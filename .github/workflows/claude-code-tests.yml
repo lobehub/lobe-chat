@@ -1,0 +1,125 @@
+name: Claude Code - Add Tests to Packages
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # 10:00 (UTC+8)
+  workflow_dispatch:
+  push:
+    branches:
+      - chore/ci/claude-tests-*
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  generate-tests:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Use Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Claude Code to add tests
+        id: claude
+        uses: anthropics/claude-code-action@main
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          allowed_non_write_users: "*"
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # 限定允许的命令，确保只在选中包内写入测试并创建 PR
+          claude_args: "--allowed-tools Bash(bunx vitest:*),Bash(git:*),Bash(gh pr:*),Bash(gh repo:*),Bash(rg:*),Bash(find:*),Bash(sed:*),Bash(grep:*),Bash(awk:*),Bash(wc:*),Bash(xargs:*)"
+          prompt: |
+            You are Claude, a TypeScript engineer helping maintain a monorepo using Vitest.
+
+            Goal: Once per day, pick ONE package under ./packages whose test coverage is below 90% and add a few high-value tests only within that package. Then open a PR.
+
+            Constraints:
+            - ONLY modify files inside the selected package directory (./packages/<name>).
+            - ONLY add colocated test files named <source>.test.ts or <source>.test.tsx next to source files under src/.
+            - DO NOT modify implementation code, lockfiles, root configs, or other packages.
+            - Keep tests deterministic and fast; mock I/O/network via vi.spyOn / vi.stubGlobal.
+            - Prefer behavior-focused tests over implementation details; avoid snapshots by default.
+
+            Steps:
+            1) Discover all packages: list directories in ./packages that contain a package.json.
+            2) For each package, compute coverage:
+               - Run: bunx vitest run --silent='passed-only' --coverage --coverage.reporter=json-summary
+               - Read coverage/coverage-summary.json; use total.statements.pct (or total.lines.pct if missing).
+               - If coverage >= 90, mark as eligible=false; else eligible=true.
+               - Skip heavy server-only suites; do NOT set TEST_SERVER_DB=1.
+            3) Build a list of eligible packages (< 90%). If none, stop (no changes needed).
+            4) Randomly pick ONE eligible package.
+            5) In the selected package:
+               - List candidate source files under src/**/*.ts, src/**/*.tsx excluding *.test.* and __tests__.
+               - Prefer files that currently lack corresponding *.test.ts[x].
+               - Choose 1-4 targets that provide the biggest coverage gain (public utils, core logic, error paths).
+               - Generate minimal but meaningful Vitest tests for those targets.
+               - Write new files as src/<path>.test.ts[x] strictly within the package.
+            6) Validate:
+               - Run: bunx vitest run --silent='passed-only' for the selected package directory.
+               - If tests fail, refine or remove the failing test and try again, up to 2 attempts.
+            7) Commit & PR:
+               - Create a new branch: chore/ci/claude-tests-<package-name>-<yyyyMMdd>.
+               - Commit only the new test files.
+               - Open a PR with title: "test: add tests for <package-name> via Claude Code" and a short body summarizing the files added.
+
+            Notes:
+            - Keep the scope tiny; avoid large diffs.
+            - NEVER touch files outside the chosen package except git operations and PR creation.
+            - If nothing to do (all >= 90%), exit without changes.
+
+
+  verify-tests:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/chore/ci/claude-tests-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.23
+
+      - name: Install deps
+        run: bun i
+
+      - name: Derive package name from branch
+        id: name
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          PKG=$(echo "$BRANCH" | sed -E 's#^chore/ci/claude-tests-##')
+          PKG=$(echo "$PKG" | sed -E 's#-[0-9]{8}$##')
+          echo "pkg=$PKG" >> "$GITHUB_OUTPUT"
+
+      - name: Run package tests with coverage
+        run: |
+          set -e
+          PKG="${{ steps.name.outputs.pkg }}"
+          echo "Testing package: $PKG"
+          bun run --filter "@lobechat/$PKG" test:coverage || bun run --filter "$PKG" test:coverage
+
