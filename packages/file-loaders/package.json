@@ -25,8 +25,6 @@
     "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
-    "@langchain/community": "^0.3.41",
-    "@langchain/core": "^0.3.45",
     "@napi-rs/canvas": "^0.1.70",
     "@xmldom/xmldom": "^0.9.8",
     "concat-stream": "^2.0.0",
