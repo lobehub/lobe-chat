@@ -1502,7 +1502,7 @@ const siliconcloudImageModels: AIImageModelCard[] = [
       currency: 'CNY',
       units: [{ name: 'imageGeneration', rate: 0.3, strategy: 'fixed', unit: 'image' }],
     },
-    releasedAt: '2025-09-25',
+    releasedAt: '2025-09-22',
     type: 'image',
   },
 ];
