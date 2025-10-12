@@ -1,7 +1,10 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { resolveParameters } from '../../core/parameterResolver';
 
 export interface CohereModelCard {
@@ -11,7 +14,7 @@ export interface CohereModelCard {
   supports_vision: boolean;
 }
 
-export const LobeCohereAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.cohere.ai/compatibility/v1',
   chatCompletion: {
     // https://docs.cohere.com/v2/docs/compatibility-api#unsupported-parameters
@@ -69,4 +72,6 @@ export const LobeCohereAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Cohere,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeCohereAI = createOpenAICompatibleRuntime(params);
