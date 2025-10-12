@@ -12,9 +12,9 @@ export interface VercelAIGatewayModelCard {
   name?: string;
   pricing?: {
     input?: string | number;
-    output?: string | number;
     input_cache_read?: string | number;
     input_cache_write?: string | number;
+    output?: string | number;
   };
   tags?: string[];
   type?: string;
