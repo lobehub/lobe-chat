@@ -263,7 +263,6 @@ describe('LobeZhipuAI', () => {
               name: genericError.name,
               cause: genericError.cause,
               message: genericError.message,
-              stack: genericError.stack,
             },
           });
         }
