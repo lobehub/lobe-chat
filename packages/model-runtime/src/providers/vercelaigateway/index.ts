@@ -12,12 +12,17 @@ export interface VercelAIGatewayModelCard {
   name?: string;
   pricing?: {
     input?: string | number;
-    output?: string | number;
     input_cache_read?: string | number;
     input_cache_write?: string | number;
+    output?: string | number;
   };
   tags?: string[];
   type?: string;
+}
+
+export interface VercelAIGatewayReasoning {
+  enabled?: boolean;
+  max_tokens?: number;
 }
 
 const formatPrice = (price?: string | number) => {
@@ -32,10 +37,26 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
   baseURL: 'https://ai-gateway.vercel.sh/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model, reasoning_effort, verbosity, ...rest } = payload;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { reasoning_effort, thinking, reasoning: _reasoning, verbosity, ...rest } = payload;
+
+      let reasoning: VercelAIGatewayReasoning | undefined;
+
+      if (thinking?.type || thinking?.budget_tokens !== undefined || reasoning_effort) {
+        if (thinking?.type === 'disabled') {
+          reasoning = { enabled: false };
+        } else if (thinking?.budget_tokens !== undefined) {
+          reasoning = {
+            enabled: true,
+            max_tokens: thinking?.budget_tokens,
+          };
+        } else if (reasoning_effort) {
+          reasoning = { enabled: true };
+        }
+      }
 
       const providerOptions: any = {};
-      if (reasoning_effort || verbosity) {
+      if ((verbosity || reasoning) && payload.model.includes('openai')) {
         providerOptions.openai = {
           ...(reasoning_effort && {
             reasoningEffort: reasoning_effort,
@@ -49,7 +70,8 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
 
       return {
         ...rest,
-        model,
+        model: payload.model,
+        ...(reasoning && { reasoning }),
         providerOptions,
       } as any;
     },
@@ -97,6 +119,38 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
         reasoning: tags.includes('reasoning') || false,
         type: m.type === 'embedding' ? 'embedding' : 'chat',
         vision: tags.includes('vision') || false,
+        ...(tags.includes('reasoning') &&
+          m.id.includes('gpt-5') && {
+            settings: {
+              extendParams: ['gpt5ReasoningEffort', 'textVerbosity'],
+            },
+          }),
+        ...(tags.includes('reasoning') &&
+          m.id.includes('openai') &&
+          !m.id.includes('gpt-5') && {
+            settings: {
+              extendParams: ['reasoningEffort', 'textVerbosity'],
+            },
+          }),
+        ...(tags.includes('reasoning') &&
+          m.id.includes('claude') && {
+            settings: {
+              extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+            },
+          }),
+        ...(m.id.includes('claude') &&
+          writeCacheInputPrice &&
+          writeCacheInputPrice !== 0 && {
+            settings: {
+              extendParams: ['disableContextCaching'],
+            },
+          }),
+        ...(tags.includes('reasoning') &&
+          m.id.includes('gemini-2.5') && {
+            settings: {
+              extendParams: ['reasoningBudgetToken'],
+            },
+          }),
       } as any;
     });
 

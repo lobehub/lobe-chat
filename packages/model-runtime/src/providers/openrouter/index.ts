@@ -14,7 +14,7 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
   chatCompletion: {
     handlePayload: (payload) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { reasoning_effort, thinking, reasoning: _originalReasoning, ...rest } = payload;
+      const { reasoning_effort, thinking, reasoning: _reasoning, ...rest } = payload;
 
       let reasoning: OpenRouterReasoning | undefined;
 
@@ -145,6 +145,12 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
           writeCacheInputPrice !== 0 && {
             settings: {
               extendParams: ['disableContextCaching'],
+            },
+          }),
+        ...(supported_parameters.includes('reasoning') &&
+          model.id.includes('gemini-2.5') && {
+            settings: {
+              extendParams: ['reasoningBudgetToken'],
             },
           }),
       };
