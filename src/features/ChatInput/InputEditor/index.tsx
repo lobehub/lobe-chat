@@ -62,10 +62,10 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
     };
   }, [state.isEmpty]);
 
-  const enableMarkdown = useUserStore(preferenceSelectors.inputMarkdownRender);
+  const enableRichRender = useUserStore(preferenceSelectors.inputMarkdownRender);
   const plugins = useMemo(
     () =>
-      !enableMarkdown
+      !enableRichRender
         ? undefined
         : [
             ReactListPlugin,
@@ -85,7 +85,7 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
                   ),
             }),
           ],
-    [enableMarkdown],
+    [enableRichRender],
   );
 
   return (
@@ -94,8 +94,17 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
       className={className}
       content={''}
       editor={editor}
-      enablePasteMarkdown={enableMarkdown}
-      markdownOption={enableMarkdown}
+      enablePasteMarkdown={enableRichRender}
+      markdownOption={{
+        bold: enableRichRender,
+        code: enableRichRender,
+        header: enableRichRender,
+        italic: enableRichRender,
+        quote: enableRichRender,
+        strikethrough: enableRichRender,
+        underline: enableRichRender,
+        underlineStrikethrough: enableRichRender,
+      }}
       onBlur={() => {
         disableScope(HotkeyEnum.AddUserMessage);
       }}
