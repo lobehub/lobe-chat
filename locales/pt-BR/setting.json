@@ -294,6 +294,13 @@
     },
     "title": "Configurações Comuns"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Defina o número padrão de imagens ao criar uma nova tarefa no painel de geração de imagens.",
+      "label": "Quantidade padrão de imagens",
+      "title": "Configurações de Desenho com IA"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Ativar limite de resposta única"
@@ -549,6 +556,7 @@
     "common": "Configurações Comuns",
     "experiment": "Experimento",
     "hotkey": "Atalhos",
+    "image": "Desenho com IA",
     "llm": "Modelo de Linguagem",
     "provider": "Fornecedor de IA",
     "proxy": "Proxy de Rede",

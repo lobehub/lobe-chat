@@ -294,6 +294,13 @@
     },
     "title": "Algemene instellingen"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Stel het standaard aantal afbeeldingen in dat wordt gegenereerd wanneer een nieuwe taak wordt aangemaakt.",
+      "label": "Standaard aantal afbeeldingen",
+      "title": "AI Tekeninstellingen"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Limiet voor enkele reacties inschakelen"
@@ -549,6 +556,7 @@
     "common": "Algemene instellingen",
     "experiment": "Experiment",
     "hotkey": "Sneltoetsen",
+    "image": "AI Tekeningen",
     "llm": "Taalmodel",
     "provider": "AI-dienstverlener",
     "proxy": "Netwerkproxy",

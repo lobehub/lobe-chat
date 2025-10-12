@@ -294,6 +294,13 @@
     },
     "title": "일반 설정"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "새 작업을 생성할 때 이미지 생성 패널의 기본 이미지 수를 설정합니다.",
+      "label": "기본 이미지 수",
+      "title": "AI 그림 설정"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "단일 응답 제한 활성화"
@@ -549,6 +556,7 @@
     "common": "일반 설정",
     "experiment": "실험",
     "hotkey": "단축키",
+    "image": "AI 그림",
     "llm": "언어 모델",
     "provider": "AI 서비스 제공자",
     "proxy": "네트워크 프록시",
