@@ -704,6 +704,9 @@
   "azure-DeepSeek-R1-0528": {
     "description": "由微软部署提供； DeepSeek R1型号已进行小版本升级，当前版本为DeepSeek-R1-0528。在最新的更新中，DeepSeek R1通过增加计算资源和引入后训练阶段的算法优化机制，大幅提升了推理深度和推断能力。该模型在数学、编程和通用逻辑等多个基准测试中表现出色，其整体性能已接近领先模型，如O3和Gemini 2.5 Pro 。"
   },
+  "baichuan-m2-32b": {
+    "description": "Baichuan M2 32B 是百川智能推出的混合专家模型，具备强大的推理能力。"
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B 百川智能开发的包含 130 亿参数的开源可商用的大规模语言模型，在权威的中文和英文 benchmark 上均取得同尺寸最好的效果"
   },
@@ -727,12 +730,6 @@
   },
   "charglm-4": {
     "description": "CharGLM-4 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。"
-  },
-  "chatglm3": {
-    "description": "ChatGLM3 是智谱 AI 与清华 KEG 实验室发布的闭源模型，经过海量中英标识符的预训练与人类偏好对齐训练，相比一代模型在 MMLU、C-Eval、GSM8K 分别取得了 16%、36%、280% 的提升，并登顶中文任务榜单 C-Eval。适用于对知识量、推理能力、创造力要求较高的场景，比如广告文案、小说写作、知识类写作、代码生成等。"
-  },
-  "chatglm3-6b-base": {
-    "description": "ChatGLM3-6b-base 是由智谱开发的 ChatGLM 系列最新一代的 60 亿参数规模的开源的基础模型。"
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
@@ -938,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。"
   },
+  "deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 Exp 模型为混合推理架构模型，同时支持思考模式与非思考模式。"
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek LLM Chat (67B) 是创新的 AI 模型 提供深度语言理解和互动能力。"
   },
@@ -1030,6 +1030,9 @@
   },
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高。经 Post-Training 优化，Agent 工具使用与智能体任务表现大幅提升。支持 128k 上下文窗口，输出长度支持最大 64k tokens。"
+  },
+  "deepseek-v3.1-terminus": {
+    "description": "DeepSeek-V3.1-Terminus 是深度求索推出的终端优化版本大语言模型，专为终端设备优化。"
   },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。"
@@ -1192,6 +1195,12 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
+  },
+  "ernie-4.5-21b-a3b": {
+    "description": "ERNIE 4.5 21B A3B 是百度文心推出的混合专家模型，具备强大的推理和多语言能力。"
+  },
+  "ernie-4.5-300b-a47b": {
+    "description": "ERNIE 4.5 300B A47B 是百度文心推出的超大规模混合专家模型，具备卓越的推理能力。"
   },
   "ernie-4.5-8k-preview": {
     "description": "文心大模型4.5是百度自主研发的新一代原生多模态基础大模型，通过多个模态联合建模实现协同优化，多模态理解能力优秀；具备更精进的语言能力，理解、生成、逻辑、记忆能力全面提升，去幻觉、逻辑推理、代码能力显著提升。"
@@ -1449,7 +1458,7 @@
     "description": "GLM-4-0520 是最新模型版本，专为高度复杂和多样化任务设计，表现卓越。"
   },
   "glm-4-9b-chat": {
-    "description": "GLM-4-9B-Chat 是智谱 AI 推出的最新一代预训练模型 GLM-4-9B 的人类偏好对齐版本。"
+    "description": "GLM-4-9B-Chat 在语义、数学、推理、代码和知识等多方面均表现出较高性能。还具备网页浏览、代码执行、自定义工具调用和长文本推理。 支持包括日语，韩语，德语在内的 26 种语言。"
   },
   "glm-4-air": {
     "description": "GLM-4-Air 是性价比高的版本，性能接近GLM-4，提供快速度和实惠的价格。"
@@ -1749,7 +1758,10 @@
     "description": "成本更低的 GPT Image 1 版本，原生支持文本与图像输入并生成图像输出。"
   },
   "gpt-oss-120b": {
-    "description": "GPT-OSS-120B MXFP4 量化的 Transformer 结构，在资源受限时仍能保持强劲性能。"
+    "description": "该模型需要申请体验。GPT-OSS-120B 是 OpenAI 推出的开源大规模语言模型，具备强大的文本生成能力。"
+  },
+  "gpt-oss-20b": {
+    "description": "该模型需要申请体验。GPT-OSS-20B 是 OpenAI 推出的开源中型语言模型，具备高效的文本生成能力。"
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B 是 OpenAI 发布的大型开源语言模型，采用 MXFP4 量化技术，为旗舰级模型。需要多GPU或高性能工作站环境运行，在复杂推理、代码生成和多语言处理方面具备卓越性能，支持高级函数调用和工具集成。"
@@ -1967,6 +1979,9 @@
   "kimi-k2-0905-preview": {
     "description": "kimi-k2-0905-preview 模型上下文长度为 256k，具备更强的 Agentic Coding 能力、更突出的前端代码的美观度和实用性、以及更好的上下文理解能力。"
   },
+  "kimi-k2-instruct": {
+    "description": "Kimi K2 Instruct 是月之暗面推出的大语言模型，具有超长上下文处理能力。"
+  },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
   },
@@ -1987,9 +2002,6 @@
   },
   "lite": {
     "description": "Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。"
-  },
-  "llama-2-7b-chat": {
-    "description": "Llama2 是由 Meta 开发并开源的大型语言模型（LLM）系列，这是一组从 70 亿到 700 亿参数不同规模、经过预训练和微调的生成式文本模型。架构层面，LLama2 是一个使用优化型转换器架构的自动回归语言模型。调整后的版本使用有监督的微调（SFT）和带有人类反馈的强化学习（RLHF）以对齐人类对有用性和安全性的偏好。Llama2 较 Llama 系列在多种学术数据集上有着更加不俗的表现，为大量其他模型提供了设计和开发的思路。"
   },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B 提供更强大的AI推理能力，适合复杂应用，支持超多的计算处理并保证高效和准确率。"
@@ -2017,9 +2029,6 @@
   },
   "llama-3.3-70b": {
     "description": "Llama 3.3 70B：中大型 Llama 模型，兼顾推理能力与吞吐。"
-  },
-  "llama-3.3-70b-instruct": {
-    "description": "Meta 发布的 LLaMA 3.3 多语言大规模语言模型（LLMs）是一个经过预训练和指令微调的生成模型，提供 70B 规模（文本输入/文本输出）。该模型使用超过 15T 的数据进行训练，支持英语、德语、法语、意大利语、葡萄牙语、印地语、西班牙语和泰语，知识更新截止于 2023 年 12 月。"
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。"
@@ -2082,7 +2091,7 @@
     "description": "Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景"
   },
   "megrez-3b-instruct": {
-    "description": "Megrez-3B-Instruct 是由无问芯穹完全自主训练的大语言模型。Megrez-3B-Instruct 旨在通过软硬协同理念，打造一款极速推理、小巧精悍、极易上手的端侧智能解决方案。"
+    "description": "Megrez 3B Instruct 是无问芯穹推出的小参数量高效模型。"
   },
   "meta-llama-3-70b-instruct": {
     "description": "一个强大的700亿参数模型，在推理、编码和广泛的语言应用方面表现出色。"
@@ -2639,6 +2648,12 @@
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。"
   },
+  "pro-deepseek-r1": {
+    "description": "企业专属服务专用模型，包并发服务。"
+  },
+  "pro-deepseek-v3": {
+    "description": "企业专属服务专用模型，包并发服务。"
+  },
   "qvq-72b-preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力。"
   },
@@ -2773,12 +2788,6 @@
   },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
-  },
-  "qwen2-72b-instruct": {
-    "description": "Qwen2 是 Qwen 团队推出的新一代大型语言模型系列。它基于 Transformer 架构，并采用 SwiGLU 激活函数、注意力 QKV 偏置(attention QKV bias)、群组查询注意力(group query attention)、滑动窗口注意力(mixture of sliding window attention)与全注意力的混合等技术。此外，Qwen 团队还改进了适应多种自然语言和代码的分词器。"
-  },
-  "qwen2-7b-instruct": {
-    "description": "Qwen2 是 Qwen 团队推出的新一代大型语言模型系列。它基于 Transformer 架构，并采用 SwiGLU 激活函数、注意力 QKV 偏置(attention QKV bias)、群组查询注意力(group query attention)、滑动窗口注意力(mixture of sliding window attention)与全注意力的混合等技术。此外，Qwen 团队还改进了适应多种自然语言和代码的分词器。"
   },
   "qwen2.5": {
     "description": "Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
@@ -2918,6 +2927,12 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "基于 Qwen3 的新一代思考模式开源模型，相较上一版本（通义千问3-235B-A22B-Thinking-2507）指令遵循能力有提升、模型总结回复更加精简。"
   },
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct 是通义千问推出的多模态模型，支持视觉理解和推理。"
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking 是通义千问推出的多模态推理模型，支持视觉理解和推理。"
+  },
   "qwen3-vl-plus": {
     "description": "通义千问VL是具有视觉（图像）理解能力的文本生成模型，不仅能进行OCR（图片文字识别），还能进一步总结和推理，例如从商品照片中提取属性，根据习题图进行解题等。"
   },
@@ -3034,6 +3049,9 @@
   },
   "step-r1-v-mini": {
     "description": "该模型是拥有强大的图像理解能力的推理大模型，能够处理图像和文字信息，经过深度思考后输出文本生成文本内容。该模型在视觉推理领域表现突出，同时拥有第一梯队的数学、代码、文本推理能力。上下文长度为100k。"
+  },
+  "step3": {
+    "description": "Step3 是阶跃星辰推出的多模态模型，具备强大的视觉理解能力。"
   },
   "stepfun-ai/step3": {
     "description": "Step3 是由阶跃星辰（StepFun）发布的前沿多模态推理模型，它基于拥有 321B 总参数和 38B 激活参数的专家混合（MoE）架构构建。该模型采用端到端设计，旨在最小化解码成本，同时在视觉语言推理方面提供顶级性能。通过多矩阵分解注意力（MFA）和注意力-FFN 解耦（AFD）的协同设计，Step3 在旗舰级和低端加速器上都能保持卓越的效率。在预训练阶段，Step3 处理了超过 20T 的文本 token 和 4T 的图文混合 token，覆盖十多种语言。该模型在数学、代码及多模态等多个基准测试中均达到了开源模型的领先水平。"
@@ -3157,9 +3175,6 @@
   },
   "xai/grok-4": {
     "description": "xAI 最新和最伟大的旗舰模型，在自然语言、数学和推理方面提供无与伦比的性能——完美的全能选手。"
-  },
-  "yi-1.5-34b-chat": {
-    "description": "Yi-1.5 是 Yi 的升级版本。 它使用 500B Tokens 的高质量语料库在 Yi 上持续进行预训练，并在 3M 个多样化的微调样本上进行微调。"
   },
   "yi-large": {
     "description": "全新千亿参数模型，提供超强问答及文本生成能力。"

@@ -284,10 +284,18 @@
           "placeholder": "Inserisci l'ID del modello, ad esempio gpt-4o o claude-3.5-sonnet",
           "title": "ID del modello"
         },
+        "imageOutput": {
+          "extra": "Questa configurazione abilita solo la capacità del modello di generare immagini. L'efficacia dipende interamente dal modello stesso. Si consiglia di testare autonomamente se il modello supporta la generazione di immagini.",
+          "title": "Supporta la generazione di immagini"
+        },
         "modalTitle": "Configurazione modello personalizzato",
         "reasoning": {
           "extra": "Questa configurazione attiverà solo la capacità di pensiero profondo del modello; l'effetto specifico dipende interamente dal modello stesso. Si prega di testare autonomamente se il modello possiede una capacità di pensiero profondo utilizzabile.",
           "title": "Supporto per il pensiero profondo"
+        },
+        "search": {
+          "extra": "Questa configurazione abilita solo la capacità del motore di ricerca integrato del modello di connettersi a Internet. La disponibilità di questa funzione dipende dal modello stesso. Si consiglia di testare autonomamente se il motore di ricerca integrato è utilizzabile.",
+          "title": "Supporta la ricerca online"
         },
         "tokens": {
           "extra": "Imposta il numero massimo di token supportati dal modello",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Seleziona il tipo di modello",
           "title": "Tipo di modello"
+        },
+        "video": {
+          "extra": "Questa configurazione abilita solo la funzione di riconoscimento video nell'applicazione. La disponibilità del riconoscimento dipende interamente dal modello stesso. Si consiglia di testare autonomamente se il modello supporta il riconoscimento video.",
+          "title": "Supporta il riconoscimento video"
         },
         "vision": {
           "extra": "Questa configurazione abiliterà solo la configurazione di caricamento immagini nell'app, la disponibilità di riconoscimento dipende interamente dal modello stesso, testare autonomamente la disponibilità di riconoscimento visivo di questo modello.",
