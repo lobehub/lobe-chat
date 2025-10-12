@@ -679,16 +679,12 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"ai_models\"\nADD COLUMN IF NOT EXISTS \"settings\" jsonb DEFAULT '{}'::jsonb;\n\nUPDATE \"ai_models\"\nSET \"settings\" = '{}'::jsonb\nWHERE \"settings\" IS NULL;\n\nALTER TABLE \"ai_models\"\nALTER COLUMN \"settings\" SET DEFAULT '{}'::jsonb;\n"
+      "ALTER TABLE \"ai_models\"\nADD COLUMN IF NOT EXISTS \"settings\" jsonb DEFAULT '{}'::jsonb;\n",
+      "\nUPDATE \"ai_models\"\nSET \"settings\" = '{}'::jsonb\nWHERE \"settings\" IS NULL;\n",
+      "\nALTER TABLE \"ai_models\"\nALTER COLUMN \"settings\" SET DEFAULT '{}'::jsonb;\n"
     ],
     "bps": true,
     "folderMillis": 1760232117000,
-    "hash": "809b0a20dd1c920f10479dce00272381603ddf1ff910d9cd95ccc8dd8b44c239"
-  },
-  {
-    "sql": ["ALTER TABLE \"ai_models\" ADD COLUMN \"settings\" jsonb DEFAULT '{}'::jsonb;"],
-    "bps": true,
-    "folderMillis": 1760232267974,
-    "hash": "bf79eb547d7db1f2299f6306dab21343d12a052f1ff9a28796441c58bc4d0725"
+    "hash": "10c2790a43362fb8c95faada32a00088b4accc90e22910ad78744032e086e27e"
   }
 ]

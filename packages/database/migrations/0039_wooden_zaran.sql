@@ -1,1 +1,0 @@
-ALTER TABLE "ai_models" ADD COLUMN "settings" jsonb DEFAULT '{}'::jsonb;
