@@ -2,23 +2,19 @@
 
 ## Current Status
 
-**Overall Coverage**: 81.86% (122 test files, 1553 tests)
+**Overall Coverage**: 82.9% (122 test files, 1646 tests)
 
 ## Coverage Status by Priority
 
 ### 🔴 Critical - Low Coverage (<50%)
 
-| File                  | Coverage | Priority    | Action                   |
-| --------------------- | -------- | ----------- | ------------------------ |
-| providers/newapi      | 13.28%   | 🔥 Critical | Refactor + full tests    |
-| providers/nebius      | 32.3%    | High        | Add custom feature tests |
-| providers/stepfun     | 34.92%   | High        | Add custom feature tests |
-| providers/lmstudio    | 35.48%   | High        | Add custom feature tests |
-| providers/internlm    | 39.13%   | High        | Add custom feature tests |
-| providers/hunyuan     | 39.68%   | High        | Add custom feature tests |
-| providers/huggingface | 39.75%   | High        | Add custom feature tests |
-| providers/groq        | 45.45%   | High        | Add custom feature tests |
-| providers/modelscope  | 47.82%   | High        | Add custom feature tests |
+| File                  | Coverage | Priority | Action                   |
+| --------------------- | -------- | -------- | ------------------------ |
+| providers/internlm    | 39.13%   | High     | Add custom feature tests |
+| providers/hunyuan     | 39.68%   | High     | Add custom feature tests |
+| providers/huggingface | 39.75%   | High     | Add custom feature tests |
+| providers/groq        | 45.45%   | High     | Add custom feature tests |
+| providers/modelscope  | 47.82%   | High     | Add custom feature tests |
 
 ### 🟡 Medium - Moderate Coverage (50-80%)
 
@@ -59,7 +55,11 @@
 
 ### ✅ Good - High Coverage (80%+)
 
-Providers with good coverage: **fireworksai (100%)**, **jina (100%)**, **tencentcloud (100%)**, **togetherai (100%)**, ai21 (100%), higress (100%), xai (100%), vllm (100%), novita (100%), sambanova (100%), upstage (100%), taichu (100%), perplexity (100%), xinference (100%), vertexai (92%), volcengine (96.63%), siliconcloud (93.42%), ppio (93.75%), minimax (93.75%), cloudflare (93.6%), fal (94.04%), anthropic (91.07%), ai302 (90%), qwen (88.07%), google (85.39%), azureOpenai (85.15%), azureai (84.31%), infiniai (84%), aihubmix (80.32%), bfl (86.3%).
+41 providers with 80%+ coverage, including:
+
+- **100% coverage**: nebius, stepfun, lmstudio, newapi, fireworksai, jina, tencentcloud, togetherai, and 16 others
+- **90-99%**: vertexai, volcengine, siliconcloud, ppio, minimax, cloudflare, fal, anthropic
+- **80-89%**: ai302, qwen, google, azureOpenai, azureai, infiniai, aihubmix, bfl
 
 ## Testing Strategy
 
@@ -539,39 +539,17 @@ bunx eslint src/providers/{provider}/
 
 **Latest Session (2025-01-15)**:
 
+- Overall coverage: 81.86% → 82.9% (+1.04%)
+- Refactored 3 providers: **nebius** (32.3% → 100%), **stepfun** (34.92% → 100%), **lmstudio** (35.48% → 100%)
+- Added 93 new tests
+- All providers now export `params` for better testability
+
+**Previous Session (2025-01-15)**:
+
 - Overall coverage: 80.81% → 81.86% (+1.05%)
-- Refactored 4 critical providers to export `params` with comprehensive tests
-- Added 65 new tests covering edge cases, keyword detection, and ability merging
-- Fixed bugs in togetherai provider (incorrect ability property references)
-- All 4 providers now at 100% coverage
-
-**Previous Session**:
-
-- Overall coverage: 79.08% → 80.81% (+1.73%)
-- Refactored 4 providers to export `params`: higress, ai360, baichuan, ai302
-- Created test for usageConverters/utils/index.ts (0% → 100%)
-
-### Providers Refactored with `params` Export
-
-**Batch 2 - Critical Priority (2025-01-15)**:
-
-- ✅ **fireworksai** (29.41% → 100%, +16 tests)
-  - Tests: reasoning detection (deepseek-r1, qwq), function calling, vision support
-- ✅ **jina** (29.41% → 100%, +14 tests)
-  - Tests: deepsearch keyword detection, ability merging, edge cases
-- ✅ **tencentcloud** (29.41% → 100%, +15 tests)
-  - Tests: deepseek-r1 reasoning detection, case-insensitive matching
-- ✅ **togetherai** (30.76% → 100%, +20 tests)
-  - Tests: multiple keyword detection (deepseek-r1, qwq, qvq, vision), custom headers, baseURL modification
-  - Bug fixes: corrected abilities.reasoning and abilities.vision references (were using abilities.functionCall)
-
-**Batch 1 - High Priority**:
-
-- ✅ higress (34.69% → 100%)
-- ✅ ai360 (39.28% → 56.14%)
-- ✅ baichuan (43.63% → 62.5%)
-- ✅ ai302 (48.71% → 90%)
-- ✅ siliconcloud (reference implementation)
+- Refactored 4 providers: **fireworksai**, **jina**, **tencentcloud**, **togetherai** (all now at 100%)
+- Added 65 new tests
+- Fixed bugs in togetherai provider
 
 ## Notes
 

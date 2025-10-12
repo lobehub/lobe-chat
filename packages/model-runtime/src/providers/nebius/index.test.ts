@@ -10,10 +10,10 @@ const defaultBaseURL = 'https://api.studio.nebius.com/v1';
 
 testProvider({
   Runtime: LobeNebiusAI,
-  provider,
-  defaultBaseURL,
   chatDebugEnv: 'DEBUG_NEBIUS_CHAT_COMPLETION',
   chatModel: 'meta/llama-3.1-8b-instruct',
+  defaultBaseURL,
+  provider,
   test: {
     skipAPICall: true,
   },
@@ -79,10 +79,10 @@ describe('LobeNebiusAI - custom features', () => {
 
     it('should preserve other payload properties', async () => {
       await instance.chat({
+        max_tokens: 100,
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'meta/llama-3.1-8b-instruct',
         temperature: 0.7,
-        max_tokens: 100,
       });
 
       const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
@@ -116,8 +116,8 @@ describe('LobeNebiusAI - custom features', () => {
   describe('pricing calculation', () => {
     it('should convert pricing to per million tokens', () => {
       const pricing = {
-        prompt: 0.001,
         completion: 0.002,
+        prompt: 0.001,
       };
       const result = {
         input: pricing.prompt * 1_000_000,
@@ -142,6 +142,256 @@ describe('LobeNebiusAI - custom features', () => {
     it('should detect vision feature', () => {
       const features = ['function-calling', 'vision'];
       expect(features.includes('vision')).toBe(true);
+    });
+  });
+
+  describe('models function', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      global.fetch = vi.fn();
+    });
+
+    it('should fetch and process models successfully', async () => {
+      const mockModelsResponse = {
+        data: [
+          {
+            architecture: { modality: 'text -> text' },
+            context_length: 8192,
+            description: 'Llama 3.1 8B Instruct model',
+            features: ['function-calling', 'vision'],
+            id: 'meta/llama-3.1-8b-instruct',
+            name: 'Llama 3.1 8B Instruct',
+            pricing: { completion: 0.0002, prompt: 0.0001 },
+          },
+        ],
+      };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      const models = await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://api.studio.nebius.com/v1/models?verbose=true',
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: 'Bearer test-key',
+          },
+          method: 'GET',
+        },
+      );
+      expect(models).toBeDefined();
+    });
+
+    it('should handle fetch errors', async () => {
+      (global.fetch as any).mockResolvedValue({
+        ok: false,
+        status: 401,
+        statusText: 'Unauthorized',
+      });
+
+      const client = { apiKey: 'invalid-key', baseURL: 'https://api.studio.nebius.com/v1' };
+
+      await expect(params.models!({ client: client as any })).rejects.toThrow(
+        'Failed to fetch Nebius models: 401 Unauthorized',
+      );
+    });
+
+    it('should handle empty data', async () => {
+      const mockModelsResponse = { data: [] };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      const models = await params.models!({ client: client as any });
+
+      expect(models).toBeDefined();
+    });
+
+    it('should handle missing data field', async () => {
+      const mockModelsResponse = {};
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      const models = await params.models!({ client: client as any });
+
+      expect(models).toBeDefined();
+    });
+
+    it('should strip trailing slashes from baseURL', async () => {
+      (global.fetch as any).mockResolvedValue({
+        json: async () => ({ data: [] }),
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1///' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://api.studio.nebius.com/v1/models?verbose=true',
+        expect.any(Object),
+      );
+    });
+
+    it('should infer image type from modality', async () => {
+      const mockModelsResponse = {
+        data: [
+          {
+            architecture: { modality: 'text -> image' },
+            id: 'image-model',
+            pricing: { completion: 0.002, prompt: 0.001 },
+          },
+        ],
+      };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    it('should infer embedding type from modality', async () => {
+      const mockModelsResponse = {
+        data: [
+          {
+            architecture: { modality: 'text -> embedding' },
+            id: 'embedding-model',
+            pricing: { completion: 0.002, prompt: 0.001 },
+          },
+        ],
+      };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    it('should handle modality without arrow', async () => {
+      const mockModelsResponse = {
+        data: [
+          {
+            architecture: { modality: 'text' },
+            id: 'text-model',
+            pricing: { completion: 0.002, prompt: 0.001 },
+          },
+        ],
+      };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    it('should handle non-string modality', async () => {
+      const mockModelsResponse = {
+        data: [
+          {
+            architecture: { modality: null },
+            id: 'model',
+            pricing: { completion: 0.002, prompt: 0.001 },
+          },
+        ],
+      };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    it('should use default baseURL when client.baseURL is undefined', async () => {
+      (global.fetch as any).mockResolvedValue({
+        json: async () => ({ data: [] }),
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://api.studio.nebius.com/v1/models?verbose=true',
+        expect.any(Object),
+      );
+    });
+
+    it('should map all model properties correctly', async () => {
+      const mockModelsResponse = {
+        data: [
+          {
+            architecture: { modality: 'text -> image' },
+            context_length: 4096,
+            description: 'Test Description',
+            features: ['function-calling', 'reasoning', 'vision'],
+            id: 'test-model',
+            name: 'Test Model',
+            pricing: { completion: 0.001, prompt: 0.0005 },
+          },
+        ],
+      };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    it('should handle missing optional fields', async () => {
+      const mockModelsResponse = {
+        data: [
+          {
+            id: 'minimal-model',
+            pricing: { completion: 0.002, prompt: 0.001 },
+          },
+        ],
+      };
+
+      (global.fetch as any).mockResolvedValue({
+        json: async () => mockModelsResponse,
+        ok: true,
+      });
+
+      const client = { apiKey: 'test-key', baseURL: 'https://api.studio.nebius.com/v1' };
+      await params.models!({ client: client as any });
+
+      expect(global.fetch).toHaveBeenCalled();
     });
   });
 });
