@@ -266,6 +266,20 @@
       "when": 1760086906862,
       "tag": "0037_add_user_memory",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1760232117000,
+      "tag": "0038_add_ai_model_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1760232267974,
+      "tag": "0039_wooden_zaran",
+      "breakpoints": true
     }
   ],
   "version": "6"
