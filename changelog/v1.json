@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add new setting for default image num."]
+    },
+    "date": "2025-10-12",
+    "version": "1.137.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix input cannot send markdown."],
       "improvements": ["Optimize OpenRouter modelFetch endpoint, update i18n."]
     },
