@@ -372,7 +372,7 @@
     "vite": "^7.1.9",
     "vitest": "^3.2.4"
   },
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.18.2",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
