@@ -1,6 +1,9 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { ChatCompletionErrorPayload } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { processMultiProviderModelList } from '../../utils/modelParse';
@@ -9,7 +12,7 @@ export interface SiliconCloudModelCard {
   id: string;
 }
 
-export const LobeSiliconCloudAI = createOpenAICompatibleRuntime({
+export const params: OpenAICompatibleFactoryOptions = {
   baseURL: 'https://api.siliconflow.cn/v1',
   chatCompletion: {
     handleError: (error: any): Omit<ChatCompletionErrorPayload, 'provider'> | undefined => {
@@ -84,4 +87,6 @@ export const LobeSiliconCloudAI = createOpenAICompatibleRuntime({
     return processMultiProviderModelList(modelList, 'siliconcloud');
   },
   provider: ModelProvider.SiliconCloud,
-});
+};
+
+export const LobeSiliconCloudAI = createOpenAICompatibleRuntime(params);

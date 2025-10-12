@@ -67,7 +67,7 @@ export interface CustomClientOptions<T extends Record<string, any> = any> {
   createClient?: (options: ConstructorOptions<T>) => any;
 }
 
-interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
+export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
   apiKey?: string;
   baseURL?: string;
   chatCompletion?: {
