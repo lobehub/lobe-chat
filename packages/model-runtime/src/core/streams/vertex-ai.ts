@@ -1,10 +1,12 @@
 import { GenerateContentResponse } from '@google/genai';
-import { GroundingSearch } from '@lobechat/types';
 
-import { ModelTokensUsage } from '../../types';
+import { GroundingSearch } from '@/types/search';
+
 import { nanoid } from '../../utils/uuid';
+import { convertGoogleAIUsage } from '../usageConverters/google-ai';
 import { type GoogleAIStreamOptions } from './google';
 import {
+  ChatPayloadForTransformStream,
   StreamContext,
   StreamProtocolChunk,
   createCallbacksTransformer,
@@ -16,31 +18,17 @@ import {
 const transformVertexAIStream = (
   chunk: GenerateContentResponse,
   context: StreamContext,
+  payload?: ChatPayloadForTransformStream,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
   const candidate = chunk.candidates?.[0];
-  const usage = chunk.usageMetadata;
+  const usageMetadata = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
-  if (candidate?.finishReason && usage) {
-    const outputReasoningTokens = usage.thoughtsTokenCount || undefined;
-    const outputTextTokens = usage.candidatesTokenCount ?? 0;
-    const totalOutputTokens = outputTextTokens + (outputReasoningTokens ?? 0);
-
+  if (candidate?.finishReason && usageMetadata) {
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
       {
-        data: {
-          inputCachedTokens: usage.cachedContentTokenCount,
-          inputImageTokens: usage.promptTokensDetails?.find((i) => i.modality === 'IMAGE')
-            ?.tokenCount,
-          inputTextTokens: usage.promptTokensDetails?.find((i) => i.modality === 'TEXT')
-            ?.tokenCount,
-          outputReasoningTokens,
-          outputTextTokens,
-          totalInputTokens: usage.promptTokenCount,
-          totalOutputTokens,
-          totalTokens: usage.totalTokenCount,
-        } as ModelTokensUsage,
+        data: convertGoogleAIUsage(usageMetadata, payload?.pricing),
         id: context?.id,
         type: 'usage',
       },
@@ -117,7 +105,7 @@ const transformVertexAIStream = (
     }
 
     if (candidate.finishReason) {
-      if (chunk.usageMetadata) {
+      if (usageMetadata) {
         return [
           !!part?.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
           ...usageChunks,
@@ -142,13 +130,16 @@ const transformVertexAIStream = (
 
 export const VertexAIStream = (
   rawStream: ReadableStream<GenerateContentResponse>,
-  { callbacks, inputStartAt, enableStreaming = true }: GoogleAIStreamOptions = {},
+  { callbacks, inputStartAt, enableStreaming = true, payload }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
+  const transformWithPayload: typeof transformVertexAIStream = (chunk, ctx) =>
+    transformVertexAIStream(chunk, ctx, payload);
+
   return rawStream
     .pipeThrough(
-      createTokenSpeedCalculator(transformVertexAIStream, {
+      createTokenSpeedCalculator(transformWithPayload, {
         enableStreaming: enableStreaming,
         inputStartAt,
         streamStack,

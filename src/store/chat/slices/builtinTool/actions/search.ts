@@ -1,9 +1,10 @@
+import { crawlResultsPrompt, searchResultsPrompt } from '@lobechat/prompts';
 import { StateCreator } from 'zustand/vanilla';
 
 import { searchService } from '@/services/search';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
-import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
+import { CRAWL_CONTENT_LIMITED_COUNT, SEARCH_ITEM_LIMITED_COUNT } from '@/tools/web-browsing/const';
 import { CreateMessageParams } from '@/types/message';
 import {
   SEARCH_SEARXNG_NOT_CONFIG,
@@ -68,16 +69,19 @@ export const searchSlice: StateCreator<
             },
       );
 
-      await internal_updateMessageContent(id, JSON.stringify(content));
+      // Convert to XML format to save tokens
+      const xmlContent = crawlResultsPrompt(content as any);
+      await internal_updateMessageContent(id, xmlContent);
 
       // if aiSummary is true, then trigger ai message
       return aiSummary;
     } catch (e) {
       const err = e as Error;
       console.error(e);
-      const content = [{ ...err, errorMessage: err.message, errorType: err.name }];
+      const content = [{ errorMessage: err.message, errorType: err.name }];
 
-      await internal_updateMessageContent(id, JSON.stringify(content));
+      const xmlContent = crawlResultsPrompt(content);
+      await internal_updateMessageContent(id, xmlContent);
     }
   },
 
@@ -178,17 +182,21 @@ export const searchSlice: StateCreator<
 
     if (!data) return;
 
-    // add 15 search results to message content
-    const searchContent: SearchContent[] = data.results.slice(0, 15).map((item) => ({
-      title: item.title,
-      url: item.url,
-      ...(item.content && { content: item.content }),
-      ...(item.publishedDate && { publishedDate: item.publishedDate }),
-      ...(item.imgSrc && { imgSrc: item.imgSrc }),
-      ...(item.thumbnail && { thumbnail: item.thumbnail }),
-    }));
+    // add LIMITED_COUNT search results to message content
+    const searchContent: SearchContent[] = data.results
+      .slice(0, SEARCH_ITEM_LIMITED_COUNT)
+      .map((item) => ({
+        title: item.title,
+        url: item.url,
+        ...(item.content && { content: item.content }),
+        ...(item.publishedDate && { publishedDate: item.publishedDate }),
+        ...(item.imgSrc && { imgSrc: item.imgSrc }),
+        ...(item.thumbnail && { thumbnail: item.thumbnail }),
+      }));
 
-    await get().internal_updateMessageContent(id, JSON.stringify(searchContent));
+    // Convert to XML format to save tokens
+    const xmlContent = searchResultsPrompt(searchContent);
+    await get().internal_updateMessageContent(id, xmlContent);
 
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;

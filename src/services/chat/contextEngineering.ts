@@ -1,4 +1,4 @@
-import { INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
+import { INBOX_GUIDE_SYSTEMROLE, INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
 import {
   type AgentState,
   ContextEngine,
@@ -16,12 +16,11 @@ import {
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { ChatMessage, OpenAIChatMessage } from '@lobechat/types';
+import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 
-import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { VARIABLE_GENERATORS } from '@/utils/client/parserPlaceholder';
 import { genToolCallingName } from '@/utils/toolCall';
 
 import { isCanUseVideo, isCanUseVision } from './helper';

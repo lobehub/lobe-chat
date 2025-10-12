@@ -1,9 +1,9 @@
 import { ModelProvider } from 'model-bank';
 
+import { pruneReasoningPayload } from '../../core/contextBuilders/openai';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { processMultiProviderModelList } from '../../utils/modelParse';
-import { pruneReasoningPayload } from '../../utils/openaiHelpers';
 
 export interface GithubModelCard {
   capabilities: string[];

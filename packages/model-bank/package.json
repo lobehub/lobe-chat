@@ -15,6 +15,7 @@
     "./baichuan": "./src/aiModels/baichuan.ts",
     "./bedrock": "./src/aiModels/bedrock.ts",
     "./bfl": "./src/aiModels/bfl.ts",
+    "./cerebras": "./src/aiModels/cerebras.ts",
     "./cloudflare": "./src/aiModels/cloudflare.ts",
     "./cohere": "./src/aiModels/cohere.ts",
     "./cometapi": "./src/aiModels/cometapi.ts",
@@ -68,7 +69,8 @@
     "./xai": "./src/aiModels/xai.ts",
     "./xinference": "./src/aiModels/xinference.ts",
     "./zeroone": "./src/aiModels/zeroone.ts",
-    "./zhipu": "./src/aiModels/zhipu.ts"
+    "./zhipu": "./src/aiModels/zhipu.ts",
+    "./types": "./src/types/index.ts"
   },
   "scripts": {
     "test": "vitest",

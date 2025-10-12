@@ -1,7 +1,7 @@
 {
-  "backButton": "뒤로",
+  "backButton": "뒤로가기",
   "badge__default": "기본",
-  "badge__otherImpersonatorDevice": "다른 가장자리 장치",
+  "badge__otherImpersonatorDevice": "다른 가장 장치",
   "badge__primary": "기본",
   "badge__requiresAction": "조치 필요",
   "badge__thisDevice": "이 장치",
@@ -9,38 +9,38 @@
   "badge__userDevice": "사용자 장치",
   "badge__you": "당신",
   "createOrganization": {
-    "formButtonSubmit": "조직 생성",
+    "formButtonSubmit": "조직 만들기",
     "invitePage": {
       "formButtonReset": "건너뛰기"
     },
-    "title": "조직 생성"
+    "title": "조직 만들기"
   },
   "dates": {
-    "lastDay": "어제 {{ date | timeString('en-US') }}",
-    "next6Days": "{{ date | weekday('en-US','long') }} {{ date | timeString('en-US') }}",
-    "nextDay": "내일 {{ date | timeString('en-US') }}",
-    "numeric": "{{ date | numeric('en-US') }}",
-    "previous6Days": "지난 {{ date | weekday('en-US','long') }} {{ date | timeString('en-US') }}",
-    "sameDay": "오늘 {{ date | timeString('en-US') }}"
+    "lastDay": "어제 {{ date | timeString('ko-KR') }}",
+    "next6Days": "{{ date | weekday('ko-KR','long') }} {{ date | timeString('ko-KR') }}",
+    "nextDay": "내일 {{ date | timeString('ko-KR') }}",
+    "numeric": "{{ date | numeric('ko-KR') }}",
+    "previous6Days": "지난 {{ date | weekday('ko-KR','long') }} {{ date | timeString('ko-KR') }}",
+    "sameDay": "오늘 {{ date | timeString('ko-KR') }}"
   },
   "dividerText": "또는",
   "footerActionLink__useAnotherMethod": "다른 방법 사용",
   "footerPageLink__help": "도움말",
-  "footerPageLink__privacy": "개인정보 처리방침",
+  "footerPageLink__privacy": "개인정보",
   "footerPageLink__terms": "약관",
   "formButtonPrimary": "계속",
-  "formButtonPrimary__verify": "확인",
+  "formButtonPrimary__verify": "인증",
   "formFieldAction__forgotPassword": "비밀번호를 잊으셨나요?",
   "formFieldError__matchingPasswords": "비밀번호가 일치합니다.",
   "formFieldError__notMatchingPasswords": "비밀번호가 일치하지 않습니다.",
-  "formFieldError__verificationLinkExpired": "확인 링크가 만료되었습니다. 새 링크를 요청하세요.",
+  "formFieldError__verificationLinkExpired": "인증 링크가 만료되었습니다. 새 링크를 요청하세요.",
   "formFieldHintText__optional": "선택 사항",
-  "formFieldHintText__slug": "Slug는 고유해야 하는 사람이 읽을 수 있는 ID입니다. 주소(URL)에서 자주 사용됩니다.",
+  "formFieldHintText__slug": "슬러그는 사람이 읽을 수 있는 고유 ID로, 일반적으로 URL에 사용됩니다.",
   "formFieldInputPlaceholder__backupCode": "",
   "formFieldInputPlaceholder__confirmDeletionUserAccount": "계정 삭제",
   "formFieldInputPlaceholder__emailAddress": "",
   "formFieldInputPlaceholder__emailAddress_username": "",
-  "formFieldInputPlaceholder__emailAddresses": "example@email.com, example2@email.com",
+  "formFieldInputPlaceholder__emailAddresses": "하나 이상의 이메일 주소를 입력하거나 붙여넣으세요. 공백 또는 쉼표로 구분합니다.",
   "formFieldInputPlaceholder__firstName": "",
   "formFieldInputPlaceholder__lastName": "",
   "formFieldInputPlaceholder__organizationDomain": "",
@@ -50,7 +50,7 @@
   "formFieldInputPlaceholder__password": "",
   "formFieldInputPlaceholder__phoneNumber": "",
   "formFieldInputPlaceholder__username": "",
-  "formFieldLabel__automaticInvitations": "이 도메인에 대한 자동 초대 활성화",
+  "formFieldLabel__automaticInvitations": "이 도메인에 대해 자동 초대 활성화",
   "formFieldLabel__backupCode": "백업 코드",
   "formFieldLabel__confirmDeletion": "확인",
   "formFieldLabel__confirmPassword": "비밀번호 확인",
@@ -63,32 +63,32 @@
   "formFieldLabel__newPassword": "새 비밀번호",
   "formFieldLabel__organizationDomain": "도메인",
   "formFieldLabel__organizationDomainDeletePending": "보류 중인 초대 및 제안 삭제",
-  "formFieldLabel__organizationDomainEmailAddress": "확인 이메일 주소",
-  "formFieldLabel__organizationDomainEmailAddressDescription": "이 도메인에서 코드를 받고 확인하려면 이메일 주소를 입력하세요.",
-  "formFieldLabel__organizationName": "이름",
-  "formFieldLabel__organizationSlug": "Slug",
+  "formFieldLabel__organizationDomainEmailAddress": "이메일 주소 인증",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "이 도메인에 속한 이메일 주소를 입력하여 인증 코드를 받고 도메인을 인증하세요.",
+  "formFieldLabel__organizationName": "조직 이름",
+  "formFieldLabel__organizationSlug": "URL 슬러그",
   "formFieldLabel__passkeyName": "패스키 이름",
   "formFieldLabel__password": "비밀번호",
   "formFieldLabel__phoneNumber": "전화번호",
   "formFieldLabel__role": "역할",
-  "formFieldLabel__signOutOfOtherSessions": "다른 장치에서 로그아웃",
+  "formFieldLabel__signOutOfOtherSessions": "다른 모든 장치에서 로그아웃",
   "formFieldLabel__username": "사용자 이름",
   "impersonationFab": {
     "action__signOut": "로그아웃",
-    "title": "{{identifier}}로 로그인함"
+    "title": "{{identifier}}로 로그인됨"
   },
   "locale": "ko-KR",
-  "maintenanceMode": "현재 유지 보수 중입니다. 걱정하지 마세요. 몇 분 안에 완료될 것입니다.",
+  "maintenanceMode": "현재 유지보수 중입니다. 몇 분 내로 완료될 예정이니 걱정하지 마세요.",
   "membershipRole__admin": "관리자",
-  "membershipRole__basicMember": "회원",
-  "membershipRole__guestMember": "손님",
+  "membershipRole__basicMember": "구성원",
+  "membershipRole__guestMember": "게스트",
   "organizationList": {
-    "action__createOrganization": "조직 생성",
+    "action__createOrganization": "조직 만들기",
     "action__invitationAccept": "가입",
     "action__suggestionsAccept": "가입 요청",
-    "createOrganization": "조직 생성",
+    "createOrganization": "조직 만들기",
     "invitationAcceptedLabel": "가입됨",
-    "subtitle": "{{applicationName}}을(를) 계속하려면",
+    "subtitle": "{{applicationName}}을 계속 사용하려면 선택하세요",
     "suggestionsAcceptedLabel": "승인 대기 중",
     "title": "계정 선택",
     "titleWithoutPersonal": "조직 선택"
@@ -96,80 +96,80 @@
   "organizationProfile": {
     "badge__automaticInvitation": "자동 초대",
     "badge__automaticSuggestion": "자동 제안",
-    "badge__manualInvitation": "자동 가입 없음",
+    "badge__manualInvitation": "자동 등록 없음",
     "badge__unverified": "미인증",
     "createDomainPage": {
-      "subtitle": "도메인을 추가하여 인증합니다. 이 도메인의 이메일 주소를 가진 사용자는 조직에 자동으로 가입하거나 가입 요청을 할 수 있습니다.",
+      "subtitle": "도메인을 추가하여 인증하세요. 이 도메인의 이메일 주소를 가진 사용자는 자동으로 가입하거나 요청할 수 있습니다.",
       "title": "도메인 추가"
     },
     "invitePage": {
-      "detailsTitle__inviteFailed": "초대장을 보낼 수 없습니다. 다음 이메일 주소에 대기 중인 초대장이 이미 있습니다: {{email_addresses}}.",
-      "formButtonPrimary__continue": "초대 보내기",
+      "detailsTitle__inviteFailed": "초대 전송 실패. 다음 이메일 주소는 이미 보류 중인 초대가 있습니다: {{email_addresses}}.",
+      "formButtonPrimary__continue": "초대 전송",
       "selectDropdown__role": "역할 선택",
-      "subtitle": "이메일 주소를 하나 이상 입력하거나 붙여넣어주세요. 띄어쓰기나 쉼표로 구분됩니다.",
-      "successMessage": "초대장이 성공적으로 전송되었습니다.",
-      "title": "새 멤버 초대"
+      "subtitle": "하나 이상의 이메일 주소를 입력하거나 붙여넣으세요. 공백 또는 쉼표로 구분합니다.",
+      "successMessage": "초대가 성공적으로 전송되었습니다",
+      "title": "새 구성원 초대"
     },
     "membersPage": {
       "action__invite": "초대",
       "activeMembersTab": {
-        "menuAction__remove": "멤버 제거",
+        "menuAction__remove": "구성원 제거",
         "tableHeader__actions": "",
         "tableHeader__joined": "가입일",
         "tableHeader__role": "역할",
         "tableHeader__user": "사용자"
       },
-      "detailsTitle__emptyRow": "표시할 멤버가 없습니다.",
+      "detailsTitle__emptyRow": "표시할 구성원이 없습니다",
       "invitationsTab": {
         "autoInvitations": {
-          "headerSubtitle": "이메일 도메인을 연결하여 사용자를 초대합니다. 일치하는 이메일 도메인으로 가입한 사용자는 언제든지 조직에 가입할 수 있습니다.",
+          "headerSubtitle": "이메일 도메인을 연결하여 사용자를 자동으로 초대합니다. 일치하는 이메일 도메인으로 가입한 사용자는 언제든지 조직에 가입할 수 있습니다.",
           "headerTitle": "자동 초대",
           "primaryButton": "인증된 도메인 관리"
         },
-        "table__emptyRow": "표시할 초대가 없습니다."
+        "table__emptyRow": "표시할 초대가 없습니다"
       },
       "invitedMembersTab": {
-        "menuAction__revoke": "초대 철회",
-        "tableHeader__invited": "초대됨"
+        "menuAction__revoke": "초대 취소",
+        "tableHeader__invited": "초대일"
       },
       "requestsTab": {
         "autoSuggestions": {
-          "headerSubtitle": "일치하는 이메일 도메인으로 가입하는 사용자는 조직 가입 요청을 보낼 수 있습니다.",
+          "headerSubtitle": "일치하는 이메일 도메인으로 가입한 사용자는 조직 가입 제안을 볼 수 있습니다.",
           "headerTitle": "자동 제안",
           "primaryButton": "인증된 도메인 관리"
         },
         "menuAction__approve": "승인",
         "menuAction__reject": "거부",
-        "tableHeader__requested": "요청된 액세스",
-        "table__emptyRow": "표시할 요청이 없습니다."
+        "tableHeader__requested": "요청일",
+        "table__emptyRow": "표시할 요청이 없습니다"
       },
       "start": {
         "headerTitle__invitations": "초대",
-        "headerTitle__members": "멤버",
+        "headerTitle__members": "구성원",
         "headerTitle__requests": "요청"
       }
     },
     "navbar": {
-      "description": "조직을 관리합니다.",
+      "description": "조직 관리",
       "general": "일반",
-      "members": "멤버",
+      "members": "구성원",
       "title": "조직"
     },
     "profilePage": {
       "dangerSection": {
         "deleteOrganization": {
-          "actionDescription": "\"{{organizationName}}\"을(를) 입력하여 계속합니다.",
+          "actionDescription": "계속하려면 아래에 “{{organizationName}}”을 입력하세요.",
           "messageLine1": "이 조직을 삭제하시겠습니까?",
           "messageLine2": "이 작업은 영구적이며 되돌릴 수 없습니다.",
-          "successMessage": "조직이 삭제되었습니다.",
+          "successMessage": "조직이 삭제되었습니다",
           "title": "조직 삭제"
         },
         "leaveOrganization": {
-          "actionDescription": "\"{{organizationName}}\"을(를) 입력하여 계속합니다.",
-          "messageLine1": "이 조직을 나가시겠습니까? 이 조직 및 해당 응용프로그램에 대한 액세스 권한이 상실됩니다.",
+          "actionDescription": "계속하려면 아래에 “{{organizationName}}”을 입력하세요.",
+          "messageLine1": "이 조직을 떠나시겠습니까? 조직 및 애플리케이션에 대한 접근 권한을 잃게 됩니다.",
           "messageLine2": "이 작업은 영구적이며 되돌릴 수 없습니다.",
-          "successMessage": "조직을 나갔습니다.",
-          "title": "조직 나가기"
+          "successMessage": "조직을 떠났습니다",
+          "title": "조직 떠나기"
         },
         "title": "위험"
       },
@@ -178,58 +178,58 @@
         "menuAction__remove": "삭제",
         "menuAction__verify": "인증",
         "primaryButton": "도메인 추가",
-        "subtitle": "인증된 이메일 도메인을 기반으로 조직에 자동으로 가입하거나 가입 요청할 수 있습니다.",
+        "subtitle": "인증된 이메일 도메인을 기반으로 사용자가 자동으로 가입하거나 요청할 수 있도록 허용합니다.",
         "title": "인증된 도메인"
       },
-      "successMessage": "조직이 업데이트되었습니다.",
+      "successMessage": "조직이 업데이트되었습니다",
       "title": "프로필 업데이트"
     },
     "removeDomainPage": {
-      "messageLine1": "{{domain}} 이메일 도메인이 제거됩니다.",
-      "messageLine2": "이후에 사용자는 이 조직에 자동으로 가입할 수 없습니다.",
-      "successMessage": "{{domain}}이(가) 제거되었습니다.",
+      "messageLine1": "이메일 도메인 {{domain}}이 제거됩니다.",
+      "messageLine2": "이후 사용자는 자동으로 조직에 가입할 수 없습니다.",
+      "successMessage": "{{domain}}이 제거되었습니다",
       "title": "도메인 제거"
     },
     "start": {
       "headerTitle__general": "일반",
-      "headerTitle__members": "멤버",
+      "headerTitle__members": "구성원",
       "profileSection": {
         "primaryButton": "프로필 업데이트",
         "title": "조직 프로필",
-        "uploadAction__title": "로고 업로드"
+        "uploadAction__title": "로고"
       }
     },
     "verifiedDomainPage": {
       "dangerTab": {
-        "calloutInfoLabel": "이 도메인을 제거하면 초대된 사용자에게 영향을 줍니다.",
+        "calloutInfoLabel": "이 도메인을 제거하면 초대된 사용자에게 영향을 미칩니다.",
         "removeDomainActionLabel__remove": "도메인 제거",
-        "removeDomainSubtitle": "이 도메인을 인증된 도메인에서 제거합니다.",
+        "removeDomainSubtitle": "인증된 도메인에서 이 도메인을 제거합니다",
         "removeDomainTitle": "도메인 제거"
       },
       "enrollmentTab": {
-        "automaticInvitationOption__description": "사용자는 가입 시 자동으로 조직에 초대되어 언제든지 가입할 수 있습니다.",
+        "automaticInvitationOption__description": "사용자가 가입하면 자동으로 조직에 초대되며 언제든지 가입할 수 있습니다.",
         "automaticInvitationOption__label": "자동 초대",
-        "automaticSuggestionOption__description": "사용자는 가입 요청을 받지만 관리자의 승인이 필요합니다.",
+        "automaticSuggestionOption__description": "사용자는 가입 요청 제안을 받으며, 관리자의 승인이 필요합니다.",
         "automaticSuggestionOption__label": "자동 제안",
-        "calloutInfoLabel": "가입 모드 변경은 새 사용자에만 영향을 줍니다.",
-        "calloutInvitationCountLabel": "사용자에게 보낸 보류 중인 초대장: {{count}}",
-        "calloutSuggestionCountLabel": "사용자에게 보낸 보류 중인 제안: {{count}}",
-        "manualInvitationOption__description": "사용자는 수동으로만 조직에 초대할 수 있습니다.",
+        "calloutInfoLabel": "등록 모드 변경은 신규 사용자에게만 적용됩니다.",
+        "calloutInvitationCountLabel": "보류 중인 초대 수: {{count}}",
+        "calloutSuggestionCountLabel": "보류 중인 제안 수: {{count}}",
+        "manualInvitationOption__description": "사용자는 수동으로만 조직에 초대될 수 있습니다.",
         "manualInvitationOption__label": "자동 가입 없음",
-        "subtitle": "이 도메인에서 조직에 가입하는 사용자의 방법을 선택하세요."
+        "subtitle": "이 도메인의 사용자가 조직에 어떻게 가입할지 선택하세요."
       },
       "start": {
         "headerTitle__danger": "위험",
-        "headerTitle__enrollment": "가입 옵션"
+        "headerTitle__enrollment": "등록 옵션"
       },
-      "subtitle": "{{domain}} 도메인이 이제 인증되었습니다. 가입 모드를 선택하여 계속하세요.",
+      "subtitle": "도메인 {{domain}}이 인증되었습니다. 계속해서 등록 모드를 선택하세요.",
       "title": "{{domain}} 업데이트"
     },
     "verifyDomainPage": {
-      "formSubtitle": "이메일 주소로 전송된 인증 코드를 입력하세요.",
+      "formSubtitle": "이메일 주소로 전송된 인증 코드를 입력하세요",
       "formTitle": "인증 코드",
-      "resendButton": "코드 받지 못했나요? 재전송",
-      "subtitle": "{{domainName}} 도메인은 이메일을 통해 인증되어야 합니다.",
+      "resendButton": "코드를 받지 못하셨나요? 다시 보내기",
+      "subtitle": "도메인 {{domainName}}을 이메일로 인증해야 합니다.",
       "subtitleVerificationCodeScreen": "{{emailAddress}}로 인증 코드가 전송되었습니다. 계속하려면 코드를 입력하세요.",
       "title": "도메인 인증"
     }

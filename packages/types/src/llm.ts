@@ -30,6 +30,12 @@ export interface ChatModelCard {
    */
   functionCall?: boolean;
   id: string;
+
+  /**
+   *  whether model supports imageOutput
+   */
+  imageOutput?: boolean;
+
   /**
    * whether model is custom
    */
@@ -53,9 +59,19 @@ export interface ChatModelCard {
    */
   releasedAt?: string;
 
+  /**
+   *  whether model supports search
+   */
+  search?: boolean;
+
   settings?: AiModelSettings;
 
   type?: AiModelType;
+
+  /**
+   *  whether model supports video
+   */
+  video?: boolean;
 
   /**
    *  whether model supports vision
@@ -116,12 +132,12 @@ export interface ModelProviderCard {
    * @deprecated
    */
   proxyUrl?:
-    | {
-        desc?: string;
-        placeholder: string;
-        title?: string;
-      }
-    | false;
+  | {
+    desc?: string;
+    placeholder: string;
+    title?: string;
+  }
+  | false;
 
   settings: AiProviderSettings;
   /**

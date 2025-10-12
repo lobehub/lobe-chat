@@ -198,6 +198,9 @@ export const getLLMConfig = () => {
       ENABLED_NEWAPI: z.boolean(),
       NEWAPI_API_KEY: z.string().optional(),
       NEWAPI_PROXY_URL: z.string().optional(),
+
+      ENABLED_CEREBRAS: z.boolean(),
+      CEREBRAS_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -394,6 +397,9 @@ export const getLLMConfig = () => {
 
       ENABLED_NEBIUS: !!process.env.NEBIUS_API_KEY,
       NEBIUS_API_KEY: process.env.NEBIUS_API_KEY,
+
+      ENABLED_CEREBRAS: !!process.env.CEREBRAS_API_KEY,
+      CEREBRAS_API_KEY: process.env.CEREBRAS_API_KEY,
     },
   });
 };

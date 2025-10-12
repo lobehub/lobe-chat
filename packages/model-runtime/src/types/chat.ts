@@ -1,7 +1,19 @@
+import { ModelSpeed, ModelTokensUsage, ModelUsage } from '@/types/message';
+
 import { MessageToolCall, MessageToolCallChunk } from './toolsCalling';
-import { ModelTokensUsage } from './usage';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
+
+export type ChatResponseFormat =
+  | { type: 'json_object' }
+  | {
+      json_schema: {
+        name: string;
+        schema: Record<string, any>;
+        strict?: boolean;
+      };
+      type: 'json_schema';
+    };
 
 interface UserMessageContentPartThinking {
   signature: string;
@@ -86,6 +98,7 @@ export interface ChatStreamPayload {
   };
   reasoning_effort?: 'minimal' | 'low' | 'medium' | 'high';
   responseMode?: 'stream' | 'json';
+  response_format?: ChatResponseFormat;
   /**
    * @title 是否开启流式请求
    * @default true
@@ -95,7 +108,7 @@ export interface ChatStreamPayload {
    * @title 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 1
    */
-  temperature: number;
+  temperature?: number;
   text?: {
     verbosity?: 'low' | 'medium' | 'high';
   };
@@ -171,12 +184,13 @@ export interface ChatCompletionTool {
   type: 'function';
 }
 
-interface OnFinishData {
+export interface OnFinishData {
   grounding?: any;
+  speed?: ModelSpeed;
   text: string;
   thinking?: string;
   toolsCalling?: MessageToolCall[];
-  usage?: ModelTokensUsage;
+  usage?: ModelUsage;
 }
 
 export interface ChatStreamCallbacks {

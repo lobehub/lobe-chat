@@ -60,6 +60,27 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
+    description: 'deepseek-v3.2-exp 引入稀疏注意力机制，旨在提升处理长文本时的训练与推理效率，价格低于 deepseek-v3.1。',
+    displayName: 'DeepSeek V3.2 Exp',
+    id: 'deepseek-v3.2-exp',
+    maxOutput: 65_536,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
     description: 'DeepSeek V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。',
     displayName: 'DeepSeek V3.1',
     id: 'deepseek-v3.1',

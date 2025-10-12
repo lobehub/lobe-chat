@@ -13,6 +13,8 @@ export interface VercelAIGatewayModelCard {
   pricing?: {
     input?: string | number;
     output?: string | number;
+    input_cache_read?: string | number;
+    input_cache_write?: string | number;
   };
   tags?: string[];
   type?: string;
@@ -70,6 +72,9 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
 
       const inputPrice = formatPrice(m.pricing?.input);
       const outputPrice = formatPrice(m.pricing?.output);
+      const cachedInputPrice = formatPrice(m.pricing?.input_cache_read);
+      const writeCacheInputPrice = formatPrice(m.pricing?.input_cache_write);
+
       let displayName = m.name ?? m.id;
       if (inputPrice === 0 && outputPrice === 0) {
         displayName += ' (free)';
@@ -84,8 +89,10 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
         id: m.id,
         maxOutput: typeof m.max_tokens === 'number' ? m.max_tokens : undefined,
         pricing: {
+          cachedInput: cachedInputPrice,
           input: inputPrice,
           output: outputPrice,
+          writeCacheInput: writeCacheInputPrice,
         },
         reasoning: tags.includes('reasoning') || false,
         type: m.type === 'embedding' ? 'embedding' : 'chat',

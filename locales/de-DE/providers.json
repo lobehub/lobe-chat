@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Ein führendes, an vorderster Front tätiges KI-Forschungslabor, das die visuelle Infrastruktur von morgen gestaltet."
   },
+  "cerebras": {
+    "description": "Cerebras ist eine KI-Inferenzplattform, die auf dem spezialisierten CS-3-System basiert. Sie wurde entwickelt, um weltweit die schnellsten, in Echtzeit reagierenden und hochdurchsatzfähigen LLM-Dienste bereitzustellen. Ziel ist es, Latenzen zu eliminieren und komplexe KI-Workflows wie die Echtzeit-Codegenerierung und Agentenaufgaben zu beschleunigen."
+  },
   "cloudflare": {
     "description": "Führen Sie von serverlosen GPUs betriebene Machine-Learning-Modelle im globalen Netzwerk von Cloudflare aus."
   },

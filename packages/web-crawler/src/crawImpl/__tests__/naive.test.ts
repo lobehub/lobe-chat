@@ -13,9 +13,9 @@ vi.mock('../../utils/withTimeout', () => ({
   withTimeout: vi.fn(),
 }));
 
-// Mock fetch globally
-const mockFetch = vi.fn();
-global.fetch = mockFetch;
+vi.mock('ssrf-safe-fetch', () => ({
+  ssrfSafeFetch: vi.fn(),
+}));
 
 describe('naive crawler', () => {
   beforeEach(() => {

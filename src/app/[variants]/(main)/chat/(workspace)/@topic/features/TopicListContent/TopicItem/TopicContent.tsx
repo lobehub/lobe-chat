@@ -2,6 +2,7 @@ import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps, Text } from '
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import {
+  ExternalLink,
   LucideCopy,
   LucideLoader2,
   MoreVertical,
@@ -16,8 +17,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
+import { isDesktop } from '@/const/version';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
 
 const useStyles = createStyles(({ css }) => ({
   content: css`
@@ -45,6 +48,8 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
 
   const mobile = useIsMobile();
 
+  const openTopicInNewWindow = useGlobalStore((s) => s.openTopicInNewWindow);
+
   const [
     editing,
     favoriteTopic,
@@ -53,6 +58,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     autoRenameTopicTitle,
     duplicateTopic,
     isLoading,
+    activeId,
   ] = useChatStore((s) => [
     s.topicRenamingId === id,
     s.favoriteTopic,
@@ -61,6 +67,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     s.autoRenameTopicTitle,
     s.duplicateTopic,
     s.topicLoadingIds.includes(id),
+    s.activeId,
   ]);
   const { styles, theme } = useStyles();
 
@@ -88,6 +95,18 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           toggleEditing(true);
         },
       },
+      ...(isDesktop
+        ? [
+          {
+            icon: <Icon icon={ExternalLink} />,
+            key: 'openInNewWindow',
+            label: '单独打开页面',
+            onClick: () => {
+              openTopicInNewWindow(activeId, id);
+            },
+          },
+        ]
+        : []),
       {
         type: 'divider',
       },
@@ -134,7 +153,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         },
       },
     ],
-    [],
+    [id, activeId, autoRenameTopicTitle, duplicateTopic, removeTopic, t, toggleEditing, openTopicInNewWindow],
   );
 
   return (
@@ -169,6 +188,11 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           <Text
             className={styles.title}
             ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
+            onDoubleClick={() => {
+              if (isDesktop) {
+                openTopicInNewWindow(activeId, id)
+              }
+            }}
             style={{ margin: 0 }}
           >
             {title}

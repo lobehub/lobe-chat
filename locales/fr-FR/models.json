@@ -92,6 +92,12 @@
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - mode réflexion ; DeepSeek-V3.1 est un nouveau modèle de raisonnement hybride lancé par DeepSeek, supportant deux modes de raisonnement : avec et sans réflexion, avec une efficacité de réflexion supérieure à celle de DeepSeek-R1-0528. Optimisé par post-entraînement, l'utilisation des outils Agent et les performances dans les tâches d'agents ont été grandement améliorées."
   },
+  "DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 est le dernier modèle universel publié par DeepSeek, prenant en charge une architecture d'inférence hybride et offrant des capacités d'agent renforcées."
+  },
+  "DeepSeek-V3.2-Exp-Think": {
+    "description": "Mode de réflexion DeepSeek V3.2. Avant de fournir la réponse finale, le modèle génère une chaîne de pensée pour améliorer la précision de la réponse."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offre une vitesse de réponse exceptionnelle et un excellent rapport qualité-prix, offrant aux clients une flexibilité accrue pour différents scénarios. Prend en charge l'inférence et le fine-tuning avec une fenêtre contextuelle de 128k."
   },
@@ -286,6 +292,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 est un grand modèle de langage hybride publié par DeepSeek AI, intégrant de nombreuses améliorations majeures par rapport à la génération précédente. Une innovation clé de ce modèle est l'intégration des modes « réflexion » (Thinking Mode) et « non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre eux via des modèles de conversation adaptés aux différents besoins. Grâce à une optimisation post-entraînement spécifique, la version V3.1 améliore significativement les performances dans l'appel d'outils et les tâches d'agent, supportant mieux les outils de recherche externes et l'exécution de tâches complexes en plusieurs étapes. Basé sur DeepSeek-V3.1-Base, il bénéficie d'un entraînement supplémentaire avec une méthode d'extension de texte long en deux phases, augmentant considérablement la quantité de données d'entraînement pour une meilleure gestion des documents longs et des codes étendus. En tant que modèle open source, DeepSeek-V3.1 démontre des capacités comparables aux meilleurs modèles propriétaires dans plusieurs benchmarks en codage, mathématiques et raisonnement, tout en réduisant efficacement les coûts d'inférence grâce à son architecture à experts mixtes (MoE) qui maintient une grande capacité de modèle."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus est une version mise à jour du modèle V3.1 publiée par DeepSeek, positionnée comme un grand modèle de langage hybride pour agents intelligents. Cette mise à jour conserve les capacités originales du modèle tout en se concentrant sur la correction des problèmes signalés par les utilisateurs et l'amélioration de la stabilité. Elle améliore significativement la cohérence linguistique, réduisant le mélange de chinois et d'anglais ainsi que l'apparition de caractères anormaux. Le modèle intègre un « mode réflexion » (Thinking Mode) et un « mode non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre ces modes via des modèles de conversation adaptés à différentes tâches. En tant qu'optimisation majeure, V3.1-Terminus renforce les performances des agents de code (Code Agent) et de recherche (Search Agent), rendant leur appel d'outils et l'exécution de tâches complexes en plusieurs étapes plus fiables."
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 est la version la plus récente et la plus puissante de Kimi K2. Il s'agit d'un modèle linguistique de pointe à experts mixtes (MoE), avec un total de 1 000 milliards de paramètres et 32 milliards de paramètres activés. Les principales caractéristiques de ce modèle incluent : une intelligence de codage d'agents améliorée, démontrant des performances significatives dans les tests de référence publics et les tâches réelles d'agents de codage ; une expérience de codage frontale améliorée, avec des progrès tant en esthétique qu'en praticité pour la programmation frontale."
@@ -680,6 +689,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 améliore significativement les capacités de Sonnet 3.7, excelle en codage avec un score de pointe de 72,7 % sur SWE-bench. Ce modèle équilibre performance et efficacité, adapté aux cas d'usage internes et externes, avec un contrôle accru grâce à une meilleure contrôlabilité."
   },
+  "anthropic/claude-sonnet-4.5": {
+    "description": "Claude Sonnet 4.5 est le modèle le plus intelligent d'Anthropic à ce jour."
+  },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B est un grand modèle de langage sparse à 72 milliards de paramètres, avec 16 milliards de paramètres activés. Il repose sur une architecture Mixture of Experts groupée (MoGE), qui regroupe les experts lors de la sélection et contraint chaque token à activer un nombre égal d'experts dans chaque groupe, assurant ainsi un équilibre de charge entre les experts et améliorant considérablement l'efficacité de déploiement sur la plateforme Ascend."
   },
@@ -772,6 +784,9 @@
   },
   "claude-sonnet-4-20250514-thinking": {
     "description": "Le modèle de réflexion Claude Sonnet 4 produit des réponses quasi instantanées ou des raisonnements prolongés étape par étape, clairement visibles par l'utilisateur."
+  },
+  "claude-sonnet-4-5-20250929": {
+    "description": "Claude Sonnet 4.5 est le modèle le plus intelligent d'Anthropic à ce jour."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 est un puissant assistant de programmation AI, prenant en charge des questions intelligentes et l'achèvement de code dans divers langages de programmation, améliorant l'efficacité du développement."
@@ -920,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 est un grand modèle de langage hybride publié par DeepSeek AI, intégrant de nombreuses améliorations majeures par rapport à la génération précédente. Une innovation clé de ce modèle est l'intégration des modes « réflexion » (Thinking Mode) et « non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre eux via des modèles de conversation adaptés aux différents besoins. Grâce à une optimisation post-entraînement spécifique, la version V3.1 améliore significativement les performances dans l'appel d'outils et les tâches d'agent, supportant mieux les outils de recherche externes et l'exécution de tâches complexes en plusieurs étapes. Basé sur DeepSeek-V3.1-Base, il bénéficie d'un entraînement supplémentaire avec une méthode d'extension de texte long en deux phases, augmentant considérablement la quantité de données d'entraînement pour une meilleure gestion des documents longs et des codes étendus. En tant que modèle open source, DeepSeek-V3.1 démontre des capacités comparables aux meilleurs modèles propriétaires dans plusieurs benchmarks en codage, mathématiques et raisonnement, tout en réduisant efficacement les coûts d'inférence grâce à son architecture à experts mixtes (MoE) qui maintient une grande capacité de modèle."
   },
+  "deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus est une version mise à jour du modèle V3.1 publiée par DeepSeek, positionnée comme un grand modèle de langage hybride pour agents intelligents. Cette mise à jour conserve les capacités originales du modèle tout en se concentrant sur la correction des problèmes signalés par les utilisateurs et l'amélioration de la stabilité. Elle améliore significativement la cohérence linguistique, réduisant le mélange de chinois et d'anglais ainsi que l'apparition de caractères anormaux. Le modèle intègre un « mode réflexion » (Thinking Mode) et un « mode non-réflexion » (Non-thinking Mode), permettant aux utilisateurs de basculer facilement entre ces modes via des modèles de conversation adaptés à différentes tâches. En tant qu'optimisation majeure, V3.1-Terminus renforce les performances des agents de code (Code Agent) et de recherche (Search Agent), rendant leur appel d'outils et l'exécution de tâches complexes en plusieurs étapes plus fiables."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B est un modèle avancé formé pour des dialogues de haute complexité."
   },
@@ -928,6 +946,9 @@
   },
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1 : modèle de raisonnement de nouvelle génération, améliorant les capacités de raisonnement complexe et de réflexion en chaîne, adapté aux tâches nécessitant une analyse approfondie."
+  },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1 : un modèle de raisonnement de nouvelle génération, améliorant les capacités de raisonnement complexe et de pensée en chaîne, idéal pour les tâches nécessitant une analyse approfondie."
   },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 est un modèle de langage visuel à experts mixtes (MoE) développé sur la base de DeepSeekMoE-27B, utilisant une architecture MoE à activation sparse, réalisant des performances exceptionnelles tout en n'activant que 4,5 milliards de paramètres. Ce modèle excelle dans plusieurs tâches telles que la question-réponse visuelle, la reconnaissance optique de caractères, la compréhension de documents/tableaux/graphes et le positionnement visuel."
@@ -993,7 +1014,7 @@
     "description": "DeepSeek R1 version complète, avec 671B de paramètres, prenant en charge la recherche en ligne en temps réel, offrant des capacités de compréhension et de génération plus puissantes."
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek V3.1 en mode réflexion. Avant de fournir la réponse finale, le modèle génère une chaîne de pensée pour améliorer la précision de la réponse finale."
+    "description": "Mode de réflexion DeepSeek V3.2. Avant de fournir la réponse finale, le modèle génère une chaîne de pensée pour améliorer la précision de la réponse."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 est un modèle de langage Mixture-of-Experts efficace, adapté aux besoins de traitement économique."
@@ -1012,6 +1033,9 @@
   },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1 : modèle de raisonnement de nouvelle génération, améliorant les capacités de raisonnement complexe et de réflexion en chaîne, adapté aux tâches nécessitant une analyse approfondie."
+  },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp introduit un mécanisme d'attention parcimonieuse, visant à améliorer l'efficacité de l'entraînement et de l'inférence lors du traitement de longs textes, à un prix inférieur à celui de deepseek-v3.1."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 est un modèle hybride d'experts avec 685B de paramètres, représentant la dernière itération de la série de modèles de chat phare de l'équipe DeepSeek.\n\nIl hérite du modèle [DeepSeek V3](/deepseek/deepseek-chat-v3) et excelle dans diverses tâches."
@@ -1232,6 +1256,9 @@
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] est un modèle de génération d'images de 12 milliards de paramètres, spécialisé dans la génération rapide d'images de haute qualité."
   },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "Un puissant modèle natif de génération d'images multimodales"
+  },
   "fal-ai/imagen4/preview": {
     "description": "Modèle de génération d'images de haute qualité fourni par Google."
   },
@@ -1343,11 +1370,17 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
   },
+  "gemini-2.5-flash-image": {
+    "description": "Nano Banana est le dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, permettant de générer et d’éditer des images par conversation."
+  },
   "gemini-2.5-flash-image-preview": {
     "description": "Nano Banana est le tout dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d'éditer des images par conversation."
   },
   "gemini-2.5-flash-image-preview:image": {
     "description": "Nano Banana est le tout dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, qui vous permet de générer et d'éditer des images par conversation."
+  },
+  "gemini-2.5-flash-image:image": {
+    "description": "Nano Banana est le dernier modèle multimodal natif de Google, le plus rapide et le plus efficace, permettant de générer et d’éditer des images par conversation."
   },
   "gemini-2.5-flash-lite": {
     "description": "Gemini 2.5 Flash-Lite est le modèle le plus petit et le plus rentable de Google, conçu pour une utilisation à grande échelle."
@@ -1355,11 +1388,17 @@
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview est le modèle le plus compact et rentable de Google, conçu pour une utilisation à grande échelle."
   },
+  "gemini-2.5-flash-lite-preview-09-2025": {
+    "description": "Version de prévisualisation (25 septembre 2025) de Gemini 2.5 Flash-Lite"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
+  },
+  "gemini-2.5-flash-preview-09-2025": {
+    "description": "Version de prévisualisation (25 septembre 2025) de Gemini 2.5 Flash"
   },
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro est le modèle de raisonnement le plus avancé de Google, capable de traiter des problèmes complexes en code, mathématiques et domaines STEM, ainsi que d'analyser de grands ensembles de données, des bases de code et des documents avec un contexte étendu."
@@ -1372,6 +1411,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview est le modèle de pensée le plus avancé de Google, capable de raisonner sur des problèmes complexes en code, mathématiques et domaines STEM, ainsi que d'analyser de grands ensembles de données, bibliothèques de code et documents avec un contexte étendu."
+  },
+  "gemini-flash-latest": {
+    "description": "Dernière version de Gemini Flash"
+  },
+  "gemini-flash-lite-latest": {
+    "description": "Dernière version de Gemini Flash-Lite"
+  },
+  "gemini-pro-latest": {
+    "description": "Dernière version de Gemini Pro"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B est adapté au traitement de tâches de taille moyenne, alliant coût et efficacité."
@@ -1437,7 +1485,7 @@
     "description": "La série GLM-4.1V-Thinking est actuellement le modèle visuel le plus performant connu dans la catégorie des VLM de 10 milliards de paramètres. Elle intègre les meilleures performances SOTA dans diverses tâches de langage visuel, incluant la compréhension vidéo, les questions-réponses sur images, la résolution de problèmes disciplinaires, la reconnaissance OCR, l'interprétation de documents et graphiques, les agents GUI, le codage web frontal, le grounding, etc. Ses capacités surpassent même celles du Qwen2.5-VL-72B, qui possède plus de huit fois plus de paramètres. Grâce à des techniques avancées d'apprentissage par renforcement, le modèle maîtrise le raisonnement par chaîne de pensée, améliorant la précision et la richesse des réponses, surpassant nettement les modèles traditionnels sans mécanisme de pensée en termes de résultats finaux et d'explicabilité."
   },
   "glm-4.5": {
-    "description": "Le dernier modèle phare de Zhipu, supportant le mode réflexion, avec des capacités globales atteignant le niveau SOTA des modèles open source, et une longueur de contexte allant jusqu'à 128K tokens."
+    "description": "Modèle phare de Zhipu, supportant le changement de mode de réflexion, avec des capacités globales atteignant le niveau SOTA des modèles open source, et une longueur de contexte pouvant atteindre 128K."
   },
   "glm-4.5-air": {
     "description": "Version allégée de GLM-4.5, équilibrant performance et rapport qualité-prix, avec une commutation flexible entre modèles de réflexion hybrides."
@@ -1453,6 +1501,9 @@
   },
   "glm-4.5v": {
     "description": "La nouvelle génération de modèle d'inférence visuelle de Zhipu, basée sur l'architecture MOE (Mixture-of-Experts), avec un total de 106 milliards de paramètres et 12 milliards de paramètres d'activation, atteint l'état de l'art (SOTA) parmi les modèles multimodaux open source de même niveau au niveau mondial sur divers benchmarks, couvrant les tâches courantes telles que la compréhension d'images, de vidéos, de documents et d'interfaces graphiques (GUI)."
+  },
+  "glm-4.6": {
+    "description": "Le dernier modèle phare de Zhipu, GLM-4.6 (355B), surpasse entièrement la génération précédente en codage avancé, traitement de longs textes, inférence et capacités d'agent intelligent, notamment en alignant ses compétences en programmation avec Claude Sonnet 4, devenant ainsi le modèle de codage de pointe en Chine."
   },
   "glm-4v": {
     "description": "GLM-4V offre de puissantes capacités de compréhension et de raisonnement d'image, prenant en charge diverses tâches visuelles."
@@ -1480,6 +1531,9 @@
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possède de puissantes capacités de raisonnement complexe, se distinguant dans les domaines du raisonnement logique, des mathématiques et de la programmation."
+  },
+  "glm4.6:355b": {
+    "description": "Le tout dernier modèle phare de Zhipu, le GLM-4.6 (355B), surpasse largement ses prédécesseurs en matière de codage avancé, de traitement de longs textes, de raisonnement et de capacités d'agents intelligents. Il est particulièrement performant en programmation, atteignant le niveau de Claude Sonnet 4, ce qui en fait l’un des meilleurs modèles de codage en Chine."
   },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash offre des fonctionnalités de nouvelle génération et des améliorations, incluant une vitesse exceptionnelle, l'utilisation d'outils intégrés, la génération multimodale et une fenêtre de contexte de 1 million de tokens."
@@ -1682,11 +1736,17 @@
   "gpt-5-nano": {
     "description": "Version la plus rapide et la plus économique de GPT-5. Parfaitement adaptée aux scénarios nécessitant une réponse rapide et sensibles aux coûts."
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 Pro utilise davantage de puissance de calcul pour approfondir sa réflexion et fournir des réponses toujours plus pertinentes."
+  },
   "gpt-audio": {
     "description": "GPT Audio est un modèle de chat universel orienté vers l'entrée et la sortie audio, supportant l'utilisation d'entrées/sorties audio dans l'API Chat Completions."
   },
   "gpt-image-1": {
     "description": "Modèle natif multimodal de génération d'images de ChatGPT."
+  },
+  "gpt-image-1-mini": {
+    "description": "Une version plus économique de GPT Image 1, prenant en charge nativement les entrées texte et image, et générant des sorties visuelles."
   },
   "gpt-oss-120b": {
     "description": "GPT-OSS-120B MXFP4 : architecture Transformer quantifiée, offrant des performances solides même en ressources limitées."
@@ -1700,9 +1760,6 @@
   "gpt-realtime": {
     "description": "Modèle universel en temps réel, supportant les entrées et sorties textuelles et audio en temps réel, ainsi que les entrées d'images."
   },
-  "grok-2-1212": {
-    "description": "Ce modèle a été amélioré en termes de précision, de respect des instructions et de capacités multilingues."
-  },
   "grok-2-image-1212": {
     "description": "Notre dernier modèle de génération d'images peut créer des images vivantes et réalistes à partir d'invites textuelles. Il excelle dans la génération d'images pour le marketing, les réseaux sociaux et le divertissement."
   },
@@ -1712,13 +1769,7 @@
   "grok-3": {
     "description": "Modèle phare, expert en extraction de données, programmation et résumé de texte pour des applications d'entreprise, avec une connaissance approfondie des domaines financier, médical, juridique et scientifique."
   },
-  "grok-3-fast": {
-    "description": "Modèle phare, expert en extraction de données, programmation et résumé de texte pour des applications d'entreprise, avec une connaissance approfondie des domaines financier, médical, juridique et scientifique."
-  },
   "grok-3-mini": {
-    "description": "Modèle léger, réfléchit avant de répondre. Rapide et intelligent, adapté aux tâches logiques ne nécessitant pas de connaissances approfondies, avec accès à la trace de pensée originale."
-  },
-  "grok-3-mini-fast": {
     "description": "Modèle léger, réfléchit avant de répondre. Rapide et intelligent, adapté aux tâches logiques ne nécessitant pas de connaissances approfondies, avec accès à la trace de pensée originale."
   },
   "grok-4": {
@@ -1799,11 +1850,11 @@
   "hunyuan-t1-latest": {
     "description": "Amélioration significative des capacités du modèle principal de réflexion lente dans les domaines des mathématiques avancées, du raisonnement complexe, du code difficile, du respect des instructions et de la qualité de la création textuelle."
   },
-  "hunyuan-t1-vision": {
-    "description": "Modèle de réflexion profonde multimodal Hunyuan, supportant des chaînes de pensée natives multimodales longues, excellent dans divers scénarios d'inférence d'images, avec une amélioration globale par rapport aux modèles de pensée rapide dans les problèmes scientifiques."
-  },
   "hunyuan-t1-vision-20250619": {
     "description": "La dernière version du modèle de réflexion profonde multimodale t1-vision de Hunyuan, supportant une chaîne de pensée native multimodale, avec des améliorations globales par rapport à la version par défaut précédente."
+  },
+  "hunyuan-t1-vision-20250916": {
+    "description": "La dernière version du modèle de raisonnement visuel profond Hunyuan t1-vision offre des améliorations significatives par rapport à la version précédente dans des tâches telles que les questions-réponses image-texte, la localisation visuelle, l'OCR, l'interprétation de graphiques, la résolution de problèmes à partir de photos et la création d’images. Les performances en anglais et en langues rares ont également été nettement optimisées."
   },
   "hunyuan-turbo": {
     "description": "Version préliminaire du nouveau modèle de langage de génération Hunyuan, utilisant une nouvelle structure de modèle d'experts mixtes (MoE), offrant une efficacité d'inférence plus rapide et de meilleures performances par rapport à Hunyuan-Pro."
@@ -1825,6 +1876,9 @@
   },
   "hunyuan-turbos-20250604": {
     "description": "Mise à niveau de la base pré-entraînée, amélioration des capacités d'écriture et de compréhension de lecture, augmentation significative des compétences en codage et en sciences, avec un suivi continu des instructions complexes."
+  },
+  "hunyuan-turbos-20250926": {
+    "description": "Amélioration de la qualité des données de base pour la pré-formation. Optimisation de la stratégie d’entraînement post-formation, avec une amélioration continue des capacités des agents, des langues anglaises et petites langues, de la conformité aux instructions, du code et des sciences."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS est la dernière version du modèle phare Hunyuan, offrant une capacité de réflexion améliorée et une expérience utilisateur optimisée."
@@ -1961,6 +2015,9 @@
   "llama-3.2-vision-instruct": {
     "description": "Le modèle Llama 3.2-Vision optimisé pour les instructions est spécialisé dans la reconnaissance visuelle, le raisonnement sur images, la description d'images et la réponse aux questions générales liées aux images."
   },
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B : un modèle Llama de taille moyenne à grande, équilibrant capacités de raisonnement et débit élevé."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 est le modèle de langage open source multilingue le plus avancé de la série Llama, offrant des performances comparables à celles du modèle 405B à un coût très bas. Basé sur une architecture Transformer, il améliore son utilité et sa sécurité grâce à un ajustement supervisé (SFT) et un apprentissage par renforcement avec retour humain (RLHF). Sa version optimisée pour les instructions est spécialement conçue pour les dialogues multilingues et surpasse de nombreux modèles de chat open source et fermés sur plusieurs benchmarks industriels. La date limite des connaissances est décembre 2023."
   },
@@ -1969,6 +2026,12 @@
   },
   "llama-3.3-instruct": {
     "description": "Le modèle d'instructions affiné Llama 3.3 est optimisé pour les scénarios de dialogue, surpassant de nombreux modèles de chat open source existants dans les tests de référence courants de l'industrie."
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick : un modèle haute performance de la série Llama, idéal pour le raisonnement avancé, la résolution de problèmes complexes et les tâches de suivi d'instructions."
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout : un modèle haute performance de la série Llama, conçu pour les scénarios nécessitant un haut débit et une faible latence."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B offre une capacité de traitement de complexité inégalée, sur mesure pour des projets exigeants."
@@ -1984,6 +2047,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 est le modèle de pointe lancé par Meta, prenant en charge jusqu'à 405B de paramètres, applicable dans les domaines des dialogues complexes, de la traduction multilingue et de l'analyse de données."
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B : une variante légère et à faible latence de Llama, adaptée aux scénarios d'inférence en ligne et d'interaction légers."
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 est le modèle de pointe lancé par Meta, prenant en charge jusqu'à 405B de paramètres, applicable dans les domaines des dialogues complexes, de la traduction multilingue et de l'analyse de données."
@@ -2582,6 +2648,12 @@
   "qvq-plus": {
     "description": "Modèle de raisonnement visuel. Prend en charge les entrées visuelles et les sorties en chaîne de pensée. Version plus avancée du modèle qvq-max, offrant une vitesse de raisonnement plus rapide et un meilleur équilibre entre performance et coût."
   },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B : un modèle de la série Qwen performant dans les tâches multilingues et de codage, adapté à une utilisation en production à échelle moyenne."
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B : un modèle à long contexte conçu pour la génération de code et les tâches de programmation complexes."
+  },
   "qwen-coder-plus": {
     "description": "Modèle de code Tongyi Qianwen."
   },
@@ -3133,6 +3205,9 @@
   },
   "zai-org/GLM-4.5V": {
     "description": "GLM-4.5V est la dernière génération de modèle langage-visuel (VLM) publiée par Zhipu AI. Ce modèle est construit sur le modèle texte phare GLM-4.5-Air, qui compte 106 milliards de paramètres au total et 12 milliards de paramètres d'activation, et adopte une architecture de mixture d'experts (MoE) afin d'obtenir des performances excellentes à un coût d'inférence réduit. Sur le plan technique, GLM-4.5V prolonge la lignée de GLM-4.1V-Thinking et introduit des innovations telles que l'encodage de position rotatif en 3D (3D-RoPE), renforçant de façon significative la perception et le raisonnement des relations spatiales tridimensionnelles. Grâce aux optimisations apportées lors des phases de pré-entraînement, d'affinage supervisé et d'apprentissage par renforcement, ce modèle est capable de traiter divers contenus visuels, notamment des images, des vidéos et des documents longs, et atteint un niveau de pointe parmi les modèles open source de la même catégorie sur 41 benchmarks multimodaux publics. De plus, le modèle intègre un interrupteur « mode réflexion » permettant aux utilisateurs de choisir de manière flexible entre réponses rapides et raisonnement approfondi, pour équilibrer efficacité et qualité."
+  },
+  "zai-org/GLM-4.6": {
+    "description": "Par rapport à GLM-4.5, GLM-4.6 apporte plusieurs améliorations clés. Sa fenêtre contextuelle s’étend de 128K à 200K tokens, permettant au modèle de gérer des tâches d’agents plus complexes. Le modèle obtient de meilleurs scores aux benchmarks de code et montre des performances renforcées dans des applications telles que Claude Code, Cline, Roo Code et Kilo Code, notamment dans la génération de pages frontales visuellement raffinées. GLM-4.6 améliore nettement les performances d’inférence et supporte l’utilisation d’outils durant l’inférence, offrant ainsi une capacité globale renforcée. Il excelle dans l’utilisation d’outils et les agents basés sur la recherche, et s’intègre plus efficacement dans les cadres d’agents. En écriture, ce modèle correspond davantage aux préférences humaines en termes de style et de lisibilité, et se comporte de manière plus naturelle dans les scénarios de jeu de rôle."
   },
   "zai/glm-4.5": {
     "description": "La série de modèles GLM-4.5 est conçue spécifiquement pour les agents. Le modèle phare GLM-4.5 intègre 355 milliards de paramètres totaux (32 milliards actifs), unifiant raisonnement, codage et capacités d'agent pour répondre à des besoins applicatifs complexes. En tant que système de raisonnement hybride, il offre deux modes d'opération."

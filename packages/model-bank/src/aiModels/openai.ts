@@ -26,8 +26,32 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 400_000,
-    description:
-      'GPT-5 Codex 是一个针对 Codex 或类似环境中的代理编码任务优化的 GPT-5 版本。',
+    description: 'GPT-5 pro 使用更多计算来更深入地思考，并持续提供更好的答案。',
+    displayName: 'GPT-5 pro',
+    id: 'gpt-5-pro',
+    maxOutput: 272_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-06',
+    settings: {
+      extendParams: ['textVerbosity'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 400_000,
+    description: 'GPT-5 Codex 是一个针对 Codex 或类似环境中的代理编码任务优化的 GPT-5 版本。',
     displayName: 'GPT-5 Codex',
     id: 'gpt-5-codex',
     maxOutput: 128_000,
@@ -50,6 +74,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -78,6 +103,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 400_000,
@@ -615,7 +641,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: 'GPT-4o Audio Preview 模型，支持音频输入输出',
     displayName: 'GPT-4o Audio Preview',
-    id: 'gpt-4o-audio-preview', // deprecated on 2025-10-10
+    id: 'gpt-4o-audio-preview',
     maxOutput: 16_384,
     pricing: {
       units: [
@@ -1050,15 +1076,15 @@ export const openaiImageModels: AIImageModelCard[] = [
         {
           lookup: {
             prices: {
+              high_1024x1024: 0.167,
+              high_1024x1536: 0.25,
+              high_1536x1024: 0.25,
               low_1024x1024: 0.011,
               low_1024x1536: 0.016,
               low_1536x1024: 0.016,
               medium_1024x1024: 0.042,
               medium_1024x1536: 0.063,
               medium_1536x1024: 0.063,
-              high_1024x1024: 0.167,
-              high_1024x1536: 0.25,
-              high_1536x1024: 0.25,
             },
             pricingParams: ['quality', 'size'],
           },
@@ -1072,12 +1098,51 @@ export const openaiImageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
+    description: '成本更低的 GPT Image 1 版本，原生支持文本与图像输入并生成图像输出。',
+    displayName: 'GPT Image 1 Mini',
+    enabled: true,
+    id: 'gpt-image-1-mini',
+    parameters: gptImage1ParamsSchema,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput_cacheRead', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: {
+            prices: {
+              low_1024x1024: 0.005,
+              low_1024x1536: 0.006,
+              low_1536x1024: 0.006,
+              medium_1024x1024: 0.011,
+              medium_1024x1536: 0.015,
+              medium_1536x1024: 0.015,
+            },
+            pricingParams: ['quality', 'size'],
+          },
+          name: 'imageGeneration',
+          strategy: 'lookup',
+          unit: 'image',
+        },
+      ],
+    },
+    releasedAt: '2025-10-06',
+    resolutions: ['1024x1024', '1024x1536', '1536x1024'],
+    type: 'image',
+  },
+  {
     description:
       '最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力',
     displayName: 'DALL·E 3',
     id: 'dall-e-3',
     parameters: {
       prompt: { default: '' },
+      quality: {
+        default: 'standard',
+        enum: ['standard', 'hd'],
+      },
       size: {
         default: '1024x1024',
         enum: ['1024x1024', '1792x1024', '1024x1792'],
@@ -1151,7 +1216,7 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
     description: '通用实时模型，支持文本与音频的实时输入输出，并支持图像输入。',
     displayName: 'GPT Realtime',
     id: 'gpt-realtime',
-    maxOutput: 4_096,
+    maxOutput: 4096,
     pricing: {
       units: [
         { name: 'audioInput', rate: 32, strategy: 'fixed', unit: 'millionTokens' },
