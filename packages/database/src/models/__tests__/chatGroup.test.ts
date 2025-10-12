@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 
 import { LobeChatDatabase } from '@/database/type';
 
+import { setupPgliteFetchMock } from '../../../../../tests/utils';
 import {
   NewChatGroup,
   agents as agentsTable,
@@ -13,7 +14,6 @@ import {
 } from '../../schemas';
 import { ChatGroupModel } from '../chatGroup';
 import { getTestDB } from './_util';
-import { setupPgliteFetchMock } from '../../../../../tests/utils';
 
 const userId = 'test-user';
 const otherUserId = 'other-user';
@@ -21,6 +21,16 @@ let chatGroupModel: ChatGroupModel;
 let serverDB: LobeChatDatabase;
 
 let restoreFetchMock: (() => void) | undefined;
+
+type RelationAgent = {
+  agentId: string;
+  chatGroupId?: string;
+  enabled?: boolean | null;
+  order?: number | null;
+  role?: string | null;
+};
+
+const toRelationAgents = (agents: unknown): RelationAgent[] => agents as RelationAgent[];
 
 beforeAll(async () => {
   restoreFetchMock = setupPgliteFetchMock();
@@ -207,10 +217,11 @@ describe('ChatGroupModel', () => {
 
       expect(result).toBeDefined();
       expect(result?.group.id).toBe('group-with-agents');
-      expect(result?.agents).toHaveLength(2);
+      const agents = toRelationAgents(result?.agents ?? []);
+      expect(agents).toHaveLength(2);
       // Should be ordered by order field
-      expect(result?.agents[0].agentId).toBe('agent-1');
-      expect(result?.agents[1].agentId).toBe('agent-2');
+      expect(agents[0]?.agentId).toBe('agent-1');
+      expect(agents[1]?.agentId).toBe('agent-2');
     });
 
     it('should return null for non-existent group', async () => {
@@ -410,8 +421,9 @@ describe('ChatGroupModel', () => {
         'agent-3',
       ]);
 
-      expect(result).toHaveLength(3);
-      expect(result.map((a) => a.agentId)).toEqual(['agent-1', 'agent-2', 'agent-3']);
+      const connectedAgents = toRelationAgents(result);
+      expect(connectedAgents).toHaveLength(3);
+      expect(connectedAgents.map((a) => a.agentId)).toEqual(['agent-1', 'agent-2', 'agent-3']);
     });
 
     it('should throw when adding duplicate agents', async () => {
@@ -440,10 +452,12 @@ describe('ChatGroupModel', () => {
         chatGroupModel.addAgentsToGroup('existing-agent-group', ['existing-agent', 'new-agent']),
       ).rejects.toThrow();
 
-      const groupAgents = await chatGroupModel.getGroupAgents('existing-agent-group');
+      const groupAgents = toRelationAgents(
+        await chatGroupModel.getGroupAgents('existing-agent-group'),
+      );
 
       expect(groupAgents).toHaveLength(1);
-      expect(groupAgents[0].agentId).toBe('existing-agent');
+      expect(groupAgents[0]?.agentId).toBe('existing-agent');
     });
 
     it('should throw when all agents already exist', async () => {
@@ -670,12 +684,12 @@ describe('ChatGroupModel', () => {
         ]);
       });
 
-      const result = await chatGroupModel.getGroupAgents('ordered-group');
+      const result = toRelationAgents(await chatGroupModel.getGroupAgents('ordered-group'));
 
       expect(result).toHaveLength(3);
-      expect(result[0].agentId).toBe('agent-2'); // order: 1
-      expect(result[1].agentId).toBe('agent-1'); // order: 2
-      expect(result[2].agentId).toBe('agent-3'); // order: 3
+      expect(result[0]?.agentId).toBe('agent-2'); // order: 1
+      expect(result[1]?.agentId).toBe('agent-1'); // order: 2
+      expect(result[2]?.agentId).toBe('agent-3'); // order: 3
     });
 
     it('should handle numeric ordering correctly (avoiding lexicographic sorting)', async () => {
@@ -700,14 +714,14 @@ describe('ChatGroupModel', () => {
         ]);
       });
 
-      const result = await chatGroupModel.getGroupAgents('numeric-order-group');
+      const result = toRelationAgents(await chatGroupModel.getGroupAgents('numeric-order-group'));
 
       expect(result).toHaveLength(3);
       // With integer ordering: 1, 2, 10 (correct)
       // With text ordering it would be: 1, 10, 2 (incorrect lexicographic)
-      expect(result[0].agentId).toBe('agent-order-1'); // order: 1
-      expect(result[1].agentId).toBe('agent-order-2'); // order: 2
-      expect(result[2].agentId).toBe('agent-order-10'); // order: 10
+      expect(result[0]?.agentId).toBe('agent-order-1'); // order: 1
+      expect(result[1]?.agentId).toBe('agent-order-2'); // order: 2
+      expect(result[2]?.agentId).toBe('agent-order-10'); // order: 10
     });
   });
 
@@ -732,10 +746,12 @@ describe('ChatGroupModel', () => {
         ]);
       });
 
-      const result = await chatGroupModel.getEnabledGroupAgents('enabled-test-group');
+      const result = toRelationAgents(
+        await chatGroupModel.getEnabledGroupAgents('enabled-test-group'),
+      );
 
       expect(result).toHaveLength(1);
-      expect(result[0].agentId).toBe('enabled-agent');
+      expect(result[0]?.agentId).toBe('enabled-agent');
     });
   });
 

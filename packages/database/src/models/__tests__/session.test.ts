@@ -355,7 +355,10 @@ describe('SessionModel', () => {
       expect(result.groupId).toBe('session-group-1');
 
       const fetched = await sessionModel.findByIdOrSlug(result.id);
-      expect(fetched?.group?.id).toBe('session-group-1');
+      const fetchedWithGroup = fetched as typeof fetched & {
+        group?: { id: string | null } | null;
+      };
+      expect(fetchedWithGroup?.group?.id).toBe('session-group-1');
     });
   });
 
