@@ -1,4 +1,6 @@
 name: e2e
+permissions:
+  contents: read
 
 on:
     pull_request:
