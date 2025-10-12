@@ -63,28 +63,43 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
   }, [state.isEmpty]);
 
   const enableRichRender = useUserStore(preferenceSelectors.inputMarkdownRender);
-  const plugins = useMemo(
+
+  const richRenderProps = useMemo(
     () =>
       !enableRichRender
-        ? undefined
-        : [
-            ReactListPlugin,
-            ReactLinkPlugin,
-            ReactCodePlugin,
-            ReactCodeblockPlugin,
-            ReactHRPlugin,
-            ReactTablePlugin,
-            Editor.withProps(ReactMathPlugin, {
-              renderComp: expand
-                ? undefined
-                : (props) => (
-                    <FloatMenu
-                      {...props}
-                      getPopupContainer={() => (slashMenuRef as any)?.current}
-                    />
-                  ),
-            }),
-          ],
+        ? {
+            enablePasteMarkdown: false,
+            markdownOption: {
+              bold: false,
+              code: false,
+              header: false,
+              italic: false,
+              quote: false,
+              strikethrough: false,
+              underline: false,
+              underlineStrikethrough: false,
+            },
+          }
+        : {
+            plugins: [
+              ReactListPlugin,
+              ReactLinkPlugin,
+              ReactCodePlugin,
+              ReactCodeblockPlugin,
+              ReactHRPlugin,
+              ReactTablePlugin,
+              Editor.withProps(ReactMathPlugin, {
+                renderComp: expand
+                  ? undefined
+                  : (props) => (
+                      <FloatMenu
+                        {...props}
+                        getPopupContainer={() => (slashMenuRef as any)?.current}
+                      />
+                    ),
+              }),
+            ],
+          },
     [enableRichRender],
   );
 
@@ -94,17 +109,7 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
       className={className}
       content={''}
       editor={editor}
-      enablePasteMarkdown={enableRichRender}
-      markdownOption={{
-        bold: enableRichRender,
-        code: enableRichRender,
-        header: enableRichRender,
-        italic: enableRichRender,
-        quote: enableRichRender,
-        strikethrough: enableRichRender,
-        underline: enableRichRender,
-        underlineStrikethrough: enableRichRender,
-      }}
+      {...richRenderProps}
       onBlur={() => {
         disableScope(HotkeyEnum.AddUserMessage);
       }}
@@ -154,7 +159,6 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
         }
       }}
       placeholder={<Placeholder />}
-      plugins={plugins}
       slashOption={{
         items: slashItems,
         renderComp: expand
