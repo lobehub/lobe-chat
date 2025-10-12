@@ -294,6 +294,13 @@
     },
     "title": "一般設定"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "新しいタスクを作成する際に、画像生成パネルでのデフォルト画像数を設定します。",
+      "label": "デフォルト画像数",
+      "title": "AI画像設定"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "単一応答制限を有効にする"
@@ -549,6 +556,7 @@
     "common": "一般設定",
     "experiment": "実験",
     "hotkey": "ショートカットキー",
+    "image": "AI画像生成",
     "llm": "言語モデル",
     "provider": "AIサービスプロバイダー",
     "proxy": "ネットワークプロキシ",
