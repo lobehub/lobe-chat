@@ -58,7 +58,7 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
     let modelList: OpenRouterModelCard[] = [];
 
     try {
-      const response = await fetch('https://openrouter.ai/api/frontend/models');
+      const response = await fetch('https://openrouter.ai/api/v1/models');
       if (response.ok) {
         const data = await response.json();
         modelList = data['data'];
@@ -70,19 +70,31 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
 
     // 处理前端获取的模型信息，转换为标准格式
     const formattedModels = modelList.map((model) => {
-      const { endpoint } = model;
-      const endpointModel = endpoint?.model;
+      const { top_provider, architecture, pricing, supported_parameters } = model;
 
-      const inputModalities = endpointModel?.input_modalities || model.input_modalities;
+      const inputModalities = architecture.input_modalities || [];
 
-      let displayName = model.slug?.toLowerCase().includes('deepseek') && !model.short_name?.toLowerCase().includes('deepseek')
-        ? (model.name ?? model.slug)
-        : (model.short_name ?? model.name ?? model.slug);
+      // 处理 name，默认去除冒号及其前面的内容
+      let displayName = model.name;
+      const colonIndex = displayName.indexOf(':');
+      if (colonIndex !== -1) {
+        const prefix = displayName.substring(0, colonIndex).trim();
+        const suffix = displayName.substring(colonIndex + 1).trim();
 
-      const inputPrice = formatPrice(endpoint?.pricing?.prompt);
-      const outputPrice = formatPrice(endpoint?.pricing?.completion);
-      const cachedInputPrice = formatPrice(endpoint?.pricing?.input_cache_read);
-      const writeCacheInputPrice = formatPrice(endpoint?.pricing?.input_cache_write);
+        const isDeepSeekPrefix = prefix.toLowerCase() === 'deepseek';
+        const suffixHasDeepSeek = suffix.toLowerCase().includes('deepseek');
+
+        if (isDeepSeekPrefix && !suffixHasDeepSeek) {
+          displayName = model.name;
+        } else {
+          displayName = suffix;
+        }
+      }
+
+      const inputPrice = formatPrice(pricing.prompt);
+      const outputPrice = formatPrice(pricing.completion);
+      const cachedInputPrice = formatPrice(pricing.input_cache_read);
+      const writeCacheInputPrice = formatPrice(pricing.input_cache_write);
 
       const isFree = (inputPrice === 0 || outputPrice === 0) && !displayName.endsWith('(free)');
       if (isFree) {
@@ -90,14 +102,14 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
       }
 
       return {
-        contextWindowTokens: endpoint?.context_length || model.context_length,
-        description: endpointModel?.description || model.description,
+        contextWindowTokens: top_provider.context_length || model.context_length,
+        description: model.description,
         displayName,
-        functionCall: endpoint?.supports_tool_parameters || false,
-        id: endpoint?.model_variant_slug || model.slug,
+        functionCall: supported_parameters.includes('tools'),
+        id: model.id,
         maxOutput:
-          typeof endpoint?.max_completion_tokens === 'number'
-            ? endpoint.max_completion_tokens
+          typeof top_provider.max_completion_tokens === 'number'
+            ? top_provider.max_completion_tokens
             : undefined,
         pricing: {
           input: inputPrice,
@@ -105,9 +117,9 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
           writeCacheInput: writeCacheInputPrice,
           output: outputPrice,
         },
-        reasoning: endpoint?.supports_reasoning || false,
-        releasedAt: new Date(model.created_at).toISOString().split('T')[0],
-        vision: Array.isArray(inputModalities) && inputModalities.includes('image'),
+        reasoning: supported_parameters.includes('reasoning'),
+        releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
+        vision: inputModalities.includes('image'),
       };
     });
 
