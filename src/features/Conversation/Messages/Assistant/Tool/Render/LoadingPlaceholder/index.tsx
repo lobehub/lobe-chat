@@ -16,7 +16,7 @@ const LoadingPlaceholder = memo<LoadingPlaceholderProps>(
   ({ identifier, requestArgs, apiName, loading }) => {
     const Render = BuiltinToolPlaceholders[identifier || ''];
 
-    if (identifier) {
+    if (identifier && Render) {
       return (
         <Render apiName={apiName} args={safeParseJSON(requestArgs) || {}} identifier={identifier} />
       );
