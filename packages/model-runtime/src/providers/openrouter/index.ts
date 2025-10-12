@@ -1,4 +1,4 @@
-import { ModelProvider, openrouter as OpenRouterModels } from 'model-bank';
+import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
@@ -13,34 +13,27 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
   baseURL: 'https://openrouter.ai/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { thinking, model, max_tokens } = payload;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { reasoning_effort, thinking, reasoning: _originalReasoning, ...rest } = payload;
 
-      let reasoning: OpenRouterReasoning = {};
+      let reasoning: OpenRouterReasoning | undefined;
 
-      if (thinking?.type === 'enabled') {
-        const modelConfig = OpenRouterModels.find((m) => m.id === model);
-        const defaultMaxOutput = modelConfig?.maxOutput;
-
-        // 配置优先级：用户设置 > 模型配置 > 硬编码默认值
-        const getMaxTokens = () => {
-          if (max_tokens) return max_tokens;
-          if (defaultMaxOutput) return defaultMaxOutput;
-          return undefined;
-        };
-
-        const maxTokens = getMaxTokens() || 32_000; // Claude Opus 4 has minimum maxOutput
-
-        reasoning = {
-          max_tokens: thinking?.budget_tokens
-            ? Math.min(thinking.budget_tokens, maxTokens - 1)
-            : 1024,
-        };
+      if (thinking?.type || thinking?.budget_tokens !== undefined || reasoning_effort) {
+        if (thinking?.type === 'disabled') {
+          reasoning = { enabled: false };
+        } else if (thinking?.budget_tokens !== undefined) {
+          reasoning = {
+            max_tokens: thinking?.budget_tokens,
+          };
+        } else if (reasoning_effort) {
+          reasoning = { effort: reasoning_effort };
+        }
       }
 
       return {
-        ...payload,
+        ...rest,
         model: payload.enabledSearch ? `${payload.model}:online` : payload.model,
-        reasoning,
+        ...(reasoning && { reasoning }),
         stream: payload.stream ?? true,
       } as any;
     },
@@ -78,8 +71,8 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
       let displayName = model.name;
       const colonIndex = displayName.indexOf(':');
       if (colonIndex !== -1) {
-        const prefix = displayName.substring(0, colonIndex).trim();
-        const suffix = displayName.substring(colonIndex + 1).trim();
+        const prefix = displayName.slice(0, Math.max(0, colonIndex)).trim();
+        const suffix = displayName.slice(Math.max(0, colonIndex + 1)).trim();
 
         const isDeepSeekPrefix = prefix.toLowerCase() === 'deepseek';
         const suffixHasDeepSeek = suffix.toLowerCase().includes('deepseek');
@@ -110,16 +103,50 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
         maxOutput:
           typeof top_provider.max_completion_tokens === 'number'
             ? top_provider.max_completion_tokens
-            : undefined,
+            : typeof model.context_length === 'number'
+              ? model.context_length
+              : undefined,
         pricing: {
-          input: inputPrice,
           cachedInput: cachedInputPrice,
-          writeCacheInput: writeCacheInputPrice,
+          input: inputPrice,
           output: outputPrice,
+          writeCacheInput: writeCacheInputPrice,
         },
         reasoning: supported_parameters.includes('reasoning'),
         releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
         vision: inputModalities.includes('image'),
+        ...(model.description &&
+          model.description.includes('`reasoning` `enabled`') && {
+            settings: {
+              extendParams: ['enableReasoning'],
+            },
+          }),
+        ...(supported_parameters.includes('reasoning') &&
+          model.id.includes('gpt-5') && {
+            settings: {
+              extendParams: ['gpt5ReasoningEffort'],
+            },
+          }),
+        ...(supported_parameters.includes('reasoning') &&
+          model.id.includes('openai') &&
+          !model.id.includes('gpt-5') && {
+            settings: {
+              extendParams: ['reasoningEffort'],
+            },
+          }),
+        ...(supported_parameters.includes('reasoning') &&
+          model.id.includes('claude') && {
+            settings: {
+              extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+            },
+          }),
+        ...(model.id.includes('claude') &&
+          writeCacheInputPrice &&
+          writeCacheInputPrice !== 0 && {
+            settings: {
+              extendParams: ['disableContextCaching'],
+            },
+          }),
       };
     });
 
