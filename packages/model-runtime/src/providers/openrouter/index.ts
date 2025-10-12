@@ -74,24 +74,19 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
 
       const inputModalities = architecture.input_modalities || [];
 
-      // 处理 name，智能去除冒号及其前面的内容
+      // 处理 name，默认去除冒号及其前面的内容
       let displayName = model.name;
       const colonIndex = displayName.indexOf(':');
       if (colonIndex !== -1) {
         const prefix = displayName.substring(0, colonIndex).trim();
         const suffix = displayName.substring(colonIndex + 1).trim();
 
-        // 规则1: 如果前缀是特定厂商名称，直接去掉
-        const removeProviders = ['OpenAI', 'Google', 'Anthropic'];
-        const shouldRemovePrefix = removeProviders.some(
-          provider => prefix.toLowerCase() === provider.toLowerCase()
-        );
+        const isDeepSeekPrefix = prefix.toLowerCase() === 'deepseek';
+        const suffixHasDeepSeek = suffix.toLowerCase().includes('deepseek');
 
-        // 规则2: 如果冒号后的内容包含前缀（不区分大小写），去掉重复
-        const hasRepetition = suffix.toLowerCase().includes(prefix.toLowerCase());
-
-        // 满足任一规则则去掉前缀
-        if (shouldRemovePrefix || hasRepetition) {
+        if (isDeepSeekPrefix && !suffixHasDeepSeek) {
+          displayName = model.name;
+        } else {
           displayName = suffix;
         }
       }
