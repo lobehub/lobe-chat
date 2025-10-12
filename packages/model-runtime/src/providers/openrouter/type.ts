@@ -5,37 +5,38 @@ interface ModelPricing {
   input_cache_write?: string;
   prompt: string;
   request?: string;
+  web_search?: string;
+  internal_reasoning?: string;
+}
+
+interface TopProvider {
+  context_length: number;
+  max_completion_tokens: number | null;
+  is_moderated: boolean;
+}
+
+interface Architecture {
+  modality: string;
+  input_modalities: string[];
+  output_modalities: string[];
+  tokenizer: string;
+  instruct_type: string | null;
 }
 
 export interface OpenRouterModelCard {
-  context_length: number;
-  created_at: number;
+  id: string;
+  canonical_slug: string;
+  hugging_face_id?: string;
+  name: string;
+  created: number;
   description?: string;
-  endpoint: OpenRouterModelEndpoint;
-  input_modalities?: string[];
-  name?: string;
-  output_modalities?: string[];
-  per_request_limits?: any | null;
-  short_name?: string;
-  slug: string;
-}
-
-interface OpenRouterModelEndpoint {
-  context_length?: number;
-  max_completion_tokens: number | null;
-  model?: {
-    description?: string;
-    input_modalities?: string[];
-    name?: string;
-    short_name?: string;
-    slug: string;
-  };
-  model_variant_slug?: string;
+  context_length: number;
+  architecture: Architecture;
   pricing: ModelPricing;
+  top_provider: TopProvider;
+  per_request_limits?: any | null;
   supported_parameters: string[];
-  supports_reasoning?: boolean;
-  supports_tool_parameters?: boolean;
-  variant?: 'free' | 'standard' | 'unknown';
+  default_parameters?: any | null;
 }
 
 interface OpenRouterOpenAIReasoning {

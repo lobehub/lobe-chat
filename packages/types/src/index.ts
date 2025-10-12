@@ -10,6 +10,7 @@ export * from './clientDB';
 export * from './discover';
 export * from './eval';
 export * from './fetch';
+export * from './files';
 export * from './hotkey';
 export * from './knowledgeBase';
 export * from './llm';

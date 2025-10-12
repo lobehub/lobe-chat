@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix input cannot send markdown."],
+      "improvements": ["Optimize OpenRouter modelFetch endpoint, update i18n."]
+    },
+    "date": "2025-10-12",
+    "version": "1.136.13"
+  },
+  {
+    "children": {
       "improvements": ["Add more AWS regions, Update infini-ai models."]
     },
     "date": "2025-10-11",

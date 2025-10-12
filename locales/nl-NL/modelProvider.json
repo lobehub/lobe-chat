@@ -284,10 +284,18 @@
           "placeholder": "Voer model-id in, bijvoorbeeld gpt-4o of claude-3.5-sonnet",
           "title": "Model ID"
         },
+        "imageOutput": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid van het model in om afbeeldingen te genereren. Het daadwerkelijke resultaat hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare afbeeldingen te genereren.",
+          "title": "Ondersteunt afbeeldingsgeneratie"
+        },
         "modalTitle": "Configuratie van aangepast model",
         "reasoning": {
           "extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
           "title": "Ondersteuning voor diepgaand denken"
+        },
+        "search": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid van het ingebouwde zoekmechanisme van het model in om verbinding te maken met het internet. Of het ingebouwde zoekmechanisme wordt ondersteund, hangt af van het model zelf. Test zelf of het ingebouwde zoekmechanisme van het model bruikbaar is.",
+          "title": "Ondersteunt zoeken via internet"
         },
         "tokens": {
           "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Selecteer een modeltype",
           "title": "Modeltype"
+        },
+        "video": {
+          "extra": "Deze configuratie schakelt alleen de videodetectie-instellingen in de applicatie in. Of videodetectie wordt ondersteund, hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare videodetectie uit te voeren.",
+          "title": "Ondersteunt videodetectie"
         },
         "vision": {
           "extra": "Deze configuratie zal alleen de afbeeldinguploadcapaciteit in de applicatie inschakelen, of herkenning wordt ondersteund hangt volledig af van het model zelf, test de beschikbaarheid van de visuele herkenningscapaciteit van dit model zelf.",

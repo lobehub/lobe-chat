@@ -284,10 +284,18 @@
           "placeholder": "Vui lòng nhập id mô hình, ví dụ gpt-4o hoặc claude-3.5-sonnet",
           "title": "ID mô hình"
         },
+        "imageOutput": {
+          "extra": "Cấu hình này chỉ bật khả năng tạo hình ảnh của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào bản thân mô hình, vui lòng tự kiểm tra xem mô hình có khả năng tạo hình ảnh khả dụng hay không",
+          "title": "Hỗ trợ tạo hình ảnh"
+        },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
         "reasoning": {
           "extra": "Cấu hình này sẽ chỉ kích hoạt khả năng suy nghĩ sâu của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra xem mô hình này có khả năng suy nghĩ sâu có thể sử dụng hay không",
           "title": "Hỗ trợ suy nghĩ sâu"
+        },
+        "search": {
+          "extra": "Cấu hình này chỉ bật khả năng tìm kiếm trực tuyến của công cụ tìm kiếm tích hợp trong mô hình, việc có hỗ trợ công cụ tìm kiếm tích hợp hay không phụ thuộc vào bản thân mô hình, vui lòng tự kiểm tra khả năng sử dụng của công cụ tìm kiếm tích hợp trong mô hình",
+          "title": "Hỗ trợ tìm kiếm trực tuyến"
         },
         "tokens": {
           "extra": "Cài đặt số Token tối đa mà mô hình hỗ trợ",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Vui lòng chọn loại mô hình",
           "title": "Loại mô hình"
+        },
+        "video": {
+          "extra": "Cấu hình này chỉ bật cấu hình nhận diện video trong ứng dụng, việc có hỗ trợ nhận diện hay không hoàn toàn phụ thuộc vào bản thân mô hình, vui lòng tự kiểm tra khả năng nhận diện video của mô hình",
+          "title": "Hỗ trợ nhận diện video"
         },
         "vision": {
           "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong ứng dụng, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình, xin hãy tự kiểm tra khả năng nhận diện hình ảnh của mô hình này.",

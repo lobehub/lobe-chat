@@ -67,10 +67,6 @@ export interface WriteLocalFileParams {
   path: string;
 }
 
-export interface RunCommandParams {
-  command: string;
-}
-
 export interface LocalReadFileResult {
   /**
    * Character count of the content within the specified `loc` range.
@@ -111,4 +107,93 @@ export interface OpenLocalFileParams {
 export interface OpenLocalFolderParams {
   isDirectory?: boolean;
   path: string;
+}
+
+// Shell command types
+export interface RunCommandParams {
+  command: string;
+  description?: string;
+  run_in_background?: boolean;
+  timeout?: number;
+}
+
+export interface RunCommandResult {
+  error?: string;
+  exit_code?: number;
+  output?: string;
+  shell_id?: string;
+  stderr?: string;
+  stdout?: string;
+  success: boolean;
+}
+
+export interface GetCommandOutputParams {
+  filter?: string;
+  shell_id: string;
+}
+
+export interface GetCommandOutputResult {
+  error?: string;
+  output: string;
+  running: boolean;
+  stderr: string;
+  stdout: string;
+  success: boolean;
+}
+
+export interface KillCommandParams {
+  shell_id: string;
+}
+
+export interface KillCommandResult {
+  error?: string;
+  success: boolean;
+}
+
+// Grep types
+export interface GrepContentParams {
+  '-A'?: number;
+  '-B'?: number;
+  '-C'?: number;
+  '-i'?: boolean;
+  '-n'?: boolean;
+  'glob'?: string;
+  'head_limit'?: number;
+  'multiline'?: boolean;
+  'output_mode'?: 'content' | 'files_with_matches' | 'count';
+  'path'?: string;
+  'pattern': string;
+  'type'?: string;
+}
+
+export interface GrepContentResult {
+  matches: string[];
+  success: boolean;
+  total_matches: number;
+}
+
+// Glob types
+export interface GlobFilesParams {
+  path?: string;
+  pattern: string;
+}
+
+export interface GlobFilesResult {
+  files: string[];
+  success: boolean;
+  total_files: number;
+}
+
+// Edit types
+export interface EditLocalFileParams {
+  file_path: string;
+  new_string: string;
+  old_string: string;
+  replace_all?: boolean;
+}
+
+export interface EditLocalFileResult {
+  error?: string;
+  replacements: number;
+  success: boolean;
 }

@@ -62,30 +62,45 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
     };
   }, [state.isEmpty]);
 
-  const enableMarkdown = useUserStore(preferenceSelectors.inputMarkdownRender);
-  const plugins = useMemo(
+  const enableRichRender = useUserStore(preferenceSelectors.inputMarkdownRender);
+
+  const richRenderProps = useMemo(
     () =>
-      !enableMarkdown
-        ? undefined
-        : [
-            ReactListPlugin,
-            ReactLinkPlugin,
-            ReactCodePlugin,
-            ReactCodeblockPlugin,
-            ReactHRPlugin,
-            ReactTablePlugin,
-            Editor.withProps(ReactMathPlugin, {
-              renderComp: expand
-                ? undefined
-                : (props) => (
-                    <FloatMenu
-                      {...props}
-                      getPopupContainer={() => (slashMenuRef as any)?.current}
-                    />
-                  ),
-            }),
-          ],
-    [enableMarkdown],
+      !enableRichRender
+        ? {
+            enablePasteMarkdown: false,
+            markdownOption: {
+              bold: false,
+              code: false,
+              header: false,
+              italic: false,
+              quote: false,
+              strikethrough: false,
+              underline: false,
+              underlineStrikethrough: false,
+            },
+          }
+        : {
+            plugins: [
+              ReactListPlugin,
+              ReactLinkPlugin,
+              ReactCodePlugin,
+              ReactCodeblockPlugin,
+              ReactHRPlugin,
+              ReactTablePlugin,
+              Editor.withProps(ReactMathPlugin, {
+                renderComp: expand
+                  ? undefined
+                  : (props) => (
+                      <FloatMenu
+                        {...props}
+                        getPopupContainer={() => (slashMenuRef as any)?.current}
+                      />
+                    ),
+              }),
+            ],
+          },
+    [enableRichRender],
   );
 
   return (
@@ -94,8 +109,7 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
       className={className}
       content={''}
       editor={editor}
-      enablePasteMarkdown={enableMarkdown}
-      markdownOption={enableMarkdown}
+      {...richRenderProps}
       onBlur={() => {
         disableScope(HotkeyEnum.AddUserMessage);
       }}
@@ -145,7 +159,6 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
         }
       }}
       placeholder={<Placeholder />}
-      plugins={plugins}
       slashOption={{
         items: slashItems,
         renderComp: expand
