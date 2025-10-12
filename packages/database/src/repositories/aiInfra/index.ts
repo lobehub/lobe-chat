@@ -218,7 +218,7 @@ export class AiInfraRepos {
               enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
-              settings: item.settings,
+              settings: user.settings || item.settings,
               sort: user.sort || undefined,
               type: user.type || item.type,
             };
