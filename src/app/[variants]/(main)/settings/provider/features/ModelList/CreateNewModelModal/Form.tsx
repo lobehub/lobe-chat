@@ -8,7 +8,6 @@ import MaxTokenSlider from '@/components/MaxTokenSlider';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ChatModelCard } from '@/types/llm';
 
-import { AiModelType } from '../../../../../../../../../packages/model-bank/src/types/aiModel';
 import ExtendParamsSelect from './ExtendParamsSelect';
 
 interface ModelConfigFormProps {
