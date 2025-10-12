@@ -80,7 +80,7 @@ export class AgentRuntime {
       // Handle human approved tool calls
       if (runtimeContext.phase === 'human_approved_tool') {
         const approvedPayload = runtimeContext.payload as { approvedToolCall: ToolsCalling };
-        rawInstructions = { toolCall: approvedPayload.approvedToolCall, type: 'call_tool' };
+        rawInstructions = { payload: approvedPayload.approvedToolCall, type: 'call_tool' };
       } else {
         // Standard flow: Plan -> Execute
         rawInstructions = await this.agent.runner(runtimeContext, newState);
@@ -150,7 +150,7 @@ export class AgentRuntime {
    */
   async approveToolCall(
     state: AgentState,
-    approvedToolCall: ToolsCalling,
+    approvedToolCall: any,
   ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
     const context: AgentRuntimeContext = {
       payload: { approvedToolCall },
@@ -411,19 +411,25 @@ export class AgentRuntime {
       newState.status = 'running';
 
       const tools = this.agent.tools || ({} as ToolRegistry);
-      const handler = tools[toolCall.apiName];
-      if (!handler) throw new Error(`Tool not found: ${toolCall.apiName}`);
 
-      const args = JSON.parse(toolCall.arguments);
+      // Support both ToolsCalling (OpenAI format) and CallingToolPayload formats
+      const toolName = toolCall.apiName || toolCall.function?.name;
+      const toolArgs = toolCall.arguments || toolCall.function?.arguments;
+      const toolId = toolCall.id;
+
+      const handler = tools[toolName];
+      if (!handler) throw new Error(`Tool not found: ${toolName}`);
+
+      const args = JSON.parse(toolArgs);
       const result = await handler(args);
 
       newState.messages.push({
         content: JSON.stringify(result),
         role: 'tool',
-        tool_call_id: toolCall.id,
+        tool_call_id: toolId,
       });
 
-      events.push({ id: toolCall.id, result, type: 'tool_result' });
+      events.push({ id: toolId, result, type: 'tool_result' });
 
       // Update usage and cost if agent provides calculation methods
       if (this.agent.calculateUsage) {
@@ -569,20 +575,20 @@ export class AgentRuntime {
    * Execute multiple tool calls concurrently
    */
   private async executeToolsBatch(
-    instruction: { toolsCalling: ToolsCalling[]; type: 'call_tools_batch' },
+    instruction: { payload: any[]; type: 'call_tools_batch' },
     baseState: AgentState,
   ): Promise<{
     events: AgentEvent[];
     newState: AgentState;
     nextContext?: AgentRuntimeContext;
   }> {
-    const { toolsCalling } = instruction;
+    const { payload: toolsCalling } = instruction;
 
     // Execute all tools concurrently based on the same state
     const results = await Promise.all(
       toolsCalling.map((toolCall) =>
         this.executors.call_tool(
-          { toolCall, type: 'call_tool' } as any,
+          { payload: toolCall, type: 'call_tool' } as any,
           structuredClone(baseState), // Each tool starts from the same base state
         ),
       ),
