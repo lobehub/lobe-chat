@@ -2,27 +2,23 @@
 
 ## Current Status
 
-**Overall Coverage**: 80.81% (118 test files, 1488 tests)
+**Overall Coverage**: 81.86% (122 test files, 1553 tests)
 
 ## Coverage Status by Priority
 
 ### 🔴 Critical - Low Coverage (<50%)
 
-| File                   | Coverage | Priority    | Action                   |
-| ---------------------- | -------- | ----------- | ------------------------ |
-| providers/newapi       | 13.28%   | 🔥 Critical | Refactor + full tests    |
-| providers/fireworksai  | 29.41%   | 🔥 Critical | Refactor + full tests    |
-| providers/jina         | 29.41%   | 🔥 Critical | Refactor + full tests    |
-| providers/tencentcloud | 29.41%   | 🔥 Critical | Refactor + full tests    |
-| providers/togetherai   | 30.76%   | 🔥 Critical | Refactor + full tests    |
-| providers/nebius       | 32.3%    | High        | Add custom feature tests |
-| providers/stepfun      | 34.92%   | High        | Add custom feature tests |
-| providers/lmstudio     | 35.48%   | High        | Add custom feature tests |
-| providers/internlm     | 39.13%   | High        | Add custom feature tests |
-| providers/hunyuan      | 39.68%   | High        | Add custom feature tests |
-| providers/huggingface  | 39.75%   | High        | Add custom feature tests |
-| providers/groq         | 45.45%   | High        | Add custom feature tests |
-| providers/modelscope   | 47.82%   | High        | Add custom feature tests |
+| File                  | Coverage | Priority    | Action                   |
+| --------------------- | -------- | ----------- | ------------------------ |
+| providers/newapi      | 13.28%   | 🔥 Critical | Refactor + full tests    |
+| providers/nebius      | 32.3%    | High        | Add custom feature tests |
+| providers/stepfun     | 34.92%   | High        | Add custom feature tests |
+| providers/lmstudio    | 35.48%   | High        | Add custom feature tests |
+| providers/internlm    | 39.13%   | High        | Add custom feature tests |
+| providers/hunyuan     | 39.68%   | High        | Add custom feature tests |
+| providers/huggingface | 39.75%   | High        | Add custom feature tests |
+| providers/groq        | 45.45%   | High        | Add custom feature tests |
+| providers/modelscope  | 47.82%   | High        | Add custom feature tests |
 
 ### 🟡 Medium - Moderate Coverage (50-80%)
 
@@ -63,7 +59,7 @@
 
 ### ✅ Good - High Coverage (80%+)
 
-Providers with good coverage: ai21 (100%), higress (100%), xai (100%), vllm (100%), novita (100%), sambanova (100%), upstage (100%), taichu (100%), perplexity (100%), xinference (100%), vertexai (92%), volcengine (96.63%), siliconcloud (93.42%), ppio (93.75%), minimax (93.75%), cloudflare (93.6%), fal (94.04%), anthropic (91.07%), ai302 (90%), qwen (88.07%), google (85.39%), azureOpenai (85.15%), azureai (84.31%), infiniai (84%), aihubmix (80.32%), bfl (86.3%).
+Providers with good coverage: **fireworksai (100%)**, **jina (100%)**, **tencentcloud (100%)**, **togetherai (100%)**, ai21 (100%), higress (100%), xai (100%), vllm (100%), novita (100%), sambanova (100%), upstage (100%), taichu (100%), perplexity (100%), xinference (100%), vertexai (92%), volcengine (96.63%), siliconcloud (93.42%), ppio (93.75%), minimax (93.75%), cloudflare (93.6%), fal (94.04%), anthropic (91.07%), ai302 (90%), qwen (88.07%), google (85.39%), azureOpenai (85.15%), azureai (84.31%), infiniai (84%), aihubmix (80.32%), bfl (86.3%).
 
 ## Testing Strategy
 
@@ -129,7 +125,7 @@ import {
   createOpenAICompatibleRuntime,
 } from '../../core/openaiCompatibleFactory';
 
-export const params: OpenAICompatibleFactoryOptions = {
+export const params = {
   baseURL: 'https://api.example.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -149,7 +145,7 @@ export const params: OpenAICompatibleFactoryOptions = {
     return modelList;
   },
   provider: ModelProvider.Xxx,
-};
+} satisfies OpenAICompatibleFactoryOptions;
 
 export const LobeXxxAI = createOpenAICompatibleRuntime(params);
 ```
@@ -167,21 +163,56 @@ For each provider, ensure:
 - [ ] Edge cases and boundary conditions
 - [ ] Export `params` object for better testability
 
-### 4. Update Coverage Documentation
+### 4. Documentation Update Workflow
 
-After completing each testing task:
+**IMPORTANT**: Updating documentation is a REQUIRED part of completing each testing task. Follow these steps:
 
-1. Run coverage command:
+#### Step 1: Run Coverage Report
 
-   ```bash
-   bunx vitest run --coverage
-   ```
+```bash
+bunx vitest run --coverage --silent='passed-only'
+```
 
-2. Update this document with:
-   - New overall coverage percentage
-   - Move completed items from low/medium to high coverage
-   - Update priority levels based on current coverage
-   - Add any new findings to the respective sections
+#### Step 2: Update This Document
+
+Update the following sections in this document:
+
+1. **Current Status** section:
+   - Update overall coverage percentage
+   - Update test file count and total test count
+
+2. **Coverage Status by Priority** section:
+   - Move completed providers from low/medium to high coverage section
+   - Update coverage percentages for all modified providers
+   - Remove completed items from critical/medium sections
+
+3. **Completed Work** section:
+   - Update "Recent Achievements" with new coverage delta
+   - Add newly refactored providers to the list with their coverage improvement
+   - Document any bugs fixed or improvements made
+
+#### Step 3: Verify Changes
+
+```bash
+# Verify all tests still pass
+bunx vitest run --silent='passed-only' 'src/providers/{provider}/index.test.ts'
+```
+
+#### Example Workflow
+
+```bash
+# 1. Refactor provider and write tests
+# 2. Run tests
+bunx vitest run --silent='passed-only' 'src/providers/example/index.test.ts'
+
+# 3. Run coverage
+bunx vitest run --coverage --silent='passed-only'
+
+# 4. Update this documentation file
+# 5. Commit changes with both code and documentation updates
+```
+
+**Remember**: A testing task is only complete when BOTH code and documentation are updated!
 
 ## Commands
 
@@ -200,11 +231,35 @@ bunx vitest run --silent='passed-only' src/providers/higress/index.test.ts src/p
 
 ### Recent Achievements ✅
 
+**Latest Session (2025-01-15)**:
+
+- Overall coverage: 80.81% → 81.86% (+1.05%)
+- Refactored 4 critical providers to export `params` with comprehensive tests
+- Added 65 new tests covering edge cases, keyword detection, and ability merging
+- Fixed bugs in togetherai provider (incorrect ability property references)
+- All 4 providers now at 100% coverage
+
+**Previous Session**:
+
 - Overall coverage: 79.08% → 80.81% (+1.73%)
 - Refactored 4 providers to export `params`: higress, ai360, baichuan, ai302
 - Created test for usageConverters/utils/index.ts (0% → 100%)
 
 ### Providers Refactored with `params` Export
+
+**Batch 2 - Critical Priority (2025-01-15)**:
+
+- ✅ **fireworksai** (29.41% → 100%, +16 tests)
+  - Tests: reasoning detection (deepseek-r1, qwq), function calling, vision support
+- ✅ **jina** (29.41% → 100%, +14 tests)
+  - Tests: deepsearch keyword detection, ability merging, edge cases
+- ✅ **tencentcloud** (29.41% → 100%, +15 tests)
+  - Tests: deepseek-r1 reasoning detection, case-insensitive matching
+- ✅ **togetherai** (30.76% → 100%, +20 tests)
+  - Tests: multiple keyword detection (deepseek-r1, qwq, qvq, vision), custom headers, baseURL modification
+  - Bug fixes: corrected abilities.reasoning and abilities.vision references (were using abilities.functionCall)
+
+**Batch 1 - High Priority**:
 
 - ✅ higress (34.69% → 100%)
 - ✅ ai360 (39.28% → 56.14%)

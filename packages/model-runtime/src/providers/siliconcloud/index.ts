@@ -12,7 +12,7 @@ export interface SiliconCloudModelCard {
   id: string;
 }
 
-export const params: OpenAICompatibleFactoryOptions = {
+export const params = {
   baseURL: 'https://api.siliconflow.cn/v1',
   chatCompletion: {
     handleError: (error: any): Omit<ChatCompletionErrorPayload, 'provider'> | undefined => {
@@ -87,6 +87,6 @@ export const params: OpenAICompatibleFactoryOptions = {
     return processMultiProviderModelList(modelList, 'siliconcloud');
   },
   provider: ModelProvider.SiliconCloud,
-};
+} satisfies OpenAICompatibleFactoryOptions;
 
 export const LobeSiliconCloudAI = createOpenAICompatibleRuntime(params);
