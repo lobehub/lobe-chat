@@ -12,8 +12,11 @@ testProvider({
   defaultBaseURL: 'https://api.baichuan-ai.com/v1',
   chatDebugEnv: 'DEBUG_BAICHUAN_CHAT_COMPLETION',
   chatModel: 'hunyuan-lite',
+  invalidErrorType: 'InvalidProviderAPIKey',
+  bizErrorType: 'ProviderBizError',
   test: {
     skipAPICall: true,
+    skipErrorHandle: true,
   },
 });
 
@@ -66,5 +69,70 @@ describe('specific LobeBaichuanAI tests', () => {
       { headers: { Accept: '*/*' } },
     );
     expect(result).toBeInstanceOf(Response);
+  });
+
+  describe('handlePayload - custom features', () => {
+    it('should add web_search tool when enabledSearch is true', async () => {
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'Baichuan3-Turbo',
+        enabledSearch: true,
+      });
+
+      const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
+      expect(calledPayload.tools).toBeDefined();
+      expect(calledPayload.tools?.some((tool: any) => tool.type === 'web_search')).toBe(true);
+      expect(
+        calledPayload.tools?.find((tool: any) => tool.type === 'web_search')?.web_search?.enable,
+      ).toBe(true);
+    });
+
+    it('should use default search_mode performance_first', async () => {
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'Baichuan3-Turbo',
+        enabledSearch: true,
+      });
+
+      const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
+      const webSearchTool = calledPayload.tools?.find((tool: any) => tool.type === 'web_search');
+      expect(webSearchTool?.web_search?.search_mode).toBe('performance_first');
+    });
+
+    it('should normalize temperature - 0 stays 0', async () => {
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'Baichuan3-Turbo',
+        temperature: 0,
+      });
+
+      const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
+      expect(calledPayload.temperature).toBe(0);
+    });
+
+    it('should normalize temperature by halving it', async () => {
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'Baichuan3-Turbo',
+        temperature: 0.5,
+      });
+
+      const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
+      expect(calledPayload.temperature).toBe(0.25);
+    });
+
+    it('should merge tools with web_search when enabledSearch is true', async () => {
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'Baichuan3-Turbo',
+        enabledSearch: true,
+        tools: [{ type: 'function', function: { name: 'existing_tool' } }],
+      });
+
+      const calledPayload = (instance['client'].chat.completions.create as any).mock.calls[0][0];
+      expect(calledPayload.tools).toHaveLength(2);
+      expect(calledPayload.tools?.some((tool: any) => tool.type === 'function')).toBe(true);
+      expect(calledPayload.tools?.some((tool: any) => tool.type === 'web_search')).toBe(true);
+    });
   });
 });

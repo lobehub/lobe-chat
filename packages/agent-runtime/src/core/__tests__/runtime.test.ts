@@ -3,12 +3,12 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   Agent,
   AgentEventError,
+  AgentRuntimeContext,
   AgentState,
   Cost,
   CostCalculationContext,
   CostLimit,
   RuntimeConfig,
-  RuntimeContext,
   ToolsCalling,
   Usage,
 } from '../../types';
@@ -20,7 +20,7 @@ class MockAgent implements Agent {
   executors = {};
   modelRuntime?: (payload: unknown) => AsyncIterable<any>;
 
-  async runner(context: RuntimeContext, state: AgentState) {
+  async runner(context: AgentRuntimeContext, state: AgentState) {
     switch (context.phase) {
       case 'user_input':
         return { type: 'call_llm' as const, payload: { messages: state.messages } };
@@ -43,17 +43,16 @@ class MockAgent implements Agent {
 
 // Helper function to create test context
 function createTestContext(
-  phase: RuntimeContext['phase'],
+  phase: AgentRuntimeContext['phase'],
   payload?: any,
   sessionId: string = 'test-session',
-): RuntimeContext {
+): AgentRuntimeContext {
   return {
     phase,
     payload,
     session: {
       sessionId,
       messageCount: 1,
-      eventCount: 0,
       status: 'idle',
       stepCount: 0,
     },
@@ -695,13 +694,12 @@ describe('AgentRuntime', () => {
       });
       const interruptResult = runtime.interrupt(state, 'Test interruption');
 
-      const resumeContext: RuntimeContext = {
+      const resumeContext: AgentRuntimeContext = {
         phase: 'user_input',
         payload: { message: { role: 'user', content: 'Hello' } },
         session: {
           sessionId: 'test-session',
           messageCount: 1,
-          eventCount: 2, // init + interrupt
           status: 'interrupted',
           stepCount: 0,
         },
@@ -770,7 +768,7 @@ describe('AgentRuntime', () => {
           test_tool: async () => ({ result: 'success' }),
         };
 
-        async runner(context: RuntimeContext, state: AgentState) {
+        async runner(context: AgentRuntimeContext, state: AgentState) {
           switch (context.phase) {
             case 'user_input':
               return { type: 'call_llm' as const, payload: { messages: state.messages } };
@@ -837,7 +835,7 @@ describe('AgentRuntime', () => {
 
     it('should respect cost limits with stop action', async () => {
       class CostTrackingAgent implements Agent {
-        async runner(context: RuntimeContext, state: AgentState) {
+        async runner(context: AgentRuntimeContext, state: AgentState) {
           return { type: 'call_llm' as const, payload: { messages: state.messages } };
         }
 
@@ -886,7 +884,7 @@ describe('AgentRuntime', () => {
 
     it('should handle cost limit with interrupt action', async () => {
       class CostTrackingAgent implements Agent {
-        async runner(context: RuntimeContext, state: AgentState) {
+        async runner(context: AgentRuntimeContext, state: AgentState) {
           return { type: 'call_llm' as const, payload: { messages: state.messages } };
         }
 
@@ -943,25 +941,27 @@ describe('AgentRuntime', () => {
       };
 
       // Mock agent behavior for different states
-      agent.runner = vi.fn().mockImplementation((context: RuntimeContext, state: AgentState) => {
-        switch (context.phase) {
-          case 'user_input':
-            return Promise.resolve({ type: 'call_llm', payload: { messages: state.messages } });
-          case 'llm_result':
-            const llmPayload = context.payload as { result: any; hasToolCalls: boolean };
-            if (llmPayload.hasToolCalls) {
-              return Promise.resolve({
-                type: 'request_human_approve',
-                pendingToolsCalling: llmPayload.result.tool_calls,
-              });
-            }
-            return Promise.resolve({ type: 'finish', reason: 'completed', reasonDetail: 'Done' });
-          case 'tool_result':
-            return Promise.resolve({ type: 'call_llm', payload: { messages: state.messages } });
-          default:
-            return Promise.resolve({ type: 'finish', reason: 'completed', reasonDetail: 'Done' });
-        }
-      });
+      agent.runner = vi
+        .fn()
+        .mockImplementation((context: AgentRuntimeContext, state: AgentState) => {
+          switch (context.phase) {
+            case 'user_input':
+              return Promise.resolve({ type: 'call_llm', payload: { messages: state.messages } });
+            case 'llm_result':
+              const llmPayload = context.payload as { result: any; hasToolCalls: boolean };
+              if (llmPayload.hasToolCalls) {
+                return Promise.resolve({
+                  type: 'request_human_approve',
+                  pendingToolsCalling: llmPayload.result.tool_calls,
+                });
+              }
+              return Promise.resolve({ type: 'finish', reason: 'completed', reasonDetail: 'Done' });
+            case 'tool_result':
+              return Promise.resolve({ type: 'call_llm', payload: { messages: state.messages } });
+            default:
+              return Promise.resolve({ type: 'finish', reason: 'completed', reasonDetail: 'Done' });
+          }
+        });
 
       async function* mockModelRuntime(payload: unknown) {
         const messages = (payload as any).messages;
@@ -1041,6 +1041,536 @@ describe('AgentRuntime', () => {
           }),
         }),
       );
+    });
+  });
+
+  describe('Batch Tool Execution', () => {
+    it('should execute multiple tools concurrently with call_tools_batch instruction', async () => {
+      // Agent that returns multiple tool calls
+      class BatchToolAgent implements Agent {
+        tools = {
+          tool_a: vi.fn().mockResolvedValue({ result: 'result_a' }),
+          tool_b: vi.fn().mockResolvedValue({ result: 'result_b' }),
+          tool_c: vi.fn().mockResolvedValue({ result: 'result_c' }),
+        };
+
+        async runner(context: AgentRuntimeContext, _state: AgentState) {
+          if (context.phase === 'user_input') {
+            return {
+              payload: [
+                {
+                  id: 'call_a',
+                  type: 'function' as const,
+                  function: { name: 'tool_a', arguments: '{}' },
+                },
+                {
+                  id: 'call_b',
+                  type: 'function' as const,
+                  function: { name: 'tool_b', arguments: '{}' },
+                },
+                {
+                  id: 'call_c',
+                  type: 'function' as const,
+                  function: { name: 'tool_c', arguments: '{}' },
+                },
+              ],
+              type: 'call_tools_batch' as const,
+            };
+          }
+          return { type: 'finish' as const, reason: 'completed' as const };
+        }
+      }
+
+      const agent = new BatchToolAgent();
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'batch-test',
+        messages: [{ role: 'user', content: 'Execute tools' }],
+      });
+
+      const result = await runtime.step(state);
+
+      // Should have executed all 3 tools
+      expect(agent.tools.tool_a).toHaveBeenCalled();
+      expect(agent.tools.tool_b).toHaveBeenCalled();
+      expect(agent.tools.tool_c).toHaveBeenCalled();
+
+      // Should have 3 tool result events
+      expect(result.events.filter((e) => e.type === 'tool_result')).toHaveLength(3);
+
+      // Should have 3 tool messages in state
+      const toolMessages = result.newState.messages.filter((m) => m.role === 'tool');
+      expect(toolMessages).toHaveLength(3);
+
+      // Should have tools_batch_result phase in nextContext
+      expect(result.nextContext?.phase).toBe('tools_batch_result');
+      expect(result.nextContext?.payload).toHaveProperty('toolCount', 3);
+    });
+
+    it('should support agent returning instruction array', async () => {
+      // Agent that returns array of instructions
+      class ArrayReturnAgent implements Agent {
+        tools = {
+          tool_1: vi.fn().mockResolvedValue({ result: 'tool_1_result' }),
+          tool_2: vi.fn().mockResolvedValue({ result: 'tool_2_result' }),
+        };
+
+        async runner(context: AgentRuntimeContext, _state: AgentState) {
+          if (context.phase === 'user_input') {
+            // Return array of instructions
+            return [
+              {
+                payload: {
+                  id: 'call_1',
+                  type: 'function' as const,
+                  function: { name: 'tool_1', arguments: '{}' },
+                },
+                type: 'call_tool' as const,
+              },
+              {
+                payload: {
+                  id: 'call_2',
+                  type: 'function' as const,
+                  function: { name: 'tool_2', arguments: '{}' },
+                },
+                type: 'call_tool' as const,
+              },
+            ];
+          }
+          return { type: 'finish' as const, reason: 'completed' as const };
+        }
+      }
+
+      const agent = new ArrayReturnAgent();
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'array-test',
+        messages: [{ role: 'user', content: 'Execute tools' }],
+      });
+
+      const result = await runtime.step(state);
+
+      // Should have executed both tools sequentially
+      expect(agent.tools.tool_1).toHaveBeenCalled();
+      expect(agent.tools.tool_2).toHaveBeenCalled();
+
+      // Should have 2 tool result events
+      expect(result.events.filter((e) => e.type === 'tool_result')).toHaveLength(2);
+
+      // Should have 2 tool messages in state
+      const toolMessages = result.newState.messages.filter((m) => m.role === 'tool');
+      expect(toolMessages).toHaveLength(2);
+    });
+
+    it('should stop execution when encountering blocking status', async () => {
+      // Agent that returns mixed instructions with approval
+      class BlockingAgent implements Agent {
+        tools = {
+          safe_tool: vi.fn().mockResolvedValue({ result: 'safe_result' }),
+        };
+
+        async runner(context: AgentRuntimeContext, _state: AgentState) {
+          if (context.phase === 'user_input') {
+            // Return array: safe tool + approval request
+            return [
+              {
+                payload: {
+                  id: 'call_safe',
+                  type: 'function' as const,
+                  function: { name: 'safe_tool', arguments: '{}' },
+                },
+                type: 'call_tool' as const,
+              },
+              {
+                pendingToolsCalling: [
+                  {
+                    id: 'call_danger',
+                    type: 'function' as const,
+                    function: { name: 'danger_tool', arguments: '{}' },
+                  },
+                ],
+                type: 'request_human_approve' as const,
+              },
+            ];
+          }
+          return { type: 'finish' as const, reason: 'completed' as const };
+        }
+      }
+
+      const agent = new BlockingAgent();
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'blocking-test',
+        messages: [{ role: 'user', content: 'Execute' }],
+      });
+
+      const result = await runtime.step(state);
+
+      // Safe tool should have been executed
+      expect(agent.tools.safe_tool).toHaveBeenCalled();
+
+      // Should be in waiting state (blocked by approval request)
+      expect(result.newState.status).toBe('waiting_for_human_input');
+
+      // Should have pending tool calls
+      expect(result.newState.pendingToolsCalling).toHaveLength(1);
+      expect(result.newState.pendingToolsCalling![0].function.name).toBe('danger_tool');
+
+      // Should have both tool_result and human_approve_required events
+      expect(result.events).toContainEqual(expect.objectContaining({ type: 'tool_result' }));
+      expect(result.events).toContainEqual(
+        expect.objectContaining({ type: 'human_approve_required' }),
+      );
+    });
+
+    it('should merge tool results correctly', async () => {
+      // Agent that returns batch with tools that modify usage/cost
+      class UsageTrackingAgent implements Agent {
+        tools = {
+          expensive_tool: vi.fn().mockResolvedValue({ cost: 10 }),
+          cheap_tool: vi.fn().mockResolvedValue({ cost: 1 }),
+        };
+
+        calculateUsage(
+          operationType: 'llm' | 'tool' | 'human_interaction',
+          operationResult: any,
+          previousUsage: Usage,
+        ): Usage {
+          if (operationType === 'tool') {
+            return {
+              ...previousUsage,
+              tools: {
+                ...previousUsage.tools,
+                totalCalls: previousUsage.tools.totalCalls + 1,
+                totalTimeMs: previousUsage.tools.totalTimeMs + 100,
+              },
+            };
+          }
+          return previousUsage;
+        }
+
+        async runner(context: AgentRuntimeContext, _state: AgentState) {
+          if (context.phase === 'user_input') {
+            return {
+              payload: [
+                {
+                  id: 'call_expensive',
+                  type: 'function' as const,
+                  function: { name: 'expensive_tool', arguments: '{}' },
+                },
+                {
+                  id: 'call_cheap',
+                  type: 'function' as const,
+                  function: { name: 'cheap_tool', arguments: '{}' },
+                },
+              ],
+              type: 'call_tools_batch' as const,
+            };
+          }
+          return { type: 'finish' as const, reason: 'completed' as const };
+        }
+      }
+
+      const agent = new UsageTrackingAgent();
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        sessionId: 'merge-test',
+        messages: [{ role: 'user', content: 'Execute' }],
+      });
+
+      const result = await runtime.step(state);
+
+      // Both tools should have been called
+      expect(agent.tools.expensive_tool).toHaveBeenCalled();
+      expect(agent.tools.cheap_tool).toHaveBeenCalled();
+
+      // Usage should be merged (2 tools called)
+      expect(result.newState.usage.tools.totalCalls).toBe(2);
+    });
+  });
+
+  describe('Edge Cases and Error Handling', () => {
+    it('should handle unknown instruction type', async () => {
+      const agent = new MockAgent();
+      agent.runner = vi.fn().mockResolvedValue({ type: 'unknown_instruction_type' as any });
+
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
+
+      const result = await runtime.step(state);
+
+      expect(result.events[0].type).toBe('error');
+      expect((result.events[0] as AgentEventError).error.message).toContain(
+        'No executor found for instruction type',
+      );
+    });
+
+    it('should handle LLM errors', async () => {
+      const agent = new MockAgent();
+      agent.modelRuntime = async function* () {
+        throw new Error('LLM API error');
+      };
+
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        messages: [{ role: 'user', content: 'test' }],
+        sessionId: 'test-session',
+      });
+
+      const result = await runtime.step(state);
+
+      expect(result.events[0].type).toBe('error');
+      expect((result.events[0] as AgentEventError).error.message).toBe('LLM API error');
+    });
+
+    it('should handle cost limit with warn action', async () => {
+      class WarnCostAgent implements Agent {
+        async runner(context: AgentRuntimeContext, state: AgentState) {
+          return { type: 'call_llm' as const, payload: { messages: state.messages } };
+        }
+
+        calculateCost(context: CostCalculationContext): Cost {
+          return {
+            calculatedAt: new Date().toISOString(),
+            currency: 'USD',
+            llm: { byModel: {}, currency: 'USD', total: 15.0 },
+            tools: { byTool: {}, currency: 'USD', total: 0 },
+            total: 15.0,
+          };
+        }
+
+        modelRuntime = async function* () {
+          yield { content: 'test' };
+        };
+      }
+
+      const agent = new WarnCostAgent();
+      const runtime = new AgentRuntime(agent);
+
+      const costLimit: CostLimit = {
+        currency: 'USD',
+        maxTotalCost: 10.0,
+        onExceeded: 'warn',
+      };
+
+      const state = AgentRuntime.createInitialState({
+        costLimit,
+        messages: [{ role: 'user', content: 'test' }],
+        sessionId: 'test-session',
+      });
+
+      const result = await runtime.step(state);
+
+      expect(result.events[0]).toMatchObject({
+        type: 'error',
+      });
+      expect((result.events[0] as AgentEventError).error.message).toContain(
+        'Warning: Cost limit exceeded',
+      );
+      expect(result.newState.status).toBe('running');
+    });
+
+    it('should track tool cost limits', async () => {
+      class ToolCostAgent implements Agent {
+        tools = {
+          expensive_tool: vi.fn().mockResolvedValue({ result: 'done' }),
+        };
+
+        async runner(context: AgentRuntimeContext, state: AgentState) {
+          if (context.phase === 'user_input') {
+            return {
+              payload: {
+                apiName: 'expensive_tool',
+                arguments: '{}',
+                id: 'call_1',
+                identifier: 'expensive_tool',
+                type: 'default' as const,
+              },
+              type: 'call_tool' as const,
+            };
+          }
+          return { reason: 'completed' as const, type: 'finish' as const };
+        }
+
+        calculateCost(context: CostCalculationContext): Cost {
+          return {
+            calculatedAt: new Date().toISOString(),
+            currency: 'USD',
+            llm: { byModel: {}, currency: 'USD', total: 0 },
+            tools: { byTool: {}, currency: 'USD', total: 20.0 },
+            total: 20.0,
+          };
+        }
+      }
+
+      const agent = new ToolCostAgent();
+      const runtime = new AgentRuntime(agent);
+
+      const costLimit: CostLimit = {
+        currency: 'USD',
+        maxTotalCost: 10.0,
+        onExceeded: 'stop',
+      };
+
+      const state = AgentRuntime.createInitialState({
+        costLimit,
+        messages: [{ role: 'user', content: 'test' }],
+        sessionId: 'test-session',
+      });
+
+      const result = await runtime.step(state);
+
+      expect(result.newState.status).toBe('done');
+      expect(result.events[0]).toMatchObject({
+        reason: 'cost_limit_exceeded',
+        type: 'done',
+      });
+    });
+
+    it('should merge cost statistics in batch tool execution', async () => {
+      class BatchCostAgent implements Agent {
+        tools = {
+          tool_1: vi.fn().mockResolvedValue({ result: 'result_1' }),
+          tool_2: vi.fn().mockResolvedValue({ result: 'result_2' }),
+        };
+
+        calculateCost(context: CostCalculationContext): Cost {
+          const baseCost = context.previousCost || {
+            calculatedAt: new Date().toISOString(),
+            currency: 'USD',
+            llm: { byModel: {}, currency: 'USD', total: 0 },
+            tools: { byTool: {}, currency: 'USD', total: 0 },
+            total: 0,
+          };
+
+          return {
+            ...baseCost,
+            calculatedAt: new Date().toISOString(),
+            tools: {
+              byTool: {},
+              currency: 'USD',
+              total: baseCost.tools.total + 5.0,
+            },
+            total: baseCost.total + 5.0,
+          };
+        }
+
+        async runner(context: AgentRuntimeContext, _state: AgentState) {
+          if (context.phase === 'user_input') {
+            return {
+              payload: [
+                {
+                  apiName: 'tool_1',
+                  arguments: '{}',
+                  id: 'call_1',
+                  identifier: 'tool_1',
+                  type: 'default' as const,
+                },
+                {
+                  apiName: 'tool_2',
+                  arguments: '{}',
+                  id: 'call_2',
+                  identifier: 'tool_2',
+                  type: 'default' as const,
+                },
+              ],
+              type: 'call_tools_batch' as const,
+            };
+          }
+          return { reason: 'completed' as const, type: 'finish' as const };
+        }
+      }
+
+      const agent = new BatchCostAgent();
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        messages: [{ role: 'user', content: 'Execute' }],
+        sessionId: 'cost-merge-test',
+      });
+
+      const result = await runtime.step(state);
+
+      // Cost should be merged from both tools
+      expect(result.newState.cost.tools.total).toBeGreaterThan(0);
+      expect(result.newState.cost.total).toBeGreaterThan(0);
+    });
+
+    it('should merge per-tool usage statistics in batch execution', async () => {
+      class DetailedUsageAgent implements Agent {
+        tools = {
+          analytics_tool: vi.fn().mockResolvedValue({ result: 'analytics_done' }),
+          logging_tool: vi.fn().mockResolvedValue({ result: 'logged' }),
+        };
+
+        calculateUsage(
+          operationType: 'llm' | 'tool' | 'human_interaction',
+          operationResult: any,
+          previousUsage: Usage,
+        ): Usage {
+          if (operationType === 'tool') {
+            const toolName = operationResult.toolCall.apiName;
+            const newUsage = structuredClone(previousUsage);
+
+            newUsage.tools.totalCalls += 1;
+            newUsage.tools.totalTimeMs += 100;
+
+            if (newUsage.tools.byTool[toolName]) {
+              newUsage.tools.byTool[toolName].calls += 1;
+              newUsage.tools.byTool[toolName].totalTimeMs += 100;
+            } else {
+              newUsage.tools.byTool[toolName] = {
+                calls: 1,
+                errors: 0,
+                totalTimeMs: 100,
+              };
+            }
+
+            return newUsage;
+          }
+          return previousUsage;
+        }
+
+        async runner(context: AgentRuntimeContext, _state: AgentState) {
+          if (context.phase === 'user_input') {
+            return {
+              payload: [
+                {
+                  apiName: 'analytics_tool',
+                  arguments: '{}',
+                  id: 'call_analytics',
+                  identifier: 'analytics_tool',
+                  type: 'default' as const,
+                },
+                {
+                  apiName: 'logging_tool',
+                  arguments: '{}',
+                  id: 'call_logging',
+                  identifier: 'logging_tool',
+                  type: 'default' as const,
+                },
+              ],
+              type: 'call_tools_batch' as const,
+            };
+          }
+          return { reason: 'completed' as const, type: 'finish' as const };
+        }
+      }
+
+      const agent = new DetailedUsageAgent();
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        messages: [{ role: 'user', content: 'Execute' }],
+        sessionId: 'usage-merge-test',
+      });
+
+      const result = await runtime.step(state);
+
+      // Should have per-tool statistics
+      expect(result.newState.usage.tools.totalCalls).toBe(2);
+      expect(result.newState.usage.tools.byTool.analytics_tool).toBeDefined();
+      expect(result.newState.usage.tools.byTool.analytics_tool.calls).toBe(1);
+      expect(result.newState.usage.tools.byTool.logging_tool).toBeDefined();
+      expect(result.newState.usage.tools.byTool.logging_tool.calls).toBe(1);
     });
   });
 });
