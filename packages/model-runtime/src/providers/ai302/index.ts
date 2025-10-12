@@ -32,7 +32,7 @@ export const Lobe302AI = createOpenAICompatibleRuntime({
     },
   },
   debug: {
-    chatCompletion: () => process.env.DEBUG_SILICONCLOUD_CHAT_COMPLETION === '1',
+    chatCompletion: () => process.env.DEBUG_AI302_CHAT_COMPLETION === '1',
   },
   errorType: {
     bizError: AgentRuntimeErrorType.ProviderBizError,
