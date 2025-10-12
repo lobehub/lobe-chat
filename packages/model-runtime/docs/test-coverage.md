@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Overall Coverage**: 84.49% (117 test files, 1684 tests)
+**Overall Coverage**: 85.74% (122 test files, 1899 tests)
 
 ## Coverage Status by Priority
 
@@ -20,14 +20,9 @@ current none
 | core/usageConverters/utils/computeChatCost.ts  | 79.78%   | Medium   | Add edge cases                |
 | core/ModelRuntime.ts                           | 75%      | Medium   | Add edge cases                |
 | **Providers**                                  |          |          |                               |
-| providers/vercelaigateway                      | 50%      | High     | Add custom tests              |
-| providers/github                               | 52.08%   | High     | Add custom tests              |
 | providers/search1api                           | 52.08%   | Medium   | Add custom tests              |
 | providers/openrouter                           | 52.83%   | Medium   | Add custom tests              |
 | providers/sensenova                            | 53.01%   | Medium   | Add custom tests              |
-| providers/cometapi                             | 55.26%   | High     | Add custom tests              |
-| providers/cerebras                             | 55.55%   | High     | Add models tests (refactored) |
-| providers/ollamacloud                          | 55.55%   | High     | Add models tests (refactored) |
 | providers/zhipu                                | 55.83%   | Medium   | Add custom tests              |
 | providers/ollama                               | 56.03%   | High     | Add custom tests              |
 | providers/ai360                                | 56.14%   | High     | Add models tests (refactored) |
@@ -49,10 +44,10 @@ current none
 
 ### ✅ Good - High Coverage (80%+)
 
-46 providers with 80%+ coverage, including:
+51 providers with 80%+ coverage, including:
 
-- **100% coverage**: internlm, hunyuan, huggingface, groq, modelscope, nebius, stepfun, lmstudio, newapi, fireworksai, jina, tencentcloud, togetherai, and 21 others
-- **90-99%**: vertexai, volcengine, siliconcloud, ppio, minimax, cloudflare, fal, anthropic
+- **100% coverage**: vercelaigateway, cometapi, cerebras, ollamacloud, internlm, hunyuan, huggingface, groq, modelscope, nebius, stepfun, lmstudio, newapi, fireworksai, jina, tencentcloud, togetherai, and 24 others
+- **90-99%**: github, vertexai, volcengine, siliconcloud, ppio, minimax, cloudflare, fal, anthropic
 - **80-89%**: ai302, qwen, google, azureOpenai, azureai, infiniai, aihubmix, bfl
 
 ## Testing Strategy
@@ -575,7 +570,21 @@ bunx eslint src/providers/{provider}/
 
 ### Recent Achievements ✅
 
-**Latest Session (2025-10-13)**: 🎉 All Critical providers completed!
+**Latest Session (2025-10-13 - Part 2)**: 🚀 5 High-Priority Providers Completed!
+
+- Overall coverage: 84.49% → 85.74% (+1.25%)
+- Refactored 5 high-priority providers:
+  - **vercelaigateway** (50% → 100%) - 43 tests, fixed verbosity bug
+  - **github** (52.08% → 97.95%) - 32 tests
+  - **cometapi** (55.26% → 100%) - 28 tests
+  - **cerebras** (55.55% → 100%) - 28 tests
+  - **ollamacloud** (55.55% → 100%) - 24 tests
+- Added 155 comprehensive tests
+- Fixed 1 bug: verbosity parameter initialization in vercelaigateway
+- All providers now export `params` for better testability
+- Used parallel subagent execution for faster development
+
+**Previous Session (2025-10-13 - Part 1)**: 🎉 All Critical providers completed!
 
 - Overall coverage: 82.9% → 84.49% (+1.59%)
 - **Eliminated all critical (<50% coverage) providers!**

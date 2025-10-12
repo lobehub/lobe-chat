@@ -1,9 +1,12 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
-export const LobeCerebrasAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.cerebras.ai/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -38,4 +41,6 @@ export const LobeCerebrasAI = createOpenAICompatibleRuntime({
     }
   },
   provider: ModelProvider.Cerebras,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeCerebrasAI = createOpenAICompatibleRuntime(params);
