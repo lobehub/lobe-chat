@@ -349,6 +349,49 @@ describe('TopicModel', () => {
     });
   });
 
+  describe('batchDeleteByGroupId', () => {
+    it('should delete all topics associated with a group', async () => {
+      await serverDB.insert(chatGroups).values([
+        { id: 'group1', userId, title: 'Group 1' },
+        { id: 'group2', userId, title: 'Group 2' },
+      ]);
+      await serverDB.insert(topics).values([
+        { id: 'topic1', groupId: 'group1', userId },
+        { id: 'topic2', groupId: 'group1', userId },
+        { id: 'topic3', groupId: 'group2', userId },
+        { id: 'topic4', userId },
+      ]);
+
+      // 调用 batchDeleteByGroupId 方法
+      await topicModel.batchDeleteByGroupId('group1');
+
+      // 断言属于 group1 的 topics 都被删除了
+      expect(
+        await serverDB.select().from(topics).where(eq(topics.groupId, 'group1')),
+      ).toHaveLength(0);
+      expect(await serverDB.select().from(topics)).toHaveLength(2);
+    });
+
+    it('should delete all topics associated without groupId', async () => {
+      await serverDB.insert(chatGroups).values([{ id: 'group1', userId, title: 'Group 1' }]);
+
+      await serverDB.insert(topics).values([
+        { id: 'topic1', groupId: 'group1', userId },
+        { id: 'topic2', groupId: 'group1', userId },
+        { id: 'topic4', userId },
+      ]);
+
+      // 调用 batchDeleteByGroupId 方法
+      await topicModel.batchDeleteByGroupId();
+
+      // 断言属于 group1 的 topics 都被删除了
+      expect(
+        await serverDB.select().from(topics).where(eq(topics.groupId, 'group1')),
+      ).toHaveLength(2);
+      expect(await serverDB.select().from(topics)).toHaveLength(2);
+    });
+  });
+
   describe('batchDelete', () => {
     it('should delete multiple topics and their associated messages', async () => {
       await serverDB.transaction(async (tx) => {

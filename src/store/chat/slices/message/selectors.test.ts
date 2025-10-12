@@ -444,4 +444,30 @@ describe('chatSelectors', () => {
       expect(chatSelectors.isToolCallStreaming('msg-1', 0)(state as ChatStore)).toBe(false);
     });
   });
+
+  describe('activeBaseChats with group chat messages', () => {
+    it('should retrieve agent meta for group chat messages with groupId and agentId', () => {
+      const groupChatMessages = [
+        {
+          id: 'msg1',
+          content: 'Hello from agent',
+          role: 'assistant',
+          groupId: 'group-123',
+          agentId: 'agent-456',
+        },
+      ] as ChatMessage[];
+
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('group-123')]: groupChatMessages,
+        },
+        activeId: 'group-123',
+      });
+
+      const chats = chatSelectors.activeBaseChats(state);
+      expect(chats).toHaveLength(1);
+      expect(chats[0].id).toBe('msg1');
+      expect(chats[0].meta).toBeDefined();
+    });
+  });
 });
