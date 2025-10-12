@@ -84,7 +84,6 @@
     "webhook:ngrok": "ngrok http http://localhost:3011",
     "workflow:cdn": "tsx ./scripts/cdnWorkflow/index.ts",
     "workflow:changelog": "tsx ./scripts/changelogWorkflow/index.ts",
-    "workflow:claude-tests": "tsx ./scripts/claudeTestsWorkflow/index.ts",
     "workflow:countCharters": "tsx scripts/countEnWord.ts",
     "workflow:dbml": "tsx ./scripts/dbmlWorkflow/index.ts",
     "workflow:docs": "tsx ./scripts/docsWorkflow/index.ts",
