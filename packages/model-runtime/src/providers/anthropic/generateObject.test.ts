@@ -12,7 +12,7 @@ describe('Anthropic generateObject', () => {
             content: [
               {
                 type: 'tool_use',
-                name: 'structured_output',
+                name: 'person_extractor',
                 input: { name: 'John', age: 30 },
               },
             ],
@@ -23,8 +23,13 @@ describe('Anthropic generateObject', () => {
       const payload = {
         messages: [{ content: 'Generate a person object', role: 'user' as const }],
         schema: {
-          type: 'object',
-          properties: { name: { type: 'string' }, age: { type: 'number' } },
+          name: 'person_extractor',
+          description: 'Extract person information',
+          schema: {
+            type: 'object' as const,
+            properties: { name: { type: 'string' }, age: { type: 'number' } },
+            required: ['name', 'age'],
+          },
         },
         model: 'claude-3-5-sonnet-20241022',
       };
@@ -35,30 +40,24 @@ describe('Anthropic generateObject', () => {
         expect.objectContaining({
           model: 'claude-3-5-sonnet-20241022',
           max_tokens: 8192,
-          messages: [
-            { content: 'Generate a person object', role: 'user' },
-            {
-              content:
-                'Please use the structured_output tool to provide your response in the required format.',
-              role: 'user',
-            },
-          ],
+          messages: [{ content: 'Generate a person object', role: 'user' }],
           tools: [
             {
-              name: 'structured_output',
-              description: 'Generate structured output according to the provided schema',
+              name: 'person_extractor',
+              description: 'Extract person information',
               input_schema: {
                 type: 'object',
                 properties: {
                   name: { type: 'string' },
                   age: { type: 'number' },
                 },
+                required: ['name', 'age'],
               },
             },
           ],
           tool_choice: {
             type: 'tool',
-            name: 'structured_output',
+            name: 'person_extractor',
           },
         }),
         expect.objectContaining({}),
@@ -74,7 +73,7 @@ describe('Anthropic generateObject', () => {
             content: [
               {
                 type: 'tool_use',
-                name: 'structured_output',
+                name: 'status_extractor',
                 input: { status: 'success' },
               },
             ],
@@ -87,7 +86,10 @@ describe('Anthropic generateObject', () => {
           { content: 'You are a helpful assistant', role: 'system' as const },
           { content: 'Generate status', role: 'user' as const },
         ],
-        schema: { type: 'object', properties: { status: { type: 'string' } } },
+        schema: {
+          name: 'status_extractor',
+          schema: { type: 'object' as const, properties: { status: { type: 'string' } } },
+        },
         model: 'claude-3-5-sonnet-20241022',
       };
 
@@ -111,7 +113,7 @@ describe('Anthropic generateObject', () => {
             content: [
               {
                 type: 'tool_use',
-                name: 'structured_output',
+                name: 'data_extractor',
                 input: { data: 'test' },
               },
             ],
@@ -121,7 +123,10 @@ describe('Anthropic generateObject', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: { type: 'object', properties: { data: { type: 'string' } } },
+        schema: {
+          name: 'data_extractor',
+          schema: { type: 'object' as const, properties: { data: { type: 'string' } } },
+        },
         model: 'claude-3-5-sonnet-20241022',
       };
 
@@ -155,20 +160,18 @@ describe('Anthropic generateObject', () => {
         },
       };
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: { type: 'object' },
+        schema: {
+          name: 'test_tool',
+          schema: { type: 'object' },
+        },
         model: 'claude-3-5-sonnet-20241022',
       };
 
-      const result = await createAnthropicGenerateObject(mockClient as any, payload);
+      const result = await createAnthropicGenerateObject(mockClient as any, payload as any);
 
-      expect(consoleSpy).toHaveBeenCalledWith('No structured output tool use found in response');
       expect(result).toBeUndefined();
-
-      consoleSpy.mockRestore();
     });
 
     it('should handle complex nested schemas', async () => {
@@ -178,7 +181,7 @@ describe('Anthropic generateObject', () => {
             content: [
               {
                 type: 'tool_use',
-                name: 'structured_output',
+                name: 'user_extractor',
                 input: {
                   user: {
                     name: 'Alice',
@@ -200,22 +203,26 @@ describe('Anthropic generateObject', () => {
       const payload = {
         messages: [{ content: 'Generate complex user data', role: 'user' as const }],
         schema: {
-          type: 'object',
-          properties: {
-            user: {
-              type: 'object',
-              properties: {
-                name: { type: 'string' },
-                profile: {
-                  type: 'object',
-                  properties: {
-                    age: { type: 'number' },
-                    preferences: { type: 'array', items: { type: 'string' } },
+          name: 'user_extractor',
+          description: 'Extract complex user information',
+          schema: {
+            type: 'object' as const,
+            properties: {
+              user: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  profile: {
+                    type: 'object',
+                    properties: {
+                      age: { type: 'number' },
+                      preferences: { type: 'array', items: { type: 'string' } },
+                    },
                   },
                 },
               },
+              metadata: { type: 'object' },
             },
-            metadata: { type: 'object' },
           },
         },
         model: 'claude-3-5-sonnet-20241022',
@@ -248,13 +255,16 @@ describe('Anthropic generateObject', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: { type: 'object' },
+        schema: {
+          name: 'test_tool',
+          schema: { type: 'object' },
+        },
         model: 'claude-3-5-sonnet-20241022',
       };
 
-      await expect(createAnthropicGenerateObject(mockClient as any, payload)).rejects.toThrow(
-        'API Error: Model not found',
-      );
+      await expect(
+        createAnthropicGenerateObject(mockClient as any, payload as any),
+      ).rejects.toThrow('API Error: Model not found');
     });
 
     it('should handle abort signals correctly', async () => {
@@ -269,7 +279,10 @@ describe('Anthropic generateObject', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: { type: 'object' },
+        schema: {
+          name: 'test_tool',
+          schema: { type: 'object' },
+        },
         model: 'claude-3-5-sonnet-20241022',
       };
 
@@ -278,7 +291,7 @@ describe('Anthropic generateObject', () => {
       };
 
       await expect(
-        createAnthropicGenerateObject(mockClient as any, payload, options),
+        createAnthropicGenerateObject(mockClient as any, payload as any, options),
       ).rejects.toThrow();
     });
   });

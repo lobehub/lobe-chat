@@ -649,7 +649,6 @@ describe('LobeOpenAICompatibleFactory', () => {
       it('should return bizErrorType with the cause when OpenAI.APIError is thrown with cause', async () => {
         // Arrange
         const errorInfo = {
-          stack: 'abc',
           cause: {
             message: 'api is undefined',
           },
@@ -670,7 +669,6 @@ describe('LobeOpenAICompatibleFactory', () => {
             endpoint: defaultBaseURL,
             error: {
               cause: { message: 'api is undefined' },
-              stack: 'abc',
             },
             errorType: bizErrorType,
             provider,
@@ -681,7 +679,6 @@ describe('LobeOpenAICompatibleFactory', () => {
       it('should return bizErrorType with an cause response with desensitize Url', async () => {
         // Arrange
         const errorInfo = {
-          stack: 'abc',
           cause: { message: 'api is undefined' },
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
@@ -706,7 +703,6 @@ describe('LobeOpenAICompatibleFactory', () => {
             endpoint: 'https://api.***.com/v1',
             error: {
               cause: { message: 'api is undefined' },
-              stack: 'abc',
             },
             errorType: bizErrorType,
             provider,
@@ -780,7 +776,6 @@ describe('LobeOpenAICompatibleFactory', () => {
               name: genericError.name,
               cause: genericError.cause,
               message: genericError.message,
-              stack: genericError.stack,
             },
           });
         }
@@ -1444,8 +1439,13 @@ describe('LobeOpenAICompatibleFactory', () => {
       const payload = {
         messages: [{ content: 'Generate a person object', role: 'user' as const }],
         schema: {
-          type: 'object',
-          properties: { name: { type: 'string' }, age: { type: 'number' } },
+          name: 'person_extractor',
+          description: 'Extract person information',
+          schema: {
+            type: 'object' as const,
+            properties: { name: { type: 'string' }, age: { type: 'number' } },
+          },
+          strict: true,
         },
         model: 'gpt-4o',
         responseApi: true,
@@ -1476,7 +1476,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate status', role: 'user' as const }],
-        schema: { type: 'object', properties: { status: { type: 'string' } } },
+        schema: {
+          name: 'status_extractor',
+          schema: { type: 'object' as const, properties: { status: { type: 'string' } } },
+        },
         model: 'gpt-4o',
         responseApi: true,
       };
@@ -1513,7 +1516,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: { type: 'object' },
+        schema: {
+          name: 'test_tool',
+          schema: { type: 'object' as const, properties: {} },
+        },
         model: 'gpt-4o',
         responseApi: true,
       };
@@ -1536,7 +1542,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: { type: 'object' },
+        schema: {
+          name: 'test_tool',
+          schema: { type: 'object' as const, properties: {} },
+        },
         model: 'gpt-4o',
         responseApi: true,
       };
@@ -1560,22 +1569,25 @@ describe('LobeOpenAICompatibleFactory', () => {
       const payload = {
         messages: [{ content: 'Generate complex user data', role: 'user' as const }],
         schema: {
-          type: 'object',
-          properties: {
-            user: {
-              type: 'object',
-              properties: {
-                name: { type: 'string' },
-                profile: {
-                  type: 'object',
-                  properties: {
-                    age: { type: 'number' },
-                    preferences: { type: 'array', items: { type: 'string' } },
+          name: 'user_extractor',
+          schema: {
+            type: 'object' as const,
+            properties: {
+              user: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  profile: {
+                    type: 'object',
+                    properties: {
+                      age: { type: 'number' },
+                      preferences: { type: 'array', items: { type: 'string' } },
+                    },
                   },
                 },
               },
+              metadata: { type: 'object' },
             },
-            metadata: { type: 'object' },
           },
         },
         model: 'gpt-4o',
@@ -1605,7 +1617,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: { type: 'object' },
+        schema: {
+          name: 'test_tool',
+          schema: { type: 'object' as const, properties: {} },
+        },
         model: 'gpt-4o',
         responseApi: true,
       };
@@ -1634,8 +1649,11 @@ describe('LobeOpenAICompatibleFactory', () => {
         const payload = {
           messages: [{ content: 'Generate a person object', role: 'user' as const }],
           schema: {
-            type: 'object',
-            properties: { name: { type: 'string' }, age: { type: 'number' } },
+            name: 'person_extractor',
+            schema: {
+              type: 'object' as const,
+              properties: { name: { type: 'string' }, age: { type: 'number' } },
+            },
           },
           model: 'gpt-4o',
           // responseApi: false or undefined - uses chat completions API
@@ -1673,7 +1691,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate status', role: 'user' as const }],
-          schema: { type: 'object', properties: { status: { type: 'string' } } },
+          schema: {
+            name: 'status_extractor',
+            schema: { type: 'object' as const, properties: { status: { type: 'string' } } },
+          },
           model: 'gpt-4o',
           responseApi: false,
         };
@@ -1717,7 +1738,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
-          schema: { type: 'object' },
+          schema: {
+            name: 'test_tool',
+            schema: { type: 'object' as const, properties: {} },
+          },
           model: 'gpt-4o',
           responseApi: false,
         };
@@ -1748,7 +1772,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
-          schema: { type: 'object' },
+          schema: {
+            name: 'test_tool',
+            schema: { type: 'object' as const, properties: {} },
+          },
           model: 'gpt-4o',
           responseApi: false,
         };
@@ -1780,19 +1807,22 @@ describe('LobeOpenAICompatibleFactory', () => {
         const payload = {
           messages: [{ content: 'Generate items list', role: 'user' as const }],
           schema: {
-            type: 'object',
-            properties: {
-              items: {
-                type: 'array',
+            name: 'abc',
+            schema: {
+              type: 'object' as const,
+              properties: {
                 items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number' },
-                    name: { type: 'string' },
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number' },
+                      name: { type: 'string' },
+                    },
                   },
                 },
+                total: { type: 'number' },
               },
-              total: { type: 'number' },
             },
           },
           model: 'gpt-4o',
@@ -1816,7 +1846,7 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
-          schema: { type: 'object' },
+          schema: { name: 'abc', schema: { type: 'object' } as any },
           model: 'gpt-4o',
           responseApi: false,
         };

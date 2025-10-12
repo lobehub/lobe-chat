@@ -160,7 +160,6 @@ export const testProvider = ({
             cause: {
               message: 'api is undefined',
             },
-            stack: 'abc',
           };
           const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
@@ -178,7 +177,6 @@ export const testProvider = ({
               endpoint: defaultBaseURL,
               error: {
                 cause: { message: 'api is undefined' },
-                stack: 'abc',
               },
               errorType: bizErrorType,
               provider,
@@ -190,7 +188,6 @@ export const testProvider = ({
           // Arrange
           const errorInfo = {
             cause: { message: 'api is undefined' },
-            stack: 'abc',
           };
           const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
@@ -214,7 +211,6 @@ export const testProvider = ({
               endpoint: 'https://api.***.com/v1',
               error: {
                 cause: { message: 'api is undefined' },
-                stack: 'abc',
               },
               errorType: bizErrorType,
               provider,
@@ -265,7 +261,6 @@ export const testProvider = ({
                 cause: genericError.cause,
                 message: genericError.message,
                 name: genericError.name,
-                stack: genericError.stack,
               },
               errorType: 'AgentRuntimeError',
               provider,

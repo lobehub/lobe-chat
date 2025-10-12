@@ -101,7 +101,6 @@ describe('LobeOpenAI', () => {
       it('should return ProviderBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
         // Arrange
         const errorInfo = {
-          stack: 'abc',
           cause: {
             message: 'api is undefined',
           },
@@ -122,7 +121,6 @@ describe('LobeOpenAI', () => {
             endpoint: 'https://api.openai.com/v1',
             error: {
               cause: { message: 'api is undefined' },
-              stack: 'abc',
             },
             errorType: 'ProviderBizError',
             provider: 'openai',
@@ -133,7 +131,6 @@ describe('LobeOpenAI', () => {
       it('should return ProviderBizError with an cause response with desensitize Url', async () => {
         // Arrange
         const errorInfo = {
-          stack: 'abc',
           cause: { message: 'api is undefined' },
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
@@ -158,7 +155,6 @@ describe('LobeOpenAI', () => {
             endpoint: 'https://api.***.com/v1',
             error: {
               cause: { message: 'api is undefined' },
-              stack: 'abc',
             },
             errorType: 'ProviderBizError',
             provider: 'openai',
@@ -188,7 +184,6 @@ describe('LobeOpenAI', () => {
               name: genericError.name,
               cause: genericError.cause,
               message: genericError.message,
-              stack: genericError.stack,
             },
           });
         }
