@@ -142,7 +142,8 @@ ENV ACCESS_CODE="" \
     DEFAULT_AGENT_CONFIG="" \
     SYSTEM_AGENT="" \
     FEATURE_FLAGS="" \
-    PROXY_URL=""
+    PROXY_URL="" \
+    ENABLE_AUTH_PROTECTION=""
 
 # Model Variables
 ENV \
