@@ -4,11 +4,23 @@ interface GenerateObjectMessage {
   role: 'user' | 'system' | 'assistant';
 }
 
+interface GenerateObjectSchema {
+  description?: string;
+  name: string;
+  schema: {
+    additionalProperties?: boolean;
+    properties: Record<string, any>;
+    required?: string[];
+    type: 'object';
+  };
+  strict?: boolean;
+}
+
 export interface GenerateObjectPayload {
   messages: GenerateObjectMessage[];
   model: string;
   responseApi?: boolean;
-  schema: any;
+  schema: GenerateObjectSchema;
 }
 
 export interface GenerateObjectOptions {

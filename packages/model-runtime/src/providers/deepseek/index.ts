@@ -12,6 +12,11 @@ export const LobeDeepSeekAI = createOpenAICompatibleRuntime({
   debug: {
     chatCompletion: () => process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION === '1',
   },
+  // Deepseek don't support json format well
+  // use Tools calling to simulate
+  generateObject: {
+    useToolsCalling: true,
+  },
   models: async ({ client }) => {
     const modelsPage = (await client.models.list()) as any;
     const modelList: DeepSeekModelCard[] = modelsPage.data;
