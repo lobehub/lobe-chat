@@ -1,6 +1,7 @@
 import { ModelProvider } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { OpenAIStream } from '../../core/streams/openai';
 import { convertIterableToStream } from '../../core/streams/protocol';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
@@ -33,30 +34,32 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
           ]
         : tools;
 
+      // Resolve parameters based on model-specific constraints
+      const resolvedParams = resolveParameters(
+        { max_tokens, temperature, top_p },
+        {
+          // max_tokens constraints
+          maxTokensRange: model.includes('glm-4v')
+            ? { max: 1024 }
+            : model === 'glm-zero-preview'
+              ? { max: 15_300 }
+              : undefined,
+          normalizeTemperature: true,
+          // glm-4-alltools has stricter temperature and top_p constraints
+          ...(model === 'glm-4-alltools' && {
+            temperatureRange: { max: 0.99, min: 0.01 },
+            topPRange: { max: 0.99, min: 0.01 },
+          }),
+        },
+      );
+
       return {
         ...rest,
-        max_tokens:
-          max_tokens === undefined
-            ? undefined
-            : (model.includes('glm-4v') && Math.min(max_tokens, 1024)) ||
-              (model === 'glm-zero-preview' && Math.min(max_tokens, 15_300)) ||
-              max_tokens,
+        ...resolvedParams,
         model,
         stream: true,
         thinking: model.includes('-4.5') ? { type: thinking?.type } : undefined,
         tools: zhipuTools,
-        ...(model === 'glm-4-alltools'
-          ? {
-              temperature:
-                temperature !== undefined
-                  ? Math.max(0.01, Math.min(0.99, temperature / 2))
-                  : undefined,
-              top_p: top_p !== undefined ? Math.max(0.01, Math.min(0.99, top_p)) : undefined,
-            }
-          : {
-              temperature: temperature !== undefined ? temperature / 2 : undefined,
-              top_p,
-            }),
       } as any;
     },
     handleStream: (stream, { callbacks, inputStartAt }) => {

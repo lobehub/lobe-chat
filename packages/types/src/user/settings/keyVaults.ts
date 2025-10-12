@@ -48,6 +48,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   bfl?: any;
+  cerebras?: OpenAICompatibleKeyVault;
   cloudflare?: CloudflareKeyVault;
   cohere?: OpenAICompatibleKeyVault;
   cometapi?: OpenAICompatibleKeyVault;

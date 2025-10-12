@@ -160,7 +160,10 @@ export const createAiProviderSlice: StateCreator<
     await get().refreshAiProviderRuntimeState();
   },
   refreshAiProviderRuntimeState: async () => {
-    await mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, true]);
+    await Promise.all([
+      mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, true]),
+      mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, false]),
+    ]);
   },
   removeAiProvider: async (id) => {
     await aiProviderService.deleteAiProvider(id);

@@ -294,6 +294,21 @@
           "title": "Fenêtre de contexte maximale",
           "unlimited": "Illimité"
         },
+        "type": {
+          "extra": "Différents types de modèles possèdent des scénarios d'utilisation et des capacités distincts",
+          "options": {
+            "chat": "Conversation",
+            "embedding": "Vectorisation",
+            "image": "Génération d'images",
+            "realtime": "Dialogue en temps réel",
+            "stt": "Reconnaissance vocale",
+            "text2music": "Texte en musique",
+            "text2video": "Texte en vidéo",
+            "tts": "Synthèse vocale"
+          },
+          "placeholder": "Veuillez sélectionner un type de modèle",
+          "title": "Type de modèle"
+        },
         "vision": {
           "extra": "Cette configuration n'activera que la configuration de téléchargement d'images dans l'application, la prise en charge de la reconnaissance dépend entièrement du modèle lui-même, veuillez tester la disponibilité des capacités de reconnaissance visuelle de ce modèle.",
           "title": "Reconnaissance visuelle prise en charge"

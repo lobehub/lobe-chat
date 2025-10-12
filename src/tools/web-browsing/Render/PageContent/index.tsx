@@ -1,7 +1,9 @@
 import { CrawlErrorResult } from '@lobechat/web-crawler';
+import { ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { CrawlPluginState } from '@/types/tool/crawler';
 
 import Loading from './Loading';
@@ -14,18 +16,25 @@ interface PagesContentProps {
 }
 
 const PagesContent = memo<PagesContentProps>(({ results, messageId, urls }) => {
+  const isMobile = useIsMobile();
+
   if (!results || results.length === 0) {
     return (
-      <Flexbox gap={12} horizontal>
-        {urls && urls.length > 0 && urls.map((url, index) => (
-          <Loading key={`${url}_${index}`} url={url} />
-        ))}
+      <Flexbox gap={isMobile ? 4 : 12} horizontal={!isMobile}>
+        {urls &&
+          urls.length > 0 &&
+          urls.map((url, index) => <Loading key={`${url}_${index}`} url={url} />)}
       </Flexbox>
     );
   }
 
   return (
-    <Flexbox gap={12} horizontal>
+    <ScrollShadow
+      gap={isMobile ? 4 : 12}
+      horizontal={!isMobile}
+      orientation={'horizontal'}
+      size={8}
+    >
       {results.map((result) => (
         <Result
           crawler={result.crawler}
@@ -44,7 +53,7 @@ const PagesContent = memo<PagesContentProps>(({ results, messageId, urls }) => {
           }
         />
       ))}
-    </Flexbox>
+    </ScrollShadow>
   );
 });
 

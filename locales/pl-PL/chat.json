@@ -3,8 +3,8 @@
     "title": "Przełącz model"
   },
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
-  "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
-  "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. Zacznijmy rozmowę!",
+  "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
+  "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
   "agents": "Asystent",
   "artifact": {
     "generating": "Generowanie",

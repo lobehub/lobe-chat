@@ -29,7 +29,7 @@ export const LobeSearch1API = createOpenAICompatibleRuntime({
         ...res,
         ...param,
         stream,
-        temperature: temperature >= 2 ? undefined : temperature,
+        temperature: temperature !== undefined && temperature >= 2 ? undefined : temperature,
       } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
   },

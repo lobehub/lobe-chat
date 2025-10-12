@@ -1,13 +1,11 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { Globe, Laptop } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Loader from '@/components/CircleLoader';
-import PluginAvatar from '@/features/PluginAvatar';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
@@ -45,14 +43,7 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
 
-  const isLoading = useChatStore((s) => {
-    const toolMessageId = chatSelectors.getMessageByToolCallId(toolCallId)(s)?.id;
-    const isToolCallStreaming = chatSelectors.isToolCallStreaming(messageId, index)(s);
-    const isPluginApiInvoking = !toolMessageId
-      ? true
-      : chatSelectors.isPluginApiInvoking(toolMessageId)(s);
-    return isToolCallStreaming || isPluginApiInvoking;
-  });
+  const isLoading = useChatStore(chatSelectors.isToolApiNameShining(messageId, index, toolCallId));
 
   const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
@@ -60,13 +51,13 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
     () => [
       {
         apiName: t(`search.apiName.${apiName}`, apiName),
-        icon: <Icon icon={Globe} size={13} />,
+        // icon: <Icon icon={Globe} size={13} />,
         id: WebBrowsingManifest.identifier,
         title: t('search.title'),
       },
       {
         apiName: t(`localSystem.apiName.${apiName}`, apiName),
-        icon: <Icon icon={Laptop} size={13} />,
+        // icon: <Icon icon={Laptop} size={13} />,
         id: LocalSystemManifest.identifier,
         title: t('localSystem.title'),
       },
@@ -92,8 +83,8 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
 
   return (
     <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={6} horizontal>
-      {isLoading ? <Loader /> : <PluginAvatar identifier={identifier} size={18} />}
-      <div>{pluginTitle}</div>/<span className={styles.apiName}>{apiName}</span>
+      <div>{pluginTitle}</div> <Icon icon={ChevronRight} />
+      <span className={styles.apiName}>{apiName}</span>
     </Flexbox>
   );
 });

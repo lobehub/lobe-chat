@@ -2,31 +2,39 @@ import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { ChatStreamPayload } from '../../types';
 
 export const LobePerplexityAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.perplexity.ai',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
-      // Set a default frequency penalty value greater than 0
       const { presence_penalty, frequency_penalty, stream = true, temperature, ...res } = payload;
 
-      let param;
+      // Resolve parameters with constraints
+      const resolvedParams = resolveParameters(
+        {
+          frequency_penalty: presence_penalty !== 0 ? undefined : frequency_penalty || 1,
+          presence_penalty: presence_penalty !== 0 ? presence_penalty : undefined,
+          temperature,
+        },
+        {
+          normalizeTemperature: false,
+        },
+      );
 
-      // Ensure we are only have one frequency_penalty or frequency_penalty
-      if (presence_penalty !== 0) {
-        param = { presence_penalty };
-      } else {
-        const defaultFrequencyPenalty = 1;
-
-        param = { frequency_penalty: frequency_penalty || defaultFrequencyPenalty };
-      }
+      // Perplexity doesn't support temperature >= 2
+      const finalTemperature =
+        resolvedParams.temperature !== undefined && resolvedParams.temperature >= 2
+          ? undefined
+          : resolvedParams.temperature;
 
       return {
         ...res,
-        ...param,
+        frequency_penalty: resolvedParams.frequency_penalty,
+        presence_penalty: resolvedParams.presence_penalty,
         stream,
-        temperature: temperature >= 2 ? undefined : temperature,
+        temperature: finalTemperature,
       } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
   },

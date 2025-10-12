@@ -29,16 +29,11 @@ alwaysApply: false
 
 ## Code Structure and Readability
 
-- Refactor repeated logic into reusable functions.
 - Prefer object destructuring when accessing and using properties.
 - Use consistent, descriptive naming; avoid obscure abbreviations.
 - Use semantically meaningful variable, function, and class names.
 - Replace magic numbers or strings with well-named constants.
-- Keep meaningful code comments; do not remove them when applying edits. Update comments when behavior changes.
-- Ensure JSDoc comments accurately reflect the implementation.
-- Look for opportunities to simplify or modernize code with the latest JavaScript/TypeScript features where it improves clarity.
 - Defer formatting to tooling; ignore purely formatting-only issues and autofixable lint problems.
-- Respect project Prettier settings.
 
 ## UI and Theming
 
@@ -50,15 +45,14 @@ alwaysApply: false
 ## Performance
 
 - Prefer `for…of` loops to index-based `for` loops when feasible.
-- Decide whether callbacks should be debounced or throttled based on UX and performance needs.
-- Reuse existing npm packages rather than reinventing the wheel (e.g., `lodash-es/omit`).
+- Reuse existing utils inside `packages/utils` or installed npm packages rather than reinventing the wheel.
 - Query only the required columns from a database rather than selecting entire rows.
 
 ## Time and Consistency
 
 - Instead of calling `Date.now()` multiple times, assign it to a constant once and reuse it to ensure consistency and improve readability.
 
-## Some logging rules
+## Logging
 
 - Never log user private information like api key, etc
 - Don't use `import { log } from 'debug'` to log messages, because it will directly log the message to the console.

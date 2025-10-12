@@ -5,6 +5,8 @@ export * from './desktop';
 export * from './guide';
 export * from './layoutTokens';
 export * from './message';
+export * from './meta';
+export * from './plugin';
 export * from './session';
 export * from './settings';
 export * from './trace';

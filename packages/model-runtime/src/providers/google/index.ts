@@ -45,6 +45,7 @@ const modelsWithModalities = new Set([
   'gemini-2.0-flash-exp-image-generation',
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
+  'gemini-2.5-flash-image',
 ]);
 
 const modelsDisableInstuction = new Set([
@@ -52,6 +53,7 @@ const modelsDisableInstuction = new Set([
   'gemini-2.0-flash-exp-image-generation',
   'gemini-2.0-flash-preview-image-generation',
   'gemini-2.5-flash-image-preview',
+  'gemini-2.5-flash-image',
   'gemma-3-1b-it',
   'gemma-3-4b-it',
   'gemma-3-12b-it',
@@ -75,9 +77,10 @@ const getThinkingModelCategory = (model?: string): ThinkingModelCategory => {
   const normalized = model.toLowerCase();
 
   if (normalized.includes('robotics-er-1.5-preview')) return 'robotics';
-  if (normalized.includes('-2.5-flash-lite')) return 'flashLite';
-  if (normalized.includes('-2.5-flash')) return 'flash';
-  if (normalized.includes('-2.5-pro')) return 'pro';
+  if (normalized.includes('-2.5-flash-lite') || normalized.includes('flash-lite-latest'))
+    return 'flashLite';
+  if (normalized.includes('-2.5-flash') || normalized.includes('flash-latest')) return 'flash';
+  if (normalized.includes('-2.5-pro') || normalized.includes('pro-latest')) return 'pro';
 
   return 'other';
 };
@@ -468,7 +471,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const { MODEL_LIST_CONFIGS, processModelList } = await import('../../utils/modelParse');
 
-      return processModelList(processedModels, MODEL_LIST_CONFIGS.google);
+      return processModelList(processedModels, MODEL_LIST_CONFIGS.google, 'google');
     } catch (error) {
       log('Failed to fetch Google models: %O', error);
       throw error;

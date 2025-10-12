@@ -3,22 +3,9 @@ import createDebug from 'debug';
 
 import { appEnv } from '@/envs/app';
 
-const debug = createDebug('lobe-server:edge-config');
+import { EdgeConfigData, EdgeConfigKeys } from './types';
 
-const EdgeConfigKeys = {
-  /**
-   * Assistant whitelist
-   */
-  AssistantBlacklist: 'assistant_blacklist',
-  /**
-   * Assistant whitelist
-   */
-  AssistantWhitelist: 'assistant_whitelist',
-  /**
-   * Feature flags configuration
-   */
-  FeatureFlags: 'feature_flags',
-};
+const debug = createDebug('lobe-server:edge-config');
 
 export class EdgeConfig {
   get client(): EdgeConfigClient {
@@ -38,29 +25,24 @@ export class EdgeConfig {
     return isEnabled;
   }
 
+  private async getValue<K extends EdgeConfigKeys>(key: K) {
+    return this.client.get<EdgeConfigData[K]>(key);
+  }
+
+  private async getValues<const K extends EdgeConfigKeys>(keys: K[]) {
+    return this.client.getAll<Pick<EdgeConfigData, K>>(keys);
+  }
+
   getAgentRestrictions = async () => {
-    const { assistant_blacklist: blacklist, assistant_whitelist: whitelist } =
-      await this.client.getAll([
-        EdgeConfigKeys.AssistantWhitelist,
-        EdgeConfigKeys.AssistantBlacklist,
-      ]);
-
-    return { blacklist, whitelist } as {
-      blacklist: string[] | undefined;
-      whitelist: string[] | undefined;
-    };
-  };
-
-  getFlagByKey = async (key: string) => {
-    const value = await this.client.get(key);
-    return value;
+    const { assistant_blacklist: blacklist, assistant_whitelist: whitelist } = await this.getValues(
+      ['assistant_blacklist', 'assistant_whitelist'],
+    );
+    return { blacklist, whitelist };
   };
 
   getFeatureFlags = async () => {
-    const featureFlags = await this.client.get(EdgeConfigKeys.FeatureFlags);
+    const featureFlags = await this.getValue('feature_flags');
     debug('Feature flags retrieved: %O', featureFlags);
-    return featureFlags as Record<string, boolean | string[]> | undefined;
+    return featureFlags;
   };
 }
-
-export { EdgeConfigKeys };

@@ -3,8 +3,8 @@
     "title": "Модел"
   },
   "agentDefaultMessage": "Здравейте, аз съм **{{name}}**, можете да започнете разговор с мен веднага или да отидете на [Настройки на асистента]({{url}}), за да попълните информацията ми.",
-  "agentDefaultMessageWithSystemRole": "Здравей, аз съм **{{name}}**, {{systemRole}}. Нека започнем да чатим!",
-  "agentDefaultMessageWithoutEdit": "Здравей, аз съм **{{name}}** и нека започнем разговора!",
+  "agentDefaultMessageWithSystemRole": "Здравейте, аз съм **{{name}}**. Как мога да ви помогна?",
+  "agentDefaultMessageWithoutEdit": "Здравейте, аз съм **{{name}}**. Как мога да ви помогна?",
   "agents": "Асистент",
   "artifact": {
     "generating": "Генериране",

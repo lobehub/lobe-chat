@@ -47,6 +47,10 @@ export interface ModelAbilities {
    */
   search?: boolean;
   /**
+   * whether model supports structured output
+   */
+  structuredOutput?: boolean;
+  /**
    * whether model supports video
    */
   video?: boolean;
@@ -59,8 +63,10 @@ export interface ModelAbilities {
 const AiModelAbilitiesSchema = z.object({
   // files: z.boolean().optional(),
   functionCall: z.boolean().optional(),
+  imageOutput: z.boolean().optional(),
   reasoning: z.boolean().optional(),
   search: z.boolean().optional(),
+  video: z.boolean().optional(),
   vision: z.boolean().optional(),
 });
 
@@ -327,6 +333,7 @@ export const CreateAiModelSchema = z.object({
   id: z.string(),
   providerId: z.string(),
   releasedAt: z.string().optional(),
+  type: AiModelTypeSchema.optional(),
 
   // checkModel: z.string().optional(),
   // homeUrl: z.string().optional(),
@@ -362,6 +369,7 @@ export const UpdateAiModelSchema = z.object({
     .optional(),
   contextWindowTokens: z.number().nullable().optional(),
   displayName: z.string().nullable().optional(),
+  type: AiModelTypeSchema.optional(),
 });
 
 export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
@@ -369,6 +377,7 @@ export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
 export interface AiModelSortMap {
   id: string;
   sort: number;
+  type?: AiModelType;
 }
 
 export const ToggleAiModelEnableSchema = z.object({

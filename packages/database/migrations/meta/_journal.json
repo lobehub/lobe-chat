@@ -252,6 +252,20 @@
       "when": 1759116400580,
       "tag": "0035_add_virtual",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1759666151079,
+      "tag": "0036_add_group_messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1760086906862,
+      "tag": "0037_add_user_memory",
+      "breakpoints": true
     }
   ],
   "version": "6"

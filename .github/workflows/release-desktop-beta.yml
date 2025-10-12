@@ -32,7 +32,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -82,7 +82,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-13, windows-2025, ubuntu-latest]
+        os: [macos-latest, macos-15-intel, windows-2025, ubuntu-latest]
     steps:
       - uses: actions/checkout@v5
         with:
@@ -116,9 +116,9 @@ jobs:
         run: npm run desktop:build
         env:
           APP_URL: http://localhost:3015
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          DATABASE_URL: "postgresql://postgres@localhost:5432/postgres"
           # 默认添加一个加密 SECRET
-          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          KEY_VAULTS_SECRET: "oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE="
           # macOS 签名和公证配置
           CSC_LINK: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
           CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
@@ -137,8 +137,8 @@ jobs:
         run: npm run desktop:build
         env:
           APP_URL: http://localhost:3015
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
-          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          DATABASE_URL: "postgresql://postgres@localhost:5432/postgres"
+          KEY_VAULTS_SECRET: "oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE="
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
@@ -152,8 +152,8 @@ jobs:
         run: npm run desktop:build
         env:
           APP_URL: http://localhost:3015
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
-          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          DATABASE_URL: "postgresql://postgres@localhost:5432/postgres"
+          KEY_VAULTS_SECRET: "oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE="
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
@@ -170,7 +170,7 @@ jobs:
             else
               ARCH_SUFFIX="x64"
             fi
-            
+
             mv latest-mac.yml "latest-mac-${ARCH_SUFFIX}.yml"
             echo "✅ Renamed latest-mac.yml to latest-mac-${ARCH_SUFFIX}.yml (detected: $SYSTEM_ARCH)"
             ls -la latest-mac-*.yml
@@ -216,7 +216,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       # 下载所有平台的构建产物
       - name: Download artifacts

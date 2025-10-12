@@ -6,6 +6,19 @@ const ollamaCloudModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 200_000,
+    description:
+      '智谱最新旗舰模型 GLM-4.6 (355B) 在高级编码、长文本处理、推理与智能体能力上全面超越前代，尤其在编程能力上对齐 Claude Sonnet 4，成为国内顶尖的 Coding 模型。',
+    displayName: 'GLM-4.6',
+    enabled: true,
+    id: 'glm4.6:355b',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 163_840,
     description:
       'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',

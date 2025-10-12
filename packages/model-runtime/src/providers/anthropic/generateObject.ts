@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 
+import { buildAnthropicMessages } from '../../core/contextBuilders/anthropic';
 import { GenerateObjectOptions, GenerateObjectPayload } from '../../types';
-import { buildAnthropicMessages } from '../../utils/anthropicHelpers';
 
 /**
  * Generate structured output using Anthropic Claude API with Function Calling
