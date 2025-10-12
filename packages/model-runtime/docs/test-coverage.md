@@ -117,7 +117,9 @@ describe('LobeXxxAI - custom features', () => {
 
 ### 2. Code Refactoring Pattern
 
-For better testability, providers should export a `params` object:
+#### 2.1 OpenAI-Compatible Provider Pattern
+
+For better testability, OpenAI-compatible providers should export a `params` object:
 
 ```typescript
 import {
@@ -150,9 +152,70 @@ export const params = {
 export const LobeXxxAI = createOpenAICompatibleRuntime(params);
 ```
 
+#### 2.2 Router Provider Pattern
+
+Router providers (like NewAPI and AiHubMix) route different models to different API types. They should also export a `params` object:
+
+```typescript
+import { ModelProvider } from 'model-bank';
+
+import { createRouterRuntime } from '../../core/RouterRuntime';
+import { CreateRouterRuntimeOptions } from '../../core/RouterRuntime/createRuntime';
+
+export const params = {
+  id: ModelProvider.Xxx,
+  debug: {
+    chatCompletion: () => process.env.DEBUG_XXX_CHAT_COMPLETION === '1',
+  },
+  defaultHeaders: {
+    'X-Custom-Header': 'value',
+  },
+  models: async ({ client }) => {
+    // Fetch and process multi-provider model list
+    const modelsPage = await client.models.list();
+    return processMultiProviderModelList(modelsPage.data, 'xxx');
+  },
+  routers: [
+    {
+      apiType: 'anthropic',
+      models: LOBE_DEFAULT_MODEL_LIST.filter((m) => detectModelProvider(m.id) === 'anthropic'),
+      options: { baseURL: 'https://api.xxx.com' },
+    },
+    {
+      apiType: 'google',
+      models: LOBE_DEFAULT_MODEL_LIST.filter((m) => detectModelProvider(m.id) === 'google'),
+      options: { baseURL: 'https://api.xxx.com/gemini' },
+    },
+    {
+      apiType: 'openai',
+      options: {
+        baseURL: 'https://api.xxx.com/v1',
+        chatCompletion: {
+          handlePayload: (payload) => {
+            // Custom payload transformation for OpenAI-compatible models
+            return payload;
+          },
+        },
+      },
+    },
+  ],
+} satisfies CreateRouterRuntimeOptions;
+
+export const LobeXxxAI = createRouterRuntime(params);
+```
+
+**Key Differences for Router Providers:**
+
+- Use `createRouterRuntime` instead of `createOpenAICompatibleRuntime`
+- Define `routers` array to specify how different models route to different API types
+- Each router can have its own `apiType`, `models` filter, and `options`
+- The `models` function should use `processMultiProviderModelList` to handle multi-provider model lists
+
 ### 3. Testing Checklist
 
-For each provider, ensure:
+#### 3.1 OpenAI-Compatible Provider Checklist
+
+For each OpenAI-compatible provider, ensure:
 
 - [ ] Basic initialization tests (via `testProvider`)
 - [ ] Debug mode tests
@@ -163,19 +226,200 @@ For each provider, ensure:
 - [ ] Edge cases and boundary conditions
 - [ ] Export `params` object for better testability
 
-### 4. Documentation Update Workflow
+#### 3.2 Router Provider Testing Checklist
 
-**IMPORTANT**: Updating documentation is a REQUIRED part of completing each testing task. Follow these steps:
+For router providers (like NewAPI, AiHubMix), ensure:
 
-#### Step 1: Run Coverage Report
+- [ ] **Basic Runtime Tests**
+  - Runtime instantiation with correct provider ID
+  - Type definitions for provider-specific interfaces
+- [ ] **Debug Configuration Tests**
+  - Debug mode enabled (`DEBUG_XXX_CHAT_COMPLETION=1`)
+  - Debug mode disabled (default)
+- [ ] **Router Configuration Tests**
+  - Dynamic routers generation (if using function form)
+  - Correct baseURL extraction and processing
+  - Per-router apiType and model filtering
+  - Per-router options configuration
+- [ ] **Models Function Tests**
+  - Successful model list fetching
+  - `processMultiProviderModelList` integration
+  - Error handling (network errors, invalid API keys)
+  - Empty or missing model data handling
+- [ ] **Custom Logic Tests** (if applicable)
+  - Custom payload transformations (e.g., `handlePayload` in OpenAI router)
+  - Custom pricing calculation logic
+  - Provider detection from model metadata
+  - URL processing and normalization
+- [ ] **Edge Cases**
+  - Missing or invalid baseURL
+  - Empty model lists
+  - API errors and fallback behavior
+  - Special model patterns (e.g., Responses API detection)
+- [ ] **Export Requirements**
+  - Export `params` object satisfying `CreateRouterRuntimeOptions`
+  - Export custom types (ModelCard, Pricing, etc.)
+  - Export utility functions for testing (e.g., `handlePayload`)
+
+#### 3.3 Router Provider Testing Example
+
+Reference: `newapi/index.test.ts`
+
+```typescript
+// @vitest-environment node
+import { describe, expect, it } from 'vitest';
+
+import { LobeXxxAI, params } from './index';
+
+describe('Xxx Router Runtime', () => {
+  describe('Runtime Instantiation', () => {
+    it('should create runtime instance', () => {
+      const instance = new LobeXxxAI({ apiKey: 'test' });
+      expect(instance).toBeDefined();
+    });
+  });
+
+  describe('Debug Configuration', () => {
+    it('should disable debug by default', () => {
+      delete process.env.DEBUG_XXX_CHAT_COMPLETION;
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(false);
+    });
+
+    it('should enable debug when env is set', () => {
+      process.env.DEBUG_XXX_CHAT_COMPLETION = '1';
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('Routers Configuration', () => {
+    it('should configure routers with correct apiTypes', () => {
+      // Test static routers
+      const routers = params.routers;
+      expect(routers).toHaveLength(4);
+      expect(routers[0].apiType).toBe('anthropic');
+      expect(routers[1].apiType).toBe('google');
+      expect(routers[2].apiType).toBe('xai');
+      expect(routers[3].apiType).toBe('openai');
+    });
+
+    it('should configure dynamic routers with user baseURL', () => {
+      // Test dynamic routers function
+      const options = { apiKey: 'test', baseURL: 'https://custom.com/v1' };
+      const routers = params.routers(options);
+      expect(routers[0].options.baseURL).toContain('custom.com');
+    });
+  });
+
+  describe('Models Function', () => {
+    it('should fetch and process models', async () => {
+      // Test models fetching logic
+      const mockClient = {
+        baseURL: 'https://api.xxx.com/v1',
+        apiKey: 'test',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [{ id: 'model-1', owned_by: 'openai' }],
+          }),
+        },
+      };
+
+      const models = await params.models({ client: mockClient });
+      expect(models).toBeDefined();
+    });
+
+    it('should handle API errors gracefully', async () => {
+      // Test error handling
+      const mockClient = {
+        models: {
+          list: vi.fn().mockRejectedValue(new Error('API Error')),
+        },
+      };
+
+      const models = await params.models({ client: mockClient });
+      expect(models).toEqual([]);
+    });
+  });
+});
+```
+
+### 4. Complete Testing Workflow
+
+**IMPORTANT**: Follow this complete workflow for every testing task. ALL steps are REQUIRED.
+
+#### Step 1: Development and Testing
 
 ```bash
+# 1. Refactor provider and write tests
+# 2. Run tests to verify they pass
+bunx vitest run --silent='passed-only' 'src/providers/{provider}/index.test.ts'
+```
+
+#### Step 2: Type and Lint Checks
+
+**CRITICAL**: Run type check and lint before proceeding. Failing these checks means the task is incomplete.
+
+```bash
+# Check TypeScript types (from project root)
+cd ../../../ && bun run type-check
+
+# Or run typecheck for model-runtime only
+bunx tsc --noEmit
+
+# Fix any linting issues
+bunx eslint src/providers/{provider}/ --fix
+```
+
+**Common Type Errors to Watch For:**
+
+- Missing or incorrect type annotations
+- Unused variables or imports
+- Incorrect generic type parameters
+- Missing satisfies clauses for `params` objects
+
+**Do NOT proceed to Step 3 if type/lint checks fail!**
+
+#### Step 3: Run Coverage Report
+
+```bash
+# Run coverage to get updated metrics
 bunx vitest run --coverage --silent='passed-only'
 ```
 
-#### Step 2: Update This Document
+#### Step 4: Summarize Development Work
 
-Update the following sections in this document:
+Before updating documentation, create a summary of what was accomplished:
+
+**Summary Checklist:**
+
+- [ ] What provider(s) were worked on?
+- [ ] What was the coverage improvement? (before% → after%)
+- [ ] How many new tests were added?
+- [ ] What specific features/logic were tested?
+- [ ] Were any bugs discovered and fixed?
+- [ ] Any new patterns or best practices identified?
+- [ ] Should the testing guide be updated based on learnings?
+
+**Example Summary:**
+
+```
+Provider: newapi
+Coverage: 13.28% → 100% (+86.72%)
+Tests Added: 65 new tests
+Features Tested:
+  - handlePayload logic with Responses API detection
+  - Complex pricing calculation (quota_type, model_price, model_ratio)
+  - Provider detection from supported_endpoint_types and owned_by
+  - Dynamic routers configuration with baseURL processing
+  - Error handling for pricing API failures
+Bugs Fixed: None
+Guide Updates: Added router provider testing pattern to documentation
+```
+
+#### Step 5: Update This Document
+
+Based on your development summary, update the following sections:
 
 1. **Current Status** section:
    - Update overall coverage percentage
@@ -191,30 +435,63 @@ Update the following sections in this document:
    - Add newly refactored providers to the list with their coverage improvement
    - Document any bugs fixed or improvements made
 
-#### Step 3: Verify Changes
+4. **Testing Strategy** section (if applicable):
+   - Add new patterns discovered during development
+   - Update examples with better practices
+   - Document any provider-specific testing approaches
+
+#### Step 6: Final Verification
 
 ```bash
 # Verify all tests still pass
 bunx vitest run --silent='passed-only' 'src/providers/{provider}/index.test.ts'
+
+# Verify type check still passes
+cd ../../../ && bun run type-check
 ```
 
-#### Example Workflow
+#### Complete Workflow Example
 
 ```bash
-# 1. Refactor provider and write tests
-# 2. Run tests
+# 1. Development Phase
+# ... write code and tests ...
 bunx vitest run --silent='passed-only' 'src/providers/example/index.test.ts'
 
-# 3. Run coverage
+# 2. Type/Lint Phase (REQUIRED)
+cd ../../../ && bun run type-check # Must pass!
+bunx eslint src/providers/example/ --fix
+
+# 3. Coverage Phase
+cd packages/model-runtime
 bunx vitest run --coverage --silent='passed-only'
 
-# 4. Update this documentation file
-# 5. Commit changes with both code and documentation updates
+# 4. Summarization Phase
+# Create summary following the checklist above
+
+# 5. Documentation Phase
+# Update this file with summary and metrics
+
+# 6. Final Verification
+bunx vitest run --silent='passed-only' 'src/providers/example/index.test.ts'
+cd ../../../ && bun run type-check
+
+# 7. Commit
+git add .
+git commit -m "✅ test: add comprehensive tests for example provider (13% → 100%)"
 ```
 
-**Remember**: A testing task is only complete when BOTH code and documentation are updated!
+**Remember**: A testing task is only complete when:
+
+1. ✅ Tests pass
+2. ✅ Type check passes
+3. ✅ Lint passes
+4. ✅ Development work is summarized
+5. ✅ Documentation is updated
+6. ✅ Final verification passes
 
 ## Commands
+
+### Testing Commands
 
 ```bash
 # Run all tests with coverage
@@ -225,6 +502,35 @@ bunx vitest run --silent='passed-only' 'src/providers/{provider}/index.test.ts'
 
 # Run tests for multiple providers
 bunx vitest run --silent='passed-only' src/providers/higress/index.test.ts src/providers/ai360/index.test.ts
+
+# Watch mode for development
+bunx vitest watch 'src/providers/{provider}/index.test.ts'
+```
+
+### Type Check Commands
+
+```bash
+# Type check entire project (from project root)
+cd ../../../ && bun run type-check
+
+# Type check model-runtime only
+bunx tsc --noEmit
+
+# Type check with watch mode
+bunx tsc --noEmit --watch
+```
+
+### Lint Commands
+
+```bash
+# Lint specific provider
+bunx eslint src/providers/{provider}/ --fix
+
+# Lint all providers
+bunx eslint src/providers/ --fix
+
+# Lint without auto-fix (check only)
+bunx eslint src/providers/{provider}/
 ```
 
 ## Completed Work
@@ -269,10 +575,34 @@ bunx vitest run --silent='passed-only' src/providers/higress/index.test.ts src/p
 
 ## Notes
 
+### General Testing Notes
+
 - All providers should follow the same testing pattern for consistency
 - Exporting `params` makes testing much easier by allowing direct testing of configuration
-- `testProvider` utility provides basic test coverage for all providers
+- `testProvider` utility provides basic test coverage for OpenAI-compatible providers
 - Custom feature tests should be added based on provider-specific functionality
 - Always mock API calls in tests (`skipAPICall: true`)
 - Debug environment variables should be tested
+- **Type check and lint must pass before committing**
 - **Update this document after each testing task completion**
+
+### Router Provider Specific Notes
+
+- **Router providers use `createRouterRuntime` instead of `createOpenAICompatibleRuntime`**
+- The `testProvider` utility does NOT work for router providers - write custom tests
+- Router providers route different models to different API implementations (anthropic, google, xai, openai)
+- Test both static and dynamic router configurations:
+  - Static: `routers: [...]` - array of router configs
+  - Dynamic: `routers: (options) => [...]` - function that generates routers based on user options
+- Router providers typically have complex `models` functions that:
+  - Fetch models from a unified API endpoint
+  - Process multi-provider model lists with `processMultiProviderModelList`
+  - Handle provider detection from model metadata
+  - May include custom pricing calculation logic
+- Test router-specific custom logic separately (e.g., `handlePayload`, pricing calculation)
+- Pay attention to baseURL processing - routers may need to:
+  - Strip version paths (`/v1`, `/v1beta`) from baseURL
+  - Apply different baseURL patterns for different API types
+  - Handle user-provided custom baseURLs
+- Examples of router providers: `newapi`, `aihubmix`
+- For comprehensive router provider testing patterns, refer to `newapi/index.test.ts`
