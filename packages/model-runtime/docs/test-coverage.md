@@ -2,19 +2,13 @@
 
 ## Current Status
 
-**Overall Coverage**: 82.9% (122 test files, 1646 tests)
+**Overall Coverage**: 84.49% (117 test files, 1684 tests)
 
 ## Coverage Status by Priority
 
 ### 🔴 Critical - Low Coverage (<50%)
 
-| File                  | Coverage | Priority | Action                   |
-| --------------------- | -------- | -------- | ------------------------ |
-| providers/internlm    | 39.13%   | High     | Add custom feature tests |
-| providers/hunyuan     | 39.68%   | High     | Add custom feature tests |
-| providers/huggingface | 39.75%   | High     | Add custom feature tests |
-| providers/groq        | 45.45%   | High     | Add custom feature tests |
-| providers/modelscope  | 47.82%   | High     | Add custom feature tests |
+current none
 
 ### 🟡 Medium - Moderate Coverage (50-80%)
 
@@ -55,9 +49,9 @@
 
 ### ✅ Good - High Coverage (80%+)
 
-41 providers with 80%+ coverage, including:
+46 providers with 80%+ coverage, including:
 
-- **100% coverage**: nebius, stepfun, lmstudio, newapi, fireworksai, jina, tencentcloud, togetherai, and 16 others
+- **100% coverage**: internlm, hunyuan, huggingface, groq, modelscope, nebius, stepfun, lmstudio, newapi, fireworksai, jina, tencentcloud, togetherai, and 21 others
 - **90-99%**: vertexai, volcengine, siliconcloud, ppio, minimax, cloudflare, fal, anthropic
 - **80-89%**: ai302, qwen, google, azureOpenai, azureai, infiniai, aihubmix, bfl
 
@@ -348,6 +342,50 @@ describe('Xxx Router Runtime', () => {
 
 **IMPORTANT**: Follow this complete workflow for every testing task. ALL steps are REQUIRED.
 
+#### Step 0: Use Subagents for Parallel Execution (Recommended)
+
+**For multiple providers**: Use subagents to parallelize test development and significantly speed up the process.
+
+**Benefits of using subagents:**
+
+- ⚡ **Speed**: 5 providers completed in parallel vs. sequential (\~5x faster)
+- 🔄 **Isolation**: Each provider's tests developed independently
+- 📊 **Progress tracking**: See all provider progress at once
+- 🐛 **Early detection**: Identify common issues across providers
+
+**How to create parallel subagents:**
+
+When working on multiple providers, create one subagent per provider with a detailed prompt like:
+
+```
+根据 model-runtime 内部的测试文档，补充以下 5 个 provider 的测试，每个 provider 的测试用独立的 subagent 执行，这样可以并发加速。
+
+请为以下 providers 分别创建 subagent：
+- internlm (current: 39.13%, target: 80%+)
+- hunyuan (current: 39.68%, target: 80%+)
+- huggingface (current: 39.75%, target: 80%+)
+- groq (current: 45.45%, target: 80%+)
+- modelscope (current: 47.82%, target: 80%+)
+```
+
+Each subagent should be instructed to:
+
+1. Read the test documentation (`packages/model-runtime/docs/test-coverage.md`)
+2. Read the implementation file and test file
+3. Analyze missing tests based on the testing checklist
+4. Add tests and verify they pass
+5. Return a summary of test results (do NOT run type check or coverage)
+
+**After all subagents complete:**
+
+- Review all test results
+- Fix any failed tests (e.g., type errors, test failures)
+- Proceed with Step 2 (Type Check) below
+
+**For single provider**: Skip this step and proceed directly to Step 1.
+
+---
+
 #### Step 1: Development and Testing
 
 ```bash
@@ -537,14 +575,29 @@ bunx eslint src/providers/{provider}/
 
 ### Recent Achievements ✅
 
-**Latest Session (2025-01-15)**:
+**Latest Session (2025-10-13)**: 🎉 All Critical providers completed!
+
+- Overall coverage: 82.9% → 84.49% (+1.59%)
+- **Eliminated all critical (<50% coverage) providers!**
+- Refactored 5 providers:
+  - **internlm** (39.13% → 100%) - 30 tests, fixed null model bug
+  - **hunyuan** (39.68% → 100%) - 33 tests, fixed null model bug
+  - **huggingface** (39.75% → 100%) - 38 tests
+  - **groq** (45.45% → 100%) - 35 tests
+  - **modelscope** (47.82% → 100%) - 24 tests
+- Added 160 comprehensive tests
+- Fixed 2 bugs: null/undefined model handling in internlm and hunyuan
+- All providers now export `params` for better testability
+- Used parallel subagent execution for faster development
+
+**Previous Session (2025-01-15)**:
 
 - Overall coverage: 81.86% → 82.9% (+1.04%)
 - Refactored 3 providers: **nebius** (32.3% → 100%), **stepfun** (34.92% → 100%), **lmstudio** (35.48% → 100%)
 - Added 93 new tests
 - All providers now export `params` for better testability
 
-**Previous Session (2025-01-15)**:
+**Earlier Session (2025-01-15)**:
 
 - Overall coverage: 80.81% → 81.86% (+1.05%)
 - Refactored 4 providers: **fireworksai**, **jina**, **tencentcloud**, **togetherai** (all now at 100%)
