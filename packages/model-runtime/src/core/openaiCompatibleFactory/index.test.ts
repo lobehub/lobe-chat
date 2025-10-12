@@ -1856,6 +1856,205 @@ describe('LobeOpenAICompatibleFactory', () => {
         );
       });
     });
+
+    describe('tool calling fallback', () => {
+      let instanceWithToolCalling: any;
+
+      beforeEach(() => {
+        const RuntimeClass = createOpenAICompatibleRuntime({
+          baseURL: 'https://api.test.com',
+          generateObject: {
+            useToolsCalling: true,
+          },
+          provider: 'test-provider',
+        });
+
+        instanceWithToolCalling = new RuntimeClass({ apiKey: 'test-key' });
+      });
+
+      it('should use tool calling when configured', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                tool_calls: [
+                  {
+                    type: 'function' as const,
+                    function: {
+                      name: 'person_extractor',
+                      arguments: '{"name":"Alice","age":28}',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instanceWithToolCalling['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const payload = {
+          messages: [{ content: 'Extract person info', role: 'user' as const }],
+          schema: {
+            name: 'person_extractor',
+            description: 'Extract person information',
+            schema: {
+              type: 'object' as const,
+              properties: { name: { type: 'string' }, age: { type: 'number' } },
+            },
+          },
+          model: 'test-model',
+        };
+
+        const result = await instanceWithToolCalling.generateObject(payload);
+
+        expect(instanceWithToolCalling['client'].chat.completions.create).toHaveBeenCalledWith(
+          {
+            messages: payload.messages,
+            model: payload.model,
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: 'person_extractor',
+                  description: 'Extract person information',
+                  parameters: payload.schema.schema,
+                },
+              },
+            ],
+            tool_choice: { type: 'function', function: { name: 'person_extractor' } },
+            user: undefined,
+          },
+          { headers: undefined, signal: undefined },
+        );
+
+        expect(result).toEqual({ name: 'Alice', age: 28 });
+      });
+
+      it('should return undefined when no tool call found', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                content: 'Some text response',
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instanceWithToolCalling['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        const payload = {
+          messages: [{ content: 'Generate data', role: 'user' as const }],
+          schema: {
+            name: 'test_tool',
+            schema: { type: 'object' as const, properties: {} },
+          },
+          model: 'test-model',
+        };
+
+        const result = await instanceWithToolCalling.generateObject(payload);
+
+        expect(consoleSpy).toHaveBeenCalledWith('No tool call found in response');
+        expect(result).toBeUndefined();
+
+        consoleSpy.mockRestore();
+      });
+
+      it('should return undefined when tool call arguments parsing fails', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                tool_calls: [
+                  {
+                    type: 'function' as const,
+                    function: {
+                      name: 'test_tool',
+                      arguments: 'invalid json',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instanceWithToolCalling['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        const payload = {
+          messages: [{ content: 'Generate data', role: 'user' as const }],
+          schema: {
+            name: 'test_tool',
+            schema: { type: 'object' as const, properties: {} },
+          },
+          model: 'test-model',
+        };
+
+        const result = await instanceWithToolCalling.generateObject(payload);
+
+        expect(consoleSpy).toHaveBeenCalledWith('parse tool call arguments error:', 'invalid json');
+        expect(result).toBeUndefined();
+
+        consoleSpy.mockRestore();
+      });
+
+      it('should handle options correctly with tool calling', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                tool_calls: [
+                  {
+                    type: 'function' as const,
+                    function: {
+                      name: 'data_extractor',
+                      arguments: '{"data":"test"}',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instanceWithToolCalling['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const payload = {
+          messages: [{ content: 'Extract data', role: 'user' as const }],
+          schema: {
+            name: 'data_extractor',
+            schema: { type: 'object' as const, properties: { data: { type: 'string' } } },
+          },
+          model: 'test-model',
+        };
+
+        const options = {
+          headers: { 'X-Custom': 'header' },
+          user: 'test-user',
+          signal: new AbortController().signal,
+        };
+
+        const result = await instanceWithToolCalling.generateObject(payload, options);
+
+        expect(instanceWithToolCalling['client'].chat.completions.create).toHaveBeenCalledWith(
+          expect.any(Object),
+          { headers: options.headers, signal: options.signal },
+        );
+
+        expect(result).toEqual({ data: 'test' });
+      });
+    });
   });
 
   describe('models', () => {

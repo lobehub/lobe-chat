@@ -116,6 +116,12 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     bizError: ILobeAgentRuntimeErrorType;
     invalidAPIKey: ILobeAgentRuntimeErrorType;
   };
+  generateObject?: {
+    /**
+     * Use tool calling to simulate structured output for providers that don't support native structured output
+     */
+    useToolsCalling?: boolean;
+  };
   models?:
     | ((params: { client: OpenAI }) => Promise<ChatModelCard[]>)
     | {
@@ -142,6 +148,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   customClient,
   responses,
   createImage: customCreateImage,
+  generateObject: generateObjectConfig,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -390,6 +397,44 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
       const { messages, schema, model, responseApi } = payload;
+
+      // Use tool calling fallback if configured
+      if (generateObjectConfig?.useToolsCalling) {
+        const tool: ChatCompletionTool = {
+          function: {
+            description:
+              schema.description || 'Generate structured output according to the provided schema',
+            name: schema.name || 'structured_output',
+            parameters: schema.schema,
+          },
+          type: 'function',
+        };
+
+        const res = await this.client.chat.completions.create(
+          {
+            messages,
+            model,
+            tool_choice: { function: { name: tool.function.name }, type: 'function' },
+            tools: [tool],
+            user: options?.user,
+          },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        const toolCall = res.choices[0].message.tool_calls?.[0];
+
+        if (!toolCall || toolCall.type !== 'function') {
+          console.error('No tool call found in response');
+          return undefined;
+        }
+
+        try {
+          return JSON.parse(toolCall.function.arguments);
+        } catch {
+          console.error('parse tool call arguments error:', toolCall.function.arguments);
+          return undefined;
+        }
+      }
 
       if (responseApi) {
         const res = await this.client!.responses.create(
