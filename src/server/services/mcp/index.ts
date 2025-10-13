@@ -35,8 +35,11 @@ export class MCPService {
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams
-  async listTools(params: MCPClientParams): Promise<LobeChatPluginApi[]> {
-    const client = await this.getClient(params); // Get client using params
+  async listTools(
+    params: MCPClientParams,
+    { retryTime, skipCache }: { retryTime?: number; skipCache?: boolean } = {},
+  ): Promise<LobeChatPluginApi[]> {
+    const client = await this.getClient(params, skipCache); // Get client using params
     const loggableParams = this.sanitizeForLogging(params);
     log(`Listing tools using client for params: %O`, loggableParams);
 
@@ -54,6 +57,18 @@ export class MCPService {
         parameters: item.inputSchema as PluginSchema,
       }));
     } catch (error) {
+      let nextReTryTime = retryTime || 0;
+
+      if ((error as Error).message === 'NoValidSessionId' && nextReTryTime <= 3) {
+        if (!nextReTryTime) {
+          nextReTryTime = 1;
+        } else {
+          nextReTryTime += 1;
+        }
+
+        return this.listTools(params, { retryTime: nextReTryTime, skipCache: true });
+      }
+
       console.error(`Error listing tools for params %O:`, loggableParams, error);
       // Propagate a TRPCError for better handling upstream
       throw new TRPCError({
@@ -200,10 +215,10 @@ export class MCPService {
   }
 
   // Private method to get or initialize a client based on parameters
-  private async getClient(params: MCPClientParams): Promise<MCPClient> {
+  private async getClient(params: MCPClientParams, skipCache = false): Promise<MCPClient> {
     const key = this.serializeParams(params); // Use custom serialization
 
-    if (this.clients.has(key)) {
+    if (!skipCache && this.clients.has(key)) {
       return this.clients.get(key)!;
     }
 
