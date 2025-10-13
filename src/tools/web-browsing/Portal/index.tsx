@@ -1,8 +1,7 @@
-import { CrawlPluginState , SearchQuery } from '@lobechat/types';
+import { CrawlPluginState, SearchQuery , BuiltinPortalProps } from '@lobechat/types';
 import { memo } from 'react';
 
 import { WebBrowsingApiName } from '@/tools/web-browsing';
-import { BuiltinPortalProps } from '@/types/tool';
 
 import PageContent from './PageContent';
 import PageContents from './PageContents';
