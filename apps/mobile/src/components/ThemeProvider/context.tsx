@@ -2,8 +2,7 @@ import type { FC, ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 
-import { darkAlgorithm } from '@/components/theme/algorithm/dark';
-import { lightAlgorithm } from '@/components/theme/algorithm/light';
+import { darkAlgorithm, lightAlgorithm } from '@/components/styles';
 import { useSettingStore } from '@/store/setting';
 
 import { getDesignToken } from './getDesignToken';

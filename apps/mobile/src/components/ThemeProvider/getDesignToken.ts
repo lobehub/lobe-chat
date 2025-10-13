@@ -1,7 +1,5 @@
-import { lightAlgorithm } from '@/components/theme/algorithm/light';
-import { formatToken } from '@/components/theme/alias';
-import type { AliasToken, SeedToken } from '@/components/theme/interface';
-import seedToken from '@/components/theme/seed';
+import { AliasToken, SeedToken, lightAlgorithm, seedToken } from '@/components/styles';
+import { formatToken } from '@/components/styles/theme/alias';
 
 import type { ThemeConfig } from './types';
 

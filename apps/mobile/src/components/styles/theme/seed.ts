@@ -1,39 +1,45 @@
 import { Platform } from 'react-native';
 
-import { primaryColors } from './color';
+import { colorScales } from './color';
 import type { PresetColorType, SeedToken } from './interface';
 
 // 字体定义
-// Android 使用 app.json 中配置的 fontFamily
-// iOS 使用字体文件中的 Family Name，系统会根据 fontWeight 自动选择对应字体文件
 const FONT_EN = Platform.select({
-  android: 'HarmonyOS-Sans', 
-  // 字体文件中的 Family Name（空格分隔）
-default: 'HarmonyOS-Sans', 
-  // 对应 app.json 中的 fontFamily
-ios: 'HarmonyOS Sans',
-});
+  android: 'HarmonyOS-Sans',
+  default: 'HarmonyOS-Sans',
+  ios: 'HarmonyOS Sans',
+}) as string;
 
 const FONT_CN = Platform.select({
-  android: 'HarmonyOS-Sans-SC', 
-  // 字体文件中的 Family Name（空格分隔）
-default: 'HarmonyOS-Sans-SC', 
-  // 对应 app.json 中的 fontFamily
-ios: 'HarmonyOS Sans SC',
-});
+  android: 'HarmonyOS-Sans-SC',
+  default: 'HarmonyOS-Sans-SC',
+  ios: 'HarmonyOS Sans SC',
+}) as string;
 
 const FONT_CODE = Platform.select({
-  android: 'Hack', 
-  // 字体文件中的 Family Name
-default: 'Hack', 
-  // 对应 app.json 中的 fontFamily
-ios: 'Hack',
-});
+  android: 'Hack',
+  default: 'Hack',
+  ios: 'Hack',
+}) as string;
 
-// 优先使用系统默认字体，但在 React Native 中使用自定义字体
 const FONT_SYSTEM = 'System';
 
-export const defaultPresetColors: PresetColorType = primaryColors;
+// 从 colorScales 中提取主色值（light 模式索引 9）作为 preset colors
+export const defaultPresetColors: PresetColorType = {
+  blue: colorScales.blue.light[9],
+  cyan: colorScales.cyan.light[9],
+  geekblue: colorScales.geekblue.light[9],
+  gold: colorScales.gold.light[9],
+  gray: colorScales.gray.light[9],
+  green: colorScales.green.light[9],
+  lime: colorScales.lime.light[9],
+  magenta: colorScales.magenta.light[9],
+  orange: colorScales.orange.light[9],
+  purple: colorScales.purple.light[9],
+  red: colorScales.red.light[9],
+  volcano: colorScales.volcano.light[9],
+  yellow: colorScales.yellow.light[9],
+};
 
 /**
  * 默认种子 Token
@@ -53,8 +59,8 @@ const seedToken: SeedToken = {
 
   colorLink: '#1677ff',
 
-  // 品牌色 - 默认使用黑色作为主色
-  colorPrimary: primaryColors.primary,
+  // 品牌色 - 默认使用 primary 色阶的主色值
+  colorPrimary: colorScales.primary.light[9],
 
   // 功能色
   colorSuccess: '#52c41a',
@@ -66,11 +72,11 @@ const seedToken: SeedToken = {
 
   colorWhite: '#fff',
 
-  controlHeight: 32,
-  // 优先使用系统默认字体
-  // iOS 和 Android 使用不同的字体名称格式
-  fontFamily: `${FONT_EN},${FONT_CN},${FONT_SYSTEM}`,
-  fontFamilyCode: FONT_CODE!,
+  controlHeight: 36,
+
+  // 字体配置
+  fontFamily: [FONT_EN, FONT_CN, FONT_SYSTEM].join(','),
+  fontFamilyCode: [FONT_CODE, FONT_CN, FONT_SYSTEM].join(','),
 
   fontSize: 14,
 
