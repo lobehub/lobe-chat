@@ -4,7 +4,7 @@ import { renderWithTheme } from '@/test/utils';
 
 import Highlighter from '../index';
 
-jest.mock('@/theme', () => ({
+jest.mock('@/components/theme', () => ({
   useTheme: () => ({
     isDarkMode: false,
   }),
@@ -143,7 +143,7 @@ describe('Highlighter', () => {
         if (n <= 1) return n;
         return fibonacci(n - 1) + fibonacci(n - 2);
       }
-      
+
       for (let i = 0; i < 10; i++) {
         console.log(fibonacci(i));
       }
