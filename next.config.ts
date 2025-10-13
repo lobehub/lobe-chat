@@ -33,21 +33,24 @@ const nextConfig: NextConfig = {
   },
   // Disable SWC minification to save memory
   experimental: {
-    optimizePackageImports: [
-      'emoji-mart',
-      '@emoji-mart/react',
-      '@emoji-mart/data',
-      '@icons-pack/react-simple-icons',
-      '@lobehub/ui',
-      '@lobehub/icons',
-      'gpt-tokenizer',
-    ],
+    // Reduce package imports optimization on Vercel to save memory
+    optimizePackageImports: isVercel
+      ? []
+      : [
+          'emoji-mart',
+          '@emoji-mart/react',
+          '@emoji-mart/data',
+          '@icons-pack/react-simple-icons',
+          '@lobehub/ui',
+          '@lobehub/icons',
+          'gpt-tokenizer',
+        ],
     // oidc provider depend on constructor.name
     // but swc minification will remove the name
     // so we need to disable it
     // refs: https://github.com/lobehub/lobe-chat/pull/7430
     serverMinification: false,
-    webVitalsAttribution: ['CLS', 'LCP'],
+    webVitalsAttribution: isVercel ? [] : ['CLS', 'LCP'],
     webpackMemoryOptimizations: true,
   },
   // Disable source maps on Vercel to save memory
@@ -295,8 +298,39 @@ const nextConfig: NextConfig = {
         ...config.optimization,
         // Reduce memory usage during build
         minimize: isServer ? false : config.optimization.minimize,
-
         moduleIds: 'deterministic',
+        // More aggressive chunk splitting to reduce memory pressure
+        splitChunks: isServer
+          ? false
+          : {
+              cacheGroups: {
+                default: false,
+                // Split large libraries into separate chunks
+framework: {
+                  enforce: true,
+                  name: 'framework',
+                  priority: 40,
+                  test: /[/\\]node_modules[/\\](react|react-dom|scheduler|next)[/\\]/,
+                },
+                
+                lib: {
+                  minChunks: 1,
+                  name(module: any) {
+                    const packageName = module.context.match(
+                      /[/\\]node_modules[/\\](.*?)([/\\]|$)/,
+                    )?.[1];
+                    return `npm.${packageName?.replace('@', '')}`;
+                  },
+                  priority: 30,
+                  reuseExistingChunk: true,
+                  test: /[/\\]node_modules[/\\]/,
+                },
+                vendors: false,
+              },
+              chunks: 'all',
+              maxInitialRequests: 25,
+              minSize: 20_000,
+            },
       };
 
       // Limit parallel processing to reduce memory spikes
@@ -304,6 +338,11 @@ const nextConfig: NextConfig = {
 
       // Disable source maps for Vercel builds
       config.devtool = false;
+
+      // Reduce cache overhead
+      if (config.cache && typeof config.cache === 'object') {
+        config.cache.maxMemoryGenerations = 1;
+      }
     }
 
     // 开启该插件会导致 pglite 的 fs bundler 被改表
@@ -342,7 +381,7 @@ const noWrapper = (config: NextConfig) => config;
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
 
 const withPWA =
-  isProd && !isDesktop
+  isProd && !isDesktop && !isVercel
     ? withSerwistInit({
         register: false,
         swDest: 'public/sw.js',

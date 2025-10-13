@@ -1,4 +1,4 @@
 {
-  "buildCommand": "NODE_OPTIONS='--max-old-space-size=4096' pnpm run build:vercel",
+  "buildCommand": "NODE_OPTIONS='--max-old-space-size=5120' pnpm run build:vercel",
   "installCommand": "pnpm install --frozen-lockfile --prefer-offline"
 }
