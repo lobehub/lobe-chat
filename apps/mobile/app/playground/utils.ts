@@ -34,6 +34,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     tags: ['alert', 'message', 'feedback', 'notification'],
   },
   {
+    category: 'basic',
+    description: '用于显示文本的基础组件，提供丰富的样式和语义化选项',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'Text',
+    path: 'text',
+    tags: ['text', 'typography', 'heading', 'paragraph'],
+  },
+  {
     category: 'display',
     description: '基于 Shiki 的高性能代码高亮组件，支持100+种编程语言',
     hasDemos: true,
