@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { useEffect, useRef } from 'react';
 import { Animated, DimensionValue, ViewStyle } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
 

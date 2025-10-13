@@ -1,4 +1,5 @@
-import { NeutralColors, PrimaryColors } from '../color';
+import { NeutralColors, PrimaryColors } from '@lobehub/ui/es/styles';
+
 import type { PresetColorType } from './presetColors';
 
 // ======================================================================
@@ -245,7 +246,7 @@ export interface SeedToken extends PresetColorType {
    * @desc 主色预设，用于控制主色的选取
    * @descEN Primary color preset, used to control the selection of primary color
    */
-  primaryColor: PrimaryColors;
+  primaryColor: PrimaryColors | 'primary';
 
   /**
    * @nameZH 组件箭头尺寸

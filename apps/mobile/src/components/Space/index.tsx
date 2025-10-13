@@ -1,7 +1,7 @@
 import { Children, Fragment, ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
 
