@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, View } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 interface StopLoadingIconProps {
   color?: string;

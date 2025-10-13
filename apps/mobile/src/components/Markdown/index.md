@@ -1,86 +1,74 @@
-# Markdown 组件
+---
+group: Display
+title: Markdown
+description: Powerful React Native Markdown rendering component with math formulas, code highlighting, images, videos, and more content types support.
+---
 
-一个功能强大的 React Native Markdown 渲染组件，支持数学公式、代码高亮、图片、视频等多种内容类型。
+## Features
 
-## 特性
+- ✅ **Math Formula Rendering** - Supports MathJax math formula display
+- ✅ **Code Highlighting** - Integrated custom Highlighter component
+- ✅ **Responsive Images** - Auto-calculate image height, responsive display
+- ✅ **Video Support** - Supports video content rendering
+- ✅ **Table Support** - Complete table styling and layout
+- ✅ **Dark Theme** - Auto-adapts to dark/light themes
+- ✅ **Custom Styles** - Rich style configuration options
+- ✅ **Link Support** - Clickable links with auto-navigation
+- ✅ **List Support** - Ordered and unordered lists
+- ✅ **Quote Blocks** - Supports blockquote styling
 
-- ✅ **数学公式渲染** - 支持 MathJax 数学公式显示
-- ✅ **代码高亮** - 集成自定义 Highlighter 组件
-- ✅ **图片自适应** - 自动计算图片高度，响应式显示
-- ✅ **视频支持** - 支持视频内容渲染
-- ✅ **表格支持** - 完整的表格样式和布局
-- ✅ **深色主题** - 自动适配暗色 / 亮色主题
-- ✅ **自定义样式** - 丰富的样式配置选项
-- ✅ **链接支持** - 可点击链接和自动跳转
-- ✅ **列表支持** - 有序列表和无序列表
-- ✅ **引用块** - 支持 blockquote 样式
-
-## 基本用法
+## Basic Usage
 
 ```jsx
 import { Markdown } from '@lobehub/ui-rn';
 
 export default function App() {
-  const markdownContent = \`
-# 标题示例
+  const markdownContent = `
+# Title Example
 
-这是一个**粗体文本**和*斜体文本*示例。
+This is **bold text** and *italic text* example.
 
-## 代码示例
+## Code Example
 
-\\\`\\\`\\\`javascript
+\`\`\`javascript
 function hello() {
   console.log('Hello World!');
 }
-\\\`\\\`\\\`
+\`\`\`
 
-## 数学公式
+## Math Formula
 
-行内公式：$E = mc^2$
+Inline formula: $E = mc^2$
 
-块级公式：
-$$\\\\int_{-\\\\infty}^{\\\\infty} e^{-x^2} dx = \\\\sqrt{\\\\pi}$$
-  \`;
+Block formula:
+$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
+  `;
 
-  return (
-    <Markdown content={markdownContent} />
-  );
+  return <Markdown content={markdownContent} />;
 }
 ```
 
-## API 参考
+## Supported Features
 
-### Props
+### Math Formula Rendering
 
-| 属性               | 类型       | 默认值  | 描述                              |
-| ------------------ | ---------- | ------- | --------------------------------- |
-| \`content\`        | \`string\` | -       | **必需** - 要渲染的 Markdown 内容 |
-| \`fontSize\`       | \`number\` | \`16\`  | 基础字体大小（px）                |
-| \`headerMultiple\` | \`number\` | \`1\`   | 标题字体大小倍数                  |
-| \`marginMultiple\` | \`number\` | \`1.5\` | 边距倍数                          |
-| \`lineHeight\`     | \`number\` | \`1.8\` | 行高倍数                          |
+Based on MathJax engine, supports complex math expressions:
 
-## 支持的功能
+- Inline formulas: `$E = mc^2$`
+- Block formulas: `$$\int_0^1 x^2 dx$$`
 
-### 数学公式渲染
+### Code Highlighting
 
-基于 MathJax 引擎，支持复杂的数学表达式：
+Integrated Highlighter component, supports 100+ programming languages syntax highlighting.
 
-- 行内公式：\`$E = mc^2$\`
-- 块级公式：\`$$\\\int\_0^1 x^2 dx$$\`
+### Images and Videos
 
-### 代码高亮
+- Auto-calculate image dimensions
+- Responsive adaptation
+- Supports video content
 
-集成 Highlighter 组件，支持 100 + 编程语言的语法高亮。
+### Table Support
 
-### 图片和视频
+Complete table rendering and styling support, including borders, alignment, etc.
 
-- 自动计算图片尺寸
-- 响应式适配
-- 支持视频内容
-
-### 表格支持
-
-完整的表格渲染和样式支持，包括边框、对齐等。
-
-更多详细信息请查看完整的 README 文档。
+For more detailed information, please check the complete README documentation.

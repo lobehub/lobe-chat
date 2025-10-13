@@ -1,5 +1,5 @@
 import { DRAWER_WIDTH } from '@/_const/theme';
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 export const useStyles = createStyles(({ token }) => ({
   container: {

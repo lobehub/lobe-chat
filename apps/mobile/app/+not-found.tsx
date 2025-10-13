@@ -1,9 +1,8 @@
+import { createStyles } from '@lobehub/ui-rn';
 import { Link, Stack } from 'expo-router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
-
-import { createStyles } from '@/theme';
 
 const useStyles = createStyles(({ token }) => ({
   container: {

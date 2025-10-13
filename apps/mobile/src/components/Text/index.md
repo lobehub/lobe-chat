@@ -1,68 +1,49 @@
-# Text 文本组件
+---
+group: Basic
+title: Text
+description: Basic component for displaying text, providing rich styling and semantic options.
+---
 
-用于显示文本的基础组件，提供丰富的样式和语义化选项。
+## When to Use
 
-## 何时使用
+- Display titles, paragraphs, and other text content
+- Semantic markup for text (success, warning, danger, etc.)
+- Text styling (bold, italic, underline, etc.)
+- Handle text overflow and ellipsis
 
-- 需要显示标题、段落等文本内容
-- 需要对文本进行语义化标记（成功、警告、危险等）
-- 需要对文本进行样式处理（加粗、斜体、下划线等）
-- 需要处理文本溢出和省略
+## Style Description
 
-## 样式说明
+### Tag Types (as)
 
-### 标签类型 (as)
+- `h1`: 38px, bold
+- `h2`: 30px, bold
+- `h3`: 24px, bold
+- `h4`: 20px, bold
+- `h5`: 16px, bold
+- `p`: 14px, normal
 
-- \`h1\`: 38px, 加粗
-- \`h2\`: 30px, 加粗
-- \`h3\`: 24px, 加粗
-- \`h4\`: 20px, 加粗
-- \`h5\`: 16px, 加粗
-- \`p\`: 14px, 正常
+### Semantic Types (type)
 
-### 语义化类型 (type)
+- `secondary`: Secondary text color
+- `success`: Success color (green)
+- `warning`: Warning color (orange)
+- `danger`: Danger color (red)
+- `info`: Info color (blue)
 
-- \`secondary\`: 次要文本色
-- \`success\`: 成功色（绿色）
-- \`warning\`: 警告色（橙色）
-- \`danger\`: 危险色（红色）
-- \`info\`: 信息色（蓝色）
+### Boolean Attributes
 
-### 布尔属性
+- `strong`: Apply bold font weight
+- `italic`: Apply italic style
+- `underline`: Add underline
+- `delete`: Add strikethrough
+- `mark`: Add yellow background highlight
+- `code`: Apply code style (monospace font, light gray background)
+- `disabled`: Apply disabled style (light gray text)
 
-- \`strong\`: 应用加粗字重
-- \`italic\`: 应用斜体样式
-- \`underline\`: 添加下划线
-- \`delete\`: 添加删除线
-- \`mark\`: 添加黄色背景高亮
-- \`code\`: 应用代码样式（等宽字体、浅灰背景）
-- \`disabled\`: 应用禁用样式（浅灰文本）
+## Notes
 
-## API
-
-| 属性          | 类型                         | 默认值                               | 说明            |              |          |       |                      |                          |
-| ------------- | ---------------------------- | ------------------------------------ | --------------- | ------------ | -------- | ----- | -------------------- | ------------------------ |
-| as            | \`'h1' \\                    | 'h2' \\                              | 'h3' \\         | 'h4' \\      | 'h5' \\  | 'p'\` | -                    | 标签类型，影响字号和字重 |
-| type          | \`'secondary' \\             | 'success' \\                         | 'warning' \\    | 'danger' \\  | 'info'\` | -     | 语义化类型，影响颜色 |                          |
-| strong        | \`boolean\`                  | \`false\`                            | 是否加粗        |              |          |       |                      |                          |
-| italic        | \`boolean\`                  | \`false\`                            | 是否斜体        |              |          |       |                      |                          |
-| underline     | \`boolean\`                  | \`false\`                            | 是否下划线      |              |          |       |                      |                          |
-| delete        | \`boolean\`                  | \`false\`                            | 是否删除线      |              |          |       |                      |                          |
-| mark          | \`boolean\`                  | \`false\`                            | 是否标记 / 高亮 |              |          |       |                      |                          |
-| code          | \`boolean\`                  | \`false\`                            | 是否代码样式    |              |          |       |                      |                          |
-| disabled      | \`boolean\`                  | \`false\`                            | 是否禁用状态    |              |          |       |                      |                          |
-| color         | \`string\`                   | -                                    | 自定义文本颜色  |              |          |       |                      |                          |
-| weight        | \`TextStyle\['fontWeight']\` | -                                    | 自定义字重      |              |          |       |                      |                          |
-| fontSize      | \`number\`                   | -                                    | 自定义字号      |              |          |       |                      |                          |
-| align         | \`'left' \\                  | 'center' \\                          | 'right' \\      | 'justify' \\ | 'auto'\` | -     | 文本对齐方式         |                          |
-| ellipsis      | \`boolean \\                 | { rows?: number; suffix?: string }\` | -               | 省略号配置   |          |       |                      |                          |
-| numberOfLines | \`number\`                   | -                                    | 限制行数        |              |          |       |                      |                          |
-| style         | \`TextStyle\`                | -                                    | 自定义样式      |              |          |       |                      |                          |
-
-## 注意事项
-
-1. \`as\` 和自定义 \`fontSize\` 可以同时使用，自定义值会覆盖默认值
-2. \`type\` 和自定义 \`color\` 可以同时使用，自定义值会覆盖默认值
-3. \`strong\` 和自定义 \`weight\` 可以同时使用，自定义值会覆盖默认值
-4. \`ellipsis\` 会自动设置 \`numberOfLines\`，但显式设置的 \`numberOfLines\` 优先级更高
-5. 多个布尔属性可以组合使用（如 \`strong\` + \`underline\` + \`italic\`）
+1. `as` and custom `fontSize` can be used together, custom value will override default
+2. `type` and custom `color` can be used together, custom value will override default
+3. `strong` and custom `weight` can be used together, custom value will override default
+4. `ellipsis` will automatically set `numberOfLines`, but explicitly set `numberOfLines` has higher priority
+5. Multiple boolean attributes can be combined (e.g., `strong` + `underline` + `italic`)

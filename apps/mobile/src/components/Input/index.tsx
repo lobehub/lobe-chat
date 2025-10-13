@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import TextArea from './TextArea';
 import { useStyles } from './style';

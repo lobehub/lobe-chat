@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import ModelCardSkeleton from '../ModelCardSkeleton';
 import { useStyles } from './style';

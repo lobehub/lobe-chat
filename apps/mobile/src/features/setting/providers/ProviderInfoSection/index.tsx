@@ -5,9 +5,9 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
+import { useTheme } from '@/components/theme';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
-import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 

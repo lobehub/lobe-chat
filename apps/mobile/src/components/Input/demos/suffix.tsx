@@ -3,7 +3,7 @@ import { Copy, Send, X } from 'lucide-react-native';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 const useStyles = createStyles(({ token }) => ({
   clearButton: {

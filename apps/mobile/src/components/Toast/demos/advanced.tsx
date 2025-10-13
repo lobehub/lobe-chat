@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 export default function AdvancedDemo() {
   const toast = useToast();

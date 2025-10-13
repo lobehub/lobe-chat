@@ -2,7 +2,7 @@ import { Highlighter } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 /**
  * 基础代码高亮演示

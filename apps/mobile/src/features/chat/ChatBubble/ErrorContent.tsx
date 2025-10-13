@@ -4,8 +4,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
+import { useTheme } from '@/components/theme';
 import { useProviderName } from '@/hooks/useProviderName';
-import { useTheme } from '@/theme';
 
 interface ErrorContentProps {
   error: ChatMessageError;

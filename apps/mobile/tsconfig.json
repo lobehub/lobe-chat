@@ -25,7 +25,6 @@
   },
   "exclude": [
     "node_modules",
-    "scripts/**",
     "tmp",
     "temp",
     ".temp",
@@ -34,5 +33,12 @@
     "**/*.test.tsx"
   ],
   "extends": "expo/tsconfig.base",
-  "include": ["src/**/*", "app/**/*", "expo-env.d.ts", "global.d.ts", ".expo/types/**/*.ts"]
+  "include": [
+    "src/**/*",
+    "app/**/*",
+    "scripts/**/*",
+    "expo-env.d.ts",
+    "global.d.ts",
+    ".expo/types/**/*.ts"
+  ]
 }

@@ -2,7 +2,7 @@ import { Button, Tooltip } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const BasicDemo = () => {
   const token = useTheme();

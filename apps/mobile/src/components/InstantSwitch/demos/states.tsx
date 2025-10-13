@@ -2,7 +2,7 @@ import { InstantSwitch } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 const handleErrorChange = async () => {
   // 模拟网络错误
