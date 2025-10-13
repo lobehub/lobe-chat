@@ -61,7 +61,7 @@ vi.mock('@/services/aiChat', () => ({
         topicId,
         userMessageId: userId,
         assistantMessageId: assistantId,
-        isCreatNewTopic: !params.topicId,
+        isCreateNewTopic: !params.topicId,
       } as any;
     }),
   },
@@ -558,7 +558,7 @@ describe('generateAIChatV2 actions', () => {
       const message = 'Test message for new topic';
 
       vi.spyOn(aiChatService, 'sendMessageInServer').mockResolvedValueOnce({
-        isCreatNewTopic: true,
+        isCreateNewTopic: true,
         topicId: 'topic-id',
         messages: [{}, {}] as any,
         topics: [{}] as any,
@@ -578,7 +578,7 @@ describe('generateAIChatV2 actions', () => {
       });
 
       // Verify that deleteMessage was called for temporary message cleanup
-      // This should happen because the mock aiChatService returns isCreatNewTopic: true
+      // This should happen because the mock aiChatService returns isCreateNewTopic: true
       expect(useChatStore.getState().messagesMap['session-id_null']).toEqual([]);
     });
   });

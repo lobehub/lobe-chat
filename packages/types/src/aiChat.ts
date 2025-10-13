@@ -47,7 +47,7 @@ export const AiSendMessageServerSchema = z.object({
 
 export interface SendMessageServerResponse {
   assistantMessageId: string;
-  isCreatNewTopic: boolean;
+  isCreateNewTopic: boolean;
   messages: ChatMessage[];
   topicId: string;
   topics?: ChatTopic[];

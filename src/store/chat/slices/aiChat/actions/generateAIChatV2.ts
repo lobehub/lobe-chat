@@ -193,7 +193,7 @@ export const generateAIChatV2: StateCreator<
         topicId: data.topicId,
       });
 
-      if (data.isCreatNewTopic && data.topicId) {
+      if (data.isCreateNewTopic && data.topicId) {
         await get().switchTopic(data.topicId, true);
       }
     } catch (e) {
@@ -211,7 +211,7 @@ export const generateAIChatV2: StateCreator<
     }
 
     // remove temporally message
-    if (data?.isCreatNewTopic) {
+    if (data?.isCreateNewTopic) {
       get().internal_dispatchMessage(
         { type: 'deleteMessage', id: tempId },
         { topicId: activeTopicId, sessionId: activeId },
@@ -240,7 +240,7 @@ export const generateAIChatV2: StateCreator<
 
     const summaryTitle = async () => {
       // check activeTopic and then auto update topic title
-      if (data.isCreatNewTopic) {
+      if (data.isCreateNewTopic) {
         await get().summaryTopicTitle(data.topicId, data.messages);
         return;
       }
