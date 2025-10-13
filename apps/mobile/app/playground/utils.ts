@@ -1,15 +1,16 @@
-import { COMPONENT_CONFIG_TREE } from './config';
-import { ComponentCategory, ComponentItem } from './type';
+import playgroundData from './.data/index.json';
+import { ComponentItem } from './type';
 
 /**
- * 将树形配置转换为平面数组（按字母顺序排序）
+ * 从 index.json 获取所有组件（按字母顺序排序）
  */
 export const getAllComponents = (): ComponentItem[] => {
   const components: ComponentItem[] = [];
 
-  (Object.keys(COMPONENT_CONFIG_TREE) as ComponentCategory[]).forEach((category) => {
-    COMPONENT_CONFIG_TREE[category].forEach((name) => {
-      components.push({ category, name });
+  Object.entries(playgroundData.components).forEach(([name, config]) => {
+    components.push({
+      category: config.group,
+      name,
     });
   });
 
@@ -25,8 +26,7 @@ export const getComponentsByCategory = (category?: string): ComponentItem[] => {
     return getAllComponents();
   }
 
-  const names = COMPONENT_CONFIG_TREE[category as ComponentCategory] || [];
-  const components = names.map((name) => ({ category: category as ComponentCategory, name }));
+  const components = getAllComponents().filter((c) => c.category === category);
 
   // 按组件名称的字母顺序排序
   return components.sort((a, b) => a.name.localeCompare(b.name));
@@ -46,9 +46,7 @@ export const searchComponentsByName = (name: string): ComponentItem[] => {
  * 获取所有分类
  */
 export const getAllCategories = (): string[] => {
-  return Object.keys(COMPONENT_CONFIG_TREE).filter(
-    (category) => COMPONENT_CONFIG_TREE[category as ComponentCategory].length > 0,
-  );
+  return playgroundData.groups;
 };
 
 /**
@@ -62,4 +60,26 @@ export const getComponentStats = () => {
     categories,
     total,
   };
+};
+
+/**
+ * 按分组获取组件列表
+ */
+export const getComponentsByGroups = (): Record<string, ComponentItem[]> => {
+  const groups: Record<string, ComponentItem[]> = {};
+  const allComponents = getAllComponents();
+
+  allComponents.forEach((component) => {
+    if (!groups[component.category]) {
+      groups[component.category] = [];
+    }
+    groups[component.category].push(component);
+  });
+
+  // 对每个分组内的组件按名称排序
+  Object.keys(groups).forEach((group) => {
+    groups[group].sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  return groups;
 };

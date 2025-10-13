@@ -2,7 +2,7 @@ import { Tag } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const UseCaseDemo = () => {
   const token = useTheme();

@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-import { AliasToken, createStyles } from '@/theme';
+import { AliasToken, createStyles } from '@/components/theme';
 
 import { InputSize, InputVariant } from './type';
 

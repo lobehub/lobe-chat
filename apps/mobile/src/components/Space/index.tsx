@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import { useStyles } from './style';
 

@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 export const useStyles = createStyles(({ token }) => ({
   footer: {

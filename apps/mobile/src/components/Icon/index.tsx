@@ -2,7 +2,7 @@ import React, { memo, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
 import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL } from '@/_const/common';
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import type {
   IconComponentType,

@@ -1,52 +1,54 @@
-# Skeleton 骨架屏组件
+---
+group: Feedback
+title: Skeleton
+description: React Native skeleton screen component inspired by Ant Design, used for page loading state display.
+---
 
-React Native 版本的骨架屏组件，参考 Ant Design 设计，用于页面加载状态显示。
+## Features
 
-## 功能特性
+- ✅ Basic skeleton screen display
+- ✅ Avatar skeleton support
+- ✅ Title and paragraph skeleton
+- ✅ Button skeleton
+- ✅ Animation effect support
+- ✅ Custom row count and width
+- ✅ Loading state control
+- ✅ TypeScript support
+- ✅ Theme adaptation
 
-- ✅ 基础骨架屏显示
-- ✅ 头像骨架屏支持
-- ✅ 标题和段落骨架屏
-- ✅ 按钮骨架屏
-- ✅ 动画效果支持
-- ✅ 自定义行数和宽度
-- ✅ 加载状态控制
-- ✅ TypeScript 支持
-- ✅ 主题适配
-
-## 基础使用
+## Basic Usage
 
 ```tsx
 import { Skeleton } from '@lobehub/ui-rn';
 
-// 基础用法
+// Basic usage
 <Skeleton />
 
-// 关闭动画
+// Disable animation
 <Skeleton animated={false} />
 
-// 加载完成显示内容
+// Show content when loading complete
 <Skeleton loading={false}>
-  <Text>实际内容</Text>
+  <Text>Actual content</Text>
 </Skeleton>
 
-// 带头像的骨架屏
+// With avatar
 <Skeleton avatar />
 
-// 自定义头像
+// Custom avatar
 <Skeleton avatar={{ size: 64, shape: 'square' }} />
 
-// 自定义段落
+// Custom paragraph
 <Skeleton paragraph={{ rows: 5 }} />
 
-// 自定义每行宽度
+// Custom row widths
 <Skeleton
   paragraph={{
     width: ['100%', '90%', '75%', '50%']
   }}
 />
 
-// 使用复合组件
+// Use compound components
 <Skeleton.Avatar size={48} shape="circle" />
 <Skeleton.Title width="80%" />
 <Skeleton.Paragraph rows={4} />
@@ -54,111 +56,46 @@ import { Skeleton } from '@lobehub/ui-rn';
 <Skeleton.Button block size="large" />
 ```
 
-## API
-
-### SkeletonProps
-
-| 属性            | 类型          | 默认值                            | 说明                 |               |                |          |                |
-| --------------- | ------------- | --------------------------------- | -------------------- | ------------- | -------------- | -------- | -------------- |
-| loading         | \`boolean\`   | \`true\`                          | 是否显示加载状态     |               |                |          |                |
-| avatar          | \`boolean     | { size?: number; shape?: 'circle' | 'square' }\`         | \`false\`     | 显示头像占位符 |          |                |
-| title           | \`boolean     | { width?: number                  | string }\`           | \`true\`      | 显示标题占位符 |          |                |
-| paragraph       | \`boolean     | { rows?: number; width?: number   | string               | Array\<number | string> }\`    | \`true\` | 显示段落占位符 |
-| animated        | \`boolean\`   | \`true\`                          | 是否显示动画效果     |               |                |          |                |
-| style           | \`ViewStyle\` | -                                 | 容器样式             |               |                |          |                |
-| children        | \`ReactNode\` | -                                 | 加载完成后显示的内容 |               |                |          |                |
-| backgroundColor | \`string\`    | -                                 | 自定义背景色         |               |                |          |                |
-| highlightColor  | \`string\`    | -                                 | 自定义高亮色         |               |                |          |                |
-
-### Avatar 配置
-
-| 属性  | 类型       | 默认值     | 说明         |          |
-| ----- | ---------- | ---------- | ------------ | -------- |
-| size  | \`number\` | \`40\`     | 头像大小     |          |
-| shape | \`'circle' | 'square'\` | \`'circle'\` | 头像形状 |
-
-### Paragraph 配置
-
-| 属性  | 类型       | 默认值 | 说明          |           |     |                                      |
-| ----- | ---------- | ------ | ------------- | --------- | --- | ------------------------------------ |
-| rows  | \`number\` | \`3\`  | 段落行数      |           |     |                                      |
-| width | \`number   | string | Array\<number | string>\` | -   | 每行宽度，可以是数组指定每行不同宽度 |
-
-## 复合组件
+## Compound Components
 
 ### Skeleton.Avatar
 
-独立的头像骨架屏组件。
-
-| 属性            | 类型          | 默认值     | 说明             |          |
-| --------------- | ------------- | ---------- | ---------------- | -------- |
-| size            | \`number\`    | \`40\`     | 头像大小         |          |
-| shape           | \`'circle'    | 'square'\` | \`'circle'\`     | 头像形状 |
-| animated        | \`boolean\`   | \`false\`  | 是否显示动画效果 |          |
-| style           | \`ViewStyle\` | -          | 自定义样式       |          |
-| backgroundColor | \`string\`    | -          | 自定义背景色     |          |
-| highlightColor  | \`string\`    | -          | 自定义高亮色     |          |
+Standalone avatar skeleton component.
 
 ### Skeleton.Title
 
-独立的标题骨架屏组件。
-
-| 属性            | 类型          | 默认值    | 说明             |          |
-| --------------- | ------------- | --------- | ---------------- | -------- |
-| width           | \`number      | string\`  | \`'60%'\`        | 标题宽度 |
-| animated        | \`boolean\`   | \`false\` | 是否显示动画效果 |          |
-| style           | \`ViewStyle\` | -         | 自定义样式       |          |
-| backgroundColor | \`string\`    | -         | 自定义背景色     |          |
-| highlightColor  | \`string\`    | -         | 自定义高亮色     |          |
+Standalone title skeleton component.
 
 ### Skeleton.Paragraph
 
-独立的段落骨架屏组件。
-
-| 属性            | 类型          | 默认值    | 说明             |           |     |                                      |
-| --------------- | ------------- | --------- | ---------------- | --------- | --- | ------------------------------------ |
-| rows            | \`number\`    | \`3\`     | 段落行数         |           |     |                                      |
-| width           | \`number      | string    | Array\<number    | string>\` | -   | 每行宽度，可以是数组指定每行不同宽度 |
-| animated        | \`boolean\`   | \`false\` | 是否显示动画效果 |           |     |                                      |
-| style           | \`ViewStyle\` | -         | 自定义样式       |           |     |                                      |
-| backgroundColor | \`string\`    | -         | 自定义背景色     |           |     |                                      |
-| highlightColor  | \`string\`    | -         | 自定义高亮色     |           |     |                                      |
+Standalone paragraph skeleton component.
 
 ### Skeleton.Button
 
-独立的按钮骨架屏组件。
+Standalone button skeleton component.
 
-| 属性     | 类型          | 默认值     | 说明             |                                       |              |
-| -------- | ------------- | ---------- | ---------------- | ------------------------------------- | ------------ |
-| size     | \`'small'     | 'middle'   | 'large'\`        | \`'middle'\`                          | 按钮高度尺寸 |
-| block    | \`boolean\`   | \`false\`  | 是否占满整行宽度 |                                       |              |
-| shape    | \`'default'   | 'circle'\` | \`'default'\`    | 按钮形状                              |              |
-| width    | \`number      | string\`   | \`'50%'\`        | 按钮宽度（当非 block 且非圆形时生效） |              |
-| animated | \`boolean\`   | \`false\`  | 是否显示动画效果 |                                       |              |
-| style    | \`ViewStyle\` | -          | 自定义样式       |                                       |              |
+## Use Cases
 
-## 使用场景
+### List Loading
 
-### 列表加载
+Suitable for displaying skeleton screens during list data loading to improve user experience.
 
-适合在列表数据加载时显示骨架屏，提升用户体验。
+### Card Content
 
-### 卡片内容
+Display corresponding skeleton screen structure when card content is loading.
 
-在卡片内容加载时显示对应的骨架屏结构。
+### Profile
 
-### 个人资料
+Use avatar + text combination to display profile loading state.
 
-使用头像 + 文字的组合展示个人资料加载状态。
+### Article Content
 
-### 文章内容
+Use title + paragraph combination to display article content loading state.
 
-使用标题 + 段落的组合展示文章内容加载状态。
+## Animation Effect
 
-## 动画效果
+The component supports gradient animation effects, controlled by the `animated` prop. Animations are implemented using React Native Animated API with excellent performance.
 
-组件支持渐变动画效果，通过 \`animated\` 属性控制开启或关闭。动画使用 React Native Animated API 实现，性能优良。
+## Custom Styles
 
-## 自定义样式
-
-可以通过 \`backgroundColor\` 和 \`highlightColor\` 属性自定义骨架屏的颜色，也可以通过 \`style\` 属性自定义容器样式。
+You can customize skeleton colors through `backgroundColor` and `highlightColor` props, or customize container styles through the `style` prop.

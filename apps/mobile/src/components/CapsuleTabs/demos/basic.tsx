@@ -2,7 +2,7 @@ import { CapsuleTabItem, CapsuleTabs } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const items: CapsuleTabItem[] = [
   { key: 'all', label: 'All' },

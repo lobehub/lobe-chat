@@ -2,7 +2,7 @@ import { Button, Toast } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const showSuccess = () => {
   Toast.success('操作成功');
