@@ -1,5 +1,4 @@
 import { Button, Space } from '@lobehub/ui-rn';
-import React from 'react';
 import { View } from 'react-native';
 
 const colors: any[] = ['default', 'primary', 'danger', 'magenta', 'purple', 'cyan'];

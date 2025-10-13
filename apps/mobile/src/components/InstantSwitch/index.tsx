@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { ActivityIndicator, Switch, View, ViewStyle } from 'react-native';
 
 import { useStyles } from './style';

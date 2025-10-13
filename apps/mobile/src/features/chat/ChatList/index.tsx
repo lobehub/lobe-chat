@@ -1,6 +1,6 @@
 import { ChatMessage } from '@lobechat/types';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
   InteractionManager,
   LayoutChangeEvent,
@@ -28,7 +28,7 @@ interface ChatListProps {
   style?: ViewStyle;
 }
 
-const ChatMessageItem = React.memo<{ index: number; item: ChatMessage; totalLength: number }>(
+const ChatMessageItem = memo<{ index: number; item: ChatMessage; totalLength: number }>(
   ({ item, index, totalLength }) => {
     const isLastMessage = index === totalLength - 1;
     const isAssistant = item.role === 'assistant';

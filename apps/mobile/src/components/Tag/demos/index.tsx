@@ -1,5 +1,4 @@
 import { DemoConfig } from '@lobehub/ui-rn';
-import React from 'react';
 
 import BasicDemo from './basic';
 import BorderDemo from './border';

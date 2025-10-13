@@ -1,4 +1,5 @@
-import React, { ReactNode, createContext, useCallback, useContext, useState } from 'react';
+import type { FC } from 'react';
+import { ReactNode, createContext, useCallback, useContext, useState } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -33,7 +34,7 @@ interface ToastItem extends Omit<ToastProps, 'opacity'> {
   translateY: Animated.Value;
 }
 
-export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
+export const ToastProvider: FC<ToastProviderProps> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const insets = useSafeAreaInsets();
 

@@ -1,5 +1,15 @@
 import { Portal } from '@gorhom/portal';
-import React, { ReactNode, useCallback, useRef, useState } from 'react';
+import type { FC, ReactElement } from 'react';
+import {
+  ReactNode,
+  cloneElement,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Animated,
   Dimensions,
@@ -78,7 +88,7 @@ const MARGIN = 4;
 const BORDER_RADIUS = 6;
 const ARROW_SAFE_MARGIN = 8;
 
-export const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip: FC<TooltipProps> = ({
   title,
   children,
   placement = 'top',
@@ -455,7 +465,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   );
 
   // 计算 tooltip 位置和箭头位置
-  const tooltipPosition = React.useMemo(() => {
+  const tooltipPosition = useMemo(() => {
     if (!childLayout || !visible) {
       return tooltipPositionCache.current;
     }
@@ -481,7 +491,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     return position;
   }, [childLayout, tooltipLayout, visible, placement, pressPosition]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (tooltipPosition) {
       setActualPlacement(tooltipPosition.placement);
     }
@@ -602,11 +612,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
     triggerProps.onPress = handleChildPress;
   }
 
-  const clonedChild = React.isValidElement(children)
-    ? React.cloneElement(children as React.ReactElement<any>, triggerProps)
+  const clonedChild = isValidElement(children)
+    ? cloneElement(children as ReactElement<any>, triggerProps)
     : children;
 
-  const longPressGesture = React.useMemo(
+  const longPressGesture = useMemo(
     () =>
       Gesture.LongPress()
         .enabled(trigger === 'longPress')

@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import Text from '../Text';

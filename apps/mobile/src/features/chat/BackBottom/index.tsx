@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui-rn';
 import { ArrowDown } from 'lucide-react-native';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { useStyles } from './style';

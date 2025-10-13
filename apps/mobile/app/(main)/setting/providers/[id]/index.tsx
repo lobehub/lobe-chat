@@ -15,7 +15,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { RefreshCcw } from 'lucide-react-native';
 import { AiProviderModelListItem } from 'model-bank';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from 'react-native';
 
@@ -41,7 +41,7 @@ type FlashListItem =
   | { data: { message: string }; id: string; type: 'empty' };
 
 // ModelCard组件（从ModelsSection提取）
-const ModelCard = React.memo<{
+const ModelCard = memo<{
   model: AiProviderModelListItem;
   onToggle: (_modelId: string, _enabled: boolean) => void;
 }>(({ model, onToggle }) => {

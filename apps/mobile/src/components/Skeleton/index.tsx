@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import type { FC, ReactNode } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, DimensionValue, StyleProp, View, ViewStyle } from 'react-native';
 
 import SkeletonAvatar from './Avatar';
@@ -14,7 +15,7 @@ export interface SkeletonProps {
   /** Show skeleton avatar */
   avatar?: boolean | { shape?: 'circle' | 'square'; size?: number };
   /** Content to show when loading is false */
-  children?: React.ReactNode;
+  children?: ReactNode;
   /** Show loading state */
   loading?: boolean;
   /** Show skeleton paragraph */
@@ -25,7 +26,7 @@ export interface SkeletonProps {
   title?: boolean | { width?: DimensionValue };
 }
 
-const Skeleton: React.FC<SkeletonProps> = ({
+const Skeleton: FC<SkeletonProps> = ({
   loading = true,
   avatar = false,
   title = true,
@@ -121,7 +122,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
     const rows = paragraphProps.rows || 3;
     const width = paragraphProps.width;
 
-    const lines = [] as React.ReactNode[];
+    const lines = [] as ReactNode[];
     for (let i = 0; i < rows; i++) {
       let lineWidth = '100%';
 

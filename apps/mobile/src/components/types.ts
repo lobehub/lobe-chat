@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 
 /**
  * Demo 项配置
@@ -8,7 +8,7 @@ export interface DemoItem {
   /**
    * Demo 组件实例
    */
-  component: React.ReactNode;
+  component: ReactNode;
   /**
    * Demo 唯一标识
    */

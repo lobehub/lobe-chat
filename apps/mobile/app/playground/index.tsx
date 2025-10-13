@@ -9,7 +9,7 @@ import {
 } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { kebabCase } from 'lodash-es';
-import React, { Fragment, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
 import { useStyles } from './styles';
