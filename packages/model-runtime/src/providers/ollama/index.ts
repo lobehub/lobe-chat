@@ -26,6 +26,14 @@ export interface OllamaModelCard {
   name: string;
 }
 
+export const params = {
+  baseURL: undefined,
+  debug: {
+    chatCompletion: () => process.env.DEBUG_OLLAMA_CHAT_COMPLETION === '1',
+  },
+  provider: ModelProvider.Ollama,
+};
+
 export class LobeOllamaAI implements LobeRuntimeAI {
   private client: Ollama;
 
