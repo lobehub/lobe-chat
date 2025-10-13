@@ -1,10 +1,9 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
 
-import { setupPgliteFetchMock } from '../../../../../tests/utils';
 import {
   NewChatGroup,
   agents as agentsTable,
@@ -17,10 +16,8 @@ import { getTestDB } from './_util';
 
 const userId = 'test-user';
 const otherUserId = 'other-user';
-let chatGroupModel: ChatGroupModel;
-let serverDB: LobeChatDatabase;
 
-let restoreFetchMock: (() => void) | undefined;
+const serverDB: LobeChatDatabase = await getTestDB();
 
 type RelationAgent = {
   agentId: string;
@@ -32,15 +29,7 @@ type RelationAgent = {
 
 const toRelationAgents = (agents: unknown): RelationAgent[] => agents as RelationAgent[];
 
-beforeAll(async () => {
-  restoreFetchMock = setupPgliteFetchMock();
-  serverDB = await getTestDB();
-  chatGroupModel = new ChatGroupModel(serverDB, userId);
-});
-
-afterAll(() => {
-  restoreFetchMock?.();
-});
+const chatGroupModel = new ChatGroupModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.delete(users);
