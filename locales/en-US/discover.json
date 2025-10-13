@@ -59,6 +59,11 @@
       }
     },
     "list": "Assistant List",
+    "marketSource": {
+      "label": "Market Source",
+      "legacy": "Legacy",
+      "new": "New"
+    },
     "more": "More",
     "plugins": "Integrated Plugins",
     "recentSubmits": "Recent Updates",

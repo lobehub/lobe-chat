@@ -10,7 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import InlineTable from '@/components/InlineTable';
 import PublishedTime from '@/components/PublishedTime';
-import { AssistantNavKey } from '@/types/discover';
+import { useQuery } from '@/hooks/useQuery';
+import { AssistantMarketSource, AssistantNavKey } from '@/types/discover';
 
 import Title from '../../../../../../features/Title';
 import { useDetailContext } from '../../DetailProvider';
@@ -20,6 +21,8 @@ const Versions = memo(() => {
   const theme = useTheme();
   const pathname = usePathname();
   const { versions = [], currentVersion } = useDetailContext();
+  const { source } = useQuery() as { source?: AssistantMarketSource };
+  const marketSource = source === 'legacy' ? 'legacy' : undefined;
 
   const statusTagMap = useMemo(
     () => ({
@@ -81,13 +84,17 @@ const Versions = memo(() => {
 
                   return (
                     <Link
-                      href={qs.stringifyUrl({
-                        query: {
-                          activeTab: AssistantNavKey.Version,
-                          version: record.version,
+                      href={qs.stringifyUrl(
+                        {
+                          query: {
+                            activeTab: AssistantNavKey.Version,
+                            source: marketSource,
+                            version: record.version,
+                          },
+                          url: pathname,
                         },
-                        url: pathname,
-                      })}
+                        { skipNull: true },
+                      )}
                       style={{ color: 'inherit' }}
                     >
                       {content}

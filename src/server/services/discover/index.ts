@@ -6,13 +6,18 @@ import matter from 'gray-matter';
 import { cloneDeep, countBy, isString, merge, uniq, uniqBy } from 'lodash-es';
 import urlJoin from 'url-join';
 
-import { DEFAULT_DISCOVER_PLUGIN_ITEM, DEFAULT_DISCOVER_PROVIDER_ITEM } from '@/const/discover';
+import {
+  DEFAULT_DISCOVER_ASSISTANT_ITEM,
+  DEFAULT_DISCOVER_PLUGIN_ITEM,
+  DEFAULT_DISCOVER_PROVIDER_ITEM,
+} from '@/const/discover';
 import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { normalizeLocale } from '@/locales/resources';
 import { AssistantStore } from '@/server/modules/AssistantStore';
 import { PluginStore } from '@/server/modules/PluginStore';
 import {
   AssistantListResponse,
+  AssistantMarketSource,
   AssistantQueryParams,
   AssistantSorts,
   CacheRevalidate,
@@ -205,11 +210,258 @@ export class DiscoverService {
     return result;
   };
 
+  private isLegacySource = (source?: AssistantMarketSource) => source === 'legacy';
+
+  private legacyGetAssistantListRaw = async (locale?: string): Promise<DiscoverAssistantItem[]> => {
+    log('legacyGetAssistantListRaw: locale=%s', locale);
+    const normalizedLocale = normalizeLocale(locale);
+    const list = await this.assistantStore.getAgentIndex(normalizedLocale);
+    if (!list || !Array.isArray(list)) {
+      log('legacyGetAssistantListRaw: no valid list found, returning empty array');
+      return [];
+    }
+    const result = list.map(({ meta, ...item }) => ({ ...item, ...meta }));
+    log('legacyGetAssistantListRaw: returning %d items', result.length);
+    return result;
+  };
+
+  private legacyGetAssistantCategories = async (
+    params: CategoryListQuery = {},
+  ): Promise<CategoryItem[]> => {
+    log('legacyGetAssistantCategories: params=%O', params);
+    const { q, locale } = params;
+    let list = await this.legacyGetAssistantListRaw(locale);
+    if (q) {
+      const originalCount = list.length;
+      list = list.filter((item) => {
+        return [item.author, item.title, item.description, item?.tags]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+      log(
+        'legacyGetAssistantCategories: filtered by query "%s", %d -> %d items',
+        q,
+        originalCount,
+        list.length,
+      );
+    }
+    const categoryCounts = countBy(list, (item) => item.category);
+    const result = Object.entries(categoryCounts)
+      .filter(([category]) => Boolean(category))
+      .map(([category, count]) => ({
+        category,
+        count,
+      }));
+    log('legacyGetAssistantCategories: returning %d categories', result.length);
+    return result;
+  };
+
+  private legacyGetAssistantDetail = async (params: {
+    identifier: string;
+    locale?: string;
+    version?: string;
+  }): Promise<DiscoverAssistantDetail | undefined> => {
+    log('legacyGetAssistantDetail: params=%O', params);
+    const { locale, identifier } = params;
+    const normalizedLocale = normalizeLocale(locale);
+    let data = await this.assistantStore.getAgent(identifier, normalizedLocale);
+    if (!data) {
+      log('legacyGetAssistantDetail: assistant not found for identifier=%s', identifier);
+      return;
+    }
+    const { meta, ...item } = data;
+    const assistant = merge(cloneDeep(DEFAULT_DISCOVER_ASSISTANT_ITEM), { ...item, ...meta });
+    const list = await this.getAssistantList({
+      category: assistant.category,
+      locale,
+      page: 1,
+      pageSize: 7,
+      source: 'legacy',
+    });
+    const result = {
+      ...assistant,
+      related: list.items.filter((item) => item.identifier !== assistant.identifier).slice(0, 6),
+    };
+    log(
+      'legacyGetAssistantDetail: returning assistant with %d related items',
+      result.related.length,
+    );
+    return result;
+  };
+
+  private legacyGetAssistantIdentifiers = async (): Promise<IdentifiersResponse> => {
+    log('legacyGetAssistantIdentifiers: fetching identifiers');
+    const list = await this.legacyGetAssistantListRaw();
+    const result = list.map((item) => {
+      return {
+        identifier: item.identifier,
+        lastModified: item.createdAt,
+      };
+    });
+    log('legacyGetAssistantIdentifiers: returning %d identifiers', result.length);
+    return result;
+  };
+
+  private legacyGetAssistantList = async (
+    params: AssistantQueryParams = {},
+  ): Promise<AssistantListResponse> => {
+    log('legacyGetAssistantList: params=%O', params);
+    const {
+      locale,
+      category,
+      order = 'desc',
+      page = 1,
+      pageSize = 20,
+      q,
+      sort = AssistantSorts.CreatedAt,
+      ownerId,
+    } = params;
+    const currentPage = Number(page) || 1;
+    const currentPageSize = Number(pageSize) || 20;
+
+    if (ownerId) {
+      log('legacyGetAssistantList: ownerId filter not supported in legacy source');
+      return {
+        currentPage,
+        items: [],
+        pageSize: currentPageSize,
+        totalCount: 0,
+        totalPages: 0,
+      };
+    }
+
+    let list = await this.legacyGetAssistantListRaw(locale);
+    const originalCount = list.length;
+
+    if (category) {
+      list = list.filter((item) => item.category === category);
+      log(
+        'legacyGetAssistantList: filtered by category "%s", %d -> %d items',
+        category,
+        originalCount,
+        list.length,
+      );
+    }
+
+    if (q) {
+      const beforeFilter = list.length;
+      list = list.filter((item) => {
+        return [item.author, item.title, item.description, item?.tags]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+      log(
+        'legacyGetAssistantList: filtered by query "%s", %d -> %d items',
+        q,
+        beforeFilter,
+        list.length,
+      );
+    }
+
+    if (sort) {
+      log('legacyGetAssistantList: sorting by %s %s', sort, order);
+      switch (sort) {
+        case AssistantSorts.CreatedAt: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix();
+            } else {
+              return dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix();
+            }
+          });
+          break;
+        }
+        case AssistantSorts.KnowledgeCount: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return (a.knowledgeCount || 0) - (b.knowledgeCount || 0);
+            } else {
+              return (b.knowledgeCount || 0) - (a.knowledgeCount || 0);
+            }
+          });
+          break;
+        }
+        case AssistantSorts.PluginCount: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return (a.pluginCount || 0) - (b.pluginCount || 0);
+            } else {
+              return (b.pluginCount || 0) - (a.pluginCount || 0);
+            }
+          });
+          break;
+        }
+        case AssistantSorts.TokenUsage: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return (a.tokenUsage || 0) - (b.tokenUsage || 0);
+            } else {
+              return (b.tokenUsage || 0) - (a.tokenUsage || 0);
+            }
+          });
+          break;
+        }
+        case AssistantSorts.Identifier: {
+          list = list.sort((a, b) => {
+            if (order !== 'desc') {
+              return a.identifier.localeCompare(b.identifier);
+            } else {
+              return b.identifier.localeCompare(a.identifier);
+            }
+          });
+          break;
+        }
+        case AssistantSorts.Title: {
+          list = list.sort((a, b) => {
+            if (order === 'desc') {
+              return (a.title || a.identifier).localeCompare(b.title || b.identifier);
+            } else {
+              return (b.title || b.identifier).localeCompare(a.title || a.identifier);
+            }
+          });
+          break;
+        }
+        default:
+          break;
+      }
+    }
+
+    const start = (currentPage - 1) * currentPageSize;
+    const end = currentPage * currentPageSize;
+    const result = {
+      currentPage,
+      items: list.slice(start, end),
+      pageSize: currentPageSize,
+      totalCount: list.length,
+      totalPages: Math.ceil(list.length / currentPageSize),
+    };
+    log(
+      'legacyGetAssistantList: returning page %d/%d with %d items',
+      currentPage,
+      result.totalPages,
+      result.items.length,
+    );
+    return result;
+  };
+
   // ============================== Assistant Market ==============================
 
-  getAssistantCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
+  getAssistantCategories = async (
+    params: (CategoryListQuery & { source?: AssistantMarketSource }) = {},
+  ): Promise<CategoryItem[]> => {
     log('getAssistantCategories: params=%O', params);
-    const { q, locale } = params;
+    const { source, ...rest } = params;
+    if (this.isLegacySource(source)) {
+      return this.legacyGetAssistantCategories(rest);
+    }
+
+    const { q, locale } = rest;
     const normalizedLocale = normalizeLocale(locale);
 
     try {
@@ -245,10 +497,16 @@ export class DiscoverService {
   getAssistantDetail = async (params: {
     identifier: string;
     locale?: string;
+    source?: AssistantMarketSource;
     version?: string;
   }): Promise<DiscoverAssistantDetail | undefined> => {
     log('getAssistantDetail: params=%O', params);
-    const { locale, identifier, version } = params;
+    const { source, ...rest } = params;
+    if (this.isLegacySource(source)) {
+      return this.legacyGetAssistantDetail(rest);
+    }
+
+    const { locale, identifier, version } = rest;
     const normalizedLocale = normalizeLocale(locale);
 
     try {
@@ -314,6 +572,7 @@ export class DiscoverService {
         locale,
         page: 1,
         pageSize: 7,
+        source,
       });
 
       const result = {
@@ -329,8 +588,14 @@ export class DiscoverService {
     }
   };
 
-  getAssistantIdentifiers = async (): Promise<IdentifiersResponse> => {
-    log('getAssistantIdentifiers: fetching identifiers');
+  getAssistantIdentifiers = async (
+    params: { source?: AssistantMarketSource } = {},
+  ): Promise<IdentifiersResponse> => {
+    log('getAssistantIdentifiers: fetching identifiers with params=%O', params);
+    if (this.isLegacySource(params.source)) {
+      return this.legacyGetAssistantIdentifiers();
+    }
+
     try {
       // Call the database API identifiers endpoint directly
       const response = await fetch(
@@ -359,6 +624,11 @@ export class DiscoverService {
 
   getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
     log('getAssistantList: params=%O', params);
+    const { source, ...rest } = params;
+    if (this.isLegacySource(source)) {
+      return this.legacyGetAssistantList(rest);
+    }
+
     const {
       locale,
       category,
@@ -368,7 +638,7 @@ export class DiscoverService {
       q,
       sort = AssistantSorts.CreatedAt,
       ownerId,
-    } = params;
+    } = rest;
 
     try {
       const normalizedLocale = normalizeLocale(locale);

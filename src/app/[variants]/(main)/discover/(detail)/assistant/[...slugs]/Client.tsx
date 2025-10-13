@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
+import { AssistantMarketSource } from '@/types/discover';
 
 import { TocProvider } from '../../features/Toc/useToc';
 import { DetailProvider } from './features/DetailProvider';
@@ -21,9 +22,10 @@ interface ClientProps {
 }
 
 const Client = memo<ClientProps>(({ identifier, mobile }) => {
-  const { version } = useQuery() as { version?: string };
+  const { version, source } = useQuery() as { source?: AssistantMarketSource; version?: string };
+  const marketSource = source as AssistantMarketSource | undefined;
   const useAssistantDetail = useDiscoverStore((s) => s.useAssistantDetail);
-  const { data, isLoading } = useAssistantDetail({ identifier, version });
+  const { data, isLoading } = useAssistantDetail({ identifier, source: marketSource, version });
 
   if (isLoading) return <Loading />;
   if (!data) return notFound();

@@ -11,6 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { useQuery } from '@/hooks/useQuery';
+import { AssistantMarketSource } from '@/types/discover';
 import { formatIntergerNumber } from '@/utils/format';
 
 import { useCategory } from '../../../../(list)/assistant/features/Category/useCategory';
@@ -50,13 +52,21 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const { mobile = isMobile } = useResponsive();
   const categories = useCategory();
   const cate = categories.find((c) => c.key === category);
+  const { source } = useQuery() as { source?: AssistantMarketSource };
+  const marketSource = source === 'legacy' ? 'legacy' : undefined;
 
   const cateButton = (
     <Link
-      href={qs.stringifyUrl({
-        query: { category: cate?.key },
-        url: '/discover/assistant',
-      })}
+      href={qs.stringifyUrl(
+        {
+          query: {
+            category: cate?.key,
+            source: marketSource,
+          },
+          url: '/discover/assistant',
+        },
+        { skipNull: true },
+      )}
     >
       <Button icon={cate?.icon} size={'middle'} variant={'outlined'}>
         {cate?.label}

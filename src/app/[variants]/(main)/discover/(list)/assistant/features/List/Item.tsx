@@ -7,10 +7,12 @@ import { useRouter } from 'nextjs-toploader/app';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import qs from 'query-string';
 import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
-import { DiscoverAssistantItem } from '@/types/discover';
+import { useQuery } from '@/hooks/useQuery';
+import { AssistantMarketSource, DiscoverAssistantItem } from '@/types/discover';
 
 import TokenTag from './TokenTag';
 
@@ -64,7 +66,14 @@ const AssistantItem = memo<DiscoverAssistantItem>(
   }) => {
     const { styles, theme } = useStyles();
     const router = useRouter();
-    const link = urlJoin('/discover/assistant', identifier);
+    const { source } = useQuery() as { source?: AssistantMarketSource };
+    const link = qs.stringifyUrl(
+      {
+        query: source ? { source } : {},
+        url: urlJoin('/discover/assistant', identifier),
+      },
+      { skipNull: true },
+    );
     const { t } = useTranslation('discover');
 
     return (

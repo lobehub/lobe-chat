@@ -59,6 +59,11 @@
       }
     },
     "list": "助手列表",
+    "marketSource": {
+      "label": "切换市场源",
+      "legacy": "旧市场",
+      "new": "新市场"
+    },
     "more": "更多",
     "plugins": "集成插件",
     "recentSubmits": "最近更新",

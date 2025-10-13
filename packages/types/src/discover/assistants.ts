@@ -49,6 +49,8 @@ export interface DiscoverAssistantItem extends Omit<LobeAgentSettings, 'meta'>, 
   tokenUsage: number;
 }
 
+export type AssistantMarketSource = 'legacy' | 'new';
+
 export interface AssistantQueryParams {
   category?: string;
   locale?: string;
@@ -58,6 +60,7 @@ export interface AssistantQueryParams {
   pageSize?: number;
   q?: string;
   sort?: AssistantSorts;
+  source?: AssistantMarketSource;
 }
 
 export interface AssistantListResponse {

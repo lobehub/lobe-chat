@@ -9,20 +9,38 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { DiscoverTab } from '@/types/discover';
+import { useQuery } from '@/hooks/useQuery';
+import { AssistantMarketSource, DiscoverTab } from '@/types/discover';
 
 const Breadcrumb = memo<{ identifier: string; tab: DiscoverTab }>(({ tab, identifier }) => {
   const theme = useTheme();
   const { t } = useTranslation('discover');
+  const { source } = useQuery() as { source?: AssistantMarketSource };
+  const marketSource = source === 'legacy' ? 'legacy' : undefined;
+
   return (
     <AntdBreadcrumb
       items={[
         {
-          title: <Link href={'/discover'}>Discover</Link>,
+          title: (
+            <Link
+              href={{
+                pathname: '/discover',
+                query: marketSource ? { source: marketSource } : undefined,
+              }}
+            >
+              Discover
+            </Link>
+          ),
         },
         {
           title: (
-            <Link href={urlJoin('/discover', tab)}>
+            <Link
+              href={{
+                pathname: urlJoin('/discover', tab),
+                query: marketSource ? { source: marketSource } : undefined,
+              }}
+            >
               {tab === DiscoverTab.Mcp ? 'MCP Servers' : t(`tab.${tab}` as any)}
             </Link>
           ),
