@@ -214,6 +214,11 @@ describe('generateAIChatV2 actions', () => {
     it('should skip creating new topic when auto-create topic is disabled', async () => {
       const { result } = renderHook(() => useChatStore());
 
+      (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
+        ...DEFAULT_AGENT_CHAT_CONFIG,
+        enableAutoCreateTopic: false,
+      });
+
       await act(async () => {
         useChatStore.setState({
           ...mockState,
