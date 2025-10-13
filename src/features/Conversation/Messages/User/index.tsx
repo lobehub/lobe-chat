@@ -106,7 +106,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
           direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
           gap={8}
         >
-          <Flexbox width={'100%'}>
+          <Flexbox flex={1} style={{ minWidth: 0 }}>
             <MessageContent
               editing={editing}
               id={id}
