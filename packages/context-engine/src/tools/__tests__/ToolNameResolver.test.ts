@@ -46,22 +46,19 @@ describe('ToolNameResolver', () => {
     });
 
     it('should handle identifier that is itself long', () => {
-      // Test the original limitation - when identifier itself is very long
+      // Test when identifier itself is very long
       const veryLongIdentifier = 'very-long-plugin-identifier-that-will-cause-overflow';
       const actionName = 'action';
-      const result = resolver.generate(veryLongIdentifier, actionName, 'builtin');
+      const result = resolver.generate(veryLongIdentifier, actionName, 'standalone');
 
-      // When the total length exceeds 64, even short action names get hashed
-      expect(result).toContain(veryLongIdentifier);
+      // When both identifier and name cause total >= 64, both get hashed
       expect(result).toContain('MD5HASH_');
-      expect(result).toContain('____builtin');
-
-      // Verify the pattern matches the expected format
-      expect(result).toMatch(
-        new RegExp(
-          `^${veryLongIdentifier.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}____MD5HASH_[a-f0-9]+____builtin$`,
-        ),
-      );
+      expect(result).toContain('____standalone');
+      // Result should be shortened
+      const originalLength = `${veryLongIdentifier}____${actionName}____standalone`.length;
+      expect(result.length).toBeLessThan(originalLength);
+      // With 12-char hashes: MD5HASH_xxx(20) + ____(4) + MD5HASH_xxx(20) + ____(4) + standalone(10) = 58
+      expect(result.length).toBeLessThan(64);
     });
 
     it('should keep short names unchanged', () => {

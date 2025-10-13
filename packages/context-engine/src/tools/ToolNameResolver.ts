@@ -17,7 +17,7 @@ export class ToolNameResolver {
    * @private
    */
   private genHash(name: string): string {
-    return Md5.hashStr(name).toString().slice(0, 16);
+    return Md5.hashStr(name).toString().slice(0, 12);
   }
 
   /**
@@ -30,15 +30,20 @@ export class ToolNameResolver {
   generate(identifier: string, name: string, type: string = 'default'): string {
     const pluginType = type && type !== 'default' ? `${PLUGIN_SCHEMA_SEPARATOR}${type}` : '';
 
-    // Use plugin identifier as prefix to avoid conflicts
+    // Step 1: Try normal format
     let apiName = identifier + PLUGIN_SCHEMA_SEPARATOR + name + pluginType;
 
     // OpenAI GPT function_call name can't be longer than 64 characters
-    // So we need to use hash to shorten the name
-    // and then find the correct apiName in response by hash
+    // Step 2: If >= 64, hash the name part
     if (apiName.length >= 64) {
-      const hashContent = PLUGIN_SCHEMA_API_MD5_PREFIX + this.genHash(name);
-      apiName = identifier + PLUGIN_SCHEMA_SEPARATOR + hashContent + pluginType;
+      const nameHash = PLUGIN_SCHEMA_API_MD5_PREFIX + this.genHash(name);
+      apiName = identifier + PLUGIN_SCHEMA_SEPARATOR + nameHash + pluginType;
+
+      // Step 3: If still >= 64, also hash the identifier
+      if (apiName.length >= 64) {
+        const identifierHash = PLUGIN_SCHEMA_API_MD5_PREFIX + this.genHash(identifier);
+        apiName = identifierHash + PLUGIN_SCHEMA_SEPARATOR + nameHash + pluginType;
+      }
     }
 
     return apiName;
@@ -56,9 +61,21 @@ export class ToolNameResolver {
   ): ChatToolPayload[] {
     return toolCalls
       .map((toolCall): ChatToolPayload | null => {
-        const [identifier, apiName, type] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
+        let [identifier, apiName, type] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
 
         if (!apiName) return null;
+
+        // Step 1: Resolve hashed identifier if needed
+        if (identifier.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
+          const identifierMd5 = identifier.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
+          // Find the manifest by hashed identifier
+          const foundIdentifier = Object.keys(manifests).find(
+            (id) => this.genHash(id) === identifierMd5,
+          );
+          if (foundIdentifier) {
+            identifier = foundIdentifier;
+          }
+        }
 
         let payload: ChatToolPayload = {
           apiName,
@@ -68,7 +85,7 @@ export class ToolNameResolver {
           type: (type ?? 'default') as any,
         };
 
-        // if the apiName is md5, try to find the correct apiName in the plugins
+        // Step 2: Resolve hashed apiName if needed
         if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX) && manifests[identifier]) {
           const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
           const manifest = manifests[identifier];
