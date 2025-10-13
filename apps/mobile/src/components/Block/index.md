@@ -1,29 +1,31 @@
-# Block 块容器组件
+---
+group: Layout
+title: Block
+description: Flexible container component based on Flexbox, supporting multiple style variants, shadow effects, and glass effects, with class-variance-authority for style management.
+---
 
-基于 Flexbox 的灵活容器组件，支持多种样式变体、阴影效果和玻璃效果，使用 class-variance-authority 进行样式管理。
+## Features
 
-## 功能特性
+- ✅ Flexible Flexbox-based layout
+- ✅ Multiple style variants (filled, outlined, borderless)
+- ✅ Shadow and glass effect support
+- ✅ Clickable state support
+- ✅ Style variant management using class-variance-authority
+- ✅ Fully compatible with React Native
+- ✅ TypeScript support
+- ✅ Theme adaptation
 
-- ✅ 基于 Flexbox 的灵活布局
-- ✅ 多种样式变体（filled、outlined、borderless）
-- ✅ 支持阴影和玻璃效果
-- ✅ 可点击状态支持
-- ✅ 使用 class-variance-authority 进行样式变体管理
-- ✅ 完全兼容 React Native
-- ✅ TypeScript 支持
-- ✅ 主题适配
-
-## 基础使用
+## Basic Usage
 
 ```tsx
 import { Block } from '@lobehub/ui-rn';
 
-// 基础用法
+// Basic usage
 <Block>
-  <Text>基础 Block</Text>
+  <Text>Basic Block</Text>
 </Block>
 
-// 不同变体
+// Different variants
 <Block variant="filled">
   <Text>Filled Block</Text>
 </Block>
@@ -36,21 +38,21 @@ import { Block } from '@lobehub/ui-rn';
   <Text>Borderless Block</Text>
 </Block>
 
-// 带效果
+// With effects
 <Block shadow>
-  <Text>带阴影的 Block</Text>
+  <Text>Block with Shadow</Text>
 </Block>
 
 <Block glass>
-  <Text>玻璃效果 Block</Text>
+  <Text>Glass Effect Block</Text>
 </Block>
 
-// 可点击
+// Clickable
 <Block clickable onPress={() => console.log('clicked')}>
-  <Text>可点击的 Block</Text>
+  <Text>Clickable Block</Text>
 </Block>
 
-// 组合效果
+// Combined effects
 <Block
   variant="filled"
   shadow
@@ -58,31 +60,15 @@ import { Block } from '@lobehub/ui-rn';
   clickable
   onPress={() => console.log('clicked')}
 >
-  <Text>组合效果 Block</Text>
+  <Text>Combined Effects Block</Text>
 </Block>
 ```
 
-## API
+## Style Variants
 
-### BlockProps
+### Filled
 
-| 属性      | 类型                     | 默认值        | 说明                          |              |          |
-| --------- | ------------------------ | ------------- | ----------------------------- | ------------ | -------- |
-| variant   | \`'filled' \\            | 'outlined' \\ | 'borderless'\`                | \`'filled'\` | 样式变体 |
-| shadow    | \`boolean\`              | \`false\`     | 是否显示阴影效果              |              |          |
-| glass     | \`boolean\`              | \`false\`     | 是否添加玻璃效果              |              |          |
-| clickable | \`boolean\`              | \`false\`     | 是否可点击（添加交互状态）    |              |          |
-| children  | \`ReactNode\`            | -             | 子元素                        |              |          |
-| style     | \`StyleProp<ViewStyle>\` | -             | 自定义样式                    |              |          |
-| onPress   | \`() => void\`           | -             | 点击回调（仅在 clickable 时） |              |          |
-
-> Block 组件继承了 [Flexbox](./flexbox) 的所有属性，支持完整的 Flexbox 布局功能。
-
-## 样式变体
-
-### Filled（填充）
-
-默认变体，带有背景色填充。
+Default variant with background color fill.
 
 ```tsx
 <Block variant="filled">
@@ -90,9 +76,9 @@ import { Block } from '@lobehub/ui-rn';
 </Block>
 ```
 
-### Outlined（轮廓）
+### Outlined
 
-透明背景，带有边框。
+Transparent background with border.
 
 ```tsx
 <Block variant="outlined">
@@ -100,9 +86,9 @@ import { Block } from '@lobehub/ui-rn';
 </Block>
 ```
 
-### Borderless（无边框）
+### Borderless
 
-完全透明，无边框。
+Completely transparent, no border.
 
 ```tsx
 <Block variant="borderless">
@@ -110,44 +96,44 @@ import { Block } from '@lobehub/ui-rn';
 </Block>
 ```
 
-## 效果组合
+## Effect Combinations
 
-### 阴影效果
+### Shadow Effect
 
-为 Block 添加阴影，增强层次感。
+Add shadow to Block for enhanced layering.
 
 ```tsx
 <Block shadow>
-  <Text>带阴影的 Block</Text>
+  <Text>Block with Shadow</Text>
 </Block>
 ```
 
-### 玻璃效果
+### Glass Effect
 
-添加半透明背景，营造玻璃质感。
+Add semi-transparent background for glass texture.
 
 ```tsx
 <Block glass>
-  <Text>玻璃效果 Block</Text>
+  <Text>Glass Effect Block</Text>
 </Block>
 ```
 
-### 可点击状态
+### Clickable State
 
-启用点击交互，自动调整悬停状态样式。
+Enable click interaction with automatic hover state styling.
 
 ```tsx
 <Block clickable onPress={() => console.log('clicked')}>
-  <Text>可点击 Block</Text>
+  <Text>Clickable Block</Text>
 </Block>
 ```
 
-## CVA 样式管理
+## CVA Style Management
 
-Block 组件使用自定义的 React Native CVA 来管理样式变体，CVA 配置位于 \`style.ts\` 文件中：
+Block component uses custom React Native CVA for style variant management. The CVA configuration is located in the `style.ts` file:
 
 ```tsx
-// style.ts 文件中的 CVA 配置
+// CVA configuration in style.ts
 export const useBlockVariants = (styles) =>
   cva(styles.root, {
     variants: {
@@ -174,47 +160,47 @@ export const useBlockVariants = (styles) =>
     },
   });
 
-// 在组件中使用
+// Usage in component
 const { styles } = useStyles();
 const blockVariants = useBlockVariants(styles);
 const variantStyles = blockVariants({ variant, clickable });
 ```
 
-### Style 文件模式优势
+### Style File Pattern Advantages
 
-1. **集中管理**: 样式和变体逻辑都在 style 文件中
-2. **主题集成**: 直接访问主题 token
-3. **类型安全**: 完整的 TypeScript 支持
-4. **易于维护**: 清晰的文件结构
+1. **Centralized Management**: Styles and variant logic are in the style file
+2. **Theme Integration**: Direct access to theme tokens
+3. **Type Safety**: Complete TypeScript support
+4. **Easy Maintenance**: Clear file structure
 
-## 布局应用
+## Layout Applications
 
-### 卡片容器
+### Card Container
 
 ```tsx
 <Block variant="filled" shadow style={{ padding: 16 }}>
-  <Text style={{ fontWeight: 'bold' }}>卡片标题</Text>
-  <Text>卡片内容</Text>
+  <Text style={{ fontWeight: 'bold' }}>Card Title</Text>
+  <Text>Card Content</Text>
 </Block>
 ```
 
-### 交互按钮
+### Interactive Button
 
 ```tsx
 <Block clickable variant="outlined" onPress={() => handleAction()} style={{ padding: 12 }}>
-  <Text>操作按钮</Text>
+  <Text>Action Button</Text>
 </Block>
 ```
 
-### 分组容器
+### Grouping Container
 
 ```tsx
 <Block variant="borderless" direction="column">
   <Block variant="filled" style={{ marginBottom: 8 }}>
-    <Text>项目 1</Text>
+    <Text>Item 1</Text>
   </Block>
   <Block variant="filled">
-    <Text>项目 2</Text>
+    <Text>Item 2</Text>
   </Block>
 </Block>
 ```

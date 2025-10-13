@@ -1,5 +1,6 @@
+import { createStyles } from '@lobehub/ui-rn';
+
 import { LOGO_SIZE } from '@/_const/common';
-import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(({ token }) => ({
   container: {

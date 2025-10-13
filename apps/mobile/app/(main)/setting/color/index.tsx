@@ -1,16 +1,17 @@
-import { ColorSwatches, PageContainer } from '@lobehub/ui-rn';
+import {
+  ColorSwatches,
+  NeutralColors,
+  PageContainer,
+  PrimaryColors,
+  findCustomThemeName,
+  neutralColors,
+  primaryColors,
+} from '@lobehub/ui-rn';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
-import {
-  NeutralColors,
-  PrimaryColors,
-  findCustomThemeName,
-  neutralColors,
-  primaryColors,
-} from '@/theme';
 
 import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from '../styles';

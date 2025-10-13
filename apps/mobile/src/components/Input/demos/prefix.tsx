@@ -2,7 +2,7 @@ import { Input } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 const useStyles = createStyles(({ token }) => ({
   container: {

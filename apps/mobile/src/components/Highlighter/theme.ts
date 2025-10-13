@@ -1,4 +1,4 @@
-import { blue, geekblue, gold, gray, green, lime, orange, red, volcano } from '@/theme';
+import { blue, geekblue, gold, gray, green, lime, orange, red, volcano } from '@/components/theme';
 
 export const themeConfig: any = (isDarkMode: boolean) => {
   const type = isDarkMode ? 'dark' : 'light';

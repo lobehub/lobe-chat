@@ -6,9 +6,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
+import { useTheme } from '@/components/theme';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
-import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 

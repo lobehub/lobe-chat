@@ -2,7 +2,7 @@ import { type CapsuleTabItem, CapsuleTabs, type CapsuleTabsSize } from '@lobehub
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const items: CapsuleTabItem[] = [
   { key: 'overview', label: 'Overview' },

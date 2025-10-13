@@ -1,5 +1,5 @@
 /**
- * file copy from https://github.com/Azure/fetch-event-source/blob/45ac3cfffd30b05b79fbf95c21e67d4ef59aa56a/src/fetch.ts
+ * file copy from https://github.com/Azure/fetch-event-source/blob/45ac3cfffd30b05b79fbf95c21e67d4ef59aa56a/@/fetch.ts
  * and remove some code
  * Updated to use expo/fetch for Expo SDK 52 ReadableStream support
  */
