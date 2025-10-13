@@ -18,8 +18,8 @@ description: React Native color palette display component, rewritten from LobeUI
 ## Basic Usage
 
 ```tsx
-import { ColorScales } from '@/components/theme/color';
-import { colorScales } from '@/components/theme/color';
+import { ColorScales } from '@/components/styles';
+import { colorScales } from '@/components/styles';
 
 export default () => <ColorScales name="primary" scale={colorScales.primary} midHighLight={9} />;
 ```
@@ -29,7 +29,7 @@ export default () => <ColorScales name="primary" scale={colorScales.primary} mid
 You can now directly use color level tokens in your components:
 
 ```tsx
-import { useThemeToken } from '@/components/theme';
+import { useThemeToken } from '@/components/styles';
 
 const MyComponent = () => {
   const token = useThemeToken();

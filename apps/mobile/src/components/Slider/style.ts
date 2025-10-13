@@ -1,4 +1,4 @@
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 export const TRACK_HEIGHT = 4;
 export const BORDER_WIDTH = 2;

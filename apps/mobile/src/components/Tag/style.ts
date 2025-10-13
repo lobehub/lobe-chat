@@ -1,4 +1,4 @@
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 import type { TagColor } from './type';
 

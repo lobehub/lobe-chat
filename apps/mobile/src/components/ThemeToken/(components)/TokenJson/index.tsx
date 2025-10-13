@@ -2,8 +2,9 @@ import type { FC } from 'react';
 import { memo } from 'react';
 import { View } from 'react-native';
 
-import Highlighter from '../../Highlighter';
-import Text from '../../Text';
+import Highlighter from '@/components/Highlighter';
+import Text from '@/components/Text';
+
 import { useStyles } from './style';
 
 export interface TokenJsonProps {

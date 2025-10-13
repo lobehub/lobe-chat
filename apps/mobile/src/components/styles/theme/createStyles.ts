@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
-import { mergeStyles } from '@/components/theme/index';
-import { AliasToken } from '@/components/theme/interface';
-import { type LobeStylish, generateStylish } from '@/components/theme/stylish';
+import {
+  type AliasToken,
+  type LobeStylish,
+  generateStylish,
+  mergeStyles,
+} from '@/components/styles';
 
-import { useTheme, useThemeMode } from '../ThemeProvider/context';
+import { useTheme, useThemeMode } from '../../ThemeProvider/context';
 
 // 定义样式类型
 export type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };

@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ActionIcon from '@/components/ActionIcon';
 import Text from '@/components/Text';
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
 

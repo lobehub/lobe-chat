@@ -1,4 +1,4 @@
-import { type AliasToken, createStyles } from '@/components/theme';
+import { type AliasToken, createStyles } from '@/components/styles';
 import { AggregationColor, isBright } from '@/utils/color';
 
 import { CapsuleTabsSize } from './type';

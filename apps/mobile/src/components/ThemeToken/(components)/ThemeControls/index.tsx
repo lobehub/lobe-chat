@@ -2,10 +2,9 @@ import type { FC } from 'react';
 import { View } from 'react-native';
 
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
-
-import ColorSwatches from '../../ColorSwatches';
-import Slider from '../../Slider';
-import Text from '../../Text';
+import ColorSwatches from '@/components/ColorSwatches';
+import Slider from '@/components/Slider';
+import Text from '@/components/Text';
 import {
   NeutralColors,
   PrimaryColors,
@@ -13,7 +12,8 @@ import {
   neutralColors,
   primaryColors,
   useTheme,
-} from '../../theme';
+} from '@/components/styles';
+
 import { useStyles } from './style';
 
 // 主题控制器组件接口
