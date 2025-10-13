@@ -1,3 +1,10 @@
+import {
+  AiModelTypeSchema,
+  AiProviderModelListItem,
+  CreateAiModelSchema,
+  ToggleAiModelEnableSchema,
+  UpdateAiModelSchema,
+} from 'model-bank';
 import { z } from 'zod';
 
 import { AiModelModel } from '@/database/models/aiModel';
@@ -8,13 +15,6 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { ProviderConfig } from '@/types/user/settings';
-
-import {
-  AiProviderModelListItem,
-  CreateAiModelSchema,
-  ToggleAiModelEnableSchema,
-  UpdateAiModelSchema,
-} from '../../../../packages/model-bank/src/types/aiModel';
 
 const aiModelProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -122,6 +122,7 @@ export const aiModelRouter = router({
           z.object({
             id: z.string(),
             sort: z.number(),
+            type: AiModelTypeSchema.optional(),
           }),
         ),
       }),
