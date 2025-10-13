@@ -1,13 +1,16 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
 
 export interface DeepSeekModelCard {
   id: string;
 }
 
-export const LobeDeepSeekAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.deepseek.com/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION === '1',
@@ -24,4 +27,6 @@ export const LobeDeepSeekAI = createOpenAICompatibleRuntime({
     return processModelList(modelList, MODEL_LIST_CONFIGS.deepseek, 'deepseek');
   },
   provider: ModelProvider.DeepSeek,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeDeepSeekAI = createOpenAICompatibleRuntime(params);
