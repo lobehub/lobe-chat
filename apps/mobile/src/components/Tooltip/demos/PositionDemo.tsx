@@ -3,7 +3,7 @@ import type { TooltipPlacement } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const placements: TooltipPlacement[] = [
   'topLeft',

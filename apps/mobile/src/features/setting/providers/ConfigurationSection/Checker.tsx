@@ -15,10 +15,10 @@ import {
   View,
 } from 'react-native';
 
+import { useTheme } from '@/components/theme';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 

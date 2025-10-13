@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 interface UseStylesProps {
   variant?: 'filled' | 'borderless' | 'outlined';

@@ -1,11 +1,10 @@
-import { PageContainer, Toast } from '@lobehub/ui-rn';
+import { PageContainer, Toast, useThemeMode } from '@lobehub/ui-rn';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
 import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
-import { useThemeMode } from '@/theme';
 
 import { version } from '../../../package.json';
 import { SettingGroup, SettingItem } from './(components)';

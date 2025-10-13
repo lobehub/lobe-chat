@@ -1,10 +1,12 @@
-# Switch 开关
+---
+group: Form
+title: Switch
+description: Lightweight wrapper of React Native Switch with built-in theme colors (thumb/track).
+---
 
-React Native \`Switch\` 的轻封装，内置主题配色（thumb/track）。
+## Basic Usage
 
-## 基础使用
-
-\`@lobehub/ui-rn\` 提供的 \`Switch\` API 与 React Native 一致：
+The `Switch` provided by `@lobehub/ui-rn` has the same API as React Native:
 
 ```tsx
 import { Switch } from '@lobehub/ui-rn';
@@ -16,9 +18,9 @@ export default function Demo() {
 }
 ```
 
-## 主题配色
+## Theme Colors
 
-- thumbColor: 使用 \`token.colorTextLightSolid\`
-- trackColor: \`false: token.colorBgContainerDisabled\`, \`true: token.colorPrimary\`
+- thumbColor: Uses `token.colorTextLightSolid`
+- trackColor: `false: token.colorBgContainerDisabled`, `true: token.colorPrimary`
 
-如需自定义，仍可传入 React Native \`Switch\` 支持的同名属性覆盖。
+If customization is needed, you can still override by passing the same-named props supported by React Native `Switch`.

@@ -6,8 +6,8 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
+import { useTheme } from '@/components/theme';
 import { useAiInfraStore } from '@/store/aiInfra';
-import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 

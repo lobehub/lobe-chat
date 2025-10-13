@@ -1,53 +1,43 @@
-# FluentEmoji 表情符号组件
+---
+group: Display
+title: FluentEmoji
+description: Microsoft Fluent-style 3D emoji component with custom size and fallback support.
+---
 
-微软 Fluent 风格的 3D 表情符号组件，支持自定义大小和回退。
+## Features
 
-## 功能特性
+- ✅ Fluent 3D emoji design
+- ✅ Custom size support
+- ✅ Plain emoji fallback
+- ✅ High-quality image rendering
+- ✅ TypeScript support
+- ✅ Theme adaptation
 
-- ✅ Fluent 3D 表情符号设计
-- ✅ 自定义尺寸支持
-- ✅ 原始表情符号回退
-- ✅ 高质量图像渲染
-- ✅ TypeScript 支持
-- ✅ 主题适配
-
-## 基础使用
+## Basic Usage
 
 ```tsx
 import { FluentEmoji } from '@lobehub/ui-rn';
 
-// 基础用法
+// Basic usage
 <FluentEmoji emoji="😊" size={40} />
 
-// 自定义尺寸
+// Custom size
 <FluentEmoji emoji="🚀" size={64} />
 
-// 使用原始表情符号
+// Use plain emoji
 <FluentEmoji emoji="🎁" size={48} plainEmoji />
 
-// 错误回退
+// Error fallback
 <FluentEmoji emoji="🎨" size={40} fallback="🎨" />
 ```
 
-## API
+## Design Philosophy
 
-### FluentEmojiProps
+The FluentEmoji component provides Microsoft Fluent design system 3D emojis, which compared to traditional flat emojis, offer:
 
-| 属性       | 类型           | 默认值    | 说明                     |
-| ---------- | -------------- | --------- | ------------------------ |
-| emoji      | \`string\`     | -         | 表情符号字符             |
-| size       | \`number\`     | \`24\`    | 表情符号尺寸             |
-| plainEmoji | \`boolean\`    | \`false\` | 是否使用原始表情符号     |
-| fallback   | \`string\`     | -         | 加载失败时的回退表情符号 |
-| style      | \`ImageStyle\` | -         | 图像样式                 |
+- Richer visual hierarchy
+- More modern design style
+- Better user experience
+- Cross-platform consistency
 
-## 设计理念
-
-FluentEmoji 组件提供了微软 Fluent 设计体系的 3D 表情符号，相比传统的平面表情符号，具有：
-
-- 更丰富的视觉层次
-- 更现代的设计风格
-- 更好的用户体验
-- 跨平台的一致性
-
-当 3D 表情符号加载失败时，会自动回退到原始的 Unicode 表情符号，确保功能的可用性。
+When 3D emoji loading fails, it automatically falls back to the original Unicode emoji, ensuring functionality availability.

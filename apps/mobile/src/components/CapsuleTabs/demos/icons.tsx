@@ -3,7 +3,7 @@ import { Briefcase, HeartPulse, Home, Palette } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const items: CapsuleTabItem[] = [
   { icon: Home, key: 'home', label: '首页' },

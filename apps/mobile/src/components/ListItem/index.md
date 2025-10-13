@@ -1,18 +1,20 @@
-# ListItem 组件
+---
+group: Layout
+title: ListItem
+description: Feature-rich React Native list item component with avatar, description, extra content display, and route navigation support.
+---
 
-一个功能丰富的 React Native 列表项组件，支持头像、描述、额外内容显示和路由导航。
+## Features
 
-## 特性
+- ✅ **Flexible Avatar** - Supports image URL, emoji, custom React components
+- ✅ **Rich Content** - Supports title, description, extra content display
+- ✅ **Route Integration** - Deep integration with Expo Router, supports navigation
+- ✅ **Interactive Response** - Supports click events and touch feedback
+- ✅ **Responsive Layout** - Adaptive content length and screen size
+- ✅ **Dark Theme** - Modern dark design style
+- ✅ **TypeScript** - Complete TypeScript type support
+- ✅ **High Performance** - Optimized rendering performance and memory usage
+- ✅ **Custom Styles** - Flexible style configuration options
+- ✅ **Text Truncation** - Automatic long text display handling
 
-- ✅ **灵活头像** - 支持图片 URL、emoji、自定义 React 组件
-- ✅ **内容丰富** - 支持标题、描述、额外内容显示
-- ✅ **路由集成** - 与 Expo Router 深度集成，支持导航跳转
-- ✅ **交互响应** - 支持点击事件和触摸反馈
-- ✅ **响应式布局** - 自适应内容长度和屏幕尺寸
-- ✅ **暗色主题** - 现代化的暗色设计风格
-- ✅ **TypeScript** - 完整的 TypeScript 类型支持
-- ✅ **高性能** - 优化的渲染性能和内存使用
-- ✅ **自定义样式** - 灵活的样式配置选项
-- ✅ **文本截断** - 自动处理长文本的显示
-
-查看完整文档请切换到 README 选项卡。
+For complete documentation, please switch to the README tab.

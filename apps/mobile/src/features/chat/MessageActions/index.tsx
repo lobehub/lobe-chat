@@ -6,8 +6,8 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 
+import { useTheme } from '@/components/theme';
 import { useChatStore } from '@/store/chat';
-import { useTheme } from '@/theme';
 
 import { useStyles } from './style';
 

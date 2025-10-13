@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme';
+import { createStyles } from '@lobehub/ui-rn';
 
 export const useStyles = createStyles(({ token }) => ({
   backButton: {
@@ -84,6 +84,19 @@ export const useStyles = createStyles(({ token }) => ({
   },
   filterTabs: {
     flexDirection: 'row',
+  },
+  groupComponents: {
+    gap: token.marginXS,
+  },
+  groupSection: {
+    marginBottom: token.marginLG,
+  },
+  groupTitle: {
+    color: token.colorTextSecondary,
+    fontSize: token.fontSizeHeading5,
+    fontWeight: token.fontWeightStrong,
+    marginBottom: token.marginSM,
+    textTransform: 'capitalize',
   },
   header: {
     alignItems: 'center',
