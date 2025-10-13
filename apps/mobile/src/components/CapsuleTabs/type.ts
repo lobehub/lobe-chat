@@ -11,6 +11,11 @@ export interface CapsuleTabItem {
 }
 
 export interface CapsuleTabsProps {
+  /**
+   * 是否启用滚动阴影效果
+   * @default true
+   */
+  enableScrollShadow?: boolean;
   items: CapsuleTabItem[];
   onSelect: (key: string) => void;
   selectedKey: string;
