@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import type { FC } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, DimensionValue, ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -15,7 +16,7 @@ interface SkeletonImageProps {
   width?: DimensionValue;
 }
 
-const SkeletonImage: React.FC<SkeletonImageProps> = ({
+const SkeletonImage: FC<SkeletonImageProps> = ({
   animated = false,
   width = '100%',
   height = 160,

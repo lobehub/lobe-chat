@@ -1,6 +1,5 @@
 import { Icon, Space } from '@lobehub/ui-rn';
 import { ZoomIn, ZoomOut } from 'lucide-react-native';
-import React from 'react';
 
 const SizesDemo = () => {
   return (

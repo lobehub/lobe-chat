@@ -1,4 +1,18 @@
-import React from 'react';
+import type { FC, ReactElement, ReactNode } from 'react';
+import {
+  Children,
+  cloneElement,
+  createContext,
+  forwardRef,
+  isValidElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
 
 import Text from '../Text';
@@ -95,7 +109,7 @@ const createFormInstance = (): InternalFormInstance => {
 };
 
 export const useForm = (form?: FormInstance): [FormInstance] => {
-  const formRef = React.useRef<FormInstance>(null);
+  const formRef = useRef<FormInstance>(null);
 
   if (!formRef.current) {
     formRef.current = form ?? createFormInstance();
@@ -115,10 +129,10 @@ type FormContextValue = {
   values: FormValues;
 };
 
-const FormContext = React.createContext<FormContextValue | null>(null);
+const FormContext = createContext<FormContextValue | null>(null);
 
 const useFormContext = () => {
-  const context = React.useContext(FormContext);
+  const context = useContext(FormContext);
 
   if (!context) {
     throw new Error('Form.Item must be used within a Form component.');
@@ -165,7 +179,7 @@ const runValidation = async (
   return undefined;
 };
 
-const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
+const FormBase = forwardRef<FormInstance, FormProps>((props, ref) => {
   const {
     children,
     form: formProp,
@@ -177,21 +191,21 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     ...rest
   } = props;
   const { styles } = useStyles();
-  const [values, setValues] = React.useState<FormValues>(() => ({ ...initialValues }));
-  const [errors, setErrors] = React.useState<FormErrors>({});
-  const [touched, setTouched] = React.useState<Record<string, boolean>>({});
-  const [hasSubmitted, setHasSubmitted] = React.useState(false);
-  const fieldsRef = React.useRef<Record<string, FormRule[]>>({});
-  const initialValuesRef = React.useRef<FormValues>({ ...initialValues });
-  const valuesRef = React.useRef<FormValues>(values);
-  const errorsRef = React.useRef<FormErrors>(errors);
-  const callbacksRef = React.useRef<FormCallbacks>({
+  const [values, setValues] = useState<FormValues>(() => ({ ...initialValues }));
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const fieldsRef = useRef<Record<string, FormRule[]>>({});
+  const initialValuesRef = useRef<FormValues>({ ...initialValues });
+  const valuesRef = useRef<FormValues>(values);
+  const errorsRef = useRef<FormErrors>(errors);
+  const callbacksRef = useRef<FormCallbacks>({
     onFinish,
     onFinishFailed,
     onValuesChange,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (initialValues) {
       initialValuesRef.current = { ...initialValues };
       setValues({ ...initialValues });
@@ -203,15 +217,15 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     }
   }, [initialValues]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     callbacksRef.current = { onFinish, onFinishFailed, onValuesChange };
   }, [onFinish, onFinishFailed, onValuesChange]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     valuesRef.current = values;
   }, [values]);
 
-  const updateErrors = React.useCallback((updater: (prev: FormErrors) => FormErrors) => {
+  const updateErrors = useCallback((updater: (prev: FormErrors) => FormErrors) => {
     setErrors((prev) => {
       const next = updater(prev);
       errorsRef.current = next;
@@ -219,7 +233,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     });
   }, []);
 
-  const registerField = React.useCallback((name: string, rules?: FormRule[]) => {
+  const registerField = useCallback((name: string, rules?: FormRule[]) => {
     fieldsRef.current[name] = rules ?? [];
 
     if (!(name in valuesRef.current) && name in initialValuesRef.current) {
@@ -231,7 +245,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     }
   }, []);
 
-  const unregisterField = React.useCallback(
+  const unregisterField = useCallback(
     (name: string) => {
       delete fieldsRef.current[name];
 
@@ -252,7 +266,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     [updateErrors],
   );
 
-  const markFieldTouched = React.useCallback((name: string, touchedValue = true) => {
+  const markFieldTouched = useCallback((name: string, touchedValue = true) => {
     setTouched((prev) => {
       const isTouched = !!prev[name];
       if (isTouched === touchedValue) return prev;
@@ -267,7 +281,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     });
   }, []);
 
-  const setFieldValue = React.useCallback(
+  const setFieldValue = useCallback(
     async (name: string, value: FormValue, options?: SetFieldValueOptions) => {
       setValues((prev) => {
         const next = { ...prev, [name]: value };
@@ -302,7 +316,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     [markFieldTouched, updateErrors],
   );
 
-  const setFieldsValue = React.useCallback(
+  const setFieldsValue = useCallback(
     async (nextValues: Partial<FormValues>, options?: SetFieldsValueOptions) => {
       if (!nextValues) return;
 
@@ -367,7 +381,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     [updateErrors],
   );
 
-  const resetFields = React.useCallback(
+  const resetFields = useCallback(
     (names?: string[]) => {
       if (!names || names.length === 0) {
         const next = { ...initialValuesRef.current };
@@ -411,7 +425,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     [updateErrors],
   );
 
-  const validateFields = React.useCallback(
+  const validateFields = useCallback(
     async (names?: string[]) => {
       const targetNames = names && names.length > 0 ? names : Object.keys(fieldsRef.current);
       const validationResults = await Promise.all(
@@ -455,7 +469,7 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     [updateErrors],
   );
 
-  const submit = React.useCallback(async () => {
+  const submit = useCallback(async () => {
     setHasSubmitted(true);
     try {
       const validatedValues = await validateFields();
@@ -467,11 +481,11 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
 
   const [internalFormInstance] = useForm(formProp);
 
-  const getFieldValue = React.useCallback((name: string) => valuesRef.current[name], []);
+  const getFieldValue = useCallback((name: string) => valuesRef.current[name], []);
 
-  const getFieldsValue = React.useCallback(() => ({ ...valuesRef.current }), []);
+  const getFieldsValue = useCallback(() => ({ ...valuesRef.current }), []);
 
-  const formApi = React.useMemo<FormInstanceApi>(
+  const formApi = useMemo<FormInstanceApi>(
     () => ({
       getFieldValue,
       getFieldsValue,
@@ -498,13 +512,13 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
     ],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     internalFormInstance.__INTERNAL__?.init(formApi);
   }, [internalFormInstance, formApi]);
 
-  React.useImperativeHandle(ref, () => internalFormInstance);
+  useImperativeHandle(ref, () => internalFormInstance);
 
-  const contextValue = React.useMemo<FormContextValue>(
+  const contextValue = useMemo<FormContextValue>(
     () => ({
       errors,
       hasSubmitted,
@@ -539,11 +553,11 @@ const FormBase = React.forwardRef<FormInstance, FormProps>((props, ref) => {
 FormBase.displayName = 'Form';
 
 export interface FormItemProps {
-  children: React.ReactElement;
-  extra?: React.ReactNode;
+  children: ReactElement;
+  extra?: ReactNode;
   getValueFromEvent?: (...args: unknown[]) => FormValue;
-  help?: React.ReactNode;
-  label?: React.ReactNode;
+  help?: ReactNode;
+  label?: ReactNode;
   name?: string;
   requiredMark?: boolean;
   rules?: FormRule[];
@@ -558,7 +572,7 @@ const normalizeValidateTrigger = (trigger?: string | string[]) => {
   return Array.isArray(trigger) ? trigger : [trigger];
 };
 
-export const FormItem: React.FC<FormItemProps> = ({
+export const FormItem: FC<FormItemProps> = ({
   children,
   extra,
   help,
@@ -586,22 +600,22 @@ export const FormItem: React.FC<FormItemProps> = ({
 
   const fieldName = typeof name === 'string' && name.length > 0 ? name : undefined;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!fieldName) return;
     registerField(fieldName, rules);
     return () => unregisterField(fieldName);
   }, [fieldName, registerField, unregisterField, rules]);
 
-  const triggers = React.useMemo(() => {
+  const triggers = useMemo(() => {
     const list = normalizeValidateTrigger(validateTrigger);
     if (list.length === 0) return [trigger];
     return list;
   }, [trigger, validateTrigger]);
 
-  const child = React.Children.only(children);
+  const child = Children.only(children);
   let controlledChild = child;
 
-  if (fieldName && React.isValidElement(child)) {
+  if (fieldName && isValidElement(child)) {
     const childProps: Record<string, unknown> = {};
     const fieldValue = values[fieldName];
     childProps[valuePropName] =
@@ -635,7 +649,7 @@ export const FormItem: React.FC<FormItemProps> = ({
       };
     }
 
-    controlledChild = React.cloneElement(child, childProps);
+    controlledChild = cloneElement(child, childProps);
   }
 
   const error = fieldName ? errors[fieldName] : undefined;

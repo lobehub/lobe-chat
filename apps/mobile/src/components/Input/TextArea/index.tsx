@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   NativeSyntheticEvent,
   TextInput as RNTextInput,
@@ -19,7 +19,7 @@ export interface TextAreaProps extends Omit<RNTextInputProps, 'multiline' | 'sty
   variant?: InputVariant;
 }
 
-const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
+const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
   const {
     autoSize = false,
     style,
@@ -32,7 +32,7 @@ const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
   } = props;
 
   const { styles, theme } = useStyles({ variant });
-  const rowHeight = React.useMemo(() => {
+  const rowHeight = useMemo(() => {
     return Math.max(1, Math.max(theme.fontHeight, theme.fontSize));
   }, [theme.fontHeight, theme.fontSize]);
 
@@ -47,9 +47,9 @@ const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
   const minHeight = autoSizeEnabled && minRows ? rowHeight * minRows : undefined;
   const maxHeight = autoSizeEnabled && maxRows ? rowHeight * maxRows : undefined;
 
-  const [inputHeight, setInputHeight] = React.useState<number | undefined>(undefined);
+  const [inputHeight, setInputHeight] = useState<number | undefined>(undefined);
 
-  const clampAutoSizeHeight = React.useCallback(
+  const clampAutoSizeHeight = useCallback(
     (height: number) => {
       if (!autoSizeEnabled || minHeight === undefined) {
         return height;
@@ -61,7 +61,7 @@ const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
     [autoSizeEnabled, minHeight, maxHeight],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!autoSizeEnabled) {
       setInputHeight(undefined);
       return;
@@ -74,7 +74,7 @@ const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
     });
   }, [autoSizeEnabled, clampAutoSizeHeight]);
 
-  const handleContentSizeChange = React.useCallback(
+  const handleContentSizeChange = useCallback(
     (event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
       if (autoSizeEnabled) {
         const nextHeight = clampAutoSizeHeight(event.nativeEvent.contentSize.height);
@@ -87,7 +87,7 @@ const TextArea = React.forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
 
   const resolvedScrollEnabled = scrollEnabled ?? !autoSizeEnabled;
 
-  const autoSizeStyle = React.useMemo(() => {
+  const autoSizeStyle = useMemo(() => {
     if (!autoSizeEnabled || minHeight === undefined) {
       return undefined;
     }

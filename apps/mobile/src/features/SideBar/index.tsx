@@ -2,7 +2,7 @@ import { ActionIcon, PageContainer, Space } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
 import { CompassIcon, Sparkles } from 'lucide-react-native';
-import React from 'react';
+import type { ReactNode } from 'react';
 import { Text, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
@@ -14,7 +14,7 @@ import Footer from './components/Footer';
 import SessionList from './components/SessionList';
 import { useStyles } from './style';
 
-export default function SideBar({ children }: { children: React.ReactNode }) {
+export default function SideBar({ children }: { children: ReactNode }) {
   const { styles } = useStyles();
   const winDim = useWindowDimensions();
 

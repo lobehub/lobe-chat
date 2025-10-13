@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import type { FC } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, View } from 'react-native';
 
 import { useTheme } from '@/components/theme';
@@ -10,7 +11,7 @@ interface LoadingDotsProps {
   size?: number;
 }
 
-const LoadingDots: React.FC<LoadingDotsProps> = ({ size = 8, color }) => {
+const LoadingDots: FC<LoadingDotsProps> = ({ size = 8, color }) => {
   const token = useTheme();
   const dotColor = color || token.colorTextSecondary;
   const { styles } = useStyles(size, dotColor);

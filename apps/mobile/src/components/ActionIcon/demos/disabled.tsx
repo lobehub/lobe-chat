@@ -1,6 +1,5 @@
 import { ActionIcon, Space } from '@lobehub/ui-rn';
 import { Bell, BellRing } from 'lucide-react-native';
-import React from 'react';
 
 const DisabledDemo = () => {
   return (

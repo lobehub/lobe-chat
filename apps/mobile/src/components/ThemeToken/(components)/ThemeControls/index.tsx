@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { View } from 'react-native';
 
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
@@ -26,7 +26,7 @@ interface ThemeControlsProps {
   primaryColor?: PrimaryColors;
 }
 
-const ThemeControls: React.FC<ThemeControlsProps> = ({
+const ThemeControls: FC<ThemeControlsProps> = ({
   fontSize,
   neutralColor,
   onFontSizeChange,

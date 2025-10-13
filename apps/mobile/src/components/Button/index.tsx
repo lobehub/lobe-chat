@@ -1,5 +1,6 @@
 import { LoaderCircle } from 'lucide-react-native';
-import React from 'react';
+import type { FC, ReactElement, ReactNode } from 'react';
+import { cloneElement, isValidElement, useEffect, useRef } from 'react';
 import {
   Animated,
   Easing,
@@ -19,11 +20,11 @@ import { ButtonColor, ButtonShape, ButtonSize, ButtonType, ButtonVariant } from 
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   block?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
   color?: ButtonColor;
   danger?: boolean;
   disabled?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   loading?: boolean;
   onPress?: () => void;
   shape?: ButtonShape;
@@ -34,7 +35,7 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   variant?: ButtonVariant;
 }
 
-const Button: React.FC<ButtonProps> = ({
+const Button: FC<ButtonProps> = ({
   type = 'default',
   size = 'middle',
   shape = 'default',
@@ -113,14 +114,14 @@ const Button: React.FC<ButtonProps> = ({
   });
 
   // Infinite spin animation for loading indicator
-  const rotationProgress = React.useRef(new Animated.Value(0)).current;
-  const rotationAnimationRef = React.useRef<Animated.CompositeAnimation | null>(null);
+  const rotationProgress = useRef(new Animated.Value(0)).current;
+  const rotationAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
   const spin = rotationProgress.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (loading) {
       rotationProgress.setValue(0);
       rotationAnimationRef.current = Animated.loop(
@@ -164,9 +165,9 @@ const Button: React.FC<ButtonProps> = ({
     const iconSize = getIconSize();
 
     let iconNode = icon;
-    if (React.isValidElement(icon)) {
+    if (isValidElement(icon)) {
       const prevStyle = (icon.props as any)?.style;
-      iconNode = React.cloneElement(icon as React.ReactElement<any>, {
+      iconNode = cloneElement(icon as ReactElement<any>, {
         color: iconColor,
         size: iconSize,
         style: [prevStyle, { color: iconColor, fontSize: iconSize }],

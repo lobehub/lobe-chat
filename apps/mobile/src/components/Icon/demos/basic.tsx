@@ -1,6 +1,5 @@
 import { Icon, Space } from '@lobehub/ui-rn';
 import { Heart, MessageCircle, Star } from 'lucide-react-native';
-import React from 'react';
 
 const BasicDemo = () => {
   return (

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import type { FC } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, DimensionValue, ViewStyle } from 'react-native';
 
 import { useStyles } from './style';
@@ -11,11 +12,7 @@ interface SkeletonTitleProps {
   width?: DimensionValue;
 }
 
-const SkeletonTitle: React.FC<SkeletonTitleProps> = ({
-  width = '60%',
-  animated = false,
-  style,
-}) => {
+const SkeletonTitle: FC<SkeletonTitleProps> = ({ width = '60%', animated = false, style }) => {
   const { styles } = useStyles();
   const shimmerAnim = useRef(new Animated.Value(0)).current;
 

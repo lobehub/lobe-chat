@@ -1,5 +1,5 @@
 import { CheckCircle, Info, RefreshCw, X, XCircle } from 'lucide-react-native';
-import React from 'react';
+import type { FC } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
 import Icon from '../Icon';
@@ -18,7 +18,7 @@ export interface ToastProps {
   type: ToastType;
 }
 
-const Toast: React.FC<ToastProps> = ({ id, message, type, opacity, onClose }) => {
+const Toast: FC<ToastProps> = ({ id, message, type, opacity, onClose }) => {
   const token = useTheme();
   const { styles } = useStyles();
 

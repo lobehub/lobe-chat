@@ -1,20 +1,21 @@
-import React, { ReactElement } from 'react';
+import type { ReactNode } from 'react';
+import { Children, ReactElement, cloneElement, isValidElement } from 'react';
 import { Text, View, type ViewProps } from 'react-native';
 
 import { useStyles } from './style';
 
 interface SettingGroupProps extends ViewProps {
-  title?: React.ReactNode;
+  title?: ReactNode;
 }
 
 export const SettingGroup = ({ children, style, title, ...rest }: SettingGroupProps) => {
   const { styles } = useStyles();
-  const items = React.Children.toArray(children);
+  const items = Children.toArray(children);
 
   const newItems = items.map((child, index) => {
-    if (React.isValidElement(child)) {
+    if (isValidElement(child)) {
       const isLast = index === items.length - 1;
-      return React.cloneElement(child as ReactElement<any>, { isLast });
+      return cloneElement(child as ReactElement<any>, { isLast });
     }
     return child;
   });
