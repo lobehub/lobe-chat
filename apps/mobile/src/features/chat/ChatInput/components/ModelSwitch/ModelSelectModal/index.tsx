@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useTheme } from '@/components/theme';
 import { useAiInfraInit } from '@/hooks/useAiInfraInit';
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
-import { useTheme } from '@/theme';
 
 import ModelItemRender from '../ModelItemRender';
 import ProviderItemRender from '../ProviderItemRender';

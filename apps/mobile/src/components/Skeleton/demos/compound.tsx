@@ -2,7 +2,7 @@ import { Skeleton } from '@lobehub/ui-rn';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const CompoundDemo: React.FC = () => {
   const token = useTheme();

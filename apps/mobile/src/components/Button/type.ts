@@ -1,4 +1,4 @@
-import type { PresetColorKey } from '@/theme/interface';
+import type { PresetColorKey } from '@/components/theme/interface';
 
 export type ButtonType = 'primary' | 'default' | 'text' | 'link' | 'dashed';
 export type ButtonVariant = 'outlined' | 'dashed' | 'solid' | 'filled' | 'text' | 'link';

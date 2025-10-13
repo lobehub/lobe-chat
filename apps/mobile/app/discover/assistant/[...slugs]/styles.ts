@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme';
+import { createStyles } from '@lobehub/ui-rn';
 
 export const useStyles = createStyles(({ token }) => ({
   // 操作按钮相关样式

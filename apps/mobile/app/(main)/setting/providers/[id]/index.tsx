@@ -7,6 +7,7 @@ import {
   ModelInfoTags,
   PageContainer,
   Tag,
+  useTheme,
   useToast,
 } from '@lobehub/ui-rn';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -23,7 +24,6 @@ import ConfigurationSection from '@/features/setting/providers/ConfigurationSect
 import ProviderInfoSection from '@/features/setting/providers/ProviderInfoSection';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
-import { useTheme } from '@/theme';
 
 import { useStyles } from './styles';
 

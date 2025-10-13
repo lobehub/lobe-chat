@@ -46,7 +46,7 @@ export class AssistantService {
    * 获取助手详情
    * @param identifier 助手标识符
    * 从 Lobe Hub 的助手市场获取助手详情
-   * 实际上从 GitHub 仓库 https://github.com/lobehub/lobe-chat-agents/src/{identifier}.json 获取数据
+   * 实际上从 GitHub 仓库 https://github.com/lobehub/lobe-chat-agents/@/{identifier}.json 获取数据
    */
   getAssistantDetail = async (
     identifier: string,

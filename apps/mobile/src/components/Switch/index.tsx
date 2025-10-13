@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Switch as RNSwitch, SwitchProps } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 export type ThemedSwitchProps = SwitchProps;
 

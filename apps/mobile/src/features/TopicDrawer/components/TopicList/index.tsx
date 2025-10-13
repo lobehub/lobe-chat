@@ -3,13 +3,13 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+import { useTheme } from '@/components/theme';
 import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { useTheme } from '@/theme';
 
 import TopicItem from '../TopicItem';
 import { useStyles } from './style';

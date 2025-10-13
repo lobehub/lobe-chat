@@ -2,7 +2,7 @@ import { Button, useToast } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 export default function IntegrationDemo() {
   const toast = useToast();

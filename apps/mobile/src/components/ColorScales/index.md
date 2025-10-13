@@ -1,19 +1,21 @@
-# ColorScales 色板组件
+---
+group: Display
+title: ColorScales
+description: React Native color palette display component, rewritten from LobeUI's ColorScales component.
+---
 
-React Native 版本的色板展示组件，基于 LobeUI 的 ColorScales 组件重写。
+## Features
 
-## 功能特性
+- ✅ Display complete color levels
+- ✅ Supports four modes: light/lightA/dark/darkA
+- ✅ Highlights mid-level color
+- ✅ Click to copy color values
+- ✅ Transparent color support
+- ✅ Vertical scrolling support (mobile optimization)
+- ✅ TypeScript support
+- ✅ **New: Automatic color level token generation**
 
-- ✅ 展示完整的颜色级别
-- ✅ 支持 light/lightA/dark/darkA 四种模式
-- ✅ 高亮中间色级
-- ✅ 点击复制颜色值
-- ✅ 透明色支持
-- ✅ 垂直滚动支持（移动端优化）
-- ✅ TypeScript 支持
-- ✅ **新增：颜色级别 Token 自动生成**
-
-## 基础使用
+## Basic Usage
 
 ```tsx
 import { ColorScales } from '@/theme/color';
@@ -22,9 +24,9 @@ import { colorScales } from '@/theme/color';
 export default () => <ColorScales name="primary" scale={colorScales.primary} midHighLight={9} />;
 ```
 
-## 颜色级别 Token 使用
+## Color Level Token Usage
 
-现在你可以直接在组件中使用颜色级别 token：
+You can now directly use color level tokens in your components:
 
 ```tsx
 import { useThemeToken } from '@/theme';
@@ -35,68 +37,44 @@ const MyComponent = () => {
   return (
     <View
       style={{
-        backgroundColor: token.primary1, // 主色级别1
-        borderColor: token.red5, // 红色级别5
-        shadowColor: token.blue3A, // 蓝色级别3透明
+        backgroundColor: token.primary1, // Primary color level 1
+        borderColor: token.red5, // Red level 5
+        shadowColor: token.blue3A, // Blue level 3 transparent
       }}
     >
-      <Text style={{ color: token.gray9 }}>使用颜色级别 token</Text>
+      <Text style={{ color: token.gray9 }}>Using color level tokens</Text>
     </View>
   );
 };
 ```
 
-## 可用的 Token 格式
+## Available Token Formats
 
-- **基础色**: \`token.{colorName}{level}\` (例如: \`token.primary5\`)
-- **透明色**: \`token.{colorName}{level} A\` (例如: \`token.red3A\`)
-- **深色模式**: \`token.{colorName}{level} Dark\` (例如: \`token.blue7Dark\`)
-- **深色透明**: \`token.{colorName}{level} DarkA\` (例如: \`token.green9DarkA\`)
+- **Base colors**: `token.{colorName}{level}` (e.g., `token.primary5`)
+- **Transparent**: `token.{colorName}{level}A` (e.g., `token.red3A`)
+- **Dark mode**: `token.{colorName}{level}Dark` (e.g., `token.blue7Dark`)
+- **Dark transparent**: `token.{colorName}{level}DarkA` (e.g., `token.green9DarkA`)
 
-其中：
+Where:
 
-- \`colorName\`: primary, red, blue, green, cyan, geekblue, gold, gray, lime, magenta, orange, purple, volcano, yellow
-- \`level\`: 1-11
+- `colorName`: primary, red, blue, green, cyan, geekblue, gold, gray, lime, magenta, orange, purple, volcano, yellow
+- `level`: 1-11
 
-## API
+## Palette Types
 
-### ColorScales
+The component supports four palette modes:
 
-| 属性         | 类型               | 默认值 | 描述               |
-| ------------ | ------------------ | ------ | ------------------ |
-| name         | \`string\`         | -      | 色板名称           |
-| scale        | \`ColorScaleItem\` | -      | 色板数据对象       |
-| midHighLight | \`number\`         | -      | 高亮的中间色级索引 |
+- **light**: Light mode solid colors
+- **lightA**: Light mode transparent colors
+- **dark**: Dark mode solid colors
+- **darkA**: Dark mode transparent colors
 
-### ColorScaleItem
+## Interactive Features
 
-```tsx
-interface ColorScaleItem {
-  light: string[]; // 浅色模式颜色数组
-  lightA: string[]; // 浅色模式透明颜色数组
-  dark: string[]; // 深色模式颜色数组
-  darkA: string[]; // 深色模式透明颜色数组
-}
-```
+- Click any color swatch to copy the corresponding token value
+- Copy format: `token.colorName + index + (A?) /* #hex */`
+- Supports vertical scrolling to view complete palette
 
-## 色板类型
+## Available Palettes
 
-组件支持四种色板模式：
-
-- **light**: 浅色模式实色
-- **lightA**: 浅色模式透明色
-- **dark**: 深色模式实色
-- **darkA**: 深色模式透明色
-
-## 交互功能
-
-- 点击任意色块可复制对应的 token 值
-- 复制格式：\`token.colorName + index + (A?) /\* #hex \*/\`
-- 支持垂直滚动查看完整色板
-
-## 可用色板
-
-当前支持的色板包括：
-${Object.keys (colorScales)
-.map ((name) => `- ${name}`)
-.join('\n')}
+Currently supported palettes include: primary, red, blue, green, cyan, geekblue, gold, gray, lime, magenta, orange, purple, volcano, yellow

@@ -1,4 +1,3 @@
-export * from '../theme/ThemeProvider';
 export { default as ActionIcon } from './ActionIcon';
 export { default as Alert } from './Alert';
 export * from './Alert';
@@ -36,6 +35,8 @@ export { default as Space } from './Space';
 export { default as Switch } from './Switch';
 export { default as Tag } from './Tag';
 export { default as Text, type TextProps } from './Text';
+export * from './theme';
+export * from './ThemeProvider';
 export * from './Toast';
 export { default as Toast } from './Toast';
 export * from './Tooltip';

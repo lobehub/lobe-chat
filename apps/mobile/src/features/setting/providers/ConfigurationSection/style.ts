@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 export const useStyles = createStyles(({ token }) => ({
   // AES-GCM 相关样式

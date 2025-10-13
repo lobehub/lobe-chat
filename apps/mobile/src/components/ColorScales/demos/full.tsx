@@ -2,7 +2,7 @@ import { ColorScales } from '@lobehub/ui-rn';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 
-import { colorScales } from '@/theme';
+import { colorScales } from '@/components/theme';
 
 const FullDemo = () => {
   return (

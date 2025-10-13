@@ -1,68 +1,55 @@
-# Center 居中组件
+---
+group: Layout
+title: Center
+description: Component for centering child elements within a container, supporting horizontal, vertical, or full centering.
+---
 
-用于将子元素在容器中居中显示的组件，支持水平居中、垂直居中或完全居中。
+## Features
 
-## 功能特性
+- ✅ Simple centering layout
+- ✅ Fully compatible with React Native
+- ✅ Separate control of horizontal and vertical centering
+- ✅ Minimum size setting support
+- ✅ Built-in test ID support
+- ✅ TypeScript support
+- ✅ Theme adaptation
 
-- ✅ 简单的居中布局
-- ✅ 完全兼容 React Native
-- ✅ 支持单独控制水平和垂直居中
-- ✅ 支持设置最小尺寸
-- ✅ 内置测试 ID 支持
-- ✅ TypeScript 支持
-- ✅ 主题适配
-
-## 基础使用
+## Basic Usage
 
 ```tsx
 import { Center } from '@lobehub/ui-rn';
 
-// 完全居中
+// Fully centered
 <Center>
   <Component />
 </Center>
 
-// 只水平居中
+// Horizontal centering only
 <Center horizontal={true} vertical={false}>
   <Component />
 </Center>
 
-// 只垂直居中
+// Vertical centering only
 <Center horizontal={false} vertical={true}>
   <Component />
 </Center>
 
-// 设置最小尺寸
+// Set minimum size
 <Center minHeight={150} minWidth={200}>
   <Component />
 </Center>
 
-// 填充模式
+// Block mode
 <Center block style={{ height: 200 }}>
   <Component />
 </Center>
 ```
 
-## API
+## Use Cases
 
-### CenterProps
+### Fully Centered
 
-| 属性       | 类型                     | 默认值    | 说明               |                |
-| ---------- | ------------------------ | --------- | ------------------ | -------------- |
-| horizontal | \`boolean\`              | \`true\`  | 是否在水平方向居中 |                |
-| vertical   | \`boolean\`              | \`true\`  | 是否在垂直方向居中 |                |
-| block      | \`boolean\`              | \`false\` | 是否填充可用空间   |                |
-| minHeight  | \`number \\              | string\`  | -                  | 容器的最小高度 |
-| minWidth   | \`number \\              | string\`  | -                  | 容器的最小宽度 |
-| children   | \`ReactNode\`            | -         | 子元素             |                |
-| style      | \`StyleProp<ViewStyle>\` | -         | 自定义样式         |                |
-| testID     | \`string\`               | -         | 测试 ID            |                |
-
-## 使用场景
-
-### 完全居中
-
-适用于需要在容器中央显示内容的场景，如加载指示器、空状态提示等。
+Suitable for scenarios where content needs to be displayed in the center of the container, such as loading indicators, empty state prompts, etc.
 
 ```tsx
 <Center style={{ height: 200, backgroundColor: '#f0f0f0' }}>
@@ -70,19 +57,19 @@ import { Center } from '@lobehub/ui-rn';
 </Center>
 ```
 
-### 水平居中
+### Horizontal Centering
 
-适用于需要在水平方向居中，但垂直位置固定的场景，如页面标题。
+Suitable for scenarios where horizontal centering is needed but vertical position is fixed, such as page titles.
 
 ```tsx
 <Center horizontal={true} vertical={false} style={{ height: 100 }}>
-  <Text>页面标题</Text>
+  <Text>Page Title</Text>
 </Center>
 ```
 
-### 垂直居中
+### Vertical Centering
 
-适用于需要在垂直方向居中，但水平位置固定的场景，如侧边栏内容。
+Suitable for scenarios where vertical centering is needed but horizontal position is fixed, such as sidebar content.
 
 ```tsx
 <Center horizontal={false} vertical={true} style={{ height: 100 }}>
@@ -90,26 +77,26 @@ import { Center } from '@lobehub/ui-rn';
 </Center>
 ```
 
-### 多子元素居中
+### Multiple Child Elements Centered
 
-当有多个子元素时，它们会在容器中整体居中显示。
+When there are multiple child elements, they will be displayed as a whole centered in the container.
 
 ```tsx
 <Center>
-  <Text>标题</Text>
-  <Text>副标题</Text>
-  <Button title="操作按钮" />
+  <Text>Title</Text>
+  <Text>Subtitle</Text>
+  <Button title="Action Button" />
 </Center>
 ```
 
-### 嵌套使用
+### Nested Usage
 
-可以与其他布局组件配合使用，实现复杂的布局效果。
+Can be combined with other layout components for complex layout effects.
 
 ```tsx
 <Center style={{ height: 300, backgroundColor: '#f5f5f5' }}>
   <Center style={{ width: 200, height: 200, backgroundColor: 'white' }}>
-    <Text>嵌套居中内容</Text>
+    <Text>Nested Centered Content</Text>
   </Center>
 </Center>
 ```
