@@ -211,6 +211,71 @@ describe('generateAIChatV2 actions', () => {
       expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
     });
 
+    it('should skip creating new topic when auto-create topic is disabled', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        useChatStore.setState({
+          ...mockState,
+          activeTopicId: undefined,
+          messagesMap: {},
+        });
+
+        await result.current.sendMessage({ message: 'disable auto create' });
+      });
+
+      const callArgs = (aiChatService.sendMessageInServer as Mock).mock.calls[0][0];
+      expect(callArgs.newTopic).toBeUndefined();
+    });
+
+    it('should include newTopic payload when auto-create topic is enabled and threshold is reached', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
+        ...DEFAULT_AGENT_CHAT_CONFIG,
+        enableAutoCreateTopic: true,
+        autoCreateTopicThreshold: 1,
+      });
+
+      await act(async () => {
+        useChatStore.setState({
+          ...mockState,
+          activeTopicId: undefined,
+          messagesMap: {},
+        });
+
+        await result.current.sendMessage({ message: 'auto create topic' });
+      });
+
+      const callArgs = (aiChatService.sendMessageInServer as Mock).mock.calls[0][0];
+      expect(callArgs.newTopic).toMatchObject({
+        topicMessageIds: [],
+      });
+    });
+
+    it('should not create new topic when threshold is not reached', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
+        ...DEFAULT_AGENT_CHAT_CONFIG,
+        enableAutoCreateTopic: true,
+        autoCreateTopicThreshold: 10,
+      });
+
+      await act(async () => {
+        useChatStore.setState({
+          ...mockState,
+          activeTopicId: undefined,
+          messagesMap: {},
+        });
+
+        await result.current.sendMessage({ message: 'threshold not met' });
+      });
+
+      const callArgs = (aiChatService.sendMessageInServer as Mock).mock.calls[0][0];
+      expect(callArgs.newTopic).toBeUndefined();
+    });
+
     it('should handle RAG query when internal_shouldUseRAG returns true', async () => {
       const { result } = renderHook(() => useChatStore());
       const message = 'Test RAG query';
@@ -523,10 +588,17 @@ describe('generateAIChatV2 actions', () => {
       const { result } = renderHook(() => useChatStore());
       const mockSwitchTopic = vi.fn();
 
+      (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
+        ...DEFAULT_AGENT_CHAT_CONFIG,
+        enableAutoCreateTopic: true,
+        autoCreateTopicThreshold: 1,
+      });
+
       await act(async () => {
         useChatStore.setState({
           ...mockState,
           activeTopicId: undefined,
+          messagesMap: {},
           switchTopic: mockSwitchTopic,
         });
         await result.current.sendMessage({ message: 'test' });
