@@ -19,10 +19,26 @@ export const useStyles = createStyles(({ token }) => ({
     paddingHorizontal: token.paddingXS,
     position: 'relative',
   },
+  largeTitle: {
+    paddingBottom: token.paddingSM,
+    paddingHorizontal: token.paddingMD,
+    paddingTop: token.paddingSM,
+  },
+  largeTitleText: {
+    color: token.colorTextHeading,
+    fontSize: 34,
+    fontWeight: '700',
+  },
   left: {
     alignItems: 'flex-start',
     justifyContent: 'center',
     zIndex: 2,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: token.paddingLG,
   },
   title: {
     alignItems: 'center',
