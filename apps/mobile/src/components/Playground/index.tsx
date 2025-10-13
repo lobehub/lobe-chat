@@ -1,17 +1,12 @@
-import { Markdown } from '@lobehub/ui-rn';
 import { BookOpen, Code2 } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+import Markdown from '../Markdown';
+import type { DemoItem } from '../types';
 import { useStyles } from './style';
 
 type TabType = 'demo' | 'readme';
-
-export interface DemoItem {
-  component: React.ReactNode;
-  key: string;
-  title: string;
-}
 
 export interface ComponentPlaygroundProps {
   demos: DemoItem[];
