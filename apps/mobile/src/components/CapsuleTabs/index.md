@@ -12,6 +12,7 @@ description: Horizontally scrollable capsule-style tabs component with custom st
 - ✅ Icon and text combinations
 - ✅ Custom styling
 - ✅ Three sizes: large, middle, small
+- ✅ Smart scroll shadows (can be toggled)
 - ✅ TypeScript support
 - ✅ Theme adaptation
 
@@ -40,4 +41,21 @@ Use the `size` prop to quickly switch component height and font size, with three
 <CapsuleTabs items={items} selectedKey={selectedKey} onSelect={setSelectedKey} size="large" />
 <CapsuleTabs items={items} selectedKey={selectedKey} onSelect={setSelectedKey} size="middle" />
 <CapsuleTabs items={items} selectedKey={selectedKey} onSelect={setSelectedKey} size="small" />
+```
+
+## Scroll Shadow
+
+The component uses ScrollShadow to automatically display gradient shadows when content is scrollable. You can disable this feature:
+
+```tsx
+// Enable scroll shadow (default)
+<CapsuleTabs items={items} selectedKey={selectedKey} onSelect={setSelectedKey} />
+
+// Disable scroll shadow
+<CapsuleTabs
+  enableScrollShadow={false}
+  items={items}
+  onSelect={setSelectedKey}
+  selectedKey={selectedKey}
+/>
 ```

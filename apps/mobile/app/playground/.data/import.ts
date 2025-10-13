@@ -41,6 +41,10 @@ import InstantSwitchDemos from '@lobehub/ui-rn/InstantSwitch/demos';
 import ListItemDemos from '@lobehub/ui-rn/ListItem/demos';
 // Markdown
 import MarkdownDemos from '@lobehub/ui-rn/Markdown/demos';
+// MaskShadow
+import MaskShadowDemos from '@lobehub/ui-rn/MaskShadow/demos';
+// ScrollShadow
+import ScrollShadowDemos from '@lobehub/ui-rn/ScrollShadow/demos';
 // Skeleton
 import SkeletonDemos from '@lobehub/ui-rn/Skeleton/demos';
 // Slider
@@ -82,6 +86,8 @@ export const DEMOS_MAP: Record<string, any> = {
   InstantSwitch: InstantSwitchDemos,
   ListItem: ListItemDemos,
   Markdown: MarkdownDemos,
+  MaskShadow: MaskShadowDemos,
+  ScrollShadow: ScrollShadowDemos,
   Skeleton: SkeletonDemos,
   Slider: SliderDemos,
   Space: SpaceDemos,
