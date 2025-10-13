@@ -294,44 +294,10 @@ const nextConfig: NextConfig = {
 
     // Memory optimizations for Vercel
     if (isVercel) {
-      config.optimization = {
-        ...config.optimization,
-        // Reduce memory usage during build
-        minimize: isServer ? false : config.optimization.minimize,
-        moduleIds: 'deterministic',
-        // More aggressive chunk splitting to reduce memory pressure
-        splitChunks: isServer
-          ? false
-          : {
-              cacheGroups: {
-                default: false,
-                // Split large libraries into separate chunks
-framework: {
-                  enforce: true,
-                  name: 'framework',
-                  priority: 40,
-                  test: /[/\\]node_modules[/\\](react|react-dom|scheduler|next)[/\\]/,
-                },
-                
-                lib: {
-                  minChunks: 1,
-                  name(module: any) {
-                    const packageName = module.context.match(
-                      /[/\\]node_modules[/\\](.*?)([/\\]|$)/,
-                    )?.[1];
-                    return `npm.${packageName?.replace('@', '')}`;
-                  },
-                  priority: 30,
-                  reuseExistingChunk: true,
-                  test: /[/\\]node_modules[/\\]/,
-                },
-                vendors: false,
-              },
-              chunks: 'all',
-              maxInitialRequests: 25,
-              minSize: 20_000,
-            },
-      };
+      // Disable minification for server bundles to save memory during build
+      if (config.optimization) {
+        config.optimization.minimize = isServer ? false : config.optimization.minimize;
+      }
 
       // Limit parallel processing to reduce memory spikes
       config.parallelism = 1;
