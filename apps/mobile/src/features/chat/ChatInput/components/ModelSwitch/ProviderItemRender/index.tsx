@@ -3,7 +3,7 @@ import { ProviderIcon } from '@lobehub/icons-rn';
 import { memo } from 'react';
 import { Image, Text, View } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 import { useStyles } from './styles';
 

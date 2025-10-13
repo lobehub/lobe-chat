@@ -1,4 +1,4 @@
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 // React Native 不支持 CSS background-image，所以我们用简化的透明背景
 export const alphaBg = {

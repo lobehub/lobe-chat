@@ -1,8 +1,9 @@
 import { memo } from 'react';
 import { ScrollView, View } from 'react-native';
 
+import { ColorScaleItem } from '@/components/styles';
+
 import Text from '../Text';
-import { ColorScaleItem } from '../theme/color/types';
 import ScaleColumn from './ScaleColumn';
 import { useStyles } from './style';
 

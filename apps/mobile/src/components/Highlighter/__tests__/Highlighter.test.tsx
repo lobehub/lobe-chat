@@ -4,7 +4,7 @@ import { renderWithTheme } from '@/test/utils';
 
 import Highlighter from '../index';
 
-jest.mock('@/components/theme', () => ({
+jest.mock('@/components/styles', () => ({
   useTheme: () => ({
     isDarkMode: false,
   }),

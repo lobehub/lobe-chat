@@ -1,5 +1,5 @@
 import { ICON_SIZE_SMALL } from '@/_const/common';
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
   container: {

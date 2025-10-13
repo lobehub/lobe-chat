@@ -15,7 +15,7 @@ import {
   View,
 } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
