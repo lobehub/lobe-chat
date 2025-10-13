@@ -1,4 +1,4 @@
-import { Center, type DemoItem, Divider, Flexbox, Markdown, Text } from '@lobehub/ui-rn';
+import { type DemoItem, Divider, Flexbox, Markdown, Text } from '@lobehub/ui-rn';
 import { BookOpen, Code2 } from 'lucide-react-native';
 import { Fragment, useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
@@ -67,7 +67,7 @@ const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps)
                 <Fragment key={demo.key}>
                   <Flexbox gap={8} padding={16}>
                     <Text type={'secondary'}>{demo.title}</Text>
-                    <Center>{demo.component}</Center>
+                    <Flexbox align={'stretch'}>{demo.component}</Flexbox>
                   </Flexbox>
                   {index < demos.length - 1 && <Divider />}
                 </Fragment>

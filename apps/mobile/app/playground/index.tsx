@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'expo-router';
 import { kebabCase } from 'lodash-es';
 import React, { Fragment, useMemo, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useStyles } from './styles';
 import { ComponentItem } from './type';
@@ -91,7 +91,7 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <PageContainer showBack title="Playground">
+    <PageContainer largeTitleEnabled showBack title="Playground">
       <View style={styles.filterContainer}>
         <Input.Search
           onChangeText={setSearchText}
@@ -111,14 +111,11 @@ export default function ComponentPlaygroundIndex() {
           />
         </View>
       </View>
-
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        <Flexbox gap={32}>
-          {Object.entries(groupedComponents).map(([group, components]) =>
-            renderGroupSection(group, components),
-          )}
-        </Flexbox>
-      </ScrollView>
+      <Flexbox gap={32}>
+        {Object.entries(groupedComponents).map(([group, components]) =>
+          renderGroupSection(group, components),
+        )}
+      </Flexbox>
     </PageContainer>
   );
 }
