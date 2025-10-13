@@ -1,9 +1,9 @@
+import { CrawlMultiPagesQuery, CrawlPluginState, CrawlSinglePageQuery } from '@lobechat/types';
 import { memo } from 'react';
 
 import { WebBrowsingApiName } from '@/tools/web-browsing';
 import PageContent from '@/tools/web-browsing/Render/PageContent';
 import { BuiltinRenderProps } from '@/types/tool';
-import { CrawlMultiPagesQuery, CrawlPluginState, CrawlSinglePageQuery } from '@/types/tool/crawler';
 import { SearchContent, SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import Search from './Search';
