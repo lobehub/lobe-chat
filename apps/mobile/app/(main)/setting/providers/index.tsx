@@ -2,7 +2,7 @@ import { AiProviderListItem } from '@lobechat/types';
 import { PageContainer } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import isEqual from 'fast-deep-equal';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 

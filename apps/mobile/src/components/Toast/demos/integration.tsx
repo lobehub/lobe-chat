@@ -1,5 +1,5 @@
 import { Button, Text, useTheme, useToast } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 
 export default function IntegrationDemo() {

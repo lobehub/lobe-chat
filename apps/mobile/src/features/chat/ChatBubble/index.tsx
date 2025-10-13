@@ -1,6 +1,6 @@
 import { ChatMessage } from '@lobechat/types';
 import { Markdown } from '@lobehub/ui-rn';
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
@@ -17,7 +17,7 @@ interface ChatBubbleProps {
   message: ChatMessage;
 }
 
-const ChatBubble = React.memo(({ message, isLoading }: ChatBubbleProps) => {
+const ChatBubble = memo(({ message, isLoading }: ChatBubbleProps) => {
   const isUser = message.role === 'user';
   const isAssistant = message.role === 'assistant';
   const hasError = !!message.error;

@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
-import React, { ReactNode, useRef } from 'react';
+import type { ComponentType, FC } from 'react';
+import { ReactNode, useRef } from 'react';
 import {
   Animated,
   NativeScrollEvent,
@@ -23,13 +24,13 @@ export interface PageContainerProps {
   largeTitleEnabled?: boolean;
   left?: ReactNode;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  scrollComponent?: React.ComponentType<any>;
+  scrollComponent?: ComponentType<any>;
   showBack?: boolean;
   style?: StyleProp<ViewStyle>;
   title?: ReactNode;
 }
 
-const PageContainer: React.FC<PageContainerProps> = ({
+const PageContainer: FC<PageContainerProps> = ({
   children,
   style,
   left = undefined,

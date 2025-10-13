@@ -1,6 +1,6 @@
 import { ChatMessageError } from '@lobechat/types';
 import { AlertTriangle } from 'lucide-react-native';
-import React from 'react';
+import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
@@ -11,7 +11,7 @@ interface ErrorContentProps {
   error: ChatMessageError;
 }
 
-const ErrorContent: React.FC<ErrorContentProps> = ({ error }) => {
+const ErrorContent: FC<ErrorContentProps> = ({ error }) => {
   const token = useTheme();
   const { t } = useTranslation('error');
   const providerName = useProviderName(error.body?.provider);

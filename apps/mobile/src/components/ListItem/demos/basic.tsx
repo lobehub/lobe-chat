@@ -1,5 +1,4 @@
 import { ListItem, Text, useTheme } from '@lobehub/ui-rn';
-import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 const handlePress = (title: string) => {

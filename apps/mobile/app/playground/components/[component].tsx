@@ -1,7 +1,6 @@
 import { PageContainer } from '@lobehub/ui-rn';
 import { useLocalSearchParams } from 'expo-router';
 import { kebabCase } from 'lodash-es';
-import React from 'react';
 import { Text, View } from 'react-native';
 
 import { DEMOS_MAP } from '../.data/import';

@@ -1,10 +1,10 @@
 import { Skeleton } from '@lobehub/ui-rn';
-import React from 'react';
+import type { FC } from 'react';
 import { View } from 'react-native';
 
 import { useStyles } from './style';
 
-const ModelCardSkeleton: React.FC = () => {
+const ModelCardSkeleton: FC = () => {
   const { styles } = useStyles();
 
   return (

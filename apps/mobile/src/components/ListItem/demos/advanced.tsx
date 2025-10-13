@@ -1,12 +1,13 @@
 import { Button, ListItem, Switch, Text } from '@lobehub/ui-rn';
 import { Minus, Plus, RefreshCw, Settings } from 'lucide-react-native';
-import React, { useCallback, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useState } from 'react';
 import { Animated, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface CustomListItemProps {
-  avatar: string | React.ReactNode;
+  avatar: string | ReactNode;
   description?: string;
-  extra?: React.ReactNode;
+  extra?: ReactNode;
   onPress?: () => void;
   style?: 'default' | 'compact' | 'expanded' | 'card';
   title: string;

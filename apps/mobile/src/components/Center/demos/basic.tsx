@@ -1,5 +1,4 @@
 import { Center, Text } from '@lobehub/ui-rn';
-import React from 'react';
 
 export default () => {
   return (
