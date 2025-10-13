@@ -1,10 +1,11 @@
 import { Href, Link } from 'expo-router';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
-import Avatar from '@/components/Avatar';
 
+import Avatar from '../Avatar';
+import Text from '../Text';
 import { useStyles } from './style';
 
 interface ListItemProps {
@@ -27,10 +28,10 @@ const ListItem = ({ title, avatar, description, extra, onPress, href, active }: 
     <View style={styles.listItem}>
       {avatar && <Avatar avatar={avatar} size={AVATAR_SIZE_MEDIUM} />}
       <View style={styles.info}>
-        <Text numberOfLines={1} style={styles.title}>
+        <Text ellipsis style={styles.title}>
           {title}
         </Text>
-        <Text numberOfLines={1} style={styles.description}>
+        <Text ellipsis style={styles.description}>
           {description}
         </Text>
       </View>

@@ -1,8 +1,6 @@
-import { CapsuleTabItem, CapsuleTabs } from '@lobehub/ui-rn';
+import { CapsuleTabItem, CapsuleTabs, Text, useTheme } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { View } from 'react-native';
 
 const items: CapsuleTabItem[] = [
   { key: 'all', label: 'All' },

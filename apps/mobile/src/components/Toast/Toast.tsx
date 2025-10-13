@@ -1,10 +1,10 @@
 import { CheckCircle, Info, RefreshCw, X, XCircle } from 'lucide-react-native';
 import React from 'react';
-import { Animated, Text, TouchableOpacity } from 'react-native';
+import { Animated, TouchableOpacity } from 'react-native';
 
-import Icon from '@/components/Icon';
-import { useTheme } from '@/components/theme';
-
+import Icon from '../Icon';
+import Text from '../Text';
+import { useTheme } from '../theme';
 import { useStyles } from './style';
 
 export type ToastType = 'success' | 'error' | 'info' | 'loading';

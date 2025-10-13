@@ -1,6 +1,6 @@
-import { Button, Highlighter } from '@lobehub/ui-rn';
+import { Button, Highlighter, Text } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 /**
  * 多语言支持演示
@@ -258,7 +258,7 @@ networks:
       languages: [
         {
           code: `import React, { useState } from 'react';
-import { Button, Alert } from 'react-native';
+import { Button, Alert  } from 'react-native';
 
 const Welcome = ({ name }) => {
   const [count, setCount] = useState(0);

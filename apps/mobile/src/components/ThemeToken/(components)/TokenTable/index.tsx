@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
-import Input from '@/components/Input';
-
+import Input from '../../Input';
+import Text from '../../Text';
 import { useStyles } from './style';
 
 export interface TokenTableProps {

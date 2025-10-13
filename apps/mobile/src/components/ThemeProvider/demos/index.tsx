@@ -1,6 +1,5 @@
+import { DemoConfig } from '@lobehub/ui-rn';
 import React from 'react';
-
-import type { DemoConfig } from '@/components';
 
 import BasicDemo from './basic';
 import CustomAlgorithmDemo from './customAlgorithm';

@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
-import Highlighter from '@/components/Highlighter';
-
+import Highlighter from '../../Highlighter';
+import Text from '../../Text';
 import { useStyles } from './style';
 
 export interface TokenJsonProps {

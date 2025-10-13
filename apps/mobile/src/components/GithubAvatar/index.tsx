@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import urlJoin from 'url-join';
 
-import Avatar, { type AvatarProps } from '@/components/Avatar';
+import Avatar, { type AvatarProps } from '../Avatar';
 
 interface GitHubAvatarProps extends Omit<AvatarProps, 'avatar'> {
   username: string;

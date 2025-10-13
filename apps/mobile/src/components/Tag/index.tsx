@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, TextStyle, View, ViewStyle } from 'react-native';
+import { TextStyle, View, ViewStyle } from 'react-native';
 
+import Text from '../Text';
 import { useStyles } from './style';
 import type { TagColor } from './type';
 

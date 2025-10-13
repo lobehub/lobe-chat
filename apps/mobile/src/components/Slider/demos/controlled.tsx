@@ -1,8 +1,6 @@
-import { Button, Slider } from '@lobehub/ui-rn';
+import { Button, Slider, Text, createStyles } from '@lobehub/ui-rn';
 import React, { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { createStyles } from '@/components/theme';
+import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
   buttonGroup: {
