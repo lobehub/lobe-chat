@@ -1,8 +1,8 @@
+import { SearchParams, SearchQuery } from '@lobechat/types';
 import { CrawlImplType, Crawler } from '@lobechat/web-crawler';
 import pMap from 'p-map';
 
 import { toolsEnv } from '@/envs/tools';
-import { SearchParams, SearchQuery } from '@/types/tool/search';
 
 import { SearchImplType, SearchServiceImpl, createSearchServiceImpl } from './impls';
 
