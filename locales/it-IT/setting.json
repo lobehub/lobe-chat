@@ -294,6 +294,13 @@
     },
     "title": "Impostazioni Generali"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Imposta il numero predefinito di immagini da generare quando si crea una nuova attività nel pannello di generazione immagini.",
+      "label": "Numero predefinito di immagini",
+      "title": "Impostazioni AI per il disegno"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Abilita limite di risposta singola"
@@ -549,6 +556,7 @@
     "common": "Impostazioni comuni",
     "experiment": "实验",
     "hotkey": "Scorciatoie",
+    "image": "Disegno AI",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",

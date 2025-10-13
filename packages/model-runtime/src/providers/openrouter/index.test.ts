@@ -21,7 +21,7 @@ testProvider({
 });
 
 // Mock the console.error to avoid polluting test output
-vi.spyOn(console, 'error').mockImplementation(() => {});
+vi.spyOn(console, 'error').mockImplementation(() => { });
 
 let instance: LobeOpenAICompatibleRuntime;
 
@@ -154,8 +154,8 @@ describe('LobeOpenRouterAI', () => {
 
       const list = await instance.models();
 
-      // 验证在当前实现中，当 frontend fetch 返回非 ok 时，会返回空列表
-      expect(fetch).toHaveBeenCalledWith('https://openrouter.ai/api/frontend/models');
+      // 验证在当前实现中，当 model fetch 返回非 ok 时，会返回空列表
+      expect(fetch).toHaveBeenCalledWith('https://openrouter.ai/api/v1/models');
       expect(list.length).toBe(0);
       expect(list).toEqual([]);
     });

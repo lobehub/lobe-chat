@@ -284,10 +284,18 @@
           "placeholder": "Please enter the model ID, e.g., gpt-4o or claude-3.5-sonnet",
           "title": "Model ID"
         },
+        "imageOutput": {
+          "extra": "This setting enables the model's image generation capability only. The actual performance depends entirely on the model itself. Please test the model to determine if it supports image generation.",
+          "title": "Supports Image Generation"
+        },
         "modalTitle": "Custom Model Configuration",
         "reasoning": {
           "extra": "This configuration will enable the model's deep thinking capabilities, and the specific effects depend entirely on the model itself. Please test whether this model has usable deep thinking abilities.",
           "title": "Support Deep Thinking"
+        },
+        "search": {
+          "extra": "This setting enables the model's built-in web search capability. Whether the built-in search engine is supported depends on the model itself. Please test the model to verify the availability of this feature.",
+          "title": "Supports Web Search"
         },
         "tokens": {
           "extra": "Set the maximum number of tokens supported by the model",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Please select a model type",
           "title": "Model Type"
+        },
+        "video": {
+          "extra": "This setting enables video recognition configuration within the application. Whether video recognition is supported depends entirely on the model itself. Please test the model to verify the availability of this feature.",
+          "title": "Supports Video Recognition"
         },
         "vision": {
           "extra": "This configuration will only enable image upload capabilities in the application. Whether recognition is supported depends entirely on the model itself. Please test the visual recognition capabilities of the model yourself.",

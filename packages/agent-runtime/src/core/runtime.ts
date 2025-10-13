@@ -2,11 +2,11 @@ import type {
   Agent,
   AgentEvent,
   AgentInstruction,
+  AgentRuntimeContext,
   AgentState,
   Cost,
   InstructionExecutor,
   RuntimeConfig,
-  RuntimeContext,
   ToolRegistry,
   ToolsCalling,
   Usage,
@@ -45,8 +45,8 @@ export class AgentRuntime {
    */
   async step(
     state: AgentState,
-    context?: RuntimeContext,
-  ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: RuntimeContext }> {
+    context?: AgentRuntimeContext,
+  ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
     try {
       // Increment step count and check limits
       const newState = structuredClone(state);
@@ -63,7 +63,6 @@ export class AgentRuntime {
           reasonDetail: `Maximum steps exceeded: ${newState.maxSteps}`,
           type: 'done' as const,
         };
-        newState.events = [...newState.events, finishEvent];
 
         return {
           events: [finishEvent],
@@ -75,29 +74,69 @@ export class AgentRuntime {
       // Use provided context or create initial context
       const runtimeContext = context || this.createInitialContext(newState);
 
-      let result: { events: AgentEvent[]; newState: AgentState; nextContext?: RuntimeContext };
+      // Get instructions from agent runner and normalize to array
+      let rawInstructions: any;
 
       // Handle human approved tool calls
       if (runtimeContext.phase === 'human_approved_tool') {
         const approvedPayload = runtimeContext.payload as { approvedToolCall: ToolsCalling };
-        result = await this.executors.call_tool(
-          { toolCall: approvedPayload.approvedToolCall, type: 'call_tool' },
-          newState,
-        );
+        rawInstructions = { payload: approvedPayload.approvedToolCall, type: 'call_tool' };
       } else {
         // Standard flow: Plan -> Execute
-        const instruction = await this.agent.runner(runtimeContext, newState);
-        result = await this.executors[instruction.type](instruction, newState);
+        rawInstructions = await this.agent.runner(runtimeContext, newState);
       }
 
-      // Ensure stepCount is preserved in the result
-      result.newState.stepCount = newState.stepCount;
-      result.newState.lastModified = newState.lastModified;
+      // Normalize to array
+      const instructions = Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions];
 
-      // Accumulate events to state history
-      result.newState.events = [...result.newState.events, ...result.events];
+      // Execute all instructions sequentially
+      let currentState = newState;
+      const allEvents: AgentEvent[] = [];
+      let finalNextContext: AgentRuntimeContext | undefined = undefined;
 
-      return result;
+      for (const instruction of instructions) {
+        let result;
+
+        // Special handling for batch tool execution
+        if (instruction.type === 'call_tools_batch') {
+          result = await this.executeToolsBatch(instruction as any, currentState);
+        } else {
+          const executor = this.executors[instruction.type as keyof typeof this.executors];
+          if (!executor) {
+            throw new Error(`No executor found for instruction type: ${instruction.type}`);
+          }
+          result = await executor(instruction, currentState);
+        }
+
+        // Accumulate events
+        allEvents.push(...result.events);
+
+        // Update state
+        currentState = result.newState;
+
+        // Keep the last nextContext
+        if (result.nextContext) {
+          finalNextContext = result.nextContext;
+        }
+
+        // Stop execution if blocked
+        if (
+          currentState.status === 'waiting_for_human_input' ||
+          currentState.status === 'interrupted'
+        ) {
+          break;
+        }
+      }
+
+      // Ensure stepCount and lastModified are preserved
+      currentState.stepCount = newState.stepCount;
+      currentState.lastModified = newState.lastModified;
+
+      return {
+        events: allEvents,
+        newState: currentState,
+        nextContext: finalNextContext,
+      };
     } catch (error) {
       const errorState = structuredClone(state);
       errorState.stepCount += 1;
@@ -111,9 +150,9 @@ export class AgentRuntime {
    */
   async approveToolCall(
     state: AgentState,
-    approvedToolCall: ToolsCalling,
-  ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: RuntimeContext }> {
-    const context: RuntimeContext = {
+    approvedToolCall: any,
+  ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
+    const context: AgentRuntimeContext = {
       payload: { approvedToolCall },
       phase: 'human_approved_tool',
       session: this.createSessionContext(state),
@@ -157,8 +196,6 @@ export class AgentRuntime {
       type: 'interrupted',
     };
 
-    newState.events = [...newState.events, interruptEvent];
-
     return {
       events: [interruptEvent],
       newState,
@@ -174,8 +211,8 @@ export class AgentRuntime {
   async resume(
     state: AgentState,
     reason: string = 'User resumed execution',
-    context?: RuntimeContext,
-  ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: RuntimeContext }> {
+    context?: AgentRuntimeContext,
+  ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
     if (state.status !== 'interrupted') {
       throw new Error('Cannot resume: state is not interrupted');
     }
@@ -199,8 +236,6 @@ export class AgentRuntime {
       resumedFromStep,
       type: 'resumed',
     };
-
-    newState.events = [...newState.events, resumeEvent];
 
     // If context is provided, continue with that context
     if (context) {
@@ -269,7 +304,6 @@ export class AgentRuntime {
       cost: defaultCost,
       // Default values
       createdAt: now,
-      events: [],
       lastModified: now,
       messages: [],
       status: 'idle',
@@ -308,6 +342,7 @@ export class AgentRuntime {
       try {
         // Stream LLM response
         for await (const chunk of modelRuntime(payload)) {
+          // Emit individual stream events for each chunk
           events.push({ chunk, type: 'llm_stream' });
 
           // Accumulate content and tool calls from chunks
@@ -348,7 +383,7 @@ export class AgentRuntime {
         }
 
         // Provide next context based on LLM result
-        const nextContext: RuntimeContext = {
+        const nextContext: AgentRuntimeContext = {
           payload: {
             hasToolCalls: toolCalls.length > 0,
             result: { content: assistantContent, tool_calls: toolCalls },
@@ -368,7 +403,7 @@ export class AgentRuntime {
   /** Create call_tool executor */
   private createCallToolExecutor(): InstructionExecutor {
     return async (instruction, state) => {
-      const { toolCall } = instruction as Extract<AgentInstruction, { type: 'call_tool' }>;
+      const { payload: toolCall } = instruction as Extract<AgentInstruction, { type: 'call_tool' }>;
       const newState = structuredClone(state);
       const events: AgentEvent[] = [];
 
@@ -376,19 +411,25 @@ export class AgentRuntime {
       newState.status = 'running';
 
       const tools = this.agent.tools || ({} as ToolRegistry);
-      const handler = tools[toolCall.function.name];
-      if (!handler) throw new Error(`Tool not found: ${toolCall.function.name}`);
 
-      const args = JSON.parse(toolCall.function.arguments);
+      // Support both ToolsCalling (OpenAI format) and CallingToolPayload formats
+      const toolName = toolCall.apiName || toolCall.function?.name;
+      const toolArgs = toolCall.arguments || toolCall.function?.arguments;
+      const toolId = toolCall.id;
+
+      const handler = tools[toolName];
+      if (!handler) throw new Error(`Tool not found: ${toolName}`);
+
+      const args = JSON.parse(toolArgs);
       const result = await handler(args);
 
       newState.messages.push({
         content: JSON.stringify(result),
         role: 'tool',
-        tool_call_id: toolCall.id,
+        tool_call_id: toolId,
       });
 
-      events.push({ id: toolCall.id, result, type: 'tool_result' });
+      events.push({ id: toolId, result, type: 'tool_result' });
 
       // Update usage and cost if agent provides calculation methods
       if (this.agent.calculateUsage) {
@@ -413,7 +454,7 @@ export class AgentRuntime {
       }
 
       // Provide next context for tool result
-      const nextContext: RuntimeContext = {
+      const nextContext: AgentRuntimeContext = {
         payload: {
           result,
           toolCall,
@@ -531,12 +572,105 @@ export class AgentRuntime {
   // ============ Helper Methods ============
 
   /**
+   * Execute multiple tool calls concurrently
+   */
+  private async executeToolsBatch(
+    instruction: { payload: any[]; type: 'call_tools_batch' },
+    baseState: AgentState,
+  ): Promise<{
+    events: AgentEvent[];
+    newState: AgentState;
+    nextContext?: AgentRuntimeContext;
+  }> {
+    const { payload: toolsCalling } = instruction;
+
+    // Execute all tools concurrently based on the same state
+    const results = await Promise.all(
+      toolsCalling.map((toolCall) =>
+        this.executors.call_tool(
+          { payload: toolCall, type: 'call_tool' } as any,
+          structuredClone(baseState), // Each tool starts from the same base state
+        ),
+      ),
+    );
+
+    // Merge results
+    return this.mergeToolResults(results, baseState);
+  }
+
+  /**
+   * Merge multiple tool execution results
+   */
+  private mergeToolResults(
+    results: Array<{
+      events: AgentEvent[];
+      newState: AgentState;
+      nextContext?: AgentRuntimeContext;
+    }>,
+    baseState: AgentState,
+  ): {
+    events: AgentEvent[];
+    newState: AgentState;
+    nextContext?: AgentRuntimeContext;
+  } {
+    const newState = structuredClone(baseState);
+    const allEvents: AgentEvent[] = [];
+
+    // Merge all tool messages in order
+    for (const result of results) {
+      // Extract tool role messages
+      const toolMessages = result.newState.messages.filter((m) => m.role === 'tool');
+      newState.messages.push(...toolMessages);
+
+      // Merge events
+      allEvents.push(...result.events);
+
+      // Merge usage statistics (if available)
+      if (result.newState.usage && newState.usage) {
+        newState.usage.tools.totalCalls += result.newState.usage.tools.totalCalls;
+        newState.usage.tools.totalTimeMs += result.newState.usage.tools.totalTimeMs;
+
+        // Merge per-tool statistics
+        Object.entries(result.newState.usage.tools.byTool).forEach(([tool, stats]) => {
+          if (newState.usage.tools.byTool[tool]) {
+            newState.usage.tools.byTool[tool].calls += stats.calls;
+            newState.usage.tools.byTool[tool].totalTimeMs += stats.totalTimeMs;
+          } else {
+            newState.usage.tools.byTool[tool] = { ...stats };
+          }
+        });
+      }
+
+      // Merge cost statistics (if available)
+      if (result.newState.cost && newState.cost) {
+        newState.cost.tools.total += result.newState.cost.tools.total;
+        newState.cost.total += result.newState.cost.tools.total;
+      }
+    }
+
+    newState.lastModified = new Date().toISOString();
+
+    return {
+      events: allEvents,
+      newState,
+      nextContext: {
+        payload: {
+          toolCount: results.length,
+          toolResults: results.map((r) => r.nextContext?.payload),
+        },
+        phase: 'tools_batch_result',
+        session: this.createSessionContext(newState),
+      },
+    };
+  }
+
+  /**
    * Handle cost limit exceeded scenario
    */
   private handleCostLimitExceeded(state: AgentState): {
     events: AgentEvent[];
     newState: AgentState;
-    nextContext?: RuntimeContext;
+    nextContext?: AgentRuntimeContext;
   } {
     const newState = structuredClone(state);
     const costLimit = newState.costLimit!;
@@ -550,7 +684,6 @@ export class AgentRuntime {
           reasonDetail: `Cost limit exceeded: ${newState.cost.total} ${newState.cost.currency} > ${costLimit.maxTotalCost} ${costLimit.currency}`,
           type: 'done' as const,
         };
-        newState.events = [...newState.events, finishEvent];
         return {
           events: [finishEvent],
           newState,
@@ -582,7 +715,6 @@ export class AgentRuntime {
           ),
           type: 'error' as const,
         };
-        newState.events = [...newState.events, warningEvent];
         return {
           events: [warningEvent],
           newState,
@@ -601,7 +733,6 @@ export class AgentRuntime {
    */
   private createSessionContext(state: AgentState) {
     return {
-      eventCount: state.events.length,
       messageCount: state.messages.length,
       sessionId: state.sessionId,
       status: state.status,
@@ -612,7 +743,7 @@ export class AgentRuntime {
   /**
    * Create initial context for the first step (fallback for backward compatibility)
    */
-  private createInitialContext(state: AgentState): RuntimeContext {
+  private createInitialContext(state: AgentState): AgentRuntimeContext {
     const lastMessage = state.messages.at(-1);
 
     if (lastMessage?.role === 'user') {
@@ -644,9 +775,6 @@ export class AgentRuntime {
     errorState.lastModified = new Date().toISOString();
 
     const errorEvent = { error, type: 'error' } as const;
-
-    // Accumulate error event to state history
-    errorState.events = [...errorState.events, errorEvent];
 
     return {
       events: [errorEvent],

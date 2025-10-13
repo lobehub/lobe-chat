@@ -44,4 +44,29 @@ describe('PptxLoader', () => {
     expect(pages[0].pageContent).toBe('');
     expect(pages[0].metadata.error).toContain('Failed to load or process PPTX file:'); // Update error message check
   });
+
+  it('should handle corrupted slide XML', async () => {
+    const corruptedFile = fixturePath('corrupted-slides.pptx');
+    const pages = await loader.loadPages(corruptedFile);
+    expect(pages).toHaveLength(1);
+    expect(pages[0].pageContent).toBe('');
+    expect(pages[0].metadata.error).toContain('All slides failed to parse correctly');
+  });
+
+  it('should handle aggregateContent with all error pages', async () => {
+    const corruptedFile = fixturePath('corrupted-slides.pptx');
+    const pages = await loader.loadPages(corruptedFile);
+    const content = await loader.aggregateContent(pages);
+    expect(content).toBe(''); // 所有页面都是错误页面时返回空字符串
+  });
+
+  it('should handle empty PPTX file with no slides', async () => {
+    const emptyFile = fixturePath('empty-slides.pptx');
+    const pages = await loader.loadPages(emptyFile);
+    expect(pages).toHaveLength(1);
+    expect(pages[0].pageContent).toBe('');
+    expect(pages[0].metadata.error).toContain(
+      'No slides found. The PPTX file might be empty, corrupted, or does not contain standard slide XMLs.',
+    );
+  });
 });

@@ -54,12 +54,24 @@ export interface SendMessageServerResponse {
   userMessageId: string;
 }
 
+export const StructureSchema = z.object({
+  description: z.string().optional(),
+  name: z.string(),
+  schema: z.object({
+    additionalProperties: z.boolean().optional(),
+    properties: z.record(z.string(), z.any()),
+    required: z.array(z.string()).optional(),
+    type: z.literal('object'),
+  }),
+  strict: z.boolean().optional(),
+});
+
 export const StructureOutputSchema = z.object({
   keyVaultsPayload: z.string(),
   messages: z.array(z.any()),
   model: z.string(),
   provider: z.string(),
-  schema: z.any(),
+  schema: StructureSchema,
 });
 
 export interface StructureOutputParams {

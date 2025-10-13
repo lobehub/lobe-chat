@@ -294,6 +294,13 @@
     },
     "title": "General Settings"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Set the default number of images generated when creating a new task in the image generation panel.",
+      "label": "Default Image Count",
+      "title": "AI Drawing Settings"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Enable Max Tokens Limit"
@@ -549,6 +556,7 @@
     "common": "Common Settings",
     "experiment": "Experiment",
     "hotkey": "Hotkeys",
+    "image": "AI Drawing",
     "llm": "Language Model",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",

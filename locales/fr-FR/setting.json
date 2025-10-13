@@ -294,6 +294,13 @@
     },
     "title": "Paramètres généraux"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Définir le nombre d'images générées par défaut lors de la création d'une nouvelle tâche dans le panneau de génération d'images.",
+      "label": "Nombre d'images par défaut",
+      "title": "Paramètres de dessin IA"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Activer la limite de tokens par réponse"
@@ -549,6 +556,7 @@
     "common": "Paramètres généraux",
     "experiment": "Expérience",
     "hotkey": "Raccourcis clavier",
+    "image": "Dessin IA",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
     "proxy": "Proxy réseau",

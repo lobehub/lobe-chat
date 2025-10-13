@@ -284,10 +284,18 @@
           "placeholder": "Introduce el id del modelo, por ejemplo gpt-4o o claude-3.5-sonnet",
           "title": "ID del modelo"
         },
+        "imageOutput": {
+          "extra": "Esta configuración solo habilitará la capacidad del modelo para generar imágenes. El efecto específico depende completamente del propio modelo. Por favor, prueba si el modelo tiene la capacidad de generar imágenes de manera utilizable.",
+          "title": "Soporte para generación de imágenes"
+        },
         "modalTitle": "Configuración del modelo personalizado",
         "reasoning": {
           "extra": "Esta configuración solo activará la capacidad de pensamiento profundo del modelo, el efecto específico depende completamente del modelo en sí, por favor, pruebe si este modelo tiene la capacidad de pensamiento profundo utilizable",
           "title": "Soporte para pensamiento profundo"
+        },
+        "search": {
+          "extra": "Esta configuración solo habilitará la capacidad de búsqueda en línea del motor de búsqueda incorporado del modelo. Si se admite o no depende del propio modelo. Por favor, prueba si el motor de búsqueda incorporado del modelo es utilizable.",
+          "title": "Soporte para búsqueda en línea"
         },
         "tokens": {
           "extra": "Establecer el número máximo de tokens que el modelo puede soportar",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Por favor, seleccione el tipo de modelo",
           "title": "Tipo de modelo"
+        },
+        "video": {
+          "extra": "Esta configuración solo habilitará la configuración de reconocimiento de video en la aplicación. Si se admite el reconocimiento depende completamente del propio modelo. Por favor, prueba si el modelo tiene la capacidad de reconocimiento de video utilizable.",
+          "title": "Soporte para reconocimiento de video"
         },
         "vision": {
           "extra": "Esta configuración solo habilitará la configuración de carga de imágenes en la aplicación, si se admite el reconocimiento depende completamente del modelo en sí, prueba la disponibilidad de la capacidad de reconocimiento visual de este modelo.",

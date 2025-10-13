@@ -294,6 +294,13 @@
     },
     "title": "通用設定"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "設定圖像生成面板在建立新任務時的預設圖片數量。",
+      "label": "預設圖片數量",
+      "title": "AI 繪圖設定"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "啟用單次回覆限制"
@@ -549,6 +556,7 @@
     "common": "通用設置",
     "experiment": "實驗",
     "hotkey": "快速鍵",
+    "image": "AI 繪圖",
     "llm": "語言模型",
     "provider": "AI 服務商",
     "proxy": "網路代理",
