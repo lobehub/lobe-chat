@@ -81,7 +81,7 @@ export default function SettingScreen() {
   }, []);
 
   return (
-    <PageContainer showBack title={t('title', { ns: 'setting' })}>
+    <PageContainer largeTitleEnabled showBack title={t('title', { ns: 'setting' })}>
       <ScrollView style={[styles.container]}>
         <SettingGroup>
           <SettingItem
