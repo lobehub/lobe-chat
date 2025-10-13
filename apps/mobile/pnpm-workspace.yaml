@@ -5,3 +5,4 @@ packages:
   - '../../packages/utils'
   - '../../packages/model-bank'
   - '../../packages/web-crawler'
+  - '../../packages/ssrf-safe-fetch'
