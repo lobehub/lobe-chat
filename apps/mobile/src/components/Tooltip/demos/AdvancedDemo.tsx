@@ -1,8 +1,6 @@
-import { Button, Tooltip } from '@lobehub/ui-rn';
+import { Button, Text, Tooltip, useTheme } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({
   colorRow: {

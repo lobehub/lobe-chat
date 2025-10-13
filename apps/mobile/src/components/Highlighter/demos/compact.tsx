@@ -1,8 +1,6 @@
-import { Highlighter } from '@lobehub/ui-rn';
+import { Highlighter, Text, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { StyleSheet, View } from 'react-native';
 
 /**
  * 紧凑型显示演示

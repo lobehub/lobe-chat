@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import type { IconRenderable } from '@/components/Icon';
+import type { IconRenderable } from '../Icon';
 
 export type AlertType = 'info' | 'success' | 'warning' | 'error';
 

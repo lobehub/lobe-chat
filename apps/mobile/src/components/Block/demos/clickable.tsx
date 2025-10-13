@@ -1,6 +1,6 @@
-import { Block, Flexbox } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Block, Flexbox, Text } from '@lobehub/ui-rn';
+import { useState } from 'react';
+import { Alert } from 'react-native';
 
 export default () => {
   const [clickCount, setClickCount] = useState(0);

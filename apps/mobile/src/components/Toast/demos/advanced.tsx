@@ -1,9 +1,7 @@
-import { Button, useToast } from '@lobehub/ui-rn';
+import { Button, Switch, Text, useTheme, useToast } from '@lobehub/ui-rn';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function AdvancedDemo() {
   const toast = useToast();

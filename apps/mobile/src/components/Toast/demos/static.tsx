@@ -1,8 +1,6 @@
-import { Button, Toast } from '@lobehub/ui-rn';
+import { Button, Text, Toast, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 const showSuccess = () => {
   Toast.success('操作成功');

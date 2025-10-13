@@ -1,8 +1,6 @@
-import { Tag } from '@lobehub/ui-rn';
+import { Tag, Text, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { View } from 'react-native';
 
 const UseCaseDemo = () => {
   const token = useTheme();
