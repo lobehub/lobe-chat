@@ -1,6 +1,9 @@
 import { ModelProvider, openrouter as OpenRouterModels } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import { OpenRouterModelCard, OpenRouterReasoning } from './type';
 
@@ -9,7 +12,7 @@ const formatPrice = (price?: string) => {
   return Number((Number(price) * 1e6).toPrecision(5));
 };
 
-export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://openrouter.ai/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -78,8 +81,8 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
       let displayName = model.name;
       const colonIndex = displayName.indexOf(':');
       if (colonIndex !== -1) {
-        const prefix = displayName.substring(0, colonIndex).trim();
-        const suffix = displayName.substring(colonIndex + 1).trim();
+        const prefix = displayName.slice(0, Math.max(0, colonIndex)).trim();
+        const suffix = displayName.slice(Math.max(0, colonIndex + 1)).trim();
 
         const isDeepSeekPrefix = prefix.toLowerCase() === 'deepseek';
         const suffixHasDeepSeek = suffix.toLowerCase().includes('deepseek');
@@ -112,10 +115,10 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
             ? top_provider.max_completion_tokens
             : undefined,
         pricing: {
-          input: inputPrice,
           cachedInput: cachedInputPrice,
-          writeCacheInput: writeCacheInputPrice,
+          input: inputPrice,
           output: outputPrice,
+          writeCacheInput: writeCacheInputPrice,
         },
         reasoning: supported_parameters.includes('reasoning'),
         releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
@@ -126,4 +129,6 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
     return await processMultiProviderModelList(formattedModels, 'openrouter');
   },
   provider: ModelProvider.OpenRouter,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeOpenRouterAI = createOpenAICompatibleRuntime(params);

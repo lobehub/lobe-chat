@@ -2,7 +2,10 @@ import { ModelProvider } from 'model-bank';
 
 import { responsesAPIModels } from '../../const/models';
 import { pruneReasoningPayload } from '../../core/contextBuilders/openai';
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { ChatStreamPayload } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
@@ -23,7 +26,7 @@ const supportsFlexTier = (model: string) => {
   return flexSupportedModels.some((supportedModel) => model.startsWith(supportedModel));
 };
 
-export const LobeOpenAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -120,4 +123,6 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
       } as any;
     },
   },
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeOpenAI = createOpenAICompatibleRuntime(params);

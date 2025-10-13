@@ -60,7 +60,7 @@ export const params = {
           enabled: knownModel?.enabled || false,
           functionCall: model.id === '360gpt-pro' || knownModel?.abilities?.functionCall || false,
           id: model.id,
-          maxTokens: typeof model.max_tokens === 'number' ? model.max_tokens : undefined,
+          maxOutput: typeof model.max_tokens === 'number' ? model.max_tokens : undefined,
           reasoning:
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||

@@ -3,6 +3,7 @@ import urlJoin from 'url-join';
 
 import { responsesAPIModels } from '../../const/models';
 import { createRouterRuntime } from '../../core/RouterRuntime';
+import { CreateRouterRuntimeOptions } from '../../core/RouterRuntime/createRuntime';
 import { ChatStreamPayload } from '../../types/chat';
 import { detectModelProvider, processMultiProviderModelList } from '../../utils/modelParse';
 
@@ -25,7 +26,7 @@ export interface NewAPIPricing {
   supported_endpoint_types?: string[];
 }
 
-const handlePayload = (payload: ChatStreamPayload) => {
+export const handlePayload = (payload: ChatStreamPayload) => {
   // Handle OpenAI responses API mode
   if (
     responsesAPIModels.has(payload.model) ||
@@ -37,7 +38,7 @@ const handlePayload = (payload: ChatStreamPayload) => {
   return payload;
 };
 
-export const LobeNewAPIAI = createRouterRuntime({
+export const params = {
   debug: {
     chatCompletion: () => process.env.DEBUG_NEWAPI_CHAT_COMPLETION === '1',
   },
@@ -183,4 +184,6 @@ export const LobeNewAPIAI = createRouterRuntime({
       },
     ];
   },
-});
+} satisfies CreateRouterRuntimeOptions;
+
+export const LobeNewAPIAI = createRouterRuntime(params);
