@@ -1,4 +1,4 @@
-import { createStyles, getLineHeight } from '@/components/theme';
+import { createStyles, getLineHeight } from '@/components/styles';
 import { AggregationColor, isBright } from '@/utils/color';
 
 import { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from './type';

@@ -4,7 +4,7 @@ import { memo, useMemo } from 'react';
 import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
 
 import { ICON_SIZE } from '@/_const/common';
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 import Icon, { type IconProps as BaseIconProps, type IconSize } from '../Icon';
 import { calcSize, getBaseStyle, getVariantStyle } from './style';

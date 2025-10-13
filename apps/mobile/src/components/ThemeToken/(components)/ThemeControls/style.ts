@@ -1,5 +1,5 @@
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => {
   return {

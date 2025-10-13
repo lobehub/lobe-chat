@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 

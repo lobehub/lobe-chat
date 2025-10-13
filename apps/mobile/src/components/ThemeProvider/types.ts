@@ -1,6 +1,6 @@
 // ======================================================================
 // ==                           Theme                                   ==
-import { AliasToken, MappingAlgorithm } from '@/components/theme';
+import { AliasToken, MappingAlgorithm } from '@/components/styles';
 
 export type ThemeAppearance = 'dark' | 'light';
 
