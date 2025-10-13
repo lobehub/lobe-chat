@@ -145,7 +145,7 @@ importers:
         version: 4.2.8(expo@53.0.23(@babel/core@7.28.4)(@expo/metro-runtime@5.0.5(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0)))(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
       expo-router:
         specifier: ~5.1.5
-        version: 5.1.7(b5ttbwzjrpl6ai5ydyqho2s6my)
+        version: 5.1.7(d20ddafeccb16422ccd6a745f6cc3105)
       expo-secure-store:
         specifier: ~14.2.4
         version: 14.2.4(expo@53.0.23(@babel/core@7.28.4)(@expo/metro-runtime@5.0.5(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0)))(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))
@@ -341,7 +341,7 @@ importers:
         version: 1.25.1(@types/react@19.0.14)(immer@10.1.3)(react-devtools-core@6.1.5)(typescript@5.9.2)(use-sync-external-store@1.5.0(react@19.0.0))(ws@8.18.3)(zod@3.25.76)
       '@lobehub/lint':
         specifier: ^1.26.2
-        version: 1.26.2(@octokit/core@4.2.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.2))(stylelint@15.11.0(typescript@5.9.2))(typescript@5.9.2)
+        version: 1.26.2(@octokit/core@7.0.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.2))(stylelint@15.11.0(typescript@5.9.2))(typescript@5.9.2)
       '@testing-library/react-native':
         specifier: ^13.2.0
         version: 13.3.3(jest@29.7.0(@types/node@22.18.10))(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))(react-test-renderer@19.0.0(react@19.0.0))(react@19.0.0)
@@ -427,6 +427,19 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
 
+  ../../packages/ssrf-safe-fetch:
+    dependencies:
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
+      request-filtering-agent:
+        specifier: ^3
+        version: 3.0.2
+    devDependencies:
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@20.0.0)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+
   ../../packages/types:
     dependencies:
       '@lobechat/web-crawler':
@@ -459,7 +472,7 @@ importers:
     devDependencies:
       vitest-canvas-mock:
         specifier: ^0.3.3
-        version: 0.3.3(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@18.0.1)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1))
+        version: 0.3.3(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@20.0.0)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1))
 
   ../../packages/web-crawler:
     dependencies:
@@ -467,14 +480,17 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       happy-dom:
-        specifier: ^18.0.0
-        version: 18.0.1
+        specifier: ^20.0.0
+        version: 20.0.0
       node-html-markdown:
         specifier: ^1.3.0
         version: 1.3.0
       query-string:
         specifier: ^9.1.1
         version: 9.3.1
+      ssrf-safe-fetch:
+        specifier: workspace:*
+        version: link:../ssrf-safe-fetch
       url-join:
         specifier: ^5
         version: 5.0.0
@@ -3222,49 +3238,41 @@ packages:
     resolution: {integrity: sha512-34gw7PjDGB9JgePJEmhEqBhWvCiiWCuXsL9hYphDF7crW7UgI05gyBAi6MF58uGcMOiOqSJ2ybEeCvHcq0BCmQ==}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@unrs/resolver-binding-linux-arm64-musl@1.11.1':
     resolution: {integrity: sha512-RyMIx6Uf53hhOtJDIamSbTskA99sPHS96wxVE/bJtePJJtpdKGXO1wY90oRdXuYOGOTuqjT8ACccMc4K6QmT3w==}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@unrs/resolver-binding-linux-ppc64-gnu@1.11.1':
     resolution: {integrity: sha512-D8Vae74A4/a+mZH0FbOkFJL9DSK2R6TFPC9M+jCWYia/q2einCubX10pecpDiTmkJVUH+y8K3BZClycD8nCShA==}
     cpu: [ppc64]
     os: [linux]
-    libc: [glibc]
 
   '@unrs/resolver-binding-linux-riscv64-gnu@1.11.1':
     resolution: {integrity: sha512-frxL4OrzOWVVsOc96+V3aqTIQl1O2TjgExV4EKgRY09AJ9leZpEg8Ak9phadbuX0BA4k8U5qtvMSQQGGmaJqcQ==}
     cpu: [riscv64]
     os: [linux]
-    libc: [glibc]
 
   '@unrs/resolver-binding-linux-riscv64-musl@1.11.1':
     resolution: {integrity: sha512-mJ5vuDaIZ+l/acv01sHoXfpnyrNKOk/3aDoEdLO/Xtn9HuZlDD6jKxHlkN8ZhWyLJsRBxfv9GYM2utQ1SChKew==}
     cpu: [riscv64]
     os: [linux]
-    libc: [musl]
 
   '@unrs/resolver-binding-linux-s390x-gnu@1.11.1':
     resolution: {integrity: sha512-kELo8ebBVtb9sA7rMe1Cph4QHreByhaZ2QEADd9NzIQsYNQpt9UkM9iqr2lhGr5afh885d/cB5QeTXSbZHTYPg==}
     cpu: [s390x]
     os: [linux]
-    libc: [glibc]
 
   '@unrs/resolver-binding-linux-x64-gnu@1.11.1':
     resolution: {integrity: sha512-C3ZAHugKgovV5YvAMsxhq0gtXuwESUKc5MhEtjBpLoHPLYM+iuwSj3lflFwK3DPm68660rZ7G8BMcwSro7hD5w==}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@unrs/resolver-binding-linux-x64-musl@1.11.1':
     resolution: {integrity: sha512-rV0YSoyhK2nZ4vEswT/QwqzqQXw5I6CjoaYMOX0TqBlWhojUf8P94mvI7nuJTeaCkkds3QE4+zS8Ko+GdXuZtA==}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@unrs/resolver-binding-wasm32-wasi@1.11.1':
     resolution: {integrity: sha512-5u4RkfxJm+Ng7IWgkzi3qrFOvLvQYnPBmjmZQ8+szTK/b31fQCnleNl1GgEt7nIsZRIf5PLhPwT0WM+q45x/UQ==}
@@ -4429,6 +4437,10 @@ packages:
   dagre-d3-es@7.0.10:
     resolution: {integrity: sha512-qTCQmEhcynucuaZgY5/+ti3X/rnszKZhEQH/ZdWdtP1tA/y3VoHJzcVrO9pjjJCNpigfscAtoUB5ONcd2wNn0A==}
 
+  data-uri-to-buffer@4.0.1:
+    resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
+    engines: {node: '>= 12'}
+
   data-urls@3.0.2:
     resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
     engines: {node: '>=12'}
@@ -5389,6 +5401,10 @@ packages:
       picomatch:
         optional: true
 
+  fetch-blob@3.2.0:
+    resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
+    engines: {node: ^12.20 || >= 14.13}
+
   figures@2.0.0:
     resolution: {integrity: sha512-Oa2M9atig69ZkfwiApY8F2Yy+tzMbazyvqv21R0NsSC8floSOC09BbT1ITWAdoMGQvJ/aZnR1KMwdx9tvHnTNA==}
     engines: {node: '>=4'}
@@ -5489,6 +5505,10 @@ packages:
   formdata-node@4.4.1:
     resolution: {integrity: sha512-0iirZp3uVDjVGt9p49aTaqjk84TrglENEDuqfdlZQ1roC9CWlPk6Avf8EEnZNcAqPonwkG35x4n3ww/1THYAeQ==}
     engines: {node: '>= 12.20'}
+
+  formdata-polyfill@4.0.10:
+    resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
+    engines: {node: '>=12.20.0'}
 
   freeport-async@2.0.0:
     resolution: {integrity: sha512-K7od3Uw45AJg00XUmy15+Hae2hOcgKcmN3/EF6Y7i01O0gaqiRx8sUSpsb9+BRNL8RPBrhzPsVfy8q9ADlJuWQ==}
@@ -5678,8 +5698,8 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@18.0.1:
-    resolution: {integrity: sha512-qn+rKOW7KWpVTtgIUi6RVmTBZJSe2k0Db0vh1f7CWrWclkkc7/Q+FrOfkZIb2eiErLyqu5AXEzE7XthO9JVxRA==}
+  happy-dom@20.0.0:
+    resolution: {integrity: sha512-GkWnwIFxVGCf2raNrxImLo397RdGhLapj5cT3R2PT7FwL62Ze1DROhzmYW7+J3p9105DYMVenEejEbnq5wA37w==}
     engines: {node: '>=20.0.0'}
 
   hard-rejection@2.1.0:
@@ -5968,6 +5988,10 @@ packages:
 
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
+
+  ipaddr.js@2.2.0:
+    resolution: {integrity: sha512-Ag3wB2o37wslZS19hZqorUnrnzSkpOVy+IiiDEiTqNubEYpYuHWIf6K4psgN2ZWKExS4xhVCrRVfb/wfW8fWJA==}
+    engines: {node: '>= 10'}
 
   is-alphabetical@1.0.4:
     resolution: {integrity: sha512-DwzsA04LQ10FHTZuL0/grVDk4rFoVH1pjAToYwBrHSxcrBIGQuXrQMtD5U1b0U2XVgKZCTLLP8u2Qxqhy3l2Vg==}
@@ -6640,28 +6664,24 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-arm64-musl@1.27.0:
     resolution: {integrity: sha512-rCGBm2ax7kQ9pBSeITfCW9XSVF69VX+fm5DIpvDZQl4NnQoMQyRwhZQm9pd59m8leZ1IesRqWk2v/DntMo26lg==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-linux-x64-gnu@1.27.0:
     resolution: {integrity: sha512-Dk/jovSI7qqhJDiUibvaikNKI2x6kWPN79AQiD/E/KeQWMjdGe9kw51RAgoWFDi0coP4jinaH14Nrt/J8z3U4A==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-x64-musl@1.27.0:
     resolution: {integrity: sha512-QKjTxXm8A9s6v9Tg3Fk0gscCQA1t/HMoF7Woy1u68wCk5kS4fR+q3vXa1p3++REW784cRAtkYKrPy6JKibrEZA==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-win32-arm64-msvc@1.27.0:
     resolution: {integrity: sha512-/wXegPS1hnhkeG4OXQKEMQeJd48RDC3qdh+OA8pCuOPCyvnm/yEayrJdJVqzBsqpy1aJklRCVxscpFur80o6iQ==}
@@ -7356,6 +7376,10 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
+
+  node-fetch@3.3.2:
+    resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   node-forge@1.3.1:
     resolution: {integrity: sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==}
@@ -8744,6 +8768,10 @@ packages:
 
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
+
+  request-filtering-agent@3.0.2:
+    resolution: {integrity: sha512-1btYBgWx++9bDFjXARo9K1Zrhf4mnzwZH9bp9XPUCz0aiBzuYZNJUlA1BaQ+7Z5+a9N2QIR/TmU/tgQlHVgv+A==}
+    engines: {node: '>=20.0.0'}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -10417,10 +10445,10 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@achingbrain/semantic-release-github@0.0.2(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.2))':
+  '@achingbrain/semantic-release-github@0.0.2(@octokit/core@7.0.4)(semantic-release@24.2.9(typescript@5.9.2))':
     dependencies:
       '@octokit/plugin-retry': 3.0.9
-      '@octokit/plugin-throttling': 3.7.0(@octokit/core@4.2.4)
+      '@octokit/plugin-throttling': 3.7.0(@octokit/core@7.0.4)
       '@octokit/rest': 19.0.13
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
@@ -12013,7 +12041,7 @@ snapshots:
       react-native: 0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0)
       react-native-svg: 15.11.2(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
 
-  '@lobehub/lint@1.26.2(@octokit/core@4.2.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.2))(stylelint@15.11.0(typescript@5.9.2))(typescript@5.9.2)':
+  '@lobehub/lint@1.26.2(@octokit/core@7.0.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.2))(stylelint@15.11.0(typescript@5.9.2))(typescript@5.9.2)':
     dependencies:
       '@trivago/prettier-plugin-sort-imports': 5.2.2(prettier@3.6.2)
       '@typescript-eslint/eslint-plugin': 7.5.0(@typescript-eslint/parser@7.5.0(eslint@8.57.1)(typescript@5.9.2))(eslint@8.57.1)(typescript@5.9.2)
@@ -12072,7 +12100,7 @@ snapshots:
       remark-sort-definitions: 2.0.0
       remark-textr: 6.1.0
       remark-toc: 9.0.0
-      semantic-release-config-gitmoji: 1.5.3(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.2))
+      semantic-release-config-gitmoji: 1.5.3(@octokit/core@7.0.4)(semantic-release@24.2.9(typescript@5.9.2))
       stylelint-config-clean-order: 7.0.0(stylelint@15.11.0(typescript@5.9.2))
       stylelint-config-recommended: 14.0.1(stylelint@15.11.0(typescript@5.9.2))
       stylelint-less: 3.0.1(postcss@8.5.6)(stylelint@15.11.0(typescript@5.9.2))
@@ -12277,9 +12305,9 @@ snapshots:
       '@octokit/types': 14.1.0
       bottleneck: 2.19.5
 
-  '@octokit/plugin-throttling@3.7.0(@octokit/core@4.2.4)':
+  '@octokit/plugin-throttling@3.7.0(@octokit/core@7.0.4)':
     dependencies:
-      '@octokit/core': 4.2.4
+      '@octokit/core': 7.0.4
       '@octokit/types': 6.41.0
       bottleneck: 2.19.5
 
@@ -15428,6 +15456,8 @@ snapshots:
       d3: 7.9.0
       lodash-es: 4.17.21
 
+  data-uri-to-buffer@4.0.1: {}
+
   data-urls@3.0.2:
     dependencies:
       abab: 2.0.6
@@ -16402,7 +16432,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  expo-router@5.1.7(b5ttbwzjrpl6ai5ydyqho2s6my):
+  expo-router@5.1.7(d20ddafeccb16422ccd6a745f6cc3105):
     dependencies:
       '@expo/metro-runtime': 5.0.5(react-native@0.79.6(@babel/core@7.28.4)(@types/react@19.0.14)(react@19.0.0))
       '@expo/schema-utils': 0.1.7
@@ -16598,6 +16628,11 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.3
 
+  fetch-blob@3.2.0:
+    dependencies:
+      node-domexception: 1.0.0
+      web-streams-polyfill: 3.3.3
+
   figures@2.0.0:
     dependencies:
       escape-string-regexp: 1.0.5
@@ -16699,6 +16734,10 @@ snapshots:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 4.0.0-beta.3
+
+  formdata-polyfill@4.0.10:
+    dependencies:
+      fetch-blob: 3.2.0
 
   freeport-async@2.0.0: {}
 
@@ -16900,7 +16939,7 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.19.3
 
-  happy-dom@18.0.1:
+  happy-dom@20.0.0:
     dependencies:
       '@types/node': 20.19.17
       '@types/whatwg-mimetype': 3.0.2
@@ -17204,6 +17243,8 @@ snapshots:
   invariant@2.2.4:
     dependencies:
       loose-envify: 1.4.0
+
+  ipaddr.js@2.2.0: {}
 
   is-alphabetical@1.0.4: {}
 
@@ -19202,6 +19243,12 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
+  node-fetch@3.3.2:
+    dependencies:
+      data-uri-to-buffer: 4.0.1
+      fetch-blob: 3.2.0
+      formdata-polyfill: 4.0.10
+
   node-forge@1.3.1: {}
 
   node-gyp-build@4.8.4:
@@ -21101,6 +21148,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  request-filtering-agent@3.0.2:
+    dependencies:
+      ipaddr.js: 2.2.0
+
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
@@ -21262,12 +21313,12 @@ snapshots:
 
   select-hose@2.0.0: {}
 
-  semantic-release-config-gitmoji@1.5.3(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.2)):
+  semantic-release-config-gitmoji@1.5.3(@octokit/core@7.0.4)(semantic-release@24.2.9(typescript@5.9.2)):
     dependencies:
       '@gitmoji/commit-types': 1.1.5
       '@semantic-release/changelog': 6.0.3(semantic-release@24.2.9(typescript@5.9.2))
       '@semantic-release/git': 10.0.1(semantic-release@24.2.9(typescript@5.9.2))
-      '@semantic-release/github': '@achingbrain/semantic-release-github@0.0.2(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.2))'
+      '@semantic-release/github': '@achingbrain/semantic-release-github@0.0.2(@octokit/core@7.0.4)(semantic-release@24.2.9(typescript@5.9.2))'
       '@semrel-extra/npm': 1.2.2
       '@types/semantic-release': 17.2.11
       conventional-changelog-gitmoji-config: 1.5.2
@@ -22627,12 +22678,12 @@ snapshots:
       tsx: 4.20.5
       yaml: 2.8.1
 
-  vitest-canvas-mock@0.3.3(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@18.0.1)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)):
+  vitest-canvas-mock@0.3.3(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@20.0.0)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)):
     dependencies:
       jest-canvas-mock: 2.5.2
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@18.0.1)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@20.0.0)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@18.0.1)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(happy-dom@20.0.0)(jsdom@20.0.3)(lightningcss@1.27.0)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -22660,7 +22711,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 24.5.2
-      happy-dom: 18.0.1
+      happy-dom: 20.0.0
       jsdom: 20.0.3
     transitivePeerDependencies:
       - jiti
