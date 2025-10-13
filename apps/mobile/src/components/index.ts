@@ -40,3 +40,4 @@ export * from './Toast';
 export { default as Toast } from './Toast';
 export * from './Tooltip';
 export { default as Tooltip } from './Tooltip';
+export type { DemoConfig, DemoItem } from './types';
