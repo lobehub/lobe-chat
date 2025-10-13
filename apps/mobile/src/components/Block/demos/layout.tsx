@@ -1,6 +1,4 @@
-import { Block, Flexbox } from '@lobehub/ui-rn';
-import React from 'react';
-import { Text } from 'react-native';
+import { Block, Flexbox, Text } from '@lobehub/ui-rn';
 
 export default () => {
   return (

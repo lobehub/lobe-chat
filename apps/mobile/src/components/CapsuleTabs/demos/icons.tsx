@@ -1,9 +1,7 @@
-import { type CapsuleTabItem, CapsuleTabs, type CapsuleTabsSize } from '@lobehub/ui-rn';
+import { CapsuleTabItem, CapsuleTabs, CapsuleTabsSize, Text, useTheme } from '@lobehub/ui-rn';
 import { Briefcase, HeartPulse, Home, Palette } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { View } from 'react-native';
 
 const items: CapsuleTabItem[] = [
   { icon: Home, key: 'home', label: '首页' },

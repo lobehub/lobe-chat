@@ -30,7 +30,6 @@ export type { MaskShadowProps } from './MaskShadow';
 export { default as MaskShadow } from './MaskShadow';
 export { default as ModelInfoTags } from './ModelInfoTags';
 export { default as PageContainer } from './PageContainer';
-export { default as Playground } from './Playground';
 export type { ScrollShadowProps } from './ScrollShadow';
 export { default as ScrollShadow } from './ScrollShadow';
 export { default as Skeleton } from './Skeleton';

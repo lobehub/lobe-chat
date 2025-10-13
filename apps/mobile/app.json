@@ -68,6 +68,20 @@
             "./assets/fonts/HarmonyOS_Sans_SC_Medium.ttf",
             "./assets/fonts/HarmonyOS_Sans_SC_Bold.ttf"
           ],
+          "ios": {
+            "fonts": [
+              "./assets/fonts/Hack-Regular.ttf",
+              "./assets/fonts/Hack-Bold.ttf",
+              "./assets/fonts/Hack-Italic.ttf",
+              "./assets/fonts/Hack-BoldItalic.ttf",
+              "./assets/fonts/HarmonyOS_Sans_Regular.ttf",
+              "./assets/fonts/HarmonyOS_Sans_Medium.ttf",
+              "./assets/fonts/HarmonyOS_Sans_Bold.ttf",
+              "./assets/fonts/HarmonyOS_Sans_SC_Regular.ttf",
+              "./assets/fonts/HarmonyOS_Sans_SC_Medium.ttf",
+              "./assets/fonts/HarmonyOS_Sans_SC_Bold.ttf"
+            ]
+          },
           "android": [
             {
               "fontFamily": "Hack",

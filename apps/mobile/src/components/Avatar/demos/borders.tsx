@@ -1,8 +1,6 @@
-import { Avatar } from '@lobehub/ui-rn';
+import { Avatar, Text, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { View } from 'react-native';
 
 const BordersDemo = () => {
   const token = useTheme();

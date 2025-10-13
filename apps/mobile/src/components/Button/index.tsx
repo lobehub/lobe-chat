@@ -4,7 +4,6 @@ import {
   Animated,
   Easing,
   StyleProp,
-  Text,
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -14,6 +13,7 @@ import {
 
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
 
+import Text from '../Text';
 import { useStyles } from './style';
 import { ButtonColor, ButtonShape, ButtonSize, ButtonType, ButtonVariant } from './type';
 

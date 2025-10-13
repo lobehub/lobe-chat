@@ -1,6 +1,5 @@
-import { Center } from '@lobehub/ui-rn';
+import { Center, Text } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text } from 'react-native';
 
 export default () => {
   return (
