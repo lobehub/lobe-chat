@@ -10,6 +10,10 @@ on:
         description: 'Target coverage percentage'
         required: false
         default: '95'
+  # Temporary: for testing workflow on feature branch (remove before merging to main)
+  push:
+    branches:
+      - workflow/model-runtime-coverage
 
 # Add permissions configuration
 permissions:
@@ -160,7 +164,7 @@ jobs:
             test
             automated
             model-runtime
-          branch: test/auto-coverage-improvement
+          branch: test/claude/model-runtime
           delete-branch: true
           title: '✅ test(model-runtime): improve test coverage'
           commit-message: '✅ test(model-runtime): improve test coverage'
