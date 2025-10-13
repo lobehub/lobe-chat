@@ -2,7 +2,7 @@
 
 import { ActionIcon, Dropdown, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Bot, SquarePlus, Users } from 'lucide-react';
+import { Bot, MessageSquarePlus, SquarePlus, Users } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -216,42 +216,51 @@ const Header = memo(() => {
         </Flexbox>
         <Flexbox align={'center'} gap={4} horizontal>
           <TogglePanelButton />
-          {showCreateSession && (
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    icon: <Icon icon={Bot} />,
-                    key: 'newAgent',
-                    label: t('newAgent'),
-                    onClick: () => {
-                      mutateAgent();
+          {showCreateSession &&
+            (enableGroupChat ? (
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      icon: <Icon icon={Bot} />,
+                      key: 'newAgent',
+                      label: t('newAgent'),
+                      onClick: () => {
+                        mutateAgent();
+                      },
                     },
-                  },
-                  ...(enableGroupChat
-                    ? [
-                        {
-                          icon: <Icon icon={Users} />,
-                          key: 'newGroup',
-                          label: t('newGroupChat'),
-                          onClick: () => {
-                            setIsGroupWizardOpen(true);
-                          },
-                        },
-                      ]
-                    : []),
-                ],
-              }}
-              trigger={['hover']}
-            >
+                    {
+                      icon: <Icon icon={Users} />,
+                      key: 'newGroup',
+                      label: t('newGroupChat'),
+                      onClick: () => {
+                        setIsGroupWizardOpen(true);
+                      },
+                    },
+                  ],
+                }}
+                trigger={['hover']}
+              >
+                <ActionIcon
+                  icon={SquarePlus}
+                  loading={isValidatingAgent || isCreatingGroup}
+                  size={DESKTOP_HEADER_ICON_SIZE}
+                  style={{ flex: 'none' }}
+                />
+              </Dropdown>
+            ) : (
               <ActionIcon
-                icon={SquarePlus}
-                loading={isValidatingAgent || isCreatingGroup}
+                icon={MessageSquarePlus}
+                loading={isValidatingAgent}
+                onClick={() => mutateAgent()}
                 size={DESKTOP_HEADER_ICON_SIZE}
                 style={{ flex: 'none' }}
+                title={t('newAgent')}
+                tooltipProps={{
+                  placement: 'bottom',
+                }}
               />
-            </Dropdown>
-          )}
+            ))}
         </Flexbox>
       </Flexbox>
       <SessionSearchBar />
