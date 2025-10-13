@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/theme';
 
 export const useStyles = createStyles(({ token }) => ({
   // 激活的默认话题容器

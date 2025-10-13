@@ -41,7 +41,7 @@
     "type-check": "tsgo --noEmit -p ./tsconfig.json",
     "web": "expo start --web",
     "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts ",
-    "workflow:playground": "tsx ./scripts/generatePlaygroundData.ts"
+    "workflow:playground": "tsx ./scripts/playground/index.ts"
   },
   "dependencies": {
     "@ant-design/fast-color": "^3.0.0",
@@ -161,11 +161,13 @@
     "@types/lodash-es": "^4.17.12",
     "@types/mdast": "^4.0.4",
     "@types/mustache": "^4.2.6",
+    "@types/node": "^22.18.9",
     "@types/react": "~19.0.14",
     "@typescript/native-preview": "7.0.0-dev.20250711.1",
     "consola": "^3.4.2",
     "dotenv-expand": "^12.0.3",
     "eslint": "^8.57.1",
+    "gray-matter": "^4.0.3",
     "jest": "^29.7.0",
     "jest-expo": "~53.0.10",
     "just-diff": "^6.0.2",

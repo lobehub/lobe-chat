@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import RootSiblings from 'react-native-root-siblings';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const LoadingContainer: FC<{
   cancel: () => void;

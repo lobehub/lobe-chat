@@ -3,8 +3,8 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
+import { NeutralColors, PrimaryColors, ThemeMode } from '@/components/theme';
 import { DEFAULT_SERVER_URL, formatServerUrl } from '@/config/server';
-import { NeutralColors, PrimaryColors, ThemeMode } from '@/theme';
 import { isDev } from '@/utils/env';
 
 interface SettingState {

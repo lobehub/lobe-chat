@@ -2,7 +2,7 @@ import { Button, Skeleton } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 const ComplexDemo: React.FC = () => {
   const [loading, setLoading] = useState(true);

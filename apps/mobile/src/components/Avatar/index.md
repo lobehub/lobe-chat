@@ -1,35 +1,37 @@
-# Avatar 头像组件
+---
+group: Display
+title: Avatar
+description: Customizable avatar component supporting custom sizes, borders, and error handling.
+---
 
-可定制的头像组件，支持自定义尺寸、边框和错误处理。
+## Features
 
-## 功能特性
+- ✅ Supports network and local images
+- ✅ Custom size support
+- ✅ Border style customization
+- ✅ Image loading error handling
+- ✅ TypeScript support
+- ✅ Theme adaptation
 
-- ✅ 支持网络图片和本地图片
-- ✅ 自定义尺寸
-- ✅ 边框样式定制
-- ✅ 图片加载错误处理
-- ✅ TypeScript 支持
-- ✅ 主题适配
-
-## 基础使用
+## Basic Usage
 
 ```tsx
 import { Avatar } from '@lobehub/ui-rn';
 
-// 基础用法
+// Basic usage
 <Avatar
   avatar="https://github.com/lobehub.png"
   alt="LobeHub"
 />
 
-// 自定义尺寸
+// Custom size
 <Avatar
   avatar="https://github.com/lobehub.png"
   alt="LobeHub"
   size={48}
 />
 
-// 添加边框
+// With border
 <Avatar
   avatar="https://github.com/lobehub.png"
   alt="LobeHub"
@@ -38,16 +40,3 @@ import { Avatar } from '@lobehub/ui-rn';
   borderWidth={2}
 />
 ```
-
-## API
-
-### AvatarProps
-
-| 属性        | 类型          | 默认值 | 说明         |
-| ----------- | ------------- | ------ | ------------ |
-| avatar      | \`string\`    | -      | 头像图片 URL |
-| alt         | \`string\`    | -      | 图片描述文本 |
-| size        | \`number\`    | \`40\` | 头像尺寸     |
-| borderColor | \`string\`    | -      | 边框颜色     |
-| borderWidth | \`number\`    | -      | 边框宽度     |
-| style       | \`ViewStyle\` | -      | 容器样式     |

@@ -4,7 +4,7 @@ import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
 
 import { ICON_SIZE } from '@/_const/common';
 import Icon, { type IconProps as BaseIconProps, type IconSize } from '@/components/Icon';
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import { calcSize, getBaseStyle, getVariantStyle } from './style';
 

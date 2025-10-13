@@ -3,24 +3,10 @@
  */
 import React from 'react';
 
-export type ComponentCategory =
-  | 'basic'
-  | 'layout'
-  | 'feedback'
-  | 'display'
-  | 'animation'
-  | 'form'
-  | 'navigation';
-
 export interface ComponentItem {
-  category: ComponentCategory;
+  category: string;
   name: string;
 }
-
-/**
- * 按分类组织的组件配置
- */
-export type ComponentConfigTree = Record<ComponentCategory, string[]>;
 
 export interface ComponentStats {
   beta: number;

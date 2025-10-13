@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 
-import { cva } from '@/theme';
+import { cva } from '@/components/theme';
 
 import Flexbox from '../Flexbox';
 import { useStyles } from './style';

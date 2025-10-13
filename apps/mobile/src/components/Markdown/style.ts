@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useTheme, useThemeMode } from '@/theme';
+import { useTheme, useThemeMode } from '@/components/theme';
 
 import type { RemarkStyles } from './context';
 
