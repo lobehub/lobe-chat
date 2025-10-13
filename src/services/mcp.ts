@@ -6,6 +6,7 @@ import { desktopClient, toolsClient } from '@/libs/trpc/client';
 import { ChatToolPayload } from '@/types/message';
 import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
+import { resolveHashedApiName } from '@/utils/toolCall';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { discoverService } from './discover';
@@ -43,11 +44,14 @@ class MCPService {
 
     if (!plugin) return;
 
+    // Resolve MD5 hashed API name back to original name for MCP server call
+    const resolvedApiName = resolveHashedApiName(apiName, plugin.manifest);
+
     const data = {
       args,
       env: plugin.settings || plugin.customParams?.mcp?.env,
       params: { ...plugin.customParams?.mcp, name: identifier } as any,
-      toolName: apiName,
+      toolName: resolvedApiName, // Use resolved name instead of potentially hashed name
     };
 
     const isStdio = plugin?.customParams?.mcp?.type === 'stdio';
@@ -109,7 +113,7 @@ class MCPService {
           command: plugin.customParams?.mcp?.command,
           mcpType: plugin.customParams?.mcp?.type,
         },
-        methodName: apiName,
+        methodName: resolvedApiName,
         methodType: 'tool' as const,
         requestSizeBytes,
         responseSizeBytes,
