@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View, type ViewProps } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 
+import Text from '../Text';
 import { useStyles } from './style';
 
 interface ListGroupProps extends ViewProps {

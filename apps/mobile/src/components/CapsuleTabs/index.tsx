@@ -1,8 +1,11 @@
-import { Icon, ScrollShadow, Space } from '@lobehub/ui-rn';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
+import Icon from '@/components/Icon';
+import ScrollShadow from '@/components/ScrollShadow';
+import Space from '@/components/Space';
+import Text from '@/components/Text';
 
 import { useStyles } from './style';
 import { CapsuleTabsProps } from './type';

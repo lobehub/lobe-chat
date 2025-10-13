@@ -8,8 +8,9 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { LayoutChangeEvent, Text, TextStyle, View } from 'react-native';
+import { LayoutChangeEvent, TextStyle, View } from 'react-native';
 
+import Text from '../../Text';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
 
@@ -178,7 +179,7 @@ export const TableCellRenderer = ({
       >
         <Text style={baseTextStyle as any}>{content}</Text>
       </View>
-      <Text numberOfLines={1} onLayout={onTextLayout} style={measuredTextStyle as any}>
+      <Text ellipsis onLayout={onTextLayout} style={measuredTextStyle as any}>
         {content}
       </Text>
     </View>

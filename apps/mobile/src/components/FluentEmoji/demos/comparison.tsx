@@ -1,8 +1,6 @@
-import { FluentEmoji } from '@lobehub/ui-rn';
+import { FluentEmoji, Text, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { View } from 'react-native';
 
 const ComparisonDemo = () => {
   const token = useTheme();

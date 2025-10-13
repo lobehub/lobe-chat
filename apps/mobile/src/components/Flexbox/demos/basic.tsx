@@ -1,6 +1,5 @@
-import { Center, Flexbox, useTheme } from '@lobehub/ui-rn';
+import { Center, Flexbox, Text, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text } from 'react-native';
 
 const BasicDemo = () => {
   const theme = useTheme();

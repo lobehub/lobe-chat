@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { Text } from 'react-native';
 
+import Text from '../../Text';
 import { useMarkdownContext } from '../context';
 
 export const BreakRenderer = (): ReactNode => {

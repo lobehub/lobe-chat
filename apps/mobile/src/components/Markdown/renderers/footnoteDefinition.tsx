@@ -1,7 +1,8 @@
 import { BlockContent, DefinitionContent, FootnoteDefinition } from 'mdast';
 import { Fragment, ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
+import Text from '../../Text';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
 

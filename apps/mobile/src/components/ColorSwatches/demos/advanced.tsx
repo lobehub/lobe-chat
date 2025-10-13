@@ -1,8 +1,6 @@
-import { ColorSwatches } from '@lobehub/ui-rn';
+import { ColorSwatches, Text, colorScales } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { colorScales } from '@/components/theme/color';
+import { View } from 'react-native';
 
 const ColorSwatchesDemo = () => {
   const [selectedColor, setSelectedColor] = useState<string | undefined>();
