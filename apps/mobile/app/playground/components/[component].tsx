@@ -5,9 +5,9 @@ import { kebabCase } from 'lodash-es';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import playgroundData from '../component-data.json';
+import { DEMOS_MAP } from '../.data/import';
+import playgroundData from '../.data/index.json';
 import { getAllComponents } from '../utils';
-import { DEMOS_MAP } from './demos-map';
 
 /**
  * 动态组件 Playground 页面

@@ -2,7 +2,7 @@ import { Markdown } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import { content } from './data';
 

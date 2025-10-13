@@ -3,7 +3,7 @@ import React from 'react';
 import { Animated, Text, TouchableOpacity } from 'react-native';
 
 import Icon from '@/components/Icon';
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import { useStyles } from './style';
 

@@ -1,9 +1,8 @@
-import { Markdown } from '@lobehub/ui-rn';
+import { Markdown, createStyles } from '@lobehub/ui-rn';
 import React from 'react';
 import { View } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
-import { createStyles } from '@/theme';
 
 const usePreviewStyles = createStyles(({ token }) => ({
   aiBubble: {

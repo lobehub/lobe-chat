@@ -2,7 +2,7 @@ import { Highlighter } from '@lobehub/ui-rn';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 /**
  * 完整功能模式演示
@@ -87,7 +87,7 @@ npx react-native run-android
 
 ## 项目结构
 \`\`\`
-src/
+@/
 ├── components/     # 公共组件
 ├── screens/       # 页面组件
 ├── utils/         # 工具函数

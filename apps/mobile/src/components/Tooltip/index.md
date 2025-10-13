@@ -1,47 +1,36 @@
-# Tooltip 组件
+---
+group: Feedback
+title: Tooltip
+description: Tooltip component inspired by Ant Design's Tooltip, providing fully-featured tooltip functionality for React Native applications.
+---
 
-参考 Ant Design 的 Tooltip 组件设计，为 React Native 应用提供功能完整的提示框组件。
+## Features
 
-## 功能特性
+- ✅ 12 placement options (top, bottom, left, right and their variants)
+- ✅ Smart position calculation and auto-adjustment
+- ✅ Multiple trigger modes (click, long press, controlled)
+- ✅ Smooth animation effects
+- ✅ Custom styles and content
+- ✅ Arrow pointer support
+- ✅ Screen boundary detection and position fallback
+- ✅ TypeScript support
 
-- ✅ 12 种位置选择 (top, bottom, left, right 及其变体)
-- ✅ 智能位置计算和自动调整
-- ✅ 多种触发方式 (点击、长按、受控)
-- ✅ 流畅的动画效果
-- ✅ 自定义样式和内容
-- ✅ 箭头指向支持
-- ✅ 屏幕边界检测和位置回退
-- ✅ TypeScript 支持
-
-## 基础使用
+## Basic Usage
 
 ```tsx
 import { Tooltip } from '@lobehub/ui-rn';
 
-// 基础用法
-<Tooltip title="这是一个提示信息">
+// Basic usage
+<Tooltip title="This is a tooltip message">
   <TouchableOpacity style={styles.button}>
-    <Text>长按显示提示</Text>
+    <Text>Long press to show tooltip</Text>
   </TouchableOpacity>
 </Tooltip>;
 ```
 
-## API
+## Placement
 
-### TooltipProps
-
-| 属性      | 类型                 | 默认值                    | 说明         |                      |
-| --------- | -------------------- | ------------------------- | ------------ | -------------------- |
-| title     | \`string \\          | ReactNode\`               | -            | 提示文字或自定义内容 |
-| children  | \`ReactNode\`        | -                         | 子组件       |                      |
-| placement | \`TooltipPlacement\` | \`'top'\`                 | 气泡框位置   |                      |
-| trigger   | \`TooltipTrigger\`   | \`'longPress'\`           | 触发行为     |                      |
-| arrow     | \`boolean\`          | \`true\`                  | 是否显示箭头 |                      |
-| color     | \`string\`           | \`'rgba(0, 0, 0, 0.85)'\` | 背景颜色     |                      |
-
-### TooltipPlacement
-
-支持 12 种位置：
+Supports 12 positions:
 
 ```tsx
 type TooltipPlacement =
@@ -59,7 +48,7 @@ type TooltipPlacement =
   | 'rightBottom';
 ```
 
-### TooltipTrigger
+## Trigger Modes
 
 ```tsx
 type TooltipTrigger = 'click' | 'longPress' | 'none';
