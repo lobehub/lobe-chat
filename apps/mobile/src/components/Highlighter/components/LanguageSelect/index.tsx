@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react-native';
 import type { FC } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 import supportedLanguageIds, { getLanguageDisplayName } from '../../hooks/supportedLanguages';
 import { useStyles } from './style';

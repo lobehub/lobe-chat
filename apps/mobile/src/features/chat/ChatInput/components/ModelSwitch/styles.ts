@@ -1,4 +1,4 @@
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(() => ({
   // 主组件样式（当前为空，后续可以添加）

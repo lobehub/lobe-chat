@@ -1,45 +1,43 @@
-import { neutralColorScales } from '../../color/neutrals';
-import { colorScales } from '../../color/primary';
-import type { AliasToken } from '../../interface';
-import { generateColorNeutralPalette, generateColorPalette } from '../shared/generateColorPalette';
+import { blue, gold, gray, lime, primary, red } from '../color';
+import { generateColorNeutralPalette, generateColorPalette } from '../generateColorPalette';
+import type { AliasToken } from '../interface';
 
-// 使用默认颜色生成亮色主题Token
 const primaryToken = generateColorPalette({
-  appearance: 'light',
-  scale: colorScales.primary,
+  appearance: 'dark',
+  scale: primary,
   type: 'Primary',
 });
 
 const neutralToken = generateColorNeutralPalette({
-  appearance: 'light',
-  scale: neutralColorScales.slate,
+  appearance: 'dark',
+  scale: gray,
 });
 
 const successToken = generateColorPalette({
-  appearance: 'light',
-  scale: colorScales.green,
+  appearance: 'dark',
+  scale: lime,
   type: 'Success',
 });
 
 const warningToken = generateColorPalette({
-  appearance: 'light',
-  scale: colorScales.gold,
+  appearance: 'dark',
+  scale: gold,
   type: 'Warning',
 });
 
 const errorToken = generateColorPalette({
-  appearance: 'light',
-  scale: colorScales.volcano,
+  appearance: 'dark',
+  scale: red,
   type: 'Error',
 });
 
 const infoToken = generateColorPalette({
-  appearance: 'light',
-  scale: colorScales.geekblue,
+  appearance: 'dark',
+  scale: blue,
   type: 'Info',
 });
 
-const lightBaseToken: Partial<AliasToken> = {
+const darkBaseToken = {
   ...primaryToken,
   ...neutralToken,
   ...successToken,
@@ -61,7 +59,6 @@ const lightBaseToken: Partial<AliasToken> = {
     shadowOpacity: 1,
     shadowRadius: 16,
   },
-
   boxShadowTertiary: {
     elevation: 1,
     shadowColor: 'rgba(26, 26, 26, 0.06)',
@@ -70,9 +67,10 @@ const lightBaseToken: Partial<AliasToken> = {
     shadowRadius: 1,
   },
 
-  // 链接颜色
-  colorLink: infoToken.colorInfoText,
-  colorLinkActive: infoToken.colorInfoTextActive,
-};
+  colorLink: (infoToken as any).colorInfoText,
+  colorLinkActive: (infoToken as any).colorInfoTextActive,
+  colorLinkHover: (infoToken as any).colorInfoTextHover,
+  colorTextLightSolid: neutralToken.colorBgLayout,
+} as Partial<AliasToken>;
 
-export default lightBaseToken;
+export default darkBaseToken;

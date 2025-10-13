@@ -1,45 +1,43 @@
-import { neutralColorScales } from '../../color/neutrals';
-import { colorScales } from '../../color/primary';
-import type { AliasToken } from '../../interface';
-import { generateColorNeutralPalette, generateColorPalette } from '../shared/generateColorPalette';
+import { geekblue, gold, gray, green, primary, volcano } from '../color';
+import { generateColorNeutralPalette, generateColorPalette } from '../generateColorPalette';
+import type { AliasToken } from '../interface';
 
-// 使用默认颜色生成暗色主题Token
 const primaryToken = generateColorPalette({
-  appearance: 'dark',
-  scale: colorScales.primary,
+  appearance: 'light',
+  scale: primary,
   type: 'Primary',
 });
 
 const neutralToken = generateColorNeutralPalette({
-  appearance: 'dark',
-  scale: neutralColorScales.slate,
+  appearance: 'light',
+  scale: gray,
 });
 
 const successToken = generateColorPalette({
-  appearance: 'dark',
-  scale: colorScales.lime,
+  appearance: 'light',
+  scale: green,
   type: 'Success',
 });
 
 const warningToken = generateColorPalette({
-  appearance: 'dark',
-  scale: colorScales.gold,
+  appearance: 'light',
+  scale: gold,
   type: 'Warning',
 });
 
 const errorToken = generateColorPalette({
-  appearance: 'dark',
-  scale: colorScales.red,
+  appearance: 'light',
+  scale: volcano,
   type: 'Error',
 });
 
 const infoToken = generateColorPalette({
-  appearance: 'dark',
-  scale: colorScales.blue,
+  appearance: 'light',
+  scale: geekblue,
   type: 'Info',
 });
 
-const darkBaseToken: Partial<AliasToken> = {
+const lightBaseToken = {
   ...primaryToken,
   ...neutralToken,
   ...successToken,
@@ -54,7 +52,6 @@ const darkBaseToken: Partial<AliasToken> = {
     shadowOpacity: 1,
     shadowRadius: 20,
   },
-
   boxShadowSecondary: {
     elevation: 8,
     shadowColor: 'rgba(0, 0, 0, 0.2)',
@@ -62,7 +59,6 @@ const darkBaseToken: Partial<AliasToken> = {
     shadowOpacity: 1,
     shadowRadius: 16,
   },
-
   boxShadowTertiary: {
     elevation: 1,
     shadowColor: 'rgba(26, 26, 26, 0.06)',
@@ -71,10 +67,10 @@ const darkBaseToken: Partial<AliasToken> = {
     shadowRadius: 1,
   },
 
-  // 链接颜色
-  colorLink: infoToken.colorInfoText,
+  colorLink: (infoToken as any).colorInfoText,
+  colorLinkActive: (infoToken as any).colorInfoTextActive,
+  colorLinkHover: (infoToken as any).colorInfoTextHover,
+  colorTextLightSolid: neutralToken.colorBgLayout,
+} as Partial<AliasToken>;
 
-  colorLinkActive: infoToken.colorInfoTextActive,
-};
-
-export default darkBaseToken;
+export default lightBaseToken;

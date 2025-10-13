@@ -1,4 +1,4 @@
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
   // Button 组件自带样式，这些不再需要

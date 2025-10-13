@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { memo } from 'react';
 import { Switch as RNSwitch, SwitchProps } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 export type ThemedSwitchProps = SwitchProps;
 

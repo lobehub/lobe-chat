@@ -1,7 +1,7 @@
 import { Skeleton } from '@lobehub/ui-rn';
 import { View } from 'react-native';
 
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 // SessionItem Skeleton Component
 const SessionItemSkeleton = () => {

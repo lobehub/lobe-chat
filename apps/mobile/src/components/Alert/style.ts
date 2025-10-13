@@ -1,4 +1,4 @@
-import { type AliasToken, createStyles } from '@/components/theme';
+import { type AliasToken, createStyles } from '@/components/styles';
 
 import type { AlertType } from './type';
 
