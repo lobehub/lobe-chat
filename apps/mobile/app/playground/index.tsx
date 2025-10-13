@@ -72,7 +72,7 @@ export default function ComponentPlaygroundIndex() {
 
   const renderComponentCard = (component: ComponentItem) => (
     <Fragment key={component.name}>
-      <Flexbox onPress={() => handleComponentPress(component)} paddingBlock={12} paddingInline={16}>
+      <Flexbox onPress={() => handleComponentPress(component)} padding={16}>
         <Text fontSize={18}>{component.name}</Text>
       </Flexbox>
       <Divider />
