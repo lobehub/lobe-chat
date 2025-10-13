@@ -14,7 +14,7 @@ export type EllipsisConfig =
       suffix?: string;
     };
 
-export interface TextProps extends Omit<RNTextProps, 'style'> {
+export interface TextProps extends RNTextProps {
   /**
    * 文本对齐方式
    */
@@ -64,10 +64,6 @@ export interface TextProps extends Omit<RNTextProps, 'style'> {
    * @default false
    */
   strong?: boolean;
-  /**
-   * 自定义样式
-   */
-  style?: TextStyle;
   /**
    * 文本类型（语义化颜色）
    */

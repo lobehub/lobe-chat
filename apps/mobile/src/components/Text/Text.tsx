@@ -102,7 +102,6 @@ const Text = memo<TextProps>(
         }),
       ...(fontSize && { fontSize }),
       ...(align && { textAlign: align }),
-      ...style,
     };
 
     return (
@@ -122,6 +121,7 @@ const Text = memo<TextProps>(
             underline: underline || undefined,
           }),
           textStyle,
+          ...(Array.isArray(style) ? style : [style]),
         ]}
       >
         {children}
