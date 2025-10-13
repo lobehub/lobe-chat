@@ -5,6 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo run:android --port 8082",
+    "build:playground": "npm run workflow:playground",
     "dev": "expo start",
     "device": "npm run device:ios & npm run device:android",
     "device:android": "expo run:android --device --port 8082",
@@ -39,7 +40,8 @@
     "test": "jest --coverage",
     "type-check": "tsgo --noEmit -p ./tsconfig.json",
     "web": "expo start --web",
-    "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts "
+    "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts ",
+    "workflow:playground": "tsx ./scripts/generatePlaygroundData.ts"
   },
   "dependencies": {
     "@ant-design/fast-color": "^3.0.0",
