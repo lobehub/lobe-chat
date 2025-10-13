@@ -2,7 +2,8 @@ import { ChatMessage } from '@lobechat/types';
 import { Tooltip, useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
 import { Copy, LucideIcon, RefreshCw, Trash2 } from 'lucide-react-native';
-import React from 'react';
+import type { FC, ReactNode } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
@@ -13,18 +14,18 @@ import { useSessionStore } from '@/store/session';
 import { useStyles } from './style';
 
 interface AssistantMenuProps {
-  children: React.ReactNode;
+  children: ReactNode;
   message: ChatMessage;
 }
 
-const AssistantMenu: React.FC<AssistantMenuProps> = ({ message, children }) => {
+const AssistantMenu: FC<AssistantMenuProps> = ({ message, children }) => {
   const { t } = useTranslation(['chat', 'common']);
   const { activeId } = useSessionStore();
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
   const token = useTheme();
   const { styles } = useStyles();
-  const [tooltipVisible, setTooltipVisible] = React.useState(false);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
 
   // 复制消息内容
   const handleCopy = async () => {

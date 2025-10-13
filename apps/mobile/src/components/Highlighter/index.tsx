@@ -1,6 +1,7 @@
 import * as Clipboard from 'expo-clipboard';
 import { Check, Copy } from 'lucide-react-native';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
 
 import Icon from '@/components/Icon';
@@ -40,7 +41,7 @@ interface HighlighterProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const Highlighter: React.FC<HighlighterProps> = ({
+const Highlighter: FC<HighlighterProps> = ({
   code,
   lang = 'markdown',
   fullFeatured = false,

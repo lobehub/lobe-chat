@@ -1,5 +1,4 @@
 import { Button, Tooltip, TooltipPlacement, useTheme } from '@lobehub/ui-rn';
-import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const placements: TooltipPlacement[] = [

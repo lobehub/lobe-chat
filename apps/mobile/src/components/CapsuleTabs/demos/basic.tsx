@@ -1,5 +1,6 @@
 import { CapsuleTabItem, CapsuleTabs, Text, useTheme } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 
 const items: CapsuleTabItem[] = [
@@ -9,7 +10,7 @@ const items: CapsuleTabItem[] = [
   { key: 'health', label: 'Health' },
 ];
 
-export const BasicDemo: React.FC = () => {
+export const BasicDemo: FC = () => {
   const [selectedKey, setSelectedKey] = useState('all');
   const token = useTheme();
 

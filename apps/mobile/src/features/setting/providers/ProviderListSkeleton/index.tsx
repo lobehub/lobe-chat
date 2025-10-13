@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
@@ -7,7 +7,7 @@ import { useTheme } from '@/components/theme';
 import ProviderCardSkeleton from '../ProviderCardSkeleton';
 import { useStyles } from './style';
 
-const ProviderListSkeleton: React.FC = () => {
+const ProviderListSkeleton: FC = () => {
   const { styles } = useStyles();
   const token = useTheme();
   const { t } = useTranslation(['setting']);

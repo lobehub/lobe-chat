@@ -1,6 +1,7 @@
 import { PageContainer } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
-import React, { memo } from 'react';
+import type { ReactNode } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
@@ -15,7 +16,7 @@ import { useStyles } from './style';
  * TopicDrawer - 右侧Topic抽屉组件
  * 负责展示当前会话下的所有topic列表
  */
-const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
+const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
   const { styles } = useStyles();
   const winDim = useWindowDimensions();
   const { t } = useTranslation(['topic']);

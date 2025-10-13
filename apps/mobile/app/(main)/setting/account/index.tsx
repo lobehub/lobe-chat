@@ -1,6 +1,5 @@
 import { Avatar, Button, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 

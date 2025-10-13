@@ -1,6 +1,6 @@
 import { Button, Input, Text, createStyles } from '@lobehub/ui-rn';
 import { CheckCircle, XCircle } from 'lucide-react-native';
-import React from 'react';
+import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
@@ -64,12 +64,12 @@ const useStyles = createStyles(({ token }) => ({
 
 const PasswordDemo = () => {
   const { styles, theme } = useStyles();
-  const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState('');
 
   // 密码强度检查
-  const getPasswordStrength = React.useCallback((pwd: string) => {
+  const getPasswordStrength = useCallback((pwd: string) => {
     if (pwd.length < 6) return { level: 'weak', text: '弱' };
     if (pwd.length < 8 || !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(pwd)) {
       return { level: 'medium', text: '中' };

@@ -1,6 +1,5 @@
 import { Alert, Button, Space } from '@lobehub/ui-rn';
 import { ShieldCheck } from 'lucide-react-native';
-import React from 'react';
 
 const CustomDemo = () => {
   return (

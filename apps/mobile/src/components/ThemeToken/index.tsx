@@ -1,5 +1,6 @@
 import { Moon, Sun } from 'lucide-react-native';
-import React, { memo, useCallback, useState } from 'react';
+import type { FC } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 import {
@@ -31,7 +32,7 @@ interface ThemeTokensContentProps {
   onToggleTheme: () => void;
 }
 
-const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
+const ThemeTokensContent: FC<ThemeTokensContentProps> = memo(
   ({
     localPrimaryColor,
     localNeutralColor,
@@ -100,7 +101,7 @@ const ThemeTokensContent: React.FC<ThemeTokensContentProps> = memo(
 );
 
 // 主组件，包装 ThemeProvider
-const ThemeTokensPlayground: React.FC = () => {
+const ThemeTokensPlayground: FC = () => {
   const [localPrimaryColor, setLocalPrimaryColor] = useState<PrimaryColors | undefined>();
   const [localNeutralColor, setLocalNeutralColor] = useState<NeutralColors | undefined>();
   const [localFontSize, setLocalFontSize] = useState(14);

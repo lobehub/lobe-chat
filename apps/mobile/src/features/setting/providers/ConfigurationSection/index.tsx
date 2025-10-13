@@ -1,7 +1,7 @@
 import { AiProviderDetailItem } from '@lobechat/types';
 import { Input } from '@lobehub/ui-rn';
 import { Lock } from 'lucide-react-native';
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Linking, Text, View } from 'react-native';
 

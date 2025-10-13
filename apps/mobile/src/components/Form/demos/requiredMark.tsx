@@ -1,5 +1,4 @@
 import { Input } from '@lobehub/ui-rn';
-import React from 'react';
 
 import Form from '..';
 

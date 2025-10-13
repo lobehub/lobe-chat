@@ -1,5 +1,4 @@
 import { Alert, Space } from '@lobehub/ui-rn';
-import React from 'react';
 
 const BasicDemo = () => {
   return (
