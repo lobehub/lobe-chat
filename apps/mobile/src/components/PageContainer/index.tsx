@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/theme';
 
 import { useStyles } from './style';
 
