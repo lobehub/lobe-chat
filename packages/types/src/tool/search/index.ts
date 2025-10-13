@@ -28,7 +28,7 @@ export interface UniformSearchResult {
   content: string;
   engines: string[];
   /**
-   * 视频会用到
+   * Used for video results
    */
   iframeSrc?: string;
   imgSrc?: string;

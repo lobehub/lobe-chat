@@ -7,7 +7,7 @@ import { SearchParams, SearchQuery } from '@/types/tool/search';
 import { SearchImplType, SearchServiceImpl, createSearchServiceImpl } from './impls';
 
 const parseImplEnv = (envString: string = '') => {
-  // 处理全角逗号和多余空格
+  // Handle full-width commas and extra whitespace
   const envValue = envString.replaceAll('，', ',').trim();
   return envValue.split(',').filter(Boolean);
 };
@@ -61,7 +61,7 @@ export class SearchService {
       searchTimeRange: searchTimeRange,
     });
 
-    // 如果没有搜索到结果，则执行第一次重试（移除搜索引擎限制）
+    // First retry: remove search engine restrictions if no results found
     if (data.results.length === 0 && searchEngines && searchEngines?.length > 0) {
       const paramsExcludeSearchEngines = {
         searchCategories: searchCategories,
@@ -71,7 +71,7 @@ export class SearchService {
       data = await this.query(query, paramsExcludeSearchEngines);
     }
 
-    // 如果仍然没有搜索到结果，则执行第二次重试（移除所有限制）
+    // Second retry: remove all restrictions if still no results found
     if (data?.results.length === 0) {
       data = await this.query(query);
     }
