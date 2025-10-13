@@ -1,8 +1,6 @@
-import { Slider } from '@lobehub/ui-rn';
+import { Slider, Text, createStyles } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { createStyles } from '@/components/theme';
+import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
   container: {

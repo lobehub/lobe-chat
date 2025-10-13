@@ -1,4 +1,3 @@
-import { ActionIcon } from '@lobehub/ui-rn';
 import { router } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
 import React, { ReactNode, useRef } from 'react';
@@ -7,12 +6,13 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleProp,
-  Text,
   View,
   ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import ActionIcon from '@/components/ActionIcon';
+import Text from '@/components/Text';
 import { useTheme } from '@/components/theme';
 
 import { useStyles } from './style';

@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleProp, Text, View, ViewProps, ViewStyle } from 'react-native';
+import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
 
+import Text from '../Text';
 import { useStyles } from './style';
 
 export type FormValue = unknown;

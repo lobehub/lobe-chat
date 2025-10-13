@@ -1,7 +1,7 @@
 import { Heading } from 'mdast';
 import { ReactNode } from 'react';
-import { Text } from 'react-native';
 
+import Text from '../../Text';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
 
