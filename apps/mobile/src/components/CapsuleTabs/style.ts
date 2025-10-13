@@ -54,25 +54,6 @@ export const useStyles = createStyles(
       container: {
         flexDirection: 'row',
       },
-      fadeGradient: {
-        flex: 1,
-      },
-      fadeLeft: {
-        bottom: 0,
-        left: 0,
-        position: 'absolute',
-        top: 0,
-        width: token.paddingXL,
-        zIndex: 1,
-      },
-      fadeRight: {
-        bottom: 0,
-        position: 'absolute',
-        right: 0,
-        top: 0,
-        width: token.paddingXL,
-        zIndex: 1,
-      },
       scrollView: {
         flexGrow: 0,
       },
