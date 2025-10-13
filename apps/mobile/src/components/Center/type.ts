@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { DimensionValue, PressableProps } from 'react-native';
 
-import type { AlignItems, FlexWrap, JustifyContent } from '@/components/Flexbox';
+import type { AlignItems, FlexWrap, JustifyContent } from '../Flexbox';
 
 export interface CenterProps extends PressableProps {
   align?: AlignItems;

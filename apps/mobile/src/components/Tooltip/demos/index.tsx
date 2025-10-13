@@ -1,4 +1,4 @@
-import type { DemoConfig } from '@lobehub/ui-rn';
+import { DemoConfig } from '@lobehub/ui-rn';
 import React from 'react';
 
 import AdvancedDemo from './AdvancedDemo';

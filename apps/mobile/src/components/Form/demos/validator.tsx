@@ -1,7 +1,5 @@
+import { Form, Input } from '@lobehub/ui-rn';
 import React from 'react';
-
-import Form from '..';
-import Input from '../../Input';
 
 const urlValidator = (value?: unknown) => {
   const input = (typeof value === 'string' ? value : '').trim();

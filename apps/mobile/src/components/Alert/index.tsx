@@ -1,11 +1,11 @@
 import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-react-native';
 import React, { memo, useCallback, useMemo, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
 
-import ActionIcon from '@/components/ActionIcon';
-import Icon from '@/components/Icon';
-
+import ActionIcon from '../ActionIcon';
+import Icon from '../Icon';
+import Text from '../Text';
 import { getAlertStatusTokens, useStyles } from './style';
 import type { AlertProps, AlertType } from './type';
 

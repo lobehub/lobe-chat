@@ -1,8 +1,6 @@
-import { Highlighter } from '@lobehub/ui-rn';
+import { Highlighter, Text, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { StyleSheet, View } from 'react-native';
 
 /**
  * 完整功能模式演示
@@ -14,7 +12,7 @@ export const FullFeaturedHighlighterDemo: React.FC = () => {
   const examples = [
     {
       code: `import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet  } from 'react-native';
 
 
 interface CounterProps {
