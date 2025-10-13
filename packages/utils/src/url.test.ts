@@ -400,42 +400,107 @@ describe('inferFileExtensionFromImageUrl', () => {
 });
 
 describe('isLocalUrl', () => {
-  it('should return true for URLs with 127.0.0.1 as hostname', () => {
-    expect(isLocalUrl('http://127.0.0.1')).toBe(true);
-    expect(isLocalUrl('https://127.0.0.1')).toBe(true);
-    expect(isLocalUrl('http://127.0.0.1:8080')).toBe(true);
-    expect(isLocalUrl('http://127.0.0.1/path/to/resource')).toBe(true);
-    expect(isLocalUrl('https://127.0.0.1/path?query=1#hash')).toBe(true);
+  describe('loopback addresses (127.0.0.0/8)', () => {
+    it('should return true for 127.0.0.1', () => {
+      expect(isLocalUrl('http://127.0.0.1')).toBe(true);
+      expect(isLocalUrl('https://127.0.0.1')).toBe(true);
+      expect(isLocalUrl('http://127.0.0.1:8080')).toBe(true);
+      expect(isLocalUrl('http://127.0.0.1/path/to/resource')).toBe(true);
+      expect(isLocalUrl('https://127.0.0.1/path?query=1#hash')).toBe(true);
+    });
+
+    it('should return true for other 127.x.x.x addresses', () => {
+      expect(isLocalUrl('http://127.0.0.2')).toBe(true);
+      expect(isLocalUrl('http://127.1.1.1')).toBe(true);
+      expect(isLocalUrl('http://127.255.255.255')).toBe(true);
+    });
   });
 
-  it('should return false for URLs with "localhost" as hostname', () => {
-    expect(isLocalUrl('http://localhost')).toBe(false);
-    expect(isLocalUrl('http://localhost:3000')).toBe(false);
+  describe('localhost', () => {
+    it('should return true for localhost', () => {
+      expect(isLocalUrl('http://localhost')).toBe(true);
+      expect(isLocalUrl('http://localhost:3000')).toBe(true);
+      expect(isLocalUrl('https://localhost/api')).toBe(true);
+    });
+
+    it('should return true for localhost subdomains', () => {
+      expect(isLocalUrl('http://app.localhost')).toBe(true);
+      expect(isLocalUrl('http://test.localhost:8080')).toBe(true);
+    });
   });
 
-  it('should return false for other IP addresses', () => {
-    expect(isLocalUrl('http://192.168.1.1')).toBe(false);
-    expect(isLocalUrl('http://0.0.0.0')).toBe(false);
-    expect(isLocalUrl('http://127.0.0.2')).toBe(false);
+  describe('IPv6 loopback', () => {
+    it('should return true for ::1', () => {
+      expect(isLocalUrl('http://[::1]')).toBe(true);
+      expect(isLocalUrl('http://[::1]:8080')).toBe(true);
+    });
   });
 
-  it('should return false for domain names', () => {
-    expect(isLocalUrl('https://example.com')).toBe(false);
-    expect(isLocalUrl('http://www.google.com')).toBe(false);
+  describe('special addresses', () => {
+    it('should return true for 0.0.0.0', () => {
+      expect(isLocalUrl('http://0.0.0.0')).toBe(true);
+      expect(isLocalUrl('http://0.0.0.0:3000')).toBe(true);
+    });
   });
 
-  it('should return false for malformed URLs', () => {
-    expect(isLocalUrl('invalid-url')).toBe(false);
-    expect(isLocalUrl('http://')).toBe(false);
-    expect(isLocalUrl('a string but not a url')).toBe(false);
+  describe('private network addresses', () => {
+    it('should return true for 10.0.0.0/8 (10.x.x.x)', () => {
+      expect(isLocalUrl('http://10.0.0.1')).toBe(true);
+      expect(isLocalUrl('http://10.1.2.3')).toBe(true);
+      expect(isLocalUrl('http://10.255.255.255')).toBe(true);
+    });
+
+    it('should return true for 172.16.0.0/12 (172.16-31.x.x)', () => {
+      expect(isLocalUrl('http://172.16.0.1')).toBe(true);
+      expect(isLocalUrl('http://172.20.10.5')).toBe(true);
+      expect(isLocalUrl('http://172.31.255.255')).toBe(true);
+    });
+
+    it('should return false for 172.x.x.x outside private range', () => {
+      expect(isLocalUrl('http://172.15.0.1')).toBe(false);
+      expect(isLocalUrl('http://172.32.0.1')).toBe(false);
+    });
+
+    it('should return true for 192.168.0.0/16 (192.168.x.x)', () => {
+      expect(isLocalUrl('http://192.168.1.1')).toBe(true);
+      expect(isLocalUrl('http://192.168.0.1')).toBe(true);
+      expect(isLocalUrl('http://192.168.255.255')).toBe(true);
+    });
   });
 
-  it('should return false for empty or nullish strings', () => {
-    expect(isLocalUrl('')).toBe(false);
+  describe('public addresses', () => {
+    it('should return false for public IP addresses', () => {
+      expect(isLocalUrl('http://8.8.8.8')).toBe(false);
+      expect(isLocalUrl('http://1.1.1.1')).toBe(false);
+      expect(isLocalUrl('http://192.167.1.1')).toBe(false);
+      expect(isLocalUrl('http://192.169.1.1')).toBe(false);
+    });
+
+    it('should return false for domain names', () => {
+      expect(isLocalUrl('https://example.com')).toBe(false);
+      expect(isLocalUrl('http://www.google.com')).toBe(false);
+    });
   });
 
-  it('should return false for relative URLs', () => {
-    expect(isLocalUrl('/path/to/file')).toBe(false);
-    expect(isLocalUrl('./relative/path')).toBe(false);
+  describe('edge cases', () => {
+    it('should return false for malformed URLs', () => {
+      expect(isLocalUrl('invalid-url')).toBe(false);
+      expect(isLocalUrl('http://')).toBe(false);
+      expect(isLocalUrl('a string but not a url')).toBe(false);
+    });
+
+    it('should return false for empty or nullish strings', () => {
+      expect(isLocalUrl('')).toBe(false);
+    });
+
+    it('should return false for relative URLs', () => {
+      expect(isLocalUrl('/path/to/file')).toBe(false);
+      expect(isLocalUrl('./relative/path')).toBe(false);
+    });
+
+    it('should return false for invalid IP addresses', () => {
+      expect(isLocalUrl('http://256.256.256.256')).toBe(false);
+      expect(isLocalUrl('http://192.168.1.256')).toBe(false);
+    });
   });
 });
