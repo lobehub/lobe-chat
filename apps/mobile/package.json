@@ -51,7 +51,7 @@
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "@lobehub/icons-rn": "^1.4.2",
+    "@lobehub/icons-rn": "^1.7.4",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-masked-view/masked-view": "^0.3.2",
