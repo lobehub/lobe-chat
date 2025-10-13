@@ -1,5 +1,4 @@
 import { PageContainer } from '@lobehub/ui-rn';
-import ComponentPlayground from '@lobehub/ui-rn/Playground';
 import { useLocalSearchParams } from 'expo-router';
 import { kebabCase } from 'lodash-es';
 import React from 'react';
@@ -8,6 +7,7 @@ import { Text, View } from 'react-native';
 import { DEMOS_MAP } from '../.data/import';
 import playgroundData from '../.data/index.json';
 import { getAllComponents } from '../utils';
+import ComponentPlayground from './ComponentPlayground';
 
 /**
  * 动态组件 Playground 页面
@@ -46,8 +46,13 @@ export default function DynamicComponentPlaygroundPage() {
   }
 
   return (
-    <PageContainer showBack title={`${componentName} 组件`}>
-      <ComponentPlayground demos={demos || []} readmeContent={componentData.readme} />
+    <PageContainer showBack title={componentName}>
+      <ComponentPlayground
+        demos={demos || []}
+        readmeContent={[componentData.description, componentData.readme]
+          .filter(Boolean)
+          .join('\n\n')}
+      />
     </PageContainer>
   );
 }
