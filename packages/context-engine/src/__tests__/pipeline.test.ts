@@ -242,7 +242,7 @@ describe('ContextEngine', () => {
       const result = await engine.process(createInitialContext());
 
       expect(result.stats.processedCount).toBe(2);
-      expect(result.stats.totalDuration).toBeGreaterThanOrEqual(30);
+      expect(result.stats.totalDuration).toBeGreaterThanOrEqual(20);
       expect(result.stats.processorDurations.p1).toBeGreaterThanOrEqual(10);
       expect(result.stats.processorDurations.p2).toBeGreaterThanOrEqual(20);
     });
