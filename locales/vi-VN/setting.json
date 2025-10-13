@@ -294,6 +294,13 @@
     },
     "title": "Cài đặt chung"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Thiết lập số lượng hình ảnh mặc định được tạo khi bắt đầu một tác vụ mới trong bảng tạo hình ảnh.",
+      "label": "Số lượng hình ảnh mặc định",
+      "title": "Cài đặt Vẽ AI"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Bật giới hạn phản hồi một lần"
@@ -549,6 +556,7 @@
     "common": "Cài đặt chung",
     "experiment": "Thử nghiệm",
     "hotkey": "Phím tắt",
+    "image": "Vẽ AI",
     "llm": "Mô hình ngôn ngữ",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",

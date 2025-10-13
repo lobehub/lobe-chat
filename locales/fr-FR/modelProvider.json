@@ -284,10 +284,18 @@
           "placeholder": "Veuillez entrer l'identifiant du modèle, par exemple gpt-4o ou claude-3.5-sonnet",
           "title": "ID du modèle"
         },
+        "imageOutput": {
+          "extra": "Cette configuration activera uniquement la capacité du modèle à générer des images. L'efficacité dépend entièrement du modèle lui-même. Veuillez tester vous-même si le modèle est capable de générer des images utilisables.",
+          "title": "Prise en charge de la génération d'images"
+        },
         "modalTitle": "Configuration du modèle personnalisé",
         "reasoning": {
           "extra": "Cette configuration activera uniquement la capacité de réflexion approfondie du modèle. Les résultats dépendent entièrement du modèle lui-même, veuillez tester si ce modèle possède une capacité de réflexion approfondie utilisable.",
           "title": "Support de la réflexion approfondie"
+        },
+        "search": {
+          "extra": "Cette configuration activera uniquement la capacité de recherche en ligne via le moteur de recherche intégré du modèle. La prise en charge dépend du modèle lui-même. Veuillez tester vous-même si le moteur de recherche intégré est fonctionnel.",
+          "title": "Prise en charge de la recherche en ligne"
         },
         "tokens": {
           "extra": "Définir le nombre maximal de tokens pris en charge par le modèle",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Veuillez sélectionner un type de modèle",
           "title": "Type de modèle"
+        },
+        "video": {
+          "extra": "Cette configuration activera uniquement la reconnaissance vidéo dans l'application. La capacité de reconnaissance dépend entièrement du modèle lui-même. Veuillez tester vous-même si le modèle est capable de reconnaître les vidéos.",
+          "title": "Prise en charge de la reconnaissance vidéo"
         },
         "vision": {
           "extra": "Cette configuration n'activera que la configuration de téléchargement d'images dans l'application, la prise en charge de la reconnaissance dépend entièrement du modèle lui-même, veuillez tester la disponibilité des capacités de reconnaissance visuelle de ce modèle.",

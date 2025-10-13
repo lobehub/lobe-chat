@@ -20,13 +20,13 @@ vi.mock('../Loading', () => ({
 }));
 
 describe('BuiltinType', () => {
-  it('should render loading state if not JSON and loading is true', () => {
-    render(<BuiltinType content="..." id="123" loading={true} />);
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  it('should not render anything if identifier is not provided', () => {
+    const { container } = render(<BuiltinType content="..." id="123" />);
+    expect(container).toBeEmptyDOMElement();
   });
 
-  it('should not render anything if not JSON and loading is false', () => {
-    const { container } = render(<BuiltinType content="..." id="123" loading={false} />);
+  it('should not render anything if content is not JSON and no identifier', () => {
+    const { container } = render(<BuiltinType content="..." id="123" />);
     expect(container).toBeEmptyDOMElement();
   });
 

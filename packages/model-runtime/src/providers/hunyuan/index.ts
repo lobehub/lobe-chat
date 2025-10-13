@@ -1,13 +1,16 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface HunyuanModelCard {
   id: string;
 }
 
-export const LobeHunyuanAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -51,6 +54,7 @@ export const LobeHunyuanAI = createOpenAICompatibleRuntime({
     const modelList: HunyuanModelCard[] = modelsPage.data;
 
     return modelList
+      .filter(Boolean)
       .map((model) => {
         const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
           (m) => model.id.toLowerCase() === m.id.toLowerCase(),
@@ -77,4 +81,6 @@ export const LobeHunyuanAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Hunyuan,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeHunyuanAI = createOpenAICompatibleRuntime(params);

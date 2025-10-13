@@ -1,11 +1,14 @@
 // @vitest-environment node
-import { InvokeModelWithResponseStreamCommand } from '@aws-sdk/client-bedrock-runtime';
+import {
+  InvokeModelCommand,
+  InvokeModelWithResponseStreamCommand,
+} from '@aws-sdk/client-bedrock-runtime';
 import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { ModelProvider } from 'model-bank';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as debugStreamModule from '../../utils/debugStream';
-import { LobeBedrockAI } from './index';
+import { LobeBedrockAI, experimental_buildLlama2Prompt } from './index';
 
 const provider = 'bedrock';
 
@@ -16,6 +19,7 @@ vi.mock('@aws-sdk/client-bedrock-runtime', async (importOriginal) => {
   const module = await importOriginal();
   return {
     ...(module as any),
+    InvokeModelCommand: vi.fn(),
     InvokeModelWithResponseStreamCommand: vi.fn(),
   };
 });
@@ -45,6 +49,59 @@ describe('LobeBedrockAI', () => {
         accessKeySecret: 'test-access-key-secret',
       });
       expect(instance).toBeInstanceOf(LobeBedrockAI);
+      expect(instance.region).toBe('us-west-2');
+    });
+
+    it('should use default region if not provided', () => {
+      const instance = new LobeBedrockAI({
+        accessKeyId: 'test-access-key-id',
+        accessKeySecret: 'test-access-key-secret',
+      });
+      expect(instance.region).toBe('us-east-1');
+    });
+
+    it('should correctly initialize with session token', () => {
+      const instance = new LobeBedrockAI({
+        region: 'us-west-2',
+        accessKeyId: 'test-access-key-id',
+        accessKeySecret: 'test-access-key-secret',
+        sessionToken: 'test-session-token',
+      });
+      expect(instance).toBeInstanceOf(LobeBedrockAI);
+    });
+
+    it('should throw InvalidBedrockCredentials if accessKeyId is missing', () => {
+      expect(() => {
+        new LobeBedrockAI({
+          accessKeySecret: 'test-access-key-secret',
+        });
+      }).toThrow(
+        expect.objectContaining({
+          errorType: AgentRuntimeErrorType.InvalidBedrockCredentials,
+        }),
+      );
+    });
+
+    it('should throw InvalidBedrockCredentials if accessKeySecret is missing', () => {
+      expect(() => {
+        new LobeBedrockAI({
+          accessKeyId: 'test-access-key-id',
+        });
+      }).toThrow(
+        expect.objectContaining({
+          errorType: AgentRuntimeErrorType.InvalidBedrockCredentials,
+        }),
+      );
+    });
+
+    it('should throw InvalidBedrockCredentials if both credentials are missing', () => {
+      expect(() => {
+        new LobeBedrockAI({});
+      }).toThrow(
+        expect.objectContaining({
+          errorType: AgentRuntimeErrorType.InvalidBedrockCredentials,
+        }),
+      );
     });
   });
 
@@ -199,6 +256,83 @@ describe('LobeBedrockAI', () => {
           modelId: 'anthropic.claude-v2:1',
         });
         expect(result).toBeInstanceOf(Response);
+      });
+
+      it('should handle tools parameter', async () => {
+        // Arrange
+        const mockStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue('Hello, world!');
+            controller.close();
+          },
+        });
+        const mockResponse = Promise.resolve(mockStream);
+        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+        const tools = [
+          {
+            function: {
+              description: 'Get weather information',
+              name: 'get_weather',
+              parameters: {
+                properties: {
+                  location: {
+                    description: 'City name',
+                    type: 'string',
+                  },
+                },
+                required: ['location'],
+                type: 'object',
+              },
+            },
+            type: 'function' as const,
+          },
+        ];
+
+        // Act
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'anthropic.claude-v2:1',
+          temperature: 0.5,
+          tools,
+        });
+
+        // Assert
+        const callArgs = (InvokeModelWithResponseStreamCommand as any as Mock).mock.calls[0][0];
+        const bodyContent = JSON.parse(callArgs.body);
+        expect(bodyContent.tools).toBeDefined();
+      });
+
+      it('should use default max_tokens when not provided', async () => {
+        // Arrange
+        const mockStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue('Hello, world!');
+            controller.close();
+          },
+        });
+        const mockResponse = Promise.resolve(mockStream);
+        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+        // Act
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'anthropic.claude-v2:1',
+          temperature: 0,
+        });
+
+        // Assert
+        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+          accept: 'application/json',
+          body: JSON.stringify({
+            anthropic_version: 'bedrock-2023-05-31',
+            max_tokens: 4096,
+            messages: [{ content: 'Hello', role: 'user' }],
+            temperature: 0,
+          }),
+          contentType: 'application/json',
+          modelId: 'anthropic.claude-v2:1',
+        });
       });
 
       it('should call Anthropic model without unsupported opions', async () => {
@@ -457,6 +591,17 @@ describe('LobeBedrockAI', () => {
     });
 
     describe('Llama Model', () => {
+      it('should return a Response on successful API call', async () => {
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'meta.llama:1',
+          temperature: 0,
+        });
+
+        // Assert
+        expect(result).toBeInstanceOf(Response);
+      });
+
       it('should call Llama model with valid payload', async () => {
         // Arrange
         const mockStream = new ReadableStream({
@@ -538,6 +683,69 @@ describe('LobeBedrockAI', () => {
         // Clean up
         delete process.env.DEBUG_BEDROCK_CHAT_COMPLETION;
       });
+
+      it('should use default max_tokens (400) when not provided', async () => {
+        // Arrange
+        const mockStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue('Hello, world!');
+            controller.close();
+          },
+        });
+        const mockResponse = Promise.resolve(mockStream);
+        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+        // Act
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'meta.llama:1',
+          temperature: 0,
+        });
+
+        // Assert
+        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+          accept: 'application/json',
+          body: JSON.stringify({
+            max_gen_len: 400,
+            prompt: '<s>[INST] Hello [/INST]',
+          }),
+          contentType: 'application/json',
+          modelId: 'meta.llama:1',
+        });
+      });
+
+      it('should handle system message in Llama prompt', async () => {
+        // Arrange
+        const mockStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue('Hello, world!');
+            controller.close();
+          },
+        });
+        const mockResponse = Promise.resolve(mockStream);
+        (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+        // Act
+        await instance.chat({
+          messages: [
+            { content: 'You are a helpful assistant', role: 'system' },
+            { content: 'Hello', role: 'user' },
+          ],
+          model: 'meta.llama2-70b-chat-v1',
+          temperature: 0,
+        });
+
+        // Assert
+        expect(InvokeModelWithResponseStreamCommand).toHaveBeenCalledWith({
+          accept: 'application/json',
+          body: JSON.stringify({
+            max_gen_len: 400,
+            prompt: '<s>[INST] <<SYS>>\nYou are a helpful assistant\n<</SYS>>\n\nHello [/INST]',
+          }),
+          contentType: 'application/json',
+          modelId: 'meta.llama2-70b-chat-v1',
+        });
+      });
     });
 
     it('should call options.callback when provided', async () => {
@@ -556,6 +764,216 @@ describe('LobeBedrockAI', () => {
 
       // Assert
       expect(onStart).toHaveBeenCalled();
+    });
+  });
+
+  describe('embeddings', () => {
+    it('should handle single input string', async () => {
+      // Arrange
+      const mockEmbedding = [0.1, 0.2, 0.3];
+      const mockResponse = {
+        body: new TextEncoder().encode(JSON.stringify({ embedding: mockEmbedding })),
+      };
+      (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.embeddings({
+        input: 'test input',
+        model: 'amazon.titan-embed-text-v1',
+      });
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual(mockEmbedding);
+      expect(InvokeModelCommand).toHaveBeenCalledWith({
+        accept: 'application/json',
+        body: JSON.stringify({
+          inputText: 'test input',
+          normalize: true,
+        }),
+        contentType: 'application/json',
+        modelId: 'amazon.titan-embed-text-v1',
+      });
+    });
+
+    it('should handle multiple input strings', async () => {
+      // Arrange
+      const mockEmbedding1 = [0.1, 0.2, 0.3];
+      const mockEmbedding2 = [0.4, 0.5, 0.6];
+      const mockResponse1 = {
+        body: new TextEncoder().encode(JSON.stringify({ embedding: mockEmbedding1 })),
+      };
+      const mockResponse2 = {
+        body: new TextEncoder().encode(JSON.stringify({ embedding: mockEmbedding2 })),
+      };
+      (instance['client'].send as Mock)
+        .mockResolvedValueOnce(mockResponse1)
+        .mockResolvedValueOnce(mockResponse2);
+
+      // Act
+      const result = await instance.embeddings({
+        input: ['test input 1', 'test input 2'],
+        model: 'amazon.titan-embed-text-v1',
+      });
+
+      // Assert
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual(mockEmbedding1);
+      expect(result[1]).toEqual(mockEmbedding2);
+      expect(InvokeModelCommand).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle dimensions parameter', async () => {
+      // Arrange
+      const mockEmbedding = [0.1, 0.2, 0.3];
+      const mockResponse = {
+        body: new TextEncoder().encode(JSON.stringify({ embedding: mockEmbedding })),
+      };
+      (instance['client'].send as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.embeddings({
+        dimensions: 512,
+        input: 'test input',
+        model: 'amazon.titan-embed-text-v1',
+      });
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(InvokeModelCommand).toHaveBeenCalledWith({
+        accept: 'application/json',
+        body: JSON.stringify({
+          dimensions: 512,
+          inputText: 'test input',
+          normalize: true,
+        }),
+        contentType: 'application/json',
+        modelId: 'amazon.titan-embed-text-v1',
+      });
+    });
+
+    it('should handle abort signal', async () => {
+      // Arrange
+      const mockEmbedding = [0.1, 0.2, 0.3];
+      const mockResponse = {
+        body: new TextEncoder().encode(JSON.stringify({ embedding: mockEmbedding })),
+      };
+      const sendSpy = vi.spyOn(instance['client'], 'send').mockResolvedValue(mockResponse as any);
+      const abortController = new AbortController();
+
+      // Act
+      await instance.embeddings(
+        {
+          input: 'test input',
+          model: 'amazon.titan-embed-text-v1',
+        },
+        { signal: abortController.signal },
+      );
+
+      // Assert
+      expect(sendSpy).toHaveBeenCalledWith(expect.any(InvokeModelCommand), {
+        abortSignal: abortController.signal,
+      });
+    });
+
+    it('should throw AgentRuntimeError on API error', async () => {
+      // Arrange
+      const errorMessage = 'Embedding API error';
+      const errorMetadata = { statusCode: 400 };
+      const mockError = new Error(errorMessage);
+      (mockError as any).$metadata = errorMetadata;
+      (instance['client'].send as Mock).mockRejectedValue(mockError);
+
+      // Act & Assert
+      await expect(
+        instance.embeddings({
+          input: 'test input',
+          model: 'amazon.titan-embed-text-v1',
+        }),
+      ).rejects.toThrow(
+        expect.objectContaining({
+          error: {
+            body: errorMetadata,
+            message: errorMessage,
+            type: 'Error',
+          },
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          provider: ModelProvider.Bedrock,
+          region: 'us-west-2',
+        }),
+      );
+    });
+  });
+
+  describe('experimental_buildLlama2Prompt', () => {
+    it('should build prompt with user message only', () => {
+      const messages = [{ content: 'Hello', role: 'user' }];
+      const result = experimental_buildLlama2Prompt(messages);
+      expect(result).toBe('<s>[INST] Hello [/INST]');
+    });
+
+    it('should build prompt with system and user messages', () => {
+      const messages = [
+        { content: 'You are a helpful assistant', role: 'system' },
+        { content: 'Hello', role: 'user' },
+      ];
+      const result = experimental_buildLlama2Prompt(messages);
+      expect(result).toBe(
+        '<s>[INST] <<SYS>>\nYou are a helpful assistant\n<</SYS>>\n\nHello [/INST]',
+      );
+    });
+
+    it('should build prompt with conversation history', () => {
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'Hi there!', role: 'assistant' },
+        { content: 'How are you?', role: 'user' },
+      ];
+      const result = experimental_buildLlama2Prompt(messages);
+      expect(result).toBe('<s>[INST] Hello [/INST] Hi there!</s><s>[INST] How are you? [/INST]');
+    });
+
+    it('should build prompt with system, user, and assistant messages', () => {
+      const messages = [
+        { content: 'You are a helpful assistant', role: 'system' },
+        { content: 'Hello', role: 'user' },
+        { content: 'Hi there!', role: 'assistant' },
+        { content: 'How are you?', role: 'user' },
+      ];
+      const result = experimental_buildLlama2Prompt(messages);
+      expect(result).toBe(
+        '<s>[INST] <<SYS>>\nYou are a helpful assistant\n<</SYS>>\n\nHello [/INST] Hi there!</s><s>[INST] How are you? [/INST]',
+      );
+    });
+
+    it('should trim user messages', () => {
+      const messages = [{ content: '  Hello  ', role: 'user' }];
+      const result = experimental_buildLlama2Prompt(messages);
+      expect(result).toBe('<s>[INST] Hello [/INST]');
+    });
+
+    it('should throw error for function messages', () => {
+      const messages = [{ content: 'function call', role: 'function' }];
+      expect(() => experimental_buildLlama2Prompt(messages)).toThrow(
+        'Llama 2 does not support function calls.',
+      );
+    });
+
+    it('should throw error for invalid role', () => {
+      const messages = [{ content: 'invalid', role: 'invalid' }];
+      expect(() => experimental_buildLlama2Prompt(messages)).toThrow(
+        'Invalid message role: invalid',
+      );
+    });
+
+    it('should throw error for system message not at index 0', () => {
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'You are a helpful assistant', role: 'system' },
+      ];
+      expect(() => experimental_buildLlama2Prompt(messages)).toThrow(
+        'Invalid message role: system',
+      );
     });
   });
 });

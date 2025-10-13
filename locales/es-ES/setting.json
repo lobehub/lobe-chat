@@ -294,6 +294,13 @@
     },
     "title": "Configuración Común"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Establece la cantidad predeterminada de imágenes al crear una nueva tarea en el panel de generación de imágenes.",
+      "label": "Cantidad de imágenes predeterminada",
+      "title": "Configuración de dibujo con IA"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Activar límite de tokens por respuesta"
@@ -549,6 +556,7 @@
     "common": "Configuración común",
     "experiment": "Experimento",
     "hotkey": "Atajos de teclado",
+    "image": "Dibujo con IA",
     "llm": "Modelo de lenguaje",
     "provider": "Proveedor de servicios de IA",
     "proxy": "Proxy de red",

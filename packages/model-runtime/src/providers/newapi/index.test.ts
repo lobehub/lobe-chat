@@ -1,14 +1,14 @@
 // @vitest-environment node
+import { ModelProvider } from 'model-bank';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { responsesAPIModels } from '../../const/models';
 import { ChatStreamPayload } from '../../types/chat';
 import * as modelParseModule from '../../utils/modelParse';
-import { LobeNewAPIAI, NewAPIModelCard, NewAPIPricing } from './index';
+import { LobeNewAPIAI, NewAPIModelCard, NewAPIPricing, handlePayload, params } from './index';
 
 // Mock external dependencies
-vi.mock('../utils/modelParse');
-vi.mock('../const/models');
+vi.mock('../../utils/modelParse');
 
 // Mock console methods
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -645,6 +645,670 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       // since the routers function processes the options.baseURL
       const expectedBaseURL = testOptions.baseURL.replace(/\/v\d+[a-z]*\/?$/, '');
       expect(expectedBaseURL).toBe('https://yourapi.cn');
+    });
+  });
+
+  // ============================================================================
+  // COMPREHENSIVE INTEGRATION TESTS FOR 90%+ COVERAGE
+  // ============================================================================
+
+  describe('Params Object - Runtime Configuration', () => {
+    it('should export params with correct provider ID', () => {
+      expect(params.id).toBe(ModelProvider.NewAPI);
+    });
+
+    it('should export params with correct defaultHeaders', () => {
+      expect(params.defaultHeaders).toEqual({
+        'X-Client': 'LobeHub',
+      });
+    });
+
+    it('should export params with debug configuration', () => {
+      expect(params.debug).toBeDefined();
+      expect(typeof params.debug.chatCompletion).toBe('function');
+    });
+
+    it('should export params with models function', () => {
+      expect(params.models).toBeDefined();
+      expect(typeof params.models).toBe('function');
+    });
+
+    it('should export params with routers function', () => {
+      expect(params.routers).toBeDefined();
+      expect(typeof params.routers).toBe('function');
+    });
+  });
+
+  describe('Debug Configuration - Direct Testing', () => {
+    it('should return false when DEBUG_NEWAPI_CHAT_COMPLETION is not set', () => {
+      delete process.env.DEBUG_NEWAPI_CHAT_COMPLETION;
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(false);
+    });
+
+    it('should return true when DEBUG_NEWAPI_CHAT_COMPLETION is set to 1', () => {
+      process.env.DEBUG_NEWAPI_CHAT_COMPLETION = '1';
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(true);
+      delete process.env.DEBUG_NEWAPI_CHAT_COMPLETION;
+    });
+
+    it('should return false when DEBUG_NEWAPI_CHAT_COMPLETION is set to 0', () => {
+      process.env.DEBUG_NEWAPI_CHAT_COMPLETION = '0';
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(false);
+      delete process.env.DEBUG_NEWAPI_CHAT_COMPLETION;
+    });
+  });
+
+  describe('HandlePayload Function - Direct Testing', () => {
+    beforeEach(() => {
+      // Mock responsesAPIModels as a Set for testing
+      (responsesAPIModels as any).has = vi.fn((model: string) => model === 'o1-pro');
+    });
+
+    it('should add apiMode for models in responsesAPIModels set', () => {
+      (responsesAPIModels as any).has = vi.fn((model: string) => model === 'o1-pro');
+
+      const payload: ChatStreamPayload = {
+        model: 'o1-pro',
+        messages: [{ role: 'user', content: 'test' }],
+        temperature: 0.5,
+      };
+
+      const result = handlePayload(payload);
+      expect(result).toEqual({ ...payload, apiMode: 'responses' });
+    });
+
+    it('should add apiMode for gpt- models', () => {
+      (responsesAPIModels as any).has = vi.fn(() => false);
+
+      const payload: ChatStreamPayload = {
+        model: 'gpt-4o',
+        messages: [{ role: 'user', content: 'test' }],
+        temperature: 0.5,
+      };
+
+      const result = handlePayload(payload);
+      expect(result).toEqual({ ...payload, apiMode: 'responses' });
+    });
+
+    it('should add apiMode for o1 models', () => {
+      (responsesAPIModels as any).has = vi.fn(() => false);
+
+      const payload: ChatStreamPayload = {
+        model: 'o1-mini',
+        messages: [{ role: 'user', content: 'test' }],
+        temperature: 0.5,
+      };
+
+      const result = handlePayload(payload);
+      expect(result).toEqual({ ...payload, apiMode: 'responses' });
+    });
+
+    it('should add apiMode for o3 models', () => {
+      (responsesAPIModels as any).has = vi.fn(() => false);
+
+      const payload: ChatStreamPayload = {
+        model: 'o3-turbo',
+        messages: [{ role: 'user', content: 'test' }],
+        temperature: 0.5,
+      };
+
+      const result = handlePayload(payload);
+      expect(result).toEqual({ ...payload, apiMode: 'responses' });
+    });
+
+    it('should not modify payload for regular models', () => {
+      (responsesAPIModels as any).has = vi.fn(() => false);
+
+      const payload: ChatStreamPayload = {
+        model: 'claude-3-sonnet',
+        messages: [{ role: 'user', content: 'test' }],
+        temperature: 0.5,
+      };
+
+      const result = handlePayload(payload);
+      expect(result).toEqual(payload);
+    });
+  });
+
+  describe('Routers Function - Direct Testing', () => {
+    it('should generate routers with correct apiTypes', () => {
+      const options = { apiKey: 'test', baseURL: 'https://api.newapi.com/v1' };
+      const routers = params.routers(options);
+
+      expect(routers).toHaveLength(4);
+      expect(routers[0].apiType).toBe('anthropic');
+      expect(routers[1].apiType).toBe('google');
+      expect(routers[2].apiType).toBe('xai');
+      expect(routers[3].apiType).toBe('openai');
+    });
+
+    it('should process baseURL by removing version paths', () => {
+      const options = { apiKey: 'test', baseURL: 'https://custom.com/v1' };
+      const routers = params.routers(options);
+
+      // Anthropic router should use base URL without /v1
+      expect(routers[0].options.baseURL).toBe('https://custom.com');
+      // Google router should use base URL without /v1
+      expect(routers[1].options.baseURL).toBe('https://custom.com');
+    });
+
+    it('should handle baseURL with v1beta', () => {
+      const options = { apiKey: 'test', baseURL: 'https://custom.com/v1beta/' };
+      const routers = params.routers(options);
+
+      expect(routers[0].options.baseURL).toBe('https://custom.com');
+    });
+
+    it('should handle baseURL without version path', () => {
+      const options = { apiKey: 'test', baseURL: 'https://custom.com' };
+      const routers = params.routers(options);
+
+      expect(routers[0].options.baseURL).toBe('https://custom.com');
+    });
+
+    it('should configure xai router with /v1 path', () => {
+      const options = { apiKey: 'test', baseURL: 'https://custom.com/v1' };
+      const routers = params.routers(options);
+
+      expect(routers[2].options.baseURL).toBe('https://custom.com/v1');
+    });
+
+    it('should configure openai router with /v1 path', () => {
+      const options = { apiKey: 'test', baseURL: 'https://custom.com/v1' };
+      const routers = params.routers(options);
+
+      expect(routers[3].options.baseURL).toBe('https://custom.com/v1');
+    });
+
+    it('should configure openai router with handlePayload', () => {
+      const options = { apiKey: 'test', baseURL: 'https://custom.com/v1' };
+      const routers = params.routers(options);
+
+      expect((routers[3].options as any).chatCompletion?.handlePayload).toBe(handlePayload);
+    });
+
+    it('should filter anthropic models for anthropic router', () => {
+      mockDetectModelProvider.mockImplementation((id: string) => {
+        if (id.includes('claude')) return 'anthropic';
+        return 'openai';
+      });
+
+      const options = { apiKey: 'test', baseURL: 'https://custom.com' };
+      const routers = params.routers(options);
+
+      expect(routers[0].models).toBeDefined();
+      expect(Array.isArray(routers[0].models)).toBe(true);
+    });
+
+    it('should filter google models for google router', () => {
+      mockDetectModelProvider.mockImplementation((id: string) => {
+        if (id.includes('gemini')) return 'google';
+        return 'openai';
+      });
+
+      const options = { apiKey: 'test', baseURL: 'https://custom.com' };
+      const routers = params.routers(options);
+
+      expect(routers[1].models).toBeDefined();
+      expect(Array.isArray(routers[1].models)).toBe(true);
+    });
+
+    it('should filter xai models for xai router', () => {
+      mockDetectModelProvider.mockImplementation((id: string) => {
+        if (id.includes('grok')) return 'xai';
+        return 'openai';
+      });
+
+      const options = { apiKey: 'test', baseURL: 'https://custom.com' };
+      const routers = params.routers(options);
+
+      expect(routers[2].models).toBeDefined();
+      expect(Array.isArray(routers[2].models)).toBe(true);
+    });
+
+    it('should handle missing baseURL by using empty string', () => {
+      const options = { apiKey: 'test' }; // No baseURL
+      const routers = params.routers(options);
+
+      expect(routers).toHaveLength(4);
+      expect(routers[0].options.baseURL).toBe('');
+      expect(routers[3].options.baseURL).toBe('v1'); // urlJoin('', '/v1') returns 'v1'
+    });
+  });
+
+  describe('Models Function - Integration Testing', () => {
+    beforeEach(() => {
+      mockProcessMultiProviderModelList.mockReturnValue([]);
+    });
+
+    it('should fetch models and process with processMultiProviderModelList', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+      });
+
+      mockProcessMultiProviderModelList.mockReturnValue([
+        {
+          id: 'test-model',
+          displayName: 'Test Model',
+        },
+      ]);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(mockClient.models.list).toHaveBeenCalled();
+      expect(mockProcessMultiProviderModelList).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: 'test-model',
+          }),
+        ]),
+        'newapi',
+      );
+      expect(result).toHaveLength(1);
+    });
+
+    it('should handle successful pricing fetch and enrich models', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          success: true,
+          data: [
+            {
+              model_name: 'test-model',
+              quota_type: 0,
+              model_price: 10,
+              completion_ratio: 1.5,
+              enable_groups: ['default'],
+            },
+          ],
+        }),
+      });
+
+      mockProcessMultiProviderModelList.mockImplementation((models) => models);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(mockFetch).toHaveBeenCalledWith('https://api.newapi.com/api/pricing', {
+        headers: {
+          Authorization: 'Bearer test-key',
+        },
+      });
+
+      expect(result[0].pricing).toEqual({
+        units: [
+          {
+            name: 'textInput',
+            rate: 20, // model_price * 2
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+          {
+            name: 'textOutput',
+            rate: 30, // 20 * 1.5
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+        ],
+      });
+    });
+
+    it('should handle pricing fetch with model_ratio instead of model_price', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          success: true,
+          data: [
+            {
+              model_name: 'test-model',
+              quota_type: 0,
+              model_ratio: 5,
+              enable_groups: ['default'],
+            },
+          ],
+        }),
+      });
+
+      mockProcessMultiProviderModelList.mockImplementation((models) => models);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(result[0].pricing).toEqual({
+        units: [
+          {
+            name: 'textInput',
+            rate: 10, // model_ratio * 2
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+          {
+            name: 'textOutput',
+            rate: 10, // 10 * 1 (default completion_ratio)
+            strategy: 'fixed',
+            unit: 'millionTokens',
+          },
+        ],
+      });
+    });
+
+    it('should skip pricing for quota_type = 1 (pay-per-call)', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          success: true,
+          data: [
+            {
+              model_name: 'test-model',
+              quota_type: 1, // Pay-per-call, not supported
+              model_price: 10,
+              enable_groups: ['default'],
+            },
+          ],
+        }),
+      });
+
+      mockProcessMultiProviderModelList.mockImplementation((models) => models);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(result[0].pricing).toBeUndefined();
+    });
+
+    it('should handle pricing fetch failure gracefully', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+      });
+
+      mockProcessMultiProviderModelList.mockImplementation((models) => models);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(result[0].pricing).toBeUndefined();
+    });
+
+    it('should handle pricing fetch network error gracefully', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockRejectedValue(new Error('Network error'));
+
+      mockProcessMultiProviderModelList.mockImplementation((models) => models);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(console.debug).toHaveBeenCalledWith(
+        'Failed to fetch NewAPI pricing info:',
+        expect.any(Error),
+      );
+      expect(result[0].pricing).toBeUndefined();
+    });
+
+    it('should handle pricing data with success=false', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          success: false,
+          data: [],
+        }),
+      });
+
+      mockProcessMultiProviderModelList.mockImplementation((models) => models);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(result[0].pricing).toBeUndefined();
+    });
+
+    it('should handle pricing data with missing data field', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [
+              {
+                id: 'test-model',
+                object: 'model',
+                created: 123,
+                owned_by: 'openai',
+              },
+            ],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          success: true,
+          // Missing data field
+        }),
+      });
+
+      mockProcessMultiProviderModelList.mockImplementation((models) => models);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(result[0].pricing).toBeUndefined();
+    });
+
+    it('should handle empty model list', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: [],
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+      });
+
+      mockProcessMultiProviderModelList.mockReturnValue([]);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(result).toEqual([]);
+    });
+
+    it('should handle undefined model data', async () => {
+      const mockClient = {
+        baseURL: 'https://api.newapi.com/v1',
+        apiKey: 'test-key',
+        models: {
+          list: vi.fn().mockResolvedValue({
+            data: undefined,
+          }),
+        },
+      };
+
+      mockFetch.mockResolvedValue({
+        ok: false,
+      });
+
+      mockProcessMultiProviderModelList.mockReturnValue([]);
+
+      const result = await params.models({ client: mockClient as any });
+
+      expect(mockProcessMultiProviderModelList).toHaveBeenCalledWith([], 'newapi');
+      expect(result).toEqual([]);
+    });
+
+    it('should strip version paths from baseURL correctly', async () => {
+      const testCases = [
+        { input: 'https://api.com/v1', expected: 'https://api.com' },
+        { input: 'https://api.com/v1/', expected: 'https://api.com' },
+        { input: 'https://api.com/v1beta', expected: 'https://api.com' },
+        { input: 'https://api.com/v2alpha/', expected: 'https://api.com' },
+        { input: 'https://api.com', expected: 'https://api.com' },
+      ];
+
+      for (const testCase of testCases) {
+        const mockClient = {
+          baseURL: testCase.input,
+          apiKey: 'test-key',
+          models: {
+            list: vi.fn().mockResolvedValue({ data: [] }),
+          },
+        };
+
+        mockFetch.mockResolvedValue({ ok: false });
+        mockProcessMultiProviderModelList.mockReturnValue([]);
+
+        await params.models({ client: mockClient as any });
+
+        if (testCase.input !== testCase.expected) {
+          expect(mockFetch).toHaveBeenCalledWith(
+            `${testCase.expected}/api/pricing`,
+            expect.any(Object),
+          );
+        }
+      }
+    });
+  });
+
+  describe('Runtime Instance Creation', () => {
+    it('should create instance with minimal options', () => {
+      const instance = new LobeNewAPIAI({ apiKey: 'test-key' });
+      expect(instance).toBeDefined();
+      expect(instance).toBeInstanceOf(LobeNewAPIAI);
+    });
+
+    it('should create instance with custom baseURL', () => {
+      const instance = new LobeNewAPIAI({
+        apiKey: 'test-key',
+        baseURL: 'https://custom.com/v1',
+      });
+      expect(instance).toBeDefined();
+    });
+
+    it('should create instance with additional options', () => {
+      const instance = new LobeNewAPIAI({
+        apiKey: 'test-key',
+        baseURL: 'https://custom.com',
+      });
+      expect(instance).toBeDefined();
     });
   });
 });

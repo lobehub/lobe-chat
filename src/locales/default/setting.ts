@@ -298,6 +298,13 @@ export default {
     },
     title: '通用设置',
   },
+  settingImage: {
+    defaultCount: {
+      desc: '设置图像生成面板在创建新任务时的默认图片数量。',
+      label: '默认图片数量',
+      title: 'AI 绘画设置',
+    },
+  },
   settingModel: {
     enableMaxTokens: {
       title: '开启单次回复限制',
@@ -553,6 +560,7 @@ export default {
     'common': '通用设置',
     'experiment': '实验',
     'hotkey': '快捷键',
+    'image': 'AI 绘画',
     'llm': '语言模型',
     'provider': 'AI 服务商',
     'proxy': '网络代理',

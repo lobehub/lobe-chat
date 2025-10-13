@@ -13,16 +13,18 @@
     "test:server-db": "vitest run --config vitest.config.server.mts"
   },
   "dependencies": {
-    "@electric-sql/pglite": "^0.2.17",
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "dayjs": "^1.11.18",
-    "drizzle-orm": "^0.44.5",
-    "nanoid": "^5.1.5",
-    "pg": "^8.16.3",
     "random-words": "^2.0.1",
     "ts-md5": "^2.0.1",
     "ws": "^8.18.3"
+  },
+  "peerDependencies": {
+    "@electric-sql/pglite": "^0.2.17",
+    "dayjs": ">=1.11.18",
+    "drizzle-orm": ">=0.44.6",
+    "nanoid": ">=5.1.5",
+    "pg": ">=8.16.3"
   }
 }

@@ -284,10 +284,18 @@
           "placeholder": "Model kimliğini girin, örneğin gpt-4o veya claude-3.5-sonnet",
           "title": "Model ID"
         },
+        "imageOutput": {
+          "extra": "Bu yapılandırma yalnızca modelin görsel oluşturma yeteneğini etkinleştirir. Gerçek performans tamamen modele bağlıdır, lütfen bu modelin kullanılabilir görsel oluşturma yeteneğini kendiniz test edin.",
+          "title": "Görsel Oluşturmayı Destekler"
+        },
         "modalTitle": "Özel Model Yapılandırması",
         "reasoning": {
           "extra": "Bu yapılandırma yalnızca modelin derin düşünme yeteneğini açacaktır, belirli etkiler tamamen modelin kendisine bağlıdır, lütfen bu modelin kullanılabilir derin düşünme yeteneğine sahip olup olmadığını kendiniz test edin",
           "title": "Derin düşünmeyi destekler"
+        },
+        "search": {
+          "extra": "Bu yapılandırma yalnızca modelin yerleşik arama motoru ile internet arama yeteneğini etkinleştirir. Yerleşik arama motorunun desteklenip desteklenmediği modele bağlıdır, lütfen bu modelin yerleşik arama motoru yeteneğini kendiniz test edin.",
+          "title": "İnternet Aramasını Destekler"
         },
         "tokens": {
           "extra": "Modelin desteklediği maksimum Token sayısını ayarlayın",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Lütfen model türünü seçin",
           "title": "Model Türü"
+        },
+        "video": {
+          "extra": "Bu yapılandırma yalnızca uygulamadaki video tanıma yapılandırmasını etkinleştirir. Tanıma desteği tamamen modele bağlıdır, lütfen bu modelin video tanıma yeteneğini kendiniz test edin.",
+          "title": "Video Tanımayı Destekler"
         },
         "vision": {
           "extra": "Bu yapılandırma yalnızca uygulamadaki resim yükleme yapılandırmasını açacaktır, tanıma desteği tamamen modele bağlıdır, lütfen bu modelin görsel tanıma yeteneğini test edin.",
