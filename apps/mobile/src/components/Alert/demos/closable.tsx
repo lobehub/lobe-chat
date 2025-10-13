@@ -1,6 +1,5 @@
 import { Alert, Space, Toast } from '@lobehub/ui-rn';
 import { Bell } from 'lucide-react-native';
-import React from 'react';
 
 const ClosableDemo = () => {
   return (

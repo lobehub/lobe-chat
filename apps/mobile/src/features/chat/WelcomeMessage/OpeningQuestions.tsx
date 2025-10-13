@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import type { FC } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -11,7 +12,7 @@ interface OpeningQuestionsProps {
   questions: string[];
 }
 
-const OpeningQuestions: React.FC<OpeningQuestionsProps> = ({ questions }) => {
+const OpeningQuestions: FC<OpeningQuestionsProps> = ({ questions }) => {
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
   const [updateInputMessage] = useChatStore((s) => [s.updateInputMessage]);

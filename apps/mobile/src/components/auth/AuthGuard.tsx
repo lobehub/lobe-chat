@@ -1,13 +1,13 @@
-import React from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { useAuth } from '@/store/user';
 
 interface AuthGuardProps {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
+  children: ReactNode;
+  fallback?: ReactNode;
 }
 
-const AuthGuard: React.FC<AuthGuardProps> = ({ children, fallback }) => {
+const AuthGuard: FC<AuthGuardProps> = ({ children, fallback }) => {
   const { isAuthenticated } = useAuth();
 
   // 未认证时显示fallback或返回null（路由会被重定向）

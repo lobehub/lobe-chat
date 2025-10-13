@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import type { FC } from 'react';
+import { memo } from 'react';
 import { View } from 'react-native';
 
 import Highlighter from '../../Highlighter';
@@ -10,7 +11,7 @@ export interface TokenJsonProps {
   token: Record<string, any>;
 }
 
-const TokenJson: React.FC<TokenJsonProps> = memo(({ token, title }) => {
+const TokenJson: FC<TokenJsonProps> = memo(({ token, title }) => {
   const { styles, theme } = useStyles();
 
   return (

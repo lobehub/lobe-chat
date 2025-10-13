@@ -1,6 +1,5 @@
 import { Icon, Space } from '@lobehub/ui-rn';
 import { LoaderCircle, RefreshCw, RotateCcw } from 'lucide-react-native';
-import React from 'react';
 
 const SpinDemo = () => {
   return (

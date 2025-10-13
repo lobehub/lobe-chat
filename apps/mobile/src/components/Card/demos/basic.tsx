@@ -1,5 +1,4 @@
 import { Button, Card, Space, Tag, Text } from '@lobehub/ui-rn';
-import React from 'react';
 
 const BasicDemo = () => {
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Defs, Path, Pattern, Rect } from 'react-native-svg';
 
@@ -22,11 +22,7 @@ const createSquare = (x: number, y: number, width: number, height: number) => {
   return `M ${x} ${y} L ${x + width} ${y} L ${x + width} ${y + height} L ${x} ${y + height} Z`;
 };
 
-const ConicGradientPattern: React.FC<ConicPatternProps> = ({
-  width = 200,
-  height = 200,
-  fillColor,
-}) => {
+const ConicGradientPattern: FC<ConicPatternProps> = ({ width = 200, height = 200, fillColor }) => {
   // 单元格尺寸
   const patternSize = width / 2;
 

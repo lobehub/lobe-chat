@@ -1,5 +1,6 @@
 import { CapsuleTabItem, CapsuleTabs, Text, useTheme } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 
 const items: CapsuleTabItem[] = [
@@ -15,7 +16,7 @@ const items: CapsuleTabItem[] = [
   { key: 'sports', label: 'Sports' },
 ];
 
-export const ScrollingDemo: React.FC = () => {
+export const ScrollingDemo: FC = () => {
   const [selectedKey, setSelectedKey] = useState('all');
   const token = useTheme();
 

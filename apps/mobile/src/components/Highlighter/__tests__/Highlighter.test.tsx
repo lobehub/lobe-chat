@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 
 import { renderWithTheme } from '@/test/utils';
 
@@ -28,7 +28,7 @@ jest.mock('../TokenDisplay', () => ({
 }));
 
 jest.mock('../contexts/highlighter', () => ({
-  HighlighterProvider: ({ children }: { children: React.ReactNode }) => (
+  HighlighterProvider: ({ children }: { children: ReactNode }) => (
     <div data-testid="highlighter-provider">{children}</div>
   ),
   supportedLanguageIds: ['javascript', 'python', 'markdown', 'typescript'],

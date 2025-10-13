@@ -1,5 +1,6 @@
 import { Block, Button, CapsuleTabItem, CapsuleTabs, Flexbox, Text } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 
 const items: CapsuleTabItem[] = [
   { key: 'all', label: 'All' },
@@ -12,7 +13,7 @@ const items: CapsuleTabItem[] = [
   { key: 'entertainment', label: 'Entertainment' },
 ];
 
-export const ScrollShadowDemo: React.FC = () => {
+export const ScrollShadowDemo: FC = () => {
   const [selectedKey, setSelectedKey] = useState('all');
   const [enableShadow, setEnableShadow] = useState(true);
 

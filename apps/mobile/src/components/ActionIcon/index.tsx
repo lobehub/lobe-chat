@@ -1,5 +1,6 @@
 import { LoaderCircle } from 'lucide-react-native';
-import React, { memo, useMemo } from 'react';
+import type { FC } from 'react';
+import { memo, useMemo } from 'react';
 import { ColorValue, Pressable, PressableProps, ViewStyle } from 'react-native';
 
 import { ICON_SIZE } from '@/_const/common';
@@ -20,7 +21,7 @@ export interface ActionIconProps extends Omit<PressableProps, 'children'> {
   variant?: 'borderless' | 'filled' | 'outlined';
 }
 
-const ActionIcon: React.FC<ActionIconProps> = memo(
+const ActionIcon: FC<ActionIconProps> = memo(
   ({
     icon,
     loading,

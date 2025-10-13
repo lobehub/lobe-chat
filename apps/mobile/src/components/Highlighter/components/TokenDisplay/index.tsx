@@ -1,5 +1,4 @@
 import type { ThemedToken } from '@shikijs/core';
-import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { useThemeMode } from '@/components/theme';

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import type { FC, ReactNode } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, DimensionValue, View, ViewStyle } from 'react-native';
 
 import { useStyles } from './style';
@@ -12,7 +13,7 @@ interface SkeletonParagraphProps {
   width?: DimensionValue | DimensionValue[];
 }
 
-const SkeletonParagraph: React.FC<SkeletonParagraphProps> = ({
+const SkeletonParagraph: FC<SkeletonParagraphProps> = ({
   rows = 3,
   width,
   animated = false,
@@ -42,7 +43,7 @@ const SkeletonParagraph: React.FC<SkeletonParagraphProps> = ({
     }
   }, [animated, shimmerAnim]);
 
-  const lines = [] as React.ReactNode[];
+  const lines = [] as ReactNode[];
   for (let i = 0; i < rows; i++) {
     let lineWidth: DimensionValue = '100%';
 

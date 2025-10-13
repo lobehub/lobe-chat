@@ -1,7 +1,7 @@
 /**
  * 组件相关的类型定义
  */
-import React from 'react';
+import type { ComponentType } from 'react';
 
 export interface ComponentItem {
   category: string;
@@ -21,7 +21,7 @@ export interface ComponentStats {
 
 export interface DemoConfig {
   code?: string;
-  component: React.ComponentType<any>;
+  component: ComponentType<any>;
   description: string;
   name: string;
 }

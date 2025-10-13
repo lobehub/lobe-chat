@@ -1,5 +1,6 @@
 import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-react-native';
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import type { ComponentType, FC, ReactElement, ReactNode } from 'react';
+import { cloneElement, isValidElement, memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
 
@@ -9,14 +10,14 @@ import Text from '../Text';
 import { getAlertStatusTokens, useStyles } from './style';
 import type { AlertProps, AlertType } from './type';
 
-const statusIconMap: Record<AlertType, React.ComponentType> = {
+const statusIconMap: Record<AlertType, ComponentType> = {
   error: AlertCircle,
   info: Info,
   success: CheckCircle2,
   warning: AlertTriangle,
 };
 
-const Alert: React.FC<AlertProps> = memo(
+const Alert: FC<AlertProps> = memo(
   ({
     type = 'info',
     message,
@@ -37,20 +38,17 @@ const Alert: React.FC<AlertProps> = memo(
       onClose?.();
     }, [onClose]);
 
-    const renderTextContent = (
-      value: React.ReactNode,
-      defaultStyle: StyleProp<TextStyle>,
-    ): React.ReactNode => {
+    const renderTextContent = (value: ReactNode, defaultStyle: StyleProp<TextStyle>): ReactNode => {
       if (value === undefined || value === null) return null;
 
       if (typeof value === 'string' || typeof value === 'number') {
         return <Text style={[defaultStyle]}>{value}</Text>;
       }
 
-      if (React.isValidElement(value) && value.type === Text) {
-        const textElement = value as React.ReactElement<{ style?: StyleProp<TextStyle> }>;
+      if (isValidElement(value) && value.type === Text) {
+        const textElement = value as ReactElement<{ style?: StyleProp<TextStyle> }>;
 
-        return React.cloneElement(textElement, {
+        return cloneElement(textElement, {
           style: [defaultStyle, textElement.props.style],
         });
       }

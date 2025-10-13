@@ -1,6 +1,5 @@
 import { ListItem, Text } from '@lobehub/ui-rn';
 import { Download, Heart, Home, Search, Share } from 'lucide-react-native';
-import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 const handlePress = (title: string) => {

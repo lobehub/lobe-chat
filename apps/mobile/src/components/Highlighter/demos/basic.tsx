@@ -1,12 +1,12 @@
 import { Highlighter, Text, useTheme } from '@lobehub/ui-rn';
-import React from 'react';
+import type { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 /**
  * 基础代码高亮演示
  * 展示最简单的使用方式
  */
-export const BasicHighlighterDemo: React.FC = () => {
+export const BasicHighlighterDemo: FC = () => {
   const token = useTheme();
 
   const codeExamples = [

@@ -1,7 +1,7 @@
 import { EnabledProviderWithModels } from '@lobechat/types';
 import { useRouter } from 'expo-router';
 import { ArrowRight, BoltIcon, X } from 'lucide-react-native';
-import React, { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
