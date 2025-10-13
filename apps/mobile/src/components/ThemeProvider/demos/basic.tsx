@@ -1,6 +1,6 @@
-import { ThemeProvider, useTheme } from '@lobehub/ui-rn';
+import { Text, ThemeProvider, useTheme } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 // 示例组件，使用主题 token
 const ExampleComponent = () => {

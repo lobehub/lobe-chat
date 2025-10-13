@@ -1,8 +1,6 @@
-import { Input } from '@lobehub/ui-rn';
+import { Input, Text, createStyles } from '@lobehub/ui-rn';
 import React from 'react';
-import { Text, View } from 'react-native';
-
-import { createStyles } from '@/components/theme';
+import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
   container: {

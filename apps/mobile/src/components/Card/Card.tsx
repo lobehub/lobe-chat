@@ -1,8 +1,8 @@
 import React, { ReactNode, memo, useMemo } from 'react';
-import { StyleProp, Text, TextStyle, View } from 'react-native';
+import { StyleProp, TextStyle, View } from 'react-native';
 
-import Block from '@/components/Block';
-
+import Block from '../Block';
+import Text from '../Text';
 import { useStyles } from './style';
 import type { CardProps } from './type';
 

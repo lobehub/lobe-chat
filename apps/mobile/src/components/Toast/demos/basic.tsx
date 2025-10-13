@@ -1,8 +1,6 @@
-import { Button, useToast } from '@lobehub/ui-rn';
+import { Button, Text, useTheme, useToast } from '@lobehub/ui-rn';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default function BasicDemo() {
   const token = useTheme();

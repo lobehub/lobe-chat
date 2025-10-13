@@ -1,8 +1,6 @@
-import { InstantSwitch } from '@lobehub/ui-rn';
+import { InstantSwitch, Text, createStyles } from '@lobehub/ui-rn';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { createStyles } from '@/components/theme';
+import { View } from 'react-native';
 
 const handleErrorChange = async () => {
   // 模拟网络错误

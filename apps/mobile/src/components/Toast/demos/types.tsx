@@ -1,8 +1,6 @@
-import { Button, useToast } from '@lobehub/ui-rn';
+import { Button, Text, useTheme, useToast } from '@lobehub/ui-rn';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-import { useTheme } from '@/components/theme';
+import { StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({
   buttonGroup: {

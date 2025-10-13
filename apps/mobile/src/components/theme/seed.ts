@@ -1,10 +1,34 @@
+import { Platform } from 'react-native';
+
 import { primaryColors } from './color';
 import type { PresetColorType, SeedToken } from './interface';
 
 // 字体定义
-const FONT_EN = `HarmonyOS-Sans`;
-const FONT_CN = `HarmonyOS-Sans-SC`;
-const FONT_CODE = `Hack`;
+// Android 使用 app.json 中配置的 fontFamily
+// iOS 使用字体文件中的 Family Name，系统会根据 fontWeight 自动选择对应字体文件
+const FONT_EN = Platform.select({
+  android: 'HarmonyOS-Sans', 
+  // 字体文件中的 Family Name（空格分隔）
+default: 'HarmonyOS-Sans', 
+  // 对应 app.json 中的 fontFamily
+ios: 'HarmonyOS Sans',
+});
+
+const FONT_CN = Platform.select({
+  android: 'HarmonyOS-Sans-SC', 
+  // 字体文件中的 Family Name（空格分隔）
+default: 'HarmonyOS-Sans-SC', 
+  // 对应 app.json 中的 fontFamily
+ios: 'HarmonyOS Sans SC',
+});
+
+const FONT_CODE = Platform.select({
+  android: 'Hack', 
+  // 字体文件中的 Family Name
+default: 'Hack', 
+  // 对应 app.json 中的 fontFamily
+ios: 'Hack',
+});
 
 // 优先使用系统默认字体，但在 React Native 中使用自定义字体
 const FONT_SYSTEM = 'System';
@@ -44,8 +68,9 @@ const seedToken: SeedToken = {
 
   controlHeight: 32,
   // 优先使用系统默认字体
-  fontFamily: [FONT_EN, FONT_CN, FONT_SYSTEM].join(','),
-  fontFamilyCode: FONT_CODE,
+  // iOS 和 Android 使用不同的字体名称格式
+  fontFamily: `${FONT_EN},${FONT_CN},${FONT_SYSTEM}`,
+  fontFamilyCode: FONT_CODE!,
 
   fontSize: 14,
 
