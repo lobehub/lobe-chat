@@ -286,7 +286,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
-  webpack(config, { isServer }) {
+  webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
@@ -294,9 +294,10 @@ const nextConfig: NextConfig = {
 
     // Memory optimizations for Vercel
     if (isVercel) {
-      // Disable minification for server bundles to save memory during build
+      // Disable ALL minification to save memory during build
+      // Trade-off: ~30-40% larger bundle, but build completes
       if (config.optimization) {
-        config.optimization.minimize = isServer ? false : config.optimization.minimize;
+        config.optimization.minimize = false;
       }
 
       // Limit parallel processing to reduce memory spikes
@@ -305,10 +306,9 @@ const nextConfig: NextConfig = {
       // Disable source maps for Vercel builds
       config.devtool = false;
 
-      // Reduce cache overhead
-      if (config.cache && typeof config.cache === 'object') {
-        config.cache.maxMemoryGenerations = 1;
-      }
+      // CRITICAL: Disable webpack persistent cache on Vercel
+      // Cache was consuming 2.5+ GB during failed builds
+      config.cache = false;
     }
 
     // 开启该插件会导致 pglite 的 fs bundler 被改表
