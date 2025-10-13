@@ -1,3 +1,5 @@
+import { CheckMcpInstallResult, CustomPluginMetadata } from '@lobechat/types';
+import { safeParseJSON } from '@lobechat/utils';
 import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehub/chat-plugin-sdk';
 import { DeploymentOption } from '@lobehub/market-sdk';
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
@@ -12,16 +14,14 @@ import {
   McpTool,
   StdioMCPParams,
 } from '@/libs/mcp';
-import { mcpSystemDepsCheckService } from '@/server/services/mcp/deps';
-import { CheckMcpInstallResult } from '@/types/plugins';
-import { CustomPluginMetadata } from '@/types/tool/plugin';
-import { safeParseJSON } from '@/utils/safeParseJSON';
+
+import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
 
 // Removed MCPConnection interface as it's no longer needed
 
-class MCPService {
+export class MCPService {
   // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
   private clients: Map<string, MCPClient> = new Map();
 

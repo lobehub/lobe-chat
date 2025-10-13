@@ -2,7 +2,7 @@ import { CrawlImplType, Crawler } from '@lobechat/web-crawler';
 import pMap from 'p-map';
 
 import { toolsEnv } from '@/envs/tools';
-import { SearchParams } from '@/types/tool/search';
+import { SearchParams, SearchQuery } from '@/types/tool/search';
 
 import { SearchImplType, SearchServiceImpl, createSearchServiceImpl } from './impls';
 
@@ -52,6 +52,31 @@ export class SearchService {
    */
   async query(query: string, params?: SearchParams) {
     return this.searchImpl.query(query, params);
+  }
+
+  async webSearch({ query, searchCategories, searchEngines, searchTimeRange }: SearchQuery) {
+    let data = await this.query(query, {
+      searchCategories: searchCategories,
+      searchEngines: searchEngines,
+      searchTimeRange: searchTimeRange,
+    });
+
+    // 如果没有搜索到结果，则执行第一次重试（移除搜索引擎限制）
+    if (data.results.length === 0 && searchEngines && searchEngines?.length > 0) {
+      const paramsExcludeSearchEngines = {
+        searchCategories: searchCategories,
+        searchEngines: undefined,
+        searchTimeRange: searchTimeRange,
+      };
+      data = await this.query(query, paramsExcludeSearchEngines);
+    }
+
+    // 如果仍然没有搜索到结果，则执行第二次重试（移除所有限制）
+    if (data?.results.length === 0) {
+      data = await this.query(query);
+    }
+
+    return data;
   }
 }
 
