@@ -1,5 +1,4 @@
 import { Center, Flexbox, Text, useTheme } from '@lobehub/ui-rn';
-import React from 'react';
 
 const BasicDemo = () => {
   const theme = useTheme();

@@ -1,4 +1,5 @@
-import React, { ReactNode, useEffect } from 'react';
+import type { FC } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import { useToast } from './InnerToastProvider';
 
@@ -29,7 +30,7 @@ const createStaticMethod = (type: 'success' | 'error' | 'info' | 'loading') => {
 };
 
 // Component to set global context
-export const ToastContextSetter: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ToastContextSetter: FC<{ children: ReactNode }> = ({ children }) => {
   const toastContext = useToast();
 
   useEffect(() => {

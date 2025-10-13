@@ -1,5 +1,5 @@
 import { PageContainer } from '@lobehub/ui-rn';
-import React from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
@@ -13,7 +13,7 @@ export default function LocaleScreen() {
   const { styles } = useStyles();
   const { localeMode, changeLocale } = useLocale();
   const { t } = useTranslation(['setting']);
-  const [pendingLocale, setPendingLocale] = React.useState<LocaleMode | null>(null);
+  const [pendingLocale, setPendingLocale] = useState<LocaleMode | null>(null);
 
   const handleLocaleChange = async (locale: LocaleMode) => {
     if (pendingLocale || localeMode === locale) return;

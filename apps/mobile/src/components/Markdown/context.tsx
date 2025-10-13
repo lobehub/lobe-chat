@@ -1,5 +1,6 @@
 import { Definition, Root } from 'mdast';
-import React, { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useContext } from 'react';
 import { ColorValue, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 import { Renderers } from './renderers/renderers';
@@ -54,7 +55,7 @@ export const useMarkdownContext = (): MarkdownContextType => {
 };
 
 export type MarkdownContextProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   contentSize: { height: number; width: number };
   definitions: Record<string, Definition>;
   renderers: Renderers;

@@ -1,6 +1,6 @@
 import { ChatMessage } from '@lobechat/types';
 import { Markdown } from '@lobehub/ui-rn';
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { useStyles } from './style';
@@ -9,7 +9,7 @@ interface WelcomeChatBubbleProps {
   message: ChatMessage;
 }
 
-const WelcomeChatBubble = React.memo(({ message }: WelcomeChatBubbleProps) => {
+const WelcomeChatBubble = memo(({ message }: WelcomeChatBubbleProps) => {
   const { styles } = useStyles();
 
   const content = useMemo(() => {

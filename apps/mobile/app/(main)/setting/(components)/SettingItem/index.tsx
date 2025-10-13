@@ -1,7 +1,7 @@
 import { Icon, Switch } from '@lobehub/ui-rn';
 import { Href, Link } from 'expo-router';
 import { Check } from 'lucide-react-native';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 
 import { useStyles } from './style';

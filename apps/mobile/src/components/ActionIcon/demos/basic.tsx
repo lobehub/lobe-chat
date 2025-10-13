@@ -1,6 +1,5 @@
 import { ActionIcon, Space } from '@lobehub/ui-rn';
 import { Heart, MessageSquare, Settings2 } from 'lucide-react-native';
-import React from 'react';
 
 const BasicDemo = () => {
   return (

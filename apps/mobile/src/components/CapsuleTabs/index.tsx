@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
@@ -10,7 +10,7 @@ import Text from '@/components/Text';
 import { useStyles } from './style';
 import { CapsuleTabsProps } from './type';
 
-export const CapsuleTabs: React.FC<CapsuleTabsProps> = ({
+export const CapsuleTabs: FC<CapsuleTabsProps> = ({
   items,
   onSelect,
   selectedKey,

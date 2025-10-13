@@ -1,4 +1,3 @@
-import React from 'react';
 import { ViewStyle } from 'react-native';
 
 import { renderWithTheme } from '@/test/utils';

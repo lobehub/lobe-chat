@@ -1,7 +1,8 @@
 import { ChatMessage } from '@lobechat/types';
 import { useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
-import React, { useCallback } from 'react';
+import type { FC, ReactNode } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
@@ -11,11 +12,11 @@ import { useChatStore } from '@/store/chat';
 import { useStyles } from './style';
 
 interface UserContextMenuProps {
-  children: React.ReactNode;
+  children: ReactNode;
   message: ChatMessage;
 }
 
-const UserContextMenu: React.FC<UserContextMenuProps> = ({ message, children }) => {
+const UserContextMenu: FC<UserContextMenuProps> = ({ message, children }) => {
   const { t } = useTranslation(['chat', 'common']);
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();

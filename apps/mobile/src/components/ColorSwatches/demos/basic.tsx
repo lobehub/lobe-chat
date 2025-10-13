@@ -1,5 +1,5 @@
 import { ColorSwatches, Text } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 
 const BasicDemo = () => {

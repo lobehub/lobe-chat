@@ -1,8 +1,9 @@
 import { Button, Skeleton, Text, useTheme } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 
-const AnimatedDemo: React.FC = () => {
+const AnimatedDemo: FC = () => {
   const [animationEnabled, setAnimationEnabled] = useState(true);
   const [customColors, setCustomColors] = useState(false);
   const token = useTheme();

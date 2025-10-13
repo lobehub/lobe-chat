@@ -1,4 +1,5 @@
-import React, { memo, useEffect, useRef } from 'react';
+import type { FC, ReactElement, ReactNode } from 'react';
+import { cloneElement, createElement, isValidElement, memo, useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
 import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL } from '@/_const/common';
@@ -53,7 +54,7 @@ const resolveIconSize = (size?: IconSize): number => {
   return ICON_SIZE;
 };
 
-const Icon: React.FC<IconProps> = memo(({ icon, size = 'middle', color, spin = false, style }) => {
+const Icon: FC<IconProps> = memo(({ icon, size = 'middle', color, spin = false, style }) => {
   const token = useTheme();
   const resolvedSize = resolveIconSize(size);
   const resolvedColor = color ?? token.colorText;
@@ -92,12 +93,12 @@ const Icon: React.FC<IconProps> = memo(({ icon, size = 'middle', color, spin = f
     }
 
     if (isIconComponent(icon)) {
-      return React.createElement(icon, { color: resolvedColor, size: resolvedSize });
+      return createElement(icon, { color: resolvedColor, size: resolvedSize });
     }
 
-    if (React.isValidElement(icon)) {
+    if (isValidElement(icon)) {
       const nextProps: Record<string, unknown> = {};
-      const element = icon as React.ReactElement<any>;
+      const element = icon as ReactElement<any>;
 
       if (color !== undefined || element.props?.color === undefined) {
         nextProps.color = resolvedColor;
@@ -107,10 +108,10 @@ const Icon: React.FC<IconProps> = memo(({ icon, size = 'middle', color, spin = f
         nextProps.size = resolvedSize;
       }
 
-      return Object.keys(nextProps).length > 0 ? React.cloneElement(element, nextProps) : icon;
+      return Object.keys(nextProps).length > 0 ? cloneElement(element, nextProps) : icon;
     }
 
-    return icon as React.ReactNode;
+    return icon as ReactNode;
   };
 
   const content = renderIcon();

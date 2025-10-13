@@ -1,5 +1,5 @@
 import { Button, Text, Tooltip, useTheme } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({

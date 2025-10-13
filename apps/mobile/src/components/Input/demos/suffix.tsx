@@ -1,6 +1,6 @@
 import { Input, Text, createStyles } from '@lobehub/ui-rn';
 import { Copy, Send, X } from 'lucide-react-native';
-import React from 'react';
+import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
@@ -29,7 +29,7 @@ const useStyles = createStyles(({ token }) => ({
 
 const SuffixDemo = () => {
   const { styles, theme } = useStyles();
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = useState('');
 
   return (
     <View style={styles.container}>

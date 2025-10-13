@@ -1,8 +1,8 @@
 import { Space, Text, useTheme } from '@lobehub/ui-rn';
-import React from 'react';
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
-const DemoItem = ({ children }: { children: React.ReactNode }) => {
+const DemoItem = ({ children }: { children: ReactNode }) => {
   const token = useTheme();
 
   return (

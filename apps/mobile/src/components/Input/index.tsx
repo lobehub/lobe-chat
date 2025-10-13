@@ -1,5 +1,6 @@
 import { Eye, EyeOff, Search } from 'lucide-react-native';
-import React from 'react';
+import type { ReactNode } from 'react';
+import { forwardRef, useState } from 'react';
 import {
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
@@ -18,14 +19,14 @@ import { InputSize, InputVariant } from './type';
 export type { TextAreaProps } from './TextArea';
 
 export interface InputProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
-  prefix?: React.ReactNode;
+  prefix?: ReactNode;
   size?: InputSize;
   style?: StyleProp<ViewStyle>;
-  suffix?: React.ReactNode;
+  suffix?: ReactNode;
   variant?: InputVariant;
 }
 
-const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
+const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
   const {
     style,
     placeholderTextColor,
@@ -56,7 +57,7 @@ const Input = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
   );
 });
 
-const InputSearch = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
+const InputSearch = forwardRef<RNTextInput, InputProps>((props, ref) => {
   const theme = useTheme();
   const size = props.size ?? 'middle';
   const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
@@ -71,10 +72,10 @@ const InputSearch = React.forwardRef<RNTextInput, InputProps>((props, ref) => {
   );
 });
 
-const InputPassword = React.forwardRef<RNTextInput, Omit<InputProps, 'suffix' | 'secureTextEntry'>>(
+const InputPassword = forwardRef<RNTextInput, Omit<InputProps, 'suffix' | 'secureTextEntry'>>(
   (props, ref) => {
     const theme = useTheme();
-    const [isSecure, setIsSecure] = React.useState(true);
+    const [isSecure, setIsSecure] = useState(true);
     const size = props.size ?? 'middle';
     const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
 
