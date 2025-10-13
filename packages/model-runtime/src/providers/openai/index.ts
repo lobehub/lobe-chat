@@ -1,10 +1,13 @@
 import { ModelProvider } from 'model-bank';
 
 import { responsesAPIModels } from '../../const/models';
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { pruneReasoningPayload } from '../../core/contextBuilders/openai';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { ChatStreamPayload } from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
-import { pruneReasoningPayload } from '../../utils/openaiHelpers';
 
 export interface OpenAIModelCard {
   id: string;
@@ -23,7 +26,7 @@ const supportsFlexTier = (model: string) => {
   return flexSupportedModels.some((supportedModel) => model.startsWith(supportedModel));
 };
 
-export const LobeOpenAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -43,10 +46,10 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           frequency_penalty: undefined,
           model,
           presence_penalty: undefined,
-          ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
           stream: payload.stream ?? true,
           temperature: undefined,
           top_p: undefined,
+          ...(enableServiceTierFlex && supportsFlexTier(model) && { service_tier: 'flex' }),
           ...(oaiSearchContextSize && {
             web_search_options: {
               search_context_size: oaiSearchContextSize,
@@ -81,14 +84,14 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
 
       const openaiTools = enabledSearch
         ? [
-          ...(tools || []),
-          {
-            type: 'web_search',
-            ...(oaiSearchContextSize && {
-              search_context_size: oaiSearchContextSize,
-            }),
-          },
-        ]
+            ...(tools || []),
+            {
+              type: 'web_search',
+              ...(oaiSearchContextSize && {
+                search_context_size: oaiSearchContextSize,
+              }),
+            },
+          ]
         : tools;
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
@@ -120,4 +123,6 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
       } as any;
     },
   },
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeOpenAI = createOpenAICompatibleRuntime(params);

@@ -2,6 +2,266 @@
 
 # Changelog
 
+## [Version 1.137.0](https://github.com/lobehub/lobe-chat/compare/v1.136.13...v1.137.0)
+
+<sup>Released on **2025-10-12**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new setting for default image num.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new setting for default image num, closes [#9618](https://github.com/lobehub/lobe-chat/issues/9618) ([de7368b](https://github.com/lobehub/lobe-chat/commit/de7368b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.13](https://github.com/lobehub/lobe-chat/compare/v1.136.12...v1.136.13)
+
+<sup>Released on **2025-10-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix input cannot send markdown.
+
+#### 💄 Styles
+
+- **misc**: Optimize OpenRouter modelFetch endpoint, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix input cannot send markdown, closes [#9674](https://github.com/lobehub/lobe-chat/issues/9674) ([2518d7e](https://github.com/lobehub/lobe-chat/commit/2518d7e))
+
+#### Styles
+
+- **misc**: Optimize OpenRouter modelFetch endpoint, closes [#9671](https://github.com/lobehub/lobe-chat/issues/9671) ([0038a64](https://github.com/lobehub/lobe-chat/commit/0038a64))
+- **misc**: Update i18n, closes [#9665](https://github.com/lobehub/lobe-chat/issues/9665) ([02096ea](https://github.com/lobehub/lobe-chat/commit/02096ea))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.12](https://github.com/lobehub/lobe-chat/compare/v1.136.11...v1.136.12)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add more AWS regions, Update infini-ai models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add more AWS regions, closes [#9644](https://github.com/lobehub/lobe-chat/issues/9644) ([4a82daf](https://github.com/lobehub/lobe-chat/commit/4a82daf))
+- **misc**: Update infini-ai models, closes [#9646](https://github.com/lobehub/lobe-chat/issues/9646) ([5274225](https://github.com/lobehub/lobe-chat/commit/5274225))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.11](https://github.com/lobehub/lobe-chat/compare/v1.136.10...v1.136.11)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add capability inference for web search, image output and video recognition in model parsing and update UI form items to support search, imageOutput and video abilities.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add capability inference for web search, image output and video recognition in model parsing and update UI form items to support search, imageOutput and video abilities, closes [#9022](https://github.com/lobehub/lobe-chat/issues/9022) ([4e44569](https://github.com/lobehub/lobe-chat/commit/4e44569))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.10](https://github.com/lobehub/lobe-chat/compare/v1.136.9...v1.136.10)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve search experience.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve search experience, closes [#9661](https://github.com/lobehub/lobe-chat/issues/9661) ([8624f84](https://github.com/lobehub/lobe-chat/commit/8624f84))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.9](https://github.com/lobehub/lobe-chat/compare/v1.136.8...v1.136.9)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add lab to support disable/enable rich text.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add lab to support disable/enable rich text, closes [#9652](https://github.com/lobehub/lobe-chat/issues/9652) ([658c294](https://github.com/lobehub/lobe-chat/commit/658c294))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.8](https://github.com/lobehub/lobe-chat/compare/v1.136.7...v1.136.8)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **provider**: Add deepseek-v3.1-terminus to THINKING_MODELS.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **provider**: Add deepseek-v3.1-terminus to THINKING_MODELS, closes [#9653](https://github.com/lobehub/lobe-chat/issues/9653) [#9648](https://github.com/lobehub/lobe-chat/issues/9648) ([e9b5c69](https://github.com/lobehub/lobe-chat/commit/e9b5c69))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.7](https://github.com/lobehub/lobe-chat/compare/v1.136.6...v1.136.7)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disable rich text in markdown editor.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disable rich text in markdown editor, closes [#9637](https://github.com/lobehub/lobe-chat/issues/9637) ([9349ce2](https://github.com/lobehub/lobe-chat/commit/9349ce2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.6](https://github.com/lobehub/lobe-chat/compare/v1.136.5...v1.136.6)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **bedrock**: Add parameter conflict handling for Claude 4+ models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **bedrock**: Add parameter conflict handling for Claude 4+ models, closes [#9627](https://github.com/lobehub/lobe-chat/issues/9627) [#9523](https://github.com/lobehub/lobe-chat/issues/9523) ([54b6217](https://github.com/lobehub/lobe-chat/commit/54b6217))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.136.5](https://github.com/lobehub/lobe-chat/compare/v1.136.4...v1.136.5)
+
+<sup>Released on **2025-10-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **plugin-store**: Fix search functionality for old plugin store.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **plugin-store**: Fix search functionality for old plugin store, closes [#9651](https://github.com/lobehub/lobe-chat/issues/9651) [#9645](https://github.com/lobehub/lobe-chat/issues/9645) ([522fc09](https://github.com/lobehub/lobe-chat/commit/522fc09))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.136.4](https://github.com/lobehub/lobe-chat/compare/v1.136.3...v1.136.4)
 
 <sup>Released on **2025-10-10**</sup>

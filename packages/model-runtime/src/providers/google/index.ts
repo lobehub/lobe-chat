@@ -471,7 +471,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const { MODEL_LIST_CONFIGS, processModelList } = await import('../../utils/modelParse');
 
-      return processModelList(processedModels, MODEL_LIST_CONFIGS.google);
+      return processModelList(processedModels, MODEL_LIST_CONFIGS.google, 'google');
     } catch (error) {
       log('Failed to fetch Google models: %O', error);
       throw error;

@@ -945,6 +945,7 @@ table user_settings {
   system_agent jsonb
   default_agent jsonb
   tool jsonb
+  image jsonb
 }
 
 table users {

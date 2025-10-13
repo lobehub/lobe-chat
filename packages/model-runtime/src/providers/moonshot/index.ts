@@ -1,6 +1,10 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { ChatStreamPayload } from '../../types';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
 
@@ -8,7 +12,7 @@ export interface MoonshotModelCard {
   id: string;
 }
 
-export const LobeMoonshotAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.moonshot.cn/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
@@ -34,10 +38,13 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
           ]
         : tools;
 
+      // Resolve parameters with normalization
+      const resolvedParams = resolveParameters({ temperature }, { normalizeTemperature: true });
+
       return {
         ...rest,
         messages: filteredMessages,
-        temperature: temperature !== undefined ? temperature / 2 : undefined,
+        temperature: resolvedParams.temperature,
         tools: moonshotTools,
       } as any;
     },
@@ -52,4 +59,6 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
     return processModelList(modelList, MODEL_LIST_CONFIGS.moonshot, 'moonshot');
   },
   provider: ModelProvider.Moonshot,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeMoonshotAI = createOpenAICompatibleRuntime(params);

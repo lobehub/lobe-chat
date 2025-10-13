@@ -294,6 +294,13 @@
     },
     "title": "Genel Ayarlar"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Yeni bir görev oluşturulurken, görsel oluşturma panelinde varsayılan olarak üretilecek görsel sayısını ayarlayın.",
+      "label": "Varsayılan Görsel Sayısı",
+      "title": "AI Çizim Ayarları"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
@@ -549,6 +556,7 @@
     "common": "Genel Ayarlar",
     "experiment": "Deney",
     "hotkey": "Kısayollar",
+    "image": "AI Çizim",
     "llm": "Modeller",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",

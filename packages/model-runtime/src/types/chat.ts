@@ -108,7 +108,7 @@ export interface ChatStreamPayload {
    * @title 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 1
    */
-  temperature: number;
+  temperature?: number;
   text?: {
     verbosity?: 'low' | 'medium' | 'high';
   };
