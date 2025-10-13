@@ -3,7 +3,7 @@ import { cloneElement, createElement, isValidElement, memo, useEffect, useRef } 
 import { Animated, Easing } from 'react-native';
 
 import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL } from '@/_const/common';
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 
 import type {
   IconComponentType,

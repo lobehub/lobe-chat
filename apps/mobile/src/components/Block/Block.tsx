@@ -1,13 +1,13 @@
 import { memo, useMemo } from 'react';
 
-import { cva } from '@/components/theme';
+import { cva } from '@/components/styles';
 
 import Flexbox from '../Flexbox';
 import { useStyles } from './style';
 import type { BlockProps } from './type';
 
 const Block = memo<BlockProps>(
-  ({ variant = 'filled', shadow, glass, children, style, onPress, ...rest }) => {
+  ({ variant = 'filled', shadow, clickable, children, style, onPress, ...rest }) => {
     const { styles } = useStyles();
 
     const variants = useMemo(
@@ -15,21 +15,19 @@ const Block = memo<BlockProps>(
         cva(styles.root, {
           compoundVariants: [
             {
-              hovered: true,
-              style: styles.borderlessHover,
-              variant: 'borderless',
+              clickable: true,
+              pressed: true,
+              style: styles.filledHover,
+              variant: 'filled',
             },
             {
-              hovered: true,
-              style: styles.outlinedHover,
-              variant: 'outlined',
-            },
-            {
+              clickable: true,
               pressed: true,
               style: styles.borderlessHover,
               variant: 'borderless',
             },
             {
+              clickable: true,
               pressed: true,
               style: styles.outlinedActive,
               variant: 'outlined',
@@ -39,6 +37,10 @@ const Block = memo<BlockProps>(
             variant: 'filled',
           },
           variants: {
+            clickable: {
+              false: null,
+              true: null,
+            },
             glass: {
               false: null,
               true: styles.glass,
@@ -69,7 +71,7 @@ const Block = memo<BlockProps>(
       <Flexbox
         onPress={onPress}
         style={({ hovered, pressed }) => [
-          variants({ glass, hovered, pressed, shadow, variant }),
+          variants({ clickable, hovered, pressed, shadow, variant }),
           style,
         ]}
         {...rest}

@@ -3,15 +3,15 @@ import type { FC } from 'react';
 import { memo, useCallback, useState } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
+import { ThemeProvider } from '@/components/ThemeProvider';
 import {
   NeutralColors,
   PrimaryColors,
-  ThemeProvider,
   darkAlgorithm,
   lightAlgorithm,
   useTheme,
   useThemeMode,
-} from '@/components/theme';
+} from '@/components/styles';
 
 import CapsuleTabs, { type CapsuleTabItem } from '../CapsuleTabs';
 import PageContainer from '../PageContainer';

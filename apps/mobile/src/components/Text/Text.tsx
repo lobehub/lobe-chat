@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Text as RNText } from 'react-native';
 
-import { cva } from '@/components/theme';
+import { cva } from '@/components/styles';
 
 import { useStyles } from './style';
 import type { TextProps } from './type';

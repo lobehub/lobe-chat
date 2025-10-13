@@ -24,7 +24,7 @@ import {
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-import { useTheme, useThemeMode } from '@/components/theme';
+import { useTheme, useThemeMode } from '@/components/styles';
 
 import { useStyles } from './style';
 

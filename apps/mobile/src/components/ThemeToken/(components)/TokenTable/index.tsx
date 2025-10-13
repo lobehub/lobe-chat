@@ -2,8 +2,9 @@ import type { FC } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
-import Input from '../../Input';
-import Text from '../../Text';
+import Input from '@/components/Input';
+import Text from '@/components/Text';
+
 import { useStyles } from './style';
 
 export interface TokenTableProps {
