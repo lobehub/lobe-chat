@@ -4,6 +4,7 @@ import {
   StructureOutputSchema,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import debug from 'debug';
 
 import { LOADING_FLAT } from '@/const/message';
 import { MessageModel } from '@/database/models/message';
@@ -14,6 +15,8 @@ import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { AiChatService } from '@/server/services/aiChat';
 import { FileService } from '@/server/services/file';
 import { getXorPayload } from '@/utils/server';
+
+const log = debug('lobe-lambda-router:ai-chat');
 
 const aiChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -30,30 +33,45 @@ const aiChatProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
 
 export const aiChatRouter = router({
   outputJSON: aiChatProcedure.input(StructureOutputSchema).mutation(async ({ input }) => {
+    log('outputJSON called with provider: %s, model: %s', input.provider, input.model);
+    log('messages count: %d', input.messages.length);
+    log('schema: %O', input.schema);
+
     let payload: object | undefined;
 
     try {
       payload = getXorPayload(input.keyVaultsPayload);
+      log('payload parsed successfully');
     } catch (e) {
+      log('payload parse error: %O', e);
       console.warn('user payload parse error', e);
     }
 
     if (!payload) {
+      log('payload is empty, throwing error');
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'keyVaultsPayload is not correct' });
     }
 
+    log('initializing model runtime with provider: %s', input.provider);
     const modelRuntime = initModelRuntimeWithUserPayload(input.provider, payload);
 
-    return modelRuntime.generateObject({
+    log('calling generateObject');
+    const result = await modelRuntime.generateObject({
       messages: input.messages,
       model: input.model,
       schema: input.schema,
     });
+
+    log('generateObject completed, result: %O', result);
+    return result;
   }),
 
   sendMessageInServer: aiChatProcedure
     .input(AiSendMessageServerSchema)
     .mutation(async ({ input, ctx }) => {
+      log('sendMessageInServer called for sessionId: %s', input.sessionId);
+      log('topicId: %s, newTopic: %O', input.topicId, input.newTopic);
+
       let messageId: string;
       let topicId = input.topicId!;
 
@@ -61,6 +79,7 @@ export const aiChatRouter = router({
 
       // create topic if there should be a new topic
       if (input.newTopic) {
+        log('creating new topic with title: %s', input.newTopic.title);
         const topicItem = await ctx.topicModel.create({
           messages: input.newTopic.topicMessageIds,
           sessionId: input.sessionId,
@@ -68,9 +87,11 @@ export const aiChatRouter = router({
         });
         topicId = topicItem.id;
         isCreatNewTopic = true;
+        log('new topic created with id: %s', topicId);
       }
 
       // create user message
+      log('creating user message with content length: %d', input.newUserMessage.content.length);
       const userMessageItem = await ctx.messageModel.create({
         content: input.newUserMessage.content,
         files: input.newUserMessage.files,
@@ -80,7 +101,14 @@ export const aiChatRouter = router({
       });
 
       messageId = userMessageItem.id;
+      log('user message created with id: %s', messageId);
+
       // create assistant message
+      log(
+        'creating assistant message with model: %s, provider: %s',
+        input.newAssistantMessage.model,
+        input.newAssistantMessage.provider,
+      );
       const assistantMessageItem = await ctx.messageModel.create({
         content: LOADING_FLAT,
         fromModel: input.newAssistantMessage.model,
@@ -90,13 +118,17 @@ export const aiChatRouter = router({
         sessionId: input.sessionId!,
         topicId,
       });
+      log('assistant message created with id: %s', assistantMessageItem.id);
 
       // retrieve latest messages and topic with
+      log('retrieving messages and topics');
       const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
         includeTopic: isCreatNewTopic,
         sessionId: input.sessionId,
         topicId,
       });
+
+      log('retrieved %d messages, %d topics', messages.length, topics?.length ?? 0);
 
       return {
         assistantMessageId: assistantMessageItem.id,

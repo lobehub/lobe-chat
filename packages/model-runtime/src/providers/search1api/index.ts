@@ -2,14 +2,17 @@ import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 import OpenAI from 'openai';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { ChatStreamPayload } from '../../types';
 
 export interface Search1APIModelCard {
   id: string;
 }
 
-export const LobeSearch1API = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.search1api.com/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
@@ -43,6 +46,7 @@ export const LobeSearch1API = createOpenAICompatibleRuntime({
     const modelList: Search1APIModelCard[] = modelsPage.data;
 
     return modelList
+      .filter((model) => model && model.id)
       .map((model) => {
         const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
           (m) => model.id.toLowerCase() === m.id.toLowerCase(),
@@ -51,7 +55,7 @@ export const LobeSearch1API = createOpenAICompatibleRuntime({
         return {
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           displayName: knownModel?.displayName ?? undefined,
-          enabled: knownModel?.enabled || false,
+          enabled: knownModel?.enabled ?? false,
           functionCall: knownModel?.abilities?.functionCall || false,
           id: model.id,
           reasoning: knownModel?.abilities?.reasoning || false,
@@ -61,4 +65,6 @@ export const LobeSearch1API = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Search1API,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeSearch1API = createOpenAICompatibleRuntime(params);

@@ -1,4 +1,4 @@
-import { LocalFilesDispatchEvents } from './localFile';
+import { LocalSystemDispatchEvents } from './localSystem';
 import { MenuDispatchEvents } from './menu';
 import { NotificationDispatchEvents } from './notification';
 import { ProtocolBroadcastEvents, ProtocolDispatchEvents } from './protocol';
@@ -23,7 +23,7 @@ export interface ClientDispatchEvents
   extends WindowsDispatchEvents,
     SystemDispatchEvents,
     MenuDispatchEvents,
-    LocalFilesDispatchEvents,
+    LocalSystemDispatchEvents,
     AutoUpdateDispatchEvents,
     ShortcutDispatchEvents,
     RemoteServerDispatchEvents,

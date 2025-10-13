@@ -7,6 +7,14 @@
     "desc": "Aktuelle Nachrichten und hochgeladene Dateien im Gespräch löschen",
     "title": "Gesprächsnachrichten löschen"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "Letzte Nachricht löschen und neu generieren",
+    "title": "Löschen und neu generieren"
+  },
+  "deleteLastMessage": {
+    "desc": "Letzte Nachricht löschen",
+    "title": "Letzte Nachricht löschen"
+  },
   "desktop": {
     "openSettings": {
       "desc": "Öffnet die Anwendungseinstellungsseite",

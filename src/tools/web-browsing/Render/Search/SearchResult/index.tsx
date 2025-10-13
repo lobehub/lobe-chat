@@ -1,10 +1,10 @@
-import { Button } from '@lobehub/ui';
-import { Empty, Skeleton } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
+import { Button, Skeleton } from 'antd';
 import { uniq } from 'lodash-es';
 import { Edit2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
@@ -50,29 +50,24 @@ const SearchResult = memo<SearchResultProps>(
 
     if (searchResults.length === 0)
       return (
-        <Center>
-          <Empty
-            description={
-              <Flexbox gap={8}>
-                <div>{t('search.emptyResult')}</div>
-                {!editing && (
-                  <div>
-                    <Button
-                      icon={Edit2Icon}
-                      onClick={() => {
-                        setEditing(true);
-                      }}
-                      type={'primary'}
-                    >
-                      {t('edit', { ns: 'common' })}
-                    </Button>
-                  </div>
-                )}
-              </Flexbox>
-            }
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-          />
-        </Center>
+        <Flexbox align={'center'} gap={8} horizontal paddingInline={8}>
+          <Text type={'secondary'}>{t('search.emptyResult')}</Text>
+          {!editing && (
+            <div>
+              <Button
+                color={'default'}
+                icon={<Icon icon={Edit2Icon} />}
+                onClick={() => {
+                  setEditing(true);
+                }}
+                size={'small'}
+                variant={'filled'}
+              >
+                {t('edit', { ns: 'common' })}
+              </Button>
+            </div>
+          )}
+        </Flexbox>
       );
 
     return (

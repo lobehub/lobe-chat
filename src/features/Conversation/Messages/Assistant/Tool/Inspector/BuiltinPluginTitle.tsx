@@ -33,18 +33,22 @@ interface BuiltinPluginTitleProps {
   toolCallId: string;
 }
 
-const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(({ messageId, index, apiName, title }) => {
-  const { styles } = useStyles();
+const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(
+  ({ messageId, index, apiName, title, toolCallId }) => {
+    const { styles } = useStyles();
 
-  const isLoading = useChatStore(chatSelectors.isInToolsCalling(messageId, index));
+    const isLoading = useChatStore(
+      chatSelectors.isToolApiNameShining(messageId, index, toolCallId),
+    );
 
-  return (
-    <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
-      <div>{title}</div>
-      <Icon icon={ChevronRight} />
-      <span className={styles.apiName}>{apiName}</span>
-    </Flexbox>
-  );
-});
+    return (
+      <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
+        <div>{title}</div>
+        <Icon icon={ChevronRight} />
+        <span className={styles.apiName}>{apiName}</span>
+      </Flexbox>
+    );
+  },
+);
 
 export default BuiltinPluginTitle;

@@ -1,7 +1,10 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { resolveParameters } from '../../core/parameterResolver';
 
 export interface MistralModelCard {
@@ -14,7 +17,7 @@ export interface MistralModelCard {
   max_context_length: number;
 }
 
-export const LobeMistralAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.mistral.ai/v1',
   chatCompletion: {
     // Mistral API does not support stream_options: { include_usage: true }
@@ -66,4 +69,6 @@ export const LobeMistralAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Mistral,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeMistralAI = createOpenAICompatibleRuntime(params);

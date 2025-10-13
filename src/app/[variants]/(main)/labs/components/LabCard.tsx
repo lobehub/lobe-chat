@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 interface LabCardProps {
   checked: boolean;
+  cover?: string;
   desc: string;
   loading: boolean;
   meta?: string;
@@ -35,14 +36,24 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   row: css`
     display: grid;
-    grid-template-columns: 240px 1fr 80px;
+    grid-template-columns: 250px 1fr 80px;
     gap: 16px;
     align-items: center;
   `,
   thumb: css`
-    height: 128px;
+    overflow: hidden;
+
+    width: 250px;
+    height: 150px;
     border-radius: ${token.borderRadiusLG}px;
+
     background: linear-gradient(135deg, ${token.colorFillTertiary}, ${token.colorFillQuaternary});
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   `,
   title: css`
     font-size: 16px;
@@ -55,14 +66,14 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const LabCard = memo<PropsWithChildren<LabCardProps>>(
-  ({ title, desc, checked, onChange, meta, loading }) => {
+  ({ title, desc, checked, onChange, meta, loading, cover }) => {
     const { styles } = useStyles();
 
     return (
       <div className={styles.wrap}>
         <div className={styles.card}>
           <div className={styles.row}>
-            <div className={styles.thumb} />
+            <div className={styles.thumb}>{cover && <img alt={title} src={cover} />}</div>
             <Flexbox gap={6}>
               <div className={styles.title}>{title}</div>
               <div className={styles.desc}>{desc}</div>

@@ -1,7 +1,10 @@
 import { ModelProvider } from 'model-bank';
 
 import { pruneReasoningPayload } from '../../core/contextBuilders/openai';
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
@@ -26,7 +29,7 @@ export interface GithubModelCard {
 
 /* eslint-enable typescript-sort-keys/interface */
 
-export const LobeGithubAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://models.github.ai/inference',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -73,4 +76,6 @@ export const LobeGithubAI = createOpenAICompatibleRuntime({
     return await processMultiProviderModelList(formattedModels, 'github');
   },
   provider: ModelProvider.Github,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeGithubAI = createOpenAICompatibleRuntime(params);
