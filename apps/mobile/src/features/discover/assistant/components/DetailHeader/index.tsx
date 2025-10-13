@@ -1,6 +1,6 @@
 import { Avatar, GitHubAvatar } from '@lobehub/ui-rn';
 import dayjs from 'dayjs';
-import React from 'react';
+import type { FC } from 'react';
 import { Text, View } from 'react-native';
 
 import { AVATAR_SIZE_LARGE } from '@/_const/common';
@@ -14,7 +14,7 @@ interface DetailHeaderProps {
   title?: string;
 }
 
-const DetailHeader: React.FC<DetailHeaderProps> = ({ avatar, title, author, createdAt }) => {
+const DetailHeader: FC<DetailHeaderProps> = ({ avatar, title, author, createdAt }) => {
   const { styles, theme } = useStyles();
 
   return (

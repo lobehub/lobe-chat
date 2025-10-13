@@ -1,6 +1,5 @@
 import { Button, Space } from '@lobehub/ui-rn';
 import { ArrowRight, Check, Plus, Search } from 'lucide-react-native';
-import React from 'react';
 
 const IconDemo = () => {
   return (

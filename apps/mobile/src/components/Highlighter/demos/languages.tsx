@@ -1,5 +1,6 @@
 import { Button, Highlighter, Text } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 /**
@@ -19,7 +20,7 @@ interface CategoryData {
 
 type CategoryKey = 'frontend' | 'backend' | 'config';
 
-export const LanguagesHighlighterDemo: React.FC = () => {
+export const LanguagesHighlighterDemo: FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('frontend');
 
   const languageCategories: Record<CategoryKey, CategoryData> = {

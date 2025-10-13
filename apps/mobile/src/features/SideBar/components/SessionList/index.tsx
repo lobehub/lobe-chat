@@ -1,5 +1,5 @@
 import { Input, Toast } from '@lobehub/ui-rn';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager, ScrollView, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';

@@ -1,8 +1,8 @@
 import { Skeleton, Text, useTheme } from '@lobehub/ui-rn';
-import React from 'react';
+import type { FC } from 'react';
 import { View } from 'react-native';
 
-const AvatarDemo: React.FC = () => {
+const AvatarDemo: FC = () => {
   const token = useTheme();
 
   return (

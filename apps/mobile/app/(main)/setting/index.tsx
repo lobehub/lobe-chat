@@ -1,5 +1,5 @@
 import { PageContainer, Toast, useThemeMode } from '@lobehub/ui-rn';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 

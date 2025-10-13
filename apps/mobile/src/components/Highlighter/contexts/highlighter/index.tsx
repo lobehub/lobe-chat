@@ -19,7 +19,8 @@ import tsx from '@shikijs/langs/tsx';
 import typescript from '@shikijs/langs/typescript';
 import xml from '@shikijs/langs/xml';
 import yaml from '@shikijs/langs/yaml';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import * as React from 'react';
 import { createNativeEngine, isNativeEngineAvailable } from 'react-native-shiki-engine';
 
 import { themeConfig } from '../../theme';

@@ -1,5 +1,5 @@
 import { ModelIcon } from '@lobehub/icons-rn';
-import React, { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { TouchableOpacity, ViewStyle } from 'react-native';
 
 import { ICON_SIZE_LARGE } from '@/_const/common';

@@ -1,4 +1,5 @@
-import React, { createContext, useContext } from 'react';
+import type { FC, ReactNode } from 'react';
+import { createContext, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { darkAlgorithm } from '@/components/theme/algorithm/dark';
@@ -11,7 +12,7 @@ import { Theme, ThemeConfig, ThemeContextValue, ThemeMode } from './types';
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 interface ThemeProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
   /**
    * 自定义主题配置
    * 当提供此属性时，将使用自定义配置生成主题
@@ -20,7 +21,7 @@ interface ThemeProviderProps {
   theme?: ThemeConfig;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme: customTheme }) => {
+export const ThemeProvider: FC<ThemeProviderProps> = ({ children, theme: customTheme }) => {
   const systemColorScheme = useColorScheme();
 
   // 检查是否已经在 ThemeProvider 内部（嵌套情况）

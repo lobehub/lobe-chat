@@ -1,6 +1,7 @@
 import { Button, Markdown } from '@lobehub/ui-rn';
 import { Edit3 } from 'lucide-react-native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type { FC } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, TextInput, View } from 'react-native';
 
@@ -11,7 +12,7 @@ import { sessionSelectors } from '@/store/session/selectors';
 
 import { useStyles } from './sectionStyles';
 
-export const AgentRoleEditSection: React.FC = () => {
+export const AgentRoleEditSection: FC = () => {
   const { t } = useTranslation();
   const { styles } = useStyles();
   const token = useTheme();

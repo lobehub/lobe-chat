@@ -1,5 +1,5 @@
 import { Href, Link } from 'expo-router';
-import React from 'react';
+import type { ReactNode } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
@@ -10,9 +10,9 @@ import { useStyles } from './style';
 
 interface ListItemProps {
   active?: boolean;
-  avatar?: string | React.ReactNode;
+  avatar?: string | ReactNode;
   description?: string;
-  extra?: React.ReactNode;
+  extra?: ReactNode;
   href?: Href;
   /**
    * 类似 onClick，必须要透传，否则上层无法响应点击事件

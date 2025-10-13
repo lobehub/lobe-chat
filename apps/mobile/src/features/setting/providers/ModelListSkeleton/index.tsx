@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Text, View } from 'react-native';
 
 import { useTheme } from '@/components/theme';
@@ -6,7 +6,7 @@ import { useTheme } from '@/components/theme';
 import ModelCardSkeleton from '../ModelCardSkeleton';
 import { useStyles } from './style';
 
-const ModelListSkeleton: React.FC = () => {
+const ModelListSkeleton: FC = () => {
   const { styles } = useStyles();
   const token = useTheme();
 

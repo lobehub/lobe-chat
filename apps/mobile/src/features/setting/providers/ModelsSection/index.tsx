@@ -3,7 +3,7 @@ import { Button, Input, InstantSwitch, ModelInfoTags, Tag, useToast } from '@lob
 import Clipboard from '@react-native-clipboard/clipboard';
 import { RefreshCcw } from 'lucide-react-native';
 import { AiProviderModelListItem } from 'model-bank';
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
 

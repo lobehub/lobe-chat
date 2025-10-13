@@ -1,5 +1,6 @@
 import { Button, Slider, Text, createStyles } from '@lobehub/ui-rn';
-import React, { useCallback, useState } from 'react';
+import type { FC } from 'react';
+import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
@@ -36,7 +37,7 @@ const useStyles = createStyles(({ token }) => ({
   },
 }));
 
-const ControlledSliderDemo: React.FC = () => {
+const ControlledSliderDemo: FC = () => {
   const { styles } = useStyles();
   const [progress, setProgress] = useState(50);
   const [lastCompleteValue, setLastCompleteValue] = useState(50);

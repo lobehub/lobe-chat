@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
 import { WebView } from 'react-native-webview';

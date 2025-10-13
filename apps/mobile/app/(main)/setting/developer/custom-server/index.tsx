@@ -1,5 +1,4 @@
 import { PageContainer } from '@lobehub/ui-rn';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 

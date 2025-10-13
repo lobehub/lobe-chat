@@ -1,5 +1,4 @@
 import { Input, createStyles } from '@lobehub/ui-rn';
-import React from 'react';
 import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({

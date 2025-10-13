@@ -1,6 +1,6 @@
 import { Button, Input, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Image, Text, View } from 'react-native';
 

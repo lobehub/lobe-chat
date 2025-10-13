@@ -1,6 +1,6 @@
 import { Button, Space } from '@lobehub/ui-rn';
 import { Upload } from 'lucide-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const LoadingDemo = () => {
   const [loadings, setLoadings] = useState<boolean[]>([]);

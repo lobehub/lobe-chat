@@ -3,7 +3,7 @@ import { Button, Input, Alert as Notice, Toast } from '@lobehub/ui-rn';
 import { SettingGroup } from 'app/(main)/setting/(components)/SettingGroup';
 import { SettingItem } from 'app/(main)/setting/(components)/SettingItem';
 import { useRouter } from 'expo-router';
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert as RNAlert, View } from 'react-native';
 

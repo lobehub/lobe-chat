@@ -1,6 +1,5 @@
 import { ActionIcon, Space } from '@lobehub/ui-rn';
 import { MoonStar, Sun } from 'lucide-react-native';
-import React from 'react';
 
 const VariantsDemo = () => {
   return (

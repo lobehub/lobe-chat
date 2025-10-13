@@ -1,5 +1,4 @@
 import { DemoConfig } from '@lobehub/ui-rn';
-import React from 'react';
 
 import AdvancedDemo from './advanced';
 import AvatarsDemo from './avatars';
