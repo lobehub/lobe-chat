@@ -1,6 +1,5 @@
-import { CapsuleTabItem, CapsuleTabs, Input, PageContainer, Tag } from '@lobehub/ui-rn';
+import { CapsuleTabItem, CapsuleTabs, Divider, Input, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { ChevronRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
@@ -10,7 +9,7 @@ import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './u
 
 export default function ComponentPlaygroundIndex() {
   const router = useRouter();
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
@@ -181,6 +180,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'text': {
+        router.push('/playground/components/text');
+
+        break;
+      }
       default: {
         alert(`${component.name} 组件页面正在建设中`);
       }
@@ -192,33 +196,33 @@ export default function ComponentPlaygroundIndex() {
       activeOpacity={0.7}
       key={component.name}
       onPress={() => handleComponentPress(component)}
-      style={styles.componentCard}
     >
-      <View style={styles.cardHeader}>
+      <View>
         <Text style={styles.componentName}>{component.name}</Text>
-        <View style={styles.badges}>
-          {component.hasReadme && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>README</Text>
-            </View>
-          )}
-          {component.hasDemos && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>DEMO</Text>
-            </View>
-          )}
-        </View>
+        {/*  <View style={styles.badges}>*/}
+        {/*    {component.hasReadme && (*/}
+        {/*      <View style={styles.badge}>*/}
+        {/*        <Text style={styles.badgeText}>README</Text>*/}
+        {/*      </View>*/}
+        {/*    )}*/}
+        {/*    {component.hasDemos && (*/}
+        {/*      <View style={styles.badge}>*/}
+        {/*        <Text style={styles.badgeText}>DEMO</Text>*/}
+        {/*      </View>*/}
+        {/*    )}*/}
+        {/*  </View>*/}
+        {/*</View>*/}
+        {/*<Text style={styles.componentDescription}>{component.description}</Text>*/}
+        {/*<View style={styles.tagsContainer}>*/}
+        {/*  {component.tags.slice(0, 3).map((tag) => (*/}
+        {/*    <Tag key={tag}>{tag}</Tag>*/}
+        {/*  ))}*/}
+        {/*</View>*/}
+        {/*<View style={styles.cardFooter}>*/}
+        {/*  <Text style={styles.categoryText}>{component.category}</Text>*/}
+        {/*  <ChevronRight color={theme.colorTextTertiary} size={20} />*/}
       </View>
-      <Text style={styles.componentDescription}>{component.description}</Text>
-      <View style={styles.tagsContainer}>
-        {component.tags.slice(0, 3).map((tag) => (
-          <Tag key={tag}>{tag}</Tag>
-        ))}
-      </View>
-      <View style={styles.cardFooter}>
-        <Text style={styles.categoryText}>{component.category}</Text>
-        <ChevronRight color={theme.colorTextTertiary} size={20} />
-      </View>
+      <Divider />
     </TouchableOpacity>
   );
 
