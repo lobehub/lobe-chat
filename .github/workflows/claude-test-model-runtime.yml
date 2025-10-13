@@ -1,0 +1,177 @@
+name: Daily Test Coverage Improvement
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      target_coverage:
+        description: 'Target coverage percentage'
+        required: false
+        default: '95'
+
+# Add permissions configuration
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  improve-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Configure Git
+        run: |
+          git config --global user.name "lobehubbot"
+          git config --global user.email "i@lobehub.com"
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.23
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run initial coverage check
+        working-directory: packages/model-runtime
+        run: |
+          bunx vitest run --coverage --silent='passed-only' || true
+          echo "INITIAL_COVERAGE=$(bunx vitest run --coverage --silent='passed-only' 2>&1 | grep 'All files' | awk '{print $4}' | tr -d '%' || echo '0')" >> $GITHUB_ENV
+
+      - name: Run Claude Code for test improvement
+        uses: anthropics/claude-code-action@main
+        id: claude
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: "--allowed-tools Bash(bun:*),Bash(bunx:*),Bash(cd:*)"
+          prompt: |
+            You are a testing expert working on improving test coverage for the `model-runtime` package.
+
+            ## Context
+            - Current working directory: `packages/model-runtime`
+            - Target coverage: ${{ github.event.inputs.target_coverage || '95' }}%
+
+            ## Your Task
+
+            1. **Analyze Current Coverage**
+               - Run: `cd packages/model-runtime && bunx vitest run --coverage --silent='passed-only'`
+               - Review the test coverage documentation: `packages/model-runtime/docs/test-coverage.md`
+               - Identify files/providers with coverage below target
+
+            2. **Prioritize Work**
+               - Focus on providers with lowest coverage first
+               - Prioritize files that have the most impact on overall coverage
+
+            3. **Follow Testing Guidelines**
+               - **CRITICAL**: Read and follow `packages/model-runtime/docs/test-coverage.md` Section 4 "Complete Testing Workflow"
+               - **REQUIRED STEPS** (in order):
+                 - Step 1: Development and Testing
+                 - Step 2: Type and Lint Checks (MUST PASS before proceeding!)
+                 - Step 3: Run Coverage Report
+                 - Step 4: Summarize Development Work
+                 - Step 5: Update test-coverage.md documentation
+                 - Step 6: Final Verification
+
+            4. **Testing Standards**
+               - For OpenAI-compatible providers: follow Section 1 "Provider Testing Pattern"
+               - For Router providers: follow Section 2.2 "Router Provider Pattern"
+               - Use the appropriate checklist from Section 3
+               - Export `params` object for better testability
+               - All tests must pass before proceeding
+
+            5. **Quality Requirements**
+               - **Type check MUST pass**: Run `bun run type-check` from project root
+               - **Lint MUST pass**: Run `bunx eslint src/providers/{provider}/ --fix`
+               - **All tests MUST pass**: Run `bunx vitest run --silent='passed-only'`
+               - Fix any errors before proceeding to next provider
+
+            6. **Documentation Updates**
+               - Update `packages/model-runtime/docs/test-coverage.md` after completing work
+               - Follow the format in Section 4 Step 4 "Summarize Development Work"
+               - Update coverage percentages and test counts
+               - Document any bugs fixed or patterns discovered
+
+            7. **Save Summary Report**
+               - Create a summary report file in the project root: `coverage-report.md`
+               - Include:
+                 - Overall coverage improvement (before% → after%)
+                 - List of providers/files enhanced with individual coverage changes
+                 - Number of tests added
+                 - Any bugs fixed or patterns discovered
+               - Format example:
+                 ```markdown
+                 **Overall Coverage**: 94.36% → 95.12% (+0.76%)
+
+                 **Enhanced Files:**
+                 - `providers/openai` (87.5% → 95.0%)
+                 - `providers/anthropic` (88.44% → 96.0%)
+
+                 **Tests Added**: 45 new tests
+
+                 **Bugs Fixed**: None
+                 ```
+               - This will be used for the PR description
+
+            ## Important Reminders
+
+            - **DO NOT skip the type check step** - it's critical for code quality
+            - **DO NOT proceed if tests fail** - fix them first
+            - **DO update documentation** - it helps track progress
+            - **DO follow the complete workflow** - all 6 steps are required
+            - **DO use parallel subagents** for multiple providers (5+ providers)
+            - **DO create the summary report** - it will be used for the PR description
+
+            ## Commands Reference
+
+            ```bash
+            # Run coverage (from model-runtime directory)
+            cd packages/model-runtime
+            bunx vitest run --coverage --silent='passed-only'
+
+            # Run specific provider tests
+            bunx vitest run --silent='passed-only' 'src/providers/{provider}/index.test.ts'
+
+            # Type check (from project root)
+            cd ../../.. && bun run type-check
+
+            # Lint fix
+            bunx eslint src/providers/{provider}/ --fix
+            ```
+
+            Start by analyzing the current coverage and identifying the lowest coverage providers. Then follow the complete testing workflow for each provider.
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          add-paths: |
+            packages/model-runtime/**
+          labels: |
+            test
+            automated
+            model-runtime
+          branch: test/auto-coverage-improvement
+          delete-branch: true
+          title: '✅ test(model-runtime): improve test coverage'
+          commit-message: '✅ test(model-runtime): improve test coverage'
+          body: |
+            This PR was automatically generated by the test coverage improvement workflow.
+
+            ## 📊 Coverage Report
+
+            $(cat coverage-report.md 2>/dev/null || echo "No coverage report generated.")
+
+            ## 🤖 Automation Info
+              - Workflow: `${{ github.workflow }}`
+              - Run ID: `${{ github.run_id }}`
+              - Commit: `${{ github.sha }}`
