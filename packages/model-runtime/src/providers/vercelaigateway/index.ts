@@ -84,6 +84,7 @@ export const params = {
 
       return {
         contextWindowTokens: m.context_window ?? undefined,
+        created: m.created,
         description: m.description ?? '',
         displayName,
         functionCall: tags.includes('tool-use') || false,

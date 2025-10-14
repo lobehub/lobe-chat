@@ -18,10 +18,6 @@ import {
   getTextOutputUnitRate,
 } from '@/utils/pricing';
 
-import {
-  AiModelSourceEnum,
-  AiProviderModelListItem,
-} from '../../../../../../../../packages/model-bank/src/types/aiModel';
 import ModelConfigModal from './ModelConfigModal';
 import { ProviderSettingsContext } from './ProviderSettingsContext';
 
