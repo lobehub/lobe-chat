@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
     e2e:
+        name: E2E CI
         runs-on: ubuntu-latest
         timeout-minutes: 25
         steps:
