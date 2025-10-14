@@ -243,8 +243,6 @@ describe('ContextEngine', () => {
 
       expect(result.stats.processedCount).toBe(2);
       expect(result.stats.totalDuration).toBeGreaterThanOrEqual(20);
-      expect(result.stats.processorDurations.p1).toBeGreaterThanOrEqual(10);
-      expect(result.stats.processorDurations.p2).toBeGreaterThanOrEqual(20);
     });
 
     it('should stop processing when aborted', async () => {

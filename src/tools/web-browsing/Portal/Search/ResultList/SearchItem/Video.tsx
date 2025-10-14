@@ -1,10 +1,9 @@
+import { UniformSearchResult } from '@lobechat/types';
 import { Text } from '@lobehub/ui';
 import { Avatar as AntAvatar } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-import { UniformSearchResult } from '@/types/tool/search';
 
 import { ENGINE_ICON_MAP } from '../../../../const';
 import TitleExtra from './TitleExtra';

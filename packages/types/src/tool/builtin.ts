@@ -57,3 +57,10 @@ export interface BuiltinPlaceholderProps {
 }
 
 export type BuiltinPlaceholder = (props: BuiltinPlaceholderProps) => ReactNode;
+
+export interface BuiltinServerRuntimeOutput {
+  content: string;
+  error?: any;
+  state?: any;
+  success: boolean;
+}

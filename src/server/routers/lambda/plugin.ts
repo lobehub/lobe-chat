@@ -1,10 +1,10 @@
+import { LobeTool } from '@lobechat/types';
 import { z } from 'zod';
 
 import { PluginModel } from '@/database/models/plugin';
 import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { LobeTool } from '@/types/tool';
 
 const pluginProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;

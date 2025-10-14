@@ -1,3 +1,7 @@
+import { CrawlUniformResult } from '@lobechat/web-crawler';
+
+import { CrawlMultiPagesQuery } from '../crawler';
+
 export interface SearchParams {
   searchCategories?: string[];
   searchEngines?: string[];
@@ -24,7 +28,7 @@ export interface UniformSearchResult {
   content: string;
   engines: string[];
   /**
-   * 视频会用到
+   * Used for video results
    */
   iframeSrc?: string;
   imgSrc?: string;
@@ -41,4 +45,9 @@ export interface UniformSearchResponse {
   query: string;
   resultNumbers: number;
   results: UniformSearchResult[];
+}
+
+export interface SearchServiceImpl {
+  crawlPages(params: CrawlMultiPagesQuery): Promise<{ results: CrawlUniformResult[] }>;
+  webSearch(params: SearchQuery): Promise<UniformSearchResponse>;
 }

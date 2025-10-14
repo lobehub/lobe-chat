@@ -1,11 +1,10 @@
+import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import urlJoin from 'url-join';
 
-import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
-
 import { SearchServiceImpl } from '../type';
-import { JinaSearchParameters, JinaResponse } from './type';
+import { JinaResponse, JinaSearchParameters } from './type';
 
 const log = debug('lobe-search:Jina');
 

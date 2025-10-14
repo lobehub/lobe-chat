@@ -123,7 +123,7 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
     );
   }
 
-  const { url, title, description } = result;
+  const { url, title, description } = result as CrawlSuccessResult;
 
   return (
     <Flexbox

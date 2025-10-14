@@ -1,11 +1,10 @@
+import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import urlJoin from 'url-join';
 
-import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
-
 import { SearchServiceImpl } from '../type';
-import { ExaSearchParameters, ExaResponse } from './type';
+import { ExaResponse, ExaSearchParameters } from './type';
 
 const log = debug('lobe-search:Exa');
 
@@ -48,9 +47,8 @@ export class ExaImpl implements SearchServiceImpl {
             };
           })()
         : {}),
-      category:
-        // Exa 只支持 news 类型
-        params?.searchCategories?.filter(cat => ['news'].includes(cat))?.[0],
+      category: // Exa 只支持 news 类型
+      params?.searchCategories?.filter((cat) => ['news'].includes(cat))?.[0],
     };
 
     log('Constructed request body: %o', body);
