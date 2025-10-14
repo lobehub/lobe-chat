@@ -19,9 +19,11 @@ const standaloneConfig: NextConfig = {
   outputFileTracingIncludes: { '*': ['public/**/*', '.next/static/**/*'] },
 };
 
+const assetPrefix = process.env.NEXT_PUBLIC_ASSET_PREFIX;
+
 const nextConfig: NextConfig = {
   ...(isStandaloneMode ? standaloneConfig : {}),
-  assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
+  assetPrefix,
   compiler: {
     emotion: true,
   },
@@ -308,6 +310,20 @@ const nextConfig: NextConfig = {
       ...config.resolve.fallback,
       zipfile: false,
     };
+
+    if (assetPrefix && (assetPrefix.startsWith('http://') || assetPrefix.startsWith('https://'))) {
+      // fix the Worker URL cross-origin issue
+      // refs: https://github.com/lobehub/lobe-chat/pull/9624
+      config.module.rules.push({
+        generator: {
+          // @see https://webpack.js.org/configuration/module/#rulegeneratorpublicpath
+          publicPath: '/_next/',
+        },
+        test: /worker\.ts$/,
+        // @see https://webpack.js.org/guides/asset-modules/
+        type: 'asset/resource',
+      });
+    }
 
     return config;
   },
