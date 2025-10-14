@@ -129,7 +129,7 @@ const PageContainer: FC<PageContainerProps> = ({
           {left !== undefined ? (
             left
           ) : showBack ? (
-            <ActionIcon icon={ChevronLeft} onPress={() => router.back()} />
+            <ActionIcon clickable={false} icon={ChevronLeft} onPress={() => router.back()} />
           ) : null}
         </View>
         <View style={styles.title}>

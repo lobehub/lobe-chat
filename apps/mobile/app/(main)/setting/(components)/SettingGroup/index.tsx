@@ -1,15 +1,17 @@
+import { Block, BlockProps, Flexbox, Text } from '@lobehub/ui-rn';
 import type { ReactNode } from 'react';
 import { Children, ReactElement, cloneElement, isValidElement } from 'react';
-import { Text, View, type ViewProps } from 'react-native';
 
-import { useStyles } from './style';
-
-interface SettingGroupProps extends ViewProps {
+interface SettingGroupProps extends BlockProps {
   title?: ReactNode;
 }
 
-export const SettingGroup = ({ children, style, title, ...rest }: SettingGroupProps) => {
-  const { styles } = useStyles();
+export const SettingGroup = ({
+  children,
+  title,
+  variant = 'borderless',
+  ...rest
+}: SettingGroupProps) => {
   const items = Children.toArray(children);
 
   const newItems = items.map((child, index) => {
@@ -21,9 +23,13 @@ export const SettingGroup = ({ children, style, title, ...rest }: SettingGroupPr
   });
 
   return (
-    <View {...rest}>
-      {title && (typeof title === 'string' ? <Text style={styles.title}>{title}</Text> : title)}
-      <View style={[styles.container, style]}>{newItems}</View>
-    </View>
+    <Block borderRadius={false} variant={variant} {...rest}>
+      {title && (
+        <Flexbox paddingBlock={8} paddingInline={16}>
+          {typeof title === 'string' ? <Text type={'secondary'}>{title}</Text> : title}
+        </Flexbox>
+      )}
+      <Flexbox>{newItems}</Flexbox>
+    </Block>
   );
 };

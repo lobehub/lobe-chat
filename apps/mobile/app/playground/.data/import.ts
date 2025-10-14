@@ -17,6 +17,8 @@ import ButtonDemos from '@lobehub/ui-rn/Button/demos';
 import CapsuleTabsDemos from '@lobehub/ui-rn/CapsuleTabs/demos';
 // Card
 import CardDemos from '@lobehub/ui-rn/Card/demos';
+// Cell
+import CellDemos from '@lobehub/ui-rn/Cell/demos';
 // Center
 import CenterDemos from '@lobehub/ui-rn/Center/demos';
 // ColorScales
@@ -74,6 +76,7 @@ export const DEMOS_MAP: Record<string, any> = {
   Button: ButtonDemos,
   CapsuleTabs: CapsuleTabsDemos,
   Card: CardDemos,
+  Cell: CellDemos,
   Center: CenterDemos,
   ColorScales: ColorScalesDemos,
   ColorSwatches: ColorSwatchesDemos,

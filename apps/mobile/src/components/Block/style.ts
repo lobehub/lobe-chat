@@ -12,7 +12,7 @@ export const useStyles = createStyles(({ token, stylish }) => ({
   outlinedActive: stylish.variantOutlinedActive,
   outlinedHover: stylish.variantOutlinedHover,
   root: {
-    borderRadius: token.borderRadius,
+    borderRadius: token.borderRadiusLG * 1.5,
     position: 'relative' as const,
   },
   shadow: stylish.shadow,
