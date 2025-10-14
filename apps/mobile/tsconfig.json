@@ -30,15 +30,9 @@
     ".temp",
     "**/*.backup/**",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "scripts/**/*"
   ],
   "extends": "expo/tsconfig.base",
-  "include": [
-    "src/**/*",
-    "app/**/*",
-    "scripts/**/*",
-    "expo-env.d.ts",
-    "global.d.ts",
-    ".expo/types/**/*.ts"
-  ]
+  "include": ["src/**/*", "app/**/*", "expo-env.d.ts", "global.d.ts", ".expo/types/**/*.ts"]
 }
