@@ -1,8 +1,10 @@
 packages:
-  - '.'
-  - '../../packages/const'
-  - '../../packages/types'
-  - '../../packages/utils'
-  - '../../packages/model-bank'
-  - '../../packages/web-crawler'
+  - .
+  - ../../packages/const
+  - ../../packages/types
+  - ../../packages/utils
+  - ../../packages/model-bank
+  - ../../packages/web-crawler
   - '../../packages/ssrf-safe-fetch'
+patchedDependencies:
+  react-native-shiki-engine: patches/react-native-shiki-engine.patch

@@ -93,7 +93,6 @@ robots.txt
 .husky/prepare-commit-msg
 
 # Documents and media
-*.patch
 *.pdf
 
 # Cloud service keys
