@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.137.4](https://github.com/lobehub/lobe-chat/compare/v1.137.3...v1.137.4)
+
+<sup>Released on **2025-10-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Prevent Vertex AI JSON credentials from being split by comma.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Prevent Vertex AI JSON credentials from being split by comma, closes [#9703](https://github.com/lobehub/lobe-chat/issues/9703) [#9477](https://github.com/lobehub/lobe-chat/issues/9477) ([189081d](https://github.com/lobehub/lobe-chat/commit/189081d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.137.3](https://github.com/lobehub/lobe-chat/compare/v1.137.2...v1.137.3)
 
 <sup>Released on **2025-10-14**</sup>
