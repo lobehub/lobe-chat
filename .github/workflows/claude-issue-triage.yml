@@ -2,12 +2,14 @@ name: Claude Issue Triage
 description: Automatically triage GitHub issues using Claude Code
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
 
 jobs:
   triage-issue:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Only run on issue opened, or when "trigger:triage" label is added
+    if: github.event.action == 'opened' || (github.event.action == 'labeled' && github.event.label.name == 'trigger:triage')
     permissions:
       contents: read
       issues: write
@@ -188,3 +190,10 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_env: |
             GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Remove trigger label
+        if: github.event.action == 'labeled' && github.event.label.name == 'trigger:triage'
+        run: |
+          gh issue edit ${{ github.event.issue.number }} --remove-label "trigger:triage"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
