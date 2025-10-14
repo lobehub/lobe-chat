@@ -33,6 +33,7 @@
     "production:ios": "eas build --platform ios --profile production",
     "production:ios:local": "eas build --platform ios --profile production --local",
     "production:local": "npm run build:android:local && npm run build:ios:local",
+    "reinstall": "cd ../.. && rm -rf node_modules apps/**/node_modules packages/**/node_modules && NODE_OPTIONS='' pnpm install && cd apps/mobile && rm -rf .expo ios android node_modules && pnpm install",
     "start": "expo start",
     "submit": "npm run submit:ios & npm run submit:android",
     "submit:android": "eas submit --platform android",
