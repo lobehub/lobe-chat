@@ -50,6 +50,7 @@ export { default as MaskShadow, type MaskShadowProps } from './MaskShadow';
 export { default as ModelInfoTags, type ModelInfoTagsProps } from './ModelInfoTags';
 export { default as PageContainer, type PageContainerProps } from './PageContainer';
 export { default as ScrollShadow, type ScrollShadowProps } from './ScrollShadow';
+export { default as Segmented, type SegmentedItemType, type SegmentedProps } from './Segmented';
 export { default as Skeleton, type SkeletonProps } from './Skeleton';
 export { default as Slider, type SliderProps } from './Slider';
 export { default as Space, type SpaceProps } from './Space';
