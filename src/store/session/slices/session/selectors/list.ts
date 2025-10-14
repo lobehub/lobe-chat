@@ -41,15 +41,15 @@ const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
 
 const isCurrentSessionGroupSession = (s: SessionStore) => {
   const session = currentSession(s);
-  return session?.type === 'group';
+  return session && session.type === 'group';
 };
 
 const currentGroupAgents = (s: SessionStore) => {
   const session = currentSession(s) as LobeGroupSession;
 
-  if (session.type !== 'group') return [];
+  if (session && session.type !== 'group') return [];
 
-  return session.members || [];
+  return session ? session.members : [];
 };
 
 const isSessionListInit = (s: SessionStore) => s.isSessionsFirstFetchFinished;
