@@ -1,7 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react-native';
-import type { FC } from 'react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
 
 import Icon from '@/components/Icon';
@@ -49,73 +48,85 @@ interface FullFeaturedProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const FullFeatured: FC<FullFeaturedProps> = ({
-  code,
-  lang,
-  copyable = true,
-  showLanguage = true,
-  fileName,
-  defalutExpand = true,
-  allowChangeLanguage = false,
-  style,
-  onCopy,
-}) => {
-  const [expanded, setExpanded] = useState(defalutExpand);
-  const { styles, theme } = useStyles();
-  const [copied, setCopied] = useState(false);
-  const [language, setLanguage] = useState(lang);
+const FullFeatured = memo<FullFeaturedProps>(
+  ({
+    code,
+    lang,
+    copyable = true,
+    showLanguage = true,
+    fileName,
+    defalutExpand = true,
+    allowChangeLanguage = false,
+    style,
+    onCopy,
+  }) => {
+    const [expanded, setExpanded] = useState(defalutExpand);
+    const { styles, theme } = useStyles();
+    const [copied, setCopied] = useState(false);
+    const [language, setLanguage] = useState(lang);
 
-  const handleCopy = async () => {
-    try {
-      await Clipboard.setStringAsync(code);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-      onCopy?.(code);
-    } catch (error) {
-      console.error('Failed to copy:', error);
-    }
-  };
+    const handleCopy = async () => {
+      try {
+        await Clipboard.setStringAsync(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        onCopy?.(code);
+      } catch (error) {
+        console.error('Failed to copy:', error);
+      }
+    };
 
-  const handleLanguageChange = (newLang: string) => {
-    setLanguage(newLang);
-  };
+    const handleLanguageChange = (newLang: string) => {
+      setLanguage(newLang);
+    };
 
-  return (
-    <View style={[styles.container, style]}>
-      <View style={[styles.headerContainer]}>
-        <View style={styles.headerLeft}>
-          <Pressable onPress={() => setExpanded(!expanded)} style={styles.expandIcon}>
-            {expanded ? (
-              <Icon icon={ChevronDown} size="small" />
-            ) : (
-              <Icon icon={ChevronRight} size="small" />
-            )}
-          </Pressable>
-        </View>
-
-        {allowChangeLanguage && showLanguage ? (
-          <LanguageSelect onSelect={handleLanguageChange} value={language} />
-        ) : (
-          (showLanguage || fileName) && (
-            <Text style={styles.headerTitle}>{fileName || language}</Text>
-          )
-        )}
-
-        <View style={styles.headerRight}>
-          {copyable && (
-            <Pressable onPress={handleCopy} style={styles.copyButton}>
-              {copied ? (
-                <Icon color={theme.colorSuccess} icon={Check} size="small" />
+    return (
+      <View style={[styles.container, style]} testID="highlighter-full-featured">
+        <View style={[styles.headerContainer]}>
+          <View style={styles.headerLeft}>
+            <Pressable
+              onPress={() => setExpanded(!expanded)}
+              style={styles.expandIcon}
+              testID="highlighter-expand-button"
+            >
+              {expanded ? (
+                <Icon icon={ChevronDown} size="small" />
               ) : (
-                <Icon icon={Copy} size="small" />
+                <Icon icon={ChevronRight} size="small" />
               )}
             </Pressable>
+          </View>
+
+          {allowChangeLanguage && showLanguage ? (
+            <LanguageSelect onSelect={handleLanguageChange} value={language} />
+          ) : (
+            (showLanguage || fileName) && (
+              <Text style={styles.headerTitle}>{fileName || language}</Text>
+            )
           )}
+
+          <View style={styles.headerRight}>
+            {copyable && (
+              <Pressable
+                onPress={handleCopy}
+                style={styles.copyButton}
+                testID="highlighter-copy-button"
+              >
+                {copied ? (
+                  <Icon color={theme.colorSuccess} icon={Check} size="small" />
+                ) : (
+                  <Icon icon={Copy} size="small" />
+                )}
+              </Pressable>
+            )}
+          </View>
         </View>
+        {expanded && <TokenDisplay code={code} lang={language} />}
       </View>
-      {expanded && <TokenDisplay code={code} lang={language} />}
-    </View>
-  );
-};
+    );
+  },
+);
+
+FullFeatured.displayName = 'FullFeatured';
 
 export default FullFeatured;

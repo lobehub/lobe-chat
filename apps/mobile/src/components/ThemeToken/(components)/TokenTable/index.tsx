@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
@@ -12,7 +11,7 @@ export interface TokenTableProps {
   token: Record<string, any>;
 }
 
-const TokenTable: FC<TokenTableProps> = memo(({ token, title }) => {
+const TokenTable = memo<TokenTableProps>(({ token, title }) => {
   const { styles } = useStyles();
   const [searchText, setSearchText] = useState('');
 

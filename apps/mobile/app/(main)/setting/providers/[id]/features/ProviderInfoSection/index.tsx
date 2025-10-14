@@ -1,3 +1,4 @@
+import { AiProviderDetailItem } from '@lobechat/types';
 import { ProviderCombine } from '@lobehub/icons-rn';
 import { InstantSwitch, Text, useTheme } from '@lobehub/ui-rn';
 import { memo } from 'react';
@@ -7,7 +8,6 @@ import { View } from 'react-native';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 
-import { AiProviderDetailItem } from '../../../../../../../../../packages/types';
 import { useStyles } from './style';
 
 interface ProviderInfoSectionProps {

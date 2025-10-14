@@ -16,7 +16,7 @@
     "i18n": "npm run workflow:i18n && lobe-i18n && prettier -c --write \"locales/**\" && tsx ./scripts/i18nWorkflow/generateLocaleConfig.ts",
     "i18n:md": "lobe-i18n md",
     "ios": "expo run:ios --port 8081",
-    "lint": "expo lint",
+    "lint": "npm run type-check && npm run lint:ts && npm run lint:style && npm run lint:md",
     "lint:md": "remark . --quiet --frail --output",
     "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "lint:ts": "eslint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
@@ -38,7 +38,7 @@
     "submit:android": "eas submit --platform android",
     "submit:ios": "eas submit --platform ios",
     "test": "jest --coverage",
-    "type-check": "tsgo --noEmit -p ./tsconfig.json",
+    "type-check": "tsx ./scripts/type-check.ts",
     "web": "expo start --web",
     "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts ",
     "workflow:playground": "tsx ./scripts/playground/index.ts"

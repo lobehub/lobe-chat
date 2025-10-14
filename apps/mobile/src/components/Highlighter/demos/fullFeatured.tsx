@@ -1,12 +1,11 @@
 import { Highlighter, Text, useTheme } from '@lobehub/ui-rn';
-import type { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 /**
  * 完整功能模式演示
  * 展示所有可用的高级功能
  */
-export const FullFeaturedHighlighterDemo: FC = () => {
+export const FullFeaturedHighlighterDemo = () => {
   const token = useTheme();
 
   const examples = [

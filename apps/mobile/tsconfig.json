@@ -20,7 +20,9 @@
       "@/test/*": ["./test/*"],
       "@/*": ["./src/*"],
       "@lobehub/ui-rn": ["./src/components"],
-      "@lobehub/ui-rn/*": ["./src/components/*"]
+      "@lobehub/ui-rn/*": ["./src/components/*"],
+      "@lobehub/chat": ["../../src"],
+      "@lobehub/chat/*": ["../../src/*"]
     }
   },
   "exclude": [

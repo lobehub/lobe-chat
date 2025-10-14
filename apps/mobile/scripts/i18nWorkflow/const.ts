@@ -1,6 +1,7 @@
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+// @ts-ignore
 import i18nConfig from '../../.i18nrc';
 
 export const root = resolve(__dirname, '../..');
@@ -16,4 +17,5 @@ export const outputLocaleJsonFilepath = (locale: string, file: string) =>
 export const srcDefaultLocales = resolve(root, srcLocalesDir, 'default');
 console.log(srcDefaultLocales);
 
+// @ts-ignore
 export { default as i18nConfig } from '../../.i18nrc';
