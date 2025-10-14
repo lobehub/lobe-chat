@@ -125,7 +125,7 @@ const Item = memo<ChatListItemProps>(
           return (
             <AssistantMessage
               {...item}
-              showTitle={true}
+              showTitle={item.groupId ? true : false}
               disableEditing={disableEditing}
               index={index}
             />

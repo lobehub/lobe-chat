@@ -106,10 +106,9 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
   const animated = transitionMode === 'fadeIn' && generating;
 
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
-  const sessionId = isGroupSession ? useSessionStore(sessionSelectors.currentSession)!.id : '';
-  const groupConfig = isGroupSession
-    ? useChatGroupStore(chatGroupSelectors.getGroupConfig(sessionId || ''))
-    : undefined;
+  const currentSession = useSessionStore(sessionSelectors.currentSession);
+  const sessionId = isGroupSession && currentSession ? currentSession.id : '';
+  const groupConfig = useChatGroupStore(chatGroupSelectors.getGroupConfig(sessionId || ''));
 
   const reducted =
     isGroupSession && targetId !== null && targetId !== 'user' && !groupConfig?.revealDM;
