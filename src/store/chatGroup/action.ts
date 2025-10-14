@@ -8,11 +8,8 @@ import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import type { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
-import { getChatStoreDeps } from '@/store/chat/deps';
-import type { ChatStoreDeps } from '@/store/chat/deps';
-import { initialState as initialChatState } from '@/store/chat/initialState';
 import type { ChatStoreState } from '@/store/chat/initialState';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useChatStore } from '@/store/chat/store';
 import { getSessionStoreState } from '@/store/session';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -29,19 +26,6 @@ const n = setNamespace('chatGroup');
 
 const FETCH_GROUPS_KEY = 'fetchGroups';
 const FETCH_GROUP_DETAIL_KEY = 'fetchGroupDetail';
-
-const getChatStoreStateSafe = (): ChatStoreState => {
-  const deps = getChatStoreDeps();
-
-  return deps ? deps.getChatStoreState() : initialChatState;
-};
-
-const withChatStore = <T>(callback: (deps: ChatStoreDeps) => T) => {
-  const deps = getChatStoreDeps();
-  if (!deps) return;
-
-  return callback(deps);
-};
 
 export const chatGroupAction: StateCreator<
   ChatGroupStore,
@@ -62,6 +46,17 @@ export const chatGroupAction: StateCreator<
       }),
       false,
       payload,
+    );
+  };
+
+  const syncChatStoreGroupMap = (groupMap: Record<string, ChatGroupItem>) => {
+    useChatStore.setState(
+      produce((state: ChatStoreState) => {
+        state.groupMaps = groupMap;
+        state.groupsInit = true;
+      }),
+      false,
+      n('syncGroupMap/chat'),
     );
   };
 
@@ -141,22 +136,12 @@ export const chatGroupAction: StateCreator<
           false,
           n('internal_refreshGroups/updateGroupMap'),
         );
+
+        syncChatStoreGroupMap(nextGroupMap);
       }
 
       // Refresh sessions so session-related group info stays up to date
       await getSessionStoreState().refreshSessions();
-    },
-
-    internal_updateGroupAgentMaps: (groupId, agents) => {
-      withChatStore(({ useChatStore }) =>
-        useChatStore.setState(
-          produce((state: ChatStoreState) => {
-            state.groupAgentMaps[groupId] = agents;
-          }),
-          false,
-          n(`internal_updateGroupAgentMaps/${groupId}`),
-        ),
-      );
     },
 
     internal_updateGroupMaps: (groups) => {
@@ -197,29 +182,7 @@ export const chatGroupAction: StateCreator<
         n('internal_updateGroupMaps/chatGroup'),
       );
 
-      const chatState = getChatStoreStateSafe();
-      if (!isEqual(chatState.groupMaps, mergedMap)) {
-        withChatStore(({ useChatStore }) =>
-          useChatStore.setState(
-            { groupMaps: mergedMap, groupsInit: true },
-            false,
-            n('internal_updateGroupMaps/chat'),
-          ),
-        );
-      }
-    },
-
-    internal_updateSupervisorTodos: (groupId, topicId, todos) => {
-      const key = messageMapKey(groupId, topicId);
-      withChatStore(({ useChatStore }) =>
-        useChatStore.setState(
-          produce((state: ChatStoreState) => {
-            state.supervisorTodos[key] = todos;
-          }),
-          false,
-          n(`internal_updateSupervisorTodos/${groupId}`),
-        ),
-      );
+      syncChatStoreGroupMap(mergedMap);
     },
 
     loadGroups: async () => {
@@ -294,23 +257,19 @@ export const chatGroupAction: StateCreator<
       });
 
       // Also update the chat store's groupMaps to keep it in sync
-      const chatState = getChatStoreStateSafe();
-      if (chatState.groupMaps[group.id]) {
-        withChatStore(({ useChatStore }) =>
-          useChatStore.setState(
-            produce((draft: ChatStoreState) => {
-              if (draft.groupMaps[group.id]) {
-                draft.groupMaps[group.id] = {
-                  ...draft.groupMaps[group.id],
-                  config: mergedConfig,
-                };
-              }
-            }),
-            false,
-            n('updateGroupConfig/syncChatStore'),
-          ),
-        );
-      }
+      useChatStore.setState(
+        produce((draft: ChatStoreState) => {
+          const existing = draft.groupMaps[group.id];
+          if (existing) {
+            draft.groupMaps[group.id] = {
+              ...existing,
+              config: mergedConfig,
+            } as ChatGroupItem;
+          }
+        }),
+        false,
+        n('updateGroupConfig/syncChatStore'),
+      );
 
       // Refresh groups to ensure consistency
       await get().internal_refreshGroups();
@@ -342,16 +301,20 @@ export const chatGroupAction: StateCreator<
             const currentGroup = get().groupMap[group.id];
             if (isEqual(currentGroup, group)) return;
 
+            const nextGroupMap = {
+              ...get().groupMap,
+              [group.id]: group,
+            };
+
             set(
               {
-                groupMap: {
-                  ...get().groupMap,
-                  [group.id]: group,
-                },
+                groupMap: nextGroupMap,
               },
               false,
               n('useFetchGroupDetail/onSuccess', { groupId: group.id }),
             );
+
+            syncChatStoreGroupMap(nextGroupMap);
           },
         },
       ),
@@ -366,7 +329,7 @@ export const chatGroupAction: StateCreator<
           fallbackData: [],
           onSuccess: (groups) => {
             // Update both groups list and groupMap
-            const groupMap = groups.reduce(
+            const incomingMap = groups.reduce(
               (map, group) => {
                 map[group.id] = group;
                 return map;
@@ -374,19 +337,24 @@ export const chatGroupAction: StateCreator<
               {} as Record<string, ChatGroupItem>,
             );
 
-            if (get().groupsInit && isEqual(get().groupMap, { ...get().groupMap, ...groupMap })) {
+            const currentMap = get().groupMap;
+            const nextGroupMap = { ...currentMap, ...incomingMap };
+
+            if (get().groupsInit && isEqual(currentMap, nextGroupMap)) {
               return;
             }
 
             set(
               {
-                groupMap: { ...get().groupMap, ...groupMap },
+                groupMap: nextGroupMap,
                 groupsInit: true,
                 isGroupsLoading: false,
               },
               false,
               n('useFetchGroups/onSuccess'),
             );
+
+            syncChatStoreGroupMap(nextGroupMap);
           },
           suspense: true,
         },

@@ -5,7 +5,6 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
-import { setChatStoreDeps } from './deps';
 import { ChatStoreState, initialState } from './initialState';
 import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/actions';
 import { ChatPortalAction, chatPortalSlice } from './slices/portal/action';
@@ -63,5 +62,3 @@ export const useChatStore = createWithEqualityFn<ChatStore>()(
 );
 
 export const getChatStoreState = () => useChatStore.getState();
-
-setChatStoreDeps({ getChatStoreState, useChatStore });

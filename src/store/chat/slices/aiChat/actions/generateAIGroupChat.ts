@@ -10,16 +10,16 @@ import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
+import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { chatGroupSelectors } from '@/store/chatGroup/selectors';
-import { useChatGroupStore } from '@/store/chatGroup/store';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, CreateMessageParams, SendGroupMessageParams } from '@/types/message';
+import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import type { ChatStoreState } from '../../../initialState';
@@ -206,6 +206,15 @@ export interface ChatGroupChatAction {
   internal_cancelAllSupervisorDecisions: () => void;
 
   /**
+   * Update supervisor todo list for a group/topic combination
+   */
+  internal_updateSupervisorTodos: (
+    groupId: string,
+    topicId: string | null | undefined,
+    todos: SupervisorTodoItem[],
+  ) => void;
+
+  /**
    * Executes agent responses for group chat based on supervisor decisions
    */
   internal_executeAgentResponses: (
@@ -248,8 +257,16 @@ export const chatAiGroupChat: StateCreator<
   [['zustand/devtools', never]],
   [],
   ChatGroupChatAction
-> = (set, get) => ({
-  sendGroupMessage: async ({ groupId, message, files, onlyAddUserMessage, targetMemberId }) => {
+> = (set, get) => {
+  const selectGroupConfig = (groupId: string) => {
+    const { groupMaps } = get();
+    const group = groupMaps[groupId];
+
+    return merge(DEFAULT_CHAT_GROUP_CHAT_CONFIG, group?.config || {});
+  };
+
+  return {
+    sendGroupMessage: async ({ groupId, message, files, onlyAddUserMessage, targetMemberId }) => {
     const {
       internal_createMessage,
       internal_triggerSupervisorDecisionDebounced,
@@ -284,9 +301,7 @@ export const chatAiGroupChat: StateCreator<
 
       if (messageId) {
         // Use the specific group's config rather than relying on active session
-        const groupConfig = chatGroupSelectors.getGroupConfig(groupId)(
-          useChatGroupStore.getState(),
-        );
+        const groupConfig = selectGroupConfig(groupId);
 
         // If supervisor is disabled, check for direct mentions and trigger them directly
         if (!groupConfig?.enableSupervisor) {
@@ -362,8 +377,6 @@ export const chatAiGroupChat: StateCreator<
     // Capture topicId at invocation time to avoid leaking state after topic switches
     const currentTopicId = typeof topicId === 'undefined' ? get().activeTopicId : topicId;
 
-    const { internal_updateSupervisorTodos } = useChatGroupStore.getState();
-
     const createSupervisorTodoMessage = async (todoList: SupervisorTodoItem[]) => {
       if (!groupId) return;
 
@@ -390,7 +403,7 @@ export const chatAiGroupChat: StateCreator<
     if (messages.length === 0) return;
 
     // Always read config for the provided groupId
-    const groupConfig = chatGroupSelectors.getGroupConfig(groupId)(useChatGroupStore.getState());
+    const groupConfig = selectGroupConfig(groupId);
 
     // If supervisor is disabled, skip supervisor decision
     if (!groupConfig?.enableSupervisor) {
@@ -447,7 +460,7 @@ export const chatAiGroupChat: StateCreator<
       // Turn off supervisor thinking immediately after decision is made
       internal_toggleSupervisorLoading(false, groupId);
 
-      internal_updateSupervisorTodos(groupId, currentTopicId, todos);
+      get().internal_updateSupervisorTodos(groupId, currentTopicId, todos);
 
       if (todoUpdated) {
         await createSupervisorTodoMessage(todos);
@@ -492,7 +505,7 @@ export const chatAiGroupChat: StateCreator<
     const { internal_processAgentMessage, internal_triggerSupervisorDecisionDebounced } = get();
 
     // Read the target group's config to respect per-group settings
-    const groupConfig = chatGroupSelectors.getGroupConfig(groupId)(useChatGroupStore.getState());
+    const groupConfig = selectGroupConfig(groupId);
     const agents = sessionSelectors.currentGroupAgents(useSessionStore.getState());
 
     // Sort decisions by member order if response order is sequential
@@ -766,7 +779,7 @@ export const chatAiGroupChat: StateCreator<
     internal_cancelSupervisorDecision(groupId);
 
     // Use per-group config for debounce calculation
-    const groupConfig = chatGroupSelectors.getGroupConfig(groupId)(useChatGroupStore.getState());
+    const groupConfig = selectGroupConfig(groupId);
     const responseSpeed = groupConfig?.responseSpeed;
     const debounceThreshold = getDebounceThreshold(responseSpeed);
 
@@ -887,6 +900,20 @@ export const chatAiGroupChat: StateCreator<
     }
   },
 
+  internal_updateSupervisorTodos: (groupId, topicId, todos) => {
+    if (!groupId) return;
+
+    const key = messageMapKey(groupId, topicId);
+
+    set(
+      produce((state: ChatStoreState) => {
+        state.supervisorTodos[key] = todos;
+      }),
+      false,
+      n(`internal_updateSupervisorTodos/${groupId}`),
+    );
+  },
+
   internal_createSupervisorErrorMessage: async (groupId: string, error: Error | string) => {
     const { internal_createTmpMessage, activeTopicId } = get();
 
@@ -911,4 +938,5 @@ export const chatAiGroupChat: StateCreator<
       console.error('Failed to create supervisor error message:', createError);
     }
   },
-});
+  };
+};
