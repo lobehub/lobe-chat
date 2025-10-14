@@ -20,6 +20,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -103,6 +104,13 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
   const loading = isInRAGFlow || generating;
 
   const animated = transitionMode === 'fadeIn' && generating;
+
+  const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
+  const sessionId = useSessionStore(sessionSelectors.currentSession)!.id;
+  const groupConfig = useChatGroupStore(chatGroupSelectors.getGroupConfig(sessionId || ''));
+
+  const reducted =
+    isGroupSession && targetId !== null && targetId !== 'user' && !groupConfig?.revealDM;
 
   // Get target name for DM indicator
   const userName = useUserStore(userProfileSelectors.nickName) || 'User';
@@ -232,7 +240,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
                 editing={editing}
                 id={id}
                 markdownProps={markdownProps}
-                message={message}
+                message={reducted ? `** ${t('hideForYou')} **` : message}
                 messageExtra={
                   <>
                     {errorContent && (

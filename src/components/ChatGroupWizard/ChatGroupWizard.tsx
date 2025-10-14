@@ -658,6 +658,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                   >
                     <ModelSelect
                       onChange={handleHostModelChange}
+                      requiredAbilities={['functionCall']}
                       value={normalizedHostModelConfig}
                     />
                   </div>
