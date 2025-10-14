@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -7,6 +6,7 @@ import { ThemeMode } from '@/components/ThemeProvider';
 import { NeutralColors, PrimaryColors } from '@/components/styles';
 import { DEFAULT_SERVER_URL, formatServerUrl } from '@/config/server';
 import { isDev } from '@/utils/env';
+import { appStorage, createMMKVStorage } from '@/utils/storage';
 
 interface SettingState {
   // 开发者模式相关
@@ -84,7 +84,7 @@ export const useSettingStore = createWithEqualityFn<SettingState>()(
     }),
     {
       name: 'lobe-chat-settings',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => createMMKVStorage(appStorage)),
     },
   ),
   shallow,
