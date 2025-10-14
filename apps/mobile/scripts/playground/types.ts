@@ -1,4 +1,5 @@
 export interface ComponentData {
+  [key: string]: any;
   demosPath: string;
   group: string;
   name: string;
