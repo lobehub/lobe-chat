@@ -1,3 +1,5 @@
+import { ChatCompletionFunctions } from './chat';
+
 interface GenerateObjectMessage {
   content: string;
   name?: string;
@@ -20,7 +22,9 @@ export interface GenerateObjectPayload {
   messages: GenerateObjectMessage[];
   model: string;
   responseApi?: boolean;
-  schema: GenerateObjectSchema;
+  schema?: GenerateObjectSchema;
+  systemRole?: string;
+  tools?: ChatCompletionFunctions[];
 }
 
 export interface GenerateObjectOptions {
