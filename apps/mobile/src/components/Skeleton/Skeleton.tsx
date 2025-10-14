@@ -1,0 +1,189 @@
+import type { ReactNode } from 'react';
+import { memo, useEffect, useRef } from 'react';
+import { Animated, View } from 'react-native';
+
+import SkeletonAvatar from './Avatar';
+import SkeletonButton from './Button';
+import SkeletonImage from './Image';
+import SkeletonParagraph from './Paragraph';
+import SkeletonTitle from './Title';
+import { useStyles } from './style';
+import type { SkeletonProps } from './type';
+
+const Skeleton = memo<SkeletonProps>(
+  ({
+    loading = true,
+    avatar = false,
+    title = true,
+    paragraph = true,
+    animated = false,
+    style,
+    children,
+  }) => {
+    const { styles } = useStyles();
+    const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+      if (animated && loading) {
+        const shimmerAnimation = Animated.loop(
+          Animated.sequence([
+            Animated.timing(shimmerAnim, {
+              duration: 1000,
+              toValue: 1,
+              useNativeDriver: false,
+            }),
+            Animated.timing(shimmerAnim, {
+              duration: 1000,
+              toValue: 0,
+              useNativeDriver: false,
+            }),
+          ]),
+        );
+        shimmerAnimation.start();
+        return () => shimmerAnimation.stop();
+      }
+    }, [animated, loading, shimmerAnim]);
+
+    if (!loading) {
+      return children;
+    }
+
+    const renderAvatar = () => {
+      if (!avatar) return null;
+
+      const avatarProps = typeof avatar === 'object' ? avatar : {};
+      const avatarSize = avatarProps.size || 40;
+      const avatarShape = avatarProps.shape || 'circle';
+
+      const avatarStyle = {
+        borderRadius: avatarShape === 'circle' ? avatarSize / 2 : 6,
+        height: avatarSize,
+        width: avatarSize,
+      };
+
+      return (
+        <Animated.View
+          style={[
+            styles.skeletonItem,
+            avatarStyle,
+            animated && {
+              opacity: shimmerAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.3, 1],
+              }),
+            },
+          ]}
+        />
+      );
+    };
+
+    const renderTitle = () => {
+      if (!title) return null;
+
+      const titleProps = typeof title === 'object' ? title : {};
+      const titleWidth = titleProps.width || '60%';
+
+      return (
+        <Animated.View
+          style={[
+            styles.skeletonItem,
+            styles.titleLine,
+            { width: titleWidth as any },
+            animated && {
+              opacity: shimmerAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.3, 1],
+              }),
+            },
+          ]}
+        />
+      );
+    };
+
+    const renderParagraph = () => {
+      if (!paragraph) return null;
+
+      const paragraphProps = typeof paragraph === 'object' ? paragraph : {};
+      const rows = paragraphProps.rows || 3;
+      const width = paragraphProps.width;
+
+      const lines = [] as ReactNode[];
+      for (let i = 0; i < rows; i++) {
+        let lineWidth = '100%';
+
+        if (Array.isArray(width)) {
+          lineWidth = (width[i] as string) || '100%';
+        } else if (width) {
+          lineWidth = width as string;
+        } else if (i === rows - 1) {
+          lineWidth = '60%'; // Last line is shorter by default
+        }
+
+        lines.push(
+          <Animated.View
+            key={i}
+            style={[
+              styles.skeletonItem,
+              styles.paragraphLine,
+              { width: lineWidth as any },
+              // Remove margin bottom from last line
+              i === rows - 1 && { marginBottom: 0 },
+              animated && {
+                opacity: shimmerAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.3, 1],
+                }),
+              },
+            ]}
+          />,
+        );
+      }
+
+      return <View style={styles.paragraphContainer}>{lines}</View>;
+    };
+
+    const hasAvatar = !!avatar;
+    const hasTitle = !!title;
+    const hasParagraph = !!paragraph;
+
+    // Special case: if only paragraph, render it directly
+    if (!hasAvatar && !hasTitle && hasParagraph) {
+      return (
+        <View style={[styles.container, style]} testID="skeleton">
+          {renderParagraph()}
+        </View>
+      );
+    }
+
+    return (
+      <View style={[styles.container, style]} testID="skeleton">
+        <View style={styles.content}>
+          {renderAvatar()}
+          <View style={[styles.textContainer, !hasAvatar && styles.textContainerNoAvatar]}>
+            {renderTitle()}
+            {renderParagraph()}
+          </View>
+        </View>
+      </View>
+    );
+  },
+);
+
+Skeleton.displayName = 'Skeleton';
+
+// Add compound components to main Skeleton component
+const SkeletonWithCompounds = Skeleton as typeof Skeleton & {
+  Avatar: typeof SkeletonAvatar;
+  Button: typeof SkeletonButton;
+  Image: typeof SkeletonImage;
+  Paragraph: typeof SkeletonParagraph;
+  Title: typeof SkeletonTitle;
+};
+
+SkeletonWithCompounds.Avatar = SkeletonAvatar;
+SkeletonWithCompounds.Button = SkeletonButton;
+SkeletonWithCompounds.Title = SkeletonTitle;
+SkeletonWithCompounds.Paragraph = SkeletonParagraph;
+SkeletonWithCompounds.Image = SkeletonImage;
+
+export default SkeletonWithCompounds;
