@@ -18,10 +18,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Copy team assignment guide
+      - name: Copy triage prompts
         run: |
           mkdir -p /tmp/claude-prompts
           cp .claude/prompts/team-assignment.md /tmp/claude-prompts/
+          cp .claude/prompts/issue-triage.md /tmp/claude-prompts/
 
       - name: Run Claude Code for Issue Triage
         uses: anthropics/claude-code-action@main
@@ -36,151 +37,23 @@ jobs:
             REPOSITORY: ${{ github.repository }}
             ISSUE_NUMBER: ${{ github.event.issue.number }}
 
-            ## WORKFLOW
+            ## Instructions
 
-            ### Step 1: Get Available Labels
+            Follow the complete triage guide located at:
             ```bash
-            gh label list --json name,description --limit 300
+            cat /tmp/claude-prompts/issue-triage.md
             ```
 
-            ### Step 2: Get Issue Details
-            ```bash
-            gh issue view ${{ github.event.issue.number }} --json number,title,body,labels,comments
-            ```
-
-            ### Step 3: Read Team Assignment Guide
+            Read the team assignment guide for determining team members:
             ```bash
             cat /tmp/claude-prompts/team-assignment.md
             ```
 
-            ### Step 4: Analyze and Select Labels
-
-            Extract information from the issue template:
-            - 📦 Platform field → platform:web/desktop/mobile
-            - 💻 Operating System → os:windows/macos/linux/ios
-            - 🌐 Browser → device:pc/mobile
-            - 📦 Deployment mode → deployment:server/client/pglite
-            - Platform (hosting) → hosting:cloud/self-host/vercel/zeabur/railway
-
-            **LABEL CATEGORIES:**
-
-            **a) Issue Type (REQUIRED - select ONE):**
-            - 🐛 Bug, 🌠 Feature Request, 💄 Design, 📝 Documentation, ⚡️ Performance
-
-            **b) Priority (select ONE if applicable):**
-            - priority:high - Critical, maintainer mentions "urgent"/"serious"/"critical"
-            - priority:medium - Important, affects multiple users
-            - priority:low - Nice to have, minor issues
-
-            **c) Platform (select ALL applicable):**
-            - platform:web, platform:desktop, platform:mobile
-
-            **d) Device (for platform:web, select ONE):**
-            - device:pc, device:mobile
-
-            **e) Operating System (select ALL applicable):**
-            - os:windows, os:macos, os:linux, os:ios
-
-            **f) Hosting Platform (select ONE):**
-            - hosting:cloud, hosting:self-host, hosting:vercel, hosting:zeabur, hosting:railway
-
-            **g) Deployment Mode (select ONE if mentioned):**
-            - deployment:server, deployment:client, deployment:pglite
-
-            **h) Model Provider (select ALL applicable):**
-            - provider:openai, provider:gemini, provider:claude, provider:deepseek
-            - provider:google, provider:ollama, provider:azure, provider:bedrock, provider:vertex
-
-            **i) Feature/Component (select ALL applicable):**
-            - feature:settings, feature:agent, feature:topic, feature:marketplace
-            - feature:streaming, feature:tool, feature:sync, feature:export
-            - feature:search, feature:auth, feature:files, feature:knowledge-base
-            - feature:tts, feature:vision, feature:mcp, feature:editor, feature:thread
-            - feature:image, feature:api, feature:dalle, feature:plugin, feature:markdown
-            - feature:group-chat, feature:memory, feature:team-workspace
-
-            **j) Workflow/Status:**
-            - Duplicate - Only if duplicate of OPEN issue
-            - needs-reproduction, good-first-issue, 🤔 Need Reproduce
-
-            **IMPORTANT RULES:**
-            - Read issue template fields carefully
-            - Check maintainer comments for priority/status
-            - Use ALL applicable labels from different categories
-            - Always use prefixes (feature:, provider:, os:, platform:, etc.)
-
-            ### Step 5: Apply Labels
-
-            Add labels:
-            ```bash
-            gh issue edit ${{ github.event.issue.number }} --add-label "label1,label2,label3"
-            ```
-
-            Remove "unconfirm" if adding other labels:
-            ```bash
-            gh issue edit ${{ github.event.issue.number }} --remove-label "unconfirm"
-            ```
-
-            **Execute the commands now.**
-
-            ### Step 6: Determine Team Member
-
-            Based on the team assignment guide and applied labels, determine who to mention.
-
-            **Priority Order:**
-            1. Specific feature owner (feature:knowledge-base → @RiverTwilight)
-            2. Platform owner (platform:mobile → @sudongyuer)
-            3. Provider owner (provider:* → @sxjeru)
-            4. Component owner (💄 Design → @canisminor1990)
-            5. Infrastructure owner (deployment:* → @nekomeowww)
-            6. General maintainer (@ONLY-yours)
-            7. Last resort (@arvinxx)
-
-            **Special Cases:**
-            - Multiple owners: Mention primary + secondary
-            - priority:high: Mention owner + @arvinxx
-
-            ### Step 7: Post Comment
-
-            Format the comment (1-2 sentences):
-
-            **Single owner:**
-            ```
-            @username - This is a [feature/component] issue. Please take a look.
-            ```
-
-            **Multiple owners:**
-            ```
-            @user1 @user2 - This involves [features]. Please coordinate.
-            ```
-
-            **High priority:**
-            ```
-            @owner @arvinxx - High priority [feature] issue.
-            ```
-
-            Post the comment:
-            ```bash
-            gh issue comment ${{ github.event.issue.number }} --body "@username - [message]"
-            ```
-
-            **Execute the command now.**
-
-            ### Step 8: Output Summary
-
-            Log your reasoning (2-4 sentences):
-            - Labels applied and why
-            - Team member(s) mentioned and reason
-            - Key factors from issue template/comments
-
-            ## GUIDELINES
-
-            - Be thorough in analysis
-            - Use only labels from the provided list
-            - Extract info from issue template fields
-            - ALWAYS post a mention comment (unless no clear owner)
-            - Keep comments professional and brief
-            - Output reasoning to logs
+            **IMPORTANT**:
+            - Follow ALL steps in the issue-triage.md guide
+            - Apply labels according to the guide's rules
+            - Post a mention comment to the appropriate team member(s) based on team-assignment.md
+            - Replace [ISSUE_NUMBER] with: ${{ github.event.issue.number }}
 
             **Start the triage process now.**
 
