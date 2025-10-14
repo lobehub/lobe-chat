@@ -7,6 +7,9 @@ const VariantsDemo = () => {
       <ActionIcon icon={Sun} variant="borderless" />
       <ActionIcon icon={Sun} variant="filled" />
       <ActionIcon icon={MoonStar} variant="outlined" />
+      <ActionIcon danger icon={Sun} variant="borderless" />
+      <ActionIcon danger icon={Sun} variant="filled" />
+      <ActionIcon danger icon={MoonStar} variant="outlined" />
     </Space>
   );
 };

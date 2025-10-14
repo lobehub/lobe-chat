@@ -1,4 +1,4 @@
-import type { TextStyle, ViewStyle } from 'react-native';
+import { StyleSheet, type TextStyle, type ViewStyle } from 'react-native';
 
 import type { AliasToken } from '../interface';
 
@@ -12,18 +12,21 @@ export interface LobeStylish {
   variantBorderless: ViewStyle;
   variantBorderlessActive: ViewStyle;
   variantBorderlessDanger: ViewStyle;
+  variantBorderlessDangerHover: ViewStyle;
   variantBorderlessHover: ViewStyle;
   variantFilled: ViewStyle;
   variantFilledActive: ViewStyle;
   variantFilledDanger: ViewStyle;
+  variantFilledDangerHover: ViewStyle;
   variantFilledHover: ViewStyle;
   variantOutlined: ViewStyle;
   variantOutlinedActive: ViewStyle;
   variantOutlinedDanger: ViewStyle;
+  variantOutlinedDangerHover: ViewStyle;
   variantOutlinedHover: ViewStyle;
 }
 
-export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeStylish => {
+export const generateStylish = (token: AliasToken): LobeStylish => {
   return {
     active: {
       backgroundColor: token.colorFillSecondary,
@@ -48,6 +51,13 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
 
     shadow: {
       elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: {
+        height: 1,
+        width: 0,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 1.41,
     },
 
     variantBorderless: {
@@ -56,7 +66,7 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
     },
 
     variantBorderlessActive: {
-      backgroundColor: isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary,
+      backgroundColor: token.colorFillTertiary,
       borderWidth: 0,
     },
 
@@ -65,8 +75,13 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
       borderWidth: 0,
     },
 
+    variantBorderlessDangerHover: {
+      backgroundColor: token.colorErrorFillSecondary,
+      borderWidth: 0,
+    },
+
     variantBorderlessHover: {
-      backgroundColor: token.colorFillTertiary,
+      backgroundColor: token.colorFillSecondary,
       borderWidth: 0,
     },
 
@@ -76,7 +91,8 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
     },
 
     variantFilledActive: {
-      backgroundColor: isDarkMode ? token.colorFillTertiary : token.colorFill,
+      backgroundColor: token.colorFillSecondary,
+      borderWidth: 0,
     },
 
     variantFilledDanger: {
@@ -84,32 +100,44 @@ export const generateStylish = (token: AliasToken, isDarkMode: boolean): LobeSty
       borderWidth: 0,
     },
 
+    variantFilledDangerHover: {
+      backgroundColor: token.colorErrorFill,
+      borderWidth: 0,
+    },
+
     variantFilledHover: {
-      backgroundColor: token.colorFillSecondary,
+      backgroundColor: token.colorFill,
+      borderWidth: 0,
     },
 
     variantOutlined: {
       backgroundColor: token.colorBgContainer,
-      borderColor: token.colorBorderSecondary,
-      borderWidth: 1,
+      borderColor: token.colorFill,
+      borderWidth: StyleSheet.hairlineWidth,
     },
 
     variantOutlinedActive: {
       backgroundColor: token.colorBgContainer,
-      borderColor: token.colorBorder,
-      borderWidth: 1,
+      borderColor: token.colorFill,
+      borderWidth: StyleSheet.hairlineWidth,
     },
 
     variantOutlinedDanger: {
       backgroundColor: token.colorBgContainer,
       borderColor: token.colorErrorBorder,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
+    },
+
+    variantOutlinedDangerHover: {
+      backgroundColor: token.colorErrorBg,
+      borderColor: token.colorErrorBorder,
+      borderWidth: StyleSheet.hairlineWidth,
     },
 
     variantOutlinedHover: {
-      backgroundColor: token.colorBgContainer,
-      borderColor: token.colorBorder,
-      borderWidth: 1,
+      backgroundColor: token.colorBgContainerSecondary,
+      borderColor: token.colorFill,
+      borderWidth: StyleSheet.hairlineWidth,
     },
   };
 };

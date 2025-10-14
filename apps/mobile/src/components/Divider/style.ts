@@ -4,11 +4,11 @@ import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
   horizontal: {
-    backgroundColor: token.colorBorder,
+    backgroundColor: token.colorFill,
     height: StyleSheet.hairlineWidth,
   },
   vertical: {
-    backgroundColor: token.colorBorder,
+    backgroundColor: token.colorFill,
     width: StyleSheet.hairlineWidth,
   },
 }));
