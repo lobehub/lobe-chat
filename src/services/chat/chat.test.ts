@@ -37,9 +37,13 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
 
   return { ...(module as any), getMessageError: vi.fn() };
 });
-vi.mock('@lobechat/utils', () => ({
+vi.mock('@lobechat/utils/url', () => ({
   isDesktopLocalStaticServerUrl: vi.fn(),
+}));
+vi.mock('@lobechat/utils/imageToBase64', () => ({
   imageUrlToBase64: vi.fn(),
+}));
+vi.mock('@lobechat/utils/uriParser', () => ({
   parseDataUri: vi.fn(),
 }));
 
@@ -280,7 +284,8 @@ describe('ChatService', () => {
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
         // Mock utility functions used in processImageList
-        const { parseDataUri, isDesktopLocalStaticServerUrl } = await import('@lobechat/utils');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
         vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // Not a local URL
 
@@ -357,9 +362,9 @@ describe('ChatService', () => {
 
     describe('local image URL conversion', () => {
       it('should convert local image URLs to base64 and call processImageList', async () => {
-        const { imageUrlToBase64, parseDataUri, isDesktopLocalStaticServerUrl } = await import(
-          '@lobechat/utils'
-        );
+        const { imageUrlToBase64 } = await import('@lobechat/utils/imageToBase64');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
 
         // Mock for local URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
@@ -432,9 +437,9 @@ describe('ChatService', () => {
       });
 
       it('should not convert remote URLs to base64 and call processImageList', async () => {
-        const { imageUrlToBase64, parseDataUri, isDesktopLocalStaticServerUrl } = await import(
-          '@lobechat/utils'
-        );
+        const { imageUrlToBase64 } = await import('@lobechat/utils/imageToBase64');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
 
         // Mock for remote URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
@@ -500,9 +505,9 @@ describe('ChatService', () => {
       });
 
       it('should handle mixed local and remote URLs correctly', async () => {
-        const { imageUrlToBase64, parseDataUri, isDesktopLocalStaticServerUrl } = await import(
-          '@lobechat/utils'
-        );
+        const { imageUrlToBase64 } = await import('@lobechat/utils/imageToBase64');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
 
         // Mock parseDataUri to always return url type
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
