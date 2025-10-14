@@ -1,10 +1,13 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { TogetherAIModel } from './type';
 
-export const LobeTogetherAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.together.xyz/v1',
   constructorOptions: {
     defaultHeaders: {
@@ -46,17 +49,21 @@ export const LobeTogetherAI = createOpenAICompatibleRuntime({
           maxOutput: model.context_length,
           reasoning:
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.functionCall ||
+            knownModel?.abilities?.reasoning ||
             false,
           tokens: model.context_length,
           vision:
             model.description?.toLowerCase().includes('vision') ||
             visionKeywords.some((keyword) => model.id?.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.functionCall ||
+            knownModel?.abilities?.vision ||
             false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.TogetherAI,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeTogetherAI = createOpenAICompatibleRuntime(params);
+
+export type { TogetherAIModel } from './type';

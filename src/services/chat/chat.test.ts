@@ -1,3 +1,4 @@
+import { LobeTool } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -16,7 +17,6 @@ import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/index';
 import { ChatImageItem, ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
-import { LobeTool } from '@/types/tool';
 
 import * as helpers from './helper';
 import { chatService } from './index';
@@ -1249,7 +1249,6 @@ describe('ChatService private methods', () => {
       expect(fetchSSEOptions.responseAnimation).toEqual({
         speed: 20,
         text: 'fadeIn',
-        toolsCalling: 'fadeIn',
       });
     });
   });

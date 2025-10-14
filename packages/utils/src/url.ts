@@ -151,3 +151,89 @@ export function isLocalUrl(url: string) {
     return false;
   }
 }
+
+/**
+ * Check if a URL points to localhost or private network address
+ *
+ * This function determines if the provided URL's hostname is a local or private network address.
+ * It checks for:
+ * - localhost (with or without domain suffix)
+ * - 127.0.0.0/8 (loopback addresses)
+ * - ::1 (IPv6 loopback)
+ * - 0.0.0.0
+ * - 10.0.0.0/8 (private network)
+ * - 172.16.0.0/12 (private network)
+ * - 192.168.0.0/16 (private network)
+ *
+ * It handles malformed URLs gracefully by returning false instead of throwing errors.
+ *
+ * @param url - The URL string to check
+ * @returns true if the URL points to a local or private network address, false otherwise
+ *
+ * @example
+ * ```typescript
+ * isLocalOrPrivateUrl('http://127.0.0.1:8080/path') // true
+ * isLocalOrPrivateUrl('http://localhost:3000') // true
+ * isLocalOrPrivateUrl('http://192.168.1.1') // true
+ * isLocalOrPrivateUrl('http://10.0.0.1') // true
+ * isLocalOrPrivateUrl('https://example.com') // false
+ * isLocalOrPrivateUrl('invalid-url') // false (instead of throwing)
+ * isLocalOrPrivateUrl('') // false (instead of throwing)
+ * ```
+ */
+export function isLocalOrPrivateUrl(url: string) {
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+
+    // Check for localhost variants
+    if (hostname === 'localhost' || hostname.endsWith('.localhost')) {
+      return true;
+    }
+
+    // Check for IPv6 loopback
+    if (hostname === '::1' || hostname === '[::1]') {
+      return true;
+    }
+
+    // Check for 0.0.0.0
+    if (hostname === '0.0.0.0') {
+      return true;
+    }
+
+    // Check for IPv4 loopback and private networks
+    const ipv4Match = hostname.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+    if (ipv4Match) {
+      const [, a, b, c, d] = ipv4Match.map(Number);
+
+      // Validate that all octets are in valid range (0-255)
+      if (a > 255 || b > 255 || c > 255 || d > 255) {
+        return false;
+      }
+
+      // 127.0.0.0/8 - Loopback
+      if (a === 127) {
+        return true;
+      }
+
+      // 10.0.0.0/8 - Private network
+      if (a === 10) {
+        return true;
+      }
+
+      // 172.16.0.0/12 - Private network
+      if (a === 172 && b >= 16 && b <= 31) {
+        return true;
+      }
+
+      // 192.168.0.0/16 - Private network
+      if (a === 192 && b === 168) {
+        return true;
+      }
+    }
+
+    return false;
+  } catch {
+    // Return false for malformed URLs instead of throwing
+    return false;
+  }
+}

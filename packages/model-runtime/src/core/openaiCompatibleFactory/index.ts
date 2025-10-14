@@ -29,10 +29,10 @@ import { desensitizeUrl } from '../../utils/desensitizeUrl';
 import { getModelPropertyWithFallback } from '../../utils/getFallbackModelProperty';
 import { getModelPricing } from '../../utils/getModelPricing';
 import { handleOpenAIError } from '../../utils/handleOpenAIError';
-import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../../utils/openaiHelpers';
 import { postProcessModelList } from '../../utils/postProcessModelList';
 import { StreamingResponse } from '../../utils/response';
 import { LobeRuntimeAI } from '../BaseAI';
+import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../contextBuilders/openai';
 import { OpenAIResponsesStream, OpenAIStream, OpenAIStreamOptions } from '../streams';
 import { createOpenAICompatibleImage } from './createImage';
 import { transformResponseAPIToStream, transformResponseToStream } from './nonStreamToStream';
@@ -67,7 +67,7 @@ export interface CustomClientOptions<T extends Record<string, any> = any> {
   createClient?: (options: ConstructorOptions<T>) => any;
 }
 
-interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
+export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
   apiKey?: string;
   baseURL?: string;
   chatCompletion?: {
@@ -116,6 +116,12 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     bizError: ILobeAgentRuntimeErrorType;
     invalidAPIKey: ILobeAgentRuntimeErrorType;
   };
+  generateObject?: {
+    /**
+     * Use tool calling to simulate structured output for providers that don't support native structured output
+     */
+    useToolsCalling?: boolean;
+  };
   models?:
     | ((params: { client: OpenAI }) => Promise<ChatModelCard[]>)
     | {
@@ -142,6 +148,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   customClient,
   responses,
   createImage: customCreateImage,
+  generateObject: generateObjectConfig,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -389,7 +396,76 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
-      const { messages, schema, model, responseApi } = payload;
+      const { messages, schema, model, responseApi, tools, systemRole } = payload;
+
+      if (tools) {
+        const msgs = messages;
+
+        if (!!systemRole) {
+          msgs.push({ content: systemRole, role: 'system' });
+        }
+
+        const res = await this.client.chat.completions.create(
+          {
+            messages: msgs,
+            model,
+            tool_choice: 'required',
+            tools: tools.map((tool) => ({ function: tool, type: 'function' })),
+            user: options?.user,
+          },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        const toolCalls = res.choices[0].message.tool_calls!;
+
+        try {
+          return toolCalls.map((item) => ({
+            arguments: JSON.parse(item.function.arguments),
+            name: item.function.name,
+          }));
+        } catch {
+          console.error('parse tool call arguments error:', res);
+          return undefined;
+        }
+      }
+
+      if (!schema) throw new Error('tools or schema is required');
+
+      // Use tool calling fallback if configured
+      if (generateObjectConfig?.useToolsCalling) {
+        const tool: ChatCompletionTool = {
+          function: {
+            description:
+              schema.description || 'Generate structured output according to the provided schema',
+            name: schema.name || 'structured_output',
+            parameters: schema.schema,
+          },
+          type: 'function',
+        };
+
+        const res = await this.client.chat.completions.create(
+          {
+            messages,
+            model,
+            tool_choice: { function: { name: tool.function.name }, type: 'function' },
+            tools: [tool],
+            user: options?.user,
+          },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        const toolCalls = res.choices[0].message.tool_calls!;
+
+        try {
+          return toolCalls.map((item) => ({
+            arguments: JSON.parse(item.function.arguments),
+            name: item.function.name,
+          }));
+        } catch {
+          console.error('parse tool call arguments error:', toolCalls);
+          return undefined;
+        }
+      }
 
       if (responseApi) {
         const res = await this.client!.responses.create(

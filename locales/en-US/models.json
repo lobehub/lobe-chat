@@ -704,6 +704,9 @@
   "azure-DeepSeek-R1-0528": {
     "description": "Deployed and provided by Microsoft; the DeepSeek R1 model has undergone a minor version upgrade, currently at DeepSeek-R1-0528. In the latest update, DeepSeek R1 significantly improves inference depth and reasoning ability by increasing computational resources and introducing algorithmic optimizations in the post-training phase. This model excels in benchmarks including mathematics, programming, and general logic, with overall performance approaching leading models such as O3 and Gemini 2.5 Pro."
   },
+  "baichuan-m2-32b": {
+    "description": "Baichuan M2 32B is a Mixture of Experts model developed by Baichuan Intelligence, featuring powerful reasoning capabilities."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B is an open-source, commercially usable large language model developed by Baichuan Intelligence, containing 13 billion parameters, achieving the best results in its size on authoritative Chinese and English benchmarks."
   },
@@ -727,12 +730,6 @@
   },
   "charglm-4": {
     "description": "CharGLM-4 is designed for role-playing and emotional companionship, supporting ultra-long multi-turn memory and personalized dialogue, with wide-ranging applications."
-  },
-  "chatglm3": {
-    "description": "ChatGLM3 is a closed-source model released by Zhipu AI and Tsinghua KEG Lab. It has been pre-trained on a massive amount of Chinese and English identifiers and fine-tuned with human preference alignment. Compared to the first-generation model, it has achieved improvements of 16%, 36%, and 280% in MMLU, C-Eval, and GSM8K, respectively, and topped the Chinese task leaderboard C-Eval. It is suitable for scenarios that require a high level of knowledge, reasoning, and creativity, such as advertising copywriting, novel writing, knowledge-based writing, and code generation."
-  },
-  "chatglm3-6b-base": {
-    "description": "ChatGLM3-6b-base is the latest generation of the ChatGLM series, a 6 billion parameter open-source base model developed by Zhipu."
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to stay current with the latest version. It combines powerful language understanding and generation capabilities, making it suitable for large-scale applications, including customer service, education, and technical support."
@@ -938,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus is an updated version of the V3.1 model released by DeepSeek, positioned as a hybrid agent large language model. This update focuses on fixing user-reported issues and improving stability while maintaining the model's original capabilities. It significantly enhances language consistency, reducing the mixing of Chinese and English and the occurrence of abnormal characters. The model integrates both \"Thinking Mode\" and \"Non-thinking Mode,\" allowing users to switch flexibly between chat templates to suit different tasks. As a key optimization, V3.1-Terminus improves the performance of the Code Agent and Search Agent, making tool invocation and multi-step complex task execution more reliable."
   },
+  "deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "The DeepSeek V3.2 Exp model adopts a hybrid reasoning architecture, supporting both reflective and non-reflective modes."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B is an advanced model trained for highly complex conversations."
   },
@@ -1030,6 +1030,9 @@
   },
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1 is a newly launched hybrid reasoning model by DeepSeek, supporting two reasoning modes: thinking and non-thinking. It offers higher thinking efficiency compared to DeepSeek-R1-0528. With post-training optimization, the use of Agent tools and agent task performance have been significantly enhanced. It supports a 128k context window and an output length of up to 64k tokens."
+  },
+  "deepseek-v3.1-terminus": {
+    "description": "DeepSeek-V3.1-Terminus is an optimized large language model developed by DeepSeek, specifically tailored for terminal devices."
   },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: The next-generation reasoning model that enhances complex reasoning and chain-of-thought capabilities, suitable for tasks requiring in-depth analysis."
@@ -1192,6 +1195,12 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Baidu's flagship ultra-large-scale language model, demonstrating outstanding overall performance, widely applicable to complex task scenarios across various fields; it supports automatic integration with Baidu search plugins to ensure the timeliness of Q&A information. It performs better than ERNIE 4.0 in terms of performance."
+  },
+  "ernie-4.5-21b-a3b": {
+    "description": "ERNIE 4.5 21B A3B is a Mixture of Experts model from Baidu's Wenxin series, offering strong reasoning and multilingual capabilities."
+  },
+  "ernie-4.5-300b-a47b": {
+    "description": "ERNIE 4.5 300B A47B is a large-scale Mixture of Experts model from Baidu's Wenxin series, delivering exceptional reasoning performance."
   },
   "ernie-4.5-8k-preview": {
     "description": "ERNIE 4.5 is Baidu's self-developed next-generation native multimodal foundational model, achieving collaborative optimization through joint modeling of multiple modalities, with excellent multimodal understanding capabilities; it features enhanced language abilities, with significant improvements in understanding, generation, logic, and memory, as well as reduced hallucinations and improved logical reasoning and coding capabilities."
@@ -1449,7 +1458,7 @@
     "description": "GLM-4-0520 is the latest model version designed for highly complex and diverse tasks, demonstrating outstanding performance."
   },
   "glm-4-9b-chat": {
-    "description": "GLM-4-9B-Chat demonstrates high performance across various aspects, including semantics, mathematics, reasoning, coding, and knowledge. It also features web browsing, code execution, custom tool invocation, and long text reasoning, supporting 26 languages including Japanese, Korean, and German."
+    "description": "GLM-4-9B-Chat demonstrates high performance across semantics, mathematics, reasoning, coding, and knowledge. It also supports web browsing, code execution, custom tool invocation, and long-text reasoning. Supports 26 languages including Japanese, Korean, and German."
   },
   "glm-4-air": {
     "description": "GLM-4-Air is a cost-effective version with performance close to GLM-4, offering fast speed at an affordable price."
@@ -1749,7 +1758,10 @@
     "description": "A more cost-effective version of GPT Image 1, natively supporting both text and image inputs with image generation output."
   },
   "gpt-oss-120b": {
-    "description": "GPT-OSS-120B MXFP4 quantized Transformer architecture, delivering strong performance even under resource constraints."
+    "description": "Access to this model requires an application. GPT-OSS-120B is an open-source large-scale language model released by OpenAI, known for its powerful text generation capabilities."
+  },
+  "gpt-oss-20b": {
+    "description": "Access to this model requires an application. GPT-OSS-20B is an open-source mid-sized language model from OpenAI, offering efficient text generation."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B is a large open-source language model released by OpenAI, employing MXFP4 quantization technology as a flagship model. It requires multi-GPU or high-performance workstation environments to operate and delivers outstanding performance in complex reasoning, code generation, and multilingual processing, supporting advanced function calls and tool integration."
@@ -1967,6 +1979,9 @@
   "kimi-k2-0905-preview": {
     "description": "The kimi-k2-0905-preview model has a context length of 256k, featuring stronger Agentic Coding capabilities, more outstanding aesthetics and practicality of frontend code, and better context understanding."
   },
+  "kimi-k2-instruct": {
+    "description": "Kimi K2 Instruct is a large language model developed by Moonshot AI, featuring ultra-long context processing capabilities."
+  },
   "kimi-k2-turbo-preview": {
     "description": "Kimi-K2 is a Mixture-of-Experts (MoE) foundation model with exceptional coding and agent capabilities, featuring 1T total parameters and 32B activated parameters. In benchmark evaluations across core categories — general knowledge reasoning, programming, mathematics, and agent tasks — the K2 model outperforms other leading open-source models."
   },
@@ -1987,9 +2002,6 @@
   },
   "lite": {
     "description": "Spark Lite is a lightweight large language model with extremely low latency and efficient processing capabilities, completely free and open, supporting real-time online search functionality. Its quick response feature makes it excel in inference applications and model fine-tuning on low-power devices, providing users with excellent cost-effectiveness and intelligent experiences, particularly in knowledge Q&A, content generation, and search scenarios."
-  },
-  "llama-2-7b-chat": {
-    "description": "Llama2 is a series of large language models (LLMs) developed and open-sourced by Meta. This series includes generative text models of varying sizes, ranging from 7 billion to 70 billion parameters, which have been pre-trained and fine-tuned. Architecturally, Llama2 is an autoregressive language model that uses an optimized transformer architecture. The fine-tuned versions leverage supervised fine-tuning (SFT) and reinforcement learning with human feedback (RLHF) to align with human preferences for usefulness and safety. Llama2 outperforms the Llama series on multiple academic datasets and provides valuable insights for the design and development of other models."
   },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B provides enhanced AI reasoning capabilities, suitable for complex applications, supporting extensive computational processing while ensuring efficiency and accuracy."
@@ -2017,9 +2029,6 @@
   },
   "llama-3.3-70b": {
     "description": "Llama 3.3 70B: A mid-to-large scale Llama model that balances reasoning power and throughput."
-  },
-  "llama-3.3-70b-instruct": {
-    "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to a 405B model at an extremely low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on various industry benchmarks. Knowledge cutoff date is December 2023."
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 is a multilingual large language model (LLM) with 70 billion parameters (text input/text output), featuring pre-training and instruction-tuning. The instruction-tuned pure text model of Llama 3.3 is optimized for multilingual conversational use cases and outperforms many available open-source and closed chat models on common industry benchmarks."
@@ -2082,7 +2091,7 @@
     "description": "Spark Max 32K is configured with large context processing capabilities, enhanced contextual understanding, and logical reasoning abilities, supporting text input of 32K tokens, suitable for long document reading, private knowledge Q&A, and other scenarios."
   },
   "megrez-3b-instruct": {
-    "description": "Megrez-3B-Instruct is a large language model fully trained by Wuwen Xin Qiong. Megrez-3B-Instruct aims to create an ultra-fast, compact, and easy-to-use intelligent solution for edge devices through the concept of hardware-software co-design."
+    "description": "Megrez 3B Instruct is a compact and efficient model developed by Wuwen Xinqiong."
   },
   "meta-llama-3-70b-instruct": {
     "description": "A powerful 70-billion parameter model excelling in reasoning, coding, and broad language applications."
@@ -2639,6 +2648,12 @@
   "pro-128k": {
     "description": "Spark Pro 128K is equipped with an extra-large context processing capability, able to handle up to 128K of contextual information, making it particularly suitable for long-form content that requires comprehensive analysis and long-term logical connections, providing smooth and consistent logic and diverse citation support in complex text communication."
   },
+  "pro-deepseek-r1": {
+    "description": "Enterprise-exclusive service model with concurrent service support."
+  },
+  "pro-deepseek-v3": {
+    "description": "Enterprise-exclusive service model with concurrent service support."
+  },
   "qvq-72b-preview": {
     "description": "The QVQ model is an experimental research model developed by the Qwen team, focusing on enhancing visual reasoning capabilities, particularly in the field of mathematical reasoning."
   },
@@ -2773,12 +2788,6 @@
   },
   "qwen2": {
     "description": "Qwen2 is Alibaba's next-generation large-scale language model, supporting diverse application needs with excellent performance."
-  },
-  "qwen2-72b-instruct": {
-    "description": "Qwen2 is the new generation of large language model series introduced by the Qwen team. It is based on the Transformer architecture and incorporates technologies such as the SwiGLU activation function, attention QKV bias, group query attention, a mixture of sliding window attention, and full attention. Additionally, the Qwen team has improved the tokenizer to better adapt to multiple natural languages and code."
-  },
-  "qwen2-7b-instruct": {
-    "description": "Qwen2 is the new generation of large language model series introduced by the Qwen team. It is based on the Transformer architecture and incorporates technologies such as the SwiGLU activation function, attention QKV bias, group query attention, a mixture of sliding window attention, and full attention. Additionally, the Qwen team has improved the tokenizer to better adapt to multiple natural languages and code."
   },
   "qwen2.5": {
     "description": "Qwen2.5 is Alibaba's next-generation large-scale language model, supporting diverse application needs with outstanding performance."
@@ -2918,6 +2927,12 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "A new generation of thinking mode open-source model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Thinking-2507), it features improved instruction-following capabilities and more concise model-generated summaries."
   },
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct is a multimodal model developed by Tongyi Qianwen, supporting visual understanding and reasoning."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking is a multimodal reasoning model from Tongyi Qianwen, designed for visual understanding and reasoning tasks."
+  },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL is a text generation model with visual (image) understanding capabilities. It can perform OCR (image text recognition) and further summarize and reason, such as extracting attributes from product photos or solving problems based on exercise images."
   },
@@ -3034,6 +3049,9 @@
   },
   "step-r1-v-mini": {
     "description": "This model is a powerful reasoning model with strong image understanding capabilities, able to process both image and text information, generating text content after deep reasoning. It excels in visual reasoning while also possessing first-tier capabilities in mathematics, coding, and text reasoning. The context length is 100k."
+  },
+  "step3": {
+    "description": "Step3 is a multimodal model developed by StepStar, offering advanced visual understanding capabilities."
   },
   "stepfun-ai/step3": {
     "description": "Step3 is a cutting-edge multimodal reasoning model released by StepFun. It is built on a mixture-of-experts (MoE) architecture with 321B total parameters and 38B active parameters. The model adopts an end-to-end design to minimize decoding cost while delivering top-tier performance in visual-language reasoning. Through the combined design of Multi-Matrix Factorized Attention (MFA) and Attention-FFN Decoupling (AFD), Step3 maintains exceptional efficiency on both high-end and low-end accelerators. During pretraining, Step3 processed over 20 trillion text tokens and 4 trillion image-text mixed tokens, covering more than a dozen languages. The model achieves leading performance among open-source models across benchmarks in mathematics, code, and multimodal tasks."
@@ -3157,9 +3175,6 @@
   },
   "xai/grok-4": {
     "description": "xAI's latest and greatest flagship model, delivering unparalleled performance in natural language, mathematics, and reasoning—an ideal all-rounder."
-  },
-  "yi-1.5-34b-chat": {
-    "description": "Yi-1.5 is an upgraded version of Yi. It continues pre-training on Yi using a high-quality corpus of 500B tokens and is fine-tuned on 3M diverse samples."
   },
   "yi-large": {
     "description": "A new trillion-parameter model, providing super strong question-answering and text generation capabilities."

@@ -7,6 +7,14 @@
     "desc": "Effacer les messages de la session actuelle et les fichiers téléchargés",
     "title": "Effacer les messages de la session"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "Supprimer le dernier message et régénérer",
+    "title": "Supprimer et régénérer"
+  },
+  "deleteLastMessage": {
+    "desc": "Supprimer le dernier message",
+    "title": "Supprimer le dernier message"
+  },
   "desktop": {
     "openSettings": {
       "desc": "Ouvrir la page des paramètres de l'application",

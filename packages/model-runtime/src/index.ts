@@ -1,4 +1,5 @@
 export * from './core/BaseAI';
+export { pruneReasoningPayload } from './core/contextBuilders/openai';
 export { ModelRuntime } from './core/ModelRuntime';
 export { createOpenAICompatibleRuntime } from './core/openaiCompatibleFactory';
 export * from './core/RouterRuntime';
@@ -33,8 +34,8 @@ export { LobeZeroOneAI } from './providers/zeroone';
 export { LobeZhipuAI } from './providers/zhipu';
 export * from './types';
 export * from './types/error';
+export { consumeStreamUntilDone } from './utils/consumeStream';
 export { AgentRuntimeError } from './utils/createError';
 export { getModelPropertyWithFallback } from './utils/getFallbackModelProperty';
 export { getModelPricing } from './utils/getModelPricing';
-export { pruneReasoningPayload } from './utils/openaiHelpers';
 export { parseDataUri } from './utils/uriParser';

@@ -284,10 +284,18 @@
           "placeholder": "Insira o ID do modelo, por exemplo, gpt-4o ou claude-3.5-sonnet",
           "title": "ID do Modelo"
         },
+        "imageOutput": {
+          "extra": "Esta configuração ativará apenas a capacidade do modelo de gerar imagens. O efeito real depende totalmente do próprio modelo. Teste por conta própria se o modelo possui capacidade utilizável de geração de imagens.",
+          "title": "Suporte à geração de imagens"
+        },
         "modalTitle": "Configuração do Modelo Personalizado",
         "reasoning": {
           "extra": "Esta configuração ativará apenas a capacidade de pensamento profundo do modelo, e o efeito específico depende totalmente do próprio modelo. Por favor, teste se este modelo possui a capacidade de pensamento profundo utilizável.",
           "title": "Suporte a Pensamento Profundo"
+        },
+        "search": {
+          "extra": "Esta configuração ativará apenas a capacidade de busca online do mecanismo de busca interno do modelo. A compatibilidade com o mecanismo de busca interno depende do próprio modelo. Teste por conta própria se o mecanismo de busca interno do modelo é utilizável.",
+          "title": "Suporte à busca online"
         },
         "tokens": {
           "extra": "Configurar o número máximo de tokens suportados pelo modelo",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Por favor, selecione o tipo de modelo",
           "title": "Tipo de modelo"
+        },
+        "video": {
+          "extra": "Esta configuração ativará apenas a configuração de reconhecimento de vídeo no aplicativo. A compatibilidade com o reconhecimento depende totalmente do próprio modelo. Teste por conta própria se o modelo possui capacidade utilizável de reconhecimento de vídeo.",
+          "title": "Suporte ao reconhecimento de vídeo"
         },
         "vision": {
           "extra": "Esta configuração apenas habilitará a configuração de upload de imagens no aplicativo, se o reconhecimento for suportado depende do modelo em si, teste a capacidade de reconhecimento visual desse modelo.",

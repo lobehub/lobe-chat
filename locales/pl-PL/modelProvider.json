@@ -284,10 +284,18 @@
           "placeholder": "Wprowadź identyfikator modelu, na przykład gpt-4o lub claude-3.5-sonnet",
           "title": "ID modelu"
         },
+        "imageOutput": {
+          "extra": "Ta konfiguracja włączy jedynie możliwość generowania obrazów przez model. Faktyczna skuteczność zależy całkowicie od samego modelu. Proszę samodzielnie przetestować, czy model posiada zdolność generowania obrazów.",
+          "title": "Obsługa generowania obrazów"
+        },
         "modalTitle": "Konfiguracja niestandardowego modelu",
         "reasoning": {
           "extra": "Ta konfiguracja włączy jedynie zdolność modelu do głębokiego myślenia, a konkretne efekty w pełni zależą od samego modelu. Proszę samodzielnie przetestować, czy model ma zdolność do głębokiego myślenia.",
           "title": "Wsparcie dla głębokiego myślenia"
+        },
+        "search": {
+          "extra": "Ta konfiguracja włączy jedynie możliwość korzystania z wbudowanej wyszukiwarki internetowej modelu. Czy model obsługuje wyszukiwanie zależy od jego możliwości. Proszę samodzielnie przetestować dostępność tej funkcji.",
+          "title": "Obsługa wyszukiwania online"
         },
         "tokens": {
           "extra": "Ustaw maksymalną liczbę tokenów wspieranych przez model",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Wybierz typ modelu",
           "title": "Typ modelu"
+        },
+        "video": {
+          "extra": "Ta konfiguracja włączy jedynie ustawienia rozpoznawania wideo w aplikacji. Czy model obsługuje rozpoznawanie zależy całkowicie od jego możliwości. Proszę samodzielnie przetestować dostępność funkcji rozpoznawania wideo.",
+          "title": "Obsługa rozpoznawania wideo"
         },
         "vision": {
           "extra": "Ta konfiguracja włączy tylko możliwość przesyłania obrazów w aplikacji, czy model obsługuje rozpoznawanie zależy od samego modelu, proszę samodzielnie przetestować dostępność rozpoznawania wizualnego tego modelu.",

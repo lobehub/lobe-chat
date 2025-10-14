@@ -7,6 +7,14 @@
     "desc": "Eliminar los mensajes y archivos subidos de la conversación actual",
     "title": "Eliminar mensajes de la conversación"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "Eliminar el último mensaje y volver a generarlo",
+    "title": "Eliminar y regenerar"
+  },
+  "deleteLastMessage": {
+    "desc": "Eliminar el último mensaje",
+    "title": "Eliminar el último mensaje"
+  },
   "desktop": {
     "openSettings": {
       "desc": "Abrir la página de configuración de la aplicación",

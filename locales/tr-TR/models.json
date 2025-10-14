@@ -704,6 +704,9 @@
   "azure-DeepSeek-R1-0528": {
     "description": "Microsoft tarafından dağıtılmıştır; DeepSeek R1 modeli küçük bir sürüm güncellemesi almıştır, mevcut sürüm DeepSeek-R1-0528'dir. En son güncellemede, DeepSeek R1 hesaplama kaynaklarını artırarak ve eğitim sonrası algoritma optimizasyon mekanizmasını tanıtarak çıkarım derinliği ve tahmin yeteneğini önemli ölçüde geliştirmiştir. Bu model matematik, programlama ve genel mantık gibi çeşitli kıyaslama testlerinde üstün performans göstermiştir ve genel performansı O3 ve Gemini 2.5 Pro gibi önde gelen modellerle yakındır."
   },
+  "baichuan-m2-32b": {
+    "description": "Baichuan M2 32B, Baichuan Intelligence tarafından geliştirilen bir karma uzman modelidir ve güçlü akıl yürütme yeteneklerine sahiptir."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B, Baichuan Zhi Neng tarafından geliştirilen 130 milyar parametreye sahip açık kaynaklı ticari bir büyük dil modelidir ve yetkili Çince ve İngilizce benchmark'larda aynı boyuttaki en iyi sonuçları elde etmiştir."
   },
@@ -727,12 +730,6 @@
   },
   "charglm-4": {
     "description": "CharGLM-4, rol yapma ve duygusal destek için tasarlanmıştır, uzun süreli çoklu hafıza ve kişiselleştirilmiş diyalogları destekler, geniş bir uygulama yelpazesine sahiptir."
-  },
-  "chatglm3": {
-    "description": "ChatGLM3, ZhiPu AI ve Tsinghua KEG laboratuvarı tarafından yayınlanan kapalı kaynaklı bir modeldir. Büyük miktarda Çince ve İngilizce belirteçlerin önceden eğitilmesi ve insan tercihleriyle hizalama eğitimi ile, birinci nesil modellere göre MMLU, C-Eval ve GSM8K'da sırasıyla %16, %36 ve %280'lük iyileştirmeler elde edilmiştir ve Çince görevler listesinde C-Eval zirvesine ulaşmıştır. Bilgi hacmi, çıkarım yeteneği ve yaratıcılık gerektiren senaryolarda kullanılabilir, örneğin reklam metni, roman yazımı, bilgi tabanlı yazım, kod oluşturma vb."
-  },
-  "chatglm3-6b-base": {
-    "description": "ChatGLM3-6b-base, ZhiPu tarafından geliştirilen ChatGLM serisinin en yeni nesli olan 6 milyar parametrelik açık kaynaklı temel modeldir."
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o, güncel versiyonunu korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi geniş ölçekli uygulama senaryoları için uygundur."
@@ -938,6 +935,9 @@
   "deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus, DeepSeek tarafından yayınlanan V3.1 modelinin güncellenmiş versiyonudur ve hibrit ajan büyük dil modeli olarak konumlandırılmıştır. Bu güncelleme, modelin mevcut yeteneklerini koruyarak kullanıcı geri bildirimlerine dayalı sorunları düzeltmeye ve kararlılığı artırmaya odaklanmıştır. Dil tutarlılığını önemli ölçüde iyileştirmiş, Çince ve İngilizce karışımı ile anormal karakterlerin görünümünü azaltmıştır. Model, farklı görevler için sohbet şablonları aracılığıyla esnek geçiş yapılabilen “Düşünme Modu” ve “Düşünmeme Modu”nu entegre etmiştir. Önemli bir iyileştirme olarak, V3.1-Terminus, kod ajanı (Code Agent) ve arama ajanı (Search Agent) performansını artırarak araç çağrıları ve çok adımlı karmaşık görevlerin yürütülmesinde daha güvenilir hale getirmiştir."
   },
+  "deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 Exp modeli, hem düşünme hem de düşünme dışı modları destekleyen hibrit bir akıl yürütme mimarisine sahiptir."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B, yüksek karmaşıklıkta diyaloglar için eğitilmiş gelişmiş bir modeldir."
   },
@@ -1030,6 +1030,9 @@
   },
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1, DeepSeek'in tamamen yeni hibrit çıkarım modeli olup, düşünme ve düşünmeme olmak üzere iki çıkarım modunu destekler ve DeepSeek-R1-0528'e kıyasla düşünme verimliliği daha yüksektir. Post-Training optimizasyonu sayesinde, Agent araç kullanımı ve akıllı görev performansı önemli ölçüde artırılmıştır. 128k bağlam penceresini destekler ve çıktı uzunluğu maksimum 64k token'a kadar çıkabilir."
+  },
+  "deepseek-v3.1-terminus": {
+    "description": "DeepSeek-V3.1-Terminus, DeepSeek tarafından geliştirilen ve uç cihazlar için optimize edilmiş büyük dil modeli sürümüdür."
   },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: Karmaşık çıkarım ve bağlantılı düşünme yeteneklerini geliştiren yeni nesil çıkarım modeli, derinlemesine analiz gerektiren görevler için uygundur."
@@ -1192,6 +1195,12 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
+  },
+  "ernie-4.5-21b-a3b": {
+    "description": "ERNIE 4.5 21B A3B, Baidu Wenxin tarafından geliştirilen karma uzman modelidir ve güçlü akıl yürütme ile çok dilli yeteneklere sahiptir."
+  },
+  "ernie-4.5-300b-a47b": {
+    "description": "ERNIE 4.5 300B A47B, Baidu Wenxin tarafından geliştirilen son derece büyük ölçekli karma uzman modelidir ve üstün akıl yürütme yeteneklerine sahiptir."
   },
   "ernie-4.5-8k-preview": {
     "description": "Wenxin büyük modeli 4.5, Baidu tarafından geliştirilen yeni nesil yerel çok modlu temel büyük modeldir. Birden fazla modun birleşik modellemesi ile işbirlikçi optimizasyon sağlar, çok modlu anlama yeteneği mükemmeldir; dil yetenekleri, anlama, üretim, mantık ve hafıza yetenekleri önemli ölçüde geliştirilmiştir, yanılsamaları ortadan kaldırma, mantıksal akıl yürütme ve kod yetenekleri belirgin şekilde artmıştır."
@@ -1449,7 +1458,7 @@
     "description": "GLM-4-0520, son derece karmaşık ve çeşitli görevler için tasarlanmış en yeni model versiyonudur, olağanüstü performans sergiler."
   },
   "glm-4-9b-chat": {
-    "description": "GLM-4-9B-Chat, anlam, matematik, akıl yürütme, kod ve bilgi gibi birçok alanda yüksek performans göstermektedir. Ayrıca web tarayıcı, kod yürütme, özel araç çağrıları ve uzun metin akıl yürütme yeteneklerine sahiptir. Japonca, Korece, Almanca dahil olmak üzere 26 dil desteği sunmaktadır."
+    "description": "GLM-4-9B-Chat, anlamsal anlama, matematik, akıl yürütme, kodlama ve bilgi alanlarında yüksek performans sergiler. Web tarama, kod yürütme, özel araç çağırma ve uzun metin akıl yürütme gibi özellikleri destekler. Japonca, Korece ve Almanca dahil olmak üzere 26 dili destekler."
   },
   "glm-4-air": {
     "description": "GLM-4-Air, maliyet etkin bir versiyondur, GLM-4'e yakın performans sunar ve hızlı hız ve uygun fiyat sağlar."
@@ -1749,7 +1758,10 @@
     "description": "Daha düşük maliyetli bir GPT Image 1 sürümüdür, metin ve görsel girdilerini doğal olarak destekler ve görsel çıktılar üretebilir."
   },
   "gpt-oss-120b": {
-    "description": "GPT-OSS-120B MXFP4 kuantize edilmiş Transformer yapısı, sınırlı kaynaklarda bile güçlü performans sağlar."
+    "description": "Bu modelin kullanımı için başvuru gereklidir. GPT-OSS-120B, OpenAI tarafından geliştirilen açık kaynaklı büyük ölçekli bir dil modelidir ve güçlü metin üretme yeteneklerine sahiptir."
+  },
+  "gpt-oss-20b": {
+    "description": "Bu modelin kullanımı için başvuru gereklidir. GPT-OSS-20B, OpenAI tarafından geliştirilen açık kaynaklı orta ölçekli bir dil modelidir ve verimli metin üretme yeteneklerine sahiptir."
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B, OpenAI tarafından yayımlanan büyük ölçekli açık kaynak dil modelidir ve MXFP4 kuantizasyon teknolojisini kullanır. Amiral gemisi model olarak çoklu GPU veya yüksek performanslı iş istasyonu ortamlarında çalıştırılması gerekmektedir. Karmaşık çıkarım, kod üretimi ve çok dilli işleme konularında üstün performans sunar ve gelişmiş fonksiyon çağrıları ile araç entegrasyonunu destekler."
@@ -1967,6 +1979,9 @@
   "kimi-k2-0905-preview": {
     "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
   },
+  "kimi-k2-instruct": {
+    "description": "Kimi K2 Instruct, Moonshot AI tarafından geliştirilen büyük bir dil modelidir ve son derece uzun bağlamları işleyebilme yeteneğine sahiptir."
+  },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2, son derece güçlü kod yazma ve Agent yeteneklerine sahip MoE mimarisine dayanan bir temel modeldir; toplam parametre sayısı 1T, aktif (etkin) parametre sayısı 32B. Genel bilgi çıkarımı, programlama, matematik ve Agent gibi ana kategorilerde yapılan karşılaştırmalı performans testlerinde K2 modelinin performansı diğer önde gelen açık kaynak modellerinin üzerindedir."
   },
@@ -1987,9 +2002,6 @@
   },
   "lite": {
     "description": "Spark Lite, son derece düşük gecikme süresi ve yüksek verimlilikle çalışan hafif bir büyük dil modelidir. Tamamen ücretsiz ve açık olup, gerçek zamanlı çevrimiçi arama işlevini desteklemektedir. Hızlı yanıt verme özelliği, düşük hesaplama gücüne sahip cihazlarda çıkarım uygulamaları ve model ince ayarlarında mükemmel performans sergileyerek, kullanıcılara maliyet etkinliği ve akıllı deneyim sunmakta, özellikle bilgi sorgulama, içerik oluşturma ve arama senaryolarında başarılı olmaktadır."
-  },
-  "llama-2-7b-chat": {
-    "description": "Llama2, Meta tarafından geliştirilmiş ve açık kaynaklı büyük dil modeli (LLM) serisidir. Bu, 7 milyar ile 70 milyar parametre arasında değişen, önceden eğitilmiş ve ince ayarlanmış üretici metin modellerinden oluşan bir gruptır. Mimari açısından, Llama2, optimize edilmiş dönüştürücü mimarisi kullanan bir otoregresif dil modelidir. Ayarlanmış versiyonlar, faydalılık ve güvenliğin insan tercihleriyle hizalanması için gözetimli ince ayarlama (SFT) ve insan geri bildirimleriyle güçlendirilmiş öğrenme (RLHF) kullanır. Llama2, Llama serisine göre çeşitli akademik veri kümelerinde daha iyi performans gösterir ve birçok diğer modelin tasarım ve geliştirilmesine ilham verir."
   },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B, daha güçlü AI akıl yürütme yeteneği sunar, karmaşık uygulamalar için uygundur ve yüksek verimlilik ve doğruluk sağlamak için çok sayıda hesaplama işlemini destekler."
@@ -2017,9 +2029,6 @@
   },
   "llama-3.3-70b": {
     "description": "Llama 3.3 70B: Orta-büyük ölçekli Llama modeli, akıl yürütme yeteneği ile yüksek işlem hacmini dengeler."
-  },
-  "llama-3.3-70b-instruct": {
-    "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir ve 405B modelinin performansını çok düşük maliyetle deneyimlemenizi sağlar. Transformer yapısına dayanmaktadır ve denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) ile faydalılığını ve güvenliğini artırmıştır. Talimat ayarlı versiyonu, çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri kıyaslamasında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 Aralık'tır."
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 çok dilli büyük dil modeli (LLM), 70B (metin girişi/metin çıkışı) içindeki önceden eğitilmiş ve talimat ayarlanmış bir üretim modelidir. Llama 3.3 talimat ayarlı saf metin modeli, çok dilli konuşma kullanım durumları için optimize edilmiştir ve yaygın endüstri kıyaslamalarında mevcut birçok açık kaynak ve kapalı sohbet modelinden daha üstündür."
@@ -2082,7 +2091,7 @@
     "description": "Spark Max 32K, büyük bağlam işleme yeteneği ile donatılmıştır ve daha güçlü bağlam anlama ve mantıksal çıkarım yetenekleri sunmaktadır. 32K token'lık metin girişi desteklemekte olup, uzun belgelerin okunması, özel bilgi sorgulama gibi senaryolar için uygundur."
   },
   "megrez-3b-instruct": {
-    "description": "Megrez-3B-Instruct, Wuwen Xin Qiong tarafından tamamen bağımsız olarak eğitilen büyük dil modelidir. Megrez-3B-Instruct, yazılım ve donanım işbirliği felsefesiyle, hızlı çıkarım, küçük ve güçlü, kullanımı kolay bir uç tarafı zeka çözümü oluşturmayı amaçlamaktadır."
+    "description": "Megrez 3B Instruct, Wuwen Xinqiong tarafından geliştirilen düşük parametreli, yüksek verimli bir modeldir."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Akıl yürütme, kodlama ve geniş dil uygulamalarında mükemmel bir 70 milyar parametreli model."
@@ -2639,6 +2648,12 @@
   "pro-128k": {
     "description": "Spark Pro 128K, olağanüstü bağlam işleme yeteneği ile donatılmıştır ve 128K'ya kadar bağlam bilgilerini işleyebilir. Özellikle uzun metinlerin bütünsel analizi ve uzun vadeli mantıksal ilişkilerin işlenmesi gereken durumlar için uygundur ve karmaşık metin iletişiminde akıcı ve tutarlı bir mantık ile çeşitli alıntı desteği sunmaktadır."
   },
+  "pro-deepseek-r1": {
+    "description": "Kurumsal özel hizmetler için tasarlanmış modeldir ve eşzamanlı hizmetleri içerir."
+  },
+  "pro-deepseek-v3": {
+    "description": "Kurumsal özel hizmetler için tasarlanmış modeldir ve eşzamanlı hizmetleri içerir."
+  },
   "qvq-72b-preview": {
     "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
   },
@@ -2773,12 +2788,6 @@
   },
   "qwen2": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
-  },
-  "qwen2-72b-instruct": {
-    "description": "Qwen2, Qwen ekibinin yeni nesil büyük dil modeli serisidir. Bu model, Transformer mimarisine dayanır ve SwiGLU aktivasyon fonksiyonu, dikkat QKV yanlısı (attention QKV bias), grup sorgu dikkati (group query attention), kayan pencere dikkatı (mixture of sliding window attention) ve tam dikkatin karışımı gibi teknikleri kullanır. Ayrıca, Qwen ekibi, çeşitli doğal diller ve kodları destekleyen belirteçleyiciyi (tokenizer) de geliştirdi."
-  },
-  "qwen2-7b-instruct": {
-    "description": "Qwen2, Qwen ekibinin yeni nesil büyük dil modeli serisidir. Bu model, Transformer mimarisine dayanır ve SwiGLU aktivasyon fonksiyonu, dikkat QKV bias, grup sorgu dikkati, kayan pencere dikkatini ve tam dikkat karışımını içeren teknolojiler kullanır. Ayrıca, Qwen ekibi, çeşitli doğal diller ve kodları için belirteçleyiciyi de geliştirdi."
   },
   "qwen2.5": {
     "description": "Qwen2.5, Alibaba'nın yeni nesil büyük ölçekli dil modelidir ve mükemmel performansıyla çeşitli uygulama ihtiyaçlarını desteklemektedir."
@@ -2918,6 +2927,12 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "Qwen3 tabanlı yeni nesil düşünme modlu açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Thinking-2507) kıyasla komutlara uyum yeteneği artırılmış ve modelin özetleyici yanıtları daha özlü hale getirilmiştir."
   },
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, Tongyi Qianwen tarafından geliştirilen çok modlu bir modeldir ve görsel anlama ile akıl yürütmeyi destekler."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, Tongyi Qianwen tarafından geliştirilen çok modlu bir akıl yürütme modelidir ve görsel anlama ile akıl yürütmeyi destekler."
+  },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL, görsel (resim) anlama yeteneğine sahip metin üretim modelidir. Sadece OCR (resim metni tanıma) yapmakla kalmaz, aynı zamanda ürün fotoğraflarından özellik çıkarma, alıştırma resimlerinden problem çözme gibi özetleme ve çıkarım yapabilir."
   },
@@ -3034,6 +3049,9 @@
   },
   "step-r1-v-mini": {
     "description": "Bu model, güçlü görüntü anlama yeteneğine sahip bir çıkarım büyük modelidir, görüntü ve metin bilgilerini işleyebilir, derin düşünme sonrası metin oluşturma çıktısı verebilir. Bu model, görsel çıkarım alanında öne çıkarken, birinci sınıf matematik, kod ve metin çıkarım yeteneklerine de sahiptir. Bağlam uzunluğu 100k'dır."
+  },
+  "step3": {
+    "description": "Step3, StepStar tarafından geliştirilen çok modlu bir modeldir ve güçlü görsel anlama yeteneklerine sahiptir."
   },
   "stepfun-ai/step3": {
     "description": "Step3, StepFun tarafından yayımlanan öncü çok modlu çıkarım modelidir; 321 milyar toplam ve 38 milyar aktif parametreye sahip Uzman Karışımı (MoE) mimarisi üzerine inşa edilmiştir. Model uçtan uca bir tasarımla kod çözme maliyetlerini en aza indirmeyi hedeflerken görsel-dilsel çıkarımda üst düzey performans sunar. Çoklu matris faktorizasyonlu dikkat (MFA) ile dikkat-FFN ayrıştırmasının (AFD) uyumlu tasarımı sayesinde Step3, hem üst düzey hem de düşük kapasiteli hızlandırıcılarda yüksek verimliliğini korur. Ön eğitim aşamasında Step3, 20 trilyondan fazla metin tokeni ve 4 trilyon görsel-metin tokeni işlemiş olup on'dan fazla dili kapsar. Model, matematik, kodlama ve çok modlu görevler gibi çeşitli kıyaslama testlerinde açık kaynak modeller arasında lider düzeye ulaşmıştır."
@@ -3157,9 +3175,6 @@
   },
   "xai/grok-4": {
     "description": "xAI'nin en yeni ve en büyük amiral gemisi modeli olup, doğal dil, matematik ve çıkarımda eşsiz performans sunar—mükemmel çok yönlü oyuncu."
-  },
-  "yi-1.5-34b-chat": {
-    "description": "Yi-1.5, Yi'nin geliştirilmiş sürümüdür. Yüksek kaliteli 500B token'lı veri kümesi üzerinde devam eden ön eğitimi ve 3M çeşitlendirilmiş ince ayar örneği üzerinde ince ayarını içerir."
   },
   "yi-large": {
     "description": "Yeni nesil yüz milyar parametreli model, güçlü soru yanıtlama ve metin üretim yetenekleri sunar."
