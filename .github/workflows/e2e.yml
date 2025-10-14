@@ -1,4 +1,4 @@
-name: e2e
+name: E2E CI
 permissions:
   contents: read
 
@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
     e2e:
-        name: E2E CI
+        name: Test Web App
         runs-on: ubuntu-latest
         timeout-minutes: 25
         steps:
