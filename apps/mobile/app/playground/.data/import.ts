@@ -25,6 +25,10 @@ import CenterDemos from '@lobehub/ui-rn/Center/demos';
 import ColorScalesDemos from '@lobehub/ui-rn/ColorScales/demos';
 // ColorSwatches
 import ColorSwatchesDemos from '@lobehub/ui-rn/ColorSwatches/demos';
+// Divider
+import DividerDemos from '@lobehub/ui-rn/Divider/demos';
+// Empty
+import EmptyDemos from '@lobehub/ui-rn/Empty/demos';
 // Flexbox
 import FlexboxDemos from '@lobehub/ui-rn/Flexbox/demos';
 // FluentEmoji
@@ -80,6 +84,8 @@ export const DEMOS_MAP: Record<string, any> = {
   Center: CenterDemos,
   ColorScales: ColorScalesDemos,
   ColorSwatches: ColorSwatchesDemos,
+  Divider: DividerDemos,
+  Empty: EmptyDemos,
   Flexbox: FlexboxDemos,
   FluentEmoji: FluentEmojiDemos,
   Form: FormDemos,
