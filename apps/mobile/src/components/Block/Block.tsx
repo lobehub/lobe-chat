@@ -116,7 +116,12 @@ const Block = memo<BlockProps>(
         style={({ hovered, pressed }) => [
           variants({ active, clickable, hovered, pressed, shadow, variant }),
           {
-            borderRadius,
+            borderRadius:
+              typeof borderRadius === 'number'
+                ? borderRadius
+                : borderRadius === false
+                  ? 0
+                  : theme.borderRadiusLG * 1.5,
           },
           typeof style === 'function' ? style({ hovered, pressed }) : style,
         ]}
