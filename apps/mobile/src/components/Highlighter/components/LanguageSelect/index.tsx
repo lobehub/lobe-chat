@@ -1,6 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ChevronDown } from 'lucide-react-native';
-import type { FC } from 'react';
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { useTheme } from '@/components/styles';
@@ -13,7 +13,7 @@ interface LanguageSelectProps {
   value: string;
 }
 
-export const LanguageSelect: FC<LanguageSelectProps> = ({ value, onSelect }) => {
+export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) => {
   const token = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const { styles } = useStyles();
@@ -64,4 +64,6 @@ export const LanguageSelect: FC<LanguageSelectProps> = ({ value, onSelect }) => 
       </Pressable>
     </View>
   );
-};
+});
+
+LanguageSelect.displayName = 'LanguageSelect';

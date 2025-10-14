@@ -1,5 +1,5 @@
-import type { FC, ReactNode } from 'react';
-import { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, memo, useContext } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { darkAlgorithm, lightAlgorithm } from '@/components/styles';
@@ -20,7 +20,7 @@ interface ThemeProviderProps {
   theme?: ThemeConfig;
 }
 
-export const ThemeProvider: FC<ThemeProviderProps> = ({ children, theme: customTheme }) => {
+export const ThemeProvider = memo<ThemeProviderProps>(({ children, theme: customTheme }) => {
   const systemColorScheme = useColorScheme();
 
   // 检查是否已经在 ThemeProvider 内部（嵌套情况）
@@ -129,7 +129,9 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({ children, theme: customT
   };
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
-};
+});
+
+ThemeProvider.displayName = 'ThemeProvider';
 
 // 使用主题的 Hook
 export const useThemeMode = (): ThemeContextValue => {

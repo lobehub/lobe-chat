@@ -1,9 +1,8 @@
 import { Button, Skeleton, Text, useTheme } from '@lobehub/ui-rn';
-import type { FC } from 'react';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-const ComplexDemo: FC = () => {
+const ComplexDemo = () => {
   const [loading, setLoading] = useState(true);
   const token = useTheme();
 

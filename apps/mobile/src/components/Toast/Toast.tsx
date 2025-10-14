@@ -1,5 +1,5 @@
 import { CheckCircle, Info, RefreshCw, X, XCircle } from 'lucide-react-native';
-import type { FC } from 'react';
+import { memo } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
 import Icon from '@/components/Icon';
@@ -7,19 +7,9 @@ import Text from '@/components/Text';
 import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
+import type { ToastProps } from './type';
 
-export type ToastType = 'success' | 'error' | 'info' | 'loading';
-
-export interface ToastProps {
-  duration?: number;
-  id: string;
-  message: string;
-  onClose?: (id: string) => void;
-  opacity: Animated.Value;
-  type: ToastType;
-}
-
-const Toast: FC<ToastProps> = ({ id, message, type, opacity, onClose }) => {
+const Toast = memo<ToastProps>(({ id, message, type, opacity, onClose }) => {
   const token = useTheme();
   const { styles } = useStyles();
 
@@ -51,19 +41,22 @@ const Toast: FC<ToastProps> = ({ id, message, type, opacity, onClose }) => {
 
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={handleClose} style={styles.touchable}>
-      <Animated.View style={[styles.toast, { opacity }]}>
+      <Animated.View style={[styles.toast, { opacity }]} testID="toast">
         {getIcon()}
         <Text style={styles.message}>{message}</Text>
         <TouchableOpacity
           hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
           onPress={handleClose}
           style={styles.closeButton}
+          testID="toast-close-button"
         >
           <Icon color={token.colorTextTertiary} icon={X} />
         </TouchableOpacity>
       </Animated.View>
     </TouchableOpacity>
   );
-};
+});
+
+Toast.displayName = 'Toast';
 
 export default Toast;

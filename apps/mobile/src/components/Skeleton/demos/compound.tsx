@@ -1,8 +1,7 @@
 import { Skeleton, Text, useTheme } from '@lobehub/ui-rn';
-import type { FC } from 'react';
 import { View } from 'react-native';
 
-const CompoundDemo: FC = () => {
+const CompoundDemo = () => {
   const token = useTheme();
 
   return (

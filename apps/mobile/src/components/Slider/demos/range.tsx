@@ -1,5 +1,4 @@
 import { Slider, Text, createStyles } from '@lobehub/ui-rn';
-import type { FC } from 'react';
 import { useState } from 'react';
 import { View } from 'react-native';
 
@@ -26,7 +25,7 @@ const useStyles = createStyles(({ token }) => ({
   },
 }));
 
-const RangeSliderDemo: FC = () => {
+const RangeSliderDemo = () => {
   const { styles } = useStyles();
   const [price, setPrice] = useState(500);
   const [volume, setVolume] = useState(75);
