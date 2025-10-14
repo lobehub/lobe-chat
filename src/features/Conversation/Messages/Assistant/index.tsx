@@ -228,7 +228,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
               />
             )}
           </Flexbox>
-          {!disableEditing && (
+          {!disableEditing && !editing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
               <AssistantActionsBar data={props} id={id} index={index} />
             </Flexbox>
