@@ -3,200 +3,95 @@ globs: src/store/**/__tests__/*.test.ts
 alwaysApply: false
 ---
 
-# 🏪 Zustand Store Action 测试指南
+# 🏪 Zustand Store Action Testing Guide
 
-测试 `src/store` 下的 Zustand store actions。本指南基于 `generateAIChat` 重构实践总结。
+Testing guide for Zustand store actions under `src/store`. This guide is based on lessons learned from the `generateAIChat` refactoring practice.
 
-## 核心原则
+## Core Principles
 
-### 1. 测试分层原则 🎯
+### 1. Test Layering Principle 🎯
 
-**每层测试只关注直接依赖，不跨层 spy**
+**Each layer should only test direct dependencies, never spy across layers**
 
 ```
-❌ 错误示例 - 跨层 spy
+❌ Bad Example - Cross-layer spying
 describe('internal_coreProcessMessage', () => {
   it('test', async () => {
-    // ❌ 跨越了 internal_fetchAIChatMessage，直接 spy 底层服务
+    // ❌ Skipping internal_fetchAIChatMessage, directly spying on lower-level service
     const streamSpy = vi.spyOn(chatService, 'createAssistantMessageStream');
   });
 });
 
-✅ 正确示例 - spy 直接依赖
+✅ Good Example - Spy on direct dependencies
 describe('internal_coreProcessMessage', () => {
   it('test', async () => {
-    // ✅ 只 spy 直接调用的方法
+    // ✅ Only spy on directly called methods
     const fetchSpy = vi.spyOn(result.current, 'internal_fetchAIChatMessage')
       .mockResolvedValue({ isFunctionCall: false, content: 'response' });
   });
 });
 ```
 
-### 2. Mock 策略 🎭
+### 2. Mocking Strategy 🎭
 
-#### Per-Test Mocking（推荐）
+#### Per-Test Mocking (Recommended)
 
 ```typescript
-// ✅ 在每个测试中按需 spy
+// ✅ Spy on-demand in each test
 describe('myAction', () => {
   it('should do something', async () => {
-    // 只在需要的测试中 spy
+    // Only spy when needed in this specific test
     const serviceSpy = vi.spyOn(someService, 'method').mockResolvedValue(result);
 
-    // 测试逻辑...
+    // Test logic...
 
-    serviceSpy.mockRestore(); // 可选：清理
+    serviceSpy.mockRestore(); // Optional: cleanup
   });
 });
 ```
 
-#### 避免全局 Mock
+#### Avoid Global Mocks
 
 ```typescript
-// ❌ 避免在 beforeEach 中全局 spy 所有东西
+// ❌ Avoid globally spying on everything in beforeEach
 beforeEach(() => {
-  spyOnEverything(); // 会造成测试间隐式耦合
+  spyOnEverything(); // Creates implicit coupling between tests
 });
 
-// ✅ 只 spy 几乎所有测试都需要的基础服务
+// ✅ Only spy on base services that almost all tests need
 beforeEach(() => {
-  spyOnMessageService(); // 大多数测试都需要
-  // 其他服务按需在测试内 spy
+  spyOnMessageService(); // Most tests need this
+  // Other services should be spied on-demand within tests
 });
 ```
 
-## 测试文件组织结构 📁
+## Action Test Templates 📝
 
-### 标准结构
-
-```
-src/store/[domain]/slices/[slice]/actions/__tests__/
-├── fixtures.ts          # 测试常量和 mock 数据工厂
-├── helpers.ts           # 可复用的测试辅助函数
-└── [action].test.ts     # 实际测试文件
-```
-
-### fixtures.ts 模板
-
-```typescript
-import { DEFAULT_CONFIG } from '@/const/settings';
-
-// 测试常量
-export const TEST_IDS = {
-  SESSION_ID: 'test-session-id',
-  MESSAGE_ID: 'test-message-id',
-  USER_ID: 'test-user-id',
-} as const;
-
-export const TEST_CONTENT = {
-  MESSAGE: 'Test message',
-  RESPONSE: 'Test response',
-} as const;
-
-// Mock 数据工厂
-export const createMockMessage = (overrides: Partial<ChatMessage> = {}): ChatMessage => ({
-  id: TEST_IDS.MESSAGE_ID,
-  role: 'user',
-  content: TEST_CONTENT.MESSAGE,
-  sessionId: TEST_IDS.SESSION_ID,
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
-  ...overrides,
-});
-
-export const createMockMessages = (count: number): ChatMessage[] =>
-  Array.from({ length: count }, (_, i) =>
-    createMockMessage({
-      id: `msg-${i}`,
-      content: `Message ${i}`,
-    }),
-  );
-
-export const createMockConfig = (overrides = {}) => ({
-  ...DEFAULT_CONFIG,
-  ...overrides,
-});
-```
-
-### helpers.ts 模板
-
-```typescript
-import { act } from '@testing-library/react';
-import { vi } from 'vitest';
-
-/**
- * Setup mock selectors with default or custom values
- */
-export const setupMockSelectors = (
-  options: {
-    config?: Record<string, any>;
-    meta?: Record<string, any>;
-  } = {},
-) => {
-  vi.spyOn(selectors, 'currentConfig').mockImplementation(() =>
-    createMockConfig(options.config),
-  );
-
-  vi.spyOn(selectors, 'currentMeta').mockImplementation(
-    () => options.meta || {},
-  );
-};
-
-/**
- * Setup store state with initial data
- */
-export const setupStoreWithData = (data: any[], storeKey = 'default') => {
-  useStore.setState({
-    [storeKey]: data,
-  });
-};
-
-/**
- * Setup spies for service methods (only common ones)
- */
-export const spyOnCommonServices = () => {
-  const serviceSpy = vi
-    .spyOn(commonService, 'method')
-    .mockResolvedValue(undefined);
-
-  return { serviceSpy };
-};
-
-/**
- * Reset test environment to clean state
- */
-export const resetTestEnvironment = () => {
-  vi.clearAllMocks();
-  useStore.setState(
-    {
-      // Reset to initial state
-      data: [],
-      loading: false,
-    },
-    false,
-  );
-};
-```
-
-## Action 测试模板 📝
-
-### 基础 Action 测试
+### Basic Action Test
 
 ```typescript
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useStore } from '../store';
-import { TEST_IDS, createMockData } from './fixtures';
-import { resetTestEnvironment, setupMockSelectors, spyOnCommonServices } from './helpers';
 
 // Mock zustand
 vi.mock('zustand/traditional');
 
+// Test constants
+const TEST_IDS = {
+  DATA_ID: 'test-data-id',
+} as const;
+
+// Mock data factory
+const createMockData = (overrides = {}) => ({
+  id: TEST_IDS.DATA_ID,
+  status: 'initial',
+  ...overrides,
+});
+
 beforeEach(() => {
-  resetTestEnvironment();
-  setupMockSelectors();
-  spyOnCommonServices();
+  vi.clearAllMocks();
 
   // Setup common mocks that most tests need
   act(() => {
@@ -264,22 +159,22 @@ describe('myAction', () => {
 });
 ```
 
-### 测试 Internal Methods（内部方法）
+### Testing Internal Methods
 
 ```typescript
-// 保存真实实现用于测试
+// Save the real implementation for testing
 const realInternalMethod = useStore.getState().internal_method;
 
 describe('internal_method', () => {
   it('should call correct dependencies', async () => {
-    // 恢复真实实现
+    // Restore the real implementation
     act(() => {
       useStore.setState({ internal_method: realInternalMethod });
     });
 
     const { result } = renderHook(() => useStore());
 
-    // ✅ Spy 直接依赖
+    // ✅ Spy on direct dependencies
     const dependencySpy = vi
       .spyOn(result.current, 'internal_dependency')
       .mockResolvedValue(expectedResult);
@@ -295,7 +190,7 @@ describe('internal_method', () => {
 });
 ```
 
-### 测试 Streaming/异步流程
+### Testing Streaming/Async Flows
 
 ```typescript
 describe('streamingAction', () => {
@@ -328,7 +223,7 @@ describe('streamingAction', () => {
 });
 ```
 
-### 测试 Toggle/Loading States
+### Testing Toggle/Loading States
 
 ```typescript
 describe('internal_toggleLoading', () => {
@@ -359,126 +254,126 @@ describe('internal_toggleLoading', () => {
 });
 ```
 
-## 常见问题和解决方案 ⚠️
+## Common Issues and Solutions ⚠️
 
-### 问题 1: React State Update 警告
+### Issue 1: React State Update Warning
 
 ```typescript
-// ❌ 错误：未包裹 setState
+// ❌ Wrong: setState without wrapping
 useStore.setState({ data: newData });
 
-// ✅ 正确：用 act() 包裹所有 setState
+// ✅ Correct: Wrap all setState with act()
 act(() => {
   useStore.setState({ data: newData });
 });
 ```
 
-### 问题 2: 跨层 Spy
+### Issue 2: Cross-Layer Spying
 
 ```typescript
-// ❌ 错误：跨层 spy 底层服务
+// ❌ Wrong: Spy on lower-level services across layers
 describe('highLevelAction', () => {
   const lowLevelServiceSpy = vi.spyOn(lowLevelService, 'method');
 });
 
-// ✅ 正确：spy 直接依赖
+// ✅ Correct: Spy on direct dependencies
 describe('highLevelAction', () => {
   const directDependencySpy = vi.spyOn(result.current, 'directMethod');
 });
 ```
 
-### 问题 3: Mock 类型不匹配
+### Issue 3: Mock Type Mismatch
 
 ```typescript
-// ❌ 错误：返回类型不匹配
+// ❌ Wrong: Return type doesn't match
 vi.spyOn(service, 'method').mockResolvedValue('string');
-// 但 method 返回 Response
+// But method returns Response
 
-// ✅ 正确：返回正确类型
+// ✅ Correct: Return correct type
 vi.spyOn(service, 'method').mockResolvedValue(new Response('string'));
 ```
 
-### 问题 4: 全局 Mock 污染
+### Issue 4: Global Mock Pollution
 
 ```typescript
-// ❌ 错误：beforeEach 中 spy 所有服务
+// ❌ Wrong: Spy on all services in beforeEach
 beforeEach(() => {
   spyOnServiceA();
   spyOnServiceB();
-  spyOnServiceC(); // 造成测试间耦合
+  spyOnServiceC(); // Creates coupling between tests
 });
 
-// ✅ 正确：按需 spy
+// ✅ Correct: Spy on-demand
 beforeEach(() => {
-  spyOnCommonService(); // 只 spy 通用服务
+  spyOnCommonService(); // Only spy on common services
 });
 
 describe('specific test', () => {
   it('test', () => {
-    const specificSpy = vi.spyOn(specificService, 'method'); // 按需 spy
+    const specificSpy = vi.spyOn(specificService, 'method'); // Spy on-demand
   });
 });
 ```
 
-## 测试覆盖率目标 📊
+## Test Coverage Goals 📊
 
-### 覆盖率要求
+### Coverage Requirements
 
-- **最低目标**: 70%
-- **推荐目标**: 85%+
-- **优秀目标**: 90%+
+- **Minimum target**: 70%
+- **Recommended target**: 85%+
+- **Excellent target**: 90%+
 
-### 检查覆盖率
+### Check Coverage
 
 ```bash
-# 运行单个测试文件的覆盖率
+# Run coverage for a single test file
 bunx vitest run --coverage 'src/store/[domain]/__tests__/[action].test.ts'
 
-# 查看特定文件的覆盖率
+# View coverage for a specific file
 bunx vitest run --coverage --silent='passed-only' 'src/store/[domain]/__tests__/[action].test.ts' | grep "[action].ts"
 ```
 
-### 优先测试场景
+### Priority Test Scenarios
 
-1. ✅ **主流程**: 正常的业务流程
-2. ✅ **边界条件**: 空数据、未定义值、边界值
-3. ✅ **错误处理**: 异常情况、失败重试
-4. ✅ **状态管理**: Loading、Toggle、Abort
-5. ⚠️ **边缘情况**: 可选，但不要为了覆盖率而写无意义的测试
+1. ✅ **Main Flow**: Normal business flow
+2. ✅ **Edge Cases**: Empty data, undefined values, boundary values
+3. ✅ **Error Handling**: Exception scenarios, failure retries
+4. ✅ **State Management**: Loading, Toggle, Abort
+5. ⚠️ **Corner Cases**: Optional, but don't write meaningless tests just for coverage
 
-## 真实案例：generateAIChat 重构 🎓
+## Real-World Case: generateAIChat Refactoring 🎓
 
-### 重构前的问题
+### Problems Before Refactoring
 
 ```typescript
-// ❌ 问题 1: 跨层 spy
+// ❌ Problem 1: Cross-layer spying
 describe('internal_coreProcessMessage', () => {
   const streamSpy = vi.spyOn(chatService, 'createAssistantMessageStream');
-  // 跳过了 internal_fetchAIChatMessage 层
+  // Skipped the internal_fetchAIChatMessage layer
 });
 
-// ❌ 问题 2: Mock 错误对象
+// ❌ Problem 2: Mocking wrong objects
 describe('internal_fetchAIChatMessage', () => {
-  vi.stubGlobal('fetch', ...); // 但实际不调用 fetch
+  vi.stubGlobal('fetch', ...); // But doesn't actually call fetch
 });
 
-// ❌ 问题 3: 全局 spy 污染
+// ❌ Problem 3: Global spy pollution
 beforeEach(() => {
-  spyOnChatService(); // 造成所有测试都有这个 spy
+  spyOnChatService(); // All tests now have this spy
 });
 ```
 
-### 重构后的解决方案
+### Solutions After Refactoring
 
 ```typescript
-// ✅ 解决 1: Spy 直接依赖
+// ✅ Solution 1: Spy on direct dependencies
 describe('internal_coreProcessMessage', () => {
   const fetchSpy = vi
     .spyOn(result.current, 'internal_fetchAIChatMessage')
     .mockResolvedValue({ isFunctionCall: false, content: 'response' });
 });
 
-// ✅ 解决 2: Mock 正确服务
+// ✅ Solution 2: Mock correct service
 describe('internal_fetchAIChatMessage', () => {
   const streamSpy = vi
     .spyOn(chatService, 'createAssistantMessageStream')
@@ -488,36 +383,28 @@ describe('internal_fetchAIChatMessage', () => {
     });
 });
 
-// ✅ 解决 3: 按需 spy
+// ✅ Solution 3: Spy on-demand
 beforeEach(() => {
-  spyOnMessageService(); // 只 spy 通用服务
-  // chatService 按需在测试中 spy
+  spyOnMessageService(); // Only spy on common services
+  // Spy on chatService on-demand in tests
 });
 ```
 
-### 重构效果
+### Refactoring Results
 
-- 📈 覆盖率提升: 54.44% → 82.03% (+27.59%)
-- ✅ 测试通过率: 52/52 (100%)
-- 🎯 类型错误: 6 → 0
-- 📝 测试更清晰: 明确的测试分层
+- 📈 Coverage improvement: 54.44% → 82.03% (+27.59%)
+- ✅ Test pass rate: 52/52 (100%)
+- 🎯 Type errors: 6 → 0
+- 📝 Clearer tests: Explicit test layering
 
-## 最佳实践 Checklist ✅
+## Best Practices Checklist ✅
 
-测试前检查：
+Check before testing:
 
-- [ ] 是否遵循测试分层原则？
-- [ ] Mock 对象是否对应实际调用？
-- [ ] 是否避免了全局 spy 污染？
-- [ ] 所有 setState 是否用 act() 包裹？
-- [ ] 测试是否足够原子化？
-- [ ] 测试描述是否清晰？
-- [ ] 是否有 fixtures 和 helpers 复用代码？
-- [ ] 覆盖率是否达到目标？
-
-## 参考资源 📚
-
-- [Vitest 官方文档](https://vitest.dev/)
-- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
-- [Zustand Testing Guide](https://docs.pmnd.rs/zustand/guides/testing)
-- 项目测试规范: `.cursor/rules/testing-guide/testing-guide.mdc`
+- [ ] Following test layering principle?
+- [ ] Mock objects match actual calls?
+- [ ] Avoiding global spy pollution?
+- [ ] All setState wrapped with act()?
+- [ ] Tests sufficiently atomic?
+- [ ] Test descriptions clear?
+- [ ] Coverage meets target?
