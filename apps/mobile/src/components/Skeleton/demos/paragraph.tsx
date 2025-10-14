@@ -1,8 +1,7 @@
 import { Skeleton, Text, useTheme } from '@lobehub/ui-rn';
-import type { FC } from 'react';
 import { View } from 'react-native';
 
-const ParagraphDemo: FC = () => {
+const ParagraphDemo = () => {
   const token = useTheme();
 
   return (

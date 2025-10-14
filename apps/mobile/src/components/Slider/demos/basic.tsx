@@ -1,5 +1,4 @@
 import { Slider, Text, createStyles } from '@lobehub/ui-rn';
-import type { FC } from 'react';
 import { useState } from 'react';
 import { View } from 'react-native';
 
@@ -26,7 +25,7 @@ const useStyles = createStyles(({ token }) => ({
   },
 }));
 
-const BasicSliderDemo: FC = () => {
+const BasicSliderDemo = () => {
   const { styles } = useStyles();
   const [value1, setValue1] = useState(30);
   const [value2, setValue2] = useState(50);
