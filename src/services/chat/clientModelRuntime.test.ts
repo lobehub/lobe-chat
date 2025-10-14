@@ -46,7 +46,7 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
 
 // Mock image processing utilities
 vi.mock('@/utils/url', () => ({
-  isLocalUrl: vi.fn(),
+  isDesktopLocalStaticServerUrl: vi.fn(),
 }));
 
 vi.mock('@/utils/imageToBase64', () => ({

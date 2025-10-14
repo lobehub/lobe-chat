@@ -38,7 +38,7 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
   return { ...(module as any), getMessageError: vi.fn() };
 });
 vi.mock('@lobechat/utils', () => ({
-  isLocalUrl: vi.fn(),
+  isDesktopLocalStaticServerUrl: vi.fn(),
   imageUrlToBase64: vi.fn(),
   parseDataUri: vi.fn(),
 }));
@@ -507,7 +507,7 @@ describe('ChatService', () => {
         // Mock parseDataUri to always return url type
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
 
-        // Mock isLocalUrl to return true only for 127.0.0.1 URLs
+        // Mock isDesktopLocalStaticServerUrl to return true only for 127.0.0.1 URLs
         vi.mocked(isDesktopLocalStaticServerUrl).mockImplementation((url: string) => {
           return new URL(url).hostname === '127.0.0.1';
         });
@@ -554,7 +554,7 @@ describe('ChatService', () => {
           model: 'gpt-4-vision-preview',
         });
 
-        // Verify isLocalUrl was called for each image
+        // Verify isDesktopLocalStaticServerUrl was called for each image
         expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
           'http://127.0.0.1:3000/local1.jpg',
         );
