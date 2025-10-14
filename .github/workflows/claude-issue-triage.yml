@@ -187,7 +187,7 @@ jobs:
           prompt_file: /tmp/claude-prompts/triage-prompt.md
           allowed_tools: "Bash(gh *),Read"
           timeout_minutes: "5"
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_env: |
             GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
