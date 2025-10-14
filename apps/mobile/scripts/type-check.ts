@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 
 // Run tsc and filter out ../../packages errors while preserving colors
-const tsc = spawn('tsc', ['--noEmit', '--pretty'], {
+const tsc = spawn('tsgo', ['--noEmit', '--pretty'], {
   shell: true,
   stdio: ['inherit', 'pipe', 'pipe'],
 });
@@ -10,11 +10,23 @@ let hasLocalErrors = false;
 let errorCount = 0;
 const errorFiles = new Set<string>();
 let inFilteredError = false;
+let inSummarySection = false;
 
 const processLine = (line: string) => {
   // Strip ANSI color codes for easier pattern matching
   // eslint-disable-next-line no-control-regex
   const cleanLine = line.replaceAll(/\u001B\[\d+m/g, '');
+
+  // Check if we've entered the summary section
+  if (/^Errors\s+Files/.test(cleanLine)) {
+    inFilteredError = false;
+    inSummarySection = true;
+    // Only show "Errors  Files" header if we have local errors
+    if (hasLocalErrors) {
+      console.log(line);
+    }
+    return;
+  }
 
   // Check if this is a file path error line (path:line:col - error)
   const isErrorLine = cleanLine.match(/^([^:]+):(\d+):(\d+) - error/);
@@ -38,17 +50,9 @@ const processLine = (line: string) => {
   // If we're in a filtered error block, skip the line
   if (inFilteredError) {
     // Check if we've reached a new section
-    // - Two consecutive empty lines
-    // - "Errors  Files" summary section
-    // - A new local file error (already handled above)
     if (cleanLine.trim() === '') {
       // On empty line, check if next line will be the end of filtered block
       // For now, just stay in filtered mode
-      return;
-    }
-    if (/^Errors\s+Files/.test(cleanLine)) {
-      inFilteredError = false;
-      console.log(line);
       return;
     }
     // Otherwise, skip this line (it's part of the filtered error)
@@ -57,12 +61,26 @@ const processLine = (line: string) => {
 
   // Skip the original "Found X errors" line, we'll print our own
   if (/^Found \d+ errors? in \d+ files?\.$/.test(cleanLine)) {
+    inSummarySection = false;
     return;
   }
 
-  // Filter out error summary lines containing ../../
-  if (/^\d+\s+\.\.\/\.\./.test(cleanLine.trim())) {
-    return;
+  // In summary section, filter out lines with ../../
+  if (inSummarySection) {
+    // If we have no local errors, skip all summary lines
+    if (!hasLocalErrors) {
+      return;
+    }
+    // Skip lines containing ../../
+    if (cleanLine.includes('../../')) {
+      return;
+    }
+    // Also skip lines that look like summary stats (e.g., "     1  " without a local file path)
+    // These are orphaned stats from filtered errors
+    if (/^\s+\d+\s+$/.test(cleanLine)) {
+      return;
+    }
+    // Keep printing other lines in summary section
   }
 
   console.log(line);
