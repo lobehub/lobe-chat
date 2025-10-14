@@ -1,10 +1,9 @@
+import { AiProviderListItem } from '@lobechat/types';
 import { ProviderIcon } from '@lobehub/icons-rn';
 import { useRouter } from 'expo-router';
 import { memo } from 'react';
 
 import { Cell } from '@/components';
-
-import { AiProviderListItem } from '../../../../../../../../packages/types';
 
 interface ProviderCardProps {
   provider: AiProviderListItem;

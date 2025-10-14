@@ -8,7 +8,7 @@ import type { ComponentData } from './types';
 /**
  * 查找所有包含 index.md 的组件目录
  */
-export function findComponentDirs(): Array<{ name: string; path: string }> {
+export function findComponentDirs(): Array<any> {
   const dirs: Array<{ name: string; path: string }> = [];
 
   // 查找 src/components 下的所有组件
@@ -99,7 +99,7 @@ export function getComponentData(componentDir: {
     name: componentDir.name,
     readme: content,
     ...data,
-  };
+  } as any;
 }
 
 /**

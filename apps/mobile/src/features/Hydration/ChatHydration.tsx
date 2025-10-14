@@ -19,8 +19,8 @@ const ChatHydration = memo(() => {
   }>();
 
   // URL → Store 同步
-  useStoreUpdater('activeTopicId', topicParam || null);
-  useStoreUpdater('activeThreadId', threadParam || null);
+  useStoreUpdater('activeTopicId', topicParam);
+  useStoreUpdater('activeThreadId', threadParam);
 
   // Store → URL 同步
   useLayoutEffect(() => {

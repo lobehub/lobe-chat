@@ -15,7 +15,7 @@ interface SettingState {
   fontSize: number;
   neutralColor: NeutralColors;
   // 主题自定义配置
-  primaryColor: PrimaryColors;
+  primaryColor: PrimaryColors | 'primary';
   setCustomServerUrl: (url: string | null) => void;
   setDeveloperMode: (enabled: boolean) => void;
   setFontSize: (size: number) => void;
