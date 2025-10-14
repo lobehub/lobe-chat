@@ -46,6 +46,7 @@ export default defineConfig({
       '**/build/**',
       '**/apps/desktop/**',
       '**/packages/**',
+      '**/e2e/**',
     ],
     globals: true,
     server: {

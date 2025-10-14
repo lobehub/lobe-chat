@@ -1,10 +1,10 @@
+import { CrawlPluginState } from '@lobechat/types';
 import { CrawlErrorResult } from '@lobechat/web-crawler';
 import { ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { CrawlPluginState } from '@/types/tool/crawler';
 
 import Loading from './Loading';
 import Result from './Result';

@@ -6,7 +6,6 @@ export type ResponseAnimation =
   | {
       speed?: number;
       text?: ResponseAnimationStyle;
-      toolsCalling?: ResponseAnimationStyle;
     }
   | ResponseAnimationStyle;
 

@@ -1,7 +1,10 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { resolveParameters } from '../../core/parameterResolver';
 import { AgentRuntimeErrorType } from '../../types/error';
 
@@ -10,7 +13,7 @@ export interface GroqModelCard {
   id: string;
 }
 
-export const LobeGroq = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.groq.com/openai/v1',
   chatCompletion: {
     handleError: (error) => {
@@ -80,4 +83,6 @@ export const LobeGroq = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Groq,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeGroq = createOpenAICompatibleRuntime(params);

@@ -32,6 +32,7 @@ export const ENGINE_ICON_MAP: Record<string, string> = {
   'brave': 'https://icons.duckduckgo.com/ip3/brave.com.ico',
   'brave.news': 'https://icons.duckduckgo.com/ip3/brave.com.ico',
   'duckduckgo': 'https://icons.duckduckgo.com/ip3/www.duckduckgo.com.ico',
+  'github': 'https://icons.duckduckgo.com/ip3/github.com.ico',
   'google': 'https://icons.duckduckgo.com/ip3/google.com.ico',
   'google scholar': 'https://icons.duckduckgo.com/ip3/scholar.google.com.ico',
   'npm': 'https://icons.duckduckgo.com/ip3/npmjs.com.ico',

@@ -1,6 +1,9 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { resolveParameters } from '../../core/parameterResolver';
 import { OpenAIStream } from '../../core/streams/openai';
 import { convertIterableToStream } from '../../core/streams/protocol';
@@ -12,7 +15,7 @@ export interface ZhipuModelCard {
   modelName: string;
 }
 
-export const LobeZhipuAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -143,4 +146,6 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
     return processModelList(standardModelList, MODEL_LIST_CONFIGS.zhipu, 'zhipu');
   },
   provider: ModelProvider.ZhiPu,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeZhipuAI = createOpenAICompatibleRuntime(params);

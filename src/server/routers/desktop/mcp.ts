@@ -1,3 +1,4 @@
+import { GetStreamableMcpServerManifestInputSchema } from '@lobechat/types';
 import debug from 'debug';
 import { z } from 'zod';
 
@@ -33,6 +34,22 @@ export const mcpRouter = router({
 
     return await mcpService.getStdioMcpServerManifest(input, input.metadata);
   }),
+
+  getStreamableMcpServerManifest: mcpProcedure
+    .input(GetStreamableMcpServerManifestInputSchema)
+    .query(async ({ input }) => {
+      log('getStreamableMcpServerManifest input: %O', {
+        identifier: input.identifier,
+        url: input.url,
+      });
+      return await mcpService.getStreamableMcpServerManifest(
+        input.identifier,
+        input.url,
+        input.metadata,
+        input.auth,
+        input.headers,
+      );
+    }),
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   // --- MCP Interaction ---

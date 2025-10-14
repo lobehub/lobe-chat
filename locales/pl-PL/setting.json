@@ -294,6 +294,13 @@
     },
     "title": "Ustawienia ogólne"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Ustaw domyślną liczbę obrazów generowanych podczas tworzenia nowego zadania.",
+      "label": "Domyślna liczba obrazów",
+      "title": "Ustawienia rysowania AI"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Włącz limit jednorazowej odpowiedzi"
@@ -549,6 +556,7 @@
     "common": "Ustawienia ogólne",
     "experiment": "Eksperyment",
     "hotkey": "Skróty klawiszowe",
+    "image": "Rysowanie AI",
     "llm": "Model językowy",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",

@@ -194,7 +194,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
           direction={'vertical'}
           gap={8}
         >
-          <Flexbox width={'100%'}>
+          <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
             {error && (message === LOADING_FLAT || !message) ? (
               <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
             ) : (
@@ -228,7 +228,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
               />
             )}
           </Flexbox>
-          {!disableEditing && (
+          {!disableEditing && !editing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
               <AssistantActionsBar data={props} id={id} index={index} />
             </Flexbox>
