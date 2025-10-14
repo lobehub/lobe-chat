@@ -22,7 +22,7 @@ jobs:
     # 添加 PR label 触发条件
     if: |
       (github.event_name == 'pull_request' &&
-       contains(github.event.pull_request.labels.*.name, 'Build Docker')) ||
+       contains(github.event.pull_request.labels.*.name, 'trigger:build-docker')) ||
       github.event_name != 'pull_request'
 
     strategy:
