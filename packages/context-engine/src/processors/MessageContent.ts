@@ -1,5 +1,7 @@
 import { filesPrompts } from '@lobechat/prompts';
-import { imageUrlToBase64, isDesktopLocalStaticServerUrl, parseDataUri } from '@lobechat/utils';
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
+import { parseDataUri } from '@lobechat/utils/uriParser';
+import { isDesktopLocalStaticServerUrl } from '@lobechat/utils/url';
 import debug from 'debug';
 
 import { BaseProcessor } from '../base/BaseProcessor';
