@@ -16,91 +16,175 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Copy team assignment guide
+        run: |
+          mkdir -p /tmp/claude-prompts
+          cp .claude/prompts/team-assignment.md /tmp/claude-prompts/
+
       - name: Create triage prompt
         run: |
           mkdir -p /tmp/claude-prompts
           cat > /tmp/claude-prompts/triage-prompt.md << 'EOF'
-          You're an issue triage assistant for GitHub issues. Your task is to analyze the issue and select appropriate labels from the provided list.
+          You're an issue triage assistant for GitHub issues. Your task is to analyze issues, apply appropriate labels, and mention the responsible team member.
 
-          IMPORTANT: Don't post any comments or messages to the issue. Your only action should be to apply labels.
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
 
-          Issue Information:
-          - REPO: ${{ github.repository }}
-          - ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ## WORKFLOW
 
-          TASK OVERVIEW:
+          ### Step 1: Get Available Labels
+          ```bash
+          gh label list --json name,description --limit 300
+          ```
 
-          1. First, fetch the list of labels available in this repository by running: `gh label list`. Run exactly this command with nothing else.
+          ### Step 2: Get Issue Details
+          ```bash
+          gh issue view ${{ github.event.issue.number }} --json number,title,body,labels,comments
+          ```
 
-          2. Next, use the GitHub tools to get context about the issue:
-             - You have access to these tools:
-               - mcp__github__get_issue: Use this to retrieve the current issue's details including title, description, and existing labels
-               - mcp__github__get_issue_comments: Use this to read any discussion or additional context provided in the comments
-               - mcp__github__update_issue: Use this to apply labels to the issue (do not use this for commenting)
-               - mcp__github__search_issues: Use this to find similar issues that might provide context for proper categorization and to identify potential duplicate issues
-               - mcp__github__list_issues: Use this to understand patterns in how other issues are labeled
-             - Start by using mcp__github__get_issue to get the issue details
+          ### Step 3: Read Team Assignment Guide
+          ```bash
+          cat /tmp/claude-prompts/team-assignment.md
+          ```
 
-          3. Analyze the issue content, considering:
-             - The issue title and description
-             - The type of issue (bug report, feature request, question, etc.)
-             - Technical areas mentioned
-             - Severity or priority indicators
-             - User impact
-             - Components affected
+          ### Step 4: Analyze and Select Labels
 
-          4. Select appropriate labels from the available labels list provided above:
-             - Choose labels that accurately reflect the issue's nature
-             - Be specific but comprehensive
-             - Select priority labels if you can determine urgency (high-priority, med-priority, or low-priority)
-             - Consider platform labels (android, ios) if applicable
-             - If you find similar issues using mcp__github__search_issues, consider using a "duplicate" label if appropriate. Only do so if the issue is a duplicate of another OPEN issue.
+          Extract information from the issue template:
+          - 📦 Platform field → platform:web/desktop/mobile
+          - 💻 Operating System → os:windows/macos/linux/ios
+          - 🌐 Browser → device:pc/mobile
+          - 📦 Deployment mode → deployment:server/client/pglite
+          - Platform (hosting) → hosting:cloud/self-host/vercel/zeabur/railway
 
-          5. Apply the selected labels:
-             - Use mcp__github__update_issue to apply your selected labels
-             - DO NOT post any comments explaining your decision
-             - DO NOT communicate directly with users
-             - If no labels are clearly applicable, do not apply any labels
+          **LABEL CATEGORIES:**
 
-          IMPORTANT GUIDELINES:
-          - Be thorough in your analysis
-          - Only select labels from the provided list above
-          - DO NOT post any comments to the issue
-          - Your ONLY action should be to apply labels using mcp__github__update_issue
-          - It's okay to not add any labels if none are clearly applicable
-          EOF
+          **a) Issue Type (REQUIRED - select ONE):**
+          - 🐛 Bug, 🌠 Feature Request, 💄 Design, 📝 Documentation, ⚡️ Performance
 
-      - name: Setup GitHub MCP Server
-        run: |
-          mkdir -p /tmp/mcp-config
-          cat > /tmp/mcp-config/mcp-servers.json << 'EOF'
-          {
-            "mcpServers": {
-              "github": {
-                "command": "docker",
-                "args": [
-                  "run",
-                  "-i",
-                  "--rm",
-                  "-e",
-                  "GITHUB_PERSONAL_ACCESS_TOKEN",
-                  "ghcr.io/github/github-mcp-server:sha-7aced2b"
-                ],
-                "env": {
-                  "GITHUB_PERSONAL_ACCESS_TOKEN": "${{ secrets.GH_TOKEN }}"
-                }
-              }
-            }
-          }
+          **b) Priority (select ONE if applicable):**
+          - priority:high - Critical, maintainer mentions "urgent"/"serious"/"critical"
+          - priority:medium - Important, affects multiple users
+          - priority:low - Nice to have, minor issues
+
+          **c) Platform (select ALL applicable):**
+          - platform:web, platform:desktop, platform:mobile
+
+          **d) Device (for platform:web, select ONE):**
+          - device:pc, device:mobile
+
+          **e) Operating System (select ALL applicable):**
+          - os:windows, os:macos, os:linux, os:ios
+
+          **f) Hosting Platform (select ONE):**
+          - hosting:cloud, hosting:self-host, hosting:vercel, hosting:zeabur, hosting:railway
+
+          **g) Deployment Mode (select ONE if mentioned):**
+          - deployment:server, deployment:client, deployment:pglite
+
+          **h) Model Provider (select ALL applicable):**
+          - provider:openai, provider:gemini, provider:claude, provider:deepseek
+          - provider:google, provider:ollama, provider:azure, provider:bedrock, provider:vertex
+
+          **i) Feature/Component (select ALL applicable):**
+          - feature:settings, feature:agent, feature:topic, feature:marketplace
+          - feature:streaming, feature:tool, feature:sync, feature:export
+          - feature:search, feature:auth, feature:files, feature:knowledge-base
+          - feature:tts, feature:vision, feature:mcp, feature:editor, feature:thread
+          - feature:image, feature:api, feature:dalle, feature:plugin, feature:markdown
+          - feature:group-chat, feature:memory, feature:team-workspace
+
+          **j) Workflow/Status:**
+          - Duplicate - Only if duplicate of OPEN issue
+          - needs-reproduction, good-first-issue, 🤔 Need Reproduce
+
+          **IMPORTANT RULES:**
+          - Read issue template fields carefully
+          - Check maintainer comments for priority/status
+          - Use ALL applicable labels from different categories
+          - Always use prefixes (feature:, provider:, os:, platform:, etc.)
+
+          ### Step 5: Apply Labels
+
+          Add labels:
+          ```bash
+          gh issue edit ${{ github.event.issue.number }} --add-label "label1,label2,label3"
+          ```
+
+          Remove "unconfirm" if adding other labels:
+          ```bash
+          gh issue edit ${{ github.event.issue.number }} --remove-label "unconfirm"
+          ```
+
+          **Execute the commands now.**
+
+          ### Step 6: Determine Team Member
+
+          Based on the team assignment guide and applied labels, determine who to mention.
+
+          **Priority Order:**
+          1. Specific feature owner (feature:knowledge-base → @RiverTwilight)
+          2. Platform owner (platform:mobile → @sudongyuer)
+          3. Provider owner (provider:* → @sxjeru)
+          4. Component owner (💄 Design → @canisminor1990)
+          5. Infrastructure owner (deployment:* → @nekomeowww)
+          6. General maintainer (@ONLY-yours)
+          7. Last resort (@arvinxx)
+
+          **Special Cases:**
+          - Multiple owners: Mention primary + secondary
+          - priority:high: Mention owner + @arvinxx
+
+          ### Step 7: Post Comment
+
+          Format the comment (1-2 sentences):
+
+          **Single owner:**
+          ```
+          @username - This is a [feature/component] issue. Please take a look.
+          ```
+
+          **Multiple owners:**
+          ```
+          @user1 @user2 - This involves [features]. Please coordinate.
+          ```
+
+          **High priority:**
+          ```
+          @owner @arvinxx - High priority [feature] issue.
+          ```
+
+          Post the comment:
+          ```bash
+          gh issue comment ${{ github.event.issue.number }} --body "@username - [message]"
+          ```
+
+          **Execute the command now.**
+
+          ### Step 8: Output Summary
+
+          Log your reasoning (2-4 sentences):
+          - Labels applied and why
+          - Team member(s) mentioned and reason
+          - Key factors from issue template/comments
+
+          ## GUIDELINES
+
+          - Be thorough in analysis
+          - Use only labels from the provided list
+          - Extract info from issue template fields
+          - ALWAYS post a mention comment (unless no clear owner)
+          - Keep comments professional and brief
+          - Output reasoning to logs
+
+          **Start the triage process now.**
           EOF
 
       - name: Run Claude Code for Issue Triage
         uses: anthropics/claude-code-base-action@beta
         with:
           prompt_file: /tmp/claude-prompts/triage-prompt.md
-          allowed_tools: "Bash(gh label list),mcp__github__get_issue,mcp__github__get_issue_comments,mcp__github__update_issue,mcp__github__search_issues,mcp__github__list_issues"
+          allowed_tools: "Bash(gh *),Read"
           timeout_minutes: "5"
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          mcp_config: /tmp/mcp-config/mcp-servers.json
           claude_env: |
             GH_TOKEN: ${{ secrets.GH_TOKEN }}
