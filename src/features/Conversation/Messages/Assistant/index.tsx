@@ -240,7 +240,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
                 editing={editing}
                 id={id}
                 markdownProps={markdownProps}
-                message={reducted ? `** ${t('hideForYou')} **` : message}
+                message={reducted ? `*${t('hideForYou')}*` : message}
                 messageExtra={
                   <>
                     {errorContent && (
