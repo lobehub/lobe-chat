@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add imagen model to vertex ai."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.5"
+  },
+  {
+    "children": {
       "fixes": ["Prevent Vertex AI JSON credentials from being split by comma."]
     },
     "date": "2025-10-14",
