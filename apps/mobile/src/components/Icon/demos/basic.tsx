@@ -1,13 +1,13 @@
-import { Icon, Space } from '@lobehub/ui-rn';
+import { Flexbox, Icon } from '@lobehub/ui-rn';
 import { Heart, MessageCircle, Star } from 'lucide-react-native';
 
 const BasicDemo = () => {
   return (
-    <Space size={[12, 16]} wrap>
+    <Flexbox gap={16} horizontal>
       <Icon icon={Heart} />
       <Icon icon={MessageCircle} />
       <Icon icon={Star} />
-    </Space>
+    </Flexbox>
   );
 };
 
