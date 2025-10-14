@@ -27,6 +27,17 @@ const n = setNamespace('chatGroup');
 const FETCH_GROUPS_KEY = 'fetchGroups';
 const FETCH_GROUP_DETAIL_KEY = 'fetchGroupDetail';
 
+const syncChatStoreGroupMap = (groupMap: Record<string, ChatGroupItem>) => {
+  useChatStore.setState(
+    produce((state: ChatStoreState) => {
+      state.groupMaps = groupMap;
+      state.groupsInit = true;
+    }),
+    false,
+    n('syncGroupMap/chat'),
+  );
+};
+
 export const chatGroupAction: StateCreator<
   ChatGroupStore,
   [['zustand/devtools', never]],
@@ -46,17 +57,6 @@ export const chatGroupAction: StateCreator<
       }),
       false,
       payload,
-    );
-  };
-
-  const syncChatStoreGroupMap = (groupMap: Record<string, ChatGroupItem>) => {
-    useChatStore.setState(
-      produce((state: ChatStoreState) => {
-        state.groupMaps = groupMap;
-        state.groupsInit = true;
-      }),
-      false,
-      n('syncGroupMap/chat'),
     );
   };
 
