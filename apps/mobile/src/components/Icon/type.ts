@@ -1,22 +1,21 @@
-import type { LucideIcon } from 'lucide-react-native';
-import type React from 'react';
+import type { LucideIcon, LucideProps } from 'lucide-react-native';
+import type { FC, ReactNode } from 'react';
 import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 
-export interface IconSizeConfig {
-  blockSize?: number | string;
-  borderRadius?: number | string;
-  size?: number;
+export interface IconSizeConfig extends Pick<LucideProps, 'strokeWidth' | 'absoluteStrokeWidth'> {
+  size?: number | string;
 }
+export type IconSizeType = 'large' | 'middle' | 'small';
+export type IconSize = number | IconSizeType | IconSizeConfig;
 
-export type IconSize = number | 'small' | 'middle' | 'large' | IconSizeConfig;
+export type LucideIconProps = Pick<
+  LucideProps,
+  'fill' | 'fillRule' | 'fillOpacity' | 'color' | 'focusable'
+>;
 
-export type IconComponentType = React.ComponentType<{ color?: ColorValue; size?: number }>;
-
-export type IconRenderable = LucideIcon | React.ComponentType<any> | React.ReactNode;
-
-export interface IconProps {
+export interface IconProps extends LucideIconProps {
   color?: ColorValue;
-  icon: IconRenderable;
+  icon: LucideIcon | FC<any> | ReactNode;
   size?: IconSize;
   spin?: boolean;
   style?: StyleProp<ViewStyle>;
