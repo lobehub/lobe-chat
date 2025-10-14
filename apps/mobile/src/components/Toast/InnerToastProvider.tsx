@@ -1,9 +1,9 @@
-import type { FC } from 'react';
-import { ReactNode, createContext, useCallback, useContext, useState } from 'react';
+import { ReactNode, createContext, memo, useCallback, useContext, useState } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Toast, { ToastProps, ToastType } from './Toast';
+import Toast from './Toast';
+import type { ToastProps, ToastType } from './type';
 
 interface ToastConfig {
   duration?: number;
@@ -34,7 +34,7 @@ interface ToastItem extends Omit<ToastProps, 'opacity'> {
   translateY: Animated.Value;
 }
 
-export const ToastProvider: FC<ToastProviderProps> = ({ children }) => {
+export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const insets = useSafeAreaInsets();
 
@@ -198,7 +198,9 @@ export const ToastProvider: FC<ToastProviderProps> = ({ children }) => {
       ))}
     </ToastContext.Provider>
   );
-};
+});
+
+ToastProvider.displayName = 'ToastProvider';
 
 export const useToast = (): ToastContextType => {
   const context = useContext(ToastContext);
