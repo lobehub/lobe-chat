@@ -14,23 +14,23 @@ export const createAnthropicGenerateObject = async (
   payload: GenerateObjectPayload,
   options?: GenerateObjectOptions,
 ) => {
-  const { schema, messages, model, tools } = payload;
+  const { schema, messages, systemRole, model, tools } = payload;
 
   log('generateObject called with model: %s', model);
   log('schema: %O', schema);
   log('messages count: %d', messages.length);
 
   // Convert messages to Anthropic format
-  const system_message = messages.find((m) => m.role === 'system');
+  const system_message = systemRole || messages.find((m) => m.role === 'system')?.content;
   const user_messages = messages.filter((m) => m.role !== 'system');
   const anthropicMessages = await buildAnthropicMessages(user_messages);
 
   log('converted %d messages to Anthropic format', anthropicMessages.length);
 
-  const systemPrompts = system_message?.content
+  const systemPrompts = system_message
     ? [
         {
-          text: system_message.content as string,
+          text: system_message,
           type: 'text' as const,
         },
       ]

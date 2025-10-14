@@ -178,30 +178,20 @@ export class GroupChatSupervisor {
     if (context.scene === 'productive') {
       tools.push(
         {
-          description: 'Create one or multiple todo items',
+          description: 'Create a new todo item',
           name: 'create_todo',
           parameters: {
             properties: {
-              todos: {
-                description: 'List of todos to create',
-                items: {
-                  properties: {
-                    assignee: {
-                      description: 'Who will do the todo. Can be agent id or empty.',
-                      type: 'string',
-                    },
-                    content: {
-                      description: 'The todo content or description.',
-                      type: 'string',
-                    },
-                  },
-                  required: ['content', 'assignee'],
-                  type: 'object',
-                },
-                type: 'array',
+              assignee: {
+                description: 'Who will do the todo. Can be agent id or empty.',
+                type: 'string',
+              },
+              content: {
+                description: 'The todo content or description.',
+                type: 'string',
               },
             },
-            required: ['todos'],
+            required: ['content', 'assignee'],
             type: 'object',
           },
         },
@@ -225,7 +215,7 @@ export class GroupChatSupervisor {
     try {
       const response = await aiChatService.generateJSON(
         {
-          messages: [],
+          messages: [{ content: 'please generate your decisions', role: 'user' }] as any,
           systemRole: prompt,
           tools,
           ...supervisorConfig,

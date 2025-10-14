@@ -63,7 +63,7 @@ export const StructureSchema = z.object({
     additionalProperties: z.boolean().optional(),
     properties: z.record(z.string(), z.any()),
     required: z.array(z.string()).optional(),
-    type: z.literal('object')
+    type: z.literal('object'),
   }),
   strict: z.boolean().optional(),
 });
