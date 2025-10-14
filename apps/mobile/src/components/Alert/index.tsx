@@ -1,5 +1,12 @@
-import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-react-native';
-import type { ComponentType, FC, ReactElement, ReactNode } from 'react';
+import {
+  AlertCircle,
+  AlertTriangle,
+  CheckCircle2,
+  Info,
+  type LucideIcon,
+  X,
+} from 'lucide-react-native';
+import type { FC, ReactElement, ReactNode } from 'react';
 import { cloneElement, isValidElement, memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
@@ -10,7 +17,7 @@ import Text from '../Text';
 import { getAlertStatusTokens, useStyles } from './style';
 import type { AlertProps, AlertType } from './type';
 
-const statusIconMap: Record<AlertType, ComponentType> = {
+const statusIconMap: Record<AlertType, LucideIcon> = {
   error: AlertCircle,
   info: Info,
   success: CheckCircle2,

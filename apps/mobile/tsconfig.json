@@ -20,7 +20,9 @@
       "@/test/*": ["./test/*"],
       "@/*": ["./src/*"],
       "@lobehub/ui-rn": ["./src/components"],
-      "@lobehub/ui-rn/*": ["./src/components/*"]
+      "@lobehub/ui-rn/*": ["./src/components/*"],
+      "@lobehub/chat": ["../../src"],
+      "@lobehub/chat/*": ["../../src/*"]
     }
   },
   "exclude": [
@@ -30,9 +32,15 @@
     ".temp",
     "**/*.backup/**",
     "**/*.test.ts",
-    "**/*.test.tsx",
-    "scripts/**/*"
+    "**/*.test.tsx"
   ],
   "extends": "expo/tsconfig.base",
-  "include": ["src/**/*", "app/**/*", "expo-env.d.ts", "global.d.ts", ".expo/types/**/*.ts"]
+  "include": [
+    "src/**/*",
+    "app/**/*",
+    "scripts/**/*",
+    "expo-env.d.ts",
+    "global.d.ts",
+    ".expo/types/**/*.ts"
+  ]
 }

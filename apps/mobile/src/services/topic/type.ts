@@ -1,5 +1,5 @@
 import { ChatTopic, TopicRankItem } from '@lobechat/types';
-import { BatchTaskResult } from '@lobechat/types/@/service';
+import { BatchTaskResult } from '@lobechat/types/src/service';
 
 export interface CreateTopicParams {
   favorite?: boolean;
