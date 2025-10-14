@@ -38,6 +38,7 @@ export const useStyles = createStyles(({ token }) => ({
     flex: 1,
   },
   scrollContent: {
+    flex: 1,
     paddingBottom: token.paddingLG,
   },
   title: {
