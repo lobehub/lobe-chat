@@ -50,11 +50,11 @@ See [internationalization.mdc](mdc:.cursor/rules/internationalization.mdc) for d
 - [package.json](mdc:package.json) - Dependencies and scripts
 - [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration
 - [metro.config.js](mdc:metro.config.js) - Metro bundler configuration
-- [app.json](mdc:app.json) - Expo app configuration
+- [app.config.ts](mdc:app.config.ts) - Expo app configuration (TypeScript, 类型安全)
 - [eas.json](mdc:eas.json) - EAS Build configuration
 
 ### Environment Setup
-- [polyfills.ts](mdc:polyfills.ts) - Polyfills for React Native
+- [src/polyfills.ts](mdc:src/polyfills.ts) - Polyfills for React Native
 - [global.d.ts](mdc:global.d.ts) - Global TypeScript declarations
 
 ## Code Organization

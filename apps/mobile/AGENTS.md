@@ -3,7 +3,7 @@
 ## Project Overview
 
 - React Native + Expo app delivering the LobeChat AI chat experience for iOS and Android from a shared codebase.
-- Core entry points: `app/_layout.tsx` wires global providers, while `app/index.tsx` (and nested routes under `app/(main)`) drive navigation via Expo Router.
+- Core entry points: `src/app/_layout.tsx` wires global providers, while `src/app/index.tsx` (and nested routes under `src/app/(main)`) drive navigation via Expo Router.
 - State flows through colocated Zustand stores such as `store/chat`, `store/session`, and `store/openai`; selectors in `store/session/selectors` keep components efficient.
 - Key platform features include Markdown + math rendering (React Native Markdown, Shiki, MathJax), streaming chat transport via `utils/fetchSSE`, and tRPC clients configured in `utils/trpc`.
 - Follow the domain guides in `rules/` (e.g., `project-overview.mdc`, `state-management.mdc`, `api-integration.mdc`) for deeper architecture context before implementing changes.
