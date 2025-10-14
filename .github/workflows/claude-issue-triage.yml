@@ -64,8 +64,8 @@ jobs:
 
             **LABEL CATEGORIES:**
 
-            **a) Issue Type (REQUIRED - select ONE):**
-            - 🐛 Bug, 🌠 Feature Request, 💄 Design, 📝 Documentation, ⚡️ Performance
+            **a) Issue Type (select ONE if applicable):**
+            - 💄 Design, 📝 Documentation, ⚡️ Performance
 
             **b) Priority (select ONE if applicable):**
             - priority:high - Critical, maintainer mentions "urgent"/"serious"/"critical"
