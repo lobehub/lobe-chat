@@ -1,0 +1,18 @@
+diff --git a/android/CMakeLists.txt b/android/CMakeLists.txt
+index 01466e361e52a18b52d6a2c3aa489fcaec2140f0..ba6ddea740cf9392066a1b691db77036f5c17699 100644
+--- a/android/CMakeLists.txt
++++ b/android/CMakeLists.txt
+@@ -1,8 +1,12 @@
+ cmake_minimum_required(VERSION 3.13)
+ project(ReactNativeShikiEngine)
+
++# Force C++20 standard for React Native 0.81+ compatibility
++set(CMAKE_CXX_STANDARD 20)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++set(CMAKE_CXX_EXTENSIONS OFF)
++
+ set(CMAKE_VERBOSE_MAKEFILE ON)
+-set(CMAKE_CXX_STANDARD 17)
+
+ find_library(ONIG_LIB onig
+     PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}
