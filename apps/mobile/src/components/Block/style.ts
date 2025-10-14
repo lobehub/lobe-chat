@@ -5,11 +5,9 @@ export const useStyles = createStyles(({ token, stylish }) => ({
   borderlessActive: stylish.variantBorderlessActive,
   borderlessHover: stylish.variantBorderlessHover,
   filled: stylish.variantFilled,
-
   filledActive: stylish.variantFilledActive,
   filledHover: stylish.variantFilledHover,
   glass: stylish.blur,
-
   outlined: stylish.variantOutlined,
   outlinedActive: stylish.variantOutlinedActive,
   outlinedHover: stylish.variantOutlinedHover,
