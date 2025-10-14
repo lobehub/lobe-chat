@@ -7,27 +7,43 @@ alwaysApply: false
 
 ## Store Architecture
 
-The app uses Zustand for state management with persistence through AsyncStorage.
+The app uses Zustand for state management. Configuration data persists through **react-native-mmkv** (replacing AsyncStorage for better performance).
 
 ### Core Stores
 
-#### OpenAI Configuration
+#### Configuration Stores (with MMKV persistence)
+
+**Settings**
+- [store/setting.ts](mdc:store/setting.ts) - App settings
+- Manages: Theme, font, language, developer mode
+- Persistence: **MMKV** with JSON serialization (appStorage instance)
+
+**OpenAI Configuration**
 - [store/openai.ts](mdc:store/openai.ts) - OpenAI API configuration
 - Manages: API key, proxy settings
-- Persistence: AsyncStorage with JSON serialization
-- Actions: `setApiKey`, `setProxy`
+- Persistence: **MMKV** with JSON serialization (appStorage instance)
 
-#### Session Management
-- [store/session/index.ts](mdc:store/session/index.ts) - Main session store
-- [store/session/helpers.ts](mdc:store/session/helpers.ts) - Session utility functions
-- [store/session/selectors/](mdc:store/session/selectors/) - Session selectors
-  - [store/session/selectors/index.ts](mdc:store/session/selectors/index.ts) - Selector exports
-  - [store/session/selectors/list.ts](mdc:store/session/selectors/list.ts) - List-related selectors
-  - [store/session/selectors/meta.ts](mdc:store/session/selectors/meta.ts) - Metadata selectors
+**Agent Configuration**
+- [store/agent/store.ts](mdc:store/agent/store.ts) - AI Agent configuration
+- Manages: Agent config, initialization data
+- Persistence: **MMKV** with JSON serialization (appStorage instance)
 
-#### Chat State
-- [store/chat/index.ts](mdc:store/chat/index.ts) - Active chat functionality
+#### Runtime Stores (no persistence)
+
+**Session Management**
+- [store/session/store.ts](mdc:store/session/store.ts) - Main session store
+- Manages: Current session state, session list
+- Persistence: Runtime only (future: SWR + local database)
+
+**Chat State**
+- [store/chat/store.ts](mdc:store/chat/store.ts) - Active chat functionality
 - Manages: Current chat state, messages, loading states
+- Persistence: Runtime only (future: SWR + local database)
+
+**User State**
+- [store/user/index.ts](mdc:store/user/index.ts) - User authentication state
+- Manages: Authentication state, user info
+- Persistence: Runtime only (Token stored in expo-secure-store separately)
 
 ## State Patterns
 
@@ -36,7 +52,7 @@ The app uses Zustand for state management with persistence through AsyncStorage.
 interface StoreState {
   // State properties
   data: DataType;
-  
+
   // Actions
   setData: (data: DataType) => void;
   updateData: (updater: (data: DataType) => DataType) => void;
@@ -46,6 +62,9 @@ interface StoreState {
 
 ### Persistence Pattern
 ```typescript
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { appStorage, createMMKVStorage } from '@/utils/storage';
+
 export const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
@@ -53,11 +72,19 @@ export const useStore = create<StoreState>()(
     }),
     {
       name: 'store-name',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => createMMKVStorage(appStorage)),
     },
   ),
 );
 ```
+
+### Storage Instances
+
+The app uses a single MMKV instance for configuration data:
+
+- **appStorage**: Global app configuration (settings, openai, agent config)
+
+For sensitive data (tokens, API keys), use **expo-secure-store** instead.
 
 ### Selector Pattern
 - Use selectors for derived state

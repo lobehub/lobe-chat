@@ -1,8 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
+
+import { appStorage, createMMKVStorage } from '@/utils/storage';
 
 import { AgentStoreState, initialState } from './initialState';
 import { AgentChatAction, createChatSlice } from './slices/chat/action';
@@ -32,7 +33,7 @@ export const useAgentStore = createWithEqualityFn<AgentStore>()(
       agentMap: state.agentMap,
     }),
 
-    storage: createJSONStorage(() => AsyncStorage),
+    storage: createJSONStorage(() => createMMKVStorage(appStorage)),
   }),
   shallow,
 );

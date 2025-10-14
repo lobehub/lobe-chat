@@ -32,9 +32,6 @@ importers:
       '@lobehub/icons-rn':
         specifier: ^1.7.4
         version: 1.7.4(expo-linear-gradient@15.0.7(expo@54.0.13)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-svg@15.12.1(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@react-native-async-storage/async-storage':
-        specifier: 2.2.0
-        version: 2.2.0(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))
       '@react-native-clipboard/clipboard':
         specifier: ^1.16.3
         version: 1.16.3(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -251,6 +248,9 @@ importers:
       react-native-mathjax-html-to-svg:
         specifier: ^1.1.0
         version: 1.1.0
+      react-native-mmkv:
+        specifier: ^3.3.3
+        version: 3.3.3(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-reanimated:
         specifier: ~4.1.2
         version: 4.1.3(@babel/core@7.28.4)(react-native-worklets@0.5.1(@babel/core@7.28.4)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -347,7 +347,7 @@ importers:
         version: 1.25.1(@types/react@19.1.17)(immer@10.1.3)(react-devtools-core@6.1.5)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.1.0))(ws@8.18.3)(zod@3.25.76)
       '@lobehub/lint':
         specifier: ^1.26.2
-        version: 1.26.2(@octokit/core@4.2.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)
+        version: 1.26.2(@octokit/core@7.0.5)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)
       '@testing-library/react-native':
         specifier: ^13.2.0
         version: 13.3.3(jest@29.7.0(@types/node@22.18.10))(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react-test-renderer@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2284,11 +2284,6 @@ packages:
 
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
-
-  '@react-native-async-storage/async-storage@2.2.0':
-    resolution: {integrity: sha512-gvRvjR5JAaUZF8tv2Kcq/Gbt3JHwbKFYfmb445rhOj6NUMx3qPLixmDx5pZAyb9at1bYvJ4/eTUipU5aki45xw==}
-    peerDependencies:
-      react-native: ^0.0.0-0 || >=0.65 <1.0
 
   '@react-native-clipboard/clipboard@1.16.3':
     resolution: {integrity: sha512-cMIcvoZKIrShzJHEaHbTAp458R9WOv0fB6UyC7Ek4Qk561Ow/DrzmmJmH/rAZg21Z6ixJ4YSdFDC14crqIBmCQ==}
@@ -6281,10 +6276,6 @@ packages:
     resolution: {integrity: sha512-yvkRyxmFKEOQ4pNXCmJG5AEQNlXJS5LaONXo5/cLdTZdWvsZ1ioJEonLGAosKlMWE8lwUy/bJzMjcw8az73+Fg==}
     engines: {node: '>=0.10.0'}
 
-  is-plain-obj@2.1.0:
-    resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
-    engines: {node: '>=8'}
-
   is-plain-obj@4.1.0:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
     engines: {node: '>=12'}
@@ -7076,10 +7067,6 @@ packages:
   meow@13.2.0:
     resolution: {integrity: sha512-pxQJQzB6djGPXh08dacEloMFopsOqGVRKFPYvPOt9XDZ1HasbgDZA74CJGreSU4G3Ak7EFJGoiH2auq+yXISgA==}
     engines: {node: '>=18'}
-
-  merge-options@3.0.4:
-    resolution: {integrity: sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==}
-    engines: {node: '>=10'}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -8430,6 +8417,12 @@ packages:
 
   react-native-mathjax-html-to-svg@1.1.0:
     resolution: {integrity: sha512-xqP/DS2Ya05yJUKw4w8liTgKl7R9j94aA/HonAZ4QMuFyj/aqrGgoSmYB1xnqtc1bw/YoqiZ+lz13hmRrjFoQg==}
+
+  react-native-mmkv@3.3.3:
+    resolution: {integrity: sha512-GMsfOmNzx0p5+CtrCFRVtpOOMYNJXuksBVARSQrCFaZwjUyHJdQzcN900GGaFFNTxw2fs8s5Xje//RDKj9+PZA==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   react-native-reanimated@4.1.3:
     resolution: {integrity: sha512-GP8wsi1u3nqvC1fMab/m8gfFwFyldawElCcUSBJQgfrXeLmsPPUOpDw44lbLeCpcwUuLa05WTVePdTEwCLTUZg==}
@@ -10636,10 +10629,10 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@achingbrain/semantic-release-github@0.0.2(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.3))':
+  '@achingbrain/semantic-release-github@0.0.2(@octokit/core@7.0.5)(semantic-release@24.2.9(typescript@5.9.3))':
     dependencies:
       '@octokit/plugin-retry': 3.0.9
-      '@octokit/plugin-throttling': 3.7.0(@octokit/core@4.2.4)
+      '@octokit/plugin-throttling': 3.7.0(@octokit/core@7.0.5)
       '@octokit/rest': 19.0.13
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
@@ -12281,7 +12274,7 @@ snapshots:
       react-native: 0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0)
       react-native-svg: 15.12.1(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
 
-  '@lobehub/lint@1.26.2(@octokit/core@4.2.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@lobehub/lint@1.26.2(@octokit/core@7.0.5)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.10))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@24.2.9(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@trivago/prettier-plugin-sort-imports': 5.2.2(prettier@3.6.2)
       '@typescript-eslint/eslint-plugin': 7.5.0(@typescript-eslint/parser@7.5.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
@@ -12340,7 +12333,7 @@ snapshots:
       remark-sort-definitions: 2.0.0
       remark-textr: 6.1.0
       remark-toc: 9.0.0
-      semantic-release-config-gitmoji: 1.5.3(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.3))
+      semantic-release-config-gitmoji: 1.5.3(@octokit/core@7.0.5)(semantic-release@24.2.9(typescript@5.9.3))
       stylelint-config-clean-order: 7.0.0(stylelint@15.11.0(typescript@5.9.3))
       stylelint-config-recommended: 14.0.1(stylelint@15.11.0(typescript@5.9.3))
       stylelint-less: 3.0.1(postcss@8.5.6)(stylelint@15.11.0(typescript@5.9.3))
@@ -12543,9 +12536,9 @@ snapshots:
       '@octokit/types': 15.0.0
       bottleneck: 2.19.5
 
-  '@octokit/plugin-throttling@3.7.0(@octokit/core@4.2.4)':
+  '@octokit/plugin-throttling@3.7.0(@octokit/core@7.0.5)':
     dependencies:
-      '@octokit/core': 4.2.4
+      '@octokit/core': 7.0.5
       '@octokit/types': 6.41.0
       bottleneck: 2.19.5
 
@@ -12906,11 +12899,6 @@ snapshots:
       '@types/react': 19.1.17
 
   '@radix-ui/rect@1.1.1': {}
-
-  '@react-native-async-storage/async-storage@2.2.0(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))':
-    dependencies:
-      merge-options: 3.0.4
-      react-native: 0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0)
 
   '@react-native-clipboard/clipboard@1.16.3(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -17684,8 +17672,6 @@ snapshots:
 
   is-plain-obj@1.1.0: {}
 
-  is-plain-obj@2.1.0: {}
-
   is-plain-obj@4.1.0: {}
 
   is-plain-object@5.0.0: {}
@@ -18851,10 +18837,6 @@ snapshots:
       yargs-parser: 20.2.9
 
   meow@13.2.0: {}
-
-  merge-options@3.0.4:
-    dependencies:
-      is-plain-obj: 2.1.0
 
   merge-stream@2.0.0: {}
 
@@ -20478,6 +20460,11 @@ snapshots:
       html-entities: 2.6.0
       mhchemparser: 4.2.1
 
+  react-native-mmkv@3.3.3(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-native: 0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0)
+
   react-native-reanimated@4.1.3(@babel/core@7.28.4)(react-native-worklets@0.5.1(@babel/core@7.28.4)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
       '@babel/core': 7.28.4
@@ -21787,12 +21774,12 @@ snapshots:
 
   select-hose@2.0.0: {}
 
-  semantic-release-config-gitmoji@1.5.3(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.3)):
+  semantic-release-config-gitmoji@1.5.3(@octokit/core@7.0.5)(semantic-release@24.2.9(typescript@5.9.3)):
     dependencies:
       '@gitmoji/commit-types': 1.1.5
       '@semantic-release/changelog': 6.0.3(semantic-release@24.2.9(typescript@5.9.3))
       '@semantic-release/git': 10.0.1(semantic-release@24.2.9(typescript@5.9.3))
-      '@semantic-release/github': '@achingbrain/semantic-release-github@0.0.2(@octokit/core@4.2.4)(semantic-release@24.2.9(typescript@5.9.3))'
+      '@semantic-release/github': '@achingbrain/semantic-release-github@0.0.2(@octokit/core@7.0.5)(semantic-release@24.2.9(typescript@5.9.3))'
       '@semrel-extra/npm': 1.2.2
       '@types/semantic-release': 17.2.11
       conventional-changelog-gitmoji-config: 1.5.2
