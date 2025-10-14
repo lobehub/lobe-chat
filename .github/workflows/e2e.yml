@@ -1,0 +1,52 @@
+name: E2E CI
+permissions:
+  contents: read
+
+on:
+    pull_request:
+    push:
+
+concurrency:
+    group: e2e-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    e2e:
+        name: Test Web App
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Install dependencies (bun)
+              run: bun install
+
+            - name: Install Playwright browsers (with system deps)
+              run: bunx playwright install --with-deps chromium
+
+            - name: Run E2E tests
+              env:
+                  PORT: 3010
+              run: bun run e2e
+
+            - name: Upload Playwright HTML report (on failure)
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report
+                  if-no-files-found: ignore
+
+            - name: Upload Playwright traces (on failure)
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: test-results
+                  path: test-results
+                  if-no-files-found: ignore
