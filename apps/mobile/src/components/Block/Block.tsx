@@ -1,4 +1,5 @@
 import { memo, useMemo } from 'react';
+import { Platform } from 'react-native';
 
 import { cva } from '@/components/styles';
 
@@ -7,29 +8,60 @@ import { useStyles } from './style';
 import type { BlockProps } from './type';
 
 const Block = memo<BlockProps>(
-  ({ variant = 'filled', shadow, clickable, children, style, onPress, ...rest }) => {
-    const { styles } = useStyles();
+  ({
+    variant = 'filled',
+    shadow,
+    clickable,
+    children,
+    style,
+    onPress,
+    active,
+    borderRadius,
+    ...rest
+  }) => {
+    const { styles, theme } = useStyles();
 
     const variants = useMemo(
       () =>
         cva(styles.root, {
           compoundVariants: [
             {
+              active: true,
+              style: styles.filledActive,
+              variant: 'filled',
+            },
+            {
+              active: true,
+              style: styles.borderlessActive,
+              variant: 'borderless',
+            },
+            {
+              active: true,
+              style: styles.outlinedActive,
+              variant: 'outlined',
+            },
+            {
               clickable: true,
               pressed: true,
-              style: styles.filledHover,
+              style: Platform.select({
+                ios: styles.filledHover,
+              }),
               variant: 'filled',
             },
             {
               clickable: true,
               pressed: true,
-              style: styles.borderlessHover,
+              style: Platform.select({
+                ios: styles.borderlessHover,
+              }),
               variant: 'borderless',
             },
             {
               clickable: true,
               pressed: true,
-              style: styles.outlinedActive,
+              style: Platform.select({
+                ios: styles.outlinedHover,
+              }),
               variant: 'outlined',
             },
           ],
@@ -37,6 +69,10 @@ const Block = memo<BlockProps>(
             variant: 'filled',
           },
           variants: {
+            active: {
+              false: null,
+              true: null,
+            },
             clickable: {
               false: null,
               true: null,
@@ -69,10 +105,20 @@ const Block = memo<BlockProps>(
 
     return (
       <Flexbox
+        android_ripple={
+          clickable
+            ? {
+                color: theme.colorFillSecondary,
+              }
+            : undefined
+        }
         onPress={onPress}
         style={({ hovered, pressed }) => [
-          variants({ clickable, hovered, pressed, shadow, variant }),
-          style,
+          variants({ active, clickable, hovered, pressed, shadow, variant }),
+          {
+            borderRadius,
+          },
+          typeof style === 'function' ? style({ hovered, pressed }) : style,
         ]}
         {...rest}
       >
