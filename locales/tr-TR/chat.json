@@ -32,7 +32,9 @@
   "defaultSession": "Varsayılan Asistan",
   "dm": {
     "placeholder": "{{agentTitle}} ile olan özel mesajlarınız burada gösterilecek.",
-    "tooltip": "Özel mesaj gönder"
+    "tooltip": "Özel mesaj gönder",
+    "visibleTo": "Yalnızca {{target}} tarafından görülebilir",
+    "you": "sen"
   },
   "duplicateSession": {
     "loading": "Kopyalanıyor...",

@@ -108,13 +108,12 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
   const userName = useUserStore(userProfileSelectors.nickName) || 'User';
   const agents = useSessionStore(sessionSelectors.currentGroupAgents);
 
-
   const dmIndicator = useMemo(() => {
     if (!targetId) return undefined;
 
     let targetName = targetId;
     if (targetId === 'user') {
-      targetName = userName;
+      targetName = t('dm.you');
     } else {
       const targetAgent = agents?.find((agent) => agent.id === targetId);
       targetName = targetAgent?.title || targetId;

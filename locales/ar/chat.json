@@ -32,7 +32,9 @@
   "defaultSession": "المساعد الافتراضي",
   "dm": {
     "placeholder": "ستظهر رسائلك الخاصة مع {{agentTitle}} هنا.",
-    "tooltip": "أرسل رسالة خاصة"
+    "tooltip": "أرسل رسالة خاصة",
+    "visibleTo": "مرئي فقط لـ {{target}}",
+    "you": "أنت"
   },
   "duplicateSession": {
     "loading": "جاري النسخ...",

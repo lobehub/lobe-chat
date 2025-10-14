@@ -32,7 +32,9 @@
   "defaultSession": "Агент по подразбиране",
   "dm": {
     "placeholder": "Вашите лични съобщения с {{agentTitle}} ще се показват тук.",
-    "tooltip": "Изпрати лично съобщение"
+    "tooltip": "Изпрати лично съобщение",
+    "visibleTo": "Видимо само за {{target}}",
+    "you": "ти"
   },
   "duplicateSession": {
     "loading": "Копиране...",

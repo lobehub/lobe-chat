@@ -32,7 +32,9 @@
   "defaultSession": "دستیار سفارشی",
   "dm": {
     "placeholder": "پیام‌های خصوصی بین شما و {{agentTitle}} در اینجا نمایش داده می‌شوند.",
-    "tooltip": "ارسال پیام خصوصی"
+    "tooltip": "ارسال پیام خصوصی",
+    "visibleTo": "فقط برای {{target}} قابل مشاهده است",
+    "you": "تو"
   },
   "duplicateSession": {
     "loading": "در حال کپی کردن...",

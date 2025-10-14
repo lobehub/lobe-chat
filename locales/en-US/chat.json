@@ -32,7 +32,9 @@
   "defaultSession": "Default Assistant",
   "dm": {
     "placeholder": "Your private messages with {{agentTitle}} will appear here.",
-    "tooltip": "Send a private message"
+    "tooltip": "Send a private message",
+    "visibleTo": "Visible to {{target}} only",
+    "you": "You"
   },
   "duplicateSession": {
     "loading": "Copying...",

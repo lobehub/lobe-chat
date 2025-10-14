@@ -32,7 +32,9 @@
   "defaultSession": "Standaard assistent",
   "dm": {
     "placeholder": "Je privéberichten met {{agentTitle}} worden hier weergegeven.",
-    "tooltip": "Stuur privébericht"
+    "tooltip": "Stuur privébericht",
+    "visibleTo": "Alleen zichtbaar voor {{target}}",
+    "you": "jij"
   },
   "duplicateSession": {
     "loading": "Bezig met kopiëren...",

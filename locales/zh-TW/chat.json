@@ -32,7 +32,9 @@
   "defaultSession": "自定義助手",
   "dm": {
     "placeholder": "你與 {{agentTitle}} 的私訊會顯示在這裡。",
-    "tooltip": "發私訊"
+    "tooltip": "發私訊",
+    "visibleTo": "僅 {{target}} 可見",
+    "you": "你"
   },
   "duplicateSession": {
     "loading": "複製中...",

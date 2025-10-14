@@ -32,7 +32,9 @@
   "defaultSession": "Trợ lý mặc định",
   "dm": {
     "placeholder": "Tin nhắn riêng tư giữa bạn và {{agentTitle}} sẽ được hiển thị ở đây.",
-    "tooltip": "Gửi tin nhắn riêng"
+    "tooltip": "Gửi tin nhắn riêng",
+    "visibleTo": "Chỉ hiển thị với {{target}}",
+    "you": "bạn"
   },
   "duplicateSession": {
     "loading": "Đang sao chép...",

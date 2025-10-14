@@ -32,7 +32,9 @@
   "defaultSession": "デフォルトセッション",
   "dm": {
     "placeholder": "あなたと{{agentTitle}}のダイレクトメッセージはここに表示されます。",
-    "tooltip": "メッセージを送る"
+    "tooltip": "メッセージを送る",
+    "visibleTo": "{{target}} のみが閲覧可能",
+    "you": "あなた"
   },
   "duplicateSession": {
     "loading": "複製中...",

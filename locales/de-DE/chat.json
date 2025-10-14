@@ -32,7 +32,9 @@
   "defaultSession": "Standardassistent",
   "dm": {
     "placeholder": "Ihre Direktnachrichten mit {{agentTitle}} werden hier angezeigt.",
-    "tooltip": "Direktnachricht senden"
+    "tooltip": "Direktnachricht senden",
+    "visibleTo": "Nur für {{target}} sichtbar",
+    "you": "Du"
   },
   "duplicateSession": {
     "loading": "Kopieren läuft...",

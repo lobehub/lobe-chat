@@ -32,7 +32,9 @@
   "defaultSession": "Sessione predefinita",
   "dm": {
     "placeholder": "I tuoi messaggi privati con {{agentTitle}} verranno visualizzati qui.",
-    "tooltip": "Invia messaggio privato"
+    "tooltip": "Invia messaggio privato",
+    "visibleTo": "Visibile solo a {{target}}",
+    "you": "tu"
   },
   "duplicateSession": {
     "loading": "In corso di duplicazione...",

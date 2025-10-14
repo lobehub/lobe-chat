@@ -32,7 +32,9 @@
   "defaultSession": "Domyślna sesja",
   "dm": {
     "placeholder": "Twoje prywatne wiadomości z {{agentTitle}} będą tutaj wyświetlane.",
-    "tooltip": "Wyślij prywatną wiadomość"
+    "tooltip": "Wyślij prywatną wiadomość",
+    "visibleTo": "Widoczne tylko dla {{target}}",
+    "you": "Ty"
   },
   "duplicateSession": {
     "loading": "Kopiowanie...",
