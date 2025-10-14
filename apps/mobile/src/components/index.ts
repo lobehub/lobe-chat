@@ -13,6 +13,7 @@ export { default as Center, type CenterProps } from './Center';
 export { default as ColorScales } from './ColorScales';
 export { default as ColorSwatches } from './ColorSwatches';
 export { default as Divider, type DividerProps } from './Divider';
+export { default as Empty, type EmptyProps } from './Empty';
 export { default as Flexbox, type FlexboxProps } from './Flexbox';
 export { default as FluentEmoji } from './FluentEmoji';
 export { default as Form } from './Form';

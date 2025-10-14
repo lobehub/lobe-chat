@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
+import SettingGroup from '@/features/SettingGroup';
+import SettingItem from '@/features/SettingItem';
 import { useLocale } from '@/hooks/useLocale';
 import { LANGUAGE_OPTIONS, LocaleMode } from '@/i18n/resource';
 
-import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from './styles';
 
 export default function LocaleScreen() {
@@ -34,12 +35,11 @@ export default function LocaleScreen() {
     <PageContainer showBack title={t('locale.title', { ns: 'setting' })}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <SettingGroup>
-          {localeOptions.map((option, index) => (
+          {localeOptions.map((option) => (
             <SettingItem
               description={
                 option.value === 'auto' ? t('locale.auto.description', { ns: 'setting' }) : ''
               }
-              isLast={index === localeOptions.length - 1}
               isSelected={localeMode === option.value}
               key={option.value}
               loading={pendingLocale === (option.value as LocaleMode)}
