@@ -3,10 +3,10 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
+import SettingGroup from '@/features/SettingGroup';
+import SettingItem from '@/features/SettingItem';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useAuth, useAuthActions } from '@/store/user';
-
-import { SettingGroup, SettingItem } from '../(components)';
 
 export default function AccountScreen() {
   const { t } = useTranslation(['setting', 'auth', 'error']);
