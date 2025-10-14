@@ -125,6 +125,34 @@ export function inferContentTypeFromImageUrl(url: string) {
 }
 
 /**
+ * Check if a URL points to localhost (127.0.0.1)
+ *
+ * This function safely determines if the provided URL's hostname is '127.0.0.1'.
+ * It handles malformed URLs gracefully by returning false instead of throwing errors.
+ *
+ * @param url - The URL string to check
+ * @returns true if the URL's hostname is '127.0.0.1', false otherwise (including for malformed URLs)
+ *
+ * @example
+ * ```typescript
+ * isLocalUrl('http://127.0.0.1:8080/path') // true
+ * isLocalUrl('https://example.com') // false
+ * isLocalUrl('invalid-url') // false (instead of throwing)
+ * isLocalUrl('') // false (instead of throwing)
+ * ```
+ *
+ * check: apps/desktop/src/main/core/StaticFileServerManager.ts
+ */
+export function isLocalUrl(url: string) {
+  try {
+    return new URL(url).hostname === '127.0.0.1';
+  } catch {
+    // Return false for malformed URLs instead of throwing
+    return false;
+  }
+}
+
+/**
  * Check if a URL points to localhost or private network address
  *
  * This function determines if the provided URL's hostname is a local or private network address.
@@ -144,18 +172,16 @@ export function inferContentTypeFromImageUrl(url: string) {
  *
  * @example
  * ```typescript
- * isLocalUrl('http://127.0.0.1:8080/path') // true
- * isLocalUrl('http://localhost:3000') // true
- * isLocalUrl('http://192.168.1.1') // true
- * isLocalUrl('http://10.0.0.1') // true
- * isLocalUrl('https://example.com') // false
- * isLocalUrl('invalid-url') // false (instead of throwing)
- * isLocalUrl('') // false (instead of throwing)
+ * isLocalOrPrivateUrl('http://127.0.0.1:8080/path') // true
+ * isLocalOrPrivateUrl('http://localhost:3000') // true
+ * isLocalOrPrivateUrl('http://192.168.1.1') // true
+ * isLocalOrPrivateUrl('http://10.0.0.1') // true
+ * isLocalOrPrivateUrl('https://example.com') // false
+ * isLocalOrPrivateUrl('invalid-url') // false (instead of throwing)
+ * isLocalOrPrivateUrl('') // false (instead of throwing)
  * ```
- *
- * check: apps/desktop/src/main/core/StaticFileServerManager.ts
  */
-export function isLocalUrl(url: string) {
+export function isLocalOrPrivateUrl(url: string) {
   try {
     const hostname = new URL(url).hostname.toLowerCase();
 

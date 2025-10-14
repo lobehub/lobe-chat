@@ -1,6 +1,6 @@
 import { CURRENT_VERSION, isDesktop } from '@lobechat/const';
 import { ChatToolPayload, CheckMcpInstallResult, CustomPluginMetadata } from '@lobechat/types';
-import { isLocalUrl, safeParseJSON } from '@lobechat/utils';
+import { isLocalOrPrivateUrl, safeParseJSON } from '@lobechat/utils';
 import { PluginManifest } from '@lobehub/market-sdk';
 import { CallReportRequest } from '@lobehub/market-types';
 
@@ -139,7 +139,7 @@ class MCPService {
   ) {
     // 如果是 Desktop 模式且 URL 是本地地址，使用 desktopClient
     // 这样可以避免在生产环境中通过远程服务器访问用户本地服务
-    if (isDesktop && isLocalUrl(params.url)) {
+    if (isDesktop && isLocalOrPrivateUrl(params.url)) {
       return desktopClient.mcp.getStreamableMcpServerManifest.query(params, { signal });
     }
 
