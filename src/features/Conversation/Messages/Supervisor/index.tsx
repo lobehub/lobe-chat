@@ -1,7 +1,8 @@
 'use client';
 
+import { ModelIcon } from '@lobehub/icons';
 import { Button, Text } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { createStyles, useTheme } from 'antd-style';
 import { LucideRefreshCw } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,13 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
 
 import TodoList, { TodoData } from './TodoList';
+
+const useStyles = createStyles(({ token, css, cx }) => ({
+  modelInfo: cx(css`
+    font-size: 12px;
+    color: ${token.colorTextQuaternary};
+  `),
+}));
 
 // Helper function to parse legacy markdown todo format
 const parseMarkdownTodos = (content: string): TodoData => {
@@ -55,6 +63,7 @@ const SupervisorMessage = memo<SupervisorMessageProps>((props) => {
   const { id, content, error, groupId, role, updatedAt, createdAt } = props;
   const { t } = useTranslation('chat');
   const theme = useTheme();
+  const { styles } = useStyles();
   const [triggerSupervisorDecision, deleteMessage] = useChatStore((s) => [
     s.internal_triggerSupervisorDecision,
     s.deleteMessage,
@@ -119,6 +128,10 @@ const SupervisorMessage = memo<SupervisorMessageProps>((props) => {
 
   // Render todo message with dedicated component
   if (isTodoMessage && todoData) {
+    const model = props.extra?.fromModel;
+    const provider = props.extra?.fromProvider;
+    const hasModelInfo = model || provider;
+
     return (
       <ChatItem
         avatar={{
@@ -128,7 +141,17 @@ const SupervisorMessage = memo<SupervisorMessageProps>((props) => {
         loading={false}
         placement="left"
         primary={false}
-        renderMessage={() => <TodoList data={todoData} />}
+        renderMessage={() => (
+          <Flexbox gap={8}>
+            <TodoList data={todoData} />
+            {hasModelInfo && (
+              <Flexbox align={'center'} className={styles.modelInfo} gap={4} horizontal>
+                {model && <ModelIcon model={model} type={'mono'} />}
+                {provider && model ? `${provider}/${model}` : provider || model}
+              </Flexbox>
+            )}
+          </Flexbox>
+        )}
         showTitle={true}
         time={updatedAt || createdAt}
         variant="bubble"
