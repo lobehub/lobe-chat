@@ -1,2 +1,8 @@
 npm run type-check
+
+# Check if there are changes in apps/mobile directory
+if git diff --cached --name-only | grep -q "^apps/mobile/"; then
+  cd apps/mobile && npm run type-check
+fi
+
 npx --no-install lint-staged
