@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
@@ -10,48 +10,16 @@ import { UploadFileItem } from '@/types/files/upload';
 
 import { useChatStore } from '../../../../store';
 import { TEST_CONTENT, TEST_IDS, createMockMessage, createMockMessages } from './fixtures';
-import { resetTestEnvironment, setupMockSelectors, setupStoreWithMessages } from './helpers';
+import {
+  resetTestEnvironment,
+  setupMockSelectors,
+  setupStoreWithMessages,
+  spyOnChatService,
+  spyOnMessageService,
+} from './helpers';
 
-vi.stubGlobal(
-  'fetch',
-  vi.fn(() => Promise.resolve(new Response('mock'))),
-);
-
+// Keep zustand mock as it's needed globally
 vi.mock('zustand/traditional');
-// Mock service
-vi.mock('@/services/message', () => ({
-  messageService: {
-    getMessages: vi.fn(),
-    updateMessageError: vi.fn(),
-    removeMessage: vi.fn(),
-    removeMessagesByAssistant: vi.fn(),
-    removeMessages: vi.fn(() => Promise.resolve()),
-    createMessage: vi.fn(() => Promise.resolve('new-message-id')),
-    updateMessage: vi.fn(),
-    removeAllMessages: vi.fn(() => Promise.resolve()),
-  },
-}));
-vi.mock('@/services/topic', () => ({
-  topicService: {
-    createTopic: vi.fn(() => Promise.resolve()),
-    removeTopic: vi.fn(() => Promise.resolve()),
-  },
-}));
-vi.mock('@/services/chat', async (importOriginal) => {
-  const original = await importOriginal();
-
-  return {
-    chatService: {
-      createAssistantMessage: vi.fn(() => Promise.resolve('assistant-message')),
-      createAssistantMessageStream: (original as any).chatService.createAssistantMessageStream,
-    },
-  };
-});
-vi.mock('@/services/session', () => ({
-  sessionService: {
-    updateSession: vi.fn(),
-  },
-}));
 
 const realCoreProcessMessage = useChatStore.getState().internal_coreProcessMessage;
 
@@ -59,11 +27,17 @@ beforeEach(() => {
   resetTestEnvironment();
   setupMockSelectors();
 
+  // Setup default spies that most tests need
+  spyOnMessageService();
+  // ✅ Removed spyOnChatService() - tests should spy chatService only when needed
+
   // Setup common mock methods that most tests need
-  useChatStore.setState({
-    refreshMessages: vi.fn(),
-    refreshTopic: vi.fn(),
-    internal_coreProcessMessage: vi.fn(),
+  act(() => {
+    useChatStore.setState({
+      refreshMessages: vi.fn(),
+      refreshTopic: vi.fn(),
+      internal_coreProcessMessage: vi.fn(),
+    });
   });
 });
 
@@ -77,7 +51,10 @@ describe('chatMessage actions', () => {
   describe('sendMessage', () => {
     describe('validation', () => {
       it('should not send when there is no active session', async () => {
-        useChatStore.setState({ activeId: undefined });
+        act(() => {
+          useChatStore.setState({ activeId: undefined });
+        });
+
         const { result } = renderHook(() => useChatStore());
 
         await act(async () => {
@@ -112,7 +89,6 @@ describe('chatMessage actions', () => {
     describe('message creation', () => {
       it('should create user message and trigger AI processing', async () => {
         const { result } = renderHook(() => useChatStore());
-        (messageService.createMessage as Mock).mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
 
         await act(async () => {
           await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
@@ -131,7 +107,6 @@ describe('chatMessage actions', () => {
       it('should send message with files attached', async () => {
         const { result } = renderHook(() => useChatStore());
         const files = [{ id: TEST_IDS.FILE_ID } as UploadFileItem];
-        (messageService.createMessage as Mock).mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
 
         await act(async () => {
           await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE, files });
@@ -149,7 +124,6 @@ describe('chatMessage actions', () => {
       it('should send files without message content', async () => {
         const { result } = renderHook(() => useChatStore());
         const files = [{ id: TEST_IDS.FILE_ID } as UploadFileItem];
-        (messageService.createMessage as Mock).mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
 
         await act(async () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files });
@@ -166,7 +140,6 @@ describe('chatMessage actions', () => {
 
       it('should not process AI when onlyAddUserMessage is true', async () => {
         const { result } = renderHook(() => useChatStore());
-        (messageService.createMessage as Mock).mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
 
         await act(async () => {
           await result.current.sendMessage({
@@ -202,19 +175,18 @@ describe('chatMessage actions', () => {
 
       it('should create topic when threshold is reached and feature is enabled', async () => {
         const { result } = renderHook(() => useChatStore());
-        vi.spyOn(messageService, 'createMessage').mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
-
-        setupMockSelectors({
-          agentConfig: {
-            enableAutoCreateTopic: true,
-            autoCreateTopicThreshold: TOPIC_THRESHOLD,
-          },
-        });
 
         const createTopicMock = vi.fn(() => Promise.resolve(TEST_IDS.NEW_TOPIC_ID));
         const switchTopicMock = vi.fn();
 
-        await act(async () => {
+        act(() => {
+          setupMockSelectors({
+            agentConfig: {
+              enableAutoCreateTopic: true,
+              autoCreateTopicThreshold: TOPIC_THRESHOLD,
+            },
+          });
+
           useChatStore.setState({
             activeTopicId: undefined,
             messagesMap: {
@@ -223,7 +195,9 @@ describe('chatMessage actions', () => {
             createTopic: createTopicMock,
             switchTopic: switchTopicMock,
           });
+        });
 
+        await act(async () => {
           await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
         });
 
@@ -235,7 +209,6 @@ describe('chatMessage actions', () => {
     describe('RAG integration', () => {
       it('should include RAG query when RAG is enabled', async () => {
         const { result } = renderHook(() => useChatStore());
-        vi.spyOn(messageService, 'createMessage').mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
         vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(true);
 
         await act(async () => {
@@ -253,7 +226,6 @@ describe('chatMessage actions', () => {
 
       it('should not use RAG when feature is disabled', async () => {
         const { result } = renderHook(() => useChatStore());
-        vi.spyOn(messageService, 'createMessage').mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
         vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(false);
         const retrieveChunksSpy = vi.spyOn(result.current, 'internal_retrieveChunks');
 
@@ -275,7 +247,6 @@ describe('chatMessage actions', () => {
     describe('special flags', () => {
       it('should pass isWelcomeQuestion flag to processing', async () => {
         const { result } = renderHook(() => useChatStore());
-        vi.spyOn(messageService, 'createMessage').mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
 
         await act(async () => {
           await result.current.sendMessage({
@@ -289,6 +260,103 @@ describe('chatMessage actions', () => {
           expect.anything(),
           { isWelcomeQuestion: true },
         );
+      });
+
+      it('should return early when onlyAddUserMessage is true', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        await act(async () => {
+          await result.current.sendMessage({
+            message: TEST_CONTENT.USER_MESSAGE,
+            onlyAddUserMessage: true,
+          });
+        });
+
+        expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('topic creation flow', () => {
+      it('should handle tempMessage during topic creation', async () => {
+        setupMockSelectors({
+          chatConfig: { enableAutoCreateTopic: true, autoCreateTopicThreshold: 2 },
+        });
+
+        act(() => {
+          useChatStore.setState({ activeTopicId: undefined });
+          setupStoreWithMessages(createMockMessages(5));
+        });
+
+        const { result } = renderHook(() => useChatStore());
+        const createTopicMock = vi
+          .spyOn(result.current, 'createTopic')
+          .mockResolvedValue(TEST_IDS.NEW_TOPIC_ID);
+        const toggleMessageLoadingSpy = vi.spyOn(result.current, 'internal_toggleMessageLoading');
+        const createTmpMessageSpy = vi
+          .spyOn(result.current, 'internal_createTmpMessage')
+          .mockReturnValue('temp-id');
+        vi.spyOn(result.current, 'internal_fetchMessages').mockResolvedValue();
+        vi.spyOn(result.current, 'switchTopic').mockResolvedValue();
+
+        await act(async () => {
+          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
+        });
+
+        expect(createTmpMessageSpy).toHaveBeenCalled();
+        expect(toggleMessageLoadingSpy).toHaveBeenCalledWith(true, 'temp-id');
+        expect(createTopicMock).toHaveBeenCalled();
+      });
+
+      it('should call summaryTopicTitle after processing when new topic created', async () => {
+        setupMockSelectors({
+          chatConfig: { enableAutoCreateTopic: true, autoCreateTopicThreshold: 2 },
+        });
+
+        act(() => {
+          useChatStore.setState({ activeTopicId: undefined });
+          setupStoreWithMessages(createMockMessages(5));
+        });
+
+        const { result } = renderHook(() => useChatStore());
+        vi.spyOn(result.current, 'createTopic').mockResolvedValue(TEST_IDS.NEW_TOPIC_ID);
+        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-id');
+        vi.spyOn(result.current, 'internal_fetchMessages').mockResolvedValue();
+        vi.spyOn(result.current, 'switchTopic').mockResolvedValue();
+
+        const summaryTopicTitleSpy = vi
+          .spyOn(result.current, 'summaryTopicTitle')
+          .mockResolvedValue();
+
+        await act(async () => {
+          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
+        });
+
+        expect(summaryTopicTitleSpy).toHaveBeenCalledWith(TEST_IDS.NEW_TOPIC_ID, expect.any(Array));
+      });
+
+      it('should handle topic creation failure gracefully', async () => {
+        setupMockSelectors({
+          chatConfig: { enableAutoCreateTopic: true, autoCreateTopicThreshold: 2 },
+        });
+
+        act(() => {
+          useChatStore.setState({ activeTopicId: undefined });
+          setupStoreWithMessages(createMockMessages(5));
+        });
+
+        const { result } = renderHook(() => useChatStore());
+        vi.spyOn(result.current, 'createTopic').mockResolvedValue(undefined);
+        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-id');
+        const toggleLoadingSpy = vi.spyOn(result.current, 'internal_toggleMessageLoading');
+        const updateTopicLoadingSpy = vi.spyOn(result.current, 'internal_updateTopicLoading');
+
+        await act(async () => {
+          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
+        });
+
+        // Should still call the AI processing even if topic creation fails
+        expect(result.current.internal_coreProcessMessage).toHaveBeenCalled();
+        expect(updateTopicLoadingSpy).not.toHaveBeenCalled();
       });
     });
   });
@@ -348,12 +416,16 @@ describe('chatMessage actions', () => {
 
   describe('stopGenerateMessage', () => {
     it('should abort generation and clear loading state when controller exists', () => {
-      const { result } = renderHook(() => useChatStore());
       const abortController = new AbortController();
-      const toggleLoadingSpy = vi.spyOn(result.current, 'internal_toggleChatLoading');
 
       act(() => {
         useChatStore.setState({ chatLoadingIdsAbortController: abortController });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const toggleLoadingSpy = vi.spyOn(result.current, 'internal_toggleChatLoading');
+
+      act(() => {
         result.current.stopGenerateMessage();
       });
 
@@ -362,11 +434,14 @@ describe('chatMessage actions', () => {
     });
 
     it('should do nothing when abort controller is not set', () => {
+      act(() => {
+        useChatStore.setState({ chatLoadingIdsAbortController: undefined });
+      });
+
       const { result } = renderHook(() => useChatStore());
       const toggleLoadingSpy = vi.spyOn(result.current, 'internal_toggleChatLoading');
 
       act(() => {
-        useChatStore.setState({ chatLoadingIdsAbortController: undefined });
         result.current.stopGenerateMessage();
       });
 
@@ -376,7 +451,9 @@ describe('chatMessage actions', () => {
 
   describe('internal_coreProcessMessage', () => {
     it('should process user message and generate AI response', async () => {
-      useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
+      act(() => {
+        useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
+      });
 
       const { result } = renderHook(() => useChatStore());
       const userMessage = createMockMessage({
@@ -385,8 +462,11 @@ describe('chatMessage actions', () => {
         content: TEST_CONTENT.USER_MESSAGE,
       });
 
-      (chatService.createAssistantMessage as Mock).mockResolvedValue(TEST_CONTENT.AI_RESPONSE);
-      const streamSpy = vi.spyOn(chatService, 'createAssistantMessageStream');
+      // ✅ Spy the direct dependency instead of chatService
+      const fetchAIChatSpy = vi
+        .spyOn(result.current, 'internal_fetchAIChatMessage')
+        .mockResolvedValue({ isFunctionCall: false, content: 'AI response' });
+
       const createMessageSpy = vi
         .spyOn(messageService, 'createMessage')
         .mockResolvedValue(TEST_IDS.ASSISTANT_MESSAGE_ID);
@@ -405,8 +485,397 @@ describe('chatMessage actions', () => {
         }),
       );
 
-      expect(streamSpy).toHaveBeenCalled();
+      expect(fetchAIChatSpy).toHaveBeenCalled();
       expect(result.current.refreshMessages).toHaveBeenCalled();
+    });
+
+    it('should handle RAG flow when ragQuery is provided', async () => {
+      act(() => {
+        useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const userMessage = createMockMessage({
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        content: TEST_CONTENT.RAG_QUERY,
+      });
+
+      const retrieveChunksSpy = vi
+        .spyOn(result.current, 'internal_retrieveChunks')
+        .mockResolvedValue({
+          chunks: [{ id: 'chunk-1', similarity: 0.9, text: 'chunk text' }] as any,
+          queryId: 'query-1',
+          rewriteQuery: 'rewritten query',
+        });
+
+      vi.spyOn(messageService, 'createMessage').mockResolvedValue(TEST_IDS.ASSISTANT_MESSAGE_ID);
+
+      await act(async () => {
+        await result.current.internal_coreProcessMessage([userMessage], userMessage.id, {
+          ragQuery: TEST_CONTENT.RAG_QUERY,
+        });
+      });
+
+      expect(retrieveChunksSpy).toHaveBeenCalledWith(
+        TEST_IDS.USER_MESSAGE_ID,
+        TEST_CONTENT.RAG_QUERY,
+        [],
+      );
+    });
+
+    it('should not process when createMessage fails', async () => {
+      act(() => {
+        useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const userMessage = createMockMessage({
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+      });
+
+      // ✅ Spy the direct dependency instead of chatService
+      const fetchAIChatSpy = vi
+        .spyOn(result.current, 'internal_fetchAIChatMessage')
+        .mockResolvedValue({ isFunctionCall: false, content: '' });
+
+      vi.spyOn(messageService, 'createMessage').mockResolvedValue(undefined as any);
+
+      await act(async () => {
+        await result.current.internal_coreProcessMessage([userMessage], userMessage.id);
+      });
+
+      expect(fetchAIChatSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('internal_fetchAIChatMessage', () => {
+    it('should fetch and return AI chat response', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+
+      // ✅ Mock chatService instead of global fetch
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          // Simulate text chunks streaming
+          await onMessageHandle?.({ type: 'text', text: TEST_CONTENT.AI_RESPONSE } as any);
+          await onFinish?.(TEST_CONTENT.AI_RESPONSE, {});
+        });
+
+      await act(async () => {
+        const response = await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+        expect(response.isFunctionCall).toEqual(false);
+        expect(response.content).toEqual(TEST_CONTENT.AI_RESPONSE);
+      });
+
+      streamSpy.mockRestore();
+    });
+
+    it('should handle streaming errors gracefully', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+
+      // ✅ Mock chatService to simulate error
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onErrorHandle }) => {
+          await onErrorHandle?.({ type: 'InvalidProviderAPIKey', message: 'Network error' } as any);
+        });
+
+      const updateMessageErrorSpy = vi.spyOn(messageService, 'updateMessageError');
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        });
+      });
+
+      expect(updateMessageErrorSpy).toHaveBeenCalledWith(
+        TEST_IDS.ASSISTANT_MESSAGE_ID,
+        expect.objectContaining({ type: 'InvalidProviderAPIKey' }),
+      );
+
+      streamSpy.mockRestore();
+    });
+
+    it('should handle tool call chunks during streaming', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({
+            type: 'tool_calls',
+            isAnimationActives: [true],
+            tool_calls: [
+              { id: 'tool-1', type: 'function', function: { name: 'test', arguments: '{}' } },
+            ],
+          } as any);
+          await onFinish?.(TEST_CONTENT.AI_RESPONSE, {
+            toolCalls: [
+              { id: 'tool-1', type: 'function', function: { name: 'test', arguments: '{}' } },
+            ],
+          } as any);
+        });
+
+      await act(async () => {
+        const response = await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+        expect(response.isFunctionCall).toEqual(true);
+      });
+
+      streamSpy.mockRestore();
+    });
+
+    it('should handle text chunks during streaming', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+      const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({ type: 'text', text: 'Hello' } as any);
+          await onMessageHandle?.({ type: 'text', text: ' World' } as any);
+          await onFinish?.('Hello World', {} as any);
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+      });
+
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          type: 'updateMessage',
+          value: expect.objectContaining({ content: 'Hello' }),
+        }),
+      );
+
+      streamSpy.mockRestore();
+    });
+
+    it('should handle reasoning chunks during streaming', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+      const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({ type: 'reasoning', text: 'Thinking...' } as any);
+          await onMessageHandle?.({ type: 'text', text: 'Answer' } as any);
+          await onFinish?.('Answer', {} as any);
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+      });
+
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          type: 'updateMessage',
+          value: expect.objectContaining({ reasoning: { content: 'Thinking...' } }),
+        }),
+      );
+
+      streamSpy.mockRestore();
+    });
+
+    it('should skip grounding when citations are empty', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+      const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({
+            type: 'grounding',
+            grounding: { citations: [], searchQueries: [] },
+          } as any);
+          await onFinish?.('Answer', {} as any);
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+      });
+
+      // Should not dispatch when citations are empty
+      const groundingCalls = dispatchSpy.mock.calls.filter((call) => {
+        const dispatch = call[0];
+        return dispatch?.type === 'updateMessage' && 'value' in dispatch && dispatch.value?.search;
+      });
+      expect(groundingCalls).toHaveLength(0);
+
+      streamSpy.mockRestore();
+    });
+
+    it('should handle grounding chunks during streaming', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+      const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({
+            type: 'grounding',
+            grounding: {
+              citations: [{ url: 'https://example.com', title: 'Example' }],
+              searchQueries: ['test query'],
+            },
+          } as any);
+          await onFinish?.('Answer', {} as any);
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+      });
+
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          type: 'updateMessage',
+          value: expect.objectContaining({
+            search: expect.objectContaining({
+              citations: expect.any(Array),
+            }),
+          }),
+        }),
+      );
+
+      streamSpy.mockRestore();
+    });
+
+    it('should handle base64 image chunks during streaming', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+      const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({
+            type: 'base64_image',
+            image: { id: 'img-1', data: 'base64data' },
+            images: [{ id: 'img-1', data: 'base64data' }],
+          } as any);
+          await onFinish?.('Answer', {} as any);
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+      });
+
+      expect(dispatchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          type: 'updateMessage',
+          value: expect.objectContaining({
+            imageList: expect.any(Array),
+          }),
+        }),
+      );
+
+      streamSpy.mockRestore();
+    });
+
+    it('should handle empty tool call arguments', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onFinish }) => {
+          await onFinish?.(TEST_CONTENT.AI_RESPONSE, {
+            toolCalls: [
+              { id: 'tool-1', type: 'function', function: { name: 'test', arguments: '' } },
+            ],
+          } as any);
+        });
+
+      await act(async () => {
+        const response = await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+        expect(response.isFunctionCall).toEqual(true);
+      });
+
+      streamSpy.mockRestore();
+    });
+
+    it('should update message with traceId when provided in onFinish', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+      const traceId = 'test-trace-123';
+
+      const updateMessageSpy = vi.spyOn(messageService, 'updateMessage');
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onFinish }) => {
+          await onFinish?.(TEST_CONTENT.AI_RESPONSE, { traceId } as any);
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+      });
+
+      expect(updateMessageSpy).toHaveBeenCalledWith(
+        TEST_IDS.ASSISTANT_MESSAGE_ID,
+        expect.objectContaining({ traceId }),
+      );
+
+      streamSpy.mockRestore();
     });
   });
 
@@ -426,46 +895,6 @@ describe('chatMessage actions', () => {
 
       expect(coreProcessSpy).not.toHaveBeenCalled();
       expect(result.current.refreshMessages).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('internal_fetchAIChatMessage', () => {
-    it('should fetch and return AI chat response', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messages = [createMockMessage({ role: 'user' })];
-
-      (fetch as Mock).mockResolvedValueOnce(new Response(TEST_CONTENT.AI_RESPONSE));
-
-      await act(async () => {
-        const response = await result.current.internal_fetchAIChatMessage({
-          messages,
-          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
-          model: 'gpt-4o-mini',
-          provider: 'openai',
-        });
-        expect(response.isFunctionCall).toEqual(false);
-      });
-    });
-
-    it('should handle fetch errors gracefully', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messages = [createMockMessage({ role: 'user' })];
-
-      vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'));
-
-      await act(async () => {
-        const response = await result.current.internal_fetchAIChatMessage({
-          model: 'gpt-4o-mini',
-          provider: 'openai',
-          messages,
-          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
-        });
-
-        expect(response).toEqual({
-          content: '',
-          isFunctionCall: false,
-        });
-      });
     });
 
     describe('context generation', () => {
@@ -533,10 +962,12 @@ describe('chatMessage actions', () => {
       it('should not process when context is empty', async () => {
         const { result } = renderHook(() => useChatStore());
 
-        useChatStore.setState({
-          messagesMap: {
-            [chatSelectors.currentChatKey(useChatStore.getState() as any)]: [],
-          },
+        act(() => {
+          useChatStore.setState({
+            messagesMap: {
+              [chatSelectors.currentChatKey(useChatStore.getState() as any)]: [],
+            },
+          });
         });
 
         await act(async () => {
@@ -544,6 +975,34 @@ describe('chatMessage actions', () => {
         });
 
         expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+      });
+
+      it('should generate correct context for tool role message', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messages = [
+          createMockMessage({ id: 'msg-1', role: 'user' }),
+          createMockMessage({ id: 'msg-2', role: 'assistant' }),
+          createMockMessage({ id: TEST_IDS.MESSAGE_ID, role: 'tool' }),
+        ];
+
+        act(() => {
+          useChatStore.setState({
+            messagesMap: {
+              [chatSelectors.currentChatKey(useChatStore.getState() as any)]: messages,
+            },
+          });
+        });
+
+        await act(async () => {
+          await result.current.internal_resendMessage(TEST_IDS.MESSAGE_ID);
+        });
+
+        // For tool role, it processes all messages up to tool but uses last user message as parentId
+        expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+          expect.any(Array),
+          'msg-1', // parentId is the last user message
+          expect.objectContaining({ traceId: undefined }),
+        );
       });
     });
   });
@@ -593,11 +1052,15 @@ describe('chatMessage actions', () => {
     });
 
     it('should reuse existing abort controller', () => {
-      const { result } = renderHook(() => useChatStore());
       const existingController = new AbortController();
 
       act(() => {
         useChatStore.setState({ chatLoadingIdsAbortController: existingController });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
         result.current.internal_toggleChatLoading(true, TEST_IDS.MESSAGE_ID, 'test');
       });
 
@@ -626,6 +1089,121 @@ describe('chatMessage actions', () => {
       });
 
       expect(result.current.toolCallingStreamIds[TEST_IDS.MESSAGE_ID]).toBeUndefined();
+    });
+  });
+
+  describe('internal_toggleSearchWorkflow', () => {
+    it('should enable search workflow loading state', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.internal_toggleSearchWorkflow(true, TEST_IDS.MESSAGE_ID);
+      });
+
+      const state = useChatStore.getState();
+      expect(state.searchWorkflowLoadingIds).toEqual([TEST_IDS.MESSAGE_ID]);
+    });
+
+    it('should disable search workflow loading state', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.internal_toggleSearchWorkflow(true, TEST_IDS.MESSAGE_ID);
+        result.current.internal_toggleSearchWorkflow(false, TEST_IDS.MESSAGE_ID);
+      });
+
+      const state = useChatStore.getState();
+      expect(state.searchWorkflowLoadingIds).toEqual([]);
+    });
+  });
+
+  describe('internal_toggleChatReasoning', () => {
+    it('should enable reasoning loading state', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.internal_toggleChatReasoning(true, TEST_IDS.MESSAGE_ID, 'test-action');
+      });
+
+      const state = useChatStore.getState();
+      expect(state.reasoningLoadingIds).toEqual([TEST_IDS.MESSAGE_ID]);
+    });
+
+    it('should disable reasoning loading state', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.internal_toggleChatReasoning(true, TEST_IDS.MESSAGE_ID, 'start');
+        result.current.internal_toggleChatReasoning(false, TEST_IDS.MESSAGE_ID, 'stop');
+      });
+
+      const state = useChatStore.getState();
+      expect(state.reasoningLoadingIds).toEqual([]);
+    });
+  });
+
+  describe('internal_toggleMessageInToolsCalling', () => {
+    it('should enable tools calling state', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.internal_toggleMessageInToolsCalling(true, TEST_IDS.MESSAGE_ID);
+      });
+
+      const state = useChatStore.getState();
+      expect(state.messageInToolsCallingIds).toEqual([TEST_IDS.MESSAGE_ID]);
+    });
+
+    it('should disable tools calling state', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.internal_toggleMessageInToolsCalling(true, TEST_IDS.MESSAGE_ID);
+        result.current.internal_toggleMessageInToolsCalling(false, TEST_IDS.MESSAGE_ID);
+      });
+
+      const state = useChatStore.getState();
+      expect(state.messageInToolsCallingIds).toEqual([]);
+    });
+  });
+
+  describe('internal_resendMessage with custom params', () => {
+    it('should use provided messages instead of store messages', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const customMessages = [createMockMessage({ id: 'custom-msg', role: 'user' })];
+
+      await act(async () => {
+        await result.current.internal_resendMessage('custom-msg', { messages: customMessages });
+      });
+
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.objectContaining({ id: 'custom-msg' })]),
+        'custom-msg',
+        expect.anything(),
+      );
+    });
+
+    it('should handle assistant message without parentId', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [
+        createMockMessage({ id: 'msg-1', role: 'user' }),
+        createMockMessage({ id: TEST_IDS.MESSAGE_ID, role: 'assistant', parentId: undefined }),
+      ];
+
+      act(() => {
+        useChatStore.setState({
+          messagesMap: {
+            [chatSelectors.currentChatKey(useChatStore.getState() as any)]: messages,
+          },
+        });
+      });
+
+      await act(async () => {
+        await result.current.internal_resendMessage(TEST_IDS.MESSAGE_ID);
+      });
+
+      // Should handle the case where parentId is not found
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalled();
     });
   });
 });

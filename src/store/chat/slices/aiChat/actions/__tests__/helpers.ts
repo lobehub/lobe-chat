@@ -54,22 +54,37 @@ export const createMockAbortController = () => {
 };
 
 /**
- * Mock message service methods with default implementations
+ * Setup spies for message service methods
  */
-export const mockMessageService = () => {
-  (messageService.createMessage as any) = vi.fn(() => Promise.resolve(TEST_IDS.NEW_MESSAGE_ID));
-  (messageService.updateMessage as any) = vi.fn(() => Promise.resolve());
-  (messageService.removeMessage as any) = vi.fn(() => Promise.resolve());
-  (messageService.updateMessageError as any) = vi.fn(() => Promise.resolve());
+export const spyOnMessageService = () => {
+  const createMessageSpy = vi
+    .spyOn(messageService, 'createMessage')
+    .mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
+  const updateMessageSpy = vi.spyOn(messageService, 'updateMessage').mockResolvedValue(undefined);
+  const removeMessageSpy = vi.spyOn(messageService, 'removeMessage').mockResolvedValue(undefined);
+  const updateMessageErrorSpy = vi
+    .spyOn(messageService, 'updateMessageError')
+    .mockResolvedValue(undefined);
+
+  return {
+    createMessageSpy,
+    removeMessageSpy,
+    updateMessageErrorSpy,
+    updateMessageSpy,
+  };
 };
 
 /**
- * Mock chat service methods with default implementations
+ * Setup spies for chat service methods
  */
-export const mockChatService = () => {
-  (chatService.createAssistantMessage as any) = vi.fn(() =>
-    Promise.resolve(TEST_IDS.ASSISTANT_MESSAGE_ID),
-  );
+export const spyOnChatService = () => {
+  const createAssistantMessageSpy = vi
+    .spyOn(chatService, 'createAssistantMessage')
+    .mockResolvedValue(new Response(TEST_IDS.ASSISTANT_MESSAGE_ID));
+
+  return {
+    createAssistantMessageSpy,
+  };
 };
 
 /**
