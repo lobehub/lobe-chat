@@ -9,7 +9,9 @@ vi.mock('@lobechat/utils', () => ({
     base64: 'base64-data',
     mimeType: 'image/png',
   }),
-  isLocalUrl: vi.fn((url: string) => url.includes('localhost') || url.includes('127.0.0.1')),
+  isDesktopLocalStaticServerUrl: vi.fn(
+    (url: string) => url.includes('localhost') || url.includes('127.0.0.1'),
+  ),
   parseDataUri: vi.fn((url: string) => {
     if (url.startsWith('data:')) {
       return { type: 'data' };
