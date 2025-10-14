@@ -1,5 +1,4 @@
-import type { FC } from 'react';
-import { ReactNode } from 'react';
+import { ReactNode, memo } from 'react';
 
 import { ToastProvider as OriginalToastProvider } from './ToastProvider';
 import { ToastContextSetter } from './staticMethods';
@@ -9,12 +8,14 @@ interface ToastProviderProps {
   children: ReactNode;
 }
 
-export const ToastProvider: FC<ToastProviderProps> = ({ children }) => {
+export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
   return (
     <OriginalToastProvider>
       <ToastContextSetter>{children}</ToastContextSetter>
     </OriginalToastProvider>
   );
-};
+});
+
+ToastProvider.displayName = 'ToastProviderWrapper';
 
 export { staticMethods } from './staticMethods';
