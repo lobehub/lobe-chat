@@ -1,3 +1,4 @@
+import { sleep } from '@lobechat/utils';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +12,6 @@ import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useSettingStore } from '@/store/setting';
 import { useAuthActions } from '@/store/user';
 
-import { sleep } from '../../../../../../../../packages/utils';
 import { useStyles } from './style';
 
 const CustomServer = () => {

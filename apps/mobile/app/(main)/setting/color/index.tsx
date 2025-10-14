@@ -61,7 +61,11 @@ export default function ThemeSettingScreen() {
                   setPrimaryColor(name || '');
                 }}
                 size={32}
-                value={primaryColor ? primaryColors[primaryColor] : undefined}
+                value={
+                  primaryColor && primaryColor !== 'primary'
+                    ? primaryColors[primaryColor]
+                    : undefined
+                }
               />
             }
             title={t('color.primary.title', { ns: 'setting' })}

@@ -1,11 +1,11 @@
 import { StyleProp, ViewStyle } from 'react-native';
 
-import { IconRenderable } from '../Icon';
+import type { IconProps } from '../Icon';
 
 export type CapsuleTabsSize = 'large' | 'middle' | 'small';
 
 export interface CapsuleTabItem {
-  icon?: IconRenderable;
+  icon?: IconProps['icon'];
   key: string;
   label: string;
 }
