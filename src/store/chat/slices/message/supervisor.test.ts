@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { aiChatService } from '@/services/aiChat';
 
@@ -70,18 +70,23 @@ describe('GroupChatSupervisor', () => {
     expect(aiChatService.generateJSON).toHaveBeenCalledTimes(1);
     const [payload] = vi.mocked(aiChatService.generateJSON).mock.calls[0];
     expect(payload).toMatchObject({
-      messages: [{ content: 'structured-supervisor-prompt', role: 'user' }],
+      messages: [{ content: 'please generate your decisions', role: 'user' }],
       model: 'gpt-4o',
       provider: 'openai',
-      schema: {
-        name: 'supervisor_decision',
-        schema: expect.objectContaining({
-          type: 'object',
-        }),
-        type: 'json_schema',
-      },
+      systemRole: 'structured-supervisor-prompt',
       temperature: 0.3,
     });
+
+    const toolNames = (payload.tools ?? []).map((tool: any) => tool.name);
+    expect(toolNames).toEqual(
+      expect.arrayContaining([
+        'trigger_agent',
+        'pause_conversation',
+        'trigger_agent_dm',
+        'create_todo',
+        'finish_todo',
+      ]),
+    );
 
     expect(result.decisions).toEqual([
       {
@@ -135,9 +140,7 @@ describe('GroupChatSupervisor', () => {
       },
     ]);
 
-    expect(result.todos).toEqual([
-      { content: 'Follow up with the user', finished: false },
-    ]);
+    expect(result.todos).toEqual([{ content: 'Follow up with the user', finished: false }]);
 
     expect(result.todoUpdated).toBe(true);
 
