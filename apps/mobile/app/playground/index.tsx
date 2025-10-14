@@ -1,7 +1,7 @@
 import {
   CapsuleTabItem,
   CapsuleTabs,
-  Divider,
+  Cell,
   Flexbox,
   Input,
   PageContainer,
@@ -9,7 +9,7 @@ import {
 } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { kebabCase } from 'lodash-es';
-import { Fragment, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 
 import { useStyles } from './styles';
@@ -71,12 +71,11 @@ export default function ComponentPlaygroundIndex() {
   };
 
   const renderComponentCard = (component: ComponentItem) => (
-    <Fragment key={component.name}>
-      <Flexbox onPress={() => handleComponentPress(component)} padding={16}>
-        <Text fontSize={18}>{component.name}</Text>
-      </Flexbox>
-      <Divider />
-    </Fragment>
+    <Cell
+      key={component.name}
+      onPress={() => handleComponentPress(component)}
+      title={component.name}
+    />
   );
 
   const renderGroupSection = (group: string, components: ComponentItem[]) => (

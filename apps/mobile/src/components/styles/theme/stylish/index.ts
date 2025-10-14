@@ -112,31 +112,31 @@ export const generateStylish = (token: AliasToken): LobeStylish => {
 
     variantOutlined: {
       backgroundColor: token.colorBgContainer,
-      borderColor: token.colorFill,
+      borderColor: token.colorFillSecondary,
       borderWidth: StyleSheet.hairlineWidth,
     },
 
     variantOutlinedActive: {
       backgroundColor: token.colorBgContainer,
-      borderColor: token.colorFill,
+      borderColor: token.colorFillSecondary,
       borderWidth: StyleSheet.hairlineWidth,
     },
 
     variantOutlinedDanger: {
       backgroundColor: token.colorBgContainer,
-      borderColor: token.colorErrorBorder,
+      borderColor: token.colorFillSecondary,
       borderWidth: StyleSheet.hairlineWidth,
     },
 
     variantOutlinedDangerHover: {
       backgroundColor: token.colorErrorBg,
-      borderColor: token.colorErrorBorder,
+      borderColor: token.colorErrorFill,
       borderWidth: StyleSheet.hairlineWidth,
     },
 
     variantOutlinedHover: {
       backgroundColor: token.colorBgContainerSecondary,
-      borderColor: token.colorFill,
+      borderColor: token.colorFillSecondary,
       borderWidth: StyleSheet.hairlineWidth,
     },
   };

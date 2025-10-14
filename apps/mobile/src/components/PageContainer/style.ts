@@ -21,7 +21,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
   largeTitle: {
     paddingBottom: token.paddingSM,
-    paddingHorizontal: token.paddingMD,
+    paddingHorizontal: 16,
     paddingTop: token.paddingSM,
   },
   largeTitleText: {

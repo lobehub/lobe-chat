@@ -1,103 +1,63 @@
-import { Icon, Switch } from '@lobehub/ui-rn';
+import { Cell, CellProps, Switch } from '@lobehub/ui-rn';
 import { Href, Link } from 'expo-router';
-import { Check } from 'lucide-react-native';
+import { CheckIcon } from 'lucide-react-native';
 import { ReactNode } from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 
-import { useStyles } from './style';
+import { Flexbox } from '@/components';
 
-interface SettingItemProps {
+interface SettingItemProps extends CellProps {
   customContent?: ReactNode;
   description?: string;
-  extra?: string;
   href?: Href;
-  isLast?: boolean;
   isSelected?: boolean;
   loading?: boolean;
-  onPress?: () => void;
   onSwitchChange?: (value: boolean) => void;
   showCheckmark?: boolean;
-  showNewBadge?: boolean;
   showSwitch?: boolean;
   switchValue?: boolean;
-  title: string;
 }
 
 export const SettingItem = ({
   title,
   extra,
-  onPress,
   href,
   showSwitch,
   switchValue,
   onSwitchChange,
   description,
-  isLast,
-  showNewBadge,
   isSelected = false,
   showCheckmark = false,
   loading = false,
   customContent,
+  ...rest
 }: SettingItemProps) => {
-  const { styles } = useStyles();
-
-  const renderRightContent = () => {
-    if (showSwitch) {
-      return <Switch onValueChange={onSwitchChange} value={switchValue} />;
-    }
-
-    return (
-      <>
-        {extra && <Text style={styles.settingItemExtra}>{extra}</Text>}
-        {showNewBadge && <View style={styles.badge} />}
-        {loading && (
-          <View style={styles.checkmark}>
-            <ActivityIndicator size="small" />
-          </View>
-        )}
-        {!loading && showCheckmark && isSelected && (
-          <Text style={styles.checkmark}>
-            <Icon icon={Check} size="small" />
-          </Text>
-        )}
-        {(onPress || href) && !showCheckmark && !loading && (
-          <Text style={styles.settingItemArrow}>›</Text>
-        )}
-      </>
+  let node = (
+    <Cell
+      arrowIcon={isSelected ? CheckIcon : undefined}
+      description={description}
+      extra={showSwitch ? <Switch onValueChange={onSwitchChange} value={switchValue} /> : extra}
+      loading={loading}
+      showArrow={!!href || (!showSwitch && showCheckmark && isSelected)}
+      title={title}
+      {...rest}
+    />
+  );
+  if (customContent) {
+    node = (
+      <Flexbox>
+        {node}
+        {customContent}
+      </Flexbox>
     );
-  };
-
-  const content = (
-    <View>
-      <View style={styles.settingItem}>
-        <View style={styles.settingItemLeft}>
-          <Text style={styles.settingItemTitle}>{title}</Text>
-          {description && <Text style={styles.settingItemDescription}>{description}</Text>}
-        </View>
-        <View style={styles.settingItemRight}>{renderRightContent()}</View>
-      </View>
-      {customContent && <View style={styles.customContent}>{customContent}</View>}
-      {!isLast && <View style={styles.separator} />}
-    </View>
-  );
-
-  const touchableContent = (
-    <TouchableOpacity activeOpacity={1} onPress={onPress}>
-      {content}
-    </TouchableOpacity>
-  );
+  }
 
   if (href) {
     return (
       <Link asChild href={href}>
-        {touchableContent}
+        {node}
       </Link>
     );
   }
 
-  return (
-    <TouchableOpacity activeOpacity={1} onPress={onPress}>
-      {content}
-    </TouchableOpacity>
-  );
+  return node;
 };
