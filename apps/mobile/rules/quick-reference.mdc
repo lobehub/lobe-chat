@@ -55,8 +55,8 @@ See [internationalization.mdc](mdc:.cursor/rules/internationalization.mdc) for f
 ## Key Files to Know
 
 ### Entry Points
-- [app/_layout.tsx](mdc:app/_layout.tsx) - Root layout with providers
-- [app/index.tsx](mdc:app/index.tsx) - Main routing logic
+- [src/app/_layout.tsx](mdc:src/app/_layout.tsx) - Root layout with providers
+- [src/app/index.tsx](mdc:src/app/index.tsx) - Main routing logic
 - [package.json](mdc:package.json) - Dependencies and scripts
 
 ### State Management
@@ -149,7 +149,7 @@ import { useStore } from '@/store/store';
 5. **Translation issues**: Run `pnpm run i18n` to regenerate translations
 
 ### Debug Tools
-- [app/playground/](mdc:app/playground/) - Component testing playground
+- [src/app/playground/](mdc:src/app/playground/) - Component testing playground
 - React Native Debugger for debugging
 - Expo DevTools for development
 

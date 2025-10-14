@@ -83,7 +83,7 @@ import { ModelSwitch } from '@/components';  # 错误：当作通用组件引用
 ### 3.2 RN 业务组件组织规范
 
 ```
-参考现有业务组件：apps/mobile/app/(main)/chat/(components)/ChatInput/(components)/
+参考现有业务组件：apps/mobile/src/app/(main)/chat/(components)/ChatInput/(components)/
 
 IconBtn/                    # 业务组件示例
 ├── index.tsx              # 主入口，使用memo + displayName
@@ -98,7 +98,7 @@ import IconBtn from './(components)/IconBtn';  # 正确：相对路径引用
 
 ```
 ✅ 重构后正确结构：
-apps/mobile/app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/
+apps/mobile/src/app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/
 ├── index.tsx                              # 导出ModelSwitch主组件
 ├── styles.ts                              # ModelSwitch样式
 ├── ModelSwitchButton/
@@ -492,7 +492,7 @@ const EmptyModelState = ({ providerId }: { providerId: string }) => (
 
 ### 7.1 Phase 0: 文件结构重构（1 天）
 
-- [ ] 🚨 **移动文件位置**：从 `src/components/ModelSwitch/` → `app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/`
+- [ ] 🚨 **移动文件位置**：从 `src/components/ModelSwitch/` → `src/app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/`
 - [ ] 🚨 **调整引用方式**：ChatInput 改为相对路径引用 `import ModelSwitch from './(components)/ModelSwitch';`
 - [ ] 🚨 **移除通用组件导出**：从 `src/components/index.ts` 删除 ModelSwitch 相关导出
 - [ ] 🚨 **重组文件结构**：按照 RN 业务组件规范创建 `index.tsx + styles.ts` 结构
@@ -551,7 +551,7 @@ const EmptyModelState = ({ providerId }: { providerId: string }) => (
 
 ### 9.1 功能对齐
 
-- [ ] 🚨 **文件结构正确**：组件位于 `app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/`
+- [ ] 🚨 **文件结构正确**：组件位于 `src/app/(main)/chat/(components)/ChatInput/(components)/ModelSwitch/`
 - [ ] 🚨 **引用方式正确**：ChatInput 使用相对路径 `import ModelSwitch from './(components)/ModelSwitch';`
 - [ ] 🚨 **文件组织规范**：每个组件都有 `index.tsx + styles.ts` 结构
 - [ ] 🚨 **移除通用组件导出**：`src/components/index.ts` 不再导出 ModelSwitch
