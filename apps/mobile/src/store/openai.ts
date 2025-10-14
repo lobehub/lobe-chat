@@ -1,7 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
+
+import { appStorage, createMMKVStorage } from '@/utils/storage';
 
 interface OpenAIConfig {
   apiKey: string;
@@ -23,7 +24,7 @@ export const useOpenAIStore = createWithEqualityFn<OpenAIStore>()(
     }),
     {
       name: 'openai-storage',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => createMMKVStorage(appStorage)),
     },
   ),
   shallow,

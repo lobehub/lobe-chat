@@ -35,14 +35,15 @@
 
 - Place tests under `test/` or alongside components as `*.test.ts(x)` per `rules/react-native.mdc` guidance.
 - Use `@testing-library/react-native` for rendering and interaction assertions; rely on user-centered queries rather than implementation details.
-- Mock async integrations (SecureStore, AsyncStorage, network services) using Jest mocks; reference `rules/debug-usage.mdc` for logging utilities during tests.
+- Mock async integrations (SecureStore, **MMKV**, network services) using Jest mocks; reference `rules/debug-usage.mdc` for logging utilities during tests.
+- MMKV is mocked in `test/utils.tsx` with an in-memory Map for test isolation.
 - Prefer explicit assertions over brittle snapshots; when snapshots are required, keep them under `__snapshots__` directories.
 - Run `pnpm test --watch` during iteration and ensure `pnpm test` + `pnpm lint` pass before opening a PR.
 
 ## Security Considerations
 
 - Keep provider keys in `.env.local` (copied from `.env.example`) and load them through the secure configuration flows in `store/openai`; never commit secrets.
-- Persist sensitive tokens with `expo-secure-store`; avoid plain AsyncStorage for credentials as outlined in `rules/api-integration.mdc`.
+- Persist sensitive tokens with `expo-secure-store`; configuration data uses MMKV as outlined in `rules/state-management.mdc`.
 - Validate API responses and sanitize Markdown before render—Shiki/remark plugins are already configured, but keep dependencies patched.
 - Enforce HTTPS endpoints for remote calls; review EAS credentials and signing configs before production builds.
 - Monitor dependency upgrades touching auth libraries (`expo-auth-session`, `jose`, `jwt-decode`) and align with guidance in `rules/development-workflow.mdc`.
