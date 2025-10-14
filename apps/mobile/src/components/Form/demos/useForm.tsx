@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Button, Input, Text } from '@lobehub/ui-rn';
+import { useState } from 'react';
+import { View } from 'react-native';
 
 import Form, { FormValues } from '..';
-import Button from '../../Button';
-import Input from '../../Input';
 
 const UseFormDemo = () => {
   const [form] = Form.useForm();

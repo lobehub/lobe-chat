@@ -1,10 +1,8 @@
 import { PageContainer } from '@lobehub/ui-rn';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import CustomServer from '@/features/setting/developer/CustomServer';
-
+import CustomServer from '../features/CustomServer';
 import { useStyles } from './style';
 
 const CustomServerScreen = () => {

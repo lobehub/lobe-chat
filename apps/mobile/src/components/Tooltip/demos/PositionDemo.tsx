@@ -1,9 +1,5 @@
-import { Button, Tooltip } from '@lobehub/ui-rn';
-import type { TooltipPlacement } from '@lobehub/ui-rn';
-import React from 'react';
+import { Button, Tooltip, TooltipPlacement, useTheme } from '@lobehub/ui-rn';
 import { StyleSheet, View } from 'react-native';
-
-import { useTheme } from '@/theme';
 
 const placements: TooltipPlacement[] = [
   'topLeft',

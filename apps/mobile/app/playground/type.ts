@@ -1,16 +1,11 @@
 /**
  * 组件相关的类型定义
  */
-import React from 'react';
+import type { ComponentType } from 'react';
 
 export interface ComponentItem {
-  category: 'basic' | 'layout' | 'feedback' | 'display' | 'animation' | 'form' | 'navigation';
-  description: string;
-  hasDemos: boolean;
-  hasReadme: boolean;
+  category: string;
   name: string;
-  path: string;
-  tags: string[];
 }
 
 export interface ComponentStats {
@@ -26,7 +21,7 @@ export interface ComponentStats {
 
 export interface DemoConfig {
   code?: string;
-  component: React.ComponentType<any>;
+  component: ComponentType<any>;
   description: string;
   name: string;
 }

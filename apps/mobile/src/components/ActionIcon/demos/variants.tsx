@@ -1,6 +1,5 @@
 import { ActionIcon, Space } from '@lobehub/ui-rn';
 import { MoonStar, Sun } from 'lucide-react-native';
-import React from 'react';
 
 const VariantsDemo = () => {
   return (
@@ -8,6 +7,9 @@ const VariantsDemo = () => {
       <ActionIcon icon={Sun} variant="borderless" />
       <ActionIcon icon={Sun} variant="filled" />
       <ActionIcon icon={MoonStar} variant="outlined" />
+      <ActionIcon danger icon={Sun} variant="borderless" />
+      <ActionIcon danger icon={Sun} variant="filled" />
+      <ActionIcon danger icon={MoonStar} variant="outlined" />
     </Space>
   );
 };

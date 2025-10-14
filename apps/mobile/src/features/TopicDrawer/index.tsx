@@ -1,12 +1,14 @@
 import { PageContainer } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
-import React, { memo } from 'react';
+import type { ReactNode } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import { DRAWER_WIDTH } from '@/_const/theme';
 import { useGlobalStore } from '@/store/global';
+import { isIOS } from '@/utils/detection';
 
 import TopicList from './components/TopicList';
 import { useStyles } from './style';
@@ -15,7 +17,7 @@ import { useStyles } from './style';
  * TopicDrawer - 右侧Topic抽屉组件
  * 负责展示当前会话下的所有topic列表
  */
-const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
+const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
   const { styles } = useStyles();
   const winDim = useWindowDimensions();
   const { t } = useTranslation(['topic']);
@@ -25,6 +27,9 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
     s.setTopicDrawerOpen,
   ]);
 
+  const onOpenDrawer = useCallback(() => setTopicDrawerOpen(true), [setTopicDrawerOpen]);
+  const onCloseDrawer = useCallback(() => setTopicDrawerOpen(false), [setTopicDrawerOpen]);
+
   return (
     <Drawer
       drawerPosition="right"
@@ -32,14 +37,14 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
         styles.drawerStyle,
         { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
       ]}
-      drawerType="slide"
+      drawerType={isIOS ? 'slide' : 'front'}
       hideStatusBarOnOpen={false}
       onClose={() => {
-        setTopicDrawerOpen(false);
+        onCloseDrawer();
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       onOpen={() => {
-        setTopicDrawerOpen(true);
+        onOpenDrawer();
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       open={topicDrawerOpen}
@@ -51,6 +56,8 @@ const TopicDrawer = memo(({ children }: { children: React.ReactNode }) => {
       )}
       swipeEdgeWidth={50}
       swipeEnabled={true}
+      swipeMinDistance={10}
+      swipeMinVelocity={100}
     >
       {children}
     </Drawer>

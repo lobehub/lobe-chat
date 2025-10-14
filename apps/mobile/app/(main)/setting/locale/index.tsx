@@ -1,9 +1,12 @@
 import { PageContainer } from '@lobehub/ui-rn';
-import React from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
+import SettingGroup from '@/features/SettingGroup';
+import SettingItem from '@/features/SettingItem';
 import { useLocale } from '@/hooks/useLocale';
+import i18n from '@/i18n';
 import {
   LANGUAGE_FALLBACK_DISPLAY_NAMES,
   LANGUAGE_FALLBACK_NAMES,
@@ -13,7 +16,6 @@ import {
   normalizeLocale,
 } from '@/i18n/resource';
 
-import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from './styles';
 
 const createDisplayNames = (locale: string) => {
@@ -42,8 +44,8 @@ const sanitizeLanguageName = (value?: string | null) => {
 export default function LocaleScreen() {
   const { styles } = useStyles();
   const { localeMode, changeLocale } = useLocale();
-  const { i18n, t } = useTranslation(['setting']);
-  const [pendingLocale, setPendingLocale] = React.useState<LocaleMode | null>(null);
+  const { t } = useTranslation(['setting']);
+  const [pendingLocale, setPendingLocale] = useState<LocaleMode | null>(null);
 
   const handleLocaleChange = async (locale: LocaleMode) => {
     if (pendingLocale || localeMode === locale) return;
@@ -55,7 +57,7 @@ export default function LocaleScreen() {
     }
   };
 
-  const normalizedLocale = React.useMemo(
+  const normalizedLocale = useMemo(
     () => normalizeLocale(i18n.language ?? '') as Locales,
     [i18n.language],
   );
@@ -66,11 +68,11 @@ export default function LocaleScreen() {
   ];
 
   const fallbackNames = LANGUAGE_FALLBACK_DISPLAY_NAMES[normalizedLocale];
-  const currentDisplayNames = React.useMemo(
+  const currentDisplayNames = useMemo(
     () => createDisplayNames(normalizedLocale),
     [normalizedLocale],
   );
-  const getDescription = React.useCallback(
+  const getDescription = useCallback(
     (option: (typeof localeOptions)[number]) => {
       if (option.value === 'auto') {
         return t('locale.auto.description', { ns: 'setting' });
@@ -118,10 +120,9 @@ export default function LocaleScreen() {
     <PageContainer showBack title={t('locale.title', { ns: 'setting' })}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <SettingGroup>
-          {localeOptions.map((option, index) => (
+          {localeOptions.map((option) => (
             <SettingItem
               description={getDescription(option)}
-              isLast={index === localeOptions.length - 1}
               isSelected={localeMode === option.value}
               key={option.value}
               loading={pendingLocale === (option.value as LocaleMode)}

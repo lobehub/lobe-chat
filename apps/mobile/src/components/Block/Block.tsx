@@ -1,37 +1,67 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
+import { Platform } from 'react-native';
 
-import { cva } from '@/theme';
+import { cva } from '@/components/styles';
 
 import Flexbox from '../Flexbox';
 import { useStyles } from './style';
 import type { BlockProps } from './type';
 
 const Block = memo<BlockProps>(
-  ({ variant = 'filled', shadow, glass, children, style, onPress, ...rest }) => {
-    const { styles } = useStyles();
+  ({
+    variant = 'filled',
+    shadow,
+    clickable,
+    children,
+    style,
+    onPress,
+    active,
+    borderRadius,
+    ...rest
+  }) => {
+    const { styles, theme } = useStyles();
 
     const variants = useMemo(
       () =>
         cva(styles.root, {
           compoundVariants: [
             {
-              hovered: true,
-              style: styles.borderlessHover,
+              active: true,
+              style: styles.filledActive,
+              variant: 'filled',
+            },
+            {
+              active: true,
+              style: styles.borderlessActive,
               variant: 'borderless',
             },
             {
-              hovered: true,
-              style: styles.outlinedHover,
+              active: true,
+              style: styles.outlinedActive,
               variant: 'outlined',
             },
             {
+              clickable: true,
               pressed: true,
-              style: styles.borderlessHover,
+              style: Platform.select({
+                ios: styles.filledHover,
+              }),
+              variant: 'filled',
+            },
+            {
+              clickable: true,
+              pressed: true,
+              style: Platform.select({
+                ios: styles.borderlessHover,
+              }),
               variant: 'borderless',
             },
             {
+              clickable: true,
               pressed: true,
-              style: styles.outlinedActive,
+              style: Platform.select({
+                ios: styles.outlinedHover,
+              }),
               variant: 'outlined',
             },
           ],
@@ -39,6 +69,14 @@ const Block = memo<BlockProps>(
             variant: 'filled',
           },
           variants: {
+            active: {
+              false: null,
+              true: null,
+            },
+            clickable: {
+              false: null,
+              true: null,
+            },
             glass: {
               false: null,
               true: styles.glass,
@@ -67,10 +105,25 @@ const Block = memo<BlockProps>(
 
     return (
       <Flexbox
+        android_ripple={
+          clickable
+            ? {
+                color: theme.colorFillSecondary,
+              }
+            : undefined
+        }
         onPress={onPress}
         style={({ hovered, pressed }) => [
-          variants({ glass, hovered, pressed, shadow, variant }),
-          style,
+          variants({ active, clickable, hovered, pressed, shadow, variant }),
+          {
+            borderRadius:
+              typeof borderRadius === 'number'
+                ? borderRadius
+                : borderRadius === false
+                  ? 0
+                  : theme.borderRadiusLG * 1.5,
+          },
+          typeof style === 'function' ? style({ hovered, pressed }) : style,
         ]}
         {...rest}
       >

@@ -1,5 +1,4 @@
 import { Node } from 'mdast';
-import React from 'react';
 import { View } from 'react-native';
 import { MathJaxSvg } from 'react-native-mathjax-html-to-svg';
 

@@ -1,12 +1,12 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { PortalProvider } from '@gorhom/portal';
-import { ToastProvider } from '@lobehub/ui-rn';
+import { ThemeProvider, ToastProvider, useTheme, useThemeMode } from '@lobehub/ui-rn';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as NavigationBar from 'expo-navigation-bar';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -19,7 +19,6 @@ import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { TRPCProvider, trpcClient } from '@/services/_auth/trpc';
 import { useAuth, useUserStore } from '@/store/user';
-import { ThemeProvider, useTheme, useThemeMode } from '@/theme';
 import { authLogger } from '@/utils/logger';
 
 import '../polyfills';

@@ -1,5 +1,5 @@
 import { Skeleton } from '@lobehub/ui-rn';
-import React from 'react';
+import type { FC } from 'react';
 import { DimensionValue, View } from 'react-native';
 
 import { useStyles } from './style';
@@ -9,10 +9,7 @@ interface MessageSkeletonProps {
   width?: DimensionValue[];
 }
 
-const MessageSkeleton: React.FC<MessageSkeletonProps> = ({
-  role,
-  width = ['100%', '100%', '75%'],
-}) => {
+const MessageSkeleton: FC<MessageSkeletonProps> = ({ role, width = ['100%', '100%', '75%'] }) => {
   const { styles } = useStyles();
   const isUser = role === 'user';
 

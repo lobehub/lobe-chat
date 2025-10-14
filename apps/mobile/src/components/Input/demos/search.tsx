@@ -1,8 +1,6 @@
-import { Input } from '@lobehub/ui-rn';
-import React from 'react';
-import { Text, View } from 'react-native';
-
-import { createStyles } from '@/theme';
+import { Input, Text, createStyles } from '@lobehub/ui-rn';
+import { useState } from 'react';
+import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
   container: {
@@ -42,7 +40,7 @@ const useStyles = createStyles(({ token }) => ({
 
 const SearchDemo = () => {
   const { styles } = useStyles();
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <View style={styles.container}>

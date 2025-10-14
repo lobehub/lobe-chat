@@ -1,8 +1,7 @@
-import { type CapsuleTabItem, CapsuleTabs, type CapsuleTabsSize } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/theme';
+import { CapsuleTabItem, CapsuleTabs, CapsuleTabsSize, Text, useTheme } from '@lobehub/ui-rn';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { View } from 'react-native';
 
 const items: CapsuleTabItem[] = [
   { key: 'overview', label: 'Overview' },
@@ -16,7 +15,7 @@ const sizeOptions: Array<{ label: string; size: CapsuleTabsSize }> = [
   { label: 'Small', size: 'small' },
 ];
 
-const SizesDemo: React.FC = () => {
+const SizesDemo: FC = () => {
   const [selected, setSelected] = useState<Record<CapsuleTabsSize, string>>({
     large: items[0].key,
     middle: items[0].key,

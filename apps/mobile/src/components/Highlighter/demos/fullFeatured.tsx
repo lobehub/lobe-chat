@@ -1,20 +1,18 @@
-import { Highlighter } from '@lobehub/ui-rn';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
-import { useTheme } from '@/theme';
+import { Highlighter, Text, useTheme } from '@lobehub/ui-rn';
+import type { FC } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 /**
  * 完整功能模式演示
  * 展示所有可用的高级功能
  */
-export const FullFeaturedHighlighterDemo: React.FC = () => {
+export const FullFeaturedHighlighterDemo: FC = () => {
   const token = useTheme();
 
   const examples = [
     {
       code: `import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet  } from 'react-native';
 
 
 interface CounterProps {
@@ -87,7 +85,7 @@ npx react-native run-android
 
 ## 项目结构
 \`\`\`
-src/
+@/
 ├── components/     # 公共组件
 ├── screens/       # 页面组件
 ├── utils/         # 工具函数

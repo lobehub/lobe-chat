@@ -1,8 +1,8 @@
-import React, { ReactNode, memo, useMemo } from 'react';
-import { StyleProp, Text, TextStyle, View } from 'react-native';
+import { ReactNode, isValidElement, memo, useMemo } from 'react';
+import { StyleProp, TextStyle, View } from 'react-native';
 
-import Block from '@/components/Block';
-
+import Block from '../Block';
+import Text from '../Text';
 import { useStyles } from './style';
 import type { CardProps } from './type';
 
@@ -18,7 +18,7 @@ const renderTextLike = (
 ) => {
   if (!hasContent(content)) return null;
 
-  if (React.isValidElement(content)) return content;
+  if (isValidElement(content)) return content;
 
   if (typeof content === 'string' || typeof content === 'number') {
     return <Text style={[defaultStyle, customStyle]}>{content}</Text>;
@@ -65,7 +65,7 @@ const Card = memo<CardProps>(
       <Block style={composedStyle} variant={variant} {...rest}>
         {shouldRenderCover ? (
           <View style={[styles.cover]} testID="card-cover">
-            {React.isValidElement(cover)
+            {isValidElement(cover)
               ? cover
               : typeof cover === 'string' || typeof cover === 'number'
                 ? renderTextLike(cover, styles.title)

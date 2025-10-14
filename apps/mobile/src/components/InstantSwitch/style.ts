@@ -1,4 +1,4 @@
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/styles';
 
 export type InstantSwitchSize = 'small' | 'default' | 'large';
 

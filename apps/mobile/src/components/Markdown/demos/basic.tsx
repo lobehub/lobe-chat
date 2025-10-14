@@ -1,8 +1,5 @@
-import { Markdown } from '@lobehub/ui-rn';
-import React from 'react';
+import { Markdown, useTheme } from '@lobehub/ui-rn';
 import { StyleSheet, View } from 'react-native';
-
-import { useTheme } from '@/theme';
 
 import { content } from './data';
 

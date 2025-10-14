@@ -1,5 +1,4 @@
 import { Button, Space } from '@lobehub/ui-rn';
-import React from 'react';
 
 const SizesDemo = () => {
   return (

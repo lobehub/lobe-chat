@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import type { FC } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, DimensionValue, ViewStyle } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
 
@@ -17,7 +18,7 @@ interface SkeletonButtonProps {
   width?: DimensionValue;
 }
 
-const SkeletonButton: React.FC<SkeletonButtonProps> = ({
+const SkeletonButton: FC<SkeletonButtonProps> = ({
   animated = false,
   size = 'middle',
   shape = 'default',

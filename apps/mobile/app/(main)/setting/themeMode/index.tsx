@@ -1,23 +1,20 @@
-import { PageContainer } from '@lobehub/ui-rn';
-import React from 'react';
+import { PageContainer, useThemeMode as useAppTheme } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useThemeMode as useAppTheme } from '@/theme';
-
-import { SettingGroup, SettingItem } from '../(components)';
-import { useStyles } from '../styles';
+import SettingGroup from '@/features/SettingGroup';
+import SettingItem from '@/features/SettingItem';
 
 export default function ThemeModeSettingScreen() {
   const { t } = useTranslation(['setting']);
-  const { styles } = useStyles();
+
   const { themeMode, setThemeMode } = useAppTheme();
 
   const isFollowSystem = themeMode === 'auto';
 
   return (
     <PageContainer showBack title={t('themeMode.title', { ns: 'setting' })}>
-      <View style={styles.container}>
+      <View>
         <SettingGroup>
           <SettingItem
             onSwitchChange={(enabled) => setThemeMode(enabled ? 'auto' : 'light')}

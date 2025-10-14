@@ -1,5 +1,6 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
-import { LayoutRectangle, Text, View, ViewStyle } from 'react-native';
+import type { ReactNode } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { LayoutRectangle, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
@@ -9,6 +10,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
+import Text from '../Text';
 import { DOT_SIZE, useStyles } from './style';
 
 export interface SliderProps {
@@ -16,9 +18,9 @@ export interface SliderProps {
   disabled?: boolean;
   marks?: Record<
     number,
-    | React.ReactNode
+    | ReactNode
     | {
-        label: React.ReactNode;
+        label: ReactNode;
         style?: ViewStyle;
       }
   >;
@@ -111,7 +113,7 @@ const Slider = memo<SliderProps>(
     );
 
     // Initialize thumb position
-    React.useEffect(() => {
+    useEffect(() => {
       if (
         sliderWidth.value > 0 && // 受控模式下：拖动过程中不强制同步 translateX，避免视觉抖动
         !isThumbActive
@@ -120,11 +122,11 @@ const Slider = memo<SliderProps>(
       }
     }, [currentValue, getThumbPosition, isThumbActive]);
 
-    React.useEffect(() => {
+    useEffect(() => {
       setActiveValueJS(currentValue);
     }, [currentValue]);
 
-    React.useEffect(() => {
+    useEffect(() => {
       lastEmittedActiveValue.value = currentValue;
     }, [currentValue]);
 

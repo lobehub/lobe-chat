@@ -1,7 +1,5 @@
-import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
-
-import { useTheme } from '@/theme';
+import { Text, useTheme } from '@lobehub/ui-rn';
+import { ScrollView, View } from 'react-native';
 
 const TokenDemo = () => {
   const token = useTheme();

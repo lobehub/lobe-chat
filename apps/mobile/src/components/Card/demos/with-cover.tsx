@@ -1,6 +1,5 @@
-import { Card, Space } from '@lobehub/ui-rn';
-import React from 'react';
-import { Text, View } from 'react-native';
+import { Card, Space, Text } from '@lobehub/ui-rn';
+import { View } from 'react-native';
 
 const CoverDemo = () => {
   return (

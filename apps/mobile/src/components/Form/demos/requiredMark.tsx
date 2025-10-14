@@ -1,7 +1,6 @@
-import React from 'react';
+import { Input } from '@lobehub/ui-rn';
 
 import Form from '..';
-import Input from '../../Input';
 
 const RequiredMarkDemo = () => (
   <Form initialValues={{ email: '', nickname: '' }}>

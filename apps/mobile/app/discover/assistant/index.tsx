@@ -1,7 +1,7 @@
 import { AssistantCategory, DiscoverAssistantItem } from '@lobechat/types';
 import { CapsuleTabs, Input, PageContainer } from '@lobehub/ui-rn';
 import { useDebounce } from 'ahooks';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

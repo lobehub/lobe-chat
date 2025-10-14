@@ -1,6 +1,4 @@
-import { Button, Card, Space, Tag } from '@lobehub/ui-rn';
-import React from 'react';
-import { Text } from 'react-native';
+import { Button, Card, Space, Tag, Text } from '@lobehub/ui-rn';
 
 const BasicDemo = () => {
   return (

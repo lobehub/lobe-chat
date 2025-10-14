@@ -6,7 +6,7 @@ import { DEFAULT_SERVER_URL, formatServerUrl, getServerUrl } from '@/config/serv
 import { authExpired } from '@/features/Error/AuthExpired';
 
 // Local type reference to server router
-import type { MobileRouter } from '../../../../../src/server/routers/mobile';
+import type { MobileRouter } from '../../../../../@/server/routers/mobile';
 import { createHeaderWithAuth } from './header';
 
 const normalizedDefaultBase = formatServerUrl(DEFAULT_SERVER_URL);

@@ -1,10 +1,8 @@
-import { Skeleton } from '@lobehub/ui-rn';
-import React from 'react';
-import { Text, View } from 'react-native';
+import { Skeleton, Text, useTheme } from '@lobehub/ui-rn';
+import type { FC } from 'react';
+import { View } from 'react-native';
 
-import { useTheme } from '@/theme';
-
-const BasicDemo: React.FC = () => {
+const BasicDemo: FC = () => {
   const token = useTheme();
 
   return (

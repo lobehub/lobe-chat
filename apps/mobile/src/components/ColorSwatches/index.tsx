@@ -1,6 +1,6 @@
 import chroma from 'chroma-js';
 import { Check } from 'lucide-react-native';
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import ConicGradientPattern from './ConicGradientPatern';

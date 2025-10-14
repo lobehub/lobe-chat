@@ -1,8 +1,7 @@
-import { Slider } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-
-import { createStyles } from '@/theme';
+import { Slider, Text, createStyles } from '@lobehub/ui-rn';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { View } from 'react-native';
 
 const useStyles = createStyles(({ token }) => ({
   container: {
@@ -37,7 +36,7 @@ const useStyles = createStyles(({ token }) => ({
   },
 }));
 
-const MarksSliderDemo: React.FC = () => {
+const MarksSliderDemo: FC = () => {
   const { styles } = useStyles();
   const [performance, setPerformance] = useState(2);
   const [temperature, setTemperature] = useState(20);

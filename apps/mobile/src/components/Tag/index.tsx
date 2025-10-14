@@ -1,6 +1,7 @@
-import React from 'react';
-import { Text, TextStyle, View, ViewStyle } from 'react-native';
+import type { FC } from 'react';
+import { TextStyle, View, ViewStyle } from 'react-native';
 
+import Text from '../Text';
 import { useStyles } from './style';
 import type { TagColor } from './type';
 
@@ -12,7 +13,7 @@ export interface TagProps {
   textStyle?: TextStyle;
 }
 
-export const Tag: React.FC<TagProps> = ({ children, color, border = true, style, textStyle }) => {
+export const Tag: FC<TagProps> = ({ children, color, border = true, style, textStyle }) => {
   const { styles } = useStyles(color, border);
 
   return (

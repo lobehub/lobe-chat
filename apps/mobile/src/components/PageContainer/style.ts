@@ -1,5 +1,5 @@
 import { HEADER_HEIGHT } from '@/_const/common';
-import { createStyles } from '@/theme';
+import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
   container: {
@@ -19,10 +19,27 @@ export const useStyles = createStyles(({ token }) => ({
     paddingHorizontal: token.paddingXS,
     position: 'relative',
   },
+  largeTitle: {
+    paddingBottom: token.paddingSM,
+    paddingHorizontal: 16,
+    paddingTop: token.paddingSM,
+  },
+  largeTitleText: {
+    color: token.colorTextHeading,
+    fontSize: 34,
+    fontWeight: '700',
+  },
   left: {
     alignItems: 'flex-start',
     justifyContent: 'center',
     zIndex: 2,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingBottom: token.paddingLG,
   },
   title: {
     alignItems: 'center',

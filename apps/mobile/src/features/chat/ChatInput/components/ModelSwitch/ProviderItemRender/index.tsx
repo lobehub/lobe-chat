@@ -1,9 +1,9 @@
 import { AiProviderSourceType } from '@lobechat/types';
 import { ProviderIcon } from '@lobehub/icons-rn';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Image, Text, View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/styles';
 
 import { useStyles } from './styles';
 

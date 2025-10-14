@@ -1,8 +1,5 @@
-import { FluentEmoji } from '@lobehub/ui-rn';
-import React from 'react';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/theme';
+import { FluentEmoji, Text, useTheme } from '@lobehub/ui-rn';
+import { View } from 'react-native';
 
 const SizesDemo = () => {
   const token = useTheme();

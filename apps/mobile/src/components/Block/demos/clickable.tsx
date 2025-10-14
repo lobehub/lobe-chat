@@ -1,6 +1,6 @@
-import { Block, Flexbox } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Block, Flexbox, Text } from '@lobehub/ui-rn';
+import { useState } from 'react';
+import { Alert } from 'react-native';
 
 export default () => {
   const [clickCount, setClickCount] = useState(0);
@@ -12,16 +12,16 @@ export default () => {
 
   return (
     <Flexbox gap={16}>
-      <Block onPress={handlePress} padding={16}>
+      <Block clickable onPress={handlePress} padding={16}>
         <Text>Clickable Variant Filled Block</Text>
       </Block>
-      <Block onPress={handlePress} padding={16} variant={'outlined'}>
+      <Block clickable onPress={handlePress} padding={16} variant={'outlined'}>
         <Text>Clickable Variant Outlined Block</Text>
       </Block>
-      <Block onPress={handlePress} padding={16} variant={'borderless'}>
+      <Block clickable onPress={handlePress} padding={16} variant={'borderless'}>
         <Text>Clickable Variant Borderless Block</Text>
       </Block>
-      <Block onPress={handlePress} padding={16} shadow variant={'outlined'}>
+      <Block clickable onPress={handlePress} padding={16} shadow variant={'outlined'}>
         <Text>Clickable Shadow Block</Text>
       </Block>
     </Flexbox>

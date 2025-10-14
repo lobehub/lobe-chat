@@ -1,7 +1,7 @@
 import { Button, Icon, Markdown, PageContainer, Tag } from '@lobehub/ui-rn';
 import { router, useLocalSearchParams } from 'expo-router';
 import { BotMessageSquare } from 'lucide-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager, ScrollView, Text, View } from 'react-native';
 

@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
+import { Children, Fragment, ReactNode } from 'react';
 import { View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
 
@@ -77,7 +77,7 @@ const Space = ({
   const { styles } = useStyles();
 
   // 将 children 转换为数组
-  const childrenArray = React.Children.toArray(children).filter(
+  const childrenArray = Children.toArray(children).filter(
     (child) => child !== null && child !== undefined,
   );
 
@@ -144,10 +144,10 @@ const Space = ({
       ) : null;
 
     return (
-      <React.Fragment key={`space-item-${index}`}>
+      <Fragment key={`space-item-${index}`}>
         <View style={itemStyle}>{child}</View>
         {splitNode}
-      </React.Fragment>
+      </Fragment>
     );
   });
 

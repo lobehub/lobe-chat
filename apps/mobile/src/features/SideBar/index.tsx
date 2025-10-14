@@ -2,23 +2,28 @@ import { ActionIcon, PageContainer, Space } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
 import { CompassIcon, Sparkles } from 'lucide-react-native';
-import React from 'react';
+import type { ReactNode } from 'react';
+import { useCallback } from 'react';
 import { Text, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import { DRAWER_WIDTH } from '@/_const/theme';
 import { useGlobalStore } from '@/store/global';
+import { isIOS } from '@/utils/detection';
 import { isDev } from '@/utils/env';
 
 import Footer from './components/Footer';
 import SessionList from './components/SessionList';
 import { useStyles } from './style';
 
-export default function SideBar({ children }: { children: React.ReactNode }) {
+export default function SideBar({ children }: { children: ReactNode }) {
   const { styles } = useStyles();
   const winDim = useWindowDimensions();
 
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
+
+  const onOpenDrawer = useCallback(() => setDrawerOpen(true), [setDrawerOpen]);
+  const onCloseDrawer = useCallback(() => setDrawerOpen(false), [setDrawerOpen]);
 
   return (
     <Drawer
@@ -27,14 +32,14 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
         styles.drawerStyle,
         { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
       ]}
-      drawerType="slide"
+      drawerType={isIOS ? 'slide' : 'front'}
       hideStatusBarOnOpen={false}
       onClose={() => {
-        setDrawerOpen(false);
+        onCloseDrawer();
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       onOpen={() => {
-        setDrawerOpen(true);
+        onOpenDrawer();
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       open={drawerOpen}
@@ -61,6 +66,8 @@ export default function SideBar({ children }: { children: React.ReactNode }) {
       )}
       swipeEdgeWidth={50}
       swipeEnabled={true}
+      swipeMinDistance={10}
+      swipeMinVelocity={100}
     >
       {children}
     </Drawer>

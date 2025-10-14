@@ -1,6 +1,7 @@
-import { Button, Highlighter } from '@lobehub/ui-rn';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, Highlighter, Text } from '@lobehub/ui-rn';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 /**
  * 多语言支持演示
@@ -19,7 +20,7 @@ interface CategoryData {
 
 type CategoryKey = 'frontend' | 'backend' | 'config';
 
-export const LanguagesHighlighterDemo: React.FC = () => {
+export const LanguagesHighlighterDemo: FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('frontend');
 
   const languageCategories: Record<CategoryKey, CategoryData> = {
@@ -258,7 +259,7 @@ networks:
       languages: [
         {
           code: `import React, { useState } from 'react';
-import { Button, Alert } from 'react-native';
+import { Button, Alert  } from 'react-native';
 
 const Welcome = ({ name }) => {
   const [count, setCount] = useState(0);

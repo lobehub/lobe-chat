@@ -1,24 +1,23 @@
-import { ColorSwatches, PageContainer } from '@lobehub/ui-rn';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
-
-import { useSettingStore } from '@/store/setting';
 import {
+  ColorSwatches,
   NeutralColors,
+  PageContainer,
   PrimaryColors,
   findCustomThemeName,
   neutralColors,
   primaryColors,
-} from '@/theme';
+} from '@lobehub/ui-rn';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
-import { SettingGroup, SettingItem } from '../(components)';
-import { useStyles } from '../styles';
-import Preview from './(components)/Preview';
+import SettingGroup from '@/features/SettingGroup';
+import SettingItem from '@/features/SettingItem';
+import { useSettingStore } from '@/store/setting';
+
+import Preview from './features/Preview';
 
 export default function ThemeSettingScreen() {
   const { t } = useTranslation(['setting']);
-  const { styles } = useStyles();
 
   const { primaryColor, neutralColor, setPrimaryColor, setNeutralColor } = useSettingStore();
 
@@ -49,7 +48,7 @@ export default function ThemeSettingScreen() {
 
   return (
     <PageContainer showBack title={t('color.title', { ns: 'setting' })}>
-      <View style={styles.container}>
+      <View>
         <Preview />
         <SettingGroup style={{ marginTop: 16 }}>
           <SettingItem

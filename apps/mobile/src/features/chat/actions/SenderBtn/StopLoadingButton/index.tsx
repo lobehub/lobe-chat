@@ -1,9 +1,10 @@
 import { ButtonSize } from '@lobehub/ui-rn';
-import React, { useEffect, useRef } from 'react';
+import type { FC } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, View } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 
-import { useTheme } from '@/theme';
+import { useTheme } from '@/components/styles';
 
 interface StopLoadingIconProps {
   color?: string;
@@ -12,7 +13,7 @@ interface StopLoadingIconProps {
   size?: ButtonSize;
 }
 
-const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
+const StopLoadingIcon: FC<StopLoadingIconProps> = ({
   size = 'middle',
   color,
   duration = 1000,
