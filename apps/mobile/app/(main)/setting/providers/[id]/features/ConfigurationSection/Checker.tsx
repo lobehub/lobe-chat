@@ -1,3 +1,4 @@
+import { ChatMessageError, TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons-rn';
 import { CheckCircle, ChevronDown, X, XCircle } from 'lucide-react-native';
 import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
@@ -19,7 +20,6 @@ import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
-import { ChatMessageError, TraceNameMap } from '../../../../../../../../../packages/types';
 import { useStyles } from './style';
 
 export type CheckErrorRender = (props: {

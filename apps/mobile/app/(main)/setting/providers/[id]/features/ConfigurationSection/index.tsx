@@ -1,3 +1,4 @@
+import { AiProviderDetailItem } from '@lobechat/types';
 import { Input } from '@lobehub/ui-rn';
 import { Lock } from 'lucide-react-native';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -7,7 +8,6 @@ import { ActivityIndicator, Alert, Linking, Text, View } from 'react-native';
 import { AES_GCM_URL } from '@/_const/url';
 import { useAiInfraStore } from '@/store/aiInfra';
 
-import { AiProviderDetailItem } from '../../../../../../../../../packages/types';
 import Checker from './Checker';
 import { useStyles } from './style';
 

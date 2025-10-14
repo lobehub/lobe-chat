@@ -1,3 +1,5 @@
+// Local type reference to server router
+import type { LambdaRouter as MobileRouter } from '@lobehub/chat/server/routers/mobile';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import superjson from 'superjson';
@@ -5,8 +7,6 @@ import superjson from 'superjson';
 import { DEFAULT_SERVER_URL, formatServerUrl, getServerUrl } from '@/config/server';
 import { authExpired } from '@/features/Error/AuthExpired';
 
-// Local type reference to server router
-import type { LambdaRouter as MobileRouter } from '../../../../../src/server/routers/lambda';
 import { createHeaderWithAuth } from './header';
 
 const normalizedDefaultBase = formatServerUrl(DEFAULT_SERVER_URL);
