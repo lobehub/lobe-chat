@@ -26,6 +26,7 @@ vi.mock('@/store/aiInfra/selectors', () => ({
   },
   aiModelSelectors: {
     isModelHasBuiltinSearch: vi.fn(),
+    isModelBuiltinSearchInternal: vi.fn(),
   },
 }));
 
@@ -47,6 +48,9 @@ describe('getSearchConfig', () => {
       () => false,
     );
     vi.mocked(aiInfraSelectors.aiModelSelectors.isModelHasBuiltinSearch).mockReturnValue(
+      () => false,
+    );
+    vi.mocked(aiInfraSelectors.aiModelSelectors.isModelBuiltinSearchInternal).mockReturnValue(
       () => false,
     );
 
@@ -71,6 +75,7 @@ describe('getSearchConfig', () => {
 
     expect(result.enabledSearch).toBe(false);
     expect(result.useApplicationBuiltinSearchTool).toBe(false);
+    expect(result.useModelSearch).toBe(false);
   });
 
   it('should prefer model search when available and enabled', () => {
@@ -83,6 +88,9 @@ describe('getSearchConfig', () => {
       () => true,
     );
     vi.mocked(aiInfraSelectors.aiModelSelectors.isModelHasBuiltinSearch).mockReturnValue(
+      () => false,
+    );
+    vi.mocked(aiInfraSelectors.aiModelSelectors.isModelBuiltinSearchInternal).mockReturnValue(
       () => false,
     );
 
@@ -109,6 +117,9 @@ describe('getSearchConfig', () => {
     vi.mocked(aiInfraSelectors.aiModelSelectors.isModelHasBuiltinSearch).mockReturnValue(
       () => true,
     );
+    vi.mocked(aiInfraSelectors.aiModelSelectors.isModelBuiltinSearchInternal).mockReturnValue(
+      () => false,
+    );
 
     const result = getSearchConfig(model, provider);
 
@@ -133,6 +144,9 @@ describe('getSearchConfig', () => {
     vi.mocked(aiInfraSelectors.aiModelSelectors.isModelHasBuiltinSearch).mockReturnValue(
       () => true,
     );
+    vi.mocked(aiInfraSelectors.aiModelSelectors.isModelBuiltinSearchInternal).mockReturnValue(
+      () => false,
+    );
 
     const result = getSearchConfig(model, provider);
 
@@ -142,6 +156,33 @@ describe('getSearchConfig', () => {
       isModelHasBuiltinSearch: true,
       useModelSearch: false,
       useApplicationBuiltinSearchTool: true,
+    });
+  });
+
+  it('should force use model search when searchImpl is internal', () => {
+    vi.mocked(agentSelectors.agentChatConfigSelectors.currentChatConfig).mockReturnValue({
+      searchMode: 'on',
+      useModelBuiltinSearch: false,
+    } as any);
+
+    vi.mocked(aiInfraSelectors.aiProviderSelectors.isProviderHasBuiltinSearch).mockReturnValue(
+      () => false
+    );
+    vi.mocked(aiInfraSelectors.aiModelSelectors.isModelHasBuiltinSearch).mockReturnValue(
+      () => true
+    );
+    vi.mocked(aiInfraSelectors.aiModelSelectors.isModelBuiltinSearchInternal).mockReturnValue(
+      () => true
+    );
+
+    const result = getSearchConfig(model, provider);
+
+    expect(result).toEqual({
+      enabledSearch: true,
+      isProviderHasBuiltinSearch: false,
+      isModelHasBuiltinSearch: true,
+      useModelSearch: true,
+      useApplicationBuiltinSearchTool: false,
     });
   });
 });

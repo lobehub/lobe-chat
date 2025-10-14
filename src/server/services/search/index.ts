@@ -1,13 +1,13 @@
+import { SearchParams, SearchQuery } from '@lobechat/types';
 import { CrawlImplType, Crawler } from '@lobechat/web-crawler';
 import pMap from 'p-map';
 
 import { toolsEnv } from '@/envs/tools';
-import { SearchParams } from '@/types/tool/search';
 
 import { SearchImplType, SearchServiceImpl, createSearchServiceImpl } from './impls';
 
 const parseImplEnv = (envString: string = '') => {
-  // 处理全角逗号和多余空格
+  // Handle full-width commas and extra whitespace
   const envValue = envString.replaceAll('，', ',').trim();
   return envValue.split(',').filter(Boolean);
 };
@@ -52,6 +52,31 @@ export class SearchService {
    */
   async query(query: string, params?: SearchParams) {
     return this.searchImpl.query(query, params);
+  }
+
+  async webSearch({ query, searchCategories, searchEngines, searchTimeRange }: SearchQuery) {
+    let data = await this.query(query, {
+      searchCategories: searchCategories,
+      searchEngines: searchEngines,
+      searchTimeRange: searchTimeRange,
+    });
+
+    // First retry: remove search engine restrictions if no results found
+    if (data.results.length === 0 && searchEngines && searchEngines?.length > 0) {
+      const paramsExcludeSearchEngines = {
+        searchCategories: searchCategories,
+        searchEngines: undefined,
+        searchTimeRange: searchTimeRange,
+      };
+      data = await this.query(query, paramsExcludeSearchEngines);
+    }
+
+    // Second retry: remove all restrictions if still no results found
+    if (data?.results.length === 0) {
+      data = await this.query(query);
+    }
+
+    return data;
   }
 }
 

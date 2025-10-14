@@ -92,6 +92,12 @@
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1-思考模式；DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支援思考與非思考兩種推理模式，較 DeepSeek-R1-0528 思考效率更高。經 Post-Training 優化，Agent 工具使用與智能體任務表現大幅提升。"
   },
+  "DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 是 DeepSeek 最新發佈的通用大模型，支援混合推理架構，具備更強的 Agent 能力。"
+  },
+  "DeepSeek-V3.2-Exp-Think": {
+    "description": "DeepSeek V3.2 思考模式。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持128k上下文視窗的推理和精調。"
   },
@@ -286,6 +292,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）發佈的混合模式大型語言模型，它在前代模型的基礎上進行了多方面的重要升級。該模型的一大創新是整合了「思考模式」（Thinking Mode）與「非思考模式」（Non-thinking Mode）於一體，使用者可以透過調整聊天範本靈活切換，以適應不同的任務需求。透過專門的後訓練優化，V3.1 在工具調用與 Agent 任務方面的效能獲得顯著提升，能更好地支援外部搜尋工具及執行多步複雜任務。該模型基於 DeepSeek-V3.1-Base 進行後訓練，透過兩階段長文本擴展方法，大幅增加訓練資料量，使其在處理長文件與長篇程式碼方面表現更佳。作為一個開源模型，DeepSeek-V3.1 在編碼、數學與推理等多個基準測試中展現了與頂尖閉源模型相媲美的能力，同時憑藉其混合專家（MoE）架構，在保持龐大模型容量的同時，有效降低推理成本。"
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）發佈的 V3.1 模型的更新版本，定位為混合智能體大語言模型。此次更新在保持模型原有能力的基礎上，專注於修復用戶反饋的問題並提升穩定性。它顯著改善了語言一致性，減少了中英文混用和異常字元的出現。模型整合了「思考模式」（Thinking Mode）和「非思考模式」（Non-thinking Mode），用戶可透過聊天範本靈活切換以適應不同任務。作為一個重要的優化，V3.1-Terminus 強化了程式碼智能體（Code Agent）和搜尋智能體（Search Agent）的效能，使其在工具呼叫和執行多步複雜任務方面更加可靠。"
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 是 Kimi K2 最新、最強大的版本。它是一款頂尖的混合專家（MoE）語言模型，擁有 1 兆的總參數和 320 億的激活參數。該模型的主要特性包括：增強的智能體編碼智能，在公開基準測試和真實世界的編碼智能體任務中表現出顯著的性能提升；改進的前端編碼體驗，在前端程式設計的美觀性和實用性方面均有進步。"
@@ -695,6 +704,9 @@
   "azure-DeepSeek-R1-0528": {
     "description": "由微軟部署提供； DeepSeek R1型號已進行小版本升級，當前版本為DeepSeek-R1-0528。在最新的更新中，DeepSeek R1透過增加計算資源和引入後訓練階段的演算法優化機制，大幅提升了推理深度和推斷能力。該模型在數學、程式設計和通用邏輯等多個基準測試中表現出色，其整體性能已接近領先模型，如O3和Gemini 2.5 Pro 。"
   },
+  "baichuan-m2-32b": {
+    "description": "Baichuan M2 32B 是百川智能推出的混合專家模型，具備強大的推理能力。"
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B百川智能開發的包含130億參數的開源可商用的大規模語言模型，在權威的中文和英文benchmark上均取得同尺寸最好的效果。"
   },
@@ -718,12 +730,6 @@
   },
   "charglm-4": {
     "description": "CharGLM-4 專為角色扮演與情感陪伴設計，支持超長多輪記憶與個性化對話，應用廣泛。"
-  },
-  "chatglm3": {
-    "description": "ChatGLM3 是智譜 AI 與清華 KEG 實驗室發佈的閉源模型，經過海量中英標識符的預訓練與人類偏好對齊訓練，相比一代模型在 MMLU、C-Eval、GSM8K 分別取得了 16%、36%、280% 的提升，並登頂中文任務榜單 C-Eval。適用於對知識量、推理能力、創造力要求較高的場景，比如廣告文案、小說寫作、知識類寫作、代碼生成等。"
-  },
-  "chatglm3-6b-base": {
-    "description": "ChatGLM3-6b-base 是由智譜開發的 ChatGLM 系列最新一代的 60 億參數規模的開源的基礎模型。"
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
@@ -926,6 +932,12 @@
   "deepseek-ai/DeepSeek-V3.1": {
     "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）發佈的混合模式大型語言模型，它在前代模型的基礎上進行了多方面的重要升級。該模型的一大創新是整合了「思考模式」（Thinking Mode）與「非思考模式」（Non-thinking Mode）於一體，使用者可以透過調整聊天範本靈活切換，以適應不同的任務需求。透過專門的後訓練優化，V3.1 在工具調用與 Agent 任務方面的效能獲得顯著提升，能更好地支援外部搜尋工具及執行多步複雜任務。該模型基於 DeepSeek-V3.1-Base 進行後訓練，透過兩階段長文本擴展方法，大幅增加訓練資料量，使其在處理長文件與長篇程式碼方面表現更佳。作為一個開源模型，DeepSeek-V3.1 在編碼、數學與推理等多個基準測試中展現了與頂尖閉源模型相媲美的能力，同時憑藉其混合專家（MoE）架構，在保持龐大模型容量的同時，有效降低推理成本。"
   },
+  "deepseek-ai/DeepSeek-V3.1-Terminus": {
+    "description": "DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）發佈的 V3.1 模型的更新版本，定位為混合智能體大語言模型。此次更新在保持模型原有能力的基礎上，專注於修復用戶反饋的問題並提升穩定性。它顯著改善了語言一致性，減少了中英文混用和異常字元的出現。模型整合了「思考模式」（Thinking Mode）和「非思考模式」（Non-thinking Mode），用戶可透過聊天範本靈活切換以適應不同任務。作為一個重要的優化，V3.1-Terminus 強化了程式碼智能體（Code Agent）和搜尋智能體（Search Agent）的效能，使其在工具呼叫和執行多步複雜任務方面更加可靠。"
+  },
+  "deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek V3.2 Exp 模型為混合推理架構模型，同時支援思考模式與非思考模式。"
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B 是為高複雜性對話訓練的先進模型。"
   },
@@ -934,6 +946,9 @@
   },
   "deepseek-ai/deepseek-v3.1": {
     "description": "DeepSeek V3.1：下一代推理模型，提升了複雜推理與鏈路思考能力，適合需要深入分析的任務。"
+  },
+  "deepseek-ai/deepseek-v3.1-terminus": {
+    "description": "DeepSeek V3.1：新一代推理模型，強化了複雜推理與鏈式思考能力，適用於需要深入分析的任務。"
   },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 是一個基於 DeepSeekMoE-27B 開發的混合專家（MoE）視覺語言模型，採用稀疏激活的 MoE 架構，在僅激活 4.5B 參數的情況下實現了卓越性能。該模型在視覺問答、光學字符識別、文檔/表格/圖表理解和視覺定位等多個任務中表現優異。"
@@ -999,7 +1014,7 @@
     "description": "DeepSeek R1 滿血版，擁有 671B 參數，支持即時聯網搜索，具有更強大的理解和生成能力。"
   },
   "deepseek-reasoner": {
-    "description": "DeepSeek V3.1 思考模式。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
+    "description": "DeepSeek V3.2 思考模式。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 是高效的 Mixture-of-Experts 語言模型，適用於經濟高效的處理需求。"
@@ -1016,8 +1031,14 @@
   "deepseek-v3.1": {
     "description": "DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支援思考與非思考兩種推理模式，較 DeepSeek-R1-0528 思考效率更高。經過後訓練優化，Agent 工具使用與智能體任務表現大幅提升。支援 128k 上下文視窗，輸出長度支援最大 64k tokens。"
   },
+  "deepseek-v3.1-terminus": {
+    "description": "DeepSeek-V3.1-Terminus 是深度求索推出的終端優化版本大型語言模型，專為終端設備優化。"
+  },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1：下一代推理模型，提升了複雜推理與鏈路思考能力，適合需要深入分析的任務。"
+  },
+  "deepseek-v3.2-exp": {
+    "description": "deepseek-v3.2-exp 引入稀疏注意力機制，旨在提升處理長文本時的訓練與推理效率，價格低於 deepseek-v3.1。"
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 是一個 685B 參數的專家混合模型，是 DeepSeek 團隊旗艦聊天模型系列的最新迭代。\n\n它繼承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，並在各種任務上表現出色。"
@@ -1175,6 +1196,12 @@
   "ernie-4.0-turbo-8k-preview": {
     "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
   },
+  "ernie-4.5-21b-a3b": {
+    "description": "ERNIE 4.5 21B A3B 是百度文心推出的混合專家模型，具備強大的推理與多語言能力。"
+  },
+  "ernie-4.5-300b-a47b": {
+    "description": "ERNIE 4.5 300B A47B 是百度文心推出的超大規模混合專家模型，具備卓越的推理能力。"
+  },
   "ernie-4.5-8k-preview": {
     "description": "文心大模型4.5是百度自主研發的新一代原生多模態基礎大模型，通過多個模態聯合建模實現協同優化，多模態理解能力優秀；具備更精進的語言能力，理解、生成、邏輯、記憶能力全面提升，去幻覺、邏輯推理、代碼能力顯著提升。"
   },
@@ -1237,6 +1264,9 @@
   },
   "fal-ai/flux/schnell": {
     "description": "FLUX.1 [schnell] 是一個具有120億參數的圖像生成模型，專注於快速生成高品質圖像。"
+  },
+  "fal-ai/hunyuan-image/v3": {
+    "description": "一個強大的原生多模態圖像生成模型"
   },
   "fal-ai/imagen4/preview": {
     "description": "Google 提供的高品質圖像生成模型"
@@ -1349,10 +1379,16 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 性價比最高的模型，提供全面的功能。"
   },
+  "gemini-2.5-flash-image": {
+    "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模態模型，它允許您透過對話生成和編輯圖像。"
+  },
   "gemini-2.5-flash-image-preview": {
     "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模態模型，它允許您透過對話生成和編輯圖像。"
   },
   "gemini-2.5-flash-image-preview:image": {
+    "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模態模型，它允許您透過對話生成和編輯圖像。"
+  },
+  "gemini-2.5-flash-image:image": {
     "description": "Nano Banana 是 Google 最新、最快、最高效的原生多模態模型，它允許您透過對話生成和編輯圖像。"
   },
   "gemini-2.5-flash-lite": {
@@ -1361,11 +1397,17 @@
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview 是 Google 最小、性價比最高的模型，專為大規模使用而設計。"
   },
+  "gemini-2.5-flash-lite-preview-09-2025": {
+    "description": "預覽版本（2025年9月25日）之 Gemini 2.5 Flash-Lite"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
+  },
+  "gemini-2.5-flash-preview-09-2025": {
+    "description": "預覽版本（2025年9月25日）之 Gemini 2.5 Flash"
   },
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
@@ -1378,6 +1420,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和STEM領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
+  },
+  "gemini-flash-latest": {
+    "description": "Gemini Flash 最新版本"
+  },
+  "gemini-flash-lite-latest": {
+    "description": "Gemini Flash-Lite 最新版本"
+  },
+  "gemini-pro-latest": {
+    "description": "Gemini Pro 最新版本"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
@@ -1407,7 +1458,7 @@
     "description": "GLM-4-0520是最新模型版本，專為高度複雜和多樣化任務設計，表現卓越。"
   },
   "glm-4-9b-chat": {
-    "description": "GLM-4-9B-Chat 在語義、數學、推理、代碼和知識等多方面均表現出較高性能。還具備網頁瀏覽、代碼執行、自定義工具調用和長文本推理。支持包括日語、韓語、德語在內的 26 種語言。"
+    "description": "GLM-4-9B-Chat 在語意、數學、推理、程式碼與知識等多方面均展現出高效能。還具備網頁瀏覽、程式碼執行、自訂工具調用與長文本推理能力。支援包括日語、韓語、德語在內的 26 種語言。"
   },
   "glm-4-air": {
     "description": "GLM-4-Air是性價比高的版本，性能接近GLM-4，提供快速度和實惠的價格。"
@@ -1443,7 +1494,7 @@
     "description": "GLM-4.1V-Thinking 系列模型是目前已知10B級別的VLM模型中性能最強的視覺模型，融合了同級別SOTA的各項視覺語言任務，包括影片理解、圖片問答、學科解題、OCR文字識別、文件和圖表解讀、GUI Agent、前端網頁程式設計、Grounding等，多項任務能力甚至超過8倍參數量的Qwen2.5-VL-72B。通過領先的強化學習技術，模型掌握了透過思維鏈推理的方式提升回答的準確性和豐富度，從最終效果和可解釋性等維度都顯著超過傳統的非thinking模型。"
   },
   "glm-4.5": {
-    "description": "智譜最新旗艦模型，支持思考模式切換，綜合能力達到開源模型的 SOTA 水準，上下文長度可達128K。"
+    "description": "智譜旗艦模型，支持思考模式切換，綜合能力達到開源模型的 SOTA 水準，上下文長度可達128K。"
   },
   "glm-4.5-air": {
     "description": "GLM-4.5 的輕量版，兼顧性能與性價比，可靈活切換混合思考模型。"
@@ -1459,6 +1510,9 @@
   },
   "glm-4.5v": {
     "description": "智譜新一代基於 MOE 架構的視覺推理模型，總參數量為106B、激活參數量為12B，在各類基準測試中達到同級別開源多模態模型的全球 SOTA，涵蓋圖像、視訊、文件理解及 GUI 任務等常見任務。"
+  },
+  "glm-4.6": {
+    "description": "智譜最新旗艦模型 GLM-4.6 (355B) 在高級編碼、長文本處理、推理與智能體能力上全面超越前代，尤其在程式設計能力上對齊 Claude Sonnet 4，成為國內頂尖的 Coding 模型。"
   },
   "glm-4v": {
     "description": "GLM-4V提供強大的圖像理解與推理能力，支持多種視覺任務。"
@@ -1486,6 +1540,9 @@
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。"
+  },
+  "glm4.6:355b": {
+    "description": "智譜最新旗艦模型 GLM-4.6 (355B) 在高階編碼、長文本處理、推理與智慧體能力上全面超越前代，特別是在程式設計能力上對齊 Claude Sonnet 4，成為國內頂尖的 Coding 模型。"
   },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash 提供下一代功能和改進的功能，包括卓越的速度、內建工具使用、多模態生成和 100 萬 token 的上下文視窗。"
@@ -1688,14 +1745,23 @@
   "gpt-5-nano": {
     "description": "最快、最經濟高效的 GPT-5 版本。非常適合需要快速回應且成本敏感的應用場景。"
   },
+  "gpt-5-pro": {
+    "description": "GPT-5 pro 運用更多運算資源進行更深入的思考，持續提供更優質的答案。"
+  },
   "gpt-audio": {
     "description": "GPT Audio 是面向音訊輸入輸出的通用聊天模型，支援在 Chat Completions API 中使用音訊 I/O。"
   },
   "gpt-image-1": {
     "description": "ChatGPT 原生多模態圖片生成模型"
   },
+  "gpt-image-1-mini": {
+    "description": "成本更低的 GPT Image 1 版本，原生支援文字與圖像輸入，並可產生圖像輸出。"
+  },
   "gpt-oss-120b": {
-    "description": "GPT-OSS-120B MXFP4 量化的 Transformer 結構，在資源受限時仍能保持強勁性能。"
+    "description": "該模型需申請體驗。GPT-OSS-120B 是 OpenAI 推出的開源大規模語言模型，具備強大的文本生成能力。"
+  },
+  "gpt-oss-20b": {
+    "description": "該模型需申請體驗。GPT-OSS-20B 是 OpenAI 推出的開源中型語言模型，具備高效的文本生成能力。"
   },
   "gpt-oss:120b": {
     "description": "GPT-OSS 120B 是 OpenAI 發布的大型開源語言模型，採用 MXFP4 量化技術，為旗艦級模型。需要多 GPU 或高效能工作站環境運行，在複雜推理、程式碼生成和多語言處理方面具備卓越性能，支援高級函數呼叫和工具整合。"
@@ -1706,9 +1772,6 @@
   "gpt-realtime": {
     "description": "通用即時模型，支援文字與音訊的即時輸入輸出，並支援影像輸入。"
   },
-  "grok-2-1212": {
-    "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
-  },
   "grok-2-image-1212": {
     "description": "我們最新的圖像生成模型可以根據文本提示生成生動逼真的圖像。它在行銷、社交媒體和娛樂等領域的圖像生成方面表現出色。"
   },
@@ -1718,13 +1781,7 @@
   "grok-3": {
     "description": "旗艦級模型，擅長資料擷取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
   },
-  "grok-3-fast": {
-    "description": "旗艦級模型，擅長資料擷取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
-  },
   "grok-3-mini": {
-    "description": "輕量級模型，對話前會先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
-  },
-  "grok-3-mini-fast": {
     "description": "輕量級模型，對話前會先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
   },
   "grok-4": {
@@ -1805,11 +1862,11 @@
   "hunyuan-t1-latest": {
     "description": "大幅提升主模型慢思考模型的高難數學、複雜推理、高難程式碼、指令遵循、文本創作品質等能力。"
   },
-  "hunyuan-t1-vision": {
-    "description": "混元多模態理解深度思考模型，支援多模態原生長思維鏈，擅長處理各種圖片推理場景，在理科難題上相比快思考模型全面提升。"
-  },
   "hunyuan-t1-vision-20250619": {
     "description": "混元最新版 t1-vision 多模態理解深度思考模型，支持多模態原生長思維鏈，相較上一代預設版本模型全面提升。"
+  },
+  "hunyuan-t1-vision-20250916": {
+    "description": "混元最新版 t1-vision 視覺深度思考模型，相較於上一版模型在通用圖文問答、視覺定位、OCR、圖表、拍題解題、看圖創作等任務上全面提升，顯著優化了英文與小語種能力。"
   },
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
@@ -1831,6 +1888,9 @@
   },
   "hunyuan-turbos-20250604": {
     "description": "預訓練底座升級，寫作、閱讀理解能力提升，較大幅度提升程式碼和理科能力，複雜指令遵循等持續提升。"
+  },
+  "hunyuan-turbos-20250926": {
+    "description": "預訓練底座資料品質升級。優化 posttrain 階段訓練策略，持續提升 Agent、英語小語種、指令遵循、程式碼和理科能力。"
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS 混元旗艦大模型最新版本，具備更強的思考能力，更優的體驗效果。"
@@ -1919,6 +1979,9 @@
   "kimi-k2-0905-preview": {
     "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
   },
+  "kimi-k2-instruct": {
+    "description": "Kimi K2 Instruct 是月之暗面推出的大型語言模型，具備超長上下文處理能力。"
+  },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 是一款具備超強程式碼與 Agent 能力的 MoE 架構的基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學與 Agent 等主要類別的基準效能測試中，K2 模型的表現超越其他主流開源模型。"
   },
@@ -1939,9 +2002,6 @@
   },
   "lite": {
     "description": "Spark Lite 是一款輕量級大語言模型，具備極低的延遲與高效的處理能力，完全免費開放，支持即時在線搜索功能。其快速響應的特性使其在低算力設備上的推理應用和模型微調中表現出色，為用戶帶來出色的成本效益和智能體驗，尤其在知識問答、內容生成及搜索場景下表現不俗。"
-  },
-  "llama-2-7b-chat": {
-    "description": "Llama2 是由 Meta 開發並開源的大型語言模型（LLM）系列，這是一組從 70 億到 700 億參數不同規模、經過預訓練和微調的生成式文本模型。架構層面，Llama2 是一個使用優化型轉換器架構的自動回歸語言模型。調整後的版本使用有監督的微調（SFT）和帶有人類反饋的強化學習（RLHF）以對齊人類對有用性和安全性的偏好。Llama2 較 Llama 系列在多種學術數據集上有着更加不俗的表現，為大量其他模型提供了設計和開發的思路。"
   },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B 提供更強大的 AI 推理能力，適合複雜應用，支持超多的計算處理並保證高效和準確率。"
@@ -1967,14 +2027,20 @@
   "llama-3.2-vision-instruct": {
     "description": "Llama 3.2-Vision 指令微調模型針對視覺辨識、圖像推理、圖像描述及回答與圖像相關的常規問題進行了最佳化。"
   },
-  "llama-3.3-70b-instruct": {
-    "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並透過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
+  "llama-3.3-70b": {
+    "description": "Llama 3.3 70B：中大型 Llama 模型，兼顧推理能力與吞吐量。"
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 多語言大語言模型 (LLM) 是 70B（文本輸入/文本輸出）中的預訓練和指令調整生成模型。Llama 3.3 指令調整的純文本模型針對多語言對話用例進行了優化，並且在常見行業基準上優於許多可用的開源和封閉式聊天模型。"
   },
   "llama-3.3-instruct": {
     "description": "Llama 3.3 指令微調模型針對對話場景進行了優化，在常見的行業基準測試中，超越了許多現有的開源聊天模型。"
+  },
+  "llama-4-maverick-17b-128e-instruct": {
+    "description": "Llama 4 Maverick：高效能的 Llama 系列模型，適合高階推理、複雜問題解決與指令跟隨任務。"
+  },
+  "llama-4-scout-17b-16e-instruct": {
+    "description": "Llama 4 Scout：高效能的 Llama 系列模型，適用於需高吞吐量與低延遲的場景。"
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B 提供無與倫比的複雜性處理能力，為高要求項目量身定制。"
@@ -1990,6 +2056,9 @@
   },
   "llama3.1": {
     "description": "Llama 3.1 是 Meta 推出的領先模型，支持高達 405B 參數，可應用於複雜對話、多語言翻譯和數據分析領域。"
+  },
+  "llama3.1-8b": {
+    "description": "Llama 3.1 8B：小體量、低延遲的 Llama 變體，適合輕量級線上推理與互動場景。"
   },
   "llama3.1:405b": {
     "description": "Llama 3.1 是 Meta 推出的領先模型，支持高達 405B 參數，可應用於複雜對話、多語言翻譯和數據分析領域。"
@@ -2022,7 +2091,7 @@
     "description": "Spark Max 32K 配置了大上下文處理能力，更強的上下文理解和邏輯推理能力，支持32K tokens的文本輸入，適用於長文檔閱讀、私有知識問答等場景。"
   },
   "megrez-3b-instruct": {
-    "description": "Megrez-3B-Instruct 是由無問芯穹完全自主訓練的大語言模型。Megrez-3B-Instruct 旨在通過軟硬協同理念，打造一款極速推理、小巧精悍、極易上手的端側智能解決方案。"
+    "description": "Megrez 3B Instruct 是無問芯穹推出的小參數量高效模型。"
   },
   "meta-llama-3-70b-instruct": {
     "description": "一個強大的70億參數模型，在推理、編碼和廣泛的語言應用中表現出色。"
@@ -2579,6 +2648,12 @@
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文處理能力，能夠處理多達128K的上下文信息，特別適合需通篇分析和長期邏輯關聯處理的長文內容，可在複雜文本溝通中提供流暢一致的邏輯與多樣的引用支持。"
   },
+  "pro-deepseek-r1": {
+    "description": "企業專屬服務專用模型，包含並發服務。"
+  },
+  "pro-deepseek-v3": {
+    "description": "企業專屬服務專用模型，包含並發服務。"
+  },
   "qvq-72b-preview": {
     "description": "QVQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於提升視覺推理能力，尤其在數學推理領域。"
   },
@@ -2587,6 +2662,12 @@
   },
   "qvq-plus": {
     "description": "視覺推理模型。支援視覺輸入及思維鏈輸出，繼qvq-max模型後推出的plus版本，相較於qvq-max模型，qvq-plus系列模型推理速度更快，效果和成本更均衡。"
+  },
+  "qwen-3-32b": {
+    "description": "Qwen 3 32B：Qwen 系列在多語言與編碼任務上表現優異，適合中等規模的生產化應用。"
+  },
+  "qwen-3-coder-480b": {
+    "description": "Qwen 3 Coder 480B：面向程式碼生成與複雜編程任務的長上下文模型。"
   },
   "qwen-coder-plus": {
     "description": "通義千問程式碼模型。"
@@ -2707,12 +2788,6 @@
   },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
-  },
-  "qwen2-72b-instruct": {
-    "description": "Qwen2 是 Qwen 團隊推出的新一代大型語言模型系列。它基於 Transformer 架構，並採用 SwiGLU 激活函數、注意力 QKV 偏置(attention QKV bias)、群組查詢注意力(group query attention)、滑動窗口注意力(mixture of sliding window attention)與全注意力的混合等技術。此外，Qwen 團隊還改進了適應多種自然語言和代碼的分詞器。"
-  },
-  "qwen2-7b-instruct": {
-    "description": "Qwen2 是 Qwen 團隊推出的新一代大型語言模型系列。它基於 Transformer 架構，並採用 SwiGLU 激活函數、注意力 QKV 偏置(attention QKV bias)、群組查詢注意力(group query attention)、滑動視窗注意力(mixture of sliding window attention)與全注意力的混合等技術。此外，Qwen 團隊還改進了適應多種自然語言和程式碼的分詞器。"
   },
   "qwen2.5": {
     "description": "Qwen2.5 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
@@ -2852,6 +2927,12 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "基於 Qwen3 的新一代思考模式開源模型，相較上一版本（通義千問3-235B-A22B-Thinking-2507）指令遵循能力有提升、模型總結回覆更加精簡。"
   },
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct 是通義千問推出的多模態模型，支援視覺理解與推理。"
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking 是通義千問推出的多模態推理模型，支援視覺理解與推理。"
+  },
   "qwen3-vl-plus": {
     "description": "通義千問VL是具有視覺（圖像）理解能力的文本生成模型，不僅能進行OCR（圖片文字識別），還能進一步總結和推理，例如從商品照片中提取屬性，根據習題圖進行解題等。"
   },
@@ -2968,6 +3049,9 @@
   },
   "step-r1-v-mini": {
     "description": "該模型是擁有強大的圖像理解能力的推理大模型，能夠處理圖像和文字信息，經過深度思考後輸出文本生成文本內容。該模型在視覺推理領域表現突出，同時擁有第一梯隊的數學、程式碼、文本推理能力。上下文長度為100k。"
+  },
+  "step3": {
+    "description": "Step3 是階躍星辰推出的多模態模型，具備強大的視覺理解能力。"
   },
   "stepfun-ai/step3": {
     "description": "Step3 是由階躍星辰（StepFun）發布的前沿多模態推理模型，它基於擁有 321B 總參數和 38B 激活參數的專家混合（MoE）架構構建。該模型採用端到端設計，旨在將解碼成本降到最低，同時在視覺-語言推理方面提供頂級效能。透過多矩陣分解注意力（MFA）與注意力與 FFN 解耦（AFD）的協同設計，Step3 在旗艦級與較低階的加速器上仍能維持卓越效率。在預訓練階段，Step3 處理了超過 20T 的文字 token 與 4T 的圖文混合 token，涵蓋十多種語言。該模型在數學、程式碼及多模態等多項基準測試中，均達到開源模型的領先水準。"
@@ -3092,9 +3176,6 @@
   "xai/grok-4": {
     "description": "xAI 最新和最偉大的旗艦模型，在自然語言、數學和推理方面提供無與倫比的性能——完美的全能選手。"
   },
-  "yi-1.5-34b-chat": {
-    "description": "Yi-1.5 是 Yi 的升級版本。它使用 500B Tokens 的高品質語料庫在 Yi 上持續進行預訓練，並在 3M 個多樣化的微調樣本上進行微調。"
-  },
   "yi-large": {
     "description": "全新千億參數模型，提供超強問答及文本生成能力。"
   },
@@ -3139,6 +3220,9 @@
   },
   "zai-org/GLM-4.5V": {
     "description": "GLM-4.5V 是由智譜 AI（Zhipu AI）發布的最新一代視覺語言模型（VLM）。該模型基於擁有 106B 總參數和 12B 激活參數的旗艦文本模型 GLM-4.5-Air 構建，採用了混合專家（MoE）架構，旨在以更低的推理成本實現卓越性能。GLM-4.5V 在技術上延續了 GLM-4.1V-Thinking 的路線，並引入了三維旋轉位置編碼（3D-RoPE）等創新，顯著增強了對三維空間關係的感知與推理能力。透過在預訓練、監督微調和強化學習階段的優化，該模型具備處理影像、影片、長文檔等多種視覺內容的能力，在 41 個公開的多模態基準測試中達到同級別開源模型的頂尖水準。此外，模型還新增了「思考模式」開關，允許使用者在快速回應與深度推理之間靈活選擇，以平衡效率與效果。"
+  },
+  "zai-org/GLM-4.6": {
+    "description": "與 GLM-4.5 相比，GLM-4.6 帶來多項關鍵改進。其上下文視窗從 128K 擴展到 200K tokens，使模型能夠處理更複雜的智能體任務。模型在程式碼基準測試中取得更高分數，並在 Claude Code、Cline、Roo Code 和 Kilo Code 等應用中展現更強的真實世界效能，包括在生成視覺效果精緻的前端頁面方面有所改進。GLM-4.6 在推理效能上表現出明顯提升，並支援在推理過程中使用工具，從而帶來更強的綜合能力。它在工具使用和基於搜尋的智能體方面表現更強，並且能更有效地整合到智能體框架中。在寫作方面，該模型在風格和可讀性上更符合人類偏好，並在角色扮演場景中表現得更自然。"
   },
   "zai/glm-4.5": {
     "description": "GLM-4.5 系列模型是專門為智能體設計的基礎模型。旗艦 GLM-4.5 整合了 3550 億總參數（320 億活躍），統一了推理、編碼和代理能力以解決複雜的應用需求。作為混合推理系統，它提供雙重操作模式。"

@@ -3,6 +3,7 @@
 import { Icon } from '@lobehub/ui';
 import { Tooltip } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
+import debug from 'debug';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { memo, useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,10 +18,12 @@ import {
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
+const log = debug('lobe-react:chat-minimap');
+
 const MIN_WIDTH = 16;
 const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
-const MIN_MESSAGES = 6;
+const MIN_MESSAGES = 4;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
@@ -219,8 +222,8 @@ const ChatMinimap = () => {
   const activeIndicatorPosition = useMemo(() => {
     if (activeIndex === null) return null;
 
-    console.log('> activeIndex', activeIndex);
-    console.log('> indicatorIndexMap', indicatorIndexMap);
+    log('> activeIndex', activeIndex);
+    log('> indicatorIndexMap', indicatorIndexMap);
 
     return indicatorIndexMap.get(activeIndex) ?? null;
   }, [activeIndex, indicatorIndexMap]);
@@ -246,7 +249,7 @@ const ChatMinimap = () => {
       let targetPosition: number;
 
       if (activeIndicatorPosition !== null) {
-        console.log('activeIndicatorPosition', activeIndicatorPosition);
+        log('activeIndicatorPosition', activeIndicatorPosition);
         // We're on an indicator, move to prev/next
         const delta = direction === 'prev' ? -1 : 1;
         targetPosition = Math.min(

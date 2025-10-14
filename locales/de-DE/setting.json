@@ -294,6 +294,13 @@
     },
     "title": "Allgemeine Einstellungen"
   },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Legen Sie die Standardanzahl der Bilder fest, die beim Erstellen einer neuen Aufgabe im Bildgenerierungs-Panel erzeugt werden.",
+      "label": "Standardanzahl der Bilder",
+      "title": "AI-Zeichnungseinstellungen"
+    }
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Maximale Token pro Antwort aktivieren"
@@ -549,6 +556,7 @@
     "common": "Allgemeine Einstellungen",
     "experiment": "Experiment",
     "hotkey": "Tastenkombinationen",
+    "image": "AI-Zeichnung",
     "llm": "Sprachmodell",
     "provider": "KI-Dienstanbieter",
     "proxy": "Netzwerkproxy",

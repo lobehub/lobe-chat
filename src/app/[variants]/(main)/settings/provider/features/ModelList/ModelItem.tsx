@@ -3,6 +3,7 @@ import { ActionIcon, Tag, Text, copyToClipboard } from '@lobehub/ui';
 import { App, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
+import { AiModelSourceEnum, AiProviderModelListItem } from 'model-bank';
 import { memo, use, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -249,7 +250,7 @@ const ModelItem = memo<ModelItemProps>(
             loading={isModelLoading}
             onChange={async (e) => {
               setChecked(e);
-              await toggleModelEnabled({ enabled: e, id, source });
+              await toggleModelEnabled({ enabled: e, id, source, type });
             }}
             size={'small'}
           />
@@ -340,7 +341,7 @@ const ModelItem = memo<ModelItemProps>(
             loading={isModelLoading}
             onChange={async (e) => {
               setChecked(e);
-              await toggleModelEnabled({ enabled: e, id, source });
+              await toggleModelEnabled({ enabled: e, id, source, type });
             }}
             size={'small'}
           />

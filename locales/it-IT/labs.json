@@ -1,0 +1,14 @@
+{
+  "desc": "Qui troverai aggiornamenti periodici sulle nuove funzionalità che stiamo esplorando. Sentiti libero di provarle!",
+  "features": {
+    "groupChat": {
+      "desc": "Abilita la capacità di coordinamento in chat di gruppo con più agenti intelligenti.",
+      "title": "Chat di gruppo (multi-agente)"
+    },
+    "inputMarkdown": {
+      "desc": "Rendering in tempo reale del Markdown nell'area di input (grassetto, blocchi di codice, tabelle, ecc.).",
+      "title": "Rendering Markdown nell'input"
+    }
+  },
+  "title": "Laboratorio"
+}

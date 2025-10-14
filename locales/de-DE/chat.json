@@ -3,8 +3,8 @@
     "title": "Modell"
   },
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir sprechen oder zu den [Assistenteneinstellungen]({{url}}) gehen, um meine Informationen zu vervollständigen.",
-  "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**, {{systemRole}}. Lass uns chatten!",
-  "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Lassen Sie uns ins Gespräch kommen!",
+  "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**. Wie kann ich Ihnen behilflich sein?",
+  "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Wie kann ich Ihnen behilflich sein?",
   "agents": "Assistent",
   "artifact": {
     "generating": "Wird generiert",

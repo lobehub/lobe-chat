@@ -1,8 +1,7 @@
 import { createStyles } from 'antd-style';
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 
 import { ChatItem } from '@/features/Conversation';
-import ActionsBar from '@/features/Conversation/components/ChatItem/ActionsBar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -64,11 +63,8 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
 
   const placement = displayMode === 'chat' && userRole === 'user' ? 'end' : 'start';
 
-  const actionBar = useMemo(() => <ActionsBar id={id} index={index} />, [id]);
-
   return (
     <ChatItem
-      actionBar={actionBar}
       className={showThread ? cx(styles.line, styles[placement]) : ''}
       enableHistoryDivider={enableHistoryDivider}
       endRender={
