@@ -51,6 +51,8 @@ import MarkdownDemos from '@lobehub/ui-rn/Markdown/demos';
 import MaskShadowDemos from '@lobehub/ui-rn/MaskShadow/demos';
 // ScrollShadow
 import ScrollShadowDemos from '@lobehub/ui-rn/ScrollShadow/demos';
+// Segmented
+import SegmentedDemos from '@lobehub/ui-rn/Segmented/demos';
 // Skeleton
 import SkeletonDemos from '@lobehub/ui-rn/Skeleton/demos';
 // Slider
@@ -97,6 +99,7 @@ export const DEMOS_MAP: Record<string, any> = {
   Markdown: MarkdownDemos,
   MaskShadow: MaskShadowDemos,
   ScrollShadow: ScrollShadowDemos,
+  Segmented: SegmentedDemos,
   Skeleton: SkeletonDemos,
   Slider: SliderDemos,
   Space: SpaceDemos,
