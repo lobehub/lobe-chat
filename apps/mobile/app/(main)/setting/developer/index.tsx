@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
 import { DEFAULT_SERVER_URL } from '@/config/server';
+import SettingGroup from '@/features/SettingGroup';
+import SettingItem from '@/features/SettingItem';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useSettingStore } from '@/store/setting';
 import { useAuthActions } from '@/store/user';
 
-import { SettingGroup, SettingItem } from '../(components)';
 import { useStyles } from './styles';
 import {
   clearAuthData,
