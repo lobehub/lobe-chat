@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.137.6](https://github.com/lobehub/lobe-chat/compare/v1.137.5...v1.137.6)
+
+<sup>Released on **2025-10-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update Claude workflows to use oauth token, vertext ai create image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update Claude workflows to use oauth token, closes [#9711](https://github.com/lobehub/lobe-chat/issues/9711) ([8dcb00e](https://github.com/lobehub/lobe-chat/commit/8dcb00e))
+- **misc**: Vertext ai create image, closes [#9710](https://github.com/lobehub/lobe-chat/issues/9710) ([790d8fd](https://github.com/lobehub/lobe-chat/commit/790d8fd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.137.5](https://github.com/lobehub/lobe-chat/compare/v1.137.4...v1.137.5)
 
 <sup>Released on **2025-10-14**</sup>
