@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { pathString } from './url';
 import {
   inferContentTypeFromImageUrl,
   inferFileExtensionFromImageUrl,
+  isDesktopLocalStaticServerUrl,
   isLocalOrPrivateUrl,
-  isLocalUrl,
+  pathString,
 } from './url';
 
 describe('pathString', () => {
@@ -404,36 +404,36 @@ describe('inferFileExtensionFromImageUrl', () => {
   });
 });
 
-describe('isLocalUrl', () => {
+describe('isDesktopLocalStaticServerUrl', () => {
   it('should return true for 127.0.0.1', () => {
-    expect(isLocalUrl('http://127.0.0.1')).toBe(true);
-    expect(isLocalUrl('https://127.0.0.1')).toBe(true);
-    expect(isLocalUrl('http://127.0.0.1:8080')).toBe(true);
-    expect(isLocalUrl('http://127.0.0.1/path/to/resource')).toBe(true);
-    expect(isLocalUrl('https://127.0.0.1/path?query=1#hash')).toBe(true);
+    expect(isDesktopLocalStaticServerUrl('http://127.0.0.1')).toBe(true);
+    expect(isDesktopLocalStaticServerUrl('https://127.0.0.1')).toBe(true);
+    expect(isDesktopLocalStaticServerUrl('http://127.0.0.1:8080')).toBe(true);
+    expect(isDesktopLocalStaticServerUrl('http://127.0.0.1/path/to/resource')).toBe(true);
+    expect(isDesktopLocalStaticServerUrl('https://127.0.0.1/path?query=1#hash')).toBe(true);
   });
 
   it('should return false for other 127.x.x.x addresses', () => {
-    expect(isLocalUrl('http://127.0.0.2')).toBe(false);
-    expect(isLocalUrl('http://127.1.1.1')).toBe(false);
-    expect(isLocalUrl('http://127.255.255.255')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('http://127.0.0.2')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('http://127.1.1.1')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('http://127.255.255.255')).toBe(false);
   });
 
   it('should return false for localhost', () => {
-    expect(isLocalUrl('http://localhost')).toBe(false);
-    expect(isLocalUrl('http://localhost:3000')).toBe(false);
-    expect(isLocalUrl('https://localhost/api')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('http://localhost')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('http://localhost:3000')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('https://localhost/api')).toBe(false);
   });
 
   it('should return false for domain names', () => {
-    expect(isLocalUrl('https://example.com')).toBe(false);
-    expect(isLocalUrl('http://www.google.com')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('https://example.com')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('http://www.google.com')).toBe(false);
   });
 
   it('should return false for malformed URLs', () => {
-    expect(isLocalUrl('invalid-url')).toBe(false);
-    expect(isLocalUrl('http://')).toBe(false);
-    expect(isLocalUrl('')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('invalid-url')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('http://')).toBe(false);
+    expect(isDesktopLocalStaticServerUrl('')).toBe(false);
   });
 });
 

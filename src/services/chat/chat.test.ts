@@ -280,9 +280,9 @@ describe('ChatService', () => {
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
         // Mock utility functions used in processImageList
-        const { parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { parseDataUri, isDesktopLocalStaticServerUrl } = await import('@lobechat/utils');
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
-        vi.mocked(isLocalUrl).mockReturnValue(false); // Not a local URL
+        vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // Not a local URL
 
         const messages = [
           {
@@ -357,11 +357,13 @@ describe('ChatService', () => {
 
     describe('local image URL conversion', () => {
       it('should convert local image URLs to base64 and call processImageList', async () => {
-        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { imageUrlToBase64, parseDataUri, isDesktopLocalStaticServerUrl } = await import(
+          '@lobechat/utils'
+        );
 
         // Mock for local URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
-        vi.mocked(isLocalUrl).mockReturnValue(true); // This is a local URL
+        vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(true); // This is a local URL
         vi.mocked(imageUrlToBase64).mockResolvedValue({
           base64: 'converted-base64-content',
           mimeType: 'image/png',
@@ -397,7 +399,9 @@ describe('ChatService', () => {
 
         // Verify the utility functions were called
         expect(parseDataUri).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
-        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'http://127.0.0.1:3000/uploads/image.png',
+        );
         expect(imageUrlToBase64).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
 
         // Verify the final result contains base64 converted URL
@@ -428,11 +432,13 @@ describe('ChatService', () => {
       });
 
       it('should not convert remote URLs to base64 and call processImageList', async () => {
-        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { imageUrlToBase64, parseDataUri, isDesktopLocalStaticServerUrl } = await import(
+          '@lobechat/utils'
+        );
 
         // Mock for remote URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
-        vi.mocked(isLocalUrl).mockReturnValue(false); // This is NOT a local URL
+        vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // This is NOT a local URL
         vi.mocked(imageUrlToBase64).mockClear(); // Clear to ensure it's not called
 
         const messages = [
@@ -464,7 +470,9 @@ describe('ChatService', () => {
 
         // Verify the utility functions were called
         expect(parseDataUri).toHaveBeenCalledWith('https://example.com/remote-image.jpg');
-        expect(isLocalUrl).toHaveBeenCalledWith('https://example.com/remote-image.jpg');
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'https://example.com/remote-image.jpg',
+        );
         expect(imageUrlToBase64).not.toHaveBeenCalled(); // Should NOT be called for remote URLs
 
         // Verify the final result preserves original URL
@@ -492,13 +500,15 @@ describe('ChatService', () => {
       });
 
       it('should handle mixed local and remote URLs correctly', async () => {
-        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { imageUrlToBase64, parseDataUri, isDesktopLocalStaticServerUrl } = await import(
+          '@lobechat/utils'
+        );
 
         // Mock parseDataUri to always return url type
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
 
         // Mock isLocalUrl to return true only for 127.0.0.1 URLs
-        vi.mocked(isLocalUrl).mockImplementation((url: string) => {
+        vi.mocked(isDesktopLocalStaticServerUrl).mockImplementation((url: string) => {
           return new URL(url).hostname === '127.0.0.1';
         });
 
@@ -545,9 +555,15 @@ describe('ChatService', () => {
         });
 
         // Verify isLocalUrl was called for each image
-        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:3000/local1.jpg');
-        expect(isLocalUrl).toHaveBeenCalledWith('https://example.com/remote1.png');
-        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:8080/local2.gif');
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'http://127.0.0.1:3000/local1.jpg',
+        );
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'https://example.com/remote1.png',
+        );
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'http://127.0.0.1:8080/local2.gif',
+        );
 
         // Verify imageUrlToBase64 was called only for local URLs
         expect(imageUrlToBase64).toHaveBeenCalledWith('http://127.0.0.1:3000/local1.jpg');
