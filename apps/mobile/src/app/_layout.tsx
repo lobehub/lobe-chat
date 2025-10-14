@@ -159,38 +159,52 @@ function ThemedSystemBars() {
   );
 }
 
+const Layout = () => {
+  const theme = useTheme();
+  return (
+    <GestureHandlerRootView style={{ backgroundColor: theme.colorBgLayout, flex: 1 }}>
+      <RootSiblingParent>
+        <ThemedSystemBars />
+        <Stack
+          screenOptions={{
+            contentStyle: {
+              backgroundColor: theme.colorBgLayout,
+            },
+            headerShown: false,
+          }}
+        >
+          {/* 指定首页, 防止 expo 路由错乱 */}
+          <Stack.Screen name="index" options={{ animation: 'none' }} />
+          {/* main page should not have animation */}
+          <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+          {/* auth page should not have animation  */}
+          <Stack.Screen name="auth" options={{ animation: 'none' }} />
+        </Stack>
+      </RootSiblingParent>
+    </GestureHandlerRootView>
+  );
+};
+
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <ThemeProvider>
       <KeyboardProvider>
-        <ThemeProvider>
-          <AuthProvider>
-            <QueryProvider>
-              <ActionSheetProvider>
-                <PortalProvider>
-                  <I18nextProvider i18n={i18n}>
-                    <I18nReadyGate>
-                      <ToastProvider>
-                        <RootSiblingParent>
-                          <ThemedSystemBars />
-                          <Stack screenOptions={{ headerShown: false }}>
-                            {/* 指定首页, 防止 expo 路由错乱 */}
-                            <Stack.Screen name="index" options={{ animation: 'none' }} />
-                            {/* main page should not have animation */}
-                            <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-                            {/* auth page should not have animation  */}
-                            <Stack.Screen name="auth" options={{ animation: 'none' }} />
-                          </Stack>
-                        </RootSiblingParent>
-                      </ToastProvider>
-                    </I18nReadyGate>
-                  </I18nextProvider>
-                </PortalProvider>
-              </ActionSheetProvider>
-            </QueryProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <QueryProvider>
+            <ActionSheetProvider>
+              <PortalProvider>
+                <I18nextProvider i18n={i18n}>
+                  <I18nReadyGate>
+                    <ToastProvider>
+                      <Layout />
+                    </ToastProvider>
+                  </I18nReadyGate>
+                </I18nextProvider>
+              </PortalProvider>
+            </ActionSheetProvider>
+          </QueryProvider>
+        </AuthProvider>
       </KeyboardProvider>
-    </GestureHandlerRootView>
+    </ThemeProvider>
   );
 }
