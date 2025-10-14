@@ -407,6 +407,11 @@ export default {
       placeholder: `{ "type": "service_account", "project_id": "xxx", "private_key_id": ... }`,
       title: 'Vertex AI Keys',
     },
+    region: {
+      desc: '选择 Vertex AI 区域，某些模型仅在特定区域可用（如 Gemini 2.5）',
+      placeholder: '选择区域',
+      title: 'Vertex AI 区域',
+    },
   },
   zeroone: {
     title: '01.AI 零一万物',

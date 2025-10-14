@@ -29,6 +29,11 @@ export interface CloudflareKeyVault {
   baseURLOrAccountID?: string;
 }
 
+export interface VertexAIKeyVault {
+  apiKey?: string;
+  region?: string;
+}
+
 export interface SearchEngineKeyVaults {
   searchxng?: {
     apiKey?: string;
@@ -96,7 +101,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   upstage?: OpenAICompatibleKeyVault;
   v0?: OpenAICompatibleKeyVault;
   vercelaigateway?: OpenAICompatibleKeyVault;
-  vertexai?: OpenAICompatibleKeyVault;
+  vertexai?: VertexAIKeyVault;
   vllm?: OpenAICompatibleKeyVault;
   volcengine?: OpenAICompatibleKeyVault;
   wenxin?: OpenAICompatibleKeyVault;

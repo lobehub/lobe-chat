@@ -25,9 +25,12 @@ export const POST: any = checkAuth(async (req: Request, { jwtPayload }) =>
       const credentials = safeParseJSON(googleAuthStr);
       const googleAuthOptions = credentials ? { credentials } : undefined;
 
+      // Use region from JWT payload (user config) if available, fallback to environment variable
+      const region = jwtPayload.keyVaults?.vertexai?.region ?? process.env.VERTEXAI_LOCATION;
+
       const instance = LobeVertexAI.initFromVertexAI({
         googleAuthOptions,
-        location: process.env.VERTEXAI_LOCATION,
+        location: region,
         project: !!credentials?.project_id ? credentials?.project_id : process.env.VERTEXAI_PROJECT,
       });
 
