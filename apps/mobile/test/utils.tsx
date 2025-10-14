@@ -1,7 +1,6 @@
+import { ThemeProvider } from '@lobehub/ui-rn';
 import { render } from '@testing-library/react-native';
 import React from 'react';
-
-import { ThemeProvider } from '@/theme';
 
 // Mock the setting store
 jest.mock('@/store/setting', () => ({
@@ -11,11 +10,47 @@ jest.mock('@/store/setting', () => ({
   })),
 }));
 
-// Mock AsyncStorage
-jest.mock('@react-native-async-storage/async-storage', () => ({
-  getItem: jest.fn(() => Promise.resolve(null)),
-  removeItem: jest.fn(() => Promise.resolve()),
-  setItem: jest.fn(() => Promise.resolve()),
+// Mock MMKV
+jest.mock('react-native-mmkv', () => {
+  const mockStorage = new Map<string, string>();
+
+  return {
+    MMKV: jest.fn().mockImplementation(() => ({
+      clearAll: jest.fn(() => {
+        mockStorage.clear();
+      }),
+      contains: jest.fn((key: string) => {
+        return mockStorage.has(key);
+      }),
+      delete: jest.fn((key: string) => {
+        mockStorage.delete(key);
+      }),
+      getAllKeys: jest.fn(() => {
+        return Array.from(mockStorage.keys());
+      }),
+      getBoolean: jest.fn((key: string) => {
+        const value = mockStorage.get(key);
+        return value === 'true';
+      }),
+      getNumber: jest.fn((key: string) => {
+        const value = mockStorage.get(key);
+        return value ? Number(value) : undefined;
+      }),
+      getString: jest.fn((key: string) => {
+        return mockStorage.get(key);
+      }),
+      set: jest.fn((key: string, value: string | number | boolean) => {
+        mockStorage.set(key, String(value));
+      }),
+    })),
+  };
+});
+
+// Mock SecureStore
+jest.mock('expo-secure-store', () => ({
+  deleteItemAsync: jest.fn(),
+  getItemAsync: jest.fn(),
+  setItemAsync: jest.fn(),
 }));
 
 // Mock Markdown dependencies
