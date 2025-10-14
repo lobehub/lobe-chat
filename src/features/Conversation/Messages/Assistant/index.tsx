@@ -1,8 +1,10 @@
 'use client';
 
 import { ChatMessage } from '@lobechat/types';
+import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
@@ -22,7 +24,7 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
@@ -64,8 +66,10 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
     extra,
     metadata,
     meta,
+    targetId,
   } = props;
   const avatar = meta;
+  const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
   const placement = 'left';
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
@@ -99,6 +103,25 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
   const loading = isInRAGFlow || generating;
 
   const animated = transitionMode === 'fadeIn' && generating;
+
+  // Get target name for DM indicator
+  const userName = useUserStore(userProfileSelectors.nickName) || 'User';
+  const agents = useSessionStore(sessionSelectors.currentGroupAgents);
+
+
+  const dmIndicator = useMemo(() => {
+    if (!targetId) return undefined;
+
+    let targetName = targetId;
+    if (targetId === 'user') {
+      targetName = userName;
+    } else {
+      const targetAgent = agents?.find((agent) => agent.id === targetId);
+      targetName = targetAgent?.title || targetId;
+    }
+
+    return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
+  }, [targetId, userName, agents, t]);
 
   // ======================= Performance Optimization ======================= //
   // these useMemo/useCallback are all for the performance optimization
@@ -188,7 +211,13 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
         style={{ marginTop: 6 }}
       />
       <Flexbox align={'flex-start'} className={styles.messageContainer}>
-        <Title avatar={avatar} placement={placement} showTitle={showTitle} time={createdAt} />
+        <Title
+          avatar={avatar}
+          placement={placement}
+          showTitle={showTitle}
+          time={createdAt}
+          titleAddon={dmIndicator}
+        />
         <Flexbox
           align={'flex-start'}
           className={styles.messageContent}

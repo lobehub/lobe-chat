@@ -34,6 +34,7 @@ export default {
   dm: {
     placeholder: '你与 {{agentTitle}} 的私信将显示在这里。',
     tooltip: '发私信',
+    visibleTo: '仅 {{target}} 可见',
   },
   duplicateSession: {
     loading: '复制中...',

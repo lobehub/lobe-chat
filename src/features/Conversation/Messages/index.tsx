@@ -122,7 +122,14 @@ const Item = memo<ChatListItemProps>(
         }
 
         case 'assistant': {
-          return <AssistantMessage {...item} disableEditing={disableEditing} index={index} />;
+          return (
+            <AssistantMessage
+              {...item}
+              showTitle={true}
+              disableEditing={disableEditing}
+              index={index}
+            />
+          );
         }
 
         case 'supervisor': {

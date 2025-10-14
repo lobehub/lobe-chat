@@ -29,6 +29,7 @@ export interface SupervisorDecisionResult {
 export type SupervisorToolName =
   | 'create_todo'
   | 'finish_todo'
+  | 'pause_conversation'
   | 'trigger_agent'
   | 'trigger_agent_dm';
 
@@ -110,151 +111,138 @@ export class GroupChatSupervisor {
       temperature: 0.3,
     };
 
-    // Build tool schemas. Use a separate DM tool instead of dynamic target.
-    const triggerAgentSchema = {
-      additionalProperties: false,
-      description: 'Trigger an agent to speak (group message).',
-      properties: {
-        id: {
-          description: 'The agent id to trigger.',
-          type: 'string',
-        },
-        instruction: {
-          type: 'string',
-        },
-      },
-      required: ['instruction', 'id'],
-      type: 'object',
-    } as const;
-
-    const triggerAgentDmSchema = {
-      additionalProperties: false,
-      description: 'Trigger an agent to DM another agent or user.',
-      properties: {
-        id: {
-          description: 'The agent id to trigger.',
-          type: 'string',
-        },
-        instruction: {
-          type: 'string',
-        },
-        target: {
-          description: 'The target agent id. Only used when need DM.',
-          type: 'string',
-        },
-      },
-      required: ['instruction', 'id', 'target'],
-      type: 'object',
-    } as const;
-
-    const enableTodo = context.scene === 'productive';
-    const toolNameEnumBase: SupervisorToolName[] = ['trigger_agent'];
-    const withDM = context.allowDM
-      ? (['trigger_agent_dm'] as SupervisorToolName[])
-      : ([] as SupervisorToolName[]);
-    const withTodo = enableTodo
-      ? (['create_todo', 'finish_todo'] as SupervisorToolName[])
-      : ([] as SupervisorToolName[]);
-    const toolNameEnum: SupervisorToolName[] = [...toolNameEnumBase, ...withDM, ...withTodo];
-
-    const todoCreateSchema = {
-      additionalProperties: false,
-      description: 'Create a new todo item',
-      properties: {
-        assignee: {
-          description: 'Who will do the todo. Can be agent id or empty.',
-          type: 'string',
-        },
-        content: {
-          description: 'The todo content or description.',
-          type: 'string',
-        },
-      },
-      required: ['content', 'assignee'],
-      type: 'object',
-    } as const;
-
-    const todoFinishSchema = {
-      additionalProperties: false,
-      description: 'Finish a todo by index or all todos',
-      properties: {
-        index: {
-          type: 'number',
-        },
-      },
-      required: ['index'],
-      type: 'object',
-    } as const;
-
-    const baseSchemas: any[] = [triggerAgentSchema];
-    const dmSchemas: any[] = context.allowDM ? [triggerAgentDmSchema] : [];
-    const todoSchemas: any[] = enableTodo ? [todoCreateSchema, todoFinishSchema] : [];
-    const parameterAnyOf = [...baseSchemas, ...dmSchemas, ...todoSchemas];
-
-    const responseFormat = {
-      name: 'supervisor_decision',
-      schema: {
-        $defs: {
-          tool_call: {
-            additionalProperties: false,
-            properties: {
-              parameter: {
-                anyOf: parameterAnyOf as any,
-              },
-              tool_name: {
-                enum: toolNameEnum,
-                type: 'string',
-              },
+    // Build tools array
+    const tools: any[] = [
+      {
+        name: 'trigger_agent',
+        description: 'Trigger an agent to speak (group message).',
+        parameters: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'The agent id to trigger.',
             },
-            required: ['tool_name', 'parameter'],
+            instruction: {
+              type: 'string',
+              description: 'The instruction or message for the agent.',
+            },
+          },
+          required: ['id', 'instruction'],
+        },
+      },
+      {
+        name: 'pause_conversation',
+        description: 'Pause the conversation and wait for user input. Use this when the conversation has naturally concluded or when waiting for user response.',
+        parameters: {
+          type: 'object',
+          properties: {
+            reason: {
+              type: 'string',
+              description: 'Optional reason for pausing the conversation.',
+            },
+          },
+          required: [],
+        },
+      },
+    ];
+
+    // Add DM tool if allowed
+    if (context.allowDM) {
+      tools.push({
+        name: 'trigger_agent_dm',
+        description: 'Trigger an agent to DM another agent or user.',
+        parameters: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'The agent id to trigger.',
+            },
+            instruction: {
+              type: 'string',
+              description: 'The instruction or message for the agent.',
+            },
+            target: {
+              type: 'string',
+              description: 'The target agent id. Only used when need DM.',
+            },
+          },
+          required: ['id', 'instruction', 'target'],
+        },
+      });
+    }
+
+    // Add todo tools if in productive scene
+    if (context.scene === 'productive') {
+      tools.push(
+        {
+          name: 'create_todo',
+          description: 'Create a new todo item',
+          parameters: {
             type: 'object',
-          },
-        },
-        additionalProperties: false,
-        properties: {
-          tool_calls: {
-            items: {
-              $ref: '#/$defs/tool_call',
+            properties: {
+              content: {
+                type: 'string',
+                description: 'The todo content or description.',
+              },
+              assignee: {
+                type: 'string',
+                description: 'Who will do the todo. Can be agent id or empty.',
+              },
             },
-            type: 'array',
+            required: ['content', 'assignee'],
           },
         },
-        required: ['tool_calls'],
-        type: 'object',
-      },
-      // strict: true,
-      type: 'json_schema',
-    };
+        {
+          name: 'finish_todo',
+          description: 'Finish a todo by index',
+          parameters: {
+            type: 'object',
+            properties: {
+              index: {
+                type: 'number',
+                description: 'The index of the todo to finish.',
+              },
+            },
+            required: ['index'],
+          },
+        },
+      );
+    }
 
     try {
       const response = await aiChatService.generateJSON(
         {
-          messages: [
-            // @ts-ignore
-            {
-              content: prompt,
-              role: 'user',
-            },
-          ],
-          schema: responseFormat,
+          messages: [],
+          systemRole: prompt,
+          tools,
           ...supervisorConfig,
         },
         context.abortController || new AbortController(),
       );
 
+      console.log('SUPERVISOR RESPONSE', JSON.stringify(response, null, 2));
+
       // Parse the response to SupervisorToolCall[]
       if (Array.isArray(response)) {
-        return response as SupervisorToolCall[];
+        // Tool calls come in format: [{ name: string, arguments: object }]
+        // We need to convert to our internal format: [{ tool_name: string, parameter: object }]
+        return response.map((item: any) => ({
+          tool_name: item.name || item.tool_name,
+          parameter: item.arguments || item.parameter,
+        })) as SupervisorToolCall[];
       }
-
-      console.log(response);
 
       // If response is a string, try to parse it as JSON
       if (typeof response === 'string') {
         try {
           const parsed = JSON.parse(response);
           if (Array.isArray(parsed)) {
-            return parsed as SupervisorToolCall[];
+            return parsed.map((item: any) => ({
+              tool_name: item.name || item.tool_name,
+              parameter: item.arguments || item.parameter,
+            })) as SupervisorToolCall[];
           }
         } catch {
           // Fall back to string response for legacy parsing
@@ -322,69 +310,37 @@ export class GroupChatSupervisor {
   }
 
   private normalizeToolCalls(response: SupervisorToolCall[] | string): SupervisorToolCall[] {
-    const sanitizeList = (items: unknown): SupervisorToolCall[] => {
-      if (!Array.isArray(items)) return [];
-      return items
-        .map((item) => this.sanitizeToolCall(item))
-        .filter((item): item is SupervisorToolCall => !!item);
-    };
-
+    // Tool calls are strictly formatted, so we can simplify
     if (Array.isArray(response)) {
-      return sanitizeList(response);
+      return response
+        .filter((item) => item && typeof item === 'object' && item.tool_name)
+        .map((item) => ({
+          tool_name: item.tool_name as SupervisorToolName,
+          parameter: item.parameter,
+        }));
     }
 
     if (typeof response === 'string') {
       const parsed = this.tryParseJson(response);
 
       if (Array.isArray(parsed)) {
-        return sanitizeList(parsed);
+        return parsed
+          .filter((item) => item && typeof item === 'object' && item.tool_name)
+          .map((item) => ({
+            tool_name: item.tool_name as SupervisorToolName,
+            parameter: item.parameter,
+          }));
       }
 
-      if (parsed && typeof parsed === 'object') {
-        const toolCalls = (parsed as { tool_calls?: unknown }).tool_calls;
-        if (Array.isArray(toolCalls)) {
-          return sanitizeList(toolCalls);
-        }
-
-        if ('decisions' in parsed || 'todos' in parsed) {
-          throw new Error('__LEGACY_FORMAT__');
-        }
-
-        const singleCall = this.sanitizeToolCall(parsed);
-        if (singleCall) {
-          return [singleCall];
-        }
-      }
-
-      const fallbackArray = this.extractJsonArrayFromString(response);
-      if (Array.isArray(fallbackArray)) {
-        return sanitizeList(fallbackArray);
+      // Check for legacy format
+      if (parsed && typeof parsed === 'object' && ('decisions' in parsed || 'todos' in parsed)) {
+        throw new Error('__LEGACY_FORMAT__');
       }
 
       throw new Error('No tool calls array found in response');
     }
 
     throw new Error('Unsupported supervisor response format');
-  }
-
-  private sanitizeToolCall(raw: any): SupervisorToolCall | null {
-    if (!raw || typeof raw !== 'object') return null;
-
-    // Since we constrained the JSON schema, we expect a specific format
-    const toolName = raw.tool_name;
-    if (
-      typeof toolName !== 'string' ||
-      !['create_todo', 'finish_todo', 'trigger_agent', 'trigger_agent_dm'].includes(toolName)
-    ) {
-      return null;
-    }
-
-    const parameter = raw.parameter;
-
-    return {
-      parameter,
-      tool_name: toolName as SupervisorToolName,
-    };
   }
 
   private processToolCalls(
@@ -417,9 +373,19 @@ export class GroupChatSupervisor {
           }
           break;
         }
+        case 'pause_conversation': {
+          // Pause conversation - no action needed, just don't add any decisions
+          console.log('DEBUG: Supervisor paused conversation:', call.parameter);
+          break;
+        }
         case 'trigger_agent':
         case 'trigger_agent_dm': {
           const decision = this.buildDecisionFromTool(call.parameter, availableAgents, context);
+          console.log('DEBUG: Built decision from tool:', {
+            toolName: call.tool_name,
+            parameter: call.parameter,
+            decision,
+          });
           if (decision) {
             decisions.push(decision);
           }
@@ -427,6 +393,8 @@ export class GroupChatSupervisor {
         }
       }
     });
+
+    console.log('DEBUG: Final decisions:', decisions);
 
     return { decisions, todoUpdated, todos };
   }
@@ -453,7 +421,7 @@ export class GroupChatSupervisor {
     return true;
   }
 
-  private extractTodoData(parameter: unknown): { assignee?: string, content: string | null; } {
+  private extractTodoData(parameter: unknown): { assignee?: string; content: string | null } {
     if (typeof parameter === 'string') {
       const trimmed = parameter.trim();
       return { content: trimmed ? trimmed : null };
