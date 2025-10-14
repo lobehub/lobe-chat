@@ -27,10 +27,11 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const providerKey: GlobalLLMProviderKey = 'vertexai';
+const REGION_KEY = 'region';
 
 const VERTEX_AI_REGIONS: string[] = [
   'global',
-  'us-central1', 
+  'us-central1',
   'us-east1',
   'us-east4',
   'us-west1',
@@ -67,7 +68,7 @@ const VERTEX_AI_REGIONS: string[] = [
   'australia-southeast2',
 ];
 
-// Same as OpenAIProvider, but replace API Key with HuggingFace Access Token
+// VertexAI provider configuration with API key and region selection
 const useProviderCard = (): ProviderItem => {
   const { t } = useTranslation('modelProvider');
   const { styles } = useStyles();
@@ -108,7 +109,7 @@ const useProviderCard = (): ProviderItem => {
         ),
         desc: t('vertexai.region.desc'),
         label: t('vertexai.region.title'),
-        name: [KeyVaultsConfigKey, 'region'],
+        name: [KeyVaultsConfigKey, REGION_KEY],
       },
     ],
   };
