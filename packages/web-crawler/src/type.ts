@@ -10,9 +10,9 @@ export interface CrawlSuccessResult {
 
 export interface CrawlErrorResult {
   content: string;
-  errorMessage: string;
-  errorType: string;
-  url: string;
+  errorMessage?: string;
+  errorType?: string;
+  url?: string;
 }
 
 export interface FilterOptions {
@@ -41,4 +41,11 @@ export interface CrawlUrlRule {
   urlPattern: string;
   // URL转换模板（可选），如果提供则进行URL转换
   urlTransform?: string;
+}
+
+export interface CrawlUniformResult {
+  crawler: string;
+  data: CrawlSuccessResult | CrawlErrorResult;
+  originalUrl: string;
+  transformedUrl?: string;
 }

@@ -28,3 +28,4 @@ export * from './crawler';
 export * from './interpreter';
 export * from './plugin';
 export * from './search';
+export * from './tool';

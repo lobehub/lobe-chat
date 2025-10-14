@@ -1,6 +1,29 @@
 [
   {
     "children": {
+      "fixes": [
+        "Fix mcp server connect issue and refactor web search implement, fix tools calling long name length >64 issue."
+      ]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix the Worker URL cross-origin issue."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.2"
+  },
+  {
+    "children": {
+      "improvements": ["Change the user chatItem maxWidth should use flex 1."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.1"
+  },
+  {
+    "children": {
       "features": ["Add new setting for default image num."]
     },
     "date": "2025-10-12",

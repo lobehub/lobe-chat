@@ -396,7 +396,40 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
-      const { messages, schema, model, responseApi } = payload;
+      const { messages, schema, model, responseApi, tools, systemRole } = payload;
+
+      if (tools) {
+        const msgs = messages;
+
+        if (!!systemRole) {
+          msgs.push({ content: systemRole, role: 'system' });
+        }
+
+        const res = await this.client.chat.completions.create(
+          {
+            messages: msgs,
+            model,
+            tool_choice: 'required',
+            tools: tools.map((tool) => ({ function: tool, type: 'function' })),
+            user: options?.user,
+          },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        const toolCalls = res.choices[0].message.tool_calls!;
+
+        try {
+          return toolCalls.map((item) => ({
+            arguments: JSON.parse(item.function.arguments),
+            name: item.function.name,
+          }));
+        } catch {
+          console.error('parse tool call arguments error:', res);
+          return undefined;
+        }
+      }
+
+      if (!schema) throw new Error('tools or schema is required');
 
       // Use tool calling fallback if configured
       if (generateObjectConfig?.useToolsCalling) {
@@ -421,17 +454,15 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           { headers: options?.headers, signal: options?.signal },
         );
 
-        const toolCall = res.choices[0].message.tool_calls?.[0];
-
-        if (!toolCall || toolCall.type !== 'function') {
-          console.error('No tool call found in response');
-          return undefined;
-        }
+        const toolCalls = res.choices[0].message.tool_calls!;
 
         try {
-          return JSON.parse(toolCall.function.arguments);
+          return toolCalls.map((item) => ({
+            arguments: JSON.parse(item.function.arguments),
+            name: item.function.name,
+          }));
         } catch {
-          console.error('parse tool call arguments error:', toolCall.function.arguments);
+          console.error('parse tool call arguments error:', toolCalls);
           return undefined;
         }
       }
