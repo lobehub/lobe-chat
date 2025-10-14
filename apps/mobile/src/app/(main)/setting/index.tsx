@@ -16,12 +16,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
+import { version } from '@/../package.json';
 import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
-
-import { version } from '../../../package.json';
 
 export default function SettingScreen() {
   const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
