@@ -1249,7 +1249,6 @@ describe('ChatService private methods', () => {
       expect(fetchSSEOptions.responseAnimation).toEqual({
         speed: 20,
         text: 'fadeIn',
-        toolsCalling: 'fadeIn',
       });
     });
   });
