@@ -10,7 +10,18 @@ import { useTheme } from '@/components/styles';
 import type { CellProps } from './type';
 
 const Cell = memo<CellProps>(
-  ({ description, title, showArrow = true, icon, extra, arrowIcon, loading, style, ...rest }) => {
+  ({
+    description,
+    title,
+    showArrow = true,
+    icon,
+    extra,
+    arrowIcon,
+    loading,
+    style,
+    iconSize = 18,
+    ...rest
+  }) => {
     const theme = useTheme();
     const titleNode = typeof title === 'string' ? <Text fontSize={16}>{title}</Text> : title;
     const descriptionNode =
@@ -38,7 +49,7 @@ const Cell = memo<CellProps>(
         {...rest}
       >
         <Flexbox align={'center'} flex={1} gap={10} horizontal>
-          {icon && <Icon icon={icon} size={18} />}
+          {icon && <Icon icon={icon} size={iconSize} />}
           {descriptionNode ? (
             <Flexbox gap={4}>
               {titleNode}
