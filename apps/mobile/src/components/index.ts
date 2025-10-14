@@ -1,4 +1,4 @@
-export { default as ActionIcon } from './ActionIcon';
+export { default as ActionIcon, type ActionIconProps, type ActionIconSize } from './ActionIcon';
 export { default as Alert } from './Alert';
 export * from './Alert';
 export { default as Avatar } from './Avatar';
@@ -8,6 +8,7 @@ export * from './Button';
 export * from './CapsuleTabs';
 export { default as Card } from './Card';
 export * from './Card';
+export { default as Cell, type CellProps } from './Cell';
 export { default as Center, type CenterProps } from './Center';
 export { default as ColorScales } from './ColorScales';
 export { default as ColorSwatches } from './ColorSwatches';
@@ -19,8 +20,13 @@ export * from './Form';
 export { FullWindowOverlay } from './FullWindowOverlay/FullWindowOverlay';
 export { default as GitHubAvatar } from './GithubAvatar';
 export { default as Highlighter } from './Highlighter';
-export { default as Icon } from './Icon';
-export * from './Icon';
+export {
+  default as Icon,
+  type IconProps,
+  IconProvider,
+  type IconSize,
+  useIconContext,
+} from './Icon';
 export { default as Input } from './Input';
 export { default as InstantSwitch } from './InstantSwitch';
 export { default as ListGroup } from './ListGroup';
