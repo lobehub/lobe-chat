@@ -1,5 +1,4 @@
-import type { FC } from 'react';
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Animated, ViewStyle } from 'react-native';
 
 import { useStyles } from './style';
@@ -13,57 +12,57 @@ interface SkeletonAvatarProps {
   style?: ViewStyle;
 }
 
-const SkeletonAvatar: FC<SkeletonAvatarProps> = ({
-  size = 40,
-  shape = 'circle',
-  animated = false,
-  style,
-}) => {
-  const { styles } = useStyles();
-  const shimmerAnim = useRef(new Animated.Value(0)).current;
+const SkeletonAvatar = memo<SkeletonAvatarProps>(
+  ({ size = 40, shape = 'circle', animated = false, style }) => {
+    const { styles } = useStyles();
+    const shimmerAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    if (animated) {
-      const shimmerAnimation = Animated.loop(
-        Animated.sequence([
-          Animated.timing(shimmerAnim, {
-            duration: 1000,
-            toValue: 1,
-            useNativeDriver: false,
-          }),
-          Animated.timing(shimmerAnim, {
-            duration: 1000,
-            toValue: 0,
-            useNativeDriver: false,
-          }),
-        ]),
-      );
-      shimmerAnimation.start();
-      return () => shimmerAnimation.stop();
-    }
-  }, [animated, shimmerAnim]);
+    useEffect(() => {
+      if (animated) {
+        const shimmerAnimation = Animated.loop(
+          Animated.sequence([
+            Animated.timing(shimmerAnim, {
+              duration: 1000,
+              toValue: 1,
+              useNativeDriver: false,
+            }),
+            Animated.timing(shimmerAnim, {
+              duration: 1000,
+              toValue: 0,
+              useNativeDriver: false,
+            }),
+          ]),
+        );
+        shimmerAnimation.start();
+        return () => shimmerAnimation.stop();
+      }
+    }, [animated, shimmerAnim]);
 
-  const avatarStyle = {
-    borderRadius: shape === 'circle' ? size / 2 : 6,
-    height: size,
-    width: size,
-  };
+    const avatarStyle = {
+      borderRadius: shape === 'circle' ? size / 2 : 6,
+      height: size,
+      width: size,
+    };
 
-  return (
-    <Animated.View
-      style={[
-        styles.skeletonItem,
-        avatarStyle,
-        animated && {
-          opacity: shimmerAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.3, 1],
-          }),
-        },
-        style,
-      ]}
-    />
-  );
-};
+    return (
+      <Animated.View
+        style={[
+          styles.skeletonItem,
+          avatarStyle,
+          animated && {
+            opacity: shimmerAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0.3, 1],
+            }),
+          },
+          style,
+        ]}
+        testID="skeleton-avatar"
+      />
+    );
+  },
+);
+
+SkeletonAvatar.displayName = 'SkeletonAvatar';
 
 export default SkeletonAvatar;

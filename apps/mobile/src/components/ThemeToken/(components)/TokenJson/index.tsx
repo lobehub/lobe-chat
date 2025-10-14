@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { memo } from 'react';
 import { View } from 'react-native';
 
@@ -12,7 +11,7 @@ export interface TokenJsonProps {
   token: Record<string, any>;
 }
 
-const TokenJson: FC<TokenJsonProps> = memo(({ token, title }) => {
+const TokenJson = memo<TokenJsonProps>(({ token, title }) => {
   const { styles, theme } = useStyles();
 
   return (
