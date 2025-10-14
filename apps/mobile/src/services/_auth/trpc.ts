@@ -1,5 +1,5 @@
 // Local type reference to server router
-import type { LambdaRouter as MobileRouter } from '@lobehub/chat/server/routers/mobile';
+import type { LambdaRouter as MobileRouter } from '@lobehub/chat/server/routers/lambda';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import superjson from 'superjson';
