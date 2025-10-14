@@ -35,7 +35,7 @@ export default () => {
 ```tsx
 // ❌ 不要这样做
 import Text from '@/components/Text';
-import { useTheme } from '@/components/theme';
+import { useTheme } from '@/components/styles';
 ```
 
 ### 2. 组件主文件 (`ComponentName.tsx`)
@@ -62,11 +62,11 @@ import Text from '@/components/Text';
 
 ### 3. 样式文件 (`style.ts`)
 
-**✅ 正确做法：使用 `@/components/theme` 导入主题工具**
+**✅ 正确做法：使用 `@/components/styles` 导入主题工具**
 
 ```tsx
 // style.ts
-import { createStyles } from '@/components/theme';  // ✅ 允许
+import { createStyles } from '@/components/styles';  // ✅ 允许
 
 export const useStyles = createStyles(({ token, stylish }) => ({
   root: {
@@ -169,7 +169,7 @@ import { View } from 'react-native';
 
 export default () => {
   const token = useTheme();  // 使用主题 token
-  
+
   return (
     <View style={{ padding: token.padding }}>
       <Text>示例内容</Text>
@@ -186,13 +186,13 @@ ThemeProvider 模块内部可以使用绝对路径引用自己的子模块：
 
 ```tsx
 // ThemeProvider/getDesignToken.ts
-import { lightAlgorithm } from '@/components/theme/algorithm/light';  // ✅ 允许
-import type { AliasToken } from '@/components/theme/interface';       // ✅ 允许
+import { lightAlgorithm } from '@/components/styles/algorithm/light';  // ✅ 允许
+import type { AliasToken } from '@/components/styles/interface';       // ✅ 允许
 ```
 
 ### 2. 工具函数和类型
 
-非组件的工具文件可以使用 `@/components/theme`：
+非组件的工具文件可以使用 `@/components/styles`：
 
 ```tsx
 // theme/createStyles.ts
@@ -223,7 +223,7 @@ const path = require('path');
 // 检测并修复 demos 文件
 function fixDemoImports(filePath) {
   let content = fs.readFileSync(filePath, 'utf-8');
-  
+
   // 将 @/components/ComponentName 改为从 @lobehub/ui-rn 导入
   content = content.replace(
     /import\s+(\w+)\s+from\s+['"]@\/components\/(\w+)['"]/g,
@@ -232,7 +232,7 @@ function fixDemoImports(filePath) {
       return `// import ${name} from '@lobehub/ui-rn'`;
     }
   );
-  
+
   fs.writeFileSync(filePath, content);
 }
 ```
@@ -277,12 +277,12 @@ import Button from '../../Button';  // 组件内部
 | 文件类型 | 导入其他组件 | 导入 Theme | 示例 |
 |---------|------------|-----------|------|
 | `demos/*.tsx` | `@lobehub/ui-rn` | `@lobehub/ui-rn` | `import { Button, useTheme } from '@lobehub/ui-rn'` |
-| `ComponentName.tsx` | 相对路径 | 相对路径或 `@/components/theme` | `import Block from '../Block'` |
-| `style.ts` | - | `@/components/theme` | `import { createStyles } from '@/components/theme'` |
+| `ComponentName.tsx` | 相对路径 | 相对路径或 `@/components/styles` | `import Block from '../Block'` |
+| `style.ts` | - | `@/components/styles` | `import { createStyles } from '@/components/styles'` |
 | `type.ts` | 相对路径（类型） | 相对路径（类型） | `import type { BlockProps } from '../Block'` |
 
 **核心原则：**
 - ✅ Demos 展示公开 API，使用 `@lobehub/ui-rn`
 - ✅ 组件内部保持模块化，使用相对路径
-- ✅ 样式文件可以使用 `@/components/theme` 获取主题工具
+- ✅ 样式文件可以使用 `@/components/styles` 获取主题工具
 - ✅ 保持导入语句的一致性和清晰性

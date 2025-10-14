@@ -32,7 +32,7 @@ src/components/ComponentName/
 
 ```tsx
 import React, { memo, useMemo } from 'react';
-import { cva } from '@/components/theme';
+import { cva } from '@/components/styles';
 import { useStyles } from './style';
 import type { ComponentNameProps } from './type';
 
@@ -96,7 +96,7 @@ export default ComponentName;
 使用 `createStyles` 创建主题感知的样式：
 
 ```tsx
-import { createStyles } from '@/components/theme';
+import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token, stylish }) => ({
   // 基础样式
@@ -104,15 +104,15 @@ export const useStyles = createStyles(({ token, stylish }) => ({
     borderRadius: token.borderRadius,
     position: 'relative' as const,
   },
-  
+
   // 变体样式 - 使用 stylish 预设
   default: stylish.variantFilled,
   primary: stylish.variantOutlined,
-  
+
   // 交互状态样式
   primaryActive: stylish.variantOutlinedActive,
   primaryHover: stylish.variantOutlinedHover,
-  
+
   // 附加效果
   shadow: stylish.shadow,
   glass: stylish.blur,
@@ -139,17 +139,17 @@ export interface ComponentNameProps extends ViewProps {
    * @default 'default'
    */
   variant?: 'default' | 'primary' | 'secondary';
-  
+
   /**
    * 是否显示阴影
    */
   shadow?: boolean;
-  
+
   /**
    * 是否启用玻璃效果
    */
   glass?: boolean;
-  
+
   /**
    * 点击回调
    */
@@ -338,7 +338,7 @@ export default () => {
       <Block variant="filled">
         <Text>Filled Block</Text>
       </Block>
-      
+
       <Text style={{ fontWeight: 'bold' }}>轮廓变体</Text>
       <Block variant="outlined">
         <Text>Outlined Block</Text>
@@ -350,7 +350,7 @@ export default () => {
 // 2. 使用状态展示交互
 export default () => {
   const [count, setCount] = useState(0);
-  
+
   return (
     <Button onPress={() => setCount(c => c + 1)}>
       <Text>点击次数: {count}</Text>
@@ -442,7 +442,7 @@ export default () => {
 
   return (
     <Flexbox gap={16}>
-      <ComponentName 
+      <ComponentName
         value={value}
         onChange={setValue}
         onPress={() => Alert.alert('提示', `当前值: ${value}`)}
@@ -460,7 +460,7 @@ CVA 用于管理组件的样式变体逻辑，提供类型安全的样式组合�
 ### 基础用法
 
 ```tsx
-import { cva } from '@/components/theme';
+import { cva } from '@/components/styles';
 
 const variants = useMemo(
   () =>
@@ -571,9 +571,9 @@ const variants = useMemo(
    ```
 
 2. **创建必需文件**
-   
+
    按以下顺序创建文件：
-   
+
    - `type.ts` - TypeScript 类型定义
    - `style.ts` - 样式定义
    - `NewComponent.tsx` - 组件实现
@@ -583,26 +583,26 @@ const variants = useMemo(
    - `demos/index.tsx` - Demo 配置文件（必需）
 
 3. **配置 demos/index.tsx**
-   
+
    创建 demo 配置文件，引入所有示例：
-   
+
    ```tsx
    import type { DemoConfig } from '@lobehub/ui-rn';
    import React from 'react';
-   
+
    import BasicDemo from './basic';
    // 引入其他 demo...
-   
+
    const demos: DemoConfig = [
      { component: <BasicDemo />, key: 'basic', title: '基础用法' },
      // 添加其他 demo 配置...
    ];
-   
+
    export default demos;
    ```
 
 4. **更新组件索引**
-   
+
    在 [src/components/index.ts](mdc:src/components/index.ts) 中添加导出：
    ```tsx
    export { default as NewComponent， type NewComponentProps } from './NewComponent';
@@ -611,17 +611,17 @@ const variants = useMemo(
 5. **生成 Playground 数据** ⚠️
 
    添加或修改组件后，**必须**运行以下命令更新 Playground：
-   
+
    ```bash
    pnpm run build:playground
    ```
-   
+
    或使用完整命令：
-   
+
    ```bash
    pnpm run workflow:playground
    ```
-   
+
    这个命令会：
    - 扫描所有组件目录
    - 读取 `index.md` 中的 frontmatter 元数据
@@ -708,7 +708,7 @@ const demos: DemoConfig = [
    root: { borderRadius: token.borderRadius },
    shadow: stylish.shadow,
    glass: stylish.blur,
-   
+
    // ❌ 避免：耦合多个效果
    rootWithShadow: { ...stylish.shadow, borderRadius: token.borderRadius },
    ```
@@ -718,7 +718,7 @@ const demos: DemoConfig = [
    // ✅ 清晰的语义
    variantPrimary: stylish.variantFilled,
    variantPrimaryActive: stylish.variantFilledActive,
-   
+
    // ❌ 避免无意义的名称
    style1: stylish.variantFilled,
    activeStyle: stylish.variantFilledActive,

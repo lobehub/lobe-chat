@@ -91,7 +91,7 @@
     "Divider": {
       "demosPath": "@lobehub/ui-rn/Divider/demos",
       "name": "Divider",
-      "readme": "\n## Features\n\n- ✅ 支持水平和垂直两种方向\n- ✅ 使用 hairline 细线效果\n- ✅ 主题自动适配\n- ✅ 轻量级实现\n- ✅ TypeScript 支持\n\n## Basic Usage\n\n```tsx\nimport { Divider } from '@lobehub/ui-rn';\n\n<Divider />\n```\n\n## API\n\n### DividerProps\n\n| 属性 | 类型 | 默认值 | 描述 |\n|-----|------|--------|------|\n| `type` | `'horizontal' \\| 'vertical'` | `'horizontal'` | 分割线方向 |\n\n继承 `ViewProps` 的所有属性（除了 `children`），支持自定义样式。\n\n## Examples\n\n### 基础用法\n\n默认的水平分割线。\n\n### 垂直分割线\n\n使用垂直分割线分隔水平排列的内容。\n\n### 内容分组\n\n使用分割线对内容进行分组。\n\n### 自定义样式\n\n通过 style 属性自定义分割线的颜色和粗细。\n\n",
+      "readme": "\n## Features\n\n- ✅ 支持水平和垂直两种方向\n- ✅ 使用 hairline 细线效果\n- ✅ 主题自动适配\n- ✅ 轻量级实现\n- ✅ TypeScript 支持\n\n## Basic Usage\n\n```tsx\nimport { Divider } from '@lobehub/ui-rn';\n\n<Divider />;\n```\n\n## API\n\n### DividerProps\n\n| 属性   | 类型                         | 默认值         | 描述       |\n| ------ | ---------------------------- | -------------- | ---------- |\n| `type` | `'horizontal' \\| 'vertical'` | `'horizontal'` | 分割线方向 |\n\n继承 `ViewProps` 的所有属性（除了 `children`），支持自定义样式。\n\n## Examples\n\n### 基础用法\n\n默认的水平分割线。\n\n### 垂直分割线\n\n使用垂直分割线分隔水平排列的内容。\n\n### 内容分组\n\n使用分割线对内容进行分组。\n\n### 自定义样式\n\n通过 style 属性自定义分割线的颜色和粗细。\n",
       "group": "Layout",
       "title": "Divider",
       "description": "分割线组件，用于在内容区域进行视觉分隔，支持水平和垂直两种方向。"
@@ -99,7 +99,7 @@
     "Empty": {
       "demosPath": "@lobehub/ui-rn/Empty/demos",
       "name": "Empty",
-      "readme": "\n## Features\n\n- ✅ 支持自定义图标和图标大小\n- ✅ 支持文本或自定义 ReactNode 描述\n- ✅ 内置居中对齐布局\n- ✅ 支持添加额外操作按钮\n- ✅ 主题自动适配\n- ✅ TypeScript 支持\n\n## Basic Usage\n\n```tsx\nimport { Empty } from '@lobehub/ui-rn';\n\n<Empty description=\"暂无数据\" />\n```\n\n## API\n\n### EmptyProps\n\n| 属性 | 类型 | 默认值 | 描述 |\n|-----|------|--------|------|\n| `description` | `ReactNode \\| string` | - | 描述文本或自定义内容 |\n| `icon` | `IconProps['icon']` | `InboxIcon` | 自定义图标，默认为收件箱图标 |\n| `iconSize` | `number` | `32` | 图标大小 |\n| `children` | `ReactNode` | - | 额外的操作内容（如按钮） |\n\n继承 `FlexboxProps` 的所有属性，支持布局配置。\n\n## Examples\n\n### 基础用法\n\n使用默认图标和描述文本展示空状态。\n\n### 自定义图标\n\n使用 Lucide 图标库中的任意图标。\n\n### 自定义描述\n\n使用自定义 ReactNode 作为描述内容。\n\n### 带操作按钮\n\n在空状态下添加操作按钮引导用户。\n\n",
+      "readme": "\n## Features\n\n- ✅ 支持自定义图标和图标大小\n- ✅ 支持文本或自定义 ReactNode 描述\n- ✅ 内置居中对齐布局\n- ✅ 支持添加额外操作按钮\n- ✅ 主题自动适配\n- ✅ TypeScript 支持\n\n## Basic Usage\n\n```tsx\nimport { Empty } from '@lobehub/ui-rn';\n\n<Empty description=\"暂无数据\" />;\n```\n\n## API\n\n### EmptyProps\n\n| 属性          | 类型                  | 默认值      | 描述                         |\n| ------------- | --------------------- | ----------- | ---------------------------- |\n| `description` | `ReactNode \\| string` | -           | 描述文本或自定义内容         |\n| `icon`        | `IconProps['icon']`   | `InboxIcon` | 自定义图标，默认为收件箱图标 |\n| `iconSize`    | `number`              | `32`        | 图标大小                     |\n| `children`    | `ReactNode`           | -           | 额外的操作内容（如按钮）     |\n\n继承 `FlexboxProps` 的所有属性，支持布局配置。\n\n## Examples\n\n### 基础用法\n\n使用默认图标和描述文本展示空状态。\n\n### 自定义图标\n\n使用 Lucide 图标库中的任意图标。\n\n### 自定义描述\n\n使用自定义 ReactNode 作为描述内容。\n\n### 带操作按钮\n\n在空状态下添加操作按钮引导用户。\n",
       "group": "Display",
       "title": "Empty",
       "description": "空状态展示组件，用于显示无数据或空内容的占位界面，支持自定义图标和描述文本。"
@@ -191,6 +191,14 @@
       "group": "Layout",
       "title": "ScrollShadow",
       "description": "Scroll container component with smart gradient shadow effects that automatically show/hide based on scroll state."
+    },
+    "Segmented": {
+      "demosPath": "@lobehub/ui-rn/Segmented/demos",
+      "name": "Segmented",
+      "readme": "\n## Features\n\n- ✅ 支持字符串、数字和自定义节点作为选项\n- ✅ 提供多种尺寸（small、middle、large）\n- ✅ 支持圆角和默认两种形状\n- ✅ 支持禁用状态和单个选项禁用\n- ✅ 受控和非受控两种模式\n- ✅ TypeScript 支持\n- ✅ 主题适配\n\n## Basic Usage\n\n```tsx\nimport { Segmented } from '@lobehub/ui-rn';\nimport { useState } from 'react';\n\nconst Demo = () => {\n  const [value, setValue] = useState('iOS');\n\n  return (\n    <Segmented\n      options={['iOS', 'Android', 'Web']}\n      value={value}\n      onChange={setValue}\n    />\n  );\n};\n```\n\n## API\n\n### SegmentedProps\n\n| 属性 | 类型 | 默认值 | 描述 |\n| --- | --- | --- | --- |\n| options | `string[] \\| number[] \\| SegmentedItemType[]` | `[]` | 选项数据 |\n| value | `string \\| number` | - | 当前选中的值（受控模式） |\n| defaultValue | `string \\| number` | - | 默认选中的值（非受控模式） |\n| onChange | `(value: string \\| number) => void` | - | 值改变时的回调 |\n| size | `'small' \\| 'middle' \\| 'large'` | `'middle'` | 尺寸大小 |\n| shape | `'default' \\| 'round'` | `'default'` | 形状样式 |\n| disabled | `boolean` | `false` | 是否禁用 |\n| block | `boolean` | `false` | 是否为块级元素 |\n| style | `ViewStyle` | - | 自定义样式 |\n\n### SegmentedItemType\n\n| 属性 | 类型 | 默认值 | 描述 |\n| --- | --- | --- | --- |\n| label | `ReactNode \\| string` | - | 选项的显示标签 |\n| value | `string \\| number` | - | 选项的值 |\n| disabled | `boolean` | `false` | 是否禁用该选项 |\n\n",
+      "group": "Form",
+      "title": "Segmented",
+      "description": "分段控制器组件，用于展示并选择多个选项中的一个，适用于在少量选项之间切换。"
     },
     "Skeleton": {
       "demosPath": "@lobehub/ui-rn/Skeleton/demos",
