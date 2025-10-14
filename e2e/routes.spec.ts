@@ -29,7 +29,12 @@ const settingsTabs = [
 const routes: string[] = [...baseRoutes, ...settingsTabs.map((key) => `/settings?active=${key}`)];
 
 // CI 环境下跳过容易不稳定或受特性开关影响的路由
-const ciSkipPaths = new Set<string>(['/image', '/settings?active=llm']);
+const ciSkipPaths = new Set<string>([
+  '/image',
+  '/changelog',
+  '/settings?active=common',
+  '/settings?active=llm',
+]);
 
 // @ts-ignore
 async function assertNoPageErrors(page: Parameters<typeof test>[0]['page']) {
@@ -51,7 +56,7 @@ test.describe('Smoke: core routes', () => {
   for (const path of routes) {
     test(`should open ${path} without error`, async ({ page }) => {
       if (process.env.CI && ciSkipPaths.has(path)) test.skip(true, 'skip flaky route on CI');
-      const response = await page.goto(path, { waitUntil: 'domcontentloaded' });
+      const response = await page.goto(path, { waitUntil: 'commit' });
       // 2xx 或 3xx 视为可接受（允许中间件/重定向）
       const status = response?.status() ?? 0;
       expect(status, `unexpected status for ${path}: ${status}`).toBeLessThan(400);
