@@ -68,7 +68,7 @@ const CustomServerLoginPage = () => {
 
         <View style={styles.content}>
           <View style={styles.welcome}>
-            <Image source={require('../../../../assets/images/logo.png')} style={styles.logo} />
+            <Image source={require('@/../assets/images/logo.png')} style={styles.logo} />
 
             <Text style={styles.title}>{t('login.selfHostedTitle', { ns: 'auth' })}</Text>
             <Text style={styles.subtitle}>{t('login.selfHostedDescription', { ns: 'auth' })}</Text>
