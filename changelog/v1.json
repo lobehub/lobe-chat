@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Prevent Vertex AI JSON credentials from being split by comma."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.4"
+  },
+  {
+    "children": {
       "fixes": [
         "Fix mcp server connect issue and refactor web search implement, fix tools calling long name length >64 issue."
       ]
