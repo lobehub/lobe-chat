@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update Claude workflows to use oauth token, vertext ai create image."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.6"
+  },
+  {
+    "children": {
       "improvements": ["Add imagen model to vertex ai."]
     },
     "date": "2025-10-14",
