@@ -8,6 +8,7 @@ export interface CellProps extends Omit<BlockProps, 'children'> {
   description?: ReactNode | string;
   extra?: ReactNode | string;
   icon?: IconProps['icon'];
+  iconSize?: number;
   loading?: boolean;
   showArrow?: boolean;
   title: ReactNode | string;
