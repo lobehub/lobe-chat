@@ -114,35 +114,36 @@ export class GroupChatSupervisor {
     // Build tools array
     const tools: any[] = [
       {
-        name: 'trigger_agent',
         description: 'Trigger an agent to speak (group message).',
+        name: 'trigger_agent',
         parameters: {
-          type: 'object',
           properties: {
             id: {
-              type: 'string',
               description: 'The agent id to trigger.',
+              type: 'string',
             },
             instruction: {
-              type: 'string',
               description: 'The instruction or message for the agent.',
+              type: 'string',
             },
           },
           required: ['id', 'instruction'],
+          type: 'object',
         },
       },
       {
+        description:
+          'Pause the conversation and wait for user input. Use this when the conversation has naturally concluded or when waiting for user response.',
         name: 'pause_conversation',
-        description: 'Pause the conversation and wait for user input. Use this when the conversation has naturally concluded or when waiting for user response.',
         parameters: {
-          type: 'object',
           properties: {
             reason: {
-              type: 'string',
               description: 'Optional reason for pausing the conversation.',
+              type: 'string',
             },
           },
           required: [],
+          type: 'object',
         },
       },
     ];
@@ -150,25 +151,25 @@ export class GroupChatSupervisor {
     // Add DM tool if allowed
     if (context.allowDM) {
       tools.push({
-        name: 'trigger_agent_dm',
         description: 'Trigger an agent to DM another agent or user.',
+        name: 'trigger_agent_dm',
         parameters: {
-          type: 'object',
           properties: {
             id: {
-              type: 'string',
               description: 'The agent id to trigger.',
+              type: 'string',
             },
             instruction: {
-              type: 'string',
               description: 'The instruction or message for the agent.',
+              type: 'string',
             },
             target: {
-              type: 'string',
               description: 'The target agent id. Only used when need DM.',
+              type: 'string',
             },
           },
           required: ['id', 'instruction', 'target'],
+          type: 'object',
         },
       });
     }
@@ -177,35 +178,45 @@ export class GroupChatSupervisor {
     if (context.scene === 'productive') {
       tools.push(
         {
+          description: 'Create one or multiple todo items',
           name: 'create_todo',
-          description: 'Create a new todo item',
           parameters: {
-            type: 'object',
             properties: {
-              content: {
-                type: 'string',
-                description: 'The todo content or description.',
-              },
-              assignee: {
-                type: 'string',
-                description: 'Who will do the todo. Can be agent id or empty.',
+              todos: {
+                description: 'List of todos to create',
+                items: {
+                  properties: {
+                    assignee: {
+                      description: 'Who will do the todo. Can be agent id or empty.',
+                      type: 'string',
+                    },
+                    content: {
+                      description: 'The todo content or description.',
+                      type: 'string',
+                    },
+                  },
+                  required: ['content', 'assignee'],
+                  type: 'object',
+                },
+                type: 'array',
               },
             },
-            required: ['content', 'assignee'],
+            required: ['todos'],
+            type: 'object',
           },
         },
         {
-          name: 'finish_todo',
           description: 'Finish a todo by index',
+          name: 'finish_todo',
           parameters: {
-            type: 'object',
             properties: {
               index: {
-                type: 'number',
                 description: 'The index of the todo to finish.',
+                type: 'number',
               },
             },
             required: ['index'],
+            type: 'object',
           },
         },
       );
@@ -229,8 +240,8 @@ export class GroupChatSupervisor {
         // Tool calls come in format: [{ name: string, arguments: object }]
         // We need to convert to our internal format: [{ tool_name: string, parameter: object }]
         return response.map((item: any) => ({
-          tool_name: item.name || item.tool_name,
           parameter: item.arguments || item.parameter,
+          tool_name: item.name || item.tool_name,
         })) as SupervisorToolCall[];
       }
 
@@ -240,8 +251,8 @@ export class GroupChatSupervisor {
           const parsed = JSON.parse(response);
           if (Array.isArray(parsed)) {
             return parsed.map((item: any) => ({
-              tool_name: item.name || item.tool_name,
               parameter: item.arguments || item.parameter,
+              tool_name: item.name || item.tool_name,
             })) as SupervisorToolCall[];
           }
         } catch {
@@ -315,8 +326,8 @@ export class GroupChatSupervisor {
       return response
         .filter((item) => item && typeof item === 'object' && item.tool_name)
         .map((item) => ({
-          tool_name: item.tool_name as SupervisorToolName,
           parameter: item.parameter,
+          tool_name: item.tool_name as SupervisorToolName,
         }));
     }
 
@@ -327,8 +338,8 @@ export class GroupChatSupervisor {
         return parsed
           .filter((item) => item && typeof item === 'object' && item.tool_name)
           .map((item) => ({
-            tool_name: item.tool_name as SupervisorToolName,
             parameter: item.parameter,
+            tool_name: item.tool_name as SupervisorToolName,
           }));
       }
 
@@ -382,9 +393,9 @@ export class GroupChatSupervisor {
         case 'trigger_agent_dm': {
           const decision = this.buildDecisionFromTool(call.parameter, availableAgents, context);
           console.log('DEBUG: Built decision from tool:', {
-            toolName: call.tool_name,
-            parameter: call.parameter,
             decision,
+            parameter: call.parameter,
+            toolName: call.tool_name,
           });
           if (decision) {
             decisions.push(decision);
@@ -400,10 +411,36 @@ export class GroupChatSupervisor {
   }
 
   private applyCreateTodo(targetTodos: SupervisorTodoItem[], parameter: unknown): boolean {
-    if (Array.isArray(parameter)) {
-      return parameter.reduce((acc, item) => this.applyCreateTodo(targetTodos, item) || acc, false);
+    if (!parameter || typeof parameter !== 'object') return false;
+
+    const payload = parameter as Record<string, unknown>;
+
+    // New format: { todos: [...] }
+    if (Array.isArray(payload.todos)) {
+      let hasChanged = false;
+
+      for (const todoItem of payload.todos) {
+        const { content, assignee } = this.extractTodoData(todoItem);
+        if (!content) continue;
+
+        const exists = targetTodos.some(
+          (todo) => todo.content.trim().toLowerCase() === content.toLowerCase() && !todo.finished,
+        );
+
+        if (exists) continue;
+
+        const newTodo: SupervisorTodoItem = { content, finished: false };
+        if (assignee && typeof assignee === 'string' && assignee.trim()) {
+          newTodo.assignee = assignee.trim();
+        }
+        targetTodos.push(newTodo);
+        hasChanged = true;
+      }
+
+      return hasChanged;
     }
 
+    // Legacy format: direct todo object (for backward compatibility)
     const { content, assignee } = this.extractTodoData(parameter);
     if (!content) return false;
 

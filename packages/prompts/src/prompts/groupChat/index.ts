@@ -123,27 +123,6 @@ export const buildSupervisorPrompt = ({
 
   const todoListTag = scene === 'productive' ? buildTodoListTag(todoList) : '';
 
-  // Build tool list text based on scene and allowDM
-  const toolLines: string[] = [
-    // trigger_agent (public)
-    '  - "trigger_agent": ask an agent to speak publicly to the group. Parameter must be {"id": "agentId"} with optional "instruction"',
-    // trigger_agent_dm (DM)
-    ...(allowDM
-      ? [
-          '  - "trigger_agent_dm": ask an agent to send a private DM. Parameter must be {"id": "agentId", "target": "recipientId|user"} with optional "instruction"',
-        ]
-      : []),
-    // TODO tools only in productive scene
-    ...(scene === 'productive'
-      ? [
-          '  - "create_todo": add a new todo. Parameter can be a string or an object like {"content": "...", "assignee": "agentId"}. Only set "assignee" when a specific agent should own the task; otherwise omit it. Always create actionable, brief todos.',
-          '  - "finish_todo": mark todos as completed. Use {"index": 0} for a specific position.',
-        ]
-      : []),
-  ];
-
-  const availableToolsText = toolLines.join('\n');
-
   // Build rules and examples for DM usage
   const dmRules = allowDM
     ? `- To send a private message, use "trigger_agent_dm" and set "target" to the recipient agent id or "user".
@@ -151,7 +130,7 @@ export const buildSupervisorPrompt = ({
     : '';
 
   const prompt = `
-You are a conversation supervisor for a group chat with multiple AI agents. Your role is to decide which agents should respond next based on the conversation context. Here's the group detail:
+You are a conversation supervisor for a group chat with multiple AI agents. Your role is to orchestrate a group of agents to finish complext tasks.
 
 <group_role>
 ${systemPrompt || ''}
@@ -169,9 +148,6 @@ ${todoListTag}
 
 RULES:
 
-- You MUST respond with a JSON array. Each item represents invoking one of the available tools below.
-- Available tools:
-${availableToolsText}
 - Execute tools in the order they should happen. Return [] when no further action is needed or it's waiting for user feedback.
 
 WHEN ASKING AGENTS TO SPEAK:
@@ -185,14 +161,13 @@ ${
   scene === 'productive'
     ? `WHEN GENERATING TODOS:
 
-- Break down the main objective into logical, sequential todos
+- Break down the main objective into logical, sequential tasks.
 - Be concise and to the point. Each todo should no longer than 10 words. Do not create more than 5 todos.
 - Match user's message language.
+- By only assigning todo will not tirgger agent response you still need to use trigger tool if needed.
 - Keep todo items synchronized with the context. Finish or create todos as progress changes.`
     : ''
 }
-
-Now share your decision.
 `;
 
   return prompt.trim();
