@@ -38,7 +38,7 @@
     "submit:android": "eas submit --platform android",
     "submit:ios": "eas submit --platform ios",
     "test": "jest --coverage",
-    "type-check": "tsgo --noEmit -p ./tsconfig.json",
+    "type-check": "tsx ./scripts/type-check.ts",
     "web": "expo start --web",
     "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts ",
     "workflow:playground": "tsx ./scripts/playground/index.ts"
