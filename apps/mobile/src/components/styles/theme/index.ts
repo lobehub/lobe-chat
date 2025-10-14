@@ -8,5 +8,5 @@ export * from './customTheme';
 export { generateCustomToken } from './customToken';
 export type { AliasToken, MappingAlgorithm, MapToken, SeedToken } from './interface';
 export * from './interface';
-export { default as seedToken } from './seed';
 export * from './stylish';
+export { default as seedToken } from './token/base';
