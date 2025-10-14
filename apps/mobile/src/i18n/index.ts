@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import { DEFAULT_LANG } from '@/_const/locale';
 import { isDev } from '@/utils/env';
+import { appStorage } from '@/utils/storage';
 
 import {
   getSupportedLocales,
@@ -14,11 +14,14 @@ import { getDetectedLocale } from './resource';
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
 const DEV_LOCALE = 'zh-CN';
 
-// 获取用户存储的语言设置
-export const getUserStoredLocale = async (): Promise<string> => {
+/**
+ * 获取用户存储的语言设置
+ * 使用 MMKV 同步读取
+ */
+export const getUserStoredLocale = (): string => {
   try {
-    // 直接从 AsyncStorage 读取语言设置
-    const stored = await AsyncStorage.getItem(LOCALE_STORAGE_KEY);
+    // 使用同步 API 读取语言设置
+    const stored = appStorage.getString(LOCALE_STORAGE_KEY);
 
     if (stored) {
       const localeMode = JSON.parse(stored) as string;
@@ -32,23 +35,19 @@ export const getUserStoredLocale = async (): Promise<string> => {
     // 否则使用系统语言
     return getDetectedLocale();
   } catch (error) {
-    console.error('Error getting user stored locale:', error);
+    console.error('[i18n] Error getting user stored locale:', error);
     return getDetectedLocale();
   }
 };
 
 // 语言检测器
 const languageDetector = {
-  async: true,
-  detect: async (callback: (lng: string) => void) => {
-    try {
-      const userLocale = await getUserStoredLocale();
-      callback(userLocale);
-    } catch (error) {
-      console.error('Error detecting language:', error);
-      callback(DEFAULT_LANG);
-    }
+  async: false,
+  // 改为同步
+  detect: () => {
+    return isDev ? DEV_LOCALE : getUserStoredLocale();
   },
+  init: () => {},
   type: 'languageDetector' as const,
 };
 
@@ -66,7 +65,7 @@ const loadLocaleResources = async (lng: string) => {
 const initI18n = async () => {
   try {
     // 仅加载当前语言（并带上默认语言作为兜底）
-    const current = await getUserStoredLocale();
+    const current = getUserStoredLocale(); // 改为同步调用
     const currentResources = await loadLocaleResources(current);
     const resources = {
       [current]: currentResources,
@@ -87,6 +86,8 @@ const initI18n = async () => {
           escapeValue: false, // React 已经处理了 XSS
         },
 
+        lng: current, // 明确指定初始语言
+
         ns: ['common', 'auth', 'chat', 'discover', 'error', 'setting'],
 
         react: {
@@ -97,6 +98,8 @@ const initI18n = async () => {
 
     console.log('✅ i18n 初始化成功');
     console.log(`📊 支持的语言: ${getSupportedLocales().join(', ')}`);
+    console.log(`🌐 当前加载的语言: ${current}`);
+    console.log(`🔤 i18n.language: ${i18n.language}`);
   } catch (error) {
     console.error('❌ i18n 初始化失败:', error);
   }
