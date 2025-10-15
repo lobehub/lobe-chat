@@ -85,19 +85,32 @@
     "title": "Renk Ayarları"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Erişim belirteci hemen geçersiz kılındı",
-        "title": "Erişim Belirteci Süresi Doldu"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Erişim belirteci hemen süresi doldu",
+          "title": "Erişim Belirteci Süresi Doldu"
+        },
+        "invalidate": {
+          "success": "Geçersiz erişim belirteci yazıldı",
+          "title": "Geçersiz Erişim Belirteci"
+        }
       },
-      "invalidate": {
-        "success": "Geçersiz erişim belirteci yazıldı",
-        "title": "Geçersiz Erişim Belirteci"
+      "clearAuthData": {
+        "success": "Kimlik doğrulama verileri temizlendi",
+        "title": "Kimlik Doğrulama Verilerini Temizle"
+      },
+      "group": "Kimlik Doğrulama Ayarları",
+      "refreshToken": {
+        "expire": {
+          "success": "Yenileme belirteci hemen süresi doldu",
+          "title": "Yenileme Belirteci Süresi Doldu"
+        },
+        "invalidate": {
+          "success": "Geçersiz yenileme belirteci yazıldı",
+          "title": "Geçersiz Yenileme Belirteci"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Kimlik doğrulama verileri temizlendi",
-      "title": "Kimlik Doğrulama Verilerini Temizle"
     },
     "failurePrefix": "İşlem başarısız: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Geliştirici modu etkinleştirildi",
       "remaining": "Geliştirici modunu açmak için {{count}} kez daha dokunun",
       "title": "Geliştirici Modu"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Yenileme belirteci hemen geçersiz kılındı",
-        "title": "Yenileme Belirteci Süresi Doldu"
-      },
-      "invalidate": {
-        "success": "Geçersiz yenileme belirteci yazıldı",
-        "title": "Geçersiz Yenileme Belirteci"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Giriş sayfasına git",

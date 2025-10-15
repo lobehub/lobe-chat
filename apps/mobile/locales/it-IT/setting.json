@@ -85,19 +85,32 @@
     "title": "Impostazioni colore"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Il token di accesso è stato immediatamente invalidato",
-        "title": "Token di accesso scaduto"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Token di accesso immediatamente scaduto",
+          "title": "Token di accesso scaduto"
+        },
+        "invalidate": {
+          "success": "Token di accesso invalidato",
+          "title": "Token di accesso non valido"
+        }
       },
-      "invalidate": {
-        "success": "Token di accesso invalidato con successo",
-        "title": "Token di accesso non valido"
+      "clearAuthData": {
+        "success": "Dati di autenticazione cancellati",
+        "title": "Cancellazione dati di autenticazione"
+      },
+      "group": "Configurazione autenticazione",
+      "refreshToken": {
+        "expire": {
+          "success": "Token di aggiornamento immediatamente scaduto",
+          "title": "Token di aggiornamento scaduto"
+        },
+        "invalidate": {
+          "success": "Token di aggiornamento invalidato",
+          "title": "Token di aggiornamento non valido"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Dati di autenticazione cancellati con successo",
-      "title": "Cancella dati di autenticazione"
     },
     "failurePrefix": "Operazione fallita: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "La modalità sviluppatore è attivata",
       "remaining": "Tocca ancora {{count}} volte per attivare la modalità sviluppatore",
       "title": "Modalità sviluppatore"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Il token di aggiornamento è stato immediatamente invalidato",
-        "title": "Token di aggiornamento scaduto"
-      },
-      "invalidate": {
-        "success": "Token di aggiornamento invalidato con successo",
-        "title": "Token di aggiornamento non valido"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Vai alla pagina di accesso",
