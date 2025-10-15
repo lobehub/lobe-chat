@@ -408,14 +408,7 @@ export default function AdvancedDemo() {
           <ListItem
             avatar="🌙"
             description="切换应用主题颜色"
-            extra={
-              <Switch
-                onValueChange={setDarkMode}
-                thumbColor={darkMode ? '#FFFFFF' : '#f4f3f4'}
-                trackColor={{ false: '#767577', true: '#007AFF' }}
-                value={darkMode}
-              />
-            }
+            extra={<Switch checked={darkMode} onChange={setDarkMode} />}
             onPress={() => setDarkMode(!darkMode)}
             title="深色模式"
           />
@@ -423,14 +416,7 @@ export default function AdvancedDemo() {
           <ListItem
             avatar="🔔"
             description="接收应用推送消息"
-            extra={
-              <Switch
-                onValueChange={setNotificationsEnabled}
-                thumbColor={notificationsEnabled ? '#FFFFFF' : '#f4f3f4'}
-                trackColor={{ false: '#767577', true: '#34C759' }}
-                value={notificationsEnabled}
-              />
-            }
+            extra={<Switch checked={notificationsEnabled} onChange={setNotificationsEnabled} />}
             onPress={() => setNotificationsEnabled(!notificationsEnabled)}
             title="推送通知"
           />
