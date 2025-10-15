@@ -1,4 +1,14 @@
-import { Empty, Flexbox, PageContainer, Segmented, TabView, Text, useTheme } from '@lobehub/ui-rn';
+import { AiProviderDetailItem } from '@lobechat/types';
+import {
+  Divider,
+  Empty,
+  Flexbox,
+  PageContainer,
+  Segmented,
+  TabView,
+  Text,
+  useTheme,
+} from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { BrainIcon, LucideSettings2 } from 'lucide-react-native';
@@ -6,22 +16,19 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 
-import SectionHeader from '../features/SectionHeader';
-import ConfigurationSection from './features/ConfigurationSection';
-import ModelCard from './features/ModelCard';
-import ModelsHeader from './features/ModelsHeader';
-import ProviderInfoSection from './features/ProviderInfoSection';
-import { useProviderDetail, useProviderModels } from './hooks';
-import { useStyles } from './styles';
-import { FlashListItem } from './types';
+import SectionHeader from '../../features/SectionHeader';
+import { useProviderDetail, useProviderModels } from '../hooks';
+import { useStyles } from '../styles';
+import { FlashListItem } from '../types';
+import ConfigurationSection from './ConfigurationSection';
+import ModelCard from './ModelCard';
+import ModelsHeader from './ModelsHeader';
+import ProviderInfoSection from './ProviderInfoSection';
 
-enum Tabs {
-  Configuration = 'configuration',
-  Models = 'models',
-}
+type TabName = 'setting' | 'models';
 
 const ProviderDetailPage = () => {
-  const [tab, setTab] = useState<Tabs>(Tabs.Configuration);
+  const [tab, setTab] = useState<TabName>('setting');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -188,21 +195,43 @@ const ProviderDetailPage = () => {
     content = <Empty description={t('aiProviders.list.loadFailed', { ns: 'setting' })} flex={1} />;
   } else {
     content = (
-      <>
+      <FlashList
+        ListFooterComponent={renderFooter}
+        data={flashListData}
+        drawDistance={500}
+        getItemType={(item) => item.type}
+        keyExtractor={keyExtractor}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.2}
+        removeClippedSubviews={true}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={true}
+      />
+    );
+  }
+
+  const data = {
+    ...flashListData.find((item) => item.type === 'provider-info')?.data,
+    ...builtinProviderCard,
+  } as AiProviderDetailItem;
+
+  return (
+    <PageContainer loading={loading} showBack title={headerTitle}>
+      <Flexbox flex={1}>
         <Flexbox paddingBlock={4} paddingInline={16}>
           <Segmented
             block
-            onChange={(v) => setTab(v as Tabs)}
+            onChange={(v) => setTab(v as TabName)}
             options={[
               {
                 icon: LucideSettings2,
                 label: '配置',
-                value: Tabs.Configuration,
+                value: 'setting',
               },
               {
                 icon: BrainIcon,
                 label: '模型',
-                value: Tabs.Models,
+                value: 'models',
               },
             ]}
             value={tab}
@@ -212,52 +241,25 @@ const ProviderDetailPage = () => {
           items={[
             {
               children: (
-                <FlashList
-                  data={flashListData.filter((item) =>
-                    ['provider-info', 'configuration'].includes(item.type),
-                  )}
-                  drawDistance={500}
-                  getItemType={(item) => item.type}
-                  keyExtractor={keyExtractor}
-                  onEndReached={handleEndReached}
-                  onEndReachedThreshold={0.2}
-                  removeClippedSubviews={true}
-                  renderItem={renderItem}
-                  showsVerticalScrollIndicator={true}
-                />
+                <Flexbox gap={24} paddingBlock={8}>
+                  <ProviderInfoSection provider={data} setLoading={setLoading} />
+                  <Divider />
+                  <ConfigurationSection provider={data} />
+                </Flexbox>
               ),
-              key: Tabs.Configuration,
+
+              key: 'setting',
             },
             {
-              children: (
-                <FlashList
-                  ListFooterComponent={renderFooter}
-                  data={flashListData.filter(
-                    (item) => !['provider-info', 'configuration'].includes(item.type),
-                  )}
-                  drawDistance={500}
-                  getItemType={(item) => item.type}
-                  keyExtractor={keyExtractor}
-                  onEndReached={handleEndReached}
-                  onEndReachedThreshold={0.2}
-                  removeClippedSubviews={true}
-                  renderItem={renderItem}
-                  showsVerticalScrollIndicator={true}
-                />
-              ),
-              key: Tabs.Models,
+              children: content,
+              key: 'models',
+              lazy: true,
             },
           ]}
-          onChange={(v) => setTab(v as Tabs)}
+          onChange={(v) => setTab(v as TabName)}
           value={tab}
         />
-      </>
-    );
-  }
-
-  return (
-    <PageContainer loading={loading} showBack title={headerTitle}>
-      {content}
+      </Flexbox>
     </PageContainer>
   );
 };

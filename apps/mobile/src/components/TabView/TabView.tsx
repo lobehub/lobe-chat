@@ -1,31 +1,23 @@
 import { memo, useEffect, useRef } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { Tabs } from 'react-native-collapsible-tab-view';
-import useMergeState from 'use-merge-value';
 
 import { TabViewProps } from './type';
 
 const TabView = memo<TabViewProps>(({ onChange, value, defaultValue, items, lazy }) => {
   const containerRef = useRef<any>(null);
-  const [activeTab, setActiveTab] = useMergeState(defaultValue || items[0].key, {
-    defaultValue: defaultValue || items[0].key,
-    onChange,
-    value,
-  });
+
   const { width } = useWindowDimensions();
 
   useEffect(() => {
     if (!containerRef.current) return;
-    containerRef.current?.jumpToTab(activeTab);
-  }, [activeTab]);
+    containerRef.current?.jumpToTab(value);
+  }, [value]);
 
   return (
     <Tabs.Container
       initialTabName={defaultValue || items[0].key}
       lazy
-      onIndexChange={(index) => {
-        setActiveTab(index === 0 ? 'demo' : 'readme');
-      }}
       onTabChange={(activeTab) => onChange?.(activeTab.tabName)}
       ref={containerRef}
       renderTabBar={() => null}
