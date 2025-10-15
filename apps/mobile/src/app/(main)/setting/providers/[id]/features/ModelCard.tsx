@@ -45,7 +45,7 @@ const ModelCard = memo<ModelCardProps>(({ model, onToggle }) => {
 
         <Flexbox style={styles.modelSwitchContainer}>
           <InstantSwitch
-            enabled={model.enabled}
+            checked={model.enabled}
             onChange={async (enabled) => {
               handleToggle(enabled);
             }}
