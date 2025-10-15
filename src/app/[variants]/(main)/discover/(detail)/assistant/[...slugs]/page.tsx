@@ -19,6 +19,8 @@ type DiscoverPageProps = PageProps<
   { hl?: Locales; source?: AssistantMarketSource; version?: string }
 >;
 
+const isUrl = (value?: string | null) => (value ? /^https?:\/\//.test(value) : false);
+
 const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
   const searchParams = await props.searchParams;
@@ -45,10 +47,25 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
   if (!data) return;
 
   const { tags, createdAt, homepage, author, description, title } = data;
+  const authorString = typeof author === 'string' ? author : undefined;
+  const authorName =
+    authorString && !isUrl(authorString)
+      ? authorString
+      : author && typeof author === 'object' && 'name' in author
+        ? String((author as { name?: unknown }).name ?? '')
+        : 'Unknown';
+  const authorHomepage = isUrl(authorString)
+    ? authorString
+    : author &&
+        typeof author === 'object' &&
+        'url' in author &&
+        typeof (author as { url?: unknown }).url === 'string'
+      ? String((author as { url?: unknown }).url)
+      : homepage;
 
   return {
     authors: [
-      { name: author, url: homepage },
+      { name: authorName, url: authorHomepage },
       { name: 'LobeHub', url: 'https://github.com/lobehub' },
       { name: 'LobeChat', url: 'https://github.com/lobehub/lobe-chat' },
     ],
@@ -63,7 +80,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
       url: urlJoin('/discover/assistant', identifier),
     }),
     other: {
-      'article:author': author,
+      'article:author': authorName,
       'article:published_time': createdAt
         ? new Date(createdAt).toISOString()
         : new Date().toISOString(),
@@ -76,13 +93,18 @@ const Page = async (props: DiscoverPageProps) => {
   const { data, t, locale, identifier, isMobile } = await getSharedProps(props);
   if (!data) return notFound();
 
-  console.log('data', data);
-
   const { tags, title, description, createdAt, author } = data;
+  const authorString = typeof author === 'string' ? author : undefined;
+  const authorName =
+    authorString && !isUrl(authorString)
+      ? authorString
+      : author && typeof author === 'object' && 'name' in author
+        ? String((author as { name?: unknown }).name ?? '')
+        : 'Unknown';
 
   const ld = ldModule.generate({
     article: {
-      author: [author],
+      author: authorName ? [authorName] : [],
       enable: true,
       identifier,
       tags: tags,

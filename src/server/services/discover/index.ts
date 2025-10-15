@@ -23,6 +23,7 @@ import {
   CacheRevalidate,
   CacheTag,
   DiscoverAssistantDetail,
+  DiscoverAssistantItem,
   DiscoverMcpDetail,
   DiscoverModelDetail,
   DiscoverModelItem,
@@ -208,6 +209,26 @@ export class DiscoverService {
       releasedAt: result.releasedAt,
     });
     return result;
+  };
+
+  private normalizeAuthorField = (author: unknown): string => {
+    if (!author) return '';
+
+    if (typeof author === 'string') return author;
+
+    if (typeof author === 'object') {
+      const { avatar, url, name } = author as {
+        avatar?: unknown;
+        name?: unknown;
+        url?: unknown;
+      };
+
+      if (typeof avatar === 'string' && avatar.length > 0) return avatar;
+      if (typeof url === 'string' && url.length > 0) return url;
+      if (typeof name === 'string' && name.length > 0) return name;
+    }
+
+    return '';
   };
 
   private isLegacySource = (source?: AssistantMarketSource) => source === 'legacy';
@@ -427,8 +448,9 @@ export class DiscoverService {
           });
           break;
         }
-        default:
+        default: {
           break;
+        }
       }
     }
 
@@ -453,7 +475,7 @@ export class DiscoverService {
   // ============================== Assistant Market ==============================
 
   getAssistantCategories = async (
-    params: (CategoryListQuery & { source?: AssistantMarketSource }) = {},
+    params: CategoryListQuery & { source?: AssistantMarketSource } = {},
   ): Promise<CategoryItem[]> => {
     log('getAssistantCategories: params=%O', params);
     const { source, ...rest } = params;
@@ -465,31 +487,14 @@ export class DiscoverService {
     const normalizedLocale = normalizeLocale(locale);
 
     try {
-      // Call the database API categories endpoint directly
-      const queryParams = new URLSearchParams();
-      if (normalizedLocale) queryParams.set('locale', normalizedLocale);
-      if (q) queryParams.set('q', q);
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents/categories?${queryParams}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'GET',
-        },
-      );
-
-      if (!response.ok) {
-        log('getAssistantCategories: API request failed with status %d', response.status);
-        return [];
-      }
-
-      const result = await response.json();
-      log('getAssistantCategories: returning %d categories from database API', result.length);
-      return result;
+      const categories = await this.market.agents.getCategories({
+        locale: normalizedLocale,
+        q,
+      });
+      log('getAssistantCategories: returning %d categories from market SDK', categories.length);
+      return categories;
     } catch (error) {
-      log('getAssistantCategories: error fetching from database API: %O', error);
+      log('getAssistantCategories: error fetching from market SDK: %O', error);
       return [];
     }
   };
@@ -510,60 +515,54 @@ export class DiscoverService {
     const normalizedLocale = normalizeLocale(locale);
 
     try {
-      // Call the database API detail endpoint
-      const queryParams = new URLSearchParams();
-      if (normalizedLocale) queryParams.set('locale', normalizedLocale);
-      if (version) queryParams.set('version', version);
+      const data = await this.market.agents.getAgentDetail(identifier, {
+        locale: normalizedLocale,
+        version,
+      });
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents/detail/${identifier}?${queryParams}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'GET',
-        },
-      );
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          log('getAssistantDetail: assistant not found for identifier=%s', identifier);
-          return;
-        }
-        log('getAssistantDetail: API request failed with status %d', response.status);
+      if (!data) {
+        log('getAssistantDetail: assistant not found for identifier=%s', identifier);
         return;
       }
 
-      const data = await response.json();
-      console.log('data', data);
-
-      // Transform database format to DiscoverAssistantDetail format
+      const normalizedAuthor = this.normalizeAuthorField(data.author);
       const assistant = {
-        author: data.author || `User${data.ownerId}`,
-        avatar: data.avatar || '',
-        category: data.category || 'general',
-
-        // Add detail-specific fields
+        author: normalizedAuthor || (data.ownerId !== null ? `User${data.ownerId}` : 'Unknown'),
+        avatar: data.avatar || normalizedAuthor || '',
+        category: (data as any).category || 'general',
         config: data.config || {},
-        createdAt: data.createdAt,
+        createdAt: (data as any).createdAt,
         currentVersion: data.version,
-        description: data.description,
-        examples: data.examples || [],
-        homepage: data.homepage || `https://lobehub.com/discover/assistant/${data.identifier}`,
-        identifier: data.identifier,
-        knowledgeCount: data.config?.knowledgeBases?.lenght,
-        // This might need to be added to the API
-        pluginCount: data.config?.plugins?.length,
+        description: (data as any).description || data.summary,
+        examples: Array.isArray((data as any).examples)
+          ? (data as any).examples.map((example: any) => ({
+              content: typeof example === 'string' ? example : example.content || '',
+              role: example.role || 'user',
+            }))
+          : [],
+        homepage:
+          (data as any).homepage ||
+          `https://lobehub.com/discover/assistant/${(data as any).identifier}`,
+        identifier: (data as any).identifier,
+        knowledgeCount:
+          (data.config as any)?.knowledgeBases?.length || (data as any).knowledgeCount || 0,
+        pluginCount: (data.config as any)?.plugins?.length || (data as any).pluginCount || 0,
         readme: data.documentationUrl || '',
         schemaVersion: 1,
-        status: data?.status,
+        status: data.status,
         summary: data.summary || '',
-        systemRole: data.config?.systemRole || '',
-        // Use author from API or fallback
-        tags: data.config?.tags || [],
-        title: data.name,
+        systemRole: (data.config as any)?.systemRole || '',
+        tags: data.tags || [],
+        title: (data as any).name || (data as any).identifier,
         tokenUsage: data.tokenUsage || 0,
-        versions: data.versions || [],
+        versions:
+          data.versions?.map((item) => ({
+            createdAt: (item as any).createdAt || item.updatedAt,
+            isLatest: item.isLatest,
+            isValidated: item.isValidated,
+            status: item.status as any,
+            version: item.version,
+          })) || [],
       };
 
       // Get related assistants
@@ -583,7 +582,7 @@ export class DiscoverService {
       log('getAssistantDetail: returning assistant with %d related items', result.related.length);
       return result;
     } catch (error) {
-      log('getAssistantDetail: error fetching from database API: %O', error);
+      log('getAssistantDetail: error fetching from market SDK: %O', error);
       return;
     }
   };
@@ -597,27 +596,15 @@ export class DiscoverService {
     }
 
     try {
-      // Call the database API identifiers endpoint directly
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents/identifiers`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'GET',
-        },
-      );
-
-      if (!response.ok) {
-        log('getAssistantIdentifiers: API request failed with status %d', response.status);
-        return [];
-      }
-
-      const result = await response.json();
-      log('getAssistantIdentifiers: returning %d identifiers from database API', result.length);
+      const identifiers = await this.market.agents.getPublishedIdentifiers();
+      const result = identifiers.map((item) => ({
+        identifier: item.id,
+        lastModified: item.lastModified,
+      }));
+      log('getAssistantIdentifiers: returning %d identifiers from market SDK', result.length);
       return result;
     } catch (error) {
-      log('getAssistantIdentifiers: error fetching from database API: %O', error);
+      log('getAssistantIdentifiers: error fetching from market SDK: %O', error);
       return [];
     }
   };
@@ -643,91 +630,57 @@ export class DiscoverService {
     try {
       const normalizedLocale = normalizeLocale(locale);
 
-      // Build query parameters for database API
-      const queryParams = new URLSearchParams();
-      if (normalizedLocale) queryParams.set('locale', normalizedLocale);
-      if (category) queryParams.set('category', category);
-      if (q) queryParams.set('q', q);
-      if (ownerId) queryParams.set('ownerId', ownerId);
-      queryParams.set('page', page.toString());
-      queryParams.set('pageSize', pageSize.toString());
-      queryParams.set('order', order);
-      queryParams.set('status', 'published');
-      queryParams.set('visibility', 'public');
-
-      // Map AssistantSorts to database API sort fields
-      let apiSort = 'createdAt'; // default
+      let apiSort: 'createdAt' | 'updatedAt' | 'name' = 'createdAt';
       switch (sort) {
+        case AssistantSorts.Identifier:
+        case AssistantSorts.Title: {
+          apiSort = 'name';
+          break;
+        }
         case AssistantSorts.CreatedAt:
         case AssistantSorts.MyOwn: {
           apiSort = 'createdAt';
           break;
         }
-        case AssistantSorts.Identifier: {
-          apiSort = 'name'; // Use name as fallback for identifier
-          break;
-        }
-        case AssistantSorts.Title: {
-          apiSort = 'name';
-          break;
-        }
-        // For sorts not supported by API, we'll use default
-        case AssistantSorts.KnowledgeCount: {
-          apiSort = 'knowledgeCount';
-          break;
-        }
-        case AssistantSorts.PluginCount: {
-          apiSort = 'pluginCount';
-          break;
-        }
-        case AssistantSorts.TokenUsage: {
-          apiSort = 'tokenUsage';
-          break;
+        default: {
+          apiSort = 'createdAt';
         }
       }
-      queryParams.set('sort', apiSort);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_MARKET_BASE_URL}/api/v1/agents?${queryParams}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'GET',
-        },
-      );
+      const data = await this.market.agents.getAgentList({
+        category,
+        locale: normalizedLocale,
+        order,
+        ownerId,
+        page,
+        pageSize,
+        q,
+        sort: apiSort,
+        status: 'published',
+        visibility: 'public',
+      });
 
-      if (!response.ok) {
-        log('getAssistantList: API request failed with status %d', response.status);
+      const transformedItems: DiscoverAssistantItem[] = (data.items || []).map((item: any) => {
+        const normalizedAuthor = this.normalizeAuthorField(item.author);
         return {
-          currentPage: page,
-          items: [],
-          pageSize,
-          totalCount: 0,
-          totalPages: 0,
+          author: normalizedAuthor || (item.ownerId !== null ? `User${item.ownerId}` : 'Unknown'),
+          avatar: item.avatar || normalizedAuthor || '',
+          category: item.category || 'general',
+          config: item.config || {},
+          createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
+          description: item.description || item.summary || '',
+          homepage: item.homepage || `https://lobehub.com/discover/assistant/${item.identifier}`,
+          identifier: item.identifier,
+          knowledgeCount: item.knowledgeCount ?? item.config?.knowledgeBases?.length ?? 0,
+          pluginCount: item.pluginCount ?? item.config?.plugins?.length ?? 0,
+          schemaVersion: item.schemaVersion ?? 1,
+          tags: item.tags || [],
+          title: item.name || item.identifier,
+          tokenUsage: item.tokenUsage || 0,
         };
-      }
+      });
 
-      const data = await response.json();
-
-      // Transform database format to DiscoverAssistantItem format
-      const transformedItems = (data.items || []).map((item: any) => ({
-        author: `User${item.ownerId}`, // Temporary mapping
-        avatar: item.avatar || '',
-        category: item.category || 'general',
-        createdAt: item.createdAt,
-        description: item.description,
-        homepage: `https://lobehub.com/discover/assistant/${item.identifier}`,
-        identifier: item.identifier,
-        knowledgeCount: item.knowledgeCount,
-        pluginCount: item.pluginCount,
-        schemaVersion: 1,
-        tags: [],
-        title: item.name, // This might need to be added to the API
-        tokenUsage: item.tokenUsage || 0,
-      }));
-
-      const result = {
+      const result: AssistantListResponse = {
         currentPage: data.currentPage || page,
         items: transformedItems,
         pageSize: data.pageSize || pageSize,
@@ -736,14 +689,14 @@ export class DiscoverService {
       };
 
       log(
-        'getAssistantList: returning page %d/%d with %d items from database API',
+        'getAssistantList: returning page %d/%d with %d items from market SDK',
         result.currentPage,
         result.totalPages,
         result.items.length,
       );
       return result;
     } catch (error) {
-      log('getAssistantList: error fetching from database API: %O', error);
+      log('getAssistantList: error fetching from market SDK: %O', error);
       return {
         currentPage: page,
         items: [],

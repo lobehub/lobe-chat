@@ -4,10 +4,10 @@ import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
+import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import qs from 'query-string';
 import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
@@ -15,6 +15,8 @@ import { useQuery } from '@/hooks/useQuery';
 import { AssistantMarketSource, DiscoverAssistantItem } from '@/types/discover';
 
 import TokenTag from './TokenTag';
+
+const isUrl = (value?: string | null) => (value ? /^https?:\/\//.test(value) : false);
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -67,6 +69,11 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     const { styles, theme } = useStyles();
     const router = useRouter();
     const { source } = useQuery() as { source?: AssistantMarketSource };
+    const authorString = typeof author === 'string' ? author : undefined;
+    const avatarString = typeof avatar === 'string' ? avatar : undefined;
+    const avatarSrc = avatarString && avatarString !== authorString ? avatarString : undefined;
+    const authorName = authorString && !isUrl(authorString) ? authorString : undefined;
+    const authorAvatar = authorString && isUrl(authorString) ? authorString : undefined;
     const link = qs.stringifyUrl(
       {
         query: source ? { source } : {},
@@ -107,7 +114,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
             title={identifier}
           >
             <Avatar
-              avatar={avatar}
+              avatar={avatarSrc}
               background={backgroundColor || 'transparent'}
               size={40}
               style={{ flex: 'none' }}
@@ -134,7 +141,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
                   </Text>
                 </Link>
               </Flexbox>
-              {author && <div className={styles.author}>{author}</div>}
+              {authorName && <div className={styles.author}>{authorName}</div>}
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
@@ -146,7 +153,10 @@ const AssistantItem = memo<DiscoverAssistantItem>(
               onClick={(e) => e.stopPropagation()}
               target={'_blank'}
             >
-              <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+              <ActionIcon
+                fill={theme.colorTextDescription}
+                icon={authorAvatar ? <Avatar avatar={authorAvatar} size={24} /> : Github}
+              />
             </Link>
           </Flexbox>
         </Flexbox>
