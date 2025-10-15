@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 import { pino } from '@/libs/logger';
 import { createLambdaContext } from '@/libs/trpc/lambda/context';
-import { lambdaRouter as mobileRouter } from '@/server/routers/lambda';
+import { mobileRouter } from '@/server/routers/mobile';
 
 const handler = (req: NextRequest) =>
   fetchRequestHandler({
