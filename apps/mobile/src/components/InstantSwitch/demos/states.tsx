@@ -62,7 +62,7 @@ const StatesDemo = () => {
         <Text style={styles.description}>切换时会显示loading指示器，模拟异步操作</Text>
         <View style={styles.switchRow}>
           <Text style={styles.label}>Loading状态</Text>
-          <InstantSwitch enabled={loadingEnabled} onChange={handleLoadingChange} />
+          <InstantSwitch checked={loadingEnabled} onChange={handleLoadingChange} />
         </View>
       </View>
 
@@ -71,7 +71,7 @@ const StatesDemo = () => {
         <Text style={styles.description}>禁用状态下无法进行切换操作</Text>
         <View style={styles.switchRow}>
           <Text style={styles.label}>禁用状态</Text>
-          <InstantSwitch disabled={true} enabled={disabledEnabled} onChange={async () => {}} />
+          <InstantSwitch checked={disabledEnabled} disabled={true} onChange={async () => {}} />
         </View>
       </View>
 
@@ -80,7 +80,7 @@ const StatesDemo = () => {
         <Text style={styles.description}>模拟网络错误，切换失败时会回滚状态</Text>
         <View style={styles.switchRow}>
           <Text style={styles.label}>错误处理</Text>
-          <InstantSwitch enabled={errorEnabled} onChange={handleErrorChange} />
+          <InstantSwitch checked={errorEnabled} onChange={handleErrorChange} />
         </View>
       </View>
     </View>
