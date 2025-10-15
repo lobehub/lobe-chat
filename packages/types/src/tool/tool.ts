@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { MetaData } from '../meta';
 
-export type LobeToolType = 'builtin' | 'customPlugin' | 'plugin';
+export type LobeToolSource = 'builtin' | 'customPlugin' | 'plugin' | 'mcp';
 
 export interface LobeToolMeta extends MetaData {
   author?: string;
@@ -11,7 +11,8 @@ export interface LobeToolMeta extends MetaData {
    * @deprecated
    */
   meta: MetaData;
-  type: LobeToolType;
+  source: LobeToolSource;
+  type: 'mcp' | 'default' | 'markdown' | 'standalone' | 'builtin';
 }
 
 export interface LobeUniformTool {

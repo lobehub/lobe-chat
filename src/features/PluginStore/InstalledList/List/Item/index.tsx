@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import PluginTag from '@/components/Plugins/PluginTag';
 import { DiscoverPluginItem } from '@/types/discover';
-import { LobeToolType } from '@/types/tool/tool';
+import { LobeToolSource } from '@/types/tool/tool';
 
 import Actions from './Action';
 
@@ -13,7 +13,7 @@ interface PluginItemProps extends DiscoverPluginItem {
   active?: boolean;
   onClick?: () => void;
   runtimeType?: 'mcp' | 'default' | 'markdown' | 'standalone' | undefined;
-  type: LobeToolType;
+  type: LobeToolSource;
 }
 
 const Item = memo<PluginItemProps>(

@@ -10,7 +10,7 @@ interface PluginTagProps {
   isMCP?: boolean;
   showIcon?: boolean;
   showText?: boolean;
-  type: 'builtin' | 'customPlugin' | 'plugin';
+  type: 'builtin' | 'customPlugin' | 'plugin' | 'mcp';
 }
 
 const PluginTag = memo<PluginTagProps>(

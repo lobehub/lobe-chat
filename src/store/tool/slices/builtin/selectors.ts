@@ -15,6 +15,7 @@ const metaList =
         author: 'LobeHub',
         identifier: t.identifier,
         meta: t.manifest.meta,
+        source: 'builtin',
         type: 'builtin',
       }));
 

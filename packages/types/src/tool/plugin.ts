@@ -1,6 +1,6 @@
 import { LobeChatPluginManifest, Meta } from '@lobehub/chat-plugin-sdk';
 
-import { LobeToolType } from './tool';
+import { LobeToolSource } from './tool';
 
 export type PluginManifestMap = Record<string, LobeChatPluginManifest>;
 
@@ -55,7 +55,7 @@ export interface InstallPluginMeta extends Partial<Meta> {
   homepage?: string;
   identifier: string;
   runtimeType?: 'mcp' | 'default' | 'markdown' | 'standalone' | undefined;
-  type: LobeToolType;
+  type: LobeToolSource;
 }
 
 export interface PluginInstallError {

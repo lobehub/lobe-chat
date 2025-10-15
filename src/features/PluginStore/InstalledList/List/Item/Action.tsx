@@ -1,3 +1,4 @@
+import { LobeToolSource } from '@lobechat/types';
 import { ActionIcon, Button, Dropdown, Icon } from '@lobehub/ui';
 import { App } from 'antd';
 import { InfoIcon, MoreVerticalIcon, PackageSearch, Settings, Trash2 } from 'lucide-react';
@@ -11,14 +12,13 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
-import { LobeToolType } from '@/types/tool/tool';
 
 import EditCustomPlugin from '../../EditCustomPlugin';
 
 interface ActionsProps {
   identifier: string;
   isMCP?: boolean;
-  type: LobeToolType;
+  type: LobeToolSource;
 }
 
 const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {

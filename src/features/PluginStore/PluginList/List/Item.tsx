@@ -12,14 +12,14 @@ import { useToolStore } from '@/store/tool';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { PluginInstallStep } from '@/store/tool/slices/oldStore/initialState';
 import { DiscoverPluginItem } from '@/types/discover';
-import { LobeToolType } from '@/types/tool/tool';
+import { LobeToolSource } from '@/types/tool/tool';
 
 import Actions from './Action';
 
 interface PluginItemProps extends DiscoverPluginItem {
   active?: boolean;
   onClick?: () => void;
-  type?: LobeToolType;
+  type?: LobeToolSource;
 }
 const Item = memo<PluginItemProps>(
   ({ title, description, avatar, onClick, active, identifier, author }) => {

@@ -7,7 +7,7 @@ import CustomPluginEmptyState from './CustomPluginEmptyState';
 interface DetailProps {
   identifier: string;
   runtimeType?: 'mcp' | 'default';
-  type?: 'plugin' | 'customPlugin' | 'builtin';
+  type?: 'plugin' | 'customPlugin' | 'builtin' | 'mcp';
 }
 
 const Detail = memo<DetailProps>(({ identifier, type, runtimeType }) => {
