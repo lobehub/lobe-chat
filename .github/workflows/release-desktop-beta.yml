@@ -15,7 +15,7 @@ permissions: read-all
 jobs:
   test:
     name: Code quality check
-    # 添加 PR label 触发条件，只有添加了 Build Desktop 标签的 PR 才会触发构建
+    # 添加 PR label 触发条件，只有添加了 trigger:build-desktop 标签的 PR 才会触发构建
     runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
     steps:
       - name: Checkout base
