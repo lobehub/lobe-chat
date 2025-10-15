@@ -1,0 +1,16 @@
+diff --git a/build/sourcer/Expo.js b/build/sourcer/Expo.js
+index 62d83e6826808f72cc2b0f568b4c49e6ae58bec2..938c0f2369f914d2a8ea0c6e54002ca763d7d156 100644
+--- a/build/sourcer/Expo.js
++++ b/build/sourcer/Expo.js
+@@ -36,7 +36,10 @@ async function getExpoConfigSourcesAsync(projectRoot, config, loadedModules, opt
+         // icons
+         expoConfig.icon,
+         isAndroid ? expoConfig.android?.icon : undefined,
+-        isIos ? expoConfig.ios?.icon : undefined,
++        isIos && typeof expoConfig.ios?.icon === 'string' ? expoConfig.ios?.icon : undefined,
++        isIos && typeof expoConfig.ios?.icon === 'object' ? expoConfig.ios?.icon.light : undefined,
++        isIos && typeof expoConfig.ios?.icon === 'object' ? expoConfig.ios?.icon.dark : undefined,
++        isIos && typeof expoConfig.ios?.icon === 'object' ? expoConfig.ios?.icon.tinted : undefined,
+         isAndroid ? expoConfig.android?.adaptiveIcon?.foregroundImage : undefined,
+         isAndroid ? expoConfig.android?.adaptiveIcon?.backgroundImage : undefined,
+         expoConfig.notification?.icon,
