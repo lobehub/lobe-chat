@@ -50,7 +50,7 @@ export const InputSearch = forwardRef<RNTextInput, InputProps>((props, ref) => {
     <Input
       ref={ref}
       {...props}
-      prefix={<Search color={theme.colorTextPlaceholder} size={iconSize} />}
+      prefix={<Search color={theme.colorTextDescription} size={iconSize * 1.25} />}
       returnKeyType="search"
     />
   );
@@ -77,9 +77,9 @@ export const InputPassword = forwardRef<
       suffix={
         <TouchableOpacity onPress={toggleSecureEntry} style={{ padding: 2 }}>
           {isSecure ? (
-            <EyeOff color={theme.colorTextPlaceholder} size={iconSize} />
+            <EyeOff color={theme.colorTextDescription} size={iconSize * 1.25} />
           ) : (
-            <Eye color={theme.colorTextPlaceholder} size={iconSize} />
+            <Eye color={theme.colorTextDescription} size={iconSize * 1.25} />
           )}
         </TouchableOpacity>
       }
