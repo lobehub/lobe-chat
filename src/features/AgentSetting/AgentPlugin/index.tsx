@@ -43,8 +43,8 @@ const AgentPlugin = memo(() => {
 
   //  =========== Plugin List =========== //
 
-  const list = installedPlugins.map(({ identifier, meta, source, author }) => {
-    const isCustomPlugin = source === 'customPlugin';
+  const list = installedPlugins.map(({ identifier, type, meta, author }) => {
+    const isCustomPlugin = type === 'customPlugin';
 
     return {
       avatar: <PluginAvatar avatar={pluginHelpers.getPluginAvatar(meta)} size={40} />,
@@ -57,7 +57,7 @@ const AgentPlugin = memo(() => {
       label: (
         <Flexbox align={'center'} gap={8} horizontal>
           {pluginHelpers.getPluginTitle(meta)}
-          <PluginTag author={author} type={source} />
+          <PluginTag author={author} type={type} />
         </Flexbox>
       ),
       layout: 'horizontal',

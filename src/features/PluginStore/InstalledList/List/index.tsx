@@ -7,7 +7,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { LobeToolSource } from '@/types/tool/tool';
+import { LobeToolType } from '@/types/tool/tool';
 
 import PluginItem from './Item';
 
@@ -17,7 +17,7 @@ interface ListProps {
   setIdentifier?: (props: {
     identifier?: string;
     runtimeType: 'mcp' | 'default';
-    type?: LobeToolSource;
+    type?: LobeToolType;
   }) => void;
 }
 

@@ -1,7 +1,7 @@
 import { LobeChatPluginManifest, LobePluginType } from '@lobehub/chat-plugin-sdk';
 
 import { CustomPluginParams } from './plugin';
-import { LobeToolSource } from './tool';
+import { LobeToolType } from './tool';
 
 export interface LobeTool {
   customParams?: CustomPluginParams | null;
@@ -13,12 +13,12 @@ export interface LobeTool {
   runtimeType?: 'mcp' | 'default' | 'markdown' | 'standalone';
   settings?: any;
   // TODO: remove type and then make it required
-  source?: LobeToolSource;
+  source?: LobeToolType;
   /**
    * need to be replaced with source
    * @deprecated
    */
-  type: LobeToolSource;
+  type: LobeToolType;
 }
 
 export type LobeToolRenderType = LobePluginType | 'builtin';

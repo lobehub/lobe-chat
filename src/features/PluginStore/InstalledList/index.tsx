@@ -7,7 +7,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { LobeToolSource } from '@/types/tool/tool';
+import { LobeToolType } from '@/types/tool/tool';
 
 import Detail from './Detail';
 import List from './List';
@@ -16,7 +16,7 @@ const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const { t } = useTranslation('plugin');
   const ref = useRef<HTMLDivElement>(null);
 
-  const [type, setType] = useState<LobeToolSource>();
+  const [type, setType] = useState<LobeToolType>();
   const [runtimeType, setRuntimeType] = useState<'mcp' | 'default'>();
   const theme = useTheme();
 

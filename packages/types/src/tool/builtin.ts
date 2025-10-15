@@ -1,10 +1,8 @@
-import { Meta } from '@lobehub/chat-plugin-sdk';
+import { LobeChatPluginApi, Meta } from '@lobehub/chat-plugin-sdk';
 import { ReactNode } from 'react';
 
-import { LobeUniformTool } from '@/types/tool/tool';
-
 export interface BuiltinToolManifest {
-  api: LobeUniformTool[];
+  api: LobeChatPluginApi[];
 
   /**
    * Plugin name
