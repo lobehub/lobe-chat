@@ -2,18 +2,18 @@
 
 ## Current Status
 
-**Overall Coverage**: 74.4% (81 test files, 1001 tests) 🎯
+**Overall Coverage**: 74.24% (83 test files, 1027 tests) 🎯
 
 **Breakdown:**
 
-- Statements: 74.4%
-- Branches: 84.53%
-- Functions: 47.94%
-- Lines: 74.4%
-- Test Files: 81 passed (81)
-- Tests: 1000 passed | 1 skipped (1001 total)
+- Statements: 74.24%
+- Branches: 84.76%
+- Functions: 48.18%
+- Lines: 74.24%
+- Test Files: 83 passed (83)
+- Tests: 1027 passed (1027 total)
 
-**Action Files Coverage**: 27/40 tested (67.5%)
+**Action Files Coverage**: 29/40 tested (72.5%)
 
 ## Coverage Status by Priority
 
@@ -29,9 +29,7 @@
 | File                                     | LOC   | Priority | Notes                 |
 | ---------------------------------------- | ----- | -------- | --------------------- |
 | `discover/slices/assistant/action.ts`    | \~120 | Medium   | Assistant discovery   |
-| `discover/slices/mcp/action.ts`          | \~110 | Medium   | MCP discovery         |
 | `knowledgeBase/slices/crud/action.ts`    | \~110 | Medium   | KB CRUD operations    |
-| `discover/slices/plugin/action.ts`       | \~105 | Medium   | Plugin discovery      |
 | `discover/slices/provider/action.ts`     | \~100 | Medium   | Provider discovery    |
 | `aiInfra/slices/aiModel/action.ts`       | \~100 | Medium   | AI model management   |
 | `discover/slices/model/action.ts`        | \~95  | Medium   | Model discovery       |
@@ -288,6 +286,25 @@ bunx eslint src/store/[domain]/
 ## Completed Work
 
 ### Recent Achievements ✅
+
+**Session (2024-10-15)**: ✅ Discover Store Testing Complete
+
+- **Coverage**: 74.24% overall (+26 tests, 2 new test files)
+- **New Test Files**:
+  - `discover/slices/plugin/action.test.ts` - 15 tests covering plugin discovery (SWR hooks)
+  - `discover/slices/mcp/action.test.ts` - 11 tests covering MCP discovery (SWR hooks)
+- **Features Tested**:
+  - Plugin categories, detail, identifiers, and list fetching
+  - MCP categories, detail, and list fetching
+  - SWR key generation with locale and parameters
+  - SWR configuration verification
+  - Service integration with discoverService
+- **Testing Patterns**:
+  - Successfully adapted zustand testing patterns for SWR hooks
+  - Mock strategy: Synchronously return data from mock useSWR
+  - Type safety: Used `as any` for test mock data where needed
+- **Type Safety**: All tests pass type-check
+- **Action Files Coverage**: 29/40 tested (72.5%, +2 files)
 
 **Session (2024-10-14)**: 📋 Store Testing Documentation Created
 
