@@ -1,9 +1,10 @@
 'use client';
 
-import { Select } from 'antd';
+import { Dropdown, DropdownMenuItemType, Icon } from '@lobehub/ui';
+import { Button } from 'antd';
+import { ChevronDown, Store } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
@@ -15,17 +16,18 @@ const MarketSourceSwitch = memo(() => {
   const query = useQuery() as { source?: AssistantMarketSource };
   const currentSource = (query.source as AssistantMarketSource) ?? 'new';
 
-  const options = useMemo(
-    () => [
-      {
-        label: t('assistants.marketSource.new'),
-        value: 'new',
-      },
-      {
-        label: t('assistants.marketSource.legacy'),
-        value: 'legacy',
-      },
-    ],
+  const items = useMemo(
+    () =>
+      [
+        {
+          key: 'new',
+          label: t('assistants.marketSource.new'),
+        },
+        {
+          key: 'legacy',
+          label: t('assistants.marketSource.legacy'),
+        },
+      ] satisfies DropdownMenuItemType[],
     [t],
   );
 
@@ -39,16 +41,21 @@ const MarketSourceSwitch = memo(() => {
   };
 
   return (
-    <Flexbox align={'center'} gap={8} horizontal>
-      <span>{t('assistants.marketSource.label')}</span>
-      <Select
-        options={options}
-        size={'small'}
-        style={{ minWidth: 132 }}
-        value={currentSource}
-        onChange={handleChange}
-      />
-    </Flexbox>
+    <Dropdown
+      menu={{
+        // @ts-expect-error 等待 antd 修复
+        activeKey: currentSource,
+        items,
+        onClick: ({ key }) => handleChange(key as AssistantMarketSource),
+      }}
+      trigger={['click', 'hover']}
+    >
+      <Button icon={<Icon icon={Store} />} type={'text'}>
+        {t('assistants.marketSource.label')}:{' '}
+        {items.find((item) => item.key === currentSource)?.label}
+        <Icon icon={ChevronDown} />
+      </Button>
+    </Dropdown>
   );
 });
 
