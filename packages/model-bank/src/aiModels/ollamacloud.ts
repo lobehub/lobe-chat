@@ -62,6 +62,17 @@ const ollamaCloudModels: AIChatModelCard[] = [
     id: 'qwen3-coder:480b',
     type: 'chat',
   },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    displayName: 'Qwen3 VL 235B',
+    id: 'qwen3-vl:235b',
+    type: 'chat',
+  },
 ];
 
 export const allModels = [...ollamaCloudModels];
