@@ -85,6 +85,7 @@
     "expo-crypto": "~15.0.7",
     "expo-dev-client": "~6.0.15",
     "expo-font": "~14.0.9",
+    "expo-glass-effect": "^0.1.4",
     "expo-haptics": "~15.0.7",
     "expo-linear-gradient": "~15.0.7",
     "expo-linking": "~8.0.8",

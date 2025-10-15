@@ -1,35 +1,52 @@
-import { Avatar, Icon } from '@lobehub/ui-rn';
+import { ActionIcon, Avatar, Block, Flexbox, Text } from '@lobehub/ui-rn';
 import { Link } from 'expo-router';
 import { Settings2 } from 'lucide-react-native';
-import { Text, TouchableOpacity, View } from 'react-native';
 
 import { AVATAR_SIZE } from '@/_const/common';
 import { DEFAULT_USER_AVATAR } from '@/_const/meta';
 import { useAuth } from '@/store/user';
 
-import { useStyles } from './styles';
-
 export default function SessionFooter() {
-  const { styles } = useStyles();
   const { user } = useAuth();
 
   const displayName = user?.name || user?.username || user?.email || 'User';
   const userAvatar = user?.avatar || DEFAULT_USER_AVATAR;
 
   return (
-    <Link asChild href="/setting">
-      <TouchableOpacity activeOpacity={1}>
-        <View style={[styles.footer]}>
-          <View style={styles.userInfo}>
+    <Flexbox paddingInline={8}>
+      <Link asChild href="/setting">
+        <Block
+          align={'center'}
+          clickable
+          horizontal
+          justify={'space-between'}
+          padding={4}
+          style={{ borderRadius: 100 }}
+          variant={'outlined'}
+        >
+          <Flexbox align={'center'} gap={8} horizontal>
             <Avatar avatar={userAvatar} size={AVATAR_SIZE} title={displayName} />
-            <Text numberOfLines={1} style={styles.userName}>
-              {displayName}
-            </Text>
-          </View>
-
-          <Icon icon={Settings2} />
-        </View>
-      </TouchableOpacity>
-    </Link>
+            <Flexbox gap={4}>
+              <Text ellipsis weight={500}>
+                {displayName}
+              </Text>
+              <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
+                {user?.email}
+              </Text>
+            </Flexbox>
+          </Flexbox>
+          <Link asChild href="/setting">
+            <ActionIcon
+              icon={Settings2}
+              size={{
+                blockSize: AVATAR_SIZE,
+                borderRadius: AVATAR_SIZE,
+                size: 20,
+              }}
+            />
+          </Link>
+        </Block>
+      </Link>
+    </Flexbox>
   );
 }
