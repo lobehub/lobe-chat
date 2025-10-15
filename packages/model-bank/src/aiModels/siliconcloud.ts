@@ -1477,7 +1477,7 @@ const siliconcloudImageModels: AIImageModelCard[] = [
     },
     pricing: {
       currency: 'CNY',
-      units: [{ name: 'imageGeneration', rate: 0.3, strategy: 'fixed', unit: 'image' }],
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-08-04',
     type: 'image',
@@ -1500,7 +1500,7 @@ const siliconcloudImageModels: AIImageModelCard[] = [
     },
     pricing: {
       currency: 'CNY',
-      units: [{ name: 'imageGeneration', rate: 0.3, strategy: 'fixed', unit: 'image' }],
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-09-22',
     type: 'image',
