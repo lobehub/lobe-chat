@@ -1,4 +1,4 @@
-import { Input, Toast } from '@lobehub/ui-rn';
+import { Flexbox, Input, Toast } from '@lobehub/ui-rn';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager, ScrollView, View } from 'react-native';
@@ -58,70 +58,73 @@ export default function SideBar() {
   }
 
   return (
-    <View style={styles.container}>
+    <Flexbox flex={1} gap={16}>
       {/* 搜索栏 */}
-      <Input.Search
-        onChangeText={setSearchText}
-        placeholder={t('session.search.placeholder', { ns: 'chat' })}
-        size="large"
-        style={styles.searchInput}
-        value={searchText}
-        variant="filled"
-      />
+      <Flexbox paddingInline={8}>
+        <Input.Search
+          onChangeText={setSearchText}
+          placeholder={t('session.search.placeholder', { ns: 'chat' })}
+          style={styles.searchInput}
+          value={searchText}
+          variant="filled"
+        />
+      </Flexbox>
 
       {/* 会话列表 */}
       <ScrollView style={styles.sessionList}>
-        {shouldShowInbox && <Inbox />}
-        {/* Group 功能现在没上，暂时不需要 */}
-        {/* <View style={styles.header}>
+        <Flexbox gap={4} paddingInline={8}>
+          {shouldShowInbox && <Inbox />}
+          {/* Group 功能现在没上，暂时不需要 */}
+          {/* <View style={styles.header}>
           <Text style={styles.headerText}>{t('agentList', { ns: 'chat' })}</Text>
         </View> */}
-        {filteredSessions.map((session) => (
-          <ContextMenu.Root key={session.id}>
-            <ContextMenu.Trigger>
-              <SessionItem id={session.id} key={session.id} />
-            </ContextMenu.Trigger>
-            <ContextMenu.Content>
-              <ContextMenu.Item
-                destructive
-                key={session.id}
-                onSelect={() => {
-                  Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
-                    {
-                      style: 'cancel',
-                      text: t('actions.cancel', { ns: 'common' }),
-                    },
-                    {
-                      onPress: () => {
-                        const { done } = loading.start();
-                        removeSession(session.id).then(() => {
-                          Toast.success(t('status.success', { ns: 'common' }));
-                          InteractionManager.runAfterInteractions(() => {
-                            toggleDrawer();
-                            done();
-                          });
-                        });
+          {filteredSessions.map((session) => (
+            <ContextMenu.Root key={session.id}>
+              <ContextMenu.Trigger>
+                <SessionItem id={session.id} key={session.id} />
+              </ContextMenu.Trigger>
+              <ContextMenu.Content>
+                <ContextMenu.Item
+                  destructive
+                  key={session.id}
+                  onSelect={() => {
+                    Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
+                      {
+                        style: 'cancel',
+                        text: t('actions.cancel', { ns: 'common' }),
                       },
-                      style: 'destructive',
-                      text: t('actions.confirm', { ns: 'common' }),
-                    },
-                  ]);
-                }}
-              >
-                <ContextMenu.ItemTitle>
-                  {t('actions.delete', { ns: 'common' })}
-                </ContextMenu.ItemTitle>
-                <ContextMenu.ItemIcon
-                  ios={{
-                    name: 'trash',
-                    pointSize: 18,
+                      {
+                        onPress: () => {
+                          const { done } = loading.start();
+                          removeSession(session.id).then(() => {
+                            Toast.success(t('status.success', { ns: 'common' }));
+                            InteractionManager.runAfterInteractions(() => {
+                              toggleDrawer();
+                              done();
+                            });
+                          });
+                        },
+                        style: 'destructive',
+                        text: t('actions.confirm', { ns: 'common' }),
+                      },
+                    ]);
                   }}
-                />
-              </ContextMenu.Item>
-            </ContextMenu.Content>
-          </ContextMenu.Root>
-        ))}
+                >
+                  <ContextMenu.ItemTitle>
+                    {t('actions.delete', { ns: 'common' })}
+                  </ContextMenu.ItemTitle>
+                  <ContextMenu.ItemIcon
+                    ios={{
+                      name: 'trash',
+                      pointSize: 18,
+                    }}
+                  />
+                </ContextMenu.Item>
+              </ContextMenu.Content>
+            </ContextMenu.Root>
+          ))}
+        </Flexbox>
       </ScrollView>
-    </View>
+    </Flexbox>
   );
 }

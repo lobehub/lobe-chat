@@ -162,7 +162,6 @@ const AssistantList = () => {
           onChangeText={setSearchText}
           onSubmitEditing={handleSearchSubmit}
           placeholder={t('assistant.search', { ns: 'common' })}
-          size="large"
           style={styles.searchContainer}
           variant="filled"
         />

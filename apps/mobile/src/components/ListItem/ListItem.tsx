@@ -1,40 +1,46 @@
 import { Link } from 'expo-router';
-import { TouchableOpacity, View } from 'react-native';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
 
 import Avatar from '../Avatar';
+import Block from '../Block';
+import Flexbox from '../Flexbox';
 import Text from '../Text';
-import { useStyles } from './style';
 import type { ListItemProps } from './type';
 
 const ListItem = ({ title, avatar, description, extra, onPress, href, active }: ListItemProps) => {
-  const { styles } = useStyles(!!description, active);
-
   const content = (
-    <View style={styles.listItem}>
+    <Block
+      active={active}
+      clickable
+      gap={8}
+      horizontal
+      onPress={onPress}
+      padding={8}
+      variant={'borderless'}
+    >
       {avatar && <Avatar avatar={avatar} size={AVATAR_SIZE_MEDIUM} />}
-      <View style={styles.info}>
-        <Text ellipsis style={styles.title}>
+      <Flexbox align={'flex-start'} flex={1} gap={6} justify={'center'}>
+        <Text ellipsis fontSize={16} weight={500}>
           {title}
         </Text>
-        <Text ellipsis style={styles.description}>
+        <Text ellipsis fontSize={12} type={'secondary'}>
           {description}
         </Text>
-      </View>
-      {extra && <Text style={styles.extra}>{extra}</Text>}
-    </View>
+      </Flexbox>
+      {extra && <Text>{extra}</Text>}
+    </Block>
   );
 
   if (href) {
     return (
       <Link asChild href={href}>
-        <TouchableOpacity onPress={onPress}>{content}</TouchableOpacity>
+        {content}
       </Link>
     );
   }
 
-  return <TouchableOpacity onPress={onPress}>{content}</TouchableOpacity>;
+  return content;
 };
 
 ListItem.displayName = 'ListItem';

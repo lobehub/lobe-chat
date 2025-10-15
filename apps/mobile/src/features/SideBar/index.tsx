@@ -17,7 +17,7 @@ import SessionList from './components/SessionList';
 import { useStyles } from './style';
 
 export default function SideBar({ children }: { children: ReactNode }) {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const winDim = useWindowDimensions();
 
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
@@ -59,6 +59,9 @@ export default function SideBar({ children }: { children: ReactNode }) {
             </Space>
           }
           left={<Text style={styles.headerTitle}>LobeChat</Text>}
+          style={{
+            backgroundColor: theme.colorBgContainerSecondary,
+          }}
         >
           <SessionList />
           <Footer />
