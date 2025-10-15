@@ -6,8 +6,6 @@ import {
   ChatMessageError,
   GroundingSearch,
   MessageToolCall,
-  MessageToolCallChunk,
-  MessageToolCallSchema,
   ModelReasoning,
   ModelSpeed,
   ModelUsage,
@@ -94,8 +92,6 @@ export interface FetchSSEOptions {
 }
 
 const START_ANIMATION_SPEED = 10; // 默认起始速度
-
-const END_ANIMATION_SPEED = 16;
 
 const createSmoothMessage = (params: {
   onTextUpdate: (delta: string, text: string) => void;
@@ -200,112 +196,10 @@ const createSmoothMessage = (params: {
   };
 };
 
-const createSmoothToolCalls = (params: {
-  onToolCallsUpdate: (toolCalls: MessageToolCall[], isAnimationActives: boolean[]) => void;
-  startSpeed?: number;
-}) => {
-  const { startSpeed = START_ANIMATION_SPEED } = params;
-  let toolCallsBuffer: MessageToolCall[] = [];
-
-  // 为每个 tool_call 维护一个输出队列和动画控制器
-
-  const outputQueues: string[][] = [];
-  const isAnimationActives: boolean[] = [];
-  const animationFrameIds: (number | null)[] = [];
-
-  const stopAnimation = (index: number) => {
-    isAnimationActives[index] = false;
-    if (animationFrameIds[index] !== null) {
-      cancelAnimationFrame(animationFrameIds[index]!);
-      animationFrameIds[index] = null;
-    }
-  };
-
-  const startAnimation = (index: number, speed = startSpeed) =>
-    new Promise<void>((resolve) => {
-      if (isAnimationActives[index]) {
-        resolve();
-        return;
-      }
-
-      isAnimationActives[index] = true;
-
-      const updateToolCall = () => {
-        if (!isAnimationActives[index]) {
-          resolve();
-          return;
-        }
-
-        if (outputQueues[index].length > 0) {
-          const charsToAdd = outputQueues[index].splice(0, speed).join('');
-
-          const toolCallToUpdate = toolCallsBuffer[index];
-
-          if (toolCallToUpdate) {
-            toolCallToUpdate.function.arguments += charsToAdd;
-
-            // 触发 ui 更新
-            params.onToolCallsUpdate(toolCallsBuffer, [...isAnimationActives]);
-          }
-
-          animationFrameIds[index] = requestAnimationFrame(() => updateToolCall());
-        } else {
-          isAnimationActives[index] = false;
-          animationFrameIds[index] = null;
-          resolve();
-        }
-      };
-
-      animationFrameIds[index] = requestAnimationFrame(() => updateToolCall());
-    });
-
-  const pushToQueue = (toolCallChunks: MessageToolCallChunk[]) => {
-    toolCallChunks.forEach((chunk) => {
-      // init the tool call buffer and output queue
-      if (!toolCallsBuffer[chunk.index]) {
-        toolCallsBuffer[chunk.index] = MessageToolCallSchema.parse(chunk);
-      }
-
-      if (!outputQueues[chunk.index]) {
-        outputQueues[chunk.index] = [];
-        isAnimationActives[chunk.index] = false;
-        animationFrameIds[chunk.index] = null;
-      }
-
-      outputQueues[chunk.index].push(...(chunk.function?.arguments || '').split(''));
-    });
-  };
-
-  const startAnimations = async (speed = startSpeed) => {
-    const pools = toolCallsBuffer.map(async (_, index) => {
-      if (outputQueues[index].length > 0 && !isAnimationActives[index]) {
-        await startAnimation(index, speed);
-      }
-    });
-
-    await Promise.all(pools);
-  };
-  const stopAnimations = () => {
-    toolCallsBuffer.forEach((_, index) => {
-      stopAnimation(index);
-    });
-  };
-
-  return {
-    isAnimationActives,
-    isTokenRemain: () => outputQueues.some((token) => token.length > 0),
-    pushToQueue,
-    startAnimations,
-    stopAnimations,
-  };
-};
-
 export const standardizeAnimationStyle = (
   animationStyle?: ResponseAnimation,
 ): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
-  return typeof animationStyle === 'object'
-    ? animationStyle
-    : { text: animationStyle, toolsCalling: animationStyle };
+  return typeof animationStyle === 'object' ? animationStyle : { text: animationStyle };
 };
 
 /**
@@ -319,14 +213,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
 
-  const {
-    text,
-    toolsCalling,
-    speed: smoothingSpeed,
-  } = standardizeAnimationStyle(options.responseAnimation ?? {});
+  const { text, speed: smoothingSpeed } = standardizeAnimationStyle(
+    options.responseAnimation ?? {},
+  );
   const shouldSkipTextProcessing = text === 'none';
   const textSmoothing = text === 'smooth';
-  const toolsCallingSmoothing = toolsCalling === 'smooth';
 
   // 添加文本buffer和计时器相关变量
   let textBuffer = '';
@@ -370,13 +261,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       thinkingBuffer = '';
     }
   };
-
-  const toolCallsController = createSmoothToolCalls({
-    onToolCallsUpdate: (toolCalls, isAnimationActives) => {
-      options.onMessageHandle?.({ isAnimationActives, tool_calls: toolCalls, type: 'tool_calls' });
-    },
-    startSpeed: smoothingSpeed,
-  });
 
   let grounding: GroundingSearch | undefined = undefined;
   let usage: ModelUsage | undefined = undefined;
@@ -531,19 +415,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           // if there is no tool calls, we should initialize the tool calls
           if (!toolCalls) toolCalls = [];
           toolCalls = parseToolCalls(toolCalls, data);
-
-          if (toolsCallingSmoothing) {
-            // make the tool calls smooth
-
-            // push the tool calls to the smooth queue
-            toolCallsController.pushToQueue(data);
-            // if there is no animation active, we should start the animation
-            if (toolCallsController.isAnimationActives.some((value) => !value)) {
-              toolCallsController.startAnimations();
-            }
-          } else {
-            options.onMessageHandle?.({ tool_calls: toolCalls, type: 'tool_calls' });
-          }
+          options.onMessageHandle?.({ tool_calls: toolCalls, type: 'tool_calls' });
         }
       }
     },
@@ -561,7 +433,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   // so like abort, we don't need to call onFinish
   if (response) {
     textController.stopAnimation();
-    toolCallsController.stopAnimations();
 
     // 确保所有缓冲区数据都被处理
     if (bufferTimer) {
@@ -586,10 +457,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
       if (textController.isTokenRemain()) {
         await textController.startAnimation(smoothingSpeed);
-      }
-
-      if (toolCallsController.isTokenRemain()) {
-        await toolCallsController.startAnimations(END_ANIMATION_SPEED);
       }
 
       await options?.onFinish?.(output, {

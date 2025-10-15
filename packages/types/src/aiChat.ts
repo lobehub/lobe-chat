@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { ChatMessage } from './message';
+import { LobeUniformTool, LobeUniformToolSchema } from './tool';
 import { ChatTopic } from './topic';
 
 export interface SendNewMessage {
@@ -58,6 +59,7 @@ export const StructureSchema = z.object({
   description: z.string().optional(),
   name: z.string(),
   schema: z.object({
+    $defs: z.any().optional(),
     additionalProperties: z.boolean().optional(),
     properties: z.record(z.string(), z.any()),
     required: z.array(z.string()).optional(),
@@ -71,13 +73,29 @@ export const StructureOutputSchema = z.object({
   messages: z.array(z.any()),
   model: z.string(),
   provider: z.string(),
-  schema: StructureSchema,
+  schema: StructureSchema.optional(),
+  systemRole: z.string().optional(),
+  tools: z.array(LobeUniformToolSchema).optional(),
 });
+
+interface IStructureSchema {
+  description: string;
+  name: string;
+  schema: {
+    additionalProperties?: boolean;
+    properties: Record<string, any>;
+    required?: string[];
+    type: 'object';
+  };
+  strict?: boolean;
+}
 
 export interface StructureOutputParams {
   keyVaultsPayload: string;
   messages: ChatMessage[];
   model: string;
   provider: string;
-  schema: any;
+  schema?: IStructureSchema;
+  systemRole?: string;
+  tools?: LobeUniformTool[];
 }
