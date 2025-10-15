@@ -41,7 +41,15 @@ export {
   type IconSize,
   useIconContext,
 } from './Icon';
-export { default as Input, type InputSize, type InputVariant } from './Input';
+export {
+  default as Input,
+  InputPassword,
+  InputSearch,
+  type InputSize,
+  type InputVariant,
+  TextArea,
+  type TextAreaProps,
+} from './Input';
 export { default as InstantSwitch, type InstantSwitchProps } from './InstantSwitch';
 export { default as ListGroup, type ListGroupProps } from './ListGroup';
 export { default as ListItem, type ListItemProps } from './ListItem';
