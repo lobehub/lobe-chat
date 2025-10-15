@@ -1,30 +1,13 @@
 import { Eye, EyeOff, Search } from 'lucide-react-native';
-import type { ReactNode } from 'react';
 import { forwardRef, useState } from 'react';
-import {
-  TextInput as RNTextInput,
-  TextInputProps as RNTextInputProps,
-  StyleProp,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { TextInput as RNTextInput, TouchableOpacity, View } from 'react-native';
 
 import { useTheme } from '@/components/styles';
 
+import Block from '../Block';
 import TextArea from './TextArea';
 import { useStyles } from './style';
-import { InputSize, InputVariant } from './type';
-
-export type { TextAreaProps } from './TextArea';
-
-export interface InputProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
-  prefix?: ReactNode;
-  size?: InputSize;
-  style?: StyleProp<ViewStyle>;
-  suffix?: ReactNode;
-  variant?: InputVariant;
-}
+import type { InputProps } from './type';
 
 const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
   const {
@@ -35,12 +18,13 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
     suffix,
     variant = 'outlined',
     size = 'middle',
+    textStyle,
     ...rest
   } = props;
-  const { styles, theme } = useStyles({ size, variant });
+  const { styles, theme } = useStyles({ size });
 
   return (
-    <View style={[styles.container, style]}>
+    <Block align={'center'} horizontal style={[styles.container, style]} variant={variant}>
       {prefix && <View style={styles.prefixContainer}>{prefix}</View>}
       <RNTextInput
         autoCapitalize="none"
@@ -49,15 +33,15 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
         ref={ref}
         {...rest}
         placeholderTextColor={placeholderTextColor ?? theme.colorTextPlaceholder}
-        style={[styles.input]}
+        style={[styles.input, textStyle]}
         underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
       />
       {suffix && <View style={styles.suffixContainer}>{suffix}</View>}
-    </View>
+    </Block>
   );
 });
 
-const InputSearch = forwardRef<RNTextInput, InputProps>((props, ref) => {
+export const InputSearch = forwardRef<RNTextInput, InputProps>((props, ref) => {
   const theme = useTheme();
   const size = props.size ?? 'middle';
   const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
@@ -72,35 +56,36 @@ const InputSearch = forwardRef<RNTextInput, InputProps>((props, ref) => {
   );
 });
 
-const InputPassword = forwardRef<RNTextInput, Omit<InputProps, 'suffix' | 'secureTextEntry'>>(
-  (props, ref) => {
-    const theme = useTheme();
-    const [isSecure, setIsSecure] = useState(true);
-    const size = props.size ?? 'middle';
-    const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
+export const InputPassword = forwardRef<
+  RNTextInput,
+  Omit<InputProps, 'suffix' | 'secureTextEntry'>
+>((props, ref) => {
+  const theme = useTheme();
+  const [isSecure, setIsSecure] = useState(true);
+  const size = props.size ?? 'middle';
+  const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
 
-    const toggleSecureEntry = () => {
-      setIsSecure(!isSecure);
-    };
+  const toggleSecureEntry = () => {
+    setIsSecure(!isSecure);
+  };
 
-    return (
-      <Input
-        ref={ref}
-        {...props}
-        secureTextEntry={isSecure}
-        suffix={
-          <TouchableOpacity onPress={toggleSecureEntry} style={{ padding: 2 }}>
-            {isSecure ? (
-              <EyeOff color={theme.colorTextPlaceholder} size={iconSize} />
-            ) : (
-              <Eye color={theme.colorTextPlaceholder} size={iconSize} />
-            )}
-          </TouchableOpacity>
-        }
-      />
-    );
-  },
-);
+  return (
+    <Input
+      ref={ref}
+      {...props}
+      secureTextEntry={isSecure}
+      suffix={
+        <TouchableOpacity onPress={toggleSecureEntry} style={{ padding: 2 }}>
+          {isSecure ? (
+            <EyeOff color={theme.colorTextPlaceholder} size={iconSize} />
+          ) : (
+            <Eye color={theme.colorTextPlaceholder} size={iconSize} />
+          )}
+        </TouchableOpacity>
+      }
+    />
+  );
+});
 
 // Add compound components to main Input component
 const InputWithCompounds = Input as typeof Input & {
