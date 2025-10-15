@@ -1,9 +1,8 @@
 import { AiProviderDetailItem } from '@lobechat/types';
-import { ProviderCombine } from '@lobehub/icons-rn';
-import { InstantSwitch, Text, useTheme } from '@lobehub/ui-rn';
+import { ProviderIcon } from '@lobehub/icons-rn';
+import { Cell, Divider, Flexbox, InstantSwitch, Text } from '@lobehub/ui-rn';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
@@ -12,11 +11,12 @@ import { useStyles } from './style';
 
 interface ProviderInfoSectionProps {
   provider: AiProviderDetailItem;
+  setLoading: (loading: boolean) => void;
 }
 
-const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
+const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provider }) => {
   const { styles } = useStyles();
-  const token = useTheme();
+
   const { t } = useTranslation(['setting']);
 
   // Store hooks
@@ -24,6 +24,7 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
   const isEnabled = aiProviderSelectors.isProviderEnabled(provider.id)(useAiInfraStore.getState());
 
   const handleSwitchChange = async (value: boolean) => {
+    setLoading(true);
     try {
       await toggleProviderEnabled(provider.id, value);
       console.log(
@@ -32,35 +33,28 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ provider }) => {
     } catch (error) {
       console.error(`Failed to toggle provider ${provider.id}:`, error);
     }
+    setLoading(false);
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <ProviderCombine
-            color={token.colorText}
-            iconProps={{
-              color: token.colorText,
-            }}
-            provider={provider.id}
-            size={24}
-          />
-          <Text style={styles.subtitle}>
-            {provider.source === 'builtin'
-              ? t('aiProviders.info.builtIn', { ns: 'setting' })
-              : t('aiProviders.info.custom', { ns: 'setting' })}
-          </Text>
-        </View>
-
-        {/* InstantSwitch control area */}
-        <View style={styles.switchContainer}>
-          <InstantSwitch checked={isEnabled} onChange={handleSwitchChange} />
-        </View>
-      </View>
-
-      {provider.description && <Text style={styles.description}>{provider.description}</Text>}
-    </View>
+    <Flexbox>
+      <Cell
+        description={
+          provider.source === 'builtin'
+            ? t('aiProviders.info.builtIn', { ns: 'setting' })
+            : t('aiProviders.info.custom', { ns: 'setting' })
+        }
+        extra={<InstantSwitch defaultChecked={isEnabled} onChange={handleSwitchChange} />}
+        icon={<ProviderIcon provider={provider.id} size={32} type={'avatar'} />}
+        iconSize={32}
+        showArrow={false}
+        title={provider.name}
+      />
+      <Flexbox paddingInline={16}>
+        {provider.description && <Text style={styles.description}>{provider.description}</Text>}
+      </Flexbox>
+      <Divider style={{ marginBlock: 16 }} />
+    </Flexbox>
   );
 });
 
