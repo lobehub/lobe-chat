@@ -218,12 +218,7 @@ export default function AdvancedDemo() {
               <Text style={styles.configLabel}>自动隐藏</Text>
               <Text style={styles.configDesc}>{autoHide ? '2秒后自动消失' : '10秒后自动消失'}</Text>
             </View>
-            <Switch
-              onValueChange={setAutoHide}
-              thumbColor={autoHide ? token.colorWhite : token.colorTextTertiary}
-              trackColor={{ false: token.colorBorderSecondary, true: token.colorSuccess }}
-              value={autoHide}
-            />
+            <Switch checked={autoHide} onChange={setAutoHide} />
           </View>
 
           <View style={styles.configItem}>
@@ -233,12 +228,7 @@ export default function AdvancedDemo() {
                 {longMessages ? '显示详细消息内容' : '显示简短消息内容'}
               </Text>
             </View>
-            <Switch
-              onValueChange={setLongMessages}
-              thumbColor={longMessages ? token.colorWhite : token.colorTextTertiary}
-              trackColor={{ false: token.colorBorderSecondary, true: token.colorSuccess }}
-              value={longMessages}
-            />
+            <Switch checked={longMessages} onChange={setLongMessages} />
           </View>
 
           <Button onPress={showConditionalToasts} type="default">

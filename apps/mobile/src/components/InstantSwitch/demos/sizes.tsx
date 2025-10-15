@@ -70,21 +70,21 @@ const SizesDemo = () => {
       <View style={styles.section}>
         <View style={styles.switchRow}>
           <Text style={styles.label}>Small尺寸</Text>
-          <InstantSwitch enabled={smallEnabled} onChange={handleSmallChange} size="small" />
+          <InstantSwitch checked={smallEnabled} onChange={handleSmallChange} size="small" />
         </View>
       </View>
 
       <View style={styles.section}>
         <View style={styles.switchRow}>
           <Text style={styles.label}>Default尺寸</Text>
-          <InstantSwitch enabled={defaultEnabled} onChange={handleDefaultChange} size="default" />
+          <InstantSwitch checked={defaultEnabled} onChange={handleDefaultChange} size="default" />
         </View>
       </View>
 
       <View style={styles.section}>
         <View style={styles.switchRow}>
           <Text style={styles.label}>Large尺寸</Text>
-          <InstantSwitch enabled={largeEnabled} onChange={handleLargeChange} size="large" />
+          <InstantSwitch checked={largeEnabled} onChange={handleLargeChange} size="large" />
         </View>
       </View>
     </View>
