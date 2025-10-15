@@ -26,10 +26,7 @@ const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps)
       <Flexbox paddingBlock={8} paddingInline={16}>
         <Segmented
           block
-          onChange={(value) => {
-            const tabName = value as TabName;
-            setActiveTab(tabName);
-          }}
+          onChange={(value) => setActiveTab(value as TabName)}
           options={[
             { icon: Code2, label: '演示', value: 'demo' },
             { icon: BookOpen, label: '文档', value: 'readme' },

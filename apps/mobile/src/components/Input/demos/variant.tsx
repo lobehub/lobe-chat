@@ -1,48 +1,26 @@
-import { Input, Text, createStyles } from '@lobehub/ui-rn';
-import { View } from 'react-native';
-
-const useStyles = createStyles(({ token }) => ({
-  container: {
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-  description: {
-    color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
-    marginBottom: token.marginSM,
-  },
-  sectionTitle: {
-    color: token.colorText,
-    fontSize: token.fontSizeLG,
-    fontWeight: '600',
-    marginBottom: token.marginXS,
-    marginTop: token.marginMD,
-  },
-}));
+import { Flexbox, Input, Text } from '@lobehub/ui-rn';
 
 const VariantDemo = () => {
-  const { styles } = useStyles();
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Filled（默认样式）</Text>
-      <Text style={styles.description}>有背景和内边距，适合多数表单场景</Text>
-      <Input placeholder="请输入内容" />
-      <Input.Search placeholder="搜索内容..." />
-      <Input.Password placeholder="请输入密码" />
+    <Flexbox gap={16}>
+      <Text>Filled</Text>
+      <Text>有背景和内边距，适合多数表单场景</Text>
+      <Input placeholder="请输入内容" variant={'filled'} />
+      <Input.Search placeholder="搜索内容..." variant={'filled'} />
+      <Input.Password placeholder="请输入密码" variant={'filled'} />
 
-      <Text style={styles.sectionTitle}>Outlined（描边）</Text>
-      <Text style={styles.description}>带边框描边，适合需要更明确边界的输入框</Text>
+      <Text>Outlined（描边）</Text>
+      <Text>带边框描边，适合需要更明确边界的输入框</Text>
       <Input placeholder="请输入内容" variant="outlined" />
       <Input.Search placeholder="搜索内容..." variant="outlined" />
       <Input.Password placeholder="请输入密码" variant="outlined" />
 
-      <Text style={styles.sectionTitle}>Borderless（无底色）</Text>
-      <Text style={styles.description}>无背景与圆角，常用于列表或紧凑布局</Text>
+      <Text>Borderless（无底色）</Text>
+      <Text>无背景与圆角，常用于列表或紧凑布局</Text>
       <Input placeholder="请输入内容" variant="borderless" />
       <Input.Search placeholder="搜索内容..." variant="borderless" />
       <Input.Password placeholder="请输入密码" variant="borderless" />
-    </View>
+    </Flexbox>
   );
 };
 
