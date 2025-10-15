@@ -34,7 +34,7 @@ const SettingItem = ({
     <Cell
       arrowIcon={isSelected ? CheckIcon : undefined}
       description={description}
-      extra={showSwitch ? <Switch onValueChange={onSwitchChange} value={switchValue} /> : extra}
+      extra={showSwitch ? <Switch checked={switchValue} onChange={onSwitchChange} /> : extra}
       loading={loading}
       showArrow={!!href || (!showSwitch && showCheckmark && isSelected)}
       title={title}
