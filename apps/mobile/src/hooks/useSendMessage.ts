@@ -17,8 +17,11 @@ export const useSendMessage = () => {
   // Mobile端暂时没有文件上传功能，所以isUploadingFiles始终为false
   const isUploadingFiles = false;
   const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
+  const isAIGenerating = useChatStore(chatSelectors.isAIGenerating);
 
   const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
+  // 分离 generating 状态，只基于 chatLoadingIds，与 web 端保持一致
+  const generating = isAIGenerating;
 
   const send = useCallback(
     (params: UseSendMessageParams = {}) => {
@@ -50,5 +53,5 @@ export const useSendMessage = () => {
     [sendMessage, updateInputMessage, isUploadingFiles],
   );
 
-  return useMemo(() => ({ canSend, send }), [canSend, send]);
+  return useMemo(() => ({ canSend, generating, send }), [canSend, generating, send]);
 };

@@ -10,7 +10,7 @@ export function useChat() {
   const { activeId } = useSessionStore();
 
   // Use the new useSendMessage hook for consistent data flow
-  const { canSend, send: sendMessage } = useSendMessage();
+  const { canSend, generating, send: sendMessage } = useSendMessage();
 
   // Chat Store actions
   const regenerateMessage = useChatStore((s) => s.regenerateMessage);
@@ -92,6 +92,8 @@ export function useChat() {
 
     // State
     input,
+
+    isGenerating: generating,
 
     isLoading,
 
