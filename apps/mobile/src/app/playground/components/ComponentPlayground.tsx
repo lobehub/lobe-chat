@@ -1,8 +1,14 @@
-import { type DemoItem, Divider, Flexbox, Markdown, Segmented, Text } from '@lobehub/ui-rn';
+import {
+  type DemoItem,
+  Divider,
+  Flexbox,
+  Markdown,
+  Segmented,
+  TabView,
+  Text,
+} from '@lobehub/ui-rn';
 import { BookOpen, Code2 } from 'lucide-react-native';
-import { Fragment, useRef, useState } from 'react';
-import { useWindowDimensions } from 'react-native';
-import { Tabs } from 'react-native-collapsible-tab-view';
+import { Fragment, useState } from 'react';
 
 type TabName = 'demo' | 'readme';
 
@@ -12,9 +18,7 @@ export interface ComponentPlaygroundProps {
 }
 
 const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps) => {
-  const containerRef = useRef<any>(null);
   const [activeTab, setActiveTab] = useState<TabName>('demo');
-  const { width } = useWindowDimensions();
 
   return (
     <Flexbox flex={1}>
@@ -25,7 +29,6 @@ const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps)
           onChange={(value) => {
             const tabName = value as TabName;
             setActiveTab(tabName);
-            containerRef.current?.jumpToTab(tabName);
           }}
           options={[
             { icon: Code2, label: '演示', value: 'demo' },
@@ -34,20 +37,10 @@ const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps)
           value={activeTab}
         />
       </Flexbox>
-
-      {/* 可滑动的标签内容 */}
-      <Tabs.Container
-        lazy
-        onIndexChange={(index) => {
-          setActiveTab(index === 0 ? 'demo' : 'readme');
-        }}
-        ref={containerRef}
-        renderTabBar={() => null}
-        width={width}
-      >
-        <Tabs.Tab name="demo">
-          <Tabs.Lazy>
-            <Tabs.ScrollView showsVerticalScrollIndicator={false}>
+      <TabView
+        items={[
+          {
+            children: (
               <Flexbox>
                 {demos.map((demo, index) => (
                   <Fragment key={demo.key}>
@@ -59,20 +52,21 @@ const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps)
                   </Fragment>
                 ))}
               </Flexbox>
-            </Tabs.ScrollView>
-          </Tabs.Lazy>
-        </Tabs.Tab>
-
-        <Tabs.Tab name="readme">
-          <Tabs.Lazy>
-            <Tabs.ScrollView showsVerticalScrollIndicator={false}>
+            ),
+            key: 'demo',
+          },
+          {
+            children: (
               <Flexbox paddingInline={16}>
                 <Markdown>{readmeContent}</Markdown>
               </Flexbox>
-            </Tabs.ScrollView>
-          </Tabs.Lazy>
-        </Tabs.Tab>
-      </Tabs.Container>
+            ),
+            key: 'readme',
+          },
+        ]}
+        onChange={(v) => setActiveTab(v as TabName)}
+        value={activeTab}
+      />
     </Flexbox>
   );
 };

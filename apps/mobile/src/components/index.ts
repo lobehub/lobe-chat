@@ -56,6 +56,7 @@ export { default as Slider, type SliderProps } from './Slider';
 export { default as Space, type SpaceProps } from './Space';
 export * from './styles';
 export { default as Switch, type SwitchProps } from './Switch';
+export { default as TabView, type TabViewProps } from './TabView';
 export { default as Tag, type TagProps } from './Tag';
 export { default as Text, type TextProps } from './Text';
 export * from './ThemeProvider';
