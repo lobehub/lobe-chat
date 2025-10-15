@@ -61,7 +61,7 @@ const BasicDemo = () => {
         <Text style={styles.description}>基础的InstantSwitch用法，支持异步切换操作</Text>
         <View style={styles.switchRow}>
           <Text style={styles.label}>基础开关</Text>
-          <InstantSwitch enabled={basicEnabled} onChange={handleBasicChange} />
+          <InstantSwitch checked={basicEnabled} onChange={handleBasicChange} />
         </View>
       </View>
 
@@ -70,16 +70,7 @@ const BasicDemo = () => {
         <Text style={styles.description}>自定义轨道和滑块颜色</Text>
         <View style={styles.switchRow}>
           <Text style={styles.label}>自定义颜色</Text>
-          <InstantSwitch
-            enabled={customEnabled}
-            loadingColor="#339af0"
-            onChange={handleCustomChange}
-            thumbColor="#ffffff"
-            trackColor={{
-              false: '#ff6b6b',
-              true: '#51cf66',
-            }}
-          />
+          <InstantSwitch checked={customEnabled} onChange={handleCustomChange} />
         </View>
       </View>
     </View>
