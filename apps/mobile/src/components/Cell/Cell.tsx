@@ -37,6 +37,7 @@ const Cell = memo<CellProps>(
         align={'center'}
         borderRadius={0}
         clickable
+        gap={8}
         horizontal
         justify={'space-between'}
         paddingBlock={14}
