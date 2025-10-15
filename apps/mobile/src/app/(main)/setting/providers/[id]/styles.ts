@@ -169,11 +169,6 @@ export const useStyles = createStyles(({ token }) => ({
     marginBottom: token.marginSM,
   },
 
-  scrollContainer: {
-    paddingHorizontal: token.paddingContentHorizontal,
-    paddingTop: token.paddingContentVertical,
-  },
-
   // Section header样式
   sectionHeader: {
     // backgroundColor: token.colorFillQuaternary,

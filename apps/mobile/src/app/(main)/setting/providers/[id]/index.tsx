@@ -1,7 +1,7 @@
-import { Empty, Flexbox, PageContainer, Text, useTheme } from '@lobehub/ui-rn';
+import { Empty, Flexbox, PageContainer, Segmented, Text, useTheme } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 
@@ -14,7 +14,13 @@ import { useProviderDetail, useProviderModels } from './hooks';
 import { useStyles } from './styles';
 import { FlashListItem } from './types';
 
+// enum Tabs {
+//   Configuration = 'configuration',
+//   Models = 'models',
+// }
+
 const ProviderDetailPage = () => {
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { styles } = useStyles();
@@ -79,7 +85,12 @@ const ProviderDetailPage = () => {
     ({ item }: { item: FlashListItem }) => {
       switch (item.type) {
         case 'provider-info': {
-          return <ProviderInfoSection provider={item.data} />;
+          return (
+            <ProviderInfoSection
+              provider={{ ...item.data, ...builtinProviderCard }}
+              setLoading={setLoading}
+            />
+          );
         }
 
         case 'configuration': {
@@ -177,7 +188,6 @@ const ProviderDetailPage = () => {
     content = (
       <FlashList
         ListFooterComponent={renderFooter}
-        contentContainerStyle={styles.scrollContainer}
         data={flashListData}
         drawDistance={500}
         getItemType={(item) => item.type}
@@ -192,7 +202,23 @@ const ProviderDetailPage = () => {
   }
 
   return (
-    <PageContainer showBack title={headerTitle}>
+    <PageContainer loading={loading} showBack title={headerTitle}>
+      <Flexbox paddingBlock={4} paddingInline={16}>
+        <Segmented
+          block
+          defaultValue={'configuration'}
+          options={[
+            {
+              label: '配置',
+              value: 'configuration',
+            },
+            {
+              label: '模型',
+              value: 'models',
+            },
+          ]}
+        />
+      </Flexbox>
       {content}
     </PageContainer>
   );

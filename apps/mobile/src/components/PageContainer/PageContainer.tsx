@@ -1,13 +1,16 @@
 import { router } from 'expo-router';
-import { ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft, Loader2Icon } from 'lucide-react-native';
 import { memo, useRef } from 'react';
 import { Animated, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { HEADER_HEIGHT } from '@/_const/common';
 import ActionIcon from '@/components/ActionIcon';
+import Icon from '@/components/Icon';
 import Text from '@/components/Text';
 import { useTheme } from '@/components/styles';
 
+import Flexbox from '../Flexbox';
 import { useStyles } from './style';
 import type { PageContainerProps } from './type';
 
@@ -22,8 +25,9 @@ const PageContainer = memo<PageContainerProps>(
     largeTitleEnabled = false,
     onScroll,
     scrollComponent,
+    loading,
   }) => {
-    const { styles } = useStyles();
+    const { styles, theme } = useStyles();
     const token = useTheme();
     const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -65,13 +69,69 @@ const PageContainer = memo<PageContainerProps>(
     // 渲染大标题（作为滚动内容的一部分）
     const renderLargeTitle = () => {
       if (!largeTitleEnabled || !title) return null;
-
       return (
         <View style={styles.largeTitle}>
           {typeof title === 'string' ? <Text style={styles.largeTitleText}>{title}</Text> : title}
         </View>
       );
     };
+
+    const leftContent = (
+      <Flexbox align={'center'} gap={8} horizontal justify={'center'} style={styles.left}>
+        {left !== undefined ? (
+          left
+        ) : showBack ? (
+          <ActionIcon clickable={false} icon={ChevronLeft} onPress={() => router.back()} />
+        ) : null}
+      </Flexbox>
+    );
+
+    const loadingContent = loading && (
+      <Icon color={theme.colorTextSecondary} icon={Loader2Icon} size={16} spin />
+    );
+
+    const extraContent = (
+      <Flexbox align={'center'} gap={8} horizontal justify={'center'} style={styles.extra}>
+        {extra}
+        {largeTitleEnabled && loadingContent}
+      </Flexbox>
+    );
+
+    const titleContent = (
+      <Flexbox align={'center'} gap={8} horizontal justify={'center'} style={styles.title}>
+        {largeTitleEnabled ? (
+          renderHeaderTitle(headerTitleOpacity)
+        ) : typeof title === 'string' ? (
+          <Text align={'center'} ellipsis style={styles.titleText} weight={500}>
+            {title}
+          </Text>
+        ) : (
+          title
+        )}
+
+        {!largeTitleEnabled && loadingContent}
+      </Flexbox>
+    );
+
+    const headerContent = (
+      <Flexbox
+        align={'center'}
+        height={HEADER_HEIGHT}
+        horizontal
+        justify={'space-between'}
+        style={[
+          {
+            paddingLeft: showBack ? 8 : 16,
+            paddingRight: 16,
+          },
+          styles.header,
+        ]}
+      >
+        {leftContent}
+        {titleContent}
+        {extraContent}
+      </Flexbox>
+    );
 
     if (largeTitleEnabled) {
       return (
@@ -80,19 +140,7 @@ const PageContainer = memo<PageContainerProps>(
           style={[styles.container, style]}
           testID="page-container"
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={styles.left}>
-              {left !== undefined ? (
-                left
-              ) : showBack ? (
-                <ActionIcon clickable={false} icon={ChevronLeft} onPress={() => router.back()} />
-              ) : null}
-            </View>
-            <View style={styles.title}>{renderHeaderTitle(headerTitleOpacity)}</View>
-            <View style={styles.extra}>{extra}</View>
-          </View>
-
+          {headerContent}
           <ScrollComponent
             contentContainerStyle={styles.scrollContent}
             contentInsetAdjustmentBehavior="never"
@@ -114,25 +162,7 @@ const PageContainer = memo<PageContainerProps>(
         style={[styles.container, style]}
         testID="page-container"
       >
-        <View style={styles.header}>
-          <View style={styles.left}>
-            {left !== undefined ? (
-              left
-            ) : showBack ? (
-              <ActionIcon clickable={false} icon={ChevronLeft} onPress={() => router.back()} />
-            ) : null}
-          </View>
-          <View style={styles.title}>
-            {typeof title === 'string' ? (
-              <Text ellipsizeMode="tail" numberOfLines={1} style={styles.titleText}>
-                {title}
-              </Text>
-            ) : (
-              title
-            )}
-          </View>
-          <View style={styles.extra}>{extra}</View>
-        </View>
+        {headerContent}
         {children}
       </SafeAreaView>
     );
