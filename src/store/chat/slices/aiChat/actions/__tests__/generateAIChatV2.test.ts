@@ -462,17 +462,10 @@ describe('generateAIChatV2 actions', () => {
       const { result } = renderHook(() => useChatStore());
       const mockSwitchTopic = vi.fn();
 
-      (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
-        ...DEFAULT_AGENT_CHAT_CONFIG,
-        enableAutoCreateTopic: true,
-        autoCreateTopicThreshold: 1,
-      });
-
       await act(async () => {
         useChatStore.setState({
           activeId: TEST_IDS.SESSION_ID,
           activeTopicId: undefined,
-          messagesMap: {},
           switchTopic: mockSwitchTopic,
         });
         await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
