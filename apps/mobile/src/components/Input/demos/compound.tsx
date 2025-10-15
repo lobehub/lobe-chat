@@ -1,45 +1,23 @@
-import { Input, Text, createStyles } from '@lobehub/ui-rn';
-import { View } from 'react-native';
-
-const useStyles = createStyles(({ token }) => ({
-  container: {
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-  description: {
-    color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
-    marginBottom: token.marginSM,
-  },
-  sectionTitle: {
-    color: token.colorText,
-    fontSize: token.fontSizeLG,
-    fontWeight: '600',
-    marginBottom: token.marginXS,
-    marginTop: token.marginMD,
-  },
-}));
+import { Flexbox, Input, Text } from '@lobehub/ui-rn';
 
 const CompoundDemo = () => {
-  const { styles } = useStyles();
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.sectionTitle}>搜索输入框</Text>
-      <Text style={styles.description}>内置搜索图标，returnKeyType为search</Text>
+    <Flexbox gap={16}>
+      <Text>搜索输入框</Text>
+      <Text>内置搜索图标，returnKeyType为search</Text>
       <Input.Search placeholder="搜索内容..." />
       <Input.Search placeholder="搜索用户" />
 
-      <Text style={styles.sectionTitle}>密码输入框</Text>
-      <Text style={styles.description}>支持密码显示/隐藏切换</Text>
+      <Text>密码输入框</Text>
+      <Text>支持密码显示/隐藏切换</Text>
       <Input.Password placeholder="请输入密码" />
       <Input.Password placeholder="确认密码" />
 
-      <Text style={styles.sectionTitle}>组合使用</Text>
-      <Text style={styles.description}>常见的登录表单示例</Text>
+      <Text>组合使用</Text>
+      <Text>常见的登录表单示例</Text>
       <Input.Search placeholder="搜索用户名..." />
       <Input.Password placeholder="输入密码" />
-    </View>
+    </Flexbox>
   );
 };
 

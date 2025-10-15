@@ -1,18 +1,8 @@
-import { Input, createStyles } from '@lobehub/ui-rn';
-import { View } from 'react-native';
-
-const useStyles = createStyles(({ token }) => ({
-  container: {
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-}));
+import { Flexbox, Input } from '@lobehub/ui-rn';
 
 const SizesDemo = () => {
-  const { styles } = useStyles();
-
   return (
-    <View style={styles.container}>
+    <Flexbox gap={16}>
       <Input placeholder="Small" size="small" />
       <Input placeholder="Middle (默认)" size="middle" />
       <Input placeholder="Large" size="large" />
@@ -24,7 +14,7 @@ const SizesDemo = () => {
       <Input.Password placeholder="Small Password" size="small" />
       <Input.Password placeholder="Middle Password" size="middle" />
       <Input.Password placeholder="Large Password" size="large" />
-    </View>
+    </Flexbox>
   );
 };
 
