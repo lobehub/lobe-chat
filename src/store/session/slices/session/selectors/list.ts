@@ -1,7 +1,13 @@
 import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
 import { sessionHelpers } from '@/store/session/slices/session/helpers';
 import { MetaData } from '@/types/meta';
-import { CustomSessionGroup, LobeGroupSession, LobeSession, LobeSessions } from '@/types/session';
+import {
+  CustomSessionGroup,
+  GroupMemberWithAgent,
+  LobeGroupSession,
+  LobeSession,
+  LobeSessions,
+} from '@/types/session';
 
 import { SessionStore } from '../../../store';
 
@@ -39,17 +45,17 @@ const hasCustomAgents = (s: SessionStore) => defaultSessions(s).length > 0;
 
 const isInboxSession = (s: SessionStore) => s.activeId === INBOX_SESSION_ID;
 
-const isCurrentSessionGroupSession = (s: SessionStore) => {
+const isCurrentSessionGroupSession = (s: SessionStore): boolean => {
   const session = currentSession(s);
-  return session && session.type === 'group';
+  return session?.type === 'group';
 };
 
-const currentGroupAgents = (s: SessionStore) => {
+const currentGroupAgents = (s: SessionStore): GroupMemberWithAgent[] => {
   const session = currentSession(s) as LobeGroupSession;
 
   if (session && session.type !== 'group') return [];
 
-  return session ? session.members : [];
+  return session ? (session.members ?? []) : [];
 };
 
 const isSessionListInit = (s: SessionStore) => s.isSessionsFirstFetchFinished;
