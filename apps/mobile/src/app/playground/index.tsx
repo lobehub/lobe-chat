@@ -10,15 +10,13 @@ import {
 import { useRouter } from 'expo-router';
 import { kebabCase } from 'lodash-es';
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
 
-import { useStyles } from './styles';
 import { ComponentItem } from './type';
 import { getAllCategories, getAllComponents, searchComponentsByName } from './utils';
 
 export default function ComponentPlaygroundIndex() {
   const router = useRouter();
-  const { styles } = useStyles();
+
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
@@ -91,25 +89,20 @@ export default function ComponentPlaygroundIndex() {
 
   return (
     <PageContainer largeTitleEnabled showBack title="Playground">
-      <View style={styles.filterContainer}>
+      <Flexbox gap={16} paddingBlock={16} paddingInline={16}>
         <Input.Search
           onChangeText={setSearchText}
           placeholder="搜索组件..."
-          size="large"
-          style={styles.searchContainer}
           value={searchText}
           variant="filled"
         />
 
-        <View style={styles.filterTabs}>
-          <CapsuleTabs
-            items={tabItems}
-            onSelect={setSelectedCategory}
-            selectedKey={selectedCategory}
-            size="large"
-          />
-        </View>
-      </View>
+        <CapsuleTabs
+          items={tabItems}
+          onSelect={setSelectedCategory}
+          selectedKey={selectedCategory}
+        />
+      </Flexbox>
       <Flexbox gap={32}>
         {Object.entries(groupedComponents).map(([group, components]) =>
           renderGroupSection(group, components),
