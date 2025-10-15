@@ -2,27 +2,24 @@
 
 ## Current Status
 
-**Overall Coverage**: 74.24% (83 test files, 1027 tests) 🎯
+**Overall Coverage**: \~76% (85 test files, 1103 tests) 🎯
 
 **Breakdown:**
 
-- Statements: 74.24%
-- Branches: 84.76%
-- Functions: 48.18%
-- Lines: 74.24%
-- Test Files: 83 passed (83)
-- Tests: 1027 passed (1027 total)
+- Statements: \~76%
+- Branches: \~85%
+- Functions: \~50%
+- Lines: \~76%
+- Test Files: 85 passed (85)
+- Tests: 1103 passed (1103 total)
 
-**Action Files Coverage**: 29/40 tested (72.5%)
+**Action Files Coverage**: 31/40 tested (77.5%)
 
 ## Coverage Status by Priority
 
 ### 🔴 High Priority - Missing Tests (>200 LOC)
 
-| File                                | LOC | Priority     | Notes                      |
-| ----------------------------------- | --- | ------------ | -------------------------- |
-| `tool/slices/mcpStore/action.ts`    | 624 | **Critical** | MCP store (largest file)   |
-| `file/slices/fileManager/action.ts` | 205 | **High**     | File management operations |
+**All high priority files now have tests! ✅**
 
 ### 🟡 Medium Priority - Missing Tests (50-150 LOC)
 
@@ -476,6 +473,35 @@ bunx eslint src/store/[domain]/
 
 ### Recent Achievements ✅
 
+**Session (2025-10-15)**: ✅ High Priority Files Testing Complete 🎉
+
+- **Coverage**: \~76% overall (+76 tests, 2 new test files)
+- **New Test Files**:
+  - `tool/slices/mcpStore/action.test.ts` - 41 tests (1,120 LOC) covering MCP plugin management
+  - `file/slices/fileManager/action.test.ts` - 35 tests (692 LOC) covering file management operations
+- **Actions Tested**:
+  - **mcpStore** (7 main actions): updateMCPInstallProgress, cancelInstallMCPPlugin, cancelMcpConnectionTest, testMcpConnection, uninstallMCPPlugin, loadMoreMCPPlugins, resetMCPPluginList, useFetchMCPPluginList, installMCPPlugin
+  - **fileManager** (15 actions): dispatchDockFileList, embeddingChunks, parseFilesToChunks, pushDockFileList, reEmbeddingChunks, reParseFile, refreshFileList, removeAllFiles, removeFileItem, removeFiles, toggleEmbeddingIds, toggleParsingIds, useFetchFileItem, useFetchFileManage
+- **Features Tested**:
+  - MCP plugin installation flow (normal, resume, with dependencies, with config)
+  - MCP connection testing (HTTP and STDIO)
+  - MCP plugin lifecycle (install, uninstall, list management)
+  - File upload and processing workflows
+  - File chunk embedding and parsing
+  - File list management and refresh
+  - SWR data fetching for both stores
+- **Testing Patterns**:
+  - Proper test layering with direct dependency spying
+  - Per-test mocking without global pollution
+  - Comprehensive error handling and cancellation flows
+  - AbortController management testing
+  - Mock return types matching actual services
+- **Development Method**: Used parallel subagents (2 subagents, one per file)
+- **Type Safety**: All tests pass type-check ✅
+- **Lint**: All tests pass lint ✅
+- **Action Files Coverage**: 31/40 tested (77.5%, +2 files)
+- **Milestone**: 🏆 All high priority files (>200 LOC) now have comprehensive tests!
+
 **Session (2024-10-15)**: ✅ Discover Store Testing Complete
 
 - **Coverage**: 74.24% overall (+26 tests, 2 new test files)
@@ -526,7 +552,8 @@ bunx eslint src/store/[domain]/
 ### Store-Specific Notes
 
 - **chat/aiChat**: Complex streaming logic, requires careful mocking of chatService
-- **tool/mcpStore**: Largest file (624 LOC), needs comprehensive test coverage
+- **tool/mcpStore**: ✅ Comprehensive tests complete (41 tests, 624 LOC)
+- **file/fileManager**: ✅ Comprehensive tests complete (35 tests, 205 LOC)
 - **discover/**\*: Similar patterns, can reuse test templates across slices
 - **aiInfra**: Some tests exist in **tests**/ subdirectories
 - **global**: Has action tests in actions/ subdirectory structure
