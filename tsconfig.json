@@ -38,7 +38,8 @@
     "apps/mobile",
     "tmp",
     "temp",
-    ".temp"
-  , "e2e"],
+    ".temp",
+    "e2e"
+  ],
   "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"]
 }
