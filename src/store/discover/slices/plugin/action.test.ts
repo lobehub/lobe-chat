@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import useSWR from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,17 +29,21 @@ describe('PluginAction', () => {
       vi.spyOn(discoverService, 'getPluginCategories').mockResolvedValue(mockCategories as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
+      // Mock useSWR to call fetcher and return its result
       const useSWRMock = vi.mocked(useSWR);
       useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        fetcher?.();
-        return { data: mockCategories, error: undefined, isValidating: false, mutate: vi.fn() };
+        const data = fetcher?.(); // Call fetcher and get its Promise
+        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
       }) as any);
 
       const params = {} as any;
       const { result } = renderHook(() => useStore.getState().usePluginCategories(params));
 
       expect(discoverService.getPluginCategories).toHaveBeenCalledWith(params);
-      expect(result.current.data).toEqual(mockCategories);
+
+      // Wait for the Promise to resolve
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockCategories);
     });
 
     it('should use correct SWR key with locale and params', () => {
@@ -85,15 +89,17 @@ describe('PluginAction', () => {
 
       const useSWRMock = vi.mocked(useSWR);
       useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        fetcher?.();
-        return { data: mockDetail, error: undefined, isValidating: false, mutate: vi.fn() };
+        const data = fetcher?.();
+        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
       }) as any);
 
       const params = { identifier: 'test-plugin', withManifest: true };
       const { result } = renderHook(() => useStore.getState().usePluginDetail(params));
 
       expect(discoverService.getPluginDetail).toHaveBeenCalledWith(params);
-      expect(result.current.data).toEqual(mockDetail);
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockDetail);
     });
 
     it('should not fetch when identifier is undefined', () => {
@@ -161,14 +167,16 @@ describe('PluginAction', () => {
 
       const useSWRMock = vi.mocked(useSWR);
       useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        fetcher?.();
-        return { data: mockIdentifiers, error: undefined, isValidating: false, mutate: vi.fn() };
+        const data = fetcher?.();
+        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
       }) as any);
 
       const { result } = renderHook(() => useStore.getState().usePluginIdentifiers());
 
       expect(discoverService.getPluginIdentifiers).toHaveBeenCalled();
-      expect(result.current.data).toEqual(mockIdentifiers);
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockIdentifiers);
     });
 
     it('should use correct SWR key', () => {
@@ -210,8 +218,8 @@ describe('PluginAction', () => {
 
       const useSWRMock = vi.mocked(useSWR);
       useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        fetcher?.();
-        return { data: mockList, error: undefined, isValidating: false, mutate: vi.fn() };
+        const data = fetcher?.();
+        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
       }) as any);
 
       const { result } = renderHook(() => useStore.getState().usePluginList());
@@ -220,7 +228,9 @@ describe('PluginAction', () => {
         page: 1,
         pageSize: 21,
       });
-      expect(result.current.data).toEqual(mockList);
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockList);
     });
 
     it('should fetch plugin list with custom parameters', async () => {
@@ -241,15 +251,14 @@ describe('PluginAction', () => {
       const params = { page: 2, pageSize: 10, category: 'development' } as any;
       const { result } = renderHook(() => useStore.getState().usePluginList(params));
 
-      await act(async () => {
-        await result.current.data;
-      });
-
       expect(discoverService.getPluginList).toHaveBeenCalledWith({
         page: 2,
         pageSize: 10,
         category: 'development',
       });
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockList);
     });
 
     it('should convert page and pageSize to numbers', async () => {

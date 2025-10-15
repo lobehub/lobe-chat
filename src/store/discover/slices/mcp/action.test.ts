@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import useSWR from 'swr';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -32,15 +32,17 @@ describe('MCPAction', () => {
 
       const useSWRMock = vi.mocked(useSWR);
       useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        fetcher?.();
-        return { data: mockDetail, error: undefined, isValidating: false, mutate: vi.fn() };
+        const data = fetcher?.();
+        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
       }) as any);
 
       const params = { identifier: 'test-mcp', version: '1.0.0' };
       const { result } = renderHook(() => useStore.getState().useFetchMcpDetail(params));
 
       expect(discoverService.getMcpDetail).toHaveBeenCalledWith(params);
-      expect(result.current.data).toEqual(mockDetail);
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockDetail);
     });
 
     it('should not fetch when identifier is undefined', () => {
@@ -108,8 +110,8 @@ describe('MCPAction', () => {
 
       const useSWRMock = vi.mocked(useSWR);
       useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        fetcher?.();
-        return { data: mockList, error: undefined, isValidating: false, mutate: vi.fn() };
+        const data = fetcher?.();
+        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
       }) as any);
 
       const { result } = renderHook(() => useStore.getState().useFetchMcpList({}));
@@ -118,7 +120,9 @@ describe('MCPAction', () => {
         page: 1,
         pageSize: 21,
       });
-      expect(result.current.data).toEqual(mockList);
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockList);
     });
 
     it('should fetch MCP list with custom parameters', async () => {
@@ -139,15 +143,14 @@ describe('MCPAction', () => {
       const params = { page: 2, pageSize: 10, category: 'data-analysis' } as any;
       const { result } = renderHook(() => useStore.getState().useFetchMcpList(params));
 
-      await act(async () => {
-        await result.current.data;
-      });
-
       expect(discoverService.getMcpList).toHaveBeenCalledWith({
         page: 2,
         pageSize: 10,
         category: 'data-analysis',
       });
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockList);
     });
 
     it('should convert page and pageSize to numbers', async () => {
@@ -198,15 +201,17 @@ describe('MCPAction', () => {
 
       const useSWRMock = vi.mocked(useSWR);
       useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        fetcher?.();
-        return { data: mockCategories, error: undefined, isValidating: false, mutate: vi.fn() };
+        const data = fetcher?.();
+        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
       }) as any);
 
       const params = {} as any;
       const { result } = renderHook(() => useStore.getState().useMcpCategories(params));
 
       expect(discoverService.getMcpCategories).toHaveBeenCalledWith(params);
-      expect(result.current.data).toEqual(mockCategories);
+
+      const resolvedData = await result.current.data;
+      expect(resolvedData).toEqual(mockCategories);
     });
 
     it('should use correct SWR key with locale and params', () => {

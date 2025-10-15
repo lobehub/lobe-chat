@@ -471,28 +471,37 @@ beforeEach(() => {
 });
 
 describe('SWR Hook Actions', () => {
-  it('should fetch data and return correct response', () => {
+  it('should fetch data and return correct response', async () => {
     const mockData = [{ id: '1', name: 'Item 1' }];
 
-    // Mock the service call
+    // Mock the service call - this is the fetcher
     vi.spyOn(discoverService, 'getPluginCategories').mockResolvedValue(mockData as any);
     vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-    // Mock useSWR to synchronously return data
+    // Mock useSWR to call fetcher and return its Promise result
     const useSWRMock = vi.mocked(useSWR);
     useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-      fetcher?.(); // Call fetcher to trigger service spy
-      return { data: mockData, error: undefined, isValidating: false, mutate: vi.fn() };
+      const data = fetcher?.(); // Call fetcher and get its Promise
+      return { data, error: undefined, isValidating: false, mutate: vi.fn() };
     }) as any);
 
     const params = {} as any;
     const { result } = renderHook(() => useStore.getState().usePluginCategories(params));
 
     expect(discoverService.getPluginCategories).toHaveBeenCalledWith(params);
-    expect(result.current.data).toEqual(mockData);
+
+    // Wait for the Promise to resolve
+    const resolvedData = await result.current.data;
+    expect(resolvedData).toEqual(mockData);
   });
 });
 ```
+
+**Key points**:
+- Mock the service method (fetcher) to return resolved data
+- Mock useSWR to **call the fetcher** and return its result (a Promise)
+- The `data` field contains a Promise, not the resolved value
+- Use `await result.current.data` to get the resolved value in assertions
 
 ### Testing SWR Key Generation
 
@@ -552,11 +561,19 @@ it('should not fetch when required parameter is missing', () => {
 ### Key Differences from Regular Action Tests
 
 1. **Mock useSWR globally**: Use `vi.mock('swr')` at the top level
-2. **Synchronous data return**: Return data immediately from mock to avoid async complexity
-3. **No act() wrapper needed**: SWR hooks don't trigger React state updates in these tests
-4. **Test SWR key generation**: Verify keys include locale and parameters
-5. **Test configuration**: Verify revalidation and other SWR options
-6. **Type assertions**: Use `as any` for test mock data where type definitions are strict
+2. **Mock the fetcher, not the result**:
+   - ✅ **Correct**: `const data = fetcher?.()` - call fetcher and return its Promise
+   - ❌ **Wrong**: `return { data: mockData }` - hardcode the result
+3. **Await Promise results**: The `data` field is a Promise, use `await result.current.data`
+4. **No act() wrapper needed**: SWR hooks don't trigger React state updates in these tests
+5. **Test SWR key generation**: Verify keys include locale and parameters
+6. **Test configuration**: Verify revalidation and other SWR options
+7. **Type assertions**: Use `as any` for test mock data where type definitions are strict
+
+**Why this matters**:
+- The fetcher (service method) is what we're testing - it must be called
+- Hardcoding the return value bypasses the actual fetcher logic
+- SWR returns Promises in real usage, tests should mirror this behavior
 
 ## Benefits of This Approach
 
