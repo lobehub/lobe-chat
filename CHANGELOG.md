@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.137.9](https://github.com/lobehub/lobe-chat/compare/v1.137.8...v1.137.9)
+
+<sup>Released on **2025-10-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve update notification.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve update notification, closes [#9717](https://github.com/lobehub/lobe-chat/issues/9717) ([16de38a](https://github.com/lobehub/lobe-chat/commit/16de38a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.137.8](https://github.com/lobehub/lobe-chat/compare/v1.137.7...v1.137.8)
 
 <sup>Released on **2025-10-15**</sup>
