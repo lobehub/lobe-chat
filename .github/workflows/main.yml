@@ -1,0 +1,68 @@
+# 工作流名称
+name: Sync Fork with Upstream
+
+# 触发工作流的事件
+on:
+  # 1. 定时触发：每小时执行一次 (在第0分钟)
+  # 你可以根据需要调整 cron 表达式来改变频率
+  schedule:
+    - cron: '0 * * * *'
+  
+  # 2. 手动触发：允许你在 GitHub Actions 页面手动运行此工作流
+  workflow_dispatch:
+
+# 定义作业
+jobs:
+  sync:
+    # 指定运行环境为最新的 Ubuntu 系统
+    runs-on: ubuntu-latest
+
+    # 作业步骤
+    steps:
+      # 步骤 1: 检出你的仓库 (Waaade-QAQ/lobe-chat-wade)
+      # 使用 actions/checkout@v4 官方动作
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          # 需要一个有写权限的 token 来推送代码
+          # GITHUB_TOKEN 是由 GitHub Actions 自动生成的秘密，无需手动设置
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # 获取所有 git 历史，这对 rebase 至关重要
+          fetch-depth: 0
+
+      # 步骤 2: 配置 Git 用户信息
+      # 这样提交记录会显示是由 action 完成的
+      - name: Set Git config
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      # 步骤 3: 添加上游仓库 (lobehub/lobe-chat) 作为远程源
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/lobehub/lobe-chat.git
+
+      # 步骤 4: 执行同步命令
+      - name: Sync with upstream repository
+        run: |
+          # 从上游仓库 fetch 最新的变更和标签
+          git fetch upstream
+
+          # 获取当前分支的名称 (例如 main)
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          
+          echo "Current branch is $BRANCH. Starting rebase onto upstream/$BRANCH..."
+
+          # 将当前分支 rebase 到上游的同名分支上
+          git rebase upstream/$BRANCH
+
+          # 使用 --force-with-lease 安全地强制推送到你自己的仓库
+          echo "Rebase successful. Pushing to origin..."
+          git push origin $BRANCH --force-with-lease
+
+      # 步骤 5 (可选): 失败时输出错误信息
+      # 如果 rebase 步骤因冲突而失败，此工作流将失败，这是正常行为
+      - name: On failure
+        if: failure()
+        run: |
+          echo "::error::Automatic rebase failed. This is likely due to a merge conflict. Please resolve the conflicts manually."
+          exit 1
