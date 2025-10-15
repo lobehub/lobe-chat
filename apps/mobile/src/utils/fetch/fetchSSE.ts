@@ -116,11 +116,17 @@ const createSmoothMessage = (params: {
   let lastQueueLength = 0; // 记录上一帧的队列长度
 
   const stopAnimation = () => {
+    console.log('[fetchSSE] Stopping text animation, queue size:', outputQueue.length);
     isAnimationActive = false;
     if (animationFrameId !== null) {
       cancelAnimationFrame(animationFrameId);
       animationFrameId = null;
     }
+  };
+
+  const clearQueue = () => {
+    console.log('[fetchSSE] Clearing text queue, size:', outputQueue.length);
+    outputQueue = [];
   };
 
   const startAnimation = (speed = startSpeed) => {
@@ -195,6 +201,7 @@ const createSmoothMessage = (params: {
   };
 
   return {
+    clearQueue,
     isAnimationActive,
     isTokenRemain: () => outputQueue.length > 0,
     pushToQueue,
@@ -222,6 +229,15 @@ const createSmoothToolCalls = (params: {
       cancelAnimationFrame(animationFrameIds[index]!);
       animationFrameIds[index] = null;
     }
+  };
+
+  const clearQueues = () => {
+    console.log('[fetchSSE] Clearing tool calls queues');
+    outputQueues.forEach((_, index) => {
+      if (outputQueues[index]) {
+        outputQueues[index] = [];
+      }
+    });
   };
 
   const startAnimation = (index: number, speed = startSpeed) =>
@@ -295,6 +311,7 @@ const createSmoothToolCalls = (params: {
   };
 
   return {
+    clearQueues,
     isAnimationActives,
     isTokenRemain: () => outputQueues.some((token) => token.length > 0),
     pushToQueue,
@@ -316,6 +333,7 @@ export const standardizeAnimationStyle = (
 export const fetchSSE = async (url: string, options: FetchRequestInit & FetchSSEOptions = {}) => {
   let toolCalls: undefined | MessageToolCall[];
   let triggerOnMessageHandler = false;
+  let isAborted = false; // 添加 abort 标志
 
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
@@ -396,9 +414,17 @@ export const fetchSSE = async (url: string, options: FetchRequestInit & FetchSSE
         (error as Error).message?.includes('Fetch request has been canceled') ||
         (error as Error).message?.includes('Expo.FetchRequestCanceledException')
       ) {
+        console.log('[fetchSSE] Abort detected:', error);
         finishedType = 'abort';
+        isAborted = true; // 设置 abort 标志
         options?.onAbort?.(output);
+        // 停止动画并清空队列
         textController.stopAnimation();
+        textController.clearQueue();
+        thinkingController.stopAnimation();
+        thinkingController.clearQueue();
+        toolCallsController.stopAnimations();
+        toolCallsController.clearQueues();
       } else {
         finishedType = 'error';
 
@@ -419,6 +445,12 @@ export const fetchSSE = async (url: string, options: FetchRequestInit & FetchSSE
       }
     },
     onmessage: (ev) => {
+      // 如果已经 abort，忽略所有后续消息
+      if (isAborted) {
+        console.log('[fetchSSE] Message ignored due to abort');
+        return;
+      }
+
       triggerOnMessageHandler = true;
       let data;
       try {
