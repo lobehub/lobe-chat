@@ -5,6 +5,8 @@ packages:
   - ../../packages/utils
   - ../../packages/model-bank
   - ../../packages/web-crawler
-  - '../../packages/ssrf-safe-fetch'
+  - ../../packages/ssrf-safe-fetch
+
 patchedDependencies:
+  '@expo/fingerprint': patches/@expo__fingerprint.patch
   react-native-shiki-engine: patches/react-native-shiki-engine.patch
