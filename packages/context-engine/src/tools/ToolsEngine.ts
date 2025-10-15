@@ -56,7 +56,7 @@ export class ToolsEngine {
     const { toolIds = [], model, provider, context } = params;
 
     // Merge user-provided tool IDs with default tool IDs
-    const allToolIds = [...toolIds, ...this.defaultToolIds];
+    const allToolIds = [...new Set([...toolIds, ...this.defaultToolIds])];
 
     log(
       'Generating tools for model=%s, provider=%s, pluginIds=%o (includes %d default tools)',
@@ -96,8 +96,8 @@ export class ToolsEngine {
   generateToolsDetailed(params: GenerateToolsParams): ToolsGenerationResult {
     const { toolIds = [], model, provider, context } = params;
 
-    // Merge user-provided tool IDs with default tool IDs
-    const allToolIds = [...toolIds, ...this.defaultToolIds];
+    // Merge user-provided tool IDs with default tool IDs and deduplicate
+    const allToolIds = [...new Set([...toolIds, ...this.defaultToolIds])];
 
     log(
       'Generating detailed tools for model=%s, provider=%s, pluginIds=%o (includes %d default tools)',

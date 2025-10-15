@@ -77,7 +77,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   // we have a special header to debug the api endpoint in development mode
   // IT WON'T GO INTO PRODUCTION ANYMORE
   const isDebugApi = request.headers.get('lobe-auth-dev-backend-api') === '1';
-  if (process.env.NODE_ENV === 'development' && isDebugApi) {
+  if (process.env.NODE_ENV === 'development' && (isDebugApi || process.env.ENABLE_MOCK_DEV_USER)) {
     return { userId: process.env.MOCK_DEV_USER_ID };
   }
 
