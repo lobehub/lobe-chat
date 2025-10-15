@@ -28,8 +28,6 @@ const ViewSwitcher = memo<ViewSwitcherProps>(({ view, onViewChange }) => {
         },
       ]}
       onActionClick={(action) => onViewChange(action.key as ViewMode)}
-      type="group"
-      value={view}
     />
   );
 });
