@@ -4,7 +4,7 @@ export const ICON_SIZE_SMALL = 20;
 
 export const LOGO_SIZE = 80;
 
-export const AVATAR_SIZE = 32;
+export const AVATAR_SIZE = 44;
 export const AVATAR_SIZE_MEDIUM = 48;
 export const AVATAR_SIZE_LARGE = 64;
 

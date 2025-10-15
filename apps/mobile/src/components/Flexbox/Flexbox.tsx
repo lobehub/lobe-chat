@@ -33,6 +33,7 @@ const Flexbox = memo<FlexboxProps>(
       padding: padding,
       paddingBlock: paddingBlock,
       paddingInline: paddingInline,
+      position: 'relative',
       width: width,
     };
 
