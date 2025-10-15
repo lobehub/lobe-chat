@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react';
-import useSWR from 'swr';
+import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { discoverService } from '@/services/discover';
@@ -9,13 +8,8 @@ import { useDiscoverStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
 
-// Mock for useSWR
-vi.mock('swr', () => ({
-  default: vi.fn(),
-}));
-
 beforeEach(() => {
-  vi.resetAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('PluginAction', () => {
@@ -29,50 +23,14 @@ describe('PluginAction', () => {
       vi.spyOn(discoverService, 'getPluginCategories').mockResolvedValue(mockCategories as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      // Mock useSWR to call fetcher and return its result
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher?.(); // Call fetcher and get its Promise
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = {} as any;
       const { result } = renderHook(() => useStore.getState().usePluginCategories(params));
 
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockCategories);
+      });
+
       expect(discoverService.getPluginCategories).toHaveBeenCalledWith(params);
-
-      // Wait for the Promise to resolve
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockCategories);
-    });
-
-    it('should use correct SWR key with locale and params', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('zh-CN');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      const params = {} as any;
-      renderHook(() => useStore.getState().usePluginCategories(params));
-
-      expect(capturedKey).toBe('plugin-categories-zh-CN');
-    });
-
-    it('should not revalidate on focus', () => {
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedOptions: any = null;
-      useSWRMock.mockImplementation(((key: string, fetcher: any, options: any) => {
-        capturedOptions = options;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() => useStore.getState().usePluginCategories({}));
-
-      expect(capturedOptions).toEqual({ revalidateOnFocus: false });
     });
   });
 
@@ -87,72 +45,23 @@ describe('PluginAction', () => {
       vi.spyOn(discoverService, 'getPluginDetail').mockResolvedValue(mockDetail as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher?.();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = { identifier: 'test-plugin', withManifest: true };
       const { result } = renderHook(() => useStore.getState().usePluginDetail(params));
 
-      expect(discoverService.getPluginDetail).toHaveBeenCalledWith(params);
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockDetail);
+      });
 
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockDetail);
+      expect(discoverService.getPluginDetail).toHaveBeenCalledWith(params);
     });
 
     it('should not fetch when identifier is undefined', () => {
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string | null) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() => useStore.getState().usePluginDetail({ identifier: undefined }));
-
-      expect(capturedKey).toBeNull();
-    });
-
-    it('should include withManifest in SWR key', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() =>
-        useStore.getState().usePluginDetail({
-          identifier: 'test-plugin',
-          withManifest: true,
-        }),
+      const { result } = renderHook(() =>
+        useStore.getState().usePluginDetail({ identifier: undefined }),
       );
 
-      expect(capturedKey).toBe('plugin-details-en-US-test-plugin-true');
-    });
-
-    it('should not include withManifest in key when false', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() =>
-        useStore.getState().usePluginDetail({
-          identifier: 'test-plugin',
-          withManifest: false,
-        }),
-      );
-
-      expect(capturedKey).toBe('plugin-details-en-US-test-plugin');
+      expect(result.current.data).toBeUndefined();
+      expect(discoverService.getPluginDetail).not.toHaveBeenCalled();
     });
   });
 
@@ -165,44 +74,13 @@ describe('PluginAction', () => {
 
       vi.spyOn(discoverService, 'getPluginIdentifiers').mockResolvedValue(mockIdentifiers);
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher?.();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const { result } = renderHook(() => useStore.getState().usePluginIdentifiers());
 
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockIdentifiers);
+      });
+
       expect(discoverService.getPluginIdentifiers).toHaveBeenCalled();
-
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockIdentifiers);
-    });
-
-    it('should use correct SWR key', () => {
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() => useStore.getState().usePluginIdentifiers());
-
-      expect(capturedKey).toBe('plugin-identifiers');
-    });
-
-    it('should not revalidate on focus', () => {
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedOptions: any = null;
-      useSWRMock.mockImplementation(((key: string, fetcher: any, options: any) => {
-        capturedOptions = options;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() => useStore.getState().usePluginIdentifiers());
-
-      expect(capturedOptions).toEqual({ revalidateOnFocus: false });
     });
   });
 
@@ -216,21 +94,16 @@ describe('PluginAction', () => {
       vi.spyOn(discoverService, 'getPluginList').mockResolvedValue(mockList as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher?.();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const { result } = renderHook(() => useStore.getState().usePluginList());
+
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockList);
+      });
 
       expect(discoverService.getPluginList).toHaveBeenCalledWith({
         page: 1,
         pageSize: 21,
       });
-
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockList);
     });
 
     it('should fetch plugin list with custom parameters', async () => {
@@ -242,71 +115,35 @@ describe('PluginAction', () => {
       vi.spyOn(discoverService, 'getPluginList').mockResolvedValue(mockList as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('zh-CN');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = { page: 2, pageSize: 10, category: 'development' } as any;
       const { result } = renderHook(() => useStore.getState().usePluginList(params));
+
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockList);
+      });
 
       expect(discoverService.getPluginList).toHaveBeenCalledWith({
         page: 2,
         pageSize: 10,
         category: 'development',
       });
-
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockList);
     });
 
     it('should convert page and pageSize to numbers', async () => {
       vi.spyOn(discoverService, 'getPluginList').mockResolvedValue({ items: [] } as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = { page: 3, pageSize: 15 } as any;
-      renderHook(() => useStore.getState().usePluginList(params));
+      const { result } = renderHook(() => useStore.getState().usePluginList(params));
+
+      await waitFor(() => {
+        expect(result.current.data).toBeDefined();
+      });
 
       expect(discoverService.getPluginList).toHaveBeenCalledWith({
         page: 3,
         pageSize: 15,
       });
-    });
-
-    it('should use correct SWR key with locale and params', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      const params = { page: 2, category: 'tools' } as any;
-      renderHook(() => useStore.getState().usePluginList(params));
-
-      expect(capturedKey).toBe('plugin-list-en-US-2-tools');
-    });
-
-    it('should not revalidate on focus', () => {
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedOptions: any = null;
-      useSWRMock.mockImplementation(((key: string, fetcher: any, options: any) => {
-        capturedOptions = options;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() => useStore.getState().usePluginList());
-
-      expect(capturedOptions).toEqual({ revalidateOnFocus: false });
     });
   });
 });

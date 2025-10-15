@@ -451,8 +451,7 @@ Some Zustand store slices use SWR hooks for data fetching. These require a diffe
 ### Basic SWR Hook Test Structure
 
 ```typescript
-import { renderHook } from '@testing-library/react';
-import useSWR from 'swr';
+import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { discoverService } from '@/services/discover';
@@ -461,47 +460,36 @@ import { useDiscoverStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
 
-// Mock useSWR
-vi.mock('swr', () => ({
-  default: vi.fn(),
-}));
-
 beforeEach(() => {
-  vi.resetAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('SWR Hook Actions', () => {
   it('should fetch data and return correct response', async () => {
     const mockData = [{ id: '1', name: 'Item 1' }];
 
-    // Mock the service call - this is the fetcher
+    // Mock the service call (the fetcher)
     vi.spyOn(discoverService, 'getPluginCategories').mockResolvedValue(mockData as any);
     vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
-
-    // Mock useSWR to call fetcher and return its Promise result
-    const useSWRMock = vi.mocked(useSWR);
-    useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-      const data = fetcher?.(); // Call fetcher and get its Promise
-      return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-    }) as any);
 
     const params = {} as any;
     const { result } = renderHook(() => useStore.getState().usePluginCategories(params));
 
-    expect(discoverService.getPluginCategories).toHaveBeenCalledWith(params);
+    // Use waitFor to wait for async data loading
+    await waitFor(() => {
+      expect(result.current.data).toEqual(mockData);
+    });
 
-    // Wait for the Promise to resolve
-    const resolvedData = await result.current.data;
-    expect(resolvedData).toEqual(mockData);
+    expect(discoverService.getPluginCategories).toHaveBeenCalledWith(params);
   });
 });
 ```
 
 **Key points**:
-- Mock the service method (fetcher) to return resolved data
-- Mock useSWR to **call the fetcher** and return its result (a Promise)
-- The `data` field contains a Promise, not the resolved value
-- Use `await result.current.data` to get the resolved value in assertions
+- **DO NOT mock useSWR** - let it use the real implementation
+- Only mock the **service methods** (fetchers)
+- Use `waitFor` from `@testing-library/react` to wait for async operations
+- Check `result.current.data` directly after waitFor completes
 
 ### Testing SWR Key Generation
 

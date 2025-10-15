@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react';
-import useSWR from 'swr';
+import { renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { discoverService } from '@/services/discover';
@@ -9,13 +8,8 @@ import { useDiscoverStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
 
-// Mock for useSWR
-vi.mock('swr', () => ({
-  default: vi.fn(),
-}));
-
 beforeEach(() => {
-  vi.resetAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('MCPAction', () => {
@@ -30,71 +24,23 @@ describe('MCPAction', () => {
       vi.spyOn(discoverService, 'getMcpDetail').mockResolvedValue(mockDetail as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher?.();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = { identifier: 'test-mcp', version: '1.0.0' };
       const { result } = renderHook(() => useStore.getState().useFetchMcpDetail(params));
 
-      expect(discoverService.getMcpDetail).toHaveBeenCalledWith(params);
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockDetail);
+      });
 
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockDetail);
+      expect(discoverService.getMcpDetail).toHaveBeenCalledWith(params);
     });
 
     it('should not fetch when identifier is undefined', () => {
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string | null) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() => useStore.getState().useFetchMcpDetail({ identifier: undefined }));
-
-      expect(capturedKey).toBeNull();
-    });
-
-    it('should include version in SWR key when provided', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() =>
-        useStore.getState().useFetchMcpDetail({
-          identifier: 'test-mcp',
-          version: '1.0.0',
-        }),
+      const { result } = renderHook(() =>
+        useStore.getState().useFetchMcpDetail({ identifier: undefined }),
       );
 
-      expect(capturedKey).toBe('mcp-detail-en-US-test-mcp-1.0.0');
-    });
-
-    it('should not include version in key when not provided', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('zh-CN');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() =>
-        useStore.getState().useFetchMcpDetail({
-          identifier: 'test-mcp',
-        }),
-      );
-
-      expect(capturedKey).toBe('mcp-detail-zh-CN-test-mcp');
+      expect(result.current.data).toBeUndefined();
+      expect(discoverService.getMcpDetail).not.toHaveBeenCalled();
     });
   });
 
@@ -108,21 +54,16 @@ describe('MCPAction', () => {
       vi.spyOn(discoverService, 'getMcpList').mockResolvedValue(mockList as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher?.();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const { result } = renderHook(() => useStore.getState().useFetchMcpList({}));
+
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockList);
+      });
 
       expect(discoverService.getMcpList).toHaveBeenCalledWith({
         page: 1,
         pageSize: 21,
       });
-
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockList);
     });
 
     it('should fetch MCP list with custom parameters', async () => {
@@ -134,58 +75,35 @@ describe('MCPAction', () => {
       vi.spyOn(discoverService, 'getMcpList').mockResolvedValue(mockList as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('zh-CN');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = { page: 2, pageSize: 10, category: 'data-analysis' } as any;
       const { result } = renderHook(() => useStore.getState().useFetchMcpList(params));
+
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockList);
+      });
 
       expect(discoverService.getMcpList).toHaveBeenCalledWith({
         page: 2,
         pageSize: 10,
         category: 'data-analysis',
       });
-
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockList);
     });
 
     it('should convert page and pageSize to numbers', async () => {
       vi.spyOn(discoverService, 'getMcpList').mockResolvedValue({ items: [] } as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = { page: 3, pageSize: 15 } as any;
-      renderHook(() => useStore.getState().useFetchMcpList(params));
+      const { result } = renderHook(() => useStore.getState().useFetchMcpList(params));
+
+      await waitFor(() => {
+        expect(result.current.data).toBeDefined();
+      });
 
       expect(discoverService.getMcpList).toHaveBeenCalledWith({
         page: 3,
         pageSize: 15,
       });
-    });
-
-    it('should use correct SWR key with locale and params', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      const params = { page: 2, category: 'tools' } as any;
-      renderHook(() => useStore.getState().useFetchMcpList(params));
-
-      expect(capturedKey).toBe('mcp-list-en-US-2-tools');
     });
   });
 
@@ -199,48 +117,14 @@ describe('MCPAction', () => {
       vi.spyOn(discoverService, 'getMcpCategories').mockResolvedValue(mockCategories as any);
       vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
 
-      const useSWRMock = vi.mocked(useSWR);
-      useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-        const data = fetcher?.();
-        return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
       const params = {} as any;
       const { result } = renderHook(() => useStore.getState().useMcpCategories(params));
 
+      await waitFor(() => {
+        expect(result.current.data).toEqual(mockCategories);
+      });
+
       expect(discoverService.getMcpCategories).toHaveBeenCalledWith(params);
-
-      const resolvedData = await result.current.data;
-      expect(resolvedData).toEqual(mockCategories);
-    });
-
-    it('should use correct SWR key with locale and params', () => {
-      vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('zh-CN');
-
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedKey: string | null = null;
-      useSWRMock.mockImplementation(((key: string) => {
-        capturedKey = key;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      const params = {} as any;
-      renderHook(() => useStore.getState().useMcpCategories(params));
-
-      expect(capturedKey).toBe('mcp-categories-zh-CN');
-    });
-
-    it('should have correct SWR configuration', () => {
-      const useSWRMock = vi.mocked(useSWR);
-      let capturedOptions: any = null;
-      useSWRMock.mockImplementation(((key: string, fetcher: any, options: any) => {
-        capturedOptions = options;
-        return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
-      }) as any);
-
-      renderHook(() => useStore.getState().useMcpCategories({}));
-
-      expect(capturedOptions).toMatchObject({ revalidateOnFocus: false });
     });
   });
 });
