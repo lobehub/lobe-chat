@@ -8,7 +8,7 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     backgroundColor: isDarkMode
       ? mix(0.5, token.colorFillTertiary, token.colorFillQuaternary)
       : token.colorFillQuaternary,
-    borderRadius: token.borderRadiusLG,
+    borderRadius: token.borderRadiusLG * 1.5,
     padding: 2,
     position: 'relative' as const,
   },
@@ -21,7 +21,7 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
   },
   indicator: {
     backgroundColor: token.colorBgElevated,
-    borderRadius: token.borderRadius,
+    borderRadius: token.borderRadius * 1.5,
     elevation: 1,
     position: 'absolute' as const,
     shadowColor: '#000',

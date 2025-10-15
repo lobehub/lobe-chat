@@ -1,31 +1,28 @@
 import { Platform } from 'react-native';
 
+import { InputSize } from '@/components';
+import { getInputSizeStyles } from '@/components/Input/style';
 import { createStyles } from '@/components/styles';
 
 interface UseStylesProps {
-  variant?: 'filled' | 'borderless' | 'outlined';
+  size?: InputSize;
 }
 
-export const useStyles = createStyles(({ token }, { variant = 'filled' }: UseStylesProps) => {
+export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStylesProps) => {
+  const sizeStyles = getInputSizeStyles(token, size);
   return {
-    container: {
-      backgroundColor: variant === 'filled' ? token.colorFillTertiary : 'transparent',
-      borderColor: variant === 'outlined' ? token.colorBorder : 'transparent',
-      borderRadius: variant === 'borderless' ? 0 : token.borderRadius,
-      borderWidth: variant === 'outlined' ? token.lineWidth : 0,
-      paddingHorizontal: token.paddingSM,
-      paddingVertical: token.paddingXXS,
-    },
+    container: {},
     input: {
       color: token.colorText,
       flex: 1,
       fontFamily: token.fontFamily,
-      fontSize: token.fontSizeLG,
-      minHeight: token.fontHeight,
+      fontSize: sizeStyles.fontSize,
+      minHeight: sizeStyles.controlHeight * 1.25,
+      paddingHorizontal: sizeStyles.paddingHorizontal * 1.25,
+      paddingVertical: sizeStyles.paddingHorizontal * 1.25,
       textAlignVertical: 'top',
       ...(Platform.OS === 'android' && {
         includeFontPadding: false,
-        paddingVertical: 0,
       }),
     },
   };

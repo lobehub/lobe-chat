@@ -7,16 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 
-import { useStyles } from './style';
-
 interface ProviderInfoSectionProps {
   provider: AiProviderDetailItem;
   setLoading: (loading: boolean) => void;
 }
 
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provider }) => {
-  const { styles } = useStyles();
-
   const { t } = useTranslation(['setting']);
 
   // Store hooks
@@ -37,7 +33,7 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
   };
 
   return (
-    <Flexbox>
+    <Flexbox paddingBlock={4}>
       <Cell
         description={
           provider.source === 'builtin'
@@ -51,7 +47,11 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
         title={provider.name}
       />
       <Flexbox paddingInline={16}>
-        {provider.description && <Text style={styles.description}>{provider.description}</Text>}
+        {provider.description && (
+          <Text as={'p'} type={'secondary'}>
+            {provider.description}
+          </Text>
+        )}
       </Flexbox>
       <Divider style={{ marginBlock: 16 }} />
     </Flexbox>

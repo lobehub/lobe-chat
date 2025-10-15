@@ -1,69 +1,9 @@
-import { Button, Input, Text, createStyles } from '@lobehub/ui-rn';
+import { Button, Flexbox, Input, Text, useTheme } from '@lobehub/ui-rn';
 import { CheckCircle, XCircle } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
-import { View } from 'react-native';
-
-const useStyles = createStyles(({ token }) => ({
-  container: {
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-  description: {
-    color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
-    marginBottom: token.marginSM,
-  },
-  loginForm: {
-    backgroundColor: token.colorFillTertiary,
-    borderRadius: token.borderRadius,
-    gap: token.marginSM,
-    padding: token.paddingLG,
-  },
-  sectionTitle: {
-    color: token.colorText,
-    fontSize: token.fontSizeLG,
-    fontWeight: '600',
-    marginBottom: token.marginXS,
-    marginTop: token.marginMD,
-  },
-  strengthIndicator: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: token.marginXS,
-    marginTop: token.marginXS,
-  },
-  strengthMedium: {
-    color: token.colorWarning,
-  },
-  strengthStrong: {
-    color: token.colorSuccess,
-  },
-  strengthText: {
-    fontSize: token.fontSizeSM,
-  },
-  strengthWeak: {
-    color: token.colorError,
-  },
-  validationInvalid: {
-    color: token.colorError,
-  },
-  validationItem: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: token.marginXS,
-    marginTop: token.marginXXS,
-  },
-  validationText: {
-    color: token.colorTextSecondary,
-    fontSize: token.fontSizeSM,
-  },
-  validationValid: {
-    color: token.colorSuccess,
-  },
-}));
 
 const PasswordDemo = () => {
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -87,57 +27,36 @@ const PasswordDemo = () => {
     { rule: '两次密码一致', valid: password && password === confirmPassword },
   ];
 
-  const getStrengthStyle = (level: string) => {
-    switch (level) {
-      case 'weak': {
-        return styles.strengthWeak;
-      }
-      case 'medium': {
-        return styles.strengthMedium;
-      }
-      case 'strong': {
-        return styles.strengthStrong;
-      }
-      default: {
-        return {};
-      }
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.sectionTitle}>基础密码输入</Text>
-      <Text style={styles.description}>支持密码显示/隐藏切换，点击眼睛图标</Text>
+    <Flexbox gap={16}>
+      <Text>基础密码输入</Text>
+      <Text>支持密码显示/隐藏切换，点击眼睛图标</Text>
       <Input.Password placeholder="请输入密码" />
       <Input.Password placeholder="请再次输入密码" />
 
-      <Text style={styles.sectionTitle}>不同场景的密码框</Text>
+      <Text>不同场景的密码框</Text>
       <Input.Password placeholder="当前密码" />
       <Input.Password placeholder="新密码" />
       <Input.Password placeholder="确认新密码" />
 
-      <Text style={styles.sectionTitle}>登录表单示例</Text>
-      <View style={styles.loginForm}>
-        <Input onChangeText={setUsername} placeholder="用户名或邮箱" value={username} />
-        <Input.Password onChangeText={setPassword} placeholder="密码" value={password} />
+      <Text>登录表单示例</Text>
 
-        <Button block type="primary">
-          登录
-        </Button>
-      </View>
+      <Input onChangeText={setUsername} placeholder="用户名或邮箱" value={username} />
+      <Input.Password onChangeText={setPassword} placeholder="密码" value={password} />
+      <Button block type="primary">
+        登录
+      </Button>
 
-      <Text style={styles.sectionTitle}>密码强度检测</Text>
-      <Text style={styles.description}>实时检测密码强度和验证规则</Text>
+      <Text>密码强度检测</Text>
+      <Text>实时检测密码强度和验证规则</Text>
 
       <Input.Password onChangeText={setPassword} placeholder="设置新密码" value={password} />
 
       {password && (
-        <View style={styles.strengthIndicator}>
-          <Text style={styles.strengthText}>密码强度: </Text>
-          <Text style={[styles.strengthText, getStrengthStyle(passwordStrength.level)]}>
-            {passwordStrength.text}
-          </Text>
-        </View>
+        <>
+          <Text>密码强度: </Text>
+          <Text type={'danger'}>{passwordStrength.text}</Text>
+        </>
       )}
 
       <Input.Password
@@ -147,27 +66,20 @@ const PasswordDemo = () => {
       />
 
       {password && (
-        <View>
+        <>
           {validations.map((validation, index) => (
-            <View key={index} style={styles.validationItem}>
+            <Flexbox gap={4} horizontal key={index}>
               {validation.valid ? (
                 <CheckCircle color={theme.colorSuccess} size={16} />
               ) : (
                 <XCircle color={theme.colorError} size={16} />
               )}
-              <Text
-                style={[
-                  styles.validationText,
-                  validation.valid ? styles.validationValid : styles.validationInvalid,
-                ]}
-              >
-                {validation.rule}
-              </Text>
-            </View>
+              <Text>{validation.rule}</Text>
+            </Flexbox>
           ))}
-        </View>
+        </>
       )}
-    </View>
+    </Flexbox>
   );
 };
 
