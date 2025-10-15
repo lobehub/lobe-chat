@@ -1,5 +1,4 @@
-import { View } from 'react-native';
-
+import Flexbox from '../Flexbox';
 import Text from '../Text';
 import { useStyles } from './style';
 import type { ListGroupProps } from './type';
@@ -8,10 +7,10 @@ const ListGroup = ({ children, style, title, ...rest }: ListGroupProps) => {
   const { styles } = useStyles();
 
   return (
-    <View {...rest}>
+    <Flexbox {...rest}>
       {title && (typeof title === 'string' ? <Text style={styles.title}>{title}</Text> : title)}
-      <View style={[styles.container, style]}>{children}</View>
-    </View>
+      <Flexbox style={[styles.container, style]}>{children}</Flexbox>
+    </Flexbox>
   );
 };
 
