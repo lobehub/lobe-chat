@@ -444,6 +444,120 @@ beforeEach(() => {
 });
 ```
 
+## Testing SWR Hooks in Zustand Stores
+
+Some Zustand store slices use SWR hooks for data fetching. These require a different testing approach.
+
+### Basic SWR Hook Test Structure
+
+```typescript
+import { renderHook } from '@testing-library/react';
+import useSWR from 'swr';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { discoverService } from '@/services/discover';
+import { globalHelpers } from '@/store/global/helpers';
+import { useDiscoverStore as useStore } from '../../store';
+
+vi.mock('zustand/traditional');
+
+// Mock useSWR
+vi.mock('swr', () => ({
+  default: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.resetAllMocks();
+});
+
+describe('SWR Hook Actions', () => {
+  it('should fetch data and return correct response', () => {
+    const mockData = [{ id: '1', name: 'Item 1' }];
+
+    // Mock the service call
+    vi.spyOn(discoverService, 'getPluginCategories').mockResolvedValue(mockData as any);
+    vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
+
+    // Mock useSWR to synchronously return data
+    const useSWRMock = vi.mocked(useSWR);
+    useSWRMock.mockImplementation(((key: string, fetcher: any) => {
+      fetcher?.(); // Call fetcher to trigger service spy
+      return { data: mockData, error: undefined, isValidating: false, mutate: vi.fn() };
+    }) as any);
+
+    const params = {} as any;
+    const { result } = renderHook(() => useStore.getState().usePluginCategories(params));
+
+    expect(discoverService.getPluginCategories).toHaveBeenCalledWith(params);
+    expect(result.current.data).toEqual(mockData);
+  });
+});
+```
+
+### Testing SWR Key Generation
+
+```typescript
+it('should generate correct SWR key with locale and params', () => {
+  vi.spyOn(globalHelpers, 'getCurrentLanguage').mockReturnValue('zh-CN');
+
+  const useSWRMock = vi.mocked(useSWR);
+  let capturedKey: string | null = null;
+  useSWRMock.mockImplementation(((key: string) => {
+    capturedKey = key;
+    return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
+  }) as any);
+
+  const params = { page: 2, category: 'tools' } as any;
+  renderHook(() => useStore.getState().usePluginList(params));
+
+  expect(capturedKey).toBe('plugin-list-zh-CN-2-tools');
+});
+```
+
+### Testing SWR Configuration
+
+```typescript
+it('should have correct SWR configuration', () => {
+  const useSWRMock = vi.mocked(useSWR);
+  let capturedOptions: any = null;
+  useSWRMock.mockImplementation(((key: string, fetcher: any, options: any) => {
+    capturedOptions = options;
+    return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
+  }) as any);
+
+  renderHook(() => useStore.getState().usePluginIdentifiers());
+
+  expect(capturedOptions).toMatchObject({ revalidateOnFocus: false });
+});
+```
+
+### Testing Conditional Fetching
+
+```typescript
+it('should not fetch when required parameter is missing', () => {
+  const useSWRMock = vi.mocked(useSWR);
+  let capturedKey: string | null = null;
+  useSWRMock.mockImplementation(((key: string | null) => {
+    capturedKey = key;
+    return { data: undefined, error: undefined, isValidating: false, mutate: vi.fn() };
+  }) as any);
+
+  // When identifier is undefined, SWR key should be null
+  renderHook(() => useStore.getState().usePluginDetail({ identifier: undefined }));
+
+  expect(capturedKey).toBeNull();
+});
+```
+
+### Key Differences from Regular Action Tests
+
+1. **Mock useSWR globally**: Use `vi.mock('swr')` at the top level
+2. **Synchronous data return**: Return data immediately from mock to avoid async complexity
+3. **No act() wrapper needed**: SWR hooks don't trigger React state updates in these tests
+4. **Test SWR key generation**: Verify keys include locale and parameters
+5. **Test configuration**: Verify revalidation and other SWR options
+6. **Type assertions**: Use `as any` for test mock data where type definitions are strict
+
 ## Benefits of This Approach
 
 ✅ **Clear test layers** - Each test only spies on direct dependencies
@@ -455,4 +569,6 @@ beforeEach(() => {
 ## Reference
 
 See example implementation in:
-- `src/store/chat/slices/aiChat/actions/__tests__/generateAIChat.test.ts`
+- `src/store/chat/slices/aiChat/actions/__tests__/generateAIChat.test.ts` (Regular actions)
+- `src/store/discover/slices/plugin/action.test.ts` (SWR hooks)
+- `src/store/discover/slices/mcp/action.test.ts` (SWR hooks)

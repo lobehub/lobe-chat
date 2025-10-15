@@ -52,6 +52,39 @@ Key principles:
 - **Per-Test Mocking**: Spy on-demand in each test, avoid global mocks
 - **Act Wrapping**: Always wrap state updates with `act()`
 - **Type Safety**: Ensure mock return types match actual service responses
+- **SWR Hooks**: For SWR-based actions, mock `useSWR` globally and return data synchronously
+
+### 1.1. Using Subagents for Efficient Testing
+
+**When to use subagents**:
+
+- Testing multiple action files in the same store/domain
+- Large refactoring requiring tests for multiple files
+- Parallel development of multiple features
+
+**Subagent workflow**:
+
+1. **One subagent per action file** - Each subagent focuses on testing ONE action file completely
+2. **Independent verification** - Each subagent runs its own type-check, lint, and test verification
+3. **No commits from subagents** - Only the parent agent creates the final commit after all subagents complete
+4. **Parallel execution** - Launch all subagents in a single message using multiple Task tool calls
+5. **Consolidate results** - Parent agent reviews all results, runs final verification, updates docs, and commits
+
+**Example usage**:
+
+Testing 3 files in discover store:
+
+- Launch 3 subagents in parallel (one message with 3 Task calls)
+- Each subagent writes tests for its assigned file
+- Each subagent verifies its tests pass
+- After all complete, run final checks and create one commit
+
+**DO NOT**:
+
+- Have subagents commit changes
+- Have subagents update test-coverage.md
+- Have subagents work on multiple files
+- Create separate commits for each file
 
 ### 2. Testing Checklist
 
@@ -94,6 +127,54 @@ store/domain/slices/feature/
 ## Complete Testing Workflow
 
 **IMPORTANT**: Follow this complete workflow for every testing task. ALL steps are REQUIRED.
+
+### Recommended: Use Subagents for Parallel Testing
+
+For files with multiple action files to test, use the Task tool to create subagents that work in parallel:
+
+**Workflow**:
+
+1. **Identify all action files** that need testing in the target store/slice
+2. **Launch one subagent per action file** using the Task tool
+3. **Each subagent independently**:
+   - Writes tests for ONE action file only
+   - Runs type-check and lint
+   - Verifies tests pass
+   - Reports results back
+   - **DOES NOT commit** (parent agent handles commits)
+4. **After all subagents complete**, review all results
+5. **Run final verification** (type-check, lint, tests)
+6. **Update test-coverage.md** with combined results
+7. **Create single commit** with all new tests
+
+**Example subagent prompt**:
+
+```
+Write comprehensive tests for src/store/discover/slices/plugin/action.ts following @.cursor/rules/testing-guide/zustand-store-action-test.mdc.
+
+Requirements:
+1. Write tests covering all actions in the file
+2. Follow SWR hooks testing pattern (if applicable)
+3. Run type-check and lint to verify
+4. Run tests to ensure they pass
+5. Report back with:
+   - Number of tests written
+   - Test coverage areas
+   - Any issues encountered
+
+DO NOT:
+- Commit changes
+- Update test-coverage.md
+- Work on other action files
+```
+
+**Benefits of subagents**:
+
+- ✅ Parallel execution - multiple action files tested simultaneously
+- ✅ Focused scope - each subagent handles one file completely
+- ✅ Independent verification - each file gets type-check/lint/test verification
+- ✅ Clean commits - single commit after all work is done
+- ✅ Better organization - clear separation of concerns
 
 ### Step 0: Identify Missing Tests
 
@@ -201,7 +282,7 @@ bunx vitest run 'src/store'
 bun run type-check
 ```
 
-### Complete Workflow Example
+### Complete Workflow Example (Single File)
 
 ```bash
 # 1. Development Phase
@@ -229,6 +310,114 @@ bun run type-check
 git add .
 git commit -m "✅ test: add comprehensive tests for mcpStore actions"
 ```
+
+### Complete Workflow Example (Using Subagents)
+
+**Scenario**: Testing all discover store slices (plugin, mcp, assistant, model, provider)
+
+**Step 1: Launch Subagents in Parallel**
+
+Create 5 subagents, one for each action file:
+
+```typescript
+// Launch all subagents in a single message with multiple Task tool calls
+Task({
+  subagent_type: 'general-purpose',
+  description: 'Test plugin action',
+  prompt: `Write comprehensive tests for src/store/discover/slices/plugin/action.ts following @.cursor/rules/testing-guide/zustand-store-action-test.mdc.
+
+Requirements:
+1. Write tests covering all actions (usePluginCategories, usePluginDetail, usePluginList, usePluginIdentifiers)
+2. Follow SWR hooks testing pattern
+3. Run type-check and lint to verify
+4. Run tests to ensure they pass
+5. Report back with number of tests written and coverage areas
+
+DO NOT commit changes or update test-coverage.md.`,
+});
+
+Task({
+  subagent_type: 'general-purpose',
+  description: 'Test mcp action',
+  prompt: `Write comprehensive tests for src/store/discover/slices/mcp/action.ts following @.cursor/rules/testing-guide/zustand-store-action-test.mdc.
+
+Requirements:
+1. Write tests covering all actions (useFetchMcpDetail, useFetchMcpList, useMcpCategories)
+2. Follow SWR hooks testing pattern
+3. Run type-check and lint to verify
+4. Run tests to ensure they pass
+5. Report back with number of tests written and coverage areas
+
+DO NOT commit changes or update test-coverage.md.`,
+});
+
+// ... similar for assistant, model, provider ...
+```
+
+**Step 2: Wait for All Subagents to Complete**
+
+Each subagent will:
+
+- Write tests
+- Run type-check and lint
+- Verify tests pass
+- Report results
+
+**Step 3: Review Results**
+
+After all subagents complete:
+
+- Review each subagent's report
+- Check for any issues or failures
+- Verify all tests are written
+
+**Step 4: Final Verification**
+
+```bash
+# Run type-check on entire project
+bun run type-check
+
+# Run lint on all new test files
+bunx eslint src/store/discover/ --fix
+
+# Run all new tests together
+bunx vitest run 'src/store/discover/**/*.test.ts'
+
+# Run coverage
+bunx vitest run --coverage 'src/store'
+```
+
+**Step 5: Update Documentation**
+
+```bash
+# Update test-coverage.md with:
+# - New overall coverage percentage
+# - Number of new tests
+# - List of newly tested action files
+# - Session summary
+```
+
+**Step 6: Create Single Commit**
+
+```bash
+git add .
+git commit -m "✅ test(store): add comprehensive tests for discover store
+
+- Add tests for plugin, mcp, assistant, model, provider slices
+- Coverage: X% → Y% (+Z tests, 5 new test files)
+- All tests pass type-check and lint
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+**Benefits**:
+
+- All 5 action files tested in parallel (faster)
+- Each file independently verified
+- Single atomic commit with all changes
+- Clean git history
 
 **Remember**: A testing task is only complete when:
 
