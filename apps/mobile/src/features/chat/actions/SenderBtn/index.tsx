@@ -6,14 +6,14 @@ import { useChat } from '@/hooks/useChat';
 import StopLoadingButton from './StopLoadingButton';
 
 const SenderBtn = () => {
-  const { handleSubmit, isLoading, canSend, stopGenerating } = useChat();
+  const { handleSubmit, isLoading, isGenerating, canSend, stopGenerating } = useChat();
 
   return isLoading ? (
     <StopLoadingButton onPress={stopGenerating} size={'small'} />
   ) : (
     <Button
       icon={<ArrowUp />}
-      loading={!canSend}
+      loading={isGenerating || !canSend}
       onPress={handleSubmit}
       shape="circle"
       size={'small'}
