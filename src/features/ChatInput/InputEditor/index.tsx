@@ -5,7 +5,6 @@ import {
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
-  ReactLinkPlugin,
   ReactListPlugin,
   ReactMathPlugin,
   ReactTablePlugin,
@@ -83,7 +82,6 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
         : {
             plugins: [
               ReactListPlugin,
-              ReactLinkPlugin,
               ReactCodePlugin,
               ReactCodeblockPlugin,
               ReactHRPlugin,
