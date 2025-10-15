@@ -7,6 +7,7 @@ export interface PageContainerProps {
   extra?: ReactNode;
   largeTitleEnabled?: boolean;
   left?: ReactNode;
+  loading?: boolean;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   scrollComponent?: ComponentType<any>;
   showBack?: boolean;
