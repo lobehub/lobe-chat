@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { FileListItem } from '@/types/files';
 
-import MasonryFileItem from './MasonryFileItem';
+import MasonryFileItem from '.';
 
 interface MasonryItemWrapperProps {
   context: {
@@ -15,6 +15,11 @@ interface MasonryItemWrapperProps {
 }
 
 const MasonryItemWrapper = memo<MasonryItemWrapperProps>(({ data: item, context }) => {
+  // Safety check: return null if item is undefined (can happen during deletion)
+  if (!item || !item.id) {
+    return null;
+  }
+
   return (
     <div style={{ padding: '8px' }}>
       <MasonryFileItem

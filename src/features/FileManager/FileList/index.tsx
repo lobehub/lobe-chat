@@ -16,7 +16,7 @@ import { FileListItem as FileListItemType, SortType } from '@/types/files';
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
 import FileSkeleton from './FileSkeleton';
-import MasonryItemWrapper from './MasonryItemWrapper';
+import MasonryItemWrapper from './MasonryFileItem/MasonryItemWrapper';
 import ToolBar from './ToolBar';
 import { ViewMode } from './ToolBar/ViewSwitcher';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
@@ -49,7 +49,12 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
 
   const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [viewConfig, setViewConfig] = useState({ showFilesInKnowledgeBase: false });
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewModeQuery, setViewModeQuery] = useQueryState('view', {
+    clearOnDefault: true,
+    defaultValue: 'list',
+  });
+  const viewMode: ViewMode = viewModeQuery === 'masonry' ? 'masonry' : 'list';
+  const setViewMode = (mode: ViewMode) => setViewModeQuery(mode);
   const [columnCount, setColumnCount] = useState(4);
 
   // Update column count based on window size
@@ -100,6 +105,17 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
   });
 
   useCheckTaskStatus(data);
+
+  // Clean up selected files that no longer exist in the data
+  React.useEffect(() => {
+    if (data && selectFileIds.length > 0) {
+      const validFileIds = new Set(data.map((item) => item?.id).filter(Boolean));
+      const filteredSelection = selectFileIds.filter((id) => validFileIds.has(id));
+      if (filteredSelection.length !== selectFileIds.length) {
+        setSelectedFileIds(filteredSelection);
+      }
+    }
+  }, [data]);
 
   return !isLoading && data?.length === 0 ? (
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
