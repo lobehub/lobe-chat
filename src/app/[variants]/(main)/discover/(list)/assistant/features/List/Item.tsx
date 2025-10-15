@@ -11,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
+import { AGENTS_INDEX_GITHUB, AGENTS_OFFICIAL_URL } from '@/const/url';
 import { useQuery } from '@/hooks/useQuery';
 import { AssistantMarketSource, DiscoverAssistantItem } from '@/types/discover';
 
@@ -69,11 +70,16 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     const { styles, theme } = useStyles();
     const router = useRouter();
     const { source } = useQuery() as { source?: AssistantMarketSource };
+    const isLegacy = source === 'legacy';
     const authorString = typeof author === 'string' ? author : undefined;
     const avatarString = typeof avatar === 'string' ? avatar : undefined;
     const avatarSrc = avatarString && avatarString !== authorString ? avatarString : undefined;
     const authorName = authorString && !isUrl(authorString) ? authorString : undefined;
     const authorAvatar = authorString && isUrl(authorString) ? authorString : undefined;
+    const baseGithubLocaleUrl = urlJoin(AGENTS_INDEX_GITHUB, 'tree/main/locales');
+    const marketplaceHref = isLegacy
+      ? urlJoin(baseGithubLocaleUrl, identifier)
+      : urlJoin(AGENTS_OFFICIAL_URL, identifier);
     const link = qs.stringifyUrl(
       {
         query: source ? { source } : {},
@@ -145,18 +151,12 @@ const AssistantItem = memo<DiscoverAssistantItem>(
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
-            <Link
-              href={urlJoin(
-                'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
-                identifier,
+            <Link href={marketplaceHref} onClick={(e) => e.stopPropagation()} target={'_blank'}>
+              {authorAvatar && !isLegacy ? (
+                <Avatar avatar={authorAvatar} size={24} />
+              ) : (
+                <ActionIcon fill={theme.colorTextDescription} icon={Github} />
               )}
-              onClick={(e) => e.stopPropagation()}
-              target={'_blank'}
-            >
-              <ActionIcon
-                fill={theme.colorTextDescription}
-                icon={authorAvatar ? <Avatar avatar={authorAvatar} size={24} /> : Github}
-              />
             </Link>
           </Flexbox>
         </Flexbox>

@@ -19,6 +19,8 @@ type DiscoverPageProps = PageProps<
   { hl?: Locales; source?: AssistantMarketSource; version?: string }
 >;
 
+export const dynamic = 'force-dynamic';
+
 const isUrl = (value?: string | null) => (value ? /^https?:\/\//.test(value) : false);
 
 const getSharedProps = async (props: DiscoverPageProps) => {
