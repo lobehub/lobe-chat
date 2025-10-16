@@ -796,9 +796,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 128_000]': 0.8 * 0.2,
-              '[128_000, 256_000]': 2.4 * 0.2,
-              '[256_000, infinity]': 4.8 * 0.2,
+              '[0, 0.128]': 0.8 * 0.2,
+              '[0.128, 0.256]': 2.4 * 0.2,
+              '[0.256, infinity]': 4.8 * 0.2,
             },
             pricingParams: ['textInputRange'],
           },
@@ -809,9 +809,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 128_000]': 0.8,
-              '[128_000, 256_000]': 2.4,
-              '[256_000, infinity]': 4.8,
+              '[0, 0.128]': 0.8,
+              '[0.128, 0.256]': 2.4,
+              '[0.256, infinity]': 4.8,
             },
             pricingParams: ['textInputRange'],
           },
@@ -822,12 +822,12 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 128_000]_[false]': 2,
-              '[0, 128_000]_[true]': 8,
-              '[128_000, 256_000]_[false]': 20,
-              '[128_000, 256_000]_[true]': 24,
-              '[256_000, infinity]_[false]': 48,
-              '[256_000, infinity]_[true]': 64,
+              '[0, 0.128]_[false]': 2,
+              '[0, 0.128]_[true]': 8,
+              '[0.128, 0.256]_[false]': 20,
+              '[0.128, 0.256]_[true]': 24,
+              '[0.256, infinity]_[false]': 48,
+              '[0.256, infinity]_[true]': 64,
             },
             pricingParams: ['textInputRange', 'thinkingMode'],
           },
@@ -866,9 +866,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 6 * 0.2,
-              '[128_000, infinity]': 15 * 0.2,
-              '[32_000, 128_000]': 10 * 0.2,
+              '[0, 0.032]': 6 * 0.2,
+              '[0.032, 0.128]': 10 * 0.2,
+              '[0.128, infinity]': 15 * 0.2,
             },
             pricingParams: ['textInputRange'],
           },
@@ -879,9 +879,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 6,
-              '[128_000, infinity]': 15,
-              '[32_000, 128_000]': 10,
+              '[0, 0.032]': 6,
+              '[0.032, 0.128]': 10,
+              '[0.128, infinity]': 15,
             },
             pricingParams: ['textInputRange'],
           },
@@ -892,9 +892,9 @@ const qwenChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 24,
-              '[128_000, infinity]': 60,
-              '[32_000, 128_000]': 40,
+              '[0, 0.032]': 24,
+              '[0.032, 0.128]': 40,
+              '[0.128, infinity]': 60,
             },
             pricingParams: ['textInputRange'],
           },

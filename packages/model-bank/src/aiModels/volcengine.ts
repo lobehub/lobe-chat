@@ -205,7 +205,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['gpt5ReasoningEffort', 'thinking'],
+      extendParams: ['gpt5ReasoningEffort'],
     },
     type: 'chat',
   },
@@ -258,7 +258,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['gpt5ReasoningEffort', 'thinking'],
+      extendParams: ['gpt5ReasoningEffort'],
     },
     type: 'chat',
   },
