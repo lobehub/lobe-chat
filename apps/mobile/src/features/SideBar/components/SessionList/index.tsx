@@ -9,6 +9,7 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { useAuth } from '@/store/user';
 
+import AddButton from './features/AddButton';
 import Inbox from './features/Inbox';
 import SessionItem from './features/SessionItem';
 import { SessionListSkeleton } from './features/SkeletonList';
@@ -78,51 +79,55 @@ export default function SideBar() {
           {/* <View style={styles.header}>
           <Text style={styles.headerText}>{t('agentList', { ns: 'chat' })}</Text>
         </View> */}
-          {filteredSessions.map((session) => (
-            <ContextMenu.Root key={session.id}>
-              <ContextMenu.Trigger>
-                <SessionItem id={session.id} key={session.id} />
-              </ContextMenu.Trigger>
-              <ContextMenu.Content>
-                <ContextMenu.Item
-                  destructive
-                  key={session.id}
-                  onSelect={() => {
-                    Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
-                      {
-                        style: 'cancel',
-                        text: t('actions.cancel', { ns: 'common' }),
-                      },
-                      {
-                        onPress: () => {
-                          const { done } = loading.start();
-                          removeSession(session.id).then(() => {
-                            Toast.success(t('status.success', { ns: 'common' }));
-                            InteractionManager.runAfterInteractions(() => {
-                              toggleDrawer();
-                              done();
-                            });
-                          });
+          {filteredSessions.length === 0 ? (
+            <AddButton />
+          ) : (
+            filteredSessions.map((session) => (
+              <ContextMenu.Root key={session.id}>
+                <ContextMenu.Trigger>
+                  <SessionItem id={session.id} key={session.id} />
+                </ContextMenu.Trigger>
+                <ContextMenu.Content>
+                  <ContextMenu.Item
+                    destructive
+                    key={session.id}
+                    onSelect={() => {
+                      Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
+                        {
+                          style: 'cancel',
+                          text: t('actions.cancel', { ns: 'common' }),
                         },
-                        style: 'destructive',
-                        text: t('actions.confirm', { ns: 'common' }),
-                      },
-                    ]);
-                  }}
-                >
-                  <ContextMenu.ItemTitle>
-                    {t('actions.delete', { ns: 'common' })}
-                  </ContextMenu.ItemTitle>
-                  <ContextMenu.ItemIcon
-                    ios={{
-                      name: 'trash',
-                      pointSize: 18,
+                        {
+                          onPress: () => {
+                            const { done } = loading.start();
+                            removeSession(session.id).then(() => {
+                              Toast.success(t('status.success', { ns: 'common' }));
+                              InteractionManager.runAfterInteractions(() => {
+                                toggleDrawer();
+                                done();
+                              });
+                            });
+                          },
+                          style: 'destructive',
+                          text: t('actions.confirm', { ns: 'common' }),
+                        },
+                      ]);
                     }}
-                  />
-                </ContextMenu.Item>
-              </ContextMenu.Content>
-            </ContextMenu.Root>
-          ))}
+                  >
+                    <ContextMenu.ItemTitle>
+                      {t('actions.delete', { ns: 'common' })}
+                    </ContextMenu.ItemTitle>
+                    <ContextMenu.ItemIcon
+                      ios={{
+                        name: 'trash',
+                        pointSize: 18,
+                      }}
+                    />
+                  </ContextMenu.Item>
+                </ContextMenu.Content>
+              </ContextMenu.Root>
+            ))
+          )}
         </Flexbox>
       </ScrollView>
     </Flexbox>
