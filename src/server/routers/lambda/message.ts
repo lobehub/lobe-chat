@@ -63,13 +63,7 @@ export const messageRouter = router({
   createMessage: messageProcedure
     .input(z.object({}).passthrough().partial())
     .mutation(async ({ input, ctx }) => {
-      // Ensure group message does not populate sessionId
-      const normalized = { ...input } as any;
-      if (normalized.groupId) {
-        normalized.sessionId = null;
-      }
-
-      const data = await ctx.messageModel.create(normalized as any);
+      const data = await ctx.messageModel.create(input as any);
 
       return data.id;
     }),

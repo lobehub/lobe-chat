@@ -475,10 +475,13 @@ export class MessageModel {
     id: string = this.genId(),
   ): Promise<MessageItem> => {
     return this.db.transaction(async (trx) => {
+      // Ensure group message does not populate sessionId
+      const normalizedMessage = message.groupId ? { ...message, sessionId: null } : message;
+
       const [item] = (await trx
         .insert(messages)
         .values({
-          ...message,
+          ...normalizedMessage,
           // TODO: remove this when the client is updated
           createdAt: createdAt ? new Date(createdAt) : undefined,
           id,
