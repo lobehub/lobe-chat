@@ -2,7 +2,7 @@ import { Eye, EyeOff, Search } from 'lucide-react-native';
 import { forwardRef, useState } from 'react';
 import { TextInput as RNTextInput, TouchableOpacity, View } from 'react-native';
 
-import { useTheme } from '@/components/styles';
+import { useTheme, useThemeMode } from '@/components/styles';
 
 import Block from '../Block';
 import TextArea from './TextArea';
@@ -16,21 +16,21 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
     underlineColorAndroid,
     prefix,
     suffix,
-    variant = 'outlined',
+    variant,
     size = 'middle',
     textStyle,
     disabled,
     ...rest
   } = props;
   const { styles, theme } = useStyles({ size });
-
+  const { isDarkMode } = useThemeMode();
   return (
     <Block
       align={'center'}
       disabled={disabled}
       horizontal
       style={[styles.container, disabled && { opacity: 0.6 }, style]}
-      variant={disabled ? 'filled' : variant}
+      variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
     >
       {prefix && <View style={styles.prefixContainer}>{prefix}</View>}
       <RNTextInput

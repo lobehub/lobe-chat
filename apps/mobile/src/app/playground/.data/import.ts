@@ -11,6 +11,8 @@ import AlertDemos from '@lobehub/ui-rn/Alert/demos';
 import AvatarDemos from '@lobehub/ui-rn/Avatar/demos';
 // Block
 import BlockDemos from '@lobehub/ui-rn/Block/demos';
+// BottomSheet
+import BottomSheetDemos from '@lobehub/ui-rn/BottomSheet/demos';
 // Button
 import ButtonDemos from '@lobehub/ui-rn/Button/demos';
 // CapsuleTabs
@@ -53,6 +55,8 @@ import MaskShadowDemos from '@lobehub/ui-rn/MaskShadow/demos';
 import ScrollShadowDemos from '@lobehub/ui-rn/ScrollShadow/demos';
 // Segmented
 import SegmentedDemos from '@lobehub/ui-rn/Segmented/demos';
+// Select
+import SelectDemos from '@lobehub/ui-rn/Select/demos';
 // Skeleton
 import SkeletonDemos from '@lobehub/ui-rn/Skeleton/demos';
 // Slider
@@ -79,6 +83,7 @@ export const DEMOS_MAP: Record<string, any> = {
   Alert: AlertDemos,
   Avatar: AvatarDemos,
   Block: BlockDemos,
+  BottomSheet: BottomSheetDemos,
   Button: ButtonDemos,
   CapsuleTabs: CapsuleTabsDemos,
   Card: CardDemos,
@@ -100,6 +105,7 @@ export const DEMOS_MAP: Record<string, any> = {
   MaskShadow: MaskShadowDemos,
   ScrollShadow: ScrollShadowDemos,
   Segmented: SegmentedDemos,
+  Select: SelectDemos,
   Skeleton: SkeletonDemos,
   Slider: SliderDemos,
   Space: SpaceDemos,

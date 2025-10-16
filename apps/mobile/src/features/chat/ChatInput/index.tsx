@@ -20,7 +20,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
   useInitAgentConfig(); // 关键：触发agent配置加载
 
   return (
-    <Flexbox height={'auto'} paddingInline={16} style={style}>
+    <Flexbox height={'auto'} paddingInline={16} style={[{ paddingBottom: 16 }, style]}>
       <Block borderRadius={24} height={'auto'} variant={'outlined'}>
         <TextArea
           numberOfLines={12}

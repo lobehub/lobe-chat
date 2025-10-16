@@ -1,10 +1,11 @@
-import { ActionIcon, PageContainer, Space } from '@lobehub/ui-rn';
+import { LobeHub } from '@lobehub/icons-rn';
+import { ActionIcon, Flexbox, PageContainer } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
-import { CompassIcon, Sparkles } from 'lucide-react-native';
+import { CompassIcon, LucideComponent } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useCallback } from 'react';
-import { Text, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import { DRAWER_WIDTH } from '@/_const/theme';
@@ -17,7 +18,7 @@ import SessionList from './components/SessionList';
 import { useStyles } from './style';
 
 export default function SideBar({ children }: { children: ReactNode }) {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const winDim = useWindowDimensions();
 
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
@@ -48,18 +49,32 @@ export default function SideBar({ children }: { children: ReactNode }) {
       renderDrawerContent={() => (
         <PageContainer
           extra={
-            <Space>
+            <Flexbox align={'center'} gap={4} horizontal>
               {isDev && (
                 <Link asChild href="/playground">
-                  <ActionIcon icon={Sparkles} />
+                  <ActionIcon
+                    icon={LucideComponent}
+                    size={{
+                      blockSize: 32,
+                      borderRadius: 32,
+                      size: 20,
+                    }}
+                  />
                 </Link>
               )}
               <Link asChild href="/discover/assistant">
-                <ActionIcon icon={CompassIcon} />
+                <ActionIcon
+                  icon={CompassIcon}
+                  size={{
+                    blockSize: 32,
+                    borderRadius: 32,
+                    size: 20,
+                  }}
+                />
               </Link>
-            </Space>
+            </Flexbox>
           }
-          left={<Text style={styles.headerTitle}>LobeChat</Text>}
+          left={<LobeHub.Text color={theme.colorText} size={18} />}
           style={styles.drawerBackground}
         >
           <SessionList />
