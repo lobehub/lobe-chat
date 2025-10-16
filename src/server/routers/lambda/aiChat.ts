@@ -77,7 +77,7 @@ export const aiChatRouter = router({
       let messageId: string;
       let topicId = input.topicId!;
 
-      let isCreatNewTopic = false;
+      let isCreateNewTopic = false;
 
       // create topic if there should be a new topic
       if (input.newTopic) {
@@ -88,7 +88,7 @@ export const aiChatRouter = router({
           title: input.newTopic.title,
         });
         topicId = topicItem.id;
-        isCreatNewTopic = true;
+        isCreateNewTopic = true;
         log('new topic created with id: %s', topicId);
       }
 
@@ -125,7 +125,7 @@ export const aiChatRouter = router({
       // retrieve latest messages and topic with
       log('retrieving messages and topics');
       const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
-        includeTopic: isCreatNewTopic,
+        includeTopic: isCreateNewTopic,
         sessionId: input.sessionId,
         topicId,
       });
@@ -134,7 +134,7 @@ export const aiChatRouter = router({
 
       return {
         assistantMessageId: assistantMessageItem.id,
-        isCreatNewTopic,
+        isCreateNewTopic,
         messages,
         topicId,
         topics,
