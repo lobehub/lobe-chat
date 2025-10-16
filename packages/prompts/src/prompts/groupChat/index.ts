@@ -16,48 +16,27 @@ const buildGroupMembersTag = (members: GroupMemberInfo[]): string => {
   return `<group_members>\n${JSON.stringify(members, null, 2)}\n</group_members>`;
 };
 
-const buildChatHistoryAuthorTag = (messages: ChatMessage[], members: GroupMemberInfo[]): string => {
-  if (!messages || messages.length === 0) return '';
-
-  const idToTitle = new Map(members.map((m) => [m.id, m.title]));
-
-  const authorLines = messages
-    .map((message, index) => {
-      let author: string;
-      if (message.role === 'user') {
-        author = idToTitle.get('user') || 'User';
-      } else if (message.agentId) {
-        author = idToTitle.get(message.agentId) || 'Assistant';
-      } else {
-        author = 'Assistant';
-      }
-      return `${index + 1}: ${author}`;
-    })
-    .join('\n');
-
-  return `<chat_history_author>\n${authorLines}\n</chat_history_author>`;
-};
-
 export const buildGroupChatSystemPrompt = ({
   baseSystemRole = '',
   agentId,
   groupMembers,
-  messages,
+  targetId,
+  instruction,
 }: {
   agentId: string;
   baseSystemRole?: string;
   groupMembers: GroupMemberInfo[];
+  instruction?: string;
   messages: ChatMessage[];
+  targetId?: string;
 }): string => {
   const membersTag = buildGroupMembersTag(groupMembers);
-  const historyTag = buildChatHistoryAuthorTag(messages, groupMembers);
 
   const agentTitle = groupMembers.find((m) => m.id === agentId)?.title || 'Agent';
 
   const guidelines = [
-    `Stay in character as ${agentId}`,
+    `Stay in character as ${agentId} (${agentTitle})`,
     'Be concise and natural, behave like a real person',
-    'Engage naturally in the conversation flow',
     "The group supervisor will decide whether to send it privately or publicly, so you just need to say the actuall content, even it's a DM to a specific member. Do not pretend you've sent it.",
     "Be collaborative and build upon others' responses when appropriate",
     'Keep your responses concise and relevant to the ongoing discussion',
@@ -67,14 +46,17 @@ export const buildGroupChatSystemPrompt = ({
     '\n',
   );
 
-  const sections = [
-    baseSystemRole,
-    `You are participating in a group chat in real world as ${agentId} (${agentTitle}).`,
-    guidelinesSection,
-  ];
+  const sections = [baseSystemRole, guidelinesSection];
 
   if (membersTag) sections.push(membersTag);
-  if (historyTag) sections.push(historyTag);
+
+  // Add response instruction at the end
+  const targetText = targetId ? targetId : 'the group publicly';
+  const instructionText = instruction ? `SUPERVISOR INSTRUCTION: ${instruction}` : '';
+  const responseInstruction =
+    `Now it's your turn to respond. ${instructionText} You are sending message to ${targetText}. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.`.trim();
+
+  sections.push(responseInstruction);
 
   return sections.filter(Boolean).join('\n\n').trim();
 };
@@ -150,6 +132,7 @@ ${todoListTag}
 
 RULES:
 
+- Do not forcing user to respond, only ask for information for one time before you get the information you need.
 - Make the group conversation feels like a real conversation.
 
 WHEN ASKING AGENTS TO SPEAK:
@@ -176,28 +159,7 @@ ${
   return prompt.trim();
 };
 
-/**
- * Build the prompt for agents to respond in group chat context
- * This is the most impressive prompt since it's the last message
- */
-export const buildAgentResponsePrompt = ({
-  targetId,
-  instruction,
-}: {
-  instruction?: string;
-  targetId?: string;
-}): string => {
-  const targetText = targetId ? targetId : 'the group publicly';
-  const instructionText = instruction ? `SUPERVISOR INSTRUCTION: ${instruction}` : '';
-
-  return `
-  ${instructionText}
-
-  Now it's your turn to respond. You are sending message to ${targetText}. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else.`.trim();
-};
-
 export const groupChatPrompts = {
-  buildAgentResponsePrompt,
   buildGroupChatSystemPrompt,
   buildSupervisorPrompt,
 };

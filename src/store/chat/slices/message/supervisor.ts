@@ -134,7 +134,7 @@ export class GroupChatSupervisor {
       },
       {
         description:
-          'Wait for user input. Use this when the conversation has naturally concluded or agents are waiting for user input.',
+          'Wait for user input. Use this when the conversation history looks likes fine for now, or agents are waiting for user input.',
         name: 'wait_for_user_input',
         parameters: {
           properties: {

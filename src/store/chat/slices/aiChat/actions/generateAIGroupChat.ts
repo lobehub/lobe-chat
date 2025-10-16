@@ -2,7 +2,6 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import {
   GroupMemberInfo,
-  buildAgentResponsePrompt,
   buildGroupChatSystemPrompt,
   filterMessagesForAgent,
 } from '@lobechat/prompts';
@@ -646,6 +645,8 @@ export const chatAiGroupChat: StateCreator<
           baseSystemRole,
           agentId,
           messages,
+          targetId,
+          instruction,
         });
 
         // Create agent message using real agent config
@@ -674,15 +675,6 @@ export const chatAiGroupChat: StateCreator<
           meta: {},
         };
 
-        const userMessage: ChatMessage = {
-          id: 'group-user',
-          role: 'user',
-          content: buildAgentResponsePrompt({ targetId, instruction }),
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-          meta: {},
-        };
-
         // Add author names to messages for better context
         const messagesWithAuthors = messages.map((msg) => {
           const authorInfo = agentTitleMap.find((member) =>
@@ -705,7 +697,7 @@ export const chatAiGroupChat: StateCreator<
         });
 
         // TODO: Use context engineering
-        const messagesForAPI = [systemMessage, ...messagesWithAuthors, userMessage];
+        const messagesForAPI = [systemMessage, ...messagesWithAuthors];
 
         if (assistantId) {
           const { isFunctionCall } = await internal_fetchAIChatMessage({

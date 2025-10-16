@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatMessage } from '@/types/index';
 
 import { filterMessagesForAgent } from '../chatMessages';
-import { buildAgentResponsePrompt, buildGroupChatSystemPrompt } from './index';
+import { buildGroupChatSystemPrompt } from './index';
 
 describe('buildGroupChatSystemPrompt', () => {
   const baseSystemRole = 'You are an expert collaborator.';
@@ -57,22 +57,42 @@ describe('buildGroupChatSystemPrompt', () => {
 
     expect(result).toMatchSnapshot();
   });
-});
 
-describe('buildAgentResponsePrompt', () => {
-  it('should generate prompt for group message', () => {
-    const result = buildAgentResponsePrompt({});
-    expect(result).toMatchSnapshot();
+  it('should include response instruction for group message', () => {
+    const result = buildGroupChatSystemPrompt({
+      agentId: 'agent-1',
+      baseSystemRole,
+      groupMembers: [{ id: 'agent-1', title: 'Agent One' }],
+      messages,
+    });
+
+    expect(result).toContain("Now it's your turn to respond");
+    expect(result).toContain('the group publicly');
   });
 
-  it('should generate prompt for direct message to agent', () => {
-    const result = buildAgentResponsePrompt({ targetId: 'agent-1' });
-    expect(result).toMatchSnapshot();
+  it('should include response instruction for direct message', () => {
+    const result = buildGroupChatSystemPrompt({
+      agentId: 'agent-1',
+      baseSystemRole,
+      groupMembers: [{ id: 'agent-1', title: 'Agent One' }],
+      messages,
+      targetId: 'user',
+    });
+
+    expect(result).toContain("Now it's your turn to respond");
+    expect(result).toContain('user');
   });
 
-  it('should generate prompt for direct message to user', () => {
-    const result = buildAgentResponsePrompt({ targetId: 'user' });
-    expect(result).toMatchSnapshot();
+  it('should include supervisor instruction when provided', () => {
+    const result = buildGroupChatSystemPrompt({
+      agentId: 'agent-1',
+      baseSystemRole,
+      groupMembers: [{ id: 'agent-1', title: 'Agent One' }],
+      messages,
+      instruction: 'Please be concise',
+    });
+
+    expect(result).toContain('SUPERVISOR INSTRUCTION: Please be concise');
   });
 });
 
