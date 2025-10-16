@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.138.2](https://github.com/lobehub/lobe-chat/compare/v1.138.1...v1.138.2)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve welcome message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve welcome message, closes [#9747](https://github.com/lobehub/lobe-chat/issues/9747) ([c83fe13](https://github.com/lobehub/lobe-chat/commit/c83fe13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.138.1](https://github.com/lobehub/lobe-chat/compare/v1.138.0...v1.138.1)
 
 <sup>Released on **2025-10-16**</sup>
