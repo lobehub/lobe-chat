@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Claude Haiku 4.5 model."]
+    },
+    "date": "2025-10-16",
+    "version": "1.137.10"
+  },
+  {
+    "children": {
       "improvements": ["Improve update notification."]
     },
     "date": "2025-10-15",
