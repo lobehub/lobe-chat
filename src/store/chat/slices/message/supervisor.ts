@@ -29,7 +29,7 @@ export interface SupervisorDecisionResult {
 export type SupervisorToolName =
   | 'create_todo'
   | 'finish_todo'
-  | 'pause_conversation'
+  | 'wait_for_user_input'
   | 'trigger_agent'
   | 'trigger_agent_dm';
 
@@ -133,8 +133,8 @@ export class GroupChatSupervisor {
       },
       {
         description:
-          'Pause the conversation and wait for user input. Use this when the conversation has naturally concluded or when waiting for user response.',
-        name: 'pause_conversation',
+          'Wait for user input. Use this when the conversation has naturally concluded or agents are waiting for user input.',
+        name: 'wait_for_user_input',
         parameters: {
           properties: {
             reason: {
@@ -215,8 +215,7 @@ export class GroupChatSupervisor {
     try {
       const response = await aiChatService.generateJSON(
         {
-          messages: [{ content: 'please generate your decisions', role: 'user' }] as any,
-          systemRole: prompt,
+          messages: [{ content: prompt, role: 'user' }] as any,
           tools,
           ...supervisorConfig,
         },
@@ -374,7 +373,7 @@ export class GroupChatSupervisor {
           }
           break;
         }
-        case 'pause_conversation': {
+        case 'wait_for_user_input': {
           // Pause conversation - no action needed, just don't add any decisions
           console.log('DEBUG: Supervisor paused conversation:', call.parameter);
           break;

@@ -81,7 +81,7 @@ describe('GroupChatSupervisor', () => {
     expect(toolNames).toEqual(
       expect.arrayContaining([
         'trigger_agent',
-        'pause_conversation',
+        'wait_for_user_input',
         'trigger_agent_dm',
         'create_todo',
         'finish_todo',

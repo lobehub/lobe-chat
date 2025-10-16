@@ -90,6 +90,8 @@ export interface SupervisorPromptParams {
 }
 
 const buildTodoListTag = (todoList?: SupervisorTodoItem[]): string => {
+  if (!todoList || todoList.length === 0) return '';
+
   const serialized = JSON.stringify(todoList && todoList.length > 0 ? todoList : [], null, 2);
   return `<todo_list>\n${serialized}\n</todo_list>`;
 };
@@ -130,7 +132,7 @@ export const buildSupervisorPrompt = ({
     : '';
 
   const prompt = `
-You are a conversation supervisor for a group chat with multiple AI agents. Your role is to orchestrate a group of agents to finish complext tasks.
+You are a conversation supervisor for a group chat with multiple AI agents. Your role is to orchestrate a group of agents to make user feel natural and interactive.
 
 <group_role>
 ${systemPrompt || ''}
@@ -148,7 +150,9 @@ ${todoListTag}
 
 RULES:
 
-- Execute tools in the order they should happen. Return [] when no further action is needed or it's waiting for user feedback.
+- Execute tools in the order they should happen.
+- Make the group conversation feels like a real conversation.
+- Do not use tool when it's not necessary.
 
 WHEN ASKING AGENTS TO SPEAK:
 
@@ -161,6 +165,7 @@ ${
   scene === 'productive'
     ? `WHEN GENERATING TODOS:
 
+- Only use Todo for complex tasks.
 - Break down the main objective into logical, sequential tasks.
 - Be concise and to the point. Each todo should no longer than 10 words. Do not create more than 5 todos.
 - Match user's message language.
