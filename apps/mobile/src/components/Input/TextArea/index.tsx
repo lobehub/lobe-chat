@@ -11,6 +11,7 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
     placeholderTextColor,
     underlineColorAndroid,
     variant = 'filled',
+    disabled,
     size,
     textStyle,
     numberOfLines,
@@ -20,10 +21,15 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
   const { styles, theme } = useStyles({ size });
 
   return (
-    <Block style={[styles.container, style]} variant={variant}>
+    <Block
+      disabled={disabled}
+      style={[styles.container, disabled && { opacity: 0.6 }, style]}
+      variant={disabled ? 'filled' : variant}
+    >
       <RNTextInput
         autoCapitalize="none"
         autoCorrect={false}
+        editable={!disabled}
         keyboardType="default"
         multiline
         numberOfLines={numberOfLines}
@@ -31,7 +37,7 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
         scrollEnabled={!!numberOfLines}
         {...rest}
         placeholderTextColor={placeholderTextColor ?? theme.colorTextPlaceholder}
-        style={[styles.input, textStyle]}
+        style={[styles.input, disabled && { opacity: 0.6 }, textStyle]}
         underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
       />
     </Block>

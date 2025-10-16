@@ -96,7 +96,7 @@ const ProviderDetailPage = () => {
         }
 
         case 'configuration': {
-          return <ConfigurationSection provider={item.data} />;
+          return <ConfigurationSection provider={item.data} setLoading={setLoading} />;
         }
 
         case 'models-header': {
@@ -116,7 +116,9 @@ const ProviderDetailPage = () => {
         }
 
         case 'model': {
-          return <ModelCard model={item.data} onToggle={handleToggleModel} />;
+          return (
+            <ModelCard model={item.data} onToggle={handleToggleModel} setLoading={setLoading} />
+          );
         }
 
         case 'empty': {

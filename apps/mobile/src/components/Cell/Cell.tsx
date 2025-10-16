@@ -20,12 +20,27 @@ const Cell = memo<CellProps>(
     loading,
     style,
     iconSize = 18,
+    titleProps,
+    descriptionProps,
     ...rest
   }) => {
     const theme = useTheme();
-    const titleNode = typeof title === 'string' ? <Text fontSize={16}>{title}</Text> : title;
+    const titleNode =
+      typeof title === 'string' ? (
+        <Text fontSize={16} {...titleProps}>
+          {title}
+        </Text>
+      ) : (
+        title
+      );
     const descriptionNode =
-      typeof description === 'string' ? <Text type={'secondary'}>{description}</Text> : description;
+      typeof description === 'string' ? (
+        <Text type={'secondary'} {...descriptionProps}>
+          {description}
+        </Text>
+      ) : (
+        description
+      );
     const rightNode = (
       <Flexbox align={'center'} gap={8} horizontal>
         {typeof extra === 'string' ? <Text type={'secondary'}>{extra}</Text> : extra}
