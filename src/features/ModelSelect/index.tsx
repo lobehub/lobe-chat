@@ -42,7 +42,14 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
   const options = useMemo<SelectProps['options']>(() => {
     const getChatModels = (provider: EnabledProviderWithModels) =>
       provider.children.map((model) => ({
-        label: <ModelItemRender {...model} {...model.abilities} showInfoTag={showAbility} />,
+        label: (
+          <ModelItemRender
+            {...model}
+            {...model.abilities}
+            showInfoTag={showAbility}
+            provider={provider.name}
+          />
+        ),
         provider: provider.id,
         value: `${provider.id}/${model.id}`,
       }));

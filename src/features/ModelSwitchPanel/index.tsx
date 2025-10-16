@@ -63,7 +63,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
     const getModelItems = (provider: EnabledProviderWithModels) => {
       const items = provider.children.map((model) => ({
         key: menuKey(provider.id, model.id),
-        label: <ModelItemRender {...model} {...model.abilities} />,
+        label: <ModelItemRender {...model} {...model.abilities} provider={provider.name} />,
         onClick: async () => {
           await updateAgentConfig({ model: model.id, provider: provider.id });
         },

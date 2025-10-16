@@ -1,6 +1,7 @@
 import { ChatModelCard } from '@lobechat/types';
 import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Avatar, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
+import { Popover } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import {
   Infinity,
@@ -20,6 +21,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { AiProviderSourceType } from '@/types/aiProvider';
 import { formatTokenNumber } from '@/utils/format';
+
+import { ModelHoverCard } from './ModelHoverCard';
 
 export const TAG_CLASSNAME = 'lobe-model-info-tags';
 
@@ -174,39 +177,66 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
 );
 
 interface ModelItemRenderProps extends ChatModelCard {
+  provider?: string;
   showInfoTag?: boolean;
 }
 
-export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
-  const { mobile } = useResponsive();
-  return (
-    <Flexbox
-      align={'center'}
-      gap={32}
-      horizontal
-      justify={'space-between'}
-      style={{
-        minWidth: mobile ? '100%' : undefined,
-        overflow: 'hidden',
-        position: 'relative',
-        width: mobile ? '80vw' : 'auto',
-      }}
-    >
+export const ModelItemRender = memo<ModelItemRenderProps>(
+  ({ showInfoTag = true, provider, ...model }) => {
+    const { mobile } = useResponsive();
+
+    const content = (
       <Flexbox
         align={'center'}
-        gap={8}
+        gap={32}
         horizontal
-        style={{ flexShrink: 1, minWidth: 0, overflow: 'hidden' }}
+        justify={'space-between'}
+        style={{
+          minWidth: mobile ? '100%' : undefined,
+          overflow: 'hidden',
+          position: 'relative',
+          width: mobile ? '80vw' : 'auto',
+        }}
       >
-        <ModelIcon model={model.id} size={20} />
-        <Text style={mobile ? { maxWidth: '60vw', overflowX: 'auto', whiteSpace: 'nowrap' } : {}}>
-          {model.displayName || model.id}
-        </Text>
+        <Flexbox
+          align={'center'}
+          gap={8}
+          horizontal
+          style={{ flexShrink: 1, minWidth: 0, overflow: 'hidden' }}
+        >
+          <ModelIcon model={model.id} size={20} />
+          <Text style={mobile ? { maxWidth: '60vw', overflowX: 'auto', whiteSpace: 'nowrap' } : {}}>
+            {model.displayName || model.id}
+          </Text>
+        </Flexbox>
+        {showInfoTag && <ModelInfoTags {...model} />}
       </Flexbox>
-      {showInfoTag && <ModelInfoTags {...model} />}
-    </Flexbox>
-  );
-});
+    );
+
+    // Only show hover card on desktop and when we have meaningful information to show
+    const shouldShowHoverCard =
+      !mobile &&
+      (model.description ||
+        model.pricing ||
+        typeof model.contextWindowTokens === 'number' ||
+        model.releasedAt);
+
+    if (shouldShowHoverCard) {
+      return (
+        <Popover
+          arrow={false}
+          content={<ModelHoverCard {...model} provider={provider} />}
+          mouseEnterDelay={0.5}
+          placement="right"
+        >
+          {content}
+        </Popover>
+      );
+    }
+
+    return content;
+  },
+);
 
 interface ProviderItemRenderProps {
   logo?: string;
