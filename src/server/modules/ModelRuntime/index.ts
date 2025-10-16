@@ -4,6 +4,7 @@ import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
 import { ClientSecretPayload } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
 import { ModelProvider } from 'model-bank';
+import { ssrfSafeFetch } from 'ssrf-safe-fetch';
 
 import { getLLMConfig } from '@/envs/llm';
 
@@ -176,5 +177,6 @@ export const initModelRuntimeWithUserPayload = (
   return ModelRuntime.initializeWithProvider(runtimeProvider, {
     ...getParamsFromPayload(runtimeProvider, payload),
     ...params,
+    fetch: ssrfSafeFetch as any,
   });
 };
