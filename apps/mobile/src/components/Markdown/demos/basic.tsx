@@ -1,36 +1,9 @@
-import { Markdown, useTheme } from '@lobehub/ui-rn';
-import { StyleSheet, View } from 'react-native';
+import { Markdown } from '@lobehub/ui-rn';
 
 import { content } from './data';
 
 const BasicDemo = () => {
-  const token = useTheme();
-
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: token.colorBgLayout,
-      flex: 1,
-    },
-    content: {
-      backgroundColor: token.colorBgContainer,
-      flex: 1,
-      padding: 16,
-    },
-    title: {
-      color: token.colorText,
-      fontSize: 18,
-      fontWeight: '600',
-      padding: 16,
-    },
-  });
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Markdown>{content}</Markdown>
-      </View>
-    </View>
-  );
+  return <Markdown>{content}</Markdown>;
 };
 
 export default BasicDemo;
