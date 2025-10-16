@@ -46,7 +46,7 @@ export default {
         empty: '暂无历史版本',
         status: {
           archived: '已归档',
-          deprecated: '已废弃',
+          deprecated: '已拒绝',
           unpublished: '审核中',
         },
         table: {

@@ -55,9 +55,9 @@ const StatusPage = memo<StatusPageProps>(({ status }) => {
     );
   }
 
-  // 归档/废弃状态
+  // 归档/拒绝状态
   const isArchived = status === 'archived';
-  const statusText = isArchived ? '归档' : '废弃';
+  const statusText = isArchived ? '归档' : '拒绝';
   const statusIcon = isArchived ? (
     <FolderOpenOutlined style={{ color: '#8c8c8c' }} />
   ) : (
@@ -84,9 +84,9 @@ const StatusPage = memo<StatusPageProps>(({ status }) => {
         icon={statusIcon}
         subTitle={
           <div style={{ color: '#666', lineHeight: 1.6 }}>
-            <p>当前访问的助手已经因为以下可能的原因进行{statusText}了：</p>
+            <p>当前访问的助手已经因为以下可能的原因被{statusText}了：</p>
             <ul style={{ margin: '16px 0', paddingLeft: '20px', textAlign: 'left' }}>
-              <li>开发助手的 owner 主动下架/{statusText === '归档' ? '归档' : '废弃'}该助手</li>
+              <li>开发助手的 owner 主动下架/{statusText === '归档' ? '归档' : '拒绝'}该助手</li>
               <li>助手有安全/政治等问题，被官方下架</li>
             </ul>
             <p>
