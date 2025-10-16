@@ -13,7 +13,7 @@ interface SettingState {
   customServerUrl: string | null;
   developerMode: boolean;
   fontSize: number;
-  neutralColor: NeutralColors;
+  neutralColor?: NeutralColors;
   // 主题自定义配置
   primaryColor: PrimaryColors | 'primary';
   setCustomServerUrl: (url: string | null) => void;
@@ -39,7 +39,7 @@ export const useSettingStore = createWithEqualityFn<SettingState>()(
       fontSize: 14,
 
       // 默认中性色
-      neutralColor: 'mauve',
+      neutralColor: undefined,
 
       // 默认主色
       primaryColor: 'primary',
