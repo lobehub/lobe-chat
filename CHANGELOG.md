@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.137.10](https://github.com/lobehub/lobe-chat/compare/v1.137.9...v1.137.10)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Claude Haiku 4.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Claude Haiku 4.5 model, closes [#9735](https://github.com/lobehub/lobe-chat/issues/9735) ([1cfbc87](https://github.com/lobehub/lobe-chat/commit/1cfbc87))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.137.9](https://github.com/lobehub/lobe-chat/compare/v1.137.8...v1.137.9)
 
 <sup>Released on **2025-10-15**</sup>
