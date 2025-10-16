@@ -1,8 +1,8 @@
-import { PageContainer } from '@lobehub/ui-rn';
+import { Flexbox, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { CodeIcon, ServerIcon, ShieldIcon, TrashIcon, XIcon, ZapIcon } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 
 import { DEFAULT_SERVER_URL } from '@/config/server';
 import SettingGroup from '@/features/SettingGroup';
@@ -11,7 +11,6 @@ import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useSettingStore } from '@/store/setting';
 import { useAuthActions } from '@/store/user';
 
-import { useStyles } from './styles';
 import {
   clearAuthData,
   expireAccessTokenNow,
@@ -21,7 +20,6 @@ import {
 } from './utils';
 
 export default function DeveloperScreen() {
-  const { styles } = useStyles();
   const { t } = useTranslation(['setting', 'common', 'error']);
   const router = useRouter();
   const { logout } = useAuthActions();
@@ -133,7 +131,7 @@ export default function DeveloperScreen() {
 
   return (
     <PageContainer showBack title={t('developer.title', { ns: 'setting' })}>
-      <View style={styles.container}>
+      <Flexbox gap={16}>
         <SettingGroup>
           <SettingItem
             icon={CodeIcon}
@@ -175,6 +173,7 @@ export default function DeveloperScreen() {
                     t('developer.auth.accessToken.expire.success', { ns: 'setting' }),
                   )
                 }
+                showArrow
                 title={t('developer.auth.accessToken.expire.title', { ns: 'setting' })}
               />
               <SettingItem
@@ -186,6 +185,7 @@ export default function DeveloperScreen() {
                     t('developer.auth.refreshToken.expire.success', { ns: 'setting' }),
                   )
                 }
+                showArrow
                 title={t('developer.auth.refreshToken.expire.title', { ns: 'setting' })}
               />
               <SettingItem
@@ -197,6 +197,7 @@ export default function DeveloperScreen() {
                     t('developer.auth.accessToken.invalidate.success', { ns: 'setting' }),
                   )
                 }
+                showArrow
                 title={t('developer.auth.accessToken.invalidate.title', { ns: 'setting' })}
               />
               <SettingItem
@@ -208,6 +209,7 @@ export default function DeveloperScreen() {
                     t('developer.auth.refreshToken.invalidate.success', { ns: 'setting' }),
                   )
                 }
+                showArrow
                 title={t('developer.auth.refreshToken.invalidate.title', { ns: 'setting' })}
               />
               <SettingItem
@@ -219,12 +221,13 @@ export default function DeveloperScreen() {
                     t('developer.auth.clearAuthData.success', { ns: 'setting' }),
                   )
                 }
+                showArrow
                 title={t('developer.auth.clearAuthData.title', { ns: 'setting' })}
               />
             </SettingGroup>
           </>
         )}
-      </View>
+      </Flexbox>
     </PageContainer>
   );
 }
