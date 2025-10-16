@@ -1,18 +1,12 @@
+import { BottomSheetBackdrop, BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet';
+import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { ChatMessageError, TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons-rn';
 import { CheckCircle, ChevronDown, X, XCircle } from 'lucide-react-native';
-import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import { ReactNode, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  FlatList,
-  ListRenderItem,
-  Modal,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/components';
 import { useTheme } from '@/components/styles';
@@ -36,49 +30,49 @@ interface CheckerProps {
   provider: string;
 }
 
-// Model item height constant for FlatList optimization
-const MODEL_ITEM_HEIGHT = 56;
+// Model list item height for FlashList optimization
+const MODEL_ITEM_HEIGHT = 64;
 
-// Model option type
 interface ModelOption {
   displayName: string;
   id: string;
   isSelected: boolean;
 }
 
-// Model item component - optimized with React.memo
-const ModelItem = memo<{
+interface ModelItemProps {
   model: ModelOption;
-  onSelect: (_id: string) => void;
-  styles: any;
-  token: any;
-}>(
-  ({ model, onSelect, styles, token }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => onSelect(model.id)}
-        style={[styles.modalItem, model.isSelected && styles.modalItemSelected]}
-      >
-        <View style={styles.modalItemContent}>
-          <ModelIcon model={model.id} size={20} />
-          <Text style={[styles.modalItemText, model.isSelected && styles.modalItemTextSelected]}>
-            {model.displayName}
-          </Text>
-        </View>
-        {model.isSelected && <CheckCircle color={token.colorPrimary} size={16} />}
-      </TouchableOpacity>
-    );
-  },
-  (prevProps, nextProps) => {
-    // Custom comparison for better performance
-    return (
-      prevProps.model.isSelected === nextProps.model.isSelected &&
-      prevProps.model.id === nextProps.model.id
-    );
-  },
+  onSelect: (id: string) => void;
+  styles: ReturnType<typeof useStyles>['styles'];
+  token: ReturnType<typeof useTheme>;
+}
+
+/**
+ * Model list item with selection state
+ */
+const ModelItem = memo<ModelItemProps>(
+  ({ model, onSelect, styles, token }) => (
+    <TouchableOpacity
+      onPress={() => onSelect(model.id)}
+      style={[styles.modalItem, model.isSelected && styles.modalItemSelected]}
+    >
+      <View style={styles.modalItemContent}>
+        <ModelIcon model={model.id} size={20} />
+        <Text style={[styles.modalItemText, model.isSelected && styles.modalItemTextSelected]}>
+          {model.displayName}
+        </Text>
+      </View>
+      {model.isSelected && <CheckCircle color={token.colorPrimary} size={16} />}
+    </TouchableOpacity>
+  ),
+  (prev, next) =>
+    prev.model.isSelected === next.model.isSelected && prev.model.id === next.model.id,
 );
 
-// Error component for detailed error display
+ModelItem.displayName = 'ModelItem';
+
+/**
+ * Error display with expandable details
+ */
 const ErrorDisplay = memo<{ error: ChatMessageError }>(({ error }) => {
   const { styles } = useStyles();
   const token = useTheme();
@@ -117,13 +111,19 @@ const ErrorDisplay = memo<{ error: ChatMessageError }>(({ error }) => {
   );
 });
 
+ErrorDisplay.displayName = 'ErrorDisplay';
+
+/**
+ * Connection checker component with model selection
+ */
 const Checker = memo<CheckerProps>(
   ({ model, provider, checkErrorRender: CheckErrorRender, onBeforeCheck, onAfterCheck }) => {
     const { styles } = useStyles();
     const token = useTheme();
     const { t } = useTranslation(['setting']);
+    const insets = useSafeAreaInsets();
 
-    // Store hooks
+    // Store state
     const isProviderConfigUpdating = useAiInfraStore(
       aiProviderSelectors.isProviderConfigUpdating(provider),
     );
@@ -132,7 +132,16 @@ const Checker = memo<CheckerProps>(
     const currentConfig = useAiInfraStore(aiProviderSelectors.providerConfigById(provider));
     const aiProviderModelList = useAiInfraStore((s) => s.aiProviderModelList);
 
-    // Create model info map for O(1) lookup performance
+    // Local state
+    const [loading, setLoading] = useState(false);
+    const [pass, setPass] = useState(false);
+    const [checkModel, setCheckModel] = useState(model);
+    const [error, setError] = useState<ChatMessageError | undefined>();
+
+    // Bottom sheet ref
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+    // Model info map for O(1) lookup
     const modelInfoMap = useMemo(() => {
       const map = new Map<string, any>();
       aiProviderModelList.forEach((model) => {
@@ -141,32 +150,35 @@ const Checker = memo<CheckerProps>(
       return map;
     }, [aiProviderModelList]);
 
-    // 获取模型信息的辅助函数 - optimized with Map
-    const getModelInfo = useCallback(
-      (modelId: string) => {
-        return modelInfoMap.get(modelId);
-      },
-      [modelInfoMap],
+    // Bottom sheet configuration - multiple snap points for resizing
+    const snapPoints = useMemo(() => ['50%', '90%'], []);
+
+    const renderBackdrop = useCallback(
+      (props: BottomSheetBackdropProps) => (
+        <BottomSheetBackdrop
+          {...props}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          opacity={0.5}
+          pressBehavior="close"
+        />
+      ),
+      [],
     );
 
-    // State
-    const [loading, setLoading] = useState(false);
-    const [pass, setPass] = useState(false);
-    const [checkModel, setCheckModel] = useState(model);
-    const [error, setError] = useState<ChatMessageError | undefined>();
-    const [showModelModal, setShowModelModal] = useState(false);
+    // Model options for the list
+    const modelOptions = useMemo<ModelOption[]>(
+      () =>
+        totalModels.map((modelId) => ({
+          displayName: modelInfoMap.get(modelId)?.displayName || modelId,
+          id: modelId,
+          isSelected: checkModel === modelId,
+        })),
+      [totalModels, checkModel, modelInfoMap],
+    );
 
-    // Pre-compute model options to avoid re-calculation during render
-    const modelOptions = useMemo<ModelOption[]>(() => {
-      return totalModels.map((modelId) => ({
-        displayName: getModelInfo(modelId)?.displayName || modelId,
-        id: modelId,
-        isSelected: checkModel === modelId,
-      }));
-    }, [totalModels, checkModel, getModelInfo]);
-
-    const checkConnection = async () => {
-      // Clear previous check results
+    // Handlers
+    const checkConnection = useCallback(async () => {
       setPass(false);
       setError(undefined);
 
@@ -191,16 +203,9 @@ const Checker = memo<CheckerProps>(
             });
           }
         },
-        onLoadingChange: (loading) => {
-          setLoading(loading);
-        },
+        onLoadingChange: setLoading,
         params: {
-          messages: [
-            {
-              content: 'hello',
-              role: 'user',
-            },
-          ],
+          messages: [{ content: 'hello', role: 'user' }],
           model: checkModel,
           provider,
         },
@@ -210,26 +215,51 @@ const Checker = memo<CheckerProps>(
           traceName: TraceNameMap.ConnectivityChecker,
         },
       });
-    };
+    }, [checkModel, provider, t]);
 
-    const handleCheckPress = async () => {
+    const handleCheckPress = useCallback(async () => {
       await onBeforeCheck();
       try {
         await checkConnection();
       } finally {
         await onAfterCheck();
       }
-    };
+    }, [onBeforeCheck, checkConnection, onAfterCheck]);
 
-    const handleModelChange = async (modelId: string) => {
-      setCheckModel(modelId);
-      setShowModelModal(false);
-      await updateAiProviderConfig(provider, {
-        ...currentConfig,
-        checkModel: modelId,
-      });
-    };
+    const handleModelChange = useCallback(
+      async (modelId: string) => {
+        setCheckModel(modelId);
+        bottomSheetModalRef.current?.dismiss();
+        await updateAiProviderConfig(provider, {
+          ...currentConfig,
+          checkModel: modelId,
+        });
+      },
+      [provider, currentConfig, updateAiProviderConfig],
+    );
 
+    const renderModelItem = useCallback(
+      ({ item }: { item: ModelOption }) => (
+        <ModelItem model={item} onSelect={handleModelChange} styles={styles} token={token} />
+      ),
+      [handleModelChange, styles, token],
+    );
+
+    const renderListHeader = useCallback(
+      () => (
+        <View style={styles.modalHeader}>
+          <Text style={styles.modalTitle}>{t('providerModels.config.checker.selectModel')}</Text>
+          <TouchableOpacity onPress={() => bottomSheetModalRef.current?.dismiss()}>
+            <X color={token.colorTextSecondary} size={20} />
+          </TouchableOpacity>
+        </View>
+      ),
+      [styles.modalHeader, styles.modalTitle, t, token.colorTextSecondary],
+    );
+
+    const renderListFooter = useCallback(() => <View style={{ height: 16 }} />, []);
+
+    // Error rendering
     const defaultError = error ? <ErrorDisplay error={error} /> : null;
     const errorContent = CheckErrorRender ? (
       <CheckErrorRender defaultError={defaultError} error={error} setError={setError} />
@@ -237,46 +267,23 @@ const Checker = memo<CheckerProps>(
       defaultError
     );
 
-    // FlatList renderItem callback
-    const renderModelItem: ListRenderItem<ModelOption> = useCallback(
-      ({ item }) => (
-        <ModelItem model={item} onSelect={handleModelChange} styles={styles} token={token} />
-      ),
-      [handleModelChange, styles, token],
-    );
-
-    // FlatList getItemLayout for better performance
-    const getItemLayout = useCallback(
-      (_data: ArrayLike<ModelOption> | null | undefined, index: number) => ({
-        index,
-        length: MODEL_ITEM_HEIGHT,
-        offset: MODEL_ITEM_HEIGHT * index,
-      }),
-      [],
-    );
+    const isDisabled = isProviderConfigUpdating || loading;
 
     return (
       <View style={styles.checkerContainer}>
-        {/* Model selector and check button */}
         <View style={styles.checkerRow}>
           <TouchableOpacity
-            disabled={isProviderConfigUpdating || loading}
-            onPress={() => setShowModelModal(true)}
-            style={[
-              styles.modelSelector,
-              (isProviderConfigUpdating || loading) && styles.modelSelectorDisabled,
-            ]}
+            disabled={isDisabled}
+            onPress={() => bottomSheetModalRef.current?.present()}
+            style={[styles.modelSelector, isDisabled && styles.modelSelectorDisabled]}
           >
             <View style={styles.modelSelectorContent}>
               <ModelIcon model={checkModel} size={20} />
               <Text
                 numberOfLines={1}
-                style={[
-                  styles.modelSelectorText,
-                  (isProviderConfigUpdating || loading) && styles.modelSelectorTextDisabled,
-                ]}
+                style={[styles.modelSelectorText, isDisabled && styles.modelSelectorTextDisabled]}
               >
-                {getModelInfo(checkModel)?.displayName || checkModel}
+                {modelInfoMap.get(checkModel)?.displayName || checkModel}
               </Text>
             </View>
             <View style={styles.modelSelectorIcon}>
@@ -289,7 +296,7 @@ const Checker = memo<CheckerProps>(
           </TouchableOpacity>
 
           <Button
-            disabled={isProviderConfigUpdating || loading}
+            disabled={isDisabled}
             loading={loading}
             onPress={handleCheckPress}
             size="large"
@@ -299,50 +306,28 @@ const Checker = memo<CheckerProps>(
           </Button>
         </View>
 
-        {/* Model selector modal */}
-        <Modal
-          animationType="slide"
-          onRequestClose={() => setShowModelModal(false)}
-          transparent={true}
-          visible={showModelModal}
+        <BottomSheetModal
+          backdropComponent={renderBackdrop}
+          backgroundStyle={styles.bottomSheetBackground}
+          enableDismissOnClose
+          enableDynamicSizing={false}
+          enablePanDownToClose
+          handleIndicatorStyle={styles.bottomSheetHandle}
+          ref={bottomSheetModalRef}
+          snapPoints={snapPoints}
+          topInset={insets.top}
         >
-          {/* Background overlay - separate clickable area */}
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setShowModelModal(false)}
-            style={styles.modalBackdrop}
+          <BottomSheetFlashList
+            ListFooterComponent={renderListFooter}
+            ListHeaderComponent={renderListHeader}
+            data={modelOptions}
+            estimatedItemSize={MODEL_ITEM_HEIGHT}
+            keyExtractor={(item: ModelOption) => item.id}
+            renderItem={renderModelItem}
+            showsVerticalScrollIndicator
           />
+        </BottomSheetModal>
 
-          {/* Content wrapper - allows touch events to pass through */}
-          <View pointerEvents="box-none" style={styles.modalWrapper}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>
-                  {t('providerModels.config.checker.selectModel')}
-                </Text>
-                <TouchableOpacity onPress={() => setShowModelModal(false)}>
-                  <X color={token.colorTextSecondary} size={20} />
-                </TouchableOpacity>
-              </View>
-
-              <FlatList
-                bounces={true}
-                data={modelOptions}
-                getItemLayout={getItemLayout}
-                initialNumToRender={10}
-                keyExtractor={(item) => item.id}
-                maxToRenderPerBatch={10}
-                removeClippedSubviews={true}
-                renderItem={renderModelItem}
-                showsVerticalScrollIndicator={true}
-                style={styles.modalList}
-                windowSize={10}
-              />
-            </View>
-          </View>
-        </Modal>
-
-        {/* Success status */}
         {pass && (
           <View style={styles.statusContainer}>
             <CheckCircle color={token.colorSuccess} size={16} />
@@ -352,11 +337,12 @@ const Checker = memo<CheckerProps>(
           </View>
         )}
 
-        {/* Error display */}
         {error && errorContent}
       </View>
     );
   },
 );
+
+Checker.displayName = 'Checker';
 
 export default Checker;
