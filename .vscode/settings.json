@@ -4,6 +4,7 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
+  "editor.formatOnSave": true,
   // don't show errors, but fix when save and git pre commit
   "eslint.rules.customizations": [
     { "rule": "import/order", "severity": "off" },
@@ -33,7 +34,7 @@
     // make stylelint work with tsx antd-style css template string
     "typescriptreact"
   ],
-  "vitest.maximumConfigs": 6,
+  "vitest.maximumConfigs": 20,
   "workbench.editor.customLabels.patterns": {
     "**/app/**/[[]*[]]/[[]*[]]/page.tsx": "${dirname(2)}/${dirname(1)}/${dirname} • page component",
     "**/app/**/[[]*[]]/page.tsx": "${dirname(1)}/${dirname} • page component",

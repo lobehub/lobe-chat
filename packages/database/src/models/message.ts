@@ -132,9 +132,6 @@ export class MessageModel {
       .limit(pageSize)
       .offset(offset);
 
-    console.log('input', { current, groupId, sessionId, topicId });
-    console.log('result', result);
-
     const messageIds = result.map((message) => message.id as string);
 
     if (messageIds.length === 0) return [];
