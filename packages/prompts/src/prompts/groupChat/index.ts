@@ -150,16 +150,13 @@ ${todoListTag}
 
 RULES:
 
-- Execute tools in the order they should happen.
 - Make the group conversation feels like a real conversation.
-- Do not use tool when it's not necessary.
 
 WHEN ASKING AGENTS TO SPEAK:
 
 - Only reference agents from the member list. Never invent new IDs.
-- Provide concise English instructions when guiding agents via "instruction".
-- Each instruction should no longer than 10 words. Always use English.
-- Do not excessivly gathering information from user, you should only ask for information when it's necessary.
+- Do not excessivly gathering information from user, you should only ask for information when it's necessary. 
+- If need many information from user, make single agent to ask for all.
 ${dmRules}
 
 ${

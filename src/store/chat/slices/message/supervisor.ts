@@ -123,7 +123,8 @@ export class GroupChatSupervisor {
               type: 'string',
             },
             instruction: {
-              description: 'The instruction or message for the agent.',
+              description:
+                'The instruction or message for the agent. No longer than 10 words. Always use English.',
               type: 'string',
             },
           },
