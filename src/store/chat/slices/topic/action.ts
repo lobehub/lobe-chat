@@ -5,6 +5,7 @@ import { chainSummaryTitle } from '@lobechat/prompts';
 import { TraceNameMap } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
+import { produce } from 'immer';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -16,7 +17,11 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { CreateTopicParams } from '@/services/topic/type';
 import type { ChatStore } from '@/store/chat';
+import type { ChatStoreState } from '@/store/chat/initialState';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { globalHelpers } from '@/store/global/helpers';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
@@ -39,18 +44,27 @@ export interface ChatTopicAction {
   refreshTopic: () => Promise<void>;
   removeAllTopics: () => Promise<void>;
   removeSessionTopics: () => Promise<void>;
+  removeGroupTopics: (groupId: string) => Promise<void>;
   removeTopic: (id: string) => Promise<void>;
   removeUnstarredTopic: () => Promise<void>;
-  saveToTopic: () => Promise<string | undefined>;
-  createTopic: () => Promise<string | undefined>;
+  saveToTopic: (sessionId?: string, groupId?: string) => Promise<string | undefined>;
+  createTopic: (sessionId?: string, groupId?: string) => Promise<string | undefined>;
 
   autoRenameTopicTitle: (id: string) => Promise<void>;
   duplicateTopic: (id: string) => Promise<void>;
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
   switchTopic: (id?: string, skipRefreshMessage?: boolean) => Promise<void>;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
-  useFetchTopics: (enable: boolean, sessionId: string) => SWRResponse<ChatTopic[]>;
-  useSearchTopics: (keywords?: string, sessionId?: string) => SWRResponse<ChatTopic[]>;
+  useFetchTopics: (
+    enable: boolean,
+    sessionId?: string,
+    groupId?: string,
+  ) => SWRResponse<ChatTopic[]>;
+  useSearchTopics: (
+    keywords?: string,
+    sessionId?: string,
+    groupId?: string,
+  ) => SWRResponse<ChatTopic[]>;
 
   internal_updateTopicTitleInSummary: (id: string, title: string) => void;
   internal_updateTopicLoading: (id: string, loading: boolean) => void;
@@ -77,34 +91,38 @@ export const chatTopic: StateCreator<
     }
   },
 
-  createTopic: async () => {
-    const { activeId, internal_createTopic } = get();
+  createTopic: async (sessionId, groupId) => {
+    const { activeId, activeSessionType, internal_createTopic } = get();
 
     const messages = chatSelectors.activeBaseChats(get());
 
     set({ creatingTopic: true }, false, n('creatingTopic/start'));
     const topicId = await internal_createTopic({
-      sessionId: activeId,
       title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
+      ...(activeSessionType === 'group'
+        ? { groupId: groupId || activeId }
+        : { sessionId: sessionId || activeId }),
     });
     set({ creatingTopic: false }, false, n('creatingTopic/end'));
 
     return topicId;
   },
 
-  saveToTopic: async () => {
+  saveToTopic: async (sessionId, groupId) => {
     // if there is no message, stop
     const messages = chatSelectors.activeBaseChats(get());
     if (messages.length === 0) return;
 
-    const { activeId, summaryTopicTitle, internal_createTopic } = get();
+    const { activeId, activeSessionType, summaryTopicTitle, internal_createTopic } = get();
 
     // 1. create topic and bind these messages
     const topicId = await internal_createTopic({
-      sessionId: activeId,
       title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
+      ...(activeSessionType === 'group'
+        ? { groupId: groupId || activeId }
+        : { sessionId: sessionId || activeId }),
     });
 
     get().internal_updateTopicLoading(topicId, true);
@@ -112,8 +130,33 @@ export const chatTopic: StateCreator<
     // we don't need to wait for summary, just let it run async
     summaryTopicTitle(topicId, messages);
 
+    // Clear supervisor todos for temporary topic in current container after saving
+    try {
+      const { activeId, activeSessionType } = get();
+      let isGroupSession = activeSessionType === 'group';
+      if (activeSessionType === undefined) {
+        const sessionStore = useSessionStore.getState();
+        isGroupSession = sessionSelectors.isCurrentSessionGroupSession(sessionStore);
+      }
+
+      if (isGroupSession) {
+        set(
+          produce((state: ChatStoreState) => {
+            state.supervisorTodos[messageMapKey(groupId || activeId, null)] = [];
+          }),
+          false,
+          n('resetSupervisorTodosOnSaveToTopic', { groupId: groupId || activeId }),
+        );
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Failed to reset supervisor todos on save to topic:', error);
+      }
+    }
+
     return topicId;
   },
+
   duplicateTopic: async (id) => {
     const { refreshTopic, switchTopic } = get();
 
@@ -191,13 +234,16 @@ export const chatTopic: StateCreator<
   },
 
   // query
-  useFetchTopics: (enable, sessionId) =>
+  useFetchTopics: (enable, containerId) =>
     useClientDataSWR<ChatTopic[]>(
-      enable ? [SWR_USE_FETCH_TOPIC, sessionId] : null,
-      async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
+      enable ? [SWR_USE_FETCH_TOPIC, containerId] : null,
+      async ([, containerId]: [string, string | undefined]) =>
+        topicService.getTopics({ containerId }),
       {
         onSuccess: (topics) => {
-          const nextMap = { ...get().topicMaps, [sessionId]: topics };
+          if (!containerId) return;
+
+          const nextMap = { ...get().topicMaps, [containerId]: topics };
 
           // no need to update map if the topics have been init and the map is the same
           if (get().topicsInit && isEqual(nextMap, get().topicMaps)) return;
@@ -205,16 +251,20 @@ export const chatTopic: StateCreator<
           set(
             { topicMaps: nextMap, topicsInit: true },
             false,
-            n('useFetchTopics(success)', { sessionId }),
+            n('useFetchTopics(success)', { containerId }),
           );
         },
       },
     ),
-  useSearchTopics: (keywords, sessionId) =>
+  useSearchTopics: (keywords, sessionId, groupId) =>
     useSWR<ChatTopic[]>(
-      [SWR_USE_SEARCH_TOPIC, keywords, sessionId],
-      ([, keywords, sessionId]: [string, string, string]) =>
-        topicService.searchTopics(keywords, sessionId),
+      [SWR_USE_SEARCH_TOPIC, keywords, sessionId, groupId],
+      ([, keywords, sessionId, groupId]: [
+        string,
+        string,
+        string | undefined,
+        string | undefined,
+      ]) => topicService.searchTopics(keywords, sessionId, groupId),
       {
         onSuccess: (data) => {
           set(
@@ -225,12 +275,40 @@ export const chatTopic: StateCreator<
         },
       },
     ),
+
   switchTopic: async (id, skipRefreshMessage) => {
     set(
       { activeTopicId: !id ? (null as any) : id, activeThreadId: undefined },
       false,
       n('toggleTopic'),
     );
+
+    // Reset supervisor todos when switching topics in group chats
+    try {
+      const { activeId, activeSessionType, internal_cancelSupervisorDecision } = get();
+      // Determine group session robustly (cached flag or from session store)
+      let isGroupSession = activeSessionType === 'group';
+      if (activeSessionType === undefined) {
+        const sessionStore = useSessionStore.getState();
+        isGroupSession = sessionSelectors.isCurrentSessionGroupSession(sessionStore);
+      }
+
+      if (isGroupSession) {
+        const newKey = messageMapKey(activeId, id ?? null);
+        set(
+          produce((state: ChatStoreState) => {
+            state.supervisorTodos[newKey] = [];
+          }),
+          false,
+          n('resetSupervisorTodosOnTopicSwitch', { groupId: activeId, topicId: id ?? null }),
+        );
+
+        // Also cancel any pending supervisor decisions tied to this group
+        internal_cancelSupervisorDecision?.(activeId);
+      }
+    } catch {
+      // no-op: resetting todos should not block topic switching
+    }
 
     if (skipRefreshMessage) return;
     await get().refreshMessages();
@@ -240,6 +318,23 @@ export const chatTopic: StateCreator<
     const { switchTopic, activeId, refreshTopic } = get();
 
     await topicService.removeTopics(activeId);
+    await refreshTopic();
+
+    // switch to default topic
+    switchTopic();
+  },
+
+  removeGroupTopics: async (groupId: string) => {
+    const { switchTopic, refreshTopic } = get();
+
+    // Get topics for this specific group from the topic map
+    const groupTopics = get().topicMaps[groupId] || [];
+    const topicIds = groupTopics.map((t) => t.id);
+
+    if (topicIds.length > 0) {
+      await topicService.batchRemoveTopics(topicIds);
+    }
+
     await refreshTopic();
 
     // switch to default topic

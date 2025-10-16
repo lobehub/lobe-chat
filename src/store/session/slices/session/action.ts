@@ -8,8 +8,11 @@ import { StateCreator } from 'zustand/vanilla';
 import { message } from '@/components/AntdStaticMethods';
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import { useClientDataSWR } from '@/libs/swr';
+import { chatGroupService } from '@/services/chatGroup';
 import { sessionService } from '@/services/session';
+import { getChatGroupStoreState } from '@/store/chatGroup';
 import { SessionStore } from '@/store/session';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors';
@@ -25,7 +28,6 @@ import {
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { sessionGroupSelectors } from '../sessionGroup/selectors';
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
 import { sessionMetaSelectors } from './selectors/meta';
@@ -54,6 +56,7 @@ export interface SessionAction {
     session?: PartialDeep<LobeAgentSession>,
     isSwitchSession?: boolean,
   ) => Promise<string>;
+
   duplicateSession: (id: string) => Promise<void>;
   triggerSessionUpdate: (id: string) => Promise<void>;
   updateSessionGroupId: (sessionId: string, groupId: string) => Promise<void>;
@@ -122,18 +125,11 @@ export const createSessionSlice: StateCreator<
       const userStore = getUserStoreState();
       const userId = userProfileSelectors.userId(userStore);
 
-      // Get group information
-      const groupId = newSession.group || 'default';
-      const group = sessionGroupSelectors.getGroupById(groupId)(get());
-      const groupName = group?.name || (groupId === 'default' ? 'Default' : 'Unknown');
-
       analytics.track({
         name: 'new_agent_created',
         properties: {
           assistant_name: newSession.meta?.title || 'Untitled Agent',
           assistant_tags: newSession.meta?.tags || [],
-          group_id: groupId,
-          group_name: groupName,
           session_id: id,
           user_id: userId || 'anonymous',
         },
@@ -145,6 +141,7 @@ export const createSessionSlice: StateCreator<
 
     return id;
   },
+
   duplicateSession: async (id) => {
     const { switchSession, refreshSessions } = get();
     const session = sessionSelectors.getSessionById(id)(get());
@@ -208,7 +205,18 @@ export const createSessionSlice: StateCreator<
     );
   },
   updateSessionGroupId: async (sessionId, group) => {
-    await get().internal_updateSession(sessionId, { group });
+    const session = sessionSelectors.getSessionById(sessionId)(get());
+
+    if (session?.type === 'group') {
+      // For group sessions (chat groups), use the chat group service
+      await chatGroupService.updateGroup(sessionId, {
+        groupId: group === 'default' ? null : group,
+      });
+      await get().refreshSessions();
+    } else {
+      // For regular agent sessions, use the existing session service
+      await get().internal_updateSession(sessionId, { group });
+    }
   },
 
   updateSessionMeta: async (meta) => {
@@ -248,6 +256,44 @@ export const createSessionSlice: StateCreator<
             data.sessionGroups,
             n('useFetchSessions/updateData') as any,
           );
+
+          // Sync chat groups from group sessions to chat store
+          const groupSessions = data.sessions.filter((session) => session.type === 'group');
+          if (groupSessions.length > 0) {
+            // For group sessions, we need to transform them to ChatGroupItem format
+            // The session ID is the chat group ID, and we can extract basic group info
+            const chatGroupStore = getChatGroupStoreState();
+            const chatGroups = groupSessions.map((session) => ({
+              accessedAt: session.updatedAt,
+              clientId: null,
+              config: {
+                maxResponseInRow: 3,
+                orchestratorModel: 'gpt-4',
+                orchestratorProvider: 'openai',
+                responseOrder: 'sequential' as const,
+                responseSpeed: 'medium' as const,
+                scene: DEFAULT_CHAT_GROUP_CHAT_CONFIG.scene,
+              },
+              createdAt: session.createdAt,
+              description: session.meta?.description || '',
+
+              groupId: session.group || null,
+              id: session.id, // Add the missing groupId property
+
+              // Will be set by the backend
+              pinned: session.pinned || false,
+
+              // Session ID is the chat group ID
+              slug: null,
+
+              title: session.meta?.title || 'Untitled Group',
+              updatedAt: session.updatedAt,
+              userId: '', // Use updatedAt as accessedAt fallback
+            }));
+
+            chatGroupStore.internal_updateGroupMaps(chatGroups);
+          }
+
           set({ isSessionsFirstFetchFinished: true }, false, n('useFetchSessions/onSuccess', data));
         },
         suspense: true,

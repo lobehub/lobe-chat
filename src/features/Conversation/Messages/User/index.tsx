@@ -1,6 +1,8 @@
 import { ChatMessage } from '@lobechat/types';
+import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Avatar from '@/features/ChatItem/components/Avatar';
@@ -8,11 +10,14 @@ import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import MessageContent from '@/features/ChatItem/components/MessageContent';
 import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
+import { markdownElements } from '@/features/Conversation/MarkdownElements';
 import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
@@ -28,9 +33,31 @@ interface UserMessageProps extends ChatMessage {
   index: number;
 }
 
-const UserMessage = memo<UserMessageProps>((props) => {
-  const { id, ragQuery, content, createdAt, error, role, index, extra, disableEditing } = props;
+const rehypePlugins = markdownElements
+  .filter((s) => s.scope !== 'assistant')
+  .map((element) => element.rehypePlugin)
+  .filter(Boolean);
 
+const remarkPlugins = markdownElements
+  .filter((s) => s.scope !== 'assistant')
+  .map((element) => element.remarkPlugin)
+  .filter(Boolean);
+
+const UserMessage = memo<UserMessageProps>((props) => {
+  const {
+    id,
+    ragQuery,
+    content,
+    createdAt,
+    error,
+    role,
+    index,
+    extra,
+    disableEditing,
+    targetId,
+  } = props;
+
+  const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
   const avatar = useUserAvatar();
   const title = useUserStore(userProfileSelectors.displayUserName);
@@ -44,6 +71,24 @@ const UserMessage = memo<UserMessageProps>((props) => {
   ]);
 
   const loading = isInRAGFlow || generating;
+  
+  // Get target name for DM indicator
+  const userName = useUserStore(userProfileSelectors.nickName) || 'User';
+  const agents = useSessionStore(sessionSelectors.currentGroupAgents);
+  
+  const dmIndicator = useMemo(() => {
+    if (!targetId) return undefined;
+    
+    let targetName = targetId;
+    if (targetId === 'user') {
+      targetName = userName;
+    } else {
+      const targetAgent = agents?.find((agent) => agent.id === targetId);
+      targetName = targetAgent?.title || targetId;
+    }
+    
+    return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
+  }, [targetId, userName, agents, t]);
 
   const placement = displayMode === 'chat' ? 'right' : 'left';
   const variant = displayMode === 'chat' ? 'bubble' : 'docs';
@@ -67,11 +112,26 @@ const UserMessage = memo<UserMessageProps>((props) => {
     [props],
   );
 
+  const components = useMemo(
+    () =>
+      Object.fromEntries(
+        markdownElements.map((element) => {
+          const Component = element.Component;
+
+          return [element.tag, (props: any) => <Component {...props} id={id} />];
+        }),
+      ),
+    [id],
+  );
+
   const markdownProps = useMemo(
     () => ({
+      components,
       customRender: (dom: ReactNode, { text }: { text: string }) => (
         <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
       ),
+      rehypePlugins,
+      remarkPlugins,
     }),
     [displayMode],
   );
@@ -99,6 +159,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
           placement={placement}
           showTitle={false}
           time={createdAt}
+          titleAddon={dmIndicator}
         />
         <Flexbox
           align={placement === 'left' ? 'flex-start' : 'flex-end'}

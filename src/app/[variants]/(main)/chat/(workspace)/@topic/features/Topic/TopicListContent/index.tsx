@@ -14,7 +14,7 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { TopicDisplayMode } from '@/types/topic';
 
-import { SkeletonList } from '../SkeletonList';
+import { SkeletonList } from '../../SkeletonList';
 import ByTimeMode from './ByTimeMode';
 import FlatMode from './FlatMode';
 import SearchResult from './SearchResult';

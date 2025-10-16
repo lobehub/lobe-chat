@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Modèle"
   },
+  "active": "Actif",
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
@@ -13,17 +14,28 @@
     "thought": "Processus de pensée",
     "unknownTitle": "Œuvre sans nom"
   },
+  "availableAgents": "Assistants disponibles",
   "backToBottom": "Retour en bas",
   "chatList": {
     "longMessageDetail": "Voir les détails"
   },
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
+  "confirmRemoveChatGroupItemAlert": "Vous êtes sur le point de supprimer ce groupe de discussion, les membres du groupe ne seront pas affectés, veuillez confirmer votre action",
+  "confirmRemoveGroupItemAlert": "Vous êtes sur le point de supprimer ce groupe. Après la suppression, les assistants de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
+  "confirmRemoveGroupSuccess": "Suppression du groupe réussie",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveSessionSuccess": "Agent supprimé avec succès",
   "defaultAgent": "Agent par défaut",
+  "defaultGroupChat": "Groupe de discussion",
   "defaultList": "Liste par défaut",
   "defaultSession": "Session par défaut",
+  "dm": {
+    "placeholder": "Vos messages privés avec {{agentTitle}} s'afficheront ici.",
+    "tooltip": "Envoyer un message privé",
+    "visibleTo": "Visible uniquement par {{target}}",
+    "you": "vous"
+  },
   "duplicateSession": {
     "loading": "Copie en cours...",
     "success": "Copie réussie",
@@ -58,11 +70,56 @@
       "title": "Extraction du contenu des liens web"
     }
   },
+  "group": {
+    "desc": "Collaborez avec plusieurs assistants IA dans un espace de conversation partagé.",
+    "memberTooltip": "Le groupe contient {{count}} membre(s)",
+    "orchestratorThinking": "L'animateur est en train de réfléchir...",
+    "removeMember": "Retirer un membre",
+    "title": "Groupe"
+  },
+  "groupDescription": "Description du groupe",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Ajouter un membre",
+      "memberSettings": "Paramètres des membres",
+      "orchestrator": "Animateur",
+      "orchestratorThinking": "L'animateur est en train de réfléchir...",
+      "removeMember": "Retirer un membre",
+      "stopOrchestrator": "Arrêter la réflexion",
+      "triggerOrchestrator": "Démarrer la discussion de groupe"
+    },
+    "tabs": {
+      "host": "Hôte",
+      "members": "Membres",
+      "role": "Paramètres"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Choisir des assistants existants...",
+    "createGroup": "Créer un groupe",
+    "existingMembers": "Membres existants",
+    "groupMembers": "Ces assistants seront également ajoutés à votre liste",
+    "host": {
+      "description": "Automatise le fonctionnement du groupe de discussion",
+      "title": "Animateur",
+      "tooltip": "Si vous désactivez l'hôte du groupe, vous devrez mentionner manuellement les membres avec @ pour qu'ils puissent répondre"
+    },
+    "memberCount": "{{count}} membres",
+    "noMatchingTemplates": "Aucun modèle correspondant",
+    "noSelectedTemplates": "Aucun modèle sélectionné",
+    "noTemplateMembers": "Aucun membre dans le modèle",
+    "noTemplates": "Aucun modèle disponible",
+    "searchTemplates": "Rechercher des modèles...",
+    "title": "Créer un groupe",
+    "useTemplate": "Utiliser le modèle"
+  },
+  "hideForYou": "Le contenu du message privé est caché, veuillez activer « Afficher le contenu des messages privés » dans les paramètres pour le voir",
   "history": {
     "title": "L'assistant ne se souviendra que des {{count}} derniers messages"
   },
   "historyRange": "Plage d'historique",
   "historySummary": "Résumé des messages historiques",
+  "inactive": "Inactif",
   "inbox": {
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "En train de comprendre et d'analyser votre intention..."
   },
+  "inviteMembers": "Inviter des membres",
   "knowledgeBase": {
     "all": "Tout le contenu",
     "allFiles": "Tous les fichiers",
@@ -101,12 +159,29 @@
     "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la « Base de connaissances ».",
     "viewMore": "Voir plus"
   },
+  "memberSelection": {
+    "addMember": "Ajouter un membre",
+    "allMembers": "Tous les membres",
+    "createGroup": "Créer un groupe de discussion",
+    "noAvailableAgents": "Aucun assistant disponible à inviter",
+    "noSelectedAgents": "Aucun assistant sélectionné",
+    "searchAgents": "Rechercher un assistant...",
+    "setInitialMembers": "Sélectionner les membres du groupe"
+  },
+  "members": "Membres",
+  "mention": {
+    "title": "Mentionner un membre"
+  },
   "messageAction": {
     "delAndRegenerate": "Supprimer et régénérer",
     "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
     "regenerate": "Régénérer"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Visible uniquement par {{name}}",
+      "title": "Message privé"
+    },
     "modelCard": {
       "credit": "Crédit",
       "creditPricing": "Tarification",
@@ -156,6 +231,13 @@
     "previousMessage": "Message précédent"
   },
   "newAgent": "Nouvel agent",
+  "newGroupChat": "Nouveau groupe de discussion",
+  "noAgentsYet": "Ce groupe ne contient encore aucun assistant. Cliquez sur le bouton + pour en inviter.",
+  "noAvailableAgents": "Aucun assistant disponible à inviter",
+  "noMatchingAgents": "Aucun assistant correspondant",
+  "noMembersYet": "Ce groupe n'a pas encore de membres. Cliquez sur le bouton + pour inviter des assistants.",
+  "noSelectedAgents": "Aucun assistant n'a encore été sélectionné",
+  "owner": "Propriétaire du groupe",
   "pin": "Épingler",
   "pinOff": "Désépingler",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "Recherche en ligne"
   },
   "searchAgentPlaceholder": "Assistant de recherche...",
+  "searchAgents": "Assistant de recherche...",
+  "selectedAgents": "Assistants sélectionnés",
   "sendPlaceholder": "Saisissez votre message...",
   "sessionGroup": {
     "config": "Gestion des groupes",
     "confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les agents de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
     "createAgentSuccess": "Création de l'agent réussie",
     "createGroup": "Créer un nouveau groupe",
+    "createGroupFailed": "Échec de la création du groupe de discussion",
+    "createGroupSuccess": "Groupe de discussion créé avec succès",
     "createSuccess": "Création réussie",
     "creatingAgent": "Création de l'agent en cours...",
     "inputPlaceholder": "Veuillez saisir le nom du groupe...",
@@ -235,6 +321,12 @@
     "loading": "En cours de reconnaissance...",
     "prettifying": "En cours d'embellissement..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "Toutes les tâches sont terminées",
+      "title": "Tâches terminées"
+    }
+  },
   "thread": {
     "divider": "Sous-sujet",
     "threadMessageCount": "{{messageCount}} messages",
@@ -248,6 +340,7 @@
     "chats": "Messages de discussion",
     "historySummary": "Résumé historique",
     "rest": "Restant disponible",
+    "supervisor": "Animateur du groupe",
     "systemRole": "Rôle système",
     "title": "Détails du jeton",
     "tools": "Paramètres du plugin",
@@ -273,6 +366,7 @@
     "action": "Lecture vocale",
     "clear": "Effacer la voix"
   },
+  "untitledAgent": "Assistant sans nom",
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "La taille du fichier vidéo ne peut pas dépasser 20 Mo, la taille actuelle est de {{actualSize}}"
     }
   },
+  "you": "vous",
   "zenMode": "Mode de concentration"
 }

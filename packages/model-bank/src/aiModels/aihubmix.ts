@@ -815,6 +815,7 @@ const aihubmixModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      structuredOutput: true,
     },
     contextWindowTokens: 131_072,
     description:

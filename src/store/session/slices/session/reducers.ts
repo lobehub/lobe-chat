@@ -1,9 +1,9 @@
 import { produce } from 'immer';
 
-import { LobeAgentSession, LobeSessions } from '@/types/session';
+import { LobeSession, LobeSessions } from '@/types/session';
 
 interface AddSession {
-  session: LobeAgentSession;
+  session: LobeSession;
   type: 'addSession';
 }
 
@@ -15,7 +15,7 @@ interface RemoveSession {
 interface UpdateSession {
   id: string;
   type: 'updateSession';
-  value: Partial<LobeAgentSession>;
+  value: Partial<LobeSession>;
 }
 
 export type SessionDispatch = AddSession | RemoveSession | UpdateSession;
