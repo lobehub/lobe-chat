@@ -1,4 +1,5 @@
 import { ChatMessage } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui-rn';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -6,7 +7,6 @@ import {
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  View,
   ViewStyle,
 } from 'react-native';
 import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
@@ -22,7 +22,6 @@ import { chatSelectors } from '@/store/chat/selectors';
 import ChatBubble from '../ChatBubble';
 import MessageSkeletonList from '../MessageSkeletonList';
 import WelcomeMessage from '../WelcomeMessage';
-import { useStyles } from './style';
 
 interface ChatListProps {
   style?: ViewStyle;
@@ -50,7 +49,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
   useFetchMessages();
 
   const { messages } = useChat();
-  const { styles } = useStyles();
+
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
   const [isScrolling, setIsScrolling] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
@@ -198,14 +197,14 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   if (!isCurrentChatLoaded) {
     return (
-      <View style={[{ flex: 1 }, style]}>
+      <Flexbox flex={1} style={style}>
         <MessageSkeletonList />
-      </View>
+      </Flexbox>
     );
   }
 
   return (
-    <View style={[styles.chatContainer, style]}>
+    <Flexbox flex={1} style={style}>
       <FlashList
         ListEmptyComponent={renderEmptyComponent}
         data={messages}
@@ -239,6 +238,6 @@ export default function ChatListChatList({ style }: ChatListProps) {
           }
         }}
       />
-    </View>
+    </Flexbox>
   );
 }

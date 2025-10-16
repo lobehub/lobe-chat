@@ -9,9 +9,9 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { useAuth } from '@/store/user';
 
-import Inbox from './Inbox';
-import SessionItem from './SessionItem';
-import { SessionListSkeleton } from './components/SkeletonList';
+import Inbox from './features/Inbox';
+import SessionItem from './features/SessionItem';
+import { SessionListSkeleton } from './features/SkeletonList';
 import { useStyles } from './style';
 
 export default function SideBar() {
@@ -58,7 +58,7 @@ export default function SideBar() {
   }
 
   return (
-    <Flexbox flex={1} gap={16}>
+    <Flexbox flex={1} gap={8}>
       {/* 搜索栏 */}
       <Flexbox paddingInline={8}>
         <Input.Search
@@ -72,7 +72,7 @@ export default function SideBar() {
 
       {/* 会话列表 */}
       <ScrollView style={styles.sessionList}>
-        <Flexbox gap={4} paddingInline={8}>
+        <Flexbox>
           {shouldShowInbox && <Inbox />}
           {/* Group 功能现在没上，暂时不需要 */}
           {/* <View style={styles.header}>

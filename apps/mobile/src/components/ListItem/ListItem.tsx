@@ -16,7 +16,8 @@ const ListItem = ({ title, avatar, description, extra, onPress, href, active }: 
       gap={8}
       horizontal
       onPress={onPress}
-      padding={8}
+      padding={12}
+      style={{ borderRadius: 0 }}
       variant={'borderless'}
     >
       {avatar && <Avatar avatar={avatar} size={AVATAR_SIZE_MEDIUM} />}

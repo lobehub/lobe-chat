@@ -11,10 +11,8 @@ interface UseStylesProps {
 export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStylesProps) => {
   const sizeStyles = getInputSizeStyles(token, size);
   return {
-    container: {},
     input: {
       color: token.colorText,
-      flex: 1,
       fontFamily: token.fontFamily,
       fontSize: sizeStyles.fontSize,
       minHeight: sizeStyles.controlHeight * 1.25,
