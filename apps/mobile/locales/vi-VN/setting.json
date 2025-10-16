@@ -85,19 +85,32 @@
     "title": "Cài đặt màu sắc"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Đã làm cho token truy cập hết hạn ngay lập tức",
-        "title": "Token truy cập hết hạn"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Đã làm cho mã truy cập hết hạn ngay lập tức",
+          "title": "Mã truy cập hết hạn"
+        },
+        "invalidate": {
+          "success": "Đã ghi mã truy cập không hợp lệ",
+          "title": "Mã truy cập không hợp lệ"
+        }
       },
-      "invalidate": {
-        "success": "Đã ghi token truy cập không hợp lệ",
-        "title": "Token truy cập không hợp lệ"
+      "clearAuthData": {
+        "success": "Đã xóa dữ liệu xác thực",
+        "title": "Xóa dữ liệu xác thực"
+      },
+      "group": "Cấu hình xác thực",
+      "refreshToken": {
+        "expire": {
+          "success": "Đã làm cho mã làm mới hết hạn ngay lập tức",
+          "title": "Mã làm mới hết hạn"
+        },
+        "invalidate": {
+          "success": "Đã ghi mã làm mới không hợp lệ",
+          "title": "Mã làm mới không hợp lệ"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Đã xóa dữ liệu xác thực",
-      "title": "Xóa dữ liệu xác thực"
     },
     "failurePrefix": "Thao tác thất bại: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Chế độ nhà phát triển đã được bật",
       "remaining": "Chạm thêm {{count}} lần để bật chế độ nhà phát triển",
       "title": "Chế độ nhà phát triển"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Đã làm cho token làm mới hết hạn ngay lập tức",
-        "title": "Token làm mới hết hạn"
-      },
-      "invalidate": {
-        "success": "Đã ghi token làm mới không hợp lệ",
-        "title": "Token làm mới không hợp lệ"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Đi đến trang đăng nhập",

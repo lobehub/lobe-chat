@@ -85,19 +85,32 @@
     "title": "Color Settings"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Access token has been expired immediately",
-        "title": "Access Token Expired"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Access token has been expired immediately",
+          "title": "Access Token Expired"
+        },
+        "invalidate": {
+          "success": "Invalid access token has been written",
+          "title": "Invalid Access Token"
+        }
       },
-      "invalidate": {
-        "success": "Invalid access token has been written",
-        "title": "Invalid Access Token"
+      "clearAuthData": {
+        "success": "Authentication data has been cleared",
+        "title": "Clear Authentication Data"
+      },
+      "group": "Authentication Configuration",
+      "refreshToken": {
+        "expire": {
+          "success": "Refresh token has been expired immediately",
+          "title": "Refresh Token Expired"
+        },
+        "invalidate": {
+          "success": "Invalid refresh token has been written",
+          "title": "Invalid Refresh Token"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Authentication data cleared",
-      "title": "Clear Authentication Data"
     },
     "failurePrefix": "Operation failed: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Developer mode is enabled",
       "remaining": "Tap {{count}} more times to enable developer mode",
       "title": "Developer Mode"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Refresh token has been expired immediately",
-        "title": "Refresh Token Expired"
-      },
-      "invalidate": {
-        "success": "Invalid refresh token has been written",
-        "title": "Invalid Refresh Token"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Go to login",
