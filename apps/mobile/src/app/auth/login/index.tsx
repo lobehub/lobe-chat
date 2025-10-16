@@ -65,7 +65,6 @@ const LoginPage = () => {
           disabled={isLoading}
           loading={isLoading}
           onPress={handleLogin}
-          size="large"
           style={styles.loginButton}
           type="primary"
         >
@@ -76,7 +75,6 @@ const LoginPage = () => {
             block
             disabled={isLoading}
             onPress={handleSelfHostedLogin}
-            size="large"
             style={styles.selfHostedButton}
             variant="filled"
           >

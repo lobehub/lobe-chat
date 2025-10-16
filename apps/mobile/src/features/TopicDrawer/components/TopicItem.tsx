@@ -1,13 +1,12 @@
 import { ChatTopic } from '@lobechat/types';
+import { Cell, useTheme } from '@lobehub/ui-rn';
+import { MessageSquareText } from 'lucide-react-native';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TouchableOpacity, View } from 'react-native';
 
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
-
-import { useStyles } from './style';
 
 interface TopicItemProps {
   topic: ChatTopic;
@@ -18,8 +17,8 @@ interface TopicItemProps {
  * 参考web端TopicItem实现，适配React Native
  */
 const TopicItem = memo<TopicItemProps>(({ topic }) => {
-  const { styles } = useStyles();
   const { t } = useTranslation('topic');
+  const theme = useTheme();
 
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const setTopicDrawerOpen = useGlobalStore((s) => s.setTopicDrawerOpen);
@@ -35,23 +34,20 @@ const TopicItem = memo<TopicItemProps>(({ topic }) => {
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
+    <Cell
+      active={isActive}
+      icon={MessageSquareText}
+      iconProps={{
+        color: theme.colorTextSecondary,
+      }}
+      iconSize={16}
       onPress={handlePress}
-      style={[styles.container, isActive && styles.activeContainer]}
-    >
-      <View style={styles.content}>
-        <Text
-          ellipsizeMode="tail"
-          numberOfLines={2}
-          style={[styles.title, isActive && styles.activeTitle]}
-        >
-          {topic.title || t('defaultTitle')}
-        </Text>
-
-        {/* TODO: 后续可以添加更多信息，如时间、消息数等 */}
-      </View>
-    </TouchableOpacity>
+      showArrow={false}
+      title={topic.title || t('defaultTitle')}
+      titleProps={{
+        fontSize: 14,
+      }}
+    />
   );
 });
 

@@ -151,7 +151,7 @@ const CustomServer = () => {
           {/* Action Section */}
           <Form.Item>
             <View style={styles.actionSection}>
-              <Button block onPress={applyCustomServer} size="large" type="primary">
+              <Button block onPress={applyCustomServer} type="primary">
                 {t('developer.server.save', { ns: 'setting' })}
               </Button>
             </View>
