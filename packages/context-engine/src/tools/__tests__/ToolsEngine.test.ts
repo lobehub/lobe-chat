@@ -900,4 +900,83 @@ describe('ToolsEngine', () => {
       });
     });
   });
+
+  describe('deduplication', () => {
+    it('should deduplicate tool IDs in toolIds array', () => {
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest, mockDalleManifest],
+        enableChecker: () => true,
+        functionCallChecker: () => true,
+      });
+
+      const result = engine.generateTools({
+        toolIds: ['lobe-web-browsing', 'lobe-web-browsing', 'dalle'],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      // Should only generate 2 tools, not 3
+      expect(result).toHaveLength(2);
+      expect(result![0].function.name).toBe('lobe-web-browsing____search____builtin');
+      expect(result![1].function.name).toBe('dalle____generateImage____builtin');
+    });
+
+    it('should deduplicate between toolIds and defaultToolIds', () => {
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest, mockDalleManifest],
+        defaultToolIds: ['lobe-web-browsing'],
+        enableChecker: () => true,
+        functionCallChecker: () => true,
+      });
+
+      const result = engine.generateTools({
+        toolIds: ['lobe-web-browsing', 'dalle'],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      // Should only generate 2 tools (lobe-web-browsing should appear once)
+      expect(result).toHaveLength(2);
+      expect(result![0].function.name).toBe('lobe-web-browsing____search____builtin');
+      expect(result![1].function.name).toBe('dalle____generateImage____builtin');
+    });
+
+    it('should deduplicate in generateToolsDetailed', () => {
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest, mockDalleManifest],
+        defaultToolIds: ['dalle'],
+        enableChecker: () => true,
+        functionCallChecker: () => true,
+      });
+
+      const result = engine.generateToolsDetailed({
+        toolIds: ['lobe-web-browsing', 'dalle', 'dalle'],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      // Should only generate 2 unique tools
+      expect(result.tools).toHaveLength(2);
+      expect(result.enabledToolIds).toEqual(['lobe-web-browsing', 'dalle']);
+      expect(result.filteredTools).toEqual([]);
+    });
+
+    it('should handle complex deduplication scenarios', () => {
+      const engine = new ToolsEngine({
+        manifestSchemas: [mockWebBrowsingManifest, mockDalleManifest],
+        defaultToolIds: ['lobe-web-browsing', 'dalle'],
+        enableChecker: () => true,
+        functionCallChecker: () => true,
+      });
+
+      const result = engine.generateTools({
+        toolIds: ['dalle', 'lobe-web-browsing', 'dalle', 'lobe-web-browsing'],
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      // Should only generate 2 unique tools despite multiple duplicates
+      expect(result).toHaveLength(2);
+    });
+  });
 });

@@ -1,6 +1,28 @@
 [
   {
     "children": {
+      "improvements": ["Improve update notification."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix duplicate tools id issue and fix link dialog issue."],
+      "improvements": ["Add region support for Vertex AI provider."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.8"
+  },
+  {
+    "children": {
+      "improvements": ["Use different favicon.ico in dev mode."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.7"
+  },
+  {
+    "children": {
       "fixes": ["Update Claude workflows to use oauth token, vertext ai create image."]
     },
     "date": "2025-10-14",

@@ -3,8 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { featureFlagsSelectors, serverConfigSelectors } from './selectors';
 import { initServerConfigStore } from './store';
 
-vi.mock('zustand/traditional');
-
 describe('featureFlagsSelectors', () => {
   it('should return mapped feature flags from store', () => {
     const store = initServerConfigStore({

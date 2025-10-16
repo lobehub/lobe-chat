@@ -262,8 +262,6 @@ export const createPluginStoreSlice: StateCreator<
   },
   useFetchPluginStore: () =>
     useSWR<DiscoverPluginItem[]>('loadPluginStore', get().loadPluginStore, {
-      fallbackData: [],
       revalidateOnFocus: false,
-      suspense: true,
     }),
 });
