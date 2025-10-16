@@ -85,19 +85,32 @@
     "title": "색상 설정"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "액세스 토큰이 즉시 만료되었습니다",
-        "title": "액세스 토큰 만료"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "액세스 토큰이 즉시 만료되었습니다",
+          "title": "액세스 토큰 만료"
+        },
+        "invalidate": {
+          "success": "무효한 액세스 토큰이 기록되었습니다",
+          "title": "무효한 액세스 토큰"
+        }
       },
-      "invalidate": {
-        "success": "무효한 액세스 토큰이 기록되었습니다",
-        "title": "무효 액세스 토큰"
+      "clearAuthData": {
+        "success": "인증 데이터가 삭제되었습니다",
+        "title": "인증 데이터 삭제"
+      },
+      "group": "인증 설정",
+      "refreshToken": {
+        "expire": {
+          "success": "리프레시 토큰이 즉시 만료되었습니다",
+          "title": "리프레시 토큰 만료"
+        },
+        "invalidate": {
+          "success": "무효한 리프레시 토큰이 기록되었습니다",
+          "title": "무효한 리프레시 토큰"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "인증 데이터가 삭제되었습니다",
-      "title": "인증 데이터 삭제"
     },
     "failurePrefix": "작업 실패: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "개발자 모드가 활성화되었습니다",
       "remaining": "개발자 모드를 활성화하려면 {{count}}번 더 탭하세요",
       "title": "개발자 모드"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "리프레시 토큰이 즉시 만료되었습니다",
-        "title": "리프레시 토큰 만료"
-      },
-      "invalidate": {
-        "success": "무효한 리프레시 토큰이 기록되었습니다",
-        "title": "무효 리프레시 토큰"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "로그인 페이지로 이동",

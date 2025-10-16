@@ -85,19 +85,32 @@
     "title": "Paramètres des couleurs"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Le jeton d'accès a été immédiatement expiré",
-        "title": "Expiration du jeton d'accès"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Le jeton d'accès a expiré immédiatement",
+          "title": "Expiration du jeton d'accès"
+        },
+        "invalidate": {
+          "success": "Jeton d'accès invalide enregistré",
+          "title": "Jeton d'accès invalide"
+        }
       },
-      "invalidate": {
-        "success": "Le jeton d'accès invalide a été enregistré",
-        "title": "Jeton d'accès invalide"
+      "clearAuthData": {
+        "success": "Données d'authentification effacées",
+        "title": "Effacer les données d'authentification"
+      },
+      "group": "Configuration d'authentification",
+      "refreshToken": {
+        "expire": {
+          "success": "Le jeton de rafraîchissement a expiré immédiatement",
+          "title": "Expiration du jeton de rafraîchissement"
+        },
+        "invalidate": {
+          "success": "Jeton de rafraîchissement invalide enregistré",
+          "title": "Jeton de rafraîchissement invalide"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Les données d'authentification ont été effacées",
-      "title": "Effacer les données d'authentification"
     },
     "failurePrefix": "Échec de l'opération : ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Le mode développeur est activé",
       "remaining": "Appuyez encore {{count}} fois pour activer le mode développeur",
       "title": "Mode développeur"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Le jeton de rafraîchissement a été immédiatement expiré",
-        "title": "Expiration du jeton de rafraîchissement"
-      },
-      "invalidate": {
-        "success": "Le jeton de rafraîchissement invalide a été enregistré",
-        "title": "Jeton de rafraîchissement invalide"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Aller à la page de connexion",

@@ -85,20 +85,34 @@ export default {
     title: '色彩设置',
   },
   developer: {
-    accessToken: {
-      expire: {
-        success: '已使访问令牌立即过期',
-        title: '访问令牌过期',
+    auth: {
+      accessToken: {
+        expire: {
+          success: '已使访问令牌立即过期',
+          title: '访问令牌过期',
+        },
+        invalidate: {
+          success: '已写入无效的访问令牌',
+          title: '无效访问令牌',
+        },
       },
-      invalidate: {
-        success: '已写入无效的访问令牌',
-        title: '无效访问令牌',
+      clearAuthData: {
+        success: '已清空认证数据',
+        title: '清空认证数据',
+      },
+      group: '认证配置',
+      refreshToken: {
+        expire: {
+          success: '已使刷新令牌立即过期',
+          title: '刷新令牌过期',
+        },
+        invalidate: {
+          success: '已写入无效的刷新令牌',
+          title: '无效刷新令牌',
+        },
       },
     },
-    clearAuthData: {
-      success: '已清空认证数据',
-      title: '清空认证数据',
-    },
+
     failurePrefix: '操作失败: ',
     mode: {
       already: '你已经处于开发者模式',
@@ -106,16 +120,7 @@ export default {
       remaining: '再点按 {{count}} 次即可开启开发者模式',
       title: '开发者模式',
     },
-    refreshToken: {
-      expire: {
-        success: '已使刷新令牌立即过期',
-        title: '刷新令牌过期',
-      },
-      invalidate: {
-        success: '已写入无效的刷新令牌',
-        title: '无效刷新令牌',
-      },
-    },
+
     selfHostedEntry: {
       confirmAction: '前往登录页',
       confirmDescription: '启用后将在登录页面展示自托管配置入口，是否退出当前账号并前往登录页？',
