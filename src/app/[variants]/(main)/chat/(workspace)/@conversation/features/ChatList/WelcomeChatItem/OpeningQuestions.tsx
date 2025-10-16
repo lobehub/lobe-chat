@@ -25,7 +25,7 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
 
   container: css`
     padding-block: 0;
-    padding-inline: 64px 16px;
+    padding-inline: 0;
   `,
 
   title: css`
