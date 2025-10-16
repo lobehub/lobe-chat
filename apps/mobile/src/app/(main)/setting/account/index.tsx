@@ -70,7 +70,7 @@ export default function AccountScreen() {
 
             {/* Logout Section */}
             <View>
-              <Button block danger onPress={handleSignOut} size="large" type="primary">
+              <Button block danger onPress={handleSignOut} type="primary">
                 {t('account.signOut.label', { ns: 'setting' })}
               </Button>
             </View>

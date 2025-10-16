@@ -27,7 +27,7 @@ const Select = memo<SelectProps>(
     ...rest
   }) => {
     const [showModal, setShowModal] = useState(false);
-    const { styles } = useStyles({ size });
+    const { styles, theme } = useStyles({ size });
     const { isDarkMode } = useThemeMode();
     const [selected, setSelected] = useMergeState(defaultValue || options[0]?.value, {
       defaultValue: defaultValue || options[0]?.value,
@@ -69,7 +69,11 @@ const Select = memo<SelectProps>(
           {...rest}
         >
           <SelectItem size={size} {...selectedOption} />
-          <Icon icon={ChevronDown} />
+          <Icon
+            color={theme.colorTextDescription}
+            icon={ChevronDown}
+            size={styles.sizeStyles.fontSize}
+          />
         </Block>
 
         {/* 选项列表 BottomSheet */}
