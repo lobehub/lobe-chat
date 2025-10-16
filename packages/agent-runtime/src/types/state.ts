@@ -14,7 +14,7 @@ export interface AgentState {
   messages: any[];
   tools?: any[];
   systemRole?: string;
-
+  toolManifestMap: Record<string, any>;
   // --- Execution Tracking ---
   /**
    * Number of execution steps in this session.

@@ -5,7 +5,7 @@ export interface LobeChatPluginApi {
   url?: string;
 }
 
-export interface LobeChatPluginManifest {
+export interface LobeToolManifest {
   api: LobeChatPluginApi[];
   identifier: string;
   meta: any;
@@ -36,7 +36,7 @@ export interface ToolsGenerationContext {
  */
 export type PluginEnableChecker = (params: {
   context?: ToolsGenerationContext;
-  manifest: LobeChatPluginManifest;
+  manifest: LobeToolManifest;
   model: string;
   pluginId: string;
   provider: string;
@@ -79,7 +79,7 @@ export interface ToolsEngineOptions {
   /** Optional tool name generator function */
   generateToolName?: ToolNameGenerator;
   /** Statically injected manifest schemas */
-  manifestSchemas: LobeChatPluginManifest[];
+  manifestSchemas: LobeToolManifest[];
 }
 
 /**

@@ -308,6 +308,7 @@ export class AgentRuntime {
       messages: [],
       status: 'idle',
       stepCount: 0,
+      toolManifestMap: {},
       usage: defaultUsage,
       // User provided values override defaults
       ...partialState,
