@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 
-import { useSend } from '../../ChatInput/useSend';
+import { useSend } from '../../../ChatInput/useSend';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`

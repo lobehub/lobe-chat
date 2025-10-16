@@ -1,5 +1,6 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/const';
 import { FluentEmoji, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -7,19 +8,18 @@ import React, { memo, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import OpeningQuestions from '@/app/[variants]/(main)/chat/(workspace)/@conversation/features/ChatList/WelcomeChatItem/OpeningQuestions';
-import { BRANDING_NAME } from '@/const/branding';
 import { useGreeting } from '@/hooks/useGreeting';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import AddButton from './AddButton';
+import OpeningQuestions from './OpeningQuestions';
 
 const useStyles = createStyles(({ css, responsive }) => ({
   container: css`
