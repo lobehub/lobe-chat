@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useTheme, useThemeMode } from '@/components/styles';
+import { useTheme } from '@/components/styles';
 
 import type { RemarkStyles } from './context';
 
@@ -13,7 +13,6 @@ export type RemarkStyleOptions = {
 
 export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
   const theme = useTheme();
-  const { isDarkMode } = useThemeMode();
 
   const heading = useCallback(() => {
     return (level: number) => {
@@ -23,7 +22,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       return {
         color: theme.colorTextHeading,
         fontSize: size,
-        fontWeight: theme.fontWeightStrong,
+        fontWeight: 'bold',
         lineHeight: 1.25 * size,
         marginVertical: options.fontSize * options.marginMultiple * 0.4,
       } as const;
@@ -40,6 +39,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
 
   return {
     blockCode: {
+      borderColor: theme.colorBorder,
       marginVertical: options.fontSize * options.marginMultiple * 0.25,
     },
     blockQuote: {
@@ -48,7 +48,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       marginVertical: options.fontSize * options.marginMultiple * 0.5,
       paddingHorizontal: options.fontSize,
     },
-    blockQuoteColor: theme.colorTextTertiary,
+    blockQuoteColor: theme.colorTextSecondary,
     borderColor: theme.colorBorder,
     break: {},
     container: { flex: 1 },
@@ -73,10 +73,8 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       marginVertical: options.fontSize * options.marginMultiple * 0.25,
     },
     inlineCode: {
-      backgroundColor: theme.colorFillSecondary,
       color: theme.colorText,
       fontFamily: theme.fontFamilyCode,
-      fontSize: options.fontSize * 0.875,
     },
     link: {
       color: theme.colorLink,
@@ -92,7 +90,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     listItem: {
       flex: 1,
     },
-    listMarkerColor: isDarkMode ? theme.cyan9A : theme.cyan11A,
+    listMarkerColor: theme.colorInfo,
     paragraph: {
       color: theme.colorText,
       letterSpacing: 0.02 * options.fontSize,
@@ -104,16 +102,12 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       fontWeight: theme.fontWeightStrong,
     },
     table: {
-      backgroundColor: theme.colorFillQuaternary,
       borderColor: theme.colorBorder,
-      borderRadius: theme.borderRadius,
       marginVertical: options.fontSize * options.marginMultiple * 0.5,
     },
     td: tdth,
     text: {
       fontSize: options.fontSize,
-      // 从 父节点继承,否则一些样式带不下来
-      // color: theme.colorText
     },
     textColor: theme.colorText,
     th: tdth,
