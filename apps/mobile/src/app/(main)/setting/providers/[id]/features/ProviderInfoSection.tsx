@@ -1,6 +1,6 @@
 import { AiProviderDetailItem } from '@lobechat/types';
 import { ProviderIcon } from '@lobehub/icons-rn';
-import { Cell, Flexbox, InstantSwitch, Text, useTheme } from '@lobehub/ui-rn';
+import { Cell, Flexbox, InstantSwitch } from '@lobehub/ui-rn';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,6 @@ interface ProviderInfoSectionProps {
 
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provider }) => {
   const { t } = useTranslation(['setting']);
-  const theme = useTheme();
 
   // Store hooks
   const { toggleProviderEnabled } = useAiInfraStore();
@@ -51,14 +50,6 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
           weight: 500,
         }}
       />
-
-      {provider.description && (
-        <Flexbox paddingInline={16} style={{ marginBottom: 16 }}>
-          <Text as={'p'} color={theme.colorTextSecondary}>
-            {provider.description}
-          </Text>
-        </Flexbox>
-      )}
     </Flexbox>
   );
 });

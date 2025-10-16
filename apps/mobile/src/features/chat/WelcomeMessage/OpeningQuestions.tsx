@@ -1,20 +1,16 @@
-import type { FC } from 'react';
-import { useCallback } from 'react';
+import { Block, Flexbox, Text } from '@lobehub/ui-rn';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TouchableOpacity, View } from 'react-native';
 
 import { useSendMessage } from '@/hooks/useSendMessage';
 import { useChatStore } from '@/store/chat';
-
-import { useStyles } from './OpeningQuestions.style';
 
 interface OpeningQuestionsProps {
   questions: string[];
 }
 
-const OpeningQuestions: FC<OpeningQuestionsProps> = ({ questions }) => {
+const OpeningQuestions = memo<OpeningQuestionsProps>(({ questions }) => {
   const { t } = useTranslation('welcome');
-  const { styles } = useStyles();
   const [updateInputMessage] = useChatStore((s) => [s.updateInputMessage]);
   const { send: sendMessage } = useSendMessage();
 
@@ -29,22 +25,23 @@ const OpeningQuestions: FC<OpeningQuestionsProps> = ({ questions }) => {
   if (!questions.length) return null;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{t('guide.questions.title', { ns: 'welcome' })}</Text>
-      <View style={styles.questionsWrapper}>
+    <Flexbox gap={16}>
+      <Text type={'secondary'}>{t('guide.questions.title', { ns: 'welcome' })}</Text>
+      <Flexbox gap={8} horizontal wrap={'wrap'}>
         {questions.map((question, index) => (
-          <TouchableOpacity
-            activeOpacity={0.7}
+          <Block
+            clickable
             key={index}
             onPress={() => handleQuestionPress(question)}
-            style={styles.questionButton}
+            padding={12}
+            variant={'outlined'}
           >
-            <Text style={styles.questionText}>{question}</Text>
-          </TouchableOpacity>
+            <Text>{question}</Text>
+          </Block>
         ))}
-      </View>
-    </View>
+      </Flexbox>
+    </Flexbox>
   );
-};
+});
 
 export default OpeningQuestions;
