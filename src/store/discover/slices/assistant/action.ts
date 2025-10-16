@@ -7,17 +7,24 @@ import { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
 import {
   AssistantListResponse,
+  AssistantMarketSource,
   AssistantQueryParams,
   DiscoverAssistantDetail,
   IdentifiersResponse,
 } from '@/types/discover';
 
 export interface AssistantAction {
-  useAssistantCategories: (params: CategoryListQuery) => SWRResponse<CategoryItem[]>;
+  useAssistantCategories: (
+    params: CategoryListQuery & { source?: AssistantMarketSource },
+  ) => SWRResponse<CategoryItem[]>;
   useAssistantDetail: (params: {
     identifier: string;
+    source?: AssistantMarketSource;
+    version?: string;
   }) => SWRResponse<DiscoverAssistantDetail | undefined>;
-  useAssistantIdentifiers: () => SWRResponse<IdentifiersResponse>;
+  useAssistantIdentifiers: (params?: {
+    source?: AssistantMarketSource;
+  }) => SWRResponse<IdentifiersResponse>;
   useAssistantList: (params?: AssistantQueryParams) => SWRResponse<AssistantListResponse>;
 }
 
@@ -41,7 +48,9 @@ export const createAssistantSlice: StateCreator<
   useAssistantDetail: (params) => {
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
-      ['assistant-details', locale, params.identifier].filter(Boolean).join('-'),
+      ['assistant-details', locale, params.identifier, params.version, params.source]
+        .filter(Boolean)
+        .join('-'),
       async () => discoverService.getAssistantDetail(params),
       {
         revalidateOnFocus: false,
@@ -49,10 +58,14 @@ export const createAssistantSlice: StateCreator<
     );
   },
 
-  useAssistantIdentifiers: () => {
-    return useSWR('assistant-identifiers', async () => discoverService.getAssistantIdentifiers(), {
-      revalidateOnFocus: false,
-    });
+  useAssistantIdentifiers: (params) => {
+    return useSWR(
+      ['assistant-identifiers', params?.source].filter(Boolean).join('-') || 'assistant-identifiers',
+      async () => discoverService.getAssistantIdentifiers(params),
+      {
+        revalidateOnFocus: false,
+      },
+    );
   },
 
   useAssistantList: (params = {}) => {

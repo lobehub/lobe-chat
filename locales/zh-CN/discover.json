@@ -41,9 +41,29 @@
         "openingMessage": "开场消息",
         "openingQuestions": "开场问题",
         "title": "助手设定"
+      },
+      "version": {
+        "empty": "暂无历史版本",
+        "table": {
+          "isLatest": "最新版本",
+          "isValidated": "已验证",
+          "publishAt": "发布日期",
+          "version": "版本号"
+        },
+        "status": {
+          "archived": "已归档",
+          "deprecated": "已拒绝",
+          "unpublished": "审核中"
+        },
+        "title": "版本历史"
       }
     },
     "list": "助手列表",
+    "marketSource": {
+      "label": "切换市场源",
+      "legacy": "旧市场",
+      "new": "新市场"
+    },
     "more": "更多",
     "plugins": "集成插件",
     "recentSubmits": "最近更新",

@@ -11,6 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { useQuery } from '@/hooks/useQuery';
+import { AssistantMarketSource } from '@/types/discover';
 import { formatIntergerNumber } from '@/utils/format';
 
 import { useCategory } from '../../../../(list)/assistant/features/Category/useCategory';
@@ -33,6 +35,8 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
+const isUrl = (value?: string | null) => (value ? /^https?:\/\//.test(value) : false);
+
 const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const { t } = useTranslation('discover');
   const {
@@ -50,13 +54,30 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const { mobile = isMobile } = useResponsive();
   const categories = useCategory();
   const cate = categories.find((c) => c.key === category);
+  const authorString = typeof author === 'string' ? author : undefined;
+  const avatarSrc =
+    typeof avatar === 'string' && avatar.length > 0
+      ? avatar
+      : isUrl(authorString)
+        ? authorString
+        : undefined;
+  const authorName = authorString && !isUrl(authorString) ? authorString : undefined;
+  const authorHref = authorName ? urlJoin('https://github.com', authorName) : undefined;
+  const { source } = useQuery() as { source?: AssistantMarketSource };
+  const marketSource = source === 'legacy' ? 'legacy' : undefined;
 
   const cateButton = (
     <Link
-      href={qs.stringifyUrl({
-        query: { category: cate?.key },
-        url: '/discover/assistant',
-      })}
+      href={qs.stringifyUrl(
+        {
+          query: {
+            category: cate?.key,
+            source: marketSource,
+          },
+          url: '/discover/assistant',
+        },
+        { skipNull: true },
+      )}
     >
       <Button icon={cate?.icon} size={'middle'} variant={'outlined'}>
         {cate?.label}
@@ -67,7 +88,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   return (
     <Flexbox gap={12}>
       <Flexbox align={'flex-start'} gap={16} horizontal width={'100%'}>
-        <Avatar avatar={avatar} size={mobile ? 48 : 64} />
+        <Avatar avatar={avatarSrc} size={mobile ? 48 : 64} />
         <Flexbox
           flex={1}
           gap={4}
@@ -118,12 +139,23 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
-            {author && (
-              <Link href={urlJoin('https://github.com', author)} target={'_blank'}>
-                {author}
-              </Link>
-            )}
-            <Icon icon={DotIcon} />
+            <Flexbox align={'center'} horizontal>
+              {authorHref ? (
+                <Link href={authorHref} target={'_blank'}>
+                  {avatarSrc ? (
+                    <Avatar avatar={avatarSrc} size={24} />
+                  ) : (
+                    <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+                  )}
+                </Link>
+              ) : avatarSrc ? (
+                <Avatar avatar={avatarSrc} size={24} />
+              ) : (
+                <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+              )}
+            </Flexbox>
+            {authorName && <span>{authorName}</span>}
+            {(authorName || authorHref) && <Icon icon={DotIcon} />}
             <PublishedTime
               className={styles.time}
               date={createdAt as string}

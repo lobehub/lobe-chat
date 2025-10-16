@@ -7,7 +7,7 @@ import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { DiscoverTab } from '@/types/discover';
+import { AssistantMarketSource, DiscoverTab } from '@/types/discover';
 import { PageProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
@@ -16,18 +16,24 @@ import Client from './Client';
 
 type DiscoverPageProps = PageProps<
   { slugs: string[]; variants: string },
-  { hl?: Locales; version?: string }
+  { hl?: Locales; source?: AssistantMarketSource; version?: string }
 >;
+
+export const dynamic = 'force-dynamic';
+
+const isUrl = (value?: string | null) => (value ? /^https?:\/\//.test(value) : false);
 
 const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
+  const searchParams = await props.searchParams;
   const { slugs } = params;
   const identifier = decodeURIComponent(slugs.join('/'));
   const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
+  const marketSource = searchParams?.source as AssistantMarketSource | undefined;
   const discoverService = new DiscoverService();
   const [{ t, locale }, data] = await Promise.all([
     translation('metadata', hl),
-    discoverService.getAssistantDetail({ identifier, locale: hl }),
+    discoverService.getAssistantDetail({ identifier, locale: hl, source: marketSource }),
   ]);
   return {
     data,
@@ -43,10 +49,25 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
   if (!data) return;
 
   const { tags, createdAt, homepage, author, description, title } = data;
+  const authorString = typeof author === 'string' ? author : undefined;
+  const authorName =
+    authorString && !isUrl(authorString)
+      ? authorString
+      : author && typeof author === 'object' && 'name' in author
+        ? String((author as { name?: unknown }).name ?? '')
+        : 'Unknown';
+  const authorHomepage = isUrl(authorString)
+    ? authorString
+    : author &&
+        typeof author === 'object' &&
+        'url' in author &&
+        typeof (author as { url?: unknown }).url === 'string'
+      ? String((author as { url?: unknown }).url)
+      : homepage;
 
   return {
     authors: [
-      { name: author, url: homepage },
+      { name: authorName, url: authorHomepage },
       { name: 'LobeHub', url: 'https://github.com/lobehub' },
       { name: 'LobeChat', url: 'https://github.com/lobehub/lobe-chat' },
     ],
@@ -61,7 +82,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
       url: urlJoin('/discover/assistant', identifier),
     }),
     other: {
-      'article:author': author,
+      'article:author': authorName,
       'article:published_time': createdAt
         ? new Date(createdAt).toISOString()
         : new Date().toISOString(),
@@ -75,10 +96,17 @@ const Page = async (props: DiscoverPageProps) => {
   if (!data) return notFound();
 
   const { tags, title, description, createdAt, author } = data;
+  const authorString = typeof author === 'string' ? author : undefined;
+  const authorName =
+    authorString && !isUrl(authorString)
+      ? authorString
+      : author && typeof author === 'object' && 'name' in author
+        ? String((author as { name?: unknown }).name ?? '')
+        : 'Unknown';
 
   const ld = ldModule.generate({
     article: {
-      author: [author],
+      author: authorName ? [authorName] : [],
       enable: true,
       identifier,
       tags: tags,

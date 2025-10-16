@@ -7,6 +7,9 @@ import qs from 'query-string';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useQuery } from '@/hooks/useQuery';
+import { AssistantMarketSource } from '@/types/discover';
+
 const useStyles = createStyles(({ token, css }) => {
   return {
     tag: css`
@@ -22,18 +25,24 @@ const useStyles = createStyles(({ token, css }) => {
 
 const TagList = memo<{ tags: string[] }>(({ tags }) => {
   const { styles } = useStyles();
+  const { source } = useQuery() as { source?: AssistantMarketSource };
+  const marketSource = source === 'legacy' ? 'legacy' : undefined;
   const showTags = Boolean(tags?.length && tags?.length > 0);
   return (
     showTags && (
       <Flexbox gap={8} horizontal wrap={'wrap'}>
         {tags.map((tag) => (
           <Link
-            href={qs.stringifyUrl({
-              query: {
-                q: tag,
+            href={qs.stringifyUrl(
+              {
+                query: {
+                  q: tag,
+                  source: marketSource,
+                },
+                url: '/discover/assistant',
               },
-              url: '/discover/assistant',
-            })}
+              { skipNull: true },
+            )}
             key={tag}
           >
             <Tag className={styles.tag}>{tag}</Tag>

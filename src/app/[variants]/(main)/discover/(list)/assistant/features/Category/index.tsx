@@ -10,22 +10,31 @@ import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/discover/features/cons
 import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { AssistantCategory } from '@/types/discover';
+import { AssistantCategory, AssistantMarketSource } from '@/types/discover';
 
 import CategoryMenu from '../../../../components/CategoryMenu';
 import { useCategory } from './useCategory';
 
 const Category = memo(() => {
   const useAssistantCategories = useDiscoverStore((s) => s.useAssistantCategories);
-  const { category = 'all', q } = useQuery() as { category?: AssistantCategory; q?: string };
-  const { data: items = [] } = useAssistantCategories({ q });
+  const { category = 'all', q, source } = useQuery() as {
+    category?: AssistantCategory;
+    q?: string;
+    source?: AssistantMarketSource;
+  };
+  const marketSource = (source as AssistantMarketSource | undefined) ?? 'new';
+  const { data: items = [] } = useAssistantCategories({ q, source: marketSource });
   const route = useRouter();
   const cates = useCategory();
 
   const genUrl = (key: AssistantCategory) =>
     qs.stringifyUrl(
       {
-        query: { category: key === AssistantCategory.All ? null : key, q },
+        query: {
+          category: key === AssistantCategory.All ? null : key,
+          q,
+          source: marketSource === 'new' ? null : marketSource,
+        },
         url: '/discover/assistant',
       },
       { skipNull: true },
