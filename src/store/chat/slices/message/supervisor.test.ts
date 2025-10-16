@@ -5,10 +5,17 @@ import { aiChatService } from '@/services/aiChat';
 import { GroupChatSupervisor, type SupervisorContext } from './supervisor';
 
 vi.mock('@lobechat/prompts', () => ({
-  groupChatPrompts: {
-    buildSupervisorPrompt: vi.fn(() => 'structured-supervisor-prompt'),
-  },
-  groupSupervisorPrompts: vi.fn(() => 'conversation-history'),
+  contextSupervisorMakeDecision: vi.fn(() => ({
+    messages: [{ content: 'structured-supervisor-prompt', role: 'user' }],
+    temperature: 0.3,
+    tools: [
+      { function: { name: 'trigger_agent' }, type: 'function' },
+      { function: { name: 'wait_for_user_input' }, type: 'function' },
+      { function: { name: 'trigger_agent_dm' }, type: 'function' },
+      { function: { name: 'create_todo' }, type: 'function' },
+      { function: { name: 'finish_todo' }, type: 'function' },
+    ],
+  })),
 }));
 
 vi.mock('@/services/aiChat', () => ({
@@ -76,7 +83,7 @@ describe('GroupChatSupervisor', () => {
       temperature: 0.3,
     });
 
-    const toolNames = (payload.tools ?? []).map((tool: any) => tool.name);
+    const toolNames = (payload.tools ?? []).map((tool: any) => tool.function.name);
     expect(toolNames).toEqual(
       expect.arrayContaining([
         'trigger_agent',
