@@ -17,7 +17,7 @@ import SessionList from './components/SessionList';
 import { useStyles } from './style';
 
 export default function SideBar({ children }: { children: ReactNode }) {
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const winDim = useWindowDimensions();
 
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
@@ -30,6 +30,7 @@ export default function SideBar({ children }: { children: ReactNode }) {
       drawerPosition="left"
       drawerStyle={[
         styles.drawerStyle,
+        styles.drawerBackground,
         { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
       ]}
       drawerType={isIOS ? 'slide' : 'front'}
@@ -59,9 +60,7 @@ export default function SideBar({ children }: { children: ReactNode }) {
             </Space>
           }
           left={<Text style={styles.headerTitle}>LobeChat</Text>}
-          style={{
-            backgroundColor: theme.colorBgContainerSecondary,
-          }}
+          style={styles.drawerBackground}
         >
           <SessionList />
           <Footer />

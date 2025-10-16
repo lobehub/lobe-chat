@@ -1,15 +1,19 @@
+import { darken, rgba } from 'polished';
+
 import { DRAWER_WIDTH } from '@/_const/theme';
 import { createStyles } from '@/components/styles';
 
-export const useStyles = createStyles(({ token }) => ({
+export const useStyles = createStyles(({ token, isDarkMode }) => ({
   container: {
     flex: 1,
   },
+  drawerBackground: {
+    backgroundColor: isDarkMode ? token.colorBgContainer : token.colorBgContainerSecondary,
+  },
   drawerOverlay: {
-    backgroundColor: token.colorBgMask,
+    backgroundColor: isDarkMode ? token.colorBgMask : rgba(darken(0.1, token.colorBgLayout), 0.5),
   },
   drawerStyle: {
-    backgroundColor: token.colorBgLayout,
     width: DRAWER_WIDTH,
   },
   header: {

@@ -1,11 +1,10 @@
-import { ActionIcon, Avatar, PageContainer, Space } from '@lobehub/ui-rn';
+import { ActionIcon, Flexbox, PageContainer, useTheme, useThemeMode } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
+import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
-import { AVATAR_SIZE } from '@/_const/common';
 import Hydration from '@/features/Hydration';
 import SideBar from '@/features/SideBar';
 import TopicDrawer from '@/features/TopicDrawer';
@@ -15,16 +14,13 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
-import { useStyles } from './style';
-
 export default function ChatWithDrawer() {
-  const { styles, theme } = useStyles();
-
+  const theme = useTheme();
+  const { isDarkMode } = useThemeMode();
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
   const { t } = useTranslation(['chat']);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
-  const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
 
   const router = useRouter();
 
@@ -33,16 +29,20 @@ export default function ChatWithDrawer() {
   const renderContent = () => {
     return (
       <PageContainer
-        extra={<ActionIcon icon={MoreHorizontal} onPress={() => router.push('/chat/setting')} />}
-        left={<ActionIcon icon={AlignJustify} onPress={toggleDrawer} />}
-        title={
-          <Space>
-            <Avatar avatar={avatar} size={AVATAR_SIZE} />
-            <Text ellipsizeMode="tail" numberOfLines={1} style={styles.title}>
-              {displayTitle}
-            </Text>
-          </Space>
+        backgroundColor={
+          isDarkMode
+            ? [theme.colorBgContainer, darken(0.04, theme.colorBgLayout)]
+            : [theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]
         }
+        extra={
+          <ActionIcon
+            clickable={false}
+            icon={MoreHorizontal}
+            onPress={() => router.push('/chat/setting')}
+          />
+        }
+        left={<ActionIcon clickable={false} icon={AlignJustify} onPress={toggleDrawer} />}
+        title={displayTitle}
       >
         <KeyboardAvoidingView
           behavior="padding"
@@ -51,19 +51,19 @@ export default function ChatWithDrawer() {
           style={{ flex: 1 }}
         >
           <ChatList />
-          <ChatInput />
         </KeyboardAvoidingView>
+        <ChatInput />
       </PageContainer>
     );
   };
 
   return (
-    <View style={styles.root}>
+    <Flexbox flex={1}>
       {/* Hydration组件：处理URL和Store的双向同步 */}
       <Hydration />
       <SideBar>
         <TopicDrawer>{renderContent()}</TopicDrawer>
       </SideBar>
-    </View>
+    </Flexbox>
   );
 }
