@@ -176,7 +176,11 @@ const Button = memo<ButtonProps>(
           </Animated.View>
         )}
         {renderIcon()}
-        {children ? <Text style={[styles.text, textStyle]}>{children}</Text> : undefined}
+        {children ? (
+          <Text style={[styles.text, textStyle]} weight={500}>
+            {children}
+          </Text>
+        ) : undefined}
       </TouchableOpacity>
     );
   },

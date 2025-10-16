@@ -26,12 +26,12 @@ export const useStyles = createStyles(({ token }) => ({
     paddingTop: token.paddingXXS,
   },
   bubble: {
-    borderRadius: token.borderRadius,
+    borderRadius: token.borderRadiusLG * 1.5,
   },
   bubbleContainer: {
     alignItems: 'flex-start',
     flexDirection: 'column',
-    padding: token.paddingSM,
+    paddingBlock: 8,
   },
   codeBlockContainer: {
     backgroundColor: token.colorBgElevated,
@@ -71,7 +71,8 @@ export const useStyles = createStyles(({ token }) => ({
 
   userBubble: {
     backgroundColor: token.colorBgContainer,
-    paddingHorizontal: token.paddingSM,
+    paddingBlock: 8,
+    paddingInline: 16,
   },
 
   userBubbleContainer: {
