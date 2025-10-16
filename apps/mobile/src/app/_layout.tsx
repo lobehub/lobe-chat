@@ -1,4 +1,5 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { PortalProvider } from '@gorhom/portal';
 import { ThemeProvider, ToastProvider, useTheme, useThemeMode } from '@lobehub/ui-rn';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -163,24 +164,26 @@ const Layout = () => {
   const theme = useTheme();
   return (
     <GestureHandlerRootView style={{ backgroundColor: theme.colorBgLayout, flex: 1 }}>
-      <RootSiblingParent>
-        <ThemedSystemBars />
-        <Stack
-          screenOptions={{
-            contentStyle: {
-              backgroundColor: theme.colorBgLayout,
-            },
-            headerShown: false,
-          }}
-        >
-          {/* 指定首页, 防止 expo 路由错乱 */}
-          <Stack.Screen name="index" options={{ animation: 'none' }} />
-          {/* main page should not have animation */}
-          <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-          {/* auth page should not have animation  */}
-          <Stack.Screen name="auth" options={{ animation: 'none' }} />
-        </Stack>
-      </RootSiblingParent>
+      <BottomSheetModalProvider>
+        <RootSiblingParent>
+          <ThemedSystemBars />
+          <Stack
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: theme.colorBgLayout,
+              },
+              headerShown: false,
+            }}
+          >
+            {/* 指定首页, 防止 expo 路由错乱 */}
+            <Stack.Screen name="index" options={{ animation: 'none' }} />
+            {/* main page should not have animation */}
+            <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+            {/* auth page should not have animation  */}
+            <Stack.Screen name="auth" options={{ animation: 'none' }} />
+          </Stack>
+        </RootSiblingParent>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 };
