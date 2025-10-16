@@ -158,7 +158,6 @@ const AssistantDetail = () => {
               disabled={isAdding}
               loading={isAdding}
               onPress={handleAddAssistant}
-              size="large"
               type="primary"
             >
               {t('assistant.detail.addAndChat', { ns: 'discover' })}

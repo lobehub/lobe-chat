@@ -1,4 +1,4 @@
-import { ActionIcon, Flexbox, PageContainer, useTheme, useThemeMode } from '@lobehub/ui-rn';
+import { ActionIcon, Flexbox, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
 import { darken } from 'polished';
@@ -16,7 +16,7 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 
 export default function ChatWithDrawer() {
   const theme = useTheme();
-  const { isDarkMode } = useThemeMode();
+
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
   const { t } = useTranslation(['chat']);
@@ -29,11 +29,7 @@ export default function ChatWithDrawer() {
   const renderContent = () => {
     return (
       <PageContainer
-        backgroundColor={
-          isDarkMode
-            ? [theme.colorBgContainer, darken(0.04, theme.colorBgLayout)]
-            : [theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]
-        }
+        backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
         extra={
           <ActionIcon
             clickable={false}

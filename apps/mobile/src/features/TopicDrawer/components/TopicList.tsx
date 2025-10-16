@@ -1,9 +1,9 @@
+import { Cell, Empty, Flexbox, Tag, useTheme } from '@lobehub/ui-rn';
 import { MessageSquareDashed } from 'lucide-react-native';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native';
 
-import { useTheme } from '@/components/styles';
 import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
@@ -11,17 +11,15 @@ import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
-import TopicItem from '../TopicItem';
-import { useStyles } from './style';
+import TopicItem from './TopicItem';
 
 /**
  * TopicList - Topic列表组件
  * 展示当前会话下的所有话题
  */
 const TopicList = memo(() => {
-  const { styles } = useStyles();
   const { t } = useTranslation('topic');
-  const token = useTheme();
+  const theme = useTheme();
 
   // 获取当前会话的topics - 参考web端实现
   useFetchTopics();
@@ -35,51 +33,39 @@ const TopicList = memo(() => {
   // 如果是inbox且没有topics，显示提示信息
   if (activeId === 'inbox' && topics?.length === 0) {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{t('title')}</Text>
-        </View>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>{t('empty')}</Text>
-        </View>
-      </View>
+      <Flexbox flex={1} justify={'center'}>
+        <Empty description={t('empty')} />
+      </Flexbox>
     );
   }
 
   return (
     <ScrollView
-      contentContainerStyle={styles.scrollContent}
       removeClippedSubviews={true}
       scrollEventThrottle={32}
       showsVerticalScrollIndicator={false}
-      style={styles.scrollView}
+      style={{
+        flex: 1,
+      }}
     >
-      {/* 默认话题 - 始终显示在第一位，参考web端实现 */}
-      <TouchableOpacity
-        activeOpacity={0.7}
+      <Cell
+        active={!activeTopicId}
+        extra={<Tag>{t('temp')}</Tag>}
+        icon={MessageSquareDashed}
+        iconProps={{
+          color: theme.colorTextSecondary,
+        }}
+        iconSize={16}
         onPress={() => {
           switchTopic(); // 切换到默认topic (null)
           setTopicDrawerOpen(false);
         }}
-        style={[styles.defaultTopicContainer, !activeTopicId && styles.activeDefaultTopic]}
-      >
-        <View style={styles.defaultTopicIcon}>
-          <MessageSquareDashed
-            color={!activeTopicId ? token.colorText : token.colorTextSecondary}
-            size={16}
-          />
-        </View>
-        <View style={styles.defaultTopicContent}>
-          <Text
-            style={[styles.defaultTopicTitle, !activeTopicId && styles.activeDefaultTopicTitle]}
-          >
-            {t('defaultTitle')}
-          </Text>
-        </View>
-        <View style={styles.tempBadgeContainer}>
-          <Text style={styles.tempBadge}>{t('temp')}</Text>
-        </View>
-      </TouchableOpacity>
+        showArrow={false}
+        title={t('defaultTitle')}
+        titleProps={{
+          fontSize: 14,
+        }}
+      />
 
       {/* 实际的topic列表项 */}
       {topics?.map((topic) => (

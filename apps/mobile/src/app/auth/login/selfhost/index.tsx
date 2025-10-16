@@ -104,7 +104,6 @@ const CustomServerLoginPage = () => {
                 onSubmitEditing={handleContinue}
                 placeholder={t('login.selfHostedPlaceholder', { ns: 'auth' })}
                 returnKeyType="done"
-                size="large"
                 variant="outlined"
               />
             </Form.Item>
@@ -114,7 +113,6 @@ const CustomServerLoginPage = () => {
             block
             loading={isLoading}
             onPress={handleContinue}
-            size="large"
             style={styles.selfHostedButton}
             type="primary"
           >
