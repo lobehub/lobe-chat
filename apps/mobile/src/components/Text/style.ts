@@ -70,7 +70,7 @@ export const useStyles = createStyles(({ token }) => ({
     lineHeight: token.lineHeight,
   },
   secondary: {
-    color: token.colorTextSecondary,
+    color: token.colorTextDescription,
   },
   strong: {
     fontWeight: 'bold',

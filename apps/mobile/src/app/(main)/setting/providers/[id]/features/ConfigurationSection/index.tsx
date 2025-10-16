@@ -1,34 +1,34 @@
 import { AiProviderDetailItem } from '@lobechat/types';
-import { Input } from '@lobehub/ui-rn';
+import { Cell, Center, Flexbox, Form, Icon, Input, Text, useTheme } from '@lobehub/ui-rn';
 import { Lock } from 'lucide-react-native';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Linking, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking } from 'react-native';
 
 import { AES_GCM_URL } from '@/_const/url';
-import { Form } from '@/components';
 import { useAiInfraStore } from '@/store/aiInfra';
 
 import Checker from './Checker';
-import { useStyles } from './style';
 
 interface ConfigurationSectionProps {
   provider: AiProviderDetailItem;
+  setLoading: (loading: boolean) => void;
 }
 
 const isValidUrl = (url: string) => {
   return !url || url.match(/^https?:\/\/.+/);
 };
 
-const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
-  const { styles, theme } = useStyles();
+const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoading }) => {
+  const theme = useTheme();
   const { t } = useTranslation('setting');
 
   // Store hooks
   const { useFetchAiProviderItem, updateAiProviderConfig } = useAiInfraStore();
   const { data: providerData } = useFetchAiProviderItem(provider.id);
+
+  // Form state
   const [form] = Form.useForm();
-  const [isUpdating, setIsUpdating] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
 
   const initialValues = useMemo(
@@ -42,7 +42,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   // Update function for onBlur events
   const updateField = useCallback(
     async (field: 'apiKey' | 'baseURL', value: string) => {
-      setIsUpdating(true);
+      setLoading(true);
       try {
         const updateData = {
           keyVaults: {
@@ -60,7 +60,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
           t('aiProviders.configuration.updateFailedDesc', { ns: 'setting' }),
         );
       } finally {
-        setIsUpdating(false);
+        setLoading(false);
       }
     },
     [providerData?.keyVaults, provider.id, updateAiProviderConfig, t],
@@ -97,54 +97,52 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   const isServerMode = true;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.sectionTitle}>
-        {t('aiProviders.configuration.title', { ns: 'setting' })}
-      </Text>
-
+    <Flexbox gap={8} paddingInline={16}>
       <Form form={form} initialValues={initialValues}>
         {/* API Key Field */}
         {shouldShowApiKey && (
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>
-              {t('aiProviders.configuration.apiKey.label', { ns: 'setting' })}
-            </Text>
-            <Text style={styles.inputDescription}>
-              {t('aiProviders.configuration.apiKey.description', {
+          <Flexbox>
+            <Cell
+              description={t('aiProviders.configuration.apiKey.description', {
                 name: provider.name || provider.id,
                 ns: 'setting',
               })}
-            </Text>
+              paddingInline={0}
+              showArrow={false}
+              title={t('aiProviders.configuration.apiKey.label', { ns: 'setting' })}
+            />
             <Form.Item name="apiKey" style={{ marginBottom: 0 }}>
               <Input.Password
                 autoCapitalize="none"
                 autoComplete="off"
                 autoCorrect={false}
-                editable={!isChecking}
+                disabled={isChecking}
                 onBlur={handleApiKeyBlur}
                 placeholder={t('aiProviders.configuration.apiKey.placeholder', {
                   name: provider.name || provider.id,
                   ns: 'setting',
                 })}
-                size="large"
-                style={[styles.textInput, isChecking && styles.textInputDisabled]}
                 variant="outlined"
               />
             </Form.Item>
-          </View>
+          </Flexbox>
         )}
 
         {/* API Proxy URL Field */}
         {showProxyUrl && (
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>
-              {(proxyUrlConfig && typeof proxyUrlConfig === 'object' && proxyUrlConfig.title) ||
-                t('aiProviders.configuration.proxyUrl.title', { ns: 'setting' })}
-            </Text>
-            <Text style={styles.inputDescription}>
-              {(proxyUrlConfig && typeof proxyUrlConfig === 'object' && proxyUrlConfig.desc) ||
-                t('aiProviders.configuration.proxyUrl.desc', { ns: 'setting' })}
-            </Text>
+          <Flexbox>
+            <Cell
+              description={
+                (proxyUrlConfig && typeof proxyUrlConfig === 'object' && proxyUrlConfig.desc) ||
+                t('aiProviders.configuration.proxyUrl.desc', { ns: 'setting' })
+              }
+              paddingInline={0}
+              showArrow={false}
+              title={
+                (proxyUrlConfig && typeof proxyUrlConfig === 'object' && proxyUrlConfig.title) ||
+                t('aiProviders.configuration.proxyUrl.title', { ns: 'setting' })
+              }
+            />
             <Form.Item
               name="proxyUrl"
               rules={[
@@ -160,39 +158,37 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
               style={{ marginBottom: 0 }}
               validateTrigger={['onChangeText', 'onBlur']}
             >
-              <View>
-                <Input
-                  autoCapitalize="none"
-                  autoComplete="off"
-                  autoCorrect={false}
-                  editable={!isChecking}
-                  keyboardType="url"
-                  onBlur={handleProxyUrlBlur}
-                  placeholder={
-                    (proxyUrlConfig &&
-                      typeof proxyUrlConfig === 'object' &&
-                      proxyUrlConfig.placeholder) ||
-                    t('aiProviders.configuration.proxyUrl.placeholder', { ns: 'setting' })
-                  }
-                  size="large"
-                  style={[styles.textInput, isChecking && styles.textInputDisabled]}
-                />
-                {isChecking && (
-                  <View style={styles.loadingIndicator}>
-                    <ActivityIndicator color={theme.colorTextSecondary} size="small" />
-                  </View>
-                )}
-              </View>
+              <Input
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect={false}
+                disabled={isChecking}
+                keyboardType="url"
+                onBlur={handleProxyUrlBlur}
+                placeholder={
+                  (proxyUrlConfig &&
+                    typeof proxyUrlConfig === 'object' &&
+                    proxyUrlConfig.placeholder) ||
+                  t('aiProviders.configuration.proxyUrl.placeholder', { ns: 'setting' })
+                }
+                suffix={
+                  isChecking && <ActivityIndicator color={theme.colorTextSecondary} size="small" />
+                }
+              />
             </Form.Item>
-          </View>
+          </Flexbox>
         )}
       </Form>
 
       {/* Connectivity Checker */}
       {showChecker && (
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>{t('providerModels.config.checker.title')}</Text>
-          <Text style={styles.inputDescription}>{t('providerModels.config.checker.desc')}</Text>
+        <Flexbox>
+          <Cell
+            description={t('providerModels.config.checker.desc')}
+            paddingInline={0}
+            showArrow={false}
+            title={t('providerModels.config.checker.title')}
+          />
           <Checker
             model={provider.checkModel!}
             onAfterCheck={async () => {
@@ -212,34 +208,25 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
             }}
             provider={provider.id}
           />
-        </View>
+        </Flexbox>
       )}
 
       {/* AES-GCM Encryption Notice */}
       {isServerMode && (
-        <View style={styles.aesGcmContainer}>
-          <View style={styles.aesGcmContent}>
-            <Lock color={theme.colorTextQuaternary} size={theme.fontSize} />
-            <Text style={styles.aesGcmText}>
-              <Trans i18nKey="providerModels.config.aesGcm" ns="setting">
-                您的秘钥与代理地址等将使用
-                <Text onPress={() => Linking.openURL(AES_GCM_URL)} style={styles.aesGcmLink}>
-                  AES-GCM
-                </Text>
-                算法进行加密
-              </Trans>
-            </Text>
-          </View>
-        </View>
+        <Center gap={6} horizontal paddingBlock={16}>
+          <Icon color={theme.colorTextDescription} icon={Lock} size={14} />
+          <Text type={'secondary'}>
+            <Trans i18nKey="providerModels.config.aesGcm" ns="setting">
+              您的秘钥与代理地址等将使用
+              <Text onPress={() => Linking.openURL(AES_GCM_URL)} type={'info'}>
+                AES-GCM
+              </Text>
+              算法进行加密
+            </Trans>
+          </Text>
+        </Center>
       )}
-
-      {/* Update status indicator */}
-      {isUpdating && (
-        <Text style={styles.updatingIndicator}>
-          {t('aiProviders.configuration.saving', { ns: 'setting' })}
-        </Text>
-      )}
-    </View>
+    </Flexbox>
   );
 });
 
