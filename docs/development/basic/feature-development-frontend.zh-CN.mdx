@@ -5,7 +5,9 @@ LobeChat 基于 Next.js 框架构建，使用 TypeScript 作为主要开发语�
 1. 路由：定义路由 (`src/app`)
 2. 数据结构： 定义数据结构 ( `src/types` )
 3. 业务功能实现： zustand store (`src/store`)
-4. 页面展示：书写静态组件 / 页面 (`src/app/<new-page>/features/<new-feature>.tsx`)
+4. 页面展示：书写静态组件 / 页面。根据以下方式创建功能组件：
+   - `src/features/<feature-name>/` 用于 **全局共享功能**（跨多个页面使用）
+   - `src/app/<new-page>/features/<feature-name>/` 用于 **页面专属功能**（仅在当前页面使用）
 5. 功能绑定：绑定 store 与页面的触发 (`const  [state,function]= useNewStore(s=>[s.state,s.function])`)
 
 我们以 "会话消息" 功能为例，以下是实现这个功能的简要步骤：
@@ -60,7 +62,8 @@ export const useChatStore = create<ChatState>((set) => ({
 在 `src/app/<new-page>/features/<new-feature>.tsx` 中，我们需要创建一个新的页面或组件来显示 "会话消息"。在这个文件中，我们可以使用上面创建的 Zustand Store，以及 Ant Design 的组件来构建 UI：
 
 ```jsx
-// src/features/chat/index.tsx
+// src/app/chat/features/ChatPage/index.tsx
+// 注意：使用 src/app/<page>/features/ 放置页面专属组件
 import { List, Typography } from 'antd';
 import { useChatStore } from 'src/store/chatStore';
 
@@ -81,6 +84,12 @@ const ChatPage = () => {
 
 export default ChatPage;
 ```
+
+> **关于功能组件组织方式的说明**：LobeChat 使用两种模式来组织功能组件：
+> - **全局功能**（`src/features/`）：跨应用共享的组件，如 `ChatInput`、`Conversation` 等
+> - **页面专属功能**（`src/app/<page>/features/`）：仅在特定页面路由中使用的组件
+>
+> 根据可复用性选择合适的方式。如果不确定，可以先放在页面专属位置，需要时再重构为全局共享。
 
 ## 5. 功能绑定
 

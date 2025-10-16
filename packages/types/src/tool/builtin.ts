@@ -49,3 +49,18 @@ export interface BuiltinPortalProps<Arguments = Record<string, any>, State = any
 }
 
 export type BuiltinPortal = <T = any>(props: BuiltinPortalProps<T>) => ReactNode;
+
+export interface BuiltinPlaceholderProps {
+  apiName: string;
+  args?: Record<string, any>;
+  identifier: string;
+}
+
+export type BuiltinPlaceholder = (props: BuiltinPlaceholderProps) => ReactNode;
+
+export interface BuiltinServerRuntimeOutput {
+  content: string;
+  error?: any;
+  state?: any;
+  success: boolean;
+}

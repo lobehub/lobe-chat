@@ -43,14 +43,7 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
 
-  const isLoading = useChatStore((s) => {
-    const toolMessageId = chatSelectors.getMessageByToolCallId(toolCallId)(s)?.id;
-    const isToolCallStreaming = chatSelectors.isToolCallStreaming(messageId, index)(s);
-    const isPluginApiInvoking = !toolMessageId
-      ? true
-      : chatSelectors.isPluginApiInvoking(toolMessageId)(s);
-    return isToolCallStreaming || isPluginApiInvoking;
-  });
+  const isLoading = useChatStore(chatSelectors.isToolApiNameShining(messageId, index, toolCallId));
 
   const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 

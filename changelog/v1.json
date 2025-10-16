@@ -1,6 +1,199 @@
 [
   {
     "children": {
+      "fixes": ["Automatic topic creation switch does not work."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.1"
+  },
+  {
+    "children": {
+      "features": ["Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Claude Haiku 4.5 model."]
+    },
+    "date": "2025-10-16",
+    "version": "1.137.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve update notification."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix duplicate tools id issue and fix link dialog issue."],
+      "improvements": ["Add region support for Vertex AI provider."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.8"
+  },
+  {
+    "children": {
+      "improvements": ["Use different favicon.ico in dev mode."]
+    },
+    "date": "2025-10-15",
+    "version": "1.137.7"
+  },
+  {
+    "children": {
+      "fixes": ["Update Claude workflows to use oauth token, vertext ai create image."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add imagen model to vertex ai."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.5"
+  },
+  {
+    "children": {
+      "fixes": ["Prevent Vertex AI JSON credentials from being split by comma."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.4"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix mcp server connect issue and refactor web search implement, fix tools calling long name length >64 issue."
+      ]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix the Worker URL cross-origin issue."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.2"
+  },
+  {
+    "children": {
+      "improvements": ["Change the user chatItem maxWidth should use flex 1."]
+    },
+    "date": "2025-10-14",
+    "version": "1.137.1"
+  },
+  {
+    "children": {
+      "features": ["Add new setting for default image num."]
+    },
+    "date": "2025-10-12",
+    "version": "1.137.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix input cannot send markdown."],
+      "improvements": ["Optimize OpenRouter modelFetch endpoint, update i18n."]
+    },
+    "date": "2025-10-12",
+    "version": "1.136.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add more AWS regions, Update infini-ai models."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.12"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add capability inference for web search, image output and video recognition in model parsing and update UI form items to support search, imageOutput and video abilities."
+      ]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.11"
+  },
+  {
+    "children": {
+      "improvements": ["Improve search experience."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add lab to support disable/enable rich text."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.9"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.8"
+  },
+  {
+    "children": {
+      "fixes": ["Disable rich text in markdown editor."]
+    },
+    "date": "2025-10-11",
+    "version": "1.136.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.6"
+  },
+  {
+    "children": {},
+    "date": "2025-10-11",
+    "version": "1.136.5"
+  },
+  {
+    "children": {
+      "fixes": ["Add 'gemini-2.5-flash-image' to disabled models Thinking."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add delete & regenerate hotkeys."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-10",
+    "version": "1.136.2"
+  },
+  {
+    "children": {},
+    "date": "2025-10-09",
+    "version": "1.136.1"
+  },
+  {
+    "children": {
+      "features": ["Add new provider Cerebras."],
+      "fixes": ["Fix standalone plugin rerender issue."]
+    },
+    "date": "2025-10-09",
+    "version": "1.136.0"
+  },
+  {
+    "children": {},
+    "date": "2025-10-08",
+    "version": "1.135.6"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-10-08",

@@ -1,5 +1,6 @@
+import { LobeBuiltinTool } from '@lobechat/types';
+
 import { builtinTools } from '@/tools';
-import { LobeBuiltinTool } from '@/types/tool';
 
 export interface BuiltinToolState {
   builtinToolLoading: Record<string, boolean>;

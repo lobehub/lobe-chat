@@ -288,11 +288,21 @@ export default {
           placeholder: '请输入模型 id，例如 gpt-4o 或 claude-3.5-sonnet',
           title: '模型 ID',
         },
+        imageOutput: {
+          extra:
+            '此配置将仅开启模型生成图片的能力，具体效果完全取决于模型本身，请自行测试该模型是否具备可用的图片生成能力',
+          title: '支持图片生成',
+        },
         modalTitle: '自定义模型配置',
         reasoning: {
           extra:
             '此配置将仅开启模型深度思考的能力，具体效果完全取决于模型本身，请自行测试该模型是否具备可用的深度思考能力',
           title: '支持深度思考',
+        },
+        search: {
+          extra:
+            '此配置将仅开启模型内置搜索引擎的联网搜索能力，是否支持内置搜索引擎取决于模型本身，请自行测试该模型的内置搜索引擎能力可用性',
+          title: '支持联网搜索',
         },
         tokens: {
           extra: '设置模型支持的最大 Token 数',
@@ -313,6 +323,11 @@ export default {
           },
           placeholder: '请选择模型类型',
           title: '模型类型',
+        },
+        video: {
+          extra:
+            '此配置将仅开启应用中的视频识别配置，是否支持识别完全取决于模型本身，请自行测试该模型的视频识别能力可用性',
+          title: '支持视频识别',
         },
         vision: {
           extra:
@@ -391,6 +406,11 @@ export default {
       desc: '填入你的 Vertex Ai Keys',
       placeholder: `{ "type": "service_account", "project_id": "xxx", "private_key_id": ... }`,
       title: 'Vertex AI Keys',
+    },
+    region: {
+      desc: '选择 Vertex AI 服务的区域。某些模型如 Gemini 2.5 仅在特定区域可用（如 global）',
+      placeholder: '选择区域',
+      title: 'Vertex AI 区域',
     },
   },
   zeroone: {

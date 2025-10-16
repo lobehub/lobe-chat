@@ -47,6 +47,10 @@ export interface ModelAbilities {
    */
   search?: boolean;
   /**
+   * whether model supports structured output
+   */
+  structuredOutput?: boolean;
+  /**
    * whether model supports video
    */
   video?: boolean;
@@ -59,8 +63,10 @@ export interface ModelAbilities {
 const AiModelAbilitiesSchema = z.object({
   // files: z.boolean().optional(),
   functionCall: z.boolean().optional(),
+  imageOutput: z.boolean().optional(),
   reasoning: z.boolean().optional(),
   search: z.boolean().optional(),
+  video: z.boolean().optional(),
   vision: z.boolean().optional(),
 });
 

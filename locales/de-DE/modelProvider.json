@@ -284,10 +284,18 @@
           "placeholder": "Bitte Modell-ID eingeben, z. B. gpt-4o oder claude-3.5-sonnet",
           "title": "Modell-ID"
         },
+        "imageOutput": {
+          "extra": "Diese Einstellung aktiviert lediglich die Fähigkeit des Modells zur Bildgenerierung. Die tatsächliche Leistung hängt vollständig vom Modell selbst ab. Bitte testen Sie selbst, ob das Modell über eine nutzbare Bildgenerierungsfunktion verfügt.",
+          "title": "Bildgenerierung unterstützen"
+        },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "reasoning": {
           "extra": "Diese Konfiguration aktiviert nur die Fähigkeit des Modells zu tiefem Denken. Die tatsächlichen Ergebnisse hängen vollständig vom Modell selbst ab. Bitte testen Sie selbst, ob das Modell über die Fähigkeit zum tiefen Denken verfügt.",
           "title": "Unterstützung für tiefes Denken"
+        },
+        "search": {
+          "extra": "Diese Einstellung aktiviert lediglich die integrierte Internetsuchfunktion des Modells. Ob eine integrierte Suchmaschine unterstützt wird, hängt vom Modell selbst ab. Bitte testen Sie selbst, ob die Suchfunktion des Modells verfügbar ist.",
+          "title": "Internetsuche unterstützen"
         },
         "tokens": {
           "extra": "Maximale Token-Anzahl für das Modell festlegen",
@@ -308,6 +316,10 @@
           },
           "placeholder": "Bitte Modelltyp auswählen",
           "title": "Modelltyp"
+        },
+        "video": {
+          "extra": "Diese Einstellung aktiviert lediglich die Videorekognition innerhalb der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie selbst, ob das Modell über eine nutzbare Videorekognitionsfunktion verfügt.",
+          "title": "Videoerkennung unterstützen"
         },
         "vision": {
           "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Funktionalität in der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verwendbarkeit der visuellen Erkennungsfähigkeit des Modells selbst.",
@@ -387,6 +399,11 @@
       "desc": "Geben Sie Ihre Vertex AI-Schlüssel ein",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Vertex AI-Schlüssel"
+    },
+    "region": {
+      "desc": "Wählen Sie die Region für den Vertex AI-Dienst aus. Einige Modelle wie Gemini 2.5 sind nur in bestimmten Regionen verfügbar (z. B. global).",
+      "placeholder": "Region auswählen",
+      "title": "Vertex AI-Region"
     }
   },
   "zeroone": {
