@@ -70,10 +70,9 @@ describe('GroupChatSupervisor', () => {
     expect(aiChatService.generateJSON).toHaveBeenCalledTimes(1);
     const [payload] = vi.mocked(aiChatService.generateJSON).mock.calls[0];
     expect(payload).toMatchObject({
-      messages: [{ content: 'please generate your decisions', role: 'user' }],
+      messages: [{ content: 'structured-supervisor-prompt', role: 'user' }],
       model: 'gpt-4o',
       provider: 'openai',
-      systemRole: 'structured-supervisor-prompt',
       temperature: 0.3,
     });
 
