@@ -85,19 +85,32 @@
     "title": "Configuración de colores"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "El token de acceso ha expirado inmediatamente",
-        "title": "Token de acceso expirado"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "El token de acceso ha expirado inmediatamente",
+          "title": "Token de acceso expirado"
+        },
+        "invalidate": {
+          "success": "Se ha registrado un token de acceso inválido",
+          "title": "Token de acceso inválido"
+        }
       },
-      "invalidate": {
-        "success": "Se ha invalidado el token de acceso",
-        "title": "Token de acceso inválido"
+      "clearAuthData": {
+        "success": "Datos de autenticación borrados",
+        "title": "Borrar datos de autenticación"
+      },
+      "group": "Configuración de autenticación",
+      "refreshToken": {
+        "expire": {
+          "success": "El token de actualización ha expirado inmediatamente",
+          "title": "Token de actualización expirado"
+        },
+        "invalidate": {
+          "success": "Se ha registrado un token de actualización inválido",
+          "title": "Token de actualización inválido"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Datos de autenticación borrados",
-      "title": "Borrar datos de autenticación"
     },
     "failurePrefix": "Operación fallida: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Modo desarrollador activado",
       "remaining": "Presiona {{count}} veces más para activar el modo desarrollador",
       "title": "Modo desarrollador"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "El token de actualización ha expirado inmediatamente",
-        "title": "Token de actualización expirado"
-      },
-      "invalidate": {
-        "success": "Se ha invalidado el token de actualización",
-        "title": "Token de actualización inválido"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Ir a la página de inicio de sesión",

@@ -85,19 +85,32 @@
     "title": "Configurações de cor"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Token de acesso expirado imediatamente",
-        "title": "Expiração do token de acesso"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Token de acesso expirado imediatamente",
+          "title": "Expiração do token de acesso"
+        },
+        "invalidate": {
+          "success": "Token de acesso inválido registrado",
+          "title": "Token de acesso inválido"
+        }
       },
-      "invalidate": {
-        "success": "Token de acesso inválido registrado",
-        "title": "Token de acesso inválido"
+      "clearAuthData": {
+        "success": "Dados de autenticação limpos",
+        "title": "Limpar dados de autenticação"
+      },
+      "group": "Configuração de autenticação",
+      "refreshToken": {
+        "expire": {
+          "success": "Token de atualização expirado imediatamente",
+          "title": "Expiração do token de atualização"
+        },
+        "invalidate": {
+          "success": "Token de atualização inválido registrado",
+          "title": "Token de atualização inválido"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Dados de autenticação limpos",
-      "title": "Limpar dados de autenticação"
     },
     "failurePrefix": "Operação falhou: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Modo desenvolvedor ativado",
       "remaining": "Toque mais {{count}} vezes para ativar o modo desenvolvedor",
       "title": "Modo desenvolvedor"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Token de atualização expirado imediatamente",
-        "title": "Expiração do token de atualização"
-      },
-      "invalidate": {
-        "success": "Token de atualização inválido registrado",
-        "title": "Token de atualização inválido"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Ir para a página de login",
