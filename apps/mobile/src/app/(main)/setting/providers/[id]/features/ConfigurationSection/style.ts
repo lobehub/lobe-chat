@@ -1,5 +1,3 @@
-import { StyleSheet } from 'react-native';
-
 import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
@@ -26,6 +24,15 @@ export const useStyles = createStyles(({ token }) => ({
     flexShrink: 1,
     fontSize: token.fontSize,
     textAlign: 'left',
+  },
+
+  // Bottom Sheet styles
+  bottomSheetBackground: {
+    backgroundColor: token.colorBgElevated,
+  },
+
+  bottomSheetHandle: {
+    backgroundColor: token.colorBorder,
   },
 
   // Checker 相关样式
@@ -147,20 +154,6 @@ export const useStyles = createStyles(({ token }) => ({
     transform: [{ translateY: -8 }], // 居中对齐
   },
 
-  // Modal styles
-  modalBackdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: token.colorBgMask,
-  },
-
-  modalContent: {
-    backgroundColor: token.colorBgElevated,
-    borderTopLeftRadius: token.borderRadiusLG,
-    borderTopRightRadius: token.borderRadiusLG,
-    maxHeight: '50%',
-    paddingBottom: 20,
-  },
-
   modalHeader: {
     alignItems: 'center',
     borderBottomColor: token.colorBorder,
@@ -174,9 +167,10 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     borderRadius: token.borderRadius,
     flexDirection: 'row',
-    height: 56, // Fixed height for FlatList optimization
+    height: 64, // Fixed height for FlashList optimization (56 + 8 padding)
     justifyContent: 'space-between',
-    marginTop: token.marginXS,
+    marginHorizontal: token.padding,
+    marginVertical: token.marginXXS,
     paddingHorizontal: token.paddingSM,
   },
 
@@ -202,25 +196,13 @@ export const useStyles = createStyles(({ token }) => ({
   },
 
   modalList: {
-    paddingHorizontal: token.padding,
-  },
-
-  modalOverlay: {
-    backgroundColor: token.colorBgMask,
-    flex: 1,
-    justifyContent: 'flex-end',
+    paddingBottom: token.paddingSM,
   },
 
   modalTitle: {
     color: token.colorText,
     fontSize: token.fontSizeLG,
     fontWeight: token.fontWeightStrong,
-  },
-
-  modalWrapper: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    pointerEvents: 'box-none',
   },
 
   modelSelector: {
