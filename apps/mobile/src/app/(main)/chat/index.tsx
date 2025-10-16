@@ -47,12 +47,12 @@ export default function ChatWithDrawer() {
         <KeyboardAvoidingView
           behavior="padding"
           enabled
-          keyboardVerticalOffset={theme.marginXS}
+          keyboardVerticalOffset={16}
           style={{ flex: 1 }}
         >
           <ChatList />
+          <ChatInput />
         </KeyboardAvoidingView>
-        <ChatInput />
       </PageContainer>
     );
   };
