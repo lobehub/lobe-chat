@@ -1,19 +1,25 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/const';
 import { FluentEmoji, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import isEqual from 'fast-deep-equal';
+import React, { memo, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { BRANDING_NAME } from '@/const/branding';
-import { isCustomBranding } from '@/const/version';
 import { useGreeting } from '@/hooks/useGreeting';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import AddButton from './AddButton';
-import AgentsSuggest from './AgentsSuggest';
-import QuestionSuggest from './QuestionSuggest';
+import OpeningQuestions from './OpeningQuestions';
 
 const useStyles = createStyles(({ css, responsive }) => ({
   container: css`
@@ -41,14 +47,30 @@ const useStyles = createStyles(({ css, responsive }) => ({
 }));
 
 const InboxWelcome = memo(() => {
-  const { t } = useTranslation('welcome');
+  const { t } = useTranslation(['welcome', 'chat']);
   const { styles } = useStyles();
-  const mobile = useServerConfigStore((s) => s.isMobile);
+  const mobile = useIsMobile();
   const greeting = useGreeting();
-  const { showWelcomeSuggest, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const openingQuestions = useAgentStore(agentSelectors.openingQuestions);
+
+  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+
+  const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
+    name: meta.title || t('defaultAgent', { ns: 'chat' }),
+    ns: 'chat',
+  });
+  const openingMessage = useAgentStore(agentSelectors.openingMessage);
+
+  const showInboxWelcome = useChatStore(chatSelectors.showInboxWelcome);
+
+  const message = useMemo(() => {
+    if (openingMessage) return openingMessage;
+    return agentSystemRoleMsg;
+  }, [openingMessage, agentSystemRoleMsg, meta.description]);
 
   return (
-    <Center padding={16} width={'100%'}>
+    <Center gap={12} padding={16} width={'100%'}>
       <Flexbox className={styles.container} gap={16} style={{ maxWidth: 800 }} width={'100%'}>
         <Flexbox align={'center'} gap={8} horizontal>
           <FluentEmoji emoji={'👋'} size={40} type={'anim'} />
@@ -74,15 +96,14 @@ const InboxWelcome = memo(() => {
           }}
           variant={'chat'}
         >
-          {t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
-            appName: BRANDING_NAME,
-          })}
+          {showInboxWelcome
+            ? t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
+                appName: BRANDING_NAME,
+              })
+            : message}
         </Markdown>
-        {showWelcomeSuggest && (
-          <>
-            <AgentsSuggest mobile={mobile} />
-            {!isCustomBranding && <QuestionSuggest mobile={mobile} />}
-          </>
+        {openingQuestions.length > 0 && (
+          <OpeningQuestions mobile={mobile} questions={openingQuestions} />
         )}
       </Flexbox>
     </Center>

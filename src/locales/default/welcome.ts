@@ -381,7 +381,7 @@ export default {
     },
     questions: {
       moreBtn: '了解更多',
-      title: '大家都在问：',
+      title: '试着问问：',
     },
     welcome: {
       afternoon: '下午好',
