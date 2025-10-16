@@ -1,6 +1,8 @@
 import { forwardRef } from 'react';
 import { TextInput as RNTextInput } from 'react-native';
 
+import { useThemeMode } from '@/components';
+
 import Block from '../../Block';
 import { TextAreaProps } from '../type';
 import { useStyles } from './style';
@@ -10,7 +12,7 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
     style,
     placeholderTextColor,
     underlineColorAndroid,
-    variant = 'filled',
+    variant,
     disabled,
     size,
     textStyle,
@@ -19,12 +21,13 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
   } = props;
 
   const { styles, theme } = useStyles({ size });
+  const { isDarkMode } = useThemeMode();
 
   return (
     <Block
       disabled={disabled}
       style={[disabled && { opacity: 0.6 }, style]}
-      variant={disabled ? 'filled' : variant}
+      variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
     >
       <RNTextInput
         autoCapitalize="none"
