@@ -1,3 +1,4 @@
+import { Flexbox } from '@lobehub/ui-rn';
 import isEqual from 'fast-deep-equal';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -49,10 +50,10 @@ const WelcomeMessage = () => {
   );
 
   return openingQuestions.length > 0 ? (
-    <>
+    <Flexbox gap={16}>
       {welcomeBubble}
       <OpeningQuestions questions={openingQuestions} />
-    </>
+    </Flexbox>
   ) : (
     welcomeBubble
   );

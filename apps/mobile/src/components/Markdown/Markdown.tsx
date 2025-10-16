@@ -34,10 +34,10 @@ const Markdown = memo<MarkdownProps>(
     children,
     customRenderers,
     customStyles,
-    fontSize = 16,
-    headerMultiple = 1,
+    fontSize = 14,
+    headerMultiple = 0.25,
     lineHeight = 1.6,
-    marginMultiple = 2,
+    marginMultiple = 1,
   }) => {
     const tree = useMemo(() => parser.parse(children), [children]);
 

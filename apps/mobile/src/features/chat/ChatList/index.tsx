@@ -204,7 +204,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
   }
 
   return (
-    <Flexbox flex={1} style={style}>
+    <Flexbox flex={1} paddingInline={16} style={style}>
       <FlashList
         ListEmptyComponent={renderEmptyComponent}
         data={messages}

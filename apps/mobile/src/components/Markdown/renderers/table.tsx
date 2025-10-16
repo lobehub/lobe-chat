@@ -1,5 +1,6 @@
 import { Table, TableCell, TableRow } from 'mdast';
 import {
+  Fragment,
   ReactNode,
   createContext,
   useCallback,
@@ -8,8 +9,10 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { LayoutChangeEvent, TextStyle, View } from 'react-native';
+import { LayoutChangeEvent, ScrollView, TextStyle, View } from 'react-native';
 
+import Block from '../../Block';
+import Divider from '../../Divider';
 import Text from '../../Text';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
@@ -90,22 +93,26 @@ export const TableRenderer = ({ node }: RendererArgs<Table>): ReactNode => {
       columnCount={node.children[0]?.children.length ?? 0}
       rowCount={node.children.length ?? 0}
     >
-      {/* <ScrollView horizontal> */}
-      <View
+      <Block
         style={[
-          {
-            boxSizing: 'border-box',
-            overflow: 'scroll',
-            width: '100%',
-          },
           styles.table,
+          {
+            overflow: 'hidden',
+          },
         ]}
+        variant={'outlined'}
       >
-        {node.children.map((child, idx) => (
-          <TableRowRenderer index={idx} key={idx} node={child} parent={node} />
-        ))}
-      </View>
-      {/* </ScrollView> */}
+        <ScrollView horizontal>
+          <View style={{ minWidth: '100%' }}>
+            {node.children.map((child, idx) => (
+              <Fragment key={idx}>
+                {idx !== 0 && <Divider />}
+                <TableRowRenderer index={idx} node={child} parent={node} />
+              </Fragment>
+            ))}
+          </View>
+        </ScrollView>
+      </Block>
     </TableContextProvider>
   );
 };

@@ -66,7 +66,6 @@ export const useStyles = createStyles(({ token }) => ({
     fontStyle: 'italic',
   },
   p: {
-    fontSize: token.fontSize,
     lineHeight: token.lineHeight,
   },
   secondary: {
@@ -81,7 +80,6 @@ export const useStyles = createStyles(({ token }) => ({
   text: {
     color: token.colorText,
     fontFamily: token.fontFamily,
-    fontSize: token.fontSize,
   },
 
   underline: {

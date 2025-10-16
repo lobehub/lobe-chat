@@ -1,8 +1,9 @@
 import * as Clipboard from 'expo-clipboard';
 import { Check, Copy } from 'lucide-react-native';
 import { memo, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable } from 'react-native';
 
+import Block from '@/components/Block';
 import Icon from '@/components/Icon';
 
 import FullFeatured from './FullFeatured';
@@ -59,7 +60,7 @@ const Highlighter = memo<HighlighterProps>(
     }
 
     return (
-      <View style={[styles.container, style]} testID="highlighter">
+      <Block style={[styles.container, style]} testID="highlighter" variant={'outlined'}>
         {copyable && (
           <Pressable
             onPress={handleCopy}
@@ -75,7 +76,7 @@ const Highlighter = memo<HighlighterProps>(
         )}
 
         <TokenDisplay code={code} lang={matchedLanguage} />
-      </View>
+      </Block>
     );
   },
 );

@@ -12,7 +12,7 @@ export const useStyles = createStyles(({ token }) => ({
     flexDirection: 'row',
     flexShrink: 0,
     fontFamily: token.fontFamilyCode,
-    fontSize: token.fontSize,
+    fontSize: 12,
     lineHeight: token.lineHeight,
   },
   codeScrollContainer: {
@@ -23,7 +23,7 @@ export const useStyles = createStyles(({ token }) => ({
   codeText: {
     flexShrink: 0,
     fontFamily: token.fontFamilyCode,
-    fontSize: token.fontSize,
+    fontSize: 12,
     lineHeight: token.lineHeight,
   },
   errorText: {
