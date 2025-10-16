@@ -2,6 +2,7 @@ import { Button, Divider, Empty, Flexbox, Markdown, Text, TextArea } from '@lobe
 import { ReactNode, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, TextInput } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { agentSelectors, useAgentStore } from '@/store/agent';
 import { useSessionStore } from '@/store/session';
@@ -108,7 +109,7 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(({ header })
 
   // 编辑态
   return (
-    <>
+    <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
       <ScrollView
         style={{
           flex: 1,
@@ -131,6 +132,6 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(({ header })
           {t('agentRoleEdit.confirm', { ns: 'chat' })}
         </Button>
       </Flexbox>
-    </>
+    </KeyboardAvoidingView>
   );
 });
