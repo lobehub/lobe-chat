@@ -35,7 +35,7 @@ const AgentCardComponent = ({ item }: AgentCardProps) => {
               <Space align="center">
                 <GitHubAvatar size={24} username={item.author} />
                 <Text style={styles.authorName}>
-                  {item.author || 'LobeChat'}{' '}
+                  {item.author || 'LobeChat'}
                   <Text style={styles.date}>{dayjs(item.createdAt).format('YYYY-MM-DD')}</Text>
                 </Text>
               </Space>

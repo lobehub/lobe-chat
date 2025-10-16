@@ -191,7 +191,21 @@ const ProviderDetailPage = () => {
   } else {
     content = (
       <>
-        <Flexbox paddingBlock={4} paddingInline={16}>
+        <ProviderInfoSection
+          provider={
+            {
+              ...flashListData.find((item) => item.type === 'provider-info'),
+              ...builtinProviderCard,
+            } as any
+          }
+          setLoading={setLoading}
+        />
+        <Flexbox
+          paddingInline={16}
+          style={{
+            paddingBottom: 8,
+          }}
+        >
           <Segmented
             block
             onChange={(v) => setTab(v as Tabs)}
@@ -215,9 +229,7 @@ const ProviderDetailPage = () => {
             {
               children: (
                 <FlashList
-                  data={flashListData.filter((item) =>
-                    ['provider-info', 'configuration'].includes(item.type),
-                  )}
+                  data={flashListData.filter((item) => ['configuration'].includes(item.type))}
                   drawDistance={500}
                   getItemType={(item) => item.type}
                   keyExtractor={keyExtractor}
