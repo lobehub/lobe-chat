@@ -85,19 +85,32 @@
     "title": "カラー設定"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "アクセス トークンを即時に期限切れにしました",
-        "title": "アクセス トークンの期限切れ"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "アクセストークンを即時に期限切れにしました",
+          "title": "アクセストークンの期限切れ"
+        },
+        "invalidate": {
+          "success": "無効なアクセストークンを書き込みました",
+          "title": "無効なアクセストークン"
+        }
       },
-      "invalidate": {
-        "success": "無効なアクセス トークンを書き込みました",
-        "title": "無効なアクセス トークン"
+      "clearAuthData": {
+        "success": "認証データをクリアしました",
+        "title": "認証データのクリア"
+      },
+      "group": "認証設定",
+      "refreshToken": {
+        "expire": {
+          "success": "リフレッシュトークンを即時に期限切れにしました",
+          "title": "リフレッシュトークンの期限切れ"
+        },
+        "invalidate": {
+          "success": "無効なリフレッシュトークンを書き込みました",
+          "title": "無効なリフレッシュトークン"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "認証データをクリアしました",
-      "title": "認証データのクリア"
     },
     "failurePrefix": "操作失敗: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "開発者モードが有効になりました",
       "remaining": "あと {{count}} 回タップすると開発者モードが有効になります",
       "title": "開発者モード"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "リフレッシュ トークンを即時に期限切れにしました",
-        "title": "リフレッシュ トークンの期限切れ"
-      },
-      "invalidate": {
-        "success": "無効なリフレッシュ トークンを書き込みました",
-        "title": "無効なリフレッシュ トークン"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "ログインページへ移動",

@@ -85,19 +85,32 @@
     "title": "色彩設定"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "已使存取令牌立即過期",
-        "title": "存取令牌過期"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "已使訪問令牌立即過期",
+          "title": "訪問令牌過期"
+        },
+        "invalidate": {
+          "success": "已寫入無效的訪問令牌",
+          "title": "無效訪問令牌"
+        }
       },
-      "invalidate": {
-        "success": "已寫入無效的存取令牌",
-        "title": "無效存取令牌"
+      "clearAuthData": {
+        "success": "已清空認證資料",
+        "title": "清空認證資料"
+      },
+      "group": "認證配置",
+      "refreshToken": {
+        "expire": {
+          "success": "已使刷新令牌立即過期",
+          "title": "刷新令牌過期"
+        },
+        "invalidate": {
+          "success": "已寫入無效的刷新令牌",
+          "title": "無效刷新令牌"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "已清除認證資料",
-      "title": "清除認證資料"
     },
     "failurePrefix": "操作失敗：",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "開發者模式已啟用",
       "remaining": "再點按 {{count}} 次即可啟用開發者模式",
       "title": "開發者模式"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "已使刷新令牌立即過期",
-        "title": "刷新令牌過期"
-      },
-      "invalidate": {
-        "success": "已寫入無效的刷新令牌",
-        "title": "無效刷新令牌"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "前往登入頁",
