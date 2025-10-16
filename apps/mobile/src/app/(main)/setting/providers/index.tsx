@@ -1,6 +1,6 @@
-import { Empty, PageContainer } from '@lobehub/ui-rn';
+import { Empty, Flexbox, InputSearch, PageContainer } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ProviderCard from './features/ProviderCard';
@@ -10,6 +10,7 @@ import { useProviderList } from './hooks';
 import { ProviderFlashListItem } from './types';
 
 const ProviderList = memo(() => {
+  const [keyword, setKeyword] = useState('');
   const { t } = useTranslation(['setting']);
 
   // 使用自定义hook获取数据
@@ -36,6 +37,15 @@ const ProviderList = memo(() => {
     }
   }, []);
 
+  const data = useMemo(() => {
+    if (!keyword) return flashListData;
+    return flashListData.filter((item) => {
+      if (item.type === 'section-header') return false;
+      if (item.type !== 'provider') return true;
+      return item.id.toLowerCase().includes(keyword.toLowerCase());
+    });
+  }, [flashListData, keyword]);
+
   // FlashList的keyExtractor
   const keyExtractor = useCallback((item: ProviderFlashListItem) => item.id, []);
 
@@ -49,7 +59,7 @@ const ProviderList = memo(() => {
   } else {
     content = (
       <FlashList
-        data={flashListData}
+        data={data}
         drawDistance={400}
         getItemType={(item) => item.type}
         keyExtractor={keyExtractor}
@@ -62,6 +72,13 @@ const ProviderList = memo(() => {
 
   return (
     <PageContainer largeTitleEnabled showBack title={t('providers', { ns: 'setting' })}>
+      <Flexbox padding={16}>
+        <InputSearch
+          onChangeText={setKeyword}
+          placeholder={'以关键词搜索供应商...'}
+          variant={'filled'}
+        />
+      </Flexbox>
       {content}
     </PageContainer>
   );

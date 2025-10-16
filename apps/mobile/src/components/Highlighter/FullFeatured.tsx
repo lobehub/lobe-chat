@@ -3,6 +3,7 @@ import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react-native';
 import { memo, useState } from 'react';
 import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
 
+import Block from '@/components/Block';
 import Icon from '@/components/Icon';
 
 import { LanguageSelect } from './components/LanguageSelect';
@@ -81,7 +82,11 @@ const FullFeatured = memo<FullFeaturedProps>(
     };
 
     return (
-      <View style={[styles.container, style]} testID="highlighter-full-featured">
+      <Block
+        style={[styles.container, style]}
+        testID="highlighter-full-featured"
+        variant={'outlined'}
+      >
         <View style={[styles.headerContainer]}>
           <View style={styles.headerLeft}>
             <Pressable
@@ -122,7 +127,7 @@ const FullFeatured = memo<FullFeaturedProps>(
           </View>
         </View>
         {expanded && <TokenDisplay code={code} lang={language} />}
-      </View>
+      </Block>
     );
   },
 );

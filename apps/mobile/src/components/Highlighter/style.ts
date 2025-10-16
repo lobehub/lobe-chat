@@ -2,10 +2,6 @@ import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
   container: {
-    backgroundColor: token.colorBgElevated,
-    borderColor: token.colorBorder,
-    borderRadius: token.borderRadius,
-    borderWidth: token.lineWidth / 2,
     overflow: 'hidden',
   },
   copyButton: {

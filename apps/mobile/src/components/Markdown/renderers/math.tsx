@@ -1,7 +1,7 @@
 import { Node } from 'mdast';
-import { View } from 'react-native';
 import { MathJaxSvg } from 'react-native-mathjax-html-to-svg';
 
+import Center from '../../Center';
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
 
@@ -18,11 +18,11 @@ interface InlineMathNode extends Node {
 export const MathRenderer = ({ node }: RendererArgs<MathNode>) => {
   const { styles } = useMarkdownContext();
   return (
-    <View style={{ marginVertical: 8 }}>
+    <Center style={{ marginVertical: 16 }}>
       <MathJaxSvg color={styles.textColor} fontCache={true} fontSize={styles.fontSize}>
         {`$$${node.value}$$`}
       </MathJaxSvg>
-    </View>
+    </Center>
   );
 };
 
