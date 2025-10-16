@@ -1,5 +1,6 @@
 import {
   ColorSwatches,
+  Flexbox,
   NeutralColors,
   PageContainer,
   PrimaryColors,
@@ -8,9 +9,7 @@ import {
   primaryColors,
 } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 
-import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { useSettingStore } from '@/store/setting';
 
@@ -48,45 +47,43 @@ export default function ThemeSettingScreen() {
 
   return (
     <PageContainer showBack title={t('color.title', { ns: 'setting' })}>
-      <View>
+      <Flexbox gap={16} paddingInline={16}>
         <Preview />
-        <SettingGroup style={{ marginTop: 16 }}>
-          <SettingItem
-            customContent={
-              <ColorSwatches
-                colors={primaryColorSwatchesData}
-                gap={8}
-                onChange={(color: any) => {
-                  const name = findCustomThemeName('primary', color) as PrimaryColors;
-                  setPrimaryColor(name || '');
-                }}
-                size={32}
-                value={
-                  primaryColor && primaryColor !== 'primary'
-                    ? primaryColors[primaryColor]
-                    : undefined
-                }
-              />
-            }
-            title={t('color.primary.title', { ns: 'setting' })}
-          />
-          <SettingItem
-            customContent={
-              <ColorSwatches
-                colors={neutralColorSwatchesData}
-                gap={8}
-                onChange={(color: any) => {
-                  const name = findCustomThemeName('neutral', color) as NeutralColors;
-                  setNeutralColor(name || '');
-                }}
-                size={32}
-                value={neutralColor ? neutralColors[neutralColor] : undefined}
-              />
-            }
-            title={t('color.neutral.title', { ns: 'setting' })}
-          />
-        </SettingGroup>
-      </View>
+        <SettingItem
+          customContent={
+            <ColorSwatches
+              colors={primaryColorSwatchesData}
+              gap={8}
+              onChange={(color: any) => {
+                const name = findCustomThemeName('primary', color) as PrimaryColors;
+                setPrimaryColor(name || '');
+              }}
+              size={32}
+              value={
+                primaryColor && primaryColor !== 'primary' ? primaryColors[primaryColor] : undefined
+              }
+            />
+          }
+          paddingInline={0}
+          title={t('color.primary.title', { ns: 'setting' })}
+        />
+        <SettingItem
+          customContent={
+            <ColorSwatches
+              colors={neutralColorSwatchesData}
+              gap={8}
+              onChange={(color: any) => {
+                const name = findCustomThemeName('neutral', color) as NeutralColors;
+                setNeutralColor(name || '');
+              }}
+              size={32}
+              value={neutralColor ? neutralColors[neutralColor] : undefined}
+            />
+          }
+          paddingInline={0}
+          title={t('color.neutral.title', { ns: 'setting' })}
+        />
+      </Flexbox>
     </PageContainer>
   );
 }
