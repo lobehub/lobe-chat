@@ -35,9 +35,16 @@
       "title": "Alle instellingen resetten"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Leden",
+    "meta": "Basisinformatie"
+  },
   "header": {
     "desc": "Voorkeuren en modelinstellingen.",
     "global": "Algemene instellingen",
+    "group": "Groepschatinstellingen",
+    "groupDesc": "Beheer de huidige groepschat",
     "session": "Sessie-instellingen",
     "sessionDesc": "Rolinstellingen en sessievoorkeuren.",
     "sessionWithName": "Sessie-instellingen · {{name}}",
@@ -138,6 +145,9 @@
       "title": "API Proxy Adres"
     },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte"
+  },
+  "message": {
+    "success": "Succesvol bijgewerkt"
   },
   "plugin": {
     "addMCPPlugin": "MCP-plug-in toevoegen",
@@ -293,6 +303,101 @@
       "title": "Thema"
     },
     "title": "Algemene instellingen"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Voer een groepschatbeschrijving in",
+      "title": "Groepschatbeschrijving"
+    },
+    "name": {
+      "placeholder": "Voer een groepschatnaam in",
+      "title": "Groepschatnaam"
+    },
+    "scene": {
+      "desc": "Kies groepschatscenario",
+      "options": {
+        "casual": "Informeel",
+        "productive": "Productief"
+      },
+      "title": "Groepschatscenario"
+    },
+    "submit": "Groepschat bijwerken",
+    "systemPrompt": {
+      "placeholder": "Voer de systeemopdracht van de host in",
+      "title": "Systeemopdracht van de host"
+    },
+    "title": "Groepschatinformatie"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Wanneer uitgeschakeld, kun je nog steeds zelf privéberichten naar de assistent sturen",
+      "title": "Sta privéberichten van assistent toe"
+    },
+    "enableSupervisor": {
+      "desc": "Schakel de moderatorfunctie in voor groepschats; de moderator beheert het verloop van het gesprek",
+      "title": "Moderator inschakelen"
+    },
+    "maxResponseInRow": {
+      "desc": "Kies hoeveel berichten een lid achter elkaar kan beantwoorden. Stel in op 0 om deze beperking uit te schakelen.",
+      "title": "Aantal opeenvolgende antwoorden"
+    },
+    "model": {
+      "desc": "De bijdragen van groepsleden worden niet beïnvloed. Sommige modellen kunnen niet als moderator worden gebruikt.",
+      "title": "Hostmodel"
+    },
+    "orchestratorTitle": "Hostinstellingen",
+    "responseOrder": {
+      "desc": "De agent zal antwoorden in de volgorde die in de groepschat is ingesteld",
+      "options": {
+        "natural": "Natuurlijk",
+        "sequential": "Opeenvolgend"
+      },
+      "placeholder": "Kies de antwoordvolgorde",
+      "title": "Antwoordvolgorde"
+    },
+    "responseSpeed": {
+      "desc": "Beheert het algemene tempo van de groepschat",
+      "options": {
+        "fast": "Snel",
+        "medium": "Gemiddeld",
+        "slow": "Langzaam"
+      },
+      "placeholder": "Kies de reactiesnelheid",
+      "title": "Reactiesnelheid"
+    },
+    "revealDM": {
+      "desc": "Maak privéberichten die naar andere leden zijn gestuurd zichtbaar voor jou.",
+      "title": "Privéberichten tonen"
+    },
+    "submit": "Instellingen bijwerken",
+    "systemPrompt": {
+      "desc": "Aangepaste systeemopdracht voor de host van de groepschat. Dit kan het standaardgedrag van de host beïnvloeden.",
+      "placeholder": "Voer een aangepaste systeemopdracht voor de host in...",
+      "title": "Systeemopdracht van de host"
+    },
+    "title": "Chatinstellingen"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Toevoegen aan groep",
+    "availableAgents": "Beschikbare assistenten",
+    "defaultAgent": "Aangepaste assistent",
+    "disableHost": "Host-assistent uitschakelen",
+    "edit": "Lid bewerken",
+    "empty": "Er zijn momenteel geen agenten in deze groepschat. Klik op de + knop om leden toe te voegen.",
+    "enableHost": "Host-assistent inschakelen",
+    "groupHost": "Groepshost",
+    "groupMembers": "Groepsleden",
+    "host": {
+      "description": "Wanneer de host in de groep is, wordt de groepschat automatisch beheerd, geschikt voor creatieve taken.",
+      "title": "Host"
+    },
+    "noAvailableAgents": "Geen beschikbare assistenten",
+    "noDescription": "Geen beschrijving",
+    "noMembersInGroup": "Geen leden in de groep",
+    "owner": "Jij (eigenaar)",
+    "remove": "Lid verwijderen",
+    "removeFromGroup": "Verwijderen uit groep",
+    "you": "Jij"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "AI-schilderij onderwerp naamgevingsmodel",
       "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
       "title": "Automatisch onderwerp naamgeven voor AI-schilderijen"
+    },
+    "groupChatSupervisor": {
+      "label": "Model voor groepschattoezicht",
+      "modelDesc": "Speciaal model voor het toezicht en beheer van groepschatgesprekken",
+      "title": "Groepschattoezicht en -beheer"
     },
     "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {

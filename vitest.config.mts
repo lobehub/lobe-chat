@@ -47,6 +47,7 @@ export default defineConfig({
       '**/apps/desktop/**',
       '**/apps/mobile/**',
       '**/packages/**',
+      '**/e2e/**',
     ],
     globals: true,
     server: {

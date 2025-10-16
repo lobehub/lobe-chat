@@ -6,6 +6,340 @@
     },
     "defaultMessage": "我是您的私人智能助理 {{appName}} ，請問現在能幫您做什麼？<br />如果需要獲得更加專業或定制的助手，可以點擊 <plus /> 創建自定義助手",
     "defaultMessageWithoutCreate": "我是您的私人智能助理 {{appName}} ，請問現在能幫您做什麼？",
+    "groupActivities": {
+      "analysis": {
+        "codeReview": {
+          "description": "對程式碼變更和實作進行技術討論和同儕審查",
+          "emoji": "💻",
+          "prompt": "讓我們一起審查一些程式碼。你能幫助我們分析這些程式碼並識別改進的地方嗎？",
+          "title": "程式碼審查"
+        },
+        "investment": {
+          "description": "分析市場、討論投資策略並分享財經洞察",
+          "emoji": "📈",
+          "prompt": "讓我們一起分析市場。你能幫助我們討論投資策略並分享財經洞察嗎？",
+          "title": "投資俱樂部"
+        },
+        "research": {
+          "description": "探索科學概念、進行實驗並分享發現",
+          "emoji": "🔬",
+          "prompt": "讓我們一起探索科學吧！你能幫助我們進行實驗並分享我們的發現嗎？",
+          "title": "科學展覽"
+        },
+        "study": {
+          "description": "協作學習會議，討論概念並共同解決問題",
+          "emoji": "📚",
+          "prompt": "讓我們組成一個學習小組。你能幫助我們理解這些概念並一起解決問題嗎？",
+          "title": "學習小組"
+        }
+      },
+      "brainstorm": {
+        "artWorkshop": {
+          "description": "創作、評論和欣賞各種形式的視覺和數位藝術",
+          "emoji": "🖼️",
+          "prompt": "讓我們舉辦藝術工作坊吧！你能幫助我們創作、評論和欣賞各種形式的藝術嗎？",
+          "title": "藝術工作坊"
+        },
+        "debate": {
+          "description": "關於各種話題和時事的結構化討論和論辯",
+          "emoji": "⚖️",
+          "prompt": "讓我們進行一場結構化辯論。你能幫助我們就這個話題組織一場有理有據的討論嗎？",
+          "title": "辯論俱樂部"
+        },
+        "designReview": {
+          "description": "針對設計概念、原型或創意作品的協作反饋會議",
+          "emoji": "🎨",
+          "prompt": "我們需要審查一些設計作品。你能幫助我們對設計概念和原型提供建設性反饋嗎？",
+          "title": "設計評審"
+        },
+        "ideation": {
+          "description": "多視角協作式創意產生和創造性問題解決",
+          "emoji": "🧠",
+          "prompt": "讓我們開始為專案進行頭腦風暴吧。你能幫助我們產生創意想法和解決方案嗎？",
+          "title": "頭腦風暴"
+        }
+      },
+      "game": {
+        "debateClub": {
+          "description": "關於各種話題和時事的結構化討論和論辯",
+          "emoji": "⚖️",
+          "prompt": "讓我們進行一場結構化辯論。你能幫助我們就這個話題組織一場有理有據的討論嗎？",
+          "title": "辯論俱樂部"
+        },
+        "gameNight": {
+          "description": "有趣的互動遊戲和活動，建立團隊紐帶並享受樂趣",
+          "emoji": "🎲",
+          "prompt": "遊戲之夜開始啦！你能幫助我們組織一些有趣的互動遊戲來建立團隊紐帶嗎？",
+          "title": "遊戲之夜"
+        },
+        "modelUN": {
+          "description": "模擬聯合國辯論和全球議題的外交談判",
+          "emoji": "🌍",
+          "prompt": "讓我們模擬一場聯合國辯論。你能幫助我們設定一個關於全球議題的外交談判嗎？",
+          "title": "模擬聯合國"
+        },
+        "werewolf": {
+          "description": "玩家透過策略和討論找出狼人的社交推理遊戲",
+          "emoji": "🐺",
+          "prompt": "讓我們玩狼人遊戲吧！你能幫助我們設定規則並主持這個社交推理遊戲嗎？",
+          "title": "狼人遊戲"
+        }
+      },
+      "general": {
+        "brainstorm": {
+          "description": "多視角協作式創意產生和創造性問題解決",
+          "emoji": "🧠",
+          "prompt": "讓我們開始為專案進行頭腦風暴吧。你能幫助我們產生創意想法和解決方案嗎？",
+          "title": "頭腦風暴"
+        },
+        "debate": {
+          "description": "關於各種話題和時事的結構化討論和論辯",
+          "emoji": "⚖️",
+          "prompt": "讓我們進行一場結構化辯論。你能幫助我們就這個話題組織一場有理有據的討論嗎？",
+          "title": "辯論俱樂部"
+        },
+        "languagePractice": {
+          "description": "與母語者一起練習口語和學習新語言",
+          "emoji": "🗣️",
+          "prompt": "讓我們一起練習新語言吧。你能幫助我們學習和練習說這門語言嗎？",
+          "title": "語言練習"
+        },
+        "studyGroup": {
+          "description": "協作學習會議，討論概念並共同解決問題",
+          "emoji": "📚",
+          "prompt": "讓我們組成一個學習小組。你能幫助我們理解這些概念並一起解決問題嗎？",
+          "title": "學習小組"
+        }
+      },
+      "planning": {
+        "cookingClass": {
+          "description": "學習和分享烹飪技巧、食譜和烹飪傳統",
+          "emoji": "👨‍🍳",
+          "prompt": "讓我們上烹飪課吧！你能幫助我們一起學習新食譜和烹飪技巧嗎？",
+          "title": "烹飪課堂"
+        },
+        "fitnessChallenge": {
+          "description": "設定團體健身目標、分享鍛鍊方法並相互激勵",
+          "emoji": "💪",
+          "prompt": "讓我們開始健身挑戰吧！你能幫助我們設定目標並相互激勵保持健康嗎？",
+          "title": "健身挑戰"
+        },
+        "planningPoker": {
+          "description": "使用卡片估算專案任務和工作量的敏捷估算技術",
+          "emoji": "🃏",
+          "prompt": "我們正在為專案進行規劃撲克。你能幫助我們使用敏捷技術估算這些任務的工作量嗎？",
+          "title": "規劃撲克"
+        },
+        "travelPlanning": {
+          "description": "規劃旅行、分享旅行經歷並發現新目的地",
+          "emoji": "✈️",
+          "prompt": "讓我們一起規劃旅行吧！你能幫助我們研究目的地並規劃旅行行程嗎？",
+          "title": "旅行規劃"
+        }
+      },
+      "product": {
+        "codeReview": {
+          "description": "對程式碼變更和實作進行技術討論和同儕審查",
+          "emoji": "💻",
+          "prompt": "讓我們一起審查一些程式碼。你能幫助我們分析這些程式碼並識別改進的地方嗎？",
+          "title": "程式碼審查"
+        },
+        "designReview": {
+          "description": "針對設計概念、原型或創意作品的協作反饋會議",
+          "emoji": "🎨",
+          "prompt": "我們需要審查一些設計作品。你能幫助我們對設計概念和原型提供建設性反饋嗎？",
+          "title": "設計評審"
+        },
+        "sprintPlanning": {
+          "description": "使用卡片估算專案任務和工作量的敏捷估算技術",
+          "emoji": "🃏",
+          "prompt": "我們正在為專案進行規劃撲克。你能幫助我們使用敏捷技術估算這些任務的工作量嗎？",
+          "title": "規劃撲克"
+        },
+        "techExchange": {
+          "description": "討論新興技術、創新和行業趨勢",
+          "emoji": "🚀",
+          "prompt": "讓我們進行技術交流吧！你能幫助我們討論新興技術和行業趨勢嗎？",
+          "title": "技術交流"
+        }
+      },
+      "title": "群聊用法推薦",
+      "writing": {
+        "bookClub": {
+          "description": "對書籍、故事和文學作品進行文學討論和分析",
+          "emoji": "📖",
+          "prompt": "讓我們開始讀書俱樂部討論。你能幫助我們分析這本書並一起探討其主題嗎？",
+          "title": "讀書俱樂部"
+        },
+        "movieClub": {
+          "description": "一起觀看和討論電影、紀錄片和視覺媒體",
+          "emoji": "🎬",
+          "prompt": "讓我們開始電影俱樂部討論。你能幫助我們分析這部電影並一起探討其主題嗎？",
+          "title": "電影俱樂部"
+        },
+        "musicSession": {
+          "description": "協作音樂創作、分享和欣賞會議",
+          "emoji": "🎵",
+          "prompt": "讓我們進行音樂即興演奏吧！你能幫助我們一起創作和欣賞音樂嗎？",
+          "title": "音樂即興"
+        },
+        "studyGroup": {
+          "description": "協作學習會議，討論概念並共同解決問題",
+          "emoji": "📚",
+          "prompt": "讓我們組成一個學習小組。你能幫助我們理解這些概念並一起解決問題嗎？",
+          "title": "學習小組"
+        }
+      }
+    },
+    "groupMessage": "歡迎使用群聊！在共享的對話空間中與多位 AI 助手協作。",
+    "groupTemplates": {
+      "analysis": {
+        "description": "數據驅動洞察，深度研究分析",
+        "members": [
+          {
+            "avatar": "📊",
+            "backgroundColor": "#E8F8F5",
+            "plugins": ["steam"],
+            "systemRole": "你擅長處理和解釋資料，透過圖表和統計分析揭示資料背後的規律與趨勢。",
+            "title": "數據分析師"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你是研究專家，專門負責資訊收集和深度調研，能夠從多個維度全面分析問題。",
+            "title": "研究專家"
+          },
+          {
+            "avatar": "📈",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你是統計專家，精通各種統計方法和模型，能夠從數據中提取有價值的商業洞察。",
+            "title": "統計專家"
+          },
+          {
+            "avatar": "🧮",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "你是量化分析師，專門進行量化建模和風險評估，用數學方法解決複雜問題。",
+            "title": "量化分析師"
+          }
+        ],
+        "title": "分析小隊"
+      },
+      "brainstorm": {
+        "description": "多視角創意思維，激發無限可能",
+        "members": [
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你是一位創意總監，擅長從宏觀角度把控創意方向，能夠將抽象概念轉化為具體可執行的創意方案。",
+            "title": "創意總監"
+          },
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你是創新專家，專門負責發現新穎的解決方案和突破性思維，善於跳出固有框架思考問題。",
+            "title": "創新專家"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你是設計思維專家，從使用者體驗和視覺呈現角度思考問題，注重創意的可視化表達。",
+            "title": "設計思維師"
+          }
+        ],
+        "title": "頭腦風暴小組"
+      },
+      "game": {
+        "description": "暢玩各種多人文字遊戲，例如狼人殺和誰是臥底",
+        "members": [
+          null,
+          {
+            "avatar": "🧑‍🔬",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你擅長參與各種多人文字遊戲，能夠根據遊戲規則進行遊戲。",
+            "title": "遊戲玩家"
+          },
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你擅長參與各種多人文字遊戲，能夠根據遊戲規則進行遊戲。",
+            "title": "遊戲玩家"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你擅長參與各種多人文字遊戲，能夠根據遊戲規則進行遊戲。",
+            "title": "遊戲玩家"
+          }
+        ],
+        "title": "遊戲廳"
+      },
+      "planning": {
+        "description": "策略規劃與專案管理，統籌全局",
+        "members": [
+          {
+            "avatar": "📋",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你負責專案的整體規劃、進度管控和資源協調，確保專案按時高品質完成。",
+            "title": "廚師"
+          },
+          {
+            "avatar": "🎯",
+            "backgroundColor": "#FFF7E8",
+            "systemRole": "你負責制定長期策略規劃，分析市場機會，制定目標和實現路徑。",
+            "title": "原料採購專家"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#F0F8FF",
+            "systemRole": "你負責制定詳細的執行計畫，協調各部門資源，確保計畫的可執行性。",
+            "title": "美食研發專家"
+          }
+        ],
+        "title": "美食研發團隊"
+      },
+      "product": {
+        "description": "產品設計與開發，打造優質產品",
+        "members": [
+          {
+            "avatar": "🎨",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你是設計師，擅長設計各種類型的產品，能夠根據產品需求進行設計。",
+            "title": "設計師"
+          },
+          {
+            "avatar": "🧑",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "你是產品經理，負責產品的規劃、設計、開發和維護，確保產品的品質和使用者體驗。",
+            "title": "產品經理"
+          },
+          {
+            "avatar": "🧑‍💻",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "你是經驗豐富的全端工程師，擅長開發各種類型的產品，能夠根據產品需求進行開發。",
+            "title": "全端工程師"
+          }
+        ],
+        "title": "產品研發團隊"
+      },
+      "writing": {
+        "description": "內容創作與編輯，打造優質文案",
+        "members": [
+          {
+            "avatar": "✍️",
+            "backgroundColor": "#F6E8FF",
+            "systemRole": "你擅長創作各類文體的內容，能夠根據不同場景和受眾調整寫作風格。",
+            "title": "內容寫手"
+          },
+          {
+            "avatar": "🧑‍🎨",
+            "backgroundColor": "#E8F8F5",
+            "systemRole": "你是編輯，負責文本的校對、潤飾和優化，確保內容的準確性、流暢性和專業性。",
+            "title": "編輯"
+          }
+        ],
+        "title": "寫作圈"
+      }
+    },
     "qa": {
       "q01": "LobeHub 是什麼？",
       "q02": "{{appName}} 是什麼？",

@@ -23,7 +23,7 @@ import {
   userProfileSelectors,
 } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
-import type { ChatStreamPayload } from '@/types/openai/chat';
+import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import {
@@ -45,6 +45,10 @@ interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'mess
   messages: ChatMessage[];
 }
 
+type ChatStreamInputParams = Partial<Omit<ChatStreamPayload, 'messages'>> & {
+  messages?: (ChatMessage | OpenAIChatMessage)[];
+};
+
 interface FetchAITaskResultParams extends FetchSSEOptions {
   abortController?: AbortController;
   onError?: (e: Error, rawError?: any) => void;
@@ -56,7 +60,7 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
   /**
    * 请求对象
    */
-  params: Partial<ChatStreamPayload>;
+  params: ChatStreamInputParams;
   trace?: TracePayload;
 }
 

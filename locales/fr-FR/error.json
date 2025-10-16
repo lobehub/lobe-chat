@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"
   },
+  "supervisor": {
+    "decisionFailed": "L'animateur du groupe ne peut pas fonctionner. Veuillez vérifier votre configuration d'animateur pour vous assurer que le modèle, la clé API et l'adresse API sont correctement configurés."
+  },
   "testConnectionFailed": "Échec du test de connexion : {{error}}",
   "tts": {
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"

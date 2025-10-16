@@ -1,9 +1,9 @@
+import { LobeTool } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PluginModel } from '@/database/_deprecated/models/plugin';
 import { DB_Plugin } from '@/database/_deprecated/schemas/plugin';
-import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { ClientService } from './_deprecated';

@@ -64,7 +64,7 @@ describe('TopicService', () => {
     // Example for getTopics
     it('should query topics with given parameters', async () => {
       // Setup
-      const queryParams = { sessionId };
+      const queryParams = { containerId: sessionId };
 
       // Execute
       const data = await topicService.getTopics(queryParams);

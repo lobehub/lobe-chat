@@ -35,9 +35,16 @@
       "title": "모든 설정 초기화"
     }
   },
+  "groupTab": {
+    "chat": "채팅",
+    "members": "구성원",
+    "meta": "기본 정보"
+  },
   "header": {
     "desc": "환경설정 및 모델 설정",
     "global": "전역 설정",
+    "group": "그룹 채팅 설정",
+    "groupDesc": "현재 그룹 채팅 관리",
     "session": "세션 설정",
     "sessionDesc": "역할 프롬프트 및 세션 환경설정",
     "sessionWithName": "세션 설정 · {{name}}",
@@ -138,6 +145,9 @@
       "title": "API 프록시 주소"
     },
     "waitingForMore": "더 많은 모델이 <1>도입 예정</1>입니다. 기대해 주세요."
+  },
+  "message": {
+    "success": "업데이트 성공"
   },
   "plugin": {
     "addMCPPlugin": "MCP 플러그인 추가",
@@ -293,6 +303,101 @@
       "title": "테마"
     },
     "title": "일반 설정"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "그룹 채팅 설명을 입력하세요",
+      "title": "그룹 채팅 설명"
+    },
+    "name": {
+      "placeholder": "그룹 채팅 이름을 입력하세요",
+      "title": "그룹 채팅 이름"
+    },
+    "scene": {
+      "desc": "그룹 채팅 환경 선택",
+      "options": {
+        "casual": "캐주얼",
+        "productive": "생산성"
+      },
+      "title": "그룹 채팅 환경"
+    },
+    "submit": "그룹 채팅 업데이트",
+    "systemPrompt": {
+      "placeholder": "호스트 시스템 프롬프트를 입력하세요",
+      "title": "호스트 시스템 프롬프트"
+    },
+    "title": "그룹 채팅 정보"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "비활성화해도, 당신은 여전히 어시스턴트에게 직접 메시지를 보낼 수 있습니다",
+      "title": "어시스턴트의 DM 허용"
+    },
+    "enableSupervisor": {
+      "desc": "그룹 채팅 진행을 관리할 수 있는 진행자 기능을 활성화합니다",
+      "title": "진행자 활성화"
+    },
+    "maxResponseInRow": {
+      "desc": "멤버가 연속으로 답변할 수 있는 메시지 수를 선택하세요. 0으로 설정하면 제한이 해제됩니다.",
+      "title": "연속 답변 메시지 수"
+    },
+    "model": {
+      "desc": "그룹 구성원의 발언에는 영향을 주지 않습니다. 일부 모델은 진행자 모델로 사용할 수 없습니다.",
+      "title": "호스트 모델"
+    },
+    "orchestratorTitle": "호스트 설정",
+    "responseOrder": {
+      "desc": "에이전트가 그룹 채팅에서 설정된 순서대로 답변합니다.",
+      "options": {
+        "natural": "자연스러운",
+        "sequential": "순차적인"
+      },
+      "placeholder": "답변 순서 선택",
+      "title": "답변 순서"
+    },
+    "responseSpeed": {
+      "desc": "그룹 채팅의 전체 진행 속도를 조절합니다.",
+      "options": {
+        "fast": "빠름",
+        "medium": "보통",
+        "slow": "느림"
+      },
+      "placeholder": "답변 속도 선택",
+      "title": "답변 속도"
+    },
+    "revealDM": {
+      "desc": "다른 멤버에게 보낸 비공개 메시지 내용을 볼 수 있게 합니다.",
+      "title": "비공개 메시지 내용 표시"
+    },
+    "submit": "설정 업데이트",
+    "systemPrompt": {
+      "desc": "그룹 채팅 대화 호스트의 맞춤 시스템 프롬프트입니다. 기본 호스트 동작에 영향을 줄 수 있습니다.",
+      "placeholder": "맞춤 호스트 시스템 프롬프트를 입력하세요...",
+      "title": "호스트 시스템 프롬프트"
+    },
+    "title": "채팅 설정"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "그룹에 추가",
+    "availableAgents": "사용 가능한 어시스턴트",
+    "defaultAgent": "맞춤 어시스턴트",
+    "disableHost": "호스트 도우미 비활성화",
+    "edit": "멤버 편집",
+    "empty": "이 그룹 채팅에는 에이전트가 없습니다. + 버튼을 눌러 멤버를 추가하세요.",
+    "enableHost": "호스트 도우미 활성화",
+    "groupHost": "그룹 호스트",
+    "groupMembers": "그룹 멤버",
+    "host": {
+      "description": "호스트가 그룹에 있을 때 그룹 채팅이 자동으로 운영되며, 창의적인 작업에 적합합니다.",
+      "title": "호스트"
+    },
+    "noAvailableAgents": "사용 가능한 어시스턴트가 없습니다",
+    "noDescription": "설명 없음",
+    "noMembersInGroup": "그룹에 멤버가 없습니다",
+    "owner": "당신 (소유자)",
+    "remove": "멤버 제거",
+    "removeFromGroup": "그룹에서 제거",
+    "you": "당신"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "AI 그림 주제 명명 모델",
       "modelDesc": "AI 그림 자동 주제 명명에 사용되는 모델 지정",
       "title": "AI 그림 자동 주제 명명"
+    },
+    "groupChatSupervisor": {
+      "label": "그룹 채팅 감독 모델",
+      "modelDesc": "그룹 채팅 대화를 감독하고 관리하기 위해 지정된 모델",
+      "title": "그룹 채팅 감독 및 관리"
     },
     "helpInfo": "새 도우미를 생성할 때 기본 도우미 설정이 기본값으로 사용됩니다.",
     "historyCompress": {

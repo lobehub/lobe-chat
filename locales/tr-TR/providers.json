@@ -30,7 +30,10 @@
     "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
   },
   "bfl": {
-    "description": "Önde gelen bir ileri düzey yapay zeka araştırma laboratuvarı; yarının görsel altyapısını inşa ediyor."
+    "description": "Öncü bir ileri düzey yapay zeka araştırma laboratuvarı, yarının görsel altyapısını inşa ediyor."
+  },
+  "cerebras": {
+    "description": "Cerebras, özel CS-3 sistemi üzerine kurulu bir yapay zeka çıkarım platformudur. Gerçek zamanlı yanıtlar ve yüksek veri işleme kapasitesiyle dünyanın en hızlı LLM hizmetini sunmayı hedefler. Gecikmeleri ortadan kaldırmak ve gerçek zamanlı kod üretimi ile aracı görevler gibi karmaşık yapay zeka iş akışlarını hızlandırmak için tasarlanmıştır."
   },
   "cerebras": {
     "description": "Cerebras, özel CS-3 sistemi üzerine kurulu bir yapay zeka çıkarım platformudur. Gerçek zamanlı yanıtlar ve yüksek veri işleme kapasitesiyle dünyanın en hızlı LLM hizmetini sunmayı hedefler. Gecikmeleri ortadan kaldırmak ve gerçek zamanlı kod üretimi ile aracı görevler gibi karmaşık yapay zeka iş akışlarını hızlandırmak için tasarlanmıştır."

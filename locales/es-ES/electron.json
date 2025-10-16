@@ -92,14 +92,15 @@
     "installLater": "Actualizar en el próximo inicio",
     "isLatestVersion": "Ya tienes la última versión",
     "isLatestVersionDesc": "¡Genial! La versión {{version}} que estás utilizando ya es la más avanzada.",
-    "later": "Actualizar más tarde",
+    "later": "Más tarde",
     "newVersionAvailable": "Nueva versión disponible",
     "newVersionAvailableDesc": "Se ha encontrado una nueva versión {{version}}, ¿desea descargarla ahora?",
     "restartAndInstall": "Instalar actualizaciones y reiniciar",
     "updateError": "Error de actualización",
-    "updateReady": "Actualización lista",
+    "updateReady": "Hay una nueva versión disponible",
     "updateReadyDesc": "La nueva versión {{version}} se ha descargado, reinicia la aplicación para completar la instalación.",
-    "upgradeNow": "Actualizar ahora"
+    "upgradeNow": "Actualizar ahora",
+    "willInstallLater": "La actualización se instalará en el próximo inicio"
   },
   "waitingOAuth": {
     "cancel": "Cancelar",

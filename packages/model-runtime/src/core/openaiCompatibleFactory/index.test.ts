@@ -1857,6 +1857,185 @@ describe('LobeOpenAICompatibleFactory', () => {
       });
     });
 
+    describe('tools parameter support', () => {
+      it('should handle tools parameter with multiple tools', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                tool_calls: [
+                  {
+                    type: 'function' as const,
+                    function: {
+                      name: 'get_weather',
+                      arguments: '{"city":"Tokyo","unit":"celsius"}',
+                    },
+                  },
+                  {
+                    type: 'function' as const,
+                    function: {
+                      name: 'get_time',
+                      arguments: '{"timezone":"Asia/Tokyo"}',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const payload = {
+          messages: [{ content: 'What is the weather and time in Tokyo?', role: 'user' as const }],
+          tools: [
+            {
+              name: 'get_weather',
+              description: 'Get weather information',
+              parameters: {
+                type: 'object' as const,
+                properties: {
+                  city: { type: 'string' },
+                  unit: { type: 'string' },
+                },
+                required: ['city'],
+              },
+            },
+            {
+              name: 'get_time',
+              description: 'Get current time',
+              parameters: {
+                type: 'object' as const,
+                properties: {
+                  timezone: { type: 'string' },
+                },
+                required: ['timezone'],
+              },
+            },
+          ],
+          model: 'gpt-4o',
+        };
+
+        const result = await instance.generateObject(payload);
+
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          {
+            messages: payload.messages,
+            model: payload.model,
+            tool_choice: 'required',
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: 'get_weather',
+                  description: 'Get weather information',
+                  parameters: {
+                    type: 'object',
+                    properties: {
+                      city: { type: 'string' },
+                      unit: { type: 'string' },
+                    },
+                    required: ['city'],
+                  },
+                },
+              },
+              {
+                type: 'function',
+                function: {
+                  name: 'get_time',
+                  description: 'Get current time',
+                  parameters: {
+                    type: 'object',
+                    properties: {
+                      timezone: { type: 'string' },
+                    },
+                    required: ['timezone'],
+                  },
+                },
+              },
+            ],
+            user: undefined,
+          },
+          { headers: undefined, signal: undefined },
+        );
+
+        expect(result).toEqual([
+          { arguments: { city: 'Tokyo', unit: 'celsius' }, name: 'get_weather' },
+          { arguments: { timezone: 'Asia/Tokyo' }, name: 'get_time' },
+        ]);
+      });
+
+      it('should handle tools parameter with systemRole', async () => {
+        const mockResponse = {
+          choices: [
+            {
+              message: {
+                tool_calls: [
+                  {
+                    type: 'function' as const,
+                    function: {
+                      name: 'calculate',
+                      arguments: '{"result":8}',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const payload = {
+          messages: [{ content: 'Add 5 and 3', role: 'user' as const }],
+          tools: [
+            {
+              name: 'calculate',
+              description: 'Perform calculation',
+              parameters: {
+                type: 'object' as const,
+                properties: {
+                  result: { type: 'number' },
+                },
+                required: ['result'],
+              },
+            },
+          ],
+          systemRole: 'You are a helpful calculator',
+          model: 'gpt-4o',
+        };
+
+        const result = await instance.generateObject(payload);
+
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: [
+              { content: 'Add 5 and 3', role: 'user' },
+              { content: 'You are a helpful calculator', role: 'system' },
+            ],
+          }),
+          expect.any(Object),
+        );
+
+        expect(result).toEqual([{ arguments: { result: 8 }, name: 'calculate' }]);
+      });
+
+      it('should throw error when neither tools nor schema is provided', async () => {
+        const payload = {
+          messages: [{ content: 'Generate data', role: 'user' as const }],
+          model: 'gpt-4o',
+        };
+
+        await expect(instance.generateObject(payload as any)).rejects.toThrow(
+          'tools or schema is required',
+        );
+      });
+    });
+
     describe('tool calling fallback', () => {
       let instanceWithToolCalling: any;
 
@@ -1930,7 +2109,9 @@ describe('LobeOpenAICompatibleFactory', () => {
           { headers: undefined, signal: undefined },
         );
 
-        expect(result).toEqual({ name: 'Alice', age: 28 });
+        expect(result).toEqual([
+          { arguments: { name: 'Alice', age: 28 }, name: 'person_extractor' },
+        ]);
       });
 
       it('should return undefined when no tool call found', async () => {
@@ -1960,7 +2141,7 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const result = await instanceWithToolCalling.generateObject(payload);
 
-        expect(consoleSpy).toHaveBeenCalledWith('No tool call found in response');
+        expect(consoleSpy).toHaveBeenCalledWith('parse tool call arguments error:', undefined);
         expect(result).toBeUndefined();
 
         consoleSpy.mockRestore();
@@ -2001,7 +2182,10 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const result = await instanceWithToolCalling.generateObject(payload);
 
-        expect(consoleSpy).toHaveBeenCalledWith('parse tool call arguments error:', 'invalid json');
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'parse tool call arguments error:',
+          mockResponse.choices[0].message.tool_calls,
+        );
         expect(result).toBeUndefined();
 
         consoleSpy.mockRestore();
@@ -2052,7 +2236,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           { headers: options.headers, signal: options.signal },
         );
 
-        expect(result).toEqual({ data: 'test' });
+        expect(result).toEqual([{ arguments: { data: 'test' }, name: 'data_extractor' }]);
       });
     });
   });

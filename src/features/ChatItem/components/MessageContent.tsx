@@ -13,14 +13,13 @@ import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
 
 export interface MessageContentProps {
+  disabled?: ChatItemProps['disabled'];
   editing?: ChatItemProps['editing'];
   id: string;
   markdownProps?: Omit<MarkdownProps, 'className' | 'style' | 'children'>;
   message?: ReactNode;
   messageExtra?: ChatItemProps['messageExtra'];
-  onChange?: ChatItemProps['onChange'];
   onDoubleClick?: ChatItemProps['onDoubleClick'];
-  onEditingChange?: ChatItemProps['onEditingChange'];
   placement?: ChatItemProps['placement'];
   primary?: ChatItemProps['primary'];
   renderMessage?: ChatItemProps['renderMessage'];
@@ -39,9 +38,10 @@ const MessageContent = memo<MessageContentProps>(
     primary,
     onDoubleClick,
     markdownProps,
+    disabled,
   }) => {
     const { t } = useTranslation('common');
-    const { cx, styles } = useStyles({ editing, placement, primary, variant });
+    const { cx, styles } = useStyles({ disabled, editing, placement, primary, variant });
     const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const { mobile } = useResponsive();
     const text = useMemo(
