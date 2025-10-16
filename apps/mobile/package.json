@@ -48,6 +48,7 @@
     "@ant-design/fast-color": "^3.0.0",
     "@csark0812/zustand-expo-devtools": "^2.1.3",
     "@expo/react-native-action-sheet": "^4.1.1",
+    "@gorhom/bottom-sheet": "^5.2.6",
     "@gorhom/portal": "^1.0.14",
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
