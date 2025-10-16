@@ -106,7 +106,6 @@ const Text = memo<TextProps>(
 
     return (
       <RNText
-        {...rest}
         numberOfLines={computedNumberOfLines}
         style={[
           variants({
@@ -123,6 +122,8 @@ const Text = memo<TextProps>(
           textStyle,
           ...(Array.isArray(style) ? style : [style]),
         ]}
+        textBreakStrategy={'highQuality'}
+        {...rest}
       >
         {children}
       </RNText>
