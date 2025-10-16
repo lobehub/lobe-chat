@@ -2,6 +2,7 @@ export { default as ActionIcon, type ActionIconProps, type ActionIconSize } from
 export { default as Alert, type AlertProps, type AlertType } from './Alert';
 export { default as Avatar, type AvatarProps } from './Avatar';
 export { default as Block, type BlockProps } from './Block';
+export { default as BottomSheet, type BottomSheetProps } from './BottomSheet';
 export {
   default as Button,
   type ButtonColor,
@@ -59,6 +60,14 @@ export { default as ModelInfoTags, type ModelInfoTagsProps } from './ModelInfoTa
 export { default as PageContainer, type PageContainerProps } from './PageContainer';
 export { default as ScrollShadow, type ScrollShadowProps } from './ScrollShadow';
 export { default as Segmented, type SegmentedItemType, type SegmentedProps } from './Segmented';
+export {
+  default as Select,
+  SelectItem,
+  type SelectOptionItem,
+  type SelectProps,
+  type SelectSize,
+  type SelectVariant,
+} from './Select';
 export { default as Skeleton, type SkeletonProps } from './Skeleton';
 export { default as Slider, type SliderProps } from './Slider';
 export { default as Space, type SpaceProps } from './Space';

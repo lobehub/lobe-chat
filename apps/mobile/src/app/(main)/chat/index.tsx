@@ -44,12 +44,7 @@ export default function ChatWithDrawer() {
         left={<ActionIcon clickable={false} icon={AlignJustify} onPress={toggleDrawer} />}
         title={displayTitle}
       >
-        <KeyboardAvoidingView
-          behavior="padding"
-          enabled
-          keyboardVerticalOffset={16}
-          style={{ flex: 1 }}
-        >
+        <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
           <ChatList />
           <ChatInput />
         </KeyboardAvoidingView>
