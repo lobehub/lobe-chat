@@ -1,6 +1,6 @@
 import { AiProviderDetailItem } from '@lobechat/types';
 import { ProviderIcon } from '@lobehub/icons-rn';
-import { Cell, Divider, Flexbox, InstantSwitch, Text } from '@lobehub/ui-rn';
+import { Cell, Flexbox, InstantSwitch, Text, useTheme } from '@lobehub/ui-rn';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +14,7 @@ interface ProviderInfoSectionProps {
 
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provider }) => {
   const { t } = useTranslation(['setting']);
+  const theme = useTheme();
 
   // Store hooks
   const { toggleProviderEnabled } = useAiInfraStore();
@@ -41,19 +42,23 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
             : t('aiProviders.info.custom', { ns: 'setting' })
         }
         extra={<InstantSwitch defaultChecked={isEnabled} onChange={handleSwitchChange} />}
-        icon={<ProviderIcon provider={provider.id} size={32} type={'avatar'} />}
-        iconSize={32}
+        icon={<ProviderIcon provider={provider.id} size={44} type={'avatar'} />}
+        iconSize={44}
         showArrow={false}
         title={provider.name}
+        titleProps={{
+          fontSize: 18,
+          weight: 500,
+        }}
       />
-      <Flexbox paddingInline={16}>
-        {provider.description && (
-          <Text as={'p'} type={'secondary'}>
+
+      {provider.description && (
+        <Flexbox paddingInline={16} style={{ marginBottom: 16 }}>
+          <Text as={'p'} color={theme.colorTextSecondary}>
             {provider.description}
           </Text>
-        )}
-      </Flexbox>
-      <Divider style={{ marginBlock: 16 }} />
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

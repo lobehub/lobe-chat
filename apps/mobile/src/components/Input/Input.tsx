@@ -19,21 +19,29 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
     variant = 'outlined',
     size = 'middle',
     textStyle,
+    disabled,
     ...rest
   } = props;
   const { styles, theme } = useStyles({ size });
 
   return (
-    <Block align={'center'} horizontal style={[styles.container, style]} variant={variant}>
+    <Block
+      align={'center'}
+      disabled={disabled}
+      horizontal
+      style={[styles.container, disabled && { opacity: 0.6 }, style]}
+      variant={disabled ? 'filled' : variant}
+    >
       {prefix && <View style={styles.prefixContainer}>{prefix}</View>}
       <RNTextInput
         autoCapitalize="none"
         autoCorrect={false}
+        editable={!disabled}
         keyboardType="default"
         ref={ref}
         {...rest}
         placeholderTextColor={placeholderTextColor ?? theme.colorTextPlaceholder}
-        style={[styles.input, textStyle]}
+        style={[styles.input, disabled && { opacity: 0.6 }, textStyle]}
         underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
       />
       {suffix && <View style={styles.suffixContainer}>{suffix}</View>}
