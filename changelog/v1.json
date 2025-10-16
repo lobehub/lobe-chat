@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve welcome message."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.2"
+  },
+  {
+    "children": {
       "fixes": ["Automatic topic creation switch does not work."]
     },
     "date": "2025-10-16",
