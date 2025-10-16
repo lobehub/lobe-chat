@@ -17,9 +17,12 @@ export const ParagraphRenderer = ({ node, parent }: RendererArgs<Paragraph>): Re
 
   return (
     <Text style={paragraphStyle}>
-      {node.children.map((child, idx) => (
-        <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />
-      ))}
+      {node.children.map((child, idx) => {
+        if (child.type === 'text') {
+          return child.value;
+        }
+        return <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />;
+      })}
     </Text>
   );
 };

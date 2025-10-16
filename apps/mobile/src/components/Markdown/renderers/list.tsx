@@ -27,7 +27,7 @@ export const ListItemRenderer = ({ node, index, parent }: RendererArgs<ListItem>
   const itemNumber = (list?.start ?? 1) + (index ?? 0);
 
   const markerStyle = useMemo(() => {
-    const defaultStyle = [styles.paragraph, { fontWeight: '500' }];
+    const defaultStyle = [styles.paragraph, { fontWeight: '400' }];
     const firstItem = node.children[0];
     if (!firstItem) return defaultStyle;
     if (firstItem.type === 'heading') {
