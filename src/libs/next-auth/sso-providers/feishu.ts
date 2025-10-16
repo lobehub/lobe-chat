@@ -29,6 +29,8 @@ function Feishu(): OAuthConfig<FeishuProfileResponse> {
     client: {
       token_endpoint_auth_method: 'client_secret_post',
     },
+    clientId: process.env.AUTH_FEISHU_APP_ID,
+    clientSecret: process.env.AUTH_FEISHU_APP_SECRET,
     [customFetch]: (url, options = {}) => {
       if (
         url === 'https://open.feishu.cn/open-apis/authen/v2/oauth/token' &&
