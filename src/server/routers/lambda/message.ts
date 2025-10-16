@@ -148,9 +148,17 @@ export const messageRouter = router({
     }),
 
   searchMessages: messageProcedure
-    .input(z.object({ keywords: z.string() }))
+    .input(
+      z.object({
+        current: z.number().optional(),
+        keywords: z.string(),
+        pageSize: z.number().optional(),
+      }),
+    )
     .query(async ({ input, ctx }) => {
-      return ctx.messageModel.queryByKeyword(input.keywords);
+      const { current, keywords, pageSize } = input;
+
+      return ctx.messageModel.queryByKeyword(keywords, { current, pageSize });
     }),
 
   update: messageProcedure

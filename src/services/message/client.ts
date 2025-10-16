@@ -72,6 +72,10 @@ export class ClientService extends BaseClientService implements IMessageService 
     return data as unknown as ChatMessage[];
   };
 
+  searchMessages: IMessageService['searchMessages'] = async (keyword, params) => {
+    return this.messageModel.queryByKeyword(keyword, params);
+  };
+
   updateMessageError: IMessageService['updateMessageError'] = async (id, error) => {
     return this.messageModel.update(id, { error });
   };

@@ -561,38 +561,44 @@ describe('MessageModel', () => {
   });
 
   describe('queryByKeyWord', () => {
-    it('should query messages by keyword', async () => {
-      // 创建测试数据
+    beforeEach(async () => {
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'apple', createdAt: new Date('2022-02-01') },
         { id: '2', userId, role: 'user', content: 'banana' },
         { id: '3', userId, role: 'user', content: 'pear' },
         { id: '4', userId, role: 'user', content: 'apple pie', createdAt: new Date('2024-02-01') },
       ]);
-
-      // 测试查询包含特定关键字的消息
-      const result = await messageModel.queryByKeyword('apple');
-
-      // 断言结果
-      expect(result).toHaveLength(2);
-      expect(result[0].id).toBe('4');
-      expect(result[1].id).toBe('1');
     });
 
-    it('should return empty array when keyword is empty', async () => {
-      // 创建测试数据
-      await serverDB.insert(messages).values([
-        { id: '1', userId, role: 'user', content: 'apple' },
-        { id: '2', userId, role: 'user', content: 'banana' },
-        { id: '3', userId, role: 'user', content: 'pear' },
-        { id: '4', userId, role: 'user', content: 'apple pie' },
-      ]);
+    it('should query messages by keyword with default pagination', async () => {
+      const result = await messageModel.queryByKeyword('apple');
 
-      // 测试当关键字为空时返回空数组
-      const result = await messageModel.queryByKeyword('');
+      expect(result.data).toHaveLength(2);
+      expect(result.data[0].id).toBe('4');
+      expect(result.data[1].id).toBe('1');
+      expect(result.pagination.current).toBe(0);
+      expect(result.pagination.pageSize).toBe(20);
+      expect(result.pagination.total).toBe(2);
+    });
 
-      // 断言结果
-      expect(result).toHaveLength(0);
+    it('should support pagination options', async () => {
+      const firstPage = await messageModel.queryByKeyword('apple', { current: 0, pageSize: 1 });
+      const secondPage = await messageModel.queryByKeyword('apple', { current: 1, pageSize: 1 });
+
+      expect(firstPage.data).toHaveLength(1);
+      expect(firstPage.data[0].id).toBe('4');
+      expect(firstPage.pagination).toMatchObject({ current: 0, pageSize: 1, total: 2 });
+
+      expect(secondPage.data).toHaveLength(1);
+      expect(secondPage.data[0].id).toBe('1');
+      expect(secondPage.pagination).toMatchObject({ current: 1, pageSize: 1, total: 2 });
+    });
+
+    it('should return empty result when keyword is empty after trim', async () => {
+      const result = await messageModel.queryByKeyword('  ');
+
+      expect(result.data).toHaveLength(0);
+      expect(result.pagination.total).toBe(0);
     });
   });
 

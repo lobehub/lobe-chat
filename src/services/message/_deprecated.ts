@@ -10,6 +10,8 @@ import {
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
+  MessageItem,
+  MessageKeywordSearchResult,
   ModelRankItem,
 } from '@/types/message';
 
@@ -81,6 +83,61 @@ export class ClientService implements IMessageService {
 
   async getAllMessagesInSession(sessionId: string) {
     return MessageModel.queryBySessionId(sessionId);
+  }
+
+  async searchMessages(keyword: string, params?: { current?: number; pageSize?: number }) {
+    const current = Math.max(params?.current ?? 0, 0);
+    const pageSize = Math.max(params?.pageSize ?? 20, 1);
+    const normalizedKeyword = keyword.trim().toLowerCase();
+
+    if (!normalizedKeyword) {
+      return {
+        data: [],
+        pagination: { current, pageSize, total: 0 },
+      } satisfies MessageKeywordSearchResult;
+    }
+
+    const messages = await MessageModel.queryAll();
+
+    const matched = messages
+      .filter((message) => (message.content || '').toLowerCase().includes(normalizedKeyword))
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+    const start = current * pageSize;
+    const slice = matched.slice(start, start + pageSize);
+
+    return {
+      data: slice.map<MessageItem>((message) => ({
+        agentId: (message as any).agentId ?? null,
+        clientId: null,
+        content: message.content ?? '',
+        createdAt: new Date(message.createdAt || Date.now()),
+        error: null,
+        favorite: null,
+        id: message.id,
+        metadata: null,
+        model: null,
+        observationId: null,
+        parentId: message.parentId ?? null,
+        provider: null,
+        quotaId: null,
+        reasoning: null,
+        role: message.role,
+        search: null,
+        sessionId: message.sessionId ?? null,
+        threadId: message.threadId ?? null,
+        tools: null,
+        topicId: message.topicId ?? null,
+        traceId: null,
+        updatedAt: new Date(message.updatedAt || message.createdAt || Date.now()),
+        userId: '',
+      })),
+      pagination: {
+        current,
+        pageSize,
+        total: matched.length,
+      },
+    } satisfies MessageKeywordSearchResult;
   }
 
   async updateMessageError(id: string, error: ChatMessageError) {
