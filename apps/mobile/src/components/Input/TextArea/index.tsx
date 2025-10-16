@@ -23,7 +23,7 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
   return (
     <Block
       disabled={disabled}
-      style={[styles.container, disabled && { opacity: 0.6 }, style]}
+      style={[disabled && { opacity: 0.6 }, style]}
       variant={disabled ? 'filled' : variant}
     >
       <RNTextInput
@@ -35,6 +35,8 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
         numberOfLines={numberOfLines}
         ref={ref}
         scrollEnabled={!!numberOfLines}
+        spellCheck={false}
+        textBreakStrategy="highQuality"
         {...rest}
         placeholderTextColor={placeholderTextColor ?? theme.colorTextPlaceholder}
         style={[styles.input, disabled && { opacity: 0.6 }, textStyle]}

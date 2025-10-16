@@ -1,37 +1,42 @@
-import { Avatar, PageContainer } from '@lobehub/ui-rn';
+import { Avatar, Block, Cell, PageContainer } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { AVATAR_SIZE_LARGE } from '@/_const/common';
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
-import { useStyles } from './styles';
-
 export default function AgentDetail() {
   const { t } = useTranslation(['chat']);
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const description = useSessionStore(sessionMetaSelectors.currentAgentDescription);
-  const { styles } = useStyles();
 
   return (
     <PageContainer showBack title={t('setting.title', { ns: 'chat' })}>
-      <KeyboardAwareScrollView
-        bottomOffset={40}
-        extraKeyboardSpace={60}
-        showsVerticalScrollIndicator={false}
-        style={styles.container}
-      >
-        <View style={styles.avatarContainer}>
-          <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
-        </View>
-        <Text style={styles.title}>{title}</Text>
-        {description ? <Text style={styles.description}>{description}</Text> : null}
-        <AgentRoleEditSection />
-      </KeyboardAwareScrollView>
+      <AgentRoleEditSection
+        header={
+          <Cell
+            description={description}
+            descriptionProps={{
+              ellipsis: { rows: 2 },
+            }}
+            icon={
+              <Block
+                borderRadius={AVATAR_SIZE_LARGE}
+                height={AVATAR_SIZE_LARGE}
+                variant={'filled'}
+                width={AVATAR_SIZE_LARGE}
+              >
+                <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
+              </Block>
+            }
+            iconSize={AVATAR_SIZE_LARGE}
+            showArrow={false}
+            title={title}
+          />
+        }
+      />
     </PageContainer>
   );
 }
