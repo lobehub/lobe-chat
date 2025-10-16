@@ -51,6 +51,7 @@
     "desktop:prepare-dist": "tsx scripts/electronWorkflow/moveNextStandalone.ts",
     "dev": "next dev --turbopack -p 3010",
     "dev:desktop": "next dev --turbopack -p 3015",
+    "dev:mobile": "next dev --turbopack -p 3018",
     "docs:i18n": "lobe-i18n md && npm run lint:md && npm run lint:mdx && prettier -c --write locales/**/*",
     "docs:seo": "lobe-seo && npm run lint:mdx",
     "e2e": "playwright test",

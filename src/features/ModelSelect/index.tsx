@@ -46,7 +46,6 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
         provider: provider.id,
         value: `${provider.id}/${model.id}`,
       }));
-
     if (enabledList.length === 1) {
       const provider = enabledList[0];
 
