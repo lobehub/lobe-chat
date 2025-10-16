@@ -1,4 +1,5 @@
 import { createEnv } from '@t3-oss/env-nextjs';
+import debug from 'debug';
 import { z } from 'zod';
 
 import { EdgeConfig } from '@/server/modules/EdgeConfig';
@@ -6,6 +7,8 @@ import { merge } from '@/utils/merge';
 
 import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from './schema';
 import { parseFeatureFlag } from './utils/parser';
+
+const log = debug('lobe-feature-flags');
 
 const env = createEnv({
   runtimeEnv: {
@@ -38,26 +41,26 @@ export const getServerFeatureFlagsFromEdgeConfig = async (userId?: string) => {
       if (edgeFeatureFlags && Object.keys(edgeFeatureFlags).length > 0) {
         // Merge EdgeConfig flags with defaults
         const mergedFlags = merge(DEFAULT_FEATURE_FLAGS, edgeFeatureFlags);
-        console.log('[FeatureFlags] Using EdgeConfig flags for user:', userId || 'anonymous');
+        log('[FeatureFlags] Using EdgeConfig flags for user:', userId || 'anonymous');
         return mergedFlags;
       } else {
-        console.log(
+        log(
           '[FeatureFlags] EdgeConfig returned empty/null/undefined, falling back to environment variables',
         );
       }
     } catch (error) {
-      console.warn(
+      log(
         '[FeatureFlags] Failed to fetch feature flags from EdgeConfig, falling back to environment variables:',
         error,
       );
     }
   } else {
-    console.log('[FeatureFlags] EdgeConfig not enabled, using environment variables');
+    log('[FeatureFlags] EdgeConfig not enabled, using environment variables');
   }
 
   // Fallback to environment variable-based feature flags
   const envFlags = getServerFeatureFlagsValue();
-  console.log('[FeatureFlags] Using environment variable flags for user:', userId || 'anonymous');
+  log('[FeatureFlags] Using environment variable flags for user:', userId || 'anonymous');
   return envFlags;
 };
 
