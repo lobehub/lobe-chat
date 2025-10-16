@@ -16,8 +16,6 @@ import {
   normalizeLocale,
 } from '@/i18n/resource';
 
-import { useStyles } from './styles';
-
 const createDisplayNames = (locale: string) => {
   if (typeof Intl === 'undefined' || typeof Intl.DisplayNames === 'undefined') return undefined;
 
@@ -42,7 +40,6 @@ const sanitizeLanguageName = (value?: string | null) => {
 };
 
 export default function LocaleScreen() {
-  const { styles } = useStyles();
   const { localeMode, changeLocale } = useLocale();
   const { t } = useTranslation(['setting']);
   const [pendingLocale, setPendingLocale] = useState<LocaleMode | null>(null);
@@ -118,7 +115,7 @@ export default function LocaleScreen() {
 
   return (
     <PageContainer showBack title={t('locale.title', { ns: 'setting' })}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView>
         <SettingGroup>
           {localeOptions.map((option) => (
             <SettingItem
