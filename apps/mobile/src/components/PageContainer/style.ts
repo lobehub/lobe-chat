@@ -2,7 +2,6 @@ import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
   container: {
-    backgroundColor: token.colorBgLayout,
     flex: 1,
   },
   extra: {
