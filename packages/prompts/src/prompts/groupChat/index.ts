@@ -158,7 +158,8 @@ WHEN ASKING AGENTS TO SPEAK:
 
 - Only reference agents from the member list. Never invent new IDs.
 - Provide concise English instructions when guiding agents via "instruction".
-- Be concise and to the point. Each instruction should no longer than 10 words. Always use English.
+- Each instruction should no longer than 10 words. Always use English.
+- Do not excessivly gathering information from user, you should only ask for information when it's necessary.
 ${dmRules}
 
 ${
