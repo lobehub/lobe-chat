@@ -41,16 +41,12 @@ const allGroups = (s: ChatStoreState): ChatGroupItem[] =>
 const groupsInitialized = (s: ChatStoreState): boolean => s.groupsInit;
 
 const getGroupConfig = (groupId: string) => (s: ChatGroupStore) => {
-  console.log('getGroupConfig / groupMap', s.groupMap);
-  console.log('getGroupConfig / groupId', groupId);
   const groupConfig = s.groupMap?.[groupId]?.config;
-  console.log('==> getGroupConfig / groupConfig', groupConfig);
   return merge(DEFAULT_CHAT_GROUP_CHAT_CONFIG, groupConfig || {});
 };
 
 const currentGroupConfig = (s: ChatGroupStore) => {
   const groupId = activeGroupId();
-  console.log('currentGroupConfig / groupId', groupId);
   return groupId ? getGroupConfig(groupId)(s) : DEFAULT_CHAT_GROUP_CHAT_CONFIG;
 };
 
