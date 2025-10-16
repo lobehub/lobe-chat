@@ -85,19 +85,32 @@
     "title": "Ustawienia kolorów"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Token dostępu wygasł natychmiast",
-        "title": "Wygasanie tokenu dostępu"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Token dostępu został natychmiast wygaszony",
+          "title": "Wygasł token dostępu"
+        },
+        "invalidate": {
+          "success": "Token dostępu został oznaczony jako nieważny",
+          "title": "Nieważny token dostępu"
+        }
       },
-      "invalidate": {
-        "success": "Token dostępu został unieważniony",
-        "title": "Unieważnienie tokenu dostępu"
+      "clearAuthData": {
+        "success": "Dane uwierzytelniające zostały wyczyszczone",
+        "title": "Wyczyszczono dane uwierzytelniające"
+      },
+      "group": "Konfiguracja uwierzytelniania",
+      "refreshToken": {
+        "expire": {
+          "success": "Token odświeżania został natychmiast wygaszony",
+          "title": "Wygasł token odświeżania"
+        },
+        "invalidate": {
+          "success": "Token odświeżania został oznaczony jako nieważny",
+          "title": "Nieważny token odświeżania"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Dane uwierzytelniające zostały wyczyszczone",
-      "title": "Wyczyszczenie danych uwierzytelniających"
     },
     "failurePrefix": "Operacja nie powiodła się: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Tryb deweloperski został włączony",
       "remaining": "Naciśnij jeszcze {{count}} razy, aby włączyć tryb deweloperski",
       "title": "Tryb deweloperski"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Token odświeżania wygasł natychmiast",
-        "title": "Wygasanie tokenu odświeżania"
-      },
-      "invalidate": {
-        "success": "Token odświeżania został unieważniony",
-        "title": "Unieważnienie tokenu odświeżania"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Przejdź do strony logowania",
@@ -140,7 +143,8 @@
       "reset": "Przywróć domyślne",
       "resetSuccess": "Przywrócono oficjalny adres serwera",
       "save": "Zapisz",
-      "title": "Własny serwer"
+      "title": "Własny serwer",
+      "updated": "Adres niestandardowego serwera został zaktualizowany"
     },
     "title": "Opcje deweloperskie"
   },

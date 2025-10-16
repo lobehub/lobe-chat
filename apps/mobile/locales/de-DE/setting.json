@@ -85,19 +85,32 @@
     "title": "Farb-Einstellungen"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Der Zugriffstoken ist sofort abgelaufen",
-        "title": "Zugriffstoken abgelaufen"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Der Zugriffstoken ist sofort abgelaufen",
+          "title": "Zugriffstoken abgelaufen"
+        },
+        "invalidate": {
+          "success": "Ungültiger Zugriffstoken wurde geschrieben",
+          "title": "Ungültiger Zugriffstoken"
+        }
       },
-      "invalidate": {
-        "success": "Der Zugriffstoken wurde ungültig gemacht",
-        "title": "Ungültiger Zugriffstoken"
+      "clearAuthData": {
+        "success": "Authentifizierungsdaten wurden gelöscht",
+        "title": "Authentifizierungsdaten löschen"
+      },
+      "group": "Authentifizierungskonfiguration",
+      "refreshToken": {
+        "expire": {
+          "success": "Der Aktualisierungstoken ist sofort abgelaufen",
+          "title": "Aktualisierungstoken abgelaufen"
+        },
+        "invalidate": {
+          "success": "Ungültiger Aktualisierungstoken wurde geschrieben",
+          "title": "Ungültiger Aktualisierungstoken"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Authentifizierungsdaten wurden gelöscht",
-      "title": "Authentifizierungsdaten löschen"
     },
     "failurePrefix": "Vorgang fehlgeschlagen: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Entwicklermodus ist aktiviert",
       "remaining": "Noch {{count}} Mal tippen, um den Entwicklermodus zu aktivieren",
       "title": "Entwicklermodus"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Der Refresh-Token ist sofort abgelaufen",
-        "title": "Refresh-Token abgelaufen"
-      },
-      "invalidate": {
-        "success": "Der Refresh-Token wurde ungültig gemacht",
-        "title": "Ungültiger Refresh-Token"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Zur Anmeldeseite wechseln",

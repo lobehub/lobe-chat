@@ -1,5 +1,6 @@
 import { PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
+import { CodeIcon, ServerIcon, ShieldIcon, TrashIcon, XIcon, ZapIcon } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
 
@@ -135,6 +136,7 @@ export default function DeveloperScreen() {
       <View style={styles.container}>
         <SettingGroup>
           <SettingItem
+            icon={CodeIcon}
             onSwitchChange={(value) => setDeveloperMode(value)}
             showSwitch
             switchValue={developerMode}
@@ -147,9 +149,11 @@ export default function DeveloperScreen() {
             <SettingGroup title={t('developer.server.group', { ns: 'setting' })}>
               <SettingItem
                 extra={currentServer}
+                icon={ServerIcon}
                 title={t('developer.server.current', { ns: 'setting' })}
               />
               <SettingItem
+                icon={ShieldIcon}
                 onSwitchChange={handleSelfHostedEntryChange}
                 showSwitch
                 switchValue={showSelfHostedEntry}
@@ -161,56 +165,61 @@ export default function DeveloperScreen() {
                 title={t('developer.server.title', { ns: 'setting' })}
               /> */}
             </SettingGroup>
-            <SettingGroup>
+            <SettingGroup title={t('developer.auth.group', { ns: 'setting' })}>
               <SettingItem
+                icon={ZapIcon}
                 onPress={() =>
                   confirmThenExecute(
-                    t('developer.accessToken.expire.title', { ns: 'setting' }),
+                    t('developer.auth.accessToken.expire.title', { ns: 'setting' }),
                     expireAccessTokenNow,
-                    t('developer.accessToken.expire.success', { ns: 'setting' }),
+                    t('developer.auth.accessToken.expire.success', { ns: 'setting' }),
                   )
                 }
-                title={t('developer.accessToken.expire.title', { ns: 'setting' })}
+                title={t('developer.auth.accessToken.expire.title', { ns: 'setting' })}
               />
               <SettingItem
+                icon={ZapIcon}
                 onPress={() =>
                   confirmThenExecute(
-                    t('developer.refreshToken.expire.title', { ns: 'setting' }),
+                    t('developer.auth.refreshToken.expire.title', { ns: 'setting' }),
                     expireRefreshTokenNow,
-                    t('developer.refreshToken.expire.success', { ns: 'setting' }),
+                    t('developer.auth.refreshToken.expire.success', { ns: 'setting' }),
                   )
                 }
-                title={t('developer.refreshToken.expire.title', { ns: 'setting' })}
+                title={t('developer.auth.refreshToken.expire.title', { ns: 'setting' })}
               />
               <SettingItem
+                icon={XIcon}
                 onPress={() =>
                   confirmThenExecute(
-                    t('developer.accessToken.invalidate.title', { ns: 'setting' }),
+                    t('developer.auth.accessToken.invalidate.title', { ns: 'setting' }),
                     invalidateAccessToken,
-                    t('developer.accessToken.invalidate.success', { ns: 'setting' }),
+                    t('developer.auth.accessToken.invalidate.success', { ns: 'setting' }),
                   )
                 }
-                title={t('developer.accessToken.invalidate.title', { ns: 'setting' })}
+                title={t('developer.auth.accessToken.invalidate.title', { ns: 'setting' })}
               />
               <SettingItem
+                icon={XIcon}
                 onPress={() =>
                   confirmThenExecute(
-                    t('developer.refreshToken.invalidate.title', { ns: 'setting' }),
+                    t('developer.auth.refreshToken.invalidate.title', { ns: 'setting' }),
                     invalidateRefreshToken,
-                    t('developer.refreshToken.invalidate.success', { ns: 'setting' }),
+                    t('developer.auth.refreshToken.invalidate.success', { ns: 'setting' }),
                   )
                 }
-                title={t('developer.refreshToken.invalidate.title', { ns: 'setting' })}
+                title={t('developer.auth.refreshToken.invalidate.title', { ns: 'setting' })}
               />
               <SettingItem
+                icon={TrashIcon}
                 onPress={() =>
                   confirmThenExecute(
-                    t('developer.clearAuthData.title', { ns: 'setting' }),
+                    t('developer.auth.clearAuthData.title', { ns: 'setting' }),
                     clearAuthData,
-                    t('developer.clearAuthData.success', { ns: 'setting' }),
+                    t('developer.auth.clearAuthData.success', { ns: 'setting' }),
                   )
                 }
-                title={t('developer.clearAuthData.title', { ns: 'setting' })}
+                title={t('developer.auth.clearAuthData.title', { ns: 'setting' })}
               />
             </SettingGroup>
           </>

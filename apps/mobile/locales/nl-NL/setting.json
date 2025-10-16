@@ -85,19 +85,32 @@
     "title": "Kleurinstellingen"
   },
   "developer": {
-    "accessToken": {
-      "expire": {
-        "success": "Toegangstoken is onmiddellijk verlopen",
-        "title": "Toegangstoken verlopen"
+    "auth": {
+      "accessToken": {
+        "expire": {
+          "success": "Toegangstoken is onmiddellijk verlopen",
+          "title": "Toegangstoken verlopen"
+        },
+        "invalidate": {
+          "success": "Ongeldig toegangstoken is geschreven",
+          "title": "Ongeldig toegangstoken"
+        }
       },
-      "invalidate": {
-        "success": "Ongeldig toegangstoken is ingesteld",
-        "title": "Ongeldig toegangstoken"
+      "clearAuthData": {
+        "success": "Authenticatiegegevens zijn gewist",
+        "title": "Authenticatiegegevens wissen"
+      },
+      "group": "Authenticatieconfiguratie",
+      "refreshToken": {
+        "expire": {
+          "success": "Verversingstoken is onmiddellijk verlopen",
+          "title": "Verversingstoken verlopen"
+        },
+        "invalidate": {
+          "success": "Ongeldig verversingstoken is geschreven",
+          "title": "Ongeldig verversingstoken"
+        }
       }
-    },
-    "clearAuthData": {
-      "success": "Authenticatiegegevens zijn gewist",
-      "title": "Authenticatiegegevens wissen"
     },
     "failurePrefix": "Actie mislukt: ",
     "mode": {
@@ -105,16 +118,6 @@
       "enabled": "Ontwikkelaarsmodus is ingeschakeld",
       "remaining": "Tik nog {{count}} keer om de ontwikkelaarsmodus in te schakelen",
       "title": "Ontwikkelaarsmodus"
-    },
-    "refreshToken": {
-      "expire": {
-        "success": "Verversingstoken is onmiddellijk verlopen",
-        "title": "Verversingstoken verlopen"
-      },
-      "invalidate": {
-        "success": "Ongeldig verversingstoken is ingesteld",
-        "title": "Ongeldig verversingstoken"
-      }
     },
     "selfHostedEntry": {
       "confirmAction": "Ga naar inlogpagina",
