@@ -150,6 +150,9 @@ describe('ToolNameResolver', () => {
     it('should handle web browsing tools correctly', () => {
       const result = resolver.generate('lobe-web-browsing', 'search', 'builtin');
       expect(result).toBe('lobe-web-browsing____search____builtin');
+
+      const result2 = resolver.generate('lobe-web-browsing', 'crawlSinglePage', 'builtin');
+      expect(result2).toBe('lobe-web-browsing____crawlSinglePage____builtin');
     });
 
     it('should handle plugin tools correctly', () => {

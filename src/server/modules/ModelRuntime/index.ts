@@ -136,7 +136,7 @@ const buildVertexOptions = (
 
   const project = projectFromParams ?? projectFromCredentials ?? projectFromEnv;
   const location =
-    (params.location as string | undefined) ?? process.env.VERTEXAI_LOCATION ?? undefined;
+    (params.location as string | undefined) ?? payload.vertexAIRegion ?? process.env.VERTEXAI_LOCATION ?? undefined;
 
   const googleAuthOptions = params.googleAuthOptions ?? (credentials ? { credentials } : undefined);
 

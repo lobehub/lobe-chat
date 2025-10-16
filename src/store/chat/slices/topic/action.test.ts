@@ -7,7 +7,9 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useSessionStore } from '@/store/session';
 import { ChatMessage } from '@/types/message';
+import { LobeSessionType } from '@/types/session';
 import { ChatTopic } from '@/types/topic';
 
 import { useChatStore } from '../../store';
@@ -59,6 +61,16 @@ beforeEach(() => {
       activeId: undefined,
       activeTopicId: undefined,
       // ... initial state
+    },
+    false,
+  );
+  useSessionStore.setState(
+    {
+      activeId: 'inbox',
+      defaultSessions: [],
+      pinnedSessions: [],
+      sessions: [],
+      isSessionsFirstFetchFinished: false,
     },
     false,
   );
@@ -146,6 +158,37 @@ describe('topic action', () => {
         }),
       );
       expect(topicId).toEqual('new-topic-id');
+    });
+
+    it('should reset supervisor todos after saving to topic for group sessions', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupId = 'group-session';
+      const todoKey = messageMapKey(groupId, null);
+      const messages = [{ id: 'group-message-1' }] as ChatMessage[];
+
+      await act(async () => {
+        useChatStore.setState({
+          activeId: groupId,
+          activeSessionType: 'group',
+          messagesMap: {
+            [messageMapKey(groupId)]: messages,
+          },
+          supervisorTodos: {
+            [todoKey]: [{ id: 'todo-1' } as any],
+          },
+        });
+      });
+
+      vi.spyOn(topicService, 'createTopic').mockResolvedValue('group-topic-id');
+      vi.spyOn(result.current, 'refreshTopic').mockResolvedValue(undefined);
+      const summarySpy = vi.spyOn(result.current, 'summaryTopicTitle').mockResolvedValue(undefined);
+
+      await act(async () => {
+        await result.current.saveToTopic();
+      });
+
+      expect(summarySpy).toHaveBeenCalled();
+      expect(useChatStore.getState().supervisorTodos[todoKey]).toEqual([]);
     });
   });
   describe('refreshTopic', () => {
@@ -302,6 +345,71 @@ describe('topic action', () => {
       // Verify that the refreshMessages was called to update the messages
       expect(refreshMessagesSpy).toHaveBeenCalled();
     });
+
+    it('should reset supervisor todos and cancel supervisor decision for group sessions', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupId = 'group-1';
+      const nextTopicId = 'topic-2';
+      const expectedKey = messageMapKey(groupId, nextTopicId);
+
+      await act(async () => {
+        useChatStore.setState({
+          activeId: groupId,
+          activeSessionType: 'group',
+          supervisorTodos: {
+            [messageMapKey(groupId, null)]: [{ id: 'todo' } as any],
+          },
+        });
+      });
+
+      const cancelSpy = vi.spyOn(result.current, 'internal_cancelSupervisorDecision');
+      vi.spyOn(result.current, 'refreshMessages').mockResolvedValue(undefined);
+
+      await act(async () => {
+        await result.current.switchTopic(nextTopicId);
+      });
+
+      expect(cancelSpy).toHaveBeenCalledWith(groupId);
+      expect(useChatStore.getState().supervisorTodos[expectedKey]).toEqual([]);
+    });
+
+    it('should detect group sessions from session store when type is not cached', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupId = 'group-from-session';
+      const newTopicId = 'topic-session';
+      const expectedKey = messageMapKey(groupId, newTopicId);
+
+      await act(async () => {
+        useChatStore.setState({
+          activeId: groupId,
+          activeSessionType: undefined,
+          supervisorTodos: {},
+        });
+      });
+
+      useSessionStore.setState({
+        activeId: groupId,
+        sessions: [
+          {
+            id: groupId,
+            createdAt: new Date(0),
+            updatedAt: new Date(0),
+            meta: {},
+            type: LobeSessionType.Group,
+          } as any,
+        ],
+      });
+
+      const cancelSpy = vi.spyOn(result.current, 'internal_cancelSupervisorDecision');
+      vi.spyOn(result.current, 'refreshMessages').mockResolvedValue(undefined);
+
+      await act(async () => {
+        await result.current.switchTopic(newTopicId);
+      });
+
+      expect(cancelSpy).toHaveBeenCalledWith(groupId);
+      expect(useChatStore.getState().supervisorTodos[expectedKey]).toEqual([]);
+    });
   });
   describe('removeSessionTopics', () => {
     it('should remove all topics from the current session and refresh the topic list', async () => {
@@ -318,6 +426,37 @@ describe('topic action', () => {
       });
 
       expect(topicService.removeTopics).toHaveBeenCalledWith(activeId);
+      expect(refreshTopicSpy).toHaveBeenCalled();
+      expect(switchTopicSpy).toHaveBeenCalled();
+    });
+  });
+  describe('removeGroupTopics', () => {
+    it('should remove all topics for the specified group and refresh state', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupId = 'group-delete';
+      const topics = [
+        { id: 'topic-1', title: 'Topic 1' } as ChatTopic,
+        { id: 'topic-2', title: 'Topic 2' } as ChatTopic,
+      ];
+
+      await act(async () => {
+        useChatStore.setState({
+          topicMaps: {
+            [groupId]: topics,
+          },
+        });
+      });
+
+      const batchRemoveSpy = topicService.batchRemoveTopics as Mock;
+      batchRemoveSpy.mockClear();
+      const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic').mockResolvedValue(undefined);
+      const switchTopicSpy = vi.spyOn(result.current, 'switchTopic').mockResolvedValue(undefined);
+
+      await act(async () => {
+        await result.current.removeGroupTopics(groupId);
+      });
+
+      expect(batchRemoveSpy).toHaveBeenCalledWith(['topic-1', 'topic-2']);
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).toHaveBeenCalled();
     });

@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Model"
   },
+  "active": "Active",
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**. How can I assist you today?",
   "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. How can I assist you today?",
@@ -13,17 +14,28 @@
     "thought": "Thought",
     "unknownTitle": "Untitled Work"
   },
+  "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
   "chatList": {
     "longMessageDetail": "View Details"
   },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
+  "confirmRemoveChatGroupItemAlert": "You are about to delete this group chat. Group members will not be affected. Please confirm your action.",
+  "confirmRemoveGroupItemAlert": "You are about to delete this group. After deletion, its assistants will be moved to the default list. Please confirm your action.",
+  "confirmRemoveGroupSuccess": "Group chat deleted successfully",
   "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionSuccess": "Assistant removed successfully",
   "defaultAgent": "Default Assistant",
+  "defaultGroupChat": "Group Chat",
   "defaultList": "Default List",
   "defaultSession": "Default Assistant",
+  "dm": {
+    "placeholder": "Your private messages with {{agentTitle}} will appear here.",
+    "tooltip": "Send a private message",
+    "visibleTo": "Visible to {{target}} only",
+    "you": "You"
+  },
   "duplicateSession": {
     "loading": "Copying...",
     "success": "Copy successful",
@@ -58,11 +70,56 @@
       "title": "Extract Webpage Link Content"
     }
   },
+  "group": {
+    "desc": "Collaborate with multiple AI assistants in a shared conversation space.",
+    "memberTooltip": "There are {{count}} members in the group",
+    "orchestratorThinking": "The host is thinking...",
+    "removeMember": "Remove Member",
+    "title": "Group"
+  },
+  "groupDescription": "Group description",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Add Member",
+      "memberSettings": "Member Settings",
+      "orchestrator": "Host",
+      "orchestratorThinking": "The host is thinking...",
+      "removeMember": "Remove Member",
+      "stopOrchestrator": "Stop Thinking",
+      "triggerOrchestrator": "Start Group Chat"
+    },
+    "tabs": {
+      "host": "Host",
+      "members": "Members",
+      "role": "Settings"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Select existing assistants...",
+    "createGroup": "Create Group Chat",
+    "existingMembers": "Existing Assistants",
+    "groupMembers": "These assistants will also be added to your list",
+    "host": {
+      "description": "Automate group chat operations",
+      "title": "Host",
+      "tooltip": "If group chat hosting is disabled, you'll need to manually @mention members to get their responses."
+    },
+    "memberCount": "{{count}} members",
+    "noMatchingTemplates": "No matching templates",
+    "noSelectedTemplates": "No templates selected",
+    "noTemplateMembers": "No members in the template",
+    "noTemplates": "No templates available",
+    "searchTemplates": "Search templates...",
+    "title": "Create Group Chat",
+    "useTemplate": "Use Template"
+  },
+  "hideForYou": "Direct message content is hidden. Please enable 'Show Direct Message Content' in settings to view.",
   "history": {
     "title": "The assistant will only remember the last {{count}} messages."
   },
   "historyRange": "History Range",
   "historySummary": "Historical Message Summary",
+  "inactive": "Inactive",
   "inbox": {
     "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
     "title": "Just Chat"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "Understanding and analyzing your intent..."
   },
+  "inviteMembers": "Invite members",
   "knowledgeBase": {
     "all": "All Content",
     "allFiles": "All Files",
@@ -101,12 +159,29 @@
     "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
     "viewMore": "View More"
   },
+  "memberSelection": {
+    "addMember": "Add Member",
+    "allMembers": "All members",
+    "createGroup": "Create Group Chat",
+    "noAvailableAgents": "No assistants available to invite",
+    "noSelectedAgents": "No assistants selected yet",
+    "searchAgents": "Search assistants...",
+    "setInitialMembers": "Select Group Members"
+  },
+  "members": "Members",
+  "mention": {
+    "title": "Mention Members"
+  },
   "messageAction": {
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
     "regenerate": "Regenerate"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Visible only to {{name}}",
+      "title": "Direct Message"
+    },
     "modelCard": {
       "credit": "Credits",
       "creditPricing": "Pricing",
@@ -156,6 +231,13 @@
     "previousMessage": "Previous message"
   },
   "newAgent": "New Assistant",
+  "newGroupChat": "New Group Chat",
+  "noAgentsYet": "There are no assistants in this group yet. Click the + button to invite an assistant.",
+  "noAvailableAgents": "No assistants available to invite",
+  "noMatchingAgents": "No matching assistants",
+  "noMembersYet": "This group doesn't have any members yet. Click the + button to invite assistants.",
+  "noSelectedAgents": "No assistant selected yet",
+  "owner": "Group Owner",
   "pin": "Pin",
   "pinOff": "Unpin",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "Online Search"
   },
   "searchAgentPlaceholder": "Search assistants...",
+  "searchAgents": "Search assistants...",
+  "selectedAgents": "Selected agents",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",
     "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
     "createAgentSuccess": "Assistant created successfully",
     "createGroup": "Add New Group",
+    "createGroupFailed": "Failed to create group chat",
+    "createGroupSuccess": "Group chat created successfully",
     "createSuccess": "Created successfully",
     "creatingAgent": "Creating assistant...",
     "inputPlaceholder": "Please enter group name...",
@@ -235,6 +321,12 @@
     "loading": "Recognizing...",
     "prettifying": "Polishing..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "All tasks completed",
+      "title": "Tasks Completed"
+    }
+  },
   "thread": {
     "divider": "Subtopic",
     "threadMessageCount": "{{messageCount}} messages",
@@ -248,6 +340,7 @@
     "chats": "Chat Messages",
     "historySummary": "History Summary",
     "rest": "Remaining",
+    "supervisor": "Group Host",
     "systemRole": "Role Settings",
     "title": "Context Details",
     "tools": "Plugin Settings",
@@ -273,6 +366,7 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
+  "untitledAgent": "Untitled Assistant",
   "updateAgent": "Update Assistant Information",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "Video file size must not exceed 20MB. Current file size is {{actualSize}}."
     }
   },
+  "you": "you",
   "zenMode": "Zen Mode"
 }

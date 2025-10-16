@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
   },
+  "supervisor": {
+    "decisionFailed": "El moderador del grupo no puede funcionar. Por favor, verifica la configuración de tu moderador para asegurarte de que el modelo, la clave API y la dirección API estén configurados correctamente."
+  },
   "testConnectionFailed": "Fallo en la prueba de conexión: {{error}}",
   "tts": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"

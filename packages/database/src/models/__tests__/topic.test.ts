@@ -1,15 +1,14 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { messages, sessions, topics, users } from '../../schemas';
+import { chatGroups, messages, sessions, topics, users } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 import { CreateTopicParams, TopicModel } from '../topic';
 import { getTestDB } from './_util';
 
-const serverDB: LobeChatDatabase = await getTestDB();
-
 const userId = 'topic-user-test';
 const sessionId = 'topic-session';
+const serverDB: LobeChatDatabase = await getTestDB();
 const topicModel = new TopicModel(serverDB, userId);
 
 describe('TopicModel', () => {
@@ -44,7 +43,7 @@ describe('TopicModel', () => {
       });
 
       // 调用 query 方法
-      const result = await topicModel.query({ sessionId });
+      const result = await topicModel.query({ containerId: sessionId });
 
       // 断言结果
       expect(result).toHaveLength(4);
@@ -87,9 +86,48 @@ describe('TopicModel', () => {
       });
 
       // 应该只返回属于 session1 的 topic
-      const result = await topicModel.query({ sessionId: 'session1' });
+      const result = await topicModel.query({ containerId: 'session1' });
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+    });
+
+    it('should query topics by group ID', async () => {
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(chatGroups).values([
+          { id: 'chat-group-1', title: 'Chat Group 1', userId },
+          { id: 'chat-group-2', title: 'Chat Group 2', userId },
+        ]);
+
+        await tx.insert(topics).values([
+          {
+            id: 'group-topic-1',
+            userId,
+            groupId: 'chat-group-1',
+            favorite: true,
+            updatedAt: new Date('2023-05-01'),
+          },
+          {
+            id: 'group-topic-2',
+            userId,
+            groupId: 'chat-group-1',
+            favorite: false,
+            updatedAt: new Date('2023-04-01'),
+          },
+          {
+            id: 'group-topic-3',
+            userId,
+            groupId: 'chat-group-2',
+            favorite: true,
+            updatedAt: new Date('2023-06-01'),
+          },
+        ]);
+      });
+
+      const result = await topicModel.query({ containerId: 'chat-group-1' });
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('group-topic-1');
+      expect(result[1].id).toBe('group-topic-2');
     });
 
     it('should return topics based on pagination parameters', async () => {
@@ -101,8 +139,8 @@ describe('TopicModel', () => {
       ]);
 
       // 调用 query 方法
-      const result1 = await topicModel.query({ current: 0, pageSize: 2, sessionId });
-      const result2 = await topicModel.query({ current: 1, pageSize: 2, sessionId });
+      const result1 = await topicModel.query({ containerId: sessionId, current: 0, pageSize: 2 });
+      const result2 = await topicModel.query({ containerId: sessionId, current: 1, pageSize: 2 });
 
       // 断言返回结果符合分页要求
       expect(result1).toHaveLength(2);
@@ -306,6 +344,49 @@ describe('TopicModel', () => {
       // 断言属于 session1 的 topics 都被删除了
       expect(
         await serverDB.select().from(topics).where(eq(topics.sessionId, 'session1')),
+      ).toHaveLength(2);
+      expect(await serverDB.select().from(topics)).toHaveLength(2);
+    });
+  });
+
+  describe('batchDeleteByGroupId', () => {
+    it('should delete all topics associated with a group', async () => {
+      await serverDB.insert(chatGroups).values([
+        { id: 'group1', userId, title: 'Group 1' },
+        { id: 'group2', userId, title: 'Group 2' },
+      ]);
+      await serverDB.insert(topics).values([
+        { id: 'topic1', groupId: 'group1', userId },
+        { id: 'topic2', groupId: 'group1', userId },
+        { id: 'topic3', groupId: 'group2', userId },
+        { id: 'topic4', userId },
+      ]);
+
+      // 调用 batchDeleteByGroupId 方法
+      await topicModel.batchDeleteByGroupId('group1');
+
+      // 断言属于 group1 的 topics 都被删除了
+      expect(
+        await serverDB.select().from(topics).where(eq(topics.groupId, 'group1')),
+      ).toHaveLength(0);
+      expect(await serverDB.select().from(topics)).toHaveLength(2);
+    });
+
+    it('should delete all topics associated without groupId', async () => {
+      await serverDB.insert(chatGroups).values([{ id: 'group1', userId, title: 'Group 1' }]);
+
+      await serverDB.insert(topics).values([
+        { id: 'topic1', groupId: 'group1', userId },
+        { id: 'topic2', groupId: 'group1', userId },
+        { id: 'topic4', userId },
+      ]);
+
+      // 调用 batchDeleteByGroupId 方法
+      await topicModel.batchDeleteByGroupId();
+
+      // 断言属于 group1 的 topics 都被删除了
+      expect(
+        await serverDB.select().from(topics).where(eq(topics.groupId, 'group1')),
       ).toHaveLength(2);
       expect(await serverDB.select().from(topics)).toHaveLength(2);
     });

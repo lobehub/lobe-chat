@@ -33,6 +33,7 @@ export class ClientService implements ISessionService {
   }
 
   async batchCreateSessions(importSessions: LobeSessions) {
+    // @ts-ignore
     return SessionModel.batchCreate(importSessions);
   }
 
