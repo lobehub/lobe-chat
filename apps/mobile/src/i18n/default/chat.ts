@@ -23,6 +23,7 @@ export default {
     title: '随便聊聊',
   },
   messageCopied: '消息已复制',
+  newAgent: '新建助手',
   newChat: '新对话',
   placeholder: '输入您的消息...',
   regenerateFailed: '重新生成失败，请稍后重试',
