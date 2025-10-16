@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Automatic topic creation switch does not work."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.1"
+  },
+  {
+    "children": {
       "features": ["Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag."]
     },
     "date": "2025-10-16",
