@@ -115,6 +115,32 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
       content={''}
       editor={editor}
       {...richRenderProps}
+      mentionOption={
+        enableMention
+          ? {
+              items: mentionItems,
+              markdownWriter: (mention) => {
+                return `<mention name="${mention.label}" id="${mention.metadata.id}" />`;
+              },
+              onSelect: (editor, option) => {
+                editor.dispatchCommand(INSERT_MENTION_COMMAND, {
+                  label: String(option.label),
+                  metadata: option.metadata,
+                });
+              },
+              renderComp: expand
+                ? undefined
+                : (props) => {
+                    return (
+                      <SlashMenu
+                        {...props}
+                        getPopupContainer={() => (slashMenuRef as any)?.current}
+                      />
+                    );
+                  },
+            }
+          : undefined
+      }
       onBlur={() => {
         disableScope(HotkeyEnum.AddUserMessage);
       }}
@@ -186,32 +212,6 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
       style={{
         minHeight: defaultRows > 1 ? defaultRows * 23 : undefined,
       }}
-      mentionOption={
-        enableMention
-          ? {
-              items: mentionItems,
-              markdownWriter: (mention) => {
-                return `<mention name="${mention.label}" id="${mention.metadata.id}" />`;
-              },
-              onSelect: (editor, option) => {
-                editor.dispatchCommand(INSERT_MENTION_COMMAND, {
-                  label: String(option.label),
-                  metadata: option.metadata,
-                });
-              },
-              renderComp: expand
-                ? undefined
-                : (props) => {
-                    return (
-                      <SlashMenu
-                        {...props}
-                        getPopupContainer={() => (slashMenuRef as any)?.current}
-                      />
-                    );
-                  },
-            }
-          : undefined
-      }
       type={'text'}
       variant={'chat'}
     />

@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag."]
+    },
+    "date": "2025-10-16",
+    "version": "1.138.0"
+  },
+  {
+    "children": {
       "improvements": ["Add Claude Haiku 4.5 model."]
     },
     "date": "2025-10-16",
