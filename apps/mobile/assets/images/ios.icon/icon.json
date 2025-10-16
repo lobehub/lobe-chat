@@ -1,0 +1,44 @@
+{
+  "fill": "automatic",
+  "groups": [
+    {
+      "blur-material": 1,
+      "hidden": false,
+      "layers": [
+        {
+          "glass": false,
+          "image-name": "dLogo.png",
+          "name": "dLogo",
+          "position": {
+            "scale": 0.65,
+            "translation-in-points": [0, 0]
+          }
+        },
+        {
+          "glass": false,
+          "hidden": true,
+          "image-name": "Group 72.png",
+          "name": "Group 72",
+          "position": {
+            "scale": 1.3,
+            "translation-in-points": [0, 0]
+          }
+        }
+      ],
+      "lighting": "individual",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 1
+      }
+    }
+  ],
+  "supported-platforms": {
+    "circles": ["watchOS"],
+    "squares": "shared"
+  }
+}
