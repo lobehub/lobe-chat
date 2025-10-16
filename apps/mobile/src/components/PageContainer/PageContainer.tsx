@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronLeft, Loader2Icon } from 'lucide-react-native';
 import { memo, useRef } from 'react';
@@ -26,6 +27,7 @@ const PageContainer = memo<PageContainerProps>(
     onScroll,
     scrollComponent,
     loading,
+    backgroundColor,
   }) => {
     const { styles, theme } = useStyles();
     const token = useTheme();
@@ -119,13 +121,8 @@ const PageContainer = memo<PageContainerProps>(
         height={HEADER_HEIGHT}
         horizontal
         justify={'space-between'}
-        style={[
-          {
-            paddingLeft: showBack ? 8 : 16,
-            paddingRight: 16,
-          },
-          styles.header,
-        ]}
+        paddingInline={8}
+        style={[styles.header]}
       >
         {leftContent}
         {titleContent}
@@ -156,15 +153,29 @@ const PageContainer = memo<PageContainerProps>(
       );
     }
 
-    return (
+    const isColor = Boolean(!backgroundColor || typeof backgroundColor === 'string');
+
+    const content = (
       <SafeAreaView
         edges={['top', 'bottom']}
-        style={[styles.container, style]}
+        style={[
+          styles.container,
+          isColor && { backgroundColor: (backgroundColor as string) || theme.colorBgLayout },
+          style,
+        ]}
         testID="page-container"
       >
         {headerContent}
         {children}
       </SafeAreaView>
+    );
+
+    if (!backgroundColor) return content;
+
+    return (
+      <LinearGradient colors={backgroundColor as any} style={{ flex: 1 }}>
+        {content}
+      </LinearGradient>
     );
   },
 );

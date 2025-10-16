@@ -1,21 +1,18 @@
-import { Button, Markdown } from '@lobehub/ui-rn';
-import { Edit3 } from 'lucide-react-native';
-import type { FC } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Divider, Empty, Flexbox, Markdown, Text, TextArea } from '@lobehub/ui-rn';
+import { ReactNode, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TextInput, View } from 'react-native';
+import { ScrollView, TextInput } from 'react-native';
 
-import { useTheme } from '@/components/styles';
 import { agentSelectors, useAgentStore } from '@/store/agent';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import { useStyles } from './sectionStyles';
+interface AgentRoleEditSectionProps {
+  header: ReactNode;
+}
 
-export const AgentRoleEditSection: FC = () => {
+export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(({ header }) => {
   const { t } = useTranslation();
-  const { styles } = useStyles();
-  const token = useTheme();
 
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
@@ -85,70 +82,55 @@ export const AgentRoleEditSection: FC = () => {
   // 预览态
   if (!isEditing) {
     return (
-      <View style={styles.container}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>{t('agentRoleEdit.roleSetting', { ns: 'chat' })}</Text>
-          <Button icon={<Edit3 />} onPress={handleEdit} size="small" type="primary">
-            {t('agentRoleEdit.edit', { ns: 'chat' })}
-          </Button>
-        </View>
-
-        <View style={styles.previewContainer}>
-          {systemRole ? (
-            <View style={styles.markdownWrapper}>
+      <>
+        <ScrollView style={{ flex: 1 }}>
+          {header}
+          <Divider style={{ marginTop: 8 }} />
+          <Flexbox padding={16}>
+            {systemRole ? (
               <Markdown>{systemRole}</Markdown>
-            </View>
-          ) : (
-            <Text style={styles.emptyText}>{t('agentRoleEdit.placeholder', { ns: 'chat' })}</Text>
-          )}
-        </View>
-
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsText}>
+            ) : (
+              <Empty description={t('agentRoleEdit.placeholder', { ns: 'chat' })} />
+            )}
+          </Flexbox>
+        </ScrollView>
+        <Flexbox gap={8} padding={16}>
+          <Button block onPress={handleEdit} type="primary">
+            编辑角色设定
+          </Button>
+          <Text align={'center'} type={'secondary'}>
             Token: {systemRole ? Math.ceil(systemRole.length / 4) : 0}
           </Text>
-        </View>
-      </View>
+        </Flexbox>
+      </>
     );
   }
 
   // 编辑态
   return (
-    <View style={styles.container}>
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>{t('agentRoleEdit.title', { ns: 'chat' })}</Text>
-        <View style={styles.editActions}>
-          <Button onPress={handleCancel} size="small" type="text">
-            {t('agentRoleEdit.cancel', { ns: 'chat' })}
-          </Button>
-          <Button
-            disabled={loading}
-            loading={loading}
-            onPress={handleSave}
-            size="small"
-            type="primary"
-          >
-            {t('agentRoleEdit.confirm', { ns: 'chat' })}
-          </Button>
-        </View>
-      </View>
-
-      <View style={styles.editContainer}>
-        <TextInput
+    <>
+      <ScrollView
+        style={{
+          flex: 1,
+        }}
+      >
+        <TextArea
           autoFocus
-          enablesReturnKeyAutomatically={false}
-          multiline
           onChangeText={setEditValue}
           placeholder={t('agentRoleEdit.placeholder', { ns: 'chat' })}
-          placeholderTextColor={token.colorTextPlaceholder}
           ref={textInputRef}
-          returnKeyType="default"
-          scrollEnabled={true}
-          style={styles.textInput}
-          textAlignVertical="top"
           value={editValue}
+          variant={'borderless'}
         />
-      </View>
-    </View>
+      </ScrollView>
+      <Flexbox align={'center'} horizontal justify={'flex-end'} padding={16}>
+        <Button onPress={handleCancel} type={'text'}>
+          {t('agentRoleEdit.cancel', { ns: 'chat' })}
+        </Button>
+        <Button disabled={loading} loading={loading} onPress={handleSave} type="primary">
+          {t('agentRoleEdit.confirm', { ns: 'chat' })}
+        </Button>
+      </Flexbox>
+    </>
   );
-};
+});
