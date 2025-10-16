@@ -23,7 +23,7 @@ const log = debug('lobe-react:chat-minimap');
 const MIN_WIDTH = 16;
 const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
-const MIN_MESSAGES = 4;
+const MIN_MESSAGES = 3;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
