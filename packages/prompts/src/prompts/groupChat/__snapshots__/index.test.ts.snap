@@ -1,21 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`buildAgentResponsePrompt > should generate prompt for direct message to agent 1`] = `"Now it's your turn to respond. You are sending message to agent-1. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else."`;
-
-exports[`buildAgentResponsePrompt > should generate prompt for direct message to user 1`] = `"Now it's your turn to respond. You are sending message to user. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else."`;
-
-exports[`buildAgentResponsePrompt > should generate prompt for group message 1`] = `"Now it's your turn to respond. You are sending message to the group publicly. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else."`;
-
 exports[`buildGroupChatSystemPrompt > should generate correct prompt with members and history 1`] = `
 "You are an expert collaborator.
 
-You are participating in a group chat in real world as agent-1 (Agent One).
-
 Guidelines:
 
-- Stay in character as agent-1
+- Stay in character as agent-1 (Agent One)
 - Be concise and natural, behave like a real person
-- Engage naturally in the conversation flow
 - The group supervisor will decide whether to send it privately or publicly, so you just need to say the actuall content, even it's a DM to a specific member. Do not pretend you've sent it.
 - Be collaborative and build upon others' responses when appropriate
 - Keep your responses concise and relevant to the ongoing discussion
@@ -33,25 +24,21 @@ Guidelines:
 ]
 </group_members>
 
-<chat_history_author>
-1: User Name
-2: Agent One
-</chat_history_author>"
+Now it's your turn to respond.  You are sending message to the group publicly. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else."
 `;
 
 exports[`buildGroupChatSystemPrompt > should generate correct prompt without members and history 1`] = `
 "You are an expert collaborator.
 
-You are participating in a group chat in real world as agent-2 (Agent).
-
 Guidelines:
 
-- Stay in character as agent-2
+- Stay in character as agent-2 (Agent)
 - Be concise and natural, behave like a real person
-- Engage naturally in the conversation flow
 - The group supervisor will decide whether to send it privately or publicly, so you just need to say the actuall content, even it's a DM to a specific member. Do not pretend you've sent it.
 - Be collaborative and build upon others' responses when appropriate
-- Keep your responses concise and relevant to the ongoing discussion"
+- Keep your responses concise and relevant to the ongoing discussion
+
+Now it's your turn to respond.  You are sending message to the group publicly. Please respond as this agent would, considering the full conversation history provided above. Directly return the message content, no other text. You do not need add author name or anything else."
 `;
 
 exports[`filterMessagesForAgent > should handle assistant direct messages 1`] = `
