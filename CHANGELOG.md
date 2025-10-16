@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.138.0](https://github.com/lobehub/lobe-chat/compare/v1.137.10...v1.138.0)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag, closes [#8976](https://github.com/lobehub/lobe-chat/issues/8976) ([03c2838](https://github.com/lobehub/lobe-chat/commit/03c2838))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.137.10](https://github.com/lobehub/lobe-chat/compare/v1.137.9...v1.137.10)
 
 <sup>Released on **2025-10-16**</sup>
