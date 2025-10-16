@@ -1,15 +1,11 @@
-import { BottomSheetBackdrop, BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet';
-import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import { ChatMessageError, TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons-rn';
-import { CheckCircle, ChevronDown, X, XCircle } from 'lucide-react-native';
-import { ReactNode, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { Button, Flexbox, Select, type SelectOptionItem, Text, useTheme } from '@lobehub/ui-rn';
+import { CheckCircle, ChevronDown, XCircle } from 'lucide-react-native';
+import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 
-import { Button } from '@/components';
-import { useTheme } from '@/components/styles';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -29,46 +25,6 @@ interface CheckerProps {
   onBeforeCheck: () => Promise<void>;
   provider: string;
 }
-
-// Model list item height for FlashList optimization
-const MODEL_ITEM_HEIGHT = 64;
-
-interface ModelOption {
-  displayName: string;
-  id: string;
-  isSelected: boolean;
-}
-
-interface ModelItemProps {
-  model: ModelOption;
-  onSelect: (id: string) => void;
-  styles: ReturnType<typeof useStyles>['styles'];
-  token: ReturnType<typeof useTheme>;
-}
-
-/**
- * Model list item with selection state
- */
-const ModelItem = memo<ModelItemProps>(
-  ({ model, onSelect, styles, token }) => (
-    <TouchableOpacity
-      onPress={() => onSelect(model.id)}
-      style={[styles.modalItem, model.isSelected && styles.modalItemSelected]}
-    >
-      <View style={styles.modalItemContent}>
-        <ModelIcon model={model.id} size={20} />
-        <Text style={[styles.modalItemText, model.isSelected && styles.modalItemTextSelected]}>
-          {model.displayName}
-        </Text>
-      </View>
-      {model.isSelected && <CheckCircle color={token.colorPrimary} size={16} />}
-    </TouchableOpacity>
-  ),
-  (prev, next) =>
-    prev.model.isSelected === next.model.isSelected && prev.model.id === next.model.id,
-);
-
-ModelItem.displayName = 'ModelItem';
 
 /**
  * Error display with expandable details
@@ -121,7 +77,6 @@ const Checker = memo<CheckerProps>(
     const { styles } = useStyles();
     const token = useTheme();
     const { t } = useTranslation(['setting']);
-    const insets = useSafeAreaInsets();
 
     // Store state
     const isProviderConfigUpdating = useAiInfraStore(
@@ -138,9 +93,6 @@ const Checker = memo<CheckerProps>(
     const [checkModel, setCheckModel] = useState(model);
     const [error, setError] = useState<ChatMessageError | undefined>();
 
-    // Bottom sheet ref
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
     // Model info map for O(1) lookup
     const modelInfoMap = useMemo(() => {
       const map = new Map<string, any>();
@@ -150,31 +102,16 @@ const Checker = memo<CheckerProps>(
       return map;
     }, [aiProviderModelList]);
 
-    // Bottom sheet configuration - multiple snap points for resizing
-    const snapPoints = useMemo(() => ['50%', '90%'], []);
-
-    const renderBackdrop = useCallback(
-      (props: BottomSheetBackdropProps) => (
-        <BottomSheetBackdrop
-          {...props}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
-          opacity={0.5}
-          pressBehavior="close"
-        />
-      ),
-      [],
-    );
-
-    // Model options for the list
-    const modelOptions = useMemo<ModelOption[]>(
+    // Model options for Select component
+    const modelOptions = useMemo<SelectOptionItem[]>(
       () =>
         totalModels.map((modelId) => ({
-          displayName: modelInfoMap.get(modelId)?.displayName || modelId,
-          id: modelId,
-          isSelected: checkModel === modelId,
+          icon: <ModelIcon model={modelId} size={24} />,
+          iconSize: 24,
+          title: modelInfoMap.get(modelId)?.displayName || modelId,
+          value: modelId,
         })),
-      [totalModels, checkModel, modelInfoMap],
+      [totalModels, modelInfoMap],
     );
 
     // Handlers
@@ -227,9 +164,9 @@ const Checker = memo<CheckerProps>(
     }, [onBeforeCheck, checkConnection, onAfterCheck]);
 
     const handleModelChange = useCallback(
-      async (modelId: string) => {
+      async (value: string | number) => {
+        const modelId = String(value);
         setCheckModel(modelId);
-        bottomSheetModalRef.current?.dismiss();
         await updateAiProviderConfig(provider, {
           ...currentConfig,
           checkModel: modelId,
@@ -237,27 +174,6 @@ const Checker = memo<CheckerProps>(
       },
       [provider, currentConfig, updateAiProviderConfig],
     );
-
-    const renderModelItem = useCallback(
-      ({ item }: { item: ModelOption }) => (
-        <ModelItem model={item} onSelect={handleModelChange} styles={styles} token={token} />
-      ),
-      [handleModelChange, styles, token],
-    );
-
-    const renderListHeader = useCallback(
-      () => (
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>{t('providerModels.config.checker.selectModel')}</Text>
-          <TouchableOpacity onPress={() => bottomSheetModalRef.current?.dismiss()}>
-            <X color={token.colorTextSecondary} size={20} />
-          </TouchableOpacity>
-        </View>
-      ),
-      [styles.modalHeader, styles.modalTitle, t, token.colorTextSecondary],
-    );
-
-    const renderListFooter = useCallback(() => <View style={{ height: 16 }} />, []);
 
     // Error rendering
     const defaultError = error ? <ErrorDisplay error={error} /> : null;
@@ -270,75 +186,36 @@ const Checker = memo<CheckerProps>(
     const isDisabled = isProviderConfigUpdating || loading;
 
     return (
-      <View style={styles.checkerContainer}>
-        <View style={styles.checkerRow}>
-          <TouchableOpacity
+      <Flexbox gap={16} style={styles.checkerContainer}>
+        <Flexbox gap={12} horizontal>
+          <Select
+            bottomSheetProps={{
+              snapPoints: ['50%', '80%'],
+            }}
             disabled={isDisabled}
-            onPress={() => bottomSheetModalRef.current?.present()}
-            style={[styles.modelSelector, isDisabled && styles.modelSelectorDisabled]}
-          >
-            <View style={styles.modelSelectorContent}>
-              <ModelIcon model={checkModel} size={20} />
-              <Text
-                numberOfLines={1}
-                style={[styles.modelSelectorText, isDisabled && styles.modelSelectorTextDisabled]}
-              >
-                {modelInfoMap.get(checkModel)?.displayName || checkModel}
-              </Text>
-            </View>
-            <View style={styles.modelSelectorIcon}>
-              {isProviderConfigUpdating ? (
-                <ActivityIndicator color={token.colorTextSecondary} size="small" />
-              ) : (
-                <ChevronDown color={token.colorTextSecondary} size={16} />
-              )}
-            </View>
-          </TouchableOpacity>
+            onChange={handleModelChange}
+            options={modelOptions}
+            style={{ flex: 1 }}
+            title={t('providerModels.config.checker.selectModel')}
+            value={checkModel}
+          />
 
-          <Button
-            disabled={isDisabled}
-            loading={loading}
-            onPress={handleCheckPress}
-            size="large"
-            type="primary"
-          >
+          <Button disabled={isDisabled} loading={loading} onPress={handleCheckPress} type="primary">
             {t('providerModels.config.checker.button')}
           </Button>
-        </View>
-
-        <BottomSheetModal
-          backdropComponent={renderBackdrop}
-          backgroundStyle={styles.bottomSheetBackground}
-          enableDismissOnClose
-          enableDynamicSizing={false}
-          enablePanDownToClose
-          handleIndicatorStyle={styles.bottomSheetHandle}
-          ref={bottomSheetModalRef}
-          snapPoints={snapPoints}
-          topInset={insets.top}
-        >
-          <BottomSheetFlashList
-            ListFooterComponent={renderListFooter}
-            ListHeaderComponent={renderListHeader}
-            data={modelOptions}
-            estimatedItemSize={MODEL_ITEM_HEIGHT}
-            keyExtractor={(item: ModelOption) => item.id}
-            renderItem={renderModelItem}
-            showsVerticalScrollIndicator
-          />
-        </BottomSheetModal>
+        </Flexbox>
 
         {pass && (
-          <View style={styles.statusContainer}>
+          <Flexbox align="center" gap={8} horizontal style={styles.statusContainer}>
             <CheckCircle color={token.colorSuccess} size={16} />
-            <Text style={[styles.statusText, { color: token.colorSuccess }]}>
+            <Text fontSize={14} style={{ color: token.colorSuccess }}>
               {t('providerModels.config.checker.pass')}
             </Text>
-          </View>
+          </Flexbox>
         )}
 
         {error && errorContent}
-      </View>
+      </Flexbox>
     );
   },
 );

@@ -1,4 +1,4 @@
-import { createStyles, getLineHeight } from '@/components/styles';
+import { createStyles } from '@/components/styles';
 import { AggregationColor, isBright } from '@/utils/color';
 
 import { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from './type';
@@ -182,55 +182,29 @@ export const useStyles = createStyles(
     };
 
     const getSizeStyles = () => {
-      const paddingInline = token.paddingContentHorizontal - token.lineWidth;
-      const paddingInlineLG = token.paddingContentHorizontal - token.lineWidth;
-      const paddingInlineSM = 8 - token.lineWidth;
-
-      const contentFontSize = token.fontSize;
-      // 和 fontSize 保持一致
-      const contentFontSizeSM = token.fontSize;
-      const contentFontSizeLG = token.fontSizeLG;
-
-      const contentLineHeight = getLineHeight(contentFontSize);
-      const contentLineHeightSM = getLineHeight(contentFontSizeSM);
-      const contentLineHeightLG = getLineHeight(contentFontSizeLG);
-
-      const paddingBlock = Math.max(
-        (token.controlHeight - contentFontSize * contentLineHeight) / 2 - token.lineWidth,
-        0,
-      );
-      const paddingBlockSM = Math.max(
-        (token.controlHeightSM - contentFontSizeSM * contentLineHeightSM) / 2 - token.lineWidth,
-        0,
-      );
-      const paddingBlockLG = Math.max(
-        (token.controlHeightLG - contentFontSizeLG * contentLineHeightLG) / 2 - token.lineWidth,
-        0,
-      );
-
       switch (size) {
         case 'small': {
           return {
-            fontSize: contentFontSizeSM,
+            fontSize: 14,
             height: token.controlHeightSM,
-            paddingHorizontal: paddingInlineSM,
-            paddingVertical: paddingBlockSM,
+            paddingHorizontal: token.paddingXS,
+            paddingVertical: 0,
           };
         }
         case 'large': {
           return {
-            fontSize: contentFontSizeLG,
+            fontSize: 18,
             height: token.controlHeightLG,
-            paddingHorizontal: paddingInlineLG,
-            paddingVertical: paddingBlockLG,
+            paddingHorizontal: token.paddingSM,
+            paddingVertical: token.paddingXS,
           };
         }
         default: {
           return {
-            fontSize: contentFontSize,
+            fontSize: 16,
             height: token.controlHeight,
-            paddingHorizontal: paddingInline,
-            paddingVertical: paddingBlock,
+            paddingHorizontal: token.paddingSM,
+            paddingVertical: token.paddingXXS,
           };
         }
       }
@@ -247,15 +221,15 @@ export const useStyles = createStyles(
         alignSelf: block ? 'auto' : 'flex-start',
         backgroundColor: typeStyles.backgroundColor,
         borderColor: typeStyles.borderColor,
-        borderRadius: isCircle ? sizeStyles.height / 2 : token.borderRadius,
+        borderRadius: isCircle ? sizeStyles.height / 2 : token.borderRadiusLG * 1.5,
         borderStyle: typeStyles.borderStyle,
         borderWidth: typeStyles.borderWidth,
         flexDirection: 'row',
         height: sizeStyles.height,
         justifyContent: 'center',
-        minHeight: isCircle ? undefined : sizeStyles.height,
+        minHeight: isCircle ? undefined : sizeStyles.height * 1.25,
         opacity: loading ? token.opacityLoading : 1,
-        paddingHorizontal: isCircle ? 0 : sizeStyles.paddingHorizontal,
+        paddingHorizontal: isCircle ? 0 : sizeStyles.paddingHorizontal * 1.25,
         paddingVertical: isCircle ? 0 : sizeStyles.paddingVertical,
         width: isCircle ? sizeStyles.height : block ? '100%' : 'auto',
       },

@@ -22,6 +22,7 @@ const Cell = memo<CellProps>(
     iconSize = 18,
     titleProps,
     descriptionProps,
+    iconProps,
     ...rest
   }) => {
     const theme = useTheme();
@@ -65,7 +66,7 @@ const Cell = memo<CellProps>(
         {...rest}
       >
         <Flexbox align={'center'} flex={1} gap={10} horizontal>
-          {icon && <Icon icon={icon} size={iconSize} />}
+          {icon && <Icon icon={icon} size={iconSize} {...iconProps} />}
           {descriptionNode ? (
             <Flexbox gap={4}>
               {titleNode}

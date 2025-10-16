@@ -1,9 +1,9 @@
-import { PageContainer } from '@lobehub/ui-rn';
+import { PageContainer, Text } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import type { ReactNode } from 'react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import { DRAWER_WIDTH } from '@/_const/theme';
@@ -35,6 +35,7 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       drawerPosition="right"
       drawerStyle={[
         styles.drawerStyle,
+        styles.drawerBackground,
         { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
       ]}
       drawerType={isIOS ? 'slide' : 'front'}
@@ -50,7 +51,7 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <PageContainer left={<Text style={styles.headerTitle}>{t('title')}</Text>}>
+        <PageContainer left={<Text>{t('title')}</Text>} style={styles.drawerBackground}>
           <TopicList />
         </PageContainer>
       )}

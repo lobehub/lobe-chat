@@ -120,6 +120,7 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(({ header })
           onChangeText={setEditValue}
           placeholder={t('agentRoleEdit.placeholder', { ns: 'chat' })}
           ref={textInputRef}
+          size={'small'}
           value={editValue}
           variant={'borderless'}
         />
