@@ -12,7 +12,7 @@
     "@opentelemetry/exporter-trace-otlp-http": "^0.205.0",
     "@opentelemetry/instrumentation": "^0.205.0",
     "@opentelemetry/instrumentation-http": "^0.205.0",
-    "@opentelemetry/instrumentation-pg": "^0.56.0",
+    "@opentelemetry/instrumentation-pg": "^0.59.0",
     "@opentelemetry/resources": "^2.0.1",
     "@opentelemetry/sdk-metrics": "^2.0.1",
     "@opentelemetry/sdk-node": "^0.205.0",
