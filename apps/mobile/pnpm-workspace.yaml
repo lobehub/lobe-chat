@@ -4,6 +4,7 @@ packages:
   - ../../packages/types
   - ../../packages/utils
   - ../../packages/model-bank
+  - ../../packages/prompts
   - ../../packages/web-crawler
   - ../../packages/ssrf-safe-fetch
 

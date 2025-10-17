@@ -32,11 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     appleTeamId: '4684H589ZU',
     bundleIdentifier: 'com.lobehub.app',
-    icon: {
-      dark: './assets/images/ios-dark.png',
-      light: './assets/images/ios-light.png',
-      tinted: './assets/images/ios-tinted.png',
-    },
+    icon: './assets/images/ios.icon',
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
       NSAppTransportSecurity: {

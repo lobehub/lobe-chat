@@ -306,9 +306,7 @@ const createSmoothToolCalls = (params: {
 export const standardizeAnimationStyle = (
   animationStyle?: ResponseAnimation,
 ): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
-  return typeof animationStyle === 'object'
-    ? animationStyle
-    : { text: animationStyle, toolsCalling: animationStyle };
+  return typeof animationStyle === 'object' ? animationStyle : { text: animationStyle };
 };
 
 /**
@@ -322,14 +320,11 @@ export const fetchSSE = async (url: string, options: FetchRequestInit & FetchSSE
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
 
-  const {
-    text,
-    toolsCalling,
-    speed: smoothingSpeed,
-  } = standardizeAnimationStyle(options.responseAnimation ?? {});
+  const { text, speed: smoothingSpeed } = standardizeAnimationStyle(
+    options.responseAnimation ?? {},
+  );
   const shouldSkipTextProcessing = text === 'none';
   const textSmoothing = text === 'smooth';
-  const toolsCallingSmoothing = toolsCalling === 'smooth';
 
   // 添加文本buffer和计时器相关变量
   let textBuffer = '';
@@ -543,18 +538,7 @@ export const fetchSSE = async (url: string, options: FetchRequestInit & FetchSSE
           if (!toolCalls) toolCalls = [];
           toolCalls = parseToolCalls(toolCalls, data);
 
-          if (toolsCallingSmoothing) {
-            // make the tool calls smooth
-
-            // push the tool calls to the smooth queue
-            toolCallsController.pushToQueue(data);
-            // if there is no animation active, we should start the animation
-            if (toolCallsController.isAnimationActives.some((value) => !value)) {
-              toolCallsController.startAnimations();
-            }
-          } else {
-            options.onMessageHandle?.({ tool_calls: toolCalls, type: 'tool_calls' });
-          }
+          options.onMessageHandle?.({ tool_calls: toolCalls, type: 'tool_calls' });
         }
       }
     },
