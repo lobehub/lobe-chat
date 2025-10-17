@@ -69,9 +69,8 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
       textAlignVertical: 'center',
       ...(Platform.OS === 'android' && {
         includeFontPadding: false,
-        lineHeight: sizeStyles.fontSize * 2,
+        lineHeight: sizeStyles.fontSize * 1.25,
         margin: 0,
-        paddingTop: sizeStyles.fontSize / 4,
         paddingVertical: 0,
       }),
     },

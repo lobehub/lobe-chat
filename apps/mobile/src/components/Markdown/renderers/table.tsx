@@ -95,9 +95,9 @@ export const TableRenderer = ({ node }: RendererArgs<Table>): ReactNode => {
       columnCount={node.children[0]?.children.length ?? 0}
       rowCount={node.children.length ?? 0}
     >
-      <Block horizontal style={[styles.table]} variant={'outlined'}>
-        <ScrollView horizontal style={{ flex: 1 }}>
-          <Flexbox align={'flex-start'} justify={'flex-start'} style={{ minWidth: '100%' }}>
+      <Block style={styles.table} variant={'outlined'}>
+        <ScrollView horizontal>
+          <Flexbox style={{ minWidth: '100%' }}>
             {node.children.map((child, idx) => (
               <Fragment key={idx}>
                 {idx !== 0 && <Divider />}
