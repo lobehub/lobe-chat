@@ -1,6 +1,6 @@
 import { ActionIcon, Flexbox, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { AlignJustify, ChevronRightIcon, MessagesSquare } from 'lucide-react-native';
+import { ChevronRightIcon, MessagesSquare, TextAlignStartIcon } from 'lucide-react-native';
 import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -31,7 +31,7 @@ export default function ChatWithDrawer() {
       <PageContainer
         backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
         extra={<ActionIcon clickable={false} icon={MessagesSquare} onPress={toggleTopicDrawer} />}
-        left={<ActionIcon clickable={false} icon={AlignJustify} onPress={toggleDrawer} />}
+        left={<ActionIcon clickable={false} icon={TextAlignStartIcon} onPress={toggleDrawer} />}
         onTitlePress={isInbox ? undefined : () => router.push('/chat/setting')}
         title={displayTitle}
         titleIcon={isInbox ? undefined : ChevronRightIcon}

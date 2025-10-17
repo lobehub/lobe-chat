@@ -9,13 +9,14 @@ const SenderBtn = () => {
   const { handleSubmit, isLoading, canSend, stopGenerating } = useChat();
 
   return isLoading ? (
-    <StopLoadingButton onPress={stopGenerating} />
+    <StopLoadingButton onPress={stopGenerating} size={'small'} />
   ) : (
     <Button
       icon={<ArrowUp />}
       loading={!canSend}
       onPress={handleSubmit}
       shape="circle"
+      size={'small'}
       type="primary"
     />
   );
