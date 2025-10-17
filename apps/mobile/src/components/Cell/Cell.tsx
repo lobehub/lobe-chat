@@ -28,7 +28,7 @@ const Cell = memo<CellProps>(
     const theme = useTheme();
     const titleNode =
       typeof title === 'string' ? (
-        <Text fontSize={16} {...titleProps}>
+        <Text ellipsis fontSize={16} {...titleProps}>
           {title}
         </Text>
       ) : (
@@ -36,14 +36,22 @@ const Cell = memo<CellProps>(
       );
     const descriptionNode =
       typeof description === 'string' ? (
-        <Text type={'secondary'} {...descriptionProps}>
+        <Text ellipsis type={'secondary'} {...descriptionProps}>
           {description}
         </Text>
       ) : (
         description
       );
     const rightNode = (
-      <Flexbox align={'center'} gap={8} horizontal>
+      <Flexbox
+        align={'center'}
+        gap={8}
+        horizontal
+        justify={'flex-end'}
+        style={{
+          overflow: 'hidden',
+        }}
+      >
         {typeof extra === 'string' ? (
           <Text ellipsis style={{ maxWidth: 100 }} type={'secondary'}>
             {extra}
@@ -77,7 +85,16 @@ const Cell = memo<CellProps>(
         variant={'borderless'}
         {...rest}
       >
-        <Flexbox align={'center'} flex={1} gap={10} horizontal>
+        <Flexbox
+          align={'center'}
+          flex={1}
+          gap={10}
+          horizontal
+          justify={'flex-start'}
+          style={{
+            overflow: 'hidden',
+          }}
+        >
           {icon && <Icon icon={icon} size={iconSize} {...iconProps} />}
           {descriptionNode ? (
             <Flexbox gap={4}>
