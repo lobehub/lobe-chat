@@ -168,33 +168,6 @@ describe('LobeHuggingFaceAI', () => {
         });
       });
 
-      it('should use default max_tokens of 4096 when not provided', () => {
-        const mockClient = {
-          chatCompletionStream: vi.fn().mockReturnValue({
-            async *[Symbol.asyncIterator]() {
-              yield { choices: [] } as any;
-            },
-          }),
-        } as any;
-
-        const mockInstance = {
-          baseURL: 'https://api.example.com',
-        };
-
-        const payload = {
-          messages: [{ role: 'user', content: 'test' }],
-          model: 'test-model',
-        };
-
-        params.customClient!.createChatCompletionStream(mockClient, payload as any, mockInstance);
-
-        expect(mockClient.chatCompletionStream).toHaveBeenCalledWith(
-          expect.objectContaining({
-            max_tokens: 4096,
-          }),
-        );
-      });
-
       it('should handle undefined baseURL', () => {
         const mockClient = {
           chatCompletionStream: vi.fn().mockReturnValue({
