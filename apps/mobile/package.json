@@ -1,6 +1,6 @@
 {
   "name": "lobe-chat-react-native",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -51,6 +51,7 @@
     "@gorhom/bottom-sheet": "^5.2.6",
     "@gorhom/portal": "^1.0.14",
     "@lobechat/const": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "@lobehub/icons-rn": "^1.7.4",
