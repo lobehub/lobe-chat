@@ -35,7 +35,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     flexDirection: 'row',
     gap: token.marginXXS,
-    left: token.paddingSM,
+    left: 8,
     position: 'absolute',
     zIndex: 10,
   },
@@ -43,7 +43,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     flexDirection: 'row',
     position: 'absolute',
-    right: token.paddingSM,
+    right: 8,
     zIndex: 10,
   },
   headerTitle: {
@@ -53,12 +53,9 @@ export const useStyles = createStyles(({ token }) => ({
     textAlign: 'center',
   },
   simpleCopyButton: {
-    backgroundColor: token.colorBgContainer,
-    borderRadius: token.borderRadiusXS,
-    padding: token.paddingXXS,
     position: 'absolute',
-    right: token.paddingSM,
-    top: token.paddingSM,
+    right: 6,
+    top: 6,
     zIndex: 10,
   },
   statusContainer: {

@@ -62,13 +62,16 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
       flex: 1,
       fontFamily: token.fontFamily,
       fontSize: sizeStyles.fontSize,
+
       padding: 0,
+
       // 不要设置 lineHeight
       textAlignVertical: 'center',
       ...(Platform.OS === 'android' && {
-        // 不要影响 IOS 配置
         includeFontPadding: false,
-        // 垂直居中
+        lineHeight: sizeStyles.fontSize * 2,
+        margin: 0,
+        paddingTop: sizeStyles.fontSize / 4,
         paddingVertical: 0,
       }),
     },

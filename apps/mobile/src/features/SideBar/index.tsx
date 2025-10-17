@@ -8,6 +8,7 @@ import { useCallback } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
+import { ICON_SIZE } from '@/_const/common';
 import { DRAWER_WIDTH } from '@/_const/theme';
 import { useGlobalStore } from '@/store/global';
 import { isIOS } from '@/utils/detection';
@@ -55,9 +56,9 @@ export default function SideBar({ children }: { children: ReactNode }) {
                   <ActionIcon
                     icon={LucideComponent}
                     size={{
-                      blockSize: 32,
-                      borderRadius: 32,
-                      size: 20,
+                      blockSize: 36,
+                      borderRadius: 36,
+                      size: ICON_SIZE,
                     }}
                   />
                 </Link>
@@ -66,15 +67,15 @@ export default function SideBar({ children }: { children: ReactNode }) {
                 <ActionIcon
                   icon={CompassIcon}
                   size={{
-                    blockSize: 32,
-                    borderRadius: 32,
-                    size: 20,
+                    blockSize: 36,
+                    borderRadius: 36,
+                    size: ICON_SIZE,
                   }}
                 />
               </Link>
             </Flexbox>
           }
-          left={<LobeHub.Text color={theme.colorText} size={18} />}
+          left={<LobeHub.Text color={theme.colorText} size={20} style={{ marginLeft: 8 }} />}
           style={styles.drawerBackground}
         >
           <SessionList />

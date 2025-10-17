@@ -1,10 +1,9 @@
+import ActionIcon from '@lobehub/ui-rn/ActionIcon';
 import * as Clipboard from 'expo-clipboard';
 import { Check, Copy } from 'lucide-react-native';
 import { memo, useState } from 'react';
-import { Pressable } from 'react-native';
 
 import Block from '@/components/Block';
-import Icon from '@/components/Icon';
 
 import FullFeatured from './FullFeatured';
 import { TokenDisplay } from './components/TokenDisplay';
@@ -62,17 +61,14 @@ const Highlighter = memo<HighlighterProps>(
     return (
       <Block style={[styles.container, style]} testID="highlighter" variant={'outlined'}>
         {copyable && (
-          <Pressable
+          <ActionIcon
+            clickable
+            color={copied ? theme.colorSuccess : theme.colorTextDescription}
+            icon={copied ? Check : Copy}
             onPress={handleCopy}
+            size="small"
             style={styles.simpleCopyButton}
-            testID="highlighter-copy-button"
-          >
-            {copied ? (
-              <Icon color={theme.colorSuccess} icon={Check} size="small" />
-            ) : (
-              <Icon color={theme.colorText} icon={Copy} size="small" />
-            )}
-          </Pressable>
+          />
         )}
 
         <TokenDisplay code={code} lang={matchedLanguage} />

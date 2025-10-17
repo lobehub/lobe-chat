@@ -2,7 +2,7 @@ import { ActionIcon, Avatar, Block, Flexbox, Text } from '@lobehub/ui-rn';
 import { Link } from 'expo-router';
 import { Settings2 } from 'lucide-react-native';
 
-import { AVATAR_SIZE } from '@/_const/common';
+import { AVATAR_SIZE, ICON_SIZE } from '@/_const/common';
 import { DEFAULT_USER_AVATAR } from '@/_const/meta';
 import { useAuth } from '@/store/user';
 
@@ -13,7 +13,7 @@ export default function SessionFooter() {
   const userAvatar = user?.avatar || DEFAULT_USER_AVATAR;
 
   return (
-    <Flexbox paddingBlock={16} paddingInline={8}>
+    <Flexbox paddingBlock={16} paddingInline={12}>
       <Link asChild href="/setting">
         <Block
           align={'center'}
@@ -41,7 +41,7 @@ export default function SessionFooter() {
               size={{
                 blockSize: AVATAR_SIZE,
                 borderRadius: AVATAR_SIZE,
-                size: 20,
+                size: ICON_SIZE,
               }}
             />
           </Link>

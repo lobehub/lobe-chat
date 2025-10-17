@@ -1,7 +1,6 @@
-import { Avatar, Block, Cell, PageContainer } from '@lobehub/ui-rn';
+import { Avatar, Cell, PageContainer } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
 
-import { AVATAR_SIZE_LARGE } from '@/_const/common';
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
@@ -16,25 +15,11 @@ export default function AgentDetail() {
     <PageContainer showBack title={t('setting.title', { ns: 'chat' })}>
       <AgentRoleEditSection
         header={
-          <Cell
-            description={description}
-            descriptionProps={{
-              ellipsis: { rows: 2 },
-            }}
-            icon={
-              <Block
-                borderRadius={AVATAR_SIZE_LARGE}
-                height={AVATAR_SIZE_LARGE}
-                variant={'filled'}
-                width={AVATAR_SIZE_LARGE}
-              >
-                <Avatar alt={title} avatar={avatar || '🤖'} size={AVATAR_SIZE_LARGE} />
-              </Block>
-            }
-            iconSize={AVATAR_SIZE_LARGE}
-            showArrow={false}
-            title={title}
-          />
+          <>
+            <Cell extra={<Avatar alt={title} avatar={avatar || '🤖'} size={32} />} title={'头像'} />
+            <Cell extra={title} title={'名称'} />
+            <Cell extra={description} title={'描述'} />
+          </>
         }
       />
     </PageContainer>
