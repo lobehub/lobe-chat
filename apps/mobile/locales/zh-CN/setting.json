@@ -120,8 +120,8 @@
       "title": "开发者模式"
     },
     "selfHostedEntry": {
-      "confirmAction": "前往登录页",
-      "confirmDescription": "启用后将在登录页面展示自托管配置入口，是否退出当前账号并前往登录页？",
+      "confirmAction": "前往配置页",
+      "confirmDescription": "启用后将直接打开自托管配置页面，是否退出当前账号并前往配置页？",
       "confirmResetAction": "重置并前往登录",
       "confirmResetDescription": "关闭自部署模式将重置服务器地址为官方实例，并退出当前账号。是否继续？",
       "confirmResetTitle": "关闭自部署模式",

@@ -120,8 +120,8 @@
       "title": "Developer Mode"
     },
     "selfHostedEntry": {
-      "confirmAction": "Go to login",
-      "confirmDescription": "Enabling this will show the self-hosted setup entry on the login screen and sign you out. Continue to the login screen now?",
+      "confirmAction": "Go to setup",
+      "confirmDescription": "Enabling this will open the self-hosted setup page and sign you out. Continue to the setup page now?",
       "confirmResetAction": "Reset and go to login",
       "confirmResetDescription": "Disabling self-hosted mode will restore the official server address and sign you out. Continue?",
       "confirmResetTitle": "Disable self-hosted mode",
