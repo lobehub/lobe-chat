@@ -24,7 +24,7 @@ export const getProviderAuthPayload = (
     AzureOpenAIKeyVault &
     AWSBedrockKeyVault &
     CloudflareKeyVault &
-    ComfyUIKeyVault,
+    ComfyUIKeyVault &
     VertexAIKeyVault,
 ) => {
   switch (provider) {
@@ -86,10 +86,13 @@ export const getProviderAuthPayload = (
         customHeaders: keyVaults?.customHeaders,
         password: keyVaults?.password,
         username: keyVaults?.username,
+      };
+    }
+
     case ModelProvider.VertexAI: {
       // Vertex AI uses JSON credentials, should not split by comma
-      return { 
-        apiKey: keyVaults?.apiKey, 
+      return {
+        apiKey: keyVaults?.apiKey,
         baseURL: keyVaults?.baseURL,
         vertexAIRegion: keyVaults?.region,
       };
