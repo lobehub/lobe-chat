@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
+import { resolveMarketAuthError } from '@/layout/AuthProvider/MarketAuth/errors';
 import { useServerConfigStore } from '@/store/serverConfig';
 
 import MarketPublishModal, { type MarketPublishAction } from './MarketPublishModal';
@@ -16,7 +17,8 @@ interface MarketPublishButtonProps {
 }
 
 const MarketPublishButton = memo<MarketPublishButtonProps>(({ action, modal }) => {
-  const { t } = useTranslation('setting');
+  const { t: tSetting } = useTranslation('setting');
+  const { t: tMarketAuth } = useTranslation('marketAuth');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const [openState, setOpenState] = useState<{ submit: boolean; upload: boolean }>({
     submit: false,
@@ -32,7 +34,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(({ action, modal }) =
           text: '发布新版本',
           title: '发布新版本到助手市场',
         },
-        successMessage: '授权成功！现在可以发布新版本了',
+        successMessage: tMarketAuth('messages.success.upload'),
         unauthenticated: {
           icon: LogIn,
           text: '发布新版本',
@@ -41,7 +43,7 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(({ action, modal }) =
       } as const;
     }
 
-    const submitText = t('submitAgentModal.tooltips');
+    const submitText = tSetting('submitAgentModal.tooltips');
 
     return {
       authenticated: {
@@ -49,14 +51,14 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(({ action, modal }) =
         text: submitText,
         title: submitText,
       },
-      successMessage: '授权成功！现在可以发布助手了',
+      successMessage: tMarketAuth('messages.success.submit'),
       unauthenticated: {
         icon: LogIn,
         text: '分享助手到市场',
         title: '分享助手到市场',
       },
     } as const;
-  }, [action, t]);
+  }, [action, tMarketAuth, tSetting]);
 
   const openModal = useCallback((target: MarketPublishAction) => {
     setOpenState((prev) => ({ ...prev, [target]: true }));
@@ -80,18 +82,19 @@ const MarketPublishButton = memo<MarketPublishButtonProps>(({ action, modal }) =
 
     console.log(`[MarketPublishButton][${action}] User not authenticated, starting authorization`);
     try {
-      message.loading({ content: '正在启动授权流程...', key: 'market-auth' });
+      message.loading({ content: tMarketAuth('messages.loading'), key: 'market-auth' });
       await signIn();
       message.success({ content: buttonCopy.successMessage, key: 'market-auth' });
       openModal(action);
     } catch (error) {
       console.error(`[MarketPublishButton][${action}] Authorization failed:`, error);
+      const normalizedError = resolveMarketAuthError(error);
       message.error({
-        content: `授权失败: ${error instanceof Error ? error.message : '未知错误'}`,
+        content: tMarketAuth(`errors.${normalizedError.code}`),
         key: 'market-auth',
       });
     }
-  }, [action, buttonCopy.successMessage, isAuthenticated, openModal, signIn]);
+  }, [action, buttonCopy.successMessage, isAuthenticated, openModal, signIn, tMarketAuth]);
 
   const buttonProps = isAuthenticated ? buttonCopy.authenticated : buttonCopy.unauthenticated;
 

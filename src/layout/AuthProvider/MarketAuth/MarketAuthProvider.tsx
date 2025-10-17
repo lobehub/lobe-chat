@@ -4,6 +4,7 @@ import { ReactNode, createContext, useContext, useEffect, useState } from 'react
 
 import { MARKET_OIDC_ENDPOINTS } from '@/services/_url';
 
+import { MarketAuthError } from './errors';
 import { MarketOIDC } from './oidc';
 import { MarketAuthContextType, MarketAuthSession, MarketUserInfo, OIDCConfig } from './types';
 
@@ -193,7 +194,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
 
     if (!oidcClient) {
       console.error('[MarketAuth] OIDC client not initialized');
-      throw new Error('OIDC client not initialized');
+      throw new MarketAuthError('oidcNotReady', { message: 'OIDC client not initialized' });
     }
 
     try {
@@ -248,7 +249,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    * 登出方法
    */
   const signOut = () => {
-    console.log('[MarketAuth] Signing out');
     setSession(null);
     setStatus('unauthenticated');
     removeTokenFromCookie();
@@ -291,16 +291,11 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   useEffect(() => {
     const handleAutoReauthorization = async () => {
       if (shouldReauthorize && oidcClient) {
-        console.log('[MarketAuth] Auto-triggering re-authorization due to token expiry');
         setShouldReauthorize(false); // 重置标识，避免重复触发
-
         try {
           setStatus('loading');
-
           // 启动 OIDC 授权流程并获取授权码
           const authResult = await oidcClient.startAuthorization();
-          console.log('[MarketAuth] Auto re-authorization successful, exchanging code for token');
-
           // 用授权码换取访问令牌
           const tokenResponse = await oidcClient.exchangeCodeForToken(
             authResult.code,
@@ -309,9 +304,6 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
 
           // 获取用户信息
           const userInfo = await fetchUserInfo(tokenResponse.accessToken);
-
-          console.log('userInfo', userInfo);
-
           // 创建会话对象
           const newSession: MarketAuthSession = {
             accessToken: tokenResponse.accessToken,

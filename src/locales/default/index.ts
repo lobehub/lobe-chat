@@ -14,6 +14,7 @@ import hotkey from './hotkey';
 import image from './image';
 import knowledgeBase from './knowledgeBase';
 import labs from './labs';
+import marketAuth from './marketAuth';
 import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
@@ -47,6 +48,7 @@ const resources = {
   image,
   knowledgeBase,
   labs,
+  marketAuth,
   metadata,
   migration,
   modelProvider,

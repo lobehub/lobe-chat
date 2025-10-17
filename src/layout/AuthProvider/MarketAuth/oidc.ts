@@ -1,5 +1,6 @@
 import { MARKET_OIDC_ENDPOINTS } from '@/services/_url';
 
+import { MarketAuthError } from './errors';
 import { OIDCConfig, PKCEParams, TokenResponse } from './types';
 
 /**
@@ -113,14 +114,14 @@ export class MarketOIDC {
     const storedState = sessionStorage.getItem('market_state');
     if (state !== storedState) {
       console.error('[MarketOIDC] State parameter mismatch');
-      throw new Error('Invalid state parameter');
+      throw new MarketAuthError('stateMismatch', { message: 'Invalid state parameter' });
     }
 
     // 获取存储的 code verifier
     const codeVerifier = sessionStorage.getItem('market_code_verifier');
     if (!codeVerifier) {
       console.error('[MarketOIDC] Code verifier not found');
-      throw new Error('Code verifier not found');
+      throw new MarketAuthError('codeVerifierMissing', { message: 'Code verifier not found' });
     }
 
     const tokenUrl = MARKET_OIDC_ENDPOINTS.token;
@@ -152,9 +153,17 @@ export class MarketOIDC {
     if (!response.ok) {
       const errorData = await response.json().catch(() => undefined);
       console.log('[MarketOIDC] Token exchange error data:', errorData);
-      const errorMessage = `Token exchange failed: ${response.status} ${response.statusText} ${errorData.error_description || errorData.error || ''}`;
+      const errorMessage =
+        `Token exchange failed: ${response.status} ${response.statusText} ${errorData?.error_description || errorData?.error || ''}`.trim();
       console.error('[MarketOIDC]', errorMessage);
-      throw new Error(errorMessage);
+      throw new MarketAuthError('authorizationFailed', {
+        message: errorMessage,
+        meta: {
+          error: errorData,
+          status: response.status,
+          statusText: response.statusText,
+        },
+      });
     }
 
     const tokenData = (await response.json()) as TokenResponse;
@@ -175,13 +184,17 @@ export class MarketOIDC {
     const authUrl = await this.buildAuthUrl();
 
     if (typeof window === 'undefined') {
-      throw new Error('Authorization can only be initiated in a browser environment.');
+      throw new MarketAuthError('browserOnly', {
+        message: 'Authorization can only be initiated in a browser environment.',
+      });
     }
 
     const state = sessionStorage.getItem('market_state');
     if (!state) {
       console.error('[MarketOIDC] Missing state parameter in session storage');
-      throw new Error('Authorization state not found. Please try again.');
+      throw new MarketAuthError('stateMissing', {
+        message: 'Authorization state not found. Please try again.',
+      });
     }
 
     const isDesktopApp = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
@@ -197,12 +210,18 @@ export class MarketOIDC {
         const result = await remoteServerService.requestMarketAuthorization({ authUrl });
         if (!result.success) {
           console.error('[MarketOIDC] Failed to open system browser:', result.error);
-          throw new Error(result.error || 'Failed to open system browser');
+          throw new MarketAuthError('openBrowserFailed', {
+            message: result.error || 'Failed to open system browser',
+            meta: { error: result.error },
+          });
         }
         console.log('[MarketOIDC] System browser opened successfully');
       } catch (error) {
         console.error('[MarketOIDC] Exception opening system browser:', error);
-        throw new Error('Failed to open system browser. Please try again.');
+        throw new MarketAuthError('openBrowserFailed', {
+          cause: error,
+          message: 'Failed to open system browser. Please try again.',
+        });
       }
 
       return this.pollDesktopHandoff(state);
@@ -216,7 +235,9 @@ export class MarketOIDC {
 
       if (!popup) {
         console.error('[MarketOIDC] Failed to open authorization popup');
-        throw new Error('Failed to open authorization popup. Please check popup blocker settings.');
+        throw new MarketAuthError('openPopupFailed', {
+          message: 'Failed to open authorization popup. Please check popup blocker settings.',
+        });
       }
     }
 
@@ -248,7 +269,12 @@ export class MarketOIDC {
         } else if (event.data.type === 'MARKET_AUTH_ERROR') {
           cleanup();
           popup?.close();
-          reject(new Error(event.data.error || 'Authorization failed'));
+          reject(
+            new MarketAuthError('authorizationFailed', {
+              message: event.data.error || 'Authorization failed',
+              meta: { error: event.data.error },
+            }),
+          );
         }
       };
 
@@ -259,7 +285,9 @@ export class MarketOIDC {
         checkClosed = setInterval(() => {
           if (popup.closed) {
             cleanup();
-            reject(new Error('Authorization popup was closed'));
+            reject(
+              new MarketAuthError('popupClosed', { message: 'Authorization popup was closed' }),
+            );
           }
         }, 1000) as unknown as number;
       }
@@ -311,28 +339,44 @@ export class MarketOIDC {
         }
 
         if (response.status === 404 || data?.status === 'consumed') {
-          throw new Error('Authorization code already consumed. Please retry.');
+          throw new MarketAuthError('codeConsumed', {
+            message: 'Authorization code already consumed. Please retry.',
+          });
         }
 
         if (response.status === 410 || data?.status === 'expired') {
-          throw new Error('Authorization session expired. Please restart the sign-in process.');
+          throw new MarketAuthError('sessionExpired', {
+            message: 'Authorization session expired. Please restart the sign-in process.',
+          });
         }
 
         const errorMessage =
           data?.error || data?.message || `Handoff request failed with status ${response.status}`;
         console.error('[MarketOIDC] Handoff polling failed:', errorMessage);
-        throw new Error(errorMessage);
+        throw new MarketAuthError('handoffFailed', {
+          message: errorMessage,
+          meta: { data, status: response.status },
+        });
       } catch (error) {
         console.error('[MarketOIDC] Error while polling handoff endpoint:', error);
-        throw error instanceof Error
-          ? error
-          : new Error('Failed to retrieve authorization result from handoff endpoint.');
+        if (error instanceof MarketAuthError) {
+          throw error;
+        }
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'Failed to retrieve authorization result from handoff endpoint.';
+        throw new MarketAuthError('handoffFailed', {
+          cause: error,
+          message,
+        });
       }
     }
 
     console.warn('[MarketOIDC] Desktop handoff polling timed out');
-    throw new Error(
-      'Authorization timeout. Please complete the authorization in the browser and try again.',
-    );
+    throw new MarketAuthError('handoffTimeout', {
+      message:
+        'Authorization timeout. Please complete the authorization in the browser and try again.',
+    });
   }
 }
