@@ -5,14 +5,12 @@ import type { PresetColorType, SeedToken } from '../interface';
 
 // 字体定义
 const FONT_CN = Platform.select({
-  android: 'HarmonyOS_Sans_SC_Regular',
-  default: 'HarmonyOS-Sans-SC',
+  android: 'HarmonyOS-Sans-SC',
   ios: 'HarmonyOS Sans SC',
 }) as string;
 
 const FONT_CODE = Platform.select({
-  android: 'Hack-Regular',
-  default: 'Hack',
+  android: 'Hack',
   ios: 'Hack',
 }) as string;
 

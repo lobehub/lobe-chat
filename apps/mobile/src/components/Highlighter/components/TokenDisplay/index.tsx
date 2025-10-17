@@ -27,7 +27,7 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
   const { styles } = useStyles();
 
   return error ? (
-    <Text code style={styles.errorText}>
+    <Text code fontSize={12} style={styles.errorText}>
       {code}
     </Text>
   ) : (
