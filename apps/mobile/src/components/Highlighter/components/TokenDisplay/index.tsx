@@ -1,6 +1,7 @@
 import type { ThemedToken } from '@shikijs/core';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
+import Text from '@/components/Text';
 import { useThemeMode } from '@/components/styles';
 
 import { useTokenize } from '../../hooks/useTokenize';
@@ -26,7 +27,9 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
   const { styles } = useStyles();
 
   return error ? (
-    <Text style={styles.errorText}>{code}</Text>
+    <Text code style={styles.errorText}>
+      {code}
+    </Text>
   ) : (
     <View style={styles.codeContainer}>
       <ScrollView
@@ -40,14 +43,14 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
             <View key={generateLineKey(lineIndex, line)} style={styles.codeLine}>
               {line.map((tokenItem, tokenIndex) => (
                 <Text
+                  code
+                  color={tokenItem.color}
+                  fontSize={12}
+                  italic={tokenItem.fontStyle === 1}
                   key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
-                  style={[
-                    {
-                      color: tokenItem.color,
-                      fontStyle: tokenItem.fontStyle === 1 ? 'italic' : 'normal',
-                    },
-                    styles.codeText,
-                  ]}
+                  style={{
+                    backgroundColor: tokenItem.bgColor,
+                  }}
                 >
                   {tokenItem.content}
                 </Text>

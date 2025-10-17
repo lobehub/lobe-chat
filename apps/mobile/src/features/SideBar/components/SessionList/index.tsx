@@ -60,7 +60,7 @@ export default function SideBar() {
   return (
     <Flexbox flex={1} gap={8}>
       {/* 搜索栏 */}
-      <Flexbox paddingBlock={8} paddingInline={8}>
+      <Flexbox paddingBlock={8} paddingInline={12}>
         <Input.Search
           onChangeText={setSearchText}
           placeholder={t('session.search.placeholder', { ns: 'chat' })}

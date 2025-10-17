@@ -110,11 +110,7 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(({ header })
   // 编辑态
   return (
     <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
-      <ScrollView
-        style={{
-          flex: 1,
-        }}
-      >
+      <Flexbox flex={1}>
         <TextArea
           autoFocus
           onChangeText={setEditValue}
@@ -124,7 +120,7 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(({ header })
           value={editValue}
           variant={'borderless'}
         />
-      </ScrollView>
+      </Flexbox>
       <Flexbox align={'center'} horizontal justify={'flex-end'} padding={16}>
         <Button onPress={handleCancel} type={'text'}>
           {t('agentRoleEdit.cancel', { ns: 'chat' })}

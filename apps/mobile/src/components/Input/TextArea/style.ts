@@ -18,9 +18,13 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
       minHeight: sizeStyles.controlHeight * 1.25,
       paddingHorizontal: sizeStyles.paddingHorizontal * 1.25,
       paddingVertical: sizeStyles.paddingHorizontal * 1.25,
-      textAlignVertical: 'top',
+      textAlignVertical: 'center',
       ...(Platform.OS === 'android' && {
         includeFontPadding: false,
+        lineHeight: sizeStyles.fontSize * 2,
+        margin: 0,
+        paddingTop: sizeStyles.fontSize / 4,
+        paddingVertical: 0,
       }),
     },
   };

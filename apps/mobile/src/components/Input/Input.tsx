@@ -38,11 +38,11 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
         autoCorrect={false}
         editable={!disabled}
         keyboardType="default"
-        ref={ref}
-        {...rest}
         placeholderTextColor={placeholderTextColor ?? theme.colorTextPlaceholder}
+        ref={ref}
         style={[styles.input, disabled && { opacity: 0.6 }, textStyle]}
         underlineColorAndroid={underlineColorAndroid ?? 'transparent'}
+        {...rest}
       />
       {suffix && <View style={styles.suffixContainer}>{suffix}</View>}
     </Block>

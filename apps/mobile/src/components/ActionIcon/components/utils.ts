@@ -17,23 +17,24 @@ export const calcSize = (iconSize?: ActionIconSize) => {
   switch (iconSize) {
     case 'large': {
       blockSize = 44;
-      borderRadius = 8;
+      borderRadius = 22;
       break;
     }
     case 'middle': {
-      blockSize = 36;
-      borderRadius = 6;
+      blockSize = 38;
+      borderRadius = 19;
       break;
     }
     case 'small': {
-      blockSize = 24;
-      borderRadius = 4;
+      blockSize = 32;
+      borderRadius = 16;
       break;
     }
     default: {
       if (iconSize) {
         blockSize = iconSize?.blockSize || 36;
-        borderRadius = iconSize?.borderRadius || 6;
+        borderRadius =
+          iconSize?.borderRadius || (iconSize?.blockSize ? Number(iconSize.blockSize) / 2 : 18);
       } else {
         blockSize = '1.8em';
         borderRadius = '0.3em';
