@@ -1,5 +1,7 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
 
+import { version } from './package.json';
+
 /**
  * Expo 配置
  * 使用 TypeScript 提供类型安全和自动补全
@@ -143,7 +145,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     url: 'https://u.expo.dev/f02d6f4f-e042-4c95-ba0d-ac06bb474ef0',
   },
   userInterfaceStyle: 'automatic',
-  version: '1.0.0',
+  version: version,
   web: {
     bundler: 'metro',
     favicon: './assets/images/favicon.ico',
