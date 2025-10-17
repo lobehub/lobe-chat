@@ -1,5 +1,7 @@
 import { isNumber } from 'lodash-es';
 
+import { ICON_SIZE, ICON_SIZE_LARGE, ICON_SIZE_SMALL } from '@/_const/common';
+
 import type { IconSize } from '../type';
 
 export const calcSize = (iconSize?: IconSize) => {
@@ -12,17 +14,17 @@ export const calcSize = (iconSize?: IconSize) => {
 
   switch (iconSize) {
     case 'large': {
-      size = 24;
+      size = ICON_SIZE_LARGE;
       strokeWidth = 2;
       break;
     }
     case 'middle': {
-      size = 20;
+      size = ICON_SIZE;
       strokeWidth = 2;
       break;
     }
     case 'small': {
-      size = 14;
+      size = ICON_SIZE_SMALL;
       strokeWidth = 2;
       break;
     }
