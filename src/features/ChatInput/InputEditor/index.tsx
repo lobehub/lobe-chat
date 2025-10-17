@@ -2,6 +2,8 @@ import { isDesktop } from '@lobechat/const';
 import { HotkeyEnum, KeyEnum } from '@lobechat/types';
 import { isCommandPressed } from '@lobechat/utils';
 import {
+  INSERT_MENTION_COMMAND,
+  INSERT_TABLE_COMMAND,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -12,15 +14,16 @@ import {
 import { Editor, FloatMenu, SlashMenu, useEditorState } from '@lobehub/editor/react';
 import { combineKeys } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
+import { Table2Icon } from 'lucide-react';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
+import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import { useChatInputStore, useStoreApi } from '../store';
 import Placeholder from './Placeholder';
-import { useSlashItems } from './useSlashItems';
 
 const className = cx(css`
   p {
@@ -28,24 +31,28 @@ const className = cx(css`
   }
 `);
 
-const InputEditor = memo<{ defaultRows?: number }>(() => {
-  const [editor, slashMenuRef, send, updateMarkdownContent, expand] = useChatInputStore((s) => [
-    s.editor,
-    s.slashMenuRef,
-    s.handleSendButton,
-    s.updateMarkdownContent,
-    s.expand,
-  ]);
+const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
+  const [editor, slashMenuRef, send, updateMarkdownContent, expand, mentionItems] =
+    useChatInputStore((s) => [
+      s.editor,
+      s.slashMenuRef,
+      s.handleSendButton,
+      s.updateMarkdownContent,
+      s.expand,
+      s.mentionItems,
+    ]);
 
   const storeApi = useStoreApi();
   const state = useEditorState(editor);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.AddUserMessage));
   const { enableScope, disableScope } = useHotkeysContext();
-  const slashItems = useSlashItems();
+  const { t } = useTranslation(['editor', 'chat']);
 
   const isChineseInput = useRef(false);
 
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
+
+  const enableMention = !!mentionItems && mentionItems.length > 0;
 
   useEffect(() => {
     const fn = (e: BeforeUnloadEvent) => {
@@ -108,6 +115,32 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
       content={''}
       editor={editor}
       {...richRenderProps}
+      mentionOption={
+        enableMention
+          ? {
+              items: mentionItems,
+              markdownWriter: (mention) => {
+                return `<mention name="${mention.label}" id="${mention.metadata.id}" />`;
+              },
+              onSelect: (editor, option) => {
+                editor.dispatchCommand(INSERT_MENTION_COMMAND, {
+                  label: String(option.label),
+                  metadata: option.metadata,
+                });
+              },
+              renderComp: expand
+                ? undefined
+                : (props) => {
+                    return (
+                      <SlashMenu
+                        {...props}
+                        getPopupContainer={() => (slashMenuRef as any)?.current}
+                      />
+                    );
+                  },
+            }
+          : undefined
+      }
       onBlur={() => {
         disableScope(HotkeyEnum.AddUserMessage);
       }}
@@ -158,7 +191,16 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
       }}
       placeholder={<Placeholder />}
       slashOption={{
-        items: slashItems,
+        items: [
+          {
+            icon: Table2Icon,
+            key: 'table',
+            label: t('typobar.table'),
+            onSelect: (editor) => {
+              editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
+            },
+          },
+        ],
         renderComp: expand
           ? undefined
           : (props) => {
@@ -166,6 +208,9 @@ const InputEditor = memo<{ defaultRows?: number }>(() => {
                 <SlashMenu {...props} getPopupContainer={() => (slashMenuRef as any)?.current} />
               );
             },
+      }}
+      style={{
+        minHeight: defaultRows > 1 ? defaultRows * 23 : undefined,
       }}
       type={'text'}
       variant={'chat'}

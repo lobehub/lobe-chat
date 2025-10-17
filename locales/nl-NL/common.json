@@ -31,7 +31,7 @@
   "batchDelete": "Batch verwijderen",
   "blog": "Product Blog",
   "branching": "Subonderwerp aanmaken",
-  "branchingDisable": "De functie 'Subonderwerp' is alleen beschikbaar in de serverversie. Als je deze functie wilt gebruiken, schakel dan over naar de serverimplementatiemodus of gebruik LobeChat Cloud.",
+  "branchingDisable": "De functie 'Subonderwerpen' is niet beschikbaar in de huidige modus. Schakel over naar de Postgres/Pglite DB-modus of gebruik LobeHub Cloud om deze functie te gebruiken.",
   "branchingRequiresSavedTopic": "Het huidige onderwerp is niet opgeslagen. Sla het op om de subonderwerpfunctie te kunnen gebruiken.",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",

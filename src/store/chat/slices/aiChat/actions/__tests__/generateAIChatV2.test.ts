@@ -3,7 +3,7 @@ import { TRPCClientError } from '@trpc/client';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '@/const/settings';
+import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_MODEL, DEFAULT_PROVIDER } from '@/const/settings';
 import { aiChatService } from '@/services/aiChat';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
@@ -12,8 +12,9 @@ import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../../../store';
 import { messageMapKey } from '../../../../utils/messageMapKey';
-import { TEST_CONTENT, TEST_IDS } from './fixtures';
+import { TEST_CONTENT, TEST_IDS, createMockStoreState } from './fixtures';
 import { resetTestEnvironment, setupMockSelectors, spyOnMessageService } from './helpers';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 
 // Keep zustand mock as it's needed globally
 vi.mock('zustand/traditional');
@@ -56,7 +57,7 @@ vi.mock('@/services/aiChat', () => ({
         topicId,
         userMessageId: userId,
         assistantMessageId: assistantId,
-        isCreatNewTopic: !params.topicId,
+        isCreateNewTopic: !params.topicId,
       } as any;
     }),
   },
@@ -154,6 +155,76 @@ describe('generateAIChatV2 actions', () => {
           expect.anything(),
         );
         expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
+      });
+
+      it('should skip creating new topic when auto-create topic is disabled', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
+          ...DEFAULT_AGENT_CHAT_CONFIG,
+          enableAutoCreateTopic: false,
+        });
+
+        await act(async () => {
+          useChatStore.setState({
+            ...createMockStoreState(),
+            activeTopicId: undefined,
+            messagesMap: {},
+          });
+
+          await result.current.sendMessage({ message: 'disable auto create' });
+        });
+
+        const callArgs = (aiChatService.sendMessageInServer as Mock).mock.calls[0][0];
+        expect(callArgs.newTopic).toBeUndefined();
+      });
+
+      it('should include newTopic payload when auto-create topic is enabled and threshold is reached', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
+          ...DEFAULT_AGENT_CHAT_CONFIG,
+          enableAutoCreateTopic: true,
+          autoCreateTopicThreshold: 1,
+        });
+
+        await act(async () => {
+          useChatStore.setState({
+            ...createMockStoreState(),
+            activeTopicId: undefined,
+            messagesMap: {},
+          });
+
+          await result.current.sendMessage({ message: 'auto create topic' });
+        });
+
+        const callArgs = (aiChatService.sendMessageInServer as Mock).mock.calls[0][0];
+        expect(callArgs.newTopic).toMatchObject({
+          topicMessageIds: [],
+        });
+      });
+
+      it('should not create new topic when threshold is not reached', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        (agentChatConfigSelectors.currentChatConfig as Mock).mockReturnValue({
+          ...DEFAULT_AGENT_CHAT_CONFIG,
+          enableAutoCreateTopic: true,
+          autoCreateTopicThreshold: 10,
+        });
+
+        await act(async () => {
+          useChatStore.setState({
+            ...createMockStoreState(),
+            activeTopicId: undefined,
+            messagesMap: {},
+          });
+
+          await result.current.sendMessage({ message: 'threshold not met' });
+        });
+
+        const callArgs = (aiChatService.sendMessageInServer as Mock).mock.calls[0][0];
+        expect(callArgs.newTopic).toBeUndefined();
       });
 
       it('should send message with files attached', async () => {
@@ -365,7 +436,7 @@ describe('generateAIChatV2 actions', () => {
       const { result } = renderHook(() => useChatStore());
 
       vi.spyOn(aiChatService, 'sendMessageInServer').mockResolvedValueOnce({
-        isCreatNewTopic: true,
+        isCreateNewTopic: true,
         topicId: TEST_IDS.TOPIC_ID,
         messages: [{}, {}] as any,
         topics: [{}] as any,
@@ -516,7 +587,7 @@ describe('generateAIChatV2 actions', () => {
 
       expect(
         result.current.mainSendMessageOperations[
-          messageMapKey(TEST_IDS.SESSION_ID, TEST_IDS.TOPIC_ID)
+        messageMapKey(TEST_IDS.SESSION_ID, TEST_IDS.TOPIC_ID)
         ],
       ).toBeUndefined();
     });

@@ -20,7 +20,8 @@ export interface IMessageService {
   createMessage(data: CreateMessageParams): Promise<string>;
   batchCreateMessages(messages: MessageItem[]): Promise<any>;
 
-  getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]>;
+  getMessages(sessionId: string, topicId?: string, groupId?: string): Promise<ChatMessage[]>;
+  getGroupMessages(groupId: string, topicId?: string): Promise<ChatMessage[]>;
   getAllMessages(): Promise<ChatMessage[]>;
   getAllMessagesInSession(sessionId: string): Promise<ChatMessage[]>;
   searchMessages(
@@ -53,6 +54,7 @@ export interface IMessageService {
   removeMessage(id: string): Promise<any>;
   removeMessages(ids: string[]): Promise<any>;
   removeMessagesByAssistant(assistantId: string, topicId?: string): Promise<any>;
+  removeMessagesByGroup(groupId: string, topicId?: string): Promise<any>;
   removeAllMessages(): Promise<any>;
   messageCountToCheckTrace(): Promise<boolean>;
   hasMessages(): Promise<boolean>;

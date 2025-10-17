@@ -30,7 +30,10 @@
     "description": "Bedrock ist ein Service von Amazon AWS, der sich darauf konzentriert, Unternehmen fortschrittliche KI-Sprach- und visuelle Modelle bereitzustellen. Die Modellfamilie umfasst die Claude-Serie von Anthropic, die Llama 3.1-Serie von Meta und mehr, und bietet eine Vielzahl von Optionen von leichtgewichtig bis hochleistungsfähig, die Textgenerierung, Dialoge, Bildverarbeitung und andere Aufgaben unterstützen und für Unternehmensanwendungen unterschiedlicher Größen und Anforderungen geeignet sind."
   },
   "bfl": {
-    "description": "Ein führendes, an vorderster Front tätiges KI-Forschungslabor, das die visuelle Infrastruktur von morgen gestaltet."
+    "description": "Ein führendes, hochmodernes Forschungslabor für künstliche Intelligenz, das die visuelle Infrastruktur von morgen aufbaut."
+  },
+  "cerebras": {
+    "description": "Cerebras ist eine KI-Inferenzplattform, die auf dem spezialisierten CS-3-System basiert. Sie wurde entwickelt, um weltweit die schnellsten, in Echtzeit reagierenden und hochdurchsatzfähigen LLM-Dienste bereitzustellen. Ziel ist es, Latenzen zu eliminieren und komplexe KI-Workflows wie die Echtzeit-Codegenerierung und Agentenaufgaben zu beschleunigen."
   },
   "cerebras": {
     "description": "Cerebras ist eine KI-Inferenzplattform, die auf dem spezialisierten CS-3-System basiert. Sie wurde entwickelt, um weltweit die schnellsten, in Echtzeit reagierenden und hochdurchsatzfähigen LLM-Dienste bereitzustellen. Ziel ist es, Latenzen zu eliminieren und komplexe KI-Workflows wie die Echtzeit-Codegenerierung und Agentenaufgaben zu beschleunigen."

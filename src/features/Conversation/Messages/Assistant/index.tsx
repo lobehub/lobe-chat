@@ -1,8 +1,10 @@
 'use client';
 
 import { ChatMessage } from '@lobechat/types';
+import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
@@ -13,23 +15,25 @@ import ErrorContent from '@/features/ChatItem/components/ErrorContent';
 import MessageContent from '@/features/ChatItem/components/MessageContent';
 import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
-import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
-import { markdownElements } from '@/features/Conversation/MarkdownElements';
-import { AssistantActionsBar } from '@/features/Conversation/Messages/Assistant/Actions';
-import { AssistantMessageExtra } from '@/features/Conversation/Messages/Assistant/Extra';
-import { AssistantMessageContent } from '@/features/Conversation/Messages/Assistant/MessageContent';
-import { useDoubleClickEdit } from '@/features/Conversation/hooks/useDoubleClickEdit';
-import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
+
+import ErrorMessageExtra, { useErrorContent } from '../../Error';
+import { markdownElements } from '../../MarkdownElements';
+import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
+import { normalizeThinkTags, processWithArtifact } from '../../utils';
+import { AssistantActionsBar } from './Actions';
+import { AssistantMessageExtra } from './Extra';
+import { AssistantMessageContent } from './MessageContent';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
@@ -63,8 +67,10 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
     extra,
     metadata,
     meta,
+    targetId,
   } = props;
   const avatar = meta;
+  const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
   const placement = 'left';
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
@@ -99,6 +105,32 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
 
   const animated = transitionMode === 'fadeIn' && generating;
 
+  const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
+  const currentSession = useSessionStore(sessionSelectors.currentSession);
+  const sessionId = isGroupSession && currentSession ? currentSession.id : '';
+  const groupConfig = useChatGroupStore(chatGroupSelectors.getGroupConfig(sessionId || ''));
+
+  const reducted =
+    isGroupSession && targetId !== null && targetId !== 'user' && !groupConfig?.revealDM;
+
+  // Get target name for DM indicator
+  const userName = useUserStore(userProfileSelectors.nickName) || 'User';
+  const agents = useSessionStore(sessionSelectors.currentGroupAgents);
+
+  const dmIndicator = useMemo(() => {
+    if (!targetId) return undefined;
+
+    let targetName = targetId;
+    if (targetId === 'user') {
+      targetName = t('dm.you');
+    } else {
+      const targetAgent = agents?.find((agent) => agent.id === targetId);
+      targetName = targetAgent?.title || targetId;
+    }
+
+    return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
+  }, [targetId, userName, agents, t]);
+
   // ======================= Performance Optimization ======================= //
   // these useMemo/useCallback are all for the performance optimization
   // maybe we can remove it in React 19
@@ -115,6 +147,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
       ),
     [id],
   );
+
   const markdownProps = useMemo(
     () => ({
       animated,
@@ -186,7 +219,13 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
         style={{ marginTop: 6 }}
       />
       <Flexbox align={'flex-start'} className={styles.messageContainer}>
-        <Title avatar={avatar} placement={placement} showTitle={showTitle} time={createdAt} />
+        <Title
+          avatar={avatar}
+          placement={placement}
+          showTitle={showTitle}
+          time={createdAt}
+          titleAddon={dmIndicator}
+        />
         <Flexbox
           align={'flex-start'}
           className={styles.messageContent}
@@ -202,7 +241,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
                 editing={editing}
                 id={id}
                 markdownProps={markdownProps}
-                message={message}
+                message={reducted ? `*${t('hideForYou')}*` : message}
                 messageExtra={
                   <>
                     {errorContent && (

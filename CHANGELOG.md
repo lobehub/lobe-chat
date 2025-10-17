@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 1.138.2](https://github.com/lobehub/lobe-chat/compare/v1.138.1...v1.138.2)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve welcome message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve welcome message, closes [#9747](https://github.com/lobehub/lobe-chat/issues/9747) ([c83fe13](https://github.com/lobehub/lobe-chat/commit/c83fe13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.138.1](https://github.com/lobehub/lobe-chat/compare/v1.138.0...v1.138.1)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Automatic topic creation switch does not work.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Automatic topic creation switch does not work, closes [#9693](https://github.com/lobehub/lobe-chat/issues/9693) ([a02b301](https://github.com/lobehub/lobe-chat/commit/a02b301))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.138.0](https://github.com/lobehub/lobe-chat/compare/v1.137.10...v1.138.0)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag, closes [#8976](https://github.com/lobehub/lobe-chat/issues/8976) ([03c2838](https://github.com/lobehub/lobe-chat/commit/03c2838))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.137.10](https://github.com/lobehub/lobe-chat/compare/v1.137.9...v1.137.10)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Claude Haiku 4.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Claude Haiku 4.5 model, closes [#9735](https://github.com/lobehub/lobe-chat/issues/9735) ([1cfbc87](https://github.com/lobehub/lobe-chat/commit/1cfbc87))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.137.9](https://github.com/lobehub/lobe-chat/compare/v1.137.8...v1.137.9)
 
 <sup>Released on **2025-10-15**</sup>

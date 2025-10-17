@@ -86,15 +86,15 @@
     "ExceededContextWindow": "Nội dung yêu cầu hiện tại vượt quá độ dài mà mô hình có thể xử lý, vui lòng giảm khối lượng nội dung và thử lại",
     "FreePlanLimit": "Hiện tại bạn đang sử dụng tài khoản miễn phí, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói trả phí để tiếp tục sử dụng.",
     "GoogleAIBlockReason": {
-      "BLOCKLIST": "Nội dung của bạn chứa các từ bị cấm. Vui lòng kiểm tra và chỉnh sửa nội dung rồi thử lại.",
-      "IMAGE_SAFETY": "Nội dung hình ảnh được tạo đã bị chặn vì lý do an toàn. Vui lòng thử chỉnh sửa yêu cầu tạo ảnh.",
-      "LANGUAGE": "Ngôn ngữ bạn đang sử dụng hiện chưa được hỗ trợ. Vui lòng thử dùng tiếng Anh hoặc ngôn ngữ khác được hỗ trợ để hỏi lại.",
-      "OTHER": "Nội dung đã bị chặn vì lý do không rõ. Vui lòng thử diễn đạt lại yêu cầu.",
-      "PROHIBITED_CONTENT": "Yêu cầu của bạn có thể chứa nội dung bị cấm. Vui lòng điều chỉnh yêu cầu để đảm bảo tuân thủ quy định sử dụng.",
-      "RECITATION": "Nội dung của bạn có thể vi phạm bản quyền và đã bị chặn. Vui lòng thử sử dụng nội dung nguyên bản hoặc diễn đạt lại yêu cầu.",
-      "SAFETY": "Nội dung của bạn đã bị chặn do chính sách an toàn. Vui lòng điều chỉnh yêu cầu, tránh chứa nội dung có thể gây hại hoặc không phù hợp.",
-      "SPII": "Nội dung của bạn có thể chứa thông tin cá nhân nhạy cảm. Để bảo vệ quyền riêng tư, vui lòng loại bỏ các thông tin nhạy cảm rồi thử lại.",
-      "default": "Nội dung bị chặn: {{blockReason}}. Vui lòng điều chỉnh yêu cầu rồi thử lại."
+      "BLOCKLIST": "Nội dung của bạn chứa từ ngữ bị cấm. Vui lòng kiểm tra và chỉnh sửa đầu vào rồi thử lại.",
+      "IMAGE_SAFETY": "Nội dung hình ảnh được tạo đã bị chặn vì lý do an toàn. Vui lòng thử chỉnh sửa yêu cầu tạo ảnh của bạn。",
+      "LANGUAGE": "Ngôn ngữ bạn sử dụng hiện chưa được hỗ trợ. Vui lòng thử dùng tiếng Anh hoặc một ngôn ngữ khác được hỗ trợ.",
+      "OTHER": "Nội dung bị chặn vì lý do không rõ. Vui lòng thử diễn đạt lại yêu cầu của bạn.",
+      "PROHIBITED_CONTENT": "Yêu cầu của bạn có thể chứa nội dung bị cấm. Vui lòng điều chỉnh yêu cầu để đảm bảo tuân thủ các quy định sử dụng.",
+      "RECITATION": "Nội dung của bạn có thể bị chặn vì liên quan đến vấn đề bản quyền. Vui lòng thử dùng nội dung gốc hoặc diễn đạt lại yêu cầu.",
+      "SAFETY": "Nội dung của bạn bị chặn theo chính sách an toàn. Vui lòng điều chỉnh yêu cầu, tránh chứa các nội dung có thể gây hại hoặc không phù hợp.",
+      "SPII": "Nội dung của bạn có thể chứa thông tin cá nhân nhạy cảm. Để bảo vệ quyền riêng tư, vui lòng loại bỏ các thông tin nhạy cảm liên quan rồi thử lại.",
+      "default": "Nội dung bị chặn: {{blockReason}}。Vui lòng điều chỉnh yêu cầu rồi thử lại。"
     },
     "InsufficientQuota": "Xin lỗi, hạn mức của khóa này đã đạt giới hạn, vui lòng kiểm tra số dư tài khoản của bạn hoặc tăng hạn mức khóa trước khi thử lại",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
@@ -133,6 +133,9 @@
   },
   "stt": {
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
+  },
+  "supervisor": {
+    "decisionFailed": "Người điều hành nhóm không thể hoạt động. Vui lòng kiểm tra cấu hình người điều hành của bạn, đảm bảo rằng mô hình, API Key và địa chỉ API đã được cấu hình chính xác."
   },
   "testConnectionFailed": "Kiểm tra kết nối thất bại: {{error}}",
   "tts": {

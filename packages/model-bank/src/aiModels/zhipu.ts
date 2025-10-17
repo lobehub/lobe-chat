@@ -23,9 +23,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 0.4,
-              '[0, 32_000]_[200, infinity]': 0.6,
-              '[32_000, 200_000]': 0.8,
+              '[0, 0.032]_[0, 0.0002]': 0.4,
+              '[0, 0.032]_[0.0002, infinity]': 0.6,
+              '[0.032, 0.2]': 0.8,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -36,9 +36,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 2,
-              '[0, 32_000]_[200, infinity]': 3,
-              '[32_000, 200_000]': 4,
+              '[0, 0.032]_[0, 0.0002]': 2,
+              '[0, 0.032]_[0.0002, infinity]': 3,
+              '[0.032, 0.2]': 4,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -49,9 +49,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 8,
-              '[0, 32_000]_[200, infinity]': 14,
-              '[32_000, 200_000]': 16,
+              '[0, 0.032]_[0, 0.0002]': 8,
+              '[0, 0.032]_[0.0002, infinity]': 14,
+              '[0.032, 0.2]': 16,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -87,8 +87,8 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.4,
-              '[32_000, 65_536]': 0.8,
+              '[0, 0.032]': 0.4,
+              '[0.032, infinity]': 0.8,
             },
             pricingParams: ['textInput'],
           },
@@ -99,8 +99,8 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 2,
-              '[32_000, 65_536]': 4,
+              '[0, 0.032]': 2,
+              '[0.032, infinity]': 4,
             },
             pricingParams: ['textInput'],
           },
@@ -111,8 +111,8 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 6,
-              '[32_000, 65_536]': 12,
+              '[0, 0.032]': 6,
+              '[0.032, infinity]': 12,
             },
             pricingParams: ['textInput'],
           },
@@ -146,9 +146,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 0.4,
-              '[0, 32_000]_[200, infinity]': 0.6,
-              '[32_000, 128_000]': 0.8,
+              '[0, 0.032]_[0, 0.0002]': 0.4,
+              '[0, 0.032]_[0.0002, infinity]': 0.6,
+              '[0.032, 0.128]': 0.8,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -159,9 +159,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 2,
-              '[0, 32_000]_[200, infinity]': 3,
-              '[32_000, 128_000]': 4,
+              '[0, 0.032]_[0, 0.0002]': 2,
+              '[0, 0.032]_[0.0002, infinity]': 3,
+              '[0.032, 0.128]': 4,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -172,9 +172,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 8,
-              '[0, 32_000]_[200, infinity]': 14,
-              '[32_000, 128_000]': 16,
+              '[0, 0.032]_[0, 0.0002]': 8,
+              '[0, 0.032]_[0.0002, infinity]': 14,
+              '[0.032, 0.128]': 16,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -207,9 +207,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 1.6,
-              '[0, 32_000]_[200, infinity]': 2.4,
-              '[32_000, 128_000]': 3.2,
+              '[0, 0.032]': 1.6,
+              '[0, 0.032]_[0.0002, infinity]': 2.4,
+              '[0.032, 0.128]': 3.2,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -220,9 +220,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 8,
-              '[0, 32_000]_[200, infinity]': 12,
-              '[32_000, 128_000]': 16,
+              '[0, 0.032]_[0, 0.0002]': 8,
+              '[0, 0.032]_[0.0002, infinity]': 12,
+              '[0.032, 0.128]': 16,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -233,9 +233,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 16,
-              '[0, 32_000]_[200, infinity]': 32,
-              '[32_000, 128_000]': 64,
+              '[0, 0.032]_[0, 0.0002]': 16,
+              '[0, 0.032]_[0.0002, infinity]': 32,
+              '[0.032, 0.128]': 64,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -268,8 +268,8 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.16,
-              '[32_000, 128_000]': 0.24,
+              '[0, 0.032]': 0.16,
+              '[0.032, 0.128]': 0.24,
             },
             pricingParams: ['textInput'],
           },
@@ -280,8 +280,8 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.8,
-              '[32_000, 128_000]': 1.2,
+              '[0, 0.032]': 0.8,
+              '[0.032, 0.128]': 1.2,
             },
             pricingParams: ['textInput'],
           },
@@ -292,9 +292,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 2,
-              '[0, 32_000]_[200, infinity]': 6,
-              '[32_000, 128_000]': 8,
+              '[0, 0.032]_[0, 0.0002]': 2,
+              '[0, 0.032]_[0.0002, infinity]': 6,
+              '[0.032, 0.128]': 8,
             },
             pricingParams: ['textInput', 'textOutput'],
           },
@@ -327,8 +327,8 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.8,
-              '[32_000, 128_000]': 1.6,
+              '[0, 0.032]': 0.8,
+              '[0.032, 0.128]': 1.6,
             },
             pricingParams: ['textInput'],
           },
@@ -339,8 +339,8 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 4,
-              '[32_000, 128_000]': 8,
+              '[0, 0.032]': 4,
+              '[0.032, 0.128]': 8,
             },
             pricingParams: ['textInput'],
           },
@@ -351,9 +351,9 @@ const zhipuChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 200]': 12,
-              '[0, 32_000]_[200, infinity]': 16,
-              '[32_000, 128_000]': 32,
+              '[0, 0.032]_[0, 0.0002]': 12,
+              '[0, 0.032]_[0.0002, infinity]': 16,
+              '[0.032, 0.128]': 32,
             },
             pricingParams: ['textInput', 'textOutput'],
           },

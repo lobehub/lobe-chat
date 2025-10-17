@@ -35,9 +35,16 @@
       "title": "Restablecer todas las configuraciones"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Miembros",
+    "meta": "Información básica"
+  },
   "header": {
     "desc": "Preferencias y configuración del modelo.",
     "global": "Configuración global",
+    "group": "Configuración del grupo",
+    "groupDesc": "Gestionar el grupo actual",
     "session": "Configuración de la sesión",
     "sessionDesc": "Configuración de roles y preferencias de sesión.",
     "sessionWithName": "Configuración de la sesión · {{name}}",
@@ -138,6 +145,9 @@
       "title": "Dirección del proxy de la API"
     },
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!"
+  },
+  "message": {
+    "success": "Actualización exitosa"
   },
   "plugin": {
     "addMCPPlugin": "Agregar complemento MCP",
@@ -293,6 +303,101 @@
       "title": "Tema"
     },
     "title": "Configuración Común"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Por favor, ingrese la descripción del grupo",
+      "title": "Descripción del grupo"
+    },
+    "name": {
+      "placeholder": "Por favor, ingrese el nombre del grupo",
+      "title": "Nombre del grupo"
+    },
+    "scene": {
+      "desc": "Selecciona el escenario del chat grupal",
+      "options": {
+        "casual": "Informal",
+        "productive": "Productivo"
+      },
+      "title": "Escenario del chat grupal"
+    },
+    "submit": "Actualizar grupo",
+    "systemPrompt": {
+      "placeholder": "Por favor, ingrese la indicación del sistema para el anfitrión",
+      "title": "Indicación del sistema para el anfitrión"
+    },
+    "title": "Información del grupo"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Si se desactiva, aún podrás enviar mensajes directos al asistente",
+      "title": "Permitir mensajes directos del asistente"
+    },
+    "enableSupervisor": {
+      "desc": "Activa la función de moderador del grupo; el moderador gestionará el flujo de la conversación",
+      "title": "Activar moderador"
+    },
+    "maxResponseInRow": {
+      "desc": "Seleccione cuántos mensajes puede responder un miembro de forma consecutiva. Establecer en 0 desactiva esta limitación.",
+      "title": "Número de respuestas consecutivas"
+    },
+    "model": {
+      "desc": "Las intervenciones de los miembros del grupo no se verán afectadas. Algunos modelos no pueden utilizarse como moderadores.",
+      "title": "Modelo del anfitrión"
+    },
+    "orchestratorTitle": "Configuración del anfitrión",
+    "responseOrder": {
+      "desc": "Los agentes responderán en el orden establecido en el grupo.",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Secuencial"
+      },
+      "placeholder": "Seleccione el orden de respuesta",
+      "title": "Orden de respuesta"
+    },
+    "responseSpeed": {
+      "desc": "Controla la velocidad general del chat grupal.",
+      "options": {
+        "fast": "Rápido",
+        "medium": "Medio",
+        "slow": "Lento"
+      },
+      "placeholder": "Seleccione la velocidad de respuesta",
+      "title": "Velocidad de respuesta"
+    },
+    "revealDM": {
+      "desc": "Permite ver los mensajes privados enviados a otros miembros.",
+      "title": "Mostrar contenido de mensajes privados"
+    },
+    "submit": "Actualizar configuración",
+    "systemPrompt": {
+      "desc": "Indicación personalizada del sistema para el anfitrión del chat grupal. Esto puede afectar el comportamiento predeterminado del anfitrión.",
+      "placeholder": "Por favor, ingrese una indicación personalizada para el anfitrión...",
+      "title": "Indicación del sistema para el anfitrión"
+    },
+    "title": "Configuración del chat"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Unirse al grupo",
+    "availableAgents": "Asistentes disponibles",
+    "defaultAgent": "Asistente personalizado",
+    "disableHost": "Desactivar asistente del anfitrión",
+    "edit": "Editar miembro",
+    "empty": "No hay agentes en este grupo. Haga clic en el botón + para agregar miembros.",
+    "enableHost": "Activar asistente del anfitrión",
+    "groupHost": "Anfitrión del grupo",
+    "groupMembers": "Miembros del grupo",
+    "host": {
+      "description": "Cuando el anfitrión está en el grupo, el chat grupal se automatiza, ideal para tareas creativas.",
+      "title": "Anfitrión"
+    },
+    "noAvailableAgents": "No hay asistentes disponibles",
+    "noDescription": "Sin descripción",
+    "noMembersInGroup": "El grupo no tiene miembros",
+    "owner": "Tú (propietario)",
+    "remove": "Eliminar miembro",
+    "removeFromGroup": "Eliminar del grupo",
+    "you": "Tú"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "Modelo de denominación de temas para pintura AI",
       "modelDesc": "Modelo designado para la denominación automática de temas en pintura AI",
       "title": "Denominación automática de temas para pintura AI"
+    },
+    "groupChatSupervisor": {
+      "label": "Modelo de supervisión de chats grupales",
+      "modelDesc": "Modelo designado para supervisar y gestionar las conversaciones en chats grupales",
+      "title": "Supervisión y gestión de chats grupales"
     },
     "helpInfo": "Al crear un nuevo asistente, se utilizarán los ajustes predeterminados del asistente como valores predeterminados.",
     "historyCompress": {

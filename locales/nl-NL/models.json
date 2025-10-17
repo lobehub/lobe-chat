@@ -767,6 +767,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet biedt een ideale balans tussen intelligentie en snelheid voor bedrijfswerkbelastingen. Het biedt maximale bruikbaarheid tegen een lagere prijs, betrouwbaar en geschikt voor grootschalige implementatie."
   },
+  "claude-haiku-4-5-20251001": {
+    "description": "Claude Haiku 4.5 is het snelste en slimste Haiku-model van Anthropic, met bliksemsnelle prestaties en geavanceerde redeneercapaciteiten."
+  },
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 is het nieuwste en krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het blinkt uit in prestaties, intelligentie, vloeiendheid en begrip."
   },
@@ -1147,6 +1150,9 @@
   },
   "doubao-seed-1.6-flash": {
     "description": "Doubao-Seed-1.6-flash is een multimodaal diepdenkend model met extreem snelle inferentiesnelheid, TPOT slechts 10ms; ondersteunt zowel tekst- als visueel begrip, met tekstbegrip dat beter is dan de vorige lite-generatie en visueel begrip dat vergelijkbaar is met concurrerende pro-serie modellen. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+  },
+  "doubao-seed-1.6-lite": {
+    "description": "Doubao-Seed-1.6-lite is een gloednieuw multimodaal model voor diepgaand redeneren, met instelbare redeneerniveaus (Minimal, Low, Medium, High). Het biedt een uitstekende prijs-kwaliteitverhouding en is de beste keuze voor veelvoorkomende taken, met een contextvenster tot 256k."
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking model heeft sterk verbeterde denkvermogens, met verdere verbeteringen in basisvaardigheden zoals coderen, wiskunde en logisch redeneren ten opzichte van Doubao-1.5-thinking-pro, en ondersteunt visueel begrip. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
@@ -1541,9 +1547,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview heeft krachtige complexe redeneercapaciteiten en presteert uitstekend in logische redenering, wiskunde en programmeren."
   },
-  "glm4.6:355b": {
-    "description": "GLM-4.6 (355B), het nieuwste vlaggenschipmodel van Zhipu, overtreft zijn voorgangers op alle fronten, waaronder geavanceerde codering, verwerking van lange teksten, redeneren en agentcapaciteiten. Vooral op het gebied van programmeren is het model op één lijn gebracht met Claude Sonnet 4, waarmee het een toonaangevend coding-model in China is geworden."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash biedt next-generation functies en verbeteringen, waaronder uitstekende snelheid, ingebouwde toolintegratie, multimodale generatie en een contextvenster van 1 miljoen tokens."
   },
@@ -1934,11 +1937,17 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small is ideaal voor codegeneratie, debugging en refactoring taken met minimale latentie."
   },
+  "inclusionAI/Ling-1T": {
+    "description": "Ling-1T is het eerste vlaggenschipmodel uit de 'Ling 2.0'-serie zonder denkvermogen, met in totaal 1 biljoen parameters en ongeveer 50 miljard actieve parameters per token. Gebouwd op de Ling 2.0-architectuur, is Ling-1T ontworpen om de grenzen van efficiënte redenering en schaalbare cognitie te verleggen. Ling-1T-base is getraind op meer dan 20 biljoen hoogwaardige, redeneerintensieve tokens."
+  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0 is het derde model in de Ling 2.0 architectuurserie uitgebracht door het Bailing-team van Ant Group. Het is een Mixture of Experts (MoE) model met in totaal 100 miljard parameters, maar activeert slechts 6,1 miljard parameters per token (waarvan 4,8 miljard niet-embedding). Als een lichtgewicht configuratie toont Ling-flash-2.0 in meerdere gezaghebbende evaluaties prestaties die vergelijkbaar zijn met of beter dan 40 miljard dense modellen en grotere MoE modellen. Dit model is ontworpen om via ultieme architectuurontwerpen en trainingsstrategieën een efficiënte weg te verkennen binnen de consensus dat grote modellen gelijkstaan aan veel parameters."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 is een klein maar hoogpresterend groot taalmodel gebaseerd op de MoE-architectuur. Het heeft 16 miljard totale parameters, maar activeert slechts 1,4 miljard per token (789 miljoen niet-embedding), wat een zeer hoge generatie snelheid mogelijk maakt. Dankzij het efficiënte MoE-ontwerp en grootschalige hoogwaardige trainingsdata levert Ling-mini-2.0, ondanks de beperkte geactiveerde parameters, topprestaties die vergelijkbaar zijn met dense LLM's onder 10 miljard en grotere MoE modellen in downstream taken."
+  },
+  "inclusionAI/Ring-1T": {
+    "description": "Ring-1T is een open-source denkmodel op biljoenschaal, uitgebracht door het Bailing-team. Het is gebaseerd op de Ling 2.0-architectuur en het Ling-1T-base model, met in totaal 1 biljoen parameters en 50 miljard actieve parameters. Het ondersteunt contextvensters tot 128K en is geoptimaliseerd via grootschalige, verifieerbare beloningsversterkende training."
   },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0 is een diep geoptimaliseerd hoogpresterend denkmodel gebaseerd op Ling-flash-2.0-base. Het gebruikt een Mixture of Experts (MoE) architectuur met in totaal 100 miljard parameters, maar activeert slechts 6,1 miljard parameters per inferentie. Dit model lost met het unieke icepop-algoritme de instabiliteitsproblemen van grote MoE modellen tijdens reinforcement learning (RL) training op, waardoor de complexe redeneercapaciteit continu verbetert bij langdurige training. Ring-flash-2.0 behaalde significante doorbraken in uitdagende benchmarks zoals wiskundewedstrijden, codegeneratie en logische redenering. Het presteert niet alleen beter dan top dense modellen onder 40 miljard parameters, maar kan ook concurreren met grotere open-source MoE modellen en gesloten hoogpresterende denkmodellen. Hoewel het model zich richt op complexe redenering, presteert het ook uitstekend in creatieve schrijfopdrachten. Dankzij het efficiënte architectuurontwerp biedt Ring-flash-2.0 krachtige prestaties met hoge inferentiesnelheid, wat de implementatiekosten in scenario's met hoge gelijktijdigheid aanzienlijk verlaagt."
@@ -2035,9 +2044,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Het Llama 3.3 instructie-fijnafstemmodel is geoptimaliseerd voor gesprekssituaties en overtreft vele bestaande open-source chatmodellen op veelvoorkomende industriebenchmarks."
-  },
-  "llama-4-maverick-17b-128e-instruct": {
-    "description": "Llama 4 Maverick: een krachtig model uit de Llama-serie, geschikt voor geavanceerde redenering, het oplossen van complexe problemen en instructievolgende taken."
   },
   "llama-4-scout-17b-16e-instruct": {
     "description": "Llama 4 Scout: een hoogwaardig model uit de Llama-serie, geoptimaliseerd voor scenario's die hoge verwerkingssnelheid en lage latentie vereisen."
@@ -2906,6 +2912,9 @@
   "qwen3-8b": {
     "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
   },
+  "qwen3-coder-30b-a3b-instruct": {
+    "description": "Open-source versie van het Tongyi Qianwen codeermodel. De nieuwste qwen3-coder-30b-a3b-instruct is gebaseerd op Qwen3 en blinkt uit in codegeneratie, met krachtige mogelijkheden als Coding Agent. Het is bedreven in toolgebruik en omgevingsinteractie, en combineert uitstekende programmeervaardigheden met algemene capaciteiten."
+  },
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Open-source codeermodel van Tongyi Qianwen. De nieuwste qwen3-coder-480b-a35b-instruct is gebaseerd op Qwen3, met krachtige Coding Agent-capaciteiten, bedreven in toolaanroepen en omgevingsinteractie, en kan zelfstandig programmeren met uitstekende codeervaardigheden en algemene capaciteiten."
   },
@@ -2927,11 +2936,29 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "Een nieuwe generatie open-source model met denkmodus gebaseerd op Qwen3, met verbeterde instructienaleving en meer beknopte samenvattende antwoorden vergeleken met de vorige versie (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
   },
+  "qwen3-omni-flash": {
+    "description": "Het Qwen-Omni model accepteert gecombineerde invoer van tekst, afbeeldingen, audio en video, en genereert antwoorden in tekst- of spraakvorm. Het biedt diverse natuurlijke stemklanken, ondersteunt meertalige en dialectische spraakuitvoer, en is toepasbaar in tekstcreatie, visuele herkenning, spraakassistenten en meer."
+  },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Instruct is een multimodaal model ontwikkeld door Tongyi Qianwen, dat visueel begrip en redenering ondersteunt."
+    "description": "Qwen3 VL 235B A22B Instruct-modus (non-thinking), geschikt voor instructiescenario’s zonder redeneervermogen, met behoud van sterke visuele interpretatiecapaciteiten."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Thinking is een multimodaal redeneermodel ontwikkeld door Tongyi Qianwen, dat visueel begrip en redenering ondersteunt."
+    "description": "Qwen3 VL 235B A22B Thinking-modus (open-source), ontworpen voor complexe redeneerscenario’s en lange video-inhoud, met toonaangevende visuele en tekstuele redeneercapaciteiten."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B Instruct-modus (non-thinking), gericht op standaard instructievolgtaken, met sterke multimodale interpretatie- en generatiecapaciteiten."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen-VL (open-source) biedt visuele interpretatie en tekstgeneratie, ondersteunt agentinteractie, visuele codering, ruimtelijk bewustzijn, lange videoanalyse en diepgaand redeneren, met verbeterde teksterkenning en meertalige ondersteuning in complexe scenario’s."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct-modus (non-thinking), geschikt voor standaard multimodale generatie- en herkenningstaken."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking-modus, ontworpen voor lichtgewicht multimodale redeneer- en interactiescenario’s, met behoud van lange contextbegripcapaciteiten."
+  },
+  "qwen3-vl-flash": {
+    "description": "Qwen3 VL Flash: een lichtgewicht, snelle redeneerversie, ideaal voor latency-gevoelige of grootschalige aanvraagscenario’s."
   },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL is een tekstgeneratiemodel met visuele (beeld) begripscapaciteiten. Het kan niet alleen OCR (tekstherkenning in afbeeldingen) uitvoeren, maar ook samenvatten en redeneren, bijvoorbeeld het extraheren van attributen uit productfoto's en het oplossen van problemen op basis van oefenplaatjes."
