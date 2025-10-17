@@ -1,6 +1,6 @@
 {
   "name": "lobe-chat-react-native",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -25,7 +25,7 @@
     "preview:android": "eas build -p android --profile preview",
     "preview:android:local": "eas build -p android --profile preview --local",
     "preview:ios": "eas build -p ios --profile preview",
-    "preview:ios:local": "eas build -p ios --profile preview --local",
+    "preview:ios:local": " NODE_OPTIONS='' eas build -p ios --profile preview --local",
     "preview:local": "npm run preview:android & npm run preview:ios",
     "production": "npm run production:android && npm run production:ios",
     "production:android": "eas build --platform android --profile production",
@@ -51,6 +51,7 @@
     "@gorhom/bottom-sheet": "^5.2.6",
     "@gorhom/portal": "^1.0.14",
     "@lobechat/const": "workspace:*",
+    "@lobechat/prompts": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "@lobehub/icons-rn": "^1.7.4",

@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
 // DON'T REMOVE THE FIRST LINE
+import { chainSummaryTitle } from '@lobechat/prompts';
 import { ChatMessage, ChatTopic } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
@@ -8,7 +9,7 @@ import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/_const/message';
-import { chainSummaryTitle } from '@/chains/summaryTitle';
+import i18n from '@/i18n';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -161,7 +162,7 @@ export const chatTopic: StateCreator<
 
         internal_updateTopicTitleInSummary(topicId, output);
       },
-      params: merge(chainSummaryTitle(messages)),
+      params: merge(chainSummaryTitle(messages, i18n.language)),
       // trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
   },
