@@ -118,7 +118,7 @@ export default function DeveloperScreen() {
               const message = error instanceof Error ? error.message : String(error);
               Alert.alert(t('error.title', { ns: 'error' }), message);
             } finally {
-              safeReplaceLogin(router);
+              router.replace('/auth/login/selfhost');
             }
           },
           style: 'default',

@@ -151,11 +151,14 @@ function ThemedSystemBars() {
     NavigationBar.setButtonStyleAsync(isDarkMode ? 'light' : 'dark').catch(() => {});
   }, [isDarkMode, token.colorBgLayout]);
 
+  // iOS: dark mode 需要 light 文字，light mode 需要 dark 文字
+  // Android: backgroundColor 会影响状态栏背景色
   return (
     <StatusBar
       animated
       backgroundColor={token.colorBgLayout}
       style={isDarkMode ? 'light' : 'dark'}
+      translucent={false}
     />
   );
 }
