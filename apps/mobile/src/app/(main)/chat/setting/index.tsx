@@ -1,4 +1,5 @@
 import { Avatar, Cell, PageContainer } from '@lobehub/ui-rn';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
@@ -7,6 +8,7 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 
 export default function AgentDetail() {
   const { t } = useTranslation(['chat']);
+  const router = useRouter();
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const description = useSessionStore(sessionMetaSelectors.currentAgentDescription);
@@ -16,11 +18,20 @@ export default function AgentDetail() {
       <AgentRoleEditSection
         header={
           <>
-            <Cell extra={<Avatar alt={title} avatar={avatar || '🤖'} size={32} />} title={'头像'} />
-            <Cell extra={title} title={'名称'} />
-            <Cell extra={description} title={'描述'} />
+            <Cell
+              extra={<Avatar alt={title} avatar={avatar || '🤖'} size={32} />}
+              onPress={() => router.push('/chat/setting/avatar')}
+              title={'头像'}
+            />
+            <Cell extra={title} onPress={() => router.push('/chat/setting/name')} title={'名称'} />
+            <Cell
+              extra={description}
+              onPress={() => router.push('/chat/setting/description')}
+              title={'描述'}
+            />
           </>
         }
+        onSystemRolePress={() => router.push('/chat/setting/system-role')}
       />
     </PageContainer>
   );

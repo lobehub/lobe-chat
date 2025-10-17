@@ -31,13 +31,6 @@ export const useStyles = createStyles(({ token }) => ({
     paddingBottom: token.paddingLG,
   },
   title: {
-    left: 0,
-    position: 'absolute',
-    right: 0,
     zIndex: 1,
-  },
-  titleText: {
-    color: token.colorTextHeading,
-    fontSize: token.fontSizeLG,
   },
 }));
