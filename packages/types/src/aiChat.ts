@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { ChatMessage } from './message';
+import { OpenAIChatMessage } from './openai/chat';
 import { LobeUniformTool, LobeUniformToolSchema } from './tool';
 import { ChatTopic } from './topic';
 
@@ -75,7 +76,9 @@ export const StructureOutputSchema = z.object({
   provider: z.string(),
   schema: StructureSchema.optional(),
   systemRole: z.string().optional(),
-  tools: z.array(LobeUniformToolSchema).optional(),
+  tools: z
+    .array(z.object({ function: LobeUniformToolSchema, type: z.literal('function') }))
+    .optional(),
 });
 
 interface IStructureSchema {
@@ -92,10 +95,13 @@ interface IStructureSchema {
 
 export interface StructureOutputParams {
   keyVaultsPayload: string;
-  messages: ChatMessage[];
+  messages: OpenAIChatMessage[];
   model: string;
   provider: string;
   schema?: IStructureSchema;
   systemRole?: string;
-  tools?: LobeUniformTool[];
+  tools?: {
+    function: LobeUniformTool;
+    type: 'function';
+  }[];
 }
