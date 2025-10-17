@@ -29,6 +29,8 @@ import ColorScalesDemos from '@lobehub/ui-rn/ColorScales/demos';
 import ColorSwatchesDemos from '@lobehub/ui-rn/ColorSwatches/demos';
 // Divider
 import DividerDemos from '@lobehub/ui-rn/Divider/demos';
+// EmojiSelector
+import EmojiSelectorDemos from '@lobehub/ui-rn/EmojiSelector/demos';
 // Empty
 import EmptyDemos from '@lobehub/ui-rn/Empty/demos';
 // Flexbox
@@ -92,6 +94,7 @@ export const DEMOS_MAP: Record<string, any> = {
   ColorScales: ColorScalesDemos,
   ColorSwatches: ColorSwatchesDemos,
   Divider: DividerDemos,
+  EmojiSelector: EmojiSelectorDemos,
   Empty: EmptyDemos,
   Flexbox: FlexboxDemos,
   FluentEmoji: FluentEmojiDemos,

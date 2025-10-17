@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { ViewStyle } from 'react-native';
 
 import SenderBtn from '@/features/chat/actions/SenderBtn';
-import ToogleTopic from '@/features/chat/actions/ToogleTopic';
 import { useChat } from '@/hooks/useChat';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 
@@ -46,7 +45,6 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
             <ModelSwitch />
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal justify={'flex-end'}>
-            <ToogleTopic />
             <SenderBtn />
           </Flexbox>
         </Flexbox>
