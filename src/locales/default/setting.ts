@@ -384,6 +384,7 @@ export default {
   settingGroupMembers: {
     addToGroup: '加入群组',
     availableAgents: '可用助手',
+    createMember: '创建成员',
     defaultAgent: '自定义助手',
     disableHost: '关闭主持助手',
     edit: '编辑成员',
