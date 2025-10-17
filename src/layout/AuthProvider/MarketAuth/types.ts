@@ -38,7 +38,7 @@ export interface MarketAuthState {
 export interface MarketAuthContextType extends MarketAuthState {
   getCurrentUserInfo: () => MarketUserInfo | null;
   refreshToken: () => Promise<boolean>;
-  signIn: () => Promise<void>;
+  signIn: () => Promise<number | null>;
   signOut: () => void;
 }
 

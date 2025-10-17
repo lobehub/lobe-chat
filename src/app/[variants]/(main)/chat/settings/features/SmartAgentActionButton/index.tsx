@@ -25,42 +25,45 @@ const SmartAgentActionButton = memo<SmartAgentActionButtonProps>(({ modal }) => 
 
   const buttonType = useMemo(() => {
     if (!meta?.marketIdentifier) {
-      // 没有 marketIdentifier，显示提交按钮
       return 'submit';
     }
 
     if (isOwnAgent === null) {
-      // 正在检查所有权
       return 'loading';
     }
 
     if (isOwnAgent === true) {
-      // 是用户的 agent，显示上传新版本
       return 'upload';
     }
 
-    // 不是用户的 agent，显示提交按钮（fork 功能）
     return 'submit';
   }, [meta?.marketIdentifier, isOwnAgent]);
 
   switch (buttonType) {
     case 'upload': {
-      return <MarketPublishButton action="upload" modal={modal} />;
+      return (
+        <MarketPublishButton
+          action="upload"
+          marketIdentifier={meta?.marketIdentifier}
+          modal={modal}
+        />
+      );
     }
 
     case 'submit': {
-      return <MarketPublishButton action="submit" modal={modal} />;
+      return (
+        <MarketPublishButton
+          action="submit"
+          marketIdentifier={meta?.marketIdentifier}
+          modal={modal}
+        />
+      );
     }
 
     default: {
-      // 加载中状态：显示禁用的按钮
-      return modal ? (
-        <Button block disabled icon={Loader2} loading variant={'filled'}>
-          {t('checkingPermissions', { defaultValue: '检查权限中...' })}
-        </Button>
-      ) : (
-        <Button disabled icon={Loader2} loading size="small" variant={'filled'}>
-          {t('checking', { defaultValue: '检查中...' })}
+      return (
+        <Button block={Boolean(modal)} disabled icon={Loader2} loading variant={'filled'}>
+          {t('checkingPermissions')}
         </Button>
       );
     }

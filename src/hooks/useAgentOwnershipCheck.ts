@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
+import { MarketAuthContextType } from '@/layout/AuthProvider/MarketAuth/types';
 import { marketApiService } from '@/services/marketApi';
 
 interface AgentOwnershipResult {
@@ -13,24 +14,30 @@ interface AgentOwnershipResult {
 const agentOwnershipCache = new Map<string, { result: boolean; timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存
 
+const buildCacheKey = (marketIdentifier: string, accountId?: string | number | null) =>
+  `${marketIdentifier}::${accountId ?? 'unknown'}`;
+
 /**
  * 获取当前用户 ID
  */
-function getCurrentAccountId(marketAuth: any): string | null {
+function getCurrentAccountId(marketAuth: MarketAuthContextType): string | number | null {
   try {
     // 首先尝试从 marketAuth 中获取用户信息
     const userInfo = marketAuth.getCurrentUserInfo?.();
-    if (userInfo?.sub) {
-      console.log('[useAgentOwnershipCheck] User ID from userInfo:', userInfo.accountId);
-      return userInfo.accountId;
+    if (userInfo?.accountId !== null) {
+      console.log('[useAgentOwnershipCheck] User ID from userInfo:', userInfo?.accountId);
+      return userInfo?.accountId ?? null;
     }
 
     // 如果没有，尝试从 sessionStorage 中获取
     const userInfoData = sessionStorage.getItem('market_user_info');
     if (userInfoData) {
       const parsedUserInfo = JSON.parse(userInfoData);
-      console.log('[useAgentOwnershipCheck] User ID from sessionStorage:', parsedUserInfo.sub);
-      return parsedUserInfo.sub;
+      console.log(
+        '[useAgentOwnershipCheck] User ID from sessionStorage:',
+        parsedUserInfo.accountId,
+      );
+      return parsedUserInfo.accountId ?? parsedUserInfo.sub ?? null;
     }
 
     console.warn('[useAgentOwnershipCheck] No user ID found');
@@ -40,6 +47,51 @@ function getCurrentAccountId(marketAuth: any): string | null {
     return null;
   }
 }
+
+interface CheckOwnershipParams {
+  accessToken?: string;
+  accountId?: string | number | null;
+  marketIdentifier?: string;
+  skipCache?: boolean;
+}
+
+/**
+ * 校验当前账号是否为指定 agent 的 owner
+ */
+export const checkOwnership = async ({
+  accountId,
+  accessToken,
+  marketIdentifier,
+  skipCache = false,
+}: CheckOwnershipParams): Promise<boolean> => {
+  if (!marketIdentifier || !accountId || !accessToken) {
+    console.warn('[checkOwnership] Missing required parameters', {
+      accessToken: Boolean(accessToken),
+      accountId,
+      marketIdentifier,
+    });
+    return false;
+  }
+
+  const cacheKey = buildCacheKey(marketIdentifier, accountId);
+  const cached = agentOwnershipCache.get(cacheKey);
+  if (!skipCache && cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    console.log('[checkOwnership] Using cached result:', cached.result);
+    return cached.result;
+  }
+
+  marketApiService.setAccessToken(accessToken);
+  const agentDetail = await marketApiService.getAgentDetail(marketIdentifier);
+  console.log('[checkOwnership] Agent detail:', agentDetail);
+
+  const isOwner = `${agentDetail?.ownerId ?? ''}` === `${accountId}`;
+  agentOwnershipCache.set(cacheKey, {
+    result: isOwner,
+    timestamp: Date.now(),
+  });
+
+  return isOwner;
+};
 
 /**
  * 检查当前用户是否拥有指定的 agent
@@ -55,25 +107,9 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
       return;
     }
 
-    const checkOwnership = async () => {
+    const runOwnershipCheck = async () => {
       try {
         console.log('[useAgentOwnershipCheck] Checking ownership for:', marketIdentifier);
-
-        // 检查缓存
-        const cached = agentOwnershipCache.get(marketIdentifier);
-        console.log('cached', cached);
-        if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-          console.log('[useAgentOwnershipCheck] Using cached result:', cached.result);
-          setResult({ isOwnAgent: cached.result });
-          return;
-        }
-
-        // 设置 API 的 access token
-        marketApiService.setAccessToken(session.accessToken);
-
-        // 调用 API 获取 agent 详情
-        const agentDetail = await marketApiService.getAgentDetail(marketIdentifier);
-        console.log('[useAgentOwnershipCheck] Agent detail:', agentDetail);
 
         // 获取当前用户 ID
         const currentAccountId = getCurrentAccountId(marketAuth);
@@ -85,22 +121,14 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
           return;
         }
 
-        console.log('agentDetail', agentDetail);
-
-        // 对比用户 ID (支持多种字段名)
-        const isOwner = `${agentDetail?.ownerId}` === `${currentAccountId}`;
-        // 缓存结果
-        agentOwnershipCache.set(marketIdentifier, {
-          result: isOwner,
-          timestamp: Date.now(),
+        const isOwner = await checkOwnership({
+          accessToken: session.accessToken,
+          accountId: currentAccountId,
+          marketIdentifier,
         });
 
         setResult({ isOwnAgent: isOwner });
       } catch (error) {
-        // 错误处理策略：
-        // 1. 网络错误 -> 默认显示 SubmitAgentButton（保守策略）
-        // 2. 401/403 -> 用户无权限，显示 SubmitAgentButton
-        // 3. 404 -> agent 不存在，显示 SubmitAgentButton
         setResult({
           error: error instanceof Error ? error.message : 'Unknown error',
           isOwnAgent: false,
@@ -108,7 +136,7 @@ export const useAgentOwnershipCheck = (marketIdentifier?: string): AgentOwnershi
       }
     };
 
-    checkOwnership();
+    runOwnershipCheck();
   }, [marketIdentifier, isAuthenticated, session, marketAuth]);
 
   return result;

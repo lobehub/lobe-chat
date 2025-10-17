@@ -181,6 +181,14 @@
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
   },
   "marketPublish": {
+    "submit": {
+      "button": "分享到市场",
+      "tooltip": "分享助手到市场"
+    },
+    "upload": {
+      "button": "发布新版本",
+      "tooltip": "发布新版本到助手市场"
+    },
     "resultModal": {
       "message": "助手已经提交审核，审核通过后会自动上架，点击「去市场」查看你发布的助手",
       "view": "去查看"

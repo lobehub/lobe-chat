@@ -189,7 +189,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   /**
    * 登录方法
    */
-  const signIn = async (): Promise<void> => {
+  const signIn = async (): Promise<number | null> => {
     console.log('[MarketAuth] Starting sign in process');
 
     if (!oidcClient) {
@@ -238,6 +238,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       setStatus('authenticated');
 
       console.log('[MarketAuth] Sign in completed successfully');
+      return userInfo?.accountId ?? null;
     } catch (error) {
       console.error('[MarketAuth] Sign in failed:', error);
       setStatus('unauthenticated');
