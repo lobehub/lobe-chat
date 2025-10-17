@@ -230,7 +230,6 @@ export const createChatSlice: StateCreator<
     const prevModel = agentSelectors.currentAgentModel(get());
     // optimistic update at frontend
     get().internal_dispatchAgentMap(id, data, 'optimistic_updateAgentConfig');
-
     await sessionService.updateSessionConfig(id, data, signal);
     await get().internal_refreshAgentConfig(id);
 

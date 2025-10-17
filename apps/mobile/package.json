@@ -77,6 +77,7 @@
     "buffer": "^6.0.3",
     "chroma-js": "^3.1.2",
     "dayjs": "^1.11.18",
+    "emoji-datasource": "^16.0.0",
     "expo": "~54.0.13",
     "expo-auth-session": "~7.0.8",
     "expo-av": "~16.0.7",
