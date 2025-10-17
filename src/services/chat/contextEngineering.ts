@@ -1,4 +1,4 @@
-import { INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
+import { INBOX_GUIDE_SYSTEMROLE, INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
 import {
   type AgentState,
   ContextEngine,
@@ -12,19 +12,18 @@ import {
   SystemRoleInjector,
   ToolCallProcessor,
   ToolMessageReorder,
+  ToolNameResolver,
   ToolSystemRoleProvider,
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { ChatMessage, OpenAIChatMessage } from '@lobechat/types';
+import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 
-import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
+import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { VARIABLE_GENERATORS } from '@/utils/client/parserPlaceholder';
-import { genToolCallingName } from '@/utils/toolCall';
 
-import { isCanUseFC, isCanUseVideo, isCanUseVision } from './helper';
-
+import { isCanUseVideo, isCanUseVision } from './helper';
 
 interface ContextEngineeringContext {
   enableHistoryCount?: boolean;
@@ -53,6 +52,8 @@ export const contextEngineering = async ({
   sessionId,
   isWelcomeQuestion,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
+  const toolNameResolver = new ToolNameResolver();
+
   const pipeline = new ContextEngine({
     pipeline: [
       // 1. History truncation (MUST be first, before any message injection)
@@ -106,7 +107,12 @@ export const contextEngineering = async ({
       }),
 
       // 9. Tool call processing
-      new ToolCallProcessor({ genToolCallingName, isCanUseFC, model, provider }),
+      new ToolCallProcessor({
+        genToolCallingName: toolNameResolver.generate.bind(toolNameResolver),
+        isCanUseFC,
+        model,
+        provider,
+      }),
 
       // 10. Tool message reordering
       new ToolMessageReorder(),

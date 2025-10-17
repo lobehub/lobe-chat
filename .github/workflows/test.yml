@@ -18,6 +18,7 @@ jobs:
           - web-crawler
           - electron-server-ipc
           - utils
+          - python-interpreter
           - context-engine
           - agent-runtime
 
@@ -44,7 +45,7 @@ jobs:
         run: bun run --filter @lobechat/${{ matrix.package }} test:coverage
 
       - name: Upload ${{ matrix.package }} coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/${{ matrix.package }}/coverage/lcov.info
@@ -70,7 +71,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -79,7 +80,7 @@ jobs:
         run: bun run --filter ${{ matrix.package }} test:coverage
 
       - name: Upload ${{ matrix.package }} coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/${{ matrix.package }}/coverage/lcov.info
@@ -103,7 +104,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -112,7 +113,7 @@ jobs:
         run: bun run test-app:coverage
 
       - name: Upload App Coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/app/lcov.info
@@ -147,7 +148,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -173,7 +174,7 @@ jobs:
           APP_URL: https://home.com
 
       - name: Upload Database coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/database/coverage/lcov.info

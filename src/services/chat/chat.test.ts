@@ -1,20 +1,24 @@
+import { LobeTool } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import * as isCanUseFCModule from '@/helpers/isCanUseFC';
+import * as toolEngineeringModule from '@/helpers/toolEngineering';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { modelProviderSelectors } from '@/store/user/selectors';
 import { DalleManifest } from '@/tools/dalle';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/index';
 import { ChatImageItem, ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
-import { LobeTool } from '@/types/tool';
 
+import { API_ENDPOINTS } from '../_url';
 import * as helpers from './helper';
 import { chatService } from './index';
 
@@ -34,9 +38,13 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
 
   return { ...(module as any), getMessageError: vi.fn() };
 });
-vi.mock('@lobechat/utils', () => ({
-  isLocalUrl: vi.fn(),
+vi.mock('@lobechat/utils/url', () => ({
+  isDesktopLocalStaticServerUrl: vi.fn(),
+}));
+vi.mock('@lobechat/utils/imageToBase64', () => ({
   imageUrlToBase64: vi.fn(),
+}));
+vi.mock('@lobechat/utils/uriParser', () => ({
   parseDataUri: vi.fn(),
 }));
 
@@ -61,6 +69,11 @@ beforeEach(async () => {
 // mock auth
 vi.mock('../_auth', () => ({
   createHeaderWithAuth: vi.fn().mockResolvedValue({}),
+}));
+
+// Mock isCanUseFC to control function calling behavior in tests
+vi.mock('@/helpers/isCanUseFC', () => ({
+  isCanUseFC: vi.fn(() => true), // Default to true, tests can override
 }));
 
 describe('ChatService', () => {
@@ -106,26 +119,6 @@ describe('ChatService', () => {
             },
           ]),
           messages: expect.anything(),
-        }),
-        undefined,
-      );
-    });
-
-    it('should not use tools for models in the vision model whitelist', async () => {
-      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-      const messages = [{ content: 'Hello', role: 'user' }] as ChatMessage[];
-      const modelInWhitelist = 'gpt-4-vision-preview';
-
-      await chatService.createAssistantMessage({
-        messages,
-        model: modelInWhitelist,
-        plugins: ['plugin1'],
-      });
-
-      expect(getChatCompletionSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          tools: undefined,
-          model: modelInWhitelist,
         }),
         undefined,
       );
@@ -292,9 +285,10 @@ describe('ChatService', () => {
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
         // Mock utility functions used in processImageList
-        const { parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
-        vi.mocked(isLocalUrl).mockReturnValue(false); // Not a local URL
+        vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // Not a local URL
 
         const messages = [
           {
@@ -355,10 +349,12 @@ describe('ChatService', () => {
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
+            enabledSearch: undefined,
             messages: [
               { content: 'Hello', role: 'user' },
               { content: 'Hey', role: 'assistant' },
             ],
+            tools: undefined,
           },
           undefined,
         );
@@ -367,11 +363,13 @@ describe('ChatService', () => {
 
     describe('local image URL conversion', () => {
       it('should convert local image URLs to base64 and call processImageList', async () => {
-        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { imageUrlToBase64 } = await import('@lobechat/utils/imageToBase64');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
 
         // Mock for local URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
-        vi.mocked(isLocalUrl).mockReturnValue(true); // This is a local URL
+        vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(true); // This is a local URL
         vi.mocked(imageUrlToBase64).mockResolvedValue({
           base64: 'converted-base64-content',
           mimeType: 'image/png',
@@ -407,7 +405,9 @@ describe('ChatService', () => {
 
         // Verify the utility functions were called
         expect(parseDataUri).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
-        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'http://127.0.0.1:3000/uploads/image.png',
+        );
         expect(imageUrlToBase64).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
 
         // Verify the final result contains base64 converted URL
@@ -438,11 +438,13 @@ describe('ChatService', () => {
       });
 
       it('should not convert remote URLs to base64 and call processImageList', async () => {
-        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { imageUrlToBase64 } = await import('@lobechat/utils/imageToBase64');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
 
         // Mock for remote URL
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
-        vi.mocked(isLocalUrl).mockReturnValue(false); // This is NOT a local URL
+        vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // This is NOT a local URL
         vi.mocked(imageUrlToBase64).mockClear(); // Clear to ensure it's not called
 
         const messages = [
@@ -474,7 +476,9 @@ describe('ChatService', () => {
 
         // Verify the utility functions were called
         expect(parseDataUri).toHaveBeenCalledWith('https://example.com/remote-image.jpg');
-        expect(isLocalUrl).toHaveBeenCalledWith('https://example.com/remote-image.jpg');
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'https://example.com/remote-image.jpg',
+        );
         expect(imageUrlToBase64).not.toHaveBeenCalled(); // Should NOT be called for remote URLs
 
         // Verify the final result preserves original URL
@@ -502,13 +506,15 @@ describe('ChatService', () => {
       });
 
       it('should handle mixed local and remote URLs correctly', async () => {
-        const { imageUrlToBase64, parseDataUri, isLocalUrl } = await import('@lobechat/utils');
+        const { imageUrlToBase64 } = await import('@lobechat/utils/imageToBase64');
+        const { parseDataUri } = await import('@lobechat/utils/uriParser');
+        const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
 
         // Mock parseDataUri to always return url type
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
 
-        // Mock isLocalUrl to return true only for 127.0.0.1 URLs
-        vi.mocked(isLocalUrl).mockImplementation((url: string) => {
+        // Mock isDesktopLocalStaticServerUrl to return true only for 127.0.0.1 URLs
+        vi.mocked(isDesktopLocalStaticServerUrl).mockImplementation((url: string) => {
           return new URL(url).hostname === '127.0.0.1';
         });
 
@@ -554,10 +560,16 @@ describe('ChatService', () => {
           model: 'gpt-4-vision-preview',
         });
 
-        // Verify isLocalUrl was called for each image
-        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:3000/local1.jpg');
-        expect(isLocalUrl).toHaveBeenCalledWith('https://example.com/remote1.png');
-        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:8080/local2.gif');
+        // Verify isDesktopLocalStaticServerUrl was called for each image
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'http://127.0.0.1:3000/local1.jpg',
+        );
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'https://example.com/remote1.png',
+        );
+        expect(isDesktopLocalStaticServerUrl).toHaveBeenCalledWith(
+          'http://127.0.0.1:8080/local2.gif',
+        );
 
         // Verify imageUrlToBase64 was called only for local URLs
         expect(imageUrlToBase64).toHaveBeenCalledWith('http://127.0.0.1:3000/local1.jpg');
@@ -870,16 +882,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => false);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
@@ -913,16 +933,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
@@ -950,16 +978,24 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
         vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
-        // Mock tool selectors
-        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
-          {
-            type: 'function',
-            function: {
-              name: WebBrowsingManifest.identifier + '____search',
-              description: 'Search the web',
-            },
-          },
-        ]);
+        // Mock createChatToolsEngine to return tools with web browsing
+        const mockToolsEngine = {
+          generateToolsDetailed: vi.fn().mockReturnValue({
+            tools: [
+              {
+                type: 'function',
+                function: {
+                  name: WebBrowsingManifest.identifier + '____search',
+                  description: 'Search the web',
+                },
+              },
+            ],
+            enabledToolIds: [WebBrowsingManifest.identifier],
+          }),
+        };
+        vi.spyOn(toolEngineeringModule, 'createChatToolsEngine').mockReturnValue(
+          mockToolsEngine as any,
+        );
 
         await chatService.createAssistantMessage({ messages, plugins: [] });
 
@@ -1235,7 +1271,6 @@ describe('ChatService private methods', () => {
       expect(fetchSSEOptions.responseAnimation).toEqual({
         speed: 20,
         text: 'fadeIn',
-        toolsCalling: 'fadeIn',
       });
     });
   });

@@ -198,12 +198,13 @@ export const imageRouter = router({
     try {
       const imageGenerationPromise = async (signal: AbortSignal) => {
         log('Initializing agent runtime for provider: %s', provider);
+
         const agentRuntime = await initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
         // Check if operation has been cancelled
         checkAbortSignal(signal);
         log('Agent runtime initialized, calling createImage');
-        const response = await agentRuntime.createImage({
+        const response = await agentRuntime.createImage!({
           model,
           params: params as unknown as RuntimeImageGenParams,
         });
@@ -212,6 +213,13 @@ export const imageRouter = router({
           log('Create image response is empty');
           throw new Error('Create image response is empty');
         }
+
+        log('Create image response: %O', {
+          ...response,
+          imageUrl: response.imageUrl?.startsWith('data:')
+            ? response.imageUrl.slice(0, IMAGE_URL_PREVIEW_LENGTH) + '...'
+            : response.imageUrl,
+        });
 
         // Check if operation has been cancelled
         checkAbortSignal(signal);

@@ -1,5 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
-import useSWR from 'swr';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
@@ -8,11 +7,6 @@ import { createServerConfigStore } from '@/store/serverConfig/store';
 import { useFileStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
-
-// Mock for useSWR
-vi.mock('swr', () => ({
-  default: vi.fn(),
-}));
 
 //  mock the arrayBuffer
 beforeAll(() => {
@@ -77,7 +71,7 @@ describe('TTSFileAction', () => {
   });
 
   // Test for useFetchTTSFile
-  it('useFetchTTSFile should call useSWR and return file data', async () => {
+  it('useFetchTTSFile should fetch and return file data', async () => {
     const fileId = 'tts-file-id';
     const fileData = {
       id: fileId,
@@ -91,17 +85,11 @@ describe('TTSFileAction', () => {
     // Mock the fileService.getFile to resolve with fileData
     vi.spyOn(fileService, 'getFile').mockResolvedValue(fileData as any);
 
-    // Mock useSWR to call the fetcher function immediately
-    const useSWRMock = vi.mocked(useSWR);
-    useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-      const data = fetcher(key);
-      return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-    }) as any);
-
     const { result } = renderHook(() => useStore.getState().useFetchTTSFile(fileId));
 
-    await act(async () => {
-      await result.current.data;
+    // Wait for SWR to fetch data
+    await waitFor(() => {
+      expect(result.current.data).toEqual(fileData);
     });
 
     expect(fileService.getFile).toHaveBeenCalledWith(fileId);

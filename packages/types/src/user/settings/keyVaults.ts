@@ -24,6 +24,11 @@ export interface AWSBedrockKeyVault {
   sessionToken?: string;
 }
 
+export interface VertexAIKeyVault {
+  apiKey?: string;
+  region?: string;
+}
+
 export interface CloudflareKeyVault {
   apiKey?: string;
   baseURLOrAccountID?: string;
@@ -57,6 +62,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   bfl?: any;
+  cerebras?: OpenAICompatibleKeyVault;
   cloudflare?: CloudflareKeyVault;
   cohere?: OpenAICompatibleKeyVault;
   cometapi?: OpenAICompatibleKeyVault;
@@ -85,6 +91,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   novita?: OpenAICompatibleKeyVault;
   nvidia?: OpenAICompatibleKeyVault;
   ollama?: OpenAICompatibleKeyVault;
+  ollamacloud?: OpenAICompatibleKeyVault;
   openai?: OpenAICompatibleKeyVault;
   openrouter?: OpenAICompatibleKeyVault;
   password?: string;
@@ -104,7 +111,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   upstage?: OpenAICompatibleKeyVault;
   v0?: OpenAICompatibleKeyVault;
   vercelaigateway?: OpenAICompatibleKeyVault;
-  vertexai?: OpenAICompatibleKeyVault;
+  vertexai?: VertexAIKeyVault;
   vllm?: OpenAICompatibleKeyVault;
   volcengine?: OpenAICompatibleKeyVault;
   wenxin?: OpenAICompatibleKeyVault;

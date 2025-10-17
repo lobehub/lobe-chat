@@ -101,7 +101,10 @@ export interface AiProviderAction {
   updateAiProviderSort: (items: AiProviderSortMap[]) => Promise<void>;
 
   useFetchAiProviderItem: (id: string) => SWRResponse<AiProviderDetailItem | undefined>;
-  useFetchAiProviderList: (params?: { suspense?: boolean }) => SWRResponse<AiProviderListItem[]>;
+  useFetchAiProviderList: (params?: {
+    enabled?: boolean;
+    suspense?: boolean;
+  }) => SWRResponse<AiProviderListItem[]>;
   /**
    * fetch provider keyVaults and user enabled model list
    * @param isLoginOnInit
@@ -160,7 +163,10 @@ export const createAiProviderSlice: StateCreator<
     await get().refreshAiProviderRuntimeState();
   },
   refreshAiProviderRuntimeState: async () => {
-    await mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, true]);
+    await Promise.all([
+      mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, true]),
+      mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, false]),
+    ]);
   },
   removeAiProvider: async (id) => {
     await aiProviderService.deleteAiProvider(id);
@@ -208,9 +214,9 @@ export const createAiProviderSlice: StateCreator<
         },
       },
     ),
-  useFetchAiProviderList: () =>
+  useFetchAiProviderList: (opts) =>
     useClientDataSWR<AiProviderListItem[]>(
-      AiProviderSwrKey.fetchAiProviderList,
+      opts?.enabled === false ? null : AiProviderSwrKey.fetchAiProviderList,
       () => aiProviderService.getAiProviderList(),
       {
         fallbackData: [],

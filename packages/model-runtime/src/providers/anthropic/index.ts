@@ -2,6 +2,8 @@ import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
+import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
+import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
 import { AnthropicStream } from '../../core/streams';
 import {
   type ChatCompletionErrorPayload,
@@ -11,10 +13,10 @@ import {
   GenerateObjectPayload,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
-import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { desensitizeUrl } from '../../utils/desensitizeUrl';
+import { getModelPricing } from '../../utils/getModelPricing';
 import { MODEL_LIST_CONFIGS, processModelList } from '../../utils/modelParse';
 import { StreamingResponse } from '../../utils/response';
 import { createAnthropicGenerateObject } from './generateObject';
@@ -30,10 +32,45 @@ type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
 
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
-// Opus 4.1 models that don't allow both temperature and top_p parameters
-const opus41Models = new Set(['claude-opus-4-1', 'claude-opus-4-1-20250805']);
-
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
+const DEFAULT_CACHE_TTL = '5m' as const;
+
+type CacheTTL = Anthropic.Messages.CacheControlEphemeral['ttl'];
+
+/**
+ * Resolves cache TTL from Anthropic payload or request settings
+ * Returns the first valid TTL found in system messages or content blocks
+ */
+const resolveCacheTTL = (
+  requestPayload: ChatStreamPayload,
+  anthropicPayload: Anthropic.MessageCreateParams,
+): CacheTTL | undefined => {
+  // Check system messages for cache TTL
+  if (Array.isArray(anthropicPayload.system)) {
+    for (const block of anthropicPayload.system) {
+      const ttl = block.cache_control?.ttl;
+      if (ttl) return ttl;
+    }
+  }
+
+  // Check message content blocks for cache TTL
+  for (const message of anthropicPayload.messages ?? []) {
+    if (!Array.isArray(message.content)) continue;
+
+    for (const block of message.content) {
+      // Message content blocks might have cache_control property
+      const ttl = ('cache_control' in block && block.cache_control?.ttl) as CacheTTL | undefined;
+      if (ttl) return ttl;
+    }
+  }
+
+  // Use default TTL if context caching is enabled
+  if (requestPayload.enabledContextCaching) {
+    return DEFAULT_CACHE_TTL;
+  }
+
+  return undefined;
+};
 
 interface AnthropicAIParams extends ClientOptions {
   id?: string;
@@ -99,8 +136,16 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         debugStream(debug.toReadableStream()).catch(console.error);
       }
 
+      const pricing = await getModelPricing(payload.model, this.id);
+      const cacheTTL = resolveCacheTTL(payload, anthropicPayload);
+      const pricingOptions = cacheTTL ? { lookupParams: { ttl: cacheTTL } } : undefined;
+
       return StreamingResponse(
-        AnthropicStream(prod, { callbacks: options?.callback, inputStartAt }),
+        AnthropicStream(prod, {
+          callbacks: options?.callback,
+          inputStartAt,
+          payload: { model: payload.model, pricing, pricingOptions, provider: this.id },
+        }),
         {
           headers: options?.headers,
         },
@@ -203,9 +248,12 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       } satisfies Anthropic.MessageCreateParams;
     }
 
-    // For Opus 4.1 models, we can only set either temperature OR top_p, not both
-    const isOpus41Model = opus41Models.has(model);
-    const shouldSetTemperature = payload.temperature !== undefined;
+    // Resolve temperature and top_p parameters based on model constraints
+    const hasConflict = MODEL_PARAMETER_CONFLICTS.ANTHROPIC_CLAUDE_4_PLUS.has(model);
+    const resolvedParams = resolveParameters(
+      { temperature, top_p },
+      { hasConflict, normalizeTemperature: true, preferTemperature: true },
+    );
 
     return {
       // claude 3 series model hax max output token of 4096, 3.x series has 8192
@@ -214,17 +262,9 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       messages: postMessages,
       model,
       system: systemPrompts,
-      // For Opus 4.1 models: prefer temperature over top_p if both are provided
-      temperature: isOpus41Model
-        ? shouldSetTemperature
-          ? temperature / 2
-          : undefined
-        : payload.temperature !== undefined
-          ? temperature / 2
-          : undefined,
+      temperature: resolvedParams.temperature,
       tools: postTools,
-      // For Opus 4.1 models: only set top_p if temperature is not set
-      top_p: isOpus41Model ? (shouldSetTemperature ? undefined : top_p) : top_p,
+      top_p: resolvedParams.top_p,
     } satisfies Anthropic.MessageCreateParams;
   }
 

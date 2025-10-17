@@ -5,7 +5,9 @@ LobeChat is built on the Next.js framework and uses TypeScript as the primary de
 1. Routing: Define routes (`src/app`).
 2. Data Structure: Define data structures (`src/types`).
 3. Business Logic Implementation: Zustand store (`src/store`).
-4. Page Display: Write static components/pages (`src/app/<new-page>/features/<new-feature>.tsx`).
+4. Page Display: Write static components/pages. Create features in:
+   - `src/features/<feature-name>/` for **shared global features** (used across multiple pages)
+   - `src/app/<new-page>/features/<feature-name>/` for **page-specific features** (only used in this page)
 5. Function Binding: Bind the store with page triggers (`const [state, function] = useNewStore(s => [s.state, s.function])`).
 
 Taking the "Chat Messages" feature as an example, here are the brief steps to implement this feature:
@@ -60,7 +62,8 @@ export const useChatStore = create<ChatState>((set) => ({
 In `src/app/<new-page>/features/<new-feature>.tsx`, we need to create a new page or component to display "Chat Messages". In this file, we can use the Zustand Store created earlier and Ant Design components to build the UI:
 
 ```jsx
-// src/features/chat/index.tsx
+// src/app/chat/features/ChatPage/index.tsx
+// Note: Use src/app/<page>/features/ for page-specific components
 import { List, Typography } from 'antd';
 import { useChatStore } from 'src/store/chatStore';
 
@@ -81,6 +84,12 @@ const ChatPage = () => {
 
 export default ChatPage;
 ```
+
+> **Note on Feature Organization**: LobeChat uses two patterns for organizing features:
+> - **Global features** (`src/features/`): Shared components like `ChatInput`, `Conversation` used across the app
+> - **Page-specific features** (`src/app/<page>/features/`): Components used only within a specific page route
+>
+> Choose based on reusability. If unsure, start with page-specific and refactor to global if needed elsewhere.
 
 ## 5. Function Binding
 

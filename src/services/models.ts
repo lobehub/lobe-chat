@@ -8,6 +8,7 @@ import { getMessageError } from '@/utils/fetch';
 
 import { API_ENDPOINTS } from './_url';
 import { initializeWithClientStore } from './chat/clientModelRuntime';
+import { resolveRuntimeProvider } from './chat/helper';
 
 const isEnableFetchOnClient = (provider: string) => {
   // TODO: remove this condition in V2.0
@@ -41,17 +42,22 @@ export class ModelsService {
       headers: { 'Content-Type': 'application/json' },
       provider,
     });
+
+    const runtimeProvider = resolveRuntimeProvider(provider);
     try {
       /**
        * Use browser agent runtime
        */
       const enableFetchOnClient = isEnableFetchOnClient(provider);
       if (enableFetchOnClient) {
-        const agentRuntime = await initializeWithClientStore(provider);
+        const agentRuntime = await initializeWithClientStore({
+          provider,
+          runtimeProvider,
+        });
         return agentRuntime.models();
       }
 
-      const res = await fetch(API_ENDPOINTS.models(provider), { headers });
+      const res = await fetch(API_ENDPOINTS.models(runtimeProvider), { headers });
       if (!res.ok) return;
 
       return res.json();
@@ -77,15 +83,19 @@ export class ModelsService {
         provider,
       });
 
+      const runtimeProvider = resolveRuntimeProvider(provider);
       const enableFetchOnClient = isEnableFetchOnClient(provider);
 
       console.log('enableFetchOnClient：', enableFetchOnClient);
       let res: Response;
       if (enableFetchOnClient) {
-        const agentRuntime = await initializeWithClientStore(provider);
+        const agentRuntime = await initializeWithClientStore({
+          provider,
+          runtimeProvider,
+        });
         res = (await agentRuntime.pullModel({ model }, { signal }))!;
       } else {
-        res = await fetch(API_ENDPOINTS.modelPull(provider), {
+        res = await fetch(API_ENDPOINTS.modelPull(runtimeProvider), {
           body: JSON.stringify({ model }),
           headers,
           method: 'POST',

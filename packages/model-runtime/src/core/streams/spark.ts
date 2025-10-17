@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
 import { ChatStreamCallbacks } from '../../types';
-import { convertUsage } from '../../utils/usageConverter';
+import { convertOpenAIUsage } from '../usageConverters';
 import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
@@ -135,7 +135,7 @@ export const transformSparkStream = (chunk: OpenAI.ChatCompletionChunk): StreamP
     if (chunk.usage) {
       return [
         { data: item.delta.content, id: chunk.id, type: 'text' },
-        { data: convertUsage(chunk.usage), id: chunk.id, type: 'usage' },
+        { data: convertOpenAIUsage(chunk.usage), id: chunk.id, type: 'usage' },
       ] as any;
     }
 
@@ -148,7 +148,7 @@ export const transformSparkStream = (chunk: OpenAI.ChatCompletionChunk): StreamP
 
   // 处理 v2 endpoint usage
   if (chunk.usage) {
-    return { data: convertUsage(chunk.usage), id: chunk.id, type: 'usage' };
+    return { data: convertOpenAIUsage(chunk.usage), id: chunk.id, type: 'usage' };
   }
 
   return {

@@ -151,12 +151,14 @@ describe('aiModelRouter', () => {
       id: 'model-1',
       providerId: 'provider-1',
       enabled: true,
+      type: 'embedding',
     });
 
     expect(mockToggle).toHaveBeenCalledWith({
       id: 'model-1',
       providerId: 'provider-1',
       enabled: true,
+      type: 'embedding',
     });
   });
 

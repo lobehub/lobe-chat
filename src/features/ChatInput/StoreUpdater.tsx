@@ -20,15 +20,17 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     onSend,
     onMarkdownContentChange,
     sendMenu,
+    mentionItems,
   }) => {
     const storeApi = useStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
     const editor = useChatInputEditor();
 
-    useStoreUpdater('mobile', mobile);
-    useStoreUpdater('sendMenu', sendMenu);
-    useStoreUpdater('leftActions', leftActions);
-    useStoreUpdater('rightActions', rightActions);
+    useStoreUpdater('mobile', mobile!);
+    useStoreUpdater('sendMenu', sendMenu!);
+    useStoreUpdater('mentionItems', mentionItems);
+    useStoreUpdater('leftActions', leftActions!);
+    useStoreUpdater('rightActions', rightActions!);
 
     useStoreUpdater('sendButtonProps', sendButtonProps);
     useStoreUpdater('onSend', onSend);

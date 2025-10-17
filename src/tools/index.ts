@@ -1,7 +1,9 @@
+import { LobeBuiltinTool } from '@lobechat/types';
+
 import { isDesktop } from '@/const/version';
-import { LobeBuiltinTool } from '@/types/tool';
 
 import { ArtifactsManifest } from './artifacts';
+import { CodeInterpreterManifest } from './code-interpreter';
 import { DalleManifest } from './dalle';
 import { LocalSystemManifest } from './local-system';
 import { WebBrowsingManifest } from './web-browsing';
@@ -27,6 +29,11 @@ export const builtinTools: LobeBuiltinTool[] = [
     hidden: true,
     identifier: WebBrowsingManifest.identifier,
     manifest: WebBrowsingManifest,
+    type: 'builtin',
+  },
+  {
+    identifier: CodeInterpreterManifest.identifier,
+    manifest: CodeInterpreterManifest,
     type: 'builtin',
   },
 ];

@@ -1,8 +1,8 @@
 {
   "ArgsInput": {
-    "addArgument": "Adicionar argumento",
-    "argumentPlaceholder": "Argumento {{index}}",
-    "enterFirstArgument": "Digite o primeiro argumento..."
+    "addArgument": "Adicionar parâmetro",
+    "argumentPlaceholder": "Parâmetro {{index}}",
+    "enterFirstArgument": "Digite o primeiro parâmetro..."
   },
   "DragUpload": {
     "dragDesc": "Arraste os arquivos para cá, suportando o upload de várias imagens.",
@@ -146,8 +146,8 @@
     },
     "validation": {
       "fileSizeExceeded": "Tamanho do arquivo excede o limite",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) excede o limite máximo de {{maxSize}}",
-      "fileSizeExceededMultiple": "{{count}} arquivos excedem o limite máximo de {{maxSize}}: {{fileList}}",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) excede o tamanho máximo permitido de {{maxSize}}",
+      "fileSizeExceededMultiple": "{{count}} arquivos excedem o tamanho máximo permitido de {{maxSize}}: {{fileList}}",
       "imageCountExceeded": "Número de imagens excede o limite"
     }
   },
