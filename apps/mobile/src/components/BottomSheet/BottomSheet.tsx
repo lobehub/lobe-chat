@@ -87,6 +87,13 @@ const BottomSheet = memo(
         }
       }, [open]);
 
+      useEffect(() => {
+        return () => {
+          if (!bottomSheetRef.current) return;
+          bottomSheetRef.current.dismiss();
+        };
+      }, [onClose]);
+
       return (
         <BottomSheetModal
           animationConfigs={animationConfigs}
