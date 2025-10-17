@@ -20,12 +20,6 @@ export const useStyles = createStyles(({ token }) => ({
     minWidth: '100%',
     padding: token.paddingSM,
   },
-  codeText: {
-    flexShrink: 0,
-    fontFamily: token.fontFamilyCode,
-    fontSize: 12,
-    lineHeight: token.lineHeight,
-  },
   errorText: {
     color: token.colorText,
     margin: 8,

@@ -1,10 +1,11 @@
 import * as Clipboard from 'expo-clipboard';
 import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react-native';
 import { memo, useState } from 'react';
-import { Pressable, StyleProp, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, View, ViewStyle } from 'react-native';
 
+import ActionIcon from '@/components/ActionIcon';
 import Block from '@/components/Block';
-import Icon from '@/components/Icon';
+import Text from '@/components/Text';
 
 import { LanguageSelect } from './components/LanguageSelect';
 import { TokenDisplay } from './components/TokenDisplay';
@@ -89,40 +90,32 @@ const FullFeatured = memo<FullFeaturedProps>(
       >
         <View style={[styles.headerContainer]}>
           <View style={styles.headerLeft}>
-            <Pressable
+            <ActionIcon
+              color={theme.colorTextDescription}
+              icon={expanded ? ChevronDown : ChevronRight}
               onPress={() => setExpanded(!expanded)}
-              style={styles.expandIcon}
-              testID="highlighter-expand-button"
-            >
-              {expanded ? (
-                <Icon icon={ChevronDown} size="small" />
-              ) : (
-                <Icon icon={ChevronRight} size="small" />
-              )}
-            </Pressable>
+              size="small"
+            />
           </View>
 
           {allowChangeLanguage && showLanguage ? (
             <LanguageSelect onSelect={handleLanguageChange} value={language} />
           ) : (
             (showLanguage || fileName) && (
-              <Text style={styles.headerTitle}>{fileName || language}</Text>
+              <Text code fontSize={12} type={'secondary'}>
+                {fileName || language}
+              </Text>
             )
           )}
 
           <View style={styles.headerRight}>
             {copyable && (
-              <Pressable
+              <ActionIcon
+                color={copied ? theme.colorSuccess : theme.colorTextDescription}
+                icon={copied ? Check : Copy}
                 onPress={handleCopy}
-                style={styles.copyButton}
-                testID="highlighter-copy-button"
-              >
-                {copied ? (
-                  <Icon color={theme.colorSuccess} icon={Check} size="small" />
-                ) : (
-                  <Icon icon={Copy} size="small" />
-                )}
-              </Pressable>
+                size="small"
+              />
             )}
           </View>
         </View>

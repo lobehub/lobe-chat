@@ -109,6 +109,7 @@ const Block = memo<BlockProps>(
           clickable
             ? {
                 color: theme.colorFillSecondary,
+                foreground: true,
               }
             : undefined
         }

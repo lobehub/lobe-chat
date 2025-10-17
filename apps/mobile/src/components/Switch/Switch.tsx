@@ -43,21 +43,21 @@ const Switch = memo<SwitchProps>(
           variants: {
             size: {
               default: Platform.select({
-                android: {},
+                android: {
+                  transform: [{ scale: 1.2 }],
+                },
                 ios: {
                   transform: [{ scale: 0.8 }],
                 },
               }),
               large: Platform.select({
                 android: {
-                  transform: [{ scale: 1.2 }],
+                  transform: [{ scale: 1.5 }],
                 },
                 ios: {},
               }),
               small: Platform.select({
-                android: {
-                  transform: [{ scale: 0.8 }],
-                },
+                android: {},
                 ios: {
                   transform: [{ scale: 0.6 }],
                 },
@@ -72,13 +72,13 @@ const Switch = memo<SwitchProps>(
     const numericScale = useMemo(() => {
       switch (size) {
         case 'large': {
-          return Platform.OS === 'ios' ? 1 : 1.2;
+          return Platform.OS === 'ios' ? 1 : 1.5;
         }
         case 'small': {
-          return Platform.OS === 'ios' ? 0.6 : 0.8;
+          return Platform.OS === 'ios' ? 0.6 : 1;
         }
         default: {
-          return Platform.OS === 'ios' ? 0.8 : 1;
+          return Platform.OS === 'ios' ? 0.8 : 1.2;
         }
       }
     }, [size]);
