@@ -1,12 +1,11 @@
 import { ModelIcon } from '@lobehub/icons-rn';
-import { ModelInfoTags } from '@lobehub/ui-rn';
+import { Cell, ModelInfoTags } from '@lobehub/ui-rn';
 import { AIChatModelCard } from 'model-bank';
 import { memo } from 'react';
-import { Text, View } from 'react-native';
-
-import { useStyles } from './styles';
 
 interface ModelItemRenderProps extends AIChatModelCard {
+  active?: boolean;
+  onPress?: () => void;
   showInfoTag?: boolean;
 }
 
@@ -14,28 +13,22 @@ interface ModelItemRenderProps extends AIChatModelCard {
  * 模型项渲染组件
  * 显示模型图标、名称和能力标签，对齐Web端实现
  */
-const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
-  const { styles } = useStyles();
-
-  return (
-    <View style={styles.container}>
-      {/* 左侧：模型图标和名称 */}
-      <View style={styles.leftSection}>
-        <ModelIcon model={model.id} size={20} />
-        <Text numberOfLines={1} style={styles.modelName}>
-          {model.displayName || model.id}
-        </Text>
-      </View>
-
-      {/* 右侧：能力标签（可选） */}
-      {showInfoTag && (
-        <View style={styles.rightSection}>
-          <ModelInfoTags {...model} {...model.abilities} />
-        </View>
-      )}
-    </View>
-  );
-});
+const ModelItemRender = memo<ModelItemRenderProps>(
+  ({ onPress, active, showInfoTag = true, ...model }) => {
+    return (
+      <Cell
+        active={active}
+        clickable
+        extra={showInfoTag && <ModelInfoTags {...model} {...model.abilities} />}
+        icon={<ModelIcon model={model.id} size={24} />}
+        iconSize={24}
+        onPress={onPress}
+        showArrow={false}
+        title={model.displayName || model.id}
+      />
+    );
+  },
+);
 
 ModelItemRender.displayName = 'ModelItemRender';
 
