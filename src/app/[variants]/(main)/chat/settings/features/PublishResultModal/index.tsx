@@ -4,6 +4,7 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Modal, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PublishResultModalProps {
   identifier?: string;
@@ -13,6 +14,8 @@ interface PublishResultModalProps {
 
 const PublishResultModal = memo<PublishResultModalProps>(({ identifier, onCancel, open }) => {
   const router = useRouter();
+  const { t } = useTranslation('setting');
+  const { t: tCommon } = useTranslation('common');
 
   const handleGoToMarket = () => {
     if (identifier) {
@@ -32,12 +35,12 @@ const PublishResultModal = memo<PublishResultModalProps>(({ identifier, onCancel
         }}
       />
       <div style={{ fontSize: '16px', marginBottom: '24px' }}>
-        助手已经提交审核，审核通过后会自动上架，点击「去市场」查看你发布的助手
+        {t('marketPublish.resultModal.message')}
       </div>
       <Space>
-        <Button onClick={onCancel}>取消</Button>
+        <Button onClick={onCancel}>{tCommon('cancel')}</Button>
         <Button onClick={handleGoToMarket} type="primary">
-          去查看
+          {t('marketPublish.resultModal.view')}
         </Button>
       </Space>
     </div>

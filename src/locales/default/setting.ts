@@ -2,6 +2,45 @@ export default {
   about: {
     title: '关于',
   },
+  agentInfoDescription: {
+    basic: {
+      avatar: 'Avatar',
+      description: 'Description',
+      name: 'Name',
+      tags: 'Tags',
+      title: 'Agent Info',
+    },
+    chat: {
+      displayMode: 'Display Mode',
+      enableHistoryCount: 'Enable History Count',
+      historyCount: 'History Count',
+      no: 'No',
+      searchMode: 'Search Mode',
+      title: 'Chat Preferences',
+      yes: 'Yes',
+    },
+    model: {
+      maxTokens: 'Max Tokens',
+      model: 'Model',
+      provider: 'Provider',
+      temperature: 'Temperature',
+      title: 'Model Settings',
+      topP: 'Top P',
+    },
+    plugins: {
+      count: 'Plugin Settings ({{count}})',
+      empty: 'No plugins installed',
+      title: 'Installed Plugins',
+    },
+    role: {
+      systemRole: 'System Prompt',
+      title: 'Role Settings',
+    },
+    value: {
+      unset: 'Not set',
+      untitled: 'Untitled Agent',
+    },
+  },
   agentTab: {
     chat: '聊天偏好',
     meta: '助手信息',
@@ -18,6 +57,8 @@ export default {
     },
     title: '数据统计',
   },
+  checking: '检查中...',
+  checkingPermissions: '检查权限中...',
   danger: {
     clear: {
       action: '立即清除',
@@ -140,6 +181,13 @@ export default {
       title: 'API 代理地址',
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
+  },
+  marketPublish: {
+    resultModal: {
+      message:
+        'Your agent has been submitted for review. It will go live automatically after approval. Click “View in Marketplace” to check the published agent.',
+      view: 'View in Marketplace',
+    },
   },
   plugin: {
     addMCPPlugin: '添加 MCP 插件',

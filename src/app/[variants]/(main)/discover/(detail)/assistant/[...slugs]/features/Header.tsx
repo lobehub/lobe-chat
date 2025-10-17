@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { AGENTS_INDEX_GITHUB, AGENTS_OFFICIAL_URL } from '@/const/url';
 import { useQuery } from '@/hooks/useQuery';
 import { AssistantMarketSource } from '@/types/discover';
 import { formatIntergerNumber } from '@/utils/format';
@@ -65,6 +66,11 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const authorHref = authorName ? urlJoin('https://github.com', authorName) : undefined;
   const { source } = useQuery() as { source?: AssistantMarketSource };
   const marketSource = source === 'legacy' ? 'legacy' : undefined;
+  const assistantHref = identifier
+    ? marketSource === 'legacy'
+      ? urlJoin(AGENTS_INDEX_GITHUB, 'tree/main/locales', identifier as string)
+      : urlJoin(AGENTS_OFFICIAL_URL, identifier as string)
+    : undefined;
 
   const cateButton = (
     <Link
@@ -126,16 +132,11 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
               </Text>
             </Flexbox>
             <Flexbox align={'center'} gap={6} horizontal>
-              <Link
-                href={urlJoin(
-                  'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
-                  identifier as string,
-                )}
-                onClick={(e) => e.stopPropagation()}
-                target={'_blank'}
-              >
-                <ActionIcon fill={theme.colorTextDescription} icon={Github} />
-              </Link>
+              {assistantHref && (
+                <Link href={assistantHref} onClick={(e) => e.stopPropagation()} target={'_blank'}>
+                  <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+                </Link>
+              )}
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>

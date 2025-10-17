@@ -211,7 +211,7 @@ export class MarketOIDC {
       popup = window.open(
         authUrl,
         'market_auth',
-        'width=500,height=600,scrollbars=yes,resizable=yes',
+        'width=580,height=720,scrollbars=yes,resizable=yes',
       );
 
       if (!popup) {

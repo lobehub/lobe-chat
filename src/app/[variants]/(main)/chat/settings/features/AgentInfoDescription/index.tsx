@@ -5,6 +5,7 @@ import { AgentItemDetail } from '@lobehub/market-sdk';
 import { Tag } from 'antd';
 import Image from 'next/image';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Tokens from '@/features/AgentSetting/AgentPrompt/TokenTag';
@@ -70,6 +71,7 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
     systemRole,
     ttsConfig,
   }) => {
+    const { t } = useTranslation('setting');
     // 转换远程数据格式
     const getProcessedData = () => {
       if (!isRemote || !meta) {
@@ -122,8 +124,11 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
       provider: processedProvider,
       systemRole: processedSystemRole,
     } = getProcessedData();
+    const unsetText = t('agentInfoDescription.value.unset');
+    const unnamedText = t('agentInfoDescription.value.untitled');
+    const pluginEmptyText = t('agentInfoDescription.plugins.empty');
     const renderAvatar = (avatar: string | undefined) => {
-      if (!avatar || avatar === '未设置') return '未设置';
+      if (!avatar || avatar === '未设置') return unsetText;
 
       // 如果是 http 或 https 链接，显示图片
       if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
@@ -159,26 +164,26 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
               {
                 dataIndex: 'title',
                 key: 'title',
-                title: '名称',
+                title: t('agentInfoDescription.basic.name'),
               },
               {
                 dataIndex: 'avatar',
                 key: 'avatar',
                 render: (_: any, record: any) => renderAvatar(record.avatar),
-                title: '头像',
+                title: t('agentInfoDescription.basic.avatar'),
               },
               {
                 dataIndex: 'description',
                 key: 'description',
                 span: 2,
-                title: '描述',
+                title: t('agentInfoDescription.basic.description'),
               },
               {
                 dataIndex: 'tags',
                 key: 'tags',
                 render: (_: any, record: any) => {
                   const tags = record.tags;
-                  if (!tags || !tags.length) return '未设置';
+                  if (!tags || !tags.length) return unsetText;
                   return tags.map((tag: string, index: number) => (
                     <Tag color="blue" key={index}>
                       {tag}
@@ -186,17 +191,17 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
                   ));
                 },
                 span: 2,
-                title: '标签',
+                title: t('agentInfoDescription.basic.tags'),
               },
             ]}
             dataSource={{
-              avatar: processedMeta?.avatar || '未设置',
-              description: processedMeta?.description || '未设置',
+              avatar: processedMeta?.avatar || unsetText,
+              description: processedMeta?.description || unsetText,
               tags: processedMeta?.tags?.length ? processedMeta.tags : undefined,
-              title: processedMeta?.title || processedMeta?.name || '未命名助手',
+              title: processedMeta?.title || processedMeta?.name || unnamedText,
             }}
             size="small"
-            title="助手信息"
+            title={t('agentInfoDescription.basic.title')}
           />
 
           {/* 角色设定 */}
@@ -209,19 +214,19 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
                 key: 'systemRole',
                 render: (_: any, record: any) => {
                   const text = record.systemRole;
-                  if (text === '未设置') return text;
+                  if (text === unsetText) return text;
                   return text;
                 },
-                title: '系统角色',
+                title: t('agentInfoDescription.role.systemRole'),
               },
             ]}
             dataSource={{
-              systemRole: processedSystemRole || '未设置',
+              systemRole: processedSystemRole || unsetText,
             }}
             size="small"
             title={
               <Flexbox align={'center'} gap={8} horizontal>
-                <span>角色设定</span>
+                <span>{t('agentInfoDescription.role.title')}</span>
                 <Tokens style={{ marginTop: 0 }} value={processedSystemRole || ''} />
               </Flexbox>
             }
@@ -235,17 +240,17 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
               {
                 dataIndex: 'model',
                 key: 'model',
-                title: '模型',
+                title: t('agentInfoDescription.model.model'),
               },
               {
                 dataIndex: 'provider',
                 key: 'provider',
-                title: '提供商',
+                title: t('agentInfoDescription.model.provider'),
               },
               {
                 dataIndex: 'temperature',
                 key: 'temperature',
-                title: '温度',
+                title: t('agentInfoDescription.model.temperature'),
               },
               {
                 dataIndex: 'topP',
@@ -256,18 +261,18 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
                 dataIndex: 'maxTokens',
                 key: 'maxTokens',
                 span: 2,
-                title: '最大令牌数',
+                title: t('agentInfoDescription.model.maxTokens'),
               },
             ]}
             dataSource={{
-              maxTokens: processedAgentConfig?.params?.max_tokens ?? '未设置',
-              model: processedModel || '未设置',
-              provider: processedProvider || '未设置',
-              temperature: processedAgentConfig?.params?.temperature ?? '未设置',
-              topP: processedAgentConfig?.params?.top_p ?? '未设置',
+              maxTokens: processedAgentConfig?.params?.max_tokens ?? unsetText,
+              model: processedModel || unsetText,
+              provider: processedProvider || unsetText,
+              temperature: processedAgentConfig?.params?.temperature ?? unsetText,
+              topP: processedAgentConfig?.params?.top_p ?? unsetText,
             }}
             size="small"
-            title="模型设置"
+            title={t('agentInfoDescription.model.title')}
           />
 
           {/* 聊天偏好 */}
@@ -278,32 +283,34 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
               {
                 dataIndex: 'historyCount',
                 key: 'historyCount',
-                title: '历史消息数',
+                title: t('agentInfoDescription.chat.historyCount'),
               },
               {
                 dataIndex: 'enableHistoryCount',
                 key: 'enableHistoryCount',
-                title: '启用历史计数',
+                title: t('agentInfoDescription.chat.enableHistoryCount'),
               },
               {
                 dataIndex: 'displayMode',
                 key: 'displayMode',
-                title: '显示模式',
+                title: t('agentInfoDescription.chat.displayMode'),
               },
               {
                 dataIndex: 'searchMode',
                 key: 'searchMode',
-                title: '搜索模式',
+                title: t('agentInfoDescription.chat.searchMode'),
               },
             ]}
             dataSource={{
-              displayMode: processedChatConfig?.displayMode || '未设置',
-              enableHistoryCount: processedChatConfig?.enableHistoryCount ? '是' : '否',
-              historyCount: processedChatConfig?.historyCount ?? '未设置',
-              searchMode: processedChatConfig?.searchMode || '未设置',
+              displayMode: processedChatConfig?.displayMode || unsetText,
+              enableHistoryCount: processedChatConfig?.enableHistoryCount
+                ? t('agentInfoDescription.chat.yes')
+                : t('agentInfoDescription.chat.no'),
+              historyCount: processedChatConfig?.historyCount ?? unsetText,
+              searchMode: processedChatConfig?.searchMode || unsetText,
             }}
             size="small"
-            title="聊天偏好"
+            title={t('agentInfoDescription.chat.title')}
           />
 
           <ProDescriptions
@@ -315,21 +322,23 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
                 key: 'plugins',
                 render: (_: any, record: any) => {
                   const pluginList = record.plugins;
-                  if (!pluginList?.length) return '未安装插件';
+                  if (!pluginList?.length) return pluginEmptyText;
                   return pluginList.map((plugin: string, index: number) => (
                     <Tag color="green" key={index}>
                       {plugin}
                     </Tag>
                   ));
                 },
-                title: '已安装插件',
+                title: t('agentInfoDescription.plugins.title'),
               },
             ]}
             dataSource={{
               plugins: processedPlugins?.length ? processedPlugins : [],
             }}
             size="small"
-            title={`插件设置 (${processedPlugins?.length || 0}个)`}
+            title={t('agentInfoDescription.plugins.count', {
+              count: processedPlugins?.length || 0,
+            })}
           />
         </Flexbox>
       </div>
