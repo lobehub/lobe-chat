@@ -1,4 +1,4 @@
-import { groupChatPrompts, groupSupervisorPrompts } from '@lobechat/prompts';
+import { contextSupervisorMakeDecision } from '@lobechat/prompts';
 import { ChatMessage, GroupMemberWithAgent } from '@lobechat/types';
 
 import { aiChatService } from '@/services/aiChat';
@@ -61,7 +61,7 @@ export class GroupChatSupervisor {
    * Make decision on who should speak next
    */
   async makeDecision(context: SupervisorContext): Promise<SupervisorDecisionResult> {
-    const { messages, availableAgents, userName, systemPrompt, allowDM, todoList } = context;
+    const { availableAgents } = context;
 
     // If no agents available, stop conversation
     if (availableAgents.length === 0) {
@@ -69,22 +69,7 @@ export class GroupChatSupervisor {
     }
 
     try {
-      // Create supervisor prompt with conversation context
-      const conversationHistory = groupSupervisorPrompts(messages);
-
-      const supervisorPrompt = groupChatPrompts.buildSupervisorPrompt({
-        allowDM,
-        availableAgents: availableAgents
-          .filter((agent) => agent.id)
-          .map((agent) => ({ id: agent.id!, title: agent.title })),
-        conversationHistory,
-        scene: context.scene,
-        systemPrompt,
-        todoList,
-        userName,
-      });
-
-      const response = await this.callLLMForDecision(supervisorPrompt, context);
+      const response = await this.callLLMForDecision(context);
       const result = this.parseSupervisorResponse(response, availableAgents, context);
 
       console.log('Supervisor TODO list:', result.todos);
@@ -102,123 +87,25 @@ export class GroupChatSupervisor {
    * Call LLM service to get supervisor decision
    */
   private async callLLMForDecision(
-    prompt: string,
     context: SupervisorContext,
   ): Promise<SupervisorToolCall[] | string> {
-    const supervisorConfig = {
-      model: context.model,
-      provider: context.provider,
-      temperature: 0.3,
-    };
-
-    // Build tools array
-    const tools: any[] = [
-      {
-        description: 'Trigger an agent to speak (group message).',
-        name: 'trigger_agent',
-        parameters: {
-          properties: {
-            id: {
-              description: 'The agent id to trigger.',
-              type: 'string',
-            },
-            instruction: {
-              description:
-                'The instruction or message for the agent. No longer than 10 words. Always use English.',
-              type: 'string',
-            },
-          },
-          required: ['id', 'instruction'],
-          type: 'object',
-        },
-      },
-      {
-        description:
-          'Wait for user input. Use this when the conversation history looks likes fine for now, or agents are waiting for user input.',
-        name: 'wait_for_user_input',
-        parameters: {
-          properties: {
-            reason: {
-              description: 'Optional reason for pausing the conversation.',
-              type: 'string',
-            },
-          },
-          required: [],
-          type: 'object',
-        },
-      },
-    ];
-
-    // Add DM tool if allowed
-    if (context.allowDM) {
-      tools.push({
-        description: 'Trigger an agent to DM another agent or user.',
-        name: 'trigger_agent_dm',
-        parameters: {
-          properties: {
-            id: {
-              description: 'The agent id to trigger.',
-              type: 'string',
-            },
-            instruction: {
-              description: 'The instruction or message for the agent.',
-              type: 'string',
-            },
-            target: {
-              description: 'The target agent id. Only used when need DM.',
-              type: 'string',
-            },
-          },
-          required: ['id', 'instruction', 'target'],
-          type: 'object',
-        },
-      });
-    }
-
-    // Add todo tools if in productive scene
-    if (context.scene === 'productive') {
-      tools.push(
-        {
-          description: 'Create a new todo item',
-          name: 'create_todo',
-          parameters: {
-            properties: {
-              assignee: {
-                description: 'Who will do the todo. Can be agent id or empty.',
-                type: 'string',
-              },
-              content: {
-                description: 'The todo content or description.',
-                type: 'string',
-              },
-            },
-            required: ['content', 'assignee'],
-            type: 'object',
-          },
-        },
-        {
-          description: 'Finish a todo by index',
-          name: 'finish_todo',
-          parameters: {
-            properties: {
-              index: {
-                description: 'The index of the todo to finish.',
-                type: 'number',
-              },
-            },
-            required: ['index'],
-            type: 'object',
-          },
-        },
-      );
-    }
+    const contexts = contextSupervisorMakeDecision({
+      allowDM: context.allowDM,
+      availableAgents: context.availableAgents
+        .filter((agent) => agent.id)
+        .map((agent) => ({ id: agent.id, title: agent.title })),
+      messages: context.messages,
+      scene: context.scene,
+      todoList: context.todoList,
+      userName: context.userName,
+    });
 
     try {
       const response = await aiChatService.generateJSON(
         {
-          messages: [{ content: prompt, role: 'user' }] as any,
-          tools,
-          ...supervisorConfig,
+          ...(contexts as any),
+          model: context.model,
+          provider: context.provider,
         },
         context.abortController || new AbortController(),
       );

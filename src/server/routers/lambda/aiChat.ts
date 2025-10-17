@@ -61,7 +61,7 @@ export const aiChatRouter = router({
       model: input.model,
       schema: input.schema,
       systemRole: input.systemRole,
-      tools: input.tools,
+      tools: input.tools?.map((item) => item.function),
     });
 
     log('generateObject completed, result: %O', result);
