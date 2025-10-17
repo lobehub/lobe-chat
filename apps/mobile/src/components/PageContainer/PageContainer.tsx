@@ -28,6 +28,8 @@ const PageContainer = memo<PageContainerProps>(
     scrollComponent,
     loading,
     backgroundColor,
+    onTitlePress,
+    titleIcon,
   }) => {
     const { styles, theme } = useStyles();
     const token = useTheme();
@@ -55,13 +57,12 @@ const PageContainer = memo<PageContainerProps>(
     const renderHeaderTitle = (opacity?: Animated.AnimatedInterpolation<number>) => {
       const titleContent =
         typeof title === 'string' ? (
-          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.titleText}>
+          <Text align={'center'} ellipsis fontSize={16} weight={500}>
             {title}
           </Text>
         ) : (
           title
         );
-
       if (opacity) {
         return <Animated.View style={{ opacity }}>{titleContent}</Animated.View>;
       }
@@ -79,7 +80,14 @@ const PageContainer = memo<PageContainerProps>(
     };
 
     const leftContent = (
-      <Flexbox align={'center'} gap={8} horizontal justify={'center'} style={styles.left}>
+      <Flexbox
+        align={'center'}
+        gap={8}
+        horizontal
+        justify={'flex-start'}
+        style={styles.left}
+        width={'25%'}
+      >
         {left !== undefined ? (
           left
         ) : showBack ? (
@@ -93,24 +101,41 @@ const PageContainer = memo<PageContainerProps>(
     );
 
     const extraContent = (
-      <Flexbox align={'center'} gap={8} horizontal justify={'center'} style={styles.extra}>
+      <Flexbox
+        align={'center'}
+        gap={8}
+        horizontal
+        justify={'flex-end'}
+        style={styles.extra}
+        width={'25%'}
+      >
         {extra}
         {largeTitleEnabled && loadingContent}
       </Flexbox>
     );
 
     const titleContent = (
-      <Flexbox align={'center'} gap={8} horizontal justify={'center'} style={styles.title}>
+      <Flexbox
+        align={'center'}
+        flex={1}
+        gap={4}
+        height={'100%'}
+        horizontal
+        justify={'center'}
+        onPress={loading ? undefined : onTitlePress}
+        padding={4}
+        style={styles.title}
+      >
         {largeTitleEnabled ? (
           renderHeaderTitle(headerTitleOpacity)
         ) : typeof title === 'string' ? (
-          <Text align={'center'} ellipsis style={styles.titleText} weight={500}>
+          <Text align={'center'} ellipsis fontSize={16} weight={500}>
             {title}
           </Text>
         ) : (
           title
         )}
-
+        {!loading && titleIcon && <Icon icon={titleIcon} size={18} />}
         {!largeTitleEnabled && loadingContent}
       </Flexbox>
     );

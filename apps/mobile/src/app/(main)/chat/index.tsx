@@ -1,6 +1,6 @@
 import { ActionIcon, Flexbox, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
+import { AlignJustify, ChevronRightIcon, MessagesSquare } from 'lucide-react-native';
 import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -16,8 +16,8 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 
 export default function ChatWithDrawer() {
   const theme = useTheme();
-
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
+  const toggleTopicDrawer = useGlobalStore((s) => s.toggleTopicDrawer);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
   const { t } = useTranslation(['chat']);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
@@ -30,15 +30,11 @@ export default function ChatWithDrawer() {
     return (
       <PageContainer
         backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
-        extra={
-          <ActionIcon
-            clickable={false}
-            icon={MoreHorizontal}
-            onPress={() => router.push('/chat/setting')}
-          />
-        }
+        extra={<ActionIcon clickable={false} icon={MessagesSquare} onPress={toggleTopicDrawer} />}
         left={<ActionIcon clickable={false} icon={AlignJustify} onPress={toggleDrawer} />}
+        onTitlePress={isInbox ? undefined : () => router.push('/chat/setting')}
         title={displayTitle}
+        titleIcon={isInbox ? undefined : ChevronRightIcon}
       >
         <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
           <ChatList />
