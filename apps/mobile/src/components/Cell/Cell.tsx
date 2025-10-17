@@ -44,8 +44,20 @@ const Cell = memo<CellProps>(
       );
     const rightNode = (
       <Flexbox align={'center'} gap={8} horizontal>
-        {typeof extra === 'string' ? <Text type={'secondary'}>{extra}</Text> : extra}
-        {showArrow && <Icon color={theme.colorTextDescription} icon={arrowIcon || ChevronRight} />}
+        {typeof extra === 'string' ? (
+          <Text ellipsis style={{ maxWidth: 100 }} type={'secondary'}>
+            {extra}
+          </Text>
+        ) : (
+          extra
+        )}
+        {showArrow && (
+          <Icon
+            color={theme.colorTextDescription}
+            icon={arrowIcon || ChevronRight}
+            size={'small'}
+          />
+        )}
       </Flexbox>
     );
     return (
@@ -76,7 +88,11 @@ const Cell = memo<CellProps>(
             titleNode
           )}
         </Flexbox>
-        {loading ? <Icon color={theme.colorTextDescription} icon={Loader2Icon} spin /> : rightNode}
+        {loading ? (
+          <Icon color={theme.colorTextDescription} icon={Loader2Icon} size={'small'} spin />
+        ) : (
+          rightNode
+        )}
       </Block>
     );
   },

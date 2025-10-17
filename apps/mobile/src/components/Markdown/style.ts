@@ -93,6 +93,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     listMarkerColor: theme.colorInfo,
     paragraph: {
       color: theme.colorText,
+      fontSize: options.fontSize,
       letterSpacing: 0.02 * options.fontSize,
       lineHeight: options.lineHeight * options.fontSize,
       marginVertical: options.fontSize * options.marginMultiple * 0.16,

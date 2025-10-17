@@ -11,6 +11,8 @@ import {
 } from 'react';
 import { LayoutChangeEvent, ScrollView, TextStyle, View } from 'react-native';
 
+import { Flexbox } from '@/components';
+
 import Block from '../../Block';
 import Divider from '../../Divider';
 import Text from '../../Text';
@@ -93,24 +95,16 @@ export const TableRenderer = ({ node }: RendererArgs<Table>): ReactNode => {
       columnCount={node.children[0]?.children.length ?? 0}
       rowCount={node.children.length ?? 0}
     >
-      <Block
-        style={[
-          styles.table,
-          {
-            overflow: 'hidden',
-          },
-        ]}
-        variant={'outlined'}
-      >
-        <ScrollView horizontal>
-          <View style={{ minWidth: '100%' }}>
+      <Block horizontal style={[styles.table]} variant={'outlined'}>
+        <ScrollView horizontal style={{ flex: 1 }}>
+          <Flexbox align={'flex-start'} justify={'flex-start'} style={{ minWidth: '100%' }}>
             {node.children.map((child, idx) => (
               <Fragment key={idx}>
                 {idx !== 0 && <Divider />}
                 <TableRowRenderer index={idx} node={child} parent={node} />
               </Fragment>
             ))}
-          </View>
+          </Flexbox>
         </ScrollView>
       </Block>
     </TableContextProvider>

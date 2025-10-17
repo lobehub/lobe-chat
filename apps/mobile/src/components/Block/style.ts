@@ -13,6 +13,7 @@ export const useStyles = createStyles(({ token, stylish }) => ({
   outlinedHover: stylish.variantOutlinedHover,
   root: {
     borderRadius: token.borderRadiusLG * 1.5,
+    overflow: 'hidden',
     position: 'relative' as const,
   },
   shadow: stylish.shadow,
