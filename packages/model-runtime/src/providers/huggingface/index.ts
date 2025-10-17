@@ -96,10 +96,9 @@ export const params = {
   },
   customClient: {
     createChatCompletionStream: (client: InferenceClient, payload, instance) => {
-      const { max_tokens = 4096 } = payload;
       const hfRes = client.chatCompletionStream({
         endpointUrl: instance.baseURL ? urlJoin(instance.baseURL, payload.model) : instance.baseURL,
-        max_tokens: max_tokens,
+        max_tokens: payload.max_tokens,
         messages: convertOpenAIMessagesToHFFormat(payload.messages),
         model: payload.model,
         stream: true,
