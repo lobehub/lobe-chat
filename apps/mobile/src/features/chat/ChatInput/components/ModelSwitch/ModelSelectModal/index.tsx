@@ -1,19 +1,16 @@
 import { EnabledProviderWithModels } from '@lobechat/types';
+import { BottomSheet, Center, Flexbox, Icon, Text, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { ArrowRight, BoltIcon, X } from 'lucide-react-native';
+import { ArrowRight } from 'lucide-react-native';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useTheme } from '@/components/styles';
 import { useAiInfraInit } from '@/hooks/useAiInfraInit';
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 
 import ModelItemRender from '../ModelItemRender';
 import ProviderItemRender from '../ProviderItemRender';
-import { useStyles } from './styles';
 
 // 生成菜单键，与Web端保持一致
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;
@@ -34,7 +31,6 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
   const { isLoading: infraLoading, hasError: infraError } = useAiInfraInit();
   const token = useTheme();
   const router = useRouter();
-  const { styles } = useStyles();
 
   // 当前选中的menuKey
   const activeKey = useMemo(() => {
@@ -63,24 +59,23 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
       // 如果没有模型，返回空状态提示
       if (provider.children.length === 0) {
         return [
-          <TouchableOpacity
-            activeOpacity={0.7}
+          <Center
+            gap={6}
+            horizontal
             key={`${provider.id}-empty`}
             onPress={() => {
               onClose();
               router.push(`/setting/providers/${provider.id}`);
             }}
-            style={styles.emptyModelItem}
+            padding={16}
           >
-            <View style={styles.emptyContent}>
-              <Text style={styles.emptyText}>
-                {t('ModelSwitchPanel.emptyModel', {
-                  ns: 'components',
-                })}
-              </Text>
-              <ArrowRight color={token.colorTextTertiary} size={16} />
-            </View>
-          </TouchableOpacity>,
+            <Text type={'secondary'}>
+              {t('ModelSwitchPanel.emptyModel', {
+                ns: 'components',
+              })}
+            </Text>
+            <Icon color={token.colorTextTertiary} icon={ArrowRight} size={16} />
+          </Center>,
         ];
       }
 
@@ -89,55 +84,42 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
         const isSelected = activeKey === menuKey(provider.id, model.id);
 
         return (
-          <TouchableOpacity
-            activeOpacity={0.7}
+          <ModelItemRender
+            active={isSelected}
             key={menuKey(provider.id, model.id)}
             onPress={() => handleModelSelect(model.id, provider.id)}
-            style={[
-              styles.modelItem,
-              isSelected ? styles.modelItemSelected : styles.modelItemNormal,
-            ]}
-          >
-            <ModelItemRender {...model} showInfoTag={true} type="chat" />
-
-            {/* 选中状态指示器 */}
-            {isSelected && <View style={styles.selectedIndicator} />}
-          </TouchableOpacity>
+            {...model}
+            showInfoTag={true}
+            type="chat"
+          />
         );
       });
     },
-    [activeKey, handleModelSelect, styles, token.colorTextTertiary],
+    [activeKey, handleModelSelect, token.colorTextTertiary, token.marginXS, onClose, router, t],
   );
 
   // 渲染提供商分组（对齐Web端逻辑）
   const renderProviderGroup = useCallback(
     (provider: EnabledProviderWithModels) => {
       return (
-        <View key={provider.id} style={styles.providerGroup}>
+        <Flexbox key={provider.id}>
           {/* 提供商标题 */}
-          <View style={styles.providerHeader}>
-            <ProviderItemRender
-              logo={provider.logo}
-              name={provider.name}
-              provider={provider.id}
-              source={provider.source}
-            />
-            <BoltIcon
-              color={token.colorText}
-              onPress={() => {
-                onClose();
-                router.push(`/setting/providers/${provider.id}`);
-              }}
-              size={20}
-            />
-          </View>
-
+          <ProviderItemRender
+            logo={provider.logo}
+            name={provider.name}
+            onPressSetting={() => {
+              onClose();
+              router.push(`/setting/providers/${provider.id}`);
+            }}
+            provider={provider.id}
+            source={provider.source}
+          />
           {/* 模型列表 */}
-          <View style={styles.modelList}>{getModelItems(provider)}</View>
-        </View>
+          {getModelItems(provider)}
+        </Flexbox>
       );
     },
-    [getModelItems, styles],
+    [getModelItems, token.colorText, onClose, router],
   );
 
   // 计算要显示的内容（对齐Web端逻辑）
@@ -145,49 +127,48 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
     // 加载中状态
     if (infraLoading) {
       return (
-        <View style={styles.statusContainer}>
-          <Text style={styles.loadingText}>{t('status.loading', { ns: 'common' })}</Text>
-        </View>
+        <Center padding={16}>
+          <Text type={'secondary'}>{t('status.loading', { ns: 'common' })}</Text>
+        </Center>
       );
     }
 
     // 错误状态
     if (infraError) {
       return (
-        <View style={styles.statusContainer}>
-          <Text style={styles.errorText}>{t('status.error', { ns: 'common' })}</Text>
-          <Text style={styles.subText}>
+        <Center gap={6} padding={16}>
+          <Text fontSize={16} weight={500}>
+            {t('status.error', { ns: 'common' })}
+          </Text>
+          <Text type={'secondary'}>
             {t('status.networkRetryTip', {
               ns: 'common',
             })}
           </Text>
-        </View>
+        </Center>
       );
     }
 
     // 空提供商状态（对齐Web端emptyProvider逻辑）
     if (enabledModels.length === 0) {
       return (
-        <View style={styles.statusContainer}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => {
-              router.push('/setting/providers');
-              onClose();
-              console.log('Navigate to provider settings');
-            }}
-            style={styles.emptyProviderItem}
-          >
-            <View style={styles.emptyContent}>
-              <Text style={styles.emptyText}>
-                {t('ModelSwitchPanel.emptyProvider', {
-                  ns: 'components',
-                })}
-              </Text>
-              <ArrowRight color={token.colorTextTertiary} size={16} />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <Center
+          gap={6}
+          horizontal
+          onPress={() => {
+            router.push('/setting/providers');
+            onClose();
+            console.log('Navigate to provider settings');
+          }}
+          padding={16}
+        >
+          <Text type={'secondary'}>
+            {t('ModelSwitchPanel.emptyProvider', {
+              ns: 'components',
+            })}
+          </Text>
+          <Icon color={token.colorTextTertiary} icon={ArrowRight} size={16} />
+        </Center>
       );
     }
 
@@ -198,40 +179,24 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
     infraError,
     enabledModels,
     renderProviderGroup,
-    styles,
     token.colorTextTertiary,
+    token.marginXS,
+    t,
+    router,
+    onClose,
   ]);
 
   return (
-    <Modal
-      animationType="slide"
-      onRequestClose={onClose}
-      presentationStyle="pageSheet"
-      visible={visible}
+    <BottomSheet
+      onClose={onClose}
+      open={visible}
+      snapPoints={['70%', '90%']}
+      title={t('ModelSwitchPanel.chooseModel', {
+        ns: 'components',
+      })}
     >
-      <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
-        {/* 标题栏 */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>
-            {t('ModelSwitchPanel.chooseModel', {
-              ns: 'components',
-            })}
-          </Text>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <X color={token.colorTextSecondary} size={20} />
-          </TouchableOpacity>
-        </View>
-
-        {/* 模型列表 */}
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          style={styles.scrollContainer}
-        >
-          {renderContent}
-        </ScrollView>
-      </SafeAreaView>
-    </Modal>
+      {renderContent}
+    </BottomSheet>
   );
 });
 
