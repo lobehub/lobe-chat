@@ -65,48 +65,50 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-font',
       {
-        android: [
-          {
-            fontDefinitions: [
-              {
-                path: './assets/fonts/Hack-Regular.ttf',
-                weight: 400,
-              },
-              {
-                path: './assets/fonts/Hack-Bold.ttf',
-                weight: 700,
-              },
-              {
-                path: './assets/fonts/Hack-Italic.ttf',
-                style: 'italic',
-                weight: 400,
-              },
-              {
-                path: './assets/fonts/Hack-BoldItalic.ttf',
-                style: 'italic',
-                weight: 700,
-              },
-            ],
-            fontFamily: 'Hack',
-          },
-          {
-            fontDefinitions: [
-              {
-                path: './assets/fonts/HarmonyOS_Sans_SC_Regular.ttf',
-                weight: 400,
-              },
-              {
-                path: './assets/fonts/HarmonyOS_Sans_SC_Medium.ttf',
-                weight: 500,
-              },
-              {
-                path: './assets/fonts/HarmonyOS_Sans_SC_Bold.ttf',
-                weight: 700,
-              },
-            ],
-            fontFamily: 'HarmonyOS-Sans-SC',
-          },
-        ],
+        android: {
+          fonts: [
+            {
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/Hack-Regular.ttf',
+                  weight: 400,
+                },
+                {
+                  path: './assets/fonts/Hack-Bold.ttf',
+                  weight: 700,
+                },
+                {
+                  path: './assets/fonts/Hack-Italic.ttf',
+                  style: 'italic',
+                  weight: 400,
+                },
+                {
+                  path: './assets/fonts/Hack-BoldItalic.ttf',
+                  style: 'italic',
+                  weight: 700,
+                },
+              ],
+              fontFamily: 'Hack',
+            },
+            {
+              fontDefinitions: [
+                {
+                  path: './assets/fonts/HarmonyOS_Sans_SC_Regular.ttf',
+                  weight: 400,
+                },
+                {
+                  path: './assets/fonts/HarmonyOS_Sans_SC_Medium.ttf',
+                  weight: 500,
+                },
+                {
+                  path: './assets/fonts/HarmonyOS_Sans_SC_Bold.ttf',
+                  weight: 700,
+                },
+              ],
+              fontFamily: 'HarmonyOS-Sans-SC',
+            },
+          ],
+        },
         fonts: [
           './assets/fonts/Hack-Regular.ttf',
           './assets/fonts/Hack-Bold.ttf',
