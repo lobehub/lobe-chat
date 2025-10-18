@@ -6,7 +6,7 @@ interface GenerateObjectMessage {
   role: 'user' | 'system' | 'assistant';
 }
 
-interface GenerateObjectSchema {
+export interface GenerateObjectSchema {
   description?: string;
   name: string;
   schema: {

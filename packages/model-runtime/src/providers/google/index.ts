@@ -335,11 +335,15 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     // Convert OpenAI messages to Google format
     const contents = await this.buildGoogleMessages(payload.messages);
 
-    return createGoogleGenerateObject(
-      this.client,
-      { contents, model: payload.model, schema: payload.schema },
-      options,
-    );
+    if (payload.schema) {
+      return createGoogleGenerateObject(
+        this.client,
+        { contents, model: payload.model, schema: payload.schema },
+        options,
+      );
+    }
+
+    return undefined;
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {

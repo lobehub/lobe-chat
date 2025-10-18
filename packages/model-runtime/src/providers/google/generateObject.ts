@@ -1,9 +1,9 @@
 import { GenerateContentConfig, GoogleGenAI, Type as SchemaType } from '@google/genai';
 import Debug from 'debug';
 
-import { GenerateObjectOptions } from '../../types';
+import { GenerateObjectOptions, GenerateObjectSchema } from '../../types';
 
-const debug = Debug('mode-runtime:google:generateObject');
+const debug = Debug('lobe-mode-runtime:google:generateObject');
 
 enum HarmCategory {
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
@@ -54,7 +54,7 @@ const convertType = (type: string): SchemaType => {
 /**
  * Convert OpenAI JSON schema to Google Gemini schema format
  */
-export const convertOpenAISchemaToGoogleSchema = (openAISchema: any): any => {
+export const convertOpenAISchemaToGoogleSchema = (openAISchema: GenerateObjectSchema): any => {
   const convertSchema = (schema: any): any => {
     if (!schema) return schema;
 
@@ -92,7 +92,7 @@ export const convertOpenAISchemaToGoogleSchema = (openAISchema: any): any => {
     return converted;
   };
 
-  return convertSchema(openAISchema);
+  return convertSchema(openAISchema.schema);
 };
 
 /**
@@ -104,7 +104,7 @@ export const createGoogleGenerateObject = async (
   payload: {
     contents: any[];
     model: string;
-    schema: any;
+    schema: GenerateObjectSchema;
   },
   options?: GenerateObjectOptions,
 ) => {
