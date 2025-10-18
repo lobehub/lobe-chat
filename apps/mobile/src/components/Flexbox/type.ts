@@ -19,6 +19,7 @@ export interface FlexboxProps extends PressableProps {
   height?: DimensionValue | undefined;
   horizontal?: boolean;
   justify?: JustifyContent;
+  onLongPress?: PressableProps['onLongPress'];
   onPress?: PressableProps['onPress'];
   padding?: DimensionValue | undefined;
   paddingBlock?: DimensionValue | undefined;

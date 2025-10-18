@@ -17,6 +17,7 @@ const Block = memo<BlockProps>(
     onPress,
     active,
     borderRadius,
+    onLongPress,
     ...rest
   }) => {
     const { styles, theme } = useStyles();
@@ -113,6 +114,7 @@ const Block = memo<BlockProps>(
               }
             : undefined
         }
+        onLongPress={onLongPress}
         onPress={onPress}
         style={({ hovered, pressed }) => [
           variants({ active, clickable, hovered, pressed, shadow, variant }),
