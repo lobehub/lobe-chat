@@ -134,7 +134,15 @@ const ActionIcon = memo<ActionIconProps>(
       >
         {icon && (
           <Icon
-            color={danger ? theme.colorErrorText : disabled ? theme.colorTextDisabled : color}
+            color={
+              danger
+                ? theme.colorErrorText
+                : disabled
+                  ? theme.colorTextDisabled
+                  : color
+                    ? color
+                    : theme.colorTextSecondary
+            }
             fill={fill}
             fillOpacity={fillOpacity}
             fillRule={fillRule}

@@ -6,6 +6,7 @@ import type { TextProps } from '@/components/Text';
 
 export interface CellProps extends Omit<BlockProps, 'children'> {
   arrowIcon?: IconProps['icon'];
+  danger?: boolean;
   description?: ReactNode | string;
   descriptionProps?: Omit<TextProps, 'children'>;
   extra?: ReactNode | string;
