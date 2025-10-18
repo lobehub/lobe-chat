@@ -287,26 +287,32 @@ describe('Anthropic generateObject', () => {
         messages: [{ content: 'What is the weather and time in New York?', role: 'user' as const }],
         tools: [
           {
-            name: 'get_weather',
-            description: 'Get weather information',
-            parameters: {
-              type: 'object' as const,
-              properties: {
-                city: { type: 'string' },
-                unit: { type: 'string' },
+            type: 'function' as const,
+            function: {
+              name: 'get_weather',
+              description: 'Get weather information',
+              parameters: {
+                type: 'object' as const,
+                properties: {
+                  city: { type: 'string' },
+                  unit: { type: 'string' },
+                },
+                required: ['city'],
               },
-              required: ['city'],
             },
           },
           {
-            name: 'get_time',
-            description: 'Get current time',
-            parameters: {
-              type: 'object' as const,
-              properties: {
-                timezone: { type: 'string' },
+            type: 'function' as const,
+            function: {
+              name: 'get_time',
+              description: 'Get current time',
+              parameters: {
+                type: 'object' as const,
+                properties: {
+                  timezone: { type: 'string' },
+                },
+                required: ['timezone'],
               },
-              required: ['timezone'],
             },
           },
         ],
@@ -377,16 +383,19 @@ describe('Anthropic generateObject', () => {
         messages: [{ content: 'Add 5 and 3', role: 'user' as const }],
         tools: [
           {
-            name: 'calculate',
-            description: 'Perform mathematical calculation',
-            parameters: {
-              type: 'object' as const,
-              properties: {
-                operation: { type: 'string' },
-                a: { type: 'number' },
-                b: { type: 'number' },
+            type: 'function' as const,
+            function: {
+              name: 'calculate',
+              description: 'Perform mathematical calculation',
+              parameters: {
+                type: 'object' as const,
+                properties: {
+                  operation: { type: 'string' },
+                  a: { type: 'number' },
+                  b: { type: 'number' },
+                },
+                required: ['operation', 'a', 'b'],
               },
-              required: ['operation', 'a', 'b'],
             },
           },
         ],

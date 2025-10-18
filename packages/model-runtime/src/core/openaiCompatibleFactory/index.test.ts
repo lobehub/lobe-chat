@@ -2021,10 +2021,7 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
           expect.objectContaining({
-            messages: [
-              { content: 'Add 5 and 3', role: 'user' },
-              { content: 'You are a helpful calculator', role: 'system' },
-            ],
+            messages: [{ content: 'Add 5 and 3', role: 'user' }],
           }),
           expect.any(Object),
         );
