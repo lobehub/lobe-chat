@@ -1,3 +1,4 @@
+export * from './autoSuggestion';
 export * from './chatMessages';
 export * from './files';
 export * from './groupChat';

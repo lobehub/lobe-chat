@@ -15,6 +15,7 @@ export const DEFAULT_QUERY_REWRITE_SYSTEM_AGENT_ITEM: QueryRewriteSystemAgent = 
 
 export const DEFAULT_SYSTEM_AGENT_CONFIG: UserSystemAgentConfig = {
   agentMeta: DEFAULT_SYSTEM_AGENT_ITEM,
+  autoSuggestion: { ...DEFAULT_SYSTEM_AGENT_ITEM, model: 'gpt-4.1-nano' },
   generationTopic: DEFAULT_SYSTEM_AGENT_ITEM,
   groupChatSupervisor: DEFAULT_SYSTEM_AGENT_ITEM,
   historyCompress: DEFAULT_SYSTEM_AGENT_ITEM,

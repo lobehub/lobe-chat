@@ -2,6 +2,7 @@ import {
   LobeAgentChatConfig,
   LobeAgentConfig,
   LobeAgentTTSConfig,
+  LobeAutoSuggestion,
   UserDefaultAgent,
 } from '@lobechat/types';
 
@@ -22,8 +23,14 @@ export const DEFAULT_AGENT_SEARCH_FC_MODEL = {
   provider: DEFAULT_PROVIDER,
 };
 
+export const DEFAULT_AUTO_SUGGESTION: LobeAutoSuggestion = {
+  enabled: false,
+  maxSuggestions: 3,
+};
+
 export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
   autoCreateTopicThreshold: 2,
+  autoSuggestion: DEFAULT_AUTO_SUGGESTION,
   displayMode: 'chat',
   enableAutoCreateTopic: true,
   enableCompressHistory: true,

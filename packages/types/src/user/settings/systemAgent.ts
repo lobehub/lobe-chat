@@ -11,6 +11,7 @@ export interface QueryRewriteSystemAgent extends Omit<SystemAgentItem, 'enabled'
 
 export interface UserSystemAgentConfig {
   agentMeta: SystemAgentItem;
+  autoSuggestion: SystemAgentItem;
   generationTopic: SystemAgentItem;
   groupChatSupervisor: SystemAgentItem;
   historyCompress: SystemAgentItem;

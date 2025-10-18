@@ -15,9 +15,11 @@ const queryRewrite = (s: UserStore) => currentSystemAgent(s).queryRewrite;
 const historyCompress = (s: UserStore) => currentSystemAgent(s).historyCompress;
 const generationTopic = (s: UserStore) => currentSystemAgent(s).generationTopic;
 const groupChatSupervisor = (s: UserStore) => currentSystemAgent(s).groupChatSupervisor;
+const autoSuggestion = (s: UserStore) => currentSystemAgent(s).autoSuggestion;
 
 export const systemAgentSelectors = {
   agentMeta,
+  autoSuggestion,
   generationTopic,
   groupChatSupervisor,
   historyCompress,
