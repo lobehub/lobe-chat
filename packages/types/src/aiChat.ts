@@ -75,7 +75,6 @@ export const StructureOutputSchema = z.object({
   model: z.string(),
   provider: z.string(),
   schema: StructureSchema.optional(),
-  systemRole: z.string().optional(),
   tools: z
     .array(z.object({ function: LobeUniformToolSchema, type: z.literal('function') }))
     .optional(),
