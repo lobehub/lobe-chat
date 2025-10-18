@@ -2,7 +2,7 @@ export { default as ChatGroupMeta } from './ChatGroupMeta';
 export { default as ChatGroupSettings } from './ChatGroupSettings';
 export { default as GroupCategory } from './GroupCategory';
 export { GroupChatSettingsProvider } from './GroupChatSettingsProvider';
-export { default as GroupMembers } from './GroupMembers';
+export { default as GroupMembersConfig } from './GroupMembers';
 export { default as GroupSettings } from './GroupSettings';
 export { default as GroupSettingsContent } from './GroupSettingsContent';
 
