@@ -394,7 +394,8 @@ export const generateAIChat: StateCreator<
     )(aiInfraStoreState);
     const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(agentStoreState);
     const useModelSearch =
-      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) || isModelBuiltinSearchInternal;
+      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) ||
+      isModelBuiltinSearchInternal;
     const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
 
     if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
@@ -515,7 +516,14 @@ export const generateAIChat: StateCreator<
       }
     }
 
-    // 6. summary history if context messages is larger than historyCount
+    // 6. Generate auto-suggestions after message completion
+    get()
+      .generateSuggestions(assistantId)
+      .catch((error) => {
+        console.error('Error generating auto-suggestions:', error);
+      });
+
+    // 7. summary history if context messages is larger than historyCount
     const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
 
     if (
@@ -647,14 +655,6 @@ export const generateAIChat: StateCreator<
           imageList: finalImages.length > 0 ? finalImages : undefined,
           metadata: speed ? { ...usage, ...speed } : usage,
         });
-
-        // Generate auto-suggestions after message completion
-        try {
-          await get().generateSuggestions(messageId);
-        } catch (error) {
-          console.error('Error generating auto-suggestions:', error);
-          // Don't let suggestion errors break the main flow
-        }
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {

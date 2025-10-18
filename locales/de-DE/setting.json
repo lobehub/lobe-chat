@@ -2,7 +2,27 @@
   "about": {
     "title": "Über"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "Anleitung für die KI, welche Art von Fragen generiert werden sollen",
+        "placeholder": "Zum Beispiel: Fokus auf technische Implementierungsdetails...",
+        "title": "Benutzerdefinierte Eingabeaufforderung"
+      },
+      "enabled": {
+        "desc": "Automatische Generierung von Folgefragen nach der Antwort des Assistenten",
+        "title": "Automatische Vorschläge aktivieren"
+      },
+      "maxSuggestions": {
+        "desc": "Anzahl der angezeigten Vorschläge (1–3)",
+        "title": "Anzahl der Vorschläge"
+      },
+      "submit": "Einstellungen aktualisieren",
+      "title": "Automatische Vorschläge"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "Automatische Vorschläge",
     "chat": "Chat-Präferenz",
     "meta": "Assistenteninformation",
     "modal": "Modell-Einstellungen",
@@ -615,6 +635,11 @@
       "label": "Assistentenmetadaten-Generierungsmodell",
       "modelDesc": "Das Modell, das zur Generierung von Assistentennamen, -beschreibungen, -avatars und -tags verwendet wird",
       "title": "Automatische Generierung von Assistenteninformationen"
+    },
+    "autoSuggestion": {
+      "label": "Intelligentes Vorschlagsmodell",
+      "modelDesc": "Modell zur Generierung intelligenter Nachrichten-Vorschläge festlegen",
+      "title": "Intelligente Nachrichten-Vorschläge"
     },
     "customPrompt": {
       "addPrompt": "Benutzerdefinierte Eingabe hinzufügen",

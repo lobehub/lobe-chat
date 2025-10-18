@@ -2,7 +2,27 @@
   "about": {
     "title": "について"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "AI にどのような質問を生成させるかを指示します",
+        "placeholder": "例：技術的な実装の詳細に重点を置く...",
+        "title": "カスタムプロンプト"
+      },
+      "enabled": {
+        "desc": "アシスタントの返信後に自動で次の質問候補を生成します",
+        "title": "自動提案を有効にする"
+      },
+      "maxSuggestions": {
+        "desc": "表示する提案の数（1～3）",
+        "title": "提案数"
+      },
+      "submit": "設定を更新",
+      "title": "自動提案"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "自動提案",
     "chat": "チャット設定",
     "meta": "メタ情報",
     "modal": "モーダル設定",
@@ -615,6 +635,11 @@
       "label": "アシスタントメタデータ生成モデル",
       "modelDesc": "アシスタントの名前、説明、アバター、ラベルを生成するために指定されたモデル",
       "title": "アシスタント情報の自動生成"
+    },
+    "autoSuggestion": {
+      "label": "インテリジェント提案モデル",
+      "modelDesc": "メッセージのインテリジェント提案を生成するためのモデルを指定します",
+      "title": "メッセージインテリジェント提案"
     },
     "customPrompt": {
       "addPrompt": "カスタムプロンプトを追加",

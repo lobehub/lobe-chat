@@ -14,6 +14,10 @@
     "thought": "사고 과정",
     "unknownTitle": "제목 없음"
   },
+  "autoSuggestions": {
+    "generating": "추천 생성 중...",
+    "title": "추천 질문"
+  },
   "availableAgents": "사용 가능한 도우미",
   "backToBottom": "하단으로 이동",
   "chatList": {
@@ -322,6 +326,9 @@
     "action": "음성 입력",
     "loading": "인식 중...",
     "prettifying": "정제 중..."
+  },
+  "suggestions": {
+    "title": "다음 질문을 시도해 보세요:"
   },
   "supervisor": {
     "todoList": {

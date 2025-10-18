@@ -93,7 +93,14 @@ export interface ModelSpeed {
   latency?: number;
 }
 
-export interface MessageMetadata extends ModelUsage, ModelSpeed {}
+export interface AutoSuggestionsUserActions {
+  choice: number;
+  suggestions: string[];
+}
+
+export interface MessageMetadata extends ModelUsage, ModelSpeed {
+  autoSuggestions?: AutoSuggestionsUserActions;
+}
 
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | 'supervisor';
 

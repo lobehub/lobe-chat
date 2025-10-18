@@ -5,24 +5,24 @@ export default {
   agent: {
     autoSuggestion: {
       customPrompt: {
-        desc: 'Custom prompt to guide suggestion generation',
-        placeholder: 'Enter custom instructions for generating suggestions...',
-        title: 'Custom Prompt',
+        desc: '指导 AI 生成什么类型的问题',
+        placeholder: '例如：侧重于技术实现细节...',
+        title: '自定义提示词',
       },
       enabled: {
-        desc: 'Generate suggested follow-up questions after assistant responses',
-        title: 'Enable Auto-Suggestions',
+        desc: '在助手回复后自动生成后续问题建议',
+        title: '启用自动建议',
       },
       maxSuggestions: {
-        desc: 'Number of suggestions to display (1-5)',
-        title: 'Max Suggestions',
+        desc: '显示建议的数量（1-3）',
+        title: '建议数量',
       },
-      submit: 'Update Auto-Suggestion Settings',
-      title: 'Auto-Suggestions',
+      submit: '更新设置',
+      title: '自动建议',
     },
   },
   agentTab: {
-    autoSuggestion: 'Auto-Suggestions',
+    autoSuggestion: '自动建议',
     chat: '聊天偏好',
     meta: '助手信息',
     modal: '模型设置',
@@ -639,6 +639,11 @@ export default {
       label: '助理元数据生成模型',
       modelDesc: '指定用于生成助理名称、描述、头像、标签的模型',
       title: '自动生成助理信息',
+    },
+    autoSuggestion: {
+      label: '智能建议模型',
+      modelDesc: '指定用于生成消息智能建议的模型',
+      title: '消息智能建议',
     },
     customPrompt: {
       addPrompt: '添加自定义提示',

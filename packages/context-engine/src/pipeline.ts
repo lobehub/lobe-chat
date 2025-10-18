@@ -71,7 +71,7 @@ export class ContextEngine {
    * Execute pipeline processing
    */
   async process(input: {
-    initialState: AgentState;
+    initialState?: AgentState;
     maxTokens: number;
     messages?: Array<any>;
     metadata?: Record<string, any>;
@@ -82,7 +82,7 @@ export class ContextEngine {
 
     // Create initial pipeline context
     let context: PipelineContext = {
-      initialState: input.initialState,
+      initialState: input.initialState!,
       isAborted: false,
       messages: Array.isArray(input.messages) ? [...input.messages] : [],
       metadata: {

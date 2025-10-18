@@ -2,7 +2,27 @@
   "about": {
     "title": "Informazioni"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "Guida l'IA nel generare il tipo di domande desiderato",
+        "placeholder": "Ad esempio: concentrarsi sui dettagli tecnici dell'implementazione...",
+        "title": "Prompt personalizzato"
+      },
+      "enabled": {
+        "desc": "Genera automaticamente suggerimenti per domande successive dopo la risposta dell'assistente",
+        "title": "Abilita suggerimenti automatici"
+      },
+      "maxSuggestions": {
+        "desc": "Numero di suggerimenti da mostrare (1-3)",
+        "title": "Numero di suggerimenti"
+      },
+      "submit": "Aggiorna impostazioni",
+      "title": "Suggerimenti automatici"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "Suggerimenti automatici",
     "chat": "Preferenze di chat",
     "meta": "Informazioni assistente",
     "modal": "Impostazioni modello",
@@ -615,6 +635,11 @@
       "label": "Modello di generazione metadati assistente",
       "modelDesc": "Modello specificato per generare nome, descrizione, avatar e etichetta dell'assistente",
       "title": "Genera automaticamente informazioni sull'assistente"
+    },
+    "autoSuggestion": {
+      "label": "Modello di suggerimenti intelligenti",
+      "modelDesc": "Specifica il modello utilizzato per generare suggerimenti intelligenti nei messaggi",
+      "title": "Suggerimenti intelligenti per i messaggi"
     },
     "customPrompt": {
       "addPrompt": "Aggiungi suggerimento personalizzato",

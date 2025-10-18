@@ -14,6 +14,10 @@
     "thought": "Denken proces",
     "unknownTitle": "Onbenoemd werk"
   },
+  "autoSuggestions": {
+    "generating": "Suggesties worden gegenereerd...",
+    "title": "Voorgestelde vragen"
+  },
   "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
   "chatList": {
@@ -322,6 +326,9 @@
     "action": "Spraakinvoer",
     "loading": "Bezig met herkennen...",
     "prettifying": "Aan het verfraaien..."
+  },
+  "suggestions": {
+    "title": "Probeer verder te vragen:"
   },
   "supervisor": {
     "todoList": {

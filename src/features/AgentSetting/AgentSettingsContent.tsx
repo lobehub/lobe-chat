@@ -4,7 +4,6 @@ import { useStore } from '@/features/AgentSetting/store';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import AgentAutoSuggestion from './AgentAutoSuggestion';
 import AgentChat from './AgentChat';
 import AgentMeta from './AgentMeta';
 import AgentModal from './AgentModal';
@@ -29,7 +28,6 @@ const AgentSettingsContent = memo<AgentSettingsContentProps>(({ tab, loadingSkel
       {tab === ChatSettingsTabs.Meta && <AgentMeta />}
       {tab === ChatSettingsTabs.Prompt && <AgentPrompt />}
       {tab === ChatSettingsTabs.Opening && <AgentOpening />}
-      {tab === ChatSettingsTabs.AutoSuggestion && <AgentAutoSuggestion />}
       {tab === ChatSettingsTabs.Chat && <AgentChat />}
       {tab === ChatSettingsTabs.Modal && <AgentModal />}
       {tab === ChatSettingsTabs.TTS && <AgentTTS />}

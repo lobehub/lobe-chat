@@ -14,6 +14,10 @@
     "thought": "思考过程",
     "unknownTitle": "未命名作品"
   },
+  "autoSuggestions": {
+    "generating": "生成建议中...",
+    "title": "建议问题"
+  },
   "availableAgents": "可用助手",
   "backToBottom": "跳转至当前",
   "chatList": {
@@ -322,6 +326,9 @@
     "action": "语音输入",
     "loading": "识别中...",
     "prettifying": "润色中..."
+  },
+  "suggestions": {
+    "title": "试试继续问："
   },
   "supervisor": {
     "todoList": {

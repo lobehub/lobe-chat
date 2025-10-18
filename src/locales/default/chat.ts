@@ -15,11 +15,11 @@ export default {
     thought: '思考过程',
     unknownTitle: '未命名作品',
   },
-  availableAgents: '可用助手',
   autoSuggestions: {
-    generating: 'Generating suggestions...',
-    title: 'Suggested questions',
+    generating: '生成建议中...',
+    title: '建议问题',
   },
+  availableAgents: '可用助手',
   backToBottom: '跳转至当前',
   chatList: {
     longMessageDetail: '查看详情',
@@ -254,7 +254,6 @@ export default {
     senderAssistant: '助手',
     senderUser: '你',
   },
-
   newAgent: '新建助手',
 
   newGroupChat: '新建群聊',
@@ -286,6 +285,7 @@ export default {
   },
 
   regenerate: '重新生成',
+
   roleAndArchive: '角色与记录',
   search: {
     grounding: {
@@ -356,6 +356,9 @@ export default {
     action: '语音输入',
     loading: '识别中...',
     prettifying: '润色中...',
+  },
+  suggestions: {
+    title: '试试继续问：',
   },
   supervisor: {
     todoList: {

@@ -14,6 +14,10 @@
     "thought": "عملية التفكير",
     "unknownTitle": "عمل غير مسمى"
   },
+  "autoSuggestions": {
+    "generating": "جارٍ إنشاء الاقتراحات...",
+    "title": "الأسئلة المقترحة"
+  },
   "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
   "chatList": {
@@ -322,6 +326,9 @@
     "action": "إدخال صوتي",
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
+  },
+  "suggestions": {
+    "title": "جرّب أن تسأل أيضًا:"
   },
   "supervisor": {
     "todoList": {

@@ -14,6 +14,10 @@
     "thought": "Proces myślenia",
     "unknownTitle": "Nienazwane dzieło"
   },
+  "autoSuggestions": {
+    "generating": "Generowanie sugestii...",
+    "title": "Sugerowane pytania"
+  },
   "availableAgents": "Dostępni asystenci",
   "backToBottom": "Przewiń na dół",
   "chatList": {
@@ -322,6 +326,9 @@
     "action": "Mowa na tekst",
     "loading": "Rozpoznawanie...",
     "prettifying": "Upiększanie..."
+  },
+  "suggestions": {
+    "title": "Spróbuj zapytać dalej:"
   },
   "supervisor": {
     "todoList": {

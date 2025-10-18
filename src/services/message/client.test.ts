@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
 import {
@@ -13,7 +13,6 @@ import {
   users,
 } from '@/database/schemas';
 import {
-  ChatMessage,
   ChatMessageError,
   ChatTTS,
   ChatTranslate,
@@ -29,14 +28,6 @@ const topicId = 'topic-id';
 
 // Mock data
 const mockMessageId = 'mock-message-id';
-const mockMessage = {
-  id: mockMessageId,
-  content: 'Mock message content',
-  sessionId,
-  role: 'user',
-} as ChatMessage;
-
-const mockMessages = [mockMessage];
 
 beforeEach(async () => {
   await initializeDB();
@@ -49,12 +40,12 @@ beforeEach(async () => {
     await trx.insert(sessions).values([{ id: sessionId, userId }]);
     await trx.insert(topics).values([{ id: topicId, sessionId, userId }]);
     await trx.insert(files).values({
-      id: 'f1',
-      userId: userId,
-      url: 'abc',
-      name: 'file-1',
       fileType: 'image/png',
+      id: 'f1',
+      name: 'file-1',
       size: 1000,
+      url: 'abc',
+      userId: userId,
     });
   });
 });
@@ -72,8 +63,8 @@ describe('MessageClientService', () => {
       // Setup
       const createParams: CreateMessageParams = {
         content: 'New message content',
-        sessionId,
         role: 'user',
+        sessionId,
       };
 
       // Execute
@@ -90,13 +81,13 @@ describe('MessageClientService', () => {
       await messageService.batchCreateMessages([
         {
           content: 'Mock message content',
-          sessionId,
           role: 'user',
+          sessionId,
         },
         {
           content: 'Mock message content',
-          sessionId,
           role: 'user',
+          sessionId,
         },
       ] as MessageItem[]);
       const count = await clientDB.$count(messages);
@@ -141,7 +132,7 @@ describe('MessageClientService', () => {
       // Setup
       await clientDB
         .insert(messages)
-        .values({ id: mockMessageId, sessionId, topicId, role: 'user', userId });
+        .values({ id: mockMessageId, role: 'user', sessionId, topicId, userId });
 
       // Execute
       const data = await messageService.getMessages(sessionId, topicId);
@@ -160,9 +151,9 @@ describe('MessageClientService', () => {
         { id: sessionId, userId },
       ]);
       await clientDB.insert(messages).values([
-        { sessionId, topicId, role: 'user', userId },
-        { sessionId, topicId, role: 'assistant', userId },
-        { sessionId: 'bbb', topicId, role: 'assistant', userId },
+        { role: 'user', sessionId, topicId, userId },
+        { role: 'assistant', sessionId, topicId, userId },
+        { role: 'assistant', sessionId: 'bbb', topicId, userId },
       ]);
 
       // Execute
@@ -176,16 +167,15 @@ describe('MessageClientService', () => {
   describe('removeMessagesByAssistant', () => {
     it('should batch remove messages by assistantId and topicId', async () => {
       // Setup
-      const assistantId = 'assistant-id';
       const sessionId = 'session-id';
       await clientDB.insert(sessions).values([
         { id: 'bbb', userId },
         { id: sessionId, userId },
       ]);
       await clientDB.insert(messages).values([
-        { sessionId, topicId, role: 'user', userId },
-        { sessionId, topicId, role: 'assistant', userId },
-        { sessionId: 'bbb', topicId, role: 'assistant', userId },
+        { role: 'user', sessionId, topicId, userId },
+        { role: 'assistant', sessionId, topicId, userId },
+        { role: 'assistant', sessionId: 'bbb', topicId, userId },
       ]);
 
       // Execute
@@ -223,8 +213,8 @@ describe('MessageClientService', () => {
   describe('getAllMessages', () => {
     it('should retrieve all messages', async () => {
       await clientDB.insert(messages).values([
-        { sessionId, topicId, content: '1', role: 'user', userId },
-        { sessionId, topicId, content: '2', role: 'assistant', userId },
+        { content: '1', role: 'user', sessionId, topicId, userId },
+        { content: '2', role: 'assistant', sessionId, topicId, userId },
       ]);
 
       // Execute
@@ -232,8 +222,8 @@ describe('MessageClientService', () => {
 
       // Assert
       expect(data).toMatchObject([
-        { sessionId, topicId, content: '1', role: 'user', userId },
-        { sessionId, topicId, content: '2', role: 'assistant', userId },
+        { content: '1', role: 'user', sessionId, topicId, userId },
+        { content: '2', role: 'assistant', sessionId, topicId, userId },
       ]);
     });
   });
@@ -243,8 +233,8 @@ describe('MessageClientService', () => {
       // Setup
       await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
       const newError = {
-        type: 'InvalidProviderAPIKey',
         message: 'Error occurred',
+        type: 'InvalidProviderAPIKey',
       } as ChatMessageError;
 
       // Execute
@@ -312,7 +302,7 @@ describe('MessageClientService', () => {
 
       // Assert
       const result = await clientDB.query.messagePlugins.findFirst({
-        where: eq(messageTTS.id, mockMessageId),
+        where: eq(messagePlugins.id, mockMessageId),
       });
       expect(result).toMatchObject({ arguments: '{"key":"stateValue"}' });
     });
@@ -329,7 +319,7 @@ describe('MessageClientService', () => {
 
       // Assert
       const result = await clientDB.query.messagePlugins.findFirst({
-        where: eq(messageTTS.id, mockMessageId),
+        where: eq(messagePlugins.id, mockMessageId),
       });
       expect(result).toMatchObject({ arguments: '{"abc":"stateValue"}' });
     });
@@ -353,7 +343,7 @@ describe('MessageClientService', () => {
       // Setup
       await clientDB
         .insert(files)
-        .values({ id: 'file-abc', fileType: 'text', name: 'abc', url: 'abc', size: 100, userId });
+        .values({ fileType: 'text', id: 'file-abc', name: 'abc', size: 100, url: 'abc', userId });
       await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
       const newTTS: ChatTTS = { contentMd5: 'abc', file: 'file-abc' };
 
@@ -405,6 +395,118 @@ describe('MessageClientService', () => {
 
       // Assert
       expect(result).toBe(false);
+    });
+  });
+
+  describe('updateMessageMetadata', () => {
+    it('should update the metadata field of a message', async () => {
+      // Setup
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+      const newMetadata = {
+        autoSuggestions: {
+          choice: 0,
+          suggestions: ['What can you do?', 'Tell me more'],
+        },
+      };
+
+      // Execute
+      await messageService.updateMessageMetadata(mockMessageId, newMetadata);
+
+      // Assert
+      const result = await clientDB.query.messages.findFirst({
+        where: eq(messages.id, mockMessageId),
+      });
+
+      expect(result!.metadata).toMatchObject(newMetadata);
+    });
+
+    it('should merge new metadata with existing metadata (shallow merge)', async () => {
+      // Setup
+      const existingMetadata = { customField: 'test' } as any;
+      await clientDB.insert(messages).values({
+        id: mockMessageId,
+        metadata: existingMetadata,
+        role: 'user',
+        userId,
+      });
+
+      const newMetadata = {
+        autoSuggestions: {
+          choice: 1,
+          suggestions: ['New suggestion'],
+        },
+      };
+
+      // Execute
+      await messageService.updateMessageMetadata(mockMessageId, newMetadata);
+
+      // Assert
+      const result = await clientDB.query.messages.findFirst({
+        where: eq(messages.id, mockMessageId),
+      });
+
+      expect(result!.metadata).toMatchObject({
+        ...existingMetadata,
+        ...newMetadata,
+      });
+    });
+
+    it('should deep merge nested metadata objects', async () => {
+      // Setup - existing metadata with nested structure
+      const existingMetadata = {
+        autoSuggestions: {
+          choice: 0,
+          suggestions: ['old1', 'old2'],
+        },
+        otherData: 'preserved',
+      };
+      await clientDB.insert(messages).values({
+        id: mockMessageId,
+        metadata: existingMetadata as any,
+        role: 'user',
+        userId,
+      });
+
+      // New metadata updates autoSuggestions and adds new field
+      const newMetadata = {
+        autoSuggestions: {
+          choice: 1,
+          suggestions: ['new1', 'new2', 'new3'],
+        },
+        newField: 'added',
+      };
+
+      // Execute
+      await messageService.updateMessageMetadata(mockMessageId, newMetadata);
+
+      // Assert - deep merge should update autoSuggestions and preserve otherData
+      const result = await clientDB.query.messages.findFirst({
+        where: eq(messages.id, mockMessageId),
+      });
+
+      expect(result!.metadata).toEqual({
+        autoSuggestions: {
+          choice: 1, // updated
+          suggestions: ['new1', 'new2', 'new3'], // updated
+        },
+        newField: 'added', // new field added
+        otherData: 'preserved', // existing field preserved
+      });
+    });
+
+    it('should handle empty metadata update', async () => {
+      // Setup
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+
+      // Execute
+      await messageService.updateMessageMetadata(mockMessageId, {});
+
+      // Assert
+      const result = await clientDB.query.messages.findFirst({
+        where: eq(messages.id, mockMessageId),
+      });
+
+      expect(result).toBeTruthy();
     });
   });
 });

@@ -85,6 +85,10 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.updateTTS.mutate({ id, value: tts });
   };
 
+  updateMessageMetadata: IMessageService['updateMessageMetadata'] = async (id, value) => {
+    return lambdaClient.message.updateMetadata.mutate({ id, value });
+  };
+
   updateMessagePluginState: IMessageService['updateMessagePluginState'] = async (id, value) => {
     return lambdaClient.message.updatePluginState.mutate({ id, value });
   };

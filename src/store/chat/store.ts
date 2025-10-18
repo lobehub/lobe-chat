@@ -6,7 +6,6 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
 import { ChatStoreState, initialState } from './initialState';
-import { ChatAutoSuggestionAction, chatAutoSuggestion } from './slices/autoSuggestion/action';
 import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/actions';
 import { ChatPortalAction, chatPortalSlice } from './slices/portal/action';
 import { ChatTranslateAction, chatTranslate } from './slices/translate/action';
@@ -30,8 +29,7 @@ export interface ChatStoreAction
     ChatTTSAction,
     ChatPluginAction,
     ChatBuiltinToolAction,
-    ChatPortalAction,
-    ChatAutoSuggestionAction {}
+    ChatPortalAction {}
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
 
@@ -51,7 +49,6 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatToolSlice(...params),
   ...chatPlugin(...params),
   ...chatPortalSlice(...params),
-  ...chatAutoSuggestion(...params),
 
   // cloud
 });

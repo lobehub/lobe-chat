@@ -69,6 +69,11 @@ export class ClientService implements IMessageService {
   }
 
   // @ts-ignore
+  async updateMessageMetadata(): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+
+  // @ts-ignore
   async countWords(): Promise<number> {
     throw new Error('Method not implemented.');
   }

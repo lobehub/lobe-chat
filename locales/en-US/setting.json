@@ -2,7 +2,27 @@
   "about": {
     "title": "About"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "Guide the AI on what type of questions to generate",
+        "placeholder": "e.g., focus on technical implementation details...",
+        "title": "Custom Prompt"
+      },
+      "enabled": {
+        "desc": "Automatically generate follow-up question suggestions after the assistant responds",
+        "title": "Enable Auto Suggestions"
+      },
+      "maxSuggestions": {
+        "desc": "Number of suggestions to display (1-3)",
+        "title": "Suggestion Count"
+      },
+      "submit": "Update Settings",
+      "title": "Auto Suggestions"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "Auto Suggestions",
     "chat": "Chat Preferences",
     "meta": "Assistant Info",
     "modal": "Model Settings",
@@ -615,6 +635,11 @@
       "label": "Assistant Metadata Generation Model",
       "modelDesc": "Model designated for generating assistant name, description, avatar, and tags",
       "title": "Automatically Generate Assistant Information"
+    },
+    "autoSuggestion": {
+      "label": "Smart Suggestion Model",
+      "modelDesc": "Specify the model used to generate smart message suggestions",
+      "title": "Message Smart Suggestions"
     },
     "customPrompt": {
       "addPrompt": "Add Custom Prompt",

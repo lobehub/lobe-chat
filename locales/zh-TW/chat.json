@@ -14,6 +14,10 @@
     "thought": "思考過程",
     "unknownTitle": "未命名作品"
   },
+  "autoSuggestions": {
+    "generating": "正在產生建議...",
+    "title": "建議問題"
+  },
   "availableAgents": "可用助理",
   "backToBottom": "返回底部",
   "chatList": {
@@ -322,6 +326,9 @@
     "action": "語音輸入",
     "loading": "識別中...",
     "prettifying": "潤色中..."
+  },
+  "suggestions": {
+    "title": "試著繼續問："
   },
   "supervisor": {
     "todoList": {

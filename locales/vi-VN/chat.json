@@ -14,6 +14,10 @@
     "thought": "Quá trình suy nghĩ",
     "unknownTitle": "Tác phẩm chưa được đặt tên"
   },
+  "autoSuggestions": {
+    "generating": "Đang tạo đề xuất...",
+    "title": "Câu hỏi gợi ý"
+  },
   "availableAgents": "Trợ lý có sẵn",
   "backToBottom": "Quay về dưới cùng",
   "chatList": {
@@ -322,6 +326,9 @@
     "action": "Nhập bằng giọng nói",
     "loading": "Đang nhận dạng...",
     "prettifying": "Đang tinh chỉnh..."
+  },
+  "suggestions": {
+    "title": "Hãy thử hỏi tiếp:"
   },
   "supervisor": {
     "todoList": {
