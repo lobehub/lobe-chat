@@ -203,7 +203,10 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
+        const log = debug(`${this.logPrefix}:chat`);
         const inputStartAt = Date.now();
+
+        log('chat called with model: %s, stream: %s', payload.model, payload.stream ?? true);
 
         // 工厂级 Responses API 路由控制（支持实例覆盖）
         const modelId = (payload as any).model as string | undefined;
@@ -227,7 +230,10 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
         let processedPayload: any = payload;
         if (shouldUseResponses) {
+          log('using Responses API mode');
           processedPayload = { ...payload, apiMode: 'responses' } as any;
+        } else {
+          log('using Chat Completions API mode');
         }
 
         // 再进行工厂级处理
@@ -257,6 +263,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         };
 
         if (customClient?.createChatCompletionStream) {
+          log('using custom client for chat completion stream');
           response = customClient.createChatCompletionStream(
             this.client,
             processedPayload,
@@ -273,6 +280,8 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
                 : undefined,
           };
 
+          log('sending chat completion request with %d messages', messages.length);
+
           if (debugParams?.chatCompletion?.()) {
             console.log('[requestPayload]');
             console.log(JSON.stringify(finalPayload), '\n');
@@ -286,6 +295,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
 
         if (postPayload.stream) {
+          log('processing streaming response');
           const [prod, useForDebug] = response.tee();
 
           if (debugParams?.chatCompletion?.()) {
@@ -315,8 +325,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           debugResponse(response);
         }
 
-        if (responseMode === 'json') return Response.json(response);
+        if (responseMode === 'json') {
+          log('returning JSON response mode');
+          return Response.json(response);
+        }
 
+        log('transforming non-streaming response to stream');
         const transformHandler =
           chatCompletion?.handleTransformResponseToStream || transformResponseToStream;
         const stream = transformHandler(response as unknown as OpenAI.ChatCompletion);
@@ -338,8 +352,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async createImage(payload: CreateImagePayload) {
+      const log = debug(`${this.logPrefix}:createImage`);
+
       // If custom createImage implementation is provided, use it
       if (customCreateImage) {
+        log('using custom createImage implementation');
         return customCreateImage(payload, {
           ...this._options,
           apiKey: this._options.apiKey!,
@@ -347,15 +364,21 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         });
       }
 
+      log('using default createOpenAICompatibleImage');
       // Use the new createOpenAICompatibleImage function
       return createOpenAICompatibleImage(this.client, payload, this.id);
     }
 
     async models() {
+      const log = debug(`${this.logPrefix}:models`);
+      log('fetching available models');
+
       let resultModels: ChatModelCard[] = [];
       if (typeof models === 'function') {
+        log('using custom models function');
         resultModels = await models({ client: this.client });
       } else {
+        log('fetching models from client API');
         const list = await this.client.models.list();
         resultModels = list.data
           .filter((model) => {
@@ -402,6 +425,8 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
           .filter(Boolean) as ChatModelCard[];
       }
+
+      log('fetched %d models', resultModels.length);
 
       return await postProcessModelList(resultModels, (modelId) =>
         getModelPropertyWithFallback<AiModelType>(modelId, 'type'),
@@ -560,12 +585,20 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       payload: EmbeddingsPayload,
       options?: EmbeddingsOptions,
     ): Promise<Embeddings[]> {
+      const log = debug(`${this.logPrefix}:embeddings`);
+      log(
+        'embeddings called with model: %s, input items: %d',
+        payload.model,
+        Array.isArray(payload.input) ? payload.input.length : 1,
+      );
+
       try {
         const res = await this.client.embeddings.create(
           { ...payload, encoding_format: 'float', user: options?.user },
           { headers: options?.headers, signal: options?.signal },
         );
 
+        log('received %d embeddings', res.data.length);
         return res.data.map((item) => item.embedding);
       } catch (error) {
         throw this.handleError(error);
@@ -573,8 +606,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async textToImage(payload: TextToImagePayload) {
+      const log = debug(`${this.logPrefix}:textToImage`);
+      log('textToImage called with prompt length: %d', payload.prompt?.length || 0);
+
       try {
         const res = await this.client.images.generate(payload);
+        log('generated %d images', res.data?.length || 0);
         return (res.data || []).map((o) => o.url) as string[];
       } catch (error) {
         throw this.handleError(error);
@@ -582,18 +619,30 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async textToSpeech(payload: TextToSpeechPayload, options?: TextToSpeechOptions) {
+      const log = debug(`${this.logPrefix}:textToSpeech`);
+      log(
+        'textToSpeech called with input length: %d, voice: %s',
+        payload.input?.length || 0,
+        payload.voice,
+      );
+
       try {
         const mp3 = await this.client.audio.speech.create(payload as any, {
           headers: options?.headers,
           signal: options?.signal,
         });
-        return mp3.arrayBuffer();
+        const buffer = await mp3.arrayBuffer();
+        log('generated audio with size: %d bytes', buffer.byteLength);
+        return buffer;
       } catch (error) {
         throw this.handleError(error);
       }
     }
 
     protected handleError(error: any): ChatCompletionErrorPayload {
+      const log = debug(`${this.logPrefix}:error`);
+      log('handling error: %O', error);
+
       let desensitizedEndpoint = this.baseURL;
 
       // refs: https://github.com/lobehub/lobe-chat/issues/842
@@ -602,6 +651,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       }
 
       if (chatCompletion?.handleError) {
+        log('using custom error handler');
         const errorResult = chatCompletion.handleError(error, this._options);
 
         if (errorResult)
@@ -612,8 +662,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       }
 
       if ('status' in (error as any)) {
-        switch ((error as Response).status) {
+        const status = (error as Response).status;
+        log('HTTP error with status: %d', status);
+
+        switch (status) {
           case 401: {
+            log('invalid API key error');
             return AgentRuntimeError.chat({
               endpoint: desensitizedEndpoint,
               error: error as any,
@@ -630,8 +684,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const { errorResult, RuntimeError } = handleOpenAIError(error);
 
+      log('error code: %s, message: %s', errorResult.code, errorResult.message);
+
       switch (errorResult.code) {
         case 'insufficient_quota': {
+          log('insufficient quota error');
           return AgentRuntimeError.chat({
             endpoint: desensitizedEndpoint,
             error: errorResult,
@@ -641,6 +698,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
 
         case 'model_not_found': {
+          log('model not found error');
           return AgentRuntimeError.chat({
             endpoint: desensitizedEndpoint,
             error: errorResult,
@@ -652,6 +710,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         // content too long
         case 'context_length_exceeded':
         case 'string_above_max_length': {
+          log('context length exceeded error');
           return AgentRuntimeError.chat({
             endpoint: desensitizedEndpoint,
             error: errorResult,
@@ -661,6 +720,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
       }
 
+      log('returning generic error');
       return AgentRuntimeError.chat({
         endpoint: desensitizedEndpoint,
         error: errorResult,
@@ -673,6 +733,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       payload: ChatStreamPayload,
       options?: ChatMethodOptions,
     ): Promise<Response> {
+      const log = debug(`${this.logPrefix}:handleResponseAPIMode`);
+      log('handleResponseAPIMode called with model: %s', payload.model);
+
       const inputStartAt = Date.now();
 
       const { messages, reasoning_effort, tools, reasoning, responseMode, ...res } =
@@ -688,6 +751,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       const input = await convertOpenAIResponseInputs(messages as any);
 
       const isStreaming = payload.stream !== false;
+      log(
+        'isStreaming: %s, hasTools: %s, hasReasoning: %s',
+        isStreaming,
+        !!tools,
+        !!(reasoning || reasoning_effort),
+      );
 
       const postPayload = {
         ...res,
@@ -710,6 +779,8 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         console.log(JSON.stringify(postPayload), '\n');
       }
 
+      log('sending responses.create request');
+
       const response = await this.client.responses.create(postPayload, {
         headers: options?.requestHeaders,
         signal: options?.signal,
@@ -726,6 +797,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       };
 
       if (isStreaming) {
+        log('processing streaming Responses API response');
         const stream = response as Stream<OpenAI.Responses.ResponseStreamEvent>;
         const [prod, useForDebug] = stream.tee();
 
@@ -741,13 +813,19 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         });
       }
 
+      log('processing non-streaming Responses API response');
+
       // Handle non-streaming response
       if (debugParams?.responses?.()) {
         debugResponse(response);
       }
 
-      if (responseMode === 'json') return Response.json(response);
+      if (responseMode === 'json') {
+        log('returning JSON response mode');
+        return Response.json(response);
+      }
 
+      log('transforming non-streaming Responses API response to stream');
       const stream = transformResponseAPIToStream(response as OpenAI.Responses.Response);
 
       return StreamingResponse(
