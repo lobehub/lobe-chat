@@ -135,7 +135,9 @@ const PageContainer = memo<PageContainerProps>(
         ) : (
           title
         )}
-        {!loading && titleIcon && <Icon icon={titleIcon} size={18} />}
+        {!loading && titleIcon && (
+          <Icon color={theme.colorTextSecondary} icon={titleIcon} size={18} />
+        )}
         {!largeTitleEnabled && loadingContent}
       </Flexbox>
     );
