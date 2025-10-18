@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useQueryRoute } from '@/hooks/useQueryRoute';
+
 import Content, { knowledgeItemClass } from './Content';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -44,9 +46,15 @@ export interface KnowledgeBaseItemProps {
 const KnowledgeBaseItem = memo<KnowledgeBaseItemProps>(({ name, active, id }) => {
   const { styles, cx } = useStyles();
   const [isHover, setHovering] = useState(false);
+  const router = useQueryRoute();
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push(`/repos/${id}`);
+  };
 
   return (
-    <Link href={`/repos/${id}`}>
+    <Link href={`/repos/${id}`} onClick={handleClick}>
       <Flexbox
         align={'center'}
         className={cx(styles.container, knowledgeItemClass, active && styles.active)}
