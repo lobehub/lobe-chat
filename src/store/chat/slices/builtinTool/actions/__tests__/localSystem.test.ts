@@ -2,9 +2,9 @@ import { LocalFileItem, LocalMoveFilesResultItem } from '@lobechat/electron-clie
 import { describe, expect, it, vi } from 'vitest';
 
 import { localFileService } from '@/services/electron/localFileService';
-import { ChatStore } from '@/store/chat/store';
+import { ChatStore } from '@/store/chat';
 
-import { localFileSlice } from '../localFile';
+import { localSystemSlice } from '../localSystem';
 
 vi.mock('@/services/electron/localFileService', () => ({
   localFileService: {
@@ -31,7 +31,7 @@ const mockStore = {
 } as unknown as ChatStore;
 
 const createStore = () => {
-  return localFileSlice(
+  return localSystemSlice(
     (set) => ({
       ...mockStore,
       set,
@@ -191,7 +191,7 @@ describe('localFileSlice', () => {
   describe('toggleLocalFileLoading', () => {
     it('should toggle loading state', () => {
       const mockSetFn = vi.fn();
-      const testStore = localFileSlice(mockSetFn, () => mockStore, {} as any);
+      const testStore = localSystemSlice(mockSetFn, () => mockStore, {} as any);
 
       testStore.toggleLocalFileLoading('test-id', true);
       expect(mockSetFn).toHaveBeenCalledWith(

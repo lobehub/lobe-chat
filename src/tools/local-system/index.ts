@@ -3,10 +3,16 @@ import { BuiltinToolManifest } from '@lobechat/types';
 import { systemPrompt } from './systemRole';
 
 export const LocalSystemApiName = {
+  editLocalFile: 'editLocalFile',
+  getCommandOutput: 'getCommandOutput',
+  globLocalFiles: 'globLocalFiles',
+  grepContent: 'grepContent',
+  killCommand: 'killCommand',
   listLocalFiles: 'listLocalFiles',
   moveLocalFiles: 'moveLocalFiles',
   readLocalFile: 'readLocalFile',
   renameLocalFile: 'renameLocalFile',
+  runCommand: 'runCommand',
   searchLocalFiles: 'searchLocalFiles',
   writeLocalFile: 'writeLocalFile',
 };
@@ -192,6 +198,178 @@ export const LocalSystemManifest: BuiltinToolManifest = {
           },
         },
         required: ['path', 'content'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Execute a shell command and return its output. Supports both synchronous and background execution with timeout control.',
+      name: LocalSystemApiName.runCommand,
+      parameters: {
+        properties: {
+          command: {
+            description: 'The shell command to execute',
+            type: 'string',
+          },
+          description: {
+            description:
+              'Clear description of what this command does (5-10 words, in active voice). Use the same language as the user input.',
+            type: 'string',
+          },
+          run_in_background: {
+            description: 'Set to true to run command in background and return shell_id',
+            type: 'boolean',
+          },
+          timeout: {
+            description: 'Timeout in milliseconds (default: 120000ms, max: 600000ms)',
+            type: 'number',
+          },
+        },
+        required: ['command'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Retrieve output from a running or completed background shell command. Returns only new output since the last check.',
+      name: LocalSystemApiName.getCommandOutput,
+      parameters: {
+        properties: {
+          filter: {
+            description:
+              'Optional regex pattern to filter output lines. Only matching lines are returned.',
+            type: 'string',
+          },
+          shell_id: {
+            description: 'The ID of the background shell to retrieve output from',
+            type: 'string',
+          },
+        },
+        required: ['shell_id'],
+        type: 'object',
+      },
+    },
+    {
+      description: 'Kill a running background shell command by its ID.',
+      name: LocalSystemApiName.killCommand,
+      parameters: {
+        properties: {
+          shell_id: {
+            description: 'The ID of the background shell to kill',
+            type: 'string',
+          },
+        },
+        required: ['shell_id'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Search for content within files using regex patterns. Supports various output modes and filtering options.',
+      name: LocalSystemApiName.grepContent,
+      parameters: {
+        properties: {
+          '-A': {
+            description:
+              'Number of lines to show after each match (requires output_mode: "content")',
+            type: 'number',
+          },
+          '-B': {
+            description:
+              'Number of lines to show before each match (requires output_mode: "content")',
+            type: 'number',
+          },
+          '-C': {
+            description:
+              'Number of lines to show before and after each match (requires output_mode: "content")',
+            type: 'number',
+          },
+          '-i': {
+            description: 'Case insensitive search',
+            type: 'boolean',
+          },
+          '-n': {
+            description: 'Show line numbers in output (requires output_mode: "content")',
+            type: 'boolean',
+          },
+          'glob': {
+            description: 'Glob pattern to filter files (e.g. "*.js", "*.{ts,tsx}")',
+            type: 'string',
+          },
+          'head_limit': {
+            description: 'Limit output to first N results',
+            type: 'number',
+          },
+          'multiline': {
+            description: 'Enable multiline mode where . matches newlines',
+            type: 'boolean',
+          },
+          'output_mode': {
+            description:
+              'Output mode: "content" (matching lines), "files_with_matches" (file paths), "count" (match counts)',
+            enum: ['content', 'files_with_matches', 'count'],
+            type: 'string',
+          },
+          'path': {
+            description: 'File or directory to search in (defaults to current working directory)',
+            type: 'string',
+          },
+          'pattern': {
+            description: 'The regular expression pattern to search for',
+            type: 'string',
+          },
+          'type': {
+            description: 'File type to search (e.g. "js", "py", "rust")',
+            type: 'string',
+          },
+        },
+        required: ['pattern'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Find files matching glob patterns. Supports standard glob syntax like "**/*.js" or "src/**/*.ts".',
+      name: LocalSystemApiName.globLocalFiles,
+      parameters: {
+        properties: {
+          path: {
+            description: 'The directory to search in (defaults to current working directory)',
+            type: 'string',
+          },
+          pattern: {
+            description: 'The glob pattern to match files against (e.g. "**/*.js", "*.{ts,tsx}")',
+            type: 'string',
+          },
+        },
+        required: ['pattern'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Perform exact string replacements in files. Must read the file first before editing.',
+      name: LocalSystemApiName.editLocalFile,
+      parameters: {
+        properties: {
+          file_path: {
+            description: 'The absolute path to the file to modify',
+            type: 'string',
+          },
+          new_string: {
+            description: 'The text to replace with (must differ from old_string)',
+            type: 'string',
+          },
+          old_string: {
+            description: 'The exact text to replace',
+            type: 'string',
+          },
+          replace_all: {
+            description: 'Replace all occurrences of old_string (default: false)',
+            type: 'boolean',
+          },
+        },
+        required: ['file_path', 'old_string', 'new_string'],
         type: 'object',
       },
     },

@@ -7,6 +7,7 @@ import { LocalSystemApiName } from '@/tools/local-system';
 import ListFiles from './ListFiles';
 import ReadLocalFile from './ReadLocalFile';
 import RenameLocalFile from './RenameLocalFile';
+import RunCommand from './RunCommand';
 import SearchFiles from './SearchFiles';
 import WriteFile from './WriteFile';
 
@@ -16,6 +17,7 @@ const RenderMap = {
   [LocalSystemApiName.readLocalFile]: ReadLocalFile,
   [LocalSystemApiName.renameLocalFile]: RenameLocalFile,
   [LocalSystemApiName.writeLocalFile]: WriteFile,
+  [LocalSystemApiName.runCommand]: RunCommand,
 };
 
 const LocalFilesRender = memo<BuiltinRenderProps<LocalFileItem[]>>(
