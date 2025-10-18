@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Refactor upload router into lambda and decide to remove it in V2."]
+    },
+    "date": "2025-10-18",
+    "version": "1.138.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix response API tools calling issue."]
+    },
+    "date": "2025-10-18",
+    "version": "1.138.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix topic fetch not correct in custom agent."]
     },
     "date": "2025-10-18",

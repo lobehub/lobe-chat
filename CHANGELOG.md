@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.138.5](https://github.com/lobehub/lobe-chat/compare/v1.138.4...v1.138.5)
+
+<sup>Released on **2025-10-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor upload router into lambda and decide to remove it in V2.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor upload router into lambda and decide to remove it in V2, closes [#9766](https://github.com/lobehub/lobe-chat/issues/9766) ([d1c7f41](https://github.com/lobehub/lobe-chat/commit/d1c7f41))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.138.4](https://github.com/lobehub/lobe-chat/compare/v1.138.3...v1.138.4)
+
+<sup>Released on **2025-10-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix response API tools calling issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix response API tools calling issue, closes [#9760](https://github.com/lobehub/lobe-chat/issues/9760) ([0596692](https://github.com/lobehub/lobe-chat/commit/0596692))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.138.3](https://github.com/lobehub/lobe-chat/compare/v1.138.2...v1.138.3)
 
 <sup>Released on **2025-10-18**</sup>

@@ -5,8 +5,6 @@ import { pino } from '@/libs/logger';
 import { createEdgeContext } from '@/libs/trpc/edge/context';
 import { edgeRouter } from '@/server/routers/edge';
 
-export const runtime = 'edge';
-
 const handler = (req: NextRequest) =>
   fetchRequestHandler({
     /**
