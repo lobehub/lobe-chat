@@ -839,7 +839,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     private convertChatCompletionToolToResponseTool = (
       tool: ChatCompletionTool,
     ): OpenAI.Responses.Tool => {
-      return { type: tool.type, ...tool.function, strict: true } as any;
+      return { type: tool.type, ...tool.function } as any;
     };
 
     private async generateObjectWithTools(
