@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix response API tools calling issue."]
+    },
+    "date": "2025-10-18",
+    "version": "1.138.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix topic fetch not correct in custom agent."]
     },
     "date": "2025-10-18",
