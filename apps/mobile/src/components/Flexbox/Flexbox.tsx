@@ -19,6 +19,7 @@ const Flexbox = memo<FlexboxProps>(
     paddingBlock,
     paddingInline,
     onPress,
+    onLongPress,
     ...rest
   }) => {
     const styles: StyleProp<ViewStyle> = {
@@ -37,9 +38,10 @@ const Flexbox = memo<FlexboxProps>(
       width: width,
     };
 
-    if (onPress) {
+    if (onPress || onLongPress) {
       return (
         <Pressable
+          onLongPress={onLongPress}
           onPress={onPress}
           style={(state) => [styles, typeof style === 'function' ? style(state) : style]}
           {...rest}

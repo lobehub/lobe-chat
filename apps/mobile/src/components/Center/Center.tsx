@@ -19,6 +19,7 @@ const Center = memo<CenterProps>(
     paddingBlock,
     paddingInline,
     onPress,
+    onLongPress,
     ...rest
   }) => {
     const styles: StyleProp<ViewStyle> = {
@@ -36,9 +37,10 @@ const Center = memo<CenterProps>(
       width: width,
     };
 
-    if (onPress) {
+    if (onPress || onLongPress) {
       return (
         <Pressable
+          onLongPress={onLongPress}
           onPress={onPress}
           style={(state) => [styles, typeof style === 'function' ? style(state) : style]}
           {...rest}
