@@ -37,7 +37,7 @@ const groqChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-06',
@@ -56,8 +56,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-06',

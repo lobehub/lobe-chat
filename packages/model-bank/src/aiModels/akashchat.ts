@@ -3,7 +3,6 @@ import { AIChatModelCard } from '../types/aiModel';
 const akashChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
