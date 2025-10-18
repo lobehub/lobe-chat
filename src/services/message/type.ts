@@ -8,6 +8,7 @@ import {
   ChatTranslate,
   CreateMessageParams,
   MessageItem,
+  MessageKeywordSearchResult,
   ModelRankItem,
   UpdateMessageParams,
 } from '@/types/message';
@@ -23,6 +24,13 @@ export interface IMessageService {
   getGroupMessages(groupId: string, topicId?: string): Promise<ChatMessage[]>;
   getAllMessages(): Promise<ChatMessage[]>;
   getAllMessagesInSession(sessionId: string): Promise<ChatMessage[]>;
+  searchMessages(
+    keyword: string,
+    params?: {
+      current?: number;
+      pageSize?: number;
+    },
+  ): Promise<MessageKeywordSearchResult>;
   countMessages(params?: {
     endDate?: string;
     range?: [string, string];

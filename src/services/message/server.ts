@@ -45,6 +45,14 @@ export class ServerService implements IMessageService {
     });
   };
 
+  searchMessages: IMessageService['searchMessages'] = async (keyword, params) => {
+    return lambdaClient.message.searchMessages.query({
+      current: params?.current,
+      keywords: keyword,
+      pageSize: params?.pageSize,
+    });
+  };
+
   countMessages: IMessageService['countMessages'] = async (params) => {
     return lambdaClient.message.count.query(params);
   };

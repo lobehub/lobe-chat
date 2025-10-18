@@ -151,6 +151,17 @@ export interface NewMessage {
   userId: string; // optional because it's generated
 }
 
+export interface MessageKeywordSearchPagination {
+  current: number;
+  pageSize: number;
+  total: number;
+}
+
+export interface MessageKeywordSearchResult {
+  data: MessageItem[];
+  pagination: MessageKeywordSearchPagination;
+}
+
 export interface UpdateMessageParams {
   content?: string;
   error?: ChatMessageError | null;
