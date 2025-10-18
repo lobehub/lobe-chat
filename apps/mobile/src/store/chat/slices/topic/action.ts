@@ -188,7 +188,7 @@ export const chatTopic: StateCreator<
   useFetchTopics: (enable, sessionId) =>
     useSWR<ChatTopic[]>(
       enable ? [SWR_USE_FETCH_TOPIC, sessionId] : null,
-      async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
+      async ([, sessionId]: [string, string]) => topicService.getTopics({ containerId: sessionId }),
       {
         suspense: false,
         fallbackData: [],

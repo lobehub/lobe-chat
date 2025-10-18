@@ -18,7 +18,7 @@ export class ServerService implements ITopicService {
   getTopics: ITopicService['getTopics'] = (params) =>
     trpcClient.topic.getTopics.query({
       ...params,
-      sessionId: this.toDbSessionId(params.sessionId),
+      containerId: this.toDbSessionId(params.containerId),
     }) as any;
 
   getAllTopics: ITopicService['getAllTopics'] = () => trpcClient.topic.getAllTopics.query() as any;
@@ -50,7 +50,6 @@ export class ServerService implements ITopicService {
 
   removeAllTopic: ITopicService['removeAllTopic'] = () => trpcClient.topic.removeAllTopics.mutate();
 
-  private toDbSessionId(sessionId?: string | null) {
-    return sessionId === INBOX_SESSION_ID ? null : sessionId;
-  }
+  private toDbSessionId = (sessionId?: string | null) =>
+    sessionId === INBOX_SESSION_ID ? null : sessionId;
 }
