@@ -1892,26 +1892,32 @@ describe('LobeOpenAICompatibleFactory', () => {
           messages: [{ content: 'What is the weather and time in Tokyo?', role: 'user' as const }],
           tools: [
             {
-              name: 'get_weather',
-              description: 'Get weather information',
-              parameters: {
-                type: 'object' as const,
-                properties: {
-                  city: { type: 'string' },
-                  unit: { type: 'string' },
+              type: 'function' as const,
+              function: {
+                name: 'get_weather',
+                description: 'Get weather information',
+                parameters: {
+                  type: 'object' as const,
+                  properties: {
+                    city: { type: 'string' },
+                    unit: { type: 'string' },
+                  },
+                  required: ['city'],
                 },
-                required: ['city'],
               },
             },
             {
-              name: 'get_time',
-              description: 'Get current time',
-              parameters: {
-                type: 'object' as const,
-                properties: {
-                  timezone: { type: 'string' },
+              type: 'function' as const,
+              function: {
+                name: 'get_time',
+                description: 'Get current time',
+                parameters: {
+                  type: 'object' as const,
+                  properties: {
+                    timezone: { type: 'string' },
+                  },
+                  required: ['timezone'],
                 },
-                required: ['timezone'],
               },
             },
           ],
@@ -1994,18 +2000,20 @@ describe('LobeOpenAICompatibleFactory', () => {
           messages: [{ content: 'Add 5 and 3', role: 'user' as const }],
           tools: [
             {
-              name: 'calculate',
-              description: 'Perform calculation',
-              parameters: {
-                type: 'object' as const,
-                properties: {
-                  result: { type: 'number' },
+              type: 'function' as const,
+              function: {
+                name: 'calculate',
+                description: 'Perform calculation',
+                parameters: {
+                  type: 'object' as const,
+                  properties: {
+                    result: { type: 'number' },
+                  },
+                  required: ['result'],
                 },
-                required: ['result'],
               },
             },
           ],
-          systemRole: 'You are a helpful calculator',
           model: 'gpt-4o',
         };
 

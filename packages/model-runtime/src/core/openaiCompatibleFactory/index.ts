@@ -1,11 +1,13 @@
 import type { ChatModelCard } from '@lobechat/types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import debug from 'debug';
 import { LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 import type { AiModelType } from 'model-bank';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
+import { responsesAPIModels } from '../../const/models';
 import {
   ChatCompletionErrorPayload,
   ChatCompletionTool,
@@ -118,6 +120,15 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
   };
   generateObject?: {
     /**
+     * If true, route generateObject requests to Responses API path directly
+     */
+    useResponse?: boolean;
+    /**
+     * Allow only some models to use Responses API by simple matching.
+     * If any string appears in model id or RegExp matches, Responses API is used.
+     */
+    useResponseModels?: Array<string | RegExp>;
+    /**
      * Use tool calling to simulate structured output for providers that don't support native structured output
      */
     useToolsCalling?: boolean;
@@ -141,7 +152,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   baseURL: DEFAULT_BASE_URL,
   apiKey: DEFAULT_API_LEY,
   errorType,
-  debug,
+  debug: debugParams,
   constructorOptions,
   chatCompletion,
   models,
@@ -159,6 +170,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     client!: OpenAI;
 
     private id: string;
+    private logPrefix: string;
 
     baseURL!: string;
     protected _options: ConstructorOptions<T>;
@@ -186,6 +198,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       this.baseURL = baseURL || this.client.baseURL;
 
       this.id = options.id || provider;
+      this.logPrefix = `lobe-model-runtime:${this.id}`;
     }
 
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
@@ -260,7 +273,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
                 : undefined,
           };
 
-          if (debug?.chatCompletion?.()) {
+          if (debugParams?.chatCompletion?.()) {
             console.log('[requestPayload]');
             console.log(JSON.stringify(finalPayload), '\n');
           }
@@ -275,7 +288,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         if (postPayload.stream) {
           const [prod, useForDebug] = response.tee();
 
-          if (debug?.chatCompletion?.()) {
+          if (debugParams?.chatCompletion?.()) {
             const useForDebugStream =
               useForDebug instanceof ReadableStream ? useForDebug : useForDebug.toReadableStream();
 
@@ -298,7 +311,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           );
         }
 
-        if (debug?.chatCompletion?.()) {
+        if (debugParams?.chatCompletion?.()) {
           debugResponse(response);
         }
 
@@ -396,43 +409,26 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
-      const { messages, schema, model, responseApi, tools, systemRole } = payload;
+      const { messages, schema, model, responseApi, tools } = payload;
+
+      const log = debug(`${this.logPrefix}:generateObject`);
+      log(
+        'generateObject called with model: %s, hasTools: %s, hasSchema: %s',
+        model,
+        !!tools,
+        !!schema,
+      );
 
       if (tools) {
-        const msgs = messages;
-
-        if (!!systemRole) {
-          msgs.push({ content: systemRole, role: 'system' });
-        }
-
-        const res = await this.client.chat.completions.create(
-          {
-            messages: msgs,
-            model,
-            tool_choice: 'required',
-            tools: tools.map((tool) => ({ function: tool, type: 'function' })),
-            user: options?.user,
-          },
-          { headers: options?.headers, signal: options?.signal },
-        );
-
-        const toolCalls = res.choices[0].message.tool_calls!;
-
-        try {
-          return toolCalls.map((item) => ({
-            arguments: JSON.parse(item.function.arguments),
-            name: item.function.name,
-          }));
-        } catch {
-          console.error('parse tool call arguments error:', res);
-          return undefined;
-        }
+        log('using tools-based generation');
+        return this.generateObjectWithTools(payload, options);
       }
 
       if (!schema) throw new Error('tools or schema is required');
 
       // Use tool calling fallback if configured
       if (generateObjectConfig?.useToolsCalling) {
+        log('using tool calling fallback for structured output');
         const tool: ChatCompletionTool = {
           function: {
             description:
@@ -467,7 +463,51 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         }
       }
 
-      if (responseApi) {
+      // Factory-level Responses API routing control (supports instance override)
+      const shouldUseResponses = (() => {
+        const instanceGenerateObject = ((this._options as any).generateObject || {}) as {
+          useResponse?: boolean;
+          useResponseModels?: Array<string | RegExp>;
+        };
+        const flagUseResponse =
+          instanceGenerateObject.useResponse ??
+          (generateObjectConfig ? generateObjectConfig.useResponse : undefined);
+        const flagUseResponseModels =
+          instanceGenerateObject.useResponseModels ?? generateObjectConfig?.useResponseModels;
+
+        if (responseApi) {
+          log('using Responses API due to explicit responseApi flag');
+          return true;
+        }
+
+        if (flagUseResponse) {
+          log('using Responses API due to useResponse flag');
+          return true;
+        }
+
+        // Use factory-configured model list if provided
+        if (model && flagUseResponseModels?.length) {
+          const matches = flagUseResponseModels.some((m: string | RegExp) =>
+            typeof m === 'string' ? model.includes(m) : (m as RegExp).test(model),
+          );
+          if (matches) {
+            log('using Responses API: model %s matches useResponseModels config', model);
+            return true;
+          }
+        }
+
+        // Default: use built-in responsesAPIModels
+        if (model && responsesAPIModels.has(model)) {
+          log('using Responses API: model %s in built-in responsesAPIModels', model);
+          return true;
+        }
+
+        log('using Chat Completions API for generateObject');
+        return false;
+      })();
+
+      if (shouldUseResponses) {
+        log('calling responses.create for structured output');
         const res = await this.client!.responses.create(
           {
             input: messages,
@@ -479,14 +519,19 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         );
 
         const text = res.output_text;
+        log('received structured output from Responses API, length: %d', text?.length || 0);
         try {
-          return JSON.parse(text);
-        } catch {
+          const result = JSON.parse(text);
+          log('successfully parsed JSON output');
+          return result;
+        } catch (error) {
+          log('failed to parse JSON output: %O', error);
           console.error('parse json error:', text);
           return undefined;
         }
       }
 
+      log('calling chat.completions.create for structured output');
       const res = await this.client.chat.completions.create(
         {
           messages,
@@ -498,9 +543,14 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       );
       const text = res.choices[0].message.content!;
 
+      log('received structured output from Chat Completions API, length: %d', text?.length || 0);
+
       try {
-        return JSON.parse(text);
-      } catch {
+        const result = JSON.parse(text);
+        log('successfully parsed JSON output');
+        return result;
+      } catch (error) {
+        log('failed to parse JSON output: %O', error);
         console.error('parse json error:', text);
         return undefined;
       }
@@ -655,7 +705,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         tools: tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
       } as OpenAI.Responses.ResponseCreateParamsStreaming | OpenAI.Responses.ResponseCreateParams;
 
-      if (debug?.responses?.()) {
+      if (debugParams?.responses?.()) {
         console.log('[requestPayload]');
         console.log(JSON.stringify(postPayload), '\n');
       }
@@ -679,7 +729,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         const stream = response as Stream<OpenAI.Responses.ResponseStreamEvent>;
         const [prod, useForDebug] = stream.tee();
 
-        if (debug?.responses?.()) {
+        if (debugParams?.responses?.()) {
           const useForDebugStream =
             useForDebug instanceof ReadableStream ? useForDebug : useForDebug.toReadableStream();
 
@@ -692,7 +742,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       }
 
       // Handle non-streaming response
-      if (debug?.responses?.()) {
+      if (debugParams?.responses?.()) {
         debugResponse(response);
       }
 
@@ -708,8 +758,138 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       );
     }
 
-    private convertChatCompletionToolToResponseTool = (tool: ChatCompletionTool) => {
-      return { type: tool.type, ...tool.function };
+    private convertChatCompletionToolToResponseTool = (
+      tool: ChatCompletionTool,
+    ): OpenAI.Responses.Tool => {
+      return { type: tool.type, ...tool.function, strict: true } as any;
     };
+
+    private async generateObjectWithTools(
+      payload: GenerateObjectPayload,
+      options?: GenerateObjectOptions,
+    ) {
+      const { messages, model, tools, responseApi } = payload;
+      const log = debug(`${this.logPrefix}:generateObject`);
+
+      log(
+        'generateObjectWithTools called with model: %s, toolsCount: %d',
+        model,
+        tools?.length || 0,
+      );
+
+      // Factory-level Responses API routing control (supports instance override)
+      const shouldUseResponses = (() => {
+        const instanceGenerateObject = ((this._options as any).generateObject || {}) as {
+          useResponse?: boolean;
+          useResponseModels?: Array<string | RegExp>;
+        };
+        const flagUseResponse =
+          instanceGenerateObject.useResponse ??
+          (generateObjectConfig ? generateObjectConfig.useResponse : undefined);
+        const flagUseResponseModels =
+          instanceGenerateObject.useResponseModels ?? generateObjectConfig?.useResponseModels;
+
+        if (responseApi) {
+          log('using Responses API due to explicit responseApi flag');
+          return true;
+        }
+
+        if (flagUseResponse) {
+          log('using Responses API due to useResponse flag');
+          return true;
+        }
+
+        // Use factory-configured model list if provided
+        if (model && flagUseResponseModels?.length) {
+          const matches = flagUseResponseModels.some((m: string | RegExp) =>
+            typeof m === 'string' ? model.includes(m) : (m as RegExp).test(model),
+          );
+          if (matches) {
+            log('using Responses API: model %s matches useResponseModels config', model);
+            return true;
+          }
+        }
+
+        // Default: use built-in responsesAPIModels
+        if (model && responsesAPIModels.has(model)) {
+          log('using Responses API: model %s in built-in responsesAPIModels', model);
+          return true;
+        }
+
+        log('using Chat Completions API for tool calling');
+        return false;
+      })();
+
+      if (shouldUseResponses) {
+        log('calling responses.create for tool calling');
+        const input = await convertOpenAIResponseInputs(messages as any);
+
+        const res = await this.client.responses.create(
+          {
+            input,
+            model,
+            tool_choice: 'required',
+            tools: tools!.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
+            user: options?.user,
+          },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        const functionCalls = res.output?.filter((item: any) => item.type === 'function_call');
+
+        log('received %d function calls from Responses API', functionCalls?.length || 0);
+
+        try {
+          const result = functionCalls?.map((item: any) => ({
+            arguments:
+              typeof item.arguments === 'string' ? JSON.parse(item.arguments) : item.arguments,
+            name: item.name,
+          }));
+          log(
+            'successfully parsed function calls: %O',
+            result?.map((r) => r.name),
+          );
+          return result;
+        } catch (error) {
+          log('failed to parse tool call arguments: %O', error);
+          console.error('parse tool call arguments error:', res);
+          return undefined;
+        }
+      }
+
+      log('calling chat.completions.create for tool calling');
+      const msgs = messages;
+
+      const res = await this.client.chat.completions.create(
+        {
+          messages: msgs,
+          model,
+          tool_choice: 'required',
+          tools,
+          user: options?.user,
+        },
+        { headers: options?.headers, signal: options?.signal },
+      );
+
+      const toolCalls = res.choices[0].message.tool_calls!;
+
+      log('received %d tool calls from Chat Completions API', toolCalls?.length || 0);
+
+      try {
+        const result = toolCalls.map((item) => ({
+          arguments: JSON.parse(item.function.arguments),
+          name: item.function.name,
+        }));
+        log(
+          'successfully parsed tool calls: %O',
+          result.map((r) => r.name),
+        );
+        return result;
+      } catch (error) {
+        log('failed to parse tool call arguments: %O', error);
+        console.error('parse tool call arguments error:', res);
+        return undefined;
+      }
+    }
   };
 };

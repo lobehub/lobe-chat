@@ -1,4 +1,4 @@
-import { ChatCompletionFunctions } from './chat';
+import { ChatCompletionTool } from './chat';
 
 interface GenerateObjectMessage {
   content: string;
@@ -23,8 +23,7 @@ export interface GenerateObjectPayload {
   model: string;
   responseApi?: boolean;
   schema?: GenerateObjectSchema;
-  systemRole?: string;
-  tools?: ChatCompletionFunctions[];
+  tools?: ChatCompletionTool[];
 }
 
 export interface GenerateObjectOptions {
