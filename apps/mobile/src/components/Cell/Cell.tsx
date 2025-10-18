@@ -14,6 +14,7 @@ const Cell = memo<CellProps>(
     description,
     title,
     showArrow = true,
+    danger,
     icon,
     extra,
     arrowIcon,
@@ -28,7 +29,7 @@ const Cell = memo<CellProps>(
     const theme = useTheme();
     const titleNode =
       typeof title === 'string' ? (
-        <Text ellipsis fontSize={16} {...titleProps}>
+        <Text ellipsis fontSize={16} type={danger ? 'danger' : undefined} {...titleProps}>
           {title}
         </Text>
       ) : (
@@ -36,7 +37,7 @@ const Cell = memo<CellProps>(
       );
     const descriptionNode =
       typeof description === 'string' ? (
-        <Text ellipsis type={'secondary'} {...descriptionProps}>
+        <Text ellipsis type={danger ? 'danger' : 'secondary'} {...descriptionProps}>
           {description}
         </Text>
       ) : (
@@ -53,7 +54,7 @@ const Cell = memo<CellProps>(
         }}
       >
         {typeof extra === 'string' ? (
-          <Text ellipsis style={{ maxWidth: 100 }} type={'secondary'}>
+          <Text ellipsis style={{ maxWidth: 100 }} type={danger ? 'danger' : 'secondary'}>
             {extra}
           </Text>
         ) : (
@@ -95,7 +96,14 @@ const Cell = memo<CellProps>(
             overflow: 'hidden',
           }}
         >
-          {icon && <Icon icon={icon} size={iconSize} {...iconProps} />}
+          {icon && (
+            <Icon
+              color={danger ? theme.colorError : theme.colorTextSecondary}
+              icon={icon}
+              size={iconSize}
+              {...iconProps}
+            />
+          )}
           {descriptionNode ? (
             <Flexbox gap={4}>
               {titleNode}
