@@ -22,6 +22,7 @@
     "title": "Conversa Casual"
   },
   "messageCopied": "Mensagem copiada",
+  "newAgent": "Novo Assistente",
   "newChat": "Nova Conversa",
   "placeholder": "Digite sua mensagem...",
   "regenerateFailed": "Falha ao regenerar, por favor tente novamente mais tarde",
@@ -35,6 +36,10 @@
     "title": "Conversa Casual"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Descrição",
+    "done": "Concluído",
+    "name": "Nome",
     "title": "Configurações da Conversa"
   },
   "share": "Compartilhar",

@@ -22,6 +22,7 @@
     "title": "気軽におしゃべり"
   },
   "messageCopied": "メッセージがコピーされました",
+  "newAgent": "新しいアシスタント",
   "newChat": "新しい会話",
   "placeholder": "メッセージを入力してください...",
   "regenerateFailed": "再生成に失敗しました。後でもう一度お試しください。",
@@ -35,6 +36,10 @@
     "title": "気軽におしゃべり"
   },
   "setting": {
+    "avatar": "アバター",
+    "description": "説明",
+    "done": "完了",
+    "name": "名前",
     "title": "会話設定"
   },
   "share": "共有",

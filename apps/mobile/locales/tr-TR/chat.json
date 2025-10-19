@@ -22,6 +22,7 @@
     "title": "Rastgele Sohbet"
   },
   "messageCopied": "Mesaj kopyalandı",
+  "newAgent": "Yeni Asistan",
   "newChat": "Yeni Sohbet",
   "placeholder": "Mesajınızı yazın...",
   "regenerateFailed": "Yeniden oluşturma başarısız oldu, lütfen daha sonra tekrar deneyin",
@@ -35,6 +36,10 @@
     "title": "Rastgele Sohbet"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Açıklama",
+    "done": "Tamamlandı",
+    "name": "İsim",
     "title": "Oturum Ayarları"
   },
   "share": "Paylaş",
