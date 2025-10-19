@@ -143,7 +143,7 @@
     "@fal-ai/client": "^1.6.2",
     "@formkit/auto-animate": "^0.9.0",
     "@google/genai": "^1.24.0",
-    "@huggingface/inference": "^2.8.1",
+    "@huggingface/inference": "^4.11.3",
     "@icons-pack/react-simple-icons": "^13.8.0",
     "@khmyznikov/pwa-install": "0.3.9",
     "@langchain/community": "^0.3.57",
