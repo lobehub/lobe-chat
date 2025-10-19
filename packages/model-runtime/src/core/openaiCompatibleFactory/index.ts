@@ -208,32 +208,39 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
         log('chat called with model: %s, stream: %s', payload.model, payload.stream ?? true);
 
-        // 工厂级 Responses API 路由控制（支持实例覆盖）
-        const modelId = (payload as any).model as string | undefined;
-        const shouldUseResponses = (() => {
+        let processedPayload: any = payload;
+        const userApiMode = (payload as any).apiMode;
+
+        if (userApiMode === 'responses') {
+          // User switch is ON, check if model is in the whitelist
+          const modelId = (payload as any).model as string | undefined;
           const instanceChat = ((this._options as any).chatCompletion || {}) as {
             useResponse?: boolean;
             useResponseModels?: Array<string | RegExp>;
           };
-          const flagUseResponse =
-            instanceChat.useResponse ?? (chatCompletion ? chatCompletion.useResponse : undefined);
           const flagUseResponseModels =
             instanceChat.useResponseModels ?? chatCompletion?.useResponseModels;
 
-          if (!chatCompletion && !instanceChat) return false;
-          if (flagUseResponse) return true;
-          if (!modelId || !flagUseResponseModels?.length) return false;
-          return flagUseResponseModels.some((m: string | RegExp) =>
-            typeof m === 'string' ? modelId.includes(m) : (m as RegExp).test(modelId),
-          );
-        })();
+          // Check if model matches useResponseModels whitelist
+          const modelInWhitelist = (() => {
+            if (!modelId) return false;
+            if (!flagUseResponseModels?.length) return true; // No whitelist = allow all
+            return flagUseResponseModels.some((m: string | RegExp) =>
+              typeof m === 'string' ? modelId.includes(m) : (m as RegExp).test(modelId),
+            );
+          })();
 
-        let processedPayload: any = payload;
-        if (shouldUseResponses) {
-          log('using Responses API mode');
-          processedPayload = { ...payload, apiMode: 'responses' } as any;
+          if (modelInWhitelist) {
+            log('using Responses API mode (switch ON + model in whitelist)');
+            // Keep apiMode: 'responses'
+          } else {
+            log('using Chat Completions API mode (switch ON but model not in whitelist)');
+            processedPayload = { ...payload, apiMode: undefined } as any;
+          }
         } else {
-          log('using Chat Completions API mode');
+          // User switch is OFF or not set, always use Chat Completions API
+          log('using Chat Completions API mode (switch OFF)');
+          processedPayload = { ...payload, apiMode: undefined } as any;
         }
 
         // 再进行工厂级处理

@@ -18,8 +18,8 @@ import { Flexbox } from 'react-layout-kit';
 import { useAiInfraStore } from '@/store/aiInfra/store';
 import { CreateAiProviderParams } from '@/types/aiProvider';
 
-import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../customProviderSdkOptions';
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
+import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../customProviderSdkOptions';
 
 interface CreateNewProviderProps {
   onClose?: () => void;
@@ -41,6 +41,15 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
         ...values,
         name: values.name || values.id,
       };
+
+      // 只为 openai 和 router (newapi) 类型的自定义 provider 添加 supportResponsesApi: true
+      const sdkType = values.settings?.sdkType;
+      if (sdkType === 'openai' || sdkType === 'router') {
+        finalValues.settings = {
+          ...finalValues.settings,
+          supportResponsesApi: true,
+        };
+      }
 
       await createNewAiProvider(finalValues);
       setLoading(false);
