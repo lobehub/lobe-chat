@@ -22,6 +22,7 @@
     "title": "편하게 대화하기"
   },
   "messageCopied": "메시지가 복사되었습니다",
+  "newAgent": "새 에이전트",
   "newChat": "새 대화",
   "placeholder": "메시지를 입력하세요...",
   "regenerateFailed": "재생성에 실패했습니다. 잠시 후 다시 시도해 주세요.",
@@ -35,6 +36,10 @@
     "title": "편하게 대화하기"
   },
   "setting": {
+    "avatar": "아바타",
+    "description": "설명",
+    "done": "완료",
+    "name": "이름",
     "title": "대화 설정"
   },
   "share": "공유",

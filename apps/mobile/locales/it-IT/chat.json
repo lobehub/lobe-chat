@@ -22,6 +22,7 @@
     "title": "Parliamo liberamente"
   },
   "messageCopied": "Messaggio copiato",
+  "newAgent": "Nuovo assistente",
   "newChat": "Nuova conversazione",
   "placeholder": "Inserisci il tuo messaggio...",
   "regenerateFailed": "Rigenerazione fallita, riprova più tardi",
@@ -35,6 +36,10 @@
     "title": "Parliamo liberamente"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Descrizione",
+    "done": "Fatto",
+    "name": "Nome",
     "title": "Impostazioni della conversazione"
   },
   "share": "Condividi",
