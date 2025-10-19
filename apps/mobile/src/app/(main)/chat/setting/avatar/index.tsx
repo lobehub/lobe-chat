@@ -1,13 +1,16 @@
 import { Avatar, Button, Center, EmojiSelector, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { router } from 'expo-router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
 
 export default function AvatarSetting() {
+  const { t } = useTranslation(['chat']);
   const [loading, setLoading] = useState(false);
   const defaultAvatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
+  const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
   const [avatar, setAvatar] = useState<string>(defaultAvatar || '🤖');
 
   const theme = useTheme();
@@ -19,19 +22,18 @@ export default function AvatarSetting() {
           loading={loading}
           onPress={async () => {
             setLoading(true);
-            console.log(avatar);
-            // TODO: 增加保存逻辑
+            await updateSessionMeta({ avatar });
             setLoading(false);
             router.back();
           }}
           size={'small'}
           type={'primary'}
         >
-          完成
+          {t('setting.done')}
         </Button>
       }
       showBack
-      title={'头像'}
+      title={t('setting.avatar')}
     >
       <Center padding={16}>
         <Center

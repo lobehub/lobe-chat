@@ -1,13 +1,16 @@
 import { Button, Flexbox, Input, PageContainer } from '@lobehub/ui-rn';
 import { router } from 'expo-router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
 
 export default function NameSetting() {
+  const { t } = useTranslation(['chat']);
   const [loading, setLoading] = useState(false);
   const defaultTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
+  const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);
   const [title, setTitle] = useState(defaultTitle || '');
   return (
     <PageContainer
@@ -16,18 +19,18 @@ export default function NameSetting() {
           loading={loading}
           onPress={async () => {
             setLoading(true);
-            // TODO: 增加保存逻辑
+            await updateSessionMeta({ title });
             setLoading(false);
             router.back();
           }}
           size={'small'}
           type={'primary'}
         >
-          完成
+          {t('setting.done')}
         </Button>
       }
       showBack
-      title={'名称'}
+      title={t('setting.name')}
     >
       <Flexbox padding={16}>
         <Input defaultValue={defaultTitle || ''} onChangeText={setTitle} value={title || ''} />

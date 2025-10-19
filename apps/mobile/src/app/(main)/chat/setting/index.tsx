@@ -21,13 +21,17 @@ export default function AgentDetail() {
             <Cell
               extra={<Avatar alt={title} avatar={avatar || '🤖'} size={32} />}
               onPress={() => router.push('/chat/setting/avatar')}
-              title={'头像'}
+              title={t('setting.avatar')}
             />
-            <Cell extra={title} onPress={() => router.push('/chat/setting/name')} title={'名称'} />
+            <Cell
+              extra={title}
+              onPress={() => router.push('/chat/setting/name')}
+              title={t('setting.name')}
+            />
             <Cell
               extra={description}
               onPress={() => router.push('/chat/setting/description')}
-              title={'描述'}
+              title={t('setting.description')}
             />
           </>
         }
