@@ -22,6 +22,7 @@
     "title": "Discuter librement"
   },
   "messageCopied": "Message copié",
+  "newAgent": "Nouvel assistant",
   "newChat": "Nouvelle conversation",
   "placeholder": "Entrez votre message...",
   "regenerateFailed": "Échec de la régénération, veuillez réessayer plus tard",
@@ -35,6 +36,10 @@
     "title": "Discuter librement"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Description",
+    "done": "Terminé",
+    "name": "Nom",
     "title": "Paramètres de la conversation"
   },
   "share": "Partager",
