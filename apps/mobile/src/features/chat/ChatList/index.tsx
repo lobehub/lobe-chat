@@ -204,9 +204,10 @@ export default function ChatListChatList({ style }: ChatListProps) {
   }
 
   return (
-    <Flexbox flex={1} paddingInline={16} style={style}>
+    <Flexbox flex={1} style={style}>
       <FlashList
         ListEmptyComponent={renderEmptyComponent}
+        contentContainerStyle={{ paddingHorizontal: 16 }}
         data={messages}
         getItemType={(chatMessage) => {
           return chatMessage.role;
