@@ -2,7 +2,7 @@ import { LobeHub } from '@lobehub/icons-rn';
 import { ActionIcon, Flexbox, PageContainer } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
-import { CompassIcon, LucideComponent } from 'lucide-react-native';
+import { CompassIcon, LucideComponent, MessageSquarePlus } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useCallback } from 'react';
 import { useWindowDimensions } from 'react-native';
@@ -10,7 +10,9 @@ import { Drawer } from 'react-native-drawer-layout';
 
 import { ICON_SIZE } from '@/_const/common';
 import { DRAWER_WIDTH } from '@/_const/theme';
+import { useActionSWR } from '@/libs/swr';
 import { useGlobalStore } from '@/store/global';
+import { useSessionStore } from '@/store/session';
 import { isIOS } from '@/utils/detection';
 import { isDev } from '@/utils/env';
 
@@ -23,6 +25,11 @@ export default function SideBar({ children }: { children: ReactNode }) {
   const winDim = useWindowDimensions();
 
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
+  const createSession = useSessionStore((s) => s.createSession);
+  const { mutate: createNewSession, isValidating: isCreatingSession } = useActionSWR(
+    ['session.createSession'],
+    () => createSession(),
+  );
 
   const onOpenDrawer = useCallback(() => setDrawerOpen(true), [setDrawerOpen]);
   const onCloseDrawer = useCallback(() => setDrawerOpen(false), [setDrawerOpen]);
@@ -63,6 +70,16 @@ export default function SideBar({ children }: { children: ReactNode }) {
                   />
                 </Link>
               )}
+              <ActionIcon
+                icon={MessageSquarePlus}
+                loading={isCreatingSession}
+                onPress={() => createNewSession()}
+                size={{
+                  blockSize: 36,
+                  borderRadius: 36,
+                  size: ICON_SIZE,
+                }}
+              />
               <Link asChild href="/discover/assistant">
                 <ActionIcon
                   icon={CompassIcon}
