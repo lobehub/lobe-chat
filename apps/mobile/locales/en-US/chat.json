@@ -22,6 +22,7 @@
     "title": "Casual Chat"
   },
   "messageCopied": "Message copied",
+  "newAgent": "New Assistant",
   "newChat": "New Chat",
   "placeholder": "Type your message...",
   "regenerateFailed": "Regeneration failed, please try again later",
@@ -35,6 +36,10 @@
     "title": "Casual Chat"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Description",
+    "done": "Done",
+    "name": "Name",
     "title": "Conversation Settings"
   },
   "share": "Share",

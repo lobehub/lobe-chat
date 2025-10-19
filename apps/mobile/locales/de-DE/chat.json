@@ -22,6 +22,7 @@
     "title": "Einfach plaudern"
   },
   "messageCopied": "Nachricht kopiert",
+  "newAgent": "Neuer Assistent",
   "newChat": "Neues Gespräch",
   "placeholder": "Gib deine Nachricht ein...",
   "regenerateFailed": "Erneutes Generieren fehlgeschlagen, bitte versuche es später erneut",
@@ -35,6 +36,10 @@
     "title": "Einfach plaudern"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Beschreibung",
+    "done": "Fertig",
+    "name": "Name",
     "title": "Konversationseinstellungen"
   },
   "share": "Teilen",

@@ -22,6 +22,7 @@
     "title": "Trò chuyện tự do"
   },
   "messageCopied": "Đã sao chép tin nhắn",
+  "newAgent": "Tạo trợ lý mới",
   "newChat": "Cuộc trò chuyện mới",
   "placeholder": "Nhập tin nhắn của bạn...",
   "regenerateFailed": "Tạo lại thất bại, vui lòng thử lại sau",
@@ -35,6 +36,10 @@
     "title": "Trò chuyện tự do"
   },
   "setting": {
+    "avatar": "Ảnh đại diện",
+    "description": "Mô tả",
+    "done": "Hoàn thành",
+    "name": "Tên",
     "title": "Cài đặt cuộc trò chuyện"
   },
   "share": "Chia sẻ",
