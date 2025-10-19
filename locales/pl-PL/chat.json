@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Przełącz model"
   },
+  "active": "aktywny",
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
@@ -13,17 +14,28 @@
     "thought": "Proces myślenia",
     "unknownTitle": "Nienazwane dzieło"
   },
+  "availableAgents": "Dostępni asystenci",
   "backToBottom": "Przewiń na dół",
   "chatList": {
     "longMessageDetail": "Zobacz szczegóły"
   },
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
+  "confirmRemoveChatGroupItemAlert": "Grupa czatu zostanie usunięta, członkowie grupy nie zostaną dotknięci, potwierdź swoją operację",
+  "confirmRemoveGroupItemAlert": "Zaraz zostanie usunięta ta grupa. Po jej usunięciu asystenci z tej grupy zostaną przeniesieni do listy domyślnej. Potwierdź swoją operację",
+  "confirmRemoveGroupSuccess": "Grupa czatu została pomyślnie usunięta",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionSuccess": "Sesja usunięta pomyślnie",
   "defaultAgent": "Domyślny asystent",
+  "defaultGroupChat": "Grupa czatu",
   "defaultList": "Domyślna lista",
   "defaultSession": "Domyślna sesja",
+  "dm": {
+    "placeholder": "Twoje prywatne wiadomości z {{agentTitle}} będą tutaj wyświetlane.",
+    "tooltip": "Wyślij prywatną wiadomość",
+    "visibleTo": "Widoczne tylko dla {{target}}",
+    "you": "Ty"
+  },
   "duplicateSession": {
     "loading": "Kopiowanie...",
     "success": "Kopiowanie zakończone powodzeniem",
@@ -58,11 +70,56 @@
       "title": "Wyodrębnij zawartość linku do strony"
     }
   },
+  "group": {
+    "desc": "Współpracuj z wieloma asystentami AI w wspólnej przestrzeni konwersacji.",
+    "memberTooltip": "W grupie jest {{count}} członków",
+    "orchestratorThinking": "Organizator myśli...",
+    "removeMember": "Usuń członka",
+    "title": "Grupa"
+  },
+  "groupDescription": "Opis grupy",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Dodaj członka",
+      "memberSettings": "Ustawienia członka",
+      "orchestrator": "Organizator",
+      "orchestratorThinking": "Organizator myśli...",
+      "removeMember": "Usuń członka",
+      "stopOrchestrator": "Zatrzymaj myślenie",
+      "triggerOrchestrator": "Rozpocznij czat grupowy"
+    },
+    "tabs": {
+      "host": "Gospodarz",
+      "members": "Członkowie",
+      "role": "Ustawienia"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Wybierz istniejących asystentów...",
+    "createGroup": "Utwórz grupę czatu",
+    "existingMembers": "Istniejący członkowie",
+    "groupMembers": "Ci asystenci zostaną również dodani do Twojej listy",
+    "host": {
+      "description": "Automatyzuje działanie czatu grupowego",
+      "title": "Gospodarz",
+      "tooltip": "Jeśli wyłączysz gospodarza czatu grupowego, będziesz musiał ręcznie oznaczać członków za pomocą @, aby mogli odpowiedzieć"
+    },
+    "memberCount": "{{count}} członków",
+    "noMatchingTemplates": "Brak pasujących szablonów",
+    "noSelectedTemplates": "Nie wybrano szablonów",
+    "noTemplateMembers": "Brak członków w szablonie",
+    "noTemplates": "Brak dostępnych szablonów",
+    "searchTemplates": "Szukaj szablonów...",
+    "title": "Utwórz grupę czatu",
+    "useTemplate": "Użyj szablonu"
+  },
+  "hideForYou": "Treść prywatnej wiadomości została ukryta, włącz opcję 【Pokaż treść prywatnych wiadomości】 w ustawieniach, aby zobaczyć",
   "history": {
     "title": "Asystent zapamięta tylko ostatnie {{count}} wiadomości"
   },
   "historyRange": "Zakres historii",
   "historySummary": "Podsumowanie wiadomości historycznych",
+  "inactive": "Nieaktywny",
   "inbox": {
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "Rozumiemy i analizujemy Twoje intencje..."
   },
+  "inviteMembers": "Zaproś członków",
   "knowledgeBase": {
     "all": "Wszystkie treści",
     "allFiles": "Wszystkie pliki",
@@ -101,12 +159,29 @@
     "uploadGuide": "Przesłane pliki można przeglądać w „Bazie wiedzy”",
     "viewMore": "Zobacz więcej"
   },
+  "memberSelection": {
+    "addMember": "Dodaj członka",
+    "allMembers": "Wszyscy członkowie",
+    "createGroup": "Utwórz grupę czatu",
+    "noAvailableAgents": "Brak dostępnych asystentów do zaproszenia",
+    "noSelectedAgents": "Nie wybrano jeszcze asystentów",
+    "searchAgents": "Szukaj asystentów...",
+    "setInitialMembers": "Wybierz członków grupy"
+  },
+  "members": "Członkowie",
+  "mention": {
+    "title": "Wzmianka o członkach"
+  },
   "messageAction": {
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
     "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
     "regenerate": "Wygeneruj ponownie"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Widoczne tylko dla {{name}}",
+      "title": "Wiadomość prywatna"
+    },
     "modelCard": {
       "credit": "Punkty",
       "creditPricing": "Cennik",
@@ -156,6 +231,13 @@
     "previousMessage": "Poprzednia wiadomość"
   },
   "newAgent": "Nowy asystent",
+  "newGroupChat": "Utwórz nowy czat grupowy",
+  "noAgentsYet": "W tej grupie nie ma jeszcze asystenta. Kliknij przycisk „+”, aby zaprosić asystenta.",
+  "noAvailableAgents": "Brak dostępnych asystentów do zaproszenia",
+  "noMatchingAgents": "Brak pasujących asystentów",
+  "noMembersYet": "W tej grupie nie ma jeszcze żadnych członków. Kliknij przycisk +, aby zaprosić asystentów.",
+  "noSelectedAgents": "Nie wybrano jeszcze asystenta",
+  "owner": "Właściciel grupy",
   "pin": "Przypnij",
   "pinOff": "Odepnij",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "Wyszukiwanie w sieci"
   },
   "searchAgentPlaceholder": "Wyszukaj pomocnika...",
+  "searchAgents": "Asystent wyszukiwania...",
+  "selectedAgents": "Wybrani asystenci",
   "sendPlaceholder": "Wpisz treść rozmowy...",
   "sessionGroup": {
     "config": "Zarządzanie grupami",
     "confirmRemoveGroupAlert": "Czy na pewno chcesz usunąć tę grupę? Po usunięciu asystenci z tej grupy zostaną przeniesieni do domyślnej listy. Potwierdź swoje działanie.",
     "createAgentSuccess": "Utworzenie asystenta zakończone sukcesem",
     "createGroup": "Dodaj nową grupę",
+    "createGroupFailed": "Nie udało się utworzyć grupy czatu",
+    "createGroupSuccess": "Grupa czatu została utworzona pomyślnie",
     "createSuccess": "Utworzono pomyślnie",
     "creatingAgent": "Tworzenie asystenta...",
     "inputPlaceholder": "Wprowadź nazwę grupy...",
@@ -235,6 +321,12 @@
     "loading": "Rozpoznawanie...",
     "prettifying": "Upiększanie..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "Wszystkie zadania zostały ukończone",
+      "title": "Zadania ukończone"
+    }
+  },
   "thread": {
     "divider": "Podwątek",
     "threadMessageCount": "{{messageCount}} wiadomości",
@@ -248,6 +340,7 @@
     "chats": "Rozmowy",
     "historySummary": "Podsumowanie historii",
     "rest": "Pozostałe",
+    "supervisor": "Organizator grupy",
     "systemRole": "Rola systemowa",
     "title": "Szczegóły tokena",
     "tools": "Narzędzia",
@@ -273,6 +366,7 @@
     "action": "Czytaj tekst",
     "clear": "Wyczyść czytanie"
   },
+  "untitledAgent": "Asystent bez nazwy",
   "updateAgent": "Aktualizuj informacje asystenta",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "Rozmiar pliku wideo nie może przekraczać 20MB, aktualny rozmiar pliku to {{actualSize}}"
     }
   },
+  "you": "ty",
   "zenMode": "Tryb skupienia"
 }

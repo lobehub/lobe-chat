@@ -767,6 +767,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un équilibre idéal entre intelligence et vitesse pour les charges de travail d'entreprise. Il fournit une utilité maximale à un coût inférieur, fiable et adapté à un déploiement à grande échelle."
   },
+  "claude-haiku-4-5-20251001": {
+    "description": "Claude Haiku 4.5 est le modèle Haiku le plus rapide et le plus intelligent d'Anthropic, offrant une vitesse fulgurante et des capacités de raisonnement étendues."
+  },
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 est le modèle le plus puissant d'Anthropic pour traiter des tâches hautement complexes. Il se distingue par ses performances, son intelligence, sa fluidité et sa capacité de compréhension exceptionnelles."
   },
@@ -1147,6 +1150,9 @@
   },
   "doubao-seed-1.6-flash": {
     "description": "Doubao-Seed-1.6-flash est un modèle multimodal de réflexion profonde à vitesse d'inférence extrême, avec un TPOT de seulement 10 ms ; il supporte à la fois la compréhension textuelle et visuelle, avec une capacité de compréhension textuelle supérieure à la génération lite précédente, et une compréhension visuelle comparable aux modèles pro des concurrents. Il prend en charge une fenêtre contextuelle de 256k et une longueur de sortie maximale de 16k tokens."
+  },
+  "doubao-seed-1.6-lite": {
+    "description": "Doubao-Seed-1.6-lite est un tout nouveau modèle multimodal de raisonnement profond, avec un effort de raisonnement ajustable (Minimal, Faible, Moyen, Élevé). Il offre un excellent rapport qualité-prix et constitue le meilleur choix pour les tâches courantes, avec une fenêtre de contexte allant jusqu'à 256k."
   },
   "doubao-seed-1.6-thinking": {
     "description": "Le modèle Doubao-Seed-1.6-thinking a une capacité de réflexion considérablement renforcée. Par rapport à Doubao-1.5-thinking-pro, il améliore davantage les compétences fondamentales telles que le codage, les mathématiques et le raisonnement logique, tout en supportant la compréhension visuelle. Il prend en charge une fenêtre contextuelle de 256k et une longueur de sortie maximale de 16k tokens."
@@ -1541,9 +1547,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possède de puissantes capacités de raisonnement complexe, se distinguant dans les domaines du raisonnement logique, des mathématiques et de la programmation."
   },
-  "glm4.6:355b": {
-    "description": "Le tout dernier modèle phare de Zhipu, le GLM-4.6 (355B), surpasse largement ses prédécesseurs en matière de codage avancé, de traitement de longs textes, de raisonnement et de capacités d'agents intelligents. Il est particulièrement performant en programmation, atteignant le niveau de Claude Sonnet 4, ce qui en fait l’un des meilleurs modèles de codage en Chine."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash offre des fonctionnalités de nouvelle génération et des améliorations, incluant une vitesse exceptionnelle, l'utilisation d'outils intégrés, la génération multimodale et une fenêtre de contexte de 1 million de tokens."
   },
@@ -1934,11 +1937,17 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small est idéal pour les tâches de génération, débogage et refactorisation de code, avec une latence minimale."
   },
+  "inclusionAI/Ling-1T": {
+    "description": "Ling-1T est le premier modèle phare de la série \"Ling 2.0\", un modèle non-réfléchissant doté de 1 000 milliards de paramètres totaux et environ 50 milliards de paramètres actifs par token. Construit sur l'architecture Ling 2.0, Ling-1T vise à repousser les limites du raisonnement efficace et de la cognition évolutive. Ling-1T-base a été entraîné sur plus de 20 000 milliards de tokens de haute qualité et riches en raisonnement."
+  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0 est le troisième modèle de la série d'architectures Ling 2.0 publié par l'équipe Bailing du groupe Ant. C'est un modèle d'experts mixtes (MoE) avec un total de 100 milliards de paramètres, mais n'activant que 6,1 milliards de paramètres par token (dont 4,8 milliards hors embeddings). En tant que modèle léger, Ling-flash-2.0 affiche des performances comparables voire supérieures à celles des modèles denses de 40 milliards de paramètres et des modèles MoE de plus grande taille dans plusieurs évaluations de référence reconnues. Ce modèle vise à explorer des voies d'efficacité sous le consensus « grand modèle = grand nombre de paramètres » grâce à une conception d'architecture et des stratégies d'entraînement optimales."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 est un modèle de langage de grande taille compact et performant basé sur l'architecture MoE. Il possède 16 milliards de paramètres au total, mais n'active que 1,4 milliard par token (789 millions hors embeddings), permettant une vitesse de génération très élevée. Grâce à une conception MoE efficace et à un entraînement massif sur des données de haute qualité, Ling-mini-2.0 offre des performances de pointe sur les tâches en aval, comparables à celles des modèles denses de moins de 10 milliards de paramètres et des modèles MoE plus grands."
+  },
+  "inclusionAI/Ring-1T": {
+    "description": "Ring-1T est un modèle open source à l’échelle du billion de paramètres, développé par l’équipe Bailing. Il est basé sur l’architecture Ling 2.0 et le modèle de base Ling-1T, avec un total de 1 000 milliards de paramètres et 50 milliards de paramètres actifs. Il prend en charge une fenêtre de contexte allant jusqu’à 128K et a été optimisé via un apprentissage par renforcement avec récompenses vérifiables à grande échelle."
   },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0 est un modèle de réflexion haute performance profondément optimisé à partir de Ling-flash-2.0-base. Il utilise une architecture d'experts mixtes (MoE) avec un total de 100 milliards de paramètres, mais n'active que 6,1 milliards de paramètres à chaque inférence. Ce modèle résout, grâce à l'algorithme innovant icepop, l'instabilité des grands modèles MoE lors de l'entraînement par apprentissage par renforcement (RL), permettant une amélioration continue des capacités de raisonnement complexe sur de longues périodes d'entraînement. Ring-flash-2.0 a réalisé des avancées significatives dans plusieurs benchmarks difficiles tels que les compétitions mathématiques, la génération de code et le raisonnement logique. Ses performances surpassent non seulement les meilleurs modèles denses de moins de 40 milliards de paramètres, mais rivalisent aussi avec des modèles MoE open source plus grands et des modèles de réflexion propriétaires haute performance. Bien que focalisé sur le raisonnement complexe, il excelle également dans les tâches de création littéraire. De plus, grâce à sa conception efficace, Ring-flash-2.0 offre des performances puissantes tout en assurant une inférence rapide, réduisant considérablement les coûts de déploiement dans des scénarios à forte concurrence."
@@ -2035,9 +2044,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Le modèle d'instructions affiné Llama 3.3 est optimisé pour les scénarios de dialogue, surpassant de nombreux modèles de chat open source existants dans les tests de référence courants de l'industrie."
-  },
-  "llama-4-maverick-17b-128e-instruct": {
-    "description": "Llama 4 Maverick : un modèle haute performance de la série Llama, idéal pour le raisonnement avancé, la résolution de problèmes complexes et les tâches de suivi d'instructions."
   },
   "llama-4-scout-17b-16e-instruct": {
     "description": "Llama 4 Scout : un modèle haute performance de la série Llama, conçu pour les scénarios nécessitant un haut débit et une faible latence."
@@ -2906,6 +2912,9 @@
   "qwen3-8b": {
     "description": "Qwen3 est un modèle de nouvelle génération avec des capacités considérablement améliorées, atteignant des niveaux de pointe dans plusieurs compétences clés telles que le raisonnement, l'universalité, l'agent et le multilingue, tout en prenant en charge le changement de mode de pensée."
   },
+  "qwen3-coder-30b-a3b-instruct": {
+    "description": "Version open source du modèle de génération de code Qwen. Le dernier qwen3-coder-30b-a3b-instruct, basé sur Qwen3, est un modèle puissant de génération de code doté de capacités avancées d’agent de codage. Il excelle dans l’appel d’outils et l’interaction avec l’environnement, permettant une programmation autonome tout en conservant des compétences générales solides."
+  },
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Version open source du modèle de code Tongyi Qianwen. Le dernier qwen3-coder-480b-a35b-instruct est un modèle de génération de code basé sur Qwen3, doté de puissantes capacités d'agent de codage, expert en appels d'outils et interactions environnementales, capable de programmation autonome avec d'excellentes compétences en code tout en conservant des capacités générales."
   },
@@ -2927,11 +2936,29 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "Modèle open source de nouvelle génération en mode réflexif basé sur Qwen3, avec une meilleure conformité aux instructions et des réponses plus concises dans les résumés par rapport à la version précédente (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
   },
+  "qwen3-omni-flash": {
+    "description": "Le modèle Qwen-Omni accepte des entrées combinées de texte, image, audio et vidéo, et génère des réponses sous forme de texte ou de voix. Il propose plusieurs voix synthétiques réalistes, prend en charge plusieurs langues et dialectes, et peut être utilisé dans des scénarios tels que la création de contenu, la reconnaissance visuelle et les assistants vocaux."
+  },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Instruct est un modèle multimodal lancé par Tongyi Qianwen, prenant en charge la compréhension et le raisonnement visuels."
+    "description": "Qwen3 VL 235B A22B en mode non-réfléchissant (Instruct), conçu pour les scénarios d'instructions simples tout en conservant de puissantes capacités de compréhension visuelle."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Thinking est un modèle de raisonnement multimodal lancé par Tongyi Qianwen, prenant en charge la compréhension et le raisonnement visuels."
+    "description": "Qwen3 VL 235B A22B en mode réfléchi (version open source), offre des capacités de raisonnement visuel et textuel de pointe pour les scénarios complexes nécessitant une compréhension approfondie et un raisonnement sur de longues vidéos."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B en mode non-réfléchissant (Instruct), adapté aux scénarios d'instructions générales, avec de solides capacités de compréhension et de génération multimodales."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen-VL (version open source) offre des capacités de compréhension visuelle et de génération de texte, prenant en charge l’interaction avec des agents, l’encodage visuel, la perception spatiale, la compréhension de longues vidéos et le raisonnement approfondi. Il excelle également dans la reconnaissance de texte complexe et le support multilingue dans des contextes complexes."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B en mode non-réfléchissant (Instruct), idéal pour les tâches courantes de génération et de reconnaissance multimodales."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B en mode réfléchi, conçu pour des scénarios légers de raisonnement et d’interaction multimodale, tout en conservant une bonne compréhension des longs contextes."
+  },
+  "qwen3-vl-flash": {
+    "description": "Qwen3 VL Flash : version allégée à inférence rapide, idéale pour les scénarios sensibles à la latence ou les requêtes en grand volume."
   },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL est un modèle de génération de texte doté de capacités de compréhension visuelle (images). Il peut non seulement effectuer de l'OCR (reconnaissance de texte sur images), mais aussi résumer et raisonner davantage, par exemple extraire des attributs à partir de photos de produits ou résoudre des exercices à partir d'images."

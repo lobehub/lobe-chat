@@ -31,7 +31,7 @@
   "batchDelete": "Elimina in batch",
   "blog": "Blog sui prodotti",
   "branching": "Crea un sottotema",
-  "branchingDisable": "La funzione «sottotema» è disponibile solo nella versione server. Se desideri utilizzare questa funzione, passa alla modalità di distribuzione server o utilizza LobeChat Cloud.",
+  "branchingDisable": "La funzione \"Sotto-argomenti\" non è disponibile nella modalità attuale. Per utilizzarla, passa alla modalità Postgres/Pglite DB oppure utilizza LobeHub Cloud.",
   "branchingRequiresSavedTopic": "L'argomento corrente non è salvato, è necessario salvarlo prima di poter utilizzare la funzione di sottoargomento",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",

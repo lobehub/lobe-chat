@@ -103,7 +103,7 @@ export class ConfigService {
     if (!session) return;
 
     const messages = await messageService.getAllMessagesInSession(id);
-    const topics = await topicService.getTopics({ sessionId: id });
+    const topics = await topicService.getTopics({ containerId: id });
 
     const config = createConfigFile('singleSession', { messages, sessions: [session], topics });
     return { config, title: `${session.meta?.title}-session` };

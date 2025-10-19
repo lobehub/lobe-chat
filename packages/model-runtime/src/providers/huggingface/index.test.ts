@@ -168,33 +168,6 @@ describe('LobeHuggingFaceAI', () => {
         });
       });
 
-      it('should use default max_tokens of 4096 when not provided', () => {
-        const mockClient = {
-          chatCompletionStream: vi.fn().mockReturnValue({
-            async *[Symbol.asyncIterator]() {
-              yield { choices: [] } as any;
-            },
-          }),
-        } as any;
-
-        const mockInstance = {
-          baseURL: 'https://api.example.com',
-        };
-
-        const payload = {
-          messages: [{ role: 'user', content: 'test' }],
-          model: 'test-model',
-        };
-
-        params.customClient!.createChatCompletionStream(mockClient, payload as any, mockInstance);
-
-        expect(mockClient.chatCompletionStream).toHaveBeenCalledWith(
-          expect.objectContaining({
-            max_tokens: 4096,
-          }),
-        );
-      });
-
       it('should handle undefined baseURL', () => {
         const mockClient = {
           chatCompletionStream: vi.fn().mockReturnValue({
@@ -385,129 +358,180 @@ describe('LobeHuggingFaceAI', () => {
     });
 
     it('should fetch and process models from HuggingFace API', async () => {
-      const mockModels = [
-        {
-          id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
-          tags: ['text-generation', 'llama'],
-        },
-        {
-          id: 'microsoft/Phi-3-mini-4k-instruct',
-          tags: ['text-generation'],
-        },
-      ];
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'meta-llama',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'huggingface',
+                status: 'live',
+                context_length: 8192,
+                supports_tools: false,
+                supports_structured_output: false,
+                is_model_author: true,
+              },
+            ],
+          },
+          {
+            id: 'microsoft/Phi-3-mini-4k-instruct',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'microsoft',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'huggingface',
+                status: 'live',
+                context_length: 4096,
+                supports_tools: false,
+                supports_structured_output: false,
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
 
-      expect(fetch).toHaveBeenCalledWith('https://huggingface.co/api/models', {
-        method: 'GET',
-      });
-      expect(models).toHaveLength(2);
-      expect(models[0].id).toBe('meta-llama/Meta-Llama-3.1-8B-Instruct');
-      expect(models[1].id).toBe('microsoft/Phi-3-mini-4k-instruct');
+      expect(fetch).toHaveBeenCalledWith('https://router.huggingface.co/v1/models');
+      expect(models.length).toBeGreaterThan(0);
     });
 
-    it('should detect function-calling ability from tags', async () => {
-      const mockModels = [
-        {
-          id: 'test-model',
-          tags: ['function-calling', 'text-generation'],
-        },
-      ];
+    it('should detect function-calling ability from provider info', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'test-model',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'test',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'test',
+                status: 'live',
+                supports_tools: true,
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
 
+      expect(models.length).toBeGreaterThan(0);
       expect(models[0].functionCall).toBe(true);
     });
 
-    it('should detect vision ability from vision keywords in tags', async () => {
-      const mockModels = [
-        {
-          id: 'vision-model-1',
-          tags: ['image-text-to-text', 'text-generation'],
-        },
-        {
-          id: 'vision-model-2',
-          tags: ['multimodal', 'text-generation'],
-        },
-        {
-          id: 'vision-model-3',
-          tags: ['vision', 'text-generation'],
-        },
-      ];
+    it('should detect vision ability from input_modalities', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'vision-model-1',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'test',
+            architecture: {
+              input_modalities: ['image', 'text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'test',
+                status: 'live',
+                is_model_author: true,
+              },
+            ],
+          },
+          {
+            id: 'vision-model-2',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'test',
+            architecture: {
+              input_modalities: ['image'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'test',
+                status: 'live',
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
 
-      expect(models[0].vision).toBe(true);
-      expect(models[1].vision).toBe(true);
-      expect(models[2].vision).toBe(true);
-    });
-
-    it('should detect reasoning ability from reasoning tag', async () => {
-      const mockModels = [
-        {
-          id: 'reasoning-model',
-          tags: ['reasoning', 'text-generation'],
-        },
-      ];
-
-      global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
-      } as Response);
-
-      const models = await params.models!();
-
-      expect(models[0].reasoning).toBe(true);
-    });
-
-    it('should detect reasoning ability from reasoning keywords in model id', async () => {
-      const mockModels = [
-        {
-          id: 'deepseek-r1-model',
-          tags: ['text-generation'],
-        },
-        {
-          id: 'qvq-model',
-          tags: ['text-generation'],
-        },
-        {
-          id: 'qwq-model',
-          tags: ['text-generation'],
-        },
-      ];
-
-      global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
-      } as Response);
-
-      const models = await params.models!();
-
-      expect(models[0].reasoning).toBe(true);
-      expect(models[1].reasoning).toBe(true);
-      expect(models[2].reasoning).toBe(true);
+      expect(models.length).toBeGreaterThan(0);
+      const visionModels = models.filter((m) => m.vision);
+      expect(visionModels.length).toBeGreaterThan(0);
     });
 
     it('should merge with LOBE_DEFAULT_MODEL_LIST when model is known', async () => {
-      const mockModels = [
-        {
-          id: 'meta-llama/llama-3.3-70b-instruct',
-          tags: ['text-generation'],
-        },
-      ];
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'meta-llama/llama-3.3-70b-instruct',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'meta-llama',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'huggingface',
+                status: 'live',
+                context_length: 8192,
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
@@ -522,67 +546,126 @@ describe('LobeHuggingFaceAI', () => {
     });
 
     it('should handle models with case-insensitive matching', async () => {
-      const mockModels = [
-        {
-          id: 'META-LLAMA/LLAMA-3.3-70B-INSTRUCT',
-          tags: ['text-generation'],
-        },
-      ];
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'META-LLAMA/LLAMA-3.3-70B-INSTRUCT',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'meta-llama',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'huggingface',
+                status: 'live',
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
 
+      expect(models.length).toBeGreaterThan(0);
       expect(models[0].id).toBe('META-LLAMA/LLAMA-3.3-70B-INSTRUCT');
     });
 
     it('should set default values for unknown models', async () => {
-      const mockModels = [
-        {
-          id: 'unknown/unknown-model',
-          tags: ['text-generation'],
-        },
-      ];
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'unknown/unknown-model',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'unknown',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'unknown',
+                status: 'live',
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
 
+      expect(models.length).toBeGreaterThan(0);
       expect(models[0].enabled).toBe(false);
       expect(models[0].functionCall).toBe(false);
       expect(models[0].reasoning).toBe(false);
       expect(models[0].vision).toBe(false);
     });
 
-    it('should combine tag-based and model-list-based abilities', async () => {
-      const mockModels = [
-        {
-          id: 'meta-llama/llama-3.3-70b-instruct',
-          tags: ['function-calling', 'reasoning'],
-        },
-      ];
+    it('should combine provider-based and model-list-based abilities', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'meta-llama/llama-3.3-70b-instruct',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'meta-llama',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'huggingface',
+                status: 'live',
+                supports_tools: true,
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
 
       const model = models.find((m) => m.id === 'meta-llama/llama-3.3-70b-instruct');
       if (model) {
-        // Should have true if either tag or model list has the ability
+        // Should have true if either provider info or model list has the ability
         expect(typeof model.functionCall).toBe('boolean');
-        expect(typeof model.reasoning).toBe('boolean');
       }
     });
 
     it('should handle empty model list', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [],
+      };
+
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => [],
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
@@ -593,50 +676,88 @@ describe('LobeHuggingFaceAI', () => {
     it('should handle API errors gracefully', async () => {
       global.fetch = vi.fn().mockRejectedValue(new Error('API Error'));
 
-      await expect(params.models!()).rejects.toThrow('API Error');
+      const result = await params.models!();
+      expect(result).toEqual([]);
     });
 
     it('should handle invalid JSON response', async () => {
       global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
         json: async () => {
           throw new Error('Invalid JSON');
         },
       } as unknown as Response);
 
-      await expect(params.models!()).rejects.toThrow('Invalid JSON');
+      const result = await params.models!();
+      expect(result).toEqual([]);
     });
 
-    it('should preserve contextWindowTokens from known models', async () => {
-      const mockModels = [
-        {
-          id: 'meta-llama/llama-3.3-70b-instruct',
-          tags: [],
-        },
-      ];
+    it('should preserve contextWindowTokens from provider info', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'meta-llama/llama-3.3-70b-instruct',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'meta-llama',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'huggingface',
+                status: 'live',
+                context_length: 8192,
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
       const model = models.find((m) => m.id === 'meta-llama/llama-3.3-70b-instruct');
 
       if (model) {
-        // contextWindowTokens should be preserved from LOBE_DEFAULT_MODEL_LIST if available
-        expect(model.contextWindowTokens).toBeDefined();
+        // contextWindowTokens should be preserved from provider info
+        expect(model.contextWindowTokens).toBe(8192);
       }
     });
 
     it('should preserve displayName from known models', async () => {
-      const mockModels = [
-        {
-          id: 'meta-llama/llama-3.3-70b-instruct',
-          tags: [],
-        },
-      ];
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'meta-llama/llama-3.3-70b-instruct',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'meta-llama',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'huggingface',
+                status: 'live',
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
 
       global.fetch = vi.fn().mockResolvedValue({
-        json: async () => mockModels,
+        ok: true,
+        json: async () => mockResponse,
       } as Response);
 
       const models = await params.models!();
@@ -645,6 +766,385 @@ describe('LobeHuggingFaceAI', () => {
       if (model) {
         // displayName should be preserved from LOBE_DEFAULT_MODEL_LIST if available
         expect(model.displayName).toBeDefined();
+      }
+    });
+
+    it('should fallback to other providers when model_author has missing context_length', async () => {
+      // 场景：zai-org 是 is_model_author 但没有 context_length，novita provider 有完整信息
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'zai-org/GLM-4.6',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'zai-org',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'novita',
+                status: 'live',
+                context_length: 204800,
+                pricing: {
+                  input: 0.6,
+                  output: 2.2,
+                },
+                supports_tools: true,
+                supports_structured_output: false,
+                is_model_author: false,
+              },
+              {
+                provider: 'zai-org',
+                status: 'live',
+                supports_tools: true,
+                supports_structured_output: false,
+                is_model_author: true,
+                // context_length 缺失
+              },
+            ],
+          },
+        ],
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      const models = await params.models!();
+      expect(models.length).toBeGreaterThan(0);
+
+      const model = models[0];
+      // 应该从 novita provider 回退获取到 context_length
+      expect(model.contextWindowTokens).toBe(204800);
+      // 应该从 zai-org provider 获取到 supports_tools
+      expect(model.functionCall).toBe(true);
+    });
+
+    it('should fallback to other providers when model_author has missing supports_tools', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'test/model',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'test',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'provider-with-tools',
+                status: 'live',
+                context_length: 2048,
+                supports_tools: true,
+                is_model_author: false,
+              },
+              {
+                provider: 'author',
+                status: 'live',
+                context_length: 2048,
+                is_model_author: true,
+                // supports_tools 缺失
+              },
+            ],
+          },
+        ],
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      const models = await params.models!();
+      expect(models.length).toBeGreaterThan(0);
+
+      const model = models[0];
+      // 应该从 author provider 获取到 context_length
+      expect(model.contextWindowTokens).toBe(2048);
+      // 应该从 provider-with-tools 回退获取到 supports_tools
+      expect(model.functionCall).toBe(true);
+    });
+
+    it('should use model_author provider data when all fields are present', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'author/complete-model',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'author',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'other',
+                status: 'live',
+                context_length: 1024,
+                supports_tools: false,
+                is_model_author: false,
+              },
+              {
+                provider: 'author',
+                status: 'live',
+                context_length: 8192,
+                supports_tools: true,
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      const models = await params.models!();
+      expect(models.length).toBeGreaterThan(0);
+
+      const model = models[0];
+      // 应该使用 author provider 的完整数据，而不是 other provider
+      expect(model.contextWindowTokens).toBe(8192);
+      expect(model.functionCall).toBe(true);
+    });
+
+    it('should select provider with most complete information when no model_author', async () => {
+      // 场景：没有 is_model_author，但 novita provider 信息更完整
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'deepseek-ai/DeepSeek-V3.2-Exp',
+            object: 'model',
+            created: 1759126046,
+            owned_by: 'deepseek-ai',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'novita',
+                status: 'live',
+                context_length: 163840,
+                pricing: {
+                  input: 0.27,
+                  output: 0.41,
+                },
+                supports_tools: true,
+                supports_structured_output: true,
+                is_model_author: false,
+              },
+            ],
+          },
+        ],
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      const models = await params.models!();
+      expect(models.length).toBeGreaterThan(0);
+
+      const model = models[0];
+      // 应该从 novita provider 获取完整信息
+      expect(model.contextWindowTokens).toBe(163840);
+      expect(model.functionCall).toBe(true);
+      expect(model.id).toBe('deepseek-ai/DeepSeek-V3.2-Exp');
+    });
+
+    it('should prefer provider with more fields when is_model_author is absent', async () => {
+      // 场景：两个非作者 provider，选择信息更完整的
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'test/model',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'test',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'provider-incomplete',
+                status: 'live',
+                context_length: 2048,
+                // 只有 3 个字段
+                is_model_author: false,
+              },
+              {
+                provider: 'provider-complete',
+                status: 'live',
+                context_length: 4096,
+                supports_tools: true,
+                supports_structured_output: true,
+                pricing: {
+                  input: 0.1,
+                  output: 0.2,
+                },
+                // 5 个字段，更完整
+                is_model_author: false,
+              },
+            ],
+          },
+        ],
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      const models = await params.models!();
+      expect(models.length).toBeGreaterThan(0);
+
+      const model = models[0];
+      // 应该选择 provider-complete（信息更完整）而不是 provider-incomplete
+      expect(model.contextWindowTokens).toBe(4096);
+      expect(model.functionCall).toBe(true);
+    });
+
+    it('should extract pricing information from provider', async () => {
+      // 场景：pricing 存在于 provider 中
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'zai-org/GLM-4.6',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'zai-org',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'novita',
+                status: 'live',
+                context_length: 204800,
+                pricing: {
+                  input: 0.6,
+                  output: 2.2,
+                },
+                supports_tools: true,
+                is_model_author: false,
+              },
+              {
+                provider: 'zai-org',
+                status: 'live',
+                supports_tools: true,
+                is_model_author: true,
+                // pricing 缺失
+              },
+            ],
+          },
+        ],
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      const models = await params.models!();
+      expect(models.length).toBeGreaterThan(0);
+
+      const model = models[0];
+      // 应该从 novita 回退获取到 pricing
+      // 注意：processMultiProviderModelList 会转换 pricing 格式
+      expect(model.pricing).toBeDefined();
+      if (model.pricing && typeof model.pricing === 'object' && 'units' in model.pricing) {
+        // 经过转换的格式
+        expect((model.pricing as any).units).toHaveLength(2);
+      } else {
+        // 原始格式
+        expect(model.pricing).toEqual({
+          input: 0.6,
+          output: 2.2,
+        });
+      }
+    });
+
+    it('should use pricing from model_author when available', async () => {
+      const mockResponse = {
+        object: 'list',
+        data: [
+          {
+            id: 'author/model',
+            object: 'model',
+            created: 1759170171,
+            owned_by: 'author',
+            architecture: {
+              input_modalities: ['text'],
+              output_modalities: ['text'],
+            },
+            providers: [
+              {
+                provider: 'other',
+                status: 'live',
+                pricing: {
+                  input: 0.1,
+                  output: 0.1,
+                },
+                is_model_author: false,
+              },
+              {
+                provider: 'author',
+                status: 'live',
+                pricing: {
+                  input: 0.05,
+                  output: 0.15,
+                },
+                is_model_author: true,
+              },
+            ],
+          },
+        ],
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      const models = await params.models!();
+      expect(models.length).toBeGreaterThan(0);
+
+      const model = models[0];
+      // 应该优先使用 author provider 的定价
+      // 注意：processMultiProviderModelList 会转换 pricing 格式
+      expect(model.pricing).toBeDefined();
+      if (model.pricing && typeof model.pricing === 'object' && 'units' in model.pricing) {
+        // 经过转换的格式，检查 rate 值
+        const pricingUnits = (model.pricing as any).units;
+        expect(pricingUnits).toHaveLength(2);
+        const inputUnit = pricingUnits.find((u: any) => u.name === 'textInput');
+        const outputUnit = pricingUnits.find((u: any) => u.name === 'textOutput');
+        expect(inputUnit?.rate).toBe(0.05);
+        expect(outputUnit?.rate).toBe(0.15);
+      } else {
+        // 原始格式
+        expect(model.pricing).toEqual({
+          input: 0.05,
+          output: 0.15,
+        });
       }
     });
   });

@@ -16,6 +16,7 @@ import { fileRouter } from './file';
 import { generationRouter } from './generation';
 import { generationBatchRouter } from './generationBatch';
 import { generationTopicRouter } from './generationTopic';
+import { groupRouter } from './group';
 import { imageRouter } from './image';
 import { importerRouter } from './importer';
 import { knowledgeBaseRouter } from './knowledgeBase';
@@ -27,6 +28,7 @@ import { sessionRouter } from './session';
 import { sessionGroupRouter } from './sessionGroup';
 import { threadRouter } from './thread';
 import { topicRouter } from './topic';
+import { uploadRouter } from './upload';
 import { userRouter } from './user';
 import { usageRouter } from './usage';
 
@@ -44,6 +46,7 @@ export const lambdaRouter = router({
   generation: generationRouter,
   generationBatch: generationBatchRouter,
   generationTopic: generationTopicRouter,
+  group: groupRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
   image: imageRouter,
   importer: importerRouter,
@@ -56,6 +59,7 @@ export const lambdaRouter = router({
   sessionGroup: sessionGroupRouter,
   thread: threadRouter,
   topic: topicRouter,
+  upload: uploadRouter,
   user: userRouter,
   usage: usageRouter,
 });

@@ -399,6 +399,11 @@
       "desc": "填入你的 Vertex AI 金鑰",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Vertex AI 金鑰"
+    },
+    "region": {
+      "desc": "選擇 Vertex AI 服務的區域。某些模型如 Gemini 2.5 僅在特定區域可用（例如 global）",
+      "placeholder": "選擇區域",
+      "title": "Vertex AI 區域"
     }
   },
   "zeroone": {

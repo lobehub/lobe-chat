@@ -20,6 +20,7 @@ import {
   LobeZhipuAI,
   ModelRuntime,
 } from '@lobechat/model-runtime';
+import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
 import { ClientSecretPayload } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 import { describe, expect, it, vi } from 'vitest';
@@ -126,6 +127,36 @@ describe('initModelRuntimeWithUserPayload method', () => {
       const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
       expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
+    });
+
+    it('Vertex AI provider: with service account json', async () => {
+      const credentials = {
+        client_email: 'vertex@test-project.iam.gserviceaccount.com',
+        private_key: '-----BEGIN PRIVATE KEY-----\nTEST\n-----END PRIVATE KEY-----\n',
+        project_id: 'test-project',
+        type: 'service_account',
+      };
+      const payload: ClientSecretPayload = { apiKey: JSON.stringify(credentials) };
+      const initSpy = vi
+        .spyOn(LobeVertexAI, 'initFromVertexAI')
+        .mockImplementation((options: any) => {
+          expect(options.project).toBe('test-project');
+          expect(options.googleAuthOptions?.credentials?.private_key).toContain('TEST');
+
+          return new LobeGoogleAI({
+            apiKey: 'avoid-error',
+            client: {} as any,
+            isVertexAi: true,
+          });
+        });
+
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.VertexAI, payload);
+
+      expect(initSpy).toHaveBeenCalledTimes(1);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
+
+      initSpy.mockRestore();
     });
 
     it('Bedrock AI provider: with apikey, awsAccessKeyId, awsSecretAccessKey, awsRegion', async () => {

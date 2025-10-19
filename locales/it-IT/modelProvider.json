@@ -399,6 +399,11 @@
       "desc": "Inserisci le tue chiavi Vertex AI",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Chiavi Vertex AI"
+    },
+    "region": {
+      "desc": "Seleziona la regione per il servizio Vertex AI. Alcuni modelli, come Gemini 2.5, sono disponibili solo in regioni specifiche (ad esempio global).",
+      "placeholder": "Seleziona una regione",
+      "title": "Regione di Vertex AI"
     }
   },
   "zeroone": {

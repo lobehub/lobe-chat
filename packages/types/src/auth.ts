@@ -27,6 +27,8 @@ export interface ClientSecretPayload {
 
   cloudflareBaseURLOrAccountID?: string;
 
+  vertexAIRegion?: string;
+
   /**
    * user id
    * in client db mode it's a uuid

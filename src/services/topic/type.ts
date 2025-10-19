@@ -4,6 +4,7 @@ import { ChatTopic, TopicRankItem } from '@/types/topic';
 
 export interface CreateTopicParams {
   favorite?: boolean;
+  groupId?: string | null;
   messages?: string[];
   sessionId?: string | null;
   title: string;
@@ -11,8 +12,8 @@ export interface CreateTopicParams {
 
 export interface QueryTopicParams {
   current?: number;
+  containerId?: string | null; // sessionId or groupId
   pageSize?: number;
-  sessionId: string;
 }
 
 export interface ITopicService {
@@ -28,7 +29,7 @@ export interface ITopicService {
     startDate?: string;
   }): Promise<number>;
   rankTopics(limit?: number): Promise<TopicRankItem[]>;
-  searchTopics(keyword: string, sessionId?: string): Promise<ChatTopic[]>;
+  searchTopics(keyword: string, sessionId?: string, groupId?: string): Promise<ChatTopic[]>;
 
   updateTopic(id: string, data: Partial<ChatTopic>): Promise<any>;
 

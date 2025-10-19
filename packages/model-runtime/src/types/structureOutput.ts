@@ -1,4 +1,4 @@
-import { ChatCompletionFunctions } from './chat';
+import { ChatCompletionTool } from './chat';
 
 interface GenerateObjectMessage {
   content: string;
@@ -6,7 +6,7 @@ interface GenerateObjectMessage {
   role: 'user' | 'system' | 'assistant';
 }
 
-interface GenerateObjectSchema {
+export interface GenerateObjectSchema {
   description?: string;
   name: string;
   schema: {
@@ -23,8 +23,7 @@ export interface GenerateObjectPayload {
   model: string;
   responseApi?: boolean;
   schema?: GenerateObjectSchema;
-  systemRole?: string;
-  tools?: ChatCompletionFunctions[];
+  tools?: ChatCompletionTool[];
 }
 
 export interface GenerateObjectOptions {

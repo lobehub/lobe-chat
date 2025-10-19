@@ -399,6 +399,11 @@
       "desc": "أدخل مفاتيح Vertex AI الخاصة بك",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "مفاتيح Vertex AI"
+    },
+    "region": {
+      "desc": "اختر منطقة خدمة Vertex AI. بعض النماذج مثل Gemini 2.5 متاحة فقط في مناطق محددة (مثل global)",
+      "placeholder": "اختر المنطقة",
+      "title": "منطقة Vertex AI"
     }
   },
   "zeroone": {

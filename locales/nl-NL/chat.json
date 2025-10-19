@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Modelen"
   },
+  "active": "Actief",
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
@@ -13,17 +14,28 @@
     "thought": "Denken proces",
     "unknownTitle": "Onbenoemd werk"
   },
+  "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
   "chatList": {
     "longMessageDetail": "Bekijk details"
   },
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",
+  "confirmRemoveChatGroupItemAlert": "Deze groepschat wordt verwijderd, de groepsleden worden niet beïnvloed. Bevestig je actie alstublieft.",
+  "confirmRemoveGroupItemAlert": "Je staat op het punt deze groep te verwijderen. Nadat de groep is verwijderd, worden de assistenten uit deze groep verplaatst naar de standaardlijst. Bevestig je actie.",
+  "confirmRemoveGroupSuccess": "Groepschat succesvol verwijderd",
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie.",
   "confirmRemoveSessionSuccess": "Sessie succesvol verwijderd",
   "defaultAgent": "Standaard assistent",
+  "defaultGroupChat": "Groepschat",
   "defaultList": "Standaardlijst",
   "defaultSession": "Standaard assistent",
+  "dm": {
+    "placeholder": "Je privéberichten met {{agentTitle}} worden hier weergegeven.",
+    "tooltip": "Stuur privébericht",
+    "visibleTo": "Alleen zichtbaar voor {{target}}",
+    "you": "jij"
+  },
   "duplicateSession": {
     "loading": "Bezig met kopiëren...",
     "success": "Kopiëren gelukt",
@@ -58,11 +70,56 @@
       "title": "Inhoud van webkoppeling extraheren"
     }
   },
+  "group": {
+    "desc": "Samenwerken met meerdere AI-assistenten in een gedeelde gespreksruimte.",
+    "memberTooltip": "De groep heeft {{count}} leden",
+    "orchestratorThinking": "De organisator denkt na...",
+    "removeMember": "Lid verwijderen",
+    "title": "Groep"
+  },
+  "groupDescription": "Groepsbeschrijving",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Lid toevoegen",
+      "memberSettings": "Lidinstellingen",
+      "orchestrator": "Organisator",
+      "orchestratorThinking": "De organisator denkt na...",
+      "removeMember": "Lid verwijderen",
+      "stopOrchestrator": "Stop met nadenken",
+      "triggerOrchestrator": "Start groepschat"
+    },
+    "tabs": {
+      "host": "Gastheer",
+      "members": "Leden",
+      "role": "Instellingen"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Kies bestaande assistenten...",
+    "createGroup": "Groepschat aanmaken",
+    "existingMembers": "Bestaande assistenten",
+    "groupMembers": "Deze assistenten worden ook aan uw lijst toegevoegd",
+    "host": {
+      "description": "Automatiseer groepschat",
+      "title": "Gastheer",
+      "tooltip": "Als de groepsgastheer is uitgeschakeld, moet je handmatig leden @vermelden om een reactie van hen te krijgen"
+    },
+    "memberCount": "{{count}} leden",
+    "noMatchingTemplates": "Geen overeenkomende sjablonen",
+    "noSelectedTemplates": "Geen sjablonen geselecteerd",
+    "noTemplateMembers": "Geen leden in de sjabloon",
+    "noTemplates": "Geen sjablonen beschikbaar",
+    "searchTemplates": "Zoek sjablonen...",
+    "title": "Groepschat aanmaken",
+    "useTemplate": "Sjabloon gebruiken"
+  },
+  "hideForYou": "Privéberichten zijn verborgen. Schakel 'Toon privéberichten' in de instellingen in om ze te bekijken.",
   "history": {
     "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
   },
   "historyRange": "Geschiedenisbereik",
   "historySummary": "Geschiedenis samenvatting",
+  "inactive": "inactief",
   "inbox": {
     "desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
     "title": "Praat maar raak"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "Bezig met het begrijpen en analyseren van uw intentie..."
   },
+  "inviteMembers": "Leden uitnodigen",
   "knowledgeBase": {
     "all": "Alle inhoud",
     "allFiles": "Alle bestanden",
@@ -101,12 +159,29 @@
     "uploadGuide": "Geüploade bestanden kunnen worden bekeken in de 'Kennisbank'.",
     "viewMore": "Bekijk meer"
   },
+  "memberSelection": {
+    "addMember": "Lid toevoegen",
+    "allMembers": "Alle leden",
+    "createGroup": "Groepschat aanmaken",
+    "noAvailableAgents": "Geen assistenten beschikbaar om uit te nodigen",
+    "noSelectedAgents": "Nog geen assistenten geselecteerd",
+    "searchAgents": "Assistenten zoeken...",
+    "setInitialMembers": "Selecteer groepsleden"
+  },
+  "members": "Leden",
+  "mention": {
+    "title": "Leden vermelden"
+  },
   "messageAction": {
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
     "regenerate": "Opnieuw genereren"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Alleen zichtbaar voor {{name}}",
+      "title": "Privébericht"
+    },
     "modelCard": {
       "credit": "Credits",
       "creditPricing": "Prijsstelling",
@@ -156,6 +231,13 @@
     "previousMessage": "Vorig bericht"
   },
   "newAgent": "Nieuwe assistent",
+  "newGroupChat": "Nieuwe groepschat",
+  "noAgentsYet": "Deze groep heeft nog geen assistenten. Klik op de +‑knop om een assistent uit te nodigen.",
+  "noAvailableAgents": "Geen beschikbare assistenten om uit te nodigen",
+  "noMatchingAgents": "Geen bijpassende assistenten gevonden",
+  "noMembersYet": "Deze groep heeft nog geen leden. Klik op de + knop om assistenten uit te nodigen.",
+  "noSelectedAgents": "Nog geen assistent geselecteerd",
+  "owner": "Groepseigenaar",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "Online zoeken"
   },
   "searchAgentPlaceholder": "Zoekassistent...",
+  "searchAgents": "Zoekassistent...",
+  "selectedAgents": "Geselecteerde assistenten",
   "sendPlaceholder": "Voer chatbericht in...",
   "sessionGroup": {
     "config": "Groepsbeheer",
     "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
     "createAgentSuccess": "Assistent succesvol aangemaakt",
     "createGroup": "Nieuwe groep toevoegen",
+    "createGroupFailed": "Het aanmaken van de groepschat is mislukt",
+    "createGroupSuccess": "Groepschat succesvol aangemaakt",
     "createSuccess": "Succesvol aangemaakt",
     "creatingAgent": "Assistent wordt aangemaakt...",
     "inputPlaceholder": "Voer de naam van de groep in...",
@@ -235,6 +321,12 @@
     "loading": "Bezig met herkennen...",
     "prettifying": "Aan het verfraaien..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "Alle taken zijn voltooid",
+      "title": "Taken voltooid"
+    }
+  },
   "thread": {
     "divider": "Subonderwerp",
     "threadMessageCount": "{{messageCount}} berichten",
@@ -248,6 +340,7 @@
     "chats": "Chats",
     "historySummary": "Geschiedenis samenvatting",
     "rest": "Rust",
+    "supervisor": "Groepsorganisator",
     "systemRole": "Systeemrol",
     "title": "Contextuele details",
     "tools": "Tools",
@@ -273,6 +366,7 @@
     "action": "Tekst-naar-spraak",
     "clear": "Spraak verwijderen"
   },
+  "untitledAgent": "Naamloze assistent",
   "updateAgent": "Assistentgegevens bijwerken",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "De grootte van het videobestand mag niet groter zijn dan 20MB, de huidige bestandsgrootte is {{actualSize}}"
     }
   },
+  "you": "jij",
   "zenMode": "Focusmodus"
 }

@@ -6,7 +6,8 @@
     ".": "./src/index.ts",
     "./server": "./src/server/index.ts",
     "./client": "./src/client/index.ts",
-    "./object": "./src/object.ts"
+    "./object": "./src/object.ts",
+    "./*": "./src/*.ts"
   },
   "scripts": {
     "test": "vitest",

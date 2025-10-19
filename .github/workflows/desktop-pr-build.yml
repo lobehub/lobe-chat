@@ -18,8 +18,8 @@ env:
 jobs:
   test:
     name: Code quality check
-    # 添加 PR label 触发条件，只有添加了 Build Desktop 标签的 PR 才会触发构建
-    if: contains(github.event.pull_request.labels.*.name, 'Build Desktop')
+    # 添加 PR label 触发条件，只有添加了 trigger:build-desktop 标签的 PR 才会触发构建
+    if: contains(github.event.pull_request.labels.*.name, 'trigger:build-desktop')
     runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
     steps:
       - name: Checkout base
@@ -51,7 +51,7 @@ jobs:
   version:
     name: Determine version
     # 与 test job 相同的触发条件
-    if: contains(github.event.pull_request.labels.*.name, 'Build Desktop')
+    if: contains(github.event.pull_request.labels.*.name, 'trigger:build-desktop')
     runs-on: ubuntu-latest
     outputs:
       # 输出版本信息，供后续 job 使用

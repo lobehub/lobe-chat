@@ -5,6 +5,7 @@ import {
   ClientSecretPayload,
   CloudflareKeyVault,
   OpenAICompatibleKeyVault,
+  VertexAIKeyVault,
 } from '@lobechat/types';
 import { clientApiKeyManager } from '@lobechat/utils/client';
 import { ModelProvider } from 'model-bank';
@@ -21,7 +22,8 @@ export const getProviderAuthPayload = (
   keyVaults: OpenAICompatibleKeyVault &
     AzureOpenAIKeyVault &
     AWSBedrockKeyVault &
-    CloudflareKeyVault,
+    CloudflareKeyVault &
+    VertexAIKeyVault,
 ) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
@@ -76,7 +78,11 @@ export const getProviderAuthPayload = (
 
     case ModelProvider.VertexAI: {
       // Vertex AI uses JSON credentials, should not split by comma
-      return { apiKey: keyVaults?.apiKey, baseURL: keyVaults?.baseURL };
+      return { 
+        apiKey: keyVaults?.apiKey, 
+        baseURL: keyVaults?.baseURL,
+        vertexAIRegion: keyVaults?.region,
+      };
     }
 
     default: {

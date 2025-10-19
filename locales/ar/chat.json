@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "النموذج"
   },
+  "active": "نشط",
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
@@ -13,17 +14,28 @@
     "thought": "عملية التفكير",
     "unknownTitle": "عمل غير مسمى"
   },
+  "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
   "chatList": {
     "longMessageDetail": "عرض التفاصيل"
   },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
+  "confirmRemoveChatGroupItemAlert": "سيتم حذف هذه المحادثة الجماعية، ولن يتأثر أعضاء المجموعة، يرجى تأكيد العملية الخاصة بك",
+  "confirmRemoveGroupItemAlert": "سيتم حذف هذه المجموعة قريبًا. بعد الحذف، سيُنتقل المساعدون في هذه المجموعة إلى القائمة الافتراضية. يرجى تأكيد إجراء الحذف.",
+  "confirmRemoveGroupSuccess": "تم حذف الدردشة الجماعية بنجاح",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionSuccess": "تم حذف المساعد بنجاح",
   "defaultAgent": "المساعد الافتراضي",
+  "defaultGroupChat": "المحادثة الجماعية",
   "defaultList": "القائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
+  "dm": {
+    "placeholder": "ستظهر رسائلك الخاصة مع {{agentTitle}} هنا.",
+    "tooltip": "أرسل رسالة خاصة",
+    "visibleTo": "مرئي فقط لـ {{target}}",
+    "you": "أنت"
+  },
   "duplicateSession": {
     "loading": "جاري النسخ...",
     "success": "تم النسخ بنجاح",
@@ -58,11 +70,56 @@
       "title": "استخراج محتوى رابط الويب"
     }
   },
+  "group": {
+    "desc": "التعاون مع عدة مساعدين للذكاء الاصطناعي في مساحة محادثة مشتركة.",
+    "memberTooltip": "هناك {{count}} عضوًا في المجموعة",
+    "orchestratorThinking": "المُنسق يفكر...",
+    "removeMember": "إزالة عضو",
+    "title": "مجموعة"
+  },
+  "groupDescription": "وصف المجموعة",
+  "groupSidebar": {
+    "members": {
+      "addMember": "إضافة عضو",
+      "memberSettings": "إعدادات العضو",
+      "orchestrator": "المُنسق",
+      "orchestratorThinking": "المُنسق يفكر...",
+      "removeMember": "إزالة عضو",
+      "stopOrchestrator": "إيقاف التفكير",
+      "triggerOrchestrator": "بدء المحادثة الجماعية"
+    },
+    "tabs": {
+      "host": "المضيف",
+      "members": "الأعضاء",
+      "role": "الإعداد"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "اختر المساعدين الحاليين...",
+    "createGroup": "إنشاء دردشة جماعية",
+    "existingMembers": "الأعضاء الحاليون",
+    "groupMembers": "سيتم أيضًا إضافة هؤلاء المساعدين إلى قائمتك",
+    "host": {
+      "description": "لجعل الدردشة الجماعية تعمل تلقائيًا",
+      "title": "المضيف",
+      "tooltip": "إذا تم تعطيل مضيف الدردشة الجماعية، فستحتاج إلى الإشارة يدويًا إلى الأعضاء باستخدام @ لكي يتمكنوا من الرد"
+    },
+    "memberCount": "{{count}} عضو",
+    "noMatchingTemplates": "لا توجد قوالب مطابقة",
+    "noSelectedTemplates": "لم يتم اختيار أي قالب",
+    "noTemplateMembers": "لا يوجد أعضاء في القالب",
+    "noTemplates": "لا توجد قوالب متاحة",
+    "searchTemplates": "ابحث في القوالب...",
+    "title": "إنشاء دردشة جماعية",
+    "useTemplate": "استخدام القالب"
+  },
+  "hideForYou": "تم إخفاء محتوى الرسائل الخاصة، يرجى تفعيل خيار 【عرض محتوى الرسائل الخاصة】 في الإعدادات للعرض",
   "history": {
     "title": "سيتذكر المساعد آخر {{count}} رسالة فقط"
   },
   "historyRange": "نطاق التاريخ",
   "historySummary": "ملخص الرسائل التاريخية",
+  "inactive": "غير نشط",
   "inbox": {
     "desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
     "title": "دردشة عشوائية"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "جارٍ فهم وتحليل نواياك..."
   },
+  "inviteMembers": "دعوة الأعضاء",
   "knowledgeBase": {
     "all": "جميع المحتويات",
     "allFiles": "جميع الملفات",
@@ -101,12 +159,29 @@
     "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في «قاعدة المعرفة»",
     "viewMore": "عرض المزيد"
   },
+  "memberSelection": {
+    "addMember": "إضافة عضو",
+    "allMembers": "جميع الأعضاء",
+    "createGroup": "إنشاء محادثة جماعية",
+    "noAvailableAgents": "لا يوجد مساعدين متاحين للدعوة",
+    "noSelectedAgents": "لم يتم اختيار مساعدين بعد",
+    "searchAgents": "البحث عن مساعدين...",
+    "setInitialMembers": "اختيار أعضاء المجموعة"
+  },
+  "members": "الأعضاء",
+  "mention": {
+    "title": "الإشارة إلى الأعضاء"
+  },
   "messageAction": {
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"
   },
   "messages": {
+    "dm": {
+      "sentTo": "مرئي فقط لـ {{name}}",
+      "title": "الرسائل الخاصة"
+    },
     "modelCard": {
       "credit": "نقاط",
       "creditPricing": "التسعير",
@@ -156,6 +231,13 @@
     "previousMessage": "الرسالة السابقة"
   },
   "newAgent": "مساعد جديد",
+  "newGroupChat": "إنشاء دردشة جماعية جديدة",
+  "noAgentsYet": "لا يوجد أي مساعد في هذه المجموعة بعد. انقر على زر + لدعوة مساعد.",
+  "noAvailableAgents": "لا يوجد مساعدون متاحون للدعوة",
+  "noMatchingAgents": "لا يوجد مساعد متطابق",
+  "noMembersYet": "لا يوجد أعضاء في هذه المجموعة بعد. انقر على زر + لدعوة المساعدين.",
+  "noSelectedAgents": "لم يتم اختيار أي مساعد بعد",
+  "owner": "مالك المجموعة",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "بحث عبر الإنترنت"
   },
   "searchAgentPlaceholder": "مساعد البحث...",
+  "searchAgents": "مساعد البحث...",
+  "selectedAgents": "المساعدون المختارون",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
   "sessionGroup": {
     "config": "إدارة المجموعات",
     "confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة قريبًا، وبعد الحذف، سيتم نقل مساعدي هذه المجموعة إلى القائمة الافتراضية، يرجى تأكيد إجراءك",
     "createAgentSuccess": "تم إنشاء المساعد بنجاح",
     "createGroup": "إضافة مجموعة جديدة",
+    "createGroupFailed": "فشل إنشاء المحادثة الجماعية",
+    "createGroupSuccess": "تم إنشاء المحادثة الجماعية بنجاح",
     "createSuccess": "تم الإنشاء بنجاح",
     "creatingAgent": "جاري إنشاء المساعد...",
     "inputPlaceholder": "الرجاء إدخال اسم المجموعة...",
@@ -235,6 +321,12 @@
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "تم إنجاز جميع المهام",
+      "title": "المهام المنجزة"
+    }
+  },
   "thread": {
     "divider": "موضوع فرعي",
     "threadMessageCount": "{{messageCount}} رسالة",
@@ -248,6 +340,7 @@
     "chats": "رسائل المحادثة",
     "historySummary": "ملخص التاريخ",
     "rest": "المتبقي",
+    "supervisor": "مُنسق المجموعة",
     "systemRole": "تعيين الدور",
     "title": "تفاصيل الرمز",
     "tools": "تعيين الإضافات",
@@ -273,6 +366,7 @@
     "action": "قراءة صوتية",
     "clear": "مسح الصوت"
   },
+  "untitledAgent": "مساعد بدون اسم",
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "لا يمكن أن يتجاوز حجم ملف الفيديو 20 ميغابايت، حجم الملف الحالي هو {{actualSize}}"
     }
   },
+  "you": "أنت",
   "zenMode": "وضع التركيز"
 }

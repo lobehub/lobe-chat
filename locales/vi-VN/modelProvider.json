@@ -399,6 +399,11 @@
       "desc": "Nhập khóa Vertex AI của bạn",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Khóa Vertex AI"
+    },
+    "region": {
+      "desc": "Chọn khu vực cho dịch vụ Vertex AI. Một số mô hình như Gemini 2.5 chỉ khả dụng ở các khu vực cụ thể (ví dụ: global)",
+      "placeholder": "Chọn khu vực",
+      "title": "Khu vực Vertex AI"
     }
   },
   "zeroone": {

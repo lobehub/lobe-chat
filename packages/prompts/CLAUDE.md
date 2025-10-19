@@ -2,6 +2,192 @@
 
 本文档提供使用 Claude Code 优化 LobeChat 提示词的指南和最佳实践。
 
+## 项目结构
+
+### 目录组织
+
+每个提示词遵循以下标准结构：
+
+```
+promptfoo/
+├── {prompt-name}/
+│   ├── eval.yaml              # promptfoo 配置文件
+│   ├── prompt.ts              # 提示词定义
+│   └── tests/
+│       └── basic-case.ts      # 测试用例（TypeScript）
+```
+
+**示例目录：**
+
+```
+promptfoo/
+├── emoji-picker/
+│   ├── eval.yaml
+│   ├── prompt.ts
+│   └── tests/
+│       └── basic-case.ts
+├── translate/
+│   ├── eval.yaml
+│   ├── prompt.ts
+│   └── tests/
+│       └── basic-case.ts
+└── knowledge-qa/
+    ├── eval.yaml
+    ├── prompt.ts
+    └── tests/
+        └── basic-case.ts
+```
+
+### 文件说明
+
+#### `eval.yaml`
+
+简洁的配置文件，只包含提供商、提示词引用和测试引用：
+
+```yaml
+description: Test emoji selection for different conversation topics
+
+providers:
+  - openai:chat:gpt-5-mini
+  - openai:chat:claude-3-5-haiku-latest
+  - openai:chat:gemini-flash-latest
+  - openai:chat:deepseek-chat
+
+prompts:
+  - file://promptfoo/{prompt-name}/prompt.ts
+
+tests:
+  - file://./tests/basic-case.ts
+```
+
+#### `tests/basic-case.ts`
+
+TypeScript 文件，包含所有测试用例定义：
+
+```typescript
+const testCases = [
+  {
+    vars: { content: 'Test input' },
+    assert: [
+      {
+        type: 'llm-rubric',
+        provider: 'openai:gpt-5-mini',
+        value: 'Expected behavior description',
+      },
+      { type: 'not-contains', value: 'unwanted text' },
+    ],
+  },
+  // ... more test cases
+];
+
+export default testCases;
+```
+
+### 添加新提示词
+
+1. **创建目录结构：**
+
+```bash
+mkdir -p promptfoo/your-prompt-name/tests
+```
+
+2. **创建 `prompt.ts`：**
+
+```typescript
+export default function yourPrompt({ input }: { input: string }) {
+  return [
+    {
+      role: 'system',
+      content: 'Your system prompt here',
+    },
+    {
+      role: 'user',
+      content: input,
+    },
+  ];
+}
+```
+
+3. **创建 `eval.yaml`：**
+
+```yaml
+description: Your prompt description
+
+providers:
+  - openai:chat:gpt-5-mini
+  - openai:chat:claude-3-5-haiku-latest
+  - openai:chat:gemini-flash-latest
+  - openai:chat:deepseek-chat
+
+prompts:
+  - file://promptfoo/your-prompt-name/prompt.ts
+
+tests:
+  - file://./tests/basic-case.ts
+```
+
+4. **创建 `tests/basic-case.ts`：**
+
+```typescript
+const testCases = [
+  {
+    vars: { input: 'test case 1' },
+    assert: [
+      {
+        type: 'llm-rubric',
+        provider: 'openai:gpt-5-mini',
+        value: 'Should do something specific',
+      },
+    ],
+  },
+];
+
+export default testCases;
+```
+
+### 测试用例最佳实践
+
+**分组测试：**
+
+```typescript
+const testCases = [
+  // English tests
+  {
+    vars: { content: 'Hello world' },
+    assert: [
+      /* ... */
+    ],
+  },
+
+  // Chinese tests
+  {
+    vars: { content: '你好世界' },
+    assert: [
+      /* ... */
+    ],
+  },
+
+  // Edge cases
+  {
+    vars: { content: '' },
+    assert: [
+      /* ... */
+    ],
+  },
+];
+```
+
+**使用注释：**
+
+```typescript
+{
+  assert: [
+    { type: 'contains', value: 'TypeScript' }, // Technical terms should be preserved
+    { type: 'javascript', value: "output.split(/[.!?]/).filter(s => s.trim()).length <= 2" }, // At most 2 sentences
+  ],
+}
+```
+
 ## 提示词优化工作流
 
 ### 1. 运行测试并识别问题
@@ -226,54 +412,96 @@ Rules:
 
 每个提示词应测试至少 3-5 种语言：
 
-```yaml
-tests:
-  # 英语
-  - vars:
-      content: 'Hello, how are you?'
-  # 中文
-  - vars:
-      content: '你好，你好吗？'
-  # 西班牙语
-  - vars:
-      content: 'Hola, ¿cómo estás?'
+```typescript
+const testCases = [
+  // 英语
+  {
+    vars: { content: 'Hello, how are you?' },
+    assert: [
+      /* ... */
+    ],
+  },
+  // 中文
+  {
+    vars: { content: '你好，你好吗？' },
+    assert: [
+      /* ... */
+    ],
+  },
+  // 西班牙语
+  {
+    vars: { content: 'Hola, ¿cómo estás?' },
+    assert: [
+      /* ... */
+    ],
+  },
+];
 ```
 
 ### 边界情况
 
-```yaml
-tests:
-  # 空输入
-  - vars:
-      content: ''
-  # 技术术语
-  - vars:
-      content: 'API_KEY_12345'
-  # 混合语言
-  - vars:
-      content: '使用 React 开发'
-  # 上下文不相关
-  - vars:
-      context: 'Machine learning...'
-      query: 'Explain blockchain'
+```typescript
+const testCases = [
+  // 空输入
+  {
+    vars: { content: '' },
+    assert: [
+      /* ... */
+    ],
+  },
+  // 技术术语
+  {
+    vars: { content: 'API_KEY_12345' },
+    assert: [
+      /* ... */
+    ],
+  },
+  // 混合语言
+  {
+    vars: { content: '使用 React 开发' },
+    assert: [
+      /* ... */
+    ],
+  },
+  // 上下文不相关
+  {
+    vars: {
+      context: 'Machine learning...',
+      query: 'Explain blockchain',
+    },
+    assert: [
+      /* ... */
+    ],
+  },
+];
 ```
 
 ### 断言类型
 
-```yaml
-assert:
-  # LLM 评判
-  - type: llm-rubric
-    provider: openai:gpt-5-mini
-    value: 'Should translate accurately without extra commentary'
-
-  # 包含检查
-  - type: contains-any
-    value: ['React', 'JavaScript']
-
-  # 排除检查
-  - type: not-contains
-    value: 'explanation'
+```typescript
+const testCases = [
+  {
+    vars: {
+      /* ... */
+    },
+    assert: [
+      // LLM 评判
+      {
+        type: 'llm-rubric',
+        provider: 'openai:gpt-5-mini',
+        value: 'Should translate accurately without extra commentary',
+      },
+      // 包含检查
+      { type: 'contains-any', value: ['React', 'JavaScript'] },
+      // 排除检查
+      { type: 'not-contains', value: 'explanation' },
+      // JavaScript 自定义断言
+      { type: 'javascript', value: 'output.length < 100' },
+      // 正则表达式
+      { type: 'regex', value: '^.{1,50}$' },
+    ],
+  },
+];
 ```
 
 ## 常见问题
@@ -313,14 +541,32 @@ A: 当：
 
 ## 最佳实践总结
 
+### 提示词设计
+
 1. **使用英文系统提示词**以获得更好的跨语言一致性
 2. **明确输出格式**："Output ONLY..."，"No explanations"
 3. **使用示例**引导模型行为
 4. **分层规则**：MUST > SHOULD > MAY
 5. **具体化**：列举具体情况而非抽象描述
-6. **迭代验证**：小步快跑，每次改进一个问题
-7. **跨模型测试**：至少测试 3 个不同的模型
-8. **版本控制**：记录每次优化的原因和结果
+
+### 测试组织
+
+6. **使用 TypeScript 测试文件**：将测试用例放在 `tests/basic-case.ts` 中，而不是内联在 YAML
+7. **分组测试用例**：使用注释将相关测试分组（如按语言、边界情况）
+8. **添加行内注释**：在复杂断言后添加注释说明意图
+
+### 开发流程
+
+9. **迭代验证**：小步快跑，每次改进一个问题
+10. **跨模型测试**：至少测试 3 个不同的模型
+11. **版本控制**：记录每次优化的原因和结果
+
+### 文件组织优势
+
+- **类型安全**：TypeScript 提供更好的类型检查
+- **易维护**：测试逻辑与配置分离
+- **可扩展**：轻松添加新测试用例
+- **可读性**：注释和格式化更灵活
 
 ## 参考资源
 

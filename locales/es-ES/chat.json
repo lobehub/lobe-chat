@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Cambiar modelo"
   },
+  "active": "Activo",
   "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
   "agentDefaultMessageWithoutEdit": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
@@ -13,17 +14,28 @@
     "thought": "Proceso de pensamiento",
     "unknownTitle": "Obra sin título"
   },
+  "availableAgents": "Agentes disponibles",
   "backToBottom": "Volver al fondo",
   "chatList": {
     "longMessageDetail": "Ver detalles"
   },
   "clearCurrentMessages": "Borrar mensajes actuales",
   "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
+  "confirmRemoveChatGroupItemAlert": "Se eliminará este chat grupal, los miembros del grupo no se verán afectados, por favor confirma tu acción",
+  "confirmRemoveGroupItemAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción",
+  "confirmRemoveGroupSuccess": "El grupo de chat se eliminó con éxito",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "confirmRemoveSessionSuccess": "Asistente eliminado con éxito",
   "defaultAgent": "Asistente predeterminado",
+  "defaultGroupChat": "Chat grupal",
   "defaultList": "Lista predeterminada",
   "defaultSession": "Asistente predeterminado",
+  "dm": {
+    "placeholder": "Tus mensajes privados con {{agentTitle}} se mostrarán aquí.",
+    "tooltip": "Enviar mensaje privado",
+    "visibleTo": "Visible solo para {{target}}",
+    "you": "tú"
+  },
   "duplicateSession": {
     "loading": "Cargando duplicado...",
     "success": "Duplicado exitoso",
@@ -58,11 +70,56 @@
       "title": "Extraer contenido del enlace web"
     }
   },
+  "group": {
+    "desc": "Colabora con varios asistentes de IA en un espacio de conversación compartido.",
+    "memberTooltip": "El grupo tiene {{count}} miembros",
+    "orchestratorThinking": "El anfitrión está pensando...",
+    "removeMember": "Eliminar miembro",
+    "title": "Grupo"
+  },
+  "groupDescription": "Descripción del grupo",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Agregar miembro",
+      "memberSettings": "Configuración de miembros",
+      "orchestrator": "Anfitrión",
+      "orchestratorThinking": "El anfitrión está pensando...",
+      "removeMember": "Eliminar miembro",
+      "stopOrchestrator": "Detener pensamiento",
+      "triggerOrchestrator": "Iniciar chat grupal"
+    },
+    "tabs": {
+      "host": "Anfitrión",
+      "members": "Miembros",
+      "role": "Configuración"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Selecciona asistentes existentes...",
+    "createGroup": "Crear grupo de chat",
+    "existingMembers": "Asistentes existentes",
+    "groupMembers": "Estos asistentes también se agregarán a tu lista",
+    "host": {
+      "description": "Automatiza el funcionamiento del chat grupal",
+      "title": "Anfitrión",
+      "tooltip": "Si se desactiva el anfitrión del grupo, deberás mencionar manualmente a los miembros con @ para que puedan responder"
+    },
+    "memberCount": "{{count}} miembros",
+    "noMatchingTemplates": "No hay plantillas que coincidan",
+    "noSelectedTemplates": "No se seleccionaron plantillas",
+    "noTemplateMembers": "No hay miembros en la plantilla",
+    "noTemplates": "No hay plantillas disponibles",
+    "searchTemplates": "Buscar plantillas...",
+    "title": "Crear grupo de chat",
+    "useTemplate": "Usar plantilla"
+  },
+  "hideForYou": "El contenido del mensaje privado está oculto, por favor activa 【Mostrar contenido de mensajes privados】 en la configuración para verlo",
   "history": {
     "title": "El asistente solo recordará los últimos {{count}} mensajes"
   },
   "historyRange": "Rango de historial",
   "historySummary": "Resumen de mensajes históricos",
+  "inactive": "inactivo",
   "inbox": {
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "Entendiendo y analizando su intención..."
   },
+  "inviteMembers": "Invitar a miembros",
   "knowledgeBase": {
     "all": "Todo el contenido",
     "allFiles": "Todos los archivos",
@@ -101,12 +159,29 @@
     "uploadGuide": "Los archivos subidos se pueden ver en la 'Base de conocimiento'.",
     "viewMore": "Ver más"
   },
+  "memberSelection": {
+    "addMember": "Agregar miembro",
+    "allMembers": "Todos los miembros",
+    "createGroup": "Crear chat grupal",
+    "noAvailableAgents": "No hay asistentes disponibles para invitar",
+    "noSelectedAgents": "No se ha seleccionado ningún asistente",
+    "searchAgents": "Buscar asistentes...",
+    "setInitialMembers": "Seleccionar miembros del grupo"
+  },
+  "members": "Miembros",
+  "mention": {
+    "title": "Mencionar miembros"
+  },
   "messageAction": {
     "delAndRegenerate": "Eliminar y Regenerar",
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Visible solo para {{name}}",
+      "title": "Mensaje privado"
+    },
     "modelCard": {
       "credit": "Créditos",
       "creditPricing": "Precios",
@@ -156,6 +231,13 @@
     "previousMessage": "Mensaje anterior"
   },
   "newAgent": "Nuevo asistente",
+  "newGroupChat": "Crear nuevo chat de grupo",
+  "noAgentsYet": "Este grupo aún no tiene asistentes. Haz clic en el botón + para invitar asistentes.",
+  "noAvailableAgents": "No hay asistentes disponibles para invitar",
+  "noMatchingAgents": "No se encontraron asistentes coincidentes",
+  "noMembersYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
+  "noSelectedAgents": "No se ha seleccionado ningún asistente",
+  "owner": "Propietario del grupo",
   "pin": "Fijar",
   "pinOff": "Desfijar",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "Búsqueda en línea"
   },
   "searchAgentPlaceholder": "Asistente de búsqueda...",
+  "searchAgents": "Asistente de búsqueda...",
+  "selectedAgents": "Agentes seleccionados",
   "sendPlaceholder": "Escribe tu mensaje...",
   "sessionGroup": {
     "config": "Gestión de grupos",
     "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
     "createAgentSuccess": "Asistente creado con éxito",
     "createGroup": "Crear nuevo grupo",
+    "createGroupFailed": "Error al crear el chat grupal",
+    "createGroupSuccess": "Chat grupal creado con éxito",
     "createSuccess": "Grupo creado con éxito",
     "creatingAgent": "Creando asistente...",
     "inputPlaceholder": "Introduce el nombre del grupo...",
@@ -235,6 +321,12 @@
     "loading": "Reconociendo...",
     "prettifying": "Embelleciendo..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "Todas las tareas están completadas",
+      "title": "Tareas completadas"
+    }
+  },
   "thread": {
     "divider": "Subtema",
     "threadMessageCount": "{{messageCount}} mensajes",
@@ -248,6 +340,7 @@
     "chats": "Mensajes de chat",
     "historySummary": "Resumen histórico",
     "rest": "Restante",
+    "supervisor": "Anfitrión del grupo",
     "systemRole": "Rol del sistema",
     "title": "Detalles del token",
     "tools": "Herramientas",
@@ -273,6 +366,7 @@
     "action": "Lectura de voz",
     "clear": "Borrar voz"
   },
+  "untitledAgent": "Asistente sin título",
   "updateAgent": "Actualizar información del asistente",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "El tamaño del archivo de video no puede superar los 20 MB, el tamaño actual es {{actualSize}}"
     }
   },
+  "you": "tú",
   "zenMode": "Modo de concentración"
 }

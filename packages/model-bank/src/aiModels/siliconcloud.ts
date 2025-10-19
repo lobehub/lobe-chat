@@ -7,6 +7,48 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 131_072,
+    description:
+      'Ring-1T 是一款由百灵（Bailing）团队发布的万亿参数规模的开源思想模型。它基于 Ling 2.0 架构和 Ling-1T-base 基础模型训练，总参数量达 1 万亿，激活参数量为 500 亿，并支持高达 128K 的上下文窗口。该模型通过大规模可验证奖励强化学习进行优化。',
+    displayName: 'Ring-1T',
+    id: 'inclusionAI/Ring-1T',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-14',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Ling-1T 是"灵 2.0"系列的首款旗舰级 non-thinking 模型，拥有 1 万亿总参数和每 token 约 500 亿个活动参数。基于灵 2.0 架构构建，Ling-1T 旨在突破高效推理和可扩展认知的极限。Ling-1T-base 在超过 20 万亿个高质量、推理密集的 token 上进行训练。',
+    displayName: 'Ling-1T',
+    id: 'inclusionAI/Ling-1T',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-09',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 198_000,
     description:
       '与 GLM-4.5 相比，GLM-4.6 带来了多项关键改进。其上下文窗口从 128K 扩展到 200K tokens，使模型能够处理更复杂的智能体任务。模型在代码基准测试中取得了更高的分数，并在 Claude Code、Cline、Roo Code 和 Kilo Code 等应用中展现了更强的真实世界性能，包括在生成视觉效果精致的前端页面方面有所改进。GLM-4.6 在推理性能上表现出明显提升，并支持在推理过程中使用工具，从而带来了更强的综合能力。它在工具使用和基于搜索的智能体方面表现更强，并且能更有效地集成到智能体框架中。在写作方面，该模型在风格和可读性上更符合人类偏好，并在角色扮演场景中表现得更自然。',
@@ -150,6 +192,52 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-8B-Instruct 是 Qwen3 系列的视觉语言模型，基于 Qwen3-8B-Instruct 开发并在大量图文数据上训练，擅长通用视觉理解、以视觉为中心的对话以及图像中的多语言文本识别。适用于视觉问答、图像描述、多模态指令跟随与工具调用场景。',
+    displayName: 'Qwen3 VL 8B Instruct',
+    id: 'Qwen/Qwen3-VL-8B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-8B-Thinking 是 Qwen3 系列的视觉思考版本，针对复杂多步推理任务优化，默认在回答前生成逐步思考（thinking chain）以提高推理准确性。适合需要深度推理的视觉问答、审阅图像内容并给出详细分析的场景。',
+    displayName: 'Qwen3 VL 8B Thinking',
+    id: 'Qwen/Qwen3-VL-8B-Thinking',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-15',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1457,6 +1545,52 @@ const siliconcloudImageModels: AIImageModelCard[] = [
       },
     },
     releasedAt: '2024-07-06',
+    type: 'image',
+  },
+  {
+    description:
+      'Qwen-Image 是由阿里巴巴通义千问团队发布的图像生成基础模型，拥有 200 亿参数。该模型在复杂的文本渲染和精确的图像编辑方面取得了显著进展，尤其擅长生成包含高保真度中英文文字的图像。Qwen-Image 不仅能够处理多行布局和段落级文本，还能在生成图像时保持排版的连贯性和上下文的和谐。除了卓越的文本渲染能力，该模型还支持广泛的艺术风格，从写实照片到动漫美学，能够灵活适应各种创作需求。同时，它也具备强大的图像编辑和理解能力，支持风格迁移、物体增删、细节增强、文本编辑乃至人体姿态操控等高级操作，旨在成为一个集语言、布局和图像于一体的综合性智能视觉创作与处理基础模型',
+    displayName: 'Qwen-Image',
+    enabled: true,
+    id: 'Qwen/Qwen-Image',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1328x1328',
+        enum: ['1328x1328', '1584x1056', '1140x1472', '1664x928', '928x1664'],
+      },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2025-08-04',
+    type: 'image',
+  },
+  {
+    description:
+      'Qwen-Image-Edit-2509 是由阿里巴巴通义千问团队发布的 Qwen-Image 的图像编辑最新版本。该模型基于 20B 参数的 Qwen-Image 模型进行深入训练，将其独特的文本渲染能力成功扩展至图像编辑领域，实现了对图片中文字的精准编辑。此外，Qwen-Image-Edit 采用了一种创新的架构，将输入图像同时送入 Qwen2.5-VL（用于视觉语义控制）和 VAE Encoder（用于视觉外观控制），从而兼具语义与外观的双重编辑能力。这意味着它不仅支持元素的添加、删除或修改等局部外观编辑，还支持如 IP 创作、风格迁移等需要保持语义一致性的高阶视觉语义编辑。模型在多个公开基准测试中展现了顶尖（SOTA）的性能，使其成为一个强大的图像编辑基础模型',
+    displayName: 'Qwen-Image-Edit (2509)',
+    enabled: true,
+    id: 'Qwen/Qwen-Image-Edit-2509',
+    parameters: {
+      imageUrls: {
+        default: [],
+        maxCount: 3,
+      },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+    },
+    pricing: {
+      currency: 'CNY',
+      units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
+    },
+    releasedAt: '2025-09-22',
     type: 'image',
   },
 ];

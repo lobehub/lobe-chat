@@ -266,6 +266,7 @@ export const chatPlugin: StateCreator<
         tool_call_id: payload.id,
         threadId,
         topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
+        groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
       const id = await get().internal_createMessage(toolMessage);

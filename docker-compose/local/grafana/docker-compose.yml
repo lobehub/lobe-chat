@@ -151,7 +151,7 @@ services:
   otel-tracing-test:
     profiles:
       - otel-test
-    image: ghcr.io/grafana/xk6-client-tracing:v0.0.7
+    image: ghcr.io/grafana/xk6-client-tracing:v0.0.9
     container_name: lobe-otel-tracing-test
     network_mode: 'service:network-service'
     restart: always

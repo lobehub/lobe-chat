@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "مدل"
   },
+  "active": "فعال",
   "agentDefaultMessage": "سلام، من **{{name}}** هستم. می‌توانید همین حالا با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
   "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، چگونه می‌توانم به شما کمک کنم؟",
   "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، چگونه می‌توانم به شما کمک کنم؟",
@@ -13,17 +14,28 @@
     "thought": "فرآیند تفکر",
     "unknownTitle": "اثر بدون نام"
   },
+  "availableAgents": "دستیاران در دسترس",
   "backToBottom": "بازگشت به پایین",
   "chatList": {
     "longMessageDetail": "مشاهده جزئیات"
   },
   "clearCurrentMessages": "پاک کردن پیام‌های جلسه فعلی",
   "confirmClearCurrentMessages": "پیام‌های جلسه فعلی به زودی پاک خواهند شد و پس از پاک شدن قابل بازیابی نخواهند بود. لطفاً عملیات خود را تأیید کنید.",
+  "confirmRemoveChatGroupItemAlert": "در حال حذف این گروه چت هستید، اعضای گروه تحت تأثیر قرار نمی‌گیرند، لطفاً عملیات خود را تأیید کنید",
+  "confirmRemoveGroupItemAlert": "در حال حذف این گروه هستید؛ پس از حذف، دستیاران این گروه به فهرست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
+  "confirmRemoveGroupSuccess": "حذف گروه چت با موفقیت انجام شد",
   "confirmRemoveSessionItemAlert": "این دستیار به زودی حذف خواهد شد و پس از حذف قابل بازیابی نخواهد بود، لطفاً عملیات خود را تأیید کنید.",
   "confirmRemoveSessionSuccess": "حذف دستیار با موفقیت انجام شد",
   "defaultAgent": "دستیار سفارشی",
+  "defaultGroupChat": "گروه چت",
   "defaultList": "فهرست پیش‌فرض",
   "defaultSession": "دستیار سفارشی",
+  "dm": {
+    "placeholder": "پیام‌های خصوصی بین شما و {{agentTitle}} در اینجا نمایش داده می‌شوند.",
+    "tooltip": "ارسال پیام خصوصی",
+    "visibleTo": "فقط برای {{target}} قابل مشاهده است",
+    "you": "تو"
+  },
   "duplicateSession": {
     "loading": "در حال کپی کردن...",
     "success": "کپی با موفقیت انجام شد",
@@ -58,11 +70,56 @@
       "title": "استخراج محتوای لینک وب"
     }
   },
+  "group": {
+    "desc": "در یک فضای گفتگوی مشترک با چندین دستیار هوش مصنوعی همکاری کنید.",
+    "memberTooltip": "این گروه {{count}} عضو دارد",
+    "orchestratorThinking": "مجری در حال فکر کردن است...",
+    "removeMember": "حذف عضو",
+    "title": "گروه‌ها"
+  },
+  "groupDescription": "توضیحات گروه",
+  "groupSidebar": {
+    "members": {
+      "addMember": "افزودن عضو",
+      "memberSettings": "تنظیمات اعضا",
+      "orchestrator": "مجری",
+      "orchestratorThinking": "مجری در حال فکر کردن است...",
+      "removeMember": "حذف عضو",
+      "stopOrchestrator": "توقف فکر کردن",
+      "triggerOrchestrator": "شروع گروه چت"
+    },
+    "tabs": {
+      "host": "میزبان",
+      "members": "اعضا",
+      "role": "تنظیمات"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "انتخاب دستیاران موجود...",
+    "createGroup": "ایجاد گروه چت",
+    "existingMembers": "دستیاران موجود",
+    "groupMembers": "این دستیاران نیز به فهرست شما اضافه خواهند شد",
+    "host": {
+      "description": "اجرای خودکار چت گروهی",
+      "title": "مجری",
+      "tooltip": "اگر میزبانی گروه غیرفعال شود، باید به‌صورت دستی با @ اعضا را منشن کنید تا بتوانند پاسخ دهند"
+    },
+    "memberCount": "{{count}} عضو",
+    "noMatchingTemplates": "هیچ قالبی مطابقت ندارد",
+    "noSelectedTemplates": "هیچ قالبی انتخاب نشده است",
+    "noTemplateMembers": "در قالب هیچ عضوی وجود ندارد",
+    "noTemplates": "هیچ قالبی در دسترس نیست",
+    "searchTemplates": "جستجوی قالب‌ها...",
+    "title": "ایجاد گروه چت",
+    "useTemplate": "استفاده از قالب"
+  },
+  "hideForYou": "محتوای پیام خصوصی مخفی شده است، لطفاً برای مشاهده آن گزینه «نمایش محتوای پیام خصوصی» را در تنظیمات فعال کنید",
   "history": {
     "title": "دستیار فقط آخرین {{count}} پیام را به خاطر خواهد سپرد"
   },
   "historyRange": "محدوده تاریخی",
   "historySummary": "خلاصه پیام‌های تاریخی",
+  "inactive": "غیرفعال",
   "inbox": {
     "desc": "خوشه‌های مغزی را فعال کنید و جرقه‌های تفکر را برانگیزید. دستیار هوشمند شما اینجاست تا با شما در مورد هر چیزی صحبت کند.",
     "title": "گپ دوستانه"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "در حال درک و تحلیل نیت شما..."
   },
+  "inviteMembers": "دعوت اعضا",
   "knowledgeBase": {
     "all": "همه محتوا",
     "allFiles": "همه فایل‌ها",
@@ -101,12 +159,29 @@
     "uploadGuide": "فایل‌های آپلود شده را می‌توانید در «پایگاه دانش» مشاهده کنید.",
     "viewMore": "مشاهده بیشتر"
   },
+  "memberSelection": {
+    "addMember": "افزودن عضو",
+    "allMembers": "تمام اعضا",
+    "createGroup": "ایجاد گروه چت",
+    "noAvailableAgents": "دستیار قابل دعوت وجود ندارد",
+    "noSelectedAgents": "هنوز دستیار انتخاب نشده است",
+    "searchAgents": "جستجوی دستیار...",
+    "setInitialMembers": "انتخاب اعضای گروه"
+  },
+  "members": "اعضا",
+  "mention": {
+    "title": "ذکر اعضا"
+  },
   "messageAction": {
     "delAndRegenerate": "حذف و بازتولید",
     "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
     "regenerate": "بازتولید"
   },
   "messages": {
+    "dm": {
+      "sentTo": "فقط برای {{name}} قابل مشاهده است",
+      "title": "پیام خصوصی"
+    },
     "modelCard": {
       "credit": "اعتبار",
       "creditPricing": "قیمت گذاری",
@@ -156,6 +231,13 @@
     "previousMessage": "پیام قبلی"
   },
   "newAgent": "دستیار جدید",
+  "newGroupChat": "ایجاد چت گروهی جدید",
+  "noAgentsYet": "در این گروه هنوز هیچ دستیار وجود ندارد. برای دعوت دستیار، روی دکمهٔ «+» کلیک کنید.",
+  "noAvailableAgents": "هیچ دستیاری برای دعوت موجود نیست",
+  "noMatchingAgents": "هیچ دستیار مطابقتی یافت نشد",
+  "noMembersYet": "این گروه هنوز عضوی ندارد. برای دعوت دستیاران، روی دکمهٔ + کلیک کنید.",
+  "noSelectedAgents": "هنوز هیچ دستیار انتخاب نشده است",
+  "owner": "صاحب گروه",
   "pin": "سنجاق کردن",
   "pinOff": "لغو سنجاق",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "جستجوی متصل"
   },
   "searchAgentPlaceholder": "جستجوی دستیار...",
+  "searchAgents": "دستیار جستجو...",
+  "selectedAgents": "دستیاران انتخاب‌شده",
   "sendPlaceholder": "نوشتن پیام...",
   "sessionGroup": {
     "config": "مدیریت گروه",
     "confirmRemoveGroupAlert": "این گروه در حال حذف شدن است. پس از حذف، دستیارهای این گروه به لیست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
     "createAgentSuccess": "دستیار با موفقیت ایجاد شد",
     "createGroup": "افزودن گروه جدید",
+    "createGroupFailed": "ایجاد گروه چت ناموفق بود",
+    "createGroupSuccess": "گروه چت با موفقیت ایجاد شد",
     "createSuccess": "گروه با موفقیت ایجاد شد",
     "creatingAgent": "در حال ایجاد دستیار...",
     "inputPlaceholder": "لطفاً نام گروه را وارد کنید...",
@@ -235,6 +321,12 @@
     "loading": "در حال شناسایی...",
     "prettifying": "در حال ویرایش..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "همه وظایف انجام شده‌اند",
+      "title": "وظایف انجام شده"
+    }
+  },
   "thread": {
     "divider": "زیرموضوع",
     "threadMessageCount": "{{messageCount}} پیام",
@@ -248,6 +340,7 @@
     "chats": "پیام‌های گفتگو",
     "historySummary": "خلاصه تاریخ",
     "rest": "باقی‌مانده قابل استفاده",
+    "supervisor": "مجری گروه",
     "systemRole": "تنظیم نقش",
     "title": "جزئیات پیام‌ها",
     "tools": "تنظیمات افزونه",
@@ -273,6 +366,7 @@
     "action": "خواندن با صدا",
     "clear": "حذف صدا"
   },
+  "untitledAgent": "دستیار بدون نام",
   "updateAgent": "به‌روزرسانی اطلاعات دستیار",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "حجم فایل ویدئویی نباید از ۲۰ مگابایت بیشتر باشد، حجم فعلی فایل {{actualSize}} است"
     }
   },
+  "you": "شما",
   "zenMode": "حالت تمرکز"
 }

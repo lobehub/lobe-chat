@@ -767,6 +767,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet, akıllı ve hızlı bir denge sunarak kurumsal iş yükleri için idealdir. Daha düşük bir fiyatla maksimum fayda sağlar, güvenilir ve büyük ölçekli dağıtım için uygundur."
   },
+  "claude-haiku-4-5-20251001": {
+    "description": "Claude Haiku 4.5, Anthropic'in en hızlı ve en akıllı Haiku modeli olup, yıldırım hızında çalışır ve gelişmiş düşünme yeteneklerine sahiptir."
+  },
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1, Anthropic'in en karmaşık görevleri işlemek için geliştirdiği en güçlü modelidir. Performans, zeka, akıcılık ve anlama yeteneği açısından olağanüstü bir performans sergiler."
   },
@@ -1147,6 +1150,9 @@
   },
   "doubao-seed-1.6-flash": {
     "description": "Doubao-Seed-1.6-flash, TPOT sadece 10ms olan son derece hızlı çok modlu derin düşünme modelidir; hem metin hem de görsel anlayışı destekler, metin anlama yeteneği önceki lite neslini aşar, görsel anlama ise rakiplerin pro serisi modelleriyle eşdeğerdir. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
+  },
+  "doubao-seed-1.6-lite": {
+    "description": "Doubao-Seed-1.6-lite, yeni nesil çok modlu derin düşünme modelidir. Ayarlanabilir düşünme düzeylerini (reasoning effort) destekler: Minimal, Düşük, Orta ve Yüksek. Yüksek fiyat-performans oranı sunar ve yaygın görevler için en iyi tercihtir. 256k'ya kadar bağlam penceresini destekler."
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking modeli düşünme yeteneğinde büyük gelişme göstermiştir, Doubao-1.5-thinking-pro ile karşılaştırıldığında Kodlama, Matematik ve mantıksal akıl yürütme gibi temel yeteneklerde daha da iyileşmiştir, görsel anlayışı destekler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
@@ -1541,9 +1547,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview, karmaşık akıl yürütme yeteneklerine sahip olup, mantıksal akıl yürütme, matematik, programlama gibi alanlarda mükemmel performans sergilemektedir."
   },
-  "glm4.6:355b": {
-    "description": "Zhipu'nun en yeni amiral gemisi modeli GLM-4.6 (355B), gelişmiş kodlama, uzun metin işleme, akıl yürütme ve yapay zeka ajanı yeteneklerinde seleflerini tamamen geride bırakıyor. Özellikle programlama yetenekleri açısından Claude Sonnet 4 ile aynı seviyeye ulaşarak, Çin'deki en iyi Kodlama modellerinden biri haline gelmiştir."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash, üstün hız, yerleşik araç kullanımı, çok modlu üretim ve 1 milyon token bağlam penceresi dahil olmak üzere yeni nesil özellikler ve geliştirmeler sunar."
   },
@@ -1934,11 +1937,17 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small, kod üretimi, hata ayıklama ve yeniden yapılandırma görevleri için ideal olup, minimum gecikme sunar."
   },
+  "inclusionAI/Ling-1T": {
+    "description": "Ling-1T, \"Ling 2.0\" serisinin ilk amiral gemisi non-thinking modelidir. Toplamda 1 trilyon parametreye ve her token için yaklaşık 50 milyar aktif parametreye sahiptir. Ling 2.0 mimarisi üzerine inşa edilen Ling-1T, verimli akıl yürütme ve ölçeklenebilir bilişsel yeteneklerin sınırlarını zorlamak için tasarlanmıştır. Ling-1T-base, 200 trilyondan fazla yüksek kaliteli ve akıl yürütme yoğun token üzerinde eğitilmiştir."
+  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0, Ant Group Bailing ekibi tarafından yayınlanan Ling 2.0 mimari serisinin üçüncü modelidir. Bu, hibrit uzman (MoE) modeli olup toplam parametre sayısı 100 milyara ulaşırken, her token için yalnızca 6.1 milyar parametre aktive eder (embedding dışı 4.8 milyar). Hafif yapılandırmaya sahip bu model, birçok otoriter değerlendirmede 40 milyar seviyesindeki yoğun (Dense) modeller ve daha büyük ölçekli MoE modelleriyle rekabet eden hatta onları aşan performans sergiler. Model, \"büyük model büyük parametre demektir\" anlayışı altında yüksek verimlilik yollarını keşfetmek için üstün mimari tasarım ve eğitim stratejileriyle geliştirilmiştir."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0, MoE mimarisi temelinde küçük boyutlu yüksek performanslı büyük dil modelidir. Toplam 16 milyar parametreye sahip olup, her token için yalnızca 1.4 milyar parametre aktive eder (embedding dışı 789 milyon), böylece çok yüksek üretim hızı sağlar. Verimli MoE tasarımı ve büyük ölçekli yüksek kaliteli eğitim verileri sayesinde, aktive edilen parametre sayısı sadece 1.4 milyar olmasına rağmen, Ling-mini-2.0 altındaki 10 milyar yoğun LLM ve daha büyük ölçekli MoE modelleriyle kıyaslanabilir üst düzey performans gösterir."
+  },
+  "inclusionAI/Ring-1T": {
+    "description": "Ring-1T, Bailing ekibi tarafından geliştirilen trilyon parametre ölçeğinde açık kaynaklı bir düşünce modelidir. Ling 2.0 mimarisi ve Ling-1T-base temel modeli üzerine inşa edilmiştir. Toplamda 1 trilyon parametreye ve 50 milyar aktif parametreye sahiptir. 128K'ya kadar bağlam penceresini destekler. Model, büyük ölçekli doğrulanabilir ödül takviyeli öğrenme ile optimize edilmiştir."
   },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0, Ling-flash-2.0-base üzerine derinlemesine optimize edilmiş yüksek performanslı düşünme modelidir. Hibrit uzman (MoE) mimarisi kullanır, toplam parametre sayısı 100 milyardır ancak her çıkarımda yalnızca 6.1 milyar parametre aktive edilir. Model, özgün icepop algoritması ile MoE büyük modellerin pekiştirmeli öğrenme (RL) eğitimindeki kararsızlık sorununu çözerek karmaşık çıkarım yeteneğini uzun dönemli eğitimlerde sürekli artırır. Ring-flash-2.0, matematik yarışmaları, kod üretimi ve mantıksal çıkarım gibi zorlu kıyaslama testlerinde önemli atılımlar yapmış, performansı 40 milyar parametre altındaki en iyi yoğun modelleri aşmakla kalmayıp, daha büyük ölçekli açık kaynak MoE modelleri ve kapalı kaynak yüksek performanslı düşünme modelleriyle rekabet edebilir. Model karmaşık çıkarıma odaklanmasına rağmen yaratıcı yazma gibi görevlerde de başarılıdır. Ayrıca, yüksek verimli mimari tasarımı sayesinde güçlü performans sunarken yüksek hızda çıkarım yapar ve yüksek eşzamanlılık senaryolarında düşünme modeli dağıtım maliyetlerini önemli ölçüde azaltır."
@@ -2035,9 +2044,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Llama 3.3 komut ince ayarlı modeli, diyalog senaryoları için optimize edilmiştir ve yaygın endüstri kıyaslamalarında birçok mevcut açık kaynaklı sohbet modelini geride bırakmaktadır."
-  },
-  "llama-4-maverick-17b-128e-instruct": {
-    "description": "Llama 4 Maverick: Yüksek performanslı Llama serisi modeli; gelişmiş akıl yürütme, karmaşık problem çözme ve komut takibi görevleri için uygundur."
   },
   "llama-4-scout-17b-16e-instruct": {
     "description": "Llama 4 Scout: Yüksek performanslı Llama serisi modeli; yüksek işlem hacmi ve düşük gecikme gerektiren senaryolar için idealdir."
@@ -2906,6 +2912,9 @@
   "qwen3-8b": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
   },
+  "qwen3-coder-30b-a3b-instruct": {
+    "description": "Qwen3 tabanlı kod üretim modeli olan en yeni açık kaynaklı Tongyi Qianwen kod modeli. Güçlü Kodlama Ajanı yeteneklerine sahiptir, araç kullanımı ve çevre ile etkileşimde uzmandır. Kendi kendine programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel amaçlı beceriler de sunar."
+  },
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Tongyi Qianwen kod modeli açık kaynak versiyonudur. En yeni qwen3-coder-480b-a35b-instruct, Qwen3 tabanlı kod oluşturma modelidir; güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrısı ve ortam etkileşiminde uzmandır, otonom programlama yapabilir ve üstün kodlama yetenekleri ile genel yetenekleri bir arada sunar."
   },
@@ -2927,11 +2936,29 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "Qwen3 tabanlı yeni nesil düşünme modlu açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Thinking-2507) kıyasla komutlara uyum yeteneği artırılmış ve modelin özetleyici yanıtları daha özlü hale getirilmiştir."
   },
+  "qwen3-omni-flash": {
+    "description": "Qwen-Omni modeli, metin, görsel, ses ve video gibi çoklu modların birleşik girişlerini kabul edebilir ve metin ya da ses biçiminde yanıtlar üretebilir. Çeşitli insansı ses tonları sunar, çok dilli ve lehçeli ses çıktısını destekler. Metin üretimi, görsel tanıma ve sesli asistan gibi senaryolarda kullanılabilir."
+  },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Instruct, Tongyi Qianwen tarafından geliştirilen çok modlu bir modeldir ve görsel anlama ile akıl yürütmeyi destekler."
+    "description": "Qwen3 VL 235B A22B Non-thinking modu (Instruct), düşünme gerektirmeyen komut senaryoları için uygundur ve güçlü görsel anlama yeteneğini korur."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Thinking, Tongyi Qianwen tarafından geliştirilen çok modlu bir akıl yürütme modelidir ve görsel anlama ile akıl yürütmeyi destekler."
+    "description": "Qwen3 VL 235B A22B Düşünme modu (açık kaynaklı sürüm), zorlu akıl yürütme ve uzun video anlama senaryoları için geliştirilmiş, üst düzey görsel + metin akıl yürütme yetenekleri sunar."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B Non-thinking modu (Instruct), genel komut takip senaryolarına yöneliktir ve yüksek düzeyde çok modlu anlama ve üretim yeteneğini korur."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen-VL (açık kaynaklı sürüm), görsel anlama ve metin üretme yetenekleri sunar. Akıllı ajan etkileşimi, görsel kodlama, mekânsal algı, uzun video anlama ve derin düşünme gibi alanları destekler. Karmaşık senaryolarda daha güçlü metin tanıma ve çok dilli destek sağlar."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Non-thinking modu (Instruct), standart çok modlu üretim ve tanıma görevleri için uygundur."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Düşünme modu, hafif çok modlu akıl yürütme ve etkileşim senaryolarına yöneliktir. Uzun bağlam anlama yeteneğini korur."
+  },
+  "qwen3-vl-flash": {
+    "description": "Qwen3 VL Flash: Gecikmeye duyarlı veya yüksek hacimli istek senaryoları için uygun, hafif ve yüksek hızlı akıl yürütme sürümüdür."
   },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL, görsel (resim) anlama yeteneğine sahip metin üretim modelidir. Sadece OCR (resim metni tanıma) yapmakla kalmaz, aynı zamanda ürün fotoğraflarından özellik çıkarma, alıştırma resimlerinden problem çözme gibi özetleme ve çıkarım yapabilir."

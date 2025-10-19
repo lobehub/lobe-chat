@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Modelli"
   },
+  "active": "Attivo",
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, come posso aiutarti?",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**, come posso aiutarti?",
@@ -13,17 +14,28 @@
     "thought": "Processo di pensiero",
     "unknownTitle": "Opera non nominata"
   },
+  "availableAgents": "Assistenti disponibili",
   "backToBottom": "Torna in fondo",
   "chatList": {
     "longMessageDetail": "Visualizza dettagli"
   },
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
+  "confirmRemoveChatGroupItemAlert": "Stai per eliminare questa chat di gruppo, i membri del gruppo non saranno influenzati, conferma la tua azione",
+  "confirmRemoveGroupItemAlert": "Stai per eliminare questo gruppo. Dopo l'eliminazione, gli assistenti contenuti in esso verranno spostati nell'elenco predefinito. Confermi l'operazione?",
+  "confirmRemoveGroupSuccess": "Gruppo eliminato con successo",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionSuccess": "Session eliminata con successo",
   "defaultAgent": "Assistente predefinito",
+  "defaultGroupChat": "Chat di gruppo",
   "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
+  "dm": {
+    "placeholder": "I tuoi messaggi privati con {{agentTitle}} verranno visualizzati qui.",
+    "tooltip": "Invia messaggio privato",
+    "visibleTo": "Visibile solo a {{target}}",
+    "you": "tu"
+  },
   "duplicateSession": {
     "loading": "In corso di duplicazione...",
     "success": "Duplicazione riuscita",
@@ -58,11 +70,56 @@
       "title": "Estrai contenuto dal link della pagina web"
     }
   },
+  "group": {
+    "desc": "Collaborare con più assistenti IA in uno spazio di conversazione condiviso.",
+    "memberTooltip": "Nel gruppo ci sono {{count}} membri",
+    "orchestratorThinking": "L'organizzatore sta riflettendo...",
+    "removeMember": "Rimuovi membro",
+    "title": "Gruppi"
+  },
+  "groupDescription": "Descrizione del gruppo",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Aggiungi membro",
+      "memberSettings": "Impostazioni membro",
+      "orchestrator": "Organizzatore",
+      "orchestratorThinking": "L'organizzatore sta riflettendo...",
+      "removeMember": "Rimuovi membro",
+      "stopOrchestrator": "Interrompi riflessione",
+      "triggerOrchestrator": "Avvia chat di gruppo"
+    },
+    "tabs": {
+      "host": "Ospitante",
+      "members": "Membri",
+      "role": "Impostazioni"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Seleziona assistenti esistenti...",
+    "createGroup": "Crea gruppo",
+    "existingMembers": "Assistenti esistenti",
+    "groupMembers": "Questi assistenti saranno aggiunti anche alla tua lista",
+    "host": {
+      "description": "Automatizza il funzionamento della chat di gruppo",
+      "title": "Moderatore",
+      "tooltip": "Se disattivi l'ospitante della chat di gruppo, dovrai menzionare manualmente i membri con @ per ottenere una risposta"
+    },
+    "memberCount": "{{count}} membri",
+    "noMatchingTemplates": "Nessun modello corrispondente",
+    "noSelectedTemplates": "Nessun modello selezionato",
+    "noTemplateMembers": "Nessun membro nel modello",
+    "noTemplates": "Nessun modello disponibile",
+    "searchTemplates": "Cerca modelli...",
+    "title": "Crea gruppo",
+    "useTemplate": "Usa modello"
+  },
+  "hideForYou": "Il contenuto del messaggio privato è stato nascosto, abilita 【Mostra contenuto messaggi privati】 nelle impostazioni per visualizzarlo",
   "history": {
     "title": "L'assistente ricorderà solo gli ultimi {{count}} messaggi"
   },
   "historyRange": "Intervallo cronologico",
   "historySummary": "Riepilogo della storia",
+  "inactive": "Inattivo",
   "inbox": {
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "Stiamo comprendendo e analizzando la tua intenzione..."
   },
+  "inviteMembers": "Invita membri",
   "knowledgeBase": {
     "all": "Tutti i contenuti",
     "allFiles": "Tutti i file",
@@ -101,12 +159,29 @@
     "uploadGuide": "I file caricati possono essere visualizzati nella 'Base di conoscenza'.",
     "viewMore": "Visualizza di più"
   },
+  "memberSelection": {
+    "addMember": "Aggiungi membro",
+    "allMembers": "Tutti i membri",
+    "createGroup": "Crea chat di gruppo",
+    "noAvailableAgents": "Nessun assistente disponibile da invitare",
+    "noSelectedAgents": "Nessun assistente selezionato",
+    "searchAgents": "Cerca assistenti...",
+    "setInitialMembers": "Seleziona membri del gruppo"
+  },
+  "members": "Membri",
+  "mention": {
+    "title": "Menziona membri"
+  },
   "messageAction": {
     "delAndRegenerate": "Elimina e rigenera",
     "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
     "regenerate": "Rigenera"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Visibile solo a {{name}}",
+      "title": "Messaggio privato"
+    },
     "modelCard": {
       "credit": "Crediti",
       "creditPricing": "Prezzo",
@@ -156,6 +231,13 @@
     "previousMessage": "Messaggio precedente"
   },
   "newAgent": "Nuovo assistente",
+  "newGroupChat": "Nuova chat di gruppo",
+  "noAgentsYet": "In questo gruppo non ci sono ancora assistenti. Fai clic sul pulsante + per invitare assistenti.",
+  "noAvailableAgents": "Nessun assistente disponibile da invitare",
+  "noMatchingAgents": "Nessun assistente corrispondente",
+  "noMembersYet": "Questo gruppo non ha ancora membri. Clicca sul pulsante + per invitare assistenti.",
+  "noSelectedAgents": "Nessun assistente selezionato",
+  "owner": "Proprietario del gruppo",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "Ricerca online"
   },
   "searchAgentPlaceholder": "Assistente di ricerca...",
+  "searchAgents": "Assistenti di ricerca...",
+  "selectedAgents": "Assistenti selezionati",
   "sendPlaceholder": "Inserisci il testo della chat...",
   "sessionGroup": {
     "config": "Gestione gruppi",
     "confirmRemoveGroupAlert": "Stai per rimuovere questo gruppo. Dopo la rimozione, gli assistenti di questo gruppo verranno spostati nella lista predefinita. Confermi l'operazione?",
     "createAgentSuccess": "Assistente creato con successo",
     "createGroup": "Aggiungi nuovo gruppo",
+    "createGroupFailed": "Creazione della chat di gruppo fallita",
+    "createGroupSuccess": "Chat di gruppo creata con successo",
     "createSuccess": "Creazione riuscita",
     "creatingAgent": "Creazione dell'assistente in corso...",
     "inputPlaceholder": "Inserisci il nome del gruppo...",
@@ -235,6 +321,12 @@
     "loading": "Riconoscimento in corso...",
     "prettifying": "Miglioramento in corso..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "Tutti i compiti sono stati completati",
+      "title": "Compiti completati"
+    }
+  },
   "thread": {
     "divider": "Sottoargomento",
     "threadMessageCount": "{{messageCount}} messaggi",
@@ -248,6 +340,7 @@
     "chats": "Chat",
     "historySummary": "Riepilogo storico",
     "rest": "Rimanenti",
+    "supervisor": "Organizzatore del gruppo",
     "systemRole": "Ruolo di sistema",
     "title": "Dettagli del Token",
     "tools": "Strumenti",
@@ -273,6 +366,7 @@
     "action": "Lettura vocale",
     "clear": "Cancella lettura vocale"
   },
+  "untitledAgent": "Assistente senza nome",
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "La dimensione del file video non può superare i 20MB, la dimensione attuale del file è {{actualSize}}"
     }
   },
+  "you": "tu",
   "zenMode": "Modalità di concentrazione"
 }

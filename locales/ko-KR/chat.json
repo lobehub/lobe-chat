@@ -2,46 +2,58 @@
   "ModelSwitch": {
     "title": "모델"
   },
-  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 대화를 시작하거나 [도우미 설정]({{url}})으로 이동하여 제 정보를 완성할 수 있어요.",
-  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. 무엇을 도와드릴까요?",
-  "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 무엇을 도와드릴까요?",
+  "active": "활성",
+  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작하시거나 [도우미 설정]({{url}})으로 가셔서 제 정보를 완성하실 수 있습니다.",
+  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
+  "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
   "agents": "도우미",
   "artifact": {
     "generating": "생성 중",
-    "inThread": "하위 주제에서는 볼 수 없습니다. 메인 대화 영역으로 전환해 주세요.",
+    "inThread": "하위 주제에서는 볼 수 없습니다. 주 대화 영역으로 전환하여 열어주세요.",
     "thinking": "생각 중",
     "thought": "사고 과정",
     "unknownTitle": "제목 없음"
   },
-  "backToBottom": "현재 위치로 이동",
+  "availableAgents": "사용 가능한 도우미",
+  "backToBottom": "하단으로 이동",
   "chatList": {
     "longMessageDetail": "자세히 보기"
   },
-  "clearCurrentMessages": "현재 대화 메시지 삭제",
-  "confirmClearCurrentMessages": "현재 대화 메시지를 삭제하려고 합니다. 삭제 후 복구할 수 없습니다. 계속하시겠습니까?",
-  "confirmRemoveSessionItemAlert": "이 도우미를 삭제하려고 합니다. 삭제 후 복구할 수 없습니다. 계속하시겠습니까?",
+  "clearCurrentMessages": "현재 대화 지우기",
+  "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
+  "confirmRemoveChatGroupItemAlert": "이 그룹 채팅을 삭제하려고 합니다. 그룹 채팅 멤버는 영향을 받지 않습니다. 작업을 확인해 주세요.",
+  "confirmRemoveGroupItemAlert": "해당 그룹을 삭제하려고 합니다. 삭제하면 해당 그룹의 어시스턴트가 기본 목록으로 이동합니다. 계속 진행하시겠습니까?",
+  "confirmRemoveGroupSuccess": "그룹 채팅이 성공적으로 삭제되었습니다",
+  "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionSuccess": "도우미가 성공적으로 삭제되었습니다",
-  "defaultAgent": "사용자 정의 도우미",
+  "defaultAgent": "기본 도우미",
+  "defaultGroupChat": "그룹 채팅",
   "defaultList": "기본 목록",
-  "defaultSession": "사용자 정의 도우미",
+  "defaultSession": "기본 도우미",
+  "dm": {
+    "placeholder": "당신과 {{agentTitle}}의 개인 메시지가 여기에 표시됩니다.",
+    "tooltip": "개인 메시지 보내기",
+    "visibleTo": "{{target}}만 볼 수 있습니다",
+    "you": "당신"
+  },
   "duplicateSession": {
     "loading": "복사 중...",
-    "success": "복사 완료",
+    "success": "복사 성공",
     "title": "{{title}} 복사본"
   },
   "duplicateTitle": "{{title}} 복사본",
-  "emptyAgent": "도우미 없음",
+  "emptyAgent": "도우미가 없습니다",
   "extendParams": {
     "disableContextCaching": {
-      "desc": "단일 대화 생성 비용 최대 90% 절감, 응답 속도 4배 향상 (<1>자세히 보기</1>). 활성화 시 과거 메시지 수 제한이 자동으로 비활성화됩니다.",
-      "title": "컨텍스트 캐시 활성화"
+      "desc": "단일 대화 생성 비용을 최대 90%까지 줄이고, 응답 속도를 4배 향상시킵니다 (<1>자세히 알아보기</1>). 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
+      "title": "문맥 캐시 활성화"
     },
     "enableReasoning": {
-      "desc": "Claude Thinking 메커니즘 제한에 따라 (<1>자세히 보기</1>), 활성화 시 과거 메시지 수 제한이 자동으로 비활성화됩니다.",
+      "desc": "Claude Thinking 메커니즘에 기반한 제한 (<1>자세히 알아보기</1>), 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
       "title": "심층 사고 활성화"
     },
     "reasoningBudgetToken": {
-      "title": "사고에 소모되는 토큰"
+      "title": "사고 소모 토큰"
     },
     "reasoningEffort": {
       "title": "추론 강도"
@@ -54,70 +66,133 @@
     },
     "title": "모델 확장 기능",
     "urlContext": {
-      "desc": "활성화 시 웹 링크를 자동으로 분석하여 실제 웹 페이지의 컨텍스트를 가져옵니다.",
+      "desc": "활성화하면 실제 웹페이지 컨텍스트 내용을 얻기 위해 웹 링크를 자동으로 분석합니다",
       "title": "웹 링크 내용 추출"
     }
   },
-  "history": {
-    "title": "도우미는 최근 {{count}}개의 메시지만 기억합니다"
+  "group": {
+    "desc": "여러 AI 어시스턴트와 공유된 대화 공간에서 협업합니다.",
+    "memberTooltip": "그룹에 {{count}}명의 구성원이 있습니다.",
+    "orchestratorThinking": "주최자가 생각 중입니다...",
+    "removeMember": "멤버 제거",
+    "title": "그룹"
   },
-  "historyRange": "기록 범위",
-  "historySummary": "대화 기록 요약",
+  "groupDescription": "그룹 설명",
+  "groupSidebar": {
+    "members": {
+      "addMember": "멤버 추가",
+      "memberSettings": "멤버 설정",
+      "orchestrator": "주최자",
+      "orchestratorThinking": "주최자가 생각 중입니다...",
+      "removeMember": "멤버 제거",
+      "stopOrchestrator": "생각 중지",
+      "triggerOrchestrator": "그룹 채팅 시작"
+    },
+    "tabs": {
+      "host": "호스트",
+      "members": "멤버",
+      "role": "설정"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "기존 도우미 선택...",
+    "createGroup": "그룹 채팅 생성",
+    "existingMembers": "기존 멤버",
+    "groupMembers": "이 도우미들도 귀하의 목록에 추가됩니다",
+    "host": {
+      "description": "그룹 채팅을 자동으로 운영합니다",
+      "title": "호스트",
+      "tooltip": "그룹 호스트 기능을 비활성화하면, 멤버가 응답할 수 있도록 수동으로 @멘션해야 합니다"
+    },
+    "memberCount": "{{count}}명 멤버",
+    "noMatchingTemplates": "일치하는 템플릿이 없습니다",
+    "noSelectedTemplates": "선택된 템플릿이 없습니다",
+    "noTemplateMembers": "템플릿에 멤버가 없습니다",
+    "noTemplates": "사용 가능한 템플릿이 없습니다",
+    "searchTemplates": "템플릿 검색...",
+    "title": "그룹 채팅 생성",
+    "useTemplate": "템플릿 사용"
+  },
+  "hideForYou": "개인 메시지 내용이 숨겨져 있습니다. 설정에서 【개인 메시지 내용 표시】를 켜서 확인하세요.",
+  "history": {
+    "title": "도우미는 마지막 {{count}}개의 메시지만 기억합니다."
+  },
+  "historyRange": "대화 기록 범위",
+  "historySummary": "역사 메시지 요약",
+  "inactive": "비활성",
   "inbox": {
-    "desc": "브레인 클러스터를 활성화하여 창의적인 사고를 자극하세요. 당신의 지능형 도우미가 여기서 모든 것을 함께합니다.",
-    "title": "자유롭게 대화하기"
+    "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
+    "title": "무작위 대화"
   },
   "input": {
     "addAi": "AI 메시지 추가",
     "addUser": "사용자 메시지 추가",
-    "disclaimer": "AI도 실수할 수 있으니 중요한 정보는 꼭 확인하세요",
-    "errorMsg": "메시지 전송 실패, 네트워크를 확인한 후 다시 시도해 주세요: {{errorMsg}}",
-    "more": "더보기",
-    "send": "보내기",
-    "sendWithCmdEnter": "<key/> 키로 전송",
-    "sendWithEnter": "<key/> 키로 전송",
+    "disclaimer": "AI도 실수를 할 수 있으니 중요한 정보는 꼭 확인하세요",
+    "errorMsg": "메시지 전송에 실패했습니다. 네트워크를 확인한 후 다시 시도해 주세요: {{errorMsg}}",
+    "more": "더 많은",
+    "send": "전송",
+    "sendWithCmdEnter": "<key/> 키를 눌러 전송",
+    "sendWithEnter": "<key/> 키를 눌러 전송",
     "stop": "중지",
-    "warp": "줄 바꿈",
-    "warpWithKey": "<key/> 키로 줄 바꿈"
+    "warp": "줄바꿈",
+    "warpWithKey": "<key/> 키를 눌러 줄 바꿈"
   },
   "intentUnderstanding": {
-    "title": "의도를 이해하고 분석 중..."
+    "title": "귀하의 의도를 이해하고 분석하는 중입니다..."
   },
+  "inviteMembers": "구성원 초대",
   "knowledgeBase": {
-    "all": "전체",
+    "all": "모든 내용",
     "allFiles": "모든 파일",
-    "allKnowledgeBases": "모든 지식베이스",
-    "disabled": "현재 배포 모드에서는 지식베이스 대화를 지원하지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주세요.",
+    "allKnowledgeBases": "모든 지식 베이스",
+    "disabled": "현재 배포 모드에서는 지식 기반 대화가 지원되지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주십시오.",
     "library": {
       "action": {
         "add": "추가",
         "detail": "상세",
         "remove": "제거"
       },
-      "title": "파일/지식베이스"
+      "title": "파일/지식 베이스"
     },
-    "relativeFilesOrKnowledgeBases": "연관된 파일/지식베이스",
-    "title": "지식베이스",
-    "uploadGuide": "업로드한 파일은 '지식베이스'에서 확인할 수 있어요",
-    "viewMore": "더보기"
+    "relativeFilesOrKnowledgeBases": "관련 파일/지식 베이스",
+    "title": "지식 베이스",
+    "uploadGuide": "업로드한 파일은 '지식 베이스'에서 확인할 수 있습니다.",
+    "viewMore": "더 보기"
+  },
+  "memberSelection": {
+    "addMember": "멤버 추가",
+    "allMembers": "전체 멤버",
+    "createGroup": "그룹 채팅 생성",
+    "noAvailableAgents": "초대할 보조자가 없습니다",
+    "noSelectedAgents": "아직 보조자를 선택하지 않았습니다",
+    "searchAgents": "보조자 검색...",
+    "setInitialMembers": "그룹 멤버 선택"
+  },
+  "members": "구성원",
+  "mention": {
+    "title": "멤버 언급"
   },
   "messageAction": {
-    "delAndRegenerate": "삭제 후 재생성",
-    "deleteDisabledByThreads": "하위 주제가 있어 삭제할 수 없습니다",
-    "regenerate": "재생성"
+    "delAndRegenerate": "삭제하고 다시 생성",
+    "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
+    "regenerate": "다시 생성"
   },
   "messages": {
+    "dm": {
+      "sentTo": "{{name}}만 볼 수 있습니다",
+      "title": "쪽지"
+    },
     "modelCard": {
-      "credit": "크레딧",
+      "credit": "포인트",
       "creditPricing": "가격",
-      "creditTooltip": "계산 편의를 위해 $1 = 1M 크레딧으로 환산됩니다. 예: $3/M tokens → 3 크레딧/token",
+      "creditTooltip": "계산을 용이하게 하기 위해, 1$를 1M 포인트로 환산합니다. 예를 들어, $3/M 토큰은 3포인트/토큰으로 환산됩니다.",
       "pricing": {
-        "inputCachedTokens": "입력 캐시 {{amount}}/크레딧 · ${{amount}}/M",
+        "inputCachedTokens": "캐시된 입력 {{amount}}/포인트 · ${{amount}}/M",
         "inputCharts": "${{amount}}/M 문자",
         "inputMinutes": "${{amount}}/분",
-        "inputTokens": "입력 {{amount}}/크레딧 · ${{amount}}/M",
-        "outputTokens": "출력 {{amount}}/크레딧 · ${{amount}}/M",
-        "writeCacheInputTokens": "입력 캐시 쓰기 {{amount}}/크레딧 · ${{amount}}/M"
+        "inputTokens": "입력 {{amount}}/포인트 · ${{amount}}/M",
+        "outputTokens": "출력 {{amount}}/포인트 · ${{amount}}/M",
+        "writeCacheInputTokens": "캐시 입력 쓰기 {{amount}}/포인트 · ${{amount}}/M"
       }
     },
     "tokenDetails": {
@@ -125,29 +200,29 @@
       "input": "입력",
       "inputAudio": "오디오 입력",
       "inputCached": "입력 캐시",
-      "inputCitation": "인용 입력",
+      "inputCitation": "입력 인용",
       "inputText": "텍스트 입력",
-      "inputTitle": "입력 상세",
-      "inputUncached": "비캐시 입력",
+      "inputTitle": "입력 세부사항",
+      "inputUncached": "입력 비캐시",
       "inputWriteCached": "입력 캐시 쓰기",
       "output": "출력",
       "outputAudio": "오디오 출력",
       "outputImage": "이미지 출력",
       "outputText": "텍스트 출력",
-      "outputTitle": "출력 상세",
+      "outputTitle": "출력 세부사항",
       "reasoning": "심층 사고",
       "speed": {
         "tps": {
           "title": "TPS",
-          "tooltip": "초당 토큰 수 (Tokens Per Second). 첫 토큰 수신 후부터 계산됩니다."
+          "tooltip": "초당 토큰 수(TPS). AI가 생성한 콘텐츠의 평균 속도(토큰/초)를 나타내며, 첫 번째 토큰을 수신한 후부터 계산됩니다."
         },
         "ttft": {
           "title": "TTFT",
-          "tooltip": "첫 토큰 수신까지 걸린 시간 (Time To First Token). 메시지 전송부터 첫 토큰 수신까지의 시간입니다."
+          "tooltip": "첫 번째 토큰까지의 시간(Time To First Token, TTFT). 메시지를 전송한 시점부터 클라이언트가 첫 번째 토큰을 수신할 때까지의 시간 간격을 나타냅니다."
         }
       },
-      "title": "생성 상세",
-      "total": "총 사용량"
+      "title": "생성 세부사항",
+      "total": "총 소모"
     }
   },
   "minimap": {
@@ -155,63 +230,74 @@
     "nextMessage": "다음 메시지",
     "previousMessage": "이전 메시지"
   },
-  "newAgent": "새 도우미 만들기",
-  "pin": "상단 고정",
-  "pinOff": "상단 고정 해제",
+  "newAgent": "새 도우미",
+  "newGroupChat": "새 그룹 채팅 만들기",
+  "noAgentsYet": "이 그룹에는 아직 어시스턴트가 없습니다. '+' 버튼을 눌러 어시스턴트를 초대하세요.",
+  "noAvailableAgents": "초대할 수 있는 어시스턴트가 없습니다.",
+  "noMatchingAgents": "일치하는 어시스턴트가 없습니다.",
+  "noMembersYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
+  "noSelectedAgents": "아직 어시스턴트를 선택하지 않았습니다",
+  "owner": "그룹 소유자",
+  "pin": "고정",
+  "pinOff": "고정 해제",
   "rag": {
-    "referenceChunks": "참조 소스",
+    "referenceChunks": "참조 조각",
     "userQuery": {
       "actions": {
-        "delete": "Query 재작성 삭제",
-        "regenerate": "Query 재작성"
+        "delete": "쿼리 삭제",
+        "regenerate": "쿼리 재생성"
       }
     }
   },
   "regenerate": "재생성",
-  "roleAndArchive": "역할 및 기록",
+  "roleAndArchive": "역할 및 아카이브",
   "search": {
     "grounding": {
       "searchQueries": "검색 키워드",
-      "title": "{{count}}개의 결과 검색됨"
+      "title": "{{count}}개의 결과가 검색되었습니다"
     },
     "mode": {
       "auto": {
-        "desc": "대화 내용을 기반으로 검색 필요 여부를 자동 판단",
+        "desc": "대화 내용을 기반으로 검색 필요성을 스마트하게 판단",
         "title": "스마트 연결"
       },
       "off": {
-        "desc": "모델의 기본 지식만 사용, 인터넷 검색 안 함",
+        "desc": "모델의 기본 지식만 사용하고 네트워크 검색을 수행하지 않음",
         "title": "연결 끄기"
       },
       "on": {
-        "desc": "항상 인터넷 검색을 통해 최신 정보 획득",
+        "desc": "지속적으로 네트워크 검색을 수행하여 최신 정보를 얻음",
         "title": "항상 연결"
       },
       "useModelBuiltin": "모델 내장 검색 엔진 사용"
     },
     "searchModel": {
-      "desc": "현재 모델은 함수 호출을 지원하지 않으므로, 연결 검색을 위해 함수 호출을 지원하는 모델이 필요합니다.",
+      "desc": "현재 모델은 함수 호출을 지원하지 않으므로 함수 호출을 지원하는 모델과 함께 사용해야 인터넷 검색이 가능합니다.",
       "title": "검색 보조 모델"
     },
-    "title": "인터넷 검색"
+    "title": "연결 검색"
   },
-  "searchAgentPlaceholder": "도우미 검색...",
-  "sendPlaceholder": "대화 내용을 입력하세요...",
+  "searchAgentPlaceholder": "검색 도우미...",
+  "searchAgents": "검색 도우미...",
+  "selectedAgents": "선택된 도우미",
+  "sendPlaceholder": "채팅 내용 입력...",
   "sessionGroup": {
-    "config": "그룹 관리",
-    "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 시 해당 그룹의 도우미는 기본 목록으로 이동됩니다. 계속하시겠습니까?",
-    "createAgentSuccess": "도우미 생성 완료",
+    "config": "그룹 설정",
+    "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 작업을 확인하십시오.",
+    "createAgentSuccess": "에이전트 생성 성공",
     "createGroup": "새 그룹 추가",
-    "createSuccess": "그룹 생성 완료",
-    "creatingAgent": "도우미 생성 중...",
+    "createGroupFailed": "그룹 채팅 생성 실패",
+    "createGroupSuccess": "그룹 채팅 생성 성공",
+    "createSuccess": "생성 성공",
+    "creatingAgent": "에이전트 생성 중...",
     "inputPlaceholder": "그룹 이름을 입력하세요...",
     "moveGroup": "그룹으로 이동",
     "newGroup": "새 그룹",
     "rename": "그룹 이름 변경",
-    "renameSuccess": "이름 변경 완료",
-    "sortSuccess": "정렬 완료",
+    "renameSuccess": "이름 변경 성공",
+    "sortSuccess": "다시 정렬 성공",
     "sorting": "그룹 정렬 업데이트 중...",
-    "tooLong": "그룹 이름은 1~20자 이내여야 합니다"
+    "tooLong": "그룹 이름은 1-20자여야 합니다"
   },
   "shareModal": {
     "copy": "복사",
@@ -228,12 +314,18 @@
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
     "withRole": "메시지 역할 포함",
-    "withSystemRole": "도우미 역할 설정 포함"
+    "withSystemRole": "도우미 역할 포함"
   },
   "stt": {
     "action": "음성 입력",
     "loading": "인식 중...",
-    "prettifying": "다듬는 중..."
+    "prettifying": "정제 중..."
+  },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "모든 작업이 완료되었습니다",
+      "title": "작업 완료"
+    }
   },
   "thread": {
     "divider": "하위 주제",
@@ -245,24 +337,25 @@
     "on": "와이드 스크린 모드 켜기"
   },
   "tokenDetails": {
-    "chats": "대화 메시지",
-    "historySummary": "기록 요약",
+    "chats": "채팅 메시지",
+    "historySummary": "역사 요약",
     "rest": "남은 사용량",
-    "systemRole": "역할 설정",
-    "title": "컨텍스트 상세",
-    "tools": "플러그인 설정",
-    "total": "총 사용 가능",
-    "used": "총 사용량"
+    "supervisor": "그룹 주최자",
+    "systemRole": "시스템 역할",
+    "title": "컨텍스트 세부 정보",
+    "tools": "도구 설정",
+    "total": "총 사용량",
+    "used": "총 사용"
   },
   "tokenTag": {
-    "overload": "제한 초과",
+    "overload": "한도 초과",
     "remained": "남음",
     "used": "사용됨"
   },
   "topic": {
-    "checkOpenNewTopic": "새 주제를 시작하시겠습니까?",
+    "checkOpenNewTopic": "새 주제를 열까요?",
     "checkSaveCurrentMessages": "현재 대화를 주제로 저장하시겠습니까?",
-    "openNewTopic": "새 주제 시작",
+    "openNewTopic": "새 주제 열기",
     "saveCurrentMessages": "현재 대화를 주제로 저장"
   },
   "translate": {
@@ -273,24 +366,25 @@
     "action": "음성 읽기",
     "clear": "음성 삭제"
   },
+  "untitledAgent": "이름 없는 에이전트",
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
     "action": {
       "fileUpload": "파일 업로드",
       "folderUpload": "폴더 업로드",
-      "imageDisabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경해 주세요.",
+      "imageDisabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
       "imageUpload": "이미지 업로드",
       "tooltip": "업로드"
     },
     "clientMode": {
       "actionFiletip": "파일 업로드",
       "actionTooltip": "업로드",
-      "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경해 주세요.",
-      "fileNotSupported": "브라우저 모드에서는 파일 업로드가 지원되지 않으며, 이미지만 업로드할 수 있습니다.",
-      "visionNotSupported": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경해 주세요."
+      "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
+      "fileNotSupported": "브라우저 모드에서는 파일 업로드를 지원하지 않으며, 이미지 업로드만 가능합니다",
+      "visionNotSupported": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용해 주세요"
     },
     "preview": {
-      "prepareTasks": "분할 준비 중...",
+      "prepareTasks": "청크 준비 중...",
       "status": {
         "pending": "업로드 준비 중...",
         "processing": "파일 처리 중..."
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "비디오 파일 크기는 20MB를 초과할 수 없습니다. 현재 파일 크기: {{actualSize}}"
     }
   },
+  "you": "당신",
   "zenMode": "집중 모드"
 }

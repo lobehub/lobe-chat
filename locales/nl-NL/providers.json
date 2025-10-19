@@ -30,7 +30,10 @@
     "description": "Bedrock is een dienst van Amazon AWS die zich richt op het bieden van geavanceerde AI-taalmodellen en visuele modellen voor bedrijven. De modellenfamilie omvat de Claude-serie van Anthropic, de Llama 3.1-serie van Meta, en meer, met opties variërend van lichtgewicht tot hoge prestaties, en ondersteunt tekstgeneratie, dialogen, beeldverwerking en meer, geschikt voor bedrijfsapplicaties van verschillende schalen en behoeften."
   },
   "bfl": {
-    "description": "Een toonaangevend, grensverleggend onderzoeksinstituut voor kunstmatige intelligentie dat de visuele infrastructuur van morgen bouwt."
+    "description": "Een toonaangevend, grensverleggend onderzoeksinstituut voor kunstmatige intelligentie dat de visuele infrastructuur van morgen opbouwt."
+  },
+  "cerebras": {
+    "description": "Cerebras is een AI-inferentieplatform gebaseerd op het speciale CS-3-systeem, ontworpen om 's werelds snelste, realtime reagerende en hoog-throughput LLM-diensten te leveren. Het is speciaal ontwikkeld om vertragingen te elimineren en complexe AI-workflows te versnellen, zoals realtime codegeneratie en agenttaken."
   },
   "cerebras": {
     "description": "Cerebras is een AI-inferentieplatform gebaseerd op het speciale CS-3-systeem, ontworpen om 's werelds snelste, realtime reagerende en hoog-throughput LLM-diensten te leveren. Het is speciaal ontwikkeld om vertragingen te elimineren en complexe AI-workflows te versnellen, zoals realtime codegeneratie en agenttaken."

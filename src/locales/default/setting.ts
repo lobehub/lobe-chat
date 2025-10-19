@@ -35,9 +35,16 @@ export default {
       title: '重置所有设置',
     },
   },
+  groupTab: {
+    chat: '聊天',
+    members: '成员',
+    meta: '基本信息',
+  },
   header: {
     desc: '偏好与模型设置',
     global: '全局设置',
+    group: '群聊设置',
+    groupDesc: '管理当前群聊',
     session: '会话设置',
     sessionDesc: '角色设定与会话偏好',
     sessionWithName: '会话设置 · {{name}}',
@@ -141,6 +148,9 @@ export default {
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
   },
+  message: {
+    success: '更新成功',
+  },
   plugin: {
     addMCPPlugin: '添加 MCP 插件',
     addTooltip: '自定义插件',
@@ -156,6 +166,7 @@ export default {
     },
     store: '插件商店',
   },
+
   settingAgent: {
     avatar: {
       title: '助手头像',
@@ -210,7 +221,6 @@ export default {
     },
     title: '应用外观',
   },
-
   settingChat: {
     autoCreateTopicThreshold: {
       desc: '当前消息数超过设定该值后，将自动创建话题',
@@ -297,6 +307,101 @@ export default {
       title: '主题',
     },
     title: '通用设置',
+  },
+  settingGroup: {
+    description: {
+      placeholder: '请输入群聊描述',
+      title: '群聊描述',
+    },
+    name: {
+      placeholder: '请输入群聊名称',
+      title: '群聊名称',
+    },
+    scene: {
+      desc: '选择群聊场景',
+      options: {
+        casual: '休闲',
+        productive: '生产力',
+      },
+      title: '群聊场景',
+    },
+    submit: '更新群聊',
+    systemPrompt: {
+      placeholder: '请输入主持人系统提示词',
+      title: '主持人系统提示词',
+    },
+    title: '群聊信息',
+  },
+  settingGroupChat: {
+    allowDM: {
+      desc: '关闭后，你仍然可以主动向助手发送私信',
+      title: '允许助手发送私信',
+    },
+    enableSupervisor: {
+      desc: '启用群聊主持人功能，主持人将管理群聊对话流程',
+      title: '启用主持人',
+    },
+    maxResponseInRow: {
+      desc: '选择成员可以连续回复多少条消息。设置为 0 则禁用此限制。',
+      title: '连续回复消息数',
+    },
+    model: {
+      desc: '群成员发言不受影响。部分模型无法作为主持人模型使用。',
+      title: '主持人模型',
+    },
+    orchestratorTitle: '主持人设置',
+    responseOrder: {
+      desc: '代理将按照在群聊中设置的顺序进行回复',
+      options: {
+        natural: '自然',
+        sequential: '顺序',
+      },
+      placeholder: '选择回复顺序',
+      title: '回复顺序',
+    },
+    responseSpeed: {
+      desc: '控制群聊的整体进行速度',
+      options: {
+        fast: '快速',
+        medium: '中等',
+        slow: '慢速',
+      },
+      placeholder: '选择回复速度',
+      title: '回复速度',
+    },
+    revealDM: {
+      desc: '使发送给其他成员的私信内容对你可见。',
+      title: '显示私信内容',
+    },
+    submit: '更新设置',
+    systemPrompt: {
+      desc: '群聊对话主持人的自定义系统提示词。这可能影响默认的主持人行为。',
+      placeholder: '请输入自定义主持人系统提示词...',
+      title: '主持人系统提示词',
+    },
+    title: '聊天设置',
+  },
+  settingGroupMembers: {
+    addToGroup: '加入群组',
+    availableAgents: '可用助手',
+    defaultAgent: '自定义助手',
+    disableHost: '关闭主持助手',
+    edit: '编辑成员',
+    empty: '该群聊中暂无代理。点击 + 按钮添加成员。',
+    enableHost: '启用主持助手',
+    groupHost: '群主持',
+    groupMembers: '群组成员',
+    host: {
+      description: '主持人在群组中时，群聊将自动化运行，适合发散性任务。',
+      title: '主持人',
+    },
+    noAvailableAgents: '暂无可用助手',
+    noDescription: '暂无描述',
+    noMembersInGroup: '群组暂无成员',
+    owner: '你（所有者）',
+    remove: '移除成员',
+    removeFromGroup: '移出群组',
+    you: '你',
   },
   settingImage: {
     defaultCount: {
@@ -525,6 +630,11 @@ export default {
       label: 'AI 绘画话题命名模型',
       modelDesc: '指定用于 AI 绘画自动命名话题的模型',
       title: 'AI 绘画自动命名话题',
+    },
+    groupChatSupervisor: {
+      label: '群聊监督模型',
+      modelDesc: '指定用于监督和管理群聊对话的模型',
+      title: '群聊监督管理',
     },
     helpInfo: '当创建新助手时，将以默认助手设置作为预设值。',
     historyCompress: {

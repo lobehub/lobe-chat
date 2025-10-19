@@ -31,7 +31,7 @@
   "batchDelete": "バッチ削除",
   "blog": "製品ブログ",
   "branching": "サブトピックを作成",
-  "branchingDisable": "「サブトピック」機能はサーバー版のみで利用可能です。この機能が必要な場合は、サーバー展開モードに切り替えるか、LobeChat Cloudを使用してください。",
+  "branchingDisable": "現在のモードでは「サブトピック」機能は利用できません。この機能を使用するには、Postgres/Pglite DB モードに切り替えるか、LobeHub Cloud をご利用ください。",
   "branchingRequiresSavedTopic": "現在のトピックが保存されていません。保存後にサブトピック機能を使用できます。",
   "cancel": "キャンセル",
   "changelog": "変更履歴",

@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "模型"
   },
+  "active": "活躍",
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設定]({{url}}) 完善我的資訊。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，有什麼我可以幫忙的嗎？",
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，有什麼我可以幫忙的嗎？",
@@ -13,17 +14,28 @@
     "thought": "思考過程",
     "unknownTitle": "未命名作品"
   },
+  "availableAgents": "可用助理",
   "backToBottom": "返回底部",
   "chatList": {
     "longMessageDetail": "查看詳情"
   },
   "clearCurrentMessages": "清空當前對話",
   "confirmClearCurrentMessages": "即將清空當前對話，清空後將無法找回，請確認你的操作",
+  "confirmRemoveChatGroupItemAlert": "即將刪除該群聊，群聊成員不受影響，請確認你的操作",
+  "confirmRemoveGroupItemAlert": "即將刪除此分組。刪除後，該分組中的助理將移至預設列表，請確認是否繼續。",
+  "confirmRemoveGroupSuccess": "群組刪除成功",
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
   "confirmRemoveSessionSuccess": "助手刪除成功",
   "defaultAgent": "自定義助手",
+  "defaultGroupChat": "群聊",
   "defaultList": "預設清單",
   "defaultSession": "自定義助手",
+  "dm": {
+    "placeholder": "你與 {{agentTitle}} 的私訊會顯示在這裡。",
+    "tooltip": "發私訊",
+    "visibleTo": "僅 {{target}} 可見",
+    "you": "你"
+  },
   "duplicateSession": {
     "loading": "複製中...",
     "success": "複製成功",
@@ -58,11 +70,56 @@
       "title": "擷取網頁連結內容"
     }
   },
+  "group": {
+    "desc": "與多位 AI 助手在共用的對話空間中協作。",
+    "memberTooltip": "群組內有 {{count}} 位成員",
+    "orchestratorThinking": "主持人正在思考中...",
+    "removeMember": "移除成員",
+    "title": "群組"
+  },
+  "groupDescription": "群組描述",
+  "groupSidebar": {
+    "members": {
+      "addMember": "添加成員",
+      "memberSettings": "成員設定",
+      "orchestrator": "主持人",
+      "orchestratorThinking": "主持人正在思考中...",
+      "removeMember": "移除成員",
+      "stopOrchestrator": "停止思考",
+      "triggerOrchestrator": "開始群聊"
+    },
+    "tabs": {
+      "host": "主持人",
+      "members": "成員",
+      "role": "設定"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "選擇現有助理...",
+    "createGroup": "建立群組聊天",
+    "existingMembers": "已有助理",
+    "groupMembers": "這些助理也將被加入您的列表中",
+    "host": {
+      "description": "使群聊自動化運作",
+      "title": "主持人",
+      "tooltip": "若停用群組主持人，您需要手動@提及成員才能讓他們回覆"
+    },
+    "memberCount": "{{count}} 位成員",
+    "noMatchingTemplates": "沒有符合的範本",
+    "noSelectedTemplates": "未選擇範本",
+    "noTemplateMembers": "模板中沒有成員",
+    "noTemplates": "沒有可用的範本",
+    "searchTemplates": "搜尋範本...",
+    "title": "建立群組聊天",
+    "useTemplate": "使用模板"
+  },
+  "hideForYou": "私訊內容已經隱藏，請在設定中開啟【顯示私訊內容】以查看",
   "history": {
     "title": "助手將只記住最後{{count}}條消息"
   },
   "historyRange": "歷史範圍",
   "historySummary": "歷史消息總結",
+  "inactive": "不活躍",
   "inbox": {
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "正在理解並分析您的意圖..."
   },
+  "inviteMembers": "邀請成員",
   "knowledgeBase": {
     "all": "所有內容",
     "allFiles": "所有檔案",
@@ -101,12 +159,29 @@
     "uploadGuide": "上傳過的檔案可以在「知識庫」中查看哦",
     "viewMore": "查看更多"
   },
+  "memberSelection": {
+    "addMember": "添加成員",
+    "allMembers": "所有成員",
+    "createGroup": "建立群聊",
+    "noAvailableAgents": "沒有可邀請的助理",
+    "noSelectedAgents": "尚未選擇助理",
+    "searchAgents": "搜尋助理...",
+    "setInitialMembers": "選擇群成員"
+  },
+  "members": "成員",
+  "mention": {
+    "title": "提及成員"
+  },
   "messageAction": {
     "delAndRegenerate": "刪除並重新生成",
     "deleteDisabledByThreads": "存在子話題，無法刪除",
     "regenerate": "重新生成"
   },
   "messages": {
+    "dm": {
+      "sentTo": "僅對{{name}}可見",
+      "title": "私訊"
+    },
     "modelCard": {
       "credit": "積分",
       "creditPricing": "定價",
@@ -156,6 +231,13 @@
     "previousMessage": "上一條訊息"
   },
   "newAgent": "新建助手",
+  "newGroupChat": "建立群組",
+  "noAgentsYet": "此群組還沒有助手。點擊 + 按鈕邀請助手。",
+  "noAvailableAgents": "沒有可邀請的助手",
+  "noMatchingAgents": "找不到符合的助手",
+  "noMembersYet": "此群組尚未有成員。請點選 + 按鈕邀請助理。",
+  "noSelectedAgents": "尚未選擇助理",
+  "owner": "群組擁有者",
   "pin": "置頂",
   "pinOff": "取消置頂",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "連網搜尋"
   },
   "searchAgentPlaceholder": "搜尋助手...",
+  "searchAgents": "搜尋助手...",
+  "selectedAgents": "已選擇的助理",
   "sendPlaceholder": "輸入聊天內容...",
   "sessionGroup": {
     "config": "分組管理",
     "confirmRemoveGroupAlert": "即將刪除該分組，刪除後該分組的助手將移動到預設清單，請確認你的操作",
     "createAgentSuccess": "助手建立成功",
     "createGroup": "新增新分組",
+    "createGroupFailed": "群聊建立失敗",
+    "createGroupSuccess": "群聊建立成功",
     "createSuccess": "創建成功",
     "creatingAgent": "助手建立中...",
     "inputPlaceholder": "請輸入分組名稱...",
@@ -235,6 +321,12 @@
     "loading": "識別中...",
     "prettifying": "潤色中..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "所有任務已完成",
+      "title": "任務已完成"
+    }
+  },
   "thread": {
     "divider": "子話題",
     "threadMessageCount": "{{messageCount}} 條消息",
@@ -248,6 +340,7 @@
     "chats": "聊天訊息",
     "historySummary": "歷史總結",
     "rest": "剩餘可用",
+    "supervisor": "群組主持",
     "systemRole": "角色設定",
     "title": "上下文詳細資訊",
     "tools": "外掛程式設定",
@@ -273,6 +366,7 @@
     "action": "語音朗讀",
     "clear": "刪除語音"
   },
+  "untitledAgent": "未命名助理",
   "updateAgent": "更新助理信息",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "影片檔案大小不能超過 20MB，當前檔案大小為 {{actualSize}}"
     }
   },
+  "you": "你",
   "zenMode": "專注模式"
 }

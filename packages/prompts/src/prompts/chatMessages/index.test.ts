@@ -1,7 +1,23 @@
 import { ChatMessage } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { chatHistoryPrompts } from './index';
+import {
+  chatHistoryPrompts,
+  consolidateGroupChatHistory,
+  groupMemeberSpeakingPrompts,
+  groupSupervisorPrompts,
+} from './index';
+
+let messageCounter = 0;
+const createMessage = (
+  overrides: Partial<ChatMessage> & Pick<ChatMessage, 'role' | 'content'>,
+): ChatMessage => ({
+  id: overrides.id ?? `msg-${++messageCounter}`,
+  createdAt: overrides.createdAt ?? 0,
+  updatedAt: overrides.updatedAt ?? 0,
+  meta: overrides.meta ?? {},
+  ...overrides,
+});
 
 describe('chatHistoryPrompts', () => {
   // Test with empty messages array
@@ -89,5 +105,72 @@ describe('chatHistoryPrompts', () => {
     expect(result).toBe(`<chat_history>
 <user>Line 1\nLine 2</user>
 </chat_history>`);
+  });
+});
+
+describe('groupSupervisorPrompts', () => {
+  it('should format messages and exclude supervisor role', () => {
+    const messages: ChatMessage[] = [
+      createMessage({ role: 'user', content: 'Hello everyone' }),
+      createMessage({ role: 'assistant', agentId: 'agent-1', content: 'Reporting in' }),
+      createMessage({
+        role: 'assistant',
+        agentId: 'agent-2',
+        targetId: 'agent-1',
+        content: 'Private update',
+      }),
+      createMessage({ role: 'supervisor', content: 'Ignore this' }),
+      createMessage({ role: 'assistant', content: 'General update' }),
+    ];
+
+    const result = groupSupervisorPrompts(messages);
+
+    expect(result).toBe(
+      `<message author="user">Hello everyone</message>
+<message author="agent-1">Reporting in</message>
+<message author="agent-2" target="agent-1">Private update</message>
+<message author="assistant">General update</message>`,
+    );
+  });
+});
+
+describe('groupMemeberSpeakingPrompts', () => {
+  it('should wrap messages in chat_group tags', () => {
+    const messages: ChatMessage[] = [
+      createMessage({ role: 'user', content: 'Need assistance' }),
+      createMessage({ role: 'assistant', content: 'On it!' }),
+    ];
+
+    const result = groupMemeberSpeakingPrompts(messages);
+
+    expect(result).toBe(`<chat_group>
+<user>Need assistance</user>
+<assistant>On it!</assistant>
+</chat_group>`);
+  });
+});
+
+describe('consolidateGroupChatHistory', () => {
+  it('should return empty string for no messages', () => {
+    expect(consolidateGroupChatHistory([])).toBe('');
+  });
+
+  it('should format messages with agent titles and default labels', () => {
+    const messages: ChatMessage[] = [
+      createMessage({ role: 'assistant', content: '   ' }), // filtered out
+      createMessage({ role: 'user', content: 'Hello group' }),
+      createMessage({ role: 'assistant', agentId: 'agent-1', content: 'Status update' }),
+      createMessage({ role: 'assistant', agentId: 'agent-2', content: 'Additional info' }),
+      createMessage({ role: 'assistant', content: 'General response' }),
+    ];
+
+    const agents = [{ id: 'agent-1', title: 'Researcher' }];
+
+    const result = consolidateGroupChatHistory(messages, agents);
+
+    expect(result).toBe(`(User): Hello group
+(Researcher): Status update
+(Agent agent-2): Additional info
+(Assistant): General response`);
   });
 });

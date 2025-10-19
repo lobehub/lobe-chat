@@ -11,5 +11,6 @@ export * from './plugin';
 export * from './session';
 export * from './settings';
 export * from './trace';
+export * from './url';
 export * from './user';
 export * from './version';

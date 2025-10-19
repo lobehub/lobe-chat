@@ -35,9 +35,16 @@
       "title": "Reset All Settings"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Members",
+    "meta": "Basic Info"
+  },
   "header": {
     "desc": "Preferences and model settings.",
     "global": "Global Settings",
+    "group": "Group Chat Settings",
+    "groupDesc": "Manage the current group chat",
     "session": "Session Settings",
     "sessionDesc": "Role settings and session preferences.",
     "sessionWithName": "Session Settings · {{name}}",
@@ -138,6 +145,9 @@
       "title": "API Proxy Address"
     },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
+  },
+  "message": {
+    "success": "Update successful"
   },
   "plugin": {
     "addMCPPlugin": "Add MCP Plugin",
@@ -293,6 +303,101 @@
       "title": "Theme"
     },
     "title": "General Settings"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Please enter the group chat description",
+      "title": "Group Chat Description"
+    },
+    "name": {
+      "placeholder": "Please enter the group chat name",
+      "title": "Group Chat Name"
+    },
+    "scene": {
+      "desc": "Select group chat scenario",
+      "options": {
+        "casual": "Casual",
+        "productive": "Productive"
+      },
+      "title": "Group Chat Scenario"
+    },
+    "submit": "Update Group Chat",
+    "systemPrompt": {
+      "placeholder": "Please enter the host system prompt",
+      "title": "Host System Prompt"
+    },
+    "title": "Group Chat Information"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "When turned off, you can still send direct messages to the assistant",
+      "title": "Allow Direct Messages from Assistant"
+    },
+    "enableSupervisor": {
+      "desc": "The host will manage the flow of the conversation.",
+      "title": "Enable Host"
+    },
+    "maxResponseInRow": {
+      "desc": "Select how many consecutive messages a member can reply with. Set to 0 to disable this limit.",
+      "title": "Consecutive Reply Count"
+    },
+    "model": {
+      "desc": "Group members' messages will not be affected. Some models cannot be used as host models.",
+      "title": "Host Model"
+    },
+    "orchestratorTitle": "Host Settings",
+    "responseOrder": {
+      "desc": "The agent will reply in the order set within the group chat",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Sequential"
+      },
+      "placeholder": "Select reply order",
+      "title": "Reply Order"
+    },
+    "responseSpeed": {
+      "desc": "Controls the overall pace of the group chat",
+      "options": {
+        "fast": "Fast",
+        "medium": "Medium",
+        "slow": "Slow"
+      },
+      "placeholder": "Select reply speed",
+      "title": "Reply Speed"
+    },
+    "revealDM": {
+      "desc": "Make private messages sent to other members visible to you.",
+      "title": "Show Private Messages"
+    },
+    "submit": "Update Settings",
+    "systemPrompt": {
+      "desc": "Custom system prompt for the group chat host. This may affect the default host behavior.",
+      "placeholder": "Please enter a custom host system prompt...",
+      "title": "Host System Prompt"
+    },
+    "title": "Chat Settings"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Add to Group",
+    "availableAgents": "Available Assistants",
+    "defaultAgent": "Custom Assistant",
+    "disableHost": "Disable Host Assistant",
+    "edit": "Edit Member",
+    "empty": "No agents in this group chat yet. Click the + button to add members.",
+    "enableHost": "Enable Host Assistant",
+    "groupHost": "Group Host",
+    "groupMembers": "Group Members",
+    "host": {
+      "description": "When the host is in the group, the chat runs automatically, suitable for brainstorming tasks.",
+      "title": "Host"
+    },
+    "noAvailableAgents": "No available assistants",
+    "noDescription": "No description",
+    "noMembersInGroup": "No members in the group",
+    "owner": "You (Owner)",
+    "remove": "Remove Member",
+    "removeFromGroup": "Remove from Group",
+    "you": "You"
   },
   "settingImage": {
     "defaultCount": {
@@ -522,6 +627,11 @@
       "modelDesc": "Model designated for automatic naming of AI art topics",
       "title": "AI Art Automatic Topic Naming"
     },
+    "groupChatSupervisor": {
+      "label": "Group Chat Supervision Model",
+      "modelDesc": "Model for supervising and managing group chat conversations.",
+      "title": "Group Chat Supervision"
+    },
     "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {
       "label": "Conversation History Model",
@@ -553,7 +663,7 @@
   "tab": {
     "about": "About",
     "agent": "Default Assistant",
-    "common": "Common Settings",
+    "common": "General",
     "experiment": "Experiment",
     "hotkey": "Hotkeys",
     "image": "AI Drawing",

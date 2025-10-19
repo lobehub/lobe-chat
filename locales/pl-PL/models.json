@@ -767,6 +767,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet zapewnia idealną równowagę między inteligencją a szybkością dla obciążeń roboczych w przedsiębiorstwach. Oferuje maksymalną użyteczność przy niższej cenie, jest niezawodny i odpowiedni do dużych wdrożeń."
   },
+  "claude-haiku-4-5-20251001": {
+    "description": "Claude Haiku 4.5 to najszybszy i najbardziej inteligentny model Haiku firmy Anthropic, oferujący błyskawiczne działanie i zaawansowane możliwości rozumowania."
+  },
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 to najnowszy i najpotężniejszy model Anthropic do obsługi wysoce złożonych zadań. Wyróżnia się doskonałą wydajnością, inteligencją, płynnością i zdolnością rozumienia."
   },
@@ -1147,6 +1150,9 @@
   },
   "doubao-seed-1.6-flash": {
     "description": "Doubao-Seed-1.6-flash to ultraszybki model wielomodalnego głębokiego myślenia, z czasem TPOT zaledwie 10 ms; obsługuje zarówno rozumienie tekstu, jak i obrazu, z lepszymi zdolnościami tekstowymi niż poprzednia generacja lite oraz wizualnymi porównywalnymi do modeli pro konkurencji. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
+  },
+  "doubao-seed-1.6-lite": {
+    "description": "Doubao-Seed-1.6-lite to nowy, multimodalny model głębokiego rozumowania, umożliwiający regulację poziomu wnioskowania (reasoning effort) w czterech trybach: Minimal, Low, Medium i High. Oferuje doskonały stosunek jakości do ceny i jest idealnym wyborem do typowych zadań, z kontekstem do 256k."
   },
   "doubao-seed-1.6-thinking": {
     "description": "Model Doubao-Seed-1.6-thinking ma znacznie wzmocnione zdolności myślenia, w porównaniu do Doubao-1.5-thinking-pro osiąga dalsze ulepszenia w podstawowych umiejętnościach takich jak kodowanie, matematyka i rozumowanie logiczne, wspiera również rozumienie wizualne. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
@@ -1541,9 +1547,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posiada silne zdolności do złożonego wnioskowania, wyróżniając się w dziedzinach takich jak wnioskowanie logiczne, matematyka i programowanie."
   },
-  "glm4.6:355b": {
-    "description": "Najnowszy flagowy model Zhipu, GLM-4.6 (355B), znacznie przewyższa swojego poprzednika w zakresie zaawansowanego kodowania, przetwarzania długich tekstów, wnioskowania i zdolności agentowych. Szczególnie w programowaniu dorównuje Claude Sonnet 4, stając się czołowym modelem kodującym w Chinach."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash oferuje funkcje nowej generacji i ulepszenia, w tym doskonałą szybkość, wbudowane użycie narzędzi, generowanie multimodalne oraz okno kontekstu o rozmiarze 1 miliona tokenów."
   },
@@ -1934,11 +1937,17 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small to idealny wybór do generowania, debugowania i refaktoryzacji kodu, oferujący minimalne opóźnienia."
   },
+  "inclusionAI/Ling-1T": {
+    "description": "Ling-1T to flagowy model bez rozumowania (non-thinking) z serii „Ling 2.0”, posiadający 1 bilion parametrów ogólnych i około 50 miliardów aktywnych parametrów na token. Zbudowany na architekturze Ling 2.0, Ling-1T ma na celu przesunięcie granic efektywnego wnioskowania i skalowalnej kognicji. Ling-1T-base został wytrenowany na ponad 20 bilionach wysokiej jakości, intensywnie rozumujących tokenów."
+  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0 to trzeci model z serii architektury Ling 2.0 wydany przez zespół Bailing z Ant Group. Jest to model hybrydowy ekspertów (MoE) o łącznej liczbie parametrów 100 miliardów, z aktywacją jedynie 6,1 miliarda parametrów na token (48 miliardów bez uwzględnienia wektorów osadzeń). Jako lekka konfiguracja modelu, Ling-flash-2.0 wykazuje w wielu autorytatywnych testach wydajność porównywalną lub przewyższającą modele gęste (Dense) o wielkości 40 miliardów parametrów oraz większe modele MoE. Model ten ma na celu eksplorację efektywnych ścieżek w kontekście powszechnego przekonania, że „duży model to duża liczba parametrów”, poprzez zaawansowany projekt architektury i strategię treningową."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 to mały, wysokowydajny duży model językowy oparty na architekturze MoE. Posiada 16 miliardów parametrów, ale aktywuje tylko 1,4 miliarda na token (789 milionów bez osadzeń), co zapewnia bardzo wysoką szybkość generowania. Dzięki efektywnemu projektowi MoE i dużej, wysokiej jakości bazie treningowej, mimo niskiej liczby aktywowanych parametrów, Ling-mini-2.0 osiąga w zadaniach downstream wydajność porównywalną z najlepszymi modelami gęstymi poniżej 10 miliardów parametrów oraz większymi modelami MoE."
+  },
+  "inclusionAI/Ring-1T": {
+    "description": "Ring-1T to otwartoźródłowy model myślenia o skali biliona parametrów, opracowany przez zespół Bailing. Bazuje na architekturze Ling 2.0 i modelu bazowym Ling-1T-base, z 1 bilionem parametrów ogólnych i 50 miliardami aktywnych parametrów. Obsługuje kontekst do 128K i został zoptymalizowany za pomocą skalowalnego, weryfikowalnego uczenia przez wzmocnienie z nagrodą."
   },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0 to wysoko wydajny model myślenia głęboko zoptymalizowany na bazie Ling-flash-2.0-base. Wykorzystuje architekturę hybrydowych ekspertów (MoE) z łączną liczbą parametrów 100 miliardów, aktywując podczas inferencji tylko 6,1 miliarda parametrów. Model rozwiązuje problem niestabilności treningu MoE w uczeniu ze wzmocnieniem (RL) dzięki autorskiej metodzie icepop, co pozwala na ciągłe zwiększanie zdolności do złożonego wnioskowania podczas długotrwałego treningu. Ring-flash-2.0 osiągnął znaczące przełomy w trudnych benchmarkach, takich jak konkursy matematyczne, generowanie kodu i rozumowanie logiczne. Jego wydajność przewyższa najlepsze modele gęste poniżej 40 miliardów parametrów i jest porównywalna z większymi otwartoźródłowymi modelami MoE oraz zamkniętymi modelami myślenia o wysokiej wydajności. Choć skupiony na złożonym wnioskowaniu, model dobrze radzi sobie także z zadaniami kreatywnego pisania. Dzięki efektywnej architekturze Ring-flash-2.0 oferuje wysoką wydajność przy szybkim inferowaniu, co znacząco obniża koszty wdrożenia modeli myślenia w środowiskach o dużej równoczesności."
@@ -2035,9 +2044,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Model Llama 3.3 zoptymalizowany do rozmów, który w standardowych testach branżowych przewyższa wiele istniejących modeli czatowych o otwartym kodzie."
-  },
-  "llama-4-maverick-17b-128e-instruct": {
-    "description": "Llama 4 Maverick: wysokowydajny model z serii Llama, idealny do zaawansowanego wnioskowania, rozwiązywania złożonych problemów i zadań opartych na instrukcjach."
   },
   "llama-4-scout-17b-16e-instruct": {
     "description": "Llama 4 Scout: wysokowydajny model z serii Llama, zaprojektowany do zastosowań wymagających dużej przepustowości i niskich opóźnień."
@@ -2906,6 +2912,9 @@
   "qwen3-8b": {
     "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
   },
+  "qwen3-coder-30b-a3b-instruct": {
+    "description": "Otwartoźródłowa wersja modelu kodowania Tongyi Qianwen. Najnowszy qwen3-coder-30b-a3b-instruct to model generowania kodu oparty na Qwen3, wyposażony w zaawansowane możliwości agenta kodującego, doskonale radzący sobie z wywoływaniem narzędzi i interakcją ze środowiskiem, umożliwiający autonomiczne programowanie i łączący doskonałe umiejętności kodowania z ogólnymi zdolnościami."
+  },
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Otwartoźródłowa wersja modelu kodowania Tongyi Qianwen. Najnowszy qwen3-coder-480b-a35b-instruct to model generowania kodu oparty na Qwen3, posiadający potężne zdolności agenta kodującego, specjalizujący się w wywoływaniu narzędzi i interakcji środowiskowej, umożliwiający autonomiczne programowanie z doskonałymi zdolnościami kodowania i ogólnymi."
   },
@@ -2927,11 +2936,29 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "Nowa generacja otwartego modelu z trybem myślenia oparta na Qwen3, która w porównaniu z poprzednią wersją (Tongyi Qianwen 3-235B-A22B-Thinking-2507) wykazuje poprawę w przestrzeganiu instrukcji oraz bardziej zwięzłe podsumowania w odpowiedziach modelu."
   },
+  "qwen3-omni-flash": {
+    "description": "Model Qwen-Omni obsługuje wejścia w różnych modalnościach, takich jak tekst, obraz, dźwięk i wideo, generując odpowiedzi w formie tekstu lub mowy. Oferuje różnorodne, naturalnie brzmiące głosy, wspiera wiele języków i dialektów, i znajduje zastosowanie w takich obszarach jak tworzenie tekstów, rozpoznawanie obrazów czy asystenci głosowi."
+  },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Instruct to multimodalny model opracowany przez Tongyi Qianwen, wspierający rozumienie wizualne i wnioskowanie."
+    "description": "Qwen3 VL 235B A22B w trybie bez rozumowania (Instruct), przeznaczony do scenariuszy z instrukcjami niewymagającymi głębokiego wnioskowania, zachowując silne zdolności rozumienia wizualnego."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Thinking to multimodalny model wnioskowania opracowany przez Tongyi Qianwen, wspierający rozumienie wizualne i wnioskowanie."
+    "description": "Qwen3 VL 235B A22B w trybie rozumowania (wersja open source), zaprojektowany do złożonych zadań wymagających intensywnego wnioskowania i rozumienia długich materiałów wideo, oferujący najwyższej klasy zdolności w zakresie rozumowania wizualno-tekstowego."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B w trybie bez rozumowania (Instruct), przeznaczony do standardowych scenariuszy podążania za instrukcjami, oferujący wysoką jakość rozumienia i generowania multimodalnego."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen-VL (wersja open source) oferuje zdolności rozumienia wizualnego i generowania tekstu, wspiera interakcję z agentami, kodowanie wizualne, percepcję przestrzenną, rozumienie długich materiałów wideo i głębokie wnioskowanie, a także zapewnia zaawansowane rozpoznawanie tekstu i obsługę wielu języków w złożonych scenariuszach."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B w trybie bez rozumowania (Instruct), odpowiedni do standardowych zadań generowania i rozpoznawania multimodalnego."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B w trybie rozumowania, przeznaczony do lekkich scenariuszy multimodalnego wnioskowania i interakcji, z zachowaniem zdolności rozumienia długiego kontekstu."
+  },
+  "qwen3-vl-flash": {
+    "description": "Qwen3 VL Flash: lekka, szybka wersja do wnioskowania, idealna do zastosowań wrażliwych na opóźnienia lub wymagających obsługi dużej liczby żądań."
   },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL to model generujący tekst z umiejętnością rozumienia wizualnego (obrazów). Potrafi nie tylko wykonywać OCR (rozpoznawanie tekstu na obrazach), ale także podsumowywać i wnioskować, na przykład wyodrębniać atrybuty z fotografii produktów czy rozwiązywać zadania na podstawie ilustracji."

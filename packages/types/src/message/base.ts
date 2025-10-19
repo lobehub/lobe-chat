@@ -95,7 +95,7 @@ export interface ModelSpeed {
 
 export interface MessageMetadata extends ModelUsage, ModelSpeed {}
 
-export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
+export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | 'supervisor';
 
 export interface MessageItem {
   agentId: string | null;

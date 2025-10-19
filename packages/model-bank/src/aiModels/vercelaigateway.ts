@@ -647,7 +647,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576,
@@ -657,8 +656,8 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.0-flash',
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',
@@ -666,7 +665,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576,

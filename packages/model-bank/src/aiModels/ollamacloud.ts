@@ -11,7 +11,7 @@ const ollamaCloudModels: AIChatModelCard[] = [
       '智谱最新旗舰模型 GLM-4.6 (355B) 在高级编码、长文本处理、推理与智能体能力上全面超越前代，尤其在编程能力上对齐 Claude Sonnet 4，成为国内顶尖的 Coding 模型。',
     displayName: 'GLM-4.6',
     enabled: true,
-    id: 'glm4.6:355b',
+    id: 'glm-4.6',
     type: 'chat',
   },
   {
@@ -70,10 +70,20 @@ const ollamaCloudModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 262_144,
-    description:
-      '阿里巴巴针对代理和编码任务的高性能长上下文模型。',
+    description: '阿里巴巴针对代理和编码任务的高性能长上下文模型。',
     displayName: 'Qwen3 Coder 480B',
     id: 'qwen3-coder:480b',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    displayName: 'Qwen3 VL 235B',
+    id: 'qwen3-vl:235b',
     type: 'chat',
   },
 ];

@@ -1,17 +1,14 @@
 import {
-  Content,
-  FunctionDeclaration,
   GenerateContentConfig,
   Tool as GoogleFunctionCallTool,
   GoogleGenAI,
   HttpOptions,
-  Part,
-  Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
 import debug from 'debug';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
+import { buildGoogleMessages, buildGoogleTools } from '../../core/contextBuilders/google';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../../core/streams';
 import { LOBE_ERROR_KEY } from '../../core/streams/google';
 import {
@@ -20,8 +17,6 @@ import {
   ChatStreamPayload,
   GenerateObjectOptions,
   GenerateObjectPayload,
-  OpenAIChatMessage,
-  UserMessageContentPart,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
@@ -29,12 +24,9 @@ import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { getModelPricing } from '../../utils/getModelPricing';
 import { parseGoogleErrorMessage } from '../../utils/googleErrorParser';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { StreamingResponse } from '../../utils/response';
-import { safeParseJSON } from '../../utils/safeParseJSON';
-import { parseDataUri } from '../../utils/uriParser';
 import { createGoogleImage } from './createImage';
-import { createGoogleGenerateObject } from './generateObject';
+import { createGoogleGenerateObject, createGoogleGenerateObjectWithTools } from './generateObject';
 
 const log = debug('model-runtime:google');
 
@@ -217,7 +209,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         thinkingBudget: resolvedThinkingBudget,
       };
 
-      const contents = await this.buildGoogleMessages(payload.messages);
+      const contents = await buildGoogleMessages(payload.messages);
 
       const controller = new AbortController();
       const originalSignal = options?.signal;
@@ -264,7 +256,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           modelsDisableInstuction.has(model) || model.toLowerCase().includes('learnlm')
             ? undefined
             : thinkingConfig,
-        tools: this.buildGoogleTools(payload.tools, payload),
+        tools: this.buildGoogleToolsWithSearch(payload.tools, payload),
         topP: payload.top_p,
       };
 
@@ -330,16 +322,31 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   /**
    * Generate structured output using Google Gemini API
    * @see https://ai.google.dev/gemini-api/docs/structured-output
+   * @see https://ai.google.dev/gemini-api/docs/function-calling
    */
   async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
     // Convert OpenAI messages to Google format
-    const contents = await this.buildGoogleMessages(payload.messages);
+    const contents = await buildGoogleMessages(payload.messages);
 
-    return createGoogleGenerateObject(
-      this.client,
-      { contents, model: payload.model, schema: payload.schema },
-      options,
-    );
+    // Handle tools-based structured output
+    if (payload.tools && payload.tools.length > 0) {
+      return createGoogleGenerateObjectWithTools(
+        this.client,
+        { contents, model: payload.model, tools: payload.tools },
+        options,
+      );
+    }
+
+    // Handle schema-based structured output
+    if (payload.schema) {
+      return createGoogleGenerateObject(
+        this.client,
+        { contents, model: payload.model, schema: payload.schema },
+        options,
+      );
+    }
+
+    return undefined;
   }
 
   private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {
@@ -489,147 +496,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     };
   }
 
-  private convertContentToGooglePart = async (
-    content: UserMessageContentPart,
-  ): Promise<Part | undefined> => {
-    switch (content.type) {
-      default: {
-        return undefined;
-      }
-
-      case 'text': {
-        return { text: content.text };
-      }
-
-      case 'image_url': {
-        const { mimeType, base64, type } = parseDataUri(content.image_url.url);
-
-        if (type === 'base64') {
-          if (!base64) {
-            throw new TypeError("Image URL doesn't contain base64 data");
-          }
-
-          return {
-            inlineData: { data: base64, mimeType: mimeType || 'image/png' },
-          };
-        }
-
-        if (type === 'url') {
-          const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
-
-          return {
-            inlineData: { data: base64, mimeType },
-          };
-        }
-
-        throw new TypeError(`currently we don't support image url: ${content.image_url.url}`);
-      }
-
-      case 'video_url': {
-        const { mimeType, base64, type } = parseDataUri(content.video_url.url);
-
-        if (type === 'base64') {
-          if (!base64) {
-            throw new TypeError("Video URL doesn't contain base64 data");
-          }
-
-          return {
-            inlineData: { data: base64, mimeType: mimeType || 'video/mp4' },
-          };
-        }
-
-        if (type === 'url') {
-          // For video URLs, we need to fetch and convert to base64
-          // Note: This might need size/duration limits for practical use
-          const response = await fetch(content.video_url.url);
-          const arrayBuffer = await response.arrayBuffer();
-          const base64 = Buffer.from(arrayBuffer).toString('base64');
-          const mimeType = response.headers.get('content-type') || 'video/mp4';
-
-          return {
-            inlineData: { data: base64, mimeType },
-          };
-        }
-
-        throw new TypeError(`currently we don't support video url: ${content.video_url.url}`);
-      }
-    }
-  };
-
-  private convertOAIMessagesToGoogleMessage = async (
-    message: OpenAIChatMessage,
-    toolCallNameMap?: Map<string, string>,
-  ): Promise<Content> => {
-    const content = message.content as string | UserMessageContentPart[];
-    if (!!message.tool_calls) {
-      return {
-        parts: message.tool_calls.map<Part>((tool) => ({
-          functionCall: {
-            args: safeParseJSON(tool.function.arguments)!,
-            name: tool.function.name,
-          },
-        })),
-        role: 'model',
-      };
-    }
-
-    // 将 tool_call result 转成 functionResponse part
-    if (message.role === 'tool' && toolCallNameMap && message.tool_call_id) {
-      const functionName = toolCallNameMap.get(message.tool_call_id);
-      if (functionName) {
-        return {
-          parts: [
-            {
-              functionResponse: {
-                name: functionName,
-                response: { result: message.content },
-              },
-            },
-          ],
-          role: 'user',
-        };
-      }
-    }
-
-    const getParts = async () => {
-      if (typeof content === 'string') return [{ text: content }];
-
-      const parts = await Promise.all(
-        content.map(async (c) => await this.convertContentToGooglePart(c)),
-      );
-      return parts.filter(Boolean) as Part[];
-    };
-
-    return {
-      parts: await getParts(),
-      role: message.role === 'assistant' ? 'model' : 'user',
-    };
-  };
-
-  // convert messages from the OpenAI format to Google GenAI SDK
-  private buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promise<Content[]> => {
-    const toolCallNameMap = new Map<string, string>();
-    messages.forEach((message) => {
-      if (message.role === 'assistant' && message.tool_calls) {
-        message.tool_calls.forEach((toolCall) => {
-          if (toolCall.type === 'function') {
-            toolCallNameMap.set(toolCall.id, toolCall.function.name);
-          }
-        });
-      }
-    });
-
-    const pools = messages
-      .filter((message) => message.role !== 'function')
-      .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg, toolCallNameMap));
-
-    const contents = await Promise.all(pools);
-
-    // 筛除空消息: contents.parts must not be empty.
-    return contents.filter((content: Content) => content.parts && content.parts.length > 0);
-  };
-
-  private buildGoogleTools(
+  private buildGoogleToolsWithSearch(
     tools: ChatCompletionTool[] | undefined,
     payload?: ChatStreamPayload,
   ): GoogleFunctionCallTool[] | undefined {
@@ -640,7 +507,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
     // 如果已经有 tool_calls，优先处理 function declarations
     if (hasToolCalls && hasFunctionTools) {
-      return this.buildFunctionDeclarations(tools);
+      return buildGoogleTools(tools);
     }
 
     // 构建并返回搜索相关工具（搜索工具不能与 FunctionCall 同时使用）
@@ -655,41 +522,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
 
     // 最后考虑 function declarations
-    return this.buildFunctionDeclarations(tools);
+    return buildGoogleTools(tools);
   }
-
-  private buildFunctionDeclarations(
-    tools: ChatCompletionTool[] | undefined,
-  ): GoogleFunctionCallTool[] | undefined {
-    if (!tools || tools.length === 0) return;
-
-    return [
-      {
-        functionDeclarations: tools.map((tool) => this.convertToolToGoogleTool(tool)),
-      },
-    ];
-  }
-
-  private convertToolToGoogleTool = (tool: ChatCompletionTool): FunctionDeclaration => {
-    const functionDeclaration = tool.function;
-    const parameters = functionDeclaration.parameters;
-    // refs: https://github.com/lobehub/lobe-chat/pull/5002
-    const properties =
-      parameters?.properties && Object.keys(parameters.properties).length > 0
-        ? parameters.properties
-        : { dummy: { type: 'string' } }; // dummy property to avoid empty object
-
-    return {
-      description: functionDeclaration.description,
-      name: functionDeclaration.name,
-      parameters: {
-        description: parameters?.description,
-        properties: properties,
-        required: parameters?.required,
-        type: SchemaType.OBJECT,
-      },
-    };
-  };
 }
 
 export default LobeGoogleAI;

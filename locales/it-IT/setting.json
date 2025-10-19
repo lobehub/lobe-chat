@@ -35,9 +35,16 @@
       "title": "Ripristina tutte le impostazioni"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Membri",
+    "meta": "Informazioni di base"
+  },
   "header": {
     "desc": "Preferenze e impostazioni del modello.",
     "global": "Impostazioni globali",
+    "group": "Impostazioni chat di gruppo",
+    "groupDesc": "Gestisci la chat di gruppo corrente",
     "session": "Impostazioni della sessione",
     "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
     "sessionWithName": "Impostazioni della sessione · {{name}}",
@@ -138,6 +145,9 @@
       "title": "Indirizzo del proxy API"
     },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
+  },
+  "message": {
+    "success": "Aggiornamento riuscito"
   },
   "plugin": {
     "addMCPPlugin": "Aggiungi plugin MCP",
@@ -293,6 +303,101 @@
       "title": "Tema"
     },
     "title": "Impostazioni Generali"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Inserisci la descrizione della chat di gruppo",
+      "title": "Descrizione della chat di gruppo"
+    },
+    "name": {
+      "placeholder": "Inserisci il nome della chat di gruppo",
+      "title": "Nome della chat di gruppo"
+    },
+    "scene": {
+      "desc": "Seleziona la scena della chat di gruppo",
+      "options": {
+        "casual": "Informale",
+        "productive": "Produttivo"
+      },
+      "title": "Scena della chat di gruppo"
+    },
+    "submit": "Aggiorna chat di gruppo",
+    "systemPrompt": {
+      "placeholder": "Inserisci il prompt di sistema del moderatore",
+      "title": "Prompt di sistema del moderatore"
+    },
+    "title": "Informazioni chat di gruppo"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Dopo la disattivazione, puoi comunque inviare messaggi privati all'assistente",
+      "title": "Consenti messaggi privati dall'assistente"
+    },
+    "enableSupervisor": {
+      "desc": "Attiva la funzione di moderatore della chat di gruppo; il moderatore gestirà il flusso della conversazione",
+      "title": "Attiva moderatore"
+    },
+    "maxResponseInRow": {
+      "desc": "Seleziona quante risposte consecutive un membro può inviare. Imposta a 0 per disabilitare questo limite.",
+      "title": "Numero di risposte consecutive"
+    },
+    "model": {
+      "desc": "Gli interventi dei membri del gruppo non saranno influenzati. Alcuni modelli non possono essere utilizzati come moderatori.",
+      "title": "Modello moderatore"
+    },
+    "orchestratorTitle": "Impostazioni moderatore",
+    "responseOrder": {
+      "desc": "Gli agenti risponderanno nell'ordine stabilito nella chat di gruppo",
+      "options": {
+        "natural": "Naturale",
+        "sequential": "Sequenziale"
+      },
+      "placeholder": "Seleziona l'ordine di risposta",
+      "title": "Ordine di risposta"
+    },
+    "responseSpeed": {
+      "desc": "Controlla la velocità complessiva della chat di gruppo",
+      "options": {
+        "fast": "Veloce",
+        "medium": "Media",
+        "slow": "Lenta"
+      },
+      "placeholder": "Seleziona la velocità di risposta",
+      "title": "Velocità di risposta"
+    },
+    "revealDM": {
+      "desc": "Rendi visibili i messaggi privati inviati ad altri membri.",
+      "title": "Mostra contenuti messaggi privati"
+    },
+    "submit": "Aggiorna impostazioni",
+    "systemPrompt": {
+      "desc": "Prompt di sistema personalizzato per il moderatore della chat di gruppo. Può influenzare il comportamento predefinito del moderatore.",
+      "placeholder": "Inserisci un prompt di sistema personalizzato per il moderatore...",
+      "title": "Prompt di sistema del moderatore"
+    },
+    "title": "Impostazioni chat"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Aggiungi al gruppo",
+    "availableAgents": "Assistenti disponibili",
+    "defaultAgent": "Assistente personalizzato",
+    "disableHost": "Disattiva assistente host",
+    "edit": "Modifica membro",
+    "empty": "Nessun agente presente in questa chat di gruppo. Clicca il pulsante + per aggiungere membri.",
+    "enableHost": "Attiva assistente host",
+    "groupHost": "Host del gruppo",
+    "groupMembers": "Membri del gruppo",
+    "host": {
+      "description": "Quando l'host è nel gruppo, la chat di gruppo funziona in modo automatizzato, adatta a compiti creativi.",
+      "title": "Host"
+    },
+    "noAvailableAgents": "Nessun assistente disponibile",
+    "noDescription": "Nessuna descrizione",
+    "noMembersInGroup": "Nessun membro nel gruppo",
+    "owner": "Tu (proprietario)",
+    "remove": "Rimuovi membro",
+    "removeFromGroup": "Rimuovi dal gruppo",
+    "you": "Tu"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "Modello di denominazione argomenti per disegno AI",
       "modelDesc": "Modello specificato per la denominazione automatica degli argomenti nel disegno AI",
       "title": "Denominazione automatica argomenti per disegno AI"
+    },
+    "groupChatSupervisor": {
+      "label": "Modello di supervisione per chat di gruppo",
+      "modelDesc": "Specifica il modello da utilizzare per la supervisione e la gestione delle conversazioni di gruppo",
+      "title": "Supervisione e gestione delle chat di gruppo"
     },
     "helpInfo": "Quando crei un nuovo assistente, verranno utilizzate le impostazioni predefinite dell'assistente come valori predefiniti.",
     "historyCompress": {

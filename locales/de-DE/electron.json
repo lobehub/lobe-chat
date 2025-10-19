@@ -92,14 +92,15 @@
     "installLater": "Beim nächsten Start aktualisieren",
     "isLatestVersion": "Sie verwenden bereits die neueste Version",
     "isLatestVersionDesc": "Fantastisch, die verwendete Version {{version}} ist die aktuellste Version.",
-    "later": "Später aktualisieren",
+    "later": "Später",
     "newVersionAvailable": "Neue Version verfügbar",
     "newVersionAvailableDesc": "Eine neue Version {{version}} wurde gefunden, möchten Sie jetzt herunterladen?",
     "restartAndInstall": "Update installieren und neu starten",
     "updateError": "Update-Fehler",
-    "updateReady": "Update ist bereit",
+    "updateReady": "Eine neue Version ist verfügbar",
     "updateReadyDesc": "Die neue Version {{version}} wurde heruntergeladen, die Installation wird nach dem Neustart der Anwendung abgeschlossen.",
-    "upgradeNow": "Jetzt aktualisieren"
+    "upgradeNow": "Jetzt aktualisieren",
+    "willInstallLater": "Das Update wird beim nächsten Start installiert"
   },
   "waitingOAuth": {
     "cancel": "Abbrechen",

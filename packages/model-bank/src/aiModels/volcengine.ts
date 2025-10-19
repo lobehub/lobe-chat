@@ -74,9 +74,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.8,
-              '[128_000, infinity]': 4.8,
-              '[32_000, 128_000]': 2.4,
+              '[0, 0.032]': 0.8,
+              '[0.032, 0.128]': 2.4,
+              '[0.128, infinity]': 4.8,
             },
             pricingParams: ['textInputRange'],
           },
@@ -87,9 +87,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 8,
-              '[128_000, infinity]': 24,
-              '[32_000, 128_000]': 16,
+              '[0, 0.032]': 8,
+              '[0.032, 0.128]': 16,
+              '[0.128, infinity]': 24,
             },
             pricingParams: ['textInputRange'],
           },
@@ -127,9 +127,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.8,
-              '[128_000, infinity]': 2.4,
-              '[32_000, 128_000]': 1.2,
+              '[0, 0.032]': 0.8,
+              '[0.032, 0.128]': 1.2,
+              '[0.128, infinity]': 2.4,
             },
             pricingParams: ['textInputRange'],
           },
@@ -140,9 +140,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 8,
-              '[128_000, infinity]': 24,
-              '[32_000, 128_000]': 16,
+              '[0, 0.032]': 8,
+              '[0.032, 0.128]': 16,
+              '[0.128, infinity]': 24,
             },
             pricingParams: ['textInputRange'],
           },
@@ -162,7 +162,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-seed-1-6-250615',
+      deploymentName: 'doubao-seed-1-6-251015',
     },
     contextWindowTokens: 256_000,
     description:
@@ -177,9 +177,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.8,
-              '[128_000, infinity]': 2.4,
-              '[32_000, 128_000]': 1.2,
+              '[0, 0.032]': 0.8,
+              '[0.032, 0.128]': 1.2,
+              '[0.128, infinity]': 2.4,
             },
             pricingParams: ['textInputRange'],
           },
@@ -190,10 +190,10 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]_[0, 8192]': 2,
-              '[0, 32_000]_[8192, infinity]': 8,
-              '[128_000, infinity]_[0, infinity]': 24,
-              '[32_000, 128_000]_[0, infinity]': 16,
+              '[0, 0.032]_[0, 0.0002]': 2,
+              '[0, 0.032]_[0.0002, infinity]': 8,
+              '[0.032, 0.128]_[0, infinity]': 16,
+              '[0.128, infinity]_[0, infinity]': 24,
             },
             pricingParams: ['textInputRange', 'textOutputRange'],
           },
@@ -205,7 +205,60 @@ const doubaoChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['thinking'],
+      extendParams: ['gpt5ReasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-seed-1-6-lite-251015',
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Doubao-Seed-1.6-lite 全新多模态深度思考模型，支持思考程度可调节（reasoning effort），即 Minimal、Low、Medium、High 四种模式，更强性价比，常见任务的最佳选择，上下文窗口至256k。',
+    displayName: 'Doubao Seed 1.6 Lite',
+    id: 'doubao-seed-1.6-lite',
+    maxOutput: 32_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 0.3,
+              '[0.032, 0.128]': 0.6,
+              '[0.128, 0.256]': 1.2,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]_[0, 0.0002]': 0.6,
+              '[0, 0.032]_[0.0002, infinity]': 2.4,
+              '[0.032, 0.128]_[0, infinity]': 4,
+              '[0.128, 0.256]_[0, infinity]': 12,
+            },
+            pricingParams: ['textInputRange', 'textOutputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        { name: 'textInput_cacheRead', rate: 0.06, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['gpt5ReasoningEffort'],
     },
     type: 'chat',
   },
@@ -231,9 +284,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 0.15,
-              '[128_000, infinity]': 0.6,
-              '[32_000, 128_000]': 0.3,
+              '[0, 0.032]': 0.15,
+              '[0.032, 0.128]': 0.3,
+              '[0.128, infinity]': 0.6,
             },
             pricingParams: ['textInputRange'],
           },
@@ -244,9 +297,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         {
           lookup: {
             prices: {
-              '[0, 32_000]': 1.5,
-              '[128_000, infinity]': 6,
-              '[32_000, 128_000]': 3,
+              '[0, 0.032]': 1.5,
+              '[0.032, 0.128]': 3,
+              '[0.128, infinity]': 6,
             },
             pricingParams: ['textInputRange'],
           },

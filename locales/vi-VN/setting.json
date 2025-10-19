@@ -35,9 +35,16 @@
       "title": "Đặt lại tất cả cài đặt"
     }
   },
+  "groupTab": {
+    "chat": "Trò chuyện",
+    "members": "Thành viên",
+    "meta": "Thông tin cơ bản"
+  },
   "header": {
     "desc": "Thiết lập Ưu tiên và Mô hình.",
     "global": "Cài đặt toàn cầu",
+    "group": "Cài đặt nhóm trò chuyện",
+    "groupDesc": "Quản lý nhóm trò chuyện hiện tại",
     "session": "Cài đặt cuộc trò chuyện",
     "sessionDesc": "Thiết lập nhân vật và ưu tiên phiên hội thoại.",
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
@@ -138,6 +145,9 @@
       "title": "Địa chỉ Proxy API"
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
+  },
+  "message": {
+    "success": "Cập nhật thành công"
   },
   "plugin": {
     "addMCPPlugin": "Thêm plugin MCP",
@@ -293,6 +303,101 @@
       "title": "Chủ đề"
     },
     "title": "Cài đặt chung"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Vui lòng nhập mô tả nhóm trò chuyện",
+      "title": "Mô tả nhóm trò chuyện"
+    },
+    "name": {
+      "placeholder": "Vui lòng nhập tên nhóm trò chuyện",
+      "title": "Tên nhóm trò chuyện"
+    },
+    "scene": {
+      "desc": "Chọn bối cảnh trò chuyện nhóm",
+      "options": {
+        "casual": "Thư giãn",
+        "productive": "Năng suất"
+      },
+      "title": "Bối cảnh trò chuyện nhóm"
+    },
+    "submit": "Cập nhật nhóm trò chuyện",
+    "systemPrompt": {
+      "placeholder": "Vui lòng nhập từ khóa hệ thống cho người dẫn chương trình",
+      "title": "Từ khóa hệ thống người dẫn chương trình"
+    },
+    "title": "Thông tin nhóm trò chuyện"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Sau khi tắt, bạn vẫn có thể chủ động gửi tin nhắn riêng cho trợ lý",
+      "title": "Cho phép trợ lý gửi tin nhắn riêng"
+    },
+    "enableSupervisor": {
+      "desc": "Bật chức năng người điều phối nhóm, người điều phối sẽ quản lý luồng hội thoại trong nhóm",
+      "title": "Bật người điều phối"
+    },
+    "maxResponseInRow": {
+      "desc": "Chọn số lượng tin nhắn thành viên có thể trả lời liên tiếp. Đặt là 0 để vô hiệu hóa giới hạn này.",
+      "title": "Số tin nhắn trả lời liên tiếp"
+    },
+    "model": {
+      "desc": "Phát ngôn của thành viên nhóm sẽ không bị ảnh hưởng. Một số mô hình không thể được sử dụng làm mô hình điều phối.",
+      "title": "Mô hình người dẫn chương trình"
+    },
+    "orchestratorTitle": "Cài đặt người dẫn chương trình",
+    "responseOrder": {
+      "desc": "Đại diện sẽ trả lời theo thứ tự được thiết lập trong nhóm trò chuyện",
+      "options": {
+        "natural": "Tự nhiên",
+        "sequential": "Tuần tự"
+      },
+      "placeholder": "Chọn thứ tự trả lời",
+      "title": "Thứ tự trả lời"
+    },
+    "responseSpeed": {
+      "desc": "Điều khiển tốc độ tổng thể của cuộc trò chuyện nhóm",
+      "options": {
+        "fast": "Nhanh",
+        "medium": "Trung bình",
+        "slow": "Chậm"
+      },
+      "placeholder": "Chọn tốc độ trả lời",
+      "title": "Tốc độ trả lời"
+    },
+    "revealDM": {
+      "desc": "Hiển thị nội dung tin nhắn riêng gửi cho các thành viên khác cho bạn xem.",
+      "title": "Hiển thị nội dung tin nhắn riêng"
+    },
+    "submit": "Cập nhật cài đặt",
+    "systemPrompt": {
+      "desc": "Từ khóa hệ thống tùy chỉnh cho người dẫn chương trình trong cuộc trò chuyện nhóm. Điều này có thể ảnh hưởng đến hành vi mặc định của người dẫn.",
+      "placeholder": "Vui lòng nhập từ khóa hệ thống người dẫn chương trình tùy chỉnh...",
+      "title": "Từ khóa hệ thống người dẫn chương trình"
+    },
+    "title": "Cài đặt trò chuyện"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Thêm vào nhóm",
+    "availableAgents": "Trợ lý có sẵn",
+    "defaultAgent": "Trợ lý tùy chỉnh",
+    "disableHost": "Tắt trợ lý chủ trì",
+    "edit": "Chỉnh sửa thành viên",
+    "empty": "Hiện chưa có đại diện trong nhóm này. Nhấn nút + để thêm thành viên.",
+    "enableHost": "Bật trợ lý chủ trì",
+    "groupHost": "Chủ trì nhóm",
+    "groupMembers": "Thành viên nhóm",
+    "host": {
+      "description": "Khi chủ trì có mặt trong nhóm, trò chuyện nhóm sẽ được tự động hóa, phù hợp với các nhiệm vụ sáng tạo.",
+      "title": "Chủ trì"
+    },
+    "noAvailableAgents": "Không có trợ lý khả dụng",
+    "noDescription": "Chưa có mô tả",
+    "noMembersInGroup": "Nhóm chưa có thành viên",
+    "owner": "Bạn (chủ sở hữu)",
+    "remove": "Xóa thành viên",
+    "removeFromGroup": "Loại khỏi nhóm",
+    "you": "Bạn"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "Mô hình đặt tên chủ đề vẽ AI",
       "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề cho vẽ AI",
       "title": "Tự động đặt tên chủ đề vẽ AI"
+    },
+    "groupChatSupervisor": {
+      "label": "Mô hình giám sát cuộc trò chuyện nhóm",
+      "modelDesc": "Mô hình được chỉ định để giám sát và quản lý các cuộc trò chuyện nhóm",
+      "title": "Quản lý giám sát cuộc trò chuyện nhóm"
     },
     "helpInfo": "Khi tạo trợ lý mới, sẽ sử dụng cài đặt trợ lý mặc định làm giá trị mặc định.",
     "historyCompress": {

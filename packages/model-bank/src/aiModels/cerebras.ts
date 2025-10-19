@@ -22,23 +22,6 @@ const cerebrasModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'Llama 4 Maverick：高性能的 Llama 系列模型，适合高级推理、复杂问题解决和指令跟随任务。',
-    displayName: 'Llama 4 Maverick',
-    id: 'llama-4-maverick-17b-128e-instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
     description: 'Llama 3.1 8B：小体量、低延迟的 Llama 变体，适合轻量在线推理与交互场景。',
     displayName: 'Llama 3.1 8B',
     id: 'llama3.1-8b',

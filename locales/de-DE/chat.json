@@ -2,6 +2,7 @@
   "ModelSwitch": {
     "title": "Modell"
   },
+  "active": "Aktiv",
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir sprechen oder zu den [Assistenteneinstellungen]({{url}}) gehen, um meine Informationen zu vervollständigen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**. Wie kann ich Ihnen behilflich sein?",
   "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Wie kann ich Ihnen behilflich sein?",
@@ -13,17 +14,28 @@
     "thought": "Denkenprozess",
     "unknownTitle": "Unbenanntes Werk"
   },
+  "availableAgents": "Verfügbare Assistenten",
   "backToBottom": "Zurück zum Ende",
   "chatList": {
     "longMessageDetail": "Details anzeigen"
   },
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
   "confirmClearCurrentMessages": "Möchtest du wirklich die aktuellen Nachrichten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "confirmRemoveChatGroupItemAlert": "Die Gruppenunterhaltung wird gelöscht, die Mitglieder bleiben davon unberührt. Bitte bestätigen Sie Ihre Aktion.",
+  "confirmRemoveGroupItemAlert": "Sie sind dabei, diese Gruppe zu löschen. Nach der Löschung werden die Assistenten dieser Gruppe in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
+  "confirmRemoveGroupSuccess": "Gruppenchat erfolgreich gelöscht",
   "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
   "confirmRemoveSessionSuccess": "Hilfe wurde erfolgreich entfernt",
   "defaultAgent": "Standardassistent",
+  "defaultGroupChat": "Gruppenchat",
   "defaultList": "Standardliste",
   "defaultSession": "Standardassistent",
+  "dm": {
+    "placeholder": "Ihre Direktnachrichten mit {{agentTitle}} werden hier angezeigt.",
+    "tooltip": "Direktnachricht senden",
+    "visibleTo": "Nur für {{target}} sichtbar",
+    "you": "Du"
+  },
   "duplicateSession": {
     "loading": "Kopieren läuft...",
     "success": "Kopieren erfolgreich",
@@ -58,11 +70,56 @@
       "title": "Webseiten-Link-Inhalt extrahieren"
     }
   },
+  "group": {
+    "desc": "Mit mehreren KI‑Assistenten in einem gemeinsamen Gesprächsraum zusammenarbeiten.",
+    "memberTooltip": "In der Gruppe sind {{count}} Mitglieder",
+    "orchestratorThinking": "Der Moderator denkt nach...",
+    "removeMember": "Mitglied entfernen",
+    "title": "Gruppe"
+  },
+  "groupDescription": "Gruppenbeschreibung",
+  "groupSidebar": {
+    "members": {
+      "addMember": "Mitglied hinzufügen",
+      "memberSettings": "Mitgliedereinstellungen",
+      "orchestrator": "Moderator",
+      "orchestratorThinking": "Der Moderator denkt nach...",
+      "removeMember": "Mitglied entfernen",
+      "stopOrchestrator": "Nachdenken beenden",
+      "triggerOrchestrator": "Gruppenchat starten"
+    },
+    "tabs": {
+      "host": "Moderator",
+      "members": "Mitglieder",
+      "role": "Einstellungen"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "Bestehende Assistenten auswählen...",
+    "createGroup": "Gruppenchat erstellen",
+    "existingMembers": "Bestehende Assistenten",
+    "groupMembers": "Diese Assistenten werden ebenfalls zu Ihrer Liste hinzugefügt",
+    "host": {
+      "description": "Automatisiert den Gruppenchat",
+      "title": "Moderator",
+      "tooltip": "Wenn der Gruppenmoderator deaktiviert ist, müssen Sie Mitglieder manuell mit @ erwähnen, damit sie antworten können."
+    },
+    "memberCount": "{{count}} Mitglieder",
+    "noMatchingTemplates": "Keine passenden Vorlagen",
+    "noSelectedTemplates": "Keine Vorlagen ausgewählt",
+    "noTemplateMembers": "Keine Mitglieder in der Vorlage",
+    "noTemplates": "Keine Vorlagen verfügbar",
+    "searchTemplates": "Vorlagen durchsuchen...",
+    "title": "Gruppenchat erstellen",
+    "useTemplate": "Vorlage verwenden"
+  },
+  "hideForYou": "Private Nachrichten sind ausgeblendet. Bitte aktivieren Sie in den Einstellungen „Private Nachrichten anzeigen“, um sie zu sehen.",
   "history": {
     "title": "Der Assistent wird nur die letzten {{count}} Nachrichten speichern"
   },
   "historyRange": "Verlaufsbereich",
   "historySummary": "Zusammenfassung historischer Nachrichten",
+  "inactive": "Inaktiv",
   "inbox": {
     "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
     "title": "Lass uns plaudern"
@@ -83,6 +140,7 @@
   "intentUnderstanding": {
     "title": "Verstehe und analysiere gerade Ihre Absicht..."
   },
+  "inviteMembers": "Mitglieder einladen",
   "knowledgeBase": {
     "all": "Alle Inhalte",
     "allFiles": "Alle Dateien",
@@ -101,12 +159,29 @@
     "uploadGuide": "Hochgeladene Dateien können in der „Wissensdatenbank“ eingesehen werden.",
     "viewMore": "Mehr anzeigen"
   },
+  "memberSelection": {
+    "addMember": "Mitglied hinzufügen",
+    "allMembers": "Alle Mitglieder",
+    "createGroup": "Gruppenchat erstellen",
+    "noAvailableAgents": "Keine verfügbaren Assistenten zum Einladen",
+    "noSelectedAgents": "Noch keine Assistenten ausgewählt",
+    "searchAgents": "Assistenten suchen...",
+    "setInitialMembers": "Gruppenmitglieder auswählen"
+  },
+  "members": "Mitglieder",
+  "mention": {
+    "title": "Mitglieder erwähnen"
+  },
   "messageAction": {
     "delAndRegenerate": "Löschen und neu generieren",
     "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
     "regenerate": "Neu generieren"
   },
   "messages": {
+    "dm": {
+      "sentTo": "Nur für {{name}} sichtbar",
+      "title": "Direktnachricht"
+    },
     "modelCard": {
       "credit": "Punkte",
       "creditPricing": "Preisgestaltung",
@@ -156,6 +231,13 @@
     "previousMessage": "Vorherige Nachricht"
   },
   "newAgent": "Neuer Assistent",
+  "newGroupChat": "Neue Gruppe erstellen",
+  "noAgentsYet": "In dieser Gruppe gibt es noch keine Assistenten. Klicken Sie auf die + Schaltfläche, um einen Assistenten einzuladen.",
+  "noAvailableAgents": "Keine verfügbaren Assistenten zum Einladen.",
+  "noMatchingAgents": "Keine passenden Assistenten",
+  "noMembersYet": "Diese Gruppe hat noch keine Mitglieder. Klicken Sie auf die +-Schaltfläche, um Assistenten einzuladen.",
+  "noSelectedAgents": "Noch keinen Assistenten ausgewählt",
+  "owner": "Gruppeninhaber",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
   "rag": {
@@ -196,12 +278,16 @@
     "title": "Netzwerksuche"
   },
   "searchAgentPlaceholder": "Suchassistent...",
+  "searchAgents": "Suchassistent...",
+  "selectedAgents": "Ausgewählte Assistenten",
   "sendPlaceholder": "Chat-Nachricht eingeben...",
   "sessionGroup": {
     "config": "Gruppenkonfiguration",
     "confirmRemoveGroupAlert": "Die Gruppe wird bald gelöscht. Nach dem Löschen werden die Assistenten in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
     "createAgentSuccess": "Assistent erfolgreich erstellt",
     "createGroup": "Neue Gruppe erstellen",
+    "createGroupFailed": "Gruppenerstellung fehlgeschlagen",
+    "createGroupSuccess": "Gruppe erfolgreich erstellt",
     "createSuccess": "Erstellung erfolgreich",
     "creatingAgent": "Assistent wird erstellt...",
     "inputPlaceholder": "Geben Sie den Gruppennamen ein...",
@@ -235,6 +321,12 @@
     "loading": "Erkenne...",
     "prettifying": "Verschönern..."
   },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "Alle Aufgaben erledigt",
+      "title": "Aufgaben abgeschlossen"
+    }
+  },
   "thread": {
     "divider": "Unterthema",
     "threadMessageCount": "{{messageCount}} Nachrichten",
@@ -248,6 +340,7 @@
     "chats": "Chats",
     "historySummary": "Historische Zusammenfassung",
     "rest": "Verbleibend",
+    "supervisor": "Gruppenmoderator",
     "systemRole": "Systemrolle",
     "title": "Kontextdetails",
     "tools": "Werkzeuge",
@@ -273,6 +366,7 @@
     "action": "Sprachausgabe",
     "clear": "Sprachausgabe löschen"
   },
+  "untitledAgent": "Unbenannter Assistent",
   "updateAgent": "Assistenteninformationen aktualisieren",
   "upload": {
     "action": {
@@ -300,5 +394,6 @@
       "videoSizeExceeded": "Die Videodatei darf nicht größer als 20 MB sein, die aktuelle Dateigröße beträgt {{actualSize}}"
     }
   },
+  "you": "du",
   "zenMode": "Fokusmodus"
 }
