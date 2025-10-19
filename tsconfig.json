@@ -23,7 +23,8 @@
       "@/utils/*": ["./packages/utils/src/*", "./src/utils/*"],
       "@/types/*": ["./packages/types/src/*", "./src/types/*"],
       "@/*": ["./src/*"],
-      "~test-utils": ["./tests/utils.tsx"]
+      "~test-utils": ["./tests/utils.tsx"],
+      "ssrf-safe-fetch": ["./packages/ssrf-safe-fetch/index.ts"]
     },
     "plugins": [
       {
