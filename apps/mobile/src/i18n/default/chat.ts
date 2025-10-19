@@ -37,6 +37,10 @@ export default {
     title: '随便聊聊',
   },
   setting: {
+    avatar: '头像',
+    description: ' 描述',
+    done: '完成',
+    name: '名称',
     title: '会话设置',
   },
   share: '分享',
