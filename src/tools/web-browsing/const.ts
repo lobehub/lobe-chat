@@ -43,6 +43,15 @@ export const ENGINE_ICON_MAP: Record<string, string> = {
   'youtube': 'https://icons.duckduckgo.com/ip3/youtube.com.ico',
 };
 
-export const CRAWL_CONTENT_LIMITED_COUNT = 25_000;
+// Read and parse an integer; fall back to the default if unset, non-numeric, or <= 0
+const readIntFromEnv = (key: string, def: number) => {
+  const raw = process.env[key]?.trim();
+  if (!raw) return def;
+  if (!/^\d+$/.test(raw)) return def; // strictly digits only
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : def;
+};
 
-export const SEARCH_ITEM_LIMITED_COUNT = 30;
+export const CRAWL_CONTENT_LIMITED_COUNT = readIntFromEnv('CRAWL_CONTENT_LIMITED_COUNT', 25_000);
+
+export const SEARCH_ITEM_LIMITED_COUNT = readIntFromEnv('SEARCH_ITEM_LIMITED_COUNT', 30);

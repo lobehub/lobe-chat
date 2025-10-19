@@ -199,6 +199,30 @@ formats:
 - json
 ```
 
+# Online Search Parameter Configuration
+
+## `CRAWL_CONTENT_LIMITED_COUNT`
+
+Sets the maximum number of characters to extract from a single page. This controls how much main content the crawler pulls to avoid memory usage and response time overhead caused by overly long content. Default: 25000.
+
+```env
+CRAWL_CONTENT_LIMITED_COUNT=25000
+```
+
+> 📌 Tip: Adjust this value based on your needs to avoid performance issues caused by extracting excessively long content.
+
+---
+
+## `SEARCH_ITEM_LIMITED_COUNT`
+
+Sets the maximum number of results returned for each online search. This limits the number of candidate results during the search phase, thereby controlling the workload for subsequent crawling and summarization. Default: 30.
+
+```env
+SEARCH_ITEM_LIMITED_COUNT=30
+```
+
+> 📌 Suggested range: 10–50. A value too small may reduce recall, while a value too large will significantly increase crawling and processing costs.
+
 # Verifying Online Search Functionality
 
 After configuration, you can verify whether the online search functionality is working correctly by following these steps:
