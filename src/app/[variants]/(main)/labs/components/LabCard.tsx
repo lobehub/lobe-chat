@@ -1,5 +1,6 @@
 'use client';
 
+import { Image } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
@@ -73,7 +74,7 @@ const LabCard = memo<PropsWithChildren<LabCardProps>>(
       <div className={styles.wrap}>
         <div className={styles.card}>
           <div className={styles.row}>
-            <div className={styles.thumb}>{cover && <img alt={title} src={cover} />}</div>
+            <div className={styles.thumb}>{cover && <Image alt={title} src={cover} />}</div>
             <Flexbox gap={6}>
               <div className={styles.title}>{title}</div>
               <div className={styles.desc}>{desc}</div>
