@@ -119,11 +119,11 @@ describe('LobeOpenAICompatibleFactory', () => {
           max_tokens: 1024,
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'mistralai/mistral-7b-instruct:free',
-          temperature: 0.7,
           stream: true,
           stream_options: {
             include_usage: true,
           },
+          temperature: 0.7,
           top_p: 1,
         },
         { headers: { Accept: '*/*' } },
@@ -136,14 +136,14 @@ describe('LobeOpenAICompatibleFactory', () => {
         const mockStream = new ReadableStream({
           start(controller) {
             controller.enqueue({
-              id: 'a',
-              object: 'chat.completion.chunk',
-              created: 1709125675,
-              model: 'mistralai/mistral-7b-instruct:free',
-              system_fingerprint: 'fp_86156a94a0',
               choices: [
-                { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
+                { delta: { content: 'hello' }, finish_reason: null, index: 0, logprobs: null },
               ],
+              created: 1_709_125_675,
+              id: 'a',
+              model: 'mistralai/mistral-7b-instruct:free',
+              object: 'chat.completion.chunk',
+              system_fingerprint: 'fp_86156a94a0',
             });
             controller.close();
           },
@@ -163,6 +163,7 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         // Collect all chunks
         const chunks = [];
+        // eslint-disable-next-line no-constant-condition
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
@@ -185,13 +186,13 @@ describe('LobeOpenAICompatibleFactory', () => {
             object: '',
             prompt_filter_results: [
               {
-                prompt_index: 0,
                 content_filter_results: {
                   hate: { filtered: false, severity: 'safe' },
                   self_harm: { filtered: false, severity: 'safe' },
                   sexual: { filtered: false, severity: 'safe' },
                   violence: { filtered: false, severity: 'safe' },
                 },
+                prompt_index: 0,
               },
             ],
           },
@@ -204,7 +205,7 @@ describe('LobeOpenAICompatibleFactory', () => {
                 logprobs: null,
               },
             ],
-            created: 1717249403,
+            created: 1_717_249_403,
             id: 'chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
             model: 'gpt-4o-2024-05-13',
             object: 'chat.completion.chunk',
@@ -212,7 +213,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
           {
             choices: [{ delta: { content: '1' }, finish_reason: null, index: 0, logprobs: null }],
-            created: 1717249403,
+            created: 1_717_249_403,
             id: 'chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
             model: 'gpt-4o-2024-05-13',
             object: 'chat.completion.chunk',
@@ -220,7 +221,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
           {
             choices: [{ delta: {}, finish_reason: 'stop', index: 0, logprobs: null }],
-            created: 1717249403,
+            created: 1_717_249_403,
             id: 'chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
             model: 'gpt-4o-2024-05-13',
             object: 'chat.completion.chunk',
@@ -229,7 +230,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           {
             choices: [
               {
-                content_filter_offsets: { check_offset: 35, start_offset: 35, end_offset: 36 },
+                content_filter_offsets: { check_offset: 35, end_offset: 36, start_offset: 35 },
                 content_filter_results: {
                   hate: { filtered: false, severity: 'safe' },
                   self_harm: { filtered: false, severity: 'safe' },
@@ -268,6 +269,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         const decoder = new TextDecoder();
         const reader = result.body!.getReader();
 
+        // eslint-disable-next-line no-constant-condition
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
@@ -278,7 +280,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           [
             'id: ',
             'event: data',
-            'data: {"choices":[],"created":0,"id":"","model":"","object":"","prompt_filter_results":[{"prompt_index":0,"content_filter_results":{"hate":{"filtered":false,"severity":"safe"},"self_harm":{"filtered":false,"severity":"safe"},"sexual":{"filtered":false,"severity":"safe"},"violence":{"filtered":false,"severity":"safe"}}}]}\n',
+            'data: {"choices":[],"created":0,"id":"","model":"","object":"","prompt_filter_results":[{"content_filter_results":{"hate":{"filtered":false,"severity":"safe"},"self_harm":{"filtered":false,"severity":"safe"},"sexual":{"filtered":false,"severity":"safe"},"violence":{"filtered":false,"severity":"safe"}},"prompt_index":0}]}\n',
             'id: chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
             'event: text',
             'data: ""\n',
@@ -299,21 +301,21 @@ describe('LobeOpenAICompatibleFactory', () => {
         vi.useFakeTimers();
 
         const mockResponse = {
-          id: 'a',
-          object: 'chat.completion',
-          created: 123,
-          model: 'mistralai/mistral-7b-instruct:free',
           choices: [
             {
-              index: 0,
-              message: { role: 'assistant', content: 'Hello' },
               finish_reason: 'stop',
+              index: 0,
               logprobs: null,
+              message: { content: 'Hello', role: 'assistant' },
             },
           ],
+          created: 123,
+          id: 'a',
+          model: 'mistralai/mistral-7b-instruct:free',
+          object: 'chat.completion',
           usage: {
-            prompt_tokens: 5,
             completion_tokens: 5,
+            prompt_tokens: 5,
             total_tokens: 10,
           },
         } as OpenAI.ChatCompletion;
@@ -324,8 +326,8 @@ describe('LobeOpenAICompatibleFactory', () => {
         const chatPromise = instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'mistralai/mistral-7b-instruct:free',
-          temperature: 0,
           stream: false,
+          temperature: 0,
         });
 
         // Advance time to simulate processing delay
@@ -337,6 +339,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         const reader = result.body!.getReader();
         const stream: string[] = [];
 
+        // eslint-disable-next-line no-constant-condition
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
@@ -352,13 +355,14 @@ describe('LobeOpenAICompatibleFactory', () => {
           'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10}\n\n',
           'id: output_speed\n',
           'event: speed\n',
-          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft should be calculated with elapsed time
+          expect.stringMatching(/^data: {.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft should be calculated with elapsed time
           'id: a\n',
           'event: stop\n',
           'data: "stop"\n\n',
         ]);
 
-        expect((await reader.read()).done).toBe(true);
+        const finalRead = await reader.read();
+        expect(finalRead.done).toBe(true);
 
         vi.useRealTimers();
       });
@@ -367,25 +371,25 @@ describe('LobeOpenAICompatibleFactory', () => {
         vi.useFakeTimers();
 
         const mockResponse = {
-          id: 'a',
-          object: 'chat.completion',
-          created: 123,
-          model: 'deepseek/deepseek-reasoner',
           choices: [
             {
+              finish_reason: 'stop',
               index: 0,
+              logprobs: null,
               message: {
-                role: 'assistant',
                 content: 'Hello',
                 reasoning_content: 'Thinking content',
+                role: 'assistant',
               },
-              finish_reason: 'stop',
-              logprobs: null,
             },
           ],
+          created: 123,
+          id: 'a',
+          model: 'deepseek/deepseek-reasoner',
+          object: 'chat.completion',
           usage: {
-            prompt_tokens: 5,
             completion_tokens: 5,
+            prompt_tokens: 5,
             total_tokens: 10,
           },
         } as unknown as OpenAI.ChatCompletion;
@@ -396,8 +400,8 @@ describe('LobeOpenAICompatibleFactory', () => {
         const chatPromise = instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'deepseek/deepseek-reasoner',
-          temperature: 0,
           stream: false,
+          temperature: 0,
         });
 
         // Advance time to simulate processing delay
@@ -409,6 +413,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         const reader = result.body!.getReader();
         const stream: string[] = [];
 
+        // eslint-disable-next-line no-constant-condition
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
@@ -427,13 +432,14 @@ describe('LobeOpenAICompatibleFactory', () => {
           'data: {"inputTextTokens":5,"outputTextTokens":5,"totalInputTokens":5,"totalOutputTokens":5,"totalTokens":10}\n\n',
           'id: output_speed\n',
           'event: speed\n',
-          expect.stringMatching(/^data: \{.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft should be calculated with elapsed time
+          expect.stringMatching(/^data: {.*"tps":.*,"ttft":.*}\n\n$/), // tps ttft should be calculated with elapsed time
           'id: a\n',
           'event: stop\n',
           'data: "stop"\n\n',
         ]);
 
-        expect((await reader.read()).done).toBe(true);
+        const finalRead = await reader.read();
+        expect(finalRead.done).toBe(true);
 
         vi.useRealTimers();
       });
@@ -607,10 +613,10 @@ describe('LobeOpenAICompatibleFactory', () => {
         const apiError = new OpenAI.APIError(
           400,
           {
-            status: 400,
             error: {
               message: 'Bad Request',
             },
+            status: 400,
           },
           'Error message',
           {},
@@ -770,13 +776,13 @@ describe('LobeOpenAICompatibleFactory', () => {
         } catch (e) {
           expect(e).toEqual({
             endpoint: defaultBaseURL,
-            errorType: 'AgentRuntimeError',
-            provider,
             error: {
-              name: genericError.name,
               cause: genericError.cause,
               message: genericError.message,
+              name: genericError.name,
             },
+            errorType: 'AgentRuntimeError',
+            provider,
           });
         }
       });
@@ -791,14 +797,14 @@ describe('LobeOpenAICompatibleFactory', () => {
             new ReadableStream({
               start(controller) {
                 controller.enqueue({
-                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
-                  object: 'chat.completion.chunk',
-                  created: 1709125675,
-                  model: 'mistralai/mistral-7b-instruct:free',
-                  system_fingerprint: 'fp_86156a94a0',
                   choices: [
-                    { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
+                    { delta: { content: 'hello' }, finish_reason: null, index: 0, logprobs: null },
                   ],
+                  created: 1_709_125_675,
+                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
+                  model: 'mistralai/mistral-7b-instruct:free',
+                  object: 'chat.completion.chunk',
+                  system_fingerprint: 'fp_86156a94a0',
                 });
                 controller.close();
               },
@@ -807,8 +813,8 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         // Prepare callback and headers
         const mockCallback: ChatStreamCallbacks = {
-          onStart: vi.fn(),
           onCompletion: vi.fn(),
+          onStart: vi.fn(),
         };
         const mockHeaders = { 'Custom-Header': 'TestValue' };
 
@@ -848,6 +854,7 @@ describe('LobeOpenAICompatibleFactory', () => {
               const reader = readableStream.getReader();
               const process = async () => {
                 try {
+                  // eslint-disable-next-line no-constant-condition
                   while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
@@ -877,9 +884,9 @@ describe('LobeOpenAICompatibleFactory', () => {
       const mockStream = new ReadableStream({
         start(controller) {
           controller.enqueue({
-            id: 'test-id',
             choices: [{ delta: { content: 'Hello' }, index: 0 }],
             created: Date.now(),
+            id: 'test-id',
             model: 'test-model',
             object: 'chat.completion.chunk',
           });
@@ -908,12 +915,12 @@ describe('LobeOpenAICompatibleFactory', () => {
           start(controller) {
             // Transform the completion to chunk format
             controller.enqueue({
-              id: data.id,
               choices: data.choices.map((choice) => ({
                 delta: { content: choice.message.content },
                 index: choice.index,
               })),
               created: data.created,
+              id: data.id,
               model: data.model,
               object: 'chat.completion.chunk',
             });
@@ -933,20 +940,20 @@ describe('LobeOpenAICompatibleFactory', () => {
       const instance = new LobeMockProvider({ apiKey: 'test' });
 
       const mockResponse: OpenAI.ChatCompletion = {
-        id: 'test-id',
         choices: [
           {
+            finish_reason: 'stop',
             index: 0,
+            logprobs: null,
             message: {
-              role: 'assistant',
               content: 'Test response',
               refusal: null,
+              role: 'assistant',
             },
-            logprobs: null,
-            finish_reason: 'stop',
           },
         ],
         created: Date.now(),
+        id: 'test-id',
         model: 'test-model',
         object: 'chat.completion',
         usage: { completion_tokens: 2, prompt_tokens: 1, total_tokens: 3 },
@@ -959,8 +966,8 @@ describe('LobeOpenAICompatibleFactory', () => {
       const payload: ChatStreamPayload = {
         messages: [{ content: 'Test', role: 'user' }],
         model: 'test-model',
-        temperature: 0.7,
         stream: false,
+        temperature: 0.7,
       };
 
       await instance.chat(payload);
@@ -1110,8 +1117,8 @@ describe('LobeOpenAICompatibleFactory', () => {
           model: 'dall-e-3',
           params: {
             prompt: 'A beautiful sunset',
-            size: '1024x1024',
             quality: 'standard',
+            size: '1024x1024',
           },
         };
 
@@ -1121,9 +1128,9 @@ describe('LobeOpenAICompatibleFactory', () => {
           model: 'dall-e-3',
           n: 1,
           prompt: 'A beautiful sunset',
-          size: '1024x1024',
           quality: 'standard',
           response_format: 'b64_json',
+          size: '1024x1024',
         });
 
         expect(result).toEqual({
@@ -1200,9 +1207,9 @@ describe('LobeOpenAICompatibleFactory', () => {
         const payload = {
           model: 'dall-e-2',
           params: {
-            prompt: 'Add a rainbow to this image',
             imageUrls: ['https://example.com/image1.jpg'],
             mask: 'https://example.com/mask.jpg',
+            prompt: 'Add a rainbow to this image',
           },
         };
 
@@ -1212,13 +1219,13 @@ describe('LobeOpenAICompatibleFactory', () => {
           'https://example.com/image1.jpg',
         );
         expect(instance['client'].images.edit).toHaveBeenCalledWith({
+          image: expect.any(File),
+          input_fidelity: 'high',
+          mask: 'https://example.com/mask.jpg',
           model: 'dall-e-2',
           n: 1,
           prompt: 'Add a rainbow to this image',
-          image: expect.any(File),
-          mask: 'https://example.com/mask.jpg',
           response_format: 'b64_json',
-          input_fidelity: 'high',
         });
 
         expect(result).toEqual({
@@ -1243,8 +1250,8 @@ describe('LobeOpenAICompatibleFactory', () => {
         const payload = {
           model: 'dall-e-2',
           params: {
-            prompt: 'Merge these images',
             imageUrls: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
+            prompt: 'Merge these images',
           },
         };
 
@@ -1259,12 +1266,12 @@ describe('LobeOpenAICompatibleFactory', () => {
         );
 
         expect(instance['client'].images.edit).toHaveBeenCalledWith({
+          image: [mockFile1, mockFile2],
+          input_fidelity: 'high',
           model: 'dall-e-2',
           n: 1,
           prompt: 'Merge these images',
-          image: [mockFile1, mockFile2],
           response_format: 'b64_json',
-          input_fidelity: 'high',
         });
 
         expect(result).toEqual({
@@ -1280,8 +1287,8 @@ describe('LobeOpenAICompatibleFactory', () => {
         const payload = {
           model: 'dall-e-2',
           params: {
-            prompt: 'Edit this image',
             imageUrls: ['https://invalid-url.com/image.jpg'],
+            prompt: 'Edit this image',
           },
         };
 
@@ -1379,22 +1386,22 @@ describe('LobeOpenAICompatibleFactory', () => {
         const payload = {
           model: 'dall-e-2',
           params: {
-            prompt: 'Test prompt',
-            imageUrls: ['https://example.com/image.jpg'],
             customParam: 'should remain unchanged',
+            imageUrls: ['https://example.com/image.jpg'],
+            prompt: 'Test prompt',
           },
         };
 
         await (instance as any).createImage(payload);
 
         expect(instance['client'].images.edit).toHaveBeenCalledWith({
+          customParam: 'should remain unchanged',
+          image: expect.any(File),
+          input_fidelity: 'high',
           model: 'dall-e-2',
           n: 1,
           prompt: 'Test prompt',
-          image: expect.any(File),
-          customParam: 'should remain unchanged',
           response_format: 'b64_json',
-          input_fidelity: 'high',
         });
       });
 
@@ -1421,8 +1428,8 @@ describe('LobeOpenAICompatibleFactory', () => {
           n: 1,
           prompt: 'Test prompt',
           quality: 'hd',
-          style: 'vivid',
           response_format: 'b64_json',
+          style: 'vivid',
         });
       });
     });
@@ -1438,17 +1445,17 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate a person object', role: 'user' as const }],
+        model: 'gpt-4o',
+        responseApi: true,
         schema: {
-          name: 'person_extractor',
           description: 'Extract person information',
+          name: 'person_extractor',
           schema: {
+            properties: { age: { type: 'number' }, name: { type: 'string' } },
             type: 'object' as const,
-            properties: { name: { type: 'string' }, age: { type: 'number' } },
           },
           strict: true,
         },
-        model: 'gpt-4o',
-        responseApi: true,
       };
 
       const result = await instance.generateObject(payload);
@@ -1464,7 +1471,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         { headers: undefined, signal: undefined },
       );
 
-      expect(result).toEqual({ name: 'John', age: 30 });
+      expect(result).toEqual({ age: 30, name: 'John' });
     });
 
     it('should handle options correctly', async () => {
@@ -1476,18 +1483,18 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate status', role: 'user' as const }],
-        schema: {
-          name: 'status_extractor',
-          schema: { type: 'object' as const, properties: { status: { type: 'string' } } },
-        },
         model: 'gpt-4o',
         responseApi: true,
+        schema: {
+          name: 'status_extractor',
+          schema: { properties: { status: { type: 'string' } }, type: 'object' as const },
+        },
       };
 
       const options = {
         headers: { 'Custom-Header': 'test-value' },
-        user: 'test-user',
         signal: new AbortController().signal,
+        user: 'test-user',
       };
 
       const result = await instance.generateObject(payload, options);
@@ -1516,12 +1523,12 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: {
-          name: 'test_tool',
-          schema: { type: 'object' as const, properties: {} },
-        },
         model: 'gpt-4o',
         responseApi: true,
+        schema: {
+          name: 'test_tool',
+          schema: { properties: {}, type: 'object' as const },
+        },
       };
 
       const result = await instance.generateObject(payload);
@@ -1542,12 +1549,12 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: {
-          name: 'test_tool',
-          schema: { type: 'object' as const, properties: {} },
-        },
         model: 'gpt-4o',
         responseApi: true,
+        schema: {
+          name: 'test_tool',
+          schema: { properties: {}, type: 'object' as const },
+        },
       };
 
       const result = await instance.generateObject(payload);
@@ -1568,44 +1575,44 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate complex user data', role: 'user' as const }],
+        model: 'gpt-4o',
+        responseApi: true,
         schema: {
           name: 'user_extractor',
           schema: {
-            type: 'object' as const,
             properties: {
+              metadata: { type: 'object' },
               user: {
-                type: 'object',
                 properties: {
                   name: { type: 'string' },
                   profile: {
-                    type: 'object',
                     properties: {
                       age: { type: 'number' },
-                      preferences: { type: 'array', items: { type: 'string' } },
+                      preferences: { items: { type: 'string' }, type: 'array' },
                     },
+                    type: 'object',
                   },
                 },
+                type: 'object',
               },
-              metadata: { type: 'object' },
             },
+            type: 'object' as const,
           },
         },
-        model: 'gpt-4o',
-        responseApi: true,
       };
 
       const result = await instance.generateObject(payload);
 
       expect(result).toEqual({
+        metadata: {
+          created: '2024-01-01',
+        },
         user: {
           name: 'Alice',
           profile: {
             age: 25,
             preferences: ['music', 'sports'],
           },
-        },
-        metadata: {
-          created: '2024-01-01',
         },
       });
     });
@@ -1617,12 +1624,12 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: {
-          name: 'test_tool',
-          schema: { type: 'object' as const, properties: {} },
-        },
         model: 'gpt-4o',
         responseApi: true,
+        schema: {
+          name: 'test_tool',
+          schema: { properties: {}, type: 'object' as const },
+        },
       };
 
       await expect(instance.generateObject(payload)).rejects.toThrow(
@@ -1648,14 +1655,14 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate a person object', role: 'user' as const }],
+          model: 'gpt-4o',
           schema: {
             name: 'person_extractor',
             schema: {
+              properties: { age: { type: 'number' }, name: { type: 'string' } },
               type: 'object' as const,
-              properties: { name: { type: 'string' }, age: { type: 'number' } },
             },
           },
-          model: 'gpt-4o',
           // responseApi: false or undefined - uses chat completions API
         };
 
@@ -1671,7 +1678,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           { headers: undefined, signal: undefined },
         );
 
-        expect(result).toEqual({ name: 'Bob', age: 25 });
+        expect(result).toEqual({ age: 25, name: 'Bob' });
       });
 
       it('should handle options correctly with chat completions API', async () => {
@@ -1691,18 +1698,18 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate status', role: 'user' as const }],
-          schema: {
-            name: 'status_extractor',
-            schema: { type: 'object' as const, properties: { status: { type: 'string' } } },
-          },
           model: 'gpt-4o',
           responseApi: false,
+          schema: {
+            name: 'status_extractor',
+            schema: { properties: { status: { type: 'string' } }, type: 'object' as const },
+          },
         };
 
         const options = {
           headers: { Authorization: 'Bearer token' },
-          user: 'test-user-123',
           signal: new AbortController().signal,
+          user: 'test-user-123',
         };
 
         const result = await instance.generateObject(payload, options);
@@ -1738,12 +1745,12 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
-          schema: {
-            name: 'test_tool',
-            schema: { type: 'object' as const, properties: {} },
-          },
           model: 'gpt-4o',
           responseApi: false,
+          schema: {
+            name: 'test_tool',
+            schema: { properties: {}, type: 'object' as const },
+          },
         };
 
         const result = await instance.generateObject(payload);
@@ -1772,12 +1779,12 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
-          schema: {
-            name: 'test_tool',
-            schema: { type: 'object' as const, properties: {} },
-          },
           model: 'gpt-4o',
           responseApi: false,
+          schema: {
+            name: 'test_tool',
+            schema: { properties: {}, type: 'object' as const },
+          },
         };
 
         const result = await instance.generateObject(payload);
@@ -1806,26 +1813,26 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate items list', role: 'user' as const }],
+          model: 'gpt-4o',
           schema: {
             name: 'abc',
             schema: {
-              type: 'object' as const,
               properties: {
                 items: {
-                  type: 'array',
                   items: {
-                    type: 'object',
                     properties: {
                       id: { type: 'number' },
                       name: { type: 'string' },
                     },
+                    type: 'object',
                   },
+                  type: 'array',
                 },
                 total: { type: 'number' },
               },
+              type: 'object' as const,
             },
           },
-          model: 'gpt-4o',
         };
 
         const result = await instance.generateObject(payload);
@@ -1846,9 +1853,9 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
-          schema: { name: 'abc', schema: { type: 'object' } as any },
           model: 'gpt-4o',
           responseApi: false,
+          schema: { name: 'abc', schema: { type: 'object' } as any },
         };
 
         await expect(instance.generateObject(payload)).rejects.toThrow(
@@ -1865,18 +1872,18 @@ describe('LobeOpenAICompatibleFactory', () => {
               message: {
                 tool_calls: [
                   {
-                    type: 'function' as const,
                     function: {
-                      name: 'get_weather',
                       arguments: '{"city":"Tokyo","unit":"celsius"}',
+                      name: 'get_weather',
                     },
+                    type: 'function' as const,
                   },
                   {
-                    type: 'function' as const,
                     function: {
-                      name: 'get_time',
                       arguments: '{"timezone":"Asia/Tokyo"}',
+                      name: 'get_time',
                     },
+                    type: 'function' as const,
                   },
                 ],
               },
@@ -1890,32 +1897,38 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'What is the weather and time in Tokyo?', role: 'user' as const }],
+          model: 'gpt-4o',
           tools: [
             {
-              name: 'get_weather',
-              description: 'Get weather information',
-              parameters: {
-                type: 'object' as const,
-                properties: {
-                  city: { type: 'string' },
-                  unit: { type: 'string' },
+              function: {
+                description: 'Get weather information',
+                name: 'get_weather',
+                parameters: {
+                  properties: {
+                    city: { type: 'string' },
+                    unit: { type: 'string' },
+                  },
+                  required: ['city'],
+                  type: 'object' as const,
                 },
-                required: ['city'],
               },
+              type: 'function' as const,
             },
             {
-              name: 'get_time',
-              description: 'Get current time',
-              parameters: {
-                type: 'object' as const,
-                properties: {
-                  timezone: { type: 'string' },
+              function: {
+                description: 'Get current time',
+                name: 'get_time',
+                parameters: {
+                  properties: {
+                    timezone: { type: 'string' },
+                  },
+                  required: ['timezone'],
+                  type: 'object' as const,
                 },
-                required: ['timezone'],
               },
+              type: 'function' as const,
             },
           ],
-          model: 'gpt-4o',
         };
 
         const result = await instance.generateObject(payload);
@@ -1927,33 +1940,33 @@ describe('LobeOpenAICompatibleFactory', () => {
             tool_choice: 'required',
             tools: [
               {
-                type: 'function',
                 function: {
-                  name: 'get_weather',
                   description: 'Get weather information',
+                  name: 'get_weather',
                   parameters: {
-                    type: 'object',
                     properties: {
                       city: { type: 'string' },
                       unit: { type: 'string' },
                     },
                     required: ['city'],
+                    type: 'object',
                   },
                 },
+                type: 'function',
               },
               {
-                type: 'function',
                 function: {
-                  name: 'get_time',
                   description: 'Get current time',
+                  name: 'get_time',
                   parameters: {
-                    type: 'object',
                     properties: {
                       timezone: { type: 'string' },
                     },
                     required: ['timezone'],
+                    type: 'object',
                   },
                 },
+                type: 'function',
               },
             ],
             user: undefined,
@@ -1974,11 +1987,11 @@ describe('LobeOpenAICompatibleFactory', () => {
               message: {
                 tool_calls: [
                   {
-                    type: 'function' as const,
                     function: {
-                      name: 'calculate',
                       arguments: '{"result":8}',
+                      name: 'calculate',
                     },
+                    type: 'function' as const,
                   },
                 ],
               },
@@ -1992,31 +2005,30 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Add 5 and 3', role: 'user' as const }],
+          model: 'gpt-4o',
           tools: [
             {
-              name: 'calculate',
-              description: 'Perform calculation',
-              parameters: {
-                type: 'object' as const,
-                properties: {
-                  result: { type: 'number' },
+              function: {
+                description: 'Perform calculation',
+                name: 'calculate',
+                parameters: {
+                  properties: {
+                    result: { type: 'number' },
+                  },
+                  required: ['result'],
+                  type: 'object' as const,
                 },
-                required: ['result'],
               },
+              type: 'function' as const,
             },
           ],
-          systemRole: 'You are a helpful calculator',
-          model: 'gpt-4o',
         };
 
         const result = await instance.generateObject(payload);
 
         expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
           expect.objectContaining({
-            messages: [
-              { content: 'Add 5 and 3', role: 'user' },
-              { content: 'You are a helpful calculator', role: 'system' },
-            ],
+            messages: [{ content: 'Add 5 and 3', role: 'user' }],
           }),
           expect.any(Object),
         );
@@ -2058,11 +2070,11 @@ describe('LobeOpenAICompatibleFactory', () => {
               message: {
                 tool_calls: [
                   {
-                    type: 'function' as const,
                     function: {
-                      name: 'person_extractor',
                       arguments: '{"name":"Alice","age":28}',
+                      name: 'person_extractor',
                     },
+                    type: 'function' as const,
                   },
                 ],
               },
@@ -2076,15 +2088,15 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Extract person info', role: 'user' as const }],
+          model: 'test-model',
           schema: {
-            name: 'person_extractor',
             description: 'Extract person information',
+            name: 'person_extractor',
             schema: {
+              properties: { age: { type: 'number' }, name: { type: 'string' } },
               type: 'object' as const,
-              properties: { name: { type: 'string' }, age: { type: 'number' } },
             },
           },
-          model: 'test-model',
         };
 
         const result = await instanceWithToolCalling.generateObject(payload);
@@ -2093,24 +2105,24 @@ describe('LobeOpenAICompatibleFactory', () => {
           {
             messages: payload.messages,
             model: payload.model,
+            tool_choice: { function: { name: 'person_extractor' }, type: 'function' },
             tools: [
               {
-                type: 'function',
                 function: {
-                  name: 'person_extractor',
                   description: 'Extract person information',
+                  name: 'person_extractor',
                   parameters: payload.schema.schema,
                 },
+                type: 'function',
               },
             ],
-            tool_choice: { type: 'function', function: { name: 'person_extractor' } },
             user: undefined,
           },
           { headers: undefined, signal: undefined },
         );
 
         expect(result).toEqual([
-          { arguments: { name: 'Alice', age: 28 }, name: 'person_extractor' },
+          { arguments: { age: 28, name: 'Alice' }, name: 'person_extractor' },
         ]);
       });
 
@@ -2132,11 +2144,11 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
+          model: 'test-model',
           schema: {
             name: 'test_tool',
-            schema: { type: 'object' as const, properties: {} },
+            schema: { properties: {}, type: 'object' as const },
           },
-          model: 'test-model',
         };
 
         const result = await instanceWithToolCalling.generateObject(payload);
@@ -2154,11 +2166,11 @@ describe('LobeOpenAICompatibleFactory', () => {
               message: {
                 tool_calls: [
                   {
-                    type: 'function' as const,
                     function: {
-                      name: 'test_tool',
                       arguments: 'invalid json',
+                      name: 'test_tool',
                     },
+                    type: 'function' as const,
                   },
                 ],
               },
@@ -2173,11 +2185,11 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Generate data', role: 'user' as const }],
+          model: 'test-model',
           schema: {
             name: 'test_tool',
-            schema: { type: 'object' as const, properties: {} },
+            schema: { properties: {}, type: 'object' as const },
           },
-          model: 'test-model',
         };
 
         const result = await instanceWithToolCalling.generateObject(payload);
@@ -2198,11 +2210,11 @@ describe('LobeOpenAICompatibleFactory', () => {
               message: {
                 tool_calls: [
                   {
-                    type: 'function' as const,
                     function: {
-                      name: 'data_extractor',
                       arguments: '{"data":"test"}',
+                      name: 'data_extractor',
                     },
+                    type: 'function' as const,
                   },
                 ],
               },
@@ -2216,17 +2228,17 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         const payload = {
           messages: [{ content: 'Extract data', role: 'user' as const }],
+          model: 'test-model',
           schema: {
             name: 'data_extractor',
-            schema: { type: 'object' as const, properties: { data: { type: 'string' } } },
+            schema: { properties: { data: { type: 'string' } }, type: 'object' as const },
           },
-          model: 'test-model',
         };
 
         const options = {
           headers: { 'X-Custom': 'header' },
-          user: 'test-user',
           signal: new AbortController().signal,
+          user: 'test-user',
         };
 
         const result = await instanceWithToolCalling.generateObject(payload, options);
@@ -2245,10 +2257,10 @@ describe('LobeOpenAICompatibleFactory', () => {
     it('should get models with third party model list', async () => {
       vi.spyOn(instance['client'].models, 'list').mockResolvedValue({
         data: [
-          { id: 'gpt-4o', object: 'model', created: 1698218177 },
+          { created: 1_698_218_177, id: 'gpt-4o', object: 'model' },
           { id: 'claude-3-haiku-20240307', object: 'model' },
-          { id: 'gpt-4o-mini', object: 'model', created: 1698318177 * 1000 },
-          { id: 'gemini', object: 'model', created: 1736499509125 },
+          { created: 1_698_318_177 * 1000, id: 'gpt-4o-mini', object: 'model' },
+          { created: 1_736_499_509_125, id: 'gemini', object: 'model' },
         ],
       } as any);
 
@@ -2263,7 +2275,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           config: {
             deploymentName: 'gpt-4o',
           },
-          contextWindowTokens: 128000,
+          contextWindowTokens: 128_000,
           description:
             'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
           displayName: 'GPT-4o',
@@ -2302,7 +2314,7 @@ describe('LobeOpenAICompatibleFactory', () => {
             functionCall: true,
             vision: true,
           },
-          contextWindowTokens: 200000,
+          contextWindowTokens: 200_000,
           description:
             'Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。',
           displayName: 'Claude 3 Haiku',
@@ -2359,7 +2371,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           config: {
             deploymentName: 'gpt-4o-mini',
           },
-          contextWindowTokens: 128000,
+          contextWindowTokens: 128_000,
           description: 'GPT-4o Mini，小型高效模型，具备与GPT-4o相似的卓越性能。',
           displayName: 'GPT 4o Mini',
           enabled: false,

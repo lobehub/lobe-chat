@@ -14,14 +14,14 @@ export const createAnthropicGenerateObject = async (
   payload: GenerateObjectPayload,
   options?: GenerateObjectOptions,
 ) => {
-  const { schema, messages, systemRole, model, tools } = payload;
+  const { schema, messages, model, tools } = payload;
 
   log('generateObject called with model: %s', model);
   log('schema: %O', schema);
   log('messages count: %d', messages.length);
 
   // Convert messages to Anthropic format
-  const system_message = systemRole || messages.find((m) => m.role === 'system')?.content;
+  const system_message = messages.find((m) => m.role === 'system')?.content;
   const user_messages = messages.filter((m) => m.role !== 'system');
   const anthropicMessages = await buildAnthropicMessages(user_messages);
 
@@ -39,7 +39,7 @@ export const createAnthropicGenerateObject = async (
   let finalTools;
   let tool_choice: Anthropic.ToolChoiceAny | Anthropic.ToolChoiceTool;
   if (tools) {
-    finalTools = buildAnthropicTools(tools.map((item) => ({ function: item, type: 'function' })));
+    finalTools = buildAnthropicTools(tools);
     tool_choice = { type: 'any' };
   } else if (schema) {
     // Convert OpenAI-style schema to Anthropic tool format
