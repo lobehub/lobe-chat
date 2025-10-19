@@ -1,9 +1,15 @@
-import { GenerateContentConfig, GoogleGenAI, Type as SchemaType } from '@google/genai';
+import {
+  FunctionCallingConfigMode,
+  GenerateContentConfig,
+  GoogleGenAI,
+  Type as SchemaType,
+} from '@google/genai';
 import Debug from 'debug';
 
-import { GenerateObjectOptions } from '../../types';
+import { buildGoogleTool } from '../../core/contextBuilders/google';
+import { ChatCompletionTool, GenerateObjectOptions, GenerateObjectSchema } from '../../types';
 
-const debug = Debug('mode-runtime:google:generateObject');
+const debug = Debug('lobe-mode-runtime:google:generateObject');
 
 enum HarmCategory {
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
@@ -54,7 +60,7 @@ const convertType = (type: string): SchemaType => {
 /**
  * Convert OpenAI JSON schema to Google Gemini schema format
  */
-export const convertOpenAISchemaToGoogleSchema = (openAISchema: any): any => {
+export const convertOpenAISchemaToGoogleSchema = (openAISchema: GenerateObjectSchema): any => {
   const convertSchema = (schema: any): any => {
     if (!schema) return schema;
 
@@ -92,7 +98,7 @@ export const convertOpenAISchemaToGoogleSchema = (openAISchema: any): any => {
     return converted;
   };
 
-  return convertSchema(openAISchema);
+  return convertSchema(openAISchema.schema);
 };
 
 /**
@@ -104,7 +110,7 @@ export const createGoogleGenerateObject = async (
   payload: {
     contents: any[];
     model: string;
-    schema: any;
+    schema: GenerateObjectSchema;
   },
   options?: GenerateObjectOptions,
 ) => {
@@ -174,4 +180,96 @@ export const createGoogleGenerateObject = async (
 
     return undefined;
   }
+};
+
+/**
+ * Generate structured output using Google Gemini API with tools calling
+ * @see https://ai.google.dev/gemini-api/docs/function-calling
+ */
+export const createGoogleGenerateObjectWithTools = async (
+  client: GoogleGenAI,
+  payload: {
+    contents: any[];
+    model: string;
+    tools: ChatCompletionTool[];
+  },
+  options?: GenerateObjectOptions,
+) => {
+  const { tools, contents, model } = payload;
+
+  debug('createGoogleGenerateObjectWithTools started', {
+    contentsLength: contents.length,
+    model,
+    toolsCount: tools.length,
+  });
+
+  // Convert tools to Google FunctionDeclaration format
+  const functionDeclarations = tools.map(buildGoogleTool);
+  debug('Tools conversion completed', { functionDeclarations });
+
+  const config: GenerateContentConfig = {
+    abortSignal: options?.signal,
+    // avoid wide sensitive words
+    safetySettings: [
+      {
+        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+        threshold: getThreshold(model),
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+        threshold: getThreshold(model),
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: getThreshold(model),
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold: getThreshold(model),
+      },
+    ],
+    // Force tool calling with 'any' mode
+    toolConfig: {
+      functionCallingConfig: {
+        mode: FunctionCallingConfigMode.ANY,
+      },
+    },
+    tools: [{ functionDeclarations }],
+  };
+
+  debug('Config prepared', {
+    hasAbortSignal: !!config.abortSignal,
+    hasSafetySettings: !!config.safetySettings,
+    hasTools: !!config.tools,
+    model,
+  });
+
+  const response = await client.models.generateContent({
+    config,
+    contents,
+    model,
+  });
+
+  debug('API response received', {
+    candidatesCount: response.candidates?.length,
+    hasContent: !!response.candidates?.[0]?.content,
+  });
+
+  // Extract function calls from response
+  const candidate = response.candidates?.[0];
+  if (!candidate?.content?.parts) {
+    debug('no content parts in response');
+    return undefined;
+  }
+
+  const functionCalls = candidate.content.parts
+    .filter((part) => part.functionCall)
+    .map((part) => ({
+      arguments: part.functionCall!.args,
+      name: part.functionCall!.name,
+    }));
+
+  debug('extracted function calls', { count: functionCalls.length, functionCalls });
+
+  return functionCalls.length > 0 ? functionCalls : undefined;
 };

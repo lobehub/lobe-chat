@@ -2,6 +2,264 @@
 
 # Changelog
 
+### [Version 1.138.5](https://github.com/lobehub/lobe-chat/compare/v1.138.4...v1.138.5)
+
+<sup>Released on **2025-10-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor upload router into lambda and decide to remove it in V2.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor upload router into lambda and decide to remove it in V2, closes [#9766](https://github.com/lobehub/lobe-chat/issues/9766) ([d1c7f41](https://github.com/lobehub/lobe-chat/commit/d1c7f41))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.138.4](https://github.com/lobehub/lobe-chat/compare/v1.138.3...v1.138.4)
+
+<sup>Released on **2025-10-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix response API tools calling issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix response API tools calling issue, closes [#9760](https://github.com/lobehub/lobe-chat/issues/9760) ([0596692](https://github.com/lobehub/lobe-chat/commit/0596692))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.138.3](https://github.com/lobehub/lobe-chat/compare/v1.138.2...v1.138.3)
+
+<sup>Released on **2025-10-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix topic fetch not correct in custom agent.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix topic fetch not correct in custom agent, closes [#9761](https://github.com/lobehub/lobe-chat/issues/9761) ([ceffce2](https://github.com/lobehub/lobe-chat/commit/ceffce2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.138.2](https://github.com/lobehub/lobe-chat/compare/v1.138.1...v1.138.2)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve welcome message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve welcome message, closes [#9747](https://github.com/lobehub/lobe-chat/issues/9747) ([c83fe13](https://github.com/lobehub/lobe-chat/commit/c83fe13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.138.1](https://github.com/lobehub/lobe-chat/compare/v1.138.0...v1.138.1)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Automatic topic creation switch does not work.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Automatic topic creation switch does not work, closes [#9693](https://github.com/lobehub/lobe-chat/issues/9693) ([a02b301](https://github.com/lobehub/lobe-chat/commit/a02b301))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.138.0](https://github.com/lobehub/lobe-chat/compare/v1.137.10...v1.138.0)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Group Chat, Mention, and Multi-Agent Orchestration with feature flag, closes [#8976](https://github.com/lobehub/lobe-chat/issues/8976) ([03c2838](https://github.com/lobehub/lobe-chat/commit/03c2838))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.137.10](https://github.com/lobehub/lobe-chat/compare/v1.137.9...v1.137.10)
+
+<sup>Released on **2025-10-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Claude Haiku 4.5 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Claude Haiku 4.5 model, closes [#9735](https://github.com/lobehub/lobe-chat/issues/9735) ([1cfbc87](https://github.com/lobehub/lobe-chat/commit/1cfbc87))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.137.9](https://github.com/lobehub/lobe-chat/compare/v1.137.8...v1.137.9)
+
+<sup>Released on **2025-10-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve update notification.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve update notification, closes [#9717](https://github.com/lobehub/lobe-chat/issues/9717) ([16de38a](https://github.com/lobehub/lobe-chat/commit/16de38a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.137.8](https://github.com/lobehub/lobe-chat/compare/v1.137.7...v1.137.8)
+
+<sup>Released on **2025-10-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix duplicate tools id issue and fix link dialog issue.
+
+#### 💄 Styles
+
+- **misc**: Add region support for Vertex AI provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix duplicate tools id issue and fix link dialog issue, closes [#9731](https://github.com/lobehub/lobe-chat/issues/9731) ([0a8c80d](https://github.com/lobehub/lobe-chat/commit/0a8c80d))
+
+#### Styles
+
+- **misc**: Add region support for Vertex AI provider, closes [#9720](https://github.com/lobehub/lobe-chat/issues/9720) ([d17b50c](https://github.com/lobehub/lobe-chat/commit/d17b50c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.137.7](https://github.com/lobehub/lobe-chat/compare/v1.137.6...v1.137.7)
+
+<sup>Released on **2025-10-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Use different favicon.ico in dev mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Use different favicon.ico in dev mode, closes [#9723](https://github.com/lobehub/lobe-chat/issues/9723) ([2f7317b](https://github.com/lobehub/lobe-chat/commit/2f7317b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.137.6](https://github.com/lobehub/lobe-chat/compare/v1.137.5...v1.137.6)
 
 <sup>Released on **2025-10-14**</sup>

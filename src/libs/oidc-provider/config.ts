@@ -35,6 +35,21 @@ export const defaultClients: ClientMetadata[] = [
     // 标记为公共客户端客户端，无密钥
     token_endpoint_auth_method: 'none',
   },
+  {
+    application_type: 'native', // 移动端使用 native 类型
+    client_id: 'lobehub-mobile',
+    client_name: 'LobeHub Mobile',
+    // 支持授权码流程和刷新令牌
+    grant_types: ['authorization_code', 'refresh_token'],
+    logo_uri: 'https://hub-apac-1.lobeobjects.space/docs/73f69adfa1b802a0e250f6ff9d62f70b.png',
+    // 移动端不需要 post_logout_redirect_uris，因为注销通常在应用内处理
+    post_logout_redirect_uris: [],
+    // 移动端使用自定义 URL Scheme
+    redirect_uris: ['com.lobehub.app://auth/callback'],
+    response_types: ['code'],
+    // 公共客户端，无密钥
+    token_endpoint_auth_method: 'none',
+  },
 ];
 
 /**

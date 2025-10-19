@@ -767,6 +767,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet cung cấp sự cân bằng lý tưởng giữa trí thông minh và tốc độ cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu suất tối đa với mức giá thấp hơn, đáng tin cậy và phù hợp cho triển khai quy mô lớn."
   },
+  "claude-haiku-4-5-20251001": {
+    "description": "Claude Haiku 4.5 là mô hình Haiku nhanh nhất và thông minh nhất của Anthropic, với tốc độ như chớp và khả năng tư duy mở rộng."
+  },
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 là mô hình mạnh mẽ nhất mới nhất của Anthropic dành cho xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự mượt mà và khả năng hiểu biết."
   },
@@ -1147,6 +1150,9 @@
   },
   "doubao-seed-1.6-flash": {
     "description": "Doubao-Seed-1.6-flash là mô hình suy nghĩ sâu đa phương thức với tốc độ suy luận tối ưu, TPOT chỉ cần 10ms; đồng thời hỗ trợ hiểu văn bản và hình ảnh, khả năng hiểu văn bản vượt trội so với thế hệ lite trước, khả năng hiểu hình ảnh sánh ngang với các mô hình pro của đối thủ. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6-lite": {
+    "description": "Doubao-Seed-1.6-lite là mô hình tư duy sâu đa phương thức hoàn toàn mới, hỗ trợ điều chỉnh mức độ suy luận (reasoning effort) với bốn chế độ: Tối thiểu, Thấp, Trung bình và Cao. Đây là lựa chọn tối ưu cho các tác vụ phổ biến với hiệu suất vượt trội và cửa sổ ngữ cảnh lên đến 256k."
   },
   "doubao-seed-1.6-thinking": {
     "description": "Mô hình Doubao-Seed-1.6-thinking có khả năng suy nghĩ được tăng cường đáng kể, so với Doubao-1.5-thinking-pro, nâng cao hơn nữa các năng lực cơ bản như lập trình, toán học, suy luận logic, đồng thời hỗ trợ hiểu hình ảnh. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
@@ -1541,9 +1547,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview có khả năng suy luận phức tạp mạnh mẽ, thể hiện xuất sắc trong các lĩnh vực suy luận logic, toán học, lập trình."
   },
-  "glm4.6:355b": {
-    "description": "Mô hình hàng đầu mới nhất của Zhipu - GLM-4.6 (355B) vượt trội hoàn toàn so với thế hệ trước về mã hóa nâng cao, xử lý văn bản dài, suy luận và khả năng tác nhân thông minh. Đặc biệt, năng lực lập trình đã đạt đến mức tương đương với Claude Sonnet 4, trở thành mô hình Coding hàng đầu tại Trung Quốc."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash cung cấp các tính năng thế hệ tiếp theo và cải tiến, bao gồm tốc độ vượt trội, sử dụng công cụ tích hợp, tạo đa phương thức và cửa sổ ngữ cảnh 1 triệu token."
   },
@@ -1934,11 +1937,17 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small là lựa chọn lý tưởng cho các nhiệm vụ tạo mã, gỡ lỗi và tái cấu trúc với độ trễ tối thiểu."
   },
+  "inclusionAI/Ling-1T": {
+    "description": "Ling-1T là mô hình non-thinking hàng đầu đầu tiên trong dòng sản phẩm \"Linh 2.0\", sở hữu tổng cộng 1 nghìn tỷ tham số và khoảng 50 tỷ tham số hoạt động cho mỗi token. Được xây dựng trên kiến trúc Linh 2.0, Ling-1T hướng đến việc vượt qua giới hạn của suy luận hiệu quả và nhận thức có thể mở rộng. Ling-1T-base được huấn luyện trên hơn 20 nghìn tỷ token chất lượng cao, đòi hỏi suy luận chuyên sâu."
+  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0 là mô hình thứ ba trong dòng kiến trúc Ling 2.0 do đội ngũ Bailing của Ant Group phát hành. Đây là mô hình chuyên gia hỗn hợp (MoE) với tổng số tham số lên đến 100 tỷ, nhưng mỗi token chỉ kích hoạt 6.1 tỷ tham số (không bao gồm embedding là 4.8 tỷ). Là mô hình cấu hình nhẹ, Ling-flash-2.0 thể hiện hiệu năng ngang hoặc vượt trội so với các mô hình dày đặc (Dense) 40 tỷ tham số và các mô hình MoE quy mô lớn hơn trong nhiều bài đánh giá uy tín. Mô hình này nhằm khám phá con đường hiệu quả trong bối cảnh quan niệm “mô hình lớn đồng nghĩa với tham số lớn” thông qua thiết kế kiến trúc và chiến lược huấn luyện tối ưu."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 là mô hình ngôn ngữ lớn hiệu năng cao kích thước nhỏ dựa trên kiến trúc MoE. Nó có tổng số 16 tỷ tham số, nhưng mỗi token chỉ kích hoạt 1.4 tỷ tham số (không bao gồm embedding là 789 triệu), từ đó đạt tốc độ sinh nhanh vượt trội. Nhờ thiết kế MoE hiệu quả và dữ liệu huấn luyện quy mô lớn, chất lượng cao, mặc dù tham số kích hoạt chỉ 1.4 tỷ, Ling-mini-2.0 vẫn thể hiện hiệu năng hàng đầu trong các tác vụ hạ nguồn, có thể so sánh với các mô hình dense dưới 10 tỷ tham số và các mô hình MoE quy mô lớn hơn."
+  },
+  "inclusionAI/Ring-1T": {
+    "description": "Ring-1T là mô hình tư duy mã nguồn mở quy mô nghìn tỷ tham số do nhóm Bailing phát triển. Dựa trên kiến trúc Linh 2.0 và mô hình nền tảng Ling-1T-base, mô hình này có tổng cộng 1 nghìn tỷ tham số và 50 tỷ tham số hoạt động, hỗ trợ cửa sổ ngữ cảnh lên đến 128K. Mô hình được tối ưu hóa thông qua học tăng cường với phần thưởng có thể xác minh ở quy mô lớn."
   },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0 là mô hình tư duy hiệu năng cao được tối ưu sâu dựa trên Ling-flash-2.0-base. Nó sử dụng kiến trúc chuyên gia hỗn hợp (MoE) với tổng số 100 tỷ tham số, nhưng mỗi lần suy luận chỉ kích hoạt 6.1 tỷ tham số. Mô hình này áp dụng thuật toán độc quyền icepop, giải quyết vấn đề không ổn định trong huấn luyện tăng cường (RL) của các mô hình MoE lớn, giúp năng lực suy luận phức tạp được cải thiện liên tục trong quá trình huấn luyện dài hạn. Ring-flash-2.0 đạt bước đột phá đáng kể trong các bài kiểm tra chuẩn khó như thi toán, tạo mã và suy luận logic, hiệu năng không chỉ vượt các mô hình dense hàng đầu dưới 40 tỷ tham số mà còn có thể sánh ngang các mô hình MoE mã nguồn mở quy mô lớn và các mô hình tư duy hiệu năng cao đóng nguồn. Mặc dù tập trung vào suy luận phức tạp, mô hình cũng thể hiện tốt trong các tác vụ sáng tạo viết lách. Ngoài ra, nhờ thiết kế kiến trúc hiệu quả, Ring-flash-2.0 vừa cung cấp hiệu năng mạnh mẽ vừa đạt tốc độ suy luận cao, giảm đáng kể chi phí triển khai mô hình tư duy trong các kịch bản tải cao."
@@ -2035,9 +2044,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Mô hình Llama 3.3 được tối ưu hóa cho các tình huống đối thoại, và đã vượt qua nhiều mô hình trò chuyện nguồn mở hiện có trong các bài kiểm tra chuẩn ngành phổ biến."
-  },
-  "llama-4-maverick-17b-128e-instruct": {
-    "description": "Llama 4 Maverick: Mô hình hiệu suất cao thuộc dòng Llama, phù hợp với các nhiệm vụ suy luận nâng cao, giải quyết vấn đề phức tạp và tuân theo chỉ dẫn."
   },
   "llama-4-scout-17b-16e-instruct": {
     "description": "Llama 4 Scout: Mô hình hiệu suất cao thuộc dòng Llama, lý tưởng cho các tình huống yêu cầu thông lượng cao và độ trễ thấp."
@@ -2906,6 +2912,9 @@
   "qwen3-8b": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
+  "qwen3-coder-30b-a3b-instruct": {
+    "description": "Phiên bản mã nguồn mở của mô hình mã hóa Tongyi Qianwen. Mô hình qwen3-coder-30b-a3b-instruct mới nhất được phát triển dựa trên Qwen3, có khả năng hoạt động như một Tác nhân Lập trình mạnh mẽ, thành thạo trong việc gọi công cụ và tương tác môi trường, hỗ trợ lập trình tự động với năng lực mã hóa xuất sắc và khả năng tổng quát cao."
+  },
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã hóa Tongyi Qianwen. Mô hình qwen3-coder-480b-a35b-instruct mới nhất dựa trên Qwen3, có khả năng Coding Agent mạnh mẽ, thành thạo gọi công cụ và tương tác môi trường, có thể lập trình tự chủ, vừa xuất sắc về mã hóa vừa có năng lực chung."
   },
@@ -2927,11 +2936,29 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "Mô hình mã nguồn mở thế hệ mới có chế độ suy nghĩ dựa trên Qwen3, so với phiên bản trước (Thông Nghĩa Thiên Vấn 3-235B-A22B-Thinking-2507) có khả năng tuân thủ chỉ dẫn được nâng cao, và các phản hồi tóm tắt của mô hình trở nên ngắn gọn hơn."
   },
+  "qwen3-omni-flash": {
+    "description": "Mô hình Qwen-Omni có thể tiếp nhận đầu vào kết hợp từ nhiều phương thức như văn bản, hình ảnh, âm thanh và video, và tạo phản hồi dưới dạng văn bản hoặc giọng nói. Mô hình cung cấp nhiều giọng nói nhân hóa, hỗ trợ đầu ra bằng nhiều ngôn ngữ và phương ngữ, phù hợp với các ứng dụng như sáng tác văn bản, nhận diện hình ảnh và trợ lý giọng nói."
+  },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Instruct là mô hình đa phương thức do Tongyi Qianwen phát triển, hỗ trợ hiểu và suy luận hình ảnh."
+    "description": "Qwen3 VL 235B A22B chế độ không tư duy (Instruct), phù hợp với các tình huống chỉ dẫn không yêu cầu suy luận, vẫn duy trì khả năng hiểu thị giác mạnh mẽ."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Thinking là mô hình suy luận đa phương thức do Tongyi Qianwen phát triển, hỗ trợ hiểu và suy luận hình ảnh."
+    "description": "Qwen3 VL 235B A22B chế độ tư duy (phiên bản mã nguồn mở), cung cấp khả năng suy luận văn bản + hình ảnh hàng đầu cho các tình huống yêu cầu suy luận phức tạp và hiểu video dài."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B chế độ không tư duy (Instruct), hướng đến các tình huống theo dõi chỉ dẫn thông thường, duy trì khả năng hiểu và tạo nội dung đa phương thức ở mức cao."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen-VL (phiên bản mã nguồn mở) cung cấp khả năng hiểu hình ảnh và tạo văn bản, hỗ trợ tương tác với tác nhân thông minh, mã hóa thị giác, nhận thức không gian, hiểu video dài và tư duy sâu, đồng thời có khả năng nhận diện văn bản và hỗ trợ đa ngôn ngữ mạnh mẽ trong các tình huống phức tạp."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B chế độ không tư duy (Instruct), phù hợp với các tác vụ tạo và nhận diện đa phương thức thông thường."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B chế độ tư duy, hướng đến các tình huống suy luận và tương tác đa phương thức nhẹ, vẫn giữ được khả năng hiểu ngữ cảnh dài."
+  },
+  "qwen3-vl-flash": {
+    "description": "Qwen3 VL Flash: phiên bản suy luận tốc độ cao và nhẹ, phù hợp với các tình huống yêu cầu độ trễ thấp hoặc xử lý số lượng lớn yêu cầu."
   },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL là mô hình sinh văn bản có khả năng hiểu thị giác (hình ảnh), không chỉ thực hiện OCR (nhận dạng chữ trong ảnh) mà còn có thể tóm tắt và suy luận thêm, ví dụ như trích xuất thuộc tính từ ảnh sản phẩm, giải bài tập dựa trên hình ảnh minh họa."

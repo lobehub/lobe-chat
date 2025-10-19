@@ -31,7 +31,7 @@
   "batchDelete": "Xóa hàng loạt",
   "blog": "Blog sản phẩm",
   "branching": "Tạo chủ đề con",
-  "branchingDisable": "Chức năng «Chủ đề con» chỉ có sẵn trong phiên bản máy chủ. Nếu bạn cần chức năng này, hãy chuyển sang chế độ triển khai máy chủ hoặc sử dụng LobeChat Cloud.",
+  "branchingDisable": "Chức năng \"chủ đề con\" không khả dụng trong chế độ hiện tại. Vui lòng chuyển sang chế độ cơ sở dữ liệu Postgres/Pglite hoặc sử dụng LobeHub Cloud để sử dụng tính năng này.",
   "branchingRequiresSavedTopic": "Chủ đề hiện tại chưa được lưu, vui lòng lưu trước khi sử dụng chức năng chủ đề con",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",

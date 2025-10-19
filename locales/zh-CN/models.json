@@ -767,6 +767,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面为企业工作负载提供了理想的平衡。它以更低的价格提供最大效用，可靠且适合大规模部署。"
   },
+  "claude-haiku-4-5-20251001": {
+    "description": "Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。"
+  },
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 是 Anthropic 最新的用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。"
   },
@@ -1147,6 +1150,9 @@
   },
   "doubao-seed-1.6-flash": {
     "description": "Doubao-Seed-1.6-flash推理速度极致的多模态深度思考模型，TPOT仅需10ms； 同时支持文本和视觉理解，文本理解能力超过上一代lite，视觉理解比肩友商pro系列模型。支持 256k 上下文窗口，输出长度支持最大 16k tokens。"
+  },
+  "doubao-seed-1.6-lite": {
+    "description": "Doubao-Seed-1.6-lite 全新多模态深度思考模型，支持思考程度可调节（reasoning effort），即 Minimal、Low、Medium、High 四种模式，更强性价比，常见任务的最佳选择，上下文窗口至256k。"
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking模型思考能力大幅强化， 对比Doubao-1.5-thinking-pro，在Coding、Math、 逻辑推理等基础能力上进一步提升， 支持视觉理解。 支持 256k 上下文窗口，输出长度支持最大 16k tokens。"
@@ -1541,9 +1547,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。"
   },
-  "glm4.6:355b": {
-    "description": "智谱最新旗舰模型 GLM-4.6 (355B) 在高级编码、长文本处理、推理与智能体能力上全面超越前代，尤其在编程能力上对齐 Claude Sonnet 4，成为国内顶尖的 Coding 模型。"
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash 提供下一代功能和改进的功能，包括卓越的速度、内置工具使用、多模态生成和 100 万 token 的上下文窗口。"
   },
@@ -1934,11 +1937,17 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small 是代码生成、调试和重构任务的理想选择，具有最小延迟。"
   },
+  "inclusionAI/Ling-1T": {
+    "description": "Ling-1T 是\"灵 2.0\"系列的首款旗舰级 non-thinking 模型，拥有 1 万亿总参数和每 token 约 500 亿个活动参数。基于灵 2.0 架构构建，Ling-1T 旨在突破高效推理和可扩展认知的极限。Ling-1T-base 在超过 20 万亿个高质量、推理密集的 token 上进行训练。"
+  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0 是由蚂蚁集团百灵团队发布的 Ling 2.0 架构系列的第三款模型。它是一款混合专家（MoE）模型，总参数规模达到 1000 亿，但每个 token 仅激活 61 亿参数（非词向量激活 48 亿）。 作为一个轻量级配置的模型，Ling-flash-2.0 在多个权威评测中展现出媲美甚至超越 400 亿级别稠密（Dense）模型及更大规模 MoE 模型的性能。该模型旨在通过极致的架构设计与训练策略，在“大模型等于大参数”的共识下探索高效能的路径。"
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 是一款基于 MoE 架构的小尺寸高性能大语言模型。它拥有 16B 总参数，但每个 token 仅激活 1.4B（non-embedding 789M），从而实现了极高的生成速度。得益于高效的 MoE 设计与大规模高质量训练数据，尽管激活参数仅为 1.4B，Ling-mini-2.0 依然在下游任务中展现出可媲美 10B 以下 dense LLM 及更大规模 MoE 模型的顶尖性能。"
+  },
+  "inclusionAI/Ring-1T": {
+    "description": "Ring-1T 是一款由百灵（Bailing）团队发布的万亿参数规模的开源思想模型。它基于 Ling 2.0 架构和 Ling-1T-base 基础模型训练，总参数量达 1 万亿，激活参数量为 500 亿，并支持高达 128K 的上下文窗口。该模型通过大规模可验证奖励强化学习进行优化。"
   },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0 是一个基于 Ling-flash-2.0-base 深度优化的高性能思考模型。它采用混合专家（MoE）架构，总参数量为 100B，但在每次推理中仅激活 6.1B 参数。该模型通过独创的 icepop 算法，解决了 MoE 大模型在强化学习（RL）训练中的不稳定性难题，使其复杂推理能力在长周期训练中得以持续提升。Ring-flash-2.0 在数学竞赛、代码生成和逻辑推理等多个高难度基准测试中取得了显著突破，其性能不仅超越了 40B 参数规模以下的顶尖稠密模型，还能媲美更大规模的开源 MoE 模型及闭源的高性能思考模型。尽管该模型专注于复杂推理，它在创意写作等任务上也表现出色。此外，得益于其高效的架构设计，Ring-flash-2.0 在提供强大性能的同时，也实现了高速推理，显著降低了思考模型在高并发场景下的部署成本。"
@@ -2035,9 +2044,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Llama 3.3 指令微调模型针对对话场景进行了优化，在常见的行业基准测试中，超越了许多现有的开源聊天模型。"
-  },
-  "llama-4-maverick-17b-128e-instruct": {
-    "description": "Llama 4 Maverick：高性能的 Llama 系列模型，适合高级推理、复杂问题解决和指令跟随任务。"
   },
   "llama-4-scout-17b-16e-instruct": {
     "description": "Llama 4 Scout：高性能的 Llama 系列模型，适合需高吞吐与低延迟的场景。"
@@ -2906,6 +2912,9 @@
   "qwen3-8b": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
   },
+  "qwen3-coder-30b-a3b-instruct": {
+    "description": "通义千问代码模型开源版。最新的 qwen3-coder-30b-a3b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。"
+  },
   "qwen3-coder-480b-a35b-instruct": {
     "description": "通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。"
   },
@@ -2927,11 +2936,29 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "基于 Qwen3 的新一代思考模式开源模型，相较上一版本（通义千问3-235B-A22B-Thinking-2507）指令遵循能力有提升、模型总结回复更加精简。"
   },
+  "qwen3-omni-flash": {
+    "description": "Qwen-Omni 模型能够接收文本、图片、音频、视频等多种模态的组合输入，并生成文本或语音形式的回复， 提供多种拟人音色，支持多语言和方言的语音输出，可应用于文本创作、视觉识别、语音助手等场景。"
+  },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Instruct 是通义千问推出的多模态模型，支持视觉理解和推理。"
+    "description": "Qwen3 VL 235B A22B 非思考模式（Instruct），适用于非思考指令场景，保持强大的视觉理解能力。"
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Thinking 是通义千问推出的多模态推理模型，支持视觉理解和推理。"
+    "description": "Qwen3 VL 235B A22B 思考模式（开源版），针对高难度强推理与长视频理解场景，提供顶尖的视觉+文本推理能力。"
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B 非思考模式（Instruct），面向普通指令跟随场景，保持较高的多模态理解与生成能力。"
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen-VL（开源版）提供视觉理解与文本生成能力，支持智能体交互、视觉编码、空间感知、长视频理解与深度思考，并在复杂场景下具备更强的文字识别与多语言支持。"
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B 非思考模式（Instruct），适合常规多模态生成与识别任务。"
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B 思考模式，面向轻量级多模态推理与交互场景，保留长上下文理解能力。"
+  },
+  "qwen3-vl-flash": {
+    "description": "Qwen3 VL Flash：轻量化高速推理版本，适合对延迟敏感或大批量请求场景。"
   },
   "qwen3-vl-plus": {
     "description": "通义千问VL是具有视觉（图像）理解能力的文本生成模型，不仅能进行OCR（图片文字识别），还能进一步总结和推理，例如从商品照片中提取属性，根据习题图进行解题等。"

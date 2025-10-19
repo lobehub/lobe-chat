@@ -7,6 +7,48 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 131_072,
+    description:
+      'Ring-1T 是一款由百灵（Bailing）团队发布的万亿参数规模的开源思想模型。它基于 Ling 2.0 架构和 Ling-1T-base 基础模型训练，总参数量达 1 万亿，激活参数量为 500 亿，并支持高达 128K 的上下文窗口。该模型通过大规模可验证奖励强化学习进行优化。',
+    displayName: 'Ring-1T',
+    id: 'inclusionAI/Ring-1T',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-14',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Ling-1T 是"灵 2.0"系列的首款旗舰级 non-thinking 模型，拥有 1 万亿总参数和每 token 约 500 亿个活动参数。基于灵 2.0 架构构建，Ling-1T 旨在突破高效推理和可扩展认知的极限。Ling-1T-base 在超过 20 万亿个高质量、推理密集的 token 上进行训练。',
+    displayName: 'Ling-1T',
+    id: 'inclusionAI/Ling-1T',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-09',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 198_000,
     description:
       '与 GLM-4.5 相比，GLM-4.6 带来了多项关键改进。其上下文窗口从 128K 扩展到 200K tokens，使模型能够处理更复杂的智能体任务。模型在代码基准测试中取得了更高的分数，并在 Claude Code、Cline、Roo Code 和 Kilo Code 等应用中展现了更强的真实世界性能，包括在生成视觉效果精致的前端页面方面有所改进。GLM-4.6 在推理性能上表现出明显提升，并支持在推理过程中使用工具，从而带来了更强的综合能力。它在工具使用和基于搜索的智能体方面表现更强，并且能更有效地集成到智能体框架中。在写作方面，该模型在风格和可读性上更符合人类偏好，并在角色扮演场景中表现得更自然。',
@@ -150,6 +192,52 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-8B-Instruct 是 Qwen3 系列的视觉语言模型，基于 Qwen3-8B-Instruct 开发并在大量图文数据上训练，擅长通用视觉理解、以视觉为中心的对话以及图像中的多语言文本识别。适用于视觉问答、图像描述、多模态指令跟随与工具调用场景。',
+    displayName: 'Qwen3 VL 8B Instruct',
+    id: 'Qwen/Qwen3-VL-8B-Instruct',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Qwen3-VL-8B-Thinking 是 Qwen3 系列的视觉思考版本，针对复杂多步推理任务优化，默认在回答前生成逐步思考（thinking chain）以提高推理准确性。适合需要深度推理的视觉问答、审阅图像内容并给出详细分析的场景。',
+    displayName: 'Qwen3 VL 8B Thinking',
+    id: 'Qwen/Qwen3-VL-8B-Thinking',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-15',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },

@@ -30,7 +30,10 @@
     "description": "Bedrock to usługa oferowana przez Amazon AWS, skoncentrowana na dostarczaniu zaawansowanych modeli językowych i wizualnych dla przedsiębiorstw. Jej rodzina modeli obejmuje serię Claude od Anthropic, serię Llama 3.1 od Meta i inne, oferując różnorodne opcje od lekkich do wysokowydajnych, wspierając generowanie tekstu, dialogi, przetwarzanie obrazów i inne zadania, odpowiednie dla różnych skal i potrzeb aplikacji biznesowych."
   },
   "bfl": {
-    "description": "Wiodące, przełomowe laboratorium badawcze sztucznej inteligencji, tworzące wizualną infrastrukturę jutra."
+    "description": "Wiodące, pionierskie laboratorium badań nad sztuczną inteligencją, tworzące wizualną infrastrukturę jutra."
+  },
+  "cerebras": {
+    "description": "Cerebras to platforma do wnioskowania AI oparta na dedykowanym systemie CS-3, zaprojektowana w celu zapewnienia najszybszej na świecie, reakcji w czasie rzeczywistym oraz wysokiej przepustowości usług LLM. Stworzona została, aby eliminować opóźnienia i przyspieszać złożone przepływy pracy AI, takie jak generowanie kodu w czasie rzeczywistym i zadania agentowe."
   },
   "cerebras": {
     "description": "Cerebras to platforma do wnioskowania AI oparta na dedykowanym systemie CS-3, zaprojektowana w celu zapewnienia najszybszej na świecie, reakcji w czasie rzeczywistym oraz wysokiej przepustowości usług LLM. Stworzona została, aby eliminować opóźnienia i przyspieszać złożone przepływy pracy AI, takie jak generowanie kodu w czasie rzeczywistym i zadania agentowe."

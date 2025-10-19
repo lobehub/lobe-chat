@@ -35,9 +35,16 @@
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
+  "groupTab": {
+    "chat": "Czaty",
+    "members": "Członkowie",
+    "meta": "Informacje podstawowe"
+  },
   "header": {
     "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
+    "group": "Ustawienia czatu grupowego",
+    "groupDesc": "Zarządzaj bieżącym czatem grupowym",
     "session": "Ustawienia sesji",
     "sessionDesc": "Ustawienia postaci i preferencje sesji.",
     "sessionWithName": "Ustawienia sesji · {{name}}",
@@ -138,6 +145,9 @@
       "title": "Adres proxy API"
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
+  },
+  "message": {
+    "success": "Pomyślnie zaktualizowano"
   },
   "plugin": {
     "addMCPPlugin": "Dodaj wtyczkę MCP",
@@ -293,6 +303,101 @@
       "title": "Motyw"
     },
     "title": "Ustawienia ogólne"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Wprowadź opis czatu grupowego",
+      "title": "Opis czatu grupowego"
+    },
+    "name": {
+      "placeholder": "Wprowadź nazwę czatu grupowego",
+      "title": "Nazwa czatu grupowego"
+    },
+    "scene": {
+      "desc": "Wybierz scenariusz czatu grupowego",
+      "options": {
+        "casual": "Nieformalny",
+        "productive": "Produktywność"
+      },
+      "title": "Scenariusz czatu grupowego"
+    },
+    "submit": "Aktualizuj czat grupowy",
+    "systemPrompt": {
+      "placeholder": "Wprowadź systemową wskazówkę prowadzącego",
+      "title": "Systemowa wskazówka prowadzącego"
+    },
+    "title": "Informacje o czacie grupowym"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Po wyłączeniu nadal możesz samodzielnie wysyłać wiadomości prywatne do asystenta",
+      "title": "Zezwól asystentowi na wysyłanie wiadomości prywatnych"
+    },
+    "enableSupervisor": {
+      "desc": "Włącz funkcję moderatora czatu grupowego — moderator będzie zarządzać przebiegiem rozmowy",
+      "title": "Włącz moderatora"
+    },
+    "maxResponseInRow": {
+      "desc": "Wybierz, ile wiadomości członek może odpowiedzieć z rzędu. Ustaw na 0, aby wyłączyć to ograniczenie.",
+      "title": "Liczba kolejnych odpowiedzi"
+    },
+    "model": {
+      "desc": "Wypowiedzi członków grupy nie będą ograniczane. Niektóre modele nie mogą być używane jako modele moderatora.",
+      "title": "Model prowadzącego"
+    },
+    "orchestratorTitle": "Ustawienia prowadzącego",
+    "responseOrder": {
+      "desc": "Agent będzie odpowiadał zgodnie z kolejnością ustaloną w czacie grupowym",
+      "options": {
+        "natural": "Naturalna",
+        "sequential": "Sekwencyjna"
+      },
+      "placeholder": "Wybierz kolejność odpowiedzi",
+      "title": "Kolejność odpowiedzi"
+    },
+    "responseSpeed": {
+      "desc": "Kontroluj ogólne tempo czatu grupowego",
+      "options": {
+        "fast": "Szybkie",
+        "medium": "Średnie",
+        "slow": "Wolne"
+      },
+      "placeholder": "Wybierz prędkość odpowiedzi",
+      "title": "Prędkość odpowiedzi"
+    },
+    "revealDM": {
+      "desc": "Umożliw wyświetlanie prywatnych wiadomości wysłanych do innych członków.",
+      "title": "Pokaż treść prywatnych wiadomości"
+    },
+    "submit": "Aktualizuj ustawienia",
+    "systemPrompt": {
+      "desc": "Niestandardowa systemowa wskazówka dla prowadzącego rozmowę w czacie grupowym. Może wpłynąć na domyślne zachowanie prowadzącego.",
+      "placeholder": "Wprowadź niestandardową systemową wskazówkę prowadzącego...",
+      "title": "Systemowa wskazówka prowadzącego"
+    },
+    "title": "Ustawienia czatu"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Dołącz do grupy",
+    "availableAgents": "Dostępni asystenci",
+    "defaultAgent": "Niestandardowy asystent",
+    "disableHost": "Wyłącz asystenta gospodarza",
+    "edit": "Edytuj członka",
+    "empty": "Brak agentów w tym czacie grupowym. Kliknij przycisk +, aby dodać członków.",
+    "enableHost": "Włącz asystenta gospodarza",
+    "groupHost": "Gospodarz grupy",
+    "groupMembers": "Członkowie grupy",
+    "host": {
+      "description": "Gdy gospodarz jest w grupie, czat grupowy działa automatycznie, co jest odpowiednie dla zadań twórczych.",
+      "title": "Gospodarz"
+    },
+    "noAvailableAgents": "Brak dostępnych asystentów",
+    "noDescription": "Brak opisu",
+    "noMembersInGroup": "Brak członków w grupie",
+    "owner": "Ty (właściciel)",
+    "remove": "Usuń członka",
+    "removeFromGroup": "Usuń z grupy",
+    "you": "Ty"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "Model nazewnictwa tematów do AI w malarstwie",
       "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
       "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
+    },
+    "groupChatSupervisor": {
+      "label": "Model nadzoru czatu grupowego",
+      "modelDesc": "Model przeznaczony do nadzorowania i zarządzania rozmowami w czatach grupowych",
+      "title": "Nadzór i zarządzanie czatem grupowym"
     },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {

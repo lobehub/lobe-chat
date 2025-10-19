@@ -35,9 +35,16 @@
       "title": "すべての設定をリセット"
     }
   },
+  "groupTab": {
+    "chat": "チャット",
+    "members": "メンバー",
+    "meta": "基本情報"
+  },
   "header": {
     "desc": "設定優先順位和模型設置。",
     "global": "グローバル設定",
+    "group": "グループチャット設定",
+    "groupDesc": "現在のグループチャットを管理",
     "session": "セッション設定",
     "sessionDesc": "キャラクター設定とセッションの好み。",
     "sessionWithName": "セッション設定 · {{name}}",
@@ -138,6 +145,9 @@
       "title": "APIプロキシアドレス"
     },
     "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに"
+  },
+  "message": {
+    "success": "更新に成功しました"
   },
   "plugin": {
     "addMCPPlugin": "MCPプラグインを追加",
@@ -293,6 +303,101 @@
       "title": "テーマ"
     },
     "title": "一般設定"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "グループチャットの説明を入力してください",
+      "title": "グループチャットの説明"
+    },
+    "name": {
+      "placeholder": "グループチャット名を入力してください",
+      "title": "グループチャット名"
+    },
+    "scene": {
+      "desc": "グループチャットのシーンを選択",
+      "options": {
+        "casual": "カジュアル",
+        "productive": "生産性"
+      },
+      "title": "グループチャットのシーン"
+    },
+    "submit": "グループチャットを更新",
+    "systemPrompt": {
+      "placeholder": "ホストのシステムプロンプトを入力してください",
+      "title": "ホストのシステムプロンプト"
+    },
+    "title": "グループチャット情報"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "オフにしても、あなたからアシスタントへのダイレクトメッセージは可能です",
+      "title": "アシスタントからのダイレクトメッセージを許可"
+    },
+    "enableSupervisor": {
+      "desc": "グループチャットの司会機能を有効にすると、司会者が会話の進行を管理します",
+      "title": "司会者を有効にする"
+    },
+    "maxResponseInRow": {
+      "desc": "メンバーが連続して返信できるメッセージ数を選択します。0に設定すると制限が無効になります。",
+      "title": "連続返信メッセージ数"
+    },
+    "model": {
+      "desc": "グループメンバーの発言には影響しません。一部のモデルは司会者として使用できません。",
+      "title": "ホストモデル"
+    },
+    "orchestratorTitle": "ホスト設定",
+    "responseOrder": {
+      "desc": "代理はグループチャットで設定された順序に従って返信します",
+      "options": {
+        "natural": "自然",
+        "sequential": "順序通り"
+      },
+      "placeholder": "返信順序を選択してください",
+      "title": "返信順序"
+    },
+    "responseSpeed": {
+      "desc": "グループチャット全体の進行速度を制御します",
+      "options": {
+        "fast": "速い",
+        "medium": "中程度",
+        "slow": "遅い"
+      },
+      "placeholder": "返信速度を選択してください",
+      "title": "返信速度"
+    },
+    "revealDM": {
+      "desc": "他のメンバーに送信されたプライベートメッセージの内容をあなたに表示します。",
+      "title": "プライベートメッセージを表示"
+    },
+    "submit": "設定を更新",
+    "systemPrompt": {
+      "desc": "グループチャットホストのカスタムシステムプロンプト。デフォルトのホスト動作に影響を与える可能性があります。",
+      "placeholder": "カスタムホストシステムプロンプトを入力してください...",
+      "title": "ホストのシステムプロンプト"
+    },
+    "title": "チャット設定"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "グループに参加",
+    "availableAgents": "利用可能なアシスタント",
+    "defaultAgent": "カスタムアシスタント",
+    "disableHost": "ホストアシスタントを無効にする",
+    "edit": "メンバーを編集",
+    "empty": "このグループチャットには代理がいません。+ ボタンをクリックしてメンバーを追加してください。",
+    "enableHost": "ホストアシスタントを有効にする",
+    "groupHost": "グループホスト",
+    "groupMembers": "グループメンバー",
+    "host": {
+      "description": "ホストがグループにいるとき、グループチャットは自動化され、発散的なタスクに適しています。",
+      "title": "ホスト"
+    },
+    "noAvailableAgents": "利用可能なアシスタントがいません",
+    "noDescription": "説明なし",
+    "noMembersInGroup": "グループにメンバーがいません",
+    "owner": "あなた（所有者）",
+    "remove": "メンバーを削除",
+    "removeFromGroup": "グループから削除",
+    "you": "あなた"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "AI絵画トピック命名モデル",
       "modelDesc": "AI絵画の自動トピック命名に使用されるモデルを指定します",
       "title": "AI絵画自動トピック命名"
+    },
+    "groupChatSupervisor": {
+      "label": "グループチャット監督モデル",
+      "modelDesc": "グループチャットの会話を監督・管理するために使用するモデルを指定します",
+      "title": "グループチャットの監督・管理"
     },
     "helpInfo": "新しいアシスタントを作成するとき、デフォルトのアシスタント設定がプリセット値として使用されます。",
     "historyCompress": {

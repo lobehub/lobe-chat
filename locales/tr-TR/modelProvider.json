@@ -399,6 +399,11 @@
       "desc": "Vertex AI Anahtarlarınızı buraya girin",
       "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
       "title": "Vertex AI Anahtarları"
+    },
+    "region": {
+      "desc": "Vertex AI hizmeti için bir bölge seçin. Gemini 2.5 gibi bazı modeller yalnızca belirli bölgelerde (örneğin global) kullanılabilir",
+      "placeholder": "Bölge seçin",
+      "title": "Vertex AI Bölgesi"
     }
   },
   "zeroone": {

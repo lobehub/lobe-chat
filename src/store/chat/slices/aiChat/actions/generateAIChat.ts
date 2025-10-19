@@ -39,6 +39,10 @@ interface ProcessMessageParams {
   ragQuery?: string;
   threadId?: string;
   inPortalThread?: boolean;
+
+  groupId?: string;
+  agentId?: string;
+  agentConfig?: any; // Agent configuration for group chat agents
 }
 
 export interface AIGenerateAction {
@@ -544,7 +548,8 @@ export const generateAIChat: StateCreator<
       n('generateMessage(start)', { messageId, messages }),
     );
 
-    const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());
+    const agentConfig =
+      params?.agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     // ================================== //

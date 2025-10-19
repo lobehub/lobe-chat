@@ -1,7 +1,7 @@
 import { LobeTool } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -18,6 +18,7 @@ import { ChatErrorType } from '@/types/index';
 import { ChatImageItem, ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 
+import { API_ENDPOINTS } from '../_url';
 import * as helpers from './helper';
 import { chatService } from './index';
 
