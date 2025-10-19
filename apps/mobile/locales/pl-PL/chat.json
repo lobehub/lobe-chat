@@ -22,6 +22,7 @@
     "title": "Rozmowa na luzie"
   },
   "messageCopied": "Wiadomość skopiowana",
+  "newAgent": "Nowy asystent",
   "newChat": "Nowa rozmowa",
   "placeholder": "Wpisz swoją wiadomość...",
   "regenerateFailed": "Nie udało się wygenerować ponownie, spróbuj później",
@@ -35,6 +36,10 @@
     "title": "Rozmowa na luzie"
   },
   "setting": {
+    "avatar": "Awatar",
+    "description": "Opis",
+    "done": "Gotowe",
+    "name": "Nazwa",
     "title": "Ustawienia rozmowy"
   },
   "share": "Udostępnij",

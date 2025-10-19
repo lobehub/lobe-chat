@@ -22,6 +22,7 @@
     "title": "Gewoon kletsen"
   },
   "messageCopied": "Bericht gekopieerd",
+  "newAgent": "Nieuwe assistent",
   "newChat": "Nieuw gesprek",
   "placeholder": "Typ uw bericht...",
   "regenerateFailed": "Hertellen mislukt, probeer het later opnieuw",
@@ -35,6 +36,10 @@
     "title": "Gewoon kletsen"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Beschrijving",
+    "done": "Gereed",
+    "name": "Naam",
     "title": "Gespreksinstellingen"
   },
   "share": "Delen",

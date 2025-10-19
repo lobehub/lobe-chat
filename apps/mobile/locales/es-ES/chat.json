@@ -22,6 +22,7 @@
     "title": "Charlemos"
   },
   "messageCopied": "Mensaje copiado",
+  "newAgent": "Nuevo asistente",
   "newChat": "Nueva conversación",
   "placeholder": "Escribe tu mensaje...",
   "regenerateFailed": "Error al regenerar, por favor intenta más tarde",
@@ -35,6 +36,10 @@
     "title": "Charlemos"
   },
   "setting": {
+    "avatar": "Avatar",
+    "description": "Descripción",
+    "done": "Hecho",
+    "name": "Nombre",
     "title": "Configuración de la conversación"
   },
   "share": "Compartir",
