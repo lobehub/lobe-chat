@@ -1,8 +1,7 @@
-import { Cell, Empty, Flexbox, Tag, useTheme } from '@lobehub/ui-rn';
+import { Cell, Empty, Flexbox, ScrollShadow, Tag, useTheme } from '@lobehub/ui-rn';
 import { MessageSquareDashed } from 'lucide-react-native';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
 
 import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
@@ -40,10 +39,11 @@ const TopicList = memo(() => {
   }
 
   return (
-    <ScrollView
+    <ScrollShadow
       removeClippedSubviews={true}
       scrollEventThrottle={32}
       showsVerticalScrollIndicator={false}
+      size={4}
       style={{
         flex: 1,
       }}
@@ -71,7 +71,7 @@ const TopicList = memo(() => {
       {topics?.map((topic) => (
         <TopicItem key={topic.id} topic={topic} />
       ))}
-    </ScrollView>
+    </ScrollShadow>
   );
 });
 

@@ -133,7 +133,7 @@ const ScrollShadow = memo<ScrollShadowProps>(
     // 如果没有阴影，直接返回 ScrollView
     if (!gradientConfig) {
       return (
-        <ScrollView {...scrollViewProps} style={style}>
+        <ScrollView removeClippedSubviews={true} style={style} {...scrollViewProps}>
           {children}
         </ScrollView>
       );
