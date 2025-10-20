@@ -4,7 +4,7 @@
   },
   "active": "활성",
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작하시거나 [도우미 설정]({{url}})으로 가셔서 제 정보를 완성하실 수 있습니다.",
-  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
+  "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해 봅시다!",
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
   "agents": "도우미",
   "artifact": {
