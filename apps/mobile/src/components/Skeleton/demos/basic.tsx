@@ -1,35 +1,19 @@
-import { Skeleton, Text, useTheme } from '@lobehub/ui-rn';
-import { View } from 'react-native';
+import { Flexbox, Skeleton, Text } from '@lobehub/ui-rn';
 
 const BasicDemo = () => {
-  const token = useTheme();
-
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ color: token.colorText, fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
-        Basic Skeleton
-      </Text>
-
+    <Flexbox gap={16}>
+      <Text strong>Basic Skeleton</Text>
       <Skeleton />
-
-      <View style={{ marginTop: 20 }}>
-        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-          Without Animation
-        </Text>
-        <Skeleton animated={false} />
-      </View>
-
-      <View style={{ marginTop: 20 }}>
-        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-          Loading Complete
-        </Text>
-        <Skeleton loading={false}>
-          <Text style={{ color: token.colorText }}>
-            This is the actual content that appears when loading is complete.
-          </Text>
-        </Skeleton>
-      </View>
-    </View>
+      <Text strong>Without Title</Text>
+      <Skeleton title={false} />
+      <Text strong>With Animation</Text>
+      <Skeleton animated={true} />
+      <Text strong>Loading Complete</Text>
+      <Skeleton loading={false}>
+        <Text>This is the actual content that appears when loading is complete.</Text>
+      </Skeleton>
+    </Flexbox>
   );
 };
 
