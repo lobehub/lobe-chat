@@ -12,9 +12,9 @@ import UserAvatar from '@/features/User/UserAvatar';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
-import SSOProvidersList from './features/SSOProvidersList';
+import SSOProvidersList from '../(home)/features/SSOProvidersList';
 
-const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
+const ProfilePage = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [isLoginWithNextAuth, isLogin] = useUserStore((s) => [
     authSelectors.isLoginWithNextAuth(s),
     authSelectors.isLogin(s),
@@ -83,4 +83,4 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-export default Client;
+export default ProfilePage;

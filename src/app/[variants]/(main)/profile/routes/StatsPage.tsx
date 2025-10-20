@@ -7,18 +7,18 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 
-import AiHeatmaps from './features/AiHeatmaps';
-import AssistantsRank from './features/AssistantsRank';
-import ModelsRank from './features/ModelsRank';
-import ShareButton from './features/ShareButton';
-import TopicsRank from './features/TopicsRank';
-import TotalAssistants from './features/TotalAssistants';
-import TotalMessages from './features/TotalMessages';
-import TotalTopics from './features/TotalTopics';
-import TotalWords from './features/TotalWords';
-import Welcome from './features/Welcome';
+import AiHeatmaps from '../stats/features/AiHeatmaps';
+import AssistantsRank from '../stats/features/AssistantsRank';
+import ModelsRank from '../stats/features/ModelsRank';
+import ShareButton from '../stats/features/ShareButton';
+import TopicsRank from '../stats/features/TopicsRank';
+import TotalAssistants from '../stats/features/TotalAssistants';
+import TotalMessages from '../stats/features/TotalMessages';
+import TotalTopics from '../stats/features/TotalTopics';
+import TotalWords from '../stats/features/TotalWords';
+import Welcome from '../stats/features/Welcome';
 
-const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
+const StatsPage = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
 
   return (
@@ -49,4 +49,4 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-export default Client;
+export default StatsPage;
