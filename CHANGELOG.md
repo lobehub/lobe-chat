@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.139.2](https://github.com/lobehub/lobe-chat/compare/v1.139.1...v1.139.2)
+
+<sup>Released on **2025-10-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Solve when desktop the sider agent list too long.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Solve when desktop the sider agent list too long, closes [#9792](https://github.com/lobehub/lobe-chat/issues/9792) ([778dea3](https://github.com/lobehub/lobe-chat/commit/778dea3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.139.1](https://github.com/lobehub/lobe-chat/compare/v1.139.0...v1.139.1)
 
 <sup>Released on **2025-10-20**</sup>
