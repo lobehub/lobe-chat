@@ -64,7 +64,7 @@ const LoginPage = () => {
             <Text fontSize={26} weight={'bold'}>
               欢迎使用
             </Text>
-            <LobeHub.Text size={24} />
+            <LobeHub.Text color={theme.colorText} size={24} />
           </Flexbox>
         </Center>
 
