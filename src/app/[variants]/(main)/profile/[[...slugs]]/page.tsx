@@ -2,9 +2,13 @@
 
 import dynamic from 'next/dynamic';
 
+import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
-const ProfileRouter = dynamic(() => import('../ProfileRouter'), { ssr: false });
+const ProfileRouter = dynamic(() => import('../ProfileRouter'), {
+  loading: BrandTextLoading,
+  ssr: false,
+});
 
 const Page = () => {
   const mobile = useIsMobile();
