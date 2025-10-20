@@ -26,6 +26,7 @@ const Button = memo<ButtonProps>(
     textStyle,
     icon,
     iconProps,
+    textProps,
     ...rest
   }) => {
     // Map legacy `type` to new `variant` + `color` if not explicitly provided
@@ -274,21 +275,14 @@ const Button = memo<ButtonProps>(
             icon={Loader2Icon}
             size={iconSize}
             spin
-            style={isCircle ? styles.iconCircle : styles.icon}
             {...iconProps}
           />
         )}
         {!loading && icon && (
-          <Icon
-            color={textColorStyle.color}
-            icon={icon}
-            size={iconSize}
-            style={isCircle ? styles.iconCircle : styles.icon}
-            {...iconProps}
-          />
+          <Icon color={textColorStyle.color} icon={icon} size={iconSize} {...iconProps} />
         )}
         {children && !isCircle ? (
-          <Text style={[textColorStyle, textStyle]} weight={500}>
+          <Text ellipsis style={[textColorStyle, textStyle]} weight={500} {...textProps}>
             {children}
           </Text>
         ) : undefined}
