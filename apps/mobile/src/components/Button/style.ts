@@ -51,15 +51,6 @@ export const useStyles = createStyles(({ token, stylish }, props?: { size?: Butt
 
     diabled: stylish.disabled,
 
-    // Icon styles
-    icon: {
-      marginRight: token.marginXS,
-    },
-
-    iconCircle: {
-      marginRight: 0,
-    },
-
     // Loading state
     loading: {
       opacity: token.opacityLoading,
