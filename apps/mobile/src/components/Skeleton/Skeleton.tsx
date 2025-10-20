@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
-import { memo, useEffect, useRef } from 'react';
-import { Animated, View } from 'react-native';
+import { memo, useCallback } from 'react';
+import { Animated } from 'react-native';
 
+import Flexbox from '../Flexbox';
 import SkeletonAvatar from './Avatar';
 import SkeletonButton from './Button';
 import SkeletonImage from './Image';
@@ -9,6 +10,7 @@ import SkeletonParagraph from './Paragraph';
 import SkeletonTitle from './Title';
 import { useStyles } from './style';
 import type { SkeletonProps } from './type';
+import { useSkeletonAnimation } from './useSkeletonAnimation';
 
 const Skeleton = memo<SkeletonProps>(
   ({
@@ -19,36 +21,13 @@ const Skeleton = memo<SkeletonProps>(
     animated = false,
     style,
     children,
+    fontSize = 16,
+    ...rest
   }) => {
     const { styles } = useStyles();
-    const shimmerAnim = useRef(new Animated.Value(0)).current;
+    const opacityInterpolation = useSkeletonAnimation(animated && loading);
 
-    useEffect(() => {
-      if (animated && loading) {
-        const shimmerAnimation = Animated.loop(
-          Animated.sequence([
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 1,
-              useNativeDriver: false,
-            }),
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 0,
-              useNativeDriver: false,
-            }),
-          ]),
-        );
-        shimmerAnimation.start();
-        return () => shimmerAnimation.stop();
-      }
-    }, [animated, loading, shimmerAnim]);
-
-    if (!loading) {
-      return children;
-    }
-
-    const renderAvatar = () => {
+    const renderAvatar = useCallback(() => {
       if (!avatar) return null;
 
       const avatarProps = typeof avatar === 'object' ? avatar : {};
@@ -66,18 +45,13 @@ const Skeleton = memo<SkeletonProps>(
           style={[
             styles.skeletonItem,
             avatarStyle,
-            animated && {
-              opacity: shimmerAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.3, 1],
-              }),
-            },
+            opacityInterpolation && { opacity: opacityInterpolation },
           ]}
         />
       );
-    };
+    }, [avatar, styles.skeletonItem, opacityInterpolation]);
 
-    const renderTitle = () => {
+    const renderTitle = useCallback(() => {
       if (!title) return null;
 
       const titleProps = typeof title === 'object' ? title : {};
@@ -87,22 +61,21 @@ const Skeleton = memo<SkeletonProps>(
         <Animated.View
           style={[
             styles.skeletonItem,
-            styles.titleLine,
-            { width: titleWidth as any },
-            animated && {
-              opacity: shimmerAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.3, 1],
-              }),
+            {
+              height: fontSize,
             },
+            { width: titleWidth as any },
+            opacityInterpolation && { opacity: opacityInterpolation },
           ]}
         />
       );
-    };
+    }, [title, styles.skeletonItem, opacityInterpolation, fontSize]);
 
-    const renderParagraph = () => {
+    const renderParagraph = useCallback(() => {
       if (!paragraph) return null;
 
+      const paragraphFontSize =
+        typeof paragraph === 'object' && paragraph.fontSize ? paragraph.fontSize : 14;
       const paragraphProps = typeof paragraph === 'object' ? paragraph : {};
       const rows = paragraphProps.rows || 3;
       const width = paragraphProps.width;
@@ -124,23 +97,22 @@ const Skeleton = memo<SkeletonProps>(
             key={i}
             style={[
               styles.skeletonItem,
-              styles.paragraphLine,
+              {
+                height: paragraphFontSize,
+              },
               { width: lineWidth as any },
               // Remove margin bottom from last line
               i === rows - 1 && { marginBottom: 0 },
-              animated && {
-                opacity: shimmerAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.3, 1],
-                }),
-              },
+              opacityInterpolation && { opacity: opacityInterpolation },
             ]}
           />,
         );
       }
 
-      return <View style={styles.paragraphContainer}>{lines}</View>;
-    };
+      return <Flexbox gap={paragraphFontSize / 2}>{lines}</Flexbox>;
+    }, [paragraph, styles.skeletonItem, styles.paragraphContainer, opacityInterpolation]);
+
+    if (!loading) return children;
 
     const hasAvatar = !!avatar;
     const hasTitle = !!title;
@@ -149,22 +121,31 @@ const Skeleton = memo<SkeletonProps>(
     // Special case: if only paragraph, render it directly
     if (!hasAvatar && !hasTitle && hasParagraph) {
       return (
-        <View style={[styles.container, style]} testID="skeleton">
+        <Flexbox
+          gap={fontSize * 0.5}
+          style={[{ overflow: 'hidden', position: 'relative' }, style]}
+          testID="skeleton"
+          {...rest}
+        >
           {renderParagraph()}
-        </View>
+        </Flexbox>
       );
     }
 
     return (
-      <View style={[styles.container, style]} testID="skeleton">
-        <View style={styles.content}>
-          {renderAvatar()}
-          <View style={[styles.textContainer, !hasAvatar && styles.textContainerNoAvatar]}>
-            {renderTitle()}
-            {renderParagraph()}
-          </View>
-        </View>
-      </View>
+      <Flexbox
+        gap={12}
+        horizontal
+        style={[{ overflow: 'hidden', position: 'relative' }, style]}
+        testID="skeleton"
+        {...rest}
+      >
+        {renderAvatar()}
+        <Flexbox flex={1} gap={fontSize * 0.5} style={{ overflow: 'hidden', position: 'relative' }}>
+          {renderTitle()}
+          {renderParagraph()}
+        </Flexbox>
+      </Flexbox>
     );
   },
 );

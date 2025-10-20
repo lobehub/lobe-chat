@@ -1,7 +1,7 @@
 import { Flexbox, Input, ScrollShadow, Toast } from '@lobehub/ui-rn';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, InteractionManager, View } from 'react-native';
+import { Alert, InteractionManager } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
 
 import { loading } from '@/libs/loading';
@@ -13,13 +13,11 @@ import AddButton from './features/AddButton';
 import Inbox from './features/Inbox';
 import SessionItem from './features/SessionItem';
 import { SessionListSkeleton } from './features/SkeletonList';
-import { useStyles } from './style';
 
 export default function SideBar() {
   const { t } = useTranslation('chat');
   const [searchText, setSearchText] = useState('');
   const { sessions } = useSessionStore();
-  const { styles } = useStyles();
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
 
   const { useFetchSessions, removeSession } = useSessionStore();
@@ -66,11 +64,7 @@ export default function SideBar() {
   }, [keyword, sessions]);
 
   if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <SessionListSkeleton />
-      </View>
-    );
+    return <SessionListSkeleton />;
   }
 
   return (
@@ -80,7 +74,6 @@ export default function SideBar() {
         <Input.Search
           onChangeText={setSearchText}
           placeholder={t('session.search.placeholder', { ns: 'chat' })}
-          style={styles.searchInput}
           value={searchText}
           variant="filled"
         />
