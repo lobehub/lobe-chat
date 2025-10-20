@@ -1,10 +1,11 @@
 import { LoaderCircle } from 'lucide-react-native';
 import type { ReactElement } from 'react';
 import { cloneElement, isValidElement, memo, useEffect, useRef } from 'react';
-import { Animated, Easing, TouchableOpacity, View } from 'react-native';
+import { Animated, Easing, View } from 'react-native';
 
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
 
+import Block from '../Block';
 import Text from '../Text';
 import { useStyles } from './style';
 import type { ButtonColor, ButtonProps, ButtonVariant } from './type';
@@ -157,14 +158,14 @@ const Button = memo<ButtonProps>(
     };
 
     return (
-      <TouchableOpacity
-        {...rest}
+      <Block
         accessibilityRole="button"
-        activeOpacity={disabled || loading ? 1 : 0.7}
+        clickable
         disabled={disabled || loading}
         onPress={handlePress}
         style={[styles.button, style]}
         testID="button"
+        {...rest}
       >
         {loading && (
           <Animated.View style={[styles.icon, { transform: [{ rotate: spin }] }]}>
@@ -181,7 +182,7 @@ const Button = memo<ButtonProps>(
             {children}
           </Text>
         ) : undefined}
-      </TouchableOpacity>
+      </Block>
     );
   },
 );

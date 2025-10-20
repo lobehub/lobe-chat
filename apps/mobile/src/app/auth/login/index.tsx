@@ -1,23 +1,23 @@
-import { Button } from '@lobehub/ui-rn';
+import { LobeHub } from '@lobehub/icons-rn';
+import { Button, Center, Flexbox, PageContainer, Text, useTheme } from '@lobehub/ui-rn';
 import { Link, useRouter } from 'expo-router';
+import { darken } from 'polished';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Image, Text, View } from 'react-native';
+import { Alert, Image } from 'react-native';
 
 import { setLoginMounted } from '@/navigation/loginState';
 import { useSettingStore } from '@/store/setting';
 import { useAuth, useAuthActions } from '@/store/user';
 import { getLoginErrorKey } from '@/utils/error';
 
-import { useStyles } from './style';
-
 const LoginPage = () => {
+  const theme = useTheme();
   const { t } = useTranslation(['auth', 'error', 'common']);
   const { isLoading } = useAuth();
   const { login } = useAuthActions();
   const router = useRouter();
 
-  const { styles } = useStyles();
   const { setCustomServerUrl, showSelfHostedEntry } = useSettingStore((state) => ({
     setCustomServerUrl: state.setCustomServerUrl,
     showSelfHostedEntry: state.showSelfHostedEntry,
@@ -47,56 +47,64 @@ const LoginPage = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header} />
+    <PageContainer
+      backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
+    >
+      <Flexbox flex={1}>
+        <Center flex={1} gap={24}>
+          <Image
+            source={require('@/../assets/images/logo.png')}
+            style={{
+              height: 100,
+              width: 100,
+            }}
+          />
+          <Flexbox align={'center'} gap={8} horizontal>
+            <Text fontSize={26} weight={'bold'}>
+              欢迎使用
+            </Text>
+            <LobeHub.Text size={24} />
+          </Flexbox>
+        </Center>
 
-      <View style={styles.content}>
-        {/* Logo 和标题 */}
-        <View style={styles.welcome}>
-          <Image source={require('@/../assets/images/logo.png')} style={styles.logo} />
-
-          <Text style={styles.title}>LobeChat</Text>
-          <Text style={styles.subtitle}>{t('login.subtitle', { ns: 'auth' })}</Text>
-        </View>
-
-        {/* 登录按钮 */}
-        <Button
-          block
-          disabled={isLoading}
-          loading={isLoading}
-          onPress={handleLogin}
-          style={styles.loginButton}
-          type="primary"
-        >
-          {t('login.button', { appName: 'LobeChat.com', ns: 'auth' })}
-        </Button>
-        {showSelfHostedEntry && (
-          <Button
-            block
-            disabled={isLoading}
-            onPress={handleSelfHostedLogin}
-            style={styles.selfHostedButton}
-            variant="filled"
-          >
-            {t('login.selfHostedButton', { ns: 'auth' })}
-          </Button>
-        )}
-      </View>
-
-      {/* 安全提示 */}
-      <View style={styles.securityNote}>
-        <Text style={styles.securityText}>
-          {t('login.securityNote', { ns: 'auth' })}
-          <Link href="https://lobehub.com/terms" style={styles.securityLink}>
-            《{t('login.usePolicy', { ns: 'auth' })}》
-          </Link>
-          {t('and', { ns: 'common' })}
-          <Link href="https://lobehub.com/privacy" style={styles.securityLink}>
-            《{t('login.privacyPolicy', { ns: 'auth' })}》
-          </Link>
-        </Text>
-      </View>
-    </View>
+        <Flexbox gap={36} padding={16}>
+          {/* 登录按钮 */}
+          <Flexbox gap={8}>
+            <Button
+              block
+              disabled={isLoading}
+              loading={isLoading}
+              onPress={handleLogin}
+              type={'primary'}
+            >
+              {'通过 LobeHub 账号登录'}
+            </Button>
+            {showSelfHostedEntry && (
+              <Button
+                block
+                disabled={isLoading}
+                onPress={handleSelfHostedLogin}
+                variant={'outlined'}
+              >
+                {t('login.selfHostedButton', { ns: 'auth' })}
+              </Button>
+            )}
+          </Flexbox>
+          <Flexbox align={'center'} gap={16} horizontal justify={'center'}>
+            <Link href="https://lobehub.com/terms">
+              <Text fontSize={12} type={'secondary'}>
+                {t('login.usePolicy', { ns: 'auth' })}
+              </Text>
+            </Link>
+            <Link href="https://lobehub.com/privacy">
+              <Text fontSize={12} type={'secondary'}>
+                {t('login.privacyPolicy', { ns: 'auth' })}
+              </Text>
+            </Link>
+          </Flexbox>
+        </Flexbox>
+      </Flexbox>
+    </PageContainer>
   );
 };
 
