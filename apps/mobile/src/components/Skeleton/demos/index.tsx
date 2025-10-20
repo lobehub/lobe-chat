@@ -1,5 +1,6 @@
 import { DemoConfig } from '@lobehub/ui-rn';
 
+import AlignmentDemo from './alignment';
 import AnimatedDemo from './animated';
 import AvatarDemo from './avatar';
 import BasicDemo from './basic';
@@ -13,6 +14,7 @@ const demos: DemoConfig = [
   { component: <AvatarDemo />, key: 'avatar', title: '头像骨架屏' },
   { component: <ParagraphDemo />, key: 'paragraph', title: '段落骨架屏' },
   { component: <CompoundDemo />, key: 'compound', title: '复合组件' },
+  { component: <AlignmentDemo />, key: 'alignment', title: '尺寸对齐' },
   { component: <ComplexDemo />, key: 'complex', title: '复杂示例' },
 ];
 
