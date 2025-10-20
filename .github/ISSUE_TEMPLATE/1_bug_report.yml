@@ -5,10 +5,38 @@ type: Bug
 body:
   - type: dropdown
     attributes:
+      label: '📱 Client Type'
+      description: 'Select how you are accessing LobeChat'
+      multiple: true
+      options:
+        - 'Web (Desktop Browser)'
+        - 'Web (Mobile Browser)'
+        - 'Desktop App (Electron)'
+        - 'Mobile App (React Native)'
+        - 'Other'
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: '💻 Operating System'
+      multiple: true
+      options:
+        - 'Windows'
+        - 'macOS'
+        - 'Ubuntu'
+        - 'Other Linux'
+        - 'iOS'
+        - 'Android'
+        - 'Other'
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
       label: '📦 Deployment Platform'
       multiple: true
       options:
-        - 'Official Preview'
         - 'Official Cloud'
         - 'Vercel'
         - 'Zeabur'
@@ -33,35 +61,6 @@ body:
   - type: input
     attributes:
       label: '📌 Version'
-    validations:
-      required: true
-
-  - type: dropdown
-    attributes:
-      label: '💻 Operating System'
-      multiple: true
-      options:
-        - 'Windows'
-        - 'macOS'
-        - 'Ubuntu'
-        - 'Other Linux'
-        - 'iOS'
-        - 'Android'
-        - 'Other'
-    validations:
-      required: true
-
-  - type: dropdown
-    attributes:
-      label: '📱 Client Type'
-      description: 'Select how you are accessing LobeChat'
-      multiple: true
-      options:
-        - 'Web (Desktop Browser)'
-        - 'Web (Mobile Browser)'
-        - 'Desktop App (Electron)'
-        - 'Mobile App (React Native)'
-        - 'Other'
     validations:
       required: true
 
