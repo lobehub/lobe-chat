@@ -7,7 +7,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
 
 export default function NameSetting() {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const [loading, setLoading] = useState(false);
   const defaultTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);

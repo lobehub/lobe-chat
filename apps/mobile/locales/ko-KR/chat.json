@@ -7,6 +7,7 @@
     "cancel": "취소",
     "confirm": "확인",
     "edit": "편집",
+    "editButton": "역할 설정 편집",
     "placeholder": "역할 프롬프트를 입력하세요",
     "roleSetting": "역할 설정",
     "title": "역할 설정"

@@ -1,4 +1,5 @@
 import { Markdown, createStyles } from '@lobehub/ui-rn';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useSettingStore } from '@/store/setting';
@@ -32,31 +33,28 @@ const usePreviewStyles = createStyles(({ token }) => ({
 const Preview = () => {
   const { styles } = usePreviewStyles();
   const { fontSize } = useSettingStore();
+  const { t } = useTranslation('setting');
 
   return (
     <View style={styles.container}>
       <View style={[styles.row, styles.rowRight]}>
         <View style={[styles.bubble, styles.userBubble]}>
-          <Markdown fontSize={fontSize}>{'我想把对话字体调大一些，该怎么做？'}</Markdown>
+          <Markdown fontSize={fontSize}>{t('fontSize.preview.userQuestion')}</Markdown>
         </View>
       </View>
       <View style={[styles.row, styles.aiBubble]}>
         <View style={[styles.bubble]}>
-          <Markdown
-            fontSize={fontSize}
-          >{`**如何调整字体大小？**\n\n使用下方的滑块即可调节字体大小：向左变小，向右变大。拖动时，这里会实时预览效果。\n\n小提示：选择“${'标准'}”刻度可快速恢复默认大小。`}</Markdown>
+          <Markdown fontSize={fontSize}>{t('fontSize.preview.botAnswer')}</Markdown>
         </View>
       </View>
       <View style={[styles.row, styles.rowRight]}>
         <View style={[styles.bubble, styles.userBubble]}>
-          <Markdown fontSize={fontSize}>{'很棒！'}</Markdown>
+          <Markdown fontSize={fontSize}>{t('fontSize.preview.userGreat')}</Markdown>
         </View>
       </View>
       <View style={[styles.row, styles.aiBubble]}>
         <View style={[styles.bubble]}>
-          <Markdown fontSize={fontSize}>
-            {'很高兴你喜欢！这个预览功能让你可以在应用设置之前直观地看到在对话框中的对话效果。'}
-          </Markdown>
+          <Markdown fontSize={fontSize}>{t('fontSize.preview.botGreat')}</Markdown>
         </View>
       </View>
     </View>

@@ -1,6 +1,7 @@
 {
   "about": "O LobeHub",
   "account": {
+    "group": "Konto",
     "profile": {
       "email": "E-mail",
       "name": "Nazwa użytkownika",
@@ -13,6 +14,9 @@
       "label": "Wyloguj się"
     },
     "title": "Ustawienia konta"
+  },
+  "advanced": {
+    "group": "Zaawansowane"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Podgląd",
     "previewMessages": {
+      "botGreat": "Cieszę się, że Ci się podoba! Ta funkcja podglądu pozwala zobaczyć efekt motywu przed zastosowaniem ustawień.",
       "botHowToUse": "Możesz dostosować główny kolor i kolory neutralne za pomocą poniższego selektora kolorów, podgląd będzie aktualizowany na żywo, aby pokazać efekt.",
+      "userGreat": "Świetnie!",
       "userHowToUse": "Jak korzystać z podglądu motywu?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Dane uwierzytelniające zostały wyczyszczone",
         "title": "Wyczyszczono dane uwierzytelniające"
+      },
+      "error": {
+        "noToken": "Brak dostępnego tokena"
       },
       "group": "Konfiguracja uwierzytelniania",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Opinie i sugestie",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**Jak zmienić rozmiar czcionki?**\n\nUżyj suwaka poniżej, aby dostosować rozmiar czcionki: przesuwając w lewo zmniejszasz, w prawo powiększasz. Podczas przesuwania zobaczysz podgląd na żywo.\n\nWskazówka: wybierz skalę „Standard”, aby szybko przywrócić domyślny rozmiar.",
+      "botGreat": "Cieszę się, że Ci się podoba! Ta funkcja podglądu pozwala zobaczyć, jak rozmowy będą wyglądać w oknie czatu, zanim zastosujesz ustawienia.",
+      "userGreat": "Świetnie!",
+      "userQuestion": "Chcę powiększyć czcionkę rozmowy, jak to zrobić?"
+    },
     "standard": "Standardowy",
     "text": "Uwaga, ta konfiguracja wpływa wyłącznie na rozmiar czcionki wyświetlanej w treści wiadomości",
     "title": "Rozmiar czcionki"
   },
+  "general": {
+    "group": "Ogólne"
+  },
   "help": "Pomoc",
+  "info": {
+    "group": "Informacje"
+  },
   "locale": {
     "auto": {
       "description": "Dopasuj do języka systemowego",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "Dostawcy AI",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Konfiguracja",
+      "models": "Modele"
+    }
+  },
+  "providersSearchPlaceholder": "Wyszukaj dostawców według słów kluczowych...",
   "support": "Wsparcie mailowe",
   "themeMode": {
     "auto": "Dopasuj do systemu",

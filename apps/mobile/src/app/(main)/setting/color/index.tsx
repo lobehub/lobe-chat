@@ -16,7 +16,7 @@ import { useSettingStore } from '@/store/setting';
 import Preview from './features/Preview';
 
 export default function ThemeSettingScreen() {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
 
   const { primaryColor, neutralColor, setPrimaryColor, setNeutralColor } = useSettingStore();
 

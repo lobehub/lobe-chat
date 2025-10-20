@@ -1,6 +1,7 @@
 {
   "about": "Giới thiệu về LobeHub",
   "account": {
+    "group": "Tài khoản",
     "profile": {
       "email": "Email",
       "name": "Tên người dùng",
@@ -13,6 +14,9 @@
       "label": "Đăng xuất"
     },
     "title": "Cài đặt tài khoản"
+  },
+  "advanced": {
+    "group": "Nâng cao"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Xem trước",
     "previewMessages": {
+      "botGreat": "Rất vui vì bạn thích! Tính năng xem trước này cho phép bạn trực quan thấy hiệu ứng chủ đề trước khi áp dụng cài đặt.",
       "botHowToUse": "Bạn có thể điều chỉnh màu chủ đạo và màu trung tính bằng bộ chọn màu bên dưới, bản xem trước sẽ cập nhật trực tiếp để hiển thị hiệu ứng.",
+      "userGreat": "Tuyệt vời!",
       "userHowToUse": "Cách sử dụng bản xem trước chủ đề?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Đã xóa dữ liệu xác thực",
         "title": "Xóa dữ liệu xác thực"
+      },
+      "error": {
+        "noToken": "Hiện không có Token khả dụng"
       },
       "group": "Cấu hình xác thực",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Phản hồi ý kiến",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**Làm thế nào để điều chỉnh kích thước phông chữ?**\n\nSử dụng thanh trượt bên dưới để điều chỉnh kích thước phông chữ: kéo sang trái để giảm, kéo sang phải để tăng. Khi kéo, bạn sẽ thấy bản xem trước hiệu ứng ngay tại đây.\n\nMẹo nhỏ: chọn mức \"Tiêu chuẩn\" để nhanh chóng khôi phục kích thước mặc định.",
+      "botGreat": "Rất vui vì bạn thích! Tính năng xem trước này giúp bạn có thể trực quan thấy được hiệu ứng trong hộp thoại trước khi áp dụng cài đặt.",
+      "userGreat": "Tuyệt vời!",
+      "userQuestion": "Tôi muốn phông chữ trong cuộc trò chuyện to hơn, làm thế nào để làm được?"
+    },
     "standard": "Tiêu chuẩn",
     "text": "Lưu ý, cấu hình này chỉ ảnh hưởng đến kích thước phông chữ hiển thị của nội dung tin nhắn",
     "title": "Cỡ chữ"
   },
+  "general": {
+    "group": "Chung"
+  },
   "help": "Trợ giúp sử dụng",
+  "info": {
+    "group": "Thông tin"
+  },
   "locale": {
     "auto": {
       "description": "Theo cài đặt ngôn ngữ hệ thống",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "Nhà cung cấp AI",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Cấu hình",
+      "models": "Mô hình"
+    }
+  },
+  "providersSearchPlaceholder": "Tìm nhà cung cấp theo từ khóa...",
   "support": "Hỗ trợ qua email",
   "themeMode": {
     "auto": "Theo hệ thống",

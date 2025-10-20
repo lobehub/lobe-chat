@@ -26,7 +26,7 @@ const ProviderDetailPage = () => {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { styles } = useStyles();
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
   const token = useTheme();
 
   // Provider 配置相关
@@ -212,12 +212,12 @@ const ProviderDetailPage = () => {
             options={[
               {
                 icon: LucideSettings2,
-                label: '配置',
+                label: t('providersDetail.tabs.configuration', { ns: 'setting' }),
                 value: Tabs.Configuration,
               },
               {
                 icon: BrainIcon,
-                label: '模型',
+                label: t('providersDetail.tabs.models', { ns: 'setting' }),
                 value: Tabs.Models,
               },
             ]}

@@ -41,7 +41,7 @@ const sanitizeLanguageName = (value?: string | null) => {
 
 export default function LocaleScreen() {
   const { localeMode, changeLocale } = useLocale();
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
   const [pendingLocale, setPendingLocale] = useState<LocaleMode | null>(null);
 
   const handleLocaleChange = async (locale: LocaleMode) => {

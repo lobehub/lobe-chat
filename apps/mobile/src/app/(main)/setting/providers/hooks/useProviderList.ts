@@ -11,7 +11,7 @@ import { ProviderFlashListItem } from '../types';
  * Hook for managing provider list data
  */
 export const useProviderList = () => {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
 
   // 获取store数据和方法
   const { useFetchAiProviderList } = useAiInfraStore();

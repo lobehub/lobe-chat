@@ -13,7 +13,7 @@ interface ModelsHeaderProps {
 
 const ModelsHeader = memo<ModelsHeaderProps>(
   ({ isFetching, onFetchModels, onSearchChange, searchKeyword, totalCount }) => {
-    const { t } = useTranslation(['setting']);
+    const { t } = useTranslation('setting');
 
     return (
       <Flexbox align={'center'} gap={8} horizontal paddingInline={16} style={{ marginTop: 16 }}>

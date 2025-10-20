@@ -6,11 +6,11 @@ import CustomServer from '../features/CustomServer';
 import { useStyles } from './style';
 
 const CustomServerScreen = () => {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
   const { styles } = useStyles();
 
   return (
-    <PageContainer showBack title={t('developer.server.title', { ns: 'setting' })}>
+    <PageContainer showBack title={t('developer.server.title')}>
       <View style={styles.container}>
         <CustomServer />
       </View>

@@ -1,6 +1,7 @@
 {
   "about": "Informazioni su LobeHub",
   "account": {
+    "group": "Account",
     "profile": {
       "email": "Email",
       "name": "Nome utente",
@@ -13,6 +14,9 @@
       "label": "Esci"
     },
     "title": "Impostazioni account"
+  },
+  "advanced": {
+    "group": "Avanzate"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Anteprima",
     "previewMessages": {
+      "botGreat": "Felice che ti piaccia! Questa funzione di anteprima ti permette di vedere l'effetto del tema prima di applicare le impostazioni.",
       "botHowToUse": "Puoi regolare il colore principale e le tonalità neutre tramite il selettore colori sottostante; l'anteprima si aggiornerà in tempo reale per mostrare l'effetto.",
+      "userGreat": "Ottimo!",
       "userHowToUse": "Come utilizzare l'anteprima del tema?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Dati di autenticazione cancellati",
         "title": "Cancellazione dati di autenticazione"
+      },
+      "error": {
+        "noToken": "Nessun token disponibile al momento"
       },
       "group": "Configurazione autenticazione",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Feedback",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**Come regolare la dimensione del carattere?**\n\nUsa il cursore qui sotto per modificare la dimensione del testo: spostalo a sinistra per ridurla, a destra per aumentarla. Durante lo spostamento, l'anteprima si aggiornerà in tempo reale.\n\nSuggerimento: selezionando la scala \"Standard\" puoi rapidamente tornare alla dimensione predefinita.",
+      "botGreat": "Sono felice che ti piaccia! Questa funzione di anteprima ti permette di vedere in modo intuitivo come appariranno i messaggi nella finestra di chat prima di applicare le impostazioni.",
+      "userGreat": "Fantastico!",
+      "userQuestion": "Vorrei aumentare la dimensione del testo nella chat, come posso fare?"
+    },
     "standard": "Standard",
     "text": "Attenzione, questa configurazione influisce solo sulla dimensione del carattere del contenuto del messaggio",
     "title": "Dimensione carattere"
   },
+  "general": {
+    "group": "Generale"
+  },
   "help": "Guida all'uso",
+  "info": {
+    "group": "Informazioni"
+  },
   "locale": {
     "auto": {
       "description": "Segui la lingua del sistema",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "Provider AI",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Configurazione",
+      "models": "Modelli"
+    }
+  },
+  "providersSearchPlaceholder": "Cerca fornitori per parola chiave...",
   "support": "Supporto via email",
   "themeMode": {
     "auto": "Segui sistema",
