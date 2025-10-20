@@ -1,7 +1,7 @@
 'use client';
 
 import { useResponsive } from 'antd-style';
-import { memo, useEffect, useRef } from 'react';
+import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
@@ -10,9 +10,9 @@ import InitClientDB from '@/features/InitClientDB';
 import Footer from '@/features/Setting/Footer';
 import SettingContainer from '@/features/Setting/SettingContainer';
 
-import CategoryContent from './features/CategoryContent';
 import Header from './_layout/Desktop/Header';
 import SideBar from './_layout/Desktop/SideBar';
+import CategoryContent from './features/CategoryContent';
 import ApiKeyPage from './routes/ApiKeyPage';
 import ProfilePage from './routes/ProfilePage';
 import SecurityPage from './routes/SecurityPage';
@@ -31,7 +31,8 @@ const ProfileLayout = memo<ProfileLayoutProps>(({ mobile }) => {
   // Get active tab from pathname
   const getActiveTab = () => {
     const path = location.pathname.replace('/profile', '').replace(/^\//, '');
-    return path || 'profile';
+    if (!path) return 'profile';
+    return path;
   };
 
   const activeKey = getActiveTab();
@@ -50,7 +51,7 @@ const ProfileLayout = memo<ProfileLayoutProps>(({ mobile }) => {
             <CategoryContent />
           </SideBar>
         ) : (
-          <Header getContainer={() => ref.current} title={<>{t(`tab.${activeKey}`)}</>}>
+          <Header getContainer={() => ref.current} title={<>{t(`tab.${activeKey}` as any)}</>}>
             <CategoryContent />
           </Header>
         )}
