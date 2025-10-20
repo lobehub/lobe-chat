@@ -70,7 +70,7 @@ const LoginPage = () => {
 
         <Flexbox gap={36} padding={16}>
           {/* 登录按钮 */}
-          <Flexbox gap={8}>
+          <Flexbox gap={12}>
             <Button
               block
               disabled={isLoading}
