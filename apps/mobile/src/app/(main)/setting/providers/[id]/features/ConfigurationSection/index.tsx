@@ -21,6 +21,7 @@ const isValidUrl = (url: string) => {
 
 const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoading }) => {
   const theme = useTheme();
+  const isLobehub = provider.id === 'lobehub' || (provider as any)?.data?.id === 'lobehub';
   const { t } = useTranslation('setting');
 
   // Store hooks
@@ -100,7 +101,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoa
     <Flexbox gap={8} paddingInline={16}>
       <Form form={form} initialValues={initialValues}>
         {/* API Key Field */}
-        {shouldShowApiKey && (
+        {!isLobehub && shouldShowApiKey && (
           <Flexbox>
             <Cell
               description={t('aiProviders.configuration.apiKey.description', {
@@ -129,7 +130,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoa
         )}
 
         {/* API Proxy URL Field */}
-        {showProxyUrl && (
+        {!isLobehub && showProxyUrl && (
           <Flexbox>
             <Cell
               description={
@@ -212,7 +213,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoa
       )}
 
       {/* AES-GCM Encryption Notice */}
-      {isServerMode && (
+      {!isLobehub && isServerMode && (
         <Center gap={6} horizontal paddingBlock={16}>
           <Icon color={theme.colorTextDescription} icon={Lock} size={14} />
           <Text type={'secondary'}>

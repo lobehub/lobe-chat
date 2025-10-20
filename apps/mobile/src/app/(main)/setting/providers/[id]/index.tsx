@@ -270,7 +270,11 @@ const ProviderDetailPage = () => {
   }
 
   return (
-    <PageContainer loading={loading} showBack title={headerTitle}>
+    <PageContainer
+      loading={loading}
+      showBack
+      title={headerTitle === 'lobehub' ? 'LobeHub' : headerTitle}
+    >
       {content}
     </PageContainer>
   );
