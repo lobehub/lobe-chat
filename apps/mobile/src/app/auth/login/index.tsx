@@ -9,6 +9,7 @@ import { Alert, Image } from 'react-native';
 import { setLoginMounted } from '@/navigation/loginState';
 import { useSettingStore } from '@/store/setting';
 import { useAuth, useAuthActions } from '@/store/user';
+import { isDev } from '@/utils/env';
 import { getLoginErrorKey } from '@/utils/error';
 
 const LoginPage = () => {
@@ -88,6 +89,13 @@ const LoginPage = () => {
               >
                 {t('login.selfHostedButton', { ns: 'auth' })}
               </Button>
+            )}
+            {isDev && (
+              <Link asChild href="/playground">
+                <Button block variant={'outlined'}>
+                  {'Playground'}
+                </Button>
+              </Link>
             )}
           </Flexbox>
           <Flexbox align={'center'} gap={16} horizontal justify={'center'}>

@@ -29,7 +29,7 @@ const ModelsHeader = memo<ModelsHeaderProps>(
         />
         <Button
           disabled={isFetching}
-          icon={<RefreshCcw />}
+          icon={RefreshCcw}
           loading={isFetching}
           onPress={onFetchModels}
           type="primary"

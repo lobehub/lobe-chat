@@ -19,13 +19,6 @@ const DisabledDemo = () => {
           </Button>
         </Space>
         <Space>
-          <Button type="dashed">Dashed</Button>
-          <Button disabled type="dashed">
-            Dashed(disabled)
-          </Button>
-        </Space>
-
-        <Space>
           <Button type="text">Text</Button>
           <Button disabled type="text">
             Text(disabled)

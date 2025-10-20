@@ -7,12 +7,12 @@ const DangerDemo = () => {
         Primary
       </Button>
 
-      <Button danger onPress={() => console.log('Danger Default')} type="default">
+      <Button danger onPress={() => console.log('Danger Default')}>
         Default
       </Button>
 
-      <Button danger onPress={() => console.log('Danger Dashed')} type="dashed">
-        Dashed
+      <Button danger onPress={() => console.log('Danger Default')} variant={'filled'}>
+        Filled
       </Button>
 
       <Button danger onPress={() => console.log('Danger Text')} type="text">

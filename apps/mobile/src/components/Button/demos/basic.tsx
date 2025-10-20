@@ -7,12 +7,10 @@ const BasicDemo = () => {
         Primary
       </Button>
 
-      <Button onPress={() => console.log('Default clicked')} type="default">
-        Default
-      </Button>
+      <Button onPress={() => console.log('Default clicked')}>Default</Button>
 
-      <Button onPress={() => console.log('Dashed clicked')} type="dashed">
-        Dashed
+      <Button onPress={() => console.log('Default clicked')} variant={'filled'}>
+        Default
       </Button>
 
       <Button onPress={() => console.log('Text clicked')} type="text">
