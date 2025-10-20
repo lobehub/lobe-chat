@@ -2,6 +2,7 @@ import type { StyleProp, TextStyle } from 'react-native';
 
 import type { BlockProps } from '@/components/Block';
 import type { IconProps } from '@/components/Icon';
+import type { TextProps } from '@/components/Text';
 import type { PresetColorKey } from '@/components/styles';
 
 export type ButtonType = 'primary' | 'default' | 'text' | 'link';
@@ -19,6 +20,7 @@ export interface ButtonProps extends Omit<BlockProps, 'variant'> {
   loading?: boolean;
   shape?: ButtonShape;
   size?: ButtonSize;
+  textProps?: Omit<TextProps, 'children'>;
   textStyle?: StyleProp<TextStyle>;
   type?: ButtonType;
   variant?: ButtonVariant;
