@@ -5,7 +5,21 @@ type: Bug
 body:
   - type: dropdown
     attributes:
-      label: '📦 Platform'
+      label: '📱 Client Type'
+      description: 'Select how you are accessing LobeChat'
+      multiple: false
+      options:
+        - 'Web (Desktop Browser)'
+        - 'Web (Mobile Browser)'
+        - 'Desktop App (Electron)'
+        - 'Mobile App (React Native)'
+        - 'Other'
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: '📦 Deployment Platform'
+      description: 'For Web users: where is LobeChat deployed? (Desktop App users can skip)'
       multiple: true
       options:
         - 'Official Preview'
@@ -15,19 +29,22 @@ body:
         - 'Sealos'
         - 'Netlify'
         - 'Self hosting Docker'
+        - 'N/A (Desktop/Mobile App)'
         - 'Other'
     validations:
-      required: true
+      required: false
   - type: dropdown
     attributes:
-      label: '📦 Deploymenet mode'
+      label: '🔧 Deployment Mode'
+      description: 'For Docker users only: which image are you using?'
       multiple: true
       options:
         - 'client db (lobe-chat image)'
         - 'client pgelite db (lobe-chat-pglite image)'
-        - 'server db(lobe-chat-database image)'
+        - 'server db (lobe-chat-database image)'
+        - 'N/A (Not using Docker)'
     validations:
-      required: true
+      required: false
   - type: input
     attributes:
       label: '📌 Version'
