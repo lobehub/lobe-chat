@@ -5,19 +5,6 @@ type: Bug
 body:
   - type: dropdown
     attributes:
-      label: '📱 Client Type'
-      description: 'Select how you are accessing LobeChat'
-      multiple: false
-      options:
-        - 'Web (Desktop Browser)'
-        - 'Web (Mobile Browser)'
-        - 'Desktop App (Electron)'
-        - 'Mobile App (React Native)'
-        - 'Other'
-    validations:
-      required: true
-  - type: dropdown
-    attributes:
       label: '📦 Deployment Platform'
       description: 'For Web users: where is LobeChat deployed? (Desktop App users can skip)'
       multiple: true
@@ -62,6 +49,19 @@ body:
         - 'Other Linux'
         - 'iOS'
         - 'Android'
+        - 'Other'
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: '📱 Client Type'
+      description: 'Select how you are accessing LobeChat'
+      multiple: true
+      options:
+        - 'Web (Desktop Browser)'
+        - 'Web (Mobile Browser)'
+        - 'Desktop App (Electron)'
+        - 'Mobile App (React Native)'
         - 'Other'
     validations:
       required: true
