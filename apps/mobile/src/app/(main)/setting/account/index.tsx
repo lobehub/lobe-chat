@@ -9,7 +9,7 @@ import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useAuth, useAuthActions } from '@/store/user';
 
 export default function AccountScreen() {
-  const { t } = useTranslation(['setting', 'auth', 'error']);
+  const { t } = useTranslation(['setting', 'auth', 'error', 'common']);
   const { user, isAuthenticated } = useAuth();
   const { logout } = useAuthActions();
 

@@ -7,6 +7,7 @@
     "cancel": "取消",
     "confirm": "確認",
     "edit": "編輯",
+    "editButton": "編輯角色設定",
     "placeholder": "請輸入角色 Prompt 提示詞",
     "roleSetting": "角色設定",
     "title": "角色設定"

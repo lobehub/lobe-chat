@@ -1,6 +1,7 @@
 {
   "about": "LobeHub 소개",
   "account": {
+    "group": "계정",
     "profile": {
       "email": "이메일",
       "name": "사용자 이름",
@@ -13,6 +14,9 @@
       "label": "로그아웃"
     },
     "title": "계정 설정"
+  },
+  "advanced": {
+    "group": "고급"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "미리보기",
     "previewMessages": {
+      "botGreat": "마음에 드신다니 기쁩니다! 이 미리보기 기능을 통해 설정을 적용하기 전에 테마 효과를 직관적으로 확인할 수 있습니다.",
       "botHowToUse": "아래 색상 선택기를 사용하여 주 색상과 중립 색상을 조정할 수 있으며, 미리보기에서 실시간으로 효과를 확인할 수 있습니다.",
+      "userGreat": "멋져요!",
       "userHowToUse": "테마 미리보기 사용 방법"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "인증 데이터가 삭제되었습니다",
         "title": "인증 데이터 삭제"
+      },
+      "error": {
+        "noToken": "현재 사용 가능한 토큰이 없습니다"
       },
       "group": "인증 설정",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "피드백",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**글꼴 크기를 어떻게 조절하나요?**\n\n아래 슬라이더를 사용하여 글꼴 크기를 조절할 수 있습니다: 왼쪽으로 이동하면 작아지고, 오른쪽으로 이동하면 커집니다. 드래그하는 동안 여기에서 실시간으로 효과를 미리 볼 수 있습니다.\n\n팁: \"표준\" 눈금을 선택하면 기본 크기로 빠르게 복원할 수 있습니다.",
+      "botGreat": "마음에 드신다니 기쁩니다! 이 미리보기 기능을 통해 설정을 적용하기 전에 대화창에서 대화가 어떻게 보일지 직관적으로 확인할 수 있습니다.",
+      "userGreat": "멋져요!",
+      "userQuestion": "대화 글꼴 크기를 좀 더 키우고 싶은데, 어떻게 해야 하나요?"
+    },
     "standard": "표준",
     "text": "주의: 이 설정은 메시지 내용의 글꼴 크기 표시만 영향을 미칩니다",
     "title": "글꼴 크기"
   },
+  "general": {
+    "group": "일반"
+  },
   "help": "도움말",
+  "info": {
+    "group": "정보"
+  },
   "locale": {
     "auto": {
       "description": "시스템 언어 설정을 따름",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "AI 서비스 제공자",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "구성",
+      "models": "모델"
+    }
+  },
+  "providersSearchPlaceholder": "키워드로 공급자 검색...",
   "support": "이메일 지원",
   "themeMode": {
     "auto": "시스템 따름",

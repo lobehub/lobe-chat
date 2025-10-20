@@ -6,7 +6,7 @@ import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 
 export default function ThemeModeSettingScreen() {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
 
   const { themeMode, setThemeMode } = useAppTheme();
 

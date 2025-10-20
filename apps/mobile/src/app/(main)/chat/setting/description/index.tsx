@@ -7,7 +7,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
 
 export default function DescriptionSetting() {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const [loading, setLoading] = useState(false);
   const defaultDescription = useSessionStore(sessionMetaSelectors.currentAgentDescription);
   const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);

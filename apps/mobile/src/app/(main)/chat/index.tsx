@@ -19,12 +19,12 @@ export default function ChatWithDrawer() {
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const toggleTopicDrawer = useGlobalStore((s) => s.toggleTopicDrawer);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
 
   const router = useRouter();
 
-  const displayTitle = isInbox ? t('inbox.title', { ns: 'chat' }) : title;
+  const displayTitle = isInbox ? t('inbox.title') : title;
 
   const renderContent = () => {
     return (

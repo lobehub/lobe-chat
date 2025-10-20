@@ -11,7 +11,7 @@ import { ProviderFlashListItem } from './types';
 
 const ProviderList = memo(() => {
   const [keyword, setKeyword] = useState('');
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
 
   // 使用自定义hook获取数据
   const { flashListData, isLoading, error } = useProviderList();
@@ -75,7 +75,7 @@ const ProviderList = memo(() => {
       <Flexbox padding={16}>
         <InputSearch
           onChangeText={setKeyword}
-          placeholder={'以关键词搜索供应商...'}
+          placeholder={t('providersSearchPlaceholder', { ns: 'setting' })}
           variant={'filled'}
         />
       </Flexbox>
