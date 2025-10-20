@@ -16,7 +16,6 @@ body:
         - 'Sealos'
         - 'Netlify'
         - 'Self hosting Docker'
-        - 'N/A (Desktop/Mobile App)'
         - 'Other'
     validations:
       required: false
@@ -31,7 +30,7 @@ body:
         - 'server db (lobe-chat-database image)'
         - 'N/A (Not using Docker)'
     validations:
-      required: false
+      required: true
   - type: input
     attributes:
       label: '📌 Version'
@@ -76,7 +75,7 @@ body:
         - 'Firefox'
         - 'Other'
     validations:
-      required: true
+      required: false
   - type: textarea
     attributes:
       label: '🐛 Bug Description'
