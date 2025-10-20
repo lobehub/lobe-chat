@@ -15,22 +15,11 @@ export const useStyles = createStyles(({ token }) => ({
   paragraphContainer: {
     flexDirection: 'column',
   },
-  paragraphLine: {
-    height: token.fontSize,
-    marginTop: token.marginXS,
-  },
   skeletonItem: {
     backgroundColor: token.colorFillContent,
-    borderRadius: token.borderRadiusXS,
+    borderRadius: token.borderRadiusLG,
   },
   textContainer: {
     flex: 1,
-    marginLeft: token.marginSM,
-  },
-  textContainerNoAvatar: {
-    marginLeft: 0,
-  },
-  titleLine: {
-    height: token.fontSizeLG,
   },
 }));

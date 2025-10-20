@@ -92,6 +92,30 @@ Use avatar + text combination to display profile loading state.
 
 Use title + paragraph combination to display article content loading state.
 
+## Size Alignment
+
+Skeleton components are precisely aligned with their real counterparts to ensure a seamless loading experience:
+
+### Skeleton.Button
+
+- **Height**: Matches Button component's height calculation (`controlHeight * 1.25`)
+  - Small: \~40px (base 32px × 1.25)
+  - Middle: \~47.5px (base 38px × 1.25)
+  - Large: \~55px (base 44px × 1.25)
+- **Border Radius**:
+  - Default shape: `height / 2.5` (matching Button's rounded corners)
+  - Circle shape: `height * 2` (fully rounded)
+- **Width**: Configurable via `width` prop, `block` prop, or defaults to 50%
+
+### Skeleton.Avatar
+
+- **Size**: Directly matches Avatar component's size (default 32px)
+- **Border Radius**:
+  - Circle shape: `size / 2` (matching Avatar's circular design)
+  - Square shape: `borderRadiusLG` token value
+
+This alignment ensures that when content loads, the transition from skeleton to actual component is smooth without layout shifts.
+
 ## Animation Effect
 
 The component supports gradient animation effects, controlled by the `animated` prop. Animations are implemented using React Native Animated API with excellent performance.

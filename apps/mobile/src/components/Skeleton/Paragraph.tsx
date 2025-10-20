@@ -1,79 +1,63 @@
 import type { ReactNode } from 'react';
-import { memo, useEffect, useRef } from 'react';
-import { Animated, DimensionValue, View, ViewStyle } from 'react-native';
+import { memo, useMemo } from 'react';
+import { Animated, DimensionValue } from 'react-native';
+
+import Flexbox, { FlexboxProps } from '@/components/Flexbox';
 
 import { useStyles } from './style';
+import { useSkeletonAnimation } from './useSkeletonAnimation';
 
-interface SkeletonParagraphProps {
+interface SkeletonParagraphProps extends Omit<FlexboxProps, 'width'> {
   animated?: boolean;
   backgroundColor?: string;
+  fontSize?: number;
   highlightColor?: string;
   rows?: number;
-  style?: ViewStyle;
+
   width?: DimensionValue | DimensionValue[];
 }
 
 const SkeletonParagraph = memo<SkeletonParagraphProps>(
-  ({ rows = 3, width, animated = false, style }) => {
+  ({ rows = 3, width, animated = false, style, fontSize = 14 }) => {
     const { styles } = useStyles();
-    const shimmerAnim = useRef(new Animated.Value(0)).current;
+    const opacityInterpolation = useSkeletonAnimation(animated);
 
-    useEffect(() => {
-      if (animated) {
-        const shimmerAnimation = Animated.loop(
-          Animated.sequence([
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 1,
-              useNativeDriver: false,
-            }),
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 0,
-              useNativeDriver: false,
-            }),
-          ]),
+    // Memoize lines generation
+    const lines = useMemo(() => {
+      const result = [] as ReactNode[];
+      for (let i = 0; i < rows; i++) {
+        let lineWidth: DimensionValue = '100%';
+
+        if (Array.isArray(width)) {
+          lineWidth = width[i] || '100%';
+        } else if (width) {
+          lineWidth = width;
+        } else if (i === rows - 1) {
+          lineWidth = '60%';
+        }
+
+        result.push(
+          <Animated.View
+            key={i}
+            style={[
+              styles.skeletonItem,
+              {
+                height: fontSize,
+              },
+              { width: lineWidth },
+              i === rows - 1 && { marginBottom: 0 },
+              opacityInterpolation && { opacity: opacityInterpolation },
+            ]}
+          />,
         );
-        shimmerAnimation.start();
-        return () => shimmerAnimation.stop();
       }
-    }, [animated, shimmerAnim]);
-
-    const lines = [] as ReactNode[];
-    for (let i = 0; i < rows; i++) {
-      let lineWidth: DimensionValue = '100%';
-
-      if (Array.isArray(width)) {
-        lineWidth = width[i] || '100%';
-      } else if (width) {
-        lineWidth = width;
-      } else if (i === rows - 1) {
-        lineWidth = '60%';
-      }
-
-      lines.push(
-        <Animated.View
-          key={i}
-          style={[
-            styles.skeletonItem,
-            styles.paragraphLine,
-            { width: lineWidth },
-            i === rows - 1 && { marginBottom: 0 },
-            animated && {
-              opacity: shimmerAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.3, 1],
-              }),
-            },
-          ]}
-        />,
-      );
-    }
+      return result;
+    }, [rows, width, styles.skeletonItem, fontSize, opacityInterpolation]);
 
     return (
-      <View style={[styles.paragraphContainer, style]} testID="skeleton-paragraph">
+      <Flexbox gap={fontSize * 0.5} style={style} testID="skeleton-paragraph">
         {lines}
-      </View>
+      </Flexbox>
     );
   },
 );

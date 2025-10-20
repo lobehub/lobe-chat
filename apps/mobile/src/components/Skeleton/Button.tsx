@@ -1,9 +1,10 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useMemo } from 'react';
 import { Animated, DimensionValue, ViewStyle } from 'react-native';
 
 import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
+import { useSkeletonAnimation } from './useSkeletonAnimation';
 
 type SkeletonButtonSize = 'small' | 'middle' | 'large';
 type SkeletonButtonShape = 'default' | 'circle';
@@ -21,63 +22,52 @@ const SkeletonButton = memo<SkeletonButtonProps>(
   ({ animated = false, size = 'middle', shape = 'default', block = false, width, style }) => {
     const { styles } = useStyles();
     const token = useTheme();
-    const shimmerAnim = useRef(new Animated.Value(0)).current;
+    const opacityInterpolation = useSkeletonAnimation(animated);
 
-    useEffect(() => {
-      if (animated) {
-        const shimmerAnimation = Animated.loop(
-          Animated.sequence([
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 1,
-              useNativeDriver: false,
-            }),
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 0,
-              useNativeDriver: false,
-            }),
-          ]),
-        );
-        shimmerAnimation.start();
-        return () => shimmerAnimation.stop();
+    // Memoize size map - matching Button component's base heights
+    const sizeMap: Record<SkeletonButtonSize, number> = useMemo(
+      () => ({
+        large: token.controlHeightLG,
+        middle: token.controlHeight,
+        small: token.controlHeightSM,
+      }),
+      [token.controlHeightLG, token.controlHeight, token.controlHeightSM],
+    );
+
+    // Memoize calculated dimensions and styles
+    const buttonDimensions = useMemo(() => {
+      const baseHeight = sizeMap[size] ?? token.controlHeight;
+      // Match Button component's 1.25x height multiplier
+      const buttonHeight = baseHeight * 1.25;
+
+      // Match Button component's border radius calculation
+      // Default shape: height / 2.5, Circle shape: height * 2 (full round)
+      const buttonBorderRadius = shape === 'circle' ? buttonHeight * 2 : buttonHeight / 2.5;
+
+      let buttonWidth: DimensionValue = '50%';
+      if (shape === 'circle') {
+        // Match Button circle shape: height * 1.25
+        buttonWidth = buttonHeight;
+      } else if (block) {
+        buttonWidth = '100%';
+      } else if (width) {
+        buttonWidth = width;
       }
-    }, [animated, shimmerAnim]);
 
-    const sizeMap: Record<SkeletonButtonSize, number> = {
-      large: token.controlHeightLG,
-      middle: token.controlHeight,
-      small: token.controlHeightSM,
-    };
-
-    const buttonHeight = sizeMap[size] ?? token.controlHeight;
-    const buttonBorderRadius = shape === 'circle' ? buttonHeight / 2 : token.borderRadius;
-
-    let buttonWidth: DimensionValue = '50%';
-    if (shape === 'circle') {
-      buttonWidth = buttonHeight;
-    } else if (block) {
-      buttonWidth = '100%';
-    } else if (width) {
-      buttonWidth = width;
-    }
+      return {
+        borderRadius: buttonBorderRadius,
+        height: buttonHeight,
+        width: buttonWidth as any,
+      };
+    }, [size, shape, block, width, sizeMap, token.controlHeight]);
 
     return (
       <Animated.View
         style={[
           styles.skeletonItem,
           styles.button,
-          {
-            borderRadius: buttonBorderRadius,
-            height: buttonHeight,
-            width: buttonWidth as any,
-          },
-          animated && {
-            opacity: shimmerAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0.3, 1],
-            }),
-          },
+          buttonDimensions,
+          opacityInterpolation && { opacity: opacityInterpolation },
           style,
         ]}
         testID="skeleton-button"
