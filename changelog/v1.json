@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-20",
+    "version": "1.139.1"
+  },
+  {
+    "children": {
       "features": ["Support image generation for siliconcloud."]
     },
     "date": "2025-10-19",
