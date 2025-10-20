@@ -7,7 +7,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
 export default function AgentDetail() {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const router = useRouter();
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);

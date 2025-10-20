@@ -13,7 +13,7 @@ interface ProviderInfoSectionProps {
 }
 
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provider }) => {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
   const isLobehub = provider.id === 'lobehub' || (provider as any)?.data?.id === 'lobehub';
 
   // Store hooks

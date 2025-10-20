@@ -1,6 +1,7 @@
 {
   "about": "LobeHubについて",
   "account": {
+    "group": "アカウント",
     "profile": {
       "email": "メールアドレス",
       "name": "ユーザー名",
@@ -13,6 +14,9 @@
       "label": "ログアウト"
     },
     "title": "アカウント設定"
+  },
+  "advanced": {
+    "group": "高度"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "プレビュー",
     "previewMessages": {
+      "botGreat": "気に入っていただけて嬉しいです！このプレビュー機能では、設定を適用する前にテーマの効果を直感的に確認できます。",
       "botHowToUse": "以下のカラーピッカーでメインカラーとニュートラルカラーを調整できます。プレビューはリアルタイムで更新されます。",
+      "userGreat": "素晴らしい！",
       "userHowToUse": "テーマプレビューの使い方"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "認証データをクリアしました",
         "title": "認証データのクリア"
+      },
+      "error": {
+        "noToken": "現在利用可能なトークンがありません"
       },
       "group": "認証設定",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "フィードバック",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**フォントサイズの調整方法**\n\n下のスライダーを使ってフォントサイズを調整できます：左に動かすと小さく、右に動かすと大きくなります。ドラッグ中はここでリアルタイムにプレビューが表示されます。\n\nヒント：「標準」目盛りを選ぶと、すぐにデフォルトサイズに戻せます。",
+      "botGreat": "気に入っていただけて嬉しいです！このプレビュー機能は、設定を適用する前にチャット画面での見え方を直感的に確認できます。",
+      "userGreat": "素晴らしい！",
+      "userQuestion": "チャットのフォントを大きくしたいのですが、どうすればいいですか？"
+    },
     "standard": "標準",
     "text": "注意：この設定はメッセージ内容のフォントサイズ表示にのみ影響します",
     "title": "フォントサイズ"
   },
+  "general": {
+    "group": "一般"
+  },
   "help": "使い方ヘルプ",
+  "info": {
+    "group": "情報"
+  },
   "locale": {
     "auto": {
       "description": "システム言語設定に従う",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "AI プロバイダー",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "設定",
+      "models": "モデル"
+    }
+  },
+  "providersSearchPlaceholder": "キーワードでプロバイダーを検索...",
   "support": "メールサポート",
   "themeMode": {
     "auto": "システムに従う",

@@ -20,7 +20,7 @@ import { useStyles } from './style';
 const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
   const { styles } = useStyles();
   const winDim = useWindowDimensions();
-  const { t } = useTranslation(['topic']);
+  const { t } = useTranslation('topic');
 
   const [topicDrawerOpen, setTopicDrawerOpen] = useGlobalStore((s) => [
     s.topicDrawerOpen,
