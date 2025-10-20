@@ -6,7 +6,7 @@ description: React Native button component inspired by Ant Design, supporting mu
 
 ## Features
 
-- ✅ Multiple button types (Primary, Default, Dashed, Text, Link)
+- ✅ Multiple button types (Primary, Default, Text, Link)
 - ✅ Three sizes (Small, Middle, Large)
 - ✅ Loading state support
 - ✅ Disabled state support
@@ -28,11 +28,6 @@ import { Button } from '@lobehub/ui-rn';
 // Primary button
 <Button type="primary" onPress={() => console.log('clicked')}>
   Primary Button
-</Button>
-
-// Dashed button
-<Button type="dashed" onPress={() => console.log('clicked')}>
-  Dashed Button
 </Button>
 
 // Different sizes
@@ -63,17 +58,32 @@ import { Plus } from 'lucide-react-native';
 
 // Circle button
 <Button shape="circle" type="primary" icon={<Plus />} />
+
+// Using variant prop directly (recommended)
+<Button variant="filled" color="primary">Filled Button</Button>
+<Button variant="outlined" color="default">Outlined Button</Button>
+<Button variant="borderless">Borderless Button</Button>
 ```
 
-## Button Types
+## Button Variants
 
-- `primary`: Primary button for main actions
-- `default`: Default button for secondary actions
-- `text`: Text button for lightweight actions
-- `link`: Link button for navigation
+Button variants are aligned with Block component for consistency:
+
+- `filled`: Solid background (used for primary actions)
+- `outlined`: Border with transparent background (used for secondary actions)
+- `borderless`: No border or background (used for text and link styles)
+
+## Button Types (Legacy)
+
+For backward compatibility, you can still use the `type` prop:
+
+- `primary`: Primary button for main actions (maps to `filled` variant)
+- `default`: Default button for secondary actions (maps to `outlined` variant)
+- `text`: Text button for lightweight actions (maps to `borderless` variant)
+- `link`: Link button for navigation (maps to `borderless` variant with underline on hover)
 
 ## Size Specifications
 
-- `small`: Small size (24px height)
-- `middle`: Medium size (32px height)
-- `large`: Large size (40px height)
+- `small`: Small size (32px height)
+- `middle`: Medium size (38px height)
+- `large`: Large size (44px height)
