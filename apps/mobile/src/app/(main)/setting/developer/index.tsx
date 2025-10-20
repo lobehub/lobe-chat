@@ -1,4 +1,4 @@
-import { Flexbox, PageContainer } from '@lobehub/ui-rn';
+import { Flexbox, Highlighter, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { CodeIcon, ServerIcon, ShieldIcon, TrashIcon, XIcon, ZapIcon } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
@@ -146,10 +146,23 @@ export default function DeveloperScreen() {
           <>
             <SettingGroup title={t('developer.server.group', { ns: 'setting' })}>
               <SettingItem
-                extra={currentServer}
                 icon={ServerIcon}
                 title={t('developer.server.current', { ns: 'setting' })}
               />
+              <Flexbox
+                paddingInline={16}
+                style={{
+                  paddingBottom: 8,
+                }}
+              >
+                <Highlighter
+                  code={currentServer}
+                  lang={'text'}
+                  style={{
+                    paddingBlock: 4,
+                  }}
+                />
+              </Flexbox>
               <SettingItem
                 icon={ShieldIcon}
                 onSwitchChange={handleSelfHostedEntryChange}

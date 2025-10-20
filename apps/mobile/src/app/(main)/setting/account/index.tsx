@@ -1,7 +1,7 @@
 import { Avatar, Button, Center, Flexbox, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 
 import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
@@ -49,10 +49,10 @@ export default function AccountScreen() {
 
   return (
     <PageContainer showBack title={t('account.title', { ns: 'setting' })}>
-      <Flexbox flex={1} justify={'space-between'} paddingInline={16}>
+      <Flexbox flex={1} justify={'space-between'}>
         {isAuthenticated && user && (
           <>
-            <Flexbox gap={32} style={{ paddingTop: 24 }}>
+            <Flexbox gap={32} paddingInline={16} style={{ paddingTop: 24 }}>
               <Center>
                 <Avatar alt={user.name || user.email} avatar={user.avatar} size={80} />
               </Center>
@@ -69,11 +69,11 @@ export default function AccountScreen() {
             </Flexbox>
 
             {/* Logout Section */}
-            <View>
-              <Button block danger onPress={handleSignOut} type="primary">
+            <Flexbox padding={16}>
+              <Button block danger onPress={handleSignOut} variant={'filled'}>
                 {t('account.signOut.label', { ns: 'setting' })}
               </Button>
-            </View>
+            </Flexbox>
           </>
         )}
       </Flexbox>
