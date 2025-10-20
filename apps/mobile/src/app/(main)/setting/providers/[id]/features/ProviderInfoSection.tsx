@@ -14,6 +14,7 @@ interface ProviderInfoSectionProps {
 
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provider }) => {
   const { t } = useTranslation(['setting']);
+  const isLobehub = provider.id === 'lobehub' || (provider as any)?.data?.id === 'lobehub';
 
   // Store hooks
   const { toggleProviderEnabled } = useAiInfraStore();
@@ -36,15 +37,19 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
     <Flexbox paddingBlock={4}>
       <Cell
         description={
-          provider.source === 'builtin'
+          isLobehub || provider.source === 'builtin'
             ? t('aiProviders.info.builtIn', { ns: 'setting' })
             : t('aiProviders.info.custom', { ns: 'setting' })
         }
-        extra={<InstantSwitch defaultChecked={isEnabled} onChange={handleSwitchChange} />}
-        icon={<ProviderIcon provider={provider.id} size={44} type={'avatar'} />}
+        extra={
+          !isLobehub && <InstantSwitch defaultChecked={isEnabled} onChange={handleSwitchChange} />
+        }
+        icon={
+          <ProviderIcon provider={isLobehub ? 'lobehub' : provider.id} size={44} type={'avatar'} />
+        }
         iconSize={44}
         showArrow={false}
-        title={provider.name}
+        title={isLobehub ? 'LobeHub' : provider.name}
         titleProps={{
           fontSize: 18,
           weight: 500,
