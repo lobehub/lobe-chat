@@ -1,7 +1,8 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useMemo } from 'react';
 import { Animated, ViewStyle } from 'react-native';
 
 import { useStyles } from './style';
+import { useSkeletonAnimation } from './useSkeletonAnimation';
 
 interface SkeletonAvatarProps {
   animated?: boolean;
@@ -13,48 +14,26 @@ interface SkeletonAvatarProps {
 }
 
 const SkeletonAvatar = memo<SkeletonAvatarProps>(
-  ({ size = 40, shape = 'circle', animated = false, style }) => {
-    const { styles } = useStyles();
-    const shimmerAnim = useRef(new Animated.Value(0)).current;
+  ({ size = 36, shape = 'circle', animated = false, style }) => {
+    const { styles, theme } = useStyles();
+    const opacityInterpolation = useSkeletonAnimation(animated);
 
-    useEffect(() => {
-      if (animated) {
-        const shimmerAnimation = Animated.loop(
-          Animated.sequence([
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 1,
-              useNativeDriver: false,
-            }),
-            Animated.timing(shimmerAnim, {
-              duration: 1000,
-              toValue: 0,
-              useNativeDriver: false,
-            }),
-          ]),
-        );
-        shimmerAnimation.start();
-        return () => shimmerAnimation.stop();
-      }
-    }, [animated, shimmerAnim]);
-
-    const avatarStyle = {
-      borderRadius: shape === 'circle' ? size / 2 : 6,
-      height: size,
-      width: size,
-    };
+    // Memoize avatar style to avoid recalculation
+    const avatarStyle = useMemo(
+      () => ({
+        borderRadius: shape === 'circle' ? size / 2 : theme.borderRadiusLG,
+        height: size,
+        width: size,
+      }),
+      [size, shape, theme.borderRadiusLG],
+    );
 
     return (
       <Animated.View
         style={[
           styles.skeletonItem,
           avatarStyle,
-          animated && {
-            opacity: shimmerAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0.3, 1],
-            }),
-          },
+          opacityInterpolation && { opacity: opacityInterpolation },
           style,
         ]}
         testID="skeleton-avatar"

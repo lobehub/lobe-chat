@@ -1,56 +1,23 @@
-import { Skeleton, Text, useTheme } from '@lobehub/ui-rn';
-import { View } from 'react-native';
+import { Flexbox, Skeleton, Text } from '@lobehub/ui-rn';
 
 const ParagraphDemo = () => {
-  const token = useTheme();
-
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ color: token.colorText, fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
-        Paragraph Skeleton
-      </Text>
+    <Flexbox gap={16}>
+      <Text strong>Default Paragraph</Text>
+      <Skeleton avatar={false} />
 
-      <View style={{ marginBottom: 20 }}>
-        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-          Default Paragraph
-        </Text>
-        <Skeleton avatar={false} />
-      </View>
+      <Text strong>Custom Rows (5)</Text>
+      <Skeleton avatar={false} paragraph={{ rows: 5 }} />
 
-      <View style={{ marginBottom: 20 }}>
-        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-          Custom Rows
-        </Text>
-        <Skeleton avatar={false} paragraph={{ rows: 5 }} />
-      </View>
+      <Text strong>Custom Width (80%)</Text>
+      <Skeleton avatar={false} paragraph={{ width: '80%' }} />
 
-      <View style={{ marginBottom: 20 }}>
-        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-          Custom Width
-        </Text>
-        <Skeleton avatar={false} paragraph={{ width: '80%' }} />
-      </View>
+      <Text strong>Different Width per Line</Text>
+      <Skeleton avatar={false} paragraph={{ rows: 4, width: ['100%', '90%', '75%', '50%'] }} />
 
-      <View style={{ marginBottom: 20 }}>
-        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-          Different Width per Line
-        </Text>
-        <Skeleton
-          avatar={false}
-          paragraph={{
-            rows: 4,
-            width: ['100%', '90%', '75%', '50%'],
-          }}
-        />
-      </View>
-
-      <View style={{ marginBottom: 20 }}>
-        <Text style={{ color: token.colorText, fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>
-          No Paragraph
-        </Text>
-        <Skeleton avatar={false} paragraph={false} />
-      </View>
-    </View>
+      <Text strong>No Paragraph</Text>
+      <Skeleton avatar={false} paragraph={false} />
+    </Flexbox>
   );
 };
 
