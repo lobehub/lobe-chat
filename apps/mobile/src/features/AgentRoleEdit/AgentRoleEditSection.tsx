@@ -14,7 +14,7 @@ interface AgentRoleEditSectionProps {
 
 export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(
   ({ header, onSystemRolePress }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation('chat');
 
     const isInbox = useSessionStore(sessionSelectors.isInboxSession);
     const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
@@ -33,13 +33,13 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(
             {systemRole ? (
               <Markdown>{systemRole}</Markdown>
             ) : (
-              <Empty description={t('agentRoleEdit.placeholder', { ns: 'chat' })} />
+              <Empty description={t('agentRoleEdit.placeholder')} />
             )}
           </Flexbox>
         </ScrollView>
         <Flexbox gap={8} padding={16}>
           <Button block onPress={onSystemRolePress} type="primary">
-            编辑角色设定
+            {t('agentRoleEdit.editButton')}
           </Button>
           <Text align={'center'} type={'secondary'}>
             Token: {systemRole ? Math.ceil(systemRole.length / 4) : 0}

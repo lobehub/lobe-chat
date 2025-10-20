@@ -14,7 +14,7 @@ interface ChatInputProps {
 }
 
 const ChatInput = memo(({ style }: ChatInputProps) => {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const { input, handleInputChange, handleSubmit } = useChat();
   useInitAgentConfig(); // 关键：触发agent配置加载
 

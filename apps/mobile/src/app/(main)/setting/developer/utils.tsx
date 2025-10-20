@@ -1,10 +1,11 @@
 import { Token } from '@/_types/user';
+import i18n from '@/i18n';
 import { TokenStorage } from '@/services/_auth/tokenStorage';
 import { useUserStore } from '@/store/user';
 
 const updateToken = async (mutate: (token: Token) => Token): Promise<void> => {
   const current = await TokenStorage.getToken();
-  if (!current) throw new Error('当前无可用 Token');
+  if (!current) throw new Error(i18n.t('developer.auth.error.noToken', { ns: 'setting' }));
   const next = mutate(current);
   await TokenStorage.storeToken(next);
 };

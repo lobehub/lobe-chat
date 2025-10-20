@@ -7,7 +7,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
 
 export default function AvatarSetting() {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
   const [loading, setLoading] = useState(false);
   const defaultAvatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
   const updateSessionMeta = useSessionStore((s) => s.updateSessionMeta);

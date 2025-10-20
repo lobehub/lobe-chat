@@ -12,7 +12,7 @@ import { FlashListItem } from '../types';
  * Hook for managing provider models data and operations
  */
 export const useProviderModels = (providerId: string) => {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
   const toast = useToast();
 
   // Models相关状态

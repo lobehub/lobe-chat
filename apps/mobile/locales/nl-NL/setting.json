@@ -1,6 +1,7 @@
 {
   "about": "Over LobeHub",
   "account": {
+    "group": "Account",
     "profile": {
       "email": "E-mail",
       "name": "Gebruikersnaam",
@@ -13,6 +14,9 @@
       "label": "Uitloggen"
     },
     "title": "Accountinstellingen"
+  },
+  "advanced": {
+    "group": "Geavanceerd"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Voorbeeld",
     "previewMessages": {
+      "botGreat": "Fijn dat je het leuk vindt! Met deze previewfunctie kun je het thema visueel bekijken voordat je het toepast.",
       "botHowToUse": "Je kunt de hoofdkleur en neutrale kleuren aanpassen met de onderstaande kleurkiezer. De voorbeeldweergave wordt realtime bijgewerkt om het effect te tonen.",
+      "userGreat": "Geweldig!",
       "userHowToUse": "Hoe gebruik je de thema-voorbeeldweergave?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Authenticatiegegevens zijn gewist",
         "title": "Authenticatiegegevens wissen"
+      },
+      "error": {
+        "noToken": "Er is momenteel geen beschikbare token"
       },
       "group": "Authenticatieconfiguratie",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Feedback",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**Hoe pas ik de lettergrootte aan?**\n\nGebruik de schuifregelaar hieronder om de lettergrootte aan te passen: naar links voor kleiner, naar rechts voor groter. Tijdens het slepen zie je hier direct een voorbeeld van het effect.\n\nTip: kies de \"Standaard\" markering om snel terug te keren naar de standaardgrootte.",
+      "botGreat": "Fijn dat je het leuk vindt! Met deze voorbeeldfunctie kun je visueel zien hoe de tekst in het gesprek eruitziet voordat je de instellingen toepast.",
+      "userGreat": "Geweldig!",
+      "userQuestion": "Ik wil de lettergrootte van het gesprek vergroten, hoe doe ik dat?"
+    },
     "standard": "Standaard",
     "text": "Let op, deze instelling beïnvloedt alleen de weergave van de lettergrootte van de berichtinhoud",
     "title": "Lettergrootte"
   },
+  "general": {
+    "group": "Algemeen"
+  },
   "help": "Hulp",
+  "info": {
+    "group": "Informatie"
+  },
   "locale": {
     "auto": {
       "description": "Volg de systeemtaalinstelling",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "AI-providers",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Configuratie",
+      "models": "Modellen"
+    }
+  },
+  "providersSearchPlaceholder": "Zoek leveranciers op trefwoord...",
   "support": "E-mailondersteuning",
   "themeMode": {
     "auto": "Volg systeem",

@@ -1,6 +1,7 @@
 {
   "about": "Acerca de LobeHub",
   "account": {
+    "group": "Cuenta",
     "profile": {
       "email": "Correo electrónico",
       "name": "Nombre de usuario",
@@ -13,6 +14,9 @@
       "label": "Cerrar sesión"
     },
     "title": "Configuración de la cuenta"
+  },
+  "advanced": {
+    "group": "Avanzado"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Vista previa",
     "previewMessages": {
+      "botGreat": "¡Me alegra que te guste! Esta función de vista previa te permite ver el efecto del tema de forma intuitiva antes de aplicar la configuración.",
       "botHowToUse": "Puede ajustar el color principal y los tonos neutros con el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
+      "userGreat": "¡Genial!",
       "userHowToUse": "¿Cómo usar la vista previa del tema?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Datos de autenticación borrados",
         "title": "Borrar datos de autenticación"
+      },
+      "error": {
+        "noToken": "No hay token disponible actualmente"
       },
       "group": "Configuración de autenticación",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Comentarios",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**¿Cómo ajustar el tamaño de la fuente?**\n\nUsa el control deslizante de abajo para cambiar el tamaño de la fuente: desliza hacia la izquierda para reducirlo, hacia la derecha para aumentarlo. Mientras lo arrastras, aquí se mostrará una vista previa en tiempo real.\n\nConsejo: selecciona la escala \"Estándar\" para restaurar rápidamente el tamaño predeterminado.",
+      "botGreat": "¡Me alegra que te guste! Esta función de vista previa te permite ver de forma intuitiva cómo se verá la conversación en el cuadro de diálogo antes de aplicar la configuración.",
+      "userGreat": "¡Genial!",
+      "userQuestion": "Quiero aumentar el tamaño de la fuente en la conversación, ¿cómo puedo hacerlo?"
+    },
     "standard": "Estándar",
     "text": "Atención, esta configuración solo afecta el tamaño de la fuente del contenido del mensaje",
     "title": "Tamaño de fuente"
   },
+  "general": {
+    "group": "General"
+  },
   "help": "Ayuda",
+  "info": {
+    "group": "Información"
+  },
   "locale": {
     "auto": {
       "description": "Seguir la configuración de idioma del sistema",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "Proveedores de IA",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Configuración",
+      "models": "Modelos"
+    }
+  },
+  "providersSearchPlaceholder": "Buscar proveedores por palabra clave...",
   "support": "Soporte por correo",
   "themeMode": {
     "auto": "Seguir sistema",

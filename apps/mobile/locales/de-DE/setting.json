@@ -1,6 +1,7 @@
 {
   "about": "Über LobeHub",
   "account": {
+    "group": "Konto",
     "profile": {
       "email": "E-Mail",
       "name": "Benutzername",
@@ -13,6 +14,9 @@
       "label": "Abmelden"
     },
     "title": "Kontoeinstellungen"
+  },
+  "advanced": {
+    "group": "Erweitert"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Vorschau",
     "previewMessages": {
+      "botGreat": "Freut mich, dass es dir gefällt! Diese Vorschaufunktion ermöglicht es dir, das Thema vor der Anwendung der Einstellungen anschaulich zu sehen.",
       "botHowToUse": "Sie können die Haupt- und Neutralfarben mit dem Farbwähler unten anpassen, die Vorschau aktualisiert sich in Echtzeit.",
+      "userGreat": "Großartig!",
       "userHowToUse": "Wie benutzt man die Themenvorschau?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Authentifizierungsdaten wurden gelöscht",
         "title": "Authentifizierungsdaten löschen"
+      },
+      "error": {
+        "noToken": "Derzeit ist kein Token verfügbar"
       },
       "group": "Authentifizierungskonfiguration",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Feedback",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**Wie kann ich die Schriftgröße anpassen?**\n\nVerwenden Sie den Schieberegler unten, um die Schriftgröße zu ändern: nach links für kleiner, nach rechts für größer. Während des Ziehens wird hier eine Echtzeitvorschau angezeigt.\n\nTipp: Wählen Sie die \"Standard\"-Markierung, um schnell zur Standardgröße zurückzukehren.",
+      "botGreat": "Freut mich, dass es Ihnen gefällt! Diese Vorschaufunktion ermöglicht es Ihnen, die Wirkung der Schriftgröße im Chatfenster vor der Anwendung der Einstellungen anschaulich zu sehen.",
+      "userGreat": "Großartig!",
+      "userQuestion": "Ich möchte die Schriftgröße im Chat etwas vergrößern. Wie mache ich das?"
+    },
     "standard": "Standard",
     "text": "Hinweis: Diese Einstellung beeinflusst nur die Anzeigegröße der Schrift im Nachrichteninhalt.",
     "title": "Schriftgröße"
   },
+  "general": {
+    "group": "Allgemein"
+  },
   "help": "Hilfe",
+  "info": {
+    "group": "Information"
+  },
   "locale": {
     "auto": {
       "description": "Folgt der Systemsprache",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "KI-Anbieter",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Konfiguration",
+      "models": "Modelle"
+    }
+  },
+  "providersSearchPlaceholder": "Anbieter nach Stichwort suchen...",
   "support": "E-Mail-Support",
   "themeMode": {
     "auto": "Systemeinstellung folgen",

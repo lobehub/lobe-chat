@@ -6,7 +6,7 @@ import { useStyles } from './style';
 
 const Preview = memo(() => {
   const { styles } = useStyles();
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
 
   // 移动端导航栏
   const navbar = (
@@ -45,7 +45,9 @@ const Preview = memo(() => {
 
       <View style={[styles.messageContainer, styles.messageContainerUser]}>
         <View style={styles.messageBubbleUser}>
-          <Text style={[styles.messageText, styles.messageTextUser]}>很棒！</Text>
+          <Text style={[styles.messageText, styles.messageTextUser]}>
+            {t('color.previewMessages.userGreat', { ns: 'setting' })}
+          </Text>
         </View>
       </View>
 
@@ -53,7 +55,7 @@ const Preview = memo(() => {
       <View style={[styles.messageContainer, styles.messageContainerBot]}>
         <View style={styles.messageBubbleBot}>
           <Text style={[styles.messageText, styles.messageTextBot]}>
-            很高兴你喜欢！这个预览功能让你可以在应用设置之前直观地看到主题效果。
+            {t('color.previewMessages.botGreat', { ns: 'setting' })}
           </Text>
         </View>
       </View>

@@ -1,6 +1,7 @@
 export default {
   about: '关于 LobeHub',
   account: {
+    group: '账户',
     profile: {
       email: '邮箱',
       name: '用户名',
@@ -13,6 +14,9 @@ export default {
       label: '退出登录',
     },
     title: '账号设置',
+  },
+  advanced: {
+    group: '高级',
   },
   aiProviders: {
     configuration: {
@@ -75,7 +79,9 @@ export default {
     },
     preview: '预览',
     previewMessages: {
+      botGreat: '很高兴你喜欢！这个预览功能让你可以在应用设置之前直观地看到主题效果。',
       botHowToUse: '你可以通过下面的颜色选择器来调整主色和中性色，预览会实时更新以显示效果。',
+      userGreat: '很棒！',
       userHowToUse: '主题预览如何使用？',
     },
     primary: {
@@ -99,6 +105,9 @@ export default {
       clearAuthData: {
         success: '已清空认证数据',
         title: '清空认证数据',
+      },
+      error: {
+        noToken: '当前无可用 Token',
       },
       group: '认证配置',
       refreshToken: {
@@ -154,11 +163,24 @@ export default {
   },
   feedback: '意见反馈',
   fontSize: {
+    preview: {
+      botAnswer:
+        '**如何调整字体大小？**\n\n使用下方的滑块即可调节字体大小：向左变小，向右变大。拖动时，这里会实时预览效果。\n\n小提示：选择"标准"刻度可快速恢复默认大小。',
+      botGreat: '很高兴你喜欢！这个预览功能让你可以在应用设置之前直观地看到在对话框中的对话效果。',
+      userGreat: '很棒！',
+      userQuestion: '我想把对话字体调大一些，该怎么做？',
+    },
     standard: '标准',
     text: '注意，该配置仅影响消息内容的字体大小展示',
     title: '字体大小',
   },
+  general: {
+    group: '通用',
+  },
   help: '使用帮助',
+  info: {
+    group: '信息',
+  },
   locale: {
     auto: {
       description: '跟随系统语言设置',
@@ -196,6 +218,13 @@ export default {
   },
 
   providers: 'AI 服务商',
+  providersDetail: {
+    tabs: {
+      configuration: '配置',
+      models: '模型',
+    },
+  },
+  providersSearchPlaceholder: '以关键词搜索供应商...',
   support: '邮件支持',
   themeMode: {
     auto: '跟随系统',
