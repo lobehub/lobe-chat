@@ -21,10 +21,6 @@ const BlockDemo = () => {
         Default
       </Button>
 
-      <Button block onPress={() => console.log('Block Dashed clicked')} type="dashed">
-        Dashed
-      </Button>
-
       <Button block onPress={() => console.log('Block Text clicked')} type="text">
         Text
       </Button>
