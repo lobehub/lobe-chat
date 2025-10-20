@@ -67,6 +67,7 @@
     "@shikijs/themes": "^3.13.0",
     "@shopify/flash-list": "^2.1.0",
     "@tanstack/react-query": "^5.90.3",
+    "@tanstack/react-query-persist-client": "^5.90.3",
     "@trpc/client": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",

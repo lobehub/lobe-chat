@@ -71,6 +71,19 @@ export default {
       enabled: '已启用',
     },
   },
+  cache: {
+    clear: {
+      confirm: {
+        action: '清理缓存',
+        description: '这将移除保存在本地的缓存数据，下一次打开应用时需要重新加载内容。',
+        title: '确认清理缓存？',
+      },
+      failure: '清理缓存失败',
+      success: '缓存已清理',
+    },
+    description: '缓存可以提升启动速度，需要释放空间时可以点击清理。',
+    title: '清理缓存',
+  },
   changelog: '更新日志',
   color: {
     neutral: {
