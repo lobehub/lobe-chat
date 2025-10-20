@@ -1,11 +1,10 @@
-import { LoaderCircle } from 'lucide-react-native';
-import type { ReactElement } from 'react';
-import { cloneElement, isValidElement, memo, useEffect, useRef } from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { Loader2Icon } from 'lucide-react-native';
+import { memo, useMemo } from 'react';
 
-import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
+import { cva } from '@/components/styles';
 
 import Block from '../Block';
+import Icon from '../Icon';
 import Text from '../Text';
 import { useStyles } from './style';
 import type { ButtonColor, ButtonProps, ButtonVariant } from './type';
@@ -26,6 +25,7 @@ const Button = memo<ButtonProps>(
     style,
     textStyle,
     icon,
+    iconProps,
     ...rest
   }) => {
     // Map legacy `type` to new `variant` + `color` if not explicitly provided
@@ -35,8 +35,8 @@ const Button = memo<ButtonProps>(
 
       // If only color provided, choose a sensible default variant
       if (color && !variant) {
-        // non-default colors default to filled; default uses solid
-        return { color, variant: (color !== 'default' ? 'filled' : 'solid') as ButtonVariant };
+        // primary color uses filled (solid background); others use outlined
+        return { color, variant: (color === 'primary' ? 'filled' : 'outlined') as ButtonVariant };
       }
 
       // If only variant provided, default color
@@ -49,25 +49,14 @@ const Button = memo<ButtonProps>(
         case 'primary': {
           return {
             color: (danger ? 'danger' : 'primary') as ButtonColor,
-            variant: 'solid' as ButtonVariant,
+            variant: 'filled' as ButtonVariant,
           };
         }
-        case 'text': {
-          return {
-            color: (danger ? 'danger' : 'default') as ButtonColor,
-            variant: 'text' as ButtonVariant,
-          };
-        }
+        case 'text':
         case 'link': {
           return {
-            color: (danger ? 'danger' : 'primary') as ButtonColor,
-            variant: 'link' as ButtonVariant,
-          };
-        }
-        case 'dashed': {
-          return {
-            color: (danger ? 'danger' : 'default') as ButtonColor,
-            variant: 'dashed' as ButtonVariant,
+            color: (danger ? 'danger' : type === 'link' ? 'primary' : 'default') as ButtonColor,
+            variant: 'borderless' as ButtonVariant,
           };
         }
         default: {
@@ -79,106 +68,227 @@ const Button = memo<ButtonProps>(
       }
     })();
 
-    const { styles } = useStyles({
-      block,
-      color: mapped.color,
-      disabled,
-      loading,
-      shape,
-      size,
-      variant: mapped.variant,
-    });
+    const finalVariant = mapped.variant;
+    const finalColor = mapped.color;
+    const isDanger = danger || finalColor === 'danger';
+    const isPrimary = finalColor === 'primary';
+    const isLink = type === 'link'; // Track if it's a link type for underline effect
 
-    // Infinite spin animation for loading indicator
-    const rotationProgress = useRef(new Animated.Value(0)).current;
-    const rotationAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
-    const spin = rotationProgress.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'],
-    });
+    const { styles } = useStyles({ size });
 
-    useEffect(() => {
-      if (loading) {
-        rotationProgress.setValue(0);
-        rotationAnimationRef.current = Animated.loop(
-          Animated.timing(rotationProgress, {
-            duration: 1000,
-            easing: Easing.linear,
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-        );
-        rotationAnimationRef.current.start();
-      } else {
-        rotationAnimationRef.current?.stop?.();
+    // Use CVA to manage style variants
+    const variants = useMemo(
+      () =>
+        cva(styles.root, {
+          compoundVariants: [
+            // Filled variants (primary/solid style)
+
+            // Danger variants - Filled
+            {
+              danger: true,
+              disabled: false,
+              style: styles.dangerFilled,
+              variant: 'filled',
+            },
+            {
+              danger: true,
+              disabled: false,
+              style: styles.dangerBorderless,
+              variant: 'borderless',
+            },
+            {
+              danger: true,
+              disabled: false,
+              style: styles.dangerOutlined,
+              variant: 'outlined',
+            },
+            {
+              danger: true,
+              disabled: false,
+              pressed: true,
+              style: styles.dangerFilledHover,
+              variant: 'filled',
+            },
+            {
+              danger: true,
+              pressed: true,
+              style: styles.dangerBorderlessHover,
+              variant: 'borderless',
+            },
+            {
+              danger: true,
+              disabled: false,
+              pressed: true,
+              style: styles.dangerOutlinedHover,
+              variant: 'outlined',
+            },
+
+            // primary
+            {
+              danger: false,
+              pressed: true,
+              style: styles.primaryHover,
+              type: 'primary',
+            },
+            {
+              danger: true,
+              disabled: false,
+              style: styles.dangerPrimary,
+              type: 'primary',
+            },
+            {
+              danger: true,
+              pressed: true,
+              style: styles.dangerPrimaryHover,
+              type: 'primary',
+            },
+
+            // Loading state
+            {
+              loading: true,
+              style: styles.loading,
+            },
+
+            // Block style
+            {
+              block: true,
+              style: styles.block,
+            },
+
+            // Circle shape
+            {
+              circle: true,
+              style: styles.circle,
+            },
+          ],
+          defaultVariants: {},
+          /* eslint-disable sort-keys-fix/sort-keys-fix */
+          variants: {
+            type: {
+              default: null,
+              link: null,
+              primary: styles.primary,
+              text: null,
+            },
+            variant: {
+              borderless: null,
+              filled: null,
+              outlined: null,
+            },
+            block: {
+              false: null,
+              true: null,
+            },
+            circle: {
+              false: null,
+              true: null,
+            },
+            danger: {
+              false: null,
+              true: null,
+            },
+            hovered: {
+              false: null,
+              true: null,
+            },
+            isLink: {
+              false: null,
+              true: null,
+            },
+            loading: {
+              false: null,
+              true: null,
+            },
+            pressed: {
+              false: null,
+              true: null,
+            },
+            disabled: {
+              false: null,
+              true: styles.diabled,
+            },
+            /* eslint-enable sort-keys-fix/sort-keys-fix */
+          },
+        }),
+      [styles],
+    );
+
+    // Get text color style
+    const getTextColorStyle = () => {
+      if (disabled) return styles.textColorDisabled;
+      if (isDanger) {
+        if (type === 'primary') {
+          return styles.textColorDangerPrimary;
+        }
+        if (finalVariant === 'filled') {
+          return styles.textColorDangerFilled;
+        }
+        return styles.textColorDanger;
       }
-
-      return () => {
-        rotationAnimationRef.current?.stop?.();
-      };
-    }, [loading, rotationProgress]);
-
-    const handlePress = () => {
-      if (!disabled && !loading && onPress) {
-        onPress();
+      if (isPrimary && finalVariant === 'filled') {
+        return styles.textColorPrimary;
       }
+      return styles.textColor;
     };
 
-    const getIconSize = () => {
-      if (size === 'large') {
-        return FONT_SIZE_LARGE;
-      }
-      if (size === 'small') {
-        return FONT_SIZE_SMALL;
-      }
-      return FONT_SIZE_STANDARD;
-    };
-
-    const renderIcon = () => {
-      if (loading || !icon) return null;
-      const iconColor = (styles.text?.color as string) ?? undefined;
-      // Always match icon size to button text size for consistency
-      const iconSize = getIconSize();
-
-      let iconNode = icon;
-      if (isValidElement(icon)) {
-        const prevStyle = (icon.props as any)?.style;
-        iconNode = cloneElement(icon as ReactElement<any>, {
-          color: iconColor,
-          size: iconSize,
-          style: [prevStyle, { color: iconColor, fontSize: iconSize }],
-        });
-      }
-
-      return (
-        <View style={styles.icon} testID="button-icon">
-          {iconNode}
-        </View>
-      );
-    };
+    const textColorStyle = getTextColorStyle();
+    const isCircle = shape === 'circle';
+    const iconSize = textColorStyle.fontSize || 16;
 
     return (
       <Block
         accessibilityRole="button"
-        clickable
-        disabled={disabled || loading}
-        onPress={handlePress}
-        style={[styles.button, style]}
+        align={'center'}
+        clickable={!loading}
+        disabled={disabled}
+        gap={isCircle ? 0 : 6}
+        horizontal
+        justify={'center'}
+        onPress={(e) => {
+          if (!disabled && !loading && onPress) {
+            onPress?.(e);
+          }
+        }}
+        style={({ pressed, hovered }) => [
+          variants({
+            block,
+            circle: isCircle,
+            danger: isDanger,
+            disabled: disabled || loading,
+            hovered,
+            isLink,
+            loading,
+            pressed,
+            type,
+            variant: finalVariant,
+          }),
+          typeof style === 'function' ? style({ hovered, pressed }) : style,
+        ]}
         testID="button"
+        variant={finalVariant}
         {...rest}
       >
         {loading && (
-          <Animated.View style={[styles.icon, { transform: [{ rotate: spin }] }]}>
-            <LoaderCircle
-              color={styles.text.color}
-              size={styles.text.fontSize}
-              testID="loading-circle"
-            />
-          </Animated.View>
+          <Icon
+            color={textColorStyle.color}
+            icon={Loader2Icon}
+            size={iconSize}
+            spin
+            style={isCircle ? styles.iconCircle : styles.icon}
+            {...iconProps}
+          />
         )}
-        {renderIcon()}
-        {children ? (
-          <Text style={[styles.text, textStyle]} weight={500}>
+        {!loading && icon && (
+          <Icon
+            color={textColorStyle.color}
+            icon={icon}
+            size={iconSize}
+            style={isCircle ? styles.iconCircle : styles.icon}
+            {...iconProps}
+          />
+        )}
+        {children && !isCircle ? (
+          <Text style={[textColorStyle, textStyle]} weight={500}>
             {children}
           </Text>
         ) : undefined}

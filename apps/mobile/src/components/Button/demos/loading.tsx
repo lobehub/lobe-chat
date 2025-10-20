@@ -25,16 +25,11 @@ const LoadingDemo = () => {
 
   return (
     <Space size={[8, 16]} wrap>
-      <Button
-        icon={<Upload />}
-        loading={loadings[0]}
-        onPress={() => enterLoading(0)}
-        type="primary"
-      >
+      <Button icon={Upload} loading={loadings[0]} onPress={() => enterLoading(0)} type="primary">
         Click to Load
       </Button>
       <Button
-        icon={<Upload />}
+        icon={Upload}
         loading={loadings[1]}
         onPress={() => enterLoading(1)}
         shape="circle"
@@ -53,8 +48,8 @@ const LoadingDemo = () => {
       <Button loading type="default">
         Solid
       </Button>
-      <Button loading type="dashed">
-        Dashed
+      <Button loading type="default">
+        Default
       </Button>
       <Button loading type="text">
         Text
