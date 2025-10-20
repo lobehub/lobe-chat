@@ -5,7 +5,7 @@ type: Bug
 body:
   - type: dropdown
     attributes:
-      label: '📦 Platform'
+      label: '📦 Deployment Platform'
       multiple: true
       options:
         - 'Official Preview'
@@ -17,17 +17,19 @@ body:
         - 'Self hosting Docker'
         - 'Other'
     validations:
-      required: true
+      required: false
+
   - type: dropdown
     attributes:
-      label: '📦 Deploymenet mode'
+      label: '🔧 Deployment Mode'
       multiple: true
       options:
         - 'client db (lobe-chat image)'
         - 'client pgelite db (lobe-chat-pglite image)'
-        - 'server db(lobe-chat-database image)'
+        - 'server db (lobe-chat-database image)'
     validations:
       required: true
+
   - type: input
     attributes:
       label: '📌 Version'
@@ -48,6 +50,21 @@ body:
         - 'Other'
     validations:
       required: true
+
+  - type: dropdown
+    attributes:
+      label: '📱 Client Type'
+      description: 'Select how you are accessing LobeChat'
+      multiple: true
+      options:
+        - 'Web (Desktop Browser)'
+        - 'Web (Mobile Browser)'
+        - 'Desktop App (Electron)'
+        - 'Mobile App (React Native)'
+        - 'Other'
+    validations:
+      required: true
+
   - type: dropdown
     attributes:
       label: '🌐 Browser'
@@ -60,20 +77,24 @@ body:
         - 'Other'
     validations:
       required: true
+
   - type: textarea
     attributes:
       label: '🐛 Bug Description'
       description: A clear and concise description of the bug, if the above option is `Other`, please also explain in detail.
     validations:
       required: true
+
   - type: textarea
     attributes:
       label: '📷 Recurrence Steps'
       description: A clear and concise description of how to recurrence.
+
   - type: textarea
     attributes:
       label: '🚦 Expected Behavior'
       description: A clear and concise description of what you expected to happen.
+
   - type: textarea
     attributes:
       label: '📝 Additional Information'
