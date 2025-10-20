@@ -15,7 +15,4 @@ export const useStyles = createStyles(({ token }) => ({
   searchInput: {
     borderRadius: 100,
   },
-  sessionList: {
-    flex: 1,
-  },
 }));

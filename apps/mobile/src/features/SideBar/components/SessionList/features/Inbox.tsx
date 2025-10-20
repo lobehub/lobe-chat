@@ -25,6 +25,7 @@ const Inbox = () => {
       description={t('inbox.desc', { ns: 'chat' })}
       onPress={handlePress}
       title={t('inbox.title', { ns: 'chat' })}
+      variant={'filled'}
     />
   );
 };
