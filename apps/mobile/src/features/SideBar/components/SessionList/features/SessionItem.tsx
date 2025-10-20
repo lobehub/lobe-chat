@@ -1,3 +1,4 @@
+import { LobeAgentSession } from '@lobechat/types';
 import { ListItem } from '@lobehub/ui-rn';
 import { memo, useCallback, useMemo } from 'react';
 
@@ -5,11 +6,7 @@ import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
-interface SessionItemProps {
-  id: string;
-}
-
-const SessionItemComponent = ({ id }: SessionItemProps) => {
+const SessionItem = memo<LobeAgentSession>(({ id, pinned }) => {
   const session = useSessionStore((s) => sessionSelectors.getSessionById(id)(s));
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
@@ -37,11 +34,11 @@ const SessionItemComponent = ({ id }: SessionItemProps) => {
       description={description}
       onPress={handlePress}
       title={title}
+      variant={pinned ? 'filled' : 'borderless'}
     />
   );
-};
+});
 
-const SessionItem = memo(SessionItemComponent);
 SessionItem.displayName = 'SessionItem';
 
 export default SessionItem;

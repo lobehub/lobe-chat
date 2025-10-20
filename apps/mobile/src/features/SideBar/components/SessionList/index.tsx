@@ -1,7 +1,7 @@
-import { Flexbox, Input, Toast } from '@lobehub/ui-rn';
+import { Flexbox, Input, ScrollShadow, Toast } from '@lobehub/ui-rn';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, InteractionManager, ScrollView, View } from 'react-native';
+import { Alert, InteractionManager, View } from 'react-native';
 import * as ContextMenu from 'zeego/context-menu';
 
 import { loading } from '@/libs/loading';
@@ -40,13 +40,28 @@ export default function SideBar() {
 
   const filteredSessions = useMemo(() => {
     if (!sessions) return [];
-    if (!keyword) return sessions;
 
-    return sessions.filter((session) => {
-      const title = session.meta.title?.toLowerCase() || '';
-      const description = session.meta.description?.toLowerCase() || '';
+    // 筛选会话
+    let filtered = !keyword
+      ? sessions
+      : sessions.filter((session) => {
+          const title = session.meta.title?.toLowerCase() || '';
+          const description = session.meta.description?.toLowerCase() || '';
+          return title.includes(keyword) || description.includes(keyword);
+        });
 
-      return title.includes(keyword) || description.includes(keyword);
+    // 排序：优先 pinned，然后按 updatedAt（兜底 createdAt）
+    return [...filtered].sort((a, b) => {
+      // 1. 优先 pinned 的会话
+      if (a.pinned !== b.pinned) {
+        return a.pinned ? -1 : 1;
+      }
+
+      // 2. 按 updatedAt 排序（最新的在前），兜底使用 createdAt
+      const aTime = a.updatedAt || a.createdAt;
+      const bTime = b.updatedAt || b.createdAt;
+
+      return new Date(bTime).getTime() - new Date(aTime).getTime();
     });
   }, [keyword, sessions]);
 
@@ -72,7 +87,15 @@ export default function SideBar() {
       </Flexbox>
 
       {/* 会话列表 */}
-      <ScrollView style={styles.sessionList}>
+      <ScrollShadow
+        removeClippedSubviews={true}
+        scrollEventThrottle={32}
+        showsVerticalScrollIndicator={false}
+        size={4}
+        style={{
+          flex: 1,
+        }}
+      >
         <Flexbox>
           {shouldShowInbox && <Inbox />}
           {/* Group 功能现在没上，暂时不需要 */}
@@ -85,7 +108,7 @@ export default function SideBar() {
             filteredSessions.map((session) => (
               <ContextMenu.Root key={session.id}>
                 <ContextMenu.Trigger>
-                  <SessionItem id={session.id} key={session.id} />
+                  <SessionItem {...(session as any)} key={session.id} />
                 </ContextMenu.Trigger>
                 <ContextMenu.Content>
                   <ContextMenu.Item
@@ -129,7 +152,7 @@ export default function SideBar() {
             ))
           )}
         </Flexbox>
-      </ScrollView>
+      </ScrollShadow>
     </Flexbox>
   );
 }
