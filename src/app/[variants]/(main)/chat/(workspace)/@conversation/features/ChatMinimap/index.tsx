@@ -1,9 +1,8 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { Tooltip } from 'antd';
+import { Popover, Tooltip } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import debug from 'debug';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { memo, useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,12 +17,10 @@ import {
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-const log = debug('lobe-react:chat-minimap');
-
 const MIN_WIDTH = 16;
 const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
-const MIN_MESSAGES = 4;
+const MIN_MESSAGES = 6;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
@@ -114,6 +111,19 @@ const useStyles = createStyles(({ css, token }) => ({
   indicatorContentActive: css`
     background: ${token.colorPrimary};
   `,
+  popoverContent: css`
+    max-width: 300px;
+  `,
+  popoverLabel: css`
+    margin-block-end: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: ${token.colorTextSecondary};
+  `,
+  popoverText: css`
+    color: ${token.colorText};
+    word-break: break-word;
+  `,
   rail: css`
     pointer-events: auto;
 
@@ -174,6 +184,7 @@ const getPreviewText = (content: string | undefined) => {
 interface MinimapIndicator {
   id: string;
   preview: string;
+  role: 'user' | 'assistant';
   virtuosoIndex: number;
   width: number;
 }
@@ -203,6 +214,7 @@ const ChatMinimap = () => {
       acc.push({
         id: message.id,
         preview: getPreviewText(message.content),
+        role: message.role,
         virtuosoIndex,
         width: getIndicatorWidth(message.content),
       });
@@ -222,8 +234,8 @@ const ChatMinimap = () => {
   const activeIndicatorPosition = useMemo(() => {
     if (activeIndex === null) return null;
 
-    log('> activeIndex', activeIndex);
-    log('> indicatorIndexMap', indicatorIndexMap);
+    console.log('> activeIndex', activeIndex);
+    console.log('> indicatorIndexMap', indicatorIndexMap);
 
     return indicatorIndexMap.get(activeIndex) ?? null;
   }, [activeIndex, indicatorIndexMap]);
@@ -249,7 +261,7 @@ const ChatMinimap = () => {
       let targetPosition: number;
 
       if (activeIndicatorPosition !== null) {
-        log('activeIndicatorPosition', activeIndicatorPosition);
+        console.log('activeIndicatorPosition', activeIndicatorPosition);
         // We're on an indicator, move to prev/next
         const delta = direction === 'prev' ? -1 : 1;
         targetPosition = Math.min(
@@ -317,16 +329,20 @@ const ChatMinimap = () => {
           </button>
         </Tooltip>
         <Flexbox className={styles.railContent}>
-          {indicators.map(({ id, width, preview, virtuosoIndex }, position) => {
+          {indicators.map(({ id, width, preview, role, virtuosoIndex }, position) => {
             const isActive = activeIndicatorPosition === position;
+            const senderLabel =
+              role === 'user' ? t('minimap.senderUser') : t('minimap.senderAssistant');
+
+            const popoverContent = preview ? (
+              <div className={styles.popoverContent}>
+                <div className={styles.popoverLabel}>{senderLabel}</div>
+                <div className={styles.popoverText}>{preview}</div>
+              </div>
+            ) : undefined;
 
             return (
-              <Tooltip
-                key={id}
-                mouseEnterDelay={0.1}
-                placement={'left'}
-                title={preview || undefined}
-              >
+              <Popover content={popoverContent} key={id} mouseEnterDelay={0.1} placement={'left'}>
                 <button
                   aria-current={isActive ? 'true' : undefined}
                   aria-label={t('minimap.jumpToMessage', { index: position + 1 })}
@@ -344,7 +360,7 @@ const ChatMinimap = () => {
                     )}
                   />
                 </button>
-              </Tooltip>
+              </Popover>
             );
           })}
         </Flexbox>

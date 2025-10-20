@@ -228,7 +228,9 @@
   "minimap": {
     "jumpToMessage": "Zur Nachricht Nr. {{index}} springen",
     "nextMessage": "Nächste Nachricht",
-    "previousMessage": "Vorherige Nachricht"
+    "previousMessage": "Vorherige Nachricht",
+    "senderAssistant": "Assistent",
+    "senderUser": "Du"
   },
   "newAgent": "Neuer Assistent",
   "newGroupChat": "Neue Gruppe erstellen",

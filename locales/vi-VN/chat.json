@@ -228,7 +228,9 @@
   "minimap": {
     "jumpToMessage": "Chuyển đến tin nhắn thứ {{index}}",
     "nextMessage": "Tin nhắn tiếp theo",
-    "previousMessage": "Tin nhắn trước"
+    "previousMessage": "Tin nhắn trước",
+    "senderAssistant": "Trợ lý",
+    "senderUser": "Bạn"
   },
   "newAgent": "Tạo trợ lý mới",
   "newGroupChat": "Tạo nhóm mới",
