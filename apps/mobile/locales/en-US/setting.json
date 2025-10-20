@@ -1,6 +1,7 @@
 {
   "about": "About LobeHub",
   "account": {
+    "group": "Account",
     "profile": {
       "email": "Email",
       "name": "Username",
@@ -13,6 +14,9 @@
       "label": "Sign Out"
     },
     "title": "Account Settings"
+  },
+  "advanced": {
+    "group": "Advanced"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Preview",
     "previewMessages": {
+      "botGreat": "Glad you like it! This preview feature lets you see the theme effect intuitively before applying the settings.",
       "botHowToUse": "You can adjust the primary and neutral colors using the color picker below. The preview will update in real time to show the effect.",
+      "userGreat": "Great!",
       "userHowToUse": "How to use the theme preview?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Authentication data has been cleared",
         "title": "Clear Authentication Data"
+      },
+      "error": {
+        "noToken": "No available token currently"
       },
       "group": "Authentication Configuration",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Feedback",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**How to adjust the font size?**\n\nUse the slider below to adjust the font size: move left to decrease, right to increase. The preview here updates in real-time as you drag.\n\nTip: Select the \"Standard\" mark to quickly reset to the default size.",
+      "botGreat": "Glad you like it! This preview feature lets you see how the conversation will look before applying the settings.",
+      "userGreat": "Awesome!",
+      "userQuestion": "I want to make the chat font bigger, how can I do that?"
+    },
     "standard": "Standard",
     "text": "Note: This setting only affects the display size of the message content font.",
     "title": "Font Size"
   },
+  "general": {
+    "group": "General"
+  },
   "help": "Help",
+  "info": {
+    "group": "Information"
+  },
   "locale": {
     "auto": {
       "description": "Follow system language settings",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "AI Providers",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Configuration",
+      "models": "Models"
+    }
+  },
+  "providersSearchPlaceholder": "Search providers by keyword...",
   "support": "Email Support",
   "themeMode": {
     "auto": "Follow System",

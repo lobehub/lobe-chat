@@ -7,13 +7,13 @@ import ProviderCardSkeleton from './ProviderCardSkeleton';
 import SectionHeader from './SectionHeader';
 
 const ProviderListSkeleton = memo(() => {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
   return (
     <Flexbox>
-      <SectionHeader title={t('aiProviders.skeleton.enabled', { ns: 'setting' })} />
+      <SectionHeader title={t('aiProviders.skeleton.enabled')} />
       <ProviderCardSkeleton />
       <ProviderCardSkeleton />
-      <SectionHeader title={t('aiProviders.skeleton.disabled', { ns: 'setting' })} />
+      <SectionHeader title={t('aiProviders.skeleton.disabled')} />
       <ProviderCardSkeleton />
       <ProviderCardSkeleton />
     </Flexbox>

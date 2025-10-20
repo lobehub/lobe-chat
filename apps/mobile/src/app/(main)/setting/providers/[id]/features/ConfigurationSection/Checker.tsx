@@ -76,7 +76,7 @@ const Checker = memo<CheckerProps>(
   ({ model, provider, checkErrorRender: CheckErrorRender, onBeforeCheck, onAfterCheck }) => {
     const { styles } = useStyles();
     const token = useTheme();
-    const { t } = useTranslation(['setting']);
+    const { t } = useTranslation('setting');
 
     // Store state
     const isProviderConfigUpdating = useAiInfraStore(

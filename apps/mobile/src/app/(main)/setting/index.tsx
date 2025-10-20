@@ -23,7 +23,7 @@ import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
 
 export default function SettingScreen() {
-  const { t } = useTranslation(['setting', 'auth', 'common', 'error']);
+  const { t } = useTranslation('setting');
   const { getLocaleDisplayName } = useLocale();
   const { themeMode } = useThemeMode();
   const { developerMode, setDeveloperMode } = useSettingStore();
@@ -33,9 +33,9 @@ export default function SettingScreen() {
 
   const getThemeModeDisplayName = () => {
     if (themeMode === 'auto') {
-      return t('themeMode.auto', { ns: 'setting' });
+      return t('themeMode.auto');
     }
-    return t(`themeMode.${themeMode}`, { ns: 'setting' });
+    return t(`themeMode.${themeMode}`);
   };
 
   const handleVersionTap = () => {
@@ -50,7 +50,7 @@ export default function SettingScreen() {
     // 开发者模式开启后提示
     if (developerMode) {
       if (newTapCount >= 3) {
-        Toast.info(t('developer.mode.already', { ns: 'setting' }));
+        Toast.info(t('developer.mode.already'));
         setTapCount(0);
         return;
       }
@@ -59,7 +59,7 @@ export default function SettingScreen() {
       if (newTapCount >= 7) {
         setDeveloperMode(true);
         setTapCount(0);
-        Toast.success(t('developer.mode.enabled', { ns: 'setting' }));
+        Toast.success(t('developer.mode.enabled'));
         return;
       }
 
@@ -68,7 +68,6 @@ export default function SettingScreen() {
         Toast.info(
           t('developer.mode.remaining', {
             count: remaining,
-            ns: 'setting',
           }),
           1500,
         );
@@ -91,78 +90,54 @@ export default function SettingScreen() {
   }, []);
 
   return (
-    <PageContainer largeTitleEnabled showBack title={t('title', { ns: 'setting' })}>
+    <PageContainer largeTitleEnabled showBack title={t('title')}>
       <ScrollView>
         <Flexbox gap={8} style={{ paddingTop: 8 }}>
-          <SettingGroup title={'账户'}>
-            <SettingItem
-              href="/setting/account"
-              icon={User2Icon}
-              title={t('account.title', { ns: 'setting' })}
-            />
-            <SettingItem
-              href="/setting/providers"
-              icon={RadarIcon}
-              title={t('providers', { ns: 'setting' })}
-            />
+          <SettingGroup title={t('account.group')}>
+            <SettingItem href="/setting/account" icon={User2Icon} title={t('account.title')} />
+            <SettingItem href="/setting/providers" icon={RadarIcon} title={t('providers')} />
           </SettingGroup>
 
-          <SettingGroup title={'通用'}>
+          <SettingGroup title={t('general.group')}>
             <SettingItem
               extra={getThemeModeDisplayName()}
               href={'/setting/themeMode'}
               icon={SunMoonIcon}
-              title={t('themeMode.title', { ns: 'setting' })}
+              title={t('themeMode.title')}
             />
-            <SettingItem
-              href={'/setting/color'}
-              icon={PaletteIcon}
-              title={t('color.title', { ns: 'setting' })}
-            />
-            <SettingItem
-              href={'/setting/fontSize'}
-              icon={TypeIcon}
-              title={t('fontSize.title', { ns: 'setting' })}
-            />
+            <SettingItem href={'/setting/color'} icon={PaletteIcon} title={t('color.title')} />
+            <SettingItem href={'/setting/fontSize'} icon={TypeIcon} title={t('fontSize.title')} />
             <SettingItem
               extra={getLocaleDisplayName()}
               href="/setting/locale"
               icon={GlobeIcon}
-              title={t('locale.title', { ns: 'setting' })}
+              title={t('locale.title')}
             />
           </SettingGroup>
 
           {developerMode && (
-            <SettingGroup title={'高级'}>
-              <SettingItem
-                href="/setting/developer"
-                icon={CodeIcon}
-                title={t('developer.title', { ns: 'setting' })}
-              />
+            <SettingGroup title={t('advanced.group')}>
+              <SettingItem href="/setting/developer" icon={CodeIcon} title={t('developer.title')} />
             </SettingGroup>
           )}
 
-          <SettingGroup title={'信息'}>
+          <SettingGroup title={t('info.group')}>
             <SettingItem
               href="https://lobehub.com/docs?utm_source=mobile"
               icon={LifeBuoy}
-              title={t('help', { ns: 'setting' })}
+              title={t('help')}
             />
             <SettingItem
               href="https://github.com/lobehub/lobe-chat/issues/new/choose"
               icon={StickerIcon}
-              title={t('feedback', { ns: 'setting' })}
+              title={t('feedback')}
             />
             <SettingItem
               href="https://lobehub.com/changelog"
               icon={InboxIcon}
-              title={t('changelog', { ns: 'setting' })}
+              title={t('changelog')}
             />
-            <SettingItem
-              href="mailto:support@lobehub.com"
-              icon={MailIcon}
-              title={t('support', { ns: 'setting' })}
-            />
+            <SettingItem href="mailto:support@lobehub.com" icon={MailIcon} title={t('support')} />
           </SettingGroup>
           <Center onPress={handleVersionTap} style={{ paddingTop: 24 }}>
             <Text align={'center'} type={'secondary'}>

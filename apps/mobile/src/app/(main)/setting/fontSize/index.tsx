@@ -9,7 +9,7 @@ import Preview from './features/Preview';
 import { useStyles } from './styles';
 
 export default function FontSizeSettingScreen() {
-  const { t } = useTranslation(['setting']);
+  const { t } = useTranslation('setting');
   const { styles } = useStyles();
 
   const { fontSize, setFontSize } = useSettingStore();

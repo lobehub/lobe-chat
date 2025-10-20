@@ -7,6 +7,7 @@
     "cancel": "取消",
     "confirm": "确认",
     "edit": "编辑",
+    "editButton": "编辑角色设定",
     "placeholder": "请输入角色 Prompt 提示词",
     "roleSetting": "角色设定",
     "title": "角色设定"

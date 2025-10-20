@@ -8,7 +8,7 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { agentSelectors, useAgentStore } from '@/store/agent';
 
 export default function SystemRoleSetting() {
-  const { t } = useTranslation(['chat']);
+  const { t } = useTranslation('chat');
 
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
@@ -45,11 +45,11 @@ export default function SystemRoleSetting() {
     <PageContainer
       extra={
         <Button loading={loading} onPress={handleSave} size={'small'} type={'primary'}>
-          完成
+          {t('setting.done')}
         </Button>
       }
       showBack
-      title={'角色设定'}
+      title={t('agentRoleEdit.title')}
     >
       <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
         <TextArea

@@ -7,6 +7,7 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "edit": "Editar",
+    "editButton": "Editar configuración del rol",
     "placeholder": "Por favor, ingresa el prompt del rol",
     "roleSetting": "Configuración del rol",
     "title": "Configuración del rol"

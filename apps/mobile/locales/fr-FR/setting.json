@@ -1,6 +1,7 @@
 {
   "about": "À propos de LobeHub",
   "account": {
+    "group": "Compte",
     "profile": {
       "email": "E-mail",
       "name": "Nom d'utilisateur",
@@ -13,6 +14,9 @@
       "label": "Se déconnecter"
     },
     "title": "Paramètres du compte"
+  },
+  "advanced": {
+    "group": "Avancé"
   },
   "aiProviders": {
     "configuration": {
@@ -75,7 +79,9 @@
     },
     "preview": "Aperçu",
     "previewMessages": {
+      "botGreat": "Ravi que cela vous plaise ! Cette fonction d'aperçu vous permet de voir visuellement l'effet du thème avant de l'appliquer.",
       "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres avec le sélecteur ci-dessous, l'aperçu se mettra à jour en temps réel pour montrer l'effet.",
+      "userGreat": "Super !",
       "userHowToUse": "Comment utiliser l'aperçu du thème ?"
     },
     "primary": {
@@ -99,6 +105,9 @@
       "clearAuthData": {
         "success": "Données d'authentification effacées",
         "title": "Effacer les données d'authentification"
+      },
+      "error": {
+        "noToken": "Aucun jeton disponible actuellement"
       },
       "group": "Configuration d'authentification",
       "refreshToken": {
@@ -150,11 +159,23 @@
   },
   "feedback": "Retour d'information",
   "fontSize": {
+    "preview": {
+      "botAnswer": "**Comment ajuster la taille de la police ?**\n\nUtilisez le curseur ci-dessous pour régler la taille de la police : vers la gauche pour diminuer, vers la droite pour augmenter. Pendant le glissement, un aperçu en temps réel s'affiche ici.\n\nAstuce : sélectionnez l'échelle « Standard » pour revenir rapidement à la taille par défaut.",
+      "botGreat": "Ravi que cela vous plaise ! Cette fonction d'aperçu vous permet de voir directement l'effet dans la fenêtre de conversation avant d'appliquer les réglages.",
+      "userGreat": "Super !",
+      "userQuestion": "Je voudrais agrandir la taille de la police dans la conversation, comment faire ?"
+    },
     "standard": "Standard",
     "text": "Attention, cette configuration n'affecte que la taille d'affichage de la police du contenu des messages",
     "title": "Taille de la police"
   },
+  "general": {
+    "group": "Général"
+  },
   "help": "Aide à l'utilisation",
+  "info": {
+    "group": "Informations"
+  },
   "locale": {
     "auto": {
       "description": "Suivre la langue du système",
@@ -190,6 +211,13 @@
     }
   },
   "providers": "Fournisseurs d'IA",
+  "providersDetail": {
+    "tabs": {
+      "configuration": "Configuration",
+      "models": "Modèles"
+    }
+  },
+  "providersSearchPlaceholder": "Rechercher un fournisseur par mot-clé...",
   "support": "Support par e-mail",
   "themeMode": {
     "auto": "Suivre le système",

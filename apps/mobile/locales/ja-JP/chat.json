@@ -7,6 +7,7 @@
     "cancel": "キャンセル",
     "confirm": "確認",
     "edit": "編集",
+    "editButton": "役割設定を編集",
     "placeholder": "役割のプロンプトを入力してください",
     "roleSetting": "役割設定",
     "title": "役割設定"
