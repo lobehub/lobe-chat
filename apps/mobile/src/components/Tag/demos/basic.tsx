@@ -1,22 +1,13 @@
-import { Tag } from '@lobehub/ui-rn';
-import { View } from 'react-native';
+import { Flexbox, Tag } from '@lobehub/ui-rn';
 
 const BasicDemo = () => {
   return (
-    <View style={{ padding: 16 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          gap: 8,
-        }}
-      >
-        <Tag>React</Tag>
-        <Tag>TypeScript</Tag>
-        <Tag>JavaScript</Tag>
-        <Tag>React Native</Tag>
-      </View>
-    </View>
+    <Flexbox gap={8} horizontal wrap="wrap">
+      <Tag>React</Tag>
+      <Tag>TypeScript</Tag>
+      <Tag>JavaScript</Tag>
+      <Tag>React Native</Tag>
+    </Flexbox>
   );
 };
 

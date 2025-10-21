@@ -1,55 +1,30 @@
-import { Tag, Text, useTheme } from '@lobehub/ui-rn';
-import { View } from 'react-native';
+import { Block, Flexbox, Tag, Text } from '@lobehub/ui-rn';
 
 const UseCaseDemo = () => {
-  const token = useTheme();
-
   return (
-    <View style={{ padding: 16 }}>
-      <View
-        style={{
-          backgroundColor: token.colorFillQuaternary,
-          borderRadius: 8,
-          padding: 16,
-        }}
-      >
-        <Text
-          style={{
-            color: token.colorText,
-            fontSize: 18,
-            fontWeight: 'bold',
-            marginBottom: 8,
-          }}
-        >
-          AI Assistant Card
-        </Text>
-        <Text
-          style={{
-            color: token.colorTextSecondary,
-            fontSize: 14,
-            lineHeight: 20,
-            marginBottom: 12,
-          }}
-        >
-          A powerful AI assistant that can help you with various tasks including coding, writing,
-          and problem-solving.
-        </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            gap: 8,
-          }}
-        >
-          <Tag>AI</Tag>
-          <Tag>Chat</Tag>
-          <Tag>Assistant</Tag>
-          <Tag>Coding</Tag>
-          <Tag>Writing</Tag>
-          <Tag>Problem Solving</Tag>
-        </View>
-      </View>
-    </View>
+    <Block gap={12} padding={16} variant="filled">
+      <Text as="h3" strong>
+        AI Assistant Card
+      </Text>
+      <Text fontSize={14} type="secondary">
+        A powerful AI assistant that can help you with various tasks including coding, writing, and
+        problem-solving.
+      </Text>
+      <Flexbox gap={8} horizontal wrap="wrap">
+        <Tag color="blue">AI</Tag>
+        <Tag color="green">Chat</Tag>
+        <Tag color="purple">Assistant</Tag>
+        <Tag color="cyan" variant="outlined">
+          Coding
+        </Tag>
+        <Tag color="orange" variant="outlined">
+          Writing
+        </Tag>
+        <Tag color="magenta" variant="outlined">
+          Problem Solving
+        </Tag>
+      </Flexbox>
+    </Block>
   );
 };
 

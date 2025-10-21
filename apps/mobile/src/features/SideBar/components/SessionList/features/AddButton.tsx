@@ -13,8 +13,15 @@ const AddButton = memo(() => {
   const { mutate, isValidating } = useActionSWR(['session.createSession'], () => createSession());
 
   return (
-    <Flexbox flex={1} padding={16}>
-      <Button block icon={Plus} loading={isValidating} onPress={() => mutate()} size={'small'}>
+    <Flexbox flex={1} paddingInline={12}>
+      <Button
+        block
+        icon={Plus}
+        loading={isValidating}
+        onPress={() => mutate()}
+        size={'small'}
+        variant={'filled'}
+      >
         {t('newAgent')}
       </Button>
     </Flexbox>
