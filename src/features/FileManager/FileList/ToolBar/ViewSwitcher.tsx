@@ -1,7 +1,9 @@
-import { ActionIconGroup } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { Grid3x3Icon, ListIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 export type ViewMode = 'list' | 'masonry';
 
@@ -10,25 +12,33 @@ interface ViewSwitcherProps {
   view: ViewMode;
 }
 
-const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange }) => {
+const useStyles = createStyles(({ css }) => ({
+  container: css`
+    gap: 4px;
+  `,
+}));
+
+const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange, view }) => {
   const { t } = useTranslation('components');
+  const { styles } = useStyles();
 
   return (
-    <ActionIconGroup
-      items={[
-        {
-          icon: ListIcon,
-          key: 'list',
-          label: t('FileManager.view.list'),
-        },
-        {
-          icon: Grid3x3Icon,
-          key: 'masonry',
-          label: t('FileManager.view.masonry'),
-        },
-      ]}
-      onActionClick={(action) => onViewChange(action.key as ViewMode)}
-    />
+    <Flexbox className={styles.container} horizontal>
+      <ActionIcon
+        active={view === 'list'}
+        icon={ListIcon}
+        onClick={() => onViewChange('list')}
+        size={16}
+        title={t('FileManager.view.list')}
+      />
+      <ActionIcon
+        active={view === 'masonry'}
+        icon={Grid3x3Icon}
+        onClick={() => onViewChange('masonry')}
+        size={16}
+        title={t('FileManager.view.masonry')}
+      />
+    </Flexbox>
   );
 });
 
