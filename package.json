@@ -123,9 +123,6 @@
       "eslint --fix"
     ]
   },
-  "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
-  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.10",
@@ -174,7 +171,7 @@
     "@lobehub/ui": "^2.13.2",
     "@modelcontextprotocol/sdk": "^1.20.0",
     "@neondatabase/serverless": "^1.0.2",
-    "@next/third-parties": "^15.5.4",
+    "@next/third-parties": "16.0.0-beta.0",
     "@opentelemetry/exporter-jaeger": "^2.1.0",
     "@opentelemetry/winston-transport": "^0.18.0",
     "@react-pdf/renderer": "^4.3.0",
@@ -235,7 +232,7 @@
     "model-bank": "workspace:*",
     "modern-screenshot": "^4.6.6",
     "nanoid": "^5.1.6",
-    "next": "~15.3.5",
+    "next": "16.0.0-beta.0",
     "next-auth": "5.0.0-beta.30",
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.9.17",
@@ -261,9 +258,9 @@
     "pwa-install-handler": "^2.6.3",
     "query-string": "^9.3.1",
     "random-words": "^2.0.1",
-    "react": "^19.2.0",
+    "react": "19.2.0",
     "react-confetti": "^6.4.0",
-    "react-dom": "^19.2.0",
+    "react-dom": "19.2.0",
     "react-fast-marquee": "^1.6.5",
     "react-hotkeys-hook": "^5.1.0",
     "react-i18next": "^15.7.4",
@@ -313,8 +310,8 @@
     "@lobehub/lint": "^1.26.2",
     "@lobehub/market-types": "^1.11.4",
     "@lobehub/seo-cli": "^1.7.0",
-    "@next/bundle-analyzer": "^15.5.4",
-    "@next/eslint-plugin-next": "^15.5.4",
+    "@next/bundle-analyzer": "16.0.0-beta.0",
+    "@next/eslint-plugin-next": "^15.5.6",
     "@peculiar/webcrypto": "^1.5.0",
     "@playwright/test": "^1.49.1",
     "@prettier/sync": "^0.6.1",
@@ -335,8 +332,8 @@
     "@types/oidc-provider": "^9.5.0",
     "@types/pdfkit": "^0.17.3",
     "@types/pg": "^8.15.5",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
     "@types/rtl-detect": "^1.0.3",
     "@types/semver": "^7.7.1",
     "@types/systemjs": "^6.15.3",
@@ -399,9 +396,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vercel/speed-insights"
-    ],
-    "overrides": {
-      "mdast-util-gfm-autolink-literal": "2.0.0"
-    }
+    ]
   }
 }
