@@ -1,11 +1,9 @@
 // @vitest-environment node
-import { uuid } from '@lobechat/utils';
+import { LobeChatDatabase } from '@lobechat/database';
+import { messages, sessions, topics } from '@lobechat/database/schemas';
+import { getTestDB } from '@lobechat/database/test-utils';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { getTestDB } from '@/database/models/__tests__/_util';
-import { messages, sessions, topics, users } from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
 
 import { messageRouter } from '../../message';
 import { cleanupTestUser, createTestContext, createTestUser } from './setup';
@@ -48,7 +46,6 @@ describe('Message Router Integration Tests', () => {
     const [session] = await serverDB
       .insert(sessions)
       .values({
-        id: uuid(),
         userId,
         type: 'agent',
       })
@@ -59,7 +56,6 @@ describe('Message Router Integration Tests', () => {
     const [topic] = await serverDB
       .insert(topics)
       .values({
-        id: uuid(),
         userId,
         sessionId: testSessionId,
         title: 'Test Topic',
@@ -108,7 +104,6 @@ describe('Message Router Integration Tests', () => {
       const [thread] = await serverDB
         .insert(threads)
         .values({
-          id: uuid(),
           userId,
           topicId: testTopicId,
           sourceMessageId: 'msg-source',
@@ -179,7 +174,6 @@ describe('Message Router Integration Tests', () => {
       const [anotherSession] = await serverDB
         .insert(sessions)
         .values({
-          id: uuid(),
           userId,
           type: 'agent',
         })
@@ -188,7 +182,6 @@ describe('Message Router Integration Tests', () => {
       const [anotherTopic] = await serverDB
         .insert(topics)
         .values({
-          id: uuid(),
           userId,
           sessionId: anotherSession.id,
           title: 'Another Topic',
@@ -230,7 +223,6 @@ describe('Message Router Integration Tests', () => {
       const [anotherSession] = await serverDB
         .insert(sessions)
         .values({
-          id: uuid(),
           userId,
           type: 'agent',
         })
