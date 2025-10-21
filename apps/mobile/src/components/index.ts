@@ -28,6 +28,13 @@ export {
   type ColorSwatchesProps,
 } from './ColorSwatches';
 export { default as Divider, type DividerProps } from './Divider';
+export {
+  default as Dropdown,
+  type DropdownIconConfig,
+  type DropdownOptionItem,
+  type DropdownPlacement,
+  type DropdownProps,
+} from './Dropdown';
 export { default as EmojiSelector, type EmojiSelectorProps } from './EmojiSelector';
 export { default as Empty, type EmptyProps } from './Empty';
 export { default as Flexbox, type FlexboxProps } from './Flexbox';

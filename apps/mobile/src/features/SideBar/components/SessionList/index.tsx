@@ -1,9 +1,10 @@
-import { Flexbox, Input, ScrollShadow, Toast } from '@lobehub/ui-rn';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager } from 'react-native';
-import * as ContextMenu from 'zeego/context-menu';
 
+import { Flexbox, Input, ScrollShadow, Toast } from '@/components';
+import Dropdown from '@/components/Dropdown';
+import type { DropdownOptionItem } from '@/components/Dropdown';
 import { loading } from '@/libs/loading';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -98,51 +99,47 @@ export default function SideBar() {
           {filteredSessions.length === 0 ? (
             <AddButton />
           ) : (
-            filteredSessions.map((session) => (
-              <ContextMenu.Root key={session.id}>
-                <ContextMenu.Trigger>
-                  <SessionItem {...(session as any)} key={session.id} />
-                </ContextMenu.Trigger>
-                <ContextMenu.Content>
-                  <ContextMenu.Item
-                    destructive
-                    key={session.id}
-                    onSelect={() => {
-                      Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
-                        {
-                          style: 'cancel',
-                          text: t('actions.cancel', { ns: 'common' }),
-                        },
-                        {
-                          onPress: () => {
-                            const { done } = loading.start();
-                            removeSession(session.id).then(() => {
-                              Toast.success(t('status.success', { ns: 'common' }));
-                              InteractionManager.runAfterInteractions(() => {
-                                toggleDrawer();
-                                done();
-                              });
+            filteredSessions.map((session) => {
+              const options: DropdownOptionItem[] = [
+                {
+                  destructive: true,
+                  icon: {
+                    name: 'trash',
+                    pointSize: 18,
+                  },
+                  key: 'delete',
+                  onSelect: () => {
+                    Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
+                      {
+                        style: 'cancel',
+                        text: t('actions.cancel', { ns: 'common' }),
+                      },
+                      {
+                        onPress: () => {
+                          const { done } = loading.start();
+                          removeSession(session.id).then(() => {
+                            Toast.success(t('status.success', { ns: 'common' }));
+                            InteractionManager.runAfterInteractions(() => {
+                              toggleDrawer();
+                              done();
                             });
-                          },
-                          style: 'destructive',
-                          text: t('actions.confirm', { ns: 'common' }),
+                          });
                         },
-                      ]);
-                    }}
-                  >
-                    <ContextMenu.ItemTitle>
-                      {t('actions.delete', { ns: 'common' })}
-                    </ContextMenu.ItemTitle>
-                    <ContextMenu.ItemIcon
-                      ios={{
-                        name: 'trash',
-                        pointSize: 18,
-                      }}
-                    />
-                  </ContextMenu.Item>
-                </ContextMenu.Content>
-              </ContextMenu.Root>
-            ))
+                        style: 'destructive',
+                        text: t('actions.confirm', { ns: 'common' }),
+                      },
+                    ]);
+                  },
+                  title: t('actions.delete', { ns: 'common' }),
+                },
+              ];
+
+              return (
+                <Dropdown key={session.id} options={options}>
+                  <SessionItem {...(session as any)} />
+                </Dropdown>
+              );
+            })
           )}
         </Flexbox>
       </ScrollShadow>
