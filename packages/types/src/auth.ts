@@ -16,6 +16,8 @@ export interface ClientSecretPayload {
    */
   baseURL?: string;
 
+  runtimeProvider?: string;
+
   azureApiVersion?: string;
 
   awsAccessKeyId?: string;
@@ -24,6 +26,8 @@ export interface ClientSecretPayload {
   awsSessionToken?: string;
 
   cloudflareBaseURLOrAccountID?: string;
+
+  vertexAIRegion?: string;
 
   /**
    * user id

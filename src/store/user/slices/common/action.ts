@@ -78,6 +78,7 @@ export const createCommonSlice: StateCreator<
             // merge settings
             const serverSettings: PartialDeep<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
+              image: serverConfig.image,
               languageModel: serverConfig.languageModel,
               systemAgent: serverConfig.systemAgent,
             };

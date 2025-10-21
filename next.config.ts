@@ -19,9 +19,11 @@ const standaloneConfig: NextConfig = {
   outputFileTracingIncludes: { '*': ['public/**/*', '.next/static/**/*'] },
 };
 
+const assetPrefix = process.env.NEXT_PUBLIC_ASSET_PREFIX;
+
 const nextConfig: NextConfig = {
   ...(isStandaloneMode ? standaloneConfig : {}),
-  assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
+  assetPrefix,
   compiler: {
     emotion: true,
   },
@@ -45,6 +47,7 @@ const nextConfig: NextConfig = {
     // refs: https://github.com/lobehub/lobe-chat/pull/7430
     serverMinification: false,
     webVitalsAttribution: ['CLS', 'LCP'],
+    webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
   },
   async headers() {
@@ -252,15 +255,14 @@ const nextConfig: NextConfig = {
     // },
     {
       destination: '/chat',
+      permanent: false,
+      source: '/',
+    },
+    {
+      destination: '/chat',
       permanent: true,
       source: '/welcome',
     },
-    // TODO: 等 V2 做强制跳转吧
-    // {
-    //   destination: '/settings/provider/volcengine',
-    //   permanent: true,
-    //   source: '/settings/provider/doubao',
-    // },
     // we need back /repos url in the further
     {
       destination: '/files',
@@ -309,6 +311,20 @@ const nextConfig: NextConfig = {
       ...config.resolve.fallback,
       zipfile: false,
     };
+
+    if (assetPrefix && (assetPrefix.startsWith('http://') || assetPrefix.startsWith('https://'))) {
+      // fix the Worker URL cross-origin issue
+      // refs: https://github.com/lobehub/lobe-chat/pull/9624
+      config.module.rules.push({
+        generator: {
+          // @see https://webpack.js.org/configuration/module/#rulegeneratorpublicpath
+          publicPath: '/_next/',
+        },
+        test: /worker\.ts$/,
+        // @see https://webpack.js.org/guides/asset-modules/
+        type: 'asset/resource',
+      });
+    }
 
     return config;
   },

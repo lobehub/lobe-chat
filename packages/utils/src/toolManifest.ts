@@ -1,10 +1,7 @@
-import { ChatCompletionTool, OpenAIPluginManifest } from '@lobechat/types';
+import { OpenAIPluginManifest } from '@lobechat/types';
 import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
-import { uniqBy } from 'lodash-es';
 
 import { API_ENDPOINTS } from '@/services/_url';
-
-import { genToolCallingName } from './toolCall';
 
 const fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {
   // 2. 发送请求
@@ -126,21 +123,4 @@ export const getToolManifest = async (
   }
 
   return data;
-};
-
-/**
- *
- */
-export const convertPluginManifestToToolsCalling = (
-  manifests: LobeChatPluginManifest[],
-): ChatCompletionTool[] => {
-  const list = manifests.flatMap((manifest) =>
-    manifest.api.map((m) => ({
-      description: m.description,
-      name: genToolCallingName(manifest.identifier, m.name, manifest.type),
-      parameters: m.parameters,
-    })),
-  );
-
-  return uniqBy(list, 'name').map((i) => ({ function: i, type: 'function' }));
 };

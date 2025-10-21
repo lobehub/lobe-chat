@@ -1,10 +1,13 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
-export const LobeOllamaCloudAI = createOpenAICompatibleRuntime({
-  baseURL: 'https://api.ollama.com/v1',
+export const params = {
+  baseURL: 'https://ollama.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
       const { model, ...rest } = payload;
@@ -37,4 +40,6 @@ export const LobeOllamaCloudAI = createOpenAICompatibleRuntime({
     }
   },
   provider: ModelProvider.OllamaCloud,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeOllamaCloudAI = createOpenAICompatibleRuntime(params);

@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Falha na solicitação de serviço. Verifique a configuração ou tente novamente"
   },
+  "supervisor": {
+    "decisionFailed": "O anfitrião do grupo não está funcionando. Por favor, verifique sua configuração de anfitrião para garantir que o modelo correto, a chave API e o endereço da API estejam configurados."
+  },
   "testConnectionFailed": "Falha ao testar a conexão: {{error}}",
   "tts": {
     "responseError": "Falha na solicitação de serviço. Verifique a configuração ou tente novamente"

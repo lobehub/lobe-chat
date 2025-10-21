@@ -1,19 +1,20 @@
-import { DEFAULT_AGENT_META } from '@/const/meta';
 import {
   DEFAULT_AGENT,
   DEFAULT_AGENT_CONFIG,
+  DEFAULT_AGENT_META,
   DEFAULT_HOTKEY_CONFIG,
   DEFAULT_SYSTEM_AGENT_CONFIG,
   DEFAULT_TTS_CONFIG,
-} from '@/const/settings';
-import type { UserStore } from '@/store/user';
-import { HotkeyId } from '@/types/hotkey';
+} from '@lobechat/const';
 import {
   GlobalLLMProviderKey,
+  HotkeyId,
   ProviderConfig,
   UserModelProviderConfig,
   UserSettings,
-} from '@/types/user/settings';
+} from '@lobechat/types';
+
+import type { UserStore } from '@/store/user';
 import { merge } from '@/utils/merge';
 
 export const currentSettings = (s: UserStore): UserSettings => merge(s.defaultSettings, s.settings);
@@ -23,6 +24,8 @@ export const currentLLMSettings = (s: UserStore): UserModelProviderConfig =>
 
 export const getProviderConfigById = (provider: string) => (s: UserStore) =>
   currentLLMSettings(s)[provider as GlobalLLMProviderKey] as ProviderConfig | undefined;
+
+const currentImageSettings = (s: UserStore) => currentSettings(s).image;
 
 const currentTTS = (s: UserStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
@@ -43,6 +46,7 @@ const getHotkeyById = (id: HotkeyId) => (s: UserStore) =>
   merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey)[id];
 
 export const settingsSelectors = {
+  currentImageSettings,
   currentSettings,
   currentSystemAgent,
   currentTTS,

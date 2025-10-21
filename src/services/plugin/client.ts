@@ -1,7 +1,8 @@
+import { LobeTool } from '@lobechat/types';
+
 import { clientDB } from '@/database/client/db';
 import { PluginModel } from '@/database/models/plugin';
 import { BaseClientService } from '@/services/baseClientService';
-import { LobeTool } from '@/types/tool';
 
 import { IPluginService } from './type';
 

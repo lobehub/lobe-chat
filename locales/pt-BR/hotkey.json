@@ -7,6 +7,14 @@
     "desc": "Limpar as mensagens da conversa atual e os arquivos enviados",
     "title": "Limpar mensagens da conversa"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "Excluir a última mensagem e gerar novamente",
+    "title": "Excluir e gerar novamente"
+  },
+  "deleteLastMessage": {
+    "desc": "Excluir a última mensagem",
+    "title": "Excluir a última mensagem"
+  },
   "desktop": {
     "openSettings": {
       "desc": "Abrir a página de configurações do aplicativo",

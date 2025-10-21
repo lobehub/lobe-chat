@@ -1,8 +1,8 @@
 {
   "ArgsInput": {
-    "addArgument": "Argüman ekle",
-    "argumentPlaceholder": "Argüman {{index}}",
-    "enterFirstArgument": "İlk argümanı girin..."
+    "addArgument": "Parametre ekle",
+    "argumentPlaceholder": "Parametre {{index}}",
+    "enterFirstArgument": "İlk parametreyi girin..."
   },
   "DragUpload": {
     "dragDesc": "Dosyaları buraya sürükleyin, birden fazla resim yüklemeyi destekler.",
@@ -146,8 +146,8 @@
     },
     "validation": {
       "fileSizeExceeded": "Dosya boyutu sınırı aşıldı",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}), izin verilen maksimum boyut olan {{maxSize}}'ı aşıyor",
-      "fileSizeExceededMultiple": "{{count}} dosya, izin verilen maksimum boyut olan {{maxSize}}'ı aşıyor: {{fileList}}",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) maksimum boyut sınırı olan {{maxSize}}'yi aşıyor",
+      "fileSizeExceededMultiple": "{{count}} dosya, maksimum boyut sınırı olan {{maxSize}}'yi aşıyor: {{fileList}}",
       "imageCountExceeded": "Resim sayısı sınırı aşıldı"
     }
   },

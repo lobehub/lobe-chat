@@ -9,15 +9,14 @@ import {
   text,
   uniqueIndex,
   uuid,
-  varchar,
 } from 'drizzle-orm/pg-core';
-import { createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 import { ModelReasoning } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
 
 import { idGenerator } from '../utils/idGenerator';
-import { timestamps } from './_helpers';
+import { timestamps, varchar255 } from './_helpers';
 import { agents } from './agent';
 import { chatGroups } from './chatGroup';
 import { files } from './file';
@@ -25,6 +24,53 @@ import { chunks, embeddings } from './rag';
 import { sessions } from './session';
 import { threads, topics } from './topic';
 import { users } from './user';
+
+/**
+ * Message groups table for multi-models parallel conversations
+ * Allows multiple AI models to respond to the same user message in parallel
+ */
+// @ts-ignore
+export const messageGroups = pgTable(
+  'message_groups',
+  {
+    id: varchar255('id')
+      .primaryKey()
+      .$defaultFn(() => idGenerator('messageGroups'))
+      .notNull(),
+
+    // 关联关系 - 只需要 topic 层级
+    topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    // 支持嵌套结构
+    // @ts-ignore
+    parentGroupId: varchar255('parent_group_id').references(() => messageGroups.id, {
+      onDelete: 'cascade',
+    }),
+
+    // 关联的用户消息
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    parentMessageId: text('parent_message_id').references(() => messages.id, {
+      onDelete: 'cascade',
+    }),
+
+    // 元数据
+    title: varchar255('title'),
+    description: text('description'),
+
+    clientId: varchar255('client_id'),
+
+    ...timestamps,
+  },
+  (t) => [uniqueIndex('message_groups_client_id_user_id_unique').on(t.clientId, t.userId)],
+);
+
+export const insertMessageGroupSchema = createInsertSchema(messageGroups);
+
+export type NewMessageGroup = typeof messageGroups.$inferInsert;
+export type MessageGroupItem = typeof messageGroups.$inferSelect;
 
 // @ts-ignore
 export const messages = pgTable(
@@ -34,7 +80,7 @@ export const messages = pgTable(
       .$defaultFn(() => idGenerator('messages'))
       .primaryKey(),
 
-    role: varchar('role', { length: 255 }).notNull(),
+    role: varchar255('role').notNull(),
     content: text('content'),
     reasoning: jsonb('reasoning').$type<ModelReasoning>(),
     search: jsonb('search').$type<GroundingSearch>(),
@@ -69,6 +115,11 @@ export const messages = pgTable(
     groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'set null' }),
     // targetId can be an agent ID, "user", or null - no FK constraint
     targetId: text('target_id'),
+
+    // used for multi-models parallel
+    messageGroupId: varchar255('message_group_id').references(() => messageGroups.id, {
+      onDelete: 'cascade',
+    }),
     ...timestamps,
   },
   (table) => [

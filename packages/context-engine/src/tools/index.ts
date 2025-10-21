@@ -1,6 +1,9 @@
 // Core ToolsEngine class
 export { ToolsEngine } from './ToolsEngine';
 
+// Tool Name Resolver
+export { ToolNameResolver } from './ToolNameResolver';
+
 // Types and interfaces
 export type {
   FunctionCallChecker,
@@ -13,4 +16,4 @@ export type {
 } from './types';
 
 // Utility functions
-export { filterValidManifests, generateToolName, validateManifest } from './utils';
+export { filterValidManifests, validateManifest } from './utils';
