@@ -228,7 +228,9 @@
   "minimap": {
     "jumpToMessage": "{{index}}번째 메시지로 이동",
     "nextMessage": "다음 메시지",
-    "previousMessage": "이전 메시지"
+    "previousMessage": "이전 메시지",
+    "senderAssistant": "도우미",
+    "senderUser": "당신"
   },
   "newAgent": "새 도우미",
   "newGroupChat": "새 그룹 채팅 만들기",
