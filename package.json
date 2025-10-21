@@ -175,6 +175,7 @@
     "@opentelemetry/exporter-jaeger": "^2.1.0",
     "@opentelemetry/winston-transport": "^0.17.0",
     "@react-spring/web": "^9.7.5",
+    "@saintno/comfyui-sdk": "^0.2.48",
     "@serwist/next": "^9.2.1",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.90.2",

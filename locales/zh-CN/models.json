@@ -866,6 +866,46 @@
   "cohere/embed-v4.0": {
     "description": "一个允许对文本、图像或混合内容进行分类或转换为嵌入的模型。"
   },
+  "comfyui/flux-dev": {
+    "description": "FLUX.1 Dev - 高质量文生图模型，支持 guidance scale 调节，10-50步生成，非商业许可，适合高质量创作和艺术作品生成"
+  },
+  "comfyui/flux-kontext-dev": {
+    "description": "FLUX.1 Kontext-dev - 图像编辑模型，支持基于文本指令修改现有图像，支持局部修改和风格迁移，非商业许可"
+  },
+  "comfyui/flux-krea-dev": {
+    "description": "FLUX.1 Krea-dev - 增强安全的文生图模型，与 Krea 合作开发，内置安全过滤，避免生成不当内容，非商业许可"
+  },
+  "comfyui/flux-schnell": {
+    "description": "FLUX.1 Schnell - 超快速文生图模型，1-4步即可生成高质量图像，Apache 2.0开源许可，适合实时应用和快速原型制作"
+  },
+  "comfyui/stable-diffusion-15": {
+    "displayName": "SD 1.5",
+    "description": "Stable Diffusion 1.5 文生图模型，经典的512x512分辨率文本到图像生成，适合快速原型和创意实验。支持负向提示。"
+  },
+  "comfyui/stable-diffusion-35": {
+    "displayName": "Stable Diffusion 3.5",
+    "description": "Stable Diffusion 3.5 新一代文生图模型，支持 Large 和 Medium 两个版本，需要外部 CLIP 编码器文件，提供卓越的图像质量和提示词匹配度。"
+  },
+  "comfyui/stable-diffusion-35-inclclip": {
+    "displayName": "Stable Diffusion 3.5 (内置编码器)",
+    "description": "Stable Diffusion 3.5 内置 CLIP/T5 编码器版本，无需外部编码器文件，适用于 sd3.5_medium_incl_clips 等模型，资源占用更少。"
+  },
+  "comfyui/stable-diffusion-custom": {
+    "displayName": "Custom SD",
+    "description": "自定义 SD 文生图模型，模型文件名请使用 custom_sd_lobe.safetensors，如有 VAE 请使用 custom_sd_vae_lobe.safetensors，模型文件需要按照 Comfy 的要求放入对应文件夹。"
+  },
+  "comfyui/stable-diffusion-custom-refiner": {
+    "displayName": "Custom SD Refiner",
+    "description": "自定义 SD 图生图模型，模型文件名请使用 custom_sd_lobe.safetensors，如有 VAE 请使用 custom_sd_vae_lobe.safetensors，模型文件需要按照 Comfy 的要求放入对应文件夹。"
+  },
+  "comfyui/stable-diffusion-refiner": {
+    "displayName": "SDXL Image-to-Image",
+    "description": "SDXL 图生图模型，基于输入图像进行高质量的图像到图像转换，支持风格迁移、图像修复和创意变换。"
+  },
+  "comfyui/stable-diffusion-xl": {
+    "displayName": "SDXL Text-to-Image",
+    "description": "SDXL 文生图模型，支持1024x1024高分辨率文本到图像生成，提供更好的图像质量和细节表现。支持负向提示。"
+  },
   "command": {
     "description": "一个遵循指令的对话模型，在语言任务中表现出高质量、更可靠，并且相比我们的基础生成模型具有更长的上下文长度。"
   },
@@ -3017,6 +3057,9 @@
   "sonar-reasoning-pro": {
     "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
   },
+  "stable-diffusion-15": {
+    "description": "Stable Diffusion 1.5 文生图模型，经典的512x512分辨率文本到图像生成，适合快速原型和创意实验。支持负向提示。"
+  },
   "stable-diffusion-3-medium": {
     "description": "由 Stability AI 推出的最新文生图大模型。这一版本在继承了前代的优点上，对图像质量、文本理解和风格多样性等方面进行了显著改进，能够更准确地解读复杂的自然语言提示，并生成更为精确和多样化的图像。"
   },
@@ -3025,6 +3068,15 @@
   },
   "stable-diffusion-3.5-large-turbo": {
     "description": "stable-diffusion-3.5-large-turbo 是在 stable-diffusion-3.5-large 的基础上采用对抗性扩散蒸馏（ADD）技术的模型，具备更快的速度。"
+  },
+  "stable-diffusion-custom": {
+    "description": "自定义 SD 文生图模型，支持社区和第三方训练的 Stable Diffusion 文本到图像模型，提供灵活的参数配置。"
+  },
+  "stable-diffusion-custom-refiner": {
+    "description": "自定义 SD 图生图模型，支持社区和第三方训练的 Stable Diffusion 图像到图像模型，适合专业图像处理工作流。"
+  },
+  "stable-diffusion-refiner": {
+    "description": "SDXL 图生图模型，基于输入图像进行高质量的图像到图像转换，支持风格迁移、图像修复和创意变换。"
   },
   "stable-diffusion-v1.5": {
     "description": "stable-diffusion-v1.5 是以 stable-diffusion-v1.2 检查点的权重进行初始化，并在 \"laion-aesthetics v2 5+\" 上以 512x512 的分辨率进行了595k步的微调，减少了 10% 的文本条件化，以提高无分类器的引导采样。"
