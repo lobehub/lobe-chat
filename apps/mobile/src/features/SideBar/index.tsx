@@ -1,16 +1,15 @@
 import { LobeHub } from '@lobehub/icons-rn';
 import { ActionIcon, Flexbox, PageContainer } from '@lobehub/ui-rn';
 import * as Haptics from 'expo-haptics';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { CompassIcon, LucideComponent, MessageSquarePlus } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { useCallback } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { useCallback, useState } from 'react';
+import { InteractionManager, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import { ICON_SIZE } from '@/_const/common';
 import { DRAWER_WIDTH } from '@/_const/theme';
-import { useActionSWR } from '@/libs/swr';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { isIOS } from '@/utils/detection';
@@ -26,10 +25,30 @@ export default function SideBar({ children }: { children: ReactNode }) {
 
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
   const createSession = useSessionStore((s) => s.createSession);
-  const { mutate: createNewSession, isValidating: isCreatingSession } = useActionSWR(
-    ['session.createSession'],
-    () => createSession(),
-  );
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
+
+  const createNewSession = async () => {
+    setIsCreatingSession(true);
+    try {
+      // Create session without auto-switching
+      const sessionId = await createSession(undefined, false);
+
+      // Close the Session Drawer
+      setDrawerOpen(false);
+
+      // Navigate to the new session after interactions complete
+      InteractionManager.runAfterInteractions(() => {
+        router.replace({
+          params: { session: sessionId },
+          pathname: '/chat',
+        });
+      });
+    } catch (error) {
+      console.error('Failed to create session:', error);
+    } finally {
+      setIsCreatingSession(false);
+    }
+  };
 
   const onOpenDrawer = useCallback(() => setDrawerOpen(true), [setDrawerOpen]);
   const onCloseDrawer = useCallback(() => setDrawerOpen(false), [setDrawerOpen]);

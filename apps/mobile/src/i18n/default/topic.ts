@@ -1,4 +1,5 @@
 export default {
+  confirmRemoveTopicItemAlert: '即将删除该话题，删除后将无法找回，请确认你的操作',
   defaultTitle: '默认话题',
   empty: '暂无话题',
   guide: {
