@@ -21,10 +21,16 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
       next(op).subscribe({
         complete: () => observer.complete(),
         error: async (err) => {
+          // Check if this is an abort error and should be ignored
+          const isAbortError = err.message.includes('aborted') || err.name === 'AbortError' || 
+                              err.cause?.name === 'AbortError' || 
+                              err.message.includes('signal is aborted without reason');
+          
           const showError = (op.context?.showNotification as boolean) ?? true;
           const status = err.data?.httpStatus as number;
 
-          if (showError) {
+          // Don't show notifications for abort errors
+          if (showError && !isAbortError) {
             const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
             const { fetchErrorNotification } = await import(
               '@/components/Error/fetchErrorNotification'
