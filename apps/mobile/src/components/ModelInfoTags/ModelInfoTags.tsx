@@ -28,50 +28,26 @@ const ModelInfoTags = memo<ModelInfoTagsProps>((model) => {
   return (
     <View style={styles.container}>
       {/* Files 支持 */}
-      {model.files && (
-        <View style={[styles.tag, styles.successTag]}>
-          <Paperclip color={styles.successIcon.color} size={12} />
-        </View>
-      )}
+      {model.files && <Tag color={'success'} icon={Paperclip} size={'small'} />}
 
       {/* Image Output 支持 */}
-      {model.imageOutput && (
-        <View style={[styles.tag, styles.successTag]}>
-          <Image color={styles.successIcon.color} size={12} />
-        </View>
-      )}
+      {model.imageOutput && <Tag color={'success'} icon={Image} size={'small'} />}
 
       {/* Vision 支持 */}
-      {model.vision && (
-        <View style={[styles.tag, styles.successTag]}>
-          <Eye color={styles.successIcon.color} size={12} />
-        </View>
-      )}
+      {model.vision && <Tag color={'success'} icon={Eye} size={'small'} />}
 
       {/* Function Call 支持 */}
-      {model.functionCall && (
-        <View style={[styles.tag, styles.infoTag]}>
-          <ToyBrick color={styles.infoIcon.color} size={12} />
-        </View>
-      )}
+      {model.functionCall && <Tag color={'processing'} icon={ToyBrick} size={'small'} />}
 
       {/* Reasoning 支持 */}
-      {model.reasoning && (
-        <View style={[styles.tag, styles.purpleTag]}>
-          <Atom color={styles.purpleIcon.color} size={12} />
-        </View>
-      )}
+      {model.reasoning && <Tag color={'purple'} icon={Atom} size={'small'} />}
 
       {/* Search 支持 */}
-      {model.search && (
-        <View style={[styles.tag, styles.cyanTag]}>
-          <Globe color={styles.cyanIcon.color} size={12} />
-        </View>
-      )}
+      {model.search && <Tag color={'cyan'} icon={Globe} size={'small'} />}
 
       {/* Context Window Tokens */}
       {typeof model.contextWindowTokens === 'number' && (
-        <Tag style={styles.tokenTag} textStyle={styles.tokenText}>
+        <Tag size={'small'} textProps={{ code: true }}>
           {model.contextWindowTokens === 0 ? '∞' : formatTokenNumber(model.contextWindowTokens)}
         </Tag>
       )}
