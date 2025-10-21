@@ -1,0 +1,15 @@
+# Promptfoo results and cache
+promptfoo-results.json
+results/
+.promptfoo/
+*.promptfoo.cache
+
+# Node modules
+node_modules/
+
+# Test coverage
+coverage/
+
+# Environment variables
+.env
+.env.local

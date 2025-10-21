@@ -1,5 +1,6 @@
+import { LobeBuiltinTool } from '@lobechat/types';
+
 import { isDesktop } from '@/const/version';
-import { LobeBuiltinTool } from '@/types/tool';
 
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';

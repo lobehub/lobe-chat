@@ -1,3 +1,5 @@
+import { crawlResultsPrompt, searchResultsPrompt } from '@lobechat/prompts';
+import { SearchContent, SearchQuery, UniformSearchResponse } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -6,12 +8,11 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
 import { ChatMessage } from '@/types/message';
-import { SearchContent, SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 // Mock services
 vi.mock('@/services/search', () => ({
   searchService: {
-    search: vi.fn(),
+    webSearch: vi.fn(),
     crawlPages: vi.fn(),
   },
 }));
@@ -58,7 +59,7 @@ describe('search actions', () => {
         query: 'test',
       };
 
-      (searchService.search as Mock).mockResolvedValue(mockResponse);
+      (searchService.webSearch as Mock).mockResolvedValue(mockResponse);
 
       const { result } = renderHook(() => useChatStore());
       const { search } = result.current;
@@ -81,17 +82,18 @@ describe('search actions', () => {
         },
       ];
 
-      expect(searchService.search).toHaveBeenCalledWith('test query', {
+      expect(searchService.webSearch).toHaveBeenCalledWith({
         searchEngines: ['google'],
+        query: 'test query',
       });
       expect(result.current.searchLoading[messageId]).toBe(false);
       expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
-        JSON.stringify(expectedContent),
+        searchResultsPrompt(expectedContent),
       );
     });
 
-    it('should handle empty search results and retry with default engine', async () => {
+    it('should handle empty search results', async () => {
       const emptyResponse: UniformSearchResponse = {
         results: [],
         costTime: 1,
@@ -99,27 +101,7 @@ describe('search actions', () => {
         query: 'test',
       };
 
-      const retryResponse: UniformSearchResponse = {
-        results: [
-          {
-            title: 'Retry Result',
-            content: 'Retry Content',
-            url: 'https://retry.com',
-            category: 'general',
-            engines: ['google'],
-            parsedUrl: 'retry.com',
-            score: 1,
-          },
-        ],
-        costTime: 1,
-        resultNumbers: 1,
-        query: 'test',
-      };
-
-      (searchService.search as Mock)
-        .mockResolvedValueOnce(emptyResponse)
-        .mockResolvedValueOnce(emptyResponse)
-        .mockResolvedValueOnce(retryResponse);
+      (searchService.webSearch as Mock).mockResolvedValue(emptyResponse);
 
       const { result } = renderHook(() => useChatStore());
       const { search } = result.current;
@@ -135,27 +117,21 @@ describe('search actions', () => {
         await search(messageId, query);
       });
 
-      expect(searchService.search).toHaveBeenCalledTimes(3);
-      expect(searchService.search).toHaveBeenNthCalledWith(1, 'test query', {
+      expect(searchService.webSearch).toHaveBeenCalledWith({
         searchEngines: ['custom-engine'],
         searchTimeRange: 'year',
-      });
-      expect(searchService.search).toHaveBeenNthCalledWith(2, 'test query', {
-        searchTimeRange: 'year',
-      });
-      expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, {
         query: 'test query',
       });
-      expect(searchService.search).toHaveBeenNthCalledWith(3, 'test query');
-      expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, {
-        optionalParams: undefined,
-        query: 'test query',
-      });
+      expect(result.current.searchLoading[messageId]).toBe(false);
+      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+        messageId,
+        searchResultsPrompt([]),
+      );
     });
 
     it('should handle search error', async () => {
       const error = new Error('Search failed');
-      (searchService.search as Mock).mockRejectedValue(error);
+      (searchService.webSearch as Mock).mockRejectedValue(error);
 
       const { result } = renderHook(() => useChatStore());
       const { search } = result.current;
@@ -175,6 +151,10 @@ describe('search actions', () => {
         type: 'PluginServerError',
       });
       expect(result.current.searchLoading[messageId]).toBe(false);
+      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+        messageId,
+        'Search failed',
+      );
     });
   });
 
@@ -212,7 +192,7 @@ describe('search actions', () => {
 
       expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
-        JSON.stringify(expectedContent),
+        crawlResultsPrompt(expectedContent as any),
       );
     });
 
@@ -238,7 +218,7 @@ describe('search actions', () => {
 
       expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
-        JSON.stringify(mockResponse.results),
+        crawlResultsPrompt(mockResponse.results),
       );
     });
   });

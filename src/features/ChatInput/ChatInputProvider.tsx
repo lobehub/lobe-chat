@@ -19,6 +19,7 @@ export const ChatInputProvider = memo<ChatInputProviderProps>(
     sendMenu,
     chatInputEditorRef,
     onMarkdownContentChange,
+    mentionItems,
   }) => {
     const editor = useEditor();
     const slashMenuRef = useRef<HTMLDivElement>(null);
@@ -29,6 +30,7 @@ export const ChatInputProvider = memo<ChatInputProviderProps>(
           createStore({
             editor,
             leftActions,
+            mentionItems,
             mobile,
             rightActions,
             sendButtonProps,
@@ -40,6 +42,7 @@ export const ChatInputProvider = memo<ChatInputProviderProps>(
         <StoreUpdater
           chatInputEditorRef={chatInputEditorRef}
           leftActions={leftActions}
+          mentionItems={mentionItems}
           mobile={mobile}
           onMarkdownContentChange={onMarkdownContentChange}
           onSend={onSend}

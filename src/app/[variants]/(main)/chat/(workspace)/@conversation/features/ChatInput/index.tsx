@@ -1,10 +1,15 @@
 import DesktopChatInput from './Desktop';
 import MobileChatInput from './V1Mobile';
 
-const ChatInput = ({ mobile }: { mobile: boolean }) => {
+interface ChatInputProps {
+  mobile: boolean;
+  targetMemberId?: string;
+}
+
+const ChatInput = ({ mobile, targetMemberId }: ChatInputProps) => {
   const Input = mobile ? MobileChatInput : DesktopChatInput;
 
-  return <Input />;
+  return <Input targetMemberId={targetMemberId} />;
 };
 
 export default ChatInput;

@@ -7,6 +7,7 @@ import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
 import { appEnv } from '@/envs/app';
 import { getJWKS } from '@/libs/oidc-provider/jwt';
+import { normalizeLocale } from '@/locales/resources';
 
 import { DrizzleAdapter } from './adapter';
 import { defaultClaims, defaultClients, defaultScopes } from './config';
@@ -76,6 +77,9 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
     // 1. 客户端配置
     clients: defaultClients,
 
+    // 新增：确保 ID Token 包含所有 scope 对应的 claims，而不仅仅是 openid scope
+    conformIdTokenClaims: false,
+
     // 7. Cookie 配置
     cookies: {
       keys: cookieKeys,
@@ -93,6 +97,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
       resourceIndicators: {
         defaultResource: () => API_AUDIENCE,
         enabled: true,
+
         getResourceServerInfo: (ctx, resourceIndicator) => {
           logProvider('getResourceServerInfo called with indicator: %s', resourceIndicator); // <-- 添加这行日志
           if (resourceIndicator === API_AUDIENCE) {
@@ -107,6 +112,8 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
           logProvider('Indicator does not match API_AUDIENCE, throwing InvalidTarget.'); // <-- 添加这行日志
           throw new errors.InvalidTarget();
         },
+        // 当客户端使用刷新令牌请求新的访问令牌但没有指定资源时，授权服务器会检查原始授权中包含的所有资源，并将这些资源用于新的访问令牌。这提供了一种便捷的方式来维持授权一致性，而不需要客户端在每次刷新时重新指定所有资源
+        useGrantedResource: () => true,
       },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
@@ -195,7 +202,25 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
         // ---> 添加日志 <---
         logProvider('interactions.url function called');
         logProvider('Interaction details: %O', interaction);
-        const interactionUrl = `/oauth/consent/${interaction.uid}`;
+
+        // 读取 OIDC 请求中的 ui_locales 参数（空格分隔的语言优先级）
+        // https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+        const uiLocalesRaw = (interaction.params?.ui_locales || ctx.oidc?.params?.ui_locales) as
+          | string
+          | undefined;
+
+        let query = '';
+        if (uiLocalesRaw) {
+          // 取第一个优先语言，规范化到站点支持的标签
+          const first = uiLocalesRaw.split(/[\s,]+/).find(Boolean);
+          const hl = normalizeLocale(first);
+          query = `?hl=${encodeURIComponent(hl)}`;
+          logProvider('Detected ui_locales=%s -> using hl=%s', uiLocalesRaw, hl);
+        } else {
+          logProvider('No ui_locales provided in authorization request');
+        }
+
+        const interactionUrl = `/oauth/consent/${interaction.uid}${query}`;
         logProvider('Generated interaction URL: %s', interactionUrl);
         // ---> 添加日志结束 <---
         return interactionUrl;

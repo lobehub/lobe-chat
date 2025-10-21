@@ -4,37 +4,88 @@ LobeChat 的文件夹目录架构如下：
 
 ```bash
 src
-├── app        # 应用主要逻辑和状态管理相关的代码
+├── app        # Next.js App Router 实现，包含路由组和 API 路由
 ├── components # 可复用的 UI 组件
 ├── config     # 应用的配置文件，包含客户端环境变量与服务端环境变量
-├── const      # 用于定义常量，如 action 类型、路由名等
 ├── features   # 与业务功能相关的功能模块，如 Agent 设置、插件开发弹窗等
 ├── hooks      # 全应用复用自定义的工具 Hooks
 ├── layout     # 应用的布局组件，如导航栏、侧边栏等
+├── libs       # 第三方集成（分析、OIDC 等）
 ├── locales    # 国际化的语言文件
+├── server     # 服务端模块和服务
 ├── services   # 封装的后端服务接口，如 HTTP 请求
 ├── store      # 用于状态管理的 zustand store
+├── styles     # 全局样式和 CSS-in-JS 配置
 ├── types      # TypeScript 的类型定义文件
 └── utils      # 通用的工具函数
 ```
 
 ## app
 
-在 `app` 文件夹中，我们将每个路由页面按照 app router 的 [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups) 进行组织，以此来分别处理桌面端和移动端的代码实现。以 `welcome` 页面的文件结构为例：
+`app` 目录遵循 Next.js 13+ App Router 约定，采用复杂的架构，使用 [路由组](https://nextjs.org/docs/app/building-your-application/routing/route-groups) 来组织后端服务、平台变体和应用路由：
 
 ```bash
-welcome
-├── (desktop)               # 桌面端实现
-│   ├── features            # 桌面端特有的功能
-│   ├── index.tsx           # 桌面端的主入口文件
-│   └── layout.desktop.tsx  # 桌面端的布局组件
-├── (mobile)                # 移动端实现
-│   ├── features            # 移动端特有的功能
-│   ├── index.tsx           # 移动端的主入口文件
-│   └── layout.mobile.tsx   # 移动端的布局组件
-├── features                # 此文件夹包含双端共享的特性代码，如 Banner 组件
-│   └── Banner
-└── page.tsx                # 此为页面的主入口文件，用于根据设备类型选择加载桌面端或移动端的代码
+app
+├── (backend)/                    # 后端 API 路由和服务
+│   ├── api/                      # REST API 端点
+│   │   ├── auth/                 # 身份验证路由
+│   │   └── webhooks/             # Webhook 处理器
+│   ├── middleware/               # 请求中间件
+│   ├── oidc/                     # OpenID Connect 路由
+│   ├── trpc/                     # tRPC API 端点
+│   │   ├── async/                # 异步 tRPC 路由
+│   │   ├── desktop/              # 桌面端专用 tRPC 路由
+│   │   ├── edge/                 # Edge 运行时 tRPC 路由
+│   │   ├── lambda/               # Lambda tRPC 路由
+│   │   └── tools/                # 工具 tRPC 路由
+│   └── webapi/                   # Web API 端点
+│       ├── chat/                 # 聊天相关 API
+│       ├── models/               # 模型管理 API
+│       ├── tts/                  # 文本转语音 API
+│       └── ...
+├── [variants]/                   # 平台和设备变体
+│   ├── (auth)/                   # 身份验证页面
+│   │   ├── login/
+│   │   ├── signup/
+│   │   └── next-auth/
+│   ├── (main)/                   # 主应用路由
+│   │   ├── (mobile)/             # 移动端专用路由
+│   │   │   └── me/               # 移动端个人资料页面
+│   │   ├── _layout/              # 布局组件
+│   │   ├── chat/                 # 聊天界面
+│   │   ├── discover/             # 发现页面
+│   │   ├── files/                # 文件管理
+│   │   ├── image/                # 图像生成
+│   │   ├── profile/              # 用户资料
+│   │   ├── repos/                # 仓库管理
+│   │   └── settings/             # 应用设置
+│   └── @modal/                   # 并行模态框路由
+│       ├── (.)changelog/
+│       └── _layout/
+├── desktop/                      # 桌面端专用路由
+│   └── devtools/
+├── manifest.ts                   # PWA 清单
+├── robots.tsx                    # Robots.txt 生成
+├── sitemap.tsx                   # 站点地图生成
+└── sw.ts                         # Service Worker
 ```
 
-通过这种方式，我们可以清晰地区分和管理桌面端和移动端的代码，同时也能方便地复用在两种设备上都需要的代码，从而提高开发效率并保持代码的整洁和可维护性。
+### 架构说明
+
+**路由组：**
+- `(backend)` - 包含所有服务端 API 路由、中间件和后端服务
+- `[variants]` - 处理不同平台变体和主应用页面的动态路由组
+- `@modal` - 使用 Next.js 并行路由的模态框对话框并行路由
+
+**平台组织：**
+- 架构通过路由组织支持多个平台（Web、桌面端、移动端）
+- 桌面端专用路由位于 `desktop/` 目录中
+- 移动端专用路由组织在 `(main)/(mobile)/` 下
+- 共享布局和组件位于 `_layout/` 目录中
+
+**API 架构：**
+- `(backend)/api/` 和 `(backend)/webapi/` 中的 REST API
+- 按运行时环境组织的 tRPC 端点（edge、lambda、async、desktop）
+- 专用路由组中的身份验证和 OIDC 处理
+
+这种架构在保持不同部署目标和运行时环境灵活性的同时，提供了清晰的关注点分离。

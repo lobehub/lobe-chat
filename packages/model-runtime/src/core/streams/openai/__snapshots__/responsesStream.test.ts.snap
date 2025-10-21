@@ -145,6 +145,445 @@ exports[`OpenAIResponsesStream > Reasoning > summary 1`] = `
 ]
 `;
 
+exports[`OpenAIResponsesStream > should handle chunk errors in catch block 1`] = `
+[
+  "id: resp_error_catch
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: undefined
+",
+  "event: reasoning
+",
+  "data: undefined
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle chunks with undefined values gracefully 1`] = `
+[
+  "id: resp_undefined_vals
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: undefined
+",
+  "event: reasoning
+",
+  "data: undefined
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle first chunk error with FIRST_CHUNK_ERROR_KEY 1`] = `
+[
+  "id: first_chunk_error
+",
+  "event: error
+",
+  "data: {"body":{"message":"Invalid API key","errorType":"InvalidProviderAPIKey"},"message":"Invalid API key","type":"InvalidProviderAPIKey"}
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle first chunk error with message object 1`] = `
+[
+  "id: first_chunk_error
+",
+  "event: error
+",
+  "data: {"body":{"message":{"error":"API quota exceeded","code":429}},"message":"{\\"message\\":{\\"error\\":\\"API quota exceeded\\",\\"code\\":429}}","type":"ProviderBizError"}
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle first chunk error without message 1`] = `
+[
+  "id: first_chunk_error
+",
+  "event: error
+",
+  "data: {"body":{"code":"rate_limit_exceeded","status":429},"message":"{\\"code\\":\\"rate_limit_exceeded\\",\\"status\\":429}","type":"ProviderBizError"}
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle function_call in response.output_item.added 1`] = `
+[
+  "id: resp_test_456
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: resp_test_456
+",
+  "event: tool_calls
+",
+  "data: [{"function":{"arguments":"{\\"location\\": \\"San Francisco\\"}","name":"get_weather"},"id":"call_abc123","index":0,"type":"function"}]
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle multiple annotations and accumulate citations 1`] = `
+[
+  "id: resp_multi_citation
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: msg_cite
+",
+  "event: text
+",
+  "data: null
+
+",
+  "id: msg_cite
+",
+  "event: text
+",
+  "data: null
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle multiple function_calls with incrementing index 1`] = `
+[
+  "id: resp_multi_tool
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: resp_multi_tool
+",
+  "event: tool_calls
+",
+  "data: [{"function":{"arguments":"{\\"param\\": \\"value1\\"}","name":"tool_one"},"id":"call_1","index":0,"type":"function"}]
+
+",
+  "id: resp_multi_tool
+",
+  "event: tool_calls
+",
+  "data: [{"function":{"arguments":"{\\"param\\": \\"value2\\"}","name":"tool_two"},"id":"call_2","index":1,"type":"function"}]
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle non-standard item types in output_item.added 1`] = `
+[
+  "id: resp_other_item
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: resp_other_item
+",
+  "event: data
+",
+  "data: {"type":"message","id":"msg_test","status":"in_progress","content":[],"role":"assistant"}
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.completed with usage 1`] = `
+[
+  "id: resp_completed_usage
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: resp_completed_usage
+",
+  "event: usage
+",
+  "data: {"inputCacheMissTokens":100,"inputTextTokens":100,"outputTextTokens":50,"totalInputTokens":100,"totalOutputTokens":50,"totalTokens":150}
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.completed without usage 1`] = `
+[
+  "id: resp_completed_no_usage
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: resp_completed_no_usage
+",
+  "event: data
+",
+  "data: {"type":"response.completed","response":{"id":"resp_completed_no_usage","status":"completed"}}
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.created event 1`] = `
+[
+  "id: resp_test_123
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.function_call_arguments.delta 1`] = `
+[
+  "id: resp_delta_test
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: resp_delta_test
+",
+  "event: tool_calls
+",
+  "data: [{"function":{"arguments":"{\\"query\\":","name":"search_web"},"id":"call_delta","index":0,"type":"function"}]
+
+",
+  "id: resp_delta_test
+",
+  "event: tool_calls
+",
+  "data: [{"function":{"arguments":" \\"OpenAI\\"}","name":"search_web"},"id":"call_delta","index":0,"type":"function"}]
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.output_item.done with citations 1`] = `
+[
+  "id: resp_done_citation
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: msg_final
+",
+  "event: text
+",
+  "data: null
+
+",
+  "id: msg_final
+",
+  "event: grounding
+",
+  "data: {"citations":[{"title":"Citation Title","url":"https://citation.com"}]}
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.output_item.done without citations 1`] = `
+[
+  "id: resp_done_no_citation
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: msg_no_cite
+",
+  "event: text
+",
+  "data: null
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.output_text.annotation.added 1`] = `
+[
+  "id: resp_annotation
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: msg_citation
+",
+  "event: text
+",
+  "data: null
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.output_text.delta 1`] = `
+[
+  "id: resp_text_delta
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: msg_123
+",
+  "event: text
+",
+  "data: "Hello "
+
+",
+  "id: msg_123
+",
+  "event: text
+",
+  "data: "world!"
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.reasoning_summary_part.added for first part 1`] = `
+[
+  "id: resp_reasoning
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: reasoning_1
+",
+  "event: reasoning
+",
+  "data: ""
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.reasoning_summary_part.added for subsequent parts 1`] = `
+[
+  "id: resp_reasoning_multi
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: reasoning_1
+",
+  "event: reasoning
+",
+  "data: ""
+
+",
+  "id: reasoning_2
+",
+  "event: reasoning
+",
+  "data: "\\n"
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle response.reasoning_summary_text.delta 1`] = `
+[
+  "id: resp_reasoning_delta
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: reasoning_123
+",
+  "event: reasoning
+",
+  "data: "Thinking about"
+
+",
+  "id: reasoning_123
+",
+  "event: reasoning
+",
+  "data: " the problem..."
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle stream chunk transformation error with null access 1`] = `
+[
+  "id: resp_error_test
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: null
+",
+  "event: text
+",
+  "data: "test"
+
+",
+]
+`;
+
+exports[`OpenAIResponsesStream > should handle unknown chunk type as data 1`] = `
+[
+  "id: resp_unknown
+",
+  "event: data
+",
+  "data: "in_progress"
+
+",
+  "id: resp_unknown
+",
+  "event: data
+",
+  "data: {"type":"response.unknown_event","data":"some data"}
+
+",
+]
+`;
+
 exports[`OpenAIResponsesStream > should transform OpenAI stream to protocol stream 1`] = `
 [
   "id: resp_683e7b8ca3308190b6837f20d2c015cd0cf93af363cdcf58

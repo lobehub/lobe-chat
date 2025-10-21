@@ -12,6 +12,7 @@ const googleChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       video: true,
       vision: true,
     },
@@ -819,7 +820,7 @@ const googleChatModels: AIChatModelCard[] = [
 ];
 
 // Common parameters for Imagen models
-const imagenBaseParameters: ModelParamsSchema = {
+export const imagenGenParameters: ModelParamsSchema = {
   aspectRatio: {
     default: '1:1',
     enum: ['1:1', '16:9', '9:16', '3:4', '4:3'],
@@ -840,7 +841,7 @@ const NANO_BANANA_ASPECT_RATIOS = [
   '21:9', // 1536x672
 ];
 
-const nanoBananaParameters: ModelParamsSchema = {
+export const nanoBananaParameters: ModelParamsSchema = {
   aspectRatio: {
     default: '1:1',
     enum: NANO_BANANA_ASPECT_RATIOS,
@@ -894,7 +895,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
@@ -907,7 +908,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series Ultra version',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
     },
@@ -920,7 +921,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series Fast version',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.02, strategy: 'fixed', unit: 'image' }],
     },
@@ -932,7 +933,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
     releasedAt: '2024-06-06',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
@@ -944,7 +945,7 @@ const googleImageModels: AIImageModelCard[] = [
     description: 'Imagen 4th generation text-to-image model series Ultra version',
     organization: 'Deepmind',
     releasedAt: '2025-06-11',
-    parameters: imagenBaseParameters,
+    parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
     },

@@ -1,6 +1,5 @@
 import { dispatch } from '@lobechat/electron-client-ipc';
-
-import { FileMetadata } from '@/types/files';
+import { FileMetadata } from '@lobechat/types';
 
 /**
  * 桌面应用文件API客户端服务

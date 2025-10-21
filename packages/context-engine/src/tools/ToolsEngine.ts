@@ -56,7 +56,7 @@ export class ToolsEngine {
     const { toolIds = [], model, provider, context } = params;
 
     // Merge user-provided tool IDs with default tool IDs
-    const allToolIds = [...toolIds, ...this.defaultToolIds];
+    const allToolIds = [...new Set([...toolIds, ...this.defaultToolIds])];
 
     log(
       'Generating tools for model=%s, provider=%s, pluginIds=%o (includes %d default tools)',
@@ -96,8 +96,8 @@ export class ToolsEngine {
   generateToolsDetailed(params: GenerateToolsParams): ToolsGenerationResult {
     const { toolIds = [], model, provider, context } = params;
 
-    // Merge user-provided tool IDs with default tool IDs
-    const allToolIds = [...toolIds, ...this.defaultToolIds];
+    // Merge user-provided tool IDs with default tool IDs and deduplicate
+    const allToolIds = [...new Set([...toolIds, ...this.defaultToolIds])];
 
     log(
       'Generating detailed tools for model=%s, provider=%s, pluginIds=%o (includes %d default tools)',
@@ -107,28 +107,33 @@ export class ToolsEngine {
       this.defaultToolIds.length,
     );
 
-    // Filter and validate plugins
+    // Check if model supports Function Calling
+    const supportsFunctionCall = this.checkFunctionCallSupport(model, provider);
+
+    // Filter and validate plugins with FC support information
     const { enabledManifests, filteredPlugins } = this.filterEnabledPlugins(
       allToolIds,
       model,
       provider,
       context,
+      supportsFunctionCall,
     );
 
-    // Convert to UniformTool format
-    const tools = this.convertManifestsToTools(enabledManifests);
+    // Convert to UniformTool format only if there are enabled manifests
+    const tools =
+      enabledManifests.length > 0 ? this.convertManifestsToTools(enabledManifests) : undefined;
 
     log(
       'Generated detailed result: enabled=%d, filtered=%d, tools=%d',
       enabledManifests.length,
       filteredPlugins.length,
-      tools.length,
+      tools?.length ?? 0,
     );
 
     return {
       enabledToolIds: enabledManifests.map((m) => m.identifier),
       filteredTools: filteredPlugins,
-      tools: tools.length > 0 ? tools : undefined,
+      tools,
     };
   }
 
@@ -155,6 +160,7 @@ export class ToolsEngine {
     model: string,
     provider: string,
     context?: ToolsGenerationContext,
+    supportsFunctionCall?: boolean,
   ): {
     enabledManifests: LobeChatPluginManifest[];
     filteredPlugins: Array<{
@@ -169,6 +175,22 @@ export class ToolsEngine {
     }> = [];
 
     log('Filtering plugins: %o', pluginIds);
+
+    // If function calling is not supported, filter all plugins as incompatible
+    if (supportsFunctionCall === false) {
+      for (const pluginId of pluginIds) {
+        const manifest = this.manifestSchemas.get(pluginId);
+        if (!manifest) {
+          log('Plugin not found: %s', pluginId);
+          filteredPlugins.push({ id: pluginId, reason: 'not_found' });
+        } else {
+          log('Plugin incompatible (no FC support): %s', pluginId);
+          filteredPlugins.push({ id: pluginId, reason: 'incompatible' });
+        }
+      }
+      log('Filtering complete: enabled=%d, filtered=%d', 0, filteredPlugins.length);
+      return { enabledManifests, filteredPlugins };
+    }
 
     for (const pluginId of pluginIds) {
       const manifest = this.manifestSchemas.get(pluginId);

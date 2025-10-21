@@ -71,7 +71,7 @@ describe('aiChatRouter', () => {
     expect(mockGet).toHaveBeenCalledWith({ includeTopic: true, sessionId: 's1', topicId: 't1' });
     expect(res.assistantMessageId).toBe('m-assistant');
     expect(res.userMessageId).toBe('m-user');
-    expect(res.isCreatNewTopic).toBe(true);
+    expect(res.isCreateNewTopic).toBe(true);
     expect(res.topicId).toBe('t1');
     expect(res.messages?.length).toBe(2);
     expect(res.topics?.length).toBe(1);
@@ -102,7 +102,7 @@ describe('aiChatRouter', () => {
       sessionId: 's1',
       topicId: 't-exist',
     });
-    expect(res.isCreatNewTopic).toBe(false);
+    expect(res.isCreateNewTopic).toBe(false);
     expect(res.topicId).toBe('t-exist');
   });
 });

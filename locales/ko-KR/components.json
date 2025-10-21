@@ -5,73 +5,73 @@
     "enterFirstArgument": "첫 번째 매개변수를 입력하세요..."
   },
   "DragUpload": {
-    "dragDesc": "여기에 파일을 드래그하여 여러 이미지를 업로드할 수 있습니다.",
-    "dragFileDesc": "여기에 이미지와 파일을 드래그하여 여러 이미지와 파일을 업로드할 수 있습니다.",
+    "dragDesc": "파일을 이곳에 끌어다 놓으세요. 여러 이미지를 업로드할 수 있습니다.",
+    "dragFileDesc": "이미지 및 파일을 이곳에 끌어다 놓으세요. 여러 개의 이미지와 파일 업로드를 지원합니다.",
     "dragFileTitle": "파일 업로드",
     "dragTitle": "이미지 업로드"
   },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "지식 베이스에 추가",
-      "addToOtherKnowledgeBase": "다른 지식 베이스에 추가",
-      "batchChunking": "배치 청크 분할",
-      "chunking": "청크 분할",
-      "chunkingTooltip": "파일을 여러 텍스트 블록으로 분할하고 벡터화한 후, 의미 검색 및 파일 대화에 사용할 수 있습니다.",
-      "chunkingUnsupported": "이 파일은 청크 처리를 지원하지 않습니다.",
-      "confirmDelete": "해당 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
-      "confirmDeleteMultiFiles": "선택한 {{count}} 개 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
-      "confirmRemoveFromKnowledgeBase": "선택한 {{count}} 개 파일을 지식 베이스에서 제거하려고 합니다. 제거 후에도 파일은 모든 파일에서 볼 수 있으니, 작업을 확인해 주세요.",
+      "addToKnowledgeBase": "지식베이스에 추가",
+      "addToOtherKnowledgeBase": "다른 지식베이스에 추가",
+      "batchChunking": "일괄 분할",
+      "chunking": "분할",
+      "chunkingTooltip": "파일을 여러 텍스트 블록으로 분할하고 벡터화하여 의미 기반 검색 및 파일 대화에 사용할 수 있습니다.",
+      "chunkingUnsupported": "이 파일은 분할을 지원하지 않습니다.",
+      "confirmDelete": "이 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없습니다. 계속하시겠습니까?",
+      "confirmDeleteMultiFiles": "선택한 {{count}}개의 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없습니다. 계속하시겠습니까?",
+      "confirmRemoveFromKnowledgeBase": "선택한 {{count}}개의 파일을 지식베이스에서 제거하려고 합니다. 제거 후에도 전체 파일 목록에서 확인할 수 있습니다. 계속하시겠습니까?",
       "copyUrl": "링크 복사",
       "copyUrlSuccess": "파일 주소가 성공적으로 복사되었습니다.",
       "createChunkingTask": "준비 중...",
       "deleteSuccess": "파일이 성공적으로 삭제되었습니다.",
       "downloading": "파일 다운로드 중...",
-      "removeFromKnowledgeBase": "지식 베이스에서 제거",
+      "removeFromKnowledgeBase": "지식베이스에서 제거",
       "removeFromKnowledgeBaseSuccess": "파일이 성공적으로 제거되었습니다."
     },
-    "bottom": "끝까지 도달했습니다.",
+    "bottom": "마지막입니다",
     "config": {
-      "showFilesInKnowledgeBase": "지식 베이스의 내용 표시"
+      "showFilesInKnowledgeBase": "지식베이스의 콘텐츠 표시"
     },
     "emptyStatus": {
       "actions": {
         "file": "파일 업로드",
         "folder": "폴더 업로드",
-        "knowledgeBase": "새 지식 베이스 만들기"
+        "knowledgeBase": "지식베이스 생성"
       },
       "or": "또는",
-      "title": "파일 또는 폴더를 여기에 드래그하세요."
+      "title": "파일이나 폴더를 이곳에 끌어다 놓으세요"
     },
     "title": {
-      "createdAt": "생성 시간",
+      "createdAt": "생성일",
       "size": "크기",
       "title": "파일"
     },
     "total": {
-      "fileCount": "총 {{count}} 항목",
-      "selectedCount": "선택된 {{count}} 항목"
+      "fileCount": "총 {{count}}개 항목",
+      "selectedCount": "{{count}}개 선택됨"
     }
   },
   "FileParsingStatus": {
     "chunks": {
       "embeddingStatus": {
-        "empty": "텍스트 블록이 완전히 벡터화되지 않았습니다. 이는 의미 검색 기능을 사용할 수 없게 만듭니다. 검색 품질을 향상시키기 위해 텍스트 블록을 벡터화해 주세요.",
+        "empty": "텍스트 블록이 아직 완전히 벡터화되지 않았습니다. 의미 기반 검색 기능이 제한될 수 있습니다. 검색 품질을 높이기 위해 벡터화를 완료하세요.",
         "error": "벡터화 실패",
-        "errorResult": "벡터화에 실패했습니다. 다시 확인한 후 재시도해 주세요. 실패 원인:",
-        "processing": "텍스트 블록이 벡터화되고 있습니다. 잠시 기다려 주세요.",
-        "success": "현재 텍스트 블록이 모두 벡터화되었습니다."
+        "errorResult": "벡터화에 실패했습니다. 확인 후 다시 시도하세요. 실패 원인:",
+        "processing": "텍스트 블록 벡터화 중입니다. 잠시만 기다려 주세요.",
+        "success": "모든 텍스트 블록이 벡터화되었습니다."
       },
       "embeddings": "벡터화",
       "status": {
-        "error": "청크 분할 실패",
-        "errorResult": "청크 분할에 실패했습니다. 다시 시도하기 전에 확인해 주세요. 실패 원인:",
-        "processing": "청크 분할 중",
-        "processingTip": "서버에서 텍스트 블록을 분할하고 있습니다. 페이지를 닫아도 분할 진행에는 영향을 미치지 않습니다."
+        "error": "분할 실패",
+        "errorResult": "분할에 실패했습니다. 확인 후 다시 시도하세요. 실패 원인:",
+        "processing": "분할 중",
+        "processingTip": "서버에서 텍스트 블록을 분할 중입니다. 페이지를 닫아도 작업은 계속됩니다."
       }
     }
   },
   "GoBack": {
-    "back": "뒤로 가기"
+    "back": "뒤로가기"
   },
   "HtmlPreview": {
     "actions": {
@@ -87,101 +87,101 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "이미지 변경 클릭",
-      "dropMultipleFiles": "여러 파일 업로드는 지원하지 않으며, 첫 번째 파일만 사용됩니다"
+      "changeImage": "이미지를 클릭하여 변경",
+      "dropMultipleFiles": "여러 파일 업로드는 지원되지 않으며, 첫 번째 파일만 사용됩니다."
     },
     "placeholder": {
       "primary": "이미지 추가",
-      "secondary": "클릭하거나 드래그하여 업로드"
+      "secondary": "클릭하거나 끌어다 놓아 업로드"
     }
   },
   "KeyValueEditor": {
-    "addButton": "새 행 추가",
+    "addButton": "행 추가",
     "deleteTooltip": "삭제",
-    "duplicateKeyError": "키 이름은 고유해야 합니다",
+    "duplicateKeyError": "키는 고유해야 합니다.",
     "keyPlaceholder": "키",
     "valuePlaceholder": "값"
   },
   "MaxTokenSlider": {
-    "unlimited": "무제한"
+    "unlimited": "제한 없음"
   },
   "ModelSelect": {
     "featureTag": {
-      "custom": "사용자 정의 모델, 기본적으로 함수 호출 및 시각 인식을 모두 지원하며, 실제 기능을 확인하세요",
-      "file": "이 모델은 파일 업로드 및 인식을 지원합니다",
-      "functionCall": "이 모델은 함수 호출을 지원합니다",
-      "imageOutput": "이 모델은 이미지를 생성하는 기능을 지원합니다.",
-      "reasoning": "이 모델은 깊이 있는 사고를 지원합니다.",
-      "search": "이 모델은 온라인 검색을 지원합니다.",
-      "tokens": "이 모델은 단일 세션당 최대 {{tokens}} 토큰을 지원합니다",
-      "video": "이 모델은 비디오 인식을 지원합니다",
-      "vision": "이 모델은 시각 인식을 지원합니다"
+      "custom": "사용자 정의 모델입니다. 기본 설정은 함수 호출 및 시각 인식을 지원합니다. 실제 사용 가능 여부는 확인이 필요합니다.",
+      "file": "이 모델은 파일 업로드 및 인식을 지원합니다.",
+      "functionCall": "이 모델은 함수 호출(Function Call)을 지원합니다.",
+      "imageOutput": "이 모델은 이미지 생성을 지원합니다.",
+      "reasoning": "이 모델은 심층 사고를 지원합니다.",
+      "search": "이 모델은 인터넷 검색을 지원합니다.",
+      "tokens": "이 모델은 세션당 최대 {{tokens}} 토큰을 지원합니다.",
+      "video": "이 모델은 비디오 인식을 지원합니다.",
+      "vision": "이 모델은 시각 인식을 지원합니다."
     },
-    "removed": "모델이 목록에서 제거되었습니다. 선택이 취소되면 자동으로 제거됩니다."
+    "removed": "이 모델은 목록에 없습니다. 선택 해제 시 자동으로 제거됩니다."
   },
   "ModelSwitchPanel": {
-    "emptyModel": "활성화된 모델이 없습니다. 설정으로 이동하여 활성화하세요",
-    "emptyProvider": "활성화된 서비스 제공자가 없습니다. 설정으로 가서 활성화하세요.",
-    "goToSettings": "설정으로 가기",
-    "provider": "제공자",
+    "emptyModel": "활성화된 모델이 없습니다. 설정에서 활성화하세요.",
+    "emptyProvider": "활성화된 서비스 제공자가 없습니다. 설정에서 활성화하세요.",
+    "goToSettings": "설정으로 이동",
+    "provider": "서비스 제공자",
     "title": "모델"
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "클릭하거나 드래그하여 더 업로드"
+      "uploadMore": "클릭하거나 끌어다 놓아 더 많은 이미지 업로드"
     },
     "modal": {
       "complete": "완료",
-      "newFileIndicator": "새로 추가됨",
-      "selectImageToPreview": "미리 볼 이미지를 선택하세요",
+      "newFileIndicator": "신규",
+      "selectImageToPreview": "미리볼 이미지를 선택하세요",
       "title": "이미지 관리 ({{count}})",
       "upload": "이미지 업로드"
     },
     "placeholder": {
-      "primary": "클릭하거나 드래그하여 이미지를 업로드하세요",
+      "primary": "클릭하거나 끌어다 놓아 이미지 업로드",
       "secondary": "여러 이미지 선택 가능"
     },
     "progress": {
       "uploadingWithCount": "{{completed}}/{{total}} 업로드 완료"
     },
     "validation": {
-      "fileSizeExceeded": "파일 용량이 허용된 최대 크기를 초과했습니다",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}})이(가) 허용된 최대 크기 {{maxSize}}를 초과했습니다",
-      "fileSizeExceededMultiple": "{{count}}개의 파일이 허용된 최대 크기 {{maxSize}}를 초과합니다: {{fileList}}",
-      "imageCountExceeded": "이미지 수가 허용된 한도를 초과했습니다"
+      "fileSizeExceeded": "파일 크기 제한 초과",
+      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}})이(가) 최대 크기 제한 {{maxSize}}를 초과했습니다.",
+      "fileSizeExceededMultiple": "{{count}}개의 파일이 최대 크기 제한 {{maxSize}}를 초과했습니다: {{fileList}}",
+      "imageCountExceeded": "이미지 개수 제한 초과"
     }
   },
   "OllamaSetupGuide": {
     "action": {
-      "close": "팝업 닫기",
-      "start": "설치 및 실행 완료, 대화 시작"
+      "close": "알림 닫기",
+      "start": "설치 및 실행 완료, 대화를 시작하세요"
     },
     "cors": {
-      "description": "브라우저 보안 제한으로 인해 Ollama를 사용하기 위해서는 교차 출처 구성이 필요합니다.",
+      "description": "브라우저 보안 제한으로 인해 Ollama를 사용하려면 CORS 설정이 필요합니다.",
       "linux": {
-        "env": "[Service] 섹션에 `Environment`를 추가하고 OLLAMA_ORIGINS 환경 변수를 추가하세요:",
-        "reboot": "systemd를 재로드하고 Ollama를 재시작하세요",
-        "systemd": "systemd를 호출하여 ollama 서비스를 편집하세요:"
+        "env": "[Service] 섹션에 `Environment`를 추가하고 OLLAMA_ORIGINS 환경 변수를 설정하세요:",
+        "reboot": "systemd를 다시 로드하고 Ollama를 재시작하세요",
+        "systemd": "systemd를 사용하여 ollama 서비스를 편집하세요:"
       },
-      "macos": "터미널 애플리케이션을 열고 아래 명령어를 붙여넣은 후 Enter 키를 눌러 실행하세요",
-      "reboot": "작업이 완료된 후 Ollama 서비스를 재시작하세요",
-      "title": "Ollama의 교차 출처 접근 허용 구성",
-      "windows": "Windows에서 '제어판'을 클릭하고 시스템 환경 변수를 편집하세요. 사용자 계정에 'OLLAMA_ORIGINS'라는 이름의 환경 변수를 새로 만들고 값으로 *를 입력한 후 '확인/적용'을 클릭하여 저장하세요."
+      "macos": "터미널 앱을 열고 아래 명령어를 붙여넣은 후 Enter 키를 누르세요.",
+      "reboot": "설정 후 Ollama 서비스를 재시작하세요.",
+      "title": "Ollama의 CORS 접근 허용 설정",
+      "windows": "Windows에서는 제어판을 열고 시스템 환경 변수를 편집하세요. 사용자 계정에 'OLLAMA_ORIGINS'라는 이름의 환경 변수를 새로 만들고 값은 *로 설정한 후 '확인/적용'을 클릭하세요."
     },
     "install": {
-      "description": "Ollama가 이미 실행 중인지 확인하세요. Ollama를 다운로드하지 않았다면 공식 웹사이트<1>에서 다운로드</1>하세요.",
-      "docker": "Docker를 사용하는 것을 선호하는 경우, Ollama는 공식 Docker 이미지를 제공합니다. 아래 명령어로 가져올 수 있습니다:",
+      "description": "Ollama가 실행 중인지 확인하세요. 설치하지 않았다면 <1>공식 웹사이트</1>에서 다운로드하세요.",
+      "docker": "Docker를 선호하는 경우, Ollama는 공식 Docker 이미지를 제공합니다. 다음 명령어로 다운로드할 수 있습니다:",
       "linux": {
-        "command": "아래 명령어로 설치하세요:",
-        "manual": "또는 <1>Linux 수동 설치 가이드</1>를 참조하여 직접 설치할 수 있습니다."
+        "command": "다음 명령어로 설치하세요:",
+        "manual": "또는 <1>Linux 수동 설치 가이드</1>를 참고하여 직접 설치할 수 있습니다."
       },
-      "title": "로컬에 Ollama 애플리케이션 설치 및 실행",
-      "windowsTab": "Windows (미리보기 버전)"
+      "title": "로컬에 Ollama 설치 및 실행",
+      "windowsTab": "Windows (프리뷰)"
     }
   },
   "Thinking": {
-    "thinking": "심층적으로 생각 중...",
-    "thought": "심층적으로 생각했습니다 (소요 시간 {{duration}} 초)",
-    "thoughtWithDuration": "심층적으로 생각했습니다"
+    "thinking": "심층 사고 중...",
+    "thought": "심층 사고 완료 (소요 시간 {{duration}}초)",
+    "thoughtWithDuration": "심층 사고 완료"
   }
 }

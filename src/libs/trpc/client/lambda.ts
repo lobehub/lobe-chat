@@ -10,6 +10,10 @@ import type { LambdaRouter } from '@/server/routers/lambda';
 
 const log = debug('lobe-image:lambda-client');
 
+// 401 error debouncing: prevent showing multiple login notifications in short time
+let last401Time = 0;
+const MIN_401_INTERVAL = 5000; // 5 seconds
+
 // handle error
 const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
   return ({ op, next }) =>
@@ -18,10 +22,9 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
         complete: () => observer.complete(),
         error: async (err) => {
           const showError = (op.context?.showNotification as boolean) ?? true;
+          const status = err.data?.httpStatus as number;
 
           if (showError) {
-            const status = err.data?.httpStatus as number;
-
             const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
             const { fetchErrorNotification } = await import(
               '@/components/Error/fetchErrorNotification'
@@ -29,7 +32,14 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
 
             switch (status) {
               case 401: {
-                loginRequired.redirect();
+                // Debounce: only show login notification once every 5 seconds
+                const now = Date.now();
+                if (now - last401Time > MIN_401_INTERVAL) {
+                  last401Time = now;
+                  loginRequired.redirect();
+                }
+                // Mark error as non-retryable to prevent SWR infinite retry loop
+                err.meta = { ...err.meta, shouldRetry: false };
                 break;
               }
 

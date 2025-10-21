@@ -142,7 +142,8 @@ ENV ACCESS_CODE="" \
     DEFAULT_AGENT_CONFIG="" \
     SYSTEM_AGENT="" \
     FEATURE_FLAGS="" \
-    PROXY_URL=""
+    PROXY_URL="" \
+    ENABLE_AUTH_PROTECTION=""
 
 # Model Variables
 ENV \
@@ -255,7 +256,7 @@ ENV \
     # 302.AI
     AI302_API_KEY="" AI302_MODEL_LIST="" \
     # FAL
-    FAL_API_KEY="" FAL_MODEL_LIST="" \
+    ENABLED_FAL="" FAL_API_KEY="" FAL_MODEL_LIST="" \
     # BFL
     BFL_API_KEY="" BFL_MODEL_LIST="" \
     # Vercel AI Gateway

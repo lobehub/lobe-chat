@@ -1,7 +1,11 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 
 export interface CohereModelCard {
   context_length: number;
@@ -10,7 +14,7 @@ export interface CohereModelCard {
   supports_vision: boolean;
 }
 
-export const LobeCohereAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.cohere.ai/compatibility/v1',
   chatCompletion: {
     // https://docs.cohere.com/v2/docs/compatibility-api#unsupported-parameters
@@ -18,17 +22,20 @@ export const LobeCohereAI = createOpenAICompatibleRuntime({
     handlePayload: (payload) => {
       const { frequency_penalty, presence_penalty, top_p, ...rest } = payload;
 
+      // Resolve parameters with range constraints
+      const resolvedParams = resolveParameters(
+        { frequency_penalty, presence_penalty, top_p },
+        {
+          frequencyPenaltyRange: { max: 1, min: 0 },
+          normalizeTemperature: false,
+          presencePenaltyRange: { max: 1, min: 0 },
+          topPRange: { max: 1, min: 0 },
+        },
+      );
+
       return {
         ...rest,
-        frequency_penalty:
-          frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 1
-            ? frequency_penalty
-            : undefined,
-        presence_penalty:
-          presence_penalty !== undefined && presence_penalty > 0 && presence_penalty <= 1
-            ? presence_penalty
-            : undefined,
-        top_p: top_p !== undefined && top_p > 0 && top_p < 1 ? top_p : undefined,
+        ...resolvedParams,
       } as any;
     },
     noUserId: true,
@@ -65,4 +72,6 @@ export const LobeCohereAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Cohere,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeCohereAI = createOpenAICompatibleRuntime(params);

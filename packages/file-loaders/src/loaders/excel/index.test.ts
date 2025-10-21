@@ -44,4 +44,12 @@ describe('ExcelLoader', () => {
     expect(pages[0].pageContent).toBe('');
     expect(pages[0].metadata.error).toContain('Failed to load Excel file');
   });
+
+  it('should handle Excel file with only headers', async () => {
+    const onlyHeaderFile = fixturePath('only-header.xlsx');
+    const pages = await loader.loadPages(onlyHeaderFile);
+    expect(pages.length).toBeGreaterThan(0);
+    expect(pages[0].pageContent).toBeTruthy(); // 应该包含表头内容
+    expect(pages).toMatchSnapshot('only_header_pages');
+  });
 });

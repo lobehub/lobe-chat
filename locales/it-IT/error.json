@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
+  "supervisor": {
+    "decisionFailed": "Il supervisore del gruppo non riesce a funzionare. Controlla la configurazione del supervisore per assicurarti di aver impostato correttamente il modello, la chiave API e l'indirizzo API."
+  },
   "testConnectionFailed": "Connessione di prova fallita: {{error}}",
   "tts": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"

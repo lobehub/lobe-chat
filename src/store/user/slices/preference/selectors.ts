@@ -21,8 +21,10 @@ const shouldTriggerFileInKnowledgeBaseTip = (s: UserStore) =>
 const isPreferenceInit = (s: UserStore) => s.isUserStateInit;
 
 export const preferenceSelectors = {
+  enableGroupChat: (s: UserStore) => s.preference.enableGroupChat || false,
   hideSettingsMoveGuide,
   hideSyncAlert,
+  inputMarkdownRender: (s: UserStore) => !s.preference.disableInputMarkdownRender,
   isPreferenceInit,
   shouldTriggerFileInKnowledgeBaseTip,
   showUploadFileInKnowledgeBaseTip,

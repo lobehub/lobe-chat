@@ -38,4 +38,4 @@ export type {
   ToolsGenerationContext,
   ToolsGenerationResult,
 } from './tools';
-export { filterValidManifests, ToolsEngine, validateManifest } from './tools';
+export { filterValidManifests, ToolNameResolver, ToolsEngine, validateManifest } from './tools';

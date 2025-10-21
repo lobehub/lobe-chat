@@ -33,6 +33,7 @@ export const config = {
     '/',
     '/discover',
     '/discover(.*)',
+    '/labs',
     '/chat',
     '/chat(.*)',
     '/changelog(.*)',
@@ -142,7 +143,32 @@ const defaultMiddleware = (request: NextRequest) => {
 
   url.pathname = nextPathname;
 
-  return NextResponse.rewrite(url, { status: 200 });
+  // build rewrite response first
+  const rewrite = NextResponse.rewrite(url, { status: 200 });
+
+  // If locale explicitly provided via query (?hl=), persist it in cookie when user has no prior preference
+  if (explicitlyLocale) {
+    const existingLocale = request.cookies.get(LOBE_LOCALE_COOKIE)?.value as Locales | undefined;
+    if (!existingLocale) {
+      rewrite.cookies.set(LOBE_LOCALE_COOKIE, explicitlyLocale, {
+        // 90 days is a balanced persistence for locale preference
+        maxAge: 60 * 60 * 24 * 90,
+
+        path: '/',
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+      });
+      logDefault('Persisted explicit locale to cookie (no prior cookie): %s', explicitlyLocale);
+    } else {
+      logDefault(
+        'Locale cookie exists (%s), skip overwrite with %s',
+        existingLocale,
+        explicitlyLocale,
+      );
+    }
+  }
+
+  return rewrite;
 };
 
 const isPublicRoute = createRouteMatcher([
@@ -157,6 +183,8 @@ const isPublicRoute = createRouteMatcher([
   '/login',
   '/signup',
   // oauth
+  // Make only the consent view public (GET page), not other oauth paths
+  '/oauth/consent/(.*)',
   '/oidc/handoff',
   '/oidc/token',
 ]);
@@ -211,6 +239,11 @@ const nextAuthMiddleware = NextAuth.auth((req) => {
       logNextAuth('Request a protected route, redirecting to sign-in page');
       const nextLoginUrl = new URL('/next-auth/signin', req.nextUrl.origin);
       nextLoginUrl.searchParams.set('callbackUrl', req.nextUrl.href);
+      const hl = req.nextUrl.searchParams.get('hl');
+      if (hl) {
+        nextLoginUrl.searchParams.set('hl', hl);
+        logNextAuth('Preserving locale to sign-in: hl=%s', hl);
+      }
       return Response.redirect(nextLoginUrl);
     }
     logNextAuth('Request a free route but not login, allow visit without auth header');

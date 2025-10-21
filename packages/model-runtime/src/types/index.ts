@@ -8,4 +8,3 @@ export * from './textToImage';
 export * from './toolsCalling';
 export * from './tts';
 export * from './type';
-export * from './usage';

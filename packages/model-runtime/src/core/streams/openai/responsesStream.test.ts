@@ -289,6 +289,557 @@ describe('OpenAIResponsesStream', () => {
     expect(onStartMock).toHaveBeenCalledTimes(1);
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
+  it('should handle first chunk error with FIRST_CHUNK_ERROR_KEY', async () => {
+    const mockErrorChunk = {
+      [FIRST_CHUNK_ERROR_KEY]: true,
+      message: 'Invalid API key',
+      errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
+      name: 'APIError',
+      stack: 'stack trace',
+    };
+
+    const mockOpenAIStream = createReadableStream([mockErrorChunk]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('id: first_chunk_error'))).toBe(true);
+    expect(chunks.some((c) => c.includes('event: error'))).toBe(true);
+  });
+
+  it('should handle first chunk error with message object', async () => {
+    const mockErrorChunk = {
+      [FIRST_CHUNK_ERROR_KEY]: true,
+      message: { error: 'API quota exceeded', code: 429 },
+    };
+
+    const mockOpenAIStream = createReadableStream([mockErrorChunk]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('id: first_chunk_error'))).toBe(true);
+  });
+
+  it('should handle first chunk error without message', async () => {
+    const mockErrorChunk = {
+      [FIRST_CHUNK_ERROR_KEY]: true,
+      code: 'rate_limit_exceeded',
+      status: 429,
+    };
+
+    const mockOpenAIStream = createReadableStream([mockErrorChunk]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('id: first_chunk_error'))).toBe(true);
+  });
+
+  it('should handle response.created event', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_test_123',
+          status: 'in_progress',
+          object: 'response',
+          created_at: 1234567890,
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('id: resp_test_123'))).toBe(true);
+    expect(chunks.some((c) => c.includes('"in_progress"'))).toBe(true);
+  });
+
+  it('should handle function_call in response.output_item.added', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_test_456',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_item.added',
+        output_index: 0,
+        item: {
+          type: 'function_call',
+          call_id: 'call_abc123',
+          name: 'get_weather',
+          arguments: '{"location": "San Francisco"}',
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('event: tool_calls'))).toBe(true);
+    expect(chunks.some((c) => c.includes('get_weather'))).toBe(true);
+  });
+
+  it('should handle multiple function_calls with incrementing index', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_multi_tool',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_item.added',
+        output_index: 0,
+        item: {
+          type: 'function_call',
+          call_id: 'call_1',
+          name: 'tool_one',
+          arguments: '{"param": "value1"}',
+        },
+      },
+      {
+        type: 'response.output_item.added',
+        output_index: 1,
+        item: {
+          type: 'function_call',
+          call_id: 'call_2',
+          name: 'tool_two',
+          arguments: '{"param": "value2"}',
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.filter((c) => c.includes('event: tool_calls')).length).toBeGreaterThan(0);
+  });
+
+  it('should handle response.function_call_arguments.delta', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_delta_test',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_item.added',
+        output_index: 0,
+        item: {
+          type: 'function_call',
+          call_id: 'call_delta',
+          name: 'search_web',
+          arguments: '{"query":',
+        },
+      },
+      {
+        type: 'response.function_call_arguments.delta',
+        item_id: 'call_delta',
+        delta: ' "OpenAI"}',
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('search_web'))).toBe(true);
+  });
+
+  it('should handle response.output_text.delta', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_text_delta',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_text.delta',
+        item_id: 'msg_123',
+        delta: 'Hello ',
+      },
+      {
+        type: 'response.output_text.delta',
+        item_id: 'msg_123',
+        delta: 'world!',
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('event: text'))).toBe(true);
+    expect(chunks.some((c) => c.includes('Hello '))).toBe(true);
+    expect(chunks.some((c) => c.includes('world!'))).toBe(true);
+  });
+
+  it('should handle response.reasoning_summary_part.added for first part', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_reasoning',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.reasoning_summary_part.added',
+        item_id: 'reasoning_1',
+        summary_index: 0,
+        part: { type: 'summary_text', text: '' },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('event: reasoning'))).toBe(true);
+  });
+
+  it('should handle response.reasoning_summary_part.added for subsequent parts', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_reasoning_multi',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.reasoning_summary_part.added',
+        item_id: 'reasoning_1',
+        summary_index: 0,
+        part: { type: 'summary_text', text: '' },
+      },
+      {
+        type: 'response.reasoning_summary_part.added',
+        item_id: 'reasoning_2',
+        summary_index: 1,
+        part: { type: 'summary_text', text: '' },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.filter((c) => c.includes('event: reasoning')).length).toBeGreaterThan(0);
+  });
+
+  it('should handle response.reasoning_summary_text.delta', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_reasoning_delta',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.reasoning_summary_text.delta',
+        item_id: 'reasoning_123',
+        output_index: 0,
+        summary_index: 0,
+        delta: 'Thinking about',
+      },
+      {
+        type: 'response.reasoning_summary_text.delta',
+        item_id: 'reasoning_123',
+        output_index: 0,
+        summary_index: 0,
+        delta: ' the problem...',
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('Thinking about'))).toBe(true);
+    expect(chunks.some((c) => c.includes(' the problem...'))).toBe(true);
+  });
+
+  it('should handle response.output_text.annotation.added', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_annotation',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_text.annotation.added',
+        item_id: 'msg_citation',
+        annotation: {
+          type: 'url_citation',
+          title: 'Example Source',
+          url: 'https://example.com',
+          start_index: 0,
+          end_index: 10,
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+  });
+
+  it('should handle multiple annotations and accumulate citations', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_multi_citation',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_text.annotation.added',
+        item_id: 'msg_cite',
+        annotation: {
+          type: 'url_citation',
+          title: 'Source 1',
+          url: 'https://example1.com',
+          start_index: 0,
+          end_index: 10,
+        },
+      },
+      {
+        type: 'response.output_text.annotation.added',
+        item_id: 'msg_cite',
+        annotation: {
+          type: 'url_citation',
+          title: 'Source 2',
+          url: 'https://example2.com',
+          start_index: 11,
+          end_index: 20,
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+  });
+
+  it('should handle response.output_item.done with citations', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_done_citation',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_text.annotation.added',
+        item_id: 'msg_final',
+        annotation: {
+          type: 'url_citation',
+          title: 'Citation Title',
+          url: 'https://citation.com',
+          start_index: 0,
+          end_index: 5,
+        },
+      },
+      {
+        type: 'response.output_item.done',
+        output_index: 0,
+        item: {
+          id: 'msg_final',
+          type: 'message',
+          status: 'completed',
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('event: grounding'))).toBe(true);
+    expect(chunks.some((c) => c.includes('citations'))).toBe(true);
+  });
+
+  it('should handle response.output_item.done without citations', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_done_no_citation',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_item.done',
+        output_index: 0,
+        item: {
+          id: 'msg_no_cite',
+          type: 'message',
+          status: 'completed',
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+  });
+
+  it('should handle response.completed with usage', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_completed_usage',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.completed',
+        response: {
+          id: 'resp_completed_usage',
+          status: 'completed',
+          usage: {
+            input_tokens: 100,
+            output_tokens: 50,
+            total_tokens: 150,
+          },
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream, {
+      payload: { model: 'gpt-4', provider: 'openai' },
+    });
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('event: usage'))).toBe(true);
+  });
+
+  it('should handle response.completed without usage', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_completed_no_usage',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.completed',
+        response: {
+          id: 'resp_completed_no_usage',
+          status: 'completed',
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+  });
+
+  it('should handle unknown chunk type as data', async () => {
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_unknown',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.unknown_event',
+        data: 'some data',
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+  });
+
+  it('should handle non-standard item types in output_item.added', async () => {
+    // Test the default case in output_item.added when item type is not function_call
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_other_item',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.output_item.added',
+        output_index: 0,
+        item: {
+          type: 'message', // Non-function_call type
+          id: 'msg_test',
+          status: 'in_progress',
+          content: [],
+          role: 'assistant',
+        },
+      },
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.some((c) => c.includes('event: data'))).toBe(true);
+  });
+
+  it('should handle chunks with undefined values gracefully', async () => {
+    // Test handling of chunks with undefined/missing properties
+    const mockOpenAIStream = createReadableStream([
+      {
+        type: 'response.created',
+        response: {
+          id: 'resp_undefined_vals',
+          status: 'in_progress',
+        },
+      },
+      {
+        type: 'response.reasoning_summary_text.delta',
+        item_id: undefined,
+        delta: undefined,
+      } as any,
+    ]);
+
+    const protocolStream = OpenAIResponsesStream(mockOpenAIStream);
+    const chunks = await readStreamChunk(protocolStream);
+
+    expect(chunks).toMatchSnapshot();
+    expect(chunks.length).toBeGreaterThan(0);
+  });
+
   describe('Reasoning', () => {
     it('summary', async () => {
       const mockOpenAIStream = createReadableStream([

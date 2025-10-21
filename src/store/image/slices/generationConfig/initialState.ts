@@ -7,9 +7,10 @@ import {
   gptImage1ParamsSchema,
 } from 'model-bank';
 
+import { DEFAULT_IMAGE_CONFIG } from '@/const/settings';
+
 export const DEFAULT_AI_IMAGE_PROVIDER = ModelProvider.OpenAI;
 export const DEFAULT_AI_IMAGE_MODEL = 'gpt-image-1';
-export const DEFAULT_IMAGE_NUM = 4;
 
 export interface GenerationConfigState {
   parameters: RuntimeImageGenParams;
@@ -34,7 +35,7 @@ export const DEFAULT_IMAGE_GENERATION_PARAMETERS: RuntimeImageGenParams =
 export const initialGenerationConfigState: GenerationConfigState = {
   model: DEFAULT_AI_IMAGE_MODEL,
   provider: DEFAULT_AI_IMAGE_PROVIDER,
-  imageNum: DEFAULT_IMAGE_NUM,
+  imageNum: DEFAULT_IMAGE_CONFIG.defaultImageNum,
   parameters: DEFAULT_IMAGE_GENERATION_PARAMETERS,
   parametersSchema: gptImage1ParamsSchema,
   isAspectRatioLocked: false,

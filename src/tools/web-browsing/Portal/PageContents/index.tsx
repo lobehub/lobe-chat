@@ -1,7 +1,7 @@
+import { CrawlResult } from '@lobechat/types';
 import { memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { CrawlResult } from '@/types/tool/crawler';
 
 import PageContent from '../PageContent';
 

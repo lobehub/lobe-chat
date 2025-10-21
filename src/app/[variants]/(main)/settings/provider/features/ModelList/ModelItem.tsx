@@ -3,6 +3,7 @@ import { ActionIcon, Tag, Text, copyToClipboard } from '@lobehub/ui';
 import { App, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
+import { AiModelSourceEnum, AiProviderModelListItem } from 'model-bank';
 import { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,10 +18,6 @@ import {
   getTextOutputUnitRate,
 } from '@/utils/pricing';
 
-import {
-  AiModelSourceEnum,
-  AiProviderModelListItem,
-} from '../../../../../../../../packages/model-bank/src/types/aiModel';
 import ModelConfigModal from './ModelConfigModal';
 import { ProviderSettingsContext } from './ProviderSettingsContext';
 

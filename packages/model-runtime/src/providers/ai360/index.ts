@@ -1,7 +1,10 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface Ai360ModelCard {
   id: string;
@@ -9,7 +12,7 @@ export interface Ai360ModelCard {
   total_tokens: number;
 }
 
-export const LobeAi360AI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.360.cn/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -57,7 +60,7 @@ export const LobeAi360AI = createOpenAICompatibleRuntime({
           enabled: knownModel?.enabled || false,
           functionCall: model.id === '360gpt-pro' || knownModel?.abilities?.functionCall || false,
           id: model.id,
-          maxTokens: typeof model.max_tokens === 'number' ? model.max_tokens : undefined,
+          maxOutput: typeof model.max_tokens === 'number' ? model.max_tokens : undefined,
           reasoning:
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||
@@ -68,4 +71,6 @@ export const LobeAi360AI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Ai360,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeAi360AI = createOpenAICompatibleRuntime(params);

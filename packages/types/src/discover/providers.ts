@@ -1,5 +1,6 @@
-import { LobeDefaultAiModelListItem } from '../../../model-bank/src/types/aiModel';
-import { ModelProviderCard } from '@/types/llm';
+import { LobeDefaultAiModelListItem } from 'model-bank';
+
+import { ModelProviderCard } from '../llm';
 
 export enum ProviderSorts {
   Default = 'default',

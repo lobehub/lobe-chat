@@ -13,6 +13,7 @@ import file from './file';
 import hotkey from './hotkey';
 import image from './image';
 import knowledgeBase from './knowledgeBase';
+import labs from './labs';
 import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
@@ -45,6 +46,7 @@ const resources = {
   hotkey,
   image,
   knowledgeBase,
+  labs,
   metadata,
   migration,
   modelProvider,

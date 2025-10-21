@@ -1,3 +1,4 @@
+import { SearchQuery } from '@lobechat/types';
 import { Button, Input, Select, Text, Tooltip } from '@lobehub/ui';
 import { Checkbox, Radio, Space } from 'antd';
 import { SearchIcon } from 'lucide-react';
@@ -8,7 +9,6 @@ import { Flexbox } from 'react-layout-kit';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
-import { SearchQuery } from '@/types/tool/search';
 
 import { CATEGORY_ICON_MAP, ENGINE_ICON_MAP } from '../const';
 import { CategoryAvatar } from './CategoryAvatar';

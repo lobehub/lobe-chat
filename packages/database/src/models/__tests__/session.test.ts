@@ -115,6 +115,81 @@ describe('SessionModel', () => {
       expect(result.sessions).toHaveLength(0);
       expect(result.sessionGroups).toHaveLength(0);
     });
+
+    it('should map group sessions with members correctly', async () => {
+      // Create a group session with multiple agents
+      await serverDB.transaction(async (trx) => {
+        // Create a group session
+        await trx.insert(sessions).values({
+          id: 'group-session-1',
+          userId,
+          type: 'group',
+          title: 'Test Group',
+          description: 'A test group session',
+          avatar: 'group-avatar',
+          backgroundColor: 'blue',
+        });
+
+        // Create agents
+        await trx.insert(agents).values([
+          { id: 'agent-1', userId, title: 'Agent 1', model: 'gpt-4' },
+          { id: 'agent-2', userId, title: 'Agent 2', model: 'gpt-3.5-turbo' },
+          { id: 'agent-3', userId, title: 'Agent 3', model: 'claude-2' },
+        ]);
+
+        // Link agents to the group session
+        await trx.insert(agentsToSessions).values([
+          { sessionId: 'group-session-1', agentId: 'agent-1', userId },
+          { sessionId: 'group-session-1', agentId: 'agent-2', userId },
+          { sessionId: 'group-session-1', agentId: 'agent-3', userId },
+        ]);
+      });
+
+      const result = await sessionModel.queryWithGroups();
+
+      // Verify group session mapping
+      expect(result.sessions).toHaveLength(1);
+      const groupSession = result.sessions[0] as any;
+
+      expect(groupSession.type).toBe('group');
+      expect(groupSession.meta).toEqual({
+        avatar: 'group-avatar',
+        backgroundColor: 'blue',
+        description: 'A test group session',
+        tags: undefined,
+        title: 'Test Group',
+      });
+
+      // Verify members are mapped correctly
+      expect(groupSession.members).toHaveLength(3);
+      expect(groupSession.members[0]).toMatchObject({
+        agentId: 'agent-1',
+        chatGroupId: 'group-session-1',
+        enabled: true,
+        order: 0,
+        role: 'participant',
+        title: 'Agent 1',
+        model: 'gpt-4',
+      });
+      expect(groupSession.members[1]).toMatchObject({
+        agentId: 'agent-2',
+        chatGroupId: 'group-session-1',
+        enabled: true,
+        order: 1,
+        role: 'participant',
+        title: 'Agent 2',
+        model: 'gpt-3.5-turbo',
+      });
+      expect(groupSession.members[2]).toMatchObject({
+        agentId: 'agent-3',
+        chatGroupId: 'group-session-1',
+        enabled: true,
+        order: 2,
+        role: 'participant',
+        title: 'Agent 3',
+        model: 'claude-2',
+      });
+    });
   });
 
   describe('findById', () => {
@@ -337,6 +412,71 @@ describe('SessionModel', () => {
 
       // 断言结果
       expect(result.id).toBe(customId);
+    });
+
+    it('should create a session associated with a group', async () => {
+      await serverDB.insert(sessionGroups).values({
+        id: 'session-group-1',
+        name: 'Session Group',
+        userId,
+      });
+
+      const result = await sessionModel.create({
+        type: 'agent',
+        config: { model: 'gpt-3.5-turbo' },
+        session: { title: 'Grouped Session', groupId: 'session-group-1' },
+      });
+
+      expect(result.groupId).toBe('session-group-1');
+
+      const fetched = await sessionModel.findByIdOrSlug(result.id);
+      const fetchedWithGroup = fetched as typeof fetched & {
+        group?: { id: string | null } | null;
+      };
+      expect(fetchedWithGroup?.group?.id).toBe('session-group-1');
+    });
+
+    it('should create a group-type session', async () => {
+      const result = await sessionModel.create({
+        type: 'group',
+        session: {
+          title: 'Group Chat Session',
+          description: 'Multi-agent group chat',
+        },
+      });
+
+      expect(result.id).toBeDefined();
+      expect(result.userId).toBe(userId);
+      expect(result.type).toBe('group');
+      expect(result.title).toBe('Group Chat Session');
+      expect(result.description).toBe('Multi-agent group chat');
+
+      // Verify group session was created
+      const fetched = await sessionModel.findByIdOrSlug(result.id);
+      expect(fetched).toBeDefined();
+      expect(fetched?.type).toBe('group');
+    });
+
+    it('should return existing session if slug already exists', async () => {
+      // Create a session with a slug
+      const first = await sessionModel.create({
+        type: 'agent',
+        config: { model: 'gpt-4' },
+        session: { title: 'First Session' },
+        slug: 'test-slug',
+      });
+
+      // Try to create another session with the same slug
+      const second = await sessionModel.create({
+        type: 'agent',
+        config: { model: 'gpt-3.5-turbo' },
+        session: { title: 'Second Session' },
+        slug: 'test-slug',
+      });
+
+      // Should return the existing session
+      expect(second.id).toBe(first.id);
+      expect(second.title).toBe('First Session');
     });
   });
 
@@ -1149,17 +1289,24 @@ describe('SessionModel', () => {
 
   describe('findSessionsByKeywords', () => {
     it('should handle errors gracefully and return empty array', async () => {
-      // 这个测试旨在覆盖 findSessionsByKeywords 中的错误处理逻辑 (lines 484-486)
-      // 通过模拟一个可能导致错误的场景来触发 catch 块
+      // 这个测试旨在覆盖 findSessionsByKeywords 中的错误处理逻辑
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      // 创建一个会导致错误的场景
-      // 我们可以通过传递一个会导致数据库查询问题的关键词来测试错误处理
+      // Mock the database query to throw an error
+      const originalFindMany = serverDB.query.agents.findMany;
+      serverDB.query.agents.findMany = vi.fn().mockRejectedValue(new Error('Database error'));
+
       const result = await sessionModel.findSessionsByKeywords({ keyword: 'test' });
 
       // 即使发生错误，方法也应该返回一个空数组
       expect(Array.isArray(result)).toBe(true);
+      expect(result).toEqual([]);
+      expect(consoleSpy).toHaveBeenCalledWith('findSessionsByKeywords error:', expect.any(Error), {
+        keyword: 'test',
+      });
 
+      // Restore original method
+      serverDB.query.agents.findMany = originalFindMany;
       consoleSpy.mockRestore();
     });
 

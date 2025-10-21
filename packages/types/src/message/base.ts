@@ -61,6 +61,7 @@ export interface ModelTokensUsage {
   rejectedPredictionTokens?: number;
 
   // Total tokens
+  // TODO: make all following fields required
   totalInputTokens?: number;
   totalOutputTokens?: number;
   totalTokens?: number;
@@ -94,7 +95,7 @@ export interface ModelSpeed {
 
 export interface MessageMetadata extends ModelUsage, ModelSpeed {}
 
-export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
+export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | 'supervisor';
 
 export interface MessageItem {
   agentId: string | null;

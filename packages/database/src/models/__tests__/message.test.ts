@@ -9,6 +9,8 @@ import { getTestDB } from '../../models/__tests__/_util';
 import {
   chunks,
   embeddings,
+  agents,
+  chatGroups,
   fileChunks,
   files,
   messagePlugins,
@@ -31,6 +33,7 @@ const serverDB: LobeChatDatabase = await getTestDB();
 const userId = 'message-db';
 const messageModel = new MessageModel(serverDB, userId);
 const embeddingsId = uuid();
+
 beforeEach(async () => {
   // 在每个测试用例之前，清空表
   await serverDB.transaction(async (trx) => {
@@ -175,6 +178,51 @@ describe('MessageModel', () => {
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[1].id).toBe('2');
+    });
+
+    it('should filter messages by groupId and expose group metadata', async () => {
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(chatGroups).values([
+          { id: 'group-1', userId, title: 'Group 1' },
+          { id: 'group-2', userId, title: 'Group 2' },
+        ]);
+
+        await trx.insert(agents).values([
+          { id: 'agent-group', userId, title: 'Agent Group' },
+          { id: 'agent-other', userId, title: 'Agent Other' },
+        ]);
+
+        await trx.insert(messages).values([
+          {
+            id: 'group-message',
+            userId,
+            role: 'assistant',
+            content: 'group message',
+            groupId: 'group-1',
+            agentId: 'agent-group',
+            targetId: 'user',
+            createdAt: new Date('2024-01-01'),
+          },
+          {
+            id: 'other-message',
+            userId,
+            role: 'assistant',
+            content: 'other group message',
+            groupId: 'group-2',
+            agentId: 'agent-other',
+            targetId: 'user',
+            createdAt: new Date('2024-01-02'),
+          },
+        ]);
+      });
+
+      const result = await messageModel.query({ groupId: 'group-1' });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('group-message');
+      expect(result[0].groupId).toBe('group-1');
+      expect(result[0].agentId).toBe('agent-group');
+      expect(result[0].targetId).toBe('user');
     });
 
     it('should query messages with join', async () => {

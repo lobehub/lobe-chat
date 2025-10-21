@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { ChatMessage } from '@/types/message';
 
 const useStyles = createStyles(({ css, cx }) => ({
   action: cx(
@@ -34,7 +33,13 @@ const useStyles = createStyles(({ css, cx }) => ({
   `,
 }));
 
-export const UserBelowMessage = memo<ChatMessage>(({ ragQuery, content, id }) => {
+interface UserBelowMessageProps {
+  content: string;
+  id: string;
+  ragQuery?: string | null;
+}
+
+export const UserBelowMessage = memo<UserBelowMessageProps>(({ ragQuery, content, id }) => {
   const { styles } = useStyles();
 
   const { t } = useTranslation('chat');

@@ -243,6 +243,68 @@ describe('ModelRuntime', () => {
     });
   });
 
+  describe('ModelRuntime generateObject method', () => {
+    it('should run correctly', async () => {
+      const payload = {
+        model: 'gpt-4',
+        messages: [{ role: 'user' as const, content: 'Generate a JSON object' }],
+        schema: {
+          name: 'PersonSchema',
+          schema: {
+            type: 'object' as const,
+            properties: { name: { type: 'string' } },
+          },
+        },
+      };
+
+      const mockResponse = { name: 'John Doe' };
+
+      vi.spyOn(LobeOpenAI.prototype, 'generateObject').mockResolvedValue(mockResponse);
+
+      const result = await mockModelRuntime.generateObject(payload);
+
+      expect(LobeOpenAI.prototype.generateObject).toHaveBeenCalledWith(payload);
+      expect(result).toBe(mockResponse);
+    });
+  });
+
+  describe('ModelRuntime textToImage method', () => {
+    it('should run correctly', async () => {
+      const payload = {
+        model: 'stable-diffusion',
+        prompt: 'A beautiful landscape',
+      };
+
+      const mockResponse = ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'];
+
+      vi.spyOn(LobeOpenAI.prototype, 'textToImage').mockResolvedValue(mockResponse);
+
+      const result = await mockModelRuntime.textToImage(payload);
+
+      expect(LobeOpenAI.prototype.textToImage).toHaveBeenCalledWith(payload);
+      expect(result).toBe(mockResponse);
+    });
+
+    it('should handle undefined textToImage method gracefully', async () => {
+      const payload = {
+        model: 'stable-diffusion',
+        prompt: 'A beautiful landscape',
+      };
+
+      // Mock runtime without textToImage method
+      const runtimeWithoutTextToImage = {
+        textToImage: undefined,
+      };
+
+      // @ts-ignore - testing edge case
+      mockModelRuntime['_runtime'] = runtimeWithoutTextToImage;
+
+      const result = await mockModelRuntime.textToImage(payload);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
   describe('ModelRuntime createImage method', () => {
     it('should run correctly', async () => {
       const payload: CreateImagePayload = {
@@ -317,6 +379,175 @@ describe('ModelRuntime', () => {
       mockModelRuntime['_runtime'] = runtimeWithoutModels;
 
       const result = await mockModelRuntime.models();
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('ModelRuntime embeddings method', () => {
+    it('should run correctly', async () => {
+      const payload = {
+        model: 'text-embedding-ada-002',
+        input: 'Hello world',
+      };
+
+      const mockEmbeddings = [[0.1, 0.2, 0.3]];
+
+      vi.spyOn(LobeOpenAI.prototype, 'embeddings').mockResolvedValue(mockEmbeddings);
+
+      const result = await mockModelRuntime.embeddings(payload);
+
+      expect(LobeOpenAI.prototype.embeddings).toHaveBeenCalledWith(payload, undefined);
+      expect(result).toBe(mockEmbeddings);
+    });
+
+    it('should handle options correctly', async () => {
+      const payload = {
+        model: 'text-embedding-ada-002',
+        input: 'Hello world',
+      };
+
+      const options = {};
+
+      const mockEmbeddings = [[0.1, 0.2, 0.3]];
+
+      vi.spyOn(LobeOpenAI.prototype, 'embeddings').mockResolvedValue(mockEmbeddings);
+
+      const result = await mockModelRuntime.embeddings(payload, options);
+
+      expect(LobeOpenAI.prototype.embeddings).toHaveBeenCalledWith(payload, options);
+      expect(result).toBe(mockEmbeddings);
+    });
+
+    it('should handle undefined embeddings method gracefully', async () => {
+      const payload = {
+        model: 'text-embedding-ada-002',
+        input: 'Hello world',
+      };
+
+      // Mock runtime without embeddings method
+      const runtimeWithoutEmbeddings = {
+        embeddings: undefined,
+      };
+
+      // @ts-ignore - testing edge case
+      mockModelRuntime['_runtime'] = runtimeWithoutEmbeddings;
+
+      const result = await mockModelRuntime.embeddings(payload);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('ModelRuntime textToSpeech method', () => {
+    it('should run correctly', async () => {
+      const payload = {
+        model: 'tts-1',
+        input: 'Hello world',
+        voice: 'alloy',
+      };
+
+      const mockResponse = new ArrayBuffer(8);
+
+      vi.spyOn(LobeOpenAI.prototype, 'textToSpeech').mockResolvedValue(mockResponse);
+
+      const result = await mockModelRuntime.textToSpeech(payload);
+
+      expect(LobeOpenAI.prototype.textToSpeech).toHaveBeenCalledWith(payload, undefined);
+      expect(result).toBe(mockResponse);
+    });
+
+    it('should handle options correctly', async () => {
+      const payload = {
+        model: 'tts-1',
+        input: 'Hello world',
+        voice: 'alloy',
+      };
+
+      const options = {};
+
+      const mockResponse = new ArrayBuffer(8);
+
+      vi.spyOn(LobeOpenAI.prototype, 'textToSpeech').mockResolvedValue(mockResponse);
+
+      const result = await mockModelRuntime.textToSpeech(payload, options);
+
+      expect(LobeOpenAI.prototype.textToSpeech).toHaveBeenCalledWith(payload, options);
+      expect(result).toBe(mockResponse);
+    });
+
+    it('should handle undefined textToSpeech method gracefully', async () => {
+      const payload = {
+        model: 'tts-1',
+        input: 'Hello world',
+        voice: 'alloy',
+      };
+
+      // Mock runtime without textToSpeech method
+      const runtimeWithoutTextToSpeech = {
+        textToSpeech: undefined,
+      };
+
+      // @ts-ignore - testing edge case
+      mockModelRuntime['_runtime'] = runtimeWithoutTextToSpeech;
+
+      const result = await mockModelRuntime.textToSpeech(payload);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('ModelRuntime pullModel method', () => {
+    it('should run correctly', async () => {
+      const params = {
+        model: 'llama2',
+      };
+
+      const mockResponse = new Response('Success');
+      const mockPullModel = vi.fn().mockResolvedValue(mockResponse);
+
+      // Mock runtime with pullModel method
+      mockModelRuntime['_runtime'].pullModel = mockPullModel;
+
+      const result = await mockModelRuntime.pullModel(params);
+
+      expect(mockPullModel).toHaveBeenCalledWith(params, undefined);
+      expect(result).toBe(mockResponse);
+    });
+
+    it('should handle options correctly', async () => {
+      const params = {
+        model: 'llama2',
+      };
+
+      const options = {};
+
+      const mockResponse = new Response('Success');
+      const mockPullModel = vi.fn().mockResolvedValue(mockResponse);
+
+      // Mock runtime with pullModel method
+      mockModelRuntime['_runtime'].pullModel = mockPullModel;
+
+      const result = await mockModelRuntime.pullModel(params, options);
+
+      expect(mockPullModel).toHaveBeenCalledWith(params, options);
+      expect(result).toBe(mockResponse);
+    });
+
+    it('should handle undefined pullModel method gracefully', async () => {
+      const params = {
+        model: 'llama2',
+      };
+
+      // Mock runtime without pullModel method
+      const runtimeWithoutPullModel = {
+        pullModel: undefined,
+      };
+
+      // @ts-ignore - testing edge case
+      mockModelRuntime['_runtime'] = runtimeWithoutPullModel;
+
+      const result = await mockModelRuntime.pullModel(params);
 
       expect(result).toBeUndefined();
     });

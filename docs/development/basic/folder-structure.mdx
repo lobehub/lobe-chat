@@ -4,37 +4,88 @@ The directory structure of LobeChat is as follows:
 
 ```bash
 src
-├── app        # Main logic and state management related code for the application
+├── app        # Next.js App Router implementation with route groups and API routes
 ├── components # Reusable UI components
 ├── config     # Application configuration files, including client-side and server-side environment variables
-├── const      # Used to define constants, such as action types, route names, etc.
 ├── features   # Function modules related to business functions, such as agent settings, plugin development pop-ups, etc.
 ├── hooks      # Custom utility hooks reused throughout the application
 ├── layout     # Application layout components, such as navigation bars, sidebars, etc.
+├── libs       # Third-party integrations (analytics, OIDC, etc.)
 ├── locales    # Internationalization language files
+├── server     # Server-side modules and services
 ├── services   # Encapsulated backend service interfaces, such as HTTP requests
 ├── store      # Zustand store for state management
+├── styles     # Global styles and CSS-in-JS configurations
 ├── types      # TypeScript type definition files
 └── utils      # Common utility functions
 ```
 
 ## app
 
-In the `app` folder, we organize each route page according to the app router's [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups) to separately handle the implementation of desktop and mobile code. Taking the file structure of the `welcome` page as an example:
+The `app` directory follows Next.js 13+ App Router conventions with a sophisticated architecture using [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups) to organize backend services, platform variants, and application routes:
 
 ```bash
-welcome
-├── (desktop)               # Desktop implementation
-│   ├── features            # Desktop-specific features
-│   ├── index.tsx           # Main entry file for desktop
-│   └── layout.desktop.tsx  # Desktop layout component
-├── (mobile)                # Mobile implementation
-│   ├── features            # Mobile-specific features
-│   ├── index.tsx           # Main entry file for mobile
-│   └── layout.mobile.tsx   # Mobile layout component
-├── features                # This folder contains features code shared by both desktop and mobile, such as the Banner component
-│   └── Banner
-└── page.tsx                # This is the main entry file for the page, used to load desktop or mobile code based on the device type
+app
+├── (backend)/                    # Backend API routes and services
+│   ├── api/                      # REST API endpoints
+│   │   ├── auth/                 # Authentication routes
+│   │   └── webhooks/             # Webhook handlers
+│   ├── middleware/               # Request middleware
+│   ├── oidc/                     # OpenID Connect routes
+│   ├── trpc/                     # tRPC API endpoints
+│   │   ├── async/                # Async tRPC routes
+│   │   ├── desktop/              # Desktop-specific tRPC routes
+│   │   ├── edge/                 # Edge runtime tRPC routes
+│   │   ├── lambda/               # Lambda tRPC routes
+│   │   └── tools/                # Tools tRPC routes
+│   └── webapi/                   # Web API endpoints
+│       ├── chat/                 # Chat-related APIs
+│       ├── models/               # Model management APIs
+│       ├── tts/                  # Text-to-speech APIs
+│       └── ...
+├── [variants]/                   # Platform and device variants
+│   ├── (auth)/                   # Authentication pages
+│   │   ├── login/
+│   │   ├── signup/
+│   │   └── next-auth/
+│   ├── (main)/                   # Main application routes
+│   │   ├── (mobile)/             # Mobile-specific routes
+│   │   │   └── me/               # Mobile profile pages
+│   │   ├── _layout/              # Layout components
+│   │   ├── chat/                 # Chat interface
+│   │   ├── discover/             # Discovery pages
+│   │   ├── files/                # File management
+│   │   ├── image/                # Image generation
+│   │   ├── profile/              # User profile
+│   │   ├── repos/                # Repository management
+│   │   └── settings/             # Application settings
+│   └── @modal/                   # Parallel modal routes
+│       ├── (.)changelog/
+│       └── _layout/
+├── desktop/                      # Desktop-specific routes
+│   └── devtools/
+├── manifest.ts                   # PWA manifest
+├── robots.tsx                    # Robots.txt generation
+├── sitemap.tsx                   # Sitemap generation
+└── sw.ts                         # Service worker
 ```
 
-In this way, we can clearly distinguish and manage desktop and mobile code, while also easily reusing code required on both devices, thereby improving development efficiency and maintaining code cleanliness and maintainability.
+### Architecture Explanation
+
+**Route Groups:**
+- `(backend)` - Contains all server-side API routes, middleware, and backend services
+- `[variants]` - Dynamic route group handling different platform variants and main application pages
+- `@modal` - Parallel routes for modal dialogs using Next.js parallel routing
+
+**Platform Organization:**
+- The architecture supports multiple platforms (web, desktop, mobile) through route organization
+- Desktop-specific routes are in the `desktop/` directory
+- Mobile-specific routes are organized under `(main)/(mobile)/`
+- Shared layouts and components are in `_layout/` directories
+
+**API Architecture:**
+- REST APIs in `(backend)/api/` and `(backend)/webapi/`
+- tRPC endpoints organized by runtime environment (edge, lambda, async, desktop)
+- Authentication and OIDC handling in dedicated route groups
+
+This architecture provides clear separation of concerns while maintaining flexibility for different deployment targets and runtime environments.

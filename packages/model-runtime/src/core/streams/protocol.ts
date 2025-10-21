@@ -384,7 +384,6 @@ export const createTokenSpeedCalculator = (
   }: { enableStreaming?: boolean; inputStartAt?: number; streamStack?: StreamContext } = {},
 ) => {
   let outputStartAt: number | undefined;
-  let outputThinking: boolean | undefined;
 
   const process = (chunk: StreamProtocolChunk) => {
     let result = [chunk];
@@ -393,24 +392,12 @@ export const createTokenSpeedCalculator = (
       outputStartAt = Date.now();
     }
 
-    /**
-     * 部分 provider 在正式输出 reasoning 前，可能会先输出 content 为空字符串的 chunk，
-     * 其中 reasoning 可能为 null，会导致判断是否输出思考内容错误，所以过滤掉 null 或者空字符串。
-     * 也可能是某些特殊 token，所以不修改 outputStartAt 的逻辑。
-     */
-    if (
-      outputThinking === undefined &&
-      (chunk.type === 'text' || chunk.type === 'reasoning') &&
-      typeof chunk.data === 'string' &&
-      chunk.data.length > 0
-    ) {
-      outputThinking = chunk.type === 'reasoning';
-    }
     // if the chunk is the stop chunk, set as output finish
     if (inputStartAt && outputStartAt && chunk.type === 'usage') {
       // TPS should always include all generated tokens (including reasoning tokens)
       // because it measures generation speed, not just visible content
-      const outputTokens = chunk.data?.totalOutputTokens ?? 0;
+      const usage = chunk.data as ModelUsage;
+      const outputTokens = usage?.totalOutputTokens ?? 0;
       const now = Date.now();
       const elapsed = now - (enableStreaming ? outputStartAt : inputStartAt);
       const duration = now - outputStartAt;

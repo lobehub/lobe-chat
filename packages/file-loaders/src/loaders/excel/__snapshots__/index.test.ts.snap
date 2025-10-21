@@ -22,6 +22,36 @@ exports[`ExcelLoader > should aggregate content correctly (joining sheets) > agg
 </sheet>"
 `;
 
+exports[`ExcelLoader > should handle Excel file with only headers > only_header_pages 1`] = `
+[
+  {
+    "charCount": 124,
+    "lineCount": 3,
+    "metadata": {
+      "sheetName": "表1",
+    },
+    "pageContent": "| 表格 1 | __EMPTY | __EMPTY_1 | __EMPTY_2 | __EMPTY_3 |
+| --- | --- | --- | --- | --- |
+| header1 | header2 | header3 |  |  |",
+  },
+  {
+    "charCount": 231,
+    "lineCount": 8,
+    "metadata": {
+      "sheetName": "表2 - 表格 2",
+    },
+    "pageContent": "| 表格 2 | __EMPTY | __EMPTY_1 | __EMPTY_2 | __EMPTY_3 |
+| --- | --- | --- | --- | --- |
+|  | 类别 A | 类别 B |  |  |
+| 项目 1 | 5 | 7 |  |  |
+| 项目 2 | 10 | 8 |  |  |
+| 项目 3 | 9 | 15 |  |  |
+| 项目 4 | 7 | 12 |  |  |
+| 项目 5 | 16 | 21 |  |  |",
+  },
+]
+`;
+
 exports[`ExcelLoader > should load pages correctly from an Excel file (one page per sheet) 1`] = `
 [
   {

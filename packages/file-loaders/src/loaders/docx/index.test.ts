@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { FileLoaderInterface } from '../../types';
 import { DocxLoader } from './index';
 
-// 确保你已经在 fixtures 目录下放置了 test.docx 文件
 const fixturePath = (filename: string) => path.join(__dirname, `./fixtures/${filename}`);
 
 let loader: FileLoaderInterface;

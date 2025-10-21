@@ -32,7 +32,7 @@ describe('AiChatService', () => {
       { includeTopic: true, sessionId: 's1' },
       expect.objectContaining({ postProcessUrl: expect.any(Function) }),
     );
-    expect(mockQueryTopics).toHaveBeenCalledWith({ sessionId: 's1' });
+    expect(mockQueryTopics).toHaveBeenCalledWith({ containerId: 's1' });
     expect(res.messages).toEqual([{ id: 'm1' }]);
     expect(res.topics).toEqual([{ id: 't1' }]);
   });

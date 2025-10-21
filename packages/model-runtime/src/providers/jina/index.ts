@@ -1,13 +1,16 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface JinaModelCard {
   id: string;
 }
 
-export const LobeJinaAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://deepsearch.jina.ai/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_JINA_CHAT_COMPLETION === '1',
@@ -42,4 +45,6 @@ export const LobeJinaAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Jina,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeJinaAI = createOpenAICompatibleRuntime(params);

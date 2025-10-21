@@ -6,6 +6,8 @@ import {
 import { ModelProvider } from 'model-bank';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
+import { buildAnthropicMessages, buildAnthropicTools } from '../../core/contextBuilders/anthropic';
+import { MODEL_PARAMETER_CONFLICTS, resolveParameters } from '../../core/parameterResolver';
 import {
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,
@@ -19,7 +21,6 @@ import {
   EmbeddingsPayload,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
-import { buildAnthropicMessages, buildAnthropicTools } from '../../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { StreamingResponse } from '../../utils/response';
@@ -151,6 +152,13 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
+    // Resolve temperature and top_p parameters based on model constraints
+    const hasConflict = MODEL_PARAMETER_CONFLICTS.BEDROCK_CLAUDE_4_PLUS.has(model);
+    const resolvedParams = resolveParameters(
+      { temperature, top_p },
+      { hasConflict, normalizeTemperature: true, preferTemperature: true },
+    );
+
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
       body: JSON.stringify({
@@ -158,9 +166,9 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         max_tokens: max_tokens || 4096,
         messages: await buildAnthropicMessages(user_messages),
         system: system_message?.content as string,
-        temperature: temperature / 2,
+        temperature: resolvedParams.temperature,
         tools: buildAnthropicTools(tools),
-        top_p: top_p,
+        top_p: resolvedParams.top_p,
       }),
       contentType: 'application/json',
       modelId: model,

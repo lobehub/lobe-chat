@@ -1,3 +1,5 @@
+import { CheckMcpInstallResult, CustomPluginMetadata } from '@lobechat/types';
+import { safeParseJSON } from '@lobechat/utils';
 import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehub/chat-plugin-sdk';
 import { DeploymentOption } from '@lobehub/market-sdk';
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
@@ -12,16 +14,14 @@ import {
   McpTool,
   StdioMCPParams,
 } from '@/libs/mcp';
-import { mcpSystemDepsCheckService } from '@/server/services/mcp/deps';
-import { CheckMcpInstallResult } from '@/types/plugins';
-import { CustomPluginMetadata } from '@/types/tool/plugin';
-import { safeParseJSON } from '@/utils/safeParseJSON';
+
+import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
 
 // Removed MCPConnection interface as it's no longer needed
 
-class MCPService {
+export class MCPService {
   // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
   private clients: Map<string, MCPClient> = new Map();
 
@@ -35,8 +35,11 @@ class MCPService {
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams
-  async listTools(params: MCPClientParams): Promise<LobeChatPluginApi[]> {
-    const client = await this.getClient(params); // Get client using params
+  async listTools(
+    params: MCPClientParams,
+    { retryTime, skipCache }: { retryTime?: number; skipCache?: boolean } = {},
+  ): Promise<LobeChatPluginApi[]> {
+    const client = await this.getClient(params, skipCache); // Get client using params
     const loggableParams = this.sanitizeForLogging(params);
     log(`Listing tools using client for params: %O`, loggableParams);
 
@@ -54,6 +57,18 @@ class MCPService {
         parameters: item.inputSchema as PluginSchema,
       }));
     } catch (error) {
+      let nextReTryTime = retryTime || 0;
+
+      if ((error as Error).message === 'NoValidSessionId' && nextReTryTime <= 3) {
+        if (!nextReTryTime) {
+          nextReTryTime = 1;
+        } else {
+          nextReTryTime += 1;
+        }
+
+        return this.listTools(params, { retryTime: nextReTryTime, skipCache: true });
+      }
+
       console.error(`Error listing tools for params %O:`, loggableParams, error);
       // Propagate a TRPCError for better handling upstream
       throw new TRPCError({
@@ -200,10 +215,10 @@ class MCPService {
   }
 
   // Private method to get or initialize a client based on parameters
-  private async getClient(params: MCPClientParams): Promise<MCPClient> {
+  private async getClient(params: MCPClientParams, skipCache = false): Promise<MCPClient> {
     const key = this.serializeParams(params); // Use custom serialization
 
-    if (this.clients.has(key)) {
+    if (!skipCache && this.clients.has(key)) {
       return this.clients.get(key)!;
     }
 

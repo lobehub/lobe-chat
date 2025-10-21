@@ -12,6 +12,7 @@ import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { StreamingResponse } from '../../utils/response';
+import { sanitizeError } from '../../utils/sanitizeError';
 
 interface AzureAIParams {
   apiKey?: string;
@@ -112,9 +113,12 @@ export class LobeAzureAI implements LobeRuntimeAI {
         ? AgentRuntimeErrorType.ProviderBizError
         : AgentRuntimeErrorType.AgentRuntimeError;
 
+      // Sanitize error to remove sensitive information like API keys from headers
+      const sanitizedError = sanitizeError(error);
+
       throw AgentRuntimeError.chat({
         endpoint: this.maskSensitiveUrl(this.baseURL),
-        error,
+        error: sanitizedError,
         errorType,
         provider: ModelProvider.Azure,
       });

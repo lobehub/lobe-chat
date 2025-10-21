@@ -7,6 +7,14 @@
     "desc": "Verwijder de berichten en geüploade bestanden van de huidige sessie",
     "title": "Verwijder sessieberichten"
   },
+  "deleteAndRegenerateMessage": {
+    "desc": "Verwijder het laatste bericht en genereer opnieuw",
+    "title": "Verwijderen en opnieuw genereren"
+  },
+  "deleteLastMessage": {
+    "desc": "Verwijder het laatste bericht",
+    "title": "Laatste bericht verwijderen"
+  },
   "desktop": {
     "openSettings": {
       "desc": "Open de applicatie-instellingenpagina",

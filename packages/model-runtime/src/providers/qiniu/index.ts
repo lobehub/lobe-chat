@@ -1,13 +1,16 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
 export interface QiniuModelCard {
   id: string;
 }
 
-export const LobeQiniuAI = createOpenAICompatibleRuntime({
+export const params = {
   apiKey: 'placeholder-to-avoid-error',
   baseURL: 'https://api.qnaigc.com/v1',
   debug: {
@@ -21,4 +24,6 @@ export const LobeQiniuAI = createOpenAICompatibleRuntime({
     return processMultiProviderModelList(modelList, 'qiniu');
   },
   provider: ModelProvider.Qiniu,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeQiniuAI = createOpenAICompatibleRuntime(params);

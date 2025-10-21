@@ -1,3 +1,4 @@
+import { ToolNameResolver } from '@lobechat/context-engine';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -11,7 +12,6 @@ import { useChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useToolStore } from '@/store/tool';
 import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';
-import { genToolCallShortMD5Hash } from '@/utils/toolCall';
 
 const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
 
@@ -1045,7 +1045,16 @@ describe('ChatPluginAction', () => {
 
     it('should handle MD5 hashed API names', () => {
       const apiName = 'testApi';
-      const md5Hash = genToolCallShortMD5Hash(apiName);
+      const resolver = new ToolNameResolver();
+      // Generate a very long name to force MD5 hashing
+      const longApiName =
+        'very-long-action-name-that-will-cause-the-total-length-to-exceed-64-characters';
+      const toolName = resolver.generate('plugin1', longApiName, 'default');
+
+      // Extract the MD5 part from the generated name
+      const parts = toolName.split(PLUGIN_SCHEMA_SEPARATOR);
+      const md5Hash = parts[1].replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
+
       const toolCalls: MessageToolCall[] = [
         {
           id: 'tool1',
@@ -1069,7 +1078,7 @@ describe('ChatPluginAction', () => {
                 identifier: 'plugin1',
                 api: [
                   {
-                    name: apiName,
+                    name: longApiName,
                     parameters: { type: 'object', properties: {} },
                     description: 'abc',
                   },
@@ -1085,7 +1094,7 @@ describe('ChatPluginAction', () => {
 
       const transformed = result.current.internal_transformToolCalls(toolCalls);
 
-      expect(transformed[0].apiName).toBe(apiName);
+      expect(transformed[0].apiName).toBe(longApiName);
     });
   });
 

@@ -8,7 +8,6 @@ export * from './parseModels';
 export * from './pricing';
 export * from './safeParseJSON';
 export * from './sleep';
-export * from './toolCall';
 export * from './uriParser';
 export * from './url';
 export * from './uuid';

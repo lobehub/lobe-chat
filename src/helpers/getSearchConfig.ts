@@ -34,10 +34,14 @@ export const getSearchConfig = (model: string, provider: string): SearchConfig =
     model,
     provider,
   )(aiInfraStoreState);
+  const isModelBuiltinSearchInternal = aiModelSelectors.isModelBuiltinSearchInternal(
+    model,
+    provider!,
+  )(aiInfraStoreState);
 
   const useModelSearch =
     ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch) ||
-    false;
+    isModelBuiltinSearchInternal || false;
 
   const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 

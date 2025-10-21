@@ -14,7 +14,7 @@
     },
     "svg": {
       "copyAsImage": "이미지로 복사",
-      "copyFail": "복사 실패, 오류 원인: {{error}}",
+      "copyFail": "복사 실패, 오류 원인:{{error}}",
       "copySuccess": "이미지 복사 성공",
       "download": {
         "png": "PNG로 다운로드",
@@ -22,9 +22,9 @@
       }
     }
   },
-  "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 플러그인을 사용한 후에 다시 확인해주세요.",
-  "emptyKnowledgeList": "현재 지식 목록이 비어 있습니다. 대화 중에 필요에 따라 지식 베이스를 활성화한 후 다시 확인해 주세요.",
+  "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 세션에서 플러그인을 사용한 후 다시 확인해 주세요.",
+  "emptyKnowledgeList": "현재 지식 목록이 비어 있습니다. 지식 베이스를 활성화한 후 다시 확인해 주세요.",
   "files": "파일",
-  "messageDetail": "메시지 세부정보",
-  "title": "확장 창"
+  "messageDetail": "메시지 상세",
+  "title": "작업 공간"
 }

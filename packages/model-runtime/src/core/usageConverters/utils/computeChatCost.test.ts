@@ -322,6 +322,82 @@ describe('computeChatPricing', () => {
       expect(cacheWrite?.credits).toBe(5_625);
     });
 
+    it('handles lookup pricing with missing key and adds issue', () => {
+      const pricing = anthropicChatModels.find(
+        (model: { id: string }) => model.id === 'claude-opus-4-1-20250805',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      const usage: ModelTokensUsage = {
+        inputCacheMissTokens: 1_000,
+        inputWriteCacheTokens: 300,
+        outputTextTokens: 500,
+      };
+
+      // Provide an invalid TTL value that doesn't exist in the lookup table
+      const result = computeChatCost(pricing, usage, { lookupParams: { ttl: 'invalid' } });
+      expect(result).toBeDefined();
+      expect(result?.issues).toHaveLength(1);
+      expect(result?.issues[0].reason).toContain('Lookup price not found for key');
+      expect(result?.issues[0].reason).toContain('invalid');
+
+      const cacheWrite = result?.breakdown.find(
+        (item) => item.unit.name === 'textInput_cacheWrite',
+      );
+      expect(cacheWrite?.lookupKey).toBe('invalid');
+      expect(cacheWrite?.credits).toBe(0); // No credits when lookup fails
+    });
+
+    it('handles lookup pricing with missing lookup params and adds issue', () => {
+      const pricing = anthropicChatModels.find(
+        (model: { id: string }) => model.id === 'claude-opus-4-1-20250805',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      const usage: ModelTokensUsage = {
+        inputCacheMissTokens: 1_000,
+        inputWriteCacheTokens: 300,
+        outputTextTokens: 500,
+      };
+
+      // Don't provide lookup params at all
+      const result = computeChatCost(pricing, usage);
+      expect(result).toBeDefined();
+      expect(result?.issues).toHaveLength(1);
+      expect(result?.issues[0].reason).toContain('Missing lookup params');
+      expect(result?.issues[0].reason).toContain('ttl');
+
+      const cacheWrite = result?.breakdown.find(
+        (item) => item.unit.name === 'textInput_cacheWrite',
+      );
+      expect(cacheWrite?.credits).toBe(0); // No credits when lookup params missing
+    });
+
+    it('handles lookup pricing with undefined lookup params and adds issue', () => {
+      const pricing = anthropicChatModels.find(
+        (model: { id: string }) => model.id === 'claude-opus-4-1-20250805',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      const usage: ModelTokensUsage = {
+        inputCacheMissTokens: 1_000,
+        inputWriteCacheTokens: 300,
+        outputTextTokens: 500,
+      };
+
+      // Provide null value for TTL (simulating missing/invalid value)
+      const result = computeChatCost(pricing, usage, { lookupParams: { ttl: null as any } });
+      expect(result).toBeDefined();
+      expect(result?.issues).toHaveLength(1);
+      expect(result?.issues[0].reason).toContain('Missing lookup params');
+      expect(result?.issues[0].reason).toContain('ttl');
+
+      const cacheWrite = result?.breakdown.find(
+        (item) => item.unit.name === 'textInput_cacheWrite',
+      );
+      expect(cacheWrite?.credits).toBe(0); // No credits when lookup params undefined
+    });
+
     it('handles simple request without thinking for Claude Sonnet 4', () => {
       const pricing = anthropicChatModels.find(
         (model: { id: string }) => model.id === 'claude-sonnet-4-20250514',
@@ -450,6 +526,160 @@ describe('computeChatPricing', () => {
       // Verify totals match the actual billing log
       expect(totalCredits).toBe(49_916); // ceil(30 + 42615 + 906.3 + 6363.75) = 49916
       expect(totalCost).toBeCloseTo(0.049916, 6); // 49916 credits = $0.049916
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('handles tiered pricing with quantity exceeding all tier limits (fallback to last tier)', () => {
+      const pricing = googleChatModels.find(
+        (model: { id: string }) => model.id === 'gemini-2.5-pro',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      const usage: ModelTokensUsage = {
+        inputCacheMissTokens: 500_000, // Exceeds 200k threshold
+        outputTextTokens: 300_000, // Exceeds 200k threshold
+      };
+
+      const result = computeChatCost(pricing, usage);
+      expect(result).toBeDefined();
+      expect(result?.issues).toHaveLength(0);
+
+      const input = result?.breakdown.find((item) => item.unit.name === 'textInput');
+      expect(input?.quantity).toBe(500_000);
+      // Should use the highest tier rate (2.5 for input > 200k)
+      expect(input?.credits).toBe(1_250_000); // 500_000 * 2.5
+      expect(input?.segments).toEqual([{ quantity: 500_000, rate: 2.5, credits: 1_250_000 }]);
+
+      const output = result?.breakdown.find((item) => item.unit.name === 'textOutput');
+      expect(output?.quantity).toBe(300_000);
+      // Should use the highest tier rate (15 for output > 200k)
+      expect(output?.credits).toBe(4_500_000); // 300_000 * 15
+      expect(output?.segments).toEqual([{ quantity: 300_000, rate: 15, credits: 4_500_000 }]);
+    });
+
+    it('handles unsupported pricing strategy and adds issue', () => {
+      const unsupportedPricing = {
+        units: [
+          {
+            name: 'textInput',
+            strategy: 'unsupported-strategy',
+            unit: 'millionTokens',
+            rate: 1,
+          },
+        ],
+      };
+
+      const usage: ModelTokensUsage = {
+        inputTextTokens: 1000,
+      };
+
+      const result = computeChatCost(unsupportedPricing as any, usage);
+      expect(result).toBeDefined();
+      expect(result?.issues).toHaveLength(1);
+      expect(result?.issues[0].reason).toBe('Unsupported pricing strategy');
+      expect(result?.totalCredits).toBe(0);
+      expect(result?.totalCost).toBe(0);
+    });
+
+    it('returns undefined when pricing is not provided', () => {
+      const usage: ModelTokensUsage = {
+        inputTextTokens: 1000,
+        outputTextTokens: 500,
+      };
+
+      const result = computeChatCost(undefined, usage);
+      expect(result).toBeUndefined();
+    });
+
+    it('handles zero quantity for tiered pricing', () => {
+      const pricing = googleChatModels.find(
+        (model: { id: string }) => model.id === 'gemini-2.5-pro',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      const usage: ModelTokensUsage = {
+        inputTextTokens: 0,
+        outputTextTokens: 0,
+      };
+
+      const result = computeChatCost(pricing, usage);
+      expect(result).toBeDefined();
+      expect(result?.totalCredits).toBe(0);
+      expect(result?.totalCost).toBe(0);
+    });
+
+    it('throws error when using unsupported unit for fixed strategy', () => {
+      const invalidPricing = {
+        units: [
+          {
+            name: 'textInput',
+            strategy: 'fixed',
+            unit: 'unsupportedUnit',
+            rate: 1,
+          },
+        ],
+      };
+
+      const usage: ModelTokensUsage = {
+        inputTextTokens: 1000,
+      };
+
+      expect(() => computeChatCost(invalidPricing as any, usage)).toThrow(
+        'Unsupported chat pricing unit: unsupportedUnit',
+      );
+    });
+
+    it('throws error when inputCacheMissTokens is missing but cache tokens are present', () => {
+      const pricing = openaiChatModels.find(
+        (model: { id: string }) => model.id === 'gpt-4.1',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      const usage: ModelTokensUsage = {
+        inputCachedTokens: 1024,
+        totalInputTokens: 1169,
+        outputTextTokens: 59,
+      };
+
+      expect(() => computeChatCost(pricing, usage)).toThrow(
+        'Missing inputCacheMissTokens! You can set it by inputCacheMissTokens = totalInputTokens - inputCachedTokens',
+      );
+    });
+
+    it('handles output with only reasoning tokens', () => {
+      const pricing = openaiChatModels.find(
+        (model: { id: string }) => model.id === 'gpt-4.1',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      const usage: ModelTokensUsage = {
+        inputTextTokens: 100,
+        outputReasoningTokens: 500,
+      };
+
+      const result = computeChatCost(pricing, usage);
+      expect(result).toBeDefined();
+
+      const output = result?.breakdown.find((item) => item.unit.name === 'textOutput');
+      expect(output?.quantity).toBe(500); // Only reasoning tokens
+      expect(output?.credits).toBe(4_000); // 500 * 8
+    });
+
+    it('handles empty usage with no tokens', () => {
+      const pricing = openaiChatModels.find(
+        (model: { id: string }) => model.id === 'gpt-4.1',
+      )?.pricing;
+      expect(pricing).toBeDefined();
+
+      // Usage with no tokens at all
+      const usage: ModelTokensUsage = {};
+
+      const result = computeChatCost(pricing, usage);
+      expect(result).toBeDefined();
+      expect(result?.breakdown).toHaveLength(0); // No breakdown items when no tokens
+      expect(result?.totalCredits).toBe(0);
+      expect(result?.totalCost).toBe(0);
     });
   });
 });

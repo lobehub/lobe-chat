@@ -66,7 +66,7 @@ type Routers =
       },
     ) => RouterInstance[] | Promise<RouterInstance[]>);
 
-interface CreateRouterRuntimeOptions<T extends Record<string, any> = any> {
+export interface CreateRouterRuntimeOptions<T extends Record<string, any> = any> {
   apiKey?: string;
   chatCompletion?: {
     excludeUsage?: boolean;

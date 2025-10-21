@@ -20,7 +20,7 @@ export const handleOpenAIError = (
     }
     // if there is no other request error, the error object is a Response like object
     else {
-      errorResult = { headers: error.headers, stack: error.stack, status: error.status };
+      errorResult = { headers: error.headers, status: error.status };
     }
 
     return {
@@ -29,7 +29,7 @@ export const handleOpenAIError = (
   } else {
     const err = error as Error;
 
-    errorResult = { cause: err.cause, message: err.message, name: err.name, stack: err.stack };
+    errorResult = { cause: err.cause, message: err.message, name: err.name };
 
     return {
       RuntimeError: AgentRuntimeErrorType.AgentRuntimeError,

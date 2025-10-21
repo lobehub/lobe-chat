@@ -46,9 +46,22 @@ export interface ChatMessageExtra {
   tts?: ChatTTS;
 }
 
+export interface AssistantContentBlock {
+  content: string;
+  fileList?: ChatFileItem[];
+  id: string;
+  imageList?: ChatImageItem[];
+  tools?: ChatToolPayload[];
+}
+
 export interface ChatMessage {
   // Group chat fields (alphabetically before other fields)
   agentId?: string | 'supervisor';
+  /**
+   * children messages for grouped display
+   * Used to group tool messages under their parent assistant message
+   */
+  children?: AssistantContentBlock[];
   chunksList?: ChatFileChunk[];
   content: string;
   createdAt: number;

@@ -9,8 +9,24 @@ const nvidiaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',
-    displayName: 'DeepSeek V3.1',
+    displayName: 'DeepSeek V3.1 Terminus',
     enabled: true,
+    id: 'deepseek-ai/deepseek-v3.1-terminus',
+    maxOutput: 16_384,
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',
+    displayName: 'DeepSeek V3.1',
     id: 'deepseek-ai/deepseek-v3.1',
     maxOutput: 16_384,
     settings: {

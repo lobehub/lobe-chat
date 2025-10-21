@@ -5,11 +5,11 @@ alwaysApply: false
 
 # LobeChat Project Structure
 
-note: some not very important files are not shown for simplicity.
-
 ## Complete Project Structure
 
-this project use common monorepo structure. The workspace packages name use `@lobechat/` namespace.
+This project uses common monorepo structure. The workspace packages name use `@lobechat/` namespace.
+
+**note**: some not very important files are not shown for simplicity.
 
 ```plaintext
 lobe-chat/
@@ -28,10 +28,12 @@ lobe-chat/
 │   │   │   ├── schemas/
 │   │   │   └── repositories/
 │   ├── model-bank/
+│   │   └── src/
+│   │       └── aiModels/
 │   ├── model-runtime/
 │   │   └── src/
-│   │       ├── openai/
-│   │       └── anthropic/
+│   │       ├── core/
+│   │       └── providers/
 │   ├── types/
 │   │   └── src/
 │   │       ├── message/
@@ -96,14 +98,14 @@ lobe-chat/
 - UI Components: `src/components`, `src/features`
 - Global providers: `src/layout`
 - Zustand stores: `src/store`
-- Client Services: `src/services/`
+- Client Services: `src/services/` cross-platform services
   - clientDB: `src/services/<domain>/client.ts`
   - serverDB: `src/services/<domain>/server.ts`
 - API Routers:
   - `src/app/(backend)/webapi` (REST)
   - `src/server/routers/{edge|lambda|async|desktop|tools}` (tRPC)
 - Server:
-  - Services(can access serverDB): `src/server/services`
+  - Services(can access serverDB): `src/server/services` server-used-only services
   - Modules(can't access db): `src/server/modules` (Server only Third-party Service Module)
 - Database:
   - Schema (Drizzle): `packages/database/src/schemas`
@@ -113,8 +115,8 @@ lobe-chat/
 
 ## Data Flow Architecture
 
-- **Browser/PWA**: React UI → Client Service → Direct Model Access → PGLite (Web WASM)
-- **Server**: React UI → Client Service → tRPC Lambda → Server Services → PostgreSQL (Remote)
+- **Web with ClientDB**: React UI → Client Service → Direct Model Access → PGLite (Web WASM)
+- **Web with ServerDB**: React UI → Client Service → tRPC Lambda → Server Services → PostgreSQL (Remote)
 - **Desktop**:
   - Cloud sync disabled: Electron UI → Client Service → tRPC Lambda → Local Server Services → PGLite (Node WASM)
   - Cloud sync enabled: Electron UI → Client Service → tRPC Lambda → Cloud Server Services → PostgreSQL (Remote)

@@ -4,7 +4,7 @@ import { ModelProvider } from 'model-bank';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { testProvider } from '../../providerTestUtils';
-import { LobeWenxinAI } from './index';
+import { LobeWenxinAI, params } from './index';
 
 testProvider({
   Runtime: LobeWenxinAI,
@@ -116,6 +116,149 @@ describe('LobeWenxinAI', () => {
       );
 
       expect((await reader.read()).done).toBe(true);
+    });
+  });
+});
+
+describe('LobeWenxinAI - Custom Features', () => {
+  describe('Debug Configuration', () => {
+    it('should disable debug by default', () => {
+      delete process.env.DEBUG_WENXIN_CHAT_COMPLETION;
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(false);
+    });
+
+    it('should enable debug when env is set to 1', () => {
+      process.env.DEBUG_WENXIN_CHAT_COMPLETION = '1';
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(true);
+    });
+
+    it('should disable debug when env is set to other values', () => {
+      process.env.DEBUG_WENXIN_CHAT_COMPLETION = '0';
+      const result = params.debug.chatCompletion();
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('handlePayload', () => {
+    it('should transform payload without enabledSearch', () => {
+      const payload = {
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.7,
+      };
+
+      const result = params.chatCompletion!.handlePayload!(payload as any);
+
+      expect(result).toEqual({
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.7,
+        stream: true,
+      });
+      expect(result).not.toHaveProperty('web_search');
+    });
+
+    it('should transform payload with enabledSearch set to false', () => {
+      const payload = {
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.7,
+        enabledSearch: false,
+      };
+
+      const result = params.chatCompletion!.handlePayload!(payload as any);
+
+      expect(result).toEqual({
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.7,
+        stream: true,
+      });
+      expect(result).not.toHaveProperty('web_search');
+    });
+
+    it('should transform payload with enabledSearch set to true', () => {
+      const payload = {
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.7,
+        enabledSearch: true,
+      };
+
+      const result = params.chatCompletion!.handlePayload!(payload as any);
+
+      expect(result).toEqual({
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.7,
+        stream: true,
+        web_search: {
+          enable: true,
+          enable_citation: true,
+          enable_trace: true,
+        },
+      });
+    });
+
+    it('should add web_search config when enabledSearch is true', () => {
+      const payload = {
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'What is the weather today?' }],
+        enabledSearch: true,
+      };
+
+      const result = params.chatCompletion!.handlePayload!(payload as any);
+
+      expect(result.web_search).toEqual({
+        enable: true,
+        enable_citation: true,
+        enable_trace: true,
+      });
+    });
+
+    it('should preserve all original payload properties except enabledSearch', () => {
+      const payload = {
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.8,
+        max_tokens: 2048,
+        top_p: 0.9,
+        enabledSearch: true,
+        custom_field: 'test',
+      };
+
+      const result = params.chatCompletion!.handlePayload!(payload as any);
+
+      expect(result).toHaveProperty('model', 'ernie-4.0-8k');
+      expect(result).toHaveProperty('messages');
+      expect(result).toHaveProperty('temperature', 0.8);
+      expect(result).toHaveProperty('max_tokens', 2048);
+      expect(result).toHaveProperty('top_p', 0.9);
+      expect(result).toHaveProperty('custom_field', 'test');
+      expect(result).toHaveProperty('stream', true);
+      expect(result).toHaveProperty('web_search');
+      expect(result).not.toHaveProperty('enabledSearch');
+    });
+
+    it('should always set stream to true', () => {
+      const payloadWithoutStream = {
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+      };
+
+      const result1 = params.chatCompletion!.handlePayload!(payloadWithoutStream as any);
+      expect(result1.stream).toBe(true);
+
+      const payloadWithStreamFalse = {
+        model: 'ernie-4.0-8k',
+        messages: [{ role: 'user', content: 'Hello' }],
+        stream: false,
+      };
+
+      const result2 = params.chatCompletion!.handlePayload!(payloadWithStreamFalse as any);
+      expect(result2.stream).toBe(true);
     });
   });
 });

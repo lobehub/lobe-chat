@@ -2,7 +2,7 @@
   "addDataset": {
     "confirm": "새로 만들기",
     "description": {
-      "placeholder": "데이터셋 설명 (선택 사항)"
+      "placeholder": "데이터셋 소개 (선택 사항)"
     },
     "name": {
       "placeholder": "데이터셋 이름",
@@ -21,17 +21,17 @@
         "columns": {
           "actions": "작업",
           "ideal": {
-            "title": "기대 답변"
+            "title": "예상 답변"
           },
           "question": {
             "title": "질문"
           },
           "referenceFiles": {
-            "title": "참조 파일"
+            "title": "참고 파일"
           }
         },
         "notSelected": "왼쪽에서 데이터셋을 선택해 주세요",
-        "title": "데이터셋 상세 정보"
+        "title": "데이터셋 상세"
       },
       "title": "데이터셋"
     }
@@ -40,11 +40,11 @@
     "addEvaluation": {
       "confirm": "새로 만들기",
       "datasetId": {
-        "placeholder": "평가 데이터셋을 선택해 주세요",
-        "required": "평가 데이터셋을 선택해 주세요"
+        "placeholder": "평가할 데이터셋을 선택해 주세요",
+        "required": "평가할 데이터셋을 선택해 주세요"
       },
       "description": {
-        "placeholder": "평가 작업 설명 (선택 사항)"
+        "placeholder": "평가 작업 소개 (선택 사항)"
       },
       "name": {
         "placeholder": "평가 작업 이름",
@@ -53,13 +53,13 @@
       "title": "평가 작업 추가"
     },
     "addNewButton": "평가 생성",
-    "emptyGuide": "현재 평가 작업이 비어 있습니다. 평가를 시작해 주세요.",
+    "emptyGuide": "현재 평가 작업이 없습니다. 평가를 생성해 주세요.",
     "table": {
       "columns": {
         "actions": {
           "checkStatus": "상태 확인",
           "confirmDelete": "이 평가를 삭제하시겠습니까?",
-          "confirmRun": "실행을 시작하시겠습니까? 실행이 시작되면 백그라운드에서 비동기적으로 평가 작업이 수행됩니다. 페이지를 닫아도 비동기 작업의 실행에는 영향을 미치지 않습니다.",
+          "confirmRun": "실행하시겠습니까? 실행 후에는 백그라운드에서 비동기적으로 평가 작업이 수행되며, 페이지를 닫아도 작업은 계속 진행됩니다.",
           "downloadRecords": "평가 다운로드",
           "retry": "재시도",
           "run": "실행",
@@ -75,7 +75,7 @@
           "title": "평가 기록 수"
         },
         "referenceFiles": {
-          "title": "참조 파일"
+          "title": "참고 파일"
         },
         "status": {
           "error": "실행 오류",

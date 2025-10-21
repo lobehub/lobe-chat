@@ -1,4 +1,5 @@
 import { PluginQueryParams, SystemDependency } from '@lobehub/market-sdk';
+import { z } from 'zod';
 
 import { MCPErrorType } from '@/libs/mcp';
 
@@ -219,3 +220,32 @@ export interface McpConnectionParams {
 }
 
 export type MCPInstallProgressMap = Record<string, MCPInstallProgress | undefined>;
+
+// ============ Zod Schemas ============
+
+/**
+ * Zod schema for HTTP MCP authentication
+ */
+export const StreamableHTTPAuthSchema = z
+  .object({
+    accessToken: z.string().optional(), // OAuth2 Access Token
+    token: z.string().optional(), // Bearer Token
+    type: z.enum(['none', 'bearer', 'oauth2']),
+  })
+  .optional();
+
+/**
+ * Zod schema for getStreamableMcpServerManifest input
+ */
+export const GetStreamableMcpServerManifestInputSchema = z.object({
+  auth: StreamableHTTPAuthSchema,
+  headers: z.record(z.string()).optional(),
+  identifier: z.string(),
+  metadata: z
+    .object({
+      avatar: z.string().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
+  url: z.string().url(),
+});

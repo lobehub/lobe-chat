@@ -1,9 +1,14 @@
 import type { PartialDeep } from 'type-fest';
 
-import { IFeatureFlags } from '@/config/featureFlags';
+import { IFeatureFlagsState } from '@/config/featureFlags';
 
 import { ChatModelCard } from './llm';
-import { GlobalLLMProviderKey, UserDefaultAgent, UserSystemAgentConfig } from './user/settings';
+import {
+  GlobalLLMProviderKey,
+  UserDefaultAgent,
+  UserImageConfig,
+  UserSystemAgentConfig,
+} from './user/settings';
 
 export interface ServerModelProviderConfig {
   enabled?: boolean;
@@ -26,6 +31,7 @@ export interface GlobalServerConfig {
    * @deprecated
    */
   enabledOAuthSSO?: boolean;
+  image?: PartialDeep<UserImageConfig>;
   /**
    * @deprecated
    */
@@ -39,5 +45,5 @@ export interface GlobalServerConfig {
 
 export interface GlobalRuntimeConfig {
   serverConfig: GlobalServerConfig;
-  serverFeatureFlags: IFeatureFlags;
+  serverFeatureFlags: IFeatureFlagsState;
 }

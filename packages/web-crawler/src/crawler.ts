@@ -1,5 +1,5 @@
 import { CrawlImplType, crawlImpls } from './crawImpl';
-import { CrawlUrlRule } from './type';
+import { CrawlUniformResult, CrawlUrlRule } from './type';
 import { crawUrlRules } from './urlRules';
 import { applyUrlRules } from './utils/appUrlRules';
 
@@ -30,7 +30,7 @@ export class Crawler {
     filterOptions?: CrawlUrlRule['filterOptions'];
     impls?: CrawlImplType[];
     url: string;
-  }) {
+  }): Promise<CrawlUniformResult> {
     // 应用URL规则
     const {
       transformedUrl,
@@ -76,7 +76,7 @@ export class Crawler {
     const errorMessage = finalError?.message;
 
     return {
-      crawler: finalCrawler,
+      crawler: finalCrawler!,
       data: {
         content: `Fail to crawl the page. Error type: ${errorType}, error message: ${errorMessage}`,
         errorMessage: errorMessage,

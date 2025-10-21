@@ -56,6 +56,8 @@ const Tool = memo<InspectorProps>(
         />
         <AnimatedCollapsed open={showDetail}>
           <Render
+            apiName={apiName}
+            identifier={identifier}
             messageId={messageId}
             requestArgs={requestArgs}
             setShowPluginRender={setShowPluginRender}

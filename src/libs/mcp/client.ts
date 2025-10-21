@@ -317,7 +317,12 @@ export class MCPClient {
       log('Listed tools: %O', tools);
       return tools as McpTool[];
     } catch (e) {
-      log('Listed tools error: %O', e);
+      console.error('Listed tools error: %O', e);
+
+      if ((e as Error).message.includes('No valid session ID provided')) {
+        throw new Error('NoValidSessionId');
+      }
+
       return [];
     }
   }

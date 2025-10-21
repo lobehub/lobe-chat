@@ -1,5 +1,4 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import type { AgentEvent } from './event';
 import type { Cost, CostLimit, Usage } from './usage';
 
 /**
@@ -13,14 +12,8 @@ export interface AgentState {
 
   // --- Core Context ---
   messages: any[];
+  tools?: any[];
   systemRole?: string;
-
-  // --- Event History ---
-  /**
-   * Complete event trace for this agent session.
-   * Useful for debugging, auditing, and state replay.
-   */
-  events: AgentEvent[];
 
   // --- Execution Tracking ---
   /**
