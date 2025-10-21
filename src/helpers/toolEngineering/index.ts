@@ -1,19 +1,18 @@
 /**
  * Tools Engineering - Unified tools processing using ToolsEngine
  */
-import { isDesktop } from '@lobechat/const';
 import { ToolsEngine } from '@lobechat/context-engine';
 import type { PluginEnableChecker } from '@lobechat/context-engine';
 import { ChatCompletionTool, WorkingModel } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
-import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { LocalSystemManifest } from '@/tools/local-system';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
+import { getSearchConfig } from '../getSearchConfig';
 import { isCanUseFC } from '../isCanUseFC';
+import { shouldEnableTool } from '../toolFilters';
 
 /**
  * Tools engine configuration options
@@ -60,9 +59,9 @@ export const createChatToolsEngine = (workingModel: WorkingModel) =>
     defaultToolIds: [WebBrowsingManifest.identifier],
     // Create search-aware enableChecker for this request
     enableChecker: ({ pluginId }) => {
-      // Filter local-system tools in non-desktop environment
-      if (pluginId === LocalSystemManifest.identifier) {
-        return isDesktop;
+      // Check platform-specific constraints (e.g., LocalSystem desktop-only)
+      if (!shouldEnableTool(pluginId)) {
+        return false;
       }
 
       // For WebBrowsingManifest, apply search logic
