@@ -5,7 +5,7 @@ import { MessageModel } from '@/database/models/message';
 import { TopicModel } from '@/database/models/topic';
 import { AiChatService } from '@/server/services/aiChat';
 
-import { aiChatRouter } from './aiChat';
+import { aiChatRouter } from '../aiChat';
 
 vi.mock('@/database/models/message');
 vi.mock('@/database/models/topic');
