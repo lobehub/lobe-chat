@@ -11,12 +11,13 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useFileStore } from '@/store/file';
-import { FileListItem as FileListItemType, SortType } from '@/types/files';
+import { SortType } from '@/types/files';
 
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
 import FileSkeleton from './FileSkeleton';
 import MasonryItemWrapper from './MasonryFileItem/MasonryItemWrapper';
+import MasonrySkeleton from './MasonrySkeleton';
 import ToolBar from './ToolBar';
 import { ViewMode } from './ToolBar/ViewSwitcher';
 import { useCheckTaskStatus } from './useCheckTaskStatus';
@@ -151,7 +152,11 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
         )}
       </Flexbox>
       {isLoading ? (
-        <FileSkeleton />
+        viewMode === 'masonry' ? (
+          <MasonrySkeleton columnCount={columnCount} />
+        ) : (
+          <FileSkeleton />
+        )
       ) : viewMode === 'list' ? (
         <Virtuoso
           components={{
@@ -184,15 +189,16 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
           style={{ flex: 1 }}
         />
       ) : (
-        <div style={{ flex: 1, paddingInline: 24, paddingBlockStart: 12 }}>
+        <div style={{ flex: 1, overflow: 'hidden', paddingBlockStart: 12, paddingInline: 24 }}>
           <VirtuosoMasonry
+            ItemContent={MasonryItemWrapper}
             columnCount={columnCount}
             context={{ knowledgeBaseId, selectFileIds, setSelectedFileIds }}
             data={data || []}
-            ItemContent={MasonryItemWrapper}
+            key={`masonry-${query || 'all'}-${data?.length || 0}`}
             style={{
-              height: '100%',
               gap: '16px',
+              height: '100%',
             }}
           />
         </div>

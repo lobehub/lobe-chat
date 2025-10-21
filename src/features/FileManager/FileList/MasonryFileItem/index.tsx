@@ -11,41 +11,51 @@ import { Flexbox } from 'react-layout-kit';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
+import { formatSize } from '@/utils/format';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import ChunksBadge from '../FileListItem/ChunkTag';
 import DropdownMenu from '../FileListItem/DropdownMenu';
 
 // Image file types
-const IMAGE_TYPES = [
+const IMAGE_TYPES = new Set([
   'image/png',
   'image/jpeg',
   'image/jpg',
   'image/gif',
   'image/webp',
   'image/svg+xml',
-];
+]);
 
 // Markdown file types
-const MARKDOWN_TYPES = ['text/markdown', 'text/x-markdown'];
+const MARKDOWN_TYPES = new Set(['text/markdown', 'text/x-markdown']);
 
 // Helper to check if filename ends with .md
 const isMarkdownFile = (name: string, fileType?: string) => {
   return (
     name.toLowerCase().endsWith('.md') ||
     name.toLowerCase().endsWith('.markdown') ||
-    (fileType && MARKDOWN_TYPES.includes(fileType))
+    (fileType && MARKDOWN_TYPES.has(fileType))
   );
 };
 
 const useStyles = createStyles(({ css, token }) => ({
+  actions: css`
+    opacity: 0;
+    transition: opacity ${token.motionDurationMid};
+  `,
   card: css`
     cursor: pointer;
+
     position: relative;
+
     overflow: visible;
-    background: ${token.colorBgContainer};
+
     border: 1px solid ${token.colorBorderSecondary};
     border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgContainer};
+
     transition: all ${token.motionDurationMid};
 
     &:hover {
@@ -71,19 +81,181 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   checkbox: css`
     position: absolute;
-    top: 8px;
-    left: 8px;
     z-index: 2;
+    inset-block-start: 8px;
+    inset-inline-start: 8px;
+
     opacity: 0;
+
     transition: opacity ${token.motionDurationMid};
+  `,
+  content: css`
+    position: relative;
+  `,
+  contentWithPadding: css`
+    padding: 12px;
   `,
   dropdown: css`
     position: absolute;
-    top: 8px;
-    right: 8px;
     z-index: 2;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+
     opacity: 0;
+
     transition: opacity ${token.motionDurationMid};
+  `,
+  floatingChunkBadge: css`
+    position: absolute;
+    z-index: 3;
+    inset-block-end: 8px;
+    inset-inline-end: 8px;
+
+    padding-block: 4px;
+    padding-inline: 8px;
+    border-radius: ${token.borderRadius}px;
+
+    opacity: 0;
+    background: ${token.colorBgContainer};
+    box-shadow: ${token.boxShadow};
+
+    transition: opacity ${token.motionDurationMid};
+  `,
+  hoverOverlay: css`
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    opacity: 0;
+    background: ${token.colorBgMask};
+
+    transition: opacity ${token.motionDurationMid};
+
+    &:hover {
+      opacity: 1;
+    }
+  `,
+  iconWrapper: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 120px;
+    margin-block-end: 12px;
+    border-radius: ${token.borderRadius}px;
+
+    background: ${token.colorFillQuaternary};
+  `,
+  imagePlaceholder: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 120px;
+
+    background: ${token.colorFillQuaternary};
+  `,
+  imageWrapper: css`
+    position: relative;
+
+    overflow: hidden;
+
+    width: 100%;
+    min-height: 120px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorFillQuaternary};
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  `,
+  markdownLoading: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 120px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+
+    background: ${token.colorFillQuaternary};
+  `,
+  markdownPreview: css`
+    position: relative;
+
+    overflow: hidden;
+
+    width: 100%;
+    min-height: 120px;
+    max-height: 300px;
+    padding: 16px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    font-size: 13px;
+    line-height: 1.6;
+    color: ${token.colorTextSecondary};
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
+    background: ${token.colorFillQuaternary};
+
+    &::after {
+      pointer-events: none;
+      content: '';
+
+      position: absolute;
+      inset-block-end: 0;
+      inset-inline: 0;
+
+      height: 60px;
+
+      background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
+    }
+  `,
+  name: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    margin-block-end: 12px;
+
+    font-weight: ${token.fontWeightStrong};
+    color: ${token.colorText};
+    word-break: break-word;
+  `,
+  overlaySize: css`
+    font-size: 12px;
+    color: ${token.colorTextLightSolid};
+    opacity: 0.9;
+  `,
+  overlayTitle: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+
+    max-width: 100%;
+    margin-block-end: 8px;
+
+    font-size: 14px;
+    font-weight: ${token.fontWeightStrong};
+    color: ${token.colorTextLightSolid};
+    text-align: center;
+    word-break: break-word;
   `,
   selected: css`
     border-color: ${token.colorPrimary};
@@ -92,104 +264,6 @@ const useStyles = createStyles(({ css, token }) => ({
     .checkbox {
       opacity: 1;
     }
-  `,
-  content: css`
-    position: relative;
-  `,
-  contentWithPadding: css`
-    padding: 12px;
-  `,
-  iconWrapper: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 120px;
-    background: ${token.colorFillQuaternary};
-    border-radius: ${token.borderRadius}px;
-    margin-bottom: 12px;
-  `,
-  imageWrapper: css`
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    background: ${token.colorFillQuaternary};
-    border-radius: ${token.borderRadiusLG}px;
-    min-height: 120px;
-
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-  `,
-  floatingChunkBadge: css`
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    z-index: 3;
-    opacity: 0;
-    transition: opacity ${token.motionDurationMid};
-    background: ${token.colorBgContainer};
-    border-radius: ${token.borderRadius}px;
-    padding: 4px 8px;
-    box-shadow: ${token.boxShadow};
-  `,
-  imagePlaceholder: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 120px;
-    background: ${token.colorFillQuaternary};
-  `,
-  markdownPreview: css`
-    position: relative;
-    width: 100%;
-    padding: 16px;
-    background: ${token.colorFillQuaternary};
-    border-radius: ${token.borderRadiusLG}px;
-    min-height: 120px;
-    max-height: 300px;
-    overflow: hidden;
-    font-size: 13px;
-    line-height: 1.6;
-    color: ${token.colorTextSecondary};
-    white-space: pre-wrap;
-    word-wrap: break-word;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
-      pointer-events: none;
-    }
-  `,
-  markdownLoading: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 120px;
-    background: ${token.colorFillQuaternary};
-    border-radius: ${token.borderRadiusLG}px;
-    color: ${token.colorTextTertiary};
-    font-size: 12px;
-  `,
-  name: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    font-weight: ${token.fontWeightStrong};
-    color: ${token.colorText};
-    margin-bottom: 12px;
-    word-break: break-word;
-  `,
-  actions: css`
-    opacity: 0;
-    transition: opacity ${token.motionDurationMid};
   `,
 }));
 
@@ -214,6 +288,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     chunkingStatus,
     onSelectedChange,
     knowledgeBaseId,
+    size,
   }) => {
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
@@ -227,7 +302,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     ]);
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
-    const isImage = fileType && IMAGE_TYPES.includes(fileType);
+    const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
 
     // Fetch markdown content
@@ -267,61 +342,67 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           <DropdownMenu filename={name} id={id} knowledgeBaseId={knowledgeBaseId} url={url} />
         </div>
 
-        <Tooltip title={name}>
-          <div
-            className={cx(styles.content, !isImage && !isMarkdown && styles.contentWithPadding)}
-            onClick={() => {
-              router.push(`/files/${id}`);
-            }}
-          >
-            {isImage && url ? (
-              <>
-                <div className={styles.imageWrapper}>
-                  <Image
-                    alt={name}
-                    fallback={
-                      <div className={styles.imagePlaceholder}>
-                        <FileIcon fileName={name} fileType={fileType} size={64} />
-                      </div>
-                    }
-                    onLoad={() => setImageLoaded(true)}
-                    preview={{
-                      src: url,
-                    }}
-                    src={url}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                      opacity: imageLoaded ? 1 : 0,
-                      transition: 'opacity 0.3s',
-                    }}
-                    wrapperStyle={{
-                      width: '100%',
-                      display: 'block',
-                    }}
-                  />
-                </div>
-                {/* Floating chunk badge for images */}
-                {!isNull(chunkingStatus) && chunkingStatus && (
-                  <div
-                    className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ChunksBadge
-                      chunkCount={chunkCount}
-                      chunkingError={chunkingError}
-                      chunkingStatus={chunkingStatus}
-                      embeddingError={embeddingError}
-                      embeddingStatus={embeddingStatus}
-                      finishEmbedding={finishEmbedding}
-                      id={id}
-                    />
+        <div
+          className={cx(styles.content, !isImage && !isMarkdown && styles.contentWithPadding)}
+          onClick={() => {
+            router.push(`/files/${id}`);
+          }}
+        >
+          {isImage && url ? (
+            <>
+              <div className={styles.imageWrapper}>
+                {!imageLoaded && (
+                  <div className={styles.imagePlaceholder}>
+                    <FileIcon fileName={name} fileType={fileType} size={64} />
                   </div>
                 )}
-              </>
-            ) : isMarkdown ? (
-              <>
+                <Image
+                  alt={name}
+                  onError={() => setImageLoaded(false)}
+                  onLoad={() => setImageLoaded(true)}
+                  preview={{
+                    src: url,
+                  }}
+                  src={url}
+                  style={{
+                    display: 'block',
+                    height: 'auto',
+                    opacity: imageLoaded ? 1 : 0,
+                    transition: 'opacity 0.3s',
+                    width: '100%',
+                  }}
+                  wrapperStyle={{
+                    display: 'block',
+                    width: '100%',
+                  }}
+                />
+                {/* Hover overlay */}
+                <div className={styles.hoverOverlay}>
+                  <div className={styles.overlayTitle}>{name}</div>
+                  <div className={styles.overlaySize}>{formatSize(size)}</div>
+                </div>
+              </div>
+              {/* Floating chunk badge for images */}
+              {!isNull(chunkingStatus) && chunkingStatus && (
+                <div
+                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ChunksBadge
+                    chunkCount={chunkCount}
+                    chunkingError={chunkingError}
+                    chunkingStatus={chunkingStatus}
+                    embeddingError={embeddingError}
+                    embeddingStatus={embeddingStatus}
+                    finishEmbedding={finishEmbedding}
+                    id={id}
+                  />
+                </div>
+              )}
+            </>
+          ) : isMarkdown ? (
+            <>
+              <div style={{ position: 'relative' }}>
                 {isLoadingMarkdown ? (
                   <div className={styles.markdownLoading}>Loading preview...</div>
                 ) : markdownContent ? (
@@ -331,80 +412,92 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     <FileIcon fileName={name} fileType={fileType} size={64} />
                   </div>
                 )}
-                {/* Floating chunk badge for markdown files */}
-                {!isNull(chunkingStatus) && chunkingStatus && (
-                  <div
-                    className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ChunksBadge
-                      chunkCount={chunkCount}
-                      chunkingError={chunkingError}
-                      chunkingStatus={chunkingStatus}
-                      embeddingError={embeddingError}
-                      embeddingStatus={embeddingStatus}
-                      finishEmbedding={finishEmbedding}
-                      id={id}
-                    />
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
+                {/* Hover overlay */}
+                <div className={styles.hoverOverlay}>
+                  <div className={styles.overlayTitle}>{name}</div>
+                  <div className={styles.overlaySize}>{formatSize(size)}</div>
+                </div>
+              </div>
+              {/* Floating chunk badge for markdown files */}
+              {!isNull(chunkingStatus) && chunkingStatus && (
+                <div
+                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ChunksBadge
+                    chunkCount={chunkCount}
+                    chunkingError={chunkingError}
+                    chunkingStatus={chunkingStatus}
+                    embeddingError={embeddingError}
+                    embeddingStatus={embeddingStatus}
+                    finishEmbedding={finishEmbedding}
+                    id={id}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div style={{ position: 'relative' }}>
                 <div className={styles.iconWrapper}>
                   <FileIcon fileName={name} fileType={fileType} size={64} />
                 </div>
-                <div className={styles.name}>{name}</div>
-                <Flexbox
-                  className="actions"
-                  gap={8}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  style={{ minHeight: 32 }}
-                >
-                  {isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
-                    <Tooltip
-                      title={t(
-                        isSupportedForChunking
-                          ? 'FileManager.actions.chunkingTooltip'
-                          : 'FileManager.actions.chunkingUnsupported',
-                      )}
+                {/* Hover overlay */}
+                <div className={styles.hoverOverlay}>
+                  <div className={styles.overlayTitle}>{name}</div>
+                  <div className={styles.overlaySize}>{formatSize(size)}</div>
+                </div>
+              </div>
+              <div className={styles.name}>{name}</div>
+              <Flexbox
+                className="actions"
+                gap={8}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                style={{ minHeight: 32 }}
+              >
+                {isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
+                  <Tooltip
+                    title={t(
+                      isSupportedForChunking
+                        ? 'FileManager.actions.chunkingTooltip'
+                        : 'FileManager.actions.chunkingUnsupported',
+                    )}
+                  >
+                    <Button
+                      block
+                      disabled={!isSupportedForChunking}
+                      icon={FileBoxIcon}
+                      loading={isCreatingFileParseTask}
+                      onClick={() => {
+                        parseFiles([id]);
+                      }}
+                      size={'small'}
+                      type={'text'}
                     >
-                      <Button
-                        block
-                        disabled={!isSupportedForChunking}
-                        icon={FileBoxIcon}
-                        loading={isCreatingFileParseTask}
-                        onClick={() => {
-                          parseFiles([id]);
-                        }}
-                        size={'small'}
-                        type={'text'}
-                      >
-                        {t(
-                          isCreatingFileParseTask
-                            ? 'FileManager.actions.createChunkingTask'
-                            : 'FileManager.actions.chunking',
-                        )}
-                      </Button>
-                    </Tooltip>
-                  ) : (
-                    <ChunksBadge
-                      chunkCount={chunkCount}
-                      chunkingError={chunkingError}
-                      chunkingStatus={chunkingStatus}
-                      embeddingError={embeddingError}
-                      embeddingStatus={embeddingStatus}
-                      finishEmbedding={finishEmbedding}
-                      id={id}
-                    />
-                  )}
-                </Flexbox>
-              </>
-            )}
-          </div>
-        </Tooltip>
+                      {t(
+                        isCreatingFileParseTask
+                          ? 'FileManager.actions.createChunkingTask'
+                          : 'FileManager.actions.chunking',
+                      )}
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <ChunksBadge
+                    chunkCount={chunkCount}
+                    chunkingError={chunkingError}
+                    chunkingStatus={chunkingStatus}
+                    embeddingError={embeddingError}
+                    embeddingStatus={embeddingStatus}
+                    finishEmbedding={finishEmbedding}
+                    id={id}
+                  />
+                )}
+              </Flexbox>
+            </>
+          )}
+        </div>
       </div>
     );
   },
