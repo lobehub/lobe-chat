@@ -2,11 +2,12 @@ import { ChatMessage } from '@lobechat/types';
 import { useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
 import type { FC, ReactNode } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
-import * as ContextMenu from 'zeego/context-menu';
 
+import Dropdown from '@/components/Dropdown';
+import type { DropdownOptionItem } from '@/components/Dropdown';
 import { useChatStore } from '@/store/chat';
 
 import { useStyles } from './style';
@@ -59,41 +60,35 @@ const UserContextMenu: FC<UserContextMenuProps> = ({ message, children }) => {
     ]);
   }, [deleteMessage, message.id, t]);
 
+  const options: DropdownOptionItem[] = useMemo(
+    () => [
+      {
+        icon: { name: 'doc.on.doc', pointSize: 18 },
+        key: 'copy',
+        onSelect: handleCopy,
+        title: t('actions.copy', { ns: 'common' }),
+      },
+      {
+        icon: { name: 'arrow.clockwise', pointSize: 18 },
+        key: 'regenerate',
+        onSelect: handleRegenerate,
+        title: t('actions.regenerate', { ns: 'common' }),
+      },
+      {
+        destructive: true,
+        icon: { name: 'trash', pointSize: 18 },
+        key: 'delete',
+        onSelect: handleDelete,
+        title: t('actions.delete', { ns: 'common' }),
+      },
+    ],
+    [handleCopy, handleDelete, handleRegenerate, t],
+  );
+
   return (
-    <ContextMenu.Root>
-      <ContextMenu.Trigger asChild>
-        <View style={styles.touchableWrapper}>{children}</View>
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item key={`${message.id}-copy`} onSelect={handleCopy}>
-          <ContextMenu.ItemTitle>{t('actions.copy', { ns: 'common' })}</ContextMenu.ItemTitle>
-          <ContextMenu.ItemIcon
-            ios={{
-              name: 'doc.on.doc',
-              pointSize: 18,
-            }}
-          />
-        </ContextMenu.Item>
-        <ContextMenu.Item key={`${message.id}-regenerate`} onSelect={handleRegenerate}>
-          <ContextMenu.ItemTitle>{t('actions.regenerate', { ns: 'common' })}</ContextMenu.ItemTitle>
-          <ContextMenu.ItemIcon
-            ios={{
-              name: 'arrow.clockwise',
-              pointSize: 18,
-            }}
-          />
-        </ContextMenu.Item>
-        <ContextMenu.Item destructive key={`${message.id}-delete`} onSelect={handleDelete}>
-          <ContextMenu.ItemTitle>{t('actions.delete', { ns: 'common' })}</ContextMenu.ItemTitle>
-          <ContextMenu.ItemIcon
-            ios={{
-              name: 'trash',
-              pointSize: 18,
-            }}
-          />
-        </ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
+    <Dropdown options={options}>
+      <View style={styles.touchableWrapper}>{children}</View>
+    </Dropdown>
   );
 };
 
