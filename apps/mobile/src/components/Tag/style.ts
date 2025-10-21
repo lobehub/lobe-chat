@@ -1,82 +1,58 @@
 import { createStyles } from '@/components/styles';
 
-import type { TagColor } from './type';
+export const useStyles = createStyles(({ token }) => ({
+  
+  borderless: {
+    borderWidth: 0,
+  },
 
-export const useStyles = createStyles(({ token }, color?: TagColor, border: boolean = true) => {
-  // 如果指定了颜色，使用颜色预设；否则使用默认样式
-  const getColorStyles = () => {
-    if (!color || typeof color !== 'string') {
-      // 默认样式
-      return {
-        backgroundColor: token.colorFillTertiary,
-        borderColor: token.colorBorderSecondary,
-        color: token.colorText,
-      };
-    }
+  
+  // 基础容器样式
+container: {
+    alignSelf: 'flex-start' as const,
+    gap: token.marginXXS,
+  },
 
-    // 处理语义状态颜色
-    const statusColorMap: Record<
-      string,
-      () => { backgroundColor: string; borderColor: string; color: string }
-    > = {
-      default: () => ({
-        backgroundColor: token.colorFillTertiary,
-        borderColor: token.colorBorderSecondary,
-        color: token.colorText,
-      }),
-      error: () => ({
-        backgroundColor: token.colorErrorBg,
-        borderColor: token.colorErrorBorder,
-        color: token.colorErrorText,
-      }),
-      processing: () => ({
-        backgroundColor: token.colorInfoBg,
-        borderColor: token.colorInfoBorder,
-        color: token.colorInfoText,
-      }),
-      success: () => ({
-        backgroundColor: token.colorSuccessBg,
-        borderColor: token.colorSuccessBorder,
-        color: token.colorSuccessText,
-      }),
-      warning: () => ({
-        backgroundColor: token.colorWarningBg,
-        borderColor: token.colorWarningBorder,
-        color: token.colorWarningText,
-      }),
-    };
+  // 样式变体
+filled: {
+    // 不使用 stylish 预设，保持空对象以便颜色样式能正确应用
+  },
 
-    // 如果是语义状态颜色，使用对应的语义色彩
-    if (statusColorMap[color]) {
-      return statusColorMap[color]();
-    }
+  large: {
+    height: 28,
+    paddingHorizontal: token.paddingSM,
+  },
 
-    // 否则使用数字色阶的预设颜色：浅色背景（3）、中等色边框（7）、深色文字（11）
-    const bgColorKey = `${color}3` as keyof typeof token;
-    const borderColorKey = `${color}7` as keyof typeof token;
-    const textColorKey = `${color}11` as keyof typeof token;
+  
+  medium: {
+    height: 22,
+    paddingHorizontal: token.paddingXS,
+  },
 
-    return {
-      backgroundColor: (token[bgColorKey] as string) || token.colorFillTertiary,
-      borderColor: (token[borderColorKey] as string) || token.colorBorderSecondary,
-      color: (token[textColorKey] as string) || token.colorText,
-    };
-  };
+  
+outlined: {
+    borderWidth: 1,
+  },
 
-  const colorStyles = getColorStyles();
+  // 尺寸变体
+small: {
+    height: 20,
+    paddingHorizontal: token.paddingXXS,
+  },
 
-  return {
-    tag: {
-      backgroundColor: colorStyles.backgroundColor,
-      borderColor: border ? colorStyles.borderColor : 'transparent',
-      borderRadius: token.borderRadiusSM,
-      borderWidth: border ? 1 : 0,
-      paddingHorizontal: token.paddingXS,
-      paddingVertical: token.paddingXXS,
-    },
-    tagText: {
-      color: colorStyles.color,
-      fontSize: token.fontSizeSM,
-    },
-  };
-});
+  // 文本样式 - 调整 lineHeight 以适配固定高度
+  text: {
+    fontSize: token.fontSizeSM,
+    lineHeight: 20, // 固定行高以适配容器高度
+  },
+
+  textLarge: {
+    fontSize: token.fontSize,
+    lineHeight: 24, // large 尺寸的行高
+  },
+
+  textSmall: {
+    fontSize: token.fontSizeSM - 1,
+    lineHeight: 18, // small 尺寸的行高
+  },
+}));
