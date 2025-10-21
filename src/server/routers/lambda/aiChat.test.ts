@@ -13,6 +13,12 @@ vi.mock('@/server/services/aiChat');
 vi.mock('@/server/services/file', () => ({
   FileService: vi.fn(),
 }));
+vi.mock('@/utils/server', () => ({
+  getXorPayload: vi.fn(),
+}));
+vi.mock('@/server/modules/ModelRuntime', () => ({
+  initModelRuntimeWithUserPayload: vi.fn(),
+}));
 
 describe('aiChatRouter', () => {
   const mockCtx = { userId: 'u1' };
@@ -104,5 +110,150 @@ describe('aiChatRouter', () => {
     });
     expect(res.isCreateNewTopic).toBe(false);
     expect(res.topicId).toBe('t-exist');
+  });
+
+  it('should pass threadId to both user and assistant messages when provided', async () => {
+    const mockCreateMessage = vi
+      .fn()
+      .mockResolvedValueOnce({ id: 'm-user' })
+      .mockResolvedValueOnce({ id: 'm-assistant' });
+    const mockGet = vi.fn().mockResolvedValue({ messages: [], topics: undefined });
+
+    vi.mocked(MessageModel).mockImplementation(() => ({ create: mockCreateMessage }) as any);
+    vi.mocked(AiChatService).mockImplementation(() => ({ getMessagesAndTopics: mockGet }) as any);
+
+    const caller = aiChatRouter.createCaller(mockCtx as any);
+
+    await caller.sendMessageInServer({
+      newAssistantMessage: { model: 'gpt-4o', provider: 'openai' },
+      newUserMessage: { content: 'hi' },
+      sessionId: 's1',
+      threadId: 'thread-123',
+      topicId: 't1',
+    } as any);
+
+    expect(mockCreateMessage).toHaveBeenNthCalledWith(1, {
+      content: 'hi',
+      role: 'user',
+      sessionId: 's1',
+      threadId: 'thread-123',
+      topicId: 't1',
+    });
+
+    expect(mockCreateMessage).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        parentId: 'm-user',
+        role: 'assistant',
+        sessionId: 's1',
+        threadId: 'thread-123',
+        topicId: 't1',
+      }),
+    );
+  });
+
+  describe('outputJSON', () => {
+    it('should successfully generate structured output', async () => {
+      const { getXorPayload } = await import('@/utils/server');
+      const { initModelRuntimeWithUserPayload } = await import('@/server/modules/ModelRuntime');
+
+      const mockPayload = { apiKey: 'test-key' };
+      const mockResult = { object: { name: 'John', age: 30 } };
+      const mockGenerateObject = vi.fn().mockResolvedValue(mockResult);
+
+      vi.mocked(getXorPayload).mockReturnValue(mockPayload);
+      vi.mocked(initModelRuntimeWithUserPayload).mockReturnValue({
+        generateObject: mockGenerateObject,
+      } as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      const input = {
+        keyVaultsPayload: 'encrypted-payload',
+        messages: [{ content: 'test', role: 'user' }],
+        model: 'gpt-4o',
+        provider: 'openai',
+        schema: {
+          name: 'Person',
+          schema: {
+            type: 'object' as const,
+            properties: { name: { type: 'string' }, age: { type: 'number' } },
+          },
+        },
+      };
+
+      const result = await caller.outputJSON(input);
+
+      expect(getXorPayload).toHaveBeenCalledWith('encrypted-payload');
+      expect(initModelRuntimeWithUserPayload).toHaveBeenCalledWith('openai', mockPayload);
+      expect(mockGenerateObject).toHaveBeenCalledWith({
+        messages: input.messages,
+        model: 'gpt-4o',
+        schema: input.schema,
+        tools: undefined,
+      });
+      expect(result).toEqual(mockResult);
+    });
+
+    it('should throw error when keyVaultsPayload is invalid', async () => {
+      const { getXorPayload } = await import('@/utils/server');
+
+      vi.mocked(getXorPayload).mockReturnValue(undefined as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      const input = {
+        keyVaultsPayload: 'invalid-payload',
+        messages: [],
+        model: 'gpt-4o',
+        provider: 'openai',
+      };
+
+      await expect(caller.outputJSON(input)).rejects.toThrow('keyVaultsPayload is not correct');
+    });
+
+    it('should handle tools parameter when provided', async () => {
+      const { getXorPayload } = await import('@/utils/server');
+      const { initModelRuntimeWithUserPayload } = await import('@/server/modules/ModelRuntime');
+
+      const mockPayload = { apiKey: 'test-key' };
+      const mockTools = [
+        {
+          type: 'function' as const,
+          function: {
+            name: 'test',
+            parameters: {
+              type: 'object' as const,
+              properties: { input: { type: 'string' } },
+            },
+          },
+        },
+      ];
+      const mockGenerateObject = vi.fn().mockResolvedValue({ object: {} });
+
+      vi.mocked(getXorPayload).mockReturnValue(mockPayload);
+      vi.mocked(initModelRuntimeWithUserPayload).mockReturnValue({
+        generateObject: mockGenerateObject,
+      } as any);
+
+      const caller = aiChatRouter.createCaller(mockCtx as any);
+
+      const input = {
+        keyVaultsPayload: 'encrypted-payload',
+        messages: [],
+        model: 'gpt-4o',
+        provider: 'openai',
+        tools: mockTools,
+      };
+
+      await caller.outputJSON(input);
+
+      expect(mockGenerateObject).toHaveBeenCalledWith({
+        messages: [],
+        model: 'gpt-4o',
+        schema: undefined,
+        tools: mockTools,
+      });
+    });
   });
 });
