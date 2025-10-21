@@ -73,9 +73,12 @@ export class LobeComfyUI implements LobeRuntimeAI, AuthenticatedImageRuntime {
     log('🎨 Creating image with model: %s', payload.model);
 
     try {
-      // Always use full URL from APP_URL environment variable
-      // This ensures consistency across server and client environments
-      const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 3010}`;
+      // Determine app URL with Vercel support
+      const isInVercel = process.env.VERCEL === '1';
+      const vercelUrl = `https://${process.env.VERCEL_URL}`;
+      const appUrl =
+        process.env.APP_URL ||
+        (isInVercel ? vercelUrl : `http://localhost:${process.env.PORT || 3010}`);
 
       // Build headers with authentication
       const headers: Record<string, string> = {
