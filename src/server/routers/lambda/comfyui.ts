@@ -91,21 +91,6 @@ export const comfyuiRouter = router({
 
       return modelResolverService.getAvailableModelFiles();
     }),
-
-  /**
-   * Validate ComfyUI connection
-   */
-  validateConnection: authedProcedure
-    .input(
-      z.object({
-        baseURL: z.string(),
-        options: z.custom<ComfyUIKeyVault>().optional(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      const clientService = new ComfyUIClientService(input.options || {});
-      return clientService.validateConnection();
-    }),
 });
 
 export type ComfyUIRouter = typeof comfyuiRouter;
