@@ -188,6 +188,7 @@
     "@vercel/edge-config": "^1.4.0",
     "@vercel/functions": "^3.1.3",
     "@vercel/speed-insights": "^1.2.0",
+    "@virtuoso.dev/masonry": "^1.3.5",
     "@xterm/xterm": "^5.5.0",
     "ahooks": "^3.9.5",
     "antd": "^5.27.4",
