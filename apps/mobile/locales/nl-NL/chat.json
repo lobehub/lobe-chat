@@ -25,6 +25,8 @@
   "messageCopied": "Bericht gekopieerd",
   "newAgent": "Nieuwe assistent",
   "newChat": "Nieuw gesprek",
+  "pin": "Vastzetten",
+  "pinOff": "Vastzetten opheffen",
   "placeholder": "Typ uw bericht...",
   "regenerateFailed": "Hertellen mislukt, probeer het later opnieuw",
   "send": "Verzenden",
