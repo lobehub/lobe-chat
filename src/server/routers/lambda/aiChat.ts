@@ -60,8 +60,7 @@ export const aiChatRouter = router({
       messages: input.messages,
       model: input.model,
       schema: input.schema,
-      systemRole: input.systemRole,
-      tools: input.tools?.map((item) => item.function),
+      tools: input.tools,
     });
 
     log('generateObject completed, result: %O', result);
@@ -99,6 +98,7 @@ export const aiChatRouter = router({
         files: input.newUserMessage.files,
         role: 'user',
         sessionId: input.sessionId!,
+        threadId: input.threadId,
         topicId,
       });
 
@@ -118,6 +118,7 @@ export const aiChatRouter = router({
         parentId: messageId,
         role: 'assistant',
         sessionId: input.sessionId!,
+        threadId: input.threadId,
         topicId,
       });
       log('assistant message created with id: %s', assistantMessageItem.id);

@@ -228,7 +228,9 @@
   "minimap": {
     "jumpToMessage": "رفتن به پیام شماره {{index}}",
     "nextMessage": "پیام بعدی",
-    "previousMessage": "پیام قبلی"
+    "previousMessage": "پیام قبلی",
+    "senderAssistant": "دستیار",
+    "senderUser": "شما"
   },
   "newAgent": "دستیار جدید",
   "newGroupChat": "ایجاد چت گروهی جدید",

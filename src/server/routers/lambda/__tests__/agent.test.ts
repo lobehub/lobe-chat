@@ -12,7 +12,7 @@ import { serverDB } from '@/database/server';
 import { AgentService } from '@/server/services/agent';
 import { KnowledgeType } from '@/types/knowledgeBase';
 
-import { agentRouter } from './agent';
+import { agentRouter } from '../agent';
 
 vi.mock('@/database/models/user', () => ({
   UserModel: {

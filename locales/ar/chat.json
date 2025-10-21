@@ -228,7 +228,9 @@
   "minimap": {
     "jumpToMessage": "الانتقال إلى الرسالة رقم {{index}}",
     "nextMessage": "الرسالة التالية",
-    "previousMessage": "الرسالة السابقة"
+    "previousMessage": "الرسالة السابقة",
+    "senderAssistant": "المساعد",
+    "senderUser": "أنت"
   },
   "newAgent": "مساعد جديد",
   "newGroupChat": "إنشاء دردشة جماعية جديدة",

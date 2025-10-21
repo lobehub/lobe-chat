@@ -5,7 +5,7 @@ import { GenerationTopicItem } from '@/database/schemas/generation';
 import { FileService } from '@/server/services/file';
 import { GenerationService } from '@/server/services/generation';
 
-import { generationTopicRouter } from './generationTopic';
+import { generationTopicRouter } from '../generationTopic';
 
 vi.mock('@/database/models/generationTopic');
 vi.mock('@/server/services/file');
