@@ -14,7 +14,7 @@ const AddButton = memo(() => {
 
   return (
     <Flexbox flex={1} padding={16}>
-      <Button block icon={<Plus />} loading={isValidating} onPress={() => mutate()} type="primary">
+      <Button block icon={Plus} loading={isValidating} onPress={() => mutate()} size={'small'}>
         {t('newAgent')}
       </Button>
     </Flexbox>
