@@ -1,23 +1,15 @@
-import { Tag } from '@lobehub/ui-rn';
-import { View } from 'react-native';
+import { Flexbox, Tag } from '@lobehub/ui-rn';
 
 const PresetDemo = () => {
   return (
-    <View style={{ padding: 16 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          gap: 8,
-        }}
-      >
-        <Tag color="success">Success</Tag>
-        <Tag color="processing">Processing</Tag>
-        <Tag color="error">Error</Tag>
-        <Tag color="warning">Warning</Tag>
-        <Tag color="default">Default</Tag>
-      </View>
-    </View>
+    <Flexbox gap={8} horizontal wrap="wrap">
+      <Tag color="success">Success</Tag>
+      <Tag color="processing">Processing</Tag>
+      <Tag color="error">Error</Tag>
+      <Tag color="warning">Warning</Tag>
+      <Tag color="info">Info</Tag>
+      <Tag>Default</Tag>
+    </Flexbox>
   );
 };
 
