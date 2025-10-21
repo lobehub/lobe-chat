@@ -169,7 +169,6 @@ const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
 
     width: 100%;
-    min-height: 120px;
     border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorFillQuaternary};
