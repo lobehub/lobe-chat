@@ -57,8 +57,8 @@ export const getPresetColorStyles = (
       ? 'transparent'
       : isDarkMode
         ? scale[appearance][1]
-        : scale[appearance][3],
-    borderColor: isDarkMode ? scale[appearance][2] : scale[appearance][5],
+        : scale[appearance][2],
+    borderColor: isDarkMode ? scale[appearance][2] : scale[appearance][3],
     color: isDarkMode ? scale[appearance][9] : scale[appearance][10],
   };
 };
