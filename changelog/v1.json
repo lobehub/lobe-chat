@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Solve when desktop the sider agent list too long."]
+    },
+    "date": "2025-10-20",
+    "version": "1.139.2"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-10-20",
