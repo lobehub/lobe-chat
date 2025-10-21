@@ -2,6 +2,7 @@ import { Atom, Eye, Globe, Image, Paperclip, ToyBrick } from 'lucide-react-nativ
 import { memo } from 'react';
 import { View } from 'react-native';
 
+import { useThemeMode } from '@/components';
 import Tag from '@/components/Tag';
 
 import { useStyles } from './styles';
@@ -24,6 +25,7 @@ const formatTokenNumber = (num: number): string => {
  */
 const ModelInfoTags = memo<ModelInfoTagsProps>((model) => {
   const { styles } = useStyles();
+  const { isDarkMode } = useThemeMode();
 
   return (
     <View style={styles.container}>
@@ -37,7 +39,9 @@ const ModelInfoTags = memo<ModelInfoTagsProps>((model) => {
       {model.vision && <Tag color={'success'} icon={Eye} size={'small'} />}
 
       {/* Function Call 支持 */}
-      {model.functionCall && <Tag color={'processing'} icon={ToyBrick} size={'small'} />}
+      {model.functionCall && (
+        <Tag color={isDarkMode ? 'blue' : 'geekblue'} icon={ToyBrick} size={'small'} />
+      )}
 
       {/* Reasoning 支持 */}
       {model.reasoning && <Tag color={'purple'} icon={Atom} size={'small'} />}
