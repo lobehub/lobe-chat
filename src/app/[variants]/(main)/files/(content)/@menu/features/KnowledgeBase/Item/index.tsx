@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
-import { memo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';

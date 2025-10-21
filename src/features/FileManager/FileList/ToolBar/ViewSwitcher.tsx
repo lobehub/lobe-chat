@@ -10,7 +10,7 @@ interface ViewSwitcherProps {
   view: ViewMode;
 }
 
-const ViewSwitcher = memo<ViewSwitcherProps>(({ view, onViewChange }) => {
+const ViewSwitcher = memo<ViewSwitcherProps>(({ onViewChange }) => {
   const { t } = useTranslation('components');
 
   return (
