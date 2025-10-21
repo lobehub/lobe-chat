@@ -134,6 +134,9 @@
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
   },
+  "supervisor": {
+    "decisionFailed": "De groepsbeheerder kan niet functioneren. Controleer je beheerderconfiguratie en zorg ervoor dat het juiste model, de API-sleutel en het API-adres zijn ingesteld."
+  },
   "testConnectionFailed": "Verbindingstest mislukt: {{error}}",
   "tts": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"

@@ -26,6 +26,7 @@ import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import { useChatItemContextMenu } from '../hooks/useChatItemContextMenu';
 import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import AssistantMessage from './Assistant';
+import SupervisorMessage from './Supervisor';
 import UserMessage from './User';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -354,9 +355,6 @@ const Item = memo<ChatListItemProps>(
       },
       [contextMenuContainerRef],
     );
-    const handleShare = useCallback(() => {
-      setShareModalOpen(true);
-    }, [setShareModalOpen]);
 
     // ======================= Performance Optimization ======================= //
     // these useMemo/useCallback are all for the performance optimization
@@ -424,25 +422,29 @@ const Item = memo<ChatListItemProps>(
     );
 
     const renderContent = useMemo(() => {
-      if (!item) return null;
+      switch (item?.role) {
+        case 'user': {
+          return <UserMessage {...item} disableEditing={disableEditing} index={index} />;
+        }
 
-      if (item.role === 'user') {
-        return <UserMessage {...item} disableEditing={disableEditing} index={index} />;
-      }
+        case 'assistant': {
+          return (
+            <AssistantMessage
+              {...item}
+              disableEditing={disableEditing}
+              index={index}
+              showTitle={item.groupId ? true : false}
+            />
+          );
+        }
 
-      if (item.role === 'assistant') {
-        return (
-          <AssistantMessage
-            {...item}
-            disableEditing={disableEditing}
-            index={index}
-            onShare={handleShare}
-          />
-        );
+        case 'supervisor': {
+          return <SupervisorMessage {...item} disableEditing={disableEditing} index={index} />;
+        }
       }
 
       return null;
-    }, [disableEditing, handleShare, index, item]);
+    }, [item]);
 
     if (!item) return;
 

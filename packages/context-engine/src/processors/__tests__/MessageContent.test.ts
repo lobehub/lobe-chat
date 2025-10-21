@@ -4,19 +4,16 @@ import { describe, expect, it, vi } from 'vitest';
 import type { PipelineContext } from '../../types';
 import { MessageContentProcessor } from '../MessageContent';
 
-vi.mock('@lobechat/utils', () => ({
-  imageUrlToBase64: vi.fn().mockResolvedValue({
-    base64: 'base64-data',
-    mimeType: 'image/png',
-  }),
-  isLocalUrl: vi.fn((url: string) => url.includes('localhost') || url.includes('127.0.0.1')),
-  parseDataUri: vi.fn((url: string) => {
-    if (url.startsWith('data:')) {
-      return { type: 'data' };
-    }
-    return { type: 'url' };
-  }),
-}));
+vi.mock('@lobechat/utils/imageToBase64', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@lobechat/utils/imageToBase64')>();
+  return {
+    ...actual,
+    imageUrlToBase64: vi.fn().mockResolvedValue({
+      base64: 'base64-data',
+      mimeType: 'image/png',
+    }),
+  };
+});
 
 const createContext = (messages: ChatMessage[]): PipelineContext => ({
   initialState: { messages: [] } as any,
@@ -138,7 +135,7 @@ describe('MessageContentProcessor', () => {
           role: 'user',
           content: 'Hello',
           imageList: [
-            { url: 'http://localhost:3000/image.jpg', alt: '', id: 'test' } as ChatImageItem,
+            { url: 'http://127.0.0.1:3000/image.jpg', alt: '', id: 'test' } as ChatImageItem,
           ],
           createdAt: Date.now(),
           updatedAt: Date.now(),

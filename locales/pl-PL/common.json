@@ -31,7 +31,7 @@
   "batchDelete": "Usuń wiele",
   "blog": "Blog produktowy",
   "branching": "Utwórz podtemat",
-  "branchingDisable": "Funkcja „podtemat” jest dostępna tylko w wersji serwerowej. Aby skorzystać z tej funkcji, przełącz się na tryb wdrożenia serwera lub użyj LobeChat Cloud.",
+  "branchingDisable": "Funkcja „podtematów” jest niedostępna w bieżącym trybie. Aby z niej skorzystać, przełącz się na tryb bazy danych Postgres/Pglite lub użyj LobeHub Cloud.",
   "branchingRequiresSavedTopic": "Aktualny temat nie został zapisany, zapisz go, aby móc korzystać z funkcji podtematów",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",

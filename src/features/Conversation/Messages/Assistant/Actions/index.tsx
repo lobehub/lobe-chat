@@ -154,27 +154,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         translateMessage(id, lang);
       }
     },
-    [
-      data,
-      delAndRegenerateMessage,
-      delAndResendThreadMessage,
-      deleteMessage,
-      id,
-      index,
-      inPortalThread,
-      message,
-      openThreadCreator,
-      regenerateMessage,
-      resendThreadMessage,
-      t,
-      toggleMessageEditing,
-      topic,
-      translateMessage,
-      ttsMessage,
-      virtuosoRef,
-      onShare,
-      copyMessage,
-    ],
+    [data, topic],
   );
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
