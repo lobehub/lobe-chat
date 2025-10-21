@@ -255,7 +255,8 @@ export const chatMessage: StateCreator<
     updateInputMessage('');
   },
   addUserMessage: async ({ message, fileList }) => {
-    const { internal_createMessage, updateInputMessage, activeTopicId, activeId } = get();
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId, activeThreadId } =
+      get();
     if (!activeId) return;
 
     await internal_createMessage({
@@ -265,6 +266,7 @@ export const chatMessage: StateCreator<
       sessionId: activeId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
+      threadId: activeThreadId,
     });
 
     updateInputMessage('');
