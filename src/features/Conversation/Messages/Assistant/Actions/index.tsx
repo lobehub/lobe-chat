@@ -54,6 +54,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
 
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
+  const topic = searchParams.get('topic');
   const [
     deleteMessage,
     regenerateMessage,
@@ -98,7 +99,6 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
           break;
         }
         case 'branching': {
-          const topic = searchParams.get('topic');
           if (!topic) {
             message.warning(t('branchingRequiresSavedTopic'));
             break;
@@ -155,7 +155,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         translateMessage(id, lang);
       }
     },
-    [data],
+    [data, topic],
   );
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;

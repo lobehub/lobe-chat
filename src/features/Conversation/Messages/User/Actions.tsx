@@ -23,6 +23,7 @@ interface UserActionsProps {
 export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
+  const topic = searchParams.get('topic');
 
   const [
     isThreadMode,
@@ -90,7 +91,6 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         }
 
         case 'branching': {
-          const topic = searchParams.get('topic');
           if (!topic) {
             message.warning(t('branchingRequiresSavedTopic'));
             break;
@@ -137,12 +137,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         translateMessage(id, lang);
       }
     },
-    [
-      data.content,
-      data.error,
-      inPortalThread,
-      // ,topic
-    ],
+    [data.content, data.error, inPortalThread, topic],
   );
 
   return (
