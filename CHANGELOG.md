@@ -2,6 +2,49 @@
 
 # Changelog
 
+## [Version 1.141.0](https://github.com/lobehub/lobe-chat/compare/v1.140.0...v1.141.0)
+
+<sup>Released on **2025-10-21**</sup>
+
+#### ✨ Features
+
+- **misc**: Add PDF export functionality to share modal.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Ignore abort signal errors in TRPC client, slove when pwa user info have code cannot be viewed in full.
+
+#### 💄 Styles
+
+- **misc**: Add knowledge base mansory layout \[LOB-496], improve rich text link display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add PDF export functionality to share modal, closes [#9300](https://github.com/lobehub/lobe-chat/issues/9300) [#9299](https://github.com/lobehub/lobe-chat/issues/9299) ([2b7761c](https://github.com/lobehub/lobe-chat/commit/2b7761c))
+
+#### What's fixed
+
+- **misc**: Ignore abort signal errors in TRPC client, closes [#9809](https://github.com/lobehub/lobe-chat/issues/9809) [#9401](https://github.com/lobehub/lobe-chat/issues/9401) ([7f7dcfb](https://github.com/lobehub/lobe-chat/commit/7f7dcfb))
+- **misc**: Slove when pwa user info have code cannot be viewed in full, closes [#9817](https://github.com/lobehub/lobe-chat/issues/9817) ([6734a47](https://github.com/lobehub/lobe-chat/commit/6734a47))
+
+#### Styles
+
+- **misc**: Add knowledge base mansory layout \[LOB-496], closes [#9722](https://github.com/lobehub/lobe-chat/issues/9722) ([69f21da](https://github.com/lobehub/lobe-chat/commit/69f21da))
+- **misc**: Improve rich text link display, closes [#9816](https://github.com/lobehub/lobe-chat/issues/9816) ([af33543](https://github.com/lobehub/lobe-chat/commit/af33543))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.140.0](https://github.com/lobehub/lobe-chat/compare/v1.139.5...v1.140.0)
 
 <sup>Released on **2025-10-21**</sup>
