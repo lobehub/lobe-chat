@@ -16,7 +16,7 @@ tags:
 
 LobeChat ComfyUI 集成采用四层服务架构，围绕 `LobeComfyUI` 主类构建：
 
-```
+```plaintext
 packages/model-runtime/src/providers/comfyui/
 ├── index.ts                      # LobeComfyUI 主类入口
 ├── services/                     # 四大核心服务
@@ -670,7 +670,7 @@ console.log(devModels.slice(0, 3));
 
 ### 错误类型层次
 
-```typescript
+```plaintext
 // packages/model-runtime/src/providers/comfyui/errors/
 ComfyUIInternalError              // 基础错误
 ├── ModelResolverError           // 模型解析错误
@@ -736,7 +736,7 @@ ComfyUI 集成使用了统一的测试架构，确保测试的可维护性和定
 
 ### 测试文件结构
 
-```
+```plaintext
 packages/model-runtime/src/providers/comfyui/__tests__/
 ├── setup/
 │   └── unifiedMocks.ts              # 统一Mock配置

@@ -16,7 +16,7 @@ This guide is based on actual code implementation and helps developers extend Lo
 
 LobeChat ComfyUI integration uses a four-layer service architecture built around the main `LobeComfyUI` class:
 
-```
+```plaintext
 packages/model-runtime/src/providers/comfyui/
 ├── index.ts                      # LobeComfyUI main class entry
 ├── services/                     # Four core services
@@ -670,7 +670,7 @@ console.log(devModels.slice(0, 3));
 
 ### Error Type Hierarchy
 
-```typescript
+```plaintext
 // packages/model-runtime/src/providers/comfyui/errors/
 ComfyUIInternalError              // Base error
 ├── ModelResolverError           // Model resolution errors
@@ -736,7 +736,7 @@ The ComfyUI integration uses a unified testing architecture that ensures maintai
 
 ### Test File Structure
 
-```
+```plaintext
 packages/model-runtime/src/providers/comfyui/__tests__/
 ├── setup/
 │   └── unifiedMocks.ts              # Unified Mock configuration
