@@ -382,8 +382,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                   <div className={styles.overlaySize}>{formatSize(size)}</div>
                 </div>
               </div>
-              {/* Floating chunk badge for images */}
-              {!isNull(chunkingStatus) && chunkingStatus && (
+              {/* Floating chunk badge or action button */}
+              {!isNull(chunkingStatus) && chunkingStatus ? (
                 <div
                   className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
                   onClick={(e) => e.stopPropagation()}
@@ -398,6 +398,28 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     id={id}
                   />
                 </div>
+              ) : (
+                isSupportedForChunking && (
+                  <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
+                    <div
+                      className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!isCreatingFileParseTask) {
+                          parseFiles([id]);
+                        }
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Button
+                        icon={FileBoxIcon}
+                        loading={isCreatingFileParseTask}
+                        size={'small'}
+                        type={'text'}
+                      />
+                    </div>
+                  </Tooltip>
+                )
               )}
             </>
           ) : isMarkdown ? (
@@ -418,8 +440,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                   <div className={styles.overlaySize}>{formatSize(size)}</div>
                 </div>
               </div>
-              {/* Floating chunk badge for markdown files */}
-              {!isNull(chunkingStatus) && chunkingStatus && (
+              {/* Floating chunk badge or action button */}
+              {!isNull(chunkingStatus) && chunkingStatus ? (
                 <div
                   className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
                   onClick={(e) => e.stopPropagation()}
@@ -434,56 +456,60 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     id={id}
                   />
                 </div>
+              ) : (
+                isSupportedForChunking && (
+                  <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
+                    <div
+                      className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!isCreatingFileParseTask) {
+                          parseFiles([id]);
+                        }
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Button
+                        icon={FileBoxIcon}
+                        loading={isCreatingFileParseTask}
+                        size={'small'}
+                        type={'text'}
+                      />
+                    </div>
+                  </Tooltip>
+                )
               )}
             </>
           ) : (
             <>
-              <div style={{ position: 'relative' }}>
-                <div className={styles.iconWrapper}>
-                  <FileIcon fileName={name} fileType={fileType} size={64} />
-                </div>
-                {/* Hover overlay */}
-                <div className={styles.hoverOverlay}>
-                  <div className={styles.overlayTitle}>{name}</div>
-                  <div className={styles.overlaySize}>{formatSize(size)}</div>
-                </div>
-              </div>
-              <div className={styles.name}>{name}</div>
               <Flexbox
-                className="actions"
-                gap={8}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                style={{ minHeight: 32 }}
+                align={'center'}
+                gap={12}
+                justify={'center'}
+                paddingBlock={24}
+                paddingInline={12}
+                style={{ minHeight: 180 }}
               >
-                {isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
-                  <Tooltip
-                    title={t(
-                      isSupportedForChunking
-                        ? 'FileManager.actions.chunkingTooltip'
-                        : 'FileManager.actions.chunkingUnsupported',
-                    )}
-                  >
-                    <Button
-                      block
-                      disabled={!isSupportedForChunking}
-                      icon={FileBoxIcon}
-                      loading={isCreatingFileParseTask}
-                      onClick={() => {
-                        parseFiles([id]);
-                      }}
-                      size={'small'}
-                      type={'text'}
-                    >
-                      {t(
-                        isCreatingFileParseTask
-                          ? 'FileManager.actions.createChunkingTask'
-                          : 'FileManager.actions.chunking',
-                      )}
-                    </Button>
-                  </Tooltip>
-                ) : (
+                <FileIcon fileName={name} fileType={fileType} size={64} />
+                <div className={styles.name} style={{ textAlign: 'center' }}>
+                  {name}
+                </div>
+                <div
+                  style={{
+                    color: 'var(--lobe-chat-text-tertiary)',
+                    fontSize: 12,
+                    textAlign: 'center',
+                  }}
+                >
+                  {formatSize(size)}
+                </div>
+              </Flexbox>
+              {/* Floating chunk badge or action button */}
+              {!isNull(chunkingStatus) && chunkingStatus ? (
+                <div
+                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <ChunksBadge
                     chunkCount={chunkCount}
                     chunkingError={chunkingError}
@@ -493,8 +519,30 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     finishEmbedding={finishEmbedding}
                     id={id}
                   />
-                )}
-              </Flexbox>
+                </div>
+              ) : (
+                isSupportedForChunking && (
+                  <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
+                    <div
+                      className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!isCreatingFileParseTask) {
+                          parseFiles([id]);
+                        }
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Button
+                        icon={FileBoxIcon}
+                        loading={isCreatingFileParseTask}
+                        size={'small'}
+                        type={'text'}
+                      />
+                    </div>
+                  </Tooltip>
+                )
+              )}
             </>
           )}
         </div>
