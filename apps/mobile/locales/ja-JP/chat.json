@@ -25,6 +25,8 @@
   "messageCopied": "メッセージがコピーされました",
   "newAgent": "新しいアシスタント",
   "newChat": "新しい会話",
+  "pin": "ピン留め",
+  "pinOff": "ピン留めを解除",
   "placeholder": "メッセージを入力してください...",
   "regenerateFailed": "再生成に失敗しました。後でもう一度お試しください。",
   "send": "送信",
