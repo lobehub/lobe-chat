@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "features": ["Add ComfyUI integration Phase1(RFC-128)."]
+    },
+    "date": "2025-10-21",
+    "version": "1.140.0"
+  },
+  {
     "children": {},
     "date": "2025-10-21",
     "version": "1.139.5"
