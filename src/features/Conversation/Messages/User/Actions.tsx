@@ -66,8 +66,6 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     [inThread],
   );
 
-  const topic = searchParams.get('topic');
-
   const { message } = App.useApp();
 
   // remove line breaks in artifact tag to make the ast transform easier
@@ -92,6 +90,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         }
 
         case 'branching': {
+          const topic = searchParams.get('topic');
           if (!topic) {
             message.warning(t('branchingRequiresSavedTopic'));
             break;
@@ -138,7 +137,12 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         translateMessage(id, lang);
       }
     },
-    [data.content, data.error, inPortalThread],
+    [
+      data.content,
+      data.error,
+      inPortalThread,
+      // ,topic
+    ],
   );
 
   return (
