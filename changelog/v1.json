@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-10-21",
+    "version": "1.139.5"
+  },
+  {
     "children": {
       "fixes": ["Pass threadId to messages in sendMessageInServer."]
     },
