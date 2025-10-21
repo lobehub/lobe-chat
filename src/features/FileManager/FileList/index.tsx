@@ -11,6 +11,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
 import { SortType } from '@/types/files';
 
 import EmptyStatus from './EmptyStatus';
@@ -50,12 +51,11 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
 
   const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [viewConfig, setViewConfig] = useState({ showFilesInKnowledgeBase: false });
-  const [viewModeQuery, setViewModeQuery] = useQueryState('view', {
-    clearOnDefault: true,
-    defaultValue: 'list',
-  });
-  const viewMode: ViewMode = viewModeQuery === 'masonry' ? 'masonry' : 'list';
-  const setViewMode = (mode: ViewMode) => setViewModeQuery(mode);
+
+  const viewMode = useGlobalStore((s) => s.status.fileManagerViewMode || 'list') as ViewMode;
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
+  const setViewMode = (mode: ViewMode) => updateSystemStatus({ fileManagerViewMode: mode });
+
   const [columnCount, setColumnCount] = useState(4);
 
   // Update column count based on window size
@@ -189,18 +189,21 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
           style={{ flex: 1 }}
         />
       ) : (
-        <div style={{ flex: 1, overflow: 'hidden', paddingBlockStart: 12, paddingInline: 24 }}>
-          <VirtuosoMasonry
-            ItemContent={MasonryItemWrapper}
-            columnCount={columnCount}
-            context={{ knowledgeBaseId, selectFileIds, setSelectedFileIds }}
-            data={data || []}
-            key={`masonry-${query || 'all'}-${data?.length || 0}`}
-            style={{
-              gap: '16px',
-              height: '100%',
-            }}
-          />
+        <div style={{ flex: 1, overflow: 'hidden' }}>
+          <div style={{ height: '100%', overflowY: 'auto' }}>
+            <div style={{ paddingBlockEnd: 64, paddingBlockStart: 12, paddingInline: 24 }}>
+              <VirtuosoMasonry
+                ItemContent={MasonryItemWrapper}
+                columnCount={columnCount}
+                context={{ knowledgeBaseId, selectFileIds, setSelectedFileIds }}
+                data={data || []}
+                key={`masonry-${query || 'all'}-${data?.length || 0}`}
+                style={{
+                  gap: '16px',
+                }}
+              />
+            </div>
+          </div>
         </div>
       )}
     </Flexbox>
