@@ -25,6 +25,8 @@
   "messageCopied": "메시지가 복사되었습니다",
   "newAgent": "새 에이전트",
   "newChat": "새 대화",
+  "pin": "고정",
+  "pinOff": "고정 해제",
   "placeholder": "메시지를 입력하세요...",
   "regenerateFailed": "재생성에 실패했습니다. 잠시 후 다시 시도해 주세요.",
   "send": "전송",

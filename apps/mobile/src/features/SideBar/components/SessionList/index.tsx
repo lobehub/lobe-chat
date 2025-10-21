@@ -21,7 +21,7 @@ export default function SideBar() {
   const { sessions } = useSessionStore();
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
 
-  const { useFetchSessions, removeSession } = useSessionStore();
+  const { useFetchSessions, removeSession, pinSession } = useSessionStore();
   const { isAuthenticated } = useAuth();
   const { isLoading } = useFetchSessions(isAuthenticated, isAuthenticated);
 
@@ -101,6 +101,17 @@ export default function SideBar() {
           ) : (
             filteredSessions.map((session) => {
               const options: DropdownOptionItem[] = [
+                {
+                  icon: {
+                    name: session.pinned ? 'pin.slash' : 'pin',
+                    pointSize: 18,
+                  },
+                  key: 'pin',
+                  onSelect: () => {
+                    pinSession(session.id, !session.pinned);
+                  },
+                  title: t(session.pinned ? 'pinOff' : 'pin', { ns: 'chat' }),
+                },
                 {
                   destructive: true,
                   icon: {
