@@ -1,6 +1,19 @@
 [
   {
     "children": {
+      "features": ["Add PDF export functionality to share modal."],
+      "fixes": [
+        "Ignore abort signal errors in TRPC client, slove when pwa user info have code cannot be viewed in full."
+      ],
+      "improvements": [
+        "Add knowledge base mansory layout [LOB-496], improve rich text link display."
+      ]
+    },
+    "date": "2025-10-21",
+    "version": "1.141.0"
+  },
+  {
+    "children": {
       "features": ["Add ComfyUI integration Phase1(RFC-128)."]
     },
     "date": "2025-10-21",

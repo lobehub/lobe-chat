@@ -334,10 +334,10 @@ export default {
   shareModal: {
     copy: '复制',
     download: '下载截图',
+    downloadError: '下载失败',
     downloadFile: '下载文件',
     downloadPdf: '下载 PDF',
     downloadSuccess: '下载成功',
-    downloadError: '下载失败',
     exportPdf: '导出为 PDF',
     exportTitle: '默认标题',
     generatePdf: '生成 PDF',
