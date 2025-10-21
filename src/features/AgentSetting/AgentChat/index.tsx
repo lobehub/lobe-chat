@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, ImageSelect, SliderWithInput, TextArea } from '@lobehub/ui';
-import { Switch } from 'antd';
+import { Form as AForm, Radio, Switch } from 'antd';
 import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { LayoutList, MessagesSquare } from 'lucide-react';
@@ -13,13 +13,15 @@ import { imageUrl } from '@/const/url';
 
 import { selectors, useStore } from '../store';
 
+const AUTO_SUGGESTION_SETTING_KEY = 'autoSuggestion';
+
 const AgentChat = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
   const { isDarkMode } = useThemeMode();
   const updateConfig = useStore((s) => s.setChatConfig);
   const config = useStore(selectors.currentChatConfig, isEqual);
-
+  const enableAutoSuggestion = AForm.useWatch([AUTO_SUGGESTION_SETTING_KEY, 'enabled'], form);
   const chat: FormGroupItemType = {
     children: [
       {
@@ -98,6 +100,32 @@ const AgentChat = memo(() => {
         minWidth: undefined,
         name: 'enableCompressHistory',
         valuePropName: 'checked',
+      },
+      // 基础设置
+      {
+        children: <Switch />,
+        desc: t('agent.autoSuggestion.enabled.desc'),
+        label: t('agent.autoSuggestion.enabled.title'),
+        layout: 'horizontal',
+        minWidth: undefined,
+        name: [AUTO_SUGGESTION_SETTING_KEY, 'enabled'],
+        valuePropName: 'checked',
+      },
+      {
+        children: (
+          <Radio.Group
+            optionType="button"
+            options={[
+              { label: '1', value: 1 },
+              { label: '2', value: 2 },
+              { label: '3', value: 3 },
+            ]}
+          />
+        ),
+        desc: t('agent.autoSuggestion.maxSuggestions.desc'),
+        hidden: !enableAutoSuggestion,
+        label: t('agent.autoSuggestion.maxSuggestions.title'),
+        name: [AUTO_SUGGESTION_SETTING_KEY, 'maxSuggestions'],
       },
     ],
     title: t('settingChat.title'),

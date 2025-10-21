@@ -100,6 +100,10 @@ export class ClientService extends BaseClientService implements IMessageService 
     return this.messageModel.update(id, message);
   };
 
+  updateMessageMetadata: IMessageService['updateMessageMetadata'] = async (id, metadata) => {
+    return this.messageModel.updateMetadata(id, metadata);
+  };
+
   updateMessageTTS: IMessageService['updateMessageTTS'] = async (id, tts) => {
     return this.messageModel.updateTTS(id, tts as any);
   };

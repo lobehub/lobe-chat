@@ -14,6 +14,10 @@
     "thought": "Thought",
     "unknownTitle": "Untitled Work"
   },
+  "autoSuggestions": {
+    "generating": "Generating suggestions...",
+    "title": "Suggested Questions"
+  },
   "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
   "chatList": {
@@ -335,6 +339,9 @@
     "action": "Voice Input",
     "loading": "Recognizing...",
     "prettifying": "Polishing..."
+  },
+  "suggestions": {
+    "title": "Try asking:"
   },
   "supervisor": {
     "todoList": {

@@ -2,7 +2,27 @@
   "about": {
     "title": "정보"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "AI가 어떤 유형의 질문을 생성할지 안내합니다",
+        "placeholder": "예: 기술 구현 세부사항에 중점을 둠...",
+        "title": "사용자 정의 프롬프트"
+      },
+      "enabled": {
+        "desc": "도우미가 응답한 후 후속 질문 제안을 자동으로 생성합니다",
+        "title": "자동 제안 활성화"
+      },
+      "maxSuggestions": {
+        "desc": "표시할 제안 수 (1-3)",
+        "title": "제안 수"
+      },
+      "submit": "설정 업데이트",
+      "title": "자동 제안"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "자동 제안",
     "chat": "채팅 환경설정",
     "meta": "도우미 정보",
     "modal": "모델 설정",
@@ -615,6 +635,11 @@
       "label": "어시스턴트 메타 생성 모델",
       "modelDesc": "어시스턴트 이름, 설명, 프로필 이미지, 레이블을 생성하는 데 사용되는 모델을 지정합니다.",
       "title": "어시스턴트 정보 자동 생성"
+    },
+    "autoSuggestion": {
+      "label": "스마트 제안 모델",
+      "modelDesc": "메시지 스마트 제안을 생성하는 데 사용할 모델을 지정합니다",
+      "title": "메시지 스마트 제안"
     },
     "customPrompt": {
       "addPrompt": "사용자 정의 프롬프트 추가",

@@ -2,7 +2,27 @@
   "about": {
     "title": "O nas"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "Wskazówki dla AI, jaki typ pytań generować",
+        "placeholder": "Na przykład: Skoncentruj się na szczegółach technicznej implementacji...",
+        "title": "Własna podpowiedź"
+      },
+      "enabled": {
+        "desc": "Automatycznie generuj sugestie kolejnych pytań po odpowiedzi asystenta",
+        "title": "Włącz automatyczne sugestie"
+      },
+      "maxSuggestions": {
+        "desc": "Liczba wyświetlanych sugestii (1–3)",
+        "title": "Liczba sugestii"
+      },
+      "submit": "Zaktualizuj ustawienia",
+      "title": "Automatyczne sugestie"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "Automatyczne sugestie",
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
     "modal": "Ustawienia modalne",
@@ -615,6 +635,11 @@
       "label": "Model generowania metadanych asystenta",
       "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
       "title": "Automatyczne generowanie informacji o asystencie"
+    },
+    "autoSuggestion": {
+      "label": "Model inteligentnych sugestii",
+      "modelDesc": "Określ model używany do generowania inteligentnych sugestii wiadomości",
+      "title": "Inteligentne sugestie wiadomości"
     },
     "customPrompt": {
       "addPrompt": "Dodaj niestandardowy podpowiedź",

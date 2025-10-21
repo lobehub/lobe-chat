@@ -16,6 +16,7 @@ export enum SidebarTabKey {
 }
 
 export enum ChatSettingsTabs {
+  AutoSuggestion = 'auto-suggestion',
   Chat = 'chat',
   Meta = 'meta',
   Modal = 'modal',

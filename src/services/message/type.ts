@@ -8,6 +8,7 @@ import {
   ChatTranslate,
   CreateMessageParams,
   MessageItem,
+  MessageMetadata,
   ModelRankItem,
   UpdateMessageParams,
 } from '@/types/message';
@@ -37,6 +38,7 @@ export interface IMessageService {
   getHeatmaps(): Promise<HeatmapsProps['data']>;
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
   updateMessage(id: string, message: Partial<UpdateMessageParams>): Promise<any>;
+  updateMessageMetadata(id: string, message: Partial<MessageMetadata>): Promise<any>;
   updateMessageTTS(id: string, tts: Partial<ChatTTS> | false): Promise<any>;
   updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false): Promise<any>;
   updateMessagePluginState(id: string, value: Record<string, any>): Promise<any>;

@@ -32,6 +32,7 @@ import { markdownElements } from '../../MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { normalizeThinkTags, processWithArtifact } from '../../utils';
 import { AssistantActionsBar } from './Actions';
+import Below from './Below';
 import { AssistantMessageExtra } from './Extra';
 import { AssistantMessageContent } from './MessageContent';
 
@@ -272,6 +273,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
               <AssistantActionsBar data={props} id={id} index={index} />
             </Flexbox>
           )}
+          <Below extra={extra} id={id} />
         </Flexbox>
       </Flexbox>
       {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}

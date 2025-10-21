@@ -2,7 +2,27 @@
   "about": {
     "title": "關於"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "引導 AI 生成什麼類型的問題",
+        "placeholder": "例如：著重於技術實作細節...",
+        "title": "自訂提示詞"
+      },
+      "enabled": {
+        "desc": "在助手回覆後自動產生後續問題建議",
+        "title": "啟用自動建議"
+      },
+      "maxSuggestions": {
+        "desc": "顯示建議的數量（1-3）",
+        "title": "建議數量"
+      },
+      "submit": "更新設定",
+      "title": "自動建議"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "自動建議",
     "chat": "聊天偏好",
     "meta": "助手資訊",
     "modal": "模型設定",
@@ -615,6 +635,11 @@
       "label": "助理元數據生成模型",
       "modelDesc": "指定用於生成助理名稱、描述、頭像、標籤的模型",
       "title": "自動生成助理資訊"
+    },
+    "autoSuggestion": {
+      "label": "智慧建議模型",
+      "modelDesc": "指定用於產生訊息智慧建議的模型",
+      "title": "訊息智慧建議"
     },
     "customPrompt": {
       "addPrompt": "新增自訂提示",

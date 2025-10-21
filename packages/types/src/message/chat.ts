@@ -37,7 +37,22 @@ export interface ChatFileChunk {
   text: string;
 }
 
+export interface ChatAutoSuggestions {
+  /**
+   * Whether suggestions are currently being generated
+   */
+  loading?: boolean;
+  /**
+   * List of suggested questions
+   */
+  suggestions: string[];
+}
+
 export interface ChatMessageExtra {
+  /**
+   * Auto-generated suggestions for follow-up questions
+   */
+  autoSuggestions?: ChatAutoSuggestions;
   fromModel?: string;
   fromProvider?: string;
   // 翻译

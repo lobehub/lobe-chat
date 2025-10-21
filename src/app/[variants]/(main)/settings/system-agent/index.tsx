@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_REWRITE_QUERY } from '@lobechat/prompts';
+import { DEFAULT_AUTO_SUGGESTION, DEFAULT_REWRITE_QUERY } from '@lobechat/prompts';
 
 import { isServerMode } from '@/const/version';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -24,6 +24,12 @@ const Page = () => {
           systemAgentKey="queryRewrite"
         />
       )}
+      <SystemAgentForm
+        allowCustomPrompt
+        allowDisable
+        defaultPrompt={DEFAULT_AUTO_SUGGESTION}
+        systemAgentKey="autoSuggestion"
+      />
     </>
   );
 };

@@ -14,6 +14,10 @@
     "thought": "Процесс мышления",
     "unknownTitle": "Безымянное произведение"
   },
+  "autoSuggestions": {
+    "generating": "Генерация предложений...",
+    "title": "Рекомендуемые вопросы"
+  },
   "availableAgents": "Доступные помощники",
   "backToBottom": "Вернуться вниз",
   "chatList": {
@@ -335,6 +339,9 @@
     "action": "Голосовой ввод",
     "loading": "Распознавание...",
     "prettifying": "Форматирование..."
+  },
+  "suggestions": {
+    "title": "Попробуйте спросить ещё:"
   },
   "supervisor": {
     "todoList": {

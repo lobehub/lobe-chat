@@ -2,7 +2,27 @@
   "about": {
     "title": "Hakkında"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "Yapay zekanın ne tür sorular oluşturacağını yönlendirin",
+        "placeholder": "Örneğin: Teknik uygulama detaylarına odaklan...",
+        "title": "Özel İpucu"
+      },
+      "enabled": {
+        "desc": "Asistan yanıt verdikten sonra otomatik olarak takip soruları öner",
+        "title": "Otomatik Öneriyi Etkinleştir"
+      },
+      "maxSuggestions": {
+        "desc": "Gösterilecek öneri sayısı (1-3)",
+        "title": "Öneri Sayısı"
+      },
+      "submit": "Ayarları Güncelle",
+      "title": "Otomatik Öneri"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "Otomatik Öneri",
     "chat": "Sohbet Tercihi",
     "meta": "Asistan Bilgisi",
     "modal": "Model Ayarları",
@@ -615,6 +635,11 @@
       "label": "Asistan Meta Veri Oluşturma Modeli",
       "modelDesc": "Asistan adı, açıklaması, avatar ve etiket oluşturmak için belirlenen model",
       "title": "Asistan Bilgilerini Otomatik Oluştur"
+    },
+    "autoSuggestion": {
+      "label": "Akıllı Öneri Modeli",
+      "modelDesc": "Mesaj önerileri oluşturmak için kullanılacak modeli belirtin",
+      "title": "Mesaj Akıllı Önerisi"
     },
     "customPrompt": {
       "addPrompt": "Özel İpucu Ekle",

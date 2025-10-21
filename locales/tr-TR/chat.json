@@ -14,6 +14,10 @@
     "thought": "Düşünce Süreci",
     "unknownTitle": "İsimsiz Eser"
   },
+  "autoSuggestions": {
+    "generating": "Öneriler oluşturuluyor...",
+    "title": "Önerilen Sorular"
+  },
   "availableAgents": "Kullanılabilir asistanlar",
   "backToBottom": "En alta git",
   "chatList": {
@@ -335,6 +339,9 @@
     "action": "Ses Girişi",
     "loading": "Tanımlanıyor...",
     "prettifying": "İyileştiriliyor..."
+  },
+  "suggestions": {
+    "title": "Şunları sormayı deneyin:"
   },
   "supervisor": {
     "todoList": {

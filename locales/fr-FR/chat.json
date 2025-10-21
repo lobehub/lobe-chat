@@ -14,6 +14,10 @@
     "thought": "Processus de pensée",
     "unknownTitle": "Œuvre sans nom"
   },
+  "autoSuggestions": {
+    "generating": "Génération de suggestions en cours...",
+    "title": "Questions suggérées"
+  },
   "availableAgents": "Assistants disponibles",
   "backToBottom": "Retour en bas",
   "chatList": {
@@ -335,6 +339,9 @@
     "action": "Entrée vocale",
     "loading": "En cours de reconnaissance...",
     "prettifying": "En cours d'embellissement..."
+  },
+  "suggestions": {
+    "title": "Essayez de demander aussi :"
   },
   "supervisor": {
     "todoList": {

@@ -2,7 +2,27 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "Hướng dẫn AI tạo ra loại câu hỏi nào",
+        "placeholder": "Ví dụ: Tập trung vào chi tiết kỹ thuật...",
+        "title": "Tùy chỉnh lời nhắc"
+      },
+      "enabled": {
+        "desc": "Tự động tạo đề xuất câu hỏi tiếp theo sau khi trợ lý trả lời",
+        "title": "Bật đề xuất tự động"
+      },
+      "maxSuggestions": {
+        "desc": "Số lượng đề xuất hiển thị (1-3)",
+        "title": "Số lượng đề xuất"
+      },
+      "submit": "Cập nhật cài đặt",
+      "title": "Đề xuất tự động"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "Đề xuất tự động",
     "chat": "Tùy chọn Trò chuyện",
     "meta": "Thông tin Trợ lý",
     "modal": "Cài đặt Mô hình",
@@ -615,6 +635,11 @@
       "label": "Mô hình tạo siêu dữ liệu trợ lý",
       "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
       "title": "Tự động tạo thông tin trợ lý"
+    },
+    "autoSuggestion": {
+      "label": "Mô hình đề xuất thông minh",
+      "modelDesc": "Chỉ định mô hình dùng để tạo đề xuất tin nhắn thông minh",
+      "title": "Đề xuất tin nhắn thông minh"
     },
     "customPrompt": {
       "addPrompt": "Thêm gợi ý tùy chỉnh",

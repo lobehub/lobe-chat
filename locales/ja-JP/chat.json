@@ -14,6 +14,10 @@
     "thought": "思考過程",
     "unknownTitle": "未命名の作品"
   },
+  "autoSuggestions": {
+    "generating": "提案を生成中...",
+    "title": "提案された質問"
+  },
   "availableAgents": "利用可能なアシスタント",
   "backToBottom": "現在に戻る",
   "chatList": {
@@ -335,6 +339,9 @@
     "action": "音声入力",
     "loading": "認識中...",
     "prettifying": "整形中..."
+  },
+  "suggestions": {
+    "title": "こんな質問もいかがですか："
   },
   "supervisor": {
     "todoList": {

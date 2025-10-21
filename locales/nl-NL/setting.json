@@ -2,7 +2,27 @@
   "about": {
     "title": "Over"
   },
+  "agent": {
+    "autoSuggestion": {
+      "customPrompt": {
+        "desc": "Geef AI richtlijnen over welk type vragen gegenereerd moeten worden",
+        "placeholder": "Bijvoorbeeld: focus op technische implementatiedetails...",
+        "title": "Aangepaste prompt"
+      },
+      "enabled": {
+        "desc": "Genereer automatisch vervolgvragen na het antwoord van de assistent",
+        "title": "Automatische suggesties inschakelen"
+      },
+      "maxSuggestions": {
+        "desc": "Aantal weergegeven suggesties (1-3)",
+        "title": "Aantal suggesties"
+      },
+      "submit": "Instellingen bijwerken",
+      "title": "Automatische suggesties"
+    }
+  },
   "agentTab": {
+    "autoSuggestion": "Automatische suggesties",
     "chat": "Chatvoorkeur",
     "meta": "Assistentinformatie",
     "modal": "Modelinstellingen",
@@ -615,6 +635,11 @@
       "label": "Assistentmetadata-generatiemodel",
       "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
       "title": "Automatisch assistentinformatie genereren"
+    },
+    "autoSuggestion": {
+      "label": "Slim suggestiemodel",
+      "modelDesc": "Specificeer het model dat gebruikt wordt voor het genereren van slimme berichtsuggesties",
+      "title": "Slimme berichtsuggesties"
     },
     "customPrompt": {
       "addPrompt": "Voeg aangepaste prompt toe",

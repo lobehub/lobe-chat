@@ -1,14 +1,29 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { lambdaClient } from '@/libs/trpc/client';
 
 import { ServerService } from '../server';
 
+vi.mock('@/libs/trpc/client', () => ({
+  lambdaClient: {
+    message: {
+      updateMetadata: {
+        mutate: vi.fn(),
+      },
+    },
+  },
+}));
+
 describe('ServerService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('toDbSessionId', () => {
     const service = new ServerService();
     // @ts-ignore access private method for testing
-    const toDbSessionId = service.toDbSessionId;
+    const toDbSessionId = service['toDbSessionId'];
 
     it('should return null for INBOX_SESSION_ID', () => {
       expect(toDbSessionId(INBOX_SESSION_ID)).toBeNull();
@@ -39,6 +54,68 @@ describe('ServerService', () => {
 
     it('should handle null session id', () => {
       expect(toDbSessionId(null as any)).toBeNull(); // Cast null to any to bypass type errors
+    });
+  });
+
+  describe('updateMessageMetadata', () => {
+    const service = new ServerService();
+    const mockMessageId = 'msg-123';
+
+    it('should call lambdaClient.message.updateMetadata.mutate with correct parameters', async () => {
+      const metadata = {
+        autoSuggestions: {
+          choice: 0,
+          suggestions: ['What can you do?', 'Tell me more', 'How does this work?'],
+        },
+      };
+
+      vi.mocked(lambdaClient.message.updateMetadata.mutate).mockResolvedValue(undefined);
+
+      await service.updateMessageMetadata(mockMessageId, metadata);
+
+      expect(lambdaClient.message.updateMetadata.mutate).toHaveBeenCalledWith({
+        id: mockMessageId,
+        value: metadata,
+      });
+      expect(lambdaClient.message.updateMetadata.mutate).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle empty metadata object', async () => {
+      vi.mocked(lambdaClient.message.updateMetadata.mutate).mockResolvedValue(undefined);
+
+      await service.updateMessageMetadata(mockMessageId, {});
+
+      expect(lambdaClient.message.updateMetadata.mutate).toHaveBeenCalledWith({
+        id: mockMessageId,
+        value: {},
+      });
+    });
+
+    it('should handle complex metadata objects', async () => {
+      const complexMetadata = {
+        autoSuggestions: {
+          choice: 1,
+          suggestions: ['Suggestion 1', 'Suggestion 2'],
+        },
+      } as any;
+
+      vi.mocked(lambdaClient.message.updateMetadata.mutate).mockResolvedValue(undefined);
+
+      await service.updateMessageMetadata(mockMessageId, complexMetadata);
+
+      expect(lambdaClient.message.updateMetadata.mutate).toHaveBeenCalledWith({
+        id: mockMessageId,
+        value: complexMetadata,
+      });
+    });
+
+    it('should throw error when tRPC mutation fails', async () => {
+      const mockError = new Error('Network error');
+      vi.mocked(lambdaClient.message.updateMetadata.mutate).mockRejectedValue(mockError);
+
+      await expect(service.updateMessageMetadata(mockMessageId, {})).rejects.toThrow(
+        'Network error',
+      );
     });
   });
 });
