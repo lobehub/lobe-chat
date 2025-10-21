@@ -63,7 +63,7 @@ const CustomServerLoginPage = () => {
   };
 
   return (
-    <PageContainer showBack style={{ backgroundColor: 'white' }}>
+    <PageContainer showBack>
       <View style={styles.container}>
         <View style={styles.header} />
 
