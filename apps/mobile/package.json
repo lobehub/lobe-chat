@@ -91,6 +91,7 @@
     "expo-font": "~14.0.9",
     "expo-glass-effect": "^0.1.4",
     "expo-haptics": "~15.0.7",
+    "expo-image": "~1.13.0",
     "expo-linear-gradient": "~15.0.7",
     "expo-linking": "~8.0.8",
     "expo-localization": "~17.0.7",
