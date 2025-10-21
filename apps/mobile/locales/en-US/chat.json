@@ -25,6 +25,8 @@
   "messageCopied": "Message copied",
   "newAgent": "New Assistant",
   "newChat": "New Chat",
+  "pin": "Pin to Top",
+  "pinOff": "Unpin from Top",
   "placeholder": "Type your message...",
   "regenerateFailed": "Regeneration failed, please try again later",
   "send": "Send",

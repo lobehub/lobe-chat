@@ -25,6 +25,8 @@
   "messageCopied": "Messaggio copiato",
   "newAgent": "Nuovo assistente",
   "newChat": "Nuova conversazione",
+  "pin": "Fissa in alto",
+  "pinOff": "Rimuovi fissaggio in alto",
   "placeholder": "Inserisci il tuo messaggio...",
   "regenerateFailed": "Rigenerazione fallita, riprova più tardi",
   "send": "Invia",
