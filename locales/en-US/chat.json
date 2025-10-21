@@ -58,6 +58,9 @@
     "reasoningEffort": {
       "title": "Reasoning Intensity"
     },
+    "searchContextSize": {
+      "title": "Search Context Size"
+    },
     "textVerbosity": {
       "title": "Output Text Detail Level"
     },

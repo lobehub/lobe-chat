@@ -20,7 +20,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-02-14',
     settings: {
-      extendParams: ['reasoningEffort'],
+      extendParams: ['reasoningEffort', 'searchContextSize'],
       searchImpl: 'internal',
     },
     type: 'chat',
@@ -45,6 +45,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-01-21',
     settings: {
+      extendParams: ['searchContextSize'],
       searchImpl: 'internal',
     },
     type: 'chat',
@@ -69,6 +70,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-01-21',
     settings: {
+      extendParams: ['searchContextSize'],
       searchImpl: 'internal',
     },
     type: 'chat',
@@ -91,6 +93,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-01-21',
     settings: {
+      extendParams: ['searchContextSize'],
       searchImpl: 'internal',
     },
     type: 'chat',
@@ -113,6 +116,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-01-21',
     settings: {
+      extendParams: ['searchContextSize'],
       searchImpl: 'internal',
     },
     type: 'chat',

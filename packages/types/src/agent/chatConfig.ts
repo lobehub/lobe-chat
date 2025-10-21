@@ -59,6 +59,7 @@ export interface LobeAgentChatConfig {
 
   searchMode?: SearchMode;
   searchFCModel?: WorkingModel;
+  searchContextSize?: 'low' | 'medium' | 'high';
   urlContext?: boolean;
   useModelBuiltinSearch?: boolean;
 }
@@ -76,6 +77,7 @@ export const AgentChatConfigSchema = z.object({
   enableStreaming: z.boolean().optional(),
   historyCount: z.number().optional(),
   reasoningBudgetToken: z.number().optional(),
+  searchContextSize: z.enum(['low', 'medium', 'high']).optional(),
   searchFCModel: z
     .object({
       model: z.string(),

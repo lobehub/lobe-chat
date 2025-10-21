@@ -58,6 +58,9 @@
     "reasoningEffort": {
       "title": "推理强度"
     },
+    "searchContextSize": {
+      "title": "搜索上下文大小"
+    },
     "textVerbosity": {
       "title": "输出文本详细程度"
     },

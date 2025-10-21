@@ -83,6 +83,10 @@ export interface ChatStreamPayload {
    */
   model: string;
   /**
+   * @title Perplexity search context size
+   */
+  searchContextSize?: 'low' | 'medium' | 'high';
+  /**
    * @title 返回的文本数量
    */
   n?: number;
