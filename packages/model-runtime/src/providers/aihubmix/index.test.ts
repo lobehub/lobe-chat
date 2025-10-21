@@ -21,6 +21,29 @@ describe('LobeAiHubMixAI', () => {
       // We just verify the instance is created correctly
       expect(instance).toBeInstanceOf(LobeAiHubMixAI);
     });
+
+    it('should use default APP-Code when env var not set', () => {
+      const originalEnv = process.env.AIHUBMIX_APP_CODE;
+      delete process.env.AIHUBMIX_APP_CODE;
+      
+      const { params } = require('./index');
+      expect(params.defaultHeaders['APP-Code']).toBe('LobeHub');
+      
+      process.env.AIHUBMIX_APP_CODE = originalEnv;
+    });
+
+    it('should use custom APP-Code when env var is set', () => {
+      const originalEnv = process.env.AIHUBMIX_APP_CODE;
+      process.env.AIHUBMIX_APP_CODE = 'CustomCode';
+      
+      // Re-require to get updated params
+      delete require.cache[require.resolve('./index')];
+      const { params } = require('./index');
+      expect(params.defaultHeaders['APP-Code']).toBe('CustomCode');
+      
+      process.env.AIHUBMIX_APP_CODE = originalEnv;
+      delete require.cache[require.resolve('./index')];
+    });
   });
 
   describe('chat', () => {

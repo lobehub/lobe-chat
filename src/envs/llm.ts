@@ -194,6 +194,7 @@ export const getLLMConfig = () => {
 
       ENABLED_AIHUBMIX: z.boolean(),
       AIHUBMIX_API_KEY: z.string().optional(),
+      AIHUBMIX_APP_CODE: z.string().optional(),
 
       ENABLED_NEWAPI: z.boolean(),
       NEWAPI_API_KEY: z.string().optional(),
@@ -390,6 +391,7 @@ export const getLLMConfig = () => {
 
       ENABLED_AIHUBMIX: !!process.env.AIHUBMIX_API_KEY,
       AIHUBMIX_API_KEY: process.env.AIHUBMIX_API_KEY,
+      AIHUBMIX_APP_CODE: process.env.AIHUBMIX_APP_CODE,
 
       ENABLED_NEWAPI: !!process.env.NEWAPI_API_KEY,
       NEWAPI_API_KEY: process.env.NEWAPI_API_KEY,

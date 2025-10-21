@@ -20,7 +20,7 @@ export const params: CreateRouterRuntimeOptions = {
     chatCompletion: () => process.env.DEBUG_AIHUBMIX_CHAT_COMPLETION === '1',
   },
   defaultHeaders: {
-    'APP-Code': 'LobeHub',
+    'APP-Code': process.env.AIHUBMIX_APP_CODE || 'LobeHub',
   },
   id: ModelProvider.AiHubMix,
   models: async ({ client }) => {
