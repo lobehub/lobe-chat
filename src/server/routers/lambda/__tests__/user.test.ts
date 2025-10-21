@@ -10,7 +10,7 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
 
-import { userRouter } from './user';
+import { userRouter } from '../user';
 
 // Mock modules
 vi.mock('@clerk/nextjs/server', () => ({

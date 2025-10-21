@@ -4,7 +4,7 @@ import { GenerationBatchModel } from '@/database/models/generationBatch';
 import { GenerationBatchItem } from '@/database/schemas/generation';
 import { FileService } from '@/server/services/file';
 
-import { generationBatchRouter } from './generationBatch';
+import { generationBatchRouter } from '../generationBatch';
 
 vi.mock('@/database/models/generationBatch');
 vi.mock('@/server/services/file');

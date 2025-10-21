@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Pass threadId to messages in sendMessageInServer."]
+    },
+    "date": "2025-10-21",
+    "version": "1.139.4"
+  },
+  {
+    "children": {
+      "improvements": ["Show message author in minimap."]
+    },
+    "date": "2025-10-21",
+    "version": "1.139.3"
+  },
+  {
+    "children": {
       "improvements": ["Solve when desktop the sider agent list too long."]
     },
     "date": "2025-10-20",

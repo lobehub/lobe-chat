@@ -228,7 +228,9 @@
   "minimap": {
     "jumpToMessage": "{{index}} numaralı mesaja atla",
     "nextMessage": "Sonraki mesaj",
-    "previousMessage": "Önceki mesaj"
+    "previousMessage": "Önceki mesaj",
+    "senderAssistant": "Asistan",
+    "senderUser": "Sen"
   },
   "newAgent": "Yeni Asistan",
   "newGroupChat": "Yeni grup sohbeti oluştur",

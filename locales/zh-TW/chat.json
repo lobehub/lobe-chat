@@ -228,7 +228,9 @@
   "minimap": {
     "jumpToMessage": "跳轉至第 {{index}} 條訊息",
     "nextMessage": "下一條訊息",
-    "previousMessage": "上一條訊息"
+    "previousMessage": "上一條訊息",
+    "senderAssistant": "助理",
+    "senderUser": "您"
   },
   "newAgent": "新建助手",
   "newGroupChat": "建立群組",
