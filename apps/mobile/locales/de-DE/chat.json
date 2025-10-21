@@ -25,6 +25,8 @@
   "messageCopied": "Nachricht kopiert",
   "newAgent": "Neuer Assistent",
   "newChat": "Neues Gespräch",
+  "pin": "Anheften",
+  "pinOff": "Anheften aufheben",
   "placeholder": "Gib deine Nachricht ein...",
   "regenerateFailed": "Erneutes Generieren fehlgeschlagen, bitte versuche es später erneut",
   "send": "Senden",

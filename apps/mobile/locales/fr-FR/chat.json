@@ -25,6 +25,8 @@
   "messageCopied": "Message copié",
   "newAgent": "Nouvel assistant",
   "newChat": "Nouvelle conversation",
+  "pin": "Épingler",
+  "pinOff": "Désépingler",
   "placeholder": "Entrez votre message...",
   "regenerateFailed": "Échec de la régénération, veuillez réessayer plus tard",
   "send": "Envoyer",

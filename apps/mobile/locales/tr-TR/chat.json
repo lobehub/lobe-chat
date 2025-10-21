@@ -25,6 +25,8 @@
   "messageCopied": "Mesaj kopyalandı",
   "newAgent": "Yeni Asistan",
   "newChat": "Yeni Sohbet",
+  "pin": "Sabit",
+  "pinOff": "Sabitliği Kaldır",
   "placeholder": "Mesajınızı yazın...",
   "regenerateFailed": "Yeniden oluşturma başarısız oldu, lütfen daha sonra tekrar deneyin",
   "send": "Gönder",
