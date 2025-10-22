@@ -6,7 +6,7 @@ import { CustomWorld } from '../support/world';
 // Set default timeout for all steps to 60 seconds
 setDefaultTimeout(60_000);
 
-BeforeAll(async function () {
+BeforeAll({ timeout: 120_000 }, async function () {
   console.log('🚀 Starting E2E test suite...');
 
   const PORT = process.env.PORT ? Number(process.env.PORT) : 3010;
