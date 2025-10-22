@@ -3,8 +3,8 @@
 import { Modal } from '@lobehub/ui';
 import { ConfigProvider } from 'antd';
 import { createStyles } from 'antd-style';
-import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { DETAIL_PANEL_WIDTH } from '@/app/[variants]/(main)/files/features/FileDetail';
 
@@ -56,7 +56,7 @@ interface FullscreenModalProps {
 }
 
 const FullscreenModal = ({ children, detail }: FullscreenModalProps) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(true);
 
   const { styles } = useStyles(!!detail);
@@ -69,7 +69,7 @@ const FullscreenModal = ({ children, detail }: FullscreenModalProps) => {
           classNames={{ body: styles.body, content: styles.content, header: styles.header }}
           footer={false}
           onCancel={() => {
-            router.back();
+            navigate('/');
             setOpen(false);
           }}
           open={open}
