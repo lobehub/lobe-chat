@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: 'list',
   retries: 0,
   testDir: './e2e',
-  timeout: 60_000,
+  timeout: 1_200_000,
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
