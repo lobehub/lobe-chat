@@ -1,10 +1,11 @@
 import { LobeHub } from '@lobehub/icons-rn';
 import { Button, Center, Flexbox, PageContainer, Text, useTheme } from '@lobehub/ui-rn';
+import { Image } from 'expo-image';
 import { Link, useRouter } from 'expo-router';
 import { darken } from 'polished';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Image } from 'react-native';
+import { Alert } from 'react-native';
 
 import { setLoginMounted } from '@/navigation/loginState';
 import { useSettingStore } from '@/store/setting';
@@ -54,11 +55,13 @@ const LoginPage = () => {
       <Flexbox flex={1}>
         <Center flex={1} gap={24}>
           <Image
+            cachePolicy="memory-disk"
             source={require('@/../assets/images/logo.png')}
             style={{
               height: 100,
               width: 100,
             }}
+            transition={200}
           />
           <Flexbox align={'center'} gap={8} horizontal>
             <Text fontSize={26} weight={'bold'}>

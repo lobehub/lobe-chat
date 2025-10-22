@@ -33,6 +33,12 @@ export default function DeveloperScreen() {
   } = useSettingStore();
   const currentServer = customServerUrl ?? DEFAULT_SERVER_URL;
 
+  const navigateToSelfHostedLogin = () => {
+    router.dismissAll();
+    safeReplaceLogin(router);
+    router.push('/auth/login/selfhost');
+  };
+
   const confirmThenExecute = (
     confirmMessage: string,
     execute: () => Promise<void>,
@@ -118,7 +124,7 @@ export default function DeveloperScreen() {
               const message = error instanceof Error ? error.message : String(error);
               Alert.alert(t('error.title', { ns: 'error' }), message);
             } finally {
-              router.replace('/auth/login/selfhost');
+              navigateToSelfHostedLogin();
             }
           },
           style: 'default',
