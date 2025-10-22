@@ -3,8 +3,7 @@
 import { Pagination as Page } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import urlJoin from 'url-join';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/discover/features/const';
 import { useQuery } from '@/hooks/useQuery';
