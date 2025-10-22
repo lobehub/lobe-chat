@@ -26,7 +26,8 @@
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": false,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "e2e"
   ],
   "scripts": {
     "prebuild": "tsx scripts/prebuild.mts && npm run lint",
@@ -54,7 +55,7 @@
     "dev:mobile": "next dev --turbopack -p 3018",
     "docs:i18n": "lobe-i18n md && npm run lint:md && npm run lint:mdx && prettier -c --write locales/**/*",
     "docs:seo": "lobe-seo && npm run lint:mdx",
-    "e2e": "playwright test",
+    "e2e": "cd e2e && npm run test:smoke",
     "e2e:install": "playwright install",
     "e2e:ui": "playwright test --ui",
     "i18n": "npm run workflow:i18n && lobe-i18n && prettier -c --write \"locales/**\"",
@@ -80,6 +81,8 @@
     "test": "npm run test-app && npm run test-server",
     "test-app": "vitest run",
     "test-app:coverage": "vitest --coverage --silent='passed-only'",
+    "test:e2e": "pnpm --filter @lobechat/e2e-tests test",
+    "test:e2e:smoke": "pnpm --filter @lobechat/e2e-tests test:smoke",
     "test:update": "vitest -u",
     "type-check": "tsgo --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",

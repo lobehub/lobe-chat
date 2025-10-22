@@ -1,24 +1,24 @@
 'use client';
 
 import { memo, useEffect } from 'react';
-import { MemoryRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
+import { MemoryRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
-import DiscoverLayout from './_layout/DiscoverLayout';
-import ListLayout from './(list)/_layout/ListLayout';
 import DetailLayout from './(detail)/_layout/DetailLayout';
-import HomePage from './(list)/(home)/HomePage';
-import AssistantPage from './(list)/assistant/AssistantPage';
-import AssistantLayout from './(list)/assistant/AssistantLayout';
-import McpPage from './(list)/mcp/McpPage';
-import McpLayout from './(list)/mcp/McpLayout';
-import ModelPage from './(list)/model/ModelPage';
-import ModelLayout from './(list)/model/ModelLayout';
-import ProviderPage from './(list)/provider/ProviderPage';
 import AssistantDetailPage from './(detail)/assistant/AssistantDetailPage';
 import McpDetailPage from './(detail)/mcp/McpDetailPage';
 import ModelDetailPage from './(detail)/model/ModelDetailPage';
 import ProviderDetailPage from './(detail)/provider/ProviderDetailPage';
+import HomePage from './(list)/(home)/HomePage';
+import ListLayout from './(list)/_layout/ListLayout';
+import AssistantLayout from './(list)/assistant/AssistantLayout';
+import AssistantPage from './(list)/assistant/AssistantPage';
+import McpLayout from './(list)/mcp/McpLayout';
+import McpPage from './(list)/mcp/McpPage';
+import ModelLayout from './(list)/model/ModelLayout';
+import ModelPage from './(list)/model/ModelPage';
+import ProviderPage from './(list)/provider/ProviderPage';
+import DiscoverLayout from './_layout/DiscoverLayout';
 
 // Get initial path from URL
 const getInitialPath = () => {
@@ -163,5 +163,7 @@ const DiscoverRouter = memo(() => {
     </MemoryRouter>
   );
 });
+
+DiscoverRouter.displayName = 'DiscoverRouter';
 
 export default DiscoverRouter;

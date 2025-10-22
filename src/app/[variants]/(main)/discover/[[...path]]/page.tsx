@@ -1,11 +1,12 @@
 'use client';
 
-import DiscoverRouter from '../DiscoverRouter';
+import dynamic from 'next/dynamic';
 
-const DiscoverPage = () => {
-  return <DiscoverRouter />;
-};
+import { BrandTextLoading } from '@/components/Loading';
 
-DiscoverPage.displayName = 'DiscoverPage';
+const DiscoverRouter = dynamic(() => import('../DiscoverRouter'), {
+  loading: BrandTextLoading,
+  ssr: false,
+});
 
-export default DiscoverPage;
+export default DiscoverRouter;
