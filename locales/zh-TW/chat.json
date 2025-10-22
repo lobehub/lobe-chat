@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "清空當前對話",
   "confirmClearCurrentMessages": "即將清空當前對話，清空後將無法找回，請確認你的操作",
-  "confirmRemoveChatGroupItemAlert": "即將刪除該群聊，群聊成員不受影響，請確認你的操作",
+  "confirmRemoveChatGroupItemAlert": "即將刪除該 Agent 團隊，團隊成員不受影響，請確認你的操作",
   "confirmRemoveGroupItemAlert": "即將刪除此分組。刪除後，該分組中的助理將移至預設列表，請確認是否繼續。",
   "confirmRemoveGroupSuccess": "Agent 團隊刪除成功",
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
@@ -98,10 +98,10 @@
     "chooseMembers": "選擇現有助理...",
     "createGroup": "建立群組聊天",
     "createTeam": "建立 Agent 團隊",
-    "existingMembers": "已有助理",
+    "existingMembers": "已有 Agent",
     "groupMembers": "這些助理也將被加入您的列表中",
     "host": {
-      "description": "使群聊自動化運作",
+      "description": "使團隊自主運作",
       "title": "啟用主持人",
       "tooltip": "若停用團隊主持人，您需要手動 @ 提及成員才能讓他們回覆"
     },
@@ -163,11 +163,11 @@
   "memberSelection": {
     "addMember": "添加成員",
     "allMembers": "所有成員",
-    "createGroup": "建立群聊",
+    "createGroup": "建立 Agent 團隊",
     "noAvailableAgents": "沒有可邀請的助理",
     "noSelectedAgents": "尚未選擇助理",
     "searchAgents": "搜尋助理...",
-    "setInitialMembers": "選擇群成員"
+    "setInitialMembers": "選擇團隊成員"
   },
   "members": "成員",
   "mention": {

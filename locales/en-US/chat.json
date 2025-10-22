@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
-  "confirmRemoveChatGroupItemAlert": "You are about to delete this group chat. Group members will not be affected. Please confirm your action.",
+  "confirmRemoveChatGroupItemAlert": "This Agent team will be deleted. Team members will not be affected. Please confirm your action.",
   "confirmRemoveGroupItemAlert": "You are about to delete this group. After deletion, its assistants will be moved to the default list. Please confirm your action.",
   "confirmRemoveGroupSuccess": "Agent team deleted successfully",
   "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
@@ -98,10 +98,10 @@
     "chooseMembers": "Select existing assistants...",
     "createGroup": "Create Group Chat",
     "createTeam": "Create Agent Team",
-    "existingMembers": "Existing Assistants",
+    "existingMembers": "Current Agents",
     "groupMembers": "These assistants will also be added to your list",
     "host": {
-      "description": "Automate group chat operations",
+      "description": "Enable the team to operate independently",
       "title": "Enable Host",
       "tooltip": "If the team host is disabled, you'll need to manually @mention members to get their responses"
     },
@@ -163,11 +163,11 @@
   "memberSelection": {
     "addMember": "Add Member",
     "allMembers": "All members",
-    "createGroup": "Create Group Chat",
+    "createGroup": "Create Agent Team",
     "noAvailableAgents": "No assistants available to invite",
     "noSelectedAgents": "No assistants selected yet",
     "searchAgents": "Search assistants...",
-    "setInitialMembers": "Select Group Members"
+    "setInitialMembers": "Select Team Members"
   },
   "members": "Members",
   "mention": {

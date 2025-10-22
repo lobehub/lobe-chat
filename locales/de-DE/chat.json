@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
   "confirmClearCurrentMessages": "Möchtest du wirklich die aktuellen Nachrichten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-  "confirmRemoveChatGroupItemAlert": "Die Gruppenunterhaltung wird gelöscht, die Mitglieder bleiben davon unberührt. Bitte bestätigen Sie Ihre Aktion.",
+  "confirmRemoveChatGroupItemAlert": "Dieses Agenten-Team wird gelöscht. Die Teammitglieder bleiben davon unberührt. Bitte bestätigen Sie Ihre Aktion.",
   "confirmRemoveGroupItemAlert": "Sie sind dabei, diese Gruppe zu löschen. Nach der Löschung werden die Assistenten dieser Gruppe in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
   "confirmRemoveGroupSuccess": "Agent-Team erfolgreich gelöscht",
   "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -98,10 +98,10 @@
     "chooseMembers": "Bestehende Assistenten auswählen...",
     "createGroup": "Gruppenchat erstellen",
     "createTeam": "Agent-Team erstellen",
-    "existingMembers": "Bestehende Assistenten",
+    "existingMembers": "Vorhandene Agenten",
     "groupMembers": "Diese Assistenten werden ebenfalls zu Ihrer Liste hinzugefügt",
     "host": {
-      "description": "Automatisiert den Gruppenchat",
+      "description": "Ermöglicht dem Team, eigenständig zu arbeiten",
       "title": "Moderator aktivieren",
       "tooltip": "Wenn der Team-Moderator deaktiviert ist, müssen Sie Mitglieder manuell mit @ erwähnen, damit sie antworten können"
     },
@@ -163,11 +163,11 @@
   "memberSelection": {
     "addMember": "Mitglied hinzufügen",
     "allMembers": "Alle Mitglieder",
-    "createGroup": "Gruppenchat erstellen",
+    "createGroup": "Agenten-Team erstellen",
     "noAvailableAgents": "Keine verfügbaren Assistenten zum Einladen",
     "noSelectedAgents": "Noch keine Assistenten ausgewählt",
     "searchAgents": "Assistenten suchen...",
-    "setInitialMembers": "Gruppenmitglieder auswählen"
+    "setInitialMembers": "Teammitglieder auswählen"
   },
   "members": "Mitglieder",
   "mention": {

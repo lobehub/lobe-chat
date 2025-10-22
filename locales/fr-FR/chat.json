@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
-  "confirmRemoveChatGroupItemAlert": "Vous êtes sur le point de supprimer ce groupe de discussion, les membres du groupe ne seront pas affectés, veuillez confirmer votre action",
+  "confirmRemoveChatGroupItemAlert": "Ce groupe d'agents va être supprimé. Les membres du groupe ne seront pas affectés. Veuillez confirmer votre action.",
   "confirmRemoveGroupItemAlert": "Vous êtes sur le point de supprimer ce groupe. Après la suppression, les assistants de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
   "confirmRemoveGroupSuccess": "Équipe d'agents supprimée avec succès",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
@@ -98,10 +98,10 @@
     "chooseMembers": "Choisir des assistants existants...",
     "createGroup": "Créer un groupe",
     "createTeam": "Créer une équipe d'agents",
-    "existingMembers": "Membres existants",
+    "existingMembers": "Agents existants",
     "groupMembers": "Ces assistants seront également ajoutés à votre liste",
     "host": {
-      "description": "Automatise le fonctionnement du groupe de discussion",
+      "description": "Permet au groupe de fonctionner de manière autonome",
       "title": "Activer l'hôte",
       "tooltip": "Si vous désactivez l'hôte de l'équipe, vous devrez mentionner manuellement les membres avec @ pour qu'ils puissent répondre"
     },
@@ -163,7 +163,7 @@
   "memberSelection": {
     "addMember": "Ajouter un membre",
     "allMembers": "Tous les membres",
-    "createGroup": "Créer un groupe de discussion",
+    "createGroup": "Créer un groupe d'agents",
     "noAvailableAgents": "Aucun assistant disponible à inviter",
     "noSelectedAgents": "Aucun assistant sélectionné",
     "searchAgents": "Rechercher un assistant...",

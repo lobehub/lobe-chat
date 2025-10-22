@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
-  "confirmRemoveChatGroupItemAlert": "이 그룹 채팅을 삭제하려고 합니다. 그룹 채팅 멤버는 영향을 받지 않습니다. 작업을 확인해 주세요.",
+  "confirmRemoveChatGroupItemAlert": "이 Agent 팀을 삭제하려고 합니다. 팀 구성원에게는 영향이 없습니다. 계속하시겠습니까?",
   "confirmRemoveGroupItemAlert": "해당 그룹을 삭제하려고 합니다. 삭제하면 해당 그룹의 어시스턴트가 기본 목록으로 이동합니다. 계속 진행하시겠습니까?",
   "confirmRemoveGroupSuccess": "에이전트 팀이 성공적으로 삭제되었습니다",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
@@ -98,10 +98,10 @@
     "chooseMembers": "기존 도우미 선택...",
     "createGroup": "그룹 채팅 생성",
     "createTeam": "에이전트 팀 생성",
-    "existingMembers": "기존 멤버",
+    "existingMembers": "기존 Agent",
     "groupMembers": "이 도우미들도 귀하의 목록에 추가됩니다",
     "host": {
-      "description": "그룹 채팅을 자동으로 운영합니다",
+      "description": "팀이 자율적으로 운영되도록 설정합니다",
       "title": "호스트 활성화",
       "tooltip": "팀 호스트를 비활성화하면, 멤버가 응답할 수 있도록 수동으로 @멘션해야 합니다"
     },
@@ -163,11 +163,11 @@
   "memberSelection": {
     "addMember": "멤버 추가",
     "allMembers": "전체 멤버",
-    "createGroup": "그룹 채팅 생성",
+    "createGroup": "Agent 팀 만들기",
     "noAvailableAgents": "초대할 보조자가 없습니다",
     "noSelectedAgents": "아직 보조자를 선택하지 않았습니다",
     "searchAgents": "보조자 검색...",
-    "setInitialMembers": "그룹 멤버 선택"
+    "setInitialMembers": "팀 구성원 선택"
   },
   "members": "구성원",
   "mention": {

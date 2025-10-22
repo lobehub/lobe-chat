@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
-  "confirmRemoveChatGroupItemAlert": "Stai per eliminare questa chat di gruppo, i membri del gruppo non saranno influenzati, conferma la tua azione",
+  "confirmRemoveChatGroupItemAlert": "Stai per eliminare questo team di Agent. I membri del team non saranno influenzati. Conferma la tua azione.",
   "confirmRemoveGroupItemAlert": "Stai per eliminare questo gruppo. Dopo l'eliminazione, gli assistenti contenuti in esso verranno spostati nell'elenco predefinito. Confermi l'operazione?",
   "confirmRemoveGroupSuccess": "Team di agent eliminato con successo",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
@@ -98,10 +98,10 @@
     "chooseMembers": "Seleziona assistenti esistenti...",
     "createGroup": "Crea gruppo",
     "createTeam": "Crea team di agent",
-    "existingMembers": "Assistenti esistenti",
+    "existingMembers": "Agent esistenti",
     "groupMembers": "Questi assistenti saranno aggiunti anche alla tua lista",
     "host": {
-      "description": "Automatizza il funzionamento della chat di gruppo",
+      "description": "Consenti al team di operare in modo autonomo",
       "title": "Abilita moderatore",
       "tooltip": "Se disabiliti il moderatore del team, dovrai menzionare manualmente i membri con @ per ottenere una risposta"
     },
@@ -163,11 +163,11 @@
   "memberSelection": {
     "addMember": "Aggiungi membro",
     "allMembers": "Tutti i membri",
-    "createGroup": "Crea chat di gruppo",
+    "createGroup": "Crea un team di Agent",
     "noAvailableAgents": "Nessun assistente disponibile da invitare",
     "noSelectedAgents": "Nessun assistente selezionato",
     "searchAgents": "Cerca assistenti...",
-    "setInitialMembers": "Seleziona membri del gruppo"
+    "setInitialMembers": "Seleziona i membri del team"
   },
   "members": "Membri",
   "mention": {

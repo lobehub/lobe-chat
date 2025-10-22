@@ -175,11 +175,11 @@ export default {
   memberSelection: {
     addMember: '添加成员',
     allMembers: '全体成员',
-    createGroup: '创建群聊',
+    createGroup: '创建 Agent 团队',
     noAvailableAgents: '没有可邀请的助手',
     noSelectedAgents: '还未选择助手',
     searchAgents: '搜索助手...',
-    setInitialMembers: '选择群成员',
+    setInitialMembers: '选择团队成员',
   },
 
   members: 'Members',

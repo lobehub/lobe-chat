@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "پاک کردن پیام‌های جلسه فعلی",
   "confirmClearCurrentMessages": "پیام‌های جلسه فعلی به زودی پاک خواهند شد و پس از پاک شدن قابل بازیابی نخواهند بود. لطفاً عملیات خود را تأیید کنید.",
-  "confirmRemoveChatGroupItemAlert": "در حال حذف این گروه چت هستید، اعضای گروه تحت تأثیر قرار نمی‌گیرند، لطفاً عملیات خود را تأیید کنید",
+  "confirmRemoveChatGroupItemAlert": "این تیم Agent به‌زودی حذف خواهد شد، اما اعضای تیم تحت تأثیر قرار نمی‌گیرند. لطفاً اقدام خود را تأیید کنید.",
   "confirmRemoveGroupItemAlert": "در حال حذف این گروه هستید؛ پس از حذف، دستیاران این گروه به فهرست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
   "confirmRemoveGroupSuccess": "تیم Agent با موفقیت حذف شد",
   "confirmRemoveSessionItemAlert": "این دستیار به زودی حذف خواهد شد و پس از حذف قابل بازیابی نخواهد بود، لطفاً عملیات خود را تأیید کنید.",
@@ -98,10 +98,10 @@
     "chooseMembers": "انتخاب دستیاران موجود...",
     "createGroup": "ایجاد گروه چت",
     "createTeam": "ایجاد تیم Agent",
-    "existingMembers": "دستیاران موجود",
+    "existingMembers": "Agentهای موجود",
     "groupMembers": "این دستیاران نیز به فهرست شما اضافه خواهند شد",
     "host": {
-      "description": "اجرای خودکار چت گروهی",
+      "description": "اجازه دهید تیم به‌صورت مستقل عمل کند",
       "title": "فعال‌سازی میزبان",
       "tooltip": "اگر میزبان تیم غیرفعال باشد، باید به‌صورت دستی با @ اعضا را منشن کنید تا پاسخ دهند"
     },
@@ -163,11 +163,11 @@
   "memberSelection": {
     "addMember": "افزودن عضو",
     "allMembers": "تمام اعضا",
-    "createGroup": "ایجاد گروه چت",
+    "createGroup": "ایجاد تیم Agent",
     "noAvailableAgents": "دستیار قابل دعوت وجود ندارد",
     "noSelectedAgents": "هنوز دستیار انتخاب نشده است",
     "searchAgents": "جستجوی دستیار...",
-    "setInitialMembers": "انتخاب اعضای گروه"
+    "setInitialMembers": "انتخاب اعضای تیم"
   },
   "members": "اعضا",
   "mention": {

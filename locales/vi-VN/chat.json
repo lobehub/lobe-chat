@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
-  "confirmRemoveChatGroupItemAlert": "Bạn sắp xóa nhóm trò chuyện này, các thành viên trong nhóm sẽ không bị ảnh hưởng, vui lòng xác nhận thao tác của bạn",
+  "confirmRemoveChatGroupItemAlert": "Sắp xóa nhóm Agent này, các thành viên trong nhóm sẽ không bị ảnh hưởng. Vui lòng xác nhận thao tác của bạn.",
   "confirmRemoveGroupItemAlert": "Bạn sắp xóa nhóm này. Sau khi xóa, các trợ lý trong nhóm sẽ được chuyển sang danh sách mặc định. Vui lòng xác nhận hành động của bạn.",
   "confirmRemoveGroupSuccess": "Xóa nhóm Agent thành công",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
@@ -98,10 +98,10 @@
     "chooseMembers": "Chọn trợ lý hiện có...",
     "createGroup": "Tạo nhóm trò chuyện",
     "createTeam": "Tạo nhóm Agent",
-    "existingMembers": "Trợ lý hiện có",
+    "existingMembers": "Agent hiện có",
     "groupMembers": "Những trợ lý này cũng sẽ được thêm vào danh sách của bạn",
     "host": {
-      "description": "Tự động hóa hoạt động nhóm chat",
+      "description": "Giúp nhóm hoạt động độc lập",
       "title": "Bật người điều phối",
       "tooltip": "Nếu tắt người điều phối nhóm, bạn cần @đề cập thành viên thủ công để họ có thể phản hồi"
     },
@@ -163,7 +163,7 @@
   "memberSelection": {
     "addMember": "Thêm thành viên",
     "allMembers": "Tất cả thành viên",
-    "createGroup": "Tạo nhóm trò chuyện",
+    "createGroup": "Tạo nhóm Agent",
     "noAvailableAgents": "Không có trợ lý nào để mời",
     "noSelectedAgents": "Chưa chọn trợ lý nào",
     "searchAgents": "Tìm trợ lý...",

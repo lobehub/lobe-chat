@@ -21,7 +21,7 @@
   },
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
-  "confirmRemoveChatGroupItemAlert": "このグループチャットを削除しますが、グループメンバーには影響しません。操作を確認してください。",
+  "confirmRemoveChatGroupItemAlert": "このエージェントチームを削除しようとしています。チームメンバーには影響しません。操作を確認してください。",
   "confirmRemoveGroupItemAlert": "このグループを削除すると、グループ内のアシスタントはデフォルトの一覧に移動します。操作を続行してもよろしいですか？",
   "confirmRemoveGroupSuccess": "エージェントチームの削除に成功しました",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
@@ -98,10 +98,10 @@
     "chooseMembers": "既存のアシスタントを選択...",
     "createGroup": "グループチャットを作成",
     "createTeam": "エージェントチームを作成",
-    "existingMembers": "既存のメンバー",
+    "existingMembers": "既存のエージェント",
     "groupMembers": "これらのアシスタントもあなたのリストに追加されます",
     "host": {
-      "description": "グループチャットの自動運用を実現する",
+      "description": "チームの自律的な運営を可能にします",
       "title": "ホストを有効にする",
       "tooltip": "チームホストを無効にすると、メンバーに返信してもらうには手動で@メンションする必要があります"
     },
@@ -163,11 +163,11 @@
   "memberSelection": {
     "addMember": "メンバーを追加",
     "allMembers": "全メンバー",
-    "createGroup": "グループチャットを作成",
+    "createGroup": "エージェントチームを作成",
     "noAvailableAgents": "招待可能なアシスタントがいません",
     "noSelectedAgents": "アシスタントが選択されていません",
     "searchAgents": "アシスタントを検索...",
-    "setInitialMembers": "グループメンバーを選択"
+    "setInitialMembers": "チームメンバーを選択"
   },
   "members": "メンバー",
   "mention": {
