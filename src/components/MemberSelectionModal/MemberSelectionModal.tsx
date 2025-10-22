@@ -217,7 +217,8 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
     const agentSessions = useSessionStore((s) => {
       const allSessions = s.sessions || [];
       return allSessions.filter(
-        (session) => session.type === LobeSessionType.Agent && !session.config?.virtual,
+        (session): session is LobeAgentSession =>
+          session.type === LobeSessionType.Agent && !session.config?.virtual,
       );
     });
 
