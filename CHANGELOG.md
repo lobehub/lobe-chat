@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.141.2](https://github.com/lobehub/lobe-chat/compare/v1.141.1...v1.141.2)
+
+<sup>Released on **2025-10-21**</sup>
+
+#### 💄 Styles
+
+- **settings**: Broadcast locale changes and update switchLocale action.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **settings**: Broadcast locale changes and update switchLocale action, closes [#9620](https://github.com/lobehub/lobe-chat/issues/9620) ([0eb02ca](https://github.com/lobehub/lobe-chat/commit/0eb02ca))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.141.1](https://github.com/lobehub/lobe-chat/compare/v1.141.0...v1.141.1)
+
+<sup>Released on **2025-10-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor context engine.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor context engine, closes [#9821](https://github.com/lobehub/lobe-chat/issues/9821) ([e99f12f](https://github.com/lobehub/lobe-chat/commit/e99f12f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.141.0](https://github.com/lobehub/lobe-chat/compare/v1.140.0...v1.141.0)
 
 <sup>Released on **2025-10-21**</sup>
