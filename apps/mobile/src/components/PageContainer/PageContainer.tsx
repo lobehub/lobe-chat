@@ -21,6 +21,7 @@ const PageContainer = memo<PageContainerProps>(
     style,
     left = undefined,
     showBack = false,
+    onBackPress = () => router.back(),
     title = '',
     extra = undefined,
     largeTitleEnabled = false,
@@ -91,7 +92,7 @@ const PageContainer = memo<PageContainerProps>(
         {left !== undefined ? (
           left
         ) : showBack ? (
-          <ActionIcon clickable={false} icon={ChevronLeft} onPress={() => router.back()} />
+          <ActionIcon clickable={false} icon={ChevronLeft} onPress={onBackPress} />
         ) : null}
       </Flexbox>
     );

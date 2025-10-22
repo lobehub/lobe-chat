@@ -68,12 +68,17 @@ export interface AuthEvents {
   onTokenRefresh: (token: Token) => void;
 }
 
+export interface LoginOptions {
+  prompt?: string;
+  useEphemeralSession?: boolean;
+}
+
 // 认证服务接口
 export interface AuthService {
   getUserInfo(): Promise<User>;
   isRefreshTokenValid(): Promise<boolean>;
   isTokenValid(): Promise<boolean>;
-  login(): Promise<void>;
+  login(options?: LoginOptions): Promise<void>;
   logout(): Promise<void>;
   refreshToken(): Promise<Token>;
   refreshUserInfo(): Promise<User>;
