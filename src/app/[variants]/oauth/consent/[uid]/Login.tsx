@@ -59,7 +59,7 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
   const isUserStateInit = useUserStore((s) => s.isUserStateInit);
   const avatar = useUserStore(userProfileSelectors.userAvatar);
   const nickName = useUserStore(userProfileSelectors.nickName);
-  const logout = useUserStore((s) => s.logout);
+  const [logout, openLogin] = useUserStore((s) => [s.logout, s.openLogin]);
 
   const titleText = t('login.title', { clientName: clientDisplayName });
   const descriptionText = t('login.description', { clientName: clientDisplayName });
@@ -71,10 +71,11 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
     try {
       setSwitching(true);
       await logout();
+      await openLogin();
     } finally {
       setSwitching(false);
     }
-  }, [isSwitching, logout]);
+  }, [isSwitching, logout, openLogin]);
 
   return (
     <Center className={styles.container} gap={16}>
