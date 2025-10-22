@@ -41,6 +41,9 @@ export class CustomWorld extends World {
       viewport: { height: 720, width: 1280 },
     });
 
+    // Set expect timeout for assertions (e.g., toBeVisible, toHaveText)
+    this.browserContext.setDefaultTimeout(60_000);
+
     this.page = await this.browserContext.newPage();
 
     // Set up error listeners

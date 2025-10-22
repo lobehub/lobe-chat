@@ -1,3 +1,6 @@
+/**
+ * @type {import('@cucumber/cucumber').IConfiguration}
+ */
 export default {
   format: [
     'progress-bar',
