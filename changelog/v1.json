@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Change discover page from RSC to SPA to improve performance."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.5"
+  },
+  {
+    "children": {
       "improvements": ["Fix model runtime cost calculate with CNY."]
     },
     "date": "2025-10-22",
