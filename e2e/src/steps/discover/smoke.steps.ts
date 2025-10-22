@@ -21,9 +21,9 @@ Then('I should see assistant cards', async function (this: CustomWorld) {
   // Wait for content to load
   await this.page.waitForLoadState('networkidle', { timeout: 120_000 });
 
-  // The Block component might not pass through data-testid
-  // Look for links to /discover/assistant/* as a proxy for assistant cards
-  const assistantItems = this.page.locator('a[href*="/discover/assistant/"]');
+  // After migrating to SPA (react-router), links use relative paths like /assistant/:id
+  // Look for assistant items by data-testid instead of href
+  const assistantItems = this.page.locator('[data-testid="assistant-item"]');
 
   // Wait for at least one item to be visible
   await expect(assistantItems.first()).toBeVisible({ timeout: 120_000 });
