@@ -13,6 +13,7 @@ import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { RootSiblingParent } from 'react-native-root-siblings';
+import { SWRConfig } from 'swr';
 
 import i18n from '@/i18n';
 import { I18nReadyGate } from '@/i18n/ReadyGate';
@@ -21,6 +22,7 @@ import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { TRPCProvider, trpcClient } from '@/services/_auth/trpc';
 import { useAuth, useUserStore } from '@/store/user';
 import { authLogger } from '@/utils/logger';
+import { createPersistedSWRCache } from '@/utils/swrCache';
 
 import '../polyfills';
 
@@ -128,14 +130,31 @@ function AuthProvider({ children }: PropsWithChildren) {
   return children;
 }
 
+const QUERY_CACHE_MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
+const DEFAULT_STALE_TIME = 1000 * 60 * 5; // 5 minutes
+
 const QueryProvider = ({ children }: PropsWithChildren) => {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            gcTime: QUERY_CACHE_MAX_AGE,
+            staleTime: DEFAULT_STALE_TIME,
+          },
+        },
+      }),
+  );
+
+  const [swrCache] = useState(() => createPersistedSWRCache());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TRPCProvider queryClient={queryClient} trpcClient={trpcClient}>
-        {children}
-      </TRPCProvider>
+      <SWRConfig value={{ provider: () => swrCache }}>
+        <TRPCProvider queryClient={queryClient} trpcClient={trpcClient}>
+          {children}
+        </TRPCProvider>
+      </SWRConfig>
     </QueryClientProvider>
   );
 };

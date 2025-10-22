@@ -20,6 +20,15 @@ export const appStorage = new MMKV({
 });
 
 /**
+ * 缓存数据存储
+ * - React Query 缓存数据
+ * - 其他可安全清理的缓存
+ */
+export const cacheStorage = new MMKV({
+  id: 'lobe-chat-cache-storage',
+});
+
+/**
  * ==================== Zustand 存储适配器 ====================
  */
 

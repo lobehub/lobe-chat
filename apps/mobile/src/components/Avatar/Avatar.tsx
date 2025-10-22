@@ -1,5 +1,6 @@
+import { Image } from 'expo-image';
 import { isValidElement, memo, useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { DEFAULT_AVATAR } from '@/_const/meta';
 import { isEmoji } from '@/utils/common';
@@ -35,10 +36,13 @@ const Avatar = memo<AvatarProps>(
           {isStringAvatar ? (
             <Image
               accessibilityLabel={alt}
+              cachePolicy="memory-disk"
+              contentFit="cover"
               onError={() => setError(true)}
               source={{ uri: error ? DEFAULT_AVATAR : avatar }}
               style={styles.image}
               testID="avatar-image"
+              transition={150}
             />
           ) : (
             avatar

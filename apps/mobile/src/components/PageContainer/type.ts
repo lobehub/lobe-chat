@@ -18,6 +18,7 @@ export interface PageContainerProps {
   largeTitleEnabled?: boolean;
   left?: ReactNode;
   loading?: boolean;
+  onBackPress?: () => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onTitlePress?: PressableProps['onPress'];
   scrollComponent?: ComponentType<any>;
