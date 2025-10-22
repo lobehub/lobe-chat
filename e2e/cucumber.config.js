@@ -10,7 +10,7 @@ export default {
   formatOptions: {
     snippetInterface: 'async-await',
   },
-  parallel: 4,
+  parallel: 3,
   paths: ['src/features/**/*.feature'],
   publishQuiet: true,
   require: ['src/steps/**/*.ts', 'src/support/**/*.ts'],

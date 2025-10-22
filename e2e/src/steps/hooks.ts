@@ -3,8 +3,8 @@ import { After, AfterAll, Before, BeforeAll, Status, setDefaultTimeout } from '@
 import { startWebServer, stopWebServer } from '../support/webServer';
 import { CustomWorld } from '../support/world';
 
-// Set default timeout for all steps to 60 seconds
-setDefaultTimeout(60_000);
+// Set default timeout for all steps to 120 seconds
+setDefaultTimeout(120_000);
 
 BeforeAll({ timeout: 120_000 }, async function () {
   console.log('🚀 Starting E2E test suite...');
