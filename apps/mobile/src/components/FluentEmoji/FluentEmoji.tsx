@@ -1,5 +1,6 @@
+import { Image } from 'expo-image';
 import { memo, useMemo, useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
 import { WebView } from 'react-native-webview';
 
@@ -102,10 +103,12 @@ const FluentEmoji = memo<FluentEmojiProps>(({ emoji, size = 32, type = '3d' }) =
       return (
         <Image
           accessibilityLabel={emoji}
-          height={size}
+          cachePolicy="memory-disk"
+          contentFit="cover"
           onError={() => setImageError(true)}
           source={{ uri: emojiCdnUrl }}
-          width={size}
+          style={{ height: size, width: size }}
+          transition={150}
         />
       );
     }

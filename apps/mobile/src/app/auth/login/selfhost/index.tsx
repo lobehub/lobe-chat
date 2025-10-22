@@ -1,8 +1,9 @@
 import { Button, Input, PageContainer } from '@lobehub/ui-rn';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Image, Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 
 import { Form } from '@/components';
 import { formatServerUrl, isValidServerUrl } from '@/config/server';
@@ -62,13 +63,18 @@ const CustomServerLoginPage = () => {
   };
 
   return (
-    <PageContainer showBack style={{ backgroundColor: 'white' }}>
+    <PageContainer showBack>
       <View style={styles.container}>
         <View style={styles.header} />
 
         <View style={styles.content}>
           <View style={styles.welcome}>
-            <Image source={require('@/../assets/images/logo.png')} style={styles.logo} />
+            <Image
+              cachePolicy="memory-disk"
+              source={require('@/../assets/images/logo.png')}
+              style={styles.logo}
+              transition={200}
+            />
 
             <Text style={styles.title}>{t('login.selfHostedTitle', { ns: 'auth' })}</Text>
             <Text style={styles.subtitle}>{t('login.selfHostedDescription', { ns: 'auth' })}</Text>

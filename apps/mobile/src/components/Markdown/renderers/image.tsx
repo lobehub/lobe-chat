@@ -1,6 +1,7 @@
+import { Image } from 'expo-image';
 import { ImageReference, Image as MdImage } from 'mdast';
 import { ReactNode, useEffect, useState } from 'react';
-import { Image } from 'react-native';
+import { Image as RNImage } from 'react-native';
 
 import Skeleton from '../../Skeleton';
 import { useMarkdownContext } from '../context';
@@ -22,7 +23,7 @@ const AutoSizedImage = ({ uri }: AutoSizedImageProps) => {
   });
 
   useEffect(() => {
-    Image.getSize(uri, (width, height) => {
+    RNImage.getSize(uri, (width, height) => {
       const ratio = height / width;
       const newWidth = Math.min(width, contentSize.width);
       const newHeight = newWidth * ratio;
@@ -36,12 +37,14 @@ const AutoSizedImage = ({ uri }: AutoSizedImageProps) => {
 
   return (
     <Image
+      cachePolicy="memory-disk"
       key={uri}
       onError={() => {
         setError(true);
       }}
       source={error ? { uri: FALLBACK } : { uri }}
       style={[styles.image, { height: size.height, width: size.width }]}
+      transition={200}
     />
   );
 };

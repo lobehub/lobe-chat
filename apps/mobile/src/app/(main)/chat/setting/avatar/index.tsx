@@ -44,7 +44,7 @@ export default function AvatarSetting() {
             borderWidth: 2,
           }}
         >
-          <Avatar animation avatar={avatar} size={80} />
+          <Avatar avatar={avatar} size={80} />
         </Center>
       </Center>
       <EmojiSelector onChange={setAvatar} />

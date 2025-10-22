@@ -1,9 +1,9 @@
 import { AiProviderSourceType } from '@lobechat/types';
 import { ProviderIcon } from '@lobehub/icons-rn';
 import { ActionIcon, Cell } from '@lobehub/ui-rn';
+import { Image } from 'expo-image';
 import { BoltIcon } from 'lucide-react-native';
 import { memo } from 'react';
-import { Image } from 'react-native';
 
 import { useTheme } from '@/components/styles';
 
@@ -37,13 +37,15 @@ const ProviderItemRender = memo<ProviderItemRenderProps>(
         icon={
           source === 'custom' && logo ? (
             <Image
-              resizeMode="contain"
+              cachePolicy="memory-disk"
+              contentFit="contain"
               source={{ uri: logo }}
               style={{
                 borderRadius: 10,
                 height: 20,
                 width: 20,
               }}
+              transition={150}
             />
           ) : (
             <ProviderIcon

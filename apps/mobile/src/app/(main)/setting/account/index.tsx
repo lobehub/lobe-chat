@@ -10,10 +10,44 @@ import { useAuth, useAuthActions } from '@/store/user';
 
 export default function AccountScreen() {
   const { t } = useTranslation(['setting', 'auth', 'error', 'common']);
-  const { user, isAuthenticated } = useAuth();
-  const { logout } = useAuthActions();
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const { logout, switchAccount } = useAuthActions();
 
   const router = useRouter();
+
+  const handleSwitchAccount = () => {
+    if (!isAuthenticated) return;
+
+    Alert.alert(
+      t('actions.confirm', { ns: 'common' }),
+      t('account.switchAccount.confirm', { ns: 'setting' }),
+      [
+        {
+          style: 'cancel',
+          text: t('actions.cancel', { ns: 'common' }),
+        },
+        {
+          onPress: async () => {
+            try {
+              await switchAccount();
+              setTimeout(() => router.replace('/chat'), 0);
+            } catch (error) {
+              if (error instanceof Error && error.message === 'Authorization was cancelled') {
+                return;
+              }
+              const errorMessage =
+                error instanceof Error
+                  ? error.message
+                  : t('account.switchAccount.error', { ns: 'setting' });
+              Alert.alert(t('error.title', { ns: 'error' }), errorMessage);
+            }
+          },
+          text: t('account.switchAccount.action', { ns: 'setting' }),
+        },
+      ],
+      { cancelable: true },
+    );
+  };
 
   const handleSignOut = async () => {
     if (!isAuthenticated) {
@@ -68,9 +102,25 @@ export default function AccountScreen() {
               </SettingGroup>
             </Flexbox>
 
-            {/* Logout Section */}
-            <Flexbox padding={16}>
-              <Button block danger onPress={handleSignOut} variant={'filled'}>
+            {/* Account Actions */}
+            <Flexbox gap={12} padding={16}>
+              <Button
+                block
+                disabled={isLoading}
+                loading={isLoading}
+                onPress={handleSwitchAccount}
+                variant={'outlined'}
+              >
+                {t('account.switchAccount.label', { ns: 'setting' })}
+              </Button>
+              <Button
+                block
+                danger
+                disabled={isLoading}
+                loading={isLoading}
+                onPress={handleSignOut}
+                variant={'filled'}
+              >
                 {t('account.signOut.label', { ns: 'setting' })}
               </Button>
             </Flexbox>

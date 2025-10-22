@@ -1,5 +1,7 @@
 import { Center, Flexbox, PageContainer, Text, Toast, useThemeMode } from '@lobehub/ui-rn';
+import { useFocusEffect } from 'expo-router';
 import {
+  BrushCleaning,
   CodeIcon,
   GlobeIcon,
   InboxIcon,
@@ -12,15 +14,16 @@ import {
   TypeIcon,
   User2Icon,
 } from 'lucide-react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 
 import { version } from '@/../package.json';
 import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
+import { clearPersistedCaches, formatBytes, getCacheSizeInBytes } from '@/utils/cacheManager';
 
 export default function SettingScreen() {
   const { t } = useTranslation('setting');
@@ -30,6 +33,62 @@ export default function SettingScreen() {
 
   const [tapCount, setTapCount] = useState(0);
   const tapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [cacheSize, setCacheSize] = useState('0 B');
+  const [isCacheLoading, setIsCacheLoading] = useState(false);
+  const [isClearingCache, setIsClearingCache] = useState(false);
+
+  const refreshCacheSize = useCallback(() => {
+    const bytes = getCacheSizeInBytes();
+    setCacheSize(formatBytes(bytes));
+  }, []);
+
+  const loadCacheSize = useCallback(() => {
+    setIsCacheLoading(true);
+    try {
+      refreshCacheSize();
+    } finally {
+      setIsCacheLoading(false);
+    }
+  }, [refreshCacheSize]);
+
+  const handleClearCache = useCallback(() => {
+    if (isCacheLoading || isClearingCache) return;
+
+    Alert.alert(
+      t('cache.clear.confirm.title', { ns: 'setting' }),
+      t('cache.clear.confirm.description', { ns: 'setting' }),
+      [
+        {
+          style: 'cancel',
+          text: t('actions.cancel', { ns: 'common' }),
+        },
+        {
+          onPress: () => {
+            setIsClearingCache(true);
+            setIsCacheLoading(true);
+            try {
+              clearPersistedCaches();
+              Toast.success(t('cache.clear.success', { ns: 'setting' }));
+            } catch (error) {
+              console.error('Failed to clear cache', error);
+              Toast.error(t('cache.clear.failure', { ns: 'setting' }));
+            } finally {
+              setIsClearingCache(false);
+              loadCacheSize();
+            }
+          },
+          style: 'destructive',
+          text: t('cache.clear.confirm.action', { ns: 'setting' }),
+        },
+      ],
+    );
+  }, [isCacheLoading, isClearingCache, loadCacheSize, t]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadCacheSize();
+    }, [loadCacheSize]),
+  );
 
   const getThemeModeDisplayName = () => {
     if (themeMode === 'auto') {
@@ -112,6 +171,15 @@ export default function SettingScreen() {
               href="/setting/locale"
               icon={GlobeIcon}
               title={t('locale.title')}
+            />
+            <SettingItem
+              clickable={!isClearingCache && !isCacheLoading}
+              extra={cacheSize}
+              icon={BrushCleaning}
+              loading={isCacheLoading}
+              onPress={handleClearCache}
+              showArrow={false}
+              title={t('cache.title', { ns: 'setting' })}
             />
           </SettingGroup>
 

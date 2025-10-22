@@ -13,6 +13,12 @@
       "confirm": "您确定要退出登录吗？",
       "label": "退出登录"
     },
+    "switchAccount": {
+      "action": "切换账号",
+      "confirm": "确定要切换账号吗？这会退出当前账户并重新登录。",
+      "error": "切换账号失败，请重试。",
+      "label": "切换账号"
+    },
     "title": "账号设置"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "未启用",
       "enabled": "已启用"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "清理缓存",
+        "description": "这将移除保存在本地的缓存数据，下一次打开应用时需要重新加载内容。",
+        "title": "确认清理缓存？"
+      },
+      "failure": "清理缓存失败",
+      "success": "缓存已清理"
+    },
+    "description": "缓存可以提升启动速度，需要释放空间时可以点击清理。",
+    "title": "存储缓存"
   },
   "changelog": "更新日志",
   "color": {
