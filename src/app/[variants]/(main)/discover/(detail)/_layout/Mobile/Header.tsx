@@ -11,7 +11,7 @@ const Header = memo(() => {
   const navigate = useNavigate();
 
   // Extract the path segment (assistant, model, provider, mcp)
-  const path = location.pathname.split('/').filter(Boolean)[0];
+  const path = location.pathname.split('/').find(Boolean);
 
   return (
     <ChatHeader

@@ -2,10 +2,10 @@ import { Github, ModelTag, ProviderCombine } from '@lobehub/icons';
 import { ActionIcon, Block, MaskShadow, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { GlobeIcon } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { DiscoverProviderItem } from '@/types/discover';
@@ -79,20 +79,25 @@ const ProviderItem = memo<DiscoverProviderItem>(
             }}
             title={identifier}
           >
-            <Link to={link} style={{ color: 'inherit', overflow: 'hidden' }}>
+            <Link style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
               <ProviderCombine provider={identifier} size={28} style={{ flex: 'none' }} />
             </Link>
             <div className={styles.author}>@{name}</div>
           </Flexbox>
           <Flexbox align={'center'} horizontal>
-            <a href={url} onClick={(e) => e.stopPropagation()} target={'_blank'} rel="noopener noreferrer">
+            <a
+              href={url}
+              onClick={(e) => e.stopPropagation()}
+              rel="noopener noreferrer"
+              target={'_blank'}
+            >
               <ActionIcon color={theme.colorTextDescription} icon={GlobeIcon} />
             </a>
             <a
               href={`https://github.com/lobehub/lobe-chat/blob/main/src/config/modelProviders/${identifier}.ts`}
               onClick={(e) => e.stopPropagation()}
-              target={'_blank'}
               rel="noopener noreferrer"
+              target={'_blank'}
             >
               <ActionIcon fill={theme.colorTextDescription} icon={Github} />
             </a>
@@ -122,7 +127,7 @@ const ProviderItem = memo<DiscoverProviderItem>(
               .slice(0, 6)
               .filter(Boolean)
               .map((tag: string) => (
-                <Link to={urlJoin('/model', tag)} key={tag}>
+                <Link key={tag} to={urlJoin('/model', tag)}>
                   <ModelTag model={tag} style={{ margin: 0 }} />
                 </Link>
               ))}

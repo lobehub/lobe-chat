@@ -5,10 +5,10 @@ import { ActionIcon, Avatar, Block, Icon, Tag, Text, Tooltip } from '@lobehub/ui
 import { Spotlight } from '@lobehub/ui/awesome';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import InstallationIcon from '@/components/MCPDepsIcon';
@@ -127,7 +127,7 @@ const McpItem = memo<DiscoverMcpItem>(
                   overflow: 'hidden',
                 }}
               >
-                <Link to={link} style={{ color: 'inherit', overflow: 'hidden' }}>
+                <Link style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
                   <Text as={'h2'} className={styles.title} ellipsis>
                     {name}
                   </Text>
@@ -144,7 +144,12 @@ const McpItem = memo<DiscoverMcpItem>(
           <Flexbox align={'center'} gap={4} horizontal>
             {installationMethods && <InstallationIcon type={installationMethods} />}
             {github && (
-              <a href={github.url} onClick={(e) => e.stopPropagation()} target={'_blank'} rel="noopener noreferrer">
+              <a
+                href={github.url}
+                onClick={(e) => e.stopPropagation()}
+                rel="noopener noreferrer"
+                target={'_blank'}
+              >
                 <ActionIcon fill={theme.colorTextDescription} icon={Github} />
               </a>
             )}
