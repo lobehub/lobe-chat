@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-10-21",
+    "version": "1.141.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor context engine."]
+    },
+    "date": "2025-10-21",
+    "version": "1.141.1"
+  },
+  {
     "children": {
       "features": ["Add PDF export functionality to share modal."],
       "fixes": [
