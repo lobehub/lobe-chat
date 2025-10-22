@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "Select existing assistants...",
-    "createGroup": "Create Group Chat",
-    "createTeam": "Create Agent Team",
+    "createGroup": "Create Team",
     "existingMembers": "Current Agents",
     "groupMembers": "These assistants will also be added to your list",
     "host": {

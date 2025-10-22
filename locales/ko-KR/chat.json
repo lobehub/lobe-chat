@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "기존 도우미 선택...",
-    "createGroup": "그룹 채팅 생성",
-    "createTeam": "에이전트 팀 생성",
+    "createGroup": "팀 만들기",
     "existingMembers": "기존 Agent",
     "groupMembers": "이 도우미들도 귀하의 목록에 추가됩니다",
     "host": {

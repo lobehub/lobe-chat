@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "Mevcut asistanları seçin...",
-    "createGroup": "Grup sohbeti oluştur",
-    "createTeam": "Temsilci Ekibi Oluştur",
+    "createGroup": "Grup Oluştur",
     "existingMembers": "Mevcut Agent'lar",
     "groupMembers": "Bu asistanlar listenize de eklenecek",
     "host": {

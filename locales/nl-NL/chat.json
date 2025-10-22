@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "Kies bestaande assistenten...",
-    "createGroup": "Groepschat aanmaken",
-    "createTeam": "Agentteam aanmaken",
+    "createGroup": "Team aanmaken",
     "existingMembers": "Bestaande Agents",
     "groupMembers": "Deze assistenten worden ook aan uw lijst toegevoegd",
     "host": {

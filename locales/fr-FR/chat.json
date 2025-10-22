@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "Choisir des assistants existants...",
-    "createGroup": "Créer un groupe",
-    "createTeam": "Créer une équipe d'agents",
+    "createGroup": "Créer une équipe",
     "existingMembers": "Agents existants",
     "groupMembers": "Ces assistants seront également ajoutés à votre liste",
     "host": {

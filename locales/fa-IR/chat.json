@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "انتخاب دستیاران موجود...",
-    "createGroup": "ایجاد گروه چت",
-    "createTeam": "ایجاد تیم Agent",
+    "createGroup": "ایجاد تیم",
     "existingMembers": "Agentهای موجود",
     "groupMembers": "این دستیاران نیز به فهرست شما اضافه خواهند شد",
     "host": {

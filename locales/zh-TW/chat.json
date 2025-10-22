@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "選擇現有助理...",
-    "createGroup": "建立群組聊天",
-    "createTeam": "建立 Agent 團隊",
+    "createGroup": "建立團隊",
     "existingMembers": "已有 Agent",
     "groupMembers": "這些助理也將被加入您的列表中",
     "host": {

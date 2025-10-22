@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "既存のアシスタントを選択...",
-    "createGroup": "グループチャットを作成",
-    "createTeam": "エージェントチームを作成",
+    "createGroup": "チームを作成",
     "existingMembers": "既存のエージェント",
     "groupMembers": "これらのアシスタントもあなたのリストに追加されます",
     "host": {

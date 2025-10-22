@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "Chọn trợ lý hiện có...",
-    "createGroup": "Tạo nhóm trò chuyện",
-    "createTeam": "Tạo nhóm Agent",
+    "createGroup": "Tạo nhóm",
     "existingMembers": "Agent hiện có",
     "groupMembers": "Những trợ lý này cũng sẽ được thêm vào danh sách của bạn",
     "host": {

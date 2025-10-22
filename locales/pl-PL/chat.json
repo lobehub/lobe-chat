@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "Wybierz istniejących asystentów...",
-    "createGroup": "Utwórz grupę czatu",
-    "createTeam": "Utwórz zespół Agentów",
+    "createGroup": "Utwórz zespół",
     "existingMembers": "Obecni Agenci",
     "groupMembers": "Ci asystenci zostaną również dodani do Twojej listy",
     "host": {

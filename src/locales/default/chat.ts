@@ -98,8 +98,7 @@ export default {
 
   groupWizard: {
     chooseMembers: '选择现有助手...',
-    createGroup: '创建群聊',
-    createTeam: '创建 Agent 团队',
+    createGroup: '创建团队',
     existingMembers: '已有 Agent',
     groupMembers: '这些助手也将被添加到您的列表中',
     host: {

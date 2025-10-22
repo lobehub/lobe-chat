@@ -96,8 +96,7 @@
   },
   "groupWizard": {
     "chooseMembers": "اختر المساعدين الحاليين...",
-    "createGroup": "إنشاء دردشة جماعية",
-    "createTeam": "إنشاء فريق وكلاء",
+    "createGroup": "إنشاء فريق",
     "existingMembers": "الوكلاء الحاليون",
     "groupMembers": "سيتم أيضًا إضافة هؤلاء المساعدين إلى قائمتك",
     "host": {
