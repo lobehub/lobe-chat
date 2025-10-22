@@ -19,28 +19,21 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
               with:
-                  version: 10
+                  bun-version: 1.2.23
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v5
-              with:
-                  node-version: 22
-                  cache: pnpm
-
-            - name: Install dependencies
-              run: pnpm install
+            - name: Install dependencies (bun)
+              run: bun install
 
             - name: Install Playwright browsers (with system deps)
-              run: pnpm --filter @lobechat/e2e-tests exec playwright install --with-deps chromium
+              run: bunx playwright install --with-deps chromium
 
             - name: Run E2E tests
               env:
                   PORT: 3010
-                  HEADLESS: true
-              run: pnpm run e2e
+              run: bun run e2e
 
             - name: Upload Playwright HTML report (on failure)
               if: failure()
