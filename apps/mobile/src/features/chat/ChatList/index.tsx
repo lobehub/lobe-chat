@@ -3,7 +3,6 @@ import { Flexbox } from '@lobehub/ui-rn';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
-  InteractionManager,
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -51,10 +50,12 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const { messages } = useChat();
 
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
+  const activeTopicId = useChatStore((s) => s.activeTopicId);
   const [isScrolling, setIsScrolling] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
   const atBottomRef = useRef(true);
   const isAtBottomRefWhenKeyboardStartShow = useRef(true);
+  const justSwitchedTopicRef = useRef(false);
 
   const updateBottomRef = useCallback(() => {
     isAtBottomRefWhenKeyboardStartShow.current = atBottomRef.current;
@@ -78,6 +79,17 @@ export default function ChatListChatList({ style }: ChatListProps) {
       listRef.current?.scrollToEnd({ animated: true });
     }
   }, [isVisible]);
+
+  // Mark topic switch to trigger instant scroll (no animation) on next content change
+  useEffect(() => {
+    // Only scroll when messages are loaded to avoid scrolling to empty list
+    if (!isCurrentChatLoaded) return;
+
+    // Reset atBottom state and mark as just switched
+    atBottomRef.current = true;
+    setAtBottom(true);
+    justSwitchedTopicRef.current = true;
+  }, [activeTopicId, isCurrentChatLoaded]);
 
   // Track scrolling states precisely: user drag, momentum, and programmatic scrolls
   const isDraggingRef = useRef(false);
@@ -172,9 +184,13 @@ export default function ChatListChatList({ style }: ChatListProps) {
     (_w: number, h: number) => {
       contentHeightRef.current = h;
       if (atBottomRef.current && !isScrolling) {
-        InteractionManager.runAfterInteractions(() => {
-          listRef.current?.scrollToEnd({ animated: true });
+        // Use instant scroll (no animation) if just switched topic, otherwise use smooth animation
+        const shouldAnimate = !justSwitchedTopicRef.current;
+        requestAnimationFrame(() => {
+          listRef.current?.scrollToEnd({ animated: shouldAnimate });
         });
+        // Reset the flag after scrolling
+        justSwitchedTopicRef.current = false;
         updateAtBottom(true);
       } else {
         const nextAtBottom = computeAtBottom();
