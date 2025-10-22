@@ -57,7 +57,7 @@
     "electron-is": "^3.0.0",
     "electron-log": "^5.3.3",
     "electron-store": "^8.2.0",
-    "electron-vite": "^3.0.0",
+    "electron-vite": "^4.0.0",
     "execa": "^9.5.2",
     "fix-path": "^5.0.0",
     "http-proxy-agent": "^7.0.2",
