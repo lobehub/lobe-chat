@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { createContext, memo, useContext } from 'react';
-import { Appearance, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 
 import { darkAlgorithm, lightAlgorithm } from '@/components/styles';
 import { useSettingStore } from '@/store/setting';
@@ -55,8 +55,6 @@ export const ThemeProvider = memo<ThemeProviderProps>(({ children, theme: custom
     if (themeMode === 'auto') {
       return systemColorScheme || 'light';
     }
-
-    Appearance.setColorScheme(themeMode);
 
     return themeMode;
   };
