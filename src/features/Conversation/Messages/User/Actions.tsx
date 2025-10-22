@@ -23,6 +23,7 @@ interface UserActionsProps {
 export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
+  const topic = searchParams.get('topic');
 
   const [
     isThreadMode,
@@ -65,8 +66,6 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
       [regenerate, edit, inThread ? null : branching].filter(Boolean) as ActionIconGroupItemType[],
     [inThread],
   );
-
-  const topic = searchParams.get('topic');
 
   const { message } = App.useApp();
 
@@ -138,7 +137,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         translateMessage(id, lang);
       }
     },
-    [data.content, data.error, inPortalThread],
+    [data.content, data.error, inPortalThread, topic],
   );
 
   return (

@@ -14,6 +14,7 @@
     "test:prompts:lang": "promptfoo eval -c promptfoo/language-detection/eval.yaml",
     "test:prompts:qa": "promptfoo eval -c promptfoo/knowledge-qa/eval.yaml",
     "test:prompts:summary": "promptfoo eval -c promptfoo/summary-title/eval.yaml",
+    "test:prompts:supervisor": "promptfoo eval -c promptfoo/supervisor/productive/eval.yaml",
     "test:prompts:translate": "promptfoo eval -c promptfoo/translate/eval.yaml",
     "test:update": "vitest -u"
   },
@@ -21,7 +22,7 @@
     "@lobechat/types": "workspace:*"
   },
   "devDependencies": {
-    "promptfoo": "^0.118.11",
+    "promptfoo": "^0.118.17",
     "tsx": "^4.20.4"
   }
 }

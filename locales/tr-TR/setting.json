@@ -35,9 +35,16 @@
       "title": "Tüm Ayarları Sıfırla"
     }
   },
+  "groupTab": {
+    "chat": "Sohbet",
+    "members": "Üyeler",
+    "meta": "Temel Bilgiler"
+  },
   "header": {
     "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
+    "group": "Grup Sohbeti Ayarları",
+    "groupDesc": "Mevcut grup sohbetini yönet",
     "session": "Oturum Ayarları",
     "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
     "sessionWithName": "Oturum Ayarları · {{name}}",
@@ -138,6 +145,9 @@
       "title": "API Proxy Adresi"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor"
+  },
+  "message": {
+    "success": "Güncelleme başarılı"
   },
   "plugin": {
     "addMCPPlugin": "MCP Eklentisi Ekle",
@@ -293,6 +303,101 @@
       "title": "Tema"
     },
     "title": "Genel Ayarlar"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Lütfen grup sohbeti açıklamasını girin",
+      "title": "Grup Sohbeti Açıklaması"
+    },
+    "name": {
+      "placeholder": "Lütfen grup sohbeti adını girin",
+      "title": "Grup Sohbeti Adı"
+    },
+    "scene": {
+      "desc": "Grup sohbeti sahnesini seçin",
+      "options": {
+        "casual": "Rahat",
+        "productive": "Verimli"
+      },
+      "title": "Grup Sohbeti Sahnesi"
+    },
+    "submit": "Grup Sohbetini Güncelle",
+    "systemPrompt": {
+      "placeholder": "Lütfen moderatör sistem istemini girin",
+      "title": "Moderatör Sistem İstemi"
+    },
+    "title": "Grup Sohbeti Bilgisi"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Kapattıktan sonra bile, yine de asistanlara özel mesaj gönderebilirsiniz",
+      "title": "Asistanların özel mesaj göndermesine izin ver"
+    },
+    "enableSupervisor": {
+      "desc": "Grup sohbeti moderatörlüğü özelliğini etkinleştirerek, moderatör sohbet akışını yönetecektir",
+      "title": "Moderatörü etkinleştir"
+    },
+    "maxResponseInRow": {
+      "desc": "Üyelerin kaç mesajı ardışık olarak yanıtlayabileceğini seçin. 0 olarak ayarlanırsa bu kısıtlama devre dışı bırakılır.",
+      "title": "Ardışık Yanıt Mesaj Sayısı"
+    },
+    "model": {
+      "desc": "Grup üyelerinin konuşmaları etkilenmez. Bazı modeller moderatör modeli olarak kullanılamaz.",
+      "title": "Moderatör Modeli"
+    },
+    "orchestratorTitle": "Moderatör Ayarları",
+    "responseOrder": {
+      "desc": "Temsilci, grup sohbetinde ayarlanan sıraya göre yanıt verecektir",
+      "options": {
+        "natural": "Doğal",
+        "sequential": "Sıralı"
+      },
+      "placeholder": "Yanıt sırasını seçin",
+      "title": "Yanıt Sırası"
+    },
+    "responseSpeed": {
+      "desc": "Grup sohbetinin genel hızını kontrol edin",
+      "options": {
+        "fast": "Hızlı",
+        "medium": "Orta",
+        "slow": "Yavaş"
+      },
+      "placeholder": "Yanıt hızını seçin",
+      "title": "Yanıt Hızı"
+    },
+    "revealDM": {
+      "desc": "Diğer üyelere gönderilen özel mesajların içeriğini sizin için görünür yapar.",
+      "title": "Özel Mesaj İçeriğini Göster"
+    },
+    "submit": "Ayarları Güncelle",
+    "systemPrompt": {
+      "desc": "Grup sohbeti moderatörünün özel sistem istemi. Bu, varsayılan moderatör davranışını etkileyebilir.",
+      "placeholder": "Lütfen özel moderatör sistem istemini girin...",
+      "title": "Moderatör Sistem İstemi"
+    },
+    "title": "Sohbet Ayarları"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Gruba Ekle",
+    "availableAgents": "Mevcut Asistanlar",
+    "defaultAgent": "Özel Asistan",
+    "disableHost": "Sunucu Yardımcısını Kapat",
+    "edit": "Üyeyi Düzenle",
+    "empty": "Bu grup sohbetinde henüz temsilci yok. Üye eklemek için + butonuna tıklayın.",
+    "enableHost": "Sunucu Yardımcısını Etkinleştir",
+    "groupHost": "Grup Sunucusu",
+    "groupMembers": "Grup Üyeleri",
+    "host": {
+      "description": "Sunucu grupta olduğunda, grup sohbeti otomatik olarak çalışır ve yaratıcı görevler için uygundur.",
+      "title": "Sunucu"
+    },
+    "noAvailableAgents": "Mevcut asistan yok",
+    "noDescription": "Açıklama yok",
+    "noMembersInGroup": "Grup üyesi yok",
+    "owner": "Siz (Sahip)",
+    "remove": "Üyeyi Kaldır",
+    "removeFromGroup": "Grup Dışına Çıkar",
+    "you": "Siz"
   },
   "settingImage": {
     "defaultCount": {
@@ -521,6 +626,11 @@
       "label": "Yapay Zeka Resim Konusu İsimlendirme Modeli",
       "modelDesc": "Yapay zeka resimlerinin otomatik konu isimlendirmesi için belirlenen model",
       "title": "Yapay Zeka Resim Otomatik Konu İsimlendirme"
+    },
+    "groupChatSupervisor": {
+      "label": "Grup Sohbet Denetim Modeli",
+      "modelDesc": "Grup sohbeti diyaloglarını denetlemek ve yönetmek için kullanılan model",
+      "title": "Grup Sohbet Denetimi ve Yönetimi"
     },
     "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {

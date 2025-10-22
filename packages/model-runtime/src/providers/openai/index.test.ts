@@ -59,10 +59,10 @@ describe('LobeOpenAI', () => {
         const apiError = new OpenAI.APIError(
           400,
           {
-            status: 400,
             error: {
               message: 'Bad Request',
             },
+            status: 400,
           },
           'Error message',
           {},
@@ -178,13 +178,13 @@ describe('LobeOpenAI', () => {
         } catch (e) {
           expect(e).toEqual({
             endpoint: 'https://api.openai.com/v1',
-            errorType: 'AgentRuntimeError',
-            provider: 'openai',
             error: {
-              name: genericError.name,
               cause: genericError.cause,
               message: genericError.message,
+              name: genericError.name,
             },
+            errorType: 'AgentRuntimeError',
+            provider: 'openai',
           });
         }
       });
@@ -261,10 +261,10 @@ describe('LobeOpenAI', () => {
 
     it('should use responses API when enabledSearch is true', async () => {
       const payload = {
+        enabledSearch: true,
         messages: [{ content: 'Hello', role: 'user' as const }],
         model: 'gpt-4o',
         temperature: 0.7,
-        enabledSearch: true,
       };
 
       await instance.chat(payload);
@@ -275,12 +275,12 @@ describe('LobeOpenAI', () => {
 
     it('should handle -search- models with stripped parameters', async () => {
       const payload = {
+        frequency_penalty: 0.5,
         messages: [{ content: 'Hello', role: 'user' as const }],
         model: 'gpt-4o-search-2024',
+        presence_penalty: 0.3,
         temperature: 0.7,
         top_p: 0.9,
-        frequency_penalty: 0.5,
-        presence_penalty: 0.3,
       };
 
       await instance.chat(payload);
@@ -296,12 +296,12 @@ describe('LobeOpenAI', () => {
 
     it('should handle regular models with all parameters', async () => {
       const payload = {
+        frequency_penalty: 0.5,
         messages: [{ content: 'Hello', role: 'user' as const }],
         model: 'gpt-4o',
+        presence_penalty: 0.3,
         temperature: 0.7,
         top_p: 0.9,
-        frequency_penalty: 0.5,
-        presence_penalty: 0.3,
       };
 
       await instance.chat(payload);
@@ -319,18 +319,19 @@ describe('LobeOpenAI', () => {
   describe('responses.handlePayload', () => {
     it('should add web_search tool when enabledSearch is true', async () => {
       const payload = {
-        messages: [{ content: 'Hello', role: 'user' as const }],
-        model: 'gpt-4o', // 使用常规模型，通过 enabledSearch 触发 responses API
-        temperature: 0.7,
         enabledSearch: true,
-        tools: [{ type: 'function' as const, function: { name: 'test', description: 'test' } }],
+        messages: [{ content: 'Hello', role: 'user' as const }],
+        model: 'gpt-4o',
+        // 使用常规模型，通过 enabledSearch 触发 responses API
+        temperature: 0.7,
+        tools: [{ function: { description: 'test', name: 'test' }, type: 'function' as const }],
       };
 
       await instance.chat(payload);
 
       const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
       expect(createCall.tools).toEqual([
-        { type: 'function', name: 'test', description: 'test' },
+        { description: 'test', name: 'test', type: 'function' },
         { type: 'web_search' },
       ]);
     });
@@ -339,10 +340,10 @@ describe('LobeOpenAI', () => {
       // Note: oaiSearchContextSize is read at module load time, not runtime
       // This test verifies the tool structure is correct when the env var would be set
       const payload = {
+        enabledSearch: true,
         messages: [{ content: 'Hello', role: 'user' as const }],
         model: 'gpt-4o',
         temperature: 0.7,
-        enabledSearch: true,
       };
 
       await instance.chat(payload);
@@ -358,8 +359,8 @@ describe('LobeOpenAI', () => {
       const payload = {
         messages: [{ content: 'Hello', role: 'user' as const }],
         model: 'computer-use-preview',
-        temperature: 0.7,
         reasoning: { effort: 'medium' },
+        temperature: 0.7,
       };
 
       await instance.chat(payload);
@@ -393,7 +394,7 @@ describe('LobeOpenAI', () => {
       await instance.chat(payload);
 
       const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
-      expect(createCall.reasoning).toEqual({ summary: 'auto', effort: 'high' });
+      expect(createCall.reasoning).toEqual({ effort: 'high', summary: 'auto' });
     });
 
     it('should set reasoning.effort to high for gpt-5-pro-2025-10-06 models', async () => {
@@ -406,7 +407,7 @@ describe('LobeOpenAI', () => {
       await instance.chat(payload);
 
       const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
-      expect(createCall.reasoning).toEqual({ summary: 'auto', effort: 'high' });
+      expect(createCall.reasoning).toEqual({ effort: 'high', summary: 'auto' });
     });
   });
 
