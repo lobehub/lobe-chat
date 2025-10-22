@@ -17,7 +17,7 @@ BeforeAll(async function () {
   // Start web server if not using external BASE_URL
   if (!process.env.BASE_URL) {
     await startWebServer({
-      command: 'pnpm run dev',
+      command: 'npm run dev',
       port: PORT,
       reuseExistingServer: !process.env.CI,
     });
