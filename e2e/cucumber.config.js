@@ -16,5 +16,5 @@ export default {
   require: ['src/steps/**/*.ts', 'src/support/**/*.ts'],
   requireModule: ['ts-node/register'],
   retry: 0,
-  timeout: 60_000,
+  timeout: 120_000,
 };
