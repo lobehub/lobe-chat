@@ -14,7 +14,7 @@ export default {
   paths: ['src/features/**/*.feature'],
   publishQuiet: true,
   require: ['src/steps/**/*.ts', 'src/support/**/*.ts'],
-  requireModule: ['ts-node/register'],
+  requireModule: ['tsx/cjs'],
   retry: 0,
   timeout: 120_000,
 };
