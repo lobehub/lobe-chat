@@ -171,8 +171,9 @@ const ChatGroupSettings = memo(() => {
       itemsType={'group'}
       onFinish={async ({ _modelConfig, ...rest }) => {
         await updateConfig({
-          orchestratorModel: _modelConfig?.model,
-          orchestratorProvider: _modelConfig?.provider,
+          // Preserve existing values when _modelConfig is undefined (enableSupervisor is false)
+          orchestratorModel: _modelConfig?.model ?? config?.orchestratorModel,
+          orchestratorProvider: _modelConfig?.provider ?? config?.orchestratorProvider,
           ...rest,
         });
 
