@@ -5,28 +5,6 @@ import { ModelProviderCard } from '@/types/llm';
 // ref :https://us-west-2.console.aws.amazon.com/bedrock/home?region=us-west-2#/models
 const Bedrock: ModelProviderCard = {
   chatModels: [
-    {
-      contextWindowTokens: 200_000,
-      description: 'Claude Sonnet 4.5 是 Anthropic 迄今为止最智能的模型。',
-      displayName: 'Claude Sonnet 4.5',
-      enabled: true,
-      functionCall: true,
-      id: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
-      maxOutput: 64_000,
-      releasedAt: '2025-09-29',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 200_000,
-      description: 'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
-      displayName: 'Claude Haiku 4.5',
-      enabled: true,
-      functionCall: true,
-      id: 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
-      maxOutput: 64_000,
-      releasedAt: '2025-10-15',
-      vision: true,
-    },
     /*
     // TODO: Not support for now
     {
