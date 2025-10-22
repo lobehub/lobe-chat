@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "Добавяне към групата",
     "availableAgents": "Налични асистенти",
+    "createMember": "Създаване на член",
     "defaultAgent": "Персонализиран асистент",
     "disableHost": "Изключване на асистента на водещия",
     "edit": "Редактиране на членове",

@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "Thêm vào nhóm",
     "availableAgents": "Trợ lý có sẵn",
+    "createMember": "Tạo thành viên",
     "defaultAgent": "Trợ lý tùy chỉnh",
     "disableHost": "Tắt trợ lý chủ trì",
     "edit": "Chỉnh sửa thành viên",

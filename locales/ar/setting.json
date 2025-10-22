@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "انضم إلى المجموعة",
     "availableAgents": "المساعدون المتاحون",
+    "createMember": "إنشاء عضو",
     "defaultAgent": "المساعد المخصص",
     "disableHost": "تعطيل مساعد المضيف",
     "edit": "تعديل الأعضاء",

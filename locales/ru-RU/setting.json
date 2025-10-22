@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "Добавить в группу",
     "availableAgents": "Доступные помощники",
+    "createMember": "Создать участника",
     "defaultAgent": "Пользовательский помощник",
     "disableHost": "Отключить помощника ведущего",
     "edit": "Редактировать участника",

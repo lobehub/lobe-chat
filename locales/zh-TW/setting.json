@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "加入群組",
     "availableAgents": "可用助理",
+    "createMember": "建立成員",
     "defaultAgent": "自訂助理",
     "disableHost": "關閉主持助理",
     "edit": "編輯成員",

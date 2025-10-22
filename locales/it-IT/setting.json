@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "Aggiungi al gruppo",
     "availableAgents": "Assistenti disponibili",
+    "createMember": "Crea membro",
     "defaultAgent": "Assistente personalizzato",
     "disableHost": "Disattiva assistente host",
     "edit": "Modifica membro",

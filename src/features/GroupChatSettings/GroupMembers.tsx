@@ -83,8 +83,6 @@ const GroupMembersConfig = memo(() => {
       return;
     }
 
-    console.log(`Attempting to ${action} agent:`, { action, activeGroupId, agentId });
-
     // Check if this is the host member
     const isHostMember = agentId === HOST_MEMBER_ID;
 

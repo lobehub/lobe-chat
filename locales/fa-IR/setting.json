@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "افزودن به گروه",
     "availableAgents": "دستیارهای موجود",
+    "createMember": "ایجاد عضو",
     "defaultAgent": "دستیار سفارشی",
     "disableHost": "غیرفعال کردن دستیار میزبان",
     "edit": "ویرایش اعضا",

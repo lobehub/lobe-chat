@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "Gruba Ekle",
     "availableAgents": "Mevcut Asistanlar",
+    "createMember": "Üye Oluştur",
     "defaultAgent": "Özel Asistan",
     "disableHost": "Sunucu Yardımcısını Kapat",
     "edit": "Üyeyi Düzenle",

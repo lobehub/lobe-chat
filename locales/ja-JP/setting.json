@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "グループに参加",
     "availableAgents": "利用可能なアシスタント",
+    "createMember": "メンバーを作成",
     "defaultAgent": "カスタムアシスタント",
     "disableHost": "ホストアシスタントを無効にする",
     "edit": "メンバーを編集",

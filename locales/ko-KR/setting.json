@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "그룹에 추가",
     "availableAgents": "사용 가능한 어시스턴트",
+    "createMember": "구성원 생성",
     "defaultAgent": "맞춤 어시스턴트",
     "disableHost": "호스트 도우미 비활성화",
     "edit": "멤버 편집",

@@ -380,6 +380,7 @@
   "settingGroupMembers": {
     "addToGroup": "Toevoegen aan groep",
     "availableAgents": "Beschikbare assistenten",
+    "createMember": "Lid aanmaken",
     "defaultAgent": "Aangepaste assistent",
     "disableHost": "Host-assistent uitschakelen",
     "edit": "Lid bewerken",

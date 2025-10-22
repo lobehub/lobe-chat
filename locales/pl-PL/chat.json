@@ -23,11 +23,11 @@
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
   "confirmRemoveChatGroupItemAlert": "Grupa czatu zostanie usunięta, członkowie grupy nie zostaną dotknięci, potwierdź swoją operację",
   "confirmRemoveGroupItemAlert": "Zaraz zostanie usunięta ta grupa. Po jej usunięciu asystenci z tej grupy zostaną przeniesieni do listy domyślnej. Potwierdź swoją operację",
-  "confirmRemoveGroupSuccess": "Grupa czatu została pomyślnie usunięta",
+  "confirmRemoveGroupSuccess": "Pomyślnie usunięto zespół Agentów",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionSuccess": "Sesja usunięta pomyślnie",
   "defaultAgent": "Domyślny asystent",
-  "defaultGroupChat": "Grupa czatu",
+  "defaultGroupChat": "Zespół Agentów",
   "defaultList": "Domyślna lista",
   "defaultSession": "Domyślna sesja",
   "dm": {
@@ -77,7 +77,7 @@
     "removeMember": "Usuń członka",
     "title": "Grupa"
   },
-  "groupDescription": "Opis grupy",
+  "groupDescription": "Opis zespołu",
   "groupSidebar": {
     "members": {
       "addMember": "Dodaj członka",
@@ -97,12 +97,13 @@
   "groupWizard": {
     "chooseMembers": "Wybierz istniejących asystentów...",
     "createGroup": "Utwórz grupę czatu",
+    "createTeam": "Utwórz zespół Agentów",
     "existingMembers": "Istniejący członkowie",
     "groupMembers": "Ci asystenci zostaną również dodani do Twojej listy",
     "host": {
       "description": "Automatyzuje działanie czatu grupowego",
-      "title": "Gospodarz",
-      "tooltip": "Jeśli wyłączysz gospodarza czatu grupowego, będziesz musiał ręcznie oznaczać członków za pomocą @, aby mogli odpowiedzieć"
+      "title": "Włącz prowadzącego",
+      "tooltip": "Jeśli wyłączysz prowadzącego zespołu, musisz ręcznie oznaczyć członków @, aby mogli odpowiedzieć"
     },
     "memberCount": "{{count}} członków",
     "noMatchingTemplates": "Brak pasujących szablonów",
@@ -110,7 +111,7 @@
     "noTemplateMembers": "Brak członków w szablonie",
     "noTemplates": "Brak dostępnych szablonów",
     "searchTemplates": "Szukaj szablonów...",
-    "title": "Utwórz grupę czatu",
+    "title": "Utwórz zespół Agentów",
     "useTemplate": "Użyj szablonu"
   },
   "hideForYou": "Treść prywatnej wiadomości została ukryta, włącz opcję 【Pokaż treść prywatnych wiadomości】 w ustawieniach, aby zobaczyć",
@@ -233,12 +234,12 @@
     "senderUser": "Ty"
   },
   "newAgent": "Nowy asystent",
-  "newGroupChat": "Utwórz nowy czat grupowy",
-  "noAgentsYet": "W tej grupie nie ma jeszcze asystenta. Kliknij przycisk „+”, aby zaprosić asystenta.",
-  "noAvailableAgents": "Brak dostępnych asystentów do zaproszenia",
-  "noMatchingAgents": "Brak pasujących asystentów",
+  "newGroupChat": "Nowy zespół Agentów",
+  "noAgentsYet": "Ten zespół Agentów nie ma jeszcze członków. Kliknij przycisk +, aby zaprosić asystenta.",
+  "noAvailableAgents": "Brak dostępnych członków do zaproszenia",
+  "noMatchingAgents": "Brak pasujących członków",
   "noMembersYet": "W tej grupie nie ma jeszcze żadnych członków. Kliknij przycisk +, aby zaprosić asystentów.",
-  "noSelectedAgents": "Nie wybrano jeszcze asystenta",
+  "noSelectedAgents": "Nie wybrano jeszcze członków",
   "owner": "Właściciel grupy",
   "pin": "Przypnij",
   "pinOff": "Odepnij",
