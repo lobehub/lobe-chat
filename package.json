@@ -26,7 +26,8 @@
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": false,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "e2e"
   ],
   "scripts": {
     "prebuild": "tsx scripts/prebuild.mts && npm run lint",
