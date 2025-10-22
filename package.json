@@ -357,6 +357,7 @@
     "drizzle-kit": "^0.31.5",
     "eslint": "^8.57.1",
     "eslint-plugin-mdx": "^3.6.2",
+    "eslint-plugin-unicorn": "^54.0.0",
     "fake-indexeddb": "^6.2.3",
     "fs-extra": "^11.3.2",
     "glob": "^11.0.3",
