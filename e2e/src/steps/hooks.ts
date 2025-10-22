@@ -1,5 +1,6 @@
 import { After, AfterAll, Before, BeforeAll, Status, setDefaultTimeout } from '@cucumber/cucumber';
 
+import { startWebServer, stopWebServer } from '../support/webServer';
 import { CustomWorld } from '../support/world';
 
 // Set default timeout for all steps to 60 seconds
@@ -7,7 +8,20 @@ setDefaultTimeout(60_000);
 
 BeforeAll(async function () {
   console.log('🚀 Starting E2E test suite...');
-  console.log(`Base URL: ${process.env.BASE_URL || 'http://localhost:3010'}`);
+
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 3010;
+  const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+
+  console.log(`Base URL: ${BASE_URL}`);
+
+  // Start web server if not using external BASE_URL
+  if (!process.env.BASE_URL) {
+    await startWebServer({
+      command: 'pnpm run dev',
+      port: PORT,
+      reuseExistingServer: !process.env.CI,
+    });
+  }
 });
 
 Before(async function (this: CustomWorld, { pickle }) {
@@ -47,4 +61,9 @@ After(async function (this: CustomWorld, { pickle, result }) {
 
 AfterAll(async function () {
   console.log('\n🏁 Test suite completed');
+
+  // Stop web server if we started it
+  if (!process.env.BASE_URL && process.env.CI) {
+    await stopWebServer();
+  }
 });
