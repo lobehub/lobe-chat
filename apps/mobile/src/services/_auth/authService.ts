@@ -2,7 +2,7 @@ import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { jwtDecode } from 'jwt-decode';
 
-import type { AuthConfig, AuthService, PKCE, Token, User } from '@/_types/user';
+import type { AuthConfig, AuthService, LoginOptions, PKCE, Token, User } from '@/_types/user';
 import { AUTH_ENDPOINTS } from '@/config/auth';
 import { getUserStoredLocale } from '@/i18n';
 import { authLogger } from '@/utils/logger';
@@ -89,7 +89,7 @@ export class OAuthService implements AuthService {
   /**
    * 启动登录流程
    */
-  async login(): Promise<void> {
+  async login(options?: LoginOptions): Promise<void> {
     authLogger.info('Starting login flow');
 
     try {
@@ -106,22 +106,35 @@ export class OAuthService implements AuthService {
       // 例如：'zh-CN zh' 或 'en-US en'，按优先级排列
       const currentLocale = await getUserStoredLocale();
 
+      const additionalParams: Record<string, string> = {
+        ...this.config.additionalParameters,
+        ui_locales: currentLocale,
+      };
+
+      if (options?.prompt) {
+        additionalParams.prompt = options.prompt;
+      }
+
       const authUrl = PKCEUtils.buildAuthorizationUrl(
         this.config.issuer,
         this.config.clientId,
         this.getRedirectUri(),
         this.config.scopes,
         this.currentPKCE,
-        {
-          ...this.config.additionalParameters,
-          ui_locales: currentLocale,
-        },
+        additionalParams,
       );
       authLogger.info('Authorization URL built', authUrl);
 
       // 启动授权会话
       authLogger.info('Opening authorization session');
-      const result = await WebBrowser.openAuthSessionAsync(authUrl, this.getRedirectUri());
+      const webBrowserOptions = options?.useEphemeralSession
+        ? { preferEphemeralSession: true }
+        : undefined;
+      const result = await WebBrowser.openAuthSessionAsync(
+        authUrl,
+        this.getRedirectUri(),
+        webBrowserOptions,
+      );
       authLogger.info('Authorization session result', result);
 
       if (result.type === 'success') {

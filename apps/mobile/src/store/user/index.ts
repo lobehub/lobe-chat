@@ -3,7 +3,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
-import type { AuthState, Token, User } from '@/_types/user';
+import type { AuthState, LoginOptions, Token, User } from '@/_types/user';
 import { getAuthConfig } from '@/config/auth';
 import { OAuthService } from '@/services/_auth/authService';
 import { TokenStorage } from '@/services/_auth/tokenStorage';
@@ -25,19 +25,20 @@ interface UserStore extends AuthState {
   isInitialized: boolean;
   isRefreshTokenExpired: () => Promise<boolean>;
   // 基础操作
-  login: () => Promise<void>;
+  login: (options?: LoginOptions) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
-
   restoreAuthState: () => Promise<void>;
-  setAuthenticated: (authenticated: boolean) => void;
 
+  setAuthenticated: (authenticated: boolean) => void;
   setError: (error: string | null) => void;
+
   // 状态管理
   setLoading: (loading: boolean) => void;
   setToken: (token: Token | null) => void;
-
   setUser: (user: User | null) => void;
+
+  switchAccount: () => Promise<void>;
 }
 
 export const useUserStore = createWithEqualityFn<UserStore>()(
@@ -104,15 +105,16 @@ export const useUserStore = createWithEqualityFn<UserStore>()(
     },
 
     // 登录
-    login: async () => {
+    login: async (options?: LoginOptions) => {
       const { authService, setLoading, setError, setUser, setToken, setAuthenticated } = get();
+      const wasAuthenticated = get().isAuthenticated;
 
       try {
         setLoading(true);
         setError(null);
 
         // 执行登录
-        await authService.login();
+        await authService.login(options);
 
         // 获取存储的用户数据和令牌
         const [userData, tokenData] = await Promise.all([
@@ -130,7 +132,9 @@ export const useUserStore = createWithEqualityFn<UserStore>()(
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Login failed';
         setError(errorMessage);
-        setAuthenticated(false);
+        if (!wasAuthenticated) {
+          setAuthenticated(false);
+        }
         throw error;
       } finally {
         setLoading(false);
@@ -251,6 +255,10 @@ export const useUserStore = createWithEqualityFn<UserStore>()(
       set({ user });
     },
 
+    switchAccount: async () => {
+      await get().login({ prompt: 'login consent', useEphemeralSession: true });
+    },
+
     token: null,
 
     user: null,
@@ -316,13 +324,15 @@ export const useAuthActions = () => {
   const login = useUserStore((state) => state.login);
   const logout = useUserStore((state) => state.logout);
   const refreshToken = useUserStore((state) => state.refreshToken);
+  const switchAccount = useUserStore((state) => state.switchAccount);
 
   return useMemo(
     () => ({
       login,
       logout,
       refreshToken,
+      switchAccount,
     }),
-    [login, logout, refreshToken],
+    [login, logout, refreshToken, switchAccount],
   );
 };

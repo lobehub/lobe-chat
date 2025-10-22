@@ -13,8 +13,15 @@ export default {
       confirm: '您确定要退出登录吗？',
       label: '退出登录',
     },
+    switchAccount: {
+      action: '切换账号',
+      confirm: '确定要切换账号吗？这会退出当前账户并重新登录。',
+      error: '切换账号失败，请重试。',
+      label: '切换账号',
+    },
     title: '账号设置',
   },
+
   advanced: {
     group: '高级',
   },

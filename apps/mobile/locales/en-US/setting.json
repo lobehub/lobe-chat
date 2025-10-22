@@ -13,6 +13,12 @@
       "confirm": "Are you sure you want to sign out?",
       "label": "Sign Out"
     },
+    "switchAccount": {
+      "action": "Switch Account",
+      "confirm": "Sign out of the current account and sign in again?",
+      "error": "Failed to switch account. Please try again.",
+      "label": "Switch Account"
+    },
     "title": "Account Settings"
   },
   "advanced": {
