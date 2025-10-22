@@ -4,6 +4,75 @@ import { ModelProviderCard } from '@/types/llm';
 const Azure: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 400_000,
+      deploymentName: 'gpt-5-pro',
+      description:
+        'GPT-5 Pro 是 GPT-5 系列的高级版本，具备增强的推理能力。支持结构化输出、函数调用和文本/图像处理。',
+      displayName: 'GPT-5 Pro',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5-pro',
+      maxOutput: 128_000,
+      vision: true,
+    },
+    {
+      contextWindowTokens: 400_000,
+      deploymentName: 'gpt-5-codex',
+      description: 'GPT-5 Codex 专为编程任务优化，针对 Codex CLI 和 VS Code 扩展进行了优化。',
+      displayName: 'GPT-5 Codex',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5-codex',
+      maxOutput: 128_000,
+    },
+    {
+      contextWindowTokens: 400_000,
+      deploymentName: 'gpt-5',
+      description:
+        'GPT-5 是 OpenAI 最新的旗舰模型，具备卓越的推理能力。支持文本和图像输入，结构化输出和并行工具调用。',
+      displayName: 'GPT-5',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5',
+      maxOutput: 128_000,
+      vision: true,
+    },
+    {
+      contextWindowTokens: 400_000,
+      deploymentName: 'gpt-5-mini',
+      description:
+        'GPT-5 Mini 提供与 GPT-5 相似的能力，但更加高效和经济。适合大规模部署和对成本敏感的应用场景。',
+      displayName: 'GPT-5 Mini',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5-mini',
+      maxOutput: 128_000,
+      vision: true,
+    },
+    {
+      contextWindowTokens: 400_000,
+      deploymentName: 'gpt-5-nano',
+      description:
+        'GPT-5 Nano 是 GPT-5 系列中最小、最快的版本。在保持核心能力的同时，提供超低延迟和成本效益。',
+      displayName: 'GPT-5 Nano',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-5-nano',
+      maxOutput: 128_000,
+      vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      deploymentName: 'gpt-5-chat',
+      description:
+        'GPT-5 Chat 专为对话场景优化的预览版本。支持文本和图像输入，适用于聊天机器人应用。',
+      displayName: 'GPT-5 Chat',
+      functionCall: true,
+      id: 'gpt-5-chat',
+      maxOutput: 16_384,
+      vision: true,
+    },
+    {
       contextWindowTokens: 16_385,
       deploymentName: 'gpt-35-turbo',
       description:
