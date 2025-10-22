@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.141.5](https://github.com/lobehub/lobe-chat/compare/v1.141.4...v1.141.5)
+
+<sup>Released on **2025-10-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Change discover page from RSC to SPA to improve performance.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Change discover page from RSC to SPA to improve performance, closes [#9828](https://github.com/lobehub/lobe-chat/issues/9828) ([b59ee0a](https://github.com/lobehub/lobe-chat/commit/b59ee0a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.141.4](https://github.com/lobehub/lobe-chat/compare/v1.141.3...v1.141.4)
 
 <sup>Released on **2025-10-22**</sup>
