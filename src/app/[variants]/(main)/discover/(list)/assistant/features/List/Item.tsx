@@ -69,6 +69,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     return (
       <Block
         clickable
+        data-testid="assistant-item"
         height={'100%'}
         onClick={() => {
           navigate(link);

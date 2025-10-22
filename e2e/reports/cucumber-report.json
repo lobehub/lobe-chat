@@ -1,0 +1,1608 @@
+[
+  {
+    "description": "  As a user\n  I want all core application routes to be accessible\n  So that I can navigate the application without errors",
+    "elements": [
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-core-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 20,
+        "name": "Access core routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 458590334
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3297709208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I navigate to \"/\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1342976874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1028207
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40273084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 26767791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8134500
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30703875
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-001",
+            "line": 10
+          },
+          {
+            "name": "@P0",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-core-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 21,
+        "name": "Access core routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 151398750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2865522624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I navigate to \"/chat\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1166269000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 574916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 45802708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30275749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4685084
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 35805333
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-001",
+            "line": 10
+          },
+          {
+            "name": "@P0",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-core-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 22,
+        "name": "Access core routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 197579625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2900633790
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I navigate to \"/discover\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16290860457
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 714332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6944332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49041832
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8095958
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 49154249
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-001",
+            "line": 10
+          },
+          {
+            "name": "@P0",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-core-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 23,
+        "name": "Access core routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 178329166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2951971500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I navigate to \"/files\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16221211541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3497917
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30726249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 69274167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10437207
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 71345249
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-001",
+            "line": 10
+          },
+          {
+            "name": "@P0",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-core-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 24,
+        "name": "Access core routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 204322957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3735998958
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I navigate to \"/repos\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 368189833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3535834
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3287041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19057874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2943041
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30287083
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-001",
+            "line": 10
+          },
+          {
+            "name": "@P0",
+            "line": 10
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 36,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 164770500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3164658833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=about\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 362452541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 704749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6004624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 57484042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9088250
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 34737750
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 37,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 172623166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3352144458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=agent\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 336275541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 361708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 26945416
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 22865499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5092458
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30330957
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 38,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 149048125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3013752625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=hotkey\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 363506999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 356749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4638167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19250250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21919249
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 46689625
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 39,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 171622416
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3241871125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=provider\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 331168124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 327457
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7834875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 51987624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8009624
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 36057874
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 40,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 148828500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2905954499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=proxy\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 316129916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 214957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13552416
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 27020125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10726624
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 36110375
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 41,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 164609708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3620872791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=storage\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 369118457
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 185249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3349415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35986667
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7012000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30902874
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 42,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 172566666
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2951620583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=system-agent\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 320757082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 325375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2993084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 26889750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 18873915
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 39547999
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "core-routes-accessibility;access-settings-routes-without-errors",
+        "keyword": "Scenario Outline",
+        "line": 43,
+        "name": "Access settings routes without errors",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 161820707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 8,
+            "name": "the application is running",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3454538708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 28,
+            "name": "I navigate to \"/settings?active=tts\"",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 374624209
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 29,
+            "name": "the response status should be less than 400",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 411584
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 30,
+            "name": "the page should load without errors",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13852624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 31,
+            "name": "I should see the page body",
+            "match": {
+              "location": "src/steps/common/navigation.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 27142291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "the page title should not contain \"error\" or \"not found\"",
+            "match": {
+              "location": "src/steps/routes/routes.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8976792
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 29644958
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@routes",
+            "line": 1
+          },
+          {
+            "name": "@smoke",
+            "line": 1
+          },
+          {
+            "name": "@ROUTES-002",
+            "line": 26
+          },
+          {
+            "name": "@P0",
+            "line": 26
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "core-routes-accessibility",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Core Routes Accessibility",
+    "tags": [
+      {
+        "name": "@routes",
+        "line": 1
+      },
+      {
+        "name": "@smoke",
+        "line": 1
+      }
+    ],
+    "uri": "src/features/routes/core-routes.feature"
+  }
+]
