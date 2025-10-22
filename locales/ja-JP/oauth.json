@@ -50,6 +50,7 @@
   "login": {
     "button": "ログインを確認",
     "description": "アプリ {{clientName}} があなたのアカウントを使用してログインすることを要求しています",
+    "switchAccount": "別のアカウントを使用する",
     "title": "{{clientName}} にログイン",
     "userWelcome": "お帰りなさい、"
   },

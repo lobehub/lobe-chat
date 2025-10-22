@@ -50,6 +50,7 @@
   "login": {
     "button": "Login bestätigen",
     "description": "Die Anwendung {{clientName}} beantragt die Nutzung Ihres Kontos für den Login",
+    "switchAccount": "Anderes Konto verwenden",
     "title": "Login bei {{clientName}}",
     "userWelcome": "Willkommen zurück, "
   },

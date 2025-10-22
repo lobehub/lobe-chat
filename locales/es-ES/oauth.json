@@ -50,6 +50,7 @@
   "login": {
     "button": "Confirmar inicio de sesión",
     "description": "La aplicación {{clientName}} solicita usar su cuenta para iniciar sesión",
+    "switchAccount": "Usar otra cuenta",
     "title": "Iniciar sesión en {{clientName}}",
     "userWelcome": "Bienvenido de nuevo, "
   },

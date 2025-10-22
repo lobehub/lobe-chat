@@ -50,6 +50,7 @@
   "login": {
     "button": "تأكيد تسجيل الدخول",
     "description": "التطبيق {{clientName}} يطلب استخدام حسابك لتسجيل الدخول",
+    "switchAccount": "استخدام حساب آخر",
     "title": "تسجيل الدخول إلى {{clientName}}",
     "userWelcome": "مرحبًا بعودتك،"
   },
