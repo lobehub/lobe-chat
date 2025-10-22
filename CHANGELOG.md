@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.141.4](https://github.com/lobehub/lobe-chat/compare/v1.141.3...v1.141.4)
+
+<sup>Released on **2025-10-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Fix model runtime cost calculate with CNY.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Fix model runtime cost calculate with CNY, closes [#9834](https://github.com/lobehub/lobe-chat/issues/9834) ([2e911ea](https://github.com/lobehub/lobe-chat/commit/2e911ea))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.141.3](https://github.com/lobehub/lobe-chat/compare/v1.141.2...v1.141.3)
+
+<sup>Released on **2025-10-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#9832](https://github.com/lobehub/lobe-chat/issues/9832) ([80b0999](https://github.com/lobehub/lobe-chat/commit/80b0999))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.141.2](https://github.com/lobehub/lobe-chat/compare/v1.141.1...v1.141.2)
 
 <sup>Released on **2025-10-21**</sup>
