@@ -138,7 +138,7 @@ FilesRouterContent.displayName = 'FilesRouterContent';
 // Main Client component with MemoryRouter
 const FilesClient = memo(() => {
   return (
-    <App>
+    <App style={{ height: '100%' }}>
       <MemoryRouter>
         <FilesRouterContent />
       </MemoryRouter>
