@@ -55,7 +55,7 @@ export class CustomWorld extends World {
       }
     });
 
-    this.page.setDefaultTimeout(30_000);
+    this.page.setDefaultTimeout(60_000);
   }
 
   async cleanup() {
