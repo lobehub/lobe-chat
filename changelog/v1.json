@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix model runtime cost calculate with CNY."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.4"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-10-22",

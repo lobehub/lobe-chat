@@ -5,7 +5,7 @@ import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
 import { useQueryState } from 'nuqs';
 import { rgba } from 'polished';
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
@@ -118,6 +118,16 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
     }
   }, [data]);
 
+  // Memoize context object to avoid recreating on every render
+  const masonryContext = useMemo(
+    () => ({
+      knowledgeBaseId,
+      selectFileIds,
+      setSelectedFileIds,
+    }),
+    [knowledgeBaseId, selectFileIds],
+  );
+
   return !isLoading && data?.length === 0 ? (
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
   ) : (
@@ -195,9 +205,8 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
               <VirtuosoMasonry
                 ItemContent={MasonryItemWrapper}
                 columnCount={columnCount}
-                context={{ knowledgeBaseId, selectFileIds, setSelectedFileIds }}
+                context={masonryContext}
                 data={data || []}
-                key={`masonry-${query || 'all'}-${data?.length || 0}`}
                 style={{
                   gap: '16px',
                 }}
