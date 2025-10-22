@@ -39,7 +39,7 @@ const AddButton = memo(() => {
   };
 
   return (
-    <Flexbox flex={1} paddingInline={12}>
+    <Flexbox flex={1} padding={12}>
       <Button
         block
         icon={Plus}
