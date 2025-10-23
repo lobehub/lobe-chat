@@ -25,7 +25,7 @@ const useStyles = createStyles(({ css }) => ({
 
 const HOST_MEMBER_ID = 'supervisor';
 
-const GroupMembersConfig = memo(() => {
+const AgentTeamMembersSettings = memo(() => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const [loadingAgentId, setLoadingAgentId] = useState<string | null>(null);
@@ -243,4 +243,4 @@ const GroupMembersConfig = memo(() => {
   );
 });
 
-export default GroupMembersConfig;
+export default AgentTeamMembersSettings;
