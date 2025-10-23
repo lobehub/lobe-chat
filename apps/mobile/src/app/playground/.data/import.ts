@@ -35,6 +35,8 @@ import DropdownDemos from '@lobehub/ui-rn/Dropdown/demos';
 import EmojiSelectorDemos from '@lobehub/ui-rn/EmojiSelector/demos';
 // Empty
 import EmptyDemos from '@lobehub/ui-rn/Empty/demos';
+// FlashListScrollShadow
+import FlashListScrollShadowDemos from '@lobehub/ui-rn/FlashListScrollShadow/demos';
 // Flexbox
 import FlexboxDemos from '@lobehub/ui-rn/Flexbox/demos';
 // FluentEmoji
@@ -99,6 +101,7 @@ export const DEMOS_MAP: Record<string, any> = {
   Dropdown: DropdownDemos,
   EmojiSelector: EmojiSelectorDemos,
   Empty: EmptyDemos,
+  FlashListScrollShadow: FlashListScrollShadowDemos,
   Flexbox: FlexboxDemos,
   FluentEmoji: FluentEmojiDemos,
   Form: FormDemos,

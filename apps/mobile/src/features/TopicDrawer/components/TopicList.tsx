@@ -1,6 +1,7 @@
-import { Cell, Empty, Flexbox, ScrollShadow, Tag, useTheme } from '@lobehub/ui-rn';
+import type { ChatTopic } from '@lobechat/types';
+import { Cell, Empty, FlashListScrollShadow, Flexbox, Tag, useTheme } from '@lobehub/ui-rn';
 import { MessageSquareDashed } from 'lucide-react-native';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFetchTopics } from '@/hooks/useFetchTopics';
@@ -11,6 +12,8 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 import TopicItem from './TopicItem';
+
+type ListItem = { data: ChatTopic; type: 'topic' } | { type: 'default' };
 
 /**
  * TopicList - Topic列表组件
@@ -29,6 +32,24 @@ const TopicList = memo(() => {
   const setTopicDrawerOpen = useGlobalStore((s) => s.setTopicDrawerOpen);
   const switchTopic = useSwitchTopic();
 
+  // 构建 FlashList 数据源：包含默认项和 topics
+
+  const listData = useMemo<ListItem[]>(() => {
+    const items: ListItem[] = [];
+
+    // 添加默认项
+    items.push({ type: 'default' });
+
+    // 添加 topics
+    if (topics) {
+      topics.forEach((topic) => {
+        items.push({ data: topic, type: 'topic' });
+      });
+    }
+
+    return items;
+  }, [topics]);
+
   // 如果是inbox且没有topics，显示提示信息
   if (activeId === 'inbox' && topics?.length === 0) {
     return (
@@ -38,40 +59,53 @@ const TopicList = memo(() => {
     );
   }
 
-  return (
-    <ScrollShadow
-      removeClippedSubviews={true}
-      scrollEventThrottle={32}
-      showsVerticalScrollIndicator={false}
-      size={4}
-      style={{
-        flex: 1,
-      }}
-    >
-      <Cell
-        active={!activeTopicId}
-        extra={<Tag>{t('temp')}</Tag>}
-        icon={MessageSquareDashed}
-        iconProps={{
-          color: theme.colorTextSecondary,
-        }}
-        iconSize={16}
-        onPress={() => {
-          switchTopic(); // 切换到默认topic (null)
-          setTopicDrawerOpen(false);
-        }}
-        showArrow={false}
-        title={t('defaultTitle')}
-        titleProps={{
-          fontSize: 14,
-        }}
-      />
+  const renderItem = ({ item }: { item: ListItem }) => {
+    if (item.type === 'default') {
+      return (
+        <Cell
+          active={!activeTopicId}
+          extra={<Tag>{t('temp')}</Tag>}
+          icon={MessageSquareDashed}
+          iconProps={{
+            color: theme.colorTextSecondary,
+          }}
+          iconSize={16}
+          onPress={() => {
+            switchTopic(); // 切换到默认topic (null)
+            setTopicDrawerOpen(false);
+          }}
+          showArrow={false}
+          title={t('defaultTitle')}
+          titleProps={{
+            fontSize: 14,
+          }}
+        />
+      );
+    }
 
-      {/* 实际的topic列表项 */}
-      {topics?.map((topic) => (
-        <TopicItem key={topic.id} topic={topic} />
-      ))}
-    </ScrollShadow>
+    // topic item
+    return <TopicItem topic={item.data} />;
+  };
+
+  const getItemType = (item: ListItem) => {
+    return item.type;
+  };
+
+  return (
+    <FlashListScrollShadow
+      data={listData}
+      estimatedItemSize={56}
+      getItemType={getItemType}
+      hideScrollBar
+      keyExtractor={(item, index) => {
+        if (item.type === 'topic') {
+          return item.data.id;
+        }
+        return `default-${index}`;
+      }}
+      renderItem={renderItem}
+      size={2}
+    />
   );
 });
 

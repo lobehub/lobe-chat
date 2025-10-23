@@ -1,6 +1,6 @@
 import { ChatMessage } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui-rn';
-import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
+import { FlashListScrollShadow, Flexbox } from '@lobehub/ui-rn';
+import { type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
   LayoutChangeEvent,
@@ -43,7 +43,7 @@ const ChatMessageItem = memo<{ index: number; item: ChatMessage; totalLength: nu
 ChatMessageItem.displayName = 'ChatMessageItem';
 
 export default function ChatListChatList({ style }: ChatListProps) {
-  const listRef = useRef<FlashListRef<ChatMessage>>(null);
+  const listRef = useRef<any>(null);
   // 触发消息加载
   useFetchMessages();
 
@@ -221,13 +221,15 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   return (
     <Flexbox flex={1} style={style}>
-      <FlashList
+      <FlashListScrollShadow
         ListEmptyComponent={renderEmptyComponent}
         contentContainerStyle={{ paddingHorizontal: 16 }}
         data={messages}
+        estimatedItemSize={100}
         getItemType={(chatMessage) => {
           return chatMessage.role;
         }}
+        hideScrollBar={false}
         keyExtractor={keyExtractor}
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleLayout}
@@ -238,6 +240,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
         onScrollEndDrag={handleScrollEndDrag}
         ref={listRef}
         renderItem={renderItem}
+        size={2}
       />
       <AutoScroll
         atBottom={atBottom}

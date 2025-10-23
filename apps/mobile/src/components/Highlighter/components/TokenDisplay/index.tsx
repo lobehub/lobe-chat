@@ -31,34 +31,30 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
       {code}
     </Text>
   ) : (
-    <View style={styles.codeContainer}>
-      <ScrollView
-        contentContainerStyle={styles.horizontalScrollContent}
-        horizontal
-        nestedScrollEnabled
-        showsHorizontalScrollIndicator
-      >
-        <View style={styles.codeScrollContainer}>
-          {tokens.map((line, lineIndex) => (
-            <View key={generateLineKey(lineIndex, line)} style={styles.codeLine}>
-              {line.map((tokenItem, tokenIndex) => (
-                <Text
-                  code
-                  color={tokenItem.color}
-                  fontSize={12}
-                  italic={tokenItem.fontStyle === 1}
-                  key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
-                  style={{
-                    backgroundColor: tokenItem.bgColor,
-                  }}
-                >
-                  {tokenItem.content}
-                </Text>
-              ))}
-            </View>
+    <ScrollView
+      contentContainerStyle={styles.horizontalScrollContent}
+      horizontal
+      nestedScrollEnabled
+      showsHorizontalScrollIndicator
+    >
+      {tokens.map((line, lineIndex) => (
+        <View key={generateLineKey(lineIndex, line)} style={styles.codeLine}>
+          {line.map((tokenItem, tokenIndex) => (
+            <Text
+              code
+              color={tokenItem.color}
+              fontSize={12}
+              italic={tokenItem.fontStyle === 1}
+              key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
+              style={{
+                backgroundColor: tokenItem.bgColor,
+              }}
+            >
+              {tokenItem.content}
+            </Text>
           ))}
         </View>
-      </ScrollView>
-    </View>
+      ))}
+    </ScrollView>
   );
 }

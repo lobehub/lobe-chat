@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
-interface UseScrollOverflowProps {
+export interface UseScrollOverflowProps {
   isEnabled?: boolean;
   offset?: number;
   onVisibilityChange?: (visibility: {
@@ -13,13 +13,20 @@ interface UseScrollOverflowProps {
   orientation?: 'vertical' | 'horizontal';
 }
 
+export interface ScrollState {
+  bottom: boolean;
+  left: boolean;
+  right: boolean;
+  top: boolean;
+}
+
 export const useScrollOverflow = ({
-  offset = 0,
-  orientation = 'vertical',
   isEnabled = true,
+  offset = 0,
   onVisibilityChange,
+  orientation = 'vertical',
 }: UseScrollOverflowProps) => {
-  const [scrollState, setScrollState] = useState({
+  const [scrollState, setScrollState] = useState<ScrollState>({
     bottom: false,
     left: false,
     right: false,
@@ -36,14 +43,18 @@ export const useScrollOverflow = ({
     scrollY: 0,
   });
 
-  // 计算并更新滚动状态
   const updateScrollState = useCallback(() => {
     if (!isEnabled) return;
 
     const { contentHeight, contentWidth, layoutHeight, layoutWidth, scrollX, scrollY } =
       dimensionsRef.current;
 
-    const newState = { bottom: false, left: false, right: false, top: false };
+    const newState: ScrollState = {
+      bottom: false,
+      left: false,
+      right: false,
+      top: false,
+    };
 
     if (orientation === 'vertical') {
       const hasVerticalScroll = contentHeight > layoutHeight;
@@ -95,7 +106,7 @@ export const useScrollOverflow = ({
   );
 
   const handleLayout = useCallback(
-    (event: any) => {
+    (event: { nativeEvent: { layout: { height: number; width: number } } }) => {
       const { width, height } = event.nativeEvent.layout;
       dimensionsRef.current.layoutWidth = width;
       dimensionsRef.current.layoutHeight = height;

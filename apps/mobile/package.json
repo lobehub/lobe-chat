@@ -124,6 +124,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-i18next": "^15.7.4",
+    "react-merge-refs": "^3.0.2",
     "react-native": "0.81.4",
     "react-native-collapsible-tab-view": "^8.0.1",
     "react-native-drawer-layout": "^4.1.13",
