@@ -27,7 +27,7 @@ LobeChat 支持为 AI 配置**联网搜索功能**，使其能够实时获取互
 配置可用的网页爬虫，用于对网页进行结构化内容提取。
 
 ```env
-CRAWLER_IMPLS="native,search1api"
+CRAWLER_IMPLS="naive,search1api"
 ```
 
 支持的爬虫类型如下：
@@ -38,7 +38,7 @@ CRAWLER_IMPLS="native,search1api"
 | `exa`         | 使用 [Exa](https://exa.ai/) 提供的爬虫能力，需申请 API。                       | `EXA_API_KEY`                                                               |
 | `firecrawl`   | [Firecrawl](https://firecrawl.dev/) 无头浏览器 API，适合现代网站抓取。          | `FIRECRAWL_API_KEY`                                                         |
 | `jina`        | 使用 [Jina AI](https://jina.ai/) 的爬虫服务，支持快速提取摘要信息。                 | `JINA_READER_API_KEY`                                                       |
-| `native`      | 内置通用爬虫，适用于标准网页结构。                                                |                                                                             |
+| `naive`       | 内置简易通用爬虫，适用于标准网页结构。                                              |                                                                             |
 | `search1api`  | 利用 [Search1API](https://www.search1api.com) 提供的页面抓取能力，适合结构化内容提取。 | `SEARCH1API_API_KEY` `SEARCH1API_CRAWL_API_KEY` `SEARCH1API_SEARCH_API_KEY` |
 | `tavily`      | 使用 [Tavily](https://www.tavily.com/) 的网页抓取与摘要 API。               | `TAVILY_API_KEY`                                                            |
 
