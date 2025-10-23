@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "Hủy",
+    "selectLanguage": "Chọn ngôn ngữ"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "Chọn mô hình",
     "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng vào cài đặt để bật",

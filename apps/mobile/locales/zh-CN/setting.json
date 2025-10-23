@@ -88,7 +88,7 @@
       "success": "缓存已清理"
     },
     "description": "缓存可以提升启动速度，需要释放空间时可以点击清理。",
-    "title": "存储缓存"
+    "title": "清理缓存"
   },
   "changelog": "更新日志",
   "color": {

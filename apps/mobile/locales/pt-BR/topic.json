@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "Este tópico será excluído e não poderá ser recuperado. Confirme sua ação.",
   "defaultTitle": "Tópico Padrão",
   "empty": "Nenhum tópico disponível",
   "guide": {

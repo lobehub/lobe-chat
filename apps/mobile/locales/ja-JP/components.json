@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "キャンセル",
+    "selectLanguage": "言語を選択"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "モデルを選択",
     "emptyModel": "有効なモデルがありません。設定で有効にしてください。",

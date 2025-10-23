@@ -13,6 +13,12 @@
       "confirm": "Çıkış yapmak istediğinizden emin misiniz?",
       "label": "Çıkış Yap"
     },
+    "switchAccount": {
+      "action": "Hesap Değiştir",
+      "confirm": "Hesabı değiştirmek istediğinizden emin misiniz? Bu işlem mevcut hesaptan çıkış yaparak yeniden giriş yapmanızı gerektirir.",
+      "error": "Hesap değiştirme başarısız oldu, lütfen tekrar deneyin.",
+      "label": "Hesap Değiştir"
+    },
     "title": "Hesap Ayarları"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Etkin Değil",
       "enabled": "Etkin"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Önbelleği Temizle",
+        "description": "Bu işlem, yerel olarak kaydedilen önbellek verilerini kaldırır. Uygulamayı bir sonraki açışınızda içerikler yeniden yüklenecektir.",
+        "title": "Önbelleği temizlemek istediğinizden emin misiniz?"
+      },
+      "failure": "Önbellek temizleme başarısız oldu",
+      "success": "Önbellek temizlendi"
+    },
+    "description": "Önbellek, uygulamanın daha hızlı açılmasını sağlar. Depolama alanına ihtiyaç duyduğunuzda temizleyebilirsiniz.",
+    "title": "Önbelleği Temizle"
   },
   "changelog": "Güncelleme Günlüğü",
   "color": {
