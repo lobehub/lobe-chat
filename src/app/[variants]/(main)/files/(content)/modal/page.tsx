@@ -1,17 +1,11 @@
 import { PagePropsWithId } from '@/types/next';
 
-import FileDetail from './FileDetail';
-import FilePreview from './FilePreview';
-import FullscreenModal from './FullscreenModal';
+import ModalPageClient from './ModalPageClient';
 
 const Page = async (props: PagePropsWithId) => {
   const params = await props.params;
 
-  return (
-    <FullscreenModal detail={<FileDetail id={params.id} />}>
-      <FilePreview id={params.id} />
-    </FullscreenModal>
-  );
+  return <ModalPageClient id={params.id} />;
 };
 
 export default Page;

@@ -3,8 +3,7 @@
 import { Modal } from '@lobehub/ui';
 import { ConfigProvider } from 'antd';
 import { createStyles } from 'antd-style';
-import { ReactNode, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ReactNode, useCallback, useState } from 'react';
 
 import { DETAIL_PANEL_WIDTH } from '@/app/[variants]/(main)/files/features/FileDetail';
 
@@ -53,13 +52,18 @@ const useStyles = createStyles(({ css, token }, showDetail: boolean) => {
 interface FullscreenModalProps {
   children: ReactNode;
   detail?: ReactNode;
+  onClose?: () => void;
 }
 
-const FullscreenModal = ({ children, detail }: FullscreenModalProps) => {
-  const navigate = useNavigate();
+const FullscreenModal = ({ children, detail, onClose }: FullscreenModalProps) => {
   const [open, setOpen] = useState(true);
 
   const { styles } = useStyles(!!detail);
+
+  const handleCancel = useCallback(() => {
+    setOpen(false);
+    onClose?.();
+  }, [onClose]);
 
   return (
     <>
@@ -68,10 +72,7 @@ const FullscreenModal = ({ children, detail }: FullscreenModalProps) => {
           className={styles.modal}
           classNames={{ body: styles.body, content: styles.content, header: styles.header }}
           footer={false}
-          onCancel={() => {
-            navigate('/');
-            setOpen(false);
-          }}
+          onCancel={handleCancel}
           open={open}
           width={'auto'}
         >

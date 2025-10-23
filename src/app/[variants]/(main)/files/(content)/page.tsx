@@ -119,7 +119,7 @@ MobileLayout.displayName = 'MobileLayout';
 
 // Router content (inside MemoryRouter)
 const FilesRouterContent = memo(() => {
-  const isMobile = useMediaQuery({ maxWidth: 1024 });
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return isMobile ? <MobileLayout /> : <DesktopLayout />;
 });

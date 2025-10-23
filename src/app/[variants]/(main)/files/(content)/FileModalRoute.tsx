@@ -1,7 +1,7 @@
 'use client';
 
-import { memo } from 'react';
-import { useParams } from 'react-router-dom';
+import { memo, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import FileDetail from './modal/FileDetail';
 import FilePreview from './modal/FilePreview';
@@ -14,11 +14,16 @@ import FullscreenModal from './modal/FullscreenModal';
  */
 const FileModalRoute = memo(() => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const handleClose = useCallback(() => {
+    navigate('/', { replace: true });
+  }, [navigate]);
 
   if (!id) return null;
 
   return (
-    <FullscreenModal detail={<FileDetail id={id} />}>
+    <FullscreenModal detail={<FileDetail id={id} />} onClose={handleClose}>
       <FilePreview id={id} />
     </FullscreenModal>
   );
