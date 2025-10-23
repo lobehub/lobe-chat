@@ -15,6 +15,12 @@ export interface FlashListScrollShadowProps<T>
    */
   hideScrollBar?: boolean;
   /**
+   * 是否倒置列表（从底部开始渲染）
+   * 适用于聊天应用，最新消息在底部
+   * @default false
+   */
+  inverted?: boolean;
+  /**
    * 是否启用阴影效果
    * @default true
    */
