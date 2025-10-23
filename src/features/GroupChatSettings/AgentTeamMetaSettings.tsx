@@ -14,7 +14,7 @@ import { selectors, useStore } from './store';
 
 const { TextArea } = Input;
 
-const ChatGroupMeta = memo(() => {
+const AgentTeamMetaSettings = memo(() => {
   const { t } = useTranslation(['setting', 'common']);
   const [form] = Form.useForm();
 
@@ -100,4 +100,4 @@ const ChatGroupMeta = memo(() => {
   );
 });
 
-export default ChatGroupMeta;
+export default AgentTeamMetaSettings;
