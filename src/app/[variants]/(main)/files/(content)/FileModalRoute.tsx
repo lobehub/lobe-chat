@@ -3,9 +3,9 @@
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import FileDetail from './@modal/(.)[id]/FileDetail';
-import FilePreview from './@modal/(.)[id]/FilePreview';
-import FullscreenModal from './@modal/(.)[id]/FullscreenModal';
+import FileDetail from './modal/FileDetail';
+import FilePreview from './modal/FilePreview';
+import FullscreenModal from './modal/FullscreenModal';
 
 /**
  * FileModalRoute component

@@ -3,7 +3,7 @@ import { Checkbox, Image } from 'antd';
 import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -292,6 +292,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [imageLoaded, setImageLoaded] = useState(false);
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
@@ -372,7 +373,9 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         <div
           className={cx(styles.content, !isImage && !isMarkdown && styles.contentWithPadding)}
           onClick={() => {
-            router.push(`/files/${id}`);
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('files', id);
+            router.push(`?${params.toString()}`);
           }}
         >
           {isImage && url ? (

@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -104,6 +104,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
       s.parseFilesToChunks,
@@ -131,7 +132,9 @@ const FileRenderItem = memo<FileRenderItemProps>(
           flex={1}
           horizontal
           onClick={() => {
-            router.push(`/files/${id}`);
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('files', id);
+            router.push(`?${params.toString()}`);
           }}
         >
           <Flexbox align={'center'} horizontal>

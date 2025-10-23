@@ -19,7 +19,7 @@ import { FilesTabs } from '@/types/files';
 import UrlSynchronizer from '../_layout/Desktop/UrlSynchronizer';
 import FileMenu from './@menu/features/FileMenu';
 import KnowledgeBase from './@menu/features/KnowledgeBase';
-import FileModalRoute from './FileModalRoute';
+import FileModalQueryRoute from './FileModalQueryRoute';
 import Container from './_layout/Desktop/Container';
 import RegisterHotkeys from './_layout/Desktop/RegisterHotkeys';
 
@@ -75,14 +75,11 @@ const DesktopLayout = memo(() => {
         <Container>
           <Routes>
             <Route element={<FilesListPage />} path="/" />
-            <Route element={<FilesListPage />} path="/:id" />
           </Routes>
         </Container>
       </Flexbox>
       <RegisterHotkeys />
-      <Routes>
-        <Route element={<FileModalRoute />} path="/:id" />
-      </Routes>
+      <FileModalQueryRoute />
     </>
   );
 });
@@ -114,12 +111,9 @@ const MobileLayout = memo(() => {
       >
         <Routes>
           <Route element={<FilesListPage />} path="/" />
-          <Route element={<FilesListPage />} path="/:id" />
         </Routes>
       </Flexbox>
-      <Routes>
-        <Route element={<FileModalRoute />} path="/:id" />
-      </Routes>
+      <FileModalQueryRoute />
     </>
   );
 });
