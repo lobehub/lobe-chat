@@ -1,11 +1,13 @@
 import { ChatMessage } from '@lobechat/types';
 import { FlashListScrollShadow, Flexbox } from '@lobehub/ui-rn';
-import { type ListRenderItem } from '@shopify/flash-list';
+import { type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
+  InteractionManager,
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  View,
   ViewStyle,
 } from 'react-native';
 import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
@@ -43,19 +45,16 @@ const ChatMessageItem = memo<{ index: number; item: ChatMessage; totalLength: nu
 ChatMessageItem.displayName = 'ChatMessageItem';
 
 export default function ChatListChatList({ style }: ChatListProps) {
-  const listRef = useRef<any>(null);
+  const listRef = useRef<FlashListRef<ChatMessage>>(null);
   // 触发消息加载
   useFetchMessages();
 
   const { messages } = useChat();
-
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
   const [isScrolling, setIsScrolling] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
   const atBottomRef = useRef(true);
   const isAtBottomRefWhenKeyboardStartShow = useRef(true);
-  const justSwitchedTopicRef = useRef(false);
 
   const updateBottomRef = useCallback(() => {
     isAtBottomRefWhenKeyboardStartShow.current = atBottomRef.current;
@@ -80,17 +79,6 @@ export default function ChatListChatList({ style }: ChatListProps) {
     }
   }, [isVisible]);
 
-  // Mark topic switch to trigger instant scroll (no animation) on next content change
-  useEffect(() => {
-    // Only scroll when messages are loaded to avoid scrolling to empty list
-    if (!isCurrentChatLoaded) return;
-
-    // Reset atBottom state and mark as just switched
-    atBottomRef.current = true;
-    setAtBottom(true);
-    justSwitchedTopicRef.current = true;
-  }, [activeTopicId, isCurrentChatLoaded]);
-
   // Track scrolling states precisely: user drag, momentum, and programmatic scrolls
   const isDraggingRef = useRef(false);
   const isMomentumRef = useRef(false);
@@ -107,14 +95,18 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const computeAtBottom = useCallback(() => {
     const layoutH = layoutHeightRef.current || 0;
     const contentH = contentHeightRef.current || 0;
-    // With inverted list, bottom is at offset 0
+    // Guard and clamp offset to avoid bounce/overscroll affecting result
     let offsetY = scrollYRef.current || 0;
+    const maxOffset = Math.max(0, contentH - layoutH);
+    if (offsetY < 0) offsetY = 0;
+    if (offsetY > maxOffset) offsetY = maxOffset;
 
     // If content fits entirely in the viewport, we're at bottom
     if (contentH <= layoutH) return true;
 
-    // For inverted list, at bottom means offset is close to 0
-    return Math.abs(offsetY) <= AT_BOTTOM_EPSILON;
+    // Distance from viewport bottom to content bottom
+    const distance = contentH - (offsetY + layoutH);
+    return distance <= AT_BOTTOM_EPSILON;
   }, []);
 
   const updateAtBottom = useCallback((next: boolean) => {
@@ -180,14 +172,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
     (_w: number, h: number) => {
       contentHeightRef.current = h;
       if (atBottomRef.current && !isScrolling) {
-        // For inverted list, bottom is at offset 0
-        // Use instant scroll (no animation) if just switched topic, otherwise use smooth animation
-        const shouldAnimate = !justSwitchedTopicRef.current;
-        requestAnimationFrame(() => {
-          listRef.current?.scrollToEnd({ animated: shouldAnimate });
+        InteractionManager.runAfterInteractions(() => {
+          listRef.current?.scrollToEnd({ animated: true });
         });
-        // Reset the flag after scrolling
-        justSwitchedTopicRef.current = false;
         updateAtBottom(true);
       } else {
         const nextAtBottom = computeAtBottom();
@@ -210,9 +197,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   if (!isCurrentChatLoaded) {
     return (
-      <Flexbox flex={1} style={style}>
+      <View style={[{ flex: 1 }, style]}>
         <MessageSkeletonList />
-      </Flexbox>
+      </View>
     );
   }
 
@@ -220,13 +207,11 @@ export default function ChatListChatList({ style }: ChatListProps) {
     <Flexbox flex={1} style={style}>
       <FlashListScrollShadow
         ListEmptyComponent={renderEmptyComponent}
-        contentContainerStyle={{ paddingHorizontal: 16 }}
         data={messages}
-        estimatedItemSize={100}
+        estimatedItemSize={10}
         getItemType={(chatMessage) => {
           return chatMessage.role;
         }}
-        hideScrollBar={false}
         initialScrollIndex={messages.length - 1}
         inverted
         keyExtractor={keyExtractor}
@@ -237,6 +222,10 @@ export default function ChatListChatList({ style }: ChatListProps) {
         onScroll={handleScroll}
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={handleScrollEndDrag}
+        overrideProps={{
+          paddingBottom: 16,
+          paddingInline: 16,
+        }}
         ref={listRef}
         renderItem={renderItem}
         size={2}
@@ -245,14 +234,13 @@ export default function ChatListChatList({ style }: ChatListProps) {
         atBottom={atBottom}
         onScrollToBottom={(type) => {
           const flatList = listRef.current;
-          // For inverted list, bottom is at offset 0
           switch (type) {
             case 'auto': {
-              flatList?.scrollToOffset({ animated: false, offset: 0 });
+              flatList?.scrollToEnd({ animated: false });
               break;
             }
             case 'click': {
-              flatList?.scrollToOffset({ animated: true, offset: 0 });
+              flatList?.scrollToEnd({ animated: true });
               break;
             }
           }
