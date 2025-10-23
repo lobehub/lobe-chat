@@ -1,16 +1,19 @@
 import MaskedView from '@react-native-masked-view/masked-view';
+import { FlashList } from '@shopify/flash-list';
 import { LinearGradient } from 'expo-linear-gradient';
+import type React from 'react';
 import { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import { mergeRefs } from 'react-merge-refs';
-import { ScrollView } from 'react-native';
 
 import { useStyles } from './style';
-import type { ScrollShadowProps } from './type';
+import type { FlashListScrollShadowProps } from './type';
 import { useScrollOverflow } from './useScrollOverflow';
 
-const ScrollShadowInner = (props: ScrollShadowProps, forwardedRef: any) => {
+const FlashListScrollShadowInner = <T,>(
+  props: FlashListScrollShadowProps<T>,
+  forwardedRef: any,
+) => {
   const {
-    children,
     orientation = 'vertical',
     hideScrollBar = false,
     size = 40,
@@ -18,12 +21,13 @@ const ScrollShadowInner = (props: ScrollShadowProps, forwardedRef: any) => {
     visibility = 'auto',
     isEnabled = true,
     onVisibilityChange,
-    style,
+    contentContainerStyle,
+    estimatedItemSize,
     ...rest
   } = props;
 
   const { styles } = useStyles();
-  const scrollRef = useRef<ScrollView>(null);
+  const flashListRef = useRef<any>(null);
 
   // 使用滚动检测钩子
   const { handleScroll, handleContentSizeChange, handleLayout, scrollState } = useScrollOverflow({
@@ -147,8 +151,9 @@ const ScrollShadowInner = (props: ScrollShadowProps, forwardedRef: any) => {
     [handleLayout, rest.onLayout],
   );
 
-  const scrollViewProps = {
+  const flashListProps = {
     ...rest,
+    estimatedItemSize,
     horizontal: orientation === 'horizontal',
     onContentSizeChange: mergedOnContentSizeChange,
     onLayout: mergedOnLayout,
@@ -158,17 +163,14 @@ const ScrollShadowInner = (props: ScrollShadowProps, forwardedRef: any) => {
     showsVerticalScrollIndicator: !hideScrollBar && orientation === 'vertical',
   };
 
-  // 如果没有阴影，直接返回 ScrollView
+  // 如果没有阴影，直接返回 FlashList
   if (!gradientConfig) {
     return (
-      <ScrollView
-        ref={mergeRefs([scrollRef, forwardedRef])}
-        removeClippedSubviews={true}
-        style={style}
-        {...scrollViewProps}
-      >
-        {children}
-      </ScrollView>
+      <FlashList
+        contentContainerStyle={contentContainerStyle}
+        ref={mergeRefs([flashListRef, forwardedRef]) as any}
+        {...flashListProps}
+      />
     );
   }
 
@@ -183,22 +185,22 @@ const ScrollShadowInner = (props: ScrollShadowProps, forwardedRef: any) => {
           style={styles.mask}
         />
       }
-      style={[styles.container, style]}
+      style={styles.container}
     >
-      <ScrollView
-        nestedScrollEnabled={true}
-        ref={mergeRefs([scrollRef, forwardedRef])}
-        {...scrollViewProps}
-        style={styles.scrollView}
-      >
-        {children}
-      </ScrollView>
+      <FlashList
+        contentContainerStyle={contentContainerStyle}
+        ref={mergeRefs([flashListRef, forwardedRef]) as any}
+        {...flashListProps}
+        style={styles.flashList}
+      />
     </MaskedView>
   );
 };
 
-const ScrollShadow = memo(forwardRef(ScrollShadowInner));
+const FlashListScrollShadow = memo(forwardRef(FlashListScrollShadowInner)) as <T>(
+  props: FlashListScrollShadowProps<T>,
+) => React.ReactElement;
 
-ScrollShadow.displayName = 'ScrollShadow';
+(FlashListScrollShadow as any).displayName = 'FlashListScrollShadow';
 
-export default ScrollShadow;
+export default FlashListScrollShadow;

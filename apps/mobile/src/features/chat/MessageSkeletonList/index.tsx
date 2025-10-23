@@ -1,20 +1,14 @@
-import type { FC } from 'react';
-import { View } from 'react-native';
+import { Flexbox } from '@lobehub/ui-rn';
+import { memo } from 'react';
 
 import MessageSkeleton from '../MessageSkeleton';
-import { useStyles } from './style';
 
-const MessageSkeletonList: FC = () => {
-  const { styles } = useStyles();
-
+const MessageSkeletonList = memo(() => {
   return (
-    <View style={styles.container}>
-      <MessageSkeleton role="user" />
-      <MessageSkeleton role="assistant" width={['100%', '100%', '100%', '80%']} />
-      <MessageSkeleton role="user" />
-      <MessageSkeleton role="assistant" width={['100%', '100%', '100%', '100%', '100%', '50%']} />
-    </View>
+    <Flexbox flex={1} padding={16}>
+      <MessageSkeleton role="assistant" width={['100%', '90%', '100%', '90%', '100%', '60%']} />
+    </Flexbox>
   );
-};
+});
 
 export default MessageSkeletonList;

@@ -14,6 +14,7 @@ description: Scroll container component with smart gradient shadow effects that 
 - ✅ High-performance gradient effects using native MaskedView
 - ✅ TypeScript support
 - ✅ Theme adaptation
+- ✅ Ref forwarding support
 
 ## Basic Usage
 
@@ -80,3 +81,14 @@ import { View, Text } from 'react-native';
 - `auto`: Automatically show/hide shadows based on scroll position (default)
 - `always`: Always show shadows regardless of scroll state
 - `never`: Never show shadows
+
+## Notes
+
+- For large lists with many items, consider using [FlashListScrollShadow](./FlashListScrollShadow) for better performance
+- Shadow effects use `MaskedView` and `LinearGradient` for native performance
+- Shadows automatically hide when content fits within the container
+- Supports ref forwarding with `react-merge-refs` for external ref access
+
+## Related Components
+
+- [FlashListScrollShadow](./FlashListScrollShadow) - High-performance scroll shadow component for large lists using FlashList

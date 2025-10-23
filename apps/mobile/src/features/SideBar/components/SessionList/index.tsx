@@ -1,10 +1,16 @@
+import type { LobeAgentSession } from '@lobechat/types';
+import {
+  Dropdown,
+  type DropdownOptionItem,
+  FlashListScrollShadow,
+  Flexbox,
+  Input,
+  Toast,
+} from '@lobehub/ui-rn';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager } from 'react-native';
 
-import { Flexbox, Input, ScrollShadow, Toast } from '@/components';
-import Dropdown from '@/components/Dropdown';
-import type { DropdownOptionItem } from '@/components/Dropdown';
 import { loading } from '@/libs/loading';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -40,14 +46,16 @@ export default function SideBar() {
   const filteredSessions = useMemo(() => {
     if (!sessions) return [];
 
-    // 筛选会话
-    let filtered = !keyword
-      ? sessions
-      : sessions.filter((session) => {
-          const title = session.meta.title?.toLowerCase() || '';
-          const description = session.meta.description?.toLowerCase() || '';
-          return title.includes(keyword) || description.includes(keyword);
-        });
+    // 筛选会话（仅保留 LobeAgentSession）
+    let filtered = (
+      !keyword
+        ? sessions
+        : sessions.filter((session) => {
+            const title = session.meta.title?.toLowerCase() || '';
+            const description = session.meta.description?.toLowerCase() || '';
+            return title.includes(keyword) || description.includes(keyword);
+          })
+    ) as LobeAgentSession[];
 
     // 排序：优先 pinned，然后按 updatedAt（兜底 createdAt）
     return [...filtered].sort((a, b) => {
@@ -63,6 +71,99 @@ export default function SideBar() {
       return new Date(bTime).getTime() - new Date(aTime).getTime();
     });
   }, [keyword, sessions]);
+
+  // 构建 FlashList 数据源：包含 inbox 和 sessions
+  type ListItem =
+    | { data: LobeAgentSession; type: 'session' }
+    | { type: 'addButton' }
+    | { type: 'inbox' };
+
+  const listData = useMemo<ListItem[]>(() => {
+    const items: ListItem[] = [];
+
+    // 添加 inbox
+    if (shouldShowInbox) {
+      items.push({ type: 'inbox' });
+    }
+
+    // 添加会话列表或添加按钮
+    if (filteredSessions.length === 0) {
+      items.push({ type: 'addButton' });
+    } else {
+      filteredSessions.forEach((session) => {
+        items.push({ data: session, type: 'session' });
+      });
+    }
+
+    return items;
+  }, [shouldShowInbox, filteredSessions]);
+
+  const renderItem = ({ item }: { item: ListItem }) => {
+    if (item.type === 'inbox') {
+      return <Inbox />;
+    }
+
+    if (item.type === 'addButton') {
+      return <AddButton />;
+    }
+
+    // session item
+    const session = item.data;
+    const options: DropdownOptionItem[] = [
+      {
+        icon: {
+          name: session.pinned ? 'pin.slash' : 'pin',
+          pointSize: 18,
+        },
+        key: 'pin',
+        onSelect: () => {
+          pinSession(session.id, !session.pinned);
+        },
+        title: t(session.pinned ? 'pinOff' : 'pin', { ns: 'chat' }),
+      },
+      {
+        destructive: true,
+        icon: {
+          name: 'trash',
+          pointSize: 18,
+        },
+        key: 'delete',
+        onSelect: () => {
+          Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
+            {
+              style: 'cancel',
+              text: t('actions.cancel', { ns: 'common' }),
+            },
+            {
+              onPress: () => {
+                const { done } = loading.start();
+                removeSession(session.id).then(() => {
+                  Toast.success(t('status.success', { ns: 'common' }));
+                  InteractionManager.runAfterInteractions(() => {
+                    toggleDrawer();
+                    done();
+                  });
+                });
+              },
+              style: 'destructive',
+              text: t('actions.confirm', { ns: 'common' }),
+            },
+          ]);
+        },
+        title: t('actions.delete', { ns: 'common' }),
+      },
+    ];
+
+    return (
+      <Dropdown options={options}>
+        <SessionItem {...(session as any)} />
+      </Dropdown>
+    );
+  };
+
+  const getItemType = (item: ListItem) => {
+    return item.type;
+  };
 
   if (isLoading) {
     return <SessionListSkeleton />;
@@ -81,79 +182,20 @@ export default function SideBar() {
       </Flexbox>
 
       {/* 会话列表 */}
-      <ScrollShadow
-        removeClippedSubviews={true}
-        scrollEventThrottle={32}
-        showsVerticalScrollIndicator={false}
-        size={4}
-        style={{
-          flex: 1,
+      <FlashListScrollShadow
+        data={listData}
+        estimatedItemSize={72}
+        getItemType={getItemType}
+        hideScrollBar
+        keyExtractor={(item, index) => {
+          if (item.type === 'session') {
+            return item.data.id;
+          }
+          return `${item.type}-${index}`;
         }}
-      >
-        <Flexbox>
-          {shouldShowInbox && <Inbox />}
-          {/* Group 功能现在没上，暂时不需要 */}
-          {/* <View style={styles.header}>
-          <Text style={styles.headerText}>{t('agentList', { ns: 'chat' })}</Text>
-        </View> */}
-          {filteredSessions.length === 0 ? (
-            <AddButton />
-          ) : (
-            filteredSessions.map((session) => {
-              const options: DropdownOptionItem[] = [
-                {
-                  icon: {
-                    name: session.pinned ? 'pin.slash' : 'pin',
-                    pointSize: 18,
-                  },
-                  key: 'pin',
-                  onSelect: () => {
-                    pinSession(session.id, !session.pinned);
-                  },
-                  title: t(session.pinned ? 'pinOff' : 'pin', { ns: 'chat' }),
-                },
-                {
-                  destructive: true,
-                  icon: {
-                    name: 'trash',
-                    pointSize: 18,
-                  },
-                  key: 'delete',
-                  onSelect: () => {
-                    Alert.alert(t('confirmRemoveSessionItemAlert', { ns: 'chat' }), '', [
-                      {
-                        style: 'cancel',
-                        text: t('actions.cancel', { ns: 'common' }),
-                      },
-                      {
-                        onPress: () => {
-                          const { done } = loading.start();
-                          removeSession(session.id).then(() => {
-                            Toast.success(t('status.success', { ns: 'common' }));
-                            InteractionManager.runAfterInteractions(() => {
-                              toggleDrawer();
-                              done();
-                            });
-                          });
-                        },
-                        style: 'destructive',
-                        text: t('actions.confirm', { ns: 'common' }),
-                      },
-                    ]);
-                  },
-                  title: t('actions.delete', { ns: 'common' }),
-                },
-              ];
-
-              return (
-                <Dropdown key={session.id} options={options}>
-                  <SessionItem {...(session as any)} />
-                </Dropdown>
-              );
-            })
-          )}
-        </Flexbox>
-      </ScrollShadow>
+        renderItem={renderItem}
+        size={2}
+      />
     </Flexbox>
   );
 }
