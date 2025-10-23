@@ -3,25 +3,44 @@ import { NetworkConnectionError, PageNotFoundError, TimeoutError } from '../util
 import { DEFAULT_TIMEOUT, withTimeout } from '../utils/withTimeout';
 
 interface FirecrawlMetadata {
-  description: string;
-  keywords: string;
-  language: string;
+  description?: string;
+  error?: string;
+  keywords?: string;
+  language?: string;
   ogDescription?: string;
   ogImage?: string;
   ogLocaleAlternate?: string[];
   ogSiteName?: string;
   ogTitle?: string;
   ogUrl?: string;
-  robots: string;
+  robots?: string;
   sourceURL: string;
   statusCode: number;
-  title: string;
+  title?: string;
 }
 
 interface FirecrawlResults {
+  actions?: {
+    javascriptReturns?: Array<{ type: string; value: any }>;
+    pdfs?: string[];
+    scrapes?: Array<{ html: string; url: string }>;
+    screenshots?: string[];
+  };
+  changeTracking?: {
+    changeStatus?: string;
+    diff?: string;
+    json?: Record<string, any>;
+    previousScrapeAt?: string;
+    visibility?: string;
+  };
   html?: string;
+  links?: string[];
   markdown?: string;
   metadata: FirecrawlMetadata;
+  rawHtml?: string;
+  screenshot?: string;
+  summary?: string;
+  warning?: string;
 }
 
 interface FirecrawlResponse {
@@ -75,6 +94,14 @@ export const firecrawl: CrawlImpl = async (url) => {
   try {
     const data = (await res.json()) as FirecrawlResponse;
 
+    if (data.data.warning) {
+      console.warn('[Firecrawl] Warning:', data.data.warning);
+    }
+
+    if (data.data.metadata.error) {
+      console.error('[Firecrawl] Metadata error:', data.data.metadata.error);
+    }
+
     // Check if content is empty or too short
     if (!data.data.markdown || data.data.markdown.length < 100) {
       return;
@@ -83,14 +110,14 @@ export const firecrawl: CrawlImpl = async (url) => {
     return {
       content: data.data.markdown,
       contentType: 'text',
-      description: data.data.metadata.description,
+      description: data.data.metadata.description || '',
       length: data.data.markdown.length,
       siteName: new URL(url).hostname,
-      title: data.data.metadata.title,
+      title: data.data.metadata.title || '',
       url: url,
     } satisfies CrawlSuccessResult;
   } catch (error) {
-    console.error(error);
+    console.error('[Firecrawl] Parse error:', error);
   }
 
   return;
