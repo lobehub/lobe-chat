@@ -1,4 +1,4 @@
-import { Block, Button, CapsuleTabItem, CapsuleTabs, Flexbox, Text } from '@lobehub/ui-rn';
+import { Button, CapsuleTabItem, CapsuleTabs, Flexbox, Text } from '@lobehub/ui-rn';
 import { useState } from 'react';
 
 const items: CapsuleTabItem[] = [
@@ -18,21 +18,16 @@ export const ScrollShadowDemo = () => {
 
   return (
     <Flexbox gap={16}>
-      <Flexbox gap={8}>
-        <Text>滚动阴影: {enableShadow ? '开启' : '关闭'}</Text>
-        <Button onPress={() => setEnableShadow(!enableShadow)} size="small" type="default">
-          切换滚动阴影
-        </Button>
-      </Flexbox>
+      <Button block onPress={() => setEnableShadow(!enableShadow)} size="small" type="default">
+        滚动阴影: {enableShadow ? '开启' : '关闭'}
+      </Button>
 
-      <Block>
-        <CapsuleTabs
-          enableScrollShadow={enableShadow}
-          items={items}
-          onSelect={setSelectedKey}
-          selectedKey={selectedKey}
-        />
-      </Block>
+      <CapsuleTabs
+        enableScrollShadow={enableShadow}
+        items={items}
+        onSelect={setSelectedKey}
+        selectedKey={selectedKey}
+      />
 
       <Text>选中: {selectedKey}</Text>
     </Flexbox>

@@ -1,6 +1,5 @@
-import { CapsuleTabItem, CapsuleTabs, Text, useTheme } from '@lobehub/ui-rn';
+import { CapsuleTabItem, CapsuleTabs, Flexbox, Text } from '@lobehub/ui-rn';
 import { useState } from 'react';
-import { View } from 'react-native';
 
 const items: CapsuleTabItem[] = [
   { key: 'all', label: 'All' },
@@ -11,22 +10,12 @@ const items: CapsuleTabItem[] = [
 
 export const BasicDemo = () => {
   const [selectedKey, setSelectedKey] = useState('all');
-  const token = useTheme();
 
   return (
-    <View style={{ padding: 16 }}>
+    <Flexbox gap={16}>
       <CapsuleTabs items={items} onSelect={setSelectedKey} selectedKey={selectedKey} />
-      <Text
-        style={{
-          color: token.colorTextSecondary,
-          fontSize: 14,
-          marginTop: 12,
-          textAlign: 'center',
-        }}
-      >
-        选中: {selectedKey}
-      </Text>
-    </View>
+      <Text>选中: {selectedKey}</Text>
+    </Flexbox>
   );
 };
 

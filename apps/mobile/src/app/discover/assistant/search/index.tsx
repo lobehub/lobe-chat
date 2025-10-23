@@ -1,24 +1,23 @@
-import { AssistantCategory, DiscoverAssistantItem } from '@lobechat/types';
+import { DiscoverAssistantItem } from '@lobechat/types';
 import {
-  ActionIcon,
-  CapsuleTabs,
+  Button,
   Center,
   Empty,
   FlashListScrollShadow,
   Flexbox,
+  Input,
   PageContainer,
   useTheme,
 } from '@lobehub/ui-rn';
 import type { FlashListRef } from '@shopify/flash-list';
+import { useDebounce } from 'ahooks';
 import { useRouter } from 'expo-router';
-import { SearchIcon } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 
 import AgentCard from '@/features/discover/assistant/components/AgentCard';
 import { AssistantListSkeleton } from '@/features/discover/assistant/components/SkeletonList';
-import useCategory from '@/features/discover/assistant/hooks/useCategory';
 import { useDiscoverStore } from '@/store/discover';
 
 const INITIAL_PAGE_SIZE = 21;
@@ -28,40 +27,54 @@ const AssistantList = () => {
   const router = useRouter();
   const theme = useTheme();
   const { t } = useTranslation(['common', 'discover']);
+  const [searchText, setSearchText] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const [selectedCategory, setSelectedCategory] = useState<string>(AssistantCategory.All);
   const [currentPage, setCurrentPage] = useState(1);
   const [allItems, setAllItems] = useState<DiscoverAssistantItem[]>([]);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const categories = useCategory();
 
-  const useAssistantCategories = useDiscoverStore((s) => s.useAssistantCategories);
-  const { isLoading: isCategoryLoading } = useAssistantCategories({});
+  const debouncedSearchText = useDebounce(searchText, { wait: 500 });
+
+  const finalSearchQuery = useMemo(() => {
+    if (searchQuery !== '') return searchQuery;
+    if (searchText === '') return '';
+    return debouncedSearchText;
+  }, [searchQuery, searchText, debouncedSearchText]);
 
   const queryParams = useMemo(
     () => ({
-      category: selectedCategory === AssistantCategory.All ? undefined : selectedCategory,
       page: currentPage,
       pageSize: INITIAL_PAGE_SIZE,
+      q: finalSearchQuery || undefined,
     }),
-    [selectedCategory, currentPage],
+    [finalSearchQuery, currentPage],
   );
 
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
   const { data: agents, error, isLoading } = useAssistantList(queryParams);
 
-  const handleCategorySelect = useCallback((key: string) => {
-    setSelectedCategory(key);
-    listRef?.current?.scrollToTop({ animated: true });
-  }, []);
+  const handleImmediateSearch = useCallback(
+    (query?: string) => {
+      const searchValue = query !== undefined ? query : searchText;
+      setSearchQuery(searchValue);
+      setTimeout(() => setSearchQuery(''), 100);
+      listRef?.current?.scrollToTop({ animated: true });
+    },
+    [searchText],
+  );
+
+  const handleSearchSubmit = useCallback(() => {
+    handleImmediateSearch();
+  }, [handleImmediateSearch]);
 
   useEffect(() => {
     setCurrentPage(1);
     setAllItems([]);
     setHasMoreData(true);
     setIsLoadingMore(false);
-  }, [selectedCategory]);
+  }, [finalSearchQuery]);
 
   // 处理新数据
   useEffect(() => {
@@ -99,8 +112,16 @@ const AssistantList = () => {
   }, [hasMoreData, theme.colorPrimary]);
 
   const renderEmptyComponent = useCallback(
-    () => <Empty description={t('assistant.noData', { ns: 'common' })} />,
-    [],
+    () => (
+      <Empty
+        description={
+          finalSearchQuery
+            ? t('assistant.noMatch', { ns: 'common' })
+            : t('assistant.noData', { ns: 'common' })
+        }
+      />
+    ),
+    [finalSearchQuery],
   );
 
   const renderItem = useCallback(
@@ -120,32 +141,39 @@ const AssistantList = () => {
 
   return (
     <PageContainer
-      extra={
-        <ActionIcon
-          clickable={false}
-          icon={SearchIcon}
-          onPress={() => router.push('/discover/assistant/search')}
-        />
-      }
       extraProps={{
-        width: 40,
+        style: {
+          display: 'none',
+        },
       }}
+      left={
+        <Flexbox
+          align={'center'}
+          flex={1}
+          gap={4}
+          horizontal
+          justify={'space-between'}
+          paddingInline={8}
+        >
+          <Input.Search
+            glass
+            onChangeText={setSearchText}
+            onSubmitEditing={handleSearchSubmit}
+            placeholder={t('assistant.search', { ns: 'common' })}
+            style={{
+              flex: 1,
+            }}
+            variant="filled"
+          />
+          <Button onPress={() => router.back()} type={'link'}>
+            取消
+          </Button>
+        </Flexbox>
+      }
       leftProps={{
-        width: 40,
+        width: 'auto',
       }}
       showBack
-      title={
-        isCategoryLoading ? (
-          t('title', { ns: 'discover' })
-        ) : (
-          <CapsuleTabs
-            items={categories}
-            onSelect={handleCategorySelect}
-            selectedKey={selectedCategory}
-            size="large"
-          />
-        )
-      }
     >
       <Flexbox height={16} />
       {isLoading && currentPage === 1 ? (

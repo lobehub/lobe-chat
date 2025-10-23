@@ -1,12 +1,13 @@
 ---
 group: Navigation
 title: CapsuleTabs
-description: Horizontally scrollable capsule-style tabs component with custom styling, icon combinations, and selection state support.
+description: Horizontally scrollable tabs component with animated bottom indicator, custom styling, icon combinations, and selection state support.
 ---
 
 ## Features
 
-- ✅ Capsule-style tab design
+- ✅ Animated bottom indicator design
+- ✅ Smooth indicator transition animation
 - ✅ Horizontal scrolling support
 - ✅ Selection state management
 - ✅ Icon and text combinations

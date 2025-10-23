@@ -9,14 +9,17 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { FlexboxProps } from '../Flexbox';
 import { IconProps } from '../Icon';
 
 export interface PageContainerProps {
   backgroundColor?: ColorValue | [ColorValue, ColorValue, ...ColorValue[]];
   children?: ReactNode;
   extra?: ReactNode;
+  extraProps?: Omit<FlexboxProps, 'children'>;
   largeTitleEnabled?: boolean;
   left?: ReactNode;
+  leftProps?: Omit<FlexboxProps, 'children'>;
   loading?: boolean;
   onBackPress?: () => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -26,4 +29,5 @@ export interface PageContainerProps {
   style?: StyleProp<ViewStyle>;
   title?: ReactNode;
   titleIcon?: IconProps['icon'];
+  titleProps?: Omit<FlexboxProps, 'children'>;
 }
