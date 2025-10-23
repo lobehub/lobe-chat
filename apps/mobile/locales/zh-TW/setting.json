@@ -13,6 +13,12 @@
       "confirm": "您確定要登出嗎？",
       "label": "登出"
     },
+    "switchAccount": {
+      "action": "切換帳號",
+      "confirm": "確定要切換帳號嗎？這會登出目前帳戶並重新登入。",
+      "error": "切換帳號失敗，請重試。",
+      "label": "切換帳號"
+    },
     "title": "帳號設定"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "未啟用",
       "enabled": "已啟用"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "清除快取",
+        "description": "這將移除保存在本機的快取資料，下次開啟應用程式時需要重新載入內容。",
+        "title": "確認清除快取？"
+      },
+      "failure": "清除快取失敗",
+      "success": "快取已清除"
+    },
+    "description": "快取可提升啟動速度，若需釋放空間可點選清除。",
+    "title": "清除快取"
   },
   "changelog": "更新日誌",
   "color": {

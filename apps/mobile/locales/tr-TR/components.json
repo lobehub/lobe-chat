@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "İptal",
+    "selectLanguage": "Dil Seç"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "Model Seçin",
     "emptyModel": "Etkinleştirilmiş model yok, lütfen ayarlardan etkinleştirin",

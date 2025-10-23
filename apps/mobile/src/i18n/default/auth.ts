@@ -2,6 +2,7 @@ export default {
   login: {
     button: '登录到 {{appName}}',
     cancel: '取消',
+    loginWithLobeHub: '通过 {{appName}} 账号登录',
     privacyPolicy: '隐私政策',
     securityNote: '签名即表示您接受我们的',
     selfHostedButton: '使用自托管实例',

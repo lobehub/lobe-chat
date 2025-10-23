@@ -198,7 +198,7 @@ const PageContainer = memo<PageContainerProps>(
       </SafeAreaView>
     );
 
-    if (!backgroundColor) return content;
+    if (isColor) return content;
 
     return (
       <LinearGradient colors={backgroundColor as any} style={{ flex: 1 }}>
