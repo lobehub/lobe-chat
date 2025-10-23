@@ -51,6 +51,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
 
   const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [viewConfig, setViewConfig] = useState({ showFilesInKnowledgeBase: false });
+  const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
 
   const viewMode = useGlobalStore((s) => s.status.fileManagerViewMode || 'list') as ViewMode;
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
@@ -118,6 +119,13 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
     }
   }, [data]);
 
+  // Reset lastSelectedIndex when selection is cleared
+  React.useEffect(() => {
+    if (selectFileIds.length === 0) {
+      setLastSelectedIndex(null);
+    }
+  }, [selectFileIds.length]);
+
   // Memoize context object to avoid recreating on every render
   const masonryContext = useMemo(
     () => ({
@@ -184,13 +192,30 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
               index={index}
               key={item.id}
               knowledgeBaseId={knowledgeBaseId}
-              onSelectedChange={(id, checked) => {
-                setSelectedFileIds((prev) => {
-                  if (checked) {
-                    return [...prev, id];
-                  }
-                  return prev.filter((item) => item !== id);
-                });
+              onSelectedChange={(id, checked, shiftKey, clickedIndex) => {
+                if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && data) {
+                  // Range selection with shift key
+                  const start = Math.min(lastSelectedIndex, clickedIndex);
+                  const end = Math.max(lastSelectedIndex, clickedIndex);
+                  const rangeIds = data.slice(start, end + 1).map((item) => item.id);
+
+                  setSelectedFileIds((prev) => {
+                    // Create a Set for efficient lookup
+                    const prevSet = new Set(prev);
+                    // Add all items in range
+                    rangeIds.forEach((rangeId) => prevSet.add(rangeId));
+                    return Array.from(prevSet);
+                  });
+                } else {
+                  // Normal selection
+                  setSelectedFileIds((prev) => {
+                    if (checked) {
+                      return [...prev, id];
+                    }
+                    return prev.filter((item) => item !== id);
+                  });
+                }
+                setLastSelectedIndex(clickedIndex);
               }}
               selected={selectFileIds.includes(item.id)}
               {...item}

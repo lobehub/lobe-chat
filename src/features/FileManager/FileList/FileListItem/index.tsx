@@ -79,7 +79,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
 interface FileRenderItemProps extends FileListItem {
   index: number;
   knowledgeBaseId?: string;
-  onSelectedChange: (id: string, selected: boolean) => void;
+  onSelectedChange: (id: string, selected: boolean, shiftKey: boolean, index: number) => void;
   selected?: boolean;
 }
 
@@ -100,6 +100,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     chunkingStatus,
     onSelectedChange,
     knowledgeBaseId,
+    index,
   }) => {
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
@@ -140,7 +141,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
               onClick={(e) => {
                 e.stopPropagation();
 
-                onSelectedChange(id, !selected);
+                onSelectedChange(id, !selected, e.shiftKey, index);
               }}
               style={{ paddingInline: 4 }}
             >

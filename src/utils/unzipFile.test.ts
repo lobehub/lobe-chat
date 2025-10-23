@@ -18,7 +18,7 @@ describe('unzipFile', () => {
       });
     });
 
-    const zipFile = new File([zipped], 'test.zip', { type: 'application/zip' });
+    const zipFile = new File([new Uint8Array(zipped)], 'test.zip', { type: 'application/zip' });
 
     const extractedFiles = await unzipFile(zipFile);
 
@@ -47,7 +47,7 @@ describe('unzipFile', () => {
       });
     });
 
-    const zipFile = new File([zipped], 'test.zip', { type: 'application/zip' });
+    const zipFile = new File([new Uint8Array(zipped)], 'test.zip', { type: 'application/zip' });
 
     const extractedFiles = await unzipFile(zipFile);
 
@@ -69,7 +69,7 @@ describe('unzipFile', () => {
       });
     });
 
-    const zipFile = new File([zipped], 'test.zip', { type: 'application/zip' });
+    const zipFile = new File([new Uint8Array(zipped)], 'test.zip', { type: 'application/zip' });
 
     const extractedFiles = await unzipFile(zipFile);
 
@@ -91,7 +91,7 @@ describe('unzipFile', () => {
       });
     });
 
-    const zipFile = new File([zipped], 'test.zip', { type: 'application/zip' });
+    const zipFile = new File([new Uint8Array(zipped)], 'test.zip', { type: 'application/zip' });
 
     const extractedFiles = await unzipFile(zipFile);
 
@@ -111,7 +111,7 @@ describe('unzipFile', () => {
       });
     });
 
-    const zipFile = new File([zipped], 'empty.zip', { type: 'application/zip' });
+    const zipFile = new File([new Uint8Array(zipped)], 'empty.zip', { type: 'application/zip' });
 
     const extractedFiles = await unzipFile(zipFile);
 

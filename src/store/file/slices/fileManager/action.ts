@@ -1,7 +1,10 @@
+import { t } from 'i18next';
+import pMap from 'p-map';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { FILE_UPLOAD_BLACKLIST } from '@/const/file';
+import { message } from '@/components/AntdStaticMethods';
+import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
 import { useClientDataSWR } from '@/libs/swr';
 import { fileService } from '@/services/file';
 import { ServerService } from '@/services/file/server';
@@ -110,15 +113,29 @@ export const createFileManageSlice: StateCreator<
     // 1. skip file in blacklist
     const files = filesToUpload.filter((file) => !FILE_UPLOAD_BLACKLIST.includes(file.name));
 
-    // 2. add files
+    // 2. Show queue info if there are more files than the limit
+    if (files.length > MAX_UPLOAD_FILE_COUNT) {
+      const remainingCount = files.length - MAX_UPLOAD_FILE_COUNT;
+      message.info(
+        t('uploadDock.fileQueueInfo', {
+          count: MAX_UPLOAD_FILE_COUNT,
+          ns: 'file',
+          remaining: remainingCount,
+        }),
+      );
+    }
+
+    // 3. Add all files to dock
     dispatchDockFileList({
       atStart: true,
       files: files.map((file) => ({ file, id: file.name, status: 'pending' })),
       type: 'addFiles',
     });
 
-    const uploadResults = await Promise.all(
-      files.map(async (file) => {
+    // 4. Upload files with concurrency limit using p-map
+    const uploadResults = await pMap(
+      files,
+      async (file) => {
         const result = await get().uploadWithProgress({
           file,
           knowledgeBaseId,
@@ -128,10 +145,11 @@ export const createFileManageSlice: StateCreator<
         await get().refreshFileList();
 
         return { file, fileId: result?.id, fileType: file.type };
-      }),
+      },
+      { concurrency: MAX_UPLOAD_FILE_COUNT },
     );
 
-    // 3. auto-embed files that support chunking
+    // 5. auto-embed files that support chunking
     const fileIdsToEmbed = uploadResults
       .filter(({ fileType, fileId }) => fileId && !isChunkingUnsupported(fileType))
       .map(({ fileId }) => fileId!);
