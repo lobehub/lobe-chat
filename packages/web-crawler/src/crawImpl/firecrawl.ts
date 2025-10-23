@@ -13,8 +13,8 @@ interface FirecrawlMetadata {
   ogTitle?: string;
   ogUrl?: string;
   robots: string;
-  statusCode: number;
   sourceURL: string;
+  statusCode: number;
   title: string;
 }
 
@@ -25,14 +25,14 @@ interface FirecrawlResults {
 }
 
 interface FirecrawlResponse {
-  success: boolean;
   data: FirecrawlResults;
+  success: boolean;
 }
 
 export const firecrawl: CrawlImpl = async (url) => {
   // Get API key from environment variable
   const apiKey = process.env.FIRECRAWL_API_KEY;
-  const baseUrl = process.env.FIRECRAWL_URL || 'https://api.firecrawl.dev/v1';
+  const baseUrl = process.env.FIRECRAWL_URL || 'https://api.firecrawl.dev/v2';
 
   let res: Response;
 
@@ -40,7 +40,7 @@ export const firecrawl: CrawlImpl = async (url) => {
     res = await withTimeout(
       fetch(`${baseUrl}/scrape`, {
         body: JSON.stringify({
-          formats: ["markdown"], // ["markdown", "html"]
+          formats: ['markdown'], // ["markdown", "html"]
           url,
         }),
         headers: {
