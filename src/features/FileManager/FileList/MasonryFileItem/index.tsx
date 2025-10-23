@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -304,9 +304,37 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
 
-    // Fetch markdown content
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [isInView, setIsInView] = useState(false);
+
+    // Use Intersection Observer to detect when card enters viewport
     useEffect(() => {
-      if (isMarkdown && url) {
+      if (!cardRef.current) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !isInView) {
+              setIsInView(true);
+            }
+          });
+        },
+        {
+          rootMargin: '50px', // Start loading slightly before entering viewport
+          threshold: 0.1,
+        },
+      );
+
+      observer.observe(cardRef.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }, [isInView]);
+
+    // Fetch markdown content only when in viewport
+    useEffect(() => {
+      if (isMarkdown && url && isInView && !markdownContent) {
         setIsLoadingMarkdown(true);
         fetch(url)
           .then((res) => res.text())
@@ -323,10 +351,10 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             setIsLoadingMarkdown(false);
           });
       }
-    }, [isMarkdown, url]);
+    }, [isMarkdown, url, isInView, markdownContent]);
 
     return (
-      <div className={cx(styles.card, selected && styles.selected)}>
+      <div className={cx(styles.card, selected && styles.selected)} ref={cardRef}>
         <div
           className={cx('checkbox', styles.checkbox)}
           onClick={(e) => {
@@ -355,26 +383,29 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     <FileIcon fileName={name} fileType={fileType} size={64} />
                   </div>
                 )}
-                <Image
-                  alt={name}
-                  onError={() => setImageLoaded(false)}
-                  onLoad={() => setImageLoaded(true)}
-                  preview={{
-                    src: url,
-                  }}
-                  src={url}
-                  style={{
-                    display: 'block',
-                    height: 'auto',
-                    opacity: imageLoaded ? 1 : 0,
-                    transition: 'opacity 0.3s',
-                    width: '100%',
-                  }}
-                  wrapperStyle={{
-                    display: 'block',
-                    width: '100%',
-                  }}
-                />
+                {isInView && (
+                  <Image
+                    alt={name}
+                    loading="lazy"
+                    onError={() => setImageLoaded(false)}
+                    onLoad={() => setImageLoaded(true)}
+                    preview={{
+                      src: url,
+                    }}
+                    src={url}
+                    style={{
+                      display: 'block',
+                      height: 'auto',
+                      opacity: imageLoaded ? 1 : 0,
+                      transition: 'opacity 0.3s',
+                      width: '100%',
+                    }}
+                    wrapperStyle={{
+                      display: 'block',
+                      width: '100%',
+                    }}
+                  />
+                )}
                 {/* Hover overlay */}
                 <div className={styles.hoverOverlay}>
                   <div className={styles.overlayTitle}>{name}</div>

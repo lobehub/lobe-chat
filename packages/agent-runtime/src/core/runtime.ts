@@ -256,15 +256,11 @@ export class AgentRuntime {
   }
 
   /**
-   * Create a new agent state with flexible initialization
-   * @param partialState - Partial state to override defaults
-   * @returns Complete AgentState with defaults filled in
+   * Create default usage statistics structure
+   * @returns Default Usage object with all counters set to 0
    */
-  static createInitialState(partialState: Partial<AgentState> & { sessionId: string }): AgentState {
-    const now = new Date().toISOString();
-
-    // Default usage statistics
-    const defaultUsage: Usage = {
+  static createDefaultUsage(): Usage {
+    return {
       humanInteraction: {
         approvalRequests: 0,
         promptRequests: 0,
@@ -282,9 +278,15 @@ export class AgentRuntime {
         totalTimeMs: 0,
       },
     };
+  }
 
-    // Default cost structure
-    const defaultCost: Cost = {
+  /**
+   * Create default cost structure
+   * @returns Default Cost object with all costs set to 0
+   */
+  static createDefaultCost(): Cost {
+    const now = new Date().toISOString();
+    return {
       calculatedAt: now,
       currency: 'USD',
       llm: {
@@ -299,16 +301,25 @@ export class AgentRuntime {
       },
       total: 0,
     };
+  }
+
+  /**
+   * Create a new agent state with flexible initialization
+   * @param partialState - Partial state to override defaults
+   * @returns Complete AgentState with defaults filled in
+   */
+  static createInitialState(partialState: Partial<AgentState> & { sessionId: string }): AgentState {
+    const now = new Date().toISOString();
 
     return {
-      cost: defaultCost,
+      cost: AgentRuntime.createDefaultCost(),
       // Default values
       createdAt: now,
       lastModified: now,
       messages: [],
       status: 'idle',
       stepCount: 0,
-      usage: defaultUsage,
+      usage: AgentRuntime.createDefaultUsage(),
       // User provided values override defaults
       ...partialState,
     };

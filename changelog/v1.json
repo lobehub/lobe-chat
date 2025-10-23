@@ -1,5 +1,43 @@
 [
   {
+    "children": {},
+    "date": "2025-10-22",
+    "version": "1.141.6"
+  },
+  {
+    "children": {
+      "improvements": ["Change discover page from RSC to SPA to improve performance."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix model runtime cost calculate with CNY."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.3"
+  },
+  {
+    "children": {},
+    "date": "2025-10-21",
+    "version": "1.141.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor context engine."]
+    },
+    "date": "2025-10-21",
+    "version": "1.141.1"
+  },
+  {
     "children": {
       "features": ["Add PDF export functionality to share modal."],
       "fixes": [
