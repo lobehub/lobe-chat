@@ -1,5 +1,4 @@
 import { type AliasToken, createStyles } from '@/components/styles';
-import { AggregationColor, isBright } from '@/utils/color';
 
 import { CapsuleTabsSize } from './type';
 
@@ -7,37 +6,42 @@ const getSizeStyles = (
   token: AliasToken,
   size: CapsuleTabsSize,
 ): {
-  borderRadius: number;
   fontSize: number;
+  indicatorHeight: number;
+  paddingBottom: number;
   paddingHorizontal: number;
-  paddingVertical: number;
+  paddingTop: number;
 } => {
   const sizeMap: Record<
     CapsuleTabsSize,
     {
-      borderRadius: number;
       fontSize: number;
+      indicatorHeight: number;
+      paddingBottom: number;
       paddingHorizontal: number;
-      paddingVertical: number;
+      paddingTop: number;
     }
   > = {
     large: {
-      borderRadius: token.borderRadiusLG,
       fontSize: token.fontSizeLG,
-      paddingHorizontal: token.paddingXL,
-      paddingVertical: token.paddingSM,
+      indicatorHeight: 3,
+      paddingBottom: token.paddingSM,
+      paddingHorizontal: token.paddingXXS,
+      paddingTop: token.paddingSM,
     },
     middle: {
-      borderRadius: token.borderRadiusLG,
       fontSize: token.fontSize,
-      paddingHorizontal: token.paddingLG,
-      paddingVertical: token.paddingXS,
+      indicatorHeight: 2,
+      paddingBottom: token.paddingSM,
+      paddingHorizontal: token.paddingXXS / 2,
+      paddingTop: token.paddingXS,
     },
     small: {
-      borderRadius: token.borderRadiusSM,
       fontSize: token.fontSizeSM,
-      paddingHorizontal: token.paddingSM,
-      paddingVertical: token.paddingXXS,
+      indicatorHeight: 2,
+      paddingBottom: token.paddingXS,
+      paddingHorizontal: 0,
+      paddingTop: token.paddingXXS,
     },
   };
 
@@ -46,41 +50,40 @@ const getSizeStyles = (
 
 export const useStyles = createStyles(
   ({ token }, size: 'large' | 'middle' | 'small' = 'middle') => {
-    const activeTabColor = token.colorPrimary;
-    const solidTextColor = isBright(new AggregationColor(activeTabColor), '#fff') ? '#000' : '#fff';
     const sizeStyles = getSizeStyles(token, size);
 
     return {
       container: {
         flexDirection: 'row',
       },
+      contentWrapper: {
+        position: 'relative',
+      },
+      indicator: {
+        backgroundColor: token.colorPrimary,
+        borderRadius: sizeStyles.indicatorHeight,
+        bottom: 0,
+        height: sizeStyles.indicatorHeight,
+        position: 'absolute',
+      },
       scrollView: {
         flexGrow: 0,
       },
       tab: {
         alignItems: 'center',
-        backgroundColor: token.colorBgContainer,
-        borderRadius: sizeStyles.borderRadius,
         marginRight: token.marginXS,
+        paddingBottom: sizeStyles.paddingBottom,
         paddingHorizontal: sizeStyles.paddingHorizontal,
-        paddingVertical: sizeStyles.paddingVertical,
-      },
-      tabActive: {
-        backgroundColor: activeTabColor,
+        paddingTop: sizeStyles.paddingTop,
       },
       tabContent: {
         alignItems: 'center',
         flexDirection: 'row',
       },
       tabText: {
-        color: token.colorText,
         fontSize: sizeStyles.fontSize,
-        lineHeight: sizeStyles.fontSize,
-        textTransform: 'capitalize',
       },
-      tabTextActive: {
-        color: solidTextColor,
-      },
+
       wrapper: {
         position: 'relative',
       },

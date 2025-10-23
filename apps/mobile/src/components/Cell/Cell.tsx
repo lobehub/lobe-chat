@@ -24,6 +24,7 @@ const Cell = memo<CellProps>(
     titleProps,
     descriptionProps,
     iconProps,
+    headerProps,
     ...rest
   }) => {
     const theme = useTheme();
@@ -95,6 +96,7 @@ const Cell = memo<CellProps>(
           style={{
             overflow: 'hidden',
           }}
+          {...headerProps}
         >
           {icon && (
             <Icon
@@ -105,7 +107,13 @@ const Cell = memo<CellProps>(
             />
           )}
           {descriptionNode ? (
-            <Flexbox gap={4}>
+            <Flexbox
+              gap={4}
+              style={{
+                flex: 1,
+                overflow: 'hidden',
+              }}
+            >
               {titleNode}
               {descriptionNode}
             </Flexbox>

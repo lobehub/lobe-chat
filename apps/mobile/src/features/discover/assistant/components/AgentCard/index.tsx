@@ -1,20 +1,19 @@
 import { DiscoverAssistantItem } from '@lobechat/types';
-import { Avatar, GitHubAvatar, Space, Tag } from '@lobehub/ui-rn';
+import { ActionIcon, Avatar, Cell, Flexbox, Text, useTheme } from '@lobehub/ui-rn';
 import dayjs from 'dayjs';
 import { router } from 'expo-router';
+import { PlusIcon } from 'lucide-react-native';
 import { memo, useCallback } from 'react';
-import { Pressable, Text, View } from 'react-native';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
-
-import { useStyles } from './style';
 
 interface AgentCardProps {
   item: DiscoverAssistantItem;
 }
 
 const AgentCardComponent = ({ item }: AgentCardProps) => {
-  const { styles } = useStyles();
+  const theme = useTheme();
+
   const { identifier } = item;
 
   const handlePress = useCallback(() => {
@@ -25,39 +24,31 @@ const AgentCardComponent = ({ item }: AgentCardProps) => {
   }, [identifier]);
 
   return (
-    <Pressable onPress={handlePress} style={styles.cardLink}>
-      <View style={styles.card}>
-        <View style={styles.cardContent}>
-          <View style={styles.headerContainer}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.name}>{item.title}</Text>
-
-              <Space align="center">
-                <GitHubAvatar size={24} username={item.author} />
-                <Text style={styles.authorName}>
-                  {item.author || 'LobeChat'}
-                  <Text style={styles.date}>{dayjs(item.createdAt).format('YYYY-MM-DD')}</Text>
-                </Text>
-              </Space>
-            </View>
-
-            <Avatar avatar={item.avatar || '🤖'} size={AVATAR_SIZE_MEDIUM} />
-          </View>
-
-          <Text numberOfLines={2} style={styles.description}>
+    <Cell
+      description={
+        <Flexbox flex={1} gap={4}>
+          <Text color={theme.colorTextSecondary} ellipsis>
             {item.description}
           </Text>
-
-          {item.tags && item.tags.length > 0 && (
-            <View style={styles.tagsContainer}>
-              {item.tags.map((tag: string) => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
-            </View>
+          {item.author && (
+            <Text fontSize={12} type={'secondary'}>
+              @{item.author}
+              {' · '}
+              {dayjs(item.createdAt).format('YYYY-MM-DD')}
+            </Text>
           )}
-        </View>
-      </View>
-    </Pressable>
+        </Flexbox>
+      }
+      extra={<ActionIcon glass icon={PlusIcon} size={'small'} variant={'filled'} />}
+      headerProps={{
+        align: 'flex-start',
+      }}
+      icon={<Avatar avatar={item.avatar || '🤖'} size={AVATAR_SIZE_MEDIUM} />}
+      iconSize={AVATAR_SIZE_MEDIUM}
+      onPress={handlePress}
+      showArrow={false}
+      title={item.title}
+    />
   );
 };
 
