@@ -1,22 +1,31 @@
-import { Button, Icon, Markdown, PageContainer, Tag } from '@lobehub/ui-rn';
+import {
+  Avatar,
+  Button,
+  Center,
+  Divider,
+  Empty,
+  Flexbox,
+  Markdown,
+  PageContainer,
+  ScrollShadow,
+  Text,
+} from '@lobehub/ui-rn';
 import { router, useLocalSearchParams } from 'expo-router';
-import { BotMessageSquare } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, InteractionManager, ScrollView, Text, View } from 'react-native';
+import { Alert, InteractionManager } from 'react-native';
 
-import DetailHeader from '@/features/discover/assistant/components/DetailHeader';
+import ChatBubble from '@/features/chat/ChatBubble';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
 import { useDiscoverStore } from '@/store/discover';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-
-import { useStyles } from './styles';
+import { useAuth } from '@/store/user';
 
 const AssistantDetail = () => {
   const { slugs } = useLocalSearchParams<{ slugs: string[] }>();
   const identifier = decodeURIComponent(slugs.join('/'));
-  const { styles } = useStyles();
+  const { user } = useAuth();
   const { t } = useTranslation(['common', 'discover']);
   const [isAdding, setIsAdding] = useState(false);
   const createSession = useSessionStore((s) => s.createSession);
@@ -98,88 +107,91 @@ const AssistantDetail = () => {
   //   }
   // };
 
+  let content;
+
   if (isLoading) {
-    return (
-      <PageContainer showBack title={t('assistant.detail.title', { ns: 'discover' })}>
-        <ScrollView style={styles.scrollContainer}>
-          <SkeletonDetail />
-        </ScrollView>
-      </PageContainer>
-    );
-  }
-
-  if (error || !agent) {
-    return (
-      <PageContainer
-        showBack
-        style={styles.errorContainer}
-        title={t('assistant.detail.title', { ns: 'discover' })}
-      >
-        <Text style={styles.errorText}>
-          {!identifier
+    content = <SkeletonDetail />;
+  } else if (error || !agent) {
+    content = (
+      <Empty
+        description={
+          !identifier
             ? t('assistant.detail.notFoundIdentifier', { ns: 'discover' })
-            : t('assistant.detail.loadFailed', { ns: 'discover' })}
-        </Text>
-      </PageContainer>
+            : t('assistant.detail.loadFailed', { ns: 'discover' })
+        }
+      />
+    );
+  } else {
+    content = (
+      <>
+        <ScrollShadow size={3} style={{ flex: 1 }}>
+          <Flexbox gap={16} padding={16}>
+            <Center>
+              <Avatar alt={agent.title} avatar={agent.avatar || '🤖'} size={100} />
+            </Center>
+            {agent.config.openingMessage && <Markdown>{agent.config.openingMessage}</Markdown>}
+          </Flexbox>
+          <Divider />
+          <Flexbox padding={16}>
+            {agent.examples?.map((item, index) => (
+              <ChatBubble
+                key={index}
+                message={
+                  {
+                    ...item,
+                    meta:
+                      item.role === 'user'
+                        ? {
+                            avatar: user?.avatar,
+                            title: user?.name || user?.username || 'User',
+                          }
+                        : {
+                            avatar: agent.avatar,
+                            title: agent.title || 'Assistant',
+                          },
+                  } as any
+                }
+                showActions={false}
+                showTime={false}
+                showTitle
+              />
+            ))}
+          </Flexbox>
+        </ScrollShadow>
+        <Flexbox padding={16}>
+          <Button
+            block
+            disabled={isAdding}
+            loading={isAdding}
+            onPress={handleAddAssistant}
+            type="primary"
+          >
+            {t('assistant.detail.addAndChat', { ns: 'discover' })}
+          </Button>
+        </Flexbox>
+      </>
     );
   }
-
-  // 获取系统角色内容（可能存在于不同的位置）
-  const systemRoleContent = agent.config.systemRole;
 
   return (
-    <PageContainer showBack title={t('assistant.detail.title', { ns: 'discover' })}>
-      <ScrollView style={styles.scrollContainer}>
-        <View style={styles.container}>
-          {/* Header with avatar on left, title/author/date on right */}
-          <DetailHeader
-            author={agent.author || 'LobeChat'}
-            avatar={agent.avatar || '🤖'}
-            createdAt={agent.createdAt}
-            title={agent.title}
-          />
-
-          {/* 描述信息 */}
-          <Text style={styles.description}>{agent.description}</Text>
-
-          {/* 标签列表 */}
-          {agent.tags && agent.tags.length > 0 && (
-            <View style={styles.tagsContainer}>
-              {agent.tags.map((tag: string) => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
-            </View>
-          )}
-
-          {/* 添加助手与对话按钮 */}
-          <View style={styles.actionButtonsContainer}>
-            <Button
-              block
-              disabled={isAdding}
-              loading={isAdding}
-              onPress={handleAddAssistant}
-              type="primary"
-            >
-              {t('assistant.detail.addAndChat', { ns: 'discover' })}
-            </Button>
-          </View>
-
-          {/* 系统提示区域 */}
-          {systemRoleContent && (
-            <View style={styles.systemRoleContainer}>
-              <View style={styles.settingsTitleContainer}>
-                <Icon icon={BotMessageSquare} />
-                <Text style={styles.systemRoleTitle}>
-                  {t('assistant.detail.assistantSettings', { ns: 'discover' })}
-                </Text>
-              </View>
-              <View style={styles.systemRoleContentContainer}>
-                <Markdown>{systemRoleContent}</Markdown>
-              </View>
-            </View>
-          )}
-        </View>
-      </ScrollView>
+    <PageContainer
+      showBack
+      title={
+        agent?.title ? (
+          <Flexbox align={'center'} gap={3} justify={'center'}>
+            <Text align={'center'} ellipsis strong>
+              {agent.title}
+            </Text>
+            <Text align={'center'} ellipsis fontSize={12} type={'secondary'}>
+              @{agent.author}
+            </Text>
+          </Flexbox>
+        ) : (
+          t('assistant.detail.title', { ns: 'discover' })
+        )
+      }
+    >
+      {content}
     </PageContainer>
   );
 };
