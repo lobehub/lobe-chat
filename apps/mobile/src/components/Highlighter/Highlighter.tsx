@@ -66,7 +66,7 @@ const Highlighter = memo<HighlighterProps>(
             color={copied ? theme.colorSuccess : theme.colorTextDescription}
             icon={copied ? Check : Copy}
             onPress={handleCopy}
-            size="small"
+            size={14}
             style={styles.simpleCopyButton}
           />
         )}

@@ -1,8 +1,14 @@
-import type { ForwardedRef, ReactNode } from 'react';
-import type { ScrollView, ScrollViewProps } from 'react-native';
+import type { FlashListProps } from '@shopify/flash-list';
 
-export interface ScrollShadowProps extends ScrollViewProps {
-  children?: ReactNode;
+export interface FlashListScrollShadowProps<T>
+  extends Omit<
+    FlashListProps<T>,
+    'horizontal' | 'showsHorizontalScrollIndicator' | 'showsVerticalScrollIndicator'
+  > {
+  /**
+   * Item estimated size for FlashList performance optimization
+   */
+  estimatedItemSize: number;
   /**
    * 是否隐藏滚动条
    * @default false
@@ -33,9 +39,9 @@ export interface ScrollShadowProps extends ScrollViewProps {
    */
   orientation?: 'vertical' | 'horizontal';
   /**
-   * Ref to the underlying ScrollView
+   * Ref to the underlying FlashList
    */
-  ref?: ForwardedRef<ScrollView>;
+  ref?: any;
   /**
    * 阴影大小 (0-100 的百分比)
    * @default 40

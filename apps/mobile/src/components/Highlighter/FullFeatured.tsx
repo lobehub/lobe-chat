@@ -1,10 +1,11 @@
 import * as Clipboard from 'expo-clipboard';
 import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react-native';
 import { memo, useState } from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import ActionIcon from '@/components/ActionIcon';
 import Block from '@/components/Block';
+import Flexbox from '@/components/Flexbox';
 import Text from '@/components/Text';
 
 import { LanguageSelect } from './components/LanguageSelect';
@@ -86,39 +87,48 @@ const FullFeatured = memo<FullFeaturedProps>(
       <Block
         style={[styles.container, style]}
         testID="highlighter-full-featured"
-        variant={'outlined'}
+        variant={'filled'}
       >
-        <View style={[styles.headerContainer]}>
-          <View style={styles.headerLeft}>
+        <Flexbox
+          align={'center'}
+          horizontal
+          justify={'space-between'}
+          paddingBlock={8}
+          paddingInline={8}
+          style={{
+            backgroundColor: theme.colorFillQuaternary,
+          }}
+        >
+          <Flexbox align={'center'} horizontal justify={'flex-start'}>
             <ActionIcon
               color={theme.colorTextDescription}
               icon={expanded ? ChevronDown : ChevronRight}
               onPress={() => setExpanded(!expanded)}
-              size="small"
+              size={14}
             />
-          </View>
+          </Flexbox>
 
           {allowChangeLanguage && showLanguage ? (
             <LanguageSelect onSelect={handleLanguageChange} value={language} />
           ) : (
             (showLanguage || fileName) && (
-              <Text code fontSize={12} type={'secondary'}>
+              <Text code color={theme.colorTextSecondary} fontSize={12}>
                 {fileName || language}
               </Text>
             )
           )}
 
-          <View style={styles.headerRight}>
+          <Flexbox align={'center'} horizontal justify={'flex-end'}>
             {copyable && (
               <ActionIcon
                 color={copied ? theme.colorSuccess : theme.colorTextDescription}
                 icon={copied ? Check : Copy}
                 onPress={handleCopy}
-                size="small"
+                size={14}
               />
             )}
-          </View>
-        </View>
+          </Flexbox>
+        </Flexbox>
         {expanded && <TokenDisplay code={code} lang={language} />}
       </Block>
     );

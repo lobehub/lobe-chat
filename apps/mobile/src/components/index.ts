@@ -37,6 +37,10 @@ export {
 } from './Dropdown';
 export { default as EmojiSelector, type EmojiSelectorProps } from './EmojiSelector';
 export { default as Empty, type EmptyProps } from './Empty';
+export {
+  default as FlashListScrollShadow,
+  type FlashListScrollShadowProps,
+} from './FlashListScrollShadow';
 export { default as Flexbox, type FlexboxProps } from './Flexbox';
 export { default as FluentEmoji } from './FluentEmoji';
 export { default as Form, type FormInstance, type FormItemProps, type FormProps } from './Form';

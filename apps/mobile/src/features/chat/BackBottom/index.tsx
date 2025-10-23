@@ -1,7 +1,7 @@
-import { Icon } from '@lobehub/ui-rn';
+import { Block, Icon } from '@lobehub/ui-rn';
 import { ArrowDown } from 'lucide-react-native';
 import { memo } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useStyles } from './style';
 
@@ -11,19 +11,22 @@ interface ScrollToBottomProps {
 }
 
 const ScrollToBottom = ({ onScrollToBottom, visible }: ScrollToBottomProps) => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
 
   if (!visible) return null;
 
   return (
     <View pointerEvents="box-none" style={styles.scrollToBottomWrapper}>
-      <TouchableOpacity
-        activeOpacity={1}
+      <Block
+        borderRadius={40}
+        clickable
         onPress={onScrollToBottom}
-        style={styles.scrollToBottomBtn}
+        padding={10}
+        shadow
+        variant={'outlined'}
       >
-        <Icon icon={ArrowDown} />
-      </TouchableOpacity>
+        <Icon color={theme.colorTextSecondary} icon={ArrowDown} size={20} />
+      </Block>
     </View>
   );
 };

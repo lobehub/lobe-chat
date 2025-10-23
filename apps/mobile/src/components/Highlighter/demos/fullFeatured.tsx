@@ -161,14 +161,7 @@ npx react-native run-android
         <View key={index} style={styles.exampleContainer}>
           <Text style={styles.exampleTitle}>{example.title}</Text>
           <Text style={styles.exampleDescription}>{example.description}</Text>
-          <Highlighter
-            code={example.code}
-            copyable
-            fileName={example.fileName}
-            fullFeatured
-            lang={example.lang}
-            showLanguage
-          />
+          <Highlighter code={example.code} copyable fullFeatured lang={example.lang} showLanguage />
         </View>
       ))}
 
