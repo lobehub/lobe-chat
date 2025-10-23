@@ -2,22 +2,16 @@ import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Block, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'nextjs-toploader/app';
-import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
-import { AGENTS_INDEX_GITHUB, AGENTS_OFFICIAL_URL } from '@/const/url';
-import { useQuery } from '@/hooks/useQuery';
-import { AssistantMarketSource, DiscoverAssistantItem } from '@/types/discover';
+import { DiscoverAssistantItem } from '@/types/discover';
 
 import TokenTag from './TokenTag';
-
-const isUrl = (value?: string | null) => (value ? /^https?:\/\//.test(value) : false);
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -68,33 +62,17 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     backgroundColor,
   }) => {
     const { styles, theme } = useStyles();
-    const router = useRouter();
-    const { source } = useQuery() as { source?: AssistantMarketSource };
-    const isLegacy = source === 'legacy';
-    const authorString = typeof author === 'string' ? author : undefined;
-    const avatarString = typeof avatar === 'string' ? avatar : undefined;
-    const avatarSrc = avatarString && avatarString !== authorString ? avatarString : undefined;
-    const authorName = authorString && !isUrl(authorString) ? authorString : undefined;
-    const authorAvatar = authorString && isUrl(authorString) ? authorString : undefined;
-    const baseGithubLocaleUrl = urlJoin(AGENTS_INDEX_GITHUB, 'tree/main/locales');
-    const marketplaceHref = isLegacy
-      ? urlJoin(baseGithubLocaleUrl, identifier)
-      : urlJoin(AGENTS_OFFICIAL_URL, identifier);
-    const link = qs.stringifyUrl(
-      {
-        query: source ? { source } : {},
-        url: urlJoin('/discover/assistant', identifier),
-      },
-      { skipNull: true },
-    );
+    const navigate = useNavigate();
+    const link = urlJoin('/assistant', identifier);
     const { t } = useTranslation('discover');
 
     return (
       <Block
         clickable
+        data-testid="assistant-item"
         height={'100%'}
         onClick={() => {
-          router.push(link);
+          navigate(link);
         }}
         style={{
           overflow: 'hidden',
@@ -120,7 +98,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
             title={identifier}
           >
             <Avatar
-              avatar={avatarSrc}
+              avatar={avatar}
               background={backgroundColor || 'transparent'}
               size={40}
               style={{ flex: 'none' }}
@@ -141,23 +119,27 @@ const AssistantItem = memo<DiscoverAssistantItem>(
                   overflow: 'hidden',
                 }}
               >
-                <Link href={link} style={{ color: 'inherit', overflow: 'hidden' }}>
+                <Link style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
                   <Text as={'h2'} className={styles.title} ellipsis>
                     {title}
                   </Text>
                 </Link>
               </Flexbox>
-              {authorName && <div className={styles.author}>{authorName}</div>}
+              {author && <div className={styles.author}>{author}</div>}
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
-            <Link href={marketplaceHref} onClick={(e) => e.stopPropagation()} target={'_blank'}>
-              {authorAvatar && !isLegacy ? (
-                <Avatar avatar={authorAvatar} size={24} />
-              ) : (
-                <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+            <a
+              href={urlJoin(
+                'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
+                identifier,
               )}
-            </Link>
+              onClick={(e) => e.stopPropagation()}
+              rel="noopener noreferrer"
+              target={'_blank'}
+            >
+              <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+            </a>
           </Flexbox>
         </Flexbox>
         <Flexbox flex={1} gap={12} paddingInline={16}>

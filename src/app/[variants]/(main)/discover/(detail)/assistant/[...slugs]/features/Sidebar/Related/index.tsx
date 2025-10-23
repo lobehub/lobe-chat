@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import Title from '../../../../../../features/Title';
@@ -44,7 +44,7 @@ const Related = memo(() => {
             { skipNull: true },
           );
           return (
-            <Link href={link} key={index} style={{ color: 'inherit', overflow: 'hidden' }}>
+            <Link key={index} style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
               <Item {...item} />
             </Link>
           );
