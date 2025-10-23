@@ -2,6 +2,8 @@ import { LiquidGlassView, isLiquidGlassSupported } from '@callstack/liquid-glass
 import { memo } from 'react';
 import { Pressable, type StyleProp, View, type ViewStyle } from 'react-native';
 
+import { useThemeMode } from '@/components';
+
 import type { FlexboxProps } from './type';
 
 const Flexbox = memo<FlexboxProps>(
@@ -24,6 +26,7 @@ const Flexbox = memo<FlexboxProps>(
     glass,
     ...rest
   }) => {
+    const { isDarkMode } = useThemeMode();
     const styles: StyleProp<ViewStyle> = {
       alignItems: align,
       display: 'flex',
@@ -45,6 +48,7 @@ const Flexbox = memo<FlexboxProps>(
         return (
           <Pressable onLongPress={onLongPress} onPress={onPress} {...rest}>
             <LiquidGlassView
+              colorScheme={isDarkMode ? 'dark' : 'light'}
               effect={'regular'}
               interactive
               style={[
@@ -54,7 +58,6 @@ const Flexbox = memo<FlexboxProps>(
                   backgroundColor: 'transparent',
                 },
               ]}
-              {...rest}
             >
               {children}
             </LiquidGlassView>
@@ -64,6 +67,7 @@ const Flexbox = memo<FlexboxProps>(
 
       return (
         <LiquidGlassView
+          colorScheme={isDarkMode ? 'dark' : 'light'}
           effect={'regular'}
           interactive={false}
           style={[
