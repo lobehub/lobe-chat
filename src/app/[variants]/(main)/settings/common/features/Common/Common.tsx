@@ -4,7 +4,7 @@ import { Form, type FormGroupItemType, Icon, ImageSelect, InputPassword } from '
 import { Select } from '@lobehub/ui';
 import { Segmented, Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { Ban, Gauge, Loader2Icon, Monitor, Moon, Sun, Waves } from 'lucide-react';
+import { Ban, Gauge, Loader2Icon, Monitor, Moon, Mouse, Sun, Waves } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -112,6 +112,28 @@ const Common = memo(() => {
         label: t('settingAppearance.animationMode.title'),
         minWidth: undefined,
         name: 'animationMode',
+      },
+      {
+        children: (
+          <Segmented
+            options={[
+              {
+                icon: <Icon icon={Ban} size={16} />,
+                label: t('settingAppearance.contextMenuMode.disabled'),
+                value: 'disabled',
+              },
+              {
+                icon: <Icon icon={Mouse} size={16} />,
+                label: t('settingAppearance.contextMenuMode.default'),
+                value: 'default',
+              },
+            ]}
+          />
+        ),
+        desc: t('settingAppearance.contextMenuMode.desc'),
+        label: t('settingAppearance.contextMenuMode.title'),
+        minWidth: undefined,
+        name: 'contextMenuMode',
       },
 
       {

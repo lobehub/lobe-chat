@@ -200,6 +200,12 @@
       "elegant": "Elegant",
       "title": "Reaktionsanimation"
     },
+    "contextMenuMode": {
+      "default": "LobeChat Standard",
+      "desc": "Wählen Sie das Anzeigeformat des Kontextmenüs für Chatnachrichten",
+      "disabled": "Nicht verwenden",
+      "title": "Kontextmenü-Option"
+    },
     "neutralColor": {
       "desc": "Anpassung der Graustufen mit unterschiedlichen Farbneigungen",
       "title": "Neutrale Farben"
