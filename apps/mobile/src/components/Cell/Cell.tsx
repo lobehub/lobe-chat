@@ -55,7 +55,7 @@ const Cell = memo<CellProps>(
         }}
       >
         {typeof extra === 'string' ? (
-          <Text ellipsis style={{ maxWidth: 100 }} type={danger ? 'danger' : 'secondary'}>
+          <Text ellipsis style={{ maxWidth: 180 }} type={danger ? 'danger' : 'secondary'}>
             {extra}
           </Text>
         ) : (
