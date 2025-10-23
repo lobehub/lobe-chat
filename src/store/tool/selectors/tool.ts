@@ -1,3 +1,4 @@
+import { ToolNameResolver } from '@lobechat/context-engine';
 import { pluginPrompts } from '@lobechat/prompts';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
@@ -5,12 +6,13 @@ import { MetaData } from '@/types/meta';
 import { LobeToolMeta } from '@/types/tool/tool';
 import { globalAgentContextManager } from '@/utils/client/GlobalAgentContextManager';
 import { hydrationPrompt } from '@/utils/promptTemplate';
-import { genToolCallingName } from '@/utils/toolCall';
 
 import { pluginHelpers } from '../helpers';
 import { ToolStoreState } from '../initialState';
 import { builtinToolSelectors } from '../slices/builtin/selectors';
 import { pluginSelectors } from '../slices/plugin/selectors';
+
+const toolNameResolver = new ToolNameResolver();
 
 const enabledSystemRoles =
   (tools: string[] = []) =>
@@ -36,7 +38,7 @@ const enabledSystemRoles =
         return {
           apis: manifest.api.map((m) => ({
             desc: m.description,
-            name: genToolCallingName(manifest.identifier, m.name, manifest.type),
+            name: toolNameResolver.generate(manifest.identifier, m.name, manifest.type),
           })),
           identifier: manifest.identifier,
           name: title,

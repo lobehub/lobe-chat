@@ -1,6 +1,7 @@
-import { minimax as minimaxChatModels , ModelProvider } from 'model-bank';
+import { ModelProvider, minimax as minimaxChatModels } from 'model-bank';
 
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { createMiniMaxImage } from './createImage';
 
 export const getMinimaxMaxOutputs = (modelId: string): number | undefined => {
@@ -23,14 +24,31 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
           ]
         : tools;
 
+      // Resolve parameters with constraints
+      const resolvedParams = resolveParameters(
+        {
+          max_tokens: max_tokens !== undefined ? max_tokens : getMinimaxMaxOutputs(payload.model),
+          temperature,
+          top_p,
+        },
+        {
+          normalizeTemperature: true,
+          topPRange: { max: 1, min: 0 },
+        },
+      );
+
+      // Minimax doesn't support temperature <= 0
+      const finalTemperature =
+        resolvedParams.temperature !== undefined && resolvedParams.temperature <= 0
+          ? undefined
+          : resolvedParams.temperature;
+
       return {
         ...params,
-        frequency_penalty: undefined,
-        max_tokens: max_tokens !== undefined ? max_tokens : getMinimaxMaxOutputs(payload.model),
-        presence_penalty: undefined,
-        temperature: temperature === undefined || temperature <= 0 ? undefined : temperature / 2,
+        max_tokens: resolvedParams.max_tokens,
+        temperature: finalTemperature,
         tools: minimaxTools,
-        top_p: top_p !== undefined && top_p > 0 && top_p <= 1 ? top_p : undefined,
+        top_p: resolvedParams.top_p,
       } as any;
     },
   },

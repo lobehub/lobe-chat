@@ -86,7 +86,19 @@ jobs:
                  [Original content]
                  </details>
 
-            4. Update using gh tool:
+            4. CRITICAL RULES to prevent hallucination and ensure accuracy:
+
+               - The "Original Content" section MUST contain the EXACT, UNMODIFIED original text byte-for-byte. NEVER add, remove, modify, or hallucinate ANY content in this section.
+               - Code blocks, error logs, JSON structures, and other technical content MUST appear in BOTH the translated section AND the original content section WITHOUT ANY MODIFICATION.
+               - When translating content with code/logs/JSON:
+                 * Copy the code/logs/JSON blocks identically to both sections
+                 * Only translate the natural language text (e.g., Chinese, Japanese) surrounding the code blocks
+                 * Keep all technical content (URLs, variable names, error messages in English) unchanged
+               - ALWAYS verify the "Original Content" section matches the source text exactly before updating
+               - If you detect any discrepancy, retrieve the original content again to ensure accuracy
+               - Pay special attention to the end of comments - do not drop or hallucinate the last sentences
+
+            5. Update using gh tool:
 
                - Choose the correct command based on the Event type in environment information:
                  - If Event is 'issues': gh issue edit [ISSUE_NUMBER] --title "[English title]" --body "[Translated content + Original content]"

@@ -33,8 +33,6 @@ const ChatItem = memo<ChatItemProps>(
     showTitle,
     time,
     editing,
-    onChange,
-    onEditingChange,
     messageExtra,
     renderMessage,
     errorMessage,
@@ -42,11 +40,15 @@ const ChatItem = memo<ChatItemProps>(
     aboveMessage,
     belowMessage,
     markdownProps,
+    showAvatar = true,
+    titleAddon,
+    disabled = false,
     id,
     ...rest
   }) => {
     const { mobile } = useResponsive();
     const { cx, styles } = useStyles({
+      disabled,
       editing,
       placement,
       primary,
@@ -70,26 +72,34 @@ const ChatItem = memo<ChatItemProps>(
         gap={mobile ? 6 : 12}
         {...rest}
       >
-        <Avatar
-          {...avatarProps}
-          addon={avatarAddon}
-          alt={avatarProps?.alt || avatar.title || 'avatar'}
-          avatar={avatar}
-          loading={loading}
-          onClick={onAvatarClick}
-          placement={placement}
-          size={mobile ? MOBILE_AVATAR_SIZE : undefined}
-          style={{
-            marginTop: 6,
-            ...avatarProps?.style,
-          }}
-        />
+        {showAvatar && (
+          <Avatar
+            {...avatarProps}
+            addon={avatarAddon}
+            alt={avatarProps?.alt || avatar.title || 'avatar'}
+            avatar={avatar}
+            loading={loading}
+            onClick={onAvatarClick}
+            placement={placement}
+            size={mobile ? MOBILE_AVATAR_SIZE : undefined}
+            style={{
+              marginTop: showTitle ? -12 : 6,
+              ...avatarProps?.style,
+            }}
+          />
+        )}
         <Flexbox
           align={placement === 'left' ? 'flex-start' : 'flex-end'}
           className={styles.messageContainer}
           ref={containerRef}
         >
-          <Title avatar={avatar} placement={placement} showTitle={showTitle} time={time} />
+          <Title
+            avatar={avatar}
+            placement={placement}
+            showTitle={showTitle}
+            time={time}
+            titleAddon={titleAddon}
+          />
           {aboveMessage}
           <Flexbox
             align={placement === 'left' ? 'flex-start' : 'flex-end'}
@@ -109,6 +119,7 @@ const ChatItem = memo<ChatItemProps>(
                 <ErrorContent error={error} message={errorMessage} placement={placement} />
               ) : (
                 <MessageContent
+                  disabled={disabled}
                   editing={editing}
                   id={id!}
                   markdownProps={markdownProps}
@@ -121,9 +132,7 @@ const ChatItem = memo<ChatItemProps>(
                       {messageExtra}
                     </>
                   }
-                  onChange={onChange}
                   onDoubleClick={onDoubleClick}
-                  onEditingChange={onEditingChange}
                   placement={placement}
                   primary={primary}
                   renderMessage={renderMessage}
@@ -142,7 +151,9 @@ const ChatItem = memo<ChatItemProps>(
           </Flexbox>
           {belowMessage}
         </Flexbox>
-        {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
+        {mobile && variant === 'bubble' && showAvatar && (
+          <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />
+        )}
       </Flexbox>
     );
   },

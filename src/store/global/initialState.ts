@@ -25,11 +25,18 @@ export enum ChatSettingsTabs {
   TTS = 'tts',
 }
 
+export enum GroupSettingsTabs {
+  Chat = 'chat',
+  Members = 'members',
+  Settings = 'settings',
+}
+
 export enum SettingsTabs {
   About = 'about',
   Agent = 'agent',
   Common = 'common',
   Hotkey = 'hotkey',
+  Image = 'image',
   LLM = 'llm',
   Provider = 'provider',
   Proxy = 'proxy',
@@ -50,6 +57,7 @@ export interface SystemStatus {
   expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  fileManagerViewMode?: 'list' | 'masonry';
   filePanelWidth: number;
   hideGemini2_5FlashImagePreviewChineseWarning?: boolean;
   hidePWAInstaller?: boolean;
@@ -118,6 +126,7 @@ export const INITIAL_STATUS = {
   chatInputHeight: 64,
   expandInputActionbar: true,
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
+  fileManagerViewMode: 'list' as const,
   filePanelWidth: 320,
   hideGemini2_5FlashImagePreviewChineseWarning: false,
   hidePWAInstaller: false,

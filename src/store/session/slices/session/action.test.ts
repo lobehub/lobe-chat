@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { message } from '@/components/AntdStaticMethods';
 import { SESSION_CHAT_URL } from '@/const/url';
+import { chatGroupService } from '@/services/chatGroup';
 import { sessionService } from '@/services/session';
 import { useSessionStore } from '@/store/session';
 import { LobeSessionType } from '@/types/session';
@@ -23,6 +24,12 @@ vi.mock('@/services/session', () => ({
     updateSessionGroupId: vi.fn(),
     searchSessions: vi.fn(),
     updateSessionPinned: vi.fn(),
+  },
+}));
+
+vi.mock('@/services/chatGroup', () => ({
+  chatGroupService: {
+    updateGroup: vi.fn(),
   },
 }));
 
@@ -175,16 +182,69 @@ describe('SessionAction', () => {
   });
 
   describe('updateSessionGroupId', () => {
-    it('should update the session group and refresh the list', async () => {
+    it('should update regular session group and refresh the list', async () => {
       const { result } = renderHook(() => useSessionStore());
       const sessionId = 'session-id';
       const groupId = 'new-group-id';
+
+      // Mock session selector to return a regular agent session
+      vi.spyOn(sessionSelectors, 'getSessionById').mockReturnValue(
+        () =>
+          ({
+            id: sessionId,
+            type: 'agent',
+          }) as any,
+      );
 
       await act(async () => {
         await result.current.updateSessionGroupId(sessionId, groupId);
       });
 
       expect(sessionService.updateSession).toHaveBeenCalledWith(sessionId, { group: groupId });
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+
+    it('should update chat group session and refresh the list', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const sessionId = 'group-session-id';
+      const groupId = 'new-group-id';
+
+      // Mock session selector to return a group session
+      vi.spyOn(sessionSelectors, 'getSessionById').mockReturnValue(
+        () =>
+          ({
+            id: sessionId,
+            type: 'group',
+          }) as any,
+      );
+
+      await act(async () => {
+        await result.current.updateSessionGroupId(sessionId, groupId);
+      });
+
+      expect(chatGroupService.updateGroup).toHaveBeenCalledWith(sessionId, { groupId });
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+
+    it('should handle default group for chat group sessions', async () => {
+      const { result } = renderHook(() => useSessionStore());
+      const sessionId = 'group-session-id';
+      const groupId = 'default';
+
+      // Mock session selector to return a group session
+      vi.spyOn(sessionSelectors, 'getSessionById').mockReturnValue(
+        () =>
+          ({
+            id: sessionId,
+            type: 'group',
+          }) as any,
+      );
+
+      await act(async () => {
+        await result.current.updateSessionGroupId(sessionId, groupId);
+      });
+
+      expect(chatGroupService.updateGroup).toHaveBeenCalledWith(sessionId, { groupId: null });
       expect(mockRefresh).toHaveBeenCalled();
     });
   });

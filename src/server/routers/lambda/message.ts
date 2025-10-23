@@ -93,6 +93,7 @@ export const messageRouter = router({
     .input(
       z.object({
         current: z.number().optional(),
+        groupId: z.string().nullable().optional(),
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
@@ -139,12 +140,28 @@ export const messageRouter = router({
   removeMessagesByAssistant: messageProcedure
     .input(
       z.object({
+        groupId: z.string().nullable().optional(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessagesBySession(input.sessionId, input.topicId);
+      return ctx.messageModel.deleteMessagesBySession(
+        input.sessionId,
+        input.topicId,
+        input.groupId,
+      );
+    }),
+
+  removeMessagesByGroup: messageProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        topicId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.deleteMessagesBySession(null, input.topicId, input.groupId);
     }),
 
   searchMessages: messageProcedure
@@ -179,6 +196,17 @@ export const messageRouter = router({
     .input(UpdateMessageRAGParamsSchema)
     .mutation(async ({ input, ctx }) => {
       await ctx.messageModel.updateMessageRAG(input.id, input.value);
+    }),
+
+  updateMetadata: messageProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        value: z.object({}).passthrough(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.updateMetadata(input.id, input.value);
     }),
 
   updatePluginError: messageProcedure

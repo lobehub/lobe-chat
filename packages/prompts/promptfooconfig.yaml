@@ -7,6 +7,7 @@ testPaths:
   - promptfoo/language-detection/eval.yaml
   - promptfoo/emoji-picker/eval.yaml
   - promptfoo/knowledge-qa/eval.yaml
+  - promptfoo/abstract-chunk/eval.yaml
 
 # Output configuration
 outputPath: promptfoo-results.json

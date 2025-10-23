@@ -1,6 +1,9 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { ChatCompletionErrorPayload } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { processMultiProviderModelList } from '../../utils/modelParse';
@@ -9,7 +12,7 @@ export interface Ai302ModelCard {
   id: string;
 }
 
-export const Lobe302AI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.302.ai/v1',
   chatCompletion: {
     handleError: (error: any): Omit<ChatCompletionErrorPayload, 'provider'> | undefined => {
@@ -32,7 +35,7 @@ export const Lobe302AI = createOpenAICompatibleRuntime({
     },
   },
   debug: {
-    chatCompletion: () => process.env.DEBUG_SILICONCLOUD_CHAT_COMPLETION === '1',
+    chatCompletion: () => process.env.DEBUG_AI302_CHAT_COMPLETION === '1',
   },
   errorType: {
     bizError: AgentRuntimeErrorType.ProviderBizError,
@@ -45,4 +48,6 @@ export const Lobe302AI = createOpenAICompatibleRuntime({
     return processMultiProviderModelList(modelList, 'ai302');
   },
   provider: ModelProvider.Ai302,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const Lobe302AI = createOpenAICompatibleRuntime(params);

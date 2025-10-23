@@ -1,6 +1,7 @@
 import { createStyles } from 'antd-style';
 import React, { memo } from 'react';
 
+import OrchestratorThinkingTag from '@/app/[variants]/(main)/chat/(workspace)/@conversation/features/ChatList/ChatItem/OrchestratorThinking';
 import { ChatItem } from '@/features/Conversation';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
@@ -63,22 +64,27 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
 
   const placement = displayMode === 'chat' && userRole === 'user' ? 'end' : 'start';
 
+  const isLatestItem = historyLength === index + 1;
+
   return (
-    <ChatItem
-      className={showThread ? cx(styles.line, styles[placement]) : ''}
-      enableHistoryDivider={enableHistoryDivider}
-      endRender={
-        showThread && (
-          <Thread
-            id={id}
-            placement={placement}
-            style={{ marginTop: displayMode === 'docs' ? 12 : undefined }}
-          />
-        )
-      }
-      id={id}
-      index={index}
-    />
+    <>
+      <ChatItem
+        className={showThread ? cx(styles.line, styles[placement]) : ''}
+        enableHistoryDivider={enableHistoryDivider}
+        endRender={
+          showThread && (
+            <Thread
+              id={id}
+              placement={placement}
+              style={{ marginTop: displayMode === 'docs' ? 12 : undefined }}
+            />
+          )
+        }
+        id={id}
+        index={index}
+      />
+      {isLatestItem && <OrchestratorThinkingTag />}
+    </>
   );
 });
 

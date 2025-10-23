@@ -15,7 +15,7 @@ permissions: read-all
 jobs:
   test:
     name: Code quality check
-    # 添加 PR label 触发条件，只有添加了 Build Desktop 标签的 PR 才会触发构建
+    # 添加 PR label 触发条件，只有添加了 trigger:build-desktop 标签的 PR 才会触发构建
     runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
     steps:
       - name: Checkout base
@@ -32,7 +32,7 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       - name: Install deps
         run: bun i
@@ -170,7 +170,7 @@ jobs:
             else
               ARCH_SUFFIX="x64"
             fi
-            
+
             mv latest-mac.yml "latest-mac-${ARCH_SUFFIX}.yml"
             echo "✅ Renamed latest-mac.yml to latest-mac-${ARCH_SUFFIX}.yml (detected: $SYSTEM_ARCH)"
             ls -la latest-mac-*.yml
@@ -216,11 +216,11 @@ jobs:
       - name: Install bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          bun-version: 1.2.23
 
       # 下载所有平台的构建产物
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: release
           pattern: release-*
@@ -262,7 +262,7 @@ jobs:
     steps:
       # 下载合并后的构建产物
       - name: Download merged artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: merged-release
           path: release

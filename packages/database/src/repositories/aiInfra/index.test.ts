@@ -298,6 +298,439 @@ describe('AiInfraRepos', () => {
       const disabledModels = result.filter((model) => !model.enabled);
       expect(disabledModels.length).toBeGreaterThan(0);
     });
+
+    it('should allow search=true and add searchImpl=params when user enables it without providing settings (builtin has no search and no settings)', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ] as AiProviderListItem[];
+
+      // User explicitly enables search but provides no settings field
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { search: true },
+        // no settings on user model
+      };
+
+      // Builtin does NOT have search capability and thus no settings
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([
+        {
+          id: 'gpt-4',
+          enabled: true,
+          type: 'chat' as const,
+          abilities: { search: false },
+          // no settings since builtin search is false
+        },
+      ]);
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find(
+        (m) => m.id === 'gpt-4' && m.providerId === 'openai' && m.type === 'chat',
+      );
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toMatchObject({ search: true });
+      // settings should remain undefined because builtin had none and user never has settings
+      expect(merged?.settings).toEqual({ searchImpl: 'params' });
+    });
+
+    it('should remove builtin rearch settings and disable search when user turns search off', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ] as AiProviderListItem[];
+
+      // User explicitly disables search and provides no settings field
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { search: false },
+        // no settings on user model
+      };
+
+      const builtinSettings = { searchImpl: 'tool' as const };
+
+      // Builtin has search capability and corresponding settings
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([
+        {
+          id: 'gpt-4',
+          enabled: true,
+          type: 'chat' as const,
+          abilities: { search: true },
+          settings: builtinSettings,
+        },
+      ]);
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find(
+        (m) => m.id === 'gpt-4' && m.providerId === 'openai' && m.type === 'chat',
+      );
+      expect(merged).toBeDefined();
+      // User's choice takes precedence
+      expect(merged?.abilities).toMatchObject({ search: false });
+      // Builtin settings are preserved on the merged model
+      expect(merged?.settings).toBeUndefined();
+    });
+
+    it('should set search=true and settings=params for custom provider when user enables search and builtin has no search/settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'custom', name: 'Custom Provider', source: 'custom' as const },
+      ] as AiProviderListItem[];
+
+      // Builtin (preset) has the model but without search and without settings
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([
+        {
+          id: 'my-model',
+          enabled: true,
+          type: 'chat' as const,
+          abilities: { search: false },
+          // no settings
+        } as any,
+      ]);
+
+      // User explicitly enables search; user models do not carry settings
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([
+        {
+          id: 'my-model',
+          providerId: 'custom',
+          enabled: true,
+          type: 'chat',
+          abilities: { search: true },
+        } as EnabledAiModel,
+      ]);
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'my-model' && m.providerId === 'custom');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toMatchObject({ search: true });
+      // For custom provider, when user enables search with no builtin settings, default to 'params'
+      expect(merged?.settings).toEqual({ searchImpl: 'params' });
+    });
+
+    // 测试场景：用户模型 abilitie 为空（Empty），而基础模型有搜索能力和设置
+    it('should retain builtin abilities and settings when user model has no abilities (empty) and builtin has settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: {}, // Empty object, no search
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        abilities: { search: false }, // 使用 builtin abilities
+        settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // 使用 builtin abilities
+      expect(merged?.abilities?.search).toEqual(false);
+      // 删去 builtin settings
+      expect(merged?.settings).toBeUndefined();
+    });
+
+    it('should retain builtin abilities and settings when user model has no abilities (empty) and builtin has settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: {}, // Empty object, no search
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        abilities: { search: true }, // 使用 builtin abilities
+        settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // 使用 builtin abilities
+      expect(merged?.abilities?.search).toEqual(true);
+      // 保留 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'params', searchProvider: 'google' });
+    });
+
+    // 测试场景：用户模型未启用搜索（abilities.search 为 undefined），而基础模型有搜索能力和设置
+    it('should retain builtin settings when user model has no abilities.search (undefined) and builtin has settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { vision: true }, // 启用 vision 能力, no search
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        abilities: { search: false }, // builtin abilities 不生效
+        settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // abilities.search 仍 undefined（兼容老版本）
+      expect(merged?.abilities?.search).toBeUndefined();
+      // 保留 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'params', searchProvider: 'google' });
+    });
+
+    it('should retain builtin settings when user model has no abilities.search (undefined) and builtin has settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { vision: true }, // 启用 vision 能力, no search
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        abilities: { search: true }, // builtin abilities 不生效
+        settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // abilities.search 仍 undefined（兼容老版本）
+      expect(merged?.abilities?.search).toBeUndefined();
+      // 保留 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'params', searchProvider: 'google' });
+    });
+
+    // 测试场景：用户模型未启用搜索（abilities.search 为 undefined），而基础模型也无搜索能力和设置
+    it('should retain no settings when user model has no abilities.search (undefined) and builtin has no settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: {}, // 无 search
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        abilities: {},
+        // builtin 无 settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities?.search).toBeUndefined();
+      // 无 settings
+      expect(merged?.settings).toBeUndefined();
+    });
+
+    // 测试：用户模型有 abilities.search: true
+    it('should inject defaults when user has search: true, no existing settings (builtin none)', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { search: true }, // 用户启用 search
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        abilities: {},
+        // 无 settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: true });
+      // 注入 defaults (openai: params)
+      expect(merged?.settings).toEqual({ searchImpl: 'params' });
+    });
+
+    it('should retain existing settings when user has search: true and builtin has settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { search: true },
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        settings: { searchImpl: 'tool' }, // builtin 有 settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: true });
+      // 使用 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'tool' });
+    });
+
+    // 测试：用户模型有 abilities.search: false
+    it('should remove settings when user has search: false and builtin has settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { search: false }, // 用户禁用 search
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        settings: { searchImpl: 'tool', extendParams: [] }, // builtin 有 settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: false });
+      // 移除 search 相关，保留其他
+      expect(merged?.settings).toEqual({ extendParams: [] });
+    });
+
+    it('should keep no settings when user has search: false and no existing settings', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' as const },
+      ];
+
+      const userModel: EnabledAiModel = {
+        id: 'gpt-4',
+        providerId: 'openai',
+        enabled: true,
+        type: 'chat',
+        abilities: { search: false },
+      };
+
+      const builtinModel = {
+        id: 'gpt-4',
+        enabled: true,
+        type: 'chat' as const,
+        // 无 settings
+      };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue([userModel]);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([builtinModel]);
+
+      const result = await repo.getEnabledModels();
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: false });
+      // 无 settings
+      expect(merged?.settings).toBeUndefined();
+    });
   });
 
   describe('getAiProviderModelList', () => {
@@ -379,6 +812,463 @@ describe('AiInfraRepos', () => {
       const result = await repo.getAiProviderModelList(providerId);
 
       expect(result).toHaveLength(0);
+    });
+
+    // New tests for getAiProviderModelList per the corrected behavior
+    it('should allow search=true and add searchImpl=params when user enables it without providing settings (builtin has no search and no settings)', async () => {
+      const providerId = 'openai';
+
+      // User explicitly enables search in custom model, but provides no settings
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: true },
+          // user never has settings
+        } as any,
+      ];
+
+      // Builtin has no search and no settings
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: false },
+          // no settings
+        } as any,
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged.abilities).toMatchObject({ search: true });
+      // when user enables search with no settings, default searchImpl should be 'params'
+      expect(merged.settings).toEqual({ searchImpl: 'params' });
+    });
+
+    it('should remove builtin search settings and disable search when user turns search off', async () => {
+      const providerId = 'openai';
+
+      // User explicitly disables search in custom model, and provides no settings
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: false },
+          // user never has settings
+        } as any,
+      ];
+
+      // Builtin has search with settings
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: true },
+          settings: { searchImpl: 'tool' },
+        } as any,
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // User's choice takes precedence
+      expect(merged.abilities).toMatchObject({ search: false });
+      // Builtin search settings should be removed since user turned search off
+      expect(merged.settings).toBeUndefined();
+    });
+
+    it('should set search=true and settings=params for custom provider when user enables search and builtin has no search/settings', async () => {
+      const providerId = 'custom';
+
+      // User list: model with search enabled, but no settings
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'my-model',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: true },
+          // user never has settings
+        } as any,
+      ];
+
+      // Default list: same model without search and without settings
+      const defaultModels: AiProviderModelListItem[] = [
+        {
+          id: 'my-model',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: false },
+          // no settings
+        } as any,
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(defaultModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'my-model') as any;
+      expect(merged).toBeDefined();
+      expect(merged.abilities).toMatchObject({ search: true });
+      // For custom provider, when user enables search with no builtin settings, default to 'params'
+      expect(merged.settings).toEqual({ searchImpl: 'params' });
+    });
+
+    // 测试场景：用户模型 abilitie 为空（Empty），而基础模型有搜索能力和设置
+    it('should retain builtin abilities and settings when user model has no abilities (empty) and builtin has settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: {}, // Empty object, no search
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: false }, // 使用 builtin abilities
+          settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // 使用 builtin abilities
+      expect(merged?.abilities?.search).toEqual(false);
+      // 保留 builtin settings
+      expect(merged?.settings).toBeUndefined();
+    });
+
+    it('should retain builtin abilities and settings when user model has no abilities (empty) and builtin has settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: {}, // Empty object, no search
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: true }, // 使用 builtin abilities
+          settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // 使用 builtin abilities
+      expect(merged?.abilities?.search).toEqual(true);
+      // 保留 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'params', searchProvider: 'google' });
+    });
+
+    // 测试场景：用户模型未启用搜索（abilities.search 为 undefined），而基础模型有搜索能力和设置
+    it('should retain builtin settings when user model has no abilities (empty) and builtin has settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { vision: true }, // 启用 vision 能力, no search
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: false }, // builtin abilities 会被 merge
+          settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // abilities.search 会被 merge 为 false，此处和 getEnabledAiModel 不同
+      expect(merged?.abilities?.search).toEqual(false);
+      // 删去 builtin settings
+      expect(merged?.settings).toBeUndefined();
+    });
+
+    it('should retain builtin settings when user model has no abilities (empty) and builtin has settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { vision: true }, // 启用 vision 能力, no search
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: true }, // builtin abilities 会被 merge
+          settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin has settings
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      // abilities.search 会被 merge 为 true，此处和 getEnabledAiModel 不同
+      expect(merged?.abilities?.search).toEqual(true);
+      // 保留 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'params', searchProvider: 'google' });
+    });
+
+    // 测试：用户模型无 abilities.search（undefined），保留 builtin settings（mergeArrayById 优先用户，但用户无则 builtin）
+    it('should retain builtin settings when user model has no abilities.search (undefined) and builtin has settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: {}, // 无 search
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: {},
+          settings: { searchImpl: 'params', searchProvider: 'google' }, // builtin 有
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities?.search).toBeUndefined();
+      // 保留 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'params', searchProvider: 'google' });
+    });
+
+    it('should retain no settings when user model has no abilities.search (undefined) and builtin has no settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: {}, // 无 search
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          // 无 settings
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities?.search).toBeUndefined();
+      // 无 settings
+      expect(merged?.settings).toBeUndefined();
+    });
+
+    // 测试：用户模型有 abilities.search: true
+    it('should inject defaults when user has search: true, no existing settings (builtin none)', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: true }, // 用户启用
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          // 无 settings
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: true });
+      // 注入 defaults
+      expect(merged?.settings).toEqual({ searchImpl: 'params' });
+    });
+
+    it('should retain existing settings when user has search: true and builtin has settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: true },
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          settings: { searchImpl: 'tool' },
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: true });
+      // 使用 builtin settings
+      expect(merged?.settings).toEqual({ searchImpl: 'tool' });
+    });
+
+    // 测试：用户模型有 abilities.search: false
+    it('should remove settings when user has search: false and builtin has settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: false }, // 用户禁用
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          settings: { searchImpl: 'tool', extendParams: [] },
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: false });
+      // 移除 search 相关，保留其他
+      expect(merged?.settings).toEqual({ extendParams: [] });
+    });
+
+    it('should keep no settings when user has search: false and no existing settings', async () => {
+      const providerId = 'openai';
+
+      const userModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          abilities: { search: false },
+        },
+      ];
+
+      const builtinModels: AiProviderModelListItem[] = [
+        {
+          id: 'gpt-4',
+          type: 'chat',
+          enabled: true,
+          // 无 settings
+        },
+      ];
+
+      vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue(userModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue(builtinModels);
+
+      const result = await repo.getAiProviderModelList(providerId);
+
+      const merged = result.find((m) => m.id === 'gpt-4');
+      expect(merged).toBeDefined();
+      expect(merged?.abilities).toEqual({ search: false });
+      // 无 settings
+      expect(merged?.settings).toBeUndefined();
     });
   });
 
