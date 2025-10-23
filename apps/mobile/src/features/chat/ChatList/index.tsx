@@ -237,9 +237,6 @@ export default function ChatListChatList({ style }: ChatListProps) {
         onScroll={handleScroll}
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={handleScrollEndDrag}
-        overrideProps={{
-          contentContainerStyle: { flexGrow: 1, justifyContent: 'flex-end' },
-        }}
         ref={listRef}
         renderItem={renderItem}
         size={2}
