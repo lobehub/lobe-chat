@@ -311,6 +311,12 @@
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview to najnowszy eksperymentalny model badawczy Qwen, skoncentrowany na zwiększeniu zdolności wnioskowania AI. Poprzez eksplorację złożonych mechanizmów, takich jak mieszanie języków i wnioskowanie rekurencyjne, główne zalety obejmują silne zdolności analizy wnioskowania, matematyki i programowania. Jednocześnie występują problemy z przełączaniem języków, cyklami wnioskowania, kwestiami bezpieczeństwa oraz różnicami w innych zdolnościach."
   },
+  "Qwen/Qwen-Image": {
+    "description": "Qwen-Image to podstawowy model generowania obrazów opracowany przez zespół Tongyi Qianwen z Alibaba, zawierający 20 miliardów parametrów. Model ten osiągnął znaczące postępy w złożonym renderowaniu tekstu oraz precyzyjnej edycji obrazów, szczególnie wyróżniając się w generowaniu obrazów zawierających teksty w języku chińskim i angielskim o wysokiej wierności. Qwen-Image potrafi nie tylko obsługiwać układy wielowierszowe i teksty na poziomie akapitów, ale także zachowuje spójność typograficzną i kontekstową podczas generowania obrazów. Oprócz doskonałych możliwości renderowania tekstu, model obsługuje szeroką gamę stylów artystycznych – od realistycznych fotografii po estetykę anime – elastycznie dostosowując się do różnych potrzeb twórczych. Ponadto posiada zaawansowane możliwości edycji i rozumienia obrazów, wspierając takie operacje jak transfer stylu, dodawanie i usuwanie obiektów, wzmacnianie detali, edycję tekstu, a nawet manipulację postawą ciała, dążąc do bycia kompleksowym, inteligentnym modelem bazowym do tworzenia i przetwarzania wizualnego, łączącym język, układ i obraz."
+  },
+  "Qwen/Qwen-Image-Edit-2509": {
+    "description": "Qwen-Image-Edit-2509 to najnowsza wersja edytora obrazów Qwen-Image, opracowana przez zespół Tongyi Qianwen z Alibaba. Model ten został głęboko wytrenowany na bazie 20-miliardowego modelu Qwen-Image, skutecznie rozszerzając jego unikalne możliwości renderowania tekstu na obszar edycji obrazów, umożliwiając precyzyjną edycję tekstu w obrazach. Qwen-Image-Edit wykorzystuje innowacyjną architekturę, w której obraz wejściowy trafia jednocześnie do Qwen2.5-VL (do kontroli semantyki wizualnej) oraz do VAE Encoder (do kontroli wyglądu wizualnego), co zapewnia podwójną zdolność edycji – zarówno semantyczną, jak i wizualną. Oznacza to, że model obsługuje nie tylko lokalne zmiany wyglądu, takie jak dodawanie, usuwanie czy modyfikacja elementów, ale także zaawansowaną edycję semantyczną, wymagającą spójności znaczeniowej – jak np. tworzenie IP, transfer stylu itp. Model osiąga najwyższe wyniki (SOTA) w wielu publicznych benchmarkach, czyniąc go potężnym podstawowym modelem do edycji obrazów."
+  },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 to zaawansowany uniwersalny model językowy, wspierający różne typy poleceń."
   },
@@ -391,6 +397,12 @@
   },
   "Qwen/Qwen3-Next-80B-A3B-Thinking": {
     "description": "Qwen3-Next-80B-A3B-Thinking to kolejna generacja modelu bazowego wydanego przez zespół Tongyi Qianwen z Alibaba, specjalnie zaprojektowana do złożonych zadań wnioskowania. Opiera się na innowacyjnej architekturze Qwen3-Next, która łączy hybrydowy mechanizm uwagi (Gated DeltaNet i Gated Attention) oraz wysoko rzadką strukturę ekspertów mieszanych (MoE), dążąc do maksymalnej efektywności treningu i inferencji. Jako model rzadki z 80 miliardami parametrów, podczas inferencji aktywuje jedynie około 3 miliardów parametrów, co znacznie obniża koszty obliczeniowe. Przy zadaniach z bardzo długim kontekstem przekraczającym 32 tysiące tokenów, przepustowość jest ponad 10 razy wyższa niż w modelu Qwen3-32B. Wersja „Thinking” jest zoptymalizowana do wykonywania złożonych, wieloetapowych zadań takich jak dowody matematyczne, synteza kodu, analiza logiczna i planowanie, domyślnie generując proces wnioskowania w ustrukturyzowanej formie łańcucha myślenia. Pod względem wydajności przewyższa modele o wyższych kosztach, takie jak Qwen3-32B-Thinking, a także w wielu benchmarkach jest lepszy od Gemini-2.5-Flash-Thinking."
+  },
+  "Qwen/Qwen3-VL-8B-Instruct": {
+    "description": "Qwen3-VL-8B-Instruct to model językowo-wizualny z serii Qwen3, opracowany na bazie Qwen3-8B-Instruct i wytrenowany na dużej ilości danych tekstowo-obrazowych. Wyróżnia się w ogólnym rozumieniu wizualnym, dialogach skoncentrowanych na obrazie oraz rozpoznawaniu tekstu w wielu językach w obrazach. Nadaje się do zastosowań takich jak pytania i odpowiedzi wizualne, opisy obrazów, podążanie za multimodalnymi instrukcjami oraz wywoływanie narzędzi."
+  },
+  "Qwen/Qwen3-VL-8B-Thinking": {
+    "description": "Qwen3-VL-8B-Thinking to wersja modelu Qwen3 skoncentrowana na rozumowaniu wizualnym, zoptymalizowana pod kątem złożonych zadań wymagających wieloetapowego wnioskowania. Domyślnie generuje łańcuch myślenia (thinking chain) przed udzieleniem odpowiedzi, aby zwiększyć dokładność rozumowania. Idealnie nadaje się do zastosowań wymagających głębokiej analizy, takich jak pytania i odpowiedzi wizualne czy przegląd treści obrazów z dokładną analizą."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 to najnowsza seria modeli Qwen, obsługująca kontekst 128k. W porównaniu do obecnie najlepszych modeli open source, Qwen2-72B znacznie przewyższa w zakresie rozumienia języka naturalnego, wiedzy, kodowania, matematyki i wielu języków."
@@ -853,6 +865,39 @@
   },
   "cohere/embed-v4.0": {
     "description": "Model umożliwiający klasyfikację tekstu, obrazów lub treści mieszanych oraz konwersję na osadzenia."
+  },
+  "comfyui/flux-dev": {
+    "description": "FLUX.1 Dev – Wysokiej jakości model generowania obrazów z tekstu, generuje w 10–50 krokach, idealny do tworzenia dzieł sztuki i kreatywnych projektów."
+  },
+  "comfyui/flux-kontext-dev": {
+    "description": "FLUX.1 Kontext-dev – Model edycji obrazów, umożliwia modyfikację istniejących obrazów na podstawie poleceń tekstowych, wspiera edycję lokalną i transfer stylu."
+  },
+  "comfyui/flux-krea-dev": {
+    "description": "FLUX.1 Krea-dev – Ulepszony pod względem bezpieczeństwa model generowania obrazów z tekstu, opracowany we współpracy z Krea, z wbudowanym filtrem bezpieczeństwa."
+  },
+  "comfyui/flux-schnell": {
+    "description": "FLUX.1 Schnell – Ekstremalnie szybki model generowania obrazów z tekstu, tworzy wysokiej jakości obrazy w zaledwie 1–4 krokach, idealny do zastosowań w czasie rzeczywistym i szybkiego prototypowania."
+  },
+  "comfyui/stable-diffusion-15": {
+    "description": "Stable Diffusion 1.5 – Klasyczny model generowania obrazów z tekstu o rozdzielczości 512x512, idealny do szybkiego prototypowania i eksperymentów twórczych."
+  },
+  "comfyui/stable-diffusion-35": {
+    "description": "Stable Diffusion 3.5 – Nowej generacji model generowania obrazów z tekstu, dostępny w wersjach Large i Medium, wymaga zewnętrznego pliku kodera CLIP, oferuje doskonałą jakość obrazu i zgodność z podpowiedziami."
+  },
+  "comfyui/stable-diffusion-35-inclclip": {
+    "description": "Stable Diffusion 3.5 – Wersja z wbudowanym koderem CLIP/T5, nie wymaga zewnętrznych plików kodera, odpowiednia dla modeli takich jak sd3.5_medium_incl_clips, zużywa mniej zasobów."
+  },
+  "comfyui/stable-diffusion-custom": {
+    "description": "Niestandardowy model SD do generowania obrazów z tekstu. Nazwa pliku modelu powinna brzmieć custom_sd_lobe.safetensors, a jeśli używasz VAE – custom_sd_vae_lobe.safetensors. Pliki modelu muszą być umieszczone w odpowiednim folderze zgodnie z wymaganiami Comfy."
+  },
+  "comfyui/stable-diffusion-custom-refiner": {
+    "description": "Niestandardowy model SDXL do konwersji obrazu na obraz. Nazwa pliku modelu powinna brzmieć custom_sd_lobe.safetensors, a jeśli używasz VAE – custom_sd_vae_lobe.safetensors. Pliki modelu muszą być umieszczone w odpowiednim folderze zgodnie z wymaganiami Comfy."
+  },
+  "comfyui/stable-diffusion-refiner": {
+    "description": "Model SDXL do konwersji obrazu na obraz, umożliwia wysokiej jakości przekształcenia obrazu, wspiera transfer stylu, naprawę obrazu i kreatywne modyfikacje."
+  },
+  "comfyui/stable-diffusion-xl": {
+    "description": "Model SDXL do generowania obrazów z tekstu, obsługuje wysoką rozdzielczość 1024x1024, oferuje lepszą jakość obrazu i szczegółowość."
   },
   "command": {
     "description": "Model konwersacyjny, który przestrzega instrukcji, oferujący wysoką jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do naszych podstawowych modeli generacyjnych."

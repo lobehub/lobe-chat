@@ -155,7 +155,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         translateMessage(id, lang);
       }
     },
-    [data],
+    [data, topic],
   );
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
