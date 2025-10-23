@@ -1,3 +1,4 @@
+import { LiquidGlassView, isLiquidGlassSupported } from '@callstack/liquid-glass';
 import { memo } from 'react';
 import { Pressable, type StyleProp, View, type ViewStyle } from 'react-native';
 
@@ -20,6 +21,7 @@ const Flexbox = memo<FlexboxProps>(
     paddingInline,
     onPress,
     onLongPress,
+    glass,
     ...rest
   }) => {
     const styles: StyleProp<ViewStyle> = {
@@ -37,6 +39,46 @@ const Flexbox = memo<FlexboxProps>(
       position: 'relative',
       width: width,
     };
+
+    if (glass && isLiquidGlassSupported) {
+      if (onPress || onLongPress) {
+        return (
+          <Pressable onLongPress={onLongPress} onPress={onPress} {...rest}>
+            <LiquidGlassView
+              effect={'regular'}
+              interactive
+              style={[
+                styles,
+                typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
+                {
+                  backgroundColor: 'transparent',
+                },
+              ]}
+              {...rest}
+            >
+              {children}
+            </LiquidGlassView>
+          </Pressable>
+        );
+      }
+
+      return (
+        <LiquidGlassView
+          effect={'regular'}
+          interactive={false}
+          style={[
+            styles,
+            typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
+            {
+              backgroundColor: 'transparent',
+            },
+          ]}
+          {...rest}
+        >
+          {children}
+        </LiquidGlassView>
+      );
+    }
 
     if (onPress || onLongPress) {
       return (

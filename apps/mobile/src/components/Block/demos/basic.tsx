@@ -15,6 +15,9 @@ export default () => {
       <Block padding={16} shadow variant={'outlined'}>
         <Text>Shadow Block</Text>
       </Block>
+      <Block glass padding={16}>
+        <Text>Glass Block</Text>
+      </Block>
     </Flexbox>
   );
 };

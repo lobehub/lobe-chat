@@ -74,6 +74,7 @@ const ProviderList = memo(() => {
     <PageContainer largeTitleEnabled showBack title={t('providers', { ns: 'setting' })}>
       <Flexbox padding={16}>
         <InputSearch
+          glass
           onChangeText={setKeyword}
           placeholder={t('providersSearchPlaceholder', { ns: 'setting' })}
           variant={'filled'}
