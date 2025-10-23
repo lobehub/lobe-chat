@@ -132,7 +132,7 @@ const AssistantDetail = () => {
             {agent.config.openingMessage && <Markdown>{agent.config.openingMessage}</Markdown>}
           </Flexbox>
           <Divider />
-          <Flexbox padding={16}>
+          <Flexbox paddingBlock={16}>
             {agent.examples?.map((item, index) => (
               <ChatBubble
                 key={index}
