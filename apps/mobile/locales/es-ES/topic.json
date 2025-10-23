@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "defaultTitle": "Tema predeterminado",
   "empty": "No hay temas",
   "guide": {

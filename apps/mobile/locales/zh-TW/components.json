@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "取消",
+    "selectLanguage": "選擇語言"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "選擇模型",
     "emptyModel": "沒有啟用的模型，請前往設定開啟",

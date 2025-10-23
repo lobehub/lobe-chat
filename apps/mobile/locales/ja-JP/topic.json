@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "このトピックを削除しようとしています。削除すると元に戻せません。本当に削除してもよろしいですか？",
   "defaultTitle": "デフォルトトピック",
   "empty": "トピックがありません",
   "guide": {

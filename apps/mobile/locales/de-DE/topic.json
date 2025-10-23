@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "Dieses Thema wird gelöscht und kann danach nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "defaultTitle": "Standardthema",
   "empty": "Keine Themen vorhanden",
   "guide": {

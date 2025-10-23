@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "Отмена",
+    "selectLanguage": "Выбрать язык"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "Выберите модель",
     "emptyModel": "Нет активных моделей, перейдите в настройки для активации",

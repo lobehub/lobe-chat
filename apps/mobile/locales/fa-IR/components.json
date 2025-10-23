@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "لغو",
+    "selectLanguage": "انتخاب زبان"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "انتخاب مدل",
     "emptyModel": "مدلی فعال نیست، لطفاً به تنظیمات مراجعه کنید و فعال کنید",

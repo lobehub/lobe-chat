@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "Zamierzasz usunąć ten temat. Po usunięciu nie będzie można go odzyskać. Proszę potwierdź swoją decyzję.",
   "defaultTitle": "Domyślny temat",
   "empty": "Brak tematów",
   "guide": {

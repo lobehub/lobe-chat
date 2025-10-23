@@ -1,6 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ChevronDown } from 'lucide-react-native';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 
 import { useTheme } from '@/components/styles';
@@ -17,6 +18,7 @@ export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) =>
   const token = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const { styles } = useStyles();
+  const { t } = useTranslation('components');
 
   // 创建语言选项列表，只包含支持的语言
   const languages = supportedLanguageIds.map((langId) => ({
@@ -29,7 +31,7 @@ export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) =>
 
   const handleOpenLanguageSelect = () => {
     const options = languages.map((item) => item.label);
-    options.push('取消');
+    options.push(t('Highlighter.cancel'));
 
     const cancelButtonIndex = options.length - 1;
     const destructiveButtonIndex = undefined;
@@ -44,7 +46,7 @@ export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) =>
         destructiveButtonIndex,
         options,
         textStyle: styles.actionSheetText,
-        title: '选择语言',
+        title: t('Highlighter.selectLanguage'),
         titleTextStyle: styles.actionSheetTitle,
         useModal: true,
       },

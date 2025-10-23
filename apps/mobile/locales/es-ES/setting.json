@@ -13,6 +13,12 @@
       "confirm": "¿Está seguro de que desea cerrar sesión?",
       "label": "Cerrar sesión"
     },
+    "switchAccount": {
+      "action": "Cambiar de cuenta",
+      "confirm": "¿Estás seguro de que deseas cambiar de cuenta? Esto cerrará la sesión actual e iniciará una nueva.",
+      "error": "Error al cambiar de cuenta. Por favor, inténtalo de nuevo.",
+      "label": "Cambiar de cuenta"
+    },
     "title": "Configuración de la cuenta"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "No habilitado",
       "enabled": "Habilitado"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Borrar caché",
+        "description": "Esto eliminará los datos almacenados en caché localmente. La próxima vez que abras la aplicación, el contenido se volverá a cargar.",
+        "title": "¿Confirmar borrado de caché?"
+      },
+      "failure": "Error al borrar la caché",
+      "success": "Caché borrada correctamente"
+    },
+    "description": "La caché puede mejorar la velocidad de inicio. Puedes borrarla para liberar espacio cuando sea necesario.",
+    "title": "Borrar caché"
   },
   "changelog": "Registro de cambios",
   "color": {
