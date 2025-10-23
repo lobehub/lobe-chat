@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.141.8](https://github.com/lobehub/lobe-chat/compare/v1.141.7...v1.141.8)
+
+<sup>Released on **2025-10-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improvement for Agent Team After Alpha Launch \[LOB-517].
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improvement for Agent Team After Alpha Launch \[LOB-517], closes [#9748](https://github.com/lobehub/lobe-chat/issues/9748) ([28245be](https://github.com/lobehub/lobe-chat/commit/28245be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.141.7](https://github.com/lobehub/lobe-chat/compare/v1.141.6...v1.141.7)
 
 <sup>Released on **2025-10-23**</sup>
