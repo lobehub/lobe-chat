@@ -1,12 +1,6 @@
 import { createStyles } from '@/components/styles';
 
-export const useStyles = createStyles(({ token }) => ({
-  scrollToBottomBtn: {
-    backgroundColor: token.colorBgContainer,
-    borderRadius: token.borderRadiusLG * 3,
-    padding: token.paddingXS,
-    ...token.boxShadowCard,
-  },
+export const useStyles = createStyles(() => ({
   scrollToBottomWrapper: {
     alignItems: 'center',
     bottom: 8,

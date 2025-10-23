@@ -25,6 +25,9 @@ export const useStyles = createStyles(({ token }) => ({
     margin: 8,
   },
   horizontalScrollContent: {
+    flexDirection: 'column',
     flexGrow: 1,
+    gap: 2,
+    padding: 16,
   },
 }));
