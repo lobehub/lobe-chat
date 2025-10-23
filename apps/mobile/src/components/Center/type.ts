@@ -8,6 +8,7 @@ export interface CenterProps extends PressableProps {
   children?: ReactNode;
   flex?: number | undefined;
   gap?: number | string | undefined;
+  glass?: boolean;
   height?: DimensionValue | undefined;
   horizontal?: boolean;
   justify?: JustifyContent;
