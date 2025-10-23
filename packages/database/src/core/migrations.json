@@ -223,7 +223,10 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
+    "sql": [
+      "DROP TABLE \"user_budgets\";",
+      "\nDROP TABLE \"user_subscriptions\";"
+    ],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -295,7 +298,9 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -510,7 +515,9 @@
     "hash": "a7ccf007fd185ff922823148d1eae6fafe652fc98d2fd2793f84a84f29e93cd1"
   },
   {
-    "sql": ["ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1749309388370,
     "hash": "39cea379f08ee4cb944875c0b67f7791387b508c2d47958bb4cd501ed1ef33eb"
@@ -628,7 +635,9 @@
     "hash": "1ba9b1f74ea13348da98d6fcdad7867ab4316ed565bf75d84d160c526cdac14b"
   },
   {
-    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"virtual\" boolean DEFAULT false;"],
+    "sql": [
+      "ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"virtual\" boolean DEFAULT false;"
+    ],
     "bps": true,
     "folderMillis": 1759116400580,
     "hash": "433ddae88e785f2db734e49a4c115eee93e60afe389f7919d66e5ba9aa159a37"
@@ -650,11 +659,11 @@
   },
   {
     "sql": [
-      "CREATE TABLE IF NOT EXISTS \"user_memories\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"user_id\" text,\n\t\"memory_category\" varchar(255),\n\t\"memory_layer\" varchar(255),\n\t\"memory_type\" varchar(255),\n\t\"title\" varchar(255),\n\t\"summary\" text,\n\t\"summary_vector_1024\" vector(1024),\n\t\"details\" text,\n\t\"details_vector_1024\" vector(1024),\n\t\"status\" varchar(255),\n\t\"accessed_count\" bigint DEFAULT 0,\n\t\"last_accessed_at\" timestamp with time zone NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
-      "\nCREATE TABLE IF NOT EXISTS \"user_memories_contexts\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"user_memory_ids\" jsonb,\n\t\"labels\" jsonb,\n\t\"extracted_labels\" jsonb,\n\t\"associated_objects\" jsonb,\n\t\"associated_subjects\" jsonb,\n\t\"title\" text,\n\t\"title_vector\" vector(1024),\n\t\"description\" text,\n\t\"description_vector\" vector(1024),\n\t\"type\" varchar(255),\n\t\"current_status\" text,\n\t\"score_impact\" numeric DEFAULT 0,\n\t\"score_urgency\" numeric DEFAULT 0,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
-      "\nCREATE TABLE IF NOT EXISTS \"user_memories_experiences\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"user_memory_id\" text,\n\t\"labels\" jsonb,\n\t\"extracted_labels\" jsonb,\n\t\"type\" varchar(255),\n\t\"situation\" text,\n\t\"situation_vector\" vector(1024),\n\t\"reasoning\" text,\n\t\"possible_outcome\" text,\n\t\"action\" text,\n\t\"action_vector\" vector(1024),\n\t\"key_learning\" text,\n\t\"key_learning_vector\" vector(1024),\n\t\"metadata\" jsonb,\n\t\"score_confidence\" real DEFAULT 0,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
-      "\nCREATE TABLE IF NOT EXISTS \"user_memories_identities\" (\n\t\"current_focuses\" text,\n\t\"description\" text,\n\t\"description_vector\" vector(1024),\n\t\"experience\" text,\n\t\"extracted_labels\" jsonb,\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"labels\" jsonb,\n\t\"relationship\" text,\n\t\"role\" text,\n\t\"type\" varchar(255),\n\t\"user_memory_id\" text,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
-      "\nCREATE TABLE IF NOT EXISTS \"user_memories_preferences\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"context_id\" varchar(255),\n\t\"user_memory_id\" varchar(255),\n\t\"labels\" jsonb,\n\t\"extracted_labels\" jsonb,\n\t\"extracted_scopes\" jsonb,\n\t\"conclusion_directives\" text,\n\t\"conclusion_directives_vector\" vector(1024),\n\t\"type\" varchar(255),\n\t\"suggestions\" text,\n\t\"score_priority\" numeric DEFAULT 0,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "CREATE TABLE \"user_memories\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text,\n\t\"memory_category\" text,\n\t\"memory_layer\" text,\n\t\"memory_type\" text,\n\t\"title\" varchar(255),\n\t\"summary\" text,\n\t\"summary_vector_1024\" vector(1024),\n\t\"details\" text,\n\t\"details_vector_1024\" vector(1024),\n\t\"status\" text,\n\t\"accessed_count\" bigint DEFAULT 0,\n\t\"last_accessed_at\" timestamp with time zone NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE \"user_memories_contexts\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_memory_ids\" jsonb,\n\t\"labels\" jsonb,\n\t\"extracted_labels\" jsonb,\n\t\"associated_objects\" jsonb,\n\t\"associated_subjects\" jsonb,\n\t\"title\" text,\n\t\"title_vector\" vector(1024),\n\t\"description\" text,\n\t\"description_vector\" vector(1024),\n\t\"type\" text,\n\t\"current_status\" text,\n\t\"score_impact\" numeric DEFAULT 0,\n\t\"score_urgency\" numeric DEFAULT 0,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE \"user_memories_experiences\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_memory_id\" text,\n\t\"labels\" jsonb,\n\t\"extracted_labels\" jsonb,\n\t\"type\" text,\n\t\"situation\" text,\n\t\"situation_vector\" vector(1024),\n\t\"reasoning\" text,\n\t\"possible_outcome\" text,\n\t\"action\" text,\n\t\"action_vector\" vector(1024),\n\t\"key_learning\" text,\n\t\"key_learning_vector\" vector(1024),\n\t\"metadata\" jsonb,\n\t\"score_confidence\" real DEFAULT 0,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE \"user_memories_identities\" (\n\t\"current_focuses\" text,\n\t\"description\" text,\n\t\"description_vector\" vector(1024),\n\t\"experience\" text,\n\t\"extracted_labels\" jsonb,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"labels\" jsonb,\n\t\"relationship\" text,\n\t\"role\" text,\n\t\"type\" text,\n\t\"user_memory_id\" text,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE \"user_memories_preferences\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"context_id\" text,\n\t\"user_memory_id\" text,\n\t\"labels\" jsonb,\n\t\"extracted_labels\" jsonb,\n\t\"extracted_scopes\" jsonb,\n\t\"conclusion_directives\" text,\n\t\"conclusion_directives_vector\" vector(1024),\n\t\"type\" text,\n\t\"suggestions\" text,\n\t\"score_priority\" numeric DEFAULT 0,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
       "\nALTER TABLE \"user_memories\" ADD CONSTRAINT \"user_memories_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
       "\nALTER TABLE \"user_memories_experiences\" ADD CONSTRAINT \"user_memories_experiences_user_memory_id_user_memories_id_fk\" FOREIGN KEY (\"user_memory_id\") REFERENCES \"public\".\"user_memories\"(\"id\") ON DELETE cascade ON UPDATE no action;",
       "\nALTER TABLE \"user_memories_identities\" ADD CONSTRAINT \"user_memories_identities_user_memory_id_user_memories_id_fk\" FOREIGN KEY (\"user_memory_id\") REFERENCES \"public\".\"user_memories\"(\"id\") ON DELETE cascade ON UPDATE no action;",
@@ -671,16 +680,34 @@
       "\nCREATE INDEX \"user_memories_experiences_type_index\" ON \"user_memories_experiences\" USING btree (\"type\");",
       "\nCREATE INDEX \"user_memories_identities_description_vector_index\" ON \"user_memories_identities\" USING hnsw (\"description_vector\" vector_cosine_ops);",
       "\nCREATE INDEX \"user_memories_identities_type_index\" ON \"user_memories_identities\" USING btree (\"type\");",
-      "\nCREATE INDEX \"user_memories_preferences_conclusion_directives_vector_index\" ON \"user_memories_preferences\" USING hnsw (\"conclusion_directives_vector\" vector_cosine_ops);\n"
+      "\nCREATE INDEX \"user_memories_preferences_conclusion_directives_vector_index\" ON \"user_memories_preferences\" USING hnsw (\"conclusion_directives_vector\" vector_cosine_ops);"
     ],
     "bps": true,
     "folderMillis": 1760086906862,
     "hash": "4bdc6505797d7a33b622498c138cfd47f637239f6905e1c484cd01d9d5f21d6b"
   },
   {
-    "sql": ["ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"image\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"image\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1760108430562,
     "hash": "ce09b301abb80f6563abc2f526bdd20b4f69bae430f09ba2179b9e3bfec43067"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"user_memories_preferences\" DROP CONSTRAINT \"user_memories_preferences_context_id_user_memories_contexts_id_fk\";\n",
+      "\nALTER TABLE \"user_memories_identities\" ALTER COLUMN \"role\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"user_memories_identities\" ALTER COLUMN \"user_memory_id\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"user_memories\" ADD COLUMN \"labels\" jsonb;",
+      "\nALTER TABLE \"user_memories\" ADD COLUMN \"extracted_labels\" jsonb;",
+      "\nALTER TABLE \"user_memories_identities\" ADD COLUMN \"episodic_date\" timestamp with time zone;",
+      "\nALTER TABLE \"user_memories_identities\" DROP COLUMN \"current_focuses\";",
+      "\nALTER TABLE \"user_memories_identities\" DROP COLUMN \"experience\";",
+      "\nALTER TABLE \"user_memories_preferences\" DROP COLUMN \"context_id\";"
+    ],
+    "bps": true,
+    "folderMillis": 1761194299884,
+    "hash": "a1de2be220c585f0f8042437e0117ad8674eb3e169d979f9fe4ccdadfd0e8d78"
   }
 ]

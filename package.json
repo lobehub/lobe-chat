@@ -300,6 +300,7 @@
     "ws": "^8.18.3",
     "yaml": "^2.8.1",
     "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6",
     "zustand": "5.0.4",
     "zustand-utils": "^2.1.1"
   },
@@ -397,7 +398,22 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@vercel/speed-insights"
+      "@clerk/shared",
+      "@playwright/browser-chromium",
+      "@scarf/scarf",
+      "@tree-sitter-grammars/tree-sitter-yaml",
+      "@vercel/speed-insights",
+      "better-sqlite3",
+      "canvas",
+      "core-js",
+      "core-js-pure",
+      "es5-ext",
+      "esbuild",
+      "protobufjs",
+      "sharp",
+      "tree-sitter",
+      "tree-sitter-json",
+      "unrs-resolver"
     ],
     "overrides": {
       "mdast-util-gfm-autolink-literal": "2.0.0"
