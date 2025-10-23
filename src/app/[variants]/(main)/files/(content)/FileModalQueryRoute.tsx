@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
 
 import { DETAIL_PANEL_WIDTH } from '@/app/[variants]/(main)/files/features/FileDetail';
+import { fileManagerSelectors, useFileStore } from '@/store/file';
 
 import FileDetail from './modal/FileDetail';
 import FilePreview from './modal/FilePreview';
@@ -65,9 +66,8 @@ const FileModalQueryRoute = memo(() => {
   const [open, setOpen] = useState(false);
   const { styles } = useStyles(true);
 
-  console.log('searchParams', searchParams);
-
-  console.log('fileId', fileId);
+  // Get file info from store
+  const file = useFileStore(fileManagerSelectors.getFileById(fileId || undefined));
 
   useEffect(() => {
     setOpen(!!fileId);
@@ -84,7 +84,7 @@ const FileModalQueryRoute = memo(() => {
     setOpen(false);
   };
 
-  if (!fileId) return null;
+  if (!fileId || !file) return null;
 
   return (
     <>

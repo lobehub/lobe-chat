@@ -3,6 +3,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import FileModalQueryRoute from '@/app/[variants]/(main)/files/(content)/FileModalQueryRoute';
 import FileManager from '@/features/FileManager';
 import FilePanel from '@/features/FileSidePanel';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
@@ -22,6 +23,7 @@ const RepoClientPage = memo<{ id: string }>(({ id }) => {
       <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
         <FileManager knowledgeBaseId={id} title={name} />
       </Flexbox>
+      <FileModalQueryRoute />
     </>
   );
 });

@@ -16,7 +16,6 @@ import FilePanel from '@/features/FileSidePanel';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { FilesTabs } from '@/types/files';
 
-import UrlSynchronizer from '../_layout/Desktop/UrlSynchronizer';
 import FileMenu from './@menu/features/FileMenu';
 import KnowledgeBase from './@menu/features/KnowledgeBase';
 import FileModalQueryRoute from './FileModalQueryRoute';
@@ -62,7 +61,6 @@ const DesktopLayout = memo(() => {
   return (
     <>
       <NProgress />
-      <UrlSynchronizer />
       <Flexbox
         height={'100%'}
         horizontal
@@ -94,7 +92,6 @@ const MobileLayout = memo(() => {
   return (
     <>
       <NProgress />
-      <UrlSynchronizer />
       <Flexbox
         className={styles.main}
         height="100%"
