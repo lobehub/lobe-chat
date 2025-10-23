@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Allow removal of top_p and similar request parameters."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.7"
+  },
+  {
     "children": {},
     "date": "2025-10-22",
     "version": "1.141.6"
