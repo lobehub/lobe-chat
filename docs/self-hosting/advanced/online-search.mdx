@@ -34,7 +34,7 @@ By setting the search service environment variable `SEARCH_PROVIDERS` and the co
 Configure available web crawlers for structured extraction of webpage content.
 
 ```env
-CRAWLER_IMPLS="native,search1api"
+CRAWLER_IMPLS="naive,search1api"
 ```
 
 Supported crawler types are listed below:
@@ -45,7 +45,7 @@ Supported crawler types are listed below:
 | `exa`         | Crawler capabilities provided by [Exa](https://exa.ai/), API required.                                              | `EXA_API_KEY`                                                               |
 | `firecrawl`   | [Firecrawl](https://firecrawl.dev/) headless browser API, ideal for modern websites.                                | `FIRECRAWL_API_KEY`                                                         |
 | `jina`        | Crawler service from [Jina AI](https://jina.ai/), supports fast content summarization.                              | `JINA_READER_API_KEY`                                                       |
-| `native`      | Built-in general-purpose crawler for standard web structures.                                                       |                                                                             |
+| `naive`       | Built-in general-purpose crawler for standard web structures.                                                       |                                                                             |
 | `search1api`  | Page crawling capabilities from [Search1API](https://www.search1api.com), great for structured content extraction.  | `SEARCH1API_API_KEY` `SEARCH1API_CRAWL_API_KEY` `SEARCH1API_SEARCH_API_KEY` |
 | `tavily`      | Web scraping and summarization API from [Tavily](https://www.tavily.com/).                                          | `TAVILY_API_KEY`                                                            |
 
