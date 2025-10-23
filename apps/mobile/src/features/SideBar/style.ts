@@ -8,7 +8,7 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     flex: 1,
   },
   drawerBackground: {
-    backgroundColor: token.colorBgLayout,
+    backgroundColor: isDarkMode ? token.colorBgContainerSecondary : token.colorBgLayout,
   },
   drawerOverlay: {
     backgroundColor: isDarkMode ? token.colorBgMask : rgba(darken(0.1, token.colorBgLayout), 0.5),
