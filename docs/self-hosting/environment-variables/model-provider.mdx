@@ -653,6 +653,13 @@ The above example disables all models first, then enables `fal-ai/flux/schnell` 
 
 ## ComfyUI
 
+### `ENABLED_COMFYUI`
+
+- Type: Optional
+- Description: Enables ComfyUI as a model provider by default. Set to `0` to disable the ComfyUI service.
+- Default: `1`
+- Example: `0`
+
 ### `COMFYUI_BASE_URL`
 
 - Type: Optional
@@ -705,13 +712,6 @@ The above example disables all models first, then enables `fal-ai/flux/schnell` 
 
 ## BFL
 
-### `ENABLED_BFL`
-
-- Type: Optional
-- Description: Enables BFL as a model provider by default. Set to `0` to disable the BFL service.
-- Default: `1`
-- Example: `0`
-
 ### `BFL_API_KEY`
 
 - Type: Required
@@ -747,13 +747,6 @@ The above example disables all models first, then enables `flux-pro-1.1` and `fl
 NewAPI is a multi-provider model aggregation service that supports automatic model routing based on provider detection. It offers cost management features and provides a single endpoint for accessing models from multiple providers including OpenAI, Anthropic, Google, and more. Learn more about NewAPI at [https://github.com/Calcium-Ion/new-api](https://github.com/Calcium-Ion/new-api).
 
 ## Vercel AI Gateway
-
-### `ENABLED_VERCELAIGATEWAY`
-
-- Type: Optional
-- Description: Enables Vercel AI Gateway as a model provider by default. Set to `0` to disable the Vercel AI Gateway service.
-- Default: `1`
-- Example: `0`
 
 ### `VERCELAIGATEWAY_API_KEY`
 
