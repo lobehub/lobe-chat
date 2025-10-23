@@ -147,14 +147,7 @@ const AssistantList = () => {
         },
       }}
       left={
-        <Flexbox
-          align={'center'}
-          flex={1}
-          gap={4}
-          horizontal
-          justify={'space-between'}
-          paddingInline={8}
-        >
+        <Flexbox align={'center'} flex={1} horizontal justify={'space-between'} paddingInline={8}>
           <Input.Search
             glass
             onChangeText={setSearchText}
@@ -165,8 +158,8 @@ const AssistantList = () => {
             }}
             variant="filled"
           />
-          <Button onPress={() => router.back()} type={'link'}>
-            取消
+          <Button clickable={false} onPress={() => router.back()} type={'link'}>
+            {t('actions.cancel', { ns: 'common' })}
           </Button>
         </Flexbox>
       }
