@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 
 import { VirtuosoContext } from '../../components/VirtualizedList/VirtuosoContext';
 import { InPortalThreadContext } from '../../context/InPortalThreadContext';
@@ -54,6 +56,8 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     s.delAndResendThreadMessage,
   ]);
 
+  const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
+
   const { regenerate, edit, copy, divider, del, branching, tts, translate } = useChatListActionsBar(
     { hasThread },
   );
@@ -63,8 +67,10 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
 
   const items = useMemo(
     () =>
-      [regenerate, edit, inThread ? null : branching].filter(Boolean) as ActionIconGroupItemType[],
-    [inThread],
+      [regenerate, edit, inThread || isGroupSession ? null : branching].filter(
+        Boolean,
+      ) as ActionIconGroupItemType[],
+    [inThread, isGroupSession],
   );
 
   const { message } = App.useApp();

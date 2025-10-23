@@ -1,5 +1,59 @@
 [
   {
+    "children": {
+      "fixes": ["Loadmore not work & navbar not show in pwa."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve local system tools render."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.9"
+  },
+  {
+    "children": {
+      "improvements": ["Improvement for Agent Team After Alpha Launch [LOB-517]."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.8"
+  },
+  {
+    "children": {
+      "improvements": ["Allow removal of top_p and similar request parameters."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-22",
+    "version": "1.141.6"
+  },
+  {
+    "children": {
+      "improvements": ["Change discover page from RSC to SPA to improve performance."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix model runtime cost calculate with CNY."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-22",
+    "version": "1.141.3"
+  },
+  {
     "children": {},
     "date": "2025-10-21",
     "version": "1.141.2"
