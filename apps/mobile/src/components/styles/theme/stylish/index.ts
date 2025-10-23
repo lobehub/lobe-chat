@@ -66,7 +66,7 @@ export const generateStylish = (token: AliasToken): LobeStylish => {
     },
 
     variantBorderlessActive: {
-      backgroundColor: token.colorFillTertiary,
+      backgroundColor: token.colorFillQuaternary,
       borderWidth: 0,
     },
 
@@ -81,7 +81,7 @@ export const generateStylish = (token: AliasToken): LobeStylish => {
     },
 
     variantBorderlessHover: {
-      backgroundColor: token.colorFillSecondary,
+      backgroundColor: token.colorFillTertiary,
       borderWidth: 0,
     },
 

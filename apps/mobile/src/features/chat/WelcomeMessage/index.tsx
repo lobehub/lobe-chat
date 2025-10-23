@@ -49,13 +49,11 @@ const WelcomeMessage = () => {
     />
   );
 
-  return openingQuestions.length > 0 ? (
-    <Flexbox gap={16}>
+  return (
+    <Flexbox gap={16} padding={16}>
       {welcomeBubble}
-      <OpeningQuestions questions={openingQuestions} />
+      {openingQuestions.length > 0 && <OpeningQuestions questions={openingQuestions} />}
     </Flexbox>
-  ) : (
-    welcomeBubble
   );
 };
 
