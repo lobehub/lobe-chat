@@ -37,7 +37,9 @@ const ChatMessageItem = memo<{ index: number; item: ChatMessage; totalLength: nu
     // 如果有错误，即使content是LOADING_FLAT也不应该显示为loading状态
     const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent && !hasError;
 
-    return <ChatBubble isLoading={shouldShowLoading} message={item} />;
+    return (
+      <ChatBubble isLoading={shouldShowLoading} message={item} showActionsBar={isLastMessage} />
+    );
   },
 );
 
