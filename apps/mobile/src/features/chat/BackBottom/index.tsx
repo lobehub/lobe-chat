@@ -1,4 +1,4 @@
-import { Block, Icon } from '@lobehub/ui-rn';
+import { Button } from '@lobehub/ui-rn';
 import { ArrowDown } from 'lucide-react-native';
 import { memo } from 'react';
 import { View } from 'react-native';
@@ -17,16 +17,17 @@ const ScrollToBottom = ({ onScrollToBottom, visible }: ScrollToBottomProps) => {
 
   return (
     <View pointerEvents="box-none" style={styles.scrollToBottomWrapper}>
-      <Block
-        borderRadius={40}
-        clickable
+      <Button
+        icon={ArrowDown}
+        iconProps={{
+          color: theme.colorTextSecondary,
+          size: 20,
+        }}
         onPress={onScrollToBottom}
-        padding={10}
         shadow
+        shape={'circle'}
         variant={'outlined'}
-      >
-        <Icon color={theme.colorTextSecondary} icon={ArrowDown} size={20} />
-      </Block>
+      />
     </View>
   );
 };
