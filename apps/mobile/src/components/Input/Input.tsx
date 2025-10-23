@@ -20,6 +20,7 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
     size = 'middle',
     textStyle,
     disabled,
+    glass,
     ...rest
   } = props;
   const { styles, theme } = useStyles({ size });
@@ -28,6 +29,7 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
     <Block
       align={'center'}
       disabled={disabled}
+      glass={glass}
       horizontal
       style={[styles.container, disabled && { opacity: 0.6 }, style]}
       variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}

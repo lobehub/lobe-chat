@@ -91,6 +91,7 @@ export default function ComponentPlaygroundIndex() {
     <PageContainer largeTitleEnabled showBack title="Playground">
       <Flexbox gap={16} paddingBlock={16} paddingInline={16}>
         <Input.Search
+          glass
           onChangeText={setSearchText}
           placeholder="搜索组件..."
           value={searchText}

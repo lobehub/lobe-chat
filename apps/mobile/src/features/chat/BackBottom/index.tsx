@@ -18,13 +18,13 @@ const ScrollToBottom = ({ onScrollToBottom, visible }: ScrollToBottomProps) => {
   return (
     <View pointerEvents="box-none" style={styles.scrollToBottomWrapper}>
       <Button
+        glass
         icon={ArrowDown}
         iconProps={{
           color: theme.colorTextSecondary,
           size: 20,
         }}
         onPress={onScrollToBottom}
-        shadow
         shape={'circle'}
         variant={'outlined'}
       />
