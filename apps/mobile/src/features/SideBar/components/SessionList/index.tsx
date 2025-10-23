@@ -174,6 +174,7 @@ export default function SideBar() {
       {/* 搜索栏 */}
       <Flexbox paddingBlock={8} paddingInline={12}>
         <Input.Search
+          glass
           onChangeText={setSearchText}
           placeholder={t('session.search.placeholder', { ns: 'chat' })}
           value={searchText}

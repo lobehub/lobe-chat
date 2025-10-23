@@ -89,8 +89,8 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const contentHeightRef = useRef(0);
   const scrollYRef = useRef(0);
 
-  // Minimal tolerance for rounding/bounce
-  const AT_BOTTOM_EPSILON = 2;
+  // Tolerance for showing auto-scroll button (200px offset)
+  const AT_BOTTOM_EPSILON = 200;
 
   const computeAtBottom = useCallback(() => {
     const layoutH = layoutHeightRef.current || 0;

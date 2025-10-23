@@ -20,7 +20,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
 
   return (
     <Flexbox height={'auto'} paddingInline={16} style={[{ paddingBottom: 16 }, style]}>
-      <Block borderRadius={24} height={'auto'} variant={'outlined'}>
+      <Block borderRadius={24} glass height={'auto'} variant={'outlined'}>
         <TextArea
           numberOfLines={12}
           onChangeText={handleInputChange}

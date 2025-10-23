@@ -18,6 +18,7 @@ export default function SessionFooter() {
         <Block
           align={'center'}
           clickable
+          glass
           horizontal
           justify={'space-between'}
           padding={4}
