@@ -682,5 +682,21 @@
     "bps": true,
     "folderMillis": 1760108430562,
     "hash": "ce09b301abb80f6563abc2f526bdd20b4f69bae430f09ba2179b9e3bfec43067"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"user_memories_preferences\" DROP CONSTRAINT \"user_memories_preferences_context_id_user_memories_contexts_id_fk\";\n",
+      "\nALTER TABLE \"user_memories_identities\" ALTER COLUMN \"role\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"user_memories_identities\" ALTER COLUMN \"user_memory_id\" SET DATA TYPE varchar(255);",
+      "\nALTER TABLE \"user_memories\" ADD COLUMN \"labels\" jsonb;",
+      "\nALTER TABLE \"user_memories\" ADD COLUMN \"extracted_labels\" jsonb;",
+      "\nALTER TABLE \"user_memories_identities\" ADD COLUMN \"episodic_date\" timestamp with time zone;",
+      "\nALTER TABLE \"user_memories_identities\" DROP COLUMN \"current_focuses\";",
+      "\nALTER TABLE \"user_memories_identities\" DROP COLUMN \"experience\";",
+      "\nALTER TABLE \"user_memories_preferences\" DROP COLUMN \"context_id\";"
+    ],
+    "bps": true,
+    "folderMillis": 1761194299884,
+    "hash": "a1de2be220c585f0f8042437e0117ad8674eb3e169d979f9fe4ccdadfd0e8d78"
   }
 ]
