@@ -40,8 +40,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       NSAppTransportSecurity: {
         NSAllowsArbitraryLoads: true,
       },
+      // 仅支持 iPhone
+      UIDeviceFamily: [1],
     },
-    supportsTablet: true,
+    // 声明不支持平板
+    supportsTablet: false,
     userInterfaceStyle: 'automatic',
   },
   name: 'LobeHub',
