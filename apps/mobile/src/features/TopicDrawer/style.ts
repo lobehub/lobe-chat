@@ -5,7 +5,7 @@ import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token, isDarkMode }) => ({
   drawerBackground: {
-    backgroundColor: token.colorBgLayout,
+    backgroundColor: isDarkMode ? token.colorBgContainerSecondary : token.colorBgLayout,
   },
 
   // 抽屉内容容器
