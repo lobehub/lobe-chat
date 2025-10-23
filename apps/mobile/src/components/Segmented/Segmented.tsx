@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { LayoutChangeEvent, Pressable } from 'react-native';
+import { LayoutChangeEvent } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -200,8 +200,11 @@ const Segmented = memo<SegmentedProps>(
             const hasLabel = typeof option.label === 'string' && option.label;
 
             return (
-              <Pressable
+              <Flexbox
+                align="center"
                 disabled={isDisabled}
+                gap={hasIcon && hasLabel ? 8 : undefined}
+                horizontal={!!(hasIcon && hasLabel)}
                 key={`${option.value}-${index}`}
                 onLayout={(e) => handleSegmentLayout(option.value, e)}
                 onPress={() => handlePress(option.value, option.disabled)}
@@ -215,31 +218,25 @@ const Segmented = memo<SegmentedProps>(
                   })
                 }
               >
-                <Flexbox
-                  align="center"
-                  gap={hasIcon && hasLabel ? 8 : undefined}
-                  horizontal={!!(hasIcon && hasLabel)}
-                >
-                  {hasIcon && (
-                    <SegmentedIcon
-                      icon={option.icon}
-                      isDisabled={!!isDisabled}
-                      isSelected={isSelected}
-                      size={size === 'small' ? 16 : size === 'large' ? 20 : 18}
-                    />
-                  )}
-                  {hasLabel ? (
-                    <SegmentedText
-                      isDisabled={!!isDisabled}
-                      isSelected={isSelected}
-                      label={option.label as string}
-                      size={size}
-                    />
-                  ) : typeof option.label !== 'string' && option.label ? (
-                    option.label
-                  ) : null}
-                </Flexbox>
-              </Pressable>
+                {hasIcon && (
+                  <SegmentedIcon
+                    icon={option.icon}
+                    isDisabled={!!isDisabled}
+                    isSelected={isSelected}
+                    size={size === 'small' ? 16 : size === 'large' ? 20 : 18}
+                  />
+                )}
+                {hasLabel ? (
+                  <SegmentedText
+                    isDisabled={!!isDisabled}
+                    isSelected={isSelected}
+                    label={option.label as string}
+                    size={size}
+                  />
+                ) : typeof option.label !== 'string' && option.label ? (
+                  option.label
+                ) : null}
+              </Flexbox>
             );
           })}
         </Flexbox>

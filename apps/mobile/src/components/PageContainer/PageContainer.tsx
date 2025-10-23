@@ -31,6 +31,9 @@ const PageContainer = memo<PageContainerProps>(
     backgroundColor,
     onTitlePress,
     titleIcon,
+    leftProps,
+    titleProps,
+    extraProps,
   }) => {
     const { styles, theme } = useStyles();
     const token = useTheme();
@@ -88,6 +91,7 @@ const PageContainer = memo<PageContainerProps>(
         justify={'flex-start'}
         style={styles.left}
         width={'25%'}
+        {...leftProps}
       >
         {left !== undefined ? (
           left
@@ -109,6 +113,7 @@ const PageContainer = memo<PageContainerProps>(
         justify={'flex-end'}
         style={styles.extra}
         width={'25%'}
+        {...extraProps}
       >
         {extra}
         {largeTitleEnabled && loadingContent}
@@ -126,6 +131,7 @@ const PageContainer = memo<PageContainerProps>(
         onPress={loading ? undefined : onTitlePress}
         padding={4}
         style={styles.title}
+        {...titleProps}
       >
         {largeTitleEnabled ? (
           renderHeaderTitle(headerTitleOpacity)

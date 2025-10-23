@@ -1,7 +1,6 @@
-import { CapsuleTabItem, CapsuleTabs, CapsuleTabsSize, Text, useTheme } from '@lobehub/ui-rn';
+import { CapsuleTabItem, CapsuleTabs, CapsuleTabsSize, Flexbox, Text } from '@lobehub/ui-rn';
 import { Briefcase, HeartPulse, Home, Palette } from 'lucide-react-native';
 import { useState } from 'react';
-import { View } from 'react-native';
 
 const items: CapsuleTabItem[] = [
   { icon: Home, key: 'home', label: '首页' },
@@ -22,31 +21,21 @@ const SizesDemo = () => {
     middle: items[0].key,
     small: items[0].key,
   });
-  const token = useTheme();
 
   return (
-    <View style={{ gap: 16, padding: 16 }}>
+    <Flexbox gap={16}>
       {sizeOptions.map(({ label, size }) => (
-        <View key={size}>
-          <Text
-            style={{
-              color: token.colorTextSecondary,
-              fontSize: 14,
-              marginBottom: 12,
-              textTransform: 'uppercase',
-            }}
-          >
-            {label}
-          </Text>
+        <Flexbox gap={16} key={size}>
+          <Text>{label}</Text>
           <CapsuleTabs
             items={items}
             onSelect={(key) => setSelected((prev) => ({ ...prev, [size]: key }))}
             selectedKey={selected[size]}
             size={size}
           />
-        </View>
+        </Flexbox>
       ))}
-    </View>
+    </Flexbox>
   );
 };
 
