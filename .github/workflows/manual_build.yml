@@ -1,0 +1,56 @@
+name: Manual Docker Build and Push
+
+permissions:
+  contents: read
+  packages: write # 如果推送到 GHCR，需要此权限
+
+on:
+  workflow_dispatch: # 仅支持手动触发
+
+jobs:
+  build_and_push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. 设置 Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. 登录到 Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 4. 提取 Docker 元数据（标签、标注）
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: marvinlee514/lobechat-docker-clerk
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=,suffix=,format=short
+
+      # 5. 构建并推送 Docker 镜像（amd64）
+      - name: Build and push Docker image (amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.database
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_ARG=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            CLERK_WEBHOOK_SECRET_ARG=${{ secrets.CLERK_WEBHOOK_SECRET }}
+            CLERK_SECRET_KEY_ARG=${{ secrets.CLERK_SECRET_KEY }}
