@@ -29,7 +29,7 @@ export interface AgentRuntimeContext {
     stepCount: number;
   };
   /** Usage statistics from the current step (if applicable) */
-  stepUsage?: ModelUsage;
+  stepUsage?: ModelUsage | unknown;
 }
 
 /**

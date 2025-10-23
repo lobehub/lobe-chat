@@ -120,10 +120,7 @@ export class AgentRuntime {
         }
 
         // Stop execution if blocked
-        if (
-          currentState.status === 'waiting_for_human_input' ||
-          currentState.status === 'interrupted'
-        ) {
+        if (currentState.status === 'waiting_for_human' || currentState.status === 'interrupted') {
           break;
         }
       }
@@ -273,7 +270,7 @@ export class AgentRuntime {
         tokens: { input: 0, output: 0, total: 0 },
       },
       tools: {
-        byTool: {},
+        byTool: [],
         totalCalls: 0,
         totalTimeMs: 0,
       },
@@ -290,12 +287,12 @@ export class AgentRuntime {
       calculatedAt: now,
       currency: 'USD',
       llm: {
-        byModel: {},
+        byModel: [],
         currency: 'USD',
         total: 0,
       },
       tools: {
-        byTool: {},
+        byTool: [],
         currency: 'USD',
         total: 0,
       },
@@ -308,7 +305,9 @@ export class AgentRuntime {
    * @param partialState - Partial state to override defaults
    * @returns Complete AgentState with defaults filled in
    */
-  static createInitialState(partialState: Partial<AgentState> & { sessionId: string }): AgentState {
+  static createInitialState(
+    partialState?: Partial<AgentState> & { sessionId: string },
+  ): AgentState {
     const now = new Date().toISOString();
 
     return {
@@ -319,9 +318,10 @@ export class AgentRuntime {
       messages: [],
       status: 'idle',
       stepCount: 0,
+      toolManifestMap: {},
       usage: AgentRuntime.createDefaultUsage(),
       // User provided values override defaults
-      ...partialState,
+      ...(partialState || { sessionId: '' }),
     };
   }
 
@@ -489,7 +489,7 @@ export class AgentRuntime {
       const newState = structuredClone(state);
 
       newState.lastModified = new Date().toISOString();
-      newState.status = 'waiting_for_human_input';
+      newState.status = 'waiting_for_human';
       newState.pendingToolsCalling = pendingToolsCalling;
 
       const events: AgentEvent[] = [
@@ -515,7 +515,7 @@ export class AgentRuntime {
       const newState = structuredClone(state);
 
       newState.lastModified = new Date().toISOString();
-      newState.status = 'waiting_for_human_input';
+      newState.status = 'waiting_for_human';
       newState.pendingHumanPrompt = { metadata, prompt };
 
       const events: AgentEvent[] = [
@@ -541,7 +541,7 @@ export class AgentRuntime {
       const newState = structuredClone(state);
 
       newState.lastModified = new Date().toISOString();
-      newState.status = 'waiting_for_human_input';
+      newState.status = 'waiting_for_human';
       newState.pendingHumanSelect = { metadata, multi, options, prompt };
 
       const events: AgentEvent[] = [
@@ -641,13 +641,15 @@ export class AgentRuntime {
         newState.usage.tools.totalCalls += result.newState.usage.tools.totalCalls;
         newState.usage.tools.totalTimeMs += result.newState.usage.tools.totalTimeMs;
 
-        // Merge per-tool statistics
-        Object.entries(result.newState.usage.tools.byTool).forEach(([tool, stats]) => {
-          if (newState.usage.tools.byTool[tool]) {
-            newState.usage.tools.byTool[tool].calls += stats.calls;
-            newState.usage.tools.byTool[tool].totalTimeMs += stats.totalTimeMs;
+        // Merge per-tool statistics (now using array)
+        result.newState.usage.tools.byTool.forEach((toolStats) => {
+          const existingTool = newState.usage.tools.byTool.find((t) => t.name === toolStats.name);
+          if (existingTool) {
+            existingTool.calls += toolStats.calls;
+            existingTool.totalTimeMs += toolStats.totalTimeMs;
+            existingTool.errors += toolStats.errors || 0;
           } else {
-            newState.usage.tools.byTool[tool] = { ...stats };
+            newState.usage.tools.byTool.push({ ...toolStats });
           }
         });
       }
@@ -656,6 +658,17 @@ export class AgentRuntime {
       if (result.newState.cost && newState.cost) {
         newState.cost.tools.total += result.newState.cost.tools.total;
         newState.cost.total += result.newState.cost.tools.total;
+
+        // Merge per-tool cost statistics (now using array)
+        result.newState.cost.tools.byTool.forEach((toolCost) => {
+          const existingToolCost = newState.cost.tools.byTool.find((t) => t.name === toolCost.name);
+          if (existingToolCost) {
+            existingToolCost.calls += toolCost.calls;
+            existingToolCost.totalCost += toolCost.totalCost;
+          } else {
+            newState.cost.tools.byTool.push({ ...toolCost });
+          }
+        });
       }
     }
 

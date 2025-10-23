@@ -103,6 +103,14 @@ export const generateAIChatV2: StateCreator<
     // if message is empty or no files, then stop
     if (!message && !hasFile) return;
 
+    // Check if agent mode is enabled and route to agent runtime
+    const agentStore = getAgentStoreState();
+    const isAgentModeEnabled = agentSelectors.enableAgentMode(agentStore);
+
+    if (isAgentModeEnabled && !onlyAddUserMessage) {
+      return get().sendAgentMessage({ message, files, isWelcomeQuestion });
+    }
+
     if (onlyAddUserMessage) {
       await get().addUserMessage({ message, fileList: fileIdList });
 
