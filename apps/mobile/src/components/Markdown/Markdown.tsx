@@ -1,5 +1,5 @@
 import { Definition, Root } from 'mdast';
-import { memo, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';
 import remarkGfm from 'remark-gfm';
 // 仅用于解析数学公式
@@ -50,14 +50,19 @@ const Markdown = memo<MarkdownProps>(
     );
     const definitions = useMemo(() => extractDefinitions(tree), [tree]);
 
-    const [contentSize, setContentSize] = useState<{
-      height: number;
-      width: number;
-    }>({ height: 0, width: 0 });
-    const onLayout = (e: LayoutChangeEvent) => {
-      const { width, height } = e.nativeEvent.layout;
-      setContentSize({ height, width });
-    };
+    const [contentSize, setContentSize] = useState<{ height: number; width: number }>({
+      height: 0,
+      width: 0,
+    });
+    const onLayout = useCallback(
+      (e: LayoutChangeEvent) => {
+        const { width, height } = e.nativeEvent.layout;
+        setContentSize((prev) =>
+          prev.height === height && prev.width === width ? prev : { height, width },
+        );
+      },
+      [setContentSize],
+    );
 
     const options: RemarkStyleOptions = { fontSize, headerMultiple, lineHeight, marginMultiple };
     const remarkStyles = useRemarkStyles(options);
