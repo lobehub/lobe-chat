@@ -1,17 +1,14 @@
+import { ChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fileService } from '@/services/file';
-import { ClientService } from '@/services/file/_deprecated';
 import { messageService } from '@/services/message';
 import { imageGenerationService } from '@/services/textToImage';
 import { uploadService } from '@/services/upload';
+import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useFileStore } from '@/store/file';
-import { ChatMessage } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
-
-import { useChatStore } from '../../../store';
 
 describe('chatToolSlice - dalle', () => {
   describe('generateImageFromPrompts', () => {
