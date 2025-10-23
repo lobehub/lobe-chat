@@ -7,7 +7,6 @@ import {
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  View,
   ViewStyle,
 } from 'react-native';
 import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
@@ -197,9 +196,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   if (!isCurrentChatLoaded) {
     return (
-      <View style={[{ flex: 1 }, style]}>
+      <Flexbox flex={1} style={style}>
         <MessageSkeletonList />
-      </View>
+      </Flexbox>
     );
   }
 
@@ -224,7 +223,6 @@ export default function ChatListChatList({ style }: ChatListProps) {
         onScrollEndDrag={handleScrollEndDrag}
         overrideProps={{
           paddingBottom: 16,
-          paddingInline: 16,
         }}
         ref={listRef}
         renderItem={renderItem}
