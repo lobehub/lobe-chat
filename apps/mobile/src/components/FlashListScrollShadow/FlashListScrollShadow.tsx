@@ -23,6 +23,7 @@ const FlashListScrollShadowInner = <T,>(
     onVisibilityChange,
     contentContainerStyle,
     estimatedItemSize,
+    inverted = false,
     ...rest
   } = props;
 
@@ -155,6 +156,7 @@ const FlashListScrollShadowInner = <T,>(
     ...rest,
     estimatedItemSize,
     horizontal: orientation === 'horizontal',
+    inverted,
     onContentSizeChange: mergedOnContentSizeChange,
     onLayout: mergedOnLayout,
     onScroll: mergedOnScroll,

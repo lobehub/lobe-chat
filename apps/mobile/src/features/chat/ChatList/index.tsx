@@ -107,18 +107,14 @@ export default function ChatListChatList({ style }: ChatListProps) {
   const computeAtBottom = useCallback(() => {
     const layoutH = layoutHeightRef.current || 0;
     const contentH = contentHeightRef.current || 0;
-    // Guard and clamp offset to avoid bounce/overscroll affecting result
+    // With inverted list, bottom is at offset 0
     let offsetY = scrollYRef.current || 0;
-    const maxOffset = Math.max(0, contentH - layoutH);
-    if (offsetY < 0) offsetY = 0;
-    if (offsetY > maxOffset) offsetY = maxOffset;
 
     // If content fits entirely in the viewport, we're at bottom
     if (contentH <= layoutH) return true;
 
-    // Distance from viewport bottom to content bottom
-    const distance = contentH - (offsetY + layoutH);
-    return distance <= AT_BOTTOM_EPSILON;
+    // For inverted list, at bottom means offset is close to 0
+    return Math.abs(offsetY) <= AT_BOTTOM_EPSILON;
   }, []);
 
   const updateAtBottom = useCallback((next: boolean) => {
@@ -184,6 +180,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
     (_w: number, h: number) => {
       contentHeightRef.current = h;
       if (atBottomRef.current && !isScrolling) {
+        // For inverted list, bottom is at offset 0
         // Use instant scroll (no animation) if just switched topic, otherwise use smooth animation
         const shouldAnimate = !justSwitchedTopicRef.current;
         requestAnimationFrame(() => {
@@ -230,6 +227,8 @@ export default function ChatListChatList({ style }: ChatListProps) {
           return chatMessage.role;
         }}
         hideScrollBar={false}
+        initialScrollIndex={messages.length - 1}
+        inverted
         keyExtractor={keyExtractor}
         onContentSizeChange={handleContentSizeChange}
         onLayout={handleLayout}
@@ -238,6 +237,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
         onScroll={handleScroll}
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={handleScrollEndDrag}
+        overrideProps={{
+          contentContainerStyle: { flexGrow: 1, justifyContent: 'flex-end' },
+        }}
         ref={listRef}
         renderItem={renderItem}
         size={2}
@@ -246,13 +248,14 @@ export default function ChatListChatList({ style }: ChatListProps) {
         atBottom={atBottom}
         onScrollToBottom={(type) => {
           const flatList = listRef.current;
+          // For inverted list, bottom is at offset 0
           switch (type) {
             case 'auto': {
-              flatList?.scrollToEnd({ animated: false });
+              flatList?.scrollToOffset({ animated: false, offset: 0 });
               break;
             }
             case 'click': {
-              flatList?.scrollToEnd({ animated: true });
+              flatList?.scrollToOffset({ animated: true, offset: 0 });
               break;
             }
           }
