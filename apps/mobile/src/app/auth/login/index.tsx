@@ -1,9 +1,17 @@
 import { LobeHub } from '@lobehub/icons-rn';
-import { Button, Center, Flexbox, PageContainer, Text, useTheme } from '@lobehub/ui-rn';
+import {
+  Button,
+  Center,
+  Flexbox,
+  PageContainer,
+  Text,
+  useTheme,
+  useThemeMode,
+} from '@lobehub/ui-rn';
+import { ResizeMode, Video } from 'expo-av';
 import { Image } from 'expo-image';
 import { Link, useRouter } from 'expo-router';
-import { darken } from 'polished';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
@@ -15,10 +23,12 @@ import { getLoginErrorKey } from '@/utils/error';
 
 const LoginPage = () => {
   const theme = useTheme();
-  const { t } = useTranslation(['auth', 'error', 'common']);
+  const { isDarkMode } = useThemeMode();
+  const { t } = useTranslation(['auth', 'error', 'common', 'welcome']);
   const { isLoading } = useAuth();
   const { login } = useAuthActions();
   const router = useRouter();
+  const videoRef = useRef<Video>(null);
 
   const { setCustomServerUrl, showSelfHostedEntry } = useSettingStore((state) => ({
     setCustomServerUrl: state.setCustomServerUrl,
@@ -48,12 +58,22 @@ const LoginPage = () => {
     router.push('/auth/login/selfhost');
   };
 
+  // 根据主题选择视频源
+  const videoSource = isDarkMode
+    ? require('@/../assets/videos/landing-dark.mp4')
+    : require('@/../assets/videos/landing-light.mp4');
+
   return (
-    <PageContainer
-      backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
-    >
+    <PageContainer backgroundColor={isDarkMode ? '#000000' : '#FFFFFF'}>
       <Flexbox flex={1}>
-        <Center flex={1} gap={24}>
+        <Center
+          flex={1}
+          gap={24}
+          paddingInline={16}
+          style={{
+            paddingTop: '20%',
+          }}
+        >
           <Image
             cachePolicy="memory-disk"
             source={require('@/../assets/images/logo.png')}
@@ -65,13 +85,31 @@ const LoginPage = () => {
           />
           <Flexbox align={'center'} gap={8} horizontal>
             <Text fontSize={26} weight={'bold'}>
-              欢迎使用
+              {t('title', { ns: 'welcome' })}
             </Text>
             <LobeHub.Text color={theme.colorText} size={24} />
           </Flexbox>
         </Center>
-
-        <Flexbox gap={36} padding={16}>
+        <Video
+          isLooping
+          isMuted
+          ref={videoRef}
+          resizeMode={ResizeMode.COVER}
+          shouldPlay
+          source={videoSource}
+          style={{
+            height: 150,
+            left: 0,
+            right: 0,
+          }}
+        />
+        <Flexbox
+          gap={36}
+          padding={16}
+          style={{
+            paddingTop: 24,
+          }}
+        >
           {/* 登录按钮 */}
           <Flexbox gap={12}>
             <Button
@@ -81,21 +119,16 @@ const LoginPage = () => {
               onPress={handleLogin}
               type={'primary'}
             >
-              {'通过 LobeHub 账号登录'}
+              {t('login.loginWithLobeHub', { appName: 'LobeHub', ns: 'auth' })}
             </Button>
             {showSelfHostedEntry && (
-              <Button
-                block
-                disabled={isLoading}
-                onPress={handleSelfHostedLogin}
-                variant={'outlined'}
-              >
+              <Button block disabled={isLoading} onPress={handleSelfHostedLogin} variant={'filled'}>
                 {t('login.selfHostedButton', { ns: 'auth' })}
               </Button>
             )}
             {isDev && (
               <Link asChild href="/playground">
-                <Button block variant={'outlined'}>
+                <Button block variant={'filled'}>
                   {'Playground'}
                 </Button>
               </Link>

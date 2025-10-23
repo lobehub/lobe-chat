@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "This topic is about to be deleted and cannot be recovered. Please confirm your action.",
   "defaultTitle": "Default Topic",
   "empty": "No Topics Available",
   "guide": {

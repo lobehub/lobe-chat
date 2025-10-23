@@ -13,6 +13,12 @@
       "confirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
       "label": "Se déconnecter"
     },
+    "switchAccount": {
+      "action": "Changer de compte",
+      "confirm": "Voulez-vous vraiment changer de compte ? Cela entraînera la déconnexion du compte actuel et une nouvelle connexion.",
+      "error": "Échec du changement de compte, veuillez réessayer.",
+      "label": "Changer de compte"
+    },
     "title": "Paramètres du compte"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Désactivé",
       "enabled": "Activé"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Vider le cache",
+        "description": "Cela supprimera les données en cache stockées localement. Le contenu devra être rechargé lors du prochain démarrage de l'application.",
+        "title": "Confirmer la suppression du cache ?"
+      },
+      "failure": "Échec du nettoyage du cache",
+      "success": "Le cache a été vidé"
+    },
+    "description": "Le cache permet d'accélérer le démarrage. Vous pouvez le vider pour libérer de l'espace.",
+    "title": "Vider le cache"
   },
   "changelog": "Journal des mises à jour",
   "color": {

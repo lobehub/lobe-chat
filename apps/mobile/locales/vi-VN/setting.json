@@ -13,6 +13,12 @@
       "confirm": "Bạn có chắc chắn muốn đăng xuất không?",
       "label": "Đăng xuất"
     },
+    "switchAccount": {
+      "action": "Chuyển tài khoản",
+      "confirm": "Bạn có chắc muốn chuyển tài khoản không? Thao tác này sẽ đăng xuất khỏi tài khoản hiện tại và đăng nhập lại.",
+      "error": "Chuyển tài khoản thất bại, vui lòng thử lại.",
+      "label": "Chuyển tài khoản"
+    },
     "title": "Cài đặt tài khoản"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Chưa kích hoạt",
       "enabled": "Đã kích hoạt"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Xóa bộ nhớ đệm",
+        "description": "Thao tác này sẽ xóa dữ liệu được lưu trữ cục bộ, nội dung sẽ được tải lại khi mở ứng dụng lần sau.",
+        "title": "Xác nhận xóa bộ nhớ đệm?"
+      },
+      "failure": "Xóa bộ nhớ đệm thất bại",
+      "success": "Bộ nhớ đệm đã được xóa"
+    },
+    "description": "Bộ nhớ đệm giúp tăng tốc độ khởi động, bạn có thể xóa để giải phóng dung lượng khi cần.",
+    "title": "Xóa bộ nhớ đệm"
   },
   "changelog": "Nhật ký cập nhật",
   "color": {

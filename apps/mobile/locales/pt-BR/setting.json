@@ -13,6 +13,12 @@
       "confirm": "Tem certeza de que deseja sair?",
       "label": "Sair"
     },
+    "switchAccount": {
+      "action": "Trocar de conta",
+      "confirm": "Tem certeza de que deseja trocar de conta? Isso encerrará a sessão atual e fará login novamente.",
+      "error": "Falha ao trocar de conta. Tente novamente.",
+      "label": "Trocar de conta"
+    },
     "title": "Configurações da conta"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Desativado",
       "enabled": "Ativado"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Limpar cache",
+        "description": "Isso removerá os dados em cache armazenados localmente. O conteúdo será recarregado na próxima vez que o aplicativo for aberto.",
+        "title": "Confirmar limpeza de cache?"
+      },
+      "failure": "Falha ao limpar o cache",
+      "success": "Cache limpo com sucesso"
+    },
+    "description": "O cache pode acelerar o tempo de inicialização. Você pode limpá-lo para liberar espaço.",
+    "title": "Limpar cache"
   },
   "changelog": "Registro de atualizações",
   "color": {

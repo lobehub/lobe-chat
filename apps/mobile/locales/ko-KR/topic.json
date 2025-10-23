@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "이 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 정말로 삭제하시겠습니까?",
   "defaultTitle": "기본 주제",
   "empty": "주제가 없습니다",
   "guide": {

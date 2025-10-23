@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "Abbrechen",
+    "selectLanguage": "Sprache auswählen"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "Modell auswählen",
     "emptyModel": "Keine aktivierten Modelle, bitte aktivieren Sie welche in den Einstellungen",

@@ -13,6 +13,12 @@
       "confirm": "Sei sicuro di voler uscire?",
       "label": "Esci"
     },
+    "switchAccount": {
+      "action": "Cambia account",
+      "confirm": "Sei sicuro di voler cambiare account? Questo comporterà la disconnessione dall'account attuale e un nuovo accesso.",
+      "error": "Cambio account non riuscito, riprova.",
+      "label": "Cambia account"
+    },
     "title": "Impostazioni account"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Disabilitato",
       "enabled": "Abilitato"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Pulisci cache",
+        "description": "Questo rimuoverà i dati memorizzati localmente; al prossimo avvio dell'app sarà necessario ricaricare i contenuti.",
+        "title": "Confermi la pulizia della cache?"
+      },
+      "failure": "Pulizia della cache non riuscita",
+      "success": "Cache pulita con successo"
+    },
+    "description": "La cache può migliorare la velocità di avvio. Puoi cancellarla per liberare spazio.",
+    "title": "Pulisci cache"
   },
   "changelog": "Registro delle modifiche",
   "color": {

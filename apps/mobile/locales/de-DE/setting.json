@@ -13,6 +13,12 @@
       "confirm": "Möchten Sie sich wirklich abmelden?",
       "label": "Abmelden"
     },
+    "switchAccount": {
+      "action": "Konto wechseln",
+      "confirm": "Möchten Sie wirklich das Konto wechseln? Sie werden abgemeldet und müssen sich erneut anmelden.",
+      "error": "Kontowechsel fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "label": "Konto wechseln"
+    },
     "title": "Kontoeinstellungen"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Deaktiviert",
       "enabled": "Aktiviert"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Cache leeren",
+        "description": "Dadurch werden lokal gespeicherte Cache-Daten entfernt. Beim nächsten Start der App müssen Inhalte neu geladen werden.",
+        "title": "Cache wirklich leeren?"
+      },
+      "failure": "Cache konnte nicht geleert werden",
+      "success": "Cache wurde geleert"
+    },
+    "description": "Der Cache kann die Startgeschwindigkeit verbessern. Wenn Sie Speicherplatz freigeben möchten, können Sie ihn leeren.",
+    "title": "Cache leeren"
   },
   "changelog": "Änderungsprotokoll",
   "color": {

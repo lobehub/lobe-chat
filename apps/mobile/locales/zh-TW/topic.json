@@ -1,4 +1,5 @@
 {
+  "confirmRemoveTopicItemAlert": "即將刪除該主題，刪除後將無法恢復，請確認你的操作",
   "defaultTitle": "預設話題",
   "empty": "暫無話題",
   "guide": {

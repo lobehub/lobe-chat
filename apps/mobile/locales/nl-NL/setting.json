@@ -13,6 +13,12 @@
       "confirm": "Weet u zeker dat u wilt uitloggen?",
       "label": "Uitloggen"
     },
+    "switchAccount": {
+      "action": "Account wisselen",
+      "confirm": "Weet je zeker dat je van account wilt wisselen? Je wordt uitgelogd en opnieuw aangemeld.",
+      "error": "Account wisselen mislukt, probeer het opnieuw.",
+      "label": "Account wisselen"
+    },
     "title": "Accountinstellingen"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Uitgeschakeld",
       "enabled": "Ingeschakeld"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Cache wissen",
+        "description": "Dit verwijdert lokaal opgeslagen cachegegevens. Bij het volgende openen van de app moeten de inhoud opnieuw worden geladen.",
+        "title": "Weet je zeker dat je de cache wilt wissen?"
+      },
+      "failure": "Cache wissen mislukt",
+      "success": "Cache is gewist"
+    },
+    "description": "Cache kan de opstarttijd versnellen. Als je ruimte wilt vrijmaken, kun je de cache wissen.",
+    "title": "Cache wissen"
   },
   "changelog": "Wijzigingslogboek",
   "color": {

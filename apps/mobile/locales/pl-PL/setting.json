@@ -13,6 +13,12 @@
       "confirm": "Czy na pewno chcesz się wylogować?",
       "label": "Wyloguj się"
     },
+    "switchAccount": {
+      "action": "Przełącz konto",
+      "confirm": "Czy na pewno chcesz przełączyć konto? Spowoduje to wylogowanie z bieżącego konta i ponowne zalogowanie.",
+      "error": "Nie udało się przełączyć konta. Spróbuj ponownie.",
+      "label": "Przełącz konto"
+    },
     "title": "Ustawienia konta"
   },
   "advanced": {
@@ -70,6 +76,19 @@
       "disabled": "Nieaktywne",
       "enabled": "Aktywne"
     }
+  },
+  "cache": {
+    "clear": {
+      "confirm": {
+        "action": "Wyczyść pamięć podręczną",
+        "description": "Spowoduje to usunięcie zapisanych lokalnie danych podręcznych. Przy następnym uruchomieniu aplikacji zawartość zostanie załadowana ponownie.",
+        "title": "Czy na pewno chcesz wyczyścić pamięć podręczną?"
+      },
+      "failure": "Nie udało się wyczyścić pamięci podręcznej",
+      "success": "Pamięć podręczna została wyczyszczona"
+    },
+    "description": "Pamięć podręczna przyspiesza uruchamianie aplikacji. Możesz ją wyczyścić, aby zwolnić miejsce.",
+    "title": "Wyczyść pamięć podręczną"
   },
   "changelog": "Dziennik zmian",
   "color": {

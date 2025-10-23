@@ -1,4 +1,8 @@
 {
+  "Highlighter": {
+    "cancel": "إلغاء",
+    "selectLanguage": "اختر اللغة"
+  },
   "ModelSwitchPanel": {
     "chooseModel": "اختر النموذج",
     "emptyModel": "لا توجد نماذج مفعلة، يرجى التوجه إلى الإعدادات للتفعيل",
