@@ -113,7 +113,7 @@ const Block = memo<BlockProps>(
           longPressEffect || pressEffect
             ? {
                 color: theme.colorFillTertiary,
-                foreground: longPressEffect ? isLongPressed : false,
+                foreground: longPressEffect ? isLongPressed : true,
               }
             : undefined
         }
