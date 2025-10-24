@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Use env to control clerk allow origin feature."]
+    },
+    "date": "2025-10-24",
+    "version": "1.142.0"
+  },
+  {
+    "children": {
       "fixes": ["Loadmore not work & navbar not show in pwa."]
     },
     "date": "2025-10-23",
