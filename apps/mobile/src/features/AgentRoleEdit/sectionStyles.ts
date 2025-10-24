@@ -60,7 +60,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: token.paddingLG,
+    paddingInline: token.paddingLG,
     paddingTop: token.paddingLG,
     width: '100%',
   },

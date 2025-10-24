@@ -4,10 +4,10 @@ export const useStyles = createStyles(({ token }) => ({
   avatarSection: {
     alignItems: 'center',
     marginBottom: token.marginLG,
-    paddingVertical: token.paddingXL,
+    paddingBlock: token.paddingXL,
   },
   container: {
-    paddingHorizontal: token.padding,
+    paddingInline: token.padding,
   },
   signOutSection: {
     marginTop: token.marginXS,

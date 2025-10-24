@@ -26,8 +26,8 @@ export const useStyles = createStyles(({ token }) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     minWidth: 70,
-    paddingHorizontal: 0,
-    paddingVertical: token.paddingXXS,
+    paddingBlock: token.paddingXXS,
+    paddingInline: 0,
   },
   selectText: {
     color: token.colorText,

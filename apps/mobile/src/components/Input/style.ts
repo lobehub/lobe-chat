@@ -12,8 +12,8 @@ interface InputSizeStyles {
   controlHeight: number;
 
   fontSize: number;
-  paddingHorizontal: number;
-  paddingVertical: number;
+  paddingBlock: number;
+  paddingInline: number;
 }
 
 export const getInputSizeStyles = (
@@ -25,24 +25,24 @@ export const getInputSizeStyles = (
       return {
         controlHeight: token.controlHeightSM,
         fontSize: 14,
-        paddingHorizontal: token.paddingXS,
-        paddingVertical: 0,
+        paddingBlock: 0,
+        paddingInline: token.paddingXS,
       };
     }
     case 'large': {
       return {
         controlHeight: token.controlHeightLG,
         fontSize: 18,
-        paddingHorizontal: token.paddingSM,
-        paddingVertical: token.paddingXS,
+        paddingBlock: token.paddingXS,
+        paddingInline: token.paddingSM,
       };
     }
     default: {
       return {
         controlHeight: token.controlHeight,
         fontSize: 16,
-        paddingHorizontal: token.paddingSM,
-        paddingVertical: token.paddingXXS,
+        paddingBlock: token.paddingXXS,
+        paddingInline: token.paddingSM,
       };
     }
   }
@@ -54,8 +54,8 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
   return {
     container: {
       minHeight: sizeStyles.controlHeight * 1.25,
-      paddingHorizontal: sizeStyles.paddingHorizontal * 1.25,
-      paddingVertical: sizeStyles.paddingVertical,
+      paddingBlock: sizeStyles.paddingBlock,
+      paddingInline: sizeStyles.paddingInline * 1.25,
     },
     input: {
       color: token.colorText,
@@ -71,7 +71,7 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
         includeFontPadding: false,
         lineHeight: sizeStyles.fontSize * 1.25,
         margin: 0,
-        paddingVertical: 0,
+        paddingBlock: 0,
       }),
     },
     prefixContainer: {

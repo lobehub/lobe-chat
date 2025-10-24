@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     height: 20,
     justifyContent: 'center',
     minWidth: 20,
-    paddingHorizontal: 6,
+    paddingInline: 6,
   },
   badgeText: {
     color: '#FFFFFF',

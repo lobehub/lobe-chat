@@ -24,8 +24,8 @@ export const useStyles = createStyles(({ token, stylish }, props?: { size?: Butt
       maxWidth: sizeStyles.height * 1.25,
       minHeight: sizeStyles.height * 1.25,
       minWidth: sizeStyles.height * 1.25,
-      paddingHorizontal: 0,
-      paddingVertical: 0,
+      paddingBlock: 0,
+      paddingInline: 0,
       width: sizeStyles.height * 1.25,
     },
 
@@ -71,7 +71,7 @@ export const useStyles = createStyles(({ token, stylish }, props?: { size?: Butt
       height: sizeStyles.height * 1.25,
       minWidth: sizeStyles.height * 1.25,
 
-      paddingHorizontal: sizeStyles.paddingHorizontal * 1.25,
+      paddingInline: sizeStyles.paddingInline * 1.25,
 
       position: 'relative' as const,
     },

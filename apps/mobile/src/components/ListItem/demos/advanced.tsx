@@ -195,8 +195,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C1C1E',
     borderRadius: 8,
     flex: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingBlock: 8,
+    paddingInline: 12,
   },
   styleButtonText: {
     color: '#FFFFFF',

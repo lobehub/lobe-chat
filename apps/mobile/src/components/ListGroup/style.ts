@@ -12,6 +12,6 @@ export const useStyles = createStyles(({ token }) => ({
     fontSize: token.fontSize,
     fontWeight: token.fontWeightStrong,
     marginBottom: token.marginXS,
-    paddingHorizontal: token.padding,
+    paddingInline: token.padding,
   },
 }));

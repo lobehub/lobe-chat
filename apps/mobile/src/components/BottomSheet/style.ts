@@ -18,8 +18,8 @@ export const useStyles = createStyles(({ token }) => ({
   },
   content: {
     flex: 1,
-    paddingHorizontal: token.paddingLG,
-    paddingVertical: token.padding,
+    paddingBlock: token.padding,
+    paddingInline: token.paddingLG,
   },
   handle: {
     alignSelf: 'center' as const,
@@ -39,8 +39,8 @@ export const useStyles = createStyles(({ token }) => ({
     flexDirection: 'row' as const,
     justifyContent: 'center' as const,
     minHeight: 56,
-    paddingHorizontal: token.paddingLG,
-    paddingVertical: token.padding,
+    paddingBlock: token.padding,
+    paddingInline: token.paddingLG,
   },
   headerWithCloseButton: {
     paddingRight: 48,

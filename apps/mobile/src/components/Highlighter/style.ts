@@ -66,8 +66,8 @@ export const useStyles = createStyles(({ token }) => ({
     borderRadius: token.borderRadius,
     borderWidth: token.lineWidth,
     flexDirection: 'row',
-    paddingHorizontal: token.padding,
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
+    paddingInline: token.padding,
   },
   statusLabel: {
     color: token.colorTextSecondary,

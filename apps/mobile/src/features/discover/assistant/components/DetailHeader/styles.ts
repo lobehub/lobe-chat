@@ -22,7 +22,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     flexDirection: 'row',
     marginBottom: token.margin,
-    paddingHorizontal: token.marginXXS,
+    paddingInline: token.marginXXS,
   },
   headerContent: {
     flex: 1,

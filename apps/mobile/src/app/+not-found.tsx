@@ -13,7 +13,7 @@ const useStyles = createStyles(({ token }) => ({
   },
   link: {
     marginTop: token.marginLG,
-    paddingVertical: token.paddingLG,
+    paddingBlock: token.paddingLG,
   },
   linkText: {
     color: token.colorPrimary,
