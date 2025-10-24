@@ -11,10 +11,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   android: {
     adaptiveIcon: {
-      backgroundColor: '#ffffff',
-      foregroundImage: './assets/images/adaptive-icon.png',
+      backgroundColor: '#000',
+      backgroundImage: './assets/images/icon-android-background.png',
+      foregroundImage: './assets/images/icon-android-foreground.png',
+      monochromeImage: './assets/images/icon-android-foreground.png',
     },
+    icon: './assets/images/icon-android.png',
     package: 'com.lobehub.app',
+  },
+  androidNavigationBar: {
+    barStyle: 'light-content',
+  },
+  androidStatusBar: {
+    barStyle: 'light-content',
   },
   experiments: {
     // @ts-ignore
@@ -57,14 +66,28 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#ffffff',
-        dark: {
-          backgroundColor: '#000000',
-          image: './assets/images/splash-icon-dark.png',
+        android: {
+          backgroundColor: '#f5f5f5',
+          dark: {
+            backgroundColor: '#000',
+            image: './assets/images/splash-icon.png',
+            imageWidth: 150,
+          },
+          image: './assets/images/splash-icon.png',
+          imageWidth: 150,
         },
-        image: './assets/images/splash-icon-light.png',
-        imageWidth: 200,
-        resizeMode: 'contain',
+        ios: {
+          backgroundColor: '#f5f5f5',
+          dark: {
+            backgroundColor: '#000',
+            enableFullScreenImage_legacy: true,
+            image: './assets/images/splash-dark.png',
+            resizeMode: 'cover',
+          },
+          enableFullScreenImage_legacy: true,
+          image: './assets/images/splash.png',
+          resizeMode: 'cover',
+        },
       },
     ],
     [
