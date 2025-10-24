@@ -17,54 +17,54 @@ services:
 
   postgresql:
     extends:
-      file: docker-compose/local/docker-compose.yml
+      file: docker-compose.yml
       service: postgresql
   minio:
     extends:
-      file: docker-compose/local/docker-compose.yml
+      file: docker-compose.yml
       service: minio
   casdoor:
     extends:
-      file: docker-compose/local/docker-compose.yml
+      file: docker-compose.yml
       service: casdoor
   searxng:
     extends:
-      file: docker-compose/local/docker-compose.yml
+      file: docker-compose.yml
       service: searxng
 
   grafana:
     profiles:
       - otel
     extends:
-      file: docker-compose/local/grafana/docker-compose.yml
+      file: grafana/docker-compose.yml
       service: grafana
 
   tempo:
     profiles:
       - otel
     extends:
-      file: docker-compose/local/grafana/docker-compose.yml
+      file: grafana/docker-compose.yml
       service: tempo
 
   prometheus:
     profiles:
       - otel
     extends:
-      file: docker-compose/local/grafana/docker-compose.yml
+      file: grafana/docker-compose.yml
       service: prometheus
 
   otel-collector:
     profiles:
       - otel
     extends:
-      file: docker-compose/local/grafana/docker-compose.yml
+      file: grafana/docker-compose.yml
       service: otel-collector
 
   otel-tracing-test:
     profiles:
       - otel-test
     extends:
-      file: docker-compose/local/grafana/docker-compose.yml
+      file: grafana/docker-compose.yml
       service: otel-tracing-test
 
 volumes:

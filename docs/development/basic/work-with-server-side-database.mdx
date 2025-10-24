@@ -30,7 +30,7 @@ Edit `docker-compose/local/.env` as needed for your development setup. This file
 Start all required services using Docker Compose:
 
 ```bash
-docker-compose -f docker-compose.development.yml up -d
+docker-compose -f docker-compose/local/docker-compose.development.yml up -d
 ```
 
 This will start the following services:
@@ -63,7 +63,7 @@ The server will start on `http://localhost:3010`
 And you can check all Docker services are running by running:
 
 ```bash
-docker-compose -f docker-compose.development.yml ps
+docker-compose -f docker-compose/local/docker-compose.development.yml ps
 ```
 
 ## Image Generation Development
@@ -138,14 +138,13 @@ await fetch(uploadUrl, {
 });
 ```
 
-
 ### Service URLs
 
 When running with Docker Compose development setup:
 
 - **PostgreSQL**: `postgres://postgres@localhost:5432/lobechat`
 - **MinIO API**: `http://localhost:9000`
-- **MinIO Console**: `http://localhost:9001` (admin/CHANGE_THIS_PASSWORD_IN_PRODUCTION)
+- **MinIO Console**: `http://localhost:9001` (admin/CHANGE\_THIS\_PASSWORD\_IN\_PRODUCTION)
 - **Application**: `http://localhost:3010`
 
 ### Reset Services
@@ -154,16 +153,15 @@ If you encounter issues, you can reset the entire stack:
 
 ```bash
 # Stop and remove all containers
-docker-compose -f docker-compose.development.yml down
+docker-compose -f docker-compose/local/docker-compose.development.yml down
 
 # Remove volumes (this will delete all data)
-docker-compose -f docker-compose.development.yml down -v
+docker-compose -f docker-compose/local/docker-compose.development.yml down -v
 
 # Start fresh
-docker-compose -f docker-compose.development.yml up -d
+docker-compose -f docker-compose/local/docker-compose.development.yml up -d
 pnpm db:migrate
 ```
-
 
 ### Troubleshooting
 

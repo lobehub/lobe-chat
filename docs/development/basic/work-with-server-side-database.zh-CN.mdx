@@ -30,7 +30,7 @@ cp docker-compose/local/.env.example docker-compose/local/.env
 使用 Docker Compose 启动所有必需的服务：
 
 ```bash
-docker-compose -f docker-compose.development.yml up -d
+docker-compose -f docker-compose/local/docker-compose.development.yml up -d
 ```
 
 这将启动以下服务：
@@ -63,7 +63,7 @@ pnpm dev
 可以通过运行以下命令检查所有 Docker 服务运行状态：
 
 ```bash
-docker-compose -f docker-compose.development.yml ps
+docker-compose -f docker-compose/local/docker-compose.development.yml ps
 ```
 
 ## 图像生成开发
@@ -138,14 +138,13 @@ await fetch(uploadUrl, {
 });
 ```
 
-
 ### 服务地址
 
 运行 Docker Compose 开发环境时：
 
 - **PostgreSQL**：`postgres://postgres@localhost:5432/lobechat`
 - **MinIO API**：`http://localhost:9000`
-- **MinIO 控制台**：`http://localhost:9001` (admin/CHANGE_THIS_PASSWORD_IN_PRODUCTION)
+- **MinIO 控制台**：`http://localhost:9001` (admin/CHANGE\_THIS\_PASSWORD\_IN\_PRODUCTION)
 - **应用程序**：`http://localhost:3010`
 
 ### 重置服务
@@ -154,16 +153,15 @@ await fetch(uploadUrl, {
 
 ```bash
 # 停止并删除所有容器
-docker-compose -f docker-compose.development.yml down
+docker-compose -f docker-compose/local/docker-compose.development.yml down
 
 # 删除卷（这将删除所有数据）
-docker-compose -f docker-compose.development.yml down -v
+docker-compose -f docker-compose/local/docker-compose.development.yml down -v
 
 # 重新启动
-docker-compose -f docker-compose.development.yml up -d
+docker-compose -f docker-compose/local/docker-compose.development.yml up -d
 pnpm db:migrate
 ```
-
 
 ### 故障排除
 
