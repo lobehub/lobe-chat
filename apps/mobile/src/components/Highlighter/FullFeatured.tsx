@@ -93,7 +93,7 @@ const FullFeatured = memo<FullFeaturedProps>(
           align={'center'}
           horizontal
           justify={'space-between'}
-          paddingBlock={8}
+          paddingBlock={6}
           paddingInline={8}
           style={{
             backgroundColor: theme.colorFillQuaternary,

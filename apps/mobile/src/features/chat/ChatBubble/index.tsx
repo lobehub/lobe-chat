@@ -27,13 +27,13 @@ const ChatBubble = memo(
     isLoading,
     showActions = true,
     showTime = true,
-    showTitle,
+    showTitle = true,
     showActionsBar,
   }: ChatBubbleProps) => {
     const isUser = message.role === 'user';
     const hasError = !!message.error;
 
-    const { styles, theme } = useStyles();
+    const { styles } = useStyles();
     const { fontSize } = useSettingStore();
 
     const content = useMemo(() => {
@@ -50,24 +50,31 @@ const ChatBubble = memo(
 
     const node = (
       <>
-        <Avatar avatar={message?.meta?.avatar || DEFAULT_AVATAR} size={32} />
-        <Flexbox flex={1} gap={4}>
+        {!isUser && (
           <Flexbox align={'center'} gap={8} horizontal>
-            {showTitle && message?.meta?.title && (
-              <Text color={!isUser ? theme.geekblue : theme.colorWarning} fontSize={13} strong>
-                {message?.meta?.title}
-              </Text>
-            )}
+            <Avatar
+              avatar={message?.meta?.avatar || DEFAULT_AVATAR}
+              backgroundColor={message?.meta?.backgroundColor}
+              size={24}
+            />
+            {showTitle && message?.meta?.title && <Text weight={500}>{message?.meta?.title}</Text>}
             {showTime && message?.createdAt && (
               <Text fontSize={12} type={'secondary'}>
                 {formatTime(message.createdAt)}
               </Text>
             )}
           </Flexbox>
+        )}
+        <Flexbox style={{ paddingBottom: 16 }}>
           {isUser ? (
-            <Block style={[hasError && styles.errorBubble]} variant={'borderless'}>
-              {content}
-            </Block>
+            <Flexbox horizontal justify={'flex-end'}>
+              <Block
+                style={[isUser && styles.userBubble, hasError && styles.errorBubble]}
+                variant={isUser ? 'outlined' : 'borderless'}
+              >
+                {content}
+              </Block>
+            </Flexbox>
           ) : (
             <Flexbox gap={4}>
               <Block style={[hasError && styles.errorBubble]} variant={'borderless'}>
@@ -86,8 +93,7 @@ const ChatBubble = memo(
       return (
         <MessageContextMenu
           borderRadius={false}
-          gap={12}
-          horizontal
+          gap={8}
           message={message}
           paddingBlock={8}
           paddingInline={16}
@@ -97,7 +103,7 @@ const ChatBubble = memo(
       );
 
     return (
-      <Flexbox gap={12} horizontal paddingBlock={8} paddingInline={16}>
+      <Flexbox gap={8} paddingBlock={8} paddingInline={16}>
         {node}
       </Flexbox>
     );
