@@ -41,9 +41,29 @@
         "openingMessage": "Opening Message",
         "openingQuestions": "Opening Questions",
         "title": "Assistant Settings"
+      },
+      "version": {
+        "empty": "No historical versions yet",
+        "table": {
+          "isLatest": "Latest Version",
+          "isValidated": "Validated",
+          "publishAt": "Published Date",
+          "version": "Version"
+        },
+        "status": {
+          "archived": "Archived",
+          "deprecated": "Deprecated",
+          "unpublished": "Under Review"
+        },
+        "title": "Version History"
       }
     },
     "list": "Assistant List",
+    "marketSource": {
+      "label": "Market Source",
+      "legacy": "Legacy",
+      "new": "New"
+    },
     "more": "More",
     "plugins": "Integrated Plugins",
     "recentSubmits": "Recent Updates",

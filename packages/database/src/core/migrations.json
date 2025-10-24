@@ -682,5 +682,11 @@
     "bps": true,
     "folderMillis": 1760108430562,
     "hash": "ce09b301abb80f6563abc2f526bdd20b4f69bae430f09ba2179b9e3bfec43067"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"market_identifier\" text;\n", "\n"],
+    "bps": true,
+    "folderMillis": 1760200000000,
+    "hash": "6ea2b0e438ce8a518d3425fd1d1c790fd38635d188408806d512ff8e568d0eb1"
   }
 ]

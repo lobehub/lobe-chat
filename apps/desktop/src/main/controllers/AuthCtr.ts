@@ -1,4 +1,4 @@
-import { DataSyncConfig } from '@lobechat/electron-client-ipc';
+import { DataSyncConfig, MarketAuthorizationParams } from '@lobechat/electron-client-ipc';
 import { BrowserWindow, shell } from 'electron';
 import crypto from 'node:crypto';
 import querystring from 'node:querystring';
@@ -111,6 +111,31 @@ export default class AuthCtr extends ControllerModule {
     } catch (error) {
       logger.error('Authorization request failed:', error);
       return { error: error.message, success: false };
+    }
+  }
+
+  /**
+   * Request Market OAuth authorization (desktop)
+   */
+  @ipcClientEvent('requestMarketAuthorization')
+  async requestMarketAuthorization(params: MarketAuthorizationParams) {
+    const { authUrl } = params;
+
+    if (!authUrl) {
+      const errorMessage = 'Market authorization URL is required';
+      logger.error(errorMessage);
+      return { error: errorMessage, success: false };
+    }
+
+    logger.info(`Requesting market authorization via: ${authUrl}`);
+    try {
+      await shell.openExternal(authUrl);
+      logger.debug('Opening market authorization URL in default browser');
+      return { success: true };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error('Market authorization request failed:', error);
+      return { error: message, success: false };
     }
   }
 

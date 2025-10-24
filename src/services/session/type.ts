@@ -20,7 +20,7 @@ export interface ISessionService {
   createSession(type: LobeSessionType, defaultValue: Partial<LobeAgentSession>): Promise<string>;
 
   /**
-   * 需要废弃
+   * 需要拒绝
    * @deprecated
    */
   batchCreateSessions(importSessions: LobeSessions): Promise<any>;
@@ -67,7 +67,7 @@ export interface ISessionService {
   createSessionGroup(name: string, sort?: number): Promise<string>;
 
   /**
-   * 需要废弃
+   * 需要拒绝
    * @deprecated
    */
   batchCreateSessionGroups(groups: SessionGroups): Promise<BatchTaskResult>;
