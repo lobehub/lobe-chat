@@ -98,7 +98,7 @@ export const TableRenderer = ({ node }: RendererArgs<Table>): ReactNode => {
       <Block style={styles.table} variant={'outlined'}>
         <ScrollView horizontal>
           <Flexbox style={{ minWidth: '100%' }}>
-            {node.children.map((child, idx) => (
+            {node.children.filter(Boolean).map((child, idx) => (
               <Fragment key={idx}>
                 {idx !== 0 && <Divider />}
                 <TableRowRenderer index={idx} node={child} parent={node} />
@@ -119,7 +119,7 @@ export const TableRowRenderer = ({ node, index }: RendererArgs<TableRow>): React
 
   return (
     <View style={[{ flexDirection: 'row' }, rowStyle]}>
-      {node.children.map((child, idx) => (
+      {node.children.filter(Boolean).map((child, idx) => (
         <TableCellRenderer index={idx} key={idx} node={child} parent={node} rowIndex={index ?? 0} />
       ))}
     </View>
@@ -162,9 +162,11 @@ export const TableCellRenderer = ({
 
   const content = useMemo(
     () =>
-      node.children.map((child, idx) => (
-        <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />
-      )),
+      node.children
+        .filter(Boolean)
+        .map((child, idx) => (
+          <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />
+        )),
     [node, PhrasingContentRenderer],
   );
 

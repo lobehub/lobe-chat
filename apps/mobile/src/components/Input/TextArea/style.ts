@@ -18,6 +18,7 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
       minHeight: sizeStyles.controlHeight * 1.25,
       paddingBlock: sizeStyles.paddingInline * 1.25,
       paddingHorizontal: sizeStyles.paddingInline * 1.25,
+      paddingVertical: sizeStyles.paddingInline * 1.25,
       textAlignVertical: 'center',
       ...(Platform.OS === 'android' && {
         includeFontPadding: false,

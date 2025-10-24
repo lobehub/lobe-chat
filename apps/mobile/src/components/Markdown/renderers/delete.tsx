@@ -11,7 +11,7 @@ export const DeleteRenderer = ({ node }: RendererArgs<Delete>): ReactNode => {
 
   return (
     <Text style={styles.delete}>
-      {node.children.map((child, idx) => (
+      {node.children.filter(Boolean).map((child, idx) => (
         <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />
       ))}
     </Text>

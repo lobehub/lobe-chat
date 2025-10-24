@@ -12,7 +12,7 @@ export const ListRenderer = ({ node }: RendererArgs<List>): ReactNode => {
 
   return (
     <View style={[styles.container, styles.list]}>
-      {node.children.map((child, idx) => (
+      {node.children.filter(Boolean).map((child, idx) => (
         <ListItemRenderer index={idx} key={idx} node={child} parent={node} />
       ))}
     </View>
@@ -46,7 +46,7 @@ export const ListItemRenderer = ({ node, index, parent }: RendererArgs<ListItem>
         )}
       </View>
       <View style={styles.listItem}>
-        {node.children.map((child, idx) => (
+        {node.children.filter(Boolean).map((child, idx) => (
           <Fragment key={idx}>
             <BlockContentRenderer index={idx} node={child as BlockContent} parent={node} />
             <DefinitionContentRenderer

@@ -1,5 +1,6 @@
 import { Heading } from 'mdast';
 import { ReactNode } from 'react';
+import { View } from 'react-native';
 
 import Text from '../../Text';
 import { useMarkdownContext } from '../context';
@@ -10,13 +11,15 @@ export const HeadingRenderer = ({ node }: RendererArgs<Heading>): ReactNode => {
   const { PhrasingContentRenderer } = renderers;
 
   return (
-    <Text style={styles.heading?.(node.depth)}>
-      {node.children.map((child, idx) => {
-        if (child.type === 'text') {
-          return child.value;
-        }
-        return <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />;
-      })}
-    </Text>
+    <View style={{ pointerEvents: 'none' }}>
+      <Text style={styles.heading?.(node.depth)}>
+        {node.children.filter(Boolean).map((child, idx) => {
+          if (child.type === 'text') {
+            return child.value;
+          }
+          return <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />;
+        })}
+      </Text>
+    </View>
   );
 };
