@@ -164,7 +164,7 @@ const AssistantList = () => {
             }}
             variant="filled"
           />
-          <Button clickable={false} onPress={() => router.back()} type={'link'}>
+          <Button onPress={() => router.back()} pressEffect={false} type={'link'}>
             {t('actions.cancel', { ns: 'common' })}
           </Button>
         </Flexbox>

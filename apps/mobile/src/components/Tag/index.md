@@ -9,7 +9,7 @@ description: Versatile tag component for marking and classification with multipl
 - ✅ **Multiple sizes**: small, medium, large
 - ✅ **Style variants**: filled, outlined, borderless
 - ✅ **Rich colors**: preset colors, system status colors, hex colors
-- ✅ **Interactive**: supports onPress for clickable tags
+- ✅ **Interactive**: supports onPress for pressEffect tags
 - ✅ **Icon support**: optional icon with auto size/color matching
 - ✅ **Smart defaults**: icon size and color automatically match text
 - ✅ **CVA-powered**: type-safe style variants

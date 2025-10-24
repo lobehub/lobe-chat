@@ -1,16 +1,12 @@
 import { ChatMessage } from '@lobechat/types';
-import { FlashListScrollShadow, Flexbox } from '@lobehub/ui-rn';
-import { type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
+import { Flexbox } from '@lobehub/ui-rn';
+import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import {
-  InteractionManager,
-  LayoutChangeEvent,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ViewStyle,
-} from 'react-native';
-import { useKeyboardHandler, useKeyboardState } from 'react-native-keyboard-controller';
+import { ViewStyle } from 'react-native';
+import { useKeyboardHandler } from 'react-native-keyboard-controller';
 import { runOnJS } from 'react-native-reanimated';
+import { NativeScrollEvent } from 'react-native/Libraries/Components/ScrollView/ScrollView';
+import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 
 import { LOADING_FLAT } from '@/_const/message';
 import AutoScroll from '@/features/chat/AutoScroll';
@@ -26,6 +22,22 @@ import WelcomeMessage from '../WelcomeMessage';
 interface ChatListProps {
   style?: ViewStyle;
 }
+
+const AT_BOTTOM_EPSILON = 100;
+
+const computeAtBottom = (layoutH = 0, contentH = 0, offsetY = 0) => {
+  const maxOffset = Math.max(0, contentH - layoutH);
+  let offset = offsetY;
+  if (offset < 0) offset = 0;
+  if (offset > maxOffset) offset = maxOffset;
+
+  // If content fits entirely in the viewport, we're at bottom
+  if (contentH <= layoutH) return true;
+
+  // Distance from viewport bottom to content bottom
+  const distance = contentH - (offset + layoutH);
+  return distance <= AT_BOTTOM_EPSILON;
+};
 
 const ChatMessageItem = memo<{ index: number; item: ChatMessage; totalLength: number }>(
   ({ item, index, totalLength }) => {
@@ -50,9 +62,8 @@ export default function ChatListChatList({ style }: ChatListProps) {
   // 触发消息加载
   useFetchMessages();
 
-  const { messages } = useChat();
+  const { messages, isGenerating, isLoading } = useChat();
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
-  const [isScrolling, setIsScrolling] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
   const atBottomRef = useRef(true);
   const isAtBottomRefWhenKeyboardStartShow = useRef(true);
@@ -72,50 +83,15 @@ export default function ChatListChatList({ style }: ChatListProps) {
     },
     [],
   );
-  const { isVisible } = useKeyboardState();
+
+  const scrollToBottom = useCallback((animated: boolean = true) => {
+    if (!listRef.current) return;
+    listRef.current.scrollToEnd({ animated });
+  }, []);
 
   useEffect(() => {
-    if (isVisible && isAtBottomRefWhenKeyboardStartShow.current) {
-      listRef.current?.scrollToEnd({ animated: true });
-    }
-  }, [isVisible]);
-
-  // Track scrolling states precisely: user drag, momentum, and programmatic scrolls
-  const isDraggingRef = useRef(false);
-  const isMomentumRef = useRef(false);
-  // Remove programmatic-scroll flag; treat any animated movement as scrolling
-
-  // Track last measurements to compute atBottom across events
-  const layoutHeightRef = useRef(0);
-  const contentHeightRef = useRef(0);
-  const scrollYRef = useRef(0);
-
-  // Tolerance for showing auto-scroll button (200px offset)
-  const AT_BOTTOM_EPSILON = 200;
-
-  const computeAtBottom = useCallback(() => {
-    const layoutH = layoutHeightRef.current || 0;
-    const contentH = contentHeightRef.current || 0;
-    // Guard and clamp offset to avoid bounce/overscroll affecting result
-    let offsetY = scrollYRef.current || 0;
-    const maxOffset = Math.max(0, contentH - layoutH);
-    if (offsetY < 0) offsetY = 0;
-    if (offsetY > maxOffset) offsetY = maxOffset;
-
-    // If content fits entirely in the viewport, we're at bottom
-    if (contentH <= layoutH) return true;
-
-    // Distance from viewport bottom to content bottom
-    const distance = contentH - (offsetY + layoutH);
-    return distance <= AT_BOTTOM_EPSILON;
-  }, []);
-
-  const updateAtBottom = useCallback((next: boolean) => {
-    if (atBottomRef.current !== next) {
-      atBottomRef.current = next;
-      setAtBottom(next);
-    }
-  }, []);
+    if (isCurrentChatLoaded || isLoading || isGenerating) scrollToBottom();
+  }, [isCurrentChatLoaded, isGenerating, isLoading]);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
@@ -126,121 +102,61 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   const keyExtractor = useCallback((item: ChatMessage) => item.id, []);
 
-  const handleScroll = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-      layoutHeightRef.current = layoutMeasurement.height;
-      contentHeightRef.current = contentSize.height;
-      scrollYRef.current = contentOffset.y;
-
-      const nearBottom = computeAtBottom();
-      if (nearBottom) {
-        updateAtBottom(true);
-      } else if (isDraggingRef.current || isMomentumRef.current) {
-        // Only mark as not-at-bottom when the user is actively scrolling away
-        updateAtBottom(false);
-      }
-    },
-    [computeAtBottom, updateAtBottom],
-  );
-
-  const handleScrollBeginDrag = useCallback(() => {
-    isDraggingRef.current = true;
-    setIsScrolling(true);
-  }, []);
-
-  const handleScrollEndDrag = useCallback(() => {
-    isDraggingRef.current = false;
-    // If no momentum started, scrolling stops here
-    if (!isMomentumRef.current) {
-      setIsScrolling(false);
-    }
-  }, []);
-
-  const handleMomentumScrollBegin = useCallback(() => {
-    isMomentumRef.current = true;
-    setIsScrolling(true);
-  }, []);
-
-  const handleMomentumScrollEnd = useCallback(() => {
-    isMomentumRef.current = false;
-    if (!isDraggingRef.current) {
-      setIsScrolling(false);
-    }
-  }, []);
-
-  const handleContentSizeChange = useCallback(
-    (_w: number, h: number) => {
-      contentHeightRef.current = h;
-      if (atBottomRef.current && !isScrolling) {
-        InteractionManager.runAfterInteractions(() => {
-          listRef.current?.scrollToEnd({ animated: true });
-        });
-        updateAtBottom(true);
-      } else {
-        const nextAtBottom = computeAtBottom();
-        updateAtBottom(nextAtBottom);
-      }
-    },
-    [computeAtBottom, updateAtBottom, isScrolling],
-  );
-
-  const handleLayout = useCallback(
-    (e: LayoutChangeEvent) => {
-      layoutHeightRef.current = e.nativeEvent.layout.height;
-      const nextAtBottom = computeAtBottom();
-      updateAtBottom(nextAtBottom);
-    },
-    [computeAtBottom, updateAtBottom],
-  );
-
   const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
 
-  if (!isCurrentChatLoaded) {
-    return (
-      <Flexbox flex={1} style={style}>
-        <MessageSkeletonList />
-      </Flexbox>
+  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const nearBottom = computeAtBottom(
+      layoutMeasurement.height,
+      contentSize.height,
+      contentOffset.y,
     );
-  }
+    setAtBottom(nearBottom);
+  }, []);
 
-  return (
-    <Flexbox flex={1} style={style}>
-      <FlashListScrollShadow
+  let content;
+
+  if (!isCurrentChatLoaded) {
+    content = <MessageSkeletonList />;
+  } else {
+    content = (
+      <FlashList
         ListEmptyComponent={renderEmptyComponent}
         data={messages}
-        estimatedItemSize={10}
         getItemType={(chatMessage) => {
           return chatMessage.role;
         }}
         initialScrollIndex={messages.length - 1}
-        inverted
         keyExtractor={keyExtractor}
-        onContentSizeChange={handleContentSizeChange}
-        onLayout={handleLayout}
-        onMomentumScrollBegin={handleMomentumScrollBegin}
-        onMomentumScrollEnd={handleMomentumScrollEnd}
+        maintainVisibleContentPosition={{
+          autoscrollToBottomThreshold: isGenerating ? 0.2 : undefined,
+          // startRenderingFromBottom: true,
+        }}
         onScroll={handleScroll}
-        onScrollBeginDrag={handleScrollBeginDrag}
-        onScrollEndDrag={handleScrollEndDrag}
         overrideProps={{
           paddingBottom: 16,
         }}
         ref={listRef}
         renderItem={renderItem}
-        size={2}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       />
+    );
+  }
+
+  return (
+    <Flexbox flex={1} style={style}>
+      {content}
       <AutoScroll
         atBottom={atBottom}
         onScrollToBottom={(type) => {
-          const flatList = listRef.current;
           switch (type) {
             case 'auto': {
-              flatList?.scrollToEnd({ animated: false });
+              scrollToBottom(false);
               break;
             }
             case 'click': {
-              flatList?.scrollToEnd({ animated: true });
+              scrollToBottom(true);
               break;
             }
           }

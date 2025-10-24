@@ -24,11 +24,11 @@ const ListItem = memo<ListItemProps>(
     const content = (
       <Block
         active={active}
-        clickable
         gap={8}
         horizontal
         onPress={onPress}
         padding={12}
+        pressEffect
         style={{ borderRadius: 0 }}
         variant={variant}
         {...rest}

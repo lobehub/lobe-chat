@@ -1,5 +1,4 @@
 import { PageContainer, Text } from '@lobehub/ui-rn';
-import * as Haptics from 'expo-haptics';
 import type { ReactNode } from 'react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,11 +41,9 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       hideStatusBarOnOpen={false}
       onClose={() => {
         onCloseDrawer();
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       onOpen={() => {
         onOpenDrawer();
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}

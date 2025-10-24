@@ -30,10 +30,10 @@ const OpeningQuestions = memo<OpeningQuestionsProps>(({ questions }) => {
       <Flexbox gap={8} horizontal wrap={'wrap'}>
         {questions.map((question, index) => (
           <Block
-            clickable
             key={index}
             onPress={() => handleQuestionPress(question)}
             padding={12}
+            pressEffect
             variant={'outlined'}
           >
             <Text>{question}</Text>

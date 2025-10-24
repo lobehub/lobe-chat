@@ -4,7 +4,7 @@ title: ActionIcon
 description: ActionIcon is a component for rendering icon buttons with background, supporting multiple style variants, sizes, and interaction states. It integrates with the Lucide icon library and provides tooltip capabilities.
 ---
 
-Used to display clickable icon buttons in the interface, supporting size, variant, loading and disabled states. Suitable for toolbars, cards or lists.
+Used to display pressEffect icon buttons in the interface, supporting size, variant, loading and disabled states. Suitable for toolbars, cards or lists.
 
 ## Features
 

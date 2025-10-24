@@ -91,7 +91,6 @@ const Select = memo<SelectProps>(
                 <Block
                   active={isSelected}
                   borderRadius={0}
-                  clickable
                   disabled={option.disabled}
                   key={option.value}
                   onPress={(event) => {
@@ -100,6 +99,7 @@ const Select = memo<SelectProps>(
                     handleSelect(option.value);
                   }}
                   padding={16}
+                  pressEffect
                   style={[option.disabled && { opacity: 0.4 }]}
                   variant={'borderless'}
                 >

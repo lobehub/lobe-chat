@@ -48,7 +48,7 @@ import { Block } from '@lobehub/ui-rn';
 </Block>
 
 // Clickable
-<Block clickable onPress={() => console.log('clicked')}>
+<Block pressEffect onPress={() => console.log('clicked')}>
   <Text>Clickable Block</Text>
 </Block>
 
@@ -57,7 +57,7 @@ import { Block } from '@lobehub/ui-rn';
   variant="filled"
   shadow
   glass
-  clickable
+  pressEffect
   onPress={() => console.log('clicked')}
 >
   <Text>Combined Effects Block</Text>
@@ -123,7 +123,7 @@ Add semi-transparent background for glass texture.
 Enable click interaction with automatic hover state styling.
 
 ```tsx
-<Block clickable onPress={() => console.log('clicked')}>
+<Block pressEffect onPress={() => console.log('clicked')}>
   <Text>Clickable Block</Text>
 </Block>
 ```
@@ -142,28 +142,28 @@ export const useBlockVariants = (styles) =>
         outlined: styles.outlined,
         borderless: styles.borderless,
       },
-      clickable: {
+      pressEffect: {
         false: null,
-        true: styles.clickableRoot,
+        true: styles.pressEffectRoot,
       },
     },
     compoundVariants: [
       {
-        clickable: true,
+        pressEffect: true,
         variant: 'filled',
-        style: styles.clickableFilled,
+        style: styles.pressEffectFilled,
       },
     ],
     defaultVariants: {
       variant: 'filled',
-      clickable: false,
+      pressEffect: false,
     },
   });
 
 // Usage in component
 const { styles } = useStyles();
 const blockVariants = useBlockVariants(styles);
-const variantStyles = blockVariants({ variant, clickable });
+const variantStyles = blockVariants({ variant, pressEffect });
 ```
 
 ### Style File Pattern Advantages
@@ -187,7 +187,7 @@ const variantStyles = blockVariants({ variant, clickable });
 ### Interactive Button
 
 ```tsx
-<Block clickable variant="outlined" onPress={() => handleAction()} style={{ padding: 12 }}>
+<Block pressEffect variant="outlined" onPress={() => handleAction()} style={{ padding: 12 }}>
   <Text>Action Button</Text>
 </Block>
 ```

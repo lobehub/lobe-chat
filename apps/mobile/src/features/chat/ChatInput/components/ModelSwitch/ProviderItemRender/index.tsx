@@ -27,10 +27,10 @@ const ProviderItemRender = memo<ProviderItemRenderProps>(
       <Cell
         extra={
           <ActionIcon
-            clickable
             color={token.colorTextSecondary}
             icon={BoltIcon}
             onPress={onPressSetting}
+            pressEffect
             size={20}
           />
         }

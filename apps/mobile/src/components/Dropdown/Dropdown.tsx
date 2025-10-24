@@ -2,6 +2,8 @@ import { memo, useMemo } from 'react';
 import * as ContextMenu from 'zeego/context-menu';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
+import { hapticsEffect } from '@/utils/hapticsEffect';
+
 import type { DropdownPlacement, DropdownProps } from './type';
 
 /**
@@ -67,7 +69,12 @@ const Dropdown = memo<DropdownProps>(
     );
 
     return (
-      <Menu.Root onOpenChange={onOpenChange}>
+      <Menu.Root
+        onOpenChange={(open) => {
+          onOpenChange?.(open);
+          if (open) hapticsEffect();
+        }}
+      >
         <Menu.Trigger asChild>{children}</Menu.Trigger>
         <Menu.Content align={align} side={side}>
           {content}
