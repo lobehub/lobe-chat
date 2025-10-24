@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 
 import { cva } from '@/components/styles';
@@ -11,15 +11,18 @@ const Block = memo<BlockProps>(
   ({
     variant = 'filled',
     shadow,
-    clickable,
+    pressEffect,
     children,
     style,
     onPress,
     active,
     borderRadius,
     onLongPress,
+    onPressOut,
+    longPressEffect,
     ...rest
   }) => {
+    const [isLongPressed, setIsLongPressed] = useState(false);
     const { styles, theme } = useStyles();
 
     const variants = useMemo(
@@ -42,7 +45,7 @@ const Block = memo<BlockProps>(
               variant: 'outlined',
             },
             {
-              clickable: true,
+              pressEffect: true,
               pressed: true,
               style: Platform.select({
                 ios: styles.filledHover,
@@ -50,7 +53,7 @@ const Block = memo<BlockProps>(
               variant: 'filled',
             },
             {
-              clickable: true,
+              pressEffect: true,
               pressed: true,
               style: Platform.select({
                 ios: styles.borderlessHover,
@@ -58,7 +61,7 @@ const Block = memo<BlockProps>(
               variant: 'borderless',
             },
             {
-              clickable: true,
+              pressEffect: true,
               pressed: true,
               style: Platform.select({
                 ios: styles.outlinedHover,
@@ -74,10 +77,6 @@ const Block = memo<BlockProps>(
               false: null,
               true: null,
             },
-            clickable: {
-              false: null,
-              true: null,
-            },
             glass: {
               false: null,
               true: styles.glass,
@@ -85,6 +84,10 @@ const Block = memo<BlockProps>(
             hovered: {
               false: null,
               true: styles.filledHover,
+            },
+            pressEffect: {
+              false: null,
+              true: null,
             },
             pressed: {
               false: null,
@@ -107,17 +110,31 @@ const Block = memo<BlockProps>(
     return (
       <Flexbox
         android_ripple={
-          clickable
+          longPressEffect || pressEffect
             ? {
-                color: theme.colorFillSecondary,
+                color: theme.colorFillTertiary,
                 foreground: true,
               }
             : undefined
         }
-        onLongPress={onLongPress}
+        onLongPress={(e) => {
+          onLongPress?.(e);
+          if (longPressEffect) setIsLongPressed(true);
+        }}
         onPress={onPress}
+        onPressOut={(e) => {
+          onPressOut?.(e);
+          if (longPressEffect) setIsLongPressed(false);
+        }}
         style={({ hovered, pressed }) => [
-          variants({ active, clickable, hovered, pressed, shadow, variant }),
+          variants({
+            active,
+            hovered,
+            pressEffect: longPressEffect || pressEffect,
+            pressed: longPressEffect ? isLongPressed : pressed,
+            shadow,
+            variant,
+          }),
           {
             borderRadius:
               typeof borderRadius === 'number'

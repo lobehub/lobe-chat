@@ -1,6 +1,5 @@
 import { LobeHub } from '@lobehub/icons-rn';
 import { ActionIcon, Flexbox, PageContainer } from '@lobehub/ui-rn';
-import * as Haptics from 'expo-haptics';
 import { Link, router } from 'expo-router';
 import { CompassIcon, LucideComponent, MessageSquarePlus } from 'lucide-react-native';
 import type { ReactNode } from 'react';
@@ -65,11 +64,9 @@ export default function SideBar({ children }: { children: ReactNode }) {
       hideStatusBarOnOpen={false}
       onClose={() => {
         onCloseDrawer();
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       onOpen={() => {
         onOpenDrawer();
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }}
       open={drawerOpen}
       overlayStyle={styles.drawerOverlay}

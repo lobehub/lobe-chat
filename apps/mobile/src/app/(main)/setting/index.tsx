@@ -173,11 +173,11 @@ export default function SettingScreen() {
               title={t('locale.title')}
             />
             <SettingItem
-              clickable={!isClearingCache && !isCacheLoading}
               extra={cacheSize}
               icon={BrushCleaning}
               loading={isCacheLoading}
               onPress={handleClearCache}
+              pressEffect={!isClearingCache && !isCacheLoading}
               showArrow={false}
               title={t('cache.title', { ns: 'setting' })}
             />

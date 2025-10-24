@@ -74,12 +74,12 @@ const Cell = memo<CellProps>(
       <Block
         align={'center'}
         borderRadius={0}
-        clickable
         gap={8}
         horizontal
         justify={'space-between'}
         paddingBlock={14}
         paddingInline={16}
+        pressEffect
         style={({ hovered, pressed }) => [
           { minHeight: 48 },
           typeof style === 'function' ? style({ hovered, pressed }) : style,

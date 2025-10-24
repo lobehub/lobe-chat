@@ -30,8 +30,8 @@ export default function ChatWithDrawer() {
     return (
       <PageContainer
         backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
-        extra={<ActionIcon clickable={false} icon={MessagesSquare} onPress={toggleTopicDrawer} />}
-        left={<ActionIcon clickable={false} icon={TextAlignStartIcon} onPress={toggleDrawer} />}
+        extra={<ActionIcon icon={MessagesSquare} onPress={toggleTopicDrawer} pressEffect={false} />}
+        left={<ActionIcon icon={TextAlignStartIcon} onPress={toggleDrawer} pressEffect={false} />}
         onTitlePress={isInbox ? undefined : () => router.push('/chat/setting')}
         title={displayTitle}
         titleIcon={isInbox ? undefined : ChevronRightIcon}

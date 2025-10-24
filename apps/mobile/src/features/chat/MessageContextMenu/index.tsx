@@ -9,6 +9,7 @@ import { Alert } from 'react-native';
 
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
+import { hapticsEffect } from '@/utils/hapticsEffect';
 
 import { useStyles } from './style';
 
@@ -22,7 +23,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
   const { activeId } = useSessionStore();
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const [open, setOpen] = useState(false);
 
   const isUser = message.role === 'user';
@@ -80,7 +81,20 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
 
   return (
     <>
-      <Block clickable onLongPress={() => setOpen(true)} variant={'borderless'} {...rest}>
+      <Block
+        android_ripple={{
+          color: theme.colorFillQuaternary,
+          foreground: true,
+        }}
+        longPressEffect
+        onLongPress={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+          hapticsEffect();
+        }}
+        variant={'borderless'}
+        {...rest}
+      >
         {children}
       </Block>
       <BottomSheet

@@ -124,10 +124,10 @@ const BottomSheet = memo(
               </Flexbox>
               {showCloseButton && (
                 <ActionIcon
-                  clickable
                   color={theme.colorTextDescription}
                   icon={X}
                   onPress={handleClose}
+                  pressEffect
                   size={{
                     blockSize: 32,
                     borderRadius: 16,
