@@ -111,6 +111,9 @@ const AgentCardComponent = ({ item }: AgentCardProps) => {
       onPress={handlePress}
       showArrow={false}
       title={item.title}
+      titleProps={{
+        weight: 500,
+      }}
     />
   );
 };
