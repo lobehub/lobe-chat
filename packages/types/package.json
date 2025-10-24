@@ -6,7 +6,7 @@
   "dependencies": {
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
-    "type-fest": "^4.41.0",
+    "type-fest": "^5.0.0",
     "zod": "^3.25.76"
   }
 }
