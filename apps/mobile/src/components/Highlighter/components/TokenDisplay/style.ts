@@ -8,13 +8,7 @@ export const useStyles = createStyles(({ token }) => ({
     flexShrink: 1,
     margin: 0,
   },
-  codeLine: {
-    flexDirection: 'row',
-    flexShrink: 0,
-    fontFamily: token.fontFamilyCode,
-    fontSize: 12,
-    lineHeight: token.lineHeight,
-  },
+
   codeScrollContainer: {
     flexDirection: 'column',
     minWidth: '100%',
@@ -25,9 +19,8 @@ export const useStyles = createStyles(({ token }) => ({
     margin: 8,
   },
   horizontalScrollContent: {
-    flexDirection: 'column',
-    flexGrow: 1,
-    gap: 2,
+    overflowX: 'auto',
+    overflowY: 'hidden',
     padding: 16,
   },
 }));
