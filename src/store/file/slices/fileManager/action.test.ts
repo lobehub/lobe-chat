@@ -15,6 +15,17 @@ import { useFileStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
 
+// Mock i18next
+vi.mock('i18next', () => ({
+  t: vi.fn((key: string, options?: any) => {
+    // Return a mock translation string that includes the options
+    if (key === 'uploadDock.fileQueueInfo' && options) {
+      return `Uploading ${options.count} files, ${options.remaining} queued`;
+    }
+    return key;
+  }),
+}));
+
 // Mock message
 vi.mock('@/components/AntdStaticMethods', () => ({
   message: {
