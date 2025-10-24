@@ -46,7 +46,13 @@ const Flexbox = memo<FlexboxProps>(
     if (glass && isLiquidGlassSupported) {
       if (onPress || onLongPress) {
         return (
-          <Pressable onLongPress={onLongPress} onPress={onPress} {...rest}>
+          <Pressable
+            delayLongPress={onLongPress ? 500 : undefined}
+            onLongPress={onLongPress}
+            onPress={onPress}
+            unstable_pressDelay={0}
+            {...rest}
+          >
             <LiquidGlassView
               colorScheme={isDarkMode ? 'dark' : 'light'}
               effect={'regular'}
@@ -90,9 +96,11 @@ const Flexbox = memo<FlexboxProps>(
     if (onPress || onLongPress) {
       return (
         <Pressable
+          delayLongPress={onLongPress ? 500 : undefined}
           onLongPress={onLongPress}
           onPress={onPress}
           style={(state) => [styles, typeof style === 'function' ? style(state) : style]}
+          unstable_pressDelay={0}
           {...rest}
         >
           {children}
