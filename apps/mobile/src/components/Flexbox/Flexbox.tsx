@@ -71,6 +71,9 @@ const Flexbox = memo<FlexboxProps>(
           effect={'regular'}
           interactive={false}
           style={[
+            {
+              pointerEvents: 'box-none',
+            },
             styles,
             typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
             {
@@ -100,6 +103,9 @@ const Flexbox = memo<FlexboxProps>(
     return (
       <View
         style={[
+          {
+            pointerEvents: 'box-none',
+          },
           styles,
           typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
         ]}

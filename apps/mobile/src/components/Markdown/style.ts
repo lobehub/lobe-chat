@@ -50,7 +50,9 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     },
     blockQuoteColor: theme.colorTextSecondary,
     borderColor: theme.colorBorder,
-    break: {},
+    break: {
+      pointerEvents: 'none',
+    },
     container: { flex: 1 },
     delete: {
       color: theme.colorTextDescription,
@@ -86,6 +88,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     },
     list: {
       marginInlineStart: options.fontSize * options.marginMultiple * 0.5,
+      pointerEvents: 'none',
     },
     listItem: {
       flex: 1,
@@ -97,6 +100,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       letterSpacing: 0.02 * options.fontSize,
       lineHeight: options.lineHeight * options.fontSize,
       marginVertical: options.fontSize * options.marginMultiple * 0.16,
+      pointerEvents: 'none',
     },
     strong: {
       color: theme.colorTextHeading,
@@ -120,6 +124,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       borderStyle: 'dashed',
       borderWidth: 0.5,
       marginVertical: options.fontSize * options.marginMultiple * 0.75,
+      pointerEvents: 'none',
       width: '100%',
     },
     tr: {

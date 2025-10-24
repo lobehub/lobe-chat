@@ -73,6 +73,7 @@ export const useStyles = createStyles(({ token }) => ({
     borderBottomRightRadius: 4,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    minHeight: 32,
     paddingBlock: 8,
     paddingInline: 16,
   },
