@@ -37,6 +37,7 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
           key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
           style={{
             backgroundColor: tokenItem.bgColor,
+            lineHeight: 20,
           }}
         >
           {tokenItem.content}

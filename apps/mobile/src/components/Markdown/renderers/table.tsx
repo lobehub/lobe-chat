@@ -1,3 +1,4 @@
+import { FlashList } from '@shopify/flash-list';
 import { Table, TableCell, TableRow } from 'mdast';
 import {
   Fragment,
@@ -9,9 +10,9 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { LayoutChangeEvent, ScrollView, TextStyle, View } from 'react-native';
+import { LayoutChangeEvent, TextStyle } from 'react-native';
 
-import { Flexbox } from '@/components';
+import Flexbox from '@/components/Flexbox';
 
 import Block from '../../Block';
 import Divider from '../../Divider';
@@ -96,16 +97,20 @@ export const TableRenderer = ({ node }: RendererArgs<Table>): ReactNode => {
       rowCount={node.children.length ?? 0}
     >
       <Block style={styles.table} variant={'outlined'}>
-        <ScrollView horizontal>
-          <Flexbox style={{ minWidth: '100%' }}>
-            {node.children.filter(Boolean).map((child, idx) => (
-              <Fragment key={idx}>
-                {idx !== 0 && <Divider />}
-                <TableRowRenderer index={idx} node={child} parent={node} />
+        <FlashList
+          data={node.children.filter(Boolean)}
+          renderItem={({ item, index }) => {
+            return (
+              <Fragment key={index}>
+                {index !== 0 && <Divider />}
+                <TableRowRenderer index={index} node={item} parent={node} />
               </Fragment>
-            ))}
-          </Flexbox>
-        </ScrollView>
+            );
+          }}
+          scrollEnabled={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        />
       </Block>
     </TableContextProvider>
   );
@@ -118,11 +123,11 @@ export const TableRowRenderer = ({ node, index }: RendererArgs<TableRow>): React
   const rowStyle = index === 0 ? styles.thead : styles.tr;
 
   return (
-    <View style={[{ flexDirection: 'row' }, rowStyle]}>
+    <Flexbox horizontal style={rowStyle}>
       {node.children.filter(Boolean).map((child, idx) => (
         <TableCellRenderer index={idx} key={idx} node={child} parent={node} rowIndex={index ?? 0} />
       ))}
-    </View>
+    </Flexbox>
   );
 };
 
@@ -171,20 +176,21 @@ export const TableCellRenderer = ({
   );
 
   return (
-    <View>
-      <View
+    <>
+      <Flexbox
+        align={'center'}
+        horizontal
+        padding={padding}
         style={{
-          justifyContent: 'center',
           minHeight: 32,
-          padding: padding,
-          width: width,
         }}
+        width={width}
       >
         <Text style={baseTextStyle as any}>{content}</Text>
-      </View>
+      </Flexbox>
       <Text ellipsis onLayout={onTextLayout} style={measuredTextStyle as any}>
         {content}
       </Text>
-    </View>
+    </>
   );
 };
