@@ -2,7 +2,8 @@ import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
   container: {
-    overflow: 'hidden',
+    minWidth: 280,
+    width: '100%',
   },
   copyButton: {
     padding: token.paddingXXS,
