@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.142.0](https://github.com/lobehub/lobe-chat/compare/v1.141.10...v1.142.0)
+
+<sup>Released on **2025-10-24**</sup>
+
+#### ✨ Features
+
+- **misc**: Use env to control clerk allow origin feature.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Use env to control clerk allow origin feature, closes [#9863](https://github.com/lobehub/lobe-chat/issues/9863) ([490fee0](https://github.com/lobehub/lobe-chat/commit/490fee0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.141.10](https://github.com/lobehub/lobe-chat/compare/v1.141.9...v1.141.10)
 
 <sup>Released on **2025-10-23**</sup>
