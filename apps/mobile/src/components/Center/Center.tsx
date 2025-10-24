@@ -66,6 +66,9 @@ const Center = memo<CenterProps>(
           effect={'regular'}
           interactive={false}
           style={[
+            {
+              pointerEvents: 'box-none',
+            },
             styles,
             typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
             {
@@ -84,7 +87,13 @@ const Center = memo<CenterProps>(
         <Pressable
           onLongPress={onLongPress}
           onPress={onPress}
-          style={(state) => [styles, typeof style === 'function' ? style(state) : style]}
+          style={(state) => [
+            {
+              pointerEvents: 'box-none',
+            },
+            styles,
+            typeof style === 'function' ? style(state) : style,
+          ]}
           {...rest}
         >
           {children}
