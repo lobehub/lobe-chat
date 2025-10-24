@@ -1,15 +1,6 @@
 import { DiscoverAssistantItem } from '@lobechat/types';
-import {
-  Button,
-  Center,
-  Empty,
-  FlashListScrollShadow,
-  Flexbox,
-  Input,
-  PageContainer,
-  useTheme,
-} from '@lobehub/ui-rn';
-import type { FlashListRef } from '@shopify/flash-list';
+import { Button, Center, Empty, Flexbox, Input, PageContainer, useTheme } from '@lobehub/ui-rn';
+import { FlashList, FlashListRef } from '@shopify/flash-list';
 import { useDebounce } from 'ahooks';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -131,14 +122,28 @@ const AssistantList = () => {
 
   const keyExtractor = useCallback((item: DiscoverAssistantItem) => item.identifier, []);
 
+  let content;
+
   if (error) {
-    return (
-      <PageContainer>
-        <Empty description={t('assistant.fetchError', { ns: 'common' })} />
-      </PageContainer>
+    content = <Empty description={t('assistant.fetchError', { ns: 'common' })} />;
+  } else if (isLoading && currentPage === 1) {
+    content = <AssistantListSkeleton />;
+  } else {
+    content = (
+      <FlashList
+        ListEmptyComponent={renderEmptyComponent}
+        ListFooterComponent={renderFooter}
+        data={allItems}
+        keyExtractor={keyExtractor}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.1}
+        ref={listRef}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      />
     );
   }
-
   return (
     <PageContainer
       extraProps={{
@@ -169,24 +174,7 @@ const AssistantList = () => {
       }}
       showBack
     >
-      <Flexbox height={16} />
-      {isLoading && currentPage === 1 ? (
-        <AssistantListSkeleton />
-      ) : (
-        <FlashListScrollShadow
-          ListEmptyComponent={renderEmptyComponent}
-          ListFooterComponent={renderFooter}
-          data={allItems}
-          estimatedItemSize={20}
-          hideScrollBar
-          keyExtractor={keyExtractor}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.1}
-          ref={listRef}
-          renderItem={renderItem}
-          size={3}
-        />
-      )}
+      {content}
     </PageContainer>
   );
 };

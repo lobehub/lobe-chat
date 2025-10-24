@@ -15,6 +15,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { SWRConfig } from 'swr';
 
+import { useThemedScreenOptions } from '@/_const/navigation';
 import i18n from '@/i18n';
 import { I18nReadyGate } from '@/i18n/ReadyGate';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
@@ -183,25 +184,16 @@ function ThemedSystemBars() {
 }
 
 const Layout = () => {
+  const themedScreenOptions = useThemedScreenOptions(false);
   const theme = useTheme();
   return (
     <GestureHandlerRootView style={{ backgroundColor: theme.colorBgLayout, flex: 1 }}>
       <BottomSheetModalProvider>
         <RootSiblingParent>
           <ThemedSystemBars />
-          <Stack
-            screenOptions={{
-              contentStyle: {
-                backgroundColor: theme.colorBgLayout,
-              },
-              headerShown: false,
-            }}
-          >
-            {/* 指定首页, 防止 expo 路由错乱 */}
+          <Stack screenOptions={themedScreenOptions}>
             <Stack.Screen name="index" options={{ animation: 'none' }} />
-            {/* main page should not have animation */}
             <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-            {/* auth page should not have animation  */}
             <Stack.Screen name="auth" options={{ animation: 'none' }} />
           </Stack>
         </RootSiblingParent>

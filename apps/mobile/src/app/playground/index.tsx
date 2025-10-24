@@ -65,7 +65,7 @@ export default function ComponentPlaygroundIndex() {
   const handleComponentPress = (component: ComponentItem) => {
     // 使用 kebabCase 自动将组件名转换为路径
     const componentPath = kebabCase(component.name);
-    router.push(`/playground/components/${componentPath}` as any);
+    router.push(`/playground/${componentPath}` as any);
   };
 
   const renderComponentCard = (component: ComponentItem) => (
