@@ -1,11 +1,13 @@
 'use client';
 
-import { Grid, Tag, Text } from '@lobehub/ui';
+import { ActionIcon, Grid, Tag, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { Plus } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DEFAULT_AVATAR } from '@/const/meta';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { chatGroupSelectors } from '@/store/chatGroup/selectors';
 import { useSessionStore } from '@/store/session';
@@ -23,10 +25,11 @@ const useStyles = createStyles(({ css }) => ({
 
 const HOST_MEMBER_ID = 'supervisor';
 
-const GroupMembers = memo(() => {
+const AgentTeamMembersSettings = memo(() => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const [loadingAgentId, setLoadingAgentId] = useState<string | null>(null);
+  const [isCreatingMember, setIsCreatingMember] = useState(false);
 
   const activeGroupId = useSessionStore((s) => s.activeId);
   const currentSession = useSessionStore(sessionSelectors.currentSession) as LobeGroupSession;
@@ -36,6 +39,7 @@ const GroupMembers = memo(() => {
   const removeAgentFromGroup = useChatGroupStore((s) => s.removeAgentFromGroup);
   const updateGroupConfig = useChatGroupStore((s) => s.updateGroupConfig);
   const refreshSessions = useSessionStore((s) => s.refreshSessions);
+  const createSession = useSessionStore((s) => s.createSession);
 
   // Get all agent sessions
   const agentSessions = useSessionStore((s) => {
@@ -79,8 +83,6 @@ const GroupMembers = memo(() => {
       return;
     }
 
-    console.log(`Attempting to ${action} agent:`, { action, activeGroupId, agentId });
-
     // Check if this is the host member
     const isHostMember = agentId === HOST_MEMBER_ID;
 
@@ -92,19 +94,15 @@ const GroupMembers = memo(() => {
         if (isHostMember) {
           // Host toggle updates supervisor flag instead of modifying members
           await updateGroupConfig({ enableSupervisor: true });
-          console.log('Enabled supervisor');
         } else {
           await addAgentsToGroup(activeGroupId, [agentId]);
-          console.log(`Successfully added agent ${agentId} to group ${activeGroupId}`);
         }
       } else {
         if (isHostMember) {
           // Host toggle updates supervisor flag instead of modifying members
           await updateGroupConfig({ enableSupervisor: false });
-          console.log('Disabled supervisor');
         } else {
           await removeAgentFromGroup(activeGroupId, agentId);
-          console.log(`Successfully removed agent ${agentId} from group ${activeGroupId}`);
         }
       }
 
@@ -124,6 +122,49 @@ const GroupMembers = memo(() => {
     handleAgentAction(HOST_MEMBER_ID, checked ? 'add' : 'remove');
   };
 
+  const handleCreateMember = async () => {
+    if (!activeGroupId || isCreatingMember) return;
+
+    setIsCreatingMember(true);
+
+    try {
+      // Create a virtual assistant
+      const sessionId = await createSession(
+        {
+          config: {
+            virtual: true,
+          },
+          meta: {
+            avatar: DEFAULT_AVATAR,
+            description: '',
+            title: t('settingGroupMembers.defaultAgent'),
+          },
+        },
+        false, // Don't switch to the new session
+      );
+
+      // Refresh sessions to get the latest data
+      await refreshSessions();
+
+      // Get the agent ID from the created session
+      const session = sessionSelectors.getSessionById(sessionId)(useSessionStore.getState());
+      if (session && session.type === LobeSessionType.Agent) {
+        const agentSession = session as LobeAgentSession;
+        const agentId = agentSession.config?.id;
+
+        if (agentId) {
+          // Add the agent to the current group
+          await addAgentsToGroup(activeGroupId, [agentId]);
+          await refreshSessions();
+        }
+      }
+    } catch (error) {
+      console.error('Failed to create virtual member:', error);
+    } finally {
+      setIsCreatingMember(false);
+    }
+  };
+
   const groupMemberCount = agentsInGroup.length + (isSupervisorEnabled ? 1 : 0);
   const availableAgentCount = agentsNotInGroup.length + (isSupervisorEnabled ? 0 : 1);
 
@@ -131,19 +172,23 @@ const GroupMembers = memo(() => {
     <Flexbox className={styles.container} gap={40}>
       {/* Agents in Group Section */}
       <Flexbox gap={24}>
-        <Flexbox align={'center'} gap={8} horizontal>
-          <Text strong style={{ fontSize: 18 }}>
-            {t('settingGroupMembers.groupMembers')}
-          </Text>
-          <Tag>{groupMemberCount}</Tag>
+        <Flexbox align={'center'} gap={8} horizontal justify="space-between">
+          <Flexbox align={'center'} gap={8} horizontal>
+            <Text strong style={{ fontSize: 18 }}>
+              {t('settingGroupMembers.groupMembers')}
+            </Text>
+            <Tag>{groupMemberCount}</Tag>
+          </Flexbox>
+          <ActionIcon
+            icon={Plus}
+            loading={isCreatingMember}
+            onClick={handleCreateMember}
+            title={t('settingGroupMembers.createMember')}
+          />
         </Flexbox>
         <Grid gap={16} rows={3}>
           {isSupervisorEnabled && (
-            <HostMemberCard
-              checked
-              loading={hostOperationLoading}
-              onToggle={handleHostToggle}
-            />
+            <HostMemberCard checked loading={hostOperationLoading} onToggle={handleHostToggle} />
           )}
           {agentsInGroup.map((agent) => (
             <AgentCard
@@ -198,4 +243,4 @@ const GroupMembers = memo(() => {
   );
 });
 
-export default GroupMembers;
+export default AgentTeamMembersSettings;

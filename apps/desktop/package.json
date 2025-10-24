@@ -59,6 +59,7 @@
     "electron-store": "^8.2.0",
     "electron-vite": "^3.0.0",
     "execa": "^9.5.2",
+    "fast-glob": "^3.3.3",
     "fix-path": "^5.0.0",
     "http-proxy-agent": "^7.0.2",
     "https-proxy-agent": "^7.0.6",

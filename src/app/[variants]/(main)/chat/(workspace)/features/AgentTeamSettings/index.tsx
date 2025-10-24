@@ -11,9 +11,9 @@ import PanelTitle from '@/components/PanelTitle';
 import { isDesktop } from '@/const/version';
 import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import {
+  AgentTeamSettings,
   GroupCategory,
   GroupChatSettingsProvider,
-  GroupSettings,
 } from '@/features/GroupChatSettings';
 import Footer from '@/features/Setting/Footer';
 import { useInitGroupConfig } from '@/hooks/useInitGroupConfig';
@@ -22,8 +22,7 @@ import { chatGroupSelectors } from '@/store/chatGroup/selectors';
 import { GroupSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
-// Counterpart: src/app/[variants]/(main)/chat/(workspace)/features/AgentSettings/index.tsx
-const GroupChatSettings = memo(() => {
+const AgentTeamSettingsWrapper = memo(() => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
   const config = useChatGroupStore(chatGroupSelectors.currentGroupConfig, isEqual);
@@ -79,7 +78,7 @@ const GroupChatSettings = memo(() => {
           },
         }}
       >
-        <GroupSettings
+        <AgentTeamSettings
           config={config}
           id={id}
           loading={isLoading}
@@ -94,4 +93,4 @@ const GroupChatSettings = memo(() => {
   );
 });
 
-export default GroupChatSettings;
+export default AgentTeamSettingsWrapper;

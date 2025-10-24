@@ -57,7 +57,8 @@ const UrlSynchronizer = () => {
 
   // Update browser URL when location changes
   useEffect(() => {
-    const newUrl = `/discover${location.pathname}${location.search}`;
+    const normalizedPath = location.pathname === '/' ? '' : location.pathname;
+    const newUrl = `/discover${normalizedPath}${location.search}`;
     if (window.location.pathname + window.location.search !== newUrl) {
       window.history.replaceState({}, '', newUrl);
     }

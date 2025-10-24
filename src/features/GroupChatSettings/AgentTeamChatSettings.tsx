@@ -22,9 +22,9 @@ import { selectors, useStore } from './store';
 const { TextArea } = Input;
 
 /**
- * Chat Settings for Group Chat
+ * Chat Settings for Agent Team (Group Chat)
  */
-const ChatGroupSettings = memo(() => {
+const AgentTeamChatSettings = memo(() => {
   const { t } = useTranslation(['setting', 'common']);
   const [form] = Form.useForm();
   const updateConfig = useStore((s) => s.updateGroupConfig);
@@ -171,8 +171,9 @@ const ChatGroupSettings = memo(() => {
       itemsType={'group'}
       onFinish={async ({ _modelConfig, ...rest }) => {
         await updateConfig({
-          orchestratorModel: _modelConfig?.model,
-          orchestratorProvider: _modelConfig?.provider,
+          // Preserve existing values when _modelConfig is undefined (enableSupervisor is false)
+          orchestratorModel: _modelConfig?.model ?? config?.orchestratorModel,
+          orchestratorProvider: _modelConfig?.provider ?? config?.orchestratorProvider,
           ...rest,
         });
 
@@ -184,4 +185,4 @@ const ChatGroupSettings = memo(() => {
   );
 });
 
-export default ChatGroupSettings;
+export default AgentTeamChatSettings;
