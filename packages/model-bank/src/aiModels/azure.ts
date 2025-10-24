@@ -5,6 +5,161 @@ const azureChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-5-pro',
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5 Pro 是 GPT-5 系列的高级版本，具备增强的推理能力。支持结构化输出、函数调用和文本/图像处理，适用于复杂的专业任务。',
+    displayName: 'GPT-5 Pro',
+    enabled: true,
+    id: 'gpt-5-pro',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 120, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-06',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      structuredOutput: true,
+    },
+    config: {
+      deploymentName: 'gpt-5-codex',
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5 Codex 专为编程任务优化，针对 Codex CLI 和 VS Code 扩展进行了优化。支持结构化输出和函数调用，适用于代码生成和分析。',
+    displayName: 'GPT-5 Codex',
+    enabled: true,
+    id: 'gpt-5-codex',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-11',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-5',
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5 是 OpenAI 最新的旗舰模型，具备卓越的推理能力。支持文本和图像输入，结构化输出和并行工具调用，适用于需要深度理解和分析的复杂任务。',
+    displayName: 'GPT-5',
+    enabled: true,
+    id: 'gpt-5',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-5-mini',
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5 Mini 提供与 GPT-5 相似的能力，但更加高效和经济。支持推理、函数调用和视觉功能，适合大规模部署和对成本敏感的应用场景。',
+    displayName: 'GPT-5 Mini',
+    enabled: true,
+    id: 'gpt-5-mini',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-5-nano',
+    },
+    contextWindowTokens: 400_000,
+    description:
+      'GPT-5 Nano 是 GPT-5 系列中最小、最快的版本。在保持核心能力的同时，提供超低延迟和成本效益，适合边缘计算和实时应用。',
+    displayName: 'GPT-5 Nano',
+    enabled: true,
+    id: 'gpt-5-nano',
+    maxOutput: 128_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.005, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-5-chat',
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GPT-5 Chat 专为对话场景优化的预览版本。支持文本和图像输入，仅输出文本，适用于聊天机器人和对话式AI应用。',
+    displayName: 'GPT-5 Chat',
+    id: 'gpt-5-chat',
+    maxOutput: 16_384,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.125, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-08-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
       vision: true,
     },
     config: {
