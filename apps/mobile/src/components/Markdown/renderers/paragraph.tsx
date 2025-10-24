@@ -17,7 +17,7 @@ export const ParagraphRenderer = ({ node, parent }: RendererArgs<Paragraph>): Re
       : styles.paragraph;
 
   return (
-    <View style={{ pointerEvents: 'none' }}>
+    <View style={{ flex: 1, pointerEvents: 'none' }}>
       <Text style={paragraphStyle}>
         {node.children.filter(Boolean).map((child, idx) => {
           if (child.type === 'text') {
