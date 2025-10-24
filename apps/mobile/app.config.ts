@@ -62,6 +62,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: 'lobehub',
   plugins: [
     'expo-router',
+    'expo-video',
+    ['react-native-edge-to-edge', { android: { enforceNavigationBarContrast: false } }],
+    [
+      'expo-notifications',
+      {
+        color: '#000',
+        icon: './assets/images/icon-android-notification.png',
+      },
+    ],
     './plugins/withFbjniFix',
     [
       'expo-splash-screen',
