@@ -329,7 +329,7 @@
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.17.20",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^22.18.9",
+    "@types/node": "^24.0.0",
     "@types/numeral": "^2.0.5",
     "@types/oidc-provider": "^9.5.0",
     "@types/pdfkit": "^0.17.3",
