@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { useCallback } from 'react';
 
 import { useChatStore } from '@/store/chat';
@@ -17,14 +18,18 @@ export const useSwitchSession = () => {
     (id: string) => {
       console.log('[useSwitchSession] Switching to session:', id);
 
-      // 1. 更新Store状态 (模仿web端)
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+
+      // 1. 立即更新Store状态 (优先级最高，确保UI即时响应)
       switchSession(id);
 
       // 2. 清除当前topic (模仿web端SessionHydration的逻辑)
       switchTopic();
 
-      // 3. 关闭抽屉 (移动端特有)
-      setDrawerOpen(false);
+      // 3. 延迟到下一帧关闭抽屉，让状态更新和UI渲染先完成
+      requestAnimationFrame(() => {
+        setDrawerOpen(false);
+      });
 
       // 4. 导航到新URL
       // 使用setTimeout确保状态更新完成后再导航，避免race condition
