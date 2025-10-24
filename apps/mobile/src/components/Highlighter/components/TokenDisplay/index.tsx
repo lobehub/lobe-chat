@@ -1,6 +1,7 @@
 import type { ThemedToken } from '@shikijs/core';
 import { FlashList } from '@shopify/flash-list';
 
+import { Flexbox } from '@/components';
 import Text from '@/components/Text';
 import { useThemeMode } from '@/components/styles';
 
@@ -27,7 +28,7 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
   const { styles } = useStyles();
 
   const renderLine = ({ item: line, index: lineIndex }: { index: number; item: ThemedToken[] }) => (
-    <Text code key={lineIndex}>
+    <Flexbox align={'center'} horizontal key={lineIndex}>
       {line.map((tokenItem, tokenIndex) => (
         <Text
           code
@@ -43,7 +44,7 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
           {tokenItem.content}
         </Text>
       ))}
-    </Text>
+    </Flexbox>
   );
 
   return error ? (

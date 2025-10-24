@@ -1,6 +1,8 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
-export interface HighlighterProps {
+import type { BlockProps } from '@/components/Block';
+
+export interface HighlighterProps extends Omit<BlockProps, 'children'> {
   /**
    * Whether to allow changing the language.
    */

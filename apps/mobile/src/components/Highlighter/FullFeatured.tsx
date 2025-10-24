@@ -11,8 +11,9 @@ import Text from '@/components/Text';
 import { LanguageSelect } from './components/LanguageSelect';
 import { TokenDisplay } from './components/TokenDisplay';
 import { useStyles } from './style';
+import type { HighlighterProps } from './type';
 
-interface FullFeaturedProps {
+interface FullFeaturedProps extends HighlighterProps {
   /**
    * Whether to allow changing the language.
    */
@@ -62,6 +63,8 @@ const FullFeatured = memo<FullFeaturedProps>(
     allowChangeLanguage = false,
     style,
     onCopy,
+    variant,
+    ...rest
   }) => {
     const [expanded, setExpanded] = useState(defalutExpand);
     const { styles, theme } = useStyles();
@@ -85,10 +88,10 @@ const FullFeatured = memo<FullFeaturedProps>(
 
     return (
       <Block
-        pointerEvents={'box-none'}
         style={[styles.container, style]}
         testID="highlighter-full-featured"
-        variant={'filled'}
+        variant={variant}
+        {...rest}
       >
         <Flexbox
           align={'center'}
@@ -96,7 +99,6 @@ const FullFeatured = memo<FullFeaturedProps>(
           justify={'space-between'}
           paddingBlock={6}
           paddingInline={8}
-          pointerEvents={'box-none'}
           style={{
             backgroundColor: theme.colorFillQuaternary,
           }}
