@@ -10,17 +10,13 @@ export const useStyles = createStyles(({ token }) => ({
   },
 
   codeScrollContainer: {
-    flexDirection: 'column',
-    minWidth: '100%',
-    padding: token.paddingSM,
+    padding: 16,
   },
   errorText: {
     color: token.colorText,
     margin: 8,
   },
   horizontalScrollContent: {
-    overflowX: 'auto',
-    overflowY: 'hidden',
     padding: 16,
   },
 }));

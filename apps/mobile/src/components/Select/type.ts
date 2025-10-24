@@ -4,6 +4,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 import type { BlockProps } from '../Block';
 import type { BottomSheetProps } from '../BottomSheet';
 import type { IconProps } from '../Icon';
+import type { TextProps } from '../Text';
 
 export type SelectSize = 'large' | 'middle' | 'small';
 
@@ -60,6 +61,7 @@ export interface SelectProps {
    * 自定义样式
    */
   style?: StyleProp<ViewStyle>;
+  textProps?: Partial<TextProps>;
   /**
    * BottomSheet 标题
    */

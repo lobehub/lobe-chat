@@ -24,6 +24,7 @@ const Select = memo<SelectProps>(
     title,
     optionRender,
     bottomSheetProps,
+    textProps,
     ...rest
   }) => {
     const [showModal, setShowModal] = useState(false);
@@ -68,7 +69,7 @@ const Select = memo<SelectProps>(
           variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
           {...rest}
         >
-          <SelectItem size={size} {...selectedOption} />
+          <SelectItem size={size} textProps={textProps} {...selectedOption} />
           <Icon
             color={theme.colorTextDescription}
             icon={ChevronDown}

@@ -1,7 +1,6 @@
 import type { ThemedToken } from '@shikijs/core';
 import { FlashList } from '@shopify/flash-list';
 
-import Flexbox from '@/components/Flexbox';
 import Text from '@/components/Text';
 import { useThemeMode } from '@/components/styles';
 
@@ -28,7 +27,7 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
   const { styles } = useStyles();
 
   const renderLine = ({ item: line, index: lineIndex }: { index: number; item: ThemedToken[] }) => (
-    <Flexbox horizontal>
+    <Text code key={lineIndex}>
       {line.map((tokenItem, tokenIndex) => (
         <Text
           code
@@ -43,7 +42,7 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
           {tokenItem.content}
         </Text>
       ))}
-    </Flexbox>
+    </Text>
   );
 
   return error ? (
@@ -52,12 +51,15 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
     </Text>
   ) : (
     <FlashList
-      contentContainerStyle={styles.horizontalScrollContent}
+      contentContainerStyle={{
+        flex: 1,
+        padding: 16,
+      }}
       data={tokens}
       keyExtractor={(line, lineIndex) => generateLineKey(lineIndex, line)}
-      nestedScrollEnabled
+      nestedScrollEnabled={true}
       renderItem={renderLine}
-      showsHorizontalScrollIndicator={true}
+      showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     />
   );

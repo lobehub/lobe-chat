@@ -107,6 +107,7 @@ const Text = memo<TextProps>(
     return (
       <RNText
         numberOfLines={computedNumberOfLines}
+        pointerEvents={'none'}
         style={[
           variants({
             as,

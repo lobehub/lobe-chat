@@ -4,11 +4,11 @@ import { useStyles } from '@/components/Select/style';
 
 import Flexbox from '../Flexbox';
 import Icon from '../Icon';
-import Text from '../Text';
+import Text, { type TextProps } from '../Text';
 import type { SelectOptionItem, SelectSize } from './type';
 
-const SelectItem = memo<SelectOptionItem & { size?: SelectSize }>(
-  ({ size = 'middle', icon, title, disabled, iconSize }) => {
+const SelectItem = memo<SelectOptionItem & { size?: SelectSize; textProps?: Partial<TextProps> }>(
+  ({ size = 'middle', icon, title, disabled, iconSize, textProps }) => {
     const { styles } = useStyles({ size });
     return (
       <Flexbox
@@ -25,6 +25,7 @@ const SelectItem = memo<SelectOptionItem & { size?: SelectSize }>(
             ellipsis
             fontSize={styles.sizeStyles.fontSize}
             type={disabled ? 'secondary' : undefined}
+            {...textProps}
           >
             {title}
           </Text>
