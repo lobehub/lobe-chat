@@ -1,5 +1,6 @@
 import type { ChatTopic } from '@lobechat/types';
-import { Cell, Empty, FlashListScrollShadow, Flexbox, Tag, useTheme } from '@lobehub/ui-rn';
+import { Cell, Empty, Flexbox, Tag, useTheme } from '@lobehub/ui-rn';
+import { FlashList } from '@shopify/flash-list';
 import { MessageSquareDashed } from 'lucide-react-native';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -92,11 +93,9 @@ const TopicList = memo(() => {
   };
 
   return (
-    <FlashListScrollShadow
+    <FlashList
       data={listData}
-      estimatedItemSize={56}
       getItemType={getItemType}
-      hideScrollBar
       keyExtractor={(item, index) => {
         if (item.type === 'topic') {
           return item.data.id;
@@ -104,7 +103,8 @@ const TopicList = memo(() => {
         return `default-${index}`;
       }}
       renderItem={renderItem}
-      size={2}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
     />
   );
 });

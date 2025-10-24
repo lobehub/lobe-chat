@@ -7,13 +7,12 @@ import {
   Flexbox,
   Markdown,
   PageContainer,
-  ScrollShadow,
   Text,
 } from '@lobehub/ui-rn';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, InteractionManager } from 'react-native';
+import { Alert, InteractionManager, ScrollView } from 'react-native';
 
 import ChatBubble from '@/features/chat/ChatBubble';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
@@ -124,7 +123,11 @@ const AssistantDetail = () => {
   } else {
     content = (
       <>
-        <ScrollShadow size={3} style={{ flex: 1 }}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+        >
           <Flexbox gap={16} padding={16}>
             <Center>
               <Avatar alt={agent.title} avatar={agent.avatar || '🤖'} size={100} />
@@ -157,7 +160,7 @@ const AssistantDetail = () => {
               />
             ))}
           </Flexbox>
-        </ScrollShadow>
+        </ScrollView>
         <Flexbox padding={16}>
           <Button
             block
