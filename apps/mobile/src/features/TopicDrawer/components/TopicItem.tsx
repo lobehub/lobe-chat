@@ -1,6 +1,6 @@
 import { ChatTopic } from '@lobechat/types';
 import { Cell, useTheme } from '@lobehub/ui-rn';
-import { MessageSquareText } from 'lucide-react-native';
+import { Star } from 'lucide-react-native';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager } from 'react-native';
@@ -77,7 +77,7 @@ const TopicItem = memo<TopicItemProps>(({ topic }) => {
     <Dropdown options={options}>
       <Cell
         active={isActive}
-        icon={MessageSquareText}
+        icon={Star}
         iconProps={{
           color: theme.colorTextSecondary,
         }}
