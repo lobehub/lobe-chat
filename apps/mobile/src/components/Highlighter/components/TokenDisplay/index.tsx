@@ -1,6 +1,7 @@
 import type { ThemedToken } from '@shikijs/core';
-import { ScrollView, View } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 
+import Flexbox from '@/components/Flexbox';
 import Text from '@/components/Text';
 import { useThemeMode } from '@/components/styles';
 
@@ -26,35 +27,38 @@ export function TokenDisplay({ code, lang }: TokenDisplayProps) {
   const { tokens, error } = useTokenize(code, lang, isDarkMode ? 'dark' : 'light');
   const { styles } = useStyles();
 
+  const renderLine = ({ item: line, index: lineIndex }: { index: number; item: ThemedToken[] }) => (
+    <Flexbox horizontal>
+      {line.map((tokenItem, tokenIndex) => (
+        <Text
+          code
+          color={tokenItem.color}
+          fontSize={12}
+          italic={tokenItem.fontStyle === 1}
+          key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
+          style={{
+            backgroundColor: tokenItem.bgColor,
+          }}
+        >
+          {tokenItem.content}
+        </Text>
+      ))}
+    </Flexbox>
+  );
+
   return error ? (
     <Text code fontSize={12} style={styles.errorText}>
       {code}
     </Text>
   ) : (
-    <ScrollView
+    <FlashList
       contentContainerStyle={styles.horizontalScrollContent}
-      horizontal
+      data={tokens}
+      keyExtractor={(line, lineIndex) => generateLineKey(lineIndex, line)}
       nestedScrollEnabled
-      showsHorizontalScrollIndicator
-    >
-      {tokens.map((line, lineIndex) => (
-        <View key={generateLineKey(lineIndex, line)} style={styles.codeLine}>
-          {line.map((tokenItem, tokenIndex) => (
-            <Text
-              code
-              color={tokenItem.color}
-              fontSize={12}
-              italic={tokenItem.fontStyle === 1}
-              key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
-              style={{
-                backgroundColor: tokenItem.bgColor,
-              }}
-            >
-              {tokenItem.content}
-            </Text>
-          ))}
-        </View>
-      ))}
-    </ScrollView>
+      renderItem={renderLine}
+      showsHorizontalScrollIndicator={true}
+      showsVerticalScrollIndicator={false}
+    />
   );
 }
