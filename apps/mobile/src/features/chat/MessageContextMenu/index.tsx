@@ -87,8 +87,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
           foreground: true,
         }}
         longPressEffect
-        onLongPress={(e) => {
-          e.stopPropagation();
+        onLongPress={() => {
           setOpen(true);
           hapticsEffect();
         }}

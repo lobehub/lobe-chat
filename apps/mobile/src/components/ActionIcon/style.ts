@@ -18,6 +18,7 @@ export const useStyles = createStyles(({ token, stylish }) => {
       color: token.colorTextTertiary,
       cursor: 'pointer',
       overflow: 'hidden',
+      pointerEvents: 'auto',
       position: 'relative',
     },
 

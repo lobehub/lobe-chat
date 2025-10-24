@@ -51,14 +51,7 @@ const ChatBubble = memo(
     const node = (
       <>
         {!isUser && (
-          <Flexbox
-            align={'center'}
-            gap={8}
-            horizontal
-            style={{
-              pointerEvents: 'none',
-            }}
-          >
+          <Flexbox align={'center'} gap={8} horizontal>
             <Avatar
               avatar={message?.meta?.avatar || DEFAULT_AVATAR}
               backgroundColor={message?.meta?.backgroundColor}
@@ -72,11 +65,15 @@ const ChatBubble = memo(
             )}
           </Flexbox>
         )}
-        <Flexbox style={{ paddingBottom: 16, pointerEvents: 'none' }}>
+        <Flexbox style={{ paddingBottom: 16 }}>
           {isUser ? (
             <Flexbox horizontal justify={'flex-end'}>
               <Block
-                style={[isUser && styles.userBubble, hasError && styles.errorBubble]}
+                style={[
+                  { pointerEvents: 'box-none' },
+                  isUser && styles.userBubble,
+                  hasError && styles.errorBubble,
+                ]}
                 variant={isUser ? 'outlined' : 'borderless'}
               >
                 {content}
@@ -85,13 +82,13 @@ const ChatBubble = memo(
           ) : (
             <Flexbox gap={4}>
               <Block
-                style={[{ pointerEvents: 'none' }, hasError && styles.errorBubble]}
+                style={[{ pointerEvents: 'box-none' }, hasError && styles.errorBubble]}
                 variant={'borderless'}
               >
                 {content}
               </Block>
               {showActions && showActionsBar && !isLoading && (message.content || hasError) && (
-                <MessageActions message={message} />
+                <MessageActions message={message} style={{ paddingBottom: 16 }} />
               )}
             </Flexbox>
           )}

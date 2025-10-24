@@ -1,5 +1,6 @@
 import { Paragraph } from 'mdast';
 import { ReactNode } from 'react';
+import { View } from 'react-native';
 
 import Text from '../../Text';
 import { useMarkdownContext } from '../context';
@@ -16,13 +17,15 @@ export const ParagraphRenderer = ({ node, parent }: RendererArgs<Paragraph>): Re
       : styles.paragraph;
 
   return (
-    <Text style={paragraphStyle}>
-      {node.children.map((child, idx) => {
-        if (child.type === 'text') {
-          return child.value;
-        }
-        return <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />;
-      })}
-    </Text>
+    <View style={{ pointerEvents: 'none' }}>
+      <Text style={paragraphStyle}>
+        {node.children.map((child, idx) => {
+          if (child.type === 'text') {
+            return child.value;
+          }
+          return <PhrasingContentRenderer index={idx} key={idx} node={child} parent={node} />;
+        })}
+      </Text>
+    </View>
   );
 };
