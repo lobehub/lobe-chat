@@ -279,9 +279,16 @@
     },
     "title": "Online Search"
   },
-  "searchAgentPlaceholder": "Search assistants...",
-  "searchAgents": "Search assistants...",
-  "selectedAgents": "Selected agents",
+  "searchAgentPlaceholder": "Search assistants/chat logs...",
+  "searchMessages": {
+    "count": "{{count}} results",
+    "empty": "No chat logs found",
+    "loadMore": "Load more chat logs",
+    "title": "Chat logs"
+  },
+  "searchSessions": {
+    "title": "Assistants"
+  },
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",

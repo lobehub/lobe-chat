@@ -8,6 +8,7 @@ import {
   ChatVideoItem,
   CreateMessageParams,
   MessageItem,
+  MessageKeywordSearchResult,
   ModelRankItem,
   NewMessageQueryParams,
   UpdateMessageParams,
@@ -15,7 +16,7 @@ import {
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
-import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, sql } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gt, ilike, inArray, isNotNull, isNull, sql } from 'drizzle-orm';
 
 import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
@@ -314,14 +315,54 @@ export class MessageModel {
     return result as MessageItem[];
   };
 
-  queryByKeyword = async (keyword: string) => {
-    if (!keyword) return [];
-    const result = await this.db.query.messages.findMany({
-      orderBy: [desc(messages.createdAt)],
-      where: and(eq(messages.userId, this.userId), like(messages.content, `%${keyword}%`)),
-    });
+  queryByKeyword = async (
+    keyword: string,
+    { current = 0, pageSize = 20 }: { current?: number; pageSize?: number } = {},
+  ): Promise<MessageKeywordSearchResult> => {
+    const sanitizedKeyword = keyword.trim();
+    const safePageSize = pageSize > 0 ? pageSize : 20;
+    const safeCurrent = current >= 0 ? current : 0;
 
-    return result as MessageItem[];
+    if (!sanitizedKeyword) {
+      return {
+        data: [],
+        pagination: {
+          current: safeCurrent,
+          pageSize: safePageSize,
+          total: 0,
+        },
+      };
+    }
+
+    const offset = safeCurrent * safePageSize;
+    const whereClause = and(
+      eq(messages.userId, this.userId),
+      ilike(messages.content, `%${sanitizedKeyword}%`),
+    );
+
+    const [data, totalResult] = await Promise.all([
+      this.db.query.messages.findMany({
+        limit: safePageSize,
+        offset,
+        orderBy: [desc(messages.createdAt)],
+        where: whereClause,
+      }),
+      this.db
+        .select({ value: count(messages.id) })
+        .from(messages)
+        .where(whereClause),
+    ]);
+
+    const total = Number(totalResult[0]?.value ?? 0);
+
+    return {
+      data: data as MessageItem[],
+      pagination: {
+        current: safeCurrent,
+        pageSize: safePageSize,
+        total,
+      },
+    };
   };
 
   count = async (params?: {

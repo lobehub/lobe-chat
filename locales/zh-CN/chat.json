@@ -279,9 +279,16 @@
     },
     "title": "联网搜索"
   },
-  "searchAgentPlaceholder": "搜索助手...",
-  "searchAgents": "搜索助手...",
-  "selectedAgents": "已选助手",
+  "searchAgentPlaceholder": "搜索助手/聊天记录...",
+  "searchMessages": {
+    "count": "共找到 {{count}} 条记录",
+    "empty": "未找到相关聊天记录",
+    "loadMore": "加载更多聊天记录",
+    "title": "聊天记录"
+  },
+  "searchSessions": {
+    "title": "助手"
+  },
   "sendPlaceholder": "输入聊天内容...",
   "sessionGroup": {
     "config": "分组管理",
