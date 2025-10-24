@@ -1,6 +1,10 @@
+import { remarkBr } from '@lobehub/ui/es/Markdown/plugins/remarkBr';
+import { preprocessMarkdownContent } from '@lobehub/ui/es/hooks/useMarkdown/utils';
 import { Definition, Root } from 'mdast';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';
+import remarkBreaks from 'remark-breaks';
+import remarkCjkFriendly from 'remark-cjk-friendly';
 import remarkGfm from 'remark-gfm';
 // 仅用于解析数学公式
 import remarkMath from 'remark-math';
@@ -16,10 +20,13 @@ import type { MarkdownProps } from './type';
 
 const parser = unified()
   .use(remarkParse)
+  .use(remarkCjkFriendly)
+  .use(remarkBr)
   .use(remarkGfm, {
     singleTilde: false,
   })
-  .use(remarkMath);
+  .use(remarkMath)
+  .use(remarkBreaks);
 
 function extractDefinitions(tree: Root): Record<string, Definition> {
   const definitions: Record<string, Definition> = {};
@@ -39,7 +46,7 @@ const Markdown = memo<MarkdownProps>(
     lineHeight = 1.6,
     marginMultiple = 1,
   }) => {
-    const tree = useMemo(() => parser.parse(children), [children]);
+    const tree = useMemo(() => parser.parse(preprocessMarkdownContent(children)), [children]);
 
     const renderers = useMemo(
       () => ({

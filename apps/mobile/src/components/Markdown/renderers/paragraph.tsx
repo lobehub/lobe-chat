@@ -19,7 +19,7 @@ export const ParagraphRenderer = ({ node, parent }: RendererArgs<Paragraph>): Re
   return (
     <View style={{ pointerEvents: 'none' }}>
       <Text style={paragraphStyle}>
-        {node.children.map((child, idx) => {
+        {node.children.filter(Boolean).map((child, idx) => {
           if (child.type === 'text') {
             return child.value;
           }

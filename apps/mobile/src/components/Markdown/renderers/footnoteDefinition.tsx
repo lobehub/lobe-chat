@@ -20,7 +20,7 @@ export const FootnoteDefinitionRenderer = ({
         <Text style={mergedStyles as any}>[{node.identifier}]: </Text>
       </View>
       <View style={{ flex: 1 }}>
-        {node.children.map((child, idx) => (
+        {node.children.filter(Boolean).map((child, idx) => (
           <Fragment key={idx}>
             <BlockContentRenderer index={idx} node={child as BlockContent} parent={node} />
             <DefinitionContentRenderer

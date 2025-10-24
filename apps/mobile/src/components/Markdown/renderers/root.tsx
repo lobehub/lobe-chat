@@ -10,7 +10,7 @@ export const RootRenderer = ({ node }: RendererArgs<Root>) => {
 
   return (
     <View style={styles.container}>
-      {node.children.map((node, index) => (
+      {node.children.filter(Boolean).map((node, index) => (
         <RootContentRenderer index={index} key={index} node={node} parent={node} />
       ))}
     </View>
