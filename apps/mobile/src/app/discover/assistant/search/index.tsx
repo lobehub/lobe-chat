@@ -149,6 +149,7 @@ const AssistantList = () => {
       left={
         <Flexbox align={'center'} flex={1} horizontal justify={'space-between'} paddingInline={8}>
           <Input.Search
+            autoFocus
             glass
             onChangeText={setSearchText}
             onSubmitEditing={handleSearchSubmit}

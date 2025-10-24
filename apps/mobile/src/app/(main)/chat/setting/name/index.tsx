@@ -33,7 +33,12 @@ export default function NameSetting() {
       title={t('setting.name')}
     >
       <Flexbox padding={16}>
-        <Input defaultValue={defaultTitle || ''} onChangeText={setTitle} value={title || ''} />
+        <Input
+          autoFocus
+          defaultValue={defaultTitle || ''}
+          onChangeText={setTitle}
+          value={title || ''}
+        />
       </Flexbox>
     </PageContainer>
   );
