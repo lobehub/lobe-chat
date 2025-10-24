@@ -13,6 +13,7 @@ import ChatList from '@/features/chat/ChatList';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { isIOS } from '@/utils/detection';
 
 export default function ChatWithDrawer() {
   const theme = useTheme();
@@ -36,7 +37,10 @@ export default function ChatWithDrawer() {
         title={displayTitle}
         titleIcon={isInbox ? undefined : ChevronRightIcon}
       >
-        <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          behavior={isIOS ? 'padding' : 'translate-with-padding'}
+          style={{ flex: 1 }}
+        >
           <ChatList />
           <ChatInput />
         </KeyboardAvoidingView>
