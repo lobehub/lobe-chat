@@ -34,6 +34,7 @@ export default function DescriptionSetting() {
     >
       <Flexbox padding={16}>
         <TextArea
+          autoFocus
           defaultValue={defaultDescription || ''}
           onChangeText={setDescription}
           value={description || ''}
