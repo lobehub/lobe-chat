@@ -10,8 +10,8 @@ export const useStyles = createStyles(({ token }) => ({
     borderColor: token.colorBorder,
     borderRadius: 48, // 圆角48px匹配web端
     borderWidth: 1,
-    paddingHorizontal: token.padding,
-    paddingVertical: token.paddingXS,
+    paddingBlock: token.paddingXS,
+    paddingInline: token.padding,
   },
 
   questionText: {

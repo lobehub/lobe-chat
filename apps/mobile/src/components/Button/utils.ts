@@ -4,8 +4,8 @@ export interface ButtonSizeConfig {
   borderRadius: number;
   fontSize: number;
   height: number;
-  paddingHorizontal: number;
-  paddingVertical: number;
+  paddingBlock: number;
+  paddingInline: number;
 }
 
 /**
@@ -20,8 +20,8 @@ export const calcSize = (size?: ButtonSize, token?: any): ButtonSizeConfig => {
         borderRadius: height / 2,
         fontSize: 14,
         height,
-        paddingHorizontal: (token?.paddingXS || 8) * 1.25,
-        paddingVertical: 0,
+        paddingBlock: 0,
+        paddingInline: (token?.paddingXS || 8) * 1.25,
       };
     }
     case 'large': {
@@ -30,8 +30,8 @@ export const calcSize = (size?: ButtonSize, token?: any): ButtonSizeConfig => {
         borderRadius: height / 2,
         fontSize: 18,
         height,
-        paddingHorizontal: (token?.paddingSM || 12) * 1.25,
-        paddingVertical: token?.paddingXS || 8,
+        paddingBlock: token?.paddingXS || 8,
+        paddingInline: (token?.paddingSM || 12) * 1.25,
       };
     }
     default: {
@@ -41,8 +41,8 @@ export const calcSize = (size?: ButtonSize, token?: any): ButtonSizeConfig => {
         borderRadius: height / 2,
         fontSize: 16,
         height,
-        paddingHorizontal: (token?.paddingSM || 12) * 1.25,
-        paddingVertical: token?.paddingXXS || 4,
+        paddingBlock: token?.paddingXXS || 4,
+        paddingInline: (token?.paddingSM || 12) * 1.25,
       };
     }
   }

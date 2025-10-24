@@ -43,7 +43,7 @@ export const useStyles = createStyles(({ token }) => ({
     height: 40,
     justifyContent: 'center',
     minWidth: 80,
-    paddingHorizontal: token.padding,
+    paddingInline: token.padding,
   },
 
   checkButtonDisabled: {
@@ -171,7 +171,7 @@ export const useStyles = createStyles(({ token }) => ({
     justifyContent: 'space-between',
     marginHorizontal: token.padding,
     marginVertical: token.marginXXS,
-    paddingHorizontal: token.paddingSM,
+    paddingInline: token.paddingSM,
   },
 
   modalItemContent: {
@@ -214,7 +214,7 @@ export const useStyles = createStyles(({ token }) => ({
     flexDirection: 'row',
     height: token.controlHeightLG,
     justifyContent: 'space-between',
-    paddingHorizontal: token.paddingSM,
+    paddingInline: token.paddingSM,
   },
 
   modelSelectorContent: {

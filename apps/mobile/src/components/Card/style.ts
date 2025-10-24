@@ -20,8 +20,8 @@ export const useStyles = createStyles(({ token }) => ({
   header: {
     borderBottomColor: token.colorBorderSecondary,
     borderBottomWidth: token.lineWidth,
-    paddingHorizontal: token.paddingLG,
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
+    paddingInline: token.paddingLG,
   },
   title: {
     color: token.colorText,

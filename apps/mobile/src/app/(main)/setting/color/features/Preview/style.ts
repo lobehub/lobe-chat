@@ -18,8 +18,8 @@ export const useStyles = createStyles(({ token }) => {
     chatContent: {
       backgroundColor: token.colorBgLayout,
       gap: token.marginSM,
-      paddingHorizontal: token.paddingSM,
-      paddingVertical: token.paddingSM,
+      paddingBlock: token.paddingSM,
+      paddingInline: token.paddingSM,
     },
 
     container: {
@@ -37,7 +37,7 @@ export const useStyles = createStyles(({ token }) => {
       flexDirection: 'row',
       gap: token.marginXS,
       height: 60,
-      paddingHorizontal: token.paddingSM,
+      paddingInline: token.paddingSM,
     },
 
     inputBox: {
@@ -48,7 +48,7 @@ export const useStyles = createStyles(({ token }) => {
       flex: 1,
       height: 36,
       justifyContent: 'center',
-      paddingHorizontal: token.paddingSM,
+      paddingInline: token.paddingSM,
     },
 
     inputPlaceholder: {
@@ -64,16 +64,16 @@ export const useStyles = createStyles(({ token }) => {
       borderRadius: token.borderRadius,
       borderWidth: 0.5,
       marginBottom: 2,
-      paddingHorizontal: 10,
-      paddingVertical: token.paddingXS,
+      paddingBlock: token.paddingXS,
+      paddingInline: 10,
     },
 
     messageBubbleUser: {
       backgroundColor: token.colorBgContainer,
       borderRadius: token.borderRadius,
       marginBottom: 2,
-      paddingHorizontal: 10,
-      paddingVertical: token.paddingXS,
+      paddingBlock: token.paddingXS,
+      paddingInline: 10,
     },
 
     // 消息样式
@@ -161,7 +161,7 @@ export const useStyles = createStyles(({ token }) => {
       flexDirection: 'row',
       height: 44,
       justifyContent: 'space-between',
-      paddingHorizontal: token.padding,
+      paddingInline: token.padding,
     },
     sendButton: {
       alignItems: 'center',

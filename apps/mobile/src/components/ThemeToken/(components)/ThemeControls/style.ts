@@ -10,7 +10,7 @@ export const useStyles = createStyles(({ token }) => {
       flex: 1,
       fontSize: token.fontSize,
       height: 40,
-      paddingHorizontal: token.paddingMD,
+      paddingInline: token.paddingMD,
     },
     controlItem: {
       marginBottom: token.marginLG,

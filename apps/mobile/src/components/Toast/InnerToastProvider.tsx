@@ -164,7 +164,7 @@ export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
   const styles = StyleSheet.create({
     toastContainer: {
       left: 0,
-      paddingHorizontal: 16,
+      paddingInline: 16,
       position: 'absolute',
       right: 0,
       zIndex: 9999,

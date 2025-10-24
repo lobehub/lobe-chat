@@ -9,8 +9,8 @@ const useStyles = createStyles(({ token }) => ({
   customMarkLabel: {
     backgroundColor: token.colorPrimaryBg,
     borderRadius: token.borderRadiusSM,
-    paddingHorizontal: token.paddingXXS,
-    paddingVertical: 2,
+    paddingBlock: 2,
+    paddingInline: token.paddingXXS,
   },
   customMarkText: {
     color: token.colorPrimary,

@@ -28,8 +28,8 @@ export const useStyles = createStyles(({ token }) => ({
     borderRadius: token.borderRadiusLG,
     borderWidth: 1,
     marginBottom: token.marginLG,
-    paddingHorizontal: token.paddingLG,
-    paddingVertical: token.padding,
+    paddingBlock: token.padding,
+    paddingInline: token.paddingLG,
   },
   infoDescription: {
     color: token.colorInfoText,

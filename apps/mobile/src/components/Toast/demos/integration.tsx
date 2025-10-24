@@ -177,8 +177,8 @@ export default function IntegrationDemo() {
       borderRadius: 8,
       borderWidth: 1,
       fontSize: 14,
-      paddingHorizontal: 12,
-      paddingVertical: 12,
+      paddingBlock: 12,
+      paddingInline: 12,
     },
     tipSection: {
       marginBottom: 16,

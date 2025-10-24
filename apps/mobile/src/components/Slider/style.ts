@@ -15,9 +15,10 @@ export const useStyles = createStyles(({ token }, { disabled }: { disabled: bool
     top: 0,
   },
   container: {
-    minHeight: token.sizeXXL, // Ensure enough space for labels
-    paddingHorizontal: token.paddingXS,
-    paddingVertical: token.paddingSM,
+    minHeight: token.sizeXXL,
+    paddingBlock: token.paddingSM,
+    // Ensure enough space for labels
+    paddingInline: token.paddingXS,
   },
 
   markDot: {

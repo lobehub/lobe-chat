@@ -23,8 +23,8 @@ export const useStyles = createStyles(({ token }) => ({
   tooltip: {
     borderRadius: token.borderRadius,
     maxWidth: 250,
-    paddingHorizontal: token.paddingSM,
-    paddingVertical: token.paddingXS,
+    paddingBlock: token.paddingXS,
+    paddingInline: token.paddingSM,
   },
   tooltipText: {
     color: token.colorBgContainer,

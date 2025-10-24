@@ -4,7 +4,7 @@ export const useStyles = createStyles(({ token }, size: number, dotColor: string
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingVertical: token.paddingXS,
+    paddingBlock: token.paddingXS,
   },
   dot: {
     backgroundColor: dotColor,

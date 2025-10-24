@@ -21,7 +21,7 @@ export const useStyles = createStyles(({ token }) => ({
 
   footerComplete: {
     alignItems: 'center',
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
   },
 
   footerCompleteText: {
@@ -35,7 +35,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingVertical: token.paddingLG,
+    paddingBlock: token.paddingLG,
   },
 
   footerText: {
@@ -51,7 +51,7 @@ export const useStyles = createStyles(({ token }) => ({
     borderRadius: token.borderRadius,
     marginHorizontal: token.padding,
     marginVertical: token.marginSM,
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
   },
 
   loadMoreText: {
@@ -79,11 +79,11 @@ export const useStyles = createStyles(({ token }) => ({
 
   // ModelCard样式
   modelCard: {
+    paddingBlock: token.paddingSM,
     // backgroundColor: token.colorBgContainer,
     // borderBottomColor: token.colorBorderSecondary,
     // borderBottomWidth: 1,
-    paddingHorizontal: token.padding,
-    paddingVertical: token.paddingSM,
+    paddingInline: token.padding,
   },
 
   modelCardContent: {
@@ -105,8 +105,8 @@ export const useStyles = createStyles(({ token }) => ({
 
   modelInfo: {
     flex: 1,
-    paddingHorizontal: token.padding,
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
+    paddingInline: token.padding,
   },
 
   modelName: {
@@ -148,7 +148,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
 
   modelsSearchInput: {
-    // paddingVertical: 10,
+    // paddingBlock: 10,
   },
 
   modelsTitle: {
@@ -171,9 +171,9 @@ export const useStyles = createStyles(({ token }) => ({
 
   // Section header样式
   sectionHeader: {
+    paddingBlock: token.paddingXS,
     // backgroundColor: token.colorFillQuaternary,
-    paddingHorizontal: token.padding,
-    paddingVertical: token.paddingXS,
+    paddingInline: token.padding,
   },
 
   sectionHeaderText: {

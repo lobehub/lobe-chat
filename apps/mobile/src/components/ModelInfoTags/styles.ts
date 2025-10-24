@@ -48,8 +48,8 @@ export const useStyles = createStyles(({ token }) => ({
     backgroundColor: token.colorFillTertiary,
     marginBottom: 0,
     marginLeft: 0,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingBlock: 2,
+    paddingInline: 6,
   },
   tokenText: {
     color: token.colorTextSecondary,

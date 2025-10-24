@@ -195,7 +195,7 @@ const EmojiSelector = memo<EmojiSelectorProps>(
         {/* 内容区域 */}
         {isReady ? (
           <FlatList
-            contentContainerStyle={{ paddingBottom: 16, paddingHorizontal: 16 }}
+            contentContainerStyle={{ paddingBottom: 16, paddingInline: 16 }}
             data={currentEmojiData}
             key={`${activeCategory}-${columns}`}
             keyboardShouldPersistTaps="always"

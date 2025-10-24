@@ -17,7 +17,7 @@ export const useStyles = createStyles(({ token }) => {
 
     searchInput: {
       marginVertical: token.marginLG,
-      paddingHorizontal: token.paddingMD,
+      paddingInline: token.paddingMD,
     },
     searchInputPlaceholder: {
       color: token.colorTextPlaceholder,
@@ -57,7 +57,7 @@ export const useStyles = createStyles(({ token }) => {
       borderBottomWidth: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingVertical: token.paddingMD,
+      paddingBlock: token.paddingMD,
     },
     tokenTable: {
       backgroundColor: token.colorBgElevated,

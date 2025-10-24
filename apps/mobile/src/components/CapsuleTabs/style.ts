@@ -9,7 +9,7 @@ const getSizeStyles = (
   fontSize: number;
   indicatorHeight: number;
   paddingBottom: number;
-  paddingHorizontal: number;
+  paddingInline: number;
   paddingTop: number;
 } => {
   const sizeMap: Record<
@@ -18,7 +18,7 @@ const getSizeStyles = (
       fontSize: number;
       indicatorHeight: number;
       paddingBottom: number;
-      paddingHorizontal: number;
+      paddingInline: number;
       paddingTop: number;
     }
   > = {
@@ -26,21 +26,21 @@ const getSizeStyles = (
       fontSize: token.fontSizeLG,
       indicatorHeight: 3,
       paddingBottom: token.paddingSM,
-      paddingHorizontal: token.paddingXXS,
+      paddingInline: token.paddingXXS,
       paddingTop: token.paddingSM,
     },
     middle: {
       fontSize: token.fontSize,
       indicatorHeight: 2,
       paddingBottom: token.paddingSM,
-      paddingHorizontal: token.paddingXXS / 2,
+      paddingInline: token.paddingXXS / 2,
       paddingTop: token.paddingXS,
     },
     small: {
       fontSize: token.fontSizeSM,
       indicatorHeight: 2,
       paddingBottom: token.paddingXS,
-      paddingHorizontal: 0,
+      paddingInline: 0,
       paddingTop: token.paddingXXS,
     },
   };
@@ -73,7 +73,7 @@ export const useStyles = createStyles(
         alignItems: 'center',
         marginRight: token.marginXS,
         paddingBottom: sizeStyles.paddingBottom,
-        paddingHorizontal: sizeStyles.paddingHorizontal,
+        paddingInline: sizeStyles.paddingInline,
         paddingTop: sizeStyles.paddingTop,
       },
       tabContent: {

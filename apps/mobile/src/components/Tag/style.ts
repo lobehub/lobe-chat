@@ -1,43 +1,39 @@
 import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
-  
   borderless: {
     borderWidth: 0,
   },
 
-  
   // 基础容器样式
-container: {
+  container: {
     alignSelf: 'flex-start' as const,
     gap: token.marginXXS,
   },
 
   // 样式变体
-filled: {
+  filled: {
     // 不使用 stylish 预设，保持空对象以便颜色样式能正确应用
   },
 
   large: {
     height: 28,
-    paddingHorizontal: token.paddingSM,
+    paddingInline: token.paddingSM,
   },
 
-  
   medium: {
     height: 22,
-    paddingHorizontal: token.paddingXS,
+    paddingInline: token.paddingXS,
   },
 
-  
-outlined: {
+  outlined: {
     borderWidth: 1,
   },
 
   // 尺寸变体
-small: {
+  small: {
     height: 20,
-    paddingHorizontal: token.paddingXXS,
+    paddingInline: token.paddingXXS,
   },
 
   // 文本样式 - 调整 lineHeight 以适配固定高度

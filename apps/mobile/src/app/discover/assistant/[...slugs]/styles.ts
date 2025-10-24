@@ -16,8 +16,8 @@ export const useStyles = createStyles(({ token }) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginRight: token.marginXS,
-    paddingHorizontal: token.margin,
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
+    paddingInline: token.margin,
   },
 
   addButtonText: {
@@ -121,12 +121,12 @@ export const useStyles = createStyles(({ token }) => ({
   },
 
   systemRoleContentContainer: {
-    // paddingVertical: 12,
+    // paddingBlock: 12,
     color: token.colorText,
 
     fontSize: token.fontSizeSM,
     lineHeight: token.lineHeight,
-    paddingHorizontal: token.margin,
+    paddingInline: token.margin,
   },
 
   systemRoleTitle: {
