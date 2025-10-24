@@ -30,7 +30,13 @@ const Cell = memo<CellProps>(
     const theme = useTheme();
     const titleNode =
       typeof title === 'string' ? (
-        <Text ellipsis fontSize={16} type={danger ? 'danger' : undefined} {...titleProps}>
+        <Text
+          ellipsis
+          fontSize={16}
+          type={danger ? 'danger' : undefined}
+          weight={500}
+          {...titleProps}
+        >
           {title}
         </Text>
       ) : (
