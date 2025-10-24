@@ -150,6 +150,8 @@
     "react-native-webview": "13.15.0",
     "react-native-worklets": "0.5.1",
     "redux-devtools-expo-dev-plugin": "^2.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-cjk-friendly": "^1.2.3",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "remark-parse": "^11.0.0",

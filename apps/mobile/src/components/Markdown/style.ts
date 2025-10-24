@@ -75,8 +75,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       marginVertical: options.fontSize * options.marginMultiple * 0.25,
     },
     inlineCode: {
-      color: theme.colorText,
-      fontFamily: theme.fontFamilyCode,
+      fontSize: options.fontSize * 0.875,
     },
     link: {
       color: theme.colorLink,

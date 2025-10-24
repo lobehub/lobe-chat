@@ -1,5 +1,5 @@
 import { RootContent } from 'mdast';
-import { ReactNode } from 'react';
+import { memo } from 'react';
 
 import { useMarkdownContext } from '../context';
 import { RendererArgs } from './renderers';
@@ -7,10 +7,7 @@ import { RendererArgs } from './renderers';
 // 扩展 RootContent 类型以支持数学公式
 type ExtendedRootContent = RootContent | { type: 'math'; value: string };
 
-export const RootContentRenderer = ({
-  node,
-  ...args
-}: RendererArgs<ExtendedRootContent>): ReactNode => {
+export const RootContentRenderer = memo<RendererArgs<ExtendedRootContent>>(({ node, ...args }) => {
   const { renderers } = useMarkdownContext();
   const {
     BlockquoteRenderer,
@@ -126,4 +123,4 @@ export const RootContentRenderer = ({
       return null;
     }
   }
-};
+});

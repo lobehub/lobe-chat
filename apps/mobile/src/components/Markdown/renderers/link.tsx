@@ -11,7 +11,7 @@ export const LinkReferenceRenderer = ({ node }: RendererArgs<LinkReference>): Re
 
   return (
     <Text style={styles.linkReference}>
-      {node.children.map((child, index) => (
+      {node.children.filter(Boolean).map((child, index) => (
         <PhrasingContentRenderer index={index} key={index} node={child} parent={node} />
       ))}
     </Text>
@@ -24,7 +24,7 @@ export const LinkRenderer = ({ node }: RendererArgs<Link>): ReactNode => {
 
   return (
     <Text style={styles.link}>
-      {node.children.map((child, index) => (
+      {node.children.filter(Boolean).map((child, index) => (
         <PhrasingContentRenderer index={index} key={index} node={child} parent={node} />
       ))}
     </Text>
