@@ -9,8 +9,8 @@ import { fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import { FileListItem } from '@/types/files';
 import { UploadFileItem } from '@/types/files/upload';
+import { unzipFile } from '@/utils/unzipFile';
 
-import * as unzipFileModule from '../../../../utils/unzipFile';
 import { useFileStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
@@ -24,11 +24,9 @@ vi.mock('@/components/AntdStaticMethods', () => ({
 }));
 
 // Mock unzipFile
-vi.mock('../../../../utils/unzipFile', async () => {
-  return {
-    unzipFile: vi.fn(),
-  };
-});
+vi.mock('@/utils/unzipFile', () => ({
+  unzipFile: vi.fn(),
+}));
 
 // Mock p-map to run sequentially for easier testing
 vi.mock('p-map', () => ({
@@ -476,7 +474,7 @@ describe('FileManagerActions', () => {
         new File(['file2'], 'file2.txt', { type: 'text/plain' }),
       ];
 
-      vi.mocked(unzipFileModule.unzipFile).mockResolvedValue(extractedFiles);
+      vi.mocked(unzipFile).mockResolvedValue(extractedFiles);
       vi.spyOn(result.current, 'uploadWithProgress').mockResolvedValue({
         id: 'file-1',
         url: 'http://example.com/file-1',
@@ -490,7 +488,7 @@ describe('FileManagerActions', () => {
       });
 
       // Should extract ZIP file
-      expect(unzipFileModule.unzipFile).toHaveBeenCalledWith(zipFile);
+      expect(unzipFile).toHaveBeenCalledWith(zipFile);
 
       // Should upload extracted files
       expect(dispatchSpy).toHaveBeenCalledWith({
@@ -505,7 +503,7 @@ describe('FileManagerActions', () => {
 
       const zipFile = new File(['zip content'], 'archive.zip', { type: 'application/zip' });
 
-      vi.mocked(unzipFileModule.unzipFile).mockRejectedValue(new Error('Extraction failed'));
+      vi.mocked(unzipFile).mockRejectedValue(new Error('Extraction failed'));
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       vi.spyOn(result.current, 'uploadWithProgress').mockResolvedValue({
         id: 'file-1',
