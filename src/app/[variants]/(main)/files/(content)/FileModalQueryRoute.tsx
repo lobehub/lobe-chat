@@ -3,10 +3,14 @@
 import { Modal } from '@lobehub/ui';
 import { ConfigProvider } from 'antd';
 import { createStyles } from 'antd-style';
-import { useRouter } from 'next/navigation';
-import { ReactNode, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { memo, useEffect, useState } from 'react';
 
 import { DETAIL_PANEL_WIDTH } from '@/app/[variants]/(main)/files/features/FileDetail';
+import { fileManagerSelectors, useFileStore } from '@/store/file';
+
+import FileDetail from './modal/FileDetail';
+import FilePreview from './modal/FilePreview';
 
 const useStyles = createStyles(({ css, token }, showDetail: boolean) => {
   return {
@@ -50,16 +54,37 @@ const useStyles = createStyles(({ css, token }, showDetail: boolean) => {
   };
 });
 
-interface FullscreenModalProps {
-  children: ReactNode;
-  detail?: ReactNode;
-}
+/**
+ * FileModalQueryRoute component
+ * Renders the file preview modal when a 'files' query parameter is present
+ * Example: ?files=file_123
+ * File data is fetched from the Zustand store by FilePreview and FileDetail components
+ */
+const FileModalQueryRoute = memo(() => {
+  const searchParams = useSearchParams();
+  const fileId = searchParams.get('files');
+  const [open, setOpen] = useState(false);
+  const { styles } = useStyles(true);
 
-const FullscreenModal = ({ children, detail }: FullscreenModalProps) => {
-  const router = useRouter();
-  const [open, setOpen] = useState(true);
+  // Get file info from store
+  const file = useFileStore(fileManagerSelectors.getFileById(fileId || undefined));
 
-  const { styles } = useStyles(!!detail);
+  useEffect(() => {
+    setOpen(!!fileId);
+  }, [fileId]);
+
+  const handleClose = () => {
+    // Remove the 'files' query parameter
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('files');
+
+    const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
+    window.history.pushState({}, '', newUrl);
+
+    setOpen(false);
+  };
+
+  if (!fileId || !file) return null;
 
   return (
     <>
@@ -68,18 +93,20 @@ const FullscreenModal = ({ children, detail }: FullscreenModalProps) => {
           className={styles.modal}
           classNames={{ body: styles.body, content: styles.content, header: styles.header }}
           footer={false}
-          onCancel={() => {
-            router.back();
-            setOpen(false);
-          }}
+          onCancel={handleClose}
           open={open}
           width={'auto'}
         >
-          {children}
+          <FilePreview id={fileId} />
         </Modal>
       </ConfigProvider>
-      {!!detail && <div className={styles.extra}>{detail}</div>}
+      <div className={styles.extra}>
+        <FileDetail id={fileId} />
+      </div>
     </>
   );
-};
-export default FullscreenModal;
+});
+
+FileModalQueryRoute.displayName = 'FileModalQueryRoute';
+
+export default FileModalQueryRoute;

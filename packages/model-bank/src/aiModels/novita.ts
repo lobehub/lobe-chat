@@ -4,8 +4,8 @@ import { AIChatModelCard } from '../types/aiModel';
 const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      vision: true,
       functionCall: true,
+      vision: true,
     },
     contextWindowTokens: 131_072,
     displayName: 'Qwen3 VL 235B A22B Instruct',
@@ -21,8 +21,8 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 131_072,
     displayName: 'Qwen3 VL 235B A22B Thinking',

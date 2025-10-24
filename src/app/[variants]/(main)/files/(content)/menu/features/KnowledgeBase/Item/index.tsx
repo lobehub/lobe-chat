@@ -1,5 +1,4 @@
 import { createStyles } from 'antd-style';
-import Link from 'next/link';
 import React, { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -48,28 +47,27 @@ const KnowledgeBaseItem = memo<KnowledgeBaseItemProps>(({ name, active, id }) =>
   const [isHover, setHovering] = useState(false);
   const router = useQueryRoute();
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleClick = () => {
     router.push(`/repos/${id}`);
   };
 
   return (
-    <Link href={`/repos/${id}`} onClick={handleClick}>
-      <Flexbox
-        align={'center'}
-        className={cx(styles.container, knowledgeItemClass, active && styles.active)}
-        distribution={'space-between'}
-        horizontal
-        onMouseEnter={() => {
-          setHovering(true);
-        }}
-        onMouseLeave={() => {
-          setHovering(false);
-        }}
-      >
-        <Content id={id} name={name} showMore={isHover} />
-      </Flexbox>
-    </Link>
+    <Flexbox
+      align={'center'}
+      className={cx(styles.container, knowledgeItemClass, active && styles.active)}
+      distribution={'space-between'}
+      horizontal
+      onClick={handleClick}
+      onMouseEnter={() => {
+        setHovering(true);
+      }}
+      onMouseLeave={() => {
+        setHovering(false);
+      }}
+      style={{ cursor: 'pointer' }}
+    >
+      <Content id={id} name={name} showMore={isHover} />
+    </Flexbox>
   );
 });
 

@@ -1,21 +1,22 @@
 'use client';
 
-import { Icon, Tag } from '@lobehub/ui';
+import { ActionIcon, Icon, Tag } from '@lobehub/ui';
 import { Descriptions, Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
-import { BoltIcon } from 'lucide-react';
+import { BoltIcon, DownloadIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FileListItem } from '@/types/files';
+import { downloadFile } from '@/utils/client/downloadFile';
 import { formatSize } from '@/utils/format';
 
 export const DETAIL_PANEL_WIDTH = 300;
 
 const FileDetail = memo<FileListItem>((props) => {
-  const { name, embeddingStatus, size, createdAt, updatedAt, chunkCount } = props || {};
+  const { name, embeddingStatus, size, createdAt, updatedAt, chunkCount, url } = props || {};
   const { t } = useTranslation('file');
   const theme = useTheme();
 
@@ -73,6 +74,17 @@ const FileDetail = memo<FileListItem>((props) => {
       <Descriptions
         colon={false}
         column={1}
+        extra={
+          url && (
+            <ActionIcon
+              icon={DownloadIcon}
+              onClick={() => {
+                downloadFile(url, name);
+              }}
+              title={t('download', { ns: 'common' })}
+            />
+          )
+        }
         items={items}
         labelStyle={{ width: 120 }}
         size={'small'}

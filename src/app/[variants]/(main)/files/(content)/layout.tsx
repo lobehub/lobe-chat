@@ -1,18 +1,16 @@
-import ServerLayout from '@/components/server/ServerLayout';
+import { PropsWithChildren } from 'react';
+
 import { isServerMode } from '@/const/version';
 
 import NotSupportClient from './NotSupportClient';
-import Desktop from './_layout/Desktop';
-import Mobile from './_layout/Mobile';
-import { LayoutProps } from './_layout/type';
 
-const Layout = ServerLayout<LayoutProps>({ Desktop, Mobile });
+export default (props: PropsWithChildren) => {
+  const { children } = props;
 
-Layout.displayName = 'FileLayout';
-
-export default (props: LayoutProps) => {
   // if there is client db mode , tell user to switch to server mode
   if (!isServerMode) return <NotSupportClient />;
 
-  return <Layout {...props} />;
+  // We're using SPA routing now, so we ignore the Next.js parallel routes
+  // and use our Client component instead
+  return children;
 };
