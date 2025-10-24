@@ -6,6 +6,7 @@ import { TextInput } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 import { agentSelectors, useAgentStore } from '@/store/agent';
+import { isIOS } from '@/utils/detection';
 
 export default function SystemRoleSetting() {
   const { t } = useTranslation('chat');
@@ -51,7 +52,10 @@ export default function SystemRoleSetting() {
       showBack
       title={t('agentRoleEdit.title')}
     >
-      <KeyboardAvoidingView behavior="padding" enabled style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={isIOS ? 'padding' : 'translate-with-padding'}
+        style={{ flex: 1 }}
+      >
         <TextArea
           autoFocus
           onChangeText={setEditValue}
