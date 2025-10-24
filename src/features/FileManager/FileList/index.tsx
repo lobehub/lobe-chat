@@ -52,10 +52,14 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
   const [selectFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [viewConfig, setViewConfig] = useState({ showFilesInKnowledgeBase: false });
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const viewMode = useGlobalStore((s) => s.status.fileManagerViewMode || 'list') as ViewMode;
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
-  const setViewMode = (mode: ViewMode) => updateSystemStatus({ fileManagerViewMode: mode });
+  const setViewMode = (mode: ViewMode) => {
+    setIsTransitioning(true);
+    updateSystemStatus({ fileManagerViewMode: mode });
+  };
 
   const [columnCount, setColumnCount] = useState(4);
 
@@ -105,6 +109,19 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
     sorter,
     ...viewConfig,
   });
+
+  // Handle view transition with a brief delay to show skeleton
+  React.useEffect(() => {
+    if (isTransitioning && data) {
+      // Use requestAnimationFrame to ensure smooth transition
+      requestAnimationFrame(() => {
+        const timer = setTimeout(() => {
+          setIsTransitioning(false);
+        }, 100);
+        return () => clearTimeout(timer);
+      });
+    }
+  }, [isTransitioning, viewMode, data]);
 
   useCheckTaskStatus(data);
 
@@ -169,7 +186,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
           </Flexbox>
         )}
       </Flexbox>
-      {isLoading ? (
+      {isLoading || isTransitioning ? (
         viewMode === 'masonry' ? (
           <MasonrySkeleton columnCount={columnCount} />
         ) : (
