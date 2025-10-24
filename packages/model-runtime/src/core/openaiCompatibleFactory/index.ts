@@ -178,6 +178,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     baseURL!: string;
     protected _options: ConstructorOptions<T>;
+    protected _fetch?: typeof fetch;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
@@ -187,6 +188,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       };
       const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
       this._options = _options as ConstructorOptions<T>;
+
+      // Store custom fetch if provided
+      this._fetch = options.fetch as any;
 
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
@@ -252,7 +256,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           return this.handleResponseAPIMode(processedPayload, options);
         }
 
-        const messages = await convertOpenAIMessages(postPayload.messages);
+        const messages = await convertOpenAIMessages(postPayload.messages, this._fetch);
 
         let response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
 
@@ -370,7 +374,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       log('using default createOpenAICompatibleImage');
       // Use the new createOpenAICompatibleImage function
-      return createOpenAICompatibleImage(this.client, payload, this.id);
+      return createOpenAICompatibleImage(this.client, payload, this.id, this._fetch);
     }
 
     async models() {
@@ -764,7 +768,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       delete res.frequency_penalty;
       delete res.presence_penalty;
 
-      const input = await convertOpenAIResponseInputs(messages as any);
+      const input = await convertOpenAIResponseInputs(messages as any, this._fetch);
 
       const isStreaming = payload.stream !== false;
       log(

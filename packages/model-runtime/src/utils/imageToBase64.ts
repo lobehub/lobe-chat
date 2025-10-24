@@ -38,9 +38,11 @@ export const imageToBase64 = ({
 
 export const imageUrlToBase64 = async (
   imageUrl: string,
+  customFetch?: typeof fetch,
 ): Promise<{ base64: string; mimeType: string }> => {
   try {
-    const res = await fetch(imageUrl);
+    const fetchFn = customFetch || fetch;
+    const res = await fetchFn(imageUrl);
     const blob = await res.blob();
     const arrayBuffer = await blob.arrayBuffer();
 
