@@ -85,6 +85,7 @@ const FullFeatured = memo<FullFeaturedProps>(
 
     return (
       <Block
+        pointerEvents={'box-none'}
         style={[styles.container, style]}
         testID="highlighter-full-featured"
         variant={'filled'}
@@ -95,6 +96,7 @@ const FullFeatured = memo<FullFeaturedProps>(
           justify={'space-between'}
           paddingBlock={6}
           paddingInline={8}
+          pointerEvents={'box-none'}
           style={{
             backgroundColor: theme.colorFillQuaternary,
           }}
