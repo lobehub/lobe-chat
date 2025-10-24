@@ -82,6 +82,7 @@ export const useStyles = createStyles(
       },
       tabText: {
         fontSize: sizeStyles.fontSize,
+        lineHeight: sizeStyles.fontSize,
       },
 
       wrapper: {
