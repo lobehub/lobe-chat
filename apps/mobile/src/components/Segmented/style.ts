@@ -50,14 +50,14 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
 
   segmentLarge: {
     minHeight: 48,
-    paddingHorizontal: 24,
-    paddingVertical: 8,
+    paddingBlock: 8,
+    paddingInline: 24,
   },
 
   segmentMiddle: {
     minHeight: 36,
-    paddingHorizontal: 20,
-    paddingVertical: 6,
+    paddingBlock: 6,
+    paddingInline: 20,
   },
 
   segmentPressed: {
@@ -72,8 +72,8 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
   // Segment 尺寸变体
   segmentSmall: {
     minHeight: 28,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
+    paddingBlock: 4,
+    paddingInline: 16,
   },
 
   // Text 基础样式

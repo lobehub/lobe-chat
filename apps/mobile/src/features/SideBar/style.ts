@@ -21,7 +21,7 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     flexDirection: 'row',
     height: token.controlHeightLG,
     justifyContent: 'space-between',
-    paddingHorizontal: token.padding,
+    paddingInline: token.padding,
   },
   headerTitle: {
     color: token.colorTextHeading,

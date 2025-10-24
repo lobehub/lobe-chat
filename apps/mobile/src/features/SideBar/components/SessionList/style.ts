@@ -5,8 +5,8 @@ export const useStyles = createStyles(({ token }) => ({
     flex: 1,
   },
   header: {
-    paddingHorizontal: token.paddingSM + token.paddingXS,
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
+    paddingInline: token.paddingSM + token.paddingXS,
   },
   headerText: {
     color: token.colorText,

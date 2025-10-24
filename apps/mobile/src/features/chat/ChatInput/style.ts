@@ -20,7 +20,7 @@ export const useStyles = createStyles(({ token }) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingBottom: token.paddingXS,
-    paddingHorizontal: token.paddingSM,
+    paddingInline: token.paddingSM,
     width: '100%',
   },
   iconGroup: {

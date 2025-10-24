@@ -10,7 +10,7 @@ const usePreviewStyles = createStyles(({ token }) => ({
   },
   bubble: {
     borderRadius: token.borderRadius,
-    paddingHorizontal: token.paddingSM,
+    paddingInline: token.paddingSM,
   },
   container: {
     width: '100%',

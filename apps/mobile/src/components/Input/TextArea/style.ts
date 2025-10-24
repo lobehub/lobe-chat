@@ -16,14 +16,14 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
       fontFamily: token.fontFamily,
       fontSize: sizeStyles.fontSize,
       minHeight: sizeStyles.controlHeight * 1.25,
-      paddingHorizontal: sizeStyles.paddingHorizontal * 1.25,
-      paddingVertical: sizeStyles.paddingHorizontal * 1.25,
+      paddingBlock: sizeStyles.paddingInline * 1.25,
+      paddingHorizontal: sizeStyles.paddingInline * 1.25,
       textAlignVertical: 'center',
       ...(Platform.OS === 'android' && {
         includeFontPadding: false,
-        lineHeight: sizeStyles.fontSize * 1.25,
+        lineHeight: sizeStyles.fontSize * 1.6,
         margin: 0,
-        paddingVertical: 0,
+        paddingBlock: 0,
       }),
     },
   };

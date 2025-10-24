@@ -22,7 +22,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 2,
+    paddingInline: 2,
   },
   colorItem: {
     height: '100%',
@@ -32,7 +32,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     flexDirection: 'row' as const,
     marginVertical: 1,
-    paddingVertical: 2,
+    paddingBlock: 2,
   },
   container: {
     padding: 16,
@@ -59,7 +59,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 40,
-    paddingHorizontal: 4,
+    paddingInline: 4,
   },
   indexText: {
     fontSize: 12,

@@ -381,8 +381,8 @@ export default {
       borderColor: '#d9d9d9',
       borderRadius: 20,
       borderWidth: 1,
-      paddingHorizontal: 16,
-      paddingVertical: 8,
+      paddingBlock: 8,
+      paddingInline: 16,
     },
     categoryButtonText: {
       color: '#666',

@@ -33,8 +33,8 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
     color: theme.colorText,
     fontSize: options.fontSize,
     minWidth: 120,
-    paddingHorizontal: options.fontSize,
-    paddingVertical: options.fontSize * 0.75,
+    paddingBlock: options.fontSize * 0.75,
+    paddingInline: options.fontSize,
   };
 
   return {
@@ -46,7 +46,7 @@ export const useRemarkStyles = (options: RemarkStyleOptions): RemarkStyles => {
       borderLeftColor: theme.colorBorder,
       borderLeftWidth: 4,
       marginVertical: options.fontSize * options.marginMultiple * 0.5,
-      paddingHorizontal: options.fontSize,
+      paddingInline: options.fontSize,
     },
     blockQuoteColor: theme.colorTextSecondary,
     borderColor: theme.colorBorder,

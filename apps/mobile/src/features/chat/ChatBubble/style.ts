@@ -55,7 +55,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignItems: 'flex-start',
     flexDirection: 'row',
     gap: token.marginXS,
-    paddingVertical: token.paddingSM,
+    paddingBlock: token.paddingSM,
   },
 
   messageActions: {
