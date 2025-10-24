@@ -1,10 +1,7 @@
-import { useActionSheet } from '@expo/react-native-action-sheet';
-import { ChevronDown } from 'lucide-react-native';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
 
-import { useTheme } from '@/components/styles';
+import Select from '@/components/Select';
 
 import supportedLanguageIds, { getLanguageDisplayName } from '../../hooks/supportedLanguages';
 import { useStyles } from './style';
@@ -15,56 +12,38 @@ interface LanguageSelectProps {
 }
 
 export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) => {
-  const token = useTheme();
-  const { showActionSheetWithOptions } = useActionSheet();
   const { styles } = useStyles();
   const { t } = useTranslation('components');
 
   // 创建语言选项列表，只包含支持的语言
-  const languages = supportedLanguageIds.map((langId) => ({
-    label: getLanguageDisplayName(langId),
-    value: langId,
-  }));
-
-  // 显示显示的语言名称，确保即使很长的名称也能完整显示
-  const displayValue = getLanguageDisplayName(value);
-
-  const handleOpenLanguageSelect = () => {
-    const options = languages.map((item) => item.label);
-    options.push(t('Highlighter.cancel'));
-
-    const cancelButtonIndex = options.length - 1;
-    const destructiveButtonIndex = undefined;
-
-    // 找到当前选中语言的索引
-    // const currentLanguageIndex = languages.findIndex((item) => item.value === value);
-
-    showActionSheetWithOptions(
-      {
-        cancelButtonIndex,
-        containerStyle: styles.actionSheetContainer,
-        destructiveButtonIndex,
-        options,
-        textStyle: styles.actionSheetText,
-        title: t('Highlighter.selectLanguage'),
-        titleTextStyle: styles.actionSheetTitle,
-        useModal: true,
-      },
-      (selectedIndex: number | undefined) => {
-        if (selectedIndex !== undefined && selectedIndex !== cancelButtonIndex) {
-          onSelect(languages[selectedIndex].value);
-        }
-      },
-    );
-  };
+  const options = useMemo(
+    () =>
+      supportedLanguageIds.map((langId) => ({
+        title: getLanguageDisplayName(langId),
+        value: langId,
+      })),
+    [],
+  );
 
   return (
-    <View style={styles.container}>
-      <Pressable onPress={handleOpenLanguageSelect} style={styles.selectButton}>
-        <Text style={styles.selectText}>{displayValue}</Text>
-        <ChevronDown color={token.colorText} size={16} />
-      </Pressable>
-    </View>
+    <Select
+      onChange={(val) => onSelect(val as string)}
+      options={options}
+      size="small"
+      style={styles.select}
+      textProps={{
+        align: 'center',
+        code: true,
+        fontSize: 12,
+        style: {
+          width: '100%',
+        },
+        type: 'secondary',
+      }}
+      title={t('Highlighter.selectLanguage')}
+      value={value}
+      variant="borderless"
+    />
   );
 });
 
