@@ -212,27 +212,39 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
         log('chat called with model: %s, stream: %s', payload.model, payload.stream ?? true);
 
-        // 工厂级 Responses API 路由控制（支持实例覆盖）
-        const modelId = (payload as any).model as string | undefined;
-        const shouldUseResponses = (() => {
-          const instanceChat = ((this._options as any).chatCompletion || {}) as {
-            useResponse?: boolean;
-            useResponseModels?: Array<string | RegExp>;
-          };
-          const flagUseResponse =
-            instanceChat.useResponse ?? (chatCompletion ? chatCompletion.useResponse : undefined);
-          const flagUseResponseModels =
-            instanceChat.useResponseModels ?? chatCompletion?.useResponseModels;
-
-          if (!chatCompletion && !instanceChat) return false;
-          if (flagUseResponse) return true;
-          if (!modelId || !flagUseResponseModels?.length) return false;
-          return flagUseResponseModels.some((m: string | RegExp) =>
-            typeof m === 'string' ? modelId.includes(m) : (m as RegExp).test(modelId),
-          );
-        })();
-
         let processedPayload: any = payload;
+        const userApiMode = (payload as any).apiMode as string | undefined;
+        const modelId = (payload as any).model as string | undefined;
+
+        const instanceChat = ((this._options as any).chatCompletion || {}) as {
+          useResponse?: boolean;
+          useResponseModels?: Array<string | RegExp>;
+        };
+        const flagUseResponse =
+          instanceChat.useResponse ?? (chatCompletion ? chatCompletion.useResponse : undefined);
+        const flagUseResponseModels =
+          instanceChat.useResponseModels ?? chatCompletion?.useResponseModels;
+
+        // Determine if should use Responses API
+        let shouldUseResponses = false;
+
+        if (userApiMode === 'responses') {
+          // User explicitly set apiMode via switch (highest priority)
+          shouldUseResponses = true;
+        } else if (userApiMode !== undefined) {
+          // userApiMode is explicitly set to something else
+          shouldUseResponses = false;
+        } else {
+          // User hasn't set apiMode, check factory configuration
+          if (flagUseResponse) {
+            shouldUseResponses = true;
+          } else if (modelId && flagUseResponseModels?.length) {
+            shouldUseResponses = flagUseResponseModels.some((m: string | RegExp) =>
+              typeof m === 'string' ? modelId.includes(m) : (m as RegExp).test(modelId),
+            );
+          }
+        }
+
         if (shouldUseResponses) {
           log('using Responses API mode');
           processedPayload = { ...payload, apiMode: 'responses' } as any;

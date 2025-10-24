@@ -4,7 +4,6 @@ import urlJoin from 'url-join';
 import { responsesAPIModels } from '../../const/models';
 import { createRouterRuntime } from '../../core/RouterRuntime';
 import { CreateRouterRuntimeOptions } from '../../core/RouterRuntime/createRuntime';
-import { ChatStreamPayload } from '../../types/chat';
 import { detectModelProvider, processMultiProviderModelList } from '../../utils/modelParse';
 
 export interface NewAPIModelCard {
@@ -25,18 +24,6 @@ export interface NewAPIPricing {
   quota_type: number;
   supported_endpoint_types?: string[];
 }
-
-export const handlePayload = (payload: ChatStreamPayload) => {
-  // Handle OpenAI responses API mode
-  if (
-    responsesAPIModels.has(payload.model) ||
-    payload.model.includes('gpt-') ||
-    /^o\d/.test(payload.model)
-  ) {
-    return { ...payload, apiMode: 'responses' };
-  }
-  return payload;
-};
 
 export const params = {
   debug: {
@@ -178,7 +165,7 @@ export const params = {
           ...options,
           baseURL: urlJoin(userBaseURL, '/v1'),
           chatCompletion: {
-            handlePayload,
+            useResponseModels: [...Array.from(responsesAPIModels), /gpt-\d(?!\d)/, /^o\d/],
           },
         },
       },
