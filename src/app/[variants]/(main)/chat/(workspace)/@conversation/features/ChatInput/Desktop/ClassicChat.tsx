@@ -18,6 +18,7 @@ const leftActions: ActionKeys[] = [
   'model',
   'search',
   'typo',
+  'inputTranslate',
   'fileUpload',
   'knowledgeBase',
   'tools',
