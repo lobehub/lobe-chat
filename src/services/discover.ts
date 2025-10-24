@@ -32,7 +32,7 @@ class DiscoverService {
 
   // ============================== Assistant Market ==============================
   getAssistantCategories = async (
-    params: (CategoryListQuery & { source?: AssistantMarketSource }) = {},
+    params: CategoryListQuery & { source?: AssistantMarketSource } = {},
   ): Promise<CategoryItem[]> => {
     const locale = globalHelpers.getCurrentLanguage();
     const { source, ...rest } = params;
@@ -51,8 +51,10 @@ class DiscoverService {
   }): Promise<DiscoverAssistantDetail | undefined> => {
     const locale = globalHelpers.getCurrentLanguage();
     return lambdaClient.market.getAssistantDetail.query({
-      ...params,
+      identifier: params.identifier,
       locale,
+      source: params.source,
+      version: params.version,
     });
   };
 
