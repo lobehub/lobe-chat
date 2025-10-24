@@ -96,7 +96,7 @@ const PageContainer = memo<PageContainerProps>(
         {left !== undefined ? (
           left
         ) : showBack ? (
-          <ActionIcon clickable={false} icon={ChevronLeft} onPress={onBackPress} />
+          <ActionIcon icon={ChevronLeft} onPress={onBackPress} pressEffect={false} />
         ) : null}
       </Flexbox>
     );

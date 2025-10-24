@@ -27,7 +27,7 @@ const ActionIcon = memo<ActionIconProps>(
     focusable,
     shadow,
     disabled,
-    clickable = true,
+    pressEffect = true,
     spin: iconSpinning,
     danger,
     ...rest
@@ -39,40 +39,40 @@ const ActionIcon = memo<ActionIconProps>(
         cva(styles.root, {
           compoundVariants: [
             {
-              clickable: true,
               danger: true,
+              pressEffect: true,
               style: styles.dangerFilled,
               variant: 'filled',
             },
             {
-              clickable: true,
               danger: true,
+              pressEffect: true,
               style: styles.dangerBorderless,
               variant: 'borderless',
             },
             {
-              clickable: true,
               danger: true,
+              pressEffect: true,
               style: styles.dangerOutlined,
               variant: 'outlined',
             },
             {
-              clickable: true,
               danger: true,
+              pressEffect: true,
               pressed: true,
               style: styles.dangerFilledHover,
               variant: 'filled',
             },
             {
-              clickable: true,
               danger: true,
+              pressEffect: true,
               pressed: true,
               style: styles.dangerBorderlessHover,
               variant: 'borderless',
             },
             {
-              clickable: true,
               danger: true,
+              pressEffect: true,
               pressed: true,
               style: styles.dangerOutlinedHover,
               variant: 'outlined',
@@ -84,7 +84,7 @@ const ActionIcon = memo<ActionIconProps>(
           },
           /* eslint-disable sort-keys-fix/sort-keys-fix */
           variants: {
-            clickable: {
+            pressEffect: {
               false: null,
               true: null,
             },
@@ -113,7 +113,6 @@ const ActionIcon = memo<ActionIconProps>(
         active={active}
         align={'center'}
         borderRadius={borderRadius as number}
-        clickable={clickable}
         disabled={disabled || loading}
         flex={0}
         height={blockSize as number}
@@ -122,9 +121,10 @@ const ActionIcon = memo<ActionIconProps>(
           if (loading || disabled) return;
           onPress?.(event);
         }}
+        pressEffect={pressEffect}
         shadow={shadow}
         style={({ pressed, hovered }) => [
-          variants({ clickable, danger, pressed, variant }),
+          variants({ danger, pressEffect, pressed, variant }),
           typeof style === 'function' ? style({ hovered, pressed }) : style,
         ]}
         tabIndex={disabled ? -1 : 0}

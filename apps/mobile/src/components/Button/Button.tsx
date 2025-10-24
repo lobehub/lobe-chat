@@ -240,7 +240,6 @@ const Button = memo<ButtonProps>(
       <Block
         accessibilityRole="button"
         align={'center'}
-        clickable={!loading}
         disabled={disabled}
         gap={isCircle ? 0 : 6}
         horizontal
@@ -250,6 +249,7 @@ const Button = memo<ButtonProps>(
             onPress?.(e);
           }
         }}
+        pressEffect={!loading}
         style={({ pressed, hovered }) => [
           variants({
             block,

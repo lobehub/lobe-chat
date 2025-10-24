@@ -18,11 +18,11 @@ const ModelItemRender = memo<ModelItemRenderProps>(
     return (
       <Cell
         active={active}
-        clickable
         extra={showInfoTag && <ModelInfoTags {...model} {...model.abilities} />}
         icon={<ModelIcon model={model.id} size={24} />}
         iconSize={24}
         onPress={onPress}
+        pressEffect
         showArrow={false}
         title={model.displayName || model.id}
       />

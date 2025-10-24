@@ -16,10 +16,10 @@ const EmojiCell = memo<EmojiCellProps>(({ emoji, colSize, onPress, active }) => 
       <Block
         active={active}
         align={'center'}
-        clickable
         height={colSize - 2}
         justify={'center'}
         onPress={onPress}
+        pressEffect
         variant={active ? 'outlined' : 'borderless'}
         width={colSize - 2}
       >

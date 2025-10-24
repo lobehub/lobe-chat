@@ -17,11 +17,11 @@ export default function SessionFooter() {
       <Link asChild href="/setting">
         <Block
           align={'center'}
-          clickable
           glass
           horizontal
           justify={'space-between'}
           padding={4}
+          pressEffect
           style={{ borderRadius: 100 }}
           variant={'outlined'}
         >

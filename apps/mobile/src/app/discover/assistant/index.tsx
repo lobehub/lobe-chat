@@ -128,9 +128,9 @@ const AssistantList = () => {
     <PageContainer
       extra={
         <ActionIcon
-          clickable={false}
           icon={SearchIcon}
           onPress={() => router.push('/discover/assistant/search')}
+          pressEffect={false}
         />
       }
       extraProps={{

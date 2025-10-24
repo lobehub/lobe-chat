@@ -62,10 +62,10 @@ const Highlighter = memo<HighlighterProps>(
       <Block style={[styles.container, style]} testID="highlighter" variant={'outlined'}>
         {copyable && (
           <ActionIcon
-            clickable
             color={copied ? theme.colorSuccess : theme.colorTextDescription}
             icon={copied ? Check : Copy}
             onPress={handleCopy}
+            pressEffect
             size={14}
             style={styles.simpleCopyButton}
           />
