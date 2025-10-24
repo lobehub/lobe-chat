@@ -25,6 +25,8 @@ const Highlighter = memo<HighlighterProps>(
     allowChangeLanguage = false,
     style,
     onCopy,
+    variant = 'filled',
+    ...rest
   }) => {
     const { styles, theme } = useStyles();
     const [copied, setCopied] = useState(false);
@@ -54,12 +56,14 @@ const Highlighter = memo<HighlighterProps>(
           onCopy={onCopy}
           showLanguage={showLanguage}
           style={style}
+          variant={variant}
+          {...rest}
         />
       );
     }
 
     return (
-      <Block style={[styles.container, style]} testID="highlighter" variant={'outlined'}>
+      <Block style={[styles.container, style]} testID="highlighter" variant={variant} {...rest}>
         {copyable && (
           <ActionIcon
             color={copied ? theme.colorSuccess : theme.colorTextDescription}
