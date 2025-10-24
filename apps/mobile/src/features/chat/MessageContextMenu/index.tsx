@@ -23,7 +23,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
   const { activeId } = useSessionStore();
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const [open, setOpen] = useState(false);
 
   const isUser = message.role === 'user';
@@ -82,10 +82,6 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
   return (
     <>
       <Block
-        android_ripple={{
-          color: theme.colorFillQuaternary,
-          foreground: true,
-        }}
         longPressEffect
         onLongPress={() => {
           setOpen(true);
