@@ -1,10 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { INBOX_SESSION_ID, isDesktop } from '@lobechat/const';
+import { DEFAULT_AGENT_CHAT_CONFIG, INBOX_SESSION_ID, isDesktop } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
+  ChatImageItem,
   ChatMessage,
   ChatTopic,
+  ChatVideoItem,
   MessageSemanticSearchChunk,
   SendMessageParams,
   SendMessageServerResponse,
@@ -15,7 +17,6 @@ import { t } from 'i18next';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
-import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { aiChatService } from '@/services/aiChat';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
@@ -27,8 +28,6 @@ import type { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { ChatImageItem } from '@/types/message/image';
-import { ChatVideoItem } from '@/types/message/video';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';

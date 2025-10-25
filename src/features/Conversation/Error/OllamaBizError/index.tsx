@@ -1,8 +1,7 @@
+import { ChatMessage } from '@lobechat/types';
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
-
-import { ChatMessage } from '@/types/message';
 
 import ErrorJsonViewer from '../ErrorJsonViewer';
 

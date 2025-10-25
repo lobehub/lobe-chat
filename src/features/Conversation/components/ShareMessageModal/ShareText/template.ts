@@ -1,7 +1,7 @@
+import { ChatMessage } from '@lobechat/types';
 import { template } from 'lodash-es';
 
 import { LOADING_FLAT } from '@/const/message';
-import { ChatMessage } from '@/types/message';
 
 const markdownTemplate = template(
   `<% messages.forEach(function(chat) { %>

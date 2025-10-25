@@ -1,3 +1,4 @@
+import { BatchTaskResult, ChatMessage, UpdateMessageRAGParamsSchema } from '@lobechat/types';
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/models/message';
@@ -6,9 +7,6 @@ import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
-import { ChatMessage } from '@/types/message';
-import { UpdateMessageRAGParamsSchema } from '@/types/message/rag';
-import { BatchTaskResult } from '@/types/service';
 
 type ChatMessageList = ChatMessage[];
 

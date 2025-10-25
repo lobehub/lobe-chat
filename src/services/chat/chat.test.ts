@@ -1,4 +1,5 @@
 import { LobeTool } from '@lobechat/types';
+import { ChatImageItem, ChatMessage } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -15,7 +16,6 @@ import { modelProviderSelectors } from '@/store/user/selectors';
 import { DalleManifest } from '@/tools/dalle';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/index';
-import { ChatImageItem, ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 
 import { API_ENDPOINTS } from '../_url';

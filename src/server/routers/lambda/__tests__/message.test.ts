@@ -1,9 +1,8 @@
+import { ChatMessage, CreateMessageParams, UpdateMessageRAGParams } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MessageModel } from '@/database/models/message';
 import { FileService } from '@/server/services/file';
-import { ChatMessage, CreateMessageParams } from '@/types/message';
-import { UpdateMessageRAGParams } from '@/types/message/rag';
 
 vi.mock('@/database/models/message', () => ({
   MessageModel: vi.fn(),

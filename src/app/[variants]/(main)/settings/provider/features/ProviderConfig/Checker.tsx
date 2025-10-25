@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckCircleFilled } from '@ant-design/icons';
-import { TraceNameMap } from '@lobechat/types';
+import { TraceNameMap , ChatMessageError } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons';
 import { Alert, Button, Highlighter, Icon, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -13,7 +13,6 @@ import { Flexbox } from 'react-layout-kit';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { ChatMessageError } from '@/types/message';
 
 const Error = memo<{ error: ChatMessageError }>(({ error }) => {
   const { t } = useTranslation('error');

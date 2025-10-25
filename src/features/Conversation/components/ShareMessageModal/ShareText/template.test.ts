@@ -1,7 +1,7 @@
+import { ChatMessage } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
-import { ChatMessage } from '@/types/message';
 
 import { generateMarkdown } from './template';
 

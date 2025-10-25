@@ -1,8 +1,8 @@
+import { ChatMessage } from '@lobechat/types';
 import { type ChatItemProps } from '@lobehub/ui/chat';
 import { FC, ReactNode } from 'react';
 
 import { LLMRoleType } from '@/types/llm';
-import { ChatMessage } from '@/types/message';
 
 export type RenderRole = LLMRoleType | 'default' | 'history' | string;
 export type RenderMessage = FC<ChatMessage & { editableContent: ReactNode }>;

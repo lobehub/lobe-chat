@@ -1,3 +1,4 @@
+import { ChatMessage } from '@lobechat/types';
 import { act } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
@@ -9,7 +10,6 @@ import { initialState } from '@/store/chat/initialState';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { createServerConfigStore } from '@/store/serverConfig/store';
 import { LobeAgentConfig } from '@/types/agent';
-import { ChatMessage } from '@/types/message';
 import { merge } from '@/utils/merge';
 
 import { chatSelectors } from './selectors';

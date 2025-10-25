@@ -1,8 +1,8 @@
+import { ChatMessage } from '@lobechat/types';
 import { template } from 'lodash-es';
 
 import { LOADING_FLAT } from '@/const/message';
 import { FieldType } from '@/features/ShareModal/ShareText/type';
-import { ChatMessage } from '@/types/message';
 
 const markdownTemplate = template(
   `# {{title}}

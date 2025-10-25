@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { MessageSemanticSearchChunk } from '../rag';
+import { MessageSemanticSearchChunk } from '../../rag';
 
 export const SemanticSearchChunkSchema = z.object({
   id: z.string(),
