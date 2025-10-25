@@ -1,3 +1,4 @@
+import { ChatMessage } from '@lobechat/types';
 import { ModelTag } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
 import { ChatHeaderTitle } from '@lobehub/ui/chat';
@@ -12,7 +13,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/message';
 
 import pkg from '../../../../../../package.json';
 import { useContainerStyles } from '../style';

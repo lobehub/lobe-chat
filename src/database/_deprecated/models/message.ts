@@ -1,9 +1,9 @@
+import { ChatMessage } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
 
 import { BaseModel } from '@/database/_deprecated/core';
 import { DBModel } from '@/database/_deprecated/core/types/db';
 import { DB_Message, DB_MessageSchema } from '@/database/_deprecated/schemas/message';
-import { ChatMessage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
 
 /**

@@ -1,4 +1,5 @@
-import { ChatMessage } from '@/types/message';
+import { ChatMessage } from '@lobechat/types';
+
 import { OpenAIChatMessage } from '@/types/openai/chat';
 import { encodeAsync } from '@/utils/tokenizer';
 

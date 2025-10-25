@@ -1,8 +1,3 @@
-import dayjs from 'dayjs';
-
-import { FileModel } from '@/database/_deprecated/models/file';
-import { MessageModel } from '@/database/_deprecated/models/message';
-import { DB_Message } from '@/database/_deprecated/schemas/message';
 import {
   ChatFileItem,
   ChatMessage,
@@ -11,7 +6,12 @@ import {
   ChatTranslate,
   CreateMessageParams,
   ModelRankItem,
-} from '@/types/message';
+} from '@lobechat/types';
+import dayjs from 'dayjs';
+
+import { FileModel } from '@/database/_deprecated/models/file';
+import { MessageModel } from '@/database/_deprecated/models/message';
+import { DB_Message } from '@/database/_deprecated/schemas/message';
 
 import { IMessageService } from './type';
 

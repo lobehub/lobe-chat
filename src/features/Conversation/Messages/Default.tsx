@@ -1,10 +1,10 @@
+import { ChatMessage } from '@lobechat/types';
 import { ReactNode, memo } from 'react';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { ChatMessage } from '@/types/message';
 
 export const DefaultMessage = memo<
   ChatMessage & {

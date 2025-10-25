@@ -1,4 +1,5 @@
 import { ToolNameResolver } from '@lobechat/context-engine';
+import { ChatMessage, ChatToolPayload, MessageToolCall } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -11,7 +12,6 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useToolStore } from '@/store/tool';
-import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';
 
 const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
 

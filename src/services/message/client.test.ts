@@ -1,3 +1,11 @@
+import {
+  ChatMessage,
+  ChatMessageError,
+  ChatTTS,
+  ChatTranslate,
+  CreateMessageParams,
+  MessageItem,
+} from '@lobechat/types';
 import { and, eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -12,14 +20,6 @@ import {
   topics,
   users,
 } from '@/database/schemas';
-import {
-  ChatMessage,
-  ChatMessageError,
-  ChatTTS,
-  ChatTranslate,
-  CreateMessageParams,
-  MessageItem,
-} from '@/types/message';
 
 import { ClientService } from './client';
 

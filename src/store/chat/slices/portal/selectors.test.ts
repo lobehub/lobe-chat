@@ -1,7 +1,7 @@
+import { ChatMessage } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import type { ChatStoreState } from '@/store/chat';
-import { ChatMessage } from '@/types/message';
 
 import { chatPortalSelectors } from './selectors';
 

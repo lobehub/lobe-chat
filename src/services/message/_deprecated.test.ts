@@ -1,14 +1,14 @@
-import dayjs from 'dayjs';
-import { Mock, describe, expect, it, vi } from 'vitest';
-
-import { CreateMessageParams, MessageModel } from '@/database/_deprecated/models/message';
 import {
   ChatMessage,
   ChatMessageError,
   ChatPluginPayload,
   ChatTTS,
   ChatTranslate,
-} from '@/types/message';
+} from '@lobechat/types';
+import dayjs from 'dayjs';
+import { Mock, describe, expect, it, vi } from 'vitest';
+
+import { CreateMessageParams, MessageModel } from '@/database/_deprecated/models/message';
 
 import { ClientService } from './_deprecated';
 

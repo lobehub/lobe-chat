@@ -1,5 +1,6 @@
+import { ChatMessage } from '@lobechat/types';
+
 import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { ChatMessage } from '@/types/message';
 
 // Test Constants
 export const TEST_IDS = {
