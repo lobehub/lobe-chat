@@ -55,7 +55,7 @@ const Item = memo<ChatListItemProps>(
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
+    const item = useChatStore(chatSelectors.getDisplayMessageById(id), isEqual);
 
     const [isMessageLoading] = useChatStore((s) => [chatSelectors.isMessageLoading(id)(s)]);
 

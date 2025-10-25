@@ -1,5 +1,6 @@
 'use client';
 
+import { LOADING_FLAT } from '@lobechat/const';
 import { ChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
@@ -8,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import { LOADING_FLAT } from '@/const/message';
 import Avatar from '@/features/ChatItem/components/Avatar';
 import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import ErrorContent from '@/features/ChatItem/components/ErrorContent';
@@ -17,7 +17,7 @@ import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
@@ -31,6 +31,14 @@ import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { normalizeThinkTags, processWithArtifact } from '../../utils';
+import { AssistantActionsBar } from './Actions';
+import { AssistantMessageExtra } from './Extra';
+import { AssistantMessageContent } from './MessageContent';
+
+import ErrorMessageExtra, { useErrorContent } from '../../Error';
+import { markdownElements } from '../../MarkdownElements';
+import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
+import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
 import { AssistantMessageContent } from './MessageContent';
@@ -198,11 +206,17 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
 
   const renderMessage = useCallback(
     (editableContent: ReactNode) => (
-      <AssistantMessageContent {...props} editableContent={editableContent} />
+      <AssistantMessageContent
+        {...props}
+        editableContent={editableContent}
+        markdownProps={markdownProps}
+      />
     ),
-    [props],
+    [markdownProps, props],
   );
+
   const errorMessage = <ErrorMessageExtra data={props} />;
+
   return (
     <Flexbox
       className={styles.container}
@@ -232,6 +246,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
           data-layout={'vertical'} // 添加数据属性以方便样式选择
           direction={'vertical'}
           gap={8}
+          width={'100%'}
         >
           <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
             {error && (message === LOADING_FLAT || !message) ? (

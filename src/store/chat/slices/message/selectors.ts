@@ -82,10 +82,86 @@ const getChatsWithThread = (s: ChatStoreState, messages: ChatMessage[]) => {
 
 // ============= Main Display Chats ========== //
 // =========================================== //
-const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
-  const displayChats = activeBaseChatsWithoutTool(s);
 
-  return getChatsWithThread(s, displayChats);
+/**
+ * Group consecutive assistant messages between user messages
+ * - Messages between two user messages are grouped together
+ * - Multiple consecutive assistant messages become children blocks
+ * - The parent message takes properties from the first assistant
+ */
+const groupMessagesBetweenUsers = (messages: ChatMessage[]): ChatMessage[] => {
+  const result: ChatMessage[] = [];
+  let currentGroup: ChatMessage[] = [];
+
+  const flushGroup = () => {
+    if (currentGroup.length === 0) return;
+
+    if (currentGroup.length === 1) {
+      // Single assistant message - create children with itself
+      const msg = currentGroup[0];
+      result.push({
+        ...msg,
+        children: [
+          {
+            content: msg.content,
+            fileList: msg.fileList,
+            id: msg.id,
+            imageList: msg.imageList,
+            tools: msg.tools,
+          },
+        ],
+      });
+    } else {
+      // Multiple assistant messages - group them
+      const firstMsg = currentGroup[0];
+      const children: ChatMessage['children'] = currentGroup.map((msg) => ({
+        content: msg.content,
+        fileList: msg.fileList,
+        id: msg.id,
+        imageList: msg.imageList,
+        tools: msg.tools,
+      }));
+
+      result.push({
+        ...firstMsg,
+        children,
+      });
+    }
+
+    currentGroup = [];
+  };
+
+  for (const msg of messages) {
+    if (msg.role === 'user') {
+      // Flush any pending assistant group
+      flushGroup();
+      // Add user message
+      result.push(msg);
+    } else if (msg.role === 'assistant') {
+      // Add to current group
+      currentGroup.push(msg);
+    } else {
+      // Other roles (system, etc.)
+      flushGroup();
+      result.push(msg);
+    }
+  }
+
+  // Flush any remaining group
+  flushGroup();
+
+  return result;
+};
+
+const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
+  // Get messages without tool messages
+  const displayChats = activeBaseChatsWithoutTool(s);
+  const withThread = getChatsWithThread(s, displayChats);
+
+  // Group consecutive assistant messages
+  const result = groupMessagesBetweenUsers(withThread);
+  // console.log(result);
+  return result;
 };
 
 const mainDisplayChatIDs = (s: ChatStoreState) => mainDisplayChats(s).map((s) => s.id);
@@ -146,6 +222,9 @@ const showInboxWelcome = (s: ChatStoreState): boolean => {
 
 const getMessageById = (id: string) => (s: ChatStoreState) =>
   chatHelpers.getMessageById(activeBaseChats(s), id);
+
+const getDisplayMessageById = (id: string) => (s: ChatStoreState) =>
+  chatHelpers.getMessageById(mainDisplayChats(s), id);
 
 const countMessagesByThreadId = (id: string) => (s: ChatStoreState) => {
   const messages = activeBaseChats(s).filter((m) => m.threadId === id);
@@ -288,6 +367,7 @@ export const chatSelectors = {
   currentToolMessages,
   currentUserFiles,
   getBaseChatsByKey,
+  getDisplayMessageById,
   getMessageById,
   getMessageByToolCallId,
   getSupervisorTodos,

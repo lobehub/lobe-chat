@@ -266,6 +266,263 @@ describe('chatSelectors', () => {
       const chats = chatSelectors.mainDisplayChats(state);
       expect(chats).toEqual(mockedChats.slice(0, 2));
     });
+
+    it('should create children blocks for assistant messages', () => {
+      const messagesWithTools = [
+        {
+          id: 'user1',
+          content: 'Open a website',
+          role: 'user',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+        {
+          id: 'assistant1',
+          content: 'I will navigate to the website',
+          role: 'assistant',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          tools: [
+            {
+              id: 'call_123',
+              apiName: 'browser_navigate',
+              arguments: '{"url":"https://example.com"}',
+              identifier: 'playwright-mcp',
+              type: 'mcp',
+            },
+          ],
+        },
+        {
+          id: 'tool1',
+          content: 'Navigation successful',
+          role: 'tool',
+          tool_call_id: 'call_123',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+        {
+          id: 'assistant2',
+          content: 'Done',
+          role: 'assistant',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      ] as ChatMessage[];
+
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: messagesWithTools,
+        },
+        activeId: 'someActiveId',
+      });
+
+      const chats = chatSelectors.mainDisplayChats(state);
+
+      // Should have 2 messages: user, assistant (with 2 children - both assistants grouped)
+      expect(chats).toHaveLength(2);
+
+      // First message should be user
+      expect(chats[0].role).toBe('user');
+      expect(chats[0].id).toBe('user1');
+
+      // Second message should be grouped assistant with 2 children blocks
+      expect(chats[1].role).toBe('assistant');
+      expect(chats[1].id).toBe('assistant1');
+      expect(chats[1].children).toBeDefined();
+      expect(chats[1].children).toHaveLength(2);
+
+      // First child is assistant1
+      expect(chats[1].children![0].id).toBe('assistant1');
+      expect(chats[1].children![0].content).toBe('I will navigate to the website');
+      expect(chats[1].children![0].tools).toHaveLength(1);
+
+      // Second child is assistant2
+      expect(chats[1].children![1].id).toBe('assistant2');
+      expect(chats[1].children![1].content).toBe('Done');
+    });
+
+    it('should handle assistant with multiple tool calls', () => {
+      const messagesWithMultipleTools = [
+        {
+          id: 'user1',
+          content: 'Do multiple tasks',
+          role: 'user',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+        {
+          id: 'assistant1',
+          content: 'Executing tasks',
+          role: 'assistant',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          tools: [
+            {
+              id: 'call_1',
+              apiName: 'task1',
+              arguments: '{}',
+              identifier: 'mcp',
+              type: 'mcp',
+            },
+            {
+              id: 'call_2',
+              apiName: 'task2',
+              arguments: '{}',
+              identifier: 'mcp',
+              type: 'mcp',
+            },
+          ],
+        },
+        {
+          id: 'tool1',
+          content: 'Task 1 result',
+          role: 'tool',
+          tool_call_id: 'call_1',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+        {
+          id: 'tool2',
+          content: 'Task 2 result',
+          role: 'tool',
+          tool_call_id: 'call_2',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      ] as ChatMessage[];
+
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: messagesWithMultipleTools,
+        },
+        activeId: 'someActiveId',
+      });
+
+      const chats = chatSelectors.mainDisplayChats(state);
+
+      // Tool messages should be filtered out
+      expect(chats).toHaveLength(2);
+      expect(chats[1].children).toHaveLength(1);
+      expect(chats[1].children![0].id).toBe('assistant1');
+      expect(chats[1].children![0].content).toBe('Executing tasks');
+      expect(chats[1].children![0].tools).toHaveLength(2);
+    });
+
+    it('should handle assistant without tools', () => {
+      const messagesWithoutTools = [
+        {
+          id: 'user1',
+          content: 'Hello',
+          role: 'user',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+        {
+          id: 'assistant1',
+          content: 'Hi there',
+          role: 'assistant',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      ] as ChatMessage[];
+
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: messagesWithoutTools,
+        },
+        activeId: 'someActiveId',
+      });
+
+      const chats = chatSelectors.mainDisplayChats(state);
+
+      expect(chats).toHaveLength(2);
+      expect(chats[1].children).toBeDefined();
+      expect(chats[1].children).toHaveLength(1);
+      expect(chats[1].children![0].content).toBe('Hi there');
+    });
+
+    it('should handle complex conversation flow like playwright data', () => {
+      const playwrightLikeMessages = [
+        {
+          id: 'msg1',
+          content: 'Open lucide.dev and download 10 icons',
+          role: 'user',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+        {
+          id: 'msg2',
+          content: 'Navigating to website',
+          role: 'assistant',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          tools: [
+            {
+              id: 'call_nav',
+              apiName: 'browser_navigate',
+              arguments: '{"url":"https://lucide.dev"}',
+              identifier: 'playwright-mcp',
+              type: 'mcp',
+            },
+          ],
+        },
+        {
+          id: 'msg3',
+          content: 'Page loaded successfully',
+          role: 'tool',
+          tool_call_id: 'call_nav',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+        {
+          id: 'msg4',
+          content: 'Clicking on Icons',
+          role: 'assistant',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          tools: [
+            {
+              id: 'call_click',
+              apiName: 'browser_click',
+              arguments: '{"element":"link Icons"}',
+              identifier: 'playwright-mcp',
+              type: 'mcp',
+            },
+          ],
+        },
+        {
+          id: 'msg5',
+          content: 'Clicked on Icons link',
+          role: 'tool',
+          tool_call_id: 'call_click',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      ] as ChatMessage[];
+
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: playwrightLikeMessages,
+        },
+        activeId: 'someActiveId',
+      });
+
+      const chats = chatSelectors.mainDisplayChats(state);
+
+      // Should have 2 messages: user, assistant (with 2 children blocks)
+      expect(chats).toHaveLength(2);
+
+      // First is user
+      expect(chats[0].role).toBe('user');
+
+      // Second is grouped assistant with 2 children blocks
+      expect(chats[1].role).toBe('assistant');
+      expect(chats[1].children).toHaveLength(2);
+      expect(chats[1].children![0].id).toBe('msg2');
+      expect(chats[1].children![0].content).toBe('Navigating to website');
+      expect(chats[1].children![1].id).toBe('msg4');
+      expect(chats[1].children![1].content).toBe('Clicking on Icons');
+    });
   });
 
   describe('chatsMessageString', () => {
