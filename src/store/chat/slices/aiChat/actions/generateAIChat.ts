@@ -1,13 +1,20 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop, isServerMode } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
-import { TraceEventType, TraceNameMap } from '@lobechat/types';
+import {
+  ChatImageItem,
+  ChatMessage,
+  CreateMessageParams,
+  MessageSemanticSearchChunk,
+  SendMessageParams,
+  TraceEventType,
+  TraceNameMap,
+} from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { isDesktop, isServerMode } from '@/const/version';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
@@ -20,9 +27,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getFileStoreState } from '@/store/file/store';
 import { useSessionStore } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
-import { ChatImageItem } from '@/types/message/image';
-import { MessageSemanticSearchChunk } from '@/types/rag';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
@@ -394,7 +398,8 @@ export const generateAIChat: StateCreator<
     )(aiInfraStoreState);
     const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(agentStoreState);
     const useModelSearch =
-      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) || isModelBuiltinSearchInternal;
+      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) ||
+      isModelBuiltinSearchInternal;
     const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
 
     if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {

@@ -1,11 +1,16 @@
-import { UploadFileItem } from '../files';
-import { MetaData } from '../meta';
-import { MessageSemanticSearchChunk } from '../rag';
-import { GroundingSearch } from '../search';
-import type { ChatMessageError, MessageMetadata, MessageRoleType, ModelReasoning } from './base';
-import { ChatImageItem } from './image';
-import { ChatPluginPayload, ChatToolPayload } from './tools';
-import { Translate } from './translate';
+import { UploadFileItem } from '../../files';
+import { MetaData } from '../../meta';
+import { MessageSemanticSearchChunk } from '../../rag';
+import { GroundingSearch } from '../../search';
+import type {
+  ChatMessageError,
+  MessageMetadata,
+  MessageRoleType,
+  ModelReasoning,
+} from '../common/base';
+import { ChatImageItem } from '../common/image';
+import { Translate } from '../common/translate';
+import { ChatPluginPayload, ChatToolPayload } from '../tools';
 import { ChatVideoItem } from './video';
 
 export interface ChatTranslate extends Translate {

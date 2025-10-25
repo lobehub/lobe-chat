@@ -20,6 +20,7 @@ export * from './plugins';
 export * from './rag';
 export * from './search';
 export * from './serverConfig';
+export * from './service';
 export * from './session';
 export * from './tool';
 export * from './topic';
