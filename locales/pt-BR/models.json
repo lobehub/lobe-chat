@@ -290,11 +290,11 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 é um modelo de linguagem com 671 bilhões de parâmetros, utilizando uma arquitetura de especialistas mistos (MoE) com atenção potencial de múltiplas cabeças (MLA) e uma estratégia de balanceamento de carga sem perda auxiliar, otimizando a eficiência de inferência e treinamento. Pré-treinado em 14,8 trilhões de tokens de alta qualidade, e ajustado por supervisão e aprendizado por reforço, o DeepSeek-V3 supera outros modelos de código aberto, aproximando-se de modelos fechados líderes."
   },
-  "Pro/deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 é um modelo de linguagem grande em modo híbrido lançado pela DeepSeek AI, que traz várias melhorias importantes em relação à geração anterior. Uma inovação chave do modelo é a integração dos modos “Pensamento” (Thinking Mode) e “Não Pensamento” (Non-thinking Mode), permitindo que o usuário alterne flexivelmente entre eles ajustando o template de conversa para atender diferentes demandas. Com otimizações pós-treinamento específicas, o V3.1 apresenta desempenho significativamente melhorado em chamadas de ferramentas e tarefas Agent, suportando melhor ferramentas de busca externas e execução de tarefas complexas em múltiplas etapas. Baseado no DeepSeek-V3.1-Base, o modelo foi treinado adicionalmente com um método de expansão de texto longo em duas fases, aumentando substancialmente o volume de dados de treinamento, o que melhora seu desempenho no processamento de documentos longos e códigos extensos. Como modelo open source, o DeepSeek-V3.1 demonstra capacidades comparáveis a modelos fechados de ponta em benchmarks de codificação, matemática e raciocínio, e graças à sua arquitetura de especialistas mistos (MoE), mantém uma enorme capacidade de modelo enquanto reduz efetivamente os custos de inferência."
-  },
   "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus é uma versão atualizada do modelo V3.1 lançado pela DeepSeek, posicionada como um modelo de linguagem grande com agentes híbridos. Esta atualização mantém as capacidades originais do modelo, focando na correção de problemas reportados pelos usuários e na melhoria da estabilidade. Houve uma melhoria significativa na consistência linguística, reduzindo o uso misto de chinês e inglês e a ocorrência de caracteres anômalos. O modelo integra o “Modo de Pensamento” e o “Modo Não-Pensamento”, permitindo que os usuários alternem flexivelmente entre eles via templates de chat para diferentes tarefas. Como uma otimização importante, o V3.1-Terminus aprimora o desempenho dos agentes de código e de busca, tornando-os mais confiáveis na chamada de ferramentas e na execução de tarefas complexas em múltiplas etapas."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek-V3.2-Exp é a versão experimental V3.2 lançada pela DeepSeek, representando uma etapa intermediária rumo à próxima geração de arquitetura. Baseando-se no V3.1-Terminus, ela introduz o mecanismo de Atenção Esparsa DeepSeek (DeepSeek Sparse Attention, DSA) para melhorar a eficiência de treinamento e inferência em contextos longos. Foi especialmente otimizada para chamadas de ferramentas, compreensão de documentos extensos e raciocínio em múltiplas etapas. A V3.2-Exp serve como uma ponte entre pesquisa e aplicação comercial, ideal para usuários que buscam maior eficiência de raciocínio em cenários com orçamentos de contexto elevados."
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 é a versão mais recente e poderosa do Kimi K2. Trata-se de um modelo de linguagem de especialistas mistos (MoE) de ponta, com um total de 1 trilhão de parâmetros e 32 bilhões de parâmetros ativados. As principais características deste modelo incluem: inteligência aprimorada para codificação de agentes, demonstrando melhorias significativas em testes de referência públicos e em tarefas reais de codificação de agentes; experiência de codificação front-end melhorada, com avanços tanto na estética quanto na funcionalidade da programação front-end."
@@ -397,6 +397,18 @@
   },
   "Qwen/Qwen3-Next-80B-A3B-Thinking": {
     "description": "Qwen3-Next-80B-A3B-Thinking é o modelo base de próxima geração lançado pela equipe Tongyi Qianwen da Alibaba, projetado para tarefas complexas de raciocínio. Baseado na inovadora arquitetura Qwen3-Next, que integra mecanismos híbridos de atenção (Gated DeltaNet e Gated Attention) e uma estrutura de especialistas mistos altamente esparsos (MoE), busca máxima eficiência em treinamento e inferência. Como um modelo esparso com 80 bilhões de parâmetros totais, ativa apenas cerca de 3 bilhões durante a inferência, reduzindo significativamente o custo computacional. Em tarefas de contexto longo com mais de 32 mil tokens, sua taxa de inferência é mais de 10 vezes superior ao modelo Qwen3-32B. Esta versão “Thinking” é otimizada para executar tarefas complexas de múltiplas etapas, como provas matemáticas, síntese de código, análise lógica e planejamento, e por padrão produz o processo de raciocínio em forma estruturada de “cadeia de pensamento”. Em desempenho, supera modelos mais custosos como o Qwen3-32B-Thinking e também apresenta melhor desempenho que o Gemini-2.5-Flash-Thinking em vários benchmarks."
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Instruct": {
+    "description": "Qwen3-VL-235B-A22B-Instruct é um modelo de ajuste fino baseado em instruções da série Qwen3-VL, com arquitetura de especialistas mistos (MoE), oferecendo capacidades excepcionais de compreensão e geração multimodal. Suporta nativamente contexto de até 256K tokens, sendo adequado para serviços multimodais de produção com alta concorrência."
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Thinking": {
+    "description": "Qwen3-VL-235B-A22B-Thinking é a versão principal da série Qwen3-VL voltada para raciocínio, com otimizações específicas para inferência multimodal complexa, raciocínio com contexto longo e interações com agentes inteligentes. É ideal para cenários corporativos que exigem raciocínio profundo e interpretação visual avançada."
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Instruct": {
+    "description": "Qwen3-VL-30B-A3B-Instruct é a versão ajustada por instruções da série Qwen3-VL, com fortes capacidades de compreensão e geração visuo-linguística. Suporta nativamente contexto de até 256K tokens, sendo ideal para diálogos multimodais e tarefas de geração condicionada por imagem."
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Thinking": {
+    "description": "Qwen3-VL-30B-A3B-Thinking é a versão aprimorada para raciocínio da série Qwen3-VL, otimizada para tarefas de inferência multimodal, conversão de imagem para código e compreensão visual complexa. Suporta contexto de até 256K tokens e possui capacidades avançadas de raciocínio encadeado."
   },
   "Qwen/Qwen3-VL-8B-Instruct": {
     "description": "Qwen3-VL-8B-Instruct é um modelo de linguagem visual da série Qwen3, desenvolvido com base no Qwen3-8B-Instruct e treinado com grandes volumes de dados multimodais. Ele é especializado em compreensão visual geral, diálogos centrados em imagens e reconhecimento multilíngue de texto em imagens. É ideal para tarefas como perguntas e respostas visuais, descrição de imagens, seguimento de instruções multimodais e chamadas de ferramentas."
@@ -978,13 +990,13 @@
     "description": "DeepSeek-V3 é um modelo de linguagem de especialistas mistos (MoE) com 671 bilhões de parâmetros, utilizando atenção latente de múltiplas cabeças (MLA) e a arquitetura DeepSeekMoE, combinando uma estratégia de balanceamento de carga sem perda auxiliar para otimizar a eficiência de inferência e treinamento. Após ser pré-treinado em 14,8 trilhões de tokens de alta qualidade e passar por ajuste fino supervisionado e aprendizado por reforço, o DeepSeek-V3 supera outros modelos de código aberto em desempenho, aproximando-se de modelos fechados líderes."
   },
   "deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 é um modelo de linguagem grande em modo híbrido lançado pela DeepSeek AI, que traz várias melhorias importantes em relação à geração anterior. Uma inovação chave do modelo é a integração dos modos “Pensamento” (Thinking Mode) e “Não Pensamento” (Non-thinking Mode), permitindo que o usuário alterne flexivelmente entre eles ajustando o template de conversa para atender diferentes demandas. Com otimizações pós-treinamento específicas, o V3.1 apresenta desempenho significativamente melhorado em chamadas de ferramentas e tarefas Agent, suportando melhor ferramentas de busca externas e execução de tarefas complexas em múltiplas etapas. Baseado no DeepSeek-V3.1-Base, o modelo foi treinado adicionalmente com um método de expansão de texto longo em duas fases, aumentando substancialmente o volume de dados de treinamento, o que melhora seu desempenho no processamento de documentos longos e códigos extensos. Como modelo open source, o DeepSeek-V3.1 demonstra capacidades comparáveis a modelos fechados de ponta em benchmarks de codificação, matemática e raciocínio, e graças à sua arquitetura de especialistas mistos (MoE), mantém uma enorme capacidade de modelo enquanto reduz efetivamente os custos de inferência."
+    "description": "O modelo DeepSeek V3.1 adota uma arquitetura de inferência híbrida, suportando tanto o modo de raciocínio quanto o modo não-racional."
   },
   "deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus é uma versão atualizada do modelo V3.1 lançado pela DeepSeek, posicionada como um modelo de linguagem grande com agentes híbridos. Esta atualização mantém as capacidades originais do modelo, focando na correção de problemas reportados pelos usuários e na melhoria da estabilidade. Houve uma melhoria significativa na consistência linguística, reduzindo o uso misto de chinês e inglês e a ocorrência de caracteres anômalos. O modelo integra o “Modo de Pensamento” e o “Modo Não-Pensamento”, permitindo que os usuários alternem flexivelmente entre eles via templates de chat para diferentes tarefas. Como uma otimização importante, o V3.1-Terminus aprimora o desempenho dos agentes de código e de busca, tornando-os mais confiáveis na chamada de ferramentas e na execução de tarefas complexas em múltiplas etapas."
   },
   "deepseek-ai/DeepSeek-V3.2-Exp": {
-    "description": "O modelo DeepSeek V3.2 Exp adota uma arquitetura híbrida de raciocínio, suportando modos com e sem raciocínio."
+    "description": "DeepSeek-V3.2-Exp é a versão experimental V3.2 lançada pela DeepSeek, representando uma etapa intermediária rumo à próxima geração de arquitetura. Baseando-se no V3.1-Terminus, ela introduz o mecanismo de Atenção Esparsa DeepSeek (DeepSeek Sparse Attention, DSA) para melhorar a eficiência de treinamento e inferência em contextos longos. Foi especialmente otimizada para chamadas de ferramentas, compreensão de documentos extensos e raciocínio em múltiplas etapas. A V3.2-Exp serve como uma ponte entre pesquisa e aplicação comercial, ideal para usuários que buscam maior eficiência de raciocínio em cenários com orçamentos de contexto elevados."
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B é um modelo avançado treinado para diálogos de alta complexidade."
@@ -2473,9 +2485,6 @@
   },
   "mistralai/Mixtral-8x7B-v0.1": {
     "description": "Mixtral 8x7B é um modelo de especialistas esparsos, que utiliza múltiplos parâmetros para aumentar a velocidade de raciocínio, ideal para tarefas de geração de código e multilíngues."
-  },
-  "mistralai/mistral-7b-instruct": {
-    "description": "Mistral 7B Instruct é um modelo de padrão industrial de alto desempenho, com otimização de velocidade e suporte a longos contextos."
   },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo é um modelo de 7.3B parâmetros com suporte multilíngue e programação de alto desempenho."

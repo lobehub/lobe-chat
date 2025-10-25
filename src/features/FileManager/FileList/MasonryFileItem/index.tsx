@@ -111,8 +111,6 @@ const useStyles = createStyles(({ css, token }) => ({
     inset-block-end: 8px;
     inset-inline-end: 8px;
 
-    padding-block: 4px;
-    padding-inline: 8px;
     border-radius: ${token.borderRadius}px;
 
     opacity: 0;
@@ -320,8 +318,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           });
         },
         {
-          rootMargin: '50px', // Start loading slightly before entering viewport
-          threshold: 0.1,
+          rootMargin: '200px', // Increased margin to load content earlier
+          threshold: 0.01, // Lower threshold for earlier triggering
         },
       );
 
