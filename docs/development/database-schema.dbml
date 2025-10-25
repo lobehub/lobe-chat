@@ -340,6 +340,7 @@ table message_plugins {
   id text [pk, not null]
   tool_call_id text
   type text [default: 'default']
+  intervention jsonb [default: `{}`]
   api_name text
   arguments text
   identifier text
