@@ -1,6 +1,5 @@
 import { Icon } from '@lobehub/ui';
 import { ChartColumnBigIcon, KeyIcon, ShieldCheck, UserCircle } from 'lucide-react';
-import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
@@ -20,39 +19,23 @@ export const useCategory = () => {
     {
       icon: <Icon icon={UserCircle} />,
       key: ProfileTabs.Profile,
-      label: (
-        <Link href={'/profile'} onClick={(e) => e.preventDefault()}>
-          {t('tab.profile')}
-        </Link>
-      ),
+      label: t('tab.profile'),
     },
     enableAuth &&
       isLoginWithClerk && {
         icon: <Icon icon={ShieldCheck} />,
         key: ProfileTabs.Security,
-        label: (
-          <Link href={'/profile/security'} onClick={(e) => e.preventDefault()}>
-            {t('tab.security')}
-          </Link>
-        ),
+        label: t('tab.security'),
       },
     !isDeprecatedEdition && {
       icon: <Icon icon={ChartColumnBigIcon} />,
       key: ProfileTabs.Stats,
-      label: (
-        <Link href={'/profile/stats'} onClick={(e) => e.preventDefault()}>
-          {t('tab.stats')}
-        </Link>
-      ),
-    },
+      label: t('tab.stats'),
+      },
     !!showApiKeyManage && {
       icon: <Icon icon={KeyIcon} />,
       key: ProfileTabs.APIKey,
-      label: (
-        <Link href={'/profile/apikey'} onClick={(e) => e.preventDefault()}>
-          {t('tab.apikey')}
-        </Link>
-      ),
+      label: t('tab.apikey'),
     },
   ].filter(Boolean) as MenuProps['items'];
 
