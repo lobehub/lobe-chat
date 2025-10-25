@@ -1,9 +1,9 @@
 import {
-  ChatMessage,
   ChatMessageExtra,
   ChatPluginPayload,
   ChatToolPayload,
   CreateMessageParams,
+  UIChatMessage,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
@@ -12,13 +12,13 @@ import { merge } from '@/utils/merge';
 
 interface UpdateMessages {
   type: 'updateMessages';
-  value: ChatMessage[];
+  value: UIChatMessage[];
 }
 
 interface UpdateMessage {
   id: string;
   type: 'updateMessage';
-  value: Partial<ChatMessage>;
+  value: Partial<UIChatMessage>;
 }
 
 interface CreateMessage {
@@ -88,7 +88,10 @@ export type MessageDispatch =
   | DeleteMessageTool
   | DeleteMessages;
 
-export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
+export const messagesReducer = (
+  state: UIChatMessage[],
+  payload: MessageDispatch,
+): UIChatMessage[] => {
   switch (payload.type) {
     case 'updateMessage': {
       return produce(state, (draftState) => {

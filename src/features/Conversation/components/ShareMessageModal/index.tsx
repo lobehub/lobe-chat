@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Modal, Segmented, Tabs } from '@lobehub/ui';
 import { memo, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,7 @@ enum Tab {
 }
 
 interface ShareModalProps {
-  message: ChatMessage;
+  message: UIChatMessage;
   onCancel: () => void;
   open: boolean;
 }

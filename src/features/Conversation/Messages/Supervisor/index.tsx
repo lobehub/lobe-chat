@@ -1,6 +1,6 @@
 'use client';
 
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons';
 import { Button, Text } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
@@ -54,7 +54,7 @@ const parseMarkdownTodos = (content: string): TodoData => {
   };
 };
 
-interface SupervisorMessageProps extends ChatMessage {
+interface SupervisorMessageProps extends UIChatMessage {
   disableEditing?: boolean;
   index: number;
 }

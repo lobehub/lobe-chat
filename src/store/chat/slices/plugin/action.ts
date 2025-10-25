@@ -1,19 +1,20 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { LOADING_FLAT } from '@lobechat/const';
 import { ToolNameResolver } from '@lobechat/context-engine';
-import { ChatErrorType ,
-  ChatMessage,
+import {
+  ChatErrorType,
   ChatMessageError,
   ChatToolPayload,
   CreateMessageParams,
   MessageToolCall,
   ToolsCallingContext,
+  UIChatMessage,
 } from '@lobechat/types';
 import { LobeChatPluginManifest, PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
 import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
@@ -244,7 +245,7 @@ export const chatPlugin: StateCreator<
           name: undefined,
           tool_call_id: undefined,
         },
-      ] as ChatMessage[],
+      ] as UIChatMessage[],
       message.id,
     );
   },

@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Button, copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -17,7 +17,7 @@ import Preview from './Preview';
 import { generateMarkdown } from './template';
 
 interface ShareTextProps {
-  item: ChatMessage;
+  item: UIChatMessage;
 }
 
 const ShareText = memo<ShareTextProps>(({ item }) => {

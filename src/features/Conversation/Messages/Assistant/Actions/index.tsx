@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { ActionIconGroup, type ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
 import { App } from 'antd';
 import { useSearchParams } from 'next/navigation';
@@ -17,7 +17,7 @@ import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 import { ErrorActionsBar } from './Error';
 
 interface AssistantActionsProps {
-  data: ChatMessage;
+  data: UIChatMessage;
   id: string;
   index: number;
 }

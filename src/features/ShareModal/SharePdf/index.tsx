@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Button, Form, type FormItemProps } from '@lobehub/ui';
 import { App, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -27,7 +27,7 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withSystemRole: false,
 };
 
-const SharePdf = memo((props: { message?: ChatMessage }) => {
+const SharePdf = memo((props: { message?: UIChatMessage }) => {
   const [fieldValue, setFieldValue] = useState(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
   const { styles } = useStyles();

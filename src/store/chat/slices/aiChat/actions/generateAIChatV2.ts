@@ -4,13 +4,13 @@ import { DEFAULT_AGENT_CHAT_CONFIG, INBOX_SESSION_ID, isDesktop } from '@lobecha
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
   ChatImageItem,
-  ChatMessage,
   ChatTopic,
   ChatVideoItem,
   MessageSemanticSearchChunk,
   SendMessageParams,
   SendMessageServerResponse,
   TraceNameMap,
+  UIChatMessage,
 } from '@lobechat/types';
 import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
@@ -47,7 +47,7 @@ export interface AIGenerateV2Action {
   clearSendMessageError: () => void;
   internal_refreshAiChat: (params: {
     topics?: ChatTopic[];
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     sessionId: string;
     topicId?: string;
   }) => void;
@@ -56,7 +56,7 @@ export interface AIGenerateV2Action {
    * including preprocessing and postprocessing steps
    */
   internal_execAgentRuntime: (params: {
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     userMessageId: string;
     assistantMessageId: string;
     isWelcomeQuestion?: boolean;
@@ -353,7 +353,7 @@ export const generateAIChatV2: StateCreator<
 
       ragQueryId = queryId;
 
-      const lastMsg = messages.pop() as ChatMessage;
+      const lastMsg = messages.pop() as UIChatMessage;
 
       // 2. build the retrieve context messages
       const knowledgeBaseQAContext = knowledgeBaseQAPrompts({

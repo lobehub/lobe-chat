@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { mutate } from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -426,7 +426,7 @@ describe('thread action', () => {
         });
       });
 
-      const messages: ChatMessage[] = [
+      const messages: UIChatMessage[] = [
         {
           content: 'Hello',
           createdAt: Date.now(),

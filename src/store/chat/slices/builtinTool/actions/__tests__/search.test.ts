@@ -1,6 +1,6 @@
 import { crawlResultsPrompt, searchResultsPrompt } from '@lobechat/prompts';
 import { SearchContent, SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -247,7 +247,7 @@ describe('search actions', () => {
     it('should save search result as tool message', async () => {
       const messageId = 'test-message-id';
       const parentId = 'parent-message-id';
-      const mockMessage: Partial<ChatMessage> = {
+      const mockMessage: Partial<UIChatMessage> = {
         id: messageId,
         parentId,
         content: 'test content',
@@ -265,7 +265,7 @@ describe('search actions', () => {
       };
 
       vi.spyOn(chatSelectors, 'getMessageById').mockImplementation(
-        () => () => mockMessage as ChatMessage,
+        () => () => mockMessage as UIChatMessage,
       );
 
       const { result } = renderHook(() => useChatStore());

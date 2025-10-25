@@ -1,9 +1,9 @@
 import {
-  ChatMessage,
   ChatMessageError,
   ChatPluginPayload,
   ChatTTS,
   ChatTranslate,
+  UIChatMessage,
 } from '@lobechat/types';
 import dayjs from 'dayjs';
 import { Mock, describe, expect, it, vi } from 'vitest';
@@ -47,7 +47,7 @@ describe('MessageClientService', () => {
     updatedAt: 100,
     role: 'user',
     // ... other properties
-  } as ChatMessage;
+  } as UIChatMessage;
   const mockMessages = [mockMessage];
 
   beforeEach(() => {

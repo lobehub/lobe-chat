@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { ModelTag } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
 import { ChatHeaderTitle } from '@lobehub/ui/chat';
@@ -20,7 +20,7 @@ import { useStyles } from './style';
 import { FieldType } from './type';
 
 interface PreviewProps extends FieldType {
-  message: ChatMessage;
+  message: UIChatMessage;
   previewId?: string;
   title?: string;
 }

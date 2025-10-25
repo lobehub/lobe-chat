@@ -1,5 +1,5 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
-import { ChatErrorType, ErrorType , ChatMessage, ChatMessageError } from '@lobechat/types';
+import { ChatErrorType, ChatMessageError, ErrorType, UIChatMessage } from '@lobechat/types';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';
@@ -87,7 +87,7 @@ export const useErrorContent = (error: any) => {
   }, [error]);
 };
 
-const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
+const ErrorMessageExtra = memo<{ data: UIChatMessage }>(({ data }) => {
   const error = data.error as ChatMessageError;
   if (!error?.type) return;
 
@@ -126,7 +126,7 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   return <ErrorJsonViewer error={data.error} id={data.id} />;
 });
 
-export default memo<{ data: ChatMessage }>(({ data }) => (
+export default memo<{ data: UIChatMessage }>(({ data }) => (
   <Suspense
     fallback={
       <ErrorActionContainer>

@@ -4,12 +4,12 @@ import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop, isServerMode } from '@lob
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
   ChatImageItem,
-  ChatMessage,
   CreateMessageParams,
   MessageSemanticSearchChunk,
   SendMessageParams,
   TraceEventType,
   TraceNameMap,
+  UIChatMessage,
 } from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
@@ -76,7 +76,7 @@ export interface AIGenerateAction {
    * including preprocessing and postprocessing steps
    */
   internal_coreProcessMessage: (
-    messages: ChatMessage[],
+    messages: UIChatMessage[],
     parentId: string,
     params?: ProcessMessageParams,
   ) => Promise<void>;
@@ -84,7 +84,7 @@ export interface AIGenerateAction {
    * Retrieves an AI-generated chat message from the backend service
    */
   internal_fetchAIChatMessage: (input: {
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     messageId: string;
     params?: ProcessMessageParams;
     model: string;
@@ -101,7 +101,7 @@ export interface AIGenerateAction {
     id: string,
     params?: {
       traceId?: string;
-      messages?: ChatMessage[];
+      messages?: UIChatMessage[];
       threadId?: string;
       inPortalThread?: boolean;
     },
@@ -341,7 +341,7 @@ export const generateAIChat: StateCreator<
 
       ragQueryId = queryId;
 
-      const lastMsg = messages.pop() as ChatMessage;
+      const lastMsg = messages.pop() as UIChatMessage;
 
       // 2. build the retrieve context messages
       const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
@@ -780,7 +780,7 @@ export const generateAIChat: StateCreator<
 
     const currentMessage = chats[currentIndex];
 
-    let contextMessages: ChatMessage[] = [];
+    let contextMessages: UIChatMessage[] = [];
 
     switch (currentMessage.role) {
       case 'tool':

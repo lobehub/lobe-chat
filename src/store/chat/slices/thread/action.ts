@@ -1,13 +1,18 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { LOADING_FLAT, THREAD_DRAFT_ID, isDeprecatedEdition } from '@lobechat/const';
 import { chainSummaryTitle } from '@lobechat/prompts';
-import { ChatMessage, CreateMessageParams, SendThreadMessageParams } from '@lobechat/types';
+import {
+  CreateMessageParams,
+  SendThreadMessageParams,
+  ThreadItem,
+  ThreadType,
+  UIChatMessage,
+} from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT, THREAD_DRAFT_ID } from '@/const/message';
-import { isDeprecatedEdition } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { threadService } from '@/services/thread';
@@ -17,7 +22,6 @@ import { globalHelpers } from '@/store/global/helpers';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ThreadItem, ThreadType } from '@/types/topic';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -46,7 +50,7 @@ export interface ChatThreadAction {
   openThreadInPortal: (threadId: string, sourceMessageId: string) => void;
   closeThreadPortal: () => void;
   useFetchThreads: (enable: boolean, topicId?: string) => SWRResponse<ThreadItem[]>;
-  summaryThreadTitle: (threadId: string, messages: ChatMessage[]) => Promise<void>;
+  summaryThreadTitle: (threadId: string, messages: UIChatMessage[]) => Promise<void>;
   updateThreadTitle: (id: string, title: string) => Promise<void>;
   removeThread: (id: string) => Promise<void>;
   switchThread: (id: string) => void;

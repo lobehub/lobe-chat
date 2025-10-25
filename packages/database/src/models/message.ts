@@ -1,15 +1,15 @@
 import {
   ChatFileItem,
   ChatImageItem,
-  ChatMessage,
   ChatTTS,
   ChatToolPayload,
   ChatTranslate,
   ChatVideoItem,
   CreateMessageParams,
-  MessageItem,
+  DBMessageItem,
   ModelRankItem,
   NewMessageQueryParams,
+  UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
 } from '@lobechat/types';
@@ -266,7 +266,7 @@ export class MessageModel {
             .filter((relation) => relation.messageId === item.id)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .map<ChatVideoItem>(({ id, url, name }) => ({ alt: name!, id, url })),
-        } as unknown as ChatMessage;
+        } as unknown as UIChatMessage;
       },
     );
   };
@@ -302,7 +302,7 @@ export class MessageModel {
       .orderBy(messages.createdAt)
       .where(eq(messages.userId, this.userId));
 
-    return result as MessageItem[];
+    return result as DBMessageItem[];
   };
 
   queryBySessionId = async (sessionId?: string | null) => {
@@ -311,7 +311,7 @@ export class MessageModel {
       where: and(eq(messages.userId, this.userId), this.matchSession(sessionId)),
     });
 
-    return result as MessageItem[];
+    return result as DBMessageItem[];
   };
 
   queryByKeyword = async (keyword: string) => {
@@ -321,7 +321,7 @@ export class MessageModel {
       where: and(eq(messages.userId, this.userId), like(messages.content, `%${keyword}%`)),
     });
 
-    return result as MessageItem[];
+    return result as DBMessageItem[];
   };
 
   count = async (params?: {
@@ -473,7 +473,7 @@ export class MessageModel {
       ...message
     }: CreateMessageParams,
     id: string = this.genId(),
-  ): Promise<MessageItem> => {
+  ): Promise<DBMessageItem> => {
     return this.db.transaction(async (trx) => {
       // Ensure group message does not populate sessionId
       const normalizedMessage = message.groupId ? { ...message, sessionId: null } : message;
@@ -490,7 +490,7 @@ export class MessageModel {
           updatedAt: updatedAt ? new Date(updatedAt) : undefined,
           userId: this.userId,
         })
-        .returning()) as MessageItem[];
+        .returning()) as DBMessageItem[];
 
       // Insert the plugin data if the message is a tool
       if (message.role === 'tool') {
@@ -528,7 +528,7 @@ export class MessageModel {
     });
   };
 
-  batchCreate = async (newMessages: MessageItem[]) => {
+  batchCreate = async (newMessages: DBMessageItem[]) => {
     const messagesToInsert = newMessages.map((m) => {
       // TODO: need a better way to handle this
       return { ...m, role: m.role as any, userId: this.userId };
