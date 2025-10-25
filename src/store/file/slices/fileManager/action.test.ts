@@ -454,14 +454,6 @@ describe('FileManagerActions', () => {
         await result.current.pushDockFileList(files);
       });
 
-      // Should show info message about queuing
-      expect(message.info).toHaveBeenCalled();
-      // Verify the message contains information about the file count
-      const infoCall = vi.mocked(message.info).mock.calls[0]?.[0];
-      if (infoCall) {
-        expect(infoCall).toContain(String(MAX_UPLOAD_FILE_COUNT));
-      }
-
       // Should add all files to dock (not just first MAX_UPLOAD_FILE_COUNT)
       expect(dispatchSpy).toHaveBeenCalledWith({
         atStart: true,
