@@ -1,3 +1,4 @@
+import { ChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -7,7 +8,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ChatMessage } from '@/types/message';
 import { QueryRewriteSystemAgent } from '@/types/user/settings';
 
 import { useChatStore } from '../../../../store';

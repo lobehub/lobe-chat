@@ -1,5 +1,3 @@
-import type { HeatmapsProps } from '@lobehub/charts';
-
 import {
   ChatMessage,
   ChatMessageError,
@@ -10,8 +8,9 @@ import {
   MessageItem,
   ModelRankItem,
   UpdateMessageParams,
-} from '@/types/message';
-import { UpdateMessageRAGParams } from '@/types/message/rag';
+  UpdateMessageRAGParams,
+} from '@lobechat/types';
+import type { HeatmapsProps } from '@lobehub/charts';
 
 /* eslint-disable typescript-sort-keys/interface */
 

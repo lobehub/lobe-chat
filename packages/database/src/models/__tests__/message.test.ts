@@ -1,8 +1,8 @@
+import { MessageItem } from '@lobechat/types';
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MessageItem } from '@/types/message';
 import { uuid } from '@/utils/uuid';
 
 import { getTestDB } from '../../models/__tests__/_util';

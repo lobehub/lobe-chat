@@ -1,7 +1,7 @@
-import { ChatMessage } from '@/types/message';
-import { LobeSessions, SessionGroupItem } from '@/types/session';
-import { ChatTopic } from '@/types/topic';
-import { UserSettings } from '@/types/user/settings';
+import { ChatMessage } from './message';
+import { LobeSessions, SessionGroupItem } from './session';
+import { ChatTopic } from './topic';
+import { UserSettings } from './user/settings';
 
 // ---------- TODO: this file need to be deleted in V2 ---------- //
 

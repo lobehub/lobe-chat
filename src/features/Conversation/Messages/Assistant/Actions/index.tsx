@@ -1,3 +1,4 @@
+import { ChatMessage } from '@lobechat/types';
 import { ActionIconGroup, type ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
 import { App } from 'antd';
 import { useSearchParams } from 'next/navigation';
@@ -10,7 +11,6 @@ import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/message';
 
 import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
 import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';

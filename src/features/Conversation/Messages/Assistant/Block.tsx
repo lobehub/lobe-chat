@@ -1,3 +1,4 @@
+import { AssistantContentBlock } from '@lobechat/types';
 import { Markdown } from '@lobehub/ui';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -6,7 +7,6 @@ import { LOADING_FLAT } from '@/const/message';
 import ImageFileListViewer from '@/features/Conversation/Messages/User/ImageFileListViewer';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { AssistantContentBlock } from '@/types/message';
 
 import { DefaultMessage } from '../Default';
 import Tool from './Tool';

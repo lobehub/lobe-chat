@@ -1,6 +1,13 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { ToolNameResolver } from '@lobechat/context-engine';
-import { ChatErrorType } from '@lobechat/types';
+import { ChatErrorType ,
+  ChatMessage,
+  ChatMessageError,
+  ChatToolPayload,
+  CreateMessageParams,
+  MessageToolCall,
+  ToolsCallingContext,
+} from '@lobechat/types';
 import { LobeChatPluginManifest, PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
@@ -14,14 +21,6 @@ import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { builtinTools } from '@/tools';
-import {
-  ChatMessage,
-  ChatMessageError,
-  ChatToolPayload,
-  CreateMessageParams,
-  MessageToolCall,
-  ToolsCallingContext,
-} from '@/types/message';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';

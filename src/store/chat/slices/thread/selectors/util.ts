@@ -1,4 +1,5 @@
-import { ChatMessage } from '@/types/message';
+import { ChatMessage } from '@lobechat/types';
+
 import { ThreadType } from '@/types/topic';
 
 export const genMessage = (

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ChatMessage, ChatTranslate } from '@lobechat/types';
+
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { ChatMessage, ChatTranslate } from '@/types/message';
 
 import { IMessageService } from './type';
 

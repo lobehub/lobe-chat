@@ -1,9 +1,10 @@
+import { ChatMessage } from '@lobechat/types';
+
 import { THREAD_DRAFT_ID } from '@/const/message';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import type { ChatStoreState } from '@/store/chat';
 import { chatHelpers } from '@/store/chat/helpers';
-import { ChatMessage } from '@/types/message';
 import { ThreadItem } from '@/types/topic';
 
 import { chatSelectors } from '../../message/selectors';

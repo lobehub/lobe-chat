@@ -1,4 +1,4 @@
-import { ChatMessage, ChatToolPayload } from '@/types/message';
+import { ChatMessage, ChatToolPayload } from '@lobechat/types';
 
 import { MessageDispatch, messagesReducer } from './reducer';
 

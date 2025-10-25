@@ -1,5 +1,6 @@
+import { ChatMessage } from '@lobechat/types';
+
 import { LOADING_FLAT } from '@/const/message';
-import { ChatMessage } from '@/types/message';
 
 import { FieldType } from './type';
 

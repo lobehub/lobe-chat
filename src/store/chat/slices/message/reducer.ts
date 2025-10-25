@@ -1,13 +1,13 @@
-import isEqual from 'fast-deep-equal';
-import { produce } from 'immer';
-
 import {
   ChatMessage,
   ChatMessageExtra,
   ChatPluginPayload,
   ChatToolPayload,
   CreateMessageParams,
-} from '@/types/message';
+} from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
+import { produce } from 'immer';
+
 import { merge } from '@/utils/merge';
 
 interface UpdateMessages {

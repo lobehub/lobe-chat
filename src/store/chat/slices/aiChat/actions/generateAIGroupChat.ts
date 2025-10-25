@@ -5,6 +5,7 @@ import {
   buildGroupChatSystemPrompt,
   filterMessagesForAgent,
 } from '@lobechat/prompts';
+import { ChatMessage, CreateMessageParams, SendGroupMessageParams } from '@lobechat/types';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -17,7 +18,6 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
 import { ChatErrorType } from '@/types/fetch';
-import { ChatMessage, CreateMessageParams, SendGroupMessageParams } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
