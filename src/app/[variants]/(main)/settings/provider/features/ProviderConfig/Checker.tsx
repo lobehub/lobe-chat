@@ -24,7 +24,12 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
       <Alert
         extra={
           <Flexbox>
-            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
+            <Highlighter
+              actionIconSize={'small'}
+              language={'json'}
+              variant={'borderless'}
+              wrap={true}
+            >
               {JSON.stringify(error.body || error, null, 2)}
             </Highlighter>
           </Flexbox>
