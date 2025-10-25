@@ -11,6 +11,7 @@ export * from './discover';
 export * from './eval';
 export * from './fetch';
 export * from './files';
+export * from './generation';
 export * from './hotkey';
 export * from './knowledgeBase';
 export * from './llm';
