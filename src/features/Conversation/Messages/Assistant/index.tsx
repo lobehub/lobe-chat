@@ -1,6 +1,6 @@
 'use client';
 
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
@@ -47,7 +47,7 @@ const isHtmlCode = (content: string, language: string) => {
 };
 const MOBILE_AVATAR_SIZE = 32;
 
-interface AssistantMessageProps extends ChatMessage {
+interface AssistantMessageProps extends UIChatMessage {
   disableEditing?: boolean;
   index: number;
   showTitle?: boolean;

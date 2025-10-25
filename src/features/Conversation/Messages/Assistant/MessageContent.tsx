@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -17,7 +17,7 @@ import SearchGrounding from './SearchGrounding';
 import Tool from './Tool';
 
 export const AssistantMessageContent = memo<
-  ChatMessage & {
+  UIChatMessage & {
     editableContent: ReactNode;
   }
 >(({ id, tools, content, chunksList, search, imageList, videoList, children, ...props }) => {

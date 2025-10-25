@@ -1,4 +1,4 @@
-import { BatchTaskResult, ChatMessage, UpdateMessageRAGParamsSchema } from '@lobechat/types';
+import { BatchTaskResult, UIChatMessage, UpdateMessageRAGParamsSchema } from '@lobechat/types';
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/models/message';
@@ -8,7 +8,7 @@ import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 
-type ChatMessageList = ChatMessage[];
+type ChatMessageList = UIChatMessage[];
 
 const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;

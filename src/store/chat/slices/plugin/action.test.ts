@@ -1,11 +1,14 @@
+import {
+  DEFAULT_INBOX_AVATAR,
+  LOADING_FLAT,
+  PLUGIN_SCHEMA_API_MD5_PREFIX,
+  PLUGIN_SCHEMA_SEPARATOR,
+} from '@lobechat/const';
 import { ToolNameResolver } from '@lobechat/context-engine';
-import { ChatMessage, ChatToolPayload, MessageToolCall } from '@lobechat/types';
+import { ChatToolPayload, MessageToolCall, UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
-import { LOADING_FLAT } from '@/const/message';
-import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -40,7 +43,7 @@ describe('ChatPluginAction', () => {
         id: messageId,
         role: 'tool',
         content: 'Tool content to summarize',
-      } as ChatMessage;
+      } as UIChatMessage;
 
       const internal_coreProcessMessageMock = vi.fn();
 
@@ -88,7 +91,7 @@ describe('ChatPluginAction', () => {
         id: messageId,
         role: 'user',
         content: 'User message',
-      } as ChatMessage;
+      } as UIChatMessage;
 
       const internal_coreProcessMessageMock = vi.fn();
 
@@ -326,7 +329,7 @@ describe('ChatPluginAction', () => {
             arguments: '{}',
           },
         ],
-      } as ChatMessage;
+      } as UIChatMessage;
 
       const invokeStandaloneTypePluginMock = vi.fn();
       const invokeMarkdownTypePluginMock = vi.fn();
@@ -420,7 +423,7 @@ describe('ChatPluginAction', () => {
             arguments: '{}',
           },
         ],
-      } as ChatMessage;
+      } as UIChatMessage;
 
       const invokeStandaloneTypePluginMock = vi.fn();
       const invokeMarkdownTypePluginMock = vi.fn();
@@ -818,7 +821,7 @@ describe('ChatPluginAction', () => {
           arguments: '{}',
         },
         tool_call_id: 'tool-id',
-      } as ChatMessage;
+      } as UIChatMessage;
 
       const internal_invokeDifferentTypePluginMock = vi.fn();
       act(() => {
@@ -856,7 +859,7 @@ describe('ChatPluginAction', () => {
         },
         tool_call_id: 'tool-id',
         pluginError: { message: 'Previous error', type: 'ProviderBizError' },
-      } as ChatMessage;
+      } as UIChatMessage;
 
       const internal_updateMessageErrorMock = vi.fn();
 
@@ -894,14 +897,14 @@ describe('ChatPluginAction', () => {
         plugin: { identifier: identifier, arguments: '{"oldKey":"oldValue"}' },
         tool_call_id: toolCallId,
         parentId,
-      } as ChatMessage;
+      } as UIChatMessage;
 
       const assistantMessage = {
         id: parentId,
         role: 'assistant',
         content: 'Assistant content',
         tools: [{ identifier: identifier, arguments: '{"oldKey":"oldValue"}', id: toolCallId }],
-      } as ChatMessage;
+      } as UIChatMessage;
 
       act(() => {
         useChatStore.setState({
@@ -1138,7 +1141,7 @@ describe('ChatPluginAction', () => {
         role: 'assistant',
         content: 'Assistant content',
         tools: [{ identifier: identifier, arguments: '{"oldKey":"oldValue"}', id: toolCallId }],
-      } as ChatMessage;
+      } as UIChatMessage;
 
       act(() => {
         useChatStore.setState({

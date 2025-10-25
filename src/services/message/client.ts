@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB } from '@/database/client/db';
@@ -42,7 +42,7 @@ export class ClientService extends BaseClientService implements IMessageService 
       },
     );
 
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
   };
 
   getGroupMessages: IMessageService['getGroupMessages'] = async (groupId, topicId) => {
@@ -62,13 +62,13 @@ export class ClientService extends BaseClientService implements IMessageService 
       },
     );
 
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
   };
 
   getAllMessages: IMessageService['getAllMessages'] = async () => {
     const data = await this.messageModel.queryAll();
 
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
   };
 
   countMessages: IMessageService['countMessages'] = async (params) => {
@@ -90,7 +90,7 @@ export class ClientService extends BaseClientService implements IMessageService 
   getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
     const data = this.messageModel.queryBySessionId(this.toDbSessionId(sessionId));
 
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
   };
 
   updateMessageError: IMessageService['updateMessageError'] = async (id, error) => {

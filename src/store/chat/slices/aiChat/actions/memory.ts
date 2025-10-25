@@ -1,5 +1,5 @@
 import { chainSummaryHistory } from '@lobechat/prompts';
-import { TraceNameMap , ChatMessage } from '@lobechat/types';
+import { TraceNameMap, UIChatMessage } from '@lobechat/types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chatService } from '@/services/chat';
@@ -9,7 +9,7 @@ import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 
 export interface ChatMemoryAction {
-  internal_summaryHistory: (messages: ChatMessage[]) => Promise<void>;
+  internal_summaryHistory: (messages: UIChatMessage[]) => Promise<void>;
 }
 
 export const chatMemory: StateCreator<

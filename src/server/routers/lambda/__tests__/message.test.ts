@@ -1,4 +1,4 @@
-import { ChatMessage, CreateMessageParams, UpdateMessageRAGParams } from '@lobechat/types';
+import { CreateMessageParams, UIChatMessage, UpdateMessageRAGParams } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { MessageModel } from '@/database/models/message';
@@ -153,7 +153,7 @@ describe('messageRouter', () => {
       {
         id: 'msg1',
         meta: {},
-      } as ChatMessage,
+      } as UIChatMessage,
     ]);
     vi.mocked(MessageModel).mockImplementation(
       () =>
