@@ -19,7 +19,7 @@ vi.mock('zustand/traditional');
 vi.mock('i18next', () => ({
   t: (key: string, options?: any) => {
     // Return a mock translation string that includes the options for verification
-    if (key === 'uploadDock.fileQueueInfo' && options) {
+    if (key === 'uploadDock.fileQueueInfo' && options?.count !== undefined) {
       return `Uploading ${options.count} files, ${options.remaining} queued`;
     }
     return key;
