@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -49,7 +49,7 @@ describe('chatRAG actions', () => {
       act(() => {
         useChatStore.setState({
           messagesMap: {
-            default: [{ id: messageId }] as ChatMessage[],
+            default: [{ id: messageId }] as UIChatMessage[],
           },
         });
       });
@@ -75,7 +75,7 @@ describe('chatRAG actions', () => {
           ({
             id: messageId,
             ragQuery: existingRagQuery,
-          }) as ChatMessage,
+          }) as UIChatMessage,
       );
 
       // Mock the semantic search response
@@ -117,7 +117,7 @@ describe('chatRAG actions', () => {
         () =>
           ({
             id: messageId,
-          }) as ChatMessage,
+          }) as UIChatMessage,
       );
 
       // Mock the rewrite query function
@@ -240,12 +240,12 @@ describe('chatRAG actions', () => {
           ({
             id: messageId,
             content,
-          }) as ChatMessage,
+          }) as UIChatMessage,
       );
 
       vi.spyOn(chatSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
         { content: 'history' },
-      ] as ChatMessage[]);
+      ] as UIChatMessage[]);
 
       const rewriteSpy = vi.spyOn(result.current, 'internal_rewriteQuery');
       const deleteSpy = vi.spyOn(result.current, 'deleteUserMessageRagQuery');

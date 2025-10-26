@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ChatMessage, ChatTranslate } from '@lobechat/types';
+import { ChatTranslate, UIChatMessage } from '@lobechat/types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
@@ -25,7 +25,7 @@ export class ServerService implements IMessageService {
       topicId,
     });
 
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
   };
 
   getGroupMessages: IMessageService['getGroupMessages'] = async (groupId, topicId) => {
@@ -33,7 +33,7 @@ export class ServerService implements IMessageService {
       groupId,
       topicId,
     });
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
   };
 
   getAllMessages: IMessageService['getAllMessages'] = async () => {

@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -33,7 +33,7 @@ describe('generateMessages', () => {
       createdAt: Date.now(),
       tool_call_id: 'tool1',
     },
-  ] as ChatMessage[];
+  ] as UIChatMessage[];
 
   it('should filter out loading messages', () => {
     const result = generateMessages({
@@ -109,7 +109,7 @@ describe('generateMessages', () => {
         role: 'user',
         createdAt: Date.now(),
       },
-    ] as ChatMessage[];
+    ] as UIChatMessage[];
 
     const result = generateMessages({
       messages: messagesWithSpaces,
