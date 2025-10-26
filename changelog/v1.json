@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve provider modal height when creating custom provider."]
+    },
+    "date": "2025-10-26",
+    "version": "1.142.2"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-10-26",
