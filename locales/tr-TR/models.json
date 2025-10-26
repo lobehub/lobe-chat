@@ -290,11 +290,11 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir ve çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıplar olmadan yük dengeleme stratejileri ile çıkarım ve eğitim verimliliğini optimize etmektedir. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ve güçlendirilmiş öğrenme ile, DeepSeek-V3 performans açısından diğer açık kaynak modelleri geride bırakmakta ve lider kapalı kaynak modellere yaklaşmaktadır."
   },
-  "Pro/deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1, DeepSeek AI tarafından yayımlanan hibrit modlu büyük dil modelidir ve selef modellerine kıyasla birçok önemli yükseltme içermektedir. Modelin en büyük yeniliği, \"Düşünme Modu\" (Thinking Mode) ve \"Düşünmeme Modu\" (Non-thinking Mode) özelliklerini bir arada sunmasıdır; kullanıcılar sohbet şablonlarını ayarlayarak farklı görev ihtiyaçlarına esnek şekilde uyum sağlayabilirler. Özel post-training optimizasyonları sayesinde V3.1, araç çağrıları ve Agent görevlerinde performansını önemli ölçüde artırmış, dış arama araçlarını destekleme ve çok adımlı karmaşık görevleri yerine getirme kapasitesini geliştirmiştir. Model, DeepSeek-V3.1-Base üzerine post-training uygulanarak, iki aşamalı uzun metin genişletme yöntemiyle eğitim veri miktarını büyük ölçüde artırmış ve uzun belgeler ile uzun kod parçalarını işleme yeteneğini geliştirmiştir. Açık kaynaklı bir model olarak DeepSeek-V3.1, kodlama, matematik ve çıkarım gibi birçok kıyaslama testinde en iyi kapalı kaynak modellerle rekabet eden performans sergilemekte ve MoE (Mixture of Experts) mimarisi sayesinde büyük model kapasitesini korurken çıkarım maliyetlerini etkin şekilde düşürmektedir."
-  },
   "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus, DeepSeek tarafından yayınlanan V3.1 modelinin güncellenmiş versiyonudur ve hibrit ajan büyük dil modeli olarak konumlandırılmıştır. Bu güncelleme, modelin mevcut yeteneklerini koruyarak kullanıcı geri bildirimlerine dayalı sorunları düzeltmeye ve kararlılığı artırmaya odaklanmıştır. Dil tutarlılığını önemli ölçüde iyileştirmiş, Çince ve İngilizce karışımı ile anormal karakterlerin görünümünü azaltmıştır. Model, farklı görevler için sohbet şablonları aracılığıyla esnek geçiş yapılabilen “Düşünme Modu” ve “Düşünmeme Modu”nu entegre etmiştir. Önemli bir iyileştirme olarak, V3.1-Terminus, kod ajanı (Code Agent) ve arama ajanı (Search Agent) performansını artırarak araç çağrıları ve çok adımlı karmaşık görevlerin yürütülmesinde daha güvenilir hale getirmiştir."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek-V3.2-Exp, DeepSeek tarafından yayınlanan deneysel V3.2 sürümüdür ve yeni nesil mimariye geçişte bir ara keşif niteliğindedir. Bu sürüm, V3.1-Terminus temelinde geliştirilmiş olup, uzun bağlamlı eğitim ve çıkarım verimliliğini artırmak amacıyla DeepSeek Seyrek Dikkat (DeepSeek Sparse Attention, DSA) mekanizmasını entegre eder. Araç kullanımı, uzun belge anlama ve çok adımlı akıl yürütme gibi alanlarda özel optimizasyonlar yapılmıştır. V3.2-Exp, araştırma ile ürünleştirme arasında bir köprü görevi görür ve yüksek bağlam bütçesi gerektiren senaryolarda daha verimli çıkarım arayan kullanıcılar için uygundur."
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905, Kimi K2'nin en yeni ve en güçlü versiyonudur. Bu, toplamda 1 trilyon parametreye ve 32 milyar aktif parametreye sahip, üst düzey bir Hibrit Uzman (MoE) dil modelidir. Modelin başlıca özellikleri şunlardır: geliştirilmiş ajan kodlama zekası, açık benchmark testlerinde ve gerçek dünya ajan kodlama görevlerinde belirgin performans artışı; ön uç kodlama deneyiminde iyileştirmeler, ön uç programlamada estetik ve işlevsellik açısından ilerlemeler."
@@ -397,6 +397,18 @@
   },
   "Qwen/Qwen3-Next-80B-A3B-Thinking": {
     "description": "Qwen3-Next-80B-A3B-Thinking, Alibaba Tongyi Qianwen ekibi tarafından karmaşık çıkarım görevleri için tasarlanmış yeni nesil temel modeldir. Yenilikçi Qwen3-Next mimarisi üzerine kurulmuş olup, hibrit dikkat mekanizması (Gated DeltaNet ve Gated Attention) ve yüksek seyrekli hibrit uzman (MoE) yapısını birleştirerek en üst düzey eğitim ve çıkarım verimliliğini hedefler. 80 milyar toplam parametreye sahip seyrek bir model olarak, çıkarım sırasında yalnızca yaklaşık 3 milyar parametreyi aktive ederek hesaplama maliyetlerini önemli ölçüde düşürür ve 32K token’dan uzun bağlam görevlerinde çıkarım verimliliği Qwen3-32B modeline kıyasla 10 kat daha fazladır. Bu “Thinking” versiyonu, matematiksel ispatlar, kod sentezi, mantıksal analiz ve planlama gibi zorlu çok adımlı görevler için optimize edilmiştir ve çıkarım sürecini varsayılan olarak yapılandırılmış “düşünce zinciri” biçiminde sunar. Performans açısından, yalnızca daha maliyetli modeller olan Qwen3-32B-Thinking’i değil, aynı zamanda Gemini-2.5-Flash-Thinking’i de birçok kıyaslama testinde geride bırakır."
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Instruct": {
+    "description": "Qwen3-VL-235B-A22B-Instruct, Qwen3-VL serisinin büyük ölçekli talimatla ince ayarlanmış modelidir. Karışık uzman (MoE) mimarisi üzerine kuruludur ve üstün çok modlu anlama ve üretim yeteneklerine sahiptir. Doğal olarak 256K bağlamı destekler ve yüksek eşzamanlı üretim düzeyinde çok modlu hizmetler için uygundur."
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Thinking": {
+    "description": "Qwen3-VL-235B-A22B-Thinking, Qwen3-VL serisinin amiral gemisi düşünme sürümüdür. Karmaşık çok modlu akıl yürütme, uzun bağlamlı çıkarım ve yapay zeka etkileşimleri için özel olarak optimize edilmiştir. Derin düşünme ve görsel akıl yürütme gerektiren kurumsal düzeydeki senaryolar için uygundur."
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Instruct": {
+    "description": "Qwen3-VL-30B-A3B-Instruct, Qwen3-VL serisinin talimatla ince ayarlanmış sürümüdür. Güçlü görsel-dil anlama ve üretim yeteneklerine sahiptir, doğal olarak 256K bağlam uzunluğunu destekler ve çok modlu diyaloglar ile görsel koşullu üretim görevleri için uygundur."
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Thinking": {
+    "description": "Qwen3-VL-30B-A3B-Thinking, Qwen3-VL serisinin akıl yürütme yetenekleri geliştirilmiş (Thinking) sürümüdür. Çok modlu akıl yürütme, görselden koda dönüşüm ve karmaşık görsel anlama görevlerinde optimize edilmiştir. 256K bağlam desteği sunar ve daha güçlü zincirleme düşünme yeteneğine sahiptir."
   },
   "Qwen/Qwen3-VL-8B-Instruct": {
     "description": "Qwen3-VL-8B-Instruct, Qwen3 serisinin bir görsel-dil modelidir. Qwen3-8B-Instruct temel alınarak geliştirilmiş ve büyük miktarda görsel-metin verisiyle eğitilmiştir. Genel görsel anlama, görsel odaklı diyaloglar ve görsellerde çok dilli metin tanıma konularında uzmandır. Görsel soru-cevap, görsel betimleme, çok modlu komut takibi ve araç çağırma gibi senaryolarda kullanılabilir."
@@ -978,13 +990,13 @@
     "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir. Çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıplar olmadan yük dengeleme stratejisi ile çıkarım ve eğitim verimliliğini optimize etmektedir. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ile tekrarlayan öğrenme gerçekleştirilmiştir; DeepSeek-V3, performans açısından diğer açık kaynaklı modelleri geride bırakmakta ve lider kapalı kaynaklı modellere yaklaşmaktadır."
   },
   "deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1, DeepSeek AI tarafından yayımlanan hibrit modlu büyük dil modelidir ve selef modellerine kıyasla birçok önemli yükseltme içermektedir. Modelin en büyük yeniliği, \"Düşünme Modu\" (Thinking Mode) ve \"Düşünmeme Modu\" (Non-thinking Mode) özelliklerini bir arada sunmasıdır; kullanıcılar sohbet şablonlarını ayarlayarak farklı görev ihtiyaçlarına esnek şekilde uyum sağlayabilirler. Özel post-training optimizasyonları sayesinde V3.1, araç çağrıları ve Agent görevlerinde performansını önemli ölçüde artırmış, dış arama araçlarını destekleme ve çok adımlı karmaşık görevleri yerine getirme kapasitesini geliştirmiştir. Model, DeepSeek-V3.1-Base üzerine post-training uygulanarak, iki aşamalı uzun metin genişletme yöntemiyle eğitim veri miktarını büyük ölçüde artırmış ve uzun belgeler ile uzun kod parçalarını işleme yeteneğini geliştirmiştir. Açık kaynaklı bir model olarak DeepSeek-V3.1, kodlama, matematik ve çıkarım gibi birçok kıyaslama testinde en iyi kapalı kaynak modellerle rekabet eden performans sergilemekte ve MoE (Mixture of Experts) mimarisi sayesinde büyük model kapasitesini korurken çıkarım maliyetlerini etkin şekilde düşürmektedir."
+    "description": "DeepSeek V3.1 modeli, hem düşünme hem de düşünme dışı modları destekleyen hibrit akıl yürütme mimarisine sahip bir modeldir."
   },
   "deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus, DeepSeek tarafından yayınlanan V3.1 modelinin güncellenmiş versiyonudur ve hibrit ajan büyük dil modeli olarak konumlandırılmıştır. Bu güncelleme, modelin mevcut yeteneklerini koruyarak kullanıcı geri bildirimlerine dayalı sorunları düzeltmeye ve kararlılığı artırmaya odaklanmıştır. Dil tutarlılığını önemli ölçüde iyileştirmiş, Çince ve İngilizce karışımı ile anormal karakterlerin görünümünü azaltmıştır. Model, farklı görevler için sohbet şablonları aracılığıyla esnek geçiş yapılabilen “Düşünme Modu” ve “Düşünmeme Modu”nu entegre etmiştir. Önemli bir iyileştirme olarak, V3.1-Terminus, kod ajanı (Code Agent) ve arama ajanı (Search Agent) performansını artırarak araç çağrıları ve çok adımlı karmaşık görevlerin yürütülmesinde daha güvenilir hale getirmiştir."
   },
   "deepseek-ai/DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 Exp modeli, hem düşünme hem de düşünme dışı modları destekleyen hibrit bir akıl yürütme mimarisine sahiptir."
+    "description": "DeepSeek-V3.2-Exp, DeepSeek tarafından yayınlanan deneysel V3.2 sürümüdür ve yeni nesil mimariye geçişte bir ara keşif niteliğindedir. Bu sürüm, V3.1-Terminus temelinde geliştirilmiş olup, uzun bağlamlı eğitim ve çıkarım verimliliğini artırmak amacıyla DeepSeek Seyrek Dikkat (DeepSeek Sparse Attention, DSA) mekanizmasını entegre eder. Araç kullanımı, uzun belge anlama ve çok adımlı akıl yürütme gibi alanlarda özel optimizasyonlar yapılmıştır. V3.2-Exp, araştırma ile ürünleştirme arasında bir köprü görevi görür ve yüksek bağlam bütçesi gerektiren senaryolarda daha verimli çıkarım arayan kullanıcılar için uygundur."
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B, yüksek karmaşıklıkta diyaloglar için eğitilmiş gelişmiş bir modeldir."
@@ -2473,9 +2485,6 @@
   },
   "mistralai/Mixtral-8x7B-v0.1": {
     "description": "Mixtral 8x7B, birden fazla parametre kullanarak akıl yürütme hızını artıran seyrek uzman modelidir, çok dilli ve kod üretim görevleri için uygundur."
-  },
-  "mistralai/mistral-7b-instruct": {
-    "description": "Mistral 7B Instruct, hız optimizasyonu ve uzun bağlam desteği sunan yüksek performanslı bir endüstri standart modelidir."
   },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo, çok dilli destek ve yüksek performanslı programlama sunan 7.3B parametreli bir modeldir."
