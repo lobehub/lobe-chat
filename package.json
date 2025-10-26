@@ -176,7 +176,7 @@
     "@neondatabase/serverless": "^1.0.2",
     "@next/third-parties": "^15.5.4",
     "@opentelemetry/exporter-jaeger": "^2.1.0",
-    "@opentelemetry/winston-transport": "^0.17.0",
+    "@opentelemetry/winston-transport": "^0.18.0",
     "@react-pdf/renderer": "^4.3.0",
     "@react-spring/web": "^9.7.5",
     "@saintno/comfyui-sdk": "^0.2.48",
