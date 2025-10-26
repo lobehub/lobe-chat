@@ -1,23 +1,30 @@
-// plugins/disable-tablet.js
 const { withAndroidManifest } = require('@expo/config-plugins');
 
 module.exports = function withDisableTablet(config) {
   return withAndroidManifest(config, (cfg) => {
-    const manifest = cfg.modResults?.manifest;
-    if (!manifest) return cfg;
+    const m = cfg.modResults.manifest;
 
-    // 若没有 <supports-screens/> 节点则创建
-    if (!manifest['supports-screens']) {
-      manifest['supports-screens'] = [{ $: {} }];
-    }
+    // 1) 仍保留 supports-screens（你现在已经有了）
+    if (!m['supports-screens']) m['supports-screens'] = [{ $: {} }];
+    const s = m['supports-screens'][0].$;
+    s['android:smallScreens'] = 'true';
+    s['android:normalScreens'] = 'true';
+    s['android:largeScreens'] = 'false';
+    s['android:xlargeScreens'] = 'false';
+    s['android:anyDensity'] = 'true';
 
-    // 取到属性对象并写入我们想要的值
-    const attrs = manifest['supports-screens'][0].$;
-    attrs['android:smallScreens'] = 'true';
-    attrs['android:normalScreens'] = 'true';
-    attrs['android:largeScreens'] = 'false';
-    attrs['android:xlargeScreens'] = 'false';
-    attrs['android:anyDensity'] = 'true';
+    // 2) 追加 compatible-screens，只白名单 small/normal
+    const densities = ['ldpi', 'mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+    const sizes = ['small', 'normal']; // 不包含 large/xlarge
+    m['compatible-screens'] = [
+      {
+        screen: sizes.flatMap((size) =>
+          densities.map((dpi) => ({
+            $: { 'android:screenDensity': dpi, 'android:screenSize': size },
+          })),
+        ),
+      },
+    ];
 
     return cfg;
   });
