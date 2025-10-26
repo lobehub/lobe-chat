@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.142.2](https://github.com/lobehub/lobe-chat/compare/v1.142.1...v1.142.2)
+
+<sup>Released on **2025-10-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve provider modal height when creating custom provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve provider modal height when creating custom provider, closes [#9870](https://github.com/lobehub/lobe-chat/issues/9870) ([55d92c0](https://github.com/lobehub/lobe-chat/commit/55d92c0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.142.1](https://github.com/lobehub/lobe-chat/compare/v1.142.0...v1.142.1)
 
 <sup>Released on **2025-10-26**</sup>
