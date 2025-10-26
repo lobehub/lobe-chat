@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { TRPCClientError } from '@trpc/client';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -376,7 +376,7 @@ describe('generateAIChatV2 actions', () => {
         content: TEST_CONTENT.USER_MESSAGE,
         sessionId: TEST_IDS.SESSION_ID,
         topicId: TEST_IDS.TOPIC_ID,
-      } as ChatMessage;
+      } as UIChatMessage;
       const messages = [userMessage];
 
       const streamSpy = vi.spyOn(chatService, 'createAssistantMessageStream');

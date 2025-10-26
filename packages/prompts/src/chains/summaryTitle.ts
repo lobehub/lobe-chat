@@ -1,7 +1,7 @@
-import { ChatMessage, ChatStreamPayload, OpenAIChatMessage } from '@lobechat/types';
+import { ChatStreamPayload, OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 
 export const chainSummaryTitle = (
-  messages: (ChatMessage | OpenAIChatMessage)[],
+  messages: (UIChatMessage | OpenAIChatMessage)[],
   locale: string,
 ): Partial<ChatStreamPayload> => ({
   messages: [

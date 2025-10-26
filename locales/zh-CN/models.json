@@ -290,11 +290,11 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
   },
-  "Pro/deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。"
-  },
   "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。"
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek-V3.2-Exp 是 DeepSeek 发布的实验性 V3.2 版本，作为迈向下一代架构的中间探索。它在 V3.1-Terminus 的基础上引入了 DeepSeek 稀疏注意力（DeepSeek Sparse Attention，DSA）机制以提升长上下文训练与推理效率，针对工具调用、长文档理解与多步推理进行了专项优化。V3.2-Exp 为研究与产品化之间的桥梁，适合希望在高上下文预算场景中探索更高推理效率的用户。"
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 是 Kimi K2 最新、最强大的版本。它是一款顶尖的混合专家（MoE）语言模型，拥有 1 万亿的总参数和 320 亿的激活参数。该模型的主要特性包括：增强的智能体编码智能，在公开基准测试和真实世界的编码智能体任务中表现出显著的性能提升；改进的前端编码体验，在前端编程的美观性和实用性方面均有进步。"
@@ -397,6 +397,18 @@
   },
   "Qwen/Qwen3-Next-80B-A3B-Thinking": {
     "description": "Qwen3-Next-80B-A3B-Thinking 是由阿里巴巴通义千问团队发布的、专为复杂推理任务设计的下一代基础模型。它基于创新的 Qwen3-Next 架构，该架构融合了混合注意力机制（Gated DeltaNet 与 Gated Attention）和高稀疏度混合专家（MoE）结构，旨在实现极致的训练与推理效率。作为一个总参数达 800 亿的稀疏模型，它在推理时仅激活约 30 亿参数，大幅降低了计算成本，在处理超过 32K tokens 的长上下文任务时，吞吐量比 Qwen3-32B 模型高出 10 倍以上。此“Thinking”版本专为执行数学证明、代码综合、逻辑分析和规划等高难度多步任务而优化，并默认以结构化的“思维链”形式输出推理过程。在性能上，它不仅超越了 Qwen3-32B-Thinking 等成本更高的模型，还在多个基准测试中优于 Gemini-2.5-Flash-Thinking。"
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Instruct": {
+    "description": "Qwen3-VL-235B-A22B-Instruct 是 Qwen3-VL 系列的大型指令微调模型，基于混合专家（MoE）架构，拥有卓越的多模态理解与生成能力，原生支持 256K 上下文，适用于高并发生产级多模态服务。"
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Thinking": {
+    "description": "Qwen3-VL-235B-A22B-Thinking 是 Qwen3-VL 系列中的旗舰思考版本，针对复杂多模态推理、长上下文推理与智能体交互进行了专项优化，适合需要深度思考与视觉推理的企业级场景。"
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Instruct": {
+    "description": "Qwen3-VL-30B-A3B-Instruct 是 Qwen3-VL 系列的指令微调版本，具有强大的视觉-语言理解与生成能力，原生支持 256K 上下文长度，适合多模态对话与图像条件生成任务。"
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Thinking": {
+    "description": "Qwen3-VL-30B-A3B-Thinking 是 Qwen3-VL 的推理增强版本（Thinking），在多模态推理、图像到代码和复杂视觉理解任务上进行了优化，支持 256K 上下文并具备更强的链式思考能力。"
   },
   "Qwen/Qwen3-VL-8B-Instruct": {
     "description": "Qwen3-VL-8B-Instruct 是 Qwen3 系列的视觉语言模型，基于 Qwen3-8B-Instruct 开发并在大量图文数据上训练，擅长通用视觉理解、以视觉为中心的对话以及图像中的多语言文本识别。适用于视觉问答、图像描述、多模态指令跟随与工具调用场景。"
@@ -978,13 +990,13 @@
     "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
   },
   "deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 是由深度求索（DeepSeek AI）发布的混合模式大语言模型，它在前代模型的基础上进行了多方面的重要升级。该模型的一大创新是集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode）于一体，用户可以通过调整聊天模板灵活切换，以适应不同的任务需求。通过专门的训练后优化，V3.1 在工具调用和 Agent 任务方面的性能得到了显著增强，能够更好地支持外部搜索工具和执行多步复杂任务。该模型基于 DeepSeek-V3.1-Base 进行后训练，通过两阶段长文本扩展方法，大幅增加了训练数据量，使其在处理长文档和长篇代码方面表现更佳。作为一个开源模型，DeepSeek-V3.1 在编码、数学和推理等多个基准测试中展现了与顶尖闭源模型相媲美的能力，同时凭借其混合专家（MoE）架构，在保持巨大模型容量的同时，有效降低了推理成本。"
+    "description": "DeepSeek V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。"
   },
   "deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus 是由深度求索（DeepSeek）发布的 V3.1 模型的更新版本，定位为混合智能体大语言模型。此次更新在保持模型原有能力的基础上，专注于修复用户反馈的问题并提升稳定性。它显著改善了语言一致性，减少了中英文混用和异常字符的出现。模型集成了“思考模式”（Thinking Mode）和“非思考模式”（Non-thinking Mode），用户可通过聊天模板灵活切换以适应不同任务。作为一个重要的优化，V3.1-Terminus 增强了代码智能体（Code Agent）和搜索智能体（Search Agent）的性能，使其在工具调用和执行多步复杂任务方面更加可靠。"
   },
   "deepseek-ai/DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 Exp 模型为混合推理架构模型，同时支持思考模式与非思考模式。"
+    "description": "DeepSeek-V3.2-Exp 是 DeepSeek 发布的实验性 V3.2 版本，作为迈向下一代架构的中间探索。它在 V3.1-Terminus 的基础上引入了 DeepSeek 稀疏注意力（DeepSeek Sparse Attention，DSA）机制以提升长上下文训练与推理效率，针对工具调用、长文档理解与多步推理进行了专项优化。V3.2-Exp 为研究与产品化之间的桥梁，适合希望在高上下文预算场景中探索更高推理效率的用户。"
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek LLM Chat (67B) 是创新的 AI 模型 提供深度语言理解和互动能力。"
@@ -2473,9 +2485,6 @@
   },
   "mistralai/Mixtral-8x7B-v0.1": {
     "description": "Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。"
-  },
-  "mistralai/mistral-7b-instruct": {
-    "description": "Mistral 7B Instruct 是一款兼有速度优化和长上下文支持的高性能行业标准模型。"
   },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo 是多语言支持和高性能编程的7.3B参数模型。"

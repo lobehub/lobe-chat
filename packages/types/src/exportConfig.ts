@@ -1,4 +1,4 @@
-import { ChatMessage } from './message';
+import { UIChatMessage } from './message';
 import { LobeSessions, SessionGroupItem } from './session';
 import { ChatTopic } from './topic';
 import { UserSettings } from './user/settings';
@@ -44,7 +44,7 @@ export interface ConfigModelMap {
  * 配置状态：会话
  */
 export interface ConfigStateSessions {
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
   sessionGroups: SessionGroupItem[];
   sessions: LobeSessions;
   topics: ChatTopic[];
@@ -54,7 +54,7 @@ export interface ConfigStateSessions {
  * 配置状态：单个会话
  */
 export interface ConfigStateSingleSession {
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
   sessions: LobeSessions;
   topics: ChatTopic[];
 }
