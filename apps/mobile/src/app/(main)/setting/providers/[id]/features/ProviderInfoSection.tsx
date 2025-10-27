@@ -24,9 +24,6 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
     setLoading(true);
     try {
       await toggleProviderEnabled(provider.id, value);
-      console.log(
-        `Successfully toggled provider ${provider.id} to ${value ? 'enabled' : 'disabled'}`,
-      );
     } catch (error) {
       console.error(`Failed to toggle provider ${provider.id}:`, error);
     }
