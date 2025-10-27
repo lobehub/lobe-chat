@@ -13,7 +13,7 @@ import List from './features/List';
 import Loading from './loading';
 
 const AssistantPage = memo<{ mobile?: boolean }>(() => {
-  const { q, page, category, sort, order } = useQuery() as AssistantQueryParams;
+  const { q, page, category, sort, order, source } = useQuery() as AssistantQueryParams;
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
   const { data, isLoading } = useAssistantList({
     category,
@@ -22,6 +22,7 @@ const AssistantPage = memo<{ mobile?: boolean }>(() => {
     pageSize: 21,
     q,
     sort,
+    source,
   });
 
   if (isLoading || !data) return <Loading />;

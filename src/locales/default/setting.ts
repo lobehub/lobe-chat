@@ -2,6 +2,45 @@ export default {
   about: {
     title: '关于',
   },
+  agentInfoDescription: {
+    basic: {
+      avatar: '头像',
+      description: '描述',
+      name: '名称',
+      tags: '标签',
+      title: '助手信息',
+    },
+    chat: {
+      displayMode: '展示模式',
+      enableHistoryCount: '启用历史消息计数',
+      historyCount: '历史消息数量',
+      no: '否',
+      searchMode: '搜索模式',
+      title: '聊天偏好',
+      yes: '是',
+    },
+    model: {
+      maxTokens: '最大 Token 数',
+      model: '模型',
+      provider: '服务商',
+      temperature: '温度',
+      title: '模型设置',
+      topP: 'Top P 值',
+    },
+    plugins: {
+      count: '插件设置（{{count}}）',
+      empty: '尚未安装插件',
+      title: '已安装插件',
+    },
+    role: {
+      systemRole: '系统提示词',
+      title: '角色设置',
+    },
+    value: {
+      unset: '未设置',
+      untitled: '未命名助手',
+    },
+  },
   agentTab: {
     chat: '聊天偏好',
     meta: '助手信息',
@@ -18,6 +57,8 @@ export default {
     },
     title: '数据统计',
   },
+  checking: '检查中...',
+  checkingPermissions: '检查权限中...',
   danger: {
     clear: {
       action: '立即清除',
@@ -147,6 +188,20 @@ export default {
       title: 'API 代理地址',
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
+  },
+  marketPublish: {
+    resultModal: {
+      message: '助手已提交审核，审核通过后将自动上线。点击「在市场查看」查看已发布的助手。',
+      view: '在市场查看',
+    },
+    submit: {
+      button: '分享到市场',
+      tooltip: '分享助手到市场',
+    },
+    upload: {
+      button: '发布新版本',
+      tooltip: '发布新版本到助手市场',
+    },
   },
   message: {
     success: '更新成功',
@@ -565,7 +620,7 @@ export default {
   },
   submitAgentModal: {
     button: '提交助手',
-    identifier: 'identifier 助手标识符',
+    identifier: '助手标识符（identifier）',
     metaMiss: '请补全助手信息后提交，需要包含名称、描述和标签',
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
     tooltips: '分享到助手市场',

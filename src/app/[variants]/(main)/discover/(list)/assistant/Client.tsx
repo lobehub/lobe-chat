@@ -6,22 +6,26 @@ import { Flexbox } from 'react-layout-kit';
 import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { AssistantQueryParams, DiscoverTab } from '@/types/discover';
+import { AssistantMarketSource, AssistantQueryParams, DiscoverTab } from '@/types/discover';
 
 import Pagination from '../features/Pagination';
 import List from './features/List';
 import Loading from './loading';
 
 const Client = memo<{ mobile?: boolean }>(() => {
-  const { q, page, category, sort, order } = useQuery() as AssistantQueryParams;
+  const { q, page, category, sort, order, ownerId, source } =
+    useQuery() as AssistantQueryParams;
+  const marketSource = (source as AssistantMarketSource | undefined) ?? 'new';
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
   const { data, isLoading } = useAssistantList({
     category,
     order,
+    ownerId,
     page,
     pageSize: 21,
     q,
     sort,
+    source: marketSource,
   });
 
   if (isLoading || !data) return <Loading />;

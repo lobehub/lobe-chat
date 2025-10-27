@@ -1,0 +1,25 @@
+export default {
+  errors: {
+    authorizationFailed: '授权失败，请重试。',
+    browserOnly: '授权流程只能在浏览器中发起。',
+    codeConsumed: '授权码已被使用，请重新尝试。',
+    codeVerifierMissing: '授权会话无效，请重新发起登录流程。',
+    general: '授权出现错误，请重试。',
+    handoffFailed: '无法获取授权结果，请重试。',
+    handoffTimeout: '授权超时，请在浏览器中完成操作后重试。',
+    oidcNotReady: '授权服务尚未就绪，请稍后再试。',
+    openBrowserFailed: '无法打开系统浏览器，请重试。',
+    openPopupFailed: '无法打开授权弹窗，请检查浏览器的弹窗拦截设置。',
+    popupClosed: '授权窗口未完成即被关闭。',
+    sessionExpired: '授权会话已过期，请重新登录。',
+    stateMismatch: '授权状态不匹配，请重试。',
+    stateMissing: '未找到授权状态，请重试。',
+  },
+  messages: {
+    loading: '正在启动授权流程...',
+    success: {
+      submit: '授权成功！现在可以发布助手了。',
+      upload: '授权成功！现在可以发布新版本了。',
+    },
+  },
+};

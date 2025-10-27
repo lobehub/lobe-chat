@@ -15,38 +15,52 @@ const Overview = memo(() => {
   const { t } = useTranslation('discover');
   const { tokenUsage, tags = [], config } = useDetailContext();
   const theme = useTheme();
+
+  const { systemRole, openingMessage, openingQuestions } = config || {};
   return (
     <Flexbox gap={16}>
-      <Title tag={tokenUsage && <TokenTag tokenUsage={tokenUsage} />}>
-        {t('assistants.details.systemRole.title')}
-      </Title>
-      <Block gap={16} padding={16} variant={'outlined'}>
-        {<MarkdownRender>{config?.systemRole.trimEnd()}</MarkdownRender>}
-        <TagList tags={tags} />
-      </Block>
-      <Title>{t('assistants.details.systemRole.openingMessage')}</Title>
-      <Block align={'flex-start'} gap={12} horizontal padding={16} variant={'outlined'}>
-        <Icon
-          color={theme.colorError}
-          icon={MessageCircleHeartIcon}
-          size={20}
-          style={{
-            marginTop: 4,
-          }}
-        />
-        <MarkdownRender>{config?.openingMessage?.trimEnd()}</MarkdownRender>
-      </Block>
-      <Title tag={<Tag>{config?.openingQuestions?.length}</Tag>}>
-        {t('assistants.details.systemRole.openingQuestions')}
-      </Title>
-      <Flexbox gap={8}>
-        {config?.openingQuestions?.map((item, key) => (
-          <Block gap={12} horizontal key={key} padding={16} variant={'outlined'}>
-            <Icon color={theme.colorWarning} icon={MessageCircleQuestionIcon} size={20} />
-            <MarkdownRender>{item}</MarkdownRender>
+      {systemRole && (
+        <>
+          <Title tag={tokenUsage && <TokenTag tokenUsage={tokenUsage} />}>
+            {t('assistants.details.systemRole.title')}
+          </Title>
+          <Block gap={16} padding={16} variant={'outlined'}>
+            {<MarkdownRender>{systemRole.trimEnd()}</MarkdownRender>}
+            <TagList tags={tags} />
           </Block>
-        ))}
-      </Flexbox>
+        </>
+      )}
+      {openingMessage && (
+        <>
+          <Title>{t('assistants.details.systemRole.openingMessage')}</Title>
+          <Block align={'flex-start'} gap={12} horizontal padding={16} variant={'outlined'}>
+            <Icon
+              color={theme.colorError}
+              icon={MessageCircleHeartIcon}
+              size={20}
+              style={{
+                marginTop: 4,
+              }}
+            />
+            <MarkdownRender>{openingMessage?.trimEnd()}</MarkdownRender>
+          </Block>
+        </>
+      )}
+      {openingQuestions && (
+        <>
+          <Title tag={<Tag>{openingQuestions?.length}</Tag>}>
+            {t('assistants.details.systemRole.openingQuestions')}
+          </Title>
+          <Flexbox gap={8}>
+            {openingQuestions?.map((item, key) => (
+              <Block gap={12} horizontal key={key} padding={16} variant={'outlined'}>
+                <Icon color={theme.colorWarning} icon={MessageCircleQuestionIcon} size={20} />
+                <MarkdownRender>{item}</MarkdownRender>
+              </Block>
+            ))}
+          </Flexbox>
+        </>
+      )}
     </Flexbox>
   );
 });

@@ -2,7 +2,7 @@
 
 import { Icon, Tabs, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { BookOpenIcon, LayersIcon, ListIcon, SquareUserIcon } from 'lucide-react';
+import { BookOpenIcon, HistoryIcon, LayersIcon, ListIcon, SquareUserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,9 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { SOCIAL_URL } from '@/const/branding';
-import { AssistantNavKey, McpNavKey } from '@/types/discover';
+import { AGENTS_INDEX_GITHUB, AGENTS_OFFICIAL_URL } from '@/const/url';
+import { useQuery } from '@/hooks/useQuery';
+import { AssistantNavKey } from '@/types/discover';
 
 import { useDetailContext } from '../DetailProvider';
 
@@ -38,6 +40,13 @@ const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = AssistantNavKey.
   const { t } = useTranslation('discover');
   const { pluginCount, knowledgeCount, identifier } = useDetailContext();
   const { styles } = useStyles();
+  const { source } = useQuery() as { source?: string };
+  const isLegacy = source === 'legacy';
+  const marketplaceLink = identifier
+    ? isLegacy
+      ? urlJoin(AGENTS_INDEX_GITHUB, 'tree/main/locales', identifier)
+      : urlJoin(AGENTS_OFFICIAL_URL, identifier)
+    : undefined;
 
   const capabilitiesCount = Number(pluginCount) + Number(knowledgeCount);
 
@@ -77,8 +86,13 @@ const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = AssistantNavKey.
             ),
         },
         {
+          icon: <Icon icon={HistoryIcon} size={16} />,
+          key: AssistantNavKey.Version,
+          label: t('assistants.details.version.title'),
+        },
+        {
           icon: <Icon icon={ListIcon} size={16} />,
-          key: McpNavKey.Related,
+          key: AssistantNavKey.Related,
           label: t('assistants.details.related.title'),
         },
       ]}
@@ -95,15 +109,8 @@ const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = AssistantNavKey.
         <Link className={styles.link} href={SOCIAL_URL.discord} target={'_blank'}>
           {t('mcp.details.nav.needHelp')}
         </Link>
-        {identifier && (
-          <Link
-            className={styles.link}
-            href={urlJoin(
-              'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
-              identifier,
-            )}
-            target={'_blank'}
-          >
+        {identifier && marketplaceLink && (
+          <Link className={styles.link} href={marketplaceLink} target={'_blank'}>
             {t('mcp.details.nav.viewSourceCode')}
           </Link>
         )}

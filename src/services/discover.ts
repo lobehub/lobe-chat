@@ -7,6 +7,7 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import {
   AssistantListResponse,
+  AssistantMarketSource,
   AssistantQueryParams,
   DiscoverAssistantDetail,
   DiscoverMcpDetail,
@@ -30,27 +31,37 @@ class DiscoverService {
   private _isRetrying = false;
 
   // ============================== Assistant Market ==============================
-  getAssistantCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
+  getAssistantCategories = async (
+    params: CategoryListQuery & { source?: AssistantMarketSource } = {},
+  ): Promise<CategoryItem[]> => {
     const locale = globalHelpers.getCurrentLanguage();
+    const { source, ...rest } = params;
     return lambdaClient.market.getAssistantCategories.query({
-      ...params,
+      ...rest,
       locale,
+      source,
     });
   };
 
   getAssistantDetail = async (params: {
     identifier: string;
     locale?: string;
+    source?: AssistantMarketSource;
+    version?: string;
   }): Promise<DiscoverAssistantDetail | undefined> => {
     const locale = globalHelpers.getCurrentLanguage();
     return lambdaClient.market.getAssistantDetail.query({
-      ...params,
+      identifier: params.identifier,
       locale,
+      source: params.source,
+      version: params.version,
     });
   };
 
-  getAssistantIdentifiers = async (): Promise<IdentifiersResponse> => {
-    return lambdaClient.market.getAssistantIdentifiers.query();
+  getAssistantIdentifiers = async (
+    params: { source?: AssistantMarketSource } = {},
+  ): Promise<IdentifiersResponse> => {
+    return lambdaClient.market.getAssistantIdentifiers.query(params);
   };
 
   getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
