@@ -2,7 +2,6 @@
 
 import {
   HotkeyEnum,
-  IEditor,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -18,6 +17,7 @@ import {
   type ChatInputActionsProps,
   CodeLanguageSelect,
   Editor,
+  useEditor,
   useEditorState,
 } from '@lobehub/editor/react';
 import { Modal } from '@lobehub/ui';
@@ -60,11 +60,13 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
   ({ open, onClose, documentId, knowledgeBaseId }) => {
     const { t } = useTranslation(['file', 'editor']);
     const theme = useTheme();
-    const [editor, setEditor] = useState<IEditor | undefined>(undefined);
+
+    const editor = useEditor();
+    const editorState = useEditorState(editor);
+
     const [isSaving, setIsSaving] = useState(false);
     const [isLoadingContent, setIsLoadingContent] = useState(false);
     const [noteTitle, setNoteTitle] = useState('');
-    const editorState = useEditorState(editor);
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const isEditMode = !!documentId;
 
@@ -79,18 +81,10 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
         .then((doc) => {
           if (doc && doc.content) {
             setNoteTitle(doc.title || doc.filename || '');
-            try {
-              const editorData = JSON.parse(doc.rawData);
-              editor.setDocument('json', editorData);
-            } catch (error) {
-              console.error('Failed to parse editor content as JSON:', error);
-              // If it's not JSON, it might be old markdown format, set as markdown
-              try {
-                editor.setDocument('markdown', doc.content);
-              } catch (e) {
-                console.error('Failed to set editor content:', e);
-              }
-            }
+
+            console.log('doc.editorData', doc.editorData);
+
+            editor.setDocument('json', doc.editorData);
           }
         })
         .catch((error) => {
@@ -100,7 +94,7 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
         .finally(() => {
           setIsLoadingContent(false);
         });
-    }, [open, documentId, editor, t]);
+    }, [open, documentId, editor]);
 
     const handleClose = () => {
       // Clean up editor state
@@ -306,7 +300,6 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
                 className={editorClassName}
                 content={''}
                 editor={editor}
-                onInit={(editor) => setEditor(editor)}
                 plugins={[
                   ReactListPlugin,
                   ReactCodePlugin,

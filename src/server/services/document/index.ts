@@ -31,13 +31,21 @@ export class DocumentService {
    */
   async createNote(params: {
     content?: string;
+    editorData: Record<string, any>;
     fileType?: string;
     knowledgeBaseId?: string;
     metadata?: Record<string, any>;
     rawData?: string;
     title: string;
   }): Promise<DocumentItem> {
-    const { content, rawData, title, fileType = 'custom/note', metadata, knowledgeBaseId } = params;
+    const {
+      content,
+      editorData,
+      title,
+      fileType = 'custom/note',
+      metadata,
+      knowledgeBaseId,
+    } = params;
 
     // Calculate character and line counts
     const totalCharCount = content.length;
@@ -45,12 +53,12 @@ export class DocumentService {
 
     const document = await this.documentModel.create({
       content,
+      editorData,
       fileId: knowledgeBaseId ? null : undefined,
       fileType,
       filename: title,
       metadata,
       pages: undefined,
-      rawData,
       source: 'note',
       sourceType: 'api',
       title,
