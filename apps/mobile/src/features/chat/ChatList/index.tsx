@@ -64,6 +64,8 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   const { messages, isGenerating, isLoading } = useChat();
   const isCurrentChatLoaded = useChatStore(chatSelectors.isCurrentChatLoaded);
+  const activeId = useChatStore((s) => s.activeId);
+  const activeTopicId = useChatStore((s) => s.activeTopicId);
   const [atBottom, setAtBottom] = useState(true);
   const atBottomRef = useRef(true);
   const isAtBottomRefWhenKeyboardStartShow = useRef(true);
@@ -91,7 +93,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   useEffect(() => {
     if (isCurrentChatLoaded || isLoading || isGenerating) scrollToBottom();
-  }, [isCurrentChatLoaded, isGenerating, isLoading]);
+  }, [isCurrentChatLoaded, isGenerating, isLoading, activeId, activeTopicId]);
 
   const renderItem: ListRenderItem<ChatMessage> = useCallback(
     ({ item, index }) => (
