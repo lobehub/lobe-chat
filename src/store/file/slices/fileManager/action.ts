@@ -1,9 +1,7 @@
-import { t } from 'i18next';
 import pMap from 'p-map';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { message } from '@/components/AntdStaticMethods';
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
 import { useClientDataSWR } from '@/libs/swr';
 import { fileService } from '@/services/file';
@@ -113,26 +111,14 @@ export const createFileManageSlice: StateCreator<
     // 1. skip file in blacklist
     const files = filesToUpload.filter((file) => !FILE_UPLOAD_BLACKLIST.includes(file.name));
 
-    // 2. Show queue info if there are more files than the limit
-    if (files.length > MAX_UPLOAD_FILE_COUNT) {
-      const remainingCount = files.length - MAX_UPLOAD_FILE_COUNT;
-      message.info(
-        t('uploadDock.fileQueueInfo', {
-          count: MAX_UPLOAD_FILE_COUNT,
-          ns: 'file',
-          remaining: remainingCount,
-        }),
-      );
-    }
-
-    // 3. Add all files to dock
+    // 2. Add all files to dock
     dispatchDockFileList({
       atStart: true,
       files: files.map((file) => ({ file, id: file.name, status: 'pending' })),
       type: 'addFiles',
     });
 
-    // 4. Upload files with concurrency limit using p-map
+    // 3. Upload files with concurrency limit using p-map
     const uploadResults = await pMap(
       files,
       async (file) => {
@@ -149,7 +135,7 @@ export const createFileManageSlice: StateCreator<
       { concurrency: MAX_UPLOAD_FILE_COUNT },
     );
 
-    // 5. auto-embed files that support chunking
+    // 4. auto-embed files that support chunking
     const fileIdsToEmbed = uploadResults
       .filter(({ fileType, fileId }) => fileId && !isChunkingUnsupported(fileType))
       .map(({ fileId }) => fileId!);
