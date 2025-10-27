@@ -1,8 +1,8 @@
+import { DBMessageItem } from '@lobechat/types';
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MessageItem } from '@/types/message';
 import { uuid } from '@/utils/uuid';
 
 import { getTestDB } from '../../models/__tests__/_util';
@@ -919,7 +919,7 @@ describe('MessageModel', () => {
       const newMessages = [
         { id: '1', role: 'user', content: 'message 1' },
         { id: '2', role: 'assistant', content: 'message 2' },
-      ] as MessageItem[];
+      ] as DBMessageItem[];
 
       // 调用 batchCreateMessages 方法
       await messageModel.batchCreate(newMessages);

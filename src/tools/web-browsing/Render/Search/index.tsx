@@ -1,9 +1,7 @@
-import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
+import { SearchQuery, UniformSearchResponse , ChatMessagePluginError } from '@lobechat/types';
 import { Alert, Highlighter } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-import { ChatMessagePluginError } from '@/types/message';
 
 import ConfigForm from './ConfigForm';
 import SearchQueryView from './SearchQuery';

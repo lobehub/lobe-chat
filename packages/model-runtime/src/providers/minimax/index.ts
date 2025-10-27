@@ -10,18 +10,18 @@ export const getMinimaxMaxOutputs = (modelId: string): number | undefined => {
 };
 
 export const LobeMinimaxAI = createOpenAICompatibleRuntime({
-  baseURL: 'https://api.minimax.chat/v1',
+  baseURL: 'https://api.minimaxi.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
       const { enabledSearch, max_tokens, temperature, tools, top_p, ...params } = payload;
 
       const minimaxTools = enabledSearch
         ? [
-            ...(tools || []),
-            {
-              type: 'web_search',
-            },
-          ]
+          ...(tools || []),
+          {
+            type: 'web_search',
+          },
+        ]
         : tools;
 
       // Resolve parameters with constraints
@@ -33,7 +33,7 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
         },
         {
           normalizeTemperature: true,
-          topPRange: { max: 1, min: 0 },
+          topPRange: { max: 1, min: 0.01 },
         },
       );
 

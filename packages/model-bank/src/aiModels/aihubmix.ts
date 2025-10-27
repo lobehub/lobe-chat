@@ -944,14 +944,18 @@ const aihubmixModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768 + 8192,
-    description: 'Gemini 2.5 Flash 实验模型，支持图像生成',
+    description:
+      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
     displayName: 'Nano Banana',
-    id: 'gemini-2.5-flash-image-preview',
+    enabled: true,
+    id: 'gemini-2.5-flash-image',
     maxOutput: 8192,
     pricing: {
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-26',
