@@ -82,14 +82,13 @@ const ProviderDetailPage = () => {
     return buildModelsData(items);
   }, [providerDetail, buildModelsData]);
 
-  // 统一的renderItem函数
   const renderItem = useCallback(
     ({ item }: { item: FlashListItem }) => {
       switch (item.type) {
         case 'provider-info': {
           return (
             <ProviderInfoSection
-              provider={{ ...item.data, ...builtinProviderCard }}
+              provider={{ ...builtinProviderCard, ...item.data }}
               setLoading={setLoading}
             />
           );
@@ -130,7 +129,7 @@ const ProviderDetailPage = () => {
         }
       }
     },
-    [handleFetchModels, handleToggleModel, setSearchKeyword],
+    [builtinProviderCard, handleFetchModels, handleToggleModel, setSearchKeyword],
   );
 
   // FlashList的keyExtractor
@@ -194,8 +193,8 @@ const ProviderDetailPage = () => {
         <ProviderInfoSection
           provider={
             {
-              ...flashListData.find((item) => item.type === 'provider-info'),
               ...builtinProviderCard,
+              ...flashListData.find((item) => item.type === 'provider-info')?.data,
             } as any
           }
           setLoading={setLoading}

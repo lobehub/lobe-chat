@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { merge } from '@/utils/merge';
 
 /**
  * Hook for managing provider detail data
@@ -16,37 +17,21 @@ export const useProviderDetail = (providerId: string) => {
     aiProviderSelectors.isAiProviderConfigLoading(providerId),
   );
 
-  // 先从本地配置获取基础信息
   const builtinProviderCard = useMemo(
     () => DEFAULT_MODEL_PROVIDER_LIST.find((v) => v.id === providerId),
     [providerId],
   );
 
-  // 合并配置
+  // 合并本地配置和服务端配置（与 web 端的 AiInfraRepos.getAiProviderDetail 逻辑一致）
   const providerDetail = useMemo<AiProviderDetailItem | undefined>(() => {
     if (!builtinProviderCard && !userConfig) return undefined;
 
-    // 如果是内置provider，合并本地配置和用户配置
     if (builtinProviderCard) {
-      return {
-        ...builtinProviderCard,
-        ...userConfig,
-
-        // 保持checkModel的默认值，只有用户明确配置了才使用用户的值
-        checkModel: userConfig?.checkModel ?? builtinProviderCard.checkModel,
-
-        // 保留用户配置的这些字段
-        enabled: userConfig?.enabled ?? builtinProviderCard.enabled,
-
-        keyVaults: userConfig?.keyVaults || {},
-        // 确保settings字段来自本地配置
-        settings: builtinProviderCard.settings,
-      } as AiProviderDetailItem;
+      return merge(builtinProviderCard, userConfig || {}) as unknown as AiProviderDetailItem;
     }
 
-    // 如果是自定义provider，直接使用用户配置
     return userConfig;
-  }, [builtinProviderCard, userConfig]);
+  }, [builtinProviderCard, userConfig, providerId]);
 
   return {
     builtinProviderCard,
