@@ -58,6 +58,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking'],
     visionKeywords: [],
   },
+  minimax: {
+    functionCallKeywords: ['minimax'],
+    reasoningKeywords: ['-m'],
+    visionKeywords: ['-vl', 'Text-01'],
+  },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
     reasoningKeywords: ['thinking'],
@@ -81,7 +86,7 @@ export const MODEL_LIST_CONFIGS = {
       'qwen3',
     ],
     reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-', '!-max-'],
-    visionKeywords: ['qvq', 'vl'],
+    visionKeywords: ['qvq', '-vl', '-omni'],
   },
   v0: {
     functionCallKeywords: ['v0'],
@@ -118,6 +123,7 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
   longcat: ['longcat'],
+  minimax: ['minimax'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
@@ -374,9 +380,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-        model.id.toLowerCase(),
-        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
+            model.id.toLowerCase(),
+            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+          )
         ? 'embedding'
         : 'chat');
 
