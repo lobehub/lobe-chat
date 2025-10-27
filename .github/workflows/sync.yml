@@ -7,7 +7,7 @@ permissions:
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # every 6 hours
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
@@ -18,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - name: Clean issue notice
         uses: actions-cool/issues-helper@v3
@@ -32,7 +34,7 @@ jobs:
           upstream_sync_repo: lobehub/lobe-chat
           upstream_sync_branch: main
           target_sync_branch: main
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
+          target_repo_token: ${{ secrets.SYNC_TOKEN }}  # ← 使用你新建的 PAT
           test_mode: false
 
       - name: Sync check
@@ -43,12 +45,4 @@ jobs:
           title: '🚨 同步失败 | Sync Fail'
           labels: '🚨 Sync Fail'
           body: |
-            Due to a change in the workflow file of the [LobeChat][lobechat] upstream repository, GitHub has automatically suspended the scheduled automatic update. You need to manually sync your fork. Please refer to the detailed [Tutorial][tutorial-en-US] for instructions.
-
-            由于 [LobeChat][lobechat] 上游仓库的 workflow 文件变更，导致 GitHub 自动暂停了本次自动更新，你需要手动 Sync Fork 一次，请查看 [详细教程][tutorial-zh-CN]
-
-            ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/273954625-df80c890-0822-4ac2-95e6-c990785cbed5.png)
-
-            [lobechat]: https://github.com/lobehub/lobe-chat
-            [tutorial-zh-CN]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN
-            [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
+            ...（你的原文保持不变）
