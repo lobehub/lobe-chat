@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { processWithArtifact } from './utils';
+import { processWithArtifact } from './markdown';
 
 describe('processWithArtifact', () => {
   it('should removeLineBreaks with closed tag', () => {
