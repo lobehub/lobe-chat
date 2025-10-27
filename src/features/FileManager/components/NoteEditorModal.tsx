@@ -79,10 +79,8 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
         .then((doc) => {
           if (doc && doc.content) {
             setNoteTitle(doc.title || doc.filename || '');
-            console.log('doc.content', doc.content);
-            // Parse the content as JSON and set it to the editor
             try {
-              const editorData = JSON.parse(doc.content);
+              const editorData = JSON.parse(doc.rawData);
               editor.setDocument('json', editorData);
             } catch (error) {
               console.error('Failed to parse editor content as JSON:', error);
@@ -116,10 +114,9 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
 
       // Get editor content as JSON (native format)
       const editorData = editor.getDocument('json');
-      const content = JSON.stringify(editorData);
 
       // Check if editor is empty by getting text content
-      const textContent = (editor.getDocument('text') as unknown as string) || '';
+      const textContent = (editor.getDocument('markdown') as unknown as string) || '';
       if (!textContent || textContent.trim() === '') {
         message.warning(t('header.newNoteDialog.emptyContent', { ns: 'file' }));
         return;
@@ -131,7 +128,8 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
         if (isEditMode) {
           // Update existing note
           await documentService.updateDocument({
-            content,
+            content: textContent,
+            editorData: JSON.stringify(editorData),
             id: documentId,
             title: noteTitle,
           });
@@ -149,7 +147,8 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
           const title = noteTitle || `Note - ${timestamp}`;
 
           await documentService.createNote({
-            content,
+            content: textContent,
+            editorData: JSON.stringify(editorData),
             fileType: 'custom/note',
             knowledgeBaseId,
             metadata: {
