@@ -16,6 +16,7 @@ import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import ChunksBadge from '../FileListItem/ChunkTag';
 import DropdownMenu from '../FileListItem/DropdownMenu';
+import NoteEditorModal from '../../components/NoteEditorModal';
 
 // Image file types
 const IMAGE_TYPES = new Set([
@@ -45,6 +46,29 @@ const isMarkdownFile = (name: string, fileType?: string) => {
 // Helper to check if it's a custom note that should be rendered
 const isCustomNote = (fileType?: string) => {
   return fileType === CUSTOM_NOTE_TYPE;
+};
+
+// Helper function to extract text from editor's JSON format for preview
+const extractTextFromEditorJSON = (editorData: any): string => {
+  if (!editorData || !editorData.root || !editorData.root.children) {
+    return '';
+  }
+
+  const extractFromNode = (node: any): string => {
+    if (!node) return '';
+
+    // If node has text, return it
+    if (node.text) return node.text;
+
+    // If node has children, recursively extract text
+    if (node.children && Array.isArray(node.children)) {
+      return node.children.map((child: any) => extractFromNode(child)).join('');
+    }
+
+    return '';
+  };
+
+  return editorData.root.children.map((node: any) => extractFromNode(node)).join('\n');
 };
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -345,6 +369,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const [imageLoaded, setImageLoaded] = useState(false);
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
+    const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
       s.parseFilesToChunks,
@@ -354,7 +379,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
     const isNote = isCustomNote(fileType);
-    const shouldRenderMarkdown = isNote;
 
     const cardRef = useRef<HTMLDivElement>(null);
     const [isInView, setIsInView] = useState(false);
@@ -396,7 +420,18 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             if (isNote) {
               // For custom notes, fetch from document service
               const document = await documentService.getDocumentById(id);
-              text = document?.content || '';
+              const content = document?.content || '';
+
+              // Try to parse as JSON (editor's native format) and convert to markdown for preview
+              try {
+                const editorData = JSON.parse(content);
+                // Since we can't easily convert JSON to markdown here without an editor instance,
+                // we'll extract plain text from the JSON structure for preview
+                text = extractTextFromEditorJSON(editorData);
+              } catch {
+                // If it's not JSON, use it as-is (might be old markdown format)
+                text = content;
+              }
             } else if (url) {
               // For regular markdown files, fetch from URL
               const res = await fetch(url);
@@ -442,7 +477,11 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             !isImage && !isMarkdown && !isNote && styles.contentWithPadding,
           )}
           onClick={() => {
-            onOpen(id);
+            if (isNote) {
+              setIsNoteModalOpen(true);
+            } else {
+              onOpen(id);
+            }
           }}
         >
           {isImage && url ? (
@@ -528,13 +567,13 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                 {isLoadingMarkdown ? (
                   <div className={styles.markdownLoading}>Loading preview...</div>
                 ) : markdownContent ? (
-                  shouldRenderMarkdown ? (
-                    <div className={styles.markdownPreview}>
+                  <div className={styles.markdownPreview}>
+                    {isMarkdown && !isNote ? (
                       <Markdown>{markdownContent}</Markdown>
-                    </div>
-                  ) : (
-                    <div className={styles.markdownPreview}>{markdownContent}</div>
-                  )
+                    ) : (
+                      markdownContent
+                    )}
+                  </div>
                 ) : (
                   <div className={styles.iconWrapper}>
                     <FileIcon fileName={name} fileType={fileType} size={64} />
@@ -652,6 +691,16 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             </>
           )}
         </div>
+
+        {/* Note Editor Modal */}
+        {isNote && (
+          <NoteEditorModal
+            documentId={id}
+            knowledgeBaseId={knowledgeBaseId}
+            onClose={() => setIsNoteModalOpen(false)}
+            open={isNoteModalOpen}
+          />
+        )}
       </div>
     );
   },
