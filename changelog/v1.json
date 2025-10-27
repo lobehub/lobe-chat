@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add MiniMax-M2 model."]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.5"
+  },
+  {
+    "children": {
       "improvements": [
         "Pre render ModelSwitchPanel, The error details of the connectivity check lead to a layout problem."
       ]
