@@ -28,6 +28,11 @@
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },
+    "newNoteButton": "New Note",
+    "newNoteDialog": {
+      "save": "Save",
+      "title": "New Note"
+    },
     "uploadButton": "Upload"
   },
   "knowledgeBase": {
