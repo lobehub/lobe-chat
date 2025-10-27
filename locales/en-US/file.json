@@ -30,11 +30,15 @@
     },
     "newNoteButton": "New Note",
     "newNoteDialog": {
+      "editTitle": "Edit Note",
       "emptyContent": "Note content cannot be empty",
+      "loadError": "Failed to load note, please try again",
+      "loading": "Loading...",
       "save": "Save",
       "saveError": "Failed to save note, please try again",
       "saveSuccess": "Note saved successfully",
-      "title": "New Note"
+      "title": "New Note",
+      "updateSuccess": "Note updated successfully"
     },
     "uploadButton": "Upload"
   },
