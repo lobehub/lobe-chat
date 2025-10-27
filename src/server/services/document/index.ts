@@ -30,13 +30,14 @@ export class DocumentService {
    * Create a note document (without associated file)
    */
   async createNote(params: {
-    content: string;
+    content?: string;
     fileType?: string;
     knowledgeBaseId?: string;
     metadata?: Record<string, any>;
+    rawData?: string;
     title: string;
   }): Promise<DocumentItem> {
-    const { content, title, fileType = 'custom/note', metadata, knowledgeBaseId } = params;
+    const { content, rawData, title, fileType = 'custom/note', metadata, knowledgeBaseId } = params;
 
     // Calculate character and line counts
     const totalCharCount = content.length;
@@ -49,6 +50,7 @@ export class DocumentService {
       filename: title,
       metadata,
       pages: undefined,
+      rawData,
       source: 'note',
       sourceType: 'api',
       title,

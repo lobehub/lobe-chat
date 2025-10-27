@@ -24,7 +24,8 @@ export const documentRouter = router({
   createNote: documentProcedure
     .input(
       z.object({
-        content: z.string(),
+        content: z.string().optional(),
+        editorData: z.string(),
         fileType: z.string().optional(),
         knowledgeBaseId: z.string().optional(),
         metadata: z.record(z.any()).optional(),
@@ -69,6 +70,7 @@ export const documentRouter = router({
       z.object({
         content: z.string().optional(),
         id: z.string(),
+        rawData: z.string().optional(),
         title: z.string().optional(),
       }),
     )

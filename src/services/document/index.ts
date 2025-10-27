@@ -3,7 +3,8 @@ import { DocumentItem } from '@lobechat/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
 
 export interface CreateNoteParams {
-  content: string;
+  content?: string;
+  editorData: string;
   fileType?: string;
   knowledgeBaseId?: string;
   metadata?: Record<string, any>;
@@ -12,6 +13,7 @@ export interface CreateNoteParams {
 
 export interface UpdateDocumentParams {
   content?: string;
+  editorData?: string;
   id: string;
   title?: string;
 }
