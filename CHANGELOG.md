@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.142.5](https://github.com/lobehub/lobe-chat/compare/v1.142.4...v1.142.5)
+
+<sup>Released on **2025-10-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add MiniMax-M2 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add MiniMax-M2 model, closes [#9897](https://github.com/lobehub/lobe-chat/issues/9897) ([d6fded2](https://github.com/lobehub/lobe-chat/commit/d6fded2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.142.4](https://github.com/lobehub/lobe-chat/compare/v1.142.3...v1.142.4)
 
 <sup>Released on **2025-10-27**</sup>
