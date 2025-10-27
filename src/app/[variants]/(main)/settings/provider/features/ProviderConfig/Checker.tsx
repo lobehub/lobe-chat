@@ -19,11 +19,16 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
   const providerName = useProviderName(error.body?.provider);
 
   return (
-    <Flexbox gap={8} style={{ width: '100%' }}>
+    <Flexbox gap={8} style={{ maxWidth: 600, width: '100%' }}>
       <Alert
         extra={
           <Flexbox>
-            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
+            <Highlighter
+              actionIconSize={'small'}
+              language={'json'}
+              variant={'borderless'}
+              wrap={true}
+            >
               {JSON.stringify(error.body || error, null, 2)}
             </Highlighter>
           </Flexbox>
