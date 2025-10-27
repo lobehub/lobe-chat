@@ -193,6 +193,7 @@ table documents {
   file_id text
   user_id text [not null]
   client_id text
+  editor_data jsonb
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

@@ -2,6 +2,57 @@
 
 # Changelog
 
+### [Version 1.142.5](https://github.com/lobehub/lobe-chat/compare/v1.142.4...v1.142.5)
+
+<sup>Released on **2025-10-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add MiniMax-M2 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add MiniMax-M2 model, closes [#9897](https://github.com/lobehub/lobe-chat/issues/9897) ([d6fded2](https://github.com/lobehub/lobe-chat/commit/d6fded2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.142.4](https://github.com/lobehub/lobe-chat/compare/v1.142.3...v1.142.4)
+
+<sup>Released on **2025-10-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Pre render ModelSwitchPanel, The error details of the connectivity check lead to a layout problem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Pre render ModelSwitchPanel, closes [#9499](https://github.com/lobehub/lobe-chat/issues/9499) ([840382b](https://github.com/lobehub/lobe-chat/commit/840382b))
+- **misc**: The error details of the connectivity check lead to a layout problem, closes [#9872](https://github.com/lobehub/lobe-chat/issues/9872) ([ea42e60](https://github.com/lobehub/lobe-chat/commit/ea42e60))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.142.3](https://github.com/lobehub/lobe-chat/compare/v1.142.2...v1.142.3)
 
 <sup>Released on **2025-10-27**</sup>

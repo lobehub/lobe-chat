@@ -1,6 +1,22 @@
 [
   {
     "children": {
+      "improvements": ["Add MiniMax-M2 model."]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Pre render ModelSwitchPanel, The error details of the connectivity check lead to a layout problem."
+      ]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.4"
+  },
+  {
+    "children": {
       "improvements": [
         "Adjust modal setting form styles for improved layout and responsiveness, Unzip file when uploading in knowledge base [LOB-500]."
       ]
