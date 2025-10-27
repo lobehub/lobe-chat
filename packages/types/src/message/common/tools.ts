@@ -19,6 +19,23 @@ export interface ChatToolPayload {
   type: LobeToolRenderType;
 }
 
+/**
+ * Tool execution result from tool messages
+ */
+export interface ChatToolResult {
+  content: string | null;
+  error?: any;
+  id: string;
+  state?: any;
+}
+
+/**
+ * Chat tool payload with merged execution result
+ */
+export interface ChatToolPayloadWithResult extends ChatToolPayload {
+  result?: ChatToolResult;
+}
+
 export interface ToolsCallingContext {
   topicId?: string;
 }

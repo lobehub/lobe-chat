@@ -1,29 +1,35 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 import { GroundingSearch } from '../../search';
 import { MessageMetadata, ModelReasoning } from '../common';
 
 export interface DBMessageItem {
-  agentId: string | null;
-  clientId: string | null;
-  content: string | null;
-  createdAt: Date;
-  error: any | null;
-  favorite: boolean | null;
   id: string;
-  metadata?: MessageMetadata | null;
-  model: string | null;
-  observationId: string | null;
-  parentId: string | null;
-  provider: string | null;
-  quotaId: string | null;
-  reasoning: ModelReasoning | null;
+
   role: string;
+  content: string;
+  reasoning: ModelReasoning | null;
   search: GroundingSearch | null;
-  sessionId: string | null;
-  threadId: string | null;
   tools: any | null;
+
+  sessionId: string | null;
   topicId: string | null;
-  // jsonb type
+  threadId: string | null;
+  agentId: string | null;
+
+  parentId: string | null;
+  quotaId: string | null;
+  favorite: boolean | null;
+  metadata?: MessageMetadata | null;
+  error: any | null;
+  model: string | null;
+  provider: string | null;
+
   traceId: string | null;
-  updatedAt: Date;
+  observationId: string | null;
+
+  clientId: string | null;
+
   userId: string;
+  updatedAt: Date;
+  createdAt: Date;
 }

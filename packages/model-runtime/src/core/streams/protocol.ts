@@ -1,4 +1,4 @@
-import { ChatCitationItem, ModelSpeed, ModelUsage } from '@lobechat/types';
+import { ChatCitationItem, ModelPerformance, ModelUsage } from '@lobechat/types';
 import type { Pricing } from 'model-bank';
 
 import { parseToolCalls } from '../../helpers';
@@ -218,7 +218,7 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
   let aggregatedText = '';
   let aggregatedThinking: string | undefined = undefined;
   let usage: ModelUsage | undefined;
-  let speed: ModelSpeed | undefined;
+  let speed: ModelPerformance | undefined;
   let grounding: any;
   let toolsCalling: any;
 
@@ -410,7 +410,7 @@ export const createTokenSpeedCalculator = (
           latency,
           tps,
           ttft,
-        } as ModelSpeed,
+        } as ModelPerformance,
         id: TOKEN_SPEED_CHUNK_ID,
         type: 'speed',
       });
