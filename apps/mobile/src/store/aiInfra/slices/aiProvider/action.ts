@@ -150,6 +150,40 @@ export const createAiProviderSlice: StateCreator<
   updateAiProviderConfig: async (id, value) => {
     get().internal_toggleAiProviderConfigUpdating(id, true);
     await aiProviderService.updateAiProviderConfig(id, value);
+
+    // Immediately update local runtime config to avoid stale data
+    // This is critical for connection checker to get the latest keyVaults immediately
+    if (value.keyVaults) {
+      const currentRuntimeConfig = get().aiProviderRuntimeConfig;
+      const providerConfig = currentRuntimeConfig[id];
+      if (providerConfig) {
+        // Filter out non-string values to match AiProviderRuntimeConfig type
+        const updatedKeyVaults: Record<string, string> = {};
+        Object.entries(value.keyVaults).forEach(([key, val]) => {
+          if (typeof val === 'string') {
+            updatedKeyVaults[key] = val;
+          }
+        });
+
+        set(
+          {
+            aiProviderRuntimeConfig: {
+              ...currentRuntimeConfig,
+              [id]: {
+                ...providerConfig,
+                keyVaults: {
+                  ...providerConfig.keyVaults,
+                  ...updatedKeyVaults,
+                },
+              },
+            },
+          },
+          false,
+          'updateAiProviderConfig/immediateUpdate',
+        );
+      }
+    }
+
     await get().refreshAiProviderDetail();
 
     get().internal_toggleAiProviderConfigUpdating(id, false);
