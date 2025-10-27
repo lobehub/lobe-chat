@@ -30,7 +30,10 @@
     },
     "newNoteButton": "New Note",
     "newNoteDialog": {
+      "emptyContent": "Note content cannot be empty",
       "save": "Save",
+      "saveError": "Failed to save note, please try again",
+      "saveSuccess": "Note saved successfully",
       "title": "New Note"
     },
     "uploadButton": "Upload"

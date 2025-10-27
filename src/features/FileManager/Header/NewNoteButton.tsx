@@ -1,7 +1,8 @@
 'use client';
 
-import { HotkeyEnum, IEditor, getHotkeyById } from '@lobehub/editor';
 import {
+  HotkeyEnum,
+  IEditor,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -9,6 +10,7 @@ import {
   ReactListPlugin,
   ReactMathPlugin,
   ReactTablePlugin,
+  getHotkeyById,
 } from '@lobehub/editor';
 import {
   ChatInputActionBar,
@@ -38,6 +40,10 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { message } from '@/components/AntdStaticMethods';
+import { documentService } from '@/services/document';
+import { useFileStore } from '@/store/file';
+
 const editorClassName = cx(css`
   p {
     margin-block-end: 0;
@@ -49,7 +55,9 @@ const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const theme = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editor, setEditor] = useState<IEditor | undefined>(undefined);
+  const [isSaving, setIsSaving] = useState(false);
   const editorState = useEditorState(editor);
+  const refreshFileList = useFileStore((s) => s.refreshFileList);
 
   const handleOpen = () => {
     setIsModalOpen(true);
@@ -60,15 +68,56 @@ const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
     setIsModalOpen(false);
   };
 
-  const handleSave = () => {
-    // Get editor content as markdown
-    const content = editor?.getDocument('markdown') as unknown as string;
-    console.log('Note content:', content);
-    // TODO: Implement save logic with knowledgeBaseId
+  const handleSave = async () => {
+    if (!editor || isSaving) return;
 
-    // Clear draft after successful save
-    editor?.cleanDocument();
-    setIsModalOpen(false);
+    // Get editor content as markdown
+    const content = (editor.getDocument('markdown') as unknown as string) || '';
+
+    if (!content || content.trim() === '') {
+      message.warning(t('header.newNoteDialog.emptyContent', { ns: 'file' }));
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      // Generate title with timestamp
+      const now = Date.now();
+      const timestamp = new Date(now).toLocaleString('en-US', {
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+      const title = `Note - ${timestamp}`;
+
+      // Create note document in database
+      await documentService.createNote({
+        content,
+        fileType: 'custom/note',
+        knowledgeBaseId,
+        metadata: {
+          createdAt: now,
+        },
+        title,
+      });
+
+      message.success(t('header.newNoteDialog.saveSuccess', { ns: 'file' }));
+
+      // Clear draft after successful save
+      editor.cleanDocument();
+      setIsModalOpen(false);
+
+      // Refresh file list to show the new note
+      await refreshFileList();
+    } catch (error) {
+      console.error('Failed to save note:', error);
+      message.error(t('header.newNoteDialog.saveError', { ns: 'file' }));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const toolbarItems: ChatInputActionsProps['items'] = useMemo(
@@ -183,6 +232,7 @@ const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
       </Button>
 
       <Modal
+        okButtonProps={{ loading: isSaving }}
         okText={t('header.newNoteDialog.save')}
         onCancel={handleClose}
         onOk={handleSave}

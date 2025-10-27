@@ -30,7 +30,10 @@
     },
     "newNoteButton": "新建笔记",
     "newNoteDialog": {
+      "emptyContent": "笔记内容不能为空",
       "save": "保存",
+      "saveError": "保存笔记失败,请重试",
+      "saveSuccess": "笔记保存成功",
       "title": "新建笔记"
     },
     "uploadButton": "上传"

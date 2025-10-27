@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@lobehub/ui';
+import { Button, Markdown, Tooltip } from '@lobehub/ui';
 import { Checkbox, Image } from 'antd';
 import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
+import { documentService } from '@/services/document';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
 import { formatSize } from '@/utils/format';
@@ -29,13 +30,21 @@ const IMAGE_TYPES = new Set([
 // Markdown file types
 const MARKDOWN_TYPES = new Set(['text/markdown', 'text/x-markdown']);
 
-// Helper to check if filename ends with .md
+// Custom note file type
+const CUSTOM_NOTE_TYPE = 'custom/note';
+
+// Helper to check if filename ends with .md or is a custom note
 const isMarkdownFile = (name: string, fileType?: string) => {
   return (
     name.toLowerCase().endsWith('.md') ||
     name.toLowerCase().endsWith('.markdown') ||
     (fileType && MARKDOWN_TYPES.has(fileType))
   );
+};
+
+// Helper to check if it's a custom note that should be rendered
+const isCustomNote = (fileType?: string) => {
+  return fileType === CUSTOM_NOTE_TYPE;
 };
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -208,6 +217,49 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: ${token.colorFillQuaternary};
 
+    /* Style for rendered markdown */
+    article {
+      font-size: 13px;
+      line-height: 1.6;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-block-start: 8px;
+        margin-block-end: 4px;
+        font-size: 14px;
+        font-weight: ${token.fontWeightStrong};
+        color: ${token.colorText};
+      }
+
+      p {
+        margin-block-end: 8px;
+      }
+
+      ul,
+      ol {
+        margin-block-end: 8px;
+        padding-inline-start: 20px;
+      }
+
+      code {
+        padding: 2px 4px;
+        border-radius: 3px;
+        background: ${token.colorFillTertiary};
+        font-size: 12px;
+      }
+
+      pre {
+        margin-block-end: 8px;
+        padding: 8px;
+        border-radius: ${token.borderRadius}px;
+        background: ${token.colorFillTertiary};
+      }
+    }
+
     &::after {
       pointer-events: none;
       content: '';
@@ -301,6 +353,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
     const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
+    const isNote = isCustomNote(fileType);
+    const shouldRenderMarkdown = isNote;
 
     const cardRef = useRef<HTMLDivElement>(null);
     const [isInView, setIsInView] = useState(false);
@@ -332,24 +386,39 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
 
     // Fetch markdown content only when in viewport
     useEffect(() => {
-      if (isMarkdown && url && isInView && !markdownContent) {
+      if ((isMarkdown || isNote) && isInView && !markdownContent) {
         setIsLoadingMarkdown(true);
-        fetch(url)
-          .then((res) => res.text())
-          .then((text) => {
-            // Take first 500 characters for preview
-            const preview = text.slice(0, 500);
+
+        const fetchContent = async () => {
+          try {
+            let text: string;
+
+            if (isNote) {
+              // For custom notes, fetch from document service
+              const document = await documentService.getDocumentById(id);
+              text = document?.content || '';
+            } else if (url) {
+              // For regular markdown files, fetch from URL
+              const res = await fetch(url);
+              text = await res.text();
+            } else {
+              text = '';
+            }
+
+            // For custom notes, take more content for better preview; for regular markdown, take first 500 chars
+            const preview = isNote ? text.slice(0, 1000) : text.slice(0, 500);
             setMarkdownContent(preview);
-          })
-          .catch((error) => {
+          } catch (error) {
             console.error('Failed to fetch markdown content:', error);
             setMarkdownContent('');
-          })
-          .finally(() => {
+          } finally {
             setIsLoadingMarkdown(false);
-          });
+          }
+        };
+
+        fetchContent();
       }
-    }, [isMarkdown, url, isInView, markdownContent]);
+    }, [isMarkdown, isNote, url, isInView, markdownContent, id]);
 
     return (
       <div className={cx(styles.card, selected && styles.selected)} ref={cardRef}>
@@ -368,7 +437,10 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         </div>
 
         <div
-          className={cx(styles.content, !isImage && !isMarkdown && styles.contentWithPadding)}
+          className={cx(
+            styles.content,
+            !isImage && !isMarkdown && !isNote && styles.contentWithPadding,
+          )}
           onClick={() => {
             onOpen(id);
           }}
@@ -450,13 +522,19 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                 )
               )}
             </>
-          ) : isMarkdown ? (
+          ) : isMarkdown || isNote ? (
             <>
               <div style={{ position: 'relative' }}>
                 {isLoadingMarkdown ? (
                   <div className={styles.markdownLoading}>Loading preview...</div>
                 ) : markdownContent ? (
-                  <div className={styles.markdownPreview}>{markdownContent}</div>
+                  shouldRenderMarkdown ? (
+                    <div className={styles.markdownPreview}>
+                      <Markdown>{markdownContent}</Markdown>
+                    </div>
+                  ) : (
+                    <div className={styles.markdownPreview}>{markdownContent}</div>
+                  )
                 ) : (
                   <div className={styles.iconWrapper}>
                     <FileIcon fileName={name} fileType={fileType} size={64} />

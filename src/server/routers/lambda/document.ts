@@ -21,6 +21,32 @@ const documentProcedure = authedProcedure.use(serverDatabase).use(async (opts) =
 });
 
 export const documentRouter = router({
+  createNote: documentProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        fileType: z.string().optional(),
+        knowledgeBaseId: z.string().optional(),
+        metadata: z.record(z.any()).optional(),
+        title: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.documentService.createNote(input);
+    }),
+
+  deleteDocument: documentProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.documentService.deleteDocument(input.id);
+    }),
+
+  getDocumentById: documentProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.documentService.getDocumentById(input.id);
+    }),
+
   parseFileContent: documentProcedure
     .input(
       z.object({
@@ -32,5 +58,22 @@ export const documentRouter = router({
       const lobeDocument = await ctx.documentService.parseFile(input.id);
 
       return lobeDocument;
+    }),
+
+  queryDocuments: documentProcedure.query(async ({ ctx }) => {
+    return ctx.documentService.queryDocuments();
+  }),
+
+  updateDocument: documentProcedure
+    .input(
+      z.object({
+        content: z.string().optional(),
+        id: z.string(),
+        title: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...params } = input;
+      return ctx.documentService.updateDocument(id, params);
     }),
 });
