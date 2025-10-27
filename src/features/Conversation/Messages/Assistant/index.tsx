@@ -1,5 +1,6 @@
 'use client';
 
+import { LOADING_FLAT } from '@lobechat/const';
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
@@ -8,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import { LOADING_FLAT } from '@/const/message';
 import Avatar from '@/features/ChatItem/components/Avatar';
 import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import ErrorContent from '@/features/ChatItem/components/ErrorContent';
@@ -17,7 +17,7 @@ import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
@@ -30,7 +30,7 @@ import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
-import { normalizeThinkTags, processWithArtifact } from '../../utils';
+import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
 import { AssistantMessageContent } from './MessageContent';

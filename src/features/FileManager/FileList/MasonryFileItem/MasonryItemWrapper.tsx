@@ -21,7 +21,7 @@ const MasonryItemWrapper = memo<MasonryItemWrapperProps>(({ data: item, context 
   }
 
   return (
-    <div style={{ padding: '8px' }}>
+    <div style={{ padding: '8px 4px' }}>
       <MasonryFileItem
         knowledgeBaseId={context.knowledgeBaseId}
         onSelectedChange={(id, checked) => {

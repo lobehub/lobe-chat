@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.142.3](https://github.com/lobehub/lobe-chat/compare/v1.142.2...v1.142.3)
+
+<sup>Released on **2025-10-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Adjust modal setting form styles for improved layout and responsiveness, Unzip file when uploading in knowledge base \[LOB-500].
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Adjust modal setting form styles for improved layout and responsiveness, closes [#9890](https://github.com/lobehub/lobe-chat/issues/9890) ([1997ec5](https://github.com/lobehub/lobe-chat/commit/1997ec5))
+- **misc**: Unzip file when uploading in knowledge base \[LOB-500], closes [#9854](https://github.com/lobehub/lobe-chat/issues/9854) ([e568ce6](https://github.com/lobehub/lobe-chat/commit/e568ce6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.142.2](https://github.com/lobehub/lobe-chat/compare/v1.142.1...v1.142.2)
 
 <sup>Released on **2025-10-26**</sup>

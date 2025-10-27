@@ -45,23 +45,23 @@ export interface ModelUsage extends ModelTokensUsage {
   cost?: number;
 }
 
-export interface ModelSpeed {
+export interface ModelPerformance {
   /**
    * tokens per second
    */
   tps?: number;
   /**
-   * time to first token
+   * time to first token (ms)
    */
   ttft?: number;
   /**
-   * from output start to output finish
+   * from output start to output finish (ms)
    */
   duration?: number;
   /**
-   * from input start to output finish
+   * from input start to output finish (ms)
    */
   latency?: number;
 }
 
-export interface MessageMetadata extends ModelUsage, ModelSpeed {}
+export interface MessageMetadata extends ModelUsage, ModelPerformance {}

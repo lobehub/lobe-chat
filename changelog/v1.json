@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Adjust modal setting form styles for improved layout and responsiveness, Unzip file when uploading in knowledge base [LOB-500]."
+      ]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.3"
+  },
+  {
+    "children": {
       "improvements": ["Improve provider modal height when creating custom provider."]
     },
     "date": "2025-10-26",
