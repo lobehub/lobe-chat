@@ -3,23 +3,21 @@ import { useTranslation } from 'react-i18next';
 
 import Select from '@/components/Select';
 
-import supportedLanguageIds, { getLanguageDisplayName } from '../../hooks/supportedLanguages';
-import { useStyles } from './style';
+import { getCodeLanguageDisplayName, supportedLanguageIds } from './const';
 
-interface LanguageSelectProps {
-  onSelect: (lang: string) => void;
+interface LangSelectProps {
+  onSelect?: (lang: string) => void;
   value: string;
 }
 
-export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) => {
-  const { styles } = useStyles();
+const LangSelect = memo<LangSelectProps>(({ value, onSelect }) => {
   const { t } = useTranslation('components');
 
-  // 创建语言选项列表，只包含支持的语言
+  // Create language options list with supported languages
   const options = useMemo(
     () =>
       supportedLanguageIds.map((langId) => ({
-        title: getLanguageDisplayName(langId),
+        title: getCodeLanguageDisplayName(langId),
         value: langId,
       })),
     [],
@@ -27,10 +25,15 @@ export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) =>
 
   return (
     <Select
-      onChange={(val) => onSelect(val as string)}
+      bottomSheetProps={{
+        snapPoints: ['50%', '90%'],
+      }}
+      onChange={(val) => onSelect?.(val as string)}
       options={options}
       size="small"
-      style={styles.select}
+      style={{
+        width: '33%',
+      }}
       textProps={{
         align: 'center',
         code: true,
@@ -47,4 +50,6 @@ export const LanguageSelect = memo<LanguageSelectProps>(({ value, onSelect }) =>
   );
 });
 
-LanguageSelect.displayName = 'LanguageSelect';
+LangSelect.displayName = 'LangSelect';
+
+export default LangSelect;
