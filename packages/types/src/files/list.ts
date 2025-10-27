@@ -14,6 +14,12 @@ export interface FileListItem {
   id: string;
   name: string;
   size: number;
+  /**
+   * Source type to distinguish between files and documents
+   * - 'file': from files table
+   * - 'document': from documents table (notes)
+   */
+  sourceType: 'file' | 'document';
   updatedAt: Date;
   url: string;
 }
