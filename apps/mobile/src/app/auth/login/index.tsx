@@ -8,10 +8,10 @@ import {
   useTheme,
   useThemeMode,
 } from '@lobehub/ui-rn';
-import { ResizeMode, Video } from 'expo-av';
 import { Image } from 'expo-image';
 import { Link, useRouter } from 'expo-router';
-import { useEffect, useRef } from 'react';
+import { VideoView, useVideoPlayer } from 'expo-video';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
@@ -28,7 +28,6 @@ const LoginPage = () => {
   const { isLoading } = useAuth();
   const { login } = useAuthActions();
   const router = useRouter();
-  const videoRef = useRef<Video>(null);
 
   const { setCustomServerUrl, showSelfHostedEntry } = useSettingStore((state) => ({
     setCustomServerUrl: state.setCustomServerUrl,
@@ -59,9 +58,20 @@ const LoginPage = () => {
   };
 
   // 根据主题选择视频源
-  const videoSource = isDarkMode
-    ? require('@/../assets/videos/landing-dark.mp4')
-    : require('@/../assets/videos/landing-light.mp4');
+  const videoSource = useMemo(
+    () =>
+      isDarkMode
+        ? require('@/../assets/videos/landing-dark.mp4')
+        : require('@/../assets/videos/landing-light.mp4'),
+    [isDarkMode],
+  );
+
+  // 使用 expo-video 的播放器
+  const player = useVideoPlayer(videoSource, (player) => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
 
   return (
     <PageContainer backgroundColor={isDarkMode ? '#000000' : '#FFFFFF'}>
@@ -90,13 +100,9 @@ const LoginPage = () => {
             <LobeHub.Text color={theme.colorText} size={24} />
           </Flexbox>
         </Center>
-        <Video
-          isLooping
-          isMuted
-          ref={videoRef}
-          resizeMode={ResizeMode.COVER}
-          shouldPlay
-          source={videoSource}
+        <VideoView
+          contentFit="cover"
+          player={player}
           style={{
             height: 150,
             left: 0,
