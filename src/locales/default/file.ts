@@ -28,6 +28,11 @@ export default {
       uploadFile: '上传文件',
       uploadFolder: '上传文件夹',
     },
+    newNoteButton: '新建笔记',
+    newNoteDialog: {
+      save: '保存',
+      title: '新建笔记',
+    },
     uploadButton: '上传',
   },
   knowledgeBase: {
