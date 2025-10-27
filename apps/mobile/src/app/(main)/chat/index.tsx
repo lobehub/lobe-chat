@@ -1,6 +1,11 @@
 import { ActionIcon, Flexbox, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { ChevronRightIcon, MessagesSquare, TextAlignStartIcon } from 'lucide-react-native';
+import {
+  ChevronRightIcon,
+  MessagesSquare,
+  PlusCircle,
+  TextAlignStartIcon,
+} from 'lucide-react-native';
 import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -10,6 +15,8 @@ import SideBar from '@/features/SideBar';
 import TopicDrawer from '@/features/TopicDrawer';
 import ChatInput from '@/features/chat/ChatInput';
 import ChatList from '@/features/chat/ChatList';
+import { useSwitchTopic } from '@/hooks/useSwitchSession';
+import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -20,18 +27,31 @@ export default function ChatWithDrawer() {
   const isInbox = useSessionStore(sessionSelectors.isInboxSession);
   const toggleTopicDrawer = useGlobalStore((s) => s.toggleTopicDrawer);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
+  const switchTopic = useSwitchTopic();
+  const activeTopicId = useChatStore((s) => s.activeTopicId);
   const { t } = useTranslation('chat');
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
 
   const router = useRouter();
 
   const displayTitle = isInbox ? t('inbox.title') : title;
+  const isInDefaultTopic = !activeTopicId;
 
   const renderContent = () => {
     return (
       <PageContainer
         backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
-        extra={<ActionIcon icon={MessagesSquare} onPress={toggleTopicDrawer} pressEffect={false} />}
+        extra={
+          <Flexbox align={'center'} gap={1} horizontal>
+            <ActionIcon
+              disabled={isInDefaultTopic}
+              icon={PlusCircle}
+              onPress={() => switchTopic()}
+              pressEffect={false}
+            />
+            <ActionIcon icon={MessagesSquare} onPress={toggleTopicDrawer} pressEffect={false} />
+          </Flexbox>
+        }
         left={<ActionIcon icon={TextAlignStartIcon} onPress={toggleDrawer} pressEffect={false} />}
         onTitlePress={isInbox ? undefined : () => router.push('/chat/setting')}
         title={displayTitle}
