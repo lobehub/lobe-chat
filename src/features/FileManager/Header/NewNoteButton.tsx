@@ -56,9 +56,8 @@ const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   };
 
   const handleClose = () => {
+    // Just close the dialog, keep the content in editor (draft persisted in memory)
     setIsModalOpen(false);
-    // Clear editor content when closing
-    editor?.cleanDocument();
   };
 
   const handleSave = () => {
@@ -66,8 +65,10 @@ const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
     const content = editor?.getDocument('markdown') as unknown as string;
     console.log('Note content:', content);
     // TODO: Implement save logic with knowledgeBaseId
-    setIsModalOpen(false);
+
+    // Clear draft after successful save
     editor?.cleanDocument();
+    setIsModalOpen(false);
   };
 
   const toolbarItems: ChatInputActionsProps['items'] = useMemo(
