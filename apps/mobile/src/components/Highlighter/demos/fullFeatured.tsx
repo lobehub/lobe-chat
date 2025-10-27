@@ -1,18 +1,9 @@
-import { Highlighter, Text, useTheme } from '@lobehub/ui-rn';
-import { StyleSheet, View } from 'react-native';
+import { Flexbox, Highlighter, Text } from '@lobehub/ui-rn';
 
-/**
- * 完整功能模式演示
- * 展示所有可用的高级功能
- */
-export const FullFeaturedHighlighterDemo = () => {
-  const token = useTheme();
-
-  const examples = [
-    {
-      code: `import React, { useState, useEffect } from 'react';
-import { View, StyleSheet  } from 'react-native';
-
+const fullFeaturedExamples = [
+  {
+    code: `import React, { useState, useEffect } from 'react';
+import { View, Button } from 'react-native';
 
 interface CounterProps {
   initialValue?: number;
@@ -31,150 +22,62 @@ const Counter: React.FC<CounterProps> = ({
 
   const increment = () => setCount(prev => prev + 1);
   const decrement = () => setCount(prev => prev - 1);
-  const reset = () => setCount(initialValue);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.countText}>{count}</Text>
-      <View style={styles.buttonContainer}>
-        <Button onPress={decrement} size="small" style={styles.button} type="default">
-          -
-        </Button>
-        <Button onPress={reset} size="small" style={styles.button} type="default">
-          Reset
-        </Button>
-        <Button onPress={increment} size="small" style={styles.button} type="default">
-          +
-        </Button>
-      </View>
+    <View>
+      <Text>{count}</Text>
+      <Button title="-" onPress={decrement} />
+      <Button title="+" onPress={increment} />
     </View>
   );
-};
-
-export default Counter;`,
-      description: '包含工具栏、复制功能、展开收起',
-      fileName: 'Counter.tsx',
-      lang: 'typescript',
-      title: '标准完整功能',
-    },
-    {
-      code: `# React Native 项目配置
+};`,
+    description: '包含工具栏、复制功能、展开收起',
+    lang: 'typescript',
+    title: 'TypeScript 组件',
+  },
+  {
+    allowChangeLanguage: true,
+    code: `# React Native 项目
 
 ## 环境要求
 - Node.js >= 16
 - React Native CLI
-- Xcode (iOS开发)
-- Android Studio (Android开发)
 
 ## 安装依赖
 \`\`\`bash
 npm install
-# 或
-yarn install
 \`\`\`
 
 ## 运行项目
 \`\`\`bash
-# iOS
 npx react-native run-ios
-
-# Android
 npx react-native run-android
-\`\`\`
-
-## 项目结构
-\`\`\`
-@/
-├── components/     # 公共组件
-├── screens/       # 页面组件
-├── utils/         # 工具函数
-├── types/         # 类型定义
-└── constants/     # 常量配置
 \`\`\``,
-      description: '显示文件名而不是语言标识',
-      fileName: 'README.md',
-      lang: 'markdown',
-      title: '带文件名显示',
-    },
-  ];
+    description: 'Markdown 文档示例',
+    lang: 'markdown',
+    title: 'Markdown 文档',
+  },
+];
 
-  const styles = StyleSheet.create({
-    container: {
-      padding: token.padding,
-    },
-    description: {
-      color: token.colorTextSecondary,
-      fontSize: token.fontSize,
-      lineHeight: token.lineHeight,
-      marginBottom: token.marginXXL,
-    },
-    exampleContainer: {
-      marginBottom: token.marginXXL,
-    },
-    exampleDescription: {
-      color: token.colorTextTertiary,
-      fontSize: token.fontSizeSM,
-      fontStyle: 'italic',
-      marginBottom: token.marginSM,
-    },
-    exampleTitle: {
-      color: token.colorText,
-      fontSize: token.fontSizeLG,
-      fontWeight: '600',
-      marginBottom: token.marginXXS,
-    },
-    featuresContainer: {
-      backgroundColor: token.colorInfoBg,
-      borderLeftColor: token.colorInfo,
-      borderLeftWidth: 4,
-      borderRadius: token.borderRadius,
-      marginTop: token.marginLG,
-      padding: token.padding,
-    },
-    featuresText: {
-      color: token.colorInfoText,
-      fontSize: token.fontSizeSM,
-      lineHeight: token.lineHeightSM,
-    },
-    featuresTitle: {
-      color: token.colorInfo,
-      fontSize: token.fontSize,
-      fontWeight: '600',
-      marginBottom: token.marginXS,
-    },
-    title: {
-      color: token.colorTextHeading,
-      fontSize: token.fontSizeHeading2,
-      fontWeight: 'bold',
-      marginBottom: token.marginXS,
-    },
-  });
-
+export default () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>完整功能模式</Text>
-      <Text style={styles.description}>
-        展示包含工具栏、复制、展开收起等完整功能的代码高亮组件。
-      </Text>
-
-      {examples.map((example, index) => (
-        <View key={index} style={styles.exampleContainer}>
-          <Text style={styles.exampleTitle}>{example.title}</Text>
-          <Text style={styles.exampleDescription}>{example.description}</Text>
-          <Highlighter code={example.code} copyable fullFeatured lang={example.lang} showLanguage />
-        </View>
+    <Flexbox gap={24}>
+      {fullFeaturedExamples.map((example, index) => (
+        <Flexbox gap={8} key={index}>
+          <Text as="h4" strong>
+            {example.title}
+          </Text>
+          <Text type="secondary">{example.description}</Text>
+          <Highlighter
+            allowChangeLanguage={example.allowChangeLanguage}
+            code={example.code}
+            copyable
+            fullFeatured
+            lang={example.lang}
+            showLanguage
+          />
+        </Flexbox>
       ))}
-
-      <View style={styles.featuresContainer}>
-        <Text style={styles.featuresTitle}>功能特性：</Text>
-        <Text style={styles.featuresText}>
-          • 🔧 工具栏：包含展开/收起、复制按钮{'\n'}• 📄 文件名：可显示文件名或语言标识{'\n'}• 📋
-          复制功能：一键复制代码到剪贴板{'\n'}• 📱 展开收起：节省屏幕空间，按需显示{'\n'}• 🎨
-          完整主题：基于系统主题的高亮效果
-        </Text>
-      </View>
-    </View>
+    </Flexbox>
   );
 };
-
-export default FullFeaturedHighlighterDemo;

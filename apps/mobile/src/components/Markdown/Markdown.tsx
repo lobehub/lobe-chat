@@ -83,7 +83,7 @@ const Markdown = memo<MarkdownProps>(
     );
 
     return (
-      <View onLayout={onLayout} style={{ pointerEvents: 'box-none' }}>
+      <View onLayout={onLayout}>
         <MarkdownContextProvider
           contentSize={contentSize}
           definitions={definitions}

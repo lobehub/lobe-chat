@@ -5,13 +5,11 @@ import { memo, useState } from 'react';
 
 import Block from '@/components/Block';
 
-import FullFeatured from './FullFeatured';
-import { TokenDisplay } from './components/TokenDisplay';
-import { HighlighterProvider, supportedLanguageIds } from './contexts/highlighter';
+import HighlighterFullFeatured from './FullFeatured';
+import SyntaxHighlighter from './SyntaxHighlighter';
+import { getCodeLanguageByInput } from './const';
 import { useStyles } from './style';
 import type { HighlighterProps } from './type';
-
-export const FALLBACK_LANG = 'markdown';
 
 const Highlighter = memo<HighlighterProps>(
   ({
@@ -31,7 +29,7 @@ const Highlighter = memo<HighlighterProps>(
     const { styles, theme } = useStyles();
     const [copied, setCopied] = useState(false);
     const language = lang.toLowerCase();
-    const matchedLanguage = supportedLanguageIds.includes(language) ? language : FALLBACK_LANG;
+    const matchedLanguage = getCodeLanguageByInput(language);
 
     const handleCopy = async () => {
       try {
@@ -46,7 +44,7 @@ const Highlighter = memo<HighlighterProps>(
 
     if (fullFeatured) {
       return (
-        <FullFeatured
+        <HighlighterFullFeatured
           allowChangeLanguage={allowChangeLanguage}
           code={code}
           copyable={copyable}
@@ -75,7 +73,7 @@ const Highlighter = memo<HighlighterProps>(
           />
         )}
 
-        <TokenDisplay code={code} lang={matchedLanguage} />
+        <SyntaxHighlighter language={matchedLanguage}>{code}</SyntaxHighlighter>
       </Block>
     );
   },
@@ -83,14 +81,4 @@ const Highlighter = memo<HighlighterProps>(
 
 Highlighter.displayName = 'Highlighter';
 
-const HighlighterWithProvider = memo<HighlighterProps>(({ ...props }) => {
-  return (
-    <HighlighterProvider>
-      <Highlighter {...props} />
-    </HighlighterProvider>
-  );
-});
-
-HighlighterWithProvider.displayName = 'HighlighterWithProvider';
-
-export default HighlighterWithProvider;
+export default Highlighter;
