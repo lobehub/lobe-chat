@@ -8,12 +8,12 @@ import Block from '@/components/Block';
 import Flexbox from '@/components/Flexbox';
 import Text from '@/components/Text';
 
-import { LanguageSelect } from './components/LanguageSelect';
-import { TokenDisplay } from './components/TokenDisplay';
+import LangSelect from './LangSelect';
+import SyntaxHighlighter from './SyntaxHighlighter';
 import { useStyles } from './style';
 import type { HighlighterProps } from './type';
 
-interface FullFeaturedProps extends HighlighterProps {
+interface HighlighterFullFeaturedProps extends HighlighterProps {
   /**
    * Whether to allow changing the language.
    */
@@ -52,7 +52,7 @@ interface FullFeaturedProps extends HighlighterProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const FullFeatured = memo<FullFeaturedProps>(
+export const HighlighterFullFeatured = memo<HighlighterFullFeaturedProps>(
   ({
     code,
     lang,
@@ -113,7 +113,7 @@ const FullFeatured = memo<FullFeaturedProps>(
           </Flexbox>
 
           {allowChangeLanguage && showLanguage ? (
-            <LanguageSelect onSelect={handleLanguageChange} value={language} />
+            <LangSelect onSelect={handleLanguageChange} value={language} />
           ) : (
             (showLanguage || fileName) && (
               <Text code color={theme.colorTextSecondary} fontSize={12}>
@@ -133,12 +133,12 @@ const FullFeatured = memo<FullFeaturedProps>(
             )}
           </Flexbox>
         </Flexbox>
-        {expanded && <TokenDisplay code={code} lang={language} />}
+        {expanded && <SyntaxHighlighter language={language}>{code}</SyntaxHighlighter>}
       </Block>
     );
   },
 );
 
-FullFeatured.displayName = 'FullFeatured';
+HighlighterFullFeatured.displayName = 'HighlighterFullFeatured';
 
-export default FullFeatured;
+export default HighlighterFullFeatured;

@@ -1,27 +1,19 @@
-import { Highlighter, Text, useTheme } from '@lobehub/ui-rn';
-import { StyleSheet, View } from 'react-native';
+import { Flexbox, Highlighter, Text } from '@lobehub/ui-rn';
 
-/**
- * 基础代码高亮演示
- * 展示最简单的使用方式
- */
-export const BasicHighlighterDemo = () => {
-  const token = useTheme();
-
-  const codeExamples = [
-    {
-      code: `function greet(name) {
+const codeExamples = [
+  {
+    code: `function greet(name) {
   console.log(\`Hello, \${name}!\`);
   return \`Welcome, \${name}\`;
 }
 
 const user = 'React Native';
 greet(user);`,
-      lang: 'javascript',
-      title: 'JavaScript 基础语法',
-    },
-    {
-      code: `interface User {
+    lang: 'javascript',
+    title: 'JavaScript 基础语法',
+  },
+  {
+    code: `interface User {
   id: number;
   name: string;
   email?: string;
@@ -35,11 +27,11 @@ const createUser = (data: Partial<User>): User => {
     ...data
   } as User;
 };`,
-      lang: 'typescript',
-      title: 'TypeScript 接口定义',
-    },
-    {
-      code: `.container {
+    lang: 'typescript',
+    title: 'TypeScript 接口定义',
+  },
+  {
+    code: `.container {
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -58,82 +50,22 @@ const createUser = (data: Partial<User>): User => {
   color: #ffffff;
   margin-bottom: 12px;
 }`,
-      lang: 'css',
-      title: 'CSS 样式规则',
-    },
-  ];
+    lang: 'css',
+    title: 'CSS 样式规则',
+  },
+];
 
-  const styles = StyleSheet.create({
-    container: {
-      padding: token.padding,
-    },
-    description: {
-      color: token.colorTextSecondary,
-      fontSize: token.fontSize,
-      lineHeight: token.lineHeight,
-      marginBottom: token.marginXXL,
-    },
-    exampleContainer: {
-      marginBottom: token.marginXXL,
-    },
-    exampleTitle: {
-      color: token.colorText,
-      fontSize: token.fontSizeLG,
-      fontWeight: '600',
-      marginBottom: token.marginSM,
-    },
-    infoContainer: {
-      backgroundColor: token.colorBgContainer,
-      borderColor: token.colorBorder,
-      borderRadius: token.borderRadius,
-      borderWidth: token.lineWidth,
-      marginTop: token.marginLG,
-      padding: token.padding,
-    },
-    infoText: {
-      color: token.colorTextSecondary,
-      fontSize: token.fontSizeSM,
-      lineHeight: token.lineHeightSM,
-    },
-    infoTitle: {
-      color: token.colorText,
-      fontSize: token.fontSize,
-      fontWeight: '600',
-      marginBottom: token.marginXS,
-    },
-    title: {
-      color: token.colorTextHeading,
-      fontSize: token.fontSizeHeading2,
-      fontWeight: 'bold',
-      marginBottom: token.marginXS,
-    },
-  });
-
+export default () => {
   return (
-    <View style={[styles.container, { backgroundColor: token.colorBgLayout }]}>
-      <Text style={[styles.title, { color: token.colorText }]}>基础代码高亮</Text>
-      <Text style={[styles.description, { color: token.colorTextSecondary }]}>
-        展示不同编程语言的基础语法高亮效果，无额外功能。
-      </Text>
-
+    <Flexbox gap={24}>
       {codeExamples.map((example, index) => (
-        <View key={index} style={styles.exampleContainer}>
-          <Text style={[styles.exampleTitle, { color: token.colorTextSecondary }]}>
+        <Flexbox gap={8} key={index}>
+          <Text as="h4" strong>
             {example.title}
           </Text>
           <Highlighter code={example.code} lang={example.lang} />
-        </View>
+        </Flexbox>
       ))}
-
-      <View style={styles.infoContainer}>
-        <Text style={[styles.infoTitle, { color: token.colorTextSecondary }]}>使用说明：</Text>
-        <Text style={[styles.infoText, { color: token.colorTextSecondary }]}>
-          • 基础模式只提供语法高亮功能{'\n'}• 渲染性能最优，适合简单展示{'\n'}• 无交互功能，无工具栏
-          {'\n'}• 适用于文档、教程等场景
-        </Text>
-      </View>
-    </View>
+    </Flexbox>
   );
 };
-
-export default BasicHighlighterDemo;
