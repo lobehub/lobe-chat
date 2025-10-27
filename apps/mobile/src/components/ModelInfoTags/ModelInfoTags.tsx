@@ -1,3 +1,4 @@
+import { formatTokenNumber } from '@lobechat/utils';
 import { Atom, Eye, Globe, Image, Paperclip, ToyBrick } from 'lucide-react-native';
 import { memo } from 'react';
 import { View } from 'react-native';
@@ -7,17 +8,6 @@ import Tag from '@/components/Tag';
 
 import { useStyles } from './styles';
 import type { ModelInfoTagsProps } from './type';
-
-// 简单的token数字格式化函数
-const formatTokenNumber = (num: number): string => {
-  if (num >= 1_000_000) {
-    return `${(num / 1_000_000).toFixed(1)}M`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}K`;
-  }
-  return num.toString();
-};
 
 /**
  * 模型信息标签组件
