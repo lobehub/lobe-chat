@@ -3,14 +3,14 @@
 import { Modal } from '@lobehub/ui';
 import { ConfigProvider } from 'antd';
 import { createStyles } from 'antd-style';
-import { useSearchParams } from 'next/navigation';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 
 import { DETAIL_PANEL_WIDTH } from '@/app/[variants]/(main)/files/features/FileDetail';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 
 import FileDetail from './modal/FileDetail';
 import FilePreview from './modal/FilePreview';
+import { setFileModalId, useFileModalId } from './modal/useFilesQueryParam';
 
 const useStyles = createStyles(({ css, token }, showDetail: boolean) => {
   return {
@@ -61,30 +61,16 @@ const useStyles = createStyles(({ css, token }, showDetail: boolean) => {
  * File data is fetched from the Zustand store by FilePreview and FileDetail components
  */
 const FileModalQueryRoute = memo(() => {
-  const searchParams = useSearchParams();
-  const fileId = searchParams.get('files');
-  const [open, setOpen] = useState(false);
-  const { styles } = useStyles(true);
+  const fileId = useFileModalId();
+  const file = useFileStore(fileManagerSelectors.getFileById(fileId));
+  const showDetail = useMemo(() => Boolean(fileId && file), [fileId, file]);
+  const { styles } = useStyles(showDetail);
 
-  // Get file info from store
-  const file = useFileStore(fileManagerSelectors.getFileById(fileId || undefined));
+  const handleClose = useCallback(() => {
+    setFileModalId(undefined);
+  }, []);
 
-  useEffect(() => {
-    setOpen(!!fileId);
-  }, [fileId]);
-
-  const handleClose = () => {
-    // Remove the 'files' query parameter
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('files');
-
-    const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
-    window.history.pushState({}, '', newUrl);
-
-    setOpen(false);
-  };
-
-  if (!fileId || !file) return null;
+  if (!showDetail || !fileId) return null;
 
   return (
     <>
@@ -94,7 +80,7 @@ const FileModalQueryRoute = memo(() => {
           classNames={{ body: styles.body, content: styles.content, header: styles.header }}
           footer={false}
           onCancel={handleClose}
-          open={open}
+          open={showDetail}
           width={'auto'}
         >
           <FilePreview id={fileId} />

@@ -9,6 +9,21 @@ import type { App } from '../App';
 
 const logger = createLogger('core:StaticFileServerManager');
 
+const getAllowedOrigin = (rawOrigin?: string) => {
+  if (!rawOrigin) return '*';
+
+  try {
+    const url = new URL(rawOrigin);
+    const normalizedOrigin = `${url.protocol}//${url.host}`;
+    return url.hostname === 'localhost' || url.hostname === '127.0.0.1' ? normalizedOrigin : '*';
+  } catch {
+    const normalizedOrigin = rawOrigin.replace(/\/$/, '');
+    return normalizedOrigin.includes('localhost') || normalizedOrigin.includes('127.0.0.1')
+      ? normalizedOrigin
+      : '*';
+  }
+};
+
 export class StaticFileServerManager {
   private app: App;
   private fileService: FileService;
@@ -128,7 +143,7 @@ export class StaticFileServerManager {
 
       // 获取请求的 Origin 并设置 CORS
       const origin = req.headers.origin || req.headers.referer;
-      const allowedOrigin = origin && origin.includes('localhost') ? origin : '*';
+      const allowedOrigin = getAllowedOrigin(origin);
 
       // 处理 CORS 预检请求
       if (req.method === 'OPTIONS') {
@@ -204,7 +219,7 @@ export class StaticFileServerManager {
         try {
           // 获取请求的 Origin 并设置 CORS（错误响应也需要！）
           const origin = req.headers.origin || req.headers.referer;
-          const allowedOrigin = origin && origin.includes('localhost') ? origin : '*';
+          const allowedOrigin = getAllowedOrigin(origin);
 
           // 判断是否是文件未找到错误
           if (error.name === 'FileNotFoundError') {

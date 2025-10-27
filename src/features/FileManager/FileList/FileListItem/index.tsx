@@ -5,12 +5,12 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { setFileModalId } from '@/app/[variants]/(main)/files/(content)/modal/useFilesQueryParam';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
@@ -103,8 +103,6 @@ const FileRenderItem = memo<FileRenderItemProps>(
   }) => {
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
-    const router = useRouter();
-    const searchParams = useSearchParams();
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
       s.parseFilesToChunks,
@@ -132,9 +130,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
           flex={1}
           horizontal
           onClick={() => {
-            const params = new URLSearchParams(searchParams.toString());
-            params.set('files', id);
-            router.push(`?${params.toString()}`);
+            setFileModalId(id);
           }}
         >
           <Flexbox align={'center'} horizontal>
