@@ -41,16 +41,23 @@ const computeAtBottom = (layoutH = 0, contentH = 0, offsetY = 0) => {
 
 const ChatMessageItem = memo<{ index: number; item: UIChatMessage; totalLength: number }>(
   ({ item, index, totalLength }) => {
+    const { isGenerating } = useChat();
     const isLastMessage = index === totalLength - 1;
     const isAssistant = item.role === 'assistant';
     const isLoadingContent = item.content === LOADING_FLAT;
     const hasError = !!item.error?.type;
-
     // 如果有错误，即使content是LOADING_FLAT也不应该显示为loading状态
     const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent && !hasError;
 
     return (
-      <ChatBubble isLoading={shouldShowLoading} message={item} showActionsBar={isLastMessage} />
+      <ChatBubble
+        isLoading={shouldShowLoading}
+        markdownProps={{
+          enableStream: isLastMessage && isGenerating,
+        }}
+        message={item}
+        showActionsBar={isLastMessage}
+      />
     );
   },
 );
