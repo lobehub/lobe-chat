@@ -6,10 +6,6 @@ import type { EmojiObject } from './type';
  * Emoji 分类常量
  */
 export const Categories = {
-  activities: {
-    name: 'Activities',
-    symbol: '⚾️',
-  },
   emotion: {
     name: 'Smileys & Emotion',
     symbol: '😀',
@@ -23,7 +19,7 @@ export const Categories = {
     symbol: '🦄',
   },
   objects: {
-    name: 'Objects',
+    name: 'Objects & Activities',
     symbol: '💡',
   },
   people: {
@@ -64,8 +60,15 @@ export const charFromEmojiObject = (obj: EmojiObject): string => charFromUtf16(o
 /**
  * 根据分类获取 emoji 列表
  */
-export const emojiByCategory = (category: string) =>
-  filteredEmojis.filter((e: any) => e.category === category);
+export const emojiByCategory = (category: string) => {
+  // 将 Activities 合并到 Objects & Activities
+  if (category === 'Objects & Activities') {
+    return filteredEmojis.filter(
+      (e: any) => e.category === 'Activities' || e.category === 'Objects',
+    );
+  }
+  return filteredEmojis.filter((e: any) => e.category === category);
+};
 
 /**
  * 排序 emoji 列表

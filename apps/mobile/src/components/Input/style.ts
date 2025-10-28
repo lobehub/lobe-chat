@@ -52,6 +52,10 @@ export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStyles
   const sizeStyles = getInputSizeStyles(token, size);
 
   return {
+    block: {
+      alignSelf: 'stretch' as const,
+      width: '100%' as const,
+    },
     container: {
       minHeight: sizeStyles.controlHeight * 1.25,
       paddingBlock: sizeStyles.paddingBlock,

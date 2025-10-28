@@ -21,7 +21,7 @@ import type { EmojiObject, EmojiSelectorProps } from './type';
 // Main component
 const EmojiSelector = memo<EmojiSelectorProps>(
   ({
-    category: initialCategory = Categories.activities,
+    category: initialCategory = Categories.emotion,
     columns: userColumns,
     defaultValue = '',
     emojiSize = 48,
@@ -44,7 +44,7 @@ const EmojiSelector = memo<EmojiSelectorProps>(
     // State
     const [activeCategory, setActiveCategory] = useState(
       categoryKeys.find((key) => Categories[key as keyof typeof Categories] === initialCategory) ||
-        'activities',
+        'emotion',
     );
     const [emojiList, setEmojiList] = useState<Record<string, EmojiObject[]> | null>(null);
     const [isReady, setIsReady] = useState(false);
