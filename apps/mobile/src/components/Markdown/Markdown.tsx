@@ -15,7 +15,6 @@ const Markdown = memo<MarkdownProps>((props) => {
     enableGithubAlert,
     enableStream = false,
     rehypePluginsAhead,
-    allowHtml,
     borderRadius,
     fontSize = 14,
     headerMultiple = 0.25,
@@ -28,6 +27,7 @@ const Markdown = memo<MarkdownProps>((props) => {
     remarkPluginsAhead,
     showFootnotes = true,
     style,
+    components,
     ...rest
   } = props;
 
@@ -45,8 +45,8 @@ const Markdown = memo<MarkdownProps>((props) => {
 
   return (
     <MarkdownProvider
-      allowHtml={allowHtml}
       borderRadius={borderRadius}
+      components={components}
       enableCustomFootnotes={enableCustomFootnotes}
       enableGithubAlert={enableGithubAlert}
       enableLatex={enableLatex}

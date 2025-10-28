@@ -3,6 +3,7 @@ import { memo, useId, useMemo } from 'react';
 import { View } from 'react-native';
 
 import {
+  useMarkdownComponents,
   useMarkdownContent,
   useMarkdownRehypePlugins,
   useMarkdownRemarkPlugins,
@@ -30,6 +31,7 @@ export const StreamdownRender = memo<Omit<ReactNativeMarkdownProps, 'remarkPlugi
     const escapedContent = useMarkdownContent(children || '');
     const remarkPlugins = useMarkdownRemarkPlugins();
     const rehypePlugins = useMarkdownRehypePlugins();
+    const components = useMarkdownComponents();
     const generatedId = useId();
     const blocks = useMemo(
       () => parseMarkdownIntoBlocks(typeof escapedContent === 'string' ? escapedContent : ''),
@@ -39,6 +41,7 @@ export const StreamdownRender = memo<Omit<ReactNativeMarkdownProps, 'remarkPlugi
       <View pointerEvents={'box-none'}>
         {blocks.map((block, index) => (
           <StreamdownBlock
+            components={components}
             key={`${generatedId}-block_${index}`}
             rehypePlugins={rehypePlugins}
             remarkPlugins={remarkPlugins}

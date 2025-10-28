@@ -7,13 +7,14 @@ import {
   TR as TRElement,
   Table as TableElement,
 } from '@expo/html-elements';
-import { PropsWithChildren, memo } from 'react';
+import { memo } from 'react';
+import { Components } from 'react-markdown';
 import { Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { useStyles } from '../style';
 
-export const Table = memo<PropsWithChildren>(({ children }) => {
+export const Table: Components['table'] = memo(({ children }) => {
   const { styles } = useStyles();
   return (
     <TableElement style={styles.table}>
@@ -39,12 +40,12 @@ export const Table = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export const TBody = memo<PropsWithChildren>(({ children }) => {
+export const TBody: Components['tbody'] = memo(({ children }) => {
   const { styles } = useStyles();
   return <TBodyElement style={styles.tableBody}>{children}</TBodyElement>;
 });
 
-export const TD = memo<PropsWithChildren>(({ children }) => {
+export const TD: Components['td'] = memo(({ children }) => {
   const { styles } = useStyles();
   return (
     <TDElement style={styles.tableRowCell}>
@@ -53,11 +54,16 @@ export const TD = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export const TFoot = memo<PropsWithChildren>(({ children }) => {
-  return <TFootElement>{children}</TFootElement>;
+export const TFoot: Components['tfoot'] = memo(({ children }) => {
+  const { styles } = useStyles();
+  return (
+    <TFootElement>
+      <Text style={styles.text}>{children}</Text>
+    </TFootElement>
+  );
 });
 
-export const TH = memo<PropsWithChildren>(({ children }) => {
+export const TH: Components['th'] = memo(({ children }) => {
   const { styles } = useStyles();
   return (
     <THElement style={styles.tableHeaderCell}>
@@ -66,12 +72,12 @@ export const TH = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export const THead = memo<PropsWithChildren>(({ children }) => {
+export const THead: Components['thead'] = memo(({ children }) => {
   const { styles } = useStyles();
   return <THeadElement style={styles.tableHeader}>{children}</THeadElement>;
 });
 
-export const TR = memo<PropsWithChildren>(({ children }) => {
+export const TR: Components['tr'] = memo(({ children }) => {
   const { styles } = useStyles();
   return <TRElement style={styles.tableRow}>{children}</TRElement>;
 });

@@ -1,4 +1,4 @@
-import { ElementType } from 'react';
+import { Components } from 'react-markdown';
 import { ViewProps } from 'react-native';
 import type { Pluggable } from 'unified';
 
@@ -13,10 +13,9 @@ export interface TypographyProps {
 }
 
 export interface SyntaxMarkdownProps extends Omit<TypographyProps, 'children'> {
-  allowHtml?: boolean;
-  allowHtmlList?: ElementType[];
   animated?: boolean;
   children: string;
+  components?: Components;
   enableCustomFootnotes?: boolean;
   enableGithubAlert?: boolean;
   enableLatex?: boolean;

@@ -1,3 +1,4 @@
+import { rehypeCustomFootnotes } from '@lobehub/ui/es/Markdown/plugins/rehypeCustomFootnotes';
 import { rehypeKatexDir } from '@lobehub/ui/es/Markdown/plugins/rehypeKatexDir';
 import { useMemo } from 'react';
 import { rehypeGithubAlerts } from 'rehype-github-alerts';
@@ -17,9 +18,11 @@ export const useMarkdownRehypePlugins = (): Pluggable[] => {
 
   const memoPlugins = useMemo(
     () =>
-      [enableGithubAlert && rehypeGithubAlerts, enableLatex && rehypeKatexDir].filter(
-        Boolean,
-      ) as Pluggable[],
+      [
+        enableGithubAlert && rehypeGithubAlerts,
+        enableLatex && rehypeKatexDir,
+        enableCustomFootnotes && rehypeCustomFootnotes,
+      ].filter(Boolean) as Pluggable[],
     [animated, enableLatex, enableGithubAlert, enableCustomFootnotes],
   );
 
