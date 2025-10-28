@@ -20,6 +20,9 @@ import InlineCodeDemo from './code/inline-code';
 import LanguagesDemo from './code/languages';
 // Footnotes demo
 import FootnotesDemo from './footnotes/footnotes';
+// Media demo
+import ImageDemo from './media/image';
+import VideoDemo from './media/video';
 // Streaming demo
 import StreamingDemo from './streaming';
 
@@ -35,6 +38,10 @@ const demos: DemoConfig = [
   { component: <QuotesDemo />, key: 'quotes', title: '引用' },
   { component: <TablesDemo />, key: 'tables', title: '表格' },
   { component: <BrDemo />, key: 'line-breaks', title: '换行' },
+
+  // Media
+  { component: <ImageDemo />, key: 'image', title: '图片' },
+  { component: <VideoDemo />, key: 'video', title: '视频' },
 
   // Code
   { component: <InlineCodeDemo />, key: 'inline-code', title: '内联代码' },

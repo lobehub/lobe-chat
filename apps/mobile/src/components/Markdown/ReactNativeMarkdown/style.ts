@@ -1,5 +1,6 @@
 import { darken } from 'polished';
 import { useContext } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { createStyles } from '@/components';
 import { useMarkdownContext } from '@/components/Markdown/components';
@@ -77,7 +78,13 @@ export const useMarkdownStyles = createStyles(
       hr: {
         marginBlock: options.fontSize * options.marginMultiple,
       },
-      img: {},
+      img: {
+        backgroundColor: token.colorFill,
+        borderColor: token.colorBorderSecondary,
+        borderWidth: StyleSheet.hairlineWidth,
+        marginBlock: options.fontSize * options.marginMultiple * 0.4,
+        overflow: 'hidden',
+      },
       ins: {
         textDecorationLine: 'underline',
       },
@@ -116,6 +123,19 @@ export const useMarkdownStyles = createStyles(
         marginBlock:
           blockType === 'blockquote' ? 0 : options.fontSize * options.marginMultiple * 0.2,
         pointerEvents: 'box-none',
+      },
+      playButton: {
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        borderRadius: 40,
+        height: 80,
+        justifyContent: 'center',
+        width: 80,
+      },
+      playOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        alignItems: 'center',
+        justifyContent: 'center',
       },
       strong: {
         fontWeight: 'bold',
@@ -170,6 +190,14 @@ export const useMarkdownStyles = createStyles(
         fontWeight: isHeading ? 'bold' : 'normal',
         lineHeight: options.lineHeight * options.fontSize,
         pointerEvents: 'box-none',
+      },
+      video: {
+        backgroundColor: '#000',
+        borderColor: token.colorBorderSecondary,
+        borderRadius: token.borderRadiusLG * 1.5,
+        borderWidth: StyleSheet.hairlineWidth,
+        marginBlock: options.fontSize * options.marginMultiple * 0.4,
+        overflow: 'hidden',
       },
     };
   },
