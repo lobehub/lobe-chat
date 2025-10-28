@@ -16,7 +16,7 @@ export interface EmojiObject {
 export interface EmojiSelectorProps extends Omit<ViewProps, 'onLayout'> {
   /**
    * 初始选中的分类
-   * @default Categories.activities
+   * @default Categories.emotion
    */
   category?: EmojiCategory;
 

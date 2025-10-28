@@ -8,6 +8,7 @@ export type InputSize = 'large' | 'middle' | 'small';
 export type InputVariant = BlockProps['variant'];
 
 export interface InputProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
+  block?: boolean;
   disabled?: boolean;
   glass?: boolean;
   prefix?: ReactNode;
@@ -19,6 +20,7 @@ export interface InputProps extends Omit<RNTextInputProps, 'multiline' | 'style'
 }
 
 export interface TextAreaProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
+  block?: boolean;
   disabled?: boolean;
   size?: InputSize;
   style?: StyleProp<ViewStyle>;
