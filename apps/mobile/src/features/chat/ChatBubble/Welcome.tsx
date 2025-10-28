@@ -4,6 +4,7 @@ import { memo } from 'react';
 
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
+import { useSettingStore } from '@/store/setting';
 
 interface WelcomeChatBubbleProps {
   message: UIChatMessage;
@@ -11,12 +12,13 @@ interface WelcomeChatBubbleProps {
 
 const WelcomeChatBubble = memo(({ message }: WelcomeChatBubbleProps) => {
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
+  const { fontSize } = useSettingStore();
   return (
     <Flexbox gap={16} paddingBlock={16}>
       <Center>
         <Avatar avatar={avatar} size={100} />
       </Center>
-      <Markdown>{message.content}</Markdown>
+      <Markdown fontSize={fontSize}>{message.content}</Markdown>
     </Flexbox>
   );
 });
