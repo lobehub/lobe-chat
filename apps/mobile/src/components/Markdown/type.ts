@@ -1,4 +1,5 @@
-import { CSSProperties, ElementType, ReactNode, Ref } from 'react';
+import { ElementType } from 'react';
+import { ViewProps } from 'react-native';
 import type { Pluggable } from 'unified';
 
 import type { ReactNativeMarkdownProps } from './ReactNativeMarkdown/type';
@@ -35,10 +36,6 @@ export interface SyntaxMarkdownProps extends Omit<TypographyProps, 'children'> {
 }
 
 export interface MarkdownProps extends SyntaxMarkdownProps {
-  className?: string;
-  customRender?: (dom: ReactNode, context: { text: string }) => ReactNode;
   enableImageGallery?: boolean;
-  onDoubleClick?: () => void;
-  ref?: Ref<HTMLDivElement>;
-  style?: CSSProperties;
+  style?: ViewProps['style'];
 }

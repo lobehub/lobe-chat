@@ -6,7 +6,7 @@ import { useStyles } from '../style';
 const Sub = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
-    <View style={styles.sub}>
+    <View pointerEvents={'box-none'} style={styles.sub}>
       <Text style={[styles.text, styles.sub]}>{children}</Text>
     </View>
   );

@@ -2,8 +2,8 @@ import { ActionIcon, Flexbox, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import {
   ChevronRightIcon,
-  MessagesSquare,
-  PlusCircle,
+  Clock,
+  MessageSquarePlusIcon,
   TextAlignStartIcon,
 } from 'lucide-react-native';
 import { darken } from 'polished';
@@ -45,11 +45,11 @@ export default function ChatWithDrawer() {
           <Flexbox align={'center'} gap={1} horizontal>
             <ActionIcon
               disabled={isInDefaultTopic}
-              icon={PlusCircle}
+              icon={MessageSquarePlusIcon}
               onPress={() => switchTopic()}
               pressEffect={false}
             />
-            <ActionIcon icon={MessagesSquare} onPress={toggleTopicDrawer} pressEffect={false} />
+            <ActionIcon icon={Clock} onPress={toggleTopicDrawer} pressEffect={false} />
           </Flexbox>
         }
         left={<ActionIcon icon={TextAlignStartIcon} onPress={toggleDrawer} pressEffect={false} />}

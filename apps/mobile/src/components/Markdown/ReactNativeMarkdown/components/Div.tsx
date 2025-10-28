@@ -7,7 +7,7 @@ import TextWrapper from './TextWrapper';
 const Div = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
   return (
-    <View style={styles.div}>
+    <View pointerEvents={'box-none'} style={styles.div}>
       <TextWrapper>{children}</TextWrapper>
     </View>
   );

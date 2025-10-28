@@ -36,7 +36,7 @@ export const StreamdownRender = memo<Omit<ReactNativeMarkdownProps, 'remarkPlugi
       [escapedContent],
     );
     return (
-      <View>
+      <View pointerEvents={'box-none'}>
         {blocks.map((block, index) => (
           <StreamdownBlock
             key={`${generatedId}-block_${index}`}
