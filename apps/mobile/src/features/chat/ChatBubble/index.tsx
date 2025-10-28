@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import { Avatar, Block, Flexbox, Markdown, Text } from '@lobehub/ui-rn';
+import { Avatar, Block, Flexbox, Markdown, MarkdownProps, Text } from '@lobehub/ui-rn';
 import { memo, useMemo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/_const/meta';
@@ -14,6 +14,7 @@ import { useStyles } from './style';
 
 interface ChatBubbleProps {
   isLoading?: boolean;
+  markdownProps?: Partial<MarkdownProps>;
   message: UIChatMessage;
   showActions?: boolean;
   showActionsBar?: boolean;
@@ -29,6 +30,7 @@ const ChatBubble = memo(
     showTime = true,
     showTitle = true,
     showActionsBar,
+    markdownProps,
   }: ChatBubbleProps) => {
     const isUser = message.role === 'user';
     const hasError = !!message.error;
@@ -45,8 +47,12 @@ const ChatBubble = memo(
         return <LoadingDots />;
       }
 
-      return <Markdown fontSize={fontSize}>{message.content}</Markdown>;
-    }, [fontSize, hasError, isLoading, message.content, message.error]);
+      return (
+        <Markdown fontSize={fontSize} {...markdownProps}>
+          {message.content}
+        </Markdown>
+      );
+    }, [fontSize, hasError, isLoading, message.content, message.error, markdownProps]);
 
     const node = (
       <>
@@ -65,7 +71,7 @@ const ChatBubble = memo(
             )}
           </Flexbox>
         )}
-        <Flexbox style={{ paddingBottom: 16 }}>
+        <Flexbox>
           {isUser ? (
             <Flexbox horizontal justify={'flex-end'}>
               <Block
@@ -88,7 +94,7 @@ const ChatBubble = memo(
                 {content}
               </Block>
               {showActions && showActionsBar && !isLoading && (message.content || hasError) && (
-                <MessageActions message={message} style={{ paddingBottom: 16 }} />
+                <MessageActions message={message} />
               )}
             </Flexbox>
           )}
