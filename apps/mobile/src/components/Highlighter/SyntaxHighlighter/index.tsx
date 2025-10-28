@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useHighlight } from '@/components/hooks/useHighlight';
 
 import Text from '../../Text';
+import { isSupportedLanguage } from '../const';
 
 interface SyntaxHighlighterProps {
   children: string;
@@ -26,14 +27,33 @@ const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) 
     language,
   });
 
-  if (isLoading || error || !tokens || !tokens.map) {
-    return (
-      <View style={{ padding: 16 }}>
-        <Text code fontSize={12}>
-          {children}
-        </Text>
-      </View>
+  let content;
+
+  if (!isSupportedLanguage(language) || isLoading || error || !tokens || !tokens.map) {
+    content = (
+      <Text code fontSize={12}>
+        {children}
+      </Text>
     );
+  } else {
+    content = tokens.map((line, lineIndex) => (
+      <Span key={`line-${lineIndex}`} style={{ display: 'flex', flexDirection: 'row' }}>
+        {line.map((tokenItem, tokenIndex) => (
+          <Text
+            code
+            fontSize={12}
+            key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
+            style={{
+              backgroundColor: tokenItem.bgColor,
+              color: tokenItem.color,
+              fontStyle: tokenItem.fontStyle === 1 ? 'italic' : 'normal',
+            }}
+          >
+            {tokenItem.content}
+          </Text>
+        ))}
+      </Span>
+    ));
   }
 
   return (
@@ -49,26 +69,7 @@ const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) 
       scrollEnabled
       showsHorizontalScrollIndicator={false}
     >
-      <View>
-        {tokens.map((line, lineIndex) => (
-          <Span key={`line-${lineIndex}`} style={{ display: 'flex', flexDirection: 'row' }}>
-            {line.map((tokenItem, tokenIndex) => (
-              <Text
-                code
-                fontSize={12}
-                key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
-                style={{
-                  backgroundColor: tokenItem.bgColor,
-                  color: tokenItem.color,
-                  fontStyle: tokenItem.fontStyle === 1 ? 'italic' : 'normal',
-                }}
-              >
-                {tokenItem.content}
-              </Text>
-            ))}
-          </Span>
-        ))}
-      </View>
+      <View>{content}</View>
     </ScrollView>
   );
 });
