@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-10-28",
+    "version": "1.142.6"
+  },
+  {
     "children": {
       "improvements": ["Add MiniMax-M2 model."]
     },
