@@ -47,6 +47,8 @@ import FormDemos from '@lobehub/ui-rn/Form/demos';
 import HighlighterDemos from '@lobehub/ui-rn/Highlighter/demos';
 // Icon
 import IconDemos from '@lobehub/ui-rn/Icon/demos';
+// ImageGallery
+import ImageGalleryDemos from '@lobehub/ui-rn/ImageGallery/demos';
 // Input
 import InputDemos from '@lobehub/ui-rn/Input/demos';
 // InstantSwitch
@@ -109,6 +111,7 @@ export const DEMOS_MAP: Record<string, any> = {
   Form: FormDemos,
   Highlighter: HighlighterDemos,
   Icon: IconDemos,
+  ImageGallery: ImageGalleryDemos,
   Input: InputDemos,
   InstantSwitch: InstantSwitchDemos,
   ListItem: ListItemDemos,

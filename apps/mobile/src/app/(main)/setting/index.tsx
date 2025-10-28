@@ -177,7 +177,7 @@ export default function SettingScreen() {
               icon={BrushCleaning}
               loading={isCacheLoading}
               onPress={handleClearCache}
-              pressEffect={!isClearingCache && !isCacheLoading}
+              showArrow={true}
               title={t('cache.title', { ns: 'setting' })}
             />
           </SettingGroup>

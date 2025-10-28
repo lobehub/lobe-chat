@@ -24,6 +24,7 @@ import Sup from './components/Sup';
 import { TBody, TD, TFoot, TH, THead, TR, Table } from './components/Table';
 import Text from './components/Text';
 import Time from './components/Time';
+import Video from './components/Video';
 
 export const useComponents = (): Components => {
   return {
@@ -68,5 +69,6 @@ export const useComponents = (): Components => {
     tr: TR,
     u: Ins,
     ul: UL,
+    video: Video,
   };
 };

@@ -54,6 +54,7 @@ export {
   type IconSize,
   useIconContext,
 } from './Icon';
+export { default as ImageGallery, type ImageGalleryProps } from './ImageGallery';
 export {
   default as Input,
   InputPassword,
