@@ -72,6 +72,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     './plugins/withFbjniFix',
+    // 禁用 Android 平板支持
+    './plugins/disable-tablet',
     [
       'expo-splash-screen',
       {
