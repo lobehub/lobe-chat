@@ -290,32 +290,26 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
             }}
           />
           <Flexbox padding={16}>
-            {isLoadingContent ? (
-              <div style={{ minHeight: 400, padding: 16 }}>
-                {t('header.newNoteDialog.loading', { ns: 'file' })}
-              </div>
-            ) : (
-              <Editor
-                autoFocus
-                className={editorClassName}
-                content={''}
-                editor={editor}
-                plugins={[
-                  ReactListPlugin,
-                  ReactCodePlugin,
-                  ReactCodeblockPlugin,
-                  ReactHRPlugin,
-                  ReactLinkHighlightPlugin,
-                  ReactTablePlugin,
-                  ReactMathPlugin,
-                ]}
-                style={{
-                  minHeight: 400,
-                }}
-                type={'text'}
-                variant={'chat'}
-              />
-            )}
+            <Editor
+              // autoFocus
+              className={editorClassName}
+              content={''}
+              editor={editor}
+              plugins={[
+                ReactListPlugin,
+                ReactCodePlugin,
+                ReactCodeblockPlugin,
+                ReactHRPlugin,
+                ReactLinkHighlightPlugin,
+                ReactTablePlugin,
+                ReactMathPlugin,
+              ]}
+              style={{
+                minHeight: 400,
+              }}
+              type={'text'}
+              variant={'chat'}
+            />
           </Flexbox>
         </Flexbox>
       </Modal>
