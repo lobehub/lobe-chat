@@ -57,7 +57,7 @@ export const useMarkdownStyles = createStyles(
         textDecorationLine: 'line-through',
       },
       div: {
-        flex: 1,
+        marginBlock: options.fontSize * options.marginMultiple * 0.4,
       },
       em: {
         fontStyle: 'italic',
@@ -151,6 +151,7 @@ export const useMarkdownStyles = createStyles(
         borderColor: token.colorBorderSecondary,
         borderRadius: token.borderRadiusLG,
         borderWidth: 1,
+        marginBlock: options.fontSize * options.marginMultiple * 0.4,
         overflow: 'hidden',
         pointerEvents: 'box-none',
       },
