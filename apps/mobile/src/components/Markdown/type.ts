@@ -1,13 +1,44 @@
-// 仅用于解析数学公式
-import { RemarkStyles } from './context';
-import { Renderers } from './renderers/renderers';
+import { CSSProperties, ElementType, ReactNode, Ref } from 'react';
+import type { Pluggable } from 'unified';
 
-export type MarkdownProps = {
-  children: string;
-  customRenderers?: Partial<Renderers>;
-  customStyles?: Partial<RemarkStyles>;
+import type { ReactNativeMarkdownProps } from './ReactNativeMarkdown/type';
+
+export interface TypographyProps {
+  borderRadius?: number;
   fontSize?: number;
   headerMultiple?: number;
   lineHeight?: number;
   marginMultiple?: number;
-};
+}
+
+export interface SyntaxMarkdownProps extends Omit<TypographyProps, 'children'> {
+  allowHtml?: boolean;
+  allowHtmlList?: ElementType[];
+  animated?: boolean;
+  children: string;
+  enableCustomFootnotes?: boolean;
+  enableGithubAlert?: boolean;
+  enableLatex?: boolean;
+  enableMermaid?: boolean;
+  enableStream?: boolean;
+  fullFeaturedCodeBlock?: boolean;
+  reactMarkdownProps?: Omit<
+    ReactNativeMarkdownProps,
+    'components' | 'rehypePlugins' | 'remarkPlugins'
+  >;
+  rehypePlugins?: Pluggable[];
+  rehypePluginsAhead?: Pluggable[];
+  remarkPlugins?: Pluggable[];
+  remarkPluginsAhead?: Pluggable[];
+  showFootnotes?: boolean;
+  variant?: 'default' | 'chat';
+}
+
+export interface MarkdownProps extends SyntaxMarkdownProps {
+  className?: string;
+  customRender?: (dom: ReactNode, context: { text: string }) => ReactNode;
+  enableImageGallery?: boolean;
+  onDoubleClick?: () => void;
+  ref?: Ref<HTMLDivElement>;
+  style?: CSSProperties;
+}

@@ -1,74 +1,143 @@
 ---
 group: Display
 title: Markdown
-description: Powerful React Native Markdown rendering component with math formulas, code highlighting, images, videos, and more content types support.
+description: Powerful React Native Markdown rendering component with math formulas, code highlighting, tables, and GitHub Flavored Markdown support.
 ---
 
 ## Features
 
-- ✅ **Math Formula Rendering** - Supports MathJax math formula display
-- ✅ **Code Highlighting** - Integrated custom Highlighter component
-- ✅ **Responsive Images** - Auto-calculate image height, responsive display
-- ✅ **Video Support** - Supports video content rendering
-- ✅ **Table Support** - Complete table styling and layout
+- ✅ **Math Formula Rendering** - Supports LaTeX math formula display via remark-math
+- ✅ **Code Highlighting** - Integrated custom Highlighter component with 100+ languages
+- ✅ **GitHub Flavored Markdown** - Tables, task lists, strikethrough, and more
+- ✅ **CJK Friendly** - Optimized for Chinese, Japanese, and Korean text
 - ✅ **Dark Theme** - Auto-adapts to dark/light themes
-- ✅ **Custom Styles** - Rich style configuration options
-- ✅ **Link Support** - Clickable links with auto-navigation
-- ✅ **List Support** - Ordered and unordered lists
-- ✅ **Quote Blocks** - Supports blockquote styling
+- ✅ **Custom Renderers** - Override rendering for any markdown element
+- ✅ **Plugin System** - Support for remark plugins (via ReactNativeMarkdown)
+- ✅ **Type Safe** - Full TypeScript support with comprehensive types
+- ✅ **Custom Styles** - Fine-grained control over markdown element styles
 
-## Basic Usage
+## Components
 
-```jsx
+### Markdown (Simplified API)
+
+A high-level wrapper with simplified API for common use cases:
+
+```tsx
 import { Markdown } from '@lobehub/ui-rn';
 
 export default function App() {
-  const markdownContent = `
-# Title Example
+  return (
+    <Markdown fontSize={16} lineHeight={1.8}>
+      # Hello World This is **bold** and *italic* text.
+    </Markdown>
+  );
+}
+```
 
-This is **bold text** and *italic text* example.
+### ReactNativeMarkdown (Advanced API)
 
-## Code Example
+For advanced use cases with plugin support and tree transformations:
+
+```tsx
+import { ReactNativeMarkdown } from '@lobehub/ui-rn';
+import remarkEmoji from 'remark-emoji';
+
+export default function App() {
+  return <ReactNativeMarkdown remarkPlugins={[remarkEmoji]}>Hello :wave:</ReactNativeMarkdown>;
+}
+```
+
+## Basic Usage
+
+```tsx
+import { Markdown } from '@lobehub/ui-rn';
+
+const content = `
+# Heading 1
+## Heading 2
+
+This is **bold** and *italic* text.
+
+- List item 1
+- List item 2
 
 \`\`\`javascript
-function hello() {
-  console.log('Hello World!');
+function greet(name) {
+  console.log(\`Hello, \${name}!\`);
 }
 \`\`\`
+`;
 
-## Math Formula
+export default () => <Markdown>{content}</Markdown>;
+```
 
-Inline formula: $E = mc^2$
+## Custom Renderers
 
-Block formula:
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
-  `;
+Override default rendering for specific markdown elements:
 
-  return <Markdown content={markdownContent} />;
-}
+```tsx
+import { Markdown } from '@lobehub/ui-rn';
+
+import Text from '@/components/Text';
+
+<Markdown
+  customRenderers={{
+    ParagraphRenderer: ({ node }) => <Text style={{ color: 'blue' }}>Custom paragraph</Text>,
+  }}
+>
+  This is a custom paragraph.
+</Markdown>;
+```
+
+## Custom Styles
+
+Customize the appearance of markdown elements:
+
+```tsx
+<Markdown
+  customStyles={{
+    paragraph: {
+      fontSize: 16,
+      color: '#333',
+    },
+    heading: (level) => ({
+      fontSize: 20 + (6 - level) * 4,
+      fontWeight: 'bold',
+    }),
+  }}
+>
+  # Styled Markdown
+</Markdown>
 ```
 
 ## Supported Features
 
-### Math Formula Rendering
+### GitHub Flavored Markdown
 
-Based on MathJax engine, supports complex math expressions:
+- **Tables** - Full table support with styling
+- **Task Lists** - `- [x]` and `- [ ]` checkboxes
+- **Strikethrough** - `~~text~~` renders as ~~text~~
+- **Autolinks** - Automatically linkify URLs
 
-- Inline formulas: `$E = mc^2$`
-- Block formulas: `$$\int_0^1 x^2 dx$$`
+### Math Formulas
+
+Supports LaTeX math expressions via remark-math:
+
+- Inline: `$E = mc^2$`
+- Block: `$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$`
 
 ### Code Highlighting
 
-Integrated Highlighter component, supports 100+ programming languages syntax highlighting.
+Integrated Highlighter component with syntax highlighting for 100+ languages.
 
-### Images and Videos
+## Architecture
 
-- Auto-calculate image dimensions
-- Responsive adaptation
-- Supports video content
+- **Markdown** - High-level wrapper with simplified API
+- **ReactNativeMarkdown** - Low-level component with full plugin support
+- Based on **unified/remark** ecosystem for markdown parsing
+- Custom React Native renderers for optimal performance
 
-### Table Support
+For detailed API documentation, see:
 
-Complete table rendering and styling support, including borders, alignment, etc.
-
-For more detailed information, please check the complete README documentation.
+- [ReactNativeMarkdown README](./ReactNativeMarkdown/README.md)
+- Component props in `type.ts`

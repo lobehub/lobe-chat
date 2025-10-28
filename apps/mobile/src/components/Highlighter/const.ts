@@ -131,3 +131,7 @@ export const supportedLanguageIds = uniq(
     return grammars.map((g) => g.name);
   }),
 ).sort((a, b) => a.localeCompare(b));
+
+export const isSupportedLanguage = (lang: string): boolean => {
+  return supportedLanguageIds.map((item) => item.toLowerCase()).includes(lang.toLowerCase());
+};
