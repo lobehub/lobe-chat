@@ -62,6 +62,7 @@ export interface SystemStatus {
   expandSessionGroupKeys: string[];
   fileManagerViewMode?: 'list' | 'masonry';
   filePanelWidth: number;
+  knowledgeBaseModalViewMode?: 'list' | 'masonry';
   hideGemini2_5FlashImagePreviewChineseWarning?: boolean;
   hidePWAInstaller?: boolean;
   hideThreadLimitAlert?: boolean;
@@ -137,6 +138,7 @@ export const INITIAL_STATUS = {
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
   fileManagerViewMode: 'list' as const,
   filePanelWidth: 320,
+  knowledgeBaseModalViewMode: 'list' as const,
   hideGemini2_5FlashImagePreviewChineseWarning: false,
   hidePWAInstaller: false,
   hideThreadLimitAlert: false,
