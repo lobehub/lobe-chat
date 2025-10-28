@@ -71,7 +71,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
       setColumnCount(2);
     } else if (width < 1024) {
       setColumnCount(3);
-    } else if (width < 1440) {
+    } else if (width < 1536) {
       setColumnCount(4);
     } else {
       setColumnCount(5);
