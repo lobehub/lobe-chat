@@ -18,14 +18,47 @@ function generateTokenKey(lineIndex: number, tokenIndex: number, token: ThemedTo
   return `token-${lineIndex}-${tokenIndex}-${token.offset}-${token.content}`;
 }
 
+const CodeLine = memo<ThemedToken>(
+  ({ bgColor, color, fontStyle, content }) => {
+    return (
+      <Text
+        code
+        fontSize={12}
+        style={{
+          backgroundColor: bgColor,
+          color: color,
+          fontStyle: fontStyle === 1 ? 'italic' : 'normal',
+          lineHeight: 18,
+        }}
+      >
+        {content}
+      </Text>
+    );
+  },
+  (prevProps, nextProps) => prevProps.content === nextProps.content,
+);
+
+const CodeRow = memo<{ line: ThemedToken[]; lineIndex: number }>(
+  ({ line, lineIndex }) => {
+    return (
+      <Span>
+        {line.map((tokenItem, tokenIndex) => (
+          <CodeLine key={generateTokenKey(lineIndex, tokenIndex, tokenItem)} {...tokenItem} />
+        ))}
+      </Span>
+    );
+  },
+  (prevProps, nextProps) => prevProps.line === nextProps.line,
+);
+
 const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) => {
-  const { data: tokens } = useHighlight(children, {
+  const { data: tokens = [] } = useHighlight(children, {
     language,
   });
 
   let content;
 
-  if (!isSupportedLanguage(language) || !tokens?.map) {
+  if (!isSupportedLanguage(language)) {
     content = (
       <Text code fontSize={12}>
         {children}
@@ -33,23 +66,7 @@ const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) 
     );
   } else {
     content = tokens.map((line, lineIndex) => (
-      <Span key={`line-${lineIndex}`} style={{ display: 'flex', flexDirection: 'row' }}>
-        {line.map((tokenItem, tokenIndex) => (
-          <Text
-            code
-            fontSize={12}
-            key={generateTokenKey(lineIndex, tokenIndex, tokenItem)}
-            style={{
-              backgroundColor: tokenItem.bgColor,
-              color: tokenItem.color,
-              fontStyle: tokenItem.fontStyle === 1 ? 'italic' : 'normal',
-              lineHeight: 18,
-            }}
-          >
-            {tokenItem.content}
-          </Text>
-        ))}
-      </Span>
+      <CodeRow key={`line-${lineIndex}`} line={line} lineIndex={lineIndex} />
     ));
   }
 

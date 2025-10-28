@@ -30,6 +30,8 @@ import StreamingDemo from './streaming';
 // Variant demo
 
 const demos: DemoConfig = [
+  // Streaming
+  { component: <StreamingDemo />, key: 'streaming', title: '流式渲染' },
   // Basic
   { component: <HeadingsDemo />, key: 'headings', title: '标题' },
   { component: <StylingTextDemo />, key: 'styling-text', title: '文本样式' },
@@ -57,9 +59,6 @@ const demos: DemoConfig = [
   // Footnotes
   { component: <FootnotesDemo />, key: 'footnotes', title: '脚注' },
   { component: <CustomFootnotesDemo />, key: 'custom-footnotes', title: '自定义脚注' },
-
-  // Streaming
-  { component: <StreamingDemo />, key: 'streaming', title: '流式渲染' },
 ];
 
 export default demos;
