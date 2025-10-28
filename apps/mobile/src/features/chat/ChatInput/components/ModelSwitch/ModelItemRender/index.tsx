@@ -3,6 +3,8 @@ import { Cell, ModelInfoTags } from '@lobehub/ui-rn';
 import { AIChatModelCard } from 'model-bank';
 import { memo } from 'react';
 
+import ScrollableTitle from './ScrollableTitle';
+
 interface ModelItemRenderProps extends AIChatModelCard {
   active?: boolean;
   onPress?: () => void;
@@ -24,7 +26,7 @@ const ModelItemRender = memo<ModelItemRenderProps>(
         onPress={onPress}
         pressEffect
         showArrow={false}
-        title={model.displayName || model.id}
+        title={<ScrollableTitle text={model.displayName || model.id} />}
       />
     );
   },
