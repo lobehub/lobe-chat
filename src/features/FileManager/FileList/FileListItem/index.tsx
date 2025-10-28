@@ -10,7 +10,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { setFileModalId } from '@/app/[variants]/(main)/files/(content)/modal/useFilesQueryParam';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
@@ -79,6 +78,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
 interface FileRenderItemProps extends FileListItem {
   index: number;
   knowledgeBaseId?: string;
+  onOpen: (id: string) => void;
   onSelectedChange: (id: string, selected: boolean) => void;
   selected?: boolean;
 }
@@ -100,6 +100,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     chunkingStatus,
     onSelectedChange,
     knowledgeBaseId,
+    onOpen,
   }) => {
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
@@ -130,7 +131,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
           flex={1}
           horizontal
           onClick={() => {
-            setFileModalId(id);
+            onOpen(id);
           }}
         >
           <Flexbox align={'center'} horizontal>

@@ -3,7 +3,6 @@ import { Checkbox, Image } from 'antd';
 import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -268,6 +267,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface MasonryFileItemProps extends FileListItem {
   knowledgeBaseId?: string;
+  onOpen: (id: string) => void;
   onSelectedChange: (id: string, selected: boolean) => void;
   selected?: boolean;
 }
@@ -288,11 +288,10 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     onSelectedChange,
     knowledgeBaseId,
     size,
+    onOpen,
   }) => {
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
-    const router = useRouter();
-    const searchParams = useSearchParams();
     const [imageLoaded, setImageLoaded] = useState(false);
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
@@ -373,9 +372,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         <div
           className={cx(styles.content, !isImage && !isMarkdown && styles.contentWithPadding)}
           onClick={() => {
-            const params = new URLSearchParams(searchParams.toString());
-            params.set('files', id);
-            router.push(`?${params.toString()}`);
+            onOpen(id);
           }}
         >
           {isImage && url ? (

@@ -24,7 +24,7 @@ const CreateForm = memo<CreateFormProps>(({ onClose }) => {
       setLoading(false);
       onClose?.();
 
-      router.push(`/repos/${id}`);
+      router.push(`/knowledge/bases/${id}`);
     } catch (e) {
       console.error(e);
       setLoading(false);
