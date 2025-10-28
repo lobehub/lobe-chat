@@ -88,6 +88,7 @@ export const HighlighterFullFeatured = memo<HighlighterFullFeaturedProps>(
 
     return (
       <Block
+        pointerEvents={'box-none'}
         style={[styles.container, style]}
         testID="highlighter-full-featured"
         variant={variant}
@@ -99,11 +100,12 @@ export const HighlighterFullFeatured = memo<HighlighterFullFeaturedProps>(
           justify={'space-between'}
           paddingBlock={6}
           paddingInline={8}
+          pointerEvents={'box-none'}
           style={{
             backgroundColor: theme.colorFillQuaternary,
           }}
         >
-          <Flexbox align={'center'} horizontal justify={'flex-start'}>
+          <Flexbox align={'center'} horizontal justify={'flex-start'} pointerEvents={'box-none'}>
             <ActionIcon
               color={theme.colorTextDescription}
               icon={expanded ? ChevronDown : ChevronRight}
@@ -122,7 +124,7 @@ export const HighlighterFullFeatured = memo<HighlighterFullFeaturedProps>(
             )
           )}
 
-          <Flexbox align={'center'} horizontal justify={'flex-end'}>
+          <Flexbox align={'center'} horizontal justify={'flex-end'} pointerEvents={'box-none'}>
             {copyable && (
               <ActionIcon
                 color={copied ? theme.colorSuccess : theme.colorTextDescription}

@@ -16,6 +16,7 @@ export type styleOptions = {
 export const useMarkdownStyles = createStyles(
   ({ token, isDarkMode }, options: styleOptions, blockType: BlockType) => {
     const isHeading = blockType.startsWith('h');
+
     const heading = (level: number) => {
       const mapping = [0, 1.5, 1, 0.5, 0.25, 0, 0];
       const multiple = mapping[level] ?? 0;
@@ -82,19 +83,23 @@ export const useMarkdownStyles = createStyles(
       },
       link: {
         color: token.colorInfo,
+        pointerEvents: 'auto',
       },
       list: {
         marginBlock: options.fontSize * options.marginMultiple * 0.4,
         paddingStart: options.fontSize / 2,
+        pointerEvents: 'box-none',
       },
       listItem: {
         alignItems: 'flex-start',
         flex: 1,
         flexDirection: 'row',
         gap: options.fontSize / 2,
+        pointerEvents: 'box-none',
       },
       listNested: {
         marginLeft: options.fontSize / 2,
+        pointerEvents: 'box-none',
       },
       listOrderedIcon: {
         color: isDarkMode ? token.cyan : darken(0.4, token.cyan),
@@ -110,8 +115,8 @@ export const useMarkdownStyles = createStyles(
         letterSpacing: 0.02 * options.fontSize,
         marginBlock:
           blockType === 'blockquote' ? 0 : options.fontSize * options.marginMultiple * 0.2,
+        pointerEvents: 'box-none',
       },
-      pre: {},
       strong: {
         fontWeight: 'bold',
       },
@@ -129,15 +134,20 @@ export const useMarkdownStyles = createStyles(
         borderRadius: token.borderRadiusLG,
         borderWidth: 1,
         overflow: 'hidden',
+        pointerEvents: 'box-none',
       },
-      tableBody: {},
+      tableBody: {
+        pointerEvents: 'box-none',
+      },
       tableHeader: {
         backgroundColor: token.colorFillQuaternary,
+        pointerEvents: 'box-none',
       },
       tableHeaderCell: {
         fontWeight: 'bold',
         paddingBlock: currentFontSize * 0.75,
         paddingInline: currentFontSize,
+        pointerEvents: 'box-none',
         textAlign: 'left',
         width: 150,
       },
@@ -145,10 +155,12 @@ export const useMarkdownStyles = createStyles(
         borderBottomWidth: 1,
         borderColor: token.colorBorderSecondary,
         flexDirection: 'row',
+        pointerEvents: 'box-none',
       },
       tableRowCell: {
         paddingBlock: currentFontSize * 0.75,
         paddingInline: currentFontSize,
+        pointerEvents: 'box-none',
         width: 150,
       },
       text: {
@@ -157,6 +169,7 @@ export const useMarkdownStyles = createStyles(
         fontSize: currentFontSize,
         fontWeight: isHeading ? 'bold' : 'normal',
         lineHeight: options.lineHeight * options.fontSize,
+        pointerEvents: 'box-none',
       },
     };
   },

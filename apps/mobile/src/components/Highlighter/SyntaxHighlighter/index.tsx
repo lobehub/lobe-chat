@@ -47,6 +47,7 @@ const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) 
               backgroundColor: tokenItem.bgColor,
               color: tokenItem.color,
               fontStyle: tokenItem.fontStyle === 1 ? 'italic' : 'normal',
+              lineHeight: 18,
             }}
           >
             {tokenItem.content}
@@ -65,6 +66,7 @@ const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) 
       directionalLockEnabled={false}
       horizontal
       nestedScrollEnabled
+      pointerEvents={'box-none'}
       removeClippedSubviews={false}
       scrollEnabled
       showsHorizontalScrollIndicator={false}
