@@ -1,5 +1,5 @@
 import { FilesTabs, QueryFileListParams, SortType } from '@lobechat/types';
-import { and, asc, desc, eq, ilike, inArray, notExists, or, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 import { DocumentModel } from '../../models/document';
 import { FileModel } from '../../models/file';
@@ -9,6 +9,7 @@ import { LobeChatDatabase } from '../../type';
 export interface KnowledgeItem {
   chunkTaskId?: string | null;
   createdAt: Date;
+  editorData?: Record<string, any> | null;
   embeddingTaskId?: string | null;
   fileType: string;
   id: string;
@@ -86,18 +87,40 @@ export class KnowledgeRepo {
 
     const result = await this.db.execute(finalQuery);
 
-    return result.rows.map((row: any) => ({
-      chunkTaskId: row.chunk_task_id,
-      createdAt: new Date(row.created_at),
-      embeddingTaskId: row.embedding_task_id,
-      fileType: row.file_type,
-      id: row.id,
-      name: row.name,
-      size: Number(row.size),
-      sourceType: row.source_type,
-      updatedAt: new Date(row.updated_at),
-      url: row.url,
-    }));
+    const mappedResults = result.rows.map((row: any) => {
+      // Parse editor_data if it's a string (raw SQL returns JSONB as string)
+      let editorData = row.editor_data;
+      if (typeof editorData === 'string') {
+        try {
+          editorData = JSON.parse(editorData);
+        } catch (e) {
+          console.error('[KnowledgeRepo] Failed to parse editor_data:', e);
+          editorData = null;
+        }
+      }
+
+      return {
+        chunkTaskId: row.chunk_task_id,
+        createdAt: new Date(row.created_at),
+        editorData,
+        embeddingTaskId: row.embedding_task_id,
+        fileType: row.file_type,
+        id: row.id,
+        name: row.name,
+        size: Number(row.size),
+        sourceType: row.source_type,
+        updatedAt: new Date(row.updated_at),
+        url: row.url,
+      };
+    });
+
+    console.log('[KnowledgeRepo.query] Fetched items:', {
+      count: mappedResults.length,
+      documents: mappedResults.filter((item) => item.sourceType === 'document'),
+      sampleEditorData: mappedResults.find((item) => item.sourceType === 'document')?.editorData,
+    });
+
+    return mappedResults;
   }
 
   /**
@@ -171,6 +194,7 @@ export class KnowledgeRepo {
           f.updated_at,
           f.chunk_task_id,
           f.embedding_task_id,
+          NULL as editor_data,
           'file' as source_type
         FROM ${files} f
         INNER JOIN ${knowledgeBaseFiles} kbf
@@ -201,6 +225,7 @@ export class KnowledgeRepo {
         updated_at,
         chunk_task_id,
         embedding_task_id,
+        NULL as editor_data,
         'file' as source_type
       FROM ${files}
       WHERE ${sql.join(whereConditions, sql` AND `)}
@@ -253,6 +278,7 @@ export class KnowledgeRepo {
         updated_at,
         NULL as chunk_task_id,
         NULL as embedding_task_id,
+        editor_data,
         'document' as source_type
       FROM ${documents}
       WHERE ${sql.join(whereConditions, sql` AND `)}

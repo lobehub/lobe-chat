@@ -1,6 +1,6 @@
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
@@ -151,6 +151,7 @@ interface MasonryFileItemProps extends FileListItem {
 const MasonryFileItem = memo<MasonryFileItemProps>(
   ({
     chunkingError,
+    editorData,
     embeddingError,
     embeddingStatus,
     finishEmbedding,
@@ -174,6 +175,19 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
     const isNote = isCustomNote(fileType);
+
+    // Debug: Log editorData for notes
+    useEffect(() => {
+      if (isNote) {
+        console.log('[MasonryFileItem] Note item:', {
+          id,
+          name,
+          hasEditorData: !!editorData,
+          editorDataType: typeof editorData,
+          editorDataPreview: editorData ? JSON.stringify(editorData).slice(0, 100) : null,
+        });
+      }
+    }, [isNote, id, name, editorData]);
 
     const cardRef = useRef<HTMLDivElement>(null);
     const [isInView, setIsInView] = useState(false);
@@ -273,6 +287,12 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           )}
           onClick={() => {
             if (isNote) {
+              console.log('[MasonryFileItem] Opening note modal with:', {
+                id,
+                name,
+                hasEditorData: !!editorData,
+                editorDataType: typeof editorData,
+              });
               setIsNoteModalOpen(true);
             } else {
               onOpen(id);
@@ -313,7 +333,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     isLoadingMarkdown={isLoadingMarkdown}
                     markdownContent={markdownContent}
                     name={name}
-                    size={size}
                   />
                 );
               }
@@ -359,8 +378,13 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         {isNote && (
           <NoteEditorModal
             documentId={id}
+            documentTitle={name}
+            editorData={editorData}
             knowledgeBaseId={knowledgeBaseId}
-            onClose={() => setIsNoteModalOpen(false)}
+            onClose={() => {
+              console.log('[MasonryFileItem] Closing note modal');
+              setIsNoteModalOpen(false);
+            }}
             open={isNoteModalOpen}
           />
         )}

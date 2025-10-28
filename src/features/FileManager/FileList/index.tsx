@@ -111,6 +111,19 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
     ...viewConfig,
   });
 
+  // Debug: Log received data
+  React.useEffect(() => {
+    if (data) {
+      console.log('[FileList] Received data:', {
+        count: data.length,
+        documents: data.filter((item) => item.sourceType === 'document'),
+        sampleDocumentWithEditorData: data.find(
+          (item) => item.sourceType === 'document' && item.editorData,
+        ),
+      });
+    }
+  }, [data]);
+
   // Handle view transition with a brief delay to show skeleton
   React.useEffect(() => {
     if (isTransitioning && data) {

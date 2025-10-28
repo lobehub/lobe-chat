@@ -147,7 +147,12 @@ export const fileRouter = router({
   }),
 
   getKnowledgeItems: fileProcedure.input(QueryFileListSchema).query(async ({ ctx, input }) => {
+    console.log('[API getKnowledgeItems] Query params:', input);
     const knowledgeItems = await ctx.knowledgeRepo.query(input);
+    console.log('[API getKnowledgeItems] Raw knowledge items:', {
+      count: knowledgeItems.length,
+      sampleDocument: knowledgeItems.find((item) => item.sourceType === 'document'),
+    });
 
     // Process files (add chunk info and async task status)
     const fileItems = knowledgeItems.filter((item) => item.sourceType === 'file');
@@ -172,14 +177,15 @@ export const fileRouter = router({
           chunkCount: chunks.find((chunk) => chunk.id === item.id)?.count ?? null,
           chunkingError: chunkTask?.error ?? null,
           chunkingStatus: chunkTask?.status as AsyncTaskStatus,
+          editorData: null,
           embeddingError: embeddingTask?.error ?? null,
           embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
           finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
           url: await ctx.fileService.getFullFileUrl(item.url!),
         } as FileListItem);
       } else {
-        // Document item - no chunk processing needed
-        resultItems.push({
+        // Document item - no chunk processing needed, includes editorData
+        const documentItem = {
           ...item,
           chunkCount: null,
           chunkingError: null,
@@ -187,9 +193,24 @@ export const fileRouter = router({
           embeddingError: null,
           embeddingStatus: null,
           finishEmbedding: false,
-        } as FileListItem);
+        } as FileListItem;
+        console.log('[API getKnowledgeItems] Processing document:', {
+          id: item.id,
+          name: item.name,
+          hasEditorData: !!item.editorData,
+          editorDataPreview: item.editorData
+            ? JSON.stringify(item.editorData).slice(0, 100)
+            : null,
+        });
+        resultItems.push(documentItem);
       }
     }
+
+    console.log('[API getKnowledgeItems] Final result items:', {
+      count: resultItems.length,
+      documentCount: resultItems.filter((item) => item.sourceType === 'document').length,
+      sampleDocument: resultItems.find((item) => item.sourceType === 'document'),
+    });
 
     return resultItems;
   }),
