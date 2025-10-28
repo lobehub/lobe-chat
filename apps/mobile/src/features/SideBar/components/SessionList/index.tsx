@@ -165,10 +165,6 @@ export default function SideBar() {
     return item.type;
   };
 
-  if (isLoading) {
-    return <SessionListSkeleton />;
-  }
-
   return (
     <Flexbox flex={1} gap={8}>
       {/* 搜索栏 */}
@@ -181,22 +177,25 @@ export default function SideBar() {
           variant="filled"
         />
       </Flexbox>
-
       {/* 会话列表 */}
-      <FlashListScrollShadow
-        data={listData}
-        estimatedItemSize={72}
-        getItemType={getItemType}
-        hideScrollBar
-        keyExtractor={(item, index) => {
-          if (item.type === 'session') {
-            return item.data.id;
-          }
-          return `${item.type}-${index}`;
-        }}
-        renderItem={renderItem}
-        size={2}
-      />
+      {isLoading ? (
+        <SessionListSkeleton />
+      ) : (
+        <FlashListScrollShadow
+          data={listData}
+          estimatedItemSize={72}
+          getItemType={getItemType}
+          hideScrollBar
+          keyExtractor={(item, index) => {
+            if (item.type === 'session') {
+              return item.data.id;
+            }
+            return `${item.type}-${index}`;
+          }}
+          renderItem={renderItem}
+          size={2}
+        />
+      )}
     </Flexbox>
   );
 }
