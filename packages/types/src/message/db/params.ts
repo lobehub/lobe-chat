@@ -1,5 +1,3 @@
-import { UIChatMessage } from '@/types/message';
-
 import { GroundingSearch } from '../../search';
 import {
   ChatImageItem,
@@ -9,6 +7,7 @@ import {
   MessageToolCall,
   ModelReasoning,
 } from '../common';
+import { UIChatMessage } from '../ui';
 
 export interface QueryMessageParams {
   current?: number;
