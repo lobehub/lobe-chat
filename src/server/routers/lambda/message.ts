@@ -66,6 +66,14 @@ export const messageRouter = router({
       return data.id;
     }),
 
+  createNewMessage: messageProcedure
+    .input(z.object({}).passthrough().partial())
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.createNewMessage(input as any, {
+        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
+      });
+    }),
+
   // TODO: it will be removed in V2
   getAllMessages: messageProcedure.query(async ({ ctx }): Promise<ChatMessageList> => {
     return ctx.messageModel.queryAll() as any;
