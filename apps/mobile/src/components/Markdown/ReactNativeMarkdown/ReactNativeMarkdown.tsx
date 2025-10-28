@@ -1,5 +1,6 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import Markdown from 'react-markdown';
+import { LogBox } from 'react-native';
 
 import type { ReactNativeMarkdownProps } from './type';
 import { useComponents } from './useComponents';
@@ -14,6 +15,21 @@ const ReactNativeMarkdown = memo<ReactNativeMarkdownProps>(
       }),
       [components],
     );
+
+    useEffect(() => {
+      if ((global as any).__DEV__) {
+        const filters = ['Text strings must be rendered within a <Text> component'];
+        LogBox.ignoreLogs(filters);
+        // 隐藏命令行错误
+        const originalError = console.error;
+        console.error = (...args) => {
+          if (typeof args[0] === 'string' && filters.some((f) => args[0].includes(f))) {
+            return;
+          }
+          originalError(...args);
+        };
+      }
+    }, []);
 
     return (
       <Markdown
