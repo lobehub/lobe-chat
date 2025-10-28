@@ -11,6 +11,10 @@ interface UseStylesProps {
 export const useStyles = createStyles(({ token }, { size = 'middle' }: UseStylesProps) => {
   const sizeStyles = getInputSizeStyles(token, size);
   return {
+    block: {
+      alignSelf: 'stretch' as const,
+      width: '100%' as const,
+    },
     input: {
       color: token.colorText,
       fontFamily: token.fontFamily,

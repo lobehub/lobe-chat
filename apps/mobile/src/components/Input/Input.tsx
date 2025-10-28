@@ -21,6 +21,7 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
     textStyle,
     disabled,
     glass,
+    block,
     ...rest
   } = props;
   const { styles, theme } = useStyles({ size });
@@ -31,7 +32,7 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
       disabled={disabled}
       glass={glass}
       horizontal
-      style={[styles.container, disabled && { opacity: 0.6 }, style]}
+      style={[styles.container, block && styles.block, disabled && { opacity: 0.6 }, style]}
       variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
     >
       {prefix && <View style={styles.prefixContainer}>{prefix}</View>}

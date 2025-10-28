@@ -16,9 +16,15 @@ const ModelsHeader = memo<ModelsHeaderProps>(
     const { t } = useTranslation('setting');
 
     return (
-      <Flexbox align={'center'} gap={8} horizontal paddingInline={16} style={{ marginTop: 16 }}>
+      <Flexbox
+        align={'center'}
+        flex={1}
+        gap={8}
+        horizontal
+        paddingInline={16}
+        style={{ marginTop: 16 }}
+      >
         <Input.Search
-          glass
           onChangeText={onSearchChange}
           placeholder={t('aiProviders.models.modelsAvailable', {
             count: totalCount,
@@ -26,7 +32,6 @@ const ModelsHeader = memo<ModelsHeaderProps>(
           })}
           style={{ flex: 1 }}
           value={searchKeyword}
-          variant="filled"
         />
         <Button
           disabled={isFetching}
