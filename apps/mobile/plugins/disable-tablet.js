@@ -19,17 +19,7 @@ module.exports = function withDisableTablet(config) {
     // - Play 要求精确匹配 density；不少机型会报 560/600 等“非标准”值
     // - 同时保留标准桶名（ldpi..xxxhdpi），兼容更多机型
     const sizes = ['small', 'normal', 'large']; // 不包含 xlarge
-    const densities = [
-      'ldpi',
-      'mdpi',
-      'tvdpi',
-      'hdpi',
-      'xhdpi',
-      'xxhdpi',
-      'xxxhdpi',
-      560,
-      600, // 常见“非标准”密度，覆盖 Redmi/部分三星
-    ];
+    const densities = ['ldpi', 'mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
 
     m['compatible-screens'] = [
       {
