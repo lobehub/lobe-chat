@@ -111,9 +111,6 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 };
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string) => {
-  // Check if server mode is enabled
-  const isServerMode = process.env.NEXT_PUBLIC_SERVICE_MODE === 'server';
-
   return {
     isAgentEditable: evaluateFeatureFlag(config.edit_agent, userId),
 
@@ -138,8 +135,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
 
     enableClerkSignUp: evaluateFeatureFlag(config.clerk_sign_up, userId),
 
-    // Knowledge base is only available in server mode
-    enableKnowledgeBase: isServerMode ? evaluateFeatureFlag(config.knowledge_base, userId) : false,
+    enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
 
     showCloudPromotion: evaluateFeatureFlag(config.cloud_promotion, userId),
