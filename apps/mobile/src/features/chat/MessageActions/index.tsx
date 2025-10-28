@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { ActionIcon, Flexbox, useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
 import { Check, Copy, RefreshCw, Trash2 } from 'lucide-react-native';
@@ -11,7 +11,7 @@ import { useTheme } from '@/components/styles';
 import { useChatStore } from '@/store/chat';
 
 interface MessageActionsProps {
-  message: ChatMessage;
+  message: UIChatMessage;
   style?: StyleProp<ViewStyle>;
 }
 

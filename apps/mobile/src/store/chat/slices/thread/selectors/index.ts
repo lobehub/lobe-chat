@@ -1,4 +1,4 @@
-import { ChatMessage, ThreadItem } from '@lobechat/types';
+import { ThreadItem, UIChatMessage } from '@lobechat/types';
 
 import { THREAD_DRAFT_ID } from '@/_const/message';
 import { useAgentStore } from '@/store/agent';
@@ -35,7 +35,7 @@ const threadSourceMessageId = (s: ChatStoreState) => {
   return portalThread?.sourceMessageId;
 };
 
-const getTheadParentMessages = (s: ChatStoreState, data: ChatMessage[]) => {
+const getTheadParentMessages = (s: ChatStoreState, data: UIChatMessage[]) => {
   if (s.startToForkThread) {
     const startMessageId = threadStartMessageId(s)!;
 
@@ -54,7 +54,7 @@ const getTheadParentMessages = (s: ChatStoreState, data: ChatMessage[]) => {
 /**
  * 获取当前 thread 的父级消息
  */
-const portalDisplayParentMessages = (s: ChatStoreState): ChatMessage[] => {
+const portalDisplayParentMessages = (s: ChatStoreState): UIChatMessage[] => {
   const data = chatSelectors.activeBaseChatsWithoutTool(s);
 
   return getTheadParentMessages(s, data);
@@ -66,7 +66,7 @@ const portalDisplayParentMessages = (s: ChatStoreState): ChatMessage[] => {
  */
 const portalDisplayChildChatsByThreadId =
   (id?: string) =>
-  (s: ChatStoreState): ChatMessage[] => {
+  (s: ChatStoreState): UIChatMessage[] => {
     // skip tool message
     const data = chatSelectors.activeBaseChatsWithoutTool(s);
 
@@ -79,9 +79,9 @@ const portalDisplayChats = (s: ChatStoreState) => {
   // use for optimistic update
   const draftMessage = chatSelectors.activeBaseChats(s).find((m) => m.threadId === THREAD_DRAFT_ID);
 
-  // return [...parentMessages, draftMessage, ...afterMessages].filter(Boolean) as ChatMessage[];
+  // return [...parentMessages, draftMessage, ...afterMessages].filter(Boolean) as UIChatMessage[];
   // TODO need align with web
-  return [...parentMessages, draftMessage].filter(Boolean) as ChatMessage[];
+  return [...parentMessages, draftMessage].filter(Boolean) as UIChatMessage[];
 };
 
 const portalDisplayChatsLength = (s: ChatStoreState) => {
@@ -100,7 +100,7 @@ const portalDisplayChatIDs = (s: ChatStoreState): string[] =>
 // ========= Portal Thread AI Chats ========= //
 // ========================================== //
 
-const portalAIParentMessages = (s: ChatStoreState): ChatMessage[] => {
+const portalAIParentMessages = (s: ChatStoreState): UIChatMessage[] => {
   const data = chatSelectors.activeBaseChats(s);
 
   return getTheadParentMessages(s, data);
@@ -109,7 +109,7 @@ const portalAIParentMessages = (s: ChatStoreState): ChatMessage[] => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const portalAIChildChatsByThreadId =
   (id?: string) =>
-  (s: ChatStoreState): ChatMessage[] => {
+  (s: ChatStoreState): UIChatMessage[] => {
     // skip tool message
     const data = chatSelectors.activeBaseChats(s);
 
@@ -121,7 +121,7 @@ const portalAIChats = (s: ChatStoreState) => {
   // const afterMessages = portalAIChildChatsByThreadId(s.portalThreadId)(s);
   // TODO need align with web
 
-  return [...parentMessages].filter(Boolean) as ChatMessage[];
+  return [...parentMessages].filter(Boolean) as UIChatMessage[];
 };
 
 const portalAIChatsWithHistoryConfig = (s: ChatStoreState) => {
@@ -129,7 +129,7 @@ const portalAIChatsWithHistoryConfig = (s: ChatStoreState) => {
   // const afterMessages = portalAIChildChatsByThreadId(s.portalThreadId)(s);
   //TODO need align with web
 
-  const messages = [...parentMessages].filter(Boolean) as ChatMessage[];
+  const messages = [...parentMessages].filter(Boolean) as UIChatMessage[];
 
   const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(useAgentStore.getState());
   const historyCount = agentChatConfigSelectors.historyCount(useAgentStore.getState());

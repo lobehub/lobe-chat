@@ -1,4 +1,4 @@
-import { ChatFileItem, ChatMessage } from '@lobechat/types';
+import { ChatFileItem, UIChatMessage } from '@lobechat/types';
 
 import { DEFAULT_USER_AVATAR } from '@/_const/meta';
 import { INBOX_SESSION_ID } from '@/_const/session';
@@ -12,7 +12,7 @@ import { useUserStore } from '@/store/user';
 import { chatHelpers } from '../../helpers';
 import type { ChatStoreState } from '../../initialState';
 
-const getMeta = (message: ChatMessage) => {
+const getMeta = (message: UIChatMessage) => {
   switch (message.role) {
     case 'user': {
       const userState = useUserStore.getState();
@@ -35,7 +35,7 @@ const getMeta = (message: ChatMessage) => {
 
 const getBaseChatsByKey =
   (key: string) =>
-  (s: ChatStoreState): ChatMessage[] => {
+  (s: ChatStoreState): UIChatMessage[] => {
     const messages = s.messagesMap[key] || [];
 
     return messages.map((i) => ({ ...i, meta: getMeta(i) }));
@@ -46,7 +46,7 @@ const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.active
 /**
  * Current active raw message list, include thread messages
  */
-const activeBaseChats = (s: ChatStoreState): ChatMessage[] => {
+const activeBaseChats = (s: ChatStoreState): UIChatMessage[] => {
   if (!s.activeId) return [];
 
   return getBaseChatsByKey(currentChatKey(s))(s);
@@ -61,7 +61,7 @@ const activeBaseChatsWithoutTool = (s: ChatStoreState) => {
   return messages.filter((m) => m.role !== 'tool');
 };
 
-const getChatsWithThread = (s: ChatStoreState, messages: ChatMessage[]) => {
+const getChatsWithThread = (s: ChatStoreState, messages: UIChatMessage[]) => {
   // 如果没有 activeThreadId，则返回所有的主消息
   if (!s.activeThreadId) return messages.filter((m) => !m.threadId);
 
@@ -77,7 +77,7 @@ const getChatsWithThread = (s: ChatStoreState, messages: ChatMessage[]) => {
 
 // ============= Main Display Chats ========== //
 // =========================================== //
-const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
+const mainDisplayChats = (s: ChatStoreState): UIChatMessage[] => {
   const displayChats = activeBaseChatsWithoutTool(s);
 
   return getChatsWithThread(s, displayChats);
@@ -85,13 +85,13 @@ const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
 
 const mainDisplayChatIDs = (s: ChatStoreState) => mainDisplayChats(s).map((s) => s.id);
 
-const mainAIChats = (s: ChatStoreState): ChatMessage[] => {
+const mainAIChats = (s: ChatStoreState): UIChatMessage[] => {
   const messages = activeBaseChats(s);
 
   return getChatsWithThread(s, messages);
 };
 
-const mainAIChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
+const mainAIChatsWithHistoryConfig = (s: ChatStoreState): UIChatMessage[] => {
   const chats = mainAIChats(s);
   const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(useAgentStore.getState());
   const historyCount = agentChatConfigSelectors.historyCount(useAgentStore.getState());
