@@ -13,8 +13,8 @@ export const HEADER_HEIGHT = 48;
 /**
  * 用于 Chat 场景的图标和字体大小，比标准大一号，在移动端体验较好
  */
-export const FONT_SIZE_SMALL = 14;
-export const FONT_SIZE_STANDARD = 16;
-export const FONT_SIZE_LARGE = 20;
+export const FONT_SIZE_SMALL = 12;
+export const FONT_SIZE_STANDARD = 14;
+export const FONT_SIZE_LARGE = 18;
 
 export const CHAT_INPUT_HEIGHT = 100;

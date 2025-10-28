@@ -1,11 +1,7 @@
-import { PropsWithChildren, memo } from 'react';
-import { Text } from 'react-native';
+import { memo } from 'react';
 
-import { useStyles } from '../style';
-
-const Html = memo<PropsWithChildren>(({ children }) => {
-  const { styles } = useStyles();
-  return <Text style={[styles.text, styles.code]}>{children}</Text>;
+const Html = memo(() => {
+  return null;
 });
 
 export default Html;

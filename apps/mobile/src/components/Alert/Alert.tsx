@@ -11,7 +11,10 @@ import { cloneElement, isValidElement, memo, useCallback, useMemo, useState } fr
 import { View } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
 
+import Flexbox from '@/components/Flexbox';
+
 import ActionIcon from '../ActionIcon';
+import Block from '../Block';
 import Icon from '../Icon';
 import Text from '../Text';
 import { getAlertStatusTokens, useStyles } from './style';
@@ -87,12 +90,11 @@ const Alert = memo<AlertProps>(
       return (
         <ActionIcon
           accessibilityLabel="Close alert"
-          color={theme.colorTextSecondary}
+          color={theme.colorTextDescription}
           icon={X}
           onPress={handleClose}
           size="small"
           style={styles.close}
-          variant="borderless"
         />
       );
     };
@@ -102,15 +104,15 @@ const Alert = memo<AlertProps>(
     }
 
     return (
-      <View style={[styles.container, style]} testID="alert">
+      <Block style={[styles.container, style]} testID="alert" variant={'outlined'}>
         {renderIcon()}
-        <View style={[styles.content]}>
+        <Flexbox flex={1}>
           {renderTextContent(message, styles.message)}
           {description ? renderTextContent(description, styles.description) : null}
           {action ? <View style={styles.action}>{action}</View> : null}
-        </View>
+        </Flexbox>
         {renderClose()}
-      </View>
+      </Block>
     );
   },
 );

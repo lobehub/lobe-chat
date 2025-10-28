@@ -52,8 +52,11 @@ export const useMarkdownStyles = createStyles(
       },
       del: {
         color: token.colorTextDescription,
+        textDecorationLine: 'line-through',
       },
-      div: {},
+      div: {
+        flex: 1,
+      },
       em: {
         fontStyle: 'italic',
       },
@@ -71,8 +74,7 @@ export const useMarkdownStyles = createStyles(
       heading5: heading(5),
       heading6: heading(6),
       hr: {
-        backgroundColor: '#000000',
-        height: 1,
+        marginBlock: options.fontSize * options.marginMultiple,
       },
       img: {},
       ins: {
@@ -95,7 +97,7 @@ export const useMarkdownStyles = createStyles(
         marginLeft: options.fontSize / 2,
       },
       listOrderedIcon: {
-        color: isDarkMode ? token.cyan : darken(0.3, token.cyan),
+        color: isDarkMode ? token.cyan : darken(0.4, token.cyan),
       },
       listUnorderedIcon: {
         color: token.colorTextDescription,
@@ -110,10 +112,6 @@ export const useMarkdownStyles = createStyles(
           blockType === 'blockquote' ? 0 : options.fontSize * options.marginMultiple * 0.2,
       },
       pre: {},
-
-      strikethrough: {
-        textDecorationLine: 'line-through',
-      },
       strong: {
         fontWeight: 'bold',
       },

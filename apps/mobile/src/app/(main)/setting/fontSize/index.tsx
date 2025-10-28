@@ -1,6 +1,6 @@
-import { PageContainer, Slider } from '@lobehub/ui-rn';
+import { Center, PageContainer, Slider, Text } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
 import { useSettingStore } from '@/store/setting';
@@ -22,7 +22,7 @@ export default function FontSizeSettingScreen() {
       >
         <Preview />
       </ScrollView>
-      <View style={styles.bottomBarWrapper}>
+      <Center gap={24} style={styles.bottomBarWrapper}>
         <Slider
           marks={{
             [FONT_SIZE_LARGE]: { label: <Text style={styles.fontSizeLarge}>A</Text> },
@@ -39,12 +39,13 @@ export default function FontSizeSettingScreen() {
           min={FONT_SIZE_SMALL}
           onChangeComplete={setFontSize}
           step={1}
+          style={{
+            width: '100%',
+          }}
           value={fontSize}
         />
-        <View style={styles.fontSizeContainer}>
-          <Text style={styles.fontSizeText}>{t('fontSize.text', { ns: 'setting' })}</Text>
-        </View>
-      </View>
+        <Text type={'secondary'}>{t('fontSize.text', { ns: 'setting' })}</Text>
+      </Center>
     </PageContainer>
   );
 }
