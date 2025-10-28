@@ -1,4 +1,5 @@
 import { darken, rgba } from 'polished';
+import { StyleSheet } from 'react-native';
 
 import { DRAWER_WIDTH } from '@/_const/theme';
 import { createStyles } from '@/components/styles';
@@ -13,7 +14,9 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     flex: 1,
   },
   drawerOverlay: {
-    backgroundColor: isDarkMode ? token.colorBgMask : rgba(darken(0.1, token.colorBgLayout), 0.5),
+    backgroundColor: isDarkMode ? 'rgba(0,0,0,.8)' : rgba(darken(0.1, token.colorBgLayout), 0.5),
+    borderColor: token.colorFillTertiary,
+    borderRightWidth: StyleSheet.hairlineWidth,
   },
   drawerStyle: {
     backgroundColor: token.colorBgLayout,
