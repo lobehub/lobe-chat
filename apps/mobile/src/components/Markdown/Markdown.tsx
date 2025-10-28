@@ -1,4 +1,5 @@
 import { memo, useCallback } from 'react';
+import { View } from 'react-native';
 
 import { MarkdownRender, StreamdownRender } from './SyntaxMarkdown';
 import { MarkdownProvider } from './components/MarkdownProvider';
@@ -25,8 +26,8 @@ const Markdown = memo<MarkdownProps>((props) => {
     rehypePlugins,
     remarkPlugins,
     remarkPluginsAhead,
-    customRender,
     showFootnotes = true,
+    style,
     ...rest
   } = props;
 
@@ -37,10 +38,9 @@ const Markdown = memo<MarkdownProps>((props) => {
       reactMarkdownProps,
     }: Pick<MarkdownProps, 'children' | 'enableStream' | 'reactMarkdownProps'>) => {
       const DefaultRender = enableStream ? StreamdownRender : MarkdownRender;
-      const defaultDOM = <DefaultRender {...reactMarkdownProps}>{children}</DefaultRender>;
-      return customRender ? customRender(defaultDOM, { text: children }) : defaultDOM;
+      return <DefaultRender {...reactMarkdownProps}>{children}</DefaultRender>;
     },
-    [customRender],
+    [],
   );
 
   return (
@@ -63,9 +63,11 @@ const Markdown = memo<MarkdownProps>((props) => {
       showFootnotes={showFootnotes}
       variant={variant}
     >
-      <Render enableStream={enableStream} reactMarkdownProps={reactMarkdownProps} {...rest}>
-        {children}
-      </Render>
+      <View pointerEvents={'box-none'} style={style}>
+        <Render enableStream={enableStream} reactMarkdownProps={reactMarkdownProps} {...rest}>
+          {children}
+        </Render>
+      </View>
     </MarkdownProvider>
   );
 });

@@ -21,6 +21,7 @@ const ReactNativeMarkdown = memo<ReactNativeMarkdownProps>(
         components={mergedComponents}
         rehypePlugins={rehypePlugins}
         remarkPlugins={remarkPlugins}
+        skipHtml={true}
       >
         {children}
       </Markdown>

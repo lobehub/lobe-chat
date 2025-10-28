@@ -1,7 +1,7 @@
 import { LobeHub } from '@lobehub/icons-rn';
 import { ActionIcon, Flexbox, PageContainer } from '@lobehub/ui-rn';
 import { Link, router } from 'expo-router';
-import { CompassIcon, LucideComponent, MessageSquarePlus } from 'lucide-react-native';
+import { CirclePlus, CompassIcon, LucideComponent } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 import { InteractionManager, useWindowDimensions } from 'react-native';
@@ -86,16 +86,6 @@ export default function SideBar({ children }: { children: ReactNode }) {
                   />
                 </Link>
               )}
-              <ActionIcon
-                icon={MessageSquarePlus}
-                loading={isCreatingSession}
-                onPress={() => createNewSession()}
-                size={{
-                  blockSize: 36,
-                  borderRadius: 36,
-                  size: ICON_SIZE,
-                }}
-              />
               <Link asChild href="/discover/assistant">
                 <ActionIcon
                   icon={CompassIcon}
@@ -106,6 +96,16 @@ export default function SideBar({ children }: { children: ReactNode }) {
                   }}
                 />
               </Link>
+              <ActionIcon
+                icon={CirclePlus}
+                loading={isCreatingSession}
+                onPress={() => createNewSession()}
+                size={{
+                  blockSize: 36,
+                  borderRadius: 36,
+                  size: ICON_SIZE,
+                }}
+              />
             </Flexbox>
           }
           left={<LobeHub.Text color={theme.colorText} size={20} style={{ marginLeft: 8 }} />}

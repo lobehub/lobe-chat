@@ -93,6 +93,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   useEffect(() => {
     if (isCurrentChatLoaded || isLoading || isGenerating) scrollToBottom();
+    return () => {
+      setAtBottom(true);
+    };
   }, [isCurrentChatLoaded, isGenerating, isLoading, activeId, activeTopicId]);
 
   const renderItem: ListRenderItem<UIChatMessage> = useCallback(
