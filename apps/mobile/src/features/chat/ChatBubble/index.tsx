@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Avatar, Block, Flexbox, Markdown, Text } from '@lobehub/ui-rn';
 import { memo, useMemo } from 'react';
 
@@ -14,7 +14,7 @@ import { useStyles } from './style';
 
 interface ChatBubbleProps {
   isLoading?: boolean;
-  message: ChatMessage;
+  message: UIChatMessage;
   showActions?: boolean;
   showActionsBar?: boolean;
   showTime?: boolean;

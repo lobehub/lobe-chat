@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Block, BlockProps, BottomSheet, Cell, Divider, Flexbox, useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
 import { Copy, RefreshCw, Trash2 } from 'lucide-react-native';
@@ -15,7 +15,7 @@ import { useStyles } from './style';
 
 interface MessageContextMenuProps extends BlockProps {
   children: ReactNode;
-  message: ChatMessage;
+  message: UIChatMessage;
 }
 
 const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ...rest }) => {

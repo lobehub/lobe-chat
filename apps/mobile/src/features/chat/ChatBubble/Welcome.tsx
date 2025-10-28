@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Avatar, Center, Flexbox, Markdown } from '@lobehub/ui-rn';
 import { memo } from 'react';
 
@@ -6,7 +6,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/slices/session/selectors';
 
 interface WelcomeChatBubbleProps {
-  message: ChatMessage;
+  message: UIChatMessage;
 }
 
 const WelcomeChatBubble = memo(({ message }: WelcomeChatBubbleProps) => {

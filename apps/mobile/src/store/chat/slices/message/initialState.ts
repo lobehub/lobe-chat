@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 
 export interface ChatMessageState {
   /**
@@ -20,7 +20,7 @@ export interface ChatMessageState {
    * whether messages have fetched
    */
   messagesInit: boolean;
-  messagesMap: Record<string, ChatMessage[]>;
+  messagesMap: Record<string, UIChatMessage[]>;
 }
 
 export const initialMessageState: ChatMessageState = {

@@ -1,8 +1,8 @@
 import {
   ChatImageItem,
-  ChatMessage,
   TracePayload,
   TraceTagMap,
+  UIChatMessage,
   UserMessageContentPart,
 } from '@lobechat/types';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@lobechat/types';
@@ -57,7 +57,7 @@ interface FetchOptions extends FetchSSEOptions {
 }
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
 }
 
 interface FetchAITaskResultParams extends FetchSSEOptions {
@@ -324,12 +324,12 @@ class ChatService {
     model,
     provider,
   }: {
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     model: string;
     provider: string;
   }): Promise<OpenAIChatMessage[]> => {
     // handle content type for vision model
-    const getUserContent = async (m: ChatMessage) => {
+    const getUserContent = async (m: UIChatMessage) => {
       // only if message doesn't have images, return the plain content
       if (!m.imageList || m.imageList.length === 0) return m.content;
 
@@ -339,7 +339,7 @@ class ChatService {
       return [{ text: m.content, type: 'text' }, ...imageContentParts] as UserMessageContentPart[];
     };
 
-    const getAssistantContent = async (m: ChatMessage) => {
+    const getAssistantContent = async (m: UIChatMessage) => {
       // signature is a signal of anthropic thinking mode
       const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
 

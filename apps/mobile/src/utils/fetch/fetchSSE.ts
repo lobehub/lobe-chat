@@ -6,8 +6,8 @@ import {
   MessageToolCall,
   MessageToolCallChunk,
   MessageToolCallSchema,
+  ModelPerformance,
   ModelReasoning,
-  ModelSpeed,
   ModelTokensUsage,
   ResponseAnimation,
   ResponseAnimationStyle,
@@ -31,7 +31,7 @@ export type OnFinishHandler = (
     images?: ChatImageChunk[];
     observationId?: string | null;
     reasoning?: ModelReasoning;
-    speed?: ModelSpeed;
+    speed?: ModelPerformance;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
@@ -45,7 +45,7 @@ export interface MessageUsageChunk {
 }
 
 export interface MessageSpeedChunk {
-  speed: ModelSpeed;
+  speed: ModelPerformance;
   type: 'speed';
 }
 
@@ -399,7 +399,7 @@ export const fetchSSE = async (url: string, options: FetchRequestInit & FetchSSE
   let grounding: GroundingSearch | undefined = undefined;
   let usage: ModelTokensUsage | undefined = undefined;
   let images: ChatImageChunk[] = [];
-  let speed: ModelSpeed | undefined = undefined;
+  let speed: ModelPerformance | undefined = undefined;
   await fetchEventSource(url, {
     body: options.body,
     fetch: options?.fetcher,

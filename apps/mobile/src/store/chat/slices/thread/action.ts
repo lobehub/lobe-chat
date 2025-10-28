@@ -1,11 +1,11 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface, @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports */
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import {
-  ChatMessage,
   CreateMessageParams,
   SendThreadMessageParams,
   ThreadItem,
   ThreadType,
+  UIChatMessage,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
@@ -40,7 +40,7 @@ export interface ChatThreadAction {
   openThreadInPortal: (threadId: string, sourceMessageId: string) => void;
   closeThreadPortal: () => void;
   useFetchThreads: (enable: boolean, topicId?: string) => SWRResponse<ThreadItem[]>;
-  summaryThreadTitle: (threadId: string, messages: ChatMessage[]) => Promise<void>;
+  summaryThreadTitle: (threadId: string, messages: UIChatMessage[]) => Promise<void>;
   updateThreadTitle: (id: string, title: string) => Promise<void>;
   removeThread: (id: string) => Promise<void>;
   switchThread: (id: string) => void;

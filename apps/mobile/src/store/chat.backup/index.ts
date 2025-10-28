@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { nanoid } from 'nanoid';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -14,15 +14,15 @@ interface ChatState {
   // AI 调用状态
   isLoading: boolean;
   // 消息存储，key 为 sessionId
-  messageMap: Record<string, ChatMessage[]>;
+  messageMap: Record<string, UIChatMessage[]>;
 }
 
 interface ChatActions {
-  addMessage: (sessionId: string, message: Omit<ChatMessage, 'createdAt' | 'updatedAt'>) => void;
+  addMessage: (sessionId: string, message: Omit<UIChatMessage, 'createdAt' | 'updatedAt'>) => void;
   clearMessages: (sessionId: string) => void;
   deleteMessage: (sessionId: string, messageId: string) => void;
   // 消息相关操作
-  getMessages: (sessionId: string) => ChatMessage[];
+  getMessages: (sessionId: string) => UIChatMessage[];
   regenerateMessage: (sessionId: string, messageId: string) => Promise<void>;
 
   // AI 调用相关
@@ -35,7 +35,7 @@ export const useChatStore = createWithEqualityFn<ChatState & ChatActions>()(
   persist(
     (set, get) => ({
       addMessage: (sessionId, message) => {
-        const newMessage: ChatMessage = {
+        const newMessage: UIChatMessage = {
           ...message,
           createdAt: Date.now(),
           updatedAt: Date.now(),

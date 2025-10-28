@@ -1,7 +1,6 @@
 import {
   ChatErrorType,
   ChatImageItem,
-  ChatMessage,
   ChatMessageError,
   ChatMessagePluginError,
   CreateMessageParams,
@@ -11,6 +10,7 @@ import {
   ModelReasoning,
   TraceEventPayloads,
   TraceEventType,
+  UIChatMessage,
   UpdateMessageRAGParams,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
@@ -121,7 +121,7 @@ export interface ChatMessageAction {
   modifyMessageContent: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
 
-  replaceMessages: (messages: ChatMessage[]) => void;
+  replaceMessages: (messages: UIChatMessage[]) => void;
   toggleMessageEditing: (id: string, editing: boolean) => void;
 
   // update
@@ -132,7 +132,7 @@ export interface ChatMessageAction {
     enable: boolean,
     sessionId: string,
     topicId?: string,
-  ) => SWRResponse<ChatMessage[]>;
+  ) => SWRResponse<UIChatMessage[]>;
 }
 
 export const chatMessage: StateCreator<
@@ -486,7 +486,7 @@ export const chatMessage: StateCreator<
   },
 
   useFetchMessages: (enable, sessionId, activeTopicId) =>
-    useSWR<ChatMessage[]>(
+    useSWR<UIChatMessage[]>(
       enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
       async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),

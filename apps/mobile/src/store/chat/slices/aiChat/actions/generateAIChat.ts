@@ -3,12 +3,12 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import {
   ChatImageItem,
-  ChatMessage,
   CreateMessageParams,
   MessageSemanticSearchChunk,
   SendMessageParams,
   TraceEventType,
   TraceNameMap,
+  UIChatMessage,
 } from '@lobechat/types';
 import { Toast } from '@lobehub/ui-rn';
 import { produce } from 'immer';
@@ -62,7 +62,7 @@ export interface AIGenerateAction {
    * including preprocessing and postprocessing steps
    */
   internal_coreProcessMessage: (
-    messages: ChatMessage[],
+    messages: UIChatMessage[],
     parentId: string,
     params?: ProcessMessageParams,
   ) => Promise<void>;
@@ -71,7 +71,7 @@ export interface AIGenerateAction {
    */
   internal_fetchAIChatMessage: (input: {
     messageId: string;
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     model: string;
     params?: ProcessMessageParams;
     provider: string;
@@ -87,7 +87,7 @@ export interface AIGenerateAction {
     id: string,
     params?: {
       inPortalThread?: boolean;
-      messages?: ChatMessage[];
+      messages?: UIChatMessage[];
       threadId?: string;
       traceId?: string;
     },
@@ -174,7 +174,7 @@ export const generateAIChat: StateCreator<
 
       ragQueryId = queryId;
 
-      const lastMsg = messages.pop() as ChatMessage;
+      const lastMsg = messages.pop() as UIChatMessage;
 
       // 2. build the retrieve context messages
       const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
@@ -424,7 +424,7 @@ export const generateAIChat: StateCreator<
 
     // 3. add systemRole
     if (agentConfig.systemRole) {
-      preprocessMsgs.unshift({ content: agentConfig.systemRole, role: 'system' } as ChatMessage);
+      preprocessMsgs.unshift({ content: agentConfig.systemRole, role: 'system' } as UIChatMessage);
     }
 
     // 4. handle max_tokens
@@ -647,7 +647,7 @@ export const generateAIChat: StateCreator<
 
     const currentMessage = chats[currentIndex];
 
-    let contextMessages: ChatMessage[] = [];
+    let contextMessages: UIChatMessage[] = [];
 
     switch (currentMessage.role) {
       case 'tool':
