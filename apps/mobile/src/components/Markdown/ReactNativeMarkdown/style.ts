@@ -97,6 +97,7 @@ export const useMarkdownStyles = createStyles(
         flex: 1,
         flexDirection: 'row',
         gap: options.fontSize / 2,
+        marginBlock: options.fontSize * options.marginMultiple * 0.2,
         pointerEvents: 'box-none',
       },
       listNested: {
