@@ -50,7 +50,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 8_192,
+    contextWindowTokens: 8192,
     description:
       'DeepSeek-OCR 是由深度求索（DeepSeek AI）推出的一个视觉语言模型，专注于光学字符识别（OCR）与"上下文光学压缩"。该模型旨在探索从图像中压缩上下文信息的边界，能够高效处理文档并将其转换为如 Markdown 等结构化文本格式。它能够准确识别图像中的文字内容，特别适用于文档数字化、文字提取和结构化处理等应用场景。',
     displayName: 'DeepSeek OCR',

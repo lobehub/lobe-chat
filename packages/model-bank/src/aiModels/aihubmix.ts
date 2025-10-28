@@ -663,7 +663,8 @@ const aihubmixModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
+    description:
+      'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
     displayName: 'Claude Haiku 4.5',
     enabled: true,
     id: 'claude-haiku-4-5-20251001',

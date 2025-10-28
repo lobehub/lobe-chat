@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckCircleFilled } from '@ant-design/icons';
-import { TraceNameMap , ChatMessageError } from '@lobechat/types';
+import { ChatMessageError, TraceNameMap } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons';
 import { Alert, Button, Highlighter, Icon, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
