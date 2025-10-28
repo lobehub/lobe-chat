@@ -19,17 +19,13 @@ function generateTokenKey(lineIndex: number, tokenIndex: number, token: ThemedTo
 }
 
 const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) => {
-  const {
-    data: tokens,
-    error,
-    isLoading,
-  } = useHighlight(children, {
+  const { data: tokens } = useHighlight(children, {
     language,
   });
 
   let content;
 
-  if (!isSupportedLanguage(language) || isLoading || error || !tokens || !tokens.map) {
+  if (!isSupportedLanguage(language) || !tokens?.map) {
     content = (
       <Text code fontSize={12}>
         {children}
