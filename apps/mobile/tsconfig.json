@@ -35,5 +35,12 @@
     "**/*.test.tsx"
   ],
   "extends": "expo/tsconfig.base",
-  "include": ["src/**/*", "scripts/**/*", "global.d.ts", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "src/**/*",
+    "scripts/**/*",
+    "global.d.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "app.config.ts"
+  ]
 }
