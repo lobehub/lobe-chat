@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown';
 
 import type { ReactNativeMarkdownProps } from './type';
 import { useComponents } from './useComponents';
@@ -14,14 +14,16 @@ const ReactNativeMarkdown = memo<ReactNativeMarkdownProps>(
       }),
       [components],
     );
+
     return (
-      <ReactMarkdown
+      <Markdown
+        allowedElements={Object.keys(mergedComponents)}
         components={mergedComponents}
         rehypePlugins={rehypePlugins}
         remarkPlugins={remarkPlugins}
       >
         {children}
-      </ReactMarkdown>
+      </Markdown>
     );
   },
 );

@@ -11,26 +11,26 @@ export interface AlertStatusTokens {
 
 const getStatusMap = (token: AliasToken) => ({
   error: {
-    backgroundColor: token.colorErrorBg,
-    borderColor: token.colorErrorBorder,
+    backgroundColor: token.colorErrorFillTertiary,
+    borderColor: token.colorErrorFillSecondary,
     iconColor: token.colorError,
     messageColor: token.colorErrorText,
   },
   info: {
-    backgroundColor: token.colorInfoBg,
-    borderColor: token.colorInfoBorder,
+    backgroundColor: token.colorInfoFillTertiary,
+    borderColor: token.colorInfoFillSecondary,
     iconColor: token.colorInfo,
     messageColor: token.colorInfoText,
   },
   success: {
-    backgroundColor: token.colorSuccessBg,
-    borderColor: token.colorSuccessBorder,
+    backgroundColor: token.colorSuccessFillTertiary,
+    borderColor: token.colorSuccessFillSecondary,
     iconColor: token.colorSuccess,
     messageColor: token.colorSuccessText,
   },
   warning: {
-    backgroundColor: token.colorWarningBg,
-    borderColor: token.colorWarningBorder,
+    backgroundColor: token.colorWarningFillTertiary,
+    borderColor: token.colorWarningFillSecondary,
     iconColor: token.colorWarning,
     messageColor: token.colorWarningText,
   },
@@ -50,24 +50,20 @@ export const useStyles = createStyles(({ token }, type: AlertType = 'info') => {
     },
     close: {
       alignSelf: 'flex-start',
-      marginTop: 2,
+      position: 'absolute',
+      right: 8,
+      top: 8,
     },
     container: {
-      // alignItems: 'flex-start',
-      // alignSelf: 'stretch',
       backgroundColor: status.backgroundColor,
       borderColor: status.borderColor,
-      borderRadius: token.borderRadiusLG,
-      borderWidth: 1,
+
       flexDirection: 'row',
       gap: token.marginXS,
       padding: token.padding,
       width: '100%',
     },
-    content: {
-      flex: 1,
-      minWidth: 0,
-    },
+
     description: {
       color: token.colorTextSecondary,
       fontSize: token.fontSize,

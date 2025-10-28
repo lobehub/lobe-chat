@@ -43,7 +43,7 @@ import { uniq } from 'lodash-es';
 import { bundledLanguagesInfo } from 'shiki';
 
 // Application-level constants
-export const FALLBACK_LANG = 'javascript'; // Fallback to javascript if language not found
+export const FALLBACK_LANG = 'plaintext'; // Fallback to javascript if language not found
 
 /**
  * Get the code language by input string

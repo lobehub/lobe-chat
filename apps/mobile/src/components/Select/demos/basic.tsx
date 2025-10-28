@@ -1,7 +1,7 @@
-import { Flexbox, Select } from '@lobehub/ui-rn';
+import { Flexbox, Select, Text } from '@lobehub/ui-rn';
 import { Apple, Coffee, Utensils } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Alert } from 'react-native';
 
 export default () => {
   const [value, setValue] = useState('apple');
