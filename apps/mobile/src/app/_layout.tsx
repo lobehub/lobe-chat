@@ -13,7 +13,6 @@ import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import { SWRConfig } from 'swr';
 
 import { useThemedScreenOptions } from '@/_const/navigation';
 import i18n from '@/i18n';
@@ -23,7 +22,6 @@ import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { TRPCProvider, trpcClient } from '@/services/_auth/trpc';
 import { useAuth, useUserStore } from '@/store/user';
 import { authLogger } from '@/utils/logger';
-import { createPersistedSWRCache } from '@/utils/swrCache';
 
 import '../polyfills';
 
@@ -147,15 +145,15 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
       }),
   );
 
-  const [swrCache] = useState(() => createPersistedSWRCache());
+  // const [swrCache] = useState(() => createPersistedSWRCache());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SWRConfig value={{ provider: () => swrCache }}>
-        <TRPCProvider queryClient={queryClient} trpcClient={trpcClient}>
-          {children}
-        </TRPCProvider>
-      </SWRConfig>
+      {/*<SWRConfig value={{ provider: () => swrCache }}>*/}
+      <TRPCProvider queryClient={queryClient} trpcClient={trpcClient}>
+        {children}
+      </TRPCProvider>
+      {/*</SWRConfig>*/}
     </QueryClientProvider>
   );
 };
