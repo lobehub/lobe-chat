@@ -68,6 +68,7 @@ export { default as ListGroup, type ListGroupProps } from './ListGroup';
 export { default as ListItem, type ListItemProps } from './ListItem';
 export { default as Markdown, type MarkdownProps } from './Markdown';
 export { default as MaskShadow, type MaskShadowProps } from './MaskShadow';
+export { default as Mermaid, type MermaidProps } from './Mermaid';
 export { default as ModelInfoTags, type ModelInfoTagsProps } from './ModelInfoTags';
 export { default as PageContainer, type PageContainerProps } from './PageContainer';
 export { default as ScrollShadow, type ScrollShadowProps } from './ScrollShadow';

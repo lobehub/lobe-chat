@@ -1,102 +1,74 @@
-import { remarkBr } from '@lobehub/ui/es/Markdown/plugins/remarkBr';
-import { preprocessMarkdownContent } from '@lobehub/ui/es/hooks/useMarkdown/utils';
-import { Definition, Root } from 'mdast';
-import { memo, useCallback, useMemo, useState } from 'react';
-import { LayoutChangeEvent, View } from 'react-native';
-import remarkBreaks from 'remark-breaks';
-import remarkCjkFriendly from 'remark-cjk-friendly';
-import remarkGfm from 'remark-gfm';
-// 仅用于解析数学公式
-import remarkMath from 'remark-math';
-import remarkParse from 'remark-parse';
-import { unified } from 'unified';
-import { visit } from 'unist-util-visit';
+import { memo, useCallback } from 'react';
 
-import { MarkdownContextProvider } from './context';
-import { defaultRenderers } from './renderers';
-import { RootRenderer } from './renderers/root';
-import { RemarkStyleOptions, useRemarkStyles } from './style';
+import { MarkdownRender, StreamdownRender } from './SyntaxMarkdown';
+import { MarkdownProvider } from './components/MarkdownProvider';
 import type { MarkdownProps } from './type';
 
-const parser = unified()
-  .use(remarkParse)
-  .use(remarkCjkFriendly)
-  .use(remarkBr)
-  .use(remarkGfm, {
-    singleTilde: false,
-  })
-  .use(remarkMath)
-  .use(remarkBreaks);
-
-function extractDefinitions(tree: Root): Record<string, Definition> {
-  const definitions: Record<string, Definition> = {};
-  visit(tree, 'definition', (node: Definition) => {
-    definitions[node.identifier] = node;
-  });
-  return definitions;
-}
-
-const Markdown = memo<MarkdownProps>(
-  ({
-    children,
-    customRenderers,
-    customStyles,
+const Markdown = memo<MarkdownProps>((props) => {
+  const {
+    children = '',
+    fullFeaturedCodeBlock,
+    enableLatex = true,
+    enableMermaid = true,
+    enableCustomFootnotes,
+    enableGithubAlert,
+    enableStream = false,
+    rehypePluginsAhead,
+    allowHtml,
+    borderRadius,
     fontSize = 14,
     headerMultiple = 0.25,
-    lineHeight = 1.6,
     marginMultiple = 1,
-  }) => {
-    const tree = useMemo(() => parser.parse(preprocessMarkdownContent(children)), [children]);
+    variant = 'chat',
+    reactMarkdownProps,
+    lineHeight = 1.6,
+    rehypePlugins,
+    remarkPlugins,
+    remarkPluginsAhead,
+    customRender,
+    showFootnotes = true,
+    ...rest
+  } = props;
 
-    const renderers = useMemo(
-      () => ({
-        ...defaultRenderers,
-        ...customRenderers,
-      }),
-      [customRenderers],
-    );
-    const definitions = useMemo(() => extractDefinitions(tree), [tree]);
+  const Render = useCallback(
+    ({
+      enableStream,
+      children,
+      reactMarkdownProps,
+    }: Pick<MarkdownProps, 'children' | 'enableStream' | 'reactMarkdownProps'>) => {
+      const DefaultRender = enableStream ? StreamdownRender : MarkdownRender;
+      const defaultDOM = <DefaultRender {...reactMarkdownProps}>{children}</DefaultRender>;
+      return customRender ? customRender(defaultDOM, { text: children }) : defaultDOM;
+    },
+    [customRender],
+  );
 
-    const [contentSize, setContentSize] = useState<{ height: number; width: number }>({
-      height: 0,
-      width: 0,
-    });
-    const onLayout = useCallback(
-      (e: LayoutChangeEvent) => {
-        const { width, height } = e.nativeEvent.layout;
-        setContentSize((prev) =>
-          prev.height === height && prev.width === width ? prev : { height, width },
-        );
-      },
-      [setContentSize],
-    );
-
-    const options: RemarkStyleOptions = { fontSize, headerMultiple, lineHeight, marginMultiple };
-    const remarkStyles = useRemarkStyles(options);
-
-    const mergedStyles = useMemo(
-      () => ({
-        ...remarkStyles,
-        ...customStyles,
-      }),
-      [remarkStyles, customStyles],
-    );
-
-    return (
-      <View onLayout={onLayout}>
-        <MarkdownContextProvider
-          contentSize={contentSize}
-          definitions={definitions}
-          renderers={renderers}
-          styles={mergedStyles}
-          tree={tree}
-        >
-          <RootRenderer node={tree} />
-        </MarkdownContextProvider>
-      </View>
-    );
-  },
-);
+  return (
+    <MarkdownProvider
+      allowHtml={allowHtml}
+      borderRadius={borderRadius}
+      enableCustomFootnotes={enableCustomFootnotes}
+      enableGithubAlert={enableGithubAlert}
+      enableLatex={enableLatex}
+      enableMermaid={enableMermaid}
+      fontSize={fontSize}
+      fullFeaturedCodeBlock={fullFeaturedCodeBlock}
+      headerMultiple={headerMultiple}
+      lineHeight={lineHeight}
+      marginMultiple={marginMultiple}
+      rehypePlugins={rehypePlugins}
+      rehypePluginsAhead={rehypePluginsAhead}
+      remarkPlugins={remarkPlugins}
+      remarkPluginsAhead={remarkPluginsAhead}
+      showFootnotes={showFootnotes}
+      variant={variant}
+    >
+      <Render enableStream={enableStream} reactMarkdownProps={reactMarkdownProps} {...rest}>
+        {children}
+      </Render>
+    </MarkdownProvider>
+  );
+});
 
 Markdown.displayName = 'Markdown';
 
