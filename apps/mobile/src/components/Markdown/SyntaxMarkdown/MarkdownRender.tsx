@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
 import {
+  useMarkdownComponents,
   useMarkdownContent,
   useMarkdownRehypePlugins,
   useMarkdownRemarkPlugins,
@@ -14,9 +15,15 @@ const MarkdownRender = memo<Omit<ReactNativeMarkdownProps, 'remarkPlugins'>>(
     const escapedContent = useMarkdownContent(children || '');
     const remarkPlugins = useMarkdownRemarkPlugins();
     const rehypePlugins = useMarkdownRehypePlugins();
+    const components = useMarkdownComponents();
 
     return (
-      <ReactNativeMarkdown {...rest} rehypePlugins={rehypePlugins} remarkPlugins={remarkPlugins}>
+      <ReactNativeMarkdown
+        {...rest}
+        components={components}
+        rehypePlugins={rehypePlugins}
+        remarkPlugins={remarkPlugins}
+      >
         {escapedContent || ''}
       </ReactNativeMarkdown>
     );

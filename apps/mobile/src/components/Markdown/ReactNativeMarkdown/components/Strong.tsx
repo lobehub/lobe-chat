@@ -1,9 +1,10 @@
-import { PropsWithChildren, memo } from 'react';
+import { memo } from 'react';
+import { Components } from 'react-markdown';
 import { Text } from 'react-native';
 
 import { useStyles } from '../style';
 
-const Strong = memo<PropsWithChildren>(({ children }) => {
+const Strong: Components['strong'] = memo(({ children }) => {
   const { styles } = useStyles();
   return <Text style={[styles.text, styles.strong]}>{children}</Text>;
 });

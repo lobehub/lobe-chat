@@ -1,9 +1,10 @@
-import { PropsWithChildren, memo } from 'react';
+import { memo } from 'react';
+import { Components } from 'react-markdown';
 import { Text, View } from 'react-native';
 
 import { useStyles } from '../style';
 
-const Sup = memo<PropsWithChildren>(({ children }) => {
+const Sup: Components['sup'] = memo(({ children }) => {
   const { styles } = useStyles();
   return (
     <View pointerEvents={'box-none'} style={styles.sup}>

@@ -62,10 +62,6 @@ export const useMarkdownStyles = createStyles(
       em: {
         fontStyle: 'italic',
       },
-      hardbreak: {
-        height: 1,
-        width: '100%',
-      },
       heading: {
         fontWeight: 'bold',
       },
@@ -90,11 +86,10 @@ export const useMarkdownStyles = createStyles(
       },
       link: {
         color: token.colorInfo,
-        pointerEvents: 'auto',
       },
       list: {
         marginBlock: options.fontSize * options.marginMultiple * 0.4,
-        paddingStart: options.fontSize / 2,
+
         pointerEvents: 'box-none',
       },
       listItem: {
@@ -108,8 +103,12 @@ export const useMarkdownStyles = createStyles(
         marginLeft: options.fontSize / 2,
         pointerEvents: 'box-none',
       },
+      listOrdered: {},
       listOrderedIcon: {
         color: isDarkMode ? token.cyan : darken(0.4, token.cyan),
+      },
+      listUnordered: {
+        paddingStart: options.fontSize / 2,
       },
       listUnorderedIcon: {
         color: token.colorTextDescription,
@@ -122,7 +121,6 @@ export const useMarkdownStyles = createStyles(
         letterSpacing: 0.02 * options.fontSize,
         marginBlock:
           blockType === 'blockquote' ? 0 : options.fontSize * options.marginMultiple * 0.2,
-        pointerEvents: 'box-none',
       },
       playButton: {
         alignItems: 'center',
@@ -187,9 +185,8 @@ export const useMarkdownStyles = createStyles(
         color: blockType === 'blockquote' ? token.colorTextSecondary : token.colorText,
         fontFamily: token.fontFamily,
         fontSize: currentFontSize,
-        fontWeight: isHeading ? 'bold' : 'normal',
+        fontWeight: isHeading ? 'bold' : undefined,
         lineHeight: options.lineHeight * options.fontSize,
-        pointerEvents: 'box-none',
       },
       video: {
         backgroundColor: '#000',
