@@ -22,6 +22,18 @@ export class ClientService extends BaseClientService implements IMessageService 
     return id;
   };
 
+  createNewMessage: IMessageService['createNewMessage'] = async ({ sessionId, ...params }) => {
+    return await this.messageModel.createNewMessage(
+      {
+        ...params,
+        sessionId: sessionId ? (this.toDbSessionId(sessionId) as string) : '',
+      },
+      {
+        postProcessUrl: this.postProcessUrl,
+      },
+    );
+  };
+
   batchCreateMessages: IMessageService['batchCreateMessages'] = async (messages) => {
     return this.messageModel.batchCreate(messages);
   };
@@ -33,12 +45,7 @@ export class ClientService extends BaseClientService implements IMessageService 
         topicId,
       },
       {
-        postProcessUrl: async (url, file) => {
-          const hash = (url as string).replace('client-s3://', '');
-          const base64 = await this.getBase64ByFileHash(hash);
-
-          return `data:${file.fileType};base64,${base64}`;
-        },
+        postProcessUrl: this.postProcessUrl,
       },
     );
 
@@ -53,12 +60,7 @@ export class ClientService extends BaseClientService implements IMessageService 
         topicId,
       },
       {
-        postProcessUrl: async (url, file) => {
-          const hash = (url as string).replace('client-s3://', '');
-          const base64 = await this.getBase64ByFileHash(hash);
-
-          return `data:${file.fileType};base64,${base64}`;
-        },
+        postProcessUrl: this.postProcessUrl,
       },
     );
 
@@ -166,6 +168,13 @@ export class ClientService extends BaseClientService implements IMessageService 
 
   private toDbSessionId = (sessionId: string | undefined) => {
     return sessionId === INBOX_SESSION_ID ? undefined : sessionId;
+  };
+
+  private postProcessUrl = async (url: string | null, file: any) => {
+    const hash = (url as string).replace('client-s3://', '');
+    const base64 = await this.getBase64ByFileHash(hash);
+
+    return `data:${file.fileType};base64,${base64}`;
   };
 
   private getBase64ByFileHash = async (hash: string) => {
