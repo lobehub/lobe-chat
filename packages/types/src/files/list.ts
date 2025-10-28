@@ -7,6 +7,7 @@ export interface FileListItem {
   chunkingError: any | null;
   chunkingStatus?: AsyncTaskStatus | null;
   createdAt: Date;
+  editorData?: Record<string, any> | null;
   embeddingError: any | null;
   embeddingStatus?: AsyncTaskStatus | null;
   fileType: string;

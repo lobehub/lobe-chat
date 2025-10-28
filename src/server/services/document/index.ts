@@ -48,8 +48,8 @@ export class DocumentService {
     } = params;
 
     // Calculate character and line counts
-    const totalCharCount = content.length;
-    const totalLineCount = content.split('\n').length;
+    const totalCharCount = content?.length || 0;
+    const totalLineCount = content?.split('\n').length || 0;
 
     const document = await this.documentModel.create({
       content,
@@ -93,13 +93,20 @@ export class DocumentService {
   /**
    * Update document
    */
-  async updateDocument(id: string, params: { content?: string; title?: string }) {
+  async updateDocument(
+    id: string,
+    params: { content?: string; editorData?: Record<string, any>; title?: string },
+  ) {
     const updates: any = {};
 
     if (params.content !== undefined) {
       updates.content = params.content;
       updates.totalCharCount = params.content.length;
       updates.totalLineCount = params.content.split('\n').length;
+    }
+
+    if (params.editorData !== undefined) {
+      updates.editorData = params.editorData;
     }
 
     if (params.title !== undefined) {

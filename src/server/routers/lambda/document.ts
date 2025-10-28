@@ -33,7 +33,12 @@ export const documentRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.documentService.createNote(input);
+      // Parse editorData from JSON string to object
+      const editorData = JSON.parse(input.editorData);
+      return ctx.documentService.createNote({
+        ...input,
+        editorData,
+      });
     }),
 
   deleteDocument: documentProcedure
@@ -69,13 +74,19 @@ export const documentRouter = router({
     .input(
       z.object({
         content: z.string().optional(),
+        editorData: z.string().optional(),
         id: z.string(),
         rawData: z.string().optional(),
         title: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, ...params } = input;
-      return ctx.documentService.updateDocument(id, params);
+      const { id, editorData: editorDataString, ...params } = input;
+      // Parse editorData from JSON string to object if present
+      const editorData = editorDataString ? JSON.parse(editorDataString) : undefined;
+      return ctx.documentService.updateDocument(id, {
+        ...params,
+        editorData,
+      });
     }),
 });

@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { AsyncTaskStatus, IAsyncTaskError } from '@/types/asyncTask';
-import { formatSize } from '@/utils/format';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import ChunksBadge from '../FileListItem/ChunkTag';
@@ -27,28 +26,6 @@ const useStyles = createStyles(({ css, token }) => ({
     box-shadow: ${token.boxShadow};
 
     transition: opacity ${token.motionDurationMid};
-  `,
-  hoverOverlay: css`
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    padding: 16px;
-    border-radius: ${token.borderRadiusLG}px;
-
-    opacity: 0;
-    background: ${token.colorBgMask};
-
-    transition: opacity ${token.motionDurationMid};
-
-    &:hover {
-      opacity: 1;
-    }
   `,
   iconWrapper: css`
     display: flex;
@@ -149,26 +126,6 @@ const useStyles = createStyles(({ css, token }) => ({
       background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
     }
   `,
-  overlaySize: css`
-    font-size: 12px;
-    color: ${token.colorTextLightSolid};
-    opacity: 0.9;
-  `,
-  overlayTitle: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-
-    max-width: 100%;
-    margin-block-end: 8px;
-
-    font-size: 14px;
-    font-weight: ${token.fontWeightStrong};
-    color: ${token.colorTextLightSolid};
-    text-align: center;
-    word-break: break-word;
-  `,
 }));
 
 interface NoteFileItemProps {
@@ -183,7 +140,6 @@ interface NoteFileItemProps {
   isLoadingMarkdown: boolean;
   markdownContent: string;
   name: string;
-  size: number;
 }
 
 const NoteFileItem = memo<NoteFileItemProps>(
@@ -199,7 +155,6 @@ const NoteFileItem = memo<NoteFileItemProps>(
     isLoadingMarkdown,
     markdownContent,
     name,
-    size,
   }) => {
     const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
@@ -226,11 +181,6 @@ const NoteFileItem = memo<NoteFileItemProps>(
               <FileIcon fileName={name} fileType={fileType} size={64} />
             </div>
           )}
-          {/* Hover overlay */}
-          <div className={styles.hoverOverlay}>
-            <div className={styles.overlayTitle}>{name}</div>
-            <div className={styles.overlaySize}>{formatSize(size)}</div>
-          </div>
         </div>
         {/* Floating chunk badge or action button */}
         {!isNull(chunkingStatus) && chunkingStatus ? (
