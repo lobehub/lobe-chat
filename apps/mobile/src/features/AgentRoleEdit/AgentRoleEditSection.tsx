@@ -29,7 +29,7 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           {header}
           <Divider style={{ marginTop: 8 }} />
-          <Flexbox padding={16}>
+          <Flexbox onPress={!systemRole ? onSystemRolePress : undefined} padding={16}>
             {systemRole ? (
               <Markdown>{systemRole}</Markdown>
             ) : (
