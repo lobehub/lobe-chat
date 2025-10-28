@@ -10,7 +10,7 @@ const Menu = memo<{ id: string }>(({ id }) => {
   return (
     <Flexbox gap={16} height={'100%'} paddingInline={12} style={{ paddingTop: 12 }}>
       <Head id={id} />
-      <MenuItems id={id} />
+      <MenuItems />
     </Flexbox>
   );
 });

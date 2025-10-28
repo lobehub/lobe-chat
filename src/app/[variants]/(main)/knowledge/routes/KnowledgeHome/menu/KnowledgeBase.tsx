@@ -5,6 +5,7 @@ import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
 
@@ -19,10 +20,19 @@ const useStyles = createStyles(({ css, token }) => ({
 const KnowledgeBase = () => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
+  const navigate = useNavigate();
 
   const [showList, setShowList] = useState(true);
 
   const { open } = useCreateNewModal();
+
+  const handleCreate = () => {
+    open({
+      onSuccess: (id) => {
+        navigate(`/bases/${id}`);
+      },
+    });
+  };
 
   return (
     <Flexbox flex={1} gap={8}>
@@ -43,7 +53,12 @@ const KnowledgeBase = () => {
           />
           <div style={{ lineHeight: '14px' }}>{t('knowledgeBase.title')}</div>
         </Flexbox>
-        <ActionIcon icon={PlusIcon} onClick={open} size={'small'} title={t('knowledgeBase.new')} />
+        <ActionIcon
+          icon={PlusIcon}
+          onClick={handleCreate}
+          size={'small'}
+          title={t('knowledgeBase.new')}
+        />
       </Flexbox>
 
       {showList && <KnowledgeBaseList />}

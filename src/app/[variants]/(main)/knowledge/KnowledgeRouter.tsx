@@ -5,7 +5,6 @@ import { memo, useEffect } from 'react';
 import { MemoryRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 import KnowledgeBaseDetailPage from './routes/KnowledgeBaseDetail';
-import KnowledgeBaseSettingsPage from './routes/KnowledgeBaseSettings';
 import KnowledgeBasesListPage from './routes/KnowledgeBasesList';
 import KnowledgeHomePage from './routes/KnowledgeHome';
 
@@ -47,7 +46,6 @@ const UrlSynchronizer = () => {
  * - / → Knowledge home (file list with categories)
  * - /bases → Knowledge bases list
  * - /bases/:id → Knowledge base detail (file list for specific base)
- * - /bases/:id/settings → Knowledge base settings
  */
 const KnowledgeRouter = memo(() => {
   return (
@@ -61,7 +59,6 @@ const KnowledgeRouter = memo(() => {
           {/* Knowledge bases routes */}
           <Route element={<KnowledgeBasesListPage />} path="/bases" />
           <Route element={<KnowledgeBaseDetailPage />} path="/bases/:id" />
-          <Route element={<KnowledgeBaseSettingsPage />} path="/bases/:id/settings" />
 
           {/* Fallback */}
           <Route element={<Navigate replace to="/" />} path="*" />
