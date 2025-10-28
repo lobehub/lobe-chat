@@ -222,7 +222,10 @@
     "description": "Llama 4 Maverick: Ein groß angelegtes Modell basierend auf Mixture-of-Experts, das eine effiziente Expertenaktivierungsstrategie bietet, um bei der Inferenz herausragende Leistungen zu erzielen."
   },
   "MiniMax-M1": {
-    "description": "Ein völlig neu entwickeltes Inferenzmodell. Weltweit führend: 80K Denkketten x 1M Eingaben, Leistung auf Augenhöhe mit den besten Modellen im Ausland."
+    "description": "Ein neu entwickeltes Inferenzmodell. Weltweit führend: 80K Denkketten x 1M Eingaben, vergleichbare Leistung mit den besten internationalen Modellen."
+  },
+  "MiniMax-M2": {
+    "description": "Speziell entwickelt für effizientes Programmieren und Agent-Workflows."
   },
   "MiniMax-Text-01": {
     "description": "In der MiniMax-01-Serie haben wir mutige Innovationen vorgenommen: Erstmals wurde die lineare Aufmerksamkeitsmechanismus in großem Maßstab implementiert, sodass die traditionelle Transformer-Architektur nicht mehr die einzige Wahl ist. Dieses Modell hat eine Parameteranzahl von bis zu 456 Milliarden, wobei eine Aktivierung 45,9 Milliarden beträgt. Die Gesamtleistung des Modells kann mit den besten Modellen im Ausland mithalten und kann gleichzeitig effizient den weltweit längsten Kontext von 4 Millionen Tokens verarbeiten, was 32-mal so viel wie GPT-4o und 20-mal so viel wie Claude-3.5-Sonnet ist."
@@ -398,6 +401,15 @@
   "Qwen/Qwen3-Next-80B-A3B-Thinking": {
     "description": "Qwen3-Next-80B-A3B-Thinking ist ein von Alibaba Tongyi Qianwen Team veröffentlichtes nächstes Generation Basis-Modell, das speziell für komplexe Inferenzaufgaben entwickelt wurde. Es basiert auf der innovativen Qwen3-Next-Architektur, die hybride Aufmerksamkeitsmechanismen (Gated DeltaNet und Gated Attention) mit einer hochgradig spärlichen Mixture-of-Experts (MoE)-Struktur kombiniert, um höchste Trainings- und Inferenz-Effizienz zu gewährleisten. Als spärliches Modell mit insgesamt 80 Milliarden Parametern werden bei der Inferenz nur etwa 3 Milliarden Parameter aktiviert, was die Rechenkosten stark reduziert. Bei der Verarbeitung von Langkontextaufgaben mit über 32K Tokens übertrifft der Durchsatz das Qwen3-32B-Modell um das Zehnfache. Diese „Thinking“-Version ist für anspruchsvolle mehrstufige Aufgaben wie mathematische Beweise, Code-Synthese, logische Analyse und Planung optimiert und gibt den Inferenzprozess standardmäßig in strukturierter „Denkketten“-Form aus. In der Leistung übertrifft es nicht nur kostenintensivere Modelle wie Qwen3-32B-Thinking, sondern auch in mehreren Benchmarks das Gemini-2.5-Flash-Thinking."
   },
+  "Qwen/Qwen3-Omni-30B-A3B-Captioner": {
+    "description": "Qwen3-Omni-30B-A3B-Captioner ist ein visuelles Sprachmodell (VLM) aus der Qwen3-Serie des Alibaba Tongyi Qianwen-Teams. Es ist speziell darauf ausgelegt, hochwertige, detaillierte und präzise Bildbeschreibungen zu generieren. Das Modell basiert auf einer Mixture-of-Experts (MoE)-Architektur mit insgesamt 30 Milliarden Parametern und ist in der Lage, Bildinhalte tiefgreifend zu verstehen und in natürlich fließende Textbeschreibungen umzuwandeln. Es überzeugt durch exzellente Leistungen in Bereichen wie Detailerkennung, Szenenverständnis, Objekterkennung und Beziehungslogik und eignet sich besonders für Anwendungen, die präzises Bildverständnis und Beschreibungsgenerierung erfordern."
+  },
+  "Qwen/Qwen3-Omni-30B-A3B-Instruct": {
+    "description": "Qwen3-Omni-30B-A3B-Instruct ist ein Modell aus der neuesten Qwen3-Serie des Alibaba Tongyi Qianwen-Teams. Es handelt sich um ein Mixture-of-Experts (MoE)-Modell mit insgesamt 30 Milliarden Parametern und 3 Milliarden aktiven Parametern, das starke Leistung bei gleichzeitig reduzierten Inferenzkosten bietet. Das Modell wurde mit hochwertigen, vielfältigen und mehrsprachigen Daten trainiert und verfügt über umfassende Fähigkeiten zur Verarbeitung multimodaler Eingaben, darunter Text, Bild, Audio und Video. Es kann Inhalte über verschiedene Modalitäten hinweg verstehen und generieren."
+  },
+  "Qwen/Qwen3-Omni-30B-A3B-Thinking": {
+    "description": "Qwen3-Omni-30B-A3B-Thinking ist die zentrale \"Denkkomponente\" (Thinker) innerhalb des multimodalen Qwen3-Omni-Modells. Sie ist speziell dafür konzipiert, komplexe Denkketten und Schlussfolgerungen über multimodale Eingaben wie Text, Audio, Bilder und Videos hinweg zu verarbeiten. Als das \"Gehirn\" der Inferenz vereinheitlicht dieses Modell alle Eingaben in einem gemeinsamen Repräsentationsraum und ermöglicht so tiefes Verständnis und komplexe Schlussfolgerungen über Modalitäten hinweg. Es basiert auf einer Mixture-of-Experts (MoE)-Architektur mit 30 Milliarden Gesamtparametern und 3 Milliarden aktiven Parametern und bietet starke Inferenzfähigkeiten bei optimierter Rechenleistung."
+  },
   "Qwen/Qwen3-VL-235B-A22B-Instruct": {
     "description": "Qwen3-VL-235B-A22B-Instruct ist ein groß angelegtes, instruktional feinabgestimmtes Modell der Qwen3-VL-Serie. Es basiert auf einer Mixture-of-Experts (MoE)-Architektur und bietet herausragende multimodale Verständnis- und Generierungsfähigkeiten. Mit nativer Unterstützung für 256K Kontextlänge eignet es sich ideal für hochgradig parallele, produktionsreife multimodale Dienste."
   },
@@ -409,6 +421,12 @@
   },
   "Qwen/Qwen3-VL-30B-A3B-Thinking": {
     "description": "Qwen3-VL-30B-A3B-Thinking ist die reasoning-optimierte Version (Thinking) der Qwen3-VL-Serie. Sie wurde für multimodale Schlussfolgerungen, Bild-zu-Code-Generierung und komplexe visuelle Verständnisaufgaben optimiert. Mit Unterstützung für 256K Kontext bietet sie eine verbesserte Fähigkeit zum kettenbasierten Denken."
+  },
+  "Qwen/Qwen3-VL-32B-Instruct": {
+    "description": "Qwen3-VL-32B-Instruct ist ein visuelles Sprachmodell des Alibaba Tongyi Qianwen-Teams, das in mehreren Benchmarks für visuelle Sprachverarbeitung führende SOTA-Ergebnisse erzielt hat. Das Modell unterstützt hochauflösende Bildeingaben im Megapixelbereich und bietet starke Fähigkeiten in allgemeinem visuellen Verständnis, mehrsprachiger Texterkennung (OCR), feinkörniger visueller Lokalisierung und visueller Dialogführung. Als Teil der Qwen3-Serie ist es in der Lage, komplexe multimodale Aufgaben zu bewältigen und unterstützt fortgeschrittene Funktionen wie Tool-Aufrufe und Präfix-Fortsetzungen."
+  },
+  "Qwen/Qwen3-VL-32B-Thinking": {
+    "description": "Qwen3-VL-32B-Thinking ist eine speziell für komplexe visuelle Schlussfolgerungsaufgaben optimierte Version des visuellen Sprachmodells vom Alibaba Tongyi Qianwen-Team. Das Modell verfügt über einen integrierten \"Denkmodus\", der es ihm ermöglicht, vor der Beantwortung von Fragen detaillierte Zwischenschritte der Argumentation zu generieren. Dadurch wird seine Leistung bei Aufgaben mit mehrstufiger Logik, Planung und komplexem Denken erheblich verbessert. Es unterstützt hochauflösende Bildeingaben im Megapixelbereich und bietet starke Fähigkeiten in allgemeinem visuellen Verständnis, mehrsprachiger OCR, feinkörniger visueller Lokalisierung und visueller Dialogführung sowie Funktionen wie Tool-Aufrufe und Präfix-Fortsetzungen."
   },
   "Qwen/Qwen3-VL-8B-Instruct": {
     "description": "Qwen3-VL-8B-Instruct ist ein visuelles Sprachmodell der Qwen3-Serie, basierend auf Qwen3-8B-Instruct und auf umfangreichen Bild-Text-Daten trainiert. Es ist spezialisiert auf allgemeines visuelles Verständnis, visuell zentrierte Dialoge und mehrsprachige Texterkennung in Bildern. Es eignet sich für Szenarien wie visuelle Frage-Antwort-Systeme, Bildbeschreibungen, multimodale Befehlsausführung und Tool-Integration."
@@ -958,6 +976,9 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct bietet zuverlässige Anweisungsverarbeitungsfähigkeiten und unterstützt Anwendungen in verschiedenen Branchen."
+  },
+  "deepseek-ai/DeepSeek-OCR": {
+    "description": "DeepSeek-OCR ist ein visuelles Sprachmodell von DeepSeek AI, das sich auf optische Zeichenerkennung (OCR) und \"kontextuelle optische Kompression\" spezialisiert hat. Das Modell zielt darauf ab, die Grenzen der Kontextkompression aus Bildern auszuloten und kann Dokumente effizient verarbeiten und in strukturierte Textformate wie Markdown umwandeln. Es erkennt Textinhalte in Bildern präzise und eignet sich besonders für Anwendungen wie Dokumentendigitalisierung, Textextraktion und strukturierte Verarbeitung."
   },
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 ist ein durch verstärkendes Lernen (RL) gesteuertes Inferenzmodell, das die Probleme der Wiederholbarkeit und Lesbarkeit im Modell löst. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmierbezogenen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert durch sorgfältig gestaltete Trainingsmethoden die Gesamteffizienz."
@@ -1669,9 +1690,6 @@
   },
   "google/gemma-3-12b-it": {
     "description": "Gemma 3 12B ist ein Open-Source-Sprachmodell von Google, das neue Maßstäbe in Effizienz und Leistung setzt."
-  },
-  "google/gemma-3-1b-it": {
-    "description": "Gemma 3 1B ist ein Open-Source-Sprachmodell von Google, das neue Maßstäbe in Effizienz und Leistung setzt."
   },
   "google/gemma-3-27b-it": {
     "description": "Gemma 3 27B ist ein Open-Source-Sprachmodell von Google, das neue Maßstäbe in Bezug auf Effizienz und Leistung setzt."
@@ -3148,6 +3166,9 @@
   },
   "tencent/Hunyuan-A13B-Instruct": {
     "description": "Hunyuan-A13B-Instruct verfügt über 80 Milliarden Parameter, von denen 13 Milliarden aktiviert werden können, um mit größeren Modellen zu konkurrieren. Es unterstützt eine hybride Denkweise aus „schnellem Denken/langsamem Denken“; die Verarbeitung langer Texte ist stabil; durch BFCL-v3 und τ-Bench validiert, übertrifft die Agentenfähigkeit andere Modelle; in Kombination mit GQA und mehreren Quantisierungsformaten ermöglicht es effiziente Inferenz."
+  },
+  "tencent/Hunyuan-MT-7B": {
+    "description": "Das Hunyuan-Übersetzungsmodell besteht aus dem Übersetzungsmodell Hunyuan-MT-7B und dem integrierten Modell Hunyuan-MT-Chimera. Hunyuan-MT-7B ist ein leichtgewichtiges Übersetzungsmodell mit 7 Milliarden Parametern, das Quelltexte in Zielsprache übersetzt. Es unterstützt Übersetzungen zwischen 33 Sprachen sowie 5 chinesischen Minderheitensprachen. Beim internationalen WMT25-Maschinenübersetzungswettbewerb belegte Hunyuan-MT-7B in 30 von 31 teilnehmenden Sprachpaaren den ersten Platz und demonstrierte damit seine herausragende Übersetzungsleistung. Für Übersetzungsszenarien hat Tencent Hunyuan ein vollständiges Trainingsparadigma entwickelt – von Pretraining über überwachtes Fine-Tuning bis hin zu Übersetzungsverstärkung und integrierter Optimierung – und damit branchenführende Leistung bei vergleichbarer Modellgröße erreicht. Das Modell ist recheneffizient, leicht zu implementieren und für vielfältige Anwendungsszenarien geeignet."
   },
   "text-embedding-3-large": {
     "description": "Das leistungsstärkste Vektormodell, geeignet für englische und nicht-englische Aufgaben."

@@ -17,11 +17,11 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
 
       const minimaxTools = enabledSearch
         ? [
-          ...(tools || []),
-          {
-            type: 'web_search',
-          },
-        ]
+            ...(tools || []),
+            {
+              type: 'web_search',
+            },
+          ]
         : tools;
 
       // Resolve parameters with constraints

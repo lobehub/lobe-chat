@@ -222,7 +222,10 @@
     "description": "Llama 4 Maverick：基於 Mixture-of-Experts 的大規模模型，提供高效的專家啟動策略以在推理中表現優異。"
   },
   "MiniMax-M1": {
-    "description": "全新自研推理模型。全球領先：80K思維鏈 x 1M輸入，效果比肩海外頂尖模型。"
+    "description": "全新自研推理模型。全球領先：80K 思維鏈 x 1M 輸入，效果媲美海外頂尖模型"
+  },
+  "MiniMax-M2": {
+    "description": "專為高效編碼與 Agent 工作流程而生"
   },
   "MiniMax-Text-01": {
     "description": "在 MiniMax-01系列模型中，我們做了大膽創新：首次大規模實現線性注意力機制，傳統 Transformer架構不再是唯一的選擇。這個模型的參數量高達4560億，其中單次激活459億。模型綜合性能比肩海外頂尖模型，同時能夠高效處理全球最長400萬token的上下文，是GPT-4o的32倍，Claude-3.5-Sonnet的20倍。"
@@ -398,6 +401,15 @@
   "Qwen/Qwen3-Next-80B-A3B-Thinking": {
     "description": "Qwen3-Next-80B-A3B-Thinking 是由阿里巴巴通義千問團隊發布的、專為複雜推理任務設計的下一代基礎模型。它基於創新的 Qwen3-Next 架構，該架構融合了混合注意力機制（Gated DeltaNet 與 Gated Attention）和高稀疏度混合專家（MoE）結構，旨在實現極致的訓練與推理效率。作為一個總參數達 800 億的稀疏模型，它在推理時僅啟動約 30 億參數，大幅降低了計算成本，在處理超過 32K tokens 的長上下文任務時，吞吐量比 Qwen3-32B 模型高出 10 倍以上。此“Thinking”版本專為執行數學證明、程式碼綜合、邏輯分析和規劃等高難度多步任務而優化，並預設以結構化的“思維鏈”形式輸出推理過程。在性能上，它不僅超越了 Qwen3-32B-Thinking 等成本更高的模型，還在多個基準測試中優於 Gemini-2.5-Flash-Thinking。"
   },
+  "Qwen/Qwen3-Omni-30B-A3B-Captioner": {
+    "description": "Qwen3-Omni-30B-A3B-Captioner 是阿里巴巴通義千問團隊 Qwen3 系列中的一款視覺語言模型（VLM）。它專門用於生成高品質、詳細且準確的圖像描述。該模型基於 300 億總參數的混合專家（MoE）架構，能夠深入理解圖像內容並將其轉化為自然流暢的文字描述。它在圖像細節捕捉、場景理解、物體識別與關係推理等方面表現卓越，特別適合需要精確圖像理解與描述生成的應用場景。"
+  },
+  "Qwen/Qwen3-Omni-30B-A3B-Instruct": {
+    "description": "Qwen3-Omni-30B-A3B-Instruct 是阿里巴巴通義千問團隊最新 Qwen3 系列中的一員。它是一個擁有 300 億總參數與 30 億啟用參數的混合專家（MoE）模型，在保持強大效能的同時有效降低了推理成本。該模型在高品質、多來源、多語言的資料上進行訓練，具備強大的通用能力，支援全模態輸入處理，包括文字、圖像、音訊與影片，能夠理解並生成跨模態內容。"
+  },
+  "Qwen/Qwen3-Omni-30B-A3B-Thinking": {
+    "description": "Qwen3-Omni-30B-A3B-Thinking 是 Qwen3-Omni 全模態模型中的核心「思考者」（Thinker）元件。它專門負責處理包括文字、音訊、圖像與影片在內的多模態輸入，並執行複雜的思維鏈推理。作為推理的大腦，該模型將所有輸入統一至通用的表徵空間中，實現跨模態的深度理解與複雜推理能力。該模型基於混合專家（MoE）架構，擁有 300 億總參數與 30 億啟用參數，能在保持強大推理能力的同時優化運算效率。"
+  },
   "Qwen/Qwen3-VL-235B-A22B-Instruct": {
     "description": "Qwen3-VL-235B-A22B-Instruct 是 Qwen3-VL 系列的大型指令微調模型，基於混合專家（MoE）架構，擁有卓越的多模態理解與生成能力，原生支援 256K 上下文，適用於高併發生產級多模態服務。"
   },
@@ -409,6 +421,12 @@
   },
   "Qwen/Qwen3-VL-30B-A3B-Thinking": {
     "description": "Qwen3-VL-30B-A3B-Thinking 是 Qwen3-VL 的推理增強版本（Thinking），在多模態推理、圖像轉程式碼與複雜視覺理解任務上進行了優化，支援 256K 上下文並具備更強的鏈式思考能力。"
+  },
+  "Qwen/Qwen3-VL-32B-Instruct": {
+    "description": "Qwen3-VL-32B-Instruct 是阿里巴巴通義千問團隊推出的視覺語言模型，在多項視覺語言基準測試中取得領先的 SOTA 表現。該模型支援百萬像素等級的高解析度圖像輸入，並具備強大的通用視覺理解、多語言 OCR、細緻視覺定位與視覺對話能力。作為 Qwen3 系列中的視覺語言模型，它能處理複雜的多模態任務，支援工具調用與前綴續寫等進階功能。"
+  },
+  "Qwen/Qwen3-VL-32B-Thinking": {
+    "description": "Qwen3-VL-32B-Thinking 是阿里巴巴通義千問團隊推出的視覺語言模型中一個針對複雜視覺推理任務特別優化的版本。該模型內建「思考模式」，使其在回答問題前能生成詳細的中間推理步驟，從而顯著提升其在需要多步邏輯、規劃與複雜推理任務中的表現。該模型支援百萬像素等級的高解析度圖像輸入，具備強大的通用視覺理解、多語言 OCR、細緻視覺定位與視覺對話能力，並支援工具調用與前綴續寫等功能。"
   },
   "Qwen/Qwen3-VL-8B-Instruct": {
     "description": "Qwen3-VL-8B-Instruct 是 Qwen3 系列的視覺語言模型，基於 Qwen3-8B-Instruct 開發，並在大量圖文資料上進行訓練，擅長通用視覺理解、以視覺為核心的對話以及圖像中的多語言文字識別。適用於視覺問答、圖像描述、多模態指令跟隨與工具調用等場景。"
@@ -958,6 +976,9 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct 提供高可靠性的指令處理能力，支持多行業應用。"
+  },
+  "deepseek-ai/DeepSeek-OCR": {
+    "description": "DeepSeek-OCR 是由深度求索（DeepSeek AI）推出的一款視覺語言模型，專注於光學字元識別（OCR）與「上下文光學壓縮」。該模型旨在探索從圖像中壓縮上下文資訊的極限，能高效處理文件並將其轉換為如 Markdown 等結構化文字格式。它能準確識別圖像中的文字內容，特別適用於文件數位化、文字擷取與結構化處理等應用場景。"
   },
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
@@ -1669,9 +1690,6 @@
   },
   "google/gemma-3-12b-it": {
     "description": "Gemma 3 12B 是谷歌的一款開源語言模型，以其在效率和性能方面樹立了新的標準。"
-  },
-  "google/gemma-3-1b-it": {
-    "description": "Gemma 3 1B 是谷歌的一款開源語言模型，以其在效率和性能方面樹立了新的標準。"
   },
   "google/gemma-3-27b-it": {
     "description": "Gemma 3 27B 是谷歌的一款開源語言模型，以其在效率和性能方面設立了新的標準。"
@@ -3148,6 +3166,9 @@
   },
   "tencent/Hunyuan-A13B-Instruct": {
     "description": "Hunyuan-A13B-Instruct 參數量800 億，啟動 130 億參數即可對標更大模型，支援「快思考/慢思考」混合推理；長文理解穩定；經 BFCL-v3 與 τ-Bench 驗證，Agent 能力領先；結合 GQA 與多量化格式，實現高效推理。"
+  },
+  "tencent/Hunyuan-MT-7B": {
+    "description": "混元翻譯模型（Hunyuan Translation Model）由一個翻譯模型 Hunyuan-MT-7B 與一個整合模型 Hunyuan-MT-Chimera 組成。Hunyuan-MT-7B 是一個擁有 70 億參數的輕量級翻譯模型，用於將原文翻譯為目標語言。該模型支援 33 種語言以及 5 種中國少數民族語言的互譯。在 WMT25 國際機器翻譯競賽中，Hunyuan-MT-7B 在其參與的 31 個語言類別中獲得了 30 個第一名，展現其卓越的翻譯能力。針對翻譯場景，騰訊混元提出了一套從預訓練到監督微調，再到翻譯強化與整合強化的完整訓練範式，使其在同等規模模型中達到業界領先的效能。該模型運算效率高、易於部署，適用於多種應用場景。"
   },
   "text-embedding-3-large": {
     "description": "最強大的向量化模型，適用於英文和非英文任務"

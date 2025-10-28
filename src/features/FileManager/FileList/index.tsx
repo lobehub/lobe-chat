@@ -43,9 +43,10 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 interface FileListProps {
   category?: string;
   knowledgeBaseId?: string;
+  onOpenFile: (id: string) => void;
 }
 
-const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
+const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile }) => {
   const { t } = useTranslation('components');
   const { styles } = useStyles();
 
@@ -147,10 +148,11 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
   const masonryContext = useMemo(
     () => ({
       knowledgeBaseId,
+      openFile: onOpenFile,
       selectFileIds,
       setSelectedFileIds,
     }),
-    [knowledgeBaseId, selectFileIds],
+    [onOpenFile, knowledgeBaseId, selectFileIds],
   );
 
   return !isLoading && data?.length === 0 ? (
