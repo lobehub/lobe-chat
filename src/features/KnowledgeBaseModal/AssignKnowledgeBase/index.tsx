@@ -7,11 +7,12 @@ import { useServerConfigStore } from '@/store/serverConfig';
 
 import List from './List';
 
-interface AssignKnowledgeBaseProps {
+interface AttachKnowledgeModalProps {
   open?: boolean;
   setOpen: (open: boolean) => void;
 }
-export const AssignKnowledgeBaseModal = memo<AssignKnowledgeBaseProps>(({ setOpen, open }) => {
+
+export const AttachKnowledgeModal = memo<AttachKnowledgeModalProps>(({ setOpen, open }) => {
   const { t } = useTranslation('chat');
   const mobile = useServerConfigStore((s) => s.isMobile);
 
