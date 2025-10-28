@@ -1,6 +1,7 @@
 import { memo } from 'react';
+import { Components } from 'react-markdown';
 
-const Html = memo(() => {
+const Html: Components['html'] = memo(() => {
   return null;
 });
 

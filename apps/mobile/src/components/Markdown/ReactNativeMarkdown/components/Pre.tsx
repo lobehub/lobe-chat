@@ -1,4 +1,5 @@
-import { PropsWithChildren, memo } from 'react';
+import { memo } from 'react';
+import { Components } from 'react-markdown';
 
 import Highlighter from '@/components/Highlighter';
 import Mermaid from '@/components/Mermaid';
@@ -32,7 +33,7 @@ const useCode = (raw: any) => {
   };
 };
 
-const Pre = memo<PropsWithChildren>(({ children }) => {
+const Pre: Components['pre'] = memo(({ children }) => {
   const { styles } = useStyles();
 
   const code = useCode(children);

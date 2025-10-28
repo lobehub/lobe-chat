@@ -18,6 +18,7 @@ import TaskListsDemo from './basic/task-lists';
 import CodeBlocksDemo from './code/code-blocks';
 import InlineCodeDemo from './code/inline-code';
 import LanguagesDemo from './code/languages';
+import CustomFootnotesDemo from './footnotes/customFootnotes';
 // Footnotes demo
 import FootnotesDemo from './footnotes/footnotes';
 // Media demo
@@ -55,6 +56,7 @@ const demos: DemoConfig = [
 
   // Footnotes
   { component: <FootnotesDemo />, key: 'footnotes', title: '脚注' },
+  { component: <CustomFootnotesDemo />, key: 'custom-footnotes', title: '自定义脚注' },
 
   // Streaming
   { component: <StreamingDemo />, key: 'streaming', title: '流式渲染' },

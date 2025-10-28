@@ -20,7 +20,6 @@ export const useMarkdownRemarkPlugins = (): Pluggable[] => {
     remarkPlugins = [],
     remarkPluginsAhead = [],
     variant,
-    allowHtml,
   } = useMarkdownContext();
 
   const isChatMode = variant === 'chat';
@@ -31,13 +30,13 @@ export const useMarkdownRemarkPlugins = (): Pluggable[] => {
         remarkCjkFriendly,
         enableLatex && remarkMath,
         [remarkGfm, { singleTilde: false }],
-        !allowHtml && remarkBr,
-        !allowHtml && remarkGfmPlus,
-        !allowHtml && remarkVideo,
+        remarkBr,
+        remarkGfmPlus,
+        remarkVideo,
         enableCustomFootnotes && remarkCustomFootnotes,
         isChatMode && remarkBreaks,
       ].filter(Boolean) as Pluggable[],
-    [allowHtml, isChatMode, enableLatex, enableCustomFootnotes],
+    [isChatMode, enableLatex, enableCustomFootnotes],
   );
 
   return useMemo(

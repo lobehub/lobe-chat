@@ -19,7 +19,7 @@ export const OL: Components['ol'] = memo(({ children }) => {
 
   return (
     <ListContext.Provider value={{ getIndex: getItemIndex, type: 'ol' }}>
-      <View style={styles.list}>
+      <View pointerEvents={'box-none'} style={[styles.list, styles.listOrdered]}>
         <TextWrapper>{children}</TextWrapper>
       </View>
     </ListContext.Provider>
@@ -32,7 +32,7 @@ export const UL: Components['ul'] = memo(({ children }) => {
   if (typeof children === 'string') return null;
   return (
     <ListContext.Provider value={{ getIndex: () => 0, type: 'ul' }}>
-      <View pointerEvents={'box-none'} style={styles.list}>
+      <View pointerEvents={'box-none'} style={[styles.list, styles.listUnordered]}>
         <TextWrapper>{children}</TextWrapper>
       </View>
     </ListContext.Provider>
@@ -44,11 +44,17 @@ export const LI: Components['li'] = memo(({ children }) => {
   const { styles } = useStyles();
 
   const content = useMemo(() => {
+    let prefix: any;
     let start: any = [];
     let end: any = [];
     let isNewBlock = false;
 
     Children.forEach(children, (child: any) => {
+      if (child?.props?.node?.tagName === 'input') {
+        prefix = child;
+        return;
+      }
+
       isNewBlock = ['ul', 'ol'].includes(child?.props?.node?.tagName);
       if (isNewBlock) {
         end.push(child);
@@ -58,6 +64,7 @@ export const LI: Components['li'] = memo(({ children }) => {
     });
     return {
       end,
+      prefix,
       start,
     };
   }, [children]);
@@ -66,11 +73,12 @@ export const LI: Components['li'] = memo(({ children }) => {
     <>
       <View pointerEvents={'box-none'} style={styles.listItem}>
         <View pointerEvents={'box-none'}>
-          {type === 'ul' ? (
-            <Text style={[styles.text, styles.listUnorderedIcon]}>-</Text>
-          ) : (
-            <Text style={[styles.text, styles.listOrderedIcon]}> {getIndex()}.</Text>
-          )}
+          {content.prefix ||
+            (type === 'ul' ? (
+              <Text style={[styles.text, styles.listUnorderedIcon]}>-</Text>
+            ) : (
+              <Text style={[styles.text, styles.listOrderedIcon]}> {getIndex()}.</Text>
+            ))}
         </View>
         {content.start && (
           <Text style={styles.text}>
