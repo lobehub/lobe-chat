@@ -40,7 +40,6 @@ const useStyles = createStyles(({ css, token }) => ({
     justify-content: center;
 
     padding: 16px;
-    border-radius: ${token.borderRadiusLG}px;
 
     opacity: 0;
     background: ${token.colorBgMask};
@@ -63,10 +62,7 @@ const useStyles = createStyles(({ css, token }) => ({
   imageWrapper: css`
     position: relative;
 
-    overflow: hidden;
-
     width: 100%;
-    border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorFillQuaternary};
 
