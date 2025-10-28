@@ -79,7 +79,8 @@ const TopicItem = memo<TopicItemProps>(({ topic }) => {
         active={isActive}
         icon={Star}
         iconProps={{
-          color: theme.colorTextSecondary,
+          color: topic.favorite ? theme.gold : theme.colorTextDescription,
+          fill: topic.favorite ? theme.gold : undefined,
         }}
         iconSize={16}
         onPress={handlePress}
@@ -87,6 +88,9 @@ const TopicItem = memo<TopicItemProps>(({ topic }) => {
         title={topic.title || t('defaultTitle')}
         titleProps={{
           fontSize: 14,
+          style: {
+            width: 230,
+          },
         }}
       />
     </Dropdown>

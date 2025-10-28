@@ -68,7 +68,7 @@ const TopicList = memo(() => {
           extra={<Tag>{t('temp')}</Tag>}
           icon={MessageSquareDashed}
           iconProps={{
-            color: theme.colorTextSecondary,
+            color: theme.colorTextDescription,
           }}
           iconSize={16}
           onPress={() => {
