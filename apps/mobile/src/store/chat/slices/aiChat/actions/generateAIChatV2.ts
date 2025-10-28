@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import {
-  ChatMessage,
   ChatTopic,
   MessageSemanticSearchChunk,
   SendMessageParams,
+  UIChatMessage,
 } from '@lobechat/types';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
@@ -31,7 +31,7 @@ export interface AIGenerateV2Action {
   sendMessageInServer: (params: SendMessageParams) => Promise<void>;
   internal_refreshAiChat: (params: {
     topics?: ChatTopic[];
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     sessionId: string;
     topicId?: string;
   }) => void;
@@ -40,7 +40,7 @@ export interface AIGenerateV2Action {
    * including preprocessing and postprocessing steps
    */
   internal_execAgentRuntime: (params: {
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     userMessageId: string;
     assistantMessageId: string;
     isWelcomeQuestion?: boolean;
@@ -227,7 +227,7 @@ export const generateAIChatV2: StateCreator<
 
       ragQueryId = queryId;
 
-      const lastMsg = messages.pop() as ChatMessage;
+      const lastMsg = messages.pop() as UIChatMessage;
 
       // 2. build the retrieve context messages
       const knowledgeBaseQAContext = knowledgeBaseQAPrompts({

@@ -1,4 +1,4 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import { Flexbox, MaskShadow } from '@lobehub/ui-rn';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
@@ -39,7 +39,7 @@ const computeAtBottom = (layoutH = 0, contentH = 0, offsetY = 0) => {
   return distance <= AT_BOTTOM_EPSILON;
 };
 
-const ChatMessageItem = memo<{ index: number; item: ChatMessage; totalLength: number }>(
+const ChatMessageItem = memo<{ index: number; item: UIChatMessage; totalLength: number }>(
   ({ item, index, totalLength }) => {
     const isLastMessage = index === totalLength - 1;
     const isAssistant = item.role === 'assistant';
@@ -58,7 +58,7 @@ const ChatMessageItem = memo<{ index: number; item: ChatMessage; totalLength: nu
 ChatMessageItem.displayName = 'ChatMessageItem';
 
 export default function ChatListChatList({ style }: ChatListProps) {
-  const listRef = useRef<FlashListRef<ChatMessage>>(null);
+  const listRef = useRef<FlashListRef<UIChatMessage>>(null);
   // 触发消息加载
   useFetchMessages();
 
@@ -95,14 +95,14 @@ export default function ChatListChatList({ style }: ChatListProps) {
     if (isCurrentChatLoaded || isLoading || isGenerating) scrollToBottom();
   }, [isCurrentChatLoaded, isGenerating, isLoading, activeId, activeTopicId]);
 
-  const renderItem: ListRenderItem<ChatMessage> = useCallback(
+  const renderItem: ListRenderItem<UIChatMessage> = useCallback(
     ({ item, index }) => (
       <ChatMessageItem index={index} item={item} totalLength={messages.length} />
     ),
     [messages.length],
   );
 
-  const keyExtractor = useCallback((item: ChatMessage) => item.id, []);
+  const keyExtractor = useCallback((item: UIChatMessage) => item.id, []);
 
   const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
 

@@ -2,7 +2,7 @@
 // Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
 // DON'T REMOVE THE FIRST LINE
 import { chainSummaryTitle } from '@lobechat/prompts';
-import { ChatMessage, ChatTopic } from '@lobechat/types';
+import { ChatTopic, UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import useSWR, { SWRResponse, mutate } from 'swr';
@@ -40,7 +40,7 @@ export interface ChatTopicAction {
 
   autoRenameTopicTitle: (id: string) => Promise<void>;
   duplicateTopic: (id: string) => Promise<void>;
-  summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
+  summaryTopicTitle: (topicId: string, messages: UIChatMessage[]) => Promise<void>;
   switchTopic: (id?: string, skipRefreshMessage?: boolean) => Promise<void>;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
   useFetchTopics: (enable: boolean, sessionId: string) => SWRResponse<ChatTopic[]>;
