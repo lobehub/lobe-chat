@@ -75,7 +75,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
     position: relative;
 
-    overflow: visible;
+    overflow: hidden;
 
     border: 1px solid ${token.colorBorderSecondary};
     border-radius: ${token.borderRadiusLG}px;
