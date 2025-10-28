@@ -1,22 +1,16 @@
-import { Button, Markdown, Tooltip } from '@lobehub/ui';
-import { Checkbox, Image } from 'antd';
+import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
-import { isNull } from 'lodash-es';
-import { FileBoxIcon } from 'lucide-react';
 import { memo, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
-import FileIcon from '@/components/FileIcon';
 import { documentService } from '@/services/document';
-import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
-import { formatSize } from '@/utils/format';
-import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
-import ChunksBadge from '../FileListItem/ChunkTag';
 import DropdownMenu from '../FileListItem/DropdownMenu';
 import NoteEditorModal from '../../components/NoteEditorModal';
+import DefaultFileItem from './DefaultFileItem';
+import ImageFileItem from './ImageFileItem';
+import MarkdownFileItem from './MarkdownFileItem';
+import NoteFileItem from './NoteFileItem';
 
 // Image file types
 const IMAGE_TYPES = new Set([
@@ -137,198 +131,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     transition: opacity ${token.motionDurationMid};
   `,
-  floatingChunkBadge: css`
-    position: absolute;
-    z-index: 3;
-    inset-block-end: 8px;
-    inset-inline-end: 8px;
-
-    border-radius: ${token.borderRadius}px;
-
-    opacity: 0;
-    background: ${token.colorBgContainer};
-    box-shadow: ${token.boxShadow};
-
-    transition: opacity ${token.motionDurationMid};
-  `,
-  hoverOverlay: css`
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    padding: 16px;
-    border-radius: ${token.borderRadiusLG}px;
-
-    opacity: 0;
-    background: ${token.colorBgMask};
-
-    transition: opacity ${token.motionDurationMid};
-
-    &:hover {
-      opacity: 1;
-    }
-  `,
-  iconWrapper: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    height: 120px;
-    margin-block-end: 12px;
-    border-radius: ${token.borderRadius}px;
-
-    background: ${token.colorFillQuaternary};
-  `,
-  imagePlaceholder: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 120px;
-
-    background: ${token.colorFillQuaternary};
-  `,
-  imageWrapper: css`
-    position: relative;
-
-    overflow: hidden;
-
-    width: 100%;
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorFillQuaternary};
-
-    img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-  `,
-  markdownLoading: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 120px;
-    border-radius: ${token.borderRadiusLG}px;
-
-    font-size: 12px;
-    color: ${token.colorTextTertiary};
-
-    background: ${token.colorFillQuaternary};
-  `,
-  markdownPreview: css`
-    position: relative;
-
-    overflow: hidden;
-
-    width: 100%;
-    min-height: 120px;
-    max-height: 300px;
-    padding: 16px;
-    border-radius: ${token.borderRadiusLG}px;
-
-    font-size: 13px;
-    line-height: 1.6;
-    color: ${token.colorTextSecondary};
-    word-wrap: break-word;
-    white-space: pre-wrap;
-
-    background: ${token.colorFillQuaternary};
-
-    /* Style for rendered markdown */
-    article {
-      font-size: 13px;
-      line-height: 1.6;
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        margin-block-start: 8px;
-        margin-block-end: 4px;
-        font-size: 14px;
-        font-weight: ${token.fontWeightStrong};
-        color: ${token.colorText};
-      }
-
-      p {
-        margin-block-end: 8px;
-      }
-
-      ul,
-      ol {
-        margin-block-end: 8px;
-        padding-inline-start: 20px;
-      }
-
-      code {
-        padding: 2px 4px;
-        border-radius: 3px;
-        background: ${token.colorFillTertiary};
-        font-size: 12px;
-      }
-
-      pre {
-        margin-block-end: 8px;
-        padding: 8px;
-        border-radius: ${token.borderRadius}px;
-        background: ${token.colorFillTertiary};
-      }
-    }
-
-    &::after {
-      pointer-events: none;
-      content: '';
-
-      position: absolute;
-      inset-block-end: 0;
-      inset-inline: 0;
-
-      height: 60px;
-
-      background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
-    }
-  `,
-  name: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-
-    margin-block-end: 12px;
-
-    font-weight: ${token.fontWeightStrong};
-    color: ${token.colorText};
-    word-break: break-word;
-  `,
-  overlaySize: css`
-    font-size: 12px;
-    color: ${token.colorTextLightSolid};
-    opacity: 0.9;
-  `,
-  overlayTitle: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-
-    max-width: 100%;
-    margin-block-end: 8px;
-
-    font-size: 14px;
-    font-weight: ${token.fontWeightStrong};
-    color: ${token.colorTextLightSolid};
-    text-align: center;
-    word-break: break-word;
-  `,
   selected: css`
     border-color: ${token.colorPrimary};
     background: ${token.colorPrimaryBg};
@@ -364,18 +166,11 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     size,
     onOpen,
   }) => {
-    const { t } = useTranslation('components');
     const { styles, cx } = useStyles();
-    const [imageLoaded, setImageLoaded] = useState(false);
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
     const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
-    const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
-      fileManagerSelectors.isCreatingFileParseTask(id)(s),
-      s.parseFilesToChunks,
-    ]);
 
-    const isSupportedForChunking = !isChunkingUnsupported(fileType);
     const isImage = fileType && IMAGE_TYPES.has(fileType);
     const isMarkdown = isMarkdownFile(name, fileType);
     const isNote = isCustomNote(fileType);
@@ -484,212 +279,80 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             }
           }}
         >
-          {isImage && url ? (
-            <>
-              <div className={styles.imageWrapper}>
-                {!imageLoaded && (
-                  <div className={styles.imagePlaceholder}>
-                    <FileIcon fileName={name} fileType={fileType} size={64} />
-                  </div>
-                )}
-                {isInView && (
-                  <Image
-                    alt={name}
-                    loading="lazy"
-                    onError={() => setImageLoaded(false)}
-                    onLoad={() => setImageLoaded(true)}
-                    preview={{
-                      src: url,
-                    }}
-                    src={url}
-                    style={{
-                      display: 'block',
-                      height: 'auto',
-                      opacity: imageLoaded ? 1 : 0,
-                      transition: 'opacity 0.3s',
-                      width: '100%',
-                    }}
-                    wrapperStyle={{
-                      display: 'block',
-                      width: '100%',
-                    }}
-                  />
-                )}
-                {/* Hover overlay */}
-                <div className={styles.hoverOverlay}>
-                  <div className={styles.overlayTitle}>{name}</div>
-                  <div className={styles.overlaySize}>{formatSize(size)}</div>
-                </div>
-              </div>
-              {/* Floating chunk badge or action button */}
-              {!isNull(chunkingStatus) && chunkingStatus ? (
-                <div
-                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ChunksBadge
-                    chunkCount={chunkCount}
+          {(() => {
+            switch (true) {
+              case isImage && !!url: {
+                return (
+                  <ImageFileItem
+                    chunkCount={chunkCount ?? undefined}
                     chunkingError={chunkingError}
-                    chunkingStatus={chunkingStatus}
+                    chunkingStatus={chunkingStatus ?? undefined}
                     embeddingError={embeddingError}
-                    embeddingStatus={embeddingStatus}
+                    embeddingStatus={embeddingStatus ?? undefined}
+                    fileType={fileType}
                     finishEmbedding={finishEmbedding}
                     id={id}
+                    isInView={isInView}
+                    name={name}
+                    size={size}
+                    url={url}
                   />
-                </div>
-              ) : (
-                isSupportedForChunking && (
-                  <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
-                    <div
-                      className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!isCreatingFileParseTask) {
-                          parseFiles([id]);
-                        }
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Button
-                        icon={FileBoxIcon}
-                        loading={isCreatingFileParseTask}
-                        size={'small'}
-                        type={'text'}
-                      />
-                    </div>
-                  </Tooltip>
-                )
-              )}
-            </>
-          ) : isMarkdown || isNote ? (
-            <>
-              <div style={{ position: 'relative' }}>
-                {isLoadingMarkdown ? (
-                  <div className={styles.markdownLoading}>Loading preview...</div>
-                ) : markdownContent ? (
-                  <div className={styles.markdownPreview}>
-                    {isMarkdown && !isNote ? (
-                      <Markdown>{markdownContent}</Markdown>
-                    ) : (
-                      markdownContent
-                    )}
-                  </div>
-                ) : (
-                  <div className={styles.iconWrapper}>
-                    <FileIcon fileName={name} fileType={fileType} size={64} />
-                  </div>
-                )}
-                {/* Hover overlay */}
-                <div className={styles.hoverOverlay}>
-                  <div className={styles.overlayTitle}>{name}</div>
-                  <div className={styles.overlaySize}>{formatSize(size)}</div>
-                </div>
-              </div>
-              {/* Floating chunk badge or action button */}
-              {!isNull(chunkingStatus) && chunkingStatus ? (
-                <div
-                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ChunksBadge
-                    chunkCount={chunkCount}
+                );
+              }
+              case isNote: {
+                return (
+                  <NoteFileItem
+                    chunkCount={chunkCount ?? undefined}
                     chunkingError={chunkingError}
-                    chunkingStatus={chunkingStatus}
+                    chunkingStatus={chunkingStatus ?? undefined}
                     embeddingError={embeddingError}
-                    embeddingStatus={embeddingStatus}
+                    embeddingStatus={embeddingStatus ?? undefined}
+                    fileType={fileType}
                     finishEmbedding={finishEmbedding}
                     id={id}
+                    isLoadingMarkdown={isLoadingMarkdown}
+                    markdownContent={markdownContent}
+                    name={name}
+                    size={size}
                   />
-                </div>
-              ) : (
-                isSupportedForChunking && (
-                  <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
-                    <div
-                      className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!isCreatingFileParseTask) {
-                          parseFiles([id]);
-                        }
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Button
-                        icon={FileBoxIcon}
-                        loading={isCreatingFileParseTask}
-                        size={'small'}
-                        type={'text'}
-                      />
-                    </div>
-                  </Tooltip>
-                )
-              )}
-            </>
-          ) : (
-            <>
-              <Flexbox
-                align={'center'}
-                gap={12}
-                justify={'center'}
-                paddingBlock={24}
-                paddingInline={12}
-                style={{ minHeight: 180 }}
-              >
-                <FileIcon fileName={name} fileType={fileType} size={64} />
-                <div className={styles.name} style={{ textAlign: 'center' }}>
-                  {name}
-                </div>
-                <div
-                  style={{
-                    color: 'var(--lobe-chat-text-tertiary)',
-                    fontSize: 12,
-                    textAlign: 'center',
-                  }}
-                >
-                  {formatSize(size)}
-                </div>
-              </Flexbox>
-              {/* Floating chunk badge or action button */}
-              {!isNull(chunkingStatus) && chunkingStatus ? (
-                <div
-                  className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ChunksBadge
-                    chunkCount={chunkCount}
+                );
+              }
+              case isMarkdown: {
+                return (
+                  <MarkdownFileItem
+                    chunkCount={chunkCount ?? undefined}
                     chunkingError={chunkingError}
-                    chunkingStatus={chunkingStatus}
+                    chunkingStatus={chunkingStatus ?? undefined}
                     embeddingError={embeddingError}
-                    embeddingStatus={embeddingStatus}
+                    embeddingStatus={embeddingStatus ?? undefined}
+                    fileType={fileType}
                     finishEmbedding={finishEmbedding}
                     id={id}
+                    isLoadingMarkdown={isLoadingMarkdown}
+                    markdownContent={markdownContent}
+                    name={name}
+                    size={size}
                   />
-                </div>
-              ) : (
-                isSupportedForChunking && (
-                  <Tooltip title={t('FileManager.actions.chunkingTooltip')}>
-                    <div
-                      className={cx('floatingChunkBadge', styles.floatingChunkBadge)}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!isCreatingFileParseTask) {
-                          parseFiles([id]);
-                        }
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Button
-                        icon={FileBoxIcon}
-                        loading={isCreatingFileParseTask}
-                        size={'small'}
-                        type={'text'}
-                      />
-                    </div>
-                  </Tooltip>
-                )
-              )}
-            </>
-          )}
+                );
+              }
+              default: {
+                return (
+                  <DefaultFileItem
+                    chunkCount={chunkCount ?? undefined}
+                    chunkingError={chunkingError}
+                    chunkingStatus={chunkingStatus ?? undefined}
+                    embeddingError={embeddingError}
+                    embeddingStatus={embeddingStatus ?? undefined}
+                    fileType={fileType}
+                    finishEmbedding={finishEmbedding}
+                    id={id}
+                    name={name}
+                    size={size}
+                  />
+                );
+              }
+            }
+          })()}
         </div>
 
         {/* Note Editor Modal */}
