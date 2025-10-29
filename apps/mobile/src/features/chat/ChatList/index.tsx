@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui-rn';
+import { Flexbox, MaskShadow } from '@lobehub/ui-rn';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { View, ViewStyle } from 'react-native';
@@ -133,28 +133,33 @@ export default function ChatListChatList({ style }: ChatListProps) {
   } else {
     content = (
       <>
-        <FlashList
-          ListEmptyComponent={renderEmptyComponent}
-          ListFooterComponent={<View style={{ height: 48 }} />}
-          data={messages}
-          getItemType={(chatMessage) => {
-            return chatMessage.role;
-          }}
-          initialScrollIndex={messages.length - 1}
-          keyExtractor={keyExtractor}
-          maintainVisibleContentPosition={{
-            autoscrollToBottomThreshold: isLoading || isGenerating ? 0.2 : undefined,
-            // startRenderingFromBottom: true,
-          }}
-          onScroll={handleScroll}
-          ref={listRef}
-          renderItem={renderItem}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
+        <MaskShadow
+          size={32}
           style={{
+            flex: 1,
             marginBottom: -24,
           }}
-        />
+        >
+          <FlashList
+            ListEmptyComponent={renderEmptyComponent}
+            ListFooterComponent={<View style={{ height: 48 }} />}
+            data={messages}
+            getItemType={(chatMessage) => {
+              return chatMessage.role;
+            }}
+            initialScrollIndex={messages.length - 1}
+            keyExtractor={keyExtractor}
+            maintainVisibleContentPosition={{
+              autoscrollToBottomThreshold: isLoading || isGenerating ? 0.2 : undefined,
+              // startRenderingFromBottom: true,
+            }}
+            onScroll={handleScroll}
+            ref={listRef}
+            renderItem={renderItem}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+          />
+        </MaskShadow>
         <AutoScroll
           atBottom={atBottom}
           onScrollToBottom={(type) => {
