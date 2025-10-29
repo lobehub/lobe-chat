@@ -124,8 +124,9 @@ export default function ChatListChatList({ style }: ChatListProps) {
     setAtBottom(nearBottom);
   }, []);
 
-  let content;
+  if (!activeTopicId) return <WelcomeMessage />;
 
+  let content;
   if (!isCurrentChatLoaded) {
     content = <MessageSkeletonList />;
   } else {
