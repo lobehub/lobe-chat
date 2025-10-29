@@ -1,5 +1,6 @@
 import { Center, PageContainer, Text } from '@lobehub/ui-rn';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 
 import { safeReplaceLogin } from '@/navigation/safeLogin';
@@ -14,6 +15,7 @@ type AuthCallbackParams = {
 export default function AuthCallback() {
   const router = useRouter();
   const { error } = useLocalSearchParams<AuthCallbackParams>();
+  const { t } = useTranslation('auth');
 
   // 立即导航到首页，避免展示 404 页面
   const errorParam = Array.isArray(error) ? error[0] : error;
@@ -25,14 +27,14 @@ export default function AuthCallback() {
     } else {
       safeReplaceLogin(router);
     }
-    return;
+    return null;
   }
 
   return (
     <PageContainer>
       <Center flex={1} gap={12} justify="center">
         <ActivityIndicator size="large" />
-        <Text style={{ marginTop: 12 }}>登录中，请稍候...</Text>
+        <Text style={{ marginTop: 12 }}>{t('login.processing')}</Text>
       </Center>
     </PageContainer>
   );
