@@ -1,11 +1,12 @@
 import { Flexbox, Skeleton } from '@lobehub/ui-rn';
 import { memo } from 'react';
+import type { DimensionValue } from 'react-native';
 
 /**
  * Topic 骨架屏组件
  * 可复用的 topic 列表项加载状态
  */
-const TopicItemSkeleton = memo(() => (
+const TopicItemSkeleton = memo<{ width: DimensionValue }>(({ width = '100%' }) => (
   <Flexbox paddingBlock={12} paddingInline={16}>
     <Skeleton
       animated
@@ -14,7 +15,7 @@ const TopicItemSkeleton = memo(() => (
       }}
       paragraph={{
         rows: 1,
-        width: ['70%'],
+        width: [width],
       }}
       title={false}
     />

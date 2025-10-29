@@ -15,11 +15,11 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 // 骨架屏列表
-const TopicSkeletonList = memo(({ count = 6 }: { count?: number }) => {
+const TopicSkeletonList = memo(() => {
   return (
     <Flexbox>
-      {Array.from({ length: count }).map((_, index) => (
-        <TopicItemSkeleton key={index} />
+      {['100%', '100%', '60%', '100%', '80%', '100%', '100%', '60%'].map((width, index) => (
+        <TopicItemSkeleton key={index} width={width as any} />
       ))}
     </Flexbox>
   );
