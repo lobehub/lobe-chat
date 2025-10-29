@@ -1,6 +1,7 @@
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { jwtDecode } from 'jwt-decode';
+import { Platform } from 'react-native';
 
 import type { AuthConfig, AuthService, LoginOptions, PKCE, Token, User } from '@/_types/user';
 import { AUTH_ENDPOINTS } from '@/config/auth';
@@ -12,6 +13,7 @@ import { TokenStorage } from './tokenStorage';
 
 // 为 Web 浏览器配置预热
 WebBrowser.maybeCompleteAuthSession();
+const CHROME_CUSTOM_TABS_PACKAGE = 'com.android.chrome';
 
 export class OAuthService implements AuthService {
   private config: AuthConfig;
@@ -81,7 +83,7 @@ export class OAuthService implements AuthService {
         ...payload,
       };
     } catch (error) {
-      console.error('Failed to decode JWT:', error);
+      authLogger.error('Failed to decode JWT:', error);
       return null;
     }
   }
@@ -127,9 +129,7 @@ export class OAuthService implements AuthService {
 
       // 启动授权会话
       authLogger.info('Opening authorization session');
-      const webBrowserOptions = options?.useEphemeralSession
-        ? { preferEphemeralSession: true }
-        : undefined;
+      const webBrowserOptions = await this.buildWebBrowserOptions(options?.useEphemeralSession);
       const result = await WebBrowser.openAuthSessionAsync(
         authUrl,
         this.getRedirectUri(),
@@ -149,9 +149,50 @@ export class OAuthService implements AuthService {
       }
     } catch (error) {
       authLogger.error('Login failed', error);
-      console.error('Login failed:', error);
       throw error;
     }
+  }
+
+  private async buildWebBrowserOptions(
+    useEphemeralSession?: boolean,
+  ): Promise<WebBrowser.AuthSessionOpenOptions | undefined> {
+    const options: WebBrowser.AuthSessionOpenOptions = {};
+
+    if (useEphemeralSession) {
+      if (Platform.OS === 'ios') {
+        options.preferEphemeralSession = true;
+      } else {
+        authLogger.info('Ephemeral session requested but not supported on this platform');
+      }
+    }
+
+    if (Platform.OS === 'android') {
+      try {
+        authLogger.info('Checking Custom Tabs support on Android');
+        const { browserPackages, defaultBrowserPackage, preferredBrowserPackage, servicePackages } =
+          await WebBrowser.getCustomTabsSupportingBrowsersAsync();
+
+        const chromeAvailable =
+          defaultBrowserPackage === CHROME_CUSTOM_TABS_PACKAGE ||
+          preferredBrowserPackage === CHROME_CUSTOM_TABS_PACKAGE ||
+          browserPackages.includes(CHROME_CUSTOM_TABS_PACKAGE) ||
+          servicePackages.includes(CHROME_CUSTOM_TABS_PACKAGE);
+
+        if (chromeAvailable) {
+          authLogger.info('Preferring Chrome Custom Tabs for auth session');
+          options.browserPackage = CHROME_CUSTOM_TABS_PACKAGE;
+          await WebBrowser.warmUpAsync(CHROME_CUSTOM_TABS_PACKAGE);
+        } else {
+          authLogger.info('Chrome Custom Tabs not available, using default browser');
+        }
+      } catch (error) {
+        authLogger.warn('Unable to determine Custom Tabs support, using default browser', {
+          error,
+        });
+      }
+    }
+
+    return Object.keys(options).length ? options : undefined;
   }
 
   /**
@@ -215,7 +256,6 @@ export class OAuthService implements AuthService {
       authLogger.info('Auth callback handled successfully');
     } catch (error) {
       authLogger.error('Failed to handle auth callback', error);
-      console.error('Failed to handle auth callback:', error);
       throw error;
     }
   }
@@ -336,7 +376,6 @@ export class OAuthService implements AuthService {
       return token;
     } catch (error) {
       authLogger.error('Token exchange failed', error);
-      console.error('Token exchange failed:', error);
       throw error;
     }
   }
@@ -479,7 +518,6 @@ export class OAuthService implements AuthService {
       return newToken;
     } catch (error) {
       authLogger.error('Token refresh failed', error);
-      console.error('Token refresh failed:', error);
       throw error;
     }
   }
@@ -528,7 +566,6 @@ export class OAuthService implements AuthService {
       return user;
     } catch (error) {
       authLogger.error('Failed to get user info from token', error);
-      console.error('Failed to get user info from token:', error);
       throw error;
     }
   }
@@ -546,7 +583,6 @@ export class OAuthService implements AuthService {
       return user;
     } catch (error) {
       authLogger.error('Failed to refresh user info', error);
-      console.error('Failed to refresh user info:', error);
       throw error;
     }
   }
@@ -586,7 +622,6 @@ export class OAuthService implements AuthService {
       //     });
       //   } catch (error) {
       //     authLogger.warn('Failed to revoke token', error);
-      //     console.warn('Failed to revoke token:', error);
       //     // 撤销失败不应该阻止登出
       //   }
       // } else {
@@ -599,7 +634,6 @@ export class OAuthService implements AuthService {
       authLogger.info('Logout completed successfully');
     } catch (error) {
       authLogger.error('Logout failed', error);
-      console.error('Logout failed:', error);
       throw error;
     }
   }
