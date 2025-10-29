@@ -5,11 +5,10 @@ import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/c
 export const useStyles = createStyles(({ token }) => ({
   bottomBarWrapper: {
     backgroundColor: token.colorBgContainer,
+    borderRadius: 24,
     bottom: 0,
-    height: 160,
+    height: 200,
     left: 0,
-    paddingBlock: token.paddingXL,
-    paddingInline: token.paddingLG,
     position: 'absolute',
     right: 0,
     width: '100%',

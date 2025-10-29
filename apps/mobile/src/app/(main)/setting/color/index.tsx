@@ -8,14 +8,18 @@ import {
   neutralColors,
   primaryColors,
 } from '@lobehub/ui-rn';
+import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
+import { ScrollView } from 'react-native';
 
 import SettingItem from '@/features/SettingItem';
 import { useSettingStore } from '@/store/setting';
 
 import Preview from './features/Preview';
+import { useStyles } from './styles';
 
 export default function ThemeSettingScreen() {
+  const { styles, theme } = useStyles();
   const { t } = useTranslation('setting');
 
   const { primaryColor, neutralColor, setPrimaryColor, setNeutralColor } = useSettingStore();
@@ -46,9 +50,22 @@ export default function ThemeSettingScreen() {
   ];
 
   return (
-    <PageContainer showBack title={t('color.title', { ns: 'setting' })}>
-      <Flexbox gap={16} paddingInline={16}>
+    <PageContainer
+      backgroundColor={[
+        theme.colorBgContainerSecondary,
+        darken(0.04, theme.colorBgLayout),
+        darken(0.04, theme.colorBgLayout),
+      ]}
+      showBack
+      title={t('color.title', { ns: 'setting' })}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
+        style={styles.container}
+      >
         <Preview />
+      </ScrollView>
+      <Flexbox gap={16} glass paddingBlock={16} paddingInline={16} style={styles.bottomBarWrapper}>
         <SettingItem
           customContent={
             <ColorSwatches
