@@ -12,7 +12,7 @@ const Minimax: ModelProviderCard = {
   settings: {
     disableBrowserRequest: true, // CORS error
     proxyUrl: {
-      placeholder: 'https://api.minimax.chat/v1',
+      placeholder: 'https://api.minimaxi.com/v1',
     },
     responseAnimation: {
       speed: 2,
