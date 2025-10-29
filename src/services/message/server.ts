@@ -14,6 +14,13 @@ export class ServerService implements IMessageService {
     });
   };
 
+  createNewMessage: IMessageService['createNewMessage'] = async ({ sessionId, ...params }) => {
+    return lambdaClient.message.createNewMessage.mutate({
+      ...params,
+      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
+    });
+  };
+
   batchCreateMessages: IMessageService['batchCreateMessages'] = async (messages) => {
     return lambdaClient.message.batchCreateMessages.mutate(messages);
   };

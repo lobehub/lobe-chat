@@ -1,6 +1,5 @@
 import {
   DEFAULT_INBOX_AVATAR,
-  LOADING_FLAT,
   PLUGIN_SCHEMA_API_MD5_PREFIX,
   PLUGIN_SCHEMA_SEPARATOR,
 } from '@lobechat/const';
@@ -363,16 +362,50 @@ describe('ChatPluginAction', () => {
 
       // Verify that tool messages were created for each tool call
       expect(internal_createMessageMock).toHaveBeenCalledTimes(4);
-      expect(internal_createMessageMock).toHaveBeenCalledWith({
-        content: LOADING_FLAT,
+      expect(internal_createMessageMock).toHaveBeenNthCalledWith(1, {
+        content: '',
         parentId: assistantId,
         plugin: message.tools![0],
         role: 'tool',
         sessionId: 'session-id',
         tool_call_id: 'tool1',
         topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
       });
-      // ... similar assertions for other tool calls
+      expect(internal_createMessageMock).toHaveBeenNthCalledWith(2, {
+        content: '',
+        parentId: assistantId,
+        plugin: message.tools![1],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool2',
+        topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
+      });
+      expect(internal_createMessageMock).toHaveBeenNthCalledWith(3, {
+        content: '',
+        parentId: assistantId,
+        plugin: message.tools![2],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool3',
+        topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
+      });
+      expect(internal_createMessageMock).toHaveBeenNthCalledWith(4, {
+        content: '',
+        parentId: assistantId,
+        plugin: message.tools![3],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool4',
+        topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
+      });
 
       // Verify that the appropriate plugin types were invoked
       expect(invokeStandaloneTypePluginMock).toHaveBeenCalledWith(

@@ -1,14 +1,19 @@
-import { UploadFileItem } from '../../files';
 import { MetaData } from '../../meta';
-import { MessageSemanticSearchChunk } from '../../rag';
 import { GroundingSearch } from '../../search';
-import { ChatImageItem, ChatMessageError, MessageMetadata, ModelReasoning } from '../common';
-import { ChatPluginPayload, ChatToolPayload } from '../common/tools';
+import {
+  ChatImageItem,
+  ChatMessageError,
+  MessageMetadata,
+  ModelPerformance,
+  ModelReasoning,
+  ModelUsage,
+} from '../common';
+import { ChatPluginPayload, ChatToolPayload, ChatToolPayloadWithResult } from '../common/tools';
 import { ChatMessageExtra } from './extra';
 import { ChatFileChunk } from './rag';
 import { ChatVideoItem } from './video';
 
-export type UIMessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | 'supervisor';
+export type UIMessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | 'supervisor' | 'group';
 
 export interface ChatFileItem {
   content?: string;
@@ -24,7 +29,9 @@ export interface AssistantContentBlock {
   fileList?: ChatFileItem[];
   id: string;
   imageList?: ChatImageItem[];
-  tools?: ChatToolPayload[];
+  performance?: ModelPerformance;
+  tools?: ChatToolPayloadWithResult[];
+  usage?: ModelUsage;
 }
 
 export interface UIChatMessage {
@@ -63,6 +70,11 @@ export interface UIChatMessage {
    * parent message id
    */
   parentId?: string;
+  /**
+   * Performance metrics (tps, ttft, duration, latency)
+   * Aggregated from all children in group messages
+   */
+  performance?: ModelPerformance;
   plugin?: ChatPluginPayload;
   pluginError?: any;
   pluginState?: any;
@@ -96,66 +108,10 @@ export interface UIChatMessage {
    */
   traceId?: string;
   updatedAt: number;
+  /**
+   * Token usage and cost metrics
+   * Aggregated from all children in group messages
+   */
+  usage?: ModelUsage;
   videoList?: ChatVideoItem[];
-}
-
-export interface CreateMessageParams
-  extends Partial<Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>> {
-  content: string;
-  error?: ChatMessageError | null;
-  fileChunks?: MessageSemanticSearchChunk[];
-  files?: string[];
-  fromModel?: string;
-  fromProvider?: string;
-  groupId?: string;
-  role: UIMessageRoleType;
-  sessionId: string;
-  targetId?: string | null;
-  threadId?: string | null;
-  topicId?: string;
-  traceId?: string;
-}
-
-export interface SendMessageParams {
-  /**
-   * create a thread
-   */
-  createThread?: boolean;
-  files?: UploadFileItem[];
-  /**
-   *
-   * https://github.com/lobehub/lobe-chat/pull/2086
-   */
-  isWelcomeQuestion?: boolean;
-  message: string;
-  /**
-   * Additional metadata for the message (e.g., mentioned users)
-   */
-  metadata?: Record<string, any>;
-  onlyAddUserMessage?: boolean;
-}
-
-export interface SendThreadMessageParams {
-  /**
-   * create a thread
-   */
-  createNewThread?: boolean;
-  // files?: UploadFileItem[];
-  message: string;
-  onlyAddUserMessage?: boolean;
-}
-
-export interface SendGroupMessageParams {
-  files?: UploadFileItem[];
-  groupId: string;
-  message: string;
-  /**
-   * Additional metadata for the message (e.g., mentioned users)
-   */
-  metadata?: Record<string, any>;
-  onlyAddUserMessage?: boolean;
-  /**
-   * for group chat
-   */
-  targetMemberId?: string | null;
 }

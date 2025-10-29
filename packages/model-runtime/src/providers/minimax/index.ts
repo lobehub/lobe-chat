@@ -33,7 +33,7 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
         },
         {
           normalizeTemperature: true,
-          topPRange: { max: 1, min: 0 },
+          topPRange: { max: 1, min: 0.01 },
         },
       );
 
