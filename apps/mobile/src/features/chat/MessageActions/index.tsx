@@ -94,19 +94,19 @@ const MessageActions = memo<MessageActionsProps>(({ message, style }) => {
         disabled={isCopied}
         icon={isCopied ? Check : Copy}
         onPress={handleCopy}
-        size={'small'}
+        size={16}
       />
       <ActionIcon
         color={token.colorTextDescription}
         icon={RefreshCw}
         onPress={handleRegenerate}
-        size={'small'}
+        size={16}
       />
       <ActionIcon
         color={token.colorTextDescription}
         icon={Trash2}
         onPress={handleDelete}
-        size="small"
+        size={16}
       />
     </Flexbox>
   );

@@ -1,33 +1,32 @@
+import { HEADER_HEIGHT } from '@/_const/common';
 import { createStyles } from '@/components/styles';
 
-export const useStyles = createStyles(({ token }) => ({
-  closeButton: {
-    borderRadius: token.borderRadiusXS,
-    marginLeft: token.marginXS,
-    padding: token.paddingXXS,
+export const useStyles = createStyles(() => ({
+  bottomViewport: {
+    justifyContent: 'flex-end',
+    paddingBottom: 16,
   },
   message: {
-    color: token.colorText,
     flex: 1,
-    fontFamily: token.fontFamily,
-    fontSize: token.fontSize,
-    fontWeight: token.fontWeightStrong,
-    lineHeight: token.lineHeight,
   },
   toast: {
-    alignItems: 'center',
-    backgroundColor: token.colorBgElevated,
-    borderColor: token.colorBorderSecondary,
-    borderRadius: token.borderRadius,
-    borderWidth: token.lineWidth,
-    flexDirection: 'row',
-    gap: token.marginXS,
-    paddingBlock: token.paddingContentVertical,
-    paddingInline: token.paddingContentHorizontal,
     width: '100%',
-    ...token.boxShadow,
   },
-  touchable: {
+  toastContainer: {
+    alignSelf: 'center',
+    marginVertical: 4,
+    position: 'absolute',
     width: '100%',
+  },
+  topViewport: {
+    justifyContent: 'flex-start',
+    paddingTop: HEADER_HEIGHT,
+  },
+  viewport: {
+    inset: 0,
+    padding: 16,
+    pointerEvents: 'box-none',
+    position: 'absolute',
+    zIndex: 9999,
   },
 }));
