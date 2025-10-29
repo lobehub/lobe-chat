@@ -3,6 +3,7 @@ export enum FilesTabs {
   Audios = 'audios',
   Documents = 'documents',
   Images = 'images',
+  Notes = 'notes',
   Videos = 'videos',
   Websites = 'websites',
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { FileText, Globe, ImageIcon, LayoutGrid, Mic2, SquarePlay } from 'lucide-react';
+import { FileText, FilePenLine, Globe, ImageIcon, LayoutGrid, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -49,9 +49,14 @@ const FileMenu = memo(() => {
           key: FilesTabs.Websites,
           label: t('tab.websites'),
         },
+        {
+          icon: <Icon icon={FilePenLine} />,
+          key: FilesTabs.Notes,
+          label: t('tab.notes'),
+        },
       ]
         .filter(Boolean)
-        .slice(0, 5) as MenuProps['items'],
+        .slice(0, 7) as MenuProps['items'],
     [t],
   );
 
