@@ -1,4 +1,4 @@
-import { ActionIcon, Block, Flexbox, Text } from '@lobehub/ui-rn';
+import { ActionIcon, Block, Flexbox, Tag, Text } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { SearchIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
@@ -79,17 +79,19 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
               paddingBlock={4}
               paddingInline={8}
             >
-              <Flexbox gap={4} horizontal style={{ marginLeft: 6 }}>
-                <Text>{t('title')}</Text>
-                {topics > 0 ? <Text>{topics}</Text> : undefined}
+              <Flexbox align={'center'} flex={1} gap={8} horizontal style={{ marginLeft: 6 }}>
+                <Text fontSize={16} weight={500}>
+                  {t('title')}
+                </Text>
+                {topics > 0 ? <Tag size={'small'}>{topics.toString()}</Tag> : undefined}
               </Flexbox>
               <ActionIcon
                 icon={SearchIcon}
                 onPress={handleOpenSearch}
                 size={{
-                  blockSize: 32,
-                  borderRadius: 16,
-                  size: 16,
+                  blockSize: 36,
+                  borderRadius: 36,
+                  size: 22,
                 }}
               />
             </Flexbox>
