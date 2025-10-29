@@ -79,7 +79,6 @@ const SyntaxHighlighter = memo<SyntaxHighlighterProps>(({ children, language }) 
       directionalLockEnabled={false}
       horizontal
       nestedScrollEnabled
-      pointerEvents={'box-none'}
       removeClippedSubviews={false}
       scrollEnabled
       showsHorizontalScrollIndicator={false}

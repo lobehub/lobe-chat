@@ -32,7 +32,6 @@ const SyntaxMermaid = memo<SyntaxMermaidProps>(({ children }) => {
       mediaPlaybackRequiresUserAction={false}
       onError={() => setImageError(true)}
       onHttpError={() => setImageError(true)}
-      pointerEvents={'none'}
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
