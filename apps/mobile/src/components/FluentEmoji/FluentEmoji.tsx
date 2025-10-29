@@ -2,7 +2,6 @@ import { Image } from 'expo-image';
 import { memo, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
-import { WebView } from 'react-native-webview';
 
 import { useStyles } from './style';
 import type { FluentEmojiProps } from './type';
@@ -31,65 +30,9 @@ const FluentEmoji = memo<FluentEmojiProps>(({ emoji, size = 32, type = '3d' }) =
 
   const emojiCdnUrl = genCdnUrl(emojiUrl);
   const isSvg = emojiCdnUrl.endsWith('.svg');
-  const isAnimated = type === 'anim';
 
   const renderEmoji = () => {
-    if (isAnimated) {
-      // Use WebView for animated WebP to support animation
-      // WARN:has performance issue, be careful to use
-      const html = `
-        <html>
-          <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-            <style>
-              * { margin: 0; padding: 0; }
-              body {
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                background: transparent;
-                overflow: hidden;
-              }
-              img {
-                width: ${size}px;
-                height: ${size}px;
-                object-fit: contain;
-                display: block;
-              }
-            </style>
-          </head>
-          <body>
-            <img src="${emojiCdnUrl}" alt="${emoji}" onerror="window.ReactNativeWebView.postMessage('IMAGE_ERROR');" />
-          </body>
-        </html>
-      `;
-
-      return (
-        <WebView
-          allowsInlineMediaPlayback={true}
-          automaticallyAdjustContentInsets={false}
-          bounces={false}
-          domStorageEnabled={false}
-          javaScriptEnabled={true}
-          mediaPlaybackRequiresUserAction={false}
-          onError={() => setImageError(true)}
-          onHttpError={() => setImageError(true)}
-          onMessage={(event) => {
-            if (event.nativeEvent.data === 'IMAGE_ERROR') {
-              setImageError(true);
-            }
-          }}
-          scrollEnabled={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          source={{ html }}
-          style={{ backgroundColor: 'transparent', height: size, width: size }}
-        />
-      );
-    } else if (isSvg) {
+    if (isSvg) {
       return (
         <SvgUri
           accessibilityLabel={emoji}
@@ -103,6 +46,7 @@ const FluentEmoji = memo<FluentEmojiProps>(({ emoji, size = 32, type = '3d' }) =
       return (
         <Image
           accessibilityLabel={emoji}
+          autoplay
           cachePolicy="memory-disk"
           contentFit="cover"
           onError={() => setImageError(true)}

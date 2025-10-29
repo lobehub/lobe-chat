@@ -16,7 +16,7 @@ const WelcomeChatBubble = memo(({ message }: WelcomeChatBubbleProps) => {
   return (
     <Flexbox gap={16} paddingBlock={16}>
       <Center>
-        <Avatar avatar={avatar} size={100} />
+        <Avatar animation avatar={avatar} size={100} />
       </Center>
       <Markdown fontSize={fontSize}>{message.content}</Markdown>
     </Flexbox>
