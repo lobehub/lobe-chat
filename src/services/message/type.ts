@@ -4,6 +4,7 @@ import {
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
+  CreateMessageResult,
   DBMessageItem,
   ModelRankItem,
   UIChatMessage,
@@ -16,6 +17,7 @@ import type { HeatmapsProps } from '@lobehub/charts';
 
 export interface IMessageService {
   createMessage(data: CreateMessageParams): Promise<string>;
+  createNewMessage(data: CreateMessageParams): Promise<CreateMessageResult>;
   batchCreateMessages(messages: DBMessageItem[]): Promise<any>;
 
   getMessages(sessionId: string, topicId?: string, groupId?: string): Promise<UIChatMessage[]>;

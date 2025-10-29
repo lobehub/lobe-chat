@@ -1,5 +1,4 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { LOADING_FLAT } from '@lobechat/const';
 import { ToolNameResolver } from '@lobechat/context-engine';
 import {
   ChatErrorType,
@@ -56,6 +55,9 @@ export interface ChatPluginAction {
   }) => Promise<void>;
   summaryPluginContent: (id: string) => Promise<void>;
 
+  /**
+   * @deprecated V1 method
+   */
   triggerToolCalls: (
     id: string,
     params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
@@ -258,7 +260,7 @@ export const chatPlugin: StateCreator<
     let latestToolId = '';
     const messagePools = message.tools.map(async (payload) => {
       const toolMessage: CreateMessageParams = {
-        content: LOADING_FLAT,
+        content: '',
         parentId: assistantId,
         plugin: payload,
         role: 'tool',
