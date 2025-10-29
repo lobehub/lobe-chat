@@ -1,4 +1,4 @@
-import { Center, PageContainer, Slider, Text } from '@lobehub/ui-rn';
+import { Flexbox, PageContainer, Slider, Text } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
@@ -22,7 +22,14 @@ export default function FontSizeSettingScreen() {
       >
         <Preview />
       </ScrollView>
-      <Center gap={24} style={styles.bottomBarWrapper}>
+      <Flexbox
+        align={'center'}
+        gap={24}
+        glass
+        paddingBlock={32}
+        paddingInline={16}
+        style={styles.bottomBarWrapper}
+      >
         <Slider
           marks={{
             [FONT_SIZE_LARGE]: { label: <Text style={styles.fontSizeLarge}>A</Text> },
@@ -45,7 +52,7 @@ export default function FontSizeSettingScreen() {
           value={fontSize}
         />
         <Text type={'secondary'}>{t('fontSize.text', { ns: 'setting' })}</Text>
-      </Center>
+      </Flexbox>
     </PageContainer>
   );
 }
