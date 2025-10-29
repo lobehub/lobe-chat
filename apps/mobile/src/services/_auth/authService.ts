@@ -1,6 +1,7 @@
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { jwtDecode } from 'jwt-decode';
+import { Platform } from 'react-native';
 
 import type { AuthConfig, AuthService, LoginOptions, PKCE, Token, User } from '@/_types/user';
 import { AUTH_ENDPOINTS } from '@/config/auth';
@@ -12,6 +13,7 @@ import { TokenStorage } from './tokenStorage';
 
 // 为 Web 浏览器配置预热
 WebBrowser.maybeCompleteAuthSession();
+const CHROME_CUSTOM_TABS_PACKAGE = 'com.android.chrome';
 
 export class OAuthService implements AuthService {
   private config: AuthConfig;
@@ -127,9 +129,7 @@ export class OAuthService implements AuthService {
 
       // 启动授权会话
       authLogger.info('Opening authorization session');
-      const webBrowserOptions = options?.useEphemeralSession
-        ? { preferEphemeralSession: true }
-        : undefined;
+      const webBrowserOptions = await this.buildWebBrowserOptions(options?.useEphemeralSession);
       const result = await WebBrowser.openAuthSessionAsync(
         authUrl,
         this.getRedirectUri(),
@@ -152,6 +152,48 @@ export class OAuthService implements AuthService {
       console.error('Login failed:', error);
       throw error;
     }
+  }
+
+  private async buildWebBrowserOptions(
+    useEphemeralSession?: boolean,
+  ): Promise<WebBrowser.AuthSessionOpenOptions | undefined> {
+    const options: WebBrowser.AuthSessionOpenOptions = {};
+
+    if (useEphemeralSession) {
+      if (Platform.OS === 'ios') {
+        options.preferEphemeralSession = true;
+      } else {
+        authLogger.info('Ephemeral session requested but not supported on this platform');
+      }
+    }
+
+    if (Platform.OS === 'android') {
+      try {
+        authLogger.info('Checking Custom Tabs support on Android');
+        const { browserPackages, defaultBrowserPackage, preferredBrowserPackage, servicePackages } =
+          await WebBrowser.getCustomTabsSupportingBrowsersAsync();
+
+        const chromeAvailable =
+          defaultBrowserPackage === CHROME_CUSTOM_TABS_PACKAGE ||
+          preferredBrowserPackage === CHROME_CUSTOM_TABS_PACKAGE ||
+          browserPackages.includes(CHROME_CUSTOM_TABS_PACKAGE) ||
+          servicePackages.includes(CHROME_CUSTOM_TABS_PACKAGE);
+
+        if (chromeAvailable) {
+          authLogger.info('Preferring Chrome Custom Tabs for auth session');
+          options.browserPackage = CHROME_CUSTOM_TABS_PACKAGE;
+          await WebBrowser.warmUpAsync(CHROME_CUSTOM_TABS_PACKAGE);
+        } else {
+          authLogger.info('Chrome Custom Tabs not available, using default browser');
+        }
+      } catch (error) {
+        authLogger.warn('Unable to determine Custom Tabs support, using default browser', {
+          error,
+        });
+      }
+    }
+
+    return Object.keys(options).length ? options : undefined;
   }
 
   /**
