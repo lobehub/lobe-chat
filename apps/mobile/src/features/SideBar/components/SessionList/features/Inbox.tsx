@@ -1,6 +1,8 @@
-import { ListItem } from '@lobehub/ui-rn';
+import { Cell } from '@lobehub/ui-rn';
+import Avatar from '@lobehub/ui-rn/Avatar';
 import { useTranslation } from 'react-i18next';
 
+import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
 import { DEFAULT_INBOX_AVATAR } from '@/_const/meta';
 import { INBOX_SESSION_ID } from '@/_const/session';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
@@ -19,11 +21,16 @@ const Inbox = () => {
   };
 
   return (
-    <ListItem
+    <Cell
       active={isActive}
-      avatar={DEFAULT_INBOX_AVATAR}
-      description={t('inbox.desc', { ns: 'chat' })}
+      icon={<Avatar avatar={DEFAULT_INBOX_AVATAR} size={AVATAR_SIZE_MEDIUM} />}
+      iconSize={AVATAR_SIZE_MEDIUM}
       onPress={handlePress}
+      paddingBlock={10}
+      showArrow={false}
+      style={{
+        paddingRight: 8,
+      }}
       title={t('inbox.title', { ns: 'chat' })}
       variant={'filled'}
     />
