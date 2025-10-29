@@ -114,8 +114,6 @@ export default function ChatListChatList({ style }: ChatListProps) {
 
   const keyExtractor = useCallback((item: UIChatMessage) => item.id, []);
 
-  const renderEmptyComponent = useCallback(() => <WelcomeMessage />, []);
-
   const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const nearBottom = computeAtBottom(
@@ -131,6 +129,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
   if (!isCurrentChatLoaded) {
     content = <MessageSkeletonList />;
   } else {
+    if (!messages || messages.length === 0) return <WelcomeMessage />;
     content = (
       <>
         <MaskShadow
@@ -141,7 +140,6 @@ export default function ChatListChatList({ style }: ChatListProps) {
           }}
         >
           <FlashList
-            ListEmptyComponent={renderEmptyComponent}
             ListFooterComponent={<View style={{ height: 48 }} />}
             data={messages}
             getItemType={(chatMessage) => {

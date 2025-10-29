@@ -27,6 +27,9 @@
       "moreBtn": "En savoir plus",
       "title": "Les questions fréquentes :"
     },
+    "topics": {
+      "title": "Sujets récents :"
+    },
     "welcome": {
       "afternoon": "Bon après-midi",
       "morning": "Bonjour",

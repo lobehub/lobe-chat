@@ -27,6 +27,9 @@
       "moreBtn": "Daha Fazla Bilgi",
       "title": "Herkesin Sorduğu Sorular:"
     },
+    "topics": {
+      "title": "Güncel Konular:"
+    },
     "welcome": {
       "afternoon": "İyi Öğleden Sonralar",
       "morning": "Günaydın",

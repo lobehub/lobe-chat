@@ -27,6 +27,9 @@
       "moreBtn": "더 알아보기",
       "title": "사람들이 자주 묻는 질문:"
     },
+    "topics": {
+      "title": "최근 주제:"
+    },
     "welcome": {
       "afternoon": "안녕하세요, 오후입니다",
       "morning": "안녕하세요, 아침입니다",
