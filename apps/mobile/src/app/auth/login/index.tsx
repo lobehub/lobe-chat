@@ -102,7 +102,9 @@ const LoginPage = () => {
         </Center>
         <VideoView
           contentFit="cover"
+          nativeControls={false}
           player={player}
+          pointerEvents={'none'}
           style={{
             height: 150,
             left: 0,
