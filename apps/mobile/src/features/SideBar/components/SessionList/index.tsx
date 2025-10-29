@@ -154,7 +154,6 @@ export default function SideBar() {
             color: theme.colorTextDescription,
           }}
           onPress={() => router.push('/session/search')}
-          size={'small'}
           textStyle={{
             color: theme.colorTextDescription,
           }}
