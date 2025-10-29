@@ -1,4 +1,5 @@
 import { createStyles } from '@lobehub/ui-rn';
+import { StyleSheet } from 'react-native';
 
 export const useStyles = createStyles(({ token }) => {
   return {
@@ -26,7 +27,7 @@ export const useStyles = createStyles(({ token }) => {
       backgroundColor: token.colorBgContainer,
       borderColor: token.colorBorder,
       borderRadius: token.borderRadiusLG,
-      borderWidth: 0.5,
+      borderWidth: StyleSheet.hairlineWidth,
     },
 
     // 输入区域
@@ -44,7 +45,7 @@ export const useStyles = createStyles(({ token }) => {
       backgroundColor: token.colorBgLayout,
       borderColor: token.colorBorder,
       borderRadius: 18,
-      borderWidth: 0.5,
+      borderWidth: StyleSheet.hairlineWidth,
       flex: 1,
       height: 36,
       justifyContent: 'center',
@@ -62,7 +63,7 @@ export const useStyles = createStyles(({ token }) => {
       backgroundColor: token.colorBgContainer,
       borderColor: token.colorBorderSecondary,
       borderRadius: token.borderRadius,
-      borderWidth: 0.5,
+      borderWidth: StyleSheet.hairlineWidth,
       marginBottom: 2,
       paddingBlock: token.paddingXS,
       paddingInline: 10,
