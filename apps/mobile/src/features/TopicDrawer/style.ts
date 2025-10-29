@@ -6,7 +6,7 @@ import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token, isDarkMode }) => ({
   drawerBackground: {
-    backgroundColor: isDarkMode ? token.colorBgContainerSecondary : token.colorBgLayout,
+    backgroundColor: 'transparent',
   },
 
   // 抽屉内容容器
@@ -14,7 +14,7 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     flex: 1,
   },
   drawerOverlay: {
-    backgroundColor: isDarkMode ? 'rgba(0,0,0,.8)' : rgba(darken(0.1, token.colorBgLayout), 0.5),
+    backgroundColor: isDarkMode ? 'rgba(0,0,0,.8)' : rgba(darken(0.2, token.colorBgLayout), 0.5),
     borderColor: token.colorFillTertiary,
     borderRightWidth: StyleSheet.hairlineWidth,
   },

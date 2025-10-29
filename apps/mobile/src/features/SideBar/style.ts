@@ -9,10 +9,10 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     flex: 1,
   },
   drawerBackground: {
-    backgroundColor: isDarkMode ? token.colorBgContainerSecondary : token.colorBgLayout,
+    backgroundColor: 'transparent',
   },
   drawerOverlay: {
-    backgroundColor: isDarkMode ? 'rgba(0,0,0,.8)' : rgba(darken(0.1, token.colorBgLayout), 0.5),
+    backgroundColor: isDarkMode ? 'rgba(0,0,0,.8)' : rgba(darken(0.2, token.colorBgLayout), 0.5),
     borderColor: token.colorFillTertiary,
     borderLeftWidth: StyleSheet.hairlineWidth,
   },

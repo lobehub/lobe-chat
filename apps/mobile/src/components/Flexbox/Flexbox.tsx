@@ -65,6 +65,7 @@ const Flexbox = memo<FlexboxProps>(
                 typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
                 {
                   backgroundColor: glassColor,
+                  borderWidth: 0,
                 },
               ]}
             >
@@ -84,6 +85,7 @@ const Flexbox = memo<FlexboxProps>(
             typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
             {
               backgroundColor: glassColor,
+              borderWidth: 0,
             },
           ]}
           {...rest}
