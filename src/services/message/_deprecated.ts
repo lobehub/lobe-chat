@@ -4,6 +4,7 @@ import {
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
+  CreateNewMessageParams,
   ModelRankItem,
   UIChatMessage,
 } from '@lobechat/types';
@@ -20,6 +21,13 @@ export class ClientService implements IMessageService {
     const { id } = await MessageModel.create(data);
 
     return id;
+  }
+
+  async createNewMessage(data: CreateNewMessageParams) {
+    const { id } = await MessageModel.create(data as any);
+    const messages = await this.getMessages(data.sessionId, data.topicId);
+
+    return { id, messages };
   }
 
   // @ts-ignore
