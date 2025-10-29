@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardStickyView } from 'react-native-keyboard-controller';
 
 import { agentSelectors, useAgentStore } from '@/store/agent';
 
@@ -51,7 +51,7 @@ export default function SystemRoleSetting() {
       showBack
       title={t('agentRoleEdit.title')}
     >
-      <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
+      <KeyboardStickyView style={{ flex: 1 }}>
         <TextArea
           autoFocus
           onChangeText={setEditValue}
@@ -60,7 +60,7 @@ export default function SystemRoleSetting() {
           value={editValue}
           variant={'borderless'}
         />
-      </KeyboardAvoidingView>
+      </KeyboardStickyView>
     </PageContainer>
   );
 }
