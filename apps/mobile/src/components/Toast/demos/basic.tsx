@@ -1,5 +1,5 @@
-import { Button, Text, useTheme, useToast } from '@lobehub/ui-rn';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Flexbox, Text, useTheme, useToast } from '@lobehub/ui-rn';
+import { ScrollView, StyleSheet } from 'react-native';
 
 export default function BasicDemo() {
   const token = useTheme();
@@ -14,7 +14,7 @@ export default function BasicDemo() {
   };
 
   const showWarning = () => {
-    toast.info('注意：此操作将会覆盖现有数据');
+    toast.warning('注意：此操作将会覆盖现有数据');
   };
 
   const showInfo = () => {
@@ -25,6 +25,12 @@ export default function BasicDemo() {
     toast.loading('加载中...', 3000);
   };
 
+  const showMultiple = () => {
+    toast.success('第一个 Toast');
+    setTimeout(() => toast.info('第二个 Toast'), 200);
+    setTimeout(() => toast.warning('第三个 Toast'), 400);
+  };
+
   const showLongContent = () => {
     toast.success(
       '这是一个非常长的标题用于测试文本截断功能，当文本内容超出显示区域时，应该能够正确地进行截断或者换行显示。',
@@ -32,9 +38,6 @@ export default function BasicDemo() {
   };
 
   const styles = StyleSheet.create({
-    buttonGroup: {
-      gap: 8,
-    },
     container: {
       flex: 1,
       padding: 16,
@@ -51,9 +54,9 @@ export default function BasicDemo() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: token.colorBgLayout }]}>
-      <View style={styles.section}>
+      <Flexbox style={styles.section}>
         <Text style={[styles.sectionTitle, { color: token.colorText }]}>基础类型</Text>
-        <View style={styles.buttonGroup}>
+        <Flexbox gap={8}>
           <Button
             onPress={showSuccess}
             style={{ backgroundColor: token.colorSuccess }}
@@ -77,17 +80,20 @@ export default function BasicDemo() {
           <Button onPress={showLoading} type="default">
             加载提示
           </Button>
-        </View>
-      </View>
+        </Flexbox>
+      </Flexbox>
 
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: token.colorText }]}>内容测试</Text>
-        <View style={styles.buttonGroup}>
-          <Button onPress={showLongContent} type="primary">
+      <Flexbox style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: token.colorText }]}>堆叠效果</Text>
+        <Flexbox gap={8}>
+          <Button onPress={showMultiple} type="primary">
+            显示多个 Toast（堆叠效果）
+          </Button>
+          <Button onPress={showLongContent} type="default">
             长内容测试
           </Button>
-        </View>
-      </View>
+        </Flexbox>
+      </Flexbox>
     </ScrollView>
   );
 }
