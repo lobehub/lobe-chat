@@ -16,7 +16,7 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
   drawerOverlay: {
     backgroundColor: isDarkMode
       ? 'rgba(0,0,0,.8)'
-      : rgba(mix(0.5, '#000', darken(0.2, token.colorBgLayout)), 0.2),
+      : rgba(mix(0.5, '#000', darken(0.2, token.colorBgLayout)), 0.3),
     borderColor: token.colorFillTertiary,
     borderRightWidth: StyleSheet.hairlineWidth,
   },
