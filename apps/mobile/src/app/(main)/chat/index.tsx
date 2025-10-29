@@ -8,7 +8,7 @@ import {
 } from 'lucide-react-native';
 import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { KeyboardStickyView } from 'react-native-keyboard-controller';
 
 import Hydration from '@/features/Hydration';
 import SideBar from '@/features/SideBar';
@@ -56,10 +56,10 @@ export default function ChatWithDrawer() {
         title={displayTitle}
         titleIcon={isInbox ? undefined : ChevronRightIcon}
       >
-        <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
+        <KeyboardStickyView offset={{ closed: 0, opened: 32 }} style={{ flex: 1 }}>
           <ChatList />
           <ChatInput />
-        </KeyboardAvoidingView>
+        </KeyboardStickyView>
       </PageContainer>
     );
   };

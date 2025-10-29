@@ -38,7 +38,7 @@ const PageContainer = memo<PageContainerProps>(
     const { styles, theme } = useStyles();
     const token = useTheme();
     const scrollY = useRef(new Animated.Value(0)).current;
-
+    const isColor = Boolean(!backgroundColor || typeof backgroundColor === 'string');
     const LARGE_TITLE_HEIGHT = 34 + token.paddingSM + token.paddingSM;
 
     const headerTitleOpacity = scrollY.interpolate({
@@ -149,19 +149,47 @@ const PageContainer = memo<PageContainerProps>(
       </Flexbox>
     );
 
+    const headerContentBackground = backgroundColor
+      ? isColor
+        ? backgroundColor
+        : (backgroundColor as any)[0]
+      : theme.colorBgLayout;
+
     const headerContent = (
-      <Flexbox
-        align={'center'}
-        height={HEADER_HEIGHT}
-        horizontal
-        justify={'space-between'}
-        paddingInline={8}
-        style={[styles.header]}
-      >
-        {leftContent}
-        {titleContent}
-        {extraContent}
-      </Flexbox>
+      <>
+        <View
+          style={[
+            styles.header,
+            {
+              backgroundColor: headerContentBackground,
+              height: 64,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              width: '100%',
+              zIndex: 10,
+            },
+          ]}
+        />
+        <Flexbox
+          align={'center'}
+          height={HEADER_HEIGHT}
+          horizontal
+          justify={'space-between'}
+          paddingInline={8}
+          style={[
+            styles.header,
+            {
+              backgroundColor: headerContentBackground,
+            },
+          ]}
+        >
+          {leftContent}
+          {titleContent}
+          {extraContent}
+        </Flexbox>
+      </>
     );
 
     if (largeTitleEnabled) {
@@ -187,8 +215,6 @@ const PageContainer = memo<PageContainerProps>(
       );
     }
 
-    const isColor = Boolean(!backgroundColor || typeof backgroundColor === 'string');
-
     const content = (
       <SafeAreaView
         edges={['top', 'bottom']}
@@ -207,7 +233,7 @@ const PageContainer = memo<PageContainerProps>(
     if (isColor) return content;
 
     return (
-      <LinearGradient colors={backgroundColor as any} style={{ flex: 1 }}>
+      <LinearGradient colors={backgroundColor as any} locations={[0.2, 1]} style={{ flex: 1 }}>
         {content}
       </LinearGradient>
     );

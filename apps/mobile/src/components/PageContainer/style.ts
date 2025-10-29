@@ -9,6 +9,7 @@ export const useStyles = createStyles(({ token }) => ({
   },
   header: {
     position: 'relative',
+    zIndex: 10,
   },
   largeTitle: {
     paddingBottom: token.paddingSM,
