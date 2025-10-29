@@ -75,9 +75,6 @@ const TopicSearch = () => {
             onSearch={handleSearch}
             onSubmitEditing={handleSearchSubmit}
             placeholder={t('search.placeholder')}
-            style={{
-              flex: 1,
-            }}
             value={searchText}
           />
           <Button

@@ -57,7 +57,7 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
 });
 
 export const InputSearch = forwardRef<RNTextInput, InputSearchProps>((props, ref) => {
-  const { debounceWait = 300, onChangeText, onSearch, ...restProps } = props;
+  const { debounceWait = 300, onChangeText, onSearch, style, ...restProps } = props;
   const theme = useTheme();
   const size = props.size ?? 'middle';
   const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
@@ -99,6 +99,12 @@ export const InputSearch = forwardRef<RNTextInput, InputSearchProps>((props, ref
   return (
     <Input
       ref={ref}
+      style={[
+        {
+          flex: 1,
+        },
+        style,
+      ]}
       {...restProps}
       onChangeText={handleChangeText}
       prefix={<Search color={theme.colorTextDescription} size={iconSize * 1.25} />}
