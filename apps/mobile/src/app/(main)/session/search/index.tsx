@@ -72,11 +72,7 @@ const SessionSearch = () => {
             onSearch={handleSearch}
             onSubmitEditing={handleSearchSubmit}
             placeholder={t('session.search.placeholder')}
-            style={{
-              flex: 1,
-            }}
             value={searchText}
-            variant="filled"
           />
           <Button
             onPress={() => router.back()}

@@ -33,6 +33,9 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
       disabled={disabled}
       glass={glass}
       horizontal
+      pressableStyle={{
+        flex: 1,
+      }}
       style={[styles.container, block && styles.block, disabled && { opacity: 0.6 }, style]}
       variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
     >

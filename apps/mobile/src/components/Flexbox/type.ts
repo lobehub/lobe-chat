@@ -25,6 +25,7 @@ export interface FlexboxProps extends PressableProps {
   padding?: DimensionValue | undefined;
   paddingBlock?: DimensionValue | undefined;
   paddingInline?: DimensionValue | undefined;
+  pressableStyle?: PressableProps['style'];
   width?: DimensionValue | undefined;
   wrap?: FlexWrap;
 }
