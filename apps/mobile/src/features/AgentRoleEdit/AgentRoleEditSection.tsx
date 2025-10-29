@@ -1,4 +1,4 @@
-import { Button, Divider, Empty, Flexbox, Markdown, Text } from '@lobehub/ui-rn';
+import { Button, Divider, Empty, Flexbox, Markdown } from '@lobehub/ui-rn';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
@@ -41,9 +41,6 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(
           <Button block onPress={onSystemRolePress} type="primary">
             {t('agentRoleEdit.editButton')}
           </Button>
-          <Text align={'center'} type={'secondary'}>
-            Token: {systemRole ? Math.ceil(systemRole.length / 4) : 0}
-          </Text>
         </Flexbox>
       </>
     );
