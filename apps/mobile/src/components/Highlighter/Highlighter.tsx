@@ -61,13 +61,7 @@ const Highlighter = memo<HighlighterProps>(
     }
 
     return (
-      <Block
-        pointerEvents={'box-none'}
-        style={[styles.container, style]}
-        testID="highlighter"
-        variant={variant}
-        {...rest}
-      >
+      <Block style={[styles.container, style]} testID="highlighter" variant={variant} {...rest}>
         {copyable && (
           <ActionIcon
             color={copied ? theme.colorSuccess : theme.colorTextDescription}

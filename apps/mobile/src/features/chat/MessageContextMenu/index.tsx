@@ -3,9 +3,9 @@ import { Block, BlockProps, BottomSheet, Cell, Divider, Flexbox, useToast } from
 import * as Clipboard from 'expo-clipboard';
 import { Copy, RefreshCw, Trash2 } from 'lucide-react-native';
 import type { FC, ReactNode } from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
@@ -25,6 +25,8 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
   const toast = useToast();
   const { styles } = useStyles();
   const [open, setOpen] = useState(false);
+  const longPressTimerRef = useRef<any>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const isUser = message.role === 'user';
 
@@ -79,19 +81,47 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
     }, 300);
   };
 
+  const clearLongPressTimer = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+    touchStartRef.current = null;
+  };
+
   return (
     <>
-      <Block
-        longPressEffect
-        onLongPress={() => {
-          setOpen(true);
-          hapticsEffect();
+      <View
+        onTouchCancel={clearLongPressTimer}
+        onTouchEnd={clearLongPressTimer}
+        onTouchMove={(e) => {
+          // 检查移动距离，超过10px就取消长按
+          const touch = e.nativeEvent.touches[0];
+          if (touchStartRef.current && touch) {
+            const dx = Math.abs(touch.pageX - touchStartRef.current.x);
+            const dy = Math.abs(touch.pageY - touchStartRef.current.y);
+            if (dx > 10 || dy > 10) {
+              clearLongPressTimer();
+            }
+          }
         }}
-        variant={'borderless'}
-        {...rest}
+        onTouchStart={(e) => {
+          // 记录初始触摸位置
+          const touch = e.nativeEvent.touches[0];
+          if (touch) {
+            touchStartRef.current = { x: touch.pageX, y: touch.pageY };
+          }
+          // 开始触摸时启动长按计时器
+          longPressTimerRef.current = setTimeout(() => {
+            setOpen(true);
+            hapticsEffect();
+          }, 500);
+        }}
       >
-        {children}
-      </Block>
+        <Block variant={'borderless'} {...rest}>
+          {children}
+        </Block>
+      </View>
       <BottomSheet
         enablePanDownToClose
         onClose={() => setOpen(false)}

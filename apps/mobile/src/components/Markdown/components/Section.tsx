@@ -19,7 +19,7 @@ const Section = memo<SectionProps>(({ children, ...rest }) => {
   }
 
   return (
-    <View pointerEvents={'box-none'}>
+    <View>
       <TextWrapper>{children}</TextWrapper>
     </View>
   );

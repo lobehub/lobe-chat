@@ -89,8 +89,6 @@ export const useMarkdownStyles = createStyles(
       },
       list: {
         marginBlock: options.fontSize * options.marginMultiple * 0.4,
-
-        pointerEvents: 'box-none',
       },
       listItem: {
         alignItems: 'flex-start',
@@ -98,11 +96,9 @@ export const useMarkdownStyles = createStyles(
         flexDirection: 'row',
         gap: options.fontSize / 2,
         marginBlock: options.fontSize * options.marginMultiple * 0.2,
-        pointerEvents: 'box-none',
       },
       listNested: {
         marginLeft: options.fontSize / 2,
-        pointerEvents: 'box-none',
       },
       listOrdered: {},
       listOrderedIcon: {
@@ -154,20 +150,15 @@ export const useMarkdownStyles = createStyles(
         borderWidth: 1,
         marginBlock: options.fontSize * options.marginMultiple * 0.4,
         overflow: 'hidden',
-        pointerEvents: 'box-none',
       },
-      tableBody: {
-        pointerEvents: 'box-none',
-      },
+      tableBody: {},
       tableHeader: {
         backgroundColor: token.colorFillQuaternary,
-        pointerEvents: 'box-none',
       },
       tableHeaderCell: {
         fontWeight: 'bold',
         paddingBlock: currentFontSize * 0.75,
         paddingInline: currentFontSize,
-        pointerEvents: 'box-none',
         textAlign: 'left',
         width: 150,
       },
@@ -175,12 +166,10 @@ export const useMarkdownStyles = createStyles(
         borderBottomWidth: 1,
         borderColor: token.colorBorderSecondary,
         flexDirection: 'row',
-        pointerEvents: 'box-none',
       },
       tableRowCell: {
         paddingBlock: currentFontSize * 0.75,
         paddingInline: currentFontSize,
-        pointerEvents: 'box-none',
         width: 150,
       },
       text: {

@@ -19,7 +19,7 @@ export const OL: Components['ol'] = memo(({ children }) => {
 
   return (
     <ListContext.Provider value={{ getIndex: getItemIndex, type: 'ol' }}>
-      <View pointerEvents={'box-none'} style={[styles.list, styles.listOrdered]}>
+      <View style={[styles.list, styles.listOrdered]}>
         <TextWrapper>{children}</TextWrapper>
       </View>
     </ListContext.Provider>
@@ -32,7 +32,7 @@ export const UL: Components['ul'] = memo(({ children }) => {
   if (typeof children === 'string') return null;
   return (
     <ListContext.Provider value={{ getIndex: () => 0, type: 'ul' }}>
-      <View pointerEvents={'box-none'} style={[styles.list, styles.listUnordered]}>
+      <View style={[styles.list, styles.listUnordered]}>
         <TextWrapper>{children}</TextWrapper>
       </View>
     </ListContext.Provider>
@@ -71,8 +71,8 @@ export const LI: Components['li'] = memo(({ children }) => {
 
   return (
     <>
-      <View pointerEvents={'box-none'} style={styles.listItem}>
-        <View pointerEvents={'box-none'}>
+      <View style={styles.listItem}>
+        <View>
           {content.prefix ||
             (type === 'ul' ? (
               <Text style={[styles.text, styles.listUnorderedIcon]}>-</Text>
@@ -87,7 +87,7 @@ export const LI: Components['li'] = memo(({ children }) => {
         )}
       </View>
       {content.end && (
-        <View pointerEvents={'box-none'} style={styles.listNested}>
+        <View style={styles.listNested}>
           <TextWrapper>{content.end}</TextWrapper>
         </View>
       )}
