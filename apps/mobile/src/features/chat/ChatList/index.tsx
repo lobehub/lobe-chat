@@ -1,8 +1,8 @@
 import { UIChatMessage } from '@lobechat/types';
-import { Flexbox, MaskShadow } from '@lobehub/ui-rn';
+import { Flexbox } from '@lobehub/ui-rn';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { useKeyboardHandler } from 'react-native-keyboard-controller';
 import { runOnJS } from 'react-native-reanimated';
 import { NativeScrollEvent } from 'react-native/Libraries/Components/ScrollView/ScrollView';
@@ -133,29 +133,28 @@ export default function ChatListChatList({ style }: ChatListProps) {
   } else {
     content = (
       <>
-        <MaskShadow size={32} style={{ flex: 1 }}>
-          <FlashList
-            ListEmptyComponent={renderEmptyComponent}
-            data={messages}
-            getItemType={(chatMessage) => {
-              return chatMessage.role;
-            }}
-            initialScrollIndex={messages.length - 1}
-            keyExtractor={keyExtractor}
-            maintainVisibleContentPosition={{
-              autoscrollToBottomThreshold: isLoading || isGenerating ? 0.2 : undefined,
-              // startRenderingFromBottom: true,
-            }}
-            onScroll={handleScroll}
-            overrideProps={{
-              paddingBottom: 16,
-            }}
-            ref={listRef}
-            renderItem={renderItem}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-          />
-        </MaskShadow>
+        <FlashList
+          ListEmptyComponent={renderEmptyComponent}
+          ListFooterComponent={<View style={{ height: 48 }} />}
+          data={messages}
+          getItemType={(chatMessage) => {
+            return chatMessage.role;
+          }}
+          initialScrollIndex={messages.length - 1}
+          keyExtractor={keyExtractor}
+          maintainVisibleContentPosition={{
+            autoscrollToBottomThreshold: isLoading || isGenerating ? 0.2 : undefined,
+            // startRenderingFromBottom: true,
+          }}
+          onScroll={handleScroll}
+          ref={listRef}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -24,
+          }}
+        />
         <AutoScroll
           atBottom={atBottom}
           onScrollToBottom={(type) => {

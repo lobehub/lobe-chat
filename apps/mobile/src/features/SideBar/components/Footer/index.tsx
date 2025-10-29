@@ -13,7 +13,12 @@ export default function SessionFooter() {
   const userAvatar = user?.avatar || DEFAULT_USER_AVATAR;
 
   return (
-    <Flexbox paddingBlock={16} paddingInline={12}>
+    <Flexbox
+      paddingInline={12}
+      style={{
+        paddingBottom: 16,
+      }}
+    >
       <Link asChild href="/setting">
         <Block
           align={'center'}
