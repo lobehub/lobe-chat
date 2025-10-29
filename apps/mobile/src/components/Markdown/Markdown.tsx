@@ -63,7 +63,7 @@ const Markdown = memo<MarkdownProps>((props) => {
       showFootnotes={showFootnotes}
       variant={variant}
     >
-      <View pointerEvents={'box-none'} style={style}>
+      <View style={style}>
         <Render enableStream={enableStream} reactMarkdownProps={reactMarkdownProps} {...rest}>
           {children}
         </Render>

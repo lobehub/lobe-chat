@@ -75,11 +75,7 @@ const ChatBubble = memo(
           {isUser ? (
             <Flexbox horizontal justify={'flex-end'}>
               <Block
-                style={[
-                  { pointerEvents: 'box-none' },
-                  isUser && styles.userBubble,
-                  hasError && styles.errorBubble,
-                ]}
+                style={[isUser && styles.userBubble, hasError && styles.errorBubble]}
                 variant={isUser ? 'outlined' : 'borderless'}
               >
                 {content}
@@ -87,10 +83,7 @@ const ChatBubble = memo(
             </Flexbox>
           ) : (
             <Flexbox gap={4}>
-              <Block
-                style={[{ pointerEvents: 'box-none' }, hasError && styles.errorBubble]}
-                variant={'borderless'}
-              >
+              <Block style={[hasError && styles.errorBubble]} variant={'borderless'}>
                 {content}
               </Block>
               {showActions && showActionsBar && !isLoading && (message.content || hasError) && (

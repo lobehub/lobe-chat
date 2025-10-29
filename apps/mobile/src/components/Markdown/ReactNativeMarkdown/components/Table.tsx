@@ -28,7 +28,6 @@ export const Table: Components['table'] = memo(({ children }) => {
         showsHorizontalScrollIndicator={false}
       >
         <View
-          pointerEvents={'box-none'}
           style={{
             minWidth: '100%',
           }}
