@@ -1,7 +1,9 @@
 import chroma from 'chroma-js';
 import { Check } from 'lucide-react-native';
 import { memo, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
+
+import Block from '@/components/Block';
 
 import ConicGradientPattern from './ConicGradientPatern';
 import { useStyles } from './style';
@@ -55,12 +57,9 @@ const ColorSwatches = memo<ColorSwatchesProps>(
           const isColorTransparent = isTransparent(color);
 
           return (
-            <TouchableOpacity
-              accessibilityLabel={
-                typeof colorItem.title === 'string' ? colorItem.title : `Color ${index + 1}`
-              }
+            <Block
               accessibilityRole="button"
-              activeOpacity={0.8}
+              glass
               key={colorItem.key || index}
               onPress={() => handleColorSelect(colorItem.color)}
               style={[
@@ -89,7 +88,7 @@ const ColorSwatches = memo<ColorSwatchesProps>(
                   style={styles.checkIcon}
                 />
               )}
-            </TouchableOpacity>
+            </Block>
           );
         })}
       </View>
