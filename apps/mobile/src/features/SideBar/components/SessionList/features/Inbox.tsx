@@ -32,7 +32,6 @@ const Inbox = () => {
         paddingRight: 8,
       }}
       title={t('inbox.title', { ns: 'chat' })}
-      variant={'filled'}
     />
   );
 };
