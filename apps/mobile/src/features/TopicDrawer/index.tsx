@@ -1,4 +1,4 @@
-import { ActionIcon, Flexbox, PageContainer, Text } from '@lobehub/ui-rn';
+import { ActionIcon, Block, Flexbox, Text } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { SearchIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
@@ -6,12 +6,13 @@ import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { HEADER_HEIGHT } from '@/_const/common';
 import { DRAWER_WIDTH } from '@/_const/theme';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import { useGlobalStore } from '@/store/global';
-import { isIOS } from '@/utils/detection';
 
 import TopicList from './components/TopicList';
 import { useStyles } from './style';
@@ -21,7 +22,7 @@ import { useStyles } from './style';
  * 负责展示当前会话下的所有topic列表
  */
 const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const topics = useChatStore(topicSelectors.currentTopicLength);
   const winDim = useWindowDimensions();
   const { t } = useTranslation('topic');
@@ -48,7 +49,7 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
         styles.drawerBackground,
         { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
       ]}
-      drawerType={isIOS ? 'slide' : 'front'}
+      drawerType={'front'}
       hideStatusBarOnOpen={false}
       onClose={() => {
         onCloseDrawer();
@@ -59,28 +60,42 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <PageContainer
-          extra={
-            <ActionIcon
-              icon={SearchIcon}
-              onPress={handleOpenSearch}
-              size={{
-                blockSize: 32,
-                borderRadius: 16,
-                size: 16,
-              }}
-            />
-          }
-          left={
-            <Flexbox gap={4} horizontal style={{ marginLeft: 4 }}>
-              <Text>{t('title')}</Text>
-              {topics > 0 ? <Text>{topics}</Text> : undefined}
-            </Flexbox>
-          }
-          style={styles.drawerBackground}
+        <Block
+          borderRadius={44}
+          flex={1}
+          glass
+          style={{
+            backgroundColor: theme.colorBgLayout,
+          }}
+          variant={'outlined'}
         >
-          <TopicList />
-        </PageContainer>
+          <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }} testID="page-container">
+            <Flexbox
+              align={'center'}
+              gap={8}
+              height={HEADER_HEIGHT}
+              horizontal
+              justify={'space-between'}
+              paddingBlock={4}
+              paddingInline={8}
+            >
+              <Flexbox gap={4} horizontal style={{ marginLeft: 6 }}>
+                <Text>{t('title')}</Text>
+                {topics > 0 ? <Text>{topics}</Text> : undefined}
+              </Flexbox>
+              <ActionIcon
+                icon={SearchIcon}
+                onPress={handleOpenSearch}
+                size={{
+                  blockSize: 32,
+                  borderRadius: 16,
+                  size: 16,
+                }}
+              />
+            </Flexbox>
+            <TopicList />
+          </SafeAreaView>
+        </Block>
       )}
       swipeEdgeWidth={50}
       swipeEnabled={true}
