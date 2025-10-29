@@ -23,6 +23,7 @@ const Flexbox = memo<FlexboxProps>(
     paddingInline,
     onPress,
     onLongPress,
+    pressableStyle,
     glass,
     ...rest
   }) => {
@@ -50,6 +51,7 @@ const Flexbox = memo<FlexboxProps>(
             delayLongPress={onLongPress ? 500 : undefined}
             onLongPress={onLongPress}
             onPress={onPress}
+            style={pressableStyle}
             unstable_pressDelay={0}
             {...rest}
           >

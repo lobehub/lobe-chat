@@ -27,6 +27,9 @@ const TextArea = forwardRef<RNTextInput, TextAreaProps>((props, ref) => {
   return (
     <Block
       disabled={disabled}
+      pressableStyle={{
+        flex: 1,
+      }}
       style={[block && styles.block, disabled && { opacity: 0.6 }, style]}
       variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
     >

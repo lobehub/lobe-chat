@@ -1,6 +1,8 @@
+import type { CenterProps } from '@/components/Center';
+
 import type { EmojiType } from './utils';
 
-export interface FluentEmojiProps {
+export interface FluentEmojiProps extends Omit<CenterProps, 'children'> {
   /**
    * 要显示的表情符号
    */
