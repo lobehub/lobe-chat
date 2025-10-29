@@ -8,6 +8,12 @@
   },
   "loading": "Зареждане...",
   "newTopic": "Нова тема",
+  "search": {
+    "emptyResult": "Няма намерени съвпадащи теми",
+    "placeholder": "Търсене на теми...",
+    "recentSearches": "Скорошни търсения",
+    "title": "Търсене на теми"
+  },
   "searchPlaceholder": "Търсене на тема...",
   "temp": "Временен",
   "title": "Тема"

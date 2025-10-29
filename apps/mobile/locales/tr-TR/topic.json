@@ -8,6 +8,12 @@
   },
   "loading": "Yükleniyor...",
   "newTopic": "Yeni Konu",
+  "search": {
+    "emptyResult": "Eşleşen konu bulunamadı",
+    "placeholder": "Konu ara...",
+    "recentSearches": "Son aramalar",
+    "title": "Konu ara"
+  },
   "searchPlaceholder": "Konu ara...",
   "temp": "Geçici",
   "title": "Konu"

@@ -2,11 +2,13 @@
   "actions": {
     "add": "Add",
     "cancel": "Cancel",
+    "clear": "Clear",
     "confirm": "Confirm",
     "continue": "Continue",
     "copy": "Copy",
     "delete": "Delete",
     "edit": "Edit",
+    "more": "More",
     "notNow": "Not Now",
     "regenerate": "Regenerate",
     "retry": "Retry",
@@ -17,7 +19,10 @@
     "fetchError": "Failed to fetch assistant list, please try again later",
     "noData": "No assistant data available",
     "noMatch": "No matching assistant found",
-    "search": "Search assistants..."
+    "recentSearches": "Recent Searches",
+    "search": "Search assistants...",
+    "searchNoResult": "No matching assistants found",
+    "searchPlaceholder": "Enter keywords to search"
   },
   "defaultSession": "Custom Assistant",
   "navigation": {

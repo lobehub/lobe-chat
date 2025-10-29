@@ -12,6 +12,8 @@ import type { CellProps } from './type';
 const Cell = memo<CellProps>(
   ({
     description,
+    arrowIconProps,
+    extraProps,
     title,
     showArrow = true,
     danger,
@@ -55,7 +57,12 @@ const Cell = memo<CellProps>(
         }}
       >
         {typeof extra === 'string' ? (
-          <Text ellipsis style={{ maxWidth: 180 }} type={danger ? 'danger' : 'secondary'}>
+          <Text
+            ellipsis
+            type={danger ? 'danger' : 'secondary'}
+            {...extraProps}
+            style={[{ maxWidth: 180 }, extraProps?.style]}
+          >
             {extra}
           </Text>
         ) : (
@@ -66,6 +73,7 @@ const Cell = memo<CellProps>(
             color={theme.colorTextDescription}
             icon={arrowIcon || ChevronRight}
             size={'small'}
+            {...arrowIconProps}
           />
         )}
       </Flexbox>

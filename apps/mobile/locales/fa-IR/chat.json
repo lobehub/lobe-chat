@@ -34,7 +34,12 @@
     "createFirst": "اولین جلسه چت خود را ایجاد کنید",
     "empty": "جلسه‌ای وجود ندارد",
     "search": {
-      "placeholder": "جستجوی جلسه"
+      "discoverAssistants": "دستیارهای بازار",
+      "emptyResult": "دستیار مطابقی یافت نشد",
+      "myAssistants": "دستیارهای من",
+      "placeholder": "دستیار مورد علاقه‌ات را پیدا کن...",
+      "recentSearches": "جستجوهای اخیر",
+      "title": "جستجو"
     },
     "title": "گفتگو آزاد"
   },

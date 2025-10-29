@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Uitgeschakeld",
+      "emptySearch": "Geen overeenkomende aanbieder gevonden",
       "enabled": "Ingeschakeld",
       "loadFailed": "Lijst met providers laden mislukt"
     },

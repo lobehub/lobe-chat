@@ -2,11 +2,13 @@
   "actions": {
     "add": "Dodaj",
     "cancel": "Anuluj",
+    "clear": "Wyczyść",
     "confirm": "Potwierdź",
     "continue": "Kontynuuj",
     "copy": "Kopiuj",
     "delete": "Usuń",
     "edit": "Edytuj",
+    "more": "Więcej",
     "notNow": "Nie teraz",
     "regenerate": "Wygeneruj ponownie",
     "retry": "Spróbuj ponownie",
@@ -17,7 +19,10 @@
     "fetchError": "Nie udało się pobrać listy asystentów, spróbuj ponownie później",
     "noData": "Brak danych asystenta",
     "noMatch": "Nie znaleziono pasującego asystenta",
-    "search": "Szukaj asystenta..."
+    "recentSearches": "Ostatnie wyszukiwania",
+    "search": "Szukaj asystenta...",
+    "searchNoResult": "Nie znaleziono pasującego asystenta",
+    "searchPlaceholder": "Wprowadź słowo kluczowe do wyszukania"
   },
   "defaultSession": "Niestandardowy asystent",
   "navigation": {

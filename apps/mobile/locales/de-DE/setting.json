@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Deaktiviert",
+      "emptySearch": "Keine passenden Anbieter gefunden",
       "enabled": "Aktiviert",
       "loadFailed": "Laden der Anbieter-Liste fehlgeschlagen"
     },

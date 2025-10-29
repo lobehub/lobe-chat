@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "未啟用",
+      "emptySearch": "未找到符合條件的服務提供者",
       "enabled": "已啟用",
       "loadFailed": "服務商列表載入失敗"
     },

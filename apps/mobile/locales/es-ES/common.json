@@ -2,11 +2,13 @@
   "actions": {
     "add": "Agregar",
     "cancel": "Cancelar",
+    "clear": "Borrar",
     "confirm": "Confirmar",
     "continue": "Continuar",
     "copy": "Copiar",
     "delete": "Eliminar",
     "edit": "Editar",
+    "more": "Más",
     "notNow": "Ahora no",
     "regenerate": "Regenerar",
     "retry": "Reintentar",
@@ -17,7 +19,10 @@
     "fetchError": "Error al obtener la lista de asistentes, por favor inténtelo de nuevo más tarde",
     "noData": "No hay datos de asistentes disponibles",
     "noMatch": "No se encontró ningún asistente que coincida",
-    "search": "Buscar asistente..."
+    "recentSearches": "Búsquedas recientes",
+    "search": "Buscar asistente...",
+    "searchNoResult": "No se encontraron asistentes coincidentes",
+    "searchPlaceholder": "Introduce palabras clave para buscar"
   },
   "defaultSession": "Asistente personalizado",
   "navigation": {

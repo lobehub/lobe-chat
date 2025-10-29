@@ -8,6 +8,12 @@
   },
   "loading": "Cargando...",
   "newTopic": "Nuevo tema",
+  "search": {
+    "emptyResult": "No se encontraron temas coincidentes",
+    "placeholder": "Buscar temas...",
+    "recentSearches": "Búsquedas recientes",
+    "title": "Buscar temas"
+  },
   "searchPlaceholder": "Buscar temas...",
   "temp": "Temporal",
   "title": "Tema"

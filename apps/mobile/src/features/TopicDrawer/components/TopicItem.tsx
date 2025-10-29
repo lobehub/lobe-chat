@@ -14,6 +14,10 @@ import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 
 interface TopicItemProps {
+  /**
+   * 自定义点击事件，如果提供则覆盖默认行为
+   */
+  onPress?: () => void;
   topic: ChatTopic;
 }
 
@@ -21,7 +25,7 @@ interface TopicItemProps {
  * TopicItem - Topic列表项组件
  * 参考web端TopicItem实现，适配React Native
  */
-const TopicItem = memo<TopicItemProps>(({ topic }) => {
+const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
   const { t } = useTranslation(['topic', 'common']);
   const theme = useTheme();
 
@@ -33,10 +37,14 @@ const TopicItem = memo<TopicItemProps>(({ topic }) => {
   const isActive = activeTopicId === topic.id;
 
   const handlePress = () => {
-    // 切换到选中的topic
-    switchTopic(topic.id);
-    // 关闭抽屉
-    setTopicDrawerOpen(false);
+    if (customOnPress) {
+      // 使用自定义点击行为
+      customOnPress();
+    } else {
+      // 默认行为：切换到选中的topic并关闭抽屉
+      switchTopic(topic.id);
+      setTopicDrawerOpen(false);
+    }
   };
 
   const options: DropdownOptionItem[] = [

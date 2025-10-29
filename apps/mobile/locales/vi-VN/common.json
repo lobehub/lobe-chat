@@ -2,11 +2,13 @@
   "actions": {
     "add": "Thêm",
     "cancel": "Hủy",
+    "clear": "Xóa",
     "confirm": "Xác nhận",
     "continue": "Tiếp tục",
     "copy": "Sao chép",
     "delete": "Xóa",
     "edit": "Chỉnh sửa",
+    "more": "Thêm",
     "notNow": "Không phải bây giờ",
     "regenerate": "Tạo lại",
     "retry": "Thử lại",
@@ -17,7 +19,10 @@
     "fetchError": "Lấy danh sách trợ lý thất bại, vui lòng thử lại sau",
     "noData": "Chưa có dữ liệu trợ lý",
     "noMatch": "Không tìm thấy trợ lý phù hợp",
-    "search": "Tìm kiếm trợ lý..."
+    "recentSearches": "Tìm kiếm gần đây",
+    "search": "Tìm kiếm trợ lý...",
+    "searchNoResult": "Không tìm thấy trợ lý phù hợp",
+    "searchPlaceholder": "Vui lòng nhập từ khóa tìm kiếm"
   },
   "defaultSession": "Trợ lý tùy chỉnh",
   "navigation": {

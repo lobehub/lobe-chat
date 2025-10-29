@@ -2,11 +2,13 @@
   "actions": {
     "add": "Toevoegen",
     "cancel": "Annuleren",
+    "clear": "Wissen",
     "confirm": "Bevestigen",
     "continue": "Doorgaan",
     "copy": "Kopiëren",
     "delete": "Verwijderen",
     "edit": "Bewerken",
+    "more": "Meer",
     "notNow": "Niet nu",
     "regenerate": "Opnieuw genereren",
     "retry": "Opnieuw proberen",
@@ -17,7 +19,10 @@
     "fetchError": "Fout bij het ophalen van de assistentenlijst, probeer het later opnieuw",
     "noData": "Geen assistentgegevens beschikbaar",
     "noMatch": "Geen overeenkomende assistent gevonden",
-    "search": "Assistent zoeken..."
+    "recentSearches": "Recente zoekopdrachten",
+    "search": "Assistent zoeken...",
+    "searchNoResult": "Geen overeenkomende assistent gevonden",
+    "searchPlaceholder": "Voer een zoekterm in"
   },
   "defaultSession": "Aangepaste assistent",
   "navigation": {

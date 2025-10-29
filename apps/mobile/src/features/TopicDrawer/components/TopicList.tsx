@@ -13,6 +13,20 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
 import TopicItem from './TopicItem';
+import TopicItemSkeleton from './TopicItemSkeleton';
+
+// 骨架屏列表
+const TopicSkeletonList = memo(() => {
+  return (
+    <Flexbox>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <TopicItemSkeleton key={index} />
+      ))}
+    </Flexbox>
+  );
+});
+
+TopicSkeletonList.displayName = 'TopicSkeletonList';
 
 type ListItem = { data: ChatTopic; type: 'topic' } | { type: 'default' };
 
@@ -28,6 +42,7 @@ const TopicList = memo(() => {
   useFetchTopics();
 
   const topics = useChatStore((s) => topicSelectors.currentTopics(s));
+  const topicsInit = useChatStore((s) => s.topicsInit);
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const activeId = useSessionStore((s) => s.activeId);
   const setTopicDrawerOpen = useGlobalStore((s) => s.setTopicDrawerOpen);
@@ -50,6 +65,11 @@ const TopicList = memo(() => {
 
     return items;
   }, [topics]);
+
+  // 加载中显示骨架屏
+  if (!topicsInit) {
+    return <TopicSkeletonList />;
+  }
 
   // 如果是inbox且没有topics，显示提示信息
   if (activeId === 'inbox' && topics?.length === 0) {

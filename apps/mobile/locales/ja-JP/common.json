@@ -2,11 +2,13 @@
   "actions": {
     "add": "追加",
     "cancel": "キャンセル",
+    "clear": "クリア",
     "confirm": "確認",
     "continue": "続行",
     "copy": "コピー",
     "delete": "削除",
     "edit": "編集",
+    "more": "さらに表示",
     "notNow": "今はしない",
     "regenerate": "再生成",
     "retry": "再試行",
@@ -17,7 +19,10 @@
     "fetchError": "アシスタントリストの取得に失敗しました。後でもう一度お試しください。",
     "noData": "アシスタントデータがありません",
     "noMatch": "一致するアシスタントが見つかりません",
-    "search": "アシスタントを検索..."
+    "recentSearches": "最近の検索",
+    "search": "アシスタントを検索...",
+    "searchNoResult": "一致するアシスタントが見つかりませんでした",
+    "searchPlaceholder": "検索キーワードを入力してください"
   },
   "defaultSession": "カスタムアシスタント",
   "navigation": {

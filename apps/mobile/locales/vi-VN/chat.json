@@ -34,7 +34,12 @@
     "createFirst": "Tạo cuộc trò chuyện đầu tiên của bạn",
     "empty": "Chưa có cuộc trò chuyện nào",
     "search": {
-      "placeholder": "Tìm kiếm cuộc trò chuyện"
+      "discoverAssistants": "Trợ lý thị trường",
+      "emptyResult": "Không tìm thấy trợ lý phù hợp",
+      "myAssistants": "Trợ lý của tôi",
+      "placeholder": "Tìm trợ lý bạn yêu thích...",
+      "recentSearches": "Tìm kiếm gần đây",
+      "title": "Tìm kiếm"
     },
     "title": "Trò chuyện tự do"
   },

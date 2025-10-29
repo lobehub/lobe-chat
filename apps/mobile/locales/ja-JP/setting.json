@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "無効",
+      "emptySearch": "一致するプロバイダーが見つかりませんでした",
       "enabled": "有効",
       "loadFailed": "プロバイダーリストの読み込みに失敗しました"
     },

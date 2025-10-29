@@ -8,6 +8,12 @@
   },
   "loading": "جارٍ التحميل...",
   "newTopic": "موضوع جديد",
+  "search": {
+    "emptyResult": "لم يتم العثور على مواضيع مطابقة",
+    "placeholder": "ابحث عن موضوع...",
+    "recentSearches": "عمليات البحث الأخيرة",
+    "title": "البحث عن موضوع"
+  },
   "searchPlaceholder": "ابحث عن موضوع...",
   "temp": "مؤقت",
   "title": "الموضوع"

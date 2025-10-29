@@ -8,6 +8,12 @@
   },
   "loading": "Загрузка...",
   "newTopic": "Новая тема",
+  "search": {
+    "emptyResult": "Совпадающие темы не найдены",
+    "placeholder": "Поиск тем...",
+    "recentSearches": "Недавние поиски",
+    "title": "Поиск тем"
+  },
   "searchPlaceholder": "Поиск темы...",
   "temp": "Временная",
   "title": "Тема"
