@@ -35,7 +35,7 @@ const ChatBubble = memo(
     const isUser = message.role === 'user';
     const hasError = !!message.error;
 
-    const { styles } = useStyles();
+    const { styles, theme } = useStyles();
     const { fontSize } = useSettingStore();
 
     const content = useMemo(() => {
@@ -65,7 +65,7 @@ const ChatBubble = memo(
             />
             {showTitle && message?.meta?.title && <Text weight={500}>{message?.meta?.title}</Text>}
             {showTime && message?.createdAt && (
-              <Text fontSize={12} type={'secondary'}>
+              <Text color={theme.colorTextQuaternary} fontSize={11}>
                 {formatTime(message.createdAt)}
               </Text>
             )}
