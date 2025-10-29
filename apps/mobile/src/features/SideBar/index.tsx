@@ -1,17 +1,17 @@
 import { LobeHub } from '@lobehub/icons-rn';
-import { ActionIcon, Flexbox, PageContainer } from '@lobehub/ui-rn';
+import { ActionIcon, Block, Flexbox } from '@lobehub/ui-rn';
 import { Link, router } from 'expo-router';
 import { CirclePlus, CompassIcon, LucideComponent } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 import { InteractionManager, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ICON_SIZE } from '@/_const/common';
+import { HEADER_HEIGHT, ICON_SIZE } from '@/_const/common';
 import { DRAWER_WIDTH } from '@/_const/theme';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { isIOS } from '@/utils/detection';
 import { isDev } from '@/utils/env';
 
 import Footer from './components/Footer';
@@ -60,7 +60,7 @@ export default function SideBar({ children }: { children: ReactNode }) {
         styles.drawerBackground,
         { width: Math.round(Math.min(DRAWER_WIDTH, winDim.width * 0.8)) },
       ]}
-      drawerType={isIOS ? 'slide' : 'front'}
+      drawerType={'front'}
       hideStatusBarOnOpen={false}
       onClose={() => {
         onCloseDrawer();
@@ -71,13 +71,42 @@ export default function SideBar({ children }: { children: ReactNode }) {
       open={drawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <PageContainer
-          extra={
-            <Flexbox align={'center'} gap={4} horizontal>
-              {isDev && (
-                <Link asChild href="/playground">
+        <Block
+          borderRadius={44}
+          flex={1}
+          glass
+          style={{
+            backgroundColor: theme.colorBgLayout,
+          }}
+          variant={'outlined'}
+        >
+          <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }} testID="page-container">
+            <Flexbox
+              align={'center'}
+              gap={8}
+              height={HEADER_HEIGHT}
+              horizontal
+              justify={'space-between'}
+              paddingBlock={4}
+              paddingInline={8}
+            >
+              <LobeHub.Text color={theme.colorText} size={20} style={{ marginLeft: 4 }} />
+              <Flexbox align={'center'} gap={4} horizontal>
+                {isDev && (
+                  <Link asChild href="/playground">
+                    <ActionIcon
+                      icon={LucideComponent}
+                      size={{
+                        blockSize: 36,
+                        borderRadius: 36,
+                        size: ICON_SIZE,
+                      }}
+                    />
+                  </Link>
+                )}
+                <Link asChild href="/discover/assistant">
                   <ActionIcon
-                    icon={LucideComponent}
+                    icon={CompassIcon}
                     size={{
                       blockSize: 36,
                       borderRadius: 36,
@@ -85,35 +114,22 @@ export default function SideBar({ children }: { children: ReactNode }) {
                     }}
                   />
                 </Link>
-              )}
-              <Link asChild href="/discover/assistant">
                 <ActionIcon
-                  icon={CompassIcon}
+                  icon={CirclePlus}
+                  loading={isCreatingSession}
+                  onPress={() => createNewSession()}
                   size={{
                     blockSize: 36,
                     borderRadius: 36,
                     size: ICON_SIZE,
                   }}
                 />
-              </Link>
-              <ActionIcon
-                icon={CirclePlus}
-                loading={isCreatingSession}
-                onPress={() => createNewSession()}
-                size={{
-                  blockSize: 36,
-                  borderRadius: 36,
-                  size: ICON_SIZE,
-                }}
-              />
+              </Flexbox>
             </Flexbox>
-          }
-          left={<LobeHub.Text color={theme.colorText} size={20} style={{ marginLeft: 8 }} />}
-          style={styles.drawerBackground}
-        >
-          <SessionList />
-          <Footer />
-        </PageContainer>
+            <SessionList />
+            <Footer />
+          </SafeAreaView>
+        </Block>
       )}
       swipeEdgeWidth={50}
       swipeEnabled={true}
