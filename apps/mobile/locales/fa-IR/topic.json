@@ -8,6 +8,12 @@
   },
   "loading": "در حال بارگذاری...",
   "newTopic": "موضوع جدید",
+  "search": {
+    "emptyResult": "موضوعی مطابق با جستجوی شما یافت نشد",
+    "placeholder": "جستجوی موضوع...",
+    "recentSearches": "جستجوهای اخیر",
+    "title": "جستجوی موضوع"
+  },
   "searchPlaceholder": "جستجوی موضوع...",
   "temp": "موقت",
   "title": "موضوع"

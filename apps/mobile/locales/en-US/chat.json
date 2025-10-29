@@ -34,7 +34,12 @@
     "createFirst": "Create your first chat session",
     "empty": "No sessions yet",
     "search": {
-      "placeholder": "Search sessions"
+      "discoverAssistants": "Marketplace Assistants",
+      "emptyResult": "No matching assistant found",
+      "myAssistants": "My Assistants",
+      "placeholder": "Find your favorite assistant...",
+      "recentSearches": "Recent Searches",
+      "title": "Search"
     },
     "title": "Casual Chat"
   },

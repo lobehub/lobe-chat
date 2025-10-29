@@ -8,6 +8,12 @@
   },
   "loading": "載入中...",
   "newTopic": "新建話題",
+  "search": {
+    "emptyResult": "未找到符合的主題",
+    "placeholder": "搜尋主題...",
+    "recentSearches": "最近搜尋",
+    "title": "搜尋主題"
+  },
   "searchPlaceholder": "搜尋話題...",
   "temp": "臨時",
   "title": "話題"

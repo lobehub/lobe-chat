@@ -1,5 +1,6 @@
+import { debounce } from 'lodash-es';
 import { Eye, EyeOff, Search } from 'lucide-react-native';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TextInput as RNTextInput, TouchableOpacity, View } from 'react-native';
 
 import { useTheme, useThemeMode } from '@/components/styles';
@@ -7,7 +8,7 @@ import { useTheme, useThemeMode } from '@/components/styles';
 import Block from '../Block';
 import TextArea from './TextArea';
 import { useStyles } from './style';
-import type { InputProps } from './type';
+import type { InputProps, InputSearchProps } from './type';
 
 const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
   const {
@@ -52,15 +53,51 @@ const Input = forwardRef<RNTextInput, InputProps>((props, ref) => {
   );
 });
 
-export const InputSearch = forwardRef<RNTextInput, InputProps>((props, ref) => {
+export const InputSearch = forwardRef<RNTextInput, InputSearchProps>((props, ref) => {
+  const { debounceWait = 300, onChangeText, onSearch, ...restProps } = props;
   const theme = useTheme();
   const size = props.size ?? 'middle';
   const iconSize = size === 'large' ? theme.fontSizeLG : theme.fontSize;
 
+  // 使用 ref 保存防抖函数，确保可以在组件卸载时取消
+  const debouncedOnSearchRef = useRef<ReturnType<typeof debounce> | undefined>(undefined);
+
+  // 创建防抖的 onSearch 回调
+  const debouncedOnSearch = useMemo(() => {
+    if (!onSearch) return undefined;
+
+    const debouncedFn = debounce((text: string) => {
+      onSearch(text);
+    }, debounceWait);
+
+    debouncedOnSearchRef.current = debouncedFn;
+
+    return debouncedFn;
+  }, [onSearch, debounceWait]);
+
+  // 组件卸载时取消防抖
+  useEffect(() => {
+    return () => {
+      debouncedOnSearchRef.current?.cancel();
+    };
+  }, []);
+
+  // 处理文本变化：立即调用 onChangeText，防抖调用 onSearch
+  const handleChangeText = useCallback(
+    (text: string) => {
+      // 立即更新输入框，不防抖
+      onChangeText?.(text);
+      // 防抖调用搜索回调
+      debouncedOnSearch?.(text);
+    },
+    [onChangeText, debouncedOnSearch],
+  );
+
   return (
     <Input
       ref={ref}
-      {...props}
+      {...restProps}
+      onChangeText={handleChangeText}
       prefix={<Search color={theme.colorTextDescription} size={iconSize * 1.25} />}
       returnKeyType="search"
     />

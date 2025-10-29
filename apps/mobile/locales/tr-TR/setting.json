@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Etkin Değil",
+      "emptySearch": "Eşleşen hizmet sağlayıcı bulunamadı",
       "enabled": "Etkin",
       "loadFailed": "Sağlayıcı listesi yüklenemedi"
     },

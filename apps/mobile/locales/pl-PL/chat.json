@@ -34,7 +34,12 @@
     "createFirst": "Utwórz swoją pierwszą sesję czatu",
     "empty": "Brak sesji",
     "search": {
-      "placeholder": "Szukaj sesji"
+      "discoverAssistants": "Asystenci rynkowi",
+      "emptyResult": "Nie znaleziono pasującego asystenta",
+      "myAssistants": "Moi asystenci",
+      "placeholder": "Szukaj swojego ulubionego asystenta...",
+      "recentSearches": "Ostatnie wyszukiwania",
+      "title": "Szukaj"
     },
     "title": "Rozmowa na luzie"
   },

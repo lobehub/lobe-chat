@@ -34,7 +34,12 @@
     "createFirst": "첫 번째 채팅 세션을 생성하세요",
     "empty": "세션이 없습니다",
     "search": {
-      "placeholder": "세션 검색"
+      "discoverAssistants": "마켓 어시스턴트",
+      "emptyResult": "일치하는 도우미를 찾을 수 없습니다",
+      "myAssistants": "내 어시스턴트",
+      "placeholder": "좋아하는 도우미를 찾아보세요...",
+      "recentSearches": "최근 검색",
+      "title": "검색"
     },
     "title": "편하게 대화하기"
   },

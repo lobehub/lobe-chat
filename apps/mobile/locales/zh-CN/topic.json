@@ -8,6 +8,12 @@
   },
   "loading": "加载中...",
   "newTopic": "新建话题",
+  "search": {
+    "emptyResult": "未找到匹配的话题",
+    "placeholder": "搜索话题...",
+    "recentSearches": "最近搜索",
+    "title": "搜索话题"
+  },
   "searchPlaceholder": "搜索话题...",
   "temp": "临时",
   "title": "话题"

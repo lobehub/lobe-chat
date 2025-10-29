@@ -34,7 +34,12 @@
     "createFirst": "İlk sohbet oturumunuzu oluşturun",
     "empty": "Henüz oturum yok",
     "search": {
-      "placeholder": "Oturumları ara"
+      "discoverAssistants": "Pazar Asistanları",
+      "emptyResult": "Eşleşen asistan bulunamadı",
+      "myAssistants": "Asistanlarım",
+      "placeholder": "Favori asistanını ara...",
+      "recentSearches": "Son Aramalar",
+      "title": "Ara"
     },
     "title": "Rastgele Sohbet"
   },

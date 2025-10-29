@@ -4,10 +4,13 @@ import {
   type DropdownOptionItem,
   FlashListScrollShadow,
   Flexbox,
-  Input,
   Toast,
+  useTheme,
 } from '@lobehub/ui-rn';
-import { useMemo, useState } from 'react';
+import { Button } from '@lobehub/ui-rn';
+import { useRouter } from 'expo-router';
+import { SearchIcon } from 'lucide-react-native';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager } from 'react-native';
 
@@ -22,8 +25,9 @@ import SessionItem from './features/SessionItem';
 import { SessionListSkeleton } from './features/SkeletonList';
 
 export default function SideBar() {
+  const theme = useTheme();
   const { t } = useTranslation('chat');
-  const [searchText, setSearchText] = useState('');
+  const router = useRouter();
   const { sessions } = useSessionStore();
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
 
@@ -31,34 +35,11 @@ export default function SideBar() {
   const { isAuthenticated } = useAuth();
   const { isLoading } = useFetchSessions(isAuthenticated, isAuthenticated);
 
-  const keyword = searchText.trim().toLowerCase();
-  const inboxTitle = t('inbox.title', { ns: 'chat' });
-  const inboxDescription = t('inbox.desc', { ns: 'chat' });
-
-  const shouldShowInbox = useMemo(() => {
-    if (!keyword) return true;
-
-    return (
-      inboxTitle.toLowerCase().includes(keyword) || inboxDescription.toLowerCase().includes(keyword)
-    );
-  }, [inboxDescription, inboxTitle, keyword]);
-
-  const filteredSessions = useMemo(() => {
+  const sortedSessions = useMemo(() => {
     if (!sessions) return [];
 
-    // 筛选会话（仅保留 LobeAgentSession）
-    let filtered = (
-      !keyword
-        ? sessions
-        : sessions.filter((session) => {
-            const title = session.meta.title?.toLowerCase() || '';
-            const description = session.meta.description?.toLowerCase() || '';
-            return title.includes(keyword) || description.includes(keyword);
-          })
-    ) as LobeAgentSession[];
-
     // 排序：优先 pinned，然后按 updatedAt（兜底 createdAt）
-    return [...filtered].sort((a, b) => {
+    return [...(sessions as LobeAgentSession[])].sort((a, b) => {
       // 1. 优先 pinned 的会话
       if (a.pinned !== b.pinned) {
         return a.pinned ? -1 : 1;
@@ -70,9 +51,9 @@ export default function SideBar() {
 
       return new Date(bTime).getTime() - new Date(aTime).getTime();
     });
-  }, [keyword, sessions]);
+  }, [sessions]);
 
-  // 构建 FlashList 数据源：包含 inbox 和 sessions
+  // 构建 FlashList 数据源：包含 inbox、sessions 和 addButton
   type ListItem =
     | { data: LobeAgentSession; type: 'session' }
     | { type: 'addButton' }
@@ -82,21 +63,19 @@ export default function SideBar() {
     const items: ListItem[] = [];
 
     // 添加 inbox
-    if (shouldShowInbox) {
-      items.push({ type: 'inbox' });
-    }
+    items.push({ type: 'inbox' });
 
     // 添加会话列表或添加按钮
-    if (filteredSessions.length === 0) {
+    if (sortedSessions.length === 0) {
       items.push({ type: 'addButton' });
     } else {
-      filteredSessions.forEach((session) => {
+      sortedSessions.forEach((session) => {
         items.push({ data: session, type: 'session' });
       });
     }
 
     return items;
-  }, [shouldShowInbox, filteredSessions]);
+  }, [sortedSessions]);
 
   const renderItem = ({ item }: { item: ListItem }) => {
     if (item.type === 'inbox') {
@@ -168,14 +147,21 @@ export default function SideBar() {
   return (
     <Flexbox flex={1} gap={8}>
       {/* 搜索栏 */}
-      <Flexbox paddingBlock={8} paddingInline={12}>
-        <Input.Search
-          glass
-          onChangeText={setSearchText}
-          placeholder={t('session.search.placeholder', { ns: 'chat' })}
-          value={searchText}
+      <Flexbox paddingInline={12}>
+        <Button
+          icon={SearchIcon}
+          iconProps={{
+            color: theme.colorTextDescription,
+          }}
+          onPress={() => router.push('/session/search')}
+          size={'small'}
+          textStyle={{
+            color: theme.colorTextDescription,
+          }}
           variant="filled"
-        />
+        >
+          {t('session.search.title')}
+        </Button>
       </Flexbox>
       {/* 会话列表 */}
       {isLoading ? (

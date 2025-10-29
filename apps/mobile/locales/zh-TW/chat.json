@@ -34,7 +34,12 @@
     "createFirst": "建立您的第一個聊天會話",
     "empty": "暫無會話",
     "search": {
-      "placeholder": "搜尋會話"
+      "discoverAssistants": "市集助手",
+      "emptyResult": "未找到符合的助理",
+      "myAssistants": "我的助手",
+      "placeholder": "尋找你喜愛的助手...",
+      "recentSearches": "最近搜尋",
+      "title": "搜尋"
     },
     "title": "隨便聊聊"
   },

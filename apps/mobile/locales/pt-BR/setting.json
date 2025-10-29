@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Desativado",
+      "emptySearch": "Nenhum provedor correspondente encontrado",
       "enabled": "Ativado",
       "loadFailed": "Falha ao carregar a lista de provedores"
     },

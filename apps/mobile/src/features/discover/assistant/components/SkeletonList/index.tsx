@@ -2,7 +2,7 @@ import { Flexbox, Skeleton } from '@lobehub/ui-rn';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
 
-const AgentCardSkeleton = () => {
+export const AgentCardSkeleton = () => {
   return (
     <Flexbox padding={12}>
       <Skeleton
