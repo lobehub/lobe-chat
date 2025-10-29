@@ -22,6 +22,7 @@ const Center = memo<CenterProps>(
     onPress,
     onLongPress,
     glass,
+    glassColor = 'transparent',
     ...rest
   }) => {
     const styles: StyleProp<ViewStyle> = {
@@ -57,7 +58,7 @@ const Center = memo<CenterProps>(
                 styles,
                 typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
                 {
-                  backgroundColor: 'transparent',
+                  backgroundColor: glassColor,
                 },
               ]}
               {...rest}
@@ -76,7 +77,7 @@ const Center = memo<CenterProps>(
             styles,
             typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
             {
-              backgroundColor: 'transparent',
+              backgroundColor: glassColor,
             },
           ]}
           {...rest}

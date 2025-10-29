@@ -17,6 +17,7 @@ export interface FlexboxProps extends PressableProps {
   flex?: number | undefined;
   gap?: number | string | undefined;
   glass?: boolean;
+  glassColor?: string;
   height?: DimensionValue | undefined;
   horizontal?: boolean;
   justify?: JustifyContent;
