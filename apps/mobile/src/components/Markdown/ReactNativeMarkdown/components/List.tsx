@@ -71,7 +71,7 @@ export const LI: Components['li'] = memo(({ children }) => {
 
   return (
     <>
-      <View style={styles.listItem}>
+      <View style={[styles.listItem, { width: '96%' }]}>
         <View>
           {content.prefix ||
             (type === 'ul' ? (
