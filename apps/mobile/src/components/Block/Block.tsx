@@ -117,15 +117,23 @@ const Block = memo<BlockProps>(
               }
             : undefined
         }
-        onLongPress={(e) => {
-          onLongPress?.(e);
-          if (longPressEffect) setIsLongPressed(true);
-        }}
+        onLongPress={
+          onLongPress
+            ? (e) => {
+                onLongPress?.(e);
+                if (longPressEffect) setIsLongPressed(true);
+              }
+            : undefined
+        }
         onPress={onPress}
-        onPressOut={(e) => {
-          onPressOut?.(e);
-          if (longPressEffect) setIsLongPressed(false);
-        }}
+        onPressOut={
+          onLongPress
+            ? (e) => {
+                onPressOut?.(e);
+                if (longPressEffect) setIsLongPressed(false);
+              }
+            : undefined
+        }
         style={({ hovered, pressed }) => [
           variants({
             active,

@@ -1,81 +1,60 @@
+import { Block, Flexbox, Markdown, TextArea } from '@lobehub/ui-rn';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
 
-import { useStyles } from './style';
+import { useStyles } from '@/features/chat/ChatBubble/style';
+import SenderBtn from '@/features/chat/actions/SenderBtn';
 
 const Preview = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('setting');
 
-  // 移动端导航栏
-  const navbar = (
-    <View style={styles.navbar}>
-      <View style={styles.navLeft}>
-        <View style={styles.backButton} />
-        <View style={styles.navTitle} />
-      </View>
-      <View style={styles.navRight}>
-        <View style={styles.navIcon} />
-        <View style={styles.navIcon} />
-      </View>
-    </View>
-  );
-
   // 聊天消息内容
   const chatContent = (
-    <View style={styles.chatContent}>
-      {/* 用户消息 1 */}
-      <View style={[styles.messageContainer, styles.messageContainerUser]}>
-        <View style={styles.messageBubbleUser}>
-          <Text style={[styles.messageText, styles.messageTextUser]}>
-            {t('color.previewMessages.userHowToUse', { ns: 'setting' })}
-          </Text>
-        </View>
-      </View>
-
-      {/* AI 回复消息 1 */}
-      <View style={[styles.messageContainer, styles.messageContainerBot]}>
-        <View style={styles.messageBubbleBot}>
-          <Text style={[styles.messageText, styles.messageTextBot]}>
-            {t('color.previewMessages.botHowToUse', { ns: 'setting' })}
-          </Text>
-        </View>
-      </View>
-
-      <View style={[styles.messageContainer, styles.messageContainerUser]}>
-        <View style={styles.messageBubbleUser}>
-          <Text style={[styles.messageText, styles.messageTextUser]}>
-            {t('color.previewMessages.userGreat', { ns: 'setting' })}
-          </Text>
-        </View>
-      </View>
-
-      {/* AI 回复消息 3 */}
-      <View style={[styles.messageContainer, styles.messageContainerBot]}>
-        <View style={styles.messageBubbleBot}>
-          <Text style={[styles.messageText, styles.messageTextBot]}>
-            {t('color.previewMessages.botGreat', { ns: 'setting' })}
-          </Text>
-        </View>
-      </View>
-    </View>
+    <Flexbox gap={16}>
+      <Flexbox horizontal justify={'flex-end'}>
+        <Block style={[{ pointerEvents: 'box-none' }, styles.userBubble]} variant={'outlined'}>
+          <Markdown>{t('color.previewMessages.userHowToUse', { ns: 'setting' })}</Markdown>
+        </Block>
+      </Flexbox>
+      <Block style={[{ pointerEvents: 'box-none' }, styles.aiBubble]} variant={'borderless'}>
+        <Markdown>{t('color.previewMessages.botHowToUse', { ns: 'setting' })}</Markdown>
+      </Block>
+      <Flexbox horizontal justify={'flex-end'}>
+        <Block style={[{ pointerEvents: 'box-none' }, styles.userBubble]} variant={'outlined'}>
+          <Markdown>{t('color.previewMessages.userGreat', { ns: 'setting' })}</Markdown>
+        </Block>
+      </Flexbox>
+      <Block style={[{ pointerEvents: 'box-none' }, styles.aiBubble]} variant={'borderless'}>
+        <Markdown>{t('color.previewMessages.botGreat', { ns: 'setting' })}</Markdown>
+      </Block>
+    </Flexbox>
   );
 
   // 输入区域
   const inputArea = (
-    <View style={styles.inputArea}>
-      <View style={styles.inputBox} />
-      <View style={styles.sendButton} />
-    </View>
+    <Block borderRadius={24} glass variant={'outlined'}>
+      <TextArea
+        numberOfLines={12}
+        placeholder={t('placeholder', { ns: 'chat' })}
+        style={{
+          flex: 0,
+          height: 'auto',
+          pointerEvents: 'none',
+        }}
+        variant={'borderless'}
+      />
+      <Flexbox horizontal justify={'flex-end'} padding={8}>
+        <SenderBtn />
+      </Flexbox>
+    </Block>
   );
 
   return (
-    <View style={[styles.container]}>
-      {navbar}
+    <Flexbox gap={48} padding={16}>
       {chatContent}
       {inputArea}
-    </View>
+    </Flexbox>
   );
 });
 
