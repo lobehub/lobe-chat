@@ -19,8 +19,8 @@ import TopicItemSkeleton from './TopicItemSkeleton';
 const TopicSkeletonList = memo(() => {
   return (
     <Flexbox>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <TopicItemSkeleton key={index} />
+      {['100%', '100%', '60%', '100%', '80%', '100%', '100%', '60%'].map((width, index) => (
+        <TopicItemSkeleton key={index} width={width as any} />
       ))}
     </Flexbox>
   );

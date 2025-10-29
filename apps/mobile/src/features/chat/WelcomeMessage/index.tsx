@@ -14,6 +14,7 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 import WelcomeChatBubble from '../ChatBubble/Welcome';
 import OpeningQuestions from './OpeningQuestions';
 import RecentTopics from './RecentTopics';
+import RecentTopicsSkeleton from './RecentTopicsSkeleton';
 
 const WelcomeMessage = () => {
   const { t } = useTranslation('chat');
@@ -24,11 +25,12 @@ const WelcomeMessage = () => {
   const openingMessage = useAgentStore(agentSelectors.openingMessage);
   const openingQuestions = useAgentStore(agentSelectors.openingQuestions);
   const topics = useChatStore(topicSelectors.currentTopics);
+  const topicsInit = useChatStore((s) => s.topicsInit);
 
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
 
-  // 计算是否有最近的 topics
-  const hasRecentTopics = topics && topics.length > 0;
+  // 判断是否显示 topics 相关内容（加载中或有数据）
+  const shouldShowTopicsSection = !topicsInit || (topics && topics.length > 0);
 
   const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
     name: meta.title || t('defaultAgent'),
@@ -69,8 +71,9 @@ const WelcomeMessage = () => {
       style={{ flex: 1, marginBottom: -24 }}
     >
       {welcomeBubble}
-      {/* 优先展示最近的 topics，如果没有则展示 opening questions */}
-      {hasRecentTopics ? (
+      {!topicsInit ? (
+        <RecentTopicsSkeleton />
+      ) : shouldShowTopicsSection ? (
         <RecentTopics />
       ) : (
         openingQuestions.length > 0 && <OpeningQuestions questions={openingQuestions} />
