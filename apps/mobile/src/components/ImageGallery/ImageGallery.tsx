@@ -48,16 +48,20 @@ const ImageGalleryItem = memo<{ uri: string }>(({ uri }) => {
       {imageSize ? (
         <Animated.View entering={FadeIn.duration(300)}>
           <Image
+            autoplay
             cachePolicy="memory-disk"
             contentFit="contain"
+            enableLiveTextInteraction
             source={{ uri }}
             style={getImageStyle()}
           />
         </Animated.View>
       ) : (
         <Image
+          autoplay
           cachePolicy="memory-disk"
           contentFit="contain"
+          enableLiveTextInteraction
           onLoad={(e) => {
             setImageSize({
               height: e.source.height,
