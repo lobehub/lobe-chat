@@ -97,7 +97,7 @@ const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
         titleProps={{
           fontSize: 14,
           style: {
-            width: 230,
+            width: '95%',
           },
         }}
       />

@@ -17,7 +17,7 @@ import { useSessionStore } from '@/store/session';
 // 骨架屏列表
 const TopicSkeletonList = memo(() => {
   return (
-    <Flexbox>
+    <Flexbox paddingBlock={16}>
       {['100%', '100%', '60%', '100%', '80%', '100%', '100%', '60%'].map((width, index) => (
         <TopicItemSkeleton key={index} width={width as any} />
       ))}
@@ -101,6 +101,9 @@ const TopicSearchList = memo(
     return (
       <FlashList
         ListEmptyComponent={renderEmptyComponent}
+        contentContainerStyle={{
+          paddingBlock: 16,
+        }}
         data={filteredTopics}
         keyExtractor={keyExtractor}
         ref={ref}
