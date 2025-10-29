@@ -281,16 +281,6 @@ useUserStore.subscribe(
   },
 );
 
-// 监听错误状态
-useUserStore.subscribe(
-  (state) => state.error,
-  (error) => {
-    if (error) {
-      console.error('Auth error:', error);
-    }
-  },
-);
-
 useSettingStore.subscribe((state, previousState) => {
   if (state.customServerUrl === previousState.customServerUrl) return;
 

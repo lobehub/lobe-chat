@@ -69,7 +69,13 @@ export interface AuthEvents {
 }
 
 export interface LoginOptions {
+  /**
+   * 提示用户登录
+   */
   prompt?: string;
+  /**
+   * 使用临时会话
+   */
   useEphemeralSession?: boolean;
 }
 

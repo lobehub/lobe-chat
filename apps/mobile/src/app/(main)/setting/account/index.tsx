@@ -7,6 +7,7 @@ import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useAuth, useAuthActions } from '@/store/user';
+import { getLoginErrorKey } from '@/utils/error';
 
 export default function AccountScreen() {
   const { t } = useTranslation(['setting', 'auth', 'error', 'common']);
@@ -32,14 +33,9 @@ export default function AccountScreen() {
               await switchAccount();
               setTimeout(() => router.replace('/chat'), 0);
             } catch (error) {
-              if (error instanceof Error && error.message === 'Authorization was cancelled') {
-                return;
-              }
-              const errorMessage =
-                error instanceof Error
-                  ? error.message
-                  : t('account.switchAccount.error', { ns: 'setting' });
-              Alert.alert(t('error.title', { ns: 'error' }), errorMessage);
+              const key = getLoginErrorKey(error);
+              const message = t(key, { ns: 'error' });
+              Alert.alert(t('error.title', { ns: 'error' }), message);
             }
           },
           text: t('account.switchAccount.action', { ns: 'setting' }),
