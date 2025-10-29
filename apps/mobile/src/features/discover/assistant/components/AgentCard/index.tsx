@@ -106,7 +106,13 @@ const AgentCardComponent = ({ item }: AgentCardProps) => {
       headerProps={{
         align: 'flex-start',
       }}
-      icon={<Avatar avatar={item.avatar || '🤖'} size={AVATAR_SIZE_MEDIUM} />}
+      icon={
+        <Avatar
+          avatar={item.avatar || '🤖'}
+          backgroundColor={item.backgroundColor}
+          size={AVATAR_SIZE_MEDIUM}
+        />
+      }
       iconSize={AVATAR_SIZE_MEDIUM}
       onPress={handlePress}
       showArrow={false}
