@@ -35,7 +35,7 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
 } from 'lucide-react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -67,61 +67,9 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
     const editorState = useEditorState(editor);
 
     const [isSaving, setIsSaving] = useState(false);
-    const [isLoadingContent, setIsLoadingContent] = useState(false);
     const [noteTitle, setNoteTitle] = useState('');
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const isEditMode = !!documentId;
-
-    // Load document content when editing
-    useEffect(() => {
-      if (!open || !documentId || !editor) return;
-
-      console.log('[NoteEditorModal] Loading content:', {
-        cachedEditorDataPreview: cachedEditorData
-          ? JSON.stringify(cachedEditorData).slice(0, 100)
-          : null,
-        cachedEditorDataType: typeof cachedEditorData,
-        documentId,
-        documentTitle,
-        hasCachedEditorData: !!cachedEditorData,
-      });
-
-      // If editorData is already cached (from list), use it directly
-      if (cachedEditorData) {
-        console.log('[NoteEditorModal] Using cached editorData', cachedEditorData);
-        setNoteTitle(documentTitle || '');
-        editor.setDocument('json', JSON.stringify(cachedEditorData));
-        return;
-      }
-
-      // Otherwise, fetch full content from API
-      console.log('[NoteEditorModal] Fetching from API');
-      setIsLoadingContent(true);
-      documentService
-        .getDocumentById(documentId)
-        .then((doc) => {
-          if (doc && doc.content) {
-            setNoteTitle(doc.title || doc.filename || '');
-
-            console.log('[NoteEditorModal] Fetched doc.editorData:', {
-              editorDataPreview: doc.editorData
-                ? JSON.stringify(doc.editorData).slice(0, 100)
-                : null,
-              editorDataType: typeof doc.editorData,
-              hasEditorData: !!doc.editorData,
-            });
-
-            editor.setDocument('json', doc.editorData);
-          }
-        })
-        .catch((error) => {
-          console.error('[NoteEditorModal] Failed to load document:', error);
-          message.error(t('header.newNoteDialog.loadError', { ns: 'file' }));
-        })
-        .finally(() => {
-          setIsLoadingContent(false);
-        });
-    }, [open, documentId, editor, cachedEditorData, documentTitle]);
 
     const handleClose = () => {
       // Clean up editor state
@@ -189,6 +137,59 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
         message.error(t('header.newNoteDialog.saveError', { ns: 'file' }));
       } finally {
         setIsSaving(false);
+      }
+    };
+
+    const handleOpenChange = (isOpen: boolean) => {
+      // When modal opens, load document content if in edit mode
+      if (isOpen && documentId && editor) {
+        console.log('[NoteEditorModal] Loading content:', {
+          cachedEditorDataPreview: cachedEditorData
+            ? JSON.stringify(cachedEditorData).slice(0, 100)
+            : null,
+          cachedEditorDataType: typeof cachedEditorData,
+          documentId,
+          documentTitle,
+          hasCachedEditorData: !!cachedEditorData,
+        });
+
+        // If editorData is already cached (from list), use it directly
+        if (cachedEditorData) {
+          console.log('[NoteEditorModal] Using cached editorData', cachedEditorData);
+          setNoteTitle(documentTitle || '');
+          editor.setDocument('json', JSON.stringify(cachedEditorData));
+          return;
+        }
+
+        // Otherwise, fetch full content from API
+        console.log('[NoteEditorModal] Fetching from API');
+        documentService
+          .getDocumentById(documentId)
+          .then((doc) => {
+            if (doc && doc.content) {
+              setNoteTitle(doc.title || doc.filename || '');
+
+              console.log('[NoteEditorModal] Fetched doc.editorData:', {
+                editorDataPreview: doc.editorData
+                  ? JSON.stringify(doc.editorData).slice(0, 100)
+                  : null,
+                editorDataType: typeof doc.editorData,
+                hasEditorData: !!doc.editorData,
+              });
+
+              editor.setDocument('json', doc.editorData);
+            }
+          })
+          .catch((error) => {
+            console.error('[NoteEditorModal] Failed to load document:', error);
+            message.error(t('header.newNoteDialog.loadError', { ns: 'file' }));
+          });
+      }
+
+      // When modal closes, clean up state
+      if (!isOpen) {
+        editor?.cleanDocument();
+        setNoteTitle('');
       }
     };
 
@@ -299,6 +300,7 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
 
     return (
       <Modal
+        afterOpenChange={handleOpenChange}
         okButtonProps={{ loading: isSaving }}
         okText={t('header.newNoteDialog.save')}
         onCancel={handleClose}
@@ -335,7 +337,6 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
                 minHeight: 400,
               }}
               type={'text'}
-              variant={'chat'}
             />
           </Flexbox>
         </Flexbox>
