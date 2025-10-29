@@ -12,3 +12,16 @@ export const formatTime = (time: number): string => {
     return target.format('YYYY-MM-DD HH:mm:ss');
   }
 };
+
+export const formatShortTime = (time: number): string => {
+  const now = dayjs();
+  const target = dayjs(time);
+
+  if (target.isSame(now, 'day')) {
+    return target.format('HH:mm');
+  } else if (target.isSame(now, 'year')) {
+    return target.format('MM-DD');
+  } else {
+    return target.format('YY/MM');
+  }
+};

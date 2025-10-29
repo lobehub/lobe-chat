@@ -19,6 +19,7 @@ const ListItem = memo<ListItemProps>(
     onPress,
     href,
     active,
+    avatarBackgroundColor,
     ...rest
   }) => {
     const content = (
@@ -33,7 +34,13 @@ const ListItem = memo<ListItemProps>(
         variant={variant}
         {...rest}
       >
-        {avatar && <Avatar avatar={avatar} size={AVATAR_SIZE_MEDIUM} />}
+        {avatar && (
+          <Avatar
+            avatar={avatar}
+            backgroundColor={avatarBackgroundColor}
+            size={AVATAR_SIZE_MEDIUM}
+          />
+        )}
         <Flexbox align={'flex-start'} flex={1} gap={6} justify={'center'}>
           <Text ellipsis fontSize={16} weight={500}>
             {title}
