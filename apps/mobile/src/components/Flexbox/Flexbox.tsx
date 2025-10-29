@@ -61,10 +61,10 @@ const Flexbox = memo<FlexboxProps>(
               interactive
               style={[
                 styles,
+                typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
                 {
                   backgroundColor: 'transparent',
                 },
-                typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
               ]}
             >
               {children}
@@ -80,10 +80,10 @@ const Flexbox = memo<FlexboxProps>(
           interactive={false}
           style={[
             styles,
+            typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
             {
               backgroundColor: 'transparent',
             },
-            typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
           ]}
           {...rest}
         >

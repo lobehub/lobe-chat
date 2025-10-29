@@ -1,9 +1,12 @@
 import chroma from 'chroma-js';
 import { Check } from 'lucide-react-native';
+import { darken, mix, readableColor } from 'polished';
 import { memo, useState } from 'react';
 import { View } from 'react-native';
 
 import Block from '@/components/Block';
+import Flexbox from '@/components/Flexbox';
+import Icon from '@/components/Icon';
 
 import ConicGradientPattern from './ConicGradientPatern';
 import { useStyles } from './style';
@@ -27,22 +30,13 @@ const ColorSwatches = memo<ColorSwatchesProps>(
     value,
     ...rest
   }) => {
-    const [activeColor, setActiveColor] = useState(value || defaultValue);
-    const { styles, theme } = useStyles({ gap, shape, size });
+    const [activeColor, setActiveColor] = useState(value || defaultValue || 'rgba(0, 0, 0, 0)');
+    const { styles, theme } = useStyles({ shape, size });
 
     // 处理颜色选择
     const handleColorSelect = (color: string | undefined) => {
-      setActiveColor(color);
+      setActiveColor(color as any);
       onChange?.(color || '');
-    };
-
-    // 计算可读的对比色（用于选中图标）
-    const getContrastColor = (bgColor: string) => {
-      if (isTransparent(bgColor)) {
-        return theme.colorText;
-      }
-      // 简单的对比色计算，实际项目中可以使用更复杂的算法
-      return '#ffffff';
     };
 
     if (!enableColorSwatches) {
@@ -50,7 +44,7 @@ const ColorSwatches = memo<ColorSwatchesProps>(
     }
 
     return (
-      <View style={[styles.container, style]} {...rest}>
+      <Flexbox gap={gap} horizontal style={style} wrap={'wrap'} {...rest}>
         {colors.map((colorItem, index) => {
           const color = colorItem.color || theme.colorPrimary;
           const isActive = (!activeColor && !colorItem.color) || color === activeColor;
@@ -59,14 +53,22 @@ const ColorSwatches = memo<ColorSwatchesProps>(
           return (
             <Block
               accessibilityRole="button"
-              glass
+              android_ripple={{
+                color: darken(0.1, color),
+                foreground: true,
+              }}
               key={colorItem.key || index}
               onPress={() => handleColorSelect(colorItem.color)}
-              style={[
+              pressEffect
+              style={({ pressed }) => [
                 styles.colorSwatch,
                 isActive && styles.activeSwatch,
                 {
-                  backgroundColor: isColorTransparent ? 'transparent' : color,
+                  backgroundColor: isColorTransparent
+                    ? 'transparent'
+                    : pressed
+                      ? darken(0.1, color)
+                      : color,
                   overflow: 'hidden',
                 },
               ]}
@@ -81,17 +83,26 @@ const ColorSwatches = memo<ColorSwatchesProps>(
                 </View>
               )}
               {isActive && (
-                <Check
-                  color={getContrastColor(color)}
-                  size={14}
-                  strokeWidth={3}
-                  style={styles.checkIcon}
+                <Icon
+                  color={
+                    color && color !== 'rgba(0, 0, 0, 0)'
+                      ? mix(0.5, readableColor(color), color)
+                      : undefined
+                  }
+                  icon={Check}
+                  size={{
+                    size: 14,
+                    strokeWidth: 3,
+                  }}
+                  style={{
+                    position: 'absolute',
+                  }}
                 />
               )}
             </Block>
           );
         })}
-      </View>
+      </Flexbox>
     );
   },
 );

@@ -1,3 +1,5 @@
+import { StyleSheet } from 'react-native';
+
 import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(
@@ -6,9 +8,7 @@ export const useStyles = createStyles(
     {
       size,
       shape,
-      gap,
     }: {
-      gap: number;
       shape: 'circle' | 'square';
       size: number;
     },
@@ -18,22 +18,14 @@ export const useStyles = createStyles(
         borderColor: token.colorFill,
         borderWidth: 1,
       },
-      checkIcon: {
-        position: 'absolute' as const,
-      },
       colorSwatch: {
         alignItems: 'center' as const,
-        borderColor: token.colorFillSecondary,
+        borderColor: token.colorFill,
         borderRadius: shape === 'circle' ? size / 2 : token.borderRadius,
-        borderWidth: 1,
+        borderWidth: StyleSheet.hairlineWidth,
         height: size,
         justifyContent: 'center' as const,
         width: size,
-      },
-      container: {
-        flexDirection: 'row' as const,
-        flexWrap: 'wrap' as const,
-        gap: gap,
       },
     };
   },
