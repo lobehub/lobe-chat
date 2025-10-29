@@ -7,9 +7,9 @@ export const formatTime = (time: number): string => {
   if (target.isSame(now, 'day')) {
     return target.format('HH:mm:ss');
   } else if (target.isSame(now, 'year')) {
-    return target.format('MM-DD HH:mm:ss');
+    return target.format('MM-DD HH:mm');
   } else {
-    return target.format('YYYY-MM-DD HH:mm:ss');
+    return target.format('YYYY-MM-DD HH:mm');
   }
 };
 
