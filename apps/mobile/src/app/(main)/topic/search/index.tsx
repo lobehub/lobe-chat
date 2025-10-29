@@ -79,7 +79,6 @@ const TopicSearch = () => {
               flex: 1,
             }}
             value={searchText}
-            variant="filled"
           />
           <Button
             onPress={() => router.back()}

@@ -1,7 +1,7 @@
 import { Block, Flexbox, TextArea } from '@lobehub/ui-rn';
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ViewStyle } from 'react-native';
+import { TextInput, ViewStyle } from 'react-native';
 
 import SenderBtn from '@/features/chat/actions/SenderBtn';
 import { useChat } from '@/hooks/useChat';
@@ -18,14 +18,28 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
   const { input, handleInputChange, handleSubmit } = useChat();
   useInitAgentConfig(); // 关键：触发agent配置加载
 
+  const textAreaRef = useRef<TextInput>(null);
+
+  const handleContainerPress = () => {
+    textAreaRef.current?.focus();
+  };
+
   return (
     <Flexbox height={'auto'} paddingInline={16} style={[{ paddingBottom: 16 }, style]}>
-      <Block borderRadius={24} glass height={'auto'} variant={'outlined'}>
+      <Block
+        borderRadius={24}
+        glass
+        height={'auto'}
+        onPress={handleContainerPress}
+        pressEffect
+        variant={'outlined'}
+      >
         <TextArea
           numberOfLines={12}
           onChangeText={handleInputChange}
           onSubmitEditing={handleSubmit}
           placeholder={t('placeholder', { ns: 'chat' })}
+          ref={textAreaRef}
           style={{
             flex: 0,
             height: 'auto',
@@ -38,6 +52,9 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
           gap={8}
           horizontal
           justify={'space-between'}
+          onPress={handleContainerPress}
+          onResponderRelease={(e) => e.stopPropagation()}
+          onStartShouldSetResponder={() => true}
           paddingInline={8}
           style={{ paddingBottom: 8 }}
         >

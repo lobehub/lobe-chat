@@ -42,7 +42,14 @@ const Center = memo<CenterProps>(
     if (glass && isLiquidGlassSupported) {
       if (onPress || onLongPress) {
         return (
-          <Pressable onLongPress={onLongPress} onPress={onPress} {...rest}>
+          <Pressable
+            onLongPress={onLongPress}
+            onPress={onPress}
+            style={{
+              flex: 1,
+            }}
+            {...rest}
+          >
             <LiquidGlassView
               effect={'regular'}
               interactive
