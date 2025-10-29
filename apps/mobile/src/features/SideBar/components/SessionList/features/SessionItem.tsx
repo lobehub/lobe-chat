@@ -35,12 +35,15 @@ const SessionItem = memo<LobeAgentSession>(({ id, pinned, meta, updatedAt, creat
     <Cell
       active={isActive}
       description={
-        <Flexbox align={'center'} flex={1} gap={8} horizontal justify={'space-between'}>
-          <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'}>
-            {description}
-          </Text>
-          {pinned && <Icon color={theme.colorTextDescription} icon={PinIcon} size={12} />}
-        </Flexbox>
+        description &&
+        Flexbox && (
+          <Flexbox align={'center'} flex={1} gap={8} horizontal justify={'space-between'}>
+            <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'}>
+              {description}
+            </Text>
+            {pinned && <Icon color={theme.colorTextDescription} icon={PinIcon} size={12} />}
+          </Flexbox>
+        )
       }
       icon={<Avatar avatar={avatar} backgroundColor={backgroundColor} size={AVATAR_SIZE_MEDIUM} />}
       iconSize={AVATAR_SIZE_MEDIUM}
