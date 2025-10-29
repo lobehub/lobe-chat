@@ -30,6 +30,7 @@
     },
     "newNoteButton": "New Note",
     "newNoteDialog": {
+      "cancel": "Cancel",
       "editTitle": "Edit Note",
       "emptyContent": "Note content cannot be empty",
       "loadError": "Failed to load note, please try again",
@@ -51,6 +52,10 @@
     "title": "Knowledge Base"
   },
   "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
+  "notesList": {
+    "empty": "No notes yet, click the button above to create your first note",
+    "selectNote": "Select a note to start editing"
+  },
   "notSupportGuide": {
     "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
     "features": {
@@ -79,6 +84,7 @@
     "audios": "Audio",
     "documents": "Documents",
     "images": "Images",
+    "notes": "Notes",
     "videos": "Videos",
     "websites": "Websites"
   },

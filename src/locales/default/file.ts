@@ -30,6 +30,7 @@ export default {
     },
     newNoteButton: '新建笔记',
     newNoteDialog: {
+      cancel: '取消',
       editTitle: '编辑笔记',
       emptyContent: '笔记内容不能为空',
       loadError: '加载笔记失败,请重试',
@@ -52,6 +53,10 @@ export default {
     title: '知识库',
   },
   networkError: '获取知识库失败，请检测网络连接后重试',
+  notesList: {
+    empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
+    selectNote: '选择一个笔记开始编辑',
+  },
   notSupportGuide: {
     desc: '当前部署实例为客户端数据库模式，无法使用文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>',
     features: {
@@ -80,6 +85,7 @@ export default {
     audios: '语音',
     documents: '文档',
     images: '图片',
+    notes: '笔记',
     videos: '视频',
     websites: '网页',
   },
