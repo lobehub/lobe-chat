@@ -1,4 +1,4 @@
-import { Cell } from '@lobehub/ui-rn';
+import { Cell, Text } from '@lobehub/ui-rn';
 import Avatar from '@lobehub/ui-rn/Avatar';
 import { useTranslation } from 'react-i18next';
 
@@ -31,7 +31,11 @@ const Inbox = () => {
       style={{
         paddingRight: 8,
       }}
-      title={t('inbox.title', { ns: 'chat' })}
+      title={
+        <Text ellipsis fontSize={16} style={{ flex: 1 }} weight={500}>
+          {t('inbox.title', { ns: 'chat' })}
+        </Text>
+      }
     />
   );
 };

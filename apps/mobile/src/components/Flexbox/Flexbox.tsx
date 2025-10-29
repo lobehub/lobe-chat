@@ -25,6 +25,7 @@ const Flexbox = memo<FlexboxProps>(
     onLongPress,
     pressableStyle,
     glass,
+    glassColor = 'transparent',
     ...rest
   }) => {
     const { isDarkMode } = useThemeMode();
@@ -63,7 +64,7 @@ const Flexbox = memo<FlexboxProps>(
                 styles,
                 typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
                 {
-                  backgroundColor: 'transparent',
+                  backgroundColor: glassColor,
                 },
               ]}
             >
@@ -82,7 +83,7 @@ const Flexbox = memo<FlexboxProps>(
             styles,
             typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
             {
-              backgroundColor: 'transparent',
+              backgroundColor: glassColor,
             },
           ]}
           {...rest}
