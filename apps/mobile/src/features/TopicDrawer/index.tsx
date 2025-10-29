@@ -63,7 +63,6 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
         <Block
           borderRadius={44}
           flex={1}
-          glass
           style={{
             backgroundColor: theme.colorBgLayout,
           }}
