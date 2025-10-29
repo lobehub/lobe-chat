@@ -82,6 +82,7 @@ export {
   type SelectSize,
   type SelectVariant,
 } from './Select';
+export { default as SendButton, type SendButtonProps } from './SendButton';
 export { default as Skeleton, type SkeletonProps } from './Skeleton';
 export { default as Slider, type SliderProps } from './Slider';
 export { default as Space, type SpaceProps } from './Space';

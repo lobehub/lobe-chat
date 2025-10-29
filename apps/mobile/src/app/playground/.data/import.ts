@@ -67,6 +67,8 @@ import ScrollShadowDemos from '@lobehub/ui-rn/ScrollShadow/demos';
 import SegmentedDemos from '@lobehub/ui-rn/Segmented/demos';
 // Select
 import SelectDemos from '@lobehub/ui-rn/Select/demos';
+// SendButton
+import SendButtonDemos from '@lobehub/ui-rn/SendButton/demos';
 // Skeleton
 import SkeletonDemos from '@lobehub/ui-rn/Skeleton/demos';
 // Slider
@@ -121,6 +123,7 @@ export const DEMOS_MAP: Record<string, any> = {
   ScrollShadow: ScrollShadowDemos,
   Segmented: SegmentedDemos,
   Select: SelectDemos,
+  SendButton: SendButtonDemos,
   Skeleton: SkeletonDemos,
   Slider: SliderDemos,
   Space: SpaceDemos,

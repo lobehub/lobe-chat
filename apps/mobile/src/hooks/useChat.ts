@@ -79,7 +79,7 @@ export function useChat() {
     // Session info
     activeId,
 
-    canSend,
+    canSend: !!input.trim(),
 
     // Actions
     clearMessages: handleClearMessages,
@@ -95,7 +95,7 @@ export function useChat() {
 
     isGenerating: generating,
 
-    isLoading,
+    isLoading: !canSend || isLoading,
 
     messages,
 
