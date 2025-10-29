@@ -8,6 +8,12 @@
   },
   "loading": "Loading...",
   "newTopic": "New Topic",
+  "search": {
+    "emptyResult": "No matching topics found",
+    "placeholder": "Search topics...",
+    "recentSearches": "Recent Searches",
+    "title": "Search Topics"
+  },
   "searchPlaceholder": "Search Topics...",
   "temp": "Temporary",
   "title": "Topic"

@@ -34,7 +34,12 @@
     "createFirst": "Maak je eerste chatsessie aan",
     "empty": "Geen sessies beschikbaar",
     "search": {
-      "placeholder": "Zoek sessies"
+      "discoverAssistants": "Marktassistenten",
+      "emptyResult": "Geen overeenkomende assistent gevonden",
+      "myAssistants": "Mijn assistenten",
+      "placeholder": "Zoek naar je favoriete assistent...",
+      "recentSearches": "Recente zoekopdrachten",
+      "title": "Zoeken"
     },
     "title": "Gewoon kletsen"
   },

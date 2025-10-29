@@ -34,7 +34,12 @@
     "createFirst": "أنشئ أول جلسة دردشة لك",
     "empty": "لا توجد جلسات حالياً",
     "search": {
-      "placeholder": "ابحث في الجلسات"
+      "discoverAssistants": "مساعدو السوق",
+      "emptyResult": "لم يتم العثور على مساعد مطابق",
+      "myAssistants": "مساعديّ",
+      "placeholder": "ابحث عن المساعد الذي تفضله...",
+      "recentSearches": "عمليات البحث الأخيرة",
+      "title": "بحث"
     },
     "title": "دردشة عشوائية"
   },

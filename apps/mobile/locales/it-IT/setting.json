@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Disabilitato",
+      "emptySearch": "Nessun provider corrispondente trovato",
       "enabled": "Abilitato",
       "loadFailed": "Caricamento lista provider fallito"
     },

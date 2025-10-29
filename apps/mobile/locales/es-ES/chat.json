@@ -34,7 +34,12 @@
     "createFirst": "Crea tu primera sesión de chat",
     "empty": "No hay sesiones",
     "search": {
-      "placeholder": "Buscar sesiones"
+      "discoverAssistants": "Asistentes del mercado",
+      "emptyResult": "No se encontraron asistentes coincidentes",
+      "myAssistants": "Mis asistentes",
+      "placeholder": "Busca tu asistente favorito...",
+      "recentSearches": "Búsquedas recientes",
+      "title": "Buscar"
     },
     "title": "Charlemos"
   },

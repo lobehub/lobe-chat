@@ -2,11 +2,13 @@
   "actions": {
     "add": "Hinzufügen",
     "cancel": "Abbrechen",
+    "clear": "Löschen",
     "confirm": "Bestätigen",
     "continue": "Fortsetzen",
     "copy": "Kopieren",
     "delete": "Löschen",
     "edit": "Bearbeiten",
+    "more": "Mehr",
     "notNow": "Nicht jetzt",
     "regenerate": "Erneut generieren",
     "retry": "Erneut versuchen",
@@ -17,7 +19,10 @@
     "fetchError": "Fehler beim Abrufen der Assistentenliste, bitte versuchen Sie es später erneut",
     "noData": "Keine Assistentendaten vorhanden",
     "noMatch": "Kein passender Assistent gefunden",
-    "search": "Assistent suchen..."
+    "recentSearches": "Kürzliche Suchen",
+    "search": "Assistent suchen...",
+    "searchNoResult": "Kein passender Assistent gefunden",
+    "searchPlaceholder": "Bitte Suchbegriff eingeben"
   },
   "defaultSession": "Benutzerdefinierter Assistent",
   "navigation": {

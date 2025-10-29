@@ -2,11 +2,13 @@
   "actions": {
     "add": "추가",
     "cancel": "취소",
+    "clear": "지우기",
     "confirm": "확인",
     "continue": "계속",
     "copy": "복사",
     "delete": "삭제",
     "edit": "편집",
+    "more": "더보기",
     "notNow": "나중에",
     "regenerate": "다시 생성",
     "retry": "재시도",
@@ -17,7 +19,10 @@
     "fetchError": "도우미 목록을 가져오지 못했습니다. 나중에 다시 시도해주세요.",
     "noData": "도우미 데이터가 없습니다.",
     "noMatch": "일치하는 도우미를 찾을 수 없습니다.",
-    "search": "도우미 검색..."
+    "recentSearches": "최근 검색",
+    "search": "도우미 검색...",
+    "searchNoResult": "일치하는 어시스턴트를 찾을 수 없습니다",
+    "searchPlaceholder": "검색어를 입력하세요"
   },
   "defaultSession": "사용자 지정 도우미",
   "navigation": {

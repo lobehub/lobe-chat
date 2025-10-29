@@ -34,7 +34,12 @@
     "createFirst": "Crie sua primeira sessão de chat",
     "empty": "Nenhuma sessão disponível",
     "search": {
-      "placeholder": "Pesquisar sessões"
+      "discoverAssistants": "Assistentes do Mercado",
+      "emptyResult": "Nenhum assistente correspondente encontrado",
+      "myAssistants": "Meus Assistentes",
+      "placeholder": "Encontre seu assistente favorito...",
+      "recentSearches": "Pesquisas recentes",
+      "title": "Pesquisar"
     },
     "title": "Conversa Casual"
   },

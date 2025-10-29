@@ -8,6 +8,12 @@
   },
   "loading": "Ładowanie...",
   "newTopic": "Nowy temat",
+  "search": {
+    "emptyResult": "Nie znaleziono pasujących tematów",
+    "placeholder": "Szukaj tematów...",
+    "recentSearches": "Ostatnie wyszukiwania",
+    "title": "Szukaj tematów"
+  },
   "searchPlaceholder": "Szukaj tematów...",
   "temp": "Tymczasowy",
   "title": "Temat"

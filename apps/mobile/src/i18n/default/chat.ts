@@ -35,7 +35,12 @@ export default {
     createFirst: '创建您的第一个聊天会话',
     empty: '暂无会话',
     search: {
-      placeholder: '搜索助手...',
+      discoverAssistants: '市场助手',
+      emptyResult: '未找到匹配的助手',
+      myAssistants: '我的助手',
+      placeholder: '寻找你喜爱的助手...',
+      recentSearches: '最近搜索',
+      title: '搜索',
     },
     title: '随便聊聊',
   },

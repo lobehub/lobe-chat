@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Disabled",
+      "emptySearch": "No matching providers found",
       "enabled": "Enabled",
       "loadFailed": "Failed to load provider list"
     },

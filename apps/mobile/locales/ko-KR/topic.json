@@ -8,6 +8,12 @@
   },
   "loading": "로딩 중...",
   "newTopic": "새 주제 생성",
+  "search": {
+    "emptyResult": "일치하는 주제를 찾을 수 없습니다",
+    "placeholder": "주제를 검색하세요...",
+    "recentSearches": "최근 검색",
+    "title": "주제 검색"
+  },
   "searchPlaceholder": "주제 검색...",
   "temp": "임시",
   "title": "주제"

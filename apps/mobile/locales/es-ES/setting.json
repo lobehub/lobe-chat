@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "No habilitado",
+      "emptySearch": "No se encontraron proveedores coincidentes",
       "enabled": "Habilitado",
       "loadFailed": "Error al cargar la lista de proveedores"
     },

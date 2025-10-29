@@ -8,6 +8,12 @@
   },
   "loading": "Đang tải...",
   "newTopic": "Tạo chủ đề mới",
+  "search": {
+    "emptyResult": "Không tìm thấy chủ đề phù hợp",
+    "placeholder": "Tìm kiếm chủ đề...",
+    "recentSearches": "Tìm kiếm gần đây",
+    "title": "Tìm kiếm chủ đề"
+  },
   "searchPlaceholder": "Tìm kiếm chủ đề...",
   "temp": "Tạm thời",
   "title": "Chủ đề"

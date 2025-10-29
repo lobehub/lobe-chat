@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Chưa kích hoạt",
+      "emptySearch": "Không tìm thấy nhà cung cấp phù hợp",
       "enabled": "Đã kích hoạt",
       "loadFailed": "Tải danh sách nhà cung cấp dịch vụ thất bại"
     },

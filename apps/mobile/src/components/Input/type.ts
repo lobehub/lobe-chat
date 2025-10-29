@@ -19,6 +19,19 @@ export interface InputProps extends Omit<RNTextInputProps, 'multiline' | 'style'
   variant?: InputVariant;
 }
 
+export interface InputSearchProps extends InputProps {
+  /**
+   * 防抖等待时间（毫秒）
+   * @default 300
+   */
+  debounceWait?: number;
+  /**
+   * 搜索回调，会被防抖处理
+   * 如果不传此回调，则不会进行防抖
+   */
+  onSearch?: (text: string) => void;
+}
+
 export interface TextAreaProps extends Omit<RNTextInputProps, 'multiline' | 'style'> {
   block?: boolean;
   disabled?: boolean;

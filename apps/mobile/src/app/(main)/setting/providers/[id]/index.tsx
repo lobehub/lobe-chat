@@ -1,4 +1,13 @@
-import { Empty, Flexbox, PageContainer, Segmented, TabView, Text, useTheme } from '@lobehub/ui-rn';
+import {
+  Center,
+  Empty,
+  Flexbox,
+  PageContainer,
+  Segmented,
+  TabView,
+  Text,
+  useTheme,
+} from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { BrainIcon, LucideSettings2 } from 'lucide-react-native';
@@ -58,42 +67,50 @@ const ProviderDetailPage = () => {
 
   const headerTitle = builtinProviderCard?.name || providerDetail?.name || id || '';
 
-  // 构建FlashList统一数据结构
-  const flashListData = useMemo<FlashListItem[]>(() => {
-    if (!providerDetail) return [];
+  // Configuration 标签页数据
+  const configurationData = useMemo<FlashListItem[]>(() => {
+    // 配置加载中
+    if (isConfigLoading) {
+      return [
+        {
+          data: { message: t('aiProviders.detail.loading', { ns: 'setting' }) },
+          id: 'config-loading',
+          type: 'empty',
+        },
+      ];
+    }
 
-    const items: FlashListItem[] = [];
+    // 配置加载失败
+    if (!providerDetail) {
+      return [
+        {
+          data: { message: t('aiProviders.detail.loadFailed', { ns: 'setting' }) },
+          id: 'config-error',
+          type: 'empty',
+        },
+      ];
+    }
 
-    // 1. Provider信息section
-    items.push(
-      {
-        data: providerDetail,
-        id: 'provider-info',
-        type: 'provider-info',
-      },
+    return [
       {
         data: providerDetail,
         id: 'configuration',
         type: 'configuration',
       },
-    );
+    ];
+  }, [providerDetail, isConfigLoading, t]);
 
-    // 3. Models数据（通过hook构建）
-    return buildModelsData(items);
+  // Models 标签页数据
+  const modelsData = useMemo<FlashListItem[]>(() => {
+    if (!providerDetail) return [];
+
+    // 直接构建 Models 数据，不包含 provider-info 和 configuration
+    return buildModelsData([]);
   }, [providerDetail, buildModelsData]);
 
   const renderItem = useCallback(
     ({ item }: { item: FlashListItem }) => {
       switch (item.type) {
-        case 'provider-info': {
-          return (
-            <ProviderInfoSection
-              provider={{ ...builtinProviderCard, ...item.data }}
-              setLoading={setLoading}
-            />
-          );
-        }
-
         case 'configuration': {
           return <ConfigurationSection provider={item.data} setLoading={setLoading} />;
         }
@@ -121,7 +138,11 @@ const ProviderDetailPage = () => {
         }
 
         case 'empty': {
-          return <Empty description={item.data.message} />;
+          return (
+            <Center paddingBlock={24}>
+              <Empty description={item.data.message} />
+            </Center>
+          );
         }
 
         default: {
@@ -129,7 +150,7 @@ const ProviderDetailPage = () => {
         }
       }
     },
-    [builtinProviderCard, handleFetchModels, handleToggleModel, setSearchKeyword],
+    [handleFetchModels, handleToggleModel, setSearchKeyword],
   );
 
   // FlashList的keyExtractor
@@ -173,98 +194,18 @@ const ProviderDetailPage = () => {
     return null;
   }, [isModelsLoading, displayedCount, totalFilteredCount, token, t, styles]);
 
-  let content;
-
-  if (isLoading || isConfigLoading) {
-    content = (
-      <Flexbox style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>{t('aiProviders.detail.loading', { ns: 'setting' })}</Text>
-      </Flexbox>
-    );
-  } else if (error || (!providerDetail && !isLoading && !isConfigLoading)) {
-    content = (
-      <Empty description={t('aiProviders.detail.loadFailed', { ns: 'setting' })} flex={1} />
-    );
-  } else if (!providerDetail) {
-    content = <Empty description={t('aiProviders.list.loadFailed', { ns: 'setting' })} flex={1} />;
-  } else {
-    content = (
-      <>
-        <ProviderInfoSection
-          provider={
-            {
-              ...builtinProviderCard,
-              ...flashListData.find((item) => item.type === 'provider-info')?.data,
-            } as any
-          }
-          setLoading={setLoading}
-        />
-        <Flexbox
-          paddingInline={16}
-          style={{
-            paddingBottom: 8,
-          }}
-        >
-          <Segmented
-            block
-            onChange={(v) => setTab(v as Tabs)}
-            options={[
-              {
-                icon: LucideSettings2,
-                label: t('providersDetail.tabs.configuration', { ns: 'setting' }),
-                value: Tabs.Configuration,
-              },
-              {
-                icon: BrainIcon,
-                label: t('providersDetail.tabs.models', { ns: 'setting' }),
-                value: Tabs.Models,
-              },
-            ]}
-            value={tab}
-          />
-        </Flexbox>
-        <TabView
-          items={[
-            {
-              children: (
-                <FlashList
-                  data={flashListData.filter((item) => ['configuration'].includes(item.type))}
-                  drawDistance={500}
-                  getItemType={(item) => item.type}
-                  keyExtractor={keyExtractor}
-                  onEndReached={handleEndReached}
-                  onEndReachedThreshold={0.2}
-                  removeClippedSubviews={true}
-                  renderItem={renderItem}
-                  showsVerticalScrollIndicator={true}
-                />
-              ),
-              key: Tabs.Configuration,
-            },
-            {
-              children: (
-                <FlashList
-                  ListFooterComponent={renderFooter}
-                  data={flashListData.filter(
-                    (item) => !['provider-info', 'configuration'].includes(item.type),
-                  )}
-                  drawDistance={500}
-                  getItemType={(item) => item.type}
-                  keyExtractor={keyExtractor}
-                  onEndReached={handleEndReached}
-                  onEndReachedThreshold={0.2}
-                  removeClippedSubviews={true}
-                  renderItem={renderItem}
-                  showsVerticalScrollIndicator={true}
-                />
-              ),
-              key: Tabs.Models,
-            },
-          ]}
-          onChange={(v) => setTab(v as Tabs)}
-          value={tab}
-        />
-      </>
+  // 严重错误时的全屏错误提示（仅在没有任何数据且加载完成后显示）
+  if (error && !isLoading && !builtinProviderCard) {
+    return (
+      <PageContainer
+        loading={loading}
+        showBack
+        title={headerTitle === 'lobehub' ? 'LobeHub' : headerTitle}
+      >
+        <Center paddingBlock={24}>
+          <Empty description={t('aiProviders.detail.loadFailed', { ns: 'setting' })} flex={1} />
+        </Center>
+      </PageContainer>
     );
   }
 
@@ -274,7 +215,73 @@ const ProviderDetailPage = () => {
       showBack
       title={headerTitle === 'lobehub' ? 'LobeHub' : headerTitle}
     >
-      {content}
+      <ProviderInfoSection
+        provider={{ ...builtinProviderCard, ...providerDetail } as any}
+        setLoading={setLoading}
+      />
+      <Flexbox
+        paddingInline={16}
+        style={{
+          paddingBottom: 8,
+        }}
+      >
+        <Segmented
+          block
+          onChange={(v) => setTab(v as Tabs)}
+          options={[
+            {
+              icon: LucideSettings2,
+              label: t('providersDetail.tabs.configuration', { ns: 'setting' }),
+              value: Tabs.Configuration,
+            },
+            {
+              icon: BrainIcon,
+              label: t('providersDetail.tabs.models', { ns: 'setting' }),
+              value: Tabs.Models,
+            },
+          ]}
+          value={tab}
+        />
+      </Flexbox>
+      <TabView
+        items={[
+          {
+            children: (
+              <FlashList
+                data={configurationData}
+                drawDistance={500}
+                getItemType={(item) => item.type}
+                keyExtractor={keyExtractor}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.2}
+                removeClippedSubviews={true}
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={true}
+              />
+            ),
+            key: Tabs.Configuration,
+          },
+          {
+            children: (
+              <FlashList
+                ListFooterComponent={renderFooter}
+                data={modelsData}
+                drawDistance={500}
+                getItemType={(item) => item.type}
+                keyExtractor={keyExtractor}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.2}
+                removeClippedSubviews={true}
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={true}
+              />
+            ),
+            key: Tabs.Models,
+          },
+        ]}
+        onChange={(v) => setTab(v as Tabs)}
+        value={tab}
+      />
     </PageContainer>
   );
 };

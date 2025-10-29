@@ -34,7 +34,12 @@
     "createFirst": "Créez votre première session de chat",
     "empty": "Aucune session pour le moment",
     "search": {
-      "placeholder": "Rechercher une session"
+      "discoverAssistants": "Assistants du marché",
+      "emptyResult": "Aucun assistant correspondant trouvé",
+      "myAssistants": "Mes assistants",
+      "placeholder": "Recherchez votre assistant préféré...",
+      "recentSearches": "Recherches récentes",
+      "title": "Recherche"
     },
     "title": "Discuter librement"
   },

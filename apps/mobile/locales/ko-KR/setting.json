@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "비활성화됨",
+      "emptySearch": "일치하는 서비스 제공업체를 찾을 수 없습니다",
       "enabled": "활성화됨",
       "loadFailed": "서비스 제공자 목록 로드 실패"
     },

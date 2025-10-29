@@ -8,6 +8,12 @@
   },
   "loading": "Chargement...",
   "newTopic": "Nouveau sujet",
+  "search": {
+    "emptyResult": "Aucun sujet correspondant trouvé",
+    "placeholder": "Rechercher des sujets...",
+    "recentSearches": "Recherches récentes",
+    "title": "Rechercher des sujets"
+  },
   "searchPlaceholder": "Rechercher un sujet...",
   "temp": "Temporaire",
   "title": "Sujet"

@@ -52,6 +52,7 @@
     },
     "list": {
       "disabled": "Nieaktywne",
+      "emptySearch": "Nie znaleziono pasujących dostawców usług",
       "enabled": "Aktywne",
       "loadFailed": "Nie udało się załadować listy dostawców"
     },

@@ -2,11 +2,13 @@
   "actions": {
     "add": "Adicionar",
     "cancel": "Cancelar",
+    "clear": "Limpar",
     "confirm": "Confirmar",
     "continue": "Continuar",
     "copy": "Copiar",
     "delete": "Excluir",
     "edit": "Editar",
+    "more": "Mais",
     "notNow": "Agora não",
     "regenerate": "Regenerar",
     "retry": "Tentar novamente",
@@ -17,7 +19,10 @@
     "fetchError": "Falha ao obter a lista de assistentes, por favor tente novamente mais tarde",
     "noData": "Nenhum dado de assistente disponível",
     "noMatch": "Nenhum assistente correspondente encontrado",
-    "search": "Pesquisar assistente..."
+    "recentSearches": "Pesquisas recentes",
+    "search": "Pesquisar assistente...",
+    "searchNoResult": "Nenhum assistente correspondente encontrado",
+    "searchPlaceholder": "Digite palavras-chave para pesquisar"
   },
   "defaultSession": "Assistente personalizado",
   "navigation": {

@@ -8,6 +8,12 @@
   },
   "loading": "Bezig met laden...",
   "newTopic": "Nieuw onderwerp",
+  "search": {
+    "emptyResult": "Geen overeenkomende onderwerpen gevonden",
+    "placeholder": "Onderwerpen zoeken...",
+    "recentSearches": "Recente zoekopdrachten",
+    "title": "Onderwerpen zoeken"
+  },
   "searchPlaceholder": "Zoek onderwerpen...",
   "temp": "Tijdelijk",
   "title": "Onderwerp"

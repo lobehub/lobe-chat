@@ -39,12 +39,26 @@ const ProviderList = memo(() => {
 
   const data = useMemo(() => {
     if (!keyword) return flashListData;
-    return flashListData.filter((item) => {
+
+    const filtered = flashListData.filter((item) => {
       if (item.type === 'section-header') return false;
       if (item.type !== 'provider') return true;
       return item.id.toLowerCase().includes(keyword.toLowerCase());
     });
-  }, [flashListData, keyword]);
+
+    // 搜索无结果时显示 Empty
+    if (filtered.length === 0) {
+      return [
+        {
+          data: { message: t('aiProviders.list.emptySearch', { ns: 'setting' }) },
+          id: 'empty-search',
+          type: 'empty',
+        },
+      ] as ProviderFlashListItem[];
+    }
+
+    return filtered;
+  }, [flashListData, keyword, t]);
 
   // FlashList的keyExtractor
   const keyExtractor = useCallback((item: ProviderFlashListItem) => item.id, []);

@@ -2,11 +2,13 @@
   "actions": {
     "add": "Ekle",
     "cancel": "İptal",
+    "clear": "Temizle",
     "confirm": "Onayla",
     "continue": "Devam Et",
     "copy": "Kopyala",
     "delete": "Sil",
     "edit": "Düzenle",
+    "more": "Daha fazla",
     "notNow": "Şimdi değil",
     "regenerate": "Yeniden Oluştur",
     "retry": "Tekrar Dene",
@@ -17,7 +19,10 @@
     "fetchError": "Asistan listesi alınamadı, lütfen daha sonra tekrar deneyin",
     "noData": "Henüz asistan verisi yok",
     "noMatch": "Eşleşen asistan bulunamadı",
-    "search": "Asistan ara..."
+    "recentSearches": "Son Aramalar",
+    "search": "Asistan ara...",
+    "searchNoResult": "Eşleşen asistan bulunamadı",
+    "searchPlaceholder": "Lütfen arama anahtar kelimesini girin"
   },
   "defaultSession": "Özel Asistan",
   "navigation": {

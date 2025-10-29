@@ -34,7 +34,12 @@
     "createFirst": "Erstelle deine erste Chat-Sitzung",
     "empty": "Keine Sitzungen vorhanden",
     "search": {
-      "placeholder": "Sitzungen durchsuchen"
+      "discoverAssistants": "Marktplatz-Assistenten",
+      "emptyResult": "Keine passenden Assistenten gefunden",
+      "myAssistants": "Meine Assistenten",
+      "placeholder": "Finde deinen Lieblingsassistenten...",
+      "recentSearches": "Kürzliche Suchanfragen",
+      "title": "Suche"
     },
     "title": "Einfach plaudern"
   },

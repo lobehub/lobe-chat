@@ -34,7 +34,12 @@
     "createFirst": "Crea la tua prima sessione di chat",
     "empty": "Nessuna sessione",
     "search": {
-      "placeholder": "Cerca sessioni"
+      "discoverAssistants": "Assistenti di mercato",
+      "emptyResult": "Nessun assistente corrispondente trovato",
+      "myAssistants": "I miei assistenti",
+      "placeholder": "Cerca il tuo assistente preferito...",
+      "recentSearches": "Ricerche recenti",
+      "title": "Cerca"
     },
     "title": "Parliamo liberamente"
   },
