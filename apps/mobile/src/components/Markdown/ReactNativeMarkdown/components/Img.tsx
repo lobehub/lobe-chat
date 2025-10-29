@@ -61,8 +61,10 @@ const Img: Components['img'] = memo(({ src, alt }) => {
     <Pressable onPress={handlePress}>
       <Image
         alt={alt}
+        autoplay
         cachePolicy="memory-disk"
         contentFit="contain"
+        enableLiveTextInteraction
         onLoad={handleLoad}
         source={{ uri: src }}
         style={[styles.img, getImageStyle()]}
