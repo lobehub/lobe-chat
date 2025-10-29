@@ -27,6 +27,9 @@
       "moreBtn": "もっと見る",
       "title": "みんながよく聞く質問："
     },
+    "topics": {
+      "title": "最近のトピック："
+    },
     "welcome": {
       "afternoon": "こんにちは",
       "morning": "おはようございます",

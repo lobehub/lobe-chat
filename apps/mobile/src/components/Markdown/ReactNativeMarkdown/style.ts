@@ -89,6 +89,8 @@ export const useMarkdownStyles = createStyles(
       },
       list: {
         marginBlock: options.fontSize * options.marginMultiple * 0.4,
+        position: 'relative',
+        width: '100%',
       },
       listItem: {
         alignItems: 'flex-start',
@@ -96,16 +98,24 @@ export const useMarkdownStyles = createStyles(
         flexDirection: 'row',
         gap: options.fontSize / 2,
         marginBlock: options.fontSize * options.marginMultiple * 0.2,
+        position: 'relative',
       },
       listNested: {
         marginLeft: options.fontSize / 2,
+        position: 'relative',
+        width: '100%',
       },
-      listOrdered: {},
+      listOrdered: {
+        position: 'relative',
+        width: '100%',
+      },
       listOrderedIcon: {
         color: isDarkMode ? token.cyan : darken(0.4, token.cyan),
       },
       listUnordered: {
         paddingStart: options.fontSize / 2,
+        position: 'relative',
+        width: '100%',
       },
       listUnorderedIcon: {
         color: token.colorTextDescription,
