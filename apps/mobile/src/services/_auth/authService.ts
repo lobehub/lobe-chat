@@ -83,7 +83,7 @@ export class OAuthService implements AuthService {
         ...payload,
       };
     } catch (error) {
-      console.error('Failed to decode JWT:', error);
+      authLogger.error('Failed to decode JWT:', error);
       return null;
     }
   }
@@ -149,7 +149,6 @@ export class OAuthService implements AuthService {
       }
     } catch (error) {
       authLogger.error('Login failed', error);
-      console.error('Login failed:', error);
       throw error;
     }
   }
@@ -257,7 +256,6 @@ export class OAuthService implements AuthService {
       authLogger.info('Auth callback handled successfully');
     } catch (error) {
       authLogger.error('Failed to handle auth callback', error);
-      console.error('Failed to handle auth callback:', error);
       throw error;
     }
   }
@@ -378,7 +376,6 @@ export class OAuthService implements AuthService {
       return token;
     } catch (error) {
       authLogger.error('Token exchange failed', error);
-      console.error('Token exchange failed:', error);
       throw error;
     }
   }
@@ -521,7 +518,6 @@ export class OAuthService implements AuthService {
       return newToken;
     } catch (error) {
       authLogger.error('Token refresh failed', error);
-      console.error('Token refresh failed:', error);
       throw error;
     }
   }
@@ -570,7 +566,6 @@ export class OAuthService implements AuthService {
       return user;
     } catch (error) {
       authLogger.error('Failed to get user info from token', error);
-      console.error('Failed to get user info from token:', error);
       throw error;
     }
   }
@@ -588,7 +583,6 @@ export class OAuthService implements AuthService {
       return user;
     } catch (error) {
       authLogger.error('Failed to refresh user info', error);
-      console.error('Failed to refresh user info:', error);
       throw error;
     }
   }
@@ -628,7 +622,6 @@ export class OAuthService implements AuthService {
       //     });
       //   } catch (error) {
       //     authLogger.warn('Failed to revoke token', error);
-      //     console.warn('Failed to revoke token:', error);
       //     // 撤销失败不应该阻止登出
       //   }
       // } else {
@@ -641,7 +634,6 @@ export class OAuthService implements AuthService {
       authLogger.info('Logout completed successfully');
     } catch (error) {
       authLogger.error('Logout failed', error);
-      console.error('Logout failed:', error);
       throw error;
     }
   }
