@@ -1,9 +1,9 @@
 'use client';
 
-import { Button, Icon, Markdown } from '@lobehub/ui';
+import { ActionIcon, Icon, Markdown, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FilePenLine, PlusIcon } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFileStore } from '@/store/file';
@@ -36,8 +36,14 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextDescription};
   `,
   header: css`
-    padding: 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    padding-block: ${token.paddingXXS}px;
+    padding-inline: ${token.paddingXS}px;
     border-block-end: 1px solid ${token.colorBorderSecondary};
+
     background: ${token.colorBgContainer};
   `,
   listPanel: css`
@@ -184,6 +190,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
 
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [searchKeywords, setSearchKeywords] = useState<string>('');
 
   const useFetchFileManage = useFileStore((s) => s.useFetchFileManage);
   const getOptimisticNotes = useFileStore((s) => s.getOptimisticNotes);
@@ -210,6 +217,18 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   // Re-compute when localNoteMap changes to ensure list updates when notes are edited
   const notes = getOptimisticNotes();
 
+  // Filter notes based on search keywords
+  const filteredNotes = useMemo(() => {
+    if (!searchKeywords.trim()) return notes;
+
+    const lowerKeywords = searchKeywords.toLowerCase();
+    return notes.filter((note) => {
+      const content = note.content?.toLowerCase() || '';
+      const name = note.name?.toLowerCase() || '';
+      return content.includes(lowerKeywords) || name.includes(lowerKeywords);
+    });
+  }, [notes, searchKeywords]);
+
   const selectedNote = notes.find((note) => note.id === selectedNoteId);
 
   const handleNoteSelect = (noteId: string) => {
@@ -235,19 +254,30 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
       {/* Left Panel - Notes List */}
       <div className={styles.listPanel}>
         <div className={styles.header}>
-          <Button block icon={PlusIcon} onClick={handleNewNote} type="primary">
-            {t('header.newNoteButton')}
-          </Button>
+          <SearchBar
+            allowClear
+            onChange={(e) => setSearchKeywords(e.target.value)}
+            placeholder={t('searchFilePlaceholder')}
+            style={{ flex: 1 }}
+            value={searchKeywords}
+            variant={'borderless'}
+          />
+          <ActionIcon
+            icon={PlusIcon}
+            onClick={handleNewNote}
+            // size={'large'}
+            title={t('header.newNoteButton')}
+          />
         </div>
         <div className={styles.noteList}>
           {isLoading ? (
             <NoteListSkeleton />
-          ) : notes.length === 0 ? (
+          ) : filteredNotes.length === 0 ? (
             <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
-              {t('notesList.empty')}
+              {searchKeywords.trim() ? t('notesList.noResults') : t('notesList.empty')}
             </div>
           ) : (
-            notes.map((note) => {
+            filteredNotes.map((note) => {
               const previewText = getPreviewText(note);
               return (
                 <div
