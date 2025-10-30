@@ -51,6 +51,7 @@ const editorClassName = cx(css`
 `);
 
 interface NoteEditorPanelProps {
+  content?: string | null;
   documentId?: string;
   documentTitle?: string;
   editorData?: Record<string, any> | null;
@@ -61,6 +62,7 @@ interface NoteEditorPanelProps {
 
 const NoteEditorPanel = memo<NoteEditorPanelProps>(
   ({
+    content: cachedContent,
     documentId,
     documentTitle,
     editorData: cachedEditorData,
@@ -107,11 +109,32 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
           return;
         }
 
-        // If editorData is already cached (from list), use it directly
-        if (cachedEditorData) {
+        // If editorData is already cached (from list), check if it's valid
+        const hasValidCachedEditorData =
+          cachedEditorData &&
+          typeof cachedEditorData === 'object' &&
+          Object.keys(cachedEditorData).length > 0;
+
+        console.log('[NoteEditorPanel] Cached data check:', {
+          cachedContent,
+          cachedEditorData,
+          hasCachedContent: !!cachedContent,
+          hasValidCachedEditorData,
+          keys: cachedEditorData ? Object.keys(cachedEditorData) : null,
+        });
+
+        if (hasValidCachedEditorData) {
           console.log('[NoteEditorPanel] Using cached editorData', cachedEditorData);
           setNoteTitle(documentTitle || '');
           editor.setDocument('json', JSON.stringify(cachedEditorData));
+          return;
+        }
+
+        // If no valid editorData but has cached content, use markdown format
+        if (!hasValidCachedEditorData && cachedContent) {
+          console.log('[NoteEditorPanel] Using cached markdown content');
+          setNoteTitle(documentTitle || '');
+          editor.setDocument('markdown', cachedContent);
           return;
         }
 
@@ -120,7 +143,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
         documentService
           .getDocumentById(documentId)
           .then((doc) => {
-            if (doc && doc.content) {
+            if (doc) {
               setNoteTitle(doc.title || doc.filename || '');
 
               console.log('[NoteEditorPanel] Fetched doc.editorData:', {
@@ -128,17 +151,30 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
                   ? JSON.stringify(doc.editorData).slice(0, 100)
                   : null,
                 editorDataType: typeof doc.editorData,
+                hasContent: !!doc.content,
                 hasEditorData: !!doc.editorData,
               });
 
-              editor.setDocument('json', doc.editorData);
+              // Check if editorData is empty or just an empty object
+              const hasValidEditorData =
+                doc.editorData &&
+                typeof doc.editorData === 'object' &&
+                Object.keys(doc.editorData).length > 0;
+
+              // If no valid editorData but has content, use markdown format
+              if (!hasValidEditorData && doc.content) {
+                console.log('[NoteEditorPanel] Using markdown format for content');
+                editor.setDocument('markdown', doc.content);
+              } else if (hasValidEditorData) {
+                editor.setDocument('json', doc.editorData);
+              }
             }
           })
           .catch((error) => {
             console.error('[NoteEditorPanel] Failed to load document:', error);
           });
       }
-    }, [documentId, editor, cachedEditorData, documentTitle]);
+    }, [documentId, editor, cachedEditorData, cachedContent, documentTitle, localNoteMap]);
 
     // Auto-save function
     const performSave = useCallback(async () => {

@@ -2,8 +2,10 @@ import { FileTypeIcon, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
+
+import { useFileStore } from '@/store/file';
 
 const ICON_SIZE = 80;
 
@@ -60,60 +62,90 @@ const useStyles = createStyles(({ css, token }) => ({
 interface NoteEmptyStatusProps {
   knowledgeBaseId?: string;
   onCreateNewNote: () => void;
+  onNoteCreated?: (noteId: string) => void;
 }
 
-const handleUploadMarkdown = async (file: File) => {
-  // TODO: Implement markdown file upload
-  console.log('Upload markdown file:', file);
-  return false;
-};
+const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
+  ({ knowledgeBaseId, onCreateNewNote, onNoteCreated }) => {
+    const theme = useTheme();
+    const { styles } = useStyles();
+    const [isUploading, setIsUploading] = useState(false);
+    const createNote = useFileStore((s) => s.createNote);
 
-const NoteEmptyStatus = memo<NoteEmptyStatusProps>(({ onCreateNewNote }) => {
-  const theme = useTheme();
-  const { styles } = useStyles();
+    const handleUploadMarkdown = async (file: File) => {
+      try {
+        setIsUploading(true);
 
-  return (
-    <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
-      <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-        <Text as={'h4'}>Select a note to get started</Text>
-        <Text type={'secondary'}>Or</Text>
-      </Flexbox>
-      <Flexbox gap={12} horizontal>
-        {/* Create New Note */}
-        <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>
-          <span className={styles.actionTitle}>Create new note</span>
-          <div className={styles.glow} style={{ background: theme.purple }} />
-          <FileTypeIcon
-            className={styles.icon}
-            color={theme.purple}
-            icon={<Icon color={'#fff'} icon={PlusIcon} />}
-            size={ICON_SIZE}
-            type={'file'}
-          />
+        // Read markdown file content
+        const content = await file.text();
+
+        // Create note with markdown content
+        const noteId = await createNote({
+          content,
+          knowledgeBaseId,
+          title: file.name.replace(/\.md$|\.markdown$/i, ''),
+        });
+
+        // Notify parent component
+        onNoteCreated?.(noteId);
+      } catch (error) {
+        console.error('Failed to upload markdown:', error);
+      } finally {
+        setIsUploading(false);
+      }
+
+      return false; // Prevent default upload behavior
+    };
+
+    return (
+      <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
+        <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
+          <Text as={'h4'}>Select a note to get started</Text>
+          <Text type={'secondary'}>Or</Text>
         </Flexbox>
-
-        {/* Upload Markdown File */}
-        <Upload
-          accept=".md,.markdown"
-          beforeUpload={handleUploadMarkdown}
-          multiple={false}
-          showUploadList={false}
-        >
-          <Flexbox className={styles.card} padding={16}>
-            <span className={styles.actionTitle}>Upload markdown</span>
-            <div className={styles.glow} style={{ background: theme.gold }} />
+        <Flexbox gap={12} horizontal>
+          {/* Create New Note */}
+          <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>
+            <span className={styles.actionTitle}>Create new note</span>
+            <div className={styles.glow} style={{ background: theme.purple }} />
             <FileTypeIcon
               className={styles.icon}
-              color={theme.gold}
-              icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
+              color={theme.purple}
+              icon={<Icon color={'#fff'} icon={PlusIcon} />}
               size={ICON_SIZE}
               type={'file'}
             />
           </Flexbox>
-        </Upload>
 
-        {/* Import from Notion */}
-        {/* <Flexbox className={styles.card} onClick={handleImportFromNotion} padding={16}>
+          {/* Upload Markdown File */}
+          <Upload
+            accept=".md,.markdown"
+            beforeUpload={handleUploadMarkdown}
+            disabled={isUploading}
+            multiple={false}
+            showUploadList={false}
+          >
+            <Flexbox
+              className={styles.card}
+              padding={16}
+              style={{ opacity: isUploading ? 0.5 : 1 }}
+            >
+              <span className={styles.actionTitle}>
+                {isUploading ? 'Uploading...' : 'Upload markdown'}
+              </span>
+              <div className={styles.glow} style={{ background: theme.gold }} />
+              <FileTypeIcon
+                className={styles.icon}
+                color={theme.gold}
+                icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
+                size={ICON_SIZE}
+                type={'file'}
+              />
+            </Flexbox>
+          </Upload>
+
+          {/* Import from Notion */}
+          {/* <Flexbox className={styles.card} onClick={handleImportFromNotion} padding={16}>
           <span className={styles.actionTitle}>Import from Notion</span>
           <div className={styles.glow} style={{ background: theme.geekblue }} />
           <FileTypeIcon
@@ -124,9 +156,10 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(({ onCreateNewNote }) => {
             type={'doc'}
           />
         </Flexbox> */}
-      </Flexbox>
-    </Center>
-  );
-});
+        </Flexbox>
+      </Center>
+    );
+  },
+);
 
 export default NoteEmptyStatus;
