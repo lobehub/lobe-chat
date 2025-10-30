@@ -3,15 +3,7 @@
 import { CaretDownFilled, CaretRightOutlined } from '@ant-design/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import {
-  FilePenLine,
-  FileText,
-  Globe,
-  ImageIcon,
-  LayoutGrid,
-  Mic2,
-  SquarePlay,
-} from 'lucide-react';
+import { FilePenLine, FileText, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -34,11 +26,11 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   headerActive: css`
-    background-color: ${token.colorFillSecondary};
     color: ${token.colorText};
+    background-color: ${token.colorFillSecondary};
   `,
   indentedMenu: css`
-    padding-inline-start: 28px;
+    padding-inline-start: 24px;
   `,
 }));
 
@@ -107,7 +99,6 @@ const FileMenu = memo(() => {
             }}
             size={'small'}
           />
-          <Icon icon={LayoutGrid} />
           <div style={{ flex: 1, lineHeight: '14px' }}>{t('tab.all')}</div>
         </Flexbox>
       </Flexbox>
