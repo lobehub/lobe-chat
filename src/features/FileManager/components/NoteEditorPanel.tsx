@@ -25,7 +25,6 @@ import { css, cx, useTheme } from 'antd-style';
 import {
   BoldIcon,
   Check,
-  CheckIcon,
   CodeXmlIcon,
   ItalicIcon,
   ListIcon,
@@ -38,7 +37,7 @@ import {
   StrikethroughIcon,
   UnderlineIcon,
 } from 'lucide-react';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -56,7 +55,6 @@ interface NoteEditorPanelProps {
   documentTitle?: string;
   editorData?: Record<string, any> | null;
   knowledgeBaseId?: string;
-  onClose: () => void;
   onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
 }
@@ -67,7 +65,6 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
     documentTitle,
     editorData: cachedEditorData,
     knowledgeBaseId,
-    onClose,
     onDocumentIdChange,
     onSave,
   }) => {
@@ -78,16 +75,13 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
     const editorState = useEditorState(editor);
 
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [noteTitle, setNoteTitle] = useState('');
     const [currentDocId, setCurrentDocId] = useState<string | undefined>(documentId);
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const updateNoteOptimistically = useFileStore((s) => s.updateNoteOptimistically);
     const localNoteMap = useFileStore((s) => s.localNoteMap);
     const replaceTempNoteWithReal = useFileStore((s) => s.replaceTempNoteWithReal);
-    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const savedIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const isEditMode = !!documentId;
-    const isTempNote = currentDocId?.startsWith('temp-note-');
 
     // Load document content when documentId changes
     useEffect(() => {
@@ -226,14 +220,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
         }
 
         setSaveStatus('saved');
-
-        // Clear "saved" indicator after 2 seconds
-        if (savedIndicatorTimeoutRef.current) {
-          clearTimeout(savedIndicatorTimeoutRef.current);
-        }
-        savedIndicatorTimeoutRef.current = setTimeout(() => {
-          setSaveStatus('idle');
-        }, 2000);
+        setHasUnsavedChanges(false);
 
         onSave?.();
       } catch (error) {
@@ -250,30 +237,12 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
       onSave,
     ]);
 
-    // Handle content change for auto-save
+    // Handle content change - mark as unsaved
     const handleContentChange = useCallback(() => {
-      // Clear existing timeout
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-
-      // Set new timeout for auto-save (1 second debounce)
-      saveTimeoutRef.current = setTimeout(() => {
-        performSave();
-      }, 1000);
-    }, [performSave]);
-
-    // Clean up timeouts on unmount
-    useEffect(() => {
-      return () => {
-        if (saveTimeoutRef.current) {
-          clearTimeout(saveTimeoutRef.current);
-        }
-        if (savedIndicatorTimeoutRef.current) {
-          clearTimeout(savedIndicatorTimeoutRef.current);
-        }
-      };
+      setHasUnsavedChanges(true);
+      setSaveStatus('idle');
     }, []);
+
 
     // Update currentDocId when documentId prop changes
     useEffect(() => {
@@ -392,35 +361,8 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
       [editorState, t],
     );
 
-    // Render save status indicator
-    const renderSaveStatus = () => {
-      switch (saveStatus) {
-        case 'saving': {
-          return (
-            <Flexbox align="center" gap={8} horizontal style={{ color: theme.colorTextSecondary }}>
-              <Loader2Icon
-                size={14}
-                style={{
-                  animation: 'spin 1s linear infinite',
-                }}
-              />
-              <span style={{ fontSize: 12 }}>Saving...</span>
-            </Flexbox>
-          );
-        }
-        case 'saved': {
-          return (
-            <Flexbox align="center" gap={8} horizontal style={{ color: theme.colorSuccess }}>
-              <CheckIcon size={14} />
-              <span style={{ fontSize: 12 }}>Saved</span>
-            </Flexbox>
-          );
-        }
-        default: {
-          return null;
-        }
-      }
-    };
+    // Show Done button only if there are unsaved changes OR currently saving
+    const showDoneButton = hasUnsavedChanges || saveStatus === 'saving';
 
     return (
       <Flexbox height={'100%'} style={{ background: theme.colorBgContainer }}>
@@ -428,12 +370,15 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
         <ChatInputActionBar
           left={<ChatInputActions items={toolbarItems} />}
           right={
-            <Flexbox flex={'row'}>
-              <div>{renderSaveStatus()}</div>
-              <Button icon={<Icon icon={Check} />} onClick={performSave}>
+            showDoneButton ? (
+              <Button
+                icon={<Icon icon={saveStatus === 'saving' ? Loader2Icon : Check} />}
+                loading={saveStatus === 'saving'}
+                onClick={performSave}
+              >
                 Done
               </Button>
-            </Flexbox>
+            ) : null
           }
           style={{
             background: theme.colorFillQuaternary,
@@ -447,7 +392,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             className={editorClassName}
             content={''}
             editor={editor}
-            // onChange={handleContentChange}
+            onChange={handleContentChange}
             plugins={[
               ReactListPlugin,
               ReactCodePlugin,
