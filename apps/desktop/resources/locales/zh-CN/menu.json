@@ -38,7 +38,7 @@
   },
   "macOS": {
     "about": "关于 {{appName}}",
-    "devTools": "LobeHub 开发者工具",
+    "devTools": "糯米世界开发者工具",
     "hide": "隐藏 {{appName}}",
     "hideOthers": "隐藏其他",
     "preferences": "偏好设置...",
