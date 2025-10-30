@@ -192,7 +192,14 @@ const Layout = () => {
           <Stack screenOptions={themedScreenOptions}>
             <Stack.Screen name="index" options={{ animation: 'none' }} />
             <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-            <Stack.Screen name="auth" options={{ animation: 'none' }} />
+            <Stack.Screen
+              name="auth"
+              options={{
+                animation: 'none',
+                fullScreenGestureEnabled: false,
+                gestureEnabled: false,
+              }}
+            />
           </Stack>
         </RootSiblingParent>
       </BottomSheetModalProvider>
