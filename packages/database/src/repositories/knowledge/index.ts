@@ -8,6 +8,7 @@ import { LobeChatDatabase } from '../../type';
 
 export interface KnowledgeItem {
   chunkTaskId?: string | null;
+  content?: string | null;
   createdAt: Date;
   editorData?: Record<string, any> | null;
   embeddingTaskId?: string | null;
@@ -101,6 +102,7 @@ export class KnowledgeRepo {
 
       return {
         chunkTaskId: row.chunk_task_id,
+        content: row.content,
         createdAt: new Date(row.created_at),
         editorData,
         embeddingTaskId: row.embedding_task_id,
@@ -195,6 +197,7 @@ export class KnowledgeRepo {
           f.chunk_task_id,
           f.embedding_task_id,
           NULL as editor_data,
+          NULL as content,
           'file' as source_type
         FROM ${files} f
         INNER JOIN ${knowledgeBaseFiles} kbf
@@ -226,6 +229,7 @@ export class KnowledgeRepo {
         chunk_task_id,
         embedding_task_id,
         NULL as editor_data,
+        NULL as content,
         'file' as source_type
       FROM ${files}
       WHERE ${sql.join(whereConditions, sql` AND `)}
@@ -279,6 +283,7 @@ export class KnowledgeRepo {
         NULL as chunk_task_id,
         NULL as embedding_task_id,
         editor_data,
+        content,
         'document' as source_type
       FROM ${documents}
       WHERE ${sql.join(whereConditions, sql` AND `)}

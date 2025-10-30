@@ -3,7 +3,7 @@
 import { Button, Icon, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FilePenLine, PlusIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -18,6 +18,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     height: 100%;
     width: 100%;
   `,
+  editorPanel: css`
+    flex: 1;
+    background: ${token.colorBgContainer};
+    overflow: hidden;
+  `,
   emptyState: css`
     display: flex;
     flex-direction: column;
@@ -26,6 +31,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     height: 100%;
     color: ${token.colorTextDescription};
     gap: 16px;
+  `,
+  header: css`
+    padding: 16px;
+    border-bottom: 1px solid ${token.colorBorderSecondary};
+    background: ${token.colorBgContainer};
   `,
   listPanel: css`
     width: 280px;
@@ -78,7 +88,12 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
       font-size: 13px;
       line-height: 1.6;
 
-      h1, h2, h3, h4, h5, h6 {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
         margin-block-start: 8px;
         margin-block-end: 4px;
         font-size: 14px;
@@ -90,7 +105,8 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
         margin-block-end: 8px;
       }
 
-      ul, ol {
+      ul,
+      ol {
         margin-block-end: 8px;
         padding-inline-start: 20px;
       }
@@ -113,16 +129,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
       background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
     }
   `,
-  editorPanel: css`
-    flex: 1;
-    background: ${token.colorBgContainer};
-    overflow: hidden;
-  `,
-  header: css`
-    padding: 16px;
-    border-bottom: 1px solid ${token.colorBorderSecondary};
-    background: ${token.colorBgContainer};
-  `,
 }));
 
 interface NoteSplitViewProps {
@@ -137,12 +143,30 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   const [isCreatingNew, setIsCreatingNew] = useState(false);
 
   const useFetchFileManage = useFileStore((s) => s.useFetchFileManage);
+  const getOptimisticNotes = useFileStore((s) => s.getOptimisticNotes);
+  const syncNoteMapWithServer = useFileStore((s) => s.syncNoteMapWithServer);
+  const createOptimisticNote = useFileStore((s) => s.createOptimisticNote);
+
   const { data: allFiles } = useFetchFileManage({
     knowledgeBaseId,
   });
 
-  // Filter only notes (custom/note type)
-  const notes = (allFiles || []).filter((file) => file.fileType === 'custom/note');
+  // Sync server data to local note map when it changes
+  useEffect(() => {
+    if (allFiles) {
+      syncNoteMapWithServer(allFiles);
+    }
+  }, [allFiles, syncNoteMapWithServer]);
+
+  // Get optimistic notes (merged local + server)
+  const notes = getOptimisticNotes().filter((note) => {
+    // Filter by knowledgeBaseId if provided
+    // Since the API call already filters by knowledgeBaseId, we trust that data
+    // But we also need to check local optimistic updates
+    return true; // For now, show all notes since API handles filtering
+  });
+
+  console.log('notes', notes);
 
   const selectedNote = notes.find((note) => note.id === selectedNoteId);
 
@@ -152,7 +176,9 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   };
 
   const handleNewNote = () => {
-    setSelectedNoteId(null);
+    // Create optimistic note immediately
+    const newNoteId = createOptimisticNote();
+    setSelectedNoteId(newNoteId);
     setIsCreatingNew(true);
   };
 
@@ -162,31 +188,16 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   };
 
   const handleSaveNote = () => {
-    // After save, close the editor
-    handleCloseEditor();
+    // After save, do nothing - stay on current note
+    // This callback is for potential future actions like refreshing the preview
   };
 
   // Helper to extract preview text from note content
   const getPreviewText = (item: FileListItem): string => {
-    try {
-      if (item.editorData && typeof item.editorData === 'object') {
-        const editorData = item.editorData;
-        if (editorData.root?.children) {
-          const extractFromNode = (node: any): string => {
-            if (node.text) return node.text;
-            if (node.children && Array.isArray(node.children)) {
-              return node.children.map((child: any) => extractFromNode(child)).join('');
-            }
-            return '';
-          };
-          return editorData.root.children
-            .map((node: any) => extractFromNode(node))
-            .join(' ')
-            .slice(0, 60);
-        }
-      }
-    } catch {
-      // Fallback to empty preview
+    // Use the content field directly (markdown text from documents table)
+    if (item.content) {
+      // Limit to first 200 characters for preview
+      return item.content.slice(0, 200);
     }
     return '';
   };
@@ -202,7 +213,10 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
         </div>
         <div className={styles.noteList}>
           {notes.length === 0 ? (
-            <Flexbox padding={24} style={{ color: 'var(--lobe-text-secondary)', textAlign: 'center' }}>
+            <Flexbox
+              padding={24}
+              style={{ color: 'var(--lobe-text-secondary)', textAlign: 'center' }}
+            >
               {t('notesList.empty')}
             </Flexbox>
           ) : (
@@ -210,10 +224,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
               const previewText = getPreviewText(note);
               return (
                 <div
-                  className={cx(
-                    styles.noteCard,
-                    selectedNoteId === note.id && 'selected',
-                  )}
+                  className={cx(styles.noteCard, selectedNoteId === note.id && 'selected')}
                   key={note.id}
                   onClick={() => handleNoteSelect(note.id)}
                 >

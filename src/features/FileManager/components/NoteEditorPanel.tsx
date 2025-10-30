@@ -20,26 +20,28 @@ import {
   useEditor,
   useEditorState,
 } from '@lobehub/editor/react';
-import { Button } from '@lobehub/ui';
+import { Button, Icon } from '@lobehub/ui';
 import { css, cx, useTheme } from 'antd-style';
 import {
   BoldIcon,
+  Check,
+  CheckIcon,
   CodeXmlIcon,
   ItalicIcon,
   ListIcon,
   ListOrderedIcon,
   ListTodoIcon,
+  Loader2Icon,
   MessageSquareQuote,
   SigmaIcon,
   SquareDashedBottomCodeIcon,
   StrikethroughIcon,
   UnderlineIcon,
 } from 'lucide-react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { message } from '@/components/AntdStaticMethods';
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 
@@ -59,17 +61,30 @@ interface NoteEditorPanelProps {
 }
 
 const NoteEditorPanel = memo<NoteEditorPanelProps>(
-  ({ documentId, documentTitle, editorData: cachedEditorData, knowledgeBaseId, onClose, onSave }) => {
+  ({
+    documentId,
+    documentTitle,
+    editorData: cachedEditorData,
+    knowledgeBaseId,
+    onClose,
+    onSave,
+  }) => {
     const { t } = useTranslation(['file', 'editor']);
     const theme = useTheme();
 
     const editor = useEditor();
     const editorState = useEditorState(editor);
 
-    const [isSaving, setIsSaving] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [noteTitle, setNoteTitle] = useState('');
+    const [currentDocId, setCurrentDocId] = useState<string | undefined>(documentId);
     const refreshFileList = useFileStore((s) => s.refreshFileList);
+    const updateNoteOptimistically = useFileStore((s) => s.updateNoteOptimistically);
+    const localNoteMap = useFileStore((s) => s.localNoteMap);
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const savedIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isEditMode = !!documentId;
+    const isTempNote = currentDocId?.startsWith('temp-note-');
 
     // Load document content when documentId changes
     useEffect(() => {
@@ -82,7 +97,18 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
           documentId,
           documentTitle,
           hasCachedEditorData: !!cachedEditorData,
+          isTempNote: documentId.startsWith('temp-note-'),
         });
+
+        // Check if this is an optimistic note from local map
+        const localNote = localNoteMap.get(documentId);
+        if (localNote && documentId.startsWith('temp-note-')) {
+          console.log('[NoteEditorPanel] Using optimistic note from local map');
+          setNoteTitle(localNote.name || 'Untitled Note');
+          // Start with empty editor for new notes
+          editor.cleanDocument();
+          return;
+        }
 
         // If editorData is already cached (from list), use it directly
         if (cachedEditorData) {
@@ -113,51 +139,35 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
           })
           .catch((error) => {
             console.error('[NoteEditorPanel] Failed to load document:', error);
-            message.error(t('header.newNoteDialog.loadError', { ns: 'file' }));
           });
       }
-    }, [documentId, editor, cachedEditorData, documentTitle, t]);
+    }, [documentId, editor, cachedEditorData, documentTitle]);
 
-    // Clean up when closing
-    useEffect(() => {
-      return () => {
-        editor?.cleanDocument();
-      };
-    }, [editor]);
+    // Auto-save function
+    const performSave = useCallback(async () => {
+      if (!editor) return;
 
-    const handleClose = () => {
-      editor?.cleanDocument();
-      setNoteTitle('');
-      onClose();
-    };
-
-    const handleSave = async () => {
-      if (!editor || isSaving) return;
-
-      // Get editor content as JSON (native format)
       const editorData = editor.getDocument('json');
-
-      // Check if editor is empty by getting text content
       const textContent = (editor.getDocument('markdown') as unknown as string) || '';
+
+      // Don't save if content is empty
       if (!textContent || textContent.trim() === '') {
-        message.warning(t('header.newNoteDialog.emptyContent', { ns: 'file' }));
         return;
       }
 
-      setIsSaving(true);
+      setSaveStatus('saving');
 
       try {
-        if (isEditMode) {
-          // Update existing note
-          await documentService.updateDocument({
+        if (currentDocId && !currentDocId.startsWith('temp-note-')) {
+          // Update existing note with optimistic update
+          await updateNoteOptimistically(currentDocId, {
             content: textContent,
-            editorData: JSON.stringify(editorData),
-            id: documentId,
-            title: noteTitle,
+            editorData: structuredClone(editorData),
+            name: noteTitle,
+            updatedAt: new Date(),
           });
-          message.success(t('header.newNoteDialog.updateSuccess', { ns: 'file' }));
         } else {
-          // Create new note
+          // Create new note (either no ID or temp ID)
           const now = Date.now();
           const timestamp = new Date(now).toLocaleString('en-US', {
             day: '2-digit',
@@ -168,7 +178,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
           });
           const title = noteTitle || `Note - ${timestamp}`;
 
-          await documentService.createNote({
+          const newDoc = await documentService.createNote({
             content: textContent,
             editorData: JSON.stringify(editorData),
             fileType: 'custom/note',
@@ -179,20 +189,72 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             title,
           });
 
-          message.success(t('header.newNoteDialog.saveSuccess', { ns: 'file' }));
-          editor.cleanDocument();
+          // Replace temp ID with real ID
+          setCurrentDocId(newDoc.id);
+          await refreshFileList();
         }
 
-        await refreshFileList();
+        setSaveStatus('saved');
+
+        // Clear "saved" indicator after 2 seconds
+        if (savedIndicatorTimeoutRef.current) {
+          clearTimeout(savedIndicatorTimeoutRef.current);
+        }
+        savedIndicatorTimeoutRef.current = setTimeout(() => {
+          setSaveStatus('idle');
+        }, 2000);
+
         onSave?.();
-        handleClose();
       } catch (error) {
         console.error('Failed to save note:', error);
-        message.error(t('header.newNoteDialog.saveError', { ns: 'file' }));
-      } finally {
-        setIsSaving(false);
+        setSaveStatus('idle');
       }
-    };
+    }, [
+      editor,
+      currentDocId,
+      noteTitle,
+      knowledgeBaseId,
+      refreshFileList,
+      updateNoteOptimistically,
+      onSave,
+    ]);
+
+    // Handle content change for auto-save
+    const handleContentChange = useCallback(() => {
+      // Clear existing timeout
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      // Set new timeout for auto-save (1 second debounce)
+      saveTimeoutRef.current = setTimeout(() => {
+        performSave();
+      }, 1000);
+    }, [performSave]);
+
+    // Clean up timeouts on unmount
+    useEffect(() => {
+      return () => {
+        if (saveTimeoutRef.current) {
+          clearTimeout(saveTimeoutRef.current);
+        }
+        if (savedIndicatorTimeoutRef.current) {
+          clearTimeout(savedIndicatorTimeoutRef.current);
+        }
+      };
+    }, []);
+
+    // Update currentDocId when documentId prop changes
+    useEffect(() => {
+      setCurrentDocId(documentId);
+    }, [documentId]);
+
+    // Clean up when closing
+    useEffect(() => {
+      return () => {
+        editor?.cleanDocument();
+      };
+    }, [editor]);
 
     const toolbarItems: ChatInputActionsProps['items'] = useMemo(
       () =>
@@ -299,16 +361,46 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
       [editorState, t],
     );
 
+    // Render save status indicator
+    const renderSaveStatus = () => {
+      switch (saveStatus) {
+        case 'saving': {
+          return (
+            <Flexbox align="center" gap={8} horizontal style={{ color: theme.colorTextSecondary }}>
+              <Loader2Icon
+                size={14}
+                style={{
+                  animation: 'spin 1s linear infinite',
+                }}
+              />
+              <span style={{ fontSize: 12 }}>Saving...</span>
+            </Flexbox>
+          );
+        }
+        case 'saved': {
+          return (
+            <Flexbox align="center" gap={8} horizontal style={{ color: theme.colorSuccess }}>
+              <CheckIcon size={14} />
+              <span style={{ fontSize: 12 }}>Saved</span>
+            </Flexbox>
+          );
+        }
+        default: {
+          return null;
+        }
+      }
+    };
+
     return (
       <Flexbox height={'100%'} style={{ background: theme.colorBgContainer }}>
         {/* Toolbar */}
         <ChatInputActionBar
           left={<ChatInputActions items={toolbarItems} />}
           right={
-            <Flexbox gap={8} horizontal>
-              <Button onClick={handleClose}>{t('header.newNoteDialog.cancel', { ns: 'file' })}</Button>
-              <Button loading={isSaving} onClick={handleSave} type="primary">
-                {t('header.newNoteDialog.save')}
+            <Flexbox flex={'row'}>
+              <div>{renderSaveStatus()}</div>
+              <Button icon={<Icon icon={Check} />} onClick={performSave}>
+                Done
               </Button>
             </Flexbox>
           }
@@ -324,6 +416,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             className={editorClassName}
             content={''}
             editor={editor}
+            // onChange={handleContentChange}
             plugins={[
               ReactListPlugin,
               ReactCodePlugin,
