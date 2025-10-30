@@ -246,5 +246,21 @@
     "title": "Chế độ giao diện"
   },
   "title": "Cài đặt",
+  "update": {
+    "check": {
+      "applyAction": "Khởi động lại ngay",
+      "applyDescription": "Cần khởi động lại ứng dụng để áp dụng bản cập nhật mới nhất. Bạn có muốn khởi động lại ngay bây giờ không?",
+      "applyError": "Áp dụng bản cập nhật thất bại, vui lòng thử lại sau",
+      "applyTitle": "Cập nhật ứng dụng",
+      "applying": "Đang khởi động lại để áp dụng bản cập nhật...",
+      "checking": "Đang kiểm tra bản cập nhật...",
+      "downloaded": "Gói cập nhật đã được tải xuống",
+      "downloading": "Phát hiện phiên bản mới, đang tải xuống bản cập nhật...",
+      "error": "Kiểm tra bản cập nhật thất bại, vui lòng thử lại sau",
+      "none": "Bạn đang sử dụng phiên bản mới nhất",
+      "title": "Kiểm tra bản cập nhật",
+      "unavailable": "Bản dựng hiện tại không hỗ trợ kiểm tra cập nhật. Vui lòng sử dụng tính năng này trong phiên bản chính thức."
+    }
+  },
   "version": "Phiên bản hiện tại"
 }

@@ -246,5 +246,21 @@
     "title": "Mode du thème"
   },
   "title": "Paramètres",
+  "update": {
+    "check": {
+      "applyAction": "Redémarrer maintenant",
+      "applyDescription": "Un redémarrage de l'application est nécessaire pour appliquer la dernière mise à jour. Voulez-vous redémarrer maintenant ?",
+      "applyError": "Échec de l'application de la mise à jour. Veuillez réessayer plus tard.",
+      "applyTitle": "Mise à jour de l'application",
+      "applying": "Redémarrage en cours pour appliquer la mise à jour...",
+      "checking": "Vérification des mises à jour en cours...",
+      "downloaded": "Le paquet de mise à jour a été téléchargé",
+      "downloading": "Nouvelle version détectée, téléchargement de la mise à jour en cours...",
+      "error": "Échec de la vérification des mises à jour. Veuillez réessayer plus tard.",
+      "none": "Vous utilisez déjà la dernière version",
+      "title": "Vérifier les mises à jour",
+      "unavailable": "La vérification des mises à jour n'est pas disponible pour cette version. Veuillez utiliser une version officielle pour accéder à cette fonctionnalité."
+    }
+  },
   "version": "Version actuelle"
 }

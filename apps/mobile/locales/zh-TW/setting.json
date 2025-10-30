@@ -246,5 +246,21 @@
     "title": "主題模式"
   },
   "title": "設定",
+  "update": {
+    "check": {
+      "applyAction": "立即重新啟動",
+      "applyDescription": "需要重新啟動應用程式以套用最新更新，是否現在重新啟動？",
+      "applyError": "套用更新失敗，請稍後再試",
+      "applyTitle": "應用程式更新",
+      "applying": "正在重新啟動以套用更新...",
+      "checking": "正在檢查更新...",
+      "downloaded": "更新包已下載完成",
+      "downloading": "偵測到新版本，正在下載更新...",
+      "error": "檢查更新失敗，請稍後再試",
+      "none": "目前已是最新版本",
+      "title": "檢查更新",
+      "unavailable": "目前的建置版本不支援檢查更新，請在正式版本中使用此功能。"
+    }
+  },
   "version": "目前版本"
 }

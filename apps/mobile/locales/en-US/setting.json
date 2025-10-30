@@ -246,5 +246,21 @@
     "title": "Theme Mode"
   },
   "title": "Settings",
+  "update": {
+    "check": {
+      "applyAction": "Restart Now",
+      "applyDescription": "Restart now to apply the latest update?",
+      "applyError": "Failed to apply the update. Please try again.",
+      "applyTitle": "Apply Update",
+      "applying": "Restarting to apply update...",
+      "checking": "Checking for updates...",
+      "downloaded": "Update downloaded",
+      "downloading": "Update available, downloading...",
+      "error": "Failed to check for updates. Please try again later.",
+      "none": "You're on the latest version",
+      "unavailable": "Update checks are only available in release builds.",
+      "title": "Check for Updates"
+    }
+  },
   "version": "Current Version"
 }
