@@ -1,5 +1,4 @@
 import { ActionIcon, Block, Flexbox, Tag, Text } from '@lobehub/ui-rn';
-import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { useRouter } from 'expo-router';
 import { SearchIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
@@ -23,7 +22,6 @@ import { useStyles } from './style';
  * 负责展示当前会话下的所有topic列表
  */
 const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
-  const isGlassAvailable = isLiquidGlassAvailable();
   const { styles } = useStyles();
   const topics = useChatStore(topicSelectors.currentTopicLength);
   const winDim = useWindowDimensions();
@@ -62,13 +60,7 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <Block
-          borderRadius={44}
-          flex={1}
-          glass
-          style={[styles.drawerContent, isGlassAvailable ? {} : { borderRadius: 0 }]}
-          variant={'outlined'}
-        >
+        <Block borderRadius={44} flex={1} glass style={[styles.drawerContent]} variant={'outlined'}>
           <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }} testID="page-container">
             <Flexbox
               align={'center'}
