@@ -57,6 +57,11 @@ export const topicReducer = (state: ChatTopic[] = [], payload: ChatTopicDispatch
           // @ts-ignore
           draftState[topicIndex] = { ...draftState[topicIndex], ...value, updatedAt: new Date() };
         }
+
+        // MOBILE UPDATE 如果更新了 favorite 状态，重新排序以将收藏的话题排在前面
+        if (value.favorite !== undefined) {
+          return draftState.sort((a, b) => Number(b.favorite) - Number(a.favorite));
+        }
       });
     }
 
