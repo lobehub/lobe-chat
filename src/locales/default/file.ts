@@ -85,6 +85,7 @@ export default {
     audios: '语音',
     documents: '文档',
     images: '图片',
+    moreTypes: '更多类型',
     notes: '笔记',
     videos: '视频',
     websites: '网页',
