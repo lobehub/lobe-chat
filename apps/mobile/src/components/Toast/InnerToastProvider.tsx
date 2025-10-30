@@ -121,7 +121,7 @@ export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
 
       {/* Top Viewport */}
       <SafeAreaView
-        edges={['top', 'bottom']}
+        edges={['top']}
         pointerEvents="box-none"
         style={[styles.viewport, styles.topViewport]}
       >
@@ -144,7 +144,7 @@ export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
 
       {/* Bottom Viewport */}
       <SafeAreaView
-        edges={['top', 'bottom']}
+        edges={['bottom']}
         pointerEvents="box-none"
         style={[styles.viewport, styles.bottomViewport]}
       >

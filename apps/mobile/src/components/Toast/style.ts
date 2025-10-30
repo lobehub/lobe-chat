@@ -4,7 +4,7 @@ import { createStyles } from '@/components/styles';
 export const useStyles = createStyles(() => ({
   bottomViewport: {
     justifyContent: 'flex-end',
-    paddingBottom: 16,
+    paddingBottom: HEADER_HEIGHT * 2,
   },
   message: {
     flex: 1,

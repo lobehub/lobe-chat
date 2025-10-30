@@ -22,7 +22,7 @@ import { useStyles } from './style';
  * 负责展示当前会话下的所有topic列表
  */
 const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const topics = useChatStore(topicSelectors.currentTopicLength);
   const winDim = useWindowDimensions();
   const { t } = useTranslation('topic');
@@ -60,15 +60,7 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <Block
-          borderRadius={44}
-          flex={1}
-          glass
-          style={{
-            backgroundColor: theme.colorBgLayout,
-          }}
-          variant={'outlined'}
-        >
+        <Block borderRadius={44} flex={1} glass style={styles.drawerContent} variant={'outlined'}>
           <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }} testID="page-container">
             <Flexbox
               align={'center'}

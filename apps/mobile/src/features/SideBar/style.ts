@@ -11,6 +11,17 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
   drawerBackground: {
     backgroundColor: 'transparent',
   },
+  drawerContent: {
+    backgroundColor: token.colorBgLayout,
+    borderBottomEndRadius: 44,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 44,
+    borderBottomStartRadius: 0,
+    borderTopEndRadius: 44,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 44,
+    borderTopStartRadius: 0,
+  },
   drawerOverlay: {
     backgroundColor: isDarkMode
       ? 'rgba(0,0,0,.8)'
