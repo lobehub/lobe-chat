@@ -1,4 +1,8 @@
 {
+  "actions": {
+    "favorite": "Favorilere Ekle",
+    "unfavorite": "Favorilerden Kaldır"
+  },
   "confirmRemoveTopicItemAlert": "Bu konuyu silmek üzeresiniz. Silme işlemi geri alınamaz. Lütfen işleminizi onaylayın.",
   "defaultTitle": "Varsayılan Konu",
   "empty": "Henüz konu yok",
