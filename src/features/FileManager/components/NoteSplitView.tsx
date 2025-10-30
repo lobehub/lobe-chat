@@ -5,7 +5,6 @@ import { createStyles } from 'antd-style';
 import { FilePenLine, PlusIcon } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
@@ -243,12 +242,9 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
           {isLoading ? (
             <NoteListSkeleton />
           ) : notes.length === 0 ? (
-            <Flexbox
-              padding={24}
-              style={{ color: 'var(--lobe-text-secondary)', textAlign: 'center' }}
-            >
+            <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
               {t('notesList.empty')}
-            </Flexbox>
+            </div>
           ) : (
             notes.map((note) => {
               const previewText = getPreviewText(note);
