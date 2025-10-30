@@ -6,7 +6,6 @@ import {
   MessageSquarePlusIcon,
   TextAlignStartIcon,
 } from 'lucide-react-native';
-import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 
@@ -40,7 +39,7 @@ export default function ChatWithDrawer() {
   const renderContent = () => {
     return (
       <PageContainer
-        backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
+        backgroundColor={theme.colorBgLayout}
         extra={
           <Flexbox align={'center'} gap={1} horizontal>
             <ActionIcon
