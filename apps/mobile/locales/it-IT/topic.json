@@ -1,4 +1,8 @@
 {
+  "actions": {
+    "favorite": "Aggiungi ai preferiti",
+    "unfavorite": "Rimuovi dai preferiti"
+  },
   "confirmRemoveTopicItemAlert": "Stai per eliminare questo argomento. Una volta eliminato, non potrà essere recuperato. Conferma la tua azione.",
   "defaultTitle": "Argomento predefinito",
   "empty": "Nessun argomento",

@@ -1,4 +1,8 @@
 {
+  "actions": {
+    "favorite": "Ajouter aux favoris",
+    "unfavorite": "Retirer des favoris"
+  },
   "confirmRemoveTopicItemAlert": "Ce sujet va être supprimé. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "defaultTitle": "Sujet par défaut",
   "empty": "Aucun sujet pour le moment",

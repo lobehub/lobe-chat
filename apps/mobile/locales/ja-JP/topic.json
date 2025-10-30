@@ -1,4 +1,8 @@
 {
+  "actions": {
+    "favorite": "お気に入りに追加",
+    "unfavorite": "お気に入りから削除"
+  },
   "confirmRemoveTopicItemAlert": "このトピックを削除しようとしています。削除すると元に戻せません。本当に削除してもよろしいですか？",
   "defaultTitle": "デフォルトトピック",
   "empty": "トピックがありません",
