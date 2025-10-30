@@ -243,7 +243,6 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
       setSaveStatus('idle');
     }, []);
 
-
     // Update currentDocId when documentId prop changes
     useEffect(() => {
       setCurrentDocId(documentId);
@@ -387,7 +386,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
         />
 
         {/* Editor */}
-        <Flexbox flex={1} padding={24} style={{ overflowY: 'auto' }}>
+        <Flexbox flex={1} paddingBlock={16} paddingInline={24} style={{ overflowY: 'auto' }}>
           <Editor
             className={editorClassName}
             content={''}

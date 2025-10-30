@@ -75,7 +75,7 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(({ onCreateNewNote }) => {
   return (
     <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
       <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-        <Text as={'h4'}>Select a note to edit its content</Text>
+        <Text as={'h4'}>Select a note to get started</Text>
         <Text type={'secondary'}>Or</Text>
       </Flexbox>
       <Flexbox gap={12} horizontal>
