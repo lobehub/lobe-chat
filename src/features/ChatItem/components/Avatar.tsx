@@ -22,10 +22,16 @@ const Avatar = memo<AvatarProps>(
   ({ loading, avatar, placement, unoptimized, addon, onClick, size = 40, style, alt }) => {
     const { styles } = useStyles({ avatarSize: size });
     const avatarContent = (
-      <div className={styles.avatarContainer} style={style}>
+      <div
+        className={styles.avatarContainer}
+        style={{
+          ...style,
+          animation: loading ? 'dog-thinking 3s ease-in-out infinite' : undefined,
+        }}
+      >
         <A
           alt={alt || avatar.title}
-          animation={loading}
+          animation={false}
           avatar={avatar.avatar}
           background={avatar.backgroundColor}
           onClick={onClick}
