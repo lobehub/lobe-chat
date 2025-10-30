@@ -1,14 +1,16 @@
 import {
+  Content,
   GenerateContentConfig,
   Tool as GoogleFunctionCallTool,
   GoogleGenAI,
   HttpOptions,
+  Part,
   ThinkingConfig,
 } from '@google/genai';
 import debug from 'debug';
 
 import { LobeRuntimeAI } from '../../core/BaseAI';
-import { buildGoogleMessages, buildGoogleTools } from '../../core/contextBuilders/google';
+import { buildGoogleTools } from '../../core/contextBuilders/google';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../../core/streams';
 import { LOBE_ERROR_KEY } from '../../core/streams/google';
 import {
@@ -17,6 +19,8 @@ import {
   ChatStreamPayload,
   GenerateObjectOptions,
   GenerateObjectPayload,
+  OpenAIChatMessage,
+  UserMessageContentPart,
 } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
@@ -24,7 +28,10 @@ import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
 import { getModelPricing } from '../../utils/getModelPricing';
 import { parseGoogleErrorMessage } from '../../utils/googleErrorParser';
+import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { StreamingResponse } from '../../utils/response';
+import { safeParseJSON } from '../../utils/safeParseJSON';
+import { parseDataUri } from '../../utils/uriParser';
 import { createGoogleImage } from './createImage';
 import { createGoogleGenerateObject, createGoogleGenerateObjectWithTools } from './generateObject';
 
@@ -203,13 +210,13 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         includeThoughts:
           (!!thinkingBudget ||
             (model && (model.includes('-2.5-') || model.includes('thinking')))) &&
-          resolvedThinkingBudget !== 0
+            resolvedThinkingBudget !== 0
             ? true
             : undefined,
         thinkingBudget: resolvedThinkingBudget,
       };
 
-      const contents = await buildGoogleMessages(payload.messages);
+      const contents = await this.buildGoogleMessages(payload.messages);
 
       const controller = new AbortController();
       const originalSignal = options?.signal;
@@ -326,7 +333,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
    */
   async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
     // Convert OpenAI messages to Google format
-    const contents = await buildGoogleMessages(payload.messages);
+    const contents = await this.buildGoogleMessages(payload.messages);
 
     // Handle tools-based structured output
     if (payload.tools && payload.tools.length > 0) {
@@ -495,6 +502,183 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       system: system_message?.content,
     };
   }
+
+  private convertContentToGooglePart = async (
+    content: UserMessageContentPart,
+  ): Promise<Part | undefined> => {
+    switch (content.type) {
+      default: {
+        return undefined;
+      }
+
+      case 'text': {
+        return { text: content.text };
+      }
+
+      case 'image_url': {
+        const { mimeType, base64, type } = parseDataUri(content.image_url.url);
+
+        if (type === 'base64') {
+          if (!base64) {
+            throw new TypeError("Image URL doesn't contain base64 data");
+          }
+
+          return {
+            inlineData: { data: base64, mimeType: mimeType || 'image/png' },
+          };
+        }
+
+        if (type === 'url') {
+          const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
+
+          return {
+            inlineData: { data: base64, mimeType },
+          };
+        }
+
+        throw new TypeError(`currently we don't support image url: ${content.image_url.url}`);
+      }
+
+      case 'file_url': {
+        // Use Google Files API: upload then reference by fileData
+        // Accept audio/* and video/*
+        const url = content.file_url.url;
+        const mimeType = content.file_url.mimeType || 'application/octet-stream';
+
+        // 1) Upload the file via multipart (sufficient for typical chat uploads)
+        // refs: https://ai.google.dev/api/files
+        const uploadUrl = `${this.baseURL?.replace(/\/$/, '')}/upload/v1beta/files?uploadType=multipart&key=${this.apiKey}`;
+
+        const metadata = { file: { displayName: content.file_url.displayName || 'media', mimeType } };
+
+        // fetch binary
+        const mediaRes = await fetch(url);
+        if (!mediaRes.ok) throw new Error(`Failed to fetch media: ${mediaRes.status}`);
+        const mediaBlob = await mediaRes.blob();
+
+        // Build multipart body
+        const boundary = `----lobe-google-${Math.random().toString(36).slice(2)}`;
+        const encoder = new TextEncoder();
+        const part1 = encoder.encode(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`);
+        const part2Header = encoder.encode(`--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`);
+        const part3 = encoder.encode(`\r\n--${boundary}--`);
+
+        // Combine into a Blob
+        const multipartBody = new Blob([part1, part2Header, mediaBlob, part3], {
+          type: `multipart/related; boundary=${boundary}`,
+        });
+
+        // keep keys sorted in options object
+        const uploadRes = await fetch(uploadUrl, { body: multipartBody, method: 'POST' });
+        if (!uploadRes.ok) {
+          const text = await uploadRes.text();
+          throw new Error(`Google Files upload failed: ${uploadRes.status} ${text}`);
+        }
+        const uploaded = (await uploadRes.json()) as any;
+
+        // 2) Poll until ACTIVE (safeguard for videos)
+        const name: string | undefined = uploaded?.file?.name;
+        let state: string | undefined = uploaded?.file?.state?.name || uploaded?.file?.state;
+        const fileGetBase = `${this.baseURL?.replace(/\/$/, '')}/v1beta`;
+        if (name) {
+          let retry = 0;
+          while ((!state || state !== 'ACTIVE') && retry < 20) {
+            await new Promise<void>((resolve) => {
+              setTimeout(resolve, 2500);
+            });
+            const getRes = await fetch(`${fileGetBase}/${name}?key=${this.apiKey}`);
+            if (getRes.ok) {
+              const data = (await getRes.json()) as any;
+              state = data?.state?.name || data?.state;
+              if (state === 'FAILED') throw new Error('Google file processing failed');
+            } else {
+              break;
+            }
+            retry++;
+          }
+        }
+
+        const fileUri: string | undefined = uploaded?.file?.uri;
+        const finalMime = uploaded?.file?.mimeType || mimeType;
+        if (!fileUri) throw new Error('No file uri from Google Files API');
+
+        return { fileData: { fileUri, mimeType: finalMime } } as Part;
+      }
+    }
+  };
+
+  private convertOAIMessagesToGoogleMessage = async (
+    message: OpenAIChatMessage,
+    toolCallNameMap?: Map<string, string>,
+  ): Promise<Content> => {
+    const content = message.content as string | UserMessageContentPart[];
+    if (!!message.tool_calls) {
+      return {
+        parts: message.tool_calls.map<Part>((tool) => ({
+          functionCall: {
+            args: safeParseJSON(tool.function.arguments)!,
+            name: tool.function.name,
+          },
+        })),
+        role: 'model',
+      };
+    }
+
+    // 将 tool_call result 转成 functionResponse part
+    if (message.role === 'tool' && toolCallNameMap && message.tool_call_id) {
+      const functionName = toolCallNameMap.get(message.tool_call_id);
+      if (functionName) {
+        return {
+          parts: [
+            {
+              functionResponse: {
+                name: functionName,
+                response: { result: message.content },
+              },
+            },
+          ],
+          role: 'user',
+        };
+      }
+    }
+
+    const getParts = async () => {
+      if (typeof content === 'string') return [{ text: content }];
+
+      const parts = await Promise.all(
+        content.map(async (c) => await this.convertContentToGooglePart(c)),
+      );
+      return parts.filter(Boolean) as Part[];
+    };
+
+    return {
+      parts: await getParts(),
+      role: message.role === 'assistant' ? 'model' : 'user',
+    };
+  };
+
+  // convert messages from the OpenAI format to Google GenAI SDK
+  private buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promise<Content[]> => {
+    const toolCallNameMap = new Map<string, string>();
+    messages.forEach((message) => {
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall) => {
+          if (toolCall.type === 'function') {
+            toolCallNameMap.set(toolCall.id, toolCall.function.name);
+          }
+        });
+      }
+    });
+
+    const pools = messages
+      .filter((message) => message.role !== 'function')
+      .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg, toolCallNameMap));
+
+    const contents = await Promise.all(pools);
+
+    // 筛除空消息: contents.parts must not be empty.
+    return contents.filter((content: Content) => content.parts && content.parts.length > 0);
+  };
 
   private buildGoogleToolsWithSearch(
     tools: ChatCompletionTool[] | undefined,
