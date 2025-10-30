@@ -1,6 +1,7 @@
 import { UIChatMessage } from '@lobechat/types';
 import { Flexbox, MaskShadow } from '@lobehub/ui-rn';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
+import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { View, ViewStyle } from 'react-native';
 import { useKeyboardHandler } from 'react-native-keyboard-controller';
@@ -65,6 +66,7 @@ const ChatMessageItem = memo<{ index: number; item: UIChatMessage; totalLength: 
 ChatMessageItem.displayName = 'ChatMessageItem';
 
 export default function ChatListChatList({ style }: ChatListProps) {
+  const isGlassAvailable = isLiquidGlassAvailable();
   const listRef = useRef<FlashListRef<UIChatMessage>>(null);
   // 触发消息加载
   useFetchMessages();
@@ -134,7 +136,7 @@ export default function ChatListChatList({ style }: ChatListProps) {
     content = (
       <>
         <MaskShadow
-          size={32}
+          size={isGlassAvailable ? 12 : 32}
           style={{
             flex: 1,
             marginBottom: -24,
