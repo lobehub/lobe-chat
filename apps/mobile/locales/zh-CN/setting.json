@@ -246,5 +246,21 @@
     "title": "主题模式"
   },
   "title": "设置",
+  "update": {
+    "check": {
+      "applyAction": "立即重启",
+      "applyDescription": "需要重启应用以应用最新更新，是否现在重启？",
+      "applyError": "应用更新失败，请稍后重试",
+      "applyTitle": "应用更新",
+      "applying": "正在重启以应用更新...",
+      "checking": "正在检查更新...",
+      "downloaded": "更新包已下载完成",
+      "downloading": "检测到新版本，正在下载更新...",
+      "error": "检查更新失败，请稍后重试",
+      "none": "当前已是最新版本",
+      "title": "检查更新",
+      "unavailable": "当前构建不支持检查更新，请在正式版本中使用此功能。"
+    }
+  },
   "version": "当前版本"
 }
