@@ -103,17 +103,20 @@ export default function ComponentPlaygroundIndex() {
           headerBackButtonMenuEnabled: true,
           headerBackVisible: true,
           headerBlurEffect: isGlassAvailable ? undefined : blurEffect,
-          headerLargeStyle: { backgroundColor: !isIOS ? theme.colorBgLayout : 'transparent' },
+          headerLargeStyle: {
+            backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent',
+          },
           headerLargeTitle: isIOS,
           headerSearchBarOptions: {
+            cancelButtonText: '取消',
             onChangeText: (event) => {
               setSearchText(event.nativeEvent.text);
             },
-            placeholder: '搜索组件..',
+            placeholder: '搜索组件...',
             textColor: theme.colorText,
           },
           headerShown: true,
-          headerStyle: { backgroundColor: !isIOS ? theme.colorBgLayout : 'transparent' },
+          headerStyle: { backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent' },
           headerTintColor: theme.colorText,
           headerTransparent: isIOS,
           title: 'Playground',

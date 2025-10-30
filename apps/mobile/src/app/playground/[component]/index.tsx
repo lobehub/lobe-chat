@@ -55,12 +55,13 @@ export default function DynamicComponentPlaygroundPage() {
     <>
       <Stack.Screen
         options={{
-          headerBackButtonDisplayMode: 'minimal',
+          headerBackButtonDisplayMode: isGlassAvailable ? 'minimal' : 'default',
           headerBackButtonMenuEnabled: true,
+          headerBackTitle: '返回',
           headerBackVisible: true,
           headerBlurEffect: isGlassAvailable ? undefined : blurEffect,
           headerShown: true,
-          headerStyle: { backgroundColor: !isIOS ? theme.colorBgLayout : 'transparent' },
+          headerStyle: { backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent' },
           headerTintColor: theme.colorText,
           headerTransparent: isIOS,
           title: componentName,
