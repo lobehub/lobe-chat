@@ -20,6 +20,7 @@ import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { isIOS } from '@/utils/detection';
 
 export default function ChatWithDrawer() {
   const theme = useTheme();
@@ -56,7 +57,7 @@ export default function ChatWithDrawer() {
         title={displayTitle}
         titleIcon={isInbox ? undefined : ChevronRightIcon}
       >
-        <KeyboardStickyView offset={{ closed: 0, opened: 32 }} style={{ flex: 1 }}>
+        <KeyboardStickyView offset={{ closed: 0, opened: isIOS ? 32 : 16 }} style={{ flex: 1 }}>
           <ChatList />
           <ChatInput />
         </KeyboardStickyView>

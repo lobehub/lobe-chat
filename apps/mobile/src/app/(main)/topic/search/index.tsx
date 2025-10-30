@@ -3,6 +3,7 @@ import type { FlashListRef } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { RecentSearches, useRecentSearches } from '@/features/Search';
 
@@ -92,7 +93,12 @@ const TopicSearch = () => {
       }}
       showBack
     >
-      {content}
+      <KeyboardAwareScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        {content}
+      </KeyboardAwareScrollView>
     </PageContainer>
   );
 };
