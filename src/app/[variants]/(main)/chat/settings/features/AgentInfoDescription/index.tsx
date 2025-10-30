@@ -45,7 +45,7 @@ interface AgentInfoDescriptionProps {
     id: string;
     name: string;
   }>;
-  meta?: AgentItemDetail & {
+  meta?: Partial<AgentItemDetail> & {
     description?: string;
     name?: string;
     title?: string;

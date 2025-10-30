@@ -31,11 +31,11 @@ export const API_ENDPOINTS = {
 };
 
 export const MARKET_OIDC_ENDPOINTS = {
-  auth: '/market-oidc/auth',
+  auth: '/lobehub-oidc/auth',
   token: '/market/oidc/token',
   userinfo: '/market/oidc/userinfo',
   handoff: '/market/oidc/handoff',
-  desktopCallback: '/market-oidc/callback/desktop',
+  desktopCallback: '/lobehub-oidc/callback/desktop',
 };
 
 export const MARKET_ENDPOINTS = {
