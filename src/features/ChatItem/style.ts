@@ -62,7 +62,7 @@ export const useStyles = createStyles(
           justify-content: ${placement === 'left' ? 'flex-end' : 'flex-start'};
         `,
         editing &&
-          css`
+        css`
             pointer-events: none !important;
             opacity: 0 !important;
           `,
@@ -72,6 +72,34 @@ export const useStyles = createStyles(
         flex: none;
         width: ${avatarSize}px;
         height: ${avatarSize}px;
+
+        /* 狗狗思考动画 - 可爱的摆头+点头+呼吸效果 */
+        @keyframes dog-thinking {
+          0% {
+            transform: rotate(0deg) translateY(0) scale(1);
+          }
+          10% {
+            transform: rotate(-3deg) translateY(-2px) scale(1.02);
+          }
+          25% {
+            transform: rotate(2deg) translateY(0) scale(1.05);
+          }
+          40% {
+            transform: rotate(-2deg) translateY(-1px) scale(1.03);
+          }
+          55% {
+            transform: rotate(1deg) translateY(1px) scale(1.01);
+          }
+          70% {
+            transform: rotate(-1deg) translateY(-2px) scale(1.04);
+          }
+          85% {
+            transform: rotate(0.5deg) translateY(0) scale(1.02);
+          }
+          100% {
+            transform: rotate(0deg) translateY(0) scale(1);
+          }
+        }
       `,
       avatarGroupContainer: css`
         width: ${avatarSize}px;
@@ -129,7 +157,7 @@ export const useStyles = createStyles(
           }
         `,
         variant === 'docs' &&
-          css`
+        css`
             border-radius: ${token.borderRadius}px;
             background: ${token.colorFillQuaternary};
           `,
