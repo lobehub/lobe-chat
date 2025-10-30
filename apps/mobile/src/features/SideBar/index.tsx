@@ -1,6 +1,5 @@
 import { LobeHub } from '@lobehub/icons-rn';
 import { ActionIcon, Block, Flexbox } from '@lobehub/ui-rn';
-import { isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Link, router } from 'expo-router';
 import { CirclePlus, CompassIcon, LucideComponent } from 'lucide-react-native';
 import type { ReactNode } from 'react';
@@ -20,7 +19,6 @@ import SessionList from './components/SessionList';
 import { useStyles } from './style';
 
 export default function SideBar({ children }: { children: ReactNode }) {
-  const isGlassAvailable = isLiquidGlassAvailable();
   const { styles, theme } = useStyles();
   const winDim = useWindowDimensions();
 
@@ -73,12 +71,7 @@ export default function SideBar({ children }: { children: ReactNode }) {
       open={drawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <Block
-          flex={1}
-          glass
-          style={[styles.drawerContent, isGlassAvailable ? {} : { borderRadius: 0 }]}
-          variant={'outlined'}
-        >
+        <Block flex={1} glass style={[styles.drawerContent]} variant={'outlined'}>
           <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }} testID="page-container">
             <Flexbox
               align={'center'}
