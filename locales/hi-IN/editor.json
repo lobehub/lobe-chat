@@ -1,0 +1,62 @@
+{
+  "actions": {
+    "expand": {
+      "off": "संकुचित करें",
+      "on": "विस्तारित करें"
+    },
+    "typobar": {
+      "off": "फ़ॉर्मेटिंग टूलबार छिपाएँ",
+      "on": "फ़ॉर्मेटिंग टूलबार दिखाएँ"
+    }
+  },
+  "cancel": "रद्द करें",
+  "confirm": "पुष्टि करें",
+  "file": {
+    "error": "त्रुटि: {{message}}",
+    "uploading": "फ़ाइल अपलोड की जा रही है..."
+  },
+  "image": {
+    "broken": "छवि क्षतिग्रस्त है"
+  },
+  "link": {
+    "edit": "लिंक संपादित करें",
+    "open": "लिंक खोलें",
+    "placeholder": "लिंक URL दर्ज करें",
+    "unlink": "लिंक हटाएँ"
+  },
+  "math": {
+    "placeholder": "कृपया एक TeX सूत्र दर्ज करें"
+  },
+  "slash": {
+    "h1": "शीर्षक 1",
+    "h2": "शीर्षक 2",
+    "h3": "शीर्षक 3",
+    "hr": "विभाजक रेखा",
+    "table": "तालिका",
+    "tex": "TeX सूत्र"
+  },
+  "table": {
+    "delete": "तालिका हटाएँ",
+    "deleteColumn": "स्तंभ हटाएँ",
+    "deleteRow": "पंक्ति हटाएँ",
+    "insertColumnLeft": "बाईं ओर {{count}} स्तंभ जोड़ें",
+    "insertColumnRight": "दाईं ओर {{count}} स्तंभ जोड़ें",
+    "insertRowAbove": "ऊपर {{count}} पंक्ति जोड़ें",
+    "insertRowBelow": "नीचे {{count}} पंक्ति जोड़ें"
+  },
+  "typobar": {
+    "blockquote": "उद्धरण ब्लॉक",
+    "bold": "गाढ़ा",
+    "bulletList": "बुलेट सूची",
+    "code": "इनलाइन कोड",
+    "codeblock": "कोड ब्लॉक",
+    "italic": "तिरछा",
+    "link": "लिंक",
+    "numberList": "क्रमांकित सूची",
+    "strikethrough": "काटी हुई रेखा",
+    "table": "तालिका",
+    "taskList": "कार्य सूची",
+    "tex": "TeX सूत्र",
+    "underline": "रेखांकित"
+  }
+}
