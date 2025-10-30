@@ -52,10 +52,6 @@
     "title": "Knowledge Base"
   },
   "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
-  "notesList": {
-    "empty": "No notes yet, click the button above to create your first note",
-    "selectNote": "Select a note to start editing"
-  },
   "notSupportGuide": {
     "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
     "features": {
@@ -73,6 +69,14 @@
       }
     },
     "title": "The current deployment mode does not support file management"
+  },
+  "notesList": {
+    "actions": {
+      "copy": "Copy Content",
+      "delete": "Delete Note"
+    },
+    "empty": "No notes yet, click the button above to create your first note",
+    "selectNote": "Select a note to start editing"
   },
   "preview": {
     "downloadFile": "Download File",
