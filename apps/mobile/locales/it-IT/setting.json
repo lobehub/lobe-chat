@@ -246,5 +246,21 @@
     "title": "Modalità tema"
   },
   "title": "Impostazioni",
+  "update": {
+    "check": {
+      "applyAction": "Riavvia ora",
+      "applyDescription": "È necessario riavviare l'applicazione per applicare l'ultimo aggiornamento. Vuoi riavviare ora?",
+      "applyError": "Applicazione dell'aggiornamento non riuscita, riprova più tardi",
+      "applyTitle": "Aggiornamento dell'applicazione",
+      "applying": "Riavvio in corso per applicare l'aggiornamento...",
+      "checking": "Verifica aggiornamenti in corso...",
+      "downloaded": "Il pacchetto di aggiornamento è stato scaricato",
+      "downloading": "Nuova versione rilevata, download dell'aggiornamento in corso...",
+      "error": "Verifica aggiornamenti non riuscita, riprova più tardi",
+      "none": "Hai già la versione più recente",
+      "title": "Verifica aggiornamenti",
+      "unavailable": "La verifica degli aggiornamenti non è supportata in questa build. Utilizza questa funzione nella versione ufficiale."
+    }
+  },
   "version": "Versione corrente"
 }

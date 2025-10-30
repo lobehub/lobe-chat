@@ -246,5 +246,21 @@
     "title": "Tema Modu"
   },
   "title": "Ayarlar",
+  "update": {
+    "check": {
+      "applyAction": "Şimdi Yeniden Başlat",
+      "applyDescription": "En son güncellemeleri uygulamak için uygulamanın yeniden başlatılması gerekiyor. Şimdi yeniden başlatmak ister misiniz?",
+      "applyError": "Güncelleme uygulanamadı, lütfen daha sonra tekrar deneyin",
+      "applyTitle": "Uygulama Güncellemesi",
+      "applying": "Güncellemeleri uygulamak için yeniden başlatılıyor...",
+      "checking": "Güncellemeler kontrol ediliyor...",
+      "downloaded": "Güncelleme paketi indirildi",
+      "downloading": "Yeni bir sürüm tespit edildi, güncelleme indiriliyor...",
+      "error": "Güncellemeler kontrol edilemedi, lütfen daha sonra tekrar deneyin",
+      "none": "Uygulama zaten en son sürümde",
+      "title": "Güncellemeleri Kontrol Et",
+      "unavailable": "Bu yapı güncelleme kontrolünü desteklemiyor, lütfen bu özelliği resmi sürümde kullanın."
+    }
+  },
   "version": "Mevcut Sürüm"
 }

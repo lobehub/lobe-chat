@@ -246,5 +246,21 @@
     "title": "Themamodus"
   },
   "title": "Instellingen",
+  "update": {
+    "check": {
+      "applyAction": "Nu opnieuw opstarten",
+      "applyDescription": "De applicatie moet opnieuw worden opgestart om de nieuwste update toe te passen. Nu opnieuw opstarten?",
+      "applyError": "Update toepassen is mislukt. Probeer het later opnieuw.",
+      "applyTitle": "Update toepassen",
+      "applying": "Bezig met opnieuw opstarten om update toe te passen...",
+      "checking": "Bezig met controleren op updates...",
+      "downloaded": "Updatepakket is succesvol gedownload",
+      "downloading": "Nieuwe versie gedetecteerd, update wordt gedownload...",
+      "error": "Controleren op updates is mislukt. Probeer het later opnieuw.",
+      "none": "Je gebruikt al de nieuwste versie",
+      "title": "Controleren op updates",
+      "unavailable": "Deze build ondersteunt geen updatecontrole. Gebruik deze functie in de officiële versie."
+    }
+  },
   "version": "Huidige versie"
 }

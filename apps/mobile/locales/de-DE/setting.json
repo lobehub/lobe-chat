@@ -246,5 +246,21 @@
     "title": "Themenmodus"
   },
   "title": "Einstellungen",
+  "update": {
+    "check": {
+      "applyAction": "Jetzt neu starten",
+      "applyDescription": "Die Anwendung muss neu gestartet werden, um das neueste Update zu übernehmen. Jetzt neu starten?",
+      "applyError": "Update konnte nicht angewendet werden. Bitte versuchen Sie es später erneut.",
+      "applyTitle": "Update anwenden",
+      "applying": "Neustart wird durchgeführt, um das Update anzuwenden...",
+      "checking": "Suche nach Updates...",
+      "downloaded": "Update-Paket wurde erfolgreich heruntergeladen",
+      "downloading": "Neue Version erkannt, Update wird heruntergeladen...",
+      "error": "Fehler bei der Update-Prüfung. Bitte versuchen Sie es später erneut.",
+      "none": "Sie verwenden bereits die neueste Version",
+      "title": "Nach Updates suchen",
+      "unavailable": "Diese Build-Version unterstützt keine Update-Prüfung. Bitte verwenden Sie die offizielle Version für diese Funktion."
+    }
+  },
   "version": "Aktuelle Version"
 }

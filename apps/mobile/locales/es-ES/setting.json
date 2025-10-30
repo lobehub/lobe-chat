@@ -246,5 +246,21 @@
     "title": "Modo de tema"
   },
   "title": "Configuración",
+  "update": {
+    "check": {
+      "applyAction": "Reiniciar ahora",
+      "applyDescription": "Es necesario reiniciar la aplicación para aplicar la última actualización. ¿Desea reiniciar ahora?",
+      "applyError": "Error al aplicar la actualización. Por favor, inténtelo de nuevo más tarde.",
+      "applyTitle": "Aplicar actualización",
+      "applying": "Reiniciando para aplicar la actualización...",
+      "checking": "Comprobando actualizaciones...",
+      "downloaded": "El paquete de actualización se ha descargado correctamente",
+      "downloading": "Se ha detectado una nueva versión. Descargando actualización...",
+      "error": "Error al comprobar actualizaciones. Por favor, inténtelo de nuevo más tarde.",
+      "none": "Ya tienes la última versión",
+      "title": "Buscar actualizaciones",
+      "unavailable": "La comprobación de actualizaciones no está disponible en esta versión. Utiliza esta función en la versión oficial."
+    }
+  },
   "version": "Versión actual"
 }
