@@ -1,8 +1,8 @@
 'use client';
 
-import { ActionIcon, Icon, Markdown, SearchBar } from '@lobehub/ui';
+import { ActionIcon, Markdown, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { FilePenLine, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,7 @@ import { FileListItem } from '@/types/files';
 
 import NoteActions from './NoteActions';
 import NoteEditorPanel from './NoteEditorPanel';
+import NoteEmptyStatus from './NoteEmptyStatus';
 import NoteListSkeleton from './NoteListSkeleton';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -23,17 +24,6 @@ const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
     flex: 1;
     background: ${token.colorBgContainer};
-  `,
-  emptyState: css`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: center;
-    justify-content: center;
-
-    height: 100%;
-
-    color: ${token.colorTextDescription};
   `,
   header: css`
     display: flex;
@@ -68,6 +58,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   noteCard: css`
     cursor: pointer;
+    user-select: none;
 
     position: relative;
 
@@ -232,7 +223,12 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   const selectedNote = notes.find((note) => note.id === selectedNoteId);
 
   const handleNoteSelect = (noteId: string) => {
-    setSelectedNoteId(noteId);
+    if (selectedNoteId === noteId) {
+      // Deselect if clicking the same note
+      setSelectedNoteId(null);
+    } else {
+      setSelectedNoteId(noteId);
+    }
     setIsCreatingNew(false);
   };
 
@@ -328,10 +324,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
             onDocumentIdChange={handleDocumentIdChange}
           />
         ) : (
-          <div className={styles.emptyState}>
-            <Icon icon={FilePenLine} size={48} />
-            <div style={{ fontSize: 16 }}>{t('notesList.selectNote')}</div>
-          </div>
+          <NoteEmptyStatus knowledgeBaseId={knowledgeBaseId} onCreateNewNote={handleNewNote} />
         )}
       </div>
     </div>
