@@ -236,7 +236,7 @@
     "modern-screenshot": "^4.6.6",
     "nanoid": "^5.1.6",
     "next": "~15.3.5",
-    "next-auth": "5.0.0-beta.29",
+    "next-auth": "5.0.0-beta.30",
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.9.17",
     "node-machine-id": "^1.1.12",
