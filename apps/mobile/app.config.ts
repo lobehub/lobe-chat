@@ -16,6 +16,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: './assets/images/icon-android-foreground.png',
       monochromeImage: './assets/images/icon-android-foreground.png',
     },
+    edgeToEdgeEnabled: true,
     icon: './assets/images/icon-android.png',
     package: 'com.lobehub.app',
   },

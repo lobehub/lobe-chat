@@ -9,15 +9,18 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     backgroundColor: 'transparent',
   },
   drawerContent: {
-    backgroundColor: token.colorBgLayout,
+    backgroundColor: token.colorBgContainerSecondary,
     borderBottomEndRadius: 0,
     borderBottomLeftRadius: 44,
     borderBottomRightRadius: 0,
     borderBottomStartRadius: 44,
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
     borderTopEndRadius: 0,
     borderTopLeftRadius: 44,
     borderTopRightRadius: 0,
     borderTopStartRadius: 44,
+    borderTopWidth: 0,
   },
   drawerOverlay: {
     backgroundColor: isDarkMode
@@ -27,7 +30,6 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
     borderRightWidth: StyleSheet.hairlineWidth,
   },
   drawerStyle: {
-    backgroundColor: token.colorBgLayout,
     width: DRAWER_WIDTH,
   },
   headerTitle: {
