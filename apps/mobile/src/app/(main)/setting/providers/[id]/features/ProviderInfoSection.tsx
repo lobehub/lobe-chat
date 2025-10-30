@@ -14,7 +14,7 @@ interface ProviderInfoSectionProps {
 
 const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provider }) => {
   const { t } = useTranslation('setting');
-  const isLobehub = provider.id === 'lobehub' || (provider as any)?.data?.id === 'lobehub';
+  const isLobehub = provider?.id === 'lobehub' || (provider as any)?.data?.id === 'lobehub';
 
   // Store hooks
   const { toggleProviderEnabled } = useAiInfraStore();
@@ -23,9 +23,9 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
   const handleSwitchChange = async (value: boolean) => {
     setLoading(true);
     try {
-      await toggleProviderEnabled(provider.id, value);
+      await toggleProviderEnabled(provider?.id, value);
     } catch (error) {
-      console.error(`Failed to toggle provider ${provider.id}:`, error);
+      console.error(`Failed to toggle provider ${provider?.id}:`, error);
     }
     setLoading(false);
   };
@@ -34,7 +34,7 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
     <Flexbox paddingBlock={4}>
       <Cell
         description={
-          isLobehub || provider.source === 'builtin'
+          isLobehub || provider?.source === 'builtin'
             ? t('aiProviders.info.builtIn', { ns: 'setting' })
             : t('aiProviders.info.custom', { ns: 'setting' })
         }
@@ -42,11 +42,11 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
           !isLobehub && <InstantSwitch defaultChecked={isEnabled} onChange={handleSwitchChange} />
         }
         icon={
-          <ProviderIcon provider={isLobehub ? 'lobehub' : provider.id} size={44} type={'avatar'} />
+          <ProviderIcon provider={isLobehub ? 'lobehub' : provider?.id} size={44} type={'avatar'} />
         }
         iconSize={44}
         showArrow={false}
-        title={isLobehub ? 'LobeHub' : provider.name}
+        title={isLobehub ? 'LobeHub' : provider?.name}
         titleProps={{
           fontSize: 18,
           weight: 500,

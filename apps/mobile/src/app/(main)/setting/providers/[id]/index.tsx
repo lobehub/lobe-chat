@@ -112,26 +112,28 @@ const ProviderDetailPage = () => {
     ({ item }: { item: FlashListItem }) => {
       switch (item.type) {
         case 'configuration': {
+          if (!item.data) return null;
           return <ConfigurationSection provider={item.data} setLoading={setLoading} />;
         }
 
         case 'models-header': {
           return (
             <ModelsHeader
-              isFetching={item.data.isFetching}
+              isFetching={item.data?.isFetching ?? false}
               onFetchModels={handleFetchModels}
               onSearchChange={setSearchKeyword}
-              searchKeyword={item.data.searchKeyword}
-              totalCount={item.data.totalCount}
+              searchKeyword={item.data?.searchKeyword ?? ''}
+              totalCount={item.data?.totalCount ?? 0}
             />
           );
         }
 
         case 'section-header': {
-          return <SectionHeader count={item.data.count} title={item.data.title} />;
+          return <SectionHeader count={item.data?.count ?? 0} title={item.data?.title ?? ''} />;
         }
 
         case 'model': {
+          if (!item.data) return null;
           return (
             <ModelCard model={item.data} onToggle={handleToggleModel} setLoading={setLoading} />
           );
@@ -140,7 +142,7 @@ const ProviderDetailPage = () => {
         case 'empty': {
           return (
             <Center paddingBlock={24}>
-              <Empty description={item.data.message} />
+              <Empty description={item.data?.message ?? ''} />
             </Center>
           );
         }
@@ -154,7 +156,7 @@ const ProviderDetailPage = () => {
   );
 
   // FlashList的keyExtractor
-  const keyExtractor = useCallback((item: FlashListItem) => item.id, []);
+  const keyExtractor = useCallback((item: FlashListItem) => item?.id ?? 'unknown', []);
 
   // ListFooterComponent - 优雅的加载提示
   const renderFooter = useCallback(() => {
@@ -209,16 +211,35 @@ const ProviderDetailPage = () => {
     );
   }
 
+  // 如果 providerDetail 不存在且还在加载，显示加载状态
+  if (!providerDetail && isLoading) {
+    return (
+      <PageContainer
+        loading={true}
+        showBack
+        title={headerTitle === 'lobehub' ? 'LobeHub' : headerTitle}
+      />
+    );
+  }
+
+  // 如果 providerDetail 不存在且加载完成，显示错误
+  if (!providerDetail) {
+    return (
+      <PageContainer loading={loading} showBack title={id || ''}>
+        <Center paddingBlock={24}>
+          <Empty description={t('aiProviders.detail.notFound', { ns: 'setting' })} flex={1} />
+        </Center>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer
       loading={loading}
       showBack
       title={headerTitle === 'lobehub' ? 'LobeHub' : headerTitle}
     >
-      <ProviderInfoSection
-        provider={{ ...builtinProviderCard, ...providerDetail } as any}
-        setLoading={setLoading}
-      />
+      <ProviderInfoSection provider={providerDetail} setLoading={setLoading} />
       <Flexbox
         paddingInline={16}
         style={{
@@ -250,7 +271,7 @@ const ProviderDetailPage = () => {
               <FlashList
                 data={configurationData}
                 drawDistance={500}
-                getItemType={(item) => item.type}
+                getItemType={(item) => item?.type ?? 'unknown'}
                 keyExtractor={keyExtractor}
                 onEndReached={handleEndReached}
                 onEndReachedThreshold={0.2}
@@ -267,7 +288,7 @@ const ProviderDetailPage = () => {
                 ListFooterComponent={renderFooter}
                 data={modelsData}
                 drawDistance={500}
-                getItemType={(item) => item.type}
+                getItemType={(item) => item?.type ?? 'unknown'}
                 keyExtractor={keyExtractor}
                 onEndReached={handleEndReached}
                 onEndReachedThreshold={0.2}
