@@ -319,8 +319,14 @@ export class FileModel {
       case FilesTabs.Images: {
         return 'image';
       }
+      case FilesTabs.Notes: {
+        return 'custom';
+      }
       case FilesTabs.Videos: {
         return 'video';
+      }
+      case FilesTabs.Websites: {
+        return 'text/html';
       }
       default: {
         return '';

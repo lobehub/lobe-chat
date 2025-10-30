@@ -210,10 +210,12 @@ export class KnowledgeRepo {
     // Exclude files in knowledge base if needed
     if (!showFilesInKnowledgeBase) {
       whereConditions.push(
-        sql`NOT EXISTS (
-          SELECT 1 FROM ${knowledgeBaseFiles}
-          WHERE ${knowledgeBaseFiles.fileId} = ${files.id}
-        )`,
+        sql`
+          NOT EXISTS (
+                    SELECT 1 FROM ${knowledgeBaseFiles}
+                    WHERE ${knowledgeBaseFiles.fileId} = ${files.id}
+                  )
+        `,
       );
     }
 
@@ -253,22 +255,55 @@ export class KnowledgeRepo {
       );
     }
 
-    // Category filter - documents are typically in Documents category
+    // Category filter - documents are typically in Documents or Notes category
     if (category && category !== FilesTabs.All) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
       if (fileTypePrefix === 'application') {
         // Include documents in Documents category
         whereConditions.push(sql`${documents.fileType} ILIKE 'custom/%'`);
+      } else if (fileTypePrefix === 'custom') {
+        // Include documents in Notes category (already filtered by sourceType='api')
+        whereConditions.push(sql`${documents.fileType} ILIKE 'custom/%'`);
       } else {
-        // Exclude documents from other categories
-        return sql`SELECT NULL as id WHERE false`;
+        // Exclude documents from other categories (Images, Videos, Audios, Websites)
+        return sql`
+          SELECT 
+            NULL::varchar(30) as id,
+            NULL::text as name,
+            NULL::varchar(255) as file_type,
+            NULL::integer as size,
+            NULL::text as url,
+            NULL::timestamp with time zone as created_at,
+            NULL::timestamp with time zone as updated_at,
+            NULL::uuid as chunk_task_id,
+            NULL::uuid as embedding_task_id,
+            NULL::jsonb as editor_data,
+            NULL::text as content,
+            NULL::text as source_type
+          WHERE false
+        `;
       }
     }
 
     // Knowledge base filter for documents
     // Documents don't have knowledge base association currently, so skip if knowledgeBaseId is set
     if (knowledgeBaseId) {
-      return sql`SELECT NULL as id WHERE false`;
+      return sql`
+        SELECT 
+          NULL::varchar(30) as id,
+          NULL::text as name,
+          NULL::varchar(255) as file_type,
+          NULL::integer as size,
+          NULL::text as url,
+          NULL::timestamp with time zone as created_at,
+          NULL::timestamp with time zone as updated_at,
+          NULL::uuid as chunk_task_id,
+          NULL::uuid as embedding_task_id,
+          NULL::jsonb as editor_data,
+          NULL::text as content,
+          NULL::text as source_type
+        WHERE false
+      `;
     }
 
     return sql`
@@ -320,8 +355,14 @@ export class KnowledgeRepo {
       case FilesTabs.Images: {
         return 'image';
       }
+      case FilesTabs.Notes: {
+        return 'custom';
+      }
       case FilesTabs.Videos: {
         return 'video';
+      }
+      case FilesTabs.Websites: {
+        return 'text/html';
       }
       default: {
         return '';
