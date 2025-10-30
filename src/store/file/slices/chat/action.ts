@@ -24,6 +24,15 @@ const n = setNamespace('chat');
 export interface FileAction {
   clearChatUploadFileList: () => void;
   /**
+   * Create a new note with markdown content (not optimistic, waits for server response)
+   * Returns the created note ID
+   */
+  createNote: (params: {
+    content: string;
+    knowledgeBaseId?: string;
+    title: string;
+  }) => Promise<string>;
+  /**
    * Create a new optimistic note immediately in local map
    * Returns the temporary ID for the new note
    */
@@ -68,6 +77,27 @@ export const createFileSlice: StateCreator<
 > = (set, get) => ({
   clearChatUploadFileList: () => {
     set({ chatUploadFileList: [] }, false, n('clearChatUploadFileList'));
+  },
+
+  createNote: async ({ title, content, knowledgeBaseId }) => {
+    const now = Date.now();
+
+    // Create note with markdown content, leave editorData as empty JSON object
+    const newDoc = await documentService.createNote({
+      content,
+      editorData: '{}', // Empty JSON object instead of empty string
+      fileType: 'custom/note',
+      knowledgeBaseId,
+      metadata: {
+        createdAt: now,
+      },
+      title,
+    });
+
+    // Refresh file list to show the new note
+    await get().refreshFileList();
+
+    return newDoc.id;
   },
 
   createOptimisticNote: () => {

@@ -1,8 +1,9 @@
 'use client';
 
-import { ActionIcon, Markdown, SearchBar } from '@lobehub/ui';
+import { ActionIcon, SearchBar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PlusIcon } from 'lucide-react';
+import markdownToTxt from 'markdown-to-txt';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -87,77 +88,36 @@ const useStyles = createStyles(({ css, token }) => ({
       box-shadow: ${token.boxShadowTertiary};
     }
   `,
+  noteContent: css`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  `,
   noteList: css`
     overflow-y: auto;
     flex: 1;
     padding-block: 4px;
   `,
   notePreview: css`
-    position: relative;
-
     overflow: hidden;
-
-    min-height: 100px;
-    max-height: 200px;
-    padding: 12px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 
     font-size: 13px;
     line-height: 1.6;
     color: ${token.colorTextSecondary};
-    word-wrap: break-word;
-    white-space: pre-wrap;
+  `,
+  noteTitle: css`
+    overflow: hidden;
 
-    background: ${token.colorFillQuaternary};
-
-    &::after {
-      pointer-events: none;
-      content: '';
-
-      position: absolute;
-      inset-block-end: 0;
-      inset-inline: 0;
-
-      height: 40px;
-
-      background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
-    }
-
-    article {
-      font-size: 13px;
-      line-height: 1.6;
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        margin-block: 8px 4px;
-        font-size: 14px;
-        font-weight: ${token.fontWeightStrong};
-        color: ${token.colorText};
-      }
-
-      p {
-        margin-block-end: 8px;
-      }
-
-      ul,
-      ol {
-        margin-block-end: 8px;
-        padding-inline-start: 20px;
-      }
-
-      code {
-        padding-block: 2px;
-        padding-inline: 4px;
-        border-radius: 3px;
-
-        font-size: 12px;
-
-        background: ${token.colorFillTertiary};
-      }
-    }
+    font-size: 14px;
+    font-weight: ${token.fontWeightStrong};
+    line-height: 1.4;
+    color: ${token.colorText};
+    text-overflow: ellipsis;
+    white-space: nowrap;
   `,
 }));
 
@@ -165,14 +125,30 @@ interface NoteSplitViewProps {
   knowledgeBaseId?: string;
 }
 
+// Helper to extract title from markdown content
+const extractTitle = (content: string): string | null => {
+  if (!content) return null;
+
+  // Find first markdown header (# title)
+  const match = content.match(/^#\s+(.+)$/m);
+  return match ? match[1].trim() : null;
+};
+
 // Helper to extract preview text from note content
 const getPreviewText = (item: FileListItem): string => {
-  // Use the content field directly (markdown text from documents table)
-  if (item.content) {
-    // Limit to first 200 characters for preview
-    return item.content.slice(0, 200);
+  if (!item.content) return '';
+
+  // Convert markdown to plain text
+  let plainText = markdownToTxt(item.content);
+
+  // Remove the title line if it exists
+  const title = extractTitle(item.content);
+  if (title) {
+    plainText = plainText.replace(title, '').trim();
   }
-  return '';
+
+  // Limit to first 200 characters for preview
+  return plainText.slice(0, 200);
 };
 
 const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
@@ -274,6 +250,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
             </div>
           ) : (
             filteredNotes.map((note) => {
+              const title = note.content ? extractTitle(note.content) : null;
               const previewText = getPreviewText(note);
               return (
                 <div
@@ -293,19 +270,18 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
                       }}
                     />
                   </div>
-                  {previewText ? (
-                    <div className={styles.notePreview}>
-                      <Markdown fontSize={12} headerMultiple={0.1} marginMultiple={0.5}>
-                        {previewText}
-                      </Markdown>
-                    </div>
-                  ) : (
-                    <div className={styles.notePreview}>
-                      <div style={{ color: 'var(--lobe-text-tertiary)', fontStyle: 'italic' }}>
-                        No content
+                  <div className={styles.noteContent}>
+                    {title && <div className={styles.noteTitle}>{title}</div>}
+                    {previewText ? (
+                      <div className={styles.notePreview}>{previewText}</div>
+                    ) : (
+                      <div className={styles.notePreview}>
+                        <span style={{ color: 'var(--lobe-text-tertiary)', fontStyle: 'italic' }}>
+                          No content
+                        </span>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               );
             })
@@ -317,6 +293,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
       <div className={styles.editorPanel}>
         {selectedNoteId || isCreatingNew ? (
           <NoteEditorPanel
+            content={selectedNote?.content}
             documentId={selectedNoteId || undefined}
             documentTitle={selectedNote?.name}
             editorData={selectedNote?.editorData}
@@ -324,7 +301,14 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
             onDocumentIdChange={handleDocumentIdChange}
           />
         ) : (
-          <NoteEmptyStatus knowledgeBaseId={knowledgeBaseId} onCreateNewNote={handleNewNote} />
+          <NoteEmptyStatus
+            knowledgeBaseId={knowledgeBaseId}
+            onCreateNewNote={handleNewNote}
+            onNoteCreated={(noteId) => {
+              setSelectedNoteId(noteId);
+              setIsCreatingNew(false);
+            }}
+          />
         )}
       </div>
     </div>

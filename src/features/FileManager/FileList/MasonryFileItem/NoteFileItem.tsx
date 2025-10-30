@@ -1,7 +1,8 @@
-import { Button, Markdown, Tooltip } from '@lobehub/ui';
+import { Button, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
+import markdownToTxt from 'markdown-to-txt';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -51,82 +52,61 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: ${token.colorFillQuaternary};
   `,
-  markdownPreview: css`
-    position: relative;
-
-    overflow: hidden;
+  noteContent: css`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     width: 100%;
     min-height: 120px;
-    max-height: 300px;
     padding: 16px;
     border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorFillQuaternary};
+  `,
+  notePreview: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
 
     font-size: 13px;
     line-height: 1.6;
     color: ${token.colorTextSecondary};
-    word-wrap: break-word;
-    white-space: pre-wrap;
-
-    background: ${token.colorFillQuaternary};
-
-    /* Style for rendered markdown */
-    article {
-      font-size: 13px;
-      line-height: 1.6;
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        margin-block-start: 8px;
-        margin-block-end: 4px;
-        font-size: 14px;
-        font-weight: ${token.fontWeightStrong};
-        color: ${token.colorText};
-      }
-
-      p {
-        margin-block-end: 8px;
-      }
-
-      ul,
-      ol {
-        margin-block-end: 8px;
-        padding-inline-start: 20px;
-      }
-
-      code {
-        padding: 2px 4px;
-        border-radius: 3px;
-        background: ${token.colorFillTertiary};
-        font-size: 12px;
-      }
-
-      pre {
-        margin-block-end: 8px;
-        padding: 8px;
-        border-radius: ${token.borderRadius}px;
-        background: ${token.colorFillTertiary};
-      }
-    }
-
-    &::after {
-      pointer-events: none;
-      content: '';
-
-      position: absolute;
-      inset-block-end: 0;
-      inset-inline: 0;
-
-      height: 60px;
-
-      background: linear-gradient(to bottom, transparent, ${token.colorFillQuaternary});
-    }
+  `,
+  noteTitle: css`
+    font-size: 16px;
+    font-weight: ${token.fontWeightStrong};
+    line-height: 1.4;
+    color: ${token.colorText};
   `,
 }));
+
+// Helper to extract title from markdown content
+const extractTitle = (content: string): string | null => {
+  if (!content) return null;
+
+  // Find first markdown header (# title)
+  const match = content.match(/^#\s+(.+)$/m);
+  return match ? match[1].trim() : null;
+};
+
+// Helper to extract preview text from note content
+const getPreviewText = (content: string): string => {
+  if (!content) return '';
+
+  // Convert markdown to plain text
+  let plainText = markdownToTxt(content);
+
+  // Remove the title line if it exists
+  const title = extractTitle(content);
+  if (title) {
+    plainText = plainText.replace(title, '').trim();
+  }
+
+  // Limit to first 400 characters for preview
+  return plainText.slice(0, 400);
+};
 
 interface NoteFileItemProps {
   chunkCount?: number | null;
@@ -165,16 +145,26 @@ const NoteFileItem = memo<NoteFileItemProps>(
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType || '');
 
+    const title = markdownContent ? extractTitle(markdownContent) : null;
+    const previewText = markdownContent ? getPreviewText(markdownContent) : '';
+
     return (
       <>
         <div style={{ position: 'relative' }}>
           {isLoadingMarkdown ? (
             <div className={styles.markdownLoading}>Loading preview...</div>
           ) : markdownContent ? (
-            <div className={styles.markdownPreview}>
-              <Markdown fontSize={12} headerMultiple={0.15} marginMultiple={0.5}>
-                {markdownContent}
-              </Markdown>
+            <div className={styles.noteContent}>
+              {title && <div className={styles.noteTitle}>{title}</div>}
+              {previewText ? (
+                <div className={styles.notePreview}>{previewText}</div>
+              ) : (
+                <div className={styles.notePreview}>
+                  <span style={{ color: 'var(--lobe-text-tertiary)', fontStyle: 'italic' }}>
+                    No content
+                  </span>
+                </div>
+              )}
             </div>
           ) : (
             <div className={styles.iconWrapper}>
