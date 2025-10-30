@@ -50,6 +50,9 @@ export const config = {
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
+    // Fix for GCP Cloud Run / Azure URL decoding issue with parallel routes
+    // refs: https://github.com/vercel/next.js/issues/71626
+    '/_next/static/chunks/:path*',
     // ↓ cloud ↓
   ],
 };
@@ -59,6 +62,24 @@ const backendApiEndpoints = ['/api', '/trpc', '/webapi', '/oidc'];
 const defaultMiddleware = (request: NextRequest) => {
   const url = new URL(request.url);
   logDefault('Processing request: %s %s', request.method, request.url);
+
+  // Fix for GCP Cloud Run / Azure URL decoding issue with parallel routes
+  // refs: https://github.com/vercel/next.js/issues/71626
+  if (url.pathname.startsWith('/_next/static/chunks/')) {
+    const decodedPathname = url.pathname.split('/').map(decodeURIComponent).join('/');
+    const encodedPathname = decodedPathname.split('/').map(encodeURIComponent).join('/');
+
+    const includesEncodableChar = url.pathname !== encodedPathname;
+    const hasAlreadyDecoded = url.pathname === decodedPathname;
+
+    if (includesEncodableChar && hasAlreadyDecoded) {
+      const destination = new URL(url);
+      destination.pathname = encodedPathname;
+      return NextResponse.rewrite(destination);
+    }
+
+    return NextResponse.next();
+  }
 
   // skip all api requests
   if (backendApiEndpoints.some((path) => url.pathname.startsWith(path))) {
