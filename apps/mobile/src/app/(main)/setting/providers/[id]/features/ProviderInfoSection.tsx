@@ -46,7 +46,7 @@ const ProviderInfoSection = memo<ProviderInfoSectionProps>(({ setLoading, provid
         }
         iconSize={44}
         showArrow={false}
-        title={isLobehub ? 'LobeHub' : provider?.name}
+        title={isLobehub ? 'LobeHub' : provider?.name || provider?.id}
         titleProps={{
           fontSize: 18,
           weight: 500,
