@@ -1,4 +1,8 @@
 {
+  "actions": {
+    "favorite": "Yêu thích",
+    "unfavorite": "Bỏ yêu thích"
+  },
   "confirmRemoveTopicItemAlert": "Chủ đề này sắp bị xóa. Sau khi xóa sẽ không thể khôi phục. Vui lòng xác nhận hành động của bạn.",
   "defaultTitle": "Chủ đề mặc định",
   "empty": "Chưa có chủ đề",

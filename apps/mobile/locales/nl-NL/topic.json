@@ -1,4 +1,8 @@
 {
+  "actions": {
+    "favorite": "Toevoegen aan favorieten",
+    "unfavorite": "Verwijderen uit favorieten"
+  },
   "confirmRemoveTopicItemAlert": "Je staat op het punt dit onderwerp te verwijderen. Na verwijdering kan het niet worden hersteld. Bevestig je actie alstublieft.",
   "defaultTitle": "Standaardonderwerp",
   "empty": "Geen onderwerpen",
