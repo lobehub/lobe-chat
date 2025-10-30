@@ -15,6 +15,7 @@ import { TocProvider } from '../features/Toc/useToc';
 import { DetailProvider } from './[...slugs]/features/DetailProvider';
 import Details from './[...slugs]/features/Details';
 import Header from './[...slugs]/features/Header';
+import StatusPage from './[...slugs]/features/StatusPage';
 import Loading from './[...slugs]/loading';
 
 interface AssistantDetailPageProps {
@@ -32,6 +33,12 @@ const AssistantDetailPage = memo<AssistantDetailPageProps>(({ mobile }) => {
 
   if (isLoading) return <Loading />;
   if (!data) return <NotFound />;
+
+  // 检查助手状态
+  const status = (data as any)?.status;
+  if (status === 'unpublished' || status === 'archived' || status === 'deprecated') {
+    return <StatusPage status={status} />;
+  }
 
   return (
     <TocProvider>
