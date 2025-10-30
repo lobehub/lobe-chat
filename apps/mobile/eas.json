@@ -4,7 +4,8 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "config": "development-ios.yml"
       },
       "android": {
         "gradleCommand": ":app:assembleDebug"
