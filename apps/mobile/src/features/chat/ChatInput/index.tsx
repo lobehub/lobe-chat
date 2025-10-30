@@ -24,6 +24,11 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
     textAreaRef.current?.focus();
   };
 
+  const handleSend = () => {
+    textAreaRef.current?.blur();
+    handleSubmit();
+  };
+
   return (
     <Flexbox height={'auto'} paddingInline={16} style={[{ paddingBottom: 16 }, style]}>
       <Block
@@ -62,7 +67,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
             <ModelSwitch />
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal justify={'flex-end'}>
-            <SenderBtn />
+            <SenderBtn onSend={handleSend} />
           </Flexbox>
         </Flexbox>
       </Block>
