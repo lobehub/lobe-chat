@@ -1254,7 +1254,6 @@ describe('LobeOpenAICompatibleFactory', () => {
         );
         expect(instance['client'].images.edit).toHaveBeenCalledWith({
           image: expect.any(File),
-          input_fidelity: 'high',
           mask: 'https://example.com/mask.jpg',
           model: 'dall-e-2',
           n: 1,
@@ -1301,7 +1300,6 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         expect(instance['client'].images.edit).toHaveBeenCalledWith({
           image: [mockFile1, mockFile2],
-          input_fidelity: 'high',
           model: 'dall-e-2',
           n: 1,
           prompt: 'Merge these images',
@@ -1329,6 +1327,39 @@ describe('LobeOpenAICompatibleFactory', () => {
         await expect((instance as any).createImage(payload)).rejects.toThrow(
           'Failed to convert image URLs to File objects: Error: Failed to download image',
         );
+      });
+
+      it('should include input_fidelity parameter for gpt-image-1 model', async () => {
+        const mockResponse = {
+          data: [{ b64_json: 'gpt-image-edited-base64' }],
+        };
+
+        const mockFile = new File(['content'], 'test-image.jpg', { type: 'image/jpeg' });
+
+        vi.mocked(openaiHelpers.convertImageUrlToFile).mockResolvedValue(mockFile);
+        vi.spyOn(instance['client'].images, 'edit').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'gpt-image-1',
+          params: {
+            imageUrl: 'https://example.com/image.jpg',
+            prompt: 'Edit this image with gpt-image-1',
+          },
+        };
+
+        const result = await (instance as any).createImage(payload);
+
+        expect(instance['client'].images.edit).toHaveBeenCalledWith({
+          image: expect.any(File),
+          input_fidelity: 'high',
+          model: 'gpt-image-1',
+          n: 1,
+          prompt: 'Edit this image with gpt-image-1',
+        });
+
+        expect(result).toEqual({
+          imageUrl: 'data:image/png;base64,gpt-image-edited-base64',
+        });
       });
     });
 
@@ -1431,7 +1462,6 @@ describe('LobeOpenAICompatibleFactory', () => {
         expect(instance['client'].images.edit).toHaveBeenCalledWith({
           customParam: 'should remain unchanged',
           image: expect.any(File),
-          input_fidelity: 'high',
           model: 'dall-e-2',
           n: 1,
           prompt: 'Test prompt',
