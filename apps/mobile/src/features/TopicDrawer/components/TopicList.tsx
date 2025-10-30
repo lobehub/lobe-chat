@@ -49,7 +49,6 @@ const TopicList = memo(() => {
   const switchTopic = useSwitchTopic();
 
   // 构建 FlashList 数据源：包含默认项和 topics
-
   const listData = useMemo<ListItem[]>(() => {
     const items: ListItem[] = [];
 
@@ -64,6 +63,13 @@ const TopicList = memo(() => {
     }
 
     return items;
+  }, [topics]);
+
+  // 生成一个key来强制FlashList在数据结构变化时重新渲染
+  // 基于topics的id和favorite状态，确保排序变化时会触发重新渲染
+  const listKey = useMemo(() => {
+    if (!topics || topics.length === 0) return 'empty';
+    return topics.map((t) => `${t.id}-${t.favorite ? '1' : '0'}`).join('_');
   }, [topics]);
 
   // 加载中显示骨架屏
@@ -114,8 +120,11 @@ const TopicList = memo(() => {
 
   return (
     <FlashList
+      contentContainerStyle={{ paddingTop: 0 }}
       data={listData}
+      extraData={topics}
       getItemType={getItemType}
+      key={listKey}
       keyExtractor={(item, index) => {
         if (item.type === 'topic') {
           return item.data.id;
