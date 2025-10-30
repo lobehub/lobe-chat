@@ -71,15 +71,7 @@ export default function SideBar({ children }: { children: ReactNode }) {
       open={drawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <Block
-          borderRadius={44}
-          flex={1}
-          glass
-          style={{
-            backgroundColor: theme.colorBgLayout,
-          }}
-          variant={'outlined'}
-        >
+        <Block flex={1} glass style={styles.drawerContent} variant={'outlined'}>
           <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }} testID="page-container">
             <Flexbox
               align={'center'}

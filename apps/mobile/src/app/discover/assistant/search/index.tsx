@@ -3,6 +3,7 @@ import type { FlashListRef } from '@shopify/flash-list';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { RecentSearches, useRecentSearches } from '@/features/Search';
 
@@ -104,7 +105,12 @@ const AssistantList = () => {
       }}
       showBack
     >
-      {content}
+      <KeyboardAwareScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        {content}
+      </KeyboardAwareScrollView>
     </PageContainer>
   );
 };

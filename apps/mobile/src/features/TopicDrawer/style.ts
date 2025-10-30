@@ -8,10 +8,16 @@ export const useStyles = createStyles(({ token, isDarkMode }) => ({
   drawerBackground: {
     backgroundColor: 'transparent',
   },
-
-  // 抽屉内容容器
   drawerContent: {
-    flex: 1,
+    backgroundColor: token.colorBgLayout,
+    borderBottomEndRadius: 0,
+    borderBottomLeftRadius: 44,
+    borderBottomRightRadius: 0,
+    borderBottomStartRadius: 44,
+    borderTopEndRadius: 0,
+    borderTopLeftRadius: 44,
+    borderTopRightRadius: 0,
+    borderTopStartRadius: 44,
   },
   drawerOverlay: {
     backgroundColor: isDarkMode

@@ -2,6 +2,7 @@ import { Button, Flexbox, Input, PageContainer } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { RecentSearches, useRecentSearches } from '@/features/Search';
 
@@ -89,7 +90,12 @@ const SessionSearch = () => {
       }}
       showBack
     >
-      {content}
+      <KeyboardAwareScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        {content}
+      </KeyboardAwareScrollView>
     </PageContainer>
   );
 };
