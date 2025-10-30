@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';
 import { FILE_UPLOAD_BLACKLIST } from '@/const/file';
+import { documentService } from '@/services/document';
 import { fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import { UPLOAD_NETWORK_ERROR } from '@/services/upload';
@@ -22,8 +23,17 @@ const n = setNamespace('chat');
 
 export interface FileAction {
   clearChatUploadFileList: () => void;
+  /**
+   * Create a new optimistic note immediately in local map
+   * Returns the temporary ID for the new note
+   */
+  createOptimisticNote: () => string;
   dispatchChatUploadFileList: (payload: UploadFileListDispatch) => void;
 
+  /**
+   * Get notes from local optimistic map merged with server data
+   */
+  getOptimisticNotes: () => FileListItem[];
   removeChatUploadFile: (id: string) => Promise<void>;
   startAsyncTask: (
     fileId: string,
@@ -31,6 +41,14 @@ export interface FileAction {
     onFileItemChange: (fileItem: FileListItem) => void,
   ) => Promise<void>;
 
+  /**
+   * Sync local note map with server data
+   */
+  syncNoteMapWithServer: (notes: FileListItem[]) => void;
+  /**
+   * Optimistically update note in local map and queue for DB sync
+   */
+  updateNoteOptimistically: (noteId: string, updates: Partial<FileListItem>) => Promise<void>;
   uploadChatFiles: (files: File[]) => Promise<void>;
 }
 
@@ -43,12 +61,84 @@ export const createFileSlice: StateCreator<
   clearChatUploadFileList: () => {
     set({ chatUploadFileList: [] }, false, n('clearChatUploadFileList'));
   },
+
+  createOptimisticNote: () => {
+    const { localNoteMap } = get();
+
+    // Generate temporary ID with prefix to identify optimistic notes
+    const tempId = `temp-note-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+    const now = new Date();
+
+    // Create new note object
+    const newNote: FileListItem = {
+      chunkCount: null,
+      chunkingError: null,
+      chunkingStatus: null,
+      content: '',
+      createdAt: now,
+      editorData: null,
+      embeddingError: null,
+      embeddingStatus: null,
+      fileType: 'custom/note',
+      finishEmbedding: false,
+      id: tempId,
+      name: 'Untitled Note',
+      size: 0,
+      sourceType: 'document',
+      updatedAt: now,
+      url: '',
+    };
+
+    // Add to local map
+    const newMap = new Map(localNoteMap);
+    newMap.set(tempId, newNote);
+    set({ localNoteMap: newMap }, false, n('createOptimisticNote'));
+
+    return tempId;
+  },
+
   dispatchChatUploadFileList: (payload) => {
     const nextValue = uploadFileListReducer(get().chatUploadFileList, payload);
     if (nextValue === get().chatUploadFileList) return;
 
     set({ chatUploadFileList: nextValue }, false, `dispatchChatFileList/${payload.type}`);
   },
+
+  getOptimisticNotes: () => {
+    const { localNoteMap, fileList } = get();
+
+    console.log('filelist', fileList);
+
+    // Get server notes from fileList state
+    const serverNotes = (fileList || []).filter(
+      (file: FileListItem) => file.fileType === 'custom/note',
+    );
+
+    // Track which notes we've added
+    const addedIds = new Set<string>();
+
+    // Create result array - start with server notes
+    const result: FileListItem[] = serverNotes.map((note) => {
+      addedIds.add(note.id);
+      // Check if we have a local optimistic update for this note
+      const localUpdate = localNoteMap.get(note.id);
+      // If local update exists and is newer, use it; otherwise use server version
+      if (localUpdate && new Date(localUpdate.updatedAt) >= new Date(note.updatedAt)) {
+        return localUpdate;
+      }
+      return note;
+    });
+
+    // Add any optimistic notes that aren't in server list yet (e.g., newly created temp notes)
+    for (const [id, note] of localNoteMap.entries()) {
+      if (!addedIds.has(id) && note.fileType === 'custom/note') {
+        result.unshift(note); // Add new notes to the beginning
+      }
+    }
+
+    return result;
+  },
+
   removeChatUploadFile: async (id) => {
     const { dispatchChatUploadFileList } = get();
 
@@ -86,6 +176,80 @@ export const createFileSlice: StateCreator<
       else if (fileItem.chunkingStatus === 'error' || fileItem.embeddingStatus === 'error') {
         isFinished = true;
       }
+    }
+  },
+
+  syncNoteMapWithServer: (notes) => {
+    const { localNoteMap } = get();
+    const newMap = new Map(localNoteMap);
+
+    // Remove temp notes that now exist on server
+    // This prevents duplicates after creating a new note
+    for (const [id] of localNoteMap.entries()) {
+      if (id.startsWith('temp-note-')) {
+        newMap.delete(id);
+      }
+    }
+
+    // Update or add notes from server
+    for (const note of notes) {
+      if (note.fileType === 'custom/note') {
+        newMap.set(note.id, note);
+      }
+    }
+
+    set({ localNoteMap: newMap }, false, n('syncNoteMapWithServer'));
+  },
+
+  updateNoteOptimistically: async (noteId, updates) => {
+    const { localNoteMap, fileList } = get();
+
+    // Find the note either in local map or file list
+    const existingNote = localNoteMap.get(noteId) || fileList?.find((f) => f.id === noteId);
+
+    if (!existingNote) {
+      console.warn('[updateNoteOptimistically] Note not found:', noteId);
+      return;
+    }
+
+    // Create updated note with new timestamp
+    const updatedNote: FileListItem = {
+      ...existingNote,
+      ...updates,
+      updatedAt: new Date(),
+    };
+
+    console.log('updatedNote', updatedNote);
+
+    // Update local map immediately for optimistic UI
+    const newMap = new Map(localNoteMap);
+    newMap.set(noteId, updatedNote);
+    set({ localNoteMap: newMap }, false, n('updateNoteOptimistically'));
+
+    // Queue background sync to DB
+    try {
+      await documentService.updateDocument({
+        content: updatedNote.content || '',
+        editorData:
+          typeof updatedNote.editorData === 'string'
+            ? updatedNote.editorData
+            : JSON.stringify(updatedNote.editorData),
+        id: noteId,
+        title: updatedNote.name,
+      });
+
+      // After successful sync, refresh file list to get server state
+      // This will eventually sync back to the map via syncNoteMapWithServer
+    } catch (error) {
+      console.error('[updateNoteOptimistically] Failed to sync to DB:', error);
+      // On error, revert the optimistic update
+      const revertMap = new Map(localNoteMap);
+      if (existingNote) {
+        revertMap.set(noteId, existingNote);
+      } else {
+        revertMap.delete(noteId);
+      }
+      set({ localNoteMap: revertMap }, false, n('revertOptimisticUpdate'));
     }
   },
 
