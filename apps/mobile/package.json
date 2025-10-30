@@ -48,6 +48,8 @@
     "submit:ios": "eas submit --platform ios",
     "test": "jest --coverage",
     "type-check": "tsx ./scripts/type-check.ts",
+    "update:preview": "eas update --channel preview --environment preview",
+    "update:production": "eas update --channel production --environment production",
     "web": "expo start --web",
     "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts ",
     "workflow:playground": "tsx ./scripts/playground/index.ts"
