@@ -13,11 +13,22 @@ import KnowledgeBaseList from '../../../components/KnowledgeBaseList';
 
 const useStyles = createStyles(({ css, token }) => ({
   header: css`
-    color: ${token.colorTextDescription};
+    cursor: pointer;
+    border-radius: ${token.borderRadius}px;
+    color: ${token.colorTextSecondary};
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: ${token.colorFillTertiary};
+    }
+  `,
+  indentedList: css`
+    padding-inline-start: 16px;
   `,
 }));
 
-const KnowledgeBase = () => {
+// TODO: Rename to Collection
+const Collection = () => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
   const navigate = useNavigate();
@@ -35,13 +46,14 @@ const KnowledgeBase = () => {
   };
 
   return (
-    <Flexbox flex={1} gap={8}>
+    <Flexbox flex={1} gap={8} paddingInline={8}>
       <Flexbox
         align={'center'}
         className={styles.header}
         horizontal
         justify={'space-between'}
-        paddingInline={'16px 12px'}
+        paddingBlock={6}
+        paddingInline={8}
       >
         <Flexbox align={'center'} gap={8} horizontal>
           <ActionIcon
@@ -51,7 +63,7 @@ const KnowledgeBase = () => {
             }}
             size={'small'}
           />
-          <div style={{ lineHeight: '14px' }}>{t('knowledgeBase.title')}</div>
+          <div style={{ flex: 1, lineHeight: '14px' }}>{t('knowledgeBase.title')}</div>
         </Flexbox>
         <ActionIcon
           icon={PlusIcon}
@@ -61,9 +73,13 @@ const KnowledgeBase = () => {
         />
       </Flexbox>
 
-      {showList && <KnowledgeBaseList />}
+      {showList && (
+        <Flexbox className={styles.indentedList} flex={1}>
+          <KnowledgeBaseList />
+        </Flexbox>
+      )}
     </Flexbox>
   );
 };
 
-export default KnowledgeBase;
+export default Collection;
