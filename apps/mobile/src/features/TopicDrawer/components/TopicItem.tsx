@@ -31,6 +31,7 @@ const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
 
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const removeTopic = useChatStore((s) => s.removeTopic);
+  const favoriteTopic = useChatStore((s) => s.favoriteTopic);
   const setTopicDrawerOpen = useGlobalStore((s) => s.setTopicDrawerOpen);
   const switchTopic = useSwitchTopic();
 
@@ -48,6 +49,19 @@ const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
   };
 
   const options: DropdownOptionItem[] = [
+    {
+      icon: {
+        name: topic.favorite ? 'star.fill' : 'star',
+        pointSize: 18,
+      },
+      key: topic.favorite ? 'unfavorite' : 'favorite',
+      onSelect: () => {
+        favoriteTopic(topic.id, !topic.favorite);
+      },
+      title: topic.favorite
+        ? t('actions.unfavorite', { ns: 'topic' })
+        : t('actions.favorite', { ns: 'topic' }),
+    },
     {
       destructive: true,
       icon: {
