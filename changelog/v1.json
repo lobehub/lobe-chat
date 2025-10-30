@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "fixes": [
+        "Hide marketplace link from Plugin List when market disabled, OIDC error when connecting to self-host instance, only include input_fidelity parameter for gpt-image-1.."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.2"
+  },
+  {
+    "children": {
       "features": ["2.0 next baseline."],
       "improvements": ["starting V2"]
     },
