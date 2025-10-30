@@ -1,9 +1,8 @@
-import { Block, Flexbox, Markdown, TextArea } from '@lobehub/ui-rn';
+import { Block, Flexbox, Markdown, SendButton, TextArea } from '@lobehub/ui-rn';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useStyles } from '@/features/chat/ChatBubble/style';
-import SenderBtn from '@/features/chat/actions/SenderBtn';
 
 const Preview = memo(() => {
   const { styles } = useStyles();
@@ -45,7 +44,7 @@ const Preview = memo(() => {
         variant={'borderless'}
       />
       <Flexbox horizontal justify={'flex-end'} padding={8}>
-        <SenderBtn />
+        <SendButton />
       </Flexbox>
     </Block>
   );
