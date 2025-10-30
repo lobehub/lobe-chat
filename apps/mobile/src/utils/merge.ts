@@ -2,12 +2,22 @@ import { merge as _merge, isEmpty, mergeWith } from 'lodash-es';
 
 /**
  * 用于合并对象，如果是数组则直接替换
+ * 会忽略 source 中的 null 和 undefined 值，保留 target 中的原始值
  * @param target
  * @param source
  */
 export const merge: typeof _merge = <T = object>(target: T, source: T) =>
-  mergeWith({}, target, source, (obj, src) => {
-    if (Array.isArray(obj)) return src;
+  mergeWith({}, target, source, (objValue, srcValue) => {
+    // 如果是数组，直接替换
+    if (Array.isArray(objValue)) return srcValue;
+
+    // 如果 source 的值是 null 或 undefined，保留 target 的值
+    if (srcValue === null || srcValue === undefined) {
+      return objValue;
+    }
+
+    // 其他情况让 lodash 自动处理
+    return undefined;
   });
 
 type MergeableItem = {
