@@ -53,10 +53,6 @@ export default {
     title: '知识库',
   },
   networkError: '获取知识库失败，请检测网络连接后重试',
-  notesList: {
-    empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
-    selectNote: '选择一个笔记开始编辑',
-  },
   notSupportGuide: {
     desc: '当前部署实例为客户端数据库模式，无法使用文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>',
     features: {
@@ -74,6 +70,14 @@ export default {
       },
     },
     title: '当前部署模式不支持文件管理',
+  },
+  notesList: {
+    actions: {
+      copy: '复制内容',
+      delete: '删除笔记',
+    },
+    empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
+    selectNote: '选择一个笔记开始编辑',
   },
   preview: {
     downloadFile: '下载文件',

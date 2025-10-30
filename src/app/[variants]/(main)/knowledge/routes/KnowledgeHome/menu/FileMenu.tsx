@@ -18,7 +18,7 @@ const useStyles = createStyles(({ css, token }) => ({
   header: css`
     cursor: pointer;
     border-radius: ${token.borderRadius}px;
-    color: ${token.colorTextDescription};
+    color: ${token.colorTextSecondary};
     transition: background-color 0.2s;
 
     &:hover {
