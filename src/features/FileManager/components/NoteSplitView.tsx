@@ -56,6 +56,10 @@ const useStyles = createStyles(({ css, token }) => ({
     z-index: 1;
     inset-block-start: 8px;
     inset-inline-end: 8px;
+
+    opacity: 0;
+
+    transition: opacity ${token.motionDurationMid};
   `,
   noteCard: css`
     cursor: pointer;
@@ -75,6 +79,10 @@ const useStyles = createStyles(({ css, token }) => ({
     &:hover {
       border-color: ${token.colorPrimary};
       box-shadow: ${token.boxShadowTertiary};
+
+      .note-actions {
+        opacity: 1;
+      }
     }
 
     &.selected {
@@ -129,7 +137,6 @@ const useStyles = createStyles(({ css, token }) => ({
       h5,
       h6 {
         margin-block: 8px 4px;
-
         font-size: 14px;
         font-weight: ${token.fontWeightStrong};
         color: ${token.colorText};
@@ -251,7 +258,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
                   key={note.id}
                   onClick={() => handleNoteSelect(note.id)}
                 >
-                  <div className={styles.noteActions}>
+                  <div className={cx(styles.noteActions, 'note-actions')}>
                     <NoteActions
                       noteContent={note.content || undefined}
                       noteId={note.id}
