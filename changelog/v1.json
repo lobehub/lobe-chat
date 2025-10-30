@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Add new bedrock model support, add pricing info for Azure GPT-5 series models."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.3"
+  },
+  {
+    "children": {
       "fixes": [
         "Hide marketplace link from Plugin List when market disabled, OIDC error when connecting to self-host instance, only include input_fidelity parameter for gpt-image-1.."
       ]
