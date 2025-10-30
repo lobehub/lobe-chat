@@ -2,6 +2,35 @@
 
 # Changelog
 
+## [Version 1.143.0-next.1](https://github.com/lobehub/lobe-chat/compare/v1.142.8...v1.143.0-next.1)
+
+<sup>Released on **2025-10-30**</sup>
+
+#### ✨ Features
+
+- **misc**: Try 2.0 next.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Try 2.0 next ([e0af4e6](https://github.com/lobehub/lobe-chat/commit/e0af4e6))
+
+</details>
+
+#### 💥 BREAKING CHANGES
+
+- **misc**: starting V2
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.142.8](https://github.com/lobehub/lobe-chat/compare/v1.142.7...v1.142.8)
 
 <sup>Released on **2025-10-30**</sup>
