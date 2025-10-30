@@ -35,6 +35,14 @@ export interface FileAction {
    */
   getOptimisticNotes: () => FileListItem[];
   removeChatUploadFile: (id: string) => Promise<void>;
+  /**
+   * Remove a temp note from local map
+   */
+  removeTempNote: (tempId: string) => void;
+  /**
+   * Replace a temp note with real note data (for smooth UX when creating notes)
+   */
+  replaceTempNoteWithReal: (tempId: string, realNote: FileListItem) => void;
   startAsyncTask: (
     fileId: string,
     runner: (id: string) => Promise<string>,
@@ -144,6 +152,26 @@ export const createFileSlice: StateCreator<
 
     dispatchChatUploadFileList({ id, type: 'removeFile' });
     await fileService.removeFile(id);
+  },
+
+  removeTempNote: (tempId) => {
+    const { localNoteMap } = get();
+    const newMap = new Map(localNoteMap);
+    newMap.delete(tempId);
+    set({ localNoteMap: newMap }, false, n('removeTempNote'));
+  },
+
+  replaceTempNoteWithReal: (tempId, realNote) => {
+    const { localNoteMap } = get();
+    const newMap = new Map(localNoteMap);
+
+    // Remove temp note
+    newMap.delete(tempId);
+
+    // Add real note with same position
+    newMap.set(realNote.id, realNote);
+
+    set({ localNoteMap: newMap }, false, n('replaceTempNoteWithReal'));
   },
 
   startAsyncTask: async (id, runner, onFileItemUpdate) => {

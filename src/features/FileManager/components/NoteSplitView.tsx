@@ -187,6 +187,12 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
     setIsCreatingNew(false);
   };
 
+  const handleDocumentIdChange = (newId: string) => {
+    // When a temp note gets a real ID, update the selected note ID
+    setSelectedNoteId(newId);
+    setIsCreatingNew(false);
+  };
+
   const handleSaveNote = () => {
     // After save, do nothing - stay on current note
     // This callback is for potential future actions like refreshing the preview
@@ -257,6 +263,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
             editorData={selectedNote?.editorData}
             knowledgeBaseId={knowledgeBaseId}
             onClose={handleCloseEditor}
+            onDocumentIdChange={handleDocumentIdChange}
             onSave={handleSaveNote}
           />
         ) : (
