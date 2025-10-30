@@ -1,7 +1,10 @@
-import { PageContainer } from '@lobehub/ui-rn';
-import { useLocalSearchParams } from 'expo-router';
+import { PageContainer, useTheme, useThemeMode } from '@lobehub/ui-rn';
+import { isLiquidGlassAvailable } from 'expo-glass-effect';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { kebabCase } from 'lodash-es';
 import { Text, View } from 'react-native';
+
+import { isIOS } from '@/utils/detection';
 
 import { DEMOS_MAP } from '../.data/import';
 import playgroundData from '../.data/index.json';
@@ -13,6 +16,10 @@ import ComponentPlayground from './ComponentPlayground';
  * 根据路由参数自动加载对应组件的 demos 和 README
  */
 export default function DynamicComponentPlaygroundPage() {
+  const { isDarkMode } = useThemeMode();
+  const theme = useTheme();
+  const isGlassAvailable = isLiquidGlassAvailable();
+  const blurEffect = isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight';
   const { component } = useLocalSearchParams<{ component: string }>();
 
   // 从 kebab-case 路径参数查找对应的组件配置
@@ -45,13 +52,27 @@ export default function DynamicComponentPlaygroundPage() {
   }
 
   return (
-    <PageContainer showBack title={componentName}>
+    <>
+      <Stack.Screen
+        options={{
+          headerBackButtonDisplayMode: 'minimal',
+          headerBackButtonMenuEnabled: true,
+          headerBackVisible: true,
+          headerBlurEffect: isGlassAvailable ? undefined : blurEffect,
+          headerShown: true,
+          headerStyle: { backgroundColor: !isIOS ? theme.colorBgLayout : 'transparent' },
+          headerTintColor: theme.colorText,
+          headerTransparent: isIOS,
+          title: componentName,
+        }}
+      />
+
       <ComponentPlayground
         demos={demos || []}
         readmeContent={[componentData.description, componentData.readme]
           .filter(Boolean)
           .join('\n\n')}
       />
-    </PageContainer>
+    </>
   );
 }

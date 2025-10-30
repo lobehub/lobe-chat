@@ -3,18 +3,26 @@ import {
   CapsuleTabs,
   Cell,
   Flexbox,
-  Input,
-  PageContainer,
   Text,
+  useTheme,
+  useThemeMode,
 } from '@lobehub/ui-rn';
-import { useRouter } from 'expo-router';
+import { isLiquidGlassAvailable } from 'expo-glass-effect';
+import { Stack, useRouter } from 'expo-router';
 import { kebabCase } from 'lodash-es';
 import { useMemo, useState } from 'react';
+import { ScrollView } from 'react-native';
+
+import { isIOS } from '@/utils/detection';
 
 import { ComponentItem } from './type';
 import { getAllCategories, getAllComponents, searchComponentsByName } from './utils';
 
 export default function ComponentPlaygroundIndex() {
+  const { isDarkMode } = useThemeMode();
+  const theme = useTheme();
+  const isGlassAvailable = isLiquidGlassAvailable();
+  const blurEffect = isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight';
   const router = useRouter();
 
   const [searchText, setSearchText] = useState('');
@@ -88,27 +96,48 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <PageContainer largeTitleEnabled showBack title="Playground">
-      <Flexbox gap={16} paddingBlock={16} paddingInline={16}>
-        <Input.Search
-          glass
-          onChangeText={setSearchText}
-          placeholder="搜索组件..."
-          value={searchText}
-          variant="filled"
-        />
-
-        <CapsuleTabs
-          items={tabItems}
-          onSelect={setSelectedCategory}
-          selectedKey={selectedCategory}
-        />
-      </Flexbox>
-      <Flexbox gap={32}>
-        {Object.entries(groupedComponents).map(([group, components]) =>
-          renderGroupSection(group, components),
-        )}
-      </Flexbox>
-    </PageContainer>
+    <>
+      <Stack.Screen
+        options={{
+          headerBackButtonDisplayMode: 'minimal',
+          headerBackButtonMenuEnabled: true,
+          headerBackVisible: true,
+          headerBlurEffect: isGlassAvailable ? undefined : blurEffect,
+          headerLargeStyle: { backgroundColor: !isIOS ? theme.colorBgLayout : 'transparent' },
+          headerLargeTitle: isIOS,
+          headerSearchBarOptions: {
+            onChangeText: (event) => {
+              setSearchText(event.nativeEvent.text);
+            },
+            placeholder: '搜索组件..',
+            textColor: theme.colorText,
+          },
+          headerShown: true,
+          headerStyle: { backgroundColor: !isIOS ? theme.colorBgLayout : 'transparent' },
+          headerTintColor: theme.colorText,
+          headerTransparent: isIOS,
+          title: 'Playground',
+        }}
+      />
+      <ScrollView
+        automaticallyAdjustContentInsets={true}
+        contentInsetAdjustmentBehavior={'automatic'}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <Flexbox padding={16}>
+          <CapsuleTabs
+            items={tabItems}
+            onSelect={setSelectedCategory}
+            selectedKey={selectedCategory}
+          />
+        </Flexbox>
+        <Flexbox gap={32}>
+          {Object.entries(groupedComponents).map(([group, components]) =>
+            renderGroupSection(group, components),
+          )}
+        </Flexbox>
+      </ScrollView>
+    </>
   );
 }
