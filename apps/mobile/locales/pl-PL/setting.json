@@ -246,5 +246,21 @@
     "title": "Tryb motywu"
   },
   "title": "Ustawienia",
+  "update": {
+    "check": {
+      "applyAction": "Uruchom ponownie teraz",
+      "applyDescription": "Aby zastosować najnowszą aktualizację, konieczne jest ponowne uruchomienie aplikacji. Czy chcesz to zrobić teraz?",
+      "applyError": "Nie udało się zastosować aktualizacji. Spróbuj ponownie później.",
+      "applyTitle": "Aktualizacja aplikacji",
+      "applying": "Trwa ponowne uruchamianie w celu zastosowania aktualizacji...",
+      "checking": "Sprawdzanie dostępności aktualizacji...",
+      "downloaded": "Pakiet aktualizacji został pobrany",
+      "downloading": "Wykryto nową wersję, trwa pobieranie aktualizacji...",
+      "error": "Nie udało się sprawdzić dostępności aktualizacji. Spróbuj ponownie później.",
+      "none": "Masz już najnowszą wersję",
+      "title": "Sprawdź aktualizacje",
+      "unavailable": "Obecna kompilacja nie obsługuje sprawdzania aktualizacji. Skorzystaj z tej funkcji w wersji produkcyjnej."
+    }
+  },
   "version": "Aktualna wersja"
 }

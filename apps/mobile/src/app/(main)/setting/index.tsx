@@ -1,5 +1,6 @@
 import { Center, Flexbox, PageContainer, Text, Toast, useThemeMode } from '@lobehub/ui-rn';
 import { useFocusEffect } from 'expo-router';
+import * as Updates from 'expo-updates';
 import {
   BrushCleaning,
   CodeIcon,
@@ -9,6 +10,7 @@ import {
   MailIcon,
   PaletteIcon,
   RadarIcon,
+  RefreshCwIcon,
   StickerIcon,
   SunMoonIcon,
   TypeIcon,
@@ -36,6 +38,7 @@ export default function SettingScreen() {
   const [cacheSize, setCacheSize] = useState('0 B');
   const [isCacheLoading, setIsCacheLoading] = useState(false);
   const [isClearingCache, setIsClearingCache] = useState(false);
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
 
   const refreshCacheSize = useCallback(() => {
     const bytes = getCacheSizeInBytes();
@@ -83,6 +86,58 @@ export default function SettingScreen() {
       ],
     );
   }, [isCacheLoading, isClearingCache, loadCacheSize, t]);
+
+  const handleCheckForUpdates = useCallback(async () => {
+    if (isCheckingUpdate) return;
+
+    setIsCheckingUpdate(true);
+    try {
+      if (!Updates.isEnabled) {
+        Toast.info(t('update.check.unavailable'));
+        return;
+      }
+
+      Toast.info(t('update.check.checking'));
+      const update = await Updates.checkForUpdateAsync();
+
+      if (update.isAvailable) {
+        Toast.info(t('update.check.downloading'));
+        await Updates.fetchUpdateAsync();
+        Toast.success(t('update.check.downloaded'));
+        Alert.alert(t('update.check.applyTitle'), t('update.check.applyDescription'), [
+          {
+            style: 'cancel',
+            text: t('actions.cancel', { ns: 'common' }),
+          },
+          {
+            onPress: () => {
+              Toast.info(t('update.check.applying'));
+              Updates.reloadAsync().catch((error) => {
+                console.error('Failed to apply update', error);
+                Toast.error(t('update.check.applyError'));
+              });
+            },
+            text: t('update.check.applyAction'),
+          },
+        ]);
+      } else {
+        Toast.success(t('update.check.none'));
+      }
+    } catch (error) {
+      console.error('Failed to check updates', error);
+      const expoError = error as { code?: string };
+      if (
+        expoError?.code === 'ERR_NOT_AVAILABLE_IN_DEV_CLIENT' ||
+        expoError?.code === 'ERR_UPDATES_DISABLED'
+      ) {
+        Toast.info(t('update.check.unavailable'));
+      } else {
+        Toast.error(t('update.check.error'));
+      }
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  }, [isCheckingUpdate, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -203,6 +258,13 @@ export default function SettingScreen() {
               href="https://lobehub.com/changelog"
               icon={InboxIcon}
               title={t('changelog')}
+            />
+            <SettingItem
+              icon={RefreshCwIcon}
+              loading={isCheckingUpdate}
+              onPress={handleCheckForUpdates}
+              showArrow={true}
+              title={t('update.check.title')}
             />
             <SettingItem href="mailto:support@lobehub.com" icon={MailIcon} title={t('support')} />
           </SettingGroup>

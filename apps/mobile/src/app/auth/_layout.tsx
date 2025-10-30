@@ -6,6 +6,7 @@ const AuthLayout = () => {
       <Stack.Screen
         name="login"
         options={{
+          gestureEnabled: false,
           headerShown: false,
         }}
       />
