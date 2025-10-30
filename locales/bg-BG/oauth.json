@@ -50,6 +50,7 @@
   "login": {
     "button": "Потвърдете входа",
     "description": "Приложение {{clientName}} иска да използва вашия акаунт за вход",
+    "switchAccount": "Използване на друг акаунт",
     "title": "Вход в {{clientName}}",
     "userWelcome": "Добре дошли отново, "
   },

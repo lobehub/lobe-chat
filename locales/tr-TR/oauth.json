@@ -50,6 +50,7 @@
   "login": {
     "button": "Giriş Yap",
     "description": "Uygulama {{clientName}} hesabınızı kullanmak için giriş talep ediyor",
+    "switchAccount": "Başka bir hesap kullan",
     "title": "{{clientName}} Girişi",
     "userWelcome": "Hoş geldiniz, "
   },

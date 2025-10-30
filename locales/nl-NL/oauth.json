@@ -50,6 +50,7 @@
   "login": {
     "button": "Bevestig inloggen",
     "description": "De applicatie {{clientName}} vraagt om uw account te gebruiken voor inloggen",
+    "switchAccount": "Een ander account gebruiken",
     "title": "Inloggen bij {{clientName}}",
     "userWelcome": "Welkom terug, "
   },

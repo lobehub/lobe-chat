@@ -50,6 +50,7 @@
   "login": {
     "button": "確認登入",
     "description": "應用 {{clientName}} 申請使用您的帳戶進行登入",
+    "switchAccount": "使用其他帳戶",
     "title": "登入 {{clientName}}",
     "userWelcome": "歡迎回來，"
   },

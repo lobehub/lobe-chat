@@ -50,6 +50,7 @@
   "login": {
     "button": "로그인 확인",
     "description": "{{clientName}} 애플리케이션이 귀하의 계정으로 로그인하려고 합니다",
+    "switchAccount": "다른 계정으로 전환",
     "title": "{{clientName}} 로그인",
     "userWelcome": "다시 오신 것을 환영합니다,"
   },
