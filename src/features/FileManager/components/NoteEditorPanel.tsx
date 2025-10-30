@@ -57,6 +57,7 @@ interface NoteEditorPanelProps {
   editorData?: Record<string, any> | null;
   knowledgeBaseId?: string;
   onClose: () => void;
+  onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
 }
 
@@ -67,6 +68,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
     editorData: cachedEditorData,
     knowledgeBaseId,
     onClose,
+    onDocumentIdChange,
     onSave,
   }) => {
     const { t } = useTranslation(['file', 'editor']);
@@ -81,6 +83,7 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const updateNoteOptimistically = useFileStore((s) => s.updateNoteOptimistically);
     const localNoteMap = useFileStore((s) => s.localNoteMap);
+    const replaceTempNoteWithReal = useFileStore((s) => s.replaceTempNoteWithReal);
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const savedIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isEditMode = !!documentId;
@@ -189,9 +192,37 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             title,
           });
 
-          // Replace temp ID with real ID
+          // Create the real note object for optimistic update
+          const realNote = {
+            chunkCount: null,
+            chunkingError: null,
+            chunkingStatus: null,
+            content: textContent,
+            createdAt: new Date(now),
+            editorData: structuredClone(editorData),
+            embeddingError: null,
+            embeddingStatus: null,
+            fileType: 'custom/note' as const,
+            finishEmbedding: false,
+            id: newDoc.id,
+            name: title,
+            size: textContent.length,
+            sourceType: 'document' as const,
+            updatedAt: new Date(now),
+            url: '',
+          };
+
+          // Replace temp note with real note (smooth UX, no flicker)
+          if (currentDocId?.startsWith('temp-note-')) {
+            replaceTempNoteWithReal(currentDocId, realNote);
+          }
+
+          // Update state and notify parent
           setCurrentDocId(newDoc.id);
-          await refreshFileList();
+          onDocumentIdChange?.(newDoc.id);
+
+          // Refresh in background to sync with server
+          refreshFileList();
         }
 
         setSaveStatus('saved');
