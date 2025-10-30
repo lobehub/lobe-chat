@@ -1,0 +1,414 @@
+{
+  "ModelSwitch": {
+    "title": "मॉडल"
+  },
+  "active": "सक्रिय",
+  "agentDefaultMessage": "नमस्ते, मैं **{{name}}** हूँ। आप अभी मुझसे बातचीत शुरू कर सकते हैं, या आप [सहायक सेटिंग्स]({{url}}) में जाकर मेरी जानकारी पूरी कर सकते हैं।",
+  "agentDefaultMessageWithSystemRole": "नमस्ते, मैं **{{name}}** हूँ। आज मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
+  "agentDefaultMessageWithoutEdit": "नमस्ते, मैं **{{name}}** हूँ। आज मैं आपकी किस प्रकार सहायता कर सकता हूँ?",
+  "agents": "सहायक",
+  "artifact": {
+    "generating": "बनाया जा रहा है",
+    "inThread": "उप-विषय में नहीं देखा जा सकता, कृपया मुख्य बातचीत क्षेत्र में स्विच करें",
+    "thinking": "सोच रहा है",
+    "thought": "विचार",
+    "unknownTitle": "शीर्षक रहित कार्य"
+  },
+  "availableAgents": "उपलब्ध सहायक",
+  "backToBottom": "नीचे जाएँ",
+  "chatList": {
+    "longMessageDetail": "विवरण देखें"
+  },
+  "clearCurrentMessages": "वर्तमान सत्र के संदेश साफ़ करें",
+  "confirmClearCurrentMessages": "आप वर्तमान सत्र के संदेश साफ़ करने वाले हैं। एक बार साफ़ करने के बाद, उन्हें पुनः प्राप्त नहीं किया जा सकेगा। कृपया अपनी क्रिया की पुष्टि करें।",
+  "confirmRemoveChatGroupItemAlert": "यह सहायक टीम हटाई जाएगी। टीम के सदस्य प्रभावित नहीं होंगे। कृपया अपनी क्रिया की पुष्टि करें।",
+  "confirmRemoveGroupItemAlert": "आप इस समूह को हटाने वाले हैं। हटाने के बाद, इसके सहायक डिफ़ॉल्ट सूची में चले जाएँगे। कृपया अपनी क्रिया की पुष्टि करें।",
+  "confirmRemoveGroupSuccess": "सहायक टीम सफलतापूर्वक हटाई गई",
+  "confirmRemoveSessionItemAlert": "आप इस सहायक को हटाने वाले हैं। एक बार हटाने के बाद, इसे पुनः प्राप्त नहीं किया जा सकेगा। कृपया अपनी क्रिया की पुष्टि करें।",
+  "confirmRemoveSessionSuccess": "सहायक सफलतापूर्वक हटाया गया",
+  "defaultAgent": "डिफ़ॉल्ट सहायक",
+  "defaultGroupChat": "सहायक टीम",
+  "defaultList": "डिफ़ॉल्ट सूची",
+  "defaultSession": "डिफ़ॉल्ट सहायक",
+  "dm": {
+    "placeholder": "{{agentTitle}} के साथ आपके निजी संदेश यहाँ दिखाई देंगे।",
+    "tooltip": "निजी संदेश भेजें",
+    "visibleTo": "केवल {{target}} को दिखाई देगा",
+    "you": "आप"
+  },
+  "duplicateSession": {
+    "loading": "कॉपी की जा रही है...",
+    "success": "कॉपी सफल रही",
+    "title": "{{title}} कॉपी"
+  },
+  "duplicateTitle": "{{title}} कॉपी",
+  "emptyAgent": "कोई सहायक उपलब्ध नहीं",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "एक बातचीत उत्पन्न करने की लागत को 90% तक कम किया जा सकता है, और प्रतिक्रिया गति 4 गुना बढ़ जाती है (<1>और जानें</1>)। इसे सक्षम करने से ऐतिहासिक संदेशों की सीमा स्वचालित रूप से अक्षम हो जाएगी।",
+      "title": "संदर्भ कैशिंग सक्षम करें"
+    },
+    "enableReasoning": {
+      "desc": "Claude Thinking मैकेनिज़्म सीमा (<1>और जानें</1>) के आधार पर, इसे सक्षम करने से ऐतिहासिक संदेशों की सीमा स्वचालित रूप से अक्षम हो जाएगी।",
+      "title": "गहन सोच सक्षम करें"
+    },
+    "reasoningBudgetToken": {
+      "title": "सोचने की खपत टोकन"
+    },
+    "reasoningEffort": {
+      "title": "तार्किक प्रयास स्तर"
+    },
+    "textVerbosity": {
+      "title": "आउटपुट टेक्स्ट विवरण स्तर"
+    },
+    "thinking": {
+      "title": "गहन सोच स्विच"
+    },
+    "title": "मॉडल विस्तारित सुविधाएँ",
+    "urlContext": {
+      "desc": "सक्षम होने पर, वेब लिंक स्वचालित रूप से विश्लेषित होंगे ताकि वास्तविक वेबपेज सामग्री प्राप्त की जा सके",
+      "title": "वेबपेज लिंक सामग्री निकालें"
+    }
+  },
+  "group": {
+    "desc": "साझा बातचीत क्षेत्र में कई एआई सहायकों के साथ सहयोग करें।",
+    "memberTooltip": "समूह में {{count}} सदस्य हैं",
+    "orchestratorThinking": "होस्ट सोच रहा है...",
+    "removeMember": "सदस्य हटाएँ",
+    "title": "समूह"
+  },
+  "groupDescription": "टीम विवरण",
+  "groupSidebar": {
+    "members": {
+      "addMember": "सदस्य जोड़ें",
+      "memberSettings": "सदस्य सेटिंग्स",
+      "orchestrator": "होस्ट",
+      "orchestratorThinking": "होस्ट सोच रहा है...",
+      "removeMember": "सदस्य हटाएँ",
+      "stopOrchestrator": "सोचना बंद करें",
+      "triggerOrchestrator": "समूह चैट शुरू करें"
+    },
+    "tabs": {
+      "host": "होस्ट",
+      "members": "सदस्य",
+      "role": "सेटिंग्स"
+    }
+  },
+  "groupWizard": {
+    "chooseMembers": "मौजूदा सहायक चुनें...",
+    "createGroup": "टीम बनाएं",
+    "existingMembers": "वर्तमान एजेंट",
+    "groupMembers": "ये सहायक आपकी सूची में भी जोड़े जाएंगे",
+    "host": {
+      "description": "टीम को स्वतंत्र रूप से संचालित करने में सक्षम करें",
+      "title": "होस्ट सक्षम करें",
+      "tooltip": "यदि टीम होस्ट अक्षम है, तो आपको प्रतिक्रिया प्राप्त करने के लिए सदस्यों को @मेंशन करना होगा"
+    },
+    "memberCount": "{{count}} सदस्य",
+    "noMatchingTemplates": "कोई मेल खाने वाला टेम्पलेट नहीं",
+    "noSelectedTemplates": "कोई टेम्पलेट चयनित नहीं",
+    "noTemplateMembers": "टेम्पलेट में कोई सदस्य नहीं",
+    "noTemplates": "कोई टेम्पलेट उपलब्ध नहीं",
+    "searchTemplates": "टेम्पलेट खोजें...",
+    "title": "सहायक टीम बनाएं",
+    "useTemplate": "टेम्पलेट उपयोग करें"
+  },
+  "hideForYou": "प्रत्यक्ष संदेश सामग्री छिपाई गई है। देखने के लिए कृपया सेटिंग्स में 'डायरेक्ट मैसेज कंटेंट दिखाएँ' सक्षम करें।",
+  "history": {
+    "title": "सहायक केवल पिछले {{count}} संदेश याद रखेगा।"
+  },
+  "historyRange": "इतिहास सीमा",
+  "historySummary": "ऐतिहासिक संदेश सारांश",
+  "inactive": "निष्क्रिय",
+  "inbox": {
+    "desc": "ब्रेन क्लस्टर सक्रिय करें और रचनात्मक सोच जगाएँ। आपका वर्चुअल सहायक आपके साथ सब कुछ साझा करने के लिए तैयार है।",
+    "title": "सिर्फ चैट करें"
+  },
+  "input": {
+    "addAi": "एक एआई संदेश जोड़ें",
+    "addUser": "एक उपयोगकर्ता संदेश जोड़ें",
+    "disclaimer": "एआई भी गलतियाँ कर सकता है, कृपया महत्वपूर्ण जानकारी की पुष्टि करें",
+    "errorMsg": "संदेश भेजना असफल रहा, कृपया नेटवर्क जाँचें और पुनः प्रयास करें: {{errorMsg}}",
+    "more": "और",
+    "send": "भेजें",
+    "sendWithCmdEnter": "<key/> दबाकर भेजें",
+    "sendWithEnter": "<key/> दबाकर भेजें",
+    "stop": "रोकें",
+    "warp": "नई पंक्ति",
+    "warpWithKey": "नई पंक्ति जोड़ने के लिए <key/> दबाएँ"
+  },
+  "intentUnderstanding": {
+    "title": "आपके इरादे को समझा और विश्लेषित किया जा रहा है..."
+  },
+  "inviteMembers": "सदस्यों को आमंत्रित करें",
+  "knowledgeBase": {
+    "all": "सभी सामग्री",
+    "allFiles": "सभी फ़ाइलें",
+    "allKnowledgeBases": "सभी ज्ञान आधार",
+    "disabled": "वर्तमान डिप्लॉयमेंट मोड ज्ञान आधार वार्तालापों का समर्थन नहीं करता। इस सुविधा का उपयोग करने के लिए, कृपया सर्वर-साइड डेटाबेस डिप्लॉयमेंट पर स्विच करें या {{cloud}} सेवा का उपयोग करें।",
+    "library": {
+      "action": {
+        "add": "जोड़ें",
+        "detail": "विवरण",
+        "remove": "हटाएँ"
+      },
+      "title": "फ़ाइलें / ज्ञान आधार"
+    },
+    "relativeFilesOrKnowledgeBases": "संबंधित फ़ाइलें / ज्ञान आधार",
+    "title": "ज्ञान आधार",
+    "uploadGuide": "अपलोड की गई फ़ाइलें 'ज्ञान आधार' में देखी जा सकती हैं।",
+    "viewMore": "और देखें"
+  },
+  "memberSelection": {
+    "addMember": "सदस्य जोड़ें",
+    "allMembers": "सभी सदस्य",
+    "createGroup": "सहायक टीम बनाएं",
+    "noAvailableAgents": "आमंत्रित करने के लिए कोई उपलब्ध सहायक नहीं",
+    "noSelectedAgents": "अभी तक कोई सहायक चयनित नहीं",
+    "searchAgents": "सहायकों की खोज करें...",
+    "setInitialMembers": "टीम सदस्यों का चयन करें"
+  },
+  "members": "सदस्य",
+  "mention": {
+    "title": "सदस्यों को मेंशन करें"
+  },
+  "messageAction": {
+    "delAndRegenerate": "हटाएँ और पुनः उत्पन्न करें",
+    "deleteDisabledByThreads": "उप-विषय मौजूद हैं, हटाना अनुमत नहीं",
+    "regenerate": "पुनः उत्पन्न करें"
+  },
+  "messages": {
+    "dm": {
+      "sentTo": "केवल {{name}} को दिखाई देगा",
+      "title": "प्रत्यक्ष संदेश"
+    },
+    "modelCard": {
+      "credit": "क्रेडिट्स",
+      "creditPricing": "मूल्य निर्धारण",
+      "creditTooltip": "गणना के उद्देश्य से, हम $1 को 1M क्रेडिट में बदलते हैं; उदाहरण के लिए, $3/M टोकन को 3 क्रेडिट/टोकन में परिवर्तित किया जा सकता है।",
+      "pricing": {
+        "inputCachedTokens": "कैश इनपुट {{amount}}/क्रेडिट · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M अक्षर",
+        "inputMinutes": "${{amount}}/मिनट",
+        "inputTokens": "इनपुट {{amount}}/क्रेडिट · ${{amount}}/M",
+        "outputTokens": "आउटपुट {{amount}}/क्रेडिट · ${{amount}}/M",
+        "writeCacheInputTokens": "कैश इनपुट लेखन {{amount}}/पॉइंट्स · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "औसत यूनिट मूल्य",
+      "input": "इनपुट",
+      "inputAudio": "ऑडियो इनपुट",
+      "inputCached": "कैश्ड इनपुट",
+      "inputCitation": "इनपुट संदर्भ",
+      "inputText": "टेक्स्ट इनपुट",
+      "inputTitle": "इनपुट विवरण",
+      "inputUncached": "अनकैश्ड इनपुट",
+      "inputWriteCached": "इनपुट कैश लेखन",
+      "output": "आउटपुट",
+      "outputAudio": "ऑडियो आउटपुट",
+      "outputImage": "छवि आउटपुट",
+      "outputText": "टेक्स्ट आउटपुट",
+      "outputTitle": "आउटपुट विवरण",
+      "reasoning": "गहन सोच",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Tokens Per Second (TPS) — AI द्वारा उत्पन्न सामग्री की औसत गति (टोकन/सेकंड)।"
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "Time To First Token (TTFT) — संदेश भेजने से लेकर पहले टोकन प्राप्त होने तक का समय अंतराल।"
+        }
+      },
+      "title": "उत्पादन विवरण",
+      "total": "कुल उपभोग"
+    }
+  },
+  "minimap": {
+    "jumpToMessage": "संदेश {{index}} पर जाएँ",
+    "nextMessage": "अगला संदेश",
+    "previousMessage": "पिछला संदेश",
+    "senderAssistant": "सहायक",
+    "senderUser": "आप"
+  },
+  "newAgent": "नया सहायक",
+  "newGroupChat": "नई सहायक टीम",
+  "noAgentsYet": "इस सहायक टीम में अभी कोई सदस्य नहीं है। + बटन दबाकर सहायक आमंत्रित करें।",
+  "noAvailableAgents": "आमंत्रित करने के लिए कोई सदस्य उपलब्ध नहीं",
+  "noMatchingAgents": "कोई मेल खाने वाले सदस्य नहीं मिले",
+  "noMembersYet": "इस समूह में अभी कोई सदस्य नहीं है। + बटन दबाकर सहायक आमंत्रित करें।",
+  "noSelectedAgents": "अभी तक कोई सदस्य चयनित नहीं",
+  "owner": "समूह स्वामी",
+  "pin": "पिन करें",
+  "pinOff": "अनपिन करें",
+  "rag": {
+    "referenceChunks": "संदर्भ स्रोत",
+    "userQuery": {
+      "actions": {
+        "delete": "क्वेरी री-राइट हटाएँ",
+        "regenerate": "क्वेरी पुनः उत्पन्न करें"
+      }
+    }
+  },
+  "regenerate": "पुनः उत्पन्न करें",
+  "roleAndArchive": "भूमिका और संग्रह",
+  "search": {
+    "grounding": {
+      "searchQueries": "खोज कीवर्ड",
+      "title": "{{count}} परिणाम मिले"
+    },
+    "mode": {
+      "auto": {
+        "desc": "वार्तालाप सामग्री के आधार पर बुद्धिमानी से निर्णय लें कि खोज आवश्यक है या नहीं",
+        "title": "स्मार्ट ऑनलाइन सर्च"
+      },
+      "off": {
+        "desc": "केवल मॉडल का मूल ज्ञान उपयोग करें, कोई वेब खोज नहीं करें",
+        "title": "ऑनलाइन सर्च बंद करें"
+      },
+      "on": {
+        "desc": "नवीनतम जानकारी प्राप्त करने के लिए लगातार वेब खोज करें",
+        "title": "हमेशा ऑनलाइन"
+      },
+      "useModelBuiltin": "मॉडल के अंतर्निहित सर्च इंजन का उपयोग करें"
+    },
+    "searchModel": {
+      "desc": "वर्तमान मॉडल फ़ंक्शन कॉल का समर्थन नहीं करता, इसलिए ऑनलाइन सर्च के लिए फ़ंक्शन कॉल समर्थित मॉडल की आवश्यकता है।",
+      "title": "सर्च सहायक मॉडल"
+    },
+    "title": "ऑनलाइन सर्च"
+  },
+  "searchAgentPlaceholder": "सहायक खोजें...",
+  "searchAgents": "सहायक खोजें...",
+  "selectedAgents": "चयनित सहायक",
+  "sendPlaceholder": "अपना संदेश यहाँ टाइप करें...",
+  "sessionGroup": {
+    "config": "समूह प्रबंधन",
+    "confirmRemoveGroupAlert": "यह समूह हटाया जाने वाला है। हटाने के बाद, इसके सहायक डिफ़ॉल्ट सूची में चले जाएँगे। कृपया पुष्टि करें।",
+    "createAgentSuccess": "सहायक सफलतापूर्वक बनाया गया",
+    "createGroup": "नया समूह जोड़ें",
+    "createGroupFailed": "समूह चैट बनाना असफल रहा",
+    "createGroupSuccess": "समूह चैट सफलतापूर्वक बनाई गई",
+    "createSuccess": "सफलतापूर्वक बनाया गया",
+    "creatingAgent": "सहायक बनाया जा रहा है...",
+    "inputPlaceholder": "कृपया समूह का नाम दर्ज करें...",
+    "moveGroup": "समूह में स्थानांतरित करें",
+    "newGroup": "नया समूह",
+    "rename": "समूह का नाम बदलें",
+    "renameSuccess": "नाम सफलतापूर्वक बदला गया",
+    "sortSuccess": "पुनः क्रम सफल",
+    "sorting": "समूह क्रम अपडेट हो रहा है...",
+    "tooLong": "समूह नाम की लंबाई 1-20 के बीच होनी चाहिए"
+  },
+  "shareModal": {
+    "copy": "कॉपी करें",
+    "download": "स्क्रीनशॉट डाउनलोड करें",
+    "downloadError": "डाउनलोड विफल हुआ",
+    "downloadFile": "फ़ाइल डाउनलोड करें",
+    "downloadPdf": "PDF डाउनलोड करें",
+    "downloadSuccess": "डाउनलोड सफल हुआ",
+    "exportPdf": "PDF के रूप में निर्यात करें",
+    "exportTitle": "डिफ़ॉल्ट शीर्षक",
+    "generatePdf": "PDF बनाएं",
+    "generatingPdf": "PDF बनाया जा रहा है...",
+    "imageType": "छवि प्रारूप",
+    "includeTool": "प्लगइन संदेश शामिल करें",
+    "includeUser": "उपयोगकर्ता संदेश शामिल करें",
+    "loadingPdf": "PDF लोड किया जा रहा है...",
+    "noPdfData": "कोई PDF डेटा उपलब्ध नहीं",
+    "pdf": "PDF",
+    "pdfErrorDescription": "PDF बनाते समय त्रुटि हुई, कृपया पुनः प्रयास करें",
+    "pdfGenerationError": "PDF निर्माण विफल हुआ",
+    "pdfReady": "PDF तैयार है",
+    "regeneratePdf": "PDF पुनः बनाएं",
+    "screenshot": "स्क्रीनशॉट",
+    "settings": "निर्यात सेटिंग्स",
+    "text": "पाठ",
+    "withBackground": "पृष्ठभूमि छवि शामिल करें",
+    "withFooter": "फुटर शामिल करें",
+    "withPluginInfo": "प्लगइन जानकारी शामिल करें",
+    "withRole": "संदेश भूमिका शामिल करें",
+    "withSystemRole": "सहायक भूमिका सेटिंग शामिल करें"
+  },
+  "stt": {
+    "action": "वॉइस इनपुट",
+    "loading": "पहचाना जा रहा है...",
+    "prettifying": "संवारा जा रहा है..."
+  },
+  "supervisor": {
+    "todoList": {
+      "allComplete": "सभी कार्य पूर्ण हुए",
+      "title": "पूर्ण कार्य"
+    }
+  },
+  "thread": {
+    "divider": "उप-विषय",
+    "threadMessageCount": "{{messageCount}} संदेश",
+    "title": "उप-विषय"
+  },
+  "toggleWideScreen": {
+    "off": "वाइडस्क्रीन मोड बंद करें",
+    "on": "वाइडस्क्रीन मोड चालू करें"
+  },
+  "tokenDetails": {
+    "chats": "चैट संदेश",
+    "historySummary": "इतिहास सारांश",
+    "rest": "शेष",
+    "supervisor": "समूह होस्ट",
+    "systemRole": "भूमिका सेटिंग्स",
+    "title": "संदर्भ विवरण",
+    "tools": "प्लगइन सेटिंग्स",
+    "total": "कुल उपलब्ध",
+    "used": "कुल उपयोग"
+  },
+  "tokenTag": {
+    "overload": "सीमा से अधिक",
+    "remained": "शेष",
+    "used": "उपयोग किया गया"
+  },
+  "topic": {
+    "checkOpenNewTopic": "नया विषय सक्षम करें?",
+    "checkSaveCurrentMessages": "क्या आप वर्तमान वार्तालाप को विषय के रूप में सहेजना चाहते हैं?",
+    "openNewTopic": "नया विषय खोलें",
+    "saveCurrentMessages": "वर्तमान सत्र को विषय के रूप में सहेजें"
+  },
+  "translate": {
+    "action": "अनुवाद करें",
+    "clear": "अनुवाद साफ़ करें"
+  },
+  "tts": {
+    "action": "टेक्स्ट-से-भाषण",
+    "clear": "भाषण साफ़ करें"
+  },
+  "untitledAgent": "शीर्षक रहित सहायक",
+  "updateAgent": "सहायक जानकारी अपडेट करें",
+  "upload": {
+    "action": {
+      "fileUpload": "फ़ाइल अपलोड करें",
+      "folderUpload": "फ़ोल्डर अपलोड करें",
+      "imageDisabled": "वर्तमान मॉडल दृश्य पहचान का समर्थन नहीं करता। इस सुविधा का उपयोग करने के लिए कृपया मॉडल बदलें।",
+      "imageUpload": "छवि अपलोड करें",
+      "tooltip": "अपलोड करें"
+    },
+    "clientMode": {
+      "actionFiletip": "फ़ाइल अपलोड करें",
+      "actionTooltip": "अपलोड करें",
+      "disabled": "वर्तमान मॉडल दृश्य पहचान और फ़ाइल विश्लेषण का समर्थन नहीं करता। इस सुविधा के लिए कृपया मॉडल बदलें।",
+      "fileNotSupported": "ब्राउज़र मोड में फ़ाइल अपलोड समर्थित नहीं हैं; केवल छवियाँ अनुमति हैं।",
+      "visionNotSupported": "वर्तमान मॉडल दृश्य पहचान का समर्थन नहीं करता। इस सुविधा का उपयोग करने के लिए कृपया अन्य मॉडल पर स्विच करें।"
+    },
+    "preview": {
+      "prepareTasks": "खंड तैयार किए जा रहे हैं...",
+      "status": {
+        "pending": "अपलोड की तैयारी...",
+        "processing": "फ़ाइल संसाधित की जा रही है..."
+      }
+    },
+    "validation": {
+      "videoSizeExceeded": "वीडियो फ़ाइल का आकार 20MB से अधिक नहीं होना चाहिए। वर्तमान फ़ाइल आकार {{actualSize}} है।"
+    }
+  },
+  "you": "आप",
+  "zenMode": "ज़ेन मोड"
+}
