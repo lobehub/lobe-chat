@@ -1,5 +1,13 @@
 [
   {
+    "children": {
+      "features": ["Try 2.0 next."],
+      "improvements": ["starting V2"]
+    },
+    "date": "2025-10-30",
+    "version": "1.143.0-next.1"
+  },
+  {
     "children": {},
     "date": "2025-10-30",
     "version": "1.142.8"
