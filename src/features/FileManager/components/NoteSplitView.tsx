@@ -189,6 +189,8 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   const getOptimisticNotes = useFileStore((s) => s.getOptimisticNotes);
   const syncNoteMapWithServer = useFileStore((s) => s.syncNoteMapWithServer);
   const createOptimisticNote = useFileStore((s) => s.createOptimisticNote);
+  // Subscribe to localNoteMap to trigger re-render when notes are updated
+  useFileStore((s) => s.localNoteMap);
 
   const { data: allFiles, isLoading } = useFetchFileManage({
     knowledgeBaseId,
@@ -205,9 +207,8 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   // Filter by knowledgeBaseId if provided
   // Since the API call already filters by knowledgeBaseId, we trust that data
   // But we also need to check local optimistic updates
+  // Re-compute when localNoteMap changes to ensure list updates when notes are edited
   const notes = getOptimisticNotes();
-
-  console.log('notes', notes);
 
   const selectedNote = notes.find((note) => note.id === selectedNoteId);
 
