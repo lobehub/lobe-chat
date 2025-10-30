@@ -192,6 +192,7 @@ const Layout = () => {
           <Stack screenOptions={themedScreenOptions}>
             <Stack.Screen name="index" options={{ animation: 'none' }} />
             <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
+            <Stack.Screen name="playground" />
             <Stack.Screen
               name="auth"
               options={{
