@@ -1,7 +1,12 @@
 import SendButton from '@/components/SendButton';
 import { useChat } from '@/hooks/useChat';
 
-const SenderBtn = () => {
+interface SenderBtnProps {
+  onSend?: () => void;
+  onStop?: () => void;
+}
+
+const SenderBtn = ({ onSend: customOnSend, onStop: customOnStop }: SenderBtnProps) => {
   const { handleSubmit, isLoading, isGenerating, canSend, stopGenerating } = useChat();
 
   return (
@@ -9,8 +14,8 @@ const SenderBtn = () => {
       disabled={!canSend}
       generating={isGenerating}
       loading={isLoading}
-      onSend={handleSubmit}
-      onStop={stopGenerating}
+      onSend={customOnSend || handleSubmit}
+      onStop={customOnStop || stopGenerating}
       size="small"
     />
   );
