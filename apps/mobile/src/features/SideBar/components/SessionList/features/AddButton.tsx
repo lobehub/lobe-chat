@@ -9,7 +9,11 @@ import Flexbox from '@/components/Flexbox';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 
-const AddButton = memo(() => {
+interface AddButtonProps {
+  groupId?: string;
+}
+
+const AddButton = memo<AddButtonProps>(({ groupId }) => {
   const { t } = useTranslation('chat');
   const createSession = useSessionStore((s) => s.createSession);
   const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
@@ -19,7 +23,7 @@ const AddButton = memo(() => {
     setIsLoading(true);
     try {
       // Create session without auto-switching
-      const sessionId = await createSession(undefined, false);
+      const sessionId = await createSession(groupId ? { group: groupId } : undefined, false);
 
       // Close the Session Drawer
       toggleDrawer();
