@@ -41,6 +41,7 @@ table agents_files {
 
   indexes {
     (file_id, agent_id, user_id) [pk]
+    agent_id [name: 'agents_files_agent_id_idx']
   }
 }
 
@@ -334,6 +335,7 @@ table message_groups {
 
   indexes {
     (client_id, user_id) [name: 'message_groups_client_id_user_id_unique', unique]
+    topic_id [name: 'message_groups_topic_id_idx']
   }
 }
 
@@ -444,6 +446,7 @@ table messages {
     user_id [name: 'messages_user_id_idx']
     session_id [name: 'messages_session_id_idx']
     thread_id [name: 'messages_thread_id_idx']
+    agent_id [name: 'messages_agent_id_idx']
   }
 }
 
@@ -805,6 +808,8 @@ table agents_to_sessions {
 
   indexes {
     (agent_id, session_id) [pk]
+    session_id [name: 'agents_to_sessions_session_id_idx']
+    agent_id [name: 'agents_to_sessions_agent_id_idx']
   }
 }
 
@@ -865,6 +870,8 @@ table sessions {
     (client_id, user_id) [name: 'sessions_client_id_user_id_unique', unique]
     user_id [name: 'sessions_user_id_idx']
     (id, user_id) [name: 'sessions_id_user_id_idx']
+    (user_id, updated_at) [name: 'sessions_user_id_updated_at_idx']
+    group_id [name: 'sessions_group_id_idx']
   }
 }
 
@@ -885,6 +892,7 @@ table threads {
 
   indexes {
     (client_id, user_id) [name: 'threads_client_id_user_id_unique', unique]
+    topic_id [name: 'threads_topic_id_idx']
   }
 }
 
@@ -917,6 +925,8 @@ table topics {
     (client_id, user_id) [name: 'topics_client_id_user_id_unique', unique]
     user_id [name: 'topics_user_id_idx']
     (id, user_id) [name: 'topics_id_user_id_idx']
+    session_id [name: 'topics_session_id_idx']
+    group_id [name: 'topics_group_id_idx']
   }
 }
 
