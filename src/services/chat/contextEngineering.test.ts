@@ -265,7 +265,6 @@ describe('contextEngineering', () => {
       messages,
       model: 'gpt-4',
       provider: 'openai',
-      isWelcomeQuestion: true,
       sessionId: 'inbox',
     });
 

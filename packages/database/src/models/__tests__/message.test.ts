@@ -980,6 +980,63 @@ describe('MessageModel', () => {
       expect(result.messages.length).toBeGreaterThanOrEqual(3);
     });
 
+    it('should apply groupAssistantMessages transformation', async () => {
+      // 创建一个带 tools 的 assistant 消息
+      const assistantMsg = await messageModel.create({
+        role: 'assistant',
+        content: 'Checking weather',
+        tools: [
+          {
+            id: 'tool-1',
+            identifier: 'weather',
+            apiName: 'getWeather',
+            arguments: '{"city":"Beijing"}',
+            type: 'default',
+          },
+        ],
+        sessionId: '1',
+      });
+
+      // 创建对应的 tool 消息
+      const toolMsg = await messageModel.create({
+        role: 'tool',
+        content: 'Beijing: Sunny, 25°C',
+        tool_call_id: 'tool-1',
+        sessionId: '1',
+        plugin: {
+          identifier: 'weather',
+          apiName: 'getWeather',
+          arguments: '{"city":"Beijing"}',
+          type: 'default',
+        },
+      });
+
+      // 创建新消息并获取列表
+      const result = await messageModel.createNewMessage({
+        role: 'user',
+        content: 'Thanks!',
+        sessionId: '1',
+      });
+
+      // 验证 assistant 消息被分组
+      const groupMessage = result.messages.find((m) => m.id === assistantMsg.id);
+      expect(groupMessage?.role).toBe('group');
+      expect(groupMessage?.children).toBeDefined();
+      expect(groupMessage?.children).toHaveLength(1);
+
+      // 验证 tool 结果被合并到 children 中
+      const childBlock = groupMessage?.children?.[0];
+      expect(childBlock?.tools).toBeDefined();
+      expect(childBlock?.tools).toHaveLength(1);
+
+      // 验证 tool 包含执行结果
+      const tool = childBlock?.tools?.[0];
+      expect(tool?.id).toBe('tool-1');
+      expect(tool?.identifier).toBe('weather');
+      expect(tool?.result).toBeDefined();
+      expect(tool?.result?.content).toBe('Beijing: Sunny, 25°C');
+    });
+
     it('should filter messages by topicId if provided', async () => {
       const topicId = 'topic-1';
       await serverDB.insert(topics).values({ id: topicId, sessionId: '1', userId });

@@ -12,7 +12,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { createServerConfigStore } from '@/store/serverConfig/store';
 import { merge } from '@/utils/merge';
 
-import { chatSelectors } from './selectors';
+import { chatSelectors } from './chat';
 
 vi.mock('i18next', () => ({
   t: vi.fn((key) => key), // Simplified mock return value
@@ -416,35 +416,6 @@ describe('chatSelectors', () => {
     });
   });
 
-  describe('isToolCallStreaming', () => {
-    it('should return true when tool call is streaming for given message and index', () => {
-      const state: Partial<ChatStore> = {
-        toolCallingStreamIds: {
-          'msg-1': [true, false, true],
-        },
-      };
-      expect(chatSelectors.isToolCallStreaming('msg-1', 0)(state as ChatStore)).toBe(true);
-      expect(chatSelectors.isToolCallStreaming('msg-1', 2)(state as ChatStore)).toBe(true);
-    });
-
-    it('should return false when tool call is not streaming for given message and index', () => {
-      const state: Partial<ChatStore> = {
-        toolCallingStreamIds: {
-          'msg-1': [true, false, true],
-        },
-      };
-      expect(chatSelectors.isToolCallStreaming('msg-1', 1)(state as ChatStore)).toBe(false);
-      expect(chatSelectors.isToolCallStreaming('msg-2', 0)(state as ChatStore)).toBe(false);
-    });
-
-    it('should return false when no streaming data exists for the message', () => {
-      const state: Partial<ChatStore> = {
-        toolCallingStreamIds: {},
-      };
-      expect(chatSelectors.isToolCallStreaming('msg-1', 0)(state as ChatStore)).toBe(false);
-    });
-  });
-
   describe('activeBaseChats with group chat messages', () => {
     it('should retrieve agent meta for group chat messages with groupId and agentId', () => {
       const groupChatMessages = [
@@ -468,6 +439,271 @@ describe('chatSelectors', () => {
       expect(chats).toHaveLength(1);
       expect(chats[0].id).toBe('msg1');
       expect(chats[0].meta).toBeDefined();
+    });
+  });
+
+  describe('getGroupLatestMessageWithoutTools', () => {
+    it('should return the last child without tools', () => {
+      const groupMessage = {
+        id: 'group-1',
+        role: 'group',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'First response',
+            tools: [
+              {
+                id: 'tool-1',
+                identifier: 'test',
+                apiName: 'test',
+                arguments: '{}',
+                type: 'default',
+              },
+            ],
+          },
+          {
+            id: 'child-2',
+            content: 'Second response',
+            tools: [],
+          },
+          {
+            id: 'child-3',
+            content: 'Final response',
+          },
+        ],
+      } as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('group-1')(state as ChatStore);
+      expect(result).toBeDefined();
+      expect(result?.id).toBe('child-3');
+      expect(result?.content).toBe('Final response');
+    });
+
+    it('should return null if the last child has tools', () => {
+      const groupMessage = {
+        id: 'group-2',
+        role: 'group',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'First response',
+          },
+          {
+            id: 'child-2',
+            content: 'Second response with tools',
+            tools: [
+              {
+                id: 'tool-1',
+                identifier: 'test',
+                apiName: 'test',
+                arguments: '{}',
+                type: 'default',
+              },
+            ],
+          },
+        ],
+      } as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('group-2')(state as ChatStore);
+      expect(result).toBeNull();
+    });
+
+    it('should return the last child when it has empty tools array', () => {
+      const groupMessage = {
+        id: 'group-3',
+        role: 'group',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'First response with tools',
+            tools: [
+              {
+                id: 'tool-1',
+                identifier: 'test',
+                apiName: 'test',
+                arguments: '{}',
+                type: 'default',
+              },
+            ],
+          },
+          {
+            id: 'child-2',
+            content: 'Final response',
+            tools: [],
+          },
+        ],
+      } as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('group-3')(state as ChatStore);
+      expect(result).toBeDefined();
+      expect(result?.id).toBe('child-2');
+      expect(result?.content).toBe('Final response');
+    });
+
+    it('should return null for non-group messages', () => {
+      const assistantMessage = {
+        id: 'msg-1',
+        role: 'assistant',
+        content: 'Regular message',
+      } as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [assistantMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('msg-1')(state as ChatStore);
+      expect(result).toBeNull();
+    });
+
+    it('should return null for group messages without children', () => {
+      const groupMessage = {
+        id: 'group-4',
+        role: 'group',
+        content: '',
+        children: undefined,
+      } as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('group-4')(state as ChatStore);
+      expect(result).toBeNull();
+    });
+
+    it('should return null for group messages with empty children array', () => {
+      const groupMessage = {
+        id: 'group-5',
+        role: 'group',
+        content: '',
+        children: [],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('group-5')(state as ChatStore);
+      expect(result).toBeNull();
+    });
+
+    it('should return null if all children have tools', () => {
+      const groupMessage = {
+        id: 'group-6',
+        role: 'group',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'First response',
+            tools: [
+              {
+                id: 'tool-1',
+                identifier: 'test',
+                apiName: 'test',
+                arguments: '{}',
+                type: 'default',
+              },
+            ],
+          },
+          {
+            id: 'child-2',
+            content: 'Second response',
+            tools: [
+              {
+                id: 'tool-2',
+                identifier: 'test2',
+                apiName: 'test2',
+                arguments: '{}',
+                type: 'default',
+              },
+            ],
+          },
+        ],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('group-6')(state as ChatStore);
+      expect(result).toBeNull();
+    });
+
+    it('should handle empty tools array as no tools', () => {
+      const groupMessage = {
+        id: 'group-7',
+        role: 'group',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'Response with empty tools',
+            tools: [],
+          },
+        ],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('group-7')(state as ChatStore);
+      expect(result).toBeDefined();
+      expect(result?.id).toBe('child-1');
+    });
+
+    it('should return null when message is not found', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [],
+        },
+      };
+
+      const result = chatSelectors.getGroupLatestMessageWithoutTools('non-existent')(
+        state as ChatStore,
+      );
+      expect(result).toBeNull();
     });
   });
 });

@@ -16,6 +16,7 @@ export interface ChatToolPayload {
   arguments: string;
   id: string;
   identifier: string;
+  result_msg_id?: string;
   type: LobeToolRenderType;
 }
 
@@ -82,6 +83,15 @@ export const MessageToolCallSchema = z.object({
     name: z.string(),
   }),
   id: z.string(),
+  type: z.string(),
+});
+
+export const ChatToolPayloadSchema = z.object({
+  apiName: z.string(),
+  arguments: z.string(),
+  id: z.string(),
+  identifier: z.string(),
+  result_msg_id: z.string().optional(),
   type: z.string(),
 });
 

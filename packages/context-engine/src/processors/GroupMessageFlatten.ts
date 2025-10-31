@@ -67,8 +67,18 @@ export class GroupMessageFlattenProcessor extends BaseProcessor {
           }
 
           // Add reasoning if present (for models that support reasoning)
-          if (message.reasoning) {
-            assistantMsg.reasoning = message.reasoning;
+          if (child.reasoning) {
+            assistantMsg.reasoning = child.reasoning;
+          }
+
+          // Add error if present
+          if (child.error) {
+            assistantMsg.error = child.error;
+          }
+
+          // Add imageList if present
+          if (child.imageList && child.imageList.length > 0) {
+            assistantMsg.imageList = child.imageList;
           }
 
           // Preserve other fields that might be needed
