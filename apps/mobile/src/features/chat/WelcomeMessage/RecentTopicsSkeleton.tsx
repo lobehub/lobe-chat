@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
  */
 const RecentTopicsSkeleton = memo(() => {
   const { t } = useTranslation('welcome');
-  const widths = [100, 120, 90, 110]; // 固定宽度，模拟不同长度的 topic 标题
+  const widths = [100, 120]; // 固定宽度，模拟不同长度的 topic 标题
 
   return (
     <Flexbox gap={16}>

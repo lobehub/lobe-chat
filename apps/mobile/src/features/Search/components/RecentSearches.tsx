@@ -111,6 +111,7 @@ const RecentSearches = memo<RecentSearchesProps>(
       <FlashList
         ListHeaderComponent={renderHeader}
         data={searches}
+        drawDistance={400}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}

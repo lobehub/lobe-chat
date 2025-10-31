@@ -168,6 +168,7 @@ export default function SideBar() {
       ) : (
         <FlashListScrollShadow
           data={listData}
+          drawDistance={400}
           estimatedItemSize={72}
           getItemType={getItemType}
           hideScrollBar
