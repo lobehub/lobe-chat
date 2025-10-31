@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
+import { Flexbox } from '@/components';
 import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -62,13 +63,14 @@ const WelcomeMessage = () => {
   return (
     <ScrollView
       contentContainerStyle={{
-        flex: 1,
         gap: 16,
         justifyContent: 'flex-end',
+        minHeight: '100%',
         padding: 16,
-        paddingBottom: 48,
+        paddingBottom: 8,
       }}
-      style={{ flex: 1, marginBottom: -24 }}
+      showsVerticalScrollIndicator={false}
+      style={{ marginBottom: -24 }}
     >
       {welcomeBubble}
       {!topicsInit || typeof topics === 'undefined' ? (
@@ -78,6 +80,7 @@ const WelcomeMessage = () => {
       ) : (
         openingQuestions.length > 0 && <OpeningQuestions questions={openingQuestions} />
       )}
+      <Flexbox style={{ height: 48 }} />
     </ScrollView>
   );
 };
