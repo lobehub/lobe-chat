@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Toast from './Toast';
 import { useStyles } from './style';
-import type { ToastItemInternal, ToastPosition, ToastType } from './type';
+import type { ToastItemInternal, ToastPosition, ToastType, ToastUpdateConfig } from './type';
 
 interface ToastConfig {
   duration?: number;
@@ -14,13 +14,14 @@ interface ToastConfig {
 }
 
 interface ToastContextType {
-  error: (message: string, duration?: number, onClose?: () => void) => void;
+  error: (message: string, duration?: number, onClose?: () => void) => string;
   hide: (id: string) => void;
-  info: (message: string, duration?: number, onClose?: () => void) => void;
-  loading: (message: string, duration?: number, onClose?: () => void) => void;
-  show: (config: ToastConfig) => void;
-  success: (message: string, duration?: number, onClose?: () => void) => void;
-  warning: (message: string, duration?: number, onClose?: () => void) => void;
+  info: (message: string, duration?: number, onClose?: () => void) => string;
+  loading: (message: string, duration?: number, onClose?: () => void) => string;
+  show: (config: ToastConfig) => string;
+  success: (message: string, duration?: number, onClose?: () => void) => string;
+  update: (id: string, config: ToastUpdateConfig) => boolean;
+  warning: (message: string, duration?: number, onClose?: () => void) => string;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);
@@ -64,42 +65,63 @@ export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
     };
 
     setToasts((prev) => [...prev, newToast]);
+
+    return id;
   }, []);
 
   const success = useCallback(
     (message: string, duration?: number, onClose?: () => void) => {
-      show({ duration, message, onClose, type: 'success' });
+      return show({ duration, message, onClose, type: 'success' });
     },
     [show],
   );
 
   const error = useCallback(
     (message: string, duration?: number, onClose?: () => void) => {
-      show({ duration, message, onClose, type: 'error' });
+      return show({ duration, message, onClose, type: 'error' });
     },
     [show],
   );
 
   const warning = useCallback(
     (message: string, duration?: number, onClose?: () => void) => {
-      show({ duration, message, onClose, type: 'warning' });
+      return show({ duration, message, onClose, type: 'warning' });
     },
     [show],
   );
 
   const info = useCallback(
     (message: string, duration?: number, onClose?: () => void) => {
-      show({ duration, message, onClose, type: 'info' });
+      return show({ duration, message, onClose, type: 'info' });
     },
     [show],
   );
 
   const loading = useCallback(
     (message: string, duration?: number, onClose?: () => void) => {
-      show({ duration, message, onClose, type: 'loading' });
+      return show({ duration, message, onClose, type: 'loading' });
     },
     [show],
   );
+
+  const update = useCallback((id: string, config: ToastUpdateConfig) => {
+    let found = false;
+
+    setToasts((prev) => {
+      const next = prev.map((toast) => {
+        if (toast.id !== id) return toast;
+
+        found = true;
+        return { ...toast, ...config };
+      });
+
+      if (!found) return prev;
+
+      return next;
+    });
+
+    return found;
+  }, []);
 
   const contextValue: ToastContextType = {
     error,
@@ -108,6 +130,7 @@ export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
     loading,
     show,
     success,
+    update,
     warning,
   };
 

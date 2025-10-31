@@ -98,6 +98,11 @@ toast.show({
 
 // Manual control
 toast.hide(id) // Hide specific toast
+toast.update(id, config) // Update toast configuration (duration, message, etc.)
+
+// Static methods provide the same controls globally
+Toast.config(id, config)
+Toast.destroy(id)
 ```
 
 ## Use Cases

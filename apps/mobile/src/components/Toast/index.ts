@@ -8,5 +8,6 @@ const Toast = ToastComponent as typeof ToastComponent & ToastStatic;
 Object.assign(Toast, staticMethods);
 
 export default Toast;
+export type { ToastStatic } from './staticMethods';
 export { ToastProvider, useToast } from './ToastProvider';
 export type * from './type';
