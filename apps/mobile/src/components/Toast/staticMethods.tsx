@@ -1,6 +1,7 @@
 import { ReactNode, memo, useEffect } from 'react';
 
 import { useToast } from './InnerToastProvider';
+import type { ToastUpdateConfig } from './type';
 
 // Global toast manager for static methods
 let globalToastContext: ReturnType<typeof useToast> | null = null;
@@ -9,8 +10,11 @@ const setGlobalToastContext = (context: ReturnType<typeof useToast>) => {
   globalToastContext = context;
 };
 
+const MANUAL_DISMISS_DURATION = 300;
+
 // Static methods interface
 export interface ToastStatic {
+  config: (id: string, config: ToastUpdateConfig) => boolean;
   destroy: (id: string) => void;
   error: (message: string, duration?: number, onClose?: () => void) => string;
   info: (message: string, duration?: number, onClose?: () => void) => string;
@@ -44,12 +48,25 @@ ToastContextSetter.displayName = 'ToastContextSetter';
 
 // Static methods object
 export const staticMethods: ToastStatic = {
+  config: (id: string, config: ToastUpdateConfig) => {
+    if (!globalToastContext) {
+      console.warn('Toast: ToastProvider not found. Please wrap your app with ToastProvider.');
+      return false;
+    }
+
+    return globalToastContext.update(id, config);
+  },
   destroy: (id: string) => {
     if (!globalToastContext) {
       console.warn('Toast: ToastProvider not found. Please wrap your app with ToastProvider.');
       return;
     }
-    globalToastContext.hide(id);
+
+    const updated = globalToastContext.update(id, { duration: MANUAL_DISMISS_DURATION });
+
+    if (!updated) {
+      globalToastContext.hide(id);
+    }
   },
   error: createStaticMethod('error'),
   info: createStaticMethod('info'),

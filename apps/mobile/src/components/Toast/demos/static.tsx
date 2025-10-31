@@ -29,6 +29,15 @@ export default function StaticDemo() {
     persistentLoadingIdRef.current = Toast.loading('长时间任务执行中...', 0);
   };
 
+  const acceleratePersistentLoading = () => {
+    if (!persistentLoadingIdRef.current) return;
+
+    Toast.config(persistentLoadingIdRef.current, {
+      duration: 300,
+      message: '任务即将完成...',
+    });
+  };
+
   const destroyPersistentLoading = () => {
     if (persistentLoadingIdRef.current) {
       Toast.destroy(persistentLoadingIdRef.current);
@@ -83,6 +92,9 @@ export default function StaticDemo() {
         <View style={styles.buttonGroup}>
           <Button onPress={showPersistentLoading} type="default">
             Toast.loading(duration=0)
+          </Button>
+          <Button onPress={acceleratePersistentLoading} type="default">
+            Toast.config()
           </Button>
           <Button onPress={destroyPersistentLoading} type="primary">
             Toast.destroy()

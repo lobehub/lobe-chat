@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Toast from './Toast';
 import { useStyles } from './style';
-import type { ToastItemInternal, ToastPosition, ToastType } from './type';
+import type { ToastItemInternal, ToastPosition, ToastType, ToastUpdateConfig } from './type';
 
 interface ToastConfig {
   duration?: number;
@@ -20,6 +20,7 @@ interface ToastContextType {
   loading: (message: string, duration?: number, onClose?: () => void) => string;
   show: (config: ToastConfig) => string;
   success: (message: string, duration?: number, onClose?: () => void) => string;
+  update: (id: string, config: ToastUpdateConfig) => boolean;
   warning: (message: string, duration?: number, onClose?: () => void) => string;
 }
 
@@ -103,6 +104,25 @@ export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
     [show],
   );
 
+  const update = useCallback((id: string, config: ToastUpdateConfig) => {
+    let found = false;
+
+    setToasts((prev) => {
+      const next = prev.map((toast) => {
+        if (toast.id !== id) return toast;
+
+        found = true;
+        return { ...toast, ...config };
+      });
+
+      if (!found) return prev;
+
+      return next;
+    });
+
+    return found;
+  }, []);
+
   const contextValue: ToastContextType = {
     error,
     hide,
@@ -110,6 +130,7 @@ export const ToastProvider = memo<ToastProviderProps>(({ children }) => {
     loading,
     show,
     success,
+    update,
     warning,
   };
 
