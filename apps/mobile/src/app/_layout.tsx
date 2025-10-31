@@ -3,13 +3,11 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { PortalProvider } from '@gorhom/portal';
 import { ThemeProvider, ToastProvider, useTheme, useThemeMode } from '@lobehub/ui-rn';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import * as NavigationBar from 'expo-navigation-bar';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
-import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { RootSiblingParent } from 'react-native-root-siblings';
@@ -161,16 +159,6 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 function ThemedSystemBars() {
   const { isDarkMode } = useThemeMode();
   const token = useTheme();
-
-  useEffect(() => {
-    if (Platform.OS !== 'android') return;
-
-    NavigationBar.setBackgroundColorAsync(token.colorBgLayout).catch(() => {});
-    NavigationBar.setButtonStyleAsync(isDarkMode ? 'light' : 'dark').catch(() => {});
-  }, [isDarkMode, token.colorBgLayout]);
-
-  // iOS: dark mode 需要 light 文字，light mode 需要 dark 文字
-  // Android: backgroundColor 会影响状态栏背景色
   return (
     <StatusBar
       animated
