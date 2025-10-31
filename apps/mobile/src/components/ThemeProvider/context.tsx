@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { createContext, memo, useContext } from 'react';
-import { useColorScheme } from 'react-native';
+import { Appearance } from 'react-native';
 
 import { darkAlgorithm, lightAlgorithm } from '@/components/styles';
 import { useSettingStore } from '@/store/setting';
@@ -21,8 +21,6 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider = memo<ThemeProviderProps>(({ children, theme: customTheme }) => {
-  const systemColorScheme = useColorScheme();
-
   // 检查是否已经在 ThemeProvider 内部（嵌套情况）
   const parentContext = useContext(ThemeContext);
   const isNested = !!parentContext;
@@ -53,7 +51,7 @@ export const ThemeProvider = memo<ThemeProviderProps>(({ children, theme: custom
 
     // 非嵌套情况或嵌套但没有自定义主题，使用正常逻辑
     if (themeMode === 'auto') {
-      return systemColorScheme || 'light';
+      return Appearance.getColorScheme() || 'light';
     }
 
     return themeMode;
