@@ -11,20 +11,21 @@ const setGlobalToastContext = (context: ReturnType<typeof useToast>) => {
 
 // Static methods interface
 export interface ToastStatic {
-  error: (message: string, duration?: number, onClose?: () => void) => void;
-  info: (message: string, duration?: number, onClose?: () => void) => void;
-  loading: (message: string, duration?: number, onClose?: () => void) => void;
-  success: (message: string, duration?: number, onClose?: () => void) => void;
+  destroy: (id: string) => void;
+  error: (message: string, duration?: number, onClose?: () => void) => string;
+  info: (message: string, duration?: number, onClose?: () => void) => string;
+  loading: (message: string, duration?: number, onClose?: () => void) => string;
+  success: (message: string, duration?: number, onClose?: () => void) => string;
 }
 
 const createStaticMethod = (type: 'success' | 'error' | 'info' | 'loading') => {
   return (message: string, duration?: number, onClose?: () => void) => {
     if (!globalToastContext) {
       console.warn('Toast: ToastProvider not found. Please wrap your app with ToastProvider.');
-      return;
+      return '';
     }
 
-    globalToastContext[type](message, duration, onClose);
+    return globalToastContext[type](message, duration, onClose);
   };
 };
 
@@ -43,6 +44,13 @@ ToastContextSetter.displayName = 'ToastContextSetter';
 
 // Static methods object
 export const staticMethods: ToastStatic = {
+  destroy: (id: string) => {
+    if (!globalToastContext) {
+      console.warn('Toast: ToastProvider not found. Please wrap your app with ToastProvider.');
+      return;
+    }
+    globalToastContext.hide(id);
+  },
   error: createStaticMethod('error'),
   info: createStaticMethod('info'),
   loading: createStaticMethod('loading'),

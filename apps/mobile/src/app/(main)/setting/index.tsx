@@ -101,25 +101,35 @@ export default function SettingScreen() {
       const update = await Updates.checkForUpdateAsync();
 
       if (update.isAvailable) {
-        Toast.info(t('update.check.downloading'));
-        await Updates.fetchUpdateAsync();
-        Toast.success(t('update.check.downloaded'));
-        Alert.alert(t('update.check.applyTitle'), t('update.check.applyDescription'), [
-          {
-            style: 'cancel',
-            text: t('actions.cancel', { ns: 'common' }),
-          },
-          {
-            onPress: () => {
-              Toast.info(t('update.check.applying'));
-              Updates.reloadAsync().catch((error) => {
-                console.error('Failed to apply update', error);
-                Toast.error(t('update.check.applyError'));
-              });
+        const loadingToastId = Toast.loading(t('update.check.downloading'), 0);
+        try {
+          await Updates.fetchUpdateAsync();
+          if (loadingToastId) {
+            Toast.destroy(loadingToastId);
+          }
+          Toast.success(t('update.check.downloaded'));
+          Alert.alert(t('update.check.applyTitle'), t('update.check.applyDescription'), [
+            {
+              style: 'cancel',
+              text: t('actions.cancel', { ns: 'common' }),
             },
-            text: t('update.check.applyAction'),
-          },
-        ]);
+            {
+              onPress: () => {
+                Toast.info(t('update.check.applying'));
+                Updates.reloadAsync().catch((error) => {
+                  console.error('Failed to apply update', error);
+                  Toast.error(t('update.check.applyError'));
+                });
+              },
+              text: t('update.check.applyAction'),
+            },
+          ]);
+        } catch (fetchError) {
+          if (loadingToastId) {
+            Toast.destroy(loadingToastId);
+          }
+          throw fetchError;
+        }
       } else {
         Toast.success(t('update.check.none'));
       }
