@@ -1,8 +1,8 @@
 import { ChatCitationItem } from '@lobechat/types';
-import { ActionIcon, CopyButton, Icon, Markdown, ScrollShadow } from '@lobehub/ui';
+import { CopyButton, Icon, Markdown, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
+import { AtomIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import { CSSProperties, RefObject, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,8 +24,10 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextTertiary};
   `,
   header: css`
+    min-height: 32px;
     padding-block: 4px;
     padding-inline: 8px 4px;
+
     transition: background 0.2s ${token.motionEaseOut};
     transition: all 0.2s ${token.motionEaseOut};
 
@@ -165,7 +167,6 @@ const Thinking = memo<ThinkingProps>((props) => {
               <CopyButton content={content} size={'small'} title={t('copy', { ns: 'common' })} />
             </div>
           )}
-          <ActionIcon icon={showDetail ? ChevronDown : ChevronRight} size={'small'} />
         </Flexbox>
       </Flexbox>
       <AnimatePresence initial={false}>

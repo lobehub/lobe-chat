@@ -1,9 +1,8 @@
-import { INBOX_GUIDE_SYSTEMROLE, INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
+import { isDesktop, isServerMode } from '@lobechat/const';
 import {
   ContextEngine,
   HistorySummaryProvider,
   HistoryTruncateProcessor,
-  InboxGuideProvider,
   InputTemplateProcessor,
   MessageCleanupProcessor,
   MessageContentProcessor,
@@ -48,8 +47,6 @@ export const contextEngineering = async ({
   enableHistoryCount,
   historyCount,
   historySummary,
-  sessionId,
-  isWelcomeQuestion,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
 
@@ -62,14 +59,6 @@ export const contextEngineering = async ({
 
       // 2. System role injection (agent's system role)
       new SystemRoleInjector({ systemRole }),
-
-      // 3. Inbox guide system role injection
-      new InboxGuideProvider({
-        inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
-        inboxSessionId: INBOX_SESSION_ID,
-        isWelcomeQuestion: isWelcomeQuestion,
-        sessionId: sessionId,
-      }),
 
       // 4. Tool system role injection
       new ToolSystemRoleProvider({
