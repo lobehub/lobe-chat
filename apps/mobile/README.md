@@ -25,7 +25,19 @@ The LobeHub application for iOS, and Android
 
 <sup>Experience AI conversations on your mobile device. Built for you, the Super Individual.</sup>
 
+![][image-preview]
+
 </div>
+
+> \[!IMPORTANT]
+>
+> **📱 iOS Open Beta Now Available!**
+>
+> Join our TestFlight beta program and be among the first to experience LobeHub Mobile on your iPhone or iPad!
+>
+> 🔗 **[Join TestFlight Beta](https://testflight.apple.com/join/2ZbjX4Qp)**
+>
+> We'd love to hear your feedback! Share your experience with us on [Discord][discord-link] or [GitHub Issues][issues-link]. 🫰
 
 <details>
 <summary><kbd>Table of contents</kbd></summary>
@@ -65,6 +77,10 @@ The LobeHub application for iOS, and Android
 ## 👋🏻 Getting Started
 
 We are bringing the powerful LobeHub experience to your mobile devices! Whether you're an iOS or Android user, LobeHub Mobile provides a seamless, native AI chat experience on the go.
+
+| [![][testflight-shield]][testflight-link] | Download the iOS beta now! Join our TestFlight program to experience LobeHub Mobile. |
+| :---------------------------------------: | :----------------------------------------------------------------------------------- |
+| [![][discord-shield-badge]][discord-link] | Join our Discord community! Connect with other users and share your feedback.        |
 
 > \[!IMPORTANT]
 >
@@ -108,18 +124,36 @@ Built with React Native and Expo SDK 54, LobeHub Mobile delivers genuine native 
 
 ### 🤖 Multi-Model AI Provider Support
 
-**Connect to Your Favorite AI Services**
+**60+ AI Service Providers at Your Fingertips**
 
-LobeHub Mobile supports multiple AI service providers, giving you the flexibility to choose the best model for your needs:
+LobeHub Mobile supports an extensive range of AI service providers, giving you unparalleled flexibility to choose the best models for your needs:
 
-- **OpenAI**: GPT-4, GPT-4 Turbo, GPT-3.5 Turbo
-- **Anthropic**: Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku
-- **Google**: Gemini Pro, Gemini Pro Vision
-- **Local Models**: Full support for Ollama and other local LLMs
+**Major Providers:**
+
+- **OpenAI**: GPT-4o, GPT-4 Turbo, GPT-3.5, and more
+- **Anthropic**: Claude 3.5 Sonnet, Claude 3 Opus/Sonnet/Haiku
+- **Google**: Gemini 2.0 Flash, Gemini Pro, and Vision models
+- **Microsoft**: Azure OpenAI, Azure AI services
+- **xAI**: Grok models
+
+**Local & Self-Hosted:**
+
+- Ollama, LM Studio, vLLM, Xinference
+
+**Chinese Providers:**
+
+- DeepSeek, Moonshot, Qwen, ZhiPu, Baichuan, Minimax
+- Hunyuan, Spark, SenseNova, Wenxin, and more
+
+**Additional Providers:**
+
+- Groq, Perplexity, Mistral, Together AI, Fireworks AI
+- OpenRouter, HuggingFace, Cloudflare Workers AI
+- Bedrock, Vertex AI, and 40+ more providers
 
 > \[!TIP]
 >
-> Easily switch between providers and models without any hassle. Your API keys are stored securely using Expo SecureStore.
+> Seamlessly switch between providers and models. All API keys are stored securely using Expo SecureStore (iOS Keychain / Android Keystore).
 
 <div align="right">
 
@@ -132,12 +166,15 @@ LobeHub Mobile supports multiple AI service providers, giving you the flexibilit
 **Everything You Need for Powerful AI Conversations**
 
 - 🗣️ **Streaming Responses**: Real-time AI replies with smooth streaming animation
-- 📝 **Rich Markdown**: Full Markdown support with tables, lists, and formatting
-- 🎨 **Code Highlighting**: Professional syntax highlighting powered by Shiki
-- 📐 **Math Rendering**: LaTeX formula rendering with MathJax
-- 💾 **Local Storage**: All conversations saved locally with MMKV for instant access
+- 📝 **Rich Markdown**: Full Markdown support with tables, lists, GFM, and alerts
+- 🎨 **Code Highlighting**: Professional syntax highlighting powered by Shiki (100+ languages)
+- 📐 **Math Rendering**: Beautiful LaTeX formula rendering with KaTeX
+- 🎙️ **Voice Interaction**: Built-in TTS (Text-to-Speech) and STT (Speech-to-Text) support
+- 🖼️ **Vision Models**: Upload images and chat with vision-enabled AI models
+- 🎨 **Image Generation**: Create images with DALL·E, Midjourney, and more
+- 💾 **Lightning Fast Storage**: MMKV-powered local storage for instant access
 - 📤 **Export & Share**: Export conversations in multiple formats
-- 🔄 **Multi-Session**: Manage multiple conversations and switch between them seamlessly
+- 🔄 **Multi-Session**: Manage unlimited conversations with smart organization
 
 <div align="right">
 
@@ -165,14 +202,20 @@ LobeHub Mobile supports multiple AI service providers, giving you the flexibilit
 
 Beyond these features, LobeHub Mobile also offers:
 
-- [x] 🌐 **i18n Support**: Built-in support for 18 languages
-- [x] 🎯 **Context Menu**: Long-press for quick actions like copy, delete, retry
-- [x] 📋 **Smart Copy**: Intelligent content detection for copying code, text, or entire messages
-- [x] 🔍 **Search**: Quickly find messages across all your conversations
-- [x] 🏷️ **Session Groups**: Organize conversations with custom groups and tags
-- [x] ⚙️ **Customization**: Fine-tune AI parameters like temperature, top-p, and more
-- [x] 📱 **Haptic Feedback**: Native haptic feedback for better touch experience
+- [x] 🌐 **i18n Support**: Built-in support for 18 languages with auto-detection
+- [x] 🎯 **Context Menu**: Long-press for quick actions (copy, delete, retry, regenerate)
+- [x] 📋 **Smart Copy**: Intelligent content detection for code blocks, text, or entire messages
+- [x] 🔍 **Global Search**: Quickly find messages across all conversations with full-text search
+- [x] 🏷️ **Session Groups**: Organize conversations with custom groups, folders, and tags
+- [x] 🗂️ **Topic Management**: Auto-create topics and organize conversations by context
+- [x] ⚙️ **Advanced Customization**: Fine-tune model parameters (temperature, top-p, frequency penalty, etc.)
+- [x] 📱 **Haptic Feedback**: Native haptic feedback for enhanced touch experience
+- [x] 🎨 **Theme System**: Dynamic theming with dark/light modes and system preferences
+- [x] 🔔 **Push Notifications**: Stay updated with conversation notifications
+- [x] 📊 **Token Usage Tracking**: Monitor your API usage and costs
 - [x] 🔄 **Pull to Refresh**: Natural gesture-based UI updates
+- [x] ⌨️ **Keyboard Shortcuts**: Enhanced productivity with keyboard controls
+- [x] 📤 **Import/Export**: Backup and restore your conversations
 
 > ✨ More features will be added as LobeHub Mobile evolves.
 
@@ -274,7 +317,7 @@ Our technology choices focus on **performance**, **developer experience**, and *
 
 | Technology                       | Version  | Purpose                                 |
 | -------------------------------- | -------- | --------------------------------------- |
-| **React Native**                 | 0.76.6   | Core framework for cross-platform apps  |
+| **React Native**                 | 0.81.5   | Core framework for cross-platform apps  |
 | **Expo SDK**                     | \~54.0.0 | Development platform and native modules |
 | **TypeScript**                   | ^5.8.2   | Type safety and better DX               |
 | **Expo Router**                  | \~4.0.17 | File-based navigation                   |
@@ -476,6 +519,7 @@ This project is licensed under a [Creative Commons Attribution-NonCommercial 4.0
 [github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat?color=ff80eb&labelColor=black&style=flat-square
 [github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
+[image-preview]: https://github.com/user-attachments/assets/preview-mobile-app.png
 [issues-link]: https://github.com/lobehub/lobe-chat/issues/new/choose
 [license-image]: https://licensebuttons.net/l/by-nc/4.0/88x31.png
 [license-link]: https://creativecommons.org/licenses/by-nc/4.0/
@@ -498,7 +542,7 @@ This project is licensed under a [Creative Commons Attribution-NonCommercial 4.0
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_PR_WELCOME-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 [profile-link]: https://github.com/lobehub
 [react-native-link]: https://reactnative.dev
-[react-native-shield]: https://img.shields.io/badge/React%20Native-0.76.6-61dafb?labelColor=black&logo=react&style=flat-square
+[react-native-shield]: https://img.shields.io/badge/React%20Native-0.81.5-61dafb?labelColor=black&logo=react&style=flat-square
 [share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20Mobile%20-%20An%20open-source%2C%20modern-design%20AI%20chat%20mobile%20application.%20One-click%20FREE%20deployment%20of%20your%20private%20ChatGPT%2FClaude%2FGemini%20mobile%20app.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
 [share-telegram-link]: https://t.me/share/url?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20Mobile%20-%20An%20open-source%2C%20modern-design%20AI%20chat%20mobile%20application.%20One-click%20FREE%20deployment%20of%20your%20private%20ChatGPT%2FClaude%2FGemini%20mobile%20app.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
@@ -507,5 +551,7 @@ This project is licensed under a [Creative Commons Attribution-NonCommercial 4.0
 [share-whatsapp-shield]: https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
 [share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2Cmobile%2Creactnative&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeHub%20Mobile%20-%20An%20open-source%2C%20modern-design%20AI%20chat%20mobile%20application.%20One-click%20FREE%20deployment%20of%20your%20private%20ChatGPT%2FClaude%2FGemini%20mobile%20app.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
 [share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
+[testflight-link]: https://testflight.apple.com/join/2ZbjX4Qp
+[testflight-shield]: https://img.shields.io/badge/TestFlight-iOS_Beta-0D96F6?labelColor=black&logo=apple&style=for-the-badge
 [typescript-link]: https://www.typescriptlang.org
 [typescript-shield]: https://img.shields.io/badge/TypeScript-5.8.2-3178c6?labelColor=black&logo=typescript&style=flat-square
