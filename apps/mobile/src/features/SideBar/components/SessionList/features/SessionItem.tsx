@@ -35,8 +35,7 @@ const SessionItem = memo<LobeAgentSession>(({ id, pinned, meta, updatedAt, creat
     <Cell
       active={isActive}
       description={
-        description &&
-        Flexbox && (
+        (description || pinned) && (
           <Flexbox align={'center'} flex={1} gap={8} horizontal justify={'space-between'}>
             <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'}>
               {description}

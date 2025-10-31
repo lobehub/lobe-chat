@@ -1,5 +1,6 @@
 import { ChatTopic } from '@lobechat/types';
 import { Cell, useTheme } from '@lobehub/ui-rn';
+import { useRouter } from 'expo-router';
 import { Star } from 'lucide-react-native';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +29,7 @@ interface TopicItemProps {
 const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
   const { t } = useTranslation(['topic', 'common']);
   const theme = useTheme();
+  const router = useRouter();
 
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const removeTopic = useChatStore((s) => s.removeTopic);
@@ -61,6 +63,23 @@ const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
       title: topic.favorite
         ? t('actions.unfavorite', { ns: 'topic' })
         : t('actions.favorite', { ns: 'topic' }),
+    },
+    {
+      icon: {
+        name: 'pencil',
+        pointSize: 18,
+      },
+      key: 'rename',
+      onSelect: () => {
+        router.push({
+          params: {
+            id: topic.id,
+            title: topic.title || t('defaultTitle', { ns: 'topic' }),
+          },
+          pathname: '/topic/rename',
+        });
+      },
+      title: t('rename.action', { ns: 'topic' }),
     },
     {
       destructive: true,

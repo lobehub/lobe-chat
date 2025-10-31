@@ -4,6 +4,7 @@ import { FlashList } from '@shopify/flash-list';
 import { MessageSquareDashed } from 'lucide-react-native';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
@@ -24,8 +25,8 @@ type ListItem =
  */
 const ByTimeMode = memo(() => {
   const { t } = useTranslation('topic');
+  const insets = useSafeAreaInsets();
   const theme = useTheme();
-
   const groupedTopics = useChatStore((s) => topicSelectors.groupedTopicsSelector(s));
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const setTopicDrawerOpen = useGlobalStore((s) => s.setTopicDrawerOpen);
@@ -100,7 +101,7 @@ const ByTimeMode = memo(() => {
 
   return (
     <FlashList
-      contentContainerStyle={{ paddingTop: 0 }}
+      contentContainerStyle={{ paddingBottom: insets.bottom }}
       data={listData}
       drawDistance={400}
       extraData={groupedTopics}

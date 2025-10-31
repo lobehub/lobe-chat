@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible, veuillez procéder avec prudence.",
+    "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible, veuillez procéder avec prudence.",
     "favorite": "Ajouter aux favoris",
+    "removeAll": "Supprimer tous les sujets",
+    "removeUnstarred": "Supprimer les sujets non favoris",
     "unfavorite": "Retirer des favoris"
   },
   "confirmRemoveTopicItemAlert": "Ce sujet va être supprimé. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "defaultTitle": "Sujet par défaut",
   "empty": "Aucun sujet pour le moment",
+  "favorite": "Favori",
+  "groupTitle": {
+    "byTime": {
+      "month": "Ce mois-ci",
+      "today": "Aujourd'hui",
+      "week": "Cette semaine",
+      "yesterday": "Hier"
+    }
+  },
   "guide": {
     "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme sujet historique et commencer une nouvelle conversation",
     "title": "Liste des sujets"
   },
   "loading": "Chargement...",
   "newTopic": "Nouveau sujet",
+  "rename": {
+    "action": "Renommer",
+    "done": "Terminé",
+    "emptyTitle": "Le nom du sujet ne peut pas être vide",
+    "error": "Échec du renommage",
+    "placeholder": "Saisissez le nom du sujet",
+    "success": "Sujet renommé avec succès",
+    "title": "Renommer le sujet",
+    "tooLong": "Le nom du sujet est trop long"
+  },
   "search": {
     "emptyResult": "Aucun sujet correspondant trouvé",
     "placeholder": "Rechercher des sujets...",

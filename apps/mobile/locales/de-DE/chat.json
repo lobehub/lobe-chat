@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Dieser Assistent wird gelöscht und kann nicht wiederhergestellt werden. Bitte bestätige deine Aktion.",
   "copyFailed": "Kopieren fehlgeschlagen",
   "defaultAgent": "Benutzerdefinierter Assistent",
+  "defaultList": "Standardliste",
   "deleteMessageConfirm": "Möchten Sie diese Nachricht wirklich löschen?",
   "history": "Chatverlauf",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Suche"
     },
     "title": "Einfach plaudern"
+  },
+  "sessionGroup": {
+    "config": "Gruppenverwaltung",
+    "confirmRemoveGroupAlert": "Diese Gruppe wird gelöscht. Die darin enthaltenen Assistenten werden in die Standardliste verschoben. Bitte bestätigen Sie Ihre Aktion.",
+    "createGroup": "Gruppe erstellen",
+    "createSuccess": "Gruppe erfolgreich erstellt",
+    "emptyGroup": "Keine Gruppen vorhanden",
+    "inputPlaceholder": "Bitte Gruppennamen eingeben",
+    "moveGroup": "In Gruppe verschieben",
+    "moveSuccess": "Erfolgreich verschoben",
+    "newGroup": "Neue Gruppe",
+    "removeSuccess": "Erfolgreich gelöscht",
+    "rename": "Umbenennen",
+    "renameSuccess": "Erfolgreich umbenannt",
+    "tooLong": "Der Gruppenname muss zwischen 1 und 20 Zeichen lang sein"
   },
   "setting": {
     "avatar": "Avatar",

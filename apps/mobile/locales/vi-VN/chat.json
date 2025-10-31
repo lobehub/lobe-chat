@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận thao tác của bạn",
   "copyFailed": "Sao chép thất bại",
   "defaultAgent": "Trợ lý tùy chỉnh",
+  "defaultList": "Danh sách mặc định",
   "deleteMessageConfirm": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
   "history": "Lịch sử trò chuyện",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Tìm kiếm"
     },
     "title": "Trò chuyện tự do"
+  },
+  "sessionGroup": {
+    "config": "Quản lý nhóm",
+    "confirmRemoveGroupAlert": "Nhóm này sắp bị xóa. Sau khi xóa, các trợ lý trong nhóm sẽ được chuyển vào danh sách mặc định. Vui lòng xác nhận thao tác của bạn.",
+    "createGroup": "Tạo nhóm",
+    "createSuccess": "Tạo nhóm thành công",
+    "emptyGroup": "Chưa có nhóm nào",
+    "inputPlaceholder": "Vui lòng nhập tên nhóm",
+    "moveGroup": "Chuyển vào nhóm",
+    "moveSuccess": "Chuyển thành công",
+    "newGroup": "Nhóm mới",
+    "removeSuccess": "Xóa thành công",
+    "rename": "Đổi tên",
+    "renameSuccess": "Đổi tên thành công",
+    "tooLong": "Tên nhóm phải có độ dài từ 1 đến 20 ký tự"
   },
   "setting": {
     "avatar": "Ảnh đại diện",

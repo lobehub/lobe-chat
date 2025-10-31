@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "即將刪除全部主題，刪除後將無法恢復，請謹慎操作",
+    "confirmRemoveUnstarred": "即將刪除未收藏主題，刪除後將無法恢復，請謹慎操作",
     "favorite": "加入最愛",
+    "removeAll": "刪除全部主題",
+    "removeUnstarred": "刪除未收藏主題",
     "unfavorite": "取消最愛"
   },
   "confirmRemoveTopicItemAlert": "即將刪除該主題，刪除後將無法恢復，請確認你的操作",
   "defaultTitle": "預設話題",
   "empty": "暫無話題",
+  "favorite": "收藏",
+  "groupTitle": {
+    "byTime": {
+      "month": "本月",
+      "today": "今天",
+      "week": "本週",
+      "yesterday": "昨天"
+    }
+  },
   "guide": {
     "desc": "點擊發送左側按鈕可將當前會話保存為歷史話題，並開啟新一輪會話",
     "title": "話題列表"
   },
   "loading": "載入中...",
   "newTopic": "新建話題",
+  "rename": {
+    "action": "重新命名",
+    "done": "完成",
+    "emptyTitle": "主題名稱不能為空",
+    "error": "重新命名失敗",
+    "placeholder": "輸入主題名稱",
+    "success": "重新命名成功",
+    "title": "重新命名主題",
+    "tooLong": "主題名稱過長"
+  },
   "search": {
     "emptyResult": "未找到符合的主題",
     "placeholder": "搜尋主題...",

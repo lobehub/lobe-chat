@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "すべてのトピックを削除しようとしています。削除後は元に戻せませんので、慎重に操作してください。",
+    "confirmRemoveUnstarred": "お気に入りに登録されていないトピックを削除しようとしています。削除後は元に戻せませんので、慎重に操作してください。",
     "favorite": "お気に入りに追加",
+    "removeAll": "すべてのトピックを削除",
+    "removeUnstarred": "お気に入り以外のトピックを削除",
     "unfavorite": "お気に入りから削除"
   },
   "confirmRemoveTopicItemAlert": "このトピックを削除しようとしています。削除すると元に戻せません。本当に削除してもよろしいですか？",
   "defaultTitle": "デフォルトトピック",
   "empty": "トピックがありません",
+  "favorite": "お気に入り",
+  "groupTitle": {
+    "byTime": {
+      "month": "今月",
+      "today": "今日",
+      "week": "今週",
+      "yesterday": "昨日"
+    }
+  },
   "guide": {
     "desc": "左側の送信ボタンをクリックすると、現在の会話を履歴トピックとして保存し、新しい会話を開始します",
     "title": "トピック一覧"
   },
   "loading": "読み込み中...",
   "newTopic": "新しいトピック",
+  "rename": {
+    "action": "名前を変更",
+    "done": "完了",
+    "emptyTitle": "トピック名は空にできません",
+    "error": "名前の変更に失敗しました",
+    "placeholder": "トピック名を入力",
+    "success": "名前を変更しました",
+    "title": "トピック名の変更",
+    "tooLong": "トピック名が長すぎます"
+  },
   "search": {
     "emptyResult": "一致するトピックが見つかりませんでした",
     "placeholder": "トピックを検索...",

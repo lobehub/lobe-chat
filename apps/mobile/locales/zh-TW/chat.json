@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
   "copyFailed": "複製失敗",
   "defaultAgent": "自訂助手",
+  "defaultList": "預設清單",
   "deleteMessageConfirm": "確定要刪除這則訊息嗎？",
   "history": "對話歷史",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "搜尋"
     },
     "title": "隨便聊聊"
+  },
+  "sessionGroup": {
+    "config": "分組管理",
+    "confirmRemoveGroupAlert": "即將刪除該分組，刪除後該分組下的助手將移至預設清單，請確認你的操作",
+    "createGroup": "建立分組",
+    "createSuccess": "分組建立成功",
+    "emptyGroup": "暫無分組",
+    "inputPlaceholder": "請輸入分組名稱",
+    "moveGroup": "移動到分組",
+    "moveSuccess": "移動成功",
+    "newGroup": "新分組",
+    "removeSuccess": "刪除成功",
+    "rename": "重新命名",
+    "renameSuccess": "重新命名成功",
+    "tooLong": "分組名稱長度需在 1~20 個字之間"
   },
   "setting": {
     "avatar": "頭像",

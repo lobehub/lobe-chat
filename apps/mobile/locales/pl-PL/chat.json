@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Asystent zostanie usunięty i nie będzie można go odzyskać, potwierdź swoją operację",
   "copyFailed": "Kopiowanie nie powiodło się",
   "defaultAgent": "Niestandardowy asystent",
+  "defaultList": "Domyślna lista",
   "deleteMessageConfirm": "Czy na pewno chcesz usunąć tę wiadomość?",
   "history": "Historia rozmów",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Szukaj"
     },
     "title": "Rozmowa na luzie"
+  },
+  "sessionGroup": {
+    "config": "Zarządzanie grupami",
+    "confirmRemoveGroupAlert": "Grupa zostanie usunięta. Asystenci z tej grupy zostaną przeniesieni do domyślnej listy. Proszę potwierdzić swoją decyzję.",
+    "createGroup": "Utwórz grupę",
+    "createSuccess": "Grupa została pomyślnie utworzona",
+    "emptyGroup": "Brak grup",
+    "inputPlaceholder": "Wprowadź nazwę grupy",
+    "moveGroup": "Przenieś do grupy",
+    "moveSuccess": "Pomyślnie przeniesiono",
+    "newGroup": "Nowa grupa",
+    "removeSuccess": "Pomyślnie usunięto",
+    "rename": "Zmień nazwę",
+    "renameSuccess": "Nazwa została pomyślnie zmieniona",
+    "tooLong": "Nazwa grupy musi mieć od 1 do 20 znaków"
   },
   "setting": {
     "avatar": "Awatar",

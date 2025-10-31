@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { ChevronLeft, Loader2Icon } from 'lucide-react-native';
 import { memo, useRef } from 'react';
 import { Animated, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { HEADER_HEIGHT } from '@/_const/common';
 import ActionIcon from '@/components/ActionIcon';
@@ -34,12 +34,14 @@ const PageContainer = memo<PageContainerProps>(
     leftProps,
     titleProps,
     extraProps,
+    safeAreaProps,
   }) => {
     const { styles, theme } = useStyles();
     const token = useTheme();
     const scrollY = useRef(new Animated.Value(0)).current;
     const isColor = Boolean(!backgroundColor || typeof backgroundColor === 'string');
     const LARGE_TITLE_HEIGHT = 34 + token.paddingSM + token.paddingSM;
+    const insets = useSafeAreaInsets();
 
     const headerTitleOpacity = scrollY.interpolate({
       extrapolate: 'clamp',
@@ -195,13 +197,14 @@ const PageContainer = memo<PageContainerProps>(
     if (largeTitleEnabled) {
       return (
         <SafeAreaView
-          edges={['top', 'bottom']}
+          edges={['top']}
           style={[styles.container, style]}
           testID="page-container"
+          {...safeAreaProps}
         >
           {headerContent}
           <ScrollComponent
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom }]}
             contentInsetAdjustmentBehavior="never"
             onScroll={composedOnScroll}
             scrollEventThrottle={16}
@@ -224,6 +227,7 @@ const PageContainer = memo<PageContainerProps>(
           style,
         ]}
         testID="page-container"
+        {...safeAreaProps}
       >
         {headerContent}
         {children}

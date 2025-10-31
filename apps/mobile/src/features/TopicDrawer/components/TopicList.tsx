@@ -1,5 +1,5 @@
 import { TopicDisplayMode } from '@lobechat/types';
-import { Empty, Flexbox } from '@lobehub/ui-rn';
+import { Empty, Flexbox, MaskShadow } from '@lobehub/ui-rn';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -57,7 +57,11 @@ const TopicList = memo(() => {
   }
 
   // 根据显示模式切换不同的列表组件
-  return topicDisplayMode === TopicDisplayMode.ByTime ? <ByTimeMode /> : <FlatMode />;
+  return (
+    <MaskShadow position={'bottom'} style={{ flex: 1 }}>
+      {topicDisplayMode === TopicDisplayMode.ByTime ? <ByTimeMode /> : <FlatMode />}
+    </MaskShadow>
+  );
 });
 
 TopicList.displayName = 'TopicList';

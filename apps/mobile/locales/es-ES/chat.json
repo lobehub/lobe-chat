@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente, una vez eliminado no se podrá recuperar. Por favor, confirma tu acción.",
   "copyFailed": "Error al copiar",
   "defaultAgent": "Asistente personalizado",
+  "defaultList": "Lista predeterminada",
   "deleteMessageConfirm": "¿Estás seguro de que deseas eliminar este mensaje?",
   "history": "Historial de conversaciones",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Buscar"
     },
     "title": "Charlemos"
+  },
+  "sessionGroup": {
+    "config": "Gestión de grupos",
+    "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Los asistentes dentro de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
+    "createGroup": "Crear grupo",
+    "createSuccess": "Grupo creado con éxito",
+    "emptyGroup": "No hay grupos disponibles",
+    "inputPlaceholder": "Introduce el nombre del grupo",
+    "moveGroup": "Mover al grupo",
+    "moveSuccess": "Movimiento realizado con éxito",
+    "newGroup": "Nuevo grupo",
+    "removeSuccess": "Eliminado con éxito",
+    "rename": "Renombrar",
+    "renameSuccess": "Renombrado con éxito",
+    "tooLong": "El nombre del grupo debe tener entre 1 y 20 caracteres"
   },
   "setting": {
     "avatar": "Avatar",

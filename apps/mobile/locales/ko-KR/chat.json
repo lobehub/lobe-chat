@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
   "copyFailed": "복사 실패",
   "defaultAgent": "사용자 지정 도우미",
+  "defaultList": "기본 목록",
   "deleteMessageConfirm": "이 메시지를 삭제하시겠습니까?",
   "history": "대화 기록",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "검색"
     },
     "title": "편하게 대화하기"
+  },
+  "sessionGroup": {
+    "config": "그룹 관리",
+    "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 계속하시겠습니까?",
+    "createGroup": "그룹 생성",
+    "createSuccess": "그룹이 성공적으로 생성되었습니다",
+    "emptyGroup": "그룹이 없습니다",
+    "inputPlaceholder": "그룹 이름을 입력하세요",
+    "moveGroup": "그룹으로 이동",
+    "moveSuccess": "이동 완료",
+    "newGroup": "새 그룹",
+    "removeSuccess": "삭제 완료",
+    "rename": "이름 변경",
+    "renameSuccess": "이름 변경 완료",
+    "tooLong": "그룹 이름은 1자에서 20자 사이여야 합니다"
   },
   "setting": {
     "avatar": "아바타",
