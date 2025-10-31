@@ -1,0 +1,9 @@
+build:
+  steps:
+    - eas/build
+    - run:
+        command: |
+          curl \
+            -H 'Content-Type: application/json' \
+            -d '{"content": "Build ios development succeeded! URL: ${ eas.job.expoBuildUrl }"}' \
+            https://discord.com/api/webhooks/1433453648847044730/dL7TwaFY1d5mAYADZ0p7bKZlo5_an6w0REPVtzMdtHZtmwuTrTSWcQC7njCXlsJnhEPI

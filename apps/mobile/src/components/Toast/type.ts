@@ -21,3 +21,5 @@ export interface ToastItemInternal {
   position?: ToastPosition;
   type: ToastType;
 }
+
+export type ToastUpdateConfig = Partial<Omit<ToastItemInternal, 'id'>>;

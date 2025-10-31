@@ -1,8 +1,8 @@
 name: Publish preview update
 
-on:
-  push:
-    branches: ['*']
+# on:
+#   push:
+#     branches: ['*']
 
 jobs:
   publish_preview_update:

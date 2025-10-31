@@ -1,4 +1,5 @@
 import { Button, Text, Toast, useTheme } from '@lobehub/ui-rn';
+import { useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 const showSuccess = () => {
@@ -19,6 +20,30 @@ const showLoading = () => {
 
 export default function StaticDemo() {
   const token = useTheme();
+  const persistentLoadingIdRef = useRef<string>('');
+
+  const showPersistentLoading = () => {
+    if (persistentLoadingIdRef.current) {
+      Toast.destroy(persistentLoadingIdRef.current);
+    }
+    persistentLoadingIdRef.current = Toast.loading('长时间任务执行中...', 0);
+  };
+
+  const acceleratePersistentLoading = () => {
+    if (!persistentLoadingIdRef.current) return;
+
+    Toast.config(persistentLoadingIdRef.current, {
+      duration: 300,
+      message: '任务即将完成...',
+    });
+  };
+
+  const destroyPersistentLoading = () => {
+    if (persistentLoadingIdRef.current) {
+      Toast.destroy(persistentLoadingIdRef.current);
+      persistentLoadingIdRef.current = '';
+    }
+  };
 
   const styles = StyleSheet.create({
     buttonGroup: {
@@ -58,6 +83,21 @@ export default function StaticDemo() {
           </Button>
           <Button onPress={showLoading} type="default">
             Toast.loading()
+          </Button>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: token.colorText }]}>持久化加载提示</Text>
+        <View style={styles.buttonGroup}>
+          <Button onPress={showPersistentLoading} type="default">
+            Toast.loading(duration=0)
+          </Button>
+          <Button onPress={acceleratePersistentLoading} type="default">
+            Toast.config()
+          </Button>
+          <Button onPress={destroyPersistentLoading} type="primary">
+            Toast.destroy()
           </Button>
         </View>
       </View>
