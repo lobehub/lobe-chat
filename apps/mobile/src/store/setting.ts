@@ -1,3 +1,4 @@
+import { TopicDisplayMode } from '@lobechat/types';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -23,8 +24,10 @@ interface SettingState {
   setPrimaryColor: (color: PrimaryColors) => void;
   setShowSelfHostedEntry: (enabled: boolean) => void;
   setThemeMode: (themeMode: ThemeMode) => void;
+  setTopicDisplayMode: (mode: TopicDisplayMode) => void;
   showSelfHostedEntry: boolean;
   themeMode: ThemeMode;
+  topicDisplayMode: TopicDisplayMode;
 }
 
 export const useSettingStore = createWithEqualityFn<SettingState>()(
@@ -77,10 +80,16 @@ export const useSettingStore = createWithEqualityFn<SettingState>()(
         set({ themeMode });
       },
 
+      setTopicDisplayMode: (topicDisplayMode: TopicDisplayMode) => {
+        set({ topicDisplayMode });
+      },
+
       // 是否显示自托管登录入口, 默认关闭
       showSelfHostedEntry: false,
 
       themeMode: 'auto',
+
+      topicDisplayMode: TopicDisplayMode.ByTime,
     }),
     {
       name: 'lobe-chat-settings',
