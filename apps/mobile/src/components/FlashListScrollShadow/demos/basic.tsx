@@ -21,6 +21,7 @@ export default () => {
     <View style={{ height: 400 }}>
       <FlashListScrollShadow
         data={data}
+        drawDistance={400}
         estimatedItemSize={60}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (

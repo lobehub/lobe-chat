@@ -270,7 +270,7 @@ const ProviderDetailPage = () => {
             children: (
               <FlashList
                 data={configurationData}
-                drawDistance={500}
+                drawDistance={400}
                 getItemType={(item) => item?.type ?? 'unknown'}
                 keyExtractor={keyExtractor}
                 onEndReached={handleEndReached}
@@ -287,7 +287,7 @@ const ProviderDetailPage = () => {
               <FlashList
                 ListFooterComponent={renderFooter}
                 data={modelsData}
-                drawDistance={500}
+                drawDistance={400}
                 getItemType={(item) => item?.type ?? 'unknown'}
                 keyExtractor={keyExtractor}
                 onEndReached={handleEndReached}

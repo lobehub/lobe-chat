@@ -2,70 +2,29 @@ import { UIChatMessage } from '@lobechat/types';
 import { Flexbox, MaskShadow } from '@lobehub/ui-rn';
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list';
 import { isLiquidGlassAvailable } from 'expo-glass-effect';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { View, ViewStyle } from 'react-native';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ViewStyle } from 'react-native';
 import { useKeyboardHandler } from 'react-native-keyboard-controller';
 import { runOnJS } from 'react-native-reanimated';
 import { NativeScrollEvent } from 'react-native/Libraries/Components/ScrollView/ScrollView';
 import { NativeSyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 
-import { LOADING_FLAT } from '@/_const/message';
 import AutoScroll from '@/features/chat/AutoScroll';
 import { useChat } from '@/hooks/useChat';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-import ChatBubble from '../ChatBubble';
 import MessageSkeletonList from '../MessageSkeletonList';
 import WelcomeMessage from '../WelcomeMessage';
+import ChatMessageItem from './ChatMessageItem';
+import { ESTIMATED_MESSAGE_HEIGHT, computeAtBottom } from './utils';
 
 interface ChatListProps {
   style?: ViewStyle;
 }
 
-const AT_BOTTOM_EPSILON = 100;
-
-const computeAtBottom = (layoutH = 0, contentH = 0, offsetY = 0) => {
-  const maxOffset = Math.max(0, contentH - layoutH);
-  let offset = offsetY;
-  if (offset < 0) offset = 0;
-  if (offset > maxOffset) offset = maxOffset;
-
-  // If content fits entirely in the viewport, we're at bottom
-  if (contentH <= layoutH) return true;
-
-  // Distance from viewport bottom to content bottom
-  const distance = contentH - (offset + layoutH);
-  return distance <= AT_BOTTOM_EPSILON;
-};
-
-const ChatMessageItem = memo<{ index: number; item: UIChatMessage; totalLength: number }>(
-  ({ item, index, totalLength }) => {
-    const { isGenerating } = useChat();
-    const isLastMessage = index === totalLength - 1;
-    const isAssistant = item.role === 'assistant';
-    const isLoadingContent = item.content === LOADING_FLAT;
-    const hasError = !!item.error?.type;
-    // 如果有错误，即使content是LOADING_FLAT也不应该显示为loading状态
-    const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent && !hasError;
-
-    return (
-      <ChatBubble
-        isLoading={shouldShowLoading}
-        markdownProps={{
-          enableStream: isLastMessage && isGenerating,
-        }}
-        message={item}
-        showActionsBar={isLastMessage}
-      />
-    );
-  },
-);
-
-ChatMessageItem.displayName = 'ChatMessageItem';
-
-export default function ChatListChatList({ style }: ChatListProps) {
+const ChatList = memo<ChatListProps>(({ style }) => {
   const isGlassAvailable = isLiquidGlassAvailable();
   const listRef = useRef<FlashListRef<UIChatMessage>>(null);
   // 触发消息加载
@@ -126,9 +85,22 @@ export default function ChatListChatList({ style }: ChatListProps) {
     setAtBottom(nearBottom);
   }, []);
 
+  let content;
+  const maintainVisibleContentPosition = useMemo(
+    () => ({
+      animateAutoscrollToBottom: true,
+      autoscrollToBottomThreshold: isLoading || isGenerating ? 0.2 : undefined,
+    }),
+    [isGenerating, isLoading],
+  );
+
+  const initialScrollIndex = useMemo(
+    () => (messages.length > 0 ? messages.length - 1 : undefined),
+    [messages.length],
+  );
+
   if (!activeTopicId) return <WelcomeMessage />;
 
-  let content;
   if (!isCurrentChatLoaded) {
     content = <MessageSkeletonList />;
   } else {
@@ -143,22 +115,27 @@ export default function ChatListChatList({ style }: ChatListProps) {
           }}
         >
           <FlashList
-            ListFooterComponent={<View style={{ height: 48 }} />}
+            ListFooterComponent={<Flexbox style={{ height: 48 }} />}
             data={messages}
+            drawDistance={400}
             getItemType={(chatMessage) => {
               return chatMessage.role;
             }}
-            initialScrollIndex={messages.length - 1}
+            initialScrollIndex={initialScrollIndex}
             keyExtractor={keyExtractor}
-            maintainVisibleContentPosition={{
-              autoscrollToBottomThreshold: isLoading || isGenerating ? 0.2 : undefined,
-              // startRenderingFromBottom: true,
-            }}
+            keyboardShouldPersistTaps="handled"
+            maintainVisibleContentPosition={maintainVisibleContentPosition}
             onScroll={handleScroll}
+            overrideProps={{ estimatedItemSize: ESTIMATED_MESSAGE_HEIGHT }}
             ref={listRef}
             renderItem={renderItem}
+            scrollEventThrottle={isGenerating ? 16 : undefined}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
+            testID="chat-flash-list"
+            viewabilityConfig={{
+              viewAreaCoveragePercentThreshold: 1,
+            }}
           />
         </MaskShadow>
         <AutoScroll
@@ -185,4 +162,8 @@ export default function ChatListChatList({ style }: ChatListProps) {
       {content}
     </Flexbox>
   );
-}
+});
+
+ChatList.displayName = 'ChatList';
+
+export default ChatList;

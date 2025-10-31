@@ -113,6 +113,7 @@ const AssistantList = () => {
         ListEmptyComponent={renderEmptyComponent}
         ListFooterComponent={renderFooter}
         data={allItems}
+        drawDistance={400}
         keyExtractor={keyExtractor}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}

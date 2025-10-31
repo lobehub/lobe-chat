@@ -170,6 +170,7 @@ const FlashListScrollShadowInner = <T,>(
     return (
       <FlashList
         contentContainerStyle={contentContainerStyle}
+        drawDistance={400}
         ref={mergeRefs([flashListRef, forwardedRef]) as any}
         {...flashListProps}
       />
@@ -191,6 +192,7 @@ const FlashListScrollShadowInner = <T,>(
     >
       <FlashList
         contentContainerStyle={contentContainerStyle}
+        drawDistance={400}
         ref={mergeRefs([flashListRef, forwardedRef]) as any}
         {...flashListProps}
         style={styles.flashList}

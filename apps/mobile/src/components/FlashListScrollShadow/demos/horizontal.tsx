@@ -23,6 +23,7 @@ export default () => {
     <View style={{ height: 200 }}>
       <FlashListScrollShadow
         data={data}
+        drawDistance={400}
         estimatedItemSize={140}
         keyExtractor={(item) => item.id}
         orientation="horizontal"

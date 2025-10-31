@@ -343,6 +343,7 @@ const SessionSearchList = memo(
     return (
       <FlashList
         data={listData}
+        drawDistance={400}
         keyExtractor={(item, index) => {
           if (item.type === 'session') {
             return `session-${item.data.id}`;
