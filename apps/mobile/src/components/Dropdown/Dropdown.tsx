@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react';
 import * as ContextMenu from 'zeego/context-menu';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
+import { Block } from '@/components';
 import { hapticsEffect } from '@/utils/hapticsEffect';
 
 import type { DropdownPlacement, DropdownProps } from './type';
@@ -77,6 +78,15 @@ const Dropdown = memo<DropdownProps>(
       >
         <Menu.Trigger asChild>{children}</Menu.Trigger>
         <Menu.Content align={align} side={side}>
+          {!isPress && (
+            <ContextMenu.Preview borderRadius={16}>
+              {() => (
+                <Block style={{ minWidth: 300 }} variant={'outlined'}>
+                  {children}
+                </Block>
+              )}
+            </ContextMenu.Preview>
+          )}
           {content}
         </Menu.Content>
       </Menu.Root>
