@@ -15,6 +15,7 @@ export interface UpdateDocumentParams {
   content?: string;
   editorData?: string;
   id: string;
+  metadata?: Record<string, any>;
   title?: string;
 }
 

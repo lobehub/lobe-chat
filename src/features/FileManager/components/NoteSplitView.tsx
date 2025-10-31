@@ -11,7 +11,7 @@ import { useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
 
 import NoteActions from './NoteActions';
-import NoteEditorPanel from './NoteEditorPanel';
+import NoteEditor from './NoteEditorPanel';
 import NoteEmptyStatus from './NoteEmptyStatus';
 import NoteListSkeleton from './NoteListSkeleton';
 
@@ -255,8 +255,9 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
             </div>
           ) : (
             filteredNotes.map((note) => {
-              const title = note.content ? extractTitle(note.content) : null;
+              const title = note.name || t('notesList.untitled');
               const previewText = getPreviewText(note);
+              const emoji = note.metadata?.emoji;
               return (
                 <div
                   className={cx(styles.noteCard, selectedNoteId === note.id && 'selected')}
@@ -276,7 +277,10 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
                     />
                   </div>
                   <div className={styles.noteContent}>
-                    {title && <div className={styles.noteTitle}>{title}</div>}
+                    <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
+                      {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
+                      <div className={styles.noteTitle}>{title}</div>
+                    </div>
                     {previewText && <div className={styles.notePreview}>{previewText}</div>}
                   </div>
                 </div>
@@ -289,11 +293,12 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
       {/* Right Panel - Editor */}
       <div className={styles.editorPanel}>
         {selectedNoteId || isCreatingNew ? (
-          <NoteEditorPanel
+          <NoteEditor
             content={selectedNote?.content}
             documentId={selectedNoteId || undefined}
             documentTitle={selectedNote?.name}
             editorData={selectedNote?.editorData}
+            emoji={selectedNote?.metadata?.emoji}
             knowledgeBaseId={knowledgeBaseId}
             onDocumentIdChange={handleDocumentIdChange}
           />

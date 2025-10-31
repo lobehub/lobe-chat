@@ -79,6 +79,14 @@ export default {
     empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
     noResults: '未找到匹配的笔记',
     selectNote: '选择一个笔记开始编辑',
+    untitled: '无标题',
+  },
+  notesEditor: {
+    addIcon: '添加图标',
+    emojiPicker: {
+      tooltip: '选择图标',
+    },
+    titlePlaceholder: '无标题',
   },
   preview: {
     downloadFile: '下载文件',
