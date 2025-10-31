@@ -151,6 +151,25 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
+      'KAT-Dev（32B）是一款专为软件工程任务设计的开源 32B 参数模型。在 SWE-Bench Verified 基准测试中，它取得了 62.4% 的解决率，在所有不同规模的开源模型中排名第五。该模型通过多个阶段进行优化，包括中间训练、监督微调（SFT）与强化学习（RL），旨在为代码补全、缺陷修复、代码评审等复杂编程任务提供强大支持。',
+    displayName: 'KAT-Dev 32B',
+    id: 'Kwaipilot/KAT-Dev',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-27',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
       'Ling-1T 是 "灵 2.0" 系列的首款旗舰级 non-thinking 模型，拥有 1 万亿总参数和每 token 约 500 亿个活动参数。基于灵 2.0 架构构建，Ling-1T 旨在突破高效推理和可扩展认知的极限。Ling-1T-base 在超过 20 万亿个高质量、推理密集的 token 上进行训练，针对大型知识密集型任务与长文档理解进行了优化，具备出色的工具调用和上下文记忆能力。',
     displayName: 'Ling 1T',
     id: 'inclusionAI/Ling-1T',
