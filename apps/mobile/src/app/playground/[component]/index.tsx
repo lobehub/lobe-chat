@@ -60,6 +60,7 @@ export default function DynamicComponentPlaygroundPage() {
           headerBackTitle: '返回',
           headerBackVisible: true,
           headerBlurEffect: isGlassAvailable ? undefined : blurEffect,
+          headerShadowVisible: false,
           headerShown: true,
           headerStyle: { backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent' },
           headerTintColor: theme.colorText,
