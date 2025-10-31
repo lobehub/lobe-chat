@@ -598,7 +598,6 @@ export const generateAIChat: StateCreator<
         topicId: get().activeTopicId,
         traceName: TraceNameMap.Conversation,
       },
-      isWelcomeQuestion: params?.isWelcomeQuestion,
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
