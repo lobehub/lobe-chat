@@ -331,13 +331,6 @@ export default {
     sorting: '分组排序更新中...',
     tooLong: '分组名称长度需在 1-20 之内',
   },
-  setting: {
-    avatar: '头像',
-    description: '描述',
-    done: '完成',
-    name: '名称',
-    title: '会话设置',
-  },
   shareModal: {
     copy: '复制',
     download: '下载截图',
