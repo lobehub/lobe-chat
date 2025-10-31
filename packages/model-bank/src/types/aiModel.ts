@@ -186,6 +186,10 @@ export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUn
 
 export interface Pricing {
   currency?: ModelPriceCurrency;
+  /**
+   * Fallback per-image price (USD) when detailed pricing table is unavailable
+   */
+  pricePerImage?: number;
   units: PricingUnit[];
 }
 
@@ -398,6 +402,10 @@ export interface AiModelForSelect {
   contextWindowTokens?: number;
   displayName?: string;
   id: string;
+  parameters?: ModelParamsSchema;
+  pricePerImage?: number;
+  pricePerImageIsApproximate?: boolean;
+  pricing?: Pricing;
 }
 
 export interface EnabledAiModel {

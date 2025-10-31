@@ -7,7 +7,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
+import { ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/slices/aiProvider/selectors';
@@ -15,6 +15,8 @@ import { useImageStore } from '@/store/image';
 import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
+
+import ImageModelItem from './ImageModelItem';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   popup: css`
@@ -48,7 +50,7 @@ const ModelSelect = memo(() => {
   const options = useMemo<SelectProps['options']>(() => {
     const getImageModels = (provider: EnabledProviderWithModels) => {
       const modelOptions = provider.children.map((model) => ({
-        label: <ModelItemRender {...model} {...model.abilities} showInfoTag={false} />,
+        label: <ImageModelItem {...model} />,
         provider: provider.id,
         value: `${provider.id}/${model.id}`,
       }));

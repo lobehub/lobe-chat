@@ -1,4 +1,4 @@
-import { ModelParamsSchema , AiModelType, Pricing } from 'model-bank';
+import { AiModelType, ModelParamsSchema, Pricing } from 'model-bank';
 import { ReactNode } from 'react';
 
 import { AiProviderSettings } from './aiProvider';
@@ -46,6 +46,16 @@ export interface ChatModelCard {
   legacy?: boolean;
   maxOutput?: number;
   parameters?: ModelParamsSchema;
+
+  /**
+   * Resolved price per generated image (USD)
+   */
+  pricePerImage?: number;
+
+  /**
+   * Whether the image price is an approximate value
+   */
+  pricePerImageIsApproximate?: boolean;
 
   pricing?: Pricing;
 

@@ -1,11 +1,13 @@
 import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@lobechat/const';
-import { getModelPropertyWithFallback } from '@lobechat/model-runtime';
+import { getModelPropertyWithFallback, resolveImageSinglePrice } from '@lobechat/model-runtime';
 import { uniqBy } from 'lodash-es';
 import {
   AIImageModelCard,
   EnabledAiModel,
   LobeDefaultAiModelListItem,
   ModelAbilities,
+  ModelParamsSchema,
+  Pricing,
 } from 'model-bank';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -41,17 +43,45 @@ export const getModelListByType = async (
   );
 
   const models = await Promise.all(
-    filteredModels.map(async (model) => ({
-      abilities: (model.abilities || {}) as ModelAbilities,
-      contextWindowTokens: model.contextWindowTokens,
-      displayName: model.displayName ?? '',
-      id: model.id,
-      ...(model.type === 'image' && {
-        parameters:
-          (model as AIImageModelCard).parameters ||
-          (await getModelPropertyWithFallback(model.id, 'parameters')),
-      }),
-    })),
+    filteredModels.map(async (model) => {
+      const imageModel = model as AIImageModelCard;
+
+      const fallbackParametersPromise =
+        model.type === 'image' && !imageModel.parameters
+          ? getModelPropertyWithFallback<ModelParamsSchema | undefined>(
+              model.id,
+              'parameters',
+              model.providerId,
+            )
+          : Promise.resolve<ModelParamsSchema | undefined>(undefined);
+
+      const fallbackPricingPromise = imageModel.pricing
+        ? Promise.resolve<Pricing | undefined>(undefined)
+        : getModelPropertyWithFallback<Pricing | undefined>(model.id, 'pricing', model.providerId);
+
+      const [fallbackParameters, fallbackPricing] = await Promise.all([
+        fallbackParametersPromise,
+        fallbackPricingPromise,
+      ]);
+
+      const parameters = imageModel.parameters ?? fallbackParameters;
+      const pricing = imageModel.pricing ?? fallbackPricing;
+      const { price: pricePerImage, isApproximate: pricePerImageIsApproximate } =
+        resolveImageSinglePrice(pricing);
+
+      return {
+        abilities: (model.abilities || {}) as ModelAbilities,
+        contextWindowTokens: model.contextWindowTokens,
+        displayName: model.displayName ?? '',
+        id: model.id,
+        ...(parameters && { parameters }),
+        ...(pricing && { pricing }),
+        ...(typeof pricePerImage === 'number' && { pricePerImage }),
+        ...(typeof pricePerImage === 'number' && {
+          pricePerImageIsApproximate,
+        }),
+      };
+    }),
   );
 
   return uniqBy(models, 'id');
