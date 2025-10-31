@@ -4,6 +4,8 @@
 
 # LobeHub Mobile
 
+Your Workspace, Anywhere
+
 The LobeHub application for iOS, and Android
 
 [Parent Project][parent-project] · [Changelog][changelog] · [Report Bug][issues-link] · [Request Feature][issues-link]
@@ -27,7 +29,7 @@ The LobeHub application for iOS, and Android
 
 <sup>Experience AI conversations on your mobile device. Built for you, the Super Individual.</sup>
 
-![][image-preview]
+![](https://github.com/user-attachments/assets/a411daaf-11b8-4c0c-9623-1b80650aa3fa)
 
 </div>
 
@@ -519,7 +521,6 @@ This project is licensed under a [Creative Commons Attribution-NonCommercial 4.0
 [github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat?color=ff80eb&labelColor=black&style=flat-square
 [github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
 [github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
-[image-preview]: https://github.com/user-attachments/assets/preview-mobile-app.png
 [issues-link]: https://github.com/lobehub/lobe-chat/issues/new/choose
 [license-image]: https://licensebuttons.net/l/by-nc/4.0/88x31.png
 [license-link]: https://creativecommons.org/licenses/by-nc/4.0/
