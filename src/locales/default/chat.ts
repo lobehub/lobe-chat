@@ -143,6 +143,7 @@ export default {
     sendWithCmdEnter: '按 <key/> 键发送',
     sendWithEnter: '按 <key/> 键发送',
     stop: '停止',
+    translateToEnglish: '翻译成英文',
     warp: '换行',
     warpWithKey: '按 <key/> 键换行',
   },
