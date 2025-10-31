@@ -92,7 +92,7 @@ export const useCategory = () => {
           label: t('tab.about'),
         },
       ].filter(Boolean) as MenuProps['items'],
-    [t, showLLM, enableSTT, hideDocs, mobile],
+    [t, showLLM, enableSTT, hideDocs, mobile, showAiImage],
   );
 
   return cateItems;
