@@ -81,7 +81,7 @@ const Dropdown = memo<DropdownProps>(
         <Menu.Trigger asChild>{children}</Menu.Trigger>
         <Menu.Content align={align} side={side}>
           {!isPress && (
-            <ContextMenu.Preview borderRadius={16}>
+            <ContextMenu.Preview>
               {() => (
                 <Block
                   style={{ backgroundColor: theme.colorBgElevated, minWidth: 300 }}
