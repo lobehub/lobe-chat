@@ -1,4 +1,5 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
+import 'tsx/cjs';
 
 import { version } from './package.json';
 
@@ -72,7 +73,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         icon: './assets/images/icon-android-notification.png',
       },
     ],
-    './plugins/withFbjniFix',
     [
       'expo-splash-screen',
       {
@@ -171,6 +171,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     'expo-secure-store',
     'expo-localization',
+    './plugins/withFbjniFix.ts',
+    './plugins/withAndroidTransparentNavigation.ts',
   ],
   runtimeVersion: {
     policy: 'appVersion',
