@@ -47,8 +47,6 @@ export const contextEngineering = async ({
   enableHistoryCount,
   historyCount,
   historySummary,
-  sessionId,
-  isWelcomeQuestion,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
 
