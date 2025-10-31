@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Alle Themen werden gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bitte seien Sie vorsichtig.",
+    "confirmRemoveUnstarred": "Alle nicht markierten Themen werden gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bitte seien Sie vorsichtig.",
     "favorite": "Favorisieren",
+    "removeAll": "Alle Themen löschen",
+    "removeUnstarred": "Nicht markierte Themen löschen",
     "unfavorite": "Favorisierung aufheben"
   },
   "confirmRemoveTopicItemAlert": "Dieses Thema wird gelöscht und kann danach nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "defaultTitle": "Standardthema",
   "empty": "Keine Themen vorhanden",
+  "favorite": "Favorisieren",
+  "groupTitle": {
+    "byTime": {
+      "month": "Diesen Monat",
+      "today": "Heute",
+      "week": "Diese Woche",
+      "yesterday": "Gestern"
+    }
+  },
   "guide": {
     "desc": "Klicken Sie auf die linke Schaltfläche zum Senden, um die aktuelle Unterhaltung als Verlaufsthema zu speichern und eine neue Unterhaltung zu starten",
     "title": "Themenliste"
   },
   "loading": "Wird geladen...",
   "newTopic": "Neues Thema",
+  "rename": {
+    "action": "Umbenennen",
+    "done": "Fertig",
+    "emptyTitle": "Thementitel darf nicht leer sein",
+    "error": "Umbenennen fehlgeschlagen",
+    "placeholder": "Thementitel eingeben",
+    "success": "Erfolgreich umbenannt",
+    "title": "Thema umbenennen",
+    "tooLong": "Thementitel ist zu lang"
+  },
   "search": {
     "emptyResult": "Keine passenden Themen gefunden",
     "placeholder": "Themen suchen...",

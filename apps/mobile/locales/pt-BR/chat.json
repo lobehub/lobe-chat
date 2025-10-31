@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Você está prestes a excluir este assistente. Após a exclusão, não será possível recuperá-lo. Por favor, confirme sua ação.",
   "copyFailed": "Falha ao copiar",
   "defaultAgent": "Assistente Personalizado",
+  "defaultList": "Lista padrão",
   "deleteMessageConfirm": "Tem certeza de que deseja excluir esta mensagem?",
   "history": "Histórico de Conversas",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Pesquisar"
     },
     "title": "Conversa Casual"
+  },
+  "sessionGroup": {
+    "config": "Gerenciar grupos",
+    "confirmRemoveGroupAlert": "Este grupo será excluído. Os assistentes pertencentes a ele serão movidos para a lista padrão. Confirme sua ação.",
+    "createGroup": "Criar grupo",
+    "createSuccess": "Grupo criado com sucesso",
+    "emptyGroup": "Nenhum grupo disponível",
+    "inputPlaceholder": "Digite o nome do grupo",
+    "moveGroup": "Mover para grupo",
+    "moveSuccess": "Movido com sucesso",
+    "newGroup": "Novo grupo",
+    "removeSuccess": "Excluído com sucesso",
+    "rename": "Renomear",
+    "renameSuccess": "Renomeado com sucesso",
+    "tooLong": "O nome do grupo deve ter entre 1 e 20 caracteres"
   },
   "setting": {
     "avatar": "Avatar",

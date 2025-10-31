@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Todos os tópicos serão excluídos permanentemente. Esta ação não pode ser desfeita. Proceda com cautela.",
+    "confirmRemoveUnstarred": "Os tópicos não marcados como favoritos serão excluídos permanentemente. Esta ação não pode ser desfeita. Proceda com cautela.",
     "favorite": "Favoritar",
+    "removeAll": "Excluir todos os tópicos",
+    "removeUnstarred": "Excluir tópicos não favoritos",
     "unfavorite": "Desfavoritar"
   },
   "confirmRemoveTopicItemAlert": "Este tópico será excluído e não poderá ser recuperado. Confirme sua ação.",
   "defaultTitle": "Tópico Padrão",
   "empty": "Nenhum tópico disponível",
+  "favorite": "Favorito",
+  "groupTitle": {
+    "byTime": {
+      "month": "Este mês",
+      "today": "Hoje",
+      "week": "Esta semana",
+      "yesterday": "Ontem"
+    }
+  },
   "guide": {
     "desc": "Clique no botão à esquerda para salvar a conversa atual como um tópico histórico e iniciar uma nova conversa",
     "title": "Lista de Tópicos"
   },
   "loading": "Carregando...",
   "newTopic": "Novo Tópico",
+  "rename": {
+    "action": "Renomear",
+    "done": "Concluído",
+    "emptyTitle": "O nome do tópico não pode estar vazio",
+    "error": "Falha ao renomear",
+    "placeholder": "Digite o nome do tópico",
+    "success": "Tópico renomeado com sucesso",
+    "title": "Renomear tópico",
+    "tooLong": "O nome do tópico é muito longo"
+  },
   "search": {
     "emptyResult": "Nenhum tópico correspondente encontrado",
     "placeholder": "Pesquisar tópicos...",

@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Wszystkie tematy zostaną usunięte. Po usunięciu nie będzie można ich odzyskać. Proszę postępować ostrożnie.",
+    "confirmRemoveUnstarred": "Wszystkie nieoznaczone gwiazdką tematy zostaną usunięte. Po usunięciu nie będzie można ich odzyskać. Proszę postępować ostrożnie.",
     "favorite": "Dodaj do ulubionych",
+    "removeAll": "Usuń wszystkie tematy",
+    "removeUnstarred": "Usuń tematy bez gwiazdki",
     "unfavorite": "Usuń z ulubionych"
   },
   "confirmRemoveTopicItemAlert": "Zamierzasz usunąć ten temat. Po usunięciu nie będzie można go odzyskać. Proszę potwierdź swoją decyzję.",
   "defaultTitle": "Domyślny temat",
   "empty": "Brak tematów",
+  "favorite": "Ulubione",
+  "groupTitle": {
+    "byTime": {
+      "month": "W tym miesiącu",
+      "today": "Dzisiaj",
+      "week": "W tym tygodniu",
+      "yesterday": "Wczoraj"
+    }
+  },
   "guide": {
     "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematów i rozpocząć nową sesję",
     "title": "Lista tematów"
   },
   "loading": "Ładowanie...",
   "newTopic": "Nowy temat",
+  "rename": {
+    "action": "Zmień nazwę",
+    "done": "Gotowe",
+    "emptyTitle": "Nazwa tematu nie może być pusta",
+    "error": "Nie udało się zmienić nazwy",
+    "placeholder": "Wprowadź nazwę tematu",
+    "success": "Nazwa została zmieniona pomyślnie",
+    "title": "Zmień nazwę tematu",
+    "tooLong": "Nazwa tematu jest zbyt długa"
+  },
   "search": {
     "emptyResult": "Nie znaleziono pasujących tematów",
     "placeholder": "Szukaj tematów...",

@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "모든 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중히 진행해 주세요.",
+    "confirmRemoveUnstarred": "즐겨찾기되지 않은 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중히 진행해 주세요.",
     "favorite": "즐겨찾기 추가",
+    "removeAll": "모든 주제 삭제",
+    "removeUnstarred": "즐겨찾기되지 않은 주제 삭제",
     "unfavorite": "즐겨찾기 제거"
   },
   "confirmRemoveTopicItemAlert": "이 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 정말로 삭제하시겠습니까?",
   "defaultTitle": "기본 주제",
   "empty": "주제가 없습니다",
+  "favorite": "즐겨찾기",
+  "groupTitle": {
+    "byTime": {
+      "month": "이번 달",
+      "today": "오늘",
+      "week": "이번 주",
+      "yesterday": "어제"
+    }
+  },
   "guide": {
     "desc": "왼쪽 버튼을 클릭하여 현재 대화를 기록된 주제로 저장하고 새 대화를 시작할 수 있습니다",
     "title": "주제 목록"
   },
   "loading": "로딩 중...",
   "newTopic": "새 주제 생성",
+  "rename": {
+    "action": "이름 변경",
+    "done": "완료",
+    "emptyTitle": "주제 이름은 비워둘 수 없습니다",
+    "error": "이름 변경 실패",
+    "placeholder": "주제 이름 입력",
+    "success": "이름 변경 성공",
+    "title": "주제 이름 변경",
+    "tooLong": "주제 이름이 너무 깁니다"
+  },
   "search": {
     "emptyResult": "일치하는 주제를 찾을 수 없습니다",
     "placeholder": "주제를 검색하세요...",

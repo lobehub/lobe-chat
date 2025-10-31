@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Stai per eliminare tutti gli argomenti. Questa azione è irreversibile, procedi con cautela.",
+    "confirmRemoveUnstarred": "Stai per eliminare gli argomenti non salvati tra i preferiti. Questa azione è irreversibile, procedi con cautela.",
     "favorite": "Aggiungi ai preferiti",
+    "removeAll": "Elimina tutti gli argomenti",
+    "removeUnstarred": "Elimina gli argomenti non preferiti",
     "unfavorite": "Rimuovi dai preferiti"
   },
   "confirmRemoveTopicItemAlert": "Stai per eliminare questo argomento. Una volta eliminato, non potrà essere recuperato. Conferma la tua azione.",
   "defaultTitle": "Argomento predefinito",
   "empty": "Nessun argomento",
+  "favorite": "Preferiti",
+  "groupTitle": {
+    "byTime": {
+      "month": "Questo mese",
+      "today": "Oggi",
+      "week": "Questa settimana",
+      "yesterday": "Ieri"
+    }
+  },
   "guide": {
     "desc": "Clicca il pulsante a sinistra per salvare la conversazione corrente come argomento storico e avviare una nuova conversazione",
     "title": "Elenco argomenti"
   },
   "loading": "Caricamento in corso...",
   "newTopic": "Nuovo argomento",
+  "rename": {
+    "action": "Rinomina",
+    "done": "Fatto",
+    "emptyTitle": "Il nome dell'argomento non può essere vuoto",
+    "error": "Rinomina non riuscita",
+    "placeholder": "Inserisci il nome dell'argomento",
+    "success": "Rinominato con successo",
+    "title": "Rinomina argomento",
+    "tooLong": "Il nome dell'argomento è troppo lungo"
+  },
   "search": {
     "emptyResult": "Nessun argomento corrispondente trovato",
     "placeholder": "Cerca argomenti...",

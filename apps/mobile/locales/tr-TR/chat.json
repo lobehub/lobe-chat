@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Bu asistan silinecek ve geri alınamayacak, lütfen işleminizi onaylayın",
   "copyFailed": "Kopyalama başarısız oldu",
   "defaultAgent": "Özel Asistan",
+  "defaultList": "Varsayılan Liste",
   "deleteMessageConfirm": "Bu mesajı silmek istediğinizden emin misiniz?",
   "history": "Sohbet Geçmişi",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Ara"
     },
     "title": "Rastgele Sohbet"
+  },
+  "sessionGroup": {
+    "config": "Grup Yönetimi",
+    "confirmRemoveGroupAlert": "Bu grup silinmek üzere. Silindikten sonra bu gruptaki asistanlar varsayılan listeye taşınacaktır. Lütfen işleminizi onaylayın.",
+    "createGroup": "Grup Oluştur",
+    "createSuccess": "Grup başarıyla oluşturuldu",
+    "emptyGroup": "Henüz grup yok",
+    "inputPlaceholder": "Lütfen grup adını girin",
+    "moveGroup": "Gruba Taşı",
+    "moveSuccess": "Başarıyla taşındı",
+    "newGroup": "Yeni Grup",
+    "removeSuccess": "Başarıyla silindi",
+    "rename": "Yeniden Adlandır",
+    "renameSuccess": "Başarıyla yeniden adlandırıldı",
+    "tooLong": "Grup adı 1 ile 20 karakter arasında olmalıdır"
   },
   "setting": {
     "avatar": "Avatar",

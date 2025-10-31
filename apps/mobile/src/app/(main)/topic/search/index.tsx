@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecentSearches, useRecentSearches } from '@/features/Search';
 
@@ -12,6 +13,7 @@ import TopicSearchList from './components/TopicSearchList';
 const TopicSearch = () => {
   const listRef = useRef<FlashListRef<any>>(null);
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { t } = useTranslation('topic');
   const [searchText, setSearchText] = useState('');
   const [actualSearchText, setActualSearchText] = useState('');
@@ -91,9 +93,15 @@ const TopicSearch = () => {
       leftProps={{
         width: 'auto',
       }}
+      safeAreaProps={{
+        edges: ['top'],
+      }}
       showBack
     >
       <KeyboardAwareScrollView
+        contentContainerStyle={{
+          paddingBottom: insets.bottom,
+        }}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       >

@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Je staat op het punt om alle onderwerpen te verwijderen. Deze actie kan niet ongedaan worden gemaakt. Ga voorzichtig te werk.",
+    "confirmRemoveUnstarred": "Je staat op het punt om alle niet-gemarkeerde onderwerpen te verwijderen. Deze actie kan niet ongedaan worden gemaakt. Ga voorzichtig te werk.",
     "favorite": "Toevoegen aan favorieten",
+    "removeAll": "Alle onderwerpen verwijderen",
+    "removeUnstarred": "Niet-gemarkeerde onderwerpen verwijderen",
     "unfavorite": "Verwijderen uit favorieten"
   },
   "confirmRemoveTopicItemAlert": "Je staat op het punt dit onderwerp te verwijderen. Na verwijdering kan het niet worden hersteld. Bevestig je actie alstublieft.",
   "defaultTitle": "Standaardonderwerp",
   "empty": "Geen onderwerpen",
+  "favorite": "Favoriet",
+  "groupTitle": {
+    "byTime": {
+      "month": "Deze maand",
+      "today": "Vandaag",
+      "week": "Deze week",
+      "yesterday": "Gisteren"
+    }
+  },
   "guide": {
     "desc": "Klik op de knop links om het huidige gesprek op te slaan als een historisch onderwerp en een nieuw gesprek te starten",
     "title": "Onderwerplijst"
   },
   "loading": "Bezig met laden...",
   "newTopic": "Nieuw onderwerp",
+  "rename": {
+    "action": "Hernoemen",
+    "done": "Voltooid",
+    "emptyTitle": "Onderwerpnaam mag niet leeg zijn",
+    "error": "Hernoemen mislukt",
+    "placeholder": "Voer een onderwerpnaam in",
+    "success": "Succesvol hernoemd",
+    "title": "Onderwerp hernoemen",
+    "tooLong": "Onderwerpnaam is te lang"
+  },
   "search": {
     "emptyResult": "Geen overeenkomende onderwerpen gevonden",
     "placeholder": "Onderwerpen zoeken...",

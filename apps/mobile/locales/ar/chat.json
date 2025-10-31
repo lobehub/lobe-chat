@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد ولن يمكن استعادته بعد الحذف، يرجى تأكيد العملية.",
   "copyFailed": "فشل النسخ",
   "defaultAgent": "مساعد مخصص",
+  "defaultList": "القائمة الافتراضية",
   "deleteMessageConfirm": "هل أنت متأكد من حذف هذه الرسالة؟",
   "history": "سجل المحادثات",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "بحث"
     },
     "title": "دردشة عشوائية"
+  },
+  "sessionGroup": {
+    "config": "إدارة المجموعات",
+    "confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة، وبعد الحذف سيتم نقل المساعدين ضمنها إلى القائمة الافتراضية. يرجى تأكيد الإجراء.",
+    "createGroup": "إنشاء مجموعة",
+    "createSuccess": "تم إنشاء المجموعة بنجاح",
+    "emptyGroup": "لا توجد مجموعات حالياً",
+    "inputPlaceholder": "يرجى إدخال اسم المجموعة",
+    "moveGroup": "نقل إلى مجموعة",
+    "moveSuccess": "تم النقل بنجاح",
+    "newGroup": "مجموعة جديدة",
+    "removeSuccess": "تم الحذف بنجاح",
+    "rename": "إعادة التسمية",
+    "renameSuccess": "تمت إعادة التسمية بنجاح",
+    "tooLong": "يجب أن يتراوح طول اسم المجموعة بين 1 و20 حرفًا"
   },
   "setting": {
     "avatar": "الصورة الرمزية",

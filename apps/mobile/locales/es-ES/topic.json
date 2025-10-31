@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Estás a punto de eliminar todos los temas. Esta acción no se puede deshacer, por favor procede con precaución.",
+    "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Esta acción no se puede deshacer, por favor procede con precaución.",
     "favorite": "Agregar a favoritos",
+    "removeAll": "Eliminar todos los temas",
+    "removeUnstarred": "Eliminar temas no favoritos",
     "unfavorite": "Quitar de favoritos"
   },
   "confirmRemoveTopicItemAlert": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "defaultTitle": "Tema predeterminado",
   "empty": "No hay temas",
+  "favorite": "Favorito",
+  "groupTitle": {
+    "byTime": {
+      "month": "Este mes",
+      "today": "Hoy",
+      "week": "Esta semana",
+      "yesterday": "Ayer"
+    }
+  },
   "guide": {
     "desc": "Haz clic en el botón de la izquierda para guardar la conversación actual como un tema histórico y comenzar una nueva conversación",
     "title": "Lista de temas"
   },
   "loading": "Cargando...",
   "newTopic": "Nuevo tema",
+  "rename": {
+    "action": "Renombrar",
+    "done": "Hecho",
+    "emptyTitle": "El nombre del tema no puede estar vacío",
+    "error": "Error al renombrar",
+    "placeholder": "Introduce el nombre del tema",
+    "success": "Tema renombrado con éxito",
+    "title": "Renombrar tema",
+    "tooLong": "El nombre del tema es demasiado largo"
+  },
   "search": {
     "emptyResult": "No se encontraron temas coincidentes",
     "placeholder": "Buscar temas...",

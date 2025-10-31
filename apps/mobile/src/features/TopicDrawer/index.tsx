@@ -1,16 +1,20 @@
 import { TopicDisplayMode } from '@lobechat/types';
 import { ActionIcon, Block, Flexbox, Tag, Text } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { CalendarIcon, ListIcon, SearchIcon } from 'lucide-react-native';
+import { CalendarIcon, ListIcon, MoreHorizontal, SearchIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useWindowDimensions } from 'react-native';
+import { Alert, useWindowDimensions } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { HEADER_HEIGHT } from '@/_const/common';
 import { DRAWER_WIDTH } from '@/_const/theme';
+import { Toast } from '@/components';
+import Dropdown from '@/components/Dropdown';
+import type { DropdownOptionItem } from '@/components/Dropdown';
+import { loading } from '@/libs/loading';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -40,6 +44,11 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
     s.setTopicDisplayMode,
   ]);
 
+  const [removeUnstarredTopic, removeSessionTopics] = useChatStore((s) => [
+    s.removeUnstarredTopic,
+    s.removeSessionTopics,
+  ]);
+
   const onOpenDrawer = useCallback(() => setTopicDrawerOpen(true), [setTopicDrawerOpen]);
   const onCloseDrawer = useCallback(() => setTopicDrawerOpen(false), [setTopicDrawerOpen]);
 
@@ -54,6 +63,82 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       topicDisplayMode === TopicDisplayMode.Flat ? TopicDisplayMode.ByTime : TopicDisplayMode.Flat,
     );
   }, [topicDisplayMode, setTopicDisplayMode]);
+
+  // 删除未收藏话题
+  const handleRemoveUnstarred = useCallback(() => {
+    Alert.alert(t('actions.confirmRemoveUnstarred'), '', [
+      {
+        style: 'cancel',
+        text: t('actions.cancel', { ns: 'common' }),
+      },
+      {
+        onPress: async () => {
+          const { done } = loading.start();
+          try {
+            await removeUnstarredTopic();
+            Toast.success(t('status.success', { ns: 'common' }));
+            done();
+          } catch {
+            Toast.error(t('error', { ns: 'common' }));
+            done();
+          }
+        },
+        style: 'destructive',
+        text: t('actions.confirm', { ns: 'common' }),
+      },
+    ]);
+  }, [removeUnstarredTopic, t]);
+
+  // 删除所有话题
+  const handleRemoveAll = useCallback(() => {
+    Alert.alert(t('actions.confirmRemoveAll'), '', [
+      {
+        style: 'cancel',
+        text: t('actions.cancel', { ns: 'common' }),
+      },
+      {
+        onPress: async () => {
+          const { done } = loading.start();
+          try {
+            await removeSessionTopics();
+            Toast.success(t('status.success', { ns: 'common' }));
+            done();
+          } catch {
+            Toast.error(t('error', { ns: 'common' }));
+            done();
+          }
+        },
+        style: 'destructive',
+        text: t('actions.confirm', { ns: 'common' }),
+      },
+    ]);
+  }, [removeSessionTopics, t]);
+
+  // 更多菜单选项
+  const moreOptions: DropdownOptionItem[] = useMemo(
+    () => [
+      {
+        icon: {
+          name: 'trash',
+          pointSize: 18,
+        },
+        key: 'removeUnstarred',
+        onSelect: handleRemoveUnstarred,
+        title: t('actions.removeUnstarred'),
+      },
+      {
+        destructive: true,
+        icon: {
+          name: 'trash',
+          pointSize: 18,
+        },
+        key: 'removeAll',
+        onSelect: handleRemoveAll,
+        title: t('actions.removeAll'),
+      },
+    ],
+    [handleRemoveUnstarred, handleRemoveAll, t],
+  );
 
   return (
     <Drawer
@@ -75,7 +160,7 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
         <Block borderRadius={44} flex={1} glass style={[styles.drawerContent]} variant={'outlined'}>
-          <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1 }} testID="page-container">
+          <SafeAreaView edges={['top']} style={{ flex: 1 }} testID="page-container">
             <Flexbox
               align={'center'}
               gap={8}
@@ -110,6 +195,16 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
                     size: 22,
                   }}
                 />
+                <Dropdown options={moreOptions} trigger="press">
+                  <ActionIcon
+                    icon={MoreHorizontal}
+                    size={{
+                      blockSize: 36,
+                      borderRadius: 36,
+                      size: 22,
+                    }}
+                  />
+                </Dropdown>
               </Flexbox>
             </Flexbox>
             <TopicList />

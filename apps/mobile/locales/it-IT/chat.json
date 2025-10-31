@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente, l'operazione è irreversibile. Confermi?",
   "copyFailed": "Copia non riuscita",
   "defaultAgent": "Assistente personalizzato",
+  "defaultList": "Elenco predefinito",
   "deleteMessageConfirm": "Sei sicuro di voler eliminare questo messaggio?",
   "history": "Cronologia conversazioni",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Cerca"
     },
     "title": "Parliamo liberamente"
+  },
+  "sessionGroup": {
+    "config": "Gestione gruppi",
+    "confirmRemoveGroupAlert": "Stai per eliminare questo gruppo. Dopo l'eliminazione, gli assistenti in questo gruppo verranno spostati nell'elenco predefinito. Conferma l'operazione.",
+    "createGroup": "Crea gruppo",
+    "createSuccess": "Gruppo creato con successo",
+    "emptyGroup": "Nessun gruppo disponibile",
+    "inputPlaceholder": "Inserisci il nome del gruppo",
+    "moveGroup": "Sposta nel gruppo",
+    "moveSuccess": "Spostamento riuscito",
+    "newGroup": "Nuovo gruppo",
+    "removeSuccess": "Eliminazione riuscita",
+    "rename": "Rinomina",
+    "renameSuccess": "Rinominato con successo",
+    "tooLong": "Il nome del gruppo deve contenere da 1 a 20 caratteri"
   },
   "setting": {
     "avatar": "Avatar",
