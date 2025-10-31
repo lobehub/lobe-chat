@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type SearchMode = 'off' | 'auto' | 'on';
 
 export enum ModelSearchImplement {
@@ -27,3 +29,17 @@ export interface GroundingSearch {
   citations?: CitationItem[];
   searchQueries?: string[];
 }
+
+export const GroundingSearchSchema = z.object({
+  citations: z
+    .array(
+      z.object({
+        favicon: z.string().optional(),
+        id: z.string().optional(),
+        title: z.string().optional(),
+        url: z.string(),
+      }),
+    )
+    .optional(),
+  searchQueries: z.array(z.string()).optional(),
+});

@@ -10,6 +10,7 @@ import {
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
+  UpdateMessageResult,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 
@@ -37,7 +38,11 @@ export interface IMessageService {
   rankModels(): Promise<ModelRankItem[]>;
   getHeatmaps(): Promise<HeatmapsProps['data']>;
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
-  updateMessage(id: string, message: Partial<UpdateMessageParams>): Promise<any>;
+  updateMessage(
+    id: string,
+    message: Partial<UpdateMessageParams>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult>;
   updateMessageTTS(id: string, tts: Partial<ChatTTS> | false): Promise<any>;
   updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false): Promise<any>;
   updateMessagePluginState(id: string, value: Record<string, any>): Promise<any>;

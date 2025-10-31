@@ -1,4 +1,4 @@
-import { UIChatMessage } from '@lobechat/types';
+import { ChatMessageError } from '@lobechat/types';
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
@@ -24,7 +24,12 @@ interface OllamaErrorResponse {
 
 const UNRESOLVED_MODEL_REGEXP = /model "([\w+,-_]+)" not found/;
 
-const OllamaBizError = memo<UIChatMessage>(({ error, id }) => {
+interface OllamaBizErrorProps {
+  error?: ChatMessageError | null;
+  id: string;
+}
+
+const OllamaBizError = memo<OllamaBizErrorProps>(({ error, id }) => {
   const errorBody: OllamaErrorResponse = (error as any)?.body;
 
   const errorMessage = errorBody.error?.message;
