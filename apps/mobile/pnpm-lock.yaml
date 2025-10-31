@@ -247,6 +247,9 @@ importers:
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
+      numeral:
+        specifier: ^2.0.6
+        version: 2.0.6
       polished:
         specifier: ^4.3.1
         version: 4.3.1
@@ -9979,6 +9982,9 @@ packages:
 
   nullthrows@1.1.1:
     resolution: {integrity: sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==}
+
+  numeral@2.0.6:
+    resolution: {integrity: sha512-qaKRmtYPZ5qdw4jWJD6bxEf1FJEqllJrwxCLIm0sQU/A7v2/czigzOb+C2uSiFsa9lBUzeH7M1oK+Q+OLxL3kA==}
 
   nunjucks@3.2.4:
     resolution: {integrity: sha512-26XRV6BhkgK0VOxfbU5cQI+ICFUtMLixv1noZn1tGU38kQH5A5nmmbk/O45xdyBhD1esk47nKrY0mvQpZIhRjQ==}
@@ -25703,6 +25709,8 @@ snapshots:
       boolbase: 1.0.0
 
   nullthrows@1.1.1: {}
+
+  numeral@2.0.6: {}
 
   nunjucks@3.2.4(chokidar@4.0.3):
     dependencies:
