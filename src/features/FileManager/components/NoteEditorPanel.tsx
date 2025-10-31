@@ -222,24 +222,19 @@ const NoteEditor = memo<NoteEditorPanelProps>(
 
       try {
         if (currentDocId && !currentDocId.startsWith('temp-note-')) {
-          // Update existing note with optimistic update
+          // Update existing note with optimistic update (including metadata for emoji)
           await updateNoteOptimistically(currentDocId, {
             content: textContent,
             editorData: structuredClone(editorData),
-            name: noteTitle,
-            updatedAt: new Date(),
-          });
-          // Also update metadata with emoji (only if emoji is set)
-          await documentService.updateDocument({
-            content: textContent,
-            editorData: JSON.stringify(editorData),
-            id: currentDocId,
             metadata: noteEmoji
               ? {
                   emoji: noteEmoji,
                 }
-              : undefined,
-            title: noteTitle,
+              : {
+                  emoji: undefined, // Explicitly set to undefined to remove emoji
+                },
+            name: noteTitle,
+            updatedAt: new Date(),
           });
         } else {
           // Create new note (either no ID or temp ID)
