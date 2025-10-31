@@ -20,13 +20,13 @@ const ModelCard = memo<ModelCardProps>(({ model, onToggle, setLoading }) => {
     <Flexbox padding={16}>
       <Flexbox gap={8}>
         <Flexbox align={'center'} gap={12} horizontal justify={'space-between'}>
-          <Flexbox align={'center'} gap={12} horizontal>
+          <Flexbox align={'center'} flex={1} gap={12} horizontal>
             <ModelIcon model={model.id} size={36} />
-            <Flexbox gap={4}>
-              <Text ellipsis fontSize={15} weight={500}>
+            <Flexbox flex={1} gap={4}>
+              <Text ellipsis fontSize={15} style={{ maxWidth: 240 }} weight={500}>
                 {model.displayName || model.id}
               </Text>
-              <Text code ellipsis fontSize={12} type={'secondary'}>
+              <Text code ellipsis fontSize={12} style={{ maxWidth: 240 }} type={'secondary'}>
                 {model.id}
               </Text>
             </Flexbox>
