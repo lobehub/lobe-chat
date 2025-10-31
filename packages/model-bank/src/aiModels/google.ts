@@ -370,6 +370,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-image',
     maxOutput: 8192,
     pricing: {
+      pricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -392,6 +393,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
+      pricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -864,6 +866,7 @@ const googleImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-26',
     parameters: nanoBananaParameters,
     pricing: {
+      pricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -880,6 +883,7 @@ const googleImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-26',
     parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
     pricing: {
+      pricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
