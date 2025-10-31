@@ -1,5 +1,7 @@
 <div align="center"><a name="readme-top"></a>
 
+<img width="128" height="128" alt="appicon" src="https://github.com/user-attachments/assets/13c89551-5dd5-4dfb-9397-1aaf467c841f" />
+
 # LobeHub Mobile
 
 The LobeHub application for iOS, and Android
@@ -496,11 +498,9 @@ We are a group of e/acc design-engineers, hoping to provide modern design compon
 
 ---
 
-<details><summary><h4>📝 License</h4></summary>
+#### 📝 License
 
 [![][license-image]][license-link]
-
-</details>
 
 Copyright © 2025 [LobeHub][profile-link]. <br />
 This project is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License][license-link].
