@@ -45,6 +45,10 @@ export interface FileAction {
   getOptimisticNotes: () => FileListItem[];
   removeChatUploadFile: (id: string) => Promise<void>;
   /**
+   * Remove a note document (deletes from documents table)
+   */
+  removeNote: (noteId: string) => Promise<void>;
+  /**
    * Remove a temp note from local map
    */
   removeTempNote: (tempId: string) => void;
@@ -182,6 +186,27 @@ export const createFileSlice: StateCreator<
 
     dispatchChatUploadFileList({ id, type: 'removeFile' });
     await fileService.removeFile(id);
+  },
+
+  removeNote: async (noteId) => {
+    // Remove from local optimistic map first (optimistic update)
+    const { localNoteMap } = get();
+    const newMap = new Map(localNoteMap);
+    newMap.delete(noteId);
+    set({ localNoteMap: newMap }, false, n('removeNote/optimistic'));
+
+    try {
+      // Delete from documents table
+      await documentService.deleteDocument(noteId);
+      // Refresh file list to sync with server
+      await get().refreshFileList();
+    } catch (error) {
+      console.error('Failed to delete note:', error);
+      // Restore the note in local map on error
+      const restoredMap = new Map(localNoteMap);
+      set({ localNoteMap: restoredMap }, false, n('removeNote/restore'));
+      throw error;
+    }
   },
 
   removeTempNote: (tempId) => {

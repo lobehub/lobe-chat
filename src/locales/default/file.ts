@@ -73,8 +73,8 @@ export default {
   },
   notesList: {
     actions: {
-      copy: '复制内容',
-      delete: '删除笔记',
+      copy: '复制',
+      delete: '删除',
     },
     empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
     noResults: '未找到匹配的笔记',

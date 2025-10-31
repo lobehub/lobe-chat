@@ -15,12 +15,12 @@ interface NoteActionsProps {
 const NoteActions = memo<NoteActionsProps>(({ noteId, noteContent, onDelete }) => {
   const { t } = useTranslation('file');
   const [loading, setLoading] = useState(false);
-  const removeFileItem = useFileStore((s) => s.removeFileItem);
+  const removeNote = useFileStore((s) => s.removeNote);
 
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await removeFileItem(noteId);
+      await removeNote(noteId);
       onDelete?.();
     } catch (error) {
       console.error('Failed to delete note:', error);

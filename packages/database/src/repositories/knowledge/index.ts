@@ -259,8 +259,10 @@ export class KnowledgeRepo {
     if (category && category !== FilesTabs.All) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
       if (fileTypePrefix === 'application') {
-        // Include documents in Documents category
-        whereConditions.push(sql`${documents.fileType} ILIKE 'custom/%'`);
+        // Include documents in Documents category, but exclude notes
+        whereConditions.push(
+          sql`${documents.fileType} ILIKE 'custom/%' AND ${documents.fileType} != 'custom/note'`,
+        );
       } else if (fileTypePrefix === 'custom') {
         // Include documents in Notes category (already filtered by sourceType='api')
         whereConditions.push(sql`${documents.fileType} ILIKE 'custom/%'`);
