@@ -64,7 +64,11 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
           style={{ paddingBottom: 8 }}
         >
           <Flexbox align={'center'} gap={8} horizontal justify={'flex-start'}>
-            <ModelSwitch />
+            <ModelSwitch
+              onPress={() => {
+                textAreaRef.current?.blur();
+              }}
+            />
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal justify={'flex-end'}>
             <SenderBtn onSend={handleSend} />
