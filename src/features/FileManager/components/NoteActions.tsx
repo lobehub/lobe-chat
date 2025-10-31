@@ -13,7 +13,7 @@ interface NoteActionsProps {
 }
 
 const NoteActions = memo<NoteActionsProps>(({ noteId, noteContent, onDelete }) => {
-  const { t } = useTranslation('file');
+  const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const removeNote = useFileStore((s) => s.removeNote);
 
@@ -47,14 +47,14 @@ const NoteActions = memo<NoteActionsProps>(({ noteId, noteContent, onDelete }) =
             {
               icon: <Icon icon={Copy} />,
               key: 'copy',
-              label: t('notesList.actions.copy'),
+              label: t('copy'),
               onClick: handleCopy,
             },
             {
               danger: true,
               icon: <Icon icon={Trash2} />,
               key: 'delete',
-              label: t('notesList.actions.delete'),
+              label: t('delete'),
               onClick: handleDelete,
             },
           ],

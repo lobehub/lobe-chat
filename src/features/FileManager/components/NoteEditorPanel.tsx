@@ -473,7 +473,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
 
         {/* Editor with title */}
         <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-          <Flexbox paddingBlock={48} paddingInline={96}>
+          <Flexbox paddingBlock={36} paddingInline={48}>
             {/* Emoji and Title */}
             <Flexbox
               onMouseEnter={() => setIsHoveringTitle(true)}
@@ -481,23 +481,21 @@ const NoteEditor = memo<NoteEditorPanelProps>(
               style={{ marginBottom: 24 }}
             >
               {/* Choose Icon button - only shown when no emoji */}
-              {!noteEmoji && !showEmojiPicker && (
-                <Flexbox style={{ marginBottom: 12 }}>
-                  <Button
-                    icon={<Icon icon={SmilePlus} />}
-                    onClick={() => setShowEmojiPicker(true)}
-                    style={{
-                      opacity: isHoveringTitle ? 1 : 0,
-                      transform: 'translateX(-10px)',
-                      transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
-                      width: 'fit-content',
-                    }}
-                    type="text"
-                  >
-                    Choose Icon
-                  </Button>
-                </Flexbox>
-              )}
+              <Flexbox style={{ marginBottom: 12 }}>
+                <Button
+                  icon={<Icon icon={SmilePlus} />}
+                  onClick={() => setShowEmojiPicker(true)}
+                  style={{
+                    opacity: isHoveringTitle && !noteEmoji && !showEmojiPicker ? 1 : 0,
+                    transform: 'translateX(-10px)',
+                    transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
+                    width: 'fit-content',
+                  }}
+                  type="text"
+                >
+                  Choose Icon
+                </Button>
+              </Flexbox>
 
               {/* Title row with emoji at leading */}
               <Flexbox align="center" direction="horizontal" gap={8}>
@@ -505,14 +503,19 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                 {(noteEmoji || showEmojiPicker) && (
                   <Flexbox style={{ flexShrink: 0 }}>
                     <EmojiPicker
+                      allowDelete
                       locale={locale}
                       onChange={(emoji) => {
                         setNoteEmoji(emoji);
                         setHasUnsavedChanges(true);
                       }}
-                      size={64}
+                      onDelete={() => {
+                        setNoteEmoji(undefined);
+                        setHasUnsavedChanges(true);
+                      }}
+                      size={56}
                       style={{
-                        fontSize: 64,
+                        fontSize: 56,
                       }}
                       title={t('notesEditor.emojiPicker.tooltip')}
                       value={noteEmoji}
@@ -528,6 +531,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                   }}
                   placeholder={t('notesEditor.titlePlaceholder')}
                   style={{
+                    background: 'transparent',
                     border: 'none',
                     color: theme.colorText,
                     flex: 1,
