@@ -82,7 +82,8 @@ export const useStyles = createStyles(
       },
       tabText: {
         fontSize: sizeStyles.fontSize,
-        lineHeight: sizeStyles.fontSize,
+        height: sizeStyles.fontSize * 1.5,
+        lineHeight: sizeStyles.fontSize * 1.5,
       },
       wrapper: {
         position: 'relative',

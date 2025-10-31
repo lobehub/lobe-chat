@@ -1,4 +1,5 @@
 import type { LobeAgentSession, LobeSession } from '@lobechat/types';
+import { SessionDefaultGroup } from '@lobechat/types';
 import {
   Dropdown,
   type DropdownOptionItem,
@@ -28,15 +29,17 @@ import { SessionListSkeleton } from './features/SkeletonList';
 
 // 将 SessionItem 用 Dropdown 包裹的组件
 const SessionItemWithDropdown = memo<{
+  groupId?: string;
   isPinned: boolean;
   onDelete: () => void;
   onPin: () => void;
   session: LobeAgentSession;
-}>(({ session, onPin, onDelete, isPinned }) => {
+}>(({ session, onPin, onDelete, groupId, isPinned }) => {
   const { t } = useTranslation('chat');
+  const router = useRouter();
 
-  const options: DropdownOptionItem[] = useMemo(
-    () => [
+  const options: DropdownOptionItem[] = useMemo(() => {
+    return [
       {
         icon: {
           name: isPinned ? 'pin.slash' : 'pin',
@@ -45,6 +48,25 @@ const SessionItemWithDropdown = memo<{
         key: 'pin',
         onSelect: onPin,
         title: t(isPinned ? 'pinOff' : 'pin'),
+      },
+      // 移动到分组 - 跳转到新页面
+      {
+        icon: {
+          name: 'folder',
+          pointSize: 18,
+        },
+        key: 'moveToGroup',
+        onSelect: () => {
+          router.push({
+            params: {
+              currentGroupId: groupId || SessionDefaultGroup.Default,
+              isPinned: String(isPinned),
+              sessionId: session.id,
+            },
+            pathname: '/session/group-select',
+          });
+        },
+        title: t('sessionGroup.moveGroup'),
       },
       {
         destructive: true,
@@ -56,9 +78,8 @@ const SessionItemWithDropdown = memo<{
         onSelect: onDelete,
         title: t('actions.delete', { ns: 'common' }),
       },
-    ],
-    [isPinned, onPin, onDelete, t],
-  );
+    ];
+  }, [isPinned, onPin, onDelete, groupId, session.id, router, t]);
 
   return (
     <Dropdown options={options}>
@@ -73,16 +94,23 @@ SessionItemWithDropdown.displayName = 'SessionItemWithDropdown';
 const MemoizedGroupHeader = memo<{
   count: number;
   groupId: string;
+  isCustomGroup?: boolean;
   isExpanded: boolean;
   onToggle: (groupId: string) => void;
   title: string;
-}>(({ groupId, title, count, isExpanded, onToggle }) => {
+}>(({ groupId, title, count, isExpanded, onToggle, isCustomGroup }) => {
   const handlePress = useCallback(() => {
     onToggle(groupId);
   }, [groupId, onToggle]);
 
   return (
-    <SessionGroupHeader count={count} isExpanded={isExpanded} onPress={handlePress} title={title} />
+    <SessionGroupHeader
+      count={count}
+      groupId={isCustomGroup ? groupId : undefined}
+      isExpanded={isExpanded}
+      onPress={handlePress}
+      title={title}
+    />
   );
 });
 
@@ -125,7 +153,14 @@ export default function SideBar() {
   // 重要：始终包含所有项，通过高度=0来隐藏折叠的项，避免数据源变化导致重新渲染
   type ListItem =
     | { data: LobeSession; groupId?: string; type: 'session' }
-    | { count: number; groupId: string; title: string; type: 'groupHeader' }
+    | {
+        count: number;
+        groupId: string;
+        isCustomGroup?: boolean;
+        title: string;
+        type: 'groupHeader';
+      }
+    | { groupId: string; type: 'emptyGroup' }
     | { type: 'addButton' }
     | { type: 'inbox' };
 
@@ -166,25 +201,36 @@ export default function SideBar() {
         items.push({
           count: group.children.length,
           groupId: group.id,
+          isCustomGroup: true,
           title: group.name,
           type: 'groupHeader',
         });
-        // 始终添加所有 session，不管是否展开
-        group.children.forEach((session) => {
-          items.push({ data: session, groupId: group.id, type: 'session' });
-        });
+
+        if (group.children.length === 0) {
+          // 如果分组为空，添加空状态（新建按钮）
+          items.push({ groupId: group.id, type: 'emptyGroup' });
+        } else {
+          // 始终添加所有 session，不管是否展开
+          group.children.forEach((session) => {
+            items.push({ data: session, groupId: group.id, type: 'session' });
+          });
+        }
       });
     }
 
-    // 添加 Default 分组 - 始终添加所有项
-    if (defaultSessions.length > 0) {
-      const groupId = 'default';
-      items.push({
-        count: defaultSessions.length,
-        groupId,
-        title: t('defaultList'),
-        type: 'groupHeader',
-      });
+    // 添加 Default 分组 - 始终添加
+    const groupId = 'default';
+    items.push({
+      count: defaultSessions.length,
+      groupId,
+      title: t('defaultList'),
+      type: 'groupHeader',
+    });
+
+    if (defaultSessions.length === 0) {
+      // 如果分组为空，添加空状态（新建按钮）
+      items.push({ groupId, type: 'emptyGroup' });
+    } else {
       // 始终添加所有 session，不管是否展开
       defaultSessions.forEach((session) => {
         items.push({ data: session, groupId, type: 'session' });
@@ -244,11 +290,21 @@ export default function SideBar() {
           <MemoizedGroupHeader
             count={item.count}
             groupId={item.groupId}
+            isCustomGroup={item.isCustomGroup}
             isExpanded={sessionGroupKeys.includes(item.groupId)}
             onToggle={toggleGroupExpand}
             title={item.title}
           />
         );
+      }
+
+      if (item.type === 'emptyGroup') {
+        // 空分组状态：显示新建助手按钮
+        const isExpanded = sessionGroupKeys.includes(item.groupId);
+        if (!isExpanded) {
+          return null;
+        }
+        return <AddButton groupId={item.groupId} />;
       }
 
       // session item
@@ -263,6 +319,7 @@ export default function SideBar() {
 
       return (
         <SessionItemWithDropdown
+          groupId={item.groupId}
           isPinned={!!session.pinned}
           onDelete={() => handleDeleteSession(session.id)}
           onPin={() => handlePinSession(session.id, !!session.pinned)}
@@ -330,6 +387,12 @@ export default function SideBar() {
               }
               case 'addButton': {
                 (layout as any).size = 72;
+
+                break;
+              }
+              case 'emptyGroup': {
+                const isExpanded = sessionGroupKeys.includes(item.groupId);
+                (layout as any).size = isExpanded ? 72 : 0;
 
                 break;
               }
