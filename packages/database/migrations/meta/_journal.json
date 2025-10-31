@@ -287,6 +287,13 @@
       "when": 1761563458595,
       "tag": "0040_improve_user_memory_field",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1761878697451,
+      "tag": "0041_improve_index",
+      "breakpoints": true
     }
   ],
   "version": "6"
