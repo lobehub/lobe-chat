@@ -480,24 +480,8 @@ const NoteEditor = memo<NoteEditorPanelProps>(
               onMouseLeave={() => setIsHoveringTitle(false)}
               style={{ marginBottom: 24 }}
             >
-              {/* Icon Section - always above title */}
-              {noteEmoji || showEmojiPicker ? (
-                <Flexbox style={{ marginBottom: 16 }}>
-                  <EmojiPicker
-                    locale={locale}
-                    onChange={(emoji) => {
-                      setNoteEmoji(emoji);
-                      setHasUnsavedChanges(true);
-                    }}
-                    size={78}
-                    style={{
-                      fontSize: 64,
-                    }}
-                    title={t('notesEditor.emojiPicker.tooltip')}
-                    value={noteEmoji}
-                  />
-                </Flexbox>
-              ) : (
+              {/* Choose Icon button - only shown when no emoji */}
+              {!noteEmoji && !showEmojiPicker && (
                 <Flexbox style={{ marginBottom: 12 }}>
                   <Button
                     icon={<Icon icon={SmilePlus} />}
@@ -515,24 +499,46 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                 </Flexbox>
               )}
 
-              {/* Title Input */}
-              <input
-                onChange={(e) => {
-                  setNoteTitle(e.target.value);
-                  setHasUnsavedChanges(true);
-                }}
-                placeholder={t('notesEditor.titlePlaceholder')}
-                style={{
-                  border: 'none',
-                  color: theme.colorText,
-                  flex: 1,
-                  fontSize: 40,
-                  fontWeight: 700,
-                  lineHeight: 1.2,
-                  outline: 'none',
-                }}
-                value={noteTitle}
-              />
+              {/* Title row with emoji at leading */}
+              <Flexbox align="center" direction="horizontal" gap={8}>
+                {/* Emoji picker at leading position */}
+                {(noteEmoji || showEmojiPicker) && (
+                  <Flexbox style={{ flexShrink: 0 }}>
+                    <EmojiPicker
+                      locale={locale}
+                      onChange={(emoji) => {
+                        setNoteEmoji(emoji);
+                        setHasUnsavedChanges(true);
+                      }}
+                      size={64}
+                      style={{
+                        fontSize: 64,
+                      }}
+                      title={t('notesEditor.emojiPicker.tooltip')}
+                      value={noteEmoji}
+                    />
+                  </Flexbox>
+                )}
+
+                {/* Title Input */}
+                <input
+                  onChange={(e) => {
+                    setNoteTitle(e.target.value);
+                    setHasUnsavedChanges(true);
+                  }}
+                  placeholder={t('notesEditor.titlePlaceholder')}
+                  style={{
+                    border: 'none',
+                    color: theme.colorText,
+                    flex: 1,
+                    fontSize: 40,
+                    fontWeight: 700,
+                    lineHeight: 1.2,
+                    outline: 'none',
+                  }}
+                  value={noteTitle}
+                />
+              </Flexbox>
             </Flexbox>
 
             {/* Editor Content */}
