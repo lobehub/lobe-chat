@@ -277,7 +277,7 @@ const ProviderDetailPage = () => {
                 onEndReachedThreshold={0.2}
                 removeClippedSubviews={true}
                 renderItem={renderItem}
-                showsVerticalScrollIndicator={true}
+                showsVerticalScrollIndicator={false}
               />
             ),
             key: Tabs.Configuration,
@@ -294,7 +294,7 @@ const ProviderDetailPage = () => {
                 onEndReachedThreshold={0.2}
                 removeClippedSubviews={true}
                 renderItem={renderItem}
-                showsVerticalScrollIndicator={true}
+                showsVerticalScrollIndicator={false}
               />
             ),
             key: Tabs.Models,

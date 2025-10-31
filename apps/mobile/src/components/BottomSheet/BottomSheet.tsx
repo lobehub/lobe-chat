@@ -142,7 +142,11 @@ const BottomSheet = memo(
             </Flexbox>
           )}
           {/* Content */}
-          <BottomSheetScrollView contentContainerStyle={contentContainerStyle}>
+          <BottomSheetScrollView
+            contentContainerStyle={contentContainerStyle}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+          >
             <SafeAreaView edges={['bottom']} testID="bottom-sheet-container">
               {children}
             </SafeAreaView>
