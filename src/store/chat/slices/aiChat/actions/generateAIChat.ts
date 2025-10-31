@@ -26,6 +26,8 @@ import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getFileStoreState } from '@/store/file/store';
 import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
+import { useUserMemoryStore } from '@/store/userMemory';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
@@ -174,6 +176,15 @@ export const generateAIChat: StateCreator<
     // if message is empty or no files, then stop
     if (!message && !hasFile) return;
 
+    const chats = chatSelectors.activeBaseChats(get());
+
+    useUserMemoryStore.getState().setActiveMemoryContext({
+      session: sessionSelectors.currentSession(useSessionStore.getState()),
+      topic: topicSelectors.currentActiveTopic(get()),
+      latestUserMessage: chats.at(-1)?.content,
+      sendingMessage: message,
+    });
+
     // router to server mode send message
     if (isServerMode)
       return sendMessageInServer({ message, files, onlyAddUserMessage, isWelcomeQuestion });
@@ -200,8 +211,6 @@ export const generateAIChat: StateCreator<
     // if autoCreateTopic is enabled, check to whether we need to create a topic
     if (!onlyAddUserMessage && !activeTopicId && agentConfig.enableAutoCreateTopic) {
       // check activeTopic and then auto create topic
-      const chats = chatSelectors.activeBaseChats(get());
-
       // we will add two messages (user and assistant), so the finial length should +2
       const featureLength = chats.length + 2;
 

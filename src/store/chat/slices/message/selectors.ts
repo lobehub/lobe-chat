@@ -162,6 +162,18 @@ const getTraceIdByMessageId = (id: string) => (s: ChatStoreState) => getMessageB
 
 const latestMessage = (s: ChatStoreState) => activeBaseChats(s).at(-1);
 
+const latestUserMessage = (s: ChatStoreState) => {
+  const messages = activeBaseChats(s);
+
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+
+    if (message.role === 'user') return message;
+  }
+
+  return undefined;
+};
+
 const currentChatLoadingState = (s: ChatStoreState) => !s.messagesInit;
 
 const isCurrentChatLoaded = (s: ChatStoreState) => !!s.messagesMap[currentChatKey(s)];
@@ -312,6 +324,7 @@ export const chatSelectors = {
   isToolApiNameShining,
   isToolCallStreaming,
   latestMessage,
+  latestUserMessage,
   mainAIChats,
   mainAIChatsMessageString,
   mainAIChatsWithHistoryConfig,

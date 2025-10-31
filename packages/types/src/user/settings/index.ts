@@ -7,6 +7,7 @@ import { UserModelProviderConfig } from './modelProvider';
 import { UserSystemAgentConfig } from './systemAgent';
 import { UserToolConfig } from './tool';
 import { UserTTSConfig } from './tts';
+import { UserMemoryConfig } from './userMemory';
 
 export type UserDefaultAgent = LobeAgentSettings;
 
@@ -19,6 +20,7 @@ export * from './modelProvider';
 export * from './sync';
 export * from './systemAgent';
 export * from './tts';
+export * from './userMemory';
 
 /**
  * 配置设置
@@ -33,4 +35,5 @@ export interface UserSettings {
   systemAgent: UserSystemAgentConfig;
   tool: UserToolConfig;
   tts: UserTTSConfig;
+  userMemory: UserMemoryConfig;
 }

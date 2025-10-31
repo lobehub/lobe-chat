@@ -27,6 +27,8 @@ import { MainSendMessageOperation } from '@/store/chat/slices/aiChat/initialStat
 import type { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
+import { useUserMemoryStore } from '@/store/userMemory';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -109,6 +111,13 @@ export const generateAIChatV2: StateCreator<
     }
 
     const messages = chatSelectors.activeBaseChats(get());
+
+    useUserMemoryStore.getState().setActiveMemoryContext({
+      session: sessionSelectors.currentSession(getSessionStoreState()),
+      topic: topicSelectors.currentActiveTopic(get()),
+      latestUserMessage: messages.at(-1)?.content,
+      sendingMessage: message,
+    });
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
     const autoCreateThreshold =
       chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
