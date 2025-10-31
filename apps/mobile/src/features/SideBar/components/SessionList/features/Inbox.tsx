@@ -1,5 +1,6 @@
 import { Cell, Text } from '@lobehub/ui-rn';
 import Avatar from '@lobehub/ui-rn/Avatar';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
@@ -8,7 +9,7 @@ import { INBOX_SESSION_ID } from '@/_const/session';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 
-const Inbox = () => {
+const Inbox = memo(() => {
   const { t } = useTranslation('chat');
   const switchSession = useSwitchSession();
   const activeId = useSessionStore((s) => s.activeId);
@@ -38,6 +39,8 @@ const Inbox = () => {
       }
     />
   );
-};
+});
+
+Inbox.displayName = 'Inbox';
 
 export default Inbox;
