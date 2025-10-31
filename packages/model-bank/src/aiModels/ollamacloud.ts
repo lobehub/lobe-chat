@@ -7,6 +7,18 @@ const ollamaCloudModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 200_000,
+    description: 'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
+    displayName: 'MiniMax M2',
+    enabled: true,
+    id: 'minimax-m2',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 200_000,
     description:
       '智谱最新旗舰模型 GLM-4.6 (355B) 在高级编码、长文本处理、推理与智能体能力上全面超越前代，尤其在编程能力上对齐 Claude Sonnet 4，成为国内顶尖的 Coding 模型。',
     displayName: 'GLM-4.6',
@@ -23,7 +35,6 @@ const ollamaCloudModels: AIChatModelCard[] = [
     description:
       'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',
     displayName: 'DeepSeek V3.1',
-    enabled: true,
     id: 'deepseek-v3.1:671b',
     type: 'chat',
   },
@@ -78,10 +89,20 @@ const ollamaCloudModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 262_144,
+    displayName: 'Qwen3 VL 235B Instruct',
+    id: 'qwen3-vl:235b-instruct',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 262_144,
     displayName: 'Qwen3 VL 235B',
     id: 'qwen3-vl:235b',
     type: 'chat',
