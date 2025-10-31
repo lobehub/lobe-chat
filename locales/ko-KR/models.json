@@ -1811,6 +1811,9 @@
   "gpt-5": {
     "description": "다중 분야 코딩 및 에이전트 작업에 최적화된 모델입니다. GPT-5는 정확성, 속도, 추론, 문맥 인식, 구조적 사고 및 문제 해결 능력에서 비약적인 발전을 이루었습니다."
   },
+  "gpt-5-chat": {
+    "description": "GPT-5 Chat은 대화 시나리오에 최적화된 프리뷰 버전입니다. 텍스트와 이미지 입력을 지원하며, 텍스트로만 출력됩니다. 챗봇 및 대화형 AI 애플리케이션에 적합합니다."
+  },
   "gpt-5-chat-latest": {
     "description": "ChatGPT에 사용되는 GPT-5 모델로, 강력한 언어 이해 및 생성 능력을 결합하여 대화형 상호작용에 적합합니다."
   },
@@ -3211,6 +3214,12 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 소네트는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 하이쿠와 비교할 때, Claude 3.7 소네트는 모든 기술에서 향상되었으며, 많은 지능 기준 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 오푸스를 초월했습니다."
+  },
+  "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+    "description": "Claude Haiku 4.5는 Anthropic에서 가장 빠르고 똑똑한 Haiku 모델로, 번개처럼 빠른 속도와 확장된 사고 능력을 갖추고 있습니다."
+  },
+  "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
+    "description": "Claude Sonnet 4.5는 지금까지 Anthropic이 개발한 가장 지능적인 모델입니다."
   },
   "v0-1.0-md": {
     "description": "v0-1.0-md 모델은 v0 API를 통해 제공되는 구버전 모델입니다"

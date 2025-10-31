@@ -1811,6 +1811,9 @@
   "gpt-5": {
     "description": "跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。"
   },
+  "gpt-5-chat": {
+    "description": "GPT-5 Chat 专为对话场景优化的预览版本。支持文本和图像输入，仅输出文本，适用于聊天机器人和对话式AI应用。"
+  },
   "gpt-5-chat-latest": {
     "description": "ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。"
   },
@@ -3211,6 +3214,12 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。"
+  },
+  "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+    "description": "Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。"
+  },
+  "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
+    "description": "Claude Sonnet 4.5 是 Anthropic 迄今为止最智能的模型。"
   },
   "v0-1.0-md": {
     "description": "v0-1.0-md 模型是通过 v0 API 提供服务的旧版模型"

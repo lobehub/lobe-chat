@@ -1811,6 +1811,9 @@
   "gpt-5": {
     "description": "Çapraz alan kodlama ve temsil görevleri için en iyi model. GPT-5, doğruluk, hız, akıl yürütme, bağlam tanıma, yapısal düşünme ve problem çözmede büyük ilerleme kaydetti."
   },
+  "gpt-5-chat": {
+    "description": "GPT-5 Chat, diyalog senaryoları için optimize edilmiş bir önizleme sürümüdür. Metin ve görsel girişi destekler, yalnızca metin çıktısı verir; sohbet robotları ve diyalog tabanlı yapay zeka uygulamaları için uygundur."
+  },
   "gpt-5-chat-latest": {
     "description": "ChatGPT'de kullanılan GPT-5 modeli. Güçlü dil anlama ve üretme yeteneklerini birleştirerek diyalog tabanlı etkileşim uygulamaları için uygundur."
   },
@@ -3211,6 +3214,12 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet, Anthropic'in en hızlı bir sonraki nesil modelidir. Claude 3 Haiku ile karşılaştırıldığında, Claude 3.7 Sonnet, tüm becerilerde iyileşmeler göstermiştir ve birçok zeka standart testinde bir önceki neslin en büyük modeli olan Claude 3 Opus'u geride bırakmıştır."
+  },
+  "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+    "description": "Claude Haiku 4.5, Anthropic'in şimdiye kadarki en hızlı ve en akıllı Haiku modelidir; yıldırım hızında çalışır ve gelişmiş düşünme yeteneklerine sahiptir."
+  },
+  "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
+    "description": "Claude Sonnet 4.5, Anthropic'in bugüne kadarki en akıllı modelidir."
   },
   "v0-1.0-md": {
     "description": "v0-1.0-md modeli, v0 API aracılığıyla hizmet veren eski bir modeldir"
