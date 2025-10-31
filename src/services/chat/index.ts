@@ -114,6 +114,7 @@ class ChatService {
       // include user messages
       historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
       historySummary: options?.historySummary,
+      includeHistoricalThinking: chatConfig.includeHistoricalThinking,
       inputTemplate: chatConfig.inputTemplate,
       isWelcomeQuestion: options?.isWelcomeQuestion,
       messages,

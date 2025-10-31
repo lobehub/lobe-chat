@@ -54,6 +54,10 @@ export interface LobeAgentChatConfig {
    * 历史消息长度压缩阈值
    */
   enableCompressHistory?: boolean;
+  /**
+   * 是否携带历史思考内容
+   */
+  includeHistoricalThinking?: boolean;
 
   inputTemplate?: string;
 
@@ -75,6 +79,7 @@ export const AgentChatConfigSchema = z.object({
   enableReasoningEffort: z.boolean().optional(),
   enableStreaming: z.boolean().optional(),
   historyCount: z.number().optional(),
+  includeHistoricalThinking: z.boolean().optional(),
   reasoningBudgetToken: z.number().optional(),
   searchFCModel: z
     .object({
