@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import { DEFAULT_LANG } from '@/_const/locale';
+import { updateDayjsLocale } from '@/utils/dayjsLocale';
 import { isDev } from '@/utils/env';
 import { appStorage } from '@/utils/storage';
 
@@ -100,6 +101,9 @@ const initI18n = async () => {
     console.log(`📊 支持的语言: ${getSupportedLocales().join(', ')}`);
     console.log(`🌐 当前加载的语言: ${current}`);
     console.log(`🔤 i18n.language: ${i18n.language}`);
+
+    // 初始化 dayjs locale
+    updateDayjsLocale(current);
   } catch (error) {
     console.error('❌ i18n 初始化失败:', error);
   }
