@@ -296,9 +296,20 @@ export const createFileSlice: StateCreator<
     }
 
     // Create updated note with new timestamp
+    // Merge metadata if both exist, otherwise use the update's metadata or preserve existing
+    const mergedMetadata = updates.metadata !== undefined
+      ? { ...(existingNote.metadata || {}), ...updates.metadata }
+      : existingNote.metadata;
+
+    // Clean up undefined values from metadata
+    const cleanedMetadata = mergedMetadata
+      ? Object.fromEntries(Object.entries(mergedMetadata).filter(([_, v]) => v !== undefined))
+      : undefined;
+
     const updatedNote: FileListItem = {
       ...existingNote,
       ...updates,
+      metadata: cleanedMetadata,
       updatedAt: new Date(),
     };
 
@@ -318,6 +329,7 @@ export const createFileSlice: StateCreator<
             ? updatedNote.editorData
             : JSON.stringify(updatedNote.editorData),
         id: noteId,
+        metadata: updatedNote.metadata,
         title: updatedNote.name,
       });
 
