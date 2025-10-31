@@ -1,3 +1,10 @@
+> \[!NOTE]
+>
+> **版本信息**
+>
+> - **v1.x** (稳定版)：位于 [`main`](https://github.com/lobehub/lobe-chat/tree/main) 分支
+> - **v2.x** (开发中)：正在 [`next`](https://github.com/lobehub/lobe-chat/tree/next) 分支火热开发中 🔥
+
 <div align="center"><a name="readme-top"></a>
 
 [![][image-banner]][vercel-link]

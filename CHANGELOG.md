@@ -2,6 +2,208 @@
 
 # Changelog
 
+## [Version 2.0.0-next.5](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.4...v2.0.0-next.5)
+
+<sup>Released on **2025-10-31**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Migrating Firecrawl to v2.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Migrating Firecrawl to v2, closes [#9850](https://github.com/lobehub/lobe-chat/issues/9850) ([efb4c22](https://github.com/lobehub/lobe-chat/commit/efb4c22))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.4](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.3...v2.0.0-next.4)
+
+<sup>Released on **2025-10-31**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove azure-ad auth provider.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove azure-ad auth provider, closes [#9942](https://github.com/lobehub/lobe-chat/issues/9942) ([103c4d7](https://github.com/lobehub/lobe-chat/commit/103c4d7))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#9944](https://github.com/lobehub/lobe-chat/issues/9944) ([3a6468f](https://github.com/lobehub/lobe-chat/commit/3a6468f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.3](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.2...v2.0.0-next.3)
+
+<sup>Released on **2025-10-30**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove llm page.
+
+#### 💄 Styles
+
+- **misc**: Add new bedrock model support, add pricing info for Azure GPT-5 series models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove llm page, closes [#9940](https://github.com/lobehub/lobe-chat/issues/9940) ([6ec01a3](https://github.com/lobehub/lobe-chat/commit/6ec01a3))
+
+#### Styles
+
+- **misc**: Add new bedrock model support, closes [#9826](https://github.com/lobehub/lobe-chat/issues/9826) ([1b8a981](https://github.com/lobehub/lobe-chat/commit/1b8a981))
+- **misc**: Add pricing info for Azure GPT-5 series models, closes [#9833](https://github.com/lobehub/lobe-chat/issues/9833) ([39a80c5](https://github.com/lobehub/lobe-chat/commit/39a80c5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.2](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.1...v2.0.0-next.2)
+
+<sup>Released on **2025-10-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Hide marketplace link from Plugin List when market disabled, OIDC error when connecting to self-host instance, only include input_fidelity parameter for gpt-image-1..
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Hide marketplace link from Plugin List when market disabled, closes [#9929](https://github.com/lobehub/lobe-chat/issues/9929) ([e303979](https://github.com/lobehub/lobe-chat/commit/e303979))
+- **misc**: OIDC error when connecting to self-host instance, closes [#9916](https://github.com/lobehub/lobe-chat/issues/9916) ([7a2ca19](https://github.com/lobehub/lobe-chat/commit/7a2ca19))
+- **misc**: Only include input_fidelity parameter for gpt-image-1., closes [#9920](https://github.com/lobehub/lobe-chat/issues/9920) ([65dbc63](https://github.com/lobehub/lobe-chat/commit/65dbc63))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.1](https://github.com/lobehub/lobe-chat/compare/v1.143.0-next.2...v2.0.0-next.1)
+
+<sup>Released on **2025-10-30**</sup>
+
+#### ✨ Features
+
+- **misc**: 2.0 next baseline.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 2.0 next baseline ([8c57dfd](https://github.com/lobehub/lobe-chat/commit/8c57dfd))
+
+</details>
+
+#### 💥 BREAKING CHANGES
+
+- **misc**: starting V2
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.143.0-next.2](https://github.com/lobehub/lobe-chat/compare/v1.143.0-next.1...v1.143.0-next.2)
+
+<sup>Released on **2025-10-30**</sup>
+
+#### ✨ Features
+
+- **misc**: 2.0 next init.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: 2.0 next init ([26daac5](https://github.com/lobehub/lobe-chat/commit/26daac5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.143.0-next.1](https://github.com/lobehub/lobe-chat/compare/v1.142.8...v1.143.0-next.1)
+
+<sup>Released on **2025-10-30**</sup>
+
+#### ✨ Features
+
+- **misc**: Try 2.0 next.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Try 2.0 next ([e0af4e6](https://github.com/lobehub/lobe-chat/commit/e0af4e6))
+
+</details>
+
+#### 💥 BREAKING CHANGES
+
+- **misc**: starting V2
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.142.8](https://github.com/lobehub/lobe-chat/compare/v1.142.7...v1.142.8)
 
 <sup>Released on **2025-10-30**</sup>

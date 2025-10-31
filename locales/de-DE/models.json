@@ -1811,6 +1811,9 @@
   "gpt-5": {
     "description": "Das beste Modell für bereichsübergreifende Codierungs- und Agentenaufgaben. GPT-5 erzielt Durchbrüche in Genauigkeit, Geschwindigkeit, Schlussfolgerungen, Kontextverständnis, strukturiertem Denken und Problemlösung."
   },
+  "gpt-5-chat": {
+    "description": "GPT-5 Chat ist eine Vorschauversion, die speziell für Dialogszenarien optimiert wurde. Unterstützt Text- und Bildeingaben, gibt jedoch nur Text aus – ideal für Chatbots und dialogbasierte KI-Anwendungen."
+  },
   "gpt-5-chat-latest": {
     "description": "Das in ChatGPT verwendete GPT-5 Modell. Vereint starke Sprachverständnis- und Generierungsfähigkeiten, ideal für dialogorientierte Anwendungen."
   },
@@ -3211,6 +3214,12 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 Sonett ist das schnellste nächste Modell von Anthropic. Im Vergleich zu Claude 3 Haiku hat Claude 3.7 Sonett in allen Fähigkeiten Verbesserungen erfahren und übertrifft in vielen intellektuellen Benchmark-Tests das größte Modell der vorherigen Generation, Claude 3 Opus."
+  },
+  "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+    "description": "Claude Haiku 4.5 ist das schnellste und intelligenteste Haiku-Modell von Anthropic mit blitzschneller Reaktionszeit und erweiterten Denkfähigkeiten."
+  },
+  "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
+    "description": "Claude Sonnet 4.5 ist das bisher intelligenteste Modell von Anthropic."
   },
   "v0-1.0-md": {
     "description": "Das Modell v0-1.0-md ist ein älteres Modell, das über die v0 API bereitgestellt wird"

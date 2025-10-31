@@ -66,7 +66,6 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   historySummary?: string;
-  isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
 }
@@ -113,9 +112,7 @@ class ChatService {
       enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
       // include user messages
       historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
-      historySummary: options?.historySummary,
       inputTemplate: chatConfig.inputTemplate,
-      isWelcomeQuestion: options?.isWelcomeQuestion,
       messages,
       model: payload.model,
       provider: payload.provider!,
@@ -217,12 +214,10 @@ class ChatService {
     onErrorHandle,
     onFinish,
     trace,
-    isWelcomeQuestion,
     historySummary,
   }: CreateAssistantMessageStream) => {
     await this.createAssistantMessage(params, {
       historySummary,
-      isWelcomeQuestion,
       onAbort,
       onErrorHandle,
       onFinish,
@@ -404,7 +399,7 @@ class ChatService {
     onLoadingChange?.(true);
 
     try {
-      const oaiMessages = await contextEngineering({
+      const llmMessages = await contextEngineering({
         messages: params.messages as any,
         model: params.model!,
         provider: params.provider!,
@@ -421,7 +416,7 @@ class ChatService {
       // remove plugins
       delete params.plugins;
       await this.getChatCompletion(
-        { ...params, messages: oaiMessages, tools },
+        { ...params, messages: llmMessages, tools },
         {
           onErrorHandle: (error) => {
             errorHandle(new Error(error.message), error);

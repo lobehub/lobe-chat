@@ -28,7 +28,7 @@ const Qiniu: ModelProviderCard = {
   name: 'Qiniu',
   settings: {
     proxyUrl: {
-      placeholder: 'https://api.qnaigc.com/v1',
+      placeholder: 'https://openai.qiniu.com/v1',
     },
     sdkType: 'openai',
     showModelFetcher: true,

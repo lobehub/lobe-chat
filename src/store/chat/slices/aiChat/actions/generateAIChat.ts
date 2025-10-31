@@ -11,8 +11,10 @@ import {
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { produce } from 'immer';
+import { throttle } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chatService } from '@/services/chat';
@@ -29,7 +31,7 @@ import { useSessionStore } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../../selectors';
+import { chatSelectors, messageStateSelectors, topicSelectors } from '../../../selectors';
 
 const n = setNamespace('ai');
 
@@ -579,6 +581,19 @@ export const generateAIChat: StateCreator<
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
+    // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
+    const throttledUpdateToolCalls = throttle(
+      (toolCalls: any[]) => {
+        internal_dispatchMessage({
+          id: messageId,
+          type: 'updateMessage',
+          value: { tools: get().internal_transformToolCalls(toolCalls) },
+        });
+      },
+      300,
+      { leading: true, trailing: true },
+    );
+
     const historySummary = chatConfig.enableCompressHistory
       ? topicSelectors.currentActiveTopicSummary(get())
       : undefined;
@@ -598,7 +613,6 @@ export const generateAIChat: StateCreator<
         topicId: get().activeTopicId,
         traceName: TraceNameMap.Conversation,
       },
-      isWelcomeQuestion: params?.isWelcomeQuestion,
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
@@ -610,7 +624,7 @@ export const generateAIChat: StateCreator<
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
-          await messageService.updateMessage(messageId, {
+          messageService.updateMessage(messageId, {
             traceId,
             observationId: observationId ?? undefined,
           });
@@ -633,6 +647,8 @@ export const generateAIChat: StateCreator<
 
         let parsedToolCalls = toolCalls;
         if (parsedToolCalls && parsedToolCalls.length > 0) {
+          // Flush any pending throttled updates before finalizing
+          throttledUpdateToolCalls.flush();
           internal_toggleToolCallingStreaming(messageId, undefined);
           parsedToolCalls = parsedToolCalls.map((item) => ({
             ...item,
@@ -643,6 +659,8 @@ export const generateAIChat: StateCreator<
           }));
           isFunctionCall = true;
         }
+
+        internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
 
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
@@ -707,7 +725,8 @@ export const generateAIChat: StateCreator<
             if (!duration) {
               duration = Date.now() - thinkingStartAt;
 
-              const isInChatReasoning = chatSelectors.isMessageInChatReasoning(messageId)(get());
+              const isInChatReasoning =
+                messageStateSelectors.isMessageInChatReasoning(messageId)(get());
               if (isInChatReasoning) {
                 internal_toggleChatReasoning(
                   false,
@@ -752,12 +771,17 @@ export const generateAIChat: StateCreator<
           // is this message is just a tool call
           case 'tool_calls': {
             internal_toggleToolCallingStreaming(messageId, chunk.isAnimationActives);
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
-            });
+            throttledUpdateToolCalls(chunk.tool_calls);
             isFunctionCall = true;
+            const isInChatReasoning =
+              messageStateSelectors.isMessageInChatReasoning(messageId)(get());
+            if (isInChatReasoning) {
+              internal_toggleChatReasoning(
+                false,
+                messageId,
+                n('toggleChatReasoning/false') as string,
+              );
+            }
           }
         }
       },
@@ -827,16 +851,19 @@ export const generateAIChat: StateCreator<
     return get().internal_toggleLoadingArrays('reasoningLoadingIds', loading, id, action);
   },
   internal_toggleToolCallingStreaming: (id, streaming) => {
+    const previous = get().toolCallingStreamIds;
+    const next = produce(previous, (draft) => {
+      if (!!streaming) {
+        draft[id] = streaming;
+      } else {
+        delete draft[id];
+      }
+    });
+
+    if (isEqual(previous, next)) return;
+
     set(
-      {
-        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
-          if (!!streaming) {
-            draft[id] = streaming;
-          } else {
-            delete draft[id];
-          }
-        }),
-      },
+      { toolCallingStreamIds: next },
 
       false,
       `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,

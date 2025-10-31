@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { ToolNameResolver } from '@lobechat/context-engine';
 import {
-  ChatErrorType,
   ChatMessageError,
   ChatToolPayload,
   CreateMessageParams,
@@ -111,54 +110,12 @@ export const chatPlugin: StateCreator<
     if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },
   invokeBuiltinTool: async (id, payload) => {
-    const {
-      internal_togglePluginApiCalling,
-      internal_updateMessageContent,
-      internal_updatePluginError,
-    } = get();
-    const params = JSON.parse(payload.arguments);
-    internal_togglePluginApiCalling(true, id, n('invokeBuiltinTool/start') as string);
-    let data;
-    try {
-      data = await useToolStore.getState().transformApiArgumentsToAiState(payload.apiName, params);
-    } catch (error) {
-      const err = error as Error;
-      console.error(err);
-
-      const tool = builtinTools.find((tool) => tool.identifier === payload.identifier);
-      const schema = tool?.manifest?.api.find((api) => api.name === payload.apiName)?.parameters;
-
-      await internal_updatePluginError(id, {
-        type: ChatErrorType.PluginFailToTransformArguments,
-        body: {
-          message:
-            "[plugin] fail to transform plugin arguments to ai state, it may due to model's limited tools calling capacity. You can refer to https://lobehub.com/docs/usage/tools-calling for more detail.",
-          stack: err.stack,
-          arguments: params,
-          schema,
-        },
-        message: '',
-      });
-    }
-    internal_togglePluginApiCalling(false, id, n('invokeBuiltinTool/end') as string);
-
-    if (!data) return;
-
-    await internal_updateMessageContent(id, data);
-
     // run tool api call
-    // postToolCalling
     // @ts-ignore
     const { [payload.apiName]: action } = get();
     if (!action) return;
 
-    let content;
-
-    try {
-      content = JSON.parse(data);
-    } catch {
-      /* empty block */
-    }
+    const content = safeParseJSON(payload.arguments);
 
     if (!content) return;
 

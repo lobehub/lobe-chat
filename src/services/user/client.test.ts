@@ -26,7 +26,10 @@ beforeEach(async () => {
   await initializeDB();
   await clientDB.delete(users);
 
-  await clientDB.insert(users).values({ id: mockUser.uuid, avatar: 'avatar.png' });
+  await clientDB
+    .insert(users)
+    .values({ id: mockUser.uuid, avatar: 'avatar.png' })
+    .onConflictDoNothing();
   await clientDB
     .insert(userSettings)
     .values({ id: mockUser.uuid, general: { themeMode: 'light' } });

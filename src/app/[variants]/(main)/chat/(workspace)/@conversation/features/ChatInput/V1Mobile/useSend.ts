@@ -6,7 +6,7 @@ import { useGeminiChineseWarning } from '@/hooks/useGeminiChineseWarning';
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { chatSelectors, messageStateSelectors, topicSelectors } from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 import { getUserStoreState } from '@/store/user';
 
@@ -26,17 +26,19 @@ export const useSendMessage = () => {
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
 
   const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
-  const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
+  const isSendButtonDisabledByMessage = useChatStore(
+    messageStateSelectors.isSendButtonDisabledByMessage,
+  );
 
   const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
 
   const send = useCallback(async (params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
-    if (chatSelectors.isAIGenerating(store)) return;
+    if (messageStateSelectors.isAIGenerating(store)) return;
 
     // if uploading file or send button is disabled by message, then we should not send the message
     const isUploadingFiles = fileChatSelectors.isUploadingFiles(useFileStore.getState());
-    const isSendButtonDisabledByMessage = chatSelectors.isSendButtonDisabledByMessage(
+    const isSendButtonDisabledByMessage = messageStateSelectors.isSendButtonDisabledByMessage(
       useChatStore.getState(),
     );
 

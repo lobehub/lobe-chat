@@ -1,5 +1,60 @@
 [
   {
+    "children": {
+      "improvements": ["Migrating Firecrawl to v2."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add new bedrock model support, add pricing info for Azure GPT-5 series models."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.3"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Hide marketplace link from Plugin List when market disabled, OIDC error when connecting to self-host instance, only include input_fidelity parameter for gpt-image-1.."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.2"
+  },
+  {
+    "children": {
+      "features": ["2.0 next baseline."],
+      "improvements": ["starting V2"]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.1"
+  },
+  {
+    "children": {
+      "features": ["2.0 next init."]
+    },
+    "date": "2025-10-30",
+    "version": "1.143.0-next.2"
+  },
+  {
+    "children": {
+      "features": ["Try 2.0 next."],
+      "improvements": ["starting V2"]
+    },
+    "date": "2025-10-30",
+    "version": "1.143.0-next.1"
+  },
+  {
     "children": {},
     "date": "2025-10-30",
     "version": "1.142.8"

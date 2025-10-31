@@ -51,7 +51,8 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       ...message,
       role:
         // Convert 'system' role to 'user' or 'developer' based on the model
-        (model.includes('o1') || model.includes('o3')) && message.role === 'system'
+        (model.includes('o1') || model.includes('o3') || model.includes('gpt-5')) &&
+        message.role === 'system'
           ? [...systemToUserModels].some((sub) => model.includes(sub))
             ? 'user'
             : 'developer'

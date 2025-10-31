@@ -1,3 +1,10 @@
+> \[!NOTE]
+>
+> **Version Information**
+>
+> - **v1.x** (Stable): Available on the [`main`](https://github.com/lobehub/lobe-chat/tree/main) branch
+> - **v2.x** (In Development): Currently being actively developed on the [`next`](https://github.com/lobehub/lobe-chat/tree/next) branch 🔥
+
 <div align="center"><a name="readme-top"></a>
 
 [![][image-banner]][vercel-link]

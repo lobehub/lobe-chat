@@ -1,3 +1,4 @@
+import { INBOX_SESSION_ID } from '@lobechat/const';
 import {
   ChatFileItem,
   ChatImageItem,
@@ -14,6 +15,7 @@ import {
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
+  UpdateMessageResult,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
@@ -39,6 +41,7 @@ import {
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
+import { groupAssistantMessages } from '../utils/groupMessages';
 import { idGenerator } from '../utils/idGenerator';
 
 export class MessageModel {
@@ -54,6 +57,7 @@ export class MessageModel {
   query = async (
     { current = 0, pageSize = 1000, sessionId, topicId, groupId }: QueryMessageParams = {},
     options: {
+      groupAssistantMessages?: boolean;
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
     } = {},
   ) => {
@@ -211,7 +215,7 @@ export class MessageModel {
       .from(messageQueries)
       .where(inArray(messageQueries.messageId, messageIds));
 
-    return result.map(
+    const mappedMessages = result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
@@ -246,13 +250,15 @@ export class MessageModel {
               size: size!,
               url,
             })),
-
           imageList: imageList
             .filter((relation) => relation.messageId === item.id)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .map<ChatImageItem>(({ id, url, name }) => ({ alt: name!, id, url })),
-
           meta: {},
+
+          model,
+
+          provider,
           ragQuery: messageQuery?.rewriteQuery,
           ragQueryId: messageQuery?.id,
           ragRawQuery: messageQuery?.userQuery,
@@ -263,6 +269,10 @@ export class MessageModel {
         } as unknown as UIChatMessage;
       },
     );
+
+    // Group assistant messages with their tool results
+    const { groupAssistantMessages: useGroup = true } = options;
+    return useGroup ? groupAssistantMessages(mappedMessages) : mappedMessages;
   };
 
   findById = async (id: string) => {
@@ -560,7 +570,7 @@ export class MessageModel {
         sessionId: params.sessionId,
         topicId: params.topicId, // Get all messages
       },
-      options,
+      { ...options, groupAssistantMessages: true },
     );
 
     // 3. Return the result
@@ -589,27 +599,52 @@ export class MessageModel {
   };
   // **************** Update *************** //
 
-  update = async (id: string, { imageList, ...message }: Partial<UpdateMessageParams>) => {
-    return this.db.transaction(async (trx) => {
-      // 1. insert message files
-      if (imageList && imageList.length > 0) {
+  update = async (
+    id: string,
+    { imageList, ...message }: Partial<UpdateMessageParams>,
+    options?: {
+      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
+      sessionId?: string | null;
+      topicId?: string | null;
+    },
+  ): Promise<UpdateMessageResult> => {
+    try {
+      await this.db.transaction(async (trx) => {
+        // 1. insert message files
+        if (imageList && imageList.length > 0) {
+          await trx
+            .insert(messagesFiles)
+            .values(
+              imageList.map((file) => ({ fileId: file.id, messageId: id, userId: this.userId })),
+            );
+        }
+
         await trx
-          .insert(messagesFiles)
-          .values(
-            imageList.map((file) => ({ fileId: file.id, messageId: id, userId: this.userId })),
-          );
+          .update(messages)
+          .set({ ...message })
+          .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
+      });
+
+      // if sessionId or topicId provided, return the updated message list
+      if (options?.sessionId !== undefined || options?.topicId !== undefined) {
+        const messageList = await this.query(
+          {
+            sessionId: options.sessionId,
+            topicId: options.topicId,
+          },
+          {
+            postProcessUrl: options.postProcessUrl,
+          },
+        );
+
+        return { messages: messageList, success: true };
       }
 
-      return trx
-        .update(messages)
-        .set({
-          ...message,
-          // TODO: need a better way to handle this
-          // TODO: but I forget why 🤡
-          role: message.role as any,
-        })
-        .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
-    });
+      return { success: true };
+    } catch (error) {
+      console.error('Update message error:', error);
+      return { success: false };
+    }
   };
 
   updateMetadata = async (id: string, metadata: Record<string, any>) => {
@@ -778,8 +813,11 @@ export class MessageModel {
 
   private genId = () => idGenerator('messages', 14);
 
-  private matchSession = (sessionId?: string | null) =>
-    sessionId ? eq(messages.sessionId, sessionId) : isNull(messages.sessionId);
+  private matchSession = (sessionId?: string | null) => {
+    if (sessionId === INBOX_SESSION_ID) return isNull(messages.sessionId);
+
+    return sessionId ? eq(messages.sessionId, sessionId) : isNull(messages.sessionId);
+  };
 
   private matchTopic = (topicId?: string | null) =>
     topicId ? eq(messages.topicId, topicId) : isNull(messages.topicId);

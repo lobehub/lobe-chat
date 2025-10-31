@@ -1811,6 +1811,9 @@
   "gpt-5": {
     "description": "Mô hình tốt nhất cho các nhiệm vụ mã hóa và đại diện đa lĩnh vực. GPT-5 đạt bước tiến vượt bậc về độ chính xác, tốc độ, suy luận, nhận diện ngữ cảnh, tư duy có cấu trúc và giải quyết vấn đề."
   },
+  "gpt-5-chat": {
+    "description": "GPT-5 Chat là phiên bản xem trước được tối ưu hóa cho các tình huống hội thoại. Hỗ trợ đầu vào văn bản và hình ảnh, chỉ xuất ra văn bản, phù hợp cho chatbot và các ứng dụng AI đối thoại."
+  },
   "gpt-5-chat-latest": {
     "description": "Mô hình GPT-5 được sử dụng trong ChatGPT. Kết hợp khả năng hiểu và tạo ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng tương tác đối thoại."
   },
@@ -3211,6 +3214,12 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet là mô hình thế hệ tiếp theo nhanh nhất của Anthropic. So với Claude 3 Haiku, Claude 3.7 Sonnet đã cải thiện ở nhiều kỹ năng và vượt qua mô hình lớn nhất thế hệ trước là Claude 3 Opus trong nhiều bài kiểm tra trí tuệ."
+  },
+  "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+    "description": "Claude Haiku 4.5 là mô hình Haiku nhanh nhất và thông minh nhất của Anthropic, với tốc độ như chớp và khả năng tư duy mở rộng."
+  },
+  "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
+    "description": "Claude Sonnet 4.5 là mô hình thông minh nhất của Anthropic cho đến nay."
   },
   "v0-1.0-md": {
     "description": "Mô hình v0-1.0-md là phiên bản cũ được cung cấp dịch vụ qua API v0"

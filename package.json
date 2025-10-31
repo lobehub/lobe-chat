@@ -1,7 +1,7 @@
 {
-  "name": "@lobehub/chat",
-  "version": "1.142.8",
-  "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
+  "name": "@lobehub/lobehub",
+  "version": "2.0.0-next.5",
+  "description": "LobeHub - an open-source,comprehensive AI Agent framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
     "chatbot",
@@ -73,9 +73,9 @@
     "reinstall": "rm -rf pnpm-lock.yaml && rm -rf node_modules && pnpm -r exec rm -rf node_modules && pnpm install",
     "reinstall:desktop": "rm -rf pnpm-lock.yaml && rm -rf node_modules && pnpm -r exec rm -rf node_modules && pnpm install --node-linker=hoisted",
     "release": "semantic-release",
-    "self-hosting:docker": "docker build -t lobe-chat:local .",
-    "self-hosting:docker-cn": "docker build -t lobe-chat-local --build-arg USE_CN_MIRROR=true .",
-    "self-hosting:docker-cn@database": "docker build -t lobe-chat-database-local -f Dockerfile.database --build-arg USE_CN_MIRROR=true .",
+    "self-hosting:docker": "docker build -t lobehub:local .",
+    "self-hosting:docker-cn": "docker build -t lobehub-local --build-arg USE_CN_MIRROR=true .",
+    "self-hosting:docker-cn@lite": "docker build -t lobehub-lite-local -f Dockerfile.lite --build-arg USE_CN_MIRROR=true .",
     "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",

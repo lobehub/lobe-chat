@@ -3,7 +3,7 @@ import { memo, useEffect, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { ArtifactDisplayMode } from '@/store/chat/slices/portal/initialState';
 import { ArtifactType } from '@/types/artifact';
 
@@ -24,7 +24,7 @@ const ArtifactsUI = memo(() => {
     return [
       messageId,
       s.portalArtifactDisplayMode,
-      chatSelectors.isMessageGenerating(messageId)(s),
+      messageStateSelectors.isMessageGenerating(messageId)(s),
       chatPortalSelectors.artifactType(s),
       chatPortalSelectors.artifactCode(messageId)(s),
       chatPortalSelectors.artifactCodeLanguage(s),

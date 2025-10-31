@@ -45,6 +45,7 @@ export class ClientService extends BaseClientService implements IMessageService 
         topicId,
       },
       {
+        groupAssistantMessages: false,
         postProcessUrl: this.postProcessUrl,
       },
     );
@@ -60,6 +61,7 @@ export class ClientService extends BaseClientService implements IMessageService 
         topicId,
       },
       {
+        groupAssistantMessages: false,
         postProcessUrl: this.postProcessUrl,
       },
     );
@@ -99,8 +101,12 @@ export class ClientService extends BaseClientService implements IMessageService 
     return this.messageModel.update(id, { error });
   };
 
-  updateMessage: IMessageService['updateMessage'] = async (id, message) => {
-    return this.messageModel.update(id, message);
+  updateMessage: IMessageService['updateMessage'] = async (id, message, options) => {
+    return this.messageModel.update(id, message, {
+      postProcessUrl: this.postProcessUrl,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+    });
   };
 
   updateMessageTTS: IMessageService['updateMessageTTS'] = async (id, tts) => {

@@ -17,13 +17,14 @@ const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 const runMigrations = async () => {
   const { serverDB } = await import('../../packages/database/src/server');
 
+  const time = Date.now();
   if (process.env.DATABASE_DRIVER === 'node') {
     await nodeMigrate(serverDB, { migrationsFolder });
   } else {
     await neonMigrate(serverDB, { migrationsFolder });
   }
 
-  console.log('✅ database migration pass.');
+  console.log('✅ database migration pass. use: %s ms', Date.now() - time);
   // eslint-disable-next-line unicorn/no-process-exit
   process.exit(0);
 };

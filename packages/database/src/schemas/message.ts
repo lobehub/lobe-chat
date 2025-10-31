@@ -62,7 +62,10 @@ export const messageGroups = pgTable(
 
     ...timestamps,
   },
-  (t) => [uniqueIndex('message_groups_client_id_user_id_unique').on(t.clientId, t.userId)],
+  (t) => [
+    uniqueIndex('message_groups_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('message_groups_topic_id_idx').on(t.topicId),
+  ],
 );
 
 export const insertMessageGroupSchema = createInsertSchema(messageGroups);
@@ -130,6 +133,7 @@ export const messages = pgTable(
     index('messages_user_id_idx').on(table.userId),
     index('messages_session_id_idx').on(table.sessionId),
     index('messages_thread_id_idx').on(table.threadId),
+    index('messages_agent_id_idx').on(table.agentId),
   ],
 );
 

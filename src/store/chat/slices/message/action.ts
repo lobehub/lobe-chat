@@ -6,6 +6,7 @@ import {
   ChatMessageError,
   ChatMessagePluginError,
   CreateMessageParams,
+  CreateNewMessageParams,
   GroundingSearch,
   MessageMetadata,
   MessageToolCall,
@@ -117,6 +118,14 @@ export interface ChatMessageAction {
    * otherwise the message will be too slow to show
    */
   internal_createTmpMessage: (params: CreateMessageParams) => string;
+  /**
+   * create a new message using createNewMessage API and return full message list
+   * used for group message scenarios to reduce network requests
+   */
+  internal_createNewMessage: (
+    params: CreateNewMessageParams,
+    context?: { tempMessageId?: string; groupMessageId?: string },
+  ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
   /**
    * delete the message content with optimistic update
    */
@@ -374,8 +383,16 @@ export const chatMessage: StateCreator<
 
   internal_updateMessageError: async (id, error) => {
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
-    await messageService.updateMessage(id, { error });
-    await get().refreshMessages();
+    const result = await messageService.updateMessage(
+      id,
+      { error },
+      { topicId: get().activeTopicId, sessionId: get().activeId },
+    );
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    } else {
+      await get().refreshMessages();
+    }
   },
 
   internal_updateMessagePluginError: async (id, error) => {
@@ -384,7 +401,12 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessageContent: async (id, content, extra) => {
-    const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
+    const {
+      internal_dispatchMessage,
+      refreshMessages,
+      internal_transformToolCalls,
+      replaceMessages,
+    } = get();
 
     // Due to the async update method and refresh need about 100ms
     // we need to update the message content at the frontend to avoid the update flick
@@ -403,17 +425,26 @@ export const chatMessage: StateCreator<
       });
     }
 
-    await messageService.updateMessage(id, {
-      content,
-      tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
-      reasoning: extra?.reasoning,
-      search: extra?.search,
-      metadata: extra?.metadata,
-      model: extra?.model,
-      provider: extra?.provider,
-      imageList: extra?.imageList,
-    });
-    await refreshMessages();
+    const result = await messageService.updateMessage(
+      id,
+      {
+        content,
+        tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+        reasoning: extra?.reasoning,
+        search: extra?.search,
+        metadata: extra?.metadata,
+        model: extra?.model,
+        provider: extra?.provider,
+        imageList: extra?.imageList,
+      },
+      { topicId: get().activeTopicId, sessionId: get().activeId },
+    );
+
+    if (result && result.success && result.messages) {
+      replaceMessages(result.messages);
+    } else {
+      await refreshMessages();
+    }
   },
 
   internal_createMessage: async (message, context) => {
@@ -473,6 +504,63 @@ export const chatMessage: StateCreator<
 
     return tempId;
   },
+
+  internal_createNewMessage: async (message, context) => {
+    const {
+      internal_createTmpMessage,
+      internal_toggleMessageLoading,
+      internal_dispatchMessage,
+      replaceMessages,
+    } = get();
+
+    let tempId = context?.tempMessageId;
+    if (!tempId) {
+      tempId = 'tmp_' + nanoid();
+
+      // Check if should add as group block (explicitly controlled by caller)
+      if (context?.groupMessageId) {
+        internal_dispatchMessage({
+          type: 'addGroupBlock',
+          groupMessageId: context.groupMessageId,
+          blockId: tempId,
+          value: {
+            id: tempId,
+            content: message.content,
+          },
+        });
+        internal_toggleMessageLoading(true, tempId);
+      } else {
+        // Regular message creation at top level
+        tempId = internal_createTmpMessage(message as any);
+        internal_toggleMessageLoading(true, tempId);
+      }
+    }
+
+    try {
+      // 使用 createNewMessage API
+      const result = await messageService.createNewMessage(message);
+
+      // 直接用返回的 messages 更新 store（已包含 group 结构）
+      replaceMessages(result.messages);
+
+      internal_toggleMessageLoading(false, tempId);
+      return result;
+    } catch (e) {
+      internal_toggleMessageLoading(false, tempId);
+      internal_dispatchMessage({
+        id: tempId,
+        type: 'updateMessage',
+        value: {
+          error: {
+            type: ChatErrorType.CreateMessageError,
+            message: (e as Error).message,
+            body: e,
+          },
+        },
+      });
+    }
+  },
+
   internal_deleteMessage: async (id: string) => {
     get().internal_dispatchMessage({ type: 'deleteMessage', id });
     await messageService.removeMessage(id);

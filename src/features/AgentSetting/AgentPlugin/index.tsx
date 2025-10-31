@@ -34,7 +34,7 @@ const AgentPlugin = memo(() => {
     s.toggleAgentPlugin,
   ]);
 
-  const { showDalle } = useServerConfigStore(featureFlagsSelectors);
+  const { showDalle, showMarket } = useServerConfigStore(featureFlagsSelectors);
   const installedPlugins = useToolStore(toolSelectors.metaList(showDalle), isEqual);
 
   const { isLoading } = useFetchInstalledPlugins();
@@ -112,16 +112,18 @@ const AgentPlugin = memo(() => {
           />
         </Tooltip>
       ) : null}
-      <Tooltip title={t('plugin.store')}>
-        <Button
-          icon={Store}
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowStore(true);
-          }}
-          size={'small'}
-        />
-      </Tooltip>
+      {showMarket ? (
+        <Tooltip title={t('plugin.store')}>
+          <Button
+            icon={Store}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowStore(true);
+            }}
+            size={'small'}
+          />
+        </Tooltip>
+      ) : null}
     </Space.Compact>
   );
 
@@ -149,7 +151,13 @@ const AgentPlugin = memo(() => {
   );
 
   const plugin: FormGroupItemType = {
-    children: isLoading ? loadingSkeleton : isEmpty ? empty : [...deprecatedList, ...list],
+    children: isLoading
+      ? loadingSkeleton
+      : isEmpty
+        ? showMarket
+          ? empty
+          : []
+        : [...deprecatedList, ...list],
     extra,
     title: t('settingPlugin.title'),
   };

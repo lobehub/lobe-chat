@@ -67,7 +67,7 @@ async function generateByImageMode(
   const defaultInput = {
     n: 1,
     ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
-    ...(isImageEdit ? { input_fidelity: 'high' } : {}),
+    ...(isImageEdit && model === 'gpt-image-1' ? { input_fidelity: 'high' } : {}),
   };
 
   const options = cleanObject({
