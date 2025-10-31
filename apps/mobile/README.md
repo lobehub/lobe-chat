@@ -5,9 +5,9 @@ Get your own cross-platform ChatGPT/Claude/Gemini app for **free** with one clic
 
 **简体中文** · [English](./README.md)
 
-[![GitHub release](https://img.shields.io/github/v/release/lobehub/lobe-chat-react-native?color=369eff&labelColor=black&logo=github&style=flat-square)](https://github.com/lobehub/lobe-chat-react-native/releases) [![Expo SDK](https://img.shields.io/badge/Expo-52.0.5-000020?labelColor=black&logo=expo&style=flat-square)](https://expo.dev) [![React Native](https://img.shields.io/badge/React%20Native-0.76.6-61dafb?labelColor=black&logo=react&style=flat-square)](https://reactnative.dev) [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-3178c6?labelColor=black&logo=typescript&style=flat-square)](https://www.typescriptlang.org)
+[![Expo SDK](https://img.shields.io/badge/Expo-52.0.5-000020?labelColor=black&logo=expo&style=flat-square)](https://expo.dev) [![React Native](https://img.shields.io/badge/React%20Native-0.76.6-61dafb?labelColor=black&logo=react&style=flat-square)](https://reactnative.dev) [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-3178c6?labelColor=black&logo=typescript&style=flat-square)](https://www.typescriptlang.org)
 
-[![GitHub stars](https://img.shields.io/github/stars/lobehub/lobe-chat-react-native?color=ffcb47&labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-react-native/stargazers) [![GitHub forks](https://img.shields.io/github/forks/lobehub/lobe-chat-react-native?color=8ae8ff&labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-react-native/network/members) [![GitHub issues](https://img.shields.io/github/issues/lobehub/lobe-chat-react-native?color=ff80eb&labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-react-native/issues) [![GitHub license](https://img.shields.io/badge/license-apache%202.0-white?labelColor=black&style=flat-square)](https://github.com/lobehub/lobe-chat-react-native/blob/main/LICENSE)
+[![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]
 
 Explore the limitless possibilities of AI conversations on mobile, crafted for you in an era of individual empowerment.
 
@@ -199,4 +199,11 @@ We warmly welcome all forms of contributions!
 
 #### 📝 License
 
-Copyright © 2025 [LobeHub](https://github.com/lobehub). This project is open source under the [Apache 2.0](./LICENSE) license.
+Copyright © 2025 [LobeHub](https://github.com/lobehub). This project is open source under the licensed under a
+[Creative Commons Attribution-NonCommercial 4.0 International License][cc-by-nc].
+
+[![CC BY-NC 4.0][cc-by-nc-image]][cc-by-nc]
+
+[cc-by-nc]: https://creativecommons.org/licenses/by-nc/4.0/
+[cc-by-nc-image]: https://licensebuttons.net/l/by-nc/4.0/88x31.png
+[cc-by-nc-shield]: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg
