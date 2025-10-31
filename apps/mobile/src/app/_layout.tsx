@@ -1,11 +1,10 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { PortalProvider } from '@gorhom/portal';
-import { ThemeProvider, ToastProvider, useTheme, useThemeMode } from '@lobehub/ui-rn';
+import { ThemeProvider, ToastProvider, useTheme } from '@lobehub/ui-rn';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -156,18 +155,18 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-function ThemedSystemBars() {
-  const { isDarkMode } = useThemeMode();
-  const token = useTheme();
-  return (
-    <StatusBar
-      animated
-      backgroundColor={token.colorBgLayout}
-      style={isDarkMode ? 'light' : 'dark'}
-      translucent={false}
-    />
-  );
-}
+// function ThemedSystemBars() {
+//   const { isDarkMode } = useThemeMode();
+//   const token = useTheme();
+//   return (
+//     <StatusBar
+//       animated
+//       backgroundColor={token.colorBgLayout}
+//       style={isDarkMode ? 'light' : 'dark'}
+//       translucent={false}
+//     />
+//   );
+// }
 
 const Layout = () => {
   const themedScreenOptions = useThemedScreenOptions(false);
@@ -176,11 +175,10 @@ const Layout = () => {
     <GestureHandlerRootView style={{ backgroundColor: theme.colorBgLayout, flex: 1 }}>
       <BottomSheetModalProvider>
         <RootSiblingParent>
-          <ThemedSystemBars />
           <Stack screenOptions={themedScreenOptions}>
             <Stack.Screen name="index" options={{ animation: 'none' }} />
             <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-            <Stack.Screen name="playground" />
+            <Stack.Screen name="playground/index" />
             <Stack.Screen
               name="auth"
               options={{

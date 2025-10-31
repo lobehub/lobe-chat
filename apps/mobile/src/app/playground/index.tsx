@@ -109,12 +109,17 @@ export default function ComponentPlaygroundIndex() {
           headerLargeTitle: isIOS,
           headerSearchBarOptions: {
             cancelButtonText: '取消',
+            headerIconColor: theme.colorText,
+            hintTextColor: theme.colorText,
             onChangeText: (event) => {
               setSearchText(event.nativeEvent.text);
             },
             placeholder: '搜索组件...',
+            shouldShowHintSearchIcon: false,
             textColor: theme.colorText,
+            tintColor: theme.colorText,
           },
+          headerShadowVisible: false,
           headerShown: true,
           headerStyle: { backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent' },
           headerTintColor: theme.colorText,
