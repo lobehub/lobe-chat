@@ -8,7 +8,8 @@
         "config": "development-ios.yml"
       },
       "android": {
-        "gradleCommand": ":app:assembleDebug"
+        "gradleCommand": ":app:assembleDebug",
+        "config": "development-android.yml"
       },
       "pnpm": "10.10.0",
       "channel": "development"
