@@ -79,7 +79,7 @@ const ProviderList = memo(() => {
         keyExtractor={keyExtractor}
         removeClippedSubviews={true}
         renderItem={renderItem}
-        showsVerticalScrollIndicator={true}
+        showsVerticalScrollIndicator={false}
       />
     );
   }
