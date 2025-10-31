@@ -1,12 +1,13 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { PortalProvider } from '@gorhom/portal';
-import { ThemeProvider, ToastProvider, useTheme } from '@lobehub/ui-rn';
+import { ThemeProvider, ToastProvider, useTheme, useThemeMode } from '@lobehub/ui-rn';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
+import { Appearance } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { RootSiblingParent } from 'react-native-root-siblings';
@@ -171,6 +172,12 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 const Layout = () => {
   const themedScreenOptions = useThemedScreenOptions(false);
   const theme = useTheme();
+  const { isDarkMode } = useThemeMode();
+
+  useEffect(() => {
+    Appearance.setColorScheme(isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
   return (
     <GestureHandlerRootView style={{ backgroundColor: theme.colorBgLayout, flex: 1 }}>
       <BottomSheetModalProvider>
