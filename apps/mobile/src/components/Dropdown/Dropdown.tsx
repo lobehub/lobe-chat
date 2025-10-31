@@ -2,7 +2,8 @@ import { memo, useMemo } from 'react';
 import * as ContextMenu from 'zeego/context-menu';
 import * as DropdownMenu from 'zeego/dropdown-menu';
 
-import { Block } from '@/components';
+import Block from '@/components/Block';
+import { useTheme } from '@/components/styles';
 import { hapticsEffect } from '@/utils/hapticsEffect';
 
 import type { DropdownPlacement, DropdownProps } from './type';
@@ -35,6 +36,7 @@ const getPlacementConfig = (placement: DropdownPlacement = 'bottom') => {
  */
 const Dropdown = memo<DropdownProps>(
   ({ children, options, onOpenChange, placement = 'bottom', trigger = 'longPress' }) => {
+    const theme = useTheme();
     // 过滤掉隐藏的选项（缓存优化）
     const visibleOptions = useMemo(() => options.filter((option) => !option.hidden), [options]);
 
@@ -81,7 +83,10 @@ const Dropdown = memo<DropdownProps>(
           {!isPress && (
             <ContextMenu.Preview borderRadius={16}>
               {() => (
-                <Block style={{ minWidth: 300 }} variant={'outlined'}>
+                <Block
+                  style={{ backgroundColor: theme.colorBgElevated, minWidth: 300 }}
+                  variant={'outlined'}
+                >
                   {children}
                 </Block>
               )}
