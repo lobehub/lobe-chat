@@ -53,7 +53,12 @@ const useStyles = createStyles(({ css, token }) => ({
     inset-block-start: 8px;
     inset-inline-end: 8px;
 
+    padding: 0;
+    border-radius: ${token.borderRadiusSM}px;
+
     opacity: 0;
+    background: ${token.colorBgContainer};
+    box-shadow: ${token.boxShadowSecondary};
 
     transition: opacity ${token.motionDurationMid};
   `,

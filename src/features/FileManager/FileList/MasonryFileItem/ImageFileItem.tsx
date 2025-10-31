@@ -5,6 +5,7 @@ import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
@@ -54,23 +55,29 @@ const useStyles = createStyles(({ css, token }) => ({
     display: flex;
     align-items: center;
     justify-content: center;
-
-    min-height: 120px;
-
     background: ${token.colorFillQuaternary};
   `,
   imageWrapper: css`
     position: relative;
-
     width: 100%;
-
     background: ${token.colorFillQuaternary};
 
     img {
       display: block;
-      width: 100%;
       height: auto;
     }
+  `,
+  name: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    margin-block-end: 12px;
+
+    font-weight: ${token.fontWeightStrong};
+    color: ${token.colorText};
+    word-break: break-word;
   `,
   overlaySize: css`
     font-size: 12px;
@@ -139,7 +146,27 @@ const ImageFileItem = memo<ImageFileItemProps>(
         <div className={styles.imageWrapper}>
           {!imageLoaded && (
             <div className={styles.imagePlaceholder}>
-              <FileIcon fileName={name} fileType={fileType} size={64} />
+              <Flexbox
+                align={'center'}
+                gap={12}
+                justify={'center'}
+                paddingBlock={24}
+                paddingInline={12}
+              >
+                <FileIcon fileName={name} fileType={fileType} size={48} />
+                <div className={styles.name} style={{ textAlign: 'center' }}>
+                  {name}
+                </div>
+                <div
+                  style={{
+                    color: 'var(--lobe-chat-text-tertiary)',
+                    fontSize: 12,
+                    textAlign: 'center',
+                  }}
+                >
+                  {formatSize(size)}
+                </div>
+              </Flexbox>
             </div>
           )}
           {isInView && url && (
