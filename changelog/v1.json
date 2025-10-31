@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Migrating Firecrawl to v2."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.5"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-10-31",
