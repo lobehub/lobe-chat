@@ -1,6 +1,7 @@
+import { TopicDisplayMode } from '@lobechat/types';
 import { ActionIcon, Block, Flexbox, Tag, Text } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { SearchIcon } from 'lucide-react-native';
+import { CalendarIcon, ListIcon, SearchIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import { DRAWER_WIDTH } from '@/_const/theme';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import { useGlobalStore } from '@/store/global';
+import { useSettingStore } from '@/store/setting';
 
 import TopicList from './components/TopicList';
 import { useStyles } from './style';
@@ -33,6 +35,11 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
     s.setTopicDrawerOpen,
   ]);
 
+  const [topicDisplayMode, setTopicDisplayMode] = useSettingStore((s) => [
+    s.topicDisplayMode,
+    s.setTopicDisplayMode,
+  ]);
+
   const onOpenDrawer = useCallback(() => setTopicDrawerOpen(true), [setTopicDrawerOpen]);
   const onCloseDrawer = useCallback(() => setTopicDrawerOpen(false), [setTopicDrawerOpen]);
 
@@ -40,6 +47,13 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
   const handleOpenSearch = useCallback(() => {
     router.push('/topic/search');
   }, [router]);
+
+  // 切换显示模式
+  const handleToggleDisplayMode = useCallback(() => {
+    setTopicDisplayMode(
+      topicDisplayMode === TopicDisplayMode.Flat ? TopicDisplayMode.ByTime : TopicDisplayMode.Flat,
+    );
+  }, [topicDisplayMode, setTopicDisplayMode]);
 
   return (
     <Drawer
@@ -77,15 +91,26 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
                 </Text>
                 {topics > 0 ? <Tag size={'small'}>{topics.toString()}</Tag> : undefined}
               </Flexbox>
-              <ActionIcon
-                icon={SearchIcon}
-                onPress={handleOpenSearch}
-                size={{
-                  blockSize: 36,
-                  borderRadius: 36,
-                  size: 22,
-                }}
-              />
+              <Flexbox gap={4} horizontal>
+                <ActionIcon
+                  icon={topicDisplayMode === TopicDisplayMode.Flat ? CalendarIcon : ListIcon}
+                  onPress={handleToggleDisplayMode}
+                  size={{
+                    blockSize: 36,
+                    borderRadius: 36,
+                    size: 22,
+                  }}
+                />
+                <ActionIcon
+                  icon={SearchIcon}
+                  onPress={handleOpenSearch}
+                  size={{
+                    blockSize: 36,
+                    borderRadius: 36,
+                    size: 22,
+                  }}
+                />
+              </Flexbox>
             </Flexbox>
             <TopicList />
           </SafeAreaView>

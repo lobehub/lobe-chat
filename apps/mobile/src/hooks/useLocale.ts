@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ensureLanguageResources } from '@/i18n';
 import { LANGUAGE_OPTIONS, LocaleMode, getDetectedLocale } from '@/i18n/resource';
+import { updateDayjsLocale } from '@/utils/dayjsLocale';
 import { appStorage } from '@/utils/storage';
 
 const LOCALE_STORAGE_KEY = 'lobe-chat-locale';
@@ -59,6 +60,9 @@ export const useLocale = () => {
 
         // 切换语言
         await i18n.changeLanguage(targetLocale);
+
+        // 更新 dayjs locale
+        updateDayjsLocale(targetLocale);
       } catch (error) {
         console.error('Error changing locale:', error);
       }
