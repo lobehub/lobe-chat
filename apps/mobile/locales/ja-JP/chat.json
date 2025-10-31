@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "このアシスタントを削除しようとしています。削除すると復元できません。操作を確認してください。",
   "copyFailed": "コピーに失敗しました",
   "defaultAgent": "カスタムアシスタント",
+  "defaultList": "デフォルトリスト",
   "deleteMessageConfirm": "このメッセージを削除してもよろしいですか？",
   "history": "会話履歴",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "検索"
     },
     "title": "気軽におしゃべり"
+  },
+  "sessionGroup": {
+    "config": "グループ管理",
+    "confirmRemoveGroupAlert": "このグループを削除しようとしています。削除後、このグループ内のアシスタントはデフォルトリストに移動されます。操作を確認してください。",
+    "createGroup": "グループを作成",
+    "createSuccess": "グループの作成に成功しました",
+    "emptyGroup": "グループがありません",
+    "inputPlaceholder": "グループ名を入力してください",
+    "moveGroup": "グループに移動",
+    "moveSuccess": "移動に成功しました",
+    "newGroup": "新しいグループ",
+    "removeSuccess": "削除に成功しました",
+    "rename": "名前を変更",
+    "renameSuccess": "名前の変更に成功しました",
+    "tooLong": "グループ名は1〜20文字で入力してください"
   },
   "setting": {
     "avatar": "アバター",

@@ -16,6 +16,7 @@
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan daarna niet worden hersteld. Bevestig je actie alstublieft.",
   "copyFailed": "Kopiëren mislukt",
   "defaultAgent": "Aangepaste assistent",
+  "defaultList": "Standaardlijst",
   "deleteMessageConfirm": "Weet je zeker dat je dit bericht wilt verwijderen?",
   "history": "Gespreksgeschiedenis",
   "inbox": {
@@ -42,6 +43,21 @@
       "title": "Zoeken"
     },
     "title": "Gewoon kletsen"
+  },
+  "sessionGroup": {
+    "config": "Groepsbeheer",
+    "confirmRemoveGroupAlert": "Deze groep wordt verwijderd. De assistenten in deze groep worden verplaatst naar de standaardlijst. Bevestig je actie alstublieft.",
+    "createGroup": "Groep aanmaken",
+    "createSuccess": "Groep succesvol aangemaakt",
+    "emptyGroup": "Geen groepen beschikbaar",
+    "inputPlaceholder": "Voer groepsnaam in",
+    "moveGroup": "Verplaatsen naar groep",
+    "moveSuccess": "Succesvol verplaatst",
+    "newGroup": "Nieuwe groep",
+    "removeSuccess": "Succesvol verwijderd",
+    "rename": "Hernoemen",
+    "renameSuccess": "Succesvol hernoemd",
+    "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
   },
   "setting": {
     "avatar": "Avatar",

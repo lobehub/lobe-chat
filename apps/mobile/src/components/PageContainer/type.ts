@@ -8,6 +8,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
+import { NativeSafeAreaViewProps } from 'react-native-safe-area-context/src/SafeArea.types';
 
 import { FlexboxProps } from '../Flexbox';
 import { IconProps } from '../Icon';
@@ -24,6 +25,7 @@ export interface PageContainerProps {
   onBackPress?: () => void;
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onTitlePress?: PressableProps['onPress'];
+  safeAreaProps?: Omit<NativeSafeAreaViewProps, 'children' | 'style'>;
   scrollComponent?: ComponentType<any>;
   showBack?: boolean;
   style?: StyleProp<ViewStyle>;

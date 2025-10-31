@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Sắp xóa tất cả chủ đề, sau khi xóa sẽ không thể khôi phục, vui lòng cẩn thận",
+    "confirmRemoveUnstarred": "Sắp xóa các chủ đề chưa được đánh dấu yêu thích, sau khi xóa sẽ không thể khôi phục, vui lòng cẩn thận",
     "favorite": "Yêu thích",
+    "removeAll": "Xóa tất cả chủ đề",
+    "removeUnstarred": "Xóa các chủ đề chưa được yêu thích",
     "unfavorite": "Bỏ yêu thích"
   },
   "confirmRemoveTopicItemAlert": "Chủ đề này sắp bị xóa. Sau khi xóa sẽ không thể khôi phục. Vui lòng xác nhận hành động của bạn.",
   "defaultTitle": "Chủ đề mặc định",
   "empty": "Chưa có chủ đề",
+  "favorite": "Yêu thích",
+  "groupTitle": {
+    "byTime": {
+      "month": "Tháng này",
+      "today": "Hôm nay",
+      "week": "Tuần này",
+      "yesterday": "Hôm qua"
+    }
+  },
   "guide": {
     "desc": "Nhấn nút bên trái để lưu cuộc trò chuyện hiện tại thành chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới",
     "title": "Danh sách chủ đề"
   },
   "loading": "Đang tải...",
   "newTopic": "Tạo chủ đề mới",
+  "rename": {
+    "action": "Đổi tên",
+    "done": "Hoàn tất",
+    "emptyTitle": "Tên chủ đề không được để trống",
+    "error": "Đổi tên thất bại",
+    "placeholder": "Nhập tên chủ đề",
+    "success": "Đổi tên thành công",
+    "title": "Đổi tên chủ đề",
+    "tooLong": "Tên chủ đề quá dài"
+  },
   "search": {
     "emptyResult": "Không tìm thấy chủ đề phù hợp",
     "placeholder": "Tìm kiếm chủ đề...",

@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "All topics will be deleted. This action is irreversible. Please proceed with caution.",
+    "confirmRemoveUnstarred": "All unstarred topics will be deleted. This action is irreversible. Please proceed with caution.",
     "favorite": "Add to Favorites",
+    "removeAll": "Delete All Topics",
+    "removeUnstarred": "Delete Unstarred Topics",
     "unfavorite": "Remove from Favorites"
   },
   "confirmRemoveTopicItemAlert": "This topic is about to be deleted and cannot be recovered. Please confirm your action.",
   "defaultTitle": "Default Topic",
   "empty": "No Topics Available",
+  "favorite": "Favorite",
+  "groupTitle": {
+    "byTime": {
+      "month": "This Month",
+      "today": "Today",
+      "week": "This Week",
+      "yesterday": "Yesterday"
+    }
+  },
   "guide": {
     "desc": "Click the send button on the left to save the current conversation as a historical topic and start a new conversation",
     "title": "Topic List"
   },
   "loading": "Loading...",
   "newTopic": "New Topic",
+  "rename": {
+    "action": "Rename",
+    "done": "Done",
+    "emptyTitle": "Topic name cannot be empty",
+    "error": "Rename failed",
+    "placeholder": "Enter topic name",
+    "success": "Rename successful",
+    "title": "Rename Topic",
+    "tooLong": "Topic name is too long"
+  },
   "search": {
     "emptyResult": "No matching topics found",
     "placeholder": "Search topics...",

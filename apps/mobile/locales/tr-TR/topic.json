@@ -1,17 +1,40 @@
 {
   "actions": {
+    "confirmRemoveAll": "Tüm konular silinmek üzere. Silme işlemi geri alınamaz, lütfen dikkatli olun.",
+    "confirmRemoveUnstarred": "Favorilere eklenmemiş konular silinmek üzere. Silme işlemi geri alınamaz, lütfen dikkatli olun.",
     "favorite": "Favorilere Ekle",
+    "removeAll": "Tüm konuları sil",
+    "removeUnstarred": "Favori olmayan konuları sil",
     "unfavorite": "Favorilerden Kaldır"
   },
   "confirmRemoveTopicItemAlert": "Bu konuyu silmek üzeresiniz. Silme işlemi geri alınamaz. Lütfen işleminizi onaylayın.",
   "defaultTitle": "Varsayılan Konu",
   "empty": "Henüz konu yok",
+  "favorite": "Favorilere ekle",
+  "groupTitle": {
+    "byTime": {
+      "month": "Bu ay",
+      "today": "Bugün",
+      "week": "Bu hafta",
+      "yesterday": "Dün"
+    }
+  },
   "guide": {
     "desc": "Sol taraftaki düğmeye tıklayarak mevcut sohbeti geçmiş konulara kaydedebilir ve yeni bir sohbet başlatabilirsiniz",
     "title": "Konu Listesi"
   },
   "loading": "Yükleniyor...",
   "newTopic": "Yeni Konu",
+  "rename": {
+    "action": "Yeniden adlandır",
+    "done": "Tamamlandı",
+    "emptyTitle": "Konu adı boş olamaz",
+    "error": "Yeniden adlandırma başarısız oldu",
+    "placeholder": "Konu adını girin",
+    "success": "Konu adı başarıyla değiştirildi",
+    "title": "Konuyu yeniden adlandır",
+    "tooLong": "Konu adı çok uzun"
+  },
   "search": {
     "emptyResult": "Eşleşen konu bulunamadı",
     "placeholder": "Konu ara...",

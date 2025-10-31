@@ -1,6 +1,10 @@
 export default {
   actions: {
+    confirmRemoveAll: '即将删除全部话题，删除后将不可恢复，请谨慎操作',
+    confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作',
     favorite: '收藏',
+    removeAll: '删除全部话题',
+    removeUnstarred: '删除未收藏话题',
     unfavorite: '取消收藏',
   },
   confirmRemoveTopicItemAlert: '即将删除该话题，删除后将无法找回，请确认你的操作',
@@ -21,6 +25,16 @@ export default {
   },
   loading: '加载中...',
   newTopic: '新建话题',
+  rename: {
+    action: '重命名',
+    done: '完成',
+    emptyTitle: '话题名称不能为空',
+    error: '重命名失败',
+    placeholder: '输入话题名称',
+    success: '重命名成功',
+    title: '重命名话题',
+    tooLong: '话题名称过长',
+  },
   search: {
     emptyResult: '未找到匹配的话题',
     placeholder: '搜索话题...',

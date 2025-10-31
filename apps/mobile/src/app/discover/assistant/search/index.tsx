@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecentSearches, useRecentSearches } from '@/features/Search';
 
@@ -16,7 +17,7 @@ const AssistantList = () => {
   const { t } = useTranslation('common');
   const [searchText, setSearchText] = useState('');
   const [actualSearchText, setActualSearchText] = useState('');
-
+  const insets = useSafeAreaInsets();
   const { recentSearches, saveRecentSearch, removeRecentSearch, clearRecentSearches } =
     useRecentSearches('assistant_recent_searches');
 
@@ -103,9 +104,15 @@ const AssistantList = () => {
       leftProps={{
         width: 'auto',
       }}
+      safeAreaProps={{
+        edges: ['top'],
+      }}
       showBack
     >
       <KeyboardAwareScrollView
+        contentContainerStyle={{
+          paddingBottom: insets.bottom,
+        }}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       >

@@ -6,6 +6,7 @@ import { SearchIcon } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AgentCard from '@/features/discover/assistant/components/AgentCard';
 import { AssistantListSkeleton } from '@/features/discover/assistant/components/SkeletonList';
@@ -19,7 +20,7 @@ const AssistantList = () => {
   const router = useRouter();
   const theme = useTheme();
   const { t } = useTranslation(['common', 'discover']);
-
+  const insets = useSafeAreaInsets();
   const [selectedCategory, setSelectedCategory] = useState<string>(AssistantCategory.All);
   const [currentPage, setCurrentPage] = useState(1);
   const [allItems, setAllItems] = useState<DiscoverAssistantItem[]>([]);
@@ -112,6 +113,9 @@ const AssistantList = () => {
       <FlashList
         ListEmptyComponent={renderEmptyComponent}
         ListFooterComponent={renderFooter}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom,
+        }}
         data={allItems}
         drawDistance={400}
         keyExtractor={keyExtractor}
@@ -139,6 +143,9 @@ const AssistantList = () => {
       }}
       leftProps={{
         width: 40,
+      }}
+      safeAreaProps={{
+        edges: ['top'],
       }}
       showBack
       title={
