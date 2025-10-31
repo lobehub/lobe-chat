@@ -11,7 +11,7 @@ interface FileListProps {
   variant?: 'raw' | 'file' | 'folder';
 }
 
-const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'file', isDirectory }) => {
+const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'raw', isDirectory }) => {
   if (isDirectory)
     return <FileTypeIcon color={'gold'} size={size} type={'folder'} variant={'color'} />;
 
@@ -27,6 +27,8 @@ const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'file', isDire
       />
     );
   }
+
+  console.log('FileIcon', fileName);
 
   return <MaterialFileTypeIcon filename={fileName} size={size} type={'file'} variant={variant} />;
 });
