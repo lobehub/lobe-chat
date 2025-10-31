@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.4"
+  },
+  {
+    "children": {
       "improvements": [
         "Add new bedrock model support, add pricing info for Azure GPT-5 series models."
       ]
