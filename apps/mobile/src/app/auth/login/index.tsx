@@ -94,7 +94,7 @@ const LoginPage = () => {
             transition={200}
           />
           <Flexbox align={'center'} gap={8} horizontal>
-            <Text fontSize={26} weight={'bold'}>
+            <Text fontSize={28} weight={'bold'}>
               {t('title', { ns: 'welcome' })}
             </Text>
             <LobeHub.Text color={theme.colorText} size={24} />
