@@ -272,15 +272,7 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
                   </div>
                   <div className={styles.noteContent}>
                     {title && <div className={styles.noteTitle}>{title}</div>}
-                    {previewText ? (
-                      <div className={styles.notePreview}>{previewText}</div>
-                    ) : (
-                      <div className={styles.notePreview}>
-                        <span style={{ color: 'var(--lobe-text-tertiary)', fontStyle: 'italic' }}>
-                          No content
-                        </span>
-                      </div>
-                    )}
+                    {previewText && <div className={styles.notePreview}>{previewText}</div>}
                   </div>
                 </div>
               );
