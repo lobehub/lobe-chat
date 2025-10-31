@@ -19,7 +19,7 @@ const isValidUrl = (url: string) => {
   return !url || url.match(/^https?:\/\/.+/);
 };
 
-const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoading }) => {
+const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider }) => {
   const theme = useTheme();
   const isLobehub = provider.id === 'lobehub' || (provider as any)?.data?.id === 'lobehub';
   const { t } = useTranslation('setting');
@@ -40,38 +40,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoa
     [providerData?.keyVaults?.apiKey, providerData?.keyVaults?.baseURL],
   );
 
-  // Update function for onBlur events
-  const updateField = useCallback(
-    async (field: 'apiKey' | 'baseURL', value: string) => {
-      setLoading(true);
-      try {
-        const updateData = {
-          keyVaults: {
-            ...providerData?.keyVaults,
-            [field]: value,
-          },
-        };
-
-        await updateAiProviderConfig(provider.id, updateData);
-        console.log(`Updated ${field} for provider ${provider.id}`);
-      } catch (error) {
-        console.error(`Failed to update ${field}:`, error);
-        Alert.alert(
-          t('aiProviders.configuration.updateFailedTitle', { ns: 'setting' }),
-          t('aiProviders.configuration.updateFailedDesc', { ns: 'setting' }),
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [providerData?.keyVaults, provider.id, updateAiProviderConfig, t],
-  );
-
-  const handleApiKeyBlur = useCallback(() => {
-    const value = (form.getFieldValue('apiKey') as string | undefined) ?? '';
-    void updateField('apiKey', value);
-  }, [form, updateField]);
-
+  // Auto-trim proxy URL when user finishes editing
   const handleProxyUrlBlur = useCallback(() => {
     const rawValue = (form.getFieldValue('proxyUrl') as string | undefined) ?? '';
     const trimmedValue = rawValue.trim();
@@ -79,11 +48,7 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoa
     if (rawValue !== trimmedValue) {
       void form.setFieldValue('proxyUrl', trimmedValue, { markTouched: true, validate: false });
     }
-
-    if (trimmedValue && !isValidUrl(trimmedValue)) return;
-
-    void updateField('baseURL', trimmedValue);
-  }, [form, updateField]);
+  }, [form]);
 
   // 从 provider.settings 中获取配置
   const {
@@ -118,7 +83,6 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoa
                 autoComplete="off"
                 autoCorrect={false}
                 disabled={isChecking}
-                onBlur={handleApiKeyBlur}
                 placeholder={t('aiProviders.configuration.apiKey.placeholder', {
                   name: provider.name || provider.id,
                   ns: 'setting',
@@ -197,13 +161,22 @@ const ConfigurationSection = memo<ConfigurationSectionProps>(({ provider, setLoa
             }}
             onBeforeCheck={async () => {
               setIsChecking(true);
-              // 连接检查前保存当前配置
+
+              // 连接检查前验证并保存当前配置
               const { apiKey: apiKeyValue, proxyUrl: proxyUrlValue } = form.getFieldsValue();
+              const trimmedProxyUrl = ((proxyUrlValue as string | undefined) ?? '').trim();
+
+              // 验证 proxyUrl 格式
+              if (trimmedProxyUrl && !isValidUrl(trimmedProxyUrl)) {
+                setIsChecking(false);
+                Alert.alert(t('aiProviders.configuration.proxyUrl.invalid', { ns: 'setting' }));
+                throw new Error('Invalid proxy URL format');
+              }
 
               await updateAiProviderConfig(provider.id, {
                 keyVaults: {
                   apiKey: (apiKeyValue as string | undefined) ?? '',
-                  baseURL: ((proxyUrlValue as string | undefined) ?? '').trim(),
+                  baseURL: trimmedProxyUrl,
                 },
               });
             }}

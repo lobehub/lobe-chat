@@ -155,9 +155,12 @@ const Checker = memo<CheckerProps>(
     }, [checkModel, provider, t]);
 
     const handleCheckPress = useCallback(async () => {
-      await onBeforeCheck();
       try {
+        await onBeforeCheck();
         await checkConnection();
+      } catch (error) {
+        // Error is already handled in onBeforeCheck or checkConnection
+        console.error('Connection check failed:', error);
       } finally {
         await onAfterCheck();
       }
