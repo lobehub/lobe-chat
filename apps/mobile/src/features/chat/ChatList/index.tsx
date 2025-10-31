@@ -99,7 +99,18 @@ const ChatList = memo<ChatListProps>(({ style }) => {
     [messages.length],
   );
 
-  if (!activeTopicId) return <WelcomeMessage />;
+  if (!activeTopicId)
+    return (
+      <MaskShadow
+        size={isGlassAvailable ? 12 : 32}
+        style={{
+          flex: 1,
+          marginBottom: -24,
+        }}
+      >
+        <WelcomeMessage />
+      </MaskShadow>
+    );
 
   if (!isCurrentChatLoaded) {
     content = <MessageSkeletonList />;
