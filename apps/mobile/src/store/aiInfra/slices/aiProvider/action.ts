@@ -184,7 +184,10 @@ export const createAiProviderSlice: StateCreator<
       }
     }
 
-    await get().refreshAiProviderDetail();
+    // Don't refresh here to avoid overwriting the immediate local update above
+    // The local update ensures the connection checker gets the latest keyVaults immediately
+    // Other refreshes (like refreshAiProviderList) will update the runtime config when needed
+    // await get().refreshAiProviderDetail();
 
     get().internal_toggleAiProviderConfigUpdating(id, false);
   },
