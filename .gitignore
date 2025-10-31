@@ -118,11 +118,6 @@ prd
 GEMINI.md
 e2e/reports
 
-
-# for local prd docs
-docs/prd
-
-# eas
+# local eas account key for android
 service-account-key.json
 
-repomix-output-lobehub-lobe-ui.xml
