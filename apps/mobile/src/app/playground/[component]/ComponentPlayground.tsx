@@ -31,6 +31,7 @@ const ComponentPlayground = ({ demos, readmeContent }: ComponentPlaygroundProps)
       automaticallyAdjustContentInsets={true}
       contentInsetAdjustmentBehavior={'automatic'}
       data={[activeTab]}
+      drawDistance={400}
       renderItem={({ item }) => {
         if (item === 'demo') {
           return (

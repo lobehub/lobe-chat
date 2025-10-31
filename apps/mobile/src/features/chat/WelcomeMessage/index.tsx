@@ -71,7 +71,7 @@ const WelcomeMessage = () => {
       style={{ flex: 1, marginBottom: -24 }}
     >
       {welcomeBubble}
-      {!topicsInit ? (
+      {!topicsInit || typeof topics === 'undefined' ? (
         <RecentTopicsSkeleton />
       ) : shouldShowTopicsSection ? (
         <RecentTopics />

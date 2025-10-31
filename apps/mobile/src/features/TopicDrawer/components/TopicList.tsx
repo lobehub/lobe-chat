@@ -122,6 +122,7 @@ const TopicList = memo(() => {
     <FlashList
       contentContainerStyle={{ paddingTop: 0 }}
       data={listData}
+      drawDistance={400}
       extraData={topics}
       getItemType={getItemType}
       key={listKey}

@@ -105,6 +105,7 @@ const TopicSearchList = memo(
           paddingBlock: 16,
         }}
         data={filteredTopics}
+        drawDistance={400}
         keyExtractor={keyExtractor}
         ref={ref}
         renderItem={renderItem}
