@@ -238,12 +238,16 @@ export class MessageContentProcessor extends BaseProcessor {
     }
 
     // 如果开启了携带历史思考内容，并且消息有 reasoning content（非 signature 模式）
-    if (
+    // 排除 Anthropic、Google 和 Vertex，因为它们有自己的推理格式
+    const excludedProviders = ['anthropic', 'google', 'vertex'];
+    const shouldIncludeHistoricalThinking =
       this.config.includeHistoricalThinking &&
+      !excludedProviders.includes(this.config.provider.toLowerCase()) &&
       message.reasoning &&
       !message.reasoning.signature &&
-      message.reasoning.content
-    ) {
+      message.reasoning.content;
+
+    if (shouldIncludeHistoricalThinking) {
       // 将 reasoning content 以 <think></think> 标签形式嵌入到 content 开头
       const thinkingPrefix = `<think>${message.reasoning.content}</think>\n`;
       const newContent = thinkingPrefix + message.content;
