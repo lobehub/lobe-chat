@@ -95,7 +95,12 @@ export class DocumentService {
    */
   async updateDocument(
     id: string,
-    params: { content?: string; editorData?: Record<string, any>; title?: string },
+    params: {
+      content?: string;
+      editorData?: Record<string, any>;
+      metadata?: Record<string, any>;
+      title?: string;
+    },
   ) {
     const updates: any = {};
 
@@ -112,6 +117,10 @@ export class DocumentService {
     if (params.title !== undefined) {
       updates.title = params.title;
       updates.filename = params.title;
+    }
+
+    if (params.metadata !== undefined) {
+      updates.metadata = params.metadata;
     }
 
     return this.documentModel.update(id, updates);

@@ -17,6 +17,10 @@ export interface FileListItem {
   fileType: string;
   finishEmbedding: boolean;
   id: string;
+  /**
+   * Metadata (for notes/documents)
+   */
+  metadata?: Record<string, any> | null;
   name: string;
   size: number;
   /**

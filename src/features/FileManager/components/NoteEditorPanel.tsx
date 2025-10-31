@@ -33,16 +33,22 @@ import {
   Loader2Icon,
   MessageSquareQuote,
   SigmaIcon,
+  SmilePlus,
   SquareDashedBottomCodeIcon,
   StrikethroughIcon,
   UnderlineIcon,
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
+import { globalGeneralSelectors } from '@/store/global/selectors';
+
+const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 const editorClassName = cx(css`
   p {
@@ -55,23 +61,26 @@ interface NoteEditorPanelProps {
   documentId?: string;
   documentTitle?: string;
   editorData?: Record<string, any> | null;
+  emoji?: string;
   knowledgeBaseId?: string;
   onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
 }
 
-const NoteEditorPanel = memo<NoteEditorPanelProps>(
+const NoteEditor = memo<NoteEditorPanelProps>(
   ({
     content: cachedContent,
     documentId,
     documentTitle,
     editorData: cachedEditorData,
+    emoji: cachedEmoji,
     knowledgeBaseId,
     onDocumentIdChange,
     onSave,
   }) => {
     const { t } = useTranslation(['file', 'editor']);
     const theme = useTheme();
+    const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
     const editor = useEditor();
     const editorState = useEditorState(editor);
@@ -79,6 +88,9 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [noteTitle, setNoteTitle] = useState('');
+    const [noteEmoji, setNoteEmoji] = useState<string | undefined>(undefined);
+    const [isHoveringTitle, setIsHoveringTitle] = useState(false);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [currentDocId, setCurrentDocId] = useState<string | undefined>(documentId);
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const updateNoteOptimistically = useFileStore((s) => s.updateNoteOptimistically);
@@ -93,11 +105,17 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             ? JSON.stringify(cachedEditorData).slice(0, 100)
             : null,
           cachedEditorDataType: typeof cachedEditorData,
+          cachedEmoji,
           documentId,
           documentTitle,
           hasCachedEditorData: !!cachedEditorData,
           isTempNote: documentId.startsWith('temp-note-'),
         });
+
+        // Reset emoji picker state when switching documents
+        setShowEmojiPicker(false);
+        // Initialize emoji from cached value
+        setNoteEmoji(cachedEmoji);
 
         // Check if this is an optimistic note from local map
         const localNote = localNoteMap.get(documentId);
@@ -145,6 +163,10 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
           .then((doc) => {
             if (doc) {
               setNoteTitle(doc.title || doc.filename || '');
+              // Load emoji from metadata
+              if (doc.metadata?.emoji) {
+                setNoteEmoji(doc.metadata.emoji);
+              }
 
               console.log('[NoteEditorPanel] Fetched doc.editorData:', {
                 editorDataPreview: doc.editorData
@@ -174,7 +196,15 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             console.error('[NoteEditorPanel] Failed to load document:', error);
           });
       }
-    }, [documentId, editor, cachedEditorData, cachedContent, documentTitle, localNoteMap]);
+    }, [
+      documentId,
+      editor,
+      cachedEditorData,
+      cachedContent,
+      documentTitle,
+      cachedEmoji,
+      localNoteMap,
+    ]);
 
     // Auto-save function
     const performSave = useCallback(async () => {
@@ -199,6 +229,18 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             name: noteTitle,
             updatedAt: new Date(),
           });
+          // Also update metadata with emoji (only if emoji is set)
+          await documentService.updateDocument({
+            content: textContent,
+            editorData: JSON.stringify(editorData),
+            id: currentDocId,
+            metadata: noteEmoji
+              ? {
+                  emoji: noteEmoji,
+                }
+              : undefined,
+            title: noteTitle,
+          });
         } else {
           // Create new note (either no ID or temp ID)
           const now = Date.now();
@@ -216,9 +258,14 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
             editorData: JSON.stringify(editorData),
             fileType: 'custom/note',
             knowledgeBaseId,
-            metadata: {
-              createdAt: now,
-            },
+            metadata: noteEmoji
+              ? {
+                  createdAt: now,
+                  emoji: noteEmoji,
+                }
+              : {
+                  createdAt: now,
+                },
             title,
           });
 
@@ -267,10 +314,13 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
       editor,
       currentDocId,
       noteTitle,
+      noteEmoji,
       knowledgeBaseId,
       refreshFileList,
       updateNoteOptimistically,
       onSave,
+      onDocumentIdChange,
+      replaceTempNoteWithReal,
     ]);
 
     // Handle content change - mark as unsaved
@@ -421,31 +471,95 @@ const NoteEditorPanel = memo<NoteEditorPanelProps>(
           }}
         />
 
-        {/* Editor */}
-        <Flexbox flex={1} paddingBlock={16} paddingInline={24} style={{ overflowY: 'auto' }}>
-          <Editor
-            className={editorClassName}
-            content={''}
-            editor={editor}
-            onChange={handleContentChange}
-            plugins={[
-              ReactListPlugin,
-              ReactCodePlugin,
-              ReactCodeblockPlugin,
-              ReactHRPlugin,
-              ReactLinkHighlightPlugin,
-              ReactTablePlugin,
-              ReactMathPlugin,
-            ]}
-            style={{
-              minHeight: '100%',
-            }}
-            type={'text'}
-          />
+        {/* Editor with title */}
+        <Flexbox flex={1} style={{ overflowY: 'auto' }}>
+          <Flexbox paddingBlock={48} paddingInline={96}>
+            {/* Emoji and Title */}
+            <Flexbox
+              onMouseEnter={() => setIsHoveringTitle(true)}
+              onMouseLeave={() => setIsHoveringTitle(false)}
+              style={{ marginBottom: 24 }}
+            >
+              {/* Icon Section - always above title */}
+              {noteEmoji || showEmojiPicker ? (
+                <Flexbox style={{ marginBottom: 16 }}>
+                  <EmojiPicker
+                    locale={locale}
+                    onChange={(emoji) => {
+                      setNoteEmoji(emoji);
+                      setHasUnsavedChanges(true);
+                    }}
+                    size={78}
+                    style={{
+                      fontSize: 64,
+                    }}
+                    title={t('notesEditor.emojiPicker.tooltip')}
+                    value={noteEmoji}
+                  />
+                </Flexbox>
+              ) : (
+                <Flexbox style={{ marginBottom: 12 }}>
+                  <Button
+                    icon={<Icon icon={SmilePlus} />}
+                    onClick={() => setShowEmojiPicker(true)}
+                    style={{
+                      opacity: isHoveringTitle ? 1 : 0,
+                      transform: 'translateX(-10px)',
+                      transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
+                      width: 'fit-content',
+                    }}
+                    type="text"
+                  >
+                    Choose Icon
+                  </Button>
+                </Flexbox>
+              )}
+
+              {/* Title Input */}
+              <input
+                onChange={(e) => {
+                  setNoteTitle(e.target.value);
+                  setHasUnsavedChanges(true);
+                }}
+                placeholder={t('notesEditor.titlePlaceholder')}
+                style={{
+                  border: 'none',
+                  color: theme.colorText,
+                  flex: 1,
+                  fontSize: 40,
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  outline: 'none',
+                }}
+                value={noteTitle}
+              />
+            </Flexbox>
+
+            {/* Editor Content */}
+            <Editor
+              className={editorClassName}
+              content={''}
+              editor={editor}
+              onChange={handleContentChange}
+              plugins={[
+                ReactListPlugin,
+                ReactCodePlugin,
+                ReactCodeblockPlugin,
+                ReactHRPlugin,
+                ReactLinkHighlightPlugin,
+                ReactTablePlugin,
+                ReactMathPlugin,
+              ]}
+              style={{
+                minHeight: '400px',
+              }}
+              type={'text'}
+            />
+          </Flexbox>
         </Flexbox>
       </Flexbox>
     );
   },
 );
 
-export default NoteEditorPanel;
+export default NoteEditor;

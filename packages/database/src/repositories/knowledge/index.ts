@@ -14,6 +14,7 @@ export interface KnowledgeItem {
   embeddingTaskId?: string | null;
   fileType: string;
   id: string;
+  metadata?: Record<string, any> | null;
   name: string;
   size: number;
   /**
@@ -100,6 +101,17 @@ export class KnowledgeRepo {
         }
       }
 
+      // Parse metadata if it's a string (raw SQL returns JSONB as string)
+      let metadata = row.metadata;
+      if (typeof metadata === 'string') {
+        try {
+          metadata = JSON.parse(metadata);
+        } catch (e) {
+          console.error('[KnowledgeRepo] Failed to parse metadata:', e);
+          metadata = null;
+        }
+      }
+
       return {
         chunkTaskId: row.chunk_task_id,
         content: row.content,
@@ -108,6 +120,7 @@ export class KnowledgeRepo {
         embeddingTaskId: row.embedding_task_id,
         fileType: row.file_type,
         id: row.id,
+        metadata,
         name: row.name,
         size: Number(row.size),
         sourceType: row.source_type,
@@ -198,6 +211,7 @@ export class KnowledgeRepo {
           f.embedding_task_id,
           NULL as editor_data,
           NULL as content,
+          NULL as metadata,
           'file' as source_type
         FROM ${files} f
         INNER JOIN ${knowledgeBaseFiles} kbf
@@ -232,6 +246,7 @@ export class KnowledgeRepo {
         embedding_task_id,
         NULL as editor_data,
         NULL as content,
+        NULL as metadata,
         'file' as source_type
       FROM ${files}
       WHERE ${sql.join(whereConditions, sql` AND `)}
@@ -281,6 +296,7 @@ export class KnowledgeRepo {
             NULL::uuid as embedding_task_id,
             NULL::jsonb as editor_data,
             NULL::text as content,
+            NULL::jsonb as metadata,
             NULL::text as source_type
           WHERE false
         `;
@@ -303,6 +319,7 @@ export class KnowledgeRepo {
           NULL::uuid as embedding_task_id,
           NULL::jsonb as editor_data,
           NULL::text as content,
+          NULL::jsonb as metadata,
           NULL::text as source_type
         WHERE false
       `;
@@ -321,6 +338,7 @@ export class KnowledgeRepo {
         NULL as embedding_task_id,
         editor_data,
         content,
+        metadata,
         'document' as source_type
       FROM ${documents}
       WHERE ${sql.join(whereConditions, sql` AND `)}
