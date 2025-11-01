@@ -19,7 +19,7 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/slices/message/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -81,9 +81,9 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
   );
 
   const [generating, isInRAGFlow, editing] = useChatStore((s) => [
-    chatSelectors.isMessageGenerating(id)(s),
-    chatSelectors.isMessageInRAGFlow(id)(s),
-    chatSelectors.isMessageEditing(id)(s),
+    messageStateSelectors.isMessageGenerating(id)(s),
+    messageStateSelectors.isMessageInRAGFlow(id)(s),
+    messageStateSelectors.isMessageEditing(id)(s),
   ]);
 
   const { styles } = useStyles({

@@ -1,5 +1,6 @@
 import type { ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 import type { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
+import { z } from 'zod';
 
 import { ErrorType } from '../../fetch';
 
@@ -11,6 +12,12 @@ export interface ChatMessageError {
   message: string;
   type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
 }
+
+export const ChatMessageErrorSchema = z.object({
+  body: z.any().optional(),
+  message: z.string(),
+  type: z.union([z.string(), z.number()]),
+});
 
 export interface ChatCitationItem {
   id?: string;
@@ -24,3 +31,9 @@ export interface ModelReasoning {
   duration?: number;
   signature?: string;
 }
+
+export const ModelReasoningSchema = z.object({
+  content: z.string().optional(),
+  duration: z.number().optional(),
+  signature: z.string().optional(),
+});

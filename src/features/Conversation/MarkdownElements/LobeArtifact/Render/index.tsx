@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { dotLoading } from '@/styles/loading';
 
 import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
@@ -66,7 +66,7 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, language, childre
   const { message } = App.useApp();
   const [isGenerating, isArtifactTagClosed, openArtifact, closeArtifact] = useChatStore((s) => {
     return [
-      chatSelectors.isMessageGenerating(id)(s),
+      messageStateSelectors.isMessageGenerating(id)(s),
       chatPortalSelectors.isArtifactTagClosed(id)(s),
       s.openArtifact,
       s.closeArtifact,

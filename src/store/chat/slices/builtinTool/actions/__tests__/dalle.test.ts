@@ -86,7 +86,7 @@ describe('chatToolSlice - dalle', () => {
             content: initialMessageContent,
           }) as UIChatMessage,
       );
-      vi.spyOn(messageService, 'updateMessage').mockResolvedValueOnce(undefined);
+      vi.spyOn(messageService, 'updateMessage').mockResolvedValueOnce({ success: true });
 
       await act(async () => {
         await result.current.updateImageItem(messageId, updateFunction);

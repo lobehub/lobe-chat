@@ -10,8 +10,8 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
-import { chatHelpers } from '../../helpers';
-import type { ChatStoreState } from '../../initialState';
+import { chatHelpers } from '../../../helpers';
+import type { ChatStoreState } from '../../../initialState';
 
 const getMeta = (message: UIChatMessage) => {
   switch (message.role) {
@@ -47,7 +47,7 @@ const getBaseChatsByKey =
     return messages.map((i) => ({ ...i, meta: getMeta(i) }));
   };
 
-const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
+export const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
 
 /**
  * Current active raw message list, include thread messages
@@ -89,7 +89,7 @@ const mainDisplayChats = (s: ChatStoreState): UIChatMessage[] => {
   return getChatsWithThread(s, displayChats);
 };
 
-const mainDisplayChatIDs = (s: ChatStoreState) => mainDisplayChats(s).map((s) => s.id);
+export const mainDisplayChatIDs = (s: ChatStoreState) => mainDisplayChats(s).map((s) => s.id);
 
 const mainAIChats = (s: ChatStoreState): UIChatMessage[] => {
   const messages = activeBaseChats(s);
@@ -154,7 +154,7 @@ const countMessagesByThreadId = (id: string) => (s: ChatStoreState) => {
   return messages.length;
 };
 
-const getMessageByToolCallId = (id: string) => (s: ChatStoreState) => {
+export const getMessageByToolCallId = (id: string) => (s: ChatStoreState) => {
   const messages = activeBaseChats(s);
   return messages.find((m) => m.tool_call_id === id);
 };
@@ -165,67 +165,6 @@ const latestMessage = (s: ChatStoreState) => activeBaseChats(s).at(-1);
 const currentChatLoadingState = (s: ChatStoreState) => !s.messagesInit;
 
 const isCurrentChatLoaded = (s: ChatStoreState) => !!s.messagesMap[currentChatKey(s)];
-
-const isMessageEditing = (id: string) => (s: ChatStoreState) => s.messageEditingIds.includes(id);
-const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoadingIds.includes(id);
-
-const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
-const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
-  s.messageRAGLoadingIds.includes(id);
-const isMessageInChatReasoning = (id: string) => (s: ChatStoreState) =>
-  s.reasoningLoadingIds.includes(id);
-
-const isPluginApiInvoking = (id: string) => (s: ChatStoreState) =>
-  s.pluginApiLoadingIds.includes(id);
-
-const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) => {
-  const isLoading = s.toolCallingStreamIds[id];
-
-  if (!isLoading) return false;
-
-  return isLoading[index];
-};
-
-const isInToolsCalling = (id: string, index: number) => (s: ChatStoreState) => {
-  const isStreamingToolsCalling = isToolCallStreaming(id, index)(s);
-
-  const isInvokingPluginApi = s.messageInToolsCallingIds.includes(id);
-
-  return isStreamingToolsCalling || isInvokingPluginApi;
-};
-
-const isToolApiNameShining =
-  (messageId: string, index: number, toolCallId: string) => (s: ChatStoreState) => {
-    const toolMessageId = getMessageByToolCallId(toolCallId)(s)?.id;
-    const isStreaming = isToolCallStreaming(messageId, index)(s);
-    const isPluginInvoking = !toolMessageId ? true : isPluginApiInvoking(toolMessageId)(s);
-
-    return isStreaming || isPluginInvoking;
-  };
-
-const isAIGenerating = (s: ChatStoreState) =>
-  s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
-
-const isInRAGFlow = (s: ChatStoreState) =>
-  s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
-
-const isCreatingMessage = (s: ChatStoreState) => s.isCreatingMessage;
-
-const isHasMessageLoading = (s: ChatStoreState) =>
-  s.messageLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
-
-/**
- * this function is used to determine whether the send button should be disabled
- */
-const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
-  // 1. when there is message loading
-  isHasMessageLoading(s) ||
-  // 2. when is creating the topic
-  s.creatingTopic ||
-  // 3. when is creating the message
-  isCreatingMessage(s) ||
-  // 4. when the message is in RAG flow
-  isInRAGFlow(s);
 
 const inboxActiveTopicMessages = (state: ChatStoreState) => {
   const activeTopicId = state.activeTopicId;
@@ -280,6 +219,29 @@ const getSupervisorTodos = (groupId?: string, topicId?: string | null) => (s: Ch
   return s.supervisorTodos[messageMapKey(groupId, topicId)] || [];
 };
 
+/**
+ * Gets the latest message block from a group message that doesn't contain tools
+ * Returns null if the last block contains tools or if message is not a group message
+ */
+const getGroupLatestMessageWithoutTools = (id: string) => (s: ChatStoreState) => {
+  const message = getMessageById(id)(s);
+
+  if (!message || message.role !== 'group' || !message.children || message.children.length === 0)
+    return;
+
+  // Get the last child
+  const lastChild = message.children.at(-1);
+
+  if (!lastChild) return;
+
+  // Return the last child only if it doesn't have tools
+  if (!lastChild.tools || lastChild.tools.length === 0) {
+    return lastChild;
+  }
+
+  return;
+};
+
 export const chatSelectors = {
   activeBaseChats,
   activeBaseChatsWithoutTool,
@@ -289,6 +251,7 @@ export const chatSelectors = {
   currentToolMessages,
   currentUserFiles,
   getBaseChatsByKey,
+  getGroupLatestMessageWithoutTools,
   getMessageById,
   getMessageByToolCallId,
   getSupervisorTodos,
@@ -296,21 +259,8 @@ export const chatSelectors = {
   getThreadMessages,
   getTraceIdByMessageId,
   inboxActiveTopicMessages,
-  isAIGenerating,
-  isCreatingMessage,
   isCurrentChatLoaded,
-  isHasMessageLoading,
-  isInToolsCalling,
-  isMessageEditing,
-  isMessageGenerating,
-  isMessageInChatReasoning,
-  isMessageInRAGFlow,
-  isMessageLoading,
-  isPluginApiInvoking,
-  isSendButtonDisabledByMessage,
   isSupervisorLoading,
-  isToolApiNameShining,
-  isToolCallStreaming,
   latestMessage,
   mainAIChats,
   mainAIChatsMessageString,
