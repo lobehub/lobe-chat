@@ -70,12 +70,7 @@ const Select = memo<SelectProps>(
           variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
           {...rest}
         >
-          <SelectItem
-            scrollable={scrollable}
-            size={size}
-            textProps={textProps}
-            {...selectedOption}
-          />
+          <SelectItem scrollable={false} size={size} textProps={textProps} {...selectedOption} />
           <Icon
             color={theme.colorTextDescription}
             icon={ChevronDown}
