@@ -3,7 +3,7 @@ import { Cell, ModelInfoTags } from '@lobehub/ui-rn';
 import { AIChatModelCard } from 'model-bank';
 import { memo } from 'react';
 
-import ScrollableTitle from './ScrollableTitle';
+import ScrollableTitle from '@/components/ScrollableTitle';
 
 interface ModelItemRenderProps extends AIChatModelCard {
   active?: boolean;
