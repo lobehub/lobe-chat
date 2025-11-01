@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
   release:
     types: [published]
+  pull_request:
   pull_request_target:
     types: [synchronize, labeled, unlabeled]
 

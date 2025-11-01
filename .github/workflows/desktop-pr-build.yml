@@ -1,6 +1,7 @@
 name: Desktop PR Build
 
 on:
+  pull_request:
   pull_request_target:
     types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 
