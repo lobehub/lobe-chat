@@ -1,942 +1,602 @@
-# 📋 Načrt poenostavitve lobe-chat na minimalni chat
+# 📋 Načrt poenostavitve lobe-chat na minimalni chat (UI-Only Hiding Approach)
 
-> **Posodobljen načrt z opcijskimi funkcionalnostmi**
+> **⚡ UI-Only Hiding pristop - brez brisanja kode!**
 >
-> Ta načrt uporablja **Feature Flags** pristop, kjer MCP in RAG funkcionalnosti
-> **NISO ODSTRANJENE**, ampak samo **DISABLED po defaultu**. To pomeni:
-> - Minimalna aplikacija po buildu (vse disabled)
-> - Možnost vključitve MCP/RAG z environment variables
-> - Ni potrebe za code changes - samo config
-> - Enostavna nadgradnja kasneje
+> Ta načrt uporablja **Feature Flags** za skrivanje UI elementov, ampak VSA KODA OSTANE.
+>
+> - ✅ Vsa koda ostane na mestu - nič se ne briše
+> - ✅ Samo UI elementi se skrijejo z feature flags
+> - ✅ Ni breaking changes ali zlomljenih odvisnosti
+> - ✅ Enostavno vključevanje funkcionalnosti - samo toggling flags
+> - ✅ Veliko manjše tveganje napak
+> - ✅ Bundle size se zmanjša preko tree-shaking (production build)
 
 ## 🎯 Cilj
-Poenostaviti lobe-chat na minimalno chat aplikacijo z:
-- ✅ Samo OpenAI provider
+
+Poenostaviti lobe-chat **UI** na minimalno chat aplikacijo z:
+
+- ✅ Samo OpenAI provider (v UI)
 - ✅ Trenutna avtentikacija (NextAuth/Clerk/Logto/OIDC)
 - ✅ Agenti, Teme, Session groups
 - ✅ Export/Import funkcionalnost
 - ✅ Samo PGLite (client-side DB)
-- ⚡ MCP in RAG - opcijsko (disabled po defaultu, lahko vključiš kasneje)
-- ❌ Brez marketplace, pluginov, image gen, voice, search, chat groups
+- ⚡ MCP in RAG - opcijsko (hidden po defaultu, lahko vključiš)
+- 🙈 Marketplace, plugini, image gen, voice, search, chat groups - **SKRITI** (ne izbrisani!)
+
+---
+
+## ⚠️ Pomembna razlika: UI Hiding vs Code Deletion
+
+### ❌ Stari pristop (izogibaj se)
+
+- Brišeš celotne direktorije (discover/, image/, profile/, labs/)
+- Brišeš database modele, services, routers
+- Brišeš dependencies iz package.json
+- **Rezultat**: Cel kup napak, zlomljene odvisnosti, težko revertat
+
+### ✅ Novi pristop (uporabi tega!)
+
+- **Ničesar ne brišeš**
+- Samo dodaš feature flag checks v **navigacijo in layout**
+- Koda ostane → Next.js tree-shaking jo odstrani v production buildu
+- **Rezultat**: Ni napak, enostavno revertat, varna implementacija
 
 ---
 
 ## 📦 FAZA 0: Feature Flags Sistem
 
-### 0.1 Ustvari Feature Flags konfiguracija
-**Lokacija**: `src/config/featureFlags.ts`
+**Status**: ✅ Že implementirano
 
-**Ustvari novo datoteko:**
-```typescript
-/**
- * Feature Flags - Enable/Disable optional features
- */
-export const FEATURE_FLAGS = {
-  // Optional features - disabled by default
-  ENABLE_MCP: process.env.NEXT_PUBLIC_ENABLE_MCP === 'true',
-  ENABLE_RAG: process.env.NEXT_PUBLIC_ENABLE_RAG === 'true',
-  ENABLE_FILE_UPLOAD: process.env.NEXT_PUBLIC_ENABLE_FILE_UPLOAD === 'true',
+Feature Flags sistem že obstaja v:
 
-  // Features that can be removed entirely
-  ENABLE_PLUGINS: false,
-  ENABLE_IMAGE_GENERATION: false,
-  ENABLE_VOICE: false,
-  ENABLE_WEB_SEARCH: false,
-  ENABLE_CHAT_GROUPS: false,
-  ENABLE_MARKETPLACE: false,
-} as const;
+- `src/config/featureFlags/schema.ts` - schema z vsemi flags
+- `src/store/global/slices/settings/initialState.ts` - DEFAULT_FEATURE_FLAGS
+- `.env.example` - FEATURE_FLAGS dokumentacija
+- `src/components/FeatureGuard/index.tsx` - helper komponenta
 
-export type FeatureFlag = keyof typeof FEATURE_FLAGS;
+### 0.1 Feature Flags ki jih uporabljamo
 
-/**
- * Check if a feature is enabled
- */
-export const isFeatureEnabled = (feature: FeatureFlag): boolean => {
-  return FEATURE_FLAGS[feature];
-};
-```
-
-### 0.2 Posodobi environment variables
-**Lokacija**: `.env.example`
-
-**Dodaj:**
-```env
-# Optional Features (disabled by default)
-NEXT_PUBLIC_ENABLE_MCP=false
-NEXT_PUBLIC_ENABLE_RAG=false
-NEXT_PUBLIC_ENABLE_FILE_UPLOAD=false
-```
-
-### 0.3 Ustvari Feature Guard komponento
-**Lokacija**: `src/components/FeatureGuard/index.tsx`
+**Že implementirani flags:**
 
 ```typescript
-import { type FC, type ReactNode } from 'react';
-import { isFeatureEnabled, type FeatureFlag } from '@/config/featureFlags';
-
-interface FeatureGuardProps {
-  feature: FeatureFlag;
-  children: ReactNode;
-  fallback?: ReactNode;
+{
+  enableMCP: false,                 // MCP server integration
+  enableKnowledgeBase: false,       // RAG / Knowledge base
+  enableFileUpload: false,          // File upload functionality
+  showMarket: false,                // Marketplace / Discover
+  showDalle: false,                 // DALL-E image generation
+  showAiImage: false,               // AI Image generation
+  showSpeechToText: false,          // Speech to text
+  showChangelog: false,             // Changelog page
 }
+```
 
-export const FeatureGuard: FC<FeatureGuardProps> = ({
-  feature,
-  children,
-  fallback = null
-}) => {
-  if (!isFeatureEnabled(feature)) {
-    return <>{fallback}</>;
+**Kako uporabljati:**
+
+```typescript
+// V React komponenti (client-side)
+import { featureFlagsSelectors, useGlobalStore } from '@/store/global';
+
+const showMarket = useGlobalStore(featureFlagsSelectors.showMarket);
+if (!showMarket) return null; // Skrij UI element
+
+// V Server Component
+import { serverFeatureFlags } from '@/config/featureFlags';
+
+const flags = serverFeatureFlags();
+if (!flags.showMarket) {
+  notFound(); // Redirect to 404
+}
+```
+
+---
+
+## 📦 FAZA 1: Skrivanje UI Navigation Links
+
+**Cilj**: Skrij navigacijske linke za funkcionalnosti, ki jih ne želimo prikazat
+
+### 1.1 Desktop Top Actions
+
+**Lokacija**: `src/app/[variants]/(main)/_layout/Desktop/TopActions.tsx`
+
+**Dodaj feature flag checks:**
+
+```typescript
+// Že implementirano - preveri da deluje pravilno
+const showMarket = useGlobalStore(featureFlagsSelectors.showMarket);
+const showAiImage = useGlobalStore(featureFlagsSelectors.showAiImage);
+const enableKnowledgeBase = useGlobalStore(featureFlagsSelectors.enableKnowledgeBase);
+
+// Market link
+{showMarket && <Link to="/discover">...</Link>}
+
+// AI Image link
+{showAiImage && <Link to="/image">...</Link>}
+
+// Knowledge Base link
+{enableKnowledgeBase && <Link to="/knowledge">...</Link>}
+```
+
+### 1.2 Mobile Navigation
+
+**Lokacija**: `src/app/[variants]/(main)/(mobile)/me/(home)/features/useCategory.tsx`
+
+**Dodaj feature flag checks:**
+
+```typescript
+const showChangelog = useGlobalStore(featureFlagsSelectors.showChangelog);
+const showMarket = useGlobalStore(featureFlagsSelectors.showMarket);
+const showAiImage = useGlobalStore(featureFlagsSelectors.showAiImage);
+
+const categories = [
+  // Profile - vedno prikaži
+  { icon: User, key: TabsEnum.Profile, label: t('profile') },
+
+  // Changelog - samo če enabled
+  ...(showChangelog ? [{ icon: Changelog, key: TabsEnum.Changelog, label: t('changelog') }] : []),
+
+  // Market - samo če enabled
+  ...(showMarket ? [{ icon: Store, key: TabsEnum.Market, label: t('market') }] : []),
+
+  // Settings - vedno prikaži
+  { icon: Settings, key: TabsEnum.Settings, label: t('settings') },
+];
+```
+
+### 1.3 Settings Navigation
+
+**Lokacija**: `src/app/[variants]/(main)/settings/hooks/useCategory.tsx`
+
+**Dodaj feature flag checks:**
+
+```typescript
+const showAiImage = useGlobalStore(featureFlagsSelectors.showAiImage);
+const showSpeechToText = useGlobalStore(featureFlagsSelectors.showSpeechToText);
+
+const settingsCategories = [
+  { key: SettingsTabs.Common, label: t('tab.common'), icon: Settings },
+  { key: SettingsTabs.Provider, label: t('tab.llm'), icon: Bot },
+  { key: SettingsTabs.Agent, label: t('tab.agent'), icon: BotMessageSquare },
+
+  // Image settings - samo če enabled
+  ...(showAiImage ? [{ key: SettingsTabs.Image, label: t('tab.image'), icon: Image }] : []),
+
+  // TTS settings - samo če enabled
+  ...(showSpeechToText ? [{ key: SettingsTabs.TTS, label: t('tab.tts'), icon: Mic }] : []),
+
+  { key: SettingsTabs.About, label: t('tab.about'), icon: Info },
+];
+```
+
+### 1.4 Update DEFAULT_FEATURE_FLAGS
+
+**Lokacija**: `src/config/featureFlags/schema.ts`
+
+**Nastavi vse na `false` za minimal chat:**
+
+```typescript
+export const DEFAULT_FEATURE_FLAGS = {
+  enableMCP: false,
+  enableKnowledgeBase: false,
+  enableFileUpload: false,
+  showMarket: false,
+  showDalle: false,
+  showAiImage: false,
+  showSpeechToText: false,
+  showChangelog: false,
+} satisfies FeatureFlags;
+```
+
+---
+
+## 📦 FAZA 2: Skrivanje Page Routes (Layout Guards)
+
+**Cilj**: Dodaj feature flag checks v layout.tsx fajle, da preprečiš dostop do disabled strani
+
+### 2.1 Discover / Market Page
+
+**Lokacija**: `src/app/[variants]/(main)/discover/_layout/DiscoverLayout.tsx`
+
+**Dodaj guard na vrhu layout:**
+
+```typescript
+import { notFound } from 'next/navigation';
+import { serverFeatureFlags } from '@/config/featureFlags';
+
+export default function DiscoverLayout({ children }: { children: React.ReactNode }) {
+  const flags = serverFeatureFlags();
+
+  // Če market ni enabled, preusmeri na 404
+  if (!flags.showMarket) {
+    notFound();
   }
 
   return <>{children}</>;
-};
-```
-
-### 0.4 Implementacija napotki
-**Uporaba Feature Flags:**
-1. Za UI komponente: uporabi `<FeatureGuard>` komponento
-2. Za API routers: dodaj checks na začetku endpoint-ov
-3. Za services: lazy load samo če je feature enabled
-4. Za database modele: obdrži sheme, vendar ne uporabljaj če disabled
-
-**Primer uporabe:**
-```typescript
-// V React komponenti
-<FeatureGuard feature="ENABLE_MCP">
-  <MCPSettings />
-</FeatureGuard>
-
-// V tRPC router
-if (!isFeatureEnabled('ENABLE_RAG')) {
-  throw new TRPCError({ code: 'FORBIDDEN', message: 'RAG is disabled' });
-}
-
-// V service
-if (isFeatureEnabled('ENABLE_MCP')) {
-  await initializeMCP();
 }
 ```
 
----
+### 2.2 Image Generation Page
 
-## 📦 FAZA 1: Odstranitev UI strani in routing-a
+**Lokacija**: `src/app/[variants]/(main)/image/layout.tsx`
 
-### 1.1 Odstrani glavne strani
-**Lokacija**: `src/app/[variants]/(main)/`
+**Dodaj guard:**
 
-**Odstrani celotne direktorije:**
-```
-✗ discover/          # Marketplace za assistants, models, providers
-✗ image/            # Text-to-image generacija
-✗ profile/          # User profile (lahko poenostaviš na basic verzijo)
-✗ labs/             # Experimental features
-✗ changelog/        # Changelog
-```
-
-**Obdrži z Feature Guards:**
-```
-~ knowledge/         # Obdrži, dodaj FeatureGuard za ENABLE_RAG
-```
-
-**Ohrani:**
-```
-✓ chat/             # Osnovni chat
-✓ settings/         # Poenostavljena verzija (samo OpenAI provider, common, agent)
-```
-
-### 1.2 Poenostavi Settings strani
-**Lokacija**: `src/app/[variants]/(main)/settings/`
-
-**Odstrani:**
-```
-✗ provider/ (vse razen openai page)
-✗ modal-image/      # Image generation settings
-✗ tts/              # Text-to-speech settings
-✗ storage/          # Storage settings (ker imaš samo client DB)
-```
-
-**Poenostavi:**
-```
-~ provider/         # Obdrži samo OpenAI konfiguracija
-~ common/           # Obdrži appearance, language, hotkeys
-~ agent/            # Obdrži default agent settings
-~ sync/             # Odstrani (ni server sync)
-```
-
----
-
-## 📦 FAZA 2: Odstranitev Features komponent
-
-### 2.1 Odstrani celotne feature module
-**Lokacija**: `src/features/`
-
-**Odstrani:**
-```
-✗ PluginStore/
-✗ PluginManager/
-✗ PluginGateway/
-✗ ImageGeneration/
-✗ VoiceChat/
-✗ WebSearch/
-✗ ChatGroup/
-✗ DiscoverMarket/
-✗ Labs/
-✗ Changelog/
-```
-
-**Obdrži z Feature Guards (za opcijske funkcionalnosti):**
-```
-~ MCP/               # Obdrži, dodaj guards za ENABLE_MCP
-~ KnowledgeBase/     # Obdrži, dodaj guards za ENABLE_RAG
-~ FileManager/       # Obdrži, dodaj guards za ENABLE_FILE_UPLOAD
-~ FileViewer/        # Obdrži, dodaj guards za ENABLE_FILE_UPLOAD
-```
-
-**Ohrani in preveri:**
-```
-✓ Conversation/      # Chat UI
-✓ ChatInput/         # Input komponenta
-✓ ChatItem/          # Message display
-✓ SessionList/       # Session sidebar
-✓ TopicList/         # Topics
-✓ AgentConfig/       # Agent nastavitve
-✓ ShareModal/        # Za export funkcionalnost
-```
-
----
-
-## 📦 FAZA 3: Čiščenje Database modelov
-
-### 3.1 Odstrani neuporabljene modele
-**Lokacija**: `packages/database/src/models/`
-
-**Odstrani:**
-```
-✗ plugin.ts
-✗ generation.ts
-✗ generationBatch.ts
-✗ generationTopic.ts
-✗ chatGroup.ts
-```
-
-**Obdrži (za opcijske funkcionalnosti - MCP/RAG):**
-```
-~ knowledgeBase.ts   # Za ENABLE_RAG
-~ file.ts            # Za ENABLE_FILE_UPLOAD in ENABLE_RAG
-~ document.ts        # Za ENABLE_RAG
-~ chunk.ts           # Za ENABLE_RAG
-~ embedding.ts       # Za ENABLE_RAG
-```
-
-**Ohrani:**
-```
-✓ user.ts
-✓ session.ts
-✓ sessionGroup.ts
-✓ message.ts
-✓ topic.ts
-✓ thread.ts
-✓ agent.ts
-✓ aiProvider.ts (samo OpenAI)
-✓ aiModel.ts (samo OpenAI models)
-✓ asyncTask.ts (za export)
-✓ oauth.ts (za auth)
-```
-
-### 3.2 Poenostavi Database schema
-**Lokacija**: `packages/database/src/schemas/`
-
-**Odstrani sheme za:**
-- plugin
-- generation, generationBatch, generationTopic
-- chatGroup
-
-**Obdrži sheme za RAG/MCP** (disabled po defaultu, vendar dostopne če vključiš):
-- knowledgeBase, file, document, chunk, embedding
-
----
-
-## 📦 FAZA 4: Čiščenje Services
-
-### 4.1 Odstrani client services
-**Lokacija**: `src/services/`
-
-**Odstrani:**
-```
-✗ plugin/
-✗ image/
-✗ voice/
-✗ search/
-✗ chatGroup/
-✗ discover/
-✗ market/
-```
-
-**Obdrži z Feature Guards:**
-```
-~ knowledgeBase/     # Za ENABLE_RAG
-~ file/              # Za ENABLE_FILE_UPLOAD in ENABLE_RAG
-```
-
-**Ohrani:**
-```
-✓ session/
-✓ message/
-✓ topic/
-✓ thread/
-✓ agent/
-✓ user/
-✓ config/
-✓ export/
-✓ import/
-```
-
-### 4.2 Odstrani server services
-**Lokacija**: `src/server/services/`
-
-**Odstrani:**
-```
-✗ comfyui.ts
-✗ discover.ts
-✗ generation.ts
-✗ search.ts
-```
-
-**Obdrži z Feature Guards:**
-```
-~ chunk.ts           # Za ENABLE_RAG
-~ document.ts        # Za ENABLE_RAG
-~ file.ts            # Za ENABLE_FILE_UPLOAD in ENABLE_RAG
-~ mcp.ts             # Za ENABLE_MCP
-```
-
-**Ohrani:**
-```
-✓ user.ts
-✓ agent.ts
-✓ aiChat.ts
-✓ nextAuthUser.ts (za auth)
-✓ oidc.ts (za auth)
-```
-
----
-
-## 📦 FAZA 5: Čiščenje API Routers
-
-### 5.1 Poenostavi tRPC routers
-**Lokacija**: `src/server/routers/lambda/`
-
-**Odstrani:**
-```
-✗ plugin.ts
-✗ generation.ts
-✗ image.ts
-✗ market.ts
-✗ chatGroup.ts
-```
-
-**Obdrži z Feature Guards:**
-```
-~ knowledgeBase.ts   # Dodaj guards za ENABLE_RAG
-~ chunk.ts           # Dodaj guards za ENABLE_RAG
-~ document.ts        # Dodaj guards za ENABLE_RAG
-~ file.ts            # Dodaj guards za ENABLE_FILE_UPLOAD
-```
-
-**Ohrani:**
-```
-✓ session.ts
-✓ message.ts
-✓ topic.ts
-✓ thread.ts
-✓ agent.ts
-✓ user.ts
-✓ config.ts
-✓ exporter.ts
-✓ importer.ts
-✓ aiModel.ts (poenostavljen za samo OpenAI)
-✓ aiProvider.ts (poenostavljen za samo OpenAI)
-✓ aiChat.ts
-```
-
-### 5.2 Odstrani async router features
-**Lokacija**: `src/server/routers/async/`
-
-**Odstrani:**
-```
-✗ generation.ts
-```
-
-**Obdrži z Feature Guards:**
-```
-~ rag.ts             # Dodaj guards za ENABLE_RAG
-~ file.ts            # Dodaj guards za ENABLE_FILE_UPLOAD
-```
-
-### 5.3 Poenostavi tools router
-**Lokacija**: `src/server/routers/tools/`
-
-**Odstrani:**
-```
-✗ search.ts
-```
-
-**Obdrži z Feature Guards:**
-```
-~ mcp.ts             # Dodaj guards za ENABLE_MCP
-```
-
----
-
-## 📦 FAZA 6: Čiščenje WebAPI (REST endpoints)
-
-### 6.1 Odstrani REST API endpoints
-**Lokacija**: `src/app/(backend)/webapi/`
-
-**Odstrani:**
-```
-✗ plugin/
-✗ text-to-image/
-✗ create-image/
-✗ tts/
-✗ stt/
-✗ search/
-```
-
-**Ohrani:**
-```
-✓ chat/[provider]/    # Poenostavi - samo OpenAI
-✓ models/[provider]/  # Poenostavi - samo OpenAI
-✓ tokenizer/
-```
-
-### 6.2 Odstrani chat providerje
-**Lokacija**: `src/app/(backend)/webapi/chat/`
-
-**Odstrani vse razen:**
-```
-✓ openai/
-```
-
-Odstrani:
-```
-✗ anthropic/, azure/, bedrock/, google/, ollama/, itd.
-```
-
----
-
-## 📦 FAZA 7: Poenostavitev Model Runtime
-
-### 7.1 Odstrani nepotrebne AI providerje
-**Lokacija**: `packages/model-runtime/src/providers/`
-
-**Obdrži samo:**
-```
-✓ openai/
-```
-
-**Odstrani vse ostale:**
-```
-✗ anthropic/, azure/, bedrock/, google/, ollama/, mistral/, itd.
-```
-
-### 7.2 Posodobi AI Model Bank
-**Lokacija**: `packages/model-bank/src/aiModels/`
-
-**Obdrži samo:**
-```
-✓ openai.ts
-```
-
-Odstrani vse ostale provider config fajle.
-
----
-
-## 📦 FAZA 8: Čiščenje Third-party integracij
-
-### 8.1 Obdrži libs za opcijske funkcionalnosti
-**Lokacija**: `src/libs/`
-
-**Odstrani:**
-```
-(nič - vse potrebne libs ohranjamo za opcijske funkcionalnosti)
-```
-
-**Obdrži (za opcijske funkcionalnosti):**
-```
-~ langchain/        # Za ENABLE_RAG
-~ mcp/              # Za ENABLE_MCP
-```
-
-**Ohrani:**
-```
-✓ nextAuth/         # Auth
-✓ clerk/            # Auth (če uporabljaš)
-✓ swr/              # Data fetching
-✓ traces/           # Telemetry (opcijsko)
-✓ analytics/        # Analytics (opcijsko)
-```
-
-### 8.2 Odstrani server modules
-**Lokacija**: `src/server/modules/`
-
-**Odstrani:**
-```
-✗ AssistantStore/
-✗ PluginStore/
-✗ ElectronIPCClient/ (če ne potrebuješ desktop app)
-```
-
-**Obdrži (za opcijske funkcionalnosti):**
-```
-~ ContentChunk/     # Za ENABLE_RAG
-~ S3/               # Za ENABLE_FILE_UPLOAD (opcijsko)
-```
-
-**Ohrani:**
-```
-✓ ModelRuntime/     # Poenostavljen za samo OpenAI
-✓ KeyVaultsEncrypt/ # Za API key encryption
-✓ EdgeConfig/       # Konfiguracija
-```
-
----
-
-## 📦 FAZA 9: Odstranitev Server DB funkcionalnosti
-
-### 9.1 Odstrani PostgreSQL/Neon integration
-**Lokacija**: Različne lokacije
-
-**Posodobitve:**
-```
-1. packages/database/drizzle.config.ts
-   - Odstrani PostgreSQL config
-
-2. src/services/*/server.ts
-   - Odstrani vse server-side DB operacije
-   - Vse operacije naj gredo skozi client.ts z PGLite
-
-3. src/server/routers/
-   - Poenostavi vse routerje da uporabljajo samo client DB
-
-4. .env variables
-   - Odstrani DATABASE_URL, NEON_* variables
-```
-
-### 9.2 Poenostavi Database Provider
-**Lokacija**: `packages/database/src/client.ts`
-
-**Ohrani samo PGLite:**
 ```typescript
-// Odstrani PostgreSQL client logic
-// Obdrži samo PGLite initialization
+import { notFound } from 'next/navigation';
+import { serverFeatureFlags } from '@/config/featureFlags';
+
+export default function ImageLayout({ children }: { children: React.ReactNode }) {
+  const flags = serverFeatureFlags();
+
+  if (!flags.showAiImage && !flags.showDalle) {
+    notFound();
+  }
+
+  return <>{children}</>;
+}
+```
+
+### 2.3 Changelog Page
+
+**Lokacija**: `src/app/[variants]/(main)/changelog/layout.tsx`
+
+**Dodaj guard:**
+
+```typescript
+import { notFound } from 'next/navigation';
+import { serverFeatureFlags } from '@/config/featureFlags';
+
+export default function ChangelogLayout({ children }: { children: React.ReactNode }) {
+  const flags = serverFeatureFlags();
+
+  if (!flags.showChangelog) {
+    notFound();
+  }
+
+  return <>{children}</>;
+}
+```
+
+### 2.4 Knowledge Base Page
+
+**Lokacija**: `src/app/[variants]/(main)/knowledge/layout.tsx`
+
+**Preveri da že ima guard:**
+
+```typescript
+// Že implementirano - samo preveri
+const flags = serverFeatureFlags();
+
+if (!flags.enableKnowledgeBase) {
+  notFound();
+}
 ```
 
 ---
 
-## 📦 FAZA 10: Čiščenje Desktop App (opcijsko)
+## 📦 FAZA 3: Settings Page Guards
 
-**Ali želiš ohraniti desktop app?** Če ne:
+**Cilj**: Skrij settings strani za disabled features
 
-**Lokacija**: `apps/desktop/`
+### 3.1 Image Settings
 
-**Odstrani celoten desktop app:**
+**Lokacija**: `src/app/[variants]/(main)/settings/image/index.tsx`
+
+**Dodaj guard na začetek:**
+
+```typescript
+'use client';
+
+import { notFound } from 'next/navigation';
+
+import { featureFlagsSelectors, useGlobalStore } from '@/store/global';
+
+export default function ImageSettings() {
+  const showAiImage = useGlobalStore(featureFlagsSelectors.showAiImage);
+
+  if (!showAiImage) {
+    notFound();
+  }
+
+  // Existing code...
+}
 ```
-✗ apps/desktop/
+
+### 3.2 TTS Settings
+
+**Lokacija**: `src/app/[variants]/(main)/settings/tts/index.tsx`
+
+**Dodaj guard:**
+
+```typescript
+'use client';
+
+import { notFound } from 'next/navigation';
+
+import { featureFlagsSelectors, useGlobalStore } from '@/store/global';
+
+export default function TTSSettings() {
+  const showSpeechToText = useGlobalStore(featureFlagsSelectors.showSpeechToText);
+
+  if (!showSpeechToText) {
+    notFound();
+  }
+
+  // Existing code...
+}
 ```
 
-**Posodobi:**
+### 3.3 Storage Settings
+
+**Opomba**: Storage settings lahko obdržimo, ker PGLite vedno obstaja.
+Ampak če želimo skriti, dodamo guard podobno kot zgoraj.
+
+---
+
+## 📦 FAZA 4: Skrivanje Modal Routes
+
+**Cilj**: Skrij modal routes za disabled features
+
+### 4.1 Profile Modal
+
+**Lokacija**: `src/app/[variants]/(main)/profile/layout.tsx`
+
+**Opcijsko** - če želimo skriti profile page:
+
+```typescript
+// Lahko obdržimo profile - uporabno za API keys
+// Ali dodamo guard če želimo skriti
 ```
-1. package.json - odstrani desktop scripts
-2. tsconfig.json - odstrani desktop references
-3. turbo.json - odstrani desktop build steps
+
+### 4.2 Labs Modal
+
+**Lokacija**: `src/app/[variants]/(main)/labs/`
+
+**Dodaj guard** (če želimo skriti experimental features):
+
+```typescript
+// Ustvari layout.tsx z notFound() guardom
+// ali ga pusti brez guarda če želimo obdržati
 ```
 
 ---
 
-## 📦 FAZA 11: Čiščenje package.json dependencies
+## 📦 FAZA 5: Provider Settings Simplification
 
-### 11.1 Poenostavi npm pakete
+**Cilj**: V provider settings skrij vse razen OpenAI
 
-**Odstrani:**
-```
-✗ comfyui-*             # Image generation
-✗ electron-*            # Desktop (če odstraniš)
-✗ sharp, jimp           # Image processing (če ne rabiš za file upload)
-✗ cheerio               # Web scraping
-✗ puppeteer             # Browser automation
-```
+### 5.1 Provider List
 
-**Obdrži (za opcijske funkcionalnosti - MCP/RAG):**
-```
-~ @langchain/*          # Za ENABLE_RAG
-~ @modelcontextprotocol/* # Za ENABLE_MCP
-~ @aws-sdk/*            # Za ENABLE_FILE_UPLOAD (če uporabiš S3)
-~ pdf-parse             # Za ENABLE_RAG (file parsing)
-~ mammoth               # Za ENABLE_RAG (file parsing)
-~ unstructured-client   # Za ENABLE_RAG (document parsing)
+**Lokacija**: `src/app/[variants]/(main)/settings/provider/`
+
+**Filter providerjev po feature flags:**
+
+```typescript
+// V provider settings list komponenti
+const enabledProviders = allProviders.filter((provider) => {
+  // Za minimal chat, samo OpenAI
+  // Ostali providers se ne prikažejo v UI
+  return provider.id === 'openai';
+});
 ```
 
-**Ohrani:**
-```
-✓ next, react, react-dom
-✓ @trpc/*
-✓ zustand
-✓ swr
-✓ @lobehub/ui
-✓ antd, antd-style
-✓ @auth/*               # Auth packages
-✓ openai                # OpenAI SDK
-✓ @electric-sql/pglite  # Client DB
-✓ drizzle-orm
-✓ react-i18next
-```
-
-**Napotki:**
-- Dependencies za MCP/RAG ostanejo v package.json
-- Ker so disabled po defaultu, lahko kasneje enostavno vključiš funkcionalnost brez reinstall
-- Če želiš zmanjšati bundle size, lahko uporabiš dynamic imports za MCP/RAG kodo
+**Opomba**: Koda za ostale providerje ostane, samo UI se filtrira.
 
 ---
 
-## 📦 FAZA 12: Posodobitev konfiguracije
+## 📦 FAZA 6: Mobile Profile Tab Cleanup
 
-### 12.1 Posodobi environment variables
-**Lokacija**: `.env.example`
+**Cilj**: Poenostavi mobile profile tabs
 
-**Poenostavi na:**
+### 6.1 Mobile Profile Categories
+
+**Lokacija**: `src/app/[variants]/(main)/(mobile)/me/(home)/features/useCategory.tsx`
+
+**Uporabi feature flags za filtriranje:**
+
+```typescript
+const showChangelog = useGlobalStore(featureFlagsSelectors.showChangelog);
+
+// Filter kategorij glede na feature flags
+const categories = BASE_CATEGORIES.filter((cat) => {
+  if (cat.key === 'changelog') return showChangelog;
+  return true;
+});
+```
+
+---
+
+## 📦 FAZA 7: Testing & Verification
+
+### 7.1 Type Check
+
+```bash
+npm run type-check
+```
+
+**Pričakovano**: Ni errorjev ✅
+
+### 7.2 Build Test
+
+```bash
+npm run build
+```
+
+**Pričakovano**: Uspešen build ✅
+
+### 7.3 Manual Testing
+
+**Checklist:**
+
+- [ ] Discover/Market link ni viden v navigaciji
+- [ ] Image link ni viden v navigaciji
+- [ ] Changelog link ni viden v navigaciji
+- [ ] Direkten dostop do `/discover` → 404
+- [ ] Direkten dostop do `/image` → 404
+- [ ] Direkten dostop do `/changelog` → 404
+- [ ] Settings → Image tab ni viden
+- [ ] Settings → TTS tab ni viden
+- [ ] Chat functionality deluje normalno
+- [ ] OpenAI provider deluje normalno
+- [ ] Agenti delujejo normalno
+- [ ] Export/Import deluje normalno
+
+### 7.4 Vključitev Features (Test Reversibility)
+
+**Test da lahko enostavno vključiš features:**
+
+1. Nastavi v `.env.local`:
+
 ```env
-# OpenAI (required)
-OPENAI_API_KEY=
-
-# NextAuth (za authentication)
-NEXTAUTH_URL=
-NEXTAUTH_SECRET=
-
-# Auth providers (opcijsko)
-CLERK_*
-LOGTO_*
-AUTH0_*
-
-# Optional Features (disabled by default)
-NEXT_PUBLIC_ENABLE_MCP=false
-NEXT_PUBLIC_ENABLE_RAG=false
-NEXT_PUBLIC_ENABLE_FILE_UPLOAD=false
-
-# S3 Upload (samo če vključiš ENABLE_FILE_UPLOAD)
-# S3_*
-
-# Telemetry (opcijsko)
-NEXT_PUBLIC_ANALYTICS_*
+FEATURE_FLAGS={"showMarket":true,"showAiImage":true,"showChangelog":true}
 ```
 
-**Odstrani:**
-```
-DATABASE_URL
-NEON_*
-COMFYUI_*
-Vse ostale AI provider API keys (razen OpenAI)
-```
+2. Rebuild:
 
-**Napotki:**
-- Ko želiš vključiti MCP, nastavi `NEXT_PUBLIC_ENABLE_MCP=true`
-- Ko želiš vključiti RAG, nastavi `NEXT_PUBLIC_ENABLE_RAG=true`
-- Ko želiš vključiti file upload, nastavi `NEXT_PUBLIC_ENABLE_FILE_UPLOAD=true`
-
-### 12.2 Posodobi next.config.ts
-**Odstrani:**
-- S3 upload config
-- Desktop app config
-- Image optimization za external domains (če ni potrebno)
-
----
-
-## 📦 FAZA 13: Posodobitev Store (Zustand)
-
-### 13.1 Odstrani nepotrebne stores
-**Lokacija**: `src/store/`
-
-**Odstrani:**
-```
-✗ plugin/
-✗ image/
-✗ voice/
-✗ chatGroup/
-✗ market/
-```
-
-**Obdrži z conditional loading:**
-```
-~ knowledgeBase/     # Za ENABLE_RAG
-~ file/              # Za ENABLE_FILE_UPLOAD
-```
-
-**Ohrani:**
-```
-✓ session/
-✓ message/
-✓ topic/
-✓ thread/
-✓ agent/
-✓ user/
-✓ global/
-✓ chat/
-```
-
----
-
-## 📦 FAZA 14: i18n Čiščenje
-
-### 14.1 Odstrani nepotrebne translation keys
-**Lokacija**: `src/locales/default/`
-
-**Odstrani namespaces za:**
-```
-✗ plugin.ts
-✗ image.ts
-✗ voice.ts
-✗ market.ts
-✗ discover.ts
-```
-
-**Obdrži (za opcijske funkcionalnosti):**
-```
-~ knowledgeBase.ts   # Za ENABLE_RAG
-~ file.ts            # Za ENABLE_FILE_UPLOAD
-~ mcp.ts             # Za ENABLE_MCP (če obstaja)
-```
-
-**Posodobi:**
-```
-~ settings.ts        # Odstrani keys za odstranjene settings strani
-~ common.ts          # Čisti unused keys
-```
-
-**Napotki:**
-- Translation keys za MCP/RAG/File ostanejo
-- Ko je feature disabled, se enostavno ne prikažejo
-- Ni potrebe za conditional loading translations
-
----
-
-## 📦 FAZA 15: Čiščenje komponent
-
-### 15.1 Odstrani unused components
-**Lokacija**: `src/components/`
-
-**Preglej in odstrani komponente povezane z:**
-- Plugin UI
-- Image generation UI
-- Voice UI
-- Market/Discovery UI
-- Chat groups UI
-
-**Obdrži (za opcijske funkcionalnosti):**
-- Knowledge base UI (za ENABLE_RAG)
-- File upload UI (za ENABLE_FILE_UPLOAD)
-- MCP UI (za ENABLE_MCP)
-
-**Ohrani:**
-- Layout komponente
-- Chat komponente
-- Session/Topic komponente
-- Agent komponente
-- Common UI komponente
-- FeatureGuard komponenta (nova v FAZI 0)
-
----
-
-## 📦 FAZA 16: Testing & Cleanup
-
-### 16.1 Odstrani stare teste
-**Odstrani teste za:**
-```
-✗ Plugin tests
-✗ Image generation tests
-✗ Voice tests
-✗ Server DB tests
-✗ Chat groups tests
-```
-
-**Obdrži teste (za opcijske funkcionalnosti):**
-```
-~ Knowledge base tests (za ENABLE_RAG)
-~ File tests (za ENABLE_FILE_UPLOAD)
-~ MCP tests (za ENABLE_MCP)
-```
-
-**Posodobi:**
-- Dodaj teste za Feature Flags sistem
-- Preveri da testi preverijo guards ko je feature disabled
-
-### 16.2 Run type checking
 ```bash
-bun run type-check
+npm run build
 ```
 
-Odpravi vse type errore ki nastanejo zaradi odstranjenih funkcionalnosti.
+3. Preveri:
 
-### 16.3 Run tests
-```bash
-bunx vitest run
-```
-
-Odpravi ali odstrani failing teste.
-
----
-
-## 📦 FAZA 17: Build & Verification
-
-### 17.1 Build projekt
-```bash
-bun run build
-```
-
-### 17.2 Preveri funkcionalnosti
-**Manual testing checklist:**
-- [ ] Login deluje (NextAuth/Clerk/Logto)
-- [ ] Ustvarjanje nove session
-- [ ] Pošiljanje sporočil z OpenAI
-- [ ] Ustvarjanje agentov
-- [ ] Organizacija sessions v groups
-- [ ] Ustvarjanje topics/threads
-- [ ] Export chat history
-- [ ] Import chat history
-- [ ] Dark/light mode
-- [ ] Mobile responsive
-- [ ] Settings strani delujejo
+- [ ] Market link se prikaže v navigaciji
+- [ ] Image link se prikaže v navigaciji
+- [ ] Changelog link se prikaže v navigaciji
+- [ ] `/discover` page deluje
+- [ ] `/image` page deluje
+- [ ] `/changelog` page deluje
 
 ---
 
 ## 🎯 Končni rezultat
 
-Po izvedbi tega načrta boš imel **minimalno chat aplikacijo** z:
+### ✅ Prednosti UI-Only pristopa
+
+1. **Ni Code Breaks**
+   - Vsa koda ostane → ni import errorjev
+   - Vse odvisnosti ostanejo → ni missing dependencies
+   - Database schemas ostanejo → ni migration issues
+
+2. **Enostavno Revertat**
+   - Samo toggling flags v `.env`
+   - Ni potrebe za git revert ali restore
+   - Zero downtime
+
+3. **Production Optimizacija**
+   - Next.js tree-shaking odstrani neporabljeno kodo
+   - Bundle size se zmanjša avtomatično
+   - Lazy loading za disabled features
+
+4. **Maintainability**
+   - Lažje testiranje (enable/disable features)
+   - Lažje debugging (koda je še vedno dostopna)
+   - Lažje nadgrajevanje (samo flag toggle)
 
 ### ✅ Funkcionalnosti
-- Osnovni chat z OpenAI modeli
-- Agenti (custom system prompts)
-- Session groups (organizacija)
-- Topics & Threads
-- Export/Import
-- Avtentikacija (NextAuth/Clerk/Logto/OIDC)
-- Dark/light mode
-- Mobile responsive
-- i18n (multi-language)
 
-### ✅ Tehnični stack
-- Next.js 15 + React 19
-- PGLite (samo client-side DB)
-- OpenAI API
-- tRPC + REST API
-- Zustand + SWR
-- @lobehub/ui + Ant Design
+Po implementaciji boš imel:
 
-### ⚡ Opcijsko (disabled po defaultu, lahko vključiš)
-- **MCP Integration** - nastavi `NEXT_PUBLIC_ENABLE_MCP=true`
-- **RAG/Knowledge Base** - nastavi `NEXT_PUBLIC_ENABLE_RAG=true`
-- **File Upload** - nastavi `NEXT_PUBLIC_ENABLE_FILE_UPLOAD=true`
+- ✅ Minimalen chat UI (samo OpenAI + basic chat)
+- ✅ Vsa koda še vedno na mestu
+- ✅ Možnost vključitve features kadarkoli
+- ✅ Produkcijski build brez neuporabljene kode (tree-shaking)
+- ✅ Zero breaking changes
+- ✅ Instant reversibility
 
-### ❌ Odstranjeno
-- ~50% kode (namesto 70%, ker ohranjamo MCP/RAG)
-- Marketplace/Discovery
-- Plugins
-- Image generation
-- Voice (TTS/STT)
-- Web search
-- Multi-agent chat groups
-- Server DB sync
-- Desktop app (opcijsko)
-- 20+ AI providers (samo OpenAI)
+### ⚡ Kako vključiti funkcionalnosti
 
----
+**Vključi Market/Discover:**
 
-## 📦 FAZA 18: Kako vključiti MCP/RAG funkcionalnosti (kasneje)
-
-### 18.1 Vključitev MCP
-**Koraki:**
-1. Nastavi environment variable:
-   ```env
-   NEXT_PUBLIC_ENABLE_MCP=true
-   ```
-
-2. Ponovno zbuildi projekt:
-   ```bash
-   bun run build
-   ```
-
-3. MCP funkcionalnosti ki postanejo dostopne:
-   - MCP server installation UI
-   - MCP tools v chat-u
-   - MCP settings v Settings strani
-   - Desktop MCP support (če imaš desktop app)
-
-### 18.2 Vključitev RAG/Knowledge Base
-**Koraki:**
-1. Nastavi environment variables:
-   ```env
-   NEXT_PUBLIC_ENABLE_RAG=true
-   NEXT_PUBLIC_ENABLE_FILE_UPLOAD=true  # Potrebno za upload documentov
-   ```
-
-2. (Opcijsko) Konfigurira S3 za file storage:
-   ```env
-   S3_ENDPOINT=
-   S3_BUCKET=
-   S3_ACCESS_KEY_ID=
-   S3_SECRET_ACCESS_KEY=
-   ```
-
-3. Ponovno zbuildi projekt:
-   ```bash
-   bun run build
-   ```
-
-4. RAG funkcionalnosti ki postanejo dostopne:
-   - Knowledge Base UI (/knowledge)
-   - File upload & management
-   - Document chunking & embeddings
-   - RAG evaluation tools
-   - Semantic search v chat-u
-
-### 18.3 Kombinacija funkcionalnosti
-**Vse tri lahko vključiš naenkrat:**
 ```env
-NEXT_PUBLIC_ENABLE_MCP=true
-NEXT_PUBLIC_ENABLE_RAG=true
-NEXT_PUBLIC_ENABLE_FILE_UPLOAD=true
+FEATURE_FLAGS={"showMarket":true}
 ```
 
-**Napotki:**
-- Feature flags so checked client-side in server-side
-- Ni potrebe za code changes - samo environment variables
-- Vse dependencies so že installirane
-- Database schemas že obstajajo
-- UI komponente so že pripravljene z FeatureGuard
+**Vključi Image Generation:**
+
+```env
+FEATURE_FLAGS={"showAiImage":true,"showDalle":true}
+```
+
+**Vključi MCP:**
+
+```env
+FEATURE_FLAGS={"enableMCP":true}
+```
+
+**Vključi RAG:**
+
+```env
+FEATURE_FLAGS={"enableKnowledgeBase":true,"enableFileUpload":true}
+```
+
+**Vključi vse:**
+
+```env
+FEATURE_FLAGS={"enableMCP":true,"enableKnowledgeBase":true,"enableFileUpload":true,"showMarket":true,"showDalle":true,"showAiImage":true,"showSpeechToText":true,"showChangelog":true}
+```
 
 ---
 
 ## 📝 Opombe
 
-1. **Backup**: Pred začetkom naredi backup ali novo git branch
-2. **Postopno**: Izvajaj faze postopno in testiraj vmesne rezultate
-3. **Dependencies**: Po odstranitvi večjih delov poženi `pnpm install` za posodobitev lock file
-4. **Type errors**: Pričakuj veliko type errors - odpravljaj jih sproti
-5. **Dead code**: Po osnovnem čiščenju lahko uporabiš tool kot `ts-prune` za identifikacijo dead code
+1. **Backup**: Ni potreben - ni brisanja kode
+2. **Postopno**: Lahko implementiraš FAZO po FAZO
+3. **Dependencies**: Ostanejo vse - ni potrebe za pnpm install
+4. **Type errors**: Pričakovano 0 errorjev
+5. **Dead code**: Production build ga samodejno odstrani
 
 ---
 
-## 🚀 Začetek implementacije
+## 🚀 Quick Start
 
-Priporočen vrstni red:
-1. Naredi novo git branch: `git checkout -b minimal-chat`
-2. **Najprej FAZA 0** - implementiraj Feature Flags sistem (KRITIČNO!)
-3. Začni z **FAZO 1** (odstranitev UI strani)
-4. Po vsaki fazi testiraj da projekt še vedno zbuilda
-5. Commitaj po vsaki uspešno zaključeni fazi
-6. Nadaljuj z naslednjimi fazami po vrsti
+```bash
+# 1. Checkout branch
+git checkout -b minimal-chat-ui-only
 
-**POMEMBNO:**
-- FAZA 0 je ključna - implementiraj Feature Flags PRED vsemi ostalimi spremembami
-- Ko odstranjuješ kodo, preveri ali je označena za odstranitev (✗) ali ohranitev z guards (~)
-- MCP in RAG kodo NE odstranjuj - samo dodaj Feature Guards
+# 2. Posodobi DEFAULT_FEATURE_FLAGS v src/config/featureFlags/schema.ts
+# Nastavi vse na false
+
+# 3. Dodaj navigation guards (FAZA 1)
+# 4. Dodaj layout guards (FAZA 2)
+# 5. Dodaj settings guards (FAZA 3)
+
+# 6. Test
+npm run type-check
+npm run build
+
+# 7. Commit
+git commit -m "feat: implement UI-only hiding with feature flags"
+```
+
+**Predviden čas**: 2-3 ure (namesto 20+ ur z brisanjem kode!)
+
+---
+
+## 🔄 Migration iz Starega Pristopa
+
+Če si že začel z brisanjem kode:
+
+```bash
+# Revertat vse spremembe
+git revert <commit-hash-of-deletions>
+
+# Začni s tem planom
+# Follow FAZA 1-7
+```
+
+---
+
+## 📊 Primerjava Pristopov
+
+| Aspect                | Code Deletion      | UI-Only Hiding              |
+| --------------------- | ------------------ | --------------------------- |
+| Čas implementacije    | 20+ ur             | 2-3 ure                     |
+| Breaking changes      | Veliko             | 0                           |
+| Type errors           | 50+                | 0                           |
+| Reversibility         | Težko (git revert) | Enostavno (toggle flag)     |
+| Bundle size reduction | Da (manual)        | Da (automatic tree-shaking) |
+| Maintainability       | Nizka              | Visoka                      |
+| Testing               | Težko              | Enostavno                   |
+| Risk                  | Visok              | Nizek                       |
+
+**Priporočilo**: Vedno uporabi UI-Only Hiding pristop! ✅
