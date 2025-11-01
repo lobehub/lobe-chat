@@ -5,6 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOCAL_DATABASE_DIR } from '@/const/dir';
 
+// Import after mocks are set up
+import { App } from '../App';
+
 // Mock electron modules
 vi.mock('electron', () => ({
   app: {
@@ -165,9 +168,6 @@ vi.mock('@/utils/next-electron-rsc', () => ({
 // Mock controllers and services
 vi.mock('../../controllers/*Ctr.ts', () => ({}));
 vi.mock('../../services/*Srv.ts', () => ({}));
-
-// Import after mocks are set up
-import { App } from '../App';
 
 describe('App - Database Lock Cleanup', () => {
   let appInstance: App;

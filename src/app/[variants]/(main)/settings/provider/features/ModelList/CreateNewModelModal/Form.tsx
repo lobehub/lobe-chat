@@ -8,6 +8,8 @@ import MaxTokenSlider from '@/components/MaxTokenSlider';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ChatModelCard } from '@/types/llm';
 
+import ExtendParamsSelect from './ExtendParamsSelect';
+
 interface ModelConfigFormProps {
   idEditable?: boolean;
   initialValues?: ChatModelCard;
@@ -101,6 +103,13 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
             name={'contextWindowTokens'}
           >
             <MaxTokenSlider />
+          </Form.Item>
+          <Form.Item
+            extra={t('providerModels.item.modelConfig.extendParams.extra')}
+            label={t('providerModels.item.modelConfig.extendParams.title')}
+            name={['settings', 'extendParams']}
+          >
+            <ExtendParamsSelect />
           </Form.Item>
           <Form.Item
             extra={t('providerModels.item.modelConfig.functionCall.extra')}

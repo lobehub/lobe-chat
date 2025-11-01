@@ -71,7 +71,7 @@ describe('LobeVercelAIGatewayAI - custom features', () => {
     it('should add reasoning_effort to providerOptions.openai', async () => {
       await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
-        model: 'o1-preview',
+        model: 'openai/o1-preview',
         reasoning_effort: 'high',
       });
 
@@ -83,7 +83,7 @@ describe('LobeVercelAIGatewayAI - custom features', () => {
     it('should handle both reasoning_effort and verbosity', async () => {
       await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
-        model: 'o1-preview',
+        model: 'openai/o1-preview',
         reasoning_effort: 'medium',
         verbosity: 'low',
       });
@@ -96,7 +96,7 @@ describe('LobeVercelAIGatewayAI - custom features', () => {
     it('should handle verbosity without reasoning_effort', async () => {
       await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
-        model: 'gpt-4o',
+        model: 'openai/gpt-4o',
         verbosity: 'high',
       });
 
@@ -138,7 +138,7 @@ describe('LobeVercelAIGatewayAI - custom features', () => {
         vi.clearAllMocks();
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'o1-preview',
+          model: 'openai/o1-preview',
           reasoning_effort: effort,
         } as any);
 

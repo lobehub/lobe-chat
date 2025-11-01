@@ -6,7 +6,7 @@ import os from 'node:os';
 import { join } from 'node:path';
 
 import { name } from '@/../../package.json';
-import { buildDir, LOCAL_DATABASE_DIR, nextStandaloneDir } from '@/const/dir';
+import { LOCAL_DATABASE_DIR, buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
