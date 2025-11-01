@@ -9,7 +9,7 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Discover = 'discover',
-  Files = 'files',
+  Files = 'knowledge',
   Image = 'image',
   Me = 'me',
   Setting = 'settings',
@@ -69,6 +69,7 @@ export interface SystemStatus {
    */
   isEnablePglite?: boolean;
   isShowCredit?: boolean;
+  knowledgeBaseModalViewMode?: 'list' | 'masonry';
   language?: LocaleMode;
   /**
    * 记住用户最后选择的图像生成模型
@@ -133,6 +134,7 @@ export const INITIAL_STATUS = {
   hideThreadLimitAlert: false,
   imagePanelWidth: 320,
   imageTopicPanelWidth: 80,
+  knowledgeBaseModalViewMode: 'list' as const,
   mobileShowTopic: false,
   noWideScreen: true,
   portalWidth: 400,

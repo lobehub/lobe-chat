@@ -36,7 +36,7 @@ export class ServerService implements IFileService {
   };
 
   getFiles = async (params: QueryFileListParams) => {
-    return lambdaClient.file.getFiles.query(params as QueryFileListSchemaType);
+    return lambdaClient.file.getKnowledgeItems.query(params as QueryFileListSchemaType);
   };
 
   getFileItem = async (id: string) => {

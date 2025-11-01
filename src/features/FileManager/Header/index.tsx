@@ -3,9 +3,9 @@
 import { ChatHeader } from '@lobehub/ui/chat';
 import { memo } from 'react';
 
+import AddButton from './AddButton';
 import FilesSearchBar from './FilesSearchBar';
 import TogglePanelButton from './TogglePanelButton';
-import UploadFileButton from './UploadFileButton';
 
 const Header = memo<{ knowledgeBaseId?: string }>(({ knowledgeBaseId }) => {
   return (
@@ -16,7 +16,7 @@ const Header = memo<{ knowledgeBaseId?: string }>(({ knowledgeBaseId }) => {
           <FilesSearchBar />
         </>
       }
-      right={<UploadFileButton knowledgeBaseId={knowledgeBaseId} />}
+      right={<AddButton knowledgeBaseId={knowledgeBaseId} />}
       styles={{
         left: { padding: 0 },
       }}

@@ -1,0 +1,71 @@
+import { ActionIcon, Dropdown, Icon } from '@lobehub/ui';
+import { Copy, MoreHorizontal, Trash2 } from 'lucide-react';
+import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+
+import { useFileStore } from '@/store/file';
+
+interface NoteActionsProps {
+  noteContent?: string;
+  noteId: string;
+  onDelete?: () => void;
+}
+
+const NoteActions = memo<NoteActionsProps>(({ noteId, noteContent, onDelete }) => {
+  const { t } = useTranslation('common');
+  const [loading, setLoading] = useState(false);
+  const removeNote = useFileStore((s) => s.removeNote);
+
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      await removeNote(noteId);
+      onDelete?.();
+    } catch (error) {
+      console.error('Failed to delete note:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (noteContent) {
+      try {
+        await navigator.clipboard.writeText(noteContent);
+      } catch (error) {
+        console.error('Failed to copy note:', error);
+      }
+    }
+  };
+
+  return (
+    <Flexbox align={'center'} horizontal onClick={(e) => e.stopPropagation()}>
+      <Dropdown
+        menu={{
+          items: [
+            {
+              icon: <Icon icon={Copy} />,
+              key: 'copy',
+              label: t('copy'),
+              onClick: handleCopy,
+            },
+            {
+              danger: true,
+              icon: <Icon icon={Trash2} />,
+              key: 'delete',
+              label: t('delete'),
+              onClick: handleDelete,
+            },
+          ],
+        }}
+        placement="bottomRight"
+        trigger={['click']}
+      >
+        <ActionIcon icon={MoreHorizontal} loading={loading} size="small" />
+      </Dropdown>
+    </Flexbox>
+  );
+});
+
+export default NoteActions;

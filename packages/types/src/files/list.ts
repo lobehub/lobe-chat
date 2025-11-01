@@ -6,14 +6,29 @@ export interface FileListItem {
   chunkCount: number | null;
   chunkingError: any | null;
   chunkingStatus?: AsyncTaskStatus | null;
+  /**
+   * Text content of the document (for notes/documents)
+   */
+  content?: string | null;
   createdAt: Date;
+  editorData?: Record<string, any> | null;
   embeddingError: any | null;
   embeddingStatus?: AsyncTaskStatus | null;
   fileType: string;
   finishEmbedding: boolean;
   id: string;
+  /**
+   * Metadata (for notes/documents)
+   */
+  metadata?: Record<string, any> | null;
   name: string;
   size: number;
+  /**
+   * Source type to distinguish between files and documents
+   * - 'file': from files table
+   * - 'document': from documents table (notes)
+   */
+  sourceType: 'file' | 'document';
   updatedAt: Date;
   url: string;
 }

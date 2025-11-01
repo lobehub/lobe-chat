@@ -28,6 +28,19 @@ export default {
       uploadFile: '上传文件',
       uploadFolder: '上传文件夹',
     },
+    newNoteButton: '新建笔记',
+    newNoteDialog: {
+      cancel: '取消',
+      editTitle: '编辑笔记',
+      emptyContent: '笔记内容不能为空',
+      loadError: '加载笔记失败,请重试',
+      loading: '加载中...',
+      save: '保存',
+      saveError: '保存笔记失败,请重试',
+      saveSuccess: '笔记保存成功',
+      title: '新建笔记',
+      updateSuccess: '笔记更新成功',
+    },
     uploadButton: '上传',
   },
   knowledgeBase: {
@@ -58,6 +71,19 @@ export default {
     },
     title: '当前部署模式不支持文件管理',
   },
+  notesEditor: {
+    addIcon: '添加图标',
+    emojiPicker: {
+      tooltip: '选择图标',
+    },
+    titlePlaceholder: '无标题',
+  },
+  notesList: {
+    empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
+    noResults: '未找到匹配的笔记',
+    selectNote: '选择一个笔记开始编辑',
+    untitled: '无标题',
+  },
   preview: {
     downloadFile: '下载文件',
     unsupportedFileAndContact: '此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>',
@@ -68,6 +94,8 @@ export default {
     audios: '语音',
     documents: '文档',
     images: '图片',
+    moreTypes: '更多类型',
+    notes: '笔记',
     videos: '视频',
     websites: '网页',
   },

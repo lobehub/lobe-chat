@@ -54,11 +54,15 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
   const [viewConfig, setViewConfig] = useState({ showFilesInKnowledgeBase: false });
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isMasonryReady, setIsMasonryReady] = useState(false);
 
   const viewMode = useGlobalStore((s) => s.status.fileManagerViewMode || 'list') as ViewMode;
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
   const setViewMode = (mode: ViewMode) => {
     setIsTransitioning(true);
+    if (mode === 'masonry') {
+      setIsMasonryReady(false);
+    }
     updateSystemStatus({ fileManagerViewMode: mode });
   };
 
@@ -71,7 +75,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
       setColumnCount(2);
     } else if (width < 1024) {
       setColumnCount(3);
-    } else if (width < 1440) {
+    } else if (width < 1536) {
       setColumnCount(4);
     } else {
       setColumnCount(5);
@@ -111,6 +115,19 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
     ...viewConfig,
   });
 
+  // Debug: Log received data
+  React.useEffect(() => {
+    if (data) {
+      console.log('[FileList] Received data:', {
+        count: data.length,
+        documents: data.filter((item) => item.sourceType === 'document'),
+        sampleDocumentWithEditorData: data.find(
+          (item) => item.sourceType === 'document' && item.editorData,
+        ),
+      });
+    }
+  }, [data]);
+
   // Handle view transition with a brief delay to show skeleton
   React.useEffect(() => {
     if (isTransitioning && data) {
@@ -123,6 +140,20 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
       });
     }
   }, [isTransitioning, viewMode, data]);
+
+  // Mark masonry as ready after it has time to mount and render
+  React.useEffect(() => {
+    if (viewMode === 'masonry' && data && !isLoading && !isTransitioning) {
+      // Give VirtuosoMasonry enough time to fully render and calculate layout
+      const timer = setTimeout(() => {
+        setIsMasonryReady(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else if (viewMode === 'list') {
+      // Reset when switching to list view
+      setIsMasonryReady(false);
+    }
+  }, [viewMode, data, isLoading, isTransitioning]);
 
   useCheckTaskStatus(data);
 
@@ -188,12 +219,8 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
           </Flexbox>
         )}
       </Flexbox>
-      {isLoading || isTransitioning ? (
-        viewMode === 'masonry' ? (
-          <MasonrySkeleton columnCount={columnCount} />
-        ) : (
-          <FileSkeleton />
-        )
+      {isLoading || (viewMode === 'list' && isTransitioning) ? (
+        <FileSkeleton />
       ) : viewMode === 'list' ? (
         <Virtuoso
           components={{
@@ -243,8 +270,29 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
           style={{ flex: 1 }}
         />
       ) : (
-        <div style={{ flex: 1, overflow: 'hidden' }}>
-          <div style={{ height: '100%', overflowY: 'auto' }}>
+        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+          {/* Skeleton overlay */}
+          {(isTransitioning || !isMasonryReady) && (
+            <div
+              style={{
+                background: 'inherit',
+                inset: 0,
+                position: 'absolute',
+                zIndex: 10,
+              }}
+            >
+              <MasonrySkeleton columnCount={columnCount} />
+            </div>
+          )}
+          {/* Masonry content - always rendered but hidden until ready */}
+          <div
+            style={{
+              height: '100%',
+              opacity: isMasonryReady ? 1 : 0,
+              overflowY: 'auto',
+              transition: 'opacity 0.2s ease-in-out',
+            }}
+          >
             <div style={{ paddingBlockEnd: 64, paddingBlockStart: 12, paddingInline: 24 }}>
               <VirtuosoMasonry
                 ItemContent={MasonryItemWrapper}

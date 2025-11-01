@@ -16,6 +16,8 @@ const KnowledgeBaseList = () => {
 
   if (data?.length === 0) return <EmptyStatus />;
 
+  console.log('data', data);
+
   return (
     <Flexbox height={'100%'}>
       <Virtuoso
