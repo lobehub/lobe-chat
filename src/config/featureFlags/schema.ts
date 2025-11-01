@@ -34,6 +34,8 @@ export const FeatureFlagsSchema = z.object({
 
   market: FeatureFlagValue.optional(),
   knowledge_base: FeatureFlagValue.optional(),
+  file_upload: FeatureFlagValue.optional(),
+  mcp: FeatureFlagValue.optional(),
 
   rag_eval: FeatureFlagValue.optional(),
 
@@ -82,24 +84,26 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   create_session: true,
   edit_agent: true,
 
-  plugins: true,
-  dalle: true,
-  ai_image: true,
+  plugins: false,
+  dalle: false, // Disabled for minimal chat
+  ai_image: false, // Disabled for minimal chat
 
   check_updates: true,
   welcome_suggest: true,
   token_counter: true,
 
-  knowledge_base: true,
+  knowledge_base: false, // Disabled for minimal chat - RAG functionality
+  file_upload: false, // Disabled for minimal chat - File upload functionality
+  mcp: false, // Disabled for minimal chat - MCP functionality
   rag_eval: false,
 
   clerk_sign_up: true,
 
   cloud_promotion: false,
 
-  market: true,
-  speech_to_text: true,
-  changelog: true,
+  market: false, // Disabled for minimal chat
+  speech_to_text: false, // Disabled for minimal chat
+  changelog: false, // Disabled for minimal chat
 
   group_chat: false,
 
@@ -136,6 +140,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
     enableClerkSignUp: evaluateFeatureFlag(config.clerk_sign_up, userId),
 
     enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
+    enableFileUpload: evaluateFeatureFlag(config.file_upload, userId),
+    enableMCP: evaluateFeatureFlag(config.mcp, userId),
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),
 
     showCloudPromotion: evaluateFeatureFlag(config.cloud_promotion, userId),
