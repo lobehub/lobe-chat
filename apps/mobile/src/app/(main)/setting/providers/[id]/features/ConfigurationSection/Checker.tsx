@@ -198,6 +198,7 @@ const Checker = memo<CheckerProps>(
             disabled={isDisabled}
             onChange={handleModelChange}
             options={modelOptions}
+            scrollable={true}
             style={{ flex: 1 }}
             title={t('providerModels.config.checker.selectModel')}
             value={checkModel}

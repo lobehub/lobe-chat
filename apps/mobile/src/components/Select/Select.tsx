@@ -25,6 +25,7 @@ const Select = memo<SelectProps>(
     optionRender,
     bottomSheetProps,
     textProps,
+    scrollable = false,
     ...rest
   }) => {
     const [showModal, setShowModal] = useState(false);
@@ -69,7 +70,12 @@ const Select = memo<SelectProps>(
           variant={disabled ? 'filled' : variant ? variant : isDarkMode ? 'filled' : 'outlined'}
           {...rest}
         >
-          <SelectItem size={size} textProps={textProps} {...selectedOption} />
+          <SelectItem
+            scrollable={scrollable}
+            size={size}
+            textProps={textProps}
+            {...selectedOption}
+          />
           <Icon
             color={theme.colorTextDescription}
             icon={ChevronDown}
@@ -85,7 +91,7 @@ const Select = memo<SelectProps>(
               const content = optionRender ? (
                 optionRender(option, index)
               ) : (
-                <SelectItem {...option} />
+                <SelectItem scrollable={scrollable} {...option} />
               );
 
               return (
