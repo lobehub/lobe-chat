@@ -324,6 +324,15 @@ const AgentModal = memo(() => {
         name: ['params', 'reasoning_effort'],
         tag: 'reasoning_effort',
       },
+      {
+        children: <Switch />,
+        desc: t('settingModel.includeHistoricalThinking.desc'),
+        label: t('settingModel.includeHistoricalThinking.title'),
+        layout: 'horizontal',
+        minWidth: undefined,
+        name: ['chatConfig', 'includeHistoricalThinking'],
+        valuePropName: 'checked',
+      },
     ],
     title: t('settingModel.title'),
   };
