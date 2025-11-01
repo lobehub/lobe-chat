@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "features": ["Upgrade to Next 16."]
+    },
+    "date": "2025-11-01",
+    "version": "2.0.0-next.7"
+  },
+  {
     "children": {},
     "date": "2025-10-31",
     "version": "2.0.0-next.6"
