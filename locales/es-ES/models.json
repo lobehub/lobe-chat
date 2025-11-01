@@ -191,6 +191,9 @@
   "Kwai-Kolors/Kolors": {
     "description": "Kolors es un modelo de generación de imágenes a partir de texto a gran escala basado en difusión latente, desarrollado por el equipo Kolors de Kuaishou. Entrenado con miles de millones de pares texto-imagen, muestra ventajas significativas en calidad visual, precisión semántica compleja y renderizado de caracteres en chino e inglés. Soporta entradas en ambos idiomas y sobresale en la comprensión y generación de contenido específico en chino."
   },
+  "Kwaipilot/KAT-Dev": {
+    "description": "KAT-Dev (32B) es un modelo de código abierto con 32 mil millones de parámetros, diseñado específicamente para tareas de ingeniería de software. En la prueba de referencia SWE-Bench Verified, alcanzó una tasa de resolución del 62,4 %, situándose en el quinto lugar entre todos los modelos de código abierto de diferentes tamaños. El modelo ha sido optimizado a través de múltiples etapas, incluyendo entrenamiento intermedio, ajuste fino supervisado (SFT) y aprendizaje por refuerzo (RL), con el objetivo de ofrecer un sólido soporte para tareas complejas de programación como autocompletado de código, corrección de errores y revisión de código."
+  },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Capacidad de razonamiento de imágenes excepcional en imágenes de alta resolución, adecuada para aplicaciones de comprensión visual."
   },
@@ -787,12 +790,6 @@
   },
   "claude-3-5-haiku-latest": {
     "description": "Claude 3.5 Haiku ofrece respuestas rápidas, ideal para tareas ligeras."
-  },
-  "claude-3-5-sonnet-20240620": {
-    "description": "Claude 3.5 Sonnet ofrece capacidades que superan a Opus y una velocidad más rápida que Sonnet, manteniendo el mismo precio que Sonnet. Sonnet es especialmente bueno en programación, ciencia de datos, procesamiento visual y tareas de agentes."
-  },
-  "claude-3-5-sonnet-20241022": {
-    "description": "Claude 3.5 Sonnet ofrece capacidades que superan a Opus y una velocidad más rápida que Sonnet, manteniendo el mismo precio que Sonnet. Sonnet es especialmente hábil en programación, ciencia de datos, procesamiento visual y tareas de agencia."
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet es el modelo de IA más potente de Anthropic, con un rendimiento de vanguardia en tareas altamente complejas. Puede manejar indicaciones abiertas y escenarios no vistos, con una fluidez y comprensión humana excepcionales. Claude 3.7 Sonnet muestra la vanguardia de las posibilidades de la IA generativa."
@@ -2404,6 +2401,9 @@
   },
   "minicpm-v": {
     "description": "MiniCPM-V es la nueva generación de modelos multimodales lanzada por OpenBMB, que cuenta con una excelente capacidad de reconocimiento OCR y comprensión multimodal, soportando una amplia gama de escenarios de aplicación."
+  },
+  "minimax-m2": {
+    "description": "MiniMax M2 es un modelo de lenguaje grande y eficiente, diseñado para flujos de trabajo de codificación y agentes."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B es el modelo de borde de primer nivel mundial de Mistral."
