@@ -18,6 +18,10 @@ const vercelUrl = `https://${process.env.VERCEL_URL}`;
 
 const APP_URL = process.env.APP_URL ? process.env.APP_URL : isInVercel ? vercelUrl : undefined;
 
+// INTERNAL_APP_URL is used for server-to-server calls to bypass CDN/proxy
+// Falls back to APP_URL if not set
+const INTERNAL_APP_URL = process.env.INTERNAL_APP_URL || APP_URL;
+
 // only throw error in server mode and server side
 if (typeof window === 'undefined' && isServerMode && !APP_URL) {
   throw new Error('`APP_URL` is required in server mode');
@@ -46,6 +50,7 @@ export const getAppConfig = () => {
       PLUGIN_SETTINGS: z.string().optional(),
 
       APP_URL: z.string().optional(),
+      INTERNAL_APP_URL: z.string().optional(),
       VERCEL_EDGE_CONFIG: z.string().optional(),
       MIDDLEWARE_REWRITE_THROUGH_LOCAL: z.boolean().optional(),
       ENABLE_AUTH_PROTECTION: z.boolean().optional(),
@@ -80,6 +85,7 @@ export const getAppConfig = () => {
       VERCEL_EDGE_CONFIG: process.env.VERCEL_EDGE_CONFIG,
 
       APP_URL,
+      INTERNAL_APP_URL,
       MIDDLEWARE_REWRITE_THROUGH_LOCAL: process.env.MIDDLEWARE_REWRITE_THROUGH_LOCAL === '1',
       ENABLE_AUTH_PROTECTION: process.env.ENABLE_AUTH_PROTECTION === '1',
 

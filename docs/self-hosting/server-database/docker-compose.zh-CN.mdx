@@ -651,6 +651,35 @@ docker compose up -d # 重新启动
 
 至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `https://lobe.example.com` 访问你的 LobeChat 服务。
 
+#### 使用 `INTERNAL_APP_URL` 配置内部服务器通信
+
+<Callout type="info">
+  如果你在 CDN（如 Cloudflare）或反向代理后部署 LobeChat，你可以配置内部服务器到服务器通信以绕过 CDN/代理层，以获得更好的性能。
+</Callout>
+
+你可以配置 `INTERNAL_APP_URL` 环境变量：
+
+```yaml
+environment:
+  - 'APP_URL=https://lobe.example.com'  # 浏览器访问的公开 URL
+  - 'INTERNAL_APP_URL=http://localhost:3210'  # 服务器到服务器调用的内部 URL
+```
+
+**工作原理：**
+- `APP_URL`：用于浏览器/客户端访问、OAuth 回调、webhook 等（通过 CDN/代理）
+- `INTERNAL_APP_URL`：用于内部服务器到服务器通信（绕过 CDN/代理）
+
+如果未设置 `INTERNAL_APP_URL`，它将默认为 `APP_URL`。
+
+**配置选项：**
+- `http://localhost:3210` - 如果使用 Docker 主机网络模式
+- `http://lobe:3210` - 如果使用 Docker 网络与服务名称
+- `http://127.0.0.1:3210` - 备用本地主机地址
+
+<Callout type="tip">
+  对于使用 `network_mode: 'service:network-service'` 的 Docker Compose 部署，请使用 `http://localhost:3210` 作为 `INTERNAL_APP_URL`。
+</Callout>
+
 #### 配置文件
 
 为方便一键复制，在此汇总基于 casdoor 鉴权方案的域名方式下生产部署配置服务端数据库所需要的示例配置文件。
