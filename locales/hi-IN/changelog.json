@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "followOnX": "X पर हमें फ़ॉलो करें",
+    "subscribeToUpdates": "अपडेट्स के लिए सदस्यता लें",
+    "versions": "संस्करण विवरण"
+  },
+  "addedWhileAway": "आपके अनुपस्थित रहने के दौरान हमने नए फीचर्स जोड़े हैं।",
+  "allChangelog": "सभी बदलाव लॉग देखें",
+  "description": "{{appName}} की नई विशेषताओं और सुधारों से अपडेट रहें",
+  "pagination": {
+    "next": "अगला पृष्ठ",
+    "older": "पुराने बदलाव देखें"
+  },
+  "readDetails": "विवरण पढ़ें",
+  "title": "बदलाव लॉग",
+  "versionDetails": "संस्करण विवरण",
+  "welcomeBack": "वापसी पर स्वागत है!"
+}
