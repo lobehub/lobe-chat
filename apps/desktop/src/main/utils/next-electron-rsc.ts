@@ -203,6 +203,7 @@ export function createHandler({
   if (!isDev) {
     logger.info('Initializing Next.js app for production');
 
+    // https://github.com/lobehub/lobe-chat/pull/9851
     // @ts-expect-error
     // noinspection JSConstantReassignment
     process.env.NODE_ENV = 'production';
@@ -213,10 +214,7 @@ export function createHandler({
       .config as NextConfig;
     process.env.__NEXT_PRIVATE_STANDALONE_CONFIG = JSON.stringify(config);
 
-    app = next({
-      dev: false,
-      dir: standaloneDir,
-    }) as NextNodeServer;
+    app = next({ dir: standaloneDir }) as NextNodeServer;
 
     handler = app.getRequestHandler();
     preparePromise = app.prepare();
