@@ -9,10 +9,10 @@
 
 ## 🚀 Priprava
 
-- [ ] Backup trenutne verzije ali ustvari git backup
-- [ ] Ustvari novo git branch: `git checkout -b minimal-chat`
-- [ ] Preberi celoten `MINIMAL_CHAT_PLAN.md`
-- [ ] Razumi Feature Flags koncept
+- [x] Backup trenutne verzije ali ustvari git backup
+- [x] Ustvari novo git branch: `git checkout -b minimal-chat`
+- [x] Preberi celoten `MINIMAL_CHAT_PLAN.md`
+- [x] Razumi Feature Flags koncept
 
 ---
 
