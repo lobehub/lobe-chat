@@ -10,10 +10,16 @@ import {
   UpdateAiProviderParams,
 } from '@lobechat/types';
 import { uniqBy } from 'lodash-es';
-import { AIImageModelCard, LobeDefaultAiModelListItem, ModelAbilities } from 'model-bank';
+import {
+  AIImageModelCard,
+  LOBE_DEFAULT_MODEL_LIST,
+  LobeDefaultAiModelListItem,
+  ModelAbilities,
+} from 'model-bank';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
 import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
@@ -233,9 +239,7 @@ export const createAiProviderSlice: StateCreator<
     useSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
       [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin],
       async ([, isLogin]) => {
-        const [{ LOBE_DEFAULT_MODEL_LIST: builtinAiModelList }, { DEFAULT_MODEL_PROVIDER_LIST }] =
-          await Promise.all([import('@/config/aiModels'), import('@/config/modelProviders')]);
-
+        const builtinAiModelList = LOBE_DEFAULT_MODEL_LIST;
         if (isLogin) {
           const data = await aiProviderService.getAiProviderRuntimeState();
           return {
