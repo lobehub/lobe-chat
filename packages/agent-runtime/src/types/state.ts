@@ -1,5 +1,4 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import type { AgentEvent } from './event';
 import type { Cost, CostLimit, Usage } from './usage';
 
 /**
@@ -9,19 +8,13 @@ import type { Cost, CostLimit, Usage } from './usage';
 export interface AgentState {
   sessionId: string;
   // --- State Machine ---
-  status: 'idle' | 'running' | 'waiting_for_human_input' | 'done' | 'error' | 'interrupted';
+  status: 'idle' | 'running' | 'waiting_for_human' | 'done' | 'error' | 'interrupted';
 
   // --- Core Context ---
   messages: any[];
+  tools?: any[];
   systemRole?: string;
-
-  // --- Event History ---
-  /**
-   * Complete event trace for this agent session.
-   * Useful for debugging, auditing, and state replay.
-   */
-  events: AgentEvent[];
-
+  toolManifestMap: Record<string, any>;
   // --- Execution Tracking ---
   /**
    * Number of execution steps in this session.
@@ -53,7 +46,7 @@ export interface AgentState {
 
   // --- HIL ---
   /**
-   * When status is 'waiting_for_human_input', this stores pending requests
+   * When status is 'waiting_for_human', this stores pending requests
    * for human-in-the-loop operations.
    */
   pendingToolsCalling?: ToolsCalling[];

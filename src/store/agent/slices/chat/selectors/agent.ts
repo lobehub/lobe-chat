@@ -1,16 +1,16 @@
-import { VoiceList } from '@lobehub/tts';
-
-import { INBOX_SESSION_ID } from '@/const/session';
 import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
-} from '@/const/settings';
+  INBOX_SESSION_ID,
+} from '@lobechat/const';
+import { KnowledgeItem, KnowledgeType, LobeAgentConfig, LobeAgentTTSConfig } from '@lobechat/types';
+import { VoiceList } from '@lobehub/tts';
+
 import { DEFAULT_OPENING_QUESTIONS } from '@/features/AgentSetting/store/selectors';
+import { filterToolIds } from '@/helpers/toolFilters';
 import { AgentStoreState } from '@/store/agent/initialState';
-import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
-import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
 
 const isInboxSession = (s: AgentStoreState) => s.activeId === INBOX_SESSION_ID;
@@ -25,6 +25,23 @@ const getAgentConfigById =
   (id: string) =>
   (s: AgentStoreState): LobeAgentConfig =>
     merge(s.defaultAgentConfig, s.agentMap[id]);
+
+const getAgentConfigByAgentId =
+  (agentId: string) =>
+  (s: AgentStoreState): LobeAgentConfig => {
+    // Find the session that contains this agent
+    const sessionId = Object.keys(s.agentMap).find((sessionKey) => {
+      const agentConfig = s.agentMap[sessionKey];
+      return agentConfig?.id === agentId;
+    });
+
+    if (sessionId) {
+      return merge(s.defaultAgentConfig, s.agentMap[sessionId]);
+    }
+
+    // Fallback to default config if agent not found
+    return s.defaultAgentConfig;
+  };
 
 export const currentAgentConfig = (s: AgentStoreState): LobeAgentConfig =>
   getAgentConfigById(s.activeId)(s);
@@ -49,6 +66,15 @@ const currentAgentPlugins = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
 
   return config?.plugins || [];
+};
+
+/**
+ * Get displayable agent plugins by filtering out platform-specific tools
+ * that shouldn't be shown in the current environment
+ */
+const displayableAgentPlugins = (s: AgentStoreState) => {
+  const plugins = currentAgentPlugins(s);
+  return filterToolIds(plugins);
 };
 
 const currentAgentKnowledgeBases = (s: AgentStoreState) => {
@@ -155,6 +181,8 @@ export const agentSelectors = {
   currentAgentTTSVoice,
   currentEnabledKnowledge,
   currentKnowledgeIds,
+  displayableAgentPlugins,
+  getAgentConfigByAgentId,
   getAgentConfigById,
   hasEnabledKnowledge,
   hasKnowledge,

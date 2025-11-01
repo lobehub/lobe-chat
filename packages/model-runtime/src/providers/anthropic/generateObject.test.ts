@@ -4,16 +4,33 @@ import { describe, expect, it, vi } from 'vitest';
 import { createAnthropicGenerateObject } from './generateObject';
 
 describe('Anthropic generateObject', () => {
-  describe('createAnthropicGenerateObject', () => {
+  it('should throw error when neither tools nor schema is provided', async () => {
+    const mockClient = {
+      messages: {
+        create: vi.fn(),
+      },
+    };
+
+    const payload = {
+      messages: [{ content: 'Generate data', role: 'user' as const }],
+      model: 'claude-3-5-sonnet-20241022',
+    };
+
+    await expect(createAnthropicGenerateObject(mockClient as any, payload as any)).rejects.toThrow(
+      'tools or schema is required',
+    );
+  });
+
+  describe('use struct output schema', () => {
     it('should return structured data on successful API call', async () => {
       const mockClient = {
         messages: {
           create: vi.fn().mockResolvedValue({
             content: [
               {
-                type: 'tool_use',
+                input: { age: 30, name: 'John' },
                 name: 'person_extractor',
-                input: { name: 'John', age: 30 },
+                type: 'tool_use',
               },
             ],
           }),
@@ -22,48 +39,48 @@ describe('Anthropic generateObject', () => {
 
       const payload = {
         messages: [{ content: 'Generate a person object', role: 'user' as const }],
+        model: 'claude-3-5-sonnet-20241022',
         schema: {
-          name: 'person_extractor',
           description: 'Extract person information',
+          name: 'person_extractor',
           schema: {
-            type: 'object' as const,
-            properties: { name: { type: 'string' }, age: { type: 'number' } },
+            properties: { age: { type: 'number' }, name: { type: 'string' } },
             required: ['name', 'age'],
+            type: 'object' as const,
           },
         },
-        model: 'claude-3-5-sonnet-20241022',
       };
 
       const result = await createAnthropicGenerateObject(mockClient as any, payload);
 
       expect(mockClient.messages.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          model: 'claude-3-5-sonnet-20241022',
           max_tokens: 8192,
           messages: [{ content: 'Generate a person object', role: 'user' }],
+          model: 'claude-3-5-sonnet-20241022',
+          tool_choice: {
+            name: 'person_extractor',
+            type: 'tool',
+          },
           tools: [
             {
-              name: 'person_extractor',
               description: 'Extract person information',
               input_schema: {
-                type: 'object',
                 properties: {
-                  name: { type: 'string' },
                   age: { type: 'number' },
+                  name: { type: 'string' },
                 },
                 required: ['name', 'age'],
+                type: 'object',
               },
+              name: 'person_extractor',
             },
           ],
-          tool_choice: {
-            type: 'tool',
-            name: 'person_extractor',
-          },
         }),
         expect.objectContaining({}),
       );
 
-      expect(result).toEqual({ name: 'John', age: 30 });
+      expect(result).toEqual({ age: 30, name: 'John' });
     });
 
     it('should handle system messages correctly', async () => {
@@ -72,9 +89,9 @@ describe('Anthropic generateObject', () => {
           create: vi.fn().mockResolvedValue({
             content: [
               {
-                type: 'tool_use',
-                name: 'status_extractor',
                 input: { status: 'success' },
+                name: 'status_extractor',
+                type: 'tool_use',
               },
             ],
           }),
@@ -86,19 +103,19 @@ describe('Anthropic generateObject', () => {
           { content: 'You are a helpful assistant', role: 'system' as const },
           { content: 'Generate status', role: 'user' as const },
         ],
+        model: 'claude-3-5-sonnet-20241022',
         schema: {
           name: 'status_extractor',
-          schema: { type: 'object' as const, properties: { status: { type: 'string' } } },
+          schema: { properties: { status: { type: 'string' } }, type: 'object' as const },
         },
-        model: 'claude-3-5-sonnet-20241022',
       };
 
       const result = await createAnthropicGenerateObject(mockClient as any, payload);
 
       expect(mockClient.messages.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          system: [{ text: 'You are a helpful assistant', type: 'text' }],
           messages: expect.any(Array),
+          system: [{ text: 'You are a helpful assistant', type: 'text' }],
         }),
         expect.any(Object),
       );
@@ -112,9 +129,9 @@ describe('Anthropic generateObject', () => {
           create: vi.fn().mockResolvedValue({
             content: [
               {
-                type: 'tool_use',
-                name: 'data_extractor',
                 input: { data: 'test' },
+                name: 'data_extractor',
+                type: 'tool_use',
               },
             ],
           }),
@@ -123,11 +140,11 @@ describe('Anthropic generateObject', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
+        model: 'claude-3-5-sonnet-20241022',
         schema: {
           name: 'data_extractor',
-          schema: { type: 'object' as const, properties: { data: { type: 'string' } } },
+          schema: { properties: { data: { type: 'string' } }, type: 'object' as const },
         },
-        model: 'claude-3-5-sonnet-20241022',
       };
 
       const options = {
@@ -152,8 +169,8 @@ describe('Anthropic generateObject', () => {
           create: vi.fn().mockResolvedValue({
             content: [
               {
-                type: 'text',
                 text: 'Some text response without tool use',
+                type: 'text',
               },
             ],
           }),
@@ -162,11 +179,11 @@ describe('Anthropic generateObject', () => {
 
       const payload = {
         messages: [{ content: 'Generate data', role: 'user' as const }],
+        model: 'claude-3-5-sonnet-20241022',
         schema: {
           name: 'test_tool',
           schema: { type: 'object' },
         },
-        model: 'claude-3-5-sonnet-20241022',
       };
 
       const result = await createAnthropicGenerateObject(mockClient as any, payload as any);
@@ -180,9 +197,10 @@ describe('Anthropic generateObject', () => {
           create: vi.fn().mockResolvedValue({
             content: [
               {
-                type: 'tool_use',
-                name: 'user_extractor',
                 input: {
+                  metadata: {
+                    created: '2024-01-01',
+                  },
                   user: {
                     name: 'Alice',
                     profile: {
@@ -190,10 +208,9 @@ describe('Anthropic generateObject', () => {
                       preferences: ['music', 'sports'],
                     },
                   },
-                  metadata: {
-                    created: '2024-01-01',
-                  },
                 },
+                name: 'user_extractor',
+                type: 'tool_use',
               },
             ],
           }),
@@ -202,35 +219,38 @@ describe('Anthropic generateObject', () => {
 
       const payload = {
         messages: [{ content: 'Generate complex user data', role: 'user' as const }],
+        model: 'claude-3-5-sonnet-20241022',
         schema: {
-          name: 'user_extractor',
           description: 'Extract complex user information',
+          name: 'user_extractor',
           schema: {
-            type: 'object' as const,
             properties: {
+              metadata: { type: 'object' },
               user: {
-                type: 'object',
                 properties: {
                   name: { type: 'string' },
                   profile: {
-                    type: 'object',
                     properties: {
                       age: { type: 'number' },
-                      preferences: { type: 'array', items: { type: 'string' } },
+                      preferences: { items: { type: 'string' }, type: 'array' },
                     },
+                    type: 'object',
                   },
                 },
+                type: 'object',
               },
-              metadata: { type: 'object' },
             },
+            type: 'object' as const,
           },
         },
-        model: 'claude-3-5-sonnet-20241022',
       };
 
       const result = await createAnthropicGenerateObject(mockClient as any, payload);
 
       expect(result).toEqual({
+        metadata: {
+          created: '2024-01-01',
+        },
         user: {
           name: 'Alice',
           profile: {
@@ -238,61 +258,204 @@ describe('Anthropic generateObject', () => {
             preferences: ['music', 'sports'],
           },
         },
-        metadata: {
-          created: '2024-01-01',
-        },
       });
     });
+  });
 
-    it('should propagate API errors correctly', async () => {
-      const apiError = new Error('API Error: Model not found');
-
+  describe('tools calling', () => {
+    it('should handle tools calling mode with multiple tools', async () => {
       const mockClient = {
         messages: {
-          create: vi.fn().mockRejectedValue(apiError),
+          create: vi.fn().mockResolvedValue({
+            content: [
+              {
+                input: { city: 'New York', unit: 'celsius' },
+                name: 'get_weather',
+                type: 'tool_use',
+              },
+              {
+                input: { timezone: 'America/New_York' },
+                name: 'get_time',
+                type: 'tool_use',
+              },
+            ],
+          }),
         },
       };
 
       const payload = {
-        messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: {
-          name: 'test_tool',
-          schema: { type: 'object' },
-        },
+        messages: [{ content: 'What is the weather and time in New York?', role: 'user' as const }],
         model: 'claude-3-5-sonnet-20241022',
+        tools: [
+          {
+            function: {
+              description: 'Get weather information',
+              name: 'get_weather',
+              parameters: {
+                properties: {
+                  city: { type: 'string' },
+                  unit: { type: 'string' },
+                },
+                required: ['city'],
+                type: 'object' as const,
+              },
+            },
+            type: 'function' as const,
+          },
+          {
+            function: {
+              description: 'Get current time',
+              name: 'get_time',
+              parameters: {
+                properties: {
+                  timezone: { type: 'string' },
+                },
+                required: ['timezone'],
+                type: 'object' as const,
+              },
+            },
+            type: 'function' as const,
+          },
+        ],
       };
 
-      await expect(
-        createAnthropicGenerateObject(mockClient as any, payload as any),
-      ).rejects.toThrow('API Error: Model not found');
+      const result = await createAnthropicGenerateObject(mockClient as any, payload as any);
+
+      expect(mockClient.messages.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          max_tokens: 8192,
+          messages: [{ content: 'What is the weather and time in New York?', role: 'user' }],
+          model: 'claude-3-5-sonnet-20241022',
+          tool_choice: {
+            type: 'any',
+          },
+          tools: [
+            {
+              description: 'Get weather information',
+              input_schema: {
+                properties: {
+                  city: { type: 'string' },
+                  unit: { type: 'string' },
+                },
+                required: ['city'],
+                type: 'object',
+              },
+              name: 'get_weather',
+            },
+            {
+              description: 'Get current time',
+              input_schema: {
+                properties: {
+                  timezone: { type: 'string' },
+                },
+                required: ['timezone'],
+                type: 'object',
+              },
+              name: 'get_time',
+            },
+          ],
+        }),
+        expect.objectContaining({}),
+      );
+
+      expect(result).toEqual([
+        { arguments: { city: 'New York', unit: 'celsius' }, name: 'get_weather' },
+        { arguments: { timezone: 'America/New_York' }, name: 'get_time' },
+      ]);
     });
 
-    it('should handle abort signals correctly', async () => {
-      const apiError = new Error('Request was cancelled');
-      apiError.name = 'AbortError';
-
+    it('should handle tools calling mode with single tool', async () => {
       const mockClient = {
         messages: {
-          create: vi.fn().mockRejectedValue(apiError),
+          create: vi.fn().mockResolvedValue({
+            content: [
+              {
+                input: { a: 5, b: 3, operation: 'add' },
+                name: 'calculate',
+                type: 'tool_use',
+              },
+            ],
+          }),
         },
       };
 
       const payload = {
-        messages: [{ content: 'Generate data', role: 'user' as const }],
-        schema: {
-          name: 'test_tool',
-          schema: { type: 'object' },
-        },
+        messages: [{ content: 'Add 5 and 3', role: 'user' as const }],
         model: 'claude-3-5-sonnet-20241022',
+        tools: [
+          {
+            function: {
+              description: 'Perform mathematical calculation',
+              name: 'calculate',
+              parameters: {
+                properties: {
+                  a: { type: 'number' },
+                  b: { type: 'number' },
+                  operation: { type: 'string' },
+                },
+                required: ['operation', 'a', 'b'],
+                type: 'object' as const,
+              },
+            },
+            type: 'function' as const,
+          },
+        ],
       };
 
-      const options = {
-        signal: new AbortController().signal,
-      };
+      const result = await createAnthropicGenerateObject(mockClient as any, payload as any);
 
-      await expect(
-        createAnthropicGenerateObject(mockClient as any, payload as any, options),
-      ).rejects.toThrow();
+      expect(result).toEqual([{ arguments: { a: 5, b: 3, operation: 'add' }, name: 'calculate' }]);
     });
+  });
+
+  it('should propagate API errors correctly', async () => {
+    const apiError = new Error('API Error: Model not found');
+
+    const mockClient = {
+      messages: {
+        create: vi.fn().mockRejectedValue(apiError),
+      },
+    };
+
+    const payload = {
+      messages: [{ content: 'Generate data', role: 'user' as const }],
+      model: 'claude-3-5-sonnet-20241022',
+      schema: {
+        name: 'test_tool',
+        schema: { type: 'object' },
+      },
+    };
+
+    await expect(createAnthropicGenerateObject(mockClient as any, payload as any)).rejects.toThrow(
+      'API Error: Model not found',
+    );
+  });
+
+  it('should handle abort signals correctly', async () => {
+    const apiError = new Error('Request was cancelled');
+    apiError.name = 'AbortError';
+
+    const mockClient = {
+      messages: {
+        create: vi.fn().mockRejectedValue(apiError),
+      },
+    };
+
+    const payload = {
+      messages: [{ content: 'Generate data', role: 'user' as const }],
+      model: 'claude-3-5-sonnet-20241022',
+      schema: {
+        name: 'test_tool',
+        schema: { type: 'object' },
+      },
+    };
+
+    const options = {
+      signal: new AbortController().signal,
+    };
+
+    await expect(
+      createAnthropicGenerateObject(mockClient as any, payload as any, options),
+    ).rejects.toThrow();
   });
 });

@@ -1,15 +1,17 @@
 import {
   ChatFileItem,
   ChatImageItem,
-  ChatMessage,
   ChatTTS,
   ChatToolPayload,
   ChatTranslate,
   ChatVideoItem,
   CreateMessageParams,
-  MessageItem,
+  CreateMessageResult,
+  DBMessageItem,
   ModelRankItem,
   NewMessageQueryParams,
+  QueryMessageParams,
+  UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
 } from '@lobechat/types';
@@ -39,13 +41,6 @@ import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
 
-export interface QueryMessageParams {
-  current?: number;
-  pageSize?: number;
-  sessionId?: string | null;
-  topicId?: string | null;
-}
-
 export class MessageModel {
   private userId: string;
   private db: LobeChatDatabase;
@@ -57,7 +52,7 @@ export class MessageModel {
 
   // **************** Query *************** //
   query = async (
-    { current = 0, pageSize = 1000, sessionId, topicId }: QueryMessageParams = {},
+    { current = 0, pageSize = 1000, sessionId, topicId, groupId }: QueryMessageParams = {},
     options: {
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
     } = {},
@@ -85,6 +80,11 @@ export class MessageModel {
         topicId: messages.topicId,
         parentId: messages.parentId,
         threadId: messages.threadId,
+
+        // Group chat fields
+        groupId: messages.groupId,
+        agentId: messages.agentId,
+        targetId: messages.targetId,
 
         tools: messages.tools,
         tool_call_id: messagePlugins.toolCallId,
@@ -116,6 +116,7 @@ export class MessageModel {
           eq(messages.userId, this.userId),
           this.matchSession(sessionId),
           this.matchTopic(topicId),
+          this.matchGroup(groupId),
         ),
       )
       .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
@@ -259,7 +260,7 @@ export class MessageModel {
             .filter((relation) => relation.messageId === item.id)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .map<ChatVideoItem>(({ id, url, name }) => ({ alt: name!, id, url })),
-        } as unknown as ChatMessage;
+        } as unknown as UIChatMessage;
       },
     );
   };
@@ -295,7 +296,7 @@ export class MessageModel {
       .orderBy(messages.createdAt)
       .where(eq(messages.userId, this.userId));
 
-    return result as MessageItem[];
+    return result as DBMessageItem[];
   };
 
   queryBySessionId = async (sessionId?: string | null) => {
@@ -304,7 +305,7 @@ export class MessageModel {
       where: and(eq(messages.userId, this.userId), this.matchSession(sessionId)),
     });
 
-    return result as MessageItem[];
+    return result as DBMessageItem[];
   };
 
   queryByKeyword = async (keyword: string) => {
@@ -314,7 +315,7 @@ export class MessageModel {
       where: and(eq(messages.userId, this.userId), like(messages.content, `%${keyword}%`)),
     });
 
-    return result as MessageItem[];
+    return result as DBMessageItem[];
   };
 
   count = async (params?: {
@@ -466,12 +467,15 @@ export class MessageModel {
       ...message
     }: CreateMessageParams,
     id: string = this.genId(),
-  ): Promise<MessageItem> => {
+  ): Promise<DBMessageItem> => {
     return this.db.transaction(async (trx) => {
+      // Ensure group message does not populate sessionId
+      const normalizedMessage = message.groupId ? { ...message, sessionId: null } : message;
+
       const [item] = (await trx
         .insert(messages)
         .values({
-          ...message,
+          ...normalizedMessage,
           // TODO: remove this when the client is updated
           createdAt: createdAt ? new Date(createdAt) : undefined,
           id,
@@ -480,7 +484,7 @@ export class MessageModel {
           updatedAt: updatedAt ? new Date(updatedAt) : undefined,
           userId: this.userId,
         })
-        .returning()) as MessageItem[];
+        .returning()) as DBMessageItem[];
 
       // Insert the plugin data if the message is a tool
       if (message.role === 'tool') {
@@ -518,7 +522,55 @@ export class MessageModel {
     });
   };
 
-  batchCreate = async (newMessages: MessageItem[]) => {
+  /**
+   * Create a new message and return the complete message list
+   *
+   * This method combines message creation and querying into a single operation,
+   * reducing the need for separate refresh calls and improving performance.
+   *
+   * @param params - Message creation parameters
+   * @param options - Query options for post-processing
+   * @returns Object containing the created message ID and full message list
+   *
+   * @example
+   * const { id, messages } = await messageModel.createNewMessage({
+   *   role: 'assistant',
+   *   content: 'Hello',
+   *   tools: [...],
+   *   sessionId: 'session-1',
+   * });
+   * // messages already contains grouped structure, no need to refresh
+   */
+  createNewMessage = async (
+    params: CreateMessageParams,
+    options: {
+      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
+    } = {},
+  ): Promise<CreateMessageResult> => {
+    // 1. Create the message (reuse existing create method)
+    const item = await this.create(params);
+
+    // 2. Query all messages for this session/topic
+    // query() method internally applies groupAssistantMessages transformation
+    const messages = await this.query(
+      {
+        current: 0,
+        groupId: params.groupId,
+        pageSize: 9999,
+        sessionId: params.sessionId,
+        topicId: params.topicId, // Get all messages
+      },
+      options,
+    );
+
+    // 3. Return the result
+    return {
+      id: item.id,
+      messages,
+    };
+  };
+
+  batchCreate = async (newMessages: DBMessageItem[]) => {
     const messagesToInsert = newMessages.map((m) => {
       // TODO: need a better way to handle this
       return { ...m, role: m.role as any, userId: this.userId };
@@ -558,6 +610,19 @@ export class MessageModel {
         })
         .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
     });
+  };
+
+  updateMetadata = async (id: string, metadata: Record<string, any>) => {
+    const item = await this.db.query.messages.findFirst({
+      where: and(eq(messages.id, id), eq(messages.userId, this.userId)),
+    });
+
+    if (!item) return;
+
+    return this.db
+      .update(messages)
+      .set({ metadata: merge(item.metadata || {}, metadata) })
+      .where(and(eq(messages.userId, this.userId), eq(messages.id, id)));
   };
 
   updatePluginState = async (id: string, state: Record<string, any>) => {
@@ -689,7 +754,11 @@ export class MessageModel {
       .delete(messageQueries)
       .where(and(eq(messageQueries.id, id), eq(messageQueries.userId, this.userId)));
 
-  deleteMessagesBySession = async (sessionId?: string | null, topicId?: string | null) =>
+  deleteMessagesBySession = async (
+    sessionId?: string | null,
+    topicId?: string | null,
+    groupId?: string | null,
+  ) =>
     this.db
       .delete(messages)
       .where(
@@ -697,6 +766,7 @@ export class MessageModel {
           eq(messages.userId, this.userId),
           this.matchSession(sessionId),
           this.matchTopic(topicId),
+          this.matchGroup(groupId),
         ),
       );
 
@@ -713,4 +783,7 @@ export class MessageModel {
 
   private matchTopic = (topicId?: string | null) =>
     topicId ? eq(messages.topicId, topicId) : isNull(messages.topicId);
+
+  private matchGroup = (groupId?: string | null) =>
+    groupId ? eq(messages.groupId, groupId) : isNull(messages.groupId);
 }

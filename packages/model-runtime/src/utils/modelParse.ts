@@ -24,9 +24,16 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['-3-7', '3.7', '-4'],
     visionKeywords: ['claude'],
   },
+  comfyui: {
+    // ComfyUI models are image generation models, no chat capabilities
+    functionCallKeywords: [],
+    reasoningKeywords: [],
+    visionKeywords: [],
+  },
   deepseek: {
     functionCallKeywords: ['v3', 'r1', 'deepseek-chat'],
     reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1', 'v3.2'],
+    visionKeywords: ['ocr'],
   },
   google: {
     excludeKeywords: ['tts'],
@@ -52,6 +59,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking'],
     visionKeywords: [],
   },
+  minimax: {
+    functionCallKeywords: ['minimax'],
+    reasoningKeywords: ['-m'],
+    visionKeywords: ['-vl', 'Text-01'],
+  },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
     reasoningKeywords: ['thinking'],
@@ -75,7 +87,7 @@ export const MODEL_LIST_CONFIGS = {
       'qwen3',
     ],
     reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-', '!-max-'],
-    visionKeywords: ['qvq', 'vl'],
+    visionKeywords: ['qvq', '-vl', '-omni'],
   },
   v0: {
     functionCallKeywords: ['v0'],
@@ -106,11 +118,13 @@ export const MODEL_LIST_CONFIGS = {
 // 模型所有者 (提供商) 关键词配置
 export const MODEL_OWNER_DETECTION_CONFIG = {
   anthropic: ['claude'],
+  comfyui: ['comfyui/'], // ComfyUI models detection - all ComfyUI models have comfyui/ prefix
   deepseek: ['deepseek'],
   google: ['gemini', 'imagen'],
   inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
   longcat: ['longcat'],
+  minimax: ['minimax'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
@@ -437,9 +451,9 @@ const processModelCard = (
     )
       ? 'image'
       : isKeywordListMatch(
-        model.id.toLowerCase(),
-        EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
-      )
+            model.id.toLowerCase(),
+            EMBEDDING_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+          )
         ? 'embedding'
         : 'chat');
 

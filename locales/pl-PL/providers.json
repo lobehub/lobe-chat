@@ -30,7 +30,7 @@
     "description": "Bedrock to usługa oferowana przez Amazon AWS, skoncentrowana na dostarczaniu zaawansowanych modeli językowych i wizualnych dla przedsiębiorstw. Jej rodzina modeli obejmuje serię Claude od Anthropic, serię Llama 3.1 od Meta i inne, oferując różnorodne opcje od lekkich do wysokowydajnych, wspierając generowanie tekstu, dialogi, przetwarzanie obrazów i inne zadania, odpowiednie dla różnych skal i potrzeb aplikacji biznesowych."
   },
   "bfl": {
-    "description": "Wiodące, przełomowe laboratorium badawcze sztucznej inteligencji, tworzące wizualną infrastrukturę jutra."
+    "description": "Wiodące, pionierskie laboratorium badań nad sztuczną inteligencją, tworzące wizualną infrastrukturę jutra."
   },
   "cerebras": {
     "description": "Cerebras to platforma do wnioskowania AI oparta na dedykowanym systemie CS-3, zaprojektowana w celu zapewnienia najszybszej na świecie, reakcji w czasie rzeczywistym oraz wysokiej przepustowości usług LLM. Stworzona została, aby eliminować opóźnienia i przyspieszać złożone przepływy pracy AI, takie jak generowanie kodu w czasie rzeczywistym i zadania agentowe."
@@ -43,6 +43,9 @@
   },
   "cometapi": {
     "description": "CometAPI to platforma usługowa oferująca różnorodne interfejsy najnowocześniejszych modeli, wspierająca OpenAI, Anthropic, Google i inne. Idealna do zróżnicowanych potrzeb deweloperskich i aplikacyjnych. Użytkownicy mogą elastycznie wybierać najlepsze modele i ceny, co wspiera poprawę doświadczeń związanych ze sztuczną inteligencją."
+  },
+  "comfyui": {
+    "description": "Potężny, otwartoźródłowy silnik przepływu pracy do generowania obrazów, wideo i dźwięku, obsługujący zaawansowane modele takie jak SD FLUX, Qwen, Hunyuan, WAN, oferujący edytor przepływu pracy oparty na węzłach oraz możliwość wdrożenia lokalnego."
   },
   "deepseek": {
     "description": "DeepSeek to firma skoncentrowana na badaniach i zastosowaniach technologii sztucznej inteligencji, której najnowszy model DeepSeek-V2.5 łączy zdolności do prowadzenia ogólnych rozmów i przetwarzania kodu, osiągając znaczące postępy w zakresie dostosowywania do preferencji ludzkich, zadań pisarskich i przestrzegania instrukcji."

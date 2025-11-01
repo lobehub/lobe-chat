@@ -14,6 +14,7 @@ interface TesstProviderParams {
   provider: string;
   test?: {
     skipAPICall?: boolean;
+    skipErrorHandle?: boolean;
   };
 }
 
@@ -109,165 +110,167 @@ export const testProvider = ({
         });
       }
 
-      describe('Error', () => {
-        it('should return ProviderBizError with an openai error response when OpenAI.APIError is thrown', async () => {
-          // Arrange
-          const apiError = new OpenAI.APIError(
-            400,
-            {
-              error: {
-                message: 'Bad Request',
-              },
-              status: 400,
-            },
-            'Error message',
-            {},
-          );
-
-          vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-          // Act
-          try {
-            await instance.chat({
-              messages: [{ content: 'Hello', role: 'user' }],
-              model: chatModel,
-              temperature: 0,
-            });
-          } catch (e) {
-            expect(e).toEqual({
-              endpoint: defaultBaseURL,
-              error: {
-                error: { message: 'Bad Request' },
+      if (!test.skipErrorHandle) {
+        describe('Error', () => {
+          it('should return ProviderBizError with an openai error response when OpenAI.APIError is thrown', async () => {
+            // Arrange
+            const apiError = new OpenAI.APIError(
+              400,
+              {
+                error: {
+                  message: 'Bad Request',
+                },
                 status: 400,
               },
-              errorType: bizErrorType,
-              provider,
-            });
-          }
-        });
+              'Error message',
+              {},
+            );
 
-        it('should throw AgentRuntimeError with InvalidProviderAPIKey if no apiKey is provided', async () => {
-          try {
-            new Runtime({});
-          } catch (e) {
-            expect(e).toEqual({ errorType: invalidErrorType });
-          }
-        });
+            vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
 
-        it('should return ProviderBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
-          // Arrange
-          const errorInfo = {
-            cause: {
-              message: 'api is undefined',
-            },
-          };
-          const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
-
-          vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-          // Act
-          try {
-            await instance.chat({
-              messages: [{ content: 'Hello', role: 'user' }],
-              model: chatModel,
-              temperature: 0,
-            });
-          } catch (e) {
-            expect(e).toEqual({
-              endpoint: defaultBaseURL,
-              error: {
-                cause: { message: 'api is undefined' },
-              },
-              errorType: bizErrorType,
-              provider,
-            });
-          }
-        });
-
-        it('should return ProviderBizError with an cause response with desensitize Url', async () => {
-          // Arrange
-          const errorInfo = {
-            cause: { message: 'api is undefined' },
-          };
-          const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
-
-          instance = new Runtime({
-            apiKey: 'test',
-
-            baseURL: 'https://api.abc.com/v1',
+            // Act
+            try {
+              await instance.chat({
+                messages: [{ content: 'Hello', role: 'user' }],
+                model: chatModel,
+                temperature: 0,
+              });
+            } catch (e) {
+              expect(e).toEqual({
+                endpoint: defaultBaseURL,
+                error: {
+                  error: { message: 'Bad Request' },
+                  status: 400,
+                },
+                errorType: bizErrorType,
+                provider,
+              });
+            }
           });
 
-          vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+          it('should throw AgentRuntimeError with InvalidProviderAPIKey if no apiKey is provided', async () => {
+            try {
+              new Runtime({});
+            } catch (e) {
+              expect(e).toEqual({ errorType: invalidErrorType });
+            }
+          });
 
-          // Act
-          try {
-            await instance.chat({
-              messages: [{ content: 'Hello', role: 'user' }],
-              model: chatModel,
-              temperature: 0,
-            });
-          } catch (e) {
-            expect(e).toEqual({
-              endpoint: 'https://api.***.com/v1',
-              error: {
-                cause: { message: 'api is undefined' },
+          it('should return ProviderBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
+            // Arrange
+            const errorInfo = {
+              cause: {
+                message: 'api is undefined',
               },
-              errorType: bizErrorType,
-              provider,
+            };
+            const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
+
+            vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+
+            // Act
+            try {
+              await instance.chat({
+                messages: [{ content: 'Hello', role: 'user' }],
+                model: chatModel,
+                temperature: 0,
+              });
+            } catch (e) {
+              expect(e).toEqual({
+                endpoint: defaultBaseURL,
+                error: {
+                  cause: { message: 'api is undefined' },
+                },
+                errorType: bizErrorType,
+                provider,
+              });
+            }
+          });
+
+          it('should return ProviderBizError with an cause response with desensitize Url', async () => {
+            // Arrange
+            const errorInfo = {
+              cause: { message: 'api is undefined' },
+            };
+            const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
+
+            instance = new Runtime({
+              apiKey: 'test',
+
+              baseURL: 'https://api.abc.com/v1',
             });
-          }
+
+            vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+
+            // Act
+            try {
+              await instance.chat({
+                messages: [{ content: 'Hello', role: 'user' }],
+                model: chatModel,
+                temperature: 0,
+              });
+            } catch (e) {
+              expect(e).toEqual({
+                endpoint: 'https://api.***.com/v1',
+                error: {
+                  cause: { message: 'api is undefined' },
+                },
+                errorType: bizErrorType,
+                provider,
+              });
+            }
+          });
+
+          it(`should throw an InvalidAPIKey error type on 401 status code`, async () => {
+            // Mock the API call to simulate a 401 error
+            const error = new Error('Unauthorized') as any;
+            error.status = 401;
+            vi.mocked(instance['client'].chat.completions.create).mockRejectedValue(error);
+
+            try {
+              await instance.chat({
+                messages: [{ content: 'Hello', role: 'user' }],
+                model: chatModel,
+                temperature: 0,
+              });
+            } catch (e) {
+              // Expect the chat method to throw an error with InvalidHunyuanAPIKey
+              expect(e).toEqual({
+                endpoint: defaultBaseURL,
+                error: error,
+                errorType: invalidErrorType,
+                provider,
+              });
+            }
+          });
+
+          it('should return AgentRuntimeError for non-OpenAI errors', async () => {
+            // Arrange
+            const genericError = new Error('Generic Error');
+
+            vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(genericError);
+
+            // Act
+            try {
+              await instance.chat({
+                messages: [{ content: 'Hello', role: 'user' }],
+                model: chatModel,
+                temperature: 0,
+              });
+            } catch (e) {
+              expect(e).toEqual({
+                endpoint: defaultBaseURL,
+                error: {
+                  cause: genericError.cause,
+                  message: genericError.message,
+                  name: genericError.name,
+                },
+                errorType: 'AgentRuntimeError',
+                provider,
+              });
+            }
+          });
         });
-
-        it(`should throw an InvalidAPIKey error type on 401 status code`, async () => {
-          // Mock the API call to simulate a 401 error
-          const error = new Error('Unauthorized') as any;
-          error.status = 401;
-          vi.mocked(instance['client'].chat.completions.create).mockRejectedValue(error);
-
-          try {
-            await instance.chat({
-              messages: [{ content: 'Hello', role: 'user' }],
-              model: chatModel,
-              temperature: 0,
-            });
-          } catch (e) {
-            // Expect the chat method to throw an error with InvalidHunyuanAPIKey
-            expect(e).toEqual({
-              endpoint: defaultBaseURL,
-              error: error,
-              errorType: invalidErrorType,
-              provider,
-            });
-          }
-        });
-
-        it('should return AgentRuntimeError for non-OpenAI errors', async () => {
-          // Arrange
-          const genericError = new Error('Generic Error');
-
-          vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(genericError);
-
-          // Act
-          try {
-            await instance.chat({
-              messages: [{ content: 'Hello', role: 'user' }],
-              model: chatModel,
-              temperature: 0,
-            });
-          } catch (e) {
-            expect(e).toEqual({
-              endpoint: defaultBaseURL,
-              error: {
-                cause: genericError.cause,
-                message: genericError.message,
-                name: genericError.name,
-              },
-              errorType: 'AgentRuntimeError',
-              provider,
-            });
-          }
-        });
-      });
+      }
 
       describe('DEBUG', () => {
         it(`should call debugStream and return StreamingTextResponse when ${chatDebugEnv} is 1`, async () => {

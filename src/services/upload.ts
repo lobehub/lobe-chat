@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { sha256 } from 'js-sha256';
 
 import { fileEnv } from '@/envs/file';
-import { edgeClient } from '@/libs/trpc/client';
+import { lambdaClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
 import { clientS3Storage } from '@/services/file/ClientS3';
 import { FileMetadata, UploadBase64ToS3Result } from '@/types/files';
@@ -264,7 +264,7 @@ class UploadService {
     // 生成文件路径元数据
     const { date, dirname, filename, pathname } = generateFilePathMetadata(file.name, options);
 
-    const preSignUrl = await edgeClient.upload.createS3PreSignedUrl.mutate({ pathname });
+    const preSignUrl = await lambdaClient.upload.createS3PreSignedUrl.mutate({ pathname });
 
     return {
       date,

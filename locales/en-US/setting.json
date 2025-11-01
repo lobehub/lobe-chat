@@ -35,9 +35,16 @@
       "title": "Reset All Settings"
     }
   },
+  "groupTab": {
+    "chat": "Chat",
+    "members": "Members",
+    "meta": "Basic Info"
+  },
   "header": {
     "desc": "Preferences and model settings.",
     "global": "Global Settings",
+    "group": "Team Settings",
+    "groupDesc": "Manage Agent teams and chat preferences",
     "session": "Session Settings",
     "sessionDesc": "Role settings and session preferences.",
     "sessionWithName": "Session Settings · {{name}}",
@@ -138,6 +145,9 @@
       "title": "API Proxy Address"
     },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
+  },
+  "message": {
+    "success": "Update successful"
   },
   "plugin": {
     "addMCPPlugin": "Add MCP Plugin",
@@ -293,6 +303,109 @@
       "title": "Theme"
     },
     "title": "General Settings"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Enter team description",
+      "title": "Team Description"
+    },
+    "name": {
+      "placeholder": "Enter team name",
+      "title": "Team Name"
+    },
+    "scene": {
+      "desc": "Select team scenario",
+      "options": {
+        "casual": "Casual",
+        "productive": "Productive"
+      },
+      "title": "Team Scenario"
+    },
+    "submit": "Update Team",
+    "systemPrompt": {
+      "placeholder": "Please enter the host system prompt",
+      "title": "Host System Prompt"
+    },
+    "title": "Agent Team Information"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "When turned off, you can still send direct messages to the assistant",
+      "title": "Allow Direct Messages from Assistant"
+    },
+    "enableSupervisor": {
+      "desc": "Enable the Agent team moderator feature. Moderators will manage the team conversation flow.",
+      "title": "Enable Host"
+    },
+    "maxResponseInRow": {
+      "desc": "Select how many consecutive messages a member can reply with. Set to 0 to disable this limit.",
+      "title": "Consecutive Reply Count"
+    },
+    "model": {
+      "desc": "Group members' messages will not be affected. Some models cannot be used as host models.",
+      "title": "Host Model"
+    },
+    "orchestratorTitle": "Host Settings",
+    "responseOrder": {
+      "desc": "Agents will respond in the order set in the chat",
+      "options": {
+        "natural": "Natural",
+        "sequential": "Sequential"
+      },
+      "placeholder": "Select reply order",
+      "title": "Reply Order"
+    },
+    "responseSpeed": {
+      "desc": "Control the overall pace of the conversation",
+      "options": {
+        "fast": "Fast",
+        "medium": "Medium",
+        "slow": "Slow"
+      },
+      "placeholder": "Select reply speed",
+      "title": "Reply Speed"
+    },
+    "revealDM": {
+      "desc": "Make private messages sent to other members visible to you.",
+      "title": "Show Private Messages"
+    },
+    "submit": "Update Settings",
+    "systemPrompt": {
+      "desc": "Custom system prompt for the group chat host. This may affect the default host behavior.",
+      "placeholder": "Please enter a custom host system prompt...",
+      "title": "Host System Prompt"
+    },
+    "title": "Chat Settings"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Add to Group",
+    "availableAgents": "Available Assistants",
+    "createMember": "Create Member",
+    "defaultAgent": "Custom Assistant",
+    "disableHost": "Disable Host Assistant",
+    "edit": "Edit Member",
+    "empty": "There are no members in this team yet. Click the + button to add members.",
+    "enableHost": "Enable Host Assistant",
+    "groupHost": "Group Host",
+    "groupMembers": "Group Members",
+    "host": {
+      "description": "When the host is in the group, the chat runs automatically, suitable for brainstorming tasks.",
+      "title": "Host"
+    },
+    "noAvailableAgents": "No available assistants",
+    "noDescription": "No description",
+    "noMembersInGroup": "No members in the group",
+    "owner": "You (Owner)",
+    "remove": "Remove Member",
+    "removeFromGroup": "Remove from Group",
+    "you": "You"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Set the default number of images generated when creating a new task in the image generation panel.",
+      "label": "Default Image Count",
+      "title": "AI Drawing Settings"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -546,9 +659,10 @@
   "tab": {
     "about": "About",
     "agent": "Default Assistant",
-    "common": "Common Settings",
+    "common": "General",
     "experiment": "Experiment",
     "hotkey": "Hotkeys",
+    "image": "AI Drawing",
     "llm": "Language Model",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",

@@ -1,6 +1,9 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import { OpenRouterModelCard, OpenRouterReasoning } from './type';
 
@@ -9,7 +12,7 @@ const formatPrice = (price?: string) => {
   return Number((Number(price) * 1e6).toPrecision(5));
 };
 
-export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://openrouter.ai/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -159,4 +162,6 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
     return await processMultiProviderModelList(formattedModels, 'openrouter');
   },
   provider: ModelProvider.OpenRouter,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeOpenRouterAI = createOpenAICompatibleRuntime(params);

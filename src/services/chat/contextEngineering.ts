@@ -1,6 +1,5 @@
 import { INBOX_GUIDE_SYSTEMROLE, INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
 import {
-  type AgentState,
   ContextEngine,
   HistorySummaryProvider,
   HistoryTruncateProcessor,
@@ -12,16 +11,16 @@ import {
   SystemRoleInjector,
   ToolCallProcessor,
   ToolMessageReorder,
+  ToolNameResolver,
   ToolSystemRoleProvider,
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
-import { ChatMessage, OpenAIChatMessage } from '@lobechat/types';
+import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 
 import { isCanUseFC } from '@/helpers/isCanUseFC';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { genToolCallingName } from '@/utils/toolCall';
 
 import { isCanUseVideo, isCanUseVision } from './helper';
 
@@ -31,7 +30,7 @@ interface ContextEngineeringContext {
   historySummary?: string;
   inputTemplate?: string;
   isWelcomeQuestion?: boolean;
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
   model: string;
   provider: string;
   sessionId?: string;
@@ -52,6 +51,8 @@ export const contextEngineering = async ({
   sessionId,
   isWelcomeQuestion,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
+  const toolNameResolver = new ToolNameResolver();
+
   const pipeline = new ContextEngine({
     pipeline: [
       // 1. History truncation (MUST be first, before any message injection)
@@ -105,7 +106,12 @@ export const contextEngineering = async ({
       }),
 
       // 9. Tool call processing
-      new ToolCallProcessor({ genToolCallingName, isCanUseFC, model, provider }),
+      new ToolCallProcessor({
+        genToolCallingName: toolNameResolver.generate.bind(toolNameResolver),
+        isCanUseFC,
+        model,
+        provider,
+      }),
 
       // 10. Tool message reordering
       new ToolMessageReorder(),
@@ -115,14 +121,7 @@ export const contextEngineering = async ({
     ],
   });
 
-  const initialState: AgentState = { messages, model, provider, systemRole, tools };
-
-  const result = await pipeline.process({
-    initialState,
-    maxTokens: 10_000_000,
-    messages,
-    model,
-  });
+  const result = await pipeline.process({ messages });
 
   return result.messages;
 };

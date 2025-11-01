@@ -1,4 +1,4 @@
-import { ModelSpeed, ModelTokensUsage, ModelUsage } from '@/types/message';
+import { ModelPerformance, ModelTokensUsage, ModelUsage } from '@lobechat/types';
 
 import { MessageToolCall, MessageToolCallChunk } from './toolsCalling';
 
@@ -186,7 +186,7 @@ export interface ChatCompletionTool {
 
 export interface OnFinishData {
   grounding?: any;
-  speed?: ModelSpeed;
+  speed?: ModelPerformance;
   text: string;
   thinking?: string;
   toolsCalling?: MessageToolCall[];
@@ -207,6 +207,9 @@ export interface ChatStreamCallbacks {
   onThinking?: (content: string) => Promise<void> | void;
   onToolsCalling?: (data: {
     chunk: MessageToolCallChunk[];
+    /**
+     * full tools calling array
+     */
     toolsCalling: MessageToolCall[];
   }) => Promise<void> | void;
   onUsage?: (usage: ModelTokensUsage) => Promise<void> | void;

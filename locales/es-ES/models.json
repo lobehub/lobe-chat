@@ -222,7 +222,10 @@
     "description": "Llama 4 Maverick: modelo a gran escala basado en Mixture-of-Experts, que ofrece una estrategia eficiente de activación de expertos para un rendimiento sobresaliente en inferencia."
   },
   "MiniMax-M1": {
-    "description": "Modelo de inferencia de desarrollo propio completamente nuevo. Líder mundial: 80K cadenas de pensamiento x 1M de entradas, con un rendimiento comparable a los modelos de vanguardia internacionales."
+    "description": "Modelo de inferencia de desarrollo propio completamente nuevo. Líder mundial: 80K cadenas de pensamiento x 1M de entradas, con un rendimiento comparable a los modelos más avanzados del extranjero."
+  },
+  "MiniMax-M2": {
+    "description": "Diseñado específicamente para una codificación eficiente y flujos de trabajo con agentes."
   },
   "MiniMax-Text-01": {
     "description": "En la serie de modelos MiniMax-01, hemos realizado una innovación audaz: la implementación a gran escala del mecanismo de atención lineal, donde la arquitectura Transformer tradicional ya no es la única opción. Este modelo tiene una cantidad de parámetros de hasta 456 mil millones, con 45.9 mil millones por activación. El rendimiento general del modelo es comparable a los mejores modelos internacionales, y puede manejar de manera eficiente contextos de hasta 4 millones de tokens, que es 32 veces más que GPT-4o y 20 veces más que Claude-3.5-Sonnet."
@@ -290,11 +293,11 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 es un modelo de lenguaje de expertos mixtos (MoE) con 671 mil millones de parámetros, que utiliza atención potencial de múltiples cabezas (MLA) y la arquitectura DeepSeekMoE, combinando estrategias de balanceo de carga sin pérdidas auxiliares para optimizar la eficiencia de inferencia y entrenamiento. Preentrenado en 14.8 billones de tokens de alta calidad, y ajustado mediante supervisión y aprendizaje por refuerzo, DeepSeek-V3 supera a otros modelos de código abierto y se acerca a los modelos cerrados líderes."
   },
-  "Pro/deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 es un modelo de lenguaje grande híbrido lanzado por DeepSeek AI, que incorpora múltiples mejoras importantes sobre su predecesor. Una innovación clave es la integración de los modos \"Pensamiento\" y \"No pensamiento\" en un solo modelo, permitiendo a los usuarios alternar flexiblemente mediante la configuración de plantillas de chat para adaptarse a diferentes tareas. Gracias a una optimización post-entrenamiento especializada, V3.1 mejora significativamente el rendimiento en llamadas a herramientas y tareas Agent, soportando mejor herramientas de búsqueda externas y la ejecución de tareas complejas en múltiples pasos. Basado en DeepSeek-V3.1-Base, se amplió considerablemente la cantidad de datos de entrenamiento mediante un método de extensión de texto largo en dos fases, mejorando su desempeño en documentos extensos y código largo. Como modelo de código abierto, DeepSeek-V3.1 demuestra capacidades comparables a los mejores modelos cerrados en benchmarks de codificación, matemáticas y razonamiento, y gracias a su arquitectura de expertos mixtos (MoE), mantiene una gran capacidad de modelo mientras reduce eficazmente los costos de inferencia."
-  },
   "Pro/deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus es una versión actualizada del modelo V3.1 lanzado por DeepSeek, posicionada como un modelo de lenguaje grande con agentes híbridos. Esta actualización mantiene las capacidades originales del modelo, enfocándose en corregir problemas reportados por los usuarios y mejorar la estabilidad. Mejora significativamente la coherencia del lenguaje, reduciendo la mezcla de chino e inglés y la aparición de caracteres anómalos. El modelo integra el “Modo de pensamiento” y el “Modo sin pensamiento”, permitiendo a los usuarios cambiar flexiblemente mediante plantillas de chat para adaptarse a diferentes tareas. Como optimización importante, V3.1-Terminus mejora el rendimiento del agente de código y del agente de búsqueda, haciéndolos más confiables en la invocación de herramientas y en la ejecución de tareas complejas de múltiples pasos."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3.2-Exp": {
+    "description": "DeepSeek-V3.2-Exp es una versión experimental lanzada por DeepSeek como un paso intermedio hacia una arquitectura de próxima generación. Basado en V3.1-Terminus, introduce el mecanismo de Atención Dispersa de DeepSeek (DeepSeek Sparse Attention, DSA) para mejorar la eficiencia en el entrenamiento e inferencia con contextos largos. Ha sido especialmente optimizado para la invocación de herramientas, la comprensión de documentos extensos y el razonamiento en múltiples pasos. V3.2-Exp actúa como un puente entre la investigación y la producción, ideal para usuarios que buscan explorar una mayor eficiencia de razonamiento en escenarios con presupuestos de contexto elevados."
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 es la versión más reciente y potente de Kimi K2. Es un modelo de lenguaje de expertos mixtos (MoE) de primer nivel, con un total de un billón de parámetros y 32 mil millones de parámetros activados. Las principales características de este modelo incluyen: inteligencia mejorada para agentes de codificación, mostrando un rendimiento notable en pruebas de referencia públicas y en tareas reales de agentes de codificación; y una experiencia mejorada en la codificación frontend, con avances tanto en la estética como en la funcionalidad de la programación frontend."
@@ -310,6 +313,12 @@
   },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview es el último modelo de investigación experimental de Qwen, enfocado en mejorar la capacidad de razonamiento de la IA. A través de la exploración de mecanismos complejos como la mezcla de lenguajes y el razonamiento recursivo, sus principales ventajas incluyen una poderosa capacidad de análisis de razonamiento, así como habilidades matemáticas y de programación. Sin embargo, también presenta problemas de cambio de idioma, ciclos de razonamiento, consideraciones de seguridad y diferencias en otras capacidades."
+  },
+  "Qwen/Qwen-Image": {
+    "description": "Qwen-Image es un modelo base de generación de imágenes desarrollado por el equipo Tongyi Qianwen de Alibaba, con 20 mil millones de parámetros. Este modelo ha logrado avances significativos en la representación compleja de texto y la edición precisa de imágenes, destacándose especialmente en la generación de imágenes con texto en chino e inglés de alta fidelidad. Qwen-Image no solo puede manejar diseños de múltiples líneas y textos a nivel de párrafo, sino que también mantiene la coherencia tipográfica y la armonía contextual al generar imágenes. Además de su sobresaliente capacidad de renderizado de texto, el modelo admite una amplia gama de estilos artísticos, desde fotografía realista hasta estética de anime, adaptándose con flexibilidad a diversas necesidades creativas. También posee potentes capacidades de edición y comprensión de imágenes, incluyendo transferencia de estilo, adición y eliminación de objetos, mejora de detalles, edición de texto e incluso manipulación de posturas humanas. Su objetivo es convertirse en un modelo base integral para la creación y procesamiento visual inteligente que integre lenguaje, diseño y contenido visual."
+  },
+  "Qwen/Qwen-Image-Edit-2509": {
+    "description": "Qwen-Image-Edit-2509 es la versión más reciente de edición de imágenes del modelo Qwen-Image, lanzado por el equipo Tongyi Qianwen de Alibaba. Este modelo ha sido entrenado en profundidad sobre la base del modelo Qwen-Image de 20 mil millones de parámetros, extendiendo con éxito su capacidad única de renderizado de texto al ámbito de la edición de imágenes, logrando una edición precisa del texto dentro de las imágenes. Qwen-Image-Edit adopta una arquitectura innovadora que envía la imagen de entrada simultáneamente a Qwen2.5-VL (para el control semántico visual) y al codificador VAE (para el control de la apariencia visual), lo que le otorga una capacidad de edición dual tanto semántica como visual. Esto significa que no solo permite ediciones locales de apariencia como agregar, eliminar o modificar elementos, sino también ediciones semánticas visuales avanzadas que requieren coherencia semántica, como la creación de propiedad intelectual (IP) o la transferencia de estilo. El modelo ha demostrado un rendimiento de vanguardia (SOTA) en múltiples pruebas de referencia públicas, consolidándose como un potente modelo base para la edición de imágenes."
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 es un modelo de lenguaje general avanzado, que soporta múltiples tipos de instrucciones."
@@ -391,6 +400,39 @@
   },
   "Qwen/Qwen3-Next-80B-A3B-Thinking": {
     "description": "Qwen3-Next-80B-A3B-Thinking es un modelo base de próxima generación lanzado por el equipo Tongyi Qianwen de Alibaba, diseñado específicamente para tareas complejas de razonamiento. Basado en la innovadora arquitectura Qwen3-Next, que integra mecanismos de atención híbrida (Gated DeltaNet y Gated Attention) y una estructura de expertos mixtos altamente dispersos (MoE), busca alcanzar una eficiencia extrema en entrenamiento e inferencia. Como modelo disperso con 80 mil millones de parámetros totales, solo activa alrededor de 3 mil millones durante la inferencia, reduciendo considerablemente el costo computacional. En tareas de contexto largo que superan los 32K tokens, su rendimiento es más de 10 veces superior al modelo Qwen3-32B. Esta versión “Thinking” está optimizada para ejecutar tareas complejas de múltiples pasos como demostraciones matemáticas, síntesis de código, análisis lógico y planificación, y por defecto produce el proceso de razonamiento en forma estructurada de “cadena de pensamiento”. En rendimiento, supera no solo a modelos más costosos como Qwen3-32B-Thinking, sino también a Gemini-2.5-Flash-Thinking en múltiples benchmarks."
+  },
+  "Qwen/Qwen3-Omni-30B-A3B-Captioner": {
+    "description": "Qwen3-Omni-30B-A3B-Captioner es un modelo de lenguaje visual (VLM) de la serie Qwen3 del equipo Qwen de Alibaba. Está diseñado para generar descripciones de imágenes de alta calidad, detalladas y precisas. Basado en una arquitectura de expertos mixtos (MoE) con un total de 30 mil millones de parámetros, el modelo puede comprender profundamente el contenido visual y convertirlo en descripciones textuales naturales y fluidas. Destaca en la captura de detalles visuales, comprensión de escenas, reconocimiento de objetos y razonamiento relacional, siendo ideal para aplicaciones que requieren una comprensión precisa de imágenes y generación de descripciones."
+  },
+  "Qwen/Qwen3-Omni-30B-A3B-Instruct": {
+    "description": "Qwen3-Omni-30B-A3B-Instruct es parte de la última serie Qwen3 del equipo Qwen de Alibaba. Es un modelo de expertos mixtos (MoE) con 30 mil millones de parámetros totales y 3 mil millones de parámetros activos, que mantiene un alto rendimiento mientras reduce los costos de inferencia. Entrenado con datos de alta calidad, multifuente y multilingües, posee una gran capacidad general y admite entradas multimodales, incluyendo texto, imágenes, audio y video, permitiendo la comprensión y generación de contenido entre modalidades."
+  },
+  "Qwen/Qwen3-Omni-30B-A3B-Thinking": {
+    "description": "Qwen3-Omni-30B-A3B-Thinking es el componente central \"pensante\" (Thinker) del modelo multimodal Qwen3-Omni. Está diseñado para procesar entradas multimodales como texto, audio, imágenes y video, y realizar razonamientos complejos en cadena. Como el cerebro del sistema de inferencia, este modelo unifica todas las entradas en un espacio de representación común, logrando una comprensión profunda y razonamiento complejo entre modalidades. Basado en una arquitectura de expertos mixtos (MoE), cuenta con 30 mil millones de parámetros totales y 3 mil millones de parámetros activos, optimizando la eficiencia computacional sin sacrificar capacidad de razonamiento."
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Instruct": {
+    "description": "Qwen3-VL-235B-A22B-Instruct es un modelo de ajuste fino basado en instrucciones de gran escala de la serie Qwen3-VL. Basado en una arquitectura de expertos mixtos (MoE), ofrece una capacidad sobresaliente de comprensión y generación multimodal, con soporte nativo para contextos de hasta 256K, ideal para servicios multimodales de nivel de producción con alta concurrencia."
+  },
+  "Qwen/Qwen3-VL-235B-A22B-Thinking": {
+    "description": "Qwen3-VL-235B-A22B-Thinking es la versión insignia de razonamiento de la serie Qwen3-VL, especialmente optimizada para el razonamiento multimodal complejo, el razonamiento con contextos largos y la interacción con agentes inteligentes. Es adecuada para escenarios empresariales que requieren razonamiento profundo y capacidades avanzadas de inferencia visual."
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Instruct": {
+    "description": "Qwen3-VL-30B-A3B-Instruct es una versión de ajuste fino basada en instrucciones de la serie Qwen3-VL, con potentes capacidades de comprensión y generación visual-lingüística. Soporta de forma nativa contextos de hasta 256K, siendo ideal para diálogos multimodales y tareas de generación condicionada por imágenes."
+  },
+  "Qwen/Qwen3-VL-30B-A3B-Thinking": {
+    "description": "Qwen3-VL-30B-A3B-Thinking es la versión mejorada para razonamiento (Thinking) de Qwen3-VL, optimizada para tareas de razonamiento multimodal, conversión de imágenes a código y comprensión visual compleja. Soporta contextos de hasta 256K y posee una capacidad mejorada de razonamiento en cadena."
+  },
+  "Qwen/Qwen3-VL-32B-Instruct": {
+    "description": "Qwen3-VL-32B-Instruct es un modelo de lenguaje visual desarrollado por el equipo Qwen de Alibaba, que ha alcanzado un rendimiento SOTA líder en múltiples pruebas de referencia de lenguaje visual. Admite imágenes de alta resolución a nivel de megapíxeles y posee una potente capacidad de comprensión visual general, OCR multilingüe, localización visual de alta precisión y diálogo visual. Como parte de la serie Qwen3, este modelo puede manejar tareas multimodales complejas y admite funciones avanzadas como llamadas a herramientas y generación de texto con prefijos."
+  },
+  "Qwen/Qwen3-VL-32B-Thinking": {
+    "description": "Qwen3-VL-32B-Thinking es una versión optimizada del modelo de lenguaje visual de la serie Qwen3 del equipo Qwen de Alibaba, diseñada específicamente para tareas de razonamiento visual complejo. Incorpora un \"modo de pensamiento\" que le permite generar pasos intermedios detallados antes de responder, mejorando significativamente su rendimiento en tareas que requieren lógica multietapa, planificación y razonamiento complejo. Admite imágenes de alta resolución a nivel de megapíxeles, y cuenta con sólidas capacidades de comprensión visual general, OCR multilingüe, localización visual precisa y diálogo visual, además de funciones como llamadas a herramientas y generación con prefijos."
+  },
+  "Qwen/Qwen3-VL-8B-Instruct": {
+    "description": "Qwen3-VL-8B-Instruct es un modelo de lenguaje visual de la serie Qwen3, desarrollado a partir de Qwen3-8B-Instruct y entrenado con grandes volúmenes de datos de texto e imagen. Se especializa en comprensión visual general, diálogos centrados en lo visual y reconocimiento multilingüe de texto en imágenes. Es adecuado para tareas como preguntas y respuestas visuales, descripción de imágenes, seguimiento de instrucciones multimodales y activación de herramientas."
+  },
+  "Qwen/Qwen3-VL-8B-Thinking": {
+    "description": "Qwen3-VL-8B-Thinking es la versión de razonamiento visual de la serie Qwen3, optimizada para tareas complejas de razonamiento en múltiples pasos. Por defecto, genera una cadena de pensamiento antes de responder, con el fin de mejorar la precisión del razonamiento. Es ideal para escenarios que requieren razonamiento profundo, como preguntas y respuestas visuales complejas o análisis detallado del contenido de imágenes."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 es la última serie del modelo Qwen, que admite un contexto de 128k. En comparación con los modelos de código abierto más óptimos actuales, Qwen2-72B supera significativamente a los modelos líderes actuales en comprensión del lenguaje natural, conocimiento, código, matemáticas y capacidades multilingües."
@@ -767,6 +809,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet proporciona un equilibrio ideal entre inteligencia y velocidad para cargas de trabajo empresariales. Ofrece la máxima utilidad a un costo más bajo, siendo fiable y adecuado para implementaciones a gran escala."
   },
+  "claude-haiku-4-5-20251001": {
+    "description": "Claude Haiku 4.5 es el modelo Haiku más rápido e inteligente de Anthropic, con una velocidad relámpago y una capacidad de razonamiento ampliada."
+  },
   "claude-opus-4-1-20250805": {
     "description": "Claude Opus 4.1 es el modelo más potente y reciente de Anthropic para manejar tareas altamente complejas. Sobresale en rendimiento, inteligencia, fluidez y comprensión."
   },
@@ -851,6 +896,39 @@
   "cohere/embed-v4.0": {
     "description": "Un modelo que permite clasificar texto, imágenes o contenido mixto o convertirlos en incrustaciones."
   },
+  "comfyui/flux-dev": {
+    "description": "FLUX.1 Dev - Modelo de generación de imágenes a partir de texto de alta calidad, genera en 10-50 pasos, ideal para creaciones artísticas y obras de alta calidad"
+  },
+  "comfyui/flux-kontext-dev": {
+    "description": "FLUX.1 Kontext-dev - Modelo de edición de imágenes, permite modificar imágenes existentes mediante instrucciones de texto, compatible con ediciones parciales y transferencia de estilo"
+  },
+  "comfyui/flux-krea-dev": {
+    "description": "FLUX.1 Krea-dev - Modelo de generación de imágenes con seguridad mejorada, desarrollado en colaboración con Krea, incluye filtros de seguridad integrados"
+  },
+  "comfyui/flux-schnell": {
+    "description": "FLUX.1 Schnell - Modelo ultrarrápido de generación de imágenes a partir de texto, genera imágenes de alta calidad en solo 1-4 pasos, ideal para aplicaciones en tiempo real y creación rápida de prototipos"
+  },
+  "comfyui/stable-diffusion-15": {
+    "description": "Modelo Stable Diffusion 1.5 de generación de imágenes a partir de texto, clásico con resolución de 512x512, ideal para prototipos rápidos y experimentación creativa"
+  },
+  "comfyui/stable-diffusion-35": {
+    "description": "Modelo de nueva generación Stable Diffusion 3.5 para generación de imágenes a partir de texto, disponible en versiones Large y Medium, requiere archivo externo del codificador CLIP, ofrece excelente calidad de imagen y precisión en la interpretación de los prompts"
+  },
+  "comfyui/stable-diffusion-35-inclclip": {
+    "description": "Versión de Stable Diffusion 3.5 con codificadores CLIP/T5 integrados, no requiere archivos externos, compatible con modelos como sd3.5_medium_incl_clips, con menor consumo de recursos"
+  },
+  "comfyui/stable-diffusion-custom": {
+    "description": "Modelo personalizado de generación de imágenes SD, el archivo del modelo debe llamarse custom_sd_lobe.safetensors; si se utiliza VAE, debe llamarse custom_sd_vae_lobe.safetensors. Los archivos del modelo deben colocarse en la carpeta correspondiente según los requisitos de Comfy"
+  },
+  "comfyui/stable-diffusion-custom-refiner": {
+    "description": "Modelo personalizado SDXL de conversión de imagen a imagen, el archivo del modelo debe llamarse custom_sd_lobe.safetensors; si se utiliza VAE, debe llamarse custom_sd_vae_lobe.safetensors. Los archivos del modelo deben colocarse en la carpeta correspondiente según los requisitos de Comfy"
+  },
+  "comfyui/stable-diffusion-refiner": {
+    "description": "Modelo SDXL de conversión de imagen a imagen, transforma imágenes de entrada en imágenes de alta calidad, compatible con transferencia de estilo, restauración de imágenes y transformaciones creativas"
+  },
+  "comfyui/stable-diffusion-xl": {
+    "description": "Modelo SDXL de generación de imágenes a partir de texto, compatible con generación de imágenes en alta resolución 1024x1024, ofrece mejor calidad de imagen y mayor nivel de detalle"
+  },
   "command": {
     "description": "Un modelo de conversación que sigue instrucciones, ofreciendo alta calidad y fiabilidad en tareas lingüísticas, además de tener una longitud de contexto más larga que nuestros modelos de generación básicos."
   },
@@ -899,6 +977,9 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct ofrece capacidades de procesamiento de instrucciones de alta fiabilidad, soportando aplicaciones en múltiples industrias."
   },
+  "deepseek-ai/DeepSeek-OCR": {
+    "description": "DeepSeek-OCR es un modelo de lenguaje visual desarrollado por DeepSeek AI, enfocado en el reconocimiento óptico de caracteres (OCR) y la \"compresión óptica contextual\". Este modelo explora los límites de la compresión de información contextual a partir de imágenes, permitiendo procesar documentos de manera eficiente y convertirlos en formatos de texto estructurado como Markdown. Es capaz de reconocer con precisión el contenido textual en imágenes, siendo especialmente útil para digitalización de documentos, extracción de texto y procesamiento estructurado."
+  },
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 es un modelo de inferencia impulsado por aprendizaje reforzado (RL) que aborda los problemas de repetitividad y legibilidad en el modelo. Antes de RL, DeepSeek-R1 introdujo datos de arranque en frío, optimizando aún más el rendimiento de la inferencia. Su desempeño en tareas matemáticas, de código e inferencia es comparable al de OpenAI-o1, y ha mejorado su efectividad general a través de métodos de entrenamiento cuidadosamente diseñados."
   },
@@ -930,13 +1011,13 @@
     "description": "DeepSeek-V3 es un modelo de lenguaje de expertos mixtos (MoE) con 6710 millones de parámetros, que utiliza atención latente de múltiples cabezas (MLA) y la arquitectura DeepSeekMoE, combinando una estrategia de balanceo de carga sin pérdidas auxiliares para optimizar la eficiencia de inferencia y entrenamiento. Al ser preentrenado en 14.8 billones de tokens de alta calidad y realizar ajustes supervisados y aprendizaje reforzado, DeepSeek-V3 supera en rendimiento a otros modelos de código abierto, acercándose a los modelos cerrados líderes."
   },
   "deepseek-ai/DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 es un modelo de lenguaje grande híbrido lanzado por DeepSeek AI, que incorpora múltiples mejoras importantes sobre su predecesor. Una innovación clave es la integración de los modos \"Pensamiento\" y \"No pensamiento\" en un solo modelo, permitiendo a los usuarios alternar flexiblemente mediante la configuración de plantillas de chat para adaptarse a diferentes tareas. Gracias a una optimización post-entrenamiento especializada, V3.1 mejora significativamente el rendimiento en llamadas a herramientas y tareas Agent, soportando mejor herramientas de búsqueda externas y la ejecución de tareas complejas en múltiples pasos. Basado en DeepSeek-V3.1-Base, se amplió considerablemente la cantidad de datos de entrenamiento mediante un método de extensión de texto largo en dos fases, mejorando su desempeño en documentos extensos y código largo. Como modelo de código abierto, DeepSeek-V3.1 demuestra capacidades comparables a los mejores modelos cerrados en benchmarks de codificación, matemáticas y razonamiento, y gracias a su arquitectura de expertos mixtos (MoE), mantiene una gran capacidad de modelo mientras reduce eficazmente los costos de inferencia."
+    "description": "El modelo DeepSeek V3.1 adopta una arquitectura de inferencia híbrida, compatible tanto con el modo de razonamiento como con el modo no razonante."
   },
   "deepseek-ai/DeepSeek-V3.1-Terminus": {
     "description": "DeepSeek-V3.1-Terminus es una versión actualizada del modelo V3.1 lanzado por DeepSeek, posicionada como un modelo de lenguaje grande con agentes híbridos. Esta actualización mantiene las capacidades originales del modelo, enfocándose en corregir problemas reportados por los usuarios y mejorar la estabilidad. Mejora significativamente la coherencia del lenguaje, reduciendo la mezcla de chino e inglés y la aparición de caracteres anómalos. El modelo integra el “Modo de pensamiento” y el “Modo sin pensamiento”, permitiendo a los usuarios cambiar flexiblemente mediante plantillas de chat para adaptarse a diferentes tareas. Como optimización importante, V3.1-Terminus mejora el rendimiento del agente de código y del agente de búsqueda, haciéndolos más confiables en la invocación de herramientas y en la ejecución de tareas complejas de múltiples pasos."
   },
   "deepseek-ai/DeepSeek-V3.2-Exp": {
-    "description": "El modelo DeepSeek V3.2 Exp es una arquitectura de inferencia híbrida que admite tanto el modo reflexivo como el no reflexivo."
+    "description": "DeepSeek-V3.2-Exp es una versión experimental lanzada por DeepSeek como un paso intermedio hacia una arquitectura de próxima generación. Basado en V3.1-Terminus, introduce el mecanismo de Atención Dispersa de DeepSeek (DeepSeek Sparse Attention, DSA) para mejorar la eficiencia en el entrenamiento e inferencia con contextos largos. Ha sido especialmente optimizado para la invocación de herramientas, la comprensión de documentos extensos y el razonamiento en múltiples pasos. V3.2-Exp actúa como un puente entre la investigación y la producción, ideal para usuarios que buscan explorar una mayor eficiencia de razonamiento en escenarios con presupuestos de contexto elevados."
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B es un modelo avanzado entrenado para diálogos de alta complejidad."
@@ -1147,6 +1228,9 @@
   },
   "doubao-seed-1.6-flash": {
     "description": "Doubao-Seed-1.6-flash es un modelo multimodal de pensamiento profundo con velocidad de inferencia extrema, TPOT de solo 10 ms; soporta comprensión tanto textual como visual, con capacidad de comprensión textual superior a la generación lite anterior y comprensión visual comparable a los modelos pro de la competencia. Soporta una ventana de contexto de 256k y una longitud máxima de salida de 16k tokens."
+  },
+  "doubao-seed-1.6-lite": {
+    "description": "Doubao-Seed-1.6-lite es un nuevo modelo multimodal de pensamiento profundo que permite ajustar el nivel de razonamiento (reasoning effort) en cuatro modos: Mínimo, Bajo, Medio y Alto. Ofrece una excelente relación calidad-precio y es la mejor opción para tareas comunes, con una ventana de contexto de hasta 256k."
   },
   "doubao-seed-1.6-thinking": {
     "description": "El modelo Doubao-Seed-1.6-thinking tiene una capacidad de pensamiento significativamente mejorada. En comparación con Doubao-1.5-thinking-pro, mejora aún más en habilidades básicas como programación, matemáticas y razonamiento lógico, y soporta comprensión visual. Soporta una ventana de contexto de 256k y una longitud máxima de salida de 16k tokens."
@@ -1541,9 +1625,6 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posee una poderosa capacidad de razonamiento complejo, destacándose en áreas como razonamiento lógico, matemáticas y programación."
   },
-  "glm4.6:355b": {
-    "description": "El modelo insignia más reciente de Zhipu, GLM-4.6 (355B), supera ampliamente a su predecesor en codificación avanzada, procesamiento de textos largos, razonamiento y capacidades de agentes inteligentes. En particular, su habilidad para programar está a la par con Claude Sonnet 4, consolidándose como el modelo de codificación líder en China."
-  },
   "google/gemini-2.0-flash": {
     "description": "Gemini 2.0 Flash ofrece funcionalidades de próxima generación y mejoras, incluyendo velocidad sobresaliente, uso integrado de herramientas, generación multimodal y una ventana de contexto de 1 millón de tokens."
   },
@@ -1609,9 +1690,6 @@
   },
   "google/gemma-3-12b-it": {
     "description": "Gemma 3 12B es un modelo de lenguaje de código abierto de Google que establece nuevos estándares en eficiencia y rendimiento."
-  },
-  "google/gemma-3-1b-it": {
-    "description": "Gemma 3 1B es un modelo de lenguaje de código abierto de Google que establece nuevos estándares en eficiencia y rendimiento."
   },
   "google/gemma-3-27b-it": {
     "description": "Gemma 3 27B es un modelo de lenguaje de código abierto de Google, que establece nuevos estándares en eficiencia y rendimiento."
@@ -1934,11 +2012,17 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small es la opción ideal para tareas de generación, depuración y refactorización de código, con latencia mínima."
   },
+  "inclusionAI/Ling-1T": {
+    "description": "Ling-1T es el primer modelo insignia sin razonamiento de la serie \"Ling 2.0\", con un total de un billón de parámetros y aproximadamente 50 mil millones de parámetros activos por token. Construido sobre la arquitectura Ling 2.0, Ling-1T está diseñado para superar los límites del razonamiento eficiente y la cognición escalable. Ling-1T-base ha sido entrenado con más de 20 billones de tokens de alta calidad y con alta densidad de razonamiento."
+  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0 es el tercer modelo de la serie Ling 2.0 basado en la arquitectura MoE, lanzado por el equipo Bailing de Ant Group. Cuenta con 100 mil millones de parámetros totales, pero solo activa 6.1 mil millones por token (4.8 mil millones sin incluir embeddings). Como un modelo de configuración ligera, Ling-flash-2.0 demuestra en múltiples evaluaciones oficiales un rendimiento comparable o superior a modelos densos de 40 mil millones y a modelos MoE de mayor escala. Este modelo busca explorar caminos eficientes bajo el consenso de que un modelo grande equivale a muchos parámetros, mediante un diseño arquitectónico y estrategias de entrenamiento extremas."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 es un modelo de lenguaje grande de alto rendimiento y tamaño reducido basado en arquitectura MoE. Cuenta con 16 mil millones de parámetros totales, pero solo activa 1.4 mil millones por token (789 millones sin incluir embeddings), logrando una velocidad de generación muy alta. Gracias a un diseño MoE eficiente y a un entrenamiento masivo con datos de alta calidad, Ling-mini-2.0 ofrece un rendimiento de primer nivel en tareas downstream, comparable a modelos densos de menos de 10 mil millones y a modelos MoE de mayor escala."
+  },
+  "inclusionAI/Ring-1T": {
+    "description": "Ring-1T es un modelo de pensamiento de código abierto a escala de un billón de parámetros, lanzado por el equipo Bailing. Basado en la arquitectura Ling 2.0 y el modelo base Ling-1T, cuenta con un total de un billón de parámetros y 50 mil millones de parámetros activos, y admite una ventana de contexto de hasta 128K. El modelo ha sido optimizado mediante aprendizaje por refuerzo con recompensas verificables a gran escala."
   },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0 es un modelo de pensamiento de alto rendimiento profundamente optimizado basado en Ling-flash-2.0-base. Utiliza arquitectura MoE con 100 mil millones de parámetros totales, pero solo activa 6.1 mil millones en cada inferencia. Gracias al algoritmo innovador icepop, resuelve la inestabilidad de los grandes modelos MoE en entrenamiento por refuerzo (RL), mejorando continuamente su capacidad de razonamiento complejo en entrenamientos prolongados. Ring-flash-2.0 ha logrado avances significativos en competencias matemáticas, generación de código y razonamiento lógico, superando modelos densos de hasta 40 mil millones de parámetros y equiparándose a modelos MoE de mayor escala y modelos de pensamiento de alto rendimiento cerrados. Aunque está enfocado en razonamiento complejo, también destaca en tareas creativas de escritura. Además, su diseño eficiente permite un rendimiento rápido y reduce significativamente los costos de despliegue en escenarios de alta concurrencia."
@@ -2035,9 +2119,6 @@
   },
   "llama-3.3-instruct": {
     "description": "El modelo de instrucción Llama 3.3, optimizado para escenarios de diálogo, supera a muchos modelos de chat de código abierto existentes en pruebas de referencia comunes de la industria."
-  },
-  "llama-4-maverick-17b-128e-instruct": {
-    "description": "Llama 4 Maverick: un modelo de alto rendimiento de la serie Llama, ideal para razonamiento avanzado, resolución de problemas complejos y tareas de seguimiento de instrucciones."
   },
   "llama-4-scout-17b-16e-instruct": {
     "description": "Llama 4 Scout: un modelo de alto rendimiento de la serie Llama, diseñado para escenarios que requieren alto rendimiento y baja latencia."
@@ -2422,9 +2503,6 @@
   },
   "mistralai/Mixtral-8x7B-v0.1": {
     "description": "Mixtral 8x7B es un modelo de expertos dispersos que utiliza múltiples parámetros para aumentar la velocidad de razonamiento, adecuado para tareas de generación de múltiples idiomas y códigos."
-  },
-  "mistralai/mistral-7b-instruct": {
-    "description": "Mistral 7B Instruct es un modelo de estándar industrial de alto rendimiento, optimizado para velocidad y soporte de contexto largo."
   },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo es un modelo de 7.3B parámetros con soporte multilingüe y programación de alto rendimiento."
@@ -2906,6 +2984,9 @@
   "qwen3-8b": {
     "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
   },
+  "qwen3-coder-30b-a3b-instruct": {
+    "description": "Versión de código abierto del modelo de codificación Tongyi Qianwen. El nuevo qwen3-coder-30b-a3b-instruct, basado en Qwen3, es un modelo de generación de código con potentes capacidades como Agente de Programación, especializado en llamadas a herramientas e interacción con entornos, capaz de programar de forma autónoma con habilidades de codificación sobresalientes y capacidades generales."
+  },
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Versión de código abierto del modelo de código Tongyi Qianwen. El más reciente qwen3-coder-480b-a35b-instruct está basado en Qwen3, con fuertes capacidades de agente de codificación, experto en llamadas a herramientas e interacción con entornos, capaz de programación autónoma y con habilidades sobresalientes de código y capacidades generales."
   },
@@ -2927,11 +3008,29 @@
   "qwen3-next-80b-a3b-thinking": {
     "description": "Modelo de código abierto de nueva generación basado en Qwen3 en modo reflexivo, que mejora la capacidad de seguir instrucciones y ofrece respuestas más concisas en comparación con la versión anterior (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
   },
+  "qwen3-omni-flash": {
+    "description": "El modelo Qwen-Omni puede recibir entradas combinadas de texto, imágenes, audio y video, y generar respuestas en forma de texto o voz. Ofrece múltiples voces humanizadas, admite salida de voz en varios idiomas y dialectos, y puede aplicarse en escenarios como creación de texto, reconocimiento visual y asistentes de voz."
+  },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Instruct es un modelo multimodal desarrollado por Tongyi Qianwen, compatible con comprensión visual y razonamiento."
+    "description": "Qwen3 VL 235B A22B en modo sin razonamiento (Instruct), adecuado para escenarios de instrucciones sin razonamiento, manteniendo una potente capacidad de comprensión visual."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Thinking es un modelo de razonamiento multimodal desarrollado por Tongyi Qianwen, compatible con comprensión visual y razonamiento."
+    "description": "Qwen3 VL 235B A22B en modo de razonamiento (versión de código abierto), diseñado para escenarios complejos que requieren razonamiento avanzado y comprensión de videos largos, ofreciendo capacidades de razonamiento visual + textual de primer nivel."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B en modo sin razonamiento (Instruct), orientado a escenarios comunes de seguimiento de instrucciones, manteniendo una alta capacidad de comprensión y generación multimodal."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen-VL (versión de código abierto) ofrece capacidades de comprensión visual y generación de texto, compatible con interacción de agentes, codificación visual, percepción espacial, comprensión de videos largos y pensamiento profundo, con un sólido reconocimiento de texto y soporte multilingüe en escenarios complejos."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B en modo sin razonamiento (Instruct), adecuado para tareas comunes de generación y reconocimiento multimodal."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B en modo de razonamiento, orientado a escenarios ligeros de razonamiento e interacción multimodal, manteniendo la capacidad de comprensión de contextos largos."
+  },
+  "qwen3-vl-flash": {
+    "description": "Qwen3 VL Flash: versión ligera de inferencia rápida, ideal para escenarios sensibles a la latencia o con solicitudes en gran volumen."
   },
   "qwen3-vl-plus": {
     "description": "Tongyi Qianwen VL es un modelo generativo de texto con capacidad de comprensión visual (imágenes). No solo puede realizar OCR (reconocimiento de texto en imágenes), sino también resumir y razonar, por ejemplo, extrayendo atributos de fotos de productos o resolviendo problemas a partir de imágenes de ejercicios."
@@ -3067,6 +3166,9 @@
   },
   "tencent/Hunyuan-A13B-Instruct": {
     "description": "Hunyuan-A13B-Instruct cuenta con 80 mil millones de parámetros, activando solo 13 mil millones para igualar modelos más grandes, soporta razonamiento híbrido de \"pensamiento rápido/pensamiento lento\"; comprensión estable de textos largos; validado por BFCL-v3 y τ-Bench, con capacidades avanzadas de agente; combina GQA y múltiples formatos de cuantificación para lograr inferencias eficientes."
+  },
+  "tencent/Hunyuan-MT-7B": {
+    "description": "El modelo de traducción Hunyuan (Hunyuan Translation Model) está compuesto por el modelo de traducción Hunyuan-MT-7B y el modelo integrado Hunyuan-MT-Chimera. Hunyuan-MT-7B es un modelo de traducción ligero con 7 mil millones de parámetros, diseñado para traducir texto fuente a un idioma objetivo. Admite traducción entre 33 idiomas y 5 lenguas minoritarias chinas. En la competencia internacional de traducción automática WMT25, Hunyuan-MT-7B obtuvo el primer lugar en 30 de las 31 categorías lingüísticas en las que participó, demostrando su sobresaliente capacidad de traducción. Para escenarios de traducción, Tencent Hunyuan ha propuesto un paradigma de entrenamiento completo que abarca desde el preentrenamiento hasta el ajuste supervisado, seguido de refuerzo para traducción e integración, logrando un rendimiento líder en la industria entre modelos de tamaño similar. El modelo es eficiente en cómputo, fácil de implementar y adecuado para múltiples aplicaciones."
   },
   "text-embedding-3-large": {
     "description": "El modelo de vectorización más potente, adecuado para tareas en inglés y no inglés."

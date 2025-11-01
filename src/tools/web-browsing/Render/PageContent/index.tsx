@@ -1,10 +1,10 @@
+import { CrawlPluginState } from '@lobechat/types';
 import { CrawlErrorResult } from '@lobechat/web-crawler';
 import { ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { CrawlPluginState } from '@/types/tool/crawler';
 
 import Loading from './Loading';
 import Result from './Result';
@@ -12,10 +12,10 @@ import Result from './Result';
 interface PagesContentProps {
   messageId: string;
   results?: CrawlPluginState['results'];
-  urls: string[];
+  urls?: string[];
 }
 
-const PagesContent = memo<PagesContentProps>(({ results, messageId, urls }) => {
+const PagesContent = memo<PagesContentProps>(({ results, messageId, urls = [] }) => {
   const isMobile = useIsMobile();
 
   if (!results || results.length === 0) {

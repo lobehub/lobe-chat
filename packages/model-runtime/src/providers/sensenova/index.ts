@@ -2,13 +2,16 @@ import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
 import { convertSenseNovaMessage } from '../../core/contextBuilders/sensenova';
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 
 export interface SenseNovaModelCard {
   id: string;
 }
 
-export const LobeSenseNovaAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.sensenova.cn/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -95,4 +98,6 @@ export const LobeSenseNovaAI = createOpenAICompatibleRuntime({
       .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.SenseNova,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeSenseNovaAI = createOpenAICompatibleRuntime(params);

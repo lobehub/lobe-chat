@@ -1,6 +1,9 @@
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  type OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 
 export interface VercelAIGatewayModelCard {
@@ -25,7 +28,7 @@ export interface VercelAIGatewayReasoning {
   max_tokens?: number;
 }
 
-const formatPrice = (price?: string | number) => {
+export const formatPrice = (price?: string | number) => {
   if (price === undefined || price === null) return undefined;
   const n = typeof price === 'number' ? price : Number(price);
   if (Number.isNaN(n)) return undefined;
@@ -33,7 +36,7 @@ const formatPrice = (price?: string | number) => {
   return Number((n * 1e6).toPrecision(5));
 };
 
-export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://ai-gateway.vercel.sh/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -157,4 +160,6 @@ export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime({
     return await processMultiProviderModelList(formattedModels, 'vercelaigateway');
   },
   provider: ModelProvider.VercelAIGateway,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeVercelAIGatewayAI = createOpenAICompatibleRuntime(params);

@@ -12,9 +12,11 @@ import {
   ChatInputProvider,
 } from '@/features/ChatInput';
 import { useChatStore } from '@/store/chat';
-import { aiChatSelectors } from '@/store/chat/slices/aiChat/selectors';
+import { aiChatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 
-import { useSend } from '../useSend';
+import { useSend, useSendGroupMessage } from '../useSend';
 
 const leftActions: ActionKeys[] = [
   'model',
@@ -25,6 +27,7 @@ const leftActions: ActionKeys[] = [
   '---',
   ['params', 'history', 'stt', 'clear'],
   'mainToken',
+  'mention',
 ];
 
 const rightActions: ActionKey[] = ['saveTopic'];
@@ -32,6 +35,9 @@ const rightActions: ActionKey[] = ['saveTopic'];
 const MobileChatInput = memo(() => {
   const { t } = useTranslation('chat');
   const { send, disabled, generating, stop } = useSend();
+  const { send: sendGroupMessage } = useSendGroupMessage();
+
+  const isSessionGroup = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
 
   const [mainInputSendErrorMsg, clearSendMessageError] = useChatStore((s) => [
     aiChatSelectors.isCurrentSendMessageError(s),
@@ -48,7 +54,13 @@ const MobileChatInput = memo(() => {
       onMarkdownContentChange={(content) => {
         useChatStore.setState({ inputMessage: content });
       }}
-      onSend={() => send()}
+      onSend={() => {
+        if (isSessionGroup) {
+          sendGroupMessage();
+        } else {
+          send();
+        }
+      }}
       rightActions={rightActions}
       sendButtonProps={{ disabled, generating, onStop: stop }}
     >
