@@ -30,7 +30,8 @@ export const createAsyncServerClient = async (userId: string, payload: ClientSec
       httpLink({
         headers,
         transformer: superjson,
-        url: urlJoin(appEnv.APP_URL!, '/trpc/async'),
+        // Use INTERNAL_APP_URL for server-to-server calls to bypass CDN/proxy
+        url: urlJoin(appEnv.INTERNAL_APP_URL!, '/trpc/async'),
       }),
     ],
   });
