@@ -191,6 +191,9 @@
   "Kwai-Kolors/Kolors": {
     "description": "Kolors 是由快手 Kolors 團隊開發的基於潛在擴散的大規模文本到圖像生成模型。該模型透過數十億文本-圖像對的訓練，在視覺品質、複雜語義準確性以及中英文字元渲染方面展現出顯著優勢。它不僅支持中英文輸入，在理解和生成中文特定內容方面也表現出色。"
   },
+  "Kwaipilot/KAT-Dev": {
+    "description": "KAT-Dev（32B）是一款專為軟體工程任務設計的開源 32B 參數模型。在 SWE-Bench Verified 基準測試中，它達成了 62.4% 的解決率，在所有不同規模的開源模型中排名第五。該模型經過多階段優化，包括中間訓練、監督式微調（SFT）與強化學習（RL），旨在為程式碼補全、錯誤修復、程式碼審查等複雜編程任務提供強大支援。"
+  },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "在高解析度圖像上表現出色的圖像推理能力，適用於視覺理解應用。"
   },
@@ -787,12 +790,6 @@
   },
   "claude-3-5-haiku-latest": {
     "description": "Claude 3.5 Haiku 提供快速回應，適合輕量級任務。"
-  },
-  "claude-3-5-sonnet-20240620": {
-    "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長編程、數據科學、視覺處理、代理任務。"
-  },
-  "claude-3-5-sonnet-20241022": {
-    "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長編程、數據科學、視覺處理、代理任務。"
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet 提升了行業標準，性能超越競爭對手模型和 Claude 3 Opus，在廣泛的評估中表現出色，同時具備我們中等層級模型的速度和成本。"
@@ -2404,6 +2401,9 @@
   },
   "minicpm-v": {
     "description": "MiniCPM-V 是 OpenBMB 推出的新一代多模態大模型，具備卓越的 OCR 識別和多模態理解能力，支持廣泛的應用場景。"
+  },
+  "minimax-m2": {
+    "description": "MiniMax M2 是專為編碼與代理工作流程打造的高效大型語言模型。"
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B 是 Mistral 的全球頂尖邊緣模型。"

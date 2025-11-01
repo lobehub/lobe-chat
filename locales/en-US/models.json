@@ -191,6 +191,9 @@
   "Kwai-Kolors/Kolors": {
     "description": "Kolors is a large-scale latent diffusion text-to-image generation model developed by the Kuaishou Kolors team. Trained on billions of text-image pairs, it demonstrates significant advantages in visual quality, complex semantic accuracy, and Chinese and English character rendering. It supports both Chinese and English inputs and performs exceptionally well in understanding and generating Chinese-specific content."
   },
+  "Kwaipilot/KAT-Dev": {
+    "description": "KAT-Dev (32B) is an open-source 32B parameter model specifically designed for software engineering tasks. It achieved a 62.4% resolution rate on the SWE-Bench Verified benchmark, ranking fifth among open-source models of all sizes. The model has been optimized through multiple stages, including intermediate training, supervised fine-tuning (SFT), and reinforcement learning (RL), aiming to provide robust support for complex programming tasks such as code completion, bug fixing, and code review."
+  },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Exhibits outstanding image reasoning capabilities on high-resolution images, suitable for visual understanding applications."
   },
@@ -787,12 +790,6 @@
   },
   "claude-3-5-haiku-latest": {
     "description": "Claude 3.5 Haiku offers fast responses, ideal for lightweight tasks."
-  },
-  "claude-3-5-sonnet-20240620": {
-    "description": "Claude 3.5 Sonnet offers capabilities that surpass Opus and faster speeds than Sonnet, while maintaining the same price as Sonnet. Sonnet excels particularly in programming, data science, visual processing, and agent tasks."
-  },
-  "claude-3-5-sonnet-20241022": {
-    "description": "Claude 3.5 Sonnet offers capabilities that surpass Opus and faster speeds than Sonnet, while maintaining the same pricing as Sonnet. Sonnet excels particularly in programming, data science, visual processing, and agent tasks."
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet is Anthropic's latest model, offering a balance of speed and performance. It excels in a wide range of tasks, including programming, data science, visual processing, and agent tasks."
@@ -2404,6 +2401,9 @@
   },
   "minicpm-v": {
     "description": "MiniCPM-V is a next-generation multimodal large model launched by OpenBMB, boasting exceptional OCR recognition and multimodal understanding capabilities, supporting a wide range of application scenarios."
+  },
+  "minimax-m2": {
+    "description": "MiniMax M2 is a high-efficiency large language model built for coding and agent-based workflows."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B is Mistral's top-tier edge model."
