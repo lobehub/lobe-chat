@@ -1,4 +1,4 @@
-import { AiFullModelCard } from 'model-bank';
+import { AiFullModelCard, LOBE_DEFAULT_MODEL_LIST } from 'model-bank';
 
 /**
  * Get the model property value, first from the specified provider, and then from other providers as a fallback.
@@ -12,8 +12,6 @@ export const getModelPropertyWithFallback = async <T>(
   propertyName: keyof AiFullModelCard,
   providerId?: string,
 ): Promise<T> => {
-  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
   // Step 1: If providerId is provided, prioritize an exact match (same provider + same id)
   if (providerId) {
     const exactMatch = LOBE_DEFAULT_MODEL_LIST.find(
