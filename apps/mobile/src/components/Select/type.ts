@@ -53,6 +53,12 @@ export interface SelectProps {
    */
   options: SelectOptionItem[];
   /**
+   * 是否启用可滚动标题
+   * 当标题过长时，允许横向滚动查看完整内容
+   * @default false
+   */
+  scrollable?: boolean;
+  /**
    * 尺寸
    * @default 'middle'
    */
