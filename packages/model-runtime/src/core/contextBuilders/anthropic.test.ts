@@ -65,7 +65,7 @@ describe('anthropicHelpers', () => {
       const result = await buildAnthropicBlock(content);
 
       expect(parseDataUri).toHaveBeenCalledWith(content.image_url.url);
-      expect(imageUrlToBase64).toHaveBeenCalledWith(content.image_url.url);
+      expect(imageUrlToBase64).toHaveBeenCalledWith(content.image_url.url, undefined);
       expect(result).toEqual({
         source: {
           data: 'convertedBase64String',
@@ -74,6 +74,28 @@ describe('anthropicHelpers', () => {
         },
         type: 'image',
       });
+    });
+
+    it('should pass custom fetch to imageUrlToBase64', async () => {
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        mimeType: 'image/png',
+        base64: null,
+        type: 'url',
+      });
+      vi.mocked(imageUrlToBase64).mockResolvedValue({
+        base64: 'convertedBase64String',
+        mimeType: 'image/jpg',
+      });
+
+      const content = {
+        type: 'image_url',
+        image_url: { url: 'https://example.com/image.png' },
+      } as const;
+
+      const customFetch = vi.fn() as any;
+      await buildAnthropicBlock(content, customFetch);
+
+      expect(imageUrlToBase64).toHaveBeenCalledWith(content.image_url.url, customFetch);
     });
 
     it('should use default media_type for URL images when mimeType is not provided', async () => {
