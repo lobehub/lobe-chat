@@ -44,12 +44,12 @@ tags:
 
   | 环境变量                      | 类型 | 描述                                                                                   |
   | ------------------------- | -- | ------------------------------------------------------------------------------------ |
-  | `NEXT_AUTH_SECRET`        | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成密钥：`openssl rand -base64 32`                         |
+  | `AUTH_SECRET`             | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成密钥：`openssl rand -base64 32`                         |
   | `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Okta 请填写 `okta`。                                             |
   | `AUTH_OKTA_ID`            | 必选 | Okta 应用程序的客户端 ID                                                                     |
   | `AUTH_OKTA_SECRET`        | 必选 | Okta 应用程序的客户端密钥                                                                      |
   | `AUTH_OKTA_ISSUER`        | 必选 | Okta 应用程序的域名，`https://example.oktapreview.com`                                       |
-  | `NEXTAUTH_URL`            | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 认证时的回调地址。仅当默认地址不正确时才需要设置。`https://example.com/api/auth` |
+  | `AUTH_URL`                | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 认证时的回调地址。仅当默认地址不正确时才需要设置。`https://example.com/api/auth` |
 
   <Callout type={'tip'}>
     您可以在 [📘环境变量](/zh/docs/self-hosting/environment-variables/auth#okta) 查阅相关变量详情。
