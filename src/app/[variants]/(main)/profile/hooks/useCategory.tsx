@@ -1,9 +1,10 @@
 import { Icon } from '@lobehub/ui';
-import { ChartColumnBigIcon, KeyIcon, ShieldCheck, UserCircle } from 'lucide-react';
+import { BadgeCentIcon, ChartColumnBigIcon, KeyIcon, ShieldCheck, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
+import { getServerDBConfig } from '@/config/db';
 import { enableAuth } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
@@ -15,6 +16,7 @@ export const useCategory = () => {
   const { t } = useTranslation('auth');
   const [isLoginWithClerk] = useUserStore((s) => [authSelectors.isLoginWithClerk(s)]);
   const { showApiKeyManage } = useServerConfigStore(featureFlagsSelectors);
+  const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
   const cateItems: MenuProps['items'] = [
     {
@@ -51,6 +53,15 @@ export const useCategory = () => {
       label: (
         <Link href={'/profile/apikey'} onClick={(e) => e.preventDefault()}>
           {t('tab.apikey')}
+        </Link>
+      ),
+    },
+    NEXT_PUBLIC_ENABLED_SERVER_SERVICE && {
+      icon: <Icon icon={BadgeCentIcon} />,
+      key: ProfileTabs.Usage,
+      label: (
+        <Link href={'/profile/usage'} onClick={(e) => e.preventDefault()}>
+          {t('tab.usage')}
         </Link>
       ),
     },
