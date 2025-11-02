@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.14](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.13...v2.0.0-next.14)
+
+<sup>Released on **2025-11-02**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove client service.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove client service, closes [#9991](https://github.com/lobehub/lobe-chat/issues/9991) ([9137dba](https://github.com/lobehub/lobe-chat/commit/9137dba))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.13](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.12...v2.0.0-next.13)
 
 <sup>Released on **2025-11-02**</sup>
