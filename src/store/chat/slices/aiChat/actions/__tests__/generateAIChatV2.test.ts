@@ -35,6 +35,15 @@ vi.mock('@/components/AntdStaticMethods', () => ({
   },
 }));
 
+// Mock sessionService to prevent TRPC requests
+vi.mock('@/services/session', () => ({
+  sessionService: {
+    updateSession: vi.fn(),
+    updateSessionConfig: vi.fn(),
+    updateSessionChatConfig: vi.fn(),
+  },
+}));
+
 // Mock server mode for V2 tests
 vi.mock('@lobechat/const', async (importOriginal) => {
   const module = await importOriginal();
