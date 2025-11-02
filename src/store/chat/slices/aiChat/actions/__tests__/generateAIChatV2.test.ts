@@ -20,7 +20,7 @@ import { resetTestEnvironment, setupMockSelectors, spyOnMessageService } from '.
 vi.mock('zustand/traditional');
 
 // Mock server mode for V2 tests
-vi.mock('@/const/version', async (importOriginal) => {
+vi.mock('@lobechat/const', async (importOriginal) => {
   const module = await importOriginal();
   return {
     ...(module as any),
