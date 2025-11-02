@@ -302,7 +302,7 @@
     "zustand-utils": "^2.1.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.8.1",
+    "@commitlint/cli": "^20.1.0",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.19.50",
     "@lobechat/types": "workspace:*",
@@ -343,7 +343,7 @@
     "@typescript/native-preview": "7.0.0-dev.20250711.1",
     "@vitest/coverage-v8": "^3.2.4",
     "ajv-keywords": "^5.1.0",
-    "commitlint": "^19.8.1",
+    "commitlint": "^20.1.0",
     "consola": "^3.4.2",
     "cross-env": "^10.1.0",
     "crypto-js": "^4.2.0",
