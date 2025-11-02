@@ -71,7 +71,10 @@ describe('MessageModel - Message Grouping', () => {
       });
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify grouping
       expect(result).toHaveLength(1);
@@ -150,7 +153,10 @@ describe('MessageModel - Message Grouping', () => {
       ]);
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify grouping
       expect(result).toHaveLength(1);
@@ -173,7 +179,10 @@ describe('MessageModel - Message Grouping', () => {
       });
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify no grouping
       expect(result).toHaveLength(1);
@@ -203,7 +212,10 @@ describe('MessageModel - Message Grouping', () => {
       // No tool message created yet
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify grouping without result
       expect(result).toHaveLength(1);
@@ -285,7 +297,10 @@ describe('MessageModel - Message Grouping', () => {
       ]);
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Should have 1 group with 2 children
       expect(result).toHaveLength(1);
@@ -381,7 +396,10 @@ describe('MessageModel - Message Grouping', () => {
       ]);
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Should have 1 group with 3 children
       expect(result).toHaveLength(1);
@@ -486,7 +504,10 @@ describe('MessageModel - Message Grouping', () => {
       ]);
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify grouping
       expect(result).toHaveLength(4); // 2 users + 2 grouped assistants
@@ -539,7 +560,10 @@ describe('MessageModel - Message Grouping', () => {
       });
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify grouping
       expect(result).toHaveLength(2);
@@ -586,7 +610,10 @@ describe('MessageModel - Message Grouping', () => {
       });
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify error is preserved
       expect(result).toHaveLength(1);
@@ -623,7 +650,10 @@ describe('MessageModel - Message Grouping', () => {
       ]);
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify order
       expect(result).toHaveLength(3);
@@ -649,7 +679,10 @@ describe('MessageModel - Message Grouping', () => {
       });
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify orphaned tool is not filtered
       expect(result).toHaveLength(1);
@@ -677,7 +710,10 @@ describe('MessageModel - Message Grouping', () => {
       });
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify block ID uses message ID
       expect(result[0].children![0].id).toBe('msg-1');
@@ -702,7 +738,10 @@ describe('MessageModel - Message Grouping', () => {
       });
 
       // Query messages (no files attached, so imageList/fileList will be empty)
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify empty arrays become undefined
       expect(result[0].children![0].imageList).toBeUndefined();
@@ -752,7 +791,10 @@ describe('MessageModel - Message Grouping', () => {
       ]);
 
       // Query messages
-      const result = await messageModel.query({ sessionId: null });
+      const result = await messageModel.query(
+        { sessionId: null },
+        { groupAssistantMessages: true },
+      );
 
       // Verify parent fields are cleared
       expect(result[0].tools).toBeUndefined();

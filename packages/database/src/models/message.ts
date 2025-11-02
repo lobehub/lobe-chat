@@ -271,7 +271,7 @@ export class MessageModel {
     );
 
     // Group assistant messages with their tool results
-    const { groupAssistantMessages: useGroup = true } = options;
+    const { groupAssistantMessages: useGroup = false } = options;
     return useGroup ? groupAssistantMessages(mappedMessages) : mappedMessages;
   };
 
