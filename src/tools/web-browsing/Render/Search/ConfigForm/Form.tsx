@@ -23,7 +23,7 @@ const Form = memo<ProviderApiKeyFormProps>(({ provider, id }) => {
   const [apiKey, baseURL, setConfig] = useUserStore((s) => [
     keyVaultsConfigSelectors.getVaultByProvider(provider as any)(s)?.apiKey,
     keyVaultsConfigSelectors.getVaultByProvider(provider as any)(s)?.baseURL,
-    s.updateKeyVaultSettings,
+    s.updateKeyVaultConfig,
   ]);
 
   const [showKey, setShow] = useState(false);
