@@ -2,8 +2,6 @@
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
-import { isServerMode } from '@/const/version';
-
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
@@ -16,12 +14,11 @@ const isInVercel = process.env.VERCEL === '1';
 
 const vercelUrl = `https://${process.env.VERCEL_URL}`;
 
-const APP_URL = process.env.APP_URL ? process.env.APP_URL : isInVercel ? vercelUrl : undefined;
-
-// only throw error in server mode and server side
-if (typeof window === 'undefined' && isServerMode && !APP_URL) {
-  throw new Error('`APP_URL` is required in server mode');
-}
+const APP_URL = process.env.APP_URL
+  ? process.env.APP_URL
+  : isInVercel
+    ? vercelUrl
+    : 'http://localhost:3010';
 
 const ASSISTANT_INDEX_URL = 'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public';
 
