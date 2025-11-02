@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@lobechat/const": "workspace:*",
+    "@lobechat/model-runtime": "workspace:*",
     "@lobechat/types": "workspace:*",
     "dayjs": "^1.11.18",
     "dompurify": "^3.2.7"
