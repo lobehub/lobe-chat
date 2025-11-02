@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
   release:
     types: [published]
-  pull_request:
   pull_request_target:
     types: [synchronize, labeled, unlabeled]
 
@@ -26,7 +25,7 @@ jobs:
     if: |
       github.event_name == 'release' ||
       github.event_name == 'workflow_dispatch'||
-      ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') &&
+      (github.event_name == 'pull_request_target' &&
        contains(github.event.pull_request.labels.*.name, 'trigger:build-docker'))
 
     strategy:
@@ -54,7 +53,7 @@ jobs:
 
       # 为 PR 生成特殊的 tag
       - name: Generate PR metadata
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         id: pr_meta
         env:
           BRANCH_NAME: ${{ github.head_ref }}
@@ -69,10 +68,10 @@ jobs:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
             # PR 构建使用特殊的 tag
-            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request' }}
+            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request_target' }}
             # release 构建使用版本号
-            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request' }}
-            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
+            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request_target' }}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request_target' }}
 
       - name: Docker login
         uses: docker/login-action@v3
@@ -134,7 +133,7 @@ jobs:
 
       # 为 merge job 添加 PR metadata 生成
       - name: Generate PR metadata
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         id: pr_meta
         env:
           BRANCH_NAME: ${{ github.head_ref }}
@@ -148,9 +147,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
-            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request' }}
-            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request' }}
-            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
+            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request_target' }}
+            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request_target' }}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request_target' }}
 
       - name: Docker login
         uses: docker/login-action@v3
@@ -169,7 +168,7 @@ jobs:
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
 
       - name: Comment on PR with Docker build info
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
