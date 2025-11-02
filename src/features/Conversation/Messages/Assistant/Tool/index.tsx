@@ -3,7 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import AnimatedCollapsed from '@/components/AnimatedCollapsed';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 
 import Inspectors from './Inspector';
 import Render from './Render';
@@ -24,7 +24,7 @@ const Tool = memo<InspectorProps>(
   ({ arguments: requestArgs, apiName, messageId, id, index, identifier, style, payload, type }) => {
     const [showDetail, setShowDetail] = useState(type !== 'mcp');
     const [showPluginRender, setShowPluginRender] = useState(false);
-    const isLoading = useChatStore(chatSelectors.isInToolsCalling(messageId, index));
+    const isLoading = useChatStore(messageStateSelectors.isInToolsCalling(messageId, index));
 
     useEffect(() => {
       if (type !== 'mcp') return;

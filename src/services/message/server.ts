@@ -81,8 +81,13 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
   };
 
-  updateMessage: IMessageService['updateMessage'] = async (id, value) => {
-    return lambdaClient.message.update.mutate({ id, value });
+  updateMessage: IMessageService['updateMessage'] = async (id, value, options) => {
+    return lambdaClient.message.update.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      value,
+    });
   };
 
   updateMessageTranslate: IMessageService['updateMessageTranslate'] = async (id, translate) => {
