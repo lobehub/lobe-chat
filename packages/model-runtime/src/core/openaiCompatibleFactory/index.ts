@@ -95,6 +95,12 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
     /**
+     * Custom message converter for provider-specific message transformations
+     */
+    transformMessages?: (
+      messages: OpenAI.ChatCompletionMessageParam[],
+    ) => Promise<OpenAI.ChatCompletionMessageParam[]> | OpenAI.ChatCompletionMessageParam[];
+    /**
      * If true, route chat requests to Responses API path directly
      */
     useResponse?: boolean;
@@ -252,7 +258,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           return this.handleResponseAPIMode(processedPayload, options);
         }
 
-        const messages = await convertOpenAIMessages(postPayload.messages);
+        const messages = chatCompletion?.transformMessages
+          ? await chatCompletion.transformMessages(postPayload.messages)
+          : await convertOpenAIMessages(postPayload.messages);
 
         let response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
 
