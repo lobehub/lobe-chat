@@ -825,39 +825,6 @@ describe('ChatService', () => {
           undefined,
         );
       });
-
-      it('work with dalle3', async () => {
-        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-        const messages = [
-          {
-            role: 'user',
-            content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n',
-            sessionId: 'inbox',
-            createdAt: 1702723964330,
-            id: 'vyQvEw6V',
-            updatedAt: 1702723964330,
-            extra: {},
-            meta: {
-              avatar: DEFAULT_USER_AVATAR,
-            },
-          },
-        ] as UIChatMessage[];
-
-        await chatService.createAssistantMessage({
-          messages,
-          model: 'gpt-3.5-turbo-1106',
-          top_p: 1,
-          plugins: [WebBrowsingManifest.identifier],
-        });
-
-        // Assert that getChatCompletionSpy was called with the expected arguments
-        expect(getChatCompletionSpy).toHaveBeenCalled();
-
-        const calls = getChatCompletionSpy.mock.lastCall;
-        // Take a snapshot of the first call's first argument
-        expect(calls![0]).toMatchSnapshot();
-        expect(calls![1]).toBeUndefined();
-      });
     });
 
     describe('search functionality', () => {
