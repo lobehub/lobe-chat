@@ -191,6 +191,9 @@
   "Kwai-Kolors/Kolors": {
     "description": "Kolors ist ein von Kuaishou Kolors Team entwickeltes groß angelegtes latentes Diffusionsmodell zur Text-zu-Bild-Generierung. Es wurde mit Milliarden von Text-Bild-Paaren trainiert und zeigt herausragende Leistungen in visueller Qualität, komplexer semantischer Genauigkeit sowie der Darstellung chinesischer und englischer Schriftzeichen. Es unterstützt sowohl chinesische als auch englische Eingaben und ist besonders leistungsfähig bei der Verarbeitung und Erzeugung chinesischsprachiger Inhalte."
   },
+  "Kwaipilot/KAT-Dev": {
+    "description": "KAT-Dev (32B) ist ein Open-Source-Modell mit 32 Milliarden Parametern, das speziell für Aufgaben in der Softwareentwicklung konzipiert wurde. Beim SWE-Bench Verified Benchmark erreichte es eine Lösungsrate von 62,4 % und belegte damit den fünften Platz unter allen Open-Source-Modellen unterschiedlicher Größen. Das Modell wurde in mehreren Phasen optimiert, darunter Zwischen-Training, überwachtes Feintuning (SFT) und Reinforcement Learning (RL), um anspruchsvolle Programmieraufgaben wie Codevervollständigung, Fehlerbehebung und Code-Reviews effektiv zu unterstützen."
+  },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Hervorragende Bildschlussfolgerungsfähigkeiten auf hochauflösenden Bildern, geeignet für Anwendungen im Bereich der visuellen Verständigung."
   },
@@ -787,12 +790,6 @@
   },
   "claude-3-5-haiku-latest": {
     "description": "Claude 3.5 Haiku bietet schnelle Reaktionen und eignet sich für leichte Aufgaben."
-  },
-  "claude-3-5-sonnet-20240620": {
-    "description": "Claude 3.5 Sonnet bietet Fähigkeiten, die über Opus hinausgehen, und ist schneller als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in Programmierung, Datenwissenschaft, visueller Verarbeitung und Agenturaufgaben."
-  },
-  "claude-3-5-sonnet-20241022": {
-    "description": "Claude 3.5 Sonnet bietet überlegene Fähigkeiten im Vergleich zu Opus und schnellere Geschwindigkeiten als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in den Bereichen Programmierung, Datenwissenschaft, visuelle Verarbeitung und Aufgabenübertragung."
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet hebt den Branchenstandard an, übertrifft die Modelle der Konkurrenz und Claude 3 Opus, und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
@@ -2404,6 +2401,9 @@
   },
   "minicpm-v": {
     "description": "MiniCPM-V ist das neue multimodale Großmodell von OpenBMB, das über hervorragende OCR-Erkennungs- und multimodale Verständnisfähigkeiten verfügt und eine Vielzahl von Anwendungsszenarien unterstützt."
+  },
+  "minimax-m2": {
+    "description": "MiniMax M2 ist ein leistungsstarkes, effizientes Sprachmodell, das speziell für Programmier- und Agenten-Workflows entwickelt wurde."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B ist das weltbeste Edge-Modell von Mistral."
