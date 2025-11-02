@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Link from '@/components/link';
+import Link from '@/components/Link';
 import { AiProviderListItem } from '@/types/aiProvider';
 
 import EnableSwitch from './EnableSwitch';
