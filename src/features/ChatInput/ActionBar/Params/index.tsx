@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import Action from '../components/Action';
 import Controls from './Controls';
@@ -12,6 +13,11 @@ const Params = memo(() => {
   const [isLoading] = useAgentStore((s) => [agentSelectors.isAgentConfigLoading(s)]);
   const [updating, setUpdating] = useState(false);
   const { t } = useTranslation('setting');
+  const showAdvancedModelParams = useServerConfigStore(
+    (s) => featureFlagsSelectors(s).showAdvancedModelParams,
+  );
+
+  if (!showAdvancedModelParams) return null;
 
   if (isLoading) return <Action disabled icon={SlidersHorizontal} />;
 

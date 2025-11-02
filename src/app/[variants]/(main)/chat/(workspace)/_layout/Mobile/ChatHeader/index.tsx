@@ -15,7 +15,7 @@ const MobileHeader = memo(() => {
   const router = useQueryRoute();
   const [open, setOpen] = useState(false);
 
-  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
+  const { showChatSettingsButton } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <ChatHeader
@@ -26,7 +26,7 @@ const MobileHeader = memo(() => {
       right={
         <>
           <ShareButton mobile open={open} setOpen={setOpen} />
-          {isAgentEditable && <SettingButton mobile />}
+          {showChatSettingsButton && <SettingButton mobile />}
         </>
       }
       showBackButton

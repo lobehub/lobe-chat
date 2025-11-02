@@ -10,6 +10,7 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
@@ -34,6 +35,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
     s.toggleChatSideBar,
   ]);
   const showPortal = useChatStore(chatPortalSelectors.showPortal);
+  const { showTopicPanelButton } = useServerConfigStore(featureFlagsSelectors);
 
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showTopic));
 
@@ -47,6 +49,9 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
     if (lg && cacheExpand) toggleConfig(true);
     if (!lg) toggleConfig(false);
   }, [lg, cacheExpand]);
+
+  // If topic panel feature is disabled, don't render the panel
+  if (!showTopicPanelButton) return null;
 
   return (
     <DraggablePanel

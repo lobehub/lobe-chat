@@ -29,7 +29,16 @@ const Nav = memo(() => {
   const theme = useTheme();
   const isSingleMode = useIsSingleMode();
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
-  const { showPinList } = useServerConfigStore(featureFlagsSelectors);
+  const { showPinList, showMarket, showAiImage, enableKnowledgeBase } =
+    useServerConfigStore(featureFlagsSelectors);
+
+  // Hide sidebar completely in minimal chat mode (when all optional features are disabled)
+  const isMinimalChat = !showMarket && !showAiImage && !enableKnowledgeBase;
+
+  // Don't render sidebar if minimal chat mode is active
+  if (isMinimalChat) {
+    return null;
+  }
 
   return (
     !inZenMode &&

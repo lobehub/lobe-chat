@@ -13,6 +13,7 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -74,6 +75,7 @@ const Main = memo<{ className?: string }>(({ className }) => {
   const isGroup = sessionType === 'group';
 
   const openChatSettings = useOpenChatSettings();
+  const { showChatSettingsButton } = useServerConfigStore(featureFlagsSelectors);
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
@@ -105,7 +107,7 @@ const Main = memo<{ className?: string }>(({ className }) => {
               background: member.backgroundColor || undefined,
             })) || []),
           ]}
-          onClick={() => openChatSettings()}
+          onClick={showChatSettingsButton ? () => openChatSettings() : undefined}
           size={32}
           title={title}
         />
@@ -123,7 +125,7 @@ const Main = memo<{ className?: string }>(({ className }) => {
       <Avatar
         avatar={avatar}
         background={backgroundColor}
-        onClick={() => openChatSettings()}
+        onClick={showChatSettingsButton ? () => openChatSettings() : undefined}
         size={32}
         title={title}
       />

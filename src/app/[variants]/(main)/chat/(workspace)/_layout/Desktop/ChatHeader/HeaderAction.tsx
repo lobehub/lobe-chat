@@ -32,7 +32,8 @@ const HeaderAction = memo<{ className?: string }>(({ className }) => {
     s.toggleWideScreen,
   ]);
 
-  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
+  const { showChatSettingsButton, showTopicPanelButton } =
+    useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Flexbox className={className} gap={4} horizontal>
@@ -46,17 +47,19 @@ const HeaderAction = memo<{ className?: string }>(({ className }) => {
         }}
       />
       <ShareButton />
-      <ActionIcon
-        icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
-        onClick={() => toggleConfig()}
-        size={DESKTOP_HEADER_ICON_SIZE}
-        title={t('toggleRightPanel.title', { ns: 'hotkey' })}
-        tooltipProps={{
-          hotkey,
-          placement: 'bottom',
-        }}
-      />
-      {isAgentEditable && <SettingButton />}
+      {showTopicPanelButton && (
+        <ActionIcon
+          icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
+          onClick={() => toggleConfig()}
+          size={DESKTOP_HEADER_ICON_SIZE}
+          title={t('toggleRightPanel.title', { ns: 'hotkey' })}
+          tooltipProps={{
+            hotkey,
+            placement: 'bottom',
+          }}
+        />
+      )}
+      {showChatSettingsButton && <SettingButton />}
     </Flexbox>
   );
 });

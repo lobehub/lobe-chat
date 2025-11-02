@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum } from '@/types/hotkey';
@@ -19,12 +20,14 @@ const SaveTopic = memo(() => {
     !!s.activeTopicId,
     s.openNewTopicOrSaveTopic,
   ]);
+  const { showTopicPanelButton } = useServerConfigStore(featureFlagsSelectors);
 
   const mobile = useIsMobile();
-
   const { mutate, isValidating } = useActionSWR('openNewTopicOrSaveTopic', openNewTopicOrSaveTopic);
-
   const [confirmOpened, setConfirmOpened] = useState(false);
+
+  // If topic panel feature is disabled, don't show the save topic button
+  if (!showTopicPanelButton) return null;
 
   const icon = hasTopic ? LucideMessageSquarePlus : LucideGalleryVerticalEnd;
   const desc = t(hasTopic ? 'topic.openNewTopic' : 'topic.saveCurrentMessages');

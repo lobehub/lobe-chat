@@ -18,11 +18,20 @@ export const FeatureFlagsSchema = z.object({
   // model selection
   model_selection: FeatureFlagValue.optional(),
 
+  // advanced model parameters (temperature, top_p, frequency_penalty, presence_penalty)
+  advanced_model_params: FeatureFlagValue.optional(),
+
   // profile
   api_key_manage: FeatureFlagValue.optional(),
 
   create_session: FeatureFlagValue.optional(),
   edit_agent: FeatureFlagValue.optional(),
+
+  // chat settings button in top right corner
+  chat_settings_button: FeatureFlagValue.optional(),
+
+  // topic panel toggle button (show/hide topics sidebar)
+  topic_panel_button: FeatureFlagValue.optional(),
 
   plugins: FeatureFlagValue.optional(),
   dalle: FeatureFlagValue.optional(),
@@ -84,10 +93,16 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   model_selection: false, // Disabled for minimal chat - users cannot change model
 
+  advanced_model_params: false, // Disabled for minimal chat - temperature, top_p, frequency_penalty and presence_penalty controls
+
   api_key_manage: false,
 
   create_session: true,
   edit_agent: true,
+
+  chat_settings_button: false, // Disabled for minimal chat - hides the chat settings button in top right corner
+
+  topic_panel_button: false, // Disabled for minimal chat - hides the topic panel toggle button
 
   plugins: false,
   dalle: false, // Disabled for minimal chat
@@ -125,6 +140,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
 
     showCreateSession: evaluateFeatureFlag(config.create_session, userId),
     enableGroupChat: evaluateFeatureFlag(config.group_chat, userId),
+    showChatSettingsButton: evaluateFeatureFlag(config.chat_settings_button, userId),
+    showTopicPanelButton: evaluateFeatureFlag(config.topic_panel_button, userId),
     showLLM: evaluateFeatureFlag(config.language_model_settings, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
     showPinList: evaluateFeatureFlag(config.pin_list, userId),
@@ -133,6 +150,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
     showOpenAIProxyUrl: evaluateFeatureFlag(config.openai_proxy_url, userId),
 
     enableModelSelection: evaluateFeatureFlag(config.model_selection, userId),
+
+    showAdvancedModelParams: evaluateFeatureFlag(config.advanced_model_params, userId),
 
     showApiKeyManage: evaluateFeatureFlag(config.api_key_manage, userId),
 
