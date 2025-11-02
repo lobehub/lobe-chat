@@ -1,9 +1,9 @@
 'use client';
 
-import { ActionIcon, ScrollShadow, Text } from '@lobehub/ui';
+import { ActionIcon, ScrollShadow, Text, Tooltip } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { ArrowDownUpIcon } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowDownAZ, ArrowDownUpIcon } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -14,6 +14,12 @@ import All from './All';
 import ProviderItem from './Item';
 import SortProviderModal from './SortProviderModal';
 
+// Sort type enumeration
+enum SortType {
+  Alphabetical = 'alphabetical',
+  Default = 'default',
+}
+
 const ProviderList = (props: {
   mobile?: boolean;
   onProviderSelect: (providerKey: string) => void;
@@ -21,6 +27,8 @@ const ProviderList = (props: {
   const { onProviderSelect, mobile } = props;
   const { t } = useTranslation('modelProvider');
   const [open, setOpen] = useState(false);
+  const [sortType, setSortType] = useState<SortType>(SortType.Default);
+
   const enabledModelProviderList = useAiInfraStore(
     aiProviderSelectors.enabledAiProviderList,
     isEqual,
@@ -30,6 +38,29 @@ const ProviderList = (props: {
     aiProviderSelectors.disabledAiProviderList,
     isEqual,
   );
+
+  // Sort model providers based on sort type
+  const sortedDisabledProviders = useMemo(() => {
+    if (sortType === SortType.Default) {
+      return [...disabledModelProviderList];
+    } else {
+      return [...disabledModelProviderList].sort((a, b) => {
+        const cmpDisplay = (a.name || a.id).localeCompare(b.name || b.id);
+        if (cmpDisplay !== 0) return cmpDisplay;
+        return a.id.localeCompare(b.id);
+      });
+    }
+  }, [disabledModelProviderList, sortType]);
+
+  const toggleSortType = () => {
+    setSortType(sortType === SortType.Default ? SortType.Alphabetical : SortType.Default);
+  };
+
+  const getSortTooltip = () => {
+    return sortType === SortType.Default
+      ? t('menu.list.disabledActions.sortAlphabetical')
+      : t('menu.list.disabledActions.sortDefault');
+  };
   return (
     <ScrollShadow gap={4} height={'100%'} paddingInline={12} size={4} style={{ paddingBottom: 32 }}>
       {!mobile && <All onClick={onProviderSelect} />}
@@ -63,10 +94,22 @@ const ProviderList = (props: {
       {enabledModelProviderList.map((item) => (
         <ProviderItem {...item} key={item.id} onClick={onProviderSelect} />
       ))}
-      <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
-        {t('menu.list.disabled')}
-      </Text>
-      {disabledModelProviderList.map((item) => (
+      <Flexbox align={'center'} horizontal justify={'space-between'}>
+        <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
+          {t('menu.list.disabled')}
+        </Text>
+        {disabledModelProviderList.length > 1 && (
+          <Tooltip title={getSortTooltip()}>
+            <ActionIcon
+              active={sortType === SortType.Alphabetical}
+              icon={ArrowDownAZ}
+              onClick={toggleSortType}
+              size={'small'}
+            />
+          </Tooltip>
+        )}
+      </Flexbox>
+      {sortedDisabledProviders.map((item) => (
         <ProviderItem {...item} key={item.id} onClick={onProviderSelect} />
       ))}
     </ScrollShadow>

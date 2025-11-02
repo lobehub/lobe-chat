@@ -202,7 +202,11 @@ export default {
     all: '全部',
     list: {
       disabled: '未启用',
-      enabled: '已启用',
+      disabledActions: {
+        sortAlphabetical: '切换到按字母排序',
+        sortDefault: '切换到默认排序'
+      },
+      enabled: '已启用'
     },
     notFound: '未找到搜索结果',
     searchProviders: '搜索服务商...',
@@ -399,7 +403,11 @@ export default {
     list: {
       addNew: '添加模型',
       disabled: '未启用',
-      disabledActions: { showMore: '显示全部' },
+      disabledActions: {
+        showMore: '显示全部',
+        sortAlphabetical: '切换到按字母排序',
+        sortDefault: '切换到默认排序',
+      },
       empty: {
         desc: '请创建自定义模型或拉取模型后开始使用吧',
         title: '暂无可用模型',
