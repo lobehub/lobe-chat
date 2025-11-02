@@ -19,6 +19,22 @@ import { resetTestEnvironment, setupMockSelectors, spyOnMessageService } from '.
 // Keep zustand mock as it's needed globally
 vi.mock('zustand/traditional');
 
+// Mock AntdStaticMethods
+vi.mock('@/components/AntdStaticMethods', () => ({
+  notification: {
+    error: vi.fn(),
+    success: vi.fn(),
+    info: vi.fn(),
+    warning: vi.fn(),
+  },
+  message: {
+    error: vi.fn(),
+    success: vi.fn(),
+    info: vi.fn(),
+    warning: vi.fn(),
+  },
+}));
+
 // Mock server mode for V2 tests
 vi.mock('@lobechat/const', async (importOriginal) => {
   const module = await importOriginal();
