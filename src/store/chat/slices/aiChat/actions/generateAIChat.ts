@@ -29,7 +29,7 @@ import { useSessionStore } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../../selectors';
+import { chatSelectors, messageStateSelectors, topicSelectors } from '../../../selectors';
 
 const n = setNamespace('ai');
 
@@ -706,7 +706,8 @@ export const generateAIChat: StateCreator<
             if (!duration) {
               duration = Date.now() - thinkingStartAt;
 
-              const isInChatReasoning = chatSelectors.isMessageInChatReasoning(messageId)(get());
+              const isInChatReasoning =
+                messageStateSelectors.isMessageInChatReasoning(messageId)(get());
               if (isInChatReasoning) {
                 internal_toggleChatReasoning(
                   false,
