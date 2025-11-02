@@ -13,7 +13,8 @@ on:
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
+  # PR 构建时取消旧的运行,但 release 构建不取消
+  cancel-in-progress: ${{ github.event_name != 'release' }}
 
 env:
   REGISTRY_IMAGE: lobehub/lobehub

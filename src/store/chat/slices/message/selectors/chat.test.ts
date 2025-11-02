@@ -521,7 +521,7 @@ describe('chatSelectors', () => {
       };
 
       const result = chatSelectors.getGroupLatestMessageWithoutTools('group-2')(state as ChatStore);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
     it('should return the last child when it has empty tools array', () => {
@@ -579,7 +579,7 @@ describe('chatSelectors', () => {
       };
 
       const result = chatSelectors.getGroupLatestMessageWithoutTools('msg-1')(state as ChatStore);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
     it('should return null for group messages without children', () => {
@@ -598,7 +598,7 @@ describe('chatSelectors', () => {
       };
 
       const result = chatSelectors.getGroupLatestMessageWithoutTools('group-4')(state as ChatStore);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
     it('should return null for group messages with empty children array', () => {
@@ -617,7 +617,7 @@ describe('chatSelectors', () => {
       };
 
       const result = chatSelectors.getGroupLatestMessageWithoutTools('group-5')(state as ChatStore);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
     it('should return null if all children have tools', () => {
@@ -663,7 +663,7 @@ describe('chatSelectors', () => {
       };
 
       const result = chatSelectors.getGroupLatestMessageWithoutTools('group-6')(state as ChatStore);
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
     it('should handle empty tools array as no tools', () => {
@@ -703,7 +703,7 @@ describe('chatSelectors', () => {
       const result = chatSelectors.getGroupLatestMessageWithoutTools('non-existent')(
         state as ChatStore,
       );
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
   });
 });
