@@ -360,7 +360,7 @@
     "glob": "^11.0.3",
     "happy-dom": "^20.0.0",
     "husky": "^9.1.7",
-    "import-in-the-middle": "^1.15.0",
+    "import-in-the-middle": "^2.0.0",
     "just-diff": "^6.0.2",
     "lint-staged": "^15.5.2",
     "lodash": "^4.17.21",

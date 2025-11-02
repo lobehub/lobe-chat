@@ -19,7 +19,7 @@
     "@opentelemetry/sdk-trace-node": "^2.0.1",
     "@opentelemetry/semantic-conventions": "^1.36.0",
     "@vercel/otel": "^1.13.0",
-    "import-in-the-middle": "^1.14.2",
+    "import-in-the-middle": "^2.0.0",
     "require-in-the-middle": "^7.5.2"
   }
 }
