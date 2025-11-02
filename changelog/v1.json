@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Remove client service."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.14"
+  },
+  {
+    "children": {
       "fixes": ["Fix image prompt form."]
     },
     "date": "2025-11-02",
