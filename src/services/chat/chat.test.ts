@@ -8,18 +8,12 @@ import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vite
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import * as isCanUseFCModule from '@/helpers/isCanUseFC';
 import * as toolEngineeringModule from '@/helpers/toolEngineering';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
-import { toolSelectors } from '@/store/tool/selectors';
-import { modelProviderSelectors } from '@/store/user/selectors';
-import { DalleManifest } from '@/tools/dalle';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
-import { API_ENDPOINTS } from '../_url';
-import * as helpers from './helper';
 import { chatService } from './index';
 
 // Mocking external dependencies
@@ -853,7 +847,7 @@ describe('ChatService', () => {
           messages,
           model: 'gpt-3.5-turbo-1106',
           top_p: 1,
-          plugins: [DalleManifest.identifier],
+          plugins: [WebBrowsingManifest.identifier],
         });
 
         // Assert that getChatCompletionSpy was called with the expected arguments

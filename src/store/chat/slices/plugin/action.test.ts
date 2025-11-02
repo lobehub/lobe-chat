@@ -614,16 +614,16 @@ describe('ChatPluginAction', () => {
   describe('invokeBuiltinTool', () => {
     it('should invoke the builtin tool action with parsed arguments', async () => {
       const payload = {
-        apiName: 'text2image',
-        arguments: JSON.stringify([{ prompt: 'test' }]),
+        apiName: 'mockBuiltinAction',
+        arguments: JSON.stringify({ input: 'test', value: 123 }),
       } as ChatToolPayload;
 
       const messageId = 'message-id';
-      const text2imageMock = vi.fn().mockResolvedValue(undefined);
+      const mockActionFn = vi.fn().mockResolvedValue(undefined);
 
       useChatStore.setState({
-        text2image: text2imageMock,
-      });
+        mockBuiltinAction: mockActionFn,
+      } as any);
 
       const { result } = renderHook(() => useChatStore());
 
@@ -631,8 +631,8 @@ describe('ChatPluginAction', () => {
         await result.current.invokeBuiltinTool(messageId, payload);
       });
 
-      // Verify that text2image was called with correct arguments
-      expect(text2imageMock).toHaveBeenCalledWith(messageId, [{ prompt: 'test' }]);
+      // Verify that the builtin action was called with correct arguments
+      expect(mockActionFn).toHaveBeenCalledWith(messageId, { input: 'test', value: 123 });
     });
 
     it('should not invoke action if apiName does not exist in store', async () => {
@@ -654,16 +654,16 @@ describe('ChatPluginAction', () => {
 
     it('should not invoke action if arguments cannot be parsed', async () => {
       const payload = {
-        apiName: 'text2image',
+        apiName: 'mockBuiltinAction',
         arguments: 'invalid json',
       } as ChatToolPayload;
 
       const messageId = 'message-id';
-      const text2imageMock = vi.fn().mockResolvedValue(undefined);
+      const mockActionFn = vi.fn().mockResolvedValue(undefined);
 
       useChatStore.setState({
-        text2image: text2imageMock,
-      });
+        mockBuiltinAction: mockActionFn,
+      } as any);
 
       const { result } = renderHook(() => useChatStore());
 
@@ -671,8 +671,8 @@ describe('ChatPluginAction', () => {
         await result.current.invokeBuiltinTool(messageId, payload);
       });
 
-      // Should not call text2image if arguments can't be parsed
-      expect(text2imageMock).not.toHaveBeenCalled();
+      // Should not call the action if arguments can't be parsed
+      expect(mockActionFn).not.toHaveBeenCalled();
     });
   });
 

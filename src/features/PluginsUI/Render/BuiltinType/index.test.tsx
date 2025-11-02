@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DalleManifest } from '@/tools/dalle';
 import { BuiltinToolsRenders } from '@/tools/renders';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import BuiltinType from './index';
 
@@ -10,7 +10,7 @@ import BuiltinType from './index';
 vi.mock('@/tools/renders', () => ({
   BuiltinToolsRenders: {
     dalle3: vi.fn(() => <div>Test Renderer</div>),
-    [DalleManifest.identifier]: vi.fn(() => <div>{DalleManifest.identifier}</div>),
+    [WebBrowsingManifest.identifier]: vi.fn(() => <div>{WebBrowsingManifest.identifier}</div>),
   },
 }));
 
@@ -35,7 +35,7 @@ describe('BuiltinType', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  describe('DALL·E', () => {
+  describe('Web Browsing', () => {
     it('should render the correct renderer if identifier is dalle3', () => {
       render(<BuiltinType content='{"some":"data"}' id="123" identifier="dalle3" />);
       expect(BuiltinToolsRenders.dalle3).toHaveBeenCalled();
@@ -44,10 +44,14 @@ describe('BuiltinType', () => {
 
     it('should render the correct renderer if is DALL·E ', () => {
       render(
-        <BuiltinType content='{"some":"data"}' id="123" identifier={DalleManifest.identifier} />,
+        <BuiltinType
+          content='{"some":"data"}'
+          id="123"
+          identifier={WebBrowsingManifest.identifier}
+        />,
       );
       expect(BuiltinToolsRenders.dalle3).toHaveBeenCalled();
-      expect(screen.getByText(DalleManifest.identifier)).toBeInTheDocument();
+      expect(screen.getByText(WebBrowsingManifest.identifier)).toBeInTheDocument();
     });
   });
 });
