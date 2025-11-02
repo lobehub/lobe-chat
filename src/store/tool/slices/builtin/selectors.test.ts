@@ -32,7 +32,7 @@ describe('builtinToolSelectors', () => {
         ...initialState,
         builtinTools: [],
       };
-      const result = builtinToolSelectors.metaList;
+      const result = builtinToolSelectors.metaList(state);
       expect(result).toEqual([]);
     });
   });
