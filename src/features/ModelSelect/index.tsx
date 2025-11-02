@@ -4,6 +4,7 @@ import { memo, useMemo } from 'react';
 
 import { ModelItemRender, ProviderItemRender, TAG_CLASSNAME } from '@/components/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -38,10 +39,15 @@ interface ModelSelectProps {
 const ModelSelect = memo<ModelSelectProps>(
   ({ value, onChange, showAbility = true, requiredAbilities }) => {
     const enabledList = useEnabledChatModels();
+    const { enableModelSelection } = useServerConfigStore(featureFlagsSelectors);
 
     const { styles } = useStyles();
 
     const options = useMemo<SelectProps['options']>(() => {
+      // If model selection is disabled, return empty options
+      if (!enableModelSelection) {
+        return [];
+      }
       const getChatModels = (provider: EnabledProviderWithModels) => {
         const models =
           requiredAbilities && requiredAbilities.length > 0
@@ -81,10 +87,20 @@ const ModelSelect = memo<ModelSelectProps>(
           };
         })
         .filter(Boolean) as SelectProps['options'];
-    }, [enabledList, requiredAbilities, showAbility]);
+    }, [enabledList, requiredAbilities, showAbility, enableModelSelection]);
 
-    console.log('options', options);
-    console.log('enabledList', enabledList);
+    // If model selection is disabled, return disabled select
+    if (!enableModelSelection) {
+      return (
+        <Select
+          className={styles.select}
+          disabled
+          options={[]}
+          popupMatchSelectWidth={false}
+          value={`${value?.provider}/${value?.model}`}
+        />
+      );
+    }
 
     return (
       <Select

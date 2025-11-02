@@ -28,14 +28,13 @@ interface SessionItemProps {
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
-  const [defaultModel] = useAgentStore((s) => [agentSelectors.inboxAgentModel(s)]);
 
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
 
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [chatSelectors.isAIGenerating(s) && id === s.activeId]);
 
-  const [pin, title, avatar, avatarBackground, updateAt, members, model, group, sessionType] =
+  const [pin, title, avatar, avatarBackground, updateAt, members, group, sessionType] =
     useSessionStore((s) => {
       const session = sessionSelectors.getSessionById(id)(s);
       const meta = session.meta;
@@ -47,13 +46,23 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         meta.backgroundColor,
         session?.updatedAt,
         (session as LobeGroupSession).members,
-        session.type === 'agent' ? (session as any).model : undefined,
         session?.group,
         session.type,
       ];
     });
 
-  const showModel = sessionType === 'agent' && model && model !== defaultModel;
+  // Get model from agent config selector (which ensures default model is used)
+  // Use getAgentConfigById to get model for this specific session
+  const model = useAgentStore((s) => {
+    if (sessionType === 'agent') {
+      const config = agentSelectors.getAgentConfigById(id)(s);
+      return config?.model;
+    }
+    return undefined;
+  });
+
+  // Always show model for agent sessions (even if it's the default model)
+  const showModel = sessionType === 'agent' && !!model;
 
   const handleDoubleClick = () => {
     if (isDesktop) {

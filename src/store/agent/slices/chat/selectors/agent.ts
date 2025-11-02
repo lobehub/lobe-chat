@@ -17,14 +17,36 @@ const isInboxSession = (s: AgentStoreState) => s.activeId === INBOX_SESSION_ID;
 
 // ==========   Config   ============== //
 
-const inboxAgentConfig = (s: AgentStoreState) =>
-  merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
+const inboxAgentConfig = (s: AgentStoreState) => {
+  const mergedConfig = merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
+
+  // Always use DEFAULT_MODEL for inbox session to ensure consistency
+  // This ensures that even if a different model was stored in the database,
+  // we always use the default model (o1) as configured
+  if (DEFAULT_AGENT_CONFIG.model) {
+    mergedConfig.model = DEFAULT_AGENT_CONFIG.model;
+    mergedConfig.provider = DEFAULT_AGENT_CONFIG.provider || 'openai';
+  }
+
+  return mergedConfig;
+};
 const inboxAgentModel = (s: AgentStoreState) => inboxAgentConfig(s).model;
 
 const getAgentConfigById =
   (id: string) =>
-  (s: AgentStoreState): LobeAgentConfig =>
-    merge(s.defaultAgentConfig, s.agentMap[id]);
+  (s: AgentStoreState): LobeAgentConfig => {
+    const mergedConfig = merge(s.defaultAgentConfig, s.agentMap[id]);
+
+    // Always use DEFAULT_MODEL to ensure consistency
+    // This ensures that even if a different model was stored in the database,
+    // we always use the default model (o1) as configured
+    if (DEFAULT_AGENT_CONFIG.model) {
+      mergedConfig.model = DEFAULT_AGENT_CONFIG.model;
+      mergedConfig.provider = DEFAULT_AGENT_CONFIG.provider || 'openai';
+    }
+
+    return mergedConfig;
+  };
 
 const getAgentConfigByAgentId =
   (agentId: string) =>
@@ -35,12 +57,21 @@ const getAgentConfigByAgentId =
       return agentConfig?.id === agentId;
     });
 
+    let config: LobeAgentConfig;
     if (sessionId) {
-      return merge(s.defaultAgentConfig, s.agentMap[sessionId]);
+      config = merge(s.defaultAgentConfig, s.agentMap[sessionId]);
+    } else {
+      // Fallback to default config if agent not found
+      config = s.defaultAgentConfig;
     }
 
-    // Fallback to default config if agent not found
-    return s.defaultAgentConfig;
+    // Always use DEFAULT_MODEL to ensure consistency
+    if (DEFAULT_AGENT_CONFIG.model) {
+      config.model = DEFAULT_AGENT_CONFIG.model;
+      config.provider = DEFAULT_AGENT_CONFIG.provider || 'openai';
+    }
+
+    return config;
   };
 
 export const currentAgentConfig = (s: AgentStoreState): LobeAgentConfig =>

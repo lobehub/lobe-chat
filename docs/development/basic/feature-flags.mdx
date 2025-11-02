@@ -1,0 +1,337 @@
+# Feature Flags System
+
+LobeChat includes a powerful feature flags system that allows you to enable or disable specific features without modifying code. This is particularly useful for:
+
+- Creating minimal/simplified versions of the application
+- Progressive feature rollout
+- A/B testing
+- User-specific feature access
+- Environment-specific configurations
+
+## Available Feature Flags
+
+All feature flags are defined in `src/config/featureFlags/schema.ts` and can be controlled via environment variables or EdgeConfig.
+
+### UI Features
+
+| Flag              | Description                               | Default |
+| ----------------- | ----------------------------------------- | ------- |
+| `market`          | Show marketplace/discover page            | `false` |
+| `ai_image`        | Show AI image generation (all providers)  | `false` |
+| `dalle`           | Show DALL-E image generation specifically | `false` |
+| `speech_to_text`  | Show speech-to-text/TTS features          | `false` |
+| `changelog`       | Show changelog page                       | `false` |
+| `welcome_suggest` | Show welcome suggestions                  | `true`  |
+| `cloud_promotion` | Show cloud service promotion              | `false` |
+| `plugins`         | Enable plugin system                      | `false` |
+| `token_counter`   | Show token counter                        | `true`  |
+
+### Core Features
+
+| Flag             | Description                                            | Default |
+| ---------------- | ------------------------------------------------------ | ------- |
+| `knowledge_base` | Enable RAG/Knowledge base functionality                | `false` |
+| `file_upload`    | Enable file upload functionality                       | `false` |
+| `mcp`            | Enable MCP (Model Context Protocol) server integration | `false` |
+| `rag_eval`       | Enable RAG evaluation features                         | `false` |
+| `group_chat`     | Enable multi-agent group chat                          | `false` |
+
+### Settings & Configuration
+
+| Flag                      | Description                           | Default |
+| ------------------------- | ------------------------------------- | ------- |
+| `language_model_settings` | Show language model settings          | `true`  |
+| `provider_settings`       | Show provider settings                | `true`  |
+| `openai_api_key`          | Allow OpenAI API key configuration    | `true`  |
+| `openai_proxy_url`        | Allow OpenAI proxy URL configuration  | `true`  |
+| `model_selection`         | Allow users to select/change AI model | `false` |
+| `api_key_manage`          | Show API key management page          | `false` |
+| `check_updates`           | Enable update checking                | `true`  |
+
+### Session & Agent Management
+
+| Flag             | Description                        | Default |
+| ---------------- | ---------------------------------- | ------- |
+| `create_session` | Allow creating new sessions        | `true`  |
+| `edit_agent`     | Allow editing agent configurations | `true`  |
+| `pin_list`       | Show pin list feature              | `false` |
+
+### Authentication
+
+| Flag            | Description          | Default |
+| --------------- | -------------------- | ------- |
+| `clerk_sign_up` | Enable Clerk sign-up | `true`  |
+
+### Commercial Features
+
+| Flag                     | Description                                            | Default |
+| ------------------------ | ------------------------------------------------------ | ------- |
+| `commercial_hide_github` | Hide GitHub links (requires commercial license)        | `false` |
+| `commercial_hide_docs`   | Hide documentation links (requires commercial license) | `false` |
+
+## Configuration Methods
+
+### Method 1: Environment Variables
+
+Set feature flags via the `FEATURE_FLAGS` environment variable as a JSON string:
+
+```bash
+# .env.local
+FEATURE_FLAGS='{"market":true,"ai_image":true,"knowledge_base":true}'
+```
+
+### Method 2: EdgeConfig (Vercel)
+
+For production deployments with EdgeConfig enabled, feature flags are automatically fetched from your EdgeConfig store. This allows real-time feature flag updates without redeployment.
+
+## Common Use Cases
+
+### Minimal Chat (Default Configuration)
+
+The default configuration provides a minimal chat experience with only essential features:
+
+```bash
+# All advanced features disabled by default
+# See DEFAULT_FEATURE_FLAGS in src/config/featureFlags/schema.ts
+```
+
+Features included:
+
+- ✅ Basic chat functionality
+- ✅ OpenAI provider
+- ✅ Session management
+- ✅ Agent configuration
+- ✅ Settings & preferences
+
+Features disabled:
+
+- ❌ Marketplace/Discover
+- ❌ AI Image generation
+- ❌ Knowledge base/RAG
+- ❌ MCP integration
+- ❌ Speech-to-text/TTS
+- ❌ Changelog
+- ❌ Plugins
+
+### Enable All Features
+
+```bash
+FEATURE_FLAGS='{
+  "market": true,
+  "ai_image": true,
+  "dalle": true,
+  "speech_to_text": true,
+  "changelog": true,
+  "knowledge_base": true,
+  "file_upload": true,
+  "mcp": true,
+  "plugins": true,
+  "group_chat": true
+}'
+```
+
+### Enable Only Marketplace
+
+```bash
+FEATURE_FLAGS='{"market":true}'
+```
+
+### Enable Knowledge Base with File Upload
+
+```bash
+FEATURE_FLAGS='{"knowledge_base":true,"file_upload":true}'
+```
+
+### Enable Image Generation
+
+```bash
+FEATURE_FLAGS='{"ai_image":true,"dalle":true}'
+```
+
+### Enable MCP Integration
+
+```bash
+FEATURE_FLAGS='{"mcp":true}'
+```
+
+## User-Specific Feature Flags
+
+Feature flags support both boolean values and arrays of user IDs, allowing per-user feature access:
+
+```bash
+# Enable for all users
+FEATURE_FLAGS='{"market":true}'
+
+# Enable only for specific users
+FEATURE_FLAGS='{"market":["user-123","user-456"]}'
+```
+
+## Usage in Code
+
+### Client Components
+
+```tsx
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+export const MyComponent = () => {
+  const showMarket = useServerConfigStore(featureFlagsSelectors.showMarket);
+  
+  if (!showMarket) return null; // Hide feature
+  
+  return <div>Market content</div>;
+};
+```
+
+### Server Components
+
+```tsx
+import { serverFeatureFlags } from '@/config/featureFlags';
+import { notFound } from 'next/navigation';
+
+export default function MarketPage() {
+  const flags = serverFeatureFlags();
+  
+  if (!flags.showMarket) {
+    notFound(); // Return 404
+  }
+  
+  return <div>Market page</div>;
+}
+```
+
+### Layout Guards
+
+```tsx
+// layout.tsx
+import { serverFeatureFlags } from '@/config/featureFlags';
+import { notFound } from 'next/navigation';
+
+export default function Layout({ children }) {
+  const flags = serverFeatureFlags();
+  
+  if (!flags.showMarket) {
+    notFound();
+  }
+  
+  return <>{children}</>;
+}
+```
+
+## How It Works
+
+### Implementation Details
+
+1. **Feature Flag Schema** (`src/config/featureFlags/schema.ts`)
+   - Defines all available feature flags
+   - Sets default values
+   - Maps environment config to application state
+
+2. **UI Hiding (Not Code Deletion)**
+   - Features are hidden in the UI using conditional rendering
+   - **No code is deleted** - all functionality remains in codebase
+   - Next.js tree-shaking removes unused code in production builds
+
+3. **Navigation Guards**
+   - Layout guards prevent access to disabled pages
+   - Returns 404 for disabled features
+   - Works on both client and server components
+
+4. **Settings Guards**
+   - Settings pages check feature flags
+   - Disabled settings are not accessible
+   - Settings tabs are hidden from navigation
+
+### Benefits
+
+- ✅ **Zero Breaking Changes** - No code deletion means no broken dependencies
+- ✅ **Easy Reversibility** - Toggle features with a simple config change
+- ✅ **Production Optimized** - Tree-shaking removes unused code automatically
+- ✅ **Flexible Deployment** - Different configurations per environment
+- ✅ **User-Specific Access** - Enable features for specific users
+- ✅ **Real-time Updates** - EdgeConfig allows instant feature toggling
+
+## Bundle Size Impact
+
+When features are disabled:
+
+- UI components are conditionally rendered
+- Next.js production build tree-shakes unused code
+- Bundle size is automatically optimized
+- Lazy loading ensures disabled features don't load
+
+## Debugging
+
+To see which feature flags are active:
+
+```typescript
+// In browser console
+import { serverFeatureFlags } from '@/config/featureFlags';
+console.log(serverFeatureFlags());
+```
+
+Or check the environment:
+
+```bash
+echo $FEATURE_FLAGS
+```
+
+## Migration from Code Deletion
+
+If you previously deleted code to remove features, consider migrating to feature flags:
+
+1. Restore the deleted code (via git)
+2. Set appropriate feature flags to `false`
+3. Verify features are hidden
+4. Production build will optimize bundle size automatically
+
+This approach provides the same bundle size benefits without the maintenance burden of code deletion.
+
+## Best Practices
+
+1. **Use Environment Variables for Development**
+   - Easy to test different configurations
+   - Quick feature toggling during development
+
+2. **Use EdgeConfig for Production**
+   - Real-time feature toggling
+   - No redeployment required
+   - Better control over rollouts
+
+3. **Always Guard Server Routes**
+   - Add layout guards to prevent direct URL access
+   - Return proper 404 responses
+
+4. **Hide UI Elements First**
+   - Remove navigation links
+   - Hide settings tabs
+   - Then add route guards
+
+5. **Test Reversibility**
+   - Ensure features can be easily re-enabled
+   - Verify no broken functionality
+
+## Troubleshooting
+
+### Feature Not Hiding
+
+- Check feature flag name matches schema exactly (snake\_case in env, camelCase in code)
+- Verify environment variable is properly formatted JSON
+- Clear `.next` cache and rebuild
+
+### 404 Not Working
+
+- Ensure layout guard is in the correct `layout.tsx` file
+- Verify using `serverFeatureFlags()` for server components
+- Check guard is executed before rendering
+
+### Type Errors
+
+- All feature flags are properly typed
+- Use TypeScript autocomplete for flag names
+- Check import statements are correct
+
+## Related Documentation
+
+- [Environment Variables](../environment-variables.mdx)
+- [Architecture](./architecture.mdx)
+- [Feature Development](./feature-development.mdx)

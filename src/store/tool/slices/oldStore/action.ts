@@ -40,7 +40,7 @@ export interface PluginStoreAction {
 
   useFetchInstalledPlugins: (enabled: boolean) => SWRResponse<LobeTool[]>;
   useFetchPluginList: (params: PluginQueryParams) => SWRResponse<PluginListResponse>;
-  useFetchPluginStore: () => SWRResponse<DiscoverPluginItem[]>;
+  useFetchPluginStore: (enabled?: boolean) => SWRResponse<DiscoverPluginItem[]>;
 }
 
 export const createPluginStoreSlice: StateCreator<
@@ -260,8 +260,12 @@ export const createPluginStoreSlice: StateCreator<
       },
     );
   },
-  useFetchPluginStore: () =>
-    useSWR<DiscoverPluginItem[]>('loadPluginStore', get().loadPluginStore, {
-      revalidateOnFocus: false,
-    }),
+  useFetchPluginStore: (enabled: boolean = true) =>
+    useSWR<DiscoverPluginItem[]>(
+      enabled ? 'loadPluginStore' : null,
+      enabled ? get().loadPluginStore : async () => [],
+      {
+        revalidateOnFocus: false,
+      },
+    ),
 });

@@ -9,6 +9,7 @@ import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import Action from '../components/Action';
 import ControlsForm from './ControlsForm';
@@ -38,6 +39,20 @@ const useStyles = createStyles(({ css, token, cx }) => ({
       }
     }
   `,
+  modelDisabled: css`
+    cursor: default;
+    border-radius: 8px;
+
+    :hover {
+      background: ${token.colorFillSecondary};
+    }
+
+    :active {
+      .model-switch {
+        scale: 1;
+      }
+    }
+  `,
   modelWithControl: css`
     border-radius: 20px;
 
@@ -55,6 +70,7 @@ const useStyles = createStyles(({ css, token, cx }) => ({
 const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
+  const { enableModelSelection } = useServerConfigStore(featureFlagsSelectors);
 
   const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
@@ -64,6 +80,9 @@ const ModelSwitch = memo(() => {
   const isModelHasExtendParams = useAiInfraStore(
     aiModelSelectors.isModelHasExtendParams(model, provider),
   );
+
+  // Hide model selector if model selection is disabled
+  if (!enableModelSelection) return null;
 
   return (
     <Flexbox align={'center'} className={isModelHasExtendParams ? styles.container : ''} horizontal>

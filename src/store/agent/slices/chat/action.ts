@@ -6,6 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings/agent';
 import { useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
 import { agentService } from '@/services/agent';
 import { sessionService } from '@/services/session';
@@ -231,14 +232,26 @@ export const createChatSlice: StateCreator<
 
   internal_updateAgentConfig: async (id, data, signal) => {
     const prevModel = agentSelectors.currentAgentModel(get());
-    // optimistic update at frontend
-    get().internal_dispatchAgentMap(id, data, 'optimistic_updateAgentConfig');
 
-    await sessionService.updateSessionConfig(id, data, signal);
+    // If model selection is disabled, prevent model changes
+    // Always use default model (o1) regardless of what's being saved
+    const configToUpdate =
+      data.model && DEFAULT_AGENT_CONFIG.model
+        ? {
+            ...data,
+            model: DEFAULT_AGENT_CONFIG.model,
+            provider: DEFAULT_AGENT_CONFIG.provider || 'openai',
+          }
+        : data;
+
+    // optimistic update at frontend
+    get().internal_dispatchAgentMap(id, configToUpdate, 'optimistic_updateAgentConfig');
+
+    await sessionService.updateSessionConfig(id, configToUpdate, signal);
     await get().internal_refreshAgentConfig(id);
 
     // refresh sessions to update the agent config if the model has changed
-    if (prevModel !== data.model) await useSessionStore.getState().refreshSessions();
+    if (prevModel !== configToUpdate.model) await useSessionStore.getState().refreshSessions();
   },
 
   internal_refreshAgentConfig: async (id) => {

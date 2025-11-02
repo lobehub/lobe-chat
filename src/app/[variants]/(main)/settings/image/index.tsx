@@ -4,22 +4,29 @@ import { UserImageConfig } from '@lobechat/types';
 import { Form, type FormGroupItemType, Icon } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { Loader2Icon } from 'lucide-react';
+import { notFound } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FormSliderWithInput } from '@/components/FormInput';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { MAX_DEFAULT_IMAGE_NUM, MIN_DEFAULT_IMAGE_NUM } from '@/const/settings';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors';
 
 const ImageSettings = memo(() => {
   const { t } = useTranslation('setting');
+  const { showAiImage } = useServerConfigStore(featureFlagsSelectors);
   const [form] = Form.useForm<UserImageConfig>();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const imageSettings = useUserStore(settingsSelectors.currentImageSettings);
   const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
+
+  if (!showAiImage) {
+    notFound();
+  }
 
   if (!isUserStateInit) {
     return <Skeleton active paragraph={{ rows: 1 }} title={false} />;

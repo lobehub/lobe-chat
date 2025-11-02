@@ -24,7 +24,7 @@ export const useControls = ({
 }) => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
-  const { showDalle } = useServerConfigStore(featureFlagsSelectors);
+  const { showDalle, showMarket } = useServerConfigStore(featureFlagsSelectors);
   const [checked, togglePlugin] = useAgentStore((s) => [
     agentSelectors.currentAgentPlugins(s),
     s.togglePlugin,
@@ -40,7 +40,9 @@ export const useControls = ({
 
   const [useFetchPluginStore] = useToolStore((s) => [s.useFetchPluginStore]);
 
-  useFetchPluginStore();
+  // Only fetch plugin store if market is enabled
+  // Using null key to disable SWR fetch when market is disabled
+  useFetchPluginStore(showMarket);
   useFetchInstalledPlugins();
   useCheckPluginsIsInstalled(plugins);
 

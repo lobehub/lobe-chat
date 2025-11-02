@@ -3,6 +3,7 @@ import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 
 import { useStore } from '../store';
@@ -10,15 +11,17 @@ import { useStore } from '../store';
 const MarketList = memo<{ id: string }>(({ id }) => {
   const [toggleAgentPlugin, hasPlugin] = useStore((s) => [s.toggleAgentPlugin, !!s.config.plugins]);
   const plugins = useStore((s) => s.config.plugins || []);
+  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
 
-  const [useFetchPluginList, fetchPluginManifest] = useToolStore((s) => [
+  const [useFetchPluginStore, fetchPluginManifest] = useToolStore((s) => [
     s.useFetchPluginStore,
     s.installPlugin,
   ]);
 
   const pluginManifestLoading = useToolStore((s) => s.pluginInstallLoading, isEqual);
 
-  useFetchPluginList();
+  // Only fetch plugin store if market is enabled
+  useFetchPluginStore(showMarket);
 
   return (
     <Flexbox align={'center'} gap={8} horizontal>

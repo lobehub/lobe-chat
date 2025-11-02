@@ -15,6 +15,9 @@ export const FeatureFlagsSchema = z.object({
   openai_api_key: FeatureFlagValue.optional(),
   openai_proxy_url: FeatureFlagValue.optional(),
 
+  // model selection
+  model_selection: FeatureFlagValue.optional(),
+
   // profile
   api_key_manage: FeatureFlagValue.optional(),
 
@@ -79,6 +82,8 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   openai_api_key: true,
   openai_proxy_url: true,
 
+  model_selection: false, // Disabled for minimal chat - users cannot change model
+
   api_key_manage: false,
 
   create_session: true,
@@ -126,6 +131,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
 
     showOpenAIApiKey: evaluateFeatureFlag(config.openai_api_key, userId),
     showOpenAIProxyUrl: evaluateFeatureFlag(config.openai_proxy_url, userId),
+
+    enableModelSelection: evaluateFeatureFlag(config.model_selection, userId),
 
     showApiKeyManage: evaluateFeatureFlag(config.api_key_manage, userId),
 

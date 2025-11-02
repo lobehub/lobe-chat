@@ -18,6 +18,7 @@ import InfoTooltip from '@/components/InfoTooltip';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import ModelSelect from '@/features/ModelSelect';
 import { useProviderName } from '@/hooks/useProviderName';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { selectors, useStore } from '../store';
 
@@ -138,6 +139,7 @@ const AgentModal = memo(() => {
   const [form] = Form.useForm();
   const config = useStore(selectors.currentAgentConfig, isEqual);
   const { styles } = useStyles();
+  const { enableModelSelection } = useServerConfigStore(featureFlagsSelectors);
 
   const enableMaxTokens = AntdForm.useWatch(['chatConfig', 'enableMaxTokens'], form);
   const enableReasoningEffort = AntdForm.useWatch(['chatConfig', 'enableReasoningEffort'], form);
@@ -257,13 +259,17 @@ const AgentModal = memo(() => {
 
   const model: FormGroupItemType = {
     children: [
-      {
-        children: <ModelSelect />,
-        desc: t('settingModel.model.desc', { provider: providerName }),
-        label: t('settingModel.model.title'),
-        name: '_modalConfig',
-        tag: 'model',
-      },
+      ...(enableModelSelection
+        ? [
+            {
+              children: <ModelSelect />,
+              desc: t('settingModel.model.desc', { provider: providerName }),
+              label: t('settingModel.model.title'),
+              name: '_modalConfig',
+              tag: 'model',
+            } satisfies FormItemProps,
+          ]
+        : []),
       {
         children: <Switch />,
         desc: t('settingChat.enableStreaming.desc'),

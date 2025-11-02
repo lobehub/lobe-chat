@@ -46,8 +46,18 @@ const nextConfig: NextConfig = {
     // so we need to disable it
     // refs: https://github.com/lobehub/lobe-chat/pull/7430
     serverMinification: false,
-    webVitalsAttribution: ['CLS', 'LCP'],
-    webpackBuildWorker: true,
+    // Turbopack optimizations for faster dev
+turbo: {
+      resolveAlias: {
+        // Optimize frequently used aliases
+      },
+    }, 
+    
+webVitalsAttribution: isProd ? ['CLS', 'LCP'] : undefined,
+    
+// Only in production
+webpackBuildWorker: true,
+    
     webpackMemoryOptimizations: true,
   },
   async headers() {
@@ -196,8 +206,8 @@ const nextConfig: NextConfig = {
   },
   logging: {
     fetches: {
-      fullUrl: true,
-      hmrRefreshes: true,
+      fullUrl: !isProd, // Only in development when needed
+      hmrRefreshes: false, // Disable HMR refresh logging for speed
     },
   },
   reactStrictMode: true,
@@ -271,7 +281,7 @@ const nextConfig: NextConfig = {
   ],
 
   // when external packages in dev mode with turbopack, this config will lead to bundle error
-  serverExternalPackages: isProd ? ['@electric-sql/pglite', "pdfkit"] : ["pdfkit"],
+  serverExternalPackages: isProd ? ['@electric-sql/pglite', 'pdfkit'] : ['pdfkit'],
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 
   typescript: {
@@ -336,10 +346,10 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapp
 const withPWA =
   isProd && !isDesktop
     ? withSerwistInit({
-      register: false,
-      swDest: 'public/sw.js',
-      swSrc: 'src/app/sw.ts',
-    })
+        register: false,
+        swDest: 'public/sw.js',
+        swSrc: 'src/app/sw.ts',
+      })
     : noWrapper;
 
 export default withBundleAnalyzer(withPWA(nextConfig as NextConfig));

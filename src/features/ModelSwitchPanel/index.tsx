@@ -4,7 +4,7 @@ import type { ItemType } from 'antd/es/menu/interface';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { type ReactNode, memo, useMemo } from 'react';
+import { type ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -36,6 +36,10 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
   tag: css`
     cursor: pointer;
   `,
+  tagDisabled: css`
+    pointer-events: none;
+    cursor: default;
+  `,
 }));
 
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;
@@ -55,17 +59,34 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
     agentSelectors.currentAgentModelProvider(s),
     s.updateAgentConfig,
   ]);
-  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
+  const { showLLM, enableModelSelection } = useServerConfigStore(featureFlagsSelectors);
   const router = useRouter();
   const enabledList = useEnabledChatModels();
 
+  // Disable model selection if feature flag is disabled
+  // Even if component is rendered, prevent model changes
+  const handleModelChange = useCallback(
+    async (newModel: string, newProvider: string) => {
+      if (!enableModelSelection) {
+        return; // Prevent model change if disabled
+      }
+      await updateAgentConfig({ model: newModel, provider: newProvider });
+    },
+    [enableModelSelection, updateAgentConfig],
+  );
+
   const items = useMemo<ItemType[]>(() => {
+    // If model selection is disabled, return empty menu
+    if (!enableModelSelection) {
+      return [];
+    }
+
     const getModelItems = (provider: EnabledProviderWithModels) => {
       const items = provider.children.map((model) => ({
         key: menuKey(provider.id, model.id),
         label: <ModelItemRender {...model} {...model.abilities} />,
         onClick: async () => {
-          await updateAgentConfig({ model: model.id, provider: provider.id });
+          await handleModelChange(model.id, provider.id);
         },
       }));
 
@@ -140,12 +161,15 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
       ),
       type: 'group',
     }));
-  }, [enabledList]);
+  }, [enabledList, enableModelSelection, handleModelChange]);
 
-  const icon = <div className={styles.tag}>{children}</div>;
+  const icon = (
+    <div className={enableModelSelection ? styles.tag : styles.tagDisabled}>{children}</div>
+  );
 
   return (
     <ActionDropdown
+      disabled={!enableModelSelection}
       menu={{
         // @ts-expect-error 等待 antd 修复
         activeKey: menuKey(provider, model),
@@ -159,9 +183,9 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
         },
       }}
       onOpenChange={onOpenChange}
-      open={open}
+      open={enableModelSelection ? open : false}
       placement={'topLeft'}
-      prefetch
+      prefetch={enableModelSelection}
     >
       {icon}
     </ActionDropdown>

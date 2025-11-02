@@ -1,0 +1,326 @@
+# 功能开关系统
+
+LobeChat 包含一个强大的功能开关系统，允许您在不修改代码的情况下启用或禁用特定功能。这对以下场景特别有用：
+
+- 创建最小化 / 简化版本的应用
+- 渐进式功能发布
+- A/B 测试
+- 用户特定的功能访问
+- 环境特定的配置
+
+## 可用的功能开关
+
+所有功能开关都在 `src/config/featureFlags/schema.ts` 中定义，可以通过环境变量或 EdgeConfig 控制。
+
+### UI 功能
+
+| 开关                | 描述                | 默认值     |
+| ----------------- | ----------------- | ------- |
+| `market`          | 显示市场 / 发现页面       | `false` |
+| `ai_image`        | 显示 AI 图像生成（所有提供商） | `false` |
+| `dalle`           | 专门显示 DALL-E 图像生成  | `false` |
+| `speech_to_text`  | 显示语音转文字 / TTS 功能  | `false` |
+| `changelog`       | 显示更新日志页面          | `false` |
+| `welcome_suggest` | 显示欢迎建议            | `true`  |
+| `cloud_promotion` | 显示云服务推广           | `false` |
+| `plugins`         | 启用插件系统            | `false` |
+| `token_counter`   | 显示令牌计数器           | `true`  |
+
+### 核心功能
+
+| 开关               | 描述                   | 默认值     |
+| ---------------- | -------------------- | ------- |
+| `knowledge_base` | 启用 RAG / 知识库功能       | `false` |
+| `file_upload`    | 启用文件上传功能             | `false` |
+| `mcp`            | 启用 MCP（模型上下文协议）服务器集成 | `false` |
+| `rag_eval`       | 启用 RAG 评估功能          | `false` |
+| `group_chat`     | 启用多智能体群聊             | `false` |
+
+### 设置与配置
+
+| 开关                        | 描述                 | 默认值     |
+| ------------------------- | ------------------ | ------- |
+| `language_model_settings` | 显示语言模型设置           | `true`  |
+| `provider_settings`       | 显示提供商设置            | `true`  |
+| `openai_api_key`          | 允许配置 OpenAI API 密钥 | `true`  |
+| `openai_proxy_url`        | 允许配置 OpenAI 代理 URL | `true`  |
+| `model_selection`         | 允许用户选择 / 更改 AI 模型  | `false` |
+| `api_key_manage`          | 显示 API 密钥管理页面      | `false` |
+| `check_updates`           | 启用更新检查             | `true`  |
+
+### 会话与智能体管理
+
+| 开关               | 描述        | 默认值     |
+| ---------------- | --------- | ------- |
+| `create_session` | 允许创建新会话   | `true`  |
+| `edit_agent`     | 允许编辑智能体配置 | `true`  |
+| `pin_list`       | 显示固定列表功能  | `false` |
+
+### 身份验证
+
+| 开关              | 描述          | 默认值    |
+| --------------- | ----------- | ------ |
+| `clerk_sign_up` | 启用 Clerk 注册 | `true` |
+
+### 商业功能
+
+| 开关                       | 描述                   | 默认值     |
+| ------------------------ | -------------------- | ------- |
+| `commercial_hide_github` | 隐藏 GitHub 链接（需要商业许可） | `false` |
+| `commercial_hide_docs`   | 隐藏文档链接（需要商业许可）       | `false` |
+
+## 配置方法
+
+### 方法 1：环境变量
+
+通过 `FEATURE_FLAGS` 环境变量设置功能开关，格式为 JSON 字符串：
+
+```bash
+# .env.local
+FEATURE_FLAGS='{"market":true,"ai_image":true,"knowledge_base":true}'
+```
+
+### 方法 2：EdgeConfig（Vercel）
+
+对于启用了 EdgeConfig 的生产部署，功能开关会自动从您的 EdgeConfig 存储中获取。这允许实时更新功能开关而无需重新部署。
+
+## 常见用例
+
+### 最小化聊天（默认配置）
+
+默认配置提供了一个只包含基本功能的最小化聊天体验：
+
+```bash
+# 默认情况下所有高级功能都被禁用
+# 参见 src/config/featureFlags/schema.ts 中的 DEFAULT_FEATURE_FLAGS
+```
+
+包含的功能：
+
+- ✅ 基本聊天功能
+- ✅ OpenAI 提供商
+- ✅ 会话管理
+- ✅ 智能体配置
+- ✅ 设置和首选项
+
+禁用的功能：
+
+- ❌ 市场 / 发现
+- ❌ AI 图像生成
+- ❌ 知识库 / RAG
+- ❌ MCP 集成
+- ❌ 语音转文字 / TTS
+- ❌ 更新日志
+- ❌ 插件
+
+### 启用所有功能
+
+```bash
+FEATURE_FLAGS='{
+  "market": true,
+  "ai_image": true,
+  "dalle": true,
+  "speech_to_text": true,
+  "changelog": true,
+  "knowledge_base": true,
+  "file_upload": true,
+  "mcp": true,
+  "plugins": true,
+  "group_chat": true
+}'
+```
+
+### 仅启用市场
+
+```bash
+FEATURE_FLAGS='{"market":true}'
+```
+
+### 启用带文件上传的知识库
+
+```bash
+FEATURE_FLAGS='{"knowledge_base":true,"file_upload":true}'
+```
+
+### 启用图像生成
+
+```bash
+FEATURE_FLAGS='{"ai_image":true,"dalle":true}'
+```
+
+### 启用 MCP 集成
+
+```bash
+FEATURE_FLAGS='{"mcp":true}'
+```
+
+## 用户特定的功能开关
+
+功能开关支持布尔值和用户 ID 数组，允许按用户控制功能访问：
+
+```bash
+# 为所有用户启用
+FEATURE_FLAGS='{"market":true}'
+
+# 仅为特定用户启用
+FEATURE_FLAGS='{"market":["user-123","user-456"]}'
+```
+
+## 代码中的使用
+
+### 客户端组件
+
+```tsx
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
+export const MyComponent = () => {
+  const showMarket = useServerConfigStore(featureFlagsSelectors.showMarket);
+  
+  if (!showMarket) return null; // 隐藏功能
+  
+  return <div>市场内容</div>;
+};
+```
+
+### 服务器组件
+
+```tsx
+import { serverFeatureFlags } from '@/config/featureFlags';
+import { notFound } from 'next/navigation';
+
+export default function MarketPage() {
+  const flags = serverFeatureFlags();
+  
+  if (!flags.showMarket) {
+    notFound(); // 返回 404
+  }
+  
+  return <div>市场页面</div>;
+}
+```
+
+### 布局守卫
+
+```tsx
+// layout.tsx
+import { serverFeatureFlags } from '@/config/featureFlags';
+import { notFound } from 'next/navigation';
+
+export default function Layout({ children }) {
+  const flags = serverFeatureFlags();
+  
+  if (!flags.showMarket) {
+    notFound();
+  }
+  
+  return <>{children}</>;
+}
+```
+
+## 工作原理
+
+### 实现细节
+
+1. **功能开关架构** (`src/config/featureFlags/schema.ts`)
+   - 定义所有可用的功能开关
+   - 设置默认值
+   - 将环境配置映射到应用状态
+
+2. **UI 隐藏（而非代码删除）**
+   - 使用条件渲染在 UI 中隐藏功能
+   - **不删除代码** - 所有功能保留在代码库中
+   - Next.js tree-shaking 在生产构建中移除未使用的代码
+
+3. **导航守卫**
+   - 布局守卫防止访问被禁用的页面
+   - 为禁用的功能返回 404
+   - 在客户端和服务器组件上都有效
+
+4. **设置守卫**
+   - 设置页面检查功能开关
+   - 禁用的设置不可访问
+   - 设置选项卡从导航中隐藏
+
+### 优势
+
+- ✅ **零破坏性更改** - 不删除代码意味着没有破损的依赖
+- ✅ **易于回滚** - 通过简单的配置更改切换功能
+- ✅ **生产优化** - Tree-shaking 自动移除未使用的代码
+- ✅ **灵活部署** - 每个环境不同的配置
+- ✅ **用户特定访问** - 为特定用户启用功能
+- ✅ **实时更新** - EdgeConfig 允许即时功能切换
+
+## Bundle 大小影响
+
+当功能被禁用时：
+
+- UI 组件条件渲染
+- Next.js 生产构建 tree-shake 未使用的代码
+- Bundle 大小自动优化
+- 懒加载确保禁用的功能不加载
+
+## 调试
+
+查看哪些功能开关处于活动状态：
+
+```typescript
+// 在浏览器控制台
+import { serverFeatureFlags } from '@/config/featureFlags';
+console.log(serverFeatureFlags());
+```
+
+或检查环境：
+
+```bash
+echo $FEATURE_FLAGS
+```
+
+## 最佳实践
+
+1. **开发时使用环境变量**
+   - 易于测试不同配置
+   - 开发期间快速切换功能
+
+2. **生产时使用 EdgeConfig**
+   - 实时功能切换
+   - 无需重新部署
+   - 更好地控制发布
+
+3. **始终守卫服务器路由**
+   - 添加布局守卫防止直接 URL 访问
+   - 返回适当的 404 响应
+
+4. **首先隐藏 UI 元素**
+   - 移除导航链接
+   - 隐藏设置选项卡
+   - 然后添加路由守卫
+
+5. **测试可逆性**
+   - 确保功能可以轻松重新启用
+   - 验证没有破损的功能
+
+## 故障排除
+
+### 功能未隐藏
+
+- 检查功能开关名称是否与架构完全匹配（环境中为 snake\_case，代码中为 camelCase）
+- 验证环境变量是否为正确格式的 JSON
+- 清除 `.next` 缓存并重新构建
+
+### 404 不工作
+
+- 确保布局守卫在正确的 `layout.tsx` 文件中
+- 验证服务器组件使用 `serverFeatureFlags()`
+- 检查守卫在渲染前执行
+
+### 类型错误
+
+- 所有功能开关都有正确的类型
+- 使用 TypeScript 自动完成获取标志名称
+- 检查导入语句是否正确
+
+## 相关文档
+
+- [环境变量](../environment-variables.mdx)
+- [架构](./architecture.mdx)
+- [功能开发](./feature-development.mdx)
