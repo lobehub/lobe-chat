@@ -22,7 +22,7 @@ export const importConfigFile = async (
     if ('schemaHash' in config) {
       notification.error({
         description: t('import.incompatible.description', { ns: 'error' }),
-        message: t('import.incompatible.title', { ns: 'error' }),
+        title: t('import.incompatible.title', { ns: 'error' }),
       });
       return;
     }
@@ -37,7 +37,7 @@ export const importConfigFile = async (
         ns: 'error',
         reason: (error as any).message,
       }),
-      message: t('import.importConfigFile.title', { ns: 'error' }),
+      title: t('import.importConfigFile.title', { ns: 'error' }),
     });
   }
 };

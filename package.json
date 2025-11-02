@@ -191,8 +191,8 @@
     "@virtuoso.dev/masonry": "^1.3.5",
     "@xterm/xterm": "^5.5.0",
     "ahooks": "^3.9.5",
-    "antd": "^5.27.4",
-    "antd-style": "^3.7.1",
+    "antd": "^6.0.0-alpha.2",
+    "antd-style": "^4.0.0-alpha.1",
     "brotli-wasm": "^3.0.1",
     "chroma-js": "^3.1.2",
     "cookie": "^1.0.2",
@@ -396,6 +396,10 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vercel/speed-insights"
-    ]
+    ],
+    "overrides": {
+      "antd": "^6.0.0-alpha.2",
+      "antd-style": "^4.0.0-alpha.1"
+    }
   }
 }

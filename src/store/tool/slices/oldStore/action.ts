@@ -109,7 +109,7 @@ export const createPluginStoreSlice: StateCreator<
 
       notification.error({
         description: t(`error.${err.message}`, { ns: 'plugin' }),
-        message: t('error.installError', { name: plugin.title, ns: 'plugin' }),
+        title: t('error.installError', { name: plugin.title, ns: 'plugin' }),
       });
     }
   },
@@ -135,7 +135,7 @@ export const createPluginStoreSlice: StateCreator<
 
       notification.error({
         description: t(`error.${err.message}`, { ns: 'plugin' }),
-        message: t('error.installError', { name: plugin.title, ns: 'plugin' }),
+        title: t('error.installError', { name: plugin.title, ns: 'plugin' }),
       });
     }
   },

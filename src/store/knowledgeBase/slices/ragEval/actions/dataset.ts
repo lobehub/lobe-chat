@@ -54,7 +54,7 @@ export const createRagEvalDatasetSlice: StateCreator<
         // if valid, send to backend
         await ragEvalService.importDatasetRecords(datasetId, file);
       } catch (e) {
-        notification.error({ description: (e as Error).message, message: '文件格式错误' });
+        notification.error({ description: (e as Error).message, title: '文件格式错误' });
       }
     }
 

@@ -44,10 +44,10 @@ const ModalLayout = memo<ModalProps>(
             position: 'relative',
             ...styles?.body,
           },
-          content: {
+          container: {
             border: 'none',
             boxShadow: `0 0 0 1px ${theme.colorBorderSecondary}`,
-            ...styles?.content,
+            ...styles?.container,
           },
         }}
         title={false}

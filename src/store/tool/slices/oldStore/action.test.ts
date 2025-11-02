@@ -254,7 +254,7 @@ describe('useToolStore:pluginStore', () => {
 
       expect(notification.error).toHaveBeenCalledWith({
         description: 'error.noManifest',
-        message: 'error.installError',
+        title: 'error.installError',
       });
     });
   });
