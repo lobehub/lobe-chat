@@ -16,6 +16,6 @@
     "tsx": "^4.19.2"
   },
   "peerDependencies": {
-    "zod": "^3"
+    "zod": "^4.1.12"
   }
 }
