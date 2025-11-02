@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add padding to TopicList component."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.12"
+  },
+  {
+    "children": {
       "improvements": ["Smoothed model descriptions in ko-KR locales."]
     },
     "date": "2025-11-02",
