@@ -58,7 +58,7 @@ export default {
     signIn: '/next-auth/signin',
   },
   providers: initSSOProviders(),
-  secret: NEXT_AUTH_SECRET,
+  secret: NEXT_AUTH_SECRET ?? process.env.AUTH_SECRET,
   session: {
     // Force use JWT if server service is disabled
     strategy: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? NEXT_AUTH_SSO_SESSION_STRATEGY : 'jwt',
