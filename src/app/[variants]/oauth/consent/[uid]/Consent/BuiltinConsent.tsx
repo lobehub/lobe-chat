@@ -5,6 +5,7 @@ import { Card, Result } from 'antd';
 import { useTheme } from 'antd-style';
 import { LoaderCircle } from 'lucide-react';
 import { memo, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 interface BuiltinConsentProps {
@@ -12,6 +13,7 @@ interface BuiltinConsentProps {
 }
 
 const BuiltinConsent = memo<BuiltinConsentProps>(({ uid }) => {
+  const { t } = useTranslation('oauth');
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const BuiltinConsent = memo<BuiltinConsentProps>(({ uid }) => {
             icon={<Icon icon={LoaderCircle} spin style={{ color: theme.colorText }} />}
             status="success"
             style={{ padding: 0 }}
-            subTitle="授权成功，跳转中..."
+            subTitle={t('consent.redirecting')}
             title=""
           />
         </Card>
