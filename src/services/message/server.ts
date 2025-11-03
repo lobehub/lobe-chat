@@ -21,10 +21,6 @@ export class ServerService implements IMessageService {
     });
   };
 
-  batchCreateMessages: IMessageService['batchCreateMessages'] = async (messages) => {
-    return lambdaClient.message.batchCreateMessages.mutate(messages);
-  };
-
   getMessages: IMessageService['getMessages'] = async (sessionId, topicId, groupId) => {
     const data = await lambdaClient.message.getMessages.query({
       groupId,
