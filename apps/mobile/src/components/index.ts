@@ -67,6 +67,11 @@ export {
 export { default as InstantSwitch, type InstantSwitchProps } from './InstantSwitch';
 export { default as ListGroup, type ListGroupProps } from './ListGroup';
 export { default as ListItem, type ListItemProps } from './ListItem';
+export {
+  default as LoadingDots,
+  type LoadingDotsProps,
+  type LoadingDotsVariant,
+} from './LoadingDots';
 export { default as Markdown, type MarkdownProps } from './Markdown';
 export { default as MaskShadow, type MaskShadowProps } from './MaskShadow';
 export { default as Mermaid, type MermaidProps } from './Mermaid';

@@ -55,6 +55,8 @@ import InputDemos from '@lobehub/ui-rn/Input/demos';
 import InstantSwitchDemos from '@lobehub/ui-rn/InstantSwitch/demos';
 // ListItem
 import ListItemDemos from '@lobehub/ui-rn/ListItem/demos';
+// LoadingDots
+import LoadingDotsDemos from '@lobehub/ui-rn/LoadingDots/demos';
 // Markdown
 import MarkdownDemos from '@lobehub/ui-rn/Markdown/demos';
 // MaskShadow
@@ -117,6 +119,7 @@ export const DEMOS_MAP: Record<string, any> = {
   Input: InputDemos,
   InstantSwitch: InstantSwitchDemos,
   ListItem: ListItemDemos,
+  LoadingDots: LoadingDotsDemos,
   Markdown: MarkdownDemos,
   MaskShadow: MaskShadowDemos,
   Mermaid: MermaidDemos,
