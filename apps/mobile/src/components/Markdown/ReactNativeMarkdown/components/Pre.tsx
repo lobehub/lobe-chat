@@ -45,7 +45,7 @@ const Pre: Components['pre'] = memo(({ children }) => {
   }
 
   if (code.lang === 'mermaid') {
-    return <Mermaid code={code.content} fullFeatured style={styles.codeBlock} />;
+    return <Mermaid code={code.content} style={styles.codeBlock} />;
   }
 
   return <Highlighter code={code.content} fullFeatured lang={code.lang} style={styles.codeBlock} />;

@@ -75,11 +75,9 @@ export const useMarkdownStyles = createStyles(
         marginBlock: options.fontSize * options.marginMultiple,
       },
       img: {
-        backgroundColor: token.colorFill,
         borderColor: token.colorBorderSecondary,
         borderWidth: StyleSheet.hairlineWidth,
         marginBlock: options.fontSize * options.marginMultiple * 0.4,
-        overflow: 'hidden',
       },
       ins: {
         textDecorationLine: 'underline',
@@ -190,12 +188,9 @@ export const useMarkdownStyles = createStyles(
         lineHeight: options.lineHeight * options.fontSize,
       },
       video: {
-        backgroundColor: '#000',
         borderColor: token.colorBorderSecondary,
-        borderRadius: token.borderRadiusLG * 1.5,
         borderWidth: StyleSheet.hairlineWidth,
         marginBlock: options.fontSize * options.marginMultiple * 0.4,
-        overflow: 'hidden',
       },
     };
   },

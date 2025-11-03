@@ -1,39 +1,29 @@
-import { VideoView, useVideoPlayer } from 'expo-video';
 import { memo } from 'react';
 import { Components } from 'react-markdown';
-import { StyleSheet, View } from 'react-native';
+
+import VideoComponent from '@/components/Video';
 
 import { useStyles } from '../style';
 
+/**
+ * Markdown 视频组件
+ * 使用 Video 组件实现，支持自适应尺寸和视频播放控制
+ */
 const Video: Components['video'] = memo(({ src }) => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
 
-  const player = useVideoPlayer(src || '', (player) => {
-    player.loop = false;
-    player.muted = false;
-  });
+  if (!src) return null;
 
   return (
-    <View
-      style={[
-        styles.video,
-        {
-          aspectRatio: 16 / 9,
-          width: '100%',
-        },
-      ]}
-    >
-      <VideoView
-        allowsFullscreen
-        allowsPictureInPicture
-        allowsVideoFrameAnalysis
-        contentFit="cover"
-        nativeControls
-        player={player}
-        style={StyleSheet.absoluteFillObject}
-      />
-    </View>
+    <VideoComponent
+      borderRadius={theme.borderRadius}
+      src={src}
+      style={styles.video}
+      variant="borderless"
+    />
   );
 });
+
+Video.displayName = 'MarkdownVideo';
 
 export default Video;
