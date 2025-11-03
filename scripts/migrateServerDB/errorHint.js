@@ -15,13 +15,7 @@ if you have any other question, please open issue here: https://github.com/lobeh
 const DB_FAIL_INIT_HINT = `------------------------------------------------------------------------------------------
 ⚠️ Database migrate failed due to not find the db instance.
 
-1) You might not switch to server db mode, please set the env blow and try again:
-
-\`\`\`
-NEXT_PUBLIC_SERVICE_MODE=server
-\`\`\`
-
-2) if you are using docker postgres image, you may need to set DATABASE_DRIVER to node
+if you are using docker postgres image, you may need to set DATABASE_DRIVER to node
 
 \`\`\`
 DATABASE_DRIVER=node

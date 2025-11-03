@@ -10,8 +10,6 @@ import * as schema from '../schemas';
 import { LobeChatDatabase } from '../type';
 
 export const getDBInstance = (): LobeChatDatabase => {
-  if (!(process.env.NEXT_PUBLIC_SERVICE_MODE === 'server')) return {} as any;
-
   if (!serverDBEnv.KEY_VAULTS_SECRET) {
     throw new Error(
       ` \`KEY_VAULTS_SECRET\` is not set, please set it in your environment variables.
