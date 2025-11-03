@@ -80,6 +80,24 @@ export const getCodeLanguageDisplayName = (input: string): string => {
   return matchLang?.name || 'Plaintext';
 };
 
+/**
+ * Get the filename pattern for a language (for MaterialFileTypeIcon)
+ * @param input - The input language string
+ * @returns The filename pattern (e.g., '*.js', '*.py')
+ */
+export const getCodeLanguageFilename = (input: string): string => {
+  if (!input) {
+    return '*.txt';
+  }
+  const inputLang = input.toLocaleLowerCase();
+
+  const matchLang = bundledLanguagesInfo.find(
+    (lang) => lang.id === inputLang || lang.aliases?.includes(inputLang),
+  );
+  const type = matchLang?.aliases?.[0] || matchLang?.id || 'txt';
+  return `*.${type}`;
+};
+
 export const supportedLanguages = [
   langBash,
   langC,
