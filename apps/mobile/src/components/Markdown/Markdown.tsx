@@ -1,6 +1,8 @@
 import { memo, useCallback } from 'react';
 import { View } from 'react-native';
 
+import Image from '@/components/Image';
+
 import { MarkdownRender, StreamdownRender } from './SyntaxMarkdown';
 import { MarkdownProvider } from './components/MarkdownProvider';
 import { useDelayedAnimated } from './components/useDelayedAnimated';
@@ -13,6 +15,7 @@ const Markdown = memo<MarkdownProps>((props) => {
     animated,
     enableLatex = true,
     enableMermaid = true,
+    enableImageGallery = true,
     enableCustomFootnotes,
     enableGithubAlert,
     enableStream = false,
@@ -48,36 +51,38 @@ const Markdown = memo<MarkdownProps>((props) => {
   );
 
   return (
-    <MarkdownProvider
-      animated={delayedAnimated}
-      borderRadius={borderRadius}
-      components={components}
-      enableCustomFootnotes={enableCustomFootnotes}
-      enableGithubAlert={enableGithubAlert}
-      enableLatex={enableLatex}
-      enableMermaid={enableMermaid}
-      fontSize={fontSize}
-      fullFeaturedCodeBlock={fullFeaturedCodeBlock}
-      headerMultiple={headerMultiple}
-      lineHeight={lineHeight}
-      marginMultiple={marginMultiple}
-      rehypePlugins={rehypePlugins}
-      rehypePluginsAhead={rehypePluginsAhead}
-      remarkPlugins={remarkPlugins}
-      remarkPluginsAhead={remarkPluginsAhead}
-      showFootnotes={showFootnotes}
-      variant={variant}
-    >
-      <View style={style}>
-        <Render
-          enableStream={enableStream && delayedAnimated}
-          reactMarkdownProps={reactMarkdownProps}
-          {...rest}
-        >
-          {children}
-        </Render>
-      </View>
-    </MarkdownProvider>
+    <Image.PreviewGroup preview={enableImageGallery}>
+      <MarkdownProvider
+        animated={delayedAnimated}
+        borderRadius={borderRadius}
+        components={components}
+        enableCustomFootnotes={enableCustomFootnotes}
+        enableGithubAlert={enableGithubAlert}
+        enableLatex={enableLatex}
+        enableMermaid={enableMermaid}
+        fontSize={fontSize}
+        fullFeaturedCodeBlock={fullFeaturedCodeBlock}
+        headerMultiple={headerMultiple}
+        lineHeight={lineHeight}
+        marginMultiple={marginMultiple}
+        rehypePlugins={rehypePlugins}
+        rehypePluginsAhead={rehypePluginsAhead}
+        remarkPlugins={remarkPlugins}
+        remarkPluginsAhead={remarkPluginsAhead}
+        showFootnotes={showFootnotes}
+        variant={variant}
+      >
+        <View style={style}>
+          <Render
+            enableStream={enableStream && delayedAnimated}
+            reactMarkdownProps={reactMarkdownProps}
+            {...rest}
+          >
+            {children}
+          </Render>
+        </View>
+      </MarkdownProvider>
+    </Image.PreviewGroup>
   );
 });
 

@@ -35,6 +35,15 @@ export interface SyntaxMarkdownProps extends Omit<TypographyProps, 'children'> {
 }
 
 export interface MarkdownProps extends SyntaxMarkdownProps {
+  /**
+   * 是否启用图片画廊功能
+   * 启用后，Markdown 中的多张图片可以作为画廊预览，支持左右滑动切换
+   * @default true
+   */
   enableImageGallery?: boolean;
+
+  /**
+   * 容器样式
+   */
   style?: ViewProps['style'];
 }

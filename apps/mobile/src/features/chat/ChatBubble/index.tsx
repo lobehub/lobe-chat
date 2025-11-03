@@ -37,6 +37,8 @@ const ChatBubble = memo(
     const { styles, theme } = useStyles();
     const { fontSize } = useSettingStore();
 
+    // console.log(JSON.stringify(message, null, 2));
+
     const content = useMemo(() => {
       if (hasError && message.error?.type) {
         return <ErrorContent error={message.error} />;
