@@ -3,7 +3,7 @@
 import { Avatar, Button, Text } from '@lobehub/ui';
 import { Card, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { memo } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -52,16 +52,30 @@ const useStyles = createStyles(({ css, token }) => ({
 const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('oauth'); // Assuming translations are in 'oauth'
+  const [isSwitching, setSwitching] = useState(false);
 
   const clientDisplayName = clientMetadata?.clientName || 'the application';
 
   const isUserStateInit = useUserStore((s) => s.isUserStateInit);
   const avatar = useUserStore(userProfileSelectors.userAvatar);
   const nickName = useUserStore(userProfileSelectors.nickName);
+  const [logout, openLogin] = useUserStore((s) => [s.logout, s.openLogin]);
 
   const titleText = t('login.title', { clientName: clientDisplayName });
   const descriptionText = t('login.description', { clientName: clientDisplayName });
   const buttonText = t('login.button'); // Or "Continue"
+  const switchButtonText = t('login.switchAccount');
+
+  const handleSwitchAccount = useCallback(async () => {
+    if (isSwitching) return;
+    try {
+      setSwitching(true);
+      await logout();
+      await openLogin();
+    } finally {
+      setSwitching(false);
+    }
+  }, [isSwitching, logout, openLogin]);
 
   return (
     <Center className={styles.container} gap={16}>
@@ -116,6 +130,9 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
                 {buttonText}
               </Button>
             </form>
+            <Button loading={isSwitching} onClick={handleSwitchAccount} type="text">
+              {switchButtonText}
+            </Button>
           </Flexbox>
         </Flexbox>
       </Card>

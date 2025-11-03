@@ -50,6 +50,7 @@
   "login": {
     "button": "确认登录",
     "description": "应用 {{clientName}} 申请使用您的账户进行登录",
+    "switchAccount": "使用其他账户",
     "title": "登录 {{clientName}}",
     "userWelcome": "欢迎回来，"
   },

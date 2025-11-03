@@ -50,6 +50,7 @@
   "login": {
     "button": "Xác nhận đăng nhập",
     "description": "Ứng dụng {{clientName}} yêu cầu sử dụng tài khoản của bạn để đăng nhập",
+    "switchAccount": "Sử dụng tài khoản khác",
     "title": "Đăng nhập vào {{clientName}}",
     "userWelcome": "Chào mừng bạn trở lại, "
   },
