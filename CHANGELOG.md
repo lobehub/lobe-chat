@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.17](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.16...v2.0.0-next.17)
+
+<sup>Released on **2025-11-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix regex ReDoS.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix regex ReDoS, closes [#10012](https://github.com/lobehub/lobe-chat/issues/10012) ([1d8d5cd](https://github.com/lobehub/lobe-chat/commit/1d8d5cd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.16](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.15...v2.0.0-next.16)
 
 <sup>Released on **2025-11-03**</sup>
