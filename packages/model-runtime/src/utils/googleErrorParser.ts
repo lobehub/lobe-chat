@@ -39,34 +39,47 @@ export function extractStatusCodeFromError(message: string): {
   prefix: string;
 } {
   // Match status code pattern [number description text]
-  // Use non-backtracking pattern to avoid ReDoS attacks
-  const regex = /\[(\d+)\s+([^\]]+)]/;
-  const match = message.match(regex);
-
-  if (match && match.index !== undefined) {
-    const statusCode = parseInt(match[1]);
-    const statusText = match[2].trim();
-    const matchIndex = match.index;
-    const prefix = message.slice(0, matchIndex).trim();
-    const messageContent = message.slice(matchIndex + match[0].length).trim();
-
-    // Create JSON containing status code and message
-    const resultJson = {
-      message: messageContent,
-      statusCode: statusCode,
-      statusCodeText: `[${statusCode} ${statusText}]`,
-    };
-
-    return {
-      errorDetails: resultJson,
-      prefix: prefix,
-    };
+  // Use string methods instead of regex to avoid ReDoS attacks
+  const openBracketIndex = message.indexOf('[');
+  if (openBracketIndex === -1) {
+    return { errorDetails: null, prefix: message };
   }
 
-  // If no match, return original message
+  const closeBracketIndex = message.indexOf(']', openBracketIndex);
+  if (closeBracketIndex === -1) {
+    return { errorDetails: null, prefix: message };
+  }
+
+  const bracketContent = message.slice(openBracketIndex + 1, closeBracketIndex).trim();
+
+  // Find the first space to separate status code from description
+  const spaceIndex = bracketContent.indexOf(' ');
+  if (spaceIndex === -1) {
+    return { errorDetails: null, prefix: message };
+  }
+
+  const statusCodeStr = bracketContent.slice(0, spaceIndex);
+  const statusCode = parseInt(statusCodeStr, 10);
+
+  // Validate that statusCode is a valid number
+  if (isNaN(statusCode)) {
+    return { errorDetails: null, prefix: message };
+  }
+
+  const statusText = bracketContent.slice(spaceIndex + 1).trim();
+  const prefix = message.slice(0, openBracketIndex).trim();
+  const messageContent = message.slice(closeBracketIndex + 1).trim();
+
+  // Create JSON containing status code and message
+  const resultJson = {
+    message: messageContent,
+    statusCode: statusCode,
+    statusCodeText: `[${statusCode} ${statusText}]`,
+  };
+
   return {
-    errorDetails: null,
-    prefix: message,
+    errorDetails: resultJson,
+    prefix: prefix,
   };
 }
 

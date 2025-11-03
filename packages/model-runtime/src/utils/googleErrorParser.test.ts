@@ -135,6 +135,18 @@ describe('googleErrorParser', () => {
       expect(result.errorDetails).toBeNull();
     });
 
+    it('should not be vulnerable to ReDoS with many spaces', () => {
+      // Test the specific case mentioned in the security warning: '[9 ' + many spaces
+      const maliciousInput = '[9 ' + ' '.repeat(10000) + ']';
+      const startTime = Date.now();
+      const result = extractStatusCodeFromError(maliciousInput);
+      const endTime = Date.now();
+
+      // Should complete quickly (under 100ms) even with many spaces
+      expect(endTime - startTime).toBeLessThan(100);
+      expect(result.errorDetails).toBeDefined();
+    });
+
     it('should handle very long error messages efficiently', () => {
       const longMessage = 'a'.repeat(50000);
       const input = `Prefix [400 Bad Request] ${longMessage}`;
