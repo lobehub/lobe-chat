@@ -173,6 +173,32 @@ describe('googleErrorParser', () => {
         expect(result.prefix).toBe(expectedPrefix);
       });
     });
+
+    it('should find status code when there are multiple brackets', () => {
+      // Real-world case from Google AI API errors with JSON arrays in the message
+      const input =
+        '[GoogleGenerativeAI Error]: Error fetching: [400 Bad Request] API key not valid. [{"@type":"type.googleapis.com"}]';
+      const result = extractStatusCodeFromError(input);
+
+      expect(result.errorDetails).toEqual({
+        message: 'API key not valid. [{"@type":"type.googleapis.com"}]',
+        statusCode: 400,
+        statusCodeText: '[400 Bad Request]',
+      });
+      expect(result.prefix).toBe('[GoogleGenerativeAI Error]: Error fetching:');
+    });
+
+    it('should skip brackets that do not contain valid status codes', () => {
+      const input = 'Error [not a code] happened [500 Internal Server Error] please retry';
+      const result = extractStatusCodeFromError(input);
+
+      expect(result.errorDetails).toEqual({
+        message: 'please retry',
+        statusCode: 500,
+        statusCodeText: '[500 Internal Server Error]',
+      });
+      expect(result.prefix).toBe('Error [not a code] happened');
+    });
   });
 
   describe('parseGoogleErrorMessage', () => {

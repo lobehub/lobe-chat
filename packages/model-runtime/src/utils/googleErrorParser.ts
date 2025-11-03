@@ -40,47 +40,52 @@ export function extractStatusCodeFromError(message: string): {
 } {
   // Match status code pattern [number description text]
   // Use string methods instead of regex to avoid ReDoS attacks
-  const openBracketIndex = message.indexOf('[');
-  if (openBracketIndex === -1) {
-    return { errorDetails: null, prefix: message };
+  // We need to find a bracket that contains a status code (3-digit number followed by space and text)
+
+  let searchStart = 0;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const openBracketIndex = message.indexOf('[', searchStart);
+    if (openBracketIndex === -1) {
+      return { errorDetails: null, prefix: message };
+    }
+
+    const closeBracketIndex = message.indexOf(']', openBracketIndex);
+    if (closeBracketIndex === -1) {
+      return { errorDetails: null, prefix: message };
+    }
+
+    const bracketContent = message.slice(openBracketIndex + 1, closeBracketIndex).trim();
+
+    // Find the first space to separate status code from description
+    const spaceIndex = bracketContent.indexOf(' ');
+    if (spaceIndex !== -1) {
+      const statusCodeStr = bracketContent.slice(0, spaceIndex);
+      const statusCode = parseInt(statusCodeStr, 10);
+
+      // Validate that statusCode is a valid HTTP status code (3 digits)
+      if (!isNaN(statusCode) && statusCode >= 100 && statusCode < 600) {
+        const statusText = bracketContent.slice(spaceIndex + 1).trim();
+        const prefix = message.slice(0, openBracketIndex).trim();
+        const messageContent = message.slice(closeBracketIndex + 1).trim();
+
+        // Create JSON containing status code and message
+        const resultJson = {
+          message: messageContent,
+          statusCode: statusCode,
+          statusCodeText: `[${statusCode} ${statusText}]`,
+        };
+
+        return {
+          errorDetails: resultJson,
+          prefix: prefix,
+        };
+      }
+    }
+
+    // Move to next bracket
+    searchStart = openBracketIndex + 1;
   }
-
-  const closeBracketIndex = message.indexOf(']', openBracketIndex);
-  if (closeBracketIndex === -1) {
-    return { errorDetails: null, prefix: message };
-  }
-
-  const bracketContent = message.slice(openBracketIndex + 1, closeBracketIndex).trim();
-
-  // Find the first space to separate status code from description
-  const spaceIndex = bracketContent.indexOf(' ');
-  if (spaceIndex === -1) {
-    return { errorDetails: null, prefix: message };
-  }
-
-  const statusCodeStr = bracketContent.slice(0, spaceIndex);
-  const statusCode = parseInt(statusCodeStr, 10);
-
-  // Validate that statusCode is a valid number
-  if (isNaN(statusCode)) {
-    return { errorDetails: null, prefix: message };
-  }
-
-  const statusText = bracketContent.slice(spaceIndex + 1).trim();
-  const prefix = message.slice(0, openBracketIndex).trim();
-  const messageContent = message.slice(closeBracketIndex + 1).trim();
-
-  // Create JSON containing status code and message
-  const resultJson = {
-    message: messageContent,
-    statusCode: statusCode,
-    statusCodeText: `[${statusCode} ${statusText}]`,
-  };
-
-  return {
-    errorDetails: resultJson,
-    prefix: prefix,
-  };
 }
 
 /**
