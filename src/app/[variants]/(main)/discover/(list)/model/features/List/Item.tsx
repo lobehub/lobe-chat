@@ -61,6 +61,7 @@ const ModelItem = memo<DiscoverModelItem>(
     return (
       <Block
         clickable
+        data-testid="model-item"
         height={'100%'}
         onClick={() => {
           navigate(link);
