@@ -63,6 +63,8 @@ import LoadingDotsDemos from '@lobehub/ui-rn/LoadingDots/demos';
 import MarkdownDemos from '@lobehub/ui-rn/Markdown/demos';
 // MaskShadow
 import MaskShadowDemos from '@lobehub/ui-rn/MaskShadow/demos';
+// MaterialFileTypeIcon
+import MaterialFileTypeIconDemos from '@lobehub/ui-rn/MaterialFileTypeIcon/demos';
 // Mermaid
 import MermaidDemos from '@lobehub/ui-rn/Mermaid/demos';
 // ScrollShadow
@@ -127,6 +129,7 @@ export const DEMOS_MAP: Record<string, any> = {
   LoadingDots: LoadingDotsDemos,
   Markdown: MarkdownDemos,
   MaskShadow: MaskShadowDemos,
+  MaterialFileTypeIcon: MaterialFileTypeIconDemos,
   Mermaid: MermaidDemos,
   ScrollShadow: ScrollShadowDemos,
   Segmented: SegmentedDemos,

@@ -1,52 +1,67 @@
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 
+import MaterialFileTypeIcon from '@/components/MaterialFileTypeIcon';
 import Select from '@/components/Select';
 
-import { getCodeLanguageDisplayName, supportedLanguageIds } from './const';
+import { getCodeLanguageDisplayName, getCodeLanguageFilename, supportedLanguageIds } from './const';
 
-interface LangSelectProps {
+export interface LangSelectProps {
+  filetype?: string;
   onSelect?: (lang: string) => void;
+  showIcon?: boolean;
   value: string;
 }
 
-const LangSelect = memo<LangSelectProps>(({ value, onSelect }) => {
+const LangSelect = memo<LangSelectProps>(({ value, onSelect, showIcon = false }) => {
   const { t } = useTranslation('components');
 
   // Create language options list with supported languages
   const options = useMemo(
     () =>
       supportedLanguageIds.map((langId) => ({
+        icon: (
+          <MaterialFileTypeIcon
+            fallbackUnknownType={false}
+            filename={getCodeLanguageFilename(langId)}
+            size={16}
+            type="file"
+          />
+        ),
         title: getCodeLanguageDisplayName(langId),
         value: langId,
       })),
-    [],
+    [showIcon],
   );
 
   return (
-    <Select
-      bottomSheetProps={{
-        snapPoints: ['50%', '90%'],
-      }}
-      onChange={(val) => onSelect?.(val as string)}
-      options={options}
-      size="small"
+    <View
       style={{
         width: '33%',
       }}
-      textProps={{
-        align: 'center',
-        code: true,
-        fontSize: 12,
-        style: {
-          width: '100%',
-        },
-        type: 'secondary',
-      }}
-      title={t('Highlighter.selectLanguage')}
-      value={value}
-      variant="borderless"
-    />
+    >
+      <Select
+        bottomSheetProps={{
+          snapPoints: ['50%', '90%'],
+        }}
+        onChange={(val) => onSelect?.(val as string)}
+        options={options}
+        size="small"
+        textProps={{
+          code: true,
+          ellipsis: true,
+          fontSize: 12,
+          style: {
+            width: 64,
+          },
+          type: 'secondary',
+        }}
+        title={t('Highlighter.selectLanguage')}
+        value={value}
+        variant="borderless"
+      />
+    </View>
   );
 });
 

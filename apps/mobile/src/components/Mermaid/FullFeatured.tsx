@@ -6,6 +6,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 import ActionIcon from '@/components/ActionIcon';
 import Block from '@/components/Block';
 import Flexbox from '@/components/Flexbox';
+import MaterialFileTypeIcon from '@/components/MaterialFileTypeIcon';
 import Text from '@/components/Text';
 
 import SyntaxMermaid from './SyntaxMermaid';
@@ -50,10 +51,13 @@ export const MermaidFullFeatured = memo<MermaidFullFeaturedProps>(
       }
     };
 
+    const displayName = fileName || 'Mermaid';
+    const filetype = fileName || language;
+
     return (
       <Block
         style={[styles.container, style]}
-        testID="highlighter-full-featured"
+        testID="mermaid-full-featured"
         variant={variant}
         {...rest}
       >
@@ -67,31 +71,37 @@ export const MermaidFullFeatured = memo<MermaidFullFeaturedProps>(
             backgroundColor: theme.colorFillQuaternary,
           }}
         >
-          <Flexbox align={'center'} horizontal justify={'flex-start'}>
-            <ActionIcon
-              color={theme.colorTextDescription}
-              icon={expanded ? ChevronDown : ChevronRight}
-              onPress={() => setExpanded(!expanded)}
-              size={14}
-            />
-          </Flexbox>
+          <ActionIcon
+            color={theme.colorTextDescription}
+            icon={expanded ? ChevronDown : ChevronRight}
+            onPress={() => setExpanded(!expanded)}
+            size={14}
+          />
 
           {(showLanguage || fileName) && (
-            <Text code color={theme.colorTextSecondary} fontSize={12}>
-              {fileName || language}
-            </Text>
+            <Flexbox align={'center'} gap={6} horizontal>
+              <MaterialFileTypeIcon
+                fallbackUnknownType={false}
+                filename={filetype}
+                size={16}
+                type="file"
+              />
+              <Text code color={theme.colorTextSecondary} ellipsis fontSize={12} numberOfLines={1}>
+                {displayName}
+              </Text>
+            </Flexbox>
           )}
 
-          <Flexbox align={'center'} horizontal justify={'flex-end'}>
-            {copyable && (
-              <ActionIcon
-                color={copied ? theme.colorSuccess : theme.colorTextDescription}
-                icon={copied ? Check : Copy}
-                onPress={handleCopy}
-                size={14}
-              />
-            )}
-          </Flexbox>
+          {copyable ? (
+            <ActionIcon
+              color={copied ? theme.colorSuccess : theme.colorTextDescription}
+              icon={copied ? Check : Copy}
+              onPress={handleCopy}
+              size={14}
+            />
+          ) : (
+            <Flexbox style={{ width: 14 }} />
+          )}
         </Flexbox>
         {expanded && <SyntaxMermaid>{code}</SyntaxMermaid>}
       </Block>

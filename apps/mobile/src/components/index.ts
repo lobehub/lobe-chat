@@ -75,6 +75,10 @@ export {
 } from './LoadingDots';
 export { default as Markdown, type MarkdownProps } from './Markdown';
 export { default as MaskShadow, type MaskShadowProps } from './MaskShadow';
+export {
+  default as MaterialFileTypeIcon,
+  type MaterialFileTypeIconProps,
+} from './MaterialFileTypeIcon';
 export { default as Mermaid, type MermaidProps } from './Mermaid';
 export { default as ModelInfoTags, type ModelInfoTagsProps } from './ModelInfoTags';
 export { default as PageContainer, type PageContainerProps } from './PageContainer';
