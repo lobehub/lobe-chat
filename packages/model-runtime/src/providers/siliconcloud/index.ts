@@ -57,18 +57,9 @@ export const params = {
       };
 
       if (thinking) {
-        // 只有部分模型支持指定 enable_thinking，其余一些慢思考模型只支持调节 thinking budget
-        const hybridThinkingModels = [
-          /GLM-4\.5(?!.*Air$)/, // GLM-4.5 和 GLM-4.5V（不包含 GLM-4.5 Air）
-          /Qwen3-(?:\d+B|\d+B-A\d+B)$/, // Qwen3-8B、Qwen3-14B、Qwen3-32B、Qwen3-30B-A3B、Qwen3-235B-A22B
-          /DeepSeek-V3\.1/,
-          /Hunyuan-A13B-Instruct/,
-        ];
-        if (hybridThinkingModels.some((regexp) => regexp.test(model))) {
-          result.enable_thinking = thinking.type === 'enabled';
-        }
+        result.enable_thinking = thinking.type === 'enabled';
         if (typeof thinkingBudget !== 'undefined') {
-          result.thinking_budget = Math.min(Math.max(thinkingBudget, 1), 32_768);
+          result.thinking_budget = Math.min(Math.max(thinkingBudget, 128), 32_768);
         }
       }
       return result;
