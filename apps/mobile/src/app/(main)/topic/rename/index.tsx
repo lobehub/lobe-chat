@@ -3,7 +3,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { loading as loadingService } from '@/libs/loading';
 import { useChatStore } from '@/store/chat';
 
 export default function TopicRenamePage() {
@@ -30,15 +29,12 @@ export default function TopicRenamePage() {
             }
 
             setLoading(true);
-            const { done } = loadingService.start();
             try {
               await updateTopicTitle(params.id, title.trim());
               Toast.success(t('rename.success'));
-              done();
               router.back();
             } catch {
               Toast.error(t('rename.error'));
-              done();
             } finally {
               setLoading(false);
             }
