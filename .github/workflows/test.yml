@@ -145,7 +145,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=6144
 
 
-      - name: Test Desktop App
+      - name: Test Desktop Client
         run: pnpm test
         working-directory: apps/desktop
 
