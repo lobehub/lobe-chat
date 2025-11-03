@@ -79,6 +79,63 @@ export const useMermaid = (
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://registry.npmmirror.com/mermaid/11.12.1/files/dist/mermaid.min.js"></script>
         <style>
+          /* 注入字体 */
+          @font-face {
+            font-family: 'HarmonyOS Sans SC';
+            src: url('https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.0.0/files/noto-sans-sc-chinese-simplified-400-normal.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+          }
+          
+          @font-face {
+            font-family: 'HarmonyOS Sans SC';
+            src: url('https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.0.0/files/noto-sans-sc-chinese-simplified-500-normal.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+          }
+          
+          @font-face {
+            font-family: 'HarmonyOS Sans SC';
+            src: url('https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.0.0/files/noto-sans-sc-chinese-simplified-700-normal.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+          }
+          
+          @font-face {
+            font-family: 'Hack';
+            src: url('https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/fonts/hack-regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+          }
+          
+          @font-face {
+            font-family: 'Hack';
+            src: url('https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/fonts/hack-bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+          }
+          
+          @font-face {
+            font-family: 'Hack';
+            src: url('https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/fonts/hack-italic.woff2') format('woff2');
+            font-weight: 400;
+            font-style: italic;
+            font-display: swap;
+          }
+          
+          @font-face {
+            font-family: 'Hack';
+            src: url('https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/fonts/hack-bolditalic.woff2') format('woff2');
+            font-weight: 700;
+            font-style: italic;
+            font-display: swap;
+          }
+
           * { margin: 0; padding: 0; }
           body {
             margin: 0;
@@ -90,6 +147,7 @@ export const useMermaid = (
             background: transparent;
             overflow: hidden;
             pointer-events: none;
+            font-family: 'HarmonyOS Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
           }
           .mermaid {
             width: 100%;
@@ -100,6 +158,9 @@ export const useMermaid = (
           .mermaid svg {
             width: 100%;
             height: 200px;
+          }
+          .mermaid code, .mermaid pre {
+            font-family: 'Hack', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
           }
         </style>
       </head>
