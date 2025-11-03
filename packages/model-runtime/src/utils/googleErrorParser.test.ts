@@ -86,6 +86,66 @@ describe('googleErrorParser', () => {
       });
       expect(result.prefix).toBe('Error');
     });
+
+    it('should handle multiple spaces between status code and text', () => {
+      const input = 'Error [500  Internal Server Error] Something went wrong';
+      const result = extractStatusCodeFromError(input);
+
+      expect(result.errorDetails).toEqual({
+        message: 'Something went wrong',
+        statusCode: 500,
+        statusCodeText: '[500 Internal Server Error]',
+      });
+      expect(result.prefix).toBe('Error');
+    });
+
+    it('should handle status code at the beginning of message', () => {
+      const input = '[429 Too Many Requests] Rate limit exceeded';
+      const result = extractStatusCodeFromError(input);
+
+      expect(result.errorDetails).toEqual({
+        message: 'Rate limit exceeded',
+        statusCode: 429,
+        statusCodeText: '[429 Too Many Requests]',
+      });
+      expect(result.prefix).toBe('');
+    });
+
+    it('should handle status code at the end of message', () => {
+      const input = 'Request failed [503 Service Unavailable]';
+      const result = extractStatusCodeFromError(input);
+
+      expect(result.errorDetails).toEqual({
+        message: '',
+        statusCode: 503,
+        statusCodeText: '[503 Service Unavailable]',
+      });
+      expect(result.prefix).toBe('Request failed');
+    });
+
+    it('should not be vulnerable to ReDoS attacks', () => {
+      // Test with a potentially malicious input that could cause catastrophic backtracking
+      const maliciousInput = 'Error ' + 'a'.repeat(10000) + ' [not matching]';
+      const startTime = Date.now();
+      const result = extractStatusCodeFromError(maliciousInput);
+      const endTime = Date.now();
+
+      // Should complete quickly (under 100ms) even with large input
+      expect(endTime - startTime).toBeLessThan(100);
+      expect(result.errorDetails).toBeNull();
+    });
+
+    it('should handle very long error messages efficiently', () => {
+      const longMessage = 'a'.repeat(50000);
+      const input = `Prefix [400 Bad Request] ${longMessage}`;
+      const startTime = Date.now();
+      const result = extractStatusCodeFromError(input);
+      const endTime = Date.now();
+
+      // Should complete quickly even with very long input
+      expect(endTime - startTime).toBeLessThan(100);
+      expect(result.errorDetails?.statusCode).toBe(400);
+    });
   });
 
   describe('parseGoogleErrorMessage', () => {
