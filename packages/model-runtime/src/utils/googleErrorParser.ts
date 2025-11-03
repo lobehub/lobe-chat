@@ -133,26 +133,35 @@ export function parseGoogleErrorMessage(message: string): ParsedError {
   };
 
   // 1. Handle "got status: UNAVAILABLE. {JSON}" format
-  const statusJsonMatch = message.match(/got status: (\w+)\.\s*({.*})$/);
-  if (statusJsonMatch) {
-    const statusFromMessage = statusJsonMatch[1];
-    const jsonPart = statusJsonMatch[2];
+  const statusPrefix = 'got status: ';
+  const statusPrefixIndex = message.indexOf(statusPrefix);
+  if (statusPrefixIndex !== -1) {
+    const afterPrefix = message.slice(statusPrefixIndex + statusPrefix.length);
+    const dotIndex = afterPrefix.indexOf('.');
+    if (dotIndex !== -1) {
+      const statusFromMessage = afterPrefix.slice(0, dotIndex).trim();
+      const afterDot = afterPrefix.slice(dotIndex + 1).trim();
+      const braceIndex = afterDot.indexOf('{');
+      if (braceIndex !== -1) {
+        const jsonPart = afterDot.slice(braceIndex);
 
-    const parsedError = parseJsonRecursively(jsonPart);
-    if (parsedError && parsedError.error) {
-      const errorInfo = parsedError.error;
-      const finalMessage = errorInfo.message || message;
-      const finalCode = errorInfo.code || null;
-      const finalStatus = errorInfo.status || statusFromMessage;
+        const parsedError = parseJsonRecursively(jsonPart);
+        if (parsedError && parsedError.error) {
+          const errorInfo = parsedError.error;
+          const finalMessage = errorInfo.message || message;
+          const finalCode = errorInfo.code || null;
+          const finalStatus = errorInfo.status || statusFromMessage;
 
-      return {
-        error: {
-          code: finalCode,
-          message: finalMessage,
-          status: finalStatus,
-        },
-        errorType: getErrorType(finalCode, finalMessage),
-      };
+          return {
+            error: {
+              code: finalCode,
+              message: finalMessage,
+              status: finalStatus,
+            },
+            errorType: getErrorType(finalCode, finalMessage),
+          };
+        }
+      }
     }
   }
 

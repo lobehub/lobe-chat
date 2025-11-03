@@ -170,6 +170,18 @@ describe('googleErrorParser', () => {
       });
     });
 
+    it('should not be vulnerable to ReDoS in status JSON parsing', () => {
+      // Test with malicious input that could cause catastrophic backtracking
+      const maliciousInput = 'got status: UNAVAILABLE. ' + 'a'.repeat(10000);
+      const startTime = Date.now();
+      const result = parseGoogleErrorMessage(maliciousInput);
+      const endTime = Date.now();
+
+      // Should complete quickly (under 100ms) even with large input
+      expect(endTime - startTime).toBeLessThan(100);
+      expect(result.errorType).toBe(AgentRuntimeErrorType.ProviderBizError);
+    });
+
     it('should handle direct JSON parsing', () => {
       const input =
         '{"error":{"code":400,"message":"* API key not valid. Please pass a valid API key.","status":"INVALID_ARGUMENT"}}';
