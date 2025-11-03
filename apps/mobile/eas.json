@@ -12,12 +12,14 @@
         "gradleCommand": ":app:assembleDebug",
         "config": "development-android.yml"
       },
+      "pnpm": "10.10.0",
       "channel": "development"
     },
     "preview": {
       "environment": "preview",
       "distribution": "internal",
       "channel": "preview",
+      "pnpm": "10.10.0",
       "ios": {
         "config": "preview-ios.yml"
       },
@@ -29,6 +31,7 @@
       "environment": "production",
       "autoIncrement": true,
       "channel": "production",
+      "pnpm": "10.10.0",
       "ios": {
         "config": "production-ios.yml"
       },
