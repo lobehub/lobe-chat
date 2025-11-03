@@ -533,6 +533,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                     size={80}
                     style={{
                       fontSize: 80,
+                      transform: 'translateX(-6px)',
                     }}
                     title={t('notesEditor.emojiPicker.tooltip')}
                     value={noteEmoji}

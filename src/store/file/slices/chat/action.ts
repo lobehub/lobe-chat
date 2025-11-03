@@ -25,18 +25,18 @@ export interface FileAction {
   clearChatUploadFileList: () => void;
   /**
    * Create a new note with markdown content (not optimistic, waits for server response)
-   * Returns the created note ID
+   * Returns the created document
    */
   createNote: (params: {
     content: string;
     knowledgeBaseId?: string;
     title: string;
-  }) => Promise<string>;
+  }) => Promise<{ [key: string]: any; id: string }>;
   /**
    * Create a new optimistic note immediately in local map
    * Returns the temporary ID for the new note
    */
-  createOptimisticNote: () => string;
+  createOptimisticNote: (title?: string) => string;
   dispatchChatUploadFileList: (payload: UploadFileListDispatch) => void;
 
   /**
@@ -101,10 +101,10 @@ export const createFileSlice: StateCreator<
     // Refresh file list to show the new note
     await get().refreshFileList();
 
-    return newDoc.id;
+    return newDoc;
   },
 
-  createOptimisticNote: () => {
+  createOptimisticNote: (title = 'Untitled') => {
     const { localNoteMap } = get();
 
     // Generate temporary ID with prefix to identify optimistic notes
@@ -124,7 +124,7 @@ export const createFileSlice: StateCreator<
       fileType: 'custom/note',
       finishEmbedding: false,
       id: tempId,
-      name: 'Untitled Note',
+      name: title,
       size: 0,
       sourceType: 'document',
       updatedAt: now,
@@ -153,7 +153,9 @@ export const createFileSlice: StateCreator<
 
     // Get server notes from fileList state
     const serverNotes = (fileList || []).filter(
-      (file: FileListItem) => file.fileType === 'custom/note',
+      (file: FileListItem) =>
+        ['custom/note', 'text/markdown', 'application/pdf'].includes(file.fileType) &&
+        file.sourceType === 'file',
     );
 
     // Track which notes we've added
@@ -297,9 +299,10 @@ export const createFileSlice: StateCreator<
 
     // Create updated note with new timestamp
     // Merge metadata if both exist, otherwise use the update's metadata or preserve existing
-    const mergedMetadata = updates.metadata !== undefined
-      ? { ...(existingNote.metadata || {}), ...updates.metadata }
-      : existingNote.metadata;
+    const mergedMetadata =
+      updates.metadata !== undefined
+        ? { ...existingNote.metadata, ...updates.metadata }
+        : existingNote.metadata;
 
     // Clean up undefined values from metadata
     const cleanedMetadata = mergedMetadata

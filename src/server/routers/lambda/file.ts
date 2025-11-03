@@ -147,12 +147,7 @@ export const fileRouter = router({
   }),
 
   getKnowledgeItems: fileProcedure.input(QueryFileListSchema).query(async ({ ctx, input }) => {
-    console.log('[API getKnowledgeItems] Query params:', input);
     const knowledgeItems = await ctx.knowledgeRepo.query(input);
-    console.log('[API getKnowledgeItems] Raw knowledge items:', {
-      count: knowledgeItems.length,
-      sampleDocument: knowledgeItems.find((item) => item.sourceType === 'document'),
-    });
 
     // Process files (add chunk info and async task status)
     const fileItems = knowledgeItems.filter((item) => item.sourceType === 'file');
@@ -162,15 +157,24 @@ export const fileRouter = router({
     const chunkTaskIds = fileItems.map((item) => item.chunkTaskId).filter(Boolean) as string[];
     const chunkTasks = await ctx.asyncTaskModel.findByIds(chunkTaskIds, AsyncTaskType.Chunking);
 
-    const embeddingTaskIds = fileItems.map((item) => item.embeddingTaskId).filter(Boolean) as string[];
-    const embeddingTasks = await ctx.asyncTaskModel.findByIds(embeddingTaskIds, AsyncTaskType.Embedding);
+    const embeddingTaskIds = fileItems
+      .map((item) => item.embeddingTaskId)
+      .filter(Boolean) as string[];
+    const embeddingTasks = await ctx.asyncTaskModel.findByIds(
+      embeddingTaskIds,
+      AsyncTaskType.Embedding,
+    );
 
     // Combine all items with their metadata
     const resultItems = [] as any[];
     for (const item of knowledgeItems) {
       if (item.sourceType === 'file') {
-        const chunkTask = item.chunkTaskId ? chunkTasks.find((task) => task.id === item.chunkTaskId) : null;
-        const embeddingTask = item.embeddingTaskId ? embeddingTasks.find((task) => task.id === item.embeddingTaskId) : null;
+        const chunkTask = item.chunkTaskId
+          ? chunkTasks.find((task) => task.id === item.chunkTaskId)
+          : null;
+        const embeddingTask = item.embeddingTaskId
+          ? embeddingTasks.find((task) => task.id === item.embeddingTaskId)
+          : null;
 
         resultItems.push({
           ...item,
@@ -195,22 +199,14 @@ export const fileRouter = router({
           finishEmbedding: false,
         } as FileListItem;
         console.log('[API getKnowledgeItems] Processing document:', {
+          editorDataPreview: item.editorData ? JSON.stringify(item.editorData).slice(0, 100) : null,
+          hasEditorData: !!item.editorData,
           id: item.id,
           name: item.name,
-          hasEditorData: !!item.editorData,
-          editorDataPreview: item.editorData
-            ? JSON.stringify(item.editorData).slice(0, 100)
-            : null,
         });
         resultItems.push(documentItem);
       }
     }
-
-    console.log('[API getKnowledgeItems] Final result items:', {
-      count: resultItems.length,
-      documentCount: resultItems.filter((item) => item.sourceType === 'document').length,
-      sampleDocument: resultItems.find((item) => item.sourceType === 'document'),
-    });
 
     return resultItems;
   }),

@@ -80,14 +80,14 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
         const content = await file.text();
 
         // Create note with markdown content
-        const noteId = await createNote({
+        const newDoc = await createNote({
           content,
           knowledgeBaseId,
           title: file.name.replace(/\.md$|\.markdown$/i, ''),
         });
 
         // Notify parent component
-        onNoteCreated?.(noteId);
+        onNoteCreated?.(newDoc.id);
       } catch (error) {
         console.error('Failed to upload markdown:', error);
       } finally {

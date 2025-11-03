@@ -35,11 +35,11 @@ export interface FileManageAction {
   toggleEmbeddingIds: (ids: string[], loading?: boolean) => void;
   toggleParsingIds: (ids: string[], loading?: boolean) => void;
 
-  useFetchFileItem: (id?: string) => SWRResponse<FileListItem | undefined>;
-  useFetchFileManage: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
+  useFetchKnowledgeItem: (id?: string) => SWRResponse<FileListItem | undefined>;
+  useFetchKnowledgeItems: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
 }
 
-const FETCH_FILE_LIST_KEY = 'useFetchFileManage';
+const FETCH_FILE_LIST_KEY = 'useFetchKnowledgeItems';
 
 export const createFileManageSlice: StateCreator<
   FileStore,
@@ -220,15 +220,15 @@ export const createFileManageSlice: StateCreator<
     });
   },
 
-  useFetchFileItem: (id) =>
-    useClientDataSWR<FileListItem | undefined>(!id ? null : ['useFetchFileItem', id], () =>
-      serverFileService.getFileItem(id!),
+  useFetchKnowledgeItem: (id) =>
+    useClientDataSWR<FileListItem | undefined>(!id ? null : ['useFetchKnowledgeItem', id], () =>
+      serverFileService.getKnowledgeItem(id!),
     ),
 
-  useFetchFileManage: (params) =>
+  useFetchKnowledgeItems: (params) =>
     useClientDataSWR<FileListItem[]>(
       [FETCH_FILE_LIST_KEY, params],
-      () => serverFileService.getFiles(params),
+      () => serverFileService.getKnowledgeItems(params),
       {
         onSuccess: (data) => {
           set({ fileList: data, queryListParams: params });

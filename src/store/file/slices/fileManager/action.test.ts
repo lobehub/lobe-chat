@@ -873,7 +873,7 @@ describe('FileManagerActions', () => {
       vi.mocked(lambdaClient.file.getFiles.query).mockResolvedValue(mockFiles);
 
       const params = { category: 'all' as any };
-      const { result: swrResult } = renderHook(() => result.current.useFetchFileManage(params));
+      const { result: swrResult } = renderHook(() => result.current.useFetchKnowledgeItems(params));
 
       await waitFor(() => {
         expect(swrResult.current.data).toEqual(mockFiles);
@@ -903,7 +903,7 @@ describe('FileManagerActions', () => {
       vi.mocked(lambdaClient.file.getFiles.query).mockResolvedValue(mockFiles);
 
       const params = { category: 'all' as any };
-      renderHook(() => result.current.useFetchFileManage(params));
+      renderHook(() => result.current.useFetchKnowledgeItems(params));
 
       await waitFor(() => {
         expect(result.current.fileList).toEqual(mockFiles);

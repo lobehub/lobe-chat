@@ -258,10 +258,7 @@ export class KnowledgeRepo {
     q,
     knowledgeBaseId,
   }: QueryFileListParams = {}): ReturnType<typeof sql> {
-    let whereConditions: any[] = [
-      sql`${documents.userId} = ${this.userId}`,
-      sql`${documents.sourceType} = 'api'`, // Only show notes (not file-derived documents)
-    ];
+    let whereConditions: any[] = [sql`${documents.userId} = ${this.userId}`];
 
     // Search filter
     if (q) {
@@ -270,17 +267,11 @@ export class KnowledgeRepo {
       );
     }
 
-    // Category filter - documents are typically in Documents or Notes category
+    // Category filter - match documents by fileType prefix
     if (category && category !== FilesTabs.All) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
-      if (fileTypePrefix === 'application') {
-        // Include documents in Documents category, but exclude notes
-        whereConditions.push(
-          sql`${documents.fileType} ILIKE 'custom/%' AND ${documents.fileType} != 'custom/note'`,
-        );
-      } else if (fileTypePrefix === 'custom') {
-        // Include documents in Notes category (already filtered by sourceType='api')
-        whereConditions.push(sql`${documents.fileType} ILIKE 'custom/%'`);
+      if (fileTypePrefix) {
+        whereConditions.push(sql`${documents.fileType} ILIKE ${`${fileTypePrefix}%`}`);
       } else {
         // Exclude documents from other categories (Images, Videos, Audios, Websites)
         return sql`

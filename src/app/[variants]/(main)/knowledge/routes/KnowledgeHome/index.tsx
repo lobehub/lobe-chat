@@ -8,7 +8,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
-import FileManager from '@/features/FileManager';
+import KnowledgeItemManager from '@/features/FileManager';
 import FilePanel from '@/features/FileSidePanel';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { FilesTabs } from '@/types/files';
@@ -52,7 +52,7 @@ const FilesListPage = memo(() => {
   const setFileModalId = useSetFileModalId();
 
   return (
-    <FileManager
+    <KnowledgeItemManager
       category={category}
       onOpenFile={setFileModalId}
       title={`${category as FilesTabs}`}

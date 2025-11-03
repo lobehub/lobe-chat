@@ -164,14 +164,16 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [searchKeywords, setSearchKeywords] = useState<string>('');
 
-  const useFetchFileManage = useFileStore((s) => s.useFetchFileManage);
+  const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
   const getOptimisticNotes = useFileStore((s) => s.getOptimisticNotes);
   const syncNoteMapWithServer = useFileStore((s) => s.syncNoteMapWithServer);
+  const createNote = useFileStore((s) => s.createNote);
   const createOptimisticNote = useFileStore((s) => s.createOptimisticNote);
+  const replaceTempNoteWithReal = useFileStore((s) => s.replaceTempNoteWithReal);
   // Subscribe to localNoteMap to trigger re-render when notes are updated
   useFileStore((s) => s.localNoteMap);
 
-  const { data: allFiles, isLoading } = useFetchFileManage({
+  const { data: allFiles, isLoading } = useFetchKnowledgeItems({
     knowledgeBaseId,
   });
 
@@ -213,11 +215,59 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
     setIsCreatingNew(false);
   };
 
-  const handleNewNote = () => {
-    // Create optimistic note immediately
-    const newNoteId = createOptimisticNote();
-    setSelectedNoteId(newNoteId);
+  const handleNewNote = async () => {
+    const untitledTitle = t('notesList.untitled');
+
+    // Create optimistic note immediately for instant UX
+    const tempNoteId = createOptimisticNote(untitledTitle);
+    setSelectedNoteId(tempNoteId);
     setIsCreatingNew(true);
+
+    try {
+      // Create real document in background
+      const newDoc = await createNote({
+        content: '',
+        knowledgeBaseId,
+        title: untitledTitle,
+      });
+
+      // Convert DocumentItem to FileListItem
+      const realNote: FileListItem = {
+        chunkCount: null,
+        chunkingError: null,
+        chunkingStatus: null,
+        content: newDoc.content || '',
+        createdAt: newDoc.createdAt ? new Date(newDoc.createdAt) : new Date(),
+        editorData:
+          typeof newDoc.editorData === 'string'
+            ? JSON.parse(newDoc.editorData)
+            : newDoc.editorData || null,
+        embeddingError: null,
+        embeddingStatus: null,
+        fileType: 'custom/note',
+        finishEmbedding: false,
+        id: newDoc.id,
+        metadata: newDoc.metadata as any,
+        name: newDoc.title || untitledTitle,
+        size: newDoc.content?.length || 0,
+        sourceType: 'document',
+        updatedAt: newDoc.updatedAt ? new Date(newDoc.updatedAt) : new Date(),
+        url: '',
+      };
+
+      // Replace optimistic note with real note (smooth UX, no flicker)
+      replaceTempNoteWithReal(tempNoteId, realNote);
+
+      // Update selected note ID to real ID
+      setSelectedNoteId(newDoc.id);
+      setIsCreatingNew(false);
+    } catch (error) {
+      console.error('Failed to create note:', error);
+      // On error, remove the optimistic note and deselect
+      useFileStore.getState().removeTempNote(tempNoteId);
+      setSelectedNoteId(null);
+      setIsCreatingNew(false);
+    }
   };
 
   const handleDocumentIdChange = (newId: string) => {

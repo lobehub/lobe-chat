@@ -3,7 +3,7 @@
 import { CaretDownFilled, CaretRightOutlined } from '@ant-design/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { FilePenLine, FileText, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
+import { FileText, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -42,11 +42,6 @@ const FileMenu = memo(() => {
 
   const collapsedItems: MenuProps['items'] = useMemo(
     () => [
-      {
-        icon: <Icon icon={FilePenLine} />,
-        key: FilesTabs.Notes,
-        label: t('tab.notes'),
-      },
       {
         icon: <Icon icon={FileText} />,
         key: FilesTabs.Documents,
@@ -99,7 +94,7 @@ const FileMenu = memo(() => {
             }}
             size={'small'}
           />
-          <div style={{ flex: 1, lineHeight: '14px' }}>{t('tab.all')}</div>
+          <div style={{ flex: 1, lineHeight: '14px' }}>All Knowledge</div>
         </Flexbox>
       </Flexbox>
 

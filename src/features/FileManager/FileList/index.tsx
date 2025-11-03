@@ -104,9 +104,9 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
     defaultValue: SortType.Desc,
   });
 
-  const useFetchFileManage = useFileStore((s) => s.useFetchFileManage);
+  const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
 
-  const { data, isLoading } = useFetchFileManage({
+  const { data, isLoading } = useFetchKnowledgeItems({
     category,
     knowledgeBaseId,
     q: query,

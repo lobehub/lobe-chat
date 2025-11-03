@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import FileModalQueryRoute from '@/app/[variants]/(main)/knowledge/shared/FileModalQueryRoute';
 import { useSetFileModalId } from '@/app/[variants]/(main)/knowledge/shared/useFileQueryParam';
-import FileManager from '@/features/FileManager';
+import KnowledgeItemManager from '@/features/FileManager';
 import FilePanel from '@/features/FileSidePanel';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
@@ -35,7 +35,7 @@ const KnowledgeBaseDetailPage = memo(() => {
         <Menu id={id} />
       </FilePanel>
       <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
-        <FileManager knowledgeBaseId={id} onOpenFile={setFileModalId} title={name} />
+        <KnowledgeItemManager knowledgeBaseId={id} onOpenFile={setFileModalId} title={name} />
       </Flexbox>
       <FileModalQueryRoute />
     </>
