@@ -5,6 +5,7 @@ import { rehypeGithubAlerts } from 'rehype-github-alerts';
 import type { Pluggable } from 'unified';
 
 import { useMarkdownContext } from '@/components/Markdown/components/MarkdownProvider';
+import { rehypeStreamAnimated } from '@/components/Markdown/plugins/rehypeStreamAnimated';
 
 export const useMarkdownRehypePlugins = (): Pluggable[] => {
   const {
@@ -22,6 +23,7 @@ export const useMarkdownRehypePlugins = (): Pluggable[] => {
         enableGithubAlert && rehypeGithubAlerts,
         enableLatex && rehypeKatexDir,
         enableCustomFootnotes && rehypeCustomFootnotes,
+        animated && rehypeStreamAnimated,
       ].filter(Boolean) as Pluggable[],
     [animated, enableLatex, enableGithubAlert, enableCustomFootnotes],
   );

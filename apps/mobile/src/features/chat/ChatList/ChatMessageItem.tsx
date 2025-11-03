@@ -25,7 +25,7 @@ const ChatMessageItem = memo<ChatMessageItemProps>(({ item, index, totalLength }
     <ChatBubble
       isLoading={shouldShowLoading}
       markdownProps={{
-        enableStream: isLastMessage && isGenerating,
+        animated: isLastMessage && isGenerating,
       }}
       message={item}
       showActionsBar={isLastMessage}

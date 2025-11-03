@@ -101,7 +101,7 @@ export default () => {
           </Button>
         </Flexbox>
       </Flexbox>
-      <Markdown enableStream={true}>{streamedContent}</Markdown>
+      <Markdown animated={isStreaming}>{streamedContent}</Markdown>
     </Flexbox>
   );
 };
