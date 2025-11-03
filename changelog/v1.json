@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Remove NEXT_PUBLIC_SERVICE_MODE env and use server by default."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.19"
+  },
+  {
+    "children": {
       "improvements": ["Improve built-in client OIDC user flow."]
     },
     "date": "2025-11-03",
