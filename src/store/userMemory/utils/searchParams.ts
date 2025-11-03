@@ -1,12 +1,7 @@
 import { find, isString, trim } from 'lodash-es';
 
+import { DEFAULT_SEARCH_USER_MEMORY_TOP_K } from '@/const/userMemory';
 import type { RetrieveMemoryParams } from '@/types/userMemory';
-
-const DEFAULT_TOP_K = {
-  contexts: 3,
-  experiences: 4,
-  preferences: 3,
-};
 
 interface MemorySearchSource {
   latestUserMessage?: string | null;
@@ -46,7 +41,7 @@ export const createMemorySearchParams = (
   return {
     query,
     topK: {
-      ...DEFAULT_TOP_K,
+      ...DEFAULT_SEARCH_USER_MEMORY_TOP_K,
     },
   } as RetrieveMemoryParams;
 };
