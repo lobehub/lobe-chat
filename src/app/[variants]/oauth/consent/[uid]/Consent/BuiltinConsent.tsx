@@ -1,12 +1,13 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { Card, Result } from 'antd';
+import { Result } from 'antd';
 import { useTheme } from 'antd-style';
 import { LoaderCircle } from 'lucide-react';
 import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
+
+import ResultLayout from '../../../ResultLayout';
 
 interface BuiltinConsentProps {
   uid: string;
@@ -24,26 +25,15 @@ const BuiltinConsent = memo<BuiltinConsentProps>(({ uid }) => {
   const theme = useTheme();
   return (
     <>
-      <Center height="100vh">
-        <Card
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'center',
-            minHeight: 280,
-            minWidth: 500,
-            width: '100%',
-          }}
-        >
-          <Result
-            icon={<Icon icon={LoaderCircle} spin style={{ color: theme.colorText }} />}
-            status="success"
-            style={{ padding: 0 }}
-            subTitle={t('consent.redirecting')}
-            title=""
-          />
-        </Card>
-      </Center>
+      <ResultLayout>
+        <Result
+          icon={<Icon icon={LoaderCircle} spin style={{ color: theme.colorText }} />}
+          status="success"
+          style={{ padding: 0 }}
+          subTitle={t('consent.redirecting')}
+          title=""
+        />
+      </ResultLayout>
       <form action="/oidc/consent" method="post" ref={formRef} style={{ display: 'none' }}>
         <input name="uid" type="hidden" value={uid} />
         <input name="consent" type="hidden" value="accept" />
