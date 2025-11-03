@@ -13,6 +13,8 @@ export type FlexWrap = 'nowrap' | 'wrap' | 'wrap-reverse';
 
 export interface FlexboxProps extends PressableProps {
   align?: AlignItems;
+  blur?: boolean;
+  blurColor?: string;
   children?: ReactNode;
   flex?: number | undefined;
   gap?: number | string | undefined;

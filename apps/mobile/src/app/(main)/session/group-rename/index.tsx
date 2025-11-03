@@ -3,7 +3,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { loading as loadingService } from '@/libs/loading';
 import { useSessionStore } from '@/store/session';
 
 export default function GroupRenamePage() {
@@ -23,17 +22,13 @@ export default function GroupRenamePage() {
               Toast.error(t('sessionGroup.tooLong'));
               return;
             }
-
             setLoading(true);
-            const { done } = loadingService.start();
             try {
               await updateSessionGroupName(params.id, name.trim());
               Toast.success(t('sessionGroup.renameSuccess'));
-              done();
               router.back();
             } catch {
               Toast.error(t('error', { ns: 'common' }));
-              done();
             } finally {
               setLoading(false);
             }
