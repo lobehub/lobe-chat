@@ -43,10 +43,10 @@ export function extractStatusCodeFromError(message: string): {
   const regex = /\[(\d+)\s+([^\]]+)]/;
   const match = message.match(regex);
 
-  if (match) {
+  if (match && match.index !== undefined) {
     const statusCode = parseInt(match[1]);
     const statusText = match[2].trim();
-    const matchIndex = match.index!;
+    const matchIndex = match.index;
     const prefix = message.slice(0, matchIndex).trim();
     const messageContent = message.slice(matchIndex + match[0].length).trim();
 

@@ -146,6 +146,21 @@ describe('googleErrorParser', () => {
       expect(endTime - startTime).toBeLessThan(100);
       expect(result.errorDetails?.statusCode).toBe(400);
     });
+
+    it('should safely handle edge cases with match.index', () => {
+      // Test various edge cases where match.index might be 0 or at different positions
+      const testCases = [
+        { input: '[400 Bad Request]', expectedPrefix: '' },
+        { input: '[500 Error] Message', expectedPrefix: '' },
+        { input: 'Some text [404 Not Found] More text', expectedPrefix: 'Some text' },
+      ];
+
+      testCases.forEach(({ input, expectedPrefix }) => {
+        const result = extractStatusCodeFromError(input);
+        expect(result.errorDetails).toBeDefined();
+        expect(result.prefix).toBe(expectedPrefix);
+      });
+    });
   });
 
   describe('parseGoogleErrorMessage', () => {
