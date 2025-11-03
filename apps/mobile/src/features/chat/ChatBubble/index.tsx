@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import { Avatar, Block, Flexbox, Markdown, MarkdownProps, Text } from '@lobehub/ui-rn';
+import { Avatar, Block, Flexbox, LoadingDots, Markdown, MarkdownProps, Text } from '@lobehub/ui-rn';
 import { memo, useMemo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/_const/meta';
@@ -7,7 +7,6 @@ import MessageContextMenu from '@/features/chat/MessageContextMenu';
 import { useSettingStore } from '@/store/setting';
 import { formatTime } from '@/utils/formatTime';
 
-import LoadingDots from '../LoadingDots';
 import MessageActions from '../MessageActions';
 import ErrorContent from './ErrorContent';
 import { useStyles } from './style';
@@ -44,7 +43,7 @@ const ChatBubble = memo(
       }
 
       if (isLoading) {
-        return <LoadingDots />;
+        return <LoadingDots size={10} variant="pulse" />;
       }
 
       return (
