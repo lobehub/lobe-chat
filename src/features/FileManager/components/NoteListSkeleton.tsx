@@ -23,10 +23,6 @@ const NoteListSkeleton = () => {
           <Flexbox gap={12}>
             {/* Preview content skeleton */}
             <Skeleton.Button active block style={{ height: 120 }} />
-            {/* Actions skeleton */}
-            <Flexbox align={'flex-end'} justify={'flex-end'}>
-              <Skeleton.Avatar active size={24} />
-            </Flexbox>
           </Flexbox>
         </div>
       ))}
