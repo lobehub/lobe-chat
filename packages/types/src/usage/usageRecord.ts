@@ -1,50 +1,47 @@
 import { MessageMetadata } from '../message';
 
 export interface UsageRecordItem {
+  createdAt: Date;
   /**
-   * 记录 ID
+   * ID
    **/
   id: string;
+  inputStartAt?: Date | null;
   /**
-   * 模型id
+   * Meta information
+   **/
+  metadata?: MessageMetadata | null;
+  /**
+   * Model id
    */
   model: string;
+  outputFinishAt?: Date | null;
+  outputStartAt?: Date | null;
   /**
-   * 提供商
+   * Provider id
    */
   provider: string;
   /**
-   * 花费
+   * Spend
    **/
   spend: number;
   /**
-   * 调用类型
-   **/
-  type: string;
-  /**
-   * 用户 ID
-   **/
-  userId: string;
-  /**
-   * 性能信息
-   **/
-  ttft?: number | null;
-  tps?: number | null;
-  inputStartAt?: Date | null;
-  outputStartAt?: Date | null;
-  outputFinishAt?: Date | null;
-  /**
-   * 使用信息
+   * Usage details
    **/
   totalInputTokens?: number | null;
   totalOutputTokens?: number | null;
   totalTokens?: number | null;
   /**
-   * 元数据
+   * Performance details
    **/
-  metadata?: MessageMetadata | null;
-  createdAt: Date;
+  tps?: number | null;
+  ttft?: number | null;
+  /**
+   * Call types
+   **/
+  type: string;
   updatedAt: Date;
+  userId: string;
 }
 
 export type UsageLog = {
