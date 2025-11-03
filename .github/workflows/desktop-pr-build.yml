@@ -4,9 +4,9 @@ on:
   pull_request_target:
     types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 
-# 确保同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
+# 确保同一 PR 同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
 concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
+  group: pr-${{ github.event.pull_request.number }}-${{ github.workflow }}
   cancel-in-progress: true
 
 # Add default permissions
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -66,7 +66,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       # 主要逻辑：确定构建版本号
@@ -111,7 +111,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
@@ -230,7 +230,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun

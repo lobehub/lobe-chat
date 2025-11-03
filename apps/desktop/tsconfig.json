@@ -11,7 +11,6 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["src/main/*"],
       "~common/*": ["src/common/*"]

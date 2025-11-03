@@ -24,6 +24,7 @@ const GET_USER_STATE_KEY = 'initUserState';
 export interface CommonAction {
   refreshUserState: () => Promise<void>;
   updateAvatar: (avatar: string) => Promise<void>;
+  updateKeyVaultConfig: (provider: string, config: any) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useInitUserState: (
     isLogin: boolean | undefined,
@@ -50,6 +51,10 @@ export const createCommonSlice: StateCreator<
     await get().refreshUserState();
   },
 
+  updateKeyVaultConfig: async (provider, config) => {
+    await get().setSettings({ keyVaults: { [provider]: config } });
+  },
+
   useCheckTrace: (shouldFetch) =>
     useSWR<boolean>(
       shouldFetch ? 'checkTrace' : null,
@@ -65,7 +70,6 @@ export const createCommonSlice: StateCreator<
         revalidateOnFocus: false,
       },
     ),
-
   useInitUserState: (isLogin, serverConfig, options) =>
     useOnlyFetchOnceSWR<UserInitializationState>(
       !!isLogin ? GET_USER_STATE_KEY : null,
@@ -79,7 +83,6 @@ export const createCommonSlice: StateCreator<
             const serverSettings: PartialDeep<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
               image: serverConfig.image,
-              languageModel: serverConfig.languageModel,
               systemAgent: serverConfig.systemAgent,
             };
 
@@ -112,7 +115,6 @@ export const createCommonSlice: StateCreator<
                 isUserHasConversation: data.hasConversation,
                 isUserStateInit: true,
                 preference,
-                serverLanguageModel: serverConfig.languageModel,
                 settings: data.settings || {},
                 subscriptionPlan: data.subscriptionPlan,
                 user,
@@ -128,7 +130,6 @@ export const createCommonSlice: StateCreator<
               lastName: data.lastName,
               username: data.username,
             });
-            get().refreshDefaultModelProviderList({ trigger: 'fetchUserState' });
           }
         },
       },

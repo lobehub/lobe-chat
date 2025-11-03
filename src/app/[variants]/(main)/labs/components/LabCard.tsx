@@ -71,7 +71,9 @@ const LabCard = memo<PropsWithChildren<LabCardProps>>(
         <div className={styles.card}>
           <div className={styles.row}>
             <div className={styles.thumb}>
-              {cover && <Image alt={title} fill src={cover} style={{ objectFit: 'cover' }} />}
+              {cover && (
+                <Image alt={title} fill src={cover} style={{ objectFit: 'cover' }} unoptimized />
+              )}
             </div>
             <Flexbox gap={6}>
               <div className={styles.title}>{title}</div>

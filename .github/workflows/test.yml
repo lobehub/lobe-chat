@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -65,7 +65,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -98,7 +98,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -132,7 +132,6 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
 
-
         ports:
           - 5432:5432
 
@@ -142,7 +141,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install pnpm

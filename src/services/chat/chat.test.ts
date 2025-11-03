@@ -284,6 +284,9 @@ describe('ChatService', () => {
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
         vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // Not a local URL
 
+        // Mock aiModelSelectors to return true for vision support
+        vi.spyOn(aiModelSelectors, 'isModelSupportVision').mockReturnValue(() => true);
+
         const messages = [
           {
             content: 'Hello',
@@ -369,6 +372,9 @@ describe('ChatService', () => {
           mimeType: 'image/png',
         });
 
+        // Mock aiModelSelectors to return true for vision support
+        vi.spyOn(aiModelSelectors, 'isModelSupportVision').mockReturnValue(() => true);
+
         const messages = [
           {
             content: 'Hello',
@@ -440,6 +446,9 @@ describe('ChatService', () => {
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
         vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // This is NOT a local URL
         vi.mocked(imageUrlToBase64).mockClear(); // Clear to ensure it's not called
+
+        // Mock aiModelSelectors to return true for vision support
+        vi.spyOn(aiModelSelectors, 'isModelSupportVision').mockReturnValue(() => true);
 
         const messages = [
           {
@@ -517,6 +526,9 @@ describe('ChatService', () => {
           base64: 'local-file-base64',
           mimeType: 'image/jpeg',
         });
+
+        // Mock aiModelSelectors to return true for vision support
+        vi.spyOn(aiModelSelectors, 'isModelSupportVision').mockReturnValue(() => true);
 
         const messages = [
           {
