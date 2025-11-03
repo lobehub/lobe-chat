@@ -192,12 +192,12 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const systemPrompts = !!system_message?.content
       ? ([
-          {
-            cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
-            text: system_message?.content as string,
-            type: 'text',
-          },
-        ] as Anthropic.TextBlockParam[])
+        {
+          cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
+          text: system_message?.content as string,
+          type: 'text',
+        },
+      ] as Anthropic.TextBlockParam[])
       : undefined;
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
@@ -216,8 +216,8 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         ...(maxUses &&
           Number.isInteger(Number(maxUses)) &&
           Number(maxUses) > 0 && {
-            max_uses: Number(maxUses),
-          }),
+          max_uses: Number(maxUses),
+        }),
       };
 
       // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
@@ -239,10 +239,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         model,
         system: systemPrompts,
         thinking: {
-          ...thinking,
-          budget_tokens: thinking?.budget_tokens
+          budget_tokens: thinking.budget_tokens
             ? Math.min(thinking.budget_tokens, maxTokens - 1) // `max_tokens` must be greater than `thinking.budget_tokens`.
             : 1024,
+          type: 'enabled',
         },
         tools: postTools,
       } satisfies Anthropic.MessageCreateParams;
