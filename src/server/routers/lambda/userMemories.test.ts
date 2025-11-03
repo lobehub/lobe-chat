@@ -209,9 +209,6 @@ describe('userMemories.retrieveMemory', () => {
     const caller = userMemoriesRouter.createCaller(mockCtx as any);
 
     const result = await caller.searchMemory({
-      limit: '5',
-      memoryCategory: 'work',
-      memoryType: 'project',
       query: 'Project Atlas',
       topK: { contexts: 1, experiences: 1, preferences: 1 },
     });
