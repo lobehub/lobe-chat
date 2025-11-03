@@ -59,6 +59,9 @@ export default class AuthCtr extends ControllerModule {
    */
   @ipcClientEvent('requestAuthorization')
   async requestAuthorization(config: DataSyncConfig) {
+    // 清理任何旧的授权状态
+    this.clearAuthorizationState();
+
     const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl(config);
 
     // 缓存远程服务器 URL 用于后续轮询
@@ -133,7 +136,7 @@ export default class AuthCtr extends ControllerModule {
         // Check if polling has timed out
         if (Date.now() - startTime > maxPollTime) {
           logger.warn('Credential polling timed out');
-          this.stopPolling();
+          this.clearAuthorizationState();
           this.broadcastAuthorizationFailed('Authorization timed out');
           return;
         }
@@ -167,7 +170,7 @@ export default class AuthCtr extends ControllerModule {
         }
       } catch (error) {
         logger.error('Error during credential polling:', error);
-        this.stopPolling();
+        this.clearAuthorizationState();
         this.broadcastAuthorizationFailed('Polling error: ' + error.message);
       }
     }, pollInterval);
@@ -181,6 +184,18 @@ export default class AuthCtr extends ControllerModule {
       clearInterval(this.pollingInterval);
       this.pollingInterval = null;
     }
+  }
+
+  /**
+   * 清理授权状态
+   * 在开始新的授权流程前或授权失败/超时后调用
+   */
+  private clearAuthorizationState() {
+    logger.debug('Clearing authorization state');
+    this.stopPolling();
+    this.codeVerifier = null;
+    this.authRequestState = null;
+    this.cachedRemoteUrl = null;
   }
 
   /**
