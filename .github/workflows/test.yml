@@ -140,6 +140,7 @@ jobs:
 
       - name: Install deps
         run: pnpm install
+        working-directory: apps/desktop
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
