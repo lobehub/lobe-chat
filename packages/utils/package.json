@@ -17,7 +17,8 @@
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "dayjs": "^1.11.18",
-    "dompurify": "^3.2.7"
+    "dompurify": "^3.2.7",
+    "ssrf-safe-fetch": "workspace:*"
   },
   "devDependencies": {
     "vitest-canvas-mock": "^0.3.3"
