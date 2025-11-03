@@ -10,10 +10,14 @@ import {
 
 import {
   UserMemoryContext,
+  UserMemoryContextsWithoutVectors,
   UserMemoryExperience,
+  UserMemoryExperiencesWithoutVectors,
+  UserMemoryIdentitiesWithoutVectors,
   UserMemoryIdentity,
   UserMemoryItem,
   UserMemoryPreference,
+  UserMemoryPreferencesWithoutVectors,
   userMemories,
   userMemoriesContexts,
   userMemoriesExperiences,
@@ -115,9 +119,9 @@ export interface SearchUserMemoryWithEmbeddingParams {
 }
 
 export interface UserMemorySearchAggregatedResult {
-  contexts: UserMemoryContext[];
-  experiences: UserMemoryExperience[];
-  preferences: UserMemoryPreference[];
+  contexts: UserMemoryContextsWithoutVectors[];
+  experiences: UserMemoryExperiencesWithoutVectors[];
+  preferences: UserMemoryPreferencesWithoutVectors[];
 }
 
 export interface UpdateUserMemoryVectorsParams {
@@ -777,7 +781,7 @@ export class UserMemoryModel {
     embedding?: number[];
     limit?: number;
     type?: string;
-  }): Promise<UserMemoryContext[]> => {
+  }): Promise<UserMemoryContextsWithoutVectors[]> => {
     const { embedding, limit = 5, type } = params;
     if (limit <= 0) {
       return [];
@@ -791,7 +795,6 @@ export class UserMemoryModel {
         createdAt: userMemoriesContexts.createdAt,
         currentStatus: userMemoriesContexts.currentStatus,
         description: userMemoriesContexts.description,
-        descriptionVector: userMemoriesContexts.descriptionVector,
         id: userMemoriesContexts.id,
         metadata: userMemoriesContexts.metadata,
         scoreImpact: userMemoriesContexts.scoreImpact,
@@ -829,7 +832,7 @@ export class UserMemoryModel {
     embedding?: number[];
     limit?: number;
     type?: string;
-  }): Promise<UserMemoryExperience[]> => {
+  }): Promise<UserMemoryExperiencesWithoutVectors[]> => {
     const { embedding, limit = 5, type } = params;
     if (limit <= 0) {
       return [];
@@ -839,17 +842,14 @@ export class UserMemoryModel {
       .select({
         accessedAt: userMemoriesExperiences.accessedAt,
         action: userMemoriesExperiences.action,
-        actionVector: userMemoriesExperiences.actionVector,
         createdAt: userMemoriesExperiences.createdAt,
         id: userMemoriesExperiences.id,
         keyLearning: userMemoriesExperiences.keyLearning,
-        keyLearningVector: userMemoriesExperiences.keyLearningVector,
         metadata: userMemoriesExperiences.metadata,
         possibleOutcome: userMemoriesExperiences.possibleOutcome,
         reasoning: userMemoriesExperiences.reasoning,
         scoreConfidence: userMemoriesExperiences.scoreConfidence,
         situation: userMemoriesExperiences.situation,
-        situationVector: userMemoriesExperiences.situationVector,
         tags: userMemoriesExperiences.tags,
         type: userMemoriesExperiences.type,
         updatedAt: userMemoriesExperiences.updatedAt,
@@ -882,7 +882,7 @@ export class UserMemoryModel {
     embedding?: number[];
     limit?: number;
     type?: string;
-  }): Promise<UserMemoryPreference[]> => {
+  }): Promise<UserMemoryPreferencesWithoutVectors[]> => {
     const { embedding, limit = 5, type } = params;
     if (limit <= 0) {
       return [];
@@ -892,7 +892,6 @@ export class UserMemoryModel {
       .select({
         accessedAt: userMemoriesPreferences.accessedAt,
         conclusionDirectives: userMemoriesPreferences.conclusionDirectives,
-        conclusionDirectivesVector: userMemoriesPreferences.conclusionDirectivesVector,
         createdAt: userMemoriesPreferences.createdAt,
         id: userMemoriesPreferences.id,
         metadata: userMemoriesPreferences.metadata,
@@ -926,14 +925,14 @@ export class UserMemoryModel {
     return query.limit(limit);
   };
 
-  getAllIdentities = async (): Promise<UserMemoryIdentity[]> => {
+  getAllIdentities = async (): Promise<UserMemoryIdentitiesWithoutVectors[]> => {
     return this.db.query.userMemoriesIdentities.findMany({
       orderBy: [desc(userMemoriesIdentities.createdAt)],
       where: eq(userMemoriesIdentities.userId, this.userId),
     });
   };
 
-  getIdentitiesByType = async (type: string): Promise<UserMemoryIdentity[]> => {
+  getIdentitiesByType = async (type: string): Promise<UserMemoryIdentitiesWithoutVectors[]> => {
     return this.db.query.userMemoriesIdentities.findMany({
       orderBy: [desc(userMemoriesIdentities.createdAt)],
       where: and(
