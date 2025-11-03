@@ -21,7 +21,7 @@ interface LoginConfirmProps {
   uid: string;
 }
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, responsive }) => ({
   authButton: css`
     width: 100%;
     height: 40px;
@@ -35,12 +35,21 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 12px;
 
     background: ${token.colorBgContainer};
+
+    ${responsive.mobile} {
+      min-width: auto;
+    }
   `,
   container: css`
     width: 100%;
     min-height: 100vh;
     color: ${token.colorTextBase};
     background-color: ${token.colorBgLayout};
+
+    ${responsive.mobile} {
+      justify-content: flex-start;
+      padding-block-start: 64px;
+    }
   `,
   title: css`
     margin-block-end: ${token.marginLG}px;
