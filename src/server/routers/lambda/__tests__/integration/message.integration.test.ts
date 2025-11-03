@@ -318,47 +318,6 @@ describe('Message Router Integration Tests', () => {
     });
   });
 
-  describe('batchCreateMessages', () => {
-    it('should create multiple messages in batch', async () => {
-      const caller = messageRouter.createCaller(createTestContext(userId));
-
-      const messagesToCreate = [
-        {
-          content: 'Batch message 1',
-          role: 'user' as const,
-          sessionId: testSessionId,
-        },
-        {
-          content: 'Batch message 2',
-          role: 'assistant' as const,
-          sessionId: testSessionId,
-        },
-        {
-          content: 'Batch message 3',
-          role: 'user' as const,
-          sessionId: testSessionId,
-          topicId: testTopicId,
-        },
-      ];
-
-      const result = await caller.batchCreateMessages(messagesToCreate);
-
-      expect(result.success).toBe(true);
-      // Note: rowCount might be undefined in PGlite, so we skip this check
-      // expect(result.added).toBe(3);
-
-      // 验证数据库中的消息
-      const dbMessages = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.sessionId, testSessionId));
-
-      expect(dbMessages.length).toBeGreaterThanOrEqual(3);
-      const topicMessage = dbMessages.find((m) => m.content === 'Batch message 3');
-      expect(topicMessage?.topicId).toBe(testTopicId);
-    });
-  });
-
   describe('removeMessages', () => {
     it('should remove multiple messages', async () => {
       const caller = messageRouter.createCaller(createTestContext(userId));

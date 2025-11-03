@@ -1,9 +1,17 @@
 import { UserJSON } from '@clerk/backend';
+import { enableClerk, isDesktop } from '@lobechat/const';
+import {
+  NextAuthAccountSchame,
+  UserGuideSchema,
+  UserInitializationState,
+  UserPreference,
+  UserPreferenceSchema,
+  UserSettings,
+  UserSettingsSchema,
+} from '@lobechat/types';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
-import { enableClerk } from '@/const/auth';
-import { isDesktop } from '@/const/version';
 import { MessageModel } from '@/database/models/message';
 import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
@@ -16,13 +24,6 @@ import { S3 } from '@/server/modules/S3';
 import { FileService } from '@/server/services/file';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
-import {
-  NextAuthAccountSchame,
-  UserGuideSchema,
-  UserInitializationState,
-  UserPreference,
-} from '@/types/user';
-import { UserSettings } from '@/types/user/settings';
 
 const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
   return next({
@@ -199,30 +200,28 @@ export const userRouter = router({
     return ctx.userModel.updateGuide(input);
   }),
 
-  updatePreference: userProcedure.input(z.any()).mutation(async ({ ctx, input }) => {
+  updatePreference: userProcedure.input(UserPreferenceSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updatePreference(input);
   }),
 
-  updateSettings: userProcedure
-    .input(z.object({}).passthrough())
-    .mutation(async ({ ctx, input }) => {
-      const { keyVaults, ...res } = input as Partial<UserSettings>;
+  updateSettings: userProcedure.input(UserSettingsSchema).mutation(async ({ ctx, input }) => {
+    const { keyVaults, ...res } = input as Partial<UserSettings>;
 
-      // Encrypt keyVaults
-      let encryptedKeyVaults: string | null = null;
+    // Encrypt keyVaults
+    let encryptedKeyVaults: string | null = null;
 
-      if (keyVaults) {
-        // TODO: better to add a validation
-        const data = JSON.stringify(keyVaults);
-        const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+    if (keyVaults) {
+      // TODO: better to add a validation
+      const data = JSON.stringify(keyVaults);
+      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
 
-        encryptedKeyVaults = await gateKeeper.encrypt(data);
-      }
+      encryptedKeyVaults = await gateKeeper.encrypt(data);
+    }
 
-      const nextValue = { ...res, keyVaults: encryptedKeyVaults };
+    const nextValue = { ...res, keyVaults: encryptedKeyVaults };
 
-      return ctx.userModel.updateSetting(nextValue);
-    }),
+    return ctx.userModel.updateSetting(nextValue);
+  }),
 });
 
 export type UserRouter = typeof userRouter;

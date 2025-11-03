@@ -1,5 +1,6 @@
 import {
-  BatchTaskResult,
+  CreateMessageParamsSchema,
+  CreateNewMessageParamsSchema,
   UIChatMessage,
   UpdateMessageParamsSchema,
   UpdateMessageRAGParamsSchema,
@@ -27,14 +28,6 @@ const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
 });
 
 export const messageRouter = router({
-  batchCreateMessages: messageProcedure
-    .input(z.array(z.any()))
-    .mutation(async ({ input, ctx }): Promise<BatchTaskResult> => {
-      const data = await ctx.messageModel.batchCreate(input);
-
-      return { added: data.rowCount as number, ids: [], skips: [], success: true };
-    }),
-
   count: messageProcedure
     .input(
       z
@@ -64,7 +57,7 @@ export const messageRouter = router({
     }),
 
   createMessage: messageProcedure
-    .input(z.object({}).passthrough().partial())
+    .input(CreateMessageParamsSchema)
     .mutation(async ({ input, ctx }) => {
       const data = await ctx.messageModel.create(input as any);
 
@@ -72,7 +65,7 @@ export const messageRouter = router({
     }),
 
   createNewMessage: messageProcedure
-    .input(z.object({}).passthrough().partial())
+    .input(CreateNewMessageParamsSchema)
     .mutation(async ({ input, ctx }) => {
       return ctx.messageModel.createNewMessage(input as any, {
         postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),

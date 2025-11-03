@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { Plans } from '../subscription';
 import { TopicDisplayMode } from '../topic';
-import { UserSettings } from '../user/settings';
+import { UserSettings } from './settings';
 
 export interface LobeUser {
   avatar?: string;
@@ -74,3 +74,15 @@ export const NextAuthAccountSchame = z.object({
   provider: z.string(),
   providerAccountId: z.string(),
 });
+
+export const UserPreferenceSchema = z
+  .object({
+    disableInputMarkdownRender: z.boolean().optional(),
+    enableGroupChat: z.boolean().optional(),
+    guide: UserGuideSchema.optional(),
+    hideSyncAlert: z.boolean().optional(),
+    telemetry: z.boolean().nullable(),
+    topicDisplayMode: z.nativeEnum(TopicDisplayMode).optional(),
+    useCmdEnterToSend: z.boolean().optional(),
+  })
+  .partial();
