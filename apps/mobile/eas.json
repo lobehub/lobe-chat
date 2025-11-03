@@ -19,25 +19,13 @@
       "environment": "preview",
       "distribution": "internal",
       "channel": "preview",
-      "pnpm": "10.10.0",
-      "ios": {
-        "config": "preview-ios.yml"
-      },
-      "android": {
-        "config": "preview-android.yml"
-      }
+      "pnpm": "10.10.0"
     },
     "production": {
       "environment": "production",
       "autoIncrement": true,
       "channel": "production",
-      "pnpm": "10.10.0",
-      "ios": {
-        "config": "production-ios.yml"
-      },
-      "android": {
-        "config": "production-android.yml"
-      }
+      "pnpm": "10.10.0"
     }
   },
   "cli": {
