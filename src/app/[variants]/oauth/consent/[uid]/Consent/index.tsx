@@ -7,7 +7,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import OAuthApplicationLogo from './components/OAuthApplicationLogo';
+import OAuthApplicationLogo from '../components/OAuthApplicationLogo';
 
 interface ClientProps {
   clientId: string;
