@@ -1,6 +1,7 @@
-import { ActionIcon, Button, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Button, Dropdown, Icon, Text } from '@lobehub/ui';
+import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
-import { ArrowDownAZ, ChevronDown } from 'lucide-react';
+import { ArrowDownUpIcon, ChevronDown, LucideCheck } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,6 +18,7 @@ interface DisabledModelsProps {
 // Sort type enumeration
 enum SortType {
   Alphabetical = 'alphabetical',
+  AlphabeticalDesc = 'alphabeticalDesc',
   Default = 'default',
 }
 
@@ -42,28 +44,32 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
 
   // Sort models based on sort type
   const sortedDisabledModels = useMemo(() => {
-    if (sortType === SortType.Default) {
-      return [...filteredDisabledModels];
-    } else {
-      return [...filteredDisabledModels].sort((a, b) => {
-        const cmpDisplay = (a.displayName || a.id).localeCompare(b.displayName || b.id);
-        if (cmpDisplay !== 0) return cmpDisplay;
-        return a.id.localeCompare(b.id);
-      });
+    const models = [...filteredDisabledModels];
+    switch (sortType) {
+      case SortType.Alphabetical: {
+        return models.sort((a, b) => {
+          const cmpDisplay = (a.displayName || a.id).localeCompare(b.displayName || b.id);
+          if (cmpDisplay !== 0) return cmpDisplay;
+          return a.id.localeCompare(b.id);
+        });
+      }
+      case SortType.AlphabeticalDesc: {
+        return models.sort((a, b) => {
+          const cmpDisplay = (b.displayName || b.id).localeCompare(a.displayName || a.id);
+          if (cmpDisplay !== 0) return cmpDisplay;
+          return b.id.localeCompare(a.id);
+        });
+      }
+      case SortType.Default: {
+        return models;
+      }
+      default: {
+        return models;
+      }
     }
   }, [filteredDisabledModels, sortType]);
 
   const displayModels = showMore ? sortedDisabledModels : sortedDisabledModels.slice(0, 10);
-
-  const toggleSortType = () => {
-    setSortType(sortType === SortType.Default ? SortType.Alphabetical : SortType.Default);
-  };
-
-  const getSortTooltip = () => {
-    return sortType === SortType.Default
-      ? t('providerModels.list.disabledActions.sortAlphabetical')
-      : t('providerModels.list.disabledActions.sortDefault');
-  };
 
   return (
     filteredDisabledModels.length > 0 && (
@@ -73,14 +79,43 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
             {t('providerModels.list.disabled')}
           </Text>
           {filteredDisabledModels.length > 1 && (
-            <Tooltip title={getSortTooltip()}>
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    icon: sortType === SortType.Default ? <Icon icon={LucideCheck} /> : <div />,
+                    key: 'default',
+                    label: t('providerModels.list.disabledActions.sortDefault'),
+                    onClick: () => setSortType(SortType.Default),
+                  },
+                  {
+                    icon:
+                      sortType === SortType.Alphabetical ? <Icon icon={LucideCheck} /> : <div />,
+                    key: 'alphabetical',
+                    label: t('providerModels.list.disabledActions.sortAlphabetical'),
+                    onClick: () => setSortType(SortType.Alphabetical),
+                  },
+                  {
+                    icon:
+                      sortType === SortType.AlphabeticalDesc ? (
+                        <Icon icon={LucideCheck} />
+                      ) : (
+                        <div />
+                      ),
+                    key: 'alphabeticalDesc',
+                    label: t('providerModels.list.disabledActions.sortAlphabeticalDesc'),
+                    onClick: () => setSortType(SortType.AlphabeticalDesc),
+                  },
+                ] as ItemType[],
+              }}
+              trigger={['click']}
+            >
               <ActionIcon
-                active={sortType === SortType.Alphabetical}
-                icon={ArrowDownAZ}
-                onClick={toggleSortType}
+                icon={ArrowDownUpIcon}
                 size={'small'}
+                title={t('providerModels.list.disabledActions.sort')}
               />
-            </Tooltip>
+            </Dropdown>
           )}
         </Flexbox>
         {displayModels.map((item) => (
