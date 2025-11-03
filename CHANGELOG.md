@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.20](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.19...v2.0.0-next.20)
+
+<sup>Released on **2025-11-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve oidc layout style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve oidc layout style, closes [#10023](https://github.com/lobehub/lobe-chat/issues/10023) ([5008be7](https://github.com/lobehub/lobe-chat/commit/5008be7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.19](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.18...v2.0.0-next.19)
 
 <sup>Released on **2025-11-03**</sup>
