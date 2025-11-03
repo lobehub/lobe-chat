@@ -18,6 +18,8 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/c
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
+import { useUserMemoryStore } from '@/store/userMemory';
 
 import {
   dbMessageSelectors,
@@ -80,6 +82,13 @@ export const conversationLifecycle: StateCreator<
 
     const messages = displayMessageSelectors.activeDisplayMessages(get());
     const lastDisplayMessageId = displayMessageSelectors.lastDisplayMessageId(get());
+
+    useUserMemoryStore.getState().setActiveMemoryContext({
+      session: sessionSelectors.currentSession(getSessionStoreState()),
+      topic: topicSelectors.currentActiveTopic(get()),
+      latestUserMessage: messages.at(-1)?.content,
+      sendingMessage: message,
+    });
 
     let parentId: string | undefined;
     if (lastDisplayMessageId) {
