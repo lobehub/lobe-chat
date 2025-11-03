@@ -145,7 +145,7 @@ jobs:
 
 
       - name: Test Desktop App
-        run: npm run --filter @lobechat/desktop test
+        run: pnpm test
         working-directory: apps/desktop
 
       - name: Upload Desktop App Coverage to Codecov
@@ -192,7 +192,7 @@ jobs:
       - name: Test Client DB
         run: pnpm --filter @lobechat/database test:client-db
         env:
-          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
+          KEY_VAULTS_SECRET: Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 
@@ -201,7 +201,7 @@ jobs:
         env:
           DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DATABASE_DRIVER: node
-          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
+          KEY_VAULTS_SECRET: Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 
