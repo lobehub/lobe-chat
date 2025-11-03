@@ -7,6 +7,7 @@ import {
 import { useMemo, useRef, useState } from 'react';
 
 import { useMarkdownContext } from '../../Markdown/components/MarkdownProvider';
+import { ensureCodeBlockOnNewLine } from './ensureCodeBlockOnNewLine';
 
 export const useMarkdownContent = (children: string): string | undefined => {
   const { animated, enableLatex = true, enableCustomFootnotes } = useMarkdownContext();
@@ -31,6 +32,9 @@ export const useMarkdownContent = (children: string): string | undefined => {
       enableCustomFootnotes,
       enableLatex,
     });
+
+    // 确保代码块独立成行（不处理行内代码 `code`）
+    processedContent = ensureCodeBlockOnNewLine(processedContent);
 
     // Special handling for LaTeX content when animated
     if (animated && enableLatex) {
