@@ -28,6 +28,8 @@ import {
   userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
+import { getUserMemoryStoreState, userMemorySelectors } from '@/store/userMemory';
+import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
@@ -88,7 +90,13 @@ class ChatService {
 
     // =================== 1. preprocess tools =================== //
 
-    const pluginIds = [...(enabledPlugins || [])];
+    const agentStoreState = getAgentStoreState();
+    const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
+    const pluginIds =
+      enabledPlugins && enabledPlugins.length > 0
+        ? [...enabledPlugins]
+        : [...(agentConfig.plugins ?? [])];
 
     const toolsEngine = createAgentToolsEngine({
       model: payload.model,
@@ -101,11 +109,13 @@ class ChatService {
       toolIds: pluginIds,
     });
 
-    // ============  2. preprocess messages   ============ //
+    // =================== 1.1 process user memories =================== //
 
-    const agentStoreState = getAgentStoreState();
-    const agentConfig = agentSelectors.currentAgentConfig(agentStoreState);
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(agentStoreState);
+    const isMemoryPluginEnabled =
+      pluginIds.includes(MemoryManifest.identifier) ||
+      enabledToolIds.includes(MemoryManifest.identifier);
+    const userMemories =
+      userMemorySelectors.activeUserMemories(isMemoryPluginEnabled)(getUserMemoryStoreState());
 
     // Apply context engineering with preprocessing configuration
     const oaiMessages = await contextEngineering({
@@ -119,6 +129,7 @@ class ChatService {
       sessionId: options?.trace?.sessionId,
       systemRole: agentConfig.systemRole,
       tools: enabledToolIds,
+      userMemories,
     });
 
     // ============  3. process extend params   ============ //

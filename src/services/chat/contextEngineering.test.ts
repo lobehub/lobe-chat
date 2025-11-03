@@ -5,6 +5,7 @@ import * as isCanUseFCModule from '@/helpers/isCanUseFC';
 
 import { contextEngineering } from './contextEngineering';
 import * as helpers from './helper';
+import { UserMemoryInjectorConfig } from './providers/UserMemoryInjector';
 
 // Mock VARIABLE_GENERATORS
 vi.mock('@/utils/client/parserPlaceholder', () => ({
@@ -432,6 +433,62 @@ describe('contextEngineering', () => {
       const content = result[0].content as any[];
       expect(content[0].text).toBe('Hello TestUser, today is 2023-12-25');
       expect(content[1].image_url.url).toBe('data:image/png;base64,abc123');
+    });
+
+    it('should merge custom memory placeholder variables', async () => {
+      const messages: UIChatMessage[] = [
+        {
+          role: 'system',
+          content:
+            'Memory load: available={{memory_available}}, total contexts={{memory_contexts_count}}\n{{memory_summary}}',
+          createdAt: Date.now(),
+          id: 'memory-placeholder-test',
+          meta: {},
+          updatedAt: Date.now(),
+        },
+      ];
+
+      const userMemories = {
+        memories: {
+          contexts: [
+            {
+              accessedAt: new Date('2024-01-01T00:00:00.000Z'),
+              associatedObjects: [],
+              associatedSubjects: [],
+              createdAt: new Date('2024-01-01T00:00:00.000Z'),
+              currentStatus: 'active',
+              description: 'Weekly syncs for LobeHub',
+              id: 'ctx-1',
+              metadata: {},
+              scoreImpact: 0.8,
+              scoreUrgency: 0.5,
+              tags: ['project'],
+              title: 'LobeHub',
+              type: 'project',
+              updatedAt: new Date('2024-01-02T00:00:00.000Z'),
+              userMemoryIds: ['mem-1'],
+            },
+          ],
+          experiences: [],
+          preferences: [],
+        },
+      } satisfies UserMemoryInjectorConfig;
+
+      const result = await contextEngineering({
+        userMemories,
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result[0].role).toBe('system');
+      expect(result[0].content).toContain(
+        '<user_memories contexts="1" experiences="0" memory_fetched_at="{{datetime}}" preferences="0">',
+      );
+      expect(result[0].content).toContain('<context_title>LobeHub</context_title>');
+      expect(result[1].content).toBe(
+        'Memory load: available={{memory_available}}, total contexts={{memory_contexts_count}}\n{{memory_summary}}',
+      );
     });
 
     it('should handle missing placeholder variables gracefully', async () => {
