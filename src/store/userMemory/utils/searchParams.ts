@@ -1,6 +1,7 @@
+import { find, isString, trim } from 'lodash-es';
+
 import type { RetrieveMemoryParams } from '@/types/userMemory';
 
-const DEFAULT_LIMIT = 10;
 const DEFAULT_TOP_K = {
   contexts: 3,
   experiences: 4,
@@ -8,6 +9,8 @@ const DEFAULT_TOP_K = {
 };
 
 interface MemorySearchSource {
+  latestUserMessage?: string | null;
+  sendingMessage?: string | null;
   session?: {
     meta?: {
       description?: string | null;
@@ -21,16 +24,11 @@ interface MemorySearchSource {
 }
 
 const pickFirstNonEmpty = (values: Array<string | null | undefined>) => {
-  for (const value of values) {
-    if (typeof value !== 'string') continue;
+  const matched = find(values, (value) => isString(value) && trim(value).length > 0);
 
-    const trimmed = value.trim();
-    if (trimmed.length === 0) continue;
+  if (!isString(matched)) return undefined;
 
-    return trimmed;
-  }
-
-  return undefined;
+  return trim(matched);
 };
 
 export const createMemorySearchParams = (
@@ -38,15 +36,14 @@ export const createMemorySearchParams = (
 ): RetrieveMemoryParams | undefined => {
   const query = pickFirstNonEmpty([
     source.topic?.historySummary,
-    source.topic?.title,
-    source.session?.meta?.title,
     source.session?.meta?.description,
+    source.latestUserMessage,
+    source.sendingMessage,
   ]);
 
   if (!query) return undefined;
 
   return {
-    limit: String(DEFAULT_LIMIT),
     query,
     topK: {
       ...DEFAULT_TOP_K,
