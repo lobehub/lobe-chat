@@ -119,6 +119,42 @@ jobs:
           files: ./coverage/app/lcov.info
           flags: app
 
+  test-desktop:
+    name: Test Desktop App
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Install deps
+        run: pnpm install
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+
+      - name: Test Desktop App
+        run: npm run --filter @lobechat/desktop test
+        working-directory: apps/desktop
+
+      - name: Upload Desktop App Coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./apps/desktop/coverage/lcov.info
+          flags: desktop
+
   test-databsae:
     name: Test Database
 
