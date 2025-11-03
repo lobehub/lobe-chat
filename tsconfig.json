@@ -15,7 +15,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "baseUrl": ".",
     "types": ["vitest/globals", "@serwist/next/typings"],
     "paths": {
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
