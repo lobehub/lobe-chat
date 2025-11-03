@@ -26,6 +26,8 @@ import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
 import { isCanUseVideo, isCanUseVision } from './helper';
+import { UserMemoryInjector } from './providers/UserMemoryInjector';
+import type { UserMemoryInjectorConfig } from './providers/UserMemoryInjector';
 
 interface ContextEngineeringContext {
   enableHistoryCount?: boolean;
@@ -38,8 +40,10 @@ interface ContextEngineeringContext {
   sessionId?: string;
   systemRole?: string;
   tools?: string[];
+  userMemories?: UserMemoryInjectorConfig;
 }
 
+// REVIEW：可能这里可以约束一下 identity，preference，exp 的 重新排序或者裁切过的上下文进来而不是全部丢进来
 export const contextEngineering = async ({
   messages = [],
   tools,
@@ -47,6 +51,7 @@ export const contextEngineering = async ({
   provider,
   systemRole,
   inputTemplate,
+  userMemories,
   enableHistoryCount,
   historyCount,
   historySummary,
@@ -94,18 +99,19 @@ export const contextEngineering = async ({
         historySummary: historySummary,
       }),
 
-      // Create message processing processors
+      // 6. User memory injection
+      new UserMemoryInjector(userMemories ?? {}),
 
-      // 6. Input template processing
+      // 7. Input template processing
       new InputTemplateProcessor({ inputTemplate }),
 
-      // 7. Placeholder variables processing
+      // 8. Placeholder variables processing
       new PlaceholderVariablesProcessor({ variableGenerators: VARIABLE_GENERATORS }),
 
-      // 8. Group message flatten (convert role=group to standard assistant + tool messages)
+      // 9. Group message flatten (convert role=group to standard assistant + tool messages)
       new GroupMessageFlattenProcessor(),
 
-      // 8.5 Message content processing
+      // 10. Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: true, includeFileUrl: !isDesktop },
         isCanUseVideo,
@@ -114,7 +120,7 @@ export const contextEngineering = async ({
         provider,
       }),
 
-      // 9. Tool call processing
+      // 11. Tool call processing
       new ToolCallProcessor({
         genToolCallingName: toolNameResolver.generate.bind(toolNameResolver),
         isCanUseFC,
@@ -122,10 +128,10 @@ export const contextEngineering = async ({
         provider,
       }),
 
-      // 10. Tool message reordering
+      // 12. Tool message reordering
       new ToolMessageReorder(),
 
-      // 11. Message cleanup (final step, keep only necessary fields)
+      // 13. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ],
   });
