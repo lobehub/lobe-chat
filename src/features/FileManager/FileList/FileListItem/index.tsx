@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
 import { FileBoxIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useSearchParams } from 'react-router-dom';
@@ -21,6 +21,15 @@ import ChunksBadge from './ChunkTag';
 import DropdownMenu from './DropdownMenu';
 
 dayjs.extend(relativeTime);
+
+// Helper to extract title from markdown content
+const extractTitle = (content: string): string | null => {
+  if (!content) return null;
+
+  // Find first markdown header (# title)
+  const match = content.match(/^#\s+(.+)$/m);
+  return match ? match[1].trim() : null;
+};
 
 export const FILE_DATE_WIDTH = 160;
 export const FILE_SIZE_WIDTH = 140;
@@ -101,8 +110,11 @@ const FileRenderItem = memo<FileRenderItemProps>(
     onSelectedChange,
     knowledgeBaseId,
     index,
+    content,
+    metadata,
+    sourceType,
   }) => {
-    const { t } = useTranslation('components');
+    const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
     const [, setSearchParams] = useSearchParams();
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
@@ -111,6 +123,18 @@ const FileRenderItem = memo<FileRenderItemProps>(
     ]);
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
+    const isNote = sourceType === 'document' || fileType === 'custom/note';
+
+    // Extract title and emoji for notes
+    const displayTitle = useMemo(() => {
+      if (isNote && content) {
+        const extractedTitle = extractTitle(content);
+        return extractedTitle || name || t('file:notesList.untitled');
+      }
+      return name;
+    }, [isNote, content, name, t]);
+
+    const emoji = isNote ? metadata?.emoji : null;
 
     const displayTime =
       dayjs().diff(dayjs(createdAt), 'd') < 7
@@ -158,8 +182,14 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 style={{ borderRadius: '50%' }}
               />
             </Center>
-            <FileIcon fileName={name} fileType={fileType} />
-            <span className={styles.name}>{name}</span>
+            {isNote && emoji ? (
+              <Flexbox align={'center'} justify={'center'} style={{ fontSize: 24, width: 48 }}>
+                {emoji}
+              </Flexbox>
+            ) : (
+              <FileIcon fileName={name} fileType={fileType} />
+            )}
+            <span className={styles.name}>{displayTitle}</span>
           </Flexbox>
           <Flexbox
             align={'center'}

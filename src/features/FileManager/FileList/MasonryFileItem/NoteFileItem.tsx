@@ -75,6 +75,10 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextSecondary};
   `,
   noteTitle: css`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
     font-size: 16px;
     font-weight: ${token.fontWeightStrong};
     line-height: 1.4;
@@ -120,6 +124,7 @@ interface NoteFileItemProps {
   isLoadingMarkdown: boolean;
   markdownContent: string;
   name: string;
+  metadata?: Record<string, any> | null;
 }
 
 const NoteFileItem = memo<NoteFileItemProps>(
@@ -135,8 +140,9 @@ const NoteFileItem = memo<NoteFileItemProps>(
     isLoadingMarkdown,
     markdownContent,
     name,
+    metadata,
   }) => {
-    const { t } = useTranslation('components');
+    const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
       fileManagerSelectors.isCreatingFileParseTask(id)(s),
@@ -145,7 +151,9 @@ const NoteFileItem = memo<NoteFileItemProps>(
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType || '');
 
-    const title = markdownContent ? extractTitle(markdownContent) : null;
+    const extractedTitle = markdownContent ? extractTitle(markdownContent) : null;
+    const displayTitle = extractedTitle || name || t('file:notesList.untitled');
+    const emoji = metadata?.emoji;
     const previewText = markdownContent ? getPreviewText(markdownContent) : '';
 
     return (
@@ -155,7 +163,10 @@ const NoteFileItem = memo<NoteFileItemProps>(
             <div className={styles.markdownLoading}>Loading preview...</div>
           ) : markdownContent ? (
             <div className={styles.noteContent}>
-              {title && <div className={styles.noteTitle}>{title}</div>}
+              <div className={styles.noteTitle}>
+                {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
+                <span>{displayTitle}</span>
+              </div>
               {previewText ? (
                 <div className={styles.notePreview}>{previewText}</div>
               ) : (

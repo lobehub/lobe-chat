@@ -166,6 +166,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     knowledgeBaseId,
     size,
     onOpen,
+    metadata,
   }) => {
     const { styles, cx } = useStyles();
     const [markdownContent, setMarkdownContent] = useState<string>('');
@@ -332,6 +333,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                     id={id}
                     isLoadingMarkdown={isLoadingMarkdown}
                     markdownContent={markdownContent}
+                    metadata={metadata}
                     name={name}
                   />
                 );
