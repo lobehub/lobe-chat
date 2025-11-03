@@ -110,7 +110,6 @@ const searchUserMemories = async (
     model: embeddingModel,
   });
 
-  const limit = input.limit ? parseInt(input.limit, 10) : 5;
   const limits = {
     contexts: input.topK?.contexts,
     experiences: input.topK?.experiences,
@@ -119,10 +118,7 @@ const searchUserMemories = async (
 
   const layeredResults = await ctx.memoryModel.searchWithEmbedding({
     embedding: queryEmbeddings?.[0] || [],
-    limit,
     limits,
-    memoryCategory: input.memoryCategory,
-    memoryType: input.memoryType,
   });
 
   return mapMemorySearchResult(layeredResults);

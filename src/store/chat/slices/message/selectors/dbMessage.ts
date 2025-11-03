@@ -75,6 +75,21 @@ const getTraceIdByDbMessageId = (id: string) => (s: ChatStoreState) =>
  */
 const latestDbMessage = (s: ChatStoreState) => activeDbMessages(s).at(-1);
 
+/**
+ * Get latest user message from database
+ */
+const latestUserMessage = (s: ChatStoreState) => {
+  const messages = activeDbMessages(s);
+
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const message = messages[index];
+
+    if (message.role === 'user') return message;
+  }
+
+  return undefined;
+};
+
 // ============= DB Message Filtering ========== //
 
 /**
@@ -144,4 +159,5 @@ export const dbMessageSelectors = {
   inboxActiveTopicDbMessages,
   isCurrentDbChatLoaded,
   latestDbMessage,
+  latestUserMessage,
 };
