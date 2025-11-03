@@ -27,7 +27,7 @@ export const initSSOProviders = () => {
 
 // Notice this is only an object, not a full Auth.js instance
 export default {
-  adapter: LobeNextAuthDbAdapter(),
+  adapter: NEXT_PUBLIC_ENABLE_NEXT_AUTH ? LobeNextAuthDbAdapter() : undefined,
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
     async jwt({ token, user }) {
