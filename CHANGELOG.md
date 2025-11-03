@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.19](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.18...v2.0.0-next.19)
+
+<sup>Released on **2025-11-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove `NEXT_PUBLIC_SERVICE_MODE` env and use server by default.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove `NEXT_PUBLIC_SERVICE_MODE` env and use server by default, closes [#10017](https://github.com/lobehub/lobe-chat/issues/10017) ([f2ab2fc](https://github.com/lobehub/lobe-chat/commit/f2ab2fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.18](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.17...v2.0.0-next.18)
 
 <sup>Released on **2025-11-03**</sup>
