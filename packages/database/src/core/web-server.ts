@@ -11,9 +11,7 @@ import { LobeChatDatabase } from '../type';
 
 export const getDBInstance = (): LobeChatDatabase => {
   // In test environment, return a mock instance to avoid initialization errors
-  if (process.env.NODE_ENV === 'test') {
-    return {} as LobeChatDatabase;
-  }
+  if (process.env.NODE_ENV === 'test') return {} as LobeChatDatabase;
 
   if (!serverDBEnv.KEY_VAULTS_SECRET) {
     throw new Error(
