@@ -411,6 +411,8 @@ export default {
         sortAlphabetical: '按字母排序',
         sortAlphabeticalDesc: '按字母倒序排序',
         sortDefault: '默认排序',
+        sortReleasedAt: '按最早发布时间排序',
+        sortReleasedAtDesc: '按最新发布时间排序',
       },
       empty: {
         desc: '请创建自定义模型或拉取模型后开始使用吧',

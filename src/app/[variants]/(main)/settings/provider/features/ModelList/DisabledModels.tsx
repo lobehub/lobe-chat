@@ -20,6 +20,8 @@ enum SortType {
   Alphabetical = 'alphabetical',
   AlphabeticalDesc = 'alphabeticalDesc',
   Default = 'default',
+  ReleasedAt = 'releasedAt',
+  ReleasedAtDesc = 'releasedAtDesc',
 }
 
 const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
@@ -60,6 +62,30 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
           return b.id.localeCompare(a.id);
         });
       }
+      case SortType.ReleasedAt: {
+        return models.sort((a, b) => {
+          const aHasDate = !!a.releasedAt;
+          const bHasDate = !!b.releasedAt;
+
+          if (aHasDate && !bHasDate) return -1;
+          if (!aHasDate && bHasDate) return 1;
+          if (!aHasDate && !bHasDate) return 0;
+
+          return a.releasedAt!.localeCompare(b.releasedAt!);
+        });
+      }
+      case SortType.ReleasedAtDesc: {
+        return models.sort((a, b) => {
+          const aHasDate = !!a.releasedAt;
+          const bHasDate = !!b.releasedAt;
+
+          if (aHasDate && !bHasDate) return -1;
+          if (!aHasDate && bHasDate) return 1;
+          if (!aHasDate && !bHasDate) return 0;
+
+          return b.releasedAt!.localeCompare(a.releasedAt!);
+        });
+      }
       case SortType.Default: {
         return models;
       }
@@ -89,6 +115,9 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
                     onClick: () => setSortType(SortType.Default),
                   },
                   {
+                    type: 'divider',
+                  },
+                  {
                     icon:
                       sortType === SortType.Alphabetical ? <Icon icon={LucideCheck} /> : <div />,
                     key: 'alphabetical',
@@ -105,6 +134,22 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
                     key: 'alphabeticalDesc',
                     label: t('providerModels.list.disabledActions.sortAlphabeticalDesc'),
                     onClick: () => setSortType(SortType.AlphabeticalDesc),
+                  },
+                  {
+                    type: 'divider',
+                  },
+                  {
+                    icon: sortType === SortType.ReleasedAt ? <Icon icon={LucideCheck} /> : <div />,
+                    key: 'releasedAt',
+                    label: t('providerModels.list.disabledActions.sortReleasedAt'),
+                    onClick: () => setSortType(SortType.ReleasedAt),
+                  },
+                  {
+                    icon:
+                      sortType === SortType.ReleasedAtDesc ? <Icon icon={LucideCheck} /> : <div />,
+                    key: 'releasedAtDesc',
+                    label: t('providerModels.list.disabledActions.sortReleasedAtDesc'),
+                    onClick: () => setSortType(SortType.ReleasedAtDesc),
                   },
                 ] as ItemType[],
               }}

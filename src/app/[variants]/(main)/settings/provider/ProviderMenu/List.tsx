@@ -122,6 +122,9 @@ const ProviderList = (props: {
                   onClick: () => setSortType(SortType.Default),
                 },
                 {
+                  type: 'divider',
+                },
+                {
                   icon: sortType === SortType.Alphabetical ? <Icon icon={LucideCheck} /> : <div />,
                   key: 'alphabetical',
                   label: t('menu.list.disabledActions.sortAlphabetical'),

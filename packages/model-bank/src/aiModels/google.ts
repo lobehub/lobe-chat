@@ -932,7 +932,7 @@ const googleImageModels: AIImageModelCard[] = [
     type: 'image',
     description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
-    releasedAt: '2024-06-06',
+    releasedAt: '2025-06-06',
     parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
