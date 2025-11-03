@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve oidc layout style."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.20"
+  },
+  {
+    "children": {
       "improvements": ["Remove NEXT_PUBLIC_SERVICE_MODE env and use server by default."]
     },
     "date": "2025-11-03",
