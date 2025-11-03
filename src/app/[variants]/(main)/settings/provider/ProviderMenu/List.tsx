@@ -3,7 +3,7 @@
 import { ActionIcon, ScrollShadow, Text, Tooltip } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownAZ, ArrowDownUpIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -27,7 +27,13 @@ const ProviderList = (props: {
   const { onProviderSelect, mobile } = props;
   const { t } = useTranslation('modelProvider');
   const [open, setOpen] = useState(false);
-  const [sortType, setSortType] = useState<SortType>(SortType.Default);
+  const [sortType, setSortType] = useState<SortType>(
+    () => (localStorage.getItem('disabledModelProvidersSortType') as SortType) || SortType.Default,
+  );
+
+  useEffect(() => {
+    localStorage.setItem('disabledModelProvidersSortType', sortType);
+  }, [sortType]);
 
   const enabledModelProviderList = useAiInfraStore(
     aiProviderSelectors.enabledAiProviderList,
