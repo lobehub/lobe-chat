@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 2.0.0-next.18](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.17...v2.0.0-next.18)
+
+<sup>Released on **2025-11-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor trpc request to use zod schema.
+
+#### 💄 Styles
+
+- **misc**: Improve built-in client OIDC user flow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor trpc request to use zod schema, closes [#10016](https://github.com/lobehub/lobe-chat/issues/10016) ([1a84f2c](https://github.com/lobehub/lobe-chat/commit/1a84f2c))
+
+#### Styles
+
+- **misc**: Improve built-in client OIDC user flow, closes [#10020](https://github.com/lobehub/lobe-chat/issues/10020) ([80202ed](https://github.com/lobehub/lobe-chat/commit/80202ed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.17](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.16...v2.0.0-next.17)
 
 <sup>Released on **2025-11-03**</sup>
