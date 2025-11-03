@@ -76,6 +76,7 @@ export default {
     emojiPicker: {
       tooltip: '选择图标',
     },
+    saving: '保存中...',
     titlePlaceholder: '无标题',
   },
   notesList: {

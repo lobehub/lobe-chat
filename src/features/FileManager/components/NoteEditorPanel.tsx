@@ -21,10 +21,10 @@ import {
   useEditorState,
 } from '@lobehub/editor/react';
 import { Button, Icon } from '@lobehub/ui';
+import { useDebounceFn } from 'ahooks';
 import { css, cx, useTheme } from 'antd-style';
 import {
   BoldIcon,
-  Check,
   CodeXmlIcon,
   ItalicIcon,
   ListIcon,
@@ -39,7 +39,7 @@ import {
   UnderlineIcon,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -47,6 +47,8 @@ import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
+
+const SAVE_THROTTLE_TIME = 3000; // 3 seconds
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
@@ -86,7 +88,6 @@ const NoteEditor = memo<NoteEditorPanelProps>(
     const editorState = useEditorState(editor);
 
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [noteTitle, setNoteTitle] = useState('');
     const [noteEmoji, setNoteEmoji] = useState<string | undefined>(undefined);
     const [isHoveringTitle, setIsHoveringTitle] = useState(false);
@@ -96,9 +97,13 @@ const NoteEditor = memo<NoteEditorPanelProps>(
     const updateNoteOptimistically = useFileStore((s) => s.updateNoteOptimistically);
     const localNoteMap = useFileStore((s) => s.localNoteMap);
     const replaceTempNoteWithReal = useFileStore((s) => s.replaceTempNoteWithReal);
+    const isInitialLoadRef = useRef(false);
 
     // Load document content when documentId changes
     useEffect(() => {
+      // Reset initial load flag when switching documents
+      isInitialLoadRef.current = true;
+
       if (documentId && editor) {
         console.log('[NoteEditorPanel] Loading content:', {
           cachedEditorDataPreview: cachedEditorData
@@ -124,6 +129,10 @@ const NoteEditor = memo<NoteEditorPanelProps>(
           setNoteTitle(localNote.name || 'Untitled Note');
           // Start with empty editor for new notes
           editor.cleanDocument();
+          // Reset flag after cleanDocument (no onChange should fire for cleanDocument)
+          setTimeout(() => {
+            isInitialLoadRef.current = false;
+          }, 500);
           return;
         }
 
@@ -144,7 +153,11 @@ const NoteEditor = memo<NoteEditorPanelProps>(
         if (hasValidCachedEditorData) {
           console.log('[NoteEditorPanel] Using cached editorData', cachedEditorData);
           setNoteTitle(documentTitle || '');
+          isInitialLoadRef.current = true;
           editor.setDocument('json', JSON.stringify(cachedEditorData));
+          setTimeout(() => {
+            isInitialLoadRef.current = false;
+          }, 500);
           return;
         }
 
@@ -152,7 +165,11 @@ const NoteEditor = memo<NoteEditorPanelProps>(
         if (!hasValidCachedEditorData && cachedContent) {
           console.log('[NoteEditorPanel] Using cached markdown content');
           setNoteTitle(documentTitle || '');
+          isInitialLoadRef.current = true;
           editor.setDocument('markdown', cachedContent);
+          setTimeout(() => {
+            isInitialLoadRef.current = false;
+          }, 500);
           return;
         }
 
@@ -186,15 +203,31 @@ const NoteEditor = memo<NoteEditorPanelProps>(
               // If no valid editorData but has content, use markdown format
               if (!hasValidEditorData && doc.content) {
                 console.log('[NoteEditorPanel] Using markdown format for content');
+                isInitialLoadRef.current = true;
                 editor.setDocument('markdown', doc.content);
+                setTimeout(() => {
+                  isInitialLoadRef.current = false;
+                }, 500);
               } else if (hasValidEditorData) {
+                isInitialLoadRef.current = true;
                 editor.setDocument('json', doc.editorData);
+                setTimeout(() => {
+                  isInitialLoadRef.current = false;
+                }, 500);
+              } else {
+                // No valid content, reset flag
+                isInitialLoadRef.current = false;
               }
             }
           })
           .catch((error) => {
             console.error('[NoteEditorPanel] Failed to load document:', error);
+            // Reset flag on error
+            isInitialLoadRef.current = false;
           });
+      } else {
+        // Reset flag if no documentId or editor
+        isInitialLoadRef.current = false;
       }
     }, [
       documentId,
@@ -298,7 +331,6 @@ const NoteEditor = memo<NoteEditorPanelProps>(
         }
 
         setSaveStatus('saved');
-        setHasUnsavedChanges(false);
 
         onSave?.();
       } catch (error) {
@@ -318,11 +350,26 @@ const NoteEditor = memo<NoteEditorPanelProps>(
       replaceTempNoteWithReal,
     ]);
 
-    // Handle content change - mark as unsaved
-    const handleContentChange = useCallback(() => {
-      setHasUnsavedChanges(true);
-      setSaveStatus('idle');
-    }, []);
+    // Handle content change - auto-save after debounce (with skip initial load)
+    const handleContentChangeInternal = useCallback(() => {
+      // Skip if we're in the initial load phase
+      if (isInitialLoadRef.current) {
+        console.log('[NoteEditorPanel] Skipping onChange during initial load');
+        return;
+      }
+
+      console.log('[NoteEditorPanel] Content changed, triggering auto-save');
+      performSave();
+    }, [performSave]);
+
+    const { run: handleContentChange } = useDebounceFn(handleContentChangeInternal, {
+      wait: SAVE_THROTTLE_TIME,
+    });
+
+    // Debounced save for title/emoji changes (no initial load check needed)
+    const { run: debouncedSave } = useDebounceFn(performSave, {
+      wait: SAVE_THROTTLE_TIME,
+    });
 
     // Update currentDocId when documentId prop changes
     useEffect(() => {
@@ -441,23 +488,17 @@ const NoteEditor = memo<NoteEditorPanelProps>(
       [editorState, t],
     );
 
-    // Show Done button only if there are unsaved changes OR currently saving
-    const showDoneButton = hasUnsavedChanges || saveStatus === 'saving';
-
     return (
       <Flexbox height={'100%'} style={{ background: theme.colorBgContainer }}>
         {/* Toolbar */}
         <ChatInputActionBar
           left={<ChatInputActions items={toolbarItems} />}
           right={
-            showDoneButton ? (
-              <Button
-                icon={<Icon icon={saveStatus === 'saving' ? Loader2Icon : Check} />}
-                loading={saveStatus === 'saving'}
-                onClick={performSave}
-              >
-                Done
-              </Button>
+            saveStatus === 'saving' ? (
+              <Flexbox align="center" direction="horizontal" gap={8}>
+                <Icon icon={Loader2Icon} spin />
+                <span style={{ color: theme.colorTextSecondary }}>{t('notesEditor.saving')}</span>
+              </Flexbox>
             ) : null
           }
           style={{
@@ -475,14 +516,39 @@ const NoteEditor = memo<NoteEditorPanelProps>(
               onMouseLeave={() => setIsHoveringTitle(false)}
               style={{ marginBottom: 24 }}
             >
+              {/* Emoji picker above Choose Icon button */}
+              {(noteEmoji || showEmojiPicker) && (
+                <Flexbox style={{ marginBottom: 4 }}>
+                  <EmojiPicker
+                    allowDelete
+                    locale={locale}
+                    onChange={(emoji) => {
+                      setNoteEmoji(emoji);
+                      debouncedSave();
+                    }}
+                    onDelete={() => {
+                      setNoteEmoji(undefined);
+                      debouncedSave();
+                    }}
+                    size={80}
+                    style={{
+                      fontSize: 80,
+                    }}
+                    title={t('notesEditor.emojiPicker.tooltip')}
+                    value={noteEmoji}
+                  />
+                </Flexbox>
+              )}
+
               {/* Choose Icon button - only shown when no emoji */}
               <Flexbox style={{ marginBottom: 12 }}>
                 <Button
                   icon={<Icon icon={SmilePlus} />}
                   onClick={() => setShowEmojiPicker(true)}
+                  size="small"
                   style={{
                     opacity: isHoveringTitle && !noteEmoji && !showEmojiPicker ? 1 : 0,
-                    transform: 'translateX(-10px)',
+                    transform: 'translateX(-6px)',
                     transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
                     width: 'fit-content',
                   }}
@@ -492,37 +558,12 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                 </Button>
               </Flexbox>
 
-              {/* Title row with emoji at leading */}
+              {/* Title Input */}
               <Flexbox align="center" direction="horizontal" gap={8}>
-                {/* Emoji picker at leading position */}
-                {(noteEmoji || showEmojiPicker) && (
-                  <Flexbox style={{ flexShrink: 0 }}>
-                    <EmojiPicker
-                      allowDelete
-                      locale={locale}
-                      onChange={(emoji) => {
-                        setNoteEmoji(emoji);
-                        setHasUnsavedChanges(true);
-                      }}
-                      onDelete={() => {
-                        setNoteEmoji(undefined);
-                        setHasUnsavedChanges(true);
-                      }}
-                      size={56}
-                      style={{
-                        fontSize: 56,
-                      }}
-                      title={t('notesEditor.emojiPicker.tooltip')}
-                      value={noteEmoji}
-                    />
-                  </Flexbox>
-                )}
-
-                {/* Title Input */}
                 <input
                   onChange={(e) => {
                     setNoteTitle(e.target.value);
-                    setHasUnsavedChanges(true);
+                    debouncedSave();
                   }}
                   placeholder={t('notesEditor.titlePlaceholder')}
                   style={{
