@@ -5,9 +5,11 @@ import { isDesktop } from '@/const/version';
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
 import { LocalSystemManifest } from './local-system';
+import { MemoryManifest } from './memory';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinTools: LobeBuiltinTool[] = [
+  // TODO: Migrate to the extended plugin system to configure different context engineering combinations.
   {
     identifier: ArtifactsManifest.identifier,
     manifest: ArtifactsManifest,
@@ -17,6 +19,11 @@ export const builtinTools: LobeBuiltinTool[] = [
     hidden: !isDesktop,
     identifier: LocalSystemManifest.identifier,
     manifest: LocalSystemManifest,
+    type: 'builtin',
+  },
+  {
+    identifier: MemoryManifest.identifier,
+    manifest: MemoryManifest,
     type: 'builtin',
   },
   {

@@ -8,6 +8,7 @@ import { DEFAULT_LLM_CONFIG } from './llm';
 import { DEFAULT_SYSTEM_AGENT_CONFIG } from './systemAgent';
 import { DEFAULT_TOOL_CONFIG } from './tool';
 import { DEFAULT_TTS_CONFIG } from './tts';
+import { DEFAULT_USER_MEMORY_CONFIG } from './userMemory';
 
 export * from './agent';
 export * from './common';
@@ -19,6 +20,7 @@ export * from './llm';
 export * from './systemAgent';
 export * from './tool';
 export * from './tts';
+export * from './userMemory';
 
 export const DEFAULT_SETTINGS: UserSettings = {
   defaultAgent: DEFAULT_AGENT,
@@ -30,4 +32,5 @@ export const DEFAULT_SETTINGS: UserSettings = {
   systemAgent: DEFAULT_SYSTEM_AGENT_CONFIG,
   tool: DEFAULT_TOOL_CONFIG,
   tts: DEFAULT_TTS_CONFIG,
+  userMemory: DEFAULT_USER_MEMORY_CONFIG,
 };

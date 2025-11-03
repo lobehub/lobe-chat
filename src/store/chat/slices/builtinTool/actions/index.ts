@@ -5,11 +5,13 @@ import { ChatStore } from '@/store/chat/store';
 import { ChatCodeInterpreterAction, codeInterpreterSlice } from './interpreter';
 import { LocalFileAction, localSystemSlice } from './localSystem';
 import { SearchAction, searchSlice } from './search';
+import { UserMemoryAction, userMemorySlice } from './userMemory';
 
 export interface ChatBuiltinToolAction
   extends SearchAction,
     LocalFileAction,
-    ChatCodeInterpreterAction {}
+    ChatCodeInterpreterAction,
+    UserMemoryAction {}
 
 export const chatToolSlice: StateCreator<
   ChatStore,
@@ -20,4 +22,5 @@ export const chatToolSlice: StateCreator<
   ...searchSlice(...params),
   ...localSystemSlice(...params),
   ...codeInterpreterSlice(...params),
+  ...userMemorySlice(...params),
 });
