@@ -5,6 +5,8 @@ import type { AlignItems, FlexWrap, JustifyContent } from '../Flexbox';
 
 export interface CenterProps extends PressableProps {
   align?: AlignItems;
+  blur?: boolean;
+  blurColor?: string;
   children?: ReactNode;
   flex?: number | undefined;
   gap?: number | string | undefined;
@@ -18,6 +20,7 @@ export interface CenterProps extends PressableProps {
   padding?: DimensionValue | undefined;
   paddingBlock?: DimensionValue | undefined;
   paddingInline?: DimensionValue | undefined;
+  pressableStyle?: PressableProps['style'];
   width?: DimensionValue | undefined;
   wrap?: FlexWrap;
 }

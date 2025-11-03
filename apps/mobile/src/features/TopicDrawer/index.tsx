@@ -159,7 +159,7 @@ const TopicDrawer = memo(({ children }: { children: ReactNode }) => {
       open={topicDrawerOpen}
       overlayStyle={styles.drawerOverlay}
       renderDrawerContent={() => (
-        <Block borderRadius={44} flex={1} glass style={[styles.drawerContent]} variant={'outlined'}>
+        <Block blur borderRadius={44} flex={1} style={[styles.drawerContent]} variant={'outlined'}>
           <SafeAreaView edges={['top']} style={{ flex: 1 }} testID="page-container">
             <Flexbox
               align={'center'}
