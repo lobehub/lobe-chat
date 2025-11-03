@@ -1,4 +1,5 @@
 import { ActionIcon, Flexbox, PageContainer, useTheme } from '@lobehub/ui-rn';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import {
   ChevronRightIcon,
@@ -40,7 +41,6 @@ export default function ChatWithDrawer() {
   const renderContent = () => {
     return (
       <PageContainer
-        backgroundColor={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
         extra={
           <Flexbox align={'center'} gap={1} horizontal>
             <ActionIcon
@@ -57,10 +57,16 @@ export default function ChatWithDrawer() {
         title={displayTitle}
         titleIcon={isInbox ? undefined : ChevronRightIcon}
       >
-        <KeyboardStickyView offset={{ closed: 0, opened: isIOS ? 32 : 16 }} style={{ flex: 1 }}>
-          <ChatList />
-          <ChatInput />
-        </KeyboardStickyView>
+        <LinearGradient
+          colors={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
+          locations={[0.2, 1]}
+          style={{ flex: 1 }}
+        >
+          <KeyboardStickyView offset={{ closed: 0, opened: isIOS ? 32 : 16 }} style={{ flex: 1 }}>
+            <ChatList />
+            <ChatInput />
+          </KeyboardStickyView>
+        </LinearGradient>
       </PageContainer>
     );
   };
