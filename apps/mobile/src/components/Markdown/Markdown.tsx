@@ -3,12 +3,14 @@ import { View } from 'react-native';
 
 import { MarkdownRender, StreamdownRender } from './SyntaxMarkdown';
 import { MarkdownProvider } from './components/MarkdownProvider';
+import { useDelayedAnimated } from './components/useDelayedAnimated';
 import type { MarkdownProps } from './type';
 
 const Markdown = memo<MarkdownProps>((props) => {
   const {
     children = '',
     fullFeaturedCodeBlock,
+    animated,
     enableLatex = true,
     enableMermaid = true,
     enableCustomFootnotes,
@@ -31,6 +33,8 @@ const Markdown = memo<MarkdownProps>((props) => {
     ...rest
   } = props;
 
+  const delayedAnimated = useDelayedAnimated(animated);
+
   const Render = useCallback(
     ({
       enableStream,
@@ -45,6 +49,7 @@ const Markdown = memo<MarkdownProps>((props) => {
 
   return (
     <MarkdownProvider
+      animated={delayedAnimated}
       borderRadius={borderRadius}
       components={components}
       enableCustomFootnotes={enableCustomFootnotes}
@@ -64,7 +69,11 @@ const Markdown = memo<MarkdownProps>((props) => {
       variant={variant}
     >
       <View style={style}>
-        <Render enableStream={enableStream} reactMarkdownProps={reactMarkdownProps} {...rest}>
+        <Render
+          enableStream={enableStream && delayedAnimated}
+          reactMarkdownProps={reactMarkdownProps}
+          {...rest}
+        >
           {children}
         </Render>
       </View>
