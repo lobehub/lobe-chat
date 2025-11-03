@@ -47,6 +47,8 @@ import FormDemos from '@lobehub/ui-rn/Form/demos';
 import HighlighterDemos from '@lobehub/ui-rn/Highlighter/demos';
 // Icon
 import IconDemos from '@lobehub/ui-rn/Icon/demos';
+// Image
+import ImageDemos from '@lobehub/ui-rn/Image/demos';
 // ImageGallery
 import ImageGalleryDemos from '@lobehub/ui-rn/ImageGallery/demos';
 // Input
@@ -91,6 +93,8 @@ import ThemeTokenDemos from '@lobehub/ui-rn/ThemeToken/demos';
 import ToastDemos from '@lobehub/ui-rn/Toast/demos';
 // Tooltip
 import TooltipDemos from '@lobehub/ui-rn/Tooltip/demos';
+// Video
+import VideoDemos from '@lobehub/ui-rn/Video/demos';
 
 export const DEMOS_MAP: Record<string, any> = {
   ActionIcon: ActionIconDemos,
@@ -115,6 +119,7 @@ export const DEMOS_MAP: Record<string, any> = {
   Form: FormDemos,
   Highlighter: HighlighterDemos,
   Icon: IconDemos,
+  Image: ImageDemos,
   ImageGallery: ImageGalleryDemos,
   Input: InputDemos,
   InstantSwitch: InstantSwitchDemos,
@@ -137,4 +142,5 @@ export const DEMOS_MAP: Record<string, any> = {
   ThemeToken: ThemeTokenDemos,
   Toast: ToastDemos,
   Tooltip: TooltipDemos,
+  Video: VideoDemos,
 };

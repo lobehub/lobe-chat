@@ -54,6 +54,7 @@ export {
   type IconSize,
   useIconContext,
 } from './Icon';
+export { default as Image, type ImageProps, type PreviewGroupProps } from './Image';
 export { default as ImageGallery, type ImageGalleryProps } from './ImageGallery';
 export {
   default as Input,
@@ -106,3 +107,4 @@ export {
 } from './Toast';
 export { default as Tooltip, type TooltipPlacement, type TooltipProps } from './Tooltip';
 export type { DemoConfig, DemoItem } from './types';
+export { default as Video, type VideoProps } from './Video';

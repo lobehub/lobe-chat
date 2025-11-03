@@ -8,6 +8,8 @@ description: Powerful React Native Markdown rendering component with math formul
 
 - ✅ **Math Formula Rendering** - Supports LaTeX math formula display via remark-math
 - ✅ **Code Highlighting** - Integrated custom Highlighter component with 100+ languages
+- ✅ **Image Gallery** - Auto preview and gallery mode for images with swipe navigation
+- ✅ **Video Playback** - Native video player with full controls and auto-sizing
 - ✅ **GitHub Flavored Markdown** - Tables, task lists, strikethrough, and more
 - ✅ **CJK Friendly** - Optimized for Chinese, Japanese, and Korean text
 - ✅ **Dark Theme** - Auto-adapts to dark/light themes
@@ -111,6 +113,56 @@ Customize the appearance of markdown elements:
 ```
 
 ## Supported Features
+
+### Image Gallery
+
+Images in Markdown automatically support preview and gallery mode:
+
+```tsx
+import { Markdown } from '@lobehub/ui-rn';
+
+const content = `
+![Small Badge](https://img.shields.io/badge/LobeHub-Readme%20Generator-white?labelColor=black&style=flat-square)
+
+![Large Image](https://github.com/user-attachments/assets/2428a136-38bf-488c-8033-d9f261d67f3d)
+`;
+
+// 默认启用图片画廊
+<Markdown>{content}</Markdown>
+
+// 禁用图片画廊
+<Markdown enableImageGallery={false}>{content}</Markdown>
+```
+
+**Features:**
+
+- ✅ Auto-sizing: Large images scale to fit, small images display at original size
+- ✅ Click to preview: Tap any image to view full screen
+- ✅ Gallery mode: Multiple images can be swiped between
+- ✅ Zoom & pan: Full gesture support in preview mode
+- ✅ Smart fallback: Displays placeholder if image fails to load
+
+### Video Playback
+
+Videos in Markdown use the native Video component with full playback controls:
+
+```tsx
+import { Markdown } from '@lobehub/ui-rn';
+
+const content = `
+<video src="https://example.com/video.mp4"></video>
+`;
+
+<Markdown>{content}</Markdown>;
+```
+
+**Features:**
+
+- ✅ Native video controls: Play, pause, seek, volume
+- ✅ Auto-sizing: Maintains 16:9 aspect ratio by default
+- ✅ Fullscreen support: Tap fullscreen button to expand
+- ✅ Picture-in-picture: Continue watching while using other apps
+- ✅ Adaptive streaming: Efficient playback with hardware acceleration
 
 ### GitHub Flavored Markdown
 
