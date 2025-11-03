@@ -1,4 +1,10 @@
-import { TRPCLink, createTRPCClient, httpBatchLink } from '@trpc/client';
+import {
+  TRPCLink,
+  createTRPCClient,
+  httpBatchLink,
+  httpSubscriptionLink,
+  splitLink,
+} from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { observable } from '@trpc/server/observable';
 import debug from 'debug';
@@ -65,9 +71,9 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
     );
 };
 
-// 2. httpBatchLink
-const customHttpBatchLink = httpBatchLink({
-  fetch: async (input, init) => {
+// 封装通用的 fetch 和 headers 逻辑，以便复用
+const getTrpcClientOptions = () => ({
+  fetch: async (input: Parameters<typeof fetch>[0] | URL, init?: Parameters<typeof fetch>[1]) => {
     if (isDesktop) {
       const { desktopRemoteRPCFetch } = await import('@/utils/electron/desktopRemoteRPCFetch');
 
@@ -102,13 +108,38 @@ const customHttpBatchLink = httpBatchLink({
     log('Headers: %O', headers);
     return headers;
   },
-  maxURLLength: 2083,
   transformer: superjson,
+});
+
+// 2. 创建一个用于 query 和 mutation 的 Link (可以是 httpBatchLink 或 httpLink)
+const mainHttpLink = httpBatchLink({
+  ...getTrpcClientOptions(),
+  maxURLLength: 2083,
   url: '/trpc/lambda',
 });
 
-// 3. assembly links
-const links = [errorHandlingLink, customHttpBatchLink];
+// 3. 创建一个专门用于 subscription 的 Link
+const subscriptionLink = httpSubscriptionLink({
+  ...getTrpcClientOptions(),
+  url: '/trpc/lambda',
+});
+
+// 4. 使用 splitLink 来根据操作类型分发请求
+const splitRouterLink = splitLink({
+  condition: (op) => {
+    // 如果是 subscription 操作，返回 true
+    return op.type === 'subscription';
+  },
+
+  // 当 condition 返回 false 时，，使用 mainHttpLink
+  false: mainHttpLink,
+
+  // 当 condition 返回 true 时，使用 subscriptionLink
+  true: subscriptionLink,
+});
+
+// 5. 组装最终的 links 数组
+const links = [errorHandlingLink, splitRouterLink];
 
 export const lambdaClient = createTRPCClient<LambdaRouter>({
   links,

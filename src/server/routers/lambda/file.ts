@@ -24,7 +24,16 @@ const fileProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   });
 });
 
+const BatchDownloadInput = z.object({ fileIds: z.array(z.string()) });
+
 export const fileRouter = router({
+  batchDownload: fileProcedure.input(BatchDownloadInput).subscription(async function* ({
+    ctx,
+    input,
+  }) {
+    yield* ctx.fileService.batchDownloadSubscription(input.fileIds);
+  }),
+
   checkFileHash: fileProcedure
     .input(z.object({ hash: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -52,6 +61,7 @@ export const fileRouter = router({
 
       return { id, url: await ctx.fileService.getFullFileUrl(input.url) };
     }),
+
   findById: fileProcedure
     .input(
       z.object({
