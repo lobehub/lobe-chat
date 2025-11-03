@@ -7,8 +7,8 @@ import { type StateCreator } from 'zustand/vanilla';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
+import { createMemorySearchParams } from '@/store/userMemory/utils/searchParams';
 import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@/types/userMemory';
-import { createMemorySearchParams } from '@/utils/memory/searchParams';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { createDevtools } from '../middleware/createDevtools';
