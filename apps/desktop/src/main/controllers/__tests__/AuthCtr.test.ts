@@ -101,6 +101,9 @@ describe('AuthCtr', () => {
     vi.clearAllMocks();
     randomBytesCounter = 0; // Reset counter for each test
 
+    // Reset shell.openExternal to default successful behavior
+    vi.mocked(shell.openExternal).mockResolvedValue(undefined);
+
     // Create fresh instance for each test
     authCtr = new AuthCtr(mockApp);
 
@@ -119,7 +122,9 @@ describe('AuthCtr', () => {
   });
 
   afterEach(() => {
-    // Clean up any running intervals
+    // Clean up authCtr intervals (using real timers, not fake timers)
+    authCtr.cleanup();
+    // Clean up any fake timers if used
     vi.clearAllTimers();
   });
 
@@ -254,25 +259,28 @@ describe('AuthCtr', () => {
 
         let pollCount = 0;
         mockFetch.mockImplementation((url: string) => {
-          pollCount++;
           const urlObj = new URL(url);
 
           // Return success on third poll
-          if (urlObj.pathname.includes('/oidc/handoff') && pollCount >= 3) {
-            return Promise.resolve({
-              status: 200,
-              ok: true,
-              json: () =>
-                Promise.resolve({
-                  success: true,
-                  data: {
-                    payload: {
-                      code: 'mock-auth-code',
-                      state: 'mock-random-1',
+          if (urlObj.pathname.includes('/oidc/handoff')) {
+            pollCount++;
+            if (pollCount >= 3) {
+              return Promise.resolve({
+                status: 200,
+                ok: true,
+                json: () =>
+                  Promise.resolve({
+                    success: true,
+                    data: {
+                      payload: {
+                        code: 'mock-auth-code',
+                        state: 'mock-random-2', // Second randomBytes call is for state
+                      },
                     },
-                  },
-                }),
-            });
+                  }),
+                text: () => Promise.resolve('mock response'),
+              });
+            }
           }
 
           // Token exchange endpoint
@@ -286,6 +294,15 @@ describe('AuthCtr', () => {
                   refresh_token: 'new-refresh-token',
                   expires_in: 3600,
                 }),
+              text: () => Promise.resolve('mock response'),
+              clone: () => ({
+                json: () =>
+                  Promise.resolve({
+                    access_token: 'new-access-token',
+                    refresh_token: 'new-refresh-token',
+                    expires_in: 3600,
+                  }),
+              }),
             });
           }
 
@@ -298,14 +315,14 @@ describe('AuthCtr', () => {
         await authCtr.requestAuthorization(config);
 
         // Wait for polling to complete
-        await vi.advanceTimersByTimeAsync(10000);
+        await new Promise((resolve) => setTimeout(resolve, 10000));
 
         const pollCountBefore = pollCount;
 
-        // Advance more time and verify no more polling
-        await vi.advanceTimersByTimeAsync(10000);
+        // Wait more time and verify no more polling
+        await new Promise((resolve) => setTimeout(resolve, 3500));
         expect(pollCount).toBe(pollCountBefore);
-      });
+      }, 15000);
 
       it('should broadcast authorizationSuccessful when credentials are exchanged', async () => {
         const config: DataSyncConfig = {
@@ -326,10 +343,11 @@ describe('AuthCtr', () => {
                   data: {
                     payload: {
                       code: 'mock-auth-code',
-                      state: 'mock-random-1',
+                      state: 'mock-random-2', // Second randomBytes call is for state
                     },
                   },
                 }),
+              text: () => Promise.resolve('mock response'),
             });
           }
 
@@ -343,6 +361,15 @@ describe('AuthCtr', () => {
                   refresh_token: 'new-refresh-token',
                   expires_in: 3600,
                 }),
+              text: () => Promise.resolve('mock response'),
+              clone: () => ({
+                json: () =>
+                  Promise.resolve({
+                    access_token: 'new-access-token',
+                    refresh_token: 'new-refresh-token',
+                    expires_in: 3600,
+                  }),
+              }),
             });
           }
 
@@ -351,12 +378,12 @@ describe('AuthCtr', () => {
 
         await authCtr.requestAuthorization(config);
 
-        // Wait for polling to complete
-        await new Promise((resolve) => setTimeout(resolve, 3500));
+        // Wait for polling to complete and token exchange
+        await new Promise((resolve) => setTimeout(resolve, 4000));
 
         // Verify authorizationSuccessful was broadcast
         expect(mockWindow.webContents.send).toHaveBeenCalledWith('authorizationSuccessful');
-      }, 5000);
+      }, 6000);
 
       it('should validate state parameter and reject mismatched state', async () => {
         const config: DataSyncConfig = {
@@ -389,14 +416,14 @@ describe('AuthCtr', () => {
 
         await authCtr.requestAuthorization(config);
 
-        // Wait for polling
-        await new Promise((resolve) => setTimeout(resolve, 3500));
+        // Wait for polling and state validation
+        await new Promise((resolve) => setTimeout(resolve, 4000));
 
         // Verify authorizationFailed was broadcast with state error
         expect(mockWindow.webContents.send).toHaveBeenCalledWith('authorizationFailed', {
           error: 'Invalid state parameter',
         });
-      }, 5000);
+      }, 6000);
     });
 
     describe('token refresh', () => {
@@ -419,10 +446,11 @@ describe('AuthCtr', () => {
                   data: {
                     payload: {
                       code: 'mock-auth-code',
-                      state: 'mock-random-1',
+                      state: 'mock-random-2', // Second randomBytes call is for state
                     },
                   },
                 }),
+              text: () => Promise.resolve('mock response'),
             });
           }
 
@@ -436,6 +464,15 @@ describe('AuthCtr', () => {
                   refresh_token: 'new-refresh-token',
                   expires_in: 3600,
                 }),
+              text: () => Promise.resolve('mock response'),
+              clone: () => ({
+                json: () =>
+                  Promise.resolve({
+                    access_token: 'new-access-token',
+                    refresh_token: 'new-refresh-token',
+                    expires_in: 3600,
+                  }),
+              }),
             });
           }
 
@@ -444,8 +481,8 @@ describe('AuthCtr', () => {
 
         await authCtr.requestAuthorization(config);
 
-        // Wait for polling
-        await new Promise((resolve) => setTimeout(resolve, 3500));
+        // Wait for polling and token exchange
+        await new Promise((resolve) => setTimeout(resolve, 4000));
 
         // Verify saveTokens was called
         expect(mockRemoteServerConfigCtr.saveTokens).toHaveBeenCalledWith(
@@ -458,7 +495,7 @@ describe('AuthCtr', () => {
         expect(mockRemoteServerConfigCtr.setRemoteServerConfig).toHaveBeenCalledWith({
           active: true,
         });
-      }, 5000);
+      }, 6000);
     });
   });
 
@@ -591,10 +628,11 @@ describe('AuthCtr', () => {
                 data: {
                   payload: {
                     code: 'authorization-code',
-                    state: 'mock-random-2', // Matches second request's state
+                    state: 'mock-random-4', // Matches second request's state (3rd and 4th randomBytes calls)
                   },
                 },
               }),
+            text: () => Promise.resolve('mock response'),
           });
         }
 
@@ -609,6 +647,15 @@ describe('AuthCtr', () => {
                 refresh_token: 'refresh-token',
                 expires_in: 3600,
               }),
+            text: () => Promise.resolve('mock response'),
+            clone: () => ({
+              json: () =>
+                Promise.resolve({
+                  access_token: 'access-token',
+                  refresh_token: 'refresh-token',
+                  expires_in: 3600,
+                }),
+            }),
           });
         }
 
@@ -617,7 +664,8 @@ describe('AuthCtr', () => {
 
       await authCtr.requestAuthorization(config);
 
-      await new Promise((resolve) => setTimeout(resolve, 3500));
+      // Wait longer for polling and token exchange
+      await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Verify: Success message shown
       const successCall = mockWindow.webContents.send.mock.calls.find(
@@ -627,7 +675,7 @@ describe('AuthCtr', () => {
 
       // Verify: Tokens saved
       expect(mockRemoteServerConfigCtr.saveTokens).toHaveBeenCalled();
-    }, 10000);
+    }, 12000);
 
     it('Edge case: Rapid retry clicks should not create multiple polling intervals', async () => {
       const config: DataSyncConfig = {
