@@ -6,10 +6,12 @@ import { StyleProp, ViewStyle } from 'react-native';
 import ActionIcon from '@/components/ActionIcon';
 import Block from '@/components/Block';
 import Flexbox from '@/components/Flexbox';
+import MaterialFileTypeIcon from '@/components/MaterialFileTypeIcon';
 import Text from '@/components/Text';
 
 import LangSelect from './LangSelect';
 import SyntaxHighlighter from './SyntaxHighlighter';
+import { getCodeLanguageDisplayName, getCodeLanguageFilename } from './const';
 import { useStyles } from './style';
 import type { HighlighterProps } from './type';
 
@@ -86,6 +88,9 @@ export const HighlighterFullFeatured = memo<HighlighterFullFeaturedProps>(
       setLanguage(newLang);
     };
 
+    const displayName = fileName ? fileName : getCodeLanguageDisplayName(language);
+    const filetype = fileName ? fileName : getCodeLanguageFilename(language);
+
     return (
       <Block
         style={[styles.container, style]}
@@ -103,35 +108,52 @@ export const HighlighterFullFeatured = memo<HighlighterFullFeaturedProps>(
             backgroundColor: theme.colorFillQuaternary,
           }}
         >
-          <Flexbox align={'center'} horizontal justify={'flex-start'}>
-            <ActionIcon
-              color={theme.colorTextDescription}
-              icon={expanded ? ChevronDown : ChevronRight}
-              onPress={() => setExpanded(!expanded)}
-              size={14}
-            />
-          </Flexbox>
+          <ActionIcon
+            color={theme.colorTextDescription}
+            icon={expanded ? ChevronDown : ChevronRight}
+            onPress={() => setExpanded(!expanded)}
+            size={14}
+          />
 
-          {allowChangeLanguage && showLanguage ? (
-            <LangSelect onSelect={handleLanguageChange} value={language} />
+          {allowChangeLanguage && showLanguage && !fileName ? (
+            <LangSelect
+              filetype={filetype}
+              onSelect={handleLanguageChange}
+              showIcon
+              value={language}
+            />
           ) : (
             (showLanguage || fileName) && (
-              <Text code color={theme.colorTextSecondary} fontSize={12}>
-                {fileName || language}
-              </Text>
+              <Flexbox align={'center'} gap={6} horizontal>
+                <MaterialFileTypeIcon
+                  fallbackUnknownType={false}
+                  filename={filetype}
+                  size={16}
+                  type="file"
+                />
+                <Text
+                  code
+                  color={theme.colorTextSecondary}
+                  ellipsis
+                  fontSize={12}
+                  numberOfLines={1}
+                >
+                  {displayName}
+                </Text>
+              </Flexbox>
             )
           )}
 
-          <Flexbox align={'center'} horizontal justify={'flex-end'}>
-            {copyable && (
-              <ActionIcon
-                color={copied ? theme.colorSuccess : theme.colorTextDescription}
-                icon={copied ? Check : Copy}
-                onPress={handleCopy}
-                size={14}
-              />
-            )}
-          </Flexbox>
+          {copyable ? (
+            <ActionIcon
+              color={copied ? theme.colorSuccess : theme.colorTextDescription}
+              icon={copied ? Check : Copy}
+              onPress={handleCopy}
+              size={14}
+            />
+          ) : (
+            <Flexbox style={{ width: 14 }} />
+          )}
         </Flexbox>
         {expanded && <SyntaxHighlighter language={language}>{code}</SyntaxHighlighter>}
       </Block>

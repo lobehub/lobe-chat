@@ -1,4 +1,4 @@
-import { Mermaid } from '@lobehub/ui-rn';
+import { Flexbox, Mermaid } from '@lobehub/ui-rn';
 
 const codeExamples = `sequenceDiagram
     Alice->>John: Hello John, how are you?
@@ -7,5 +7,10 @@ const codeExamples = `sequenceDiagram
 `;
 
 export default () => {
-  return <Mermaid code={codeExamples} />;
+  return (
+    <Flexbox gap={16}>
+      <Mermaid code={codeExamples} />
+      <Mermaid code={codeExamples} fullFeatured />
+    </Flexbox>
+  );
 };
