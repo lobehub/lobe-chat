@@ -11,7 +11,6 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 
 import ActionIcon from '@/components/ActionIcon';
-import { loading as loadingService } from '@/libs/loading';
 import { useSessionStore } from '@/store/session';
 import { sessionGroupSelectors } from '@/store/session/selectors';
 
@@ -64,7 +63,6 @@ GroupItem.displayName = 'GroupItem';
 export default function GroupConfigScreen() {
   const { t } = useTranslation('chat');
   const router = useRouter();
-
   const sessionGroupItems = useSessionStore(sessionGroupSelectors.sessionGroupItems);
   const [addSessionGroup, updateSessionGroupSort, removeSessionGroup] = useSessionStore((s) => [
     s.addSessionGroup,
@@ -108,14 +106,14 @@ export default function GroupConfigScreen() {
         },
         {
           onPress: async () => {
-            const { done } = loadingService.start();
+            setLoading(true);
             try {
               await removeSessionGroup(id);
               Toast.success(t('sessionGroup.removeSuccess'));
             } catch {
               Toast.error(t('error'));
             } finally {
-              done();
+              setLoading(false);
             }
           },
           style: 'destructive',

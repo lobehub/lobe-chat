@@ -1,4 +1,4 @@
-import { FullWindowOverlay } from '@lobehub/ui-rn';
+import { FullWindowOverlay, useThemeMode } from '@lobehub/ui-rn';
 import { BlurView } from 'expo-blur';
 import { CircleXIcon } from 'lucide-react-native';
 import type { FC } from 'react';
@@ -11,6 +11,7 @@ import { useTheme } from '@/components/styles';
 const LoadingContainer: FC<{
   cancel: () => void;
 }> = ({ cancel }) => {
+  const { isDarkMode } = useThemeMode();
   // eslint-disable-next-line no-undef
   const cancelTimerRef = useRef<NodeJS.Timeout | null>(null);
   const token = useTheme();
@@ -34,7 +35,17 @@ const LoadingContainer: FC<{
       <Pressable
         style={[StyleSheet.absoluteFillObject, { alignItems: 'center', justifyContent: 'center' }]}
       >
-        <BlurView style={StyleSheet.absoluteFillObject} tint="systemChromeMaterialDark" />
+        <BlurView
+          intensity={33}
+          style={[
+            StyleSheet.absoluteFillObject,
+            {
+              backgroundColor: isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
+              borderWidth: 0,
+            },
+          ]}
+          tint={isDarkMode ? 'dark' : 'extraLight'}
+        />
         <ActivityIndicator size={'large'} />
         {showCancelButton && (
           <View

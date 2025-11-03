@@ -1,6 +1,10 @@
 import { LiquidGlassView, isLiquidGlassSupported } from '@callstack/liquid-glass';
+import { BlurView } from 'expo-blur';
 import { memo } from 'react';
 import { Pressable, type StyleProp, View, type ViewStyle } from 'react-native';
+
+import { useThemeMode } from '@/components';
+import { isIOS } from '@/utils/detection';
 
 import type { CenterProps } from './type';
 
@@ -23,8 +27,12 @@ const Center = memo<CenterProps>(
     onLongPress,
     glass,
     glassColor = 'transparent',
+    blur,
+    blurColor,
+    pressableStyle,
     ...rest
   }) => {
+    const { isDarkMode } = useThemeMode();
     const styles: StyleProp<ViewStyle> = {
       alignItems: align,
       display: 'flex',
@@ -39,6 +47,56 @@ const Center = memo<CenterProps>(
       paddingInline: paddingInline,
       width: width,
     };
+
+    if (blur && isIOS) {
+      if (onPress || onLongPress) {
+        return (
+          <Pressable
+            delayLongPress={onLongPress ? 500 : undefined}
+            onLongPress={onLongPress}
+            onPress={onPress}
+            style={pressableStyle}
+            unstable_pressDelay={0}
+            {...rest}
+          >
+            <BlurView
+              intensity={33}
+              style={[
+                styles,
+                typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
+                {
+                  backgroundColor:
+                    blurColor || isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
+                  borderWidth: 0,
+                },
+              ]}
+              tint={isDarkMode ? 'dark' : 'light'}
+            >
+              {children}
+            </BlurView>
+          </Pressable>
+        );
+      }
+
+      return (
+        <BlurView
+          intensity={33}
+          style={[
+            styles,
+            typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
+            {
+              backgroundColor:
+                blurColor || isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
+              borderWidth: 0,
+            },
+          ]}
+          tint={isDarkMode ? 'dark' : 'light'}
+          {...rest}
+        >
+          {children}
+        </BlurView>
+      );
+    }
 
     if (glass && isLiquidGlassSupported) {
       if (onPress || onLongPress) {
