@@ -9,7 +9,6 @@ import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
@@ -24,12 +23,11 @@ export const useControls = ({
 }) => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
-  const { showDalle } = useServerConfigStore(featureFlagsSelectors);
   const [checked, togglePlugin] = useAgentStore((s) => [
     agentSelectors.currentAgentPlugins(s),
     s.togglePlugin,
   ]);
-  const builtinList = useToolStore(builtinToolSelectors.metaList(showDalle), isEqual);
+  const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
   const enablePluginCount = useAgentStore(
     (s) =>
       agentSelectors

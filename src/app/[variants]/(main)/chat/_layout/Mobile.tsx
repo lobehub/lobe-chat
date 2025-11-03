@@ -1,11 +1,10 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { Suspense, memo } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { withSuspense } from '@/components/withSuspense';
-import InitClientDB from '@/features/InitClientDB';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 
 import { LayoutProps } from './type';
@@ -40,9 +39,6 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
       >
         {children}
       </Flexbox>
-      <Suspense>
-        <InitClientDB bottom={100} />
-      </Suspense>
     </>
   );
 });

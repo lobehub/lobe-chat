@@ -80,7 +80,10 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   const isMockUser = process.env.ENABLE_MOCK_DEV_USER === '1';
 
   if (process.env.NODE_ENV === 'development' && (isDebugApi || isMockUser)) {
-    return { userId: process.env.MOCK_DEV_USER_ID };
+    return {
+      authorizationHeader: request.headers.get(LOBE_CHAT_AUTH_HEADER),
+      userId: process.env.MOCK_DEV_USER_ID,
+    };
   }
 
   log('createLambdaContext called for request');

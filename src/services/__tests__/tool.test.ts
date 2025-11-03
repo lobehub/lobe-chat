@@ -1,8 +1,5 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { edgeClient } from '@/libs/trpc/client';
-import { globalHelpers } from '@/store/global/helpers';
-
 import { toolService } from '../tool';
 import openAPIV3 from './openai/OpenAPI_V3.json';
 import OpenAIPlugin from './openai/plugin.json';

@@ -1,3 +1,5 @@
+import { isDesktop } from '@lobechat/const';
+import { SessionDefaultGroup } from '@lobechat/types';
 import { ActionIcon, Dropdown, Icon } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
@@ -6,7 +8,6 @@ import isEqual from 'fast-deep-equal';
 import {
   Check,
   ExternalLink,
-  HardDriveDownload,
   ListTree,
   LucideCopy,
   LucidePlus,
@@ -18,14 +19,11 @@ import {
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isDesktop, isServerMode } from '@/const/version';
-import { configService } from '@/services/config';
-import { useGlobalStore } from '@/store/global';
 import { useChatGroupStore } from '@/store/chatGroup';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
-import { SessionDefaultGroup } from '@/types/session';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`
@@ -148,29 +146,6 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
           {
             type: 'divider',
           },
-          isServerMode
-            ? undefined
-            : {
-                children: [
-                  {
-                    key: 'agent',
-                    label: t('exportType.agent', { ns: 'common' }),
-                    onClick: () => {
-                      configService.exportSingleAgent(id);
-                    },
-                  },
-                  {
-                    key: 'agentWithMessage',
-                    label: t('exportType.agentWithMessage', { ns: 'common' }),
-                    onClick: () => {
-                      configService.exportSingleSession(id);
-                    },
-                  },
-                ],
-                icon: <Icon icon={HardDriveDownload} />,
-                key: 'export',
-                label: t('export', { ns: 'common' }),
-              },
           {
             danger: true,
             icon: <Icon icon={Trash} />,

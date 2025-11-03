@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 
 import StructuredData from '@/components/StructuredData';
 import { BRANDING_NAME } from '@/const/branding';
-import InitClientDB from '@/features/InitClientDB';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
@@ -34,7 +33,6 @@ const AiImage = async (props: DynamicLayoutProps) => {
   return (
     <>
       <StructuredData ld={ld} />
-      <InitClientDB bottom={100} />
       <Suspense fallback={<SkeletonList />}>
         <ImageWorkspace />
       </Suspense>

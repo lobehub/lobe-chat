@@ -471,7 +471,11 @@ describe('chatMessage actions', () => {
         await result.current.internal_updateMessageContent(messageId, newContent);
       });
 
-      expect(spy).toHaveBeenCalledWith(messageId, { content: newContent });
+      expect(spy).toHaveBeenCalledWith(
+        messageId,
+        { content: newContent },
+        { sessionId: 'session-id', topicId: 'topic-id' },
+      );
     });
 
     it('should dispatch message update action', async () => {

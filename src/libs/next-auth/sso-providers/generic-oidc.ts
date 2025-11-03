@@ -1,7 +1,5 @@
 import type { OIDCConfig } from '@auth/core/providers';
 
-import { authEnv } from '@/envs/auth';
-
 import { CommonProviderConfig } from './sso.config';
 
 export type GenericOIDCProfile = {
@@ -19,10 +17,10 @@ const provider = {
     ...CommonProviderConfig,
     authorization: { params: { scope: 'email openid profile' } },
     checks: ['state', 'pkce'],
-    clientId: authEnv.GENERIC_OIDC_CLIENT_ID ?? process.env.AUTH_GENERIC_OIDC_ID,
-    clientSecret: authEnv.GENERIC_OIDC_CLIENT_SECRET ?? process.env.AUTH_GENERIC_OIDC_SECRET,
+    clientId: process.env.AUTH_GENERIC_OIDC_ID,
+    clientSecret: process.env.AUTH_GENERIC_OIDC_SECRET,
     id: 'generic-oidc',
-    issuer: authEnv.GENERIC_OIDC_ISSUER ?? process.env.AUTH_GENERIC_OIDC_ISSUER,
+    issuer: process.env.AUTH_GENERIC_OIDC_ISSUER,
     name: 'Generic OIDC',
     profile(profile) {
       return {

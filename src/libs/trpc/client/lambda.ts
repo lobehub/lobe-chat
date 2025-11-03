@@ -22,10 +22,12 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
         complete: () => observer.complete(),
         error: async (err) => {
           // Check if this is an abort error and should be ignored
-          const isAbortError = err.message.includes('aborted') || err.name === 'AbortError' || 
-                              err.cause?.name === 'AbortError' || 
-                              err.message.includes('signal is aborted without reason');
-          
+          const isAbortError =
+            err.message.includes('aborted') ||
+            err.name === 'AbortError' ||
+            err.cause?.name === 'AbortError' ||
+            err.message.includes('signal is aborted without reason');
+
           const showError = (op.context?.showNotification as boolean) ?? true;
           const status = err.data?.httpStatus as number;
 
@@ -50,7 +52,8 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
               }
 
               default: {
-                fetchErrorNotification.error({ errorMessage: err.message, status });
+                if (fetchErrorNotification)
+                  fetchErrorNotification.error({ errorMessage: err.message, status });
               }
             }
           }

@@ -60,7 +60,9 @@ export const spyOnMessageService = () => {
   const createMessageSpy = vi
     .spyOn(messageService, 'createMessage')
     .mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
-  const updateMessageSpy = vi.spyOn(messageService, 'updateMessage').mockResolvedValue(undefined);
+  const updateMessageSpy = vi
+    .spyOn(messageService, 'updateMessage')
+    .mockResolvedValue({ messages: [], success: true });
   const removeMessageSpy = vi.spyOn(messageService, 'removeMessage').mockResolvedValue(undefined);
   const updateMessageErrorSpy = vi
     .spyOn(messageService, 'updateMessageError')

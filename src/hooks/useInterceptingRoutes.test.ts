@@ -10,20 +10,26 @@ import { useSessionStore } from '@/store/session';
 import { useOpenChatSettings } from './useInterceptingRoutes';
 
 // Mocks
+const mockPush = vi.fn((href) => href);
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({
-    push: vi.fn((href) => href),
+    push: mockPush,
     replace: vi.fn((href) => href),
   })),
 }));
 vi.mock('nextjs-toploader/app', () => ({
   useRouter: vi.fn(() => ({
-    push: vi.fn((href) => href),
+    push: mockPush,
     replace: vi.fn((href) => href),
   })),
 }));
 vi.mock('@/hooks/useQuery', () => ({
   useQuery: vi.fn(() => ({})),
+}));
+vi.mock('@/hooks/useQueryRoute', () => ({
+  useQueryRoute: vi.fn(() => ({
+    push: mockPush,
+  })),
 }));
 vi.mock('@/hooks/useIsMobile', () => ({
   useIsMobile: vi.fn(),
@@ -36,20 +42,32 @@ vi.mock('@/store/global', () => ({
     setState: vi.fn(),
   },
 }));
+let isDeprecatedEdition = false;
+vi.mock('@/const/version', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/const/version')>();
+  return {
+    ...actual,
+    get isDeprecatedEdition() {
+      return isDeprecatedEdition;
+    },
+  };
+});
 
 describe('useOpenChatSettings', () => {
   it('should handle inbox session id correctly', () => {
+    isDeprecatedEdition = true;
     vi.mocked(useSessionStore).mockReturnValue(INBOX_SESSION_ID);
     const { result } = renderHook(() => useOpenChatSettings());
 
     expect(result.current()).toBe('/settings?active=agent'); // Assuming openSettings returns a function
+    isDeprecatedEdition = false;
   });
 
   it('should handle mobile route for chat settings', () => {
     vi.mocked(useSessionStore).mockReturnValue('123');
     vi.mocked(useIsMobile).mockReturnValue(true);
     const { result } = renderHook(() => useOpenChatSettings(ChatSettingsTabs.Meta));
-    expect(result.current()).toBe('/chat/settings?session=123');
+    expect(result.current()).toBe('/chat/settings');
   });
 
   it('should handle desktop route for chat settings with session and tab', () => {

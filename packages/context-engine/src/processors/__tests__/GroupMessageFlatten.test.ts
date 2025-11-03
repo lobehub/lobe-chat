@@ -340,7 +340,7 @@ describe('GroupMessageFlattenProcessor', () => {
       expect(result.messages[0].id).toBe('msg-group-1');
     });
 
-    it('should preserve reasoning field from group message', async () => {
+    it('should preserve reasoning field from child block', async () => {
       const processor = new GroupMessageFlattenProcessor();
 
       const input: any[] = [
@@ -348,14 +348,14 @@ describe('GroupMessageFlattenProcessor', () => {
           id: 'msg-group-1',
           role: 'group',
           content: '',
-          reasoning: {
-            content: 'Thinking about the query...',
-            signature: 'sig-123',
-          },
           children: [
             {
               id: 'msg-1',
               content: 'Result',
+              reasoning: {
+                content: 'Thinking about the query...',
+                signature: 'sig-123',
+              },
               tools: [],
             },
           ],
@@ -370,6 +370,70 @@ describe('GroupMessageFlattenProcessor', () => {
         content: 'Thinking about the query...',
         signature: 'sig-123',
       });
+    });
+
+    it('should preserve error field from child block', async () => {
+      const processor = new GroupMessageFlattenProcessor();
+
+      const input: any[] = [
+        {
+          id: 'msg-group-1',
+          role: 'group',
+          content: '',
+          children: [
+            {
+              id: 'msg-1',
+              content: 'Error occurred',
+              error: {
+                type: 'InvalidAPIKey',
+                message: 'API key is invalid',
+              },
+              tools: [],
+            },
+          ],
+        },
+      ];
+
+      const context = createContext(input);
+      const result = await processor.process(context);
+
+      expect(result.messages).toHaveLength(1);
+      expect(result.messages[0].error).toEqual({
+        type: 'InvalidAPIKey',
+        message: 'API key is invalid',
+      });
+    });
+
+    it('should preserve imageList field from child block', async () => {
+      const processor = new GroupMessageFlattenProcessor();
+
+      const input: any[] = [
+        {
+          id: 'msg-group-1',
+          role: 'group',
+          content: '',
+          children: [
+            {
+              id: 'msg-1',
+              content: 'Here are the images',
+              imageList: [
+                { id: 'img-1', url: 'https://example.com/img1.jpg', alt: 'Image 1' },
+                { id: 'img-2', url: 'https://example.com/img2.jpg', alt: 'Image 2' },
+              ],
+              tools: [],
+            },
+          ],
+        },
+      ];
+
+      const context = createContext(input);
+      const result = await processor.process(context);
+
+      expect(result.messages).toHaveLength(1);
+      expect(result.messages[0].imageList).toEqual([
+        { id: 'img-1', url: 'https://example.com/img1.jpg', alt: 'Image 1' },
+        { id: 'img-2', url: 'https://example.com/img2.jpg', alt: 'Image 2' },
+      ]);
     });
 
     it('should preserve parent/thread/group/topic IDs', async () => {
@@ -435,10 +499,6 @@ describe('GroupMessageFlattenProcessor', () => {
           id: 'msg_LnIlOyMUnX1ylf',
           role: 'group',
           content: '',
-          reasoning: {
-            content:
-              '**Checking Hangzhou weather**\n\nIt seems the user is asking to check the weather in Hangzhou...',
-          },
           createdAt: '2025-10-27T10:47:59.475Z',
           updatedAt: '2025-10-27T10:48:10.768Z',
           topicId: 'tpc_WQ1wRvxdDpLw',
@@ -451,6 +511,10 @@ describe('GroupMessageFlattenProcessor', () => {
             {
               content: '',
               id: 'msg_LnIlOyMUnX1ylf',
+              reasoning: {
+                content:
+                  '**Checking Hangzhou weather**\n\nIt seems the user is asking to check the weather in Hangzhou...',
+              },
               performance: {
                 tps: 29.336734693877553,
                 ttft: 3844,

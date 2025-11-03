@@ -243,6 +243,7 @@ export function groupAssistantMessages(messages: UIChatMessage[]): UIChatMessage
             id: toolMsg.id,
             state: toolMsg.pluginState,
           },
+          result_msg_id: toolMsg.id,
         };
       }
 
@@ -253,10 +254,11 @@ export function groupAssistantMessages(messages: UIChatMessage[]): UIChatMessage
     const { usage: msgUsage, performance: msgPerformance } = splitMetadata(msg.metadata);
     children.push({
       content: msg.content || '',
-      fileList: msg.fileList && msg.fileList.length > 0 ? msg.fileList : undefined,
+      error: msg.error,
       id: msg.id,
       imageList: msg.imageList && msg.imageList.length > 0 ? msg.imageList : undefined,
       performance: msgPerformance,
+      reasoning: msg.reasoning || undefined,
       tools: toolsWithResults,
       usage: msgUsage,
     });
@@ -299,6 +301,7 @@ export function groupAssistantMessages(messages: UIChatMessage[]): UIChatMessage
                     id: followUpToolMsg.id,
                     state: followUpToolMsg.pluginState,
                   },
+                  result_msg_id: followUpToolMsg.id,
                 };
               }
 
@@ -311,16 +314,14 @@ export function groupAssistantMessages(messages: UIChatMessage[]): UIChatMessage
           );
           children.push({
             content: followUpMsg.content || '',
-            fileList:
-              followUpMsg.fileList && followUpMsg.fileList.length > 0
-                ? followUpMsg.fileList
-                : undefined,
+            error: followUpMsg.error,
             id: followUpMsg.id,
             imageList:
               followUpMsg.imageList && followUpMsg.imageList.length > 0
                 ? followUpMsg.imageList
                 : undefined,
             performance: followUpPerformance,
+            reasoning: followUpMsg.reasoning || undefined,
             tools: followUpToolsWithResults,
             usage: followUpUsage,
           });
@@ -347,6 +348,7 @@ export function groupAssistantMessages(messages: UIChatMessage[]): UIChatMessage
       assistantMsg.performance = aggregated.performance;
     }
     delete assistantMsg.metadata; // Clear individual metadata
+    delete assistantMsg.reasoning; // Reasoning moved to children blocks
     delete assistantMsg.tools;
     delete assistantMsg.imageList;
     delete assistantMsg.fileList;
