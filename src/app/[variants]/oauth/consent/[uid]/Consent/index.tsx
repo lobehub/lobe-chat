@@ -61,7 +61,10 @@ const useStyles = createStyles(({ css, token }) => ({
   container: css`
     width: 100%;
     min-height: 100vh;
+    padding-block: 12px;
+
     color: ${token.colorTextBase};
+
     background-color: ${token.colorBgLayout};
   `,
   icon: css`
