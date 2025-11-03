@@ -59,6 +59,8 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
   const avatar = useUserStore(userProfileSelectors.userAvatar);
   const nickName = useUserStore(userProfileSelectors.nickName);
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const titleText = t('login.title', { clientName: clientDisplayName });
   const descriptionText = t('login.description', { clientName: clientDisplayName });
   const buttonText = t('login.button'); // Or "Continue"
@@ -99,7 +101,12 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
 
           <Flexbox gap={16}>
             {/* Form points to the endpoint handling login confirmation */}
-            <form action="/oidc/consent" method="post" style={{ width: '100%' }}>
+            <form
+              action="/oidc/consent"
+              method="post"
+              onSubmit={() => setIsLoading(true)}
+              style={{ width: '100%' }}
+            >
               {/* Adjust action URL */}
               <input name="uid" type="hidden" value={uid} />
               <input name="choice" type="hidden" value={'accept'} />
@@ -108,6 +115,7 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
                 className={styles.authButton}
                 disabled={!isUserStateInit}
                 htmlType="submit"
+                loading={isLoading}
                 name="consent"
                 size="large"
                 type="primary"

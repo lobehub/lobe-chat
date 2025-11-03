@@ -7,7 +7,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import OAuthApplicationLogo from './components/OAuthApplicationLogo';
+import OAuthApplicationLogo from '../components/OAuthApplicationLogo';
+import BuiltinConsent from './BuiltinConsent';
 
 interface ClientProps {
   clientId: string;
@@ -117,6 +118,8 @@ function getScopeDescription(scope: string, t: any): string {
   return t(`consent.scope.${scope.replace(':', '-')}`, scope);
 }
 
+const BUILTIN_CLIENTS = new Set(['lobehub-desktop', 'lobehub-mobile', 'lobehub-market']);
+
 const ConsentClient = memo<ClientProps>(({ uid, clientId, scopes, clientMetadata }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('oauth');
@@ -124,6 +127,11 @@ const ConsentClient = memo<ClientProps>(({ uid, clientId, scopes, clientMetadata
   const [isLoading, setIsLoading] = useState(false);
 
   const clientDisplayName = clientMetadata?.clientName || clientId;
+
+  if (BUILTIN_CLIENTS.has(clientId)) {
+    return <BuiltinConsent uid={clientId} />;
+  }
+
   return (
     <Center className={styles.container} gap={16}>
       <Flexbox gap={40}>
