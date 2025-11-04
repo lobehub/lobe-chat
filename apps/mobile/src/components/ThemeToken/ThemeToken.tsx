@@ -1,7 +1,7 @@
-import { Moon, Sun } from 'lucide-react-native';
 import { memo, useCallback, useState } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
 
+import Center from '@/components/Center';
+import Flexbox from '@/components/Flexbox';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import {
   NeutralColors,
@@ -9,15 +9,12 @@ import {
   darkAlgorithm,
   lightAlgorithm,
   useTheme,
-  useThemeMode,
 } from '@/components/styles';
 
 import CapsuleTabs, { type CapsuleTabItem } from '../CapsuleTabs';
-import PageContainer from '../PageContainer';
 import ThemeControls from './(components)/ThemeControls';
 import TokenHighlight from './(components)/TokenJson';
 import TokenTable from './(components)/TokenTable';
-import { useStyles } from './style';
 import type { ThemeTokensContentProps } from './type';
 
 const ThemeTokensContent = memo<ThemeTokensContentProps>(
@@ -28,11 +25,8 @@ const ThemeTokensContent = memo<ThemeTokensContentProps>(
     onFontSizeChange,
     onNeutralColorChange,
     onPrimaryColorChange,
-    onToggleTheme,
   }) => {
-    const { isDarkMode } = useThemeMode();
     const token = useTheme();
-    const { styles } = useStyles();
     const [viewMode, setViewMode] = useState<'table' | 'json'>('table');
 
     // CapsuleTabs 配置
@@ -47,43 +41,29 @@ const ThemeTokensContent = memo<ThemeTokensContentProps>(
     }, []);
 
     return (
-      <PageContainer
-        extra={
-          <TouchableOpacity onPress={onToggleTheme} style={styles.themeToggle}>
-            {isDarkMode ? (
-              <Sun color={token.colorText} size={20} />
-            ) : (
-              <Moon color={token.colorText} size={20} />
-            )}
-          </TouchableOpacity>
-        }
-        showBack
-        title="主题令牌"
-      >
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-          {/* 主题控制器 */}
-          <ThemeControls
-            fontSize={localFontSize}
-            neutralColor={localNeutralColor}
-            onFontSizeChange={onFontSizeChange}
-            onNeutralColorChange={onNeutralColorChange}
-            onPrimaryColorChange={onPrimaryColorChange}
-            primaryColor={localPrimaryColor}
-          />
+      <Flexbox flex={1} gap={16} width={'100%'}>
+        {/* 主题控制器 */}
+        <ThemeControls
+          fontSize={localFontSize}
+          neutralColor={localNeutralColor}
+          onFontSizeChange={onFontSizeChange}
+          onNeutralColorChange={onNeutralColorChange}
+          onPrimaryColorChange={onPrimaryColorChange}
+          primaryColor={localPrimaryColor}
+        />
 
-          {/* 视图模式切换 */}
-          <View style={styles.viewModeContainer}>
-            <CapsuleTabs items={tabItems} onSelect={handleTabSelect} selectedKey={viewMode} />
-          </View>
+        {/* 视图模式切换 */}
+        <Center>
+          <CapsuleTabs items={tabItems} onSelect={handleTabSelect} selectedKey={viewMode} />
+        </Center>
 
-          {/* 根据视图模式显示不同的组件 */}
-          {viewMode === 'table' ? (
-            <TokenTable title="Design Tokens" token={token} />
-          ) : (
-            <TokenHighlight title="Design Tokens JSON" token={token} />
-          )}
-        </ScrollView>
-      </PageContainer>
+        {/* 根据视图模式显示不同的组件 */}
+        {viewMode === 'table' ? (
+          <TokenTable title="Design Tokens" token={token} />
+        ) : (
+          <TokenHighlight title="Design Tokens JSON" token={token} />
+        )}
+      </Flexbox>
     );
   },
 );

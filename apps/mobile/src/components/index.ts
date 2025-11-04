@@ -103,6 +103,7 @@ export { default as TabView, type TabViewProps } from './TabView';
 export { default as Tag, type TagProps } from './Tag';
 export { default as Text, type TextProps } from './Text';
 export * from './ThemeProvider';
+export { default as ThemeToken, type ThemeTokensContentProps } from './ThemeToken';
 export {
   default as Toast,
   type ToastProps,
