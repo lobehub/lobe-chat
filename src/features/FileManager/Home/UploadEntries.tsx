@@ -26,6 +26,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
     overflow: hidden;
 
+    width: 200px;
     min-height: 120px;
     padding: 16px;
     border: 1px solid ${token.colorBorderSecondary};
@@ -55,17 +56,10 @@ const useStyles = createStyles(({ css, token }) => ({
     filter: blur(24px);
   `,
   grid: css`
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 16px;
-
-    @media (width >= 640px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (width >= 900px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    justify-content: center;
   `,
   icon: css`
     position: absolute;
@@ -125,7 +119,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
   };
 
   return (
-    <Flexbox className={styles.grid}>
+    <div className={styles.grid}>
       {/* Create New Note */}
       <Flexbox className={styles.card} onClick={handleCreateNote} padding={16}>
         <span className={styles.actionTitle}>{t('home.uploadEntries.newNote.title')}</span>
@@ -178,7 +172,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
           />
         </Flexbox>
       </Upload>
-    </Flexbox>
+    </div>
   );
 });
 
