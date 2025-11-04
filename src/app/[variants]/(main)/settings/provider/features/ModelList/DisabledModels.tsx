@@ -8,6 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import ModelItem from './ModelItem';
 
@@ -29,11 +31,15 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
 
   const [showMore, setShowMore] = useState(false);
   const [sortType, setSortType] = useState<SortType>(
-    () => (localStorage.getItem('disabledModelsSortType') as SortType) || SortType.Default,
+    () =>
+      (systemStatusSelectors.disabledModelsSortType(useGlobalStore.getState()) as SortType) ||
+      SortType.Default,
   );
 
   useEffect(() => {
-    localStorage.setItem('disabledModelsSortType', sortType);
+    useGlobalStore.getState().updateSystemStatus({
+      disabledModelsSortType: sortType,
+    });
   }, [sortType]);
 
   const disabledModels = useAiInfraStore(aiModelSelectors.disabledAiProviderModelList, isEqual);

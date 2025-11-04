@@ -10,6 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { aiProviderSelectors } from '@/store/aiInfra';
 import { useAiInfraStore } from '@/store/aiInfra/store';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import All from './All';
 import ProviderItem from './Item';
@@ -30,11 +32,16 @@ const ProviderList = (props: {
   const { t } = useTranslation('modelProvider');
   const [open, setOpen] = useState(false);
   const [sortType, setSortType] = useState<SortType>(
-    () => (localStorage.getItem('disabledModelProvidersSortType') as SortType) || SortType.Default,
+    () =>
+      (systemStatusSelectors.disabledModelProvidersSortType(
+        useGlobalStore.getState(),
+      ) as SortType) || SortType.Default,
   );
 
   useEffect(() => {
-    localStorage.setItem('disabledModelProvidersSortType', sortType);
+    useGlobalStore.getState().updateSystemStatus({
+      disabledModelProvidersSortType: sortType,
+    });
   }, [sortType]);
 
   const enabledModelProviderList = useAiInfraStore(
