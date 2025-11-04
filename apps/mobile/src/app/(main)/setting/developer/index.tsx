@@ -17,7 +17,7 @@ import {
   expireRefreshTokenNow,
   invalidateAccessToken,
   invalidateRefreshToken,
-} from './utils';
+} from './_features/utils';
 
 export default function DeveloperScreen() {
   const { t } = useTranslation(['setting', 'common', 'error']);

@@ -5,7 +5,7 @@ export * from './color';
 export * from './colorUtils';
 export * from './createStyles';
 export * from './customTheme';
-export { generateCustomToken } from './customToken';
+export { clearThemeColorCache, generateCustomToken } from './customToken';
 export type { AliasToken, MappingAlgorithm, MapToken, SeedToken } from './interface';
 export * from './interface';
 export * from './stylish';

@@ -3,11 +3,11 @@ import { FlashList } from '@shopify/flash-list';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ProviderCard from './features/ProviderCard';
-import ProviderListSkeleton from './features/ProviderListSkeleton';
-import SectionHeader from './features/SectionHeader';
-import { useProviderList } from './hooks';
-import { ProviderFlashListItem } from './types';
+import { useProviderList } from './_features';
+import ProviderCard from './_features/ProviderCard';
+import ProviderListSkeleton from './_features/ProviderListSkeleton';
+import SectionHeader from './_features/SectionHeader';
+import { ProviderFlashListItem } from './_features/types';
 
 const ProviderList = memo(() => {
   const [keyword, setKeyword] = useState('');

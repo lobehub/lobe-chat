@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext, memo, useContext } from 'react';
+import { createContext, memo, useContext, useMemo } from 'react';
 import { Appearance, useColorScheme } from 'react-native';
 
 import { darkAlgorithm, lightAlgorithm } from '@/components/styles';
@@ -92,49 +92,62 @@ export const ThemeProvider = memo<ThemeProviderProps>(({ children, theme: custom
   // 生成主题对象
   const isDark = getActualThemeMode() === 'dark';
 
-  // 合并主题配置的优先级策略
-  let mergedThemeConfig: ThemeConfig;
+  // 使用 useMemo 缓存主题配置，只在依赖项变化时重新计算
+  const mergedThemeConfig: ThemeConfig = useMemo(() => {
+    if (isNested && customTheme) {
+      // 嵌套情况：子 ThemeProvider 的自定义配置优先
+      return {
+        algorithm: customTheme.algorithm || (isDark ? darkAlgorithm : lightAlgorithm),
+        token: {
+          // 继承父级的 token 作为基础
+          ...parentContext?.token,
+          // 子 ThemeProvider 的自定义 token 覆盖
+          ...customTheme.token,
+        },
+      };
+    } else {
+      // 非嵌套情况：使用正常的合并逻辑
+      return {
+        algorithm: isDark ? darkAlgorithm : lightAlgorithm,
+        token: {
+          neutralColor,
+          primaryColor,
+          ...customTheme?.token,
+        },
+      };
+    }
+  }, [isDark, isNested, customTheme, parentContext, neutralColor, primaryColor]);
 
-  if (isNested && customTheme) {
-    // 嵌套情况：子 ThemeProvider 的自定义配置优先
-    mergedThemeConfig = {
-      algorithm: customTheme.algorithm || (isDark ? darkAlgorithm : lightAlgorithm),
-      token: {
-        // 继承父级的 token 作为基础
-        ...parentContext?.token,
-        // 子 ThemeProvider 的自定义 token 覆盖
-        ...customTheme.token,
-      },
-    };
-  } else if (isNested && !customTheme) {
-    // 嵌套但没有自定义主题：直接继承父级配置
+  // 使用 useMemo 缓存生成的主题 token
+  // 只在 mergedThemeConfig 变化时重新生成（内部已有三层缓存）
+  const themeToken = useMemo(() => {
+    return getDesignToken(mergedThemeConfig);
+  }, [mergedThemeConfig]);
+
+  // 使用 useMemo 缓存完整的 theme 对象
+  const theme: Theme = useMemo(
+    () => ({
+      isDarkMode: isDark,
+      themeMode: isNested && customTheme ? (isDark ? 'dark' : 'light') : themeMode,
+      token: themeToken,
+    }),
+    [isDark, isNested, customTheme, themeMode, themeToken],
+  );
+
+  // 使用 useMemo 缓存 context value
+  const contextValue: ThemeContextValue = useMemo(
+    () => ({
+      setThemeMode: setThemeModeHandler,
+      toggleTheme,
+      ...theme,
+    }),
+    [setThemeModeHandler, toggleTheme, theme],
+  );
+
+  // 嵌套但没有自定义主题：直接继承父级配置
+  if (isNested && !customTheme) {
     return <ThemeContext.Provider value={parentContext}>{children}</ThemeContext.Provider>;
-  } else {
-    // 非嵌套情况：使用正常的合并逻辑
-    mergedThemeConfig = {
-      algorithm: isDark ? darkAlgorithm : lightAlgorithm,
-      token: {
-        neutralColor,
-        primaryColor,
-        ...customTheme?.token,
-      },
-    };
   }
-
-  // 使用合并后的配置生成主题
-  const themeToken = getDesignToken(mergedThemeConfig);
-
-  const theme: Theme = {
-    isDarkMode: isDark,
-    themeMode: isNested && customTheme ? (isDark ? 'dark' : 'light') : themeMode,
-    token: themeToken,
-  };
-
-  const contextValue: ThemeContextValue = {
-    setThemeMode: setThemeModeHandler,
-    toggleTheme,
-    ...theme,
-  };
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 });

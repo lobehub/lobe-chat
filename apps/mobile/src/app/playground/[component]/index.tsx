@@ -6,10 +6,10 @@ import { Text, View } from 'react-native';
 
 import { isIOS } from '@/utils/detection';
 
-import { DEMOS_MAP } from '../.data/import';
-import playgroundData from '../.data/index.json';
-import { getAllComponents } from '../utils';
-import ComponentPlayground from './ComponentPlayground';
+import { DEMOS_MAP } from '../_data/import';
+import playgroundData from '../_data/index.json';
+import { getAllComponents } from '../_features/utils';
+import ComponentPlayground from './_features/ComponentPlayground';
 
 /**
  * 动态组件 Playground 页面
