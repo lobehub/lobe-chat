@@ -2,6 +2,9 @@
 
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import isToday from 'dayjs/plugin/isToday';
+import isYesterday from 'dayjs/plugin/isYesterday';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +16,10 @@ import { formatNumber } from '@/utils/format';
 
 import { UsageChartProps } from '../../Client';
 
+dayjs.extend(utc);
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
+
 const computeSpend = (
   data: UsageLog[],
 ): {
@@ -21,8 +28,8 @@ const computeSpend = (
 } => {
   if (!data || data.length === 0) return { today: 0, yesterday: 0 };
 
-  const today = data.find((log) => dayjs(log.day).isToday())?.totalSpend ?? 0;
-  const yesterday = data.find((log) => dayjs(log.day).isYesterday())?.totalSpend ?? 0;
+  const today = data.find((log) => dayjs.utc(log.day).isToday())?.totalSpend ?? 0;
+  const yesterday = data.find((log) => dayjs.utc(log.day).isYesterday())?.totalSpend ?? 0;
 
   return {
     today: formatNumber(today),
