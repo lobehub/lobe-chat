@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve lab style."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.24"
+  },
+  {
+    "children": {
       "fixes": ["Fix send message."]
     },
     "date": "2025-11-04",
