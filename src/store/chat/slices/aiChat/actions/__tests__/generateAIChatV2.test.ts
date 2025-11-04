@@ -541,7 +541,7 @@ describe('generateAIChatV2 actions', () => {
         result.current.cancelSendMessageInServer();
       });
 
-      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessageInServer operation');
+      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessage operation');
       expect(
         result.current.mainSendMessageOperations[
           messageMapKey(TEST_IDS.SESSION_ID, TEST_IDS.TOPIC_ID)
@@ -571,7 +571,7 @@ describe('generateAIChatV2 actions', () => {
         result.current.cancelSendMessageInServer(customTopicId);
       });
 
-      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessageInServer operation');
+      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessage operation');
     });
 
     it('should handle gracefully when operation does not exist', () => {
