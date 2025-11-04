@@ -43,6 +43,7 @@ export type DiscoverMcpItem = PluginItem;
 
 export interface McpQueryParams {
   category?: string;
+  connectionType?: 'http' | 'stdio' | 'sse';
   locale?: string;
   order?: 'asc' | 'desc';
   page?: number;

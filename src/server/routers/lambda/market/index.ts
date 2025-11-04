@@ -83,6 +83,7 @@ export const marketRouter = router({
       z
         .object({
           category: z.string().optional(),
+          connectionType: z.enum(['http', 'stdio', 'sse']).optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
           page: z.number().optional(),
@@ -180,6 +181,7 @@ export const marketRouter = router({
           category: z.string().optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
+          connectionType: z.enum(['http', 'stdio', 'sse']).optional(),
           page: z.number().optional(),
           pageSize: z.number().optional(),
           q: z.string().optional(),

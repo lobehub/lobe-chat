@@ -110,7 +110,9 @@ export interface CheckMcpInstallResult {
   }>;
 }
 
-export type MCPPluginListParams = Pick<PluginQueryParams, 'locale' | 'pageSize' | 'page' | 'q'>;
+export type MCPPluginListParams = Pick<PluginQueryParams, 'locale' | 'pageSize' | 'page' | 'q'> & {
+  connectionType?: 'http' | 'stdio' | 'sse';
+};
 
 export interface MCPErrorInfoMetadata {
   errorLog?: string;

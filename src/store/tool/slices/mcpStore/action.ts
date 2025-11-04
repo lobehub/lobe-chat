@@ -692,10 +692,22 @@ export const createMCPPluginStoreSlice: StateCreator<
 
   useFetchMCPPluginList: (params) => {
     const locale = globalHelpers.getCurrentLanguage();
+    const requestParams = isDesktop ? params : { ...params, connectionType: 'http' as const };
+    const swrKeyParts = [
+      'useFetchMCPPluginList',
+      locale,
+      requestParams.page,
+      requestParams.pageSize,
+      requestParams.q,
+      requestParams.connectionType,
+    ];
+    const swrKey = swrKeyParts.filter((part) => part !== undefined && part !== null && part !== '')
+      .join('-');
+    const page = requestParams.page ?? 1;
 
     return useSWR<PluginListResponse>(
-      ['useFetchMCPPluginList', locale, ...Object.values(params)].filter(Boolean).join('-'),
-      () => discoverService.getMCPPluginList(params),
+      swrKey,
+      () => discoverService.getMCPPluginList(requestParams),
       {
         onSuccess(data) {
           set(
@@ -713,7 +725,7 @@ export const createMCPPluginStoreSlice: StateCreator<
               }
 
               // 累积数据逻辑
-              if (params.page === 1) {
+              if (page === 1) {
                 // 第一页，直接设置
                 draft.mcpPluginItems = uniqBy(data.items, 'identifier');
               } else {
