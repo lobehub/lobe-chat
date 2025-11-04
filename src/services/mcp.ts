@@ -44,16 +44,16 @@ class MCPService {
     const connection = plugin.customParams?.mcp;
     const settingsEntries = plugin.settings
       ? Object.entries(plugin.settings as Record<string, any>).filter(
-          ([, value]) => value !== undefined && value !== null,
-        )
+        ([, value]) => value !== undefined && value !== null,
+      )
       : [];
     const pluginSettings =
       settingsEntries.length > 0
-        ? settingsEntries.reduce<Record<string, string>>((acc, [key, value]) => {
-            acc[key] = typeof value === 'string' ? value : String(value);
+        ? settingsEntries.reduce<Record<string, unknown>>((acc, [key, value]) => {
+          acc[key] = value;
 
-            return acc;
-          }, {})
+          return acc;
+        }, {})
         : undefined;
 
     const params = {
@@ -70,14 +70,14 @@ class MCPService {
 
     if (connection?.type === 'stdio') {
       params.env = {
-        ...connection.env,
+        ...connection?.env,
         ...pluginSettings,
       };
     }
 
     const data = {
       args,
-      env: connection?.type === 'stdio' ? params.env : undefined,
+      env: connection?.type === 'stdio' ? params.env : pluginSettings ?? connection?.env,
       params,
       toolName: apiName,
     };
@@ -127,10 +127,10 @@ class MCPService {
         callDurationMs,
         customPluginInfo: isCustomPlugin
           ? {
-              avatar: plugin.manifest?.meta.avatar,
-              description: plugin.manifest?.meta.description,
-              name: plugin.manifest?.meta.title,
-            }
+            avatar: plugin.manifest?.meta.avatar,
+            description: plugin.manifest?.meta.description,
+            name: plugin.manifest?.meta.title,
+          }
           : undefined,
         errorCode,
         errorMessage,
