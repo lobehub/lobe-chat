@@ -151,8 +151,10 @@ const Image = memo<ImageProps>(
         // width 和 height props 优先级最高
         width !== undefined && { width },
         height !== undefined && { height },
+        // 图片加载完成后背景变透明
+        imageSize && { backgroundColor: 'transparent' },
       ];
-    }, [styles.image, style, autoSizeStyle, placeholderStyle, width, height]);
+    }, [styles.image, style, autoSizeStyle, placeholderStyle, width, height, imageSize]);
 
     const imageContent = (
       <ExpoImage
