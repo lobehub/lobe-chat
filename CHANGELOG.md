@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.23](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.22...v2.0.0-next.23)
+
+<sup>Released on **2025-11-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix send message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix send message, closes [#10041](https://github.com/lobehub/lobe-chat/issues/10041) [#9984](https://github.com/lobehub/lobe-chat/issues/9984) ([7cca60f](https://github.com/lobehub/lobe-chat/commit/7cca60f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.22](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.21...v2.0.0-next.22)
 
 <sup>Released on **2025-11-04**</sup>
