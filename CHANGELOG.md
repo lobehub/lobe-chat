@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.27](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.26...v2.0.0-next.27)
+
+<sup>Released on **2025-11-04**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor services to a more clean structure.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor services to a more clean structure, closes [#10050](https://github.com/lobehub/lobe-chat/issues/10050) ([de61dfa](https://github.com/lobehub/lobe-chat/commit/de61dfa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.26](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.25...v2.0.0-next.26)
 
 <sup>Released on **2025-11-04**</sup>
