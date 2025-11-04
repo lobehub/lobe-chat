@@ -11,22 +11,25 @@ import type { BuildVisitor } from 'unist-util-visit';
 
 /**
  * Segments text into words or characters with smart splitting
- * Optimized for mixed Chinese/English text and better animation experience
+ * Optimized for mixed Chinese/English text, emoji, and better animation experience
  *
  * Rules:
+ * - Emoji stay together (including multi-codepoint emoji like 👨‍👩‍👧‍👦, 👍🏻)
  * - English words stay together (better visual flow)
  * - Numbers stay together
  * - Chinese characters split individually (natural for CJK)
  * - Punctuation and spaces preserved
  */
 const segmentText = (text: string): string[] => {
-  // Regex pattern:
+  // Regex pattern (order matters - emoji must be first!):
+  // - Emoji sequence: handles multi-codepoint emoji (skin tones, ZWJ sequences, etc.)
   // - \d+\.?\d* : Numbers (including decimals like 3.14)
   // - [a-zA-Z]+(?:'[a-zA-Z]+)? : English words (including contractions like don't)
   // - [\u4e00-\u9fa5] : Chinese characters (CJK Unified Ideographs)
   // - [^\s] : Other characters (punctuation, symbols, etc.)
   // - \s+ : Whitespace
-  const pattern = /\d+\.?\d*|[A-Za-z]+(?:'[A-Za-z]+)?|[\u4E00-\u9FA5]|\S|\s+/g;
+  const pattern =
+    /(?:\p{Emoji}\uFE0F?(?:\u200D\p{Emoji}\uFE0F?)*(?:\p{Emoji_Modifier})?)|[\u{1F1E6}-\u{1F1FF}]{2}|\d+\.?\d*|[A-Za-z]+(?:'[A-Za-z]+)?|[\u4E00-\u9FA5]|\S|\s+/gu;
 
   const matches = text.match(pattern);
   if (matches) {
