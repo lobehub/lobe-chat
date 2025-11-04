@@ -1,5 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "automerge": false,
+  "dependencyDashboard": true,
   "extends": [
     "config:recommended",
     ":dependencyDashboard",
@@ -9,13 +11,28 @@
     ":semanticPrefixFixDepsChoreOthers",
     "group:monorepos",
     "group:recommended",
-    "group:allNonMajor",
     "replacements:all",
     "workarounds:all"
   ],
   "ignoreDeps": [],
-  "labels": ["dependencies"],
-  "postUpdateOptions": ["yarnDedupeHighest"],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "groupName": "all non-minor dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackageNames": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ]
+    }
+  ],
+  "postUpdateOptions": [
+    "yarnDedupeHighest"
+  ],
   "prConcurrentLimit": 30,
   "prHourlyLimit": 0,
   "rangeStrategy": "bump",
