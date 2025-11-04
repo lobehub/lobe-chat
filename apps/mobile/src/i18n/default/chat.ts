@@ -25,6 +25,10 @@ export default {
     title: '随便聊聊',
   },
   messageCopied: '消息已复制',
+  messageEdit: {
+    placeholder: '请输入消息内容',
+    title: '编辑消息',
+  },
   newAgent: '新建助手',
   newChat: '新对话',
   pin: '置顶',

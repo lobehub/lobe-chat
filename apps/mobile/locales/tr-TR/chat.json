@@ -24,6 +24,10 @@
     "title": "Rastgele Sohbet"
   },
   "messageCopied": "Mesaj kopyalandı",
+  "messageEdit": {
+    "placeholder": "Lütfen mesaj içeriğini girin",
+    "title": "Mesajı Düzenle"
+  },
   "newAgent": "Yeni Asistan",
   "newChat": "Yeni Sohbet",
   "pin": "Sabit",

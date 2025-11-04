@@ -1,7 +1,8 @@
 import { UIChatMessage } from '@lobechat/types';
 import { Block, BlockProps, BottomSheet, Cell, Divider, Flexbox, useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
-import { Copy, RefreshCw, Trash2 } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { Copy, Edit3, RefreshCw, Trash2 } from 'lucide-react-native';
 import type { FC, ReactNode } from 'react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -55,6 +56,16 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
     } catch (error: any) {
       toast.error(error.message || t('regenerateFailed', { ns: 'chat' }));
     }
+  };
+
+  // 编辑消息
+  const handleEdit = () => {
+    setOpen(false);
+    // 导航到编辑页面，通过 URL params 传递消息 ID
+    router.push({
+      params: { messageId: message.id },
+      pathname: '/(main)/chat/message/edit',
+    });
   };
 
   // 删除消息
@@ -127,10 +138,10 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
         onClose={() => setOpen(false)}
         open={open}
         showCloseButton={false}
-        snapPoints={['35%']}
+        snapPoints={['40%']}
       >
         <Flexbox gap={12} padding={16}>
-          {/* 复制 */}
+          {/* 复制、编辑、重新生成 */}
           <Block variant={'filled'}>
             <Cell
               icon={Copy}
@@ -139,6 +150,15 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
               paddingBlock={20}
               showArrow={false}
               title={t('actions.copy', { ns: 'common' })}
+            />
+            <Divider />
+            <Cell
+              icon={Edit3}
+              iconSize={20}
+              onPress={handleEdit}
+              paddingBlock={20}
+              showArrow={false}
+              title={t('actions.edit', { ns: 'common' })}
             />
             <Divider />
             <Cell

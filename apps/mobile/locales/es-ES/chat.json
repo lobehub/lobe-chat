@@ -24,6 +24,10 @@
     "title": "Charlemos"
   },
   "messageCopied": "Mensaje copiado",
+  "messageEdit": {
+    "placeholder": "Por favor, introduce el contenido del mensaje",
+    "title": "Editar mensaje"
+  },
   "newAgent": "Nuevo asistente",
   "newChat": "Nueva conversación",
   "pin": "Fijar",

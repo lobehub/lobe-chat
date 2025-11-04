@@ -24,6 +24,10 @@
     "title": "Conversa Casual"
   },
   "messageCopied": "Mensagem copiada",
+  "messageEdit": {
+    "placeholder": "Digite o conteúdo da mensagem",
+    "title": "Editar mensagem"
+  },
   "newAgent": "Novo Assistente",
   "newChat": "Nova Conversa",
   "pin": "Fixar no topo",

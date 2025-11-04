@@ -24,6 +24,10 @@
     "title": "Einfach plaudern"
   },
   "messageCopied": "Nachricht kopiert",
+  "messageEdit": {
+    "placeholder": "Bitte Nachrichtentext eingeben",
+    "title": "Nachricht bearbeiten"
+  },
   "newAgent": "Neuer Assistent",
   "newChat": "Neues Gespräch",
   "pin": "Anheften",

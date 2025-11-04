@@ -21,6 +21,9 @@ export default function ChatRoutesLayout() {
       <Stack.Screen name="setting/name/index" />
       <Stack.Screen name="setting/description/index" />
       <Stack.Screen name="setting/system-role/index" />
+
+      {/* 消息编辑 */}
+      <Stack.Screen name="message/edit" />
     </Stack>
   );
 }

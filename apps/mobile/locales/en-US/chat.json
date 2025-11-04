@@ -24,6 +24,10 @@
     "title": "Casual Chat"
   },
   "messageCopied": "Message copied",
+  "messageEdit": {
+    "placeholder": "Please enter your message",
+    "title": "Edit Message"
+  },
   "newAgent": "New Assistant",
   "newChat": "New Chat",
   "pin": "Pin to Top",
