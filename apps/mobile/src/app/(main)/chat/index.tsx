@@ -40,34 +40,36 @@ export default function ChatWithDrawer() {
 
   const renderContent = () => {
     return (
-      <PageContainer
-        extra={
-          <Flexbox align={'center'} gap={1} horizontal>
-            <ActionIcon
-              disabled={isInDefaultTopic}
-              icon={MessageSquarePlusIcon}
-              onPress={() => switchTopic()}
-              pressEffect={false}
-            />
-            <ActionIcon icon={Clock} onPress={toggleTopicDrawer} pressEffect={false} />
-          </Flexbox>
-        }
-        left={<ActionIcon icon={TextAlignStartIcon} onPress={toggleDrawer} pressEffect={false} />}
-        onTitlePress={isInbox ? undefined : () => router.push('/chat/setting')}
-        title={displayTitle}
-        titleIcon={isInbox ? undefined : ChevronRightIcon}
+      <LinearGradient
+        colors={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
+        locations={[0.2, 1]}
+        style={{ flex: 1 }}
       >
-        <LinearGradient
-          colors={[theme.colorBgContainerSecondary, darken(0.04, theme.colorBgLayout)]}
-          locations={[0.2, 1]}
-          style={{ flex: 1 }}
+        <PageContainer
+          backgroundColor={'transparent'}
+          extra={
+            <Flexbox align={'center'} gap={1} horizontal>
+              <ActionIcon
+                disabled={isInDefaultTopic}
+                icon={MessageSquarePlusIcon}
+                onPress={() => switchTopic()}
+                pressEffect={false}
+              />
+              <ActionIcon icon={Clock} onPress={toggleTopicDrawer} pressEffect={false} />
+            </Flexbox>
+          }
+          headerBackgroundColor={theme.colorBgContainerSecondary}
+          left={<ActionIcon icon={TextAlignStartIcon} onPress={toggleDrawer} pressEffect={false} />}
+          onTitlePress={isInbox ? undefined : () => router.push('/chat/setting')}
+          title={displayTitle}
+          titleIcon={isInbox ? undefined : ChevronRightIcon}
         >
           <KeyboardStickyView offset={{ closed: 0, opened: isIOS ? 32 : 16 }} style={{ flex: 1 }}>
             <ChatList />
             <ChatInput />
           </KeyboardStickyView>
-        </LinearGradient>
-      </PageContainer>
+        </PageContainer>
+      </LinearGradient>
     );
   };
 
