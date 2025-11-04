@@ -8,7 +8,7 @@ import { gt, valid } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { CURRENT_VERSION, isDesktop } from '@/const/version';
+import { CURRENT_VERSION, isDesktop } from '@lobechat/const';
 import { MCPErrorData } from '@/libs/mcp/types';
 import { discoverService } from '@/services/discover';
 import { mcpService } from '@/services/mcp';

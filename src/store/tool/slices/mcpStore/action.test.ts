@@ -27,8 +27,8 @@ const bootstrapToolStoreWithDesktop = async (isDesktopEnv: boolean) => {
   vi.mock('zustand/traditional');
   process.env.NEXT_PUBLIC_IS_DESKTOP_APP = isDesktopEnv ? '1' : '0';
 
-  vi.doMock('@/const/version', async () => {
-    const actual = await vi.importActual<typeof import('@/const/version')>('@/const/version');
+  vi.doMock('@lobechat/const', async () => {
+    const actual = await vi.importActual<typeof import('@lobechat/const')>('@lobechat/const');
     return {
       ...actual,
       isDesktop: isDesktopEnv,
@@ -41,7 +41,7 @@ const bootstrapToolStoreWithDesktop = async (isDesktopEnv: boolean) => {
 
   const cleanup = () => {
     vi.resetModules();
-    vi.doUnmock('@/const/version');
+    vi.doUnmock('@lobechat/const');
     vi.mock('zustand/traditional');
     if (ORIGINAL_DESKTOP_ENV === undefined) {
       delete process.env.NEXT_PUBLIC_IS_DESKTOP_APP;

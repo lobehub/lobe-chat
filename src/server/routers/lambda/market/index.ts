@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { isDesktop } from '@/const/version';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { DiscoverService } from '@/server/services/discover';
-import { AssistantSorts, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
+import { AssistantSorts, McpConnectionType, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
 
 const log = debug('lambda-router:market');
 
@@ -83,7 +83,7 @@ export const marketRouter = router({
       z
         .object({
           category: z.string().optional(),
-          connectionType: z.enum(['http', 'stdio', 'sse']).optional(),
+          connectionType: z.nativeEnum(McpConnectionType).optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
           page: z.number().optional(),
@@ -181,7 +181,7 @@ export const marketRouter = router({
           category: z.string().optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
-          connectionType: z.enum(['http', 'stdio', 'sse']).optional(),
+          connectionType: z.nativeEnum(McpConnectionType).optional(),
           page: z.number().optional(),
           pageSize: z.number().optional(),
           q: z.string().optional(),
