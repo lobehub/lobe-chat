@@ -180,7 +180,7 @@ export const CreateNewMessageParamsSchema = z
     plugin: ChatPluginPayloadSchema.optional(),
     // Grouping
     parentId: z.string().optional(),
-    groupId: z.string().optional(),
+    groupId: z.string().nullable().optional(),
     // Context
     topicId: z.string().optional(),
     threadId: z.string().nullable().optional(),

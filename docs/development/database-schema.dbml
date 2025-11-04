@@ -56,6 +56,7 @@ table agents_knowledge_bases {
 
   indexes {
     (agent_id, knowledge_base_id) [pk]
+    agent_id [name: 'agents_knowledge_bases_agent_id_idx']
   }
 }
 

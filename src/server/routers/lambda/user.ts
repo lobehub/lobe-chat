@@ -30,7 +30,9 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
     ctx: {
       clerkAuth: new ClerkAuth(),
       fileService: new FileService(ctx.serverDB, ctx.userId),
+      messageModel: new MessageModel(ctx.serverDB, ctx.userId),
       nextAuthUserService: new NextAuthUserService(ctx.serverDB),
+      sessionModel: new SessionModel(ctx.serverDB, ctx.userId),
       userModel: new UserModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -97,12 +99,12 @@ export const userRouter = router({
       }
     }
 
-    const messageModel = new MessageModel(ctx.serverDB, ctx.userId);
-    const hasMoreThan4Messages = await messageModel.hasMoreThanN(4);
-
-    const sessionModel = new SessionModel(ctx.serverDB, ctx.userId);
-    const hasAnyMessages = await messageModel.hasMoreThanN(0);
-    const hasExtraSession = await sessionModel.hasMoreThanN(1);
+    // Run all count queries in parallel
+    const [hasMoreThan4Messages, hasAnyMessages, hasExtraSession] = await Promise.all([
+      ctx.messageModel.hasMoreThanN(4),
+      ctx.messageModel.hasMoreThanN(0),
+      ctx.sessionModel.hasMoreThanN(1),
+    ]);
 
     return {
       avatar: state.avatar,

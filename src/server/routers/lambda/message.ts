@@ -283,5 +283,3 @@ export const messageRouter = router({
       return ctx.messageModel.updateTranslate(input.id, input.value);
     }),
 });
-
-export type MessageRouter = typeof messageRouter;
