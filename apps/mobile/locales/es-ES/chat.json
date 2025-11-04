@@ -33,6 +33,11 @@
   "pin": "Fijar",
   "pinOff": "Quitar fijación",
   "placeholder": "Escribe tu mensaje...",
+  "reasoning": {
+    "thinking": "Pensando profundamente...",
+    "thought": "Pensamiento profundo completado (duró {{duration}} segundos)",
+    "thoughtWithoutDuration": "Pensamiento profundo completado"
+  },
   "regenerateFailed": "Error al regenerar, por favor intenta más tarde",
   "send": "Enviar",
   "session": {

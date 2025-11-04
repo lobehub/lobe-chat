@@ -27,10 +27,10 @@
   },
   "defaultSession": "自定义助手",
   "image": {
-    "saveSuccess": "图片已保存到相册",
-    "saveFailed": "保存失败，请重试",
     "permissionDenied": "需要相册权限才能保存图片",
-    "permissionRequest": "请在设置中允许访问相册"
+    "permissionRequest": "请在设置中允许访问相册",
+    "saveFailed": "保存失败，请重试",
+    "saveSuccess": "图片已保存到相册"
   },
   "navigation": {
     "goToHomeScreen": "返回首页"

@@ -33,6 +33,11 @@
   "pin": "Przypnij",
   "pinOff": "Odpiń",
   "placeholder": "Wpisz swoją wiadomość...",
+  "reasoning": {
+    "thinking": "Trwa głębokie myślenie...",
+    "thought": "Zakończono głębokie myślenie (czas trwania: {{duration}} sekund)",
+    "thoughtWithoutDuration": "Zakończono głębokie myślenie"
+  },
   "regenerateFailed": "Nie udało się wygenerować ponownie, spróbuj później",
   "send": "Wyślij",
   "session": {

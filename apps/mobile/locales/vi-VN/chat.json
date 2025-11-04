@@ -33,6 +33,11 @@
   "pin": "Ghim lên đầu",
   "pinOff": "Bỏ ghim",
   "placeholder": "Nhập tin nhắn của bạn...",
+  "reasoning": {
+    "thinking": "Đang suy nghĩ sâu...",
+    "thought": "Đã suy nghĩ sâu (mất {{duration}} giây)",
+    "thoughtWithoutDuration": "Đã suy nghĩ sâu"
+  },
   "regenerateFailed": "Tạo lại thất bại, vui lòng thử lại sau",
   "send": "Gửi",
   "session": {

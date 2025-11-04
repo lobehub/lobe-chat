@@ -33,6 +33,11 @@
   "pin": "고정",
   "pinOff": "고정 해제",
   "placeholder": "메시지를 입력하세요...",
+  "reasoning": {
+    "thinking": "심층 사고 중...",
+    "thought": "{{duration}}초 동안 심층 사고 완료",
+    "thoughtWithoutDuration": "심층 사고 완료"
+  },
   "regenerateFailed": "재생성에 실패했습니다. 잠시 후 다시 시도해 주세요.",
   "send": "전송",
   "session": {

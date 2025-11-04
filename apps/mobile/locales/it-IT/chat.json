@@ -33,6 +33,11 @@
   "pin": "Fissa in alto",
   "pinOff": "Rimuovi fissaggio in alto",
   "placeholder": "Inserisci il tuo messaggio...",
+  "reasoning": {
+    "thinking": "Riflessione profonda in corso...",
+    "thought": "Riflessione completata (durata: {{duration}} secondi)",
+    "thoughtWithoutDuration": "Riflessione completata"
+  },
   "regenerateFailed": "Rigenerazione fallita, riprova più tardi",
   "send": "Invia",
   "session": {

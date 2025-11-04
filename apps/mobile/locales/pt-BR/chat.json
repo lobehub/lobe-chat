@@ -33,6 +33,11 @@
   "pin": "Fixar no topo",
   "pinOff": "Desafixar do topo",
   "placeholder": "Digite sua mensagem...",
+  "reasoning": {
+    "thinking": "Pensando profundamente...",
+    "thought": "Reflexão concluída (levou {{duration}} segundos)",
+    "thoughtWithoutDuration": "Reflexão concluída"
+  },
   "regenerateFailed": "Falha ao regenerar, por favor tente novamente mais tarde",
   "send": "Enviar",
   "session": {

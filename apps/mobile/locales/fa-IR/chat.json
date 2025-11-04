@@ -33,6 +33,11 @@
   "pin": "سنجاق کردن",
   "pinOff": "لغو سنجاق کردن",
   "placeholder": "پیام خود را وارد کنید...",
+  "reasoning": {
+    "thinking": "در حال تفکر عمیق...",
+    "thought": "تفکر عمیق انجام شد (مدت زمان: {{duration}} ثانیه)",
+    "thoughtWithoutDuration": "تفکر عمیق انجام شد"
+  },
   "regenerateFailed": "تولید مجدد ناموفق بود، لطفاً بعداً دوباره تلاش کنید",
   "send": "ارسال",
   "session": {
