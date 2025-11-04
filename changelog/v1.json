@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor services to a more clean structure."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.27"
+  },
+  {
+    "children": {
       "improvements": ["Add settings (jsonb) column to ai_models table."]
     },
     "date": "2025-11-04",
