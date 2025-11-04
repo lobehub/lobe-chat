@@ -41,10 +41,44 @@ class MCPService {
 
     if (!plugin) return;
 
+    const connection = plugin.customParams?.mcp;
+    const settingsEntries = plugin.settings
+      ? Object.entries(plugin.settings as Record<string, any>).filter(
+          ([, value]) => value !== undefined && value !== null,
+        )
+      : [];
+    const pluginSettings =
+      settingsEntries.length > 0
+        ? settingsEntries.reduce<Record<string, string>>((acc, [key, value]) => {
+            acc[key] = typeof value === 'string' ? value : String(value);
+
+            return acc;
+          }, {})
+        : undefined;
+
+    const params = {
+      ...connection,
+      name: identifier,
+    } as any;
+
+    if (connection?.type === 'http') {
+      params.headers = {
+        ...connection.headers,
+        ...pluginSettings,
+      };
+    }
+
+    if (connection?.type === 'stdio') {
+      params.env = {
+        ...connection.env,
+        ...pluginSettings,
+      };
+    }
+
     const data = {
       args,
-      env: plugin.settings || plugin.customParams?.mcp?.env,
-      params: { ...plugin.customParams?.mcp, name: identifier } as any,
+      env: connection?.type === 'stdio' ? params.env : undefined,
+      params,
       toolName: apiName,
     };
 
