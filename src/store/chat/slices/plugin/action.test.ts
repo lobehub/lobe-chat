@@ -26,7 +26,7 @@ vi.mock('@/services/message', () => ({
     updateMessageError: vi.fn(),
     updateMessagePluginState: vi.fn(),
     updateMessagePluginArguments: vi.fn(),
-    createMessage: vi.fn(),
+    createNewMessage: vi.fn(),
   },
 }));
 
@@ -539,13 +539,17 @@ describe('ChatPluginAction', () => {
   });
 
   describe('createAssistantMessageByPlugin', () => {
-    it('should create an assistant message and refresh messages', async () => {
-      // 模拟 messageService.create 方法的实现
-      (messageService.createMessage as Mock).mockResolvedValue({});
+    it('should create an assistant message and replace messages', async () => {
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
+      // 模拟 messageService.createNewMessage 方法的实现
+      (messageService.createNewMessage as Mock).mockResolvedValue({
+        id: 'new-message-id',
+        messages: mockMessages,
+      });
 
-      // 设置初始状态并模拟 refreshMessages 方法
+      // 设置初始状态并模拟 replaceMessages 方法
       const initialState = {
-        refreshMessages: vi.fn(),
+        replaceMessages: vi.fn(),
         activeId: 'session-id',
         activeTopicId: 'topic-id',
       };
@@ -560,8 +564,8 @@ describe('ChatPluginAction', () => {
         await result.current.createAssistantMessageByPlugin(content, parentId);
       });
 
-      // 验证 messageService.create 是否被带有正确参数调用
-      expect(messageService.createMessage).toHaveBeenCalledWith({
+      // 验证 messageService.createNewMessage 是否被带有正确参数调用
+      expect(messageService.createNewMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',
@@ -569,14 +573,14 @@ describe('ChatPluginAction', () => {
         topicId: initialState.activeTopicId,
       });
 
-      // 验证 refreshMessages 是否被调用
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      // 验证 replaceMessages 是否被调用
+      expect(result.current.replaceMessages).toHaveBeenCalledWith(mockMessages);
     });
 
     it('should handle errors when message creation fails', async () => {
       // 模拟 messageService.create 方法，使其抛出错误
       const errorMessage = 'Failed to create message';
-      (messageService.createMessage as Mock).mockRejectedValue(new Error(errorMessage));
+      (messageService.createNewMessage as Mock).mockRejectedValue(new Error(errorMessage));
 
       // 设置初始状态并模拟 refreshMessages 方法
       const initialState = {
@@ -598,7 +602,7 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 messageService.create 是否被带有正确参数调用
-      expect(messageService.createMessage).toHaveBeenCalledWith({
+      expect(messageService.createNewMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',

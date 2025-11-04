@@ -131,7 +131,7 @@ describe('generateAIChatV2 actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
         });
 
-        expect(messageService.createMessage).not.toHaveBeenCalled();
+        expect(messageService.createNewMessage).not.toHaveBeenCalled();
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
 
@@ -142,7 +142,7 @@ describe('generateAIChatV2 actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY });
         });
 
-        expect(messageService.createMessage).not.toHaveBeenCalled();
+        expect(messageService.createNewMessage).not.toHaveBeenCalled();
       });
 
       it('should not send when message is empty with empty files array', async () => {
@@ -152,7 +152,7 @@ describe('generateAIChatV2 actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files: [] });
         });
 
-        expect(messageService.createMessage).not.toHaveBeenCalled();
+        expect(messageService.createNewMessage).not.toHaveBeenCalled();
       });
     });
 
@@ -312,7 +312,7 @@ describe('generateAIChatV2 actions', () => {
           });
         });
 
-        expect(messageService.createMessage).toHaveBeenCalled();
+        expect(messageService.createNewMessage).toHaveBeenCalled();
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
 

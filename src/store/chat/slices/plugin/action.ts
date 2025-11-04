@@ -98,8 +98,8 @@ export const chatPlugin: StateCreator<
       topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
     };
 
-    await messageService.createMessage(newMessage);
-    await get().refreshMessages();
+    const result = await messageService.createNewMessage(newMessage);
+    get().replaceMessages(result.messages);
   },
 
   fillPluginMessageContent: async (id, content, triggerAiMessage) => {

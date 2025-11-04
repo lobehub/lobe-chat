@@ -450,9 +450,9 @@ export const chatMessage: StateCreator<
   internal_createMessage: async (message, context) => {
     const {
       internal_createTmpMessage,
-      refreshMessages,
       internal_toggleMessageLoading,
       internal_dispatchMessage,
+      replaceMessages,
     } = get();
     let tempId = context?.tempMessageId;
     if (!tempId) {
@@ -463,14 +463,16 @@ export const chatMessage: StateCreator<
     }
 
     try {
-      const id = await messageService.createMessage(message);
+      const result = await messageService.createNewMessage(message);
+
       if (!context?.skipRefresh) {
         internal_toggleMessageLoading(true, tempId);
-        await refreshMessages();
+        // Use the messages returned from createNewMessage (already grouped)
+        replaceMessages(result.messages);
       }
 
       internal_toggleMessageLoading(false, tempId);
-      return id;
+      return result.id;
     } catch (e) {
       internal_toggleMessageLoading(false, tempId);
       internal_dispatchMessage({

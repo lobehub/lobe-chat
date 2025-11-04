@@ -2,8 +2,8 @@
 import {
   ChatMessageError,
   ChatMessagePluginError,
-  ChatTranslate,
   ChatTTS,
+  ChatTranslate,
   CreateMessageParams,
   CreateMessageResult,
   ModelRankItem,
@@ -20,13 +20,6 @@ import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
 export class MessageService {
-  createMessage = async ({ sessionId, ...params }: CreateMessageParams): Promise<string> => {
-    return lambdaClient.message.createMessage.mutate({
-      ...params,
-      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
-    });
-  };
-
   createNewMessage = async ({
     sessionId,
     ...params
@@ -161,16 +154,6 @@ export class MessageService {
 
   private toDbSessionId = (sessionId: string | undefined) => {
     return sessionId === INBOX_SESSION_ID ? null : sessionId;
-  };
-
-  hasMessages = async (): Promise<boolean> => {
-    const number = await this.countMessages();
-    return number > 0;
-  };
-
-  messageCountToCheckTrace = async (): Promise<boolean> => {
-    const number = await this.countMessages();
-    return number >= 4;
   };
 }
 

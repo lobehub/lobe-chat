@@ -1,5 +1,4 @@
 import {
-  CreateMessageParamsSchema,
   CreateNewMessageParamsSchema,
   UpdateMessageParamsSchema,
   UpdateMessageRAGParamsSchema,
@@ -51,14 +50,6 @@ export const messageRouter = router({
     )
     .query(async ({ ctx, input }) => {
       return ctx.messageModel.countWords(input);
-    }),
-
-  createMessage: messageProcedure
-    .input(CreateMessageParamsSchema)
-    .mutation(async ({ input, ctx }) => {
-      const data = await ctx.messageModel.create(input as any);
-
-      return data.id;
     }),
 
   createNewMessage: messageProcedure
