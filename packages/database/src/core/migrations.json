@@ -770,10 +770,10 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"ai_models\" ADD COLUMN \"settings\" jsonb DEFAULT '{}'::jsonb;"
+      "ALTER TABLE \"ai_models\" ADD COLUMN IF NOT EXISTS \"settings\" jsonb DEFAULT '{}'::jsonb;"
     ],
     "bps": true,
     "folderMillis": 1762251112601,
-    "hash": "bf79eb547d7db1f2299f6306dab21343d12a052f1ff9a28796441c58bc4d0725"
+    "hash": "923ccbdf46c32be9a981dabd348e6923b4a365444241e9b8cc174bf5b914cbc5"
   }
 ]
