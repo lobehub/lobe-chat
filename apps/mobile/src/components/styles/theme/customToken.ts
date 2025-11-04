@@ -22,15 +22,13 @@ const generateCustomColorPalette = ({
   const colorStepPalette: Record<string, string> = {};
 
   // 生成数字色阶 (1-11)，跳过索引 0 和 12（与 @lobehub/ui 对齐）
-  for (const [index, color] of scale[appearance].entries()) {
-    if (index === 0 || index === 12) continue;
-    colorStepPalette[`${name}${index}`] = color;
+  for (let index = 1; index <= 11; index++) {
+    colorStepPalette[`${name}${index}`] = scale[appearance][index];
   }
 
-  // 生成Alpha色阶 (1A-11A)，跳过索引 0 和 12
-  for (const [index, color] of scale[`${appearance}A`].entries()) {
-    if (index === 0 || index === 12) continue;
-    colorStepPalette[`${name}${index}A`] = color;
+  // 生成 Alpha 色阶 (1A-11A)，跳过索引 0 和 12
+  for (let index = 1; index <= 11; index++) {
+    colorStepPalette[`${name}${index}A`] = scale[`${appearance}A`][index];
   }
 
   // 生成语义化颜色（复用 generateColorPalette）

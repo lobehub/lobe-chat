@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
+import Cell from '@/components/Cell';
 import Input from '@/components/Input';
 import Text from '@/components/Text';
 
@@ -58,7 +59,7 @@ const TokenTable = memo<TokenTableProps>(({ token, title }) => {
   );
 
   return (
-    <View style={styles.tokenTable}>
+    <View>
       <Text style={styles.tableTitle}>{title}</Text>
       <Text style={styles.tableSubtitle}>{filteredTokens.length} tokens</Text>
 
@@ -70,16 +71,19 @@ const TokenTable = memo<TokenTableProps>(({ token, title }) => {
         value={searchText}
       />
 
-      <View style={styles.tokensContainer}>
-        {filteredTokens.map((entry) => (
-          <View key={entry.name} style={styles.tokenRow}>
-            <View style={styles.tokenInfo}>
-              <Text style={styles.tokenName}>{entry.name}</Text>
-            </View>
-            <View style={styles.tokenValueContainer}>{renderValue(entry)}</View>
-          </View>
-        ))}
-      </View>
+      {filteredTokens.map((entry) => (
+        <Cell
+          extra={renderValue(entry)}
+          key={entry.name}
+          paddingInline={0}
+          showArrow={false}
+          title={entry.name}
+          titleProps={{
+            code: true,
+            fontSize: 12,
+          }}
+        />
+      ))}
     </View>
   );
 });

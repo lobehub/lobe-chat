@@ -1,11 +1,11 @@
-import { Text, useTheme } from '@lobehub/ui-rn';
-import { ScrollView, View } from 'react-native';
+import { Flexbox, Text, useTheme } from '@lobehub/ui-rn';
+import { View } from 'react-native';
 
 const TokenDemo = () => {
   const token = useTheme();
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20 }} style={{ flex: 1 }}>
+    <Flexbox gap={16}>
       <View style={{ gap: 16 }}>
         <Text style={{ color: token.colorText, fontSize: 18, fontWeight: 'bold' }}>
           颜色级别 Token 使用示例
@@ -95,7 +95,7 @@ const TokenDemo = () => {
           </Text>
         </View>
       </View>
-    </ScrollView>
+    </Flexbox>
   );
 };
 

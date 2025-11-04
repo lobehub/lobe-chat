@@ -1,15 +1,12 @@
-import { ColorScales, colorScales } from '@lobehub/ui-rn';
-import { ScrollView, View } from 'react-native';
+import { ColorScales, Flexbox, colorScales } from '@lobehub/ui-rn';
 
 const FullDemo = () => {
   return (
-    <ScrollView contentContainerStyle={{ padding: 20 }} style={{ flex: 1 }}>
-      <View style={{ gap: 32 }}>
-        {Object.entries(colorScales).map(([name, scale]) => (
-          <ColorScales key={name} midHighLight={9} name={name} scale={scale} />
-        ))}
-      </View>
-    </ScrollView>
+    <Flexbox gap={16}>
+      {Object.entries(colorScales).map(([name, scale]) => (
+        <ColorScales key={name} midHighLight={9} name={name} scale={scale} />
+      ))}
+    </Flexbox>
   );
 };
 
