@@ -12,7 +12,8 @@
     "notNow": "Not Now",
     "regenerate": "Regenerate",
     "retry": "Retry",
-    "save": "Save"
+    "save": "Save",
+    "saveImage": "Save Image"
   },
   "and": "and",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Enter keywords to search"
   },
   "defaultSession": "Custom Assistant",
+  "image": {
+    "permissionDenied": "Album access is required to save images",
+    "permissionRequest": "Please allow album access in your settings",
+    "saveFailed": "Save failed, please try again",
+    "saveSuccess": "Image has been saved to your album"
+  },
   "navigation": {
     "goToHomeScreen": "Return to Home"
   },

@@ -12,7 +12,8 @@
     "notNow": "今はしない",
     "regenerate": "再生成",
     "retry": "再試行",
-    "save": "保存"
+    "save": "保存",
+    "saveImage": "画像を保存"
   },
   "and": "と",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "検索キーワードを入力してください"
   },
   "defaultSession": "カスタムアシスタント",
+  "image": {
+    "permissionDenied": "画像を保存するにはアルバムへのアクセス許可が必要です",
+    "permissionRequest": "設定でアルバムへのアクセスを許可してください",
+    "saveFailed": "保存に失敗しました。もう一度お試しください",
+    "saveSuccess": "画像がアルバムに保存されました"
+  },
   "navigation": {
     "goToHomeScreen": "ホームに戻る"
   },

@@ -20,6 +20,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     edgeToEdgeEnabled: true,
     icon: './assets/images/icon-android.png',
     package: 'com.lobehub.app',
+    permissions: [
+      'android.permission.READ_EXTERNAL_STORAGE',
+      'android.permission.WRITE_EXTERNAL_STORAGE',
+      'android.permission.READ_MEDIA_IMAGES',
+    ],
   },
   androidNavigationBar: {
     barStyle: 'light-content',
@@ -51,6 +56,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       NSAppTransportSecurity: {
         NSAllowsArbitraryLoads: true,
       },
+      NSPhotoLibraryAddUsageDescription: '需要保存图片到相册',
+      NSPhotoLibraryUsageDescription: '需要访问相册以保存图片',
       // 仅支持 iPhone
       UIDeviceFamily: [1],
     },

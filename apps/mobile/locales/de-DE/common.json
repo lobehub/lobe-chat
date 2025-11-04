@@ -12,7 +12,8 @@
     "notNow": "Nicht jetzt",
     "regenerate": "Erneut generieren",
     "retry": "Erneut versuchen",
-    "save": "Speichern"
+    "save": "Speichern",
+    "saveImage": "Bild speichern"
   },
   "and": "und",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Bitte Suchbegriff eingeben"
   },
   "defaultSession": "Benutzerdefinierter Assistent",
+  "image": {
+    "permissionDenied": "Zugriff auf das Album erforderlich, um das Bild zu speichern",
+    "permissionRequest": "Bitte erlauben Sie den Zugriff auf das Album in den Einstellungen",
+    "saveFailed": "Speichern fehlgeschlagen, bitte erneut versuchen",
+    "saveSuccess": "Bild wurde im Album gespeichert"
+  },
   "navigation": {
     "goToHomeScreen": "Zur Startseite zurückkehren"
   },

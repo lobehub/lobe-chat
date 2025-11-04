@@ -12,7 +12,8 @@
     "notNow": "Non ora",
     "regenerate": "Rigenera",
     "retry": "Riprova",
-    "save": "Salva"
+    "save": "Salva",
+    "saveImage": "Salva immagine"
   },
   "and": "e",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Inserisci le parole chiave di ricerca"
   },
   "defaultSession": "Assistente personalizzato",
+  "image": {
+    "permissionDenied": "È necessario il permesso per accedere all'album per salvare l'immagine",
+    "permissionRequest": "Consenti l'accesso all'album nelle impostazioni",
+    "saveFailed": "Salvataggio non riuscito, riprova",
+    "saveSuccess": "Immagine salvata nell'album"
+  },
   "navigation": {
     "goToHomeScreen": "Torna alla schermata principale"
   },

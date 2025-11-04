@@ -12,7 +12,8 @@
     "notNow": "Nie teraz",
     "regenerate": "Wygeneruj ponownie",
     "retry": "Spróbuj ponownie",
-    "save": "Zapisz"
+    "save": "Zapisz",
+    "saveImage": "Zapisz obraz"
   },
   "and": "i",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Wprowadź słowo kluczowe do wyszukania"
   },
   "defaultSession": "Niestandardowy asystent",
+  "image": {
+    "permissionDenied": "Aby zapisać obraz, potrzebne są uprawnienia do albumu",
+    "permissionRequest": "Zezwól na dostęp do albumu w ustawieniach",
+    "saveFailed": "Nie udało się zapisać, spróbuj ponownie",
+    "saveSuccess": "Obraz został zapisany w albumie"
+  },
   "navigation": {
     "goToHomeScreen": "Powrót do ekranu głównego"
   },
