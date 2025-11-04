@@ -158,6 +158,8 @@ const Image = memo<ImageProps>(
 
     const imageContent = (
       <ExpoImage
+        autoplay
+        cachePolicy="memory-disk"
         {...rest}
         contentFit={rest.contentFit || 'contain'}
         onLoad={handleLoad}
