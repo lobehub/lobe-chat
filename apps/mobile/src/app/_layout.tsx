@@ -35,7 +35,7 @@ const Layout = () => {
       <Stack.Screen name="discover" />
 
       {/* 组件演练场 */}
-      <Stack.Screen name="playground" />
+      <Stack.Screen name="playground" options={{ headerShown: false }} />
 
       {/* 404 页面 */}
       <Stack.Screen name="+not-found" />

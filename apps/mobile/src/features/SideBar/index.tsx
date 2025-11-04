@@ -1,6 +1,6 @@
 import { LobeHub } from '@lobehub/icons-rn';
 import { ActionIcon, Block, Flexbox } from '@lobehub/ui-rn';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import { CirclePlus, CompassIcon, LucideComponent } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
@@ -85,27 +85,31 @@ export default function SideBar({ children }: { children: ReactNode }) {
               <LobeHub.Text color={theme.colorText} size={20} style={{ marginLeft: 4 }} />
               <Flexbox align={'center'} gap={4} horizontal>
                 {isDev && (
-                  <Link asChild href="/playground">
-                    <ActionIcon
-                      icon={LucideComponent}
-                      size={{
-                        blockSize: 36,
-                        borderRadius: 36,
-                        size: ICON_SIZE,
-                      }}
-                    />
-                  </Link>
-                )}
-                <Link asChild href="/discover/assistant">
                   <ActionIcon
-                    icon={CompassIcon}
+                    icon={LucideComponent}
+                    onPress={() => {
+                      setDrawerOpen(false);
+                      router.push('/playground');
+                    }}
                     size={{
                       blockSize: 36,
                       borderRadius: 36,
                       size: ICON_SIZE,
                     }}
                   />
-                </Link>
+                )}
+                <ActionIcon
+                  icon={CompassIcon}
+                  onPress={() => {
+                    setDrawerOpen(false);
+                    router.push('/discover/assistant');
+                  }}
+                  size={{
+                    blockSize: 36,
+                    borderRadius: 36,
+                    size: ICON_SIZE,
+                  }}
+                />
                 <ActionIcon
                   icon={CirclePlus}
                   loading={isCreatingSession}
