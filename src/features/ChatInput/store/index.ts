@@ -6,13 +6,17 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
+import { createDevtools } from '@/store/middleware/createDevtools';
+
 import { Store, store } from './action';
 import { State } from './initialState';
 
 export type { PublicState, State } from './initialState';
 
+const devtools = createDevtools('chatInput');
+
 export const createStore = (initState?: Partial<State>) =>
-  createWithEqualityFn(subscribeWithSelector(store(initState)), shallow);
+  createWithEqualityFn(subscribeWithSelector(devtools(store(initState))), shallow);
 
 export const {
   useStore: useChatInputStore,

@@ -19,7 +19,7 @@ export type Store = Action & State;
 
 type CreateStore = (
   initState?: Partial<PublicState>,
-) => StateCreator<Store, [['zustand/devtools', never]]>;
+) => StateCreator<Store, [['zustand/subscribeWithSelector', never], ['zustand/devtools', never]]>;
 
 export const store: CreateStore = (publicState) => (set, get) => ({
   ...initialState,

@@ -80,7 +80,10 @@ export type Store = Action & State;
 
 const t = setNamespace('AgentSettings');
 
-export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, get) => ({
+export const store: StateCreator<
+  Store,
+  [['zustand/subscribeWithSelector', never], ['zustand/devtools', never]]
+> = (set, get) => ({
   ...initialState,
   autoPickEmoji: async () => {
     const { config, meta, dispatchMeta } = get();

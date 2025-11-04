@@ -42,7 +42,10 @@ export type Store = Action & State;
 
 const t = setNamespace('GroupChatSettings');
 
-export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, get) => ({
+export const store: StateCreator<
+  Store,
+  [['zustand/subscribeWithSelector', never], ['zustand/devtools', never]]
+> = (set, get) => ({
   ...initialState,
 
   resetGroupConfig: async () => {
