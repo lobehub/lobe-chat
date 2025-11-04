@@ -59,6 +59,8 @@ import InstantSwitchDemos from '@lobehub/ui-rn/InstantSwitch/demos';
 import ListItemDemos from '@lobehub/ui-rn/ListItem/demos';
 // LoadingDots
 import LoadingDotsDemos from '@lobehub/ui-rn/LoadingDots/demos';
+// LoadingToast
+import LoadingToastDemos from '@lobehub/ui-rn/LoadingToast/demos';
 // Markdown
 import MarkdownDemos from '@lobehub/ui-rn/Markdown/demos';
 // MaskShadow
@@ -127,6 +129,7 @@ export const DEMOS_MAP: Record<string, any> = {
   InstantSwitch: InstantSwitchDemos,
   ListItem: ListItemDemos,
   LoadingDots: LoadingDotsDemos,
+  LoadingToast: LoadingToastDemos,
   Markdown: MarkdownDemos,
   MaskShadow: MaskShadowDemos,
   MaterialFileTypeIcon: MaterialFileTypeIconDemos,
