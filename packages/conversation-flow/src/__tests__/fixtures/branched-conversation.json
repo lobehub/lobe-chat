@@ -1,0 +1,76 @@
+[
+  {
+    "id": "msg-201",
+    "role": "user",
+    "content": "Write a haiku about programming",
+    "parentId": null,
+    "createdAt": 1704067200000,
+    "updatedAt": 1704067200000,
+    "meta": {}
+  },
+  {
+    "id": "msg-202",
+    "role": "assistant",
+    "content": "Code flows like water,\nBugs hide in silent shadows,\nDebug brings the light.",
+    "parentId": "msg-201",
+    "createdAt": 1704067203000,
+    "updatedAt": 1704067203000,
+    "meta": {},
+    "usage": {
+      "totalInputTokens": 12,
+      "totalOutputTokens": 28,
+      "totalTokens": 40
+    }
+  },
+  {
+    "id": "msg-203",
+    "role": "assistant",
+    "content": "Functions compile,\nVariables dance in memory,\nAlgorithm sings.",
+    "parentId": "msg-201",
+    "createdAt": 1704067203100,
+    "updatedAt": 1704067203100,
+    "meta": {},
+    "usage": {
+      "totalInputTokens": 12,
+      "totalOutputTokens": 24,
+      "totalTokens": 36
+    }
+  },
+  {
+    "id": "msg-204",
+    "role": "assistant",
+    "content": "Lines of logic flow,\nErrors break the peaceful code,\nTests restore the calm.",
+    "parentId": "msg-201",
+    "createdAt": 1704067203200,
+    "updatedAt": 1704067203200,
+    "meta": {},
+    "usage": {
+      "totalInputTokens": 12,
+      "totalOutputTokens": 26,
+      "totalTokens": 38
+    }
+  },
+  {
+    "id": "msg-205",
+    "role": "user",
+    "content": "I like the first one best!",
+    "parentId": "msg-202",
+    "createdAt": 1704067220000,
+    "updatedAt": 1704067220000,
+    "meta": {}
+  },
+  {
+    "id": "msg-206",
+    "role": "assistant",
+    "content": "Thank you! I'm glad you enjoyed it. The metaphor of light revealing hidden bugs is one of my favorites. Would you like me to write more haikus on different programming topics?",
+    "parentId": "msg-205",
+    "createdAt": 1704067222000,
+    "updatedAt": 1704067222000,
+    "meta": {},
+    "usage": {
+      "totalInputTokens": 52,
+      "totalOutputTokens": 48,
+      "totalTokens": 100
+    }
+  }
+]
