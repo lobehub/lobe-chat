@@ -24,7 +24,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
   const { activeId } = useSessionStore();
   const { deleteMessage, regenerateMessage } = useChatStore();
   const toast = useToast();
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const [open, setOpen] = useState(false);
   const longPressTimerRef = useRef<any>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -151,7 +151,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
               showArrow={false}
               title={t('actions.copy', { ns: 'common' })}
             />
-            <Divider />
+            <Divider style={{ backgroundColor: theme.colorFillSecondary }} />
             <Cell
               icon={Edit3}
               iconSize={20}
@@ -160,7 +160,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
               showArrow={false}
               title={t('actions.edit', { ns: 'common' })}
             />
-            <Divider />
+            <Divider style={{ backgroundColor: theme.colorFillSecondary }} />
             <Cell
               icon={RefreshCw}
               iconSize={20}
