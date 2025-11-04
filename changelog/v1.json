@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor chat message model to speed up."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.29"
+  },
+  {
+    "children": {
       "features": ["Support install sreamable http mcp server on web."]
     },
     "date": "2025-11-04",
