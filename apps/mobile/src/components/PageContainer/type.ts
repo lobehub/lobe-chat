@@ -18,6 +18,7 @@ export interface PageContainerProps {
   children?: ReactNode;
   extra?: ReactNode;
   extraProps?: Omit<FlexboxProps, 'children'>;
+  headerBackgroundColor?: ColorValue;
   largeTitleEnabled?: boolean;
   left?: ReactNode;
   leftProps?: Omit<FlexboxProps, 'children'>;
