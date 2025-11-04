@@ -48,12 +48,26 @@ export interface AIGenerateV2Action {
   /**
    * Sends a new message to the AI chat system
    */
-  sendMessageInServer: (params: SendMessageParams) => Promise<void>;
+  sendMessage: (params: SendMessageParams) => Promise<void>;
   /**
-   * Cancels sendMessageInServer operation for a specific topic/session
+   * Cancels sendMessage operation for a specific topic/session
    */
   cancelSendMessageInServer: (topicId?: string) => void;
   clearSendMessageError: () => void;
+  /**
+   */
+  triggerToolsCalling: (
+    id: string,
+    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
+  ) => Promise<void>;
+  callToolFollowAssistantMessage: (params: {
+    parentId: string;
+    traceId?: string;
+    threadId?: string;
+    inPortalThread?: boolean;
+    inSearchWorkflow?: boolean;
+  }) => Promise<void>;
+
   internal_refreshAiChat: (params: {
     topics?: ChatTopic[];
     messages: UIChatMessage[];
@@ -79,21 +93,7 @@ export interface AIGenerateV2Action {
     traceId?: string;
   }) => Promise<void>;
   /**
-   */
-  triggerToolsCalling: (
-    id: string,
-    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
-  ) => Promise<void>;
-
-  callToolFollowAssistantMessage: (params: {
-    parentId: string;
-    traceId?: string;
-    threadId?: string;
-    inPortalThread?: boolean;
-    inSearchWorkflow?: boolean;
-  }) => Promise<void>;
-  /**
-   * Toggle sendMessageInServer operation state
+   * Toggle sendMessage operation state
    */
   internal_toggleSendMessageOperation: (
     key: string | { sessionId: string; topicId?: string | null },
@@ -113,7 +113,7 @@ export const generateAIChatV2: StateCreator<
   [],
   AIGenerateV2Action
 > = (set, get) => ({
-  sendMessageInServer: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
+  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
     const { activeTopicId, activeId, activeThreadId, internal_execAgentRuntime, mainInputEditor } =
       get();
     if (!activeId) return;
@@ -174,7 +174,7 @@ export const generateAIChatV2: StateCreator<
 
     const operationKey = messageMapKey(activeId, activeTopicId);
 
-    // Start tracking sendMessageInServer operation with AbortController
+    // Start tracking sendMessage operation with AbortController
     const abortController = get().internal_toggleSendMessageOperation(operationKey, true)!;
 
     const jsonState = mainInputEditor?.getJSONState();
@@ -228,7 +228,7 @@ export const generateAIChatV2: StateCreator<
         }
       }
     } finally {
-      // Stop tracking sendMessageInServer operation
+      // Stop tracking sendMessage operation
       get().internal_toggleSendMessageOperation(operationKey, false);
     }
 
@@ -313,7 +313,7 @@ export const generateAIChatV2: StateCreator<
     get().internal_toggleSendMessageOperation(
       operationKey,
       false,
-      'User cancelled sendMessageInServer operation',
+      'User cancelled sendMessage operation',
     );
 
     // Only clear creating message state if it's the active session
