@@ -3,7 +3,7 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { isDesktop } from '@/const/version';
+import { isDesktop } from '@lobechat/const';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { DiscoverService } from '@/server/services/discover';
 import { AssistantSorts, McpConnectionType, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
@@ -179,9 +179,9 @@ export const marketRouter = router({
       z
         .object({
           category: z.string().optional(),
+          connectionType: z.nativeEnum(McpConnectionType).optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
-          connectionType: z.nativeEnum(McpConnectionType).optional(),
           page: z.number().optional(),
           pageSize: z.number().optional(),
           q: z.string().optional(),
