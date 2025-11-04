@@ -1,2 +1,2 @@
+export * from './labPrefer';
 export * from './preference';
-export * from './settings';

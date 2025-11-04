@@ -1,6 +1,10 @@
 {
   "desc": "Tutaj będziemy okresowo aktualizować nowe funkcje, które obecnie testujemy — zapraszamy do wypróbowania!",
   "features": {
+    "assistantMessageGroup": {
+      "desc": "Grupowanie wiadomości asystenta i wyników wywołań narzędzi w jednym widoku",
+      "title": "Grupowanie wiadomości asystenta"
+    },
     "groupChat": {
       "desc": "Włącz możliwość organizowania czatów grupowych z wieloma agentami.",
       "title": "Czat grupowy (wielu agentów)"

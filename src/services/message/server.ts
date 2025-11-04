@@ -39,16 +39,6 @@ export class ServerService implements IMessageService {
     return data as unknown as UIChatMessage[];
   };
 
-  getAllMessages: IMessageService['getAllMessages'] = async () => {
-    return lambdaClient.message.getAllMessages.query();
-  };
-
-  getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
-    return lambdaClient.message.getAllMessagesInSession.query({
-      sessionId: this.toDbSessionId(sessionId),
-    });
-  };
-
   countMessages: IMessageService['countMessages'] = async (params) => {
     return lambdaClient.message.count.query(params);
   };
