@@ -15,6 +15,7 @@ import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
 import { globalHelpers } from '@/store/global/helpers';
 import { mcpStoreSelectors } from '@/store/tool/selectors';
+import { McpConnectionType } from '@/types/discover';
 import {
   CheckMcpInstallResult,
   MCPErrorInfo,
@@ -692,7 +693,7 @@ export const createMCPPluginStoreSlice: StateCreator<
 
   useFetchMCPPluginList: (params) => {
     const locale = globalHelpers.getCurrentLanguage();
-    const requestParams = isDesktop ? params : { ...params, connectionType: 'http' as const };
+    const requestParams = isDesktop ? params : { ...params, connectionType: McpConnectionType.http };
     const swrKeyParts = [
       'useFetchMCPPluginList',
       locale,
