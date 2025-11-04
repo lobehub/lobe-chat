@@ -294,6 +294,13 @@
       "when": 1761878697451,
       "tag": "0041_improve_index",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1762232313711,
+      "tag": "0042_improve_agent_index",
+      "breakpoints": true
     }
   ],
   "version": "6"
