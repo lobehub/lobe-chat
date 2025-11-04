@@ -6,7 +6,6 @@ import {
   ChatMessageError,
   ChatMessagePluginError,
   CreateMessageParams,
-  CreateNewMessageParams,
   GroundingSearch,
   MessageMetadata,
   MessageToolCall,
@@ -108,24 +107,17 @@ export interface ChatMessageAction {
   ) => Promise<void>;
   /**
    * create a message with optimistic update
+   * returns the created message ID and updated message list
    */
   internal_createMessage: (
     params: CreateMessageParams,
-    context?: { tempMessageId?: string; skipRefresh?: boolean },
-  ) => Promise<string | undefined>;
+    context?: { tempMessageId?: string; skipRefresh?: boolean; groupMessageId?: string },
+  ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
   /**
    * create a temp message for optimistic update
    * otherwise the message will be too slow to show
    */
   internal_createTmpMessage: (params: CreateMessageParams) => string;
-  /**
-   * create a new message using createNewMessage API and return full message list
-   * used for group message scenarios to reduce network requests
-   */
-  internal_createNewMessage: (
-    params: CreateNewMessageParams,
-    context?: { tempMessageId?: string; groupMessageId?: string },
-  ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
   /**
    * delete the message content with optimistic update
    */
@@ -254,7 +246,7 @@ export const chatMessage: StateCreator<
       get();
     if (!activeId) return;
 
-    await internal_createMessage({
+    const result = await internal_createMessage({
       content: inputMessage,
       role: 'assistant',
       sessionId: activeId,
@@ -262,14 +254,16 @@ export const chatMessage: StateCreator<
       topicId: activeTopicId,
     });
 
-    updateInputMessage('');
+    if (result) {
+      updateInputMessage('');
+    }
   },
   addUserMessage: async ({ message, fileList }) => {
     const { internal_createMessage, updateInputMessage, activeTopicId, activeId, activeThreadId } =
       get();
     if (!activeId) return;
 
-    await internal_createMessage({
+    const result = await internal_createMessage({
       content: message,
       files: fileList,
       role: 'user',
@@ -279,7 +273,9 @@ export const chatMessage: StateCreator<
       threadId: activeThreadId,
     });
 
-    updateInputMessage('');
+    if (result) {
+      updateInputMessage('');
+    }
   },
   copyMessage: async (id, content) => {
     await copyToClipboard(content);
@@ -447,44 +443,6 @@ export const chatMessage: StateCreator<
     }
   },
 
-  internal_createMessage: async (message, context) => {
-    const {
-      internal_createTmpMessage,
-      internal_toggleMessageLoading,
-      internal_dispatchMessage,
-      replaceMessages,
-    } = get();
-    let tempId = context?.tempMessageId;
-    if (!tempId) {
-      // use optimistic update to avoid the slow waiting
-      tempId = internal_createTmpMessage(message);
-
-      internal_toggleMessageLoading(true, tempId);
-    }
-
-    try {
-      const result = await messageService.createNewMessage(message);
-
-      if (!context?.skipRefresh) {
-        internal_toggleMessageLoading(true, tempId);
-        // Use the messages returned from createNewMessage (already grouped)
-        replaceMessages(result.messages);
-      }
-
-      internal_toggleMessageLoading(false, tempId);
-      return result.id;
-    } catch (e) {
-      internal_toggleMessageLoading(false, tempId);
-      internal_dispatchMessage({
-        id: tempId,
-        type: 'updateMessage',
-        value: {
-          error: { type: ChatErrorType.CreateMessageError, message: (e as Error).message, body: e },
-        },
-      });
-    }
-  },
-
   internal_fetchMessages: async () => {
     const messages = await messageService.getMessages(get().activeId, get().activeTopicId);
     const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
@@ -506,8 +464,7 @@ export const chatMessage: StateCreator<
 
     return tempId;
   },
-
-  internal_createNewMessage: async (message, context) => {
+  internal_createMessage: async (message, context) => {
     const {
       internal_createTmpMessage,
       internal_toggleMessageLoading,
@@ -539,11 +496,12 @@ export const chatMessage: StateCreator<
     }
 
     try {
-      // 使用 createNewMessage API
       const result = await messageService.createNewMessage(message);
 
-      // 直接用返回的 messages 更新 store（已包含 group 结构）
-      replaceMessages(result.messages);
+      if (!context?.skipRefresh) {
+        // Use the messages returned from createNewMessage (already grouped)
+        replaceMessages(result.messages);
+      }
 
       internal_toggleMessageLoading(false, tempId);
       return result;

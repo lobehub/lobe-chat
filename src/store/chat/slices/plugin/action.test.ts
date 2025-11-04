@@ -345,7 +345,9 @@ describe('ChatPluginAction', () => {
       const invokeBuiltinToolMock = vi.fn();
       const invokeDefaultTypePluginMock = vi.fn().mockResolvedValue('Default tool response');
       const triggerAIMessageMock = vi.fn();
-      const internal_createMessageMock = vi.fn().mockResolvedValue('tool-message-id');
+      const internal_createMessageMock = vi
+        .fn()
+        .mockResolvedValue({ id: 'tool-message-id', messages: [] });
       const getTraceIdByMessageIdMock = vi.fn().mockReturnValue('trace-id');
 
       act(() => {
@@ -472,7 +474,9 @@ describe('ChatPluginAction', () => {
       const invokeMarkdownTypePluginMock = vi.fn();
       const invokeBuiltinToolMock = vi.fn();
       const triggerAIMessageMock = vi.fn();
-      const internal_createMessageMock = vi.fn().mockResolvedValue('tool-message-id');
+      const internal_createMessageMock = vi
+        .fn()
+        .mockResolvedValue({ id: 'tool-message-id', messages: [] });
 
       act(() => {
         useChatStore.setState({

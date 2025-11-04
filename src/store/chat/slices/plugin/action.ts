@@ -228,15 +228,15 @@ export const chatPlugin: StateCreator<
         groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
-      const id = await get().internal_createMessage(toolMessage);
-      if (!id) return;
+      const result = await get().internal_createMessage(toolMessage);
+      if (!result) return;
 
       // trigger the plugin call
-      const data = await get().internal_invokeDifferentTypePlugin(id, payload);
+      const data = await get().internal_invokeDifferentTypePlugin(result.id, payload);
 
       if (data && !['markdown', 'standalone'].includes(payload.type)) {
         shouldCreateMessage = true;
-        latestToolId = id;
+        latestToolId = result.id;
       }
     });
 

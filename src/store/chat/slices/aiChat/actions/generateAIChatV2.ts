@@ -659,7 +659,7 @@ export const generateAIChatV2: StateCreator<
           groupId: groupMessage.groupId, // Propagate groupId from parent message for group chat
         };
 
-        const result = await get().internal_createNewMessage(toolMessage);
+        const result = await get().internal_createMessage(toolMessage);
 
         if (!result) {
           log('[triggerToolsCalling] Failed to create tool message for %s', payload.identifier);
@@ -768,7 +768,7 @@ export const generateAIChatV2: StateCreator<
       topicId: get().activeTopicId,
     });
 
-    const result = await get().internal_createNewMessage(assistantMessage, { groupMessageId });
+    const result = await get().internal_createMessage(assistantMessage, { groupMessageId });
 
     if (!result) {
       log('[callToolFollowAssistantMessage] Failed to create assistant message');
