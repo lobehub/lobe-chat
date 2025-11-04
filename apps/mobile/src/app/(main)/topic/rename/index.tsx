@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { loading } from '@/libs/loading';
 import { useChatStore } from '@/store/chat';
 
 export default function TopicRenamePage() {
@@ -10,38 +11,31 @@ export default function TopicRenamePage() {
   const params = useLocalSearchParams<{ id: string; title: string }>();
   const updateTopicTitle = useChatStore((s) => s.updateTopicTitle);
   const [title, setTitle] = useState(params.title || '');
-  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    if (title.trim().length === 0) {
+      Toast.error(t('rename.emptyTitle'));
+      return;
+    }
+
+    if (title.trim().length > 100) {
+      Toast.error(t('rename.tooLong'));
+      return;
+    }
+
+    try {
+      await loading.start(updateTopicTitle(params.id, title.trim()));
+      Toast.success(t('rename.success'));
+      router.back();
+    } catch {
+      Toast.error(t('rename.error'));
+    }
+  };
 
   return (
     <PageContainer
       extra={
-        <Button
-          loading={loading}
-          onPress={async () => {
-            if (title.trim().length === 0) {
-              Toast.error(t('rename.emptyTitle'));
-              return;
-            }
-
-            if (title.trim().length > 100) {
-              Toast.error(t('rename.tooLong'));
-              return;
-            }
-
-            setLoading(true);
-            try {
-              await updateTopicTitle(params.id, title.trim());
-              Toast.success(t('rename.success'));
-              router.back();
-            } catch {
-              Toast.error(t('rename.error'));
-            } finally {
-              setLoading(false);
-            }
-          }}
-          size="small"
-          type="primary"
-        >
+        <Button onPress={handleSave} size="small" type="primary">
           {t('rename.done')}
         </Button>
       }

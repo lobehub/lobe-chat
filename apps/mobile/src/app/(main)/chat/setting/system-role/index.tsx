@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
+import { loading } from '@/libs/loading';
 import { agentSelectors, useAgentStore } from '@/store/agent';
 
 export default function SystemRoleSetting() {
@@ -14,7 +15,6 @@ export default function SystemRoleSetting() {
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
 
   const [editValue, setEditValue] = useState(systemRole || '');
-  const [loading, setLoading] = useState(false);
 
   const textInputRef = useRef<TextInput>(null);
 
@@ -25,14 +25,11 @@ export default function SystemRoleSetting() {
       return;
     }
 
-    setLoading(true);
     try {
-      await updateAgentConfig({ systemRole: editValue });
+      await loading.start(updateAgentConfig({ systemRole: editValue }));
       router.back();
     } catch (error) {
       console.error('Failed to update agent role:', error);
-    } finally {
-      setLoading(false);
     }
   }, [editValue, systemRole, updateAgentConfig]);
 
@@ -44,7 +41,7 @@ export default function SystemRoleSetting() {
   return (
     <PageContainer
       extra={
-        <Button loading={loading} onPress={handleSave} size={'small'} type={'primary'}>
+        <Button onPress={handleSave} size={'small'} type={'primary'}>
           {t('setting.done')}
         </Button>
       }

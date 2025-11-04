@@ -297,15 +297,16 @@ const SessionSearchList = memo(
                   text: t('actions.cancel', { ns: 'common' }),
                 },
                 {
-                  onPress: () => {
-                    const { done } = loading.start();
-                    removeSession(session.id).then(() => {
+                  onPress: async () => {
+                    try {
+                      await loading.start(removeSession(session.id));
                       Toast.success(t('status.success', { ns: 'common' }));
                       InteractionManager.runAfterInteractions(() => {
                         setDrawerOpen(false);
-                        done();
                       });
-                    });
+                    } catch {
+                      // 错误处理
+                    }
                   },
                   style: 'destructive',
                   text: t('actions.confirm', { ns: 'common' }),

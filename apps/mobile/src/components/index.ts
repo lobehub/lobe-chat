@@ -73,6 +73,7 @@ export {
   type LoadingDotsProps,
   type LoadingDotsVariant,
 } from './LoadingDots';
+export { default as LoadingToast, type LoadingToastProps } from './LoadingToast';
 export { default as Markdown, type MarkdownProps } from './Markdown';
 export { default as MaskShadow, type MaskShadowProps } from './MaskShadow';
 export {

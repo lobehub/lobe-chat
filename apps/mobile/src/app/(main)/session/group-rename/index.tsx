@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { loading } from '@/libs/loading';
 import { useSessionStore } from '@/store/session';
 
 export default function GroupRenamePage() {
@@ -10,32 +11,26 @@ export default function GroupRenamePage() {
   const params = useLocalSearchParams<{ id: string; name: string }>();
   const updateSessionGroupName = useSessionStore((s) => s.updateSessionGroupName);
   const [name, setName] = useState(params.name || '');
-  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    if (name.trim().length === 0 || name.trim().length > 20) {
+      Toast.error(t('sessionGroup.tooLong'));
+      return;
+    }
+
+    try {
+      await loading.start(updateSessionGroupName(params.id, name.trim()));
+      Toast.success(t('sessionGroup.renameSuccess'));
+      router.back();
+    } catch {
+      Toast.error(t('error', { ns: 'common' }));
+    }
+  };
 
   return (
     <PageContainer
       extra={
-        <Button
-          loading={loading}
-          onPress={async () => {
-            if (name.trim().length === 0 || name.trim().length > 20) {
-              Toast.error(t('sessionGroup.tooLong'));
-              return;
-            }
-            setLoading(true);
-            try {
-              await updateSessionGroupName(params.id, name.trim());
-              Toast.success(t('sessionGroup.renameSuccess'));
-              router.back();
-            } catch {
-              Toast.error(t('error', { ns: 'common' }));
-            } finally {
-              setLoading(false);
-            }
-          }}
-          size="small"
-          type="primary"
-        >
+        <Button onPress={handleSave} size="small" type="primary">
           {t('setting.done')}
         </Button>
       }
