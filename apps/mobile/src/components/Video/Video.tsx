@@ -1,22 +1,21 @@
 import { VideoView, useVideoPlayer } from 'expo-video';
-import { memo } from 'react';
-import { StyleSheet } from 'react-native';
+import { memo, useMemo } from 'react';
+import { Pressable } from 'react-native';
 
-import Block from '../Block';
 import { useStyles } from './style';
 import { VideoProps } from './type';
 
 const Video = memo<VideoProps>(
   ({
     src,
-    borderRadius,
-    variant = 'filled',
     aspectRatio = 16 / 9,
     width,
     height,
     loop = false,
     muted = false,
     style,
+    onPress,
+    onLongPress,
     ...rest
   }) => {
     const { styles } = useStyles();
@@ -26,20 +25,19 @@ const Video = memo<VideoProps>(
       player.muted = muted;
     });
 
+    const videoStyle = useMemo(() => {
+      return [
+        styles.video,
+        style,
+        { aspectRatio },
+        // width 和 height props 优先级最高
+        width !== undefined && { width },
+        height !== undefined && { height },
+      ];
+    }, [styles.video, style, aspectRatio, width, height]);
+
     return (
-      <Block
-        borderRadius={borderRadius}
-        height={height}
-        style={[
-          styles.video,
-          {
-            aspectRatio,
-          },
-          style,
-        ]}
-        variant={variant}
-        width={width || '100%'}
-      >
+      <Pressable onLongPress={onLongPress} onPress={onPress} style={styles.container}>
         <VideoView
           allowsFullscreen
           allowsPictureInPicture
@@ -47,10 +45,10 @@ const Video = memo<VideoProps>(
           contentFit="cover"
           nativeControls
           player={player}
-          style={[StyleSheet.absoluteFillObject]}
+          style={videoStyle}
           {...rest}
         />
-      </Block>
+      </Pressable>
     );
   },
 );

@@ -2,6 +2,7 @@ import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import React, { memo, useCallback, useState } from 'react';
 import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Gallery } from 'react-native-zoom-toolkit';
 
@@ -102,28 +103,30 @@ const ImageGallery = memo<ImageGalleryProps>(({ images, initialIndex = 0, onClos
 
   return (
     <FullWindowOverlay>
-      <View style={styles.container}>
-        {/* iOS 毛玻璃背景 */}
-        {Platform.OS === 'ios' && <BlurView style={StyleSheet.absoluteFillObject} tint="dark" />}
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          {/* iOS 毛玻璃背景 */}
+          {Platform.OS === 'ios' && <BlurView style={StyleSheet.absoluteFillObject} tint="dark" />}
 
-        <Gallery
-          data={images}
-          initialIndex={initialIndex}
-          keyExtractor={keyExtractor}
-          onIndexChange={handleIndexChange}
-          onTap={handleTap}
-          renderItem={renderItem}
-        />
+          <Gallery
+            data={images}
+            initialIndex={initialIndex}
+            keyExtractor={keyExtractor}
+            onIndexChange={handleIndexChange}
+            onTap={handleTap}
+            renderItem={renderItem}
+          />
 
-        {/* 图片指示器 */}
-        {images.length > 1 && (
-          <View style={styles.indicator}>
-            <Animated.Text entering={FadeIn} style={styles.indicatorText}>
-              {currentIndex + 1} / {images.length}
-            </Animated.Text>
-          </View>
-        )}
-      </View>
+          {/* 图片指示器 */}
+          {images.length > 1 && (
+            <View style={styles.indicator}>
+              <Animated.Text entering={FadeIn} style={styles.indicatorText}>
+                {currentIndex + 1} / {images.length}
+              </Animated.Text>
+            </View>
+          )}
+        </View>
+      </GestureHandlerRootView>
     </FullWindowOverlay>
   );
 });

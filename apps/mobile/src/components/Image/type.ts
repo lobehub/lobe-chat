@@ -1,9 +1,10 @@
 import type { ImageProps as ExpoImageProps } from 'expo-image';
 import type { ReactNode } from 'react';
+import type { DimensionValue, PressableProps } from 'react-native';
 
-import type { BlockProps } from '../Block';
-
-export interface ImageProps extends ExpoImageProps, Pick<BlockProps, 'variant' | 'borderRadius'> {
+export interface ImageProps
+  extends ExpoImageProps,
+    Pick<PressableProps, 'onPress' | 'onLongPress'> {
   autoSize?: boolean;
 
   /**
@@ -18,8 +19,7 @@ export interface ImageProps extends ExpoImageProps, Pick<BlockProps, 'variant' |
    * 可以是数字（像素）或字符串（如 '100%'）
    * 优先级高于 style 中的 height
    */
-  height?: number | string;
-
+  height?: DimensionValue | undefined;
   /**
    * 容器最大宽度（用于自适应计算）
    * 如果不指定，默认使用窗口宽度
@@ -37,12 +37,7 @@ export interface ImageProps extends ExpoImageProps, Pick<BlockProps, 'variant' |
    */
   previewSrc?: string;
 
-  /**
-   * 图片宽度
-   * 可以是数字（像素）或字符串（如 '100%'）
-   * 优先级高于 style 中的 width
-   */
-  width?: number | string;
+  width?: DimensionValue | undefined;
 }
 
 /**

@@ -5,7 +5,7 @@ export const ListContext = createContext<{ getIndex?: () => number; type: 'ol' |
   type: 'ul',
 });
 
-export type BlockType = 'p' | 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+export type BlockType = 'p' | 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'list';
 
 export const BlockContext = createContext<{
   type: BlockType;

@@ -1,11 +1,9 @@
 import type { VideoViewProps } from 'expo-video';
-import type { DimensionValue } from 'react-native';
-
-import type { BlockProps } from '../Block';
+import type { DimensionValue, PressableProps } from 'react-native';
 
 export interface VideoProps
   extends Omit<VideoViewProps, 'player'>,
-    Pick<BlockProps, 'variant' | 'borderRadius'> {
+    Pick<PressableProps, 'onPress' | 'onLongPress'> {
   aspectRatio?: number;
   height?: DimensionValue | undefined;
   loop?: boolean;
