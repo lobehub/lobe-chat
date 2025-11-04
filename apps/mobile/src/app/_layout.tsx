@@ -15,9 +15,13 @@ const Layout = () => {
 
   return (
     <Stack screenOptions={themedScreenOptions}>
+      {/* 入口页面 */}
       <Stack.Screen name="index" options={{ animation: 'none' }} />
-      <Stack.Screen name="(main)/chat" options={{ animation: 'none' }} />
-      <Stack.Screen name="playground/index" />
+
+      {/* 主应用路由组 */}
+      <Stack.Screen name="(main)" options={{ animation: 'none', headerShown: false }} />
+
+      {/* 认证模块 */}
       <Stack.Screen
         name="auth"
         options={{
@@ -26,6 +30,15 @@ const Layout = () => {
           gestureEnabled: false,
         }}
       />
+
+      {/* 发现模块 */}
+      <Stack.Screen name="discover" />
+
+      {/* 组件演练场 */}
+      <Stack.Screen name="playground" options={{ presentation: 'modal' }} />
+
+      {/* 404 页面 */}
+      <Stack.Screen name="+not-found" />
     </Stack>
   );
 };
