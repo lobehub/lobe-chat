@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Visualizza elenco file",
+      "moveLocalFiles": "Sposta file",
+      "readLocalFile": "Leggi contenuto del file",
+      "renameLocalFile": "Rinomina",
+      "searchLocalFiles": "Cerca file",
+      "writeLocalFile": "Scrivi file"
+    },
+    "title": "Sistema locale"
+  },
+  "mobileNotSupported": "Questo strumento non è attualmente supportato su dispositivi mobili. Si prega di utilizzare un computer per visualizzare i contenuti completi.",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "Leggi contenuti di più pagine",
+      "crawlSinglePage": "Leggi contenuto della pagina",
+      "search": "Cerca nella pagina"
+    },
+    "crawPages": {
+      "crawling": "Scansione in corso...",
+      "meta": {
+        "crawler": "Crawler",
+        "words": "Conteggio parole"
+      }
+    },
+    "emptyResult": "Nessun risultato trovato",
+    "title": "Ricerca web"
+  },
+  "title": "Richiamo dello strumento",
+  "unknown": "Strumento sconosciuto"
+}

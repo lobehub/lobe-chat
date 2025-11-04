@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Dosya listesini görüntüle",
+      "moveLocalFiles": "Dosyaları taşı",
+      "readLocalFile": "Dosya içeriğini oku",
+      "renameLocalFile": "Yeniden adlandır",
+      "searchLocalFiles": "Dosya ara",
+      "writeLocalFile": "Dosyaya yaz"
+    },
+    "title": "Yerel Sistem"
+  },
+  "mobileNotSupported": "Bu araç mobil cihazlarda desteklenmemektedir, lütfen ayrıntılı içerik için masaüstü cihazdan görüntüleyin",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "Birden fazla sayfanın içeriğini oku",
+      "crawlSinglePage": "Sayfa içeriğini oku",
+      "search": "Sayfada ara"
+    },
+    "crawPages": {
+      "crawling": "Tarama yapılıyor...",
+      "meta": {
+        "crawler": "Tarayıcı",
+        "words": "Kelime sayısı"
+      }
+    },
+    "emptyResult": "Arama sonucu bulunamadı",
+    "title": "Web Arama"
+  },
+  "title": "Araç Çağrısı",
+  "unknown": "Bilinmeyen araç"
+}

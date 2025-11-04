@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "查看檔案清單",
+      "moveLocalFiles": "移動檔案",
+      "readLocalFile": "讀取檔案內容",
+      "renameLocalFile": "重新命名",
+      "searchLocalFiles": "搜尋檔案",
+      "writeLocalFile": "寫入檔案"
+    },
+    "title": "本機系統"
+  },
+  "mobileNotSupported": "此工具暫不支援行動裝置顯示，請使用桌面裝置查看詳細內容",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "讀取多個頁面內容",
+      "crawlSinglePage": "讀取頁面內容",
+      "search": "搜尋頁面"
+    },
+    "crawPages": {
+      "crawling": "正在擷取中...",
+      "meta": {
+        "crawler": "爬蟲",
+        "words": "字數"
+      }
+    },
+    "emptyResult": "暫無搜尋結果",
+    "title": "網頁搜尋"
+  },
+  "title": "工具調用",
+  "unknown": "未知工具"
+}
