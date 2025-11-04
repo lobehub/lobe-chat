@@ -167,8 +167,16 @@ export class MessageService {
     });
   };
 
-  removeMessages = async (ids: string[]) => {
-    return lambdaClient.message.removeMessages.mutate({ ids });
+  removeMessages = async (
+    ids: string[],
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessages.mutate({
+      ids,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+    });
   };
 
   removeMessagesByAssistant = async (sessionId: string, topicId?: string) => {

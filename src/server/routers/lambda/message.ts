@@ -135,9 +135,32 @@ export const messageRouter = router({
     }),
 
   removeMessages: messageProcedure
-    .input(z.object({ ids: z.array(z.string()) }))
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessages(input.ids);
+      await ctx.messageModel.deleteMessages(input.ids);
+
+      // If sessionId or topicId is provided, return the full message list
+      if (input.sessionId !== undefined || input.topicId !== undefined) {
+        const messageList = await ctx.messageModel.query(
+          {
+            sessionId: input.sessionId,
+            topicId: input.topicId,
+          },
+          {
+            groupAssistantMessages: input.useGroup ?? false,
+            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
+          },
+        );
+        return { messages: messageList, success: true };
+      }
+      return { success: true };
     }),
 
   removeMessagesByAssistant: messageProcedure

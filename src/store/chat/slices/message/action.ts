@@ -164,22 +164,31 @@ export const chatMessage: StateCreator<
     if (!message) return;
 
     let ids = [message.id];
+    const allMessages = chatSelectors.activeBaseChats(get());
 
-    // if the message is a tool calls, then delete all the related messages
+    // if the message is a tool calls, then delete all the related tool messages
     if (message.tools) {
       const toolMessageIds = message.tools.flatMap((tool) => {
-        const messages = chatSelectors
-          .activeBaseChats(get())
-          .filter((m) => m.tool_call_id === tool.id);
-
+        const messages = allMessages.filter((m) => m.tool_call_id === tool.id);
         return messages.map((m) => m.id);
       });
       ids = ids.concat(toolMessageIds);
     }
 
+    // if the message is a group message, find all children messages (via parentId)
+    if (message.role === 'group') {
+      const childMessageIds = allMessages.filter((m) => m.parentId === message.id).map((m) => m.id);
+      ids = ids.concat(childMessageIds);
+    }
+
     get().internal_dispatchMessage({ type: 'deleteMessages', ids });
-    await messageService.removeMessages(ids);
-    await get().refreshMessages();
+    const result = await messageService.removeMessages(ids, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
 
   deleteToolMessage: async (id) => {
@@ -200,14 +209,7 @@ export const chatMessage: StateCreator<
   },
 
   clearMessage: async () => {
-    const {
-      activeId,
-      activeTopicId,
-      refreshMessages,
-      refreshTopic,
-      switchTopic,
-      activeSessionType,
-    } = get();
+    const { activeId, activeTopicId, refreshTopic, switchTopic, activeSessionType } = get();
 
     // Check if this is a group session - use activeSessionType if available, otherwise check session store
     let isGroupSession = activeSessionType === 'group';
@@ -231,15 +233,17 @@ export const chatMessage: StateCreator<
       await topicService.removeTopic(activeTopicId);
     }
     await refreshTopic();
-    await refreshMessages();
+
+    // Clear messages directly since all messages are deleted
+    get().replaceMessages([]);
 
     // after remove topic , go back to default topic
     switchTopic();
   },
   clearAllMessages: async () => {
-    const { refreshMessages } = get();
     await messageService.removeAllMessages();
-    await refreshMessages();
+    // Clear messages directly since all messages are deleted
+    get().replaceMessages([]);
   },
   addAIMessage: async () => {
     const { internal_createMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =

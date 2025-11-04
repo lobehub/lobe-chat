@@ -200,6 +200,15 @@ describe('chatMessage actions', () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const deleteSpy = vi.spyOn(result.current, 'deleteMessage');
+      const mockMessages = [{ id: 'other-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       act(() => {
         useChatStore.setState({
@@ -215,13 +224,22 @@ describe('chatMessage actions', () => {
       });
 
       expect(deleteSpy).toHaveBeenCalledWith(messageId);
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
 
     it('deleteMessage should remove messages with tools', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       act(() => {
         useChatStore.setState({
@@ -240,8 +258,11 @@ describe('chatMessage actions', () => {
         await result.current.deleteMessage(messageId);
       });
 
-      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3']);
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3'], {
+        sessionId: 'session-id',
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
   });
 
@@ -309,10 +330,16 @@ describe('chatMessage actions', () => {
       });
 
       expect(removeMessageSpy).toHaveBeenCalled();
-      expect(updateMessageSpy).toHaveBeenCalledWith('message-id', {
-        tools: [{ id: 'tool2' }],
-      });
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(updateMessageSpy).toHaveBeenCalledWith(
+        'message-id',
+        {
+          tools: [{ id: 'tool2' }],
+        },
+        {
+          sessionId: 'session-id',
+          topicId: undefined,
+        },
+      );
     });
   });
 
@@ -320,13 +347,14 @@ describe('chatMessage actions', () => {
     it('clearAllMessages should remove all messages', async () => {
       const { result } = renderHook(() => useChatStore());
       const clearAllSpy = vi.spyOn(result.current, 'clearAllMessages');
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       await act(async () => {
         await result.current.clearAllMessages();
       });
 
       expect(clearAllSpy).toHaveBeenCalled();
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith([]);
     });
   });
 
