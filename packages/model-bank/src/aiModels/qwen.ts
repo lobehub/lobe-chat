@@ -1069,7 +1069,8 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      vision: true,
+      reasoning: true,
+      search: true,
     },
     config: {
       deploymentName: 'qwen3-max-preview', // 其支持上下文缓存
