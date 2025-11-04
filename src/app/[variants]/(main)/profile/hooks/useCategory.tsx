@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
-import { getServerDBConfig } from '@/config/db';
 import { enableAuth } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
@@ -16,7 +15,6 @@ export const useCategory = () => {
   const { t } = useTranslation('auth');
   const [isLoginWithClerk] = useUserStore((s) => [authSelectors.isLoginWithClerk(s)]);
   const { showApiKeyManage } = useServerConfigStore(featureFlagsSelectors);
-  const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
   const cateItems: MenuProps['items'] = [
     {
@@ -56,7 +54,7 @@ export const useCategory = () => {
         </Link>
       ),
     },
-    NEXT_PUBLIC_ENABLED_SERVER_SERVICE && {
+    {
       icon: <Icon icon={BadgeCentIcon} />,
       key: ProfileTabs.Usage,
       label: (
