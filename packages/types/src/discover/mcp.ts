@@ -40,8 +40,8 @@ export enum McpNavKey {
 }
 
 export enum McpConnectionType {
-  Http = 'http',
-  Stdio = 'stdio'
+  http = 'http',
+  stdio = 'stdio'
 }
 
 export type DiscoverMcpItem = PluginItem;
