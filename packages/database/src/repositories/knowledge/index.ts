@@ -206,6 +206,27 @@ export class KnowledgeRepo {
 
     // Knowledge base filter
     if (knowledgeBaseId) {
+      // Build where conditions using proper table references (f.column instead of files.column)
+      const kbWhereConditions: any[] = [sql`f.user_id = ${this.userId}`];
+      
+      // Search filter
+      if (q) {
+        kbWhereConditions.push(sql`f.name ILIKE ${`%${q}%`}`);
+      }
+      
+      // Category filter
+      if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
+        const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
+        if (Array.isArray(fileTypePrefix)) {
+          const orConditions = fileTypePrefix.map(
+            (prefix) => sql`f.file_type ILIKE ${`${prefix}%`}`,
+          );
+          kbWhereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
+        } else {
+          kbWhereConditions.push(sql`f.file_type ILIKE ${`${fileTypePrefix}%`}`);
+        }
+      }
+      
       return sql`
         SELECT
           f.id,
@@ -225,7 +246,7 @@ export class KnowledgeRepo {
         INNER JOIN ${knowledgeBaseFiles} kbf
           ON f.id = kbf.file_id
           AND kbf.knowledge_base_id = ${knowledgeBaseId}
-        WHERE ${sql.join(whereConditions, sql` AND `)}
+        WHERE ${sql.join(kbWhereConditions, sql` AND `)}
       `;
     }
 

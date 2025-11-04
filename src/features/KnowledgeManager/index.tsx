@@ -34,19 +34,21 @@ const KnowledgeManager = memo<KnowledgeManagerProps>(
     const isDocumentsView = category === FilesTabs.Documents;
     const isHomeView = category === FilesTabs.Home;
 
+    if (isHomeView) {
+      return <Home knowledgeBaseId={knowledgeBaseId} onOpenFile={onOpenFile} />;
+    }
+
     return (
       <>
-        {!isDocumentsView && !isHomeView && <Header knowledgeBaseId={knowledgeBaseId} />}
+        {!isDocumentsView && <Header knowledgeBaseId={knowledgeBaseId} />}
         <Flexbox gap={12} height={'100%'}>
-          {!isDocumentsView && !isHomeView && (
+          {!isDocumentsView && (
             <Text strong style={{ fontSize: 16, marginBlock: 16, marginInline: 24 }}>
               {title}
             </Text>
           )}
           {isDocumentsView ? (
             <DocumentExplorer knowledgeBaseId={knowledgeBaseId} />
-          ) : isHomeView ? (
-            <Home knowledgeBaseId={knowledgeBaseId} onOpenFile={onOpenFile} />
           ) : (
             <FileExplorer
               category={category}
