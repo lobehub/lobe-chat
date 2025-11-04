@@ -6,7 +6,6 @@
     "sourceMap": true,
     "skipDefaultLibCheck": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,

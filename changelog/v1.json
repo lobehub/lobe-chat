@@ -1,5 +1,178 @@
 [
   {
+    "children": {
+      "fixes": ["Fix send message."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.23"
+  },
+  {
+    "children": {},
+    "date": "2025-11-04",
+    "version": "2.0.0-next.22"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc auth timeout issue on the desktop."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.21"
+  },
+  {
+    "children": {
+      "improvements": ["Improve oidc layout style."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.20"
+  },
+  {
+    "children": {
+      "improvements": ["Remove NEXT_PUBLIC_SERVICE_MODE env and use server by default."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.19"
+  },
+  {
+    "children": {
+      "improvements": ["Improve built-in client OIDC user flow."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.18"
+  },
+  {
+    "children": {
+      "fixes": ["Fix regex ReDoS."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.17"
+  },
+  {
+    "children": {
+      "improvements": ["Remove deperated code."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.16"
+  },
+  {
+    "children": {},
+    "date": "2025-11-03",
+    "version": "2.0.0-next.15"
+  },
+  {
+    "children": {
+      "improvements": ["Remove client service."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix image prompt form."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add padding to TopicList component."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.12"
+  },
+  {
+    "children": {
+      "improvements": ["Smoothed model descriptions in ko-KR locales."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.11"
+  },
+  {
+    "children": {},
+    "date": "2025-11-02",
+    "version": "2.0.0-next.10"
+  },
+  {
+    "children": {
+      "improvements": ["Remove dalle builtin plugin."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.9"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.8"
+  },
+  {
+    "children": {
+      "features": ["Upgrade to Next 16."]
+    },
+    "date": "2025-11-01",
+    "version": "2.0.0-next.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-31",
+    "version": "2.0.0-next.6"
+  },
+  {
+    "children": {
+      "improvements": ["Migrating Firecrawl to v2."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add new bedrock model support, add pricing info for Azure GPT-5 series models."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.3"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Hide marketplace link from Plugin List when market disabled, OIDC error when connecting to self-host instance, only include input_fidelity parameter for gpt-image-1.."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.2"
+  },
+  {
+    "children": {
+      "features": ["2.0 next baseline."],
+      "improvements": ["starting V2"]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.1"
+  },
+  {
+    "children": {
+      "features": ["2.0 next init."]
+    },
+    "date": "2025-10-30",
+    "version": "1.143.0-next.2"
+  },
+  {
+    "children": {
+      "features": ["Try 2.0 next."],
+      "improvements": ["starting V2"]
+    },
+    "date": "2025-10-30",
+    "version": "1.143.0-next.1"
+  },
+  {
     "children": {},
     "date": "2025-10-30",
     "version": "1.142.8"

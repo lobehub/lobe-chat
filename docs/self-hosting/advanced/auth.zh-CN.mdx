@@ -24,12 +24,13 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 
 在使用 NextAuth 之前，请先在 LobeChat 的环境变量中设置以下变量：
 
-| 环境变量                           | 类型 | 描述                                                                                                           |
-| ------------------------------ | -- | ------------------------------------------------------------------------------------------------------------ |
-| `NEXT_PUBLIC_ENABLE_NEXT_AUTH` | 必选 | 用于启用 NextAuth 服务，设置为 `1` 以启用，更改此项需要重新编译应用。使用 `lobehub/lobe-chat-database` 镜像部署的用户已经默认添加了该项配置。                |
-| `NEXT_AUTH_SECRET`             | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令： `openssl rand -base64 32`，或者访问 `https://generate-secret.vercel.app/32` 生成秘钥。 |
-| `NEXTAUTH_URL`                 | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth`                  |
-| `NEXT_AUTH_SSO_PROVIDERS`      | 可选 | 该环境变量用于同时启用多个身份验证源，以逗号 `,` 分割，例如 `auth0,microsoft-entra-id,authentik`。                                       |
+| 环境变量                             | 类型 | 描述                                                                                                           |
+| -------------------------------- | -- | ------------------------------------------------------------------------------------------------------------ |
+| `NEXT_PUBLIC_ENABLE_NEXT_AUTH`   | 必选 | 用于启用 NextAuth 服务，设置为 `1` 以启用，更改此项需要重新编译应用。使用 `lobehub/lobe-chat-database` 镜像部署的用户已经默认添加了该项配置。                |
+| `NEXT_AUTH_SECRET`               | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令： `openssl rand -base64 32`，或者访问 `https://generate-secret.vercel.app/32` 生成秘钥。 |
+| `AUTH_URL`                       | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth`                  |
+| `NEXT_AUTH_SSO_PROVIDERS`        | 可选 | 该环境变量用于同时启用多个身份验证源，以逗号 `,` 分割，例如 `auth0,microsoft-entra-id,authentik`。                                       |
+| `NEXT_AUTH_SSO_SESSION_STRATEGY` | 可选 | Auth.js 的会话策略。选项为 `jwt` 或 `database`。默认值为 `jwt`。                                                             |
 
 目前支持的身份验证服务有：
 
@@ -63,19 +64,29 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 
 顺序为 SSO 提供商的显示顺序。
 
-| SSO 提供商               | 值                       |
-| --------------------- | ----------------------- |
-| Auth0                 | `auth0`                 |
-| Authenlia             | `authenlia`             |
-| Authentik             | `authentik`             |
-| Casdoor               | `casdoor`               |
-| Cloudflare Zero Trust | `cloudflare-zero-trust` |
-| Github                | `github`                |
-| Logto                 | `logto`                 |
-| Microsoft Entra ID    | `microsoft-entra-id`    |
-| ZITADEL               | `zitadel`               |
-| Keycloak              | `keycloak`              |
-| Okta                  | `okta`                  |
+| SSO 提供商               | 值                       | 额外功能      |
+| --------------------- | ----------------------- | --------- |
+| Auth0                 | `auth0`                 |           |
+| Authenlia             | `authenlia`             |           |
+| Authentik             | `authentik`             |           |
+| Casdoor               | `casdoor`               | `Webhook` |
+| Cloudflare Zero Trust | `cloudflare-zero-trust` |           |
+| Github                | `github`                |           |
+| Logto                 | `logto`                 | `Webhook` |
+| Microsoft Entra ID    | `microsoft-entra-id`    |           |
+| ZITADEL               | `zitadel`               |           |
+| Keycloak              | `keycloak`              |           |
+| Okta                  | `okta`                  |           |
+
+## 额外功能
+
+### Webhook 支持
+
+允许 LobeChat 在身份提供商中用户信息更新时接收通知。支持的提供商包括 Casdoor 和 Logto。请参考具体提供商文档进行配置。
+
+### 数据库会话
+
+允许会话存储在数据库中，详情请参阅 [Auth.js 会话文档](https://authjs.dev/concepts/session-strategies#database-session)。
 
 ## 其他 SSO 提供商
 

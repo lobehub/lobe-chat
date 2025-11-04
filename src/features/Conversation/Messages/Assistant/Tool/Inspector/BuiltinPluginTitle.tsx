@@ -5,7 +5,7 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -38,7 +38,7 @@ const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(
     const { styles } = useStyles();
 
     const isLoading = useChatStore(
-      chatSelectors.isToolApiNameShining(messageId, index, toolCallId),
+      messageStateSelectors.isToolApiNameShining(messageId, index, toolCallId),
     );
 
     return (
