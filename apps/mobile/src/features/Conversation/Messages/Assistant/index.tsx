@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
 import Actions from '@/features/ChatItem/components/Actions';
@@ -9,8 +9,9 @@ import { AssistantMessageContent } from './MessageContent';
 
 export interface AssistantMessageProps {
   index: number;
+  isGenerating?: boolean;
+  isLastMessage?: boolean;
   isLoading?: boolean;
-  markdownProps?: any;
   message: UIChatMessage;
   showActions?: boolean;
   showActionsBar?: boolean;
@@ -23,12 +24,22 @@ const AssistantMessage = memo<AssistantMessageProps>(
   ({
     message,
     isLoading,
-    markdownProps,
+    isGenerating,
+    isLastMessage,
     showActions = true,
     showActionsBar = true,
     showTime = true,
     showTitle = true,
   }) => {
+    // Create markdownProps for Assistant messages (with animated and enableCustomFootnotes)
+    const markdownProps = useMemo(
+      () => ({
+        animated: isLastMessage && isGenerating,
+        enableCustomFootnotes: true,
+      }),
+      [isLastMessage, isGenerating],
+    );
+
     const renderMessage = useCallback(
       (editableContent: React.ReactNode) => (
         <AssistantMessageContent

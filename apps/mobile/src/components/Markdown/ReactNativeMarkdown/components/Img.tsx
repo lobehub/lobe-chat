@@ -23,7 +23,6 @@ const Img: Components['img'] = memo(({ src, alt }) => {
       accessibilityLabel={alt}
       cachePolicy="memory-disk"
       contentFit="contain"
-      enableLiveTextInteraction
       preview
       source={{ uri: src }}
       style={[styles.img]}

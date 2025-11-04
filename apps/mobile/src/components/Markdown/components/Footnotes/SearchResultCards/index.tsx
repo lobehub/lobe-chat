@@ -20,11 +20,11 @@ const SearchResultCards = memo<SearchResultCardsProps>(({ dataSource }) => {
   return (
     <ScrollShadow hideScrollBar horizontal orientation={'horizontal'} size={10}>
       <Flexbox gap={6} horizontal>
-        {dataSource.map((link) =>
+        {dataSource.map((link, index) =>
           typeof link === 'string' ? (
-            <SearchResultCard key={link} url={link} />
+            <SearchResultCard key={index} url={link} />
           ) : (
-            <SearchResultCard key={link.url} {...link} />
+            <SearchResultCard key={index} {...link} />
           ),
         )}
       </Flexbox>

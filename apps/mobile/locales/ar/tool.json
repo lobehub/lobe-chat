@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "عرض قائمة الملفات",
+      "moveLocalFiles": "نقل الملفات",
+      "readLocalFile": "قراءة محتوى الملف",
+      "renameLocalFile": "إعادة تسمية",
+      "searchLocalFiles": "البحث عن الملفات",
+      "writeLocalFile": "كتابة الملف"
+    },
+    "title": "النظام المحلي"
+  },
+  "mobileNotSupported": "هذه الأداة غير مدعومة على الأجهزة المحمولة حاليًا، يُرجى استخدام جهاز سطح المكتب لعرض المحتوى الكامل",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "قراءة محتوى عدة صفحات",
+      "crawlSinglePage": "قراءة محتوى الصفحة",
+      "search": "البحث في الصفحة"
+    },
+    "crawPages": {
+      "crawling": "جارٍ الزحف...",
+      "meta": {
+        "crawler": "الزاحف",
+        "words": "عدد الكلمات"
+      }
+    },
+    "emptyResult": "لا توجد نتائج للبحث",
+    "title": "بحث الويب"
+  },
+  "title": "استدعاء الأدوات",
+  "unknown": "أداة غير معروفة"
+}

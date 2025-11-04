@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Xem danh sách tệp",
+      "moveLocalFiles": "Di chuyển tệp",
+      "readLocalFile": "Đọc nội dung tệp",
+      "renameLocalFile": "Đổi tên tệp",
+      "searchLocalFiles": "Tìm kiếm tệp",
+      "writeLocalFile": "Ghi nội dung vào tệp"
+    },
+    "title": "Hệ thống cục bộ"
+  },
+  "mobileNotSupported": "Công cụ này hiện không hỗ trợ hiển thị trên thiết bị di động, vui lòng xem chi tiết trên máy tính để bàn",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "Đọc nội dung nhiều trang",
+      "crawlSinglePage": "Đọc nội dung trang",
+      "search": "Tìm kiếm trang"
+    },
+    "crawPages": {
+      "crawling": "Đang thu thập...",
+      "meta": {
+        "crawler": "Trình thu thập dữ liệu",
+        "words": "Số từ"
+      }
+    },
+    "emptyResult": "Không có kết quả tìm kiếm",
+    "title": "Tìm kiếm web"
+  },
+  "title": "Gọi công cụ",
+  "unknown": "Công cụ không xác định"
+}

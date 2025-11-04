@@ -73,6 +73,7 @@ const ImageFileListViewer = memo<ImageFileListViewerProps>(({ items }) => {
         {items.map((item) => (
           <Image
             autoSize={false}
+            cachePolicy="memory-disk"
             contentFit="cover"
             height={gridConfig.imageSize}
             key={item.id}
