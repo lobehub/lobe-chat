@@ -1,29 +1,17 @@
-import {
-  CapsuleTabItem,
-  CapsuleTabs,
-  Cell,
-  Flexbox,
-  Text,
-  useTheme,
-  useThemeMode,
-} from '@lobehub/ui-rn';
-import { isLiquidGlassAvailable } from 'expo-glass-effect';
-import { Stack, useRouter } from 'expo-router';
+import { CapsuleTabItem, CapsuleTabs, Cell, Flexbox, Text, useTheme } from '@lobehub/ui-rn';
+import { useRouter } from 'expo-router';
 import { kebabCase } from 'lodash-es';
 import { useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 
-import { isIOS } from '@/utils/detection';
+import NativePageContainer from '@/components/NativePageContainer';
 
 import { ComponentItem } from './_features/type';
 import { getAllCategories, getAllComponents, searchComponentsByName } from './_features/utils';
 
 export default function ComponentPlaygroundIndex() {
-  const { isDarkMode } = useThemeMode();
-  const theme = useTheme();
-  const isGlassAvailable = isLiquidGlassAvailable();
-  const blurEffect = isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight';
   const router = useRouter();
+  const theme = useTheme();
 
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -96,37 +84,23 @@ export default function ComponentPlaygroundIndex() {
   );
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerBackButtonDisplayMode: 'minimal',
-          headerBackButtonMenuEnabled: true,
-          headerBackVisible: true,
-          headerBlurEffect: isGlassAvailable ? undefined : blurEffect,
-          headerLargeStyle: {
-            backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent',
-          },
-          headerLargeTitle: isIOS,
-          headerSearchBarOptions: {
-            cancelButtonText: '取消',
-            headerIconColor: theme.colorText,
-            hintTextColor: theme.colorText,
-            onChangeText: (event) => {
-              setSearchText(event.nativeEvent.text);
-            },
-            placeholder: '搜索组件...',
-            shouldShowHintSearchIcon: false,
-            textColor: theme.colorText,
-            tintColor: theme.colorText,
-          },
-          headerShadowVisible: false,
-          headerShown: true,
-          headerStyle: { backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent' },
-          headerTintColor: theme.colorText,
-          headerTransparent: isIOS,
-          title: 'Playground',
-        }}
-      />
+    <NativePageContainer
+      autoBack
+      largeTitleEnabled
+      searchBarOptions={{
+        cancelButtonText: '取消',
+        headerIconColor: theme.colorText,
+        hintTextColor: theme.colorText,
+        onChangeText: (event) => {
+          setSearchText(event.nativeEvent.text);
+        },
+        placeholder: '搜索组件...',
+        shouldShowHintSearchIcon: false,
+        textColor: theme.colorText,
+        tintColor: theme.colorText,
+      }}
+      title="Playground"
+    >
       <ScrollView
         automaticallyAdjustContentInsets={true}
         contentInsetAdjustmentBehavior={'automatic'}
@@ -146,6 +120,6 @@ export default function ComponentPlaygroundIndex() {
           )}
         </Flexbox>
       </ScrollView>
-    </>
+    </NativePageContainer>
   );
 }
