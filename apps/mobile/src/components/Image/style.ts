@@ -1,15 +1,13 @@
 import { createStyles } from '@/components/styles';
 
-export const useStyles = createStyles(() => ({
+export const useStyles = createStyles(({ token }) => ({
   container: {
     overflow: 'hidden',
     position: 'relative',
   },
   image: {
-    // 基础样式，具体尺寸由组件逻辑计算
-  },
-  pressable: {
-    cursor: 'pointer' as any,
+    backgroundColor: token.colorFill,
+    borderRadius: token.borderRadiusLG * 1.5,
   },
 }));
 
