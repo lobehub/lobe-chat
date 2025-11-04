@@ -33,16 +33,23 @@ const FileItem = memo<ChatFileItem>(({ url, name, size }) => {
     <Cell
       borderRadius={true}
       description={size ? formatSize(size) : undefined}
+      descriptionProps={{
+        ellipsis: true,
+        fontSize: 12,
+      }}
       icon={<MaterialFileTypeIcon filename={name} size={32} type={'file'} />}
       iconSize={32}
       onPress={handlePress}
+      paddingBlock={8}
       pressEffect
       showArrow={false}
       style={{
         maxWidth: '100%',
+        minHeight: 44,
       }}
       title={name}
       titleProps={{
+        ellipsis: true,
         fontSize: 14,
       }}
       variant={'outlined'}
