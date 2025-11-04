@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
@@ -19,6 +19,7 @@ import RecentTopicsSkeleton from './RecentTopicsSkeleton';
 
 const WelcomeMessage = () => {
   const { t } = useTranslation('chat');
+  const ref = useRef<ScrollView>(null);
 
   // 触发 topics 加载
   useFetchTopics();
@@ -60,6 +61,22 @@ const WelcomeMessage = () => {
     />
   );
 
+  const isLoaded = topicsInit && typeof topics !== 'undefined';
+
+  // 首次加载和 isLoaded 后滚动到底部
+  useEffect(() => {
+    const scrollToBottom = () => {
+      if (ref.current) {
+        ref.current.scrollToEnd({ animated: true });
+      }
+    };
+
+    // 使用 setTimeout 确保内容已渲染
+    const timer = setTimeout(scrollToBottom, 100);
+
+    return () => clearTimeout(timer);
+  }, [isLoaded]);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -69,11 +86,12 @@ const WelcomeMessage = () => {
         padding: 16,
         paddingBottom: 8,
       }}
+      ref={ref}
       showsVerticalScrollIndicator={false}
       style={{ marginBottom: -24 }}
     >
       {welcomeBubble}
-      {!topicsInit || typeof topics === 'undefined' ? (
+      {!isLoaded ? (
         <RecentTopicsSkeleton />
       ) : shouldShowTopicsSection ? (
         <RecentTopics />

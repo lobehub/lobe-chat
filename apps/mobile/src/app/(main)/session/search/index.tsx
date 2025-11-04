@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecentSearches, useRecentSearches } from '@/features/Search';
 
-import SessionSearchList from './components/SessionSearchList';
+import SessionSearchList from './_features/components/SessionSearchList';
 
 const SessionSearch = () => {
   const router = useRouter();

@@ -6,7 +6,7 @@ import { Alert } from 'react-native';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
 
-import { FlashListItem } from '../types';
+import { FlashListItem } from './types';
 
 /**
  * Hook for managing provider models data and operations

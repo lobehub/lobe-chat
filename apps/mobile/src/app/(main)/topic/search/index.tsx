@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RecentSearches, useRecentSearches } from '@/features/Search';
 
-import TopicSearchList from './components/TopicSearchList';
+import TopicSearchList from './_features/components/TopicSearchList';
 
 const TopicSearch = () => {
   const listRef = useRef<FlashListRef<any>>(null);

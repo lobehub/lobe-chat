@@ -5,8 +5,8 @@ import { ScrollView } from 'react-native';
 import { FONT_SIZE_LARGE, FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '@/_const/common';
 import { useSettingStore } from '@/store/setting';
 
-import Preview from './features/Preview';
-import { useStyles } from './styles';
+import Preview from './_features/Preview';
+import { useStyles } from './_features/styles';
 
 export default function FontSizeSettingScreen() {
   const { t } = useTranslation('setting');

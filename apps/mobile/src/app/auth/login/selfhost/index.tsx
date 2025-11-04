@@ -12,7 +12,7 @@ import { useSettingStore } from '@/store/setting';
 import { useAuth, useAuthActions } from '@/store/user';
 import { getLoginErrorKey } from '@/utils/error';
 
-import { useStyles } from './style';
+import { useStyles } from './_features/style';
 
 const CustomServerLoginPage = () => {
   const { t } = useTranslation(['auth', 'error']);
