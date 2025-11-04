@@ -19,7 +19,7 @@ import { lambdaClient } from '@/libs/trpc/client';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
-class MessageService {
+export class MessageService {
   createMessage = async ({ sessionId, ...params }: CreateMessageParams): Promise<string> => {
     return lambdaClient.message.createMessage.mutate({
       ...params,

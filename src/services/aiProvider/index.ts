@@ -8,7 +8,7 @@ import {
 
 import { lambdaClient } from '@/libs/trpc/client';
 
-class AiProviderService {
+export class AiProviderService {
   createAiProvider = async (params: CreateAiProviderParams) => {
     return lambdaClient.aiProvider.createAiProvider.mutate(params);
   };

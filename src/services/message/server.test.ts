@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 
-import { ServerService } from '../server';
+import { MessageService } from './index';
 
-describe('ServerService', () => {
+describe('MessageService', () => {
   describe('toDbSessionId', () => {
-    const service = new ServerService();
+    const service = new MessageService();
     // @ts-ignore access private method for testing
     const toDbSessionId = service.toDbSessionId;
 
