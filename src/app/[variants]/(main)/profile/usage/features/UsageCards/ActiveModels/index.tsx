@@ -15,16 +15,16 @@ import { GroupBy, UsageChartProps } from '../../../Client';
 import ModelTable from './ModelTable';
 
 const computeList = (data: UsageLog[], groupBy: GroupBy): string[] => {
-  if (!data || data.length === 0) return [];
+  if (!data || data?.length === 0) return [];
 
   return Array.from(
     data.reduce((acc, log) => {
       if (log.records) {
         for (const item of log.records) {
-          if (groupBy === GroupBy.Model && item.model.length !== 0) {
+          if (groupBy === GroupBy.Model && item.model?.length !== 0) {
             acc.add(item.model);
           }
-          if (groupBy === GroupBy.Provider && item.provider.length !== 0) {
+          if (groupBy === GroupBy.Provider && item.provider?.length !== 0) {
             acc.add(item.provider);
           }
         }
@@ -96,7 +96,7 @@ const ActiveModels = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
             </Flexbox>
           ),
           precision: 0,
-          value: formatNumber(iconList.length),
+          value: formatNumber(iconList?.length ?? 0),
         }}
         title={
           <TitleWithPercentage

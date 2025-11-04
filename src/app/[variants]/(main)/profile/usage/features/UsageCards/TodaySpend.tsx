@@ -26,7 +26,7 @@ const computeSpend = (
   today: number | string;
   yesterday: number | string;
 } => {
-  if (!data || data.length === 0) return { today: 0, yesterday: 0 };
+  if (!data || data?.length === 0) return { today: 0, yesterday: 0 };
 
   const today = data.find((log) => dayjs.utc(log.day).isToday())?.totalSpend ?? 0;
   const yesterday = data.find((log) => dayjs.utc(log.day).isYesterday())?.totalSpend ?? 0;

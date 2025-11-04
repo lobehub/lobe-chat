@@ -27,7 +27,7 @@ const formatData = (
   id: string;
   totalSpend: number;
 }[] => {
-  if (!data || data.length === 0) return [];
+  if (!data || data?.length === 0) return [];
 
   const requestLogs = data.flatMap((log) => log.records);
   const groupedLogs = requestLogs.reduce((acc, log) => {
@@ -151,7 +151,7 @@ const ModelTable = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
               />
             </Flexbox>
           ),
-          extra: <Tag>{item.childrens.length}</Tag>,
+          extra: <Tag>{item?.childrens?.length ?? 0}</Tag>,
           key,
           label: (
             <Flexbox align={'center'} gap={8} horizontal>

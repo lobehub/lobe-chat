@@ -18,10 +18,10 @@ const computeMonth = (
   calls: number | string;
   spend: number | string;
 } => {
-  if (!data || data.length === 0) return { calls: 0, spend: 0 };
+  if (!data || data?.length === 0) return { calls: 0, spend: 0 };
 
   const spend = data.reduce((acc, log) => acc + (log.totalSpend || 0), 0);
-  const calls = data.reduce((acc, log) => acc + (log.records.length || 0), 0);
+  const calls = data.reduce((acc, log) => acc + (log.records?.length ?? 0), 0);
 
   return {
     calls: formatNumber(calls),

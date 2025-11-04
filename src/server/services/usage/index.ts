@@ -112,7 +112,7 @@ export class UsageRecordService {
     usages.forEach((spends, date) => {
       const totalSpend = spends.logs.reduce((acc, spend) => acc + spend.spend, 0);
       const totalTokens = spends.logs.reduce((acc, spend) => (spend.totalTokens || 0) + acc, 0);
-      const totalRequests = spends.logs.length;
+      const totalRequests = spends.logs?.length ?? 0;
       log(
         'date',
         date,
