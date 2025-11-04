@@ -51,15 +51,15 @@ export default {
       morning: '早上好',
     },
     quickActions: '快捷操作',
+    recentDocuments: '最近文档',
     recentFiles: '最近文件',
     subtitle: '欢迎使用知识库，从这里开始管理你的文档和笔记',
     uploadEntries: {
       files: {
         title: '上传文件',
       },
-      markdown: {
-        title: '上传 Markdown',
-        uploading: '上传中...',
+      folder: {
+        title: '上传文件夹',
       },
       newNote: {
         defaultTitle: '未命名笔记',

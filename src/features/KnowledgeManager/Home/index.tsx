@@ -2,6 +2,7 @@
 
 import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { Clock, FileTextIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -23,25 +24,29 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   greeting: css`
     margin-block-end: 8px;
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 600;
     color: ${token.colorText};
-    text-align: center;
+    text-align: left;
   `,
   section: css`
-    margin-block-end: 48px;
+    margin-block-end: 36px;
   `,
   sectionTitle: css`
     margin-block-end: 24px;
     font-size: 18px;
     font-weight: 600;
-    text-align: center;
+    text-align: left;
+    color: ${token.colorTextSecondary};
+    display: flex;
+    align-items: center;
+    gap: 8px;
   `,
   subText: css`
     margin-block-end: 48px;
     font-size: 16px;
     color: ${token.colorTextSecondary};
-    text-align: center;
+    text-align: left;
   `,
 }));
 
@@ -56,8 +61,8 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
 
-  // Fetch recent files (all categories, sorted by updatedAt)
-  const { data: recentFiles, isLoading } = useFetchKnowledgeItems({
+  // Fetch all items (all categories, sorted by updatedAt)
+  const { data: allItems, isLoading } = useFetchKnowledgeItems({
     category: FilesTabs.All,
     knowledgeBaseId,
     sortType: 'desc',
@@ -72,11 +77,19 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
     return t('home.greeting.evening');
   }, [t]);
 
-  // Get top 10 recent files
+  // Get top 10 recent files (filter by sourceType === 'file')
   const topRecentFiles = useMemo(() => {
-    if (!recentFiles) return [];
-    return recentFiles.slice(0, 10);
-  }, [recentFiles]);
+    if (!allItems) return [];
+    const files = allItems.filter((item) => item.sourceType === 'file');
+    return files.slice(0, 10);
+  }, [allItems]);
+
+  // Get top 10 recent documents (filter by sourceType === 'document')
+  const topRecentDocuments = useMemo(() => {
+    if (!allItems) return [];
+    const documents = allItems.filter((item) => item.sourceType === 'document');
+    return documents.slice(0, 10);
+  }, [allItems]);
 
   return (
     <div className={styles.container}>
@@ -84,26 +97,34 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
         {/* Greeting Section */}
         <Flexbox className={styles.section}>
           <Text className={styles.greeting}>{greeting}</Text>
-          <Text className={styles.subText} type="secondary">
-            {t('home.subtitle')}
-          </Text>
+        </Flexbox>
+
+        {/* Upload Entries Section */}
+        <Flexbox className={styles.section}>
+          <UploadEntries knowledgeBaseId={knowledgeBaseId} />
         </Flexbox>
 
         {/* Recent Files Section */}
         {topRecentFiles.length > 0 && (
           <Flexbox className={styles.section}>
-            <Text className={styles.sectionTitle}>{t('home.recentFiles')}</Text>
+            <Text className={styles.sectionTitle}>
+              <Clock size={18} />
+              {t('home.recentFiles')}
+            </Text>
             <RecentFiles files={topRecentFiles} isLoading={isLoading} onOpenFile={onOpenFile} />
           </Flexbox>
         )}
 
-        {/* Upload Entries Section */}
-        <Flexbox className={styles.section}>
-          <Text className={styles.sectionTitle}>
-            {topRecentFiles.length > 0 ? t('home.quickActions') : t('home.getStarted')}
-          </Text>
-          <UploadEntries knowledgeBaseId={knowledgeBaseId} />
-        </Flexbox>
+        {/* Recent Documents Section */}
+        {topRecentDocuments.length > 0 && (
+          <Flexbox className={styles.section}>
+            <Text className={styles.sectionTitle}>
+              <FileTextIcon size={18} />
+              {t('home.recentDocuments')}
+            </Text>
+            <RecentFiles files={topRecentDocuments} isLoading={isLoading} onOpenFile={onOpenFile} />
+          </Flexbox>
+        )}
       </Flexbox>
     </div>
   );

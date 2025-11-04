@@ -12,7 +12,7 @@ const Container = memo<PropsWithChildren>(({ children }) => {
       flex={1}
       style={{
         background: theme.colorBgContainerSecondary,
-        overflow: 'hidden',
+        overflowY: 'auto',
         position: 'relative',
       }}
     >

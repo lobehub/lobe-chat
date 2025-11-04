@@ -3,8 +3,8 @@
 import { FileTypeIcon, Icon } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { ArrowUpIcon, FileTextIcon, PlusIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { ArrowUpIcon, FolderUp, PlusIcon } from 'lucide-react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -59,7 +59,7 @@ const useStyles = createStyles(({ css, token }) => ({
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    justify-content: center;
+    justify-content: left;
   `,
   icon: css`
     position: absolute;
@@ -79,7 +79,6 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
   const { t } = useTranslation('file');
   const theme = useTheme();
   const { styles } = useStyles();
-  const [isUploading, setIsUploading] = useState(false);
 
   const createNote = useFileStore((s) => s.createNote);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
@@ -92,28 +91,20 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
     });
   };
 
-  const handleUploadMarkdown = async (file: File) => {
-    try {
-      setIsUploading(true);
-      const content = await file.text();
-      await createNote({
-        content,
-        knowledgeBaseId,
-        title: file.name.replace(/\.md$|\.markdown$/i, ''),
-      });
-    } catch (error) {
-      console.error('Failed to upload markdown:', error);
-    } finally {
-      setIsUploading(false);
-    }
-    return false;
-  };
-
   const handleUploadFiles = async (file: File) => {
     try {
       await pushDockFileList([file], knowledgeBaseId);
     } catch (error) {
       console.error('Failed to upload file:', error);
+    }
+    return false;
+  };
+
+  const handleUploadFolder = async (file: File) => {
+    try {
+      await pushDockFileList([file], knowledgeBaseId);
+    } catch (error) {
+      console.error('Failed to upload folder:', error);
     }
     return false;
   };
@@ -133,31 +124,6 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
         />
       </Flexbox>
 
-      {/* Upload Markdown File */}
-      <Upload
-        accept=".md,.markdown"
-        beforeUpload={handleUploadMarkdown}
-        disabled={isUploading}
-        multiple={false}
-        showUploadList={false}
-      >
-        <Flexbox className={styles.card} padding={16} style={{ opacity: isUploading ? 0.5 : 1 }}>
-          <span className={styles.actionTitle}>
-            {isUploading
-              ? t('home.uploadEntries.markdown.uploading')
-              : t('home.uploadEntries.markdown.title')}
-          </span>
-          <div className={styles.glow} style={{ background: theme.gold }} />
-          <FileTypeIcon
-            className={styles.icon}
-            color={theme.gold}
-            icon={<Icon color={'#fff'} icon={FileTextIcon} />}
-            size={ICON_SIZE}
-            type={'file'}
-          />
-        </Flexbox>
-      </Upload>
-
       {/* Upload Files */}
       <Upload beforeUpload={handleUploadFiles} multiple showUploadList={false}>
         <Flexbox className={styles.card} padding={16}>
@@ -172,9 +138,23 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
           />
         </Flexbox>
       </Upload>
+
+      {/* Upload Folder */}
+      <Upload beforeUpload={handleUploadFolder} directory multiple showUploadList={false}>
+        <Flexbox className={styles.card} padding={16}>
+          <span className={styles.actionTitle}>{t('home.uploadEntries.folder.title')}</span>
+          <div className={styles.glow} style={{ background: theme.green }} />
+          <FileTypeIcon
+            className={styles.icon}
+            color={theme.green}
+            icon={<Icon color={'#fff'} icon={FolderUp} />}
+            size={ICON_SIZE}
+            type={'file'}
+          />
+        </Flexbox>
+      </Upload>
     </div>
   );
 });
 
 export default UploadEntries;
-
