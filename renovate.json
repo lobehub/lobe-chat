@@ -21,44 +21,18 @@
     {
       "description": "Isolate PRs for pinned deps (exact x.y.z)",
       "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchDepTypes": [
-        "dependencies",
-        "devDependencies",
-        "optionalDependencies",
-        "peerDependencies"
-      ],
       "matchCurrentValue": "^\\d+\\.\\d+\\.\\d+([+-][0-9A-Za-z.-]+)?$",
       "groupName": null,
       "separateMinorPatch": true,
       "separateMajorMinor": true
     },
-    // 2a) Non-pinned deps: override splitting so patch+minor can be combined
+    // 2) Non-pinned deps: Patch versions, grouped together
     {
-      "description": "Non-pinned deps: allow patch+minor to group; keep majors separate",
+      "description": "Group patch versions together for non-pinned deps",
       "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchDepTypes": [
-        "dependencies",
-        "devDependencies",
-        "optionalDependencies",
-        "peerDependencies"
-      ],
       "matchCurrentValue": "/(^[~^]|[<>=| -])/", // anything that looks like a range
-      "separateMinorPatch": false,
-      "separateMajorMinor": true
-    },
-    // 2b) Non-pinned deps: actually group patch+minor together
-    {
-      "description": "Non-pinned deps: group non-major updates",
-      "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchDepTypes": [
-        "dependencies",
-        "devDependencies",
-        "optionalDependencies",
-        "peerDependencies"
-      ],
-      "matchCurrentValue": "/(^[~^]|[<>=| -])/",
-      "matchUpdateTypes": ["minor", "patch"], // only non-majors
-      "groupName": "deps (non-major)"
+      "groupName": "patch dependencies",
+      "matchUpdateTypes": ["patch"]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],
