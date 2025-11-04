@@ -2,7 +2,7 @@ import { ActionIcon, Button, Dropdown, Icon, Text } from '@lobehub/ui';
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, ChevronDown, LucideCheck } from 'lucide-react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -30,17 +30,13 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
   const { t } = useTranslation('modelProvider');
 
   const [showMore, setShowMore] = useState(false);
-  const [sortType, setSortType] = useState<SortType>(
-    () =>
-      (systemStatusSelectors.disabledModelsSortType(useGlobalStore.getState()) as SortType) ||
-      SortType.Default,
-  );
 
-  useEffect(() => {
-    useGlobalStore.getState().updateSystemStatus({
-      disabledModelsSortType: sortType,
-    });
-  }, [sortType]);
+  const [sortType, updateSortType] = useGlobalStore((s) => [
+    systemStatusSelectors.disabledModelsSortType(s),
+    (newSortType: SortType) => {
+      s.updateSystemStatus({ disabledModelsSortType: newSortType });
+    },
+  ]);
 
   const disabledModels = useAiInfraStore(aiModelSelectors.disabledAiProviderModelList, isEqual);
 
@@ -118,7 +114,7 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
                     icon: sortType === SortType.Default ? <Icon icon={LucideCheck} /> : <div />,
                     key: 'default',
                     label: t('providerModels.list.disabledActions.sortDefault'),
-                    onClick: () => setSortType(SortType.Default),
+                    onClick: () => updateSortType(SortType.Default),
                   },
                   {
                     type: 'divider',
@@ -128,7 +124,7 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
                       sortType === SortType.Alphabetical ? <Icon icon={LucideCheck} /> : <div />,
                     key: 'alphabetical',
                     label: t('providerModels.list.disabledActions.sortAlphabetical'),
-                    onClick: () => setSortType(SortType.Alphabetical),
+                    onClick: () => updateSortType(SortType.Alphabetical),
                   },
                   {
                     icon:
@@ -139,7 +135,7 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
                       ),
                     key: 'alphabeticalDesc',
                     label: t('providerModels.list.disabledActions.sortAlphabeticalDesc'),
-                    onClick: () => setSortType(SortType.AlphabeticalDesc),
+                    onClick: () => updateSortType(SortType.AlphabeticalDesc),
                   },
                   {
                     type: 'divider',
@@ -148,14 +144,14 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
                     icon: sortType === SortType.ReleasedAt ? <Icon icon={LucideCheck} /> : <div />,
                     key: 'releasedAt',
                     label: t('providerModels.list.disabledActions.sortReleasedAt'),
-                    onClick: () => setSortType(SortType.ReleasedAt),
+                    onClick: () => updateSortType(SortType.ReleasedAt),
                   },
                   {
                     icon:
                       sortType === SortType.ReleasedAtDesc ? <Icon icon={LucideCheck} /> : <div />,
                     key: 'releasedAtDesc',
                     label: t('providerModels.list.disabledActions.sortReleasedAtDesc'),
-                    onClick: () => setSortType(SortType.ReleasedAtDesc),
+                    onClick: () => updateSortType(SortType.ReleasedAtDesc),
                   },
                 ] as ItemType[],
               }}

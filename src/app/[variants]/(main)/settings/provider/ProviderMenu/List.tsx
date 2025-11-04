@@ -4,7 +4,7 @@ import { ActionIcon, Dropdown, Icon, ScrollShadow, Text } from '@lobehub/ui';
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, LucideCheck } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -31,18 +31,13 @@ const ProviderList = (props: {
   const { onProviderSelect, mobile } = props;
   const { t } = useTranslation('modelProvider');
   const [open, setOpen] = useState(false);
-  const [sortType, setSortType] = useState<SortType>(
-    () =>
-      (systemStatusSelectors.disabledModelProvidersSortType(
-        useGlobalStore.getState(),
-      ) as SortType) || SortType.Default,
-  );
 
-  useEffect(() => {
-    useGlobalStore.getState().updateSystemStatus({
-      disabledModelProvidersSortType: sortType,
-    });
-  }, [sortType]);
+  const [sortType, updateSortType] = useGlobalStore((s) => [
+    systemStatusSelectors.disabledModelProvidersSortType(s),
+    (newSortType: SortType) => {
+      s.updateSystemStatus({ disabledModelProvidersSortType: newSortType });
+    },
+  ]);
 
   const enabledModelProviderList = useAiInfraStore(
     aiProviderSelectors.enabledAiProviderList,
@@ -126,7 +121,7 @@ const ProviderList = (props: {
                   icon: sortType === SortType.Default ? <Icon icon={LucideCheck} /> : <div />,
                   key: 'default',
                   label: t('menu.list.disabledActions.sortDefault'),
-                  onClick: () => setSortType(SortType.Default),
+                  onClick: () => updateSortType(SortType.Default),
                 },
                 {
                   type: 'divider',
@@ -135,14 +130,14 @@ const ProviderList = (props: {
                   icon: sortType === SortType.Alphabetical ? <Icon icon={LucideCheck} /> : <div />,
                   key: 'alphabetical',
                   label: t('menu.list.disabledActions.sortAlphabetical'),
-                  onClick: () => setSortType(SortType.Alphabetical),
+                  onClick: () => updateSortType(SortType.Alphabetical),
                 },
                 {
                   icon:
                     sortType === SortType.AlphabeticalDesc ? <Icon icon={LucideCheck} /> : <div />,
                   key: 'alphabeticalDesc',
                   label: t('menu.list.disabledActions.sortAlphabeticalDesc'),
-                  onClick: () => setSortType(SortType.AlphabeticalDesc),
+                  onClick: () => updateSortType(SortType.AlphabeticalDesc),
                 },
               ] as ItemType[],
             }}
