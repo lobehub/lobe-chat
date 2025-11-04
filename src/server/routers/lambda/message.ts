@@ -1,7 +1,6 @@
 import {
   CreateMessageParamsSchema,
   CreateNewMessageParamsSchema,
-  UIChatMessage,
   UpdateMessageParamsSchema,
   UpdateMessageRAGParamsSchema,
 } from '@lobechat/types';
@@ -13,8 +12,6 @@ import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
-
-type ChatMessageList = UIChatMessage[];
 
 const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -72,22 +69,6 @@ export const messageRouter = router({
       });
     }),
 
-  // TODO: it will be removed in V2
-  getAllMessages: messageProcedure.query(async ({ ctx }): Promise<ChatMessageList> => {
-    return ctx.messageModel.queryAll() as any;
-  }),
-
-  // TODO: it will be removed in V2
-  getAllMessagesInSession: messageProcedure
-    .input(
-      z.object({
-        sessionId: z.string().nullable().optional(),
-      }),
-    )
-    .query(async ({ ctx, input }): Promise<ChatMessageList> => {
-      return ctx.messageModel.queryBySessionId(input.sessionId) as any;
-    }),
-
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {
     return ctx.messageModel.getHeatmaps();
   }),
@@ -101,16 +82,20 @@ export const messageRouter = router({
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
       const serverDB = await getServerDB();
 
+      const { useGroup, ...queryParams } = input;
+
       const messageModel = new MessageModel(serverDB, ctx.userId);
       const fileService = new FileService(serverDB, ctx.userId);
 
-      return messageModel.query(input, {
+      return messageModel.query(queryParams, {
+        groupAssistantMessages: useGroup ?? false,
         postProcessUrl: (path) => fileService.getFullFileUrl(path),
       });
     }),

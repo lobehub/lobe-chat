@@ -4,12 +4,12 @@ import { Select } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
 import { FormPassword } from '@/components/FormInput';
+import { SkeletonInput } from '@/components/Skeleton';
 import { BedrockProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { KeyVaultsConfigKey } from '../../const';
-import { SkeletonInput } from '../../features/ProviderConfig';
 import { ProviderItem } from '../../type';
 import ProviderDetail from '../default';
 

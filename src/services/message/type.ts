@@ -21,8 +21,6 @@ export interface IMessageService {
 
   getMessages(sessionId: string, topicId?: string, groupId?: string): Promise<UIChatMessage[]>;
   getGroupMessages(groupId: string, topicId?: string): Promise<UIChatMessage[]>;
-  getAllMessages(): Promise<UIChatMessage[]>;
-  getAllMessagesInSession(sessionId: string): Promise<UIChatMessage[]>;
   countMessages(params?: {
     endDate?: string;
     range?: [string, string];
