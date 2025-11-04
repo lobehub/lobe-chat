@@ -33,6 +33,7 @@ const PageContainer = memo<PageContainerProps>(
     titleIcon,
     leftProps,
     titleProps,
+    headerBackgroundColor,
     extraProps,
     safeAreaProps,
   }) => {
@@ -163,7 +164,7 @@ const PageContainer = memo<PageContainerProps>(
           style={[
             styles.header,
             {
-              backgroundColor: headerContentBackground,
+              backgroundColor: headerBackgroundColor || headerContentBackground,
               height: 64,
               left: 0,
               position: 'absolute',
