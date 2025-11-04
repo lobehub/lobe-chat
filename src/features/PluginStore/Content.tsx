@@ -21,7 +21,6 @@ export const Content = memo(() => {
   const [keywords] = useState<string>();
 
   const options = [
-    // isDesktop ? { label: t('store.tabs.mcp'), value: PluginStoreTabs.MCP } : undefined,
     { label: t('store.tabs.mcp'), value: PluginStoreTabs.MCP },
     { label: t('store.tabs.old'), value: PluginStoreTabs.Plugin },
     { label: t('store.tabs.installed'), value: PluginStoreTabs.Installed },
