@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Display assistant message in group."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.25"
+  },
+  {
+    "children": {
       "improvements": ["Improve lab style."]
     },
     "date": "2025-11-04",
