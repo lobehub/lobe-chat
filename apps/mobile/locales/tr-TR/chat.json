@@ -33,6 +33,11 @@
   "pin": "Sabit",
   "pinOff": "Sabitliği Kaldır",
   "placeholder": "Mesajınızı yazın...",
+  "reasoning": {
+    "thinking": "Derin düşünülüyor...",
+    "thought": "Derinlemesine düşünüldü ({{duration}} saniye sürdü)",
+    "thoughtWithoutDuration": "Derinlemesine düşünüldü"
+  },
   "regenerateFailed": "Yeniden oluşturma başarısız oldu, lütfen daha sonra tekrar deneyin",
   "send": "Gönder",
   "session": {

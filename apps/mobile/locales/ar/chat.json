@@ -33,6 +33,11 @@
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
   "placeholder": "أدخل رسالتك...",
+  "reasoning": {
+    "thinking": "جارٍ التفكير بعمق...",
+    "thought": "تم التفكير بعمق (استغرق {{duration}} ثانية)",
+    "thoughtWithoutDuration": "تم التفكير بعمق"
+  },
   "regenerateFailed": "فشل في إعادة التوليد، يرجى المحاولة لاحقًا",
   "send": "إرسال",
   "session": {

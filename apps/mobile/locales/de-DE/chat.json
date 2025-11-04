@@ -33,6 +33,11 @@
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
   "placeholder": "Gib deine Nachricht ein...",
+  "reasoning": {
+    "thinking": "Tiefes Nachdenken...",
+    "thought": "Tief nachgedacht (Dauer: {{duration}} Sekunden)",
+    "thoughtWithoutDuration": "Tief nachgedacht"
+  },
   "regenerateFailed": "Erneutes Generieren fehlgeschlagen, bitte versuche es später erneut",
   "send": "Senden",
   "session": {

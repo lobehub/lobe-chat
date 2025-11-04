@@ -33,6 +33,11 @@
   "pin": "Pin to Top",
   "pinOff": "Unpin from Top",
   "placeholder": "Type your message...",
+  "reasoning": {
+    "thinking": "Engaging in deep thought...",
+    "thought": "Deep thought completed (took {{duration}} seconds)",
+    "thoughtWithoutDuration": "Deep thought completed"
+  },
   "regenerateFailed": "Regeneration failed, please try again later",
   "send": "Send",
   "session": {

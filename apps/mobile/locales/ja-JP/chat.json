@@ -33,6 +33,11 @@
   "pin": "ピン留め",
   "pinOff": "ピン留めを解除",
   "placeholder": "メッセージを入力してください...",
+  "reasoning": {
+    "thinking": "深く思考中...",
+    "thought": "深く思考しました（所要時間 {{duration}} 秒）",
+    "thoughtWithoutDuration": "深く思考しました"
+  },
   "regenerateFailed": "再生成に失敗しました。後でもう一度お試しください。",
   "send": "送信",
   "session": {
