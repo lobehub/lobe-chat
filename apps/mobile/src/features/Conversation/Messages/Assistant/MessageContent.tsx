@@ -1,0 +1,99 @@
+import { LOADING_FLAT } from '@lobechat/const';
+import { UIChatMessage } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui-rn';
+import { ReactNode, memo } from 'react';
+
+import { DefaultMessage } from '../Default';
+import ImageFileListViewer from '../User/ImageFileListViewer';
+import VideoFileListViewer from '../User/VideoFileListViewer';
+
+// TODO: 待实现以下组件
+// import FileChunks from './FileChunks';
+// import IntentUnderstanding from './IntentUnderstanding';
+// import Reasoning from './Reasoning';
+// import SearchGrounding from './SearchGrounding';
+// import Tool from './Tool';
+
+export interface AssistantMessageContentProps extends UIChatMessage {
+  editableContent: ReactNode;
+  isGenerating?: boolean;
+}
+
+export const AssistantMessageContent = memo<AssistantMessageContentProps>(
+  ({
+    id,
+    tools,
+    content,
+    imageList,
+    videoList,
+    isGenerating,
+    editableContent,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    chunksList,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    search,
+    ...props
+  }) => {
+    const isToolCallGenerating = isGenerating && (content === LOADING_FLAT || !content) && !!tools;
+
+    // 功能开关
+    const showImageItems = !!imageList && imageList.length > 0;
+    const showVideoItems = !!videoList && videoList.length > 0;
+
+    // TODO: 待实现功能
+    // const showSearch = !!search && !!search.citations?.length;
+    // const showReasoning = !!props.reasoning && props.reasoning.content?.trim() !== '';
+    // const showFileChunks = !!chunksList && chunksList.length > 0;
+
+    return (
+      <Flexbox gap={8}>
+        {/* TODO: 添加搜索引用 */}
+        {/* {showSearch && <SearchGrounding citations={search?.citations} searchQueries={search?.searchQueries} />} */}
+
+        {/* TODO: 添加文件块 */}
+        {/* {showFileChunks && <FileChunks data={chunksList} />} */}
+
+        {/* TODO: 添加推理过程 */}
+        {/* {showReasoning && <Reasoning {...props.reasoning} id={id} />} */}
+
+        {/* 主要内容 */}
+        {content && (
+          <DefaultMessage
+            content={content}
+            editableContent={editableContent}
+            id={id}
+            isToolCallGenerating={isToolCallGenerating}
+            {...props}
+          />
+        )}
+
+        {/* 图片列表 - 复用 User 的 ImageFileListViewer */}
+        {showImageItems && <ImageFileListViewer items={imageList} />}
+
+        {/* 视频列表 - 复用 User 的 VideoFileListViewer */}
+        {showVideoItems && <VideoFileListViewer items={videoList} />}
+
+        {/* TODO: 添加工具调用 */}
+        {/* {tools && (
+          <Flexbox gap={8}>
+            {tools.map((toolCall, index) => (
+              <Tool
+                key={toolCall.id}
+                id={toolCall.id}
+                type={toolCall.type}
+                identifier={toolCall.identifier}
+                apiName={toolCall.apiName}
+                arguments={toolCall.arguments}
+                messageId={id}
+                index={index}
+                payload={toolCall}
+              />
+            ))}
+          </Flexbox>
+        )} */}
+      </Flexbox>
+    );
+  },
+);
+
+AssistantMessageContent.displayName = 'AssistantMessageContent';
