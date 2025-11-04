@@ -1,5 +1,5 @@
 import { Button, PageContainer, TextArea } from '@lobehub/ui-rn';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TextInput } from 'react-native';
@@ -7,50 +7,59 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { loading } from '@/libs/loading';
-import { agentSelectors, useAgentStore } from '@/store/agent';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 
-export default function SystemRoleSetting() {
-  const { t } = useTranslation('chat');
+export default function MessageEditScreen() {
+  const { t } = useTranslation(['chat', 'common']);
+  const { messageId } = useLocalSearchParams<{ messageId: string }>();
   const insets = useSafeAreaInsets();
-  const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
-  const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
+  const message = useChatStore((s) => chatSelectors.getMessageById(messageId)(s));
+  const modifyMessageContent = useChatStore((s) => s.modifyMessageContent);
 
-  const [editValue, setEditValue] = useState(systemRole || '');
+  const [editValue, setEditValue] = useState(message?.content || '');
 
   const textInputRef = useRef<TextInput>(null);
 
   const handleSave = useCallback(async () => {
     // 如果内容没有变化，直接返回
-    if (editValue === systemRole) {
+    if (editValue === message?.content) {
       router.back();
       return;
     }
 
+    // 内容不能为空
+    if (!editValue.trim()) {
+      return;
+    }
+
     try {
-      await loading.start(updateAgentConfig({ systemRole: editValue }));
+      await loading.start(modifyMessageContent(messageId, editValue));
       router.back();
     } catch (error) {
-      console.error('Failed to update agent role:', error);
+      console.error('Failed to update message:', error);
     }
-  }, [editValue, systemRole, updateAgentConfig]);
+  }, [editValue, message?.content, messageId, modifyMessageContent]);
 
-  // 监听 systemRole 变化，同步更新编辑值
+  // 监听 message 变化，同步更新编辑值
   useEffect(() => {
-    setEditValue(systemRole || '');
-  }, [systemRole]);
+    if (message?.content) {
+      setEditValue(message.content);
+    }
+  }, [message?.content]);
 
   return (
     <PageContainer
       extra={
         <Button onPress={handleSave} size={'small'} type={'primary'}>
-          {t('setting.done')}
+          {t('setting.done', { ns: 'chat' })}
         </Button>
       }
       safeAreaProps={{
         edges: ['top'],
       }}
       showBack
-      title={t('agentRoleEdit.title')}
+      title={t('messageEdit.title', { ns: 'chat' })}
     >
       <KeyboardAwareScrollView
         bottomOffset={16}
@@ -61,7 +70,7 @@ export default function SystemRoleSetting() {
         <TextArea
           autoFocus
           onChangeText={setEditValue}
-          placeholder={t('agentRoleEdit.placeholder', { ns: 'chat' })}
+          placeholder={t('messageEdit.placeholder', { ns: 'chat' })}
           ref={textInputRef}
           style={{ flex: 1, minHeight: 200, paddingBottom: insets.bottom }}
           value={editValue}

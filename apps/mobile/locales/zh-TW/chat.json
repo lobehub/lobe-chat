@@ -24,6 +24,10 @@
     "title": "隨便聊聊"
   },
   "messageCopied": "訊息已複製",
+  "messageEdit": {
+    "placeholder": "請輸入訊息內容",
+    "title": "編輯訊息"
+  },
   "newAgent": "新建助理",
   "newChat": "新對話",
   "pin": "置頂",

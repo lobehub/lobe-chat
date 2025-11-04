@@ -24,6 +24,10 @@
     "title": "気軽におしゃべり"
   },
   "messageCopied": "メッセージがコピーされました",
+  "messageEdit": {
+    "placeholder": "メッセージ内容を入力してください",
+    "title": "メッセージの編集"
+  },
   "newAgent": "新しいアシスタント",
   "newChat": "新しい会話",
   "pin": "ピン留め",

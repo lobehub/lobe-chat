@@ -24,6 +24,10 @@
     "title": "편하게 대화하기"
   },
   "messageCopied": "메시지가 복사되었습니다",
+  "messageEdit": {
+    "placeholder": "메시지 내용을 입력하세요",
+    "title": "메시지 편집"
+  },
   "newAgent": "새 에이전트",
   "newChat": "새 대화",
   "pin": "고정",

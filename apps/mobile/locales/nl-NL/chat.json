@@ -24,6 +24,10 @@
     "title": "Gewoon kletsen"
   },
   "messageCopied": "Bericht gekopieerd",
+  "messageEdit": {
+    "placeholder": "Voer berichtinhoud in",
+    "title": "Bericht bewerken"
+  },
   "newAgent": "Nieuwe assistent",
   "newChat": "Nieuw gesprek",
   "pin": "Vastzetten",

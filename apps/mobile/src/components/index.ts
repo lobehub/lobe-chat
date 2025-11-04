@@ -82,6 +82,10 @@ export {
 } from './MaterialFileTypeIcon';
 export { default as Mermaid, type MermaidProps } from './Mermaid';
 export { default as ModelInfoTags, type ModelInfoTagsProps } from './ModelInfoTags';
+export {
+  default as NativePageContainer,
+  type NativePageContainerProps,
+} from './NativePageContainer';
 export { default as PageContainer, type PageContainerProps } from './PageContainer';
 export { default as ScrollShadow, type ScrollShadowProps } from './ScrollShadow';
 export { default as Segmented, type SegmentedItemType, type SegmentedProps } from './Segmented';

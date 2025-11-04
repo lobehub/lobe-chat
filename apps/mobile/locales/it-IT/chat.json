@@ -24,6 +24,10 @@
     "title": "Parliamo liberamente"
   },
   "messageCopied": "Messaggio copiato",
+  "messageEdit": {
+    "placeholder": "Inserisci il contenuto del messaggio",
+    "title": "Modifica messaggio"
+  },
   "newAgent": "Nuovo assistente",
   "newChat": "Nuova conversazione",
   "pin": "Fissa in alto",
