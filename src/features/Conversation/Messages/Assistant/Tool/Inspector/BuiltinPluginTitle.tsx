@@ -5,7 +5,7 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -33,18 +33,22 @@ interface BuiltinPluginTitleProps {
   toolCallId: string;
 }
 
-const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(({ messageId, index, apiName, title }) => {
-  const { styles } = useStyles();
+const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(
+  ({ messageId, index, apiName, title, toolCallId }) => {
+    const { styles } = useStyles();
 
-  const isLoading = useChatStore(chatSelectors.isInToolsCalling(messageId, index));
+    const isLoading = useChatStore(
+      messageStateSelectors.isToolApiNameShining(messageId, index, toolCallId),
+    );
 
-  return (
-    <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
-      <div>{title}</div>
-      <Icon icon={ChevronRight} />
-      <span className={styles.apiName}>{apiName}</span>
-    </Flexbox>
-  );
-});
+    return (
+      <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
+        <div>{title}</div>
+        <Icon icon={ChevronRight} />
+        <span className={styles.apiName}>{apiName}</span>
+      </Flexbox>
+    );
+  },
+);
 
 export default BuiltinPluginTitle;

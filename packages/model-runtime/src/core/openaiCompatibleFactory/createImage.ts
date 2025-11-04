@@ -6,8 +6,8 @@ import OpenAI from 'openai';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { getModelPricing } from '../../utils/getModelPricing';
 import { imageUrlToBase64 } from '../../utils/imageToBase64';
-import { convertImageUrlToFile } from '../../utils/openaiHelpers';
 import { parseDataUri } from '../../utils/uriParser';
+import { convertImageUrlToFile } from '../contextBuilders/openai';
 import { convertOpenAIImageUsage } from '../usageConverters/openai';
 
 const log = createDebug('lobe-image:openai-compatible');
@@ -67,7 +67,7 @@ async function generateByImageMode(
   const defaultInput = {
     n: 1,
     ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
-    ...(isImageEdit ? { input_fidelity: 'high' } : {}),
+    ...(isImageEdit && model === 'gpt-image-1' ? { input_fidelity: 'high' } : {}),
   };
 
   const options = cleanObject({

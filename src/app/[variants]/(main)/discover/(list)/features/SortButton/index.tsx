@@ -174,7 +174,7 @@ const SortButton = memo(() => {
       }}
       trigger={['click', 'hover']}
     >
-      <Button icon={<Icon icon={ArrowDownWideNarrow} />} type={'text'}>
+      <Button data-testid="sort-dropdown" icon={<Icon icon={ArrowDownWideNarrow} />} type={'text'}>
         {activeItem.label}
         <Icon icon={ChevronDown} />
       </Button>

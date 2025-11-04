@@ -106,7 +106,8 @@ export const validateOIDCJWT = async (token: string) => {
 
     // 提取用户信息
     const userId = payload.sub;
-    const clientId = payload.aud;
+    const clientId = payload.client_id;
+    const aud = payload.aud;
 
     if (!userId) {
       throw new TRPCError({
@@ -119,7 +120,7 @@ export const validateOIDCJWT = async (token: string) => {
       clientId,
       payload,
       tokenData: {
-        aud: clientId,
+        aud: aud,
         client_id: clientId,
         exp: payload.exp,
         iat: payload.iat,

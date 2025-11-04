@@ -37,7 +37,7 @@ const groqChatModels: AIChatModelCard[] = [
     pricing: {
       units: [
         { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-06',
@@ -56,8 +56,8 @@ const groqChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.075, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-08-06',
@@ -126,23 +126,6 @@ const groqChatModels: AIChatModelCard[] = [
       units: [
         { name: 'textInput', rate: 0.29, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 0.59, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 131_072,
-    displayName: 'DeepSeek R1 Distill Llama 70B',
-    id: 'deepseek-r1-distill-llama-70b',
-    maxOutput: 131_072,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

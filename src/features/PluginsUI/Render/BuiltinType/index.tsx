@@ -3,7 +3,6 @@ import { memo } from 'react';
 import { BuiltinToolsRenders } from '@/tools/renders';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
-import Loading from '../Loading';
 import { useParseContent } from '../useParseContent';
 
 export interface BuiltinTypeProps {
@@ -24,15 +23,10 @@ const BuiltinType = memo<BuiltinTypeProps>(
     pluginState,
     id,
     identifier,
-    loading,
     pluginError,
     apiName,
   }) => {
-    const { isJSON, data } = useParseContent(content);
-
-    if (!isJSON) {
-      return loading && <Loading />;
-    }
+    const { data } = useParseContent(content);
 
     const Render = BuiltinToolsRenders[identifier || ''];
 

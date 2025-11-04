@@ -3,18 +3,20 @@
 import {
   ChatErrorType,
   ChatImageItem,
-  ChatMessage,
   ChatMessageError,
   ChatMessagePluginError,
   CreateMessageParams,
+  CreateNewMessageParams,
   GroundingSearch,
   MessageMetadata,
   MessageToolCall,
   ModelReasoning,
   TraceEventPayloads,
   TraceEventType,
+  UIChatMessage,
   UpdateMessageRAGParams,
 } from '@lobechat/types';
+import { nanoid } from '@lobechat/utils';
 import { copyToClipboard } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
@@ -26,8 +28,9 @@ import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { useSessionStore } from '@/store/session';
+import { sessionSelectors } from '@/store/session/selectors';
 import { Action, setNamespace } from '@/utils/storeDebug';
-import { nanoid } from '@/utils/uuid';
 
 import type { ChatStoreState } from '../../initialState';
 import { chatSelectors } from '../../selectors';
@@ -57,12 +60,13 @@ export interface ChatMessageAction {
   // query
   useFetchMessages: (
     enable: boolean,
-    sessionId: string,
-    topicId?: string,
-  ) => SWRResponse<ChatMessage[]>;
+    messageContextId: string,
+    activeTopicId?: string,
+    type?: 'session' | 'group',
+  ) => SWRResponse<UIChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
-  replaceMessages: (messages: ChatMessage[]) => void;
+  replaceMessages: (messages: UIChatMessage[]) => void;
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
@@ -115,6 +119,14 @@ export interface ChatMessageAction {
    */
   internal_createTmpMessage: (params: CreateMessageParams) => string;
   /**
+   * create a new message using createNewMessage API and return full message list
+   * used for group message scenarios to reduce network requests
+   */
+  internal_createNewMessage: (
+    params: CreateNewMessageParams,
+    context?: { tempMessageId?: string; groupMessageId?: string },
+  ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
+  /**
    * delete the message content with optimistic update
    */
   internal_deleteMessage: (id: string) => Promise<void>;
@@ -138,6 +150,15 @@ export interface ChatMessageAction {
     id?: string,
     action?: Action,
   ) => AbortController | undefined;
+
+  /**
+   * Update active session type
+   */
+  internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => void;
+  /**
+   * Update active session ID with cleanup of pending operations
+   */
+  internal_updateActiveId: (activeId: string) => void;
 }
 
 export const chatMessage: StateCreator<
@@ -187,9 +208,32 @@ export const chatMessage: StateCreator<
   },
 
   clearMessage: async () => {
-    const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
+    const {
+      activeId,
+      activeTopicId,
+      refreshMessages,
+      refreshTopic,
+      switchTopic,
+      activeSessionType,
+    } = get();
 
-    await messageService.removeMessagesByAssistant(activeId, activeTopicId);
+    // Check if this is a group session - use activeSessionType if available, otherwise check session store
+    let isGroupSession = activeSessionType === 'group';
+    if (activeSessionType === undefined) {
+      // Fallback: check session store directly
+      const sessionStore = useSessionStore.getState();
+      isGroupSession = sessionSelectors.isCurrentSessionGroupSession(sessionStore);
+    }
+
+    // For group sessions, we need to clear group messages using groupId
+    // For regular sessions, we clear session messages using sessionId
+    if (isGroupSession) {
+      // For group chat, activeId is the groupId
+      await messageService.removeMessagesByGroup(activeId, activeTopicId);
+    } else {
+      // For regular session, activeId is the sessionId
+      await messageService.removeMessagesByAssistant(activeId, activeTopicId);
+    }
 
     if (activeTopicId) {
       await topicService.removeTopic(activeTopicId);
@@ -221,7 +265,8 @@ export const chatMessage: StateCreator<
     updateInputMessage('');
   },
   addUserMessage: async ({ message, fileList }) => {
-    const { internal_createMessage, updateInputMessage, activeTopicId, activeId } = get();
+    const { internal_createMessage, updateInputMessage, activeTopicId, activeId, activeThreadId } =
+      get();
     if (!activeId) return;
 
     await internal_createMessage({
@@ -231,6 +276,7 @@ export const chatMessage: StateCreator<
       sessionId: activeId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
+      threadId: activeThreadId,
     });
 
     updateInputMessage('');
@@ -263,17 +309,25 @@ export const chatMessage: StateCreator<
 
     await get().internal_updateMessageContent(id, content);
   },
-  useFetchMessages: (enable, sessionId, activeTopicId) =>
-    useClientDataSWR<ChatMessage[]>(
-      enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
-      async ([, sessionId, topicId]: [string, string, string | undefined]) =>
-        messageService.getMessages(sessionId, topicId),
+
+  /**
+   * @param enable - whether to enable the fetch
+   * @param messageContextId - Can be sessionId or groupId
+   */
+  useFetchMessages: (enable, messageContextId, activeTopicId, type = 'session') =>
+    useClientDataSWR<UIChatMessage[]>(
+      enable ? [SWR_USE_FETCH_MESSAGES, messageContextId, activeTopicId, type] : null,
+      async ([, sessionId, topicId, type]: [string, string, string | undefined, string]) =>
+        type === 'session'
+          ? messageService.getMessages(sessionId, topicId)
+          : messageService.getGroupMessages(sessionId, topicId),
       {
         onSuccess: (messages, key) => {
           const nextMap = {
             ...get().messagesMap,
-            [messageMapKey(sessionId, activeTopicId)]: messages,
+            [messageMapKey(messageContextId || '', activeTopicId)]: messages,
           };
+
           // no need to update map if the messages have been init and the map is the same
           if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
 
@@ -285,8 +339,11 @@ export const chatMessage: StateCreator<
         },
       },
     ),
+  // TODO: The mutate should only be called once, but since we haven't merge session and group,
+  // we need to call it twice
   refreshMessages: async () => {
-    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId]);
+    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'session']);
+    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'group']);
   },
   replaceMessages: (messages) => {
     set(
@@ -326,8 +383,16 @@ export const chatMessage: StateCreator<
 
   internal_updateMessageError: async (id, error) => {
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
-    await messageService.updateMessage(id, { error });
-    await get().refreshMessages();
+    const result = await messageService.updateMessage(
+      id,
+      { error },
+      { topicId: get().activeTopicId, sessionId: get().activeId },
+    );
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    } else {
+      await get().refreshMessages();
+    }
   },
 
   internal_updateMessagePluginError: async (id, error) => {
@@ -336,7 +401,12 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessageContent: async (id, content, extra) => {
-    const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
+    const {
+      internal_dispatchMessage,
+      refreshMessages,
+      internal_transformToolCalls,
+      replaceMessages,
+    } = get();
 
     // Due to the async update method and refresh need about 100ms
     // we need to update the message content at the frontend to avoid the update flick
@@ -355,17 +425,26 @@ export const chatMessage: StateCreator<
       });
     }
 
-    await messageService.updateMessage(id, {
-      content,
-      tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
-      reasoning: extra?.reasoning,
-      search: extra?.search,
-      metadata: extra?.metadata,
-      model: extra?.model,
-      provider: extra?.provider,
-      imageList: extra?.imageList,
-    });
-    await refreshMessages();
+    const result = await messageService.updateMessage(
+      id,
+      {
+        content,
+        tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+        reasoning: extra?.reasoning,
+        search: extra?.search,
+        metadata: extra?.metadata,
+        model: extra?.model,
+        provider: extra?.provider,
+        imageList: extra?.imageList,
+      },
+      { topicId: get().activeTopicId, sessionId: get().activeId },
+    );
+
+    if (result && result.success && result.messages) {
+      replaceMessages(result.messages);
+    } else {
+      await refreshMessages();
+    }
   },
 
   internal_createMessage: async (message, context) => {
@@ -425,6 +504,63 @@ export const chatMessage: StateCreator<
 
     return tempId;
   },
+
+  internal_createNewMessage: async (message, context) => {
+    const {
+      internal_createTmpMessage,
+      internal_toggleMessageLoading,
+      internal_dispatchMessage,
+      replaceMessages,
+    } = get();
+
+    let tempId = context?.tempMessageId;
+    if (!tempId) {
+      tempId = 'tmp_' + nanoid();
+
+      // Check if should add as group block (explicitly controlled by caller)
+      if (context?.groupMessageId) {
+        internal_dispatchMessage({
+          type: 'addGroupBlock',
+          groupMessageId: context.groupMessageId,
+          blockId: tempId,
+          value: {
+            id: tempId,
+            content: message.content,
+          },
+        });
+        internal_toggleMessageLoading(true, tempId);
+      } else {
+        // Regular message creation at top level
+        tempId = internal_createTmpMessage(message as any);
+        internal_toggleMessageLoading(true, tempId);
+      }
+    }
+
+    try {
+      // 使用 createNewMessage API
+      const result = await messageService.createNewMessage(message);
+
+      // 直接用返回的 messages 更新 store（已包含 group 结构）
+      replaceMessages(result.messages);
+
+      internal_toggleMessageLoading(false, tempId);
+      return result;
+    } catch (e) {
+      internal_toggleMessageLoading(false, tempId);
+      internal_dispatchMessage({
+        id: tempId,
+        type: 'updateMessage',
+        value: {
+          error: {
+            type: ChatErrorType.CreateMessageError,
+            message: (e as Error).message,
+            body: e,
+          },
+        },
+      });
+    }
+  },
+
   internal_deleteMessage: async (id: string) => {
     get().internal_dispatchMessage({ type: 'deleteMessage', id });
     await messageService.removeMessage(id);
@@ -486,5 +622,20 @@ export const chatMessage: StateCreator<
 
       window.removeEventListener('beforeunload', preventLeavingFn);
     }
+  },
+  internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => {
+    if (get().activeSessionType === sessionType) return;
+
+    set({ activeSessionType: sessionType }, false, n('updateActiveSessionType'));
+  },
+
+  internal_updateActiveId: (activeId: string) => {
+    const currentActiveId = get().activeId;
+    if (currentActiveId === activeId) return;
+
+    // Before switching sessions, cancel all pending supervisor decisions
+    get().internal_cancelAllSupervisorDecisions();
+
+    set({ activeId }, false, n(`updateActiveId/${activeId}`));
   },
 });

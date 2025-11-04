@@ -15,10 +15,10 @@ const componentMap = {
   [SettingsTabs.Agent]: dynamic(() => import('../agent'), {
     loading: () => <Loading />,
   }),
-  [SettingsTabs.LLM]: dynamic(() => import('../llm'), {
+  [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
     loading: () => <Loading />,
   }),
-  [SettingsTabs.Provider]: dynamic(() => import('../provider'), {
+  [SettingsTabs.Image]: dynamic(() => import('../image'), {
     loading: () => <Loading />,
   }),
   [SettingsTabs.TTS]: dynamic(() => import('../tts'), {

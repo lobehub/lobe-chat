@@ -1,3 +1,4 @@
+import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import { uniq } from 'lodash-es';
 import { XIcon } from 'lucide-react';
@@ -6,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
-import { SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import SearchBar from '../../../components/SearchBar';
 import SearchView from './SearchView';

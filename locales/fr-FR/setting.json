@@ -35,9 +35,16 @@
       "title": "Réinitialiser tous les paramètres"
     }
   },
+  "groupTab": {
+    "chat": "Discussion",
+    "members": "Membres",
+    "meta": "Informations de base"
+  },
   "header": {
     "desc": "Préférences et paramètres du modèle.",
     "global": "Paramètres globaux",
+    "group": "Paramètres de l'équipe",
+    "groupDesc": "Gérer l'équipe d'agents et les préférences de chat",
     "session": "Paramètres de session",
     "sessionDesc": "Paramètres de personnage et préférences de session.",
     "sessionWithName": "Paramètres de session · {{name}}",
@@ -138,6 +145,9 @@
       "title": "Adresse du proxy de l'API"
     },
     "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute"
+  },
+  "message": {
+    "success": "Mise à jour réussie"
   },
   "plugin": {
     "addMCPPlugin": "Ajouter un plugin MCP",
@@ -293,6 +303,109 @@
       "title": "Thème"
     },
     "title": "Paramètres généraux"
+  },
+  "settingGroup": {
+    "description": {
+      "placeholder": "Veuillez saisir une description de l'équipe",
+      "title": "Description de l'équipe"
+    },
+    "name": {
+      "placeholder": "Veuillez saisir le nom de l'équipe",
+      "title": "Nom de l'équipe"
+    },
+    "scene": {
+      "desc": "Choisissez le contexte de l'équipe",
+      "options": {
+        "casual": "Décontracté",
+        "productive": "Productif"
+      },
+      "title": "Contexte de l'équipe"
+    },
+    "submit": "Mettre à jour l'équipe",
+    "systemPrompt": {
+      "placeholder": "Veuillez saisir l'invite système de l'animateur",
+      "title": "Invite système de l'animateur"
+    },
+    "title": "Informations sur l'équipe d'agents"
+  },
+  "settingGroupChat": {
+    "allowDM": {
+      "desc": "Une fois désactivé, vous pouvez toujours envoyer un message privé à l’assistant",
+      "title": "Autoriser les messages privés de l’assistant"
+    },
+    "enableSupervisor": {
+      "desc": "Activer la fonction de modérateur pour l'équipe d'agents. Le modérateur gérera le déroulement des conversations.",
+      "title": "Activer le modérateur"
+    },
+    "maxResponseInRow": {
+      "desc": "Choisissez combien de messages un membre peut répondre consécutivement. Réglez sur 0 pour désactiver cette limite.",
+      "title": "Nombre de réponses consécutives"
+    },
+    "model": {
+      "desc": "Les interventions des membres du groupe ne seront pas affectées. Certains modèles ne peuvent pas être utilisés comme modérateurs.",
+      "title": "Modèle de l'animateur"
+    },
+    "orchestratorTitle": "Paramètres de l'animateur",
+    "responseOrder": {
+      "desc": "Les agents répondront dans l'ordre défini dans la conversation",
+      "options": {
+        "natural": "Naturel",
+        "sequential": "Séquentiel"
+      },
+      "placeholder": "Choisissez l'ordre des réponses",
+      "title": "Ordre des réponses"
+    },
+    "responseSpeed": {
+      "desc": "Contrôler la vitesse globale des échanges",
+      "options": {
+        "fast": "Rapide",
+        "medium": "Moyenne",
+        "slow": "Lente"
+      },
+      "placeholder": "Choisissez la vitesse de réponse",
+      "title": "Vitesse de réponse"
+    },
+    "revealDM": {
+      "desc": "Rendez visibles les messages privés envoyés à d'autres membres.",
+      "title": "Afficher le contenu des messages privés"
+    },
+    "submit": "Mettre à jour les paramètres",
+    "systemPrompt": {
+      "desc": "Invite système personnalisée pour l'animateur de la conversation de groupe. Cela peut influencer le comportement par défaut de l'animateur.",
+      "placeholder": "Veuillez saisir une invite système personnalisée pour l'animateur...",
+      "title": "Invite système de l'animateur"
+    },
+    "title": "Paramètres de discussion"
+  },
+  "settingGroupMembers": {
+    "addToGroup": "Ajouter au groupe",
+    "availableAgents": "Assistants disponibles",
+    "createMember": "Créer un membre",
+    "defaultAgent": "Assistant personnalisé",
+    "disableHost": "Désactiver l'assistant hôte",
+    "edit": "Modifier le membre",
+    "empty": "Aucun membre dans cette équipe pour le moment. Cliquez sur le bouton + pour ajouter un membre.",
+    "enableHost": "Activer l'assistant hôte",
+    "groupHost": "Hôte du groupe",
+    "groupMembers": "Membres du groupe",
+    "host": {
+      "description": "Lorsque l'hôte est dans le groupe, la discussion de groupe fonctionne automatiquement, adaptée aux tâches créatives.",
+      "title": "Hôte"
+    },
+    "noAvailableAgents": "Aucun assistant disponible",
+    "noDescription": "Pas de description",
+    "noMembersInGroup": "Aucun membre dans le groupe",
+    "owner": "Vous (propriétaire)",
+    "remove": "Supprimer le membre",
+    "removeFromGroup": "Retirer du groupe",
+    "you": "Vous"
+  },
+  "settingImage": {
+    "defaultCount": {
+      "desc": "Définir le nombre d'images générées par défaut lors de la création d'une nouvelle tâche dans le panneau de génération d'images.",
+      "label": "Nombre d'images par défaut",
+      "title": "Paramètres de dessin IA"
+    }
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -549,6 +662,7 @@
     "common": "Paramètres généraux",
     "experiment": "Expérience",
     "hotkey": "Raccourcis clavier",
+    "image": "Dessin IA",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
     "proxy": "Proxy réseau",

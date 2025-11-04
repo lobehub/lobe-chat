@@ -5,6 +5,7 @@ import type { Stream } from 'openai/streaming';
 
 import { systemToUserModels } from '../../const/models';
 import { LobeRuntimeAI } from '../../core/BaseAI';
+import { convertImageUrlToFile, convertOpenAIMessages } from '../../core/contextBuilders/openai';
 import { transformResponseToStream } from '../../core/openaiCompatibleFactory';
 import { OpenAIStream } from '../../core/streams';
 import {
@@ -18,7 +19,6 @@ import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../../utils/createError';
 import { debugStream } from '../../utils/debugStream';
-import { convertImageUrlToFile, convertOpenAIMessages } from '../../utils/openaiHelpers';
 import { StreamingResponse } from '../../utils/response';
 import { sanitizeError } from '../../utils/sanitizeError';
 
@@ -51,7 +51,8 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       ...message,
       role:
         // Convert 'system' role to 'user' or 'developer' based on the model
-        (model.includes('o1') || model.includes('o3')) && message.role === 'system'
+        (model.includes('o1') || model.includes('o3') || model.includes('gpt-5')) &&
+        message.role === 'system'
           ? [...systemToUserModels].some((sub) => model.includes(sub))
             ? 'user'
             : 'developer'

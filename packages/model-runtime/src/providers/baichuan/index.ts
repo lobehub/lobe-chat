@@ -1,7 +1,11 @@
 import type { ChatModelCard } from '@lobechat/types';
 import { ModelProvider } from 'model-bank';
 
-import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
+import {
+  OpenAICompatibleFactoryOptions,
+  createOpenAICompatibleRuntime,
+} from '../../core/openaiCompatibleFactory';
+import { resolveParameters } from '../../core/parameterResolver';
 import { ChatStreamPayload } from '../../types';
 
 export interface BaichuanModelCard {
@@ -12,7 +16,7 @@ export interface BaichuanModelCard {
   model_show_name: string;
 }
 
-export const LobeBaichuanAI = createOpenAICompatibleRuntime({
+export const params = {
   baseURL: 'https://api.baichuan-ai.com/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
@@ -31,11 +35,12 @@ export const LobeBaichuanAI = createOpenAICompatibleRuntime({
           ]
         : tools;
 
+      // Resolve parameters with normalization
+      const resolvedParams = resolveParameters({ temperature }, { normalizeTemperature: true });
+
       return {
         ...rest,
-        // [baichuan] frequency_penalty must be between 1 and 2.
-        frequency_penalty: undefined,
-        temperature: temperature !== undefined ? temperature / 2 : undefined,
+        temperature: resolvedParams.temperature,
         tools: baichuanTools,
       } as any;
     },
@@ -49,24 +54,24 @@ export const LobeBaichuanAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: BaichuanModelCard[] = modelsPage.data;
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.model.toLowerCase() === m.id.toLowerCase(),
-        );
+    return modelList.filter(Boolean).map((model) => {
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+        (m) => model.model.toLowerCase() === m.id.toLowerCase(),
+      );
 
-        return {
-          contextWindowTokens: model.max_input_length,
-          displayName: model.model_show_name,
-          enabled: knownModel?.enabled || false,
-          functionCall: model.function_call,
-          id: model.model,
-          maxTokens: model.max_tokens,
-          reasoning: knownModel?.abilities?.reasoning || false,
-          vision: knownModel?.abilities?.vision || false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+      return {
+        contextWindowTokens: model.max_input_length,
+        displayName: model.model_show_name,
+        enabled: knownModel?.enabled || false,
+        functionCall: model.function_call,
+        id: model.model,
+        maxOutput: model.max_tokens,
+        reasoning: knownModel?.abilities?.reasoning || false,
+        vision: knownModel?.abilities?.vision || false,
+      };
+    }) as ChatModelCard[];
   },
   provider: ModelProvider.Baichuan,
-});
+} satisfies OpenAICompatibleFactoryOptions;
+
+export const LobeBaichuanAI = createOpenAICompatibleRuntime(params);

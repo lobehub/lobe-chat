@@ -1,12 +1,18 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { ChatErrorType } from '@lobechat/types';
-import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import { ToolNameResolver } from '@lobechat/context-engine';
+import {
+  ChatMessageError,
+  ChatToolPayload,
+  CreateMessageParams,
+  MessageToolCall,
+  ToolsCallingContext,
+  UIChatMessage,
+} from '@lobechat/types';
+import { LobeChatPluginManifest, PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT } from '@/const/message';
-import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
 import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
@@ -14,18 +20,9 @@ import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { builtinTools } from '@/tools';
-import {
-  ChatMessage,
-  ChatMessageError,
-  ChatToolPayload,
-  CreateMessageParams,
-  MessageToolCall,
-  ToolsCallingContext,
-} from '@/types/message';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
-import { genToolCallShortMD5Hash } from '@/utils/toolCall';
 
 import { chatSelectors } from '../message/selectors';
 import { threadSelectors } from '../thread/selectors';
@@ -57,6 +54,9 @@ export interface ChatPluginAction {
   }) => Promise<void>;
   summaryPluginContent: (id: string) => Promise<void>;
 
+  /**
+   * @deprecated V1 method
+   */
   triggerToolCalls: (
     id: string,
     params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
@@ -110,54 +110,12 @@ export const chatPlugin: StateCreator<
     if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },
   invokeBuiltinTool: async (id, payload) => {
-    const {
-      internal_togglePluginApiCalling,
-      internal_updateMessageContent,
-      internal_updatePluginError,
-    } = get();
-    const params = JSON.parse(payload.arguments);
-    internal_togglePluginApiCalling(true, id, n('invokeBuiltinTool/start') as string);
-    let data;
-    try {
-      data = await useToolStore.getState().transformApiArgumentsToAiState(payload.apiName, params);
-    } catch (error) {
-      const err = error as Error;
-      console.error(err);
-
-      const tool = builtinTools.find((tool) => tool.identifier === payload.identifier);
-      const schema = tool?.manifest?.api.find((api) => api.name === payload.apiName)?.parameters;
-
-      await internal_updatePluginError(id, {
-        type: ChatErrorType.PluginFailToTransformArguments,
-        body: {
-          message:
-            "[plugin] fail to transform plugin arguments to ai state, it may due to model's limited tools calling capacity. You can refer to https://lobehub.com/docs/usage/tools-calling for more detail.",
-          stack: err.stack,
-          arguments: params,
-          schema,
-        },
-        message: '',
-      });
-    }
-    internal_togglePluginApiCalling(false, id, n('invokeBuiltinTool/end') as string);
-
-    if (!data) return;
-
-    await internal_updateMessageContent(id, data);
-
     // run tool api call
-    // postToolCalling
     // @ts-ignore
     const { [payload.apiName]: action } = get();
     if (!action) return;
 
-    let content;
-
-    try {
-      content = JSON.parse(data);
-    } catch {
-      /* empty block */
-    }
+    const content = safeParseJSON(payload.arguments);
 
     if (!content) return;
 
@@ -246,7 +204,7 @@ export const chatPlugin: StateCreator<
           name: undefined,
           tool_call_id: undefined,
         },
-      ] as ChatMessage[],
+      ] as UIChatMessage[],
       message.id,
     );
   },
@@ -259,7 +217,7 @@ export const chatPlugin: StateCreator<
     let latestToolId = '';
     const messagePools = message.tools.map(async (payload) => {
       const toolMessage: CreateMessageParams = {
-        content: LOADING_FLAT,
+        content: '',
         parentId: assistantId,
         plugin: payload,
         role: 'tool',
@@ -267,6 +225,7 @@ export const chatPlugin: StateCreator<
         tool_call_id: payload.id,
         threadId,
         topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
+        groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
       const id = await get().internal_createMessage(toolMessage);
@@ -504,36 +463,28 @@ export const chatPlugin: StateCreator<
   },
 
   internal_transformToolCalls: (toolCalls) => {
-    return toolCalls
-      .map((toolCall): ChatToolPayload | null => {
-        let payload: ChatToolPayload;
+    const toolNameResolver = new ToolNameResolver();
 
-        const [identifier, apiName, type] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
+    // Build manifests map from tool store
+    const toolStoreState = useToolStore.getState();
+    const manifests: Record<string, LobeChatPluginManifest> = {};
 
-        if (!apiName) return null;
+    // Get all installed plugins
+    const installedPlugins = pluginSelectors.installedPlugins(toolStoreState);
+    for (const plugin of installedPlugins) {
+      if (plugin.manifest) {
+        manifests[plugin.identifier] = plugin.manifest as LobeChatPluginManifest;
+      }
+    }
 
-        payload = {
-          apiName,
-          arguments: toolCall.function.arguments,
-          id: toolCall.id,
-          identifier,
-          type: (type ?? 'default') as any,
-        };
+    // Get all builtin tools
+    for (const tool of builtinTools) {
+      if (tool.manifest) {
+        manifests[tool.identifier] = tool.manifest as LobeChatPluginManifest;
+      }
+    }
 
-        // if the apiName is md5, try to find the correct apiName in the plugins
-        if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
-          const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
-          const manifest = pluginSelectors.getToolManifestById(identifier)(useToolStore.getState());
-
-          const api = manifest?.api.find((api) => genToolCallShortMD5Hash(api.name) === md5);
-          if (api) {
-            payload.apiName = api.name;
-          }
-        }
-
-        return payload;
-      })
-      .filter(Boolean) as ChatToolPayload[];
+    return toolNameResolver.resolve(toolCalls, manifests);
   },
   internal_updatePluginError: async (id, error) => {
     const { refreshMessages } = get();

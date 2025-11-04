@@ -6,6 +6,7 @@ const anthropicChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      structuredOutput: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -23,6 +24,40 @@ const anthropicChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-09-29',
+    settings: {
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description: 'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
+    displayName: 'Claude Haiku 4.5',
+    enabled: true,
+    id: 'claude-haiku-4-5-20251001',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
+        {
+          lookup: { prices: { '1h': 2, '5m': 1.25 }, pricingParams: ['ttl'] },
+          name: 'textInput_cacheWrite',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-10-16',
     settings: {
       extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
@@ -158,69 +193,6 @@ const anthropicChatModels: AIChatModelCard[] = [
     releasedAt: '2025-02-24',
     settings: {
       extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
-    displayName: 'Claude 3.5 Sonnet (New)',
-    id: 'claude-3-5-sonnet-20241022',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
-        {
-          lookup: { prices: { '1h': 6, '5m': 3.75 }, pricingParams: ['ttl'] },
-          name: 'textInput_cacheWrite',
-          strategy: 'lookup',
-          unit: 'millionTokens',
-        },
-      ],
-    },
-    releasedAt: '2024-10-22',
-    settings: {
-      extendParams: ['disableContextCaching'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
-    displayName: 'Claude 3.5 Sonnet (Old)',
-    id: 'claude-3-5-sonnet-20240620',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
-        {
-          lookup: { prices: { '1h': 6, '5m': 3.75 }, pricingParams: ['ttl'] },
-          name: 'textInput_cacheWrite',
-          strategy: 'lookup',
-          unit: 'millionTokens',
-        },
-      ],
-    },
-    releasedAt: '2024-06-20',
-    settings: {
-      extendParams: ['disableContextCaching'],
       searchImpl: 'params',
     },
     type: 'chat',

@@ -1,24 +1,24 @@
-import isEqual from 'fast-deep-equal';
-import { produce } from 'immer';
-
 import {
-  ChatMessage,
   ChatMessageExtra,
   ChatPluginPayload,
   ChatToolPayload,
   CreateMessageParams,
-} from '@/types/message';
+  UIChatMessage,
+} from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
+import { produce } from 'immer';
+
 import { merge } from '@/utils/merge';
 
 interface UpdateMessages {
   type: 'updateMessages';
-  value: ChatMessage[];
+  value: UIChatMessage[];
 }
 
 interface UpdateMessage {
   id: string;
   type: 'updateMessage';
-  value: Partial<ChatMessage>;
+  value: Partial<UIChatMessage>;
 }
 
 interface CreateMessage {
@@ -75,6 +75,29 @@ interface UpdateMessageExtra {
   value: any;
 }
 
+interface UpdateGroupBlockToolResult {
+  blockId: string;
+  groupMessageId: string;
+  toolId: string;
+  toolResult: {
+    content: string;
+    error?: any;
+    id: string;
+    state?: any;
+  };
+  type: 'updateGroupBlockToolResult';
+}
+
+interface AddGroupBlock {
+  blockId: string;
+  groupMessageId: string;
+  type: 'addGroupBlock';
+  value: {
+    content: string;
+    id: string;
+  };
+}
+
 export type MessageDispatch =
   | CreateMessage
   | UpdateMessage
@@ -86,17 +109,39 @@ export type MessageDispatch =
   | UpdateMessageTools
   | AddMessageTool
   | DeleteMessageTool
-  | DeleteMessages;
+  | DeleteMessages
+  | UpdateGroupBlockToolResult
+  | AddGroupBlock;
 
-export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
+export const messagesReducer = (
+  state: UIChatMessage[],
+  payload: MessageDispatch,
+): UIChatMessage[] => {
   switch (payload.type) {
     case 'updateMessage': {
       return produce(state, (draftState) => {
         const { id, value } = payload;
-        const index = draftState.findIndex((i) => i.id === id);
-        if (index < 0) return;
 
-        draftState[index] = merge(draftState[index], { ...value, updatedAt: Date.now() });
+        // First, try to find in top-level messages
+        const index = draftState.findIndex((i) => i.id === id);
+        if (index >= 0) {
+          draftState[index] = merge(draftState[index], { ...value, updatedAt: Date.now() });
+          return;
+        }
+
+        // If not found, search in group message children (blocks)
+        for (const message of draftState) {
+          if (message.role === 'group' && message.children) {
+            const blockIndex = message.children.findIndex((block) => block.id === id);
+            if (blockIndex >= 0) {
+              message.children[blockIndex] = merge(message.children[blockIndex], {
+                ...value,
+              });
+              message.updatedAt = Date.now();
+              return;
+            }
+          }
+        }
       });
     }
 
@@ -223,6 +268,48 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
         });
       });
     }
+
+    case 'updateGroupBlockToolResult': {
+      return produce(state, (draftState) => {
+        const { groupMessageId, blockId, toolId, toolResult } = payload;
+
+        // Find the group message
+        const msg = draftState.find((m) => m.id === groupMessageId);
+        if (!msg || msg.role !== 'group' || !msg.children) return;
+
+        // Find the block within children
+        const block = msg.children.find((b) => b.id === blockId);
+        if (!block || !block.tools) return;
+
+        // Find the tool and update its result
+        const tool = block.tools.find((t) => t.id === toolId);
+        if (!tool) return;
+
+        // Update tool result (optimistic update)
+        tool.result = toolResult;
+
+        msg.updatedAt = Date.now();
+      });
+    }
+
+    case 'addGroupBlock': {
+      return produce(state, (draftState) => {
+        const { groupMessageId, blockId, value } = payload;
+
+        // Find the group message
+        const msg = draftState.find((m) => m.id === groupMessageId);
+        if (!msg || msg.role !== 'group' || !msg.children) return;
+
+        // Add new block to children
+        msg.children.push({
+          content: value.content,
+          id: blockId,
+        });
+
+        msg.updatedAt = Date.now();
+      });
+    }
+
     default: {
       throw new Error('暂未实现的 type，请检查 reducer');
     }

@@ -1,5 +1,5 @@
 {
-  "desc": "Manage files and knowledge base",
+  "desc": "Manage your knowledge",
   "detail": {
     "basic": {
       "createdAt": "Creation Time",
@@ -70,7 +70,7 @@
     "videos": "Videos",
     "websites": "Websites"
   },
-  "title": "Files",
+  "title": "Knowledge Base",
   "toggleLeftPanel": {
     "title": "Show/Hide Left Panel"
   },
@@ -85,6 +85,7 @@
         "restTime": "Remaining {{time}}"
       }
     },
+    "fileQueueInfo": "Uploading the first {{count}} files, {{remaining}} remaining in queue",
     "totalCount": "Total {{count}} items",
     "uploadStatus": {
       "error": "Upload error",

@@ -1,5 +1,5 @@
 {
-  "desc": "Gestiona tus archivos y tu base de conocimientos",
+  "desc": "Gestiona tu conocimiento",
   "detail": {
     "basic": {
       "createdAt": "Fecha de creación",
@@ -70,7 +70,7 @@
     "videos": "Videos",
     "websites": "Sitios web"
   },
-  "title": "Archivos",
+  "title": "Base de conocimientos",
   "toggleLeftPanel": {
     "title": "Mostrar/Ocultar panel izquierdo"
   },
@@ -85,6 +85,7 @@
         "restTime": "Tiempo restante {{time}}"
       }
     },
+    "fileQueueInfo": "Subiendo los primeros {{count}} archivos, los {{remaining}} restantes se pondrán en cola para subir",
     "totalCount": "Total {{count}} elementos",
     "uploadStatus": {
       "error": "Error en la subida",

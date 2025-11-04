@@ -1,27 +1,26 @@
-import type { HeatmapsProps } from '@lobehub/charts';
-
 import {
-  ChatMessage,
   ChatMessageError,
   ChatMessagePluginError,
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
-  MessageItem,
+  CreateMessageResult,
   ModelRankItem,
+  UIChatMessage,
   UpdateMessageParams,
-} from '@/types/message';
-import { UpdateMessageRAGParams } from '@/types/message/rag';
+  UpdateMessageRAGParams,
+  UpdateMessageResult,
+} from '@lobechat/types';
+import type { HeatmapsProps } from '@lobehub/charts';
 
 /* eslint-disable typescript-sort-keys/interface */
 
 export interface IMessageService {
   createMessage(data: CreateMessageParams): Promise<string>;
-  batchCreateMessages(messages: MessageItem[]): Promise<any>;
+  createNewMessage(data: CreateMessageParams): Promise<CreateMessageResult>;
 
-  getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]>;
-  getAllMessages(): Promise<ChatMessage[]>;
-  getAllMessagesInSession(sessionId: string): Promise<ChatMessage[]>;
+  getMessages(sessionId: string, topicId?: string, groupId?: string): Promise<UIChatMessage[]>;
+  getGroupMessages(groupId: string, topicId?: string): Promise<UIChatMessage[]>;
   countMessages(params?: {
     endDate?: string;
     range?: [string, string];
@@ -35,7 +34,11 @@ export interface IMessageService {
   rankModels(): Promise<ModelRankItem[]>;
   getHeatmaps(): Promise<HeatmapsProps['data']>;
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
-  updateMessage(id: string, message: Partial<UpdateMessageParams>): Promise<any>;
+  updateMessage(
+    id: string,
+    message: Partial<UpdateMessageParams>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult>;
   updateMessageTTS(id: string, tts: Partial<ChatTTS> | false): Promise<any>;
   updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false): Promise<any>;
   updateMessagePluginState(id: string, value: Record<string, any>): Promise<any>;
@@ -45,6 +48,7 @@ export interface IMessageService {
   removeMessage(id: string): Promise<any>;
   removeMessages(ids: string[]): Promise<any>;
   removeMessagesByAssistant(assistantId: string, topicId?: string): Promise<any>;
+  removeMessagesByGroup(groupId: string, topicId?: string): Promise<any>;
   removeAllMessages(): Promise<any>;
   messageCountToCheckTrace(): Promise<boolean>;
   hasMessages(): Promise<boolean>;

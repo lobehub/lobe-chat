@@ -6,13 +6,11 @@ import { ModelProvider } from 'model-bank';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
+import { SkeletonInput } from '@/components/Skeleton';
 import { AzureProviderCard } from '@/config/modelProviders';
-import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
+import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
-import { SkeletonInput } from '../../features/ProviderConfig';
 import { ProviderItem } from '../../type';
 import ProviderDetail from '../default';
 
@@ -35,11 +33,11 @@ const useProviderCard = (): ProviderItem => {
   const { styles } = useStyles();
 
   // Get the first model card's deployment name as the check model
-  const checkModel = useUserStore((s) => {
-    const chatModelCards = modelProviderSelectors.getModelCardsById(providerKey)(s);
+  const checkModel = useAiInfraStore((s) => {
+    const modelList = aiModelSelectors.enabledAiProviderModelList(s);
 
-    if (chatModelCards.length > 0) {
-      return chatModelCards[0].deploymentName;
+    if (modelList.length > 0) {
+      return modelList[0].id;
     }
 
     return 'gpt-35-turbo';

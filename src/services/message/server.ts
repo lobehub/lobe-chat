@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ChatTranslate, UIChatMessage } from '@lobechat/types';
+
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { ChatMessage, ChatTranslate } from '@/types/message';
 
 import { IMessageService } from './type';
 
@@ -9,31 +10,33 @@ export class ServerService implements IMessageService {
   createMessage: IMessageService['createMessage'] = async ({ sessionId, ...params }) => {
     return lambdaClient.message.createMessage.mutate({
       ...params,
-      sessionId: this.toDbSessionId(sessionId),
+      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
     });
   };
 
-  batchCreateMessages: IMessageService['batchCreateMessages'] = async (messages) => {
-    return lambdaClient.message.batchCreateMessages.mutate(messages);
+  createNewMessage: IMessageService['createNewMessage'] = async ({ sessionId, ...params }) => {
+    return lambdaClient.message.createNewMessage.mutate({
+      ...params,
+      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
+    });
   };
 
-  getMessages: IMessageService['getMessages'] = async (sessionId, topicId) => {
+  getMessages: IMessageService['getMessages'] = async (sessionId, topicId, groupId) => {
     const data = await lambdaClient.message.getMessages.query({
+      groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
     });
 
-    return data as unknown as ChatMessage[];
+    return data as unknown as UIChatMessage[];
   };
 
-  getAllMessages: IMessageService['getAllMessages'] = async () => {
-    return lambdaClient.message.getAllMessages.query();
-  };
-
-  getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
-    return lambdaClient.message.getAllMessagesInSession.query({
-      sessionId: this.toDbSessionId(sessionId),
+  getGroupMessages: IMessageService['getGroupMessages'] = async (groupId, topicId) => {
+    const data = await lambdaClient.message.getMessages.query({
+      groupId,
+      topicId,
     });
+    return data as unknown as UIChatMessage[];
   };
 
   countMessages: IMessageService['countMessages'] = async (params) => {
@@ -64,8 +67,13 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
   };
 
-  updateMessage: IMessageService['updateMessage'] = async (id, value) => {
-    return lambdaClient.message.update.mutate({ id, value });
+  updateMessage: IMessageService['updateMessage'] = async (id, value, options) => {
+    return lambdaClient.message.update.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      value,
+    });
   };
 
   updateMessageTranslate: IMessageService['updateMessageTranslate'] = async (id, translate) => {
@@ -102,6 +110,13 @@ export class ServerService implements IMessageService {
   ) => {
     return lambdaClient.message.removeMessagesByAssistant.mutate({
       sessionId: this.toDbSessionId(sessionId),
+      topicId,
+    });
+  };
+
+  removeMessagesByGroup: IMessageService['removeMessagesByGroup'] = async (groupId, topicId) => {
+    return lambdaClient.message.removeMessagesByGroup.mutate({
+      groupId,
       topicId,
     });
   };

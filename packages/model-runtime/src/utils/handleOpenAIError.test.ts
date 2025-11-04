@@ -48,7 +48,6 @@ describe('handleOpenAIError', () => {
 
       expect(result.errorResult).toEqual({
         headers: { headers, status: 401 },
-        stack: apiError.stack,
         status: 472,
       });
       expect(result.RuntimeError).toBeUndefined();
@@ -84,7 +83,6 @@ describe('handleOpenAIError', () => {
           cause: { details: 'Error details' },
           message: 'Generic error',
           name: 'Error',
-          stack: error.stack,
         },
       });
     });
@@ -100,7 +98,6 @@ describe('handleOpenAIError', () => {
           cause: undefined,
           message: 'Simple error',
           name: 'Error',
-          stack: error.stack,
         },
       });
     });
@@ -122,7 +119,6 @@ describe('handleOpenAIError', () => {
           cause: undefined,
           message: 'Custom error message',
           name: 'CustomError',
-          stack: error.stack,
         },
       });
     });
@@ -141,7 +137,6 @@ describe('handleOpenAIError', () => {
           cause: undefined,
           message: 'Object error',
           name: undefined,
-          stack: undefined,
         },
       });
     });

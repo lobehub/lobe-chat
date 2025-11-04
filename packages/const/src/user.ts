@@ -5,6 +5,11 @@ export const DEFAULT_PREFERENCE: UserPreference = {
     moveSettingsToAvatar: true,
     topic: true,
   },
+  lab: {
+    enableAssistantMessageGroup: false,
+    enableGroupChat: false,
+    enableInputMarkdown: true,
+  },
   telemetry: null,
   topicDisplayMode: TopicDisplayMode.ByTime,
   useCmdEnterToSend: false,

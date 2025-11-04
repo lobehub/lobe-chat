@@ -2,7 +2,7 @@
 import { ChatCompletionTool, ChatStreamPayload } from '@lobechat/model-runtime';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as anthropicHelpers from '../../utils/anthropicHelpers';
+import * as anthropicHelpers from '../../core/contextBuilders/anthropic';
 import * as debugStreamModule from '../../utils/debugStream';
 import { LobeAnthropicAI } from './index';
 

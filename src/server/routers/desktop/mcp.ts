@@ -1,8 +1,7 @@
+import { GetStreamableMcpServerManifestInputSchema } from '@lobechat/types';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { isServerMode } from '@/const/version';
-import { passwordProcedure } from '@/libs/trpc/edge';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { mcpService } from '@/server/services/mcp';
 
@@ -23,7 +22,7 @@ const stdioParamsSchema = z.object({
   type: z.literal('stdio').default('stdio'),
 });
 
-const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
+const mcpProcedure = authedProcedure;
 
 export const mcpRouter = router({
   getStdioMcpServerManifest: mcpProcedure.input(stdioParamsSchema).query(async ({ input }) => {
@@ -33,6 +32,22 @@ export const mcpRouter = router({
 
     return await mcpService.getStdioMcpServerManifest(input, input.metadata);
   }),
+
+  getStreamableMcpServerManifest: mcpProcedure
+    .input(GetStreamableMcpServerManifestInputSchema)
+    .query(async ({ input }) => {
+      log('getStreamableMcpServerManifest input: %O', {
+        identifier: input.identifier,
+        url: input.url,
+      });
+      return await mcpService.getStreamableMcpServerManifest(
+        input.identifier,
+        input.url,
+        input.metadata,
+        input.auth,
+        input.headers,
+      );
+    }),
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   // --- MCP Interaction ---

@@ -30,7 +30,7 @@
     "description": "Bedrock é um serviço oferecido pela Amazon AWS, focado em fornecer modelos de linguagem e visão de IA avançados para empresas. Sua família de modelos inclui a série Claude da Anthropic, a série Llama 3.1 da Meta, entre outros, abrangendo uma variedade de opções, desde modelos leves até de alto desempenho, suportando geração de texto, diálogos, processamento de imagens e outras tarefas, adequando-se a aplicações empresariais de diferentes escalas e necessidades."
   },
   "bfl": {
-    "description": "Laboratório líder de pesquisa de ponta em inteligência artificial, construindo a infraestrutura visual do amanhã."
+    "description": "Laboratório de pesquisa em inteligência artificial de ponta, construindo a infraestrutura visual do amanhã."
   },
   "cerebras": {
     "description": "Cerebras é uma plataforma de inferência de IA baseada em seu sistema dedicado CS-3, projetada para oferecer o serviço de LLM mais rápido do mundo, com resposta em tempo real e alta taxa de transferência. Foi desenvolvida para eliminar a latência e acelerar fluxos de trabalho complexos de IA, como geração de código em tempo real e tarefas de agentes."
@@ -43,6 +43,9 @@
   },
   "cometapi": {
     "description": "CometAPI é uma plataforma de serviços que oferece diversas interfaces de modelos avançados, suportando OpenAI, Anthropic, Google e muito mais, adequada para necessidades variadas de desenvolvimento e aplicação. Os usuários podem escolher de forma flexível o modelo e preço ideais conforme suas necessidades, promovendo uma melhor experiência com IA."
+  },
+  "comfyui": {
+    "description": "Um poderoso mecanismo de fluxo de trabalho de código aberto para geração de imagens, vídeos e áudios, compatível com modelos avançados como SD, FLUX, Qwen, Hunyuan, WAN, oferecendo edição de fluxo de trabalho baseada em nós e capacidade de implantação privada."
   },
   "deepseek": {
     "description": "A DeepSeek é uma empresa focada em pesquisa e aplicação de tecnologia de inteligência artificial, cujo modelo mais recente, DeepSeek-V2.5, combina capacidades de diálogo geral e processamento de código, alcançando melhorias significativas em alinhamento com preferências humanas, tarefas de escrita e seguimento de instruções."

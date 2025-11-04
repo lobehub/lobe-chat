@@ -40,6 +40,15 @@ vi.mock('@/const/auth', () => ({
   },
 }));
 
+// Mock version constants
+vi.mock('@/const/version', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/const/version')>();
+  return {
+    ...actual,
+    isServerMode: false,
+  };
+});
+
 afterEach(() => {
   enableAuth = true;
   enableClerk = true;

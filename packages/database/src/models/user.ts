@@ -1,12 +1,10 @@
+import { UserGuide, UserKeyVaults, UserPreference, UserSettings } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
 import type { AdapterAccount } from 'next-auth/adapters';
 import type { PartialDeep } from 'type-fest';
 
-import { LobeChatDatabase } from '../type';
-import { UserGuide, UserPreference } from '@/types/user';
-import { UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
@@ -18,6 +16,7 @@ import {
   userSettings,
   users,
 } from '../schemas';
+import { LobeChatDatabase } from '../type';
 
 type DecryptUserKeyVaults = (
   encryptKeyVaultsStr: string | null,
@@ -73,6 +72,7 @@ export class UserModel {
 
         settingsGeneral: userSettings.general,
         settingsHotkey: userSettings.hotkey,
+        settingsImage: userSettings.image,
         settingsKeyVaults: userSettings.keyVaults,
         settingsLanguageModel: userSettings.languageModel,
         settingsSystemAgent: userSettings.systemAgent,
@@ -82,7 +82,8 @@ export class UserModel {
       })
       .from(users)
       .where(eq(users.id, this.userId))
-      .leftJoin(userSettings, eq(users.id, userSettings.id));
+      .leftJoin(userSettings, eq(users.id, userSettings.id))
+      .limit(1);
 
     if (!result || !result[0]) {
       throw new UserNotFoundError();
@@ -103,6 +104,7 @@ export class UserModel {
       defaultAgent: state.settingsDefaultAgent || {},
       general: state.settingsGeneral || {},
       hotkey: state.settingsHotkey || {},
+      image: state.settingsImage || {},
       keyVaults: decryptKeyVaults,
       languageModel: state.settingsLanguageModel || {},
       systemAgent: state.settingsSystemAgent || {},

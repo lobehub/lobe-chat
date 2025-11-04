@@ -1,10 +1,16 @@
+import {
+  BuiltinRenderProps,
+  CrawlMultiPagesQuery,
+  CrawlPluginState,
+  CrawlSinglePageQuery,
+  SearchContent,
+  SearchQuery,
+  UniformSearchResponse,
+} from '@lobechat/types';
 import { memo } from 'react';
 
 import { WebBrowsingApiName } from '@/tools/web-browsing';
 import PageContent from '@/tools/web-browsing/Render/PageContent';
-import { BuiltinRenderProps } from '@/types/tool';
-import { CrawlMultiPagesQuery, CrawlPluginState, CrawlSinglePageQuery } from '@/types/tool/crawler';
-import { SearchContent, SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import Search from './Search';
 
@@ -17,7 +23,7 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
           <Search
             messageId={messageId}
             pluginError={pluginError}
-            searchQuery={args as SearchQuery}
+            searchQuery={(args as SearchQuery) || {}}
             searchResponse={pluginState as UniformSearchResponse}
           />
         );
@@ -28,7 +34,7 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
           <PageContent
             messageId={messageId}
             results={(pluginState as CrawlPluginState)?.results}
-            urls={[(args as CrawlSinglePageQuery).url]}
+            urls={[(args as CrawlSinglePageQuery)?.url]}
           />
         );
       }
@@ -38,7 +44,7 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
           <PageContent
             messageId={messageId}
             results={(pluginState as CrawlPluginState)?.results}
-            urls={(args as CrawlMultiPagesQuery).urls}
+            urls={(args as CrawlMultiPagesQuery)?.urls}
           />
         );
       }
