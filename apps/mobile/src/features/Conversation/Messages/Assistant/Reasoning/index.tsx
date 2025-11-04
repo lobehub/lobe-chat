@@ -1,7 +1,13 @@
-import { Block, Flexbox, Markdown, Text, createStyles } from '@lobehub/ui-rn';
-import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react-native';
+import { Flexbox, Markdown, Text, createStyles } from '@lobehub/ui-rn';
+import { ChevronRightIcon } from 'lucide-react-native';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface ReasoningProps {
   content?: string;
@@ -20,7 +26,8 @@ const useStyles = createStyles(({ token }) => ({
   content: {
     borderColor: token.colorBorder,
     borderLeftWidth: 3,
-    marginBottom: 16,
+
+    overflow: 'hidden',
     paddingLeft: 16,
   },
   header: {
@@ -42,6 +49,9 @@ const Reasoning = memo<ReasoningProps>(({ content = '', duration, isGenerating =
   const { styles, theme } = useStyles();
   const [showDetail, setShowDetail] = useState(isGenerating);
 
+  // Reanimated shared values
+  const animatedValue = useSharedValue(0);
+
   const handleToggle = () => {
     setShowDetail(!showDetail);
   };
@@ -52,16 +62,34 @@ const Reasoning = memo<ReasoningProps>(({ content = '', duration, isGenerating =
     }
   }, [isGenerating]);
 
+  // 动画效果
+  useEffect(() => {
+    animatedValue.value = withTiming(showDetail ? 1 : 0, {
+      duration: 200,
+    });
+  }, [showDetail, animatedValue]);
+
+  // 箭头旋转动画样式
+  const arrowStyle = useAnimatedStyle(() => {
+    const rotation = interpolate(animatedValue.value, [0, 1], [0, 90]);
+    return {
+      transform: [{ rotate: `${rotation}deg` }],
+    };
+  });
+
+  // 内容动画样式
+  const contentStyle = useAnimatedStyle(() => {
+    const opacity = animatedValue.value;
+
+    return {
+      height: animatedValue.value ? 'auto' : 0,
+      opacity,
+    };
+  });
+
   return (
-    <>
-      <Block
-        align="center"
-        gap={8}
-        horizontal
-        onPress={handleToggle}
-        paddingBlock={8}
-        variant={'borderless'}
-      >
+    <Flexbox>
+      <Flexbox align="center" horizontal onPress={handleToggle}>
         <Text
           color={isGenerating ? undefined : theme.colorTextTertiary}
           style={isGenerating && styles.shinyText}
@@ -72,22 +100,21 @@ const Reasoning = memo<ReasoningProps>(({ content = '', duration, isGenerating =
               ? t('reasoning.thought', { duration: formatDuration(duration) })
               : t('reasoning.thoughtWithoutDuration')}
         </Text>
-
-        {showDetail ? (
-          <ChevronDownIcon color={theme.colorTextTertiary} size={16} />
-        ) : (
+        <Animated.View style={arrowStyle}>
           <ChevronRightIcon color={theme.colorTextTertiary} size={16} />
-        )}
-      </Block>
+        </Animated.View>
+      </Flexbox>
 
       {showDetail && content && (
-        <Flexbox style={styles.content}>
-          <Markdown animated={isGenerating} style={{ opacity: 0.5 }}>
-            {content}
-          </Markdown>
-        </Flexbox>
+        <Animated.View style={contentStyle}>
+          <Animated.View style={styles.content}>
+            <Markdown animated={isGenerating} style={{ opacity: 0.5 }}>
+              {content}
+            </Markdown>
+          </Animated.View>
+        </Animated.View>
       )}
-    </>
+    </Flexbox>
   );
 });
 
