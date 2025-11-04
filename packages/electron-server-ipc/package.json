@@ -12,6 +12,6 @@
     "debug": "^4.3.4"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.7"
+    "@types/debug": "^4.1.12"
   }
 }
