@@ -130,10 +130,10 @@ export const CreateMessageParamsSchema = z
     files: z.array(z.string()).optional(),
     fromModel: z.string().optional(),
     fromProvider: z.string().optional(),
-    groupId: z.string().optional(),
+    groupId: z.string().nullable().optional(),
     targetId: z.string().nullable().optional(),
     threadId: z.string().nullable().optional(),
-    topicId: z.string().optional(),
+    topicId: z.string().nullable().optional(),
     traceId: z.string().optional(),
     // Allow additional fields from UIChatMessage (many can be null)
     agentId: z.string().optional(),
@@ -182,7 +182,7 @@ export const CreateNewMessageParamsSchema = z
     parentId: z.string().optional(),
     groupId: z.string().nullable().optional(),
     // Context
-    topicId: z.string().optional(),
+    topicId: z.string().nullable().optional(),
     threadId: z.string().nullable().optional(),
     targetId: z.string().nullable().optional(),
     // Model info
