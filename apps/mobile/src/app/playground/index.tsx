@@ -15,8 +15,8 @@ import { ScrollView } from 'react-native';
 
 import { isIOS } from '@/utils/detection';
 
-import { ComponentItem } from './type';
-import { getAllCategories, getAllComponents, searchComponentsByName } from './utils';
+import { ComponentItem } from './_features/type';
+import { getAllCategories, getAllComponents, searchComponentsByName } from './_features/utils';
 
 export default function ComponentPlaygroundIndex() {
   const { isDarkMode } = useThemeMode();

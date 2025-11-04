@@ -15,8 +15,8 @@ import { ScrollView } from 'react-native';
 import SettingItem from '@/features/SettingItem';
 import { useSettingStore } from '@/store/setting';
 
-import Preview from './features/Preview';
-import { useStyles } from './styles';
+import Preview from './_features/Preview';
+import { useStyles } from './_features/styles';
 
 export default function ThemeSettingScreen() {
   const { styles, theme } = useStyles();

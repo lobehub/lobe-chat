@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/selectors';
 
-import { ProviderFlashListItem } from '../types';
+import { ProviderFlashListItem } from '../_features/types';
 
 /**
  * Hook for managing provider list data

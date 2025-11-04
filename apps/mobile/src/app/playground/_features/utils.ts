@@ -1,4 +1,4 @@
-import playgroundData from './.data/index.json';
+import playgroundData from '../_data/index.json';
 import { ComponentItem } from './type';
 
 /**

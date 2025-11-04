@@ -15,14 +15,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
 
-import SectionHeader from '../features/SectionHeader';
-import ConfigurationSection from './features/ConfigurationSection';
-import ModelCard from './features/ModelCard';
-import ModelsHeader from './features/ModelsHeader';
-import ProviderInfoSection from './features/ProviderInfoSection';
-import { useProviderDetail, useProviderModels } from './hooks';
-import { useStyles } from './styles';
-import { FlashListItem } from './types';
+import SectionHeader from '../_features/SectionHeader';
+import { useProviderDetail, useProviderModels } from './_features';
+import ConfigurationSection from './_features/ConfigurationSection';
+import ModelCard from './_features/ModelCard';
+import ModelsHeader from './_features/ModelsHeader';
+import ProviderInfoSection from './_features/ProviderInfoSection';
+import { useStyles } from './_features/styles';
+import { FlashListItem } from './_features/types';
 
 enum Tabs {
   Configuration = 'configuration',
