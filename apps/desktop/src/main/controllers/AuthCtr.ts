@@ -58,7 +58,7 @@ export default class AuthCtr extends ControllerModule {
    */
   @ipcClientEvent('requestAuthorization')
   async requestAuthorization(config: DataSyncConfig) {
-    // 清理任何旧的授权状态
+    // Clear any old authorization state
     this.clearAuthorizationState();
 
     const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl(config);
@@ -186,8 +186,8 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * 清理授权状态
-   * 在开始新的授权流程前或授权失败/超时后调用
+   * Clear authorization state
+   * Called before starting a new authorization flow or after authorization failure/timeout
    */
   private clearAuthorizationState() {
     logger.debug('Clearing authorization state');
