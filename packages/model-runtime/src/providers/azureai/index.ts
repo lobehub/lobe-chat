@@ -1,6 +1,7 @@
 import createClient, { ModelClient } from '@azure-rest/ai-inference';
 import { AzureKeyCredential } from '@azure/core-auth';
 import { ModelProvider } from 'model-bank';
+import type { Readable as NodeReadable } from 'node:stream';
 import OpenAI from 'openai';
 
 import { systemToUserModels } from '../../const/models';
@@ -64,48 +65,35 @@ export class LobeAzureAI implements LobeRuntimeAI {
       });
 
       if (enableStreaming) {
-        const isServerRuntime = typeof window === 'undefined';
+        const unifiedStream = await (async () => {
+          if (typeof window === 'undefined') {
+            /**
+             * In Node.js the SDK exposes a Node readable stream, so we convert it to a Web ReadableStream
+             * to reuse the same streaming pipeline used by Edge/browser runtimes.
+             */
+            const { Readable } = await import('node:stream');
 
-        if (isServerRuntime) {
-          /**
-           * In Node.js the SDK exposes a Node readable stream, so we convert it to a Web ReadableStream
-           * to reuse the same streaming pipeline used by Edge/browser runtimes.
-           */
-          const { Readable } = await import('node:stream');
+            const nodeResponse = await response.asNodeStream();
+            const nodeStream = nodeResponse.body;
 
-          const nodeResponse = await response.asNodeStream();
-          const nodeStream = nodeResponse.body;
+            if (!nodeStream) {
+              throw new Error('Azure AI response body is empty');
+            }
 
-          if (!nodeStream) {
+            return Readable.toWeb(nodeStream as unknown as NodeReadable) as ReadableStream;
+          }
+
+          const browserResponse = await response.asBrowserStream();
+          const browserStream = browserResponse.body;
+
+          if (!browserStream) {
             throw new Error('Azure AI response body is empty');
           }
 
-          const webStream = Readable.toWeb(nodeStream as any) as ReadableStream;
+          return browserStream;
+        })();
 
-          const [prod, debug] = webStream.tee();
-
-          if (process.env.DEBUG_AZURE_AI_CHAT_COMPLETION === '1') {
-            debugStream(debug).catch(console.error);
-          }
-
-          return StreamingResponse(
-            OpenAIStream(prod.pipeThrough(createSSEDataExtractor()), {
-              callbacks: options?.callback,
-            }),
-            {
-              headers: options?.headers,
-            },
-          );
-        }
-
-        const browserResponse = await response.asBrowserStream();
-        const browserStream = browserResponse.body;
-
-        if (!browserStream) {
-          throw new Error('Azure AI response body is empty');
-        }
-
-        const [prod, debug] = browserStream.tee();
+        const [prod, debug] = unifiedStream.tee();
 
         if (process.env.DEBUG_AZURE_AI_CHAT_COMPLETION === '1') {
           debugStream(debug).catch(console.error);
