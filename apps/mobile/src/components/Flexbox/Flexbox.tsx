@@ -67,8 +67,7 @@ const Flexbox = memo<FlexboxProps>(
                 typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
                 {
                   backgroundColor:
-                    blurColor || isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
-                  borderWidth: 0,
+                    blurColor || (isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)'),
                 },
               ]}
               tint={isDarkMode ? 'dark' : 'extraLight'}
@@ -87,8 +86,7 @@ const Flexbox = memo<FlexboxProps>(
             typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
             {
               backgroundColor:
-                blurColor || isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
-              borderWidth: 0,
+                blurColor || (isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)'),
             },
           ]}
           tint={isDarkMode ? 'dark' : 'extraLight'}

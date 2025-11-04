@@ -67,7 +67,6 @@ const Center = memo<CenterProps>(
                 {
                   backgroundColor:
                     blurColor || isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
-                  borderWidth: 0,
                 },
               ]}
               tint={isDarkMode ? 'dark' : 'light'}
@@ -87,7 +86,6 @@ const Center = memo<CenterProps>(
             {
               backgroundColor:
                 blurColor || isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
-              borderWidth: 0,
             },
           ]}
           tint={isDarkMode ? 'dark' : 'light'}

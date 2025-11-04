@@ -7,6 +7,7 @@ import {
   X,
   XCircle,
 } from 'lucide-react-native';
+import { rgba } from 'polished';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import Animated, {
@@ -22,15 +23,13 @@ import ActionIcon from '@/components/ActionIcon';
 import Block from '@/components/Block';
 import Icon from '@/components/Icon';
 import Text from '@/components/Text';
-import { useTheme } from '@/components/styles';
 
 import { useStyles } from './style';
 import type { ToastProps } from './type';
 
 const Toast = memo<ToastProps>(
   ({ id, message, type, index, position = 'top', duration, onClose, showCloseButton }) => {
-    const token = useTheme();
-    const { styles } = useStyles();
+    const { styles, theme } = useStyles();
     const prevIndexRef = useRef<number>(-1);
     const onCloseRef = useRef(onClose);
 
@@ -191,33 +190,34 @@ const Toast = memo<ToastProps>(
     const getIcon = useCallback(() => {
       switch (type) {
         case 'success': {
-          return <Icon color={token.colorSuccess} icon={CheckCircle} size="small" />;
+          return <Icon color={theme.colorSuccess} icon={CheckCircle} size="small" />;
         }
         case 'error': {
-          return <Icon color={token.colorError} icon={XCircle} size="small" />;
+          return <Icon color={theme.colorError} icon={XCircle} size="small" />;
         }
         case 'warning': {
-          return <Icon color={token.colorWarning} icon={TriangleAlert} size="small" />;
+          return <Icon color={theme.colorWarning} icon={TriangleAlert} size="small" />;
         }
         case 'info': {
-          return <Icon color={token.colorInfo} icon={Info} size="small" />;
+          return <Icon color={theme.colorInfo} icon={Info} size="small" />;
         }
         case 'loading': {
-          return <Icon color={token.colorInfo} icon={Loader2} size="small" spin />;
+          return <Icon color={theme.colorInfo} icon={Loader2} size="small" spin />;
         }
         default: {
-          return <Icon color={token.colorInfo} icon={AlertCircle} size="small" />;
+          return <Icon color={theme.colorInfo} icon={AlertCircle} size="small" />;
         }
       }
-    }, [type, token]);
+    }, [type, theme]);
 
     return (
       <View style={{ position: 'relative' }}>
         <Animated.View style={[styles.toastContainer, animatedStyle]} testID="toast-container">
           <Block
             align="center"
+            blur
+            blurColor={rgba(theme.colorBgElevated, 0.5)}
             gap={12}
-            glass
             horizontal
             onPress={handlePress}
             padding={16}
@@ -230,7 +230,7 @@ const Toast = memo<ToastProps>(
             <Text style={styles.message}>{message}</Text>
             {showCloseButton && (
               <ActionIcon
-                color={token.colorTextTertiary}
+                color={theme.colorTextTertiary}
                 icon={X}
                 onPress={handlePress}
                 size="small"

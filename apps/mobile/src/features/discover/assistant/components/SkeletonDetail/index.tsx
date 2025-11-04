@@ -1,7 +1,7 @@
 import { Center, Divider, Flexbox, Skeleton } from '@lobehub/ui-rn';
 import { memo } from 'react';
 
-import MessageSkeletonList from '@/features/chat/MessageSkeletonList';
+import MessageSkeletonList from '@/features/Conversation/components/MessageSkeletonList';
 
 const AssistantDetailSkeleton = memo(() => {
   return (
