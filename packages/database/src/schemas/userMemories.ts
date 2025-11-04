@@ -17,7 +17,7 @@ export const userMemories = pgTable(
     memoryCategory: varchar255('memory_category'),
     memoryLayer: varchar255('memory_layer'),
     memoryType: varchar255('memory_type'),
-    metadata: jsonb('metadata'),
+    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
     tags: text('tags').array(),
 
     title: varchar255('title'),
@@ -53,16 +53,15 @@ export const userMemoriesContexts = pgTable(
       .primaryKey(),
 
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-    userMemoryIds: jsonb('user_memory_ids'),
+    userMemoryIds: jsonb('user_memory_ids').$type<string[]>(),
 
-    metadata: jsonb('metadata'),
+    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
     tags: text('tags').array(),
 
-    associatedObjects: jsonb('associated_objects'),
-    associatedSubjects: jsonb('associated_subjects'),
+    associatedObjects: jsonb('associated_objects').$type<Record<string, unknown>[]>(),
+    associatedSubjects: jsonb('associated_subjects').$type<Record<string, unknown>[]>(),
 
     title: text('title'),
-    titleVector: vector('title_vector', { dimensions: 1024 }),
     description: text('description'),
     descriptionVector: vector('description_vector', { dimensions: 1024 }),
 
@@ -75,10 +74,6 @@ export const userMemoriesContexts = pgTable(
     ...timestamps,
   },
   (table) => [
-    index('user_memories_contexts_title_vector_index').using(
-      'hnsw',
-      table.titleVector.op('vector_cosine_ops'),
-    ),
     index('user_memories_contexts_description_vector_index').using(
       'hnsw',
       table.descriptionVector.op('vector_cosine_ops'),
@@ -99,7 +94,7 @@ export const userMemoriesPreferences = pgTable(
       onDelete: 'cascade',
     }),
 
-    metadata: jsonb('metadata'),
+    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
     tags: text('tags').array(),
 
     conclusionDirectives: text('conclusion_directives'),
@@ -132,7 +127,7 @@ export const userMemoriesIdentities = pgTable(
       onDelete: 'cascade',
     }),
 
-    metadata: jsonb('metadata'),
+    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
     tags: text('tags').array(),
 
     type: varchar255('type'),
@@ -165,7 +160,7 @@ export const userMemoriesExperiences = pgTable(
       onDelete: 'cascade',
     }),
 
-    metadata: jsonb('metadata'),
+    metadata: jsonb('metadata').$type<Record<string, unknown>>(),
     tags: text('tags').array(),
 
     type: varchar255('type'),
@@ -200,16 +195,33 @@ export const userMemoriesExperiences = pgTable(
 );
 
 export type UserMemoryItem = typeof userMemories.$inferSelect;
+export type UserMemoryItemWithoutVectors = Omit<
+  UserMemoryItem,
+  'summaryVector1024' | 'detailsVector1024'
+>;
 export type NewUserMemory = typeof userMemories.$inferInsert;
 
 export type UserMemoryPreference = typeof userMemoriesPreferences.$inferSelect;
+export type UserMemoryPreferencesWithoutVectors = Omit<
+  UserMemoryPreference,
+  'conclusionDirectivesVector'
+>;
 export type NewUserMemoryPreference = typeof userMemoriesPreferences.$inferInsert;
 
 export type UserMemoryContext = typeof userMemoriesContexts.$inferSelect;
+export type UserMemoryContextsWithoutVectors = Omit<
+  UserMemoryContext,
+  'titleVector' | 'descriptionVector'
+>;
 export type NewUserMemoryContext = typeof userMemoriesContexts.$inferInsert;
 
 export type UserMemoryIdentity = typeof userMemoriesIdentities.$inferSelect;
+export type UserMemoryIdentitiesWithoutVectors = Omit<UserMemoryIdentity, 'descriptionVector'>;
 export type NewUserMemoryIdentity = typeof userMemoriesIdentities.$inferInsert;
 
 export type UserMemoryExperience = typeof userMemoriesExperiences.$inferSelect;
+export type UserMemoryExperiencesWithoutVectors = Omit<
+  UserMemoryExperience,
+  'situationVector' | 'actionVector' | 'keyLearningVector'
+>;
 export type NewUserMemoryExperience = typeof userMemoriesExperiences.$inferInsert;
