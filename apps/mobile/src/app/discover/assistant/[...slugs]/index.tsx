@@ -136,29 +136,29 @@ const AssistantDetail = () => {
           </Flexbox>
           <Divider />
           <Flexbox paddingBlock={16}>
-            {agent.examples?.map((item, index) => (
-              <ChatItem
-                key={index}
-                message={
-                  {
-                    ...item,
-                    meta:
-                      item.role === 'user'
-                        ? {
-                            avatar: user?.avatar,
-                            title: user?.name || user?.username || 'User',
-                          }
-                        : {
-                            avatar: agent.avatar,
-                            title: agent.title || 'Assistant',
-                          },
-                  } as any
-                }
-                showActions={false}
-                showTime={false}
-                showTitle
-              />
-            ))}
+            {agent.examples?.map((item, index) => {
+              const isUser = item.role === 'user';
+              const avatarMeta = isUser
+                ? {
+                    avatar: user?.avatar,
+                    title: user?.name || user?.username || 'User',
+                  }
+                : {
+                    avatar: agent.avatar,
+                    title: agent.title || 'Assistant',
+                  };
+
+              return (
+                <ChatItem
+                  avatar={avatarMeta}
+                  key={index}
+                  message={item.content}
+                  placement={isUser ? 'right' : 'left'}
+                  showTime={false}
+                  showTitle
+                />
+              );
+            })}
           </Flexbox>
         </ScrollView>
         <Flexbox padding={16}>

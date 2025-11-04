@@ -1,0 +1,45 @@
+import { UIChatMessage } from '@lobechat/types';
+import { memo } from 'react';
+
+import ChatItem from '@/features/ChatItem';
+
+export interface SupervisorMessageProps {
+  index: number;
+  isLoading?: boolean;
+  markdownProps?: any;
+  message: UIChatMessage;
+  showActions?: boolean;
+  showTime?: boolean;
+  showTitle?: boolean;
+  totalLength: number;
+}
+
+const SupervisorMessage = memo<SupervisorMessageProps>(
+  ({ message, isLoading, markdownProps, showTime = true, showTitle = true }) => {
+    // Supervisor uses system avatar/title
+    const supervisorMeta = {
+      avatar: '🤖',
+      title: 'Supervisor',
+    };
+
+    return (
+      <ChatItem
+        avatar={supervisorMeta}
+        error={message.error}
+        loading={isLoading}
+        markdownProps={markdownProps}
+        message={message.content}
+        placement="left"
+        primary={false}
+        showTime={showTime}
+        showTitle={showTitle}
+        time={message.createdAt}
+        variant="bubble"
+      />
+    );
+  },
+);
+
+SupervisorMessage.displayName = 'SupervisorMessage';
+
+export default SupervisorMessage;
