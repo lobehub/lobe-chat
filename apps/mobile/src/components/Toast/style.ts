@@ -1,7 +1,7 @@
 import { HEADER_HEIGHT } from '@/_const/common';
 import { createStyles } from '@/components/styles';
 
-export const useStyles = createStyles(() => ({
+export const useStyles = createStyles(({ token }) => ({
   bottomViewport: {
     justifyContent: 'flex-end',
     paddingBottom: HEADER_HEIGHT * 2,
@@ -10,6 +10,7 @@ export const useStyles = createStyles(() => ({
     flex: 1,
   },
   toast: {
+    backgroundColor: token.colorBgElevated,
     width: '100%',
   },
   toastContainer: {

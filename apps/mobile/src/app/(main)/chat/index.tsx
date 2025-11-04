@@ -11,11 +11,11 @@ import { darken } from 'polished';
 import { useTranslation } from 'react-i18next';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 
+import ChatInput from '@/features/ChatInput';
+import { ChatList } from '@/features/Conversation';
 import Hydration from '@/features/Hydration';
 import SideBar from '@/features/SideBar';
 import TopicDrawer from '@/features/TopicDrawer';
-import ChatInput from '@/features/chat/ChatInput';
-import ChatList from '@/features/chat/ChatList';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';

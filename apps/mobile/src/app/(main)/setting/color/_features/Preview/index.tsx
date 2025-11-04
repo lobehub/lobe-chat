@@ -2,7 +2,7 @@ import { Block, Flexbox, Markdown, SendButton, TextArea } from '@lobehub/ui-rn';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useStyles } from '@/features/chat/ChatBubble/style';
+import { useStyles } from '@/features/ChatItem/style';
 
 const Preview = memo(() => {
   const { styles } = useStyles();
