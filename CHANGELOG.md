@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.25](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.24...v2.0.0-next.25)
+
+<sup>Released on **2025-11-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Display assistant message in group.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Display assistant message in group, closes [#9941](https://github.com/lobehub/lobe-chat/issues/9941) ([59b6ac3](https://github.com/lobehub/lobe-chat/commit/59b6ac3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.24](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.23...v2.0.0-next.24)
 
 <sup>Released on **2025-11-04**</sup>
