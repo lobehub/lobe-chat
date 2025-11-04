@@ -22,9 +22,6 @@ const useStyles = createStyles(({ css, token }) => ({
       background-color: ${token.colorFillTertiary};
     }
   `,
-  indentedList: css`
-    padding-inline-start: 16px;
-  `,
 }));
 
 // TODO: Rename to Collection
@@ -74,7 +71,7 @@ const Collection = () => {
       </Flexbox>
 
       {showList && (
-        <Flexbox className={styles.indentedList} flex={1}>
+        <Flexbox flex={1}>
           <KnowledgeBaseList />
         </Flexbox>
       )}

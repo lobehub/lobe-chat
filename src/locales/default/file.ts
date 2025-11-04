@@ -115,12 +115,11 @@ export default {
   },
   searchFilePlaceholder: '搜索文件',
   tab: {
-    all: '全部文件',
+    all: '全部',
     audios: '语音',
     documents: '文档',
     images: '图片',
     moreTypes: '更多类型',
-    notes: '笔记',
     videos: '视频',
     websites: '网页',
   },

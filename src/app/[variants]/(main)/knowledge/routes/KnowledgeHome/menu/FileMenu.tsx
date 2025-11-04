@@ -1,8 +1,9 @@
 'use client';
 
-import { CaretDownFilled, CaretRightOutlined } from '@ant-design/icons';
+import { CaretDownFilled } from '@ant-design/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { motion } from 'framer-motion';
 import { FileText, FolderOpen, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -79,7 +80,7 @@ const FileMenu = memo(() => {
   const isHomeActive = activeKey === FilesTabs.Home;
 
   return (
-    <Flexbox gap={8}>
+    <Flexbox gap={4}>
       <Flexbox
         align={'center'}
         className={cx(styles.header, isHomeActive && styles.headerActive)}
@@ -91,20 +92,33 @@ const FileMenu = memo(() => {
         paddingInline={8}
       >
         <Flexbox align={'center'} flex={1} gap={8} horizontal>
-          <ActionIcon
-            icon={(showCollapsed ? CaretDownFilled : CaretRightOutlined) as any}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowCollapsed(!showCollapsed);
-            }}
-            size={'small'}
-          />
+          <motion.div
+            animate={{ rotate: showCollapsed ? 0 : -90 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+          >
+            <ActionIcon
+              icon={CaretDownFilled as any}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowCollapsed(!showCollapsed);
+              }}
+              size={'small'}
+            />
+          </motion.div>
           <div style={{ flex: 1, lineHeight: '14px' }}>Home</div>
         </Flexbox>
       </Flexbox>
 
-      {showCollapsed && (
-        <Flexbox className={styles.indentedMenu}>
+      <motion.div
+        animate={{
+          height: showCollapsed ? 'auto' : 0,
+          opacity: showCollapsed ? 1 : 0,
+        }}
+        initial={false}
+        style={{ overflow: 'hidden' }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+      >
+        <Flexbox>
           <Menu
             compact
             items={collapsedItems}
@@ -115,7 +129,7 @@ const FileMenu = memo(() => {
             selectedKeys={[activeKey]}
           />
         </Flexbox>
-      )}
+      </motion.div>
     </Flexbox>
   );
 });
