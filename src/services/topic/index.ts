@@ -1,21 +1,7 @@
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
 import { BatchTaskResult } from '@/types/service';
-import { ChatTopic, TopicRankItem } from '@/types/topic';
-
-export interface CreateTopicParams {
-  favorite?: boolean;
-  groupId?: string | null;
-  messages?: string[];
-  sessionId?: string | null;
-  title: string;
-}
-
-export interface QueryTopicParams {
-  current?: number;
-  containerId?: string | null; // sessionId or groupId
-  pageSize?: number;
-}
+import { ChatTopic, CreateTopicParams, QueryTopicParams, TopicRankItem } from '@/types/topic';
 
 export class TopicService {
   createTopic = (params: CreateTopicParams): Promise<string> => {
@@ -58,6 +44,7 @@ export class TopicService {
 
   searchTopics = (keywords: string, sessionId?: string, groupId?: string): Promise<ChatTopic[]> => {
     return lambdaClient.topic.searchTopics.query({
+      groupId,
       keywords,
       sessionId: this.toDbSessionId(sessionId),
     }) as any;

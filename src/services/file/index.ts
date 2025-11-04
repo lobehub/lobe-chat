@@ -12,7 +12,7 @@ interface CreateFileParams extends Omit<UploadFileParams, 'url'> {
   url: string;
 }
 
-class FileService {
+export class FileService {
   createFile = async (
     params: UploadFileParams,
     knowledgeBaseId?: string,
