@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const FileMenu = memo(() => {
+const CategoryMenu = memo(() => {
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
   const [activeKey, setActiveKey] = useFileCategory();
@@ -134,6 +134,6 @@ const FileMenu = memo(() => {
   );
 });
 
-FileMenu.displayName = 'FileMenu';
+CategoryMenu.displayName = 'CategoryMenu';
 
-export default FileMenu;
+export default CategoryMenu;

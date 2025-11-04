@@ -8,14 +8,14 @@ import { Flexbox } from 'react-layout-kit';
 import { FilesTabs } from '@/types/files';
 
 import DocumentExplorer from './DocumentExplorer/DocumentExplorer';
-import FileList from './FileList';
+import FileExplorer from './FileExplorer';
 import Header from './Header';
 import Home from './Home';
 import UploadDock from './UploadDock';
 
 const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });
 
-interface FileManagerProps {
+interface KnowledgeManagerProps {
   category?: string;
   knowledgeBaseId?: string;
   onOpenFile: (id: string) => void;
@@ -23,11 +23,13 @@ interface FileManagerProps {
 }
 
 /**
- * Documents View is a special view.
- * Home View is shown for the "home" category.
- * For other categories, it will show the file list.
+ * Manage knowledge items. Can be all items or certian knowledge base.
+ *
+ * DocumentExplorer: For the "documents" category.
+ * Home: For the "home" category.
+ * FileExplorer: For other categories.
  */
-const KnowledgeItemManager = memo<FileManagerProps>(
+const KnowledgeManager = memo<KnowledgeManagerProps>(
   ({ title, knowledgeBaseId, category, onOpenFile }) => {
     const isDocumentsView = category === FilesTabs.Documents;
     const isHomeView = category === FilesTabs.Home;
@@ -46,7 +48,7 @@ const KnowledgeItemManager = memo<FileManagerProps>(
           ) : isHomeView ? (
             <Home knowledgeBaseId={knowledgeBaseId} onOpenFile={onOpenFile} />
           ) : (
-            <FileList
+            <FileExplorer
               category={category}
               knowledgeBaseId={knowledgeBaseId}
               onOpenFile={onOpenFile}
@@ -60,4 +62,4 @@ const KnowledgeItemManager = memo<FileManagerProps>(
   },
 );
 
-export default KnowledgeItemManager;
+export default KnowledgeManager;

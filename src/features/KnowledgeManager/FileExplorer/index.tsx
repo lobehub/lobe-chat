@@ -40,13 +40,13 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-interface FileListProps {
+interface FileExplorerProps {
   category?: string;
   knowledgeBaseId?: string;
   onOpenFile: (id: string) => void;
 }
 
-const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile }) => {
+const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpenFile }) => {
   const { t } = useTranslation('components');
   const { styles } = useStyles();
 
@@ -311,4 +311,4 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
   );
 });
 
-export default FileList;
+export default FileExplorer;

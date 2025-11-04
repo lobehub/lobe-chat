@@ -8,8 +8,8 @@ import { useMediaQuery } from 'react-responsive';
 
 import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
-import KnowledgeItemManager from '@/features/FileManager';
 import FilePanel from '@/features/FileSidePanel';
+import KnowledgeItemManager from '@/features/KnowledgeManager';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { FilesTabs } from '@/types/files';
 
@@ -18,7 +18,7 @@ import FileModalQueryRoute from '../../shared/FileModalQueryRoute';
 import { useSetFileModalId } from '../../shared/useFileQueryParam';
 import Container from './layout/Container';
 import RegisterHotkeys from './layout/RegisterHotkeys';
-import FileMenu from './menu/FileMenu';
+import CategoryMenu from './menu/CategoryMenu';
 import Collection from './menu/KnowledgeBase';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -37,7 +37,7 @@ const MenuContent = memo(() => {
     <Flexbox gap={16} height={'100%'}>
       <Flexbox paddingInline={8}>
         <PanelTitle desc={t('desc')} title={t('title')} />
-        <FileMenu />
+        <CategoryMenu />
       </Flexbox>
       <Collection />
     </Flexbox>

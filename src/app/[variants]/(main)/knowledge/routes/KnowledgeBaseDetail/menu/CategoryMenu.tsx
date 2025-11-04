@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import Menu from '@/components/Menu';
 import type { MenuProps } from '@/components/Menu';
 
-const MenuItems = () => {
+const CategoryMenu = () => {
   const { t } = useTranslation('knowledgeBase');
 
   const items: MenuProps['items'] = useMemo(
@@ -30,6 +30,6 @@ const MenuItems = () => {
   );
 };
 
-MenuItems.displayName = 'MenuItems';
+CategoryMenu.displayName = 'MenuItems';
 
-export default MenuItems;
+export default CategoryMenu;

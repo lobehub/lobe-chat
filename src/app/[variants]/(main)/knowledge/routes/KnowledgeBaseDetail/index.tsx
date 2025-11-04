@@ -6,8 +6,8 @@ import { useParams } from 'react-router-dom';
 
 import FileModalQueryRoute from '@/app/[variants]/(main)/knowledge/shared/FileModalQueryRoute';
 import { useSetFileModalId } from '@/app/[variants]/(main)/knowledge/shared/useFileQueryParam';
-import KnowledgeItemManager from '@/features/FileManager';
 import FilePanel from '@/features/FileSidePanel';
+import KnowledgeItemManager from '@/features/KnowledgeManager';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import { useKnowledgeBaseItem } from '../../hooks/useKnowledgeItem';
