@@ -12,7 +12,8 @@
     "notNow": "나중에",
     "regenerate": "다시 생성",
     "retry": "재시도",
-    "save": "저장"
+    "save": "저장",
+    "saveImage": "이미지 저장"
   },
   "and": "그리고",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "검색어를 입력하세요"
   },
   "defaultSession": "사용자 지정 도우미",
+  "image": {
+    "permissionDenied": "이미지를 저장하려면 앨범 접근 권한이 필요합니다",
+    "permissionRequest": "설정에서 앨범 접근을 허용해주세요",
+    "saveFailed": "저장에 실패했습니다. 다시 시도해주세요",
+    "saveSuccess": "이미지가 앨범에 저장되었습니다"
+  },
   "navigation": {
     "goToHomeScreen": "홈 화면으로 돌아가기"
   },

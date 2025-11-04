@@ -13,6 +13,7 @@ export default {
     regenerate: '重新生成',
     retry: '重试',
     save: '保存',
+    saveImage: '保存图片',
   },
   and: '和',
   assistant: {
@@ -25,6 +26,12 @@ export default {
     searchPlaceholder: '请输入搜索关键词',
   },
   defaultSession: '自定义助手',
+  image: {
+    permissionDenied: '需要相册权限才能保存图片',
+    permissionRequest: '请在设置中允许访问相册',
+    saveFailed: '保存失败，请重试',
+    saveSuccess: '图片已保存到相册',
+  },
   navigation: {
     goToHomeScreen: '返回首页',
   },

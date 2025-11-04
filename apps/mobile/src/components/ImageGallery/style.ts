@@ -7,6 +7,11 @@ export const useStyles = createStyles(({ token }) => ({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: Platform.OS === 'ios' ? 'rgba(0, 0, 0, 0.5)' : '#000000',
   },
+  downloadButton: {
+    position: 'absolute',
+    right: 8, // 与 PageContainer 的 paddingInline 一致
+    zIndex: 100,
+  },
   imageContainer: {
     alignItems: 'center',
     flex: 1,
@@ -17,7 +22,7 @@ export const useStyles = createStyles(({ token }) => ({
     alignSelf: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     borderRadius: 16,
-    bottom: 40,
+    // bottom 通过 insets.bottom + 40 动态设置
     justifyContent: 'center',
     minWidth: 60,
     overflow: 'hidden',

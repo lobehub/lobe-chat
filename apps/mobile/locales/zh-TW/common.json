@@ -12,7 +12,8 @@
     "notNow": "暫不",
     "regenerate": "重新生成",
     "retry": "重試",
-    "save": "保存"
+    "save": "保存",
+    "saveImage": "儲存圖片"
   },
   "and": "和",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "請輸入搜尋關鍵字"
   },
   "defaultSession": "自訂助理",
+  "image": {
+    "permissionDenied": "需要相簿權限才能儲存圖片",
+    "permissionRequest": "請在設定中允許存取相簿",
+    "saveFailed": "儲存失敗，請重試",
+    "saveSuccess": "圖片已儲存至相簿"
+  },
   "navigation": {
     "goToHomeScreen": "返回首頁"
   },

@@ -1,11 +1,17 @@
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
+import { Download } from 'lucide-react-native';
 import React, { memo, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Gallery } from 'react-native-zoom-toolkit';
 
+import { saveImageWithToast } from '@/utils/saveImage';
+
+import ActionIcon from '../ActionIcon';
 import { FullWindowOverlay } from '../FullWindowOverlay';
 import { useStyles } from './style';
 import type { ImageGalleryProps } from './type';
@@ -81,7 +87,9 @@ ImageGalleryItem.displayName = 'ImageGalleryItem';
 
 const ImageGallery = memo<ImageGalleryProps>(({ images, initialIndex = 0, onClose }) => {
   const { styles } = useStyles();
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const insets = useSafeAreaInsets();
 
   const renderItem = useCallback((uri: string) => {
     return <ImageGalleryItem uri={uri} />;
@@ -95,6 +103,12 @@ const ImageGallery = memo<ImageGalleryProps>(({ images, initialIndex = 0, onClos
   const handleTap = useCallback(() => {
     onClose();
   }, [onClose]);
+
+  // 保存图片
+  const handleSaveImage = useCallback(() => {
+    const currentImageUrl = images[currentIndex];
+    saveImageWithToast(currentImageUrl, t);
+  }, [images, currentIndex, t]);
 
   // 索引变化时更新
   const handleIndexChange = useCallback((index: number) => {
@@ -119,12 +133,17 @@ const ImageGallery = memo<ImageGalleryProps>(({ images, initialIndex = 0, onClos
 
           {/* 图片指示器 */}
           {images.length > 1 && (
-            <View style={styles.indicator}>
+            <View style={[styles.indicator, { bottom: insets.bottom + 8 }]}>
               <Animated.Text entering={FadeIn} style={styles.indicatorText}>
                 {currentIndex + 1} / {images.length}
               </Animated.Text>
             </View>
           )}
+
+          {/* 下载按钮 */}
+          <View style={[styles.downloadButton, { top: insets.top + 8 }]}>
+            <ActionIcon color={'white'} icon={Download} onPress={handleSaveImage} pressEffect />
+          </View>
         </View>
       </GestureHandlerRootView>
     </FullWindowOverlay>

@@ -12,7 +12,8 @@
     "notNow": "Không phải bây giờ",
     "regenerate": "Tạo lại",
     "retry": "Thử lại",
-    "save": "Lưu"
+    "save": "Lưu",
+    "saveImage": "Lưu hình ảnh"
   },
   "and": "và",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Vui lòng nhập từ khóa tìm kiếm"
   },
   "defaultSession": "Trợ lý tùy chỉnh",
+  "image": {
+    "permissionDenied": "Cần quyền truy cập album để lưu hình ảnh",
+    "permissionRequest": "Vui lòng cho phép truy cập album trong phần cài đặt",
+    "saveFailed": "Lưu không thành công, vui lòng thử lại",
+    "saveSuccess": "Hình ảnh đã được lưu vào album"
+  },
   "navigation": {
     "goToHomeScreen": "Quay về trang chủ"
   },

@@ -12,7 +12,8 @@
     "notNow": "Pas maintenant",
     "regenerate": "Régénérer",
     "retry": "Réessayer",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "saveImage": "Enregistrer l'image"
   },
   "and": "et",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Veuillez saisir un mot-clé de recherche"
   },
   "defaultSession": "Assistant personnalisé",
+  "image": {
+    "permissionDenied": "L’autorisation d’accès à l’album est requise pour enregistrer l’image",
+    "permissionRequest": "Veuillez autoriser l’accès à l’album dans les paramètres",
+    "saveFailed": "Échec de l’enregistrement, veuillez réessayer",
+    "saveSuccess": "Image enregistrée dans l’album"
+  },
   "navigation": {
     "goToHomeScreen": "Retour à l'accueil"
   },
