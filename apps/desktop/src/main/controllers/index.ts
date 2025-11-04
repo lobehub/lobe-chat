@@ -19,13 +19,13 @@ const ipcDecorator =
   };
 
 /**
- *  controller 用的 ipc client event 装饰器
+ * IPC client event decorator for controllers
  */
 export const ipcClientEvent = (method: keyof ClientDispatchEvents) =>
   ipcDecorator(method, 'client');
 
 /**
- *  controller 用的 ipc server event 装饰器
+ * IPC server event decorator for controllers
  */
 export const ipcServerEvent = (method: keyof ServerDispatchEvents) =>
   ipcDecorator(method, 'server');
@@ -56,8 +56,8 @@ const protocolDecorator =
 
 /**
  * Protocol handler decorator
- * @param urlType 协议URL类型 (如: 'plugin')
- * @param action 操作类型 (如: 'install')
+ * @param urlType Protocol URL type (e.g., 'plugin')
+ * @param action Action type (e.g., 'install')
  */
 export const createProtocolHandler = (urlType: string) => (action: string) =>
   protocolDecorator(urlType, action);
