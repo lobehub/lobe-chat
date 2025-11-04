@@ -6,22 +6,6 @@ const cerebrasModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 32_768,
-    description: 'Llama 4 Scout：高性能的 Llama 系列模型，适合需高吞吐与低延迟的场景。',
-    displayName: 'Llama 4 Scout',
-    id: 'llama-4-scout-17b-16e-instruct',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.65, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.85, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
     description: 'Llama 3.1 8B：小体量、低延迟的 Llama 变体，适合轻量在线推理与交互场景。',
     displayName: 'Llama 3.1 8B',
     id: 'llama3.1-8b',
