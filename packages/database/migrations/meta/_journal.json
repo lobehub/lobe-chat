@@ -301,13 +301,6 @@
       "when": 1762232313711,
       "tag": "0042_improve_agent_index",
       "breakpoints": true
-    },
-    {
-      "idx": 43,
-      "version": "7",
-      "when": 1762246483139,
-      "tag": "0043_add_ai_model_settings",
-      "breakpoints": true
     }
   ],
   "version": "6"
