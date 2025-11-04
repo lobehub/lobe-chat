@@ -14,10 +14,10 @@ export default () => {
       <Image source={{ uri: IMAGE_URL }} />
 
       <Text type="secondary">小图显示原尺寸</Text>
-      <Image borderRadius={0} source={{ uri: SMALL_IMAGE }} />
+      <Image source={{ uri: SMALL_IMAGE }} />
 
       <Text type="secondary">使用 width prop 指定宽度</Text>
-      <Image borderRadius={8} source={{ uri: IMAGE_URL }} width={200} />
+      <Image source={{ uri: IMAGE_URL }} width={200} />
     </Flexbox>
   );
 };

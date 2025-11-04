@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 
 import { useStyles } from '../style';
 import TextWrapper from './TextWrapper';
-import { ListContext } from './context';
+import { BlockContext, ListContext } from './context';
 
 export const OL: Components['ol'] = memo(({ children }) => {
   const { styles } = useStyles();
@@ -70,7 +70,7 @@ export const LI: Components['li'] = memo(({ children }) => {
   }, [children]);
 
   return (
-    <>
+    <BlockContext.Provider value={{ type: 'list' }}>
       <View style={[styles.listItem, { width: '90%' }]}>
         <View>
           {content.prefix ||
@@ -91,6 +91,6 @@ export const LI: Components['li'] = memo(({ children }) => {
           <TextWrapper>{content.end}</TextWrapper>
         </View>
       )}
-    </>
+    </BlockContext.Provider>
   );
 });

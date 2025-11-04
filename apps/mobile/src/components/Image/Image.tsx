@@ -1,11 +1,9 @@
 import { Image as ExpoImage, type ImageLoadEventData } from 'expo-image';
 import React, { memo, useContext, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 
-import Flexbox from '@/components/Flexbox';
 import { imageGallery } from '@/libs/imageGallery';
 
-import Block from '../Block';
 import { useThemeMode } from '../ThemeProvider/context';
 import { PreviewGroupContext } from './context';
 import { FALLBACK_DARK, FALLBACK_LIGHT, useStyles } from './style';
@@ -27,8 +25,8 @@ const Image = memo<ImageProps>(
     onLoad,
     width,
     height,
-    variant = 'filled',
-    borderRadius,
+    onLongPress,
+    onPress,
     ...rest
   }) => {
     const { styles, theme } = useStyles();
@@ -77,7 +75,8 @@ const Image = memo<ImageProps>(
     };
 
     // 处理图片点击
-    const handlePress = () => {
+    const handlePress = (e: any) => {
+      onPress?.(e);
       if (!preview) return;
 
       // 如果在 PreviewGroup 中，使用 group 的预览功能
@@ -170,17 +169,13 @@ const Image = memo<ImageProps>(
 
     // 可点击预览的图片
     return (
-      <Flexbox align="flex-start">
-        <Block
-          borderRadius={borderRadius}
-          onPress={!cantPreview ? handlePress : undefined}
-          pressEffect={!cantPreview}
-          style={styles.container}
-          variant={variant}
-        >
-          {imageContent}
-        </Block>
-      </Flexbox>
+      <Pressable
+        onLongPress={onLongPress}
+        onPress={!cantPreview ? handlePress : undefined}
+        style={styles.container}
+      >
+        {imageContent}
+      </Pressable>
     );
   },
 );
