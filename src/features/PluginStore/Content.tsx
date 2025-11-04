@@ -44,7 +44,7 @@ export const Content = memo(() => {
             value={listType}
             variant={'filled'}
           />
-          <AddPluginButton />
+         {mobile ? null : <AddPluginButton />}
         </Flexbox>
         <Search />
       </Flexbox>
