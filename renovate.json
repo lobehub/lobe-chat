@@ -15,28 +15,64 @@
     "workarounds:all"
   ],
   "ignoreDeps": [],
-  "labels": [
-    "dependencies"
-  ],
+  "labels": ["dependencies"],
   "packageRules": [
+    // 1) Pinned deps: isolate (OK to use separate* here because there's no matchUpdateTypes)
     {
-      "groupName": "all non-minor dependencies",
-      "groupSlug": "all-minor-patch",
-      "matchPackageNames": [
-        "*"
+      "description": "Isolate PRs for pinned deps (exact x.y.z)",
+      "matchManagers": ["npm", "pnpm", "yarn", "bun"],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies",
+        "optionalDependencies",
+        "peerDependencies"
       ],
-      "matchUpdateTypes": [
-        "patch"
-      ]
+      "matchCurrentValue": "^\\d+\\.\\d+\\.\\d+([+-][0-9A-Za-z.-]+)?$",
+      "groupName": null,
+      "separateMinorPatch": true,
+      "separateMajorMinor": true,
+      "separateMultipleMinor": true,
+      "separateMultipleMajor": true
+    },
+    // 2a) Non-pinned deps: override splitting so patch+minor can be combined
+    {
+      "description": "Non-pinned deps: allow patch+minor to group; keep majors separate",
+      "matchManagers": ["npm", "pnpm", "yarn", "bun"],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies",
+        "optionalDependencies",
+        "peerDependencies"
+      ],
+      "matchCurrentValue": "/(^[~^]|[<>=| -])/", // anything that looks like a range
+      "separateMinorPatch": false,
+      "separateMajorMinor": true
+    },
+    // 2b) Non-pinned deps: actually group patch+minor together
+    {
+      "description": "Non-pinned deps: group non-major updates",
+      "matchManagers": ["npm", "pnpm", "yarn", "bun"],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies",
+        "optionalDependencies",
+        "peerDependencies"
+      ],
+      "matchCurrentValue": "/(^[~^]|[<>=| -])/",
+      "matchUpdateTypes": ["minor", "patch"], // only non-majors
+      "groupName": "deps (non-major)"
     }
   ],
-  "postUpdateOptions": [
-    "yarnDedupeHighest"
-  ],
+  "postUpdateOptions": ["yarnDedupeHighest"],
   "prConcurrentLimit": 30,
   "prHourlyLimit": 0,
   "rangeStrategy": "bump",
   "rebaseWhen": "conflicted",
   "schedule": "on sunday before 6:00am",
+  "separateMajorMinor": true,
+  // Global defaults are fine; rule 2a overrides minor/patch splitting for ranged deps
+  "separateMinorPatch": true,
+  "separateMultipleMajor": true,
+  "separateMultipleMinor": true,
   "timezone": "UTC"
 }
