@@ -30,9 +30,7 @@
       "matchCurrentValue": "^\\d+\\.\\d+\\.\\d+([+-][0-9A-Za-z.-]+)?$",
       "groupName": null,
       "separateMinorPatch": true,
-      "separateMajorMinor": true,
-      "separateMultipleMinor": true,
-      "separateMultipleMajor": true
+      "separateMajorMinor": true
     },
     // 2a) Non-pinned deps: override splitting so patch+minor can be combined
     {
@@ -70,9 +68,6 @@
   "rebaseWhen": "conflicted",
   "schedule": "on sunday before 6:00am",
   "separateMajorMinor": true,
-  // Global defaults are fine; rule 2a overrides minor/patch splitting for ranged deps
-  "separateMinorPatch": true,
   "separateMultipleMajor": true,
-  "separateMultipleMinor": true,
   "timezone": "UTC"
 }
