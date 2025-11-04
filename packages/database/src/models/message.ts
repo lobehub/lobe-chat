@@ -603,6 +603,7 @@ export class MessageModel {
     id: string,
     { imageList, ...message }: Partial<UpdateMessageParams>,
     options?: {
+      groupAssistantMessages?: boolean;
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
       sessionId?: string | null;
       topicId?: string | null;
@@ -633,6 +634,7 @@ export class MessageModel {
             topicId: options.topicId,
           },
           {
+            groupAssistantMessages: options.groupAssistantMessages ?? false,
             postProcessUrl: options.postProcessUrl,
           },
         );
@@ -660,16 +662,41 @@ export class MessageModel {
       .where(and(eq(messages.userId, this.userId), eq(messages.id, id)));
   };
 
-  updatePluginState = async (id: string, state: Record<string, any>) => {
+  updatePluginState = async (
+    id: string,
+    state: Record<string, any>,
+    options?: {
+      groupAssistantMessages?: boolean;
+      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
+      sessionId?: string | null;
+      topicId?: string | null;
+    },
+  ): Promise<UpdateMessageResult> => {
     const item = await this.db.query.messagePlugins.findFirst({
       where: eq(messagePlugins.id, id),
     });
     if (!item) throw new Error('Plugin not found');
 
-    return this.db
+    await this.db
       .update(messagePlugins)
       .set({ state: merge(item.state || {}, state) })
       .where(eq(messagePlugins.id, id));
+
+    // Return updated messages if sessionId or topicId is provided
+    if (options?.sessionId !== undefined || options?.topicId !== undefined) {
+      const messageList = await this.query(
+        {
+          sessionId: options.sessionId,
+          topicId: options.topicId,
+        },
+        {
+          groupAssistantMessages: options.groupAssistantMessages ?? false,
+          postProcessUrl: options.postProcessUrl,
+        },
+      );
+      return { messages: messageList, success: true };
+    }
+    return { success: true };
   };
 
   updateMessagePlugin = async (id: string, value: Partial<MessagePluginItem>) => {

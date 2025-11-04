@@ -98,8 +98,8 @@ export const chatPlugin: StateCreator<
       topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
     };
 
-    await messageService.createMessage(newMessage);
-    await get().refreshMessages();
+    const result = await messageService.createNewMessage(newMessage);
+    get().replaceMessages(result.messages);
   },
 
   fillPluginMessageContent: async (id, content, triggerAiMessage) => {
@@ -144,7 +144,7 @@ export const chatPlugin: StateCreator<
 
     // if the plugin settings is not valid, then set the message with error type
     if (!result.valid) {
-      await messageService.updateMessageError(id, {
+      const updateResult = await messageService.updateMessageError(id, {
         body: {
           error: result.errors,
           message: '[plugin] your settings is invalid with plugin manifest setting schema',
@@ -153,7 +153,9 @@ export const chatPlugin: StateCreator<
         type: PluginErrorType.PluginSettingsInvalid as any,
       });
 
-      await get().refreshMessages();
+      if (updateResult?.success && updateResult.messages) {
+        get().replaceMessages(updateResult.messages);
+      }
       return;
     }
   },
@@ -228,15 +230,15 @@ export const chatPlugin: StateCreator<
         groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
-      const id = await get().internal_createMessage(toolMessage);
-      if (!id) return;
+      const result = await get().internal_createMessage(toolMessage);
+      if (!result) return;
 
       // trigger the plugin call
-      const data = await get().internal_invokeDifferentTypePlugin(id, payload);
+      const data = await get().internal_invokeDifferentTypePlugin(result.id, payload);
 
       if (data && !['markdown', 'standalone'].includes(payload.type)) {
         shouldCreateMessage = true;
-        latestToolId = id;
+        latestToolId = result.id;
       }
     });
 
@@ -252,13 +254,19 @@ export const chatPlugin: StateCreator<
     await get().triggerAIMessage({ traceId, threadId, inPortalThread, inSearchWorkflow });
   },
   updatePluginState: async (id, value) => {
-    const { refreshMessages } = get();
+    const { replaceMessages } = get();
 
     // optimistic update
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState: value } });
 
-    await messageService.updateMessagePluginState(id, value);
-    await refreshMessages();
+    const result = await messageService.updateMessagePluginState(id, value, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages);
+    }
   },
 
   updatePluginArguments: async (id, value, replace = false) => {
@@ -336,18 +344,26 @@ export const chatPlugin: StateCreator<
     const message = chatSelectors.getMessageById(id)(get());
     if (!message || !message.tools) return;
 
-    const { internal_toggleMessageLoading, refreshMessages } = get();
+    const { internal_toggleMessageLoading, replaceMessages } = get();
 
     internal_toggleMessageLoading(true, id);
-    await messageService.updateMessage(id, { tools: message.tools });
+    const result = await messageService.updateMessage(
+      id,
+      { tools: message.tools },
+      {
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
+      },
+    );
     internal_toggleMessageLoading(false, id);
 
-    await refreshMessages();
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages);
+    }
   },
 
   internal_callPluginApi: async (id, payload) => {
-    const { internal_updateMessageContent, refreshMessages, internal_togglePluginApiCalling } =
-      get();
+    const { internal_updateMessageContent, internal_togglePluginApiCalling } = get();
     let data: string;
 
     try {
@@ -375,8 +391,10 @@ export const chatPlugin: StateCreator<
 
       // ignore the aborted request error
       if (!err.message.includes('The user aborted a request.')) {
-        await messageService.updateMessageError(id, error as any);
-        await refreshMessages();
+        const result = await messageService.updateMessageError(id, error as any);
+        if (result?.success && result.messages) {
+          get().replaceMessages(result.messages);
+        }
       }
 
       data = '';
@@ -418,7 +436,6 @@ export const chatPlugin: StateCreator<
   invokeMCPTypePlugin: async (id, payload) => {
     const {
       internal_updateMessageContent,
-      refreshMessages,
       internal_togglePluginApiCalling,
       internal_constructToolsCallingContext,
     } = get();
@@ -444,8 +461,10 @@ export const chatPlugin: StateCreator<
 
       // ignore the aborted request error
       if (!err.message.includes('The user aborted a request.')) {
-        await messageService.updateMessageError(id, error as any);
-        await refreshMessages();
+        const result = await messageService.updateMessageError(id, error as any);
+        if (result?.success && result.messages) {
+          get().replaceMessages(result.messages);
+        }
       }
     }
 
@@ -487,11 +506,20 @@ export const chatPlugin: StateCreator<
     return toolNameResolver.resolve(toolCalls, manifests);
   },
   internal_updatePluginError: async (id, error) => {
-    const { refreshMessages } = get();
+    const { replaceMessages } = get();
 
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
-    await messageService.updateMessage(id, { error });
-    await refreshMessages();
+    const result = await messageService.updateMessage(
+      id,
+      { error },
+      {
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
+      },
+    );
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages);
+    }
   },
 
   internal_constructToolsCallingContext: (id: string) => {

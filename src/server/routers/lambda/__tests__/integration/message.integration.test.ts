@@ -72,7 +72,7 @@ describe('Message Router Integration Tests', () => {
     it('should create message with correct sessionId and topicId', async () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
-      const messageId = await caller.createMessage({
+      const result = await caller.createNewMessage({
         content: 'Test message',
         role: 'user',
         sessionId: testSessionId,
@@ -83,11 +83,11 @@ describe('Message Router Integration Tests', () => {
       const [createdMessage] = await serverDB
         .select()
         .from(messages)
-        .where(eq(messages.id, messageId));
+        .where(eq(messages.id, result.id));
 
       expect(createdMessage).toBeDefined();
       expect(createdMessage).toMatchObject({
-        id: messageId,
+        id: result.id,
         sessionId: testSessionId,
         topicId: testTopicId,
         userId: userId,
@@ -111,7 +111,7 @@ describe('Message Router Integration Tests', () => {
         })
         .returning();
 
-      const messageId = await caller.createMessage({
+      const result = await caller.createNewMessage({
         content: 'Test message in thread',
         role: 'user',
         sessionId: testSessionId,
@@ -123,12 +123,12 @@ describe('Message Router Integration Tests', () => {
       const [createdMessage] = await serverDB
         .select()
         .from(messages)
-        .where(eq(messages.id, messageId));
+        .where(eq(messages.id, result.id));
 
       expect(createdMessage).toBeDefined();
       expect(createdMessage.threadId).toBe(thread.id);
       expect(createdMessage).toMatchObject({
-        id: messageId,
+        id: result.id,
         sessionId: testSessionId,
         topicId: testTopicId,
         threadId: thread.id,
@@ -140,7 +140,7 @@ describe('Message Router Integration Tests', () => {
     it('should create message without topicId', async () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
-      const messageId = await caller.createMessage({
+      const result = await caller.createNewMessage({
         content: 'Test message without topic',
         role: 'user',
         sessionId: testSessionId,
@@ -150,7 +150,7 @@ describe('Message Router Integration Tests', () => {
       const [createdMessage] = await serverDB
         .select()
         .from(messages)
-        .where(eq(messages.id, messageId));
+        .where(eq(messages.id, result.id));
 
       expect(createdMessage.topicId).toBeNull();
       expect(createdMessage.sessionId).toBe(testSessionId);
@@ -160,7 +160,7 @@ describe('Message Router Integration Tests', () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
       await expect(
-        caller.createMessage({
+        caller.createNewMessage({
           content: 'Test message',
           role: 'user',
           sessionId: 'non-existent-session',
@@ -192,7 +192,7 @@ describe('Message Router Integration Tests', () => {
 
       // 尝试在 testSessionId 下创建消息，但使用 anotherTopic 的 ID
       await expect(
-        caller.createMessage({
+        caller.createNewMessage({
           content: 'Test message',
           role: 'user',
           sessionId: testSessionId,
@@ -207,13 +207,13 @@ describe('Message Router Integration Tests', () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
       // 创建多个消息
-      const msg1Id = await caller.createMessage({
+      const msg1Result = await caller.createNewMessage({
         content: 'Message 1',
         role: 'user',
         sessionId: testSessionId,
       });
 
-      const msg2Id = await caller.createMessage({
+      const msg2Result = await caller.createNewMessage({
         content: 'Message 2',
         role: 'assistant',
         sessionId: testSessionId,
@@ -228,7 +228,7 @@ describe('Message Router Integration Tests', () => {
         })
         .returning();
 
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Message in another session',
         role: 'user',
         sessionId: anotherSession.id,
@@ -240,15 +240,15 @@ describe('Message Router Integration Tests', () => {
       });
 
       expect(result).toHaveLength(2);
-      expect(result.map((m) => m.id)).toContain(msg1Id);
-      expect(result.map((m) => m.id)).toContain(msg2Id);
+      expect(result.map((m) => m.id)).toContain(msg1Result.id);
+      expect(result.map((m) => m.id)).toContain(msg2Result.id);
     });
 
     it('should return messages filtered by topicId', async () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
       // 在 topic 中创建消息
-      const msgInTopicId = await caller.createMessage({
+      const msgInTopicResult = await caller.createNewMessage({
         content: 'Message in topic',
         role: 'user',
         sessionId: testSessionId,
@@ -256,7 +256,7 @@ describe('Message Router Integration Tests', () => {
       });
 
       // 在 session 中创建消息（不在 topic 中）
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Message without topic',
         role: 'user',
         sessionId: testSessionId,
@@ -269,7 +269,7 @@ describe('Message Router Integration Tests', () => {
       });
 
       expect(result).toHaveLength(1);
-      expect(result[0].id).toBe(msgInTopicId);
+      expect(result[0].id).toBe(msgInTopicResult.id);
       expect(result[0].topicId).toBe(testTopicId);
     });
 
@@ -278,7 +278,7 @@ describe('Message Router Integration Tests', () => {
 
       // 创建多个消息
       for (let i = 0; i < 5; i++) {
-        await caller.createMessage({
+        await caller.createNewMessage({
           content: `Pagination test message ${i}`,
           role: 'user',
           sessionId: testSessionId,
@@ -323,20 +323,20 @@ describe('Message Router Integration Tests', () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
       // 创建消息
-      const msg1Id = await caller.createMessage({
+      const msg1Result = await caller.createNewMessage({
         content: 'Message 1',
         role: 'user',
         sessionId: testSessionId,
       });
 
-      const msg2Id = await caller.createMessage({
+      const msg2Result = await caller.createNewMessage({
         content: 'Message 2',
         role: 'user',
         sessionId: testSessionId,
       });
 
       // 删除消息
-      await caller.removeMessages({ ids: [msg1Id, msg2Id] });
+      await caller.removeMessages({ ids: [msg1Result.id, msg2Result.id] });
 
       // 验证消息已删除
       const remainingMessages = await serverDB
@@ -353,13 +353,13 @@ describe('Message Router Integration Tests', () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
       // 创建多个消息
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Message 1',
         role: 'user',
         sessionId: testSessionId,
       });
 
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Message 2',
         role: 'assistant',
         sessionId: testSessionId,
@@ -383,7 +383,7 @@ describe('Message Router Integration Tests', () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
       // 在 topic 中创建消息
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Message in topic',
         role: 'user',
         sessionId: testSessionId,
@@ -391,7 +391,7 @@ describe('Message Router Integration Tests', () => {
       });
 
       // 在 session 中创建消息（不在 topic 中）
-      const msgOutsideTopicId = await caller.createMessage({
+      const msgOutsideTopicResult = await caller.createNewMessage({
         content: 'Message outside topic',
         role: 'user',
         sessionId: testSessionId,
@@ -410,7 +410,7 @@ describe('Message Router Integration Tests', () => {
         .where(eq(messages.sessionId, testSessionId));
 
       expect(remainingMessages).toHaveLength(1);
-      expect(remainingMessages[0].id).toBe(msgOutsideTopicId);
+      expect(remainingMessages[0].id).toBe(msgOutsideTopicResult.id);
     });
   });
 
@@ -418,14 +418,14 @@ describe('Message Router Integration Tests', () => {
     it('should update message content', async () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
-      const messageId = await caller.createMessage({
+      const result = await caller.createNewMessage({
         content: 'Original content',
         role: 'user',
         sessionId: testSessionId,
       });
 
       await caller.update({
-        id: messageId,
+        id: result.id,
         value: {
           content: 'Updated content',
         },
@@ -434,7 +434,7 @@ describe('Message Router Integration Tests', () => {
       const [updatedMessage] = await serverDB
         .select()
         .from(messages)
-        .where(eq(messages.id, messageId));
+        .where(eq(messages.id, result.id));
 
       expect(updatedMessage.content).toBe('Updated content');
     });
@@ -444,13 +444,13 @@ describe('Message Router Integration Tests', () => {
     it('should search messages by keyword', async () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'This is a test message about TypeScript',
         role: 'user',
         sessionId: testSessionId,
       });
 
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Another message about JavaScript',
         role: 'user',
         sessionId: testSessionId,
@@ -470,13 +470,13 @@ describe('Message Router Integration Tests', () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
       // 创建消息
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Message 1',
         role: 'user',
         sessionId: testSessionId,
       });
 
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Message 2',
         role: 'assistant',
         sessionId: testSessionId,
@@ -490,7 +490,7 @@ describe('Message Router Integration Tests', () => {
     it('should count words', async () => {
       const caller = messageRouter.createCaller(createTestContext(userId));
 
-      await caller.createMessage({
+      await caller.createNewMessage({
         content: 'Hello world',
         role: 'user',
         sessionId: testSessionId,

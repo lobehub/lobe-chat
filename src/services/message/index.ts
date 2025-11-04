@@ -2,8 +2,8 @@
 import {
   ChatMessageError,
   ChatMessagePluginError,
-  ChatTranslate,
   ChatTTS,
+  ChatTranslate,
   CreateMessageParams,
   CreateMessageResult,
   ModelRankItem,
@@ -20,12 +20,9 @@ import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
 export class MessageService {
-  createMessage = async ({ sessionId, ...params }: CreateMessageParams): Promise<string> => {
-    return lambdaClient.message.createMessage.mutate({
-      ...params,
-      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
-    });
-  };
+  private get useGroup() {
+    return labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+  }
 
   createNewMessage = async ({
     sessionId,
@@ -42,27 +39,21 @@ export class MessageService {
     topicId?: string,
     groupId?: string,
   ): Promise<UIChatMessage[]> => {
-    // Get user lab preference for message grouping
-    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
-      useGroup,
+      useGroup: this.useGroup,
     });
 
     return data as unknown as UIChatMessage[];
   };
 
   getGroupMessages = async (groupId: string, topicId?: string): Promise<UIChatMessage[]> => {
-    // Get user lab preference for message grouping
-    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       topicId,
-      useGroup,
+      useGroup: this.useGroup,
     });
     return data as unknown as UIChatMessage[];
   };
@@ -109,6 +100,7 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
+      useGroup: this.useGroup,
       value,
     });
   };
@@ -121,24 +113,70 @@ export class MessageService {
     return lambdaClient.message.updateTTS.mutate({ id, value: tts });
   };
 
-  updateMessagePluginState = async (id: string, value: Record<string, any>) => {
-    return lambdaClient.message.updatePluginState.mutate({ id, value });
+  updateMessagePluginState = async (
+    id: string,
+    value: Record<string, any>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updatePluginState.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value,
+    });
   };
 
-  updateMessagePluginError = async (id: string, error: ChatMessagePluginError | null) => {
-    return lambdaClient.message.updatePluginError.mutate({ id, value: error as any });
+  updateMessagePluginError = async (
+    id: string,
+    error: ChatMessagePluginError | null,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updatePluginError.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value: error as any,
+    });
   };
 
-  updateMessageRAG = async (id: string, data: UpdateMessageRAGParams): Promise<void> => {
-    return lambdaClient.message.updateMessageRAG.mutate({ id, value: data });
+  updateMessageRAG = async (
+    id: string,
+    data: UpdateMessageRAGParams,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updateMessageRAG.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value: data,
+    });
   };
 
-  removeMessage = async (id: string) => {
-    return lambdaClient.message.removeMessage.mutate({ id });
+  removeMessage = async (
+    id: string,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessage.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+    });
   };
 
-  removeMessages = async (ids: string[]) => {
-    return lambdaClient.message.removeMessages.mutate({ ids });
+  removeMessages = async (
+    ids: string[],
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessages.mutate({
+      ids,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+    });
   };
 
   removeMessagesByAssistant = async (sessionId: string, topicId?: string) => {
@@ -161,16 +199,6 @@ export class MessageService {
 
   private toDbSessionId = (sessionId: string | undefined) => {
     return sessionId === INBOX_SESSION_ID ? null : sessionId;
-  };
-
-  hasMessages = async (): Promise<boolean> => {
-    const number = await this.countMessages();
-    return number > 0;
-  };
-
-  messageCountToCheckTrace = async (): Promise<boolean> => {
-    const number = await this.countMessages();
-    return number >= 4;
   };
 }
 
