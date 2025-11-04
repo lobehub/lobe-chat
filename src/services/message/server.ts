@@ -3,6 +3,8 @@ import { ChatTranslate, UIChatMessage } from '@lobechat/types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 
 import { IMessageService } from './type';
 
@@ -21,36 +23,30 @@ export class ServerService implements IMessageService {
     });
   };
 
-  batchCreateMessages: IMessageService['batchCreateMessages'] = async (messages) => {
-    return lambdaClient.message.batchCreateMessages.mutate(messages);
-  };
-
   getMessages: IMessageService['getMessages'] = async (sessionId, topicId, groupId) => {
+    // Get user lab preference for message grouping
+    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
+      useGroup,
     });
 
     return data as unknown as UIChatMessage[];
   };
 
   getGroupMessages: IMessageService['getGroupMessages'] = async (groupId, topicId) => {
+    // Get user lab preference for message grouping
+    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       topicId,
+      useGroup,
     });
     return data as unknown as UIChatMessage[];
-  };
-
-  getAllMessages: IMessageService['getAllMessages'] = async () => {
-    return lambdaClient.message.getAllMessages.query();
-  };
-
-  getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
-    return lambdaClient.message.getAllMessagesInSession.query({
-      sessionId: this.toDbSessionId(sessionId),
-    });
   };
 
   countMessages: IMessageService['countMessages'] = async (params) => {
@@ -81,8 +77,13 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
   };
 
-  updateMessage: IMessageService['updateMessage'] = async (id, value) => {
-    return lambdaClient.message.update.mutate({ id, value });
+  updateMessage: IMessageService['updateMessage'] = async (id, value, options) => {
+    return lambdaClient.message.update.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      value,
+    });
   };
 
   updateMessageTranslate: IMessageService['updateMessageTranslate'] = async (id, translate) => {

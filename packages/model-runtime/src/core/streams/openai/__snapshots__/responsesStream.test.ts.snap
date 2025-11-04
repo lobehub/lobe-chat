@@ -145,25 +145,6 @@ exports[`OpenAIResponsesStream > Reasoning > summary 1`] = `
 ]
 `;
 
-exports[`OpenAIResponsesStream > should handle chunk errors in catch block 1`] = `
-[
-  "id: resp_error_catch
-",
-  "event: data
-",
-  "data: "in_progress"
-
-",
-  "id: undefined
-",
-  "event: reasoning
-",
-  "data: undefined
-
-",
-]
-`;
-
 exports[`OpenAIResponsesStream > should handle chunks with undefined values gracefully 1`] = `
 [
   "id: resp_undefined_vals
@@ -541,25 +522,6 @@ exports[`OpenAIResponsesStream > should handle response.reasoning_summary_text.d
   "event: reasoning
 ",
   "data: " the problem..."
-
-",
-]
-`;
-
-exports[`OpenAIResponsesStream > should handle stream chunk transformation error with null access 1`] = `
-[
-  "id: resp_error_test
-",
-  "event: data
-",
-  "data: "in_progress"
-
-",
-  "id: null
-",
-  "event: text
-",
-  "data: "test"
 
 ",
 ]

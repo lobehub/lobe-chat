@@ -5,11 +5,11 @@ import {
   ChatTranslate,
   CreateMessageParams,
   CreateMessageResult,
-  DBMessageItem,
   ModelRankItem,
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
+  UpdateMessageResult,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 
@@ -18,12 +18,9 @@ import type { HeatmapsProps } from '@lobehub/charts';
 export interface IMessageService {
   createMessage(data: CreateMessageParams): Promise<string>;
   createNewMessage(data: CreateMessageParams): Promise<CreateMessageResult>;
-  batchCreateMessages(messages: DBMessageItem[]): Promise<any>;
 
   getMessages(sessionId: string, topicId?: string, groupId?: string): Promise<UIChatMessage[]>;
   getGroupMessages(groupId: string, topicId?: string): Promise<UIChatMessage[]>;
-  getAllMessages(): Promise<UIChatMessage[]>;
-  getAllMessagesInSession(sessionId: string): Promise<UIChatMessage[]>;
   countMessages(params?: {
     endDate?: string;
     range?: [string, string];
@@ -37,7 +34,11 @@ export interface IMessageService {
   rankModels(): Promise<ModelRankItem[]>;
   getHeatmaps(): Promise<HeatmapsProps['data']>;
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
-  updateMessage(id: string, message: Partial<UpdateMessageParams>): Promise<any>;
+  updateMessage(
+    id: string,
+    message: Partial<UpdateMessageParams>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult>;
   updateMessageTTS(id: string, tts: Partial<ChatTTS> | false): Promise<any>;
   updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false): Promise<any>;
   updateMessagePluginState(id: string, value: Record<string, any>): Promise<any>;

@@ -1,7 +1,6 @@
 import Auth0 from './auth0';
 import Authelia from './authelia';
 import Authentik from './authentik';
-import AzureAD from './azure-ad';
 import Casdoor from './casdoor';
 import CloudflareZeroTrust from './cloudflare-zero-trust';
 import Cognito from './cognito';
@@ -19,7 +18,6 @@ import Zitadel from './zitadel';
 export const ssoProviders = [
   Auth0,
   Authentik,
-  AzureAD,
   GenericOIDC,
   Github,
   Zitadel,

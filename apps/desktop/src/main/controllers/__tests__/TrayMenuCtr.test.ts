@@ -106,7 +106,7 @@ describe('TrayMenuCtr', () => {
       expect(mockGetMainTray).not.toHaveBeenCalled();
       expect(mockDisplayBalloon).not.toHaveBeenCalled();
       expect(result).toEqual({
-        error: '托盘通知仅在 Windows 平台支持',
+        error: 'Tray notifications are only supported on Windows platform',
         success: false,
       });
     });
@@ -126,7 +126,7 @@ describe('TrayMenuCtr', () => {
       expect(mockGetMainTray).toHaveBeenCalled();
       expect(mockDisplayBalloon).not.toHaveBeenCalled();
       expect(result).toEqual({ 
-        error: '托盘通知仅在 Windows 平台支持',
+        error: 'Tray notifications are only supported on Windows platform',
         success: false
       });
     });
@@ -188,7 +188,7 @@ describe('TrayMenuCtr', () => {
       const result = await trayMenuCtr.updateTrayIcon(options);
 
       expect(result).toEqual({
-        error: '托盘功能仅在 Windows 平台支持',
+        error: 'Tray functionality is only supported on Windows platform',
         success: false,
       });
     });
@@ -226,7 +226,7 @@ describe('TrayMenuCtr', () => {
       const result = await trayMenuCtr.updateTrayTooltip(options);
 
       expect(result).toEqual({
-        error: '托盘功能仅在 Windows 平台支持',
+        error: 'Tray functionality is only supported on Windows platform',
         success: false,
       });
     });
@@ -248,7 +248,7 @@ describe('TrayMenuCtr', () => {
 
       expect(mockUpdateTooltip).not.toHaveBeenCalled();
       expect(result).toEqual({
-        error: '托盘功能仅在 Windows 平台支持',
+        error: 'Tray functionality is only supported on Windows platform',
         success: false,
       });
     });

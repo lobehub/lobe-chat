@@ -24,9 +24,9 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -53,9 +53,9 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       # 主要逻辑：确定构建版本号
@@ -94,9 +94,9 @@ jobs:
           run_install: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
@@ -181,7 +181,7 @@ jobs:
 
       # 上传构建产物 (工作流处理重命名，不依赖 electron-builder 钩子)
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-${{ matrix.os }}
           path: |
@@ -208,9 +208,9 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -220,7 +220,7 @@ jobs:
 
       # 下载所有平台的构建产物
       - name: Download artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: release
           pattern: release-*
@@ -246,7 +246,7 @@ jobs:
 
       # 上传合并后的构建产物
       - name: Upload artifacts with merged macOS files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: merged-release
           path: release/
@@ -262,7 +262,7 @@ jobs:
     steps:
       # 下载合并后的构建产物
       - name: Download merged artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: merged-release
           path: release

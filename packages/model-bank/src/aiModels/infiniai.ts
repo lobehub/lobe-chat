@@ -8,6 +8,27 @@ const infiniaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 200_000,
+    description:
+      'MiniMax-M2 是一款专为编码与智能体工作流优化的专家混合（MoE）语言模型，具有约 230B 总参数与约 10B 活跃参数。它在保持强通用智能的同时，针对多文件编辑、代码-运行-修复闭环、测试校验修复等开发者场景进行深度增强，在终端、IDE 与 CI 等真实环境中表现稳定、高效。',
+    displayName: 'MiniMax M2',
+    enabled: true,
+    id: 'minimax-m2',
+    maxOutput: 200_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 131_072,
     description: 'GLM-4.6 是智谱AI推出的最新大语言模型，具备更强的推理和生成能力。',
     displayName: 'GLM-4.6',

@@ -82,6 +82,7 @@ const McpItem = memo<DiscoverMcpItem>(
     return (
       <Block
         clickable
+        data-testid="mcp-item"
         height={'100%'}
         onClick={() => {
           navigate(link);

@@ -191,6 +191,9 @@
   "Kwai-Kolors/Kolors": {
     "description": "Kolors, sviluppato dal team Kolors di Kuaishou, è un modello di generazione di immagini da testo su larga scala basato su diffusione latente. Addestrato su miliardi di coppie testo-immagine, mostra vantaggi significativi nella qualità visiva, accuratezza semantica complessa e resa dei caratteri in cinese e inglese. Supporta input in entrambe le lingue e si distingue nella comprensione e generazione di contenuti specifici in cinese."
   },
+  "Kwaipilot/KAT-Dev": {
+    "description": "KAT-Dev (32B) è un modello open source con 32 miliardi di parametri, progettato specificamente per compiti di ingegneria del software. Ha raggiunto un tasso di risoluzione del 62,4% nel benchmark SWE-Bench Verified, classificandosi al quinto posto tra tutti i modelli open source di varie dimensioni. Il modello è stato ottimizzato attraverso più fasi, tra cui addestramento intermedio, fine-tuning supervisionato (SFT) e apprendimento per rinforzo (RL), con l'obiettivo di offrire un supporto potente per attività complesse di programmazione come il completamento del codice, la correzione di bug e la revisione del codice."
+  },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Eccellenti capacità di ragionamento visivo su immagini ad alta risoluzione, adatte per applicazioni di comprensione visiva."
   },
@@ -787,12 +790,6 @@
   },
   "claude-3-5-haiku-latest": {
     "description": "Claude 3.5 Haiku offre risposte rapide, ideale per compiti leggeri."
-  },
-  "claude-3-5-sonnet-20240620": {
-    "description": "Claude 3.5 Sonnet offre capacità superiori a Opus e velocità più elevate rispetto a Sonnet, mantenendo lo stesso prezzo. Sonnet è particolarmente abile in programmazione, scienza dei dati, elaborazione visiva e compiti di agenti."
-  },
-  "claude-3-5-sonnet-20241022": {
-    "description": "Claude 3.5 Sonnet offre capacità superiori a Opus e velocità maggiore rispetto a Sonnet, mantenendo lo stesso prezzo di Sonnet. Sonnet è particolarmente abile nella programmazione, nella scienza dei dati, nell'elaborazione visiva e nei compiti di agenzia."
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet è il modello più recente di Anthropic, con prestazioni all'avanguardia in una vasta gamma di valutazioni, superando i modelli concorrenti e Claude 3.5 Sonnet, dimostrando eccellenza in una vasta gamma di valutazioni, mantenendo al contempo la velocità e i costi dei nostri modelli di livello medio."
@@ -1811,6 +1808,9 @@
   "gpt-5": {
     "description": "Il miglior modello per compiti di codifica e agenti cross-domain. GPT-5 rappresenta un salto in termini di accuratezza, velocità, ragionamento, riconoscimento del contesto, pensiero strutturato e problem solving."
   },
+  "gpt-5-chat": {
+    "description": "GPT-5 Chat è una versione di anteprima ottimizzata per scenari conversazionali. Supporta input di testo e immagini, ma produce solo output testuale, ideale per chatbot e applicazioni di intelligenza artificiale conversazionale."
+  },
   "gpt-5-chat-latest": {
     "description": "Modello GPT-5 utilizzato in ChatGPT. Combina potenti capacità di comprensione e generazione del linguaggio, ideale per applicazioni di interazione conversazionale."
   },
@@ -2401,6 +2401,9 @@
   },
   "minicpm-v": {
     "description": "MiniCPM-V è la nuova generazione di modelli multimodali lanciata da OpenBMB, dotata di eccellenti capacità di riconoscimento OCR e comprensione multimodale, supportando una vasta gamma di scenari applicativi."
+  },
+  "minimax-m2": {
+    "description": "MiniMax M2 è un modello linguistico di grandi dimensioni, efficiente e progettato per flussi di lavoro di codifica e agenti intelligenti."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B è il modello di punta di Mistral per edge computing."
@@ -3211,6 +3214,12 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet è il modello di prossima generazione più veloce di Anthropic. Rispetto a Claude 3 Haiku, Claude 3.7 Sonnet ha migliorato le sue capacità in vari ambiti e ha superato il modello di generazione precedente, Claude 3 Opus, in molti test di intelligenza."
+  },
+  "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
+    "description": "Claude Haiku 4.5 è il modello Haiku più veloce e intelligente di Anthropic, con una velocità fulminea e una notevole capacità di ragionamento esteso."
+  },
+  "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
+    "description": "Claude Sonnet 4.5 è il modello più intelligente mai realizzato da Anthropic fino ad oggi."
   },
   "v0-1.0-md": {
     "description": "Il modello v0-1.0-md è una versione precedente fornita tramite l'API v0"
