@@ -1,11 +1,12 @@
 import { Icon } from '@lobehub/ui';
 import { Empty } from 'antd';
 import { ServerCrash } from 'lucide-react';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
+import { isDesktop } from '@/const/version';
 import { useToolStore } from '@/store/tool';
 
 import SearchLoading from '../../Loading';
@@ -43,6 +44,12 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
     s.resetMCPPluginList,
   ]);
 
+  const itemsToRender = useMemo(() => {
+    if (isDesktop) return allItems;
+
+    return allItems.filter((item) => item.connectionType !== 'local');
+  }, [allItems]);
+
   // 当 keywords 变化时重置列表
   useEffect(() => {
     resetMCPPluginList(keywords);
@@ -54,6 +61,44 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
     q: keywords,
   });
 
+  useEffect(() => {
+    if (isDesktop) return;
+    if (!isMcpListInit) return;
+    if (searchLoading || isLoading) return;
+    if (itemsToRender.length > 0) return;
+    if (allItems.length === 0) return;
+    if (totalCount && allItems.length >= totalCount) return;
+
+    loadMoreMCPPlugins();
+  }, [
+    allItems.length,
+    isDesktop,
+    isLoading,
+    isMcpListInit,
+    itemsToRender.length,
+    loadMoreMCPPlugins,
+    searchLoading,
+    totalCount,
+  ]);
+
+  useEffect(() => {
+    if (isDesktop) return;
+    if (!isMcpListInit) return;
+
+    const hasActiveItem =
+      !!identifier && itemsToRender.some((item) => item.identifier === identifier);
+    const nextIdentifier = itemsToRender[0]?.identifier;
+
+    if (!itemsToRender.length) {
+      if (identifier) setIdentifier(undefined);
+      return;
+    }
+
+    if (!hasActiveItem && nextIdentifier && nextIdentifier !== identifier) {
+      setIdentifier(nextIdentifier);
+    }
+  }, [identifier, isMcpListInit, itemsToRender, setIdentifier]);
+
   if (searchLoading || !isMcpListInit) return <SearchLoading />;
 
   if (error)
@@ -64,7 +109,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
       </Center>
     );
 
-  const isEmpty = allItems.length === 0;
+  const isEmpty = itemsToRender.length === 0;
 
   if (isEmpty)
     return (
@@ -78,7 +123,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
       components={{
         Footer: isLoading ? VirtuosoLoading : undefined,
       }}
-      data={allItems}
+      data={itemsToRender}
       endReached={loadMoreMCPPlugins}
       itemContent={(_, item) => {
         return (
@@ -89,7 +134,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
       }}
       overscan={400}
       style={{ height: '100%', width: '100%' }}
-      totalCount={totalCount || 0}
+      totalCount={isDesktop ? totalCount || 0 : itemsToRender.length}
     />
   );
 });

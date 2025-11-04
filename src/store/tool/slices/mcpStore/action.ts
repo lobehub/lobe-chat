@@ -8,7 +8,7 @@ import { gt, valid } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { CURRENT_VERSION } from '@/const/version';
+import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { MCPErrorData } from '@/libs/mcp/types';
 import { discoverService } from '@/services/discover';
 import { mcpService } from '@/services/mcp';
@@ -206,22 +206,35 @@ export const createMCPPluginStoreSlice: StateCreator<
           install: true,
         });
 
-        // 🎯 检查是否为 HTTP 类型的部署选项
-        const hasHttpDeployment = data.deploymentOptions?.some(
-          (option: any) => option.connection?.url,
-        );
+        const deploymentOptions: any[] = Array.isArray(data.deploymentOptions)
+          ? data.deploymentOptions
+          : [];
 
-        if (hasHttpDeployment) {
+        const httpOption = deploymentOptions.find(
+          (option) => option?.connection?.url && option?.connection?.type === 'http',
+        ) ||
+          deploymentOptions.find(
+            (option) => option?.connection?.url && !option?.connection?.type,
+          );
+
+        const hasNonHttpDeployment = deploymentOptions.some((option) => {
+          const type = option?.connection?.type;
+          if (!type && option?.connection?.url) return false;
+
+          return type && type !== 'http';
+        });
+
+        const shouldUseHttpDeployment = !!httpOption && (!hasNonHttpDeployment || !isDesktop);
+
+        if (shouldUseHttpDeployment && httpOption) {
           // ✅ HTTP 类型：跳过系统依赖检查，直接使用 URL
           log('HTTP MCP detected, skipping system dependency check');
 
-          // 从部署选项中提取 HTTP 连接信息
-          const httpOption = data.deploymentOptions.find((option: any) => option.connection?.url);
           connection = {
-            auth: httpOption.connection.auth || { type: 'none' },
-            headers: httpOption.connection.headers,
+            auth: httpOption.connection?.auth || { type: 'none' },
+            headers: httpOption.connection?.headers,
             type: 'http',
-            url: httpOption.connection.url,
+            url: httpOption.connection?.url,
           };
 
           log('Using HTTP connection: %O', { type: connection.type, url: connection.url });
