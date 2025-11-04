@@ -82,8 +82,15 @@ const Reasoning = memo<ReasoningProps>(({ content = '', duration, isGenerating =
   });
 
   return (
-    <Flexbox>
-      <Flexbox align="center" horizontal onPress={handleToggle}>
+    <Flexbox gap={8}>
+      <Flexbox
+        align="center"
+        gap={4}
+        horizontal
+        justify={'space-between'}
+        onPress={handleToggle}
+        paddingBlock={4}
+      >
         <Text type={'secondary'}>
           {isGenerating
             ? t('reasoning.thinking')
