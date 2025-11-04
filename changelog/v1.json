@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix oidc auth timeout issue on the desktop."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.21"
+  },
+  {
+    "children": {
       "improvements": ["Improve oidc layout style."]
     },
     "date": "2025-11-03",
