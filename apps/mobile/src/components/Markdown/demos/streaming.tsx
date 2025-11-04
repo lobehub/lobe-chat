@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 const fullContent = `# Streaming Markdown Demo
 
-This demonstrates how markdown content can be streamed character by character.
+This demonstrates how markdown content can be streamed character by character. 💁👌🎍😍
 
 ## Features
 
