@@ -24,18 +24,12 @@ const formatDuration = (ms?: number) => {
 
 const useStyles = createStyles(({ token }) => ({
   content: {
-    borderColor: token.colorBorder,
-    borderLeftWidth: 3,
+    borderColor: token.colorBorderSecondary,
 
     overflow: 'hidden',
-    paddingLeft: 16,
   },
   header: {
     borderRadius: 8,
-  },
-  shinyText: {
-    // 移动端简化动画效果，只显示普通文本
-    opacity: 0.6,
   },
 }));
 
@@ -90,10 +84,7 @@ const Reasoning = memo<ReasoningProps>(({ content = '', duration, isGenerating =
   return (
     <Flexbox>
       <Flexbox align="center" horizontal onPress={handleToggle}>
-        <Text
-          color={isGenerating ? undefined : theme.colorTextTertiary}
-          style={isGenerating && styles.shinyText}
-        >
+        <Text type={'secondary'}>
           {isGenerating
             ? t('reasoning.thinking')
             : duration
@@ -108,7 +99,13 @@ const Reasoning = memo<ReasoningProps>(({ content = '', duration, isGenerating =
       {showDetail && content && (
         <Animated.View style={contentStyle}>
           <Animated.View style={styles.content}>
-            <Markdown animated={isGenerating} style={{ opacity: 0.5 }}>
+            <Markdown
+              animated={isGenerating}
+              fontSize={14}
+              headerMultiple={0.2}
+              marginMultiple={0.5}
+              style={{ opacity: 0.5 }}
+            >
               {content}
             </Markdown>
           </Animated.View>
