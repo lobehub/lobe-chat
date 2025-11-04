@@ -12,7 +12,8 @@
     "notNow": "Şimdi değil",
     "regenerate": "Yeniden Oluştur",
     "retry": "Tekrar Dene",
-    "save": "Kaydet"
+    "save": "Kaydet",
+    "saveImage": "Resmi Kaydet"
   },
   "and": "ve",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Lütfen arama anahtar kelimesini girin"
   },
   "defaultSession": "Özel Asistan",
+  "image": {
+    "permissionDenied": "Resmi kaydetmek için albüm erişim izni gerekli",
+    "permissionRequest": "Lütfen ayarlardan albüm erişimine izin verin",
+    "saveFailed": "Kaydetme başarısız oldu, lütfen tekrar deneyin",
+    "saveSuccess": "Resim albüme kaydedildi"
+  },
   "navigation": {
     "goToHomeScreen": "Ana sayfaya dön"
   },

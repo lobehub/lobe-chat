@@ -12,7 +12,8 @@
     "notNow": "Niet nu",
     "regenerate": "Opnieuw genereren",
     "retry": "Opnieuw proberen",
-    "save": "Opslaan"
+    "save": "Opslaan",
+    "saveImage": "Afbeelding opslaan"
   },
   "and": "en",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Voer een zoekterm in"
   },
   "defaultSession": "Aangepaste assistent",
+  "image": {
+    "permissionDenied": "Toegang tot het album is vereist om de afbeelding op te slaan",
+    "permissionRequest": "Sta toegang tot het album toe in de instellingen",
+    "saveFailed": "Opslaan mislukt, probeer het opnieuw",
+    "saveSuccess": "Afbeelding is opgeslagen in het album"
+  },
   "navigation": {
     "goToHomeScreen": "Ga naar startscherm"
   },

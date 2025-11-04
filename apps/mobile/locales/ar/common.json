@@ -12,7 +12,8 @@
     "notNow": "ليس الآن",
     "regenerate": "إعادة التوليد",
     "retry": "إعادة المحاولة",
-    "save": "حفظ"
+    "save": "حفظ",
+    "saveImage": "حفظ الصورة"
   },
   "and": "و",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "يرجى إدخال كلمات البحث"
   },
   "defaultSession": "مساعد مخصص",
+  "image": {
+    "permissionDenied": "يتطلب إذن الوصول إلى الألبوم لحفظ الصورة",
+    "permissionRequest": "يرجى السماح بالوصول إلى الألبوم من الإعدادات",
+    "saveFailed": "فشل الحفظ، يرجى المحاولة مرة أخرى",
+    "saveSuccess": "تم حفظ الصورة في الألبوم"
+  },
   "navigation": {
     "goToHomeScreen": "العودة إلى الصفحة الرئيسية"
   },

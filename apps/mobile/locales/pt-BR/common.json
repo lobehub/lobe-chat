@@ -12,7 +12,8 @@
     "notNow": "Agora não",
     "regenerate": "Regenerar",
     "retry": "Tentar novamente",
-    "save": "Salvar"
+    "save": "Salvar",
+    "saveImage": "Salvar imagem"
   },
   "and": "e",
   "assistant": {
@@ -25,6 +26,12 @@
     "searchPlaceholder": "Digite palavras-chave para pesquisar"
   },
   "defaultSession": "Assistente personalizado",
+  "image": {
+    "permissionDenied": "Permissão para acessar o álbum é necessária para salvar a imagem",
+    "permissionRequest": "Por favor, permita o acesso ao álbum nas configurações",
+    "saveFailed": "Falha ao salvar, tente novamente",
+    "saveSuccess": "Imagem salva no álbum"
+  },
   "navigation": {
     "goToHomeScreen": "Voltar para a tela inicial"
   },
