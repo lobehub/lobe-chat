@@ -271,9 +271,16 @@ describe('ChatPluginAction', () => {
       const pluginPayload = { apiName: 'testApi', arguments: { key: 'value' } };
       const messageId = 'message-id';
       const error = new Error('API call failed');
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
+
+      // Mock the service to return messages
+      (messageService.updateMessageError as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
 
       const storeState = useChatStore.getState();
-      vi.spyOn(storeState, 'refreshMessages');
+      const replaceMessagesSpy = vi.spyOn(storeState, 'replaceMessages');
       vi.spyOn(storeState, 'triggerAIMessage').mockResolvedValue(undefined);
       vi.spyOn(storeState, 'internal_togglePluginApiCalling').mockReturnValue(undefined);
 
@@ -291,7 +298,7 @@ describe('ChatPluginAction', () => {
       );
       expect(chatService.runPluginApi).toHaveBeenCalledWith(pluginPayload, { trace: {} });
       expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error);
-      expect(storeState.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
       expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         false,
         'message-id',
@@ -727,10 +734,19 @@ describe('ChatPluginAction', () => {
   describe('invokeStandaloneTypePlugin', () => {
     it('should update message with error and refresh messages if plugin settings are invalid', async () => {
       const messageId = 'message-id';
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
 
       const payload = {
         identifier: 'pluginName',
       } as ChatToolPayload;
+
+      // Mock the service to return messages
+      (messageService.updateMessageError as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.fn();
 
       act(() => {
         useToolStore.setState({
@@ -739,7 +755,7 @@ describe('ChatPluginAction', () => {
             .mockResolvedValue({ valid: false, errors: ['Invalid setting'] }),
         });
 
-        useChatStore.setState({ refreshMessages: vi.fn(), invokeStandaloneTypePlugin });
+        useChatStore.setState({ replaceMessages: replaceMessagesSpy, invokeStandaloneTypePlugin });
       });
 
       const { result } = renderHook(() => useChatStore());
@@ -759,7 +775,7 @@ describe('ChatPluginAction', () => {
         type: 'PluginSettingsInvalid',
       });
 
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
   });
 
@@ -938,13 +954,22 @@ describe('ChatPluginAction', () => {
         arguments: '{}',
       };
       const error = new Error('API call failed');
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
+
+      // Mock the service to return messages
+      (messageService.updateMessageError as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
 
       vi.spyOn(chatService, 'runPluginApi').mockRejectedValue(error);
+
+      const replaceMessagesSpy = vi.fn();
 
       act(() => {
         useChatStore.setState({
           internal_togglePluginApiCalling: vi.fn(),
-          refreshMessages: vi.fn(),
+          replaceMessages: replaceMessagesSpy,
         });
       });
 
@@ -955,7 +980,7 @@ describe('ChatPluginAction', () => {
       });
 
       expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error);
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
   });
 
@@ -1061,10 +1086,19 @@ describe('ChatPluginAction', () => {
     it('should update plugin error and refresh messages', async () => {
       const messageId = 'message-id';
       const error = { message: 'Plugin error' } as any;
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
+
+      // Mock the service to return messages
+      (messageService.updateMessage as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.fn();
 
       act(() => {
         useChatStore.setState({
-          refreshMessages: vi.fn(),
+          replaceMessages: replaceMessagesSpy,
         });
       });
 
@@ -1074,8 +1108,12 @@ describe('ChatPluginAction', () => {
         await result.current.internal_updatePluginError(messageId, error);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { error });
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(messageService.updateMessage).toHaveBeenCalledWith(
+        messageId,
+        { error },
+        { sessionId: 'inbox', topicId: null },
+      );
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
   });
 

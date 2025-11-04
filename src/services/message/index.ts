@@ -20,6 +20,10 @@ import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
 export class MessageService {
+  private get useGroup() {
+    return labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+  }
+
   createNewMessage = async ({
     sessionId,
     ...params
@@ -35,27 +39,21 @@ export class MessageService {
     topicId?: string,
     groupId?: string,
   ): Promise<UIChatMessage[]> => {
-    // Get user lab preference for message grouping
-    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
-      useGroup,
+      useGroup: this.useGroup,
     });
 
     return data as unknown as UIChatMessage[];
   };
 
   getGroupMessages = async (groupId: string, topicId?: string): Promise<UIChatMessage[]> => {
-    // Get user lab preference for message grouping
-    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       topicId,
-      useGroup,
+      useGroup: this.useGroup,
     });
     return data as unknown as UIChatMessage[];
   };
@@ -98,14 +96,11 @@ export class MessageService {
     value: Partial<UpdateMessageParams>,
     options?: { sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
-    // Get user lab preference for message grouping
-    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-
     return lambdaClient.message.update.mutate({
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup,
+      useGroup: this.useGroup,
       value,
     });
   };
@@ -123,28 +118,53 @@ export class MessageService {
     value: Record<string, any>,
     options?: { sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
-    // Get user lab preference for message grouping
-    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-
     return lambdaClient.message.updatePluginState.mutate({
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup,
+      useGroup: this.useGroup,
       value,
     });
   };
 
-  updateMessagePluginError = async (id: string, error: ChatMessagePluginError | null) => {
-    return lambdaClient.message.updatePluginError.mutate({ id, value: error as any });
+  updateMessagePluginError = async (
+    id: string,
+    error: ChatMessagePluginError | null,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updatePluginError.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value: error as any,
+    });
   };
 
-  updateMessageRAG = async (id: string, data: UpdateMessageRAGParams): Promise<void> => {
-    return lambdaClient.message.updateMessageRAG.mutate({ id, value: data });
+  updateMessageRAG = async (
+    id: string,
+    data: UpdateMessageRAGParams,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updateMessageRAG.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value: data,
+    });
   };
 
-  removeMessage = async (id: string) => {
-    return lambdaClient.message.removeMessage.mutate({ id });
+  removeMessage = async (
+    id: string,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessage.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+    });
   };
 
   removeMessages = async (ids: string[]) => {

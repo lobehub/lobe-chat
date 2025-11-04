@@ -100,9 +100,32 @@ export const messageRouter = router({
   }),
 
   removeMessage: messageProcedure
-    .input(z.object({ id: z.string() }))
+    .input(
+      z.object({
+        id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessage(input.id);
+      await ctx.messageModel.deleteMessage(input.id);
+
+      // If sessionId or topicId is provided, return the full message list
+      if (input.sessionId !== undefined || input.topicId !== undefined) {
+        const messageList = await ctx.messageModel.query(
+          {
+            sessionId: input.sessionId,
+            topicId: input.topicId,
+          },
+          {
+            groupAssistantMessages: input.useGroup ?? false,
+            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
+          },
+        );
+        return { messages: messageList, success: true };
+      }
+      return { success: true };
     }),
 
   removeMessageQuery: messageProcedure
@@ -181,9 +204,31 @@ export const messageRouter = router({
     }),
 
   updateMessageRAG: messageProcedure
-    .input(UpdateMessageRAGParamsSchema)
+    .input(
+      UpdateMessageRAGParamsSchema.extend({
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       await ctx.messageModel.updateMessageRAG(input.id, input.value);
+
+      // If sessionId or topicId is provided, return the full message list
+      if (input.sessionId !== undefined || input.topicId !== undefined) {
+        const messageList = await ctx.messageModel.query(
+          {
+            sessionId: input.sessionId,
+            topicId: input.topicId,
+          },
+          {
+            groupAssistantMessages: input.useGroup ?? false,
+            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
+          },
+        );
+        return { messages: messageList, success: true };
+      }
+      return { success: true };
     }),
 
   updateMetadata: messageProcedure
@@ -201,11 +246,30 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough().nullable(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
+      // If sessionId or topicId is provided, we need to return the full message list
+      if (input.sessionId !== undefined || input.topicId !== undefined) {
+        await ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
+        const messageList = await ctx.messageModel.query(
+          {
+            sessionId: input.sessionId,
+            topicId: input.topicId,
+          },
+          {
+            groupAssistantMessages: input.useGroup ?? false,
+            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
+          },
+        );
+        return { messages: messageList, success: true };
+      }
+      await ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
+      return { success: true };
     }),
 
   updatePluginState: messageProcedure

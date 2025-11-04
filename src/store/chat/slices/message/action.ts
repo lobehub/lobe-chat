@@ -355,10 +355,13 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessageRAG: async (id, data) => {
-    const { refreshMessages } = get();
-
-    await messageService.updateMessageRAG(id, data);
-    await refreshMessages();
+    const result = await messageService.updateMessageRAG(id, data, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
 
   // the internal process method of the AI message
@@ -392,8 +395,13 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessagePluginError: async (id, error) => {
-    await messageService.updateMessagePluginError(id, error);
-    await get().refreshMessages();
+    const result = await messageService.updateMessagePluginError(id, error, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
 
   internal_updateMessageContent: async (id, content, extra) => {
@@ -523,8 +531,13 @@ export const chatMessage: StateCreator<
 
   internal_deleteMessage: async (id: string) => {
     get().internal_dispatchMessage({ type: 'deleteMessage', id });
-    await messageService.removeMessage(id);
-    await get().refreshMessages();
+    const result = await messageService.removeMessage(id, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
   internal_traceMessage: async (id, payload) => {
     // tracing the diff of update
