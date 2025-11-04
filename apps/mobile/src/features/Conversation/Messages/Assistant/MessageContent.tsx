@@ -4,6 +4,7 @@ import { Flexbox } from '@lobehub/ui-rn';
 import { ReactNode, memo } from 'react';
 
 import { DefaultMessage } from '../Default';
+import FileListViewer from '../User/FileListViewer';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import VideoFileListViewer from '../User/VideoFileListViewer';
 
@@ -26,6 +27,7 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
     content,
     imageList,
     videoList,
+    fileList,
     isGenerating,
     editableContent,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,6 +41,7 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
     // 功能开关
     const showImageItems = !!imageList && imageList.length > 0;
     const showVideoItems = !!videoList && videoList.length > 0;
+    const showFileItems = !!fileList && fileList.length > 0;
 
     // TODO: 待实现功能
     // const showSearch = !!search && !!search.citations?.length;
@@ -72,6 +75,9 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
 
         {/* 视频列表 - 复用 User 的 VideoFileListViewer */}
         {showVideoItems && <VideoFileListViewer items={videoList} />}
+
+        {/* 文件列表 - 复用 User 的 FileListViewer */}
+        {showFileItems && <FileListViewer items={fileList} />}
 
         {/* TODO: 添加工具调用 */}
         {/* {tools && (
