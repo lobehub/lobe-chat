@@ -3,9 +3,10 @@ import { Cell, Empty, Flexbox, PageContainer, Toast } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Check } from 'lucide-react-native';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { loading as loadingService } from '@/libs/loading';
 import { useSessionStore } from '@/store/session';
 import { sessionGroupSelectors } from '@/store/session/selectors';
 
@@ -19,7 +20,7 @@ export default function GroupSelectPage() {
     isPinned?: string;
     sessionId: string;
   }>();
-  const [loading, setLoading] = useState(false);
+
   const sessionGroupItems = useSessionStore(sessionGroupSelectors.sessionGroupItems);
   const [updateSessionGroupId, pinSession] = useSessionStore((s) => [
     s.updateSessionGroupId,
@@ -46,27 +47,28 @@ export default function GroupSelectPage() {
 
   const handleSelectGroup = useCallback(
     async (groupId: string) => {
-      setLoading(true);
       try {
-        if (groupId === 'pinned') {
-          // 移动到置顶 = 启用置顶
-          await pinSession(params.sessionId, true);
-          Toast.success(t('pin'));
-        } else {
-          // 如果当前是置顶状态，先取消置顶
-          if (isPinned) {
-            await pinSession(params.sessionId, false);
+        const promise = (async () => {
+          if (groupId === 'pinned') {
+            // 移动到置顶 = 启用置顶
+            await pinSession(params.sessionId, true);
+            Toast.success(t('pin'));
+          } else {
+            // 如果当前是置顶状态，先取消置顶
+            if (isPinned) {
+              await pinSession(params.sessionId, false);
+            }
+            // 移动到目标分组
+            const targetGroupId = groupId === 'default' ? SessionDefaultGroup.Default : groupId;
+            await updateSessionGroupId(params.sessionId, targetGroupId);
+            Toast.success(t('sessionGroup.moveSuccess'));
           }
-          // 移动到目标分组
-          const targetGroupId = groupId === 'default' ? SessionDefaultGroup.Default : groupId;
-          await updateSessionGroupId(params.sessionId, targetGroupId);
-          Toast.success(t('sessionGroup.moveSuccess'));
-        }
-        setLoading(false);
+        })();
+
+        await loadingService.start(promise);
         router.back();
       } catch {
         Toast.error(t('error', { ns: 'common' }));
-        setLoading(false);
       }
     },
     [params.sessionId, isPinned, updateSessionGroupId, pinSession, router, t],
@@ -90,9 +92,7 @@ export default function GroupSelectPage() {
       return (
         <Cell
           borderRadius
-          disabled={loading}
           extra={isSelected ? <Check size={20} /> : undefined}
-          loading={loading}
           onPress={() => handleSelectGroup(item.id)}
           pressEffect
           showArrow={false}
@@ -101,7 +101,7 @@ export default function GroupSelectPage() {
         />
       );
     },
-    [isPinned, currentGroupId, handleSelectGroup, loading],
+    [isPinned, currentGroupId, handleSelectGroup],
   );
 
   return (
@@ -111,7 +111,6 @@ export default function GroupSelectPage() {
           ItemSeparatorComponent={() => <Flexbox height={8} />}
           ListEmptyComponent={<Empty description={t('sessionGroup.emptyGroup')} />}
           contentContainerStyle={{
-            opacity: loading ? 0.5 : 1,
             padding: 16,
           }}
           data={listData}
