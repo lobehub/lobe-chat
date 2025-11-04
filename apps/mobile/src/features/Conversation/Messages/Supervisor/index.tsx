@@ -1,12 +1,13 @@
 import { UIChatMessage } from '@lobechat/types';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
 
 export interface SupervisorMessageProps {
   index: number;
+  isGenerating?: boolean;
+  isLastMessage?: boolean;
   isLoading?: boolean;
-  markdownProps?: any;
   message: UIChatMessage;
   showActions?: boolean;
   showTime?: boolean;
@@ -15,7 +16,15 @@ export interface SupervisorMessageProps {
 }
 
 const SupervisorMessage = memo<SupervisorMessageProps>(
-  ({ message, isLoading, markdownProps, showTime = true, showTitle = true }) => {
+  ({ message, isLoading, isGenerating, isLastMessage, showTime = true, showTitle = true }) => {
+    // Create markdownProps for Supervisor messages (with animated and enableCustomFootnotes)
+    const markdownProps = useMemo(
+      () => ({
+        animated: isLastMessage && isGenerating,
+        enableCustomFootnotes: true,
+      }),
+      [isLastMessage, isGenerating],
+    );
     // Supervisor uses system avatar/title
     const supervisorMeta = {
       avatar: '🤖',

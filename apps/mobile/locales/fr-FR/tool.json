@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Afficher la liste des fichiers",
+      "moveLocalFiles": "Déplacer les fichiers",
+      "readLocalFile": "Lire le contenu du fichier",
+      "renameLocalFile": "Renommer",
+      "searchLocalFiles": "Rechercher des fichiers",
+      "writeLocalFile": "Écrire dans le fichier"
+    },
+    "title": "Système local"
+  },
+  "mobileNotSupported": "Cet outil n'est pas encore disponible sur mobile. Veuillez consulter les détails sur un ordinateur de bureau.",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "Lire le contenu de plusieurs pages",
+      "crawlSinglePage": "Lire le contenu de la page",
+      "search": "Rechercher sur la page"
+    },
+    "crawPages": {
+      "crawling": "Analyse en cours...",
+      "meta": {
+        "crawler": "Robot d'exploration",
+        "words": "Nombre de mots"
+      }
+    },
+    "emptyResult": "Aucun résultat trouvé",
+    "title": "Recherche Web"
+  },
+  "title": "Appel d'outil",
+  "unknown": "Outil inconnu"
+}

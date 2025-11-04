@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "View File List",
+      "moveLocalFiles": "Move Files",
+      "readLocalFile": "Read File Content",
+      "renameLocalFile": "Rename File",
+      "searchLocalFiles": "Search Files",
+      "writeLocalFile": "Write to File"
+    },
+    "title": "Local System"
+  },
+  "mobileNotSupported": "This tool is not supported on mobile devices. Please view the full content on a desktop.",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "Read Multiple Pages",
+      "crawlSinglePage": "Read Page Content",
+      "search": "Search Page"
+    },
+    "crawPages": {
+      "crawling": "Crawling...",
+      "meta": {
+        "crawler": "Crawler",
+        "words": "Word Count"
+      }
+    },
+    "emptyResult": "No search results found",
+    "title": "Web Search"
+  },
+  "title": "Tool Invocation",
+  "unknown": "Unknown tool"
+}

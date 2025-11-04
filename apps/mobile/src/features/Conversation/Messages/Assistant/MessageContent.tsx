@@ -8,12 +8,12 @@ import FileListViewer from '../User/FileListViewer';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import VideoFileListViewer from '../User/VideoFileListViewer';
 import Reasoning from './Reasoning';
+import Tool from './Tool';
 
 // TODO: 待实现以下组件
 // import FileChunks from './FileChunks';
 // import IntentUnderstanding from './IntentUnderstanding';
 // import SearchGrounding from './SearchGrounding';
-// import Tool from './Tool';
 
 export interface AssistantMessageContentProps extends UIChatMessage {
   editableContent: ReactNode;
@@ -84,24 +84,24 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
         {/* 文件列表 - 复用 User 的 FileListViewer */}
         {showFileItems && <FileListViewer items={fileList} />}
 
-        {/* TODO: 添加工具调用 */}
-        {/* {tools && (
+        {/* 工具调用 */}
+        {tools && tools.length > 0 && (
           <Flexbox gap={8}>
             {tools.map((toolCall, index) => (
               <Tool
-                key={toolCall.id}
-                id={toolCall.id}
-                type={toolCall.type}
-                identifier={toolCall.identifier}
                 apiName={toolCall.apiName}
                 arguments={toolCall.arguments}
-                messageId={id}
+                id={toolCall.id}
+                identifier={toolCall.identifier}
                 index={index}
+                key={toolCall.id}
+                messageId={id}
                 payload={toolCall}
+                type={toolCall.type}
               />
             ))}
           </Flexbox>
-        )} */}
+        )}
       </Flexbox>
     );
   },

@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import { ReactNode, memo, useCallback } from 'react';
+import { ReactNode, memo, useCallback, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
 import MessageContent from '@/features/ChatItem/components/MessageContent';
@@ -8,8 +8,11 @@ import { UserMessageContent } from './MessageContent';
 
 export interface UserMessageProps {
   index: number;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  isGenerating?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  isLastMessage?: boolean;
   isLoading?: boolean;
-  markdownProps?: any;
   message: UIChatMessage;
   showActions?: boolean;
   showActionsBar?: boolean;
@@ -19,7 +22,9 @@ export interface UserMessageProps {
 }
 
 const UserMessage = memo<UserMessageProps>(
-  ({ message, isLoading, markdownProps, showTime = false, showTitle = false }) => {
+  ({ message, isLoading, showTime = false, showTitle = false }) => {
+    // Create markdownProps for User messages (no animated)
+    const markdownProps = useMemo(() => ({}), []);
     const renderMessage = useCallback(
       (editableContent: ReactNode) => (
         <UserMessageContent {...message} editableContent={editableContent} />

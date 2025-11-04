@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "ファイル一覧を表示",
+      "moveLocalFiles": "ファイルを移動",
+      "readLocalFile": "ファイル内容を読み取る",
+      "renameLocalFile": "名前を変更",
+      "searchLocalFiles": "ファイルを検索",
+      "writeLocalFile": "ファイルに書き込む"
+    },
+    "title": "ローカルシステム"
+  },
+  "mobileNotSupported": "このツールはモバイル端末ではご利用いただけません。詳細はデスクトップでご確認ください。",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "複数ページの内容を取得",
+      "crawlSinglePage": "ページ内容を取得",
+      "search": "ページを検索"
+    },
+    "crawPages": {
+      "crawling": "クロール中...",
+      "meta": {
+        "crawler": "クローラー",
+        "words": "文字数"
+      }
+    },
+    "emptyResult": "検索結果が見つかりませんでした",
+    "title": "ウェブ検索"
+  },
+  "title": "ツール呼び出し",
+  "unknown": "不明なツール"
+}

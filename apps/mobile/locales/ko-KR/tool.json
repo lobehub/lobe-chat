@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "파일 목록 보기",
+      "moveLocalFiles": "파일 이동",
+      "readLocalFile": "파일 내용 읽기",
+      "renameLocalFile": "이름 바꾸기",
+      "searchLocalFiles": "파일 검색",
+      "writeLocalFile": "파일 쓰기"
+    },
+    "title": "로컬 시스템"
+  },
+  "mobileNotSupported": "이 도구는 모바일에서는 지원되지 않으니, 데스크톱에서 자세한 내용을 확인해 주세요",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "여러 페이지 내용 읽기",
+      "crawlSinglePage": "페이지 내용 읽기",
+      "search": "페이지 검색"
+    },
+    "crawPages": {
+      "crawling": "크롤링 중...",
+      "meta": {
+        "crawler": "크롤러",
+        "words": "글자 수"
+      }
+    },
+    "emptyResult": "검색 결과가 없습니다",
+    "title": "웹 검색"
+  },
+  "title": "도구 호출",
+  "unknown": "알 수 없는 도구"
+}

@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Bestandenlijst bekijken",
+      "moveLocalFiles": "Bestanden verplaatsen",
+      "readLocalFile": "Bestandsinhoud lezen",
+      "renameLocalFile": "Bestand hernoemen",
+      "searchLocalFiles": "Bestanden zoeken",
+      "writeLocalFile": "In bestand schrijven"
+    },
+    "title": "Lokaal systeem"
+  },
+  "mobileNotSupported": "Deze tool wordt momenteel niet ondersteund op mobiele apparaten. Bekijk de volledige inhoud op een desktop.",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "Meerdere pagina's lezen",
+      "crawlSinglePage": "Pagina-inhoud lezen",
+      "search": "Pagina zoeken"
+    },
+    "crawPages": {
+      "crawling": "Bezig met crawlen...",
+      "meta": {
+        "crawler": "Crawler",
+        "words": "Aantal woorden"
+      }
+    },
+    "emptyResult": "Geen zoekresultaten gevonden",
+    "title": "Webzoekopdracht"
+  },
+  "title": "Hulpoproep",
+  "unknown": "Onbekende tool"
+}

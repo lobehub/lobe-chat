@@ -1,0 +1,32 @@
+{
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "نمایش فهرست فایل‌ها",
+      "moveLocalFiles": "انتقال فایل‌ها",
+      "readLocalFile": "خواندن محتوای فایل",
+      "renameLocalFile": "تغییر نام فایل",
+      "searchLocalFiles": "جستجوی فایل‌ها",
+      "writeLocalFile": "نوشتن در فایل"
+    },
+    "title": "سیستم محلی"
+  },
+  "mobileNotSupported": "این ابزار در حال حاضر در دستگاه‌های همراه پشتیبانی نمی‌شود. لطفاً برای مشاهده جزئیات از رایانه رومیزی استفاده کنید.",
+  "search": {
+    "apiName": {
+      "crawlMultiPages": "خواندن محتوای چندین صفحه",
+      "crawlSinglePage": "خواندن محتوای یک صفحه",
+      "search": "جستجوی صفحه"
+    },
+    "crawPages": {
+      "crawling": "در حال خزیدن...",
+      "meta": {
+        "crawler": "خزنده",
+        "words": "تعداد کلمات"
+      }
+    },
+    "emptyResult": "نتیجه‌ای برای جستجو یافت نشد",
+    "title": "جستجوی وب"
+  },
+  "title": "فراخوانی ابزار",
+  "unknown": "ابزار ناشناخته"
+}

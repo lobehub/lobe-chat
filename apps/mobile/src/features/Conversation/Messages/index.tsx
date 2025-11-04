@@ -32,17 +32,11 @@ const ChatMessageItem = memo<ChatMessageItemProps>(({ item, index, totalLength }
   // 如果有错误，即使content是LOADING_FLAT也不应该显示为loading状态
   const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent && !hasError;
 
-  const markdownProps = useMemo(
-    () => ({
-      animated: isLastMessage && isGenerating,
-    }),
-    [isLastMessage, isGenerating],
-  );
-
   const commonProps = {
     index,
+    isGenerating,
+    isLastMessage,
     isLoading: shouldShowLoading,
-    markdownProps,
     message: item,
     showActionsBar: isLastMessage,
     totalLength,
