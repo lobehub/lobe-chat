@@ -177,8 +177,19 @@ export const chatMessage: StateCreator<
 
     // if the message is a group message, find all children messages (via parentId)
     if (message.role === 'group') {
-      const childMessageIds = allMessages.filter((m) => m.parentId === message.id).map((m) => m.id);
+      const childMessages = allMessages.filter((m) => m.parentId === message.id);
+      const childMessageIds = childMessages.map((m) => m.id);
       ids = ids.concat(childMessageIds);
+
+      // Also delete tool results of children messages
+      const childToolMessageIds = childMessages.flatMap((child) => {
+        if (!child.tools) return [];
+        return child.tools.flatMap((tool) => {
+          const toolMessages = allMessages.filter((m) => m.tool_call_id === tool.id);
+          return toolMessages.map((m) => m.id);
+        });
+      });
+      ids = ids.concat(childToolMessageIds);
     }
 
     get().internal_dispatchMessage({ type: 'deleteMessages', ids });

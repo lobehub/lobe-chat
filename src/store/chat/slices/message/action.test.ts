@@ -264,6 +264,115 @@ describe('chatMessage actions', () => {
       });
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
+
+    it('deleteMessage should remove group message with all children', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupMessageId = 'group-message-id';
+      const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
+              {
+                id: 'child-1',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 1',
+              } as UIChatMessage,
+              {
+                id: 'child-2',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 2',
+              } as UIChatMessage,
+              { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteMessage(groupMessageId);
+      });
+
+      expect(removeMessagesSpy).toHaveBeenCalledWith([groupMessageId, 'child-1', 'child-2'], {
+        sessionId: 'session-id',
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+    });
+
+    it('deleteMessage should remove group message with children that have tool calls', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupMessageId = 'group-message-id';
+      const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
+              {
+                id: 'child-1',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child with tools',
+                tools: [{ id: 'tool1' }],
+              } as UIChatMessage,
+              {
+                id: 'tool-result-1',
+                tool_call_id: 'tool1',
+                role: 'tool',
+                content: 'Tool result',
+              } as UIChatMessage,
+              {
+                id: 'child-2',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 2',
+              } as UIChatMessage,
+              { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteMessage(groupMessageId);
+      });
+
+      // Should delete group message + all children + tool results of children
+      expect(removeMessagesSpy).toHaveBeenCalledWith(
+        [groupMessageId, 'child-1', 'child-2', 'tool-result-1'],
+        {
+          sessionId: 'session-id',
+          topicId: undefined,
+        },
+      );
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+    });
   });
 
   describe('copyMessage', () => {
