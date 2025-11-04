@@ -61,6 +61,9 @@
       "folder": {
         "title": "上传文件夹"
       },
+      "knowledgeBase": {
+        "title": "新建知识库"
+      },
       "newNote": {
         "defaultTitle": "未命名笔记",
         "title": "新建笔记"

@@ -3,11 +3,13 @@
 import { FileTypeIcon, Icon } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { ArrowUpIcon, FolderUp, PlusIcon } from 'lucide-react';
+import { ArrowUpIcon, FolderUp, LibraryBig, PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
+import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
 import { useFileStore } from '@/store/file';
 
 const ICON_SIZE = 64;
@@ -79,15 +81,25 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
   const { t } = useTranslation('file');
   const theme = useTheme();
   const { styles } = useStyles();
+  const navigate = useNavigate();
 
   const createNote = useFileStore((s) => s.createNote);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
+  const { open } = useCreateNewModal();
 
   const handleCreateNote = () => {
     createNote({
       content: '',
       knowledgeBaseId,
       title: t('home.uploadEntries.newNote.defaultTitle'),
+    });
+  };
+
+  const handleCreateKnowledgeBase = () => {
+    open({
+      onSuccess: (id) => {
+        navigate(`/bases/${id}`);
+      },
     });
   };
 
@@ -119,6 +131,19 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
           className={styles.icon}
           color={theme.purple}
           icon={<Icon color={'#fff'} icon={PlusIcon} />}
+          size={ICON_SIZE}
+          type={'file'}
+        />
+      </Flexbox>
+
+      {/* Create Knowledge Base */}
+      <Flexbox className={styles.card} onClick={handleCreateKnowledgeBase} padding={16}>
+        <span className={styles.actionTitle}>{t('home.uploadEntries.knowledgeBase.title')}</span>
+        <div className={styles.glow} style={{ background: theme.colorPrimary }} />
+        <FileTypeIcon
+          className={styles.icon}
+          color={theme.colorPrimary}
+          icon={<Icon color={'#fff'} icon={LibraryBig} />}
           size={ICON_SIZE}
           type={'file'}
         />
