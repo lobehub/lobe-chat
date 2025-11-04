@@ -156,11 +156,13 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
         value: UpdateMessageParamsSchema,
       }),
     )
     .mutation(async ({ input, ctx }) => {
       return ctx.messageModel.update(input.id, input.value as any, {
+        groupAssistantMessages: input.useGroup ?? false,
         postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
         sessionId: input.sessionId,
         topicId: input.topicId,
@@ -210,11 +212,19 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updatePluginState(input.id, input.value);
+      return ctx.messageModel.updatePluginState(input.id, input.value, {
+        groupAssistantMessages: input.useGroup ?? false,
+        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
+        sessionId: input.sessionId,
+        topicId: input.topicId,
+      });
     }),
 
   updateTTS: messageProcedure

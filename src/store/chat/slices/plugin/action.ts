@@ -252,13 +252,19 @@ export const chatPlugin: StateCreator<
     await get().triggerAIMessage({ traceId, threadId, inPortalThread, inSearchWorkflow });
   },
   updatePluginState: async (id, value) => {
-    const { refreshMessages } = get();
+    const { replaceMessages } = get();
 
     // optimistic update
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState: value } });
 
-    await messageService.updateMessagePluginState(id, value);
-    await refreshMessages();
+    const result = await messageService.updateMessagePluginState(id, value, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages);
+    }
   },
 
   updatePluginArguments: async (id, value, replace = false) => {

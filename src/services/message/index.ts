@@ -98,10 +98,14 @@ export class MessageService {
     value: Partial<UpdateMessageParams>,
     options?: { sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
+    // Get user lab preference for message grouping
+    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+
     return lambdaClient.message.update.mutate({
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
+      useGroup,
       value,
     });
   };
@@ -114,8 +118,21 @@ export class MessageService {
     return lambdaClient.message.updateTTS.mutate({ id, value: tts });
   };
 
-  updateMessagePluginState = async (id: string, value: Record<string, any>) => {
-    return lambdaClient.message.updatePluginState.mutate({ id, value });
+  updateMessagePluginState = async (
+    id: string,
+    value: Record<string, any>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    // Get user lab preference for message grouping
+    const useGroup = labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+
+    return lambdaClient.message.updatePluginState.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup,
+      value,
+    });
   };
 
   updateMessagePluginError = async (id: string, error: ChatMessagePluginError | null) => {

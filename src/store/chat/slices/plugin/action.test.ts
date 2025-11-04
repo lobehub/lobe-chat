@@ -522,9 +522,17 @@ describe('ChatPluginAction', () => {
     it('should update the plugin state for a message', async () => {
       const messageId = 'message-id';
       const pluginStateValue = { key: 'value' };
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
 
+      // Mock the service to return messages
+      (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.fn();
       const initialState = {
-        refreshMessages: vi.fn(),
+        replaceMessages: replaceMessagesSpy,
       };
       useChatStore.setState(initialState);
 
@@ -537,8 +545,13 @@ describe('ChatPluginAction', () => {
       expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
         messageId,
         pluginStateValue,
+        {
+          sessionId: 'inbox',
+          topicId: null,
+        },
       );
-      expect(initialState.refreshMessages).toHaveBeenCalled();
+
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
   });
 
