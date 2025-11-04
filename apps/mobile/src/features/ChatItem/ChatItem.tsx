@@ -102,6 +102,7 @@ const ChatItem = memo<ChatItemProps>(
         >
           <Flexbox gap={4}>
             <Block
+              borderRadius={placement === 'right'}
               style={[placement === 'right' && styles.userBubble, hasError && styles.errorBubble]}
               variant={placement === 'right' ? 'outlined' : 'borderless'}
             >
