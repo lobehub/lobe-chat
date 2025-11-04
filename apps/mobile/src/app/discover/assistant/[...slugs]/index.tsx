@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager, ScrollView } from 'react-native';
 
-import ChatBubble from '@/features/chat/ChatBubble';
+import ChatItem from '@/features/ChatItem';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
 import { useDiscoverStore } from '@/store/discover';
 import { useGlobalStore } from '@/store/global';
@@ -137,7 +137,7 @@ const AssistantDetail = () => {
           <Divider />
           <Flexbox paddingBlock={16}>
             {agent.examples?.map((item, index) => (
-              <ChatBubble
+              <ChatItem
                 key={index}
                 message={
                   {

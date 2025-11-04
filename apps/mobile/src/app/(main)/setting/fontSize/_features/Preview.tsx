@@ -1,7 +1,7 @@
 import { Block, Flexbox, Markdown } from '@lobehub/ui-rn';
 import { useTranslation } from 'react-i18next';
 
-import { useStyles } from '@/features/chat/ChatBubble/style';
+import { useStyles } from '@/features/ChatItem/style';
 import { useSettingStore } from '@/store/setting';
 
 const Preview = () => {
