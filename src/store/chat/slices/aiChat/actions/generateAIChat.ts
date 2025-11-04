@@ -1,12 +1,11 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop, isServerMode } from '@lobechat/const';
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
   ChatImageItem,
   CreateMessageParams,
   MessageSemanticSearchChunk,
-  SendMessageParams,
   TraceEventType,
   TraceNameMap,
   UIChatMessage,
@@ -49,10 +48,6 @@ interface ProcessMessageParams {
 }
 
 export interface AIGenerateAction {
-  /**
-   * Sends a new message to the AI chat system
-   */
-  sendMessage: (params: SendMessageParams) => Promise<void>;
   /**
    * Regenerates a specific message in the chat
    */
@@ -156,21 +151,6 @@ export const generateAIChat: StateCreator<
     get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
   },
 
-  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
-    const { activeId, sendMessageInServer } = get();
-    if (!activeId) return;
-
-    const fileIdList = files?.map((f) => f.id);
-
-    const hasFile = !!fileIdList && fileIdList.length > 0;
-
-    // if message is empty or no files, then stop
-    if (!message && !hasFile) return;
-
-    // router to server mode send message
-    if (isServerMode)
-      return sendMessageInServer({ message, files, onlyAddUserMessage, isWelcomeQuestion });
-  },
   stopGenerateMessage: () => {
     const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
 
@@ -487,7 +467,7 @@ export const generateAIChat: StateCreator<
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
-          await messageService.updateMessage(messageId, {
+          messageService.updateMessage(messageId, {
             traceId,
             observationId: observationId ?? undefined,
           });
