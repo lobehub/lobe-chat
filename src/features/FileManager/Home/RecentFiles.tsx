@@ -2,25 +2,42 @@
 
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { FileListItem } from '@/types/files';
 
 import RecentFileCard from './RecentFileCard';
 import RecentFilesSkeleton from './RecentFilesSkeleton';
 
-const useStyles = createStyles(({ css }) => ({
-  grid: css`
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
+const useStyles = createStyles(({ css, token }) => ({
+  container: css`
+    position: relative;
+    overflow: hidden;
+  `,
+  fadeEdge: css`
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 80px;
+
+    background: linear-gradient(to left, ${token.colorBgContainerSecondary}, transparent);
+  `,
+  scrollContainer: css`
+    display: flex;
     gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    scroll-behavior: smooth;
 
-    @media (width >= 640px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 
-    @media (width >= 900px) {
-      grid-template-columns: repeat(3, 1fr);
+    &::-webkit-scrollbar {
+      display: none;
     }
   `,
 }));
@@ -39,13 +56,15 @@ const RecentFiles = memo<RecentFilesProps>(({ files, isLoading, onOpenFile }) =>
   }
 
   return (
-    <Flexbox className={styles.grid}>
-      {files.map((file) => (
-        <RecentFileCard file={file} key={file.id} onClick={() => onOpenFile(file.id)} />
-      ))}
-    </Flexbox>
+    <div className={styles.container}>
+      <div className={styles.scrollContainer}>
+        {files.map((file) => (
+          <RecentFileCard file={file} key={file.id} onClick={() => onOpenFile(file.id)} />
+        ))}
+      </div>
+      <div className={styles.fadeEdge} />
+    </div>
   );
 });
 
 export default RecentFiles;
-

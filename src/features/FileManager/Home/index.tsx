@@ -4,7 +4,7 @@ import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { FilesTabs } from '@/types/files';
@@ -14,27 +14,18 @@ import UploadEntries from './UploadEntries';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100%;
     padding: 48px 24px;
   `,
   content: css`
     width: 100%;
-    max-width: 960px;
+    max-width: 1200px;
+    margin: 0 auto;
   `,
   greeting: css`
     margin-block-end: 8px;
     font-size: 32px;
     font-weight: 600;
     color: ${token.colorText};
-    text-align: center;
-  `,
-  subText: css`
-    margin-block-end: 48px;
-    font-size: 16px;
-    color: ${token.colorTextSecondary};
     text-align: center;
   `,
   section: css`
@@ -44,6 +35,12 @@ const useStyles = createStyles(({ css, token }) => ({
     margin-block-end: 24px;
     font-size: 18px;
     font-weight: 600;
+    text-align: center;
+  `,
+  subText: css`
+    margin-block-end: 48px;
+    font-size: 16px;
+    color: ${token.colorTextSecondary};
     text-align: center;
   `,
 }));
@@ -75,10 +72,10 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
     return t('home.greeting.evening');
   }, [t]);
 
-  // Get top 6 recent files
+  // Get top 10 recent files
   const topRecentFiles = useMemo(() => {
     if (!recentFiles) return [];
-    return recentFiles.slice(0, 6);
+    return recentFiles.slice(0, 10);
   }, [recentFiles]);
 
   return (
@@ -113,4 +110,3 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
 });
 
 export default Home;
-
