@@ -13,13 +13,12 @@ import { NativeSafeAreaViewProps } from 'react-native-safe-area-context/src/Safe
 import { FlexboxProps } from '../Flexbox';
 import { IconProps } from '../Icon';
 
-export interface PageContainerProps {
+export interface NativePageContainerProps {
   backgroundColor?: ColorValue;
   children?: ReactNode;
   extra?: ReactNode;
   extraProps?: Omit<FlexboxProps, 'children'>;
   headerBackgroundColor?: ColorValue;
-  headerStyle?: StyleProp<ViewStyle>;
   largeTitleEnabled?: boolean;
   left?: ReactNode;
   leftProps?: Omit<FlexboxProps, 'children'>;

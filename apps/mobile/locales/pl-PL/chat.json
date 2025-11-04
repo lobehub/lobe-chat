@@ -24,6 +24,10 @@
     "title": "Rozmowa na luzie"
   },
   "messageCopied": "Wiadomość skopiowana",
+  "messageEdit": {
+    "placeholder": "Wprowadź treść wiadomości",
+    "title": "Edytuj wiadomość"
+  },
   "newAgent": "Nowy asystent",
   "newChat": "Nowa rozmowa",
   "pin": "Przypnij",

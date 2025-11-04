@@ -24,6 +24,10 @@
     "title": "Discuter librement"
   },
   "messageCopied": "Message copié",
+  "messageEdit": {
+    "placeholder": "Veuillez saisir le contenu du message",
+    "title": "Modifier le message"
+  },
   "newAgent": "Nouvel assistant",
   "newChat": "Nouvelle conversation",
   "pin": "Épingler",

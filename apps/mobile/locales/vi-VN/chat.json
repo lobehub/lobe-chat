@@ -24,6 +24,10 @@
     "title": "Trò chuyện tự do"
   },
   "messageCopied": "Đã sao chép tin nhắn",
+  "messageEdit": {
+    "placeholder": "Vui lòng nhập nội dung tin nhắn",
+    "title": "Chỉnh sửa tin nhắn"
+  },
   "newAgent": "Tạo trợ lý mới",
   "newChat": "Cuộc trò chuyện mới",
   "pin": "Ghim lên đầu",

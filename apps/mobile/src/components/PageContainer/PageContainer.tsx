@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronLeft, Loader2Icon } from 'lucide-react-native';
 import { memo, useRef } from 'react';
@@ -36,11 +35,11 @@ const PageContainer = memo<PageContainerProps>(
     headerBackgroundColor,
     extraProps,
     safeAreaProps,
+    headerStyle,
   }) => {
     const { styles, theme } = useStyles();
     const token = useTheme();
     const scrollY = useRef(new Animated.Value(0)).current;
-    const isColor = Boolean(!backgroundColor || typeof backgroundColor === 'string');
     const LARGE_TITLE_HEIGHT = 34 + token.paddingSM + token.paddingSM;
     const insets = useSafeAreaInsets();
 
@@ -152,11 +151,7 @@ const PageContainer = memo<PageContainerProps>(
       </Flexbox>
     );
 
-    const headerContentBackground = backgroundColor
-      ? isColor
-        ? backgroundColor
-        : (backgroundColor as any)[0]
-      : theme.colorBgLayout;
+    const headerBg = headerBackgroundColor || backgroundColor || theme.colorBgLayout;
 
     const headerContent = (
       <>
@@ -164,8 +159,8 @@ const PageContainer = memo<PageContainerProps>(
           style={[
             styles.header,
             {
-              backgroundColor: headerBackgroundColor || headerContentBackground,
-              height: 64,
+              backgroundColor: headerBg,
+              height: HEADER_HEIGHT,
               left: 0,
               position: 'absolute',
               right: 0,
@@ -184,8 +179,9 @@ const PageContainer = memo<PageContainerProps>(
           style={[
             styles.header,
             {
-              backgroundColor: headerContentBackground,
+              backgroundColor: headerBg,
             },
+            headerStyle,
           ]}
         >
           {leftContent}
@@ -219,12 +215,12 @@ const PageContainer = memo<PageContainerProps>(
       );
     }
 
-    const content = (
+    return (
       <SafeAreaView
         edges={['top', 'bottom']}
         style={[
           styles.container,
-          isColor && { backgroundColor: (backgroundColor as string) || theme.colorBgLayout },
+          { backgroundColor: (backgroundColor as string) || theme.colorBgLayout },
           style,
         ]}
         testID="page-container"
@@ -233,14 +229,6 @@ const PageContainer = memo<PageContainerProps>(
         {headerContent}
         {children}
       </SafeAreaView>
-    );
-
-    if (isColor) return content;
-
-    return (
-      <LinearGradient colors={backgroundColor as any} locations={[0.2, 1]} style={{ flex: 1 }}>
-        {content}
-      </LinearGradient>
     );
   },
 );

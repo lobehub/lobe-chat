@@ -1,7 +1,8 @@
 import { UIChatMessage } from '@lobechat/types';
 import { ActionIcon, Flexbox, useToast } from '@lobehub/ui-rn';
 import * as Clipboard from 'expo-clipboard';
-import { Check, Copy, RefreshCw, Trash2 } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { Check, Copy, EditIcon, RefreshCw, Trash2 } from 'lucide-react-native';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, StyleProp, ViewStyle } from 'react-native';
@@ -23,6 +24,18 @@ const Actions = memo<ActionsProps>(({ message, style }) => {
   const token = useTheme();
   const [isCopied, setIsCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // 编辑消息
+  const handleEdit = useCallback(
+    (event: GestureResponderEvent) => {
+      event.stopPropagation();
+      router.push({
+        params: { messageId: message.id },
+        pathname: '/(main)/chat/message/edit',
+      });
+    },
+    [message.id],
+  );
 
   // 复制消息内容
   const handleCopy = useCallback(
@@ -94,6 +107,12 @@ const Actions = memo<ActionsProps>(({ message, style }) => {
         disabled={isCopied}
         icon={isCopied ? Check : Copy}
         onPress={handleCopy}
+        size={16}
+      />
+      <ActionIcon
+        color={token.colorTextDescription}
+        icon={EditIcon}
+        onPress={handleEdit}
         size={16}
       />
       <ActionIcon
