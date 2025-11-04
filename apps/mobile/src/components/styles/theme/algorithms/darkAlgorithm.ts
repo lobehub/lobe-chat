@@ -1,5 +1,6 @@
 import { ColorScaleItem, colorScales, neutralColorScales } from '../color';
 import type { NeutralColors, PrimaryColors } from '../customTheme';
+import { generateCustomToken } from '../customToken';
 import { generateColorNeutralPalette, generateColorPalette } from '../generateColorPalette';
 import type { MappingAlgorithm } from '../interface';
 import darkBaseToken from '../token/dark';
@@ -32,7 +33,8 @@ export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
     neutralTokens = generateColorNeutralPalette({ appearance: 'dark', scale: neutralScale });
   }
 
-  return {
+  // 生成完整的 MapToken 基础对象
+  const baseMapToken = {
     ...genSizeMapToken(seedToken),
     ...genControlHeight(seedToken),
     ...genFontMapToken(seedToken.fontSize),
@@ -41,5 +43,16 @@ export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
     ...darkBaseToken,
     ...primaryTokens,
     ...neutralTokens,
+  };
+
+  // 生成所有颜色的完整调色板（包括数字色阶 1-11 和 Alpha 色阶）
+  const customToken = generateCustomToken({
+    isDarkMode: true,
+    token: baseMapToken as any,
+  });
+
+  return {
+    ...baseMapToken,
+    ...customToken,
   };
 };

@@ -1,5 +1,7 @@
 import { memo } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
+
+import Flexbox from '@/components/Flexbox';
 
 import Text from '../Text';
 import ScaleColumn from './ScaleColumn';
@@ -15,7 +17,7 @@ const ColorScales = memo<ColorScalesProps>(({ name, scale, midHighLight }) => {
     .filter((index) => index !== 0 && index !== 12);
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <Flexbox>
       <View style={styles.content}>
         {/* 标题行 - 显示四种模式 */}
         <View style={styles.headerRow}>
@@ -90,7 +92,7 @@ const ColorScales = memo<ColorScalesProps>(({ name, scale, midHighLight }) => {
           );
         })}
       </View>
-    </ScrollView>
+    </Flexbox>
   );
 });
 

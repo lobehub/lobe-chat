@@ -15,7 +15,7 @@ const TokenJson = memo<TokenJsonProps>(({ token, title }) => {
   const { styles, theme } = useStyles();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colorBgElevated }]}>
+    <View>
       <Text style={[styles.title, { color: theme.colorText }]}>{title}</Text>
       <Text style={[styles.subtitle, { color: theme.colorTextSecondary }]}>
         {Object.keys(token).length} tokens

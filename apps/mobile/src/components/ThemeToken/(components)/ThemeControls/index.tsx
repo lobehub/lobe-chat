@@ -123,7 +123,7 @@ const ThemeControls = memo<ThemeControlsProps>(
     ];
 
     return (
-      <View style={[styles.controlsContainer, { backgroundColor: token.colorBgElevated }]}>
+      <View>
         {/* 主色控制 */}
         <View style={styles.controlItem}>
           <Text style={[styles.controlLabel, { color: token.colorText }]}>主色 (primaryColor)</Text>
