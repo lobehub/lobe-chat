@@ -164,6 +164,80 @@ function generateRandomCreateUserMemoryPreferenceParams() {
 }
 
 describe('UserMemoryModel', () => {
+  describe('create layered memories', () => {
+    it('creates a context memory and links the base record', async () => {
+      const params = generateRandomCreateUserMemoryContextParams();
+      params.context.metadata = { contextMeta: true };
+      params.context.tags = ['context-tag'];
+
+      const { context, memory } = await userMemoryModel.createContextMemory(params);
+
+      const persistedMemory = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, memory.id),
+      });
+      const persistedContext = await serverDB.query.userMemoriesContexts.findFirst({
+        where: eq(userMemoriesContexts.id, context.id),
+      });
+
+      expect(persistedMemory?.metadata).toEqual({ contextMeta: true });
+      expect(persistedMemory?.tags).toEqual(['context-tag']);
+      expect(persistedContext?.userMemoryIds).toEqual([memory.id]);
+      expect(persistedContext?.metadata).toEqual({ contextMeta: true });
+      expect(persistedContext?.tags).toEqual(['context-tag']);
+    });
+
+    it('creates an experience memory and stores vectors and fallbacks', async () => {
+      const params = generateRandomCreateUserMemoryExperienceParams();
+      params.experience.metadata = { expMeta: 1 };
+      params.experience.tags = ['exp-tag'];
+      params.experience.type = null;
+
+      const { experience, memory } = await userMemoryModel.createExperienceMemory(params);
+
+      const persistedMemory = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, memory.id),
+      });
+      const persistedExperience = await serverDB.query.userMemoriesExperiences.findFirst({
+        where: eq(userMemoriesExperiences.id, experience.id),
+      });
+
+      expect(persistedMemory?.metadata).toEqual({ expMeta: 1 });
+      expect(persistedMemory?.tags).toEqual(['exp-tag']);
+      expect(persistedExperience?.userMemoryId).toBe(memory.id);
+      expect(persistedExperience?.type).toBe(params.memoryType);
+      expectVectorToBeClose(persistedExperience?.actionVector, params.experience.actionVector!);
+      expectVectorToBeClose(
+        persistedExperience?.situationVector,
+        params.experience.situationVector!,
+      );
+    });
+
+    it('creates a preference memory and links to the base record', async () => {
+      const params = generateRandomCreateUserMemoryPreferenceParams();
+      params.preference.metadata = { prefMeta: 'yes' };
+      params.preference.tags = ['pref-tag'];
+      params.preference.type = null;
+
+      const { preference, memory } = await userMemoryModel.createPreferenceMemory(params);
+
+      const persistedMemory = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, memory.id),
+      });
+      const persistedPreference = await serverDB.query.userMemoriesPreferences.findFirst({
+        where: eq(userMemoriesPreferences.id, preference.id),
+      });
+
+      expect(persistedMemory?.metadata).toEqual({ prefMeta: 'yes' });
+      expect(persistedMemory?.tags).toEqual(['pref-tag']);
+      expect(persistedPreference?.userMemoryId).toBe(memory.id);
+      expect(persistedPreference?.type).toBe(params.memoryType);
+      expectVectorToBeClose(
+        persistedPreference?.conclusionDirectivesVector,
+        params.preference.conclusionDirectivesVector!,
+      );
+    });
+  });
+
   describe('delete', () => {
     it('should delete a memory by id', async () => {
       const created = await userMemoryModel.create(
