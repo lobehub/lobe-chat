@@ -43,6 +43,30 @@ export default {
     },
     uploadButton: '上传',
   },
+  home: {
+    getStarted: '开始使用',
+    greeting: {
+      afternoon: '下午好',
+      evening: '晚上好',
+      morning: '早上好',
+    },
+    quickActions: '快捷操作',
+    recentFiles: '最近文件',
+    subtitle: '欢迎使用知识库，从这里开始管理你的文档和笔记',
+    uploadEntries: {
+      files: {
+        title: '上传文件',
+      },
+      markdown: {
+        title: '上传 Markdown',
+        uploading: '上传中...',
+      },
+      newNote: {
+        defaultTitle: '未命名笔记',
+        title: '新建笔记',
+      },
+    },
+  },
   knowledgeBase: {
     list: {
       confirmRemoveKnowledgeBase:

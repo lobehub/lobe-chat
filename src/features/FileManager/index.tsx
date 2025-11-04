@@ -7,10 +7,11 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FilesTabs } from '@/types/files';
 
+import DocumentExplorer from './DocumentExplorer/DocumentExplorer';
 import FileList from './FileList';
 import Header from './Header';
+import Home from './Home';
 import UploadDock from './UploadDock';
-import DocumentExplorer from './components/NoteSplitView';
 
 const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });
 
@@ -23,23 +24,27 @@ interface FileManagerProps {
 
 /**
  * Documents View is a special view.
+ * Home View is shown for the "home" category.
  * For other categories, it will show the file list.
  */
 const KnowledgeItemManager = memo<FileManagerProps>(
   ({ title, knowledgeBaseId, category, onOpenFile }) => {
     const isDocumentsView = category === FilesTabs.Documents;
+    const isHomeView = category === FilesTabs.Home;
 
     return (
       <>
-        {!isDocumentsView && <Header knowledgeBaseId={knowledgeBaseId} />}
+        {!isDocumentsView && !isHomeView && <Header knowledgeBaseId={knowledgeBaseId} />}
         <Flexbox gap={12} height={'100%'}>
-          {!isDocumentsView && (
+          {!isDocumentsView && !isHomeView && (
             <Text strong style={{ fontSize: 16, marginBlock: 16, marginInline: 24 }}>
               {title}
             </Text>
           )}
           {isDocumentsView ? (
             <DocumentExplorer knowledgeBaseId={knowledgeBaseId} />
+          ) : isHomeView ? (
+            <Home knowledgeBaseId={knowledgeBaseId} onOpenFile={onOpenFile} />
           ) : (
             <FileList
               category={category}

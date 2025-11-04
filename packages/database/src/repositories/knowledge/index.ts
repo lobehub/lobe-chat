@@ -191,9 +191,17 @@ export class KnowledgeRepo {
     }
 
     // Category filter
-    if (category && category !== FilesTabs.All) {
+    if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
-      whereConditions.push(sql`${files.fileType} ILIKE ${`${fileTypePrefix}%`}`);
+      if (Array.isArray(fileTypePrefix)) {
+        // For multiple file types (e.g., Documents includes 'application' and 'custom')
+        const orConditions = fileTypePrefix.map(
+          (prefix) => sql`${files.fileType} ILIKE ${`${prefix}%`}`,
+        );
+        whereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
+      } else {
+        whereConditions.push(sql`${files.fileType} ILIKE ${`${fileTypePrefix}%`}`);
+      }
     }
 
     // Knowledge base filter
@@ -268,9 +276,15 @@ export class KnowledgeRepo {
     }
 
     // Category filter - match documents by fileType prefix
-    if (category && category !== FilesTabs.All) {
+    if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
-      if (fileTypePrefix) {
+      if (Array.isArray(fileTypePrefix)) {
+        // For multiple file types (e.g., Documents includes 'application' and 'custom')
+        const orConditions = fileTypePrefix.map(
+          (prefix) => sql`${documents.fileType} ILIKE ${`${prefix}%`}`,
+        );
+        whereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
+      } else if (fileTypePrefix) {
         whereConditions.push(sql`${documents.fileType} ILIKE ${`${fileTypePrefix}%`}`);
       } else {
         // Exclude documents from other categories (Images, Videos, Audios, Websites)
@@ -355,19 +369,16 @@ export class KnowledgeRepo {
     return sql.raw('created_at DESC');
   }
 
-  private getFileTypePrefix(category: FilesTabs): string {
+  private getFileTypePrefix(category: FilesTabs): string | string[] {
     switch (category) {
       case FilesTabs.Audios: {
         return 'audio';
       }
       case FilesTabs.Documents: {
-        return 'application';
+        return ['application', 'custom'];
       }
       case FilesTabs.Images: {
         return 'image';
-      }
-      case FilesTabs.Notes: {
-        return 'custom';
       }
       case FilesTabs.Videos: {
         return 'video';

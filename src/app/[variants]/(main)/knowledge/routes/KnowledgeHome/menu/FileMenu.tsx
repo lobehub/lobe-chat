@@ -3,7 +3,7 @@
 import { CaretDownFilled, CaretRightOutlined } from '@ant-design/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { FileText, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
+import { FileText, FolderOpen, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -43,6 +43,11 @@ const FileMenu = memo(() => {
   const collapsedItems: MenuProps['items'] = useMemo(
     () => [
       {
+        icon: <Icon icon={FolderOpen} />,
+        key: FilesTabs.All,
+        label: t('tab.all'),
+      },
+      {
         icon: <Icon icon={FileText} />,
         key: FilesTabs.Documents,
         label: t('tab.documents'),
@@ -71,16 +76,16 @@ const FileMenu = memo(() => {
     [t],
   );
 
-  const isAllFilesActive = activeKey === FilesTabs.All;
+  const isHomeActive = activeKey === FilesTabs.Home;
 
   return (
     <Flexbox gap={8}>
       <Flexbox
         align={'center'}
-        className={cx(styles.header, isAllFilesActive && styles.headerActive)}
+        className={cx(styles.header, isHomeActive && styles.headerActive)}
         horizontal
         onClick={() => {
-          setActiveKey(FilesTabs.All);
+          setActiveKey(FilesTabs.Home);
         }}
         paddingBlock={6}
         paddingInline={8}
@@ -94,7 +99,7 @@ const FileMenu = memo(() => {
             }}
             size={'small'}
           />
-          <div style={{ flex: 1, lineHeight: '14px' }}>All Knowledge</div>
+          <div style={{ flex: 1, lineHeight: '14px' }}>Home</div>
         </Flexbox>
       </Flexbox>
 

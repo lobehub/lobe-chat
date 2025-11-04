@@ -5,7 +5,7 @@ import { FilePenLine } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import NoteEditorModal from '../components/NoteEditorModal';
+import NoteEditorModal from '../DocumentExplorer/NoteEditorModal';
 
 const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   const { t } = useTranslation('file');
@@ -25,11 +25,7 @@ const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
         {t('header.newNoteButton')}
       </Button>
 
-      <NoteEditorModal
-        knowledgeBaseId={knowledgeBaseId}
-        onClose={handleClose}
-        open={isModalOpen}
-      />
+      <NoteEditorModal knowledgeBaseId={knowledgeBaseId} onClose={handleClose} open={isModalOpen} />
     </>
   );
 };

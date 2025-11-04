@@ -5,8 +5,8 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
+import NoteEditorModal from '../../DocumentExplorer/NoteEditorModal';
 import DropdownMenu from '../FileListItem/DropdownMenu';
-import NoteEditorModal from '../../components/NoteEditorModal';
 import DefaultFileItem from './DefaultFileItem';
 import ImageFileItem from './ImageFileItem';
 import MarkdownFileItem from './MarkdownFileItem';

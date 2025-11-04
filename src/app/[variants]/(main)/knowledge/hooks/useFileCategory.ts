@@ -9,14 +9,14 @@ import { FilesTabs } from '@/types/files';
 export const useFileCategory = (): [string, (value: string) => void] => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const category = searchParams.get('category') ?? FilesTabs.All;
+  const category = searchParams.get('category') ?? FilesTabs.Home;
 
   const setCategory = (value: string) => {
     setSearchParams(
       (prev) => {
         const newParams = new URLSearchParams(prev);
 
-        if (value === FilesTabs.All) {
+        if (value === FilesTabs.Home) {
           // Clear on default
           newParams.delete('category');
         } else {

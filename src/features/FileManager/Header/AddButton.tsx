@@ -9,7 +9,7 @@ import { useMemo, useState } from 'react';
 import DragUpload from '@/components/DragUpload';
 import { useFileStore } from '@/store/file';
 
-import NoteEditorModal from '../components/NoteEditorModal';
+import NoteEditorModal from '../DocumentExplorer/NoteEditorModal';
 
 const hotArea = css`
   &::before {

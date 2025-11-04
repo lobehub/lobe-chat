@@ -126,7 +126,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface NoteSplitViewProps {
+interface DocumentExplorerProps {
   knowledgeBaseId?: string;
 }
 
@@ -156,7 +156,10 @@ const getPreviewText = (item: FileListItem): string => {
   return plainText.slice(0, 200);
 };
 
-const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
+/**
+ * View, edit and create documents.
+ */
+const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId }) => {
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
 
@@ -367,4 +370,4 @@ const NoteSplitView = memo<NoteSplitViewProps>(({ knowledgeBaseId }) => {
   );
 });
 
-export default NoteSplitView;
+export default DocumentExplorer;
