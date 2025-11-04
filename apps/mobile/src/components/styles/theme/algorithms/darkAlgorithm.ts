@@ -33,7 +33,7 @@ export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
     neutralTokens = generateColorNeutralPalette({ appearance: 'dark', scale: neutralScale });
   }
 
-  // 生成完整的 MapToken 基础对象
+  // 先生成基础 token（不包含数字色阶）
   const baseMapToken = {
     ...genSizeMapToken(seedToken),
     ...genControlHeight(seedToken),
@@ -45,14 +45,19 @@ export const darkAlgorithm: MappingAlgorithm = (seedToken, mapToken) => {
     ...neutralTokens,
   };
 
-  // 生成所有颜色的完整调色板（包括数字色阶 1-11 和 Alpha 色阶）
+  // 生成所有颜色的数字色阶（red1-red11 等）
   const customToken = generateCustomToken({
     isDarkMode: true,
     token: baseMapToken as any,
   });
 
+  // 关键：先应用数字色阶，再用 primaryTokens 和 neutralTokens 覆盖
+  // 这样自定义主题色会覆盖数字色阶中的对应颜色
   return {
     ...baseMapToken,
     ...customToken,
+    // 再次应用自定义颜色，确保它们覆盖数字色阶
+    ...primaryTokens,
+    ...neutralTokens,
   };
 };
