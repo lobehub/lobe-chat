@@ -33,6 +33,11 @@
   "pin": "Vastzetten",
   "pinOff": "Vastzetten opheffen",
   "placeholder": "Typ uw bericht...",
+  "reasoning": {
+    "thinking": "Diep aan het nadenken...",
+    "thought": "Diep nagedacht (duurde {{duration}} seconden)",
+    "thoughtWithoutDuration": "Diep nagedacht"
+  },
   "regenerateFailed": "Hertellen mislukt, probeer het later opnieuw",
   "send": "Verzenden",
   "session": {

@@ -33,6 +33,11 @@
   "pin": "置頂",
   "pinOff": "取消置頂",
   "placeholder": "輸入您的訊息...",
+  "reasoning": {
+    "thinking": "深入思考中...",
+    "thought": "已深入思考（耗時 {{duration}} 秒）",
+    "thoughtWithoutDuration": "已深入思考"
+  },
   "regenerateFailed": "重新生成失敗，請稍後重試",
   "send": "發送",
   "session": {

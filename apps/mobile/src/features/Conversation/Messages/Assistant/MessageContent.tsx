@@ -7,11 +7,11 @@ import { DefaultMessage } from '../Default';
 import FileListViewer from '../User/FileListViewer';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import VideoFileListViewer from '../User/VideoFileListViewer';
+import Reasoning from './Reasoning';
 
 // TODO: 待实现以下组件
 // import FileChunks from './FileChunks';
 // import IntentUnderstanding from './IntentUnderstanding';
-// import Reasoning from './Reasoning';
 // import SearchGrounding from './SearchGrounding';
 // import Tool from './Tool';
 
@@ -30,10 +30,6 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
     fileList,
     isGenerating,
     editableContent,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    chunksList,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    search,
     ...props
   }) => {
     const isToolCallGenerating = isGenerating && (content === LOADING_FLAT || !content) && !!tools;
@@ -42,10 +38,12 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
     const showImageItems = !!imageList && imageList.length > 0;
     const showVideoItems = !!videoList && videoList.length > 0;
     const showFileItems = !!fileList && fileList.length > 0;
+    const showReasoning =
+      (!!props.reasoning && props.reasoning.content?.trim() !== '') ||
+      (!props.reasoning && isGenerating);
 
     // TODO: 待实现功能
     // const showSearch = !!search && !!search.citations?.length;
-    // const showReasoning = !!props.reasoning && props.reasoning.content?.trim() !== '';
     // const showFileChunks = !!chunksList && chunksList.length > 0;
 
     return (
@@ -56,8 +54,15 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
         {/* TODO: 添加文件块 */}
         {/* {showFileChunks && <FileChunks data={chunksList} />} */}
 
-        {/* TODO: 添加推理过程 */}
-        {/* {showReasoning && <Reasoning {...props.reasoning} id={id} />} */}
+        {/* 推理过程 */}
+        {showReasoning && (
+          <Reasoning
+            content={props.reasoning?.content}
+            duration={props.reasoning?.duration}
+            id={id}
+            isGenerating={isGenerating}
+          />
+        )}
 
         {/* 主要内容 */}
         {content && (

@@ -33,6 +33,11 @@
   "pin": "Épingler",
   "pinOff": "Désépingler",
   "placeholder": "Entrez votre message...",
+  "reasoning": {
+    "thinking": "Réflexion approfondie en cours...",
+    "thought": "Réflexion approfondie terminée (durée : {{duration}} secondes)",
+    "thoughtWithoutDuration": "Réflexion approfondie terminée"
+  },
   "regenerateFailed": "Échec de la régénération, veuillez réessayer plus tard",
   "send": "Envoyer",
   "session": {
