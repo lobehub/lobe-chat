@@ -223,13 +223,11 @@ export class SessionModel {
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {
-    const t1 = Date.now();
     const result = await this.db
       .select({ id: sessions.id })
       .from(sessions)
       .where(eq(sessions.userId, this.userId))
       .limit(n + 1);
-    console.log(`[SessionModel.hasMoreThanN(${n})] query took ${Date.now() - t1}ms`);
 
     return result.length > n;
   };
