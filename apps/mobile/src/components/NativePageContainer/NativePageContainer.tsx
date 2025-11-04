@@ -15,6 +15,7 @@ import type { NativePageContainerProps } from './type';
 
 const NativePageContainer = memo<NativePageContainerProps>(
   ({
+    autoBack = false,
     children,
     left = undefined,
     showBack = false,
@@ -27,7 +28,7 @@ const NativePageContainer = memo<NativePageContainerProps>(
     titleIcon,
     leftProps,
     titleProps,
-
+    searchBarOptions,
     extraProps,
   }) => {
     const { isDarkMode } = useThemeMode();
@@ -35,19 +36,15 @@ const NativePageContainer = memo<NativePageContainerProps>(
     const isGlassAvailable = isLiquidGlassAvailable();
     const blurEffect = isDarkMode ? 'systemMaterialDark' : 'systemMaterialLight';
 
+    // 自动检测是否可以返回
+    const canGoBack = router.canGoBack();
+    const shouldShowBack = autoBack ? canGoBack : showBack;
+
     const leftContent = (
-      <Flexbox
-        align={'center'}
-        gap={8}
-        horizontal
-        justify={'flex-start'}
-        style={styles.left}
-        width={'25%'}
-        {...leftProps}
-      >
+      <Flexbox align={'center'} gap={8} horizontal justify={'flex-start'} {...leftProps}>
         {left !== undefined ? (
           left
-        ) : showBack ? (
+        ) : shouldShowBack ? (
           <ActionIcon icon={ChevronLeft} onPress={onBackPress} pressEffect={false} />
         ) : null}
       </Flexbox>
@@ -58,15 +55,7 @@ const NativePageContainer = memo<NativePageContainerProps>(
     );
 
     const extraContent = (
-      <Flexbox
-        align={'center'}
-        gap={8}
-        horizontal
-        justify={'flex-end'}
-        style={styles.extra}
-        width={'25%'}
-        {...extraProps}
-      >
+      <Flexbox align={'center'} gap={8} horizontal justify={'flex-end'} {...extraProps}>
         {extra}
         {largeTitleEnabled && loadingContent}
       </Flexbox>
@@ -106,15 +95,22 @@ const NativePageContainer = memo<NativePageContainerProps>(
             headerBackButtonMenuEnabled: false,
             headerBackVisible: false,
             headerBlurEffect: isGlassAvailable ? undefined : blurEffect,
+            headerLargeStyle: largeTitleEnabled
+              ? {
+                  backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent',
+                }
+              : undefined,
+            headerLargeTitle: largeTitleEnabled && isIOS,
             headerLeft: () => leftContent,
-            headerRight: () => extraContent,
+            headerRight: extra ? () => extraContent : undefined,
+            headerSearchBarOptions: searchBarOptions,
             headerShadowVisible: false,
             headerShown: true,
             headerStyle: {
               backgroundColor: !isGlassAvailable ? theme.colorBgLayout : 'transparent',
             },
             headerTintColor: theme.colorText,
-            headerTitle: () => titleContent,
+            headerTitle: typeof title === 'string' ? undefined : () => titleContent,
             headerTransparent: isIOS,
             title: typeof title === 'string' ? title : 'Title',
           }}
