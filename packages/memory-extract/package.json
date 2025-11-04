@@ -13,9 +13,9 @@
     "ora": "^9.0.0"
   },
   "devDependencies": {
-    "tsx": "^4.19.2"
+    "tsx": "^4.20.6"
   },
   "peerDependencies": {
-    "zod": "^3"
+    "zod": "^3.25.76"
   }
 }

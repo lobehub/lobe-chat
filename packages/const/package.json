@@ -9,7 +9,7 @@
   "main": "./src/index.ts",
   "dependencies": {
     "model-bank": "workspace:*",
-    "query-string": "^9.2.2",
+    "query-string": "^9.3.1",
     "url-join": "^5.0.0"
   }
 }

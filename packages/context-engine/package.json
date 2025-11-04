@@ -21,8 +21,8 @@
     "@lobechat/prompts": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "debug": "^4.3.4",
-    "immer": "^10.0.3",
+    "debug": "^4.4.3",
+    "immer": "^10.2.0",
     "lodash-es": "^4.17.21",
     "ts-md5": "^2.0.1"
   },
