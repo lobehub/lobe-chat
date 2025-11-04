@@ -1,24 +1,23 @@
 'use client';
 
+import { formatSize } from '@lobechat/utils/format';
 import { Image as LobeImage, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { FileListItem } from '@/types/files';
-import { formatSize } from '@lobechat/utils/format';
 
-const IMAGE_FILE_TYPES = [
+const IMAGE_FILE_TYPES = new Set([
   'image/png',
   'image/jpeg',
   'image/jpg',
   'image/gif',
   'image/webp',
   'image/svg+xml',
-];
+]);
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
@@ -43,14 +42,6 @@ const useStyles = createStyles(({ css, token }) => ({
       box-shadow: ${token.boxShadowTertiary};
     }
   `,
-  imagePreview: css`
-    width: 100%;
-    height: 160px;
-    margin-block-end: 12px;
-    border-radius: ${token.borderRadius}px;
-    background: ${token.colorBgLayout};
-    object-fit: cover;
-  `,
   iconWrapper: css`
     display: flex;
     align-items: center;
@@ -60,31 +51,23 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: ${token.borderRadius}px;
     background: ${token.colorBgLayout};
   `,
-  noteIcon: css`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
+  imagePreview: css`
+    width: 100%;
     height: 160px;
     margin-block-end: 12px;
-    padding: 16px;
     border-radius: ${token.borderRadius}px;
     background: ${token.colorBgLayout};
+    object-fit: cover;
   `,
-  emoji: css`
-    font-size: 48px;
-    line-height: 1;
+  info: css`
+    font-size: 12px;
+    color: ${token.colorTextDescription};
   `,
   title: css`
     margin: 0 !important;
     font-size: 14px;
     font-weight: 500;
     line-height: 1.4;
-  `,
-  info: css`
-    font-size: 12px;
-    color: ${token.colorTextDescription};
   `,
 }));
 
@@ -94,12 +77,9 @@ interface RecentFileCardProps {
 }
 
 const RecentFileCard = memo<RecentFileCardProps>(({ file, onClick }) => {
-  const { t } = useTranslation('file');
   const { styles } = useStyles();
 
-  const isImage = IMAGE_FILE_TYPES.includes(file.fileType);
-  const isDocument = file.sourceType === 'document';
-  const emoji = file.metadata?.emoji;
+  const isImage = IMAGE_FILE_TYPES.has(file.fileType);
   const relativeTime = dayjs(file.updatedAt).fromNow();
 
   return (
@@ -113,10 +93,6 @@ const RecentFileCard = memo<RecentFileCardProps>(({ file, onClick }) => {
             preview={false}
             src={file.url}
           />
-        ) : isDocument && emoji ? (
-          <div className={styles.noteIcon}>
-            <div className={styles.emoji}>{emoji}</div>
-          </div>
         ) : (
           <div className={styles.iconWrapper}>
             <FileIcon fileName={file.name} fileType={file.fileType} size={48} />
@@ -140,4 +116,3 @@ const RecentFileCard = memo<RecentFileCardProps>(({ file, onClick }) => {
 });
 
 export default RecentFileCard;
-

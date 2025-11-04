@@ -1,21 +1,23 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { ActionIcon, Dropdown, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Clock, FileTextIcon } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { Clock, FileTextIcon, MoreHorizontal } from 'lucide-react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useFileCategory } from '@/app/[variants]/(main)/knowledge/hooks/useFileCategory';
 import { useFileStore } from '@/store/file';
 import { FilesTabs } from '@/types/files';
 
+import RecentDocuments from './RecentDocuments';
 import RecentFiles from './RecentFiles';
 import UploadEntries from './UploadEntries';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
-    padding: 48px 24px;
+    padding: 20px 24px 48px 24px;
   `,
   content: css`
     width: 100%;
@@ -23,7 +25,6 @@ const useStyles = createStyles(({ css, token }) => ({
     margin: 0 auto;
   `,
   greeting: css`
-    margin-block-end: 8px;
     font-size: 24px;
     font-weight: 600;
     color: ${token.colorText};
@@ -31,6 +32,15 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   section: css`
     margin-block-end: 36px;
+
+    .section-actions {
+      opacity: 0;
+      transition: opacity ${token.motionDurationMid} ${token.motionEaseInOut};
+    }
+
+    &:hover .section-actions {
+      opacity: 1;
+    }
   `,
   sectionTitle: css`
     margin-block-end: 24px;
@@ -41,6 +51,12 @@ const useStyles = createStyles(({ css, token }) => ({
     display: flex;
     align-items: center;
     gap: 8px;
+  `,
+  sectionTitleWrapper: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-end: 24px;
   `,
   subText: css`
     margin-block-end: 48px;
@@ -58,6 +74,8 @@ interface HomeProps {
 const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
+  const [, setActiveKey] = useFileCategory();
+  const [isDocumentsMenuOpen, setIsDocumentsMenuOpen] = useState(false);
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
 
@@ -68,14 +86,6 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
     sortType: 'desc',
     sorter: 'createdAt',
   });
-
-  // Get greeting based on time of day
-  const greeting = useMemo(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) return t('home.greeting.morning');
-    if (hour < 18) return t('home.greeting.afternoon');
-    return t('home.greeting.evening');
-  }, [t]);
 
   // Get top 10 recent files (filter by sourceType === 'file')
   const topRecentFiles = useMemo(() => {
@@ -96,7 +106,7 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
       <Flexbox className={styles.content}>
         {/* Greeting Section */}
         <Flexbox className={styles.section}>
-          <Text className={styles.greeting}>{greeting}</Text>
+          <Text className={styles.greeting}>开始</Text>
         </Flexbox>
 
         {/* Upload Entries Section */}
@@ -118,11 +128,36 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
         {/* Recent Documents Section */}
         {topRecentDocuments.length > 0 && (
           <Flexbox className={styles.section}>
-            <Text className={styles.sectionTitle}>
-              <FileTextIcon size={18} />
-              {t('home.recentDocuments')}
-            </Text>
-            <RecentFiles files={topRecentDocuments} isLoading={isLoading} onOpenFile={onOpenFile} />
+            <div className={styles.sectionTitleWrapper}>
+              <Text className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+                <FileTextIcon size={18} />
+                {t('home.recentDocuments')}
+              </Text>
+              <div className="section-actions">
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        key: 'all-documents',
+                        label: t('menu.allDocuments'),
+                        onClick: () => {
+                          setActiveKey(FilesTabs.Documents);
+                        },
+                      },
+                    ],
+                  }}
+                  onOpenChange={setIsDocumentsMenuOpen}
+                  open={isDocumentsMenuOpen}
+                >
+                  <ActionIcon icon={MoreHorizontal} size="small" />
+                </Dropdown>
+              </div>
+            </div>
+            <RecentDocuments
+              documents={topRecentDocuments}
+              isLoading={isLoading}
+              onOpenDocument={onOpenFile}
+            />
           </Flexbox>
         )}
       </Flexbox>
