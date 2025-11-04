@@ -35,7 +35,13 @@ const KnowledgeManager = memo<KnowledgeManagerProps>(
     const isHomeView = category === FilesTabs.Home;
 
     if (isHomeView) {
-      return <Home knowledgeBaseId={knowledgeBaseId} onOpenFile={onOpenFile} />;
+      return (
+        <>
+          <Home knowledgeBaseId={knowledgeBaseId} onOpenFile={onOpenFile} />
+          <UploadDock />
+          <ChunkDrawer />
+        </>
+      );
     }
 
     return (
