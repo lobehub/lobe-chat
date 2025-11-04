@@ -70,6 +70,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: 'portrait',
   owner: 'lobehub',
   plugins: [
+    ['expo-build-properties', { ios: { deploymentTarget: '16.4' } }],
     'expo-router',
     'expo-video',
     ['react-native-edge-to-edge', { android: { enforceNavigationBarContrast: false } }],
