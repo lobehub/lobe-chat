@@ -84,8 +84,8 @@ const AssistantList = () => {
     if (!hasMoreData) return null;
 
     return (
-      <Center padding={16}>
-        <ActivityIndicator color={theme.colorTextDescription} size="small" />
+      <Center gap={8} padding={16}>
+        <ActivityIndicator color={theme.colorPrimary} size="small" />
       </Center>
     );
   }, [hasMoreData, theme.colorPrimary]);

@@ -1,7 +1,7 @@
 import { EnabledProviderWithModels } from '@lobechat/types';
-import { BottomSheet, Center, Flexbox, Icon, Text, useTheme } from '@lobehub/ui-rn';
+import { BottomSheet, Center, Empty, Flexbox, Icon, Text, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { ArrowRight } from 'lucide-react-native';
+import { ArrowRight, Loader2Icon } from 'lucide-react-native';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -124,10 +124,11 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
 
   // 计算要显示的内容（对齐Web端逻辑）
   const renderContent = useMemo(() => {
-    // 加载中状态
+    // 加载中状态 - 使用 LoadingDots 动画
     if (infraLoading) {
       return (
-        <Center padding={16}>
+        <Center gap={12} paddingBlock={64}>
+          <Icon color={token.colorTextSecondary} icon={Loader2Icon} size={24} spin />
           <Text type={'secondary'}>{t('status.loading', { ns: 'common' })}</Text>
         </Center>
       );
@@ -136,15 +137,12 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
     // 错误状态
     if (infraError) {
       return (
-        <Center gap={6} padding={16}>
-          <Text fontSize={16} weight={500}>
-            {t('status.error', { ns: 'common' })}
-          </Text>
-          <Text type={'secondary'}>
-            {t('status.networkRetryTip', {
+        <Center gap={12} paddingBlock={64}>
+          <Empty
+            description={t('status.networkRetryTip', {
               ns: 'common',
             })}
-          </Text>
+          />
         </Center>
       );
     }
