@@ -55,10 +55,16 @@ describe('parse', () => {
       expect(serializeParseResult(result)).toEqual(outputs.branch.nested);
     });
 
-    it('should match snapshot for compare mode', () => {
-      const result = parse(inputs.compareMode);
+    it('should match snapshot for compare mode (simple)', () => {
+      const result = parse(inputs.compare.simple);
 
-      expect(serializeParseResult(result)).toEqual(outputs.compareMode);
+      expect(serializeParseResult(result)).toEqual(outputs.compare.simple);
+    });
+
+    it('should match snapshot for compare mode (with tools)', () => {
+      const result = parse(inputs.compare.withTools);
+
+      expect(serializeParseResult(result)).toEqual(outputs.compare.withTools);
     });
 
     it('should match snapshot for complex scenario', () => {
