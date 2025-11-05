@@ -7,7 +7,6 @@ import {
   ChatTranslate,
   ChatVideoItem,
   CreateMessageParams,
-  CreateMessageResult,
   DBMessageItem,
   ModelRankItem,
   NewMessageQueryParams,
@@ -530,55 +529,6 @@ export class MessageModel {
 
       return item;
     });
-  };
-
-  /**
-   * Create a new message and return the complete message list
-   *
-   * This method combines message creation and querying into a single operation,
-   * reducing the need for separate refresh calls and improving performance.
-   *
-   * @param params - Message creation parameters
-   * @param options - Query options for post-processing
-   * @returns Object containing the created message ID and full message list
-   *
-   * @example
-   * const { id, messages } = await messageModel.createNewMessage({
-   *   role: 'assistant',
-   *   content: 'Hello',
-   *   tools: [...],
-   *   sessionId: 'session-1',
-   * });
-   * // messages already contains grouped structure, no need to refresh
-   */
-  createNewMessage = async (
-    params: CreateMessageParams,
-    options: {
-      groupAssistantMessages?: boolean;
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-    } = {},
-  ): Promise<CreateMessageResult> => {
-    // 1. Create the message (reuse existing create method)
-    const item = await this.create(params);
-
-    // 2. Query all messages for this session/topic
-    // query() method internally applies groupAssistantMessages transformation
-    const messages = await this.query(
-      {
-        current: 0,
-        groupId: params.groupId,
-        pageSize: 9999,
-        sessionId: params.sessionId,
-        topicId: params.topicId, // Get all messages
-      },
-      { ...options, groupAssistantMessages: options.groupAssistantMessages ?? false },
-    );
-
-    // 3. Return the result
-    return {
-      id: item.id,
-      messages,
-    };
   };
 
   batchCreate = async (newMessages: DBMessageItem[]) => {
