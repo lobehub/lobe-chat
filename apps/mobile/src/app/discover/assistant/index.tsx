@@ -2,7 +2,7 @@ import { AssistantCategory, DiscoverAssistantItem } from '@lobechat/types';
 import { ActionIcon, CapsuleTabs, Center, Empty, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { FlashList, FlashListRef } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
-import { SearchIcon } from 'lucide-react-native';
+import { AlertCircle, PackageOpen, SearchIcon } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
@@ -91,7 +91,7 @@ const AssistantList = () => {
   }, [hasMoreData, theme.colorPrimary]);
 
   const renderEmptyComponent = useCallback(
-    () => <Empty description={t('assistant.noData', { ns: 'common' })} />,
+    () => <Empty description={t('assistant.noData', { ns: 'common' })} icon={PackageOpen} />,
     [],
   );
 
@@ -105,7 +105,9 @@ const AssistantList = () => {
   let content;
 
   if (error) {
-    content = <Empty description={t('assistant.fetchError', { ns: 'common' })} />;
+    content = (
+      <Empty description={t('assistant.fetchError', { ns: 'common' })} icon={AlertCircle} />
+    );
   } else if (isLoading && currentPage === 1) {
     content = <AssistantListSkeleton />;
   } else {

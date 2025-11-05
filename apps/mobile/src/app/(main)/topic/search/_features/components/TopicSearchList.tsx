@@ -3,6 +3,7 @@ import { Center, Empty, Flexbox } from '@lobehub/ui-rn';
 import type { FlashListRef } from '@shopify/flash-list';
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
+import { MessageSquareOff } from 'lucide-react-native';
 import { forwardRef, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { InteractionManager } from 'react-native';
@@ -87,7 +88,10 @@ const TopicSearchList = memo(
     const renderEmptyComponent = useCallback(
       () => (
         <Center paddingBlock={48}>
-          <Empty description={keyword ? t('search.emptyResult') : t('search.placeholder')} />
+          <Empty
+            description={keyword ? t('search.emptyResult') : t('search.placeholder')}
+            icon={MessageSquareOff}
+          />
         </Center>
       ),
       [keyword, t],

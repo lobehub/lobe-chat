@@ -10,6 +10,7 @@ import {
   Text,
 } from '@lobehub/ui-rn';
 import { router, useLocalSearchParams } from 'expo-router';
+import { FileQuestion } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager, ScrollView } from 'react-native';
@@ -118,6 +119,7 @@ const AssistantDetail = () => {
             ? t('assistant.detail.notFoundIdentifier', { ns: 'discover' })
             : t('assistant.detail.loadFailed', { ns: 'discover' })
         }
+        icon={FileQuestion}
       />
     );
   } else {

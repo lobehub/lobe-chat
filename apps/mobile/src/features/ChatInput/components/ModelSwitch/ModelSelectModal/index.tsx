@@ -1,7 +1,7 @@
 import { EnabledProviderWithModels } from '@lobechat/types';
 import { BottomSheet, Center, Empty, Flexbox, Icon, Text, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { ArrowRight, Loader2Icon } from 'lucide-react-native';
+import { ArrowRight, Loader2Icon, WifiOff } from 'lucide-react-native';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -142,6 +142,7 @@ const ModelSelectModal = memo<ModelSelectModalProps>(({ visible, onClose }) => {
             description={t('status.networkRetryTip', {
               ns: 'common',
             })}
+            icon={WifiOff}
           />
         </Center>
       );

@@ -1,6 +1,6 @@
 import { ActionIcon, Cell, Center, Empty, useTheme } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
-import { ClockIcon, Trash2Icon, XIcon } from 'lucide-react-native';
+import { ClockIcon, History, Trash2Icon, XIcon } from 'lucide-react-native';
 import { memo, useCallback } from 'react';
 
 interface RecentSearchesProps {
@@ -102,7 +102,7 @@ const RecentSearches = memo<RecentSearchesProps>(
     if (searches.length === 0) {
       return (
         <Center paddingBlock={48}>
-          <Empty description={emptyDescription} />
+          <Empty description={emptyDescription} icon={History} />
         </Center>
       );
     }

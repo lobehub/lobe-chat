@@ -2,7 +2,7 @@ import { SessionDefaultGroup, SessionGroupItem } from '@lobechat/types';
 import { Cell, Empty, Flexbox, PageContainer, Toast } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Check } from 'lucide-react-native';
+import { Check, FolderOpen } from 'lucide-react-native';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -109,7 +109,9 @@ export default function GroupSelectPage() {
       <Flexbox flex={1}>
         <FlashList
           ItemSeparatorComponent={() => <Flexbox height={8} />}
-          ListEmptyComponent={<Empty description={t('sessionGroup.emptyGroup')} />}
+          ListEmptyComponent={
+            <Empty description={t('sessionGroup.emptyGroup')} icon={FolderOpen} />
+          }
           contentContainerStyle={{
             padding: 16,
           }}

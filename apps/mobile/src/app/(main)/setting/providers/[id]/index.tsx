@@ -10,7 +10,7 @@ import {
 } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { BrainIcon, LucideSettings2 } from 'lucide-react-native';
+import { BrainIcon, FileQuestion, LucideSettings2, ServerCrash } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
@@ -142,7 +142,7 @@ const ProviderDetailPage = () => {
         case 'empty': {
           return (
             <Center paddingBlock={24}>
-              <Empty description={item.data?.message ?? ''} />
+              <Empty description={item.data?.message ?? ''} icon={ServerCrash} />
             </Center>
           );
         }
@@ -205,7 +205,11 @@ const ProviderDetailPage = () => {
         title={headerTitle === 'lobehub' ? 'LobeHub' : headerTitle}
       >
         <Center paddingBlock={24}>
-          <Empty description={t('aiProviders.detail.loadFailed', { ns: 'setting' })} flex={1} />
+          <Empty
+            description={t('aiProviders.detail.loadFailed', { ns: 'setting' })}
+            flex={1}
+            icon={ServerCrash}
+          />
         </Center>
       </PageContainer>
     );
@@ -227,7 +231,11 @@ const ProviderDetailPage = () => {
     return (
       <PageContainer loading={loading} showBack title={id || ''}>
         <Center paddingBlock={24}>
-          <Empty description={t('aiProviders.detail.notFound', { ns: 'setting' })} flex={1} />
+          <Empty
+            description={t('aiProviders.detail.notFound', { ns: 'setting' })}
+            flex={1}
+            icon={FileQuestion}
+          />
         </Center>
       </PageContainer>
     );

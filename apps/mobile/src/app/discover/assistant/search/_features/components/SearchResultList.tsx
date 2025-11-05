@@ -2,6 +2,7 @@ import type { DiscoverAssistantItem } from '@lobechat/types';
 import { Center, Empty, useTheme } from '@lobehub/ui-rn';
 import type { FlashListRef } from '@shopify/flash-list';
 import { FlashList } from '@shopify/flash-list';
+import { AlertCircle, SearchX } from 'lucide-react-native';
 import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';
@@ -83,6 +84,7 @@ const SearchResultList = memo(
       () => (
         <Empty
           description={searchText.trim() ? t('assistant.searchNoResult') : t('assistant.noData')}
+          icon={SearchX}
         />
       ),
       [searchText, t],
@@ -98,7 +100,7 @@ const SearchResultList = memo(
 
     // 错误状态
     if (error) {
-      return <Empty description={t('assistant.fetchError')} />;
+      return <Empty description={t('assistant.fetchError')} icon={AlertCircle} />;
     }
 
     // 首次加载中
