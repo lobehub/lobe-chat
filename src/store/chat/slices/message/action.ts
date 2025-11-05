@@ -33,7 +33,7 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
 import type { ChatStoreState } from '../../initialState';
-import { chatSelectors } from '../../selectors';
+import { dbMessageSelectors, displayMessageSelectors } from '../../selectors';
 import { preventLeavingFn, toggleBooleanList } from '../../utils';
 import { MessageDispatch, messagesReducer } from './reducer';
 
@@ -66,7 +66,7 @@ export interface ChatMessageAction {
   ) => SWRResponse<UIChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
-  replaceMessages: (messages: UIChatMessage[]) => void;
+  replaceMessages: (messages: UIChatMessage[], action?: any) => void;
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
@@ -124,7 +124,6 @@ export interface ChatMessageAction {
    */
   internal_deleteMessage: (id: string) => Promise<void>;
 
-  internal_fetchMessages: () => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 
   /**
@@ -161,11 +160,11 @@ export const chatMessage: StateCreator<
   ChatMessageAction
 > = (set, get) => ({
   deleteMessage: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message) return;
 
     let ids = [message.id];
-    const allMessages = chatSelectors.activeBaseChats(get());
+    const allMessages = displayMessageSelectors.activeDisplayMessages(get());
 
     // Handle assistantGroup messages: delete all child blocks and tool results
     if (message.role === 'assistantGroup' && message.children) {
@@ -176,9 +175,7 @@ export const chatMessage: StateCreator<
       // Collect all tool result IDs from children
       const toolResultIds = message.children.flatMap((child) => {
         if (!child.tools) return [];
-        return child.tools
-          .filter((tool) => tool.result?.id)
-          .map((tool) => tool.result!.id);
+        return child.tools.filter((tool) => tool.result?.id).map((tool) => tool.result!.id);
       });
       ids = ids.concat(toolResultIds);
     }
@@ -202,7 +199,7 @@ export const chatMessage: StateCreator<
   },
 
   deleteToolMessage: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
 
     const removeToolInAssistantMessage = async () => {
@@ -334,18 +331,19 @@ export const chatMessage: StateCreator<
       {
         onSuccess: (messages, key) => {
           const nextMap = {
-            ...get().messagesMap,
+            ...get().dbMessagesMap,
             [messageMapKey(messageContextId || '', activeTopicId)]: messages,
           };
 
           // no need to update map if the messages have been init and the map is the same
-          if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
+          if (get().messagesInit && isEqual(nextMap, get().dbMessagesMap)) return;
 
           set(
-            { messagesInit: true, messagesMap: nextMap },
+            { messagesInit: true },
             false,
-            n('useFetchMessages', { messages, queryKey: key }),
+            n('useFetchMessages(success)', { messages, queryKey: key }),
           );
+          get().replaceMessages(messages, n('useFetchMessages/updateMessages'));
         },
       },
     ),
@@ -355,7 +353,7 @@ export const chatMessage: StateCreator<
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'session']);
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'group']);
   },
-  replaceMessages: (messages) => {
+  replaceMessages: (messages, action) => {
     const messagesKey = messageMapKey(get().activeId, get().activeTopicId);
 
     // Get raw messages from dbMessagesMap and apply reducer
@@ -374,7 +372,7 @@ export const chatMessage: StateCreator<
         messagesMap: { ...get().messagesMap, [messagesKey]: flatList },
       },
       false,
-      'replaceMessages',
+      action ?? 'replaceMessages',
     );
   },
 
@@ -484,18 +482,6 @@ export const chatMessage: StateCreator<
     }
   },
 
-  internal_fetchMessages: async () => {
-    const messages = await messageService.getMessages(get().activeId, get().activeTopicId);
-    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
-    // no need to update map if the messages have been init and the map is the same
-    if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
-
-    set(
-      { messagesInit: true, messagesMap: nextMap },
-      false,
-      n('internal_fetchMessages', { messages }),
-    );
-  },
   internal_createTmpMessage: (message) => {
     const { internal_dispatchMessage } = get();
 
@@ -557,7 +543,7 @@ export const chatMessage: StateCreator<
   },
   internal_traceMessage: async (id, payload) => {
     // tracing the diff of update
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message) return;
 
     const traceId = message?.traceId;

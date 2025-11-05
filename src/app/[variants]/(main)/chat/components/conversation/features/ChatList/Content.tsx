@@ -6,7 +6,7 @@ import { SkeletonList, VirtualizedList } from '@/features/Conversation';
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors } from '@/store/chat/selectors';
 
 import MainChatItem from './ChatItem';
 import Welcome from './WelcomeChatItem';
@@ -16,10 +16,12 @@ interface ListProps {
 }
 
 const Content = memo<ListProps>(({ mobile }) => {
-  const [isCurrentChatLoaded] = useChatStore((s) => [chatSelectors.isCurrentChatLoaded(s)]);
+  const [isCurrentChatLoaded] = useChatStore((s) => [
+    displayMessageSelectors.isCurrentDisplayChatLoaded(s),
+  ]);
 
   useFetchMessages();
-  const data = useChatStore(chatSelectors.mainDisplayChatIDs);
+  const data = useChatStore(displayMessageSelectors.mainDisplayChatIDs);
 
   const itemContent = useCallback(
     (index: number, id: string) => <MainChatItem id={id} index={index} />,

@@ -38,7 +38,12 @@ import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, threadSelectors, topicSelectors } from '../../../selectors';
+import {
+  dbMessageSelectors,
+  displayMessageSelectors,
+  threadSelectors,
+  topicSelectors,
+} from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
@@ -131,7 +136,7 @@ export const generateAIChatV2: StateCreator<
       return;
     }
 
-    const messages = chatSelectors.activeBaseChats(get());
+    const messages = displayMessageSelectors.activeDisplayMessages(get());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
     const autoCreateThreshold =
       chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
@@ -254,8 +259,8 @@ export const generateAIChatV2: StateCreator<
 
     // Get the current messages to generate AI response
     // remove the latest assistant message id
-    const baseMessages = chatSelectors
-      .activeBaseChats(get())
+    const baseMessages = displayMessageSelectors
+      .activeDisplayMessages(get())
       .filter((item) => item.id !== data.assistantMessageId);
 
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
@@ -272,7 +277,9 @@ export const generateAIChatV2: StateCreator<
       const topic = topicSelectors.getTopicById(data.topicId)(get());
 
       if (topic && !topic.title) {
-        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
+        const chats = displayMessageSelectors.getDisplayMessagesByKey(
+          messageMapKey(activeId, topic.id),
+        )(get());
         await get().summaryTopicTitle(topic.id, chats);
       }
     };
@@ -292,7 +299,10 @@ export const generateAIChatV2: StateCreator<
       //
       // // if there is relative files, then add files to agent
       // // only available in server mode
-      const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
+      const userFiles = dbMessageSelectors
+        .dbUserFiles(get())
+        .map((f) => f?.id)
+        .filter(Boolean) as string[];
 
       await getAgentStoreState().addFilesToAgent(userFiles, false);
     } catch (e) {
@@ -576,7 +586,7 @@ export const generateAIChatV2: StateCreator<
   triggerToolsCalling: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
     log('[triggerToolsCalling] start, assistantId (block ID): %s', assistantId);
 
-    const foundMessage = chatSelectors.getMessageById(assistantId)(get());
+    const foundMessage = displayMessageSelectors.getDisplayMessageById(assistantId)(get());
     if (!foundMessage) {
       log('[triggerToolsCalling] Message not found, returning');
       return;
@@ -586,7 +596,7 @@ export const generateAIChatV2: StateCreator<
     let groupMessage: UIChatMessage;
     let latestBlock: UIChatMessage;
 
-    if (foundMessage.role === 'group') {
+    if (foundMessage.role === 'assistantGroup') {
       // Case 1: assistantId matches a group message ID directly
       // Find the block within children that matches assistantId
       groupMessage = foundMessage;
@@ -602,8 +612,8 @@ export const generateAIChatV2: StateCreator<
       latestBlock = block as UIChatMessage;
     } else if (foundMessage.parentId) {
       // Case 2: assistantId is a block ID, need to get parent group message
-      const parentMsg = chatSelectors.getMessageById(foundMessage.parentId)(get());
-      if (!parentMsg || parentMsg.role !== 'group') {
+      const parentMsg = displayMessageSelectors.getDisplayMessageById(foundMessage.parentId)(get());
+      if (!parentMsg || parentMsg.role !== 'assistantGroup') {
         log('[triggerToolsCalling] Parent group message not found, returning');
         return;
       }
@@ -692,7 +702,7 @@ export const generateAIChatV2: StateCreator<
       return;
     }
 
-    const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
+    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(latestToolId)(get());
     log(
       '[triggerToolsCalling] Calling follow-up assistant message with latestToolId: %s',
       latestToolId,
@@ -719,7 +729,7 @@ export const generateAIChatV2: StateCreator<
 
     const chats = inPortalThread
       ? threadSelectors.portalAIChatsWithHistoryConfig(get())
-      : chatSelectors.mainAIChatsWithHistoryConfig(get());
+      : displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
     let assistantMessageId: string;
 
@@ -733,7 +743,7 @@ export const generateAIChatV2: StateCreator<
 
     // 遍历所有 group messages，找到包含该 tool result 的那个
     for (const msg of chats) {
-      if (msg.role === 'group' && msg.children) {
+      if (msg.role === 'assistantGroup' && msg.children) {
         for (const child of msg.children) {
           // 检查 child 的 tools 中是否有 result_msg_id === parentId
           if (child.tools?.some((tool) => tool.result_msg_id === parentId)) {

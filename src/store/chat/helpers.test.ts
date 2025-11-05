@@ -70,7 +70,7 @@ describe('chatHelpers', () => {
         { id: '1', content: 'Hello' },
         {
           id: 'group1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             { id: 'block1', content: 'First block' },
@@ -89,7 +89,7 @@ describe('chatHelpers', () => {
       const messagesWithGroup = [
         {
           id: 'group1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [{ id: 'block1', content: 'Block content' }],
         },
@@ -104,13 +104,13 @@ describe('chatHelpers', () => {
       const messagesWithGroups = [
         {
           id: 'group1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [{ id: 'block1', content: 'First group block' }],
         },
         {
           id: 'group2',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [{ id: 'block2', content: 'Second group block' }],
         },
@@ -128,7 +128,7 @@ describe('chatHelpers', () => {
         { id: 'duplicate', content: 'Top-level message', role: 'user' },
         {
           id: 'group1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [{ id: 'duplicate', content: 'Block message' }],
         },
@@ -145,7 +145,7 @@ describe('chatHelpers', () => {
       const messagesWithGroup = [
         {
           id: 'group1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [{ id: 'block1', content: 'Block content' }],
         },
@@ -157,7 +157,7 @@ describe('chatHelpers', () => {
 
     it('handles group message without children', () => {
       const messagesWithEmptyGroup = [
-        { id: 'group1', role: 'group', content: '' },
+        { id: 'group1', role: 'assistantGroup', content: '' },
       ] as UIChatMessage[];
 
       const block = chatHelpers.getMessageById(messagesWithEmptyGroup, 'block1');
