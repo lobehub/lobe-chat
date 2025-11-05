@@ -188,11 +188,11 @@
       },
       "subject": "Geri Bildirim - LobeChat - {{version}}"
     },
-    "error": "E-posta düzenleyici açılamadı, lütfen daha sonra tekrar deneyin",
+    "error": "E-posta istemcisi açılamadı, lütfen daha sonra tekrar deneyin",
     "saved": "Geri bildirim taslaklara kaydedildi",
-    "sent": "Geri bildiriminiz için teşekkür ederiz!",
+    "sent": "E-posta gönderildi, geri bildiriminiz için teşekkür ederiz!",
     "title": "Geri Bildirim",
-    "unavailable": "E-posta özelliği kullanılamıyor, lütfen cihazınızda e-posta hesabı yapılandırıldığından emin olun"
+    "unavailable": "E-posta özelliği kullanılamıyor, lütfen cihazınızda e-posta hesabı veya e-posta işlevinin yapılandırıldığından emin olun"
   },
   "fontSize": {
     "preview": {

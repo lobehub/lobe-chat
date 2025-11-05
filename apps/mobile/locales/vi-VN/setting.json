@@ -188,11 +188,11 @@
       },
       "subject": "Phản hồi - LobeChat - {{version}}"
     },
-    "error": "Không thể mở trình soạn email, vui lòng thử lại sau",
+    "error": "Không thể mở ứng dụng email, vui lòng thử lại sau",
     "saved": "Phản hồi đã được lưu vào thư nháp",
-    "sent": "Cảm ơn bạn đã phản hồi!",
+    "sent": "Email đã được gửi, cảm ơn bạn đã phản hồi!",
     "title": "Góp ý",
-    "unavailable": "Chức năng email không khả dụng, vui lòng kiểm tra xem thiết bị đã cấu hình tài khoản email chưa"
+    "unavailable": "Chức năng email không khả dụng, vui lòng kiểm tra xem thiết bị đã cấu hình tài khoản email hoặc chức năng email chưa"
   },
   "fontSize": {
     "preview": {

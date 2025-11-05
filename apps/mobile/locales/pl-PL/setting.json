@@ -188,11 +188,11 @@
       },
       "subject": "Opinie - LobeChat - {{version}}"
     },
-    "error": "Nie udało się otworzyć edytora wiadomości e-mail, spróbuj ponownie później",
+    "error": "Nie udało się otworzyć klienta poczty e-mail, spróbuj ponownie później",
     "saved": "Opinia została zapisana w wersji roboczej",
-    "sent": "Dziękujemy za Twoją opinię!",
+    "sent": "E-mail został wysłany, dziękujemy za Twoją opinię!",
     "title": "Prześlij opinię",
-    "unavailable": "Funkcja e-mail jest niedostępna. Sprawdź, czy masz skonfigurowane konto e-mail na urządzeniu"
+    "unavailable": "Funkcja poczty e-mail jest niedostępna. Sprawdź, czy na urządzeniu skonfigurowano konto e-mail lub czy funkcja poczty jest aktywna"
   },
   "fontSize": {
     "preview": {

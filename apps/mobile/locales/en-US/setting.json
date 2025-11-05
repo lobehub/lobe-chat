@@ -188,11 +188,11 @@
       },
       "subject": "Feedback - LobeChat - {{version}}"
     },
-    "error": "Failed to open mail composer, please try again later",
+    "error": "Failed to open the email client. Please try again later.",
     "saved": "Feedback has been saved to drafts",
-    "sent": "Thank you for your feedback!",
+    "sent": "Email sent successfully. Thank you for your feedback!",
     "title": "Feedback",
-    "unavailable": "Mail service is not available. Please check if your device has an email account configured"
+    "unavailable": "Email feature is unavailable. Please check if your device has an email account configured or supports email functionality."
   },
   "fontSize": {
     "preview": {

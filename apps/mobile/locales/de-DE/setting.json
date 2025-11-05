@@ -188,11 +188,11 @@
       },
       "subject": "Feedback - LobeChat - {{version}}"
     },
-    "error": "E-Mail-Editor konnte nicht geöffnet werden. Bitte versuchen Sie es später erneut.",
+    "error": "E-Mail-Client konnte nicht geöffnet werden. Bitte versuchen Sie es später erneut.",
     "saved": "Feedback wurde im Entwurfsordner gespeichert",
-    "sent": "Vielen Dank für Ihr Feedback!",
+    "sent": "E-Mail wurde gesendet. Vielen Dank für Ihr Feedback!",
     "title": "Feedback",
-    "unavailable": "E-Mail-Funktion nicht verfügbar. Bitte überprüfen Sie, ob ein E-Mail-Konto eingerichtet ist."
+    "unavailable": "E-Mail-Funktion nicht verfügbar. Bitte überprüfen Sie, ob auf Ihrem Gerät ein E-Mail-Konto eingerichtet ist oder die E-Mail-Funktion aktiviert wurde."
   },
   "fontSize": {
     "preview": {
