@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import React, { memo, useMemo } from 'react';
+import { ReactNode, memo, useCallback, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
 import Actions from '@/features/ChatItem/components/Actions';
@@ -57,6 +57,18 @@ const AssistantMessage = memo<AssistantMessageProps>(
         <Actions hasError={!!message.error} message={message} />
       ) : undefined;
 
+    // 使用 renderMessage 来接管整个内容渲染，对齐 web 端逻辑
+    const renderMessage = useCallback(
+      (editableContent: ReactNode) => (
+        <AssistantMessageContent
+          {...message}
+          editableContent={editableContent}
+          isGenerating={isLoading}
+        />
+      ),
+      [message, isLoading],
+    );
+
     return (
       <ChatItem
         actions={actionsNode}
@@ -70,11 +82,9 @@ const AssistantMessage = memo<AssistantMessageProps>(
         loading={isLoading}
         markdownProps={markdownProps}
         message={message.content}
-        messageExtra={
-          <AssistantMessageContent {...message} editableContent={null} isGenerating={isLoading} />
-        }
         placement="left"
         primary={false}
+        renderMessage={renderMessage}
         showTime={showTime}
         showTitle={showTitle}
         time={message.createdAt}
