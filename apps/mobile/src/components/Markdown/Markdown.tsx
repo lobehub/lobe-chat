@@ -31,6 +31,7 @@ const Markdown = memo<MarkdownProps>((props) => {
     remarkPlugins,
     remarkPluginsAhead,
     showFootnotes = true,
+    citations,
     style,
     components,
     ...rest
@@ -55,6 +56,7 @@ const Markdown = memo<MarkdownProps>((props) => {
       <MarkdownProvider
         animated={delayedAnimated}
         borderRadius={borderRadius}
+        citations={citations}
         components={components}
         enableCustomFootnotes={enableCustomFootnotes}
         enableGithubAlert={enableGithubAlert}

@@ -13,7 +13,6 @@ import Tool from './Tool';
 // TODO: 待实现以下组件
 // import FileChunks from './FileChunks';
 // import IntentUnderstanding from './IntentUnderstanding';
-// import SearchGrounding from './SearchGrounding';
 
 export interface AssistantMessageContentProps extends UIChatMessage {
   editableContent: ReactNode;
@@ -43,14 +42,11 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
       (!props.reasoning && isGenerating);
 
     // TODO: 待实现功能
-    // const showSearch = !!search && !!search.citations?.length;
     // const showFileChunks = !!chunksList && chunksList.length > 0;
 
     return (
       <Flexbox gap={8}>
-        {/* TODO: 添加搜索引用 */}
-        {/* {showSearch && <SearchGrounding citations={search?.citations} searchQueries={search?.searchQueries} />} */}
-
+        {/* 搜索引用 - 通过 Markdown 的 Footnotes 功能自动处理 citations */}
         {/* TODO: 添加文件块 */}
         {/* {showFileChunks && <FileChunks data={chunksList} />} */}
 

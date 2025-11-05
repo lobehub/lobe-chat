@@ -31,13 +31,20 @@ const AssistantMessage = memo<AssistantMessageProps>(
     showTime = true,
     showTitle = true,
   }) => {
-    // Create markdownProps for Assistant messages (with animated and enableCustomFootnotes)
+    // Create markdownProps for Assistant messages (with animated, citations and enableCustomFootnotes)
     const markdownProps = useMemo(
       () => ({
         animated: isLastMessage && isGenerating,
+        citations: message.search?.citations,
         enableCustomFootnotes: true,
+        showFootnotes:
+          message.search?.citations &&
+          // if the citations are all empty, we should not show the citations
+          message.search?.citations.length > 0 &&
+          // if the citations's url and title are all the same, we should not show the citations
+          message.search?.citations.every((item) => item.title !== item.url),
       }),
-      [isLastMessage, isGenerating],
+      [isLastMessage, isGenerating, message.search],
     );
 
     const renderMessage = useCallback(

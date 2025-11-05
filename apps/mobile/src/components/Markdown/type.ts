@@ -12,9 +12,16 @@ export interface TypographyProps {
   marginMultiple?: number;
 }
 
+export interface CitationItem {
+  alt?: string;
+  title?: string;
+  url: string;
+}
+
 export interface SyntaxMarkdownProps extends Omit<TypographyProps, 'children'> {
   animated?: boolean;
   children: string;
+  citations?: CitationItem[];
   components?: Components;
   enableCustomFootnotes?: boolean;
   enableGithubAlert?: boolean;
