@@ -45,15 +45,10 @@ export type FlatMessage = UIChatMessage;
  * Branch metadata attached to user messages
  */
 export interface BranchMetadata {
-  /** Total number of branches */
-  count: number;
-  /** Current active branch index */
-  current: number;
-  /** Branch items */
-  items: Array<{
-    createdAt: number;
-    id: string;
-  }>;
+  /** Active branch message ID */
+  activeId: string;
+  /** All branch message IDs */
+  branchIds: string[];
 }
 
 /**

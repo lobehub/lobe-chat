@@ -1,5 +1,3 @@
-import type { ModelPerformance, ModelUsage } from '@lobechat/types';
-
 /**
  * Context Tree Types
  *
@@ -18,13 +16,11 @@ interface BaseNode {
 }
 
 /**
- * Basic message node - renders a single message
+ * Basic message node - leaf node representing a single message
  */
 export interface MessageNode extends BaseNode {
-  /** Child nodes to render after this message */
-  children: ContextNode[];
-  /** Reference to the message in messageMap */
-  messageId: string;
+  /** Tool message IDs (for assistant messages with tool calls) */
+  tools?: string[];
   type: 'message';
 }
 
@@ -32,15 +28,9 @@ export interface MessageNode extends BaseNode {
  * Assistant group node - aggregates an assistant message with its tool calls
  */
 export interface AssistantGroupNode extends BaseNode {
-  /** The assistant message ID */
-  assistantMessageId: string;
-  /** Aggregated performance metrics from assistant and all tools */
-  performance?: ModelPerformance;
-  /** Tool call message nodes */
-  tools: MessageNode[];
+  /** Child nodes (assistant and tool messages) */
+  children: ContextNode[];
   type: 'assistantGroup';
-  /** Aggregated token usage from assistant and all tools */
-  usage?: ModelUsage;
 }
 
 /**

@@ -32,13 +32,11 @@
     "createdAt": 1704067202000,
     "updatedAt": 1704067202000,
     "meta": {},
-    "usage": {
+    "metadata": {
       "totalInputTokens": 28,
       "totalOutputTokens": 45,
       "totalTokens": 73,
-      "cost": 0.000219
-    },
-    "performance": {
+      "cost": 0.000219,
       "tps": 48.5,
       "ttft": 245,
       "duration": 928,
@@ -91,13 +89,11 @@
     "createdAt": 1704067205000,
     "updatedAt": 1704067205000,
     "meta": {},
-    "usage": {
+    "metadata": {
       "totalInputTokens": 156,
       "totalOutputTokens": 42,
       "totalTokens": 198,
-      "cost": 0.000594
-    },
-    "performance": {
+      "cost": 0.000594,
       "tps": 48,
       "ttft": 178,
       "duration": 875,
@@ -134,13 +130,11 @@
     "createdAt": 1704067208000,
     "updatedAt": 1704067208000,
     "meta": {},
-    "usage": {
+    "metadata": {
       "totalInputTokens": 245,
       "totalOutputTokens": 112,
       "totalTokens": 357,
-      "cost": 0.001071
-    },
-    "performance": {
+      "cost": 0.001071,
       "tps": 54,
       "ttft": 165,
       "duration": 2074,
