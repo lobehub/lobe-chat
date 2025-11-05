@@ -11,6 +11,7 @@ import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
+import { MessageService } from '@/server/services/message';
 
 const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -19,6 +20,7 @@ const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
     ctx: {
       fileService: new FileService(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      messageService: new MessageService(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -109,23 +111,8 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.messageModel.deleteMessage(input.id);
-
-      // If sessionId or topicId is provided, return the full message list
-      if (input.sessionId !== undefined || input.topicId !== undefined) {
-        const messageList = await ctx.messageModel.query(
-          {
-            sessionId: input.sessionId,
-            topicId: input.topicId,
-          },
-          {
-            groupAssistantMessages: input.useGroup ?? false,
-            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-          },
-        );
-        return { messages: messageList, success: true };
-      }
-      return { success: true };
+      const { id, ...options } = input;
+      return ctx.messageService.removeMessage(id, options);
     }),
 
   removeMessageQuery: messageProcedure
@@ -144,23 +131,8 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.messageModel.deleteMessages(input.ids);
-
-      // If sessionId or topicId is provided, return the full message list
-      if (input.sessionId !== undefined || input.topicId !== undefined) {
-        const messageList = await ctx.messageModel.query(
-          {
-            sessionId: input.sessionId,
-            topicId: input.topicId,
-          },
-          {
-            groupAssistantMessages: input.useGroup ?? false,
-            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-          },
-        );
-        return { messages: messageList, success: true };
-      }
-      return { success: true };
+      const { ids, ...options } = input;
+      return ctx.messageService.removeMessages(ids, options);
     }),
 
   removeMessagesByAssistant: messageProcedure
@@ -207,12 +179,8 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.update(input.id, input.value as any, {
-        groupAssistantMessages: input.useGroup ?? false,
-        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-        sessionId: input.sessionId,
-        topicId: input.topicId,
-      });
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessage(id, value as any, options);
     }),
 
   updateMessagePlugin: messageProcedure
@@ -235,23 +203,8 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.messageModel.updateMessageRAG(input.id, input.value);
-
-      // If sessionId or topicId is provided, return the full message list
-      if (input.sessionId !== undefined || input.topicId !== undefined) {
-        const messageList = await ctx.messageModel.query(
-          {
-            sessionId: input.sessionId,
-            topicId: input.topicId,
-          },
-          {
-            groupAssistantMessages: input.useGroup ?? false,
-            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-          },
-        );
-        return { messages: messageList, success: true };
-      }
-      return { success: true };
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessageRAG(id, value, options);
     }),
 
   updateMetadata: messageProcedure
@@ -276,23 +229,8 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      // If sessionId or topicId is provided, we need to return the full message list
-      if (input.sessionId !== undefined || input.topicId !== undefined) {
-        await ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
-        const messageList = await ctx.messageModel.query(
-          {
-            sessionId: input.sessionId,
-            topicId: input.topicId,
-          },
-          {
-            groupAssistantMessages: input.useGroup ?? false,
-            postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-          },
-        );
-        return { messages: messageList, success: true };
-      }
-      await ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
-      return { success: true };
+      const { id, value, ...options } = input;
+      return ctx.messageService.updatePluginError(id, value, options);
     }),
 
   updatePluginState: messageProcedure
@@ -306,12 +244,8 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updatePluginState(input.id, input.value, {
-        groupAssistantMessages: input.useGroup ?? false,
-        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-        sessionId: input.sessionId,
-        topicId: input.topicId,
-      });
+      const { id, value, ...options } = input;
+      return ctx.messageService.updatePluginState(id, value, options);
     }),
 
   updateTTS: messageProcedure
