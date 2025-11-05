@@ -11,7 +11,6 @@ import {
 import { Image } from 'expo-image';
 import { Link, useRouter } from 'expo-router';
 import { VideoView, useVideoPlayer } from 'expo-video';
-import * as WebBrowser from 'expo-web-browser';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
@@ -21,6 +20,7 @@ import { useAuth, useAuthActions } from '@/store/_user';
 import { useSettingStore } from '@/store/setting';
 import { isDev } from '@/utils/env';
 import { getLoginErrorKey } from '@/utils/error';
+import { openLink } from '@/utils/openLink';
 
 const LoginPage = () => {
   const theme = useTheme();
@@ -56,17 +56,6 @@ const LoginPage = () => {
 
   const handleSelfHostedLogin = () => {
     router.push('/auth/login/selfhost');
-  };
-
-  const handleOpenLink = async (url: string) => {
-    try {
-      await WebBrowser.openBrowserAsync(url, {
-        controlsColor: theme.colorPrimary,
-        presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
-      });
-    } catch (error) {
-      console.error('Failed to open browser:', error);
-    }
   };
 
   // 根据主题选择视频源
@@ -157,14 +146,18 @@ const LoginPage = () => {
           <Flexbox align={'center'} gap={16} horizontal justify={'center'}>
             <Text
               fontSize={12}
-              onPress={() => handleOpenLink('https://lobehub.com/terms')}
+              onPress={() =>
+                openLink('https://lobehub.com/terms', { controlsColor: theme.colorPrimary })
+              }
               type={'secondary'}
             >
               {t('login.usePolicy', { ns: 'auth' })}
             </Text>
             <Text
               fontSize={12}
-              onPress={() => handleOpenLink('https://lobehub.com/privacy')}
+              onPress={() =>
+                openLink('https://lobehub.com/privacy', { controlsColor: theme.colorPrimary })
+              }
               type={'secondary'}
             >
               {t('login.privacyPolicy', { ns: 'auth' })}
