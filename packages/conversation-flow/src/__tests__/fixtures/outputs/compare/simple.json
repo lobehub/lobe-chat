@@ -48,51 +48,52 @@
     },
     {
       "activeColumnId": "msg-603",
-      "children": [
-        {
-          "content": "**REST is a great choice:**\n\nREST is simple, well-understood, and has excellent caching support. It's perfect for:\n\n- CRUD operations\n- Public APIs\n- Mobile apps with limited bandwidth\n- Teams familiar with HTTP conventions\n\n**Advantages:**\n- HTTP caching works out of the box\n- Stateless architecture\n- Wide tooling support\n- Easy to learn\n\n**Trade-offs:**\n- Over-fetching/under-fetching data\n- Multiple endpoints to maintain\n- Versioning can be complex",
-          "id": "msg-602",
-          "performance": {
-            "duration": 3452,
-            "latency": 3839,
-            "tps": 42,
-            "ttft": 387
-          },
-          "usage": {
-            "cost": 0.00471,
-            "totalInputTokens": 12,
-            "totalOutputTokens": 145,
-            "totalTokens": 157
-          }
-        },
-        {
-          "content": "**GraphQL offers more flexibility:**\n\nGraphQL provides a powerful query language that lets clients request exactly what they need. It's ideal for:\n\n- Complex data relationships\n- Multiple client types (web, mobile, desktop)\n- Rapidly evolving requirements\n- Real-time applications\n\n**Advantages:**\n- Single endpoint\n- No over-fetching\n- Strong typing with schema\n- Powerful developer tools\n\n**Trade-offs:**\n- Steeper learning curve\n- More complex server setup\n- Caching requires extra effort\n- Can be overkill for simple APIs",
-          "id": "msg-603",
-          "performance": {
-            "duration": 3098,
-            "latency": 3396,
-            "tps": 51,
-            "ttft": 298
-          },
-          "usage": {
-            "cost": 0.00085,
-            "totalInputTokens": 12,
-            "totalOutputTokens": 158,
-            "totalTokens": 170
-          }
-        }
-      ],
       "columns": [
         [
           {
             "id": "msg-602",
-            "type": "message"
+            "role": "assistant",
+            "content": "**REST is a great choice:**\n\nREST is simple, well-understood, and has excellent caching support. It's perfect for:\n\n- CRUD operations\n- Public APIs\n- Mobile apps with limited bandwidth\n- Teams familiar with HTTP conventions\n\n**Advantages:**\n- HTTP caching works out of the box\n- Stateless architecture\n- Wide tooling support\n- Easy to learn\n\n**Trade-offs:**\n- Over-fetching/under-fetching data\n- Multiple endpoints to maintain\n- Versioning can be complex",
+            "parentId": "msg-601",
+            "model": "gpt-4",
+            "provider": "openai",
+            "createdAt": 1704067205000,
+            "updatedAt": 1704067205000,
+            "meta": {},
+            "metadata": {
+              "totalInputTokens": 12,
+              "totalOutputTokens": 145,
+              "totalTokens": 157,
+              "cost": 0.00471,
+              "tps": 42,
+              "ttft": 387,
+              "duration": 3452,
+              "latency": 3839
+            }
           }
         ],
         [
           {
             "id": "msg-603",
-            "type": "message"
+            "role": "assistant",
+            "content": "**GraphQL offers more flexibility:**\n\nGraphQL provides a powerful query language that lets clients request exactly what they need. It's ideal for:\n\n- Complex data relationships\n- Multiple client types (web, mobile, desktop)\n- Rapidly evolving requirements\n- Real-time applications\n\n**Advantages:**\n- Single endpoint\n- No over-fetching\n- Strong typing with schema\n- Powerful developer tools\n\n**Trade-offs:**\n- Steeper learning curve\n- More complex server setup\n- Caching requires extra effort\n- Can be overkill for simple APIs",
+            "parentId": "msg-601",
+            "model": "claude-3-5-sonnet-20241022",
+            "provider": "anthropic",
+            "createdAt": 1704067205100,
+            "updatedAt": 1704067205100,
+            "meta": {},
+            "metadata": {
+              "totalInputTokens": 12,
+              "totalOutputTokens": 158,
+              "totalTokens": 170,
+              "cost": 0.00085,
+              "tps": 51,
+              "ttft": 298,
+              "duration": 3098,
+              "latency": 3396,
+              "activeColumn": true
+            }
           }
         ]
       ],

@@ -684,8 +684,7 @@ export class Transformer {
     allMessages: Message[],
     processedIds: Set<string>,
   ): Message {
-    const columns: ContextNode[][] = [];
-    const children: AssistantContentBlock[] = [];
+    const columns: Message[][] = [];
     const columnFirstIds: string[] = [];
     let activeColumnId: string | undefined;
 
@@ -720,86 +719,21 @@ export class Transformer {
           columnProcessedIds,
         );
 
-        // Create column with AssistantGroup structure
-        const assistantGroupChildren: ContextNode[] = [];
+        // Create assistantGroup virtual message for this column
+        const groupMessage = this.createAssistantGroupMessage(
+          assistantChain[0],
+          assistantChain,
+          allToolMessages,
+        );
 
-        // Build children MessageNodes for each assistant in the chain
-        for (const assistant of assistantChain) {
-          const toolIds = allToolMessages
-            .filter((tm) => tm.parentId === assistant.id)
-            .map((tm) => tm.id);
-
-          const messageNode: MessageNode = {
-            id: assistant.id,
-            type: 'message',
-          };
-
-          if (toolIds.length > 0) {
-            messageNode.tools = toolIds;
-          }
-
-          assistantGroupChildren.push(messageNode);
-        }
-
-        const assistantGroupColumn: AssistantGroupNode = {
-          children: assistantGroupChildren,
-          id: childMessage.id,
-          type: 'assistantGroup',
-        };
-
-        columns.push([assistantGroupColumn]);
-
-        // Add all assistant messages as content blocks to children array
-        for (const assistant of assistantChain) {
-          const toolsWithResults: ChatToolPayloadWithResult[] =
-            assistant.tools?.map((tool) => {
-              const toolMsg = allToolMessages.find((tm) => tm.tool_call_id === tool.id);
-              if (toolMsg) {
-                return {
-                  ...tool,
-                  result: {
-                    content: toolMsg.content || '',
-                    error: toolMsg.error,
-                    id: toolMsg.id,
-                    state: toolMsg.pluginState,
-                  },
-                  result_msg_id: toolMsg.id,
-                };
-              }
-              return tool;
-            }) || [];
-
-          const { usage: msgUsage, performance: msgPerformance } = this.splitMetadata(
-            assistant.metadata,
-          );
-
-          children.push({
-            content: assistant.content || '',
-            error: assistant.error,
-            id: assistant.id,
-            imageList:
-              assistant.imageList && assistant.imageList.length > 0
-                ? assistant.imageList
-                : undefined,
-            performance: msgPerformance,
-            reasoning: assistant.reasoning || undefined,
-            tools: toolsWithResults.length > 0 ? toolsWithResults : undefined,
-            usage: msgUsage,
-          });
-        }
+        columns.push([groupMessage]);
 
         // Mark all as processed
         assistantChain.forEach((m) => processedIds.add(m.id));
         allToolMessages.forEach((m) => processedIds.add(m.id));
       } else {
         // Regular message (not an AssistantGroup)
-        columns.push([
-          {
-            id: childId,
-            type: 'message',
-          },
-        ]);
-        children.push(this.messageToContentBlock(childMessage));
+        columns.push([childMessage]);
         processedIds.add(childId);
       }
     }
@@ -821,7 +755,6 @@ export class Transformer {
 
     return {
       activeColumnId,
-      children,
       columns: columns as any,
       content: '',
       createdAt,
@@ -836,16 +769,10 @@ export class Transformer {
   }
 
   private createCompareMessageFromChildren(parentMessage: Message, children: Message[]): Message {
-    // Create columns similar to contextTree
-    const columns: ContextNode[][] = children.map((msg) => [
-      {
-        id: msg.id,
-        type: 'message',
-      },
-    ]);
+    // columns contain full Message objects
+    const columns: Message[][] = children.map((msg) => [msg]);
 
     return {
-      children: children.map((msg) => this.messageToContentBlock(msg)),
       columns: columns as any,
       content: '',
       createdAt: Math.min(...children.map((m) => m.createdAt)),
@@ -866,17 +793,11 @@ export class Transformer {
     // Find active column ID from members metadata
     const activeColumnId = members.find((msg) => (msg.metadata as any)?.activeColumn === true)?.id;
 
-    // Create columns similar to contextTree
-    const columns: ContextNode[][] = members.map((msg) => [
-      {
-        id: msg.id,
-        type: 'message',
-      },
-    ]);
+    // columns contain full Message objects
+    const columns: Message[][] = members.map((msg) => [msg]);
 
     return {
       activeColumnId,
-      children: members.map((msg) => this.messageToContentBlock(msg)),
       columns: columns as any,
       content: '',
       createdAt: Math.min(...members.map((m) => m.createdAt)),
