@@ -1,9 +1,10 @@
-import { ChatToolPayload } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui-rn';
+import { ChatToolPayload, ChatToolResult } from '@lobechat/types';
+import { Flexbox, Icon } from '@lobehub/ui-rn';
+import { Check, X } from 'lucide-react-native';
 import { memo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Alert } from 'react-native';
 
+import { LOADING_FLAT } from '@/_const/message';
+import { useTheme } from '@/components/styles';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
@@ -17,7 +18,8 @@ export interface ToolProps {
   identifier?: string;
   index: number;
   messageId: string;
-  payload: ChatToolPayload;
+  payload?: ChatToolPayload;
+  result?: ChatToolResult;
   type?: string;
 }
 
@@ -25,46 +27,65 @@ export interface ToolProps {
  * Tool - 工具调用组件
  *
  * 显示工具标题和执行结果
- * 简化版：移除了交互功能（编辑、重新执行等）
+ * 对齐桌面端：支持展开/收起、显示成功/失败状态
  */
-const Tool = memo<ToolProps>(({ id, apiName, identifier, arguments: args }) => {
-  const { t } = useTranslation('tool');
-  const [expanded, setExpanded] = useState(true);
+const Tool = memo<ToolProps>(({ id, apiName, identifier, arguments: args, result }) => {
+  const theme = useTheme();
+  const [expanded, setExpanded] = useState(false);
 
-  // 获取工具执行结果消息
+  // 如果没有传入 result，从 store 获取（兼容旧逻辑）
   const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(id));
+  const finalResult: ChatToolResult | undefined =
+    result ||
+    (toolMessage
+      ? {
+          content: toolMessage.content,
+          id: toolMessage.id,
+          state: toolMessage.pluginState,
+        }
+      : undefined);
+
+  // 判断工具是否有结果
+  const hasError = !!finalResult?.error;
+  const hasSuccessResult = !!finalResult?.content && finalResult.content !== LOADING_FLAT;
+  const hasResult = hasSuccessResult || hasError;
 
   const handleTitlePress = () => {
-    // 如果是内置工具，切换展开/收起
-    if (identifier === 'lobe-web-browsing' || identifier === 'lobe-local-system') {
-      setExpanded(!expanded);
-    } else {
-      // 其他工具显示不支持提示
-      Alert.alert(t('title'), t('mobileNotSupported'));
-    }
+    setExpanded(!expanded);
   };
 
   return (
     <Flexbox gap={8}>
-      {/* 工具标题 */}
+      {/* 工具标题行 */}
       <Flexbox
         align="center"
-        gap={4}
+        gap={8}
         horizontal
         justify="space-between"
         onPress={handleTitlePress}
         paddingBlock={4}
       >
         <ToolTitle apiName={apiName || ''} identifier={identifier || ''} />
+
+        <Flexbox align="center" gap={4} horizontal>
+          {/* 成功/失败状态图标 */}
+          {hasResult && (
+            <Icon
+              color={hasError ? theme.colorError : theme.colorSuccess}
+              icon={hasError ? X : Check}
+              size={16}
+            />
+          )}
+        </Flexbox>
       </Flexbox>
 
       {/* 工具渲染结果 */}
-      {expanded && toolMessage && (
+      {expanded && finalResult && (
         <ToolRender
           apiName={apiName || ''}
           arguments={args}
           identifier={identifier || ''}
-          pluginState={toolMessage.pluginState}
+          pluginState={finalResult.state || toolMessage?.pluginState}
         />
       )}
     </Flexbox>

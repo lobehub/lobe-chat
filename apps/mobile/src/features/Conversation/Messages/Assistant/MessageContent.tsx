@@ -1,5 +1,5 @@
 import { LOADING_FLAT } from '@lobechat/const';
-import { UIChatMessage } from '@lobechat/types';
+import { ChatToolPayloadWithResult, UIChatMessage } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui-rn';
 import { ReactNode, memo } from 'react';
 
@@ -83,7 +83,7 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
         {/* 工具调用 */}
         {tools && tools.length > 0 && (
           <Flexbox gap={8}>
-            {tools.map((toolCall, index) => (
+            {(tools as ChatToolPayloadWithResult[]).map((toolCall, index) => (
               <Tool
                 apiName={toolCall.apiName}
                 arguments={toolCall.arguments}
@@ -92,7 +92,7 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
                 index={index}
                 key={toolCall.id}
                 messageId={id}
-                payload={toolCall}
+                result={toolCall.result}
                 type={toolCall.type}
               />
             ))}

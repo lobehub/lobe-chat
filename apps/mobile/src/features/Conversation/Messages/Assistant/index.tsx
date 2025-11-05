@@ -8,6 +8,7 @@ import MessageContent from '@/features/ChatItem/components/MessageContent';
 import { AssistantMessageContent } from './MessageContent';
 
 export interface AssistantMessageProps {
+  disableEditing?: boolean;
   index: number;
   isGenerating?: boolean;
   isLastMessage?: boolean;
