@@ -71,8 +71,12 @@ export class LobeAzureAI implements LobeRuntimeAI {
              * In Node.js the SDK exposes a Node readable stream, so we convert it to a Web ReadableStream
              * to reuse the same streaming pipeline used by Edge/browser runtimes.
              */
-            const { Readable } = await import('node:stream');
-            const mod = await import('node:stream');
+            const streamModule = await import('node:stream');
+            const Readable = streamModule.Readable ?? streamModule.default.Readable;
+
+            if (!Readable) throw new Error('node:stream module missing Readable export');
+            if (typeof Readable.toWeb !== 'function')
+              throw new Error('Readable.toWeb is not a function');
 
             const nodeResponse = await response.asNodeStream();
             const nodeStream = nodeResponse.body;
@@ -81,7 +85,6 @@ export class LobeAzureAI implements LobeRuntimeAI {
               throw new Error('Azure AI response body is empty');
             }
 
-            console.error('mod', mod);
             console.error('Node version', process.version, process.versions);
             console.error('Readable', Readable);
             console.error('nodeStream', nodeStream, typeof nodeStream);
