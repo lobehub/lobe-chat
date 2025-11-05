@@ -516,6 +516,25 @@ export class Transformer {
         continue;
       }
 
+      // Priority 3c: Assistant message with branches
+      if (message.role === 'assistant' && childMessages.length > 1) {
+        const activeBranchId = this.getActiveBranchIdFromMetadata(message, childMessages);
+        // Add the assistant message itself
+        flatList.push(message);
+        processedIds.add(message.id);
+
+        // Continue with active branch and process its message
+        const activeBranchMsg = this.messageMap.get(activeBranchId);
+        if (activeBranchMsg) {
+          flatList.push(activeBranchMsg);
+          processedIds.add(activeBranchId);
+
+          // Continue with active branch's children
+          this.buildFlatListRecursive(activeBranchId, flatList, processedIds, allMessages);
+        }
+        continue;
+      }
+
       // Priority 4: Regular message
       flatList.push(message);
       processedIds.add(message.id);

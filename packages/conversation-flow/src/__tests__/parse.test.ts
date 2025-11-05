@@ -37,6 +37,12 @@ describe('parse', () => {
       expect(serializeParseResult(result)).toEqual(outputs.branch.activeIndex1);
     });
 
+    it('should match snapshot for assistant message with branches', () => {
+      const result = parse(inputs.branch.assistantBranch);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.assistantBranch);
+    });
+
     it('should match snapshot for nested branches (4 levels)', () => {
       const result = parse(inputs.branch.nested);
 
