@@ -181,11 +181,11 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     useEffect(() => {
       if (isNote) {
         console.log('[MasonryFileItem] Note item:', {
+          editorDataPreview: editorData ? JSON.stringify(editorData).slice(0, 100) : null,
+          editorDataType: typeof editorData,
+          hasEditorData: !!editorData,
           id,
           name,
-          hasEditorData: !!editorData,
-          editorDataType: typeof editorData,
-          editorDataPreview: editorData ? JSON.stringify(editorData).slice(0, 100) : null,
         });
       }
     }, [isNote, id, name, editorData]);
@@ -289,10 +289,10 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
           onClick={() => {
             if (isNote) {
               console.log('[MasonryFileItem] Opening note modal with:', {
+                editorDataType: typeof editorData,
+                hasEditorData: !!editorData,
                 id,
                 name,
-                hasEditorData: !!editorData,
-                editorDataType: typeof editorData,
               });
               setIsNoteModalOpen(true);
             } else {

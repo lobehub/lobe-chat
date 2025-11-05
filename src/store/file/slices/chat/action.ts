@@ -306,7 +306,7 @@ export const createFileSlice: StateCreator<
 
     // Clean up undefined values from metadata
     const cleanedMetadata = mergedMetadata
-      ? Object.fromEntries(Object.entries(mergedMetadata).filter(([_, v]) => v !== undefined))
+      ? Object.fromEntries(Object.entries(mergedMetadata).filter(([, v]) => v !== undefined))
       : undefined;
 
     const updatedNote: FileListItem = {

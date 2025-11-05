@@ -123,8 +123,8 @@ interface NoteFileItemProps {
   id: string;
   isLoadingMarkdown: boolean;
   markdownContent: string;
-  name: string;
   metadata?: Record<string, any> | null;
+  name: string;
 }
 
 const NoteFileItem = memo<NoteFileItemProps>(

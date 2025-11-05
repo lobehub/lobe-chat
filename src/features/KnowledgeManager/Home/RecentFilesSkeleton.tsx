@@ -20,20 +20,6 @@ const useStyles = createStyles(({ css, token }) => ({
     position: relative;
     overflow: hidden;
   `,
-  scrollContainer: css`
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-
-    /* Hide scrollbar */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  `,
   fadeEdge: css`
     pointer-events: none;
     position: absolute;
@@ -51,6 +37,20 @@ const useStyles = createStyles(({ css, token }) => ({
     margin-block-end: 12px;
     border-radius: ${token.borderRadius}px;
     background: ${token.colorFillQuaternary};
+  `,
+  scrollContainer: css`
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   `,
 }));
 

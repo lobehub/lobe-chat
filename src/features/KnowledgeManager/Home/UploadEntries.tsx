@@ -46,14 +46,6 @@ const useStyles = createStyles(({ css, token }) => ({
       box-shadow: ${token.boxShadowTertiary};
     }
   `,
-  hotArea: css`
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-color: transparent;
-    }
-  `,
   glow: css`
     position: absolute;
     inset-block-end: -12px;
@@ -70,6 +62,14 @@ const useStyles = createStyles(({ css, token }) => ({
     flex-wrap: wrap;
     gap: 16px;
     justify-content: left;
+  `,
+  hotArea: css`
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: transparent;
+    }
   `,
   icon: css`
     position: absolute;
