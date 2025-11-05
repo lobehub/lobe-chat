@@ -188,11 +188,11 @@
       },
       "subject": "Feedback - LobeChat - {{version}}"
     },
-    "error": "E-mailclient openen mislukt, probeer het later opnieuw",
+    "error": "Kan e-mailclient niet openen, probeer het later opnieuw.",
     "saved": "Feedback opgeslagen in concepten",
-    "sent": "Bedankt voor je feedback!",
+    "sent": "E-mail is verzonden, bedankt voor je feedback!",
     "title": "Feedback",
-    "unavailable": "E-mailfunctie niet beschikbaar. Controleer of er een e-mailaccount is ingesteld op je apparaat."
+    "unavailable": "E-mailfunctie niet beschikbaar. Controleer of er een e-mailaccount is ingesteld op je apparaat of dat de e-mailfunctie is ingeschakeld."
   },
   "fontSize": {
     "preview": {

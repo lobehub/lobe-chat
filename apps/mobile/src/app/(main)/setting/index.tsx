@@ -27,7 +27,7 @@ import {
 } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Platform, ScrollView } from 'react-native';
+import { Alert, Linking, Platform, ScrollView } from 'react-native';
 
 import { version } from '@/../package.json';
 import SettingGroup from '@/features/SettingGroup';
@@ -104,7 +104,19 @@ export default function SettingScreen() {
       const isAvailable = await MailComposer.isAvailableAsync();
 
       if (!isAvailable) {
-        Toast.error(t('feedback.unavailable'));
+        // 如果原生邮件不可用，尝试使用 mailto 链接作为备选方案
+        const subject = encodeURIComponent(t('feedback.email.subject', { version }));
+        const body = encodeURIComponent(
+          `${t('feedback.email.body.template')}\n\n${t('feedback.email.body.description')}\n\n${t('feedback.email.body.frequency')}\n\n${t('feedback.email.body.screenshots')}\n\n---\nApp Version: ${version}\nOS: ${Platform.OS} ${Platform.Version}`,
+        );
+        const mailtoUrl = `mailto:support@lobehub.com?subject=${subject}&body=${body}`;
+
+        const supported = await Linking.canOpenURL(mailtoUrl);
+        if (supported) {
+          await Linking.openURL(mailtoUrl);
+        } else {
+          Toast.error(t('feedback.unavailable'));
+        }
         return;
       }
 

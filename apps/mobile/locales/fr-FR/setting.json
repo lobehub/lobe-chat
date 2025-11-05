@@ -188,11 +188,11 @@
       },
       "subject": "Retour - LobeChat - {{version}}"
     },
-    "error": "Échec de l'ouverture du client mail, veuillez réessayer plus tard",
+    "error": "Échec de l'ouverture du client de messagerie, veuillez réessayer plus tard.",
     "saved": "Retour enregistré dans les brouillons",
-    "sent": "Merci pour votre retour !",
+    "sent": "E-mail envoyé, merci pour votre retour !",
     "title": "Retour d'expérience",
-    "unavailable": "Fonction de messagerie indisponible. Veuillez vérifier si un compte mail est configuré sur votre appareil."
+    "unavailable": "La fonction de messagerie est indisponible. Veuillez vérifier si un compte e-mail est configuré sur votre appareil ou si la fonction de messagerie est activée."
   },
   "fontSize": {
     "preview": {

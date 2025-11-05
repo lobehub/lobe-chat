@@ -188,11 +188,11 @@
       },
       "subject": "Feedback - LobeChat - {{version}}"
     },
-    "error": "Falha ao abrir o editor de e-mail. Tente novamente mais tarde.",
+    "error": "Falha ao abrir o cliente de e-mail. Por favor, tente novamente mais tarde.",
     "saved": "Feedback salvo como rascunho",
-    "sent": "Obrigado pelo seu feedback!",
+    "sent": "E-mail enviado. Agradecemos pelo seu feedback!",
     "title": "Enviar feedback",
-    "unavailable": "Função de e-mail indisponível. Verifique se há uma conta de e-mail configurada no dispositivo."
+    "unavailable": "Função de e-mail indisponível. Verifique se há uma conta de e-mail configurada no dispositivo ou se a função de e-mail está ativada."
   },
   "fontSize": {
     "preview": {

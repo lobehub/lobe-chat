@@ -188,11 +188,11 @@
       },
       "subject": "Feedback - LobeChat - {{version}}"
     },
-    "error": "No se pudo abrir el editor de correo, por favor intenta más tarde",
+    "error": "No se pudo abrir el cliente de correo. Por favor, inténtalo de nuevo más tarde.",
     "saved": "El feedback se ha guardado en borradores",
-    "sent": "¡Gracias por tu feedback!",
+    "sent": "¡Correo enviado! Gracias por tus comentarios.",
     "title": "Enviar feedback",
-    "unavailable": "La función de correo no está disponible. Verifica si tu dispositivo tiene una cuenta de correo configurada"
+    "unavailable": "La función de correo no está disponible. Verifica si tu dispositivo tiene una cuenta de correo configurada o si la función de correo está habilitada."
   },
   "fontSize": {
     "preview": {
