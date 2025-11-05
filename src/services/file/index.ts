@@ -42,11 +42,13 @@ export class FileService {
     await lambdaClient.file.removeAllFiles.mutate();
   };
 
-  getFiles = async (params: QueryFileListParams) => {
-    return lambdaClient.file.getFiles.query(params as QueryFileListSchemaType);
+  // V2.0 Migrate from getFiles to getKnowledgeItems
+  getKnowledgeItems = async (params: QueryFileListParams) => {
+    return lambdaClient.file.getKnowledgeItems.query(params as QueryFileListSchemaType);
   };
 
-  getFileItem = async (id: string) => {
+  // V2.0 Migrate from getFileItem to getKnowledgeItem
+  getKnowledgeItem = async (id: string) => {
     return lambdaClient.file.getFileItemById.query({ id });
   };
 
