@@ -161,227 +161,40 @@ export const generateAIChat: StateCreator<
     internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },
 
-  // the internal process method of the AI message
+  /**
+   * Convenience wrapper around internal_execAgentRuntime
+   * Creates an assistant message first, then calls internal_execAgentRuntime
+   *
+   * @deprecated Consider using internal_execAgentRuntime directly for better control
+   */
   internal_coreProcessMessage: async (originalMessages, userMessageId, params) => {
-    const { internal_fetchAIChatMessage, triggerToolCalls, refreshMessages, activeTopicId } = get();
-
-    // create a new array to avoid the original messages array change
-    const messages = [...originalMessages];
+    const { activeTopicId, activeId, internal_execAgentRuntime } = get();
 
     const agentStoreState = getAgentStoreState();
-    const { model, provider, chatConfig } = agentSelectors.currentAgentConfig(agentStoreState);
+    const { model, provider } = agentSelectors.currentAgentConfig(agentStoreState);
 
-    let fileChunks: MessageSemanticSearchChunk[] | undefined;
-    let ragQueryId;
-
-    // go into RAG flow if there is ragQuery flag
-    if (params?.ragQuery) {
-      // 1. get the relative chunks from semantic search
-      const { chunks, queryId, rewriteQuery } = await get().internal_retrieveChunks(
-        userMessageId,
-        params?.ragQuery,
-        // should skip the last content
-        messages.map((m) => m.content).slice(0, messages.length - 1),
-      );
-
-      ragQueryId = queryId;
-
-      const lastMsg = messages.pop() as UIChatMessage;
-
-      // 2. build the retrieve context messages
-      const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
-        chunks,
-        userQuery: lastMsg.content,
-        rewriteQuery,
-        knowledge: agentSelectors.currentEnabledKnowledge(agentStoreState),
-      });
-
-      // 3. add the retrieve context messages to the messages history
-      messages.push({
-        ...lastMsg,
-        content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
-      });
-
-      fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
-    }
-
-    // 2. Add an empty message to place the AI response
+    // 1. Create assistant message
     const assistantMessage: CreateMessageParams = {
       role: 'assistant',
       content: LOADING_FLAT,
       fromModel: model,
       fromProvider: provider,
-
       parentId: userMessageId,
-      sessionId: get().activeId,
-      topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
+      sessionId: activeId,
+      topicId: activeTopicId,
       threadId: params?.threadId,
-      fileChunks,
-      ragQueryId,
     };
 
     const result = await get().internal_createMessage(assistantMessage);
-
     if (!result) return;
-    const assistantId = result.id;
 
-    // 3. place a search with the search working model if this model is not support tool use
-    const aiInfraStoreState = getAiInfraStoreState();
-    const isModelSupportToolUse = aiModelSelectors.isModelSupportToolUse(
-      model,
-      provider!,
-    )(aiInfraStoreState);
-    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(provider!)(
-      aiInfraStoreState,
-    );
-    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
-      model,
-      provider!,
-    )(aiInfraStoreState);
-    const isModelBuiltinSearchInternal = aiModelSelectors.isModelBuiltinSearchInternal(
-      model,
-      provider!,
-    )(aiInfraStoreState);
-    const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(agentStoreState);
-    const useModelSearch =
-      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) ||
-      isModelBuiltinSearchInternal;
-    const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
-
-    if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
-      const { model, provider } = agentChatConfigSelectors.searchFCModel(agentStoreState);
-
-      let isToolsCalling = false;
-      let isError = false;
-
-      const abortController = get().internal_toggleChatLoading(
-        true,
-        assistantId,
-        n('generateMessage(start)', { messageId: assistantId, messages }),
-      );
-
-      get().internal_toggleSearchWorkflow(true, assistantId);
-      await chatService.fetchPresetTaskResult({
-        params: { messages, model, provider, plugins: [WebBrowsingManifest.identifier] },
-        onFinish: async (_, { toolCalls, usage }) => {
-          if (toolCalls && toolCalls.length > 0) {
-            get().internal_toggleToolCallingStreaming(assistantId, undefined);
-            // update tools calling
-            await get().internal_updateMessageContent(assistantId, '', {
-              toolCalls,
-              metadata: usage,
-              model,
-              provider,
-            });
-          }
-        },
-        trace: {
-          traceId: params?.traceId,
-          sessionId: get().activeId,
-          topicId: get().activeTopicId,
-          traceName: TraceNameMap.SearchIntentRecognition,
-        },
-        abortController,
-        onMessageHandle: async (chunk) => {
-          if (chunk.type === 'tool_calls') {
-            get().internal_toggleSearchWorkflow(false, assistantId);
-            get().internal_toggleToolCallingStreaming(assistantId, chunk.isAnimationActives);
-            get().internal_dispatchMessage({
-              id: assistantId,
-              type: 'updateMessage',
-              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
-            });
-            isToolsCalling = true;
-          }
-
-          if (chunk.type === 'text') {
-            abortController!.abort('not fc');
-          }
-        },
-        onErrorHandle: async (error) => {
-          isError = true;
-          await messageService.updateMessageError(assistantId, error);
-          await refreshMessages();
-        },
-      });
-
-      get().internal_toggleChatLoading(
-        false,
-        assistantId,
-        n('generateMessage(start)', { messageId: assistantId, messages }),
-      );
-      get().internal_toggleSearchWorkflow(false, assistantId);
-
-      // if there is error, then stop
-      if (isError) return;
-
-      // if it's the function call message, trigger the function method
-      if (isToolsCalling) {
-        get().internal_toggleMessageInToolsCalling(true, assistantId);
-        await refreshMessages();
-        await triggerToolCalls(assistantId, {
-          threadId: params?.threadId,
-          inPortalThread: params?.inPortalThread,
-        });
-
-        // then story the workflow
-        return;
-      }
-    }
-
-    // 4. fetch the AI response
-    const { isFunctionCall, content } = await internal_fetchAIChatMessage({
-      messages,
-      messageId: assistantId,
-      params,
-      model,
-      provider: provider!,
+    // 2. Call internal_execAgentRuntime to handle the actual execution
+    await internal_execAgentRuntime({
+      messages: originalMessages,
+      userMessageId,
+      assistantMessageId: result.id,
+      ...params,
     });
-
-    // 5. if it's the function call message, trigger the function method
-    if (isFunctionCall) {
-      get().internal_toggleMessageInToolsCalling(true, assistantId);
-      await refreshMessages();
-      await triggerToolCalls(assistantId, {
-        threadId: params?.threadId,
-        inPortalThread: params?.inPortalThread,
-      });
-    } else {
-      // 显示桌面通知（仅在桌面端且窗口隐藏时）
-      if (isDesktop) {
-        try {
-          // 动态导入桌面通知服务，避免在非桌面端环境中导入
-          const { desktopNotificationService } = await import(
-            '@/services/electron/desktopNotification'
-          );
-
-          await desktopNotificationService.showNotification({
-            body: content,
-            title: t('notification.finishChatGeneration', { ns: 'electron' }),
-          });
-        } catch (error) {
-          // 静默处理错误，不影响正常流程
-          console.error('Desktop notification error:', error);
-        }
-      }
-    }
-
-    // 6. summary history if context messages is larger than historyCount
-    const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
-
-    if (
-      agentChatConfigSelectors.enableHistoryCount(agentStoreState) &&
-      chatConfig.enableCompressHistory &&
-      originalMessages.length > historyCount
-    ) {
-      // after generation: [u1,a1,u2,a2,u3,a3]
-      // but the `originalMessages` is still: [u1,a1,u2,a2,u3]
-      // So if historyCount=2, we need to summary [u1,a1,u2,a2]
-      // because user find UI is [u1,a1,u2,a2 | u3,a3]
-      const historyMessages = originalMessages.slice(0, -historyCount + 1);
-
-      await get().internal_summaryHistory(historyMessages);
-    }
   },
   internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
     const {
