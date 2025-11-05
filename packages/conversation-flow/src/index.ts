@@ -15,8 +15,3 @@ export type { BranchMetadata, FlatMessage, FlatMessageExtra, FlatMessageRole } f
 
 // Shared Types
 export type { HelperMaps, IdNode, Message, MessageGroupMetadata, ParseResult } from './types';
-
-// Phase functions (exported for testing and advanced usage)
-export { buildHelperMaps } from './indexing';
-export { buildIdTree } from './structuring';
-export { Transformer } from './transformation';

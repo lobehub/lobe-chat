@@ -15,7 +15,10 @@ import type {
   Message,
   MessageGroupMetadata,
   MessageNode,
-} from './types';
+} from '../types';
+import { BranchResolver } from './BranchResolver';
+import { MessageCollector } from './MessageCollector';
+import { MessageTransformer } from './MessageTransformer';
 
 /**
  * Phase 3: Transformation
@@ -27,10 +30,20 @@ export class Transformer {
   private childrenMap: Map<string | null, string[]>;
   private nodeIdCounter = 0;
 
+  // Extracted utility classes
+  private branchResolver: BranchResolver;
+  private messageCollector: MessageCollector;
+  private messageTransformer: MessageTransformer;
+
   constructor(private helperMaps: HelperMaps) {
     this.messageMap = helperMaps.messageMap;
     this.messageGroupMap = helperMaps.messageGroupMap;
     this.childrenMap = helperMaps.childrenMap;
+
+    // Initialize utility classes
+    this.branchResolver = new BranchResolver();
+    this.messageCollector = new MessageCollector(this.messageMap, this.childrenMap);
+    this.messageTransformer = new MessageTransformer();
   }
 
   /**
@@ -111,7 +124,7 @@ export class Transformer {
       contextTree.push(assistantGroupNode);
 
       // Find the next message after tools
-      const nextMessage = this.findNextAfterTools(message, idNode);
+      const nextMessage = this.messageCollector.findNextAfterTools(message, idNode);
       if (nextMessage) {
         this.transformToLinear(nextMessage, contextTree);
       }
@@ -221,7 +234,7 @@ export class Transformer {
    */
   private findNextAfterTools(assistantMsg: Message, idNode: IdNode): IdNode | null {
     // Recursively find the last message in the assistant group
-    const lastNode = this.findLastNodeInAssistantGroup(idNode);
+    const lastNode = this.messageCollector.findLastNodeInAssistantGroup(idNode);
     if (lastNode && lastNode.children.length > 0) {
       return lastNode.children[0];
     }
@@ -250,7 +263,7 @@ export class Transformer {
 
         if (nextMsg?.role === 'assistant') {
           // Continue following the assistant chain
-          return this.findLastNodeInAssistantGroup(nextChild);
+          return this.messageCollector.findLastNodeInAssistantGroup(nextChild);
         }
       }
     }
@@ -307,7 +320,7 @@ export class Transformer {
     const children: ContextNode[] = [];
 
     // Recursively collect all assistant messages in this group
-    this.collectAssistantGroupMessages(message, idNode, children);
+    this.messageCollector.collectAssistantGroupMessages(message, idNode, children);
 
     return {
       children,
@@ -354,7 +367,7 @@ export class Transformer {
 
         if (nextMsg?.role === 'assistant') {
           // Recursively collect this assistant and its descendants
-          this.collectAssistantGroupMessages(nextMsg, nextChild, children);
+          this.messageCollector.collectAssistantGroupMessages(nextMsg, nextChild, children);
           return; // Only follow one path
         }
       }
@@ -365,7 +378,7 @@ export class Transformer {
    * Create BranchNode
    */
   private createBranchNode(message: Message, idNode: IdNode): BranchNode {
-    const activeBranchId = this.getActiveBranchId(message, idNode);
+    const activeBranchId = this.branchResolver.getActiveBranchId(message, idNode);
     const activeBranchIndex = idNode.children.findIndex((child) => child.id === activeBranchId);
 
     // Each branch is a tree starting from that child
@@ -454,7 +467,10 @@ export class Transformer {
       const messageGroup = message.groupId ? this.messageGroupMap.get(message.groupId) : undefined;
 
       if (messageGroup && messageGroup.mode === 'compare' && !processedIds.has(messageGroup.id)) {
-        const groupMembers = this.collectGroupMembers(message.groupId!, allMessages);
+        const groupMembers = this.messageCollector.collectGroupMembers(
+          message.groupId!,
+          allMessages,
+        );
         const compareMessage = this.createCompareMessage(messageGroup, groupMembers);
         flatList.push(compareMessage);
         groupMembers.forEach((m) => processedIds.add(m.id));
@@ -477,7 +493,7 @@ export class Transformer {
         // Collect the entire assistant group chain
         const assistantChain: Message[] = [];
         const allToolMessages: Message[] = [];
-        this.collectAssistantChain(
+        this.messageCollector.collectAssistantChain(
           message,
           allMessages,
           assistantChain,
@@ -535,7 +551,11 @@ export class Transformer {
 
       // Priority 3b: User message with branches
       if (message.role === 'user' && childMessages.length > 1) {
-        const activeBranchId = this.getActiveBranchIdFromMetadata(message, childMessages);
+        const activeBranchId = this.branchResolver.getActiveBranchIdFromMetadata(
+          message,
+          childMessages,
+          this.childrenMap,
+        );
         const userWithBranches = this.createUserMessageWithBranches(message);
         flatList.push(userWithBranches);
         processedIds.add(message.id);
@@ -554,7 +574,11 @@ export class Transformer {
 
       // Priority 3c: Assistant message with branches
       if (message.role === 'assistant' && childMessages.length > 1) {
-        const activeBranchId = this.getActiveBranchIdFromMetadata(message, childMessages);
+        const activeBranchId = this.branchResolver.getActiveBranchIdFromMetadata(
+          message,
+          childMessages,
+          this.childrenMap,
+        );
         // Add the assistant message itself
         flatList.push(message);
         processedIds.add(message.id);
@@ -645,7 +669,7 @@ export class Transformer {
     assistantChain.push(currentAssistant);
 
     // Collect its tool messages
-    const toolMessages = this.collectToolMessages(currentAssistant, allMessages);
+    const toolMessages = this.messageCollector.collectToolMessages(currentAssistant, allMessages);
     allToolMessages.push(...toolMessages);
 
     // Find next assistant after tools
@@ -655,7 +679,7 @@ export class Transformer {
       for (const nextMsg of nextMessages) {
         if (nextMsg.role === 'assistant' && nextMsg.tools && nextMsg.tools.length > 0) {
           // Continue the chain
-          this.collectAssistantChain(
+          this.messageCollector.collectAssistantChain(
             nextMsg,
             allMessages,
             assistantChain,
@@ -711,7 +735,7 @@ export class Transformer {
         const allToolMessages: Message[] = [];
         const columnProcessedIds = new Set<string>();
 
-        this.collectAssistantChain(
+        this.messageCollector.collectAssistantChain(
           childMessage,
           allMessages,
           assistantChain,
@@ -851,9 +875,8 @@ export class Transformer {
           return tool;
         }) || [];
 
-      const { usage: msgUsage, performance: msgPerformance } = this.splitMetadata(
-        assistant.metadata,
-      );
+      const { usage: msgUsage, performance: msgPerformance } =
+        this.messageTransformer.splitMetadata(assistant.metadata);
 
       children.push({
         content: assistant.content || '',
@@ -868,7 +891,7 @@ export class Transformer {
       });
     }
 
-    const aggregated = this.aggregateMetadata(children);
+    const aggregated = this.messageTransformer.aggregateMetadata(children);
 
     return {
       ...firstAssistant,
@@ -897,7 +920,7 @@ export class Transformer {
    * Convert Message to AssistantContentBlock
    */
   private messageToContentBlock(message: Message): AssistantContentBlock {
-    const { usage, performance } = this.splitMetadata(message.metadata);
+    const { usage, performance } = this.messageTransformer.splitMetadata(message.metadata);
 
     return {
       content: message.content || '',
