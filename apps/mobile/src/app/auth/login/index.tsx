@@ -11,6 +11,7 @@ import {
 import { Image } from 'expo-image';
 import { Link, useRouter } from 'expo-router';
 import { VideoView, useVideoPlayer } from 'expo-video';
+import * as WebBrowser from 'expo-web-browser';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
@@ -55,6 +56,17 @@ const LoginPage = () => {
 
   const handleSelfHostedLogin = () => {
     router.push('/auth/login/selfhost');
+  };
+
+  const handleOpenLink = async (url: string) => {
+    try {
+      await WebBrowser.openBrowserAsync(url, {
+        controlsColor: theme.colorPrimary,
+        presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+      });
+    } catch (error) {
+      console.error('Failed to open browser:', error);
+    }
   };
 
   // 根据主题选择视频源
@@ -143,16 +155,20 @@ const LoginPage = () => {
             )}
           </Flexbox>
           <Flexbox align={'center'} gap={16} horizontal justify={'center'}>
-            <Link href="https://lobehub.com/terms">
-              <Text fontSize={12} type={'secondary'}>
-                {t('login.usePolicy', { ns: 'auth' })}
-              </Text>
-            </Link>
-            <Link href="https://lobehub.com/privacy">
-              <Text fontSize={12} type={'secondary'}>
-                {t('login.privacyPolicy', { ns: 'auth' })}
-              </Text>
-            </Link>
+            <Text
+              fontSize={12}
+              onPress={() => handleOpenLink('https://lobehub.com/terms')}
+              type={'secondary'}
+            >
+              {t('login.usePolicy', { ns: 'auth' })}
+            </Text>
+            <Text
+              fontSize={12}
+              onPress={() => handleOpenLink('https://lobehub.com/privacy')}
+              type={'secondary'}
+            >
+              {t('login.privacyPolicy', { ns: 'auth' })}
+            </Text>
           </Flexbox>
         </Flexbox>
       </Flexbox>
