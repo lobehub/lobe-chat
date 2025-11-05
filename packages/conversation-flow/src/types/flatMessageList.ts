@@ -45,14 +45,14 @@ export type FlatMessage = UIChatMessage;
  * Branch metadata attached to user messages
  */
 export interface BranchMetadata {
-  /** Current active branch index */
-  current: number;
   /** Total number of branches */
   count: number;
+  /** Current active branch index */
+  current: number;
   /** Branch items */
   items: Array<{
-    id: string;
     createdAt: number;
+    id: string;
   }>;
 }
 
@@ -62,10 +62,10 @@ export interface BranchMetadata {
 export interface FlatMessageExtra {
   /** Branch information for user messages with multiple children */
   branches?: BranchMetadata;
-  /** Group mode for messageGroup and compare virtual messages */
-  groupMode?: 'compare' | 'manual' | 'summary';
   /** Optional description for groups */
   description?: string;
+  /** Group mode for messageGroup and compare virtual messages */
+  groupMode?: 'compare' | 'manual' | 'summary';
   /** Parent message ID that triggered this group */
   parentMessageId?: string;
 }

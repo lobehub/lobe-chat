@@ -18,7 +18,7 @@ import threadConversationOutput from './outputs/thread-conversation.json';
  * Serialized parse result type
  */
 export interface SerializedParseResult {
-  displayTree: ParseResult['displayTree'];
+  contextTree: ParseResult['contextTree'];
   flatList: ParseResult['flatList'];
   messageMap: Record<string, Message>;
 }

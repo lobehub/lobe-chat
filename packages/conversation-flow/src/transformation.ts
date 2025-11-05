@@ -85,10 +85,10 @@ export class Transformer {
     });
 
     return {
-      type: 'compare',
+      columns,
       id: this.generateNodeId('compare', message.id),
       messageId: message.id,
-      columns,
+      type: 'compare',
     };
   }
 
@@ -115,17 +115,17 @@ export class Transformer {
    */
   private createAssistantGroupNode(message: Message, idNode: IdNode): AssistantGroupNode {
     const tools: MessageNode[] = idNode.children.map((child) => ({
-      type: 'message',
+      children: [],
       id: this.generateNodeId('tool', child.id),
       messageId: child.id,
-      children: [],
+      type: 'message',
     }));
 
     return {
-      type: 'assistantGroup',
-      id: this.generateNodeId('group', message.id),
       assistantMessageId: message.id,
+      id: this.generateNodeId('group', message.id),
       tools,
+      type: 'assistantGroup',
     };
   }
 
@@ -139,11 +139,14 @@ export class Transformer {
     });
 
     return {
+      activeBranchIndex: 0,
+      // Default to first branch
+branches,
+      
+id: this.generateNodeId('branch', message.id),
+      
+parentMessageId: message.id, 
       type: 'branch',
-      id: this.generateNodeId('branch', message.id),
-      parentMessageId: message.id,
-      activeBranchIndex: 0, // Default to first branch
-      branches,
     };
   }
 
@@ -154,10 +157,10 @@ export class Transformer {
     const children = idNode.children.map((child) => this.transform(child));
 
     return {
-      type: 'message',
+      children,
       id: this.generateNodeId('message', message.id),
       messageId: message.id,
-      children,
+      type: 'message',
     };
   }
 
@@ -269,17 +272,17 @@ export class Transformer {
     );
 
     return {
-      id: group.id,
-      role: 'compare' as any,
-      content: '',
       children,
+      content: '',
       createdAt: Math.min(...members.map((m) => m.createdAt)),
-      updatedAt: Math.max(...members.map((m) => m.updatedAt)),
-      meta: members[0]?.meta || {},
       extra: {
         groupMode: group.mode,
         parentMessageId: group.parentMessageId,
       },
+      id: group.id,
+      meta: members[0]?.meta || {},
+      role: 'compare' as any,
+      updatedAt: Math.max(...members.map((m) => m.updatedAt)),
     } as Message;
   }
 
@@ -295,17 +298,17 @@ export class Transformer {
     );
 
     return {
-      id: group.id,
-      role: 'messageGroup' as any,
-      content: group.title || '',
       children,
+      content: group.title || '',
       createdAt: Math.min(...members.map((m) => m.createdAt)),
-      updatedAt: Math.max(...members.map((m) => m.updatedAt)),
-      meta: members[0]?.meta || {},
       extra: {
-        groupMode: group.mode || 'manual',
         description: group.description,
+        groupMode: group.mode || 'manual',
       },
+      id: group.id,
+      meta: members[0]?.meta || {},
+      role: 'messageGroup' as any,
+      updatedAt: Math.max(...members.map((m) => m.updatedAt)),
     } as Message;
   }
 
@@ -340,9 +343,9 @@ export class Transformer {
           return {
             ...tool,
             result: {
-              id: toolMsg.id,
               content: toolMsg.content || '',
               error: toolMsg.error,
+              id: toolMsg.id,
               state: toolMsg.pluginState,
             },
             result_msg_id: toolMsg.id,
@@ -356,14 +359,14 @@ export class Transformer {
     );
 
     children.push({
-      id: assistant.id,
       content: assistant.content || '',
+      error: assistant.error,
+      id: assistant.id,
+      imageList: assistant.imageList && assistant.imageList.length > 0 ? assistant.imageList : undefined,
+      performance: msgPerformance,
+      reasoning: assistant.reasoning || undefined,
       tools: toolsWithResults,
       usage: msgUsage,
-      performance: msgPerformance,
-      error: assistant.error,
-      reasoning: assistant.reasoning || undefined,
-      imageList: assistant.imageList && assistant.imageList.length > 0 ? assistant.imageList : undefined,
     });
 
     // Aggregate usage and performance
@@ -371,15 +374,35 @@ export class Transformer {
 
     return {
       ...assistant,
-      role: 'assistantGroup' as any,
       children,
-      content: '', // Content moved to children
-      usage: aggregated.usage,
-      performance: aggregated.performance,
-      tools: undefined, // Tools moved to children
-      metadata: undefined, // Cleared
-      reasoning: undefined, // Moved to children
-      imageList: undefined, // Moved to children
+      content: '',
+      
+// Moved to children
+imageList: undefined, 
+      
+
+// Tools moved to children
+metadata: undefined,
+      
+
+
+performance: aggregated.performance,
+      
+
+
+// Cleared
+reasoning: undefined, 
+      
+
+
+role: 'assistantGroup' as any, 
+      
+
+
+tools: undefined, 
+      
+// Content moved to children
+usage: aggregated.usage, // Moved to children
     };
   }
 
@@ -512,8 +535,8 @@ export class Transformer {
     }
 
     return {
-      usage: hasUsageData ? usage : undefined,
       performance: hasPerformanceData ? performance : undefined,
+      usage: hasUsageData ? usage : undefined,
     };
   }
 
@@ -536,8 +559,8 @@ export class Transformer {
           count: branches.length,
           current: 0,
           items: branches.map((b) => ({
-            id: b.id,
             createdAt: b.createdAt,
+            id: b.id,
           })),
         },
       } as any,
@@ -551,14 +574,14 @@ export class Transformer {
     const { usage, performance } = this.splitMetadata(message.metadata);
 
     return {
-      id: message.id,
       content: message.content || '',
+      error: message.error,
+      id: message.id,
+      imageList: message.imageList,
+      performance,
+      reasoning: message.reasoning || undefined,
       tools: message.tools as any,
       usage,
-      performance,
-      error: message.error,
-      reasoning: message.reasoning || undefined,
-      imageList: message.imageList,
     };
   }
 }

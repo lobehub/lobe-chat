@@ -3,59 +3,42 @@ import { describe, expect, it } from 'vitest';
 import { parse } from '../parse';
 import { inputs, outputs } from './fixtures';
 
-/**
- * Serialize parse result to match output format
- */
-function serializeParseResult(result: ReturnType<typeof parse>) {
-  return {
-    displayTree: result.displayTree,
-    flatList: result.flatList,
-    messageMap: Object.fromEntries(result.messageMap.entries()),
-  };
-}
-
 describe('parse', () => {
   describe('Snapshot Tests', () => {
     it('should match snapshot for linear conversation', () => {
       const result = parse(inputs.linearConversation);
-      const serialized = serializeParseResult(result);
 
-      expect(serialized).toEqual(outputs.linearConversation);
+      expect(result).toEqual(outputs.linearConversation);
     });
 
     it('should match snapshot for assistant with tools', () => {
       const result = parse(inputs.assistantWithTools);
-      const serialized = serializeParseResult(result);
 
-      expect(serialized).toEqual(outputs.assistantWithTools);
+      expect(result).toEqual(outputs.assistantWithTools);
     });
 
     it('should match snapshot for branched conversation', () => {
       const result = parse(inputs.branchedConversation);
-      const serialized = serializeParseResult(result);
 
-      expect(serialized).toEqual(outputs.branchedConversation);
+      expect(result).toEqual(outputs.branchedConversation);
     });
 
     it('should match snapshot for compare mode', () => {
       const result = parse(inputs.compareMode);
-      const serialized = serializeParseResult(result);
 
-      expect(serialized).toEqual(outputs.compareMode);
+      expect(result).toEqual(outputs.compareMode);
     });
 
     it('should match snapshot for thread conversation', () => {
       const result = parse(inputs.threadConversation);
-      const serialized = serializeParseResult(result);
 
-      expect(serialized).toEqual(outputs.threadConversation);
+      expect(result).toEqual(outputs.threadConversation);
     });
 
     it('should match snapshot for complex scenario', () => {
       const result = parse(inputs.complexScenario);
-      const serialized = serializeParseResult(result);
 
-      expect(serialized).toEqual(outputs.complexScenario);
+      expect(result).toEqual(outputs.complexScenario);
     });
   });
 
@@ -72,14 +55,14 @@ describe('parse', () => {
       expect(endTime - startTime).toBeLessThan(1); // Sub-millisecond access
     });
 
-    it('should generate both displayTree and flatList', () => {
+    it('should generate both contextTree and flatList', () => {
       const result = parse(inputs.linearConversation);
 
-      expect(result.displayTree).toBeDefined();
+      expect(result.contextTree).toBeDefined();
       expect(result.flatList).toBeDefined();
       expect(result.messageMap).toBeDefined();
 
-      expect(Array.isArray(result.displayTree)).toBe(true);
+      expect(Array.isArray(result.contextTree)).toBe(true);
       expect(Array.isArray(result.flatList)).toBe(true);
       expect(result.messageMap).toBeInstanceOf(Map);
     });
@@ -88,7 +71,7 @@ describe('parse', () => {
       const result = parse([]);
 
       expect(result.messageMap.size).toBe(0);
-      expect(result.displayTree).toHaveLength(0);
+      expect(result.contextTree).toHaveLength(0);
       expect(result.flatList).toHaveLength(0);
     });
 
@@ -120,9 +103,7 @@ describe('parse', () => {
       const result = parse(inputs.branchedConversation);
 
       // Find user message with branches
-      const userMsg = result.flatList.find(
-        (msg) => msg.role === 'user' && msg.extra?.branches,
-      );
+      const userMsg = result.flatList.find((msg) => msg.role === 'user' && msg.extra?.branches);
 
       expect(userMsg).toBeDefined();
       expect(userMsg?.extra?.branches?.count).toBeGreaterThan(1);
@@ -137,12 +118,12 @@ describe('parse', () => {
     });
   });
 
-  describe('DisplayTree Validation', () => {
-    it('should create nested structure in displayTree', () => {
+  describe('ContextTree Validation', () => {
+    it('should create nested structure in contextTree', () => {
       const result = parse(inputs.linearConversation);
 
-      expect(result.displayTree).toHaveLength(1);
-      const root = result.displayTree[0];
+      expect(result.contextTree).toHaveLength(1);
+      const root = result.contextTree[0];
 
       expect(root.type).toBe('message');
       expect('children' in root && root.children.length).toBeGreaterThan(0);
@@ -151,7 +132,7 @@ describe('parse', () => {
     it('should create assistantGroup node for assistant with tools', () => {
       const result = parse(inputs.assistantWithTools);
 
-      const root = result.displayTree[0];
+      const root = result.contextTree[0];
       if (root.type === 'message' && root.children.length > 0) {
         const firstChild = root.children[0];
         expect(firstChild.type).toBe('assistantGroup');
@@ -161,7 +142,7 @@ describe('parse', () => {
     it('should create branch node for multiple alternatives', () => {
       const result = parse(inputs.branchedConversation);
 
-      const root = result.displayTree[0];
+      const root = result.contextTree[0];
       expect(root.type).toBe('branch');
 
       if (root.type === 'branch') {

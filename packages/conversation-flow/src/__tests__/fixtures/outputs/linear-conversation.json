@@ -1,4 +1,33 @@
 {
+  "contextTree": [
+    {
+      "type": "message",
+      "id": "message-msg-001-3",
+      "messageId": "msg-001",
+      "children": [
+        {
+          "type": "message",
+          "id": "message-msg-002-2",
+          "messageId": "msg-002",
+          "children": [
+            {
+              "type": "message",
+              "id": "message-msg-003-1",
+              "messageId": "msg-003",
+              "children": [
+                {
+                  "type": "message",
+                  "id": "message-msg-004-0",
+                  "messageId": "msg-004",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "flatList": [
     {
       "id": "msg-001",

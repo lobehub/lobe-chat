@@ -1,4 +1,32 @@
 {
+  "contextTree": [
+    {
+      "type": "message",
+      "id": "message-msg-501-3",
+      "messageId": "msg-501",
+      "children": [
+        {
+          "type": "assistantGroup",
+          "id": "group-msg-502-2",
+          "assistantMessageId": "msg-502",
+          "tools": [
+            {
+              "type": "message",
+              "id": "tool-msg-503-0",
+              "messageId": "msg-503",
+              "children": []
+            },
+            {
+              "type": "message",
+              "id": "tool-msg-504-1",
+              "messageId": "msg-504",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "flatList": [
     {
       "id": "msg-501",

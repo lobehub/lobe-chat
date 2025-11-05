@@ -1,4 +1,4 @@
-import type { HelperMaps, IdNode, Message } from './types';
+import type { HelperMaps, IdNode } from './types';
 
 /**
  * Phase 2: Structuring
@@ -6,14 +6,10 @@ import type { HelperMaps, IdNode, Message } from './types';
  * Separates main flow from threaded conversations
  *
  * @param helperMaps - Maps built in indexing phase
- * @param messages - Original flat messages array
  * @returns Root nodes of the main conversation flow (idTree)
  */
-export function buildIdTree(helperMaps: HelperMaps, messages: Message[]): IdNode[] {
-  const { childrenMap, threadMap, messageMap } = helperMaps;
-
-  // Filter out messages that belong to threads (they'll be processed separately)
-  const mainFlowMessages = messages.filter((msg) => !msg.threadId);
+export function buildIdTree(helperMaps: HelperMaps): IdNode[] {
+  const { childrenMap, messageMap } = helperMaps;
 
   // Build tree recursively starting from root messages (parentId = null)
   const buildTree = (messageId: string): IdNode => {
@@ -26,8 +22,8 @@ export function buildIdTree(helperMaps: HelperMaps, messages: Message[]): IdNode
     });
 
     return {
-      id: messageId,
       children: mainFlowChildIds.map((childId) => buildTree(childId)),
+      id: messageId,
     };
   };
 

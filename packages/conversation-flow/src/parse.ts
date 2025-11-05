@@ -28,7 +28,7 @@ export function parse(messages: Message[], messageGroups?: MessageGroupMetadata[
   // Phase 2: Structuring
   // Convert flat parent-child relationships to tree structure
   // Separates main flow from threaded conversations
-  const idTree = buildIdTree(helperMaps, messages);
+  const idTree = buildIdTree(helperMaps);
 
   // Phase 3: Transformation
   // Apply priority-based pattern matching to create semantic display nodes

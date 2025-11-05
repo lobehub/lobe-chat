@@ -1,4 +1,29 @@
 {
+  "contextTree": [
+    {
+      "type": "compare",
+      "id": "compare-msg-301-2",
+      "messageId": "msg-301",
+      "columns": [
+        [
+          {
+            "type": "message",
+            "id": "message-msg-302-0",
+            "messageId": "msg-302",
+            "children": []
+          }
+        ],
+        [
+          {
+            "type": "message",
+            "id": "message-msg-303-1",
+            "messageId": "msg-303",
+            "children": []
+          }
+        ]
+      ]
+    }
+  ],
   "flatList": [
     {
       "id": "msg-301",
