@@ -103,4 +103,7 @@ export interface ModelPerformance {
   latency?: number;
 }
 
-export interface MessageMetadata extends ModelUsage, ModelPerformance {}
+export interface MessageMetadata extends ModelUsage, ModelPerformance {
+  activeBranchIndex?: number;
+  compare?: boolean;
+}

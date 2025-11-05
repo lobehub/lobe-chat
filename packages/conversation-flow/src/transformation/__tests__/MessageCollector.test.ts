@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { MessageCollector } from '../../transformation/MessageCollector';
 import type { IdNode, Message } from '../../types';
+import { MessageCollector } from '../MessageCollector';
 
 describe('MessageCollector', () => {
   describe('collectGroupMembers', () => {
@@ -17,7 +17,6 @@ describe('MessageCollector', () => {
           groupId: 'group-1',
           id: 'msg-1',
           meta: {},
-          parentId: null,
           role: 'assistant',
           updatedAt: 0,
         },
@@ -27,7 +26,6 @@ describe('MessageCollector', () => {
           groupId: 'group-1',
           id: 'msg-2',
           meta: {},
-          parentId: null,
           role: 'assistant',
           updatedAt: 0,
         },
@@ -37,7 +35,6 @@ describe('MessageCollector', () => {
           groupId: 'group-2',
           id: 'msg-3',
           meta: {},
-          parentId: null,
           role: 'assistant',
           updatedAt: 0,
         },
@@ -61,7 +58,6 @@ describe('MessageCollector', () => {
         createdAt: 0,
         id: 'msg-1',
         meta: {},
-        parentId: null,
         role: 'assistant',
         tools: [
           { apiName: 'tool1', arguments: '{}', id: 'tool-1', identifier: 'test', type: 'default' },
@@ -135,7 +131,6 @@ describe('MessageCollector', () => {
             createdAt: 0,
             id: 'msg-1',
             meta: {},
-            parentId: null,
             role: 'assistant',
             updatedAt: 0,
           },
@@ -175,7 +170,6 @@ describe('MessageCollector', () => {
             createdAt: 0,
             id: 'msg-1',
             meta: {},
-            parentId: null,
             role: 'assistant',
             updatedAt: 0,
           },

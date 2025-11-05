@@ -1,8 +1,9 @@
-import type { AssistantContentBlock } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { MessageTransformer } from '../../transformation/MessageTransformer';
+import type { AssistantContentBlock } from '@/types/index';
+
 import type { Message } from '../../types';
+import { MessageTransformer } from '../MessageTransformer';
 
 describe('MessageTransformer', () => {
   const transformer = new MessageTransformer();
@@ -22,7 +23,6 @@ describe('MessageTransformer', () => {
           totalTokens: 30,
           tps: 20,
         },
-        parentId: null,
         role: 'assistant',
         updatedAt: 0,
       };
@@ -55,7 +55,6 @@ describe('MessageTransformer', () => {
         createdAt: 0,
         id: 'msg-1',
         meta: {},
-        parentId: null,
         role: 'assistant',
         updatedAt: 0,
       };
