@@ -31,6 +31,7 @@ export class MessageService {
     return lambdaClient.message.createNewMessage.mutate({
       ...params,
       sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
+      useGroup: this.useGroup,
     });
   };
 
