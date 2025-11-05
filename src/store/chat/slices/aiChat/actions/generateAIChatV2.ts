@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { AgentRuntime, type AgentRuntimeContext } from '@lobechat/agent-runtime';
 import {
   DEFAULT_AGENT_CHAT_CONFIG,
   INBOX_SESSION_ID,
@@ -12,12 +13,11 @@ import {
   ChatTopic,
   ChatVideoItem,
   CreateNewMessageParams,
-  MessageSemanticSearchChunk,
   SendMessageParams,
   SendMessageServerResponse,
-  TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
+import type { MessageSemanticSearchChunk } from '@lobechat/types';
 import { TRPCClientError } from '@trpc/client';
 import debug from 'debug';
 import { t } from 'i18next';
@@ -30,7 +30,10 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
-import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
+import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra';
+import { getAiInfraStoreState } from '@/store/aiInfra/store';
+import { ChatAgent } from '@/store/chat/agents/ChatAgent';
+import { createChatExecutors } from '@/store/chat/agents/createChatExecutors';
 import { MainSendMessageOperation } from '@/store/chat/slices/aiChat/initialState';
 import type { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
@@ -38,12 +41,7 @@ import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { setNamespace } from '@/utils/storeDebug';
 
-import {
-  dbMessageSelectors,
-  displayMessageSelectors,
-  threadSelectors,
-  topicSelectors,
-} from '../../../selectors';
+import { chatSelectors, threadSelectors, topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
@@ -59,20 +57,6 @@ export interface AIGenerateV2Action {
    */
   cancelSendMessageInServer: (topicId?: string) => void;
   clearSendMessageError: () => void;
-  /**
-   */
-  triggerToolsCalling: (
-    id: string,
-    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
-  ) => Promise<void>;
-  callToolFollowAssistantMessage: (params: {
-    parentId: string;
-    traceId?: string;
-    threadId?: string;
-    inPortalThread?: boolean;
-    inSearchWorkflow?: boolean;
-  }) => Promise<void>;
-
   internal_refreshAiChat: (params: {
     topics?: ChatTopic[];
     messages: UIChatMessage[];
@@ -136,7 +120,7 @@ export const generateAIChatV2: StateCreator<
       return;
     }
 
-    const messages = displayMessageSelectors.activeDisplayMessages(get());
+    const messages = chatSelectors.activeBaseChats(get());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
     const autoCreateThreshold =
       chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
@@ -259,8 +243,8 @@ export const generateAIChatV2: StateCreator<
 
     // Get the current messages to generate AI response
     // remove the latest assistant message id
-    const baseMessages = displayMessageSelectors
-      .activeDisplayMessages(get())
+    const baseMessages = chatSelectors
+      .activeBaseChats(get())
       .filter((item) => item.id !== data.assistantMessageId);
 
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
@@ -277,9 +261,7 @@ export const generateAIChatV2: StateCreator<
       const topic = topicSelectors.getTopicById(data.topicId)(get());
 
       if (topic && !topic.title) {
-        const chats = displayMessageSelectors.getDisplayMessagesByKey(
-          messageMapKey(activeId, topic.id),
-        )(get());
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
         await get().summaryTopicTitle(topic.id, chats);
       }
     };
@@ -299,10 +281,7 @@ export const generateAIChatV2: StateCreator<
       //
       // // if there is relative files, then add files to agent
       // // only available in server mode
-      const userFiles = dbMessageSelectors
-        .dbUserFiles(get())
-        .map((f) => f?.id)
-        .filter(Boolean) as string[];
+      const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
 
       await getAgentStoreState().addFilesToAgent(userFiles, false);
     } catch (e) {
@@ -352,53 +331,51 @@ export const generateAIChatV2: StateCreator<
   },
 
   internal_execAgentRuntime: async (params) => {
-    const {
-      assistantMessageId: assistantId,
-      userMessageId,
-      ragQuery,
-      messages: originalMessages,
-    } = params;
+    const { assistantMessageId, messages: originalMessages, userMessageId } = params;
 
     log(
       '[internal_execAgentRuntime] start, assistantId: %s, messages count: %d',
-      assistantId,
+      assistantMessageId,
       originalMessages.length,
     );
 
-    const {
-      internal_fetchAIChatMessage,
-      triggerToolsCalling,
-      refreshMessages,
-      internal_updateMessageRAG,
-    } = get();
+    const { activeId, activeTopicId } = get();
+    const messageKey = messageMapKey(activeId, activeTopicId);
 
-    // create a new array to avoid the original messages array change
-    const messages = [...originalMessages];
+    // Create a new array to avoid modifying the original messages
+    let messages = [...originalMessages];
 
     const agentStoreState = getAgentStoreState();
-    const { model, provider, chatConfig } = agentSelectors.currentAgentConfig(agentStoreState);
+    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+    const { chatConfig } = agentConfigData;
 
-    log('[internal_execAgentRuntime] Agent config: model=%s, provider=%s', model, provider);
+    // Use current agent config
+    const model = agentConfigData.model;
+    const provider = agentConfigData.provider;
 
-    let fileChunks: MessageSemanticSearchChunk[] | undefined;
-    let ragQueryId;
+    // ===========================================
+    // Step 1: RAG Preprocessing (if enabled)
+    // ===========================================
+    if (params.ragQuery && userMessageId) {
+      log('[internal_execAgentRuntime] RAG preprocessing start');
 
-    // go into RAG flow if there is ragQuery flag
-    if (ragQuery && userMessageId) {
-      log('[internal_execAgentRuntime] Entering RAG flow with query: %s', ragQuery);
-      // 1. get the relative chunks from semantic search
-      const { chunks, queryId, rewriteQuery } = await get().internal_retrieveChunks(
+      // Get relevant chunks from semantic search
+      const {
+        chunks,
+        queryId: ragQueryId,
+        rewriteQuery,
+      } = await get().internal_retrieveChunks(
         userMessageId,
-        ragQuery,
-        // should skip the last content
+        params.ragQuery,
+        // Skip the last message content when building context
         messages.map((m) => m.content).slice(0, messages.length - 1),
       );
 
-      ragQueryId = queryId;
+      log('[internal_execAgentRuntime] RAG chunks retrieved: %d chunks', chunks.length);
 
       const lastMsg = messages.pop() as UIChatMessage;
 
-      // 2. build the retrieve context messages
+      // Build RAG context and append to user query
       const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
         chunks,
         userQuery: lastMsg.content,
@@ -406,20 +383,27 @@ export const generateAIChatV2: StateCreator<
         knowledge: agentSelectors.currentEnabledKnowledge(agentStoreState),
       });
 
-      // 3. add the retrieve context messages to the messages history
       messages.push({
         ...lastMsg,
         content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
       });
 
-      fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
+      // Update assistant message with RAG metadata
+      const fileChunks: MessageSemanticSearchChunk[] = chunks.map((c) => ({
+        id: c.id,
+        similarity: c.similarity,
+      }));
 
       if (fileChunks.length > 0) {
-        await internal_updateMessageRAG(assistantId, { ragQueryId, fileChunks });
+        await get().internal_updateMessageRAG(assistantMessageId, { ragQueryId, fileChunks });
       }
+
+      log('[internal_execAgentRuntime] RAG preprocessing completed');
     }
 
-    // 3. place a search with the search working model if this model is not support tool use
+    // ===========================================
+    // Step 2: Search Workflow Preprocessing (if needed)
+    // ===========================================
     const aiInfraStoreState = getAiInfraStoreState();
     const isModelSupportToolUse = aiModelSelectors.isModelSupportToolUse(
       model,
@@ -442,46 +426,57 @@ export const generateAIChatV2: StateCreator<
       isModelBuiltinSearchInternal;
     const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
 
+    // Use search workflow for models that don't support tool use natively
     if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
-      const { model, provider } = agentChatConfigSelectors.searchFCModel(agentStoreState);
+      log(
+        '[internal_execAgentRuntime] Search workflow start (model does not support tool use natively)',
+      );
+
+      const { model: searchModel, provider: searchProvider } =
+        agentChatConfigSelectors.searchFCModel(agentStoreState);
+
+      log('[internal_execAgentRuntime] Using search model: %s/%s', searchProvider, searchModel);
 
       let isToolsCalling = false;
       let isError = false;
 
-      const abortController = get().internal_toggleChatLoading(
-        true,
-        assistantId,
-        n('generateMessage(start)', { messageId: assistantId, messages }),
-      );
+      const abortController = get().internal_toggleChatLoading(true, assistantMessageId);
 
-      get().internal_toggleSearchWorkflow(true, assistantId);
+      get().internal_toggleSearchWorkflow(true, assistantMessageId);
+
       await chatService.fetchPresetTaskResult({
-        params: { messages, model, provider, plugins: [WebBrowsingManifest.identifier] },
+        params: {
+          messages,
+          model: searchModel,
+          provider: searchProvider,
+          plugins: [WebBrowsingManifest.identifier],
+        },
         onFinish: async (_, { toolCalls, usage }) => {
           if (toolCalls && toolCalls.length > 0) {
-            get().internal_toggleToolCallingStreaming(assistantId, undefined);
-            // update tools calling
-            await get().internal_updateMessageContent(assistantId, '', {
+            get().internal_toggleToolCallingStreaming(assistantMessageId, undefined);
+            await get().internal_updateMessageContent(assistantMessageId, '', {
               toolCalls,
               metadata: usage,
-              model,
-              provider,
+              model: searchModel,
+              provider: searchProvider,
             });
           }
         },
-        trace: {
-          traceId: params.traceId,
-          sessionId: get().activeId,
-          topicId: get().activeTopicId,
-          traceName: TraceNameMap.SearchIntentRecognition,
-        },
+        trace: params.traceId
+          ? {
+              traceId: params.traceId,
+              sessionId: activeId,
+              topicId: activeTopicId,
+              traceName: 'SearchIntentRecognition' as any,
+            }
+          : undefined,
         abortController,
         onMessageHandle: async (chunk) => {
           if (chunk.type === 'tool_calls') {
-            get().internal_toggleSearchWorkflow(false, assistantId);
-            get().internal_toggleToolCallingStreaming(assistantId, chunk.isAnimationActives);
+            get().internal_toggleSearchWorkflow(false, assistantMessageId);
+            get().internal_toggleToolCallingStreaming(assistantMessageId, chunk.isAnimationActives);
             get().internal_dispatchMessage({
-              id: assistantId,
+              id: assistantMessageId,
               type: 'updateMessage',
               value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
             });
@@ -494,313 +489,177 @@ export const generateAIChatV2: StateCreator<
         },
         onErrorHandle: async (error) => {
           isError = true;
-          await messageService.updateMessageError(assistantId, error);
-          await refreshMessages();
+          await messageService.updateMessageError(assistantMessageId, error);
+          // Use replaceMessages instead of refreshMessages
+          const finalMessages = get().messagesMap[messageKey] || [];
+          get().replaceMessages(finalMessages);
         },
       });
 
-      get().internal_toggleChatLoading(
-        false,
-        assistantId,
-        n('generateMessage(start)', { messageId: assistantId, messages }),
-      );
-      get().internal_toggleSearchWorkflow(false, assistantId);
+      get().internal_toggleChatLoading(false, assistantMessageId);
+      get().internal_toggleSearchWorkflow(false, assistantMessageId);
 
-      // if there is error, then stop
-      if (isError) return;
-
-      // if it's the function call message, trigger the function method
-      if (isToolsCalling) {
-        get().internal_toggleMessageInToolsCalling(true, assistantId);
-        await refreshMessages();
-        await triggerToolsCalling(assistantId, {
-          threadId: params?.threadId,
-          inPortalThread: params?.inPortalThread,
-        });
-
-        // then story the workflow
+      // If error or tool calling detected, return early
+      if (isError) {
+        log('[internal_execAgentRuntime] Search workflow error, returning early');
         return;
       }
+      if (isToolsCalling) {
+        log('[internal_execAgentRuntime] Search workflow detected tool calling, triggering tools');
+        get().internal_toggleMessageInToolsCalling(true, assistantMessageId);
+        // Use replaceMessages instead of refreshMessages
+        const currentMessages = get().messagesMap[messageKey] || [];
+        get().replaceMessages(currentMessages);
+
+        // Trigger tool calling using the legacy method
+        await get().triggerToolsCalling(assistantMessageId, {
+          threadId: params.threadId,
+          inPortalThread: params.inPortalThread,
+        });
+        log('[internal_execAgentRuntime] Search workflow tool calling completed');
+        return;
+      }
+
+      log('[internal_execAgentRuntime] Search workflow completed (no tools detected)');
     }
 
-    // 4. fetch the AI response
-    log('[internal_execAgentRuntime] Fetching AI response for assistantId: %s', assistantId);
-    const { isFunctionCall, content } = await internal_fetchAIChatMessage({
-      messages,
-      messageId: assistantId,
-      params,
-      model,
-      provider: provider!,
+    // ===========================================
+    // Step 3: Create and Execute Agent Runtime
+    // ===========================================
+    log('[internal_execAgentRuntime] Creating agent runtime');
+
+    const agent = new ChatAgent();
+    const runtime = new AgentRuntime(agent, {
+      executors: createChatExecutors({
+        get,
+        messageKey,
+        assistantMessageId,
+        model,
+        provider,
+        params,
+      }),
     });
 
-    // 5. if it's the function call message, trigger the function method
-    if (isFunctionCall) {
-      log('[internal_execAgentRuntime] AI response is function call, triggering tools calling');
-      get().internal_toggleMessageInToolsCalling(true, assistantId);
-      await refreshMessages();
-      await triggerToolsCalling(assistantId, {
-        threadId: params?.threadId,
-        inPortalThread: params?.inPortalThread,
-      });
-    } else {
+    // Create initial state
+    let state = AgentRuntime.createInitialState({
+      sessionId: activeId,
+      messages,
+      maxSteps: 20, // Prevent infinite loops
+    });
+
+    // Initial context - use 'init' phase since state already contains messages
+    let nextContext: AgentRuntimeContext = {
+      phase: 'init',
+      payload: {},
+      session: {
+        sessionId: activeId,
+        messageCount: messages.length,
+        status: state.status,
+        stepCount: 0,
+      },
+    };
+
+    log(
+      '[internal_execAgentRuntime] Agent runtime loop start, initial phase: %s',
+      nextContext.phase,
+    );
+
+    // Execute the agent runtime loop
+    let stepCount = 0;
+    while (state.status !== 'done' && state.status !== 'error') {
+      stepCount++;
       log(
-        '[internal_execAgentRuntime] AI response completed, content length: %d',
-        content?.length || 0,
+        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',
+        stepCount,
+        nextContext.phase,
+        state.status,
       );
-      // 显示桌面通知（仅在桌面端且窗口隐藏时）
-      if (isDesktop) {
-        try {
-          // 动态导入桌面通知服务，避免在非桌面端环境中导入
+
+      const result = await runtime.step(state, nextContext);
+
+      log(
+        '[internal_execAgentRuntime] Step %d completed, events: %d, newStatus=%s',
+        stepCount,
+        result.events.length,
+        result.newState.status,
+      );
+
+      // Handle completion and error events
+      for (const event of result.events) {
+        if (event.type === 'done') {
+          log('[internal_execAgentRuntime] Received done event, syncing to database');
+          // Sync final state to database
+          const finalMessages = get().messagesMap[messageKey] || [];
+          get().replaceMessages(finalMessages);
+        }
+
+        if (event.type === 'error') {
+          log('[internal_execAgentRuntime] Received error event: %o', event.error);
+          // Update error in database
+          await messageService.updateMessageError(assistantMessageId, event.error);
+          const finalMessages = get().messagesMap[messageKey] || [];
+          get().replaceMessages(finalMessages);
+        }
+      }
+
+      state = result.newState;
+
+      // If no nextContext, stop execution
+      if (!result.nextContext) {
+        log('[internal_execAgentRuntime] No next context, stopping loop');
+        break;
+      }
+
+      nextContext = result.nextContext;
+    }
+
+    log(
+      '[internal_execAgentRuntime] Agent runtime loop finished, final status: %s, total steps: %d',
+      state.status,
+      stepCount,
+    );
+
+    log('[internal_execAgentRuntime] completed');
+
+    // Desktop notification (if not in tools calling mode)
+    if (isDesktop) {
+      try {
+        const messageKey = `${activeId}_${activeTopicId ?? null}`;
+        const finalMessages = get().messagesMap[messageKey] || [];
+        const lastAssistant = finalMessages.findLast((m) => m.role === 'assistant');
+
+        // Only show notification if there's content and no tools
+        if (lastAssistant?.content && !lastAssistant?.tools) {
           const { desktopNotificationService } = await import(
             '@/services/electron/desktopNotification'
           );
 
           await desktopNotificationService.showNotification({
-            body: content,
+            body: lastAssistant.content,
             title: t('notification.finishChatGeneration', { ns: 'electron' }),
           });
-        } catch (error) {
-          // 静默处理错误，不影响正常流程
-          console.error('Desktop notification error:', error);
         }
+      } catch (error) {
+        console.error('Desktop notification error:', error);
       }
     }
 
-    // 6. summary history if context messages is larger than historyCount
+    // Summary history if context messages is larger than historyCount
     const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
 
     if (
       agentChatConfigSelectors.enableHistoryCount(agentStoreState) &&
       chatConfig.enableCompressHistory &&
-      originalMessages.length > historyCount
+      messages.length > historyCount
     ) {
       // after generation: [u1,a1,u2,a2,u3,a3]
-      // but the `originalMessages` is still: [u1,a1,u2,a2,u3]
+      // but the `messages` is still: [u1,a1,u2,a2,u3]
       // So if historyCount=2, we need to summary [u1,a1,u2,a2]
       // because user find UI is [u1,a1,u2,a2 | u3,a3]
-      const historyMessages = originalMessages.slice(0, -historyCount + 1);
+      const historyMessages = messages.slice(0, -historyCount + 1);
 
       await get().internal_summaryHistory(historyMessages);
     }
-  },
-  triggerToolsCalling: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
-    log('[triggerToolsCalling] start, assistantId (block ID): %s', assistantId);
-
-    const foundMessage = displayMessageSelectors.getDisplayMessageById(assistantId)(get());
-    if (!foundMessage) {
-      log('[triggerToolsCalling] Message not found, returning');
-      return;
-    }
-
-    // Determine if this is a group message or a block
-    let groupMessage: UIChatMessage;
-    let latestBlock: UIChatMessage;
-
-    if (foundMessage.role === 'assistantGroup') {
-      // Case 1: assistantId matches a group message ID directly
-      // Find the block within children that matches assistantId
-      groupMessage = foundMessage;
-      const block = foundMessage.children?.find((item) => item.id === assistantId);
-
-      if (!block) {
-        log(
-          '[triggerToolsCalling] Block with id %s not found in group message children, returning',
-          assistantId,
-        );
-        return;
-      }
-      latestBlock = block as UIChatMessage;
-    } else if (foundMessage.parentId) {
-      // Case 2: assistantId is a block ID, need to get parent group message
-      const parentMsg = displayMessageSelectors.getDisplayMessageById(foundMessage.parentId)(get());
-      if (!parentMsg || parentMsg.role !== 'assistantGroup') {
-        log('[triggerToolsCalling] Parent group message not found, returning');
-        return;
-      }
-      groupMessage = parentMsg;
-      latestBlock = foundMessage;
-    } else {
-      log(
-        '[triggerToolsCalling] Message is neither a group message nor a block with parentId, returning',
-      );
-      return;
-    }
-
-    log('[triggerToolsCalling] Found group message: %O', {
-      id: groupMessage.id,
-      groupId: groupMessage.groupId,
-      childrenCount: groupMessage.children?.length,
-      latestBlockId: latestBlock.id,
-    });
-
-    if (!latestBlock.tools) {
-      log('[triggerToolsCalling] Latest block has no tools, returning');
-      return;
-    }
-
-    log(
-      '[triggerToolsCalling] Latest block found with %d tools: %O',
-      latestBlock.tools.length,
-      latestBlock.tools.map((t) => ({ id: t.id, type: t.type, identifier: t.identifier })),
-    );
-
-    let shouldCreateMessage = false;
-    let latestToolId = '';
-
-    await pMap(
-      latestBlock.tools,
-      async (payload) => {
-        log(
-          '[triggerToolsCalling] Processing tool: %s (type: %s)',
-          payload.identifier,
-          payload.type,
-        );
-
-        // 2. 使用 createMessage 创建 tool 消息
-        const toolMessage: CreateNewMessageParams = {
-          content: '',
-          parentId: assistantId,
-          plugin: payload,
-          role: 'tool',
-          sessionId: get().activeId,
-          tool_call_id: payload.id,
-          threadId,
-          topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
-          groupId: groupMessage.groupId, // Propagate groupId from parent message for group chat
-        };
-
-        const result = await get().internal_createMessage(toolMessage);
-
-        if (!result) {
-          log('[triggerToolsCalling] Failed to create tool message for %s', payload.identifier);
-          return;
-        }
-
-        log('[triggerToolsCalling] Tool message created: %s', result.id);
-
-        // 3. 执行 tool（这时 tool 消息已经创建，且 UI 已更新）
-        const data = await get().internal_invokeDifferentTypePlugin(result.id, payload);
-
-        if (data && !['markdown', 'standalone'].includes(payload.type)) {
-          shouldCreateMessage = true;
-          latestToolId = result.id;
-          log(
-            '[triggerToolsCalling] Tool %s requires follow-up assistant message',
-            payload.identifier,
-          );
-        } else {
-          log('[triggerToolsCalling] Tool %s completed without follow-up', payload.identifier);
-        }
-      },
-      { concurrency: 5 },
-    );
-
-    await get().internal_toggleMessageInToolsCalling(false, assistantId);
-
-    if (!shouldCreateMessage) {
-      log('[triggerToolsCalling] No follow-up message needed, completed');
-      return;
-    }
-
-    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(latestToolId)(get());
-    log(
-      '[triggerToolsCalling] Calling follow-up assistant message with latestToolId: %s',
-      latestToolId,
-    );
-
-    await get().callToolFollowAssistantMessage({
-      traceId,
-      threadId,
-      inPortalThread,
-      inSearchWorkflow,
-      parentId: latestToolId,
-    });
-    log('[triggerToolsCalling] completed');
-  },
-
-  callToolFollowAssistantMessage: async ({
-    parentId,
-    traceId,
-    threadId,
-    inPortalThread,
-    inSearchWorkflow,
-  }) => {
-    log('[callToolFollowAssistantMessage] start, parentId: %s', parentId);
-
-    const chats = inPortalThread
-      ? threadSelectors.portalAIChatsWithHistoryConfig(get())
-      : displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
-
-    let assistantMessageId: string;
-
-    // 获取 agent 配置
-    const agentStoreState = getAgentStoreState();
-    const { model, provider } = agentSelectors.currentAgentConfig(agentStoreState);
-
-    // 查找包含 parentId 的 group message
-    // parentId 是 tool result message 的 id，它存储在 assistant block 的 tools[].result_msg_id 中
-    let groupMessageId: string | undefined;
-
-    // 遍历所有 group messages，找到包含该 tool result 的那个
-    for (const msg of chats) {
-      if (msg.role === 'assistantGroup' && msg.children) {
-        for (const child of msg.children) {
-          // 检查 child 的 tools 中是否有 result_msg_id === parentId
-          if (child.tools?.some((tool) => tool.result_msg_id === parentId)) {
-            groupMessageId = msg.id;
-            log('[callToolFollowAssistantMessage] Found group message: %s', groupMessageId);
-            break;
-          }
-        }
-        if (groupMessageId) break;
-      }
-    }
-
-    // 创建新的 assistant message，作为 group message 的新 block
-    const assistantMessage: CreateNewMessageParams = {
-      role: 'assistant',
-      content: LOADING_FLAT,
-      parentId,
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
-      threadId,
-      traceId,
-      model,
-      provider,
-    };
-
-    log('[callToolFollowAssistantMessage] Creating new assistant message block with params: %O', {
-      parentId,
-      groupMessageId,
-      model,
-      provider,
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
-    });
-
-    const result = await get().internal_createMessage(assistantMessage, { groupMessageId });
-
-    if (!result) {
-      log('[callToolFollowAssistantMessage] Failed to create assistant message');
-      return;
-    }
-
-    assistantMessageId = result.id;
-    log(
-      '[callToolFollowAssistantMessage] Assistant message created successfully, id: %s',
-      assistantMessageId,
-    );
-
-    log('[callToolFollowAssistantMessage] Starting agent runtime with %d messages', chats.length);
-    await get().internal_execAgentRuntime({
-      messages: chats,
-      assistantMessageId,
-      traceId,
-      threadId,
-      inPortalThread,
-      inSearchWorkflow,
-    });
-    log('[callToolFollowAssistantMessage] completed');
   },
 
   internal_updateSendMessageOperation: (key, value, actionName) => {
