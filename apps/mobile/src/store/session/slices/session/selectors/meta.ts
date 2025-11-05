@@ -1,7 +1,12 @@
 import { MetaData } from '@lobechat/types';
-import { t } from 'i18next';
 
-import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, DEFAULT_INBOX_AVATAR } from '@/_const/meta';
+import {
+  DEFAULT_AVATAR,
+  DEFAULT_BACKGROUND_COLOR,
+  DEFAULT_INBOX_AVATAR,
+  DEFAULT_INBOX_DESCRIPTION,
+  DEFAULT_INBOX_TITLE,
+} from '@/_const/meta';
 import { SessionStore } from '@/store/session';
 import { merge } from '@/utils/merge';
 
@@ -14,8 +19,9 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
-    description: isInbox ? t('inbox.desc', { ns: 'chat' }) : undefined,
-    title: isInbox ? t('inbox.title', { ns: 'chat' }) : t('defaultSession'),
+    // 不在选择器中进行翻译，而是在组件中根据 isInbox 判断是否需要翻译
+    description: isInbox ? DEFAULT_INBOX_DESCRIPTION : undefined,
+    title: isInbox ? DEFAULT_INBOX_TITLE : undefined,
   };
 
   const session = sessionSelectors.currentSession(s);
@@ -29,7 +35,7 @@ const currentAgentAvatar = (s: SessionStore) => currentAgentMeta(s).avatar;
 const currentAgentBackgroundColor = (s: SessionStore) => currentAgentMeta(s).backgroundColor;
 
 const getAvatar = (s: MetaData) => s.avatar || DEFAULT_AVATAR;
-const getTitle = (s: MetaData) => s.title || t('defaultSession', { ns: 'common' });
+const getTitle = (s: MetaData) => s.title;
 // New session do not show 'noDescription'
 export const getDescription = (s: MetaData) => s.description;
 

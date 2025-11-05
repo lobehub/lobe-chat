@@ -4,14 +4,19 @@ import { useTranslation } from 'react-i18next';
 
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 export default function AgentDetail() {
   const { t } = useTranslation('chat');
   const router = useRouter();
   const avatar = useSessionStore(sessionMetaSelectors.currentAgentAvatar);
-  const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
-  const description = useSessionStore(sessionMetaSelectors.currentAgentDescription);
+  const rawTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
+  const rawDescription = useSessionStore(sessionMetaSelectors.currentAgentDescription);
+  const isInbox = useSessionStore(sessionSelectors.isInboxSession);
+
+  // 如果是 inbox，使用翻译；否则使用原始值或默认值
+  const title = isInbox ? t('inbox.title') : rawTitle || t('defaultAgent');
+  const description = isInbox ? t('inbox.desc') : rawDescription;
 
   return (
     <PageContainer showBack title={t('setting.title', { ns: 'chat' })}>

@@ -31,11 +31,11 @@ export default function ChatWithDrawer() {
   const switchTopic = useSwitchTopic();
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const { t } = useTranslation('chat');
-  const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
+  const rawTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
 
   const router = useRouter();
 
-  const displayTitle = isInbox ? t('inbox.title') : title;
+  const displayTitle = isInbox ? t('inbox.title') : rawTitle || t('defaultAgent');
   const isInDefaultTopic = !activeTopicId;
 
   const renderContent = () => {

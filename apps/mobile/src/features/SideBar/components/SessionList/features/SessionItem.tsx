@@ -3,6 +3,7 @@ import { Cell, Flexbox, Icon, Text, useTheme } from '@lobehub/ui-rn';
 import Avatar from '@lobehub/ui-rn/Avatar';
 import { PinIcon } from 'lucide-react-native';
 import { memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AVATAR_SIZE_MEDIUM } from '@/_const/common';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
@@ -11,6 +12,7 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 import { formatShortTime } from '@/utils/formatTime';
 
 const SessionItem = memo<LobeAgentSession>(({ id, pinned, meta, updatedAt, createdAt }) => {
+  const { t } = useTranslation('chat');
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
   const theme = useTheme();
@@ -22,9 +24,9 @@ const SessionItem = memo<LobeAgentSession>(({ id, pinned, meta, updatedAt, creat
       avatar: sessionMetaSelectors.getAvatar(meta),
       backgroundColor: meta.backgroundColor,
       description: sessionMetaSelectors.getDescription(meta),
-      title: sessionMetaSelectors.getTitle(meta),
+      title: sessionMetaSelectors.getTitle(meta) || t('defaultAgent'),
     };
-  }, [meta]);
+  }, [meta, t]);
 
   const handlePress = useCallback(() => {
     // 使用 useSwitchSession hook，它会自动处理路由导航和抽屉关闭

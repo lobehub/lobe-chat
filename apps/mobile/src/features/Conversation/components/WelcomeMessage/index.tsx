@@ -10,7 +10,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import OpeningQuestions from './OpeningQuestions';
 import RecentTopics from './RecentTopics';
@@ -18,7 +18,7 @@ import RecentTopicsSkeleton from './RecentTopicsSkeleton';
 import WelcomeChatBubble from './WelcomeChatBubble';
 
 const WelcomeMessage = () => {
-  const { t } = useTranslation('chat');
+  const { t, i18n } = useTranslation('chat');
   const ref = useRef<ScrollView>(null);
 
   // 触发 topics 加载
@@ -30,23 +30,39 @@ const WelcomeMessage = () => {
   const topicsInit = useChatStore((s) => s.topicsInit);
 
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+  const isInbox = useSessionStore(sessionSelectors.isInboxSession);
 
   // 判断是否显示 topics 相关内容（加载中或有数据）
   const shouldShowTopicsSection = !topicsInit || (topics && topics.length > 0);
 
+  // 根据当前语言和 isInbox 状态计算显示的 meta
+  const displayMeta = useMemo(() => {
+    if (isInbox) {
+      return {
+        ...meta,
+        description: t('inbox.desc'),
+        title: t('inbox.title'),
+      };
+    }
+    return {
+      ...meta,
+      title: meta.title || t('defaultAgent'),
+    };
+  }, [meta, isInbox, t, i18n.language]); // 添加 i18n.language 作为依赖确保语言切换时更新
+
   const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
-    name: meta.title || t('defaultAgent'),
-    systemRole: meta.description,
+    name: displayMeta.title,
+    systemRole: displayMeta.description,
   });
 
   const agentMsg = t('agentDefaultMessageWithoutEdit', {
-    name: meta.title || t('defaultAgent'),
+    name: displayMeta.title,
   });
 
   const message = useMemo(() => {
     if (openingMessage) return openingMessage;
-    return !!meta.description ? agentSystemRoleMsg : agentMsg;
-  }, [openingMessage, agentSystemRoleMsg, agentMsg, meta.description]);
+    return !!displayMeta.description ? agentSystemRoleMsg : agentMsg;
+  }, [openingMessage, agentSystemRoleMsg, agentMsg, displayMeta.description]);
 
   const welcomeBubble = (
     <WelcomeChatBubble
@@ -54,7 +70,7 @@ const WelcomeMessage = () => {
         content: message,
         createdAt: Date.now(),
         id: 'welcome',
-        meta,
+        meta: displayMeta,
         role: 'assistant',
         updatedAt: Date.now(),
       }}

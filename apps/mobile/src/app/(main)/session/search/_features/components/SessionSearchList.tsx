@@ -268,7 +268,7 @@ const SessionSearchList = memo(
         const { title, description, avatar } = {
           avatar: sessionMetaSelectors.getAvatar(session.meta),
           description: sessionMetaSelectors.getDescription(session.meta),
-          title: sessionMetaSelectors.getTitle(session.meta),
+          title: sessionMetaSelectors.getTitle(session.meta) || t('defaultAgent'),
         };
 
         const options: DropdownOptionItem[] = [

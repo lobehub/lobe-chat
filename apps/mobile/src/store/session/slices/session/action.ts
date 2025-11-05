@@ -140,9 +140,9 @@ export const createSessionSlice: StateCreator<SessionStore, [], [], SessionActio
     const session = sessionSelectors.getSessionById(id)(get());
 
     if (!session) return;
-    const title = sessionMetaSelectors.getTitle(session.meta);
+    const title = sessionMetaSelectors.getTitle(session.meta) || t('defaultAgent', { ns: 'chat' });
 
-    const newTitle = t('duplicateSession.title', { ns: 'chat', title: title });
+    const newTitle = t('duplicateSession.title', { ns: 'chat', title });
 
     // TODO: RN端暂未实现此功能 - Loading消息提示
     // const messageLoadingKey = 'duplicateSession.loading';
