@@ -3,6 +3,8 @@ import { Flexbox } from '@lobehub/ui-rn';
 import { memo, useMemo } from 'react';
 
 import { LOADING_FLAT } from '@/_const/message';
+import { useChatStore } from '@/store/chat';
+import { aiChatSelectors } from '@/store/chat/selectors';
 
 import Reasoning from '../Assistant/Reasoning';
 import ImageFileListViewer from '../User/ImageFileListViewer';
@@ -28,9 +30,11 @@ export const ContentBlock = memo<ContentBlockProps>((props) => {
     isSummary = false,
   } = props;
   const showImageItems = !!imageList && imageList.length > 0;
+  const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
+
   const hasTools = tools && tools.length > 0;
   const showReasoning =
-    (!!reasoning && reasoning.content?.trim() !== '') || (!reasoning && isGenerating);
+    (!!reasoning && reasoning.content?.trim() !== '') || (!reasoning && isReasoning);
 
   // 带工具的 block，如果不是总结部分，文字内容透明度降低
   const contentOpacity = hasTools && !isSummary ? 0.5 : 1;
@@ -54,7 +58,7 @@ export const ContentBlock = memo<ContentBlockProps>((props) => {
           content={reasoning?.content}
           duration={reasoning?.duration}
           id={id}
-          isGenerating={isGenerating}
+          isGenerating={isReasoning}
         />
       )}
 

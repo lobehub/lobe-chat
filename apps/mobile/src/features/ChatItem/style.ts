@@ -5,12 +5,6 @@ export const useStyles = createStyles(({ token }) => ({
     maxWidth: '100%',
     minHeight: 32,
   },
-  errorBubble: {
-    backgroundColor: token.colorWarningBg,
-    borderColor: token.colorWarningBorder,
-    borderWidth: 1,
-    marginVertical: token.marginXS,
-  },
 
   userBubble: {
     backgroundColor: token.colorBgContainer,

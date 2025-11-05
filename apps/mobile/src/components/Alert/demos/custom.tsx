@@ -1,9 +1,9 @@
-import { Alert, Button, Space } from '@lobehub/ui-rn';
+import { Alert, Button, Flexbox } from '@lobehub/ui-rn';
 import { ShieldCheck } from 'lucide-react-native';
 
 const CustomDemo = () => {
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Flexbox gap={16}>
       <Alert
         action={
           <Button size="small" type="primary">
@@ -22,7 +22,7 @@ const CustomDemo = () => {
         showIcon={false}
         type="success"
       />
-    </Space>
+    </Flexbox>
   );
 };
 

@@ -1,9 +1,10 @@
-import { LOADING_FLAT } from '@lobechat/const';
 import { ChatToolPayloadWithResult, UIChatMessage } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui-rn';
 import { ReactNode, memo } from 'react';
 
-import { DefaultMessage } from '../Default';
+import { useChatStore } from '@/store/chat';
+import { aiChatSelectors } from '@/store/chat/selectors';
+
 import FileListViewer from '../User/FileListViewer';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import VideoFileListViewer from '../User/VideoFileListViewer';
@@ -20,18 +21,8 @@ export interface AssistantMessageContentProps extends UIChatMessage {
 }
 
 export const AssistantMessageContent = memo<AssistantMessageContentProps>(
-  ({
-    id,
-    tools,
-    content,
-    imageList,
-    videoList,
-    fileList,
-    isGenerating,
-    editableContent,
-    ...props
-  }) => {
-    const isToolCallGenerating = isGenerating && (content === LOADING_FLAT || !content) && !!tools;
+  ({ id, tools, imageList, videoList, fileList, ...props }) => {
+    const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
 
     // 功能开关
     const showImageItems = !!imageList && imageList.length > 0;
@@ -39,10 +30,15 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
     const showFileItems = !!fileList && fileList.length > 0;
     const showReasoning =
       (!!props.reasoning && props.reasoning.content?.trim() !== '') ||
-      (!props.reasoning && isGenerating);
+      (!props.reasoning && isReasoning);
 
     // TODO: 待实现功能
     // const showFileChunks = !!chunksList && chunksList.length > 0;
+
+    // 如果有 error 且没有 content，只显示 ErrorContent
+    // Note: 这里的 error 是原始的 ChatMessageError，需要通过 useErrorContent hook 转换
+    // 但在这个 MessageContent 组件中，error 展示应该由外层的 ChatItem 处理
+    // 所以这里不再渲染 ErrorContent
 
     return (
       <Flexbox gap={8}>
@@ -56,18 +52,7 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
             content={props.reasoning?.content}
             duration={props.reasoning?.duration}
             id={id}
-            isGenerating={isGenerating}
-          />
-        )}
-
-        {/* 主要内容 */}
-        {content && (
-          <DefaultMessage
-            content={content}
-            editableContent={editableContent}
-            id={id}
-            isToolCallGenerating={isToolCallGenerating}
-            {...props}
+            isGenerating={isReasoning}
           />
         )}
 

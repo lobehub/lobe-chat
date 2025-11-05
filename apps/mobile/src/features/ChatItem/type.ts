@@ -1,5 +1,4 @@
-import { UIChatMessage } from '@lobechat/types';
-import { MarkdownProps } from '@lobehub/ui-rn';
+import { AlertProps, MarkdownProps } from '@lobehub/ui-rn';
 import { ReactNode } from 'react';
 
 export interface MetaData {
@@ -26,9 +25,9 @@ export interface ChatItemProps {
    */
   belowMessage?: ReactNode;
   /**
-   * @description Error information
+   * @description Error information (AlertProps from useErrorContent hook)
    */
-  error?: UIChatMessage['error'];
+  error?: AlertProps;
   /**
    * @description Custom error message render
    */

@@ -12,11 +12,12 @@ import { useTheme } from '@/components/styles';
 import { useChatStore } from '@/store/chat';
 
 interface ActionsProps {
+  hasError?: boolean;
   message: UIChatMessage;
   style?: StyleProp<ViewStyle>;
 }
 
-const Actions = memo<ActionsProps>(({ message, style }) => {
+const Actions = memo<ActionsProps>(({ message, hasError = false, style }) => {
   const { t } = useTranslation(['chat', 'common']);
   const deleteMessage = useChatStore((s) => s.deleteMessage);
   const regenerateMessage = useChatStore((s) => s.regenerateMessage);
@@ -99,6 +100,26 @@ const Actions = memo<ActionsProps>(({ message, style }) => {
       }
     };
   }, []);
+
+  // Error 情况下只显示 regenerate 和 delete
+  if (hasError) {
+    return (
+      <Flexbox gap={4} horizontal style={style}>
+        <ActionIcon
+          color={token.colorTextDescription}
+          icon={RefreshCw}
+          onPress={handleRegenerate}
+          size={16}
+        />
+        <ActionIcon
+          color={token.colorTextDescription}
+          icon={Trash2}
+          onPress={handleDelete}
+          size={16}
+        />
+      </Flexbox>
+    );
+  }
 
   return (
     <Flexbox gap={4} horizontal style={style}>

@@ -1,9 +1,10 @@
 import { UIChatMessage } from '@lobechat/types';
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
 import Actions from '@/features/ChatItem/components/Actions';
-import MessageContent from '@/features/ChatItem/components/MessageContent';
+import ErrorMessageExtra from '@/features/Conversation/Error';
+import { useErrorContent } from '@/hooks/useErrorContent';
 
 import { AssistantMessageContent } from './MessageContent';
 
@@ -48,28 +49,12 @@ const AssistantMessage = memo<AssistantMessageProps>(
       [isLastMessage, isGenerating, message.search],
     );
 
-    const renderMessage = useCallback(
-      (editableContent: React.ReactNode) => (
-        <AssistantMessageContent
-          {...message}
-          editableContent={editableContent}
-          isGenerating={isLoading}
-        />
-      ),
-      [message, isLoading],
-    );
-
-    const editableContent = (
-      <MessageContent
-        content={message.content}
-        isLoading={isLoading}
-        markdownProps={markdownProps}
-      />
-    );
+    const errorContent = useErrorContent(message.error);
+    const errorMessage = <ErrorMessageExtra data={{ error: message.error, id: message.id }} />;
 
     const actionsNode =
       showActions && showActionsBar && !isLoading && (message.content || message.error) ? (
-        <Actions message={message} />
+        <Actions hasError={!!message.error} message={message} />
       ) : undefined;
 
     return (
@@ -80,13 +65,16 @@ const AssistantMessage = memo<AssistantMessageProps>(
           backgroundColor: message.meta?.backgroundColor,
           title: message.meta?.title,
         }}
-        error={message.error}
+        error={errorContent}
+        errorMessage={errorMessage}
         loading={isLoading}
         markdownProps={markdownProps}
         message={message.content}
+        messageExtra={
+          <AssistantMessageContent {...message} editableContent={null} isGenerating={isLoading} />
+        }
         placement="left"
         primary={false}
-        renderMessage={renderMessage ? () => renderMessage(editableContent) : undefined}
         showTime={showTime}
         showTitle={showTitle}
         time={message.createdAt}

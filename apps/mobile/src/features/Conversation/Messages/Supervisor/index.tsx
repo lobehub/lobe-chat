@@ -2,6 +2,7 @@ import { UIChatMessage } from '@lobechat/types';
 import { memo, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
+import { useErrorContent } from '@/hooks/useErrorContent';
 
 export interface SupervisorMessageProps {
   index: number;
@@ -25,6 +26,8 @@ const SupervisorMessage = memo<SupervisorMessageProps>(
       }),
       [isLastMessage, isGenerating],
     );
+    const errorContent = useErrorContent(message.error);
+
     // Supervisor uses system avatar/title
     const supervisorMeta = {
       avatar: '🤖',
@@ -34,7 +37,7 @@ const SupervisorMessage = memo<SupervisorMessageProps>(
     return (
       <ChatItem
         avatar={supervisorMeta}
-        error={message.error}
+        error={errorContent}
         loading={isLoading}
         markdownProps={markdownProps}
         message={message.content}

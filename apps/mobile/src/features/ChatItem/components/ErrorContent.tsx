@@ -1,46 +1,22 @@
-import { ChatMessageError } from '@lobechat/types';
-import { AlertTriangle } from 'lucide-react-native';
-import type { FC } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
-
-import { useTheme } from '@/components/styles';
-import { useProviderName } from '@/hooks/useProviderName';
+import { Alert, AlertProps } from '@lobehub/ui-rn';
+import type { FC, ReactNode } from 'react';
 
 interface ErrorContentProps {
-  error: ChatMessageError;
+  error?: AlertProps;
+  message?: ReactNode;
 }
 
-const ErrorContent: FC<ErrorContentProps> = ({ error }) => {
-  const token = useTheme();
-  const { t } = useTranslation('error');
-  const providerName = useProviderName(error.body?.provider);
+const ErrorContent: FC<ErrorContentProps> = ({ error, message }) => {
+  console.log('message', message);
+  console.log('error', error);
+  // 如果 error 没有 message，但有传入 message prop，直接显示
+  if (!error?.message) {
+    if (!message) return null;
+    return message;
+  }
 
-  const errorMessage =
-    t(`response.${error.type}` as any, { provider: providerName }) || error.message;
-
-  return (
-    <View
-      style={{
-        alignItems: 'flex-start',
-        flexDirection: 'row',
-        gap: token.marginXS,
-        padding: token.paddingXS,
-      }}
-    >
-      <AlertTriangle color={token.colorWarning} size={16} style={{ marginTop: 2 }} />
-      <Text
-        style={{
-          color: token.colorWarningText,
-          flex: 1,
-          fontSize: token.fontSize,
-          lineHeight: token.lineHeight,
-        }}
-      >
-        {errorMessage}
-      </Text>
-    </View>
-  );
+  // 有 error 时，显示 Alert，message 作为 extra 额外信息
+  return <Alert closable={false} extra={message} showIcon {...error} />;
 };
 
 export default ErrorContent;
