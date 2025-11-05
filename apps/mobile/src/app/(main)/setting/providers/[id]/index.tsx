@@ -162,24 +162,24 @@ const ProviderDetailPage = () => {
   const renderFooter = useCallback(() => {
     if (isModelsLoading) {
       return (
-        <Flexbox style={styles.footerLoading}>
+        <Center gap={8} padding={16} style={styles.footerLoading}>
           <ActivityIndicator color={token.colorPrimary} size="small" />
           <Text style={styles.footerText}>
             {t('aiProviders.models.loading', { ns: 'setting' })}
           </Text>
-        </Flexbox>
+        </Center>
       );
     }
 
     if (displayedCount < totalFilteredCount) {
       return (
-        <Flexbox style={styles.footerLoading}>
-          <ActivityIndicator color={token.colorTextSecondary} size="small" />
+        <Center gap={8} padding={12} style={styles.footerLoading}>
+          <ActivityIndicator color={token.colorPrimary} size="small" />
           <Text style={styles.footerText}>
             {t('aiProviders.models.loadingMore', { ns: 'setting' })} ({displayedCount}/
             {totalFilteredCount})
           </Text>
-        </Flexbox>
+        </Center>
       );
     }
 
