@@ -26,9 +26,21 @@ describe('parse', () => {
     });
 
     it('should match snapshot for branched conversation', () => {
-      const result = parse(inputs.branchedConversation);
+      const result = parse(inputs.branch.conversation);
 
-      expect(serializeParseResult(result)).toEqual(outputs.branchedConversation);
+      expect(serializeParseResult(result)).toEqual(outputs.branch.conversation);
+    });
+
+    it('should match snapshot for branched conversation with activeBranchIndex 1', () => {
+      const result = parse(inputs.branch.activeIndex1);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.activeIndex1);
+    });
+
+    it('should match snapshot for nested branches (4 levels)', () => {
+      const result = parse(inputs.branch.nested);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.nested);
     });
 
     it('should match snapshot for compare mode', () => {

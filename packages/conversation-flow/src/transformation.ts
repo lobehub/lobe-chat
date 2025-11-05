@@ -245,11 +245,21 @@ export class Transformer {
    * Get active branch ID from message metadata or infer from children
    */
   private getActiveBranchId(message: Message, idNode: IdNode): string {
-    // Try to get from metadata
+    // Priority 1: Try to get from metadata.activeBranchId (direct ID)
     const activeBranchId = (message.metadata as any)?.activeBranchId;
     if (activeBranchId) return activeBranchId;
 
-    // Infer from which branch has children
+    // Priority 2: Try to get from metadata.activeBranchIndex (index-based)
+    const activeBranchIndex = (message.metadata as any)?.activeBranchIndex;
+    if (
+      typeof activeBranchIndex === 'number' &&
+      activeBranchIndex >= 0 &&
+      activeBranchIndex < idNode.children.length
+    ) {
+      return idNode.children[activeBranchIndex].id;
+    }
+
+    // Priority 3: Infer from which branch has children
     for (const child of idNode.children) {
       if (child.children.length > 0) {
         return child.id;
@@ -519,12 +529,23 @@ export class Transformer {
    * Get active branch ID from message metadata or infer
    */
   private getActiveBranchIdFromMetadata(message: Message, childIds: string[]): string {
+    // Priority 1: Try to get from metadata.activeBranchId (direct ID)
     const activeBranchId = (message.metadata as any)?.activeBranchId;
     if (activeBranchId && childIds.includes(activeBranchId)) {
       return activeBranchId;
     }
 
-    // Infer from which child has descendants
+    // Priority 2: Try to get from metadata.activeBranchIndex (index-based)
+    const activeBranchIndex = (message.metadata as any)?.activeBranchIndex;
+    if (
+      typeof activeBranchIndex === 'number' &&
+      activeBranchIndex >= 0 &&
+      activeBranchIndex < childIds.length
+    ) {
+      return childIds[activeBranchIndex];
+    }
+
+    // Priority 3: Infer from which child has descendants
     for (const childId of childIds) {
       const descendants = this.childrenMap.get(childId);
       if (descendants && descendants.length > 0) {

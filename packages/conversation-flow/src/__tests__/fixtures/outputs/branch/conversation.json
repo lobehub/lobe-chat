@@ -63,10 +63,7 @@
       "parentId": null,
       "createdAt": 1704067200000,
       "updatedAt": 1704067200000,
-      "meta": {},
-      "metadata": {
-        "activeBranchId": "msg-202"
-      }
+      "meta": {}
     },
     {
       "id": "msg-202",
@@ -140,10 +137,7 @@
       "parentId": null,
       "createdAt": 1704067200000,
       "updatedAt": 1704067200000,
-      "meta": {},
-      "metadata": {
-        "activeBranchId": "msg-202"
-      }
+      "meta": {}
     },
     "msg-202": {
       "id": "msg-202",
