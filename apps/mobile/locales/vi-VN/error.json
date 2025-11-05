@@ -1,6 +1,20 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Tiếp tục phiên",
+      "desc": "{{greeting}}, rất vui được tiếp tục hỗ trợ bạn. Hãy tiếp tục cuộc trò chuyện vừa rồi nhé",
+      "title": "Chào mừng trở lại, {{nickName}}"
+    }
+  },
   "error": {
+    "backHome": "Quay về trang chủ",
+    "desc": "Hãy thử lại sau, hoặc quay về thế giới quen thuộc",
+    "retry": "Tải lại",
     "title": "Đã xảy ra lỗi"
+  },
+  "fetchError": {
+    "detail": "Chi tiết lỗi",
+    "title": "Yêu cầu thất bại"
   },
   "http": {
     "forbidden": "Cấm truy cập",
@@ -9,6 +23,16 @@
     "serverError": "Lỗi máy chủ",
     "timeout": "Yêu cầu hết thời gian",
     "unauthorized": "Chưa được ủy quyền"
+  },
+  "import": {
+    "importConfigFile": {
+      "description": "Nguyên nhân lỗi: {{reason}}",
+      "title": "Nhập thất bại"
+    },
+    "incompatible": {
+      "description": "Tệp này được xuất từ phiên bản cao hơn. Vui lòng nâng cấp lên phiên bản mới nhất rồi thử lại",
+      "title": "Ứng dụng hiện tại không hỗ trợ nhập tệp này"
+    }
   },
   "login": {
     "accessDenied": "Rất tiếc, yêu cầu đăng nhập bị từ chối, vui lòng thử lại sau",
@@ -28,9 +52,23 @@
     "unknown": "Rất tiếc, đăng nhập thất bại, vui lòng thử lại sau",
     "unsupportedResponseType": "Rất tiếc, phương thức đăng nhập hiện tại không được hỗ trợ, vui lòng thử lại sau"
   },
+  "loginRequired": {
+    "desc": "Sẽ tự động chuyển đến trang đăng nhập",
+    "title": "Vui lòng đăng nhập để sử dụng tính năng này"
+  },
+  "notFound": {
+    "backHome": "Quay về trang chủ",
+    "check": "Vui lòng kiểm tra URL của bạn có chính xác không",
+    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm",
+    "title": "Lạc vào vùng đất chưa được khám phá?"
+  },
   "page": {
     "notFoundMessage": "Trang này không tồn tại.",
     "notFoundTitle": "Ôi không!"
+  },
+  "pluginSettings": {
+    "desc": "Hoàn tất cấu hình sau để bắt đầu sử dụng plugin này",
+    "title": "Cấu hình plugin {{name}}"
   },
   "response": {
     "400": "Rất tiếc, máy chủ không hiểu yêu cầu của bạn, vui lòng kiểm tra lại tham số yêu cầu",
@@ -73,14 +111,32 @@
     "522": "Rất tiếc, kết nối đến máy chủ bị hết thời gian chờ, không thể phản hồi kịp thời. Có thể do mạng không ổn định hoặc máy chủ tạm thời không truy cập được. Vui lòng thử lại sau, chúng tôi đang cố gắng khôi phục dịch vụ.",
     "524": "Rất tiếc, máy chủ hết thời gian chờ khi đợi phản hồi, có thể do phản hồi quá chậm, vui lòng thử lại sau",
     "AgentRuntimeError": "Lỗi thực thi Lobe AI Runtime, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
+    "ComfyUIBizError": "Gặp lỗi khi yêu cầu dịch vụ ComfyUI, vui lòng kiểm tra thông tin bên dưới hoặc thử lại",
+    "ComfyUIEmptyResult": "ComfyUI không tạo ra hình ảnh nào, vui lòng kiểm tra cấu hình mô hình hoặc thử lại",
+    "ComfyUIModelError": "Tải mô hình ComfyUI thất bại, vui lòng kiểm tra xem tệp mô hình có tồn tại không",
+    "ComfyUIServiceUnavailable": "Không thể kết nối với dịch vụ ComfyUI, vui lòng kiểm tra xem ComfyUI có đang hoạt động và địa chỉ dịch vụ có chính xác không",
+    "ComfyUIUploadFailed": "Tải ảnh lên ComfyUI thất bại, vui lòng kiểm tra kết nối máy chủ hoặc thử lại",
+    "ComfyUIWorkflowError": "Thực thi quy trình ComfyUI thất bại, vui lòng kiểm tra cấu hình quy trình",
     "ConnectionCheckFailed": "Yêu cầu trả về rỗng, vui lòng kiểm tra địa chỉ API proxy có chứa '/v1' ở cuối không",
     "CreateMessageError": "Rất tiếc, tin nhắn không gửi được, vui lòng sao chép nội dung và gửi lại, làm mới trang sẽ không lưu tin nhắn này",
     "ExceededContextWindow": "Nội dung yêu cầu vượt quá độ dài mô hình có thể xử lý, vui lòng giảm bớt nội dung và thử lại",
     "FreePlanLimit": "Bạn đang sử dụng gói miễn phí, không thể sử dụng tính năng này, vui lòng nâng cấp lên gói trả phí để tiếp tục",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Nội dung của bạn chứa từ ngữ bị cấm. Vui lòng kiểm tra và chỉnh sửa nội dung trước khi thử lại.",
+      "IMAGE_SAFETY": "Nội dung hình ảnh bị chặn vì lý do an toàn. Vui lòng điều chỉnh yêu cầu tạo hình ảnh.",
+      "LANGUAGE": "Ngôn ngữ bạn sử dụng hiện chưa được hỗ trợ. Vui lòng thử lại bằng tiếng Anh hoặc ngôn ngữ được hỗ trợ khác.",
+      "OTHER": "Nội dung bị chặn vì lý do không xác định. Vui lòng diễn đạt lại yêu cầu của bạn.",
+      "PROHIBITED_CONTENT": "Yêu cầu của bạn có thể chứa nội dung bị cấm. Vui lòng điều chỉnh để đảm bảo tuân thủ quy định sử dụng.",
+      "RECITATION": "Nội dung của bạn có thể liên quan đến vấn đề bản quyền và đã bị chặn. Vui lòng sử dụng nội dung gốc hoặc diễn đạt lại yêu cầu.",
+      "SAFETY": "Nội dung của bạn bị chặn do chính sách an toàn. Vui lòng điều chỉnh nội dung để tránh các yếu tố có hại hoặc không phù hợp.",
+      "SPII": "Nội dung của bạn có thể chứa thông tin nhận dạng cá nhân nhạy cảm. Vui lòng xóa thông tin nhạy cảm và thử lại.",
+      "default": "Nội dung bị chặn: {{blockReason}}. Vui lòng điều chỉnh nội dung yêu cầu và thử lại."
+    },
     "InsufficientQuota": "Rất tiếc, hạn mức (quota) của khóa này đã đạt giới hạn, vui lòng kiểm tra số dư tài khoản hoặc tăng hạn mức khóa rồi thử lại",
     "InvalidAccessCode": "Mật khẩu không đúng hoặc để trống, vui lòng nhập mật khẩu truy cập chính xác hoặc thêm API Key tùy chỉnh",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidClerkUser": "Rất tiếc, bạn chưa đăng nhập, vui lòng đăng nhập hoặc đăng ký tài khoản để tiếp tục",
+    "InvalidComfyUIArgs": "Cấu hình ComfyUI không chính xác, vui lòng kiểm tra lại và thử lại",
     "InvalidGithubToken": "Github PAT không đúng hoặc để trống, vui lòng kiểm tra Github PAT và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không đúng, vui lòng kiểm tra cấu hình Ollama và thử lại",
     "InvalidProviderAPIKey": "API Key của {{provider}} không đúng hoặc để trống, vui lòng kiểm tra API Key của {{provider}} và thử lại",
@@ -116,5 +172,54 @@
     "desc": "Để bảo vệ tài khoản của bạn, vui lòng đăng nhập lại",
     "login": "Đăng nhập ngay",
     "title": "Phiên đăng nhập đã hết hạn"
+  },
+  "stt": {
+    "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
+  },
+  "supervisor": {
+    "decisionFailed": "Người điều phối nhóm không hoạt động. Vui lòng kiểm tra cấu hình, đảm bảo đã thiết lập đúng mô hình, API Key và địa chỉ API."
+  },
+  "testConnectionFailed": "Kiểm tra kết nối thất bại: {{error}}",
+  "tts": {
+    "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
+  },
+  "unlock": {
+    "addProxyUrl": "Thêm địa chỉ proxy OpenAI (tùy chọn)",
+    "apiKey": {
+      "description": "Nhập {{name}} API Key của bạn để bắt đầu phiên",
+      "imageGenerationDescription": "Nhập {{name}} API Key của bạn để bắt đầu tạo hình ảnh",
+      "title": "Sử dụng {{name}} API Key tùy chỉnh"
+    },
+    "closeMessage": "Đóng thông báo",
+    "comfyui": {
+      "description": "Vui lòng nhập thông tin xác thực {{name}} chính xác để bắt đầu tạo hình ảnh",
+      "modifyBaseUrl": "Chỉnh sửa địa chỉ dịch vụ Comfy UI",
+      "title": "Xác nhận thông tin xác thực {{name}} của bạn"
+    },
+    "confirm": "Xác nhận và thử lại",
+    "goToSettings": "Đi tới Cài đặt",
+    "oauth": {
+      "description": "Quản trị viên đã bật xác thực đăng nhập thống nhất, nhấn nút bên dưới để đăng nhập và mở khóa ứng dụng",
+      "success": "Đăng nhập thành công",
+      "title": "Đăng nhập tài khoản",
+      "welcome": "Chào mừng bạn!"
+    },
+    "password": {
+      "description": "Quản trị viên đã bật mã hóa ứng dụng, nhập mật khẩu để mở khóa. Chỉ cần nhập một lần",
+      "placeholder": "Vui lòng nhập mật khẩu",
+      "title": "Nhập mật khẩu để mở khóa ứng dụng"
+    },
+    "tabs": {
+      "apiKey": "API Key tùy chỉnh",
+      "password": "Mật khẩu"
+    }
+  },
+  "upload": {
+    "desc": "Chi tiết: {{detail}}",
+    "fileOnlySupportInServerMode": "Chế độ triển khai hiện tại không hỗ trợ tải lên tệp không phải hình ảnh. Để tải lên tệp định dạng {{ext}}, vui lòng chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}",
+    "networkError": "Vui lòng kiểm tra kết nối mạng và cấu hình CORS của dịch vụ lưu trữ tệp",
+    "title": "Tải tệp lên thất bại, vui lòng kiểm tra kết nối mạng hoặc thử lại sau",
+    "unknownError": "Nguyên nhân lỗi: {{reason}}",
+    "uploadFailed": "Tải tệp lên thất bại"
   }
 }

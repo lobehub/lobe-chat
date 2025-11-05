@@ -1,6 +1,20 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "繼續會話",
+      "desc": "{{greeting}}，很高興能夠繼續為你服務。讓我們接著剛才的話題聊下去吧",
+      "title": "歡迎回來，{{nickName}}"
+    }
+  },
   "error": {
+    "backHome": "返回首頁",
+    "desc": "待會再試試，或回到已知的世界",
+    "retry": "重新載入",
     "title": "出錯了"
+  },
+  "fetchError": {
+    "detail": "錯誤詳情",
+    "title": "請求失敗"
   },
   "http": {
     "forbidden": "禁止訪問",
@@ -9,6 +23,16 @@
     "serverError": "伺服器錯誤",
     "timeout": "請求逾時",
     "unauthorized": "未經授權"
+  },
+  "import": {
+    "importConfigFile": {
+      "description": "錯誤原因：{{reason}}",
+      "title": "匯入失敗"
+    },
+    "incompatible": {
+      "description": "該檔案由較新版本匯出，請嘗試升級至最新版本後再重新匯入",
+      "title": "目前應用不支援匯入該檔案"
+    }
   },
   "login": {
     "accessDenied": "很抱歉，登入請求被拒絕，請稍後再試",
@@ -28,9 +52,23 @@
     "unknown": "很抱歉，登入失敗，請稍後再試",
     "unsupportedResponseType": "很抱歉，目前登入方式暫不支援，請稍後再試"
   },
+  "loginRequired": {
+    "desc": "即將自動跳轉至登入頁面",
+    "title": "請登入後使用此功能"
+  },
+  "notFound": {
+    "backHome": "返回首頁",
+    "check": "請檢查你的 URL 是否正確",
+    "desc": "我們找不到你要找的頁面",
+    "title": "進入了未知領域？"
+  },
   "page": {
     "notFoundMessage": "該頁面不存在。",
     "notFoundTitle": "哎呀！"
+  },
+  "pluginSettings": {
+    "desc": "完成以下設定，即可開始使用此插件",
+    "title": "{{name}} 插件設定"
   },
   "response": {
     "400": "很抱歉，伺服器無法理解您的請求，請確認您的請求參數是否正確",
@@ -73,14 +111,32 @@
     "522": "很抱歉，伺服器連線逾時，未能及時回應您的請求。可能是網路不穩定或伺服器暫時無法訪問。請稍後再試，我們正在努力恢復服務。",
     "524": "很抱歉，伺服器在等待回覆時逾時了，可能是因為回應太慢，請稍後再試",
     "AgentRuntimeError": "Lobe AI Runtime 執行出錯，請根據以下資訊排查或重試",
+    "ComfyUIBizError": "請求 ComfyUI 服務時發生錯誤，請根據以下資訊排查或重試",
+    "ComfyUIEmptyResult": "ComfyUI 未生成任何圖像，請檢查模型設定或重試",
+    "ComfyUIModelError": "ComfyUI 模型載入失敗，請確認模型檔案是否存在",
+    "ComfyUIServiceUnavailable": "無法連接 ComfyUI 服務，請確認 ComfyUI 是否正常運行，或檢查服務位址設定是否正確",
+    "ComfyUIUploadFailed": "ComfyUI 圖像上傳失敗，請檢查伺服器連線或重試",
+    "ComfyUIWorkflowError": "ComfyUI 工作流程執行失敗，請檢查工作流程設定",
     "ConnectionCheckFailed": "請求回傳為空，請檢查 API 代理地址末尾是否未包含 `/v1`",
     "CreateMessageError": "很抱歉，訊息未能正常發送，請複製內容後重新發送，重新整理頁面後此訊息將不會保留",
     "ExceededContextWindow": "當前請求內容超出模型可處理的長度，請減少內容量後重試",
     "FreePlanLimit": "當前為免費用戶，無法使用該功能，請升級到付費方案後繼續使用",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "你的內容包含被禁止的詞彙。請檢查並修改你的輸入內容後重試。",
+      "IMAGE_SAFETY": "因安全原因，生成的圖像內容已被阻擋。請嘗試修改你的圖像生成請求。",
+      "LANGUAGE": "你使用的語言目前尚未支援。請嘗試使用英文或其他支援的語言重新提問。",
+      "OTHER": "內容因未知原因被阻擋。請嘗試重新表述你的請求。",
+      "PROHIBITED_CONTENT": "你的請求可能包含違禁內容。請調整請求內容，確保符合使用規範。",
+      "RECITATION": "你的內容可能涉及版權問題而被阻擋。請嘗試使用原創內容或重新表述你的請求。",
+      "SAFETY": "你的內容因安全政策而被阻擋。請嘗試調整請求內容，避免包含可能有害或不當的內容。",
+      "SPII": "你的內容可能包含敏感個人身份資訊。為保護隱私，請移除相關敏感資訊後重試。",
+      "default": "內容被阻擋：{{blockReason}}。請調整你的請求內容後重試。"
+    },
     "InsufficientQuota": "很抱歉，該金鑰的配額(quota)已達上限，請檢查帳戶餘額是否充足，或增大金鑰配額後再試",
     "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或者新增自訂 API Key",
     "InvalidBedrockCredentials": "Bedrock 鑑權未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidClerkUser": "很抱歉，你當前尚未登入，請先登入或註冊帳號後繼續操作",
+    "InvalidComfyUIArgs": "ComfyUI 設定不正確，請檢查 ComfyUI 設定後重試",
     "InvalidGithubToken": "Github PAT 不正確或為空，請檢查 Github PAT 後重試",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidProviderAPIKey": "{{provider}} API Key 不正確或為空，請檢查 {{provider}} API Key 後重試",
@@ -116,5 +172,54 @@
     "desc": "為了保護您的帳戶安全，請重新登入",
     "login": "立即登入",
     "title": "登入已過期"
+  },
+  "stt": {
+    "responseError": "服務請求失敗，請檢查設定或重試"
+  },
+  "supervisor": {
+    "decisionFailed": "群組主持人無法運作。請檢查你的主持人設定，確保已設定正確的模型、API 金鑰與 API 位址。"
+  },
+  "testConnectionFailed": "測試連線失敗：{{error}}",
+  "tts": {
+    "responseError": "服務請求失敗，請檢查設定或重試"
+  },
+  "unlock": {
+    "addProxyUrl": "新增 OpenAI 代理位址（可選）",
+    "apiKey": {
+      "description": "輸入你的 {{name}} API 金鑰即可開始會話",
+      "imageGenerationDescription": "輸入你的 {{name}} API 金鑰即可開始生成",
+      "title": "使用自訂 {{name}} API 金鑰"
+    },
+    "closeMessage": "關閉提示",
+    "comfyui": {
+      "description": "請輸入正確的 {{name}} 認證資訊即可開始生成圖像",
+      "modifyBaseUrl": "修改 Comfy UI 服務位址",
+      "title": "確認你的 {{name}} 認證資訊"
+    },
+    "confirm": "確認並重試",
+    "goToSettings": "前往設定",
+    "oauth": {
+      "description": "管理員已啟用統一登入認證，點擊下方按鈕登入，即可解鎖應用",
+      "success": "登入成功",
+      "title": "登入帳號",
+      "welcome": "歡迎你！"
+    },
+    "password": {
+      "description": "管理員已啟用應用加密，輸入應用密碼後即可解鎖。密碼只需輸入一次",
+      "placeholder": "請輸入密碼",
+      "title": "輸入密碼解鎖應用"
+    },
+    "tabs": {
+      "apiKey": "自訂 API 金鑰",
+      "password": "密碼"
+    }
+  },
+  "upload": {
+    "desc": "詳情：{{detail}}",
+    "fileOnlySupportInServerMode": "目前部署模式不支援上傳非圖片檔案，如需上傳 {{ext}} 格式，請切換至伺服器端資料庫部署或使用 {{cloud}} 服務",
+    "networkError": "請確認你的網路是否正常，並檢查檔案儲存服務的跨域設定是否正確",
+    "title": "檔案上傳失敗，請檢查網路連線或稍後再試",
+    "unknownError": "錯誤原因：{{reason}}",
+    "uploadFailed": "檔案上傳失敗"
   }
 }

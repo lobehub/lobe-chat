@@ -11,12 +11,7 @@ const ErrorJsonViewer = memo<ErrorJsonViewerProps>(({ error }) => {
   if (!error) return null;
 
   return (
-    <Highlighter
-      code={JSON.stringify(error.body || error, null, 2)}
-      lang={'json'}
-      padding={0}
-      variant={'borderless'}
-    />
+    <Highlighter code={JSON.stringify(error.body || error, null, 2)} lang={'json'} padding={0} />
   );
 });
 

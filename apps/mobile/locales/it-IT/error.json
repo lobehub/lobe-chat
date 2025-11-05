@@ -1,6 +1,20 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continua la sessione",
+      "desc": "{{greeting}}, felice di poterti assistere di nuovo. Riprendiamo la conversazione da dove l'avevamo lasciata.",
+      "title": "Bentornato, {{nickName}}"
+    }
+  },
   "error": {
+    "backHome": "Torna alla home",
+    "desc": "Riprova più tardi o torna in un territorio conosciuto",
+    "retry": "Ricarica",
     "title": "Errore"
+  },
+  "fetchError": {
+    "detail": "Dettagli dell'errore",
+    "title": "Richiesta fallita"
   },
   "http": {
     "forbidden": "Accesso vietato",
@@ -9,6 +23,16 @@
     "serverError": "Errore del server",
     "timeout": "Timeout della richiesta",
     "unauthorized": "Non autorizzato"
+  },
+  "import": {
+    "importConfigFile": {
+      "description": "Motivo dell'errore: {{reason}}",
+      "title": "Importazione fallita"
+    },
+    "incompatible": {
+      "description": "Il file è stato esportato da una versione più recente. Prova ad aggiornare all'ultima versione e ripeti l'importazione.",
+      "title": "L'app attuale non supporta l'importazione di questo file"
+    }
   },
   "login": {
     "accessDenied": "Spiacenti, la richiesta di accesso è stata negata, riprova più tardi",
@@ -28,9 +52,23 @@
     "unknown": "Spiacenti, accesso fallito, riprova più tardi",
     "unsupportedResponseType": "Spiacenti, il metodo di accesso attuale non è supportato, riprova più tardi"
   },
+  "loginRequired": {
+    "desc": "Verrai reindirizzato automaticamente alla pagina di login",
+    "title": "Accedi per utilizzare questa funzione"
+  },
+  "notFound": {
+    "backHome": "Torna alla home",
+    "check": "Controlla che l'URL sia corretto",
+    "desc": "Non siamo riusciti a trovare la pagina che stai cercando",
+    "title": "Sei entrato in un territorio sconosciuto?"
+  },
   "page": {
     "notFoundMessage": "Questa pagina non esiste.",
     "notFoundTitle": "Oops!"
+  },
+  "pluginSettings": {
+    "desc": "Completa la configurazione seguente per iniziare a usare il plugin",
+    "title": "Configurazione del plugin {{name}}"
   },
   "response": {
     "400": "Spiacenti, il server non comprende la tua richiesta, verifica che i parametri siano corretti",
@@ -73,14 +111,32 @@
     "522": "Spiacenti, il server ha superato il tempo di connessione e non ha risposto in tempo. Potrebbe essere un problema di rete o il server non è accessibile. Riprova più tardi, stiamo lavorando per ripristinare il servizio.",
     "524": "Spiacenti, il server ha superato il tempo di attesa per la risposta, potrebbe essere troppo lento, riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione di Lobe AI Runtime, verifica le informazioni seguenti o riprova",
+    "ComfyUIBizError": "Errore nella richiesta al servizio ComfyUI. Verifica le informazioni seguenti o riprova.",
+    "ComfyUIEmptyResult": "ComfyUI non ha generato alcuna immagine. Controlla la configurazione del modello o riprova.",
+    "ComfyUIModelError": "Caricamento del modello ComfyUI fallito. Verifica che il file del modello esista.",
+    "ComfyUIServiceUnavailable": "Connessione al servizio ComfyUI fallita. Verifica che ComfyUI sia in esecuzione e che l'indirizzo del servizio sia corretto.",
+    "ComfyUIUploadFailed": "Caricamento immagine su ComfyUI fallito. Verifica la connessione al server o riprova.",
+    "ComfyUIWorkflowError": "Esecuzione del workflow ComfyUI fallita. Controlla la configurazione del workflow.",
     "ConnectionCheckFailed": "La richiesta ha restituito una risposta vuota, verifica che l'indirizzo proxy API termini con `/v1`",
     "CreateMessageError": "Spiacenti, il messaggio non è stato inviato correttamente, copia il contenuto e invia di nuovo, dopo il refresh questo messaggio non sarà salvato",
     "ExceededContextWindow": "Il contenuto della richiesta supera la lunghezza gestibile dal modello, riduci la quantità di contenuto e riprova",
     "FreePlanLimit": "Sei un utente gratuito e non puoi usare questa funzione, aggiorna a un piano a pagamento per continuare",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Il tuo contenuto contiene parole vietate. Controlla e modifica il tuo input prima di riprovare.",
+      "IMAGE_SAFETY": "Il contenuto dell'immagine generata è stato bloccato per motivi di sicurezza. Prova a modificare la tua richiesta.",
+      "LANGUAGE": "La lingua utilizzata non è attualmente supportata. Prova a usare l'inglese o un'altra lingua supportata.",
+      "OTHER": "Il contenuto è stato bloccato per motivi sconosciuti. Prova a riformulare la tua richiesta.",
+      "PROHIBITED_CONTENT": "La tua richiesta potrebbe contenere contenuti vietati. Modifica la richiesta per assicurarti che sia conforme alle linee guida.",
+      "RECITATION": "Il tuo contenuto è stato bloccato per possibili problemi di copyright. Prova a usare contenuti originali o a riformulare la richiesta.",
+      "SAFETY": "Il tuo contenuto è stato bloccato per motivi di sicurezza. Modifica la richiesta per evitare contenuti potenzialmente dannosi o inappropriati.",
+      "SPII": "Il tuo contenuto potrebbe contenere informazioni personali sensibili. Rimuovi tali informazioni e riprova.",
+      "default": "Contenuto bloccato: {{blockReason}}. Modifica la tua richiesta e riprova."
+    },
     "InsufficientQuota": "Spiacenti, la quota di questo key è stata superata, verifica il saldo o aumenta la quota e riprova",
     "InvalidAccessCode": "Password errata o vuota, inserisci la password corretta o aggiungi una API Key personalizzata",
     "InvalidBedrockCredentials": "Autenticazione Bedrock fallita, verifica AccessKeyId/SecretAccessKey e riprova",
     "InvalidClerkUser": "Spiacenti, non sei loggato, effettua il login o registrati per continuare",
+    "InvalidComfyUIArgs": "Configurazione ComfyUI non corretta. Controlla le impostazioni e riprova.",
     "InvalidGithubToken": "Github PAT errato o vuoto, verifica il token e riprova",
     "InvalidOllamaArgs": "Configurazione Ollama errata, verifica la configurazione e riprova",
     "InvalidProviderAPIKey": "API Key di {{provider}} errata o vuota, verifica la API Key e riprova",
@@ -116,5 +172,54 @@
     "desc": "Per proteggere la sicurezza del tuo account, effettua nuovamente il login",
     "login": "Accedi ora",
     "title": "Sessione scaduta"
+  },
+  "stt": {
+    "responseError": "Richiesta al servizio fallita. Controlla la configurazione o riprova."
+  },
+  "supervisor": {
+    "decisionFailed": "Il moderatore del gruppo non è operativo. Controlla la configurazione del moderatore e assicurati che modello, API Key e indirizzo API siano corretti."
+  },
+  "testConnectionFailed": "Test di connessione fallito: {{error}}",
+  "tts": {
+    "responseError": "Richiesta al servizio fallita. Controlla la configurazione o riprova."
+  },
+  "unlock": {
+    "addProxyUrl": "Aggiungi indirizzo proxy OpenAI (opzionale)",
+    "apiKey": {
+      "description": "Inserisci la tua API Key di {{name}} per iniziare la sessione",
+      "imageGenerationDescription": "Inserisci la tua API Key di {{name}} per iniziare la generazione",
+      "title": "Usa una API Key personalizzata di {{name}}"
+    },
+    "closeMessage": "Chiudi messaggio",
+    "comfyui": {
+      "description": "Inserisci le credenziali corrette di {{name}} per iniziare a generare immagini",
+      "modifyBaseUrl": "Modifica l'indirizzo del servizio Comfy UI",
+      "title": "Conferma le credenziali di {{name}}"
+    },
+    "confirm": "Conferma e riprova",
+    "goToSettings": "Vai alle impostazioni",
+    "oauth": {
+      "description": "L'amministratore ha abilitato l'autenticazione unificata. Clicca sul pulsante qui sotto per accedere e sbloccare l'app.",
+      "success": "Accesso effettuato con successo",
+      "title": "Accedi al tuo account",
+      "welcome": "Benvenuto!"
+    },
+    "password": {
+      "description": "L'amministratore ha protetto l'app con una password. Inserisci la password per sbloccare l'app. È sufficiente inserirla una sola volta.",
+      "placeholder": "Inserisci la password",
+      "title": "Sblocca l'app con la password"
+    },
+    "tabs": {
+      "apiKey": "API Key personalizzata",
+      "password": "Password"
+    }
+  },
+  "upload": {
+    "desc": "Dettagli: {{detail}}",
+    "fileOnlySupportInServerMode": "La modalità di distribuzione attuale non supporta il caricamento di file non immagine. Per caricare file in formato {{ext}}, passa alla modalità server o utilizza il servizio {{cloud}}.",
+    "networkError": "Verifica la connessione di rete e la configurazione CORS del servizio di archiviazione file.",
+    "title": "Caricamento file fallito. Controlla la connessione di rete o riprova più tardi.",
+    "unknownError": "Motivo dell'errore: {{reason}}",
+    "uploadFailed": "Caricamento file fallito"
   }
 }

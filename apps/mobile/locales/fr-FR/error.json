@@ -1,6 +1,20 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continuer la session",
+      "desc": "{{greeting}}, ravi de vous retrouver. Reprenons notre conversation là où nous l'avions laissée.",
+      "title": "Bon retour, {{nickName}}"
+    }
+  },
   "error": {
+    "backHome": "Retour à l'accueil",
+    "desc": "Réessayez plus tard ou retournez dans un monde familier",
+    "retry": "Recharger",
     "title": "Une erreur s'est produite"
+  },
+  "fetchError": {
+    "detail": "Détails de l'erreur",
+    "title": "Échec de la requête"
   },
   "http": {
     "forbidden": "Accès interdit",
@@ -9,6 +23,16 @@
     "serverError": "Erreur serveur",
     "timeout": "Délai de la requête dépassé",
     "unauthorized": "Non autorisé"
+  },
+  "import": {
+    "importConfigFile": {
+      "description": "Raison de l'erreur : {{reason}}",
+      "title": "Échec de l'importation"
+    },
+    "incompatible": {
+      "description": "Ce fichier a été exporté depuis une version plus récente. Veuillez mettre à jour vers la dernière version avant de réessayer.",
+      "title": "Fichier non pris en charge par cette version"
+    }
   },
   "login": {
     "accessDenied": "Désolé, la demande de connexion a été refusée, veuillez réessayer plus tard",
@@ -28,9 +52,23 @@
     "unknown": "Désolé, la connexion a échoué, veuillez réessayer plus tard",
     "unsupportedResponseType": "Désolé, ce mode de connexion n'est pas encore pris en charge, veuillez réessayer plus tard"
   },
+  "loginRequired": {
+    "desc": "Redirection automatique vers la page de connexion en cours",
+    "title": "Veuillez vous connecter pour utiliser cette fonctionnalité"
+  },
+  "notFound": {
+    "backHome": "Retour à l'accueil",
+    "check": "Veuillez vérifier que l'URL est correcte",
+    "desc": "Nous n'avons pas trouvé la page que vous recherchez",
+    "title": "Vous êtes entré en territoire inconnu ?"
+  },
   "page": {
     "notFoundMessage": "Cette page n'existe pas.",
     "notFoundTitle": "Oups !"
+  },
+  "pluginSettings": {
+    "desc": "Configurez les paramètres ci-dessous pour commencer à utiliser ce plugin",
+    "title": "Configuration du plugin {{name}}"
   },
   "response": {
     "400": "Désolé, le serveur ne comprend pas votre requête, veuillez vérifier que vos paramètres sont corrects",
@@ -73,14 +111,32 @@
     "522": "Désolé, le serveur a dépassé le délai de connexion et n'a pas pu répondre à votre requête. Cela peut être dû à une instabilité réseau ou à une indisponibilité temporaire du serveur. Veuillez réessayer plus tard, nous faisons notre possible pour rétablir le service.",
     "524": "Désolé, le serveur a dépassé le délai d'attente en attendant une réponse, probablement à cause d'une lenteur, veuillez réessayer plus tard",
     "AgentRuntimeError": "Erreur d'exécution du runtime Lobe AI, veuillez vérifier les informations ci-dessous ou réessayer",
+    "ComfyUIBizError": "Erreur lors de la requête au service ComfyUI. Veuillez consulter les informations ci-dessous ou réessayer.",
+    "ComfyUIEmptyResult": "Aucune image générée par ComfyUI. Veuillez vérifier la configuration du modèle ou réessayer.",
+    "ComfyUIModelError": "Échec du chargement du modèle ComfyUI. Veuillez vérifier que le fichier du modèle existe.",
+    "ComfyUIServiceUnavailable": "Échec de la connexion au service ComfyUI. Veuillez vérifier que ComfyUI fonctionne correctement ou que l'adresse du service est correcte.",
+    "ComfyUIUploadFailed": "Échec du téléversement de l'image ComfyUI. Veuillez vérifier la connexion au serveur ou réessayer.",
+    "ComfyUIWorkflowError": "Échec de l'exécution du workflow ComfyUI. Veuillez vérifier la configuration du workflow.",
     "ConnectionCheckFailed": "La requête a renvoyé une réponse vide, veuillez vérifier que l'adresse de l'API proxy se termine bien par `/v1`",
     "CreateMessageError": "Désolé, le message n'a pas pu être envoyé correctement, veuillez copier le contenu et le renvoyer. Après actualisation, ce message ne sera pas conservé",
     "ExceededContextWindow": "Le contenu de la requête dépasse la longueur que le modèle peut traiter, veuillez réduire la quantité de contenu et réessayer",
     "FreePlanLimit": "Vous êtes actuellement utilisateur gratuit, cette fonctionnalité n'est pas disponible. Veuillez passer à un plan payant pour continuer à l'utiliser",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Votre contenu contient des termes interdits. Veuillez vérifier et modifier votre saisie avant de réessayer.",
+      "IMAGE_SAFETY": "Le contenu généré a été bloqué pour des raisons de sécurité. Veuillez modifier votre requête d'image.",
+      "LANGUAGE": "La langue utilisée n'est pas encore prise en charge. Veuillez réessayer en anglais ou dans une autre langue prise en charge.",
+      "OTHER": "Le contenu a été bloqué pour une raison inconnue. Veuillez reformuler votre demande.",
+      "PROHIBITED_CONTENT": "Votre demande pourrait contenir du contenu interdit. Veuillez l'ajuster pour respecter les règles d'utilisation.",
+      "RECITATION": "Votre contenu a été bloqué en raison de possibles problèmes de droits d'auteur. Veuillez utiliser un contenu original ou reformuler votre demande.",
+      "SAFETY": "Votre contenu a été bloqué en raison de la politique de sécurité. Veuillez ajuster votre demande pour éviter tout contenu potentiellement nuisible ou inapproprié.",
+      "SPII": "Votre contenu pourrait contenir des informations personnelles sensibles. Pour protéger la vie privée, veuillez les supprimer avant de réessayer.",
+      "default": "Contenu bloqué : {{blockReason}}. Veuillez ajuster votre demande et réessayer."
+    },
     "InsufficientQuota": "Désolé, le quota de cette clé est atteint, veuillez vérifier le solde de votre compte ou augmenter le quota de la clé avant de réessayer",
     "InvalidAccessCode": "Mot de passe incorrect ou vide, veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée",
     "InvalidBedrockCredentials": "Échec de l'authentification Bedrock, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidClerkUser": "Désolé, vous n'êtes pas connecté, veuillez vous connecter ou créer un compte pour continuer",
+    "InvalidComfyUIArgs": "Configuration ComfyUI incorrecte. Veuillez vérifier les paramètres et réessayer.",
     "InvalidGithubToken": "Le token Github PAT est incorrect ou vide, veuillez vérifier le token Github PAT et réessayer",
     "InvalidOllamaArgs": "Configuration Ollama incorrecte, veuillez vérifier la configuration Ollama et réessayer",
     "InvalidProviderAPIKey": "La clé API {{provider}} est incorrecte ou vide, veuillez vérifier la clé API {{provider}} et réessayer",
@@ -116,5 +172,54 @@
     "desc": "Pour protéger la sécurité de votre compte, veuillez vous reconnecter",
     "login": "Se connecter maintenant",
     "title": "Session expirée"
+  },
+  "stt": {
+    "responseError": "Échec de la requête du service. Veuillez vérifier la configuration ou réessayer."
+  },
+  "supervisor": {
+    "decisionFailed": "L'animateur du groupe ne fonctionne pas. Veuillez vérifier la configuration, y compris le modèle, la clé API et l'adresse de l'API."
+  },
+  "testConnectionFailed": "Échec du test de connexion : {{error}}",
+  "tts": {
+    "responseError": "Échec de la requête du service. Veuillez vérifier la configuration ou réessayer."
+  },
+  "unlock": {
+    "addProxyUrl": "Ajouter une URL proxy OpenAI (optionnel)",
+    "apiKey": {
+      "description": "Saisissez votre clé API {{name}} pour démarrer la session",
+      "imageGenerationDescription": "Saisissez votre clé API {{name}} pour commencer la génération",
+      "title": "Utiliser une clé API {{name}} personnalisée"
+    },
+    "closeMessage": "Fermer le message",
+    "comfyui": {
+      "description": "Veuillez saisir les informations d'authentification {{name}} correctes pour commencer la génération d'images",
+      "modifyBaseUrl": "Modifier l'adresse du service Comfy UI",
+      "title": "Vérifiez vos informations d'authentification {{name}}"
+    },
+    "confirm": "Confirmer et réessayer",
+    "goToSettings": "Aller aux paramètres",
+    "oauth": {
+      "description": "L'administrateur a activé l'authentification unifiée. Cliquez sur le bouton ci-dessous pour vous connecter et déverrouiller l'application.",
+      "success": "Connexion réussie",
+      "title": "Connexion au compte",
+      "welcome": "Bienvenue !"
+    },
+    "password": {
+      "description": "L'administrateur a activé la protection par mot de passe. Entrez le mot de passe pour déverrouiller l'application. Vous ne devrez le saisir qu'une seule fois.",
+      "placeholder": "Veuillez entrer le mot de passe",
+      "title": "Déverrouiller l'application avec un mot de passe"
+    },
+    "tabs": {
+      "apiKey": "Clé API personnalisée",
+      "password": "Mot de passe"
+    }
+  },
+  "upload": {
+    "desc": "Détails : {{detail}}",
+    "fileOnlySupportInServerMode": "Le mode de déploiement actuel ne prend pas en charge le téléversement de fichiers non image. Pour téléverser un fichier au format {{ext}}, passez au mode serveur ou utilisez le service {{cloud}}.",
+    "networkError": "Veuillez vérifier votre connexion réseau et la configuration CORS du service de stockage de fichiers.",
+    "title": "Échec du téléversement. Veuillez vérifier votre connexion réseau ou réessayer plus tard.",
+    "unknownError": "Raison de l'erreur : {{reason}}",
+    "uploadFailed": "Échec du téléversement du fichier"
   }
 }

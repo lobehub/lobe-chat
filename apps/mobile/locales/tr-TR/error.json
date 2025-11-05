@@ -1,6 +1,20 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Sohbete Devam Et",
+      "desc": "{{greeting}}, size tekrar hizmet vermekten memnuniyet duyuyoruz. Kaldığımız yerden devam edelim.",
+      "title": "Tekrar hoş geldiniz, {{nickName}}"
+    }
+  },
   "error": {
+    "backHome": "Ana Sayfaya Dön",
+    "desc": "Birazdan tekrar deneyin ya da bilinen dünyaya geri dönün",
+    "retry": "Yeniden Yükle",
     "title": "Hata oluştu"
+  },
+  "fetchError": {
+    "detail": "Hata Ayrıntıları",
+    "title": "İstek Başarısız"
   },
   "http": {
     "forbidden": "Erişim engellendi",
@@ -9,6 +23,16 @@
     "serverError": "Sunucu hatası",
     "timeout": "İstek zaman aşımına uğradı",
     "unauthorized": "Yetkisiz"
+  },
+  "import": {
+    "importConfigFile": {
+      "description": "Hata nedeni: {{reason}}",
+      "title": "İçe Aktarma Başarısız"
+    },
+    "incompatible": {
+      "description": "Bu dosya daha yeni bir sürüm tarafından dışa aktarılmış. Lütfen uygulamayı en son sürüme güncelledikten sonra tekrar içe aktarın.",
+      "title": "Bu uygulama bu dosyayı içe aktarmayı desteklemiyor"
+    }
   },
   "login": {
     "accessDenied": "Üzgünüz, giriş isteğiniz reddedildi, lütfen daha sonra tekrar deneyin",
@@ -28,9 +52,23 @@
     "unknown": "Üzgünüz, giriş başarısız oldu, lütfen daha sonra tekrar deneyin",
     "unsupportedResponseType": "Üzgünüz, bu giriş yöntemi şu anda desteklenmiyor, lütfen daha sonra tekrar deneyin"
   },
+  "loginRequired": {
+    "desc": "Giriş sayfasına otomatik yönlendirileceksiniz",
+    "title": "Bu özelliği kullanmak için lütfen giriş yapın"
+  },
+  "notFound": {
+    "backHome": "Ana Sayfaya Dön",
+    "check": "Lütfen URL'nin doğru olup olmadığını kontrol edin",
+    "desc": "Aradığınız sayfayı bulamıyoruz",
+    "title": "Bilinmeyen bir alana mı girdiniz?"
+  },
   "page": {
     "notFoundMessage": "Bu sayfa mevcut değil.",
     "notFoundTitle": "Ayy!"
+  },
+  "pluginSettings": {
+    "desc": "Aşağıdaki ayarları tamamlayarak eklentiyi kullanmaya başlayabilirsiniz",
+    "title": "{{name}} Eklenti Ayarları"
   },
   "response": {
     "400": "Üzgünüz, sunucu isteğinizi anlayamadı, lütfen istek parametrelerinizi kontrol edin",
@@ -73,14 +111,32 @@
     "522": "Üzgünüz, sunucu bağlantı zaman aşımına uğradı, isteğinize zamanında yanıt veremedi. Ağ kararsız olabilir veya sunucu geçici olarak erişilemez durumda. Lütfen daha sonra tekrar deneyin, hizmeti geri getirmek için çalışıyoruz.",
     "524": "Üzgünüz, sunucu yanıt beklerken zaman aşımına uğradı, yanıt çok yavaş olabilir, lütfen daha sonra tekrar deneyin",
     "AgentRuntimeError": "Lobe AI Runtime çalıştırılırken hata oluştu, lütfen aşağıdaki bilgileri kontrol edin veya tekrar deneyin",
+    "ComfyUIBizError": "ComfyUI hizmeti isteğinde hata oluştu. Lütfen aşağıdaki bilgilere göre kontrol edin veya tekrar deneyin.",
+    "ComfyUIEmptyResult": "ComfyUI herhangi bir görsel üretmedi. Lütfen model yapılandırmasını kontrol edin veya tekrar deneyin.",
+    "ComfyUIModelError": "ComfyUI modeli yüklenemedi. Lütfen model dosyasının mevcut olduğundan emin olun.",
+    "ComfyUIServiceUnavailable": "ComfyUI hizmetine bağlanılamadı. Lütfen ComfyUI'nin düzgün çalıştığından ve hizmet adresinin doğru yapılandırıldığından emin olun.",
+    "ComfyUIUploadFailed": "ComfyUI görsel yüklemesi başarısız oldu. Lütfen sunucu bağlantısını kontrol edin veya tekrar deneyin.",
+    "ComfyUIWorkflowError": "ComfyUI iş akışı çalıştırılamadı. Lütfen iş akışı yapılandırmasını kontrol edin.",
     "ConnectionCheckFailed": "İstek boş döndü, API proxy adresinin sonunda `/v1` olup olmadığını kontrol edin",
     "CreateMessageError": "Üzgünüz, mesaj gönderilemedi, lütfen içeriği kopyalayıp tekrar gönderin, sayfa yenilendiğinde bu mesaj kaybolacaktır",
     "ExceededContextWindow": "İstek içeriği modelin işleyebileceği uzunluğu aşıyor, lütfen içeriği azaltıp tekrar deneyin",
     "FreePlanLimit": "Şu anda ücretsiz kullanıcı olarak bu özelliği kullanamazsınız, lütfen ücretli plana yükseltin",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "İçeriğiniz yasaklı kelimeler içeriyor. Lütfen girişinizi kontrol edip düzenledikten sonra tekrar deneyin.",
+      "IMAGE_SAFETY": "Görüntü güvenliği nedeniyle oluşturulan içerik engellendi. Lütfen görüntü oluşturma isteğinizi değiştirin.",
+      "LANGUAGE": "Kullandığınız dil şu anda desteklenmiyor. Lütfen İngilizce veya desteklenen başka bir dil kullanarak tekrar deneyin.",
+      "OTHER": "İçerik bilinmeyen bir nedenle engellendi. Lütfen isteğinizi yeniden ifade edin.",
+      "PROHIBITED_CONTENT": "İsteğiniz yasaklı içerik içerebilir. Lütfen isteğinizi düzenleyin ve kullanım kurallarına uygun hale getirin.",
+      "RECITATION": "İçeriğiniz olası telif hakkı sorunları nedeniyle engellendi. Lütfen özgün içerik kullanın veya isteğinizi yeniden ifade edin.",
+      "SAFETY": "İçeriğiniz güvenlik politikaları nedeniyle engellendi. Lütfen isteğinizi zararlı veya uygunsuz içerik içermeyecek şekilde düzenleyin.",
+      "SPII": "İçeriğiniz hassas kişisel bilgiler içerebilir. Gizliliği korumak için bu bilgileri kaldırdıktan sonra tekrar deneyin.",
+      "default": "İçerik engellendi: {{blockReason}}. Lütfen isteğinizi düzenledikten sonra tekrar deneyin."
+    },
     "InsufficientQuota": "Üzgünüz, bu anahtarın kota sınırı doldu, lütfen hesap bakiyenizi kontrol edin veya anahtar kotanızı artırıp tekrar deneyin",
     "InvalidAccessCode": "Şifre yanlış veya boş, lütfen doğru erişim şifresini girin veya özel API Anahtarı ekleyin",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması başarısız oldu, AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
     "InvalidClerkUser": "Üzgünüz, şu anda giriş yapmadınız, lütfen giriş yapın veya kayıt olun",
+    "InvalidComfyUIArgs": "ComfyUI yapılandırması hatalı. Lütfen yapılandırmayı kontrol edip tekrar deneyin.",
     "InvalidGithubToken": "Github PAT yanlış veya boş, lütfen Github PAT'nizi kontrol edip tekrar deneyin",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama ayarlarını kontrol edip tekrar deneyin",
     "InvalidProviderAPIKey": "{{provider}} API Anahtarı yanlış veya boş, lütfen {{provider}} API Anahtarınızı kontrol edip tekrar deneyin",
@@ -116,5 +172,54 @@
     "desc": "Hesabınızın güvenliği için lütfen tekrar giriş yapın",
     "login": "Hemen Giriş Yap",
     "title": "Oturum Süresi Doldu"
+  },
+  "stt": {
+    "responseError": "Hizmet isteği başarısız oldu. Lütfen yapılandırmayı kontrol edin veya tekrar deneyin."
+  },
+  "supervisor": {
+    "decisionFailed": "Grup moderatörü çalışamıyor. Lütfen doğru model, API Anahtarı ve API adresi yapılandırıldığından emin olun."
+  },
+  "testConnectionFailed": "Bağlantı testi başarısız: {{error}}",
+  "tts": {
+    "responseError": "Hizmet isteği başarısız oldu. Lütfen yapılandırmayı kontrol edin veya tekrar deneyin."
+  },
+  "unlock": {
+    "addProxyUrl": "OpenAI proxy adresi ekle (isteğe bağlı)",
+    "apiKey": {
+      "description": "{{name}} API Anahtarınızı girerek sohbete başlayabilirsiniz",
+      "imageGenerationDescription": "{{name}} API Anahtarınızı girerek görsel oluşturmaya başlayabilirsiniz",
+      "title": "Özel {{name}} API Anahtarı Kullan"
+    },
+    "closeMessage": "Mesajı Kapat",
+    "comfyui": {
+      "description": "Görsel oluşturmaya başlamak için lütfen geçerli {{name}} kimlik bilgilerini girin",
+      "modifyBaseUrl": "Comfy UI hizmet adresini değiştir",
+      "title": "{{name}} Kimlik Bilgilerinizi Doğrulayın"
+    },
+    "confirm": "Onayla ve Tekrar Dene",
+    "goToSettings": "Ayarlar'a Git",
+    "oauth": {
+      "description": "Yönetici birleşik oturum açmayı etkinleştirdi. Uygulamayı açmak için aşağıdaki butona tıklayarak giriş yapın.",
+      "success": "Giriş başarılı",
+      "title": "Hesabınıza Giriş Yapın",
+      "welcome": "Hoş geldiniz!"
+    },
+    "password": {
+      "description": "Yönetici uygulama şifrelemesini etkinleştirdi. Uygulamanın kilidini açmak için şifreyi girin. Şifre yalnızca bir kez girilmelidir.",
+      "placeholder": "Lütfen şifreyi girin",
+      "title": "Uygulamanın Kilidini Açmak İçin Şifre Girin"
+    },
+    "tabs": {
+      "apiKey": "Özel API Anahtarı",
+      "password": "Şifre"
+    }
+  },
+  "upload": {
+    "desc": "Ayrıntılar: {{detail}}",
+    "fileOnlySupportInServerMode": "Geçerli dağıtım modu, resim dışı dosya yüklemeyi desteklemiyor. {{ext}} formatında dosya yüklemek için sunucu veritabanı moduna geçin veya {{cloud}} hizmetini kullanın.",
+    "networkError": "Lütfen ağ bağlantınızın düzgün çalıştığından ve dosya depolama hizmetinin CORS yapılandırmasının doğru olduğundan emin olun.",
+    "title": "Dosya yükleme başarısız oldu. Lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin.",
+    "unknownError": "Hata nedeni: {{reason}}",
+    "uploadFailed": "Dosya yükleme başarısız oldu"
   }
 }

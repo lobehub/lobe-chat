@@ -1,6 +1,20 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Doorgaan met sessie",
+      "desc": "{{greeting}}, fijn je weer te zien. Laten we ons gesprek hervatten.",
+      "title": "Welkom terug, {{nickName}}"
+    }
+  },
   "error": {
+    "backHome": "Terug naar startpagina",
+    "desc": "Probeer het later opnieuw of keer terug naar de bekende wereld",
+    "retry": "Opnieuw laden",
     "title": "Er is een fout opgetreden"
+  },
+  "fetchError": {
+    "detail": "Foutdetails",
+    "title": "Verzoek mislukt"
   },
   "http": {
     "forbidden": "Toegang geweigerd",
@@ -9,6 +23,16 @@
     "serverError": "Serverfout",
     "timeout": "Verzoek verlopen",
     "unauthorized": "Niet geautoriseerd"
+  },
+  "import": {
+    "importConfigFile": {
+      "description": "Foutreden: {{reason}}",
+      "title": "Importeren mislukt"
+    },
+    "incompatible": {
+      "description": "Dit bestand is geëxporteerd met een nieuwere versie. Probeer te upgraden naar de nieuwste versie en importeer opnieuw.",
+      "title": "Huidige applicatie ondersteunt dit bestand niet"
+    }
   },
   "login": {
     "accessDenied": "Sorry, het inlogverzoek is geweigerd. Probeer het later opnieuw.",
@@ -28,9 +52,23 @@
     "unknown": "Sorry, het inloggen is mislukt. Probeer het later opnieuw.",
     "unsupportedResponseType": "Sorry, deze inlogmethode wordt momenteel niet ondersteund. Probeer het later opnieuw."
   },
+  "loginRequired": {
+    "desc": "Je wordt automatisch doorgestuurd naar de inlogpagina",
+    "title": "Log in om deze functie te gebruiken"
+  },
+  "notFound": {
+    "backHome": "Terug naar startpagina",
+    "check": "Controleer of de URL correct is",
+    "desc": "We kunnen de pagina die je zoekt niet vinden",
+    "title": "Ben je in onbekend gebied beland?"
+  },
   "page": {
     "notFoundMessage": "Deze pagina bestaat niet.",
     "notFoundTitle": "Oeps!"
+  },
+  "pluginSettings": {
+    "desc": "Voltooi de onderstaande configuratie om deze plugin te gebruiken",
+    "title": "{{name}} pluginconfiguratie"
   },
   "response": {
     "400": "Sorry, de server begrijpt uw verzoek niet. Controleer of uw verzoekparameters correct zijn.",
@@ -73,14 +111,32 @@
     "522": "Sorry, de serververbinding is verlopen en kon niet op tijd reageren. Mogelijk is het netwerk onstabiel of is de server tijdelijk niet bereikbaar. Probeer het later opnieuw. We werken aan herstel.",
     "524": "Sorry, de server is verlopen tijdens het wachten op een antwoord. Mogelijk is de reactie te traag. Probeer het later opnieuw.",
     "AgentRuntimeError": "Fout bij het uitvoeren van Lobe AI Runtime. Controleer de onderstaande informatie of probeer het opnieuw.",
+    "ComfyUIBizError": "Fout bij het aanvragen van de ComfyUI-service. Controleer de onderstaande informatie of probeer het opnieuw.",
+    "ComfyUIEmptyResult": "ComfyUI heeft geen afbeelding gegenereerd. Controleer de modelconfiguratie of probeer het opnieuw.",
+    "ComfyUIModelError": "Laden van ComfyUI-model mislukt. Controleer of het modelfile bestaat.",
+    "ComfyUIServiceUnavailable": "Kan geen verbinding maken met de ComfyUI-service. Controleer of ComfyUI correct draait of controleer de service-URL.",
+    "ComfyUIUploadFailed": "Uploaden van afbeelding naar ComfyUI mislukt. Controleer de serververbinding of probeer het opnieuw.",
+    "ComfyUIWorkflowError": "Uitvoering van ComfyUI-workflow mislukt. Controleer de workflowconfiguratie.",
     "ConnectionCheckFailed": "Lege respons ontvangen. Controleer of het API-proxyadres eindigt op '/v1'.",
     "CreateMessageError": "Sorry, het bericht kon niet worden verzonden. Kopieer de inhoud en probeer opnieuw. Na verversen van de pagina wordt dit bericht niet bewaard.",
     "ExceededContextWindow": "De inhoud van dit verzoek overschrijdt de verwerkbare lengte van het model. Verminder de hoeveelheid inhoud en probeer opnieuw.",
     "FreePlanLimit": "U bent momenteel een gratis gebruiker en kunt deze functie niet gebruiken. Upgrade naar een betaald abonnement om door te gaan.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "Je inhoud bevat verboden woorden. Controleer en pas je invoer aan en probeer het opnieuw.",
+      "IMAGE_SAFETY": "De gegenereerde afbeelding is geblokkeerd om veiligheidsredenen. Probeer je verzoek aan te passen.",
+      "LANGUAGE": "De gebruikte taal wordt momenteel niet ondersteund. Probeer het in het Engels of een andere ondersteunde taal.",
+      "OTHER": "De inhoud is om een onbekende reden geblokkeerd. Probeer je verzoek anders te formuleren.",
+      "PROHIBITED_CONTENT": "Je verzoek bevat mogelijk verboden inhoud. Pas je verzoek aan om te voldoen aan de gebruiksrichtlijnen.",
+      "RECITATION": "Je inhoud is geblokkeerd vanwege mogelijke auteursrechtproblemen. Gebruik originele inhoud of formuleer je verzoek opnieuw.",
+      "SAFETY": "Je inhoud is geblokkeerd vanwege veiligheidsbeleid. Pas je verzoek aan om schadelijke of ongepaste inhoud te vermijden.",
+      "SPII": "Je inhoud bevat mogelijk gevoelige persoonlijke informatie. Verwijder deze informatie en probeer het opnieuw.",
+      "default": "Inhoud geblokkeerd: {{blockReason}}. Pas je verzoek aan en probeer het opnieuw."
+    },
     "InsufficientQuota": "Sorry, de quota van deze sleutel is bereikt. Controleer uw accountsaldo of verhoog de quota en probeer opnieuw.",
     "InvalidAccessCode": "Wachtwoord is onjuist of leeg. Voer het juiste toegangswachtwoord in of voeg een aangepaste API-sleutel toe.",
     "InvalidBedrockCredentials": "Bedrock-authenticatie mislukt. Controleer AccessKeyId/SecretAccessKey en probeer opnieuw.",
     "InvalidClerkUser": "Sorry, u bent niet ingelogd. Log in of registreer een account om door te gaan.",
+    "InvalidComfyUIArgs": "Ongeldige ComfyUI-configuratie. Controleer de instellingen en probeer het opnieuw.",
     "InvalidGithubToken": "Github PAT is onjuist of leeg. Controleer de Github PAT en probeer opnieuw.",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist. Controleer de configuratie en probeer opnieuw.",
     "InvalidProviderAPIKey": "{{provider}} API-sleutel is onjuist of leeg. Controleer de {{provider}} API-sleutel en probeer opnieuw.",
@@ -116,5 +172,54 @@
     "desc": "Om uw account te beschermen, logt u alstublieft opnieuw in.",
     "login": "Nu inloggen",
     "title": "Sessie verlopen"
+  },
+  "stt": {
+    "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer het opnieuw."
+  },
+  "supervisor": {
+    "decisionFailed": "De groepsmoderator werkt niet. Controleer je moderatorinstellingen en zorg dat het juiste model, API-sleutel en API-adres zijn geconfigureerd."
+  },
+  "testConnectionFailed": "Verbindingstest mislukt: {{error}}",
+  "tts": {
+    "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer het opnieuw."
+  },
+  "unlock": {
+    "addProxyUrl": "Voeg OpenAI-proxyadres toe (optioneel)",
+    "apiKey": {
+      "description": "Voer je {{name}} API-sleutel in om een sessie te starten",
+      "imageGenerationDescription": "Voer je {{name}} API-sleutel in om afbeeldingen te genereren",
+      "title": "Gebruik aangepaste {{name}} API-sleutel"
+    },
+    "closeMessage": "Melding sluiten",
+    "comfyui": {
+      "description": "Voer geldige {{name}} verificatiegegevens in om afbeeldingen te genereren",
+      "modifyBaseUrl": "Wijzig Comfy UI-serviceadres",
+      "title": "Bevestig je {{name}} verificatiegegevens"
+    },
+    "confirm": "Bevestigen en opnieuw proberen",
+    "goToSettings": "Ga naar instellingen",
+    "oauth": {
+      "description": "De beheerder heeft centrale login ingeschakeld. Klik op de knop hieronder om in te loggen en de app te ontgrendelen.",
+      "success": "Succesvol ingelogd",
+      "title": "Log in op je account",
+      "welcome": "Welkom!"
+    },
+    "password": {
+      "description": "De beheerder heeft appversleuteling ingeschakeld. Voer het wachtwoord in om de app te ontgrendelen. Je hoeft het wachtwoord slechts één keer in te voeren.",
+      "placeholder": "Voer wachtwoord in",
+      "title": "Voer wachtwoord in om de app te ontgrendelen"
+    },
+    "tabs": {
+      "apiKey": "Aangepaste API-sleutel",
+      "password": "Wachtwoord"
+    }
+  },
+  "upload": {
+    "desc": "Details: {{detail}}",
+    "fileOnlySupportInServerMode": "In de huidige implementatiemodus kunnen alleen afbeeldingsbestanden worden geüpload. Om {{ext}} bestanden te uploaden, schakel over naar servermodus of gebruik de {{cloud}} service.",
+    "networkError": "Controleer of je netwerkverbinding werkt en of de CORS-instellingen van de opslagservice correct zijn.",
+    "title": "Uploaden mislukt. Controleer je netwerkverbinding of probeer het later opnieuw.",
+    "unknownError": "Foutreden: {{reason}}",
+    "uploadFailed": "Bestandsupload mislukt"
   }
 }

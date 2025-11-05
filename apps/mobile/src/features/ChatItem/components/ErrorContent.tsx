@@ -1,4 +1,4 @@
-import { Alert, AlertProps } from '@lobehub/ui-rn';
+import { Alert, AlertProps, Flexbox } from '@lobehub/ui-rn';
 import type { FC, ReactNode } from 'react';
 
 interface ErrorContentProps {
@@ -16,7 +16,12 @@ const ErrorContent: FC<ErrorContentProps> = ({ error, message }) => {
   }
 
   // 有 error 时，显示 Alert，message 作为 extra 额外信息
-  return <Alert closable={false} extra={message} showIcon {...error} />;
+  return (
+    <Flexbox gap={8}>
+      <Alert closable={false} showIcon {...error} />
+      {message}
+    </Flexbox>
+  );
 };
 
 export default ErrorContent;
