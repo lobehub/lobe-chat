@@ -1,3 +1,12 @@
+import { Alert } from 'react-native';
+
+// 检查是否是用户取消登录的错误
+export const isLoginCancelledError = (error: unknown): boolean => {
+  const errorMessage = error instanceof Error ? error.message : String(error ?? '');
+  const msg = errorMessage.toLowerCase();
+  return msg.includes('cancel');
+};
+
 // 根据错误对象/消息推断登录错误码，便于 i18n
 export const getLoginErrorKey = (err: unknown): string => {
   // 如果服务端或上层抛出了结构化错误码
@@ -94,4 +103,22 @@ export const getLoginErrorKey = (err: unknown): string => {
   if (msg.includes('network')) return 'login.networkError';
 
   return 'login.unknown';
+};
+
+// 统一处理登录错误的函数
+// 如果是用户取消操作，则静默处理，不显示错误提示
+// 如果是真实错误，则显示错误弹窗
+export const handleLoginError = (
+  error: unknown,
+  t: (key: string, options?: { ns?: string }) => string,
+): void => {
+  // 如果是用户取消登录，不显示错误提示
+  if (isLoginCancelledError(error)) {
+    return;
+  }
+
+  // 显示错误提示
+  const key = getLoginErrorKey(error);
+  const message = t(key, { ns: 'error' });
+  Alert.alert(t('error.title', { ns: 'error' }), message);
 };
