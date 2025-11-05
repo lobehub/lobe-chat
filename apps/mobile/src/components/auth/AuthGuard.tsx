@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { memo } from 'react';
 
-import { useAuth } from '@/store/user';
+import { useAuth } from '@/store/_user';
 
 interface AuthGuardProps {
   children: ReactNode;

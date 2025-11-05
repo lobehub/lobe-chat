@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 
 import i18n from '@/i18n';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '@/store/_user';
 
 let isAuthExpiredAlertVisible = false;
 

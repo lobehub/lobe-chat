@@ -4,8 +4,14 @@ import { cleanObject } from '@lobechat/utils';
 import { trpcClient } from '@/services/_auth/trpc';
 
 class AiChatService {
-  sendMessageInServer = async (params: SendMessageServerParams) => {
-    return trpcClient.aiChat.sendMessageInServer.mutate(cleanObject(params));
+  sendMessageInServer = async (
+    params: SendMessageServerParams,
+    abortController?: AbortController,
+  ) => {
+    return trpcClient.aiChat.sendMessageInServer.mutate(cleanObject(params), {
+      context: { showNotification: false },
+      signal: abortController?.signal,
+    });
   };
 }
 

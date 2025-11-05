@@ -4,7 +4,7 @@ import { Settings2 } from 'lucide-react-native';
 
 import { AVATAR_SIZE, ICON_SIZE } from '@/_const/common';
 import { DEFAULT_USER_AVATAR } from '@/_const/meta';
-import { useAuth } from '@/store/user';
+import { useAuth } from '@/store/_user';
 
 export default function SessionFooter() {
   const { user } = useAuth();

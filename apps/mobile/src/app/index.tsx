@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 
-import { useAuth } from '@/store/user';
+import { useAuth } from '@/store/_user';
 
 export default function Page() {
   const { isAuthenticated, isInitialized } = useAuth();

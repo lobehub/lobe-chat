@@ -15,3 +15,19 @@ export const useActionSWR: SWRHook = (key, fetch, config) =>
     revalidateOnReconnect: false,
     ...config,
   });
+
+/**
+ * This type of request method is relatively "dead" request mode, which will only be triggered on the first request.
+ * it suitable for first time request like `initUserState`
+
+ * 这一类请求方法是相对“死”的请求模式，只会在第一次请求时触发。
+ * 适用于第一次请求，例如 `initUserState`
+ */
+// @ts-ignore
+export const useOnlyFetchOnceSWR: SWRHook = (key, fetch, config) =>
+  useSWR(key, fetch, {
+    refreshWhenOffline: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    ...config,
+  });

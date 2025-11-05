@@ -9,8 +9,8 @@ import { DEFAULT_SERVER_URL, formatServerUrl, isValidServerUrl } from '@/config/
 import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
+import { useAuthActions } from '@/store/_user';
 import { useSettingStore } from '@/store/setting';
-import { useAuthActions } from '@/store/user';
 
 import { useStyles } from './style';
 

@@ -8,8 +8,8 @@ import { DEFAULT_SERVER_URL } from '@/config/server';
 import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
+import { useAuthActions } from '@/store/_user';
 import { useSettingStore } from '@/store/setting';
-import { useAuthActions } from '@/store/user';
 
 import {
   clearAuthData,

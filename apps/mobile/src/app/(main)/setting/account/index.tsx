@@ -6,7 +6,7 @@ import { Alert } from 'react-native';
 import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
-import { useAuth, useAuthActions } from '@/store/user';
+import { useAuth, useAuthActions } from '@/store/_user';
 import { getLoginErrorKey } from '@/utils/error';
 
 export default function AccountScreen() {

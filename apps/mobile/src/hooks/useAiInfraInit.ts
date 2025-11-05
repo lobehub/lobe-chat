@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
+import { useUserStore } from '@/store/_user';
 import { useAiInfraStore } from '@/store/aiInfra';
-import { useUserStore } from '@/store/user';
 
 /**
  * AI基础设施初始化 Hook

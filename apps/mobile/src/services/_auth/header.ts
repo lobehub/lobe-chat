@@ -1,7 +1,7 @@
 import { LOBE_CHAT_AUTH_HEADER, LOBE_CHAT_OIDC_AUTH_HEADER } from '@/_const/auth';
 import { authExpired } from '@/features/Error/AuthExpired';
+import { useUserStore } from '@/store/_user';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { useUserStore } from '@/store/user';
 import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 import { authLogger } from '@/utils/logger';
 

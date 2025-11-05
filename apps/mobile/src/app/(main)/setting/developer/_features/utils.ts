@@ -1,7 +1,7 @@
 import { Token } from '@/_types/user';
 import i18n from '@/i18n';
 import { TokenStorage } from '@/services/_auth/tokenStorage';
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '@/store/_user';
 
 const updateToken = async (mutate: (token: Token) => Token): Promise<void> => {
   const current = await TokenStorage.getToken();

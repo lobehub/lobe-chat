@@ -4,7 +4,7 @@ import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
-import { useAuth, useUserStore } from '@/store/user';
+import { useAuth, useUserStore } from '@/store/_user';
 import { authLogger } from '@/utils/logger';
 
 /**

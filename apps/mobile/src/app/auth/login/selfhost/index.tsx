@@ -8,8 +8,8 @@ import { Alert, Text, View } from 'react-native';
 import { Form } from '@/components';
 import { formatServerUrl, isValidServerUrl } from '@/config/server';
 import { setLoginMounted } from '@/navigation/loginState';
+import { useAuth, useAuthActions } from '@/store/_user';
 import { useSettingStore } from '@/store/setting';
-import { useAuth, useAuthActions } from '@/store/user';
 import { getLoginErrorKey } from '@/utils/error';
 
 import { useStyles } from './_features/style';

@@ -16,10 +16,10 @@ import { Alert, InteractionManager, ScrollView } from 'react-native';
 
 import ChatItem from '@/features/ChatItem';
 import SkeletonDetail from '@/features/discover/assistant/components/SkeletonDetail';
+import { useAuth } from '@/store/_user';
 import { useDiscoverStore } from '@/store/discover';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
-import { useAuth } from '@/store/user';
 
 const AssistantDetail = () => {
   const { slugs } = useLocalSearchParams<{ slugs: string[] }>();
