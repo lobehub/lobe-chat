@@ -4,6 +4,7 @@ import { colors } from 'consola/utils';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+// @ts-ignore
 import i18nConfig from '../../.i18nrc';
 
 const prettierOptions = prettier.resolveConfig(resolve(__dirname, '../../.prettierrc.js'));
