@@ -12,62 +12,70 @@ function serializeParseResult(result: ReturnType<typeof parse>) {
 }
 
 describe('parse', () => {
-  describe('Snapshot Tests', () => {
-    it('should match snapshot for linear conversation', () => {
+  describe('Basic Conversations', () => {
+    it('should parse linear conversation correctly', () => {
       const result = parse(inputs.linearConversation);
 
       expect(serializeParseResult(result)).toEqual(outputs.linearConversation);
     });
+  });
 
-    it('should match snapshot for assistant with tools', () => {
+  describe('Tool Usage', () => {
+    it('should parse assistant with tools correctly', () => {
       const result = parse(inputs.assistantWithTools);
 
       expect(serializeParseResult(result)).toEqual(outputs.assistantWithTools);
     });
+  });
 
-    it('should match snapshot for branched conversation', () => {
+  describe('Branching', () => {
+    it('should parse branched conversation correctly', () => {
       const result = parse(inputs.branch.conversation);
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.conversation);
     });
 
-    it('should match snapshot for branched conversation with activeBranchIndex 1', () => {
+    it('should respect activeBranchIndex when specified', () => {
       const result = parse(inputs.branch.activeIndex1);
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.activeIndex1);
     });
 
-    it('should match snapshot for assistant message with branches', () => {
+    it('should handle assistant message with branches', () => {
       const result = parse(inputs.branch.assistantBranch);
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.assistantBranch);
     });
 
-    it('should match snapshot for assistant with user branches', () => {
+    it('should handle assistant with user branches', () => {
       const result = parse(inputs.branch.assistantUserBranch);
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.assistantUserBranch);
     });
 
-    it('should match snapshot for nested branches (4 levels)', () => {
+    it('should handle deeply nested branches (4 levels)', () => {
       const result = parse(inputs.branch.nested);
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.nested);
     });
+  });
 
-    it('should match snapshot for compare mode (simple)', () => {
+  describe('Compare Mode', () => {
+    it('should parse simple compare mode correctly', () => {
       const result = parse(inputs.compare.simple);
 
       expect(serializeParseResult(result)).toEqual(outputs.compare.simple);
     });
 
-    it('should match snapshot for compare mode (with tools)', () => {
+    it('should parse compare mode with tools correctly', () => {
       const result = parse(inputs.compare.withTools);
 
       expect(serializeParseResult(result)).toEqual(outputs.compare.withTools);
     });
+  });
 
-    it('should match snapshot for complex scenario', () => {
+  describe('Complex Scenarios', () => {
+    it('should handle complex mixed scenarios correctly', () => {
       const result = parse(inputs.complexScenario);
 
       expect(serializeParseResult(result)).toEqual(outputs.complexScenario);

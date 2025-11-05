@@ -105,5 +105,6 @@ export interface ModelPerformance {
 
 export interface MessageMetadata extends ModelUsage, ModelPerformance {
   activeBranchIndex?: number;
+  activeColumn?: boolean;
   compare?: boolean;
 }
