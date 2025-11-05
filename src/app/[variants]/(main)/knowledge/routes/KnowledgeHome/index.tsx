@@ -1,10 +1,11 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useMediaQuery } from 'react-responsive';
+import { useParams } from 'react-router-dom';
 
 import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
@@ -29,8 +30,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-// Menu content component
-const MenuContent = memo(() => {
+const Sidebar = memo(() => {
   const { t } = useTranslation('file');
 
   return (
@@ -44,25 +44,34 @@ const MenuContent = memo(() => {
   );
 });
 
-MenuContent.displayName = 'MenuContent';
+Sidebar.displayName = 'Sidebar';
 
 // Main files list component
-const FilesListPage = memo(() => {
-  const [category] = useFileCategory();
+const MainContent = memo(() => {
+  const { id } = useParams<{ id: string }>();
+  const [category, setCategory] = useFileCategory();
+  const [initialized, setInitialized] = useState(false);
   const setFileModalId = useSetFileModalId();
+
+  useEffect(() => {
+    if (id && !initialized) {
+      setCategory(FilesTabs.Documents);
+      setInitialized(true);
+    }
+  }, [id, setCategory, initialized]);
 
   return (
     <KnowledgeItemManager
       category={category}
+      documentId={id}
       onOpenFile={setFileModalId}
       title={`${category as FilesTabs}`}
     />
   );
 });
 
-FilesListPage.displayName = 'FilesListPage';
+MainContent.displayName = 'FilesListPage';
 
-// Desktop layout
 const DesktopLayout = memo(() => {
   return (
     <>
@@ -74,10 +83,10 @@ const DesktopLayout = memo(() => {
         width={'100%'}
       >
         <FilePanel>
-          <MenuContent />
+          <Sidebar />
         </FilePanel>
         <Container>
-          <FilesListPage />
+          <MainContent />
         </Container>
       </Flexbox>
       <RegisterHotkeys />
@@ -88,7 +97,6 @@ const DesktopLayout = memo(() => {
 
 DesktopLayout.displayName = 'DesktopLayout';
 
-// Mobile layout
 const MobileLayout = memo(() => {
   const showMobileWorkspace = useShowMobileWorkspace();
   const { styles } = useStyles();
@@ -102,7 +110,7 @@ const MobileLayout = memo(() => {
         style={showMobileWorkspace ? { display: 'none' } : undefined}
         width="100%"
       >
-        <MenuContent />
+        <Sidebar />
       </Flexbox>
       <Flexbox
         className={styles.main}
@@ -110,7 +118,7 @@ const MobileLayout = memo(() => {
         style={showMobileWorkspace ? undefined : { display: 'none' }}
         width="100%"
       >
-        <FilesListPage />
+        <MainContent />
       </Flexbox>
       <FileModalQueryRoute />
     </>

@@ -127,6 +127,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface DocumentExplorerProps {
+  documentId?: string;
   knowledgeBaseId?: string;
 }
 
@@ -156,10 +157,15 @@ const getPreviewText = (item: FileListItem): string => {
   return plainText.slice(0, 200);
 };
 
+const updateUrl = (docId: string | null) => {
+  const newPath = docId ? `/knowledge/${docId}` : '/knowledge/';
+  window.history.replaceState({}, '', newPath);
+};
+
 /**
  * View, edit and create documents.
  */
-const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId }) => {
+const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documentId }) => {
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
 
@@ -186,6 +192,14 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId }) => {
       syncNoteMapWithServer(allFiles);
     }
   }, [allFiles, syncNoteMapWithServer]);
+
+  // If documentId is provided, automatically open that document
+  useEffect(() => {
+    if (documentId) {
+      setSelectedNoteId(documentId);
+      setIsCreatingNew(false);
+    }
+  }, [documentId]);
 
   // Get optimistic notes (merged local + server)
   // Filter by knowledgeBaseId if provided
@@ -214,6 +228,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId }) => {
       setSelectedNoteId(null);
     } else {
       setSelectedNoteId(noteId);
+      updateUrl(noteId);
     }
     setIsCreatingNew(false);
   };
@@ -277,6 +292,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId }) => {
     // When a temp note gets a real ID, update the selected note ID
     setSelectedNoteId(newId);
     setIsCreatingNew(false);
+    updateUrl(newId);
   };
 
   return (

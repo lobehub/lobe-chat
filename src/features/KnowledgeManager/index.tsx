@@ -17,6 +17,8 @@ const ChunkDrawer = dynamic(() => import('./ChunkDrawer'), { ssr: false });
 
 interface KnowledgeManagerProps {
   category?: string;
+  // Directly open a document if provided
+  documentId?: string;
   knowledgeBaseId?: string;
   onOpenFile: (id: string) => void;
   title: string;
@@ -30,7 +32,7 @@ interface KnowledgeManagerProps {
  * FileExplorer: For other categories.
  */
 const KnowledgeManager = memo<KnowledgeManagerProps>(
-  ({ title, knowledgeBaseId, category, onOpenFile }) => {
+  ({ title, knowledgeBaseId, category, onOpenFile, documentId }) => {
     const isDocumentsView = category === FilesTabs.Documents;
     const isHomeView = category === FilesTabs.Home;
 
@@ -54,7 +56,7 @@ const KnowledgeManager = memo<KnowledgeManagerProps>(
             </Text>
           )}
           {isDocumentsView ? (
-            <DocumentExplorer knowledgeBaseId={knowledgeBaseId} />
+            <DocumentExplorer documentId={documentId} knowledgeBaseId={knowledgeBaseId} />
           ) : (
             <FileExplorer
               category={category}

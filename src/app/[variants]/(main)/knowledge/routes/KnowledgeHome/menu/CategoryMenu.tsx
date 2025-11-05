@@ -8,6 +8,7 @@ import { FileText, FolderOpen, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import Menu from '@/components/Menu';
 import type { MenuProps } from '@/components/Menu';
@@ -38,8 +39,9 @@ const useStyles = createStyles(({ css, token }) => ({
 const CategoryMenu = memo(() => {
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
-  const [activeKey, setActiveKey] = useFileCategory();
+  const [activeKey] = useFileCategory();
   const [showCollapsed, setShowCollapsed] = useState(true);
+  const navigate = useNavigate();
 
   const collapsedItems: MenuProps['items'] = useMemo(
     () => [
@@ -86,7 +88,7 @@ const CategoryMenu = memo(() => {
         className={cx(styles.header, isHomeActive && styles.headerActive)}
         horizontal
         onClick={() => {
-          setActiveKey(FilesTabs.Home);
+          navigate('/', { replace: true });
         }}
         paddingBlock={6}
         paddingInline={8}
@@ -123,7 +125,9 @@ const CategoryMenu = memo(() => {
             compact
             items={collapsedItems}
             onClick={({ key }) => {
-              setActiveKey(key);
+              // Navigate to home route and set category
+              const categoryParam = key === FilesTabs.Home ? '' : `?category=${key}`;
+              navigate(`/${categoryParam}`, { replace: true });
             }}
             selectable
             selectedKeys={[activeKey]}
