@@ -148,6 +148,9 @@ importers:
       expo-dev-client:
         specifier: ~6.0.15
         version: 6.0.16(expo@54.0.19)
+      expo-device:
+        specifier: ^8.0.9
+        version: 8.0.9(expo@54.0.19)
       expo-file-system:
         specifier: ^19.0.17
         version: 19.0.17(expo@54.0.19)(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))
@@ -172,6 +175,9 @@ importers:
       expo-localization:
         specifier: ~17.0.7
         version: 17.0.7(expo@54.0.19)(react@19.1.0)
+      expo-mail-composer:
+        specifier: ^15.0.7
+        version: 15.0.7(expo@54.0.19)
       expo-media-library:
         specifier: ^18.2.0
         version: 18.2.0(expo@54.0.19)(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))
@@ -6953,6 +6959,11 @@ packages:
     peerDependencies:
       expo: '*'
 
+  expo-device@8.0.9:
+    resolution: {integrity: sha512-XqRpaljDNAYZGZzMpC+b9KZfzfydtkwx3pJAp6ODDH+O/5wjAw+mLc5wQMGJCx8/aqVmMsAokec7iebxDPFZDA==}
+    peerDependencies:
+      expo: '*'
+
   expo-eas-client@1.0.7:
     resolution: {integrity: sha512-Q/b1X0fM+3beqqvffok14pjxMF600NxopdSr9WJY61fF4xllcVnALS0kEudffp9ihMOfcb5xWYqzKj6jMqYDIw==}
 
@@ -7019,6 +7030,11 @@ packages:
     peerDependencies:
       expo: '*'
       react: '*'
+
+  expo-mail-composer@15.0.7:
+    resolution: {integrity: sha512-QEytis4Vrinff2WKcNaQJtR5wDdOyfuP72ezvaSJ81mV/J9yFntiQeynSS/svaU0N9m4inDWJ9WD5eRUGL55oQ==}
+    peerDependencies:
+      expo: '*'
 
   expo-manifests@1.0.8:
     resolution: {integrity: sha512-nA5PwU2uiUd+2nkDWf9e71AuFAtbrb330g/ecvuu52bmaXtN8J8oiilc9BDvAX0gg2fbtOaZdEdjBYopt1jdlQ==}
@@ -12751,6 +12767,10 @@ packages:
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
+    hasBin: true
+
+  ua-parser-js@0.7.41:
+    resolution: {integrity: sha512-O3oYyCMPYgNNHuO7Jjk3uacJWZF8loBgwrfd/5LE/HyZ3lUIOdniQ7DNXJcIgZbwioZxk0fLfI4EVnetdiX5jg==}
     hasBin: true
 
   ua-parser-js@1.0.41:
@@ -21746,6 +21766,11 @@ snapshots:
       expo: 54.0.19(@babel/core@7.28.4)(@expo/metro-runtime@6.1.2)(@modelcontextprotocol/sdk@1.20.1)(expo-router@6.0.13)(react-native-webview@13.15.0(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-dev-menu-interface: 2.0.0(expo@54.0.19)
 
+  expo-device@8.0.9(expo@54.0.19):
+    dependencies:
+      expo: 54.0.19(@babel/core@7.28.4)(@expo/metro-runtime@6.1.2)(@modelcontextprotocol/sdk@1.20.1)(expo-router@6.0.13)(react-native-webview@13.15.0(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      ua-parser-js: 0.7.41
+
   expo-eas-client@1.0.7: {}
 
   expo-file-system@19.0.17(expo@54.0.19)(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0)):
@@ -21806,6 +21831,10 @@ snapshots:
       expo: 54.0.19(@babel/core@7.28.4)(@expo/metro-runtime@6.1.2)(@modelcontextprotocol/sdk@1.20.1)(expo-router@6.0.13)(react-native-webview@13.15.0(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
       rtl-detect: 1.1.2
+
+  expo-mail-composer@15.0.7(expo@54.0.19):
+    dependencies:
+      expo: 54.0.19(@babel/core@7.28.4)(@expo/metro-runtime@6.1.2)(@modelcontextprotocol/sdk@1.20.1)(expo-router@6.0.13)(react-native-webview@13.15.0(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
 
   expo-manifests@1.0.8(expo@54.0.19):
     dependencies:
@@ -29439,6 +29468,8 @@ snapshots:
       ts-toolbelt: 9.6.0
 
   typescript@5.9.3: {}
+
+  ua-parser-js@0.7.41: {}
 
   ua-parser-js@1.0.41: {}
 

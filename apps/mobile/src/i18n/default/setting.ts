@@ -182,7 +182,21 @@ export default {
     },
     title: '开发者选项',
   },
-  feedback: '意见反馈',
+  feedback: {
+    email: {
+      body: {
+        description: '问题描述：',
+        footer: '发自我的 {{device}}',
+        frequency: '出现频率：',
+        screenshots: '相关截图：',
+        template: '请详细描述您遇到的问题，以便我们更好地协助您解决。',
+      },
+      subject: '反馈 - LobeChat - {{version}}',
+    },
+    error: '打开邮件撰写器失败，请稍后重试',
+    title: '意见反馈',
+    unavailable: '邮件功能不可用，请检查设备是否配置了邮箱账户',
+  },
   fontSize: {
     preview: {
       botAnswer:
