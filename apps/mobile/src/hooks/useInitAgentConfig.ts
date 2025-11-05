@@ -1,6 +1,6 @@
+import { useUserStore } from '@/store/_user';
 import { useAgentStore } from '@/store/agent';
 import { useSessionStore } from '@/store/session';
-import { useUserStore } from '@/store/user';
 
 export const useInitAgentConfig = () => {
   const [useFetchAgentConfig] = useAgentStore((s) => [s.useFetchAgentConfig]);

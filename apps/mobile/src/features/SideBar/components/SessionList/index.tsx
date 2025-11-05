@@ -16,10 +16,10 @@ import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager } from 'react-native';
 
 import { loading } from '@/libs/loading';
+import { useAuth } from '@/store/_user';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { useAuth } from '@/store/user';
 
 import AddButton from './features/AddButton';
 import Inbox from './features/Inbox';

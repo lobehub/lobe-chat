@@ -1,6 +1,6 @@
 import { AppState, AppStateStatus } from 'react-native';
 
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '@/store/_user';
 
 import { TokenStorage } from './tokenStorage';
 

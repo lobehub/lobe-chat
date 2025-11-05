@@ -10,12 +10,12 @@ import { merge } from 'lodash-es';
 
 import { DEFAULT_AGENT_CONFIG } from '@/_const/settings';
 import { ModelProvider } from '@/libs/_model-runtime/types/type';
+import { useUserStore } from '@/store/_user';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
-import { useUserStore } from '@/store/user';
 import { FetchSSEOptions, fetchSSE, standardizeAnimationStyle } from '@/utils/fetch';
 import { createTraceHeader } from '@/utils/trace';
 

@@ -16,8 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
 import { setLoginMounted } from '@/navigation/loginState';
+import { useAuth, useAuthActions } from '@/store/_user';
 import { useSettingStore } from '@/store/setting';
-import { useAuth, useAuthActions } from '@/store/user';
 import { isDev } from '@/utils/env';
 import { getLoginErrorKey } from '@/utils/error';
 

@@ -15,6 +15,8 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { CreateTopicParams } from '@/services/topic/type';
 import type { ChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
+import { systemAgentSelectors } from '@/store/user/slices/settings/selectors';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -140,7 +142,7 @@ export const chatTopic: StateCreator<
     let output = '';
 
     // Get current agent for topic
-    // const topicConfig = systemAgentSelectors.topic(useUserStore.getState());
+    const topicConfig = systemAgentSelectors.topic(useUserStore.getState());
 
     // Automatically summarize the topic title
     await chatService.fetchPresetTaskResult({
@@ -162,7 +164,7 @@ export const chatTopic: StateCreator<
 
         internal_updateTopicTitleInSummary(topicId, output);
       },
-      params: merge(chainSummaryTitle(messages, i18n.language)),
+      params: merge(topicConfig, chainSummaryTitle(messages, i18n.language)),
       // trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
   },

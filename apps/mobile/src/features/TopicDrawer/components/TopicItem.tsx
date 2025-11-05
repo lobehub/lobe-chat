@@ -1,11 +1,12 @@
 import { ChatTopic } from '@lobechat/types';
-import { Cell, useTheme } from '@lobehub/ui-rn';
+import { Cell, Icon, LoadingDots, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { Star } from 'lucide-react-native';
+import { Loader2, Star } from 'lucide-react-native';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager } from 'react-native';
 
+import { LOADING_FLAT } from '@/_const/message';
 import { Toast } from '@/components';
 import Dropdown from '@/components/Dropdown';
 import type { DropdownOptionItem } from '@/components/Dropdown';
@@ -34,10 +35,13 @@ const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const removeTopic = useChatStore((s) => s.removeTopic);
   const favoriteTopic = useChatStore((s) => s.favoriteTopic);
+  const topicLoadingIds = useChatStore((s) => s.topicLoadingIds);
   const setTopicDrawerOpen = useGlobalStore((s) => s.setTopicDrawerOpen);
   const switchTopic = useSwitchTopic();
 
   const isActive = activeTopicId === topic.id;
+  const isRenaming = topic.title === LOADING_FLAT;
+  const isLoading = topicLoadingIds.includes(topic.id);
 
   const handlePress = () => {
     if (customOnPress) {
@@ -118,15 +122,27 @@ const TopicItem = memo<TopicItemProps>(({ topic, onPress: customOnPress }) => {
     <Dropdown options={options}>
       <Cell
         active={isActive}
-        icon={Star}
-        iconProps={{
-          color: topic.favorite ? theme.gold : theme.colorTextDescription,
-          fill: topic.favorite ? theme.gold : undefined,
-        }}
+        icon={
+          isLoading ? (
+            <Icon color={theme.colorTextDescription} icon={Loader2} size={16} spin />
+          ) : (
+            Star
+          )
+        }
+        iconProps={
+          isLoading
+            ? undefined
+            : {
+                color: topic.favorite ? theme.gold : theme.colorTextDescription,
+                fill: topic.favorite ? theme.gold : undefined,
+              }
+        }
         iconSize={16}
         onPress={handlePress}
         showArrow={false}
-        title={topic.title || t('defaultTitle')}
+        title={
+          isRenaming ? <LoadingDots size={6} variant="typing" /> : topic.title || t('defaultTitle')
+        }
         titleProps={{
           fontSize: 14,
           style: {
