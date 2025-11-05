@@ -101,7 +101,7 @@ describe('Message Router Integration Tests', () => {
 
       // 先创建 thread
       const { threads } = await import('@/database/schemas');
-      const [thread] = await serverDB
+      const [thread] = (await serverDB
         .insert(threads)
         .values({
           userId,
@@ -109,7 +109,7 @@ describe('Message Router Integration Tests', () => {
           sourceMessageId: 'msg-source',
           type: 'continuation', // type is required
         })
-        .returning();
+        .returning()) as any;
 
       const result = await caller.createNewMessage({
         content: 'Test message in thread',
@@ -538,10 +538,35 @@ describe('Message Router Integration Tests', () => {
   });
 
   describe('removeMessageQuery', () => {
-    it.skip('should remove message query', async () => {
-      // This test is skipped because messageQueries uses UUID as primary key
-      // which is different from message ID format
-      // The actual functionality works correctly in production with proper query IDs
+    it('should remove message query', async () => {
+      const caller = messageRouter.createCaller(createTestContext(userId));
+
+      const msgResult = await caller.createNewMessage({
+        content: 'Message with query',
+        role: 'user',
+        sessionId: testSessionId,
+      });
+
+      // 创建一个 message query 记录，使用 UUID
+      const { messageQueries } = await import('@/database/schemas');
+      const [queryRecord] = await serverDB
+        .insert(messageQueries)
+        .values({
+          messageId: msgResult.id,
+          userId,
+          userQuery: 'test query',
+        })
+        .returning();
+
+      await caller.removeMessageQuery({ id: queryRecord.id });
+
+      // 验证消息查询已删除
+      const deletedQuery = await serverDB
+        .select()
+        .from(messageQueries)
+        .where(eq(messageQueries.id, queryRecord.id));
+
+      expect(deletedQuery).toHaveLength(0);
     });
   });
 
@@ -766,16 +791,103 @@ describe('Message Router Integration Tests', () => {
   });
 
   describe('updateMessageRAG', () => {
-    it.skip('should update message RAG information', async () => {
-      // This test is skipped because it requires proper chunk IDs and query IDs
-      // which involve complex RAG setup with embeddings, files, and chunks
-      // The actual functionality works correctly in production with proper RAG data
+    it('should update message RAG information', async () => {
+      const caller = messageRouter.createCaller(createTestContext(userId));
+
+      const msg = await caller.createNewMessage({
+        content: 'Message with RAG',
+        role: 'assistant',
+        sessionId: testSessionId,
+      });
+
+      // 创建必要的依赖: chunks -> messageQueries -> messageQueryChunks
+      const { chunks, messageQueries, messageQueryChunks } = await import('@/database/schemas');
+
+      // 1. 创建 chunk
+      const [chunk] = await serverDB
+        .insert(chunks)
+        .values({
+          userId,
+          text: 'test chunk content',
+        })
+        .returning();
+
+      // 2. 创建 message query
+      const [query] = await serverDB
+        .insert(messageQueries)
+        .values({
+          messageId: msg.id,
+          userId,
+          userQuery: 'test query',
+        })
+        .returning();
+
+      // 3. 调用 updateMessageRAG
+      await caller.updateMessageRAG({
+        id: msg.id,
+        value: {
+          fileChunks: [{ id: chunk.id, similarity: 0.95 }],
+          ragQueryId: query.id,
+        },
+      });
+
+      // 验证 messageQueryChunks 记录已创建
+      const [queryChunk] = await serverDB
+        .select()
+        .from(messageQueryChunks)
+        .where(eq(messageQueryChunks.messageId, msg.id));
+
+      expect(queryChunk).toBeDefined();
+      expect(queryChunk.chunkId).toBe(chunk.id);
     });
 
-    it.skip('should return message list when sessionId is provided', async () => {
-      // This test is skipped because it requires proper chunk IDs and query IDs
-      // which involve complex RAG setup with embeddings, files, and chunks
-      // The actual functionality works correctly in production with proper RAG data
+    it('should return message list when sessionId is provided', async () => {
+      const caller = messageRouter.createCaller(createTestContext(userId));
+
+      const msg1 = await caller.createNewMessage({
+        content: 'Message 1',
+        role: 'assistant',
+        sessionId: testSessionId,
+      });
+
+      await caller.createNewMessage({
+        content: 'Message 2',
+        role: 'assistant',
+        sessionId: testSessionId,
+      });
+
+      // 创建必要的依赖: chunks -> messageQueries
+      const { chunks, messageQueries } = await import('@/database/schemas');
+      const [chunk] = await serverDB
+        .insert(chunks)
+        .values({
+          userId,
+          text: 'test chunk content',
+        })
+        .returning();
+
+      // 创建 query (需要 queryId)
+      const [query] = await serverDB
+        .insert(messageQueries)
+        .values({
+          messageId: msg1.id,
+          userId,
+          userQuery: 'test query',
+        })
+        .returning();
+
+      const result = await caller.updateMessageRAG({
+        id: msg1.id,
+        sessionId: testSessionId,
+        value: {
+          fileChunks: [{ id: chunk.id, similarity: 0.95 }],
+          ragQueryId: query.id,
+        },
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.messages).toBeDefined();
+      expect(result.messages).toHaveLength(2);
     });
   });
 
@@ -904,14 +1016,86 @@ describe('Message Router Integration Tests', () => {
   });
 
   describe('updateTTS', () => {
-    it.skip('should update TTS information', async () => {
-      // This test is skipped because it requires proper file IDs from the files table
-      // The actual functionality works correctly in production with proper file records
+    it('should update TTS information', async () => {
+      const caller = messageRouter.createCaller(createTestContext(userId));
+
+      const msg = await caller.createNewMessage({
+        content: 'Message with TTS',
+        role: 'assistant',
+        sessionId: testSessionId,
+      });
+
+      // 创建 file 记录
+      const { files } = await import('@/database/schemas');
+      const [file] = await serverDB
+        .insert(files)
+        .values({
+          userId,
+          name: 'audio.mp3',
+          fileType: 'audio/mpeg',
+          size: 1024,
+          url: '/files/audio.mp3',
+        })
+        .returning();
+
+      await caller.updateTTS({
+        id: msg.id,
+        value: {
+          file: file.id,
+          voice: 'en-US-neural',
+          contentMd5: 'abc123',
+        },
+      });
+
+      const { messageTTS } = await import('@/database/schemas');
+      const [ttsRecord] = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, msg.id));
+
+      expect(ttsRecord).toBeDefined();
+      expect(ttsRecord.voice).toBe('en-US-neural');
+      expect(ttsRecord.fileId).toBe(file.id);
     });
 
-    it.skip('should delete TTS when value is false', async () => {
-      // This test is skipped because it requires proper file IDs from the files table
-      // The actual functionality works correctly in production with proper file records
+    it('should delete TTS when value is false', async () => {
+      const caller = messageRouter.createCaller(createTestContext(userId));
+
+      const msg = await caller.createNewMessage({
+        content: 'Message with TTS to delete',
+        role: 'assistant',
+        sessionId: testSessionId,
+      });
+
+      // 创建 file 记录
+      const { files } = await import('@/database/schemas');
+      const [file] = await serverDB
+        .insert(files)
+        .values({
+          userId,
+          name: 'audio-delete.mp3',
+          fileType: 'audio/mpeg',
+          size: 1024,
+          url: '/files/audio-delete.mp3',
+        })
+        .returning();
+
+      // First add TTS
+      await caller.updateTTS({
+        id: msg.id,
+        value: {
+          file: file.id,
+          voice: 'en-US-neural',
+        },
+      });
+
+      // Then delete it
+      await caller.updateTTS({
+        id: msg.id,
+        value: false,
+      });
+
+      const { messageTTS } = await import('@/database/schemas');
+      const [ttsRecord] = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, msg.id));
+
+      expect(ttsRecord).toBeUndefined();
     });
   });
 
