@@ -150,6 +150,7 @@
     "@lobechat/agent-runtime": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/context-engine": "workspace:*",
+    "@lobechat/conversation-flow": "workspace:*",
     "@lobechat/database": "workspace:*",
     "@lobechat/electron-client-ipc": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",

@@ -762,7 +762,7 @@ describe('generateAIChatV2 actions', () => {
       // Create a group message structure with tool results
       const groupMessage: UIChatMessage = {
         id: GROUP_MESSAGE_ID,
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         sessionId: TEST_IDS.SESSION_ID,
         topicId: TEST_IDS.TOPIC_ID,
@@ -829,7 +829,7 @@ describe('generateAIChatV2 actions', () => {
 
       const groupMessage: UIChatMessage = {
         id: GROUP_MESSAGE_ID,
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         sessionId: TEST_IDS.SESSION_ID,
         children: [
@@ -880,7 +880,7 @@ describe('generateAIChatV2 actions', () => {
 
       const groupMessage: UIChatMessage = {
         id: GROUP_MESSAGE_ID,
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         sessionId: TEST_IDS.SESSION_ID,
         children: [
@@ -947,7 +947,7 @@ describe('generateAIChatV2 actions', () => {
 
       const groupMessage: UIChatMessage = {
         id: GROUP_MESSAGE_ID,
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         sessionId: TEST_IDS.SESSION_ID,
         children: [
@@ -1001,7 +1001,7 @@ describe('generateAIChatV2 actions', () => {
 
       const groupMessage: UIChatMessage = {
         id: GROUP_MESSAGE_ID,
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         sessionId: TEST_IDS.SESSION_ID,
         children: [

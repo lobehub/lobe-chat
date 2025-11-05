@@ -13,7 +13,13 @@ import { ChatMessageExtra } from './extra';
 import { ChatFileChunk } from './rag';
 import { ChatVideoItem } from './video';
 
-export type UIMessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | 'supervisor' | 'group';
+export type UIMessageRoleType =
+  | 'user'
+  | 'system'
+  | 'assistant'
+  | 'tool'
+  | 'supervisor'
+  | 'assistantGroup';
 
 export interface ChatFileItem {
   content?: string;

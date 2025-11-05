@@ -40,7 +40,6 @@ import {
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
-import { groupAssistantMessages } from '../utils/groupMessages';
 import { idGenerator } from '../utils/idGenerator';
 
 export class MessageModel {
@@ -269,9 +268,7 @@ export class MessageModel {
       },
     );
 
-    // Group assistant messages with their tool results
-    const { groupAssistantMessages: useGroup = false } = options;
-    return useGroup ? groupAssistantMessages(mappedMessages) : mappedMessages;
+    return mappedMessages;
   };
 
   findById = async (id: string) => {
