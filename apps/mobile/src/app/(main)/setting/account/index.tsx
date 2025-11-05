@@ -7,7 +7,7 @@ import SettingGroup from '@/features/SettingGroup';
 import SettingItem from '@/features/SettingItem';
 import { safeReplaceLogin } from '@/navigation/safeLogin';
 import { useAuth, useAuthActions } from '@/store/_user';
-import { getLoginErrorKey } from '@/utils/error';
+import { handleLoginError } from '@/utils/error';
 
 export default function AccountScreen() {
   const { t } = useTranslation(['setting', 'auth', 'error', 'common']);
@@ -33,9 +33,7 @@ export default function AccountScreen() {
               await switchAccount();
               setTimeout(() => router.replace('/chat'), 0);
             } catch (error) {
-              const key = getLoginErrorKey(error);
-              const message = t(key, { ns: 'error' });
-              Alert.alert(t('error.title', { ns: 'error' }), message);
+              handleLoginError(error, t);
             }
           },
           text: t('account.switchAccount.action', { ns: 'setting' }),
