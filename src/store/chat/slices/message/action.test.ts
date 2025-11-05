@@ -265,7 +265,7 @@ describe('chatMessage actions', () => {
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
 
-    it('deleteMessage should remove group message with all children', async () => {
+    it('deleteMessage should remove assistantGroup message with all children', async () => {
       const { result } = renderHook(() => useChatStore());
       const groupMessageId = 'group-message-id';
       const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
@@ -285,18 +285,20 @@ describe('chatMessage actions', () => {
           activeTopicId: undefined,
           messagesMap: {
             [messageMapKey('session-id')]: [
-              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
               {
-                id: 'child-1',
-                parentId: groupMessageId,
-                role: 'assistant',
-                content: 'Child 1',
-              } as UIChatMessage,
-              {
-                id: 'child-2',
-                parentId: groupMessageId,
-                role: 'assistant',
-                content: 'Child 2',
+                id: groupMessageId,
+                role: 'assistantGroup',
+                content: '',
+                children: [
+                  {
+                    id: 'child-1',
+                    content: 'Child 1',
+                  },
+                  {
+                    id: 'child-2',
+                    content: 'Child 2',
+                  },
+                ],
               } as UIChatMessage,
               { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
             ],
@@ -334,25 +336,29 @@ describe('chatMessage actions', () => {
           activeTopicId: undefined,
           messagesMap: {
             [messageMapKey('session-id')]: [
-              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
               {
-                id: 'child-1',
-                parentId: groupMessageId,
-                role: 'assistant',
-                content: 'Child with tools',
-                tools: [{ id: 'tool1' }],
-              } as UIChatMessage,
-              {
-                id: 'tool-result-1',
-                tool_call_id: 'tool1',
-                role: 'tool',
-                content: 'Tool result',
-              } as UIChatMessage,
-              {
-                id: 'child-2',
-                parentId: groupMessageId,
-                role: 'assistant',
-                content: 'Child 2',
+                id: groupMessageId,
+                role: 'assistantGroup',
+                content: '',
+                children: [
+                  {
+                    id: 'child-1',
+                    content: 'Child with tools',
+                    tools: [
+                      {
+                        id: 'tool1',
+                        result: {
+                          id: 'tool-result-1',
+                          content: 'Tool result',
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    id: 'child-2',
+                    content: 'Child 2',
+                  },
+                ],
               } as UIChatMessage,
               { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
             ],
@@ -363,7 +369,7 @@ describe('chatMessage actions', () => {
         await result.current.deleteMessage(groupMessageId);
       });
 
-      // Should delete group message + all children + tool results of children
+      // Should delete assistantGroup message + all children + tool results of children
       expect(removeMessagesSpy).toHaveBeenCalledWith(
         [groupMessageId, 'child-1', 'child-2', 'tool-result-1'],
         {
@@ -413,24 +419,29 @@ describe('chatMessage actions', () => {
       const removeMessageSpy = vi.spyOn(messageService, 'removeMessage');
 
       act(() => {
+        const rawMessages = [
+          {
+            id: messageId,
+            role: 'assistant',
+            tools: [{ id: 'tool1' }, { id: 'tool2' }],
+          } as UIChatMessage,
+          {
+            id: '2',
+            parentId: messageId,
+            tool_call_id: 'tool1',
+            role: 'tool',
+          } as UIChatMessage,
+          { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
+        ];
+
         useChatStore.setState({
           activeId: 'session-id',
           activeTopicId: undefined,
+          dbMessagesMap: {
+            [messageMapKey('session-id')]: rawMessages,
+          },
           messagesMap: {
-            [messageMapKey('session-id')]: [
-              {
-                id: messageId,
-                role: 'assistant',
-                tools: [{ id: 'tool1' }, { id: 'tool2' }],
-              } as UIChatMessage,
-              {
-                id: '2',
-                parentId: messageId,
-                tool_call_id: 'tool1',
-                role: 'tool',
-              } as UIChatMessage,
-              { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
-            ],
+            [messageMapKey('session-id')]: rawMessages,
           },
         });
       });

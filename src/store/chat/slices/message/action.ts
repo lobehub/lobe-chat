@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { parse } from '@lobechat/conversation-flow';
 import {
   ChatErrorType,
   ChatImageItem,
@@ -166,30 +167,28 @@ export const chatMessage: StateCreator<
     let ids = [message.id];
     const allMessages = chatSelectors.activeBaseChats(get());
 
-    // if the message is a tool calls, then delete all the related tool messages
-    if (message.tools) {
+    // Handle assistantGroup messages: delete all child blocks and tool results
+    if (message.role === 'assistantGroup' && message.children) {
+      // Collect all child block IDs
+      const childIds = message.children.map((child) => child.id);
+      ids = ids.concat(childIds);
+
+      // Collect all tool result IDs from children
+      const toolResultIds = message.children.flatMap((child) => {
+        if (!child.tools) return [];
+        return child.tools
+          .filter((tool) => tool.result?.id)
+          .map((tool) => tool.result!.id);
+      });
+      ids = ids.concat(toolResultIds);
+    }
+    // Handle regular messages with tools: find and delete related tool messages
+    else if (message.tools) {
       const toolMessageIds = message.tools.flatMap((tool) => {
         const messages = allMessages.filter((m) => m.tool_call_id === tool.id);
         return messages.map((m) => m.id);
       });
       ids = ids.concat(toolMessageIds);
-    }
-
-    // if the message is a group message, find all children messages (via parentId)
-    if (message.role === 'group') {
-      const childMessages = allMessages.filter((m) => m.parentId === message.id);
-      const childMessageIds = childMessages.map((m) => m.id);
-      ids = ids.concat(childMessageIds);
-
-      // Also delete tool results of children messages
-      const childToolMessageIds = childMessages.flatMap((child) => {
-        if (!child.tools) return [];
-        return child.tools.flatMap((tool) => {
-          const toolMessages = allMessages.filter((m) => m.tool_call_id === tool.id);
-          return toolMessages.map((m) => m.id);
-        });
-      });
-      ids = ids.concat(childToolMessageIds);
     }
 
     get().internal_dispatchMessage({ type: 'deleteMessages', ids });
@@ -357,12 +356,22 @@ export const chatMessage: StateCreator<
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'group']);
   },
   replaceMessages: (messages) => {
+    const messagesKey = messageMapKey(get().activeId, get().activeTopicId);
+
+    // Get raw messages from dbMessagesMap and apply reducer
+    const nextDbMap = { ...get().dbMessagesMap, [messagesKey]: messages };
+
+    if (isEqual(nextDbMap, get().dbMessagesMap)) return;
+
+    // Parse messages using conversation-flow
+    const { flatList } = parse(messages);
+
     set(
       {
-        messagesMap: {
-          ...get().messagesMap,
-          [messageMapKey(get().activeId, get().activeTopicId)]: messages,
-        },
+        // Store raw messages from backend
+        dbMessagesMap: nextDbMap,
+        // Store parsed messages for display
+        messagesMap: { ...get().messagesMap, [messagesKey]: flatList },
       },
       false,
       'replaceMessages',
@@ -386,13 +395,22 @@ export const chatMessage: StateCreator<
 
     const messagesKey = messageMapKey(activeId, topicId);
 
-    const messages = messagesReducer(chatSelectors.getBaseChatsByKey(messagesKey)(get()), payload);
+    // Get raw messages from dbMessagesMap and apply reducer
+    const rawMessages = get().dbMessagesMap[messagesKey] || [];
+    const updatedRawMessages = messagesReducer(rawMessages, payload);
 
-    const nextMap = { ...get().messagesMap, [messagesKey]: messages };
+    const nextDbMap = { ...get().dbMessagesMap, [messagesKey]: updatedRawMessages };
 
-    if (isEqual(nextMap, get().messagesMap)) return;
+    if (isEqual(nextDbMap, get().dbMessagesMap)) return;
 
-    set({ messagesMap: nextMap }, false, { type: `dispatchMessage/${payload.type}`, payload });
+    // parse to get display messages
+    const { flatList } = parse(updatedRawMessages);
+    const nextDisplayMap = { ...get().messagesMap, [messagesKey]: flatList };
+
+    set({ dbMessagesMap: nextDbMap, messagesMap: nextDisplayMap }, false, {
+      type: `dispatchMessage/${payload.type}`,
+      payload,
+    });
   },
 
   internal_updateMessageError: async (id, error) => {
@@ -497,25 +515,8 @@ export const chatMessage: StateCreator<
 
     let tempId = context?.tempMessageId;
     if (!tempId) {
-      tempId = 'tmp_' + nanoid();
-
-      // Check if should add as group block (explicitly controlled by caller)
-      if (context?.groupMessageId) {
-        internal_dispatchMessage({
-          type: 'addGroupBlock',
-          groupMessageId: context.groupMessageId,
-          blockId: tempId,
-          value: {
-            id: tempId,
-            content: message.content,
-          },
-        });
-        internal_toggleMessageLoading(true, tempId);
-      } else {
-        // Regular message creation at top level
-        tempId = internal_createTmpMessage(message as any);
-        internal_toggleMessageLoading(true, tempId);
-      }
+      tempId = internal_createTmpMessage(message as any);
+      internal_toggleMessageLoading(true, tempId);
     }
 
     try {
