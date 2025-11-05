@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.30](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.29...v2.0.0-next.30)
+
+<sup>Released on **2025-11-05**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Enhance message router with service layer and comprehensive tests.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Enhance message router with service layer and comprehensive tests, closes [#10056](https://github.com/lobehub/lobe-chat/issues/10056) ([62110e0](https://github.com/lobehub/lobe-chat/commit/62110e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.29](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.28...v2.0.0-next.29)
 
 <sup>Released on **2025-11-04**</sup>
