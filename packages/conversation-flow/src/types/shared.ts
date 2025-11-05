@@ -45,7 +45,7 @@ export interface ParseResult {
   /** Flattened list optimized for virtual list rendering */
   flatList: FlatMessage[];
   /** Map for O(1) message access */
-  messageMap: Map<string, Message>;
+  messageMap: Record<string, Message>;
 }
 
 /**

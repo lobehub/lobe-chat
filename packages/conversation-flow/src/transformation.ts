@@ -19,17 +19,18 @@ import type {
 
 /**
  * Phase 3: Transformation
- * Converts structural idTree into semantic displayTree and flatList
- * Uses priority-based pattern matching to determine node types
+ * Converts structural idTree into semantic contextTree and flatList
  */
 export class Transformer {
   private messageMap: Map<string, Message>;
   private messageGroupMap: Map<string, MessageGroupMetadata>;
+  private childrenMap: Map<string | null, string[]>;
   private nodeIdCounter = 0;
 
   constructor(private helperMaps: HelperMaps) {
     this.messageMap = helperMaps.messageMap;
     this.messageGroupMap = helperMaps.messageGroupMap;
+    this.childrenMap = helperMaps.childrenMap;
   }
 
   /**
@@ -40,48 +41,112 @@ export class Transformer {
   }
 
   /**
-   * Main transform function - converts IdNode to DisplayNode
-   * Implements priority-based pattern matching
+   * Transform all root nodes to contextTree
+   * Returns a linear array of context nodes
    */
-  transform(idNode: IdNode): ContextNode {
-    const message = this.messageMap.get(idNode.id);
-    if (!message) {
-      throw new Error(`Message not found: ${idNode.id}`);
+  transformAll(idNodes: IdNode[]): ContextNode[] {
+    const contextTree: ContextNode[] = [];
+
+    for (const idNode of idNodes) {
+      this.transformToLinear(idNode, contextTree);
     }
 
-    // Priority 1: Explicit Compare instruction from metadata
-    if (this.isCompareNode(message)) {
-      return this.createCompareNode(message, idNode);
-    }
-
-    // Priority 2: Assistant + Tools aggregation (AssistantGroupNode)
-    if (this.isAssistantGroupNode(message, idNode)) {
-      return this.createAssistantGroupNode(message, idNode);
-    }
-
-    // Priority 3: Multiple children = Branch
-    if (idNode.children.length > 1) {
-      return this.createBranchNode(message, idNode);
-    }
-
-    // Priority 4: Default MessageNode
-    return this.createMessageNode(message, idNode);
+    return contextTree;
   }
 
   /**
-   * Priority 1: Check if message has explicit compare mode
+   * Transform a single IdNode and append to contextTree array
    */
-  private isCompareNode(message: Message): boolean {
+  private transformToLinear(idNode: IdNode, contextTree: ContextNode[]): void {
+    const message = this.messageMap.get(idNode.id);
+    if (!message) return;
+
+    // Priority 1: Compare mode from user message metadata
+    if (this.isCompareMode(message) && idNode.children.length > 1) {
+      // Add user message node
+      const messageNode = this.createMessageNode(message);
+      contextTree.push(messageNode);
+
+      // Create compare node with children
+      const compareNode = this.createCompareNodeFromChildren(message, idNode);
+      contextTree.push(compareNode);
+
+      // Don't continue after compare - compare is an end point
+      return;
+    }
+
+    // Priority 2: Compare mode (from messageGroup metadata)
+    const messageGroup = message.groupId ? this.messageGroupMap.get(message.groupId) : undefined;
+
+    if (messageGroup && messageGroup.mode === 'compare') {
+      // Create compare node
+      const compareNode = this.createCompareNode(messageGroup, message);
+      contextTree.push(compareNode);
+
+      // Don't process children as they're handled by compare
+      return;
+    }
+
+    // Priority 3: AssistantGroup (assistant + tools)
+    if (this.isAssistantGroupNode(message, idNode)) {
+      const assistantGroupNode = this.createAssistantGroupNode(message, idNode);
+      contextTree.push(assistantGroupNode);
+
+      // Find the next message after tools
+      const nextMessage = this.findNextAfterTools(message, idNode);
+      if (nextMessage) {
+        this.transformToLinear(nextMessage, contextTree);
+      }
+      return;
+    }
+
+    // Priority 4: Branch (multiple children)
+    if (idNode.children.length > 1) {
+      // Add current message node
+      const messageNode = this.createMessageNode(message);
+      contextTree.push(messageNode);
+
+      // Create branch node
+      const branchNode = this.createBranchNode(message, idNode);
+      contextTree.push(branchNode);
+
+      // Continue with active branch
+      const activeBranchId = this.getActiveBranchId(message, idNode);
+      const activeBranch = idNode.children.find((child) => child.id === activeBranchId);
+      if (activeBranch) {
+        this.transformToLinear(activeBranch, contextTree);
+      }
+      return;
+    }
+
+    // Priority 5: Regular message
+    const messageNode = this.createMessageNode(message);
+    contextTree.push(messageNode);
+
+    // Continue with single child
+    if (idNode.children.length === 1) {
+      this.transformToLinear(idNode.children[0], contextTree);
+    }
+  }
+
+  /**
+   * Check if message has compare mode in metadata
+   */
+  private isCompareMode(message: Message): boolean {
     return (message.metadata as any)?.presentation?.mode === 'compare';
   }
 
   /**
-   * Create CompareNode - side-by-side comparison
+   * Create CompareNode from children messages
    */
-  private createCompareNode(message: Message, idNode: IdNode): CompareNode {
+  private createCompareNodeFromChildren(message: Message, idNode: IdNode): CompareNode {
+    // Each child is a column
     const columns = idNode.children.map((child) => {
-      const childTree = this.transform(child);
-      return [childTree];
+      const messageNode: MessageNode = {
+        id: child.id,
+        type: 'message',
+      };
+      return [messageNode];
     });
 
     return {
@@ -93,14 +158,11 @@ export class Transformer {
   }
 
   /**
-   * Priority 2: Check if this is Assistant + Tools pattern
+   * Check if this is Assistant + Tools pattern
    */
   private isAssistantGroupNode(message: Message, idNode: IdNode): boolean {
-    if (message.role !== 'assistant') {
-      return false;
-    }
+    if (message.role !== 'assistant') return false;
 
-    // All children must be tool messages
     return (
       idNode.children.length > 0 &&
       idNode.children.every((child) => {
@@ -111,97 +173,228 @@ export class Transformer {
   }
 
   /**
-   * Create AssistantGroupNode - assistant with tool calls
+   * Find next message after the entire AssistantGroup
+   */
+  private findNextAfterTools(assistantMsg: Message, idNode: IdNode): IdNode | null {
+    // Recursively find the last message in the assistant group
+    const lastNode = this.findLastNodeInAssistantGroup(idNode);
+    if (lastNode && lastNode.children.length > 0) {
+      return lastNode.children[0];
+    }
+    return null;
+  }
+
+  /**
+   * Find the last node in an AssistantGroup sequence
+   */
+  private findLastNodeInAssistantGroup(idNode: IdNode): IdNode | null {
+    // Check if has tool children
+    const toolChildren = idNode.children.filter((child) => {
+      const childMsg = this.messageMap.get(child.id);
+      return childMsg?.role === 'tool';
+    });
+
+    if (toolChildren.length === 0) {
+      return idNode;
+    }
+
+    // Check if any tool has an assistant child
+    for (const toolNode of toolChildren) {
+      if (toolNode.children.length > 0) {
+        const nextChild = toolNode.children[0];
+        const nextMsg = this.messageMap.get(nextChild.id);
+
+        if (nextMsg?.role === 'assistant') {
+          // Continue following the assistant chain
+          return this.findLastNodeInAssistantGroup(nextChild);
+        }
+      }
+    }
+
+    // No more assistant messages, return the last tool node
+    return toolChildren[toolChildren.length - 1];
+  }
+
+  /**
+   * Get active branch ID from message metadata or infer from children
+   */
+  private getActiveBranchId(message: Message, idNode: IdNode): string {
+    // Try to get from metadata
+    const activeBranchId = (message.metadata as any)?.activeBranchId;
+    if (activeBranchId) return activeBranchId;
+
+    // Infer from which branch has children
+    for (const child of idNode.children) {
+      if (child.children.length > 0) {
+        return child.id;
+      }
+    }
+
+    // Default to first branch
+    return idNode.children[0].id;
+  }
+
+  /**
+   * Create MessageNode (leaf node)
+   * Uses the message's own id directly
+   */
+  private createMessageNode(message: Message): MessageNode {
+    return {
+      id: message.id,
+      type: 'message',
+    };
+  }
+
+  /**
+   * Create AssistantGroupNode
+   * Collects all assistant messages in the sequence (with or without tools)
    */
   private createAssistantGroupNode(message: Message, idNode: IdNode): AssistantGroupNode {
-    const tools: MessageNode[] = idNode.children.map((child) => ({
-      children: [],
-      id: this.generateNodeId('tool', child.id),
-      messageId: child.id,
-      type: 'message',
-    }));
+    const children: ContextNode[] = [];
+
+    // Recursively collect all assistant messages in this group
+    this.collectAssistantGroupMessages(message, idNode, children);
 
     return {
-      assistantMessageId: message.id,
-      id: this.generateNodeId('group', message.id),
-      tools,
+      children,
+      id: message.id,
       type: 'assistantGroup',
     };
   }
 
   /**
-   * Priority 3: Create BranchNode for multiple children
+   * Recursively collect assistant messages for an AssistantGroup
+   */
+  private collectAssistantGroupMessages(
+    message: Message,
+    idNode: IdNode,
+    children: ContextNode[],
+  ): void {
+    // Get tool message IDs if this assistant has tools
+    const toolIds = idNode.children
+      .filter((child) => {
+        const childMsg = this.messageMap.get(child.id);
+        return childMsg?.role === 'tool';
+      })
+      .map((child) => child.id);
+
+    // Add current assistant message node
+    const messageNode: MessageNode = {
+      id: message.id,
+      type: 'message',
+    };
+    if (toolIds.length > 0) {
+      messageNode.tools = toolIds;
+    }
+    children.push(messageNode);
+
+    // Find next assistant message after tools
+    for (const toolNode of idNode.children) {
+      const toolMsg = this.messageMap.get(toolNode.id);
+      if (toolMsg?.role !== 'tool') continue;
+
+      // Check if tool has an assistant child
+      if (toolNode.children.length > 0) {
+        const nextChild = toolNode.children[0];
+        const nextMsg = this.messageMap.get(nextChild.id);
+
+        if (nextMsg?.role === 'assistant') {
+          // Recursively collect this assistant and its descendants
+          this.collectAssistantGroupMessages(nextMsg, nextChild, children);
+          return; // Only follow one path
+        }
+      }
+    }
+  }
+
+  /**
+   * Create BranchNode
    */
   private createBranchNode(message: Message, idNode: IdNode): BranchNode {
+    const activeBranchId = this.getActiveBranchId(message, idNode);
+    const activeBranchIndex = idNode.children.findIndex((child) => child.id === activeBranchId);
+
+    // Each branch is a tree starting from that child
     const branches = idNode.children.map((child) => {
-      const childTree = this.transform(child);
-      return [childTree];
+      const branchTree: ContextNode[] = [];
+      this.transformToLinear(child, branchTree);
+      return branchTree;
     });
 
     return {
-      activeBranchIndex: 0,
-      // Default to first branch
-branches,
-      
-id: this.generateNodeId('branch', message.id),
-      
-parentMessageId: message.id, 
+      activeBranchIndex: activeBranchIndex >= 0 ? activeBranchIndex : 0,
+      branches,
+      id: this.generateNodeId('branch', message.id),
+      parentMessageId: message.id,
       type: 'branch',
     };
   }
 
   /**
-   * Priority 4: Create basic MessageNode
+   * Create CompareNode from message group
    */
-  private createMessageNode(message: Message, idNode: IdNode): MessageNode {
-    const children = idNode.children.map((child) => this.transform(child));
+  private createCompareNode(group: MessageGroupMetadata, message: Message): CompareNode {
+    // Collect all messages in this group
+    const groupMessages: Message[] = [];
+    for (const msg of this.messageMap.values()) {
+      if (msg.groupId === group.id) {
+        groupMessages.push(msg);
+      }
+    }
+
+    // Each column is a message tree
+    const columns = groupMessages.map((msg) => {
+      const messageNode: MessageNode = {
+        id: msg.id,
+        type: 'message',
+      };
+      return [messageNode];
+    });
 
     return {
-      children,
-      id: this.generateNodeId('message', message.id),
-      messageId: message.id,
-      type: 'message',
+      columns,
+      id: this.generateNodeId('compare', group.id),
+      messageId: group.parentMessageId || message.id,
+      type: 'compare',
     };
   }
 
   /**
-   * Transform multiple IdNodes to DisplayNodes
-   */
-  transformAll(idNodes: IdNode[]): ContextNode[] {
-    return idNodes.map((node) => this.transform(node));
-  }
-
-  /**
    * Generate flatList from messages array
-   * Implements RFC priority-based pattern matching for flat rendering
+   * Only includes messages in the active path
    */
   flatten(messages: Message[]): Message[] {
     const flatList: Message[] = [];
     const processedIds = new Set<string>();
-    const groupedMessageIds = new Map<string, Set<string>>();
 
-    // Build message group membership map
-    for (const msg of messages) {
-      if (msg.groupId) {
-        const members = groupedMessageIds.get(msg.groupId) || new Set();
-        members.add(msg.id);
-        groupedMessageIds.set(msg.groupId, members);
-      }
-    }
+    // Build the active path by traversing from root
+    this.buildFlatListRecursive(null, flatList, processedIds, messages);
 
-    for (let i = 0; i < messages.length; i++) {
-      const message = messages[i];
+    return flatList;
+  }
 
-      // Skip if already processed
-      if (processedIds.has(message.id)) continue;
+  /**
+   * Recursively build flatList following the active path
+   */
+  private buildFlatListRecursive(
+    parentId: string | null,
+    flatList: Message[],
+    processedIds: Set<string>,
+    allMessages: Message[],
+  ): void {
+    const children = this.childrenMap.get(parentId) ?? [];
 
-      // Priority 1a: Compare message group
-      const messageGroup = message.groupId
-        ? this.messageGroupMap.get(message.groupId)
-        : undefined;
+    for (const childId of children) {
+      if (processedIds.has(childId)) continue;
+
+      const message = this.messageMap.get(childId);
+      if (!message) continue;
+
+      // Priority 1: Compare message group
+      const messageGroup = message.groupId ? this.messageGroupMap.get(message.groupId) : undefined;
 
       if (messageGroup && messageGroup.mode === 'compare' && !processedIds.has(messageGroup.id)) {
-        const groupMembers = this.collectGroupMembers(message.groupId!, messages);
+        const groupMembers = this.collectGroupMembers(message.groupId!, allMessages);
         const compareMessage = this.createCompareMessage(messageGroup, groupMembers);
         flatList.push(compareMessage);
         groupMembers.forEach((m) => processedIds.add(m.id));
@@ -209,47 +402,104 @@ parentMessageId: message.id,
         continue;
       }
 
-      // Priority 1b: Generic message group (manual/summary)
-      if (
-        messageGroup &&
-        messageGroup.mode !== 'compare' &&
-        !processedIds.has(messageGroup.id)
-      ) {
-        const groupMembers = this.collectGroupMembers(message.groupId!, messages);
-        const groupMessage = this.createMessageGroupMessage(messageGroup, groupMembers);
-        flatList.push(groupMessage);
-        groupMembers.forEach((m) => processedIds.add(m.id));
-        processedIds.add(messageGroup.id);
-        continue;
-      }
-
       // Priority 2: AssistantGroup (assistant + tools)
       if (message.role === 'assistant' && message.tools && message.tools.length > 0) {
-        const toolMessages = this.collectToolMessages(message, messages);
-        const groupMessage = this.createAssistantGroupMessage(message, toolMessages);
+        // Collect the entire assistant group chain
+        const assistantChain: Message[] = [];
+        const allToolMessages: Message[] = [];
+        this.collectAssistantChain(message, allMessages, assistantChain, allToolMessages, processedIds);
+
+        // Create assistantGroup virtual message
+        const groupMessage = this.createAssistantGroupMessage(
+          assistantChain[0],
+          assistantChain,
+          allToolMessages,
+        );
         flatList.push(groupMessage);
-        processedIds.add(message.id);
-        toolMessages.forEach((m) => processedIds.add(m.id));
+
+        // Mark all as processed
+        assistantChain.forEach((m) => processedIds.add(m.id));
+        allToolMessages.forEach((m) => processedIds.add(m.id));
+
+        // Continue after the last tool message
+        const lastToolMsg = allToolMessages[allToolMessages.length - 1];
+        if (lastToolMsg) {
+          this.buildFlatListRecursive(lastToolMsg.id, flatList, processedIds, allMessages);
+        }
         continue;
       }
 
-      // Priority 3: User message with branches
-      if (message.role === 'user') {
-        const branches = this.collectBranches(message, messages);
-        if (branches.length > 1) {
-          const userWithBranches = this.createUserMessageWithBranches(message, branches);
-          flatList.push(userWithBranches);
-          processedIds.add(message.id);
-          continue;
+      // Priority 3a: Compare mode from user message metadata
+      const childMessages = this.childrenMap.get(message.id) ?? [];
+      if (this.isCompareMode(message) && childMessages.length > 1) {
+        // Add user message
+        flatList.push(message);
+        processedIds.add(message.id);
+
+        // Create compare virtual message
+        const compareChildren = childMessages
+          .map((childId) => this.messageMap.get(childId))
+          .filter((m): m is Message => m !== undefined);
+
+        const compareMessage = this.createCompareMessageFromChildren(message, compareChildren);
+        flatList.push(compareMessage);
+        compareChildren.forEach((m) => processedIds.add(m.id));
+
+        // Don't continue after compare
+        continue;
+      }
+
+      // Priority 3b: User message with branches
+      if (message.role === 'user' && childMessages.length > 1) {
+        const activeBranchId = this.getActiveBranchIdFromMetadata(message, childMessages);
+        const userWithBranches = this.createUserMessageWithBranches(
+          message,
+          childMessages,
+          activeBranchId,
+        );
+        flatList.push(userWithBranches);
+        processedIds.add(message.id);
+
+        // Continue with active branch and process its message
+        const activeBranchMsg = this.messageMap.get(activeBranchId);
+        if (activeBranchMsg) {
+          flatList.push(activeBranchMsg);
+          processedIds.add(activeBranchId);
+
+          // Continue with active branch's children
+          this.buildFlatListRecursive(activeBranchId, flatList, processedIds, allMessages);
         }
+        continue;
       }
 
       // Priority 4: Regular message
       flatList.push(message);
       processedIds.add(message.id);
+
+      // Continue with children
+      this.buildFlatListRecursive(message.id, flatList, processedIds, allMessages);
+    }
+  }
+
+  /**
+   * Get active branch ID from message metadata or infer
+   */
+  private getActiveBranchIdFromMetadata(message: Message, childIds: string[]): string {
+    const activeBranchId = (message.metadata as any)?.activeBranchId;
+    if (activeBranchId && childIds.includes(activeBranchId)) {
+      return activeBranchId;
     }
 
-    return flatList;
+    // Infer from which child has descendants
+    for (const childId of childIds) {
+      const descendants = this.childrenMap.get(childId);
+      if (descendants && descendants.length > 0) {
+        return childId;
+      }
+    }
+
+    // Default to first child
+    return childIds[0];
   }
 
   /**
@@ -260,19 +510,94 @@ parentMessageId: message.id,
   }
 
   /**
-   * Create compare virtual message
+   * Collect tool messages related to an assistant message
    */
-  private createCompareMessage(
-    group: MessageGroupMetadata,
-    members: Message[],
-  ): Message {
-    // Create children as 2D array (columns x messages)
-    const children: AssistantContentBlock[] = members.map((msg) =>
-      this.messageToContentBlock(msg),
+  private collectToolMessages(assistant: Message, messages: Message[]): Message[] {
+    const toolCallIds = new Set(assistant.tools?.map((t) => t.id) || []);
+    return messages.filter(
+      (m) => m.role === 'tool' && m.tool_call_id && toolCallIds.has(m.tool_call_id),
     );
+  }
+
+  /**
+   * Recursively collect the entire assistant chain (assistant -> tools -> assistant -> tools -> ...)
+   */
+  private collectAssistantChain(
+    currentAssistant: Message,
+    allMessages: Message[],
+    assistantChain: Message[],
+    allToolMessages: Message[],
+    processedIds: Set<string>,
+  ): void {
+    if (processedIds.has(currentAssistant.id)) return;
+
+    // Add current assistant to chain
+    assistantChain.push(currentAssistant);
+
+    // Collect its tool messages
+    const toolMessages = this.collectToolMessages(currentAssistant, allMessages);
+    allToolMessages.push(...toolMessages);
+
+    // Find next assistant after tools
+    for (const toolMsg of toolMessages) {
+      const nextMessages = allMessages.filter((m) => m.parentId === toolMsg.id);
+
+      for (const nextMsg of nextMessages) {
+        if (nextMsg.role === 'assistant' && nextMsg.tools && nextMsg.tools.length > 0) {
+          // Continue the chain
+          this.collectAssistantChain(nextMsg, allMessages, assistantChain, allToolMessages, processedIds);
+          return;
+        } else if (nextMsg.role === 'assistant') {
+          // Final assistant without tools
+          assistantChain.push(nextMsg);
+          return;
+        }
+      }
+    }
+  }
+
+  /**
+   * Create compare virtual message from children (for metadata-based compare)
+   */
+  private createCompareMessageFromChildren(parentMessage: Message, children: Message[]): Message {
+    // Create columns similar to contextTree
+    const columns: ContextNode[][] = children.map((msg) => [
+      {
+        id: msg.id,
+        type: 'message',
+      },
+    ]);
 
     return {
-      children,
+      children: children.map((msg) => this.messageToContentBlock(msg)),
+      columns: columns as any,
+      content: '',
+      createdAt: Math.min(...children.map((m) => m.createdAt)),
+      extra: {
+        parentMessageId: parentMessage.id,
+      },
+      id: `compare-${parentMessage.id}`,
+      meta: children[0]?.meta || {},
+      role: 'compare' as any,
+      updatedAt: Math.max(...children.map((m) => m.updatedAt)),
+    } as Message;
+  }
+
+  /**
+   * Create compare virtual message (for group-based compare)
+   */
+  private createCompareMessage(group: MessageGroupMetadata, members: Message[]): Message {
+    // Create columns similar to contextTree
+    const columns: ContextNode[][] = members.map((msg) => [
+      {
+        id: msg.id,
+        type: 'message',
+      },
+    ]);
+
+    return {
+      children: members.map((msg) => this.messageToContentBlock(msg)),
+      columns: columns as any,
       content: '',
       createdAt: Math.min(...members.map((m) => m.createdAt)),
       extra: {
@@ -287,122 +612,112 @@ parentMessageId: message.id,
   }
 
   /**
-   * Create generic message group virtual message
+   * Create assistant group virtual message from entire chain
    */
-  private createMessageGroupMessage(
-    group: MessageGroupMetadata,
-    members: Message[],
+  private createAssistantGroupMessage(
+    firstAssistant: Message,
+    assistantChain: Message[],
+    allToolMessages: Message[],
   ): Message {
-    const children: AssistantContentBlock[] = members.map((msg) =>
-      this.messageToContentBlock(msg),
-    );
-
-    return {
-      children,
-      content: group.title || '',
-      createdAt: Math.min(...members.map((m) => m.createdAt)),
-      extra: {
-        description: group.description,
-        groupMode: group.mode || 'manual',
-      },
-      id: group.id,
-      meta: members[0]?.meta || {},
-      role: 'messageGroup' as any,
-      updatedAt: Math.max(...members.map((m) => m.updatedAt)),
-    } as Message;
-  }
-
-  /**
-   * Collect tool messages related to an assistant message
-   */
-  private collectToolMessages(assistant: Message, messages: Message[]): Message[] {
-    const toolCallIds = new Set(assistant.tools?.map((t) => t.id) || []);
-    return messages.filter((m) => m.role === 'tool' && m.tool_call_id && toolCallIds.has(m.tool_call_id));
-  }
-
-  /**
-   * Create assistant group virtual message (assistant + tools aggregation)
-   * Integrates logic from groupMessages.ts
-   */
-  private createAssistantGroupMessage(assistant: Message, toolMessages: Message[]): Message {
     const children: AssistantContentBlock[] = [];
 
     // Create tool map for lookup
     const toolMap = new Map<string, Message>();
-    toolMessages.forEach((tm) => {
+    allToolMessages.forEach((tm) => {
       if (tm.tool_call_id) {
         toolMap.set(tm.tool_call_id, tm);
       }
     });
 
-    // First child: assistant with tool results
-    const toolsWithResults: ChatToolPayloadWithResult[] =
-      assistant.tools?.map((tool) => {
-        const toolMsg = toolMap.get(tool.id);
-        if (toolMsg) {
-          return {
-            ...tool,
-            result: {
-              content: toolMsg.content || '',
-              error: toolMsg.error,
-              id: toolMsg.id,
-              state: toolMsg.pluginState,
-            },
-            result_msg_id: toolMsg.id,
-          };
-        }
-        return tool;
-      }) || [];
+    // Process each assistant in the chain
+    for (const assistant of assistantChain) {
+      // Build toolsWithResults for this assistant
+      const toolsWithResults: ChatToolPayloadWithResult[] =
+        assistant.tools?.map((tool) => {
+          const toolMsg = toolMap.get(tool.id);
+          if (toolMsg) {
+            return {
+              ...tool,
+              result: {
+                content: toolMsg.content || '',
+                error: toolMsg.error,
+                id: toolMsg.id,
+                state: toolMsg.pluginState,
+              },
+              result_msg_id: toolMsg.id,
+            };
+          }
+          return tool;
+        }) || [];
 
-    const { usage: msgUsage, performance: msgPerformance } = this.splitMetadata(
-      assistant.metadata,
-    );
+      const { usage: msgUsage, performance: msgPerformance } = this.splitMetadata(
+        assistant.metadata,
+      );
 
-    children.push({
-      content: assistant.content || '',
-      error: assistant.error,
-      id: assistant.id,
-      imageList: assistant.imageList && assistant.imageList.length > 0 ? assistant.imageList : undefined,
-      performance: msgPerformance,
-      reasoning: assistant.reasoning || undefined,
-      tools: toolsWithResults,
-      usage: msgUsage,
-    });
+      children.push({
+        content: assistant.content || '',
+        error: assistant.error,
+        id: assistant.id,
+        imageList:
+          assistant.imageList && assistant.imageList.length > 0 ? assistant.imageList : undefined,
+        performance: msgPerformance,
+        reasoning: assistant.reasoning || undefined,
+        tools: toolsWithResults.length > 0 ? toolsWithResults : undefined,
+        usage: msgUsage,
+      });
+    }
 
-    // Aggregate usage and performance
     const aggregated = this.aggregateMetadata(children);
 
     return {
-      ...assistant,
+      ...firstAssistant,
       children,
       content: '',
-      
-// Moved to children
-imageList: undefined, 
-      
+      imageList: undefined,
+      metadata: undefined,
+      performance: aggregated.performance,
+      reasoning: undefined,
+      role: 'assistantGroup' as any,
+      tools: undefined,
+      usage: aggregated.usage,
+    };
+  }
 
-// Tools moved to children
-metadata: undefined,
-      
+  /**
+   * Create user message with branch metadata
+   */
+  private createUserMessageWithBranches(
+    user: Message,
+    branchIds: string[],
+    activeId: string,
+  ): Message {
+    return {
+      ...user,
+      extra: {
+        ...user.extra,
+        branches: {
+          activeId,
+          branchIds,
+        },
+      } as any,
+    };
+  }
 
+  /**
+   * Convert Message to AssistantContentBlock
+   */
+  private messageToContentBlock(message: Message): AssistantContentBlock {
+    const { usage, performance } = this.splitMetadata(message.metadata);
 
-performance: aggregated.performance,
-      
-
-
-// Cleared
-reasoning: undefined, 
-      
-
-
-role: 'assistantGroup' as any, 
-      
-
-
-tools: undefined, 
-      
-// Content moved to children
-usage: aggregated.usage, // Moved to children
+    return {
+      content: message.content || '',
+      error: message.error,
+      id: message.id,
+      imageList: message.imageList,
+      performance,
+      reasoning: message.reasoning || undefined,
+      tools: message.tools as any,
+      usage,
     };
   }
 
@@ -419,23 +734,23 @@ usage: aggregated.usage, // Moved to children
     const performance: ModelPerformance = {};
 
     const usageFields = [
-      'inputCachedTokens',
-      'inputCacheMissTokens',
-      'inputWriteCacheTokens',
-      'inputTextTokens',
-      'inputImageTokens',
-      'inputAudioTokens',
-      'inputCitationTokens',
-      'outputTextTokens',
-      'outputImageTokens',
-      'outputAudioTokens',
-      'outputReasoningTokens',
       'acceptedPredictionTokens',
+      'cost',
+      'inputAudioTokens',
+      'inputCacheMissTokens',
+      'inputCachedTokens',
+      'inputCitationTokens',
+      'inputImageTokens',
+      'inputTextTokens',
+      'inputWriteCacheTokens',
+      'outputAudioTokens',
+      'outputImageTokens',
+      'outputReasoningTokens',
+      'outputTextTokens',
       'rejectedPredictionTokens',
       'totalInputTokens',
       'totalOutputTokens',
       'totalTokens',
-      'cost',
     ] as const;
 
     let hasUsage = false;
@@ -446,7 +761,7 @@ usage: aggregated.usage, // Moved to children
       }
     });
 
-    const performanceFields = ['tps', 'ttft', 'duration', 'latency'] as const;
+    const performanceFields = ['duration', 'latency', 'tps', 'ttft'] as const;
     let hasPerformance = false;
     performanceFields.forEach((field) => {
       if (metadata[field] !== undefined) {
@@ -478,18 +793,18 @@ usage: aggregated.usage, // Moved to children
     children.forEach((child) => {
       if (child.usage) {
         const tokenFields = [
-          'inputCachedTokens',
-          'inputCacheMissTokens',
-          'inputWriteCacheTokens',
-          'inputTextTokens',
-          'inputImageTokens',
-          'inputAudioTokens',
-          'inputCitationTokens',
-          'outputTextTokens',
-          'outputImageTokens',
-          'outputAudioTokens',
-          'outputReasoningTokens',
           'acceptedPredictionTokens',
+          'inputAudioTokens',
+          'inputCacheMissTokens',
+          'inputCachedTokens',
+          'inputCitationTokens',
+          'inputImageTokens',
+          'inputTextTokens',
+          'inputWriteCacheTokens',
+          'outputAudioTokens',
+          'outputImageTokens',
+          'outputReasoningTokens',
+          'outputTextTokens',
           'rejectedPredictionTokens',
           'totalInputTokens',
           'totalOutputTokens',
@@ -537,51 +852,6 @@ usage: aggregated.usage, // Moved to children
     return {
       performance: hasPerformanceData ? performance : undefined,
       usage: hasUsageData ? usage : undefined,
-    };
-  }
-
-  /**
-   * Collect branches for a parent message
-   */
-  private collectBranches(parent: Message, messages: Message[]): Message[] {
-    return messages.filter((m) => m.parentId === parent.id);
-  }
-
-  /**
-   * Create user message with branch metadata
-   */
-  private createUserMessageWithBranches(user: Message, branches: Message[]): Message {
-    return {
-      ...user,
-      extra: {
-        ...user.extra,
-        branches: {
-          count: branches.length,
-          current: 0,
-          items: branches.map((b) => ({
-            createdAt: b.createdAt,
-            id: b.id,
-          })),
-        },
-      } as any,
-    };
-  }
-
-  /**
-   * Convert Message to AssistantContentBlock
-   */
-  private messageToContentBlock(message: Message): AssistantContentBlock {
-    const { usage, performance } = this.splitMetadata(message.metadata);
-
-    return {
-      content: message.content || '',
-      error: message.error,
-      id: message.id,
-      imageList: message.imageList,
-      performance,
-      reasoning: message.reasoning || undefined,
-      tools: message.tools as any,
-      usage,
     };
   }
 }

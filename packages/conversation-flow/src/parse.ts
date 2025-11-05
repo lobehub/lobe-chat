@@ -39,9 +39,15 @@ export function parse(messages: Message[], messageGroups?: MessageGroupMetadata[
   // Implements RFC priority-based pattern matching
   const flatList = transformer.flatten(messages);
 
+  // Convert messageMap from Map to plain object for serialization
+  const messageMapObj: Record<string, Message> = {};
+  helperMaps.messageMap.forEach((message, id) => {
+    messageMapObj[id] = message;
+  });
+
   return {
     contextTree,
     flatList,
-    messageMap: helperMaps.messageMap,
+    messageMap: messageMapObj,
   };
 }
