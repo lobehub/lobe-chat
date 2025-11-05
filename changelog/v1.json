@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-11-05",
+    "version": "2.0.0-next.31"
+  },
+  {
     "children": {
       "improvements": ["Enhance message router with service layer and comprehensive tests."]
     },
