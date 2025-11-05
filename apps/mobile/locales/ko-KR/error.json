@@ -1,6 +1,20 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "세션 계속하기",
+      "desc": "{{greeting}} 반갑습니다. 계속해서 서비스를 제공해드리겠습니다. 방금 이야기하던 주제를 이어가 볼까요?",
+      "title": "다시 오신 것을 환영합니다, {{nickName}}"
+    }
+  },
   "error": {
+    "backHome": "홈으로 돌아가기",
+    "desc": "잠시 후 다시 시도하거나 익숙한 곳으로 돌아가세요",
+    "retry": "다시 불러오기",
     "title": "오류 발생"
+  },
+  "fetchError": {
+    "detail": "오류 상세",
+    "title": "요청 실패"
   },
   "http": {
     "forbidden": "접근 금지",
@@ -9,6 +23,16 @@
     "serverError": "서버 오류",
     "timeout": "요청 시간 초과",
     "unauthorized": "권한 없음"
+  },
+  "import": {
+    "importConfigFile": {
+      "description": "오류 원인: {{reason}}",
+      "title": "가져오기 실패"
+    },
+    "incompatible": {
+      "description": "이 파일은 더 높은 버전에서 내보낸 것입니다. 최신 버전으로 업그레이드한 후 다시 가져와 주세요.",
+      "title": "현재 앱에서는 이 파일을 가져올 수 없습니다"
+    }
   },
   "login": {
     "accessDenied": "죄송합니다, 로그인 요청이 거부되었습니다. 잠시 후 다시 시도해 주세요.",
@@ -28,9 +52,23 @@
     "unknown": "죄송합니다, 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     "unsupportedResponseType": "죄송합니다, 현재 로그인 방식은 지원되지 않습니다. 잠시 후 다시 시도해 주세요."
   },
+  "loginRequired": {
+    "desc": "로그인 페이지로 자동 이동합니다",
+    "title": "기능을 사용하려면 로그인해 주세요"
+  },
+  "notFound": {
+    "backHome": "홈으로 돌아가기",
+    "check": "URL이 올바른지 확인해 주세요",
+    "desc": "찾으시는 페이지를 찾을 수 없습니다",
+    "title": "알 수 없는 영역에 들어오셨나요?"
+  },
   "page": {
     "notFoundMessage": "해당 페이지가 존재하지 않습니다.",
     "notFoundTitle": "앗!"
+  },
+  "pluginSettings": {
+    "desc": "아래 설정을 완료하면 플러그인을 사용할 수 있습니다",
+    "title": "{{name}} 플러그인 설정"
   },
   "response": {
     "400": "죄송합니다, 서버가 요청을 이해하지 못했습니다. 요청 매개변수가 올바른지 확인해 주세요.",
@@ -73,14 +111,32 @@
     "522": "죄송합니다, 서버 연결이 시간 초과되어 요청에 응답하지 못했습니다. 네트워크 불안정 또는 서버 접근 불가일 수 있습니다. 잠시 후 다시 시도해 주세요. 서비스 복구에 노력 중입니다.",
     "524": "죄송합니다, 서버가 응답을 기다리다 시간 초과되었습니다. 응답이 너무 느릴 수 있습니다. 잠시 후 다시 시도해 주세요.",
     "AgentRuntimeError": "Lobe AI 런타임 실행 오류가 발생했습니다. 아래 정보를 참고하여 문제를 해결하거나 다시 시도해 주세요.",
+    "ComfyUIBizError": "ComfyUI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 참고하여 문제를 해결하거나 다시 시도해 주세요.",
+    "ComfyUIEmptyResult": "ComfyUI에서 생성된 이미지가 없습니다. 모델 설정을 확인하거나 다시 시도해 주세요.",
+    "ComfyUIModelError": "ComfyUI 모델 로딩에 실패했습니다. 모델 파일이 존재하는지 확인해 주세요.",
+    "ComfyUIServiceUnavailable": "ComfyUI 서비스에 연결할 수 없습니다. ComfyUI가 정상적으로 실행 중인지 또는 서비스 주소 설정이 올바른지 확인해 주세요.",
+    "ComfyUIUploadFailed": "ComfyUI 이미지 업로드에 실패했습니다. 서버 연결을 확인하거나 다시 시도해 주세요.",
+    "ComfyUIWorkflowError": "ComfyUI 워크플로우 실행에 실패했습니다. 워크플로우 설정을 확인해 주세요.",
     "ConnectionCheckFailed": "요청이 비어 있습니다. API 프록시 주소 끝에 `/v1`이 포함되어 있는지 확인해 주세요.",
     "CreateMessageError": "죄송합니다, 메시지 전송에 실패했습니다. 내용을 복사한 후 다시 전송해 주세요. 페이지를 새로 고침하면 이 메시지는 저장되지 않습니다.",
     "ExceededContextWindow": "현재 요청 내용이 모델이 처리할 수 있는 길이를 초과했습니다. 내용을 줄인 후 다시 시도해 주세요.",
     "FreePlanLimit": "현재 무료 사용자로 이 기능을 사용할 수 없습니다. 유료 플랜으로 업그레이드 후 계속 이용해 주세요.",
+    "GoogleAIBlockReason": {
+      "BLOCKLIST": "입력하신 내용에 금지된 단어가 포함되어 있습니다. 내용을 수정한 후 다시 시도해 주세요.",
+      "IMAGE_SAFETY": "생성된 이미지가 안전상의 이유로 차단되었습니다. 이미지 생성 요청을 수정해 주세요.",
+      "LANGUAGE": "현재 사용하신 언어는 지원되지 않습니다. 영어 또는 지원되는 다른 언어로 다시 질문해 주세요.",
+      "OTHER": "알 수 없는 이유로 콘텐츠가 차단되었습니다. 요청을 다시 표현해 보세요.",
+      "PROHIBITED_CONTENT": "요청에 금지된 콘텐츠가 포함되어 있을 수 있습니다. 요청 내용을 조정하여 사용 정책을 준수해 주세요.",
+      "RECITATION": "저작권 문제로 인해 콘텐츠가 차단되었습니다. 원본 콘텐츠를 사용하거나 요청을 다시 표현해 주세요.",
+      "SAFETY": "보안 정책에 따라 콘텐츠가 차단되었습니다. 유해하거나 부적절한 내용을 피하도록 요청을 조정해 주세요.",
+      "SPII": "개인 식별 정보가 포함되어 있을 수 있습니다. 개인정보 보호를 위해 민감한 정보를 제거한 후 다시 시도해 주세요.",
+      "default": "콘텐츠가 차단되었습니다: {{blockReason}}. 요청 내용을 조정한 후 다시 시도해 주세요."
+    },
     "InsufficientQuota": "죄송합니다, 이 키의 할당량(quota)이 초과되었습니다. 계정 잔액을 확인하거나 키 할당량을 늘린 후 다시 시도해 주세요.",
     "InvalidAccessCode": "비밀번호가 올바르지 않거나 비어 있습니다. 올바른 접근 비밀번호를 입력하거나 사용자 지정 API 키를 추가해 주세요.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도해 주세요.",
     "InvalidClerkUser": "죄송합니다, 현재 로그인되어 있지 않습니다. 로그인하거나 계정을 등록한 후 계속 진행해 주세요.",
+    "InvalidComfyUIArgs": "ComfyUI 설정이 올바르지 않습니다. 설정을 확인한 후 다시 시도해 주세요.",
     "InvalidGithubToken": "Github PAT가 올바르지 않거나 비어 있습니다. Github PAT를 확인한 후 다시 시도해 주세요.",
     "InvalidOllamaArgs": "Ollama 구성이 올바르지 않습니다. Ollama 구성을 확인한 후 다시 시도해 주세요.",
     "InvalidProviderAPIKey": "{{provider}} API 키가 올바르지 않거나 비어 있습니다. {{provider}} API 키를 확인한 후 다시 시도해 주세요.",
@@ -116,5 +172,54 @@
     "desc": "계정 보안을 위해 다시 로그인해 주세요.",
     "login": "지금 로그인",
     "title": "로그인 만료"
+  },
+  "stt": {
+    "responseError": "서비스 요청에 실패했습니다. 설정을 확인하거나 다시 시도해 주세요."
+  },
+  "supervisor": {
+    "decisionFailed": "그룹 진행자가 작동하지 않습니다. 올바른 모델, API 키, API 주소가 설정되어 있는지 확인해 주세요."
+  },
+  "testConnectionFailed": "연결 테스트 실패: {{error}}",
+  "tts": {
+    "responseError": "서비스 요청에 실패했습니다. 설정을 확인하거나 다시 시도해 주세요."
+  },
+  "unlock": {
+    "addProxyUrl": "OpenAI 프록시 주소 추가 (선택 사항)",
+    "apiKey": {
+      "description": "{{name}} API Key를 입력하면 세션을 시작할 수 있습니다",
+      "imageGenerationDescription": "{{name}} API Key를 입력하면 이미지 생성을 시작할 수 있습니다",
+      "title": "사용자 정의 {{name}} API Key 사용"
+    },
+    "closeMessage": "메시지 닫기",
+    "comfyui": {
+      "description": "정확한 {{name}} 인증 정보를 입력하면 이미지 생성을 시작할 수 있습니다",
+      "modifyBaseUrl": "Comfy UI 서비스 주소 수정",
+      "title": "{{name}} 인증 정보 확인"
+    },
+    "confirm": "확인하고 다시 시도",
+    "goToSettings": "설정으로 이동",
+    "oauth": {
+      "description": "관리자가 통합 로그인 인증을 활성화했습니다. 아래 버튼을 클릭하여 로그인하면 앱을 사용할 수 있습니다.",
+      "success": "로그인 성공",
+      "title": "계정 로그인",
+      "welcome": "환영합니다!"
+    },
+    "password": {
+      "description": "관리자가 앱 암호화를 활성화했습니다. 앱 비밀번호를 입력하면 앱을 사용할 수 있습니다. 비밀번호는 한 번만 입력하면 됩니다.",
+      "placeholder": "비밀번호를 입력해 주세요",
+      "title": "비밀번호 입력으로 앱 잠금 해제"
+    },
+    "tabs": {
+      "apiKey": "사용자 정의 API Key",
+      "password": "비밀번호"
+    }
+  },
+  "upload": {
+    "desc": "상세 정보: {{detail}}",
+    "fileOnlySupportInServerMode": "현재 배포 모드에서는 이미지 외 파일 업로드를 지원하지 않습니다. {{ext}} 형식을 업로드하려면 서버 모드로 전환하거나 {{cloud}} 서비스를 이용해 주세요.",
+    "networkError": "네트워크가 정상인지 확인하고, 파일 저장 서비스의 CORS 설정이 올바른지 확인해 주세요.",
+    "title": "파일 업로드 실패, 네트워크 연결을 확인하거나 나중에 다시 시도해 주세요.",
+    "unknownError": "오류 원인: {{reason}}",
+    "uploadFailed": "파일 업로드에 실패했습니다"
   }
 }
