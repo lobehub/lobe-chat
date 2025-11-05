@@ -1,37 +1,49 @@
+import { StyleSheet } from 'react-native';
+
 import { createStyles } from '@/components/styles';
 
 export const useStyles = createStyles(({ token }) => ({
+  // borderless 变体：无边框，透明背景
   borderless: {
+    backgroundColor: 'transparent',
     borderWidth: 0,
   },
 
   // 基础容器样式
   container: {
     alignSelf: 'flex-start' as const,
+    borderRadius: token.borderRadiusSM,
     gap: token.marginXXS,
   },
 
-  // 样式变体
+  // filled 变体：填充背景，无边框
   filled: {
-    // 不使用 stylish 预设，保持空对象以便颜色样式能正确应用
+    backgroundColor: token.colorFillTertiary,
+    borderWidth: 0,
   },
 
   large: {
+    borderRadius: token.borderRadius,
     height: 28,
     paddingInline: token.paddingSM,
   },
 
   medium: {
+    borderRadius: token.borderRadiusSM,
     height: 22,
     paddingInline: token.paddingXS,
   },
 
+  // outlined 变体：透明背景，有边框
   outlined: {
-    borderWidth: 1,
+    backgroundColor: 'transparent',
+    borderColor: token.colorBorderSecondary,
+    borderWidth: StyleSheet.hairlineWidth,
   },
 
   // 尺寸变体
   small: {
+    borderRadius: token.borderRadiusSM,
     height: 20,
     paddingInline: token.paddingXXS,
   },

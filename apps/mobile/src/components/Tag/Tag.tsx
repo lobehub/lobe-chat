@@ -1,13 +1,11 @@
 import { memo, useMemo } from 'react';
 
-import { useThemeMode } from '@/components/ThemeProvider/context';
-
 import Flexbox from '../Flexbox';
 import Icon from '../Icon';
 import Text from '../Text';
 import { useStyles } from './style';
 import type { TagProps } from './type';
-import { getTagColorStyles } from './utils';
+import { colorsPreset, colorsPresetSystem, presetColors, presetSystemColors } from './utils';
 
 export const Tag = memo<TagProps>(
   ({
@@ -24,18 +22,49 @@ export const Tag = memo<TagProps>(
     border, // 已废弃，用于向后兼容
     textProps,
   }) => {
-    const { styles } = useStyles();
-    const { token, isDarkMode } = useThemeMode();
+    const { styles, theme } = useStyles();
 
     // 向后兼容 border prop
     const variant = propVariant || (border === false ? 'borderless' : 'filled');
 
-    // 获取颜色样式
-    const appearance = isDarkMode ? 'dark' : 'light';
-    const colorStyles = useMemo(
-      () => getTagColorStyles(token, appearance, color, variant),
-      [token, appearance, color, variant],
-    );
+    // 计算颜色样式
+    const colors = useMemo(() => {
+      let textColor = theme.colorTextSecondary;
+      let backgroundColor;
+      let borderColor;
+      const isBorderless = variant === 'borderless';
+      const isFilled = variant === 'filled';
+      const isPresetColor = color && presetColors.includes(color);
+      const isPresetSystemColors = color && presetSystemColors.has(color);
+      const isHexColor = color && color.startsWith('#');
+
+      if (isPresetColor) {
+        textColor = colorsPreset(theme, color);
+        backgroundColor = isBorderless ? 'transparent' : colorsPreset(theme, color, 'fillTertiary');
+        borderColor = colorsPreset(theme, color, isFilled ? 'fillQuaternary' : 'fillTertiary');
+      }
+      if (isPresetSystemColors) {
+        textColor = colorsPresetSystem(theme, color);
+        backgroundColor = isBorderless
+          ? 'transparent'
+          : colorsPresetSystem(theme, color, 'fillTertiary');
+        borderColor = colorsPresetSystem(
+          theme,
+          color,
+          isFilled ? 'fillQuaternary' : 'fillTertiary',
+        );
+      }
+      if (isHexColor) {
+        textColor = theme.colorBgLayout;
+        backgroundColor = isBorderless ? 'transparent' : color;
+      }
+
+      return {
+        backgroundColor,
+        borderColor,
+        textColor,
+      };
+    }, [color, theme, variant]);
 
     // 尺寸样式映射
     const sizeStyle = useMemo(() => {
@@ -55,8 +84,8 @@ export const Tag = memo<TagProps>(
         small: styles.textSmall,
       };
 
-      return [styles.text, textSizeStyles[size], { color: colorStyles.color }, textStyle];
-    }, [styles, size, colorStyles.color, textStyle]);
+      return [styles.text, textSizeStyles[size], { color: colors.textColor }, textStyle];
+    }, [styles, size, colors.textColor, textStyle]);
 
     // Icon 默认尺寸和颜色
     const defaultIconSize = useMemo(() => {
@@ -69,18 +98,8 @@ export const Tag = memo<TagProps>(
     }, [iconSize, size]);
 
     const iconColor = useMemo(() => {
-      return iconProps?.color ?? colorStyles.color;
-    }, [iconProps?.color, colorStyles.color]);
-
-    // 根据尺寸确定圆角
-    const borderRadius = useMemo(() => {
-      const radiusMap = {
-        large: token.borderRadius,
-        medium: token.borderRadiusSM,
-        small: token.borderRadiusSM,
-      };
-      return radiusMap[size];
-    }, [token.borderRadius, token.borderRadiusSM, size]);
+      return iconProps?.color ?? colors.textColor;
+    }, [iconProps?.color, colors.textColor]);
 
     // 获取 variant 样式
     const variantStyle = useMemo(() => {
@@ -98,14 +117,12 @@ export const Tag = memo<TagProps>(
         styles.container,
         sizeStyle,
         variantStyle,
-        {
-          backgroundColor: colorStyles.backgroundColor,
-          borderColor: colorStyles.borderColor,
-          borderRadius,
-        },
+        // 只在有 color 时才覆盖样式中的默认颜色
+        colors.backgroundColor && { backgroundColor: colors.backgroundColor },
+        colors.borderColor && { borderColor: colors.borderColor },
         style,
       ];
-    }, [styles.container, sizeStyle, variantStyle, colorStyles, borderRadius, style]);
+    }, [styles.container, sizeStyle, variantStyle, colors, style]);
 
     return (
       <Flexbox

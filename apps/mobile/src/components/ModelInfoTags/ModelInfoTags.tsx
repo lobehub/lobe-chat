@@ -1,9 +1,8 @@
 import { formatTokenNumber } from '@lobechat/utils';
-import { Atom, Eye, Globe, Image, Paperclip, ToyBrick } from 'lucide-react-native';
+import { Atom, Eye, Globe, Image, Paperclip, ToyBrick, Video } from 'lucide-react-native';
 import { memo } from 'react';
 import { View } from 'react-native';
 
-import { useThemeMode } from '@/components';
 import Tag from '@/components/Tag';
 
 import { useStyles } from './styles';
@@ -15,7 +14,6 @@ import type { ModelInfoTagsProps } from './type';
  */
 const ModelInfoTags = memo<ModelInfoTagsProps>((model) => {
   const { styles } = useStyles();
-  const { isDarkMode } = useThemeMode();
 
   return (
     <View style={styles.container}>
@@ -28,10 +26,11 @@ const ModelInfoTags = memo<ModelInfoTagsProps>((model) => {
       {/* Vision 支持 */}
       {model.vision && <Tag color={'success'} icon={Eye} size={'small'} />}
 
+      {/* Video 支持 */}
+      {model.video && <Tag color={'magenta'} icon={Video} size={'small'} />}
+
       {/* Function Call 支持 */}
-      {model.functionCall && (
-        <Tag color={isDarkMode ? 'blue' : 'geekblue'} icon={ToyBrick} size={'small'} />
-      )}
+      {model.functionCall && <Tag color={'info'} icon={ToyBrick} size={'small'} />}
 
       {/* Reasoning 支持 */}
       {model.reasoning && <Tag color={'purple'} icon={Atom} size={'small'} />}
