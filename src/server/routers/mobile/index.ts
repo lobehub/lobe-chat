@@ -8,6 +8,7 @@ import { agentRouter } from '../lambda/agent';
 import { aiChatRouter } from '../lambda/aiChat';
 import { aiModelRouter } from '../lambda/aiModel';
 import { aiProviderRouter } from '../lambda/aiProvider';
+import { fileRouter } from '../lambda/file';
 import { marketRouter } from '../lambda/market';
 import { messageRouter } from '../lambda/message';
 import { sessionRouter } from '../lambda/session';
@@ -19,6 +20,7 @@ export const mobileRouter = router({
   aiChat: aiChatRouter,
   aiModel: aiModelRouter,
   aiProvider: aiProviderRouter,
+  file: fileRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
   market: marketRouter,
   message: messageRouter,
