@@ -40,6 +40,14 @@
       "id": "compare-msg-301-msg-302-msg-303-msg-304",
       "messageId": "msg-301",
       "type": "compare"
+    },
+    {
+      "id": "msg-308",
+      "type": "message"
+    },
+    {
+      "id": "msg-309",
+      "type": "message"
     }
   ],
   "flatList": [
@@ -197,6 +205,34 @@
       "meta": {},
       "role": "compare",
       "updatedAt": 1704067205200
+    },
+    {
+      "id": "msg-308",
+      "role": "user",
+      "content": "Great analysis! Can you explain why QuickSort has better cache locality?",
+      "parentId": "msg-303",
+      "createdAt": 1704067220000,
+      "updatedAt": 1704067220000,
+      "meta": {}
+    },
+    {
+      "id": "msg-309",
+      "role": "assistant",
+      "content": "Excellent question! QuickSort has better cache locality because:\n\n1. **Sequential Access**: QuickSort processes array elements sequentially during partitioning, which means the CPU can prefetch nearby memory locations into cache.\n\n2. **In-place Partitioning**: Elements are rearranged within the same array, keeping data in the same memory region.\n\n3. **Smaller Working Set**: As QuickSort divides the array, it works on smaller subarrays that fit better in CPU cache.\n\n4. **Cache Lines**: Modern CPUs load data in cache lines (typically 64 bytes). QuickSort's sequential access pattern means when you access one element, nearby elements are already cached.\n\nIn contrast, some sorting algorithms like merge sort need to copy data to auxiliary arrays, causing more cache misses.",
+      "parentId": "msg-308",
+      "createdAt": 1704067222000,
+      "updatedAt": 1704067222000,
+      "meta": {},
+      "metadata": {
+        "totalInputTokens": 268,
+        "totalOutputTokens": 176,
+        "totalTokens": 444,
+        "cost": 0.00222,
+        "tps": 52,
+        "ttft": 312,
+        "duration": 3384,
+        "latency": 3696
+      }
     }
   ],
   "messageMap": {
@@ -337,6 +373,34 @@
         "ttft": 234,
         "duration": 2791,
         "latency": 3025
+      }
+    },
+    "msg-308": {
+      "id": "msg-308",
+      "role": "user",
+      "content": "Great analysis! Can you explain why QuickSort has better cache locality?",
+      "parentId": "msg-303",
+      "createdAt": 1704067220000,
+      "updatedAt": 1704067220000,
+      "meta": {}
+    },
+    "msg-309": {
+      "id": "msg-309",
+      "role": "assistant",
+      "content": "Excellent question! QuickSort has better cache locality because:\n\n1. **Sequential Access**: QuickSort processes array elements sequentially during partitioning, which means the CPU can prefetch nearby memory locations into cache.\n\n2. **In-place Partitioning**: Elements are rearranged within the same array, keeping data in the same memory region.\n\n3. **Smaller Working Set**: As QuickSort divides the array, it works on smaller subarrays that fit better in CPU cache.\n\n4. **Cache Lines**: Modern CPUs load data in cache lines (typically 64 bytes). QuickSort's sequential access pattern means when you access one element, nearby elements are already cached.\n\nIn contrast, some sorting algorithms like merge sort need to copy data to auxiliary arrays, causing more cache misses.",
+      "parentId": "msg-308",
+      "createdAt": 1704067222000,
+      "updatedAt": 1704067222000,
+      "meta": {},
+      "metadata": {
+        "totalInputTokens": 268,
+        "totalOutputTokens": 176,
+        "totalTokens": 444,
+        "cost": 0.00222,
+        "tps": 52,
+        "ttft": 312,
+        "duration": 3384,
+        "latency": 3696
       }
     }
   }

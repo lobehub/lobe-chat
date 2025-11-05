@@ -71,7 +71,16 @@ export class Transformer {
       const compareNode = this.createCompareNodeFromChildren(message, idNode);
       contextTree.push(compareNode);
 
-      // Don't continue after compare - compare is an end point
+      // Continue with active column's children (if any)
+      if (compareNode.activeColumnId) {
+        // Find the active column's IdNode in the children
+        const activeColumnIdNode = idNode.children.find(
+          (child) => child.id === compareNode.activeColumnId,
+        );
+        if (activeColumnIdNode && activeColumnIdNode.children.length > 0) {
+          this.transformToLinear(activeColumnIdNode.children[0], contextTree);
+        }
+      }
       return;
     }
 
@@ -83,7 +92,16 @@ export class Transformer {
       const compareNode = this.createCompareNode(messageGroup, message);
       contextTree.push(compareNode);
 
-      // Don't process children as they're handled by compare
+      // Continue with active column's children (if any)
+      if (compareNode.activeColumnId) {
+        // Find the active column's IdNode in the children
+        const activeColumnIdNode = idNode.children.find(
+          (child) => child.id === compareNode.activeColumnId,
+        );
+        if (activeColumnIdNode && activeColumnIdNode.children.length > 0) {
+          this.transformToLinear(activeColumnIdNode.children[0], contextTree);
+        }
+      }
       return;
     }
 
@@ -441,6 +459,16 @@ export class Transformer {
         flatList.push(compareMessage);
         groupMembers.forEach((m) => processedIds.add(m.id));
         processedIds.add(messageGroup.id);
+
+        // Continue with active column's children (if any)
+        if ((compareMessage as any).activeColumnId) {
+          this.buildFlatListRecursive(
+            (compareMessage as any).activeColumnId,
+            flatList,
+            processedIds,
+            allMessages,
+          );
+        }
         continue;
       }
 
@@ -493,7 +521,15 @@ export class Transformer {
         );
         flatList.push(compareMessage);
 
-        // Don't continue after compare
+        // Continue with active column's children (if any)
+        if ((compareMessage as any).activeColumnId) {
+          this.buildFlatListRecursive(
+            (compareMessage as any).activeColumnId,
+            flatList,
+            processedIds,
+            allMessages,
+          );
+        }
         continue;
       }
 
