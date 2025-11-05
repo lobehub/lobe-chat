@@ -1,4 +1,12 @@
-import { Center, Flexbox, PageContainer, Text, Toast, useThemeMode } from '@lobehub/ui-rn';
+import {
+  Center,
+  Flexbox,
+  PageContainer,
+  Text,
+  Toast,
+  useTheme,
+  useThemeMode,
+} from '@lobehub/ui-rn';
 import { useFocusEffect } from 'expo-router';
 import * as Updates from 'expo-updates';
 import {
@@ -26,8 +34,10 @@ import SettingItem from '@/features/SettingItem';
 import { useLocale } from '@/hooks/useLocale';
 import { useSettingStore } from '@/store/setting';
 import { clearPersistedCaches, formatBytes, getCacheSizeInBytes } from '@/utils/cacheManager';
+import { openLink } from '@/utils/openLink';
 
 export default function SettingScreen() {
+  const theme = useTheme();
   const { t } = useTranslation('setting');
   const { getLocaleDisplayName } = useLocale();
   const { themeMode } = useThemeMode();
@@ -255,18 +265,33 @@ export default function SettingScreen() {
 
           <SettingGroup title={t('info.group')}>
             <SettingItem
-              href="https://lobehub.com/docs?utm_source=mobile"
               icon={LifeBuoy}
+              onPress={() =>
+                openLink('https://lobehub.com/docs?utm_source=mobile', {
+                  controlsColor: theme.colorPrimary,
+                })
+              }
+              showArrow={true}
               title={t('help')}
             />
             <SettingItem
-              href="https://github.com/lobehub/lobe-chat/issues/new/choose"
               icon={StickerIcon}
+              onPress={() =>
+                openLink('https://github.com/lobehub/lobe-chat/issues/new/choose', {
+                  controlsColor: theme.colorPrimary,
+                })
+              }
+              showArrow={true}
               title={t('feedback')}
             />
             <SettingItem
-              href="https://lobehub.com/changelog"
               icon={InboxIcon}
+              onPress={() =>
+                openLink('https://lobehub.com/changelog', {
+                  controlsColor: theme.colorPrimary,
+                })
+              }
+              showArrow={true}
               title={t('changelog')}
             />
             <SettingItem
