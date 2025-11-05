@@ -264,6 +264,14 @@
       "title": "Mermaid",
       "description": "High-performance code highlighting component based on Shiki, providing rich syntax highlighting features for React Native applications."
     },
+    "NativePageContainer": {
+      "demosPath": "@lobehub/ui-rn/NativePageContainer/demos",
+      "name": "NativePageContainer",
+      "readme": "\n## Features\n\n- ✅ 原生导航栏集成\n- ✅ 自动返回按钮检测 (`autoBack`)\n- ✅ 大标题模式支持\n- ✅ 自定义左右侧内容\n- ✅ 加载状态显示\n- ✅ 主题自适应\n- ✅ 玻璃效果背景\n\n## Basic Usage\n\n```tsx\nimport NativePageContainer from '@/components/NativePageContainer';\n\n// 基础用法\n<NativePageContainer title=\"页面标题\" showBack>\n  {/* 页面内容 */}\n</NativePageContainer>\n\n// 自动检测返回按钮\n<NativePageContainer title=\"Playground\" autoBack largeTitleEnabled>\n  {/* 当导航栈可以返回时,自动显示返回按钮 */}\n</NativePageContainer>\n```\n\n## API\n\n### Props\n\n| 参数              | 说明                               | 类型                  | 默认值          |\n| ----------------- | ---------------------------------- | --------------------- | --------------- |\n| autoBack          | 自动检测是否可以返回并显示返回按钮 | `boolean`             | `false`         |\n| backgroundColor   | 背景颜色                           | `ColorValue`          | -               |\n| children          | 页面内容                           | `ReactNode`           | -               |\n| extra             | 右侧额外内容                       | `ReactNode`           | -               |\n| largeTitleEnabled | 启用大标题模式                     | `boolean`             | `false`         |\n| left              | 自定义左侧内容                     | `ReactNode`           | -               |\n| loading           | 显示加载状态                       | `boolean`             | -               |\n| onBackPress       | 返回按钮点击回调                   | `() => void`          | `router.back()` |\n| searchBarOptions  | iOS 原生搜索栏配置                 | `SearchBarProps`      | -               |\n| showBack          | 显示返回按钮                       | `boolean`             | `false`         |\n| title             | 标题                               | `ReactNode \\| string` | -               |\n| titleIcon         | 标题图标                           | `Icon`                | -               |\n\n## Examples\n\n### 自动返回按钮\n\n使用 `autoBack` prop, 组件会自动检测导航栈，当可以返回时显示返回按钮:\n\n```tsx\n<NativePageContainer autoBack title=\"详情页\">\n  <View>\n    {/* 从其他页面跳转过来时,会自动显示返回按钮 */}\n    {/* 如果是第一个页面,则不显示 */}\n  </View>\n</NativePageContainer>\n```\n\n### 大标题模式\n\n```tsx\n<NativePageContainer largeTitleEnabled title=\"Playground\">\n  {/* iOS 会显示大标题,滚动时收缩为普通标题 */}\n</NativePageContainer>\n```\n\n### 自定义内容\n\n```tsx\n<NativePageContainer title=\"设置\" showBack extra={<Button>保存</Button>} loading={isSaving}>\n  <View>{/* 内容 */}</View>\n</NativePageContainer>\n```\n\n### 搜索栏\n\n```tsx\nconst [searchText, setSearchText] = useState('');\nconst theme = useTheme();\n\n<NativePageContainer\n  title=\"Playground\"\n  autoBack\n  largeTitleEnabled\n  searchBarOptions={{\n    cancelButtonText: '取消',\n    headerIconColor: theme.colorText,\n    hintTextColor: theme.colorText,\n    onChangeText: (event) => {\n      setSearchText(event.nativeEvent.text);\n    },\n    placeholder: '搜索组件...',\n    shouldShowHintSearchIcon: false,\n    textColor: theme.colorText,\n    tintColor: theme.colorText,\n  }}\n>\n  <View>{/* 搜索结果 */}</View>\n</NativePageContainer>;\n```\n",
+      "group": "Layout",
+      "title": "NativePageContainer",
+      "description": "原生导航栏页面容器,支持自定义 header、自动返回按钮检测等功能。"
+    },
     "ScrollShadow": {
       "demosPath": "@lobehub/ui-rn/ScrollShadow/demos",
       "name": "ScrollShadow",
@@ -383,10 +391,19 @@
       "group": "Display",
       "title": "Video",
       "description": "视频播放组件，基于 expo-video，支持自适应尺寸、自动播放、循环播放等功能。"
+    },
+    "brand": {
+      "demosPath": "@lobehub/ui-rn/brand/demos",
+      "name": "brand",
+      "readme": "\n## Features\n\n- ✅ 多种 Logo 风格：3D、扁平、单色、文字、组合\n- ✅ 品牌加载动画\n- ✅ 灵活的尺寸配置\n- ✅ TypeScript 支持\n- ✅ 主题适配\n\n## Components\n\n### LobeHub\n\n主要的品牌展示组件，支持多种风格和组合方式。\n\n### LobeHubText\n\nLobeHub 文字 Logo SVG 组件。\n\n### Logo3d\n\nLobeHub 3D Logo 图片组件。\n\n### LogoFlat\n\nLobeHub 扁平风格 Logo SVG 组件。\n\n### LogoMono\n\nLobeHub 单色风格 Logo SVG 组件。\n\n### BrandLoading\n\n带动画效果的品牌 Logo 加载组件。\n\n### BrandDivider\n\n品牌组件专用的分割线 SVG 组件。\n\n## Basic Usage\n\n```tsx\nimport { LobeHub, BrandLoading, LobeHubText } from '@lobehub/ui-rn';\n\n// 基础 Logo\n<LobeHub size={64} />\n\n// 不同风格\n<LobeHub size={64} type=\"flat\" />\n<LobeHub size={64} type=\"mono\" />\n<LobeHub size={64} type=\"text\" />\n<LobeHub size={64} type=\"combine\" />\n\n// 带附加文字\n<LobeHub size={64} extra=\"Discover\" />\n\n// 加载动画\n<BrandLoading TextComponent={LobeHubText} size={64} />\n```\n\n",
+      "group": "Brand",
+      "title": "Brand",
+      "description": "LobeHub 品牌组件集合，包含多种 Logo 样式和加载动画"
     }
   },
   "groups": [
     "Basic",
+    "Brand",
     "Data Display",
     "Display",
     "Feedback",
