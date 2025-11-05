@@ -189,6 +189,8 @@
       "subject": "Feedback - LobeChat - {{version}}"
     },
     "error": "Failed to open mail composer, please try again later",
+    "saved": "Feedback has been saved to drafts",
+    "sent": "Thank you for your feedback!",
     "title": "Feedback",
     "unavailable": "Mail service is not available. Please check if your device has an email account configured"
   },

@@ -117,9 +117,6 @@ export default function SettingScreen() {
         `Brand: ${Device.brand || 'Unknown'}`,
       ].join('\n');
 
-      // 设备名称（用于邮件底部签名）
-      const deviceName = Platform.OS === 'ios' ? 'iPhone' : 'Android';
-
       // 准备邮件内容（国际化）
       const emailBody = `${t('feedback.email.body.template')}
 
@@ -132,14 +129,30 @@ ${t('feedback.email.body.screenshots')}
 
 ---
 ${deviceInfo}
-${t('feedback.email.body.footer', { device: deviceName })}`;
+`;
 
       // 打开原生邮件撰写器
-      await MailComposer.composeAsync({
+      const result = await MailComposer.composeAsync({
         body: emailBody,
         recipients: ['support@lobehub.com'],
         subject: t('feedback.email.subject', { version }),
       });
+
+      // 根据用户操作显示不同提示
+      switch (result.status) {
+        case 'sent': {
+          Toast.success(t('feedback.sent'));
+          break;
+        }
+        case 'saved': {
+          Toast.info(t('feedback.saved'));
+          break;
+        }
+        case 'cancelled': {
+          // 用户取消，不显示提示
+          break;
+        }
+      }
     } catch (error) {
       console.error('Failed to send feedback:', error);
       Toast.error(t('feedback.error'));
