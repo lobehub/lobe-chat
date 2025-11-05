@@ -6,10 +6,12 @@ import { useChat } from '@/hooks/useChat';
 
 import MessageContextMenu from '../components/MessageContextMenu';
 import AssistantMessage from './Assistant';
+import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
 import UserMessage from './User';
 
 export interface ChatMessageItemProps {
+  disableEditing?: boolean;
   index: number;
   item: UIChatMessage;
   totalLength: number;
@@ -23,59 +25,77 @@ export interface ChatMessageItemProps {
  * 2. 提供 MessageContextMenu 上下文菜单支持
  * 3. 处理加载状态和 markdown 配置
  */
-const ChatMessageItem = memo<ChatMessageItemProps>(({ item, index, totalLength }) => {
-  const { isGenerating } = useChat();
-  const isLastMessage = index === totalLength - 1;
-  const isAssistant = item.role === 'assistant';
-  const isLoadingContent = item.content === LOADING_FLAT;
-  const hasError = !!item.error?.type;
-  // 如果有错误，即使content是LOADING_FLAT也不应该显示为loading状态
-  const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent && !hasError;
+const ChatMessageItem = memo<ChatMessageItemProps>(
+  ({ item, index, totalLength, disableEditing }) => {
+    const { isGenerating } = useChat();
+    const isLastMessage = index === totalLength - 1;
+    const isAssistant = item.role === 'assistant';
+    const isLoadingContent = item.content === LOADING_FLAT;
+    const hasError = !!item.error?.type;
+    // 如果有错误，即使content是LOADING_FLAT也不应该显示为loading状态
+    const shouldShowLoading = isLastMessage && isAssistant && isLoadingContent && !hasError;
 
-  const commonProps = {
-    index,
-    isGenerating,
-    isLastMessage,
-    isLoading: shouldShowLoading,
-    message: item,
-    showActionsBar: isLastMessage,
-    totalLength,
-  };
+    const commonProps = {
+      index,
+      isGenerating,
+      isLastMessage,
+      isLoading: shouldShowLoading,
+      message: item,
+      showActionsBar: isLastMessage,
+      totalLength,
+    };
 
-  const renderContent = useMemo(() => {
-    switch (item?.role) {
-      case 'user': {
-        return <UserMessage {...commonProps} />;
+    const renderContent = useMemo(() => {
+      switch (item?.role) {
+        case 'user': {
+          return <UserMessage {...commonProps} />;
+        }
+
+        case 'assistant': {
+          return (
+            <AssistantMessage {...commonProps} disableEditing={disableEditing} showTime showTitle />
+          );
+        }
+
+        case 'group': {
+          return (
+            <GroupMessage
+              {...item}
+              disableEditing={disableEditing}
+              index={index}
+              isGenerating={isGenerating}
+              isLastMessage={isLastMessage}
+              showTime
+              showTitle
+            />
+          );
+        }
+
+        case 'supervisor': {
+          return <SupervisorMessage {...commonProps} />;
+        }
+
+        default: {
+          return null;
+        }
       }
+    }, [item?.role, commonProps, disableEditing, index, isGenerating, isLastMessage]);
 
-      case 'assistant': {
-        return <AssistantMessage {...commonProps} />;
-      }
+    if (!item) return null;
 
-      case 'supervisor': {
-        return <SupervisorMessage {...commonProps} />;
-      }
-
-      default: {
-        return null;
-      }
-    }
-  }, [item?.role, commonProps]);
-
-  if (!item) return null;
-
-  return (
-    <MessageContextMenu
-      borderRadius={false}
-      gap={8}
-      message={item}
-      paddingBlock={8}
-      paddingInline={16}
-    >
-      {renderContent}
-    </MessageContextMenu>
-  );
-});
+    return (
+      <MessageContextMenu
+        borderRadius={false}
+        gap={8}
+        message={item}
+        paddingBlock={8}
+        paddingInline={16}
+      >
+        {renderContent}
+      </MessageContextMenu>
+    );
+  },
+);
 
 ChatMessageItem.displayName = 'ChatMessageItem';
 

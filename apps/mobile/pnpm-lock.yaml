@@ -4,14 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@expo/fingerprint':
-    hash: 3b653d67ac9594f3f0bc340b2fe266d8b49e77bd94eec95fb29cac8ebc692411
-    path: patches/@expo__fingerprint.patch
-  react-native-shiki-engine:
-    hash: c3ee9b61ea4cbcba5dd301c4c0113dc491070d901fcfc25a85c05f13a5188517
-    path: patches/react-native-shiki-engine.patch
-
 importers:
 
   .:
@@ -530,7 +522,7 @@ importers:
     devDependencies:
       promptfoo:
         specifier: ^0.118.17
-        version: 0.118.17(ad0ef57f9b891aab2d546c9f98bfe50b)
+        version: 0.118.17(bxlz4evs37qoixcgicpbz7myqe)
       tsx:
         specifier: ^4.20.4
         version: 4.20.6
@@ -26449,7 +26441,7 @@ snapshots:
     dependencies:
       asap: 2.0.6
 
-  promptfoo@0.118.17(ad0ef57f9b891aab2d546c9f98bfe50b):
+  promptfoo@0.118.17(bxlz4evs37qoixcgicpbz7myqe):
     dependencies:
       '@adaline/anthropic': 1.8.0
       '@adaline/azure': 1.6.2

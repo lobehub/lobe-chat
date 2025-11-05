@@ -156,6 +156,29 @@ const getTraceIdByMessageId = (id: string) => (s: ChatStoreState) => getMessageB
 
 const latestMessage = (s: ChatStoreState) => activeBaseChats(s).at(-1);
 
+/**
+ * Gets the latest message block from a group message that doesn't contain tools
+ * Returns undefined if the last block contains tools or if message is not a group message
+ */
+const getGroupLatestMessageWithoutTools = (id: string) => (s: ChatStoreState) => {
+  const message = getMessageById(id)(s);
+
+  if (!message || message.role !== 'group' || !message.children || message.children.length === 0)
+    return;
+
+  // Get the last child
+  const lastChild = message.children.at(-1);
+
+  if (!lastChild) return;
+
+  // Return the last child only if it doesn't have tools
+  if (!lastChild.tools || lastChild.tools.length === 0) {
+    return lastChild;
+  }
+
+  return;
+};
+
 const currentChatLoadingState = (s: ChatStoreState) => !s.messagesInit;
 
 const isCurrentChatLoaded = (s: ChatStoreState) => !!s.messagesMap[currentChatKey(s)];
@@ -226,6 +249,7 @@ export const chatSelectors = {
   currentToolMessages,
   currentUserFiles,
   getBaseChatsByKey,
+  getGroupLatestMessageWithoutTools,
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,
