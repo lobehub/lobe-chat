@@ -1,0 +1,142 @@
+{
+  "flatList": [
+    {
+      "id": "msg-301",
+      "role": "user",
+      "content": "Compare the performance of bubble sort vs quicksort",
+      "parentId": null,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000,
+      "meta": {},
+      "metadata": {
+        "presentation": {
+          "mode": "compare"
+        }
+      },
+      "extra": {
+        "branches": {
+          "count": 2,
+          "current": 0,
+          "items": [
+            {
+              "id": "msg-302",
+              "createdAt": 1704067205000
+            },
+            {
+              "id": "msg-303",
+              "createdAt": 1704067205100
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "msg-302",
+      "role": "assistant",
+      "content": "**Bubble Sort Analysis:**\n\n```python\ndef bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n    return arr\n```\n\n**Time Complexity:**\n- Best Case: O(n)\n- Average Case: O(n²)\n- Worst Case: O(n²)\n\n**Space Complexity:** O(1)\n\n**Pros:**\n- Simple to implement\n- No extra memory needed\n- Stable sorting algorithm\n\n**Cons:**\n- Very slow for large datasets\n- Not practical for real-world use",
+      "parentId": "msg-301",
+      "model": "gpt-4",
+      "provider": "openai",
+      "createdAt": 1704067205000,
+      "updatedAt": 1704067205000,
+      "meta": {},
+      "usage": {
+        "totalInputTokens": 24,
+        "totalOutputTokens": 198,
+        "totalTokens": 222,
+        "cost": 0.00666
+      },
+      "performance": {
+        "tps": 45,
+        "ttft": 456,
+        "duration": 4400,
+        "latency": 4856
+      }
+    },
+    {
+      "id": "msg-303",
+      "role": "assistant",
+      "content": "**QuickSort Analysis:**\n\n```python\ndef quicksort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort(left) + middle + quicksort(right)\n```\n\n**Time Complexity:**\n- Best Case: O(n log n)\n- Average Case: O(n log n)\n- Worst Case: O(n²)\n\n**Space Complexity:** O(log n)\n\n**Pros:**\n- Very fast in practice\n- Good cache locality\n- Industry standard\n\n**Cons:**\n- Not stable by default\n- Worst case is rare but possible\n- Uses recursion",
+      "parentId": "msg-301",
+      "model": "claude-3-5-sonnet-20241022",
+      "provider": "anthropic",
+      "createdAt": 1704067205100,
+      "updatedAt": 1704067205100,
+      "meta": {},
+      "usage": {
+        "totalInputTokens": 24,
+        "totalOutputTokens": 215,
+        "totalTokens": 239,
+        "cost": 0.001195
+      },
+      "performance": {
+        "tps": 58,
+        "ttft": 312,
+        "duration": 3707,
+        "latency": 4019
+      }
+    }
+  ],
+  "messageMap": {
+    "msg-301": {
+      "id": "msg-301",
+      "role": "user",
+      "content": "Compare the performance of bubble sort vs quicksort",
+      "parentId": null,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000,
+      "meta": {},
+      "metadata": {
+        "presentation": {
+          "mode": "compare"
+        }
+      }
+    },
+    "msg-302": {
+      "id": "msg-302",
+      "role": "assistant",
+      "content": "**Bubble Sort Analysis:**\n\n```python\ndef bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n    return arr\n```\n\n**Time Complexity:**\n- Best Case: O(n)\n- Average Case: O(n²)\n- Worst Case: O(n²)\n\n**Space Complexity:** O(1)\n\n**Pros:**\n- Simple to implement\n- No extra memory needed\n- Stable sorting algorithm\n\n**Cons:**\n- Very slow for large datasets\n- Not practical for real-world use",
+      "parentId": "msg-301",
+      "model": "gpt-4",
+      "provider": "openai",
+      "createdAt": 1704067205000,
+      "updatedAt": 1704067205000,
+      "meta": {},
+      "usage": {
+        "totalInputTokens": 24,
+        "totalOutputTokens": 198,
+        "totalTokens": 222,
+        "cost": 0.00666
+      },
+      "performance": {
+        "tps": 45,
+        "ttft": 456,
+        "duration": 4400,
+        "latency": 4856
+      }
+    },
+    "msg-303": {
+      "id": "msg-303",
+      "role": "assistant",
+      "content": "**QuickSort Analysis:**\n\n```python\ndef quicksort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort(left) + middle + quicksort(right)\n```\n\n**Time Complexity:**\n- Best Case: O(n log n)\n- Average Case: O(n log n)\n- Worst Case: O(n²)\n\n**Space Complexity:** O(log n)\n\n**Pros:**\n- Very fast in practice\n- Good cache locality\n- Industry standard\n\n**Cons:**\n- Not stable by default\n- Worst case is rare but possible\n- Uses recursion",
+      "parentId": "msg-301",
+      "model": "claude-3-5-sonnet-20241022",
+      "provider": "anthropic",
+      "createdAt": 1704067205100,
+      "updatedAt": 1704067205100,
+      "meta": {},
+      "usage": {
+        "totalInputTokens": 24,
+        "totalOutputTokens": 215,
+        "totalTokens": 239,
+        "cost": 0.001195
+      },
+      "performance": {
+        "tps": 58,
+        "ttft": 312,
+        "duration": 3707,
+        "latency": 4019
+      }
+    }
+  }
+}

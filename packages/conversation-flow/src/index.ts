@@ -1,19 +1,20 @@
 // Main parse function
 export { parse } from './parse';
 
-// Core types
+// Context Tree Types - for navigation and context understanding
 export type {
+  AssistantGroupNode,
   BranchNode,
   CompareNode,
-  DisplayNode,
-  GroupNode,
-  HelperMaps,
-  IdNode,
-  Message,
+  ContextNode,
   MessageNode,
-  ParseResult,
-  ThreadNode,
 } from './types';
+
+// Flat Message List Types - for virtual list rendering
+export type { BranchMetadata, FlatMessage, FlatMessageExtra, FlatMessageRole } from './types';
+
+// Shared Types
+export type { HelperMaps, IdNode, Message, MessageGroupMetadata, ParseResult } from './types';
 
 // Phase functions (exported for testing and advanced usage)
 export { buildHelperMaps } from './indexing';

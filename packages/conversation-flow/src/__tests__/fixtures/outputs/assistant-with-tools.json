@@ -1,0 +1,138 @@
+{
+  "flatList": [
+    {
+      "id": "msg-101",
+      "role": "user",
+      "content": "What's the weather like in San Francisco and Beijing today?",
+      "parentId": null,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000,
+      "meta": {}
+    },
+    {
+      "id": "msg-102",
+      "role": "assistantGroup",
+      "content": "",
+      "parentId": "msg-101",
+      "createdAt": 1704067202000,
+      "updatedAt": 1704067202000,
+      "meta": {},
+      "children": [
+        {
+          "id": "msg-102",
+          "content": "Let me check the current weather conditions in both cities for you.",
+          "tools": [
+            {
+              "id": "tool-sf",
+              "identifier": "weather",
+              "apiName": "getWeather",
+              "arguments": "{\"city\":\"San Francisco\"}",
+              "type": "default",
+              "result": {
+                "id": "msg-103",
+                "content": "{\"location\": \"San Francisco, CA\", \"temperature\": 18, \"conditions\": \"Partly Cloudy\", \"humidity\": 72, \"wind_speed\": 15}",
+                "state": {
+                  "cached": false,
+                  "executionTime": 234
+                }
+              },
+              "result_msg_id": "msg-103"
+            },
+            {
+              "id": "tool-bj",
+              "identifier": "weather",
+              "apiName": "getWeather",
+              "arguments": "{\"city\":\"Beijing\"}",
+              "type": "default",
+              "result": {
+                "id": "msg-104",
+                "content": "{\"location\": \"Beijing, China\", \"temperature\": 12, \"conditions\": \"Clear\", \"humidity\": 45, \"wind_speed\": 8}",
+                "state": {
+                  "cached": false,
+                  "executionTime": 189
+                }
+              },
+              "result_msg_id": "msg-104"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "messageMap": {
+    "msg-101": {
+      "id": "msg-101",
+      "role": "user",
+      "content": "What's the weather like in San Francisco and Beijing today?",
+      "parentId": null,
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000,
+      "meta": {}
+    },
+    "msg-102": {
+      "id": "msg-102",
+      "role": "assistant",
+      "content": "Let me check the current weather conditions in both cities for you.",
+      "parentId": "msg-101",
+      "tools": [
+        {
+          "id": "tool-sf",
+          "identifier": "weather",
+          "apiName": "getWeather",
+          "arguments": "{\"city\":\"San Francisco\"}",
+          "type": "default"
+        },
+        {
+          "id": "tool-bj",
+          "identifier": "weather",
+          "apiName": "getWeather",
+          "arguments": "{\"city\":\"Beijing\"}",
+          "type": "default"
+        }
+      ],
+      "createdAt": 1704067202000,
+      "updatedAt": 1704067202000,
+      "meta": {},
+      "usage": {
+        "totalInputTokens": 28,
+        "totalOutputTokens": 45,
+        "totalTokens": 73,
+        "cost": 0.000219
+      },
+      "performance": {
+        "tps": 48.5,
+        "ttft": 245,
+        "duration": 928,
+        "latency": 1173
+      }
+    },
+    "msg-103": {
+      "id": "msg-103",
+      "role": "tool",
+      "tool_call_id": "tool-sf",
+      "content": "{\"location\": \"San Francisco, CA\", \"temperature\": 18, \"conditions\": \"Partly Cloudy\", \"humidity\": 72, \"wind_speed\": 15}",
+      "pluginState": {
+        "cached": false,
+        "executionTime": 234
+      },
+      "parentId": "msg-102",
+      "createdAt": 1704067203000,
+      "updatedAt": 1704067203000,
+      "meta": {}
+    },
+    "msg-104": {
+      "id": "msg-104",
+      "role": "tool",
+      "tool_call_id": "tool-bj",
+      "content": "{\"location\": \"Beijing, China\", \"temperature\": 12, \"conditions\": \"Clear\", \"humidity\": 45, \"wind_speed\": 8}",
+      "pluginState": {
+        "cached": false,
+        "executionTime": 189
+      },
+      "parentId": "msg-102",
+      "createdAt": 1704067203100,
+      "updatedAt": 1704067203100,
+      "meta": {}
+    }
+  }
+}

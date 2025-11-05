@@ -1,16 +1,21 @@
-import type { HelperMaps, Message } from './types';
+import type { HelperMaps, Message, MessageGroupMetadata } from './types';
 
 /**
  * Phase 1: Indexing
  * Builds helper maps for efficient querying during parsing
  *
  * @param messages - Flat array of messages from backend
+ * @param messageGroups - Optional array of message group metadata
  * @returns Helper maps for efficient access
  */
-export function buildHelperMaps(messages: Message[]): HelperMaps {
+export function buildHelperMaps(
+  messages: Message[],
+  messageGroups?: MessageGroupMetadata[],
+): HelperMaps {
   const messageMap = new Map<string, Message>();
   const childrenMap = new Map<string | null, string[]>();
   const threadMap = new Map<string, Message[]>();
+  const messageGroupMap = new Map<string, MessageGroupMetadata>();
 
   // Single pass through messages to build all maps
   for (const message of messages) {
@@ -37,9 +42,17 @@ export function buildHelperMaps(messages: Message[]): HelperMaps {
     }
   }
 
+  // 4. Build messageGroupMap from provided metadata
+  if (messageGroups) {
+    for (const group of messageGroups) {
+      messageGroupMap.set(group.id, group);
+    }
+  }
+
   return {
-    messageMap,
     childrenMap,
+    messageGroupMap,
+    messageMap,
     threadMap,
   };
 }
