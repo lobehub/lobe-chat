@@ -802,7 +802,7 @@ describe('FileManagerActions', () => {
     it('should not fetch when id is undefined', () => {
       const { result } = renderHook(() => useStore());
 
-      renderHook(() => result.current.useFetchFileItem(undefined));
+      renderHook(() => result.current.useFetchKnowledgeItem(undefined));
 
       expect(lambdaClient.file.getFileItemById.query).not.toHaveBeenCalled();
     });
@@ -827,7 +827,9 @@ describe('FileManagerActions', () => {
 
       vi.mocked(lambdaClient.file.getFileItemById.query).mockResolvedValue(mockFile);
 
-      const { result: swrResult } = renderHook(() => result.current.useFetchFileItem('file-1'));
+      const { result: swrResult } = renderHook(() =>
+        result.current.useFetchKnowledgeItem('file-1'),
+      );
 
       await waitFor(() => {
         expect(swrResult.current.data).toEqual(mockFile);

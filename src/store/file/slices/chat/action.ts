@@ -243,7 +243,7 @@ export const createFileSlice: StateCreator<
       let fileItem: FileListItem | undefined = undefined;
 
       try {
-        fileItem = await fileService.getFileItem(id);
+        fileItem = await fileService.getKnowledgeItem(id);
       } catch (e) {
         console.error('getFileItem Error:', e);
         continue;
@@ -332,7 +332,7 @@ export const createFileSlice: StateCreator<
             ? updatedNote.editorData
             : JSON.stringify(updatedNote.editorData),
         id: noteId,
-        metadata: updatedNote.metadata,
+        metadata: updatedNote.metadata || {},
         title: updatedNote.name,
       });
 
