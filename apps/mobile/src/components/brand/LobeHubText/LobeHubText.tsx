@@ -2,6 +2,8 @@ import React, { memo } from 'react';
 import type { SvgProps } from 'react-native-svg';
 import Svg, { Path } from 'react-native-svg';
 
+import { useTheme } from '@/components/styles';
+
 export interface LobeHubTextProps extends SvgProps {
   /**
    * 尺寸（宽度和高度）
@@ -10,13 +12,15 @@ export interface LobeHubTextProps extends SvgProps {
   size?: number;
 }
 
-const LobeHubText = memo<LobeHubTextProps>(({ size = 32, style, ...rest }) => {
+const LobeHubText = memo<LobeHubTextProps>(({ size = 32, style, color, ...rest }) => {
+  const theme = useTheme();
   const aspectRatio = 940 / 320; // viewBox 的宽高比
   const width = size * aspectRatio;
   const height = size;
 
   return (
     <Svg
+      color={color || theme.colorText}
       height={height}
       style={[{ flexShrink: 0 }, style]}
       viewBox="0 0 940 320"
