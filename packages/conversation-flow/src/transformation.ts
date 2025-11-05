@@ -110,12 +110,7 @@ export class Transformer {
       const branchNode = this.createBranchNode(message, idNode);
       contextTree.push(branchNode);
 
-      // Continue with active branch
-      const activeBranchId = this.getActiveBranchId(message, idNode);
-      const activeBranch = idNode.children.find((child) => child.id === activeBranchId);
-      if (activeBranch) {
-        this.transformToLinear(activeBranch, contextTree);
-      }
+      // Don't continue after branch - branch is an end point
       return;
     }
 
@@ -243,7 +238,7 @@ export class Transformer {
     }
 
     // No more assistant messages, return the last tool node
-    return toolChildren.at(-1);
+    return toolChildren.at(-1) ?? null;
   }
 
   /**
@@ -495,11 +490,7 @@ export class Transformer {
       // Priority 3b: User message with branches
       if (message.role === 'user' && childMessages.length > 1) {
         const activeBranchId = this.getActiveBranchIdFromMetadata(message, childMessages);
-        const userWithBranches = this.createUserMessageWithBranches(
-          message,
-          childMessages,
-          activeBranchId,
-        );
+        const userWithBranches = this.createUserMessageWithBranches(message);
         flatList.push(userWithBranches);
         processedIds.add(message.id);
 
@@ -899,21 +890,10 @@ export class Transformer {
   /**
    * Create user message with branch metadata
    */
-  private createUserMessageWithBranches(
-    user: Message,
-    branchIds: string[],
-    activeId: string,
-  ): Message {
-    return {
-      ...user,
-      extra: {
-        ...user.extra,
-        branches: {
-          activeId,
-          branchIds,
-        },
-      } as any,
-    };
+  private createUserMessageWithBranches(user: Message): Message {
+    // Just return the original user message with its metadata.activeBranchId
+    // No need to add extra.branches
+    return { ...user };
   }
 
   /**

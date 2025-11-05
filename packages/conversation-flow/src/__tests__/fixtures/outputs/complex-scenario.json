@@ -1,30 +1,43 @@
 {
   "contextTree": [
     {
-      "type": "message",
-      "id": "message-msg-501-3",
-      "messageId": "msg-501",
+      "id": "msg-501",
+      "type": "message"
+    },
+    {
       "children": [
         {
-          "type": "assistantGroup",
-          "id": "group-msg-502-2",
-          "assistantMessageId": "msg-502",
-          "tools": [
-            {
-              "type": "message",
-              "id": "tool-msg-503-0",
-              "messageId": "msg-503",
-              "children": []
-            },
-            {
-              "type": "message",
-              "id": "tool-msg-504-1",
-              "messageId": "msg-504",
-              "children": []
-            }
-          ]
+          "id": "msg-502",
+          "type": "message",
+          "tools": ["msg-503", "msg-504"]
         }
-      ]
+      ],
+      "id": "msg-502",
+      "type": "assistantGroup"
+    },
+    {
+      "id": "msg-505",
+      "type": "message"
+    },
+    {
+      "activeBranchIndex": 0,
+      "branches": [
+        [
+          {
+            "id": "msg-506",
+            "type": "message"
+          }
+        ],
+        [
+          {
+            "id": "msg-507",
+            "type": "message"
+          }
+        ]
+      ],
+      "id": "branch-msg-505-0",
+      "parentMessageId": "msg-505",
+      "type": "branch"
     }
   ],
   "flatList": [
@@ -47,8 +60,8 @@
       "meta": {},
       "children": [
         {
-          "id": "msg-502",
           "content": "I'll help you debug the code. Let me first check the syntax and run some analysis.",
+          "id": "msg-502",
           "tools": [
             {
               "id": "tool-lint",
@@ -57,8 +70,8 @@
               "arguments": "{\"action\":\"lint\"}",
               "type": "default",
               "result": {
-                "id": "msg-503",
                 "content": "{\"status\":\"success\",\"issues\":[{\"line\":15,\"message\":\"undefined variable 'result'\"}]}",
+                "id": "msg-503",
                 "state": {
                   "cached": false
                 }
@@ -72,8 +85,8 @@
               "arguments": "{\"action\":\"test\"}",
               "type": "default",
               "result": {
-                "id": "msg-504",
                 "content": "{\"status\":\"failed\",\"error\":\"NameError: name 'result' is not defined\"}",
+                "id": "msg-504",
                 "state": {
                   "cached": false
                 }
@@ -91,23 +104,7 @@
       "parentId": "msg-504",
       "createdAt": 1704067210000,
       "updatedAt": 1704067210000,
-      "meta": {},
-      "extra": {
-        "branches": {
-          "count": 2,
-          "current": 0,
-          "items": [
-            {
-              "id": "msg-506",
-              "createdAt": 1704067213000
-            },
-            {
-              "id": "msg-507",
-              "createdAt": 1704067213100
-            }
-          ]
-        }
-      }
+      "meta": {}
     },
     {
       "id": "msg-506",
@@ -122,21 +119,6 @@
         "totalOutputTokens": 89,
         "totalTokens": 245,
         "cost": 0.000735
-      }
-    },
-    {
-      "id": "msg-507",
-      "role": "assistant",
-      "content": "Alternatively, you could return the value instead:\n\n```python\ndef calculate():\n    x = 5\n    y = 10\n    return x + y\n\nresult = calculate()\nprint(result)\n```",
-      "parentId": "msg-505",
-      "createdAt": 1704067213100,
-      "updatedAt": 1704067213100,
-      "meta": {},
-      "usage": {
-        "totalInputTokens": 156,
-        "totalOutputTokens": 72,
-        "totalTokens": 228,
-        "cost": 0.000684
       }
     }
   ],

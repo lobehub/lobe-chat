@@ -1,50 +1,58 @@
 {
   "contextTree": [
     {
-      "type": "branch",
-      "id": "branch-msg-201-5",
-      "parentMessageId": "msg-201",
+      "id": "msg-201",
+      "type": "message"
+    },
+    {
       "activeBranchIndex": 0,
       "branches": [
         [
           {
-            "type": "message",
-            "id": "message-msg-202-2",
-            "messageId": "msg-202",
-            "children": [
-              {
-                "type": "message",
-                "id": "message-msg-205-1",
-                "messageId": "msg-205",
-                "children": [
-                  {
-                    "type": "message",
-                    "id": "message-msg-206-0",
-                    "messageId": "msg-206",
-                    "children": []
-                  }
-                ]
-              }
-            ]
+            "id": "msg-202",
+            "type": "message"
+          },
+          {
+            "id": "msg-205",
+            "type": "message"
+          },
+          {
+            "id": "msg-206",
+            "type": "message"
+          },
+          {
+            "id": "msg-209",
+            "type": "message"
+          },
+          {
+            "id": "msg-210",
+            "type": "message"
           }
         ],
         [
           {
-            "type": "message",
-            "id": "message-msg-203-3",
-            "messageId": "msg-203",
-            "children": []
+            "id": "msg-203",
+            "type": "message"
+          },
+          {
+            "id": "msg-207",
+            "type": "message"
+          },
+          {
+            "id": "msg-208",
+            "type": "message"
           }
         ],
         [
           {
-            "type": "message",
-            "id": "message-msg-204-4",
-            "messageId": "msg-204",
-            "children": []
+            "id": "msg-204",
+            "type": "message"
           }
         ]
-      ]
+      ],
+      "id": "branch-msg-201-0",
+      "parentMessageId": "msg-201",
+      "type": "branch"
     }
   ],
   "flatList": [
@@ -56,25 +64,8 @@
       "createdAt": 1704067200000,
       "updatedAt": 1704067200000,
       "meta": {},
-      "extra": {
-        "branches": {
-          "count": 3,
-          "current": 0,
-          "items": [
-            {
-              "id": "msg-202",
-              "createdAt": 1704067203000
-            },
-            {
-              "id": "msg-203",
-              "createdAt": 1704067203100
-            },
-            {
-              "id": "msg-204",
-              "createdAt": 1704067203200
-            }
-          ]
-        }
+      "metadata": {
+        "activeBranchId": "msg-202"
       }
     },
     {
@@ -85,38 +76,11 @@
       "createdAt": 1704067203000,
       "updatedAt": 1704067203000,
       "meta": {},
-      "usage": {
+      "metadata": {
         "totalInputTokens": 12,
         "totalOutputTokens": 28,
-        "totalTokens": 40
-      }
-    },
-    {
-      "id": "msg-203",
-      "role": "assistant",
-      "content": "Functions compile,\nVariables dance in memory,\nAlgorithm sings.",
-      "parentId": "msg-201",
-      "createdAt": 1704067203100,
-      "updatedAt": 1704067203100,
-      "meta": {},
-      "usage": {
-        "totalInputTokens": 12,
-        "totalOutputTokens": 24,
-        "totalTokens": 36
-      }
-    },
-    {
-      "id": "msg-204",
-      "role": "assistant",
-      "content": "Lines of logic flow,\nErrors break the peaceful code,\nTests restore the calm.",
-      "parentId": "msg-201",
-      "createdAt": 1704067203200,
-      "updatedAt": 1704067203200,
-      "meta": {},
-      "usage": {
-        "totalInputTokens": 12,
-        "totalOutputTokens": 26,
-        "totalTokens": 38
+        "totalTokens": 40,
+        "cost": 0.00012
       }
     },
     {
@@ -136,10 +100,35 @@
       "createdAt": 1704067222000,
       "updatedAt": 1704067222000,
       "meta": {},
-      "usage": {
+      "metadata": {
         "totalInputTokens": 52,
         "totalOutputTokens": 48,
-        "totalTokens": 100
+        "totalTokens": 100,
+        "cost": 0.0003
+      }
+    },
+    {
+      "id": "msg-209",
+      "role": "user",
+      "content": "Yes, please write one more about debugging!",
+      "parentId": "msg-206",
+      "createdAt": 1704067230000,
+      "updatedAt": 1704067230000,
+      "meta": {}
+    },
+    {
+      "id": "msg-210",
+      "role": "assistant",
+      "content": "Console logs cascade,\nBreakpoints pause the racing code,\nTruth emerges clear.",
+      "parentId": "msg-209",
+      "createdAt": 1704067232000,
+      "updatedAt": 1704067232000,
+      "meta": {},
+      "metadata": {
+        "totalInputTokens": 78,
+        "totalOutputTokens": 24,
+        "totalTokens": 102,
+        "cost": 0.000306
       }
     }
   ],
@@ -151,7 +140,10 @@
       "parentId": null,
       "createdAt": 1704067200000,
       "updatedAt": 1704067200000,
-      "meta": {}
+      "meta": {},
+      "metadata": {
+        "activeBranchId": "msg-202"
+      }
     },
     "msg-202": {
       "id": "msg-202",
@@ -161,10 +153,11 @@
       "createdAt": 1704067203000,
       "updatedAt": 1704067203000,
       "meta": {},
-      "usage": {
+      "metadata": {
         "totalInputTokens": 12,
         "totalOutputTokens": 28,
-        "totalTokens": 40
+        "totalTokens": 40,
+        "cost": 0.00012
       }
     },
     "msg-203": {
@@ -175,10 +168,11 @@
       "createdAt": 1704067203100,
       "updatedAt": 1704067203100,
       "meta": {},
-      "usage": {
+      "metadata": {
         "totalInputTokens": 12,
         "totalOutputTokens": 24,
-        "totalTokens": 36
+        "totalTokens": 36,
+        "cost": 0.000108
       }
     },
     "msg-204": {
@@ -189,10 +183,11 @@
       "createdAt": 1704067203200,
       "updatedAt": 1704067203200,
       "meta": {},
-      "usage": {
+      "metadata": {
         "totalInputTokens": 12,
         "totalOutputTokens": 26,
-        "totalTokens": 38
+        "totalTokens": 38,
+        "cost": 0.000114
       }
     },
     "msg-205": {
@@ -212,10 +207,59 @@
       "createdAt": 1704067222000,
       "updatedAt": 1704067222000,
       "meta": {},
-      "usage": {
+      "metadata": {
         "totalInputTokens": 52,
         "totalOutputTokens": 48,
-        "totalTokens": 100
+        "totalTokens": 100,
+        "cost": 0.0003
+      }
+    },
+    "msg-207": {
+      "id": "msg-207",
+      "role": "user",
+      "content": "Actually, I prefer the second one with the dancing variables.",
+      "parentId": "msg-203",
+      "createdAt": 1704067225000,
+      "updatedAt": 1704067225000,
+      "meta": {}
+    },
+    "msg-208": {
+      "id": "msg-208",
+      "role": "assistant",
+      "content": "I appreciate your feedback! The imagery of variables dancing in memory really captures the dynamic nature of programming. Would you like me to explore more haikus with that kind of vivid metaphor?",
+      "parentId": "msg-207",
+      "createdAt": 1704067227000,
+      "updatedAt": 1704067227000,
+      "meta": {},
+      "metadata": {
+        "totalInputTokens": 48,
+        "totalOutputTokens": 52,
+        "totalTokens": 100,
+        "cost": 0.0003
+      }
+    },
+    "msg-209": {
+      "id": "msg-209",
+      "role": "user",
+      "content": "Yes, please write one more about debugging!",
+      "parentId": "msg-206",
+      "createdAt": 1704067230000,
+      "updatedAt": 1704067230000,
+      "meta": {}
+    },
+    "msg-210": {
+      "id": "msg-210",
+      "role": "assistant",
+      "content": "Console logs cascade,\nBreakpoints pause the racing code,\nTruth emerges clear.",
+      "parentId": "msg-209",
+      "createdAt": 1704067232000,
+      "updatedAt": 1704067232000,
+      "meta": {},
+      "metadata": {
+        "totalInputTokens": 78,
+        "totalOutputTokens": 24,
+        "totalTokens": 102,
+        "cost": 0.000306
       }
     }
   }
