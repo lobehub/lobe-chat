@@ -1,3 +1,11 @@
-import { ServerService } from './server';
+import { ExportDatabaseData } from '@/types/export';
 
-export const exportService = new ServerService();
+import { lambdaClient } from '@/libs/trpc/client';
+
+class ExportService {
+  exportData = async (): Promise<ExportDatabaseData> => {
+    return await lambdaClient.exporter.exportData.mutate();
+  };
+}
+
+export const exportService = new ExportService();

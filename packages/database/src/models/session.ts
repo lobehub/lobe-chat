@@ -123,17 +123,28 @@ export class SessionModel {
   findByIdOrSlug = async (
     idOrSlug: string,
   ): Promise<(SessionItem & { agent: AgentItem }) | undefined> => {
-    const result = await this.db.query.sessions.findFirst({
-      where: and(
-        or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
-        eq(sessions.userId, this.userId),
-      ),
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
+    // Use leftJoin instead of nested 'with' for better performance
+    const result = await this.db
+      .select({
+        agent: agents,
+        group: sessionGroups,
+        session: sessions,
+      })
+      .from(sessions)
+      .where(
+        and(
+          or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
+          eq(sessions.userId, this.userId),
+        ),
+      )
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
+      .limit(1);
 
-    if (!result) return;
+    if (!result || !result[0]) return;
 
-    return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
+    return { ...result[0].session, agent: result[0].agent, group: result[0].group } as any;
   };
 
   count = async (params?: {

@@ -128,7 +128,13 @@ export const topicRouter = router({
     }),
 
   searchTopics: topicProcedure
-    .input(z.object({ keywords: z.string(), sessionId: z.string().nullable().optional() }))
+    .input(
+      z.object({
+        groupId: z.string().nullable().optional(),
+        keywords: z.string(),
+        sessionId: z.string().nullable().optional(),
+      }),
+    )
     .query(async ({ input, ctx }) => {
       return ctx.topicModel.queryByKeyword(input.keywords, input.sessionId);
     }),

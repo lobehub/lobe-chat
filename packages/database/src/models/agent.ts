@@ -28,19 +28,21 @@ export class AgentModel {
   };
 
   getAgentAssignedKnowledge = async (id: string) => {
-    const knowledgeBaseResult = await this.db
-      .select({ enabled: agentsKnowledgeBases.enabled, knowledgeBases })
-      .from(agentsKnowledgeBases)
-      .where(eq(agentsKnowledgeBases.agentId, id))
-      .orderBy(desc(agentsKnowledgeBases.createdAt))
-      .leftJoin(knowledgeBases, eq(knowledgeBases.id, agentsKnowledgeBases.knowledgeBaseId));
-
-    const fileResult = await this.db
-      .select({ enabled: agentsFiles.enabled, files })
-      .from(agentsFiles)
-      .where(eq(agentsFiles.agentId, id))
-      .orderBy(desc(agentsFiles.createdAt))
-      .leftJoin(files, eq(files.id, agentsFiles.fileId));
+    // Run both queries in parallel for better performance
+    const [knowledgeBaseResult, fileResult] = await Promise.all([
+      this.db
+        .select({ enabled: agentsKnowledgeBases.enabled, knowledgeBases })
+        .from(agentsKnowledgeBases)
+        .where(eq(agentsKnowledgeBases.agentId, id))
+        .orderBy(desc(agentsKnowledgeBases.createdAt))
+        .leftJoin(knowledgeBases, eq(knowledgeBases.id, agentsKnowledgeBases.knowledgeBaseId)),
+      this.db
+        .select({ enabled: agentsFiles.enabled, files })
+        .from(agentsFiles)
+        .where(eq(agentsFiles.agentId, id))
+        .orderBy(desc(agentsFiles.createdAt))
+        .leftJoin(files, eq(files.id, agentsFiles.fileId)),
+    ]);
 
     return {
       files: fileResult.map((item) => ({
@@ -61,6 +63,7 @@ export class AgentModel {
     const item = await this.db.query.agentsToSessions.findFirst({
       where: eq(agentsToSessions.sessionId, sessionId),
     });
+
     if (!item) return;
 
     const agentId = item.agentId;

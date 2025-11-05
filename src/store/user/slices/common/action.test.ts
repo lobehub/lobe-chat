@@ -30,7 +30,7 @@ describe('createCommonSlice', () => {
       const avatar = 'data:image/png;base64,';
 
       const spyOn = vi.spyOn(result.current, 'refreshUserState');
-      const updateAvatarSpy = vi.spyOn(userService, 'updateAvatar').mockResolvedValue(undefined);
+      const updateAvatarSpy = vi.spyOn(userService, 'updateAvatar').mockResolvedValue({} as any);
 
       await act(async () => {
         await result.current.updateAvatar(avatar);

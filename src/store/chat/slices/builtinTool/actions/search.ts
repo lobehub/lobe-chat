@@ -106,16 +106,16 @@ export const searchSlice: StateCreator<
       });
     };
 
-    const [newMessageId] = await Promise.all([
+    const [result] = await Promise.all([
       // 1. 添加 tool message
       internal_createMessage(toolMessage),
       // 2. 将这条 tool call message 插入到 ai 消息的 tools 中
       addToolItem(),
     ]);
-    if (!newMessageId) return;
+    if (!result) return;
 
     // 将新创建的 tool message 激活
-    openToolUI(newMessageId, message.plugin.identifier);
+    openToolUI(result.id, message.plugin.identifier);
   },
 
   search: async (id, params, aiSummary = true) => {

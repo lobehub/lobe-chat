@@ -1,6 +1,102 @@
 [
   {
     "children": {
+      "improvements": ["Enhance message router with service layer and comprehensive tests."]
+    },
+    "date": "2025-11-05",
+    "version": "2.0.0-next.30"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor chat message model to speed up."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.29"
+  },
+  {
+    "children": {
+      "features": ["Support install sreamable http mcp server on web."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.28"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor services to a more clean structure."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.27"
+  },
+  {
+    "children": {
+      "improvements": ["Add settings (jsonb) column to ai_models table."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.26"
+  },
+  {
+    "children": {
+      "features": ["Display assistant message in group."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.25"
+  },
+  {
+    "children": {
+      "improvements": ["Improve lab style."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.24"
+  },
+  {
+    "children": {
+      "fixes": ["Fix send message."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.23"
+  },
+  {
+    "children": {},
+    "date": "2025-11-04",
+    "version": "2.0.0-next.22"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc auth timeout issue on the desktop."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.21"
+  },
+  {
+    "children": {
+      "improvements": ["Improve oidc layout style."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.20"
+  },
+  {
+    "children": {
+      "improvements": ["Remove NEXT_PUBLIC_SERVICE_MODE env and use server by default."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.19"
+  },
+  {
+    "children": {
+      "improvements": ["Improve built-in client OIDC user flow."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.18"
+  },
+  {
+    "children": {
+      "fixes": ["Fix regex ReDoS."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.17"
+  },
+  {
+    "children": {
       "improvements": ["Remove deperated code."]
     },
     "date": "2025-11-03",

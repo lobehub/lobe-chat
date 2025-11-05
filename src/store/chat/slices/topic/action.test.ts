@@ -254,7 +254,7 @@ describe('topic action', () => {
 
       const updateFavoriteSpy = vi
         .spyOn(topicService, 'updateTopic')
-        .mockResolvedValue({ success: 1 });
+        .mockResolvedValue(undefined as any);
 
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
 

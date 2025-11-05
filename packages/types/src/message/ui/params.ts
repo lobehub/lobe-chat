@@ -1,9 +1,14 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
+import { z } from 'zod';
+
 import { UploadFileItem } from '../../files';
 import { MessageSemanticSearchChunk } from '../../rag';
-import { ChatMessageError } from '../common/base';
+import { ChatMessageError, ChatMessageErrorSchema } from '../common/base';
 import { ChatPluginPayload } from '../common/tools';
-import { UIChatMessage, UIMessageRoleType } from './chat';
+import { UIChatMessage } from './chat';
+import { SemanticSearchChunkSchema } from './rag';
+
+export type CreateMessageRoleType = 'user' | 'assistant' | 'tool' | 'supervisor';
 
 export interface CreateMessageParams
   extends Partial<Omit<UIChatMessage, 'content' | 'role' | 'topicId' | 'chunksList'>> {
@@ -14,7 +19,7 @@ export interface CreateMessageParams
   fromModel?: string;
   fromProvider?: string;
   groupId?: string;
-  role: UIMessageRoleType;
+  role: CreateMessageRoleType;
   sessionId: string;
   targetId?: string | null;
   threadId?: string | null;
@@ -28,7 +33,7 @@ export interface CreateMessageParams
  */
 export interface CreateNewMessageParams {
   // ========== Required fields ==========
-  role: UIMessageRoleType;
+  role: CreateMessageRoleType;
   content: string;
   sessionId: string;
 
@@ -103,3 +108,43 @@ export interface SendGroupMessageParams {
    */
   targetMemberId?: string | null;
 }
+
+// ========== Zod Schemas ========== //
+
+const UIMessageRoleTypeSchema = z.enum(['user', 'assistant', 'tool', 'supervisor']);
+
+const ChatPluginPayloadSchema = z.object({
+  apiName: z.string(),
+  arguments: z.string(),
+  identifier: z.string(),
+  type: z.string(),
+});
+
+export const CreateNewMessageParamsSchema = z
+  .object({
+    // Required fields
+    role: UIMessageRoleTypeSchema,
+    content: z.string(),
+    sessionId: z.string().nullable().optional(),
+    // Tool related
+    tool_call_id: z.string().optional(),
+    plugin: ChatPluginPayloadSchema.optional(),
+    // Grouping
+    parentId: z.string().optional(),
+    groupId: z.string().nullable().optional(),
+    // Context
+    topicId: z.string().nullable().optional(),
+    threadId: z.string().nullable().optional(),
+    targetId: z.string().nullable().optional(),
+    // Model info
+    model: z.string().nullable().optional(),
+    provider: z.string().nullable().optional(),
+    // Content
+    files: z.array(z.string()).optional(),
+    // Error handling
+    error: ChatMessageErrorSchema.nullable().optional(),
+    // Metadata
+    traceId: z.string().optional(),
+    fileChunks: z.array(SemanticSearchChunkSchema).optional(),
+  })
+  .passthrough();

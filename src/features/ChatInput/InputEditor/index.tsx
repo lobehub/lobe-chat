@@ -21,7 +21,7 @@ import { useHotkeysContext } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
+import { labPreferSelectors, preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
 
 import { useChatInputStore, useStoreApi } from '../store';
 import Placeholder from './Placeholder';
@@ -69,7 +69,7 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
     };
   }, [state.isEmpty]);
 
-  const enableRichRender = useUserStore(preferenceSelectors.inputMarkdownRender);
+  const enableRichRender = useUserStore(labPreferSelectors.enableInputMarkdown);
 
   const richRenderProps = useMemo(
     () =>

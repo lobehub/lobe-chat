@@ -1,41 +1,41 @@
 export const exportFile = (content: string, filename?: string) => {
-  // 创建一个 Blob 对象
+  // Create a Blob object
   const blob = new Blob([content], { type: 'plain/text' });
 
-  // 创建一个 URL 对象，用于下载
+  // Create a URL object for download
   const url = URL.createObjectURL(blob);
 
-  // 创建一个 <a> 元素，设置下载链接和文件名
+  // Create an <a> element, set download link and filename
   const a = document.createElement('a');
   a.href = url;
   a.download = filename || 'file.txt';
 
-  // 触发 <a> 元素的点击事件，开始下载
+  // Trigger the click event of the <a> element to start download
   document.body.append(a);
   a.click();
 
-  // 下载完成后，清除 URL 对象
+  // After download is complete, clear the URL object
   URL.revokeObjectURL(url);
   a.remove();
 };
 
 export const exportJSONFile = (data: object, fileName: string) => {
-  // 创建一个 Blob 对象
+  // Create a Blob object
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
 
-  // 创建一个 URL 对象，用于下载
+  // Create a URL object for download
   const url = URL.createObjectURL(blob);
 
-  // 创建一个 <a> 元素，设置下载链接和文件名
+  // Create an <a> element, set download link and filename
   const a = document.createElement('a');
   a.href = url;
   a.download = fileName;
 
-  // 触发 <a> 元素的点击事件，开始下载
+  // Trigger the click event of the <a> element to start download
   document.body.append(a);
   a.click();
 
-  // 下载完成后，清除 URL 对象
+  // After download is complete, clear the URL object
   URL.revokeObjectURL(url);
   a.remove();
 };

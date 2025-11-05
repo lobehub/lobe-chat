@@ -90,7 +90,10 @@ export const agentsKnowledgeBases = pgTable(
 
     ...timestamps,
   },
-  (t) => [primaryKey({ columns: [t.agentId, t.knowledgeBaseId] })],
+  (t) => [
+    primaryKey({ columns: [t.agentId, t.knowledgeBaseId] }),
+    index('agents_knowledge_bases_agent_id_idx').on(t.agentId),
+  ],
 );
 
 export const agentsFiles = pgTable(

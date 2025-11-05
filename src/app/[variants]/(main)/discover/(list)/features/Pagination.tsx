@@ -52,6 +52,7 @@ const Pagination = memo<PaginationProps>(({ tab, currentPage, total, pageSize })
     <Page
       className={styles.page}
       current={page ? Number(page) : currentPage}
+      data-testid="pagination"
       onChange={handlePageChange}
       pageSize={pageSize}
       showSizeChanger={false}

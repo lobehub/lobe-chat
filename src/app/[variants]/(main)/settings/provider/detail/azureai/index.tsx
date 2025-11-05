@@ -4,11 +4,11 @@ import { ModelProvider } from 'model-bank';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
+import { SkeletonInput } from '@/components/Skeleton';
 import { AzureAIProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
-import { SkeletonInput } from '../../features/ProviderConfig';
 import { ProviderItem } from '../../type';
 import ProviderDetail from '../default';
 

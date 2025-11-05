@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { MCPErrorType } from '@/libs/mcp';
 
+import { McpConnectionType } from '../discover/mcp';
 import { CustomPluginMetadata } from '../tool/plugin';
 
 /* eslint-disable typescript-sort-keys/string-enum */
@@ -110,7 +111,9 @@ export interface CheckMcpInstallResult {
   }>;
 }
 
-export type MCPPluginListParams = Pick<PluginQueryParams, 'locale' | 'pageSize' | 'page' | 'q'>;
+export type MCPPluginListParams = Pick<PluginQueryParams, 'locale' | 'pageSize' | 'page' | 'q'> & {
+  connectionType?: McpConnectionType;
+};
 
 export interface MCPErrorInfoMetadata {
   errorLog?: string;

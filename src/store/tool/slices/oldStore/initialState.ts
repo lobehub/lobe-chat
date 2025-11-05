@@ -1,4 +1,3 @@
-import { isDesktop } from '@/const/version';
 import { DiscoverPluginItem } from '@/types/discover';
 
 export type PluginInstallLoadingMap = Record<string, boolean | undefined>;
@@ -47,7 +46,7 @@ export const initialPluginStoreState: PluginStoreState = {
   // Plugin list state management initial values
   currentPluginPage: 1,
   displayMode: 'grid',
-  listType: isDesktop ? PluginStoreTabs.MCP : PluginStoreTabs.Plugin,
+  listType: PluginStoreTabs.MCP,
   oldPluginItems: [],
   pluginInstallLoading: {},
   pluginInstallProgress: {},

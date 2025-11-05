@@ -13,19 +13,19 @@ const getLocalTime = (timeZone: string) => {
 const isValidTimeZone = (timeZone: string) => {
   try {
     getLocalTime(timeZone);
-    return true; // 如果没抛异常，说明时区有效
+    return true; // If no exception is thrown, the timezone is valid
   } catch (e) {
-    // 捕获到 RangeError，说明时区无效
+    // If a RangeError is caught, the timezone is invalid
     if (e instanceof RangeError) {
       return false;
     }
-    // 如果是其他错误，最好重新抛出
+    // If it's another error, better to re-throw it
     throw e;
   }
 };
 
 export const parseDefaultThemeFromCountry = (request: NextRequest) => {
-  // 1. 从请求头中获取国家代码
+  // 1. Get country code from request headers
   const geo = geolocation(request);
 
   const countryCode =
@@ -35,22 +35,22 @@ export const parseDefaultThemeFromCountry = (request: NextRequest) => {
     request.headers.get('x-zeabur-ip-country') || // Zeabur
     request.headers.get('x-country-code'); // Netlify
 
-  // 如果没有获取到国家代码，直接返回 light 主题
+  // If no country code is obtained, return light theme directly
   if (!countryCode) return 'light';
 
-  // 2. 获取国家的时区信息
+  // 2. Get timezone information for the country
   const country = getCountry(countryCode);
 
-  // 如果找不到国家信息或该国家没有时区信息，返回 light 主题
+  // If country information is not found or the country has no timezone information, return light theme
   if (!country?.timezones?.length) return 'light';
 
   const timeZone = country.timezones.find((tz) => isValidTimeZone(tz));
   if (!timeZone) return 'light';
 
-  // 3. 获取该国家的第一个 时区下的当前时间
+  // 3. Get the current time in the country's first timezone
   const localTime = getLocalTime(timeZone);
 
-  // 4. 解析小时数并确定主题
+  // 4. Parse the hour and determine the theme
   const localHour = parseInt(localTime);
   // console.log(
   //   `[theme] Country: ${countryCode}, Timezone: ${country.timezones[0]}, LocalHour: ${localHour}`,

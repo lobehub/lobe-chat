@@ -18,6 +18,7 @@
     },
     "permissionsTitle": "Solicitar los siguientes permisos:",
     "redirectUri": "Se redirigirá a después de la autorización exitosa",
+    "redirecting": "Autorización exitosa, redirigiendo...",
     "scope": {
       "email": "Acceder a su dirección de correo electrónico",
       "offline_access": "Permitir que el cliente acceda a sus datos",

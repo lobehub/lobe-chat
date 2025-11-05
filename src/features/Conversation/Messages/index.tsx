@@ -16,6 +16,7 @@ import { chatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import AssistantMessage from './Assistant';
+import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
 import UserMessage from './User';
 
@@ -124,6 +125,17 @@ const Item = memo<ChatListItemProps>(
         case 'assistant': {
           return (
             <AssistantMessage
+              {...item}
+              disableEditing={disableEditing}
+              index={index}
+              showTitle={item.groupId ? true : false}
+            />
+          );
+        }
+
+        case 'group': {
+          return (
+            <GroupMessage
               {...item}
               disableEditing={disableEditing}
               index={index}

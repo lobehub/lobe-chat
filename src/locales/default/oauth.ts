@@ -19,6 +19,7 @@ const oauth = {
     },
     permissionsTitle: '请求以下权限：',
     redirectUri: '授权成功后将重定向到',
+    redirecting: '授权成功，跳转中...',
     scope: {
       'email': '访问您的电子邮件地址',
       'offline_access': '允许客户端访问您的数据',

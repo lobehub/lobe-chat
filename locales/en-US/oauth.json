@@ -18,6 +18,7 @@
     },
     "permissionsTitle": "Requesting the following permissions:",
     "redirectUri": "You will be redirected to after successful authorization",
+    "redirecting": "Authorization successful, redirecting...",
     "scope": {
       "email": "Access your email address",
       "offline_access": "Allow the client to access your data",

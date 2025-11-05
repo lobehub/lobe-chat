@@ -61,7 +61,7 @@ describe('chatMessage actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
         });
 
-        expect(messageService.createMessage).not.toHaveBeenCalled();
+        expect(messageService.createNewMessage).not.toHaveBeenCalled();
         expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
       });
 
@@ -72,7 +72,7 @@ describe('chatMessage actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY });
         });
 
-        expect(messageService.createMessage).not.toHaveBeenCalled();
+        expect(messageService.createNewMessage).not.toHaveBeenCalled();
       });
 
       it('should not send when message is empty with empty files array', async () => {
@@ -82,7 +82,7 @@ describe('chatMessage actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files: [] });
         });
 
-        expect(messageService.createMessage).not.toHaveBeenCalled();
+        expect(messageService.createNewMessage).not.toHaveBeenCalled();
       });
     });
 
@@ -97,13 +97,13 @@ describe('chatMessage actions', () => {
           });
         });
 
-        expect(messageService.createMessage).toHaveBeenCalled();
+        expect(messageService.createNewMessage).toHaveBeenCalled();
         expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
       });
 
       it('should handle message creation errors gracefully', async () => {
         const { result } = renderHook(() => useChatStore());
-        vi.spyOn(messageService, 'createMessage').mockRejectedValue(
+        vi.spyOn(messageService, 'createNewMessage').mockRejectedValue(
           new Error('create message error'),
         );
 
@@ -210,6 +210,8 @@ describe('chatMessage actions', () => {
 
   describe('internal_coreProcessMessage', () => {
     it('should process user message and generate AI response', async () => {
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
+
       act(() => {
         useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
       });
@@ -227,8 +229,10 @@ describe('chatMessage actions', () => {
         .mockResolvedValue({ isFunctionCall: false, content: 'AI response' });
 
       const createMessageSpy = vi
-        .spyOn(messageService, 'createMessage')
-        .mockResolvedValue(TEST_IDS.ASSISTANT_MESSAGE_ID);
+        .spyOn(messageService, 'createNewMessage')
+        .mockResolvedValue({ id: TEST_IDS.ASSISTANT_MESSAGE_ID, messages: mockMessages });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       await act(async () => {
         await result.current.internal_coreProcessMessage([userMessage], userMessage.id);
@@ -245,7 +249,7 @@ describe('chatMessage actions', () => {
       );
 
       expect(fetchAIChatSpy).toHaveBeenCalled();
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
 
     it('should handle RAG flow when ragQuery is provided', async () => {
@@ -268,7 +272,10 @@ describe('chatMessage actions', () => {
           rewriteQuery: 'rewritten query',
         });
 
-      vi.spyOn(messageService, 'createMessage').mockResolvedValue(TEST_IDS.ASSISTANT_MESSAGE_ID);
+      vi.spyOn(messageService, 'createNewMessage').mockResolvedValue({
+        id: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        messages: [],
+      });
 
       await act(async () => {
         await result.current.internal_coreProcessMessage([userMessage], userMessage.id, {
@@ -299,7 +306,7 @@ describe('chatMessage actions', () => {
         .spyOn(result.current, 'internal_fetchAIChatMessage')
         .mockResolvedValue({ isFunctionCall: false, content: '' });
 
-      vi.spyOn(messageService, 'createMessage').mockResolvedValue(undefined as any);
+      vi.spyOn(messageService, 'createNewMessage').mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.internal_coreProcessMessage([userMessage], userMessage.id);

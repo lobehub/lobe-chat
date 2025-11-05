@@ -56,6 +56,7 @@ table agents_knowledge_bases {
 
   indexes {
     (agent_id, knowledge_base_id) [pk]
+    agent_id [name: 'agents_knowledge_bases_agent_id_idx']
   }
 }
 
@@ -76,6 +77,7 @@ table ai_models {
   context_window_tokens integer
   source varchar(20)
   released_at varchar(10)
+  settings jsonb [default: `{}`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

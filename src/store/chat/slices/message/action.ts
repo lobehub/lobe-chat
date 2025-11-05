@@ -6,7 +6,6 @@ import {
   ChatMessageError,
   ChatMessagePluginError,
   CreateMessageParams,
-  CreateNewMessageParams,
   GroundingSearch,
   MessageMetadata,
   MessageToolCall,
@@ -108,24 +107,17 @@ export interface ChatMessageAction {
   ) => Promise<void>;
   /**
    * create a message with optimistic update
+   * returns the created message ID and updated message list
    */
   internal_createMessage: (
     params: CreateMessageParams,
-    context?: { tempMessageId?: string; skipRefresh?: boolean },
-  ) => Promise<string | undefined>;
+    context?: { tempMessageId?: string; skipRefresh?: boolean; groupMessageId?: string },
+  ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
   /**
    * create a temp message for optimistic update
    * otherwise the message will be too slow to show
    */
   internal_createTmpMessage: (params: CreateMessageParams) => string;
-  /**
-   * create a new message using createNewMessage API and return full message list
-   * used for group message scenarios to reduce network requests
-   */
-  internal_createNewMessage: (
-    params: CreateNewMessageParams,
-    context?: { tempMessageId?: string; groupMessageId?: string },
-  ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
   /**
    * delete the message content with optimistic update
    */
@@ -172,22 +164,42 @@ export const chatMessage: StateCreator<
     if (!message) return;
 
     let ids = [message.id];
+    const allMessages = chatSelectors.activeBaseChats(get());
 
-    // if the message is a tool calls, then delete all the related messages
+    // if the message is a tool calls, then delete all the related tool messages
     if (message.tools) {
       const toolMessageIds = message.tools.flatMap((tool) => {
-        const messages = chatSelectors
-          .activeBaseChats(get())
-          .filter((m) => m.tool_call_id === tool.id);
-
+        const messages = allMessages.filter((m) => m.tool_call_id === tool.id);
         return messages.map((m) => m.id);
       });
       ids = ids.concat(toolMessageIds);
     }
 
+    // if the message is a group message, find all children messages (via parentId)
+    if (message.role === 'group') {
+      const childMessages = allMessages.filter((m) => m.parentId === message.id);
+      const childMessageIds = childMessages.map((m) => m.id);
+      ids = ids.concat(childMessageIds);
+
+      // Also delete tool results of children messages
+      const childToolMessageIds = childMessages.flatMap((child) => {
+        if (!child.tools) return [];
+        return child.tools.flatMap((tool) => {
+          const toolMessages = allMessages.filter((m) => m.tool_call_id === tool.id);
+          return toolMessages.map((m) => m.id);
+        });
+      });
+      ids = ids.concat(childToolMessageIds);
+    }
+
     get().internal_dispatchMessage({ type: 'deleteMessages', ids });
-    await messageService.removeMessages(ids);
-    await get().refreshMessages();
+    const result = await messageService.removeMessages(ids, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
 
   deleteToolMessage: async (id) => {
@@ -208,14 +220,7 @@ export const chatMessage: StateCreator<
   },
 
   clearMessage: async () => {
-    const {
-      activeId,
-      activeTopicId,
-      refreshMessages,
-      refreshTopic,
-      switchTopic,
-      activeSessionType,
-    } = get();
+    const { activeId, activeTopicId, refreshTopic, switchTopic, activeSessionType } = get();
 
     // Check if this is a group session - use activeSessionType if available, otherwise check session store
     let isGroupSession = activeSessionType === 'group';
@@ -239,22 +244,24 @@ export const chatMessage: StateCreator<
       await topicService.removeTopic(activeTopicId);
     }
     await refreshTopic();
-    await refreshMessages();
+
+    // Clear messages directly since all messages are deleted
+    get().replaceMessages([]);
 
     // after remove topic , go back to default topic
     switchTopic();
   },
   clearAllMessages: async () => {
-    const { refreshMessages } = get();
     await messageService.removeAllMessages();
-    await refreshMessages();
+    // Clear messages directly since all messages are deleted
+    get().replaceMessages([]);
   },
   addAIMessage: async () => {
     const { internal_createMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
       get();
     if (!activeId) return;
 
-    await internal_createMessage({
+    const result = await internal_createMessage({
       content: inputMessage,
       role: 'assistant',
       sessionId: activeId,
@@ -262,14 +269,16 @@ export const chatMessage: StateCreator<
       topicId: activeTopicId,
     });
 
-    updateInputMessage('');
+    if (result) {
+      updateInputMessage('');
+    }
   },
   addUserMessage: async ({ message, fileList }) => {
     const { internal_createMessage, updateInputMessage, activeTopicId, activeId, activeThreadId } =
       get();
     if (!activeId) return;
 
-    await internal_createMessage({
+    const result = await internal_createMessage({
       content: message,
       files: fileList,
       role: 'user',
@@ -279,7 +288,9 @@ export const chatMessage: StateCreator<
       threadId: activeThreadId,
     });
 
-    updateInputMessage('');
+    if (result) {
+      updateInputMessage('');
+    }
   },
   copyMessage: async (id, content) => {
     await copyToClipboard(content);
@@ -359,10 +370,13 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessageRAG: async (id, data) => {
-    const { refreshMessages } = get();
-
-    await messageService.updateMessageRAG(id, data);
-    await refreshMessages();
+    const result = await messageService.updateMessageRAG(id, data, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
 
   // the internal process method of the AI message
@@ -396,8 +410,13 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessagePluginError: async (id, error) => {
-    await messageService.updateMessagePluginError(id, error);
-    await get().refreshMessages();
+    const result = await messageService.updateMessagePluginError(id, error, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
 
   internal_updateMessageContent: async (id, content, extra) => {
@@ -447,42 +466,6 @@ export const chatMessage: StateCreator<
     }
   },
 
-  internal_createMessage: async (message, context) => {
-    const {
-      internal_createTmpMessage,
-      refreshMessages,
-      internal_toggleMessageLoading,
-      internal_dispatchMessage,
-    } = get();
-    let tempId = context?.tempMessageId;
-    if (!tempId) {
-      // use optimistic update to avoid the slow waiting
-      tempId = internal_createTmpMessage(message);
-
-      internal_toggleMessageLoading(true, tempId);
-    }
-
-    try {
-      const id = await messageService.createMessage(message);
-      if (!context?.skipRefresh) {
-        internal_toggleMessageLoading(true, tempId);
-        await refreshMessages();
-      }
-
-      internal_toggleMessageLoading(false, tempId);
-      return id;
-    } catch (e) {
-      internal_toggleMessageLoading(false, tempId);
-      internal_dispatchMessage({
-        id: tempId,
-        type: 'updateMessage',
-        value: {
-          error: { type: ChatErrorType.CreateMessageError, message: (e as Error).message, body: e },
-        },
-      });
-    }
-  },
-
   internal_fetchMessages: async () => {
     const messages = await messageService.getMessages(get().activeId, get().activeTopicId);
     const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
@@ -504,8 +487,7 @@ export const chatMessage: StateCreator<
 
     return tempId;
   },
-
-  internal_createNewMessage: async (message, context) => {
+  internal_createMessage: async (message, context) => {
     const {
       internal_createTmpMessage,
       internal_toggleMessageLoading,
@@ -537,11 +519,12 @@ export const chatMessage: StateCreator<
     }
 
     try {
-      // 使用 createNewMessage API
       const result = await messageService.createNewMessage(message);
 
-      // 直接用返回的 messages 更新 store（已包含 group 结构）
-      replaceMessages(result.messages);
+      if (!context?.skipRefresh) {
+        // Use the messages returned from createNewMessage (already grouped)
+        replaceMessages(result.messages);
+      }
 
       internal_toggleMessageLoading(false, tempId);
       return result;
@@ -563,8 +546,13 @@ export const chatMessage: StateCreator<
 
   internal_deleteMessage: async (id: string) => {
     get().internal_dispatchMessage({ type: 'deleteMessage', id });
-    await messageService.removeMessage(id);
-    await get().refreshMessages();
+    const result = await messageService.removeMessage(id, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
   },
   internal_traceMessage: async (id, payload) => {
     // tracing the diff of update

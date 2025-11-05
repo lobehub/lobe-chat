@@ -18,6 +18,7 @@
     },
     "permissionsTitle": "Aşağıdaki izinleri talep et:",
     "redirectUri": "İzin verildikten sonra şu adrese yönlendirileceksiniz",
+    "redirecting": "Yetkilendirme başarılı, yönlendiriliyor...",
     "scope": {
       "email": "E-posta adresinize erişim",
       "offline_access": "Müşterinin verilerinize erişmesine izin ver",
