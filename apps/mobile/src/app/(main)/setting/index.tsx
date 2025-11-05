@@ -7,6 +7,8 @@ import {
   useTheme,
   useThemeMode,
 } from '@lobehub/ui-rn';
+import * as Device from 'expo-device';
+import * as MailComposer from 'expo-mail-composer';
 import { useFocusEffect } from 'expo-router';
 import * as Updates from 'expo-updates';
 import {
@@ -19,14 +21,13 @@ import {
   PaletteIcon,
   RadarIcon,
   RefreshCwIcon,
-  StickerIcon,
   SunMoonIcon,
   TypeIcon,
   User2Icon,
 } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, ScrollView } from 'react-native';
+import { Alert, Platform, ScrollView } from 'react-native';
 
 import { version } from '@/../package.json';
 import SettingGroup from '@/features/SettingGroup';
@@ -96,6 +97,54 @@ export default function SettingScreen() {
       ],
     );
   }, [isCacheLoading, isClearingCache, loadCacheSize, t]);
+
+  const handleFeedback = useCallback(async () => {
+    try {
+      // 检查设备是否支持邮件功能
+      const isAvailable = await MailComposer.isAvailableAsync();
+
+      if (!isAvailable) {
+        Toast.error(t('feedback.unavailable'));
+        return;
+      }
+
+      // 收集设备信息
+      const deviceInfo = [
+        `App Version: ${version}`,
+        `OS: ${Platform.OS} ${Platform.Version}`,
+        `Device: ${Device.modelName || 'Unknown'}`,
+        `System Version: ${Device.osVersion || 'Unknown'}`,
+        `Brand: ${Device.brand || 'Unknown'}`,
+      ].join('\n');
+
+      // 设备名称（用于邮件底部签名）
+      const deviceName = Platform.OS === 'ios' ? 'iPhone' : 'Android';
+
+      // 准备邮件内容（国际化）
+      const emailBody = `${t('feedback.email.body.template')}
+
+${t('feedback.email.body.description')}
+
+${t('feedback.email.body.frequency')}
+
+${t('feedback.email.body.screenshots')}
+
+
+---
+${deviceInfo}
+${t('feedback.email.body.footer', { device: deviceName })}`;
+
+      // 打开原生邮件撰写器
+      await MailComposer.composeAsync({
+        body: emailBody,
+        recipients: ['support@lobehub.com'],
+        subject: t('feedback.email.subject', { version }),
+      });
+    } catch (error) {
+      console.error('Failed to send feedback:', error);
+      Toast.error(t('feedback.error'));
+    }
+  }, [version, t]);
 
   const handleCheckForUpdates = useCallback(async () => {
     if (isCheckingUpdate) return;
@@ -274,7 +323,7 @@ export default function SettingScreen() {
               showArrow={true}
               title={t('help')}
             />
-            <SettingItem
+            {/* <SettingItem
               icon={StickerIcon}
               onPress={() =>
                 openLink('https://github.com/lobehub/lobe-chat/issues/new/choose', {
@@ -283,7 +332,7 @@ export default function SettingScreen() {
               }
               showArrow={true}
               title={t('feedback')}
-            />
+            /> */}
             <SettingItem
               icon={InboxIcon}
               onPress={() =>
@@ -301,7 +350,12 @@ export default function SettingScreen() {
               showArrow={true}
               title={t('update.check.title')}
             />
-            <SettingItem href="mailto:support@lobehub.com" icon={MailIcon} title={t('support')} />
+            <SettingItem
+              icon={MailIcon}
+              onPress={handleFeedback}
+              showArrow={true}
+              title={t('feedback.title')}
+            />
           </SettingGroup>
           <Center onPress={handleVersionTap} style={{ paddingTop: 24 }}>
             <Text align={'center'} type={'secondary'}>
