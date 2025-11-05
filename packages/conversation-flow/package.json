@@ -4,7 +4,8 @@
   "description": "Scalable complex conversation flow rendering engine",
   "main": "src/index.ts",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest",
+    "test:coverage": "vitest --coverage --silent='passed-only'"
   },
   "dependencies": {
     "@lobechat/types": "workspace:*"
