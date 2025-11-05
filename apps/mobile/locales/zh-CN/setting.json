@@ -177,7 +177,23 @@
     },
     "title": "开发者选项"
   },
-  "feedback": "意见反馈",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "问题描述：",
+        "footer": "发自我的 {{device}}",
+        "frequency": "出现频率：",
+        "screenshots": "相关截图：",
+        "template": "请详细描述您遇到的问题，以便我们更好地协助您解决。"
+      },
+      "subject": "反馈 - LobeChat - {{version}}"
+    },
+    "error": "打开邮件客户端失败，请稍后重试",
+    "saved": "反馈已保存到草稿箱",
+    "sent": "邮件已发送，感谢您的反馈！",
+    "title": "意见反馈",
+    "unavailable": "邮件功能不可用，请检查设备是否配置了邮箱账户或邮件功能"
+  },
   "fontSize": {
     "preview": {
       "botAnswer": "**如何调整字体大小？**\n\n使用下方的滑块即可调节字体大小：向左变小，向右变大。拖动时，这里会实时预览效果。\n\n小提示：选择\"标准\"刻度可快速恢复默认大小。",

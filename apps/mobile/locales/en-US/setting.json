@@ -177,7 +177,23 @@
     },
     "title": "Developer Options"
   },
-  "feedback": "Feedback",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Issue Description:",
+        "footer": "Sent from my {{device}}",
+        "frequency": "Frequency of Occurrence:",
+        "screenshots": "Relevant Screenshots:",
+        "template": "Please describe the issue you encountered in detail so we can better assist you."
+      },
+      "subject": "Feedback - LobeChat - {{version}}"
+    },
+    "error": "Failed to open the email client. Please try again later.",
+    "saved": "Feedback has been saved to drafts",
+    "sent": "Email sent successfully. Thank you for your feedback!",
+    "title": "Feedback",
+    "unavailable": "Email feature is unavailable. Please check if your device has an email account configured or supports email functionality."
+  },
   "fontSize": {
     "preview": {
       "botAnswer": "**How to adjust the font size?**\n\nUse the slider below to adjust the font size: move left to decrease, right to increase. The preview here updates in real-time as you drag.\n\nTip: Select the \"Standard\" mark to quickly reset to the default size.",
@@ -258,8 +274,8 @@
       "downloading": "Update available, downloading...",
       "error": "Failed to check for updates. Please try again later.",
       "none": "You're on the latest version",
-      "unavailable": "Update checks are only available in release builds.",
-      "title": "Check for Updates"
+      "title": "Check for Updates",
+      "unavailable": "Update checks are only available in release builds."
     }
   },
   "version": "Current Version"

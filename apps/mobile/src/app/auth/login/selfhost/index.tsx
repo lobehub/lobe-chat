@@ -3,14 +3,14 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Form } from '@/components';
 import { formatServerUrl, isValidServerUrl } from '@/config/server';
 import { setLoginMounted } from '@/navigation/loginState';
 import { useAuth, useAuthActions } from '@/store/_user';
 import { useSettingStore } from '@/store/setting';
-import { getLoginErrorKey } from '@/utils/error';
+import { handleLoginError } from '@/utils/error';
 
 import { useStyles } from './_features/style';
 
@@ -55,10 +55,7 @@ const CustomServerLoginPage = () => {
         return;
       }
 
-      const key = getLoginErrorKey(error);
-      const message = t(key, { ns: 'error' });
-
-      Alert.alert(t('error.title', { ns: 'error' }), message);
+      handleLoginError(error, t);
     }
   };
 

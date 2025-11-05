@@ -5,9 +5,9 @@
     "profile": {
       "email": "メールアドレス",
       "name": "ユーザー名",
-      "status": "アカウントステータス",
-      "unverified": "未認証",
-      "verified": "認証済み"
+      "status": "アカウントの状態",
+      "unverified": "未確認",
+      "verified": "確認済み"
     },
     "signOut": {
       "confirm": "ログアウトしてもよろしいですか？",
@@ -15,31 +15,31 @@
     },
     "switchAccount": {
       "action": "アカウントを切り替える",
-      "confirm": "アカウントを切り替えますか？現在のアカウントからログアウトし、再ログインします。",
+      "confirm": "アカウントを切り替えますか？現在のアカウントからログアウトし、再ログインが必要です。",
       "error": "アカウントの切り替えに失敗しました。もう一度お試しください。",
       "label": "アカウントを切り替える"
     },
     "title": "アカウント設定"
   },
   "advanced": {
-    "group": "高度"
+    "group": "詳細設定"
   },
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "{{name}} の API キーを入力してください",
-        "label": "API キー",
-        "placeholder": "{{name}} の API キーを入力してください"
+        "description": "{{name}} の API Key を入力してください",
+        "label": "API Key",
+        "placeholder": "{{name}} の API Key を入力"
       },
       "proxyUrl": {
-        "desc": "http(s):// を含める必要があります",
-        "invalid": "http:// または https:// で始まる有効な URL を入力してください",
+        "desc": "http(s):// で始まる必要があります",
+        "invalid": "http:// または https:// で始まる有効なURLを入力してください",
         "placeholder": "https://api.example.com/v1",
-        "title": "API プロキシアドレス"
+        "title": "API プロキシURL"
       },
-      "saving": "設定を保存しています...",
+      "saving": "設定を保存中...",
       "title": "設定",
-      "updateFailedDesc": "保存に失敗しました。再試行してください",
+      "updateFailedDesc": "保存に失敗しました。もう一度お試しください。",
       "updateFailedTitle": "保存失敗"
     },
     "detail": {
@@ -47,29 +47,29 @@
       "loading": "プロバイダー設定を読み込み中..."
     },
     "info": {
-      "builtIn": "組み込みプロバイダー",
+      "builtIn": "内蔵プロバイダー",
       "custom": "カスタムプロバイダー"
     },
     "list": {
       "disabled": "無効",
-      "emptySearch": "一致するプロバイダーが見つかりませんでした",
+      "emptySearch": "一致するプロバイダーが見つかりません",
       "enabled": "有効",
       "loadFailed": "プロバイダーリストの読み込みに失敗しました"
     },
     "models": {
       "allLoaded": "すべてのモデルを表示しました",
-      "copySuccess": "コピーに成功しました",
+      "copySuccess": "コピー成功",
       "disableFailed": "モデルの無効化に失敗しました",
-      "emptyNoSearch": "モデルが見つかりません。サーバーから取得を試みています",
-      "emptyWithSearch": "検索条件に一致するモデルがありません",
+      "emptyNoSearch": "モデルが見つかりません。サーバーから取得を試みてください。",
+      "emptyWithSearch": "検索条件に一致するモデルが見つかりません",
       "enableFailed": "モデルの有効化に失敗しました",
-      "fetch": "モデルを取得中",
-      "fetchFailed": "モデルの取得に失敗しました。再試行してください",
+      "fetch": "モデルを取得",
+      "fetchFailed": "モデルの取得に失敗しました。もう一度お試しください。",
       "fetchSuccess": "モデルリストの取得に成功しました！",
       "fetching": "取得中...",
       "loading": "読み込み中...",
       "loadingMore": "さらに読み込み中...",
-      "modelsAvailable": "利用可能なモデル数: {{count}}",
+      "modelsAvailable": "利用可能なモデル：{{count}} 件",
       "searchPlaceholder": "モデルを検索...",
       "title": "モデル"
     },
@@ -83,39 +83,39 @@
       "confirm": {
         "action": "キャッシュをクリア",
         "description": "ローカルに保存されたキャッシュデータを削除します。次回アプリを開く際に再読み込みが必要です。",
-        "title": "キャッシュをクリアしてもよろしいですか？"
+        "title": "キャッシュをクリアしますか？"
       },
       "failure": "キャッシュのクリアに失敗しました",
       "success": "キャッシュをクリアしました"
     },
-    "description": "キャッシュは起動速度を向上させます。ストレージを解放したい場合は、クリアをタップしてください。",
-    "title": "キャッシュをクリア"
+    "description": "キャッシュは起動速度を向上させます。容量を解放したい場合はクリアをクリックしてください。",
+    "title": "キャッシュのクリア"
   },
   "changelog": "更新履歴",
   "color": {
     "neutral": {
-      "description": "アプリのニュートラルカラーを選択してください",
-      "title": "ニュートラルカラー設定"
+      "description": "アプリの中性色を選択",
+      "title": "中性色設定"
     },
     "preview": "プレビュー",
     "previewMessages": {
-      "botGreat": "気に入っていただけて嬉しいです！このプレビュー機能では、設定を適用する前にテーマの効果を直感的に確認できます。",
-      "botHowToUse": "以下のカラーピッカーでメインカラーとニュートラルカラーを調整できます。プレビューはリアルタイムで更新されます。",
+      "botGreat": "気に入っていただけて嬉しいです！このプレビュー機能で、設定前にテーマの見た目を確認できます。",
+      "botHowToUse": "下のカラーピッカーで主色と中性色を調整できます。プレビューはリアルタイムで更新されます。",
       "userGreat": "素晴らしい！",
-      "userHowToUse": "テーマプレビューの使い方"
+      "userHowToUse": "テーマプレビューの使い方は？"
     },
     "primary": {
-      "description": "アプリのメインカラーを選択してください",
-      "title": "メインカラー設定"
+      "description": "アプリの主色を選択",
+      "title": "主色設定"
     },
-    "title": "カラー設定"
+    "title": "カラーテーマ設定"
   },
   "developer": {
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "アクセストークンを即時に期限切れにしました",
-          "title": "アクセストークンの期限切れ"
+          "success": "アクセストークンを即時に無効化しました",
+          "title": "アクセストークンの無効化"
         },
         "invalidate": {
           "success": "無効なアクセストークンを書き込みました",
@@ -127,13 +127,13 @@
         "title": "認証データのクリア"
       },
       "error": {
-        "noToken": "現在利用可能なトークンがありません"
+        "noToken": "現在使用可能なトークンがありません"
       },
       "group": "認証設定",
       "refreshToken": {
         "expire": {
-          "success": "リフレッシュトークンを即時に期限切れにしました",
-          "title": "リフレッシュトークンの期限切れ"
+          "success": "リフレッシュトークンを即時に無効化しました",
+          "title": "リフレッシュトークンの無効化"
         },
         "invalidate": {
           "success": "無効なリフレッシュトークンを書き込みました",
@@ -141,92 +141,108 @@
         }
       }
     },
-    "failurePrefix": "操作失敗: ",
+    "failurePrefix": "操作に失敗しました: ",
     "mode": {
-      "already": "すでに開発者モードです",
+      "already": "すでに開発者モードが有効です",
       "enabled": "開発者モードが有効になりました",
-      "remaining": "あと {{count}} 回タップすると開発者モードが有効になります",
+      "remaining": "あと {{count}} 回タップで開発者モードを有効にできます",
       "title": "開発者モード"
     },
     "selfHostedEntry": {
-      "confirmAction": "ログインページへ移動",
-      "confirmDescription": "有効にするとログインページにセルフホスト構成の入口が表示されます。現在のアカウントからログアウトしてログインページへ移動しますか？",
+      "confirmAction": "設定ページへ移動",
+      "confirmDescription": "有効にすると自ホスト設定ページが開きます。現在のアカウントをログアウトして移動しますか？",
       "confirmResetAction": "リセットしてログインへ",
-      "confirmResetDescription": "セルフホストモードをオフにするとサーバーアドレスが公式インスタンスにリセットされ、現在のアカウントからログアウトします。続行しますか？",
-      "confirmResetTitle": "セルフホストモードをオフにする",
-      "confirmTitle": "セルフホストログイン入口を有効にする",
-      "description": "ログインページにセルフホストインスタンスのボタンを表示するかどうかを制御します",
-      "title": "セルフホストモードを有効にする"
+      "confirmResetDescription": "自ホストモードを無効にすると、サーバーアドレスが公式インスタンスにリセットされ、ログアウトされます。続行しますか？",
+      "confirmResetTitle": "自ホストモードを無効にする",
+      "confirmTitle": "自ホストログインを有効にする",
+      "description": "ログインページに自ホストインスタンスのボタンを表示するかどうかを制御します",
+      "title": "自ホストモードを有効にする"
     },
     "server": {
-      "confirmDescription": "サーバーアドレスを変更すると現在のユーザーはログアウトし、再ログインが必要になります。続行しますか？",
-      "confirmTitle": "サーバー切り替えの確認",
+      "confirmDescription": "サーバーアドレスを変更すると、現在のユーザーはログアウトされ、再ログインが必要になります。続行しますか？",
+      "confirmTitle": "サーバーの切り替えを確認",
       "current": "現在のアドレス",
-      "description": "設定するとすべてのリクエストがこのサーバーアドレスを使用します。空欄にすると公式サーバーに戻ります。",
+      "description": "設定後、すべてのリクエストはこのサーバーアドレスを使用します。空欄にすると公式サーバーに戻ります。",
       "group": "サーバー設定",
-      "hint": "http:// または https:// で始まる必要があります。アプリの再ログインが必要になる場合があります。",
+      "hint": "http:// または https:// で始まる必要があります。アプリの再ログインが必要な場合があります。",
       "invalid": "http:// または https:// で始まる有効なアドレスを入力してください",
-      "notice": "カスタムサーバーはデフォルトのAPIエンドポイントを置き換えます。サービスが利用可能でLobeChat APIプロトコルに対応していることを確認してください。切り替え後は再ログインやアプリの再起動が必要になる場合があります。",
+      "notice": "カスタムサーバーはデフォルトのAPIエンドポイントを置き換えます。LobeChat APIに準拠していることを確認してください。切り替え後は再ログインまたはアプリの再起動が必要な場合があります。",
       "noticeTitle": "切り替え前の注意",
       "placeholder": "https://your-server.example.com",
       "reset": "デフォルトに戻す",
       "resetSuccess": "公式サーバーアドレスに戻しました",
       "save": "保存",
-      "title": "セルフホストインスタンス",
-      "updated": "カスタムサーバーアドレスが更新されました"
+      "title": "自ホストインスタンス",
+      "updated": "カスタムサーバーアドレスを更新しました"
     },
     "title": "開発者オプション"
   },
-  "feedback": "フィードバック",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "問題の詳細：",
+        "footer": "私の {{device}} より送信",
+        "frequency": "発生頻度：",
+        "screenshots": "関連スクリーンショット：",
+        "template": "問題の詳細をできるだけ詳しくご記入ください。迅速な対応のためにご協力をお願いします。"
+      },
+      "subject": "フィードバック - LobeChat - {{version}}"
+    },
+    "error": "メールクライアントの起動に失敗しました。しばらくしてから再試行してください。",
+    "saved": "フィードバックは下書きに保存されました",
+    "sent": "メールを送信しました。ご意見ありがとうございます！",
+    "title": "フィードバック",
+    "unavailable": "メール機能が利用できません。お使いのデバイスにメールアカウントが設定されているか、メール機能が有効かをご確認ください。"
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**フォントサイズの調整方法**\n\n下のスライダーを使ってフォントサイズを調整できます：左に動かすと小さく、右に動かすと大きくなります。ドラッグ中はここでリアルタイムにプレビューが表示されます。\n\nヒント：「標準」目盛りを選ぶと、すぐにデフォルトサイズに戻せます。",
-      "botGreat": "気に入っていただけて嬉しいです！このプレビュー機能は、設定を適用する前にチャット画面での見え方を直感的に確認できます。",
+      "botAnswer": "**フォントサイズを調整するには？**\n\n下のスライダーを使ってフォントサイズを調整できます。左に動かすと小さく、右に動かすと大きくなります。調整中はここにプレビューが表示されます。\n\nヒント：「標準」を選ぶとデフォルトサイズに戻せます。",
+      "botGreat": "気に入っていただけて嬉しいです！このプレビュー機能で、設定前にチャットの見た目を確認できます。",
       "userGreat": "素晴らしい！",
-      "userQuestion": "チャットのフォントを大きくしたいのですが、どうすればいいですか？"
+      "userQuestion": "チャットの文字を大きくしたいのですが、どうすればいいですか？"
     },
     "standard": "標準",
-    "text": "注意：この設定はメッセージ内容のフォントサイズ表示にのみ影響します",
+    "text": "この設定はメッセージ内容のフォントサイズの表示にのみ影響します",
     "title": "フォントサイズ"
   },
   "general": {
     "group": "一般"
   },
-  "help": "使い方ヘルプ",
+  "help": "ヘルプ",
   "info": {
     "group": "情報"
   },
   "locale": {
     "auto": {
-      "description": "システム言語設定に従う",
+      "description": "システムの言語設定に従う",
       "title": "システムに従う"
     },
     "title": "言語設定"
   },
   "openai": "OpenAI 設定",
   "openaiSettings": {
-    "apiKey": "API キー",
-    "apiKeyPlaceholder": "OpenAI の API キーを入力してください",
-    "checkApiKey": "API キーが正しいか確認してください",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "OpenAI API Key を入力してください",
+    "checkApiKey": "API Key が正しいか確認してください",
     "checkProxyAddress": "サーバーに接続できません。プロキシアドレスが正しいか確認してください",
-    "connectionSuccess": "接続成功。API キーとプロキシアドレスの設定が正しいです",
-    "connectivityHint": "接続テスト後、API キーとプロキシアドレスの正確さを検証します",
-    "pleaseEnterApiKey": "API キーを入力してください",
+    "connectionSuccess": "接続成功。API Key とプロキシアドレスは正しく設定されています",
+    "connectivityHint": "接続テスト後、API Key とプロキシアドレスの正当性が検証されます",
+    "pleaseEnterApiKey": "API Key を入力してください",
     "proxyAddress": "API プロキシアドレス",
     "proxyPlaceholder": "http(s):// を含める必要があります",
     "testConnectivity": "接続テスト",
-    "validationFailed": "検証失敗",
-    "validationSuccess": "検証成功"
+    "validationFailed": "検証に失敗しました",
+    "validationSuccess": "検証に成功しました"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "秘密鍵やプロキシアドレスなどは <1>AES-GCM</1> アルゴリズムで暗号化されます",
+      "aesGcm": "キーやプロキシアドレスなどは <1>AES-GCM</1> アルゴリズムで暗号化されます",
       "checker": {
         "button": "接続テスト",
-        "desc": "API キーとプロキシアドレスが正しく入力されているかテストします",
-        "pass": "チェック合格",
-        "selectModel": "接続テストに使用するモデルを選択してください",
-        "title": "接続性チェック"
+        "desc": "API Key とプロキシアドレスが正しく入力されているか確認します",
+        "pass": "確認成功",
+        "selectModel": "接続テストに使用するモデルを選択",
+        "title": "接続確認"
       }
     }
   },
@@ -249,17 +265,17 @@
   "update": {
     "check": {
       "applyAction": "今すぐ再起動",
-      "applyDescription": "最新のアップデートを適用するにはアプリの再起動が必要です。今すぐ再起動しますか？",
-      "applyError": "アップデートの適用に失敗しました。しばらくしてから再試行してください。",
-      "applyTitle": "アップデートの適用",
-      "applying": "アップデートを適用するために再起動しています...",
-      "checking": "アップデートを確認しています...",
-      "downloaded": "アップデートパッケージのダウンロードが完了しました",
-      "downloading": "新しいバージョンが見つかりました。アップデートをダウンロード中です...",
-      "error": "アップデートの確認に失敗しました。しばらくしてから再試行してください。",
-      "none": "現在ご利用のバージョンは最新です",
-      "title": "アップデートの確認",
-      "unavailable": "このビルドではアップデートの確認はサポートされていません。正式版でご利用ください。"
+      "applyDescription": "最新の更新を適用するにはアプリの再起動が必要です。今すぐ再起動しますか？",
+      "applyError": "更新の適用に失敗しました。後でもう一度お試しください。",
+      "applyTitle": "更新の適用",
+      "applying": "更新を適用するために再起動中...",
+      "checking": "更新を確認中...",
+      "downloaded": "更新パッケージのダウンロードが完了しました",
+      "downloading": "新しいバージョンが見つかりました。更新をダウンロード中...",
+      "error": "更新の確認に失敗しました。後でもう一度お試しください。",
+      "none": "現在、最新バージョンを使用しています",
+      "title": "更新の確認",
+      "unavailable": "このビルドでは更新の確認はサポートされていません。正式版でご利用ください。"
     }
   },
   "version": "現在のバージョン"

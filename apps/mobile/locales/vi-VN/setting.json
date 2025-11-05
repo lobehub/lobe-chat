@@ -1,5 +1,5 @@
 {
-  "about": "Giới thiệu về LobeHub",
+  "about": "Về LobeHub",
   "account": {
     "group": "Tài khoản",
     "profile": {
@@ -15,7 +15,7 @@
     },
     "switchAccount": {
       "action": "Chuyển tài khoản",
-      "confirm": "Bạn có chắc muốn chuyển tài khoản không? Thao tác này sẽ đăng xuất khỏi tài khoản hiện tại và đăng nhập lại.",
+      "confirm": "Bạn có chắc chắn muốn chuyển tài khoản không? Thao tác này sẽ đăng xuất tài khoản hiện tại và đăng nhập lại.",
       "error": "Chuyển tài khoản thất bại, vui lòng thử lại.",
       "label": "Chuyển tài khoản"
     },
@@ -32,7 +32,7 @@
         "placeholder": "Vui lòng nhập API Key của {{name}}"
       },
       "proxyUrl": {
-        "desc": "Phải bao gồm http(s)://",
+        "desc": "Phải bắt đầu bằng http(s)://",
         "invalid": "Vui lòng nhập URL hợp lệ bắt đầu bằng http:// hoặc https://",
         "placeholder": "https://api.example.com/v1",
         "title": "Địa chỉ proxy API"
@@ -43,33 +43,33 @@
       "updateFailedTitle": "Lưu thất bại"
     },
     "detail": {
-      "loadFailed": "Tải cấu hình nhà cung cấp dịch vụ thất bại",
-      "loading": "Đang tải cấu hình nhà cung cấp dịch vụ..."
+      "loadFailed": "Tải cấu hình nhà cung cấp thất bại",
+      "loading": "Đang tải cấu hình nhà cung cấp..."
     },
     "info": {
-      "builtIn": "Nhà cung cấp tích hợp sẵn",
+      "builtIn": "Nhà cung cấp tích hợp",
       "custom": "Nhà cung cấp tùy chỉnh"
     },
     "list": {
       "disabled": "Chưa kích hoạt",
       "emptySearch": "Không tìm thấy nhà cung cấp phù hợp",
       "enabled": "Đã kích hoạt",
-      "loadFailed": "Tải danh sách nhà cung cấp dịch vụ thất bại"
+      "loadFailed": "Tải danh sách nhà cung cấp thất bại"
     },
     "models": {
       "allLoaded": "Đã hiển thị tất cả mô hình",
       "copySuccess": "Sao chép thành công",
-      "disableFailed": "Vô hiệu hóa mô hình thất bại",
+      "disableFailed": "Tắt mô hình thất bại",
       "emptyNoSearch": "Không tìm thấy mô hình nào, thử lấy từ máy chủ",
-      "emptyWithSearch": "Không có mô hình phù hợp với điều kiện tìm kiếm",
-      "enableFailed": "Kích hoạt mô hình thất bại",
+      "emptyWithSearch": "Không có mô hình nào phù hợp với tìm kiếm",
+      "enableFailed": "Bật mô hình thất bại",
       "fetch": "Lấy mô hình",
       "fetchFailed": "Lấy mô hình thất bại, vui lòng thử lại",
       "fetchSuccess": "Lấy danh sách mô hình thành công!",
       "fetching": "Đang lấy...",
       "loading": "Đang tải...",
       "loadingMore": "Đang tải thêm...",
-      "modelsAvailable": "Tổng cộng {{count}} mô hình khả dụng",
+      "modelsAvailable": "Có tổng cộng {{count}} mô hình khả dụng",
       "searchPlaceholder": "Tìm kiếm mô hình...",
       "title": "Mô hình"
     },
@@ -82,13 +82,13 @@
     "clear": {
       "confirm": {
         "action": "Xóa bộ nhớ đệm",
-        "description": "Thao tác này sẽ xóa dữ liệu được lưu trữ cục bộ, nội dung sẽ được tải lại khi mở ứng dụng lần sau.",
+        "description": "Thao tác này sẽ xóa dữ liệu đệm lưu trữ cục bộ, nội dung sẽ được tải lại khi mở ứng dụng lần sau.",
         "title": "Xác nhận xóa bộ nhớ đệm?"
       },
       "failure": "Xóa bộ nhớ đệm thất bại",
-      "success": "Bộ nhớ đệm đã được xóa"
+      "success": "Đã xóa bộ nhớ đệm"
     },
-    "description": "Bộ nhớ đệm giúp tăng tốc độ khởi động, bạn có thể xóa để giải phóng dung lượng khi cần.",
+    "description": "Bộ nhớ đệm giúp tăng tốc khởi động, bạn có thể xóa khi cần giải phóng dung lượng.",
     "title": "Xóa bộ nhớ đệm"
   },
   "changelog": "Nhật ký cập nhật",
@@ -99,14 +99,14 @@
     },
     "preview": "Xem trước",
     "previewMessages": {
-      "botGreat": "Rất vui vì bạn thích! Tính năng xem trước này cho phép bạn trực quan thấy hiệu ứng chủ đề trước khi áp dụng cài đặt.",
-      "botHowToUse": "Bạn có thể điều chỉnh màu chủ đạo và màu trung tính bằng bộ chọn màu bên dưới, bản xem trước sẽ cập nhật trực tiếp để hiển thị hiệu ứng.",
+      "botGreat": "Rất vui vì bạn thích! Tính năng xem trước giúp bạn hình dung giao diện trước khi áp dụng.",
+      "botHowToUse": "Bạn có thể điều chỉnh màu chính và màu trung tính bằng bộ chọn bên dưới, giao diện sẽ cập nhật theo thời gian thực.",
       "userGreat": "Tuyệt vời!",
-      "userHowToUse": "Cách sử dụng bản xem trước chủ đề?"
+      "userHowToUse": "Cách sử dụng xem trước chủ đề?"
     },
     "primary": {
-      "description": "Chọn tông màu chủ đạo cho ứng dụng",
-      "title": "Cấu hình màu chủ đạo"
+      "description": "Chọn tông màu chính cho ứng dụng",
+      "title": "Cấu hình màu chính"
     },
     "title": "Cài đặt màu sắc"
   },
@@ -114,12 +114,12 @@
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "Đã làm cho mã truy cập hết hạn ngay lập tức",
-          "title": "Mã truy cập hết hạn"
+          "success": "Đã làm cho Access Token hết hạn ngay lập tức",
+          "title": "Access Token hết hạn"
         },
         "invalidate": {
-          "success": "Đã ghi mã truy cập không hợp lệ",
-          "title": "Mã truy cập không hợp lệ"
+          "success": "Đã ghi Access Token không hợp lệ",
+          "title": "Access Token không hợp lệ"
         }
       },
       "clearAuthData": {
@@ -132,62 +132,78 @@
       "group": "Cấu hình xác thực",
       "refreshToken": {
         "expire": {
-          "success": "Đã làm cho mã làm mới hết hạn ngay lập tức",
-          "title": "Mã làm mới hết hạn"
+          "success": "Đã làm cho Refresh Token hết hạn ngay lập tức",
+          "title": "Refresh Token hết hạn"
         },
         "invalidate": {
-          "success": "Đã ghi mã làm mới không hợp lệ",
-          "title": "Mã làm mới không hợp lệ"
+          "success": "Đã ghi Refresh Token không hợp lệ",
+          "title": "Refresh Token không hợp lệ"
         }
       }
     },
     "failurePrefix": "Thao tác thất bại: ",
     "mode": {
       "already": "Bạn đã ở chế độ nhà phát triển",
-      "enabled": "Chế độ nhà phát triển đã được bật",
-      "remaining": "Chạm thêm {{count}} lần để bật chế độ nhà phát triển",
+      "enabled": "Đã bật chế độ nhà phát triển",
+      "remaining": "Nhấn thêm {{count}} lần để bật chế độ nhà phát triển",
       "title": "Chế độ nhà phát triển"
     },
     "selfHostedEntry": {
-      "confirmAction": "Đi đến trang đăng nhập",
-      "confirmDescription": "Sau khi kích hoạt, mục cấu hình tự lưu trữ sẽ hiển thị trên trang đăng nhập, bạn có muốn đăng xuất tài khoản hiện tại và đi đến trang đăng nhập không?",
-      "confirmResetAction": "Đặt lại và đi đến đăng nhập",
-      "confirmResetDescription": "Tắt chế độ tự triển khai sẽ đặt lại địa chỉ máy chủ về phiên bản chính thức và đăng xuất tài khoản hiện tại. Bạn có muốn tiếp tục không?",
+      "confirmAction": "Đi đến trang cấu hình",
+      "confirmDescription": "Sau khi bật, sẽ mở trực tiếp trang cấu hình tự triển khai. Bạn có muốn đăng xuất và tiếp tục?",
+      "confirmResetAction": "Đặt lại và đăng nhập lại",
+      "confirmResetDescription": "Tắt chế độ tự triển khai sẽ đặt lại địa chỉ máy chủ về bản chính thức và đăng xuất tài khoản hiện tại. Bạn có muốn tiếp tục?",
       "confirmResetTitle": "Tắt chế độ tự triển khai",
-      "confirmTitle": "Kích hoạt mục đăng nhập tự lưu trữ",
-      "description": "Kiểm soát việc hiển thị nút phiên bản tự lưu trữ trên trang đăng nhập",
+      "confirmTitle": "Bật đăng nhập tự triển khai",
+      "description": "Kiểm soát việc hiển thị nút đăng nhập tự triển khai trên trang đăng nhập",
       "title": "Bật chế độ tự triển khai"
     },
     "server": {
-      "confirmDescription": "Sau khi thay đổi địa chỉ máy chủ, người dùng hiện tại sẽ bị đăng xuất và cần đăng nhập lại, bạn có muốn tiếp tục không?",
-      "confirmTitle": "Xác nhận chuyển đổi máy chủ",
+      "confirmDescription": "Thay đổi địa chỉ máy chủ sẽ đăng xuất người dùng hiện tại và yêu cầu đăng nhập lại. Bạn có muốn tiếp tục?",
+      "confirmTitle": "Xác nhận chuyển máy chủ",
       "current": "Địa chỉ hiện tại",
-      "description": "Sau khi cấu hình, tất cả các yêu cầu sẽ sử dụng địa chỉ máy chủ này. Để trống để trở về máy chủ chính thức.",
+      "description": "Sau khi cấu hình, tất cả yêu cầu sẽ sử dụng địa chỉ máy chủ này. Để trống để quay lại máy chủ chính thức.",
       "group": "Cấu hình máy chủ",
       "hint": "Phải bắt đầu bằng http:// hoặc https://, ứng dụng có thể yêu cầu đăng nhập lại.",
       "invalid": "Vui lòng nhập địa chỉ hợp lệ bắt đầu bằng http:// hoặc https://",
-      "notice": "Máy chủ tùy chỉnh sẽ thay thế địa chỉ giao diện mặc định, vui lòng đảm bảo dịch vụ hoạt động và tương thích với giao thức LobeChat API. Sau khi chuyển đổi có thể cần đăng nhập lại hoặc khởi động lại ứng dụng.",
-      "noticeTitle": "Lưu ý trước khi chuyển đổi",
+      "notice": "Máy chủ tùy chỉnh sẽ thay thế địa chỉ API mặc định. Hãy đảm bảo máy chủ khả dụng và tương thích với giao thức LobeChat API. Có thể cần đăng nhập lại hoặc khởi động lại ứng dụng sau khi chuyển.",
+      "noticeTitle": "Lưu ý trước khi chuyển",
       "placeholder": "https://your-server.example.com",
       "reset": "Khôi phục mặc định",
       "resetSuccess": "Đã khôi phục địa chỉ máy chủ chính thức",
       "save": "Lưu",
       "title": "Phiên bản tự triển khai",
-      "updated": "Địa chỉ máy chủ tùy chỉnh đã được cập nhật"
+      "updated": "Đã cập nhật địa chỉ máy chủ tùy chỉnh"
     },
     "title": "Tùy chọn nhà phát triển"
   },
-  "feedback": "Phản hồi ý kiến",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Mô tả vấn đề:",
+        "footer": "Gửi từ thiết bị {{device}} của tôi",
+        "frequency": "Tần suất xảy ra:",
+        "screenshots": "Ảnh chụp liên quan:",
+        "template": "Vui lòng mô tả chi tiết vấn đề bạn gặp phải để chúng tôi có thể hỗ trợ tốt hơn."
+      },
+      "subject": "Phản hồi - LobeChat - {{version}}"
+    },
+    "error": "Không thể mở ứng dụng email, vui lòng thử lại sau",
+    "saved": "Phản hồi đã được lưu vào thư nháp",
+    "sent": "Email đã được gửi, cảm ơn bạn đã phản hồi!",
+    "title": "Góp ý",
+    "unavailable": "Chức năng email không khả dụng, vui lòng kiểm tra xem thiết bị đã cấu hình tài khoản email hoặc chức năng email chưa"
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Làm thế nào để điều chỉnh kích thước phông chữ?**\n\nSử dụng thanh trượt bên dưới để điều chỉnh kích thước phông chữ: kéo sang trái để giảm, kéo sang phải để tăng. Khi kéo, bạn sẽ thấy bản xem trước hiệu ứng ngay tại đây.\n\nMẹo nhỏ: chọn mức \"Tiêu chuẩn\" để nhanh chóng khôi phục kích thước mặc định.",
-      "botGreat": "Rất vui vì bạn thích! Tính năng xem trước này giúp bạn có thể trực quan thấy được hiệu ứng trong hộp thoại trước khi áp dụng cài đặt.",
+      "botAnswer": "**Làm thế nào để điều chỉnh kích thước chữ?**\n\nSử dụng thanh trượt bên dưới để điều chỉnh kích thước chữ: kéo sang trái để nhỏ hơn, sang phải để lớn hơn. Kết quả sẽ được hiển thị ngay tại đây.\n\nMẹo nhỏ: Chọn mức \"Tiêu chuẩn\" để nhanh chóng quay lại kích thước mặc định.",
+      "botGreat": "Rất vui vì bạn thích! Tính năng xem trước giúp bạn hình dung rõ ràng hiệu ứng trong hộp thoại trước khi áp dụng.",
       "userGreat": "Tuyệt vời!",
-      "userQuestion": "Tôi muốn phông chữ trong cuộc trò chuyện to hơn, làm thế nào để làm được?"
+      "userQuestion": "Tôi muốn tăng kích thước chữ trong hội thoại, làm thế nào?"
     },
     "standard": "Tiêu chuẩn",
-    "text": "Lưu ý, cấu hình này chỉ ảnh hưởng đến kích thước phông chữ hiển thị của nội dung tin nhắn",
-    "title": "Cỡ chữ"
+    "text": "Lưu ý: Cài đặt này chỉ ảnh hưởng đến kích thước chữ trong nội dung tin nhắn",
+    "title": "Kích thước chữ"
   },
   "general": {
     "group": "Chung"
@@ -198,32 +214,32 @@
   },
   "locale": {
     "auto": {
-      "description": "Theo cài đặt ngôn ngữ hệ thống",
-      "title": "Theo hệ thống"
+      "description": "Theo ngôn ngữ hệ thống",
+      "title": "Tự động"
     },
     "title": "Cài đặt ngôn ngữ"
   },
   "openai": "Cài đặt OpenAI",
   "openaiSettings": {
     "apiKey": "API Key",
-    "apiKeyPlaceholder": "Vui lòng nhập API Key OpenAI của bạn",
+    "apiKeyPlaceholder": "Vui lòng nhập OpenAI API Key của bạn",
     "checkApiKey": "Vui lòng kiểm tra API Key có chính xác không",
-    "checkProxyAddress": "Không thể kết nối đến máy chủ, vui lòng kiểm tra địa chỉ proxy có chính xác không",
-    "connectionSuccess": "Kết nối thành công, API Key và địa chỉ proxy được cấu hình chính xác",
-    "connectivityHint": "Sau khi kiểm tra kết nối, sẽ xác thực API Key và địa chỉ proxy có được nhập đúng hay không",
+    "checkProxyAddress": "Không thể kết nối đến máy chủ, vui lòng kiểm tra địa chỉ proxy",
+    "connectionSuccess": "Kết nối thành công, API Key và địa chỉ proxy hợp lệ",
+    "connectivityHint": "Sau khi kiểm tra kết nối, hệ thống sẽ xác minh API Key và địa chỉ proxy",
     "pleaseEnterApiKey": "Vui lòng nhập API Key",
     "proxyAddress": "Địa chỉ proxy API",
     "proxyPlaceholder": "Phải bao gồm http(s)://",
     "testConnectivity": "Kiểm tra kết nối",
-    "validationFailed": "Xác thực thất bại",
-    "validationSuccess": "Xác thực thành công"
+    "validationFailed": "Xác minh thất bại",
+    "validationSuccess": "Xác minh thành công"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Khóa bí mật và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
+      "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
       "checker": {
         "button": "Kiểm tra kết nối",
-        "desc": "Kiểm tra API Key và địa chỉ proxy có được nhập đúng không",
+        "desc": "Kiểm tra xem API Key và địa chỉ proxy đã được nhập đúng chưa",
         "pass": "Kiểm tra thành công",
         "selectModel": "Chọn mô hình để kiểm tra kết nối",
         "title": "Kiểm tra kết nối"
@@ -237,7 +253,7 @@
       "models": "Mô hình"
     }
   },
-  "providersSearchPlaceholder": "Tìm nhà cung cấp theo từ khóa...",
+  "providersSearchPlaceholder": "Tìm kiếm nhà cung cấp theo từ khóa...",
   "support": "Hỗ trợ qua email",
   "themeMode": {
     "auto": "Theo hệ thống",
@@ -249,17 +265,17 @@
   "update": {
     "check": {
       "applyAction": "Khởi động lại ngay",
-      "applyDescription": "Cần khởi động lại ứng dụng để áp dụng bản cập nhật mới nhất. Bạn có muốn khởi động lại ngay bây giờ không?",
+      "applyDescription": "Cần khởi động lại ứng dụng để áp dụng bản cập nhật mới. Bạn có muốn khởi động lại ngay không?",
       "applyError": "Áp dụng bản cập nhật thất bại, vui lòng thử lại sau",
-      "applyTitle": "Cập nhật ứng dụng",
+      "applyTitle": "Áp dụng bản cập nhật",
       "applying": "Đang khởi động lại để áp dụng bản cập nhật...",
       "checking": "Đang kiểm tra bản cập nhật...",
       "downloaded": "Gói cập nhật đã được tải xuống",
       "downloading": "Phát hiện phiên bản mới, đang tải xuống bản cập nhật...",
       "error": "Kiểm tra bản cập nhật thất bại, vui lòng thử lại sau",
       "none": "Bạn đang sử dụng phiên bản mới nhất",
-      "title": "Kiểm tra bản cập nhật",
-      "unavailable": "Bản dựng hiện tại không hỗ trợ kiểm tra cập nhật. Vui lòng sử dụng tính năng này trong phiên bản chính thức."
+      "title": "Kiểm tra cập nhật",
+      "unavailable": "Bản dựng hiện tại không hỗ trợ kiểm tra cập nhật. Vui lòng sử dụng phiên bản chính thức để sử dụng tính năng này."
     }
   },
   "version": "Phiên bản hiện tại"

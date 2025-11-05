@@ -15,7 +15,7 @@
     },
     "switchAccount": {
       "action": "Cambia account",
-      "confirm": "Sei sicuro di voler cambiare account? Questo comporterà la disconnessione dall'account attuale e un nuovo accesso.",
+      "confirm": "Sei sicuro di voler cambiare account? Questo comporterà la disconnessione e un nuovo accesso.",
       "error": "Cambio account non riuscito, riprova.",
       "label": "Cambia account"
     },
@@ -32,18 +32,18 @@
         "placeholder": "Inserisci la API Key di {{name}}"
       },
       "proxyUrl": {
-        "desc": "Deve includere http(s)://",
+        "desc": "Deve iniziare con http(s)://",
         "invalid": "Inserisci un URL valido che inizi con http:// o https://",
         "placeholder": "https://api.example.com/v1",
         "title": "Indirizzo proxy API"
       },
       "saving": "Salvataggio configurazione in corso...",
       "title": "Configurazione",
-      "updateFailedDesc": "Salvataggio fallito, riprova",
-      "updateFailedTitle": "Salvataggio fallito"
+      "updateFailedDesc": "Salvataggio non riuscito, riprova",
+      "updateFailedTitle": "Salvataggio non riuscito"
     },
     "detail": {
-      "loadFailed": "Caricamento configurazione provider fallito",
+      "loadFailed": "Caricamento configurazione provider non riuscito",
       "loading": "Caricamento configurazione provider in corso..."
     },
     "info": {
@@ -51,61 +51,61 @@
       "custom": "Provider personalizzato"
     },
     "list": {
-      "disabled": "Disabilitato",
+      "disabled": "Disattivato",
       "emptySearch": "Nessun provider corrispondente trovato",
-      "enabled": "Abilitato",
-      "loadFailed": "Caricamento lista provider fallito"
+      "enabled": "Attivato",
+      "loadFailed": "Caricamento elenco provider non riuscito"
     },
     "models": {
-      "allLoaded": "Tutti i modelli sono stati mostrati",
-      "copySuccess": "Copia riuscita",
-      "disableFailed": "Disabilitazione modello fallita",
+      "allLoaded": "Tutti i modelli visualizzati",
+      "copySuccess": "Copiato con successo",
+      "disableFailed": "Disattivazione modello non riuscita",
       "emptyNoSearch": "Nessun modello trovato, prova a recuperare dal server",
-      "emptyWithSearch": "Nessun modello corrisponde ai criteri di ricerca",
-      "enableFailed": "Abilitazione modello fallita",
+      "emptyWithSearch": "Nessun modello corrispondente ai criteri di ricerca",
+      "enableFailed": "Attivazione modello non riuscita",
       "fetch": "Recupera modelli",
-      "fetchFailed": "Recupero modelli fallito, riprova",
-      "fetchSuccess": "Lista modelli recuperata con successo!",
+      "fetchFailed": "Recupero modelli non riuscito, riprova",
+      "fetchSuccess": "Elenco modelli recuperato con successo!",
       "fetching": "Recupero in corso...",
       "loading": "Caricamento in corso...",
-      "loadingMore": "Caricamento di altri modelli in corso...",
-      "modelsAvailable": "{{count}} modelli disponibili in totale",
+      "loadingMore": "Caricamento altri modelli...",
+      "modelsAvailable": "{{count}} modelli disponibili",
       "searchPlaceholder": "Cerca modelli...",
       "title": "Modelli"
     },
     "skeleton": {
-      "disabled": "Disabilitato",
-      "enabled": "Abilitato"
+      "disabled": "Disattivato",
+      "enabled": "Attivato"
     }
   },
   "cache": {
     "clear": {
       "confirm": {
         "action": "Pulisci cache",
-        "description": "Questo rimuoverà i dati memorizzati localmente; al prossimo avvio dell'app sarà necessario ricaricare i contenuti.",
-        "title": "Confermi la pulizia della cache?"
+        "description": "Questo rimuoverà i dati memorizzati localmente. Al prossimo avvio, i contenuti verranno ricaricati.",
+        "title": "Confermare la pulizia della cache?"
       },
-      "failure": "Pulizia della cache non riuscita",
+      "failure": "Pulizia cache non riuscita",
       "success": "Cache pulita con successo"
     },
-    "description": "La cache può migliorare la velocità di avvio. Puoi cancellarla per liberare spazio.",
+    "description": "La cache migliora la velocità di avvio. Puoi cancellarla per liberare spazio.",
     "title": "Pulisci cache"
   },
-  "changelog": "Registro delle modifiche",
+  "changelog": "Registro aggiornamenti",
   "color": {
     "neutral": {
-      "description": "Seleziona la tonalità neutra dell'applicazione",
-      "title": "Configurazione tonalità neutra"
+      "description": "Scegli la tonalità neutra dell'app",
+      "title": "Configurazione colore neutro"
     },
     "preview": "Anteprima",
     "previewMessages": {
-      "botGreat": "Felice che ti piaccia! Questa funzione di anteprima ti permette di vedere l'effetto del tema prima di applicare le impostazioni.",
-      "botHowToUse": "Puoi regolare il colore principale e le tonalità neutre tramite il selettore colori sottostante; l'anteprima si aggiornerà in tempo reale per mostrare l'effetto.",
-      "userGreat": "Ottimo!",
-      "userHowToUse": "Come utilizzare l'anteprima del tema?"
+      "botGreat": "Felice che ti piaccia! Questa anteprima ti permette di vedere l'effetto del tema prima di applicarlo.",
+      "botHowToUse": "Puoi regolare i colori principali e neutri con i selettori qui sotto. L'anteprima si aggiornerà in tempo reale.",
+      "userGreat": "Fantastico!",
+      "userHowToUse": "Come si usa l'anteprima del tema?"
     },
     "primary": {
-      "description": "Seleziona la tonalità principale dell'applicazione",
+      "description": "Scegli il colore principale dell'app",
       "title": "Configurazione colore principale"
     },
     "title": "Impostazioni colore"
@@ -114,7 +114,7 @@
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "Token di accesso immediatamente scaduto",
+          "success": "Token di accesso scaduto immediatamente",
           "title": "Token di accesso scaduto"
         },
         "invalidate": {
@@ -124,15 +124,15 @@
       },
       "clearAuthData": {
         "success": "Dati di autenticazione cancellati",
-        "title": "Cancellazione dati di autenticazione"
+        "title": "Cancella dati di autenticazione"
       },
       "error": {
-        "noToken": "Nessun token disponibile al momento"
+        "noToken": "Nessun token disponibile"
       },
       "group": "Configurazione autenticazione",
       "refreshToken": {
         "expire": {
-          "success": "Token di aggiornamento immediatamente scaduto",
+          "success": "Token di aggiornamento scaduto immediatamente",
           "title": "Token di aggiornamento scaduto"
         },
         "invalidate": {
@@ -144,49 +144,65 @@
     "failurePrefix": "Operazione fallita: ",
     "mode": {
       "already": "Sei già in modalità sviluppatore",
-      "enabled": "La modalità sviluppatore è attivata",
+      "enabled": "Modalità sviluppatore attivata",
       "remaining": "Tocca ancora {{count}} volte per attivare la modalità sviluppatore",
       "title": "Modalità sviluppatore"
     },
     "selfHostedEntry": {
-      "confirmAction": "Vai alla pagina di accesso",
-      "confirmDescription": "Dopo l'attivazione, verrà mostrata un'opzione per la configurazione self-hosted nella pagina di accesso. Vuoi uscire dall'account attuale e andare alla pagina di accesso?",
-      "confirmResetAction": "Reimposta e accedi",
-      "confirmResetDescription": "Disattivando la modalità self-hosted, l'indirizzo del server verrà reimpostato sull'istanza ufficiale e si uscirà dall'account attuale. Vuoi continuare?",
+      "confirmAction": "Vai alla pagina di configurazione",
+      "confirmDescription": "Una volta attivato, verrai reindirizzato alla configurazione self-hosted. Vuoi uscire dall'account attuale e procedere?",
+      "confirmResetAction": "Reimposta e vai al login",
+      "confirmResetDescription": "Disattivando la modalità self-hosted, l'indirizzo del server verrà ripristinato all'istanza ufficiale e verrai disconnesso. Continuare?",
       "confirmResetTitle": "Disattiva modalità self-hosted",
-      "confirmTitle": "Abilita accesso self-hosted",
-      "description": "Controlla se mostrare il pulsante per l'istanza self-hosted nella pagina di accesso",
-      "title": "Abilita modalità self-hosted"
+      "confirmTitle": "Attiva accesso self-hosted",
+      "description": "Controlla se mostrare il pulsante per l'istanza self-hosted nella pagina di login",
+      "title": "Attiva modalità self-hosted"
     },
     "server": {
-      "confirmDescription": "Dopo aver modificato l'indirizzo del server, l'utente corrente verrà disconnesso e sarà necessario effettuare nuovamente l'accesso. Vuoi continuare?",
+      "confirmDescription": "Modificando l'indirizzo del server verrai disconnesso e dovrai effettuare nuovamente l'accesso. Continuare?",
       "confirmTitle": "Conferma cambio server",
       "current": "Indirizzo attuale",
-      "description": "Dopo la configurazione, tutte le richieste utilizzeranno questo indirizzo server. Lascia vuoto per tornare al server ufficiale.",
+      "description": "Tutte le richieste useranno questo indirizzo server. Lascia vuoto per tornare al server ufficiale.",
       "group": "Configurazione server",
-      "hint": "Deve iniziare con http:// o https://, potrebbe essere necessario effettuare nuovamente l'accesso.",
+      "hint": "Deve iniziare con http:// o https://. Potrebbe essere necessario effettuare nuovamente l'accesso.",
       "invalid": "Inserisci un indirizzo valido che inizi con http:// o https://",
-      "notice": "Un server personalizzato sostituirà l'indirizzo dell'interfaccia predefinita. Assicurati che il servizio sia disponibile e compatibile con il protocollo API di LobeChat. Potrebbe essere necessario effettuare nuovamente l'accesso o riavviare l'app dopo il cambio.",
+      "notice": "Il server personalizzato sostituirà l'indirizzo API predefinito. Assicurati che sia compatibile con il protocollo LobeChat API. Potrebbe essere necessario riavviare o accedere di nuovo.",
       "noticeTitle": "Attenzione prima del cambio",
-      "placeholder": "https://tuo-server.esempio.com",
+      "placeholder": "https://your-server.example.com",
       "reset": "Ripristina predefinito",
-      "resetSuccess": "Indirizzo del server ufficiale ripristinato",
+      "resetSuccess": "Indirizzo server ufficiale ripristinato",
       "save": "Salva",
       "title": "Istanza self-hosted",
       "updated": "Indirizzo server personalizzato aggiornato"
     },
     "title": "Opzioni sviluppatore"
   },
-  "feedback": "Feedback",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Descrizione del problema:",
+        "footer": "Inviato dal mio {{device}}",
+        "frequency": "Frequenza del problema:",
+        "screenshots": "Screenshot correlati:",
+        "template": "Descrivi dettagliatamente il problema riscontrato per aiutarci a risolverlo al meglio."
+      },
+      "subject": "Feedback - LobeChat - {{version}}"
+    },
+    "error": "Impossibile aprire il client di posta, riprova più tardi",
+    "saved": "Feedback salvato nelle bozze",
+    "sent": "Email inviata, grazie per il tuo feedback!",
+    "title": "Invia feedback",
+    "unavailable": "Funzione email non disponibile, verifica che il tuo dispositivo abbia un account email configurato o che la funzione email sia attiva"
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Come regolare la dimensione del carattere?**\n\nUsa il cursore qui sotto per modificare la dimensione del testo: spostalo a sinistra per ridurla, a destra per aumentarla. Durante lo spostamento, l'anteprima si aggiornerà in tempo reale.\n\nSuggerimento: selezionando la scala \"Standard\" puoi rapidamente tornare alla dimensione predefinita.",
-      "botGreat": "Sono felice che ti piaccia! Questa funzione di anteprima ti permette di vedere in modo intuitivo come appariranno i messaggi nella finestra di chat prima di applicare le impostazioni.",
+      "botAnswer": "**Come regolare la dimensione del carattere?**\n\nUsa il cursore qui sotto per modificare la dimensione del testo: a sinistra per ridurre, a destra per aumentare. L'anteprima si aggiornerà in tempo reale.\n\nSuggerimento: seleziona \"Standard\" per tornare rapidamente alla dimensione predefinita.",
+      "botGreat": "Felice che ti piaccia! Questa anteprima ti mostra come apparirà il testo nelle conversazioni.",
       "userGreat": "Fantastico!",
-      "userQuestion": "Vorrei aumentare la dimensione del testo nella chat, come posso fare?"
+      "userQuestion": "Vorrei aumentare la dimensione del testo nelle conversazioni, come posso fare?"
     },
     "standard": "Standard",
-    "text": "Attenzione, questa configurazione influisce solo sulla dimensione del carattere del contenuto del messaggio",
+    "text": "Nota: questa impostazione influisce solo sulla dimensione del testo dei messaggi",
     "title": "Dimensione carattere"
   },
   "general": {
@@ -206,27 +222,27 @@
   "openai": "Impostazioni OpenAI",
   "openaiSettings": {
     "apiKey": "API Key",
-    "apiKeyPlaceholder": "Inserisci la tua API Key OpenAI",
-    "checkApiKey": "Controlla che la API Key sia corretta",
-    "checkProxyAddress": "Impossibile connettersi al server, verifica che l'indirizzo proxy sia corretto",
-    "connectionSuccess": "Connessione riuscita, API Key e indirizzo proxy configurati correttamente",
-    "connectivityHint": "Dopo il test di connettività, verrà verificata la correttezza della API Key e dell'indirizzo proxy",
+    "apiKeyPlaceholder": "Inserisci la tua OpenAI API Key",
+    "checkApiKey": "Verifica che la API Key sia corretta",
+    "checkProxyAddress": "Impossibile connettersi al server, controlla l'indirizzo proxy",
+    "connectionSuccess": "Connessione riuscita, API Key e proxy corretti",
+    "connectivityHint": "Dopo il test di connettività, verranno verificate API Key e proxy",
     "pleaseEnterApiKey": "Inserisci la API Key",
     "proxyAddress": "Indirizzo proxy API",
-    "proxyPlaceholder": "Deve includere http(s)://",
-    "testConnectivity": "Testa connettività",
+    "proxyPlaceholder": "Deve iniziare con http(s)://",
+    "testConnectivity": "Test connettività",
     "validationFailed": "Validazione fallita",
     "validationSuccess": "Validazione riuscita"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "La tua chiave e l'indirizzo proxy saranno criptati usando l'algoritmo <1>AES-GCM</1>",
+      "aesGcm": "La tua chiave e l'indirizzo proxy saranno criptati con algoritmo <1>AES-GCM</1>",
       "checker": {
         "button": "Test connessione",
-        "desc": "Verifica che la API Key e l'indirizzo proxy siano corretti",
+        "desc": "Verifica che API Key e proxy siano corretti",
         "pass": "Verifica superata",
-        "selectModel": "Seleziona il modello per testare la connessione",
-        "title": "Controllo connettività"
+        "selectModel": "Seleziona un modello per il test",
+        "title": "Verifica connettività"
       }
     }
   },
@@ -237,8 +253,8 @@
       "models": "Modelli"
     }
   },
-  "providersSearchPlaceholder": "Cerca fornitori per parola chiave...",
-  "support": "Supporto via email",
+  "providersSearchPlaceholder": "Cerca provider per parola chiave...",
+  "support": "Supporto email",
   "themeMode": {
     "auto": "Segui sistema",
     "dark": "Modalità scura",
@@ -249,18 +265,18 @@
   "update": {
     "check": {
       "applyAction": "Riavvia ora",
-      "applyDescription": "È necessario riavviare l'applicazione per applicare l'ultimo aggiornamento. Vuoi riavviare ora?",
-      "applyError": "Applicazione dell'aggiornamento non riuscita, riprova più tardi",
-      "applyTitle": "Aggiornamento dell'applicazione",
+      "applyDescription": "È necessario riavviare l'app per applicare l'aggiornamento. Riavviare ora?",
+      "applyError": "Applicazione aggiornamento fallita, riprova più tardi",
+      "applyTitle": "Applica aggiornamento",
       "applying": "Riavvio in corso per applicare l'aggiornamento...",
       "checking": "Verifica aggiornamenti in corso...",
-      "downloaded": "Il pacchetto di aggiornamento è stato scaricato",
-      "downloading": "Nuova versione rilevata, download dell'aggiornamento in corso...",
-      "error": "Verifica aggiornamenti non riuscita, riprova più tardi",
-      "none": "Hai già la versione più recente",
+      "downloaded": "Aggiornamento scaricato",
+      "downloading": "Nuova versione trovata, download in corso...",
+      "error": "Verifica aggiornamenti fallita, riprova più tardi",
+      "none": "Hai già l'ultima versione",
       "title": "Verifica aggiornamenti",
-      "unavailable": "La verifica degli aggiornamenti non è supportata in questa build. Utilizza questa funzione nella versione ufficiale."
+      "unavailable": "La versione attuale non supporta la verifica degli aggiornamenti. Usa la versione ufficiale per questa funzione."
     }
   },
-  "version": "Versione corrente"
+  "version": "Versione attuale"
 }

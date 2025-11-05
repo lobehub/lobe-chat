@@ -6,8 +6,8 @@
       "email": "E-mail",
       "name": "Nazwa użytkownika",
       "status": "Status konta",
-      "unverified": "Niezweryfikowany",
-      "verified": "Zweryfikowany"
+      "unverified": "Niezweryfikowane",
+      "verified": "Zweryfikowane"
     },
     "signOut": {
       "confirm": "Czy na pewno chcesz się wylogować?",
@@ -15,8 +15,8 @@
     },
     "switchAccount": {
       "action": "Przełącz konto",
-      "confirm": "Czy na pewno chcesz przełączyć konto? Spowoduje to wylogowanie z bieżącego konta i ponowne zalogowanie.",
-      "error": "Nie udało się przełączyć konta. Spróbuj ponownie.",
+      "confirm": "Czy na pewno chcesz przełączyć konto? Spowoduje to wylogowanie z bieżącego konta i ponowne logowanie.",
+      "error": "Nie udało się przełączyć konta, spróbuj ponownie.",
       "label": "Przełącz konto"
     },
     "title": "Ustawienia konta"
@@ -39,8 +39,8 @@
       },
       "saving": "Zapisywanie konfiguracji...",
       "title": "Konfiguracja",
-      "updateFailedDesc": "Zapisywanie nie powiodło się, spróbuj ponownie",
-      "updateFailedTitle": "Błąd zapisu"
+      "updateFailedDesc": "Nie udało się zapisać, spróbuj ponownie",
+      "updateFailedTitle": "Zapis nieudany"
     },
     "detail": {
       "loadFailed": "Nie udało się załadować konfiguracji dostawcy",
@@ -48,12 +48,12 @@
     },
     "info": {
       "builtIn": "Wbudowany dostawca",
-      "custom": "Niestandardowy dostawca"
+      "custom": "Dostosowany dostawca"
     },
     "list": {
-      "disabled": "Nieaktywne",
-      "emptySearch": "Nie znaleziono pasujących dostawców usług",
-      "enabled": "Aktywne",
+      "disabled": "Wyłączony",
+      "emptySearch": "Nie znaleziono pasujących dostawców",
+      "enabled": "Włączony",
       "loadFailed": "Nie udało się załadować listy dostawców"
     },
     "models": {
@@ -63,27 +63,27 @@
       "emptyNoSearch": "Nie znaleziono żadnych modeli, spróbuj pobrać z serwera",
       "emptyWithSearch": "Brak modeli spełniających kryteria wyszukiwania",
       "enableFailed": "Nie udało się włączyć modelu",
-      "fetch": "Pobieranie modeli",
+      "fetch": "Pobierz modele",
       "fetchFailed": "Nie udało się pobrać modeli, spróbuj ponownie",
-      "fetchSuccess": "Lista modeli została pobrana pomyślnie!",
+      "fetchSuccess": "Pomyślnie pobrano listę modeli!",
       "fetching": "Pobieranie...",
       "loading": "Ładowanie...",
-      "loadingMore": "Ładowanie więcej...",
+      "loadingMore": "Ładowanie kolejnych...",
       "modelsAvailable": "Dostępnych modeli: {{count}}",
       "searchPlaceholder": "Szukaj modeli...",
       "title": "Modele"
     },
     "skeleton": {
-      "disabled": "Nieaktywne",
-      "enabled": "Aktywne"
+      "disabled": "Wyłączony",
+      "enabled": "Włączony"
     }
   },
   "cache": {
     "clear": {
       "confirm": {
         "action": "Wyczyść pamięć podręczną",
-        "description": "Spowoduje to usunięcie zapisanych lokalnie danych podręcznych. Przy następnym uruchomieniu aplikacji zawartość zostanie załadowana ponownie.",
-        "title": "Czy na pewno chcesz wyczyścić pamięć podręczną?"
+        "description": "Spowoduje to usunięcie lokalnych danych pamięci podręcznej. Przy następnym uruchomieniu aplikacji zawartość zostanie ponownie załadowana.",
+        "title": "Potwierdź czyszczenie pamięci podręcznej"
       },
       "failure": "Nie udało się wyczyścić pamięci podręcznej",
       "success": "Pamięć podręczna została wyczyszczona"
@@ -95,12 +95,12 @@
   "color": {
     "neutral": {
       "description": "Wybierz neutralny odcień aplikacji",
-      "title": "Konfiguracja neutralnych kolorów"
+      "title": "Konfiguracja koloru neutralnego"
     },
     "preview": "Podgląd",
     "previewMessages": {
-      "botGreat": "Cieszę się, że Ci się podoba! Ta funkcja podglądu pozwala zobaczyć efekt motywu przed zastosowaniem ustawień.",
-      "botHowToUse": "Możesz dostosować główny kolor i kolory neutralne za pomocą poniższego selektora kolorów, podgląd będzie aktualizowany na żywo, aby pokazać efekt.",
+      "botGreat": "Cieszymy się, że Ci się podoba! Funkcja podglądu pozwala zobaczyć efekt motywu przed jego zastosowaniem.",
+      "botHowToUse": "Użyj poniższego selektora kolorów, aby dostosować kolor główny i neutralny. Podgląd będzie aktualizowany na bieżąco.",
       "userGreat": "Świetnie!",
       "userHowToUse": "Jak korzystać z podglądu motywu?"
     },
@@ -114,79 +114,95 @@
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "Token dostępu został natychmiast wygaszony",
-          "title": "Wygasł token dostępu"
+          "success": "Token dostępu natychmiast wygasł",
+          "title": "Wygaśnięcie tokenu dostępu"
         },
         "invalidate": {
-          "success": "Token dostępu został oznaczony jako nieważny",
+          "success": "Zapisano nieważny token dostępu",
           "title": "Nieważny token dostępu"
         }
       },
       "clearAuthData": {
         "success": "Dane uwierzytelniające zostały wyczyszczone",
-        "title": "Wyczyszczono dane uwierzytelniające"
+        "title": "Wyczyść dane uwierzytelniające"
       },
       "error": {
-        "noToken": "Brak dostępnego tokena"
+        "noToken": "Brak dostępnego tokenu"
       },
       "group": "Konfiguracja uwierzytelniania",
       "refreshToken": {
         "expire": {
-          "success": "Token odświeżania został natychmiast wygaszony",
-          "title": "Wygasł token odświeżania"
+          "success": "Token odświeżania natychmiast wygasł",
+          "title": "Wygaśnięcie tokenu odświeżania"
         },
         "invalidate": {
-          "success": "Token odświeżania został oznaczony jako nieważny",
+          "success": "Zapisano nieważny token odświeżania",
           "title": "Nieważny token odświeżania"
         }
       }
     },
-    "failurePrefix": "Operacja nie powiodła się: ",
+    "failurePrefix": "Niepowodzenie operacji: ",
     "mode": {
-      "already": "Jesteś już w trybie deweloperskim",
+      "already": "Tryb deweloperski jest już aktywny",
       "enabled": "Tryb deweloperski został włączony",
-      "remaining": "Naciśnij jeszcze {{count}} razy, aby włączyć tryb deweloperski",
+      "remaining": "Dotknij jeszcze {{count}} razy, aby włączyć tryb deweloperski",
       "title": "Tryb deweloperski"
     },
     "selfHostedEntry": {
-      "confirmAction": "Przejdź do strony logowania",
-      "confirmDescription": "Po włączeniu na stronie logowania pojawi się opcja konfiguracji własnego hostingu. Czy chcesz wylogować się z obecnego konta i przejść do strony logowania?",
-      "confirmResetAction": "Resetuj i przejdź do logowania",
-      "confirmResetDescription": "Wyłączenie trybu własnego hostingu spowoduje zresetowanie adresu serwera do oficjalnego oraz wylogowanie z konta. Czy kontynuować?",
-      "confirmResetTitle": "Wyłącz tryb własnego hostingu",
-      "confirmTitle": "Włącz własne logowanie",
-      "description": "Kontroluj, czy na stronie logowania ma być widoczny przycisk własnego hostingu",
-      "title": "Włącz tryb własnego hostingu"
+      "confirmAction": "Przejdź do konfiguracji",
+      "confirmDescription": "Po włączeniu zostaniesz przeniesiony do strony konfiguracji instancji własnej. Czy chcesz się wylogować i kontynuować?",
+      "confirmResetAction": "Zresetuj i przejdź do logowania",
+      "confirmResetDescription": "Wyłączenie trybu własnej instancji przywróci domyślny adres serwera i wyloguje Cię. Czy kontynuować?",
+      "confirmResetTitle": "Wyłącz tryb własnej instancji",
+      "confirmTitle": "Włącz własny punkt logowania",
+      "description": "Określa, czy na stronie logowania ma być widoczny przycisk instancji własnej",
+      "title": "Włącz tryb własnej instancji"
     },
     "server": {
-      "confirmDescription": "Po zmianie adresu serwera nastąpi wylogowanie i konieczność ponownego zalogowania. Czy kontynuować?",
+      "confirmDescription": "Zmiana adresu serwera spowoduje wylogowanie i konieczność ponownego logowania. Czy kontynuować?",
       "confirmTitle": "Potwierdź zmianę serwera",
-      "current": "Aktualny adres",
-      "description": "Po konfiguracji wszystkie żądania będą kierowane do tego serwera. Pozostaw puste, aby wrócić do oficjalnego serwera.",
+      "current": "Bieżący adres",
+      "description": "Po skonfigurowaniu wszystkie żądania będą kierowane na ten adres. Pozostaw puste, aby przywrócić domyślny serwer.",
       "group": "Konfiguracja serwera",
-      "hint": "Adres musi zaczynać się od http:// lub https://. Aplikacja może wymagać ponownego logowania.",
+      "hint": "Adres musi zaczynać się od http:// lub https://. Może być wymagane ponowne logowanie.",
       "invalid": "Wprowadź poprawny adres zaczynający się od http:// lub https://",
-      "notice": "Niestandardowy serwer zastąpi domyślny adres API. Upewnij się, że serwer jest dostępny i zgodny z protokołem LobeChat API. Po zmianie może być konieczne ponowne logowanie lub restart aplikacji.",
+      "notice": "Własny serwer zastąpi domyślny adres API. Upewnij się, że jest dostępny i zgodny z protokołem LobeChat API. Może być konieczne ponowne logowanie lub restart aplikacji.",
       "noticeTitle": "Uwaga przed zmianą",
-      "placeholder": "https://twoj-serwer.przyklad.com",
-      "reset": "Przywróć domyślne",
-      "resetSuccess": "Przywrócono oficjalny adres serwera",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Przywróć domyślny",
+      "resetSuccess": "Przywrócono domyślny adres serwera",
       "save": "Zapisz",
-      "title": "Własny serwer",
-      "updated": "Adres niestandardowego serwera został zaktualizowany"
+      "title": "Własna instancja",
+      "updated": "Zaktualizowano adres własnego serwera"
     },
     "title": "Opcje deweloperskie"
   },
-  "feedback": "Opinie i sugestie",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Opis problemu:",
+        "footer": "Wysłane z mojego urządzenia {{device}}",
+        "frequency": "Częstotliwość występowania:",
+        "screenshots": "Zrzuty ekranu:",
+        "template": "Prosimy o szczegółowy opis napotkanego problemu, abyśmy mogli lepiej Ci pomóc."
+      },
+      "subject": "Opinie - LobeChat - {{version}}"
+    },
+    "error": "Nie udało się otworzyć klienta poczty e-mail, spróbuj ponownie później",
+    "saved": "Opinia została zapisana w wersji roboczej",
+    "sent": "E-mail został wysłany, dziękujemy za Twoją opinię!",
+    "title": "Prześlij opinię",
+    "unavailable": "Funkcja poczty e-mail jest niedostępna. Sprawdź, czy na urządzeniu skonfigurowano konto e-mail lub czy funkcja poczty jest aktywna"
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Jak zmienić rozmiar czcionki?**\n\nUżyj suwaka poniżej, aby dostosować rozmiar czcionki: przesuwając w lewo zmniejszasz, w prawo powiększasz. Podczas przesuwania zobaczysz podgląd na żywo.\n\nWskazówka: wybierz skalę „Standard”, aby szybko przywrócić domyślny rozmiar.",
-      "botGreat": "Cieszę się, że Ci się podoba! Ta funkcja podglądu pozwala zobaczyć, jak rozmowy będą wyglądać w oknie czatu, zanim zastosujesz ustawienia.",
+      "botAnswer": "**Jak zmienić rozmiar czcionki?**\n\nUżyj suwaka poniżej, aby dostosować rozmiar czcionki: w lewo — mniejszy, w prawo — większy. Podgląd będzie aktualizowany na bieżąco.\n\nWskazówka: wybierz \"Standardowy\", aby szybko przywrócić domyślny rozmiar.",
+      "botGreat": "Cieszymy się, że Ci się podoba! Funkcja podglądu pozwala zobaczyć efekt w oknie rozmowy przed zastosowaniem ustawień.",
       "userGreat": "Świetnie!",
-      "userQuestion": "Chcę powiększyć czcionkę rozmowy, jak to zrobić?"
+      "userQuestion": "Chcę powiększyć czcionkę w rozmowie. Jak to zrobić?"
     },
     "standard": "Standardowy",
-    "text": "Uwaga, ta konfiguracja wpływa wyłącznie na rozmiar czcionki wyświetlanej w treści wiadomości",
+    "text": "Uwaga: to ustawienie wpływa tylko na rozmiar czcionki w treści wiadomości",
     "title": "Rozmiar czcionki"
   },
   "general": {
@@ -198,8 +214,8 @@
   },
   "locale": {
     "auto": {
-      "description": "Dopasuj do języka systemowego",
-      "title": "Dopasuj do systemu"
+      "description": "Zgodnie z językiem systemowym",
+      "title": "Zgodnie z systemem"
     },
     "title": "Ustawienia języka"
   },
@@ -208,25 +224,25 @@
     "apiKey": "Klucz API",
     "apiKeyPlaceholder": "Wprowadź swój klucz API OpenAI",
     "checkApiKey": "Sprawdź, czy klucz API jest poprawny",
-    "checkProxyAddress": "Nie można połączyć się z serwerem, sprawdź poprawność adresu proxy",
-    "connectionSuccess": "Połączenie udane, klucz API i adres proxy są poprawne",
-    "connectivityHint": "Po teście łączności zostanie zweryfikowane, czy klucz API i adres proxy są poprawnie wprowadzone",
+    "checkProxyAddress": "Nie można połączyć się z serwerem. Sprawdź, czy adres proxy jest poprawny",
+    "connectionSuccess": "Połączenie udane. Klucz API i adres proxy są poprawne",
+    "connectivityHint": "Po przetestowaniu łączności zostanie sprawdzona poprawność klucza API i adresu proxy",
     "pleaseEnterApiKey": "Wprowadź klucz API",
     "proxyAddress": "Adres proxy API",
     "proxyPlaceholder": "Musi zawierać http(s)://",
     "testConnectivity": "Testuj łączność",
     "validationFailed": "Weryfikacja nie powiodła się",
-    "validationSuccess": "Weryfikacja powiodła się"
+    "validationSuccess": "Weryfikacja zakończona pomyślnie"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Twój klucz i adres proxy będą szyfrowane za pomocą algorytmu <1>AES-GCM</1>",
+      "aesGcm": "Twój klucz i adres proxy będą szyfrowane algorytmem <1>AES-GCM</1>",
       "checker": {
         "button": "Testuj połączenie",
-        "desc": "Sprawdź, czy klucz API i adres proxy są poprawnie wprowadzone",
-        "pass": "Sprawdzenie zakończone pomyślnie",
-        "selectModel": "Wybierz model do testu połączenia",
-        "title": "Sprawdzenie łączności"
+        "desc": "Sprawdź, czy klucz API i adres proxy są poprawne",
+        "pass": "Test zakończony pomyślnie",
+        "selectModel": "Wybierz model do testowania połączenia",
+        "title": "Test łączności"
       }
     }
   },
@@ -237,10 +253,10 @@
       "models": "Modele"
     }
   },
-  "providersSearchPlaceholder": "Wyszukaj dostawców według słów kluczowych...",
-  "support": "Wsparcie mailowe",
+  "providersSearchPlaceholder": "Szukaj dostawców według słów kluczowych...",
+  "support": "Wsparcie e-mail",
   "themeMode": {
-    "auto": "Dopasuj do systemu",
+    "auto": "Zgodnie z systemem",
     "dark": "Tryb ciemny",
     "light": "Tryb jasny",
     "title": "Tryb motywu"
@@ -249,17 +265,17 @@
   "update": {
     "check": {
       "applyAction": "Uruchom ponownie teraz",
-      "applyDescription": "Aby zastosować najnowszą aktualizację, konieczne jest ponowne uruchomienie aplikacji. Czy chcesz to zrobić teraz?",
-      "applyError": "Nie udało się zastosować aktualizacji. Spróbuj ponownie później.",
-      "applyTitle": "Aktualizacja aplikacji",
-      "applying": "Trwa ponowne uruchamianie w celu zastosowania aktualizacji...",
-      "checking": "Sprawdzanie dostępności aktualizacji...",
+      "applyDescription": "Aby zastosować najnowszą aktualizację, należy ponownie uruchomić aplikację. Czy chcesz to zrobić teraz?",
+      "applyError": "Nie udało się zastosować aktualizacji, spróbuj ponownie później",
+      "applyTitle": "Zastosuj aktualizację",
+      "applying": "Ponowne uruchamianie w celu zastosowania aktualizacji...",
+      "checking": "Sprawdzanie aktualizacji...",
       "downloaded": "Pakiet aktualizacji został pobrany",
-      "downloading": "Wykryto nową wersję, trwa pobieranie aktualizacji...",
-      "error": "Nie udało się sprawdzić dostępności aktualizacji. Spróbuj ponownie później.",
-      "none": "Masz już najnowszą wersję",
+      "downloading": "Wykryto nową wersję, pobieranie aktualizacji...",
+      "error": "Nie udało się sprawdzić aktualizacji, spróbuj ponownie później",
+      "none": "Masz najnowszą wersję",
       "title": "Sprawdź aktualizacje",
-      "unavailable": "Obecna kompilacja nie obsługuje sprawdzania aktualizacji. Skorzystaj z tej funkcji w wersji produkcyjnej."
+      "unavailable": "Ta wersja nie obsługuje sprawdzania aktualizacji. Użyj wersji produkcyjnej."
     }
   },
   "version": "Aktualna wersja"

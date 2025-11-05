@@ -13,13 +13,13 @@ import { Link, useRouter } from 'expo-router';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert } from 'react-native';
 
 import { setLoginMounted } from '@/navigation/loginState';
 import { useAuth, useAuthActions } from '@/store/_user';
 import { useSettingStore } from '@/store/setting';
 import { isDev } from '@/utils/env';
-import { getLoginErrorKey } from '@/utils/error';
+import { handleLoginError } from '@/utils/error';
+import { openLink } from '@/utils/openLink';
 
 const LoginPage = () => {
   const theme = useTheme();
@@ -47,9 +47,7 @@ const LoginPage = () => {
       // 立即导航到对话页，避免展示 404 页面
       setTimeout(() => router.replace('/chat'), 0);
     } catch (error) {
-      const key = getLoginErrorKey(error);
-      const message = t(key, { ns: 'error' });
-      Alert.alert(t('error.title', { ns: 'error' }), message);
+      handleLoginError(error, t);
     }
   };
 
@@ -143,16 +141,24 @@ const LoginPage = () => {
             )}
           </Flexbox>
           <Flexbox align={'center'} gap={16} horizontal justify={'center'}>
-            <Link href="https://lobehub.com/terms">
-              <Text fontSize={12} type={'secondary'}>
-                {t('login.usePolicy', { ns: 'auth' })}
-              </Text>
-            </Link>
-            <Link href="https://lobehub.com/privacy">
-              <Text fontSize={12} type={'secondary'}>
-                {t('login.privacyPolicy', { ns: 'auth' })}
-              </Text>
-            </Link>
+            <Text
+              fontSize={12}
+              onPress={() =>
+                openLink('https://lobehub.com/terms', { controlsColor: theme.colorPrimary })
+              }
+              type={'secondary'}
+            >
+              {t('login.usePolicy', { ns: 'auth' })}
+            </Text>
+            <Text
+              fontSize={12}
+              onPress={() =>
+                openLink('https://lobehub.com/privacy', { controlsColor: theme.colorPrimary })
+              }
+              type={'secondary'}
+            >
+              {t('login.privacyPolicy', { ns: 'auth' })}
+            </Text>
           </Flexbox>
         </Flexbox>
       </Flexbox>

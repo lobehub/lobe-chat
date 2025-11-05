@@ -10,12 +10,12 @@
       "verified": "Geverifieerd"
     },
     "signOut": {
-      "confirm": "Weet u zeker dat u wilt uitloggen?",
+      "confirm": "Weet je zeker dat je wilt uitloggen?",
       "label": "Uitloggen"
     },
     "switchAccount": {
       "action": "Account wisselen",
-      "confirm": "Weet je zeker dat je van account wilt wisselen? Je wordt uitgelogd en opnieuw aangemeld.",
+      "confirm": "Weet je zeker dat je van account wilt wisselen? Dit zal je huidige sessie beëindigen en opnieuw inloggen.",
       "error": "Account wisselen mislukt, probeer het opnieuw.",
       "label": "Account wisselen"
     },
@@ -27,9 +27,9 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "Voer de API-sleutel van {{name}} in",
+        "description": "Voer de API-sleutel in voor {{name}}",
         "label": "API-sleutel",
-        "placeholder": "Voer de API-sleutel van {{name}} in"
+        "placeholder": "Voer de API-sleutel in voor {{name}}"
       },
       "proxyUrl": {
         "desc": "Moet beginnen met http(s)://",
@@ -52,24 +52,24 @@
     },
     "list": {
       "disabled": "Uitgeschakeld",
-      "emptySearch": "Geen overeenkomende aanbieder gevonden",
+      "emptySearch": "Geen overeenkomende providers gevonden",
       "enabled": "Ingeschakeld",
-      "loadFailed": "Lijst met providers laden mislukt"
+      "loadFailed": "Laden van providerlijst mislukt"
     },
     "models": {
-      "allLoaded": "Alle modellen zijn weergegeven",
-      "copySuccess": "Kopiëren geslaagd",
+      "allLoaded": "Alle modellen weergegeven",
+      "copySuccess": "Succesvol gekopieerd",
       "disableFailed": "Uitschakelen van model mislukt",
-      "emptyNoSearch": "Geen modellen gevonden, probeer ze van de server op te halen",
+      "emptyNoSearch": "Geen modellen gevonden, probeer van server te laden",
       "emptyWithSearch": "Geen modellen gevonden die aan de zoekcriteria voldoen",
       "enableFailed": "Inschakelen van model mislukt",
       "fetch": "Modellen ophalen",
-      "fetchFailed": "Modellen ophalen mislukt, probeer het opnieuw",
-      "fetchSuccess": "Modelijst succesvol opgehaald!",
+      "fetchFailed": "Ophalen van modellen mislukt, probeer opnieuw",
+      "fetchSuccess": "Modellenlijst succesvol opgehaald!",
       "fetching": "Bezig met ophalen...",
       "loading": "Bezig met laden...",
       "loadingMore": "Meer laden...",
-      "modelsAvailable": "In totaal {{count}} beschikbare modellen",
+      "modelsAvailable": "{{count}} beschikbare modellen",
       "searchPlaceholder": "Zoek modellen...",
       "title": "Modellen"
     },
@@ -82,31 +82,31 @@
     "clear": {
       "confirm": {
         "action": "Cache wissen",
-        "description": "Dit verwijdert lokaal opgeslagen cachegegevens. Bij het volgende openen van de app moeten de inhoud opnieuw worden geladen.",
+        "description": "Dit verwijdert lokaal opgeslagen cachegegevens. Bij het volgende openen van de app moeten de gegevens opnieuw worden geladen.",
         "title": "Weet je zeker dat je de cache wilt wissen?"
       },
       "failure": "Cache wissen mislukt",
-      "success": "Cache is gewist"
+      "success": "Cache succesvol gewist"
     },
-    "description": "Cache kan de opstarttijd versnellen. Als je ruimte wilt vrijmaken, kun je de cache wissen.",
+    "description": "Cache versnelt het opstarten. Klik op wissen om ruimte vrij te maken.",
     "title": "Cache wissen"
   },
   "changelog": "Wijzigingslogboek",
   "color": {
     "neutral": {
-      "description": "Kies de neutrale tint voor de applicatie",
+      "description": "Kies de neutrale kleurtoon van de app",
       "title": "Neutrale kleurinstellingen"
     },
     "preview": "Voorbeeld",
     "previewMessages": {
-      "botGreat": "Fijn dat je het leuk vindt! Met deze previewfunctie kun je het thema visueel bekijken voordat je het toepast.",
-      "botHowToUse": "Je kunt de hoofdkleur en neutrale kleuren aanpassen met de onderstaande kleurkiezer. De voorbeeldweergave wordt realtime bijgewerkt om het effect te tonen.",
+      "botGreat": "Fijn dat je het mooi vindt! Deze voorbeeldfunctie laat je het thema zien voordat je het toepast.",
+      "botHowToUse": "Gebruik de kleurkiezer hieronder om de primaire en neutrale kleuren aan te passen. Het voorbeeld wordt in realtime bijgewerkt.",
       "userGreat": "Geweldig!",
-      "userHowToUse": "Hoe gebruik je de thema-voorbeeldweergave?"
+      "userHowToUse": "Hoe gebruik ik de thema-preview?"
     },
     "primary": {
-      "description": "Kies de hoofdkleur voor de applicatie",
-      "title": "Hoofdkleurinstellingen"
+      "description": "Kies de primaire kleurtoon van de app",
+      "title": "Primaire kleurinstellingen"
     },
     "title": "Kleurinstellingen"
   },
@@ -114,61 +114,61 @@
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "Toegangstoken is onmiddellijk verlopen",
+          "success": "Toegangstoken is direct verlopen",
           "title": "Toegangstoken verlopen"
         },
         "invalidate": {
-          "success": "Ongeldig toegangstoken is geschreven",
+          "success": "Ongeldig toegangstoken opgeslagen",
           "title": "Ongeldig toegangstoken"
         }
       },
       "clearAuthData": {
-        "success": "Authenticatiegegevens zijn gewist",
+        "success": "Authenticatiegegevens gewist",
         "title": "Authenticatiegegevens wissen"
       },
       "error": {
-        "noToken": "Er is momenteel geen beschikbare token"
+        "noToken": "Geen beschikbaar token"
       },
-      "group": "Authenticatieconfiguratie",
+      "group": "Authenticatie-instellingen",
       "refreshToken": {
         "expire": {
-          "success": "Verversingstoken is onmiddellijk verlopen",
-          "title": "Verversingstoken verlopen"
+          "success": "Vernieuwtoken is direct verlopen",
+          "title": "Vernieuwtoken verlopen"
         },
         "invalidate": {
-          "success": "Ongeldig verversingstoken is geschreven",
-          "title": "Ongeldig verversingstoken"
+          "success": "Ongeldig vernieuwtoken opgeslagen",
+          "title": "Ongeldig vernieuwtoken"
         }
       }
     },
     "failurePrefix": "Actie mislukt: ",
     "mode": {
-      "already": "Je bevindt je al in de ontwikkelaarsmodus",
+      "already": "Je bent al in de ontwikkelaarsmodus",
       "enabled": "Ontwikkelaarsmodus is ingeschakeld",
-      "remaining": "Tik nog {{count}} keer om de ontwikkelaarsmodus in te schakelen",
+      "remaining": "Tik nog {{count}} keer om ontwikkelaarsmodus te activeren",
       "title": "Ontwikkelaarsmodus"
     },
     "selfHostedEntry": {
-      "confirmAction": "Ga naar inlogpagina",
-      "confirmDescription": "Na inschakeling wordt de zelfgehoste configuratie-ingang op de inlogpagina weergegeven. Wilt u uitloggen en naar de inlogpagina gaan?",
-      "confirmResetAction": "Reset en ga naar inloggen",
-      "confirmResetDescription": "Het uitschakelen van de zelfgehoste modus zal het serveradres terugzetten naar de officiële instantie en uitloggen. Wilt u doorgaan?",
-      "confirmResetTitle": "Schakel zelfgehoste modus uit",
-      "confirmTitle": "Schakel zelfgehoste login ingang in",
-      "description": "Beheer of de knop voor zelfgehoste instanties op de inlogpagina wordt weergegeven",
+      "confirmAction": "Ga naar configuratiepagina",
+      "confirmDescription": "Na inschakeling wordt de zelfgehoste configuratiepagina geopend. Wil je uitloggen en doorgaan?",
+      "confirmResetAction": "Resetten en inloggen",
+      "confirmResetDescription": "Uitschakelen van zelfgehoste modus herstelt het serveradres naar de officiële instantie en logt je uit. Doorgaan?",
+      "confirmResetTitle": "Zelfgehoste modus uitschakelen",
+      "confirmTitle": "Zelfgehoste login inschakelen",
+      "description": "Bepaal of de knop voor zelfgehoste instantie op de loginpagina wordt weergegeven",
       "title": "Zelfgehoste modus inschakelen"
     },
     "server": {
-      "confirmDescription": "Na het wijzigen van het serveradres wordt u uitgelogd en moet u opnieuw inloggen. Wilt u doorgaan?",
+      "confirmDescription": "Na het wijzigen van het serveradres word je uitgelogd en moet je opnieuw inloggen. Doorgaan?",
       "confirmTitle": "Bevestig serverwissel",
       "current": "Huidig adres",
       "description": "Na configuratie worden alle verzoeken via dit serveradres gestuurd. Laat leeg om terug te keren naar de officiële server.",
       "group": "Serverconfiguratie",
-      "hint": "Moet beginnen met http:// of https://, mogelijk is opnieuw inloggen vereist.",
+      "hint": "Moet beginnen met http:// of https://. Je moet mogelijk opnieuw inloggen.",
       "invalid": "Voer een geldig adres in dat begint met http:// of https://",
-      "notice": "Aangepaste servers vervangen het standaard API-adres. Zorg dat de server beschikbaar is en compatibel met het LobeChat API-protocol. Na wisselen kan opnieuw inloggen of herstarten nodig zijn.",
-      "noticeTitle": "Let op voor het wisselen",
-      "placeholder": "https://uw-server.voorbeeld.com",
+      "notice": "Aangepaste server vervangt het standaard API-adres. Zorg dat de server beschikbaar is en compatibel met het LobeChat API-protocol. Je moet mogelijk opnieuw inloggen of de app herstarten.",
+      "noticeTitle": "Let op bij het wisselen",
+      "placeholder": "https://your-server.example.com",
       "reset": "Herstel standaard",
       "resetSuccess": "Officieel serveradres hersteld",
       "save": "Opslaan",
@@ -177,16 +177,32 @@
     },
     "title": "Ontwikkelaarsopties"
   },
-  "feedback": "Feedback",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Probleembeschrijving:",
+        "footer": "Verzonden vanaf mijn {{device}}",
+        "frequency": "Frequentie van optreden:",
+        "screenshots": "Relevante schermafbeeldingen:",
+        "template": "Beschrijf het probleem zo gedetailleerd mogelijk zodat we je beter kunnen helpen."
+      },
+      "subject": "Feedback - LobeChat - {{version}}"
+    },
+    "error": "Kan e-mailclient niet openen, probeer het later opnieuw.",
+    "saved": "Feedback opgeslagen in concepten",
+    "sent": "E-mail is verzonden, bedankt voor je feedback!",
+    "title": "Feedback",
+    "unavailable": "E-mailfunctie niet beschikbaar. Controleer of er een e-mailaccount is ingesteld op je apparaat of dat de e-mailfunctie is ingeschakeld."
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Hoe pas ik de lettergrootte aan?**\n\nGebruik de schuifregelaar hieronder om de lettergrootte aan te passen: naar links voor kleiner, naar rechts voor groter. Tijdens het slepen zie je hier direct een voorbeeld van het effect.\n\nTip: kies de \"Standaard\" markering om snel terug te keren naar de standaardgrootte.",
-      "botGreat": "Fijn dat je het leuk vindt! Met deze voorbeeldfunctie kun je visueel zien hoe de tekst in het gesprek eruitziet voordat je de instellingen toepast.",
+      "botAnswer": "**Hoe pas ik de lettergrootte aan?**\n\nGebruik de schuifregelaar hieronder om de lettergrootte aan te passen: naar links voor kleiner, naar rechts voor groter. Tijdens het slepen zie je hier een live voorbeeld.\n\nTip: kies 'Standaard' om snel terug te keren naar de standaardgrootte.",
+      "botGreat": "Fijn dat je het mooi vindt! Deze preview laat je zien hoe het eruitziet in het gesprek voordat je het toepast.",
       "userGreat": "Geweldig!",
       "userQuestion": "Ik wil de lettergrootte van het gesprek vergroten, hoe doe ik dat?"
     },
     "standard": "Standaard",
-    "text": "Let op, deze instelling beïnvloedt alleen de weergave van de lettergrootte van de berichtinhoud",
+    "text": "Let op: deze instelling beïnvloedt alleen de lettergrootte van berichteninhoud",
     "title": "Lettergrootte"
   },
   "general": {
@@ -199,7 +215,7 @@
   "locale": {
     "auto": {
       "description": "Volg de systeemtaalinstelling",
-      "title": "Volg systeem"
+      "title": "Systeem volgen"
     },
     "title": "Taalinstellingen"
   },
@@ -208,25 +224,25 @@
     "apiKey": "API-sleutel",
     "apiKeyPlaceholder": "Voer je OpenAI API-sleutel in",
     "checkApiKey": "Controleer of de API-sleutel correct is",
-    "checkProxyAddress": "Kan geen verbinding maken met de server, controleer of het proxyadres correct is",
-    "connectionSuccess": "Verbinding geslaagd, API-sleutel en proxyadres correct geconfigureerd",
-    "connectivityHint": "Na het testen van de connectiviteit wordt gecontroleerd of de API-sleutel en het proxyadres correct zijn ingevuld",
+    "checkProxyAddress": "Kan geen verbinding maken met de server. Controleer het proxyadres.",
+    "connectionSuccess": "Verbinding geslaagd. API-sleutel en proxyadres zijn correct geconfigureerd.",
+    "connectivityHint": "Na het testen van de verbinding wordt gecontroleerd of de API-sleutel en het proxyadres correct zijn ingevuld",
     "pleaseEnterApiKey": "Voer de API-sleutel in",
     "proxyAddress": "API-proxyadres",
     "proxyPlaceholder": "Moet beginnen met http(s)://",
-    "testConnectivity": "Connectiviteit testen",
+    "testConnectivity": "Verbinding testen",
     "validationFailed": "Validatie mislukt",
     "validationSuccess": "Validatie geslaagd"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Je sleutel en proxyadres worden versleuteld met het <1>AES-GCM</1> algoritme",
+      "aesGcm": "Je sleutel, proxyadres en andere gegevens worden versleuteld met het <1>AES-GCM</1>-algoritme",
       "checker": {
         "button": "Verbinding testen",
-        "desc": "Test of de API-sleutel en het proxyadres correct zijn ingevuld",
+        "desc": "Controleer of de API-sleutel en het proxyadres correct zijn ingevuld",
         "pass": "Controle geslaagd",
-        "selectModel": "Selecteer model voor verbindingscontrole",
-        "title": "Connectiviteitscontrole"
+        "selectModel": "Selecteer een model om de verbinding te testen",
+        "title": "Verbindingscontrole"
       }
     }
   },
@@ -237,10 +253,10 @@
       "models": "Modellen"
     }
   },
-  "providersSearchPlaceholder": "Zoek leveranciers op trefwoord...",
+  "providersSearchPlaceholder": "Zoek providers op trefwoord...",
   "support": "E-mailondersteuning",
   "themeMode": {
-    "auto": "Volg systeem",
+    "auto": "Systeem volgen",
     "dark": "Donkere modus",
     "light": "Lichte modus",
     "title": "Themamodus"
@@ -248,18 +264,18 @@
   "title": "Instellingen",
   "update": {
     "check": {
-      "applyAction": "Nu opnieuw opstarten",
-      "applyDescription": "De applicatie moet opnieuw worden opgestart om de nieuwste update toe te passen. Nu opnieuw opstarten?",
-      "applyError": "Update toepassen is mislukt. Probeer het later opnieuw.",
+      "applyAction": "Nu herstarten",
+      "applyDescription": "De app moet worden herstart om de nieuwste update toe te passen. Nu herstarten?",
+      "applyError": "Update toepassen mislukt, probeer het later opnieuw",
       "applyTitle": "Update toepassen",
-      "applying": "Bezig met opnieuw opstarten om update toe te passen...",
+      "applying": "Bezig met herstarten om update toe te passen...",
       "checking": "Bezig met controleren op updates...",
-      "downloaded": "Updatepakket is succesvol gedownload",
-      "downloading": "Nieuwe versie gedetecteerd, update wordt gedownload...",
-      "error": "Controleren op updates is mislukt. Probeer het later opnieuw.",
-      "none": "Je gebruikt al de nieuwste versie",
+      "downloaded": "Updatepakket is gedownload",
+      "downloading": "Nieuwe versie gevonden, update wordt gedownload...",
+      "error": "Controleren op updates mislukt, probeer het later opnieuw",
+      "none": "Je hebt de nieuwste versie",
       "title": "Controleren op updates",
-      "unavailable": "Deze build ondersteunt geen updatecontrole. Gebruik deze functie in de officiële versie."
+      "unavailable": "Deze build ondersteunt geen updatecontrole. Gebruik de officiële versie om deze functie te gebruiken."
     }
   },
   "version": "Huidige versie"

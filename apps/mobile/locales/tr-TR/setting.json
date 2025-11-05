@@ -10,13 +10,13 @@
       "verified": "Doğrulanmış"
     },
     "signOut": {
-      "confirm": "Çıkış yapmak istediğinizden emin misiniz?",
-      "label": "Çıkış Yap"
+      "confirm": "Oturumu kapatmak istediğinizden emin misiniz?",
+      "label": "Oturumu Kapat"
     },
     "switchAccount": {
       "action": "Hesap Değiştir",
-      "confirm": "Hesabı değiştirmek istediğinizden emin misiniz? Bu işlem mevcut hesaptan çıkış yaparak yeniden giriş yapmanızı gerektirir.",
-      "error": "Hesap değiştirme başarısız oldu, lütfen tekrar deneyin.",
+      "confirm": "Hesap değiştirmek istediğinizden emin misiniz? Bu işlem mevcut hesaptan çıkış yapıp yeniden giriş yapmanızı gerektirir.",
+      "error": "Hesap değiştirilemedi, lütfen tekrar deneyin.",
       "label": "Hesap Değiştir"
     },
     "title": "Hesap Ayarları"
@@ -27,15 +27,15 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "{{name}} API Anahtarınızı girin",
+        "description": "Lütfen {{name}} için API Anahtarını girin",
         "label": "API Anahtarı",
-        "placeholder": "{{name}} API Anahtarınızı girin"
+        "placeholder": "Lütfen {{name}} için API Anahtarını girin"
       },
       "proxyUrl": {
         "desc": "http(s):// içermelidir",
         "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir URL girin",
         "placeholder": "https://api.example.com/v1",
-        "title": "API Vekil Adresi"
+        "title": "API Proxy Adresi"
       },
       "saving": "Yapılandırma kaydediliyor...",
       "title": "Yapılandırma",
@@ -47,21 +47,21 @@
       "loading": "Sağlayıcı yapılandırması yükleniyor..."
     },
     "info": {
-      "builtIn": "Yerleşik Sağlayıcı",
+      "builtIn": "Dahili Sağlayıcı",
       "custom": "Özel Sağlayıcı"
     },
     "list": {
-      "disabled": "Etkin Değil",
-      "emptySearch": "Eşleşen hizmet sağlayıcı bulunamadı",
+      "disabled": "Devre Dışı",
+      "emptySearch": "Eşleşen sağlayıcı bulunamadı",
       "enabled": "Etkin",
       "loadFailed": "Sağlayıcı listesi yüklenemedi"
     },
     "models": {
-      "allLoaded": "Tüm modeller gösterildi",
+      "allLoaded": "Tüm modeller gösteriliyor",
       "copySuccess": "Kopyalama başarılı",
       "disableFailed": "Model devre dışı bırakılamadı",
-      "emptyNoSearch": "Hiç model bulunamadı, sunucudan almaya çalışılıyor",
-      "emptyWithSearch": "Arama kriterlerine uygun model bulunamadı",
+      "emptyNoSearch": "Hiçbir model bulunamadı, sunucudan almaya çalışın",
+      "emptyWithSearch": "Arama kriterlerine uyan model bulunamadı",
       "enableFailed": "Model etkinleştirilemedi",
       "fetch": "Model alınıyor",
       "fetchFailed": "Model alınamadı, lütfen tekrar deneyin",
@@ -69,12 +69,12 @@
       "fetching": "Alınıyor...",
       "loading": "Yükleniyor...",
       "loadingMore": "Daha fazla yükleniyor...",
-      "modelsAvailable": "Toplam {{count}} kullanılabilir model",
+      "modelsAvailable": "{{count}} kullanılabilir model",
       "searchPlaceholder": "Model ara...",
       "title": "Modeller"
     },
     "skeleton": {
-      "disabled": "Etkin Değil",
+      "disabled": "Devre Dışı",
       "enabled": "Etkin"
     }
   },
@@ -82,31 +82,31 @@
     "clear": {
       "confirm": {
         "action": "Önbelleği Temizle",
-        "description": "Bu işlem, yerel olarak kaydedilen önbellek verilerini kaldırır. Uygulamayı bir sonraki açışınızda içerikler yeniden yüklenecektir.",
-        "title": "Önbelleği temizlemek istediğinizden emin misiniz?"
+        "description": "Bu işlem yerel olarak kaydedilen önbellek verilerini kaldırır, uygulamayı bir sonraki açışınızda içerikler yeniden yüklenecektir.",
+        "title": "Önbelleği temizlemek istediğinize emin misiniz?"
       },
-      "failure": "Önbellek temizleme başarısız oldu",
+      "failure": "Önbellek temizlenemedi",
       "success": "Önbellek temizlendi"
     },
-    "description": "Önbellek, uygulamanın daha hızlı açılmasını sağlar. Depolama alanına ihtiyaç duyduğunuzda temizleyebilirsiniz.",
+    "description": "Önbellek, başlatma hızını artırır. Alan boşaltmak için temizleyebilirsiniz.",
     "title": "Önbelleği Temizle"
   },
-  "changelog": "Güncelleme Günlüğü",
+  "changelog": "Değişiklik Günlüğü",
   "color": {
     "neutral": {
-      "description": "Uygulamanın nötr tonunu seçin",
-      "title": "Nötr Renk Ayarı"
+      "description": "Uygulamanın nötr renk tonunu seçin",
+      "title": "Nötr Renk Yapılandırması"
     },
     "preview": "Önizleme",
     "previewMessages": {
-      "botGreat": "Beğenmene çok sevindim! Bu önizleme özelliği, uygulama ayarlarını yapmadan önce temanın etkisini görsel olarak görmeni sağlar.",
-      "botHowToUse": "Ana renk ve nötr renkleri aşağıdaki renk seçici ile ayarlayabilirsiniz, önizleme gerçek zamanlı olarak güncellenecektir.",
+      "botGreat": "Beğenmenize sevindim! Bu önizleme özelliği, temayı uygulamadan önce görsel olarak deneyimlemenizi sağlar.",
+      "botHowToUse": "Aşağıdaki renk seçicileri kullanarak ana ve nötr renkleri ayarlayabilirsiniz. Önizleme, değişiklikleri anında yansıtır.",
       "userGreat": "Harika!",
       "userHowToUse": "Tema önizlemesi nasıl kullanılır?"
     },
     "primary": {
       "description": "Uygulamanın ana rengini seçin",
-      "title": "Ana Renk Ayarı"
+      "title": "Ana Renk Yapılandırması"
     },
     "title": "Renk Ayarları"
   },
@@ -114,7 +114,7 @@
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "Erişim belirteci hemen süresi doldu",
+          "success": "Erişim belirteci hemen geçersiz kılındı",
           "title": "Erişim Belirteci Süresi Doldu"
         },
         "invalidate": {
@@ -127,12 +127,12 @@
         "title": "Kimlik Doğrulama Verilerini Temizle"
       },
       "error": {
-        "noToken": "Mevcut kullanılabilir Token yok"
+        "noToken": "Kullanılabilir bir belirteç yok"
       },
-      "group": "Kimlik Doğrulama Ayarları",
+      "group": "Kimlik Doğrulama Yapılandırması",
       "refreshToken": {
         "expire": {
-          "success": "Yenileme belirteci hemen süresi doldu",
+          "success": "Yenileme belirteci hemen geçersiz kılındı",
           "title": "Yenileme Belirteci Süresi Doldu"
         },
         "invalidate": {
@@ -143,62 +143,78 @@
     },
     "failurePrefix": "İşlem başarısız: ",
     "mode": {
-      "already": "Geliştirici modundasınız",
+      "already": "Zaten geliştirici modundasınız",
       "enabled": "Geliştirici modu etkinleştirildi",
-      "remaining": "Geliştirici modunu açmak için {{count}} kez daha dokunun",
+      "remaining": "Geliştirici modunu etkinleştirmek için {{count}} kez daha dokunun",
       "title": "Geliştirici Modu"
     },
     "selfHostedEntry": {
-      "confirmAction": "Giriş sayfasına git",
-      "confirmDescription": "Etkinleştirildiğinde, giriş sayfasında kendi barındırdığınız yapılandırma girişi gösterilecektir. Mevcut hesaptan çıkış yapıp giriş sayfasına gitmek istiyor musunuz?",
-      "confirmResetAction": "Sıfırla ve giriş yap",
+      "confirmAction": "Yapılandırma Sayfasına Git",
+      "confirmDescription": "Etkinleştirildiğinde, doğrudan kendi barındırılan yapılandırma sayfası açılacaktır. Mevcut hesaptan çıkış yapıp yapılandırma sayfasına gitmek istiyor musunuz?",
+      "confirmResetAction": "Sıfırla ve Giriş Yap",
       "confirmResetDescription": "Kendi barındırma modu kapatıldığında, sunucu adresi resmi örneğe sıfırlanacak ve mevcut hesaptan çıkış yapılacaktır. Devam etmek istiyor musunuz?",
       "confirmResetTitle": "Kendi Barındırma Modunu Kapat",
-      "confirmTitle": "Kendi Barındırma Girişini Etkinleştir",
-      "description": "Giriş sayfasında kendi barındırdığınız örnek düğmesinin gösterilip gösterilmeyeceğini kontrol edin",
+      "confirmTitle": "Kendi Barındırılan Giriş Noktasını Etkinleştir",
+      "description": "Giriş sayfasında kendi barındırılan örnek düğmesinin gösterilip gösterilmeyeceğini kontrol eder",
       "title": "Kendi Barındırma Modunu Aç"
     },
     "server": {
-      "confirmDescription": "Sunucu adresi değiştirildikten sonra mevcut kullanıcı çıkış yapacak ve yeniden giriş yapılması gerekecektir, devam etmek istiyor musunuz?",
-      "confirmTitle": "Sunucu Değişikliğini Onayla",
-      "current": "Mevcut adres",
-      "description": "Yapılandırıldıktan sonra, tüm istekler bu sunucu adresini kullanacaktır. Boş bırakılırsa resmi sunucuya geri dönülür.",
+      "confirmDescription": "Sunucu adresi değiştirildiğinde mevcut kullanıcı oturumu kapatılacak ve yeniden giriş yapılması gerekecek. Devam etmek istiyor musunuz?",
+      "confirmTitle": "Sunucuyu Değiştirmeyi Onayla",
+      "current": "Geçerli Adres",
+      "description": "Yapılandırıldıktan sonra tüm istekler bu sunucu adresi üzerinden yapılacaktır. Boş bırakılırsa resmi sunucuya geri döner.",
       "group": "Sunucu Yapılandırması",
-      "hint": "http:// veya https:// ile başlamalıdır, uygulama yeniden giriş yapmanızı gerektirebilir.",
+      "hint": "http:// veya https:// ile başlamalıdır, uygulama yeniden giriş gerektirebilir.",
       "invalid": "Lütfen http:// veya https:// ile başlayan geçerli bir adres girin",
-      "notice": "Özel sunucu, varsayılan API adresini değiştirecektir. Lütfen hizmetin kullanılabilir ve LobeChat API protokolü ile uyumlu olduğundan emin olun. Değişiklikten sonra yeniden giriş yapmanız veya uygulamayı yeniden başlatmanız gerekebilir.",
+      "notice": "Özel sunucu, varsayılan API adresini değiştirecektir. Lütfen hizmetin kullanılabilir ve LobeChat API protokolüyle uyumlu olduğundan emin olun. Değişiklik sonrası yeniden giriş veya uygulama yeniden başlatma gerekebilir.",
       "noticeTitle": "Değiştirmeden Önce Dikkat",
-      "placeholder": "https://sunucunuz.ornek.com",
-      "reset": "Varsayılanı Geri Yükle",
-      "resetSuccess": "Resmi sunucu adresi geri yüklendi",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Varsayılana Dön",
+      "resetSuccess": "Resmi sunucu adresine dönüldü",
       "save": "Kaydet",
-      "title": "Kendi Barındırma Örneği",
+      "title": "Kendi Barındırılan Örnek",
       "updated": "Özel sunucu adresi güncellendi"
     },
     "title": "Geliştirici Seçenekleri"
   },
-  "feedback": "Geri Bildirim",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Sorunun açıklaması:",
+        "footer": "{{device}} cihazımdan gönderildi",
+        "frequency": "Görülme sıklığı:",
+        "screenshots": "İlgili ekran görüntüleri:",
+        "template": "Lütfen karşılaştığınız sorunu ayrıntılı olarak açıklayın, böylece size daha iyi yardımcı olabiliriz."
+      },
+      "subject": "Geri Bildirim - LobeChat - {{version}}"
+    },
+    "error": "E-posta istemcisi açılamadı, lütfen daha sonra tekrar deneyin",
+    "saved": "Geri bildirim taslaklara kaydedildi",
+    "sent": "E-posta gönderildi, geri bildiriminiz için teşekkür ederiz!",
+    "title": "Geri Bildirim",
+    "unavailable": "E-posta özelliği kullanılamıyor, lütfen cihazınızda e-posta hesabı veya e-posta işlevinin yapılandırıldığından emin olun"
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Yazı tipi boyutu nasıl ayarlanır?**\n\nAşağıdaki kaydırıcıyı kullanarak yazı tipi boyutunu ayarlayabilirsiniz: sola kaydırarak küçültün, sağa kaydırarak büyütün. Sürüklerken, burada anlık önizleme yapılır.\n\nİpucu: \"Standart\" işaretini seçerek varsayılan boyuta hızlıca dönebilirsiniz.",
-      "botGreat": "Beğenmene sevindim! Bu önizleme özelliği, uygulama ayarlarını yapmadan önce sohbet kutusundaki yazıların nasıl görüneceğini görsel olarak deneyimlemeni sağlar.",
+      "botAnswer": "**Yazı tipi boyutu nasıl ayarlanır?**\n\nAşağıdaki kaydırıcıyı kullanarak yazı tipi boyutunu ayarlayabilirsiniz: sola küçült, sağa büyüt. Sürüklerken, buradaki önizleme anında güncellenir.\n\nİpucu: \"Standart\" ölçeğini seçerek varsayılan boyuta hızlıca dönebilirsiniz.",
+      "botGreat": "Beğenmenize sevindim! Bu önizleme özelliği, yazı tipi boyutunu uygulamadan önce sohbet kutusunda nasıl görüneceğini gösterir.",
       "userGreat": "Harika!",
       "userQuestion": "Sohbet yazı tipini biraz büyütmek istiyorum, nasıl yapabilirim?"
     },
     "standard": "Standart",
-    "text": "Dikkat, bu ayar yalnızca mesaj içeriğinin yazı tipi boyutunu etkiler",
+    "text": "Not: Bu ayar yalnızca mesaj içeriğinin yazı tipi boyutunu etkiler",
     "title": "Yazı Tipi Boyutu"
   },
   "general": {
     "group": "Genel"
   },
-  "help": "Yardım",
+  "help": "Kullanım Yardımı",
   "info": {
     "group": "Bilgi"
   },
   "locale": {
     "auto": {
-      "description": "Sistem dil ayarlarını takip et",
+      "description": "Sistem dil ayarını takip et",
       "title": "Sistemi Takip Et"
     },
     "title": "Dil Ayarları"
@@ -207,12 +223,12 @@
   "openaiSettings": {
     "apiKey": "API Anahtarı",
     "apiKeyPlaceholder": "OpenAI API Anahtarınızı girin",
-    "checkApiKey": "Lütfen API Anahtarının doğru olduğundan emin olun",
-    "checkProxyAddress": "Sunucuya bağlanılamıyor, lütfen vekil adresini kontrol edin",
-    "connectionSuccess": "Bağlantı başarılı, API Anahtarı ve vekil adresi doğru yapılandırıldı",
-    "connectivityHint": "Bağlantı testi sonrası API Anahtarı ve vekil adresinin doğruluğu kontrol edilecektir",
+    "checkApiKey": "Lütfen API Anahtarının doğru olup olmadığını kontrol edin",
+    "checkProxyAddress": "Sunucuya bağlanılamıyor, lütfen proxy adresini kontrol edin",
+    "connectionSuccess": "Bağlantı başarılı, API Anahtarı ve proxy adresi doğru yapılandırıldı",
+    "connectivityHint": "Bağlantı testinden sonra API Anahtarı ve proxy adresinin doğru girildiği doğrulanacaktır",
     "pleaseEnterApiKey": "Lütfen API Anahtarını girin",
-    "proxyAddress": "API Vekil Adresi",
+    "proxyAddress": "API Proxy Adresi",
     "proxyPlaceholder": "http(s):// içermelidir",
     "testConnectivity": "Bağlantıyı Test Et",
     "validationFailed": "Doğrulama başarısız",
@@ -220,12 +236,12 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> algoritması ile şifrelenecektir",
+      "aesGcm": "Anahtarınız ve proxy adresiniz gibi bilgiler <1>AES-GCM</1> algoritması ile şifrelenir",
       "checker": {
         "button": "Bağlantıyı Test Et",
-        "desc": "API Anahtarı ve vekil adresinin doğruluğunu test edin",
+        "desc": "API Anahtarı ve proxy adresinin doğru girildiğini test edin",
         "pass": "Kontrol başarılı",
-        "selectModel": "Bağlantı testi için model seçin",
+        "selectModel": "Bağlantı testi için bir model seçin",
         "title": "Bağlantı Kontrolü"
       }
     }
@@ -237,30 +253,30 @@
       "models": "Modeller"
     }
   },
-  "providersSearchPlaceholder": "Sağlayıcıları anahtar kelime ile ara...",
+  "providersSearchPlaceholder": "Sağlayıcıları anahtar kelimeyle ara...",
   "support": "E-posta Desteği",
   "themeMode": {
     "auto": "Sistemi Takip Et",
-    "dark": "Koyu Mod",
-    "light": "Açık Mod",
+    "dark": "Karanlık Mod",
+    "light": "Aydınlık Mod",
     "title": "Tema Modu"
   },
   "title": "Ayarlar",
   "update": {
     "check": {
       "applyAction": "Şimdi Yeniden Başlat",
-      "applyDescription": "En son güncellemeleri uygulamak için uygulamanın yeniden başlatılması gerekiyor. Şimdi yeniden başlatmak ister misiniz?",
+      "applyDescription": "Güncellemeyi uygulamak için uygulama yeniden başlatılmalıdır. Şimdi yeniden başlatmak istiyor musunuz?",
       "applyError": "Güncelleme uygulanamadı, lütfen daha sonra tekrar deneyin",
-      "applyTitle": "Uygulama Güncellemesi",
-      "applying": "Güncellemeleri uygulamak için yeniden başlatılıyor...",
+      "applyTitle": "Güncellemeyi Uygula",
+      "applying": "Güncelleme uygulanıyor, yeniden başlatılıyor...",
       "checking": "Güncellemeler kontrol ediliyor...",
       "downloaded": "Güncelleme paketi indirildi",
-      "downloading": "Yeni bir sürüm tespit edildi, güncelleme indiriliyor...",
-      "error": "Güncellemeler kontrol edilemedi, lütfen daha sonra tekrar deneyin",
-      "none": "Uygulama zaten en son sürümde",
+      "downloading": "Yeni sürüm tespit edildi, güncelleme indiriliyor...",
+      "error": "Güncelleme kontrolü başarısız, lütfen daha sonra tekrar deneyin",
+      "none": "Uygulama en son sürümde",
       "title": "Güncellemeleri Kontrol Et",
-      "unavailable": "Bu yapı güncelleme kontrolünü desteklemiyor, lütfen bu özelliği resmi sürümde kullanın."
+      "unavailable": "Bu yapı güncelleme kontrolünü desteklemiyor, lütfen resmi sürümde deneyin."
     }
   },
-  "version": "Mevcut Sürüm"
+  "version": "Geçerli Sürüm"
 }

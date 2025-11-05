@@ -10,13 +10,13 @@
       "verified": "Verificado"
     },
     "signOut": {
-      "confirm": "¿Está seguro de que desea cerrar sesión?",
+      "confirm": "¿Estás seguro de que deseas cerrar sesión?",
       "label": "Cerrar sesión"
     },
     "switchAccount": {
       "action": "Cambiar de cuenta",
       "confirm": "¿Estás seguro de que deseas cambiar de cuenta? Esto cerrará la sesión actual e iniciará una nueva.",
-      "error": "Error al cambiar de cuenta. Por favor, inténtalo de nuevo.",
+      "error": "Error al cambiar de cuenta, por favor intenta de nuevo.",
       "label": "Cambiar de cuenta"
     },
     "title": "Configuración de la cuenta"
@@ -27,19 +27,19 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "Por favor, introduzca la clave API de {{name}}",
-        "label": "Clave API",
-        "placeholder": "Por favor, introduzca la clave API de {{name}}"
+        "description": "Por favor, introduce la API Key de {{name}}",
+        "label": "API Key",
+        "placeholder": "Introduce la API Key de {{name}}"
       },
       "proxyUrl": {
-        "desc": "Debe incluir http(s)://",
-        "invalid": "Por favor, introduzca una URL válida que comience con http:// o https://",
+        "desc": "Debe comenzar con http(s)://",
+        "invalid": "Introduce una URL válida que comience con http:// o https://",
         "placeholder": "https://api.example.com/v1",
-        "title": "Dirección del proxy API"
+        "title": "Dirección del proxy de la API"
       },
       "saving": "Guardando configuración...",
       "title": "Configuración",
-      "updateFailedDesc": "Error al guardar, por favor intente de nuevo",
+      "updateFailedDesc": "Error al guardar, por favor intenta de nuevo",
       "updateFailedTitle": "Error al guardar"
     },
     "detail": {
@@ -51,7 +51,7 @@
       "custom": "Proveedor personalizado"
     },
     "list": {
-      "disabled": "No habilitado",
+      "disabled": "Deshabilitado",
       "emptySearch": "No se encontraron proveedores coincidentes",
       "enabled": "Habilitado",
       "loadFailed": "Error al cargar la lista de proveedores"
@@ -60,70 +60,70 @@
       "allLoaded": "Todos los modelos mostrados",
       "copySuccess": "Copiado con éxito",
       "disableFailed": "Error al deshabilitar el modelo",
-      "emptyNoSearch": "No se encontraron modelos, intentando obtener del servidor",
+      "emptyNoSearch": "No se encontraron modelos, intenta obtenerlos del servidor",
       "emptyWithSearch": "No hay modelos que coincidan con la búsqueda",
       "enableFailed": "Error al habilitar el modelo",
-      "fetch": "Obteniendo modelos",
-      "fetchFailed": "Error al obtener modelos, por favor intente de nuevo",
+      "fetch": "Obtener modelos",
+      "fetchFailed": "Error al obtener modelos, por favor intenta de nuevo",
       "fetchSuccess": "¡Lista de modelos obtenida con éxito!",
       "fetching": "Obteniendo...",
       "loading": "Cargando...",
       "loadingMore": "Cargando más...",
-      "modelsAvailable": "{{count}} modelos disponibles en total",
+      "modelsAvailable": "{{count}} modelos disponibles",
       "searchPlaceholder": "Buscar modelos...",
       "title": "Modelos"
     },
     "skeleton": {
-      "disabled": "No habilitado",
+      "disabled": "Deshabilitado",
       "enabled": "Habilitado"
     }
   },
   "cache": {
     "clear": {
       "confirm": {
-        "action": "Borrar caché",
-        "description": "Esto eliminará los datos almacenados en caché localmente. La próxima vez que abras la aplicación, el contenido se volverá a cargar.",
-        "title": "¿Confirmar borrado de caché?"
+        "action": "Limpiar caché",
+        "description": "Esto eliminará los datos almacenados localmente. El contenido se recargará la próxima vez que abras la aplicación.",
+        "title": "¿Confirmar limpieza de caché?"
       },
-      "failure": "Error al borrar la caché",
-      "success": "Caché borrada correctamente"
+      "failure": "Error al limpiar la caché",
+      "success": "Caché limpiada con éxito"
     },
-    "description": "La caché puede mejorar la velocidad de inicio. Puedes borrarla para liberar espacio cuando sea necesario.",
-    "title": "Borrar caché"
+    "description": "La caché mejora la velocidad de inicio. Puedes limpiarla para liberar espacio.",
+    "title": "Limpiar caché"
   },
   "changelog": "Registro de cambios",
   "color": {
     "neutral": {
-      "description": "Seleccione el tono neutro de la aplicación",
-      "title": "Configuración de tonos neutros"
+      "description": "Selecciona el tono neutro de la aplicación",
+      "title": "Configuración de color neutro"
     },
     "preview": "Vista previa",
     "previewMessages": {
-      "botGreat": "¡Me alegra que te guste! Esta función de vista previa te permite ver el efecto del tema de forma intuitiva antes de aplicar la configuración.",
-      "botHowToUse": "Puede ajustar el color principal y los tonos neutros con el selector de colores a continuación; la vista previa se actualizará en tiempo real para mostrar el efecto.",
+      "botGreat": "¡Me alegra que te guste! Esta función de vista previa te permite ver el efecto del tema antes de aplicarlo.",
+      "botHowToUse": "Puedes ajustar el color principal y el neutro con los selectores de abajo. La vista previa se actualizará en tiempo real.",
       "userGreat": "¡Genial!",
-      "userHowToUse": "¿Cómo usar la vista previa del tema?"
+      "userHowToUse": "¿Cómo se usa la vista previa del tema?"
     },
     "primary": {
-      "description": "Seleccione el tono principal de la aplicación",
-      "title": "Configuración del color principal"
+      "description": "Selecciona el color principal de la aplicación",
+      "title": "Configuración de color principal"
     },
-    "title": "Configuración de colores"
+    "title": "Configuración de color"
   },
   "developer": {
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "El token de acceso ha expirado inmediatamente",
+          "success": "Token de acceso expirado inmediatamente",
           "title": "Token de acceso expirado"
         },
         "invalidate": {
-          "success": "Se ha registrado un token de acceso inválido",
+          "success": "Token de acceso inválido guardado",
           "title": "Token de acceso inválido"
         }
       },
       "clearAuthData": {
-        "success": "Datos de autenticación borrados",
+        "success": "Datos de autenticación eliminados",
         "title": "Borrar datos de autenticación"
       },
       "error": {
@@ -132,16 +132,16 @@
       "group": "Configuración de autenticación",
       "refreshToken": {
         "expire": {
-          "success": "El token de actualización ha expirado inmediatamente",
+          "success": "Token de actualización expirado inmediatamente",
           "title": "Token de actualización expirado"
         },
         "invalidate": {
-          "success": "Se ha registrado un token de actualización inválido",
+          "success": "Token de actualización inválido guardado",
           "title": "Token de actualización inválido"
         }
       }
     },
-    "failurePrefix": "Operación fallida: ",
+    "failurePrefix": "Error en la operación: ",
     "mode": {
       "already": "Ya estás en modo desarrollador",
       "enabled": "Modo desarrollador activado",
@@ -149,50 +149,66 @@
       "title": "Modo desarrollador"
     },
     "selfHostedEntry": {
-      "confirmAction": "Ir a la página de inicio de sesión",
-      "confirmDescription": "Al habilitar, se mostrará la entrada de configuración de autoalojamiento en la página de inicio de sesión. ¿Desea cerrar la sesión actual e ir a la página de inicio de sesión?",
-      "confirmResetAction": "Restablecer e iniciar sesión",
-      "confirmResetDescription": "Desactivar el modo de autoalojamiento restablecerá la dirección del servidor a la instancia oficial y cerrará la sesión actual. ¿Desea continuar?",
-      "confirmResetTitle": "Desactivar modo de autoalojamiento",
-      "confirmTitle": "Habilitar entrada de inicio de sesión autoalojada",
-      "description": "Controla si se muestra el botón de instancia autoalojada en la página de inicio de sesión",
-      "title": "Activar modo de autoalojamiento"
+      "confirmAction": "Ir a la página de configuración",
+      "confirmDescription": "Al habilitarlo, se abrirá directamente la página de configuración de instancia autohospedada. ¿Deseas cerrar sesión y continuar?",
+      "confirmResetAction": "Restablecer e ir a iniciar sesión",
+      "confirmResetDescription": "Desactivar el modo autohospedado restablecerá la dirección del servidor a la instancia oficial y cerrará la sesión actual. ¿Deseas continuar?",
+      "confirmResetTitle": "Desactivar modo autohospedado",
+      "confirmTitle": "Habilitar acceso de inicio de sesión autohospedado",
+      "description": "Controla si se muestra el botón de instancia autohospedada en la página de inicio de sesión",
+      "title": "Activar modo autohospedado"
     },
     "server": {
-      "confirmDescription": "Después de cambiar la dirección del servidor, se cerrará la sesión del usuario actual y será necesario iniciar sesión nuevamente. ¿Desea continuar?",
+      "confirmDescription": "Cambiar la dirección del servidor cerrará la sesión actual y requerirá volver a iniciar sesión. ¿Deseas continuar?",
       "confirmTitle": "Confirmar cambio de servidor",
       "current": "Dirección actual",
-      "description": "Después de configurar, todas las solicitudes usarán esta dirección de servidor. Dejar vacío para restaurar al servidor oficial.",
+      "description": "Una vez configurado, todas las solicitudes usarán esta dirección. Déjalo en blanco para volver al servidor oficial.",
       "group": "Configuración del servidor",
-      "hint": "Debe comenzar con http:// o https://, la aplicación puede requerir volver a iniciar sesión.",
-      "invalid": "Por favor, introduzca una dirección válida que comience con http:// o https://",
-      "notice": "El servidor personalizado reemplazará la dirección de la interfaz predeterminada. Asegúrese de que el servicio esté disponible y sea compatible con el protocolo LobeChat API. Puede ser necesario iniciar sesión nuevamente o reiniciar la aplicación después del cambio.",
+      "hint": "Debe comenzar con http:// o https://. Es posible que necesites volver a iniciar sesión.",
+      "invalid": "Introduce una dirección válida que comience con http:// o https://",
+      "notice": "El servidor personalizado reemplazará la dirección predeterminada. Asegúrate de que sea compatible con el protocolo de LobeChat. Es posible que necesites reiniciar o volver a iniciar sesión.",
       "noticeTitle": "Atención antes de cambiar",
-      "placeholder": "https://tu-servidor.ejemplo.com",
+      "placeholder": "https://your-server.example.com",
       "reset": "Restablecer a predeterminado",
       "resetSuccess": "Dirección del servidor oficial restaurada",
       "save": "Guardar",
-      "title": "Instancia autoalojada",
+      "title": "Instancia autohospedada",
       "updated": "Dirección del servidor personalizada actualizada"
     },
     "title": "Opciones de desarrollador"
   },
-  "feedback": "Comentarios",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Descripción del problema:",
+        "footer": "Enviado desde mi {{device}}",
+        "frequency": "Frecuencia del problema:",
+        "screenshots": "Capturas de pantalla relacionadas:",
+        "template": "Describe detalladamente el problema que estás experimentando para que podamos ayudarte mejor."
+      },
+      "subject": "Feedback - LobeChat - {{version}}"
+    },
+    "error": "No se pudo abrir el cliente de correo. Por favor, inténtalo de nuevo más tarde.",
+    "saved": "El feedback se ha guardado en borradores",
+    "sent": "¡Correo enviado! Gracias por tus comentarios.",
+    "title": "Enviar feedback",
+    "unavailable": "La función de correo no está disponible. Verifica si tu dispositivo tiene una cuenta de correo configurada o si la función de correo está habilitada."
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**¿Cómo ajustar el tamaño de la fuente?**\n\nUsa el control deslizante de abajo para cambiar el tamaño de la fuente: desliza hacia la izquierda para reducirlo, hacia la derecha para aumentarlo. Mientras lo arrastras, aquí se mostrará una vista previa en tiempo real.\n\nConsejo: selecciona la escala \"Estándar\" para restaurar rápidamente el tamaño predeterminado.",
-      "botGreat": "¡Me alegra que te guste! Esta función de vista previa te permite ver de forma intuitiva cómo se verá la conversación en el cuadro de diálogo antes de aplicar la configuración.",
+      "botAnswer": "**¿Cómo ajustar el tamaño de fuente?**\n\nUsa el control deslizante a continuación para ajustar el tamaño de fuente: hacia la izquierda para reducir, hacia la derecha para aumentar. La vista previa se actualizará en tiempo real.\n\nConsejo: selecciona \"Estándar\" para volver rápidamente al tamaño predeterminado.",
+      "botGreat": "¡Me alegra que te guste! Esta vista previa te permite ver cómo se verá el texto en el chat antes de aplicar los cambios.",
       "userGreat": "¡Genial!",
-      "userQuestion": "Quiero aumentar el tamaño de la fuente en la conversación, ¿cómo puedo hacerlo?"
+      "userQuestion": "Quiero aumentar el tamaño de fuente del chat, ¿cómo lo hago?"
     },
     "standard": "Estándar",
-    "text": "Atención, esta configuración solo afecta el tamaño de la fuente del contenido del mensaje",
+    "text": "Nota: esta configuración solo afecta el tamaño de fuente del contenido de los mensajes",
     "title": "Tamaño de fuente"
   },
   "general": {
     "group": "General"
   },
-  "help": "Ayuda",
+  "help": "Ayuda de uso",
   "info": {
     "group": "Información"
   },
@@ -205,27 +221,27 @@
   },
   "openai": "Configuración de OpenAI",
   "openaiSettings": {
-    "apiKey": "Clave API",
-    "apiKeyPlaceholder": "Por favor, introduzca su clave API de OpenAI",
-    "checkApiKey": "Por favor, verifique que la clave API sea correcta",
-    "checkProxyAddress": "No se puede conectar al servidor, por favor verifique que la dirección del proxy sea correcta",
-    "connectionSuccess": "Conexión exitosa, la clave API y la dirección del proxy están configuradas correctamente",
-    "connectivityHint": "Después de probar la conectividad, se verificará si la clave API y la dirección del proxy están correctamente configuradas",
-    "pleaseEnterApiKey": "Por favor, introduzca la clave API",
-    "proxyAddress": "Dirección del proxy API",
-    "proxyPlaceholder": "Debe incluir http(s)://",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Introduce tu API Key de OpenAI",
+    "checkApiKey": "Verifica si la API Key es correcta",
+    "checkProxyAddress": "No se puede conectar al servidor, verifica si la dirección del proxy es correcta",
+    "connectionSuccess": "Conexión exitosa, API Key y proxy configurados correctamente",
+    "connectivityHint": "Después de probar la conectividad, se verificará si la API Key y el proxy están correctamente configurados",
+    "pleaseEnterApiKey": "Introduce la API Key",
+    "proxyAddress": "Dirección del proxy de la API",
+    "proxyPlaceholder": "Debe comenzar con http(s)://",
     "testConnectivity": "Probar conectividad",
     "validationFailed": "Validación fallida",
     "validationSuccess": "Validación exitosa"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Su clave y la dirección del proxy serán cifradas usando el algoritmo <1>AES-GCM</1>",
+      "aesGcm": "Tu clave y dirección del proxy serán cifradas usando el algoritmo <1>AES-GCM</1>",
       "checker": {
         "button": "Probar conexión",
-        "desc": "Verificar si la clave API y la dirección del proxy están correctamente configuradas",
+        "desc": "Verifica si la API Key y el proxy están correctamente configurados",
         "pass": "Verificación exitosa",
-        "selectModel": "Seleccione el modelo para probar la conexión",
+        "selectModel": "Selecciona un modelo para probar la conexión",
         "title": "Verificación de conectividad"
       }
     }
@@ -249,17 +265,17 @@
   "update": {
     "check": {
       "applyAction": "Reiniciar ahora",
-      "applyDescription": "Es necesario reiniciar la aplicación para aplicar la última actualización. ¿Desea reiniciar ahora?",
-      "applyError": "Error al aplicar la actualización. Por favor, inténtelo de nuevo más tarde.",
+      "applyDescription": "Se necesita reiniciar la aplicación para aplicar la actualización. ¿Deseas reiniciar ahora?",
+      "applyError": "Error al aplicar la actualización, por favor intenta más tarde",
       "applyTitle": "Aplicar actualización",
       "applying": "Reiniciando para aplicar la actualización...",
-      "checking": "Comprobando actualizaciones...",
-      "downloaded": "El paquete de actualización se ha descargado correctamente",
-      "downloading": "Se ha detectado una nueva versión. Descargando actualización...",
-      "error": "Error al comprobar actualizaciones. Por favor, inténtelo de nuevo más tarde.",
+      "checking": "Buscando actualizaciones...",
+      "downloaded": "Actualización descargada",
+      "downloading": "Nueva versión detectada, descargando actualización...",
+      "error": "Error al buscar actualizaciones, por favor intenta más tarde",
       "none": "Ya tienes la última versión",
       "title": "Buscar actualizaciones",
-      "unavailable": "La comprobación de actualizaciones no está disponible en esta versión. Utiliza esta función en la versión oficial."
+      "unavailable": "Esta versión no admite la búsqueda de actualizaciones. Usa la versión oficial para esta función."
     }
   },
   "version": "Versión actual"

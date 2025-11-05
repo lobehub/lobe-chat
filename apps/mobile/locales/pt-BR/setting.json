@@ -15,7 +15,7 @@
     },
     "switchAccount": {
       "action": "Trocar de conta",
-      "confirm": "Tem certeza de que deseja trocar de conta? Isso encerrará a sessão atual e fará login novamente.",
+      "confirm": "Tem certeza de que deseja trocar de conta? Isso encerrará a sessão atual e iniciará uma nova.",
       "error": "Falha ao trocar de conta. Tente novamente.",
       "label": "Trocar de conta"
     },
@@ -27,50 +27,50 @@
   "aiProviders": {
     "configuration": {
       "apiKey": {
-        "description": "Por favor, insira a chave API do {{name}}",
-        "label": "Chave API",
-        "placeholder": "Por favor, insira a chave API do {{name}}"
+        "description": "Insira a chave de API do {{name}}",
+        "label": "Chave de API",
+        "placeholder": "Insira a chave de API do {{name}}"
       },
       "proxyUrl": {
-        "desc": "Deve conter http(s)://",
-        "invalid": "Por favor, insira uma URL válida que comece com http:// ou https://",
-        "placeholder": "https://api.exemplo.com/v1",
+        "desc": "Deve começar com http(s)://",
+        "invalid": "Insira uma URL válida que comece com http:// ou https://",
+        "placeholder": "https://api.example.com/v1",
         "title": "Endereço do proxy da API"
       },
       "saving": "Salvando configurações...",
       "title": "Configuração",
-      "updateFailedDesc": "Falha ao salvar, por favor tente novamente",
+      "updateFailedDesc": "Falha ao salvar. Tente novamente.",
       "updateFailedTitle": "Falha ao salvar"
     },
     "detail": {
-      "loadFailed": "Falha ao carregar a configuração do provedor",
-      "loading": "Carregando configuração do provedor..."
+      "loadFailed": "Falha ao carregar configurações do provedor",
+      "loading": "Carregando configurações do provedor..."
     },
     "info": {
-      "builtIn": "Provedor embutido",
+      "builtIn": "Provedor integrado",
       "custom": "Provedor personalizado"
     },
     "list": {
       "disabled": "Desativado",
       "emptySearch": "Nenhum provedor correspondente encontrado",
       "enabled": "Ativado",
-      "loadFailed": "Falha ao carregar a lista de provedores"
+      "loadFailed": "Falha ao carregar lista de provedores"
     },
     "models": {
       "allLoaded": "Todos os modelos exibidos",
       "copySuccess": "Copiado com sucesso",
-      "disableFailed": "Falha ao desativar o modelo",
-      "emptyNoSearch": "Nenhum modelo encontrado, tente obter do servidor",
-      "emptyWithSearch": "Nenhum modelo corresponde aos critérios de busca",
-      "enableFailed": "Falha ao ativar o modelo",
-      "fetch": "Obtendo modelos",
-      "fetchFailed": "Falha ao obter modelos, por favor tente novamente",
-      "fetchSuccess": "Lista de modelos obtida com sucesso!",
-      "fetching": "Obtendo...",
+      "disableFailed": "Falha ao desativar modelo",
+      "emptyNoSearch": "Nenhum modelo encontrado. Tente buscar no servidor.",
+      "emptyWithSearch": "Nenhum modelo corresponde à busca",
+      "enableFailed": "Falha ao ativar modelo",
+      "fetch": "Buscar modelos",
+      "fetchFailed": "Falha ao buscar modelos. Tente novamente.",
+      "fetchSuccess": "Lista de modelos carregada com sucesso!",
+      "fetching": "Buscando...",
       "loading": "Carregando...",
       "loadingMore": "Carregando mais...",
-      "modelsAvailable": "{{count}} modelos disponíveis no total",
-      "searchPlaceholder": "Pesquisar modelos...",
+      "modelsAvailable": "{{count}} modelos disponíveis",
+      "searchPlaceholder": "Buscar modelos...",
       "title": "Modelos"
     },
     "skeleton": {
@@ -82,16 +82,16 @@
     "clear": {
       "confirm": {
         "action": "Limpar cache",
-        "description": "Isso removerá os dados em cache armazenados localmente. O conteúdo será recarregado na próxima vez que o aplicativo for aberto.",
+        "description": "Isso removerá os dados em cache armazenados localmente. O conteúdo será recarregado na próxima vez que o app for aberto.",
         "title": "Confirmar limpeza de cache?"
       },
-      "failure": "Falha ao limpar o cache",
+      "failure": "Falha ao limpar cache",
       "success": "Cache limpo com sucesso"
     },
-    "description": "O cache pode acelerar o tempo de inicialização. Você pode limpá-lo para liberar espaço.",
+    "description": "O cache melhora a velocidade de inicialização. Você pode limpá-lo para liberar espaço.",
     "title": "Limpar cache"
   },
-  "changelog": "Registro de atualizações",
+  "changelog": "Registro de alterações",
   "color": {
     "neutral": {
       "description": "Escolha o tom neutro do aplicativo",
@@ -99,14 +99,14 @@
     },
     "preview": "Pré-visualização",
     "previewMessages": {
-      "botGreat": "Fico feliz que você gostou! Este recurso de pré-visualização permite que você veja o efeito do tema antes de aplicar as configurações.",
-      "botHowToUse": "Você pode ajustar a cor principal e as cores neutras usando o seletor de cores abaixo; a pré-visualização será atualizada em tempo real para mostrar o efeito.",
-      "userGreat": "Ótimo!",
+      "botGreat": "Fico feliz que tenha gostado! Esta pré-visualização permite ver o efeito do tema antes de aplicá-lo.",
+      "botHowToUse": "Use os seletores de cor abaixo para ajustar a cor primária e neutra. A pré-visualização será atualizada em tempo real.",
+      "userGreat": "Muito bom!",
       "userHowToUse": "Como usar a pré-visualização do tema?"
     },
     "primary": {
       "description": "Escolha a cor principal do aplicativo",
-      "title": "Configuração da cor principal"
+      "title": "Configuração de cor primária"
     },
     "title": "Configurações de cor"
   },
@@ -115,7 +115,7 @@
       "accessToken": {
         "expire": {
           "success": "Token de acesso expirado imediatamente",
-          "title": "Expiração do token de acesso"
+          "title": "Token de acesso expirado"
         },
         "invalidate": {
           "success": "Token de acesso inválido registrado",
@@ -133,7 +133,7 @@
       "refreshToken": {
         "expire": {
           "success": "Token de atualização expirado imediatamente",
-          "title": "Expiração do token de atualização"
+          "title": "Token de atualização expirado"
         },
         "invalidate": {
           "success": "Token de atualização inválido registrado",
@@ -141,7 +141,7 @@
         }
       }
     },
-    "failurePrefix": "Operação falhou: ",
+    "failurePrefix": "Falha na operação: ",
     "mode": {
       "already": "Você já está no modo desenvolvedor",
       "enabled": "Modo desenvolvedor ativado",
@@ -149,44 +149,60 @@
       "title": "Modo desenvolvedor"
     },
     "selfHostedEntry": {
-      "confirmAction": "Ir para a página de login",
-      "confirmDescription": "Após ativar, a entrada de configuração self-hosted será exibida na página de login. Deseja sair da conta atual e ir para a página de login?",
+      "confirmAction": "Ir para configurações",
+      "confirmDescription": "Ao ativar, você será redirecionado para a página de configuração de auto-hospedagem. Deseja sair da conta atual e continuar?",
       "confirmResetAction": "Redefinir e ir para login",
-      "confirmResetDescription": "Desativar o modo self-hosted irá redefinir o endereço do servidor para a instância oficial e sair da conta atual. Deseja continuar?",
-      "confirmResetTitle": "Desativar modo self-hosted",
-      "confirmTitle": "Ativar entrada de login self-hosted",
-      "description": "Controla se o botão da instância self-hosted será exibido na página de login",
-      "title": "Ativar modo self-hosted"
+      "confirmResetDescription": "Desativar o modo auto-hospedado irá restaurar o endereço do servidor para o padrão oficial e encerrar a sessão atual. Deseja continuar?",
+      "confirmResetTitle": "Desativar modo auto-hospedado",
+      "confirmTitle": "Ativar entrada de login auto-hospedado",
+      "description": "Controla se o botão de instância auto-hospedada será exibido na tela de login",
+      "title": "Ativar modo auto-hospedado"
     },
     "server": {
-      "confirmDescription": "Após alterar o endereço do servidor, o usuário atual será desconectado e será necessário fazer login novamente. Deseja continuar?",
+      "confirmDescription": "Alterar o endereço do servidor encerrará a sessão atual e exigirá novo login. Deseja continuar?",
       "confirmTitle": "Confirmar troca de servidor",
       "current": "Endereço atual",
-      "description": "Após configuração, todas as requisições usarão este endereço de servidor. Deixe em branco para restaurar o servidor oficial.",
+      "description": "Após configurado, todas as requisições usarão este endereço. Deixe em branco para usar o servidor oficial.",
       "group": "Configuração do servidor",
-      "hint": "Deve começar com http:// ou https://, o aplicativo pode precisar de novo login.",
-      "invalid": "Por favor, insira um endereço válido que comece com http:// ou https://",
-      "notice": "Servidores personalizados substituirão o endereço da API padrão. Certifique-se de que o serviço está disponível e compatível com o protocolo LobeChat API. Pode ser necessário fazer login novamente ou reiniciar o aplicativo após a troca.",
+      "hint": "Deve começar com http:// ou https://. Pode ser necessário fazer login novamente.",
+      "invalid": "Insira um endereço válido que comece com http:// ou https://",
+      "notice": "O servidor personalizado substituirá o endereço padrão. Certifique-se de que ele seja compatível com o protocolo da API do LobeChat. Pode ser necessário reiniciar o app ou fazer login novamente.",
       "noticeTitle": "Atenção antes de trocar",
-      "placeholder": "https://seu-servidor.exemplo.com",
+      "placeholder": "https://your-server.example.com",
       "reset": "Restaurar padrão",
       "resetSuccess": "Endereço do servidor oficial restaurado",
       "save": "Salvar",
-      "title": "Instância self-hosted",
+      "title": "Instância auto-hospedada",
       "updated": "Endereço do servidor personalizado atualizado"
     },
     "title": "Opções de desenvolvedor"
   },
-  "feedback": "Feedback",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Descrição do problema:",
+        "footer": "Enviado do meu {{device}}",
+        "frequency": "Frequência do problema:",
+        "screenshots": "Capturas de tela relacionadas:",
+        "template": "Descreva detalhadamente o problema que você encontrou para que possamos ajudá-lo da melhor forma possível."
+      },
+      "subject": "Feedback - LobeChat - {{version}}"
+    },
+    "error": "Falha ao abrir o cliente de e-mail. Por favor, tente novamente mais tarde.",
+    "saved": "Feedback salvo como rascunho",
+    "sent": "E-mail enviado. Agradecemos pelo seu feedback!",
+    "title": "Enviar feedback",
+    "unavailable": "Função de e-mail indisponível. Verifique se há uma conta de e-mail configurada no dispositivo ou se a função de e-mail está ativada."
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Como ajustar o tamanho da fonte?**\n\nUse o controle deslizante abaixo para ajustar o tamanho da fonte: para a esquerda para diminuir, para a direita para aumentar. Ao arrastar, a pré-visualização será atualizada em tempo real aqui.\n\nDica: selecione a marcação \"Padrão\" para restaurar rapidamente o tamanho padrão.",
-      "botGreat": "Fico feliz que você tenha gostado! Este recurso de pré-visualização permite que você veja de forma intuitiva como as conversas aparecerão antes de aplicar as configurações.",
-      "userGreat": "Ótimo!",
-      "userQuestion": "Quero aumentar o tamanho da fonte da conversa, como faço?"
+      "botAnswer": "**Como ajustar o tamanho da fonte?**\n\nUse o controle deslizante abaixo para ajustar o tamanho da fonte: deslize para a esquerda para diminuir e para a direita para aumentar. A pré-visualização será atualizada em tempo real.\n\nDica: selecione \"Padrão\" para restaurar o tamanho original.",
+      "botGreat": "Fico feliz que tenha gostado! Esta pré-visualização permite ver como o texto aparecerá nas conversas antes de aplicar.",
+      "userGreat": "Muito bom!",
+      "userQuestion": "Quero aumentar o tamanho da fonte nas conversas. Como faço isso?"
     },
     "standard": "Padrão",
-    "text": "Atenção, esta configuração afeta apenas o tamanho da fonte exibida no conteúdo da mensagem",
+    "text": "Essa configuração afeta apenas o tamanho da fonte das mensagens",
     "title": "Tamanho da fonte"
   },
   "general": {
@@ -198,20 +214,20 @@
   },
   "locale": {
     "auto": {
-      "description": "Seguir a configuração de idioma do sistema",
+      "description": "Seguir idioma do sistema",
       "title": "Seguir sistema"
     },
-    "title": "Configuração de idioma"
+    "title": "Configurações de idioma"
   },
-  "openai": "Configurações OpenAI",
+  "openai": "Configurações do OpenAI",
   "openaiSettings": {
-    "apiKey": "Chave API",
-    "apiKeyPlaceholder": "Por favor, insira sua chave API OpenAI",
-    "checkApiKey": "Por favor, verifique se a chave API está correta",
-    "checkProxyAddress": "Não foi possível conectar ao servidor, por favor verifique se o endereço do proxy está correto",
-    "connectionSuccess": "Conexão bem-sucedida, chave API e endereço do proxy configurados corretamente",
-    "connectivityHint": "Após testar a conectividade, será verificado se a chave API e o endereço do proxy foram preenchidos corretamente",
-    "pleaseEnterApiKey": "Por favor, insira a chave API",
+    "apiKey": "Chave de API",
+    "apiKeyPlaceholder": "Insira sua chave de API do OpenAI",
+    "checkApiKey": "Verifique se a chave de API está correta",
+    "checkProxyAddress": "Não foi possível conectar ao servidor. Verifique o endereço do proxy.",
+    "connectionSuccess": "Conexão bem-sucedida. A chave de API e o proxy estão corretos.",
+    "connectivityHint": "Após testar a conectividade, a chave de API e o proxy serão validados.",
+    "pleaseEnterApiKey": "Insira a chave de API",
     "proxyAddress": "Endereço do proxy da API",
     "proxyPlaceholder": "Deve conter http(s)://",
     "testConnectivity": "Testar conectividade",
@@ -220,12 +236,12 @@
   },
   "providerModels": {
     "config": {
-      "aesGcm": "Sua chave e o endereço do proxy serão criptografados usando o algoritmo <1>AES-GCM</1>",
+      "aesGcm": "Sua chave e endereço de proxy serão criptografados usando o algoritmo <1>AES-GCM</1>",
       "checker": {
         "button": "Testar conexão",
-        "desc": "Testar se a chave API e o endereço do proxy foram preenchidos corretamente",
-        "pass": "Verificação aprovada",
-        "selectModel": "Selecione o modelo para testar a conexão",
+        "desc": "Verifica se a chave de API e o proxy estão corretos",
+        "pass": "Verificação bem-sucedida",
+        "selectModel": "Selecione um modelo para testar a conexão",
         "title": "Verificação de conectividade"
       }
     }
@@ -237,29 +253,29 @@
       "models": "Modelos"
     }
   },
-  "providersSearchPlaceholder": "Pesquisar fornecedores por palavra-chave...",
+  "providersSearchPlaceholder": "Buscar provedores por palavra-chave...",
   "support": "Suporte por e-mail",
   "themeMode": {
     "auto": "Seguir sistema",
     "dark": "Modo escuro",
     "light": "Modo claro",
-    "title": "Modo do tema"
+    "title": "Modo de tema"
   },
   "title": "Configurações",
   "update": {
     "check": {
       "applyAction": "Reiniciar agora",
-      "applyDescription": "É necessário reiniciar o aplicativo para aplicar a atualização mais recente. Deseja reiniciar agora?",
-      "applyError": "Falha ao aplicar a atualização. Tente novamente mais tarde.",
-      "applyTitle": "Atualização do aplicativo",
-      "applying": "Reiniciando para aplicar a atualização...",
+      "applyDescription": "É necessário reiniciar o app para aplicar a atualização. Deseja reiniciar agora?",
+      "applyError": "Falha ao aplicar atualização. Tente novamente mais tarde.",
+      "applyTitle": "Aplicar atualização",
+      "applying": "Reiniciando para aplicar atualização...",
       "checking": "Verificando atualizações...",
-      "downloaded": "O pacote de atualização foi baixado com sucesso",
-      "downloading": "Nova versão detectada, baixando atualização...",
+      "downloaded": "Atualização baixada com sucesso",
+      "downloading": "Nova versão detectada. Baixando atualização...",
       "error": "Falha ao verificar atualizações. Tente novamente mais tarde.",
       "none": "Você já está usando a versão mais recente",
       "title": "Verificar atualizações",
-      "unavailable": "A verificação de atualizações não é compatível com esta versão. Use esta função na versão oficial."
+      "unavailable": "A verificação de atualizações não está disponível nesta versão. Use a versão oficial para acessar esse recurso."
     }
   },
   "version": "Versão atual"

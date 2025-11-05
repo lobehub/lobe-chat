@@ -4,7 +4,7 @@
     "group": "帳戶",
     "profile": {
       "email": "電子郵件",
-      "name": "用戶名",
+      "name": "使用者名稱",
       "status": "帳號狀態",
       "unverified": "未驗證",
       "verified": "已驗證"
@@ -15,7 +15,7 @@
     },
     "switchAccount": {
       "action": "切換帳號",
-      "confirm": "確定要切換帳號嗎？這會登出目前帳戶並重新登入。",
+      "confirm": "確定要切換帳號嗎？這將登出目前帳號並重新登入。",
       "error": "切換帳號失敗，請重試。",
       "label": "切換帳號"
     },
@@ -37,7 +37,7 @@
         "placeholder": "https://api.example.com/v1",
         "title": "API 代理位址"
       },
-      "saving": "正在儲存設定中...",
+      "saving": "正在儲存設定...",
       "title": "設定",
       "updateFailedDesc": "儲存失敗，請重試",
       "updateFailedTitle": "儲存失敗"
@@ -52,22 +52,22 @@
     },
     "list": {
       "disabled": "未啟用",
-      "emptySearch": "未找到符合條件的服務提供者",
+      "emptySearch": "未找到符合的服務商",
       "enabled": "已啟用",
-      "loadFailed": "服務商列表載入失敗"
+      "loadFailed": "服務商清單載入失敗"
     },
     "models": {
       "allLoaded": "已顯示全部模型",
       "copySuccess": "複製成功",
       "disableFailed": "停用模型失敗",
-      "emptyNoSearch": "找不到任何模型，嘗試從伺服器取得",
+      "emptyNoSearch": "沒有找到任何模型，嘗試從伺服器取得",
       "emptyWithSearch": "沒有符合搜尋條件的模型",
       "enableFailed": "啟用模型失敗",
       "fetch": "取得模型",
       "fetchFailed": "取得模型失敗，請重試",
-      "fetchSuccess": "模型列表取得成功！",
-      "fetching": "正在取得中...",
-      "loading": "正在載入中...",
+      "fetchSuccess": "模型清單取得成功！",
+      "fetching": "正在取得...",
+      "loading": "正在載入...",
       "loadingMore": "正在載入更多...",
       "modelsAvailable": "共 {{count}} 個可用模型",
       "searchPlaceholder": "搜尋模型...",
@@ -82,13 +82,13 @@
     "clear": {
       "confirm": {
         "action": "清除快取",
-        "description": "這將移除保存在本機的快取資料，下次開啟應用程式時需要重新載入內容。",
+        "description": "這將移除保存在本地的快取資料，下次開啟應用時需要重新載入內容。",
         "title": "確認清除快取？"
       },
       "failure": "清除快取失敗",
       "success": "快取已清除"
     },
-    "description": "快取可提升啟動速度，若需釋放空間可點選清除。",
+    "description": "快取可提升啟動速度，若需釋放空間可點擊清除。",
     "title": "清除快取"
   },
   "changelog": "更新日誌",
@@ -99,10 +99,10 @@
     },
     "preview": "預覽",
     "previewMessages": {
-      "botGreat": "很高興你喜歡！這個預覽功能讓你可以在應用設定之前直觀地看到主題效果。",
-      "botHowToUse": "您可以透過下方的顏色選擇器調整主色與中性色，預覽會即時更新以顯示效果。",
-      "userGreat": "很棒！",
-      "userHowToUse": "主題預覽如何使用？"
+      "botGreat": "很高興你喜歡！這個預覽功能讓你可以在設定應用前直觀地看到主題效果。",
+      "botHowToUse": "你可以透過下方的顏色選擇器來調整主色與中性色，預覽會即時更新顯示效果。",
+      "userGreat": "太棒了！",
+      "userHowToUse": "主題預覽怎麼使用？"
     },
     "primary": {
       "description": "選擇應用的主色調",
@@ -114,83 +114,99 @@
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "已使訪問令牌立即過期",
-          "title": "訪問令牌過期"
+          "success": "已使存取權杖立即失效",
+          "title": "存取權杖失效"
         },
         "invalidate": {
-          "success": "已寫入無效的訪問令牌",
-          "title": "無效訪問令牌"
+          "success": "已寫入無效的存取權杖",
+          "title": "無效存取權杖"
         }
       },
       "clearAuthData": {
-        "success": "已清空認證資料",
-        "title": "清空認證資料"
+        "success": "已清除認證資料",
+        "title": "清除認證資料"
       },
       "error": {
-        "noToken": "當前無可用 Token"
+        "noToken": "目前無可用 Token"
       },
-      "group": "認證配置",
+      "group": "認證設定",
       "refreshToken": {
         "expire": {
-          "success": "已使刷新令牌立即過期",
-          "title": "刷新令牌過期"
+          "success": "已使刷新權杖立即失效",
+          "title": "刷新權杖失效"
         },
         "invalidate": {
-          "success": "已寫入無效的刷新令牌",
-          "title": "無效刷新令牌"
+          "success": "已寫入無效的刷新權杖",
+          "title": "無效刷新權杖"
         }
       }
     },
     "failurePrefix": "操作失敗：",
     "mode": {
-      "already": "你已處於開發者模式",
+      "already": "你已經處於開發者模式",
       "enabled": "開發者模式已啟用",
-      "remaining": "再點按 {{count}} 次即可啟用開發者模式",
+      "remaining": "再點擊 {{count}} 次即可啟用開發者模式",
       "title": "開發者模式"
     },
     "selfHostedEntry": {
-      "confirmAction": "前往登入頁",
-      "confirmDescription": "啟用後將在登入頁面展示自托管配置入口，是否登出當前帳號並前往登入頁？",
-      "confirmResetAction": "重置並前往登入",
-      "confirmResetDescription": "關閉自部署模式將重置伺服器地址為官方實例，並登出當前帳號。是否繼續？",
+      "confirmAction": "前往設定頁",
+      "confirmDescription": "啟用後將直接開啟自架設設定頁，是否登出目前帳號並前往設定頁？",
+      "confirmResetAction": "重設並前往登入",
+      "confirmResetDescription": "關閉自部署模式將重設伺服器位址為官方實例，並登出目前帳號。是否繼續？",
       "confirmResetTitle": "關閉自部署模式",
-      "confirmTitle": "啟用自托管登入入口",
-      "description": "控制登入頁是否展示自托管實例按鈕",
-      "title": "開啟自部署模式"
+      "confirmTitle": "啟用自架設登入入口",
+      "description": "控制登入頁是否顯示自架設實例按鈕",
+      "title": "啟用自部署模式"
     },
     "server": {
-      "confirmDescription": "修改伺服器地址後將會登出當前使用者並需要重新登入，是否繼續？",
+      "confirmDescription": "修改伺服器位址後將會登出目前使用者並需要重新登入，是否繼續？",
       "confirmTitle": "確認切換伺服器",
-      "current": "當前地址",
-      "description": "配置後，所有請求都會使用該伺服器地址。留空則恢復到官方伺服器。",
-      "group": "伺服器配置",
+      "current": "目前位址",
+      "description": "設定後，所有請求將使用此伺服器位址。留空則恢復為官方伺服器。",
+      "group": "伺服器設定",
       "hint": "必須以 http:// 或 https:// 開頭，應用可能需要重新登入。",
-      "invalid": "請輸入以 http:// 或 https:// 開頭的有效地址",
-      "notice": "自訂伺服器會替換預設介面地址，請確保服務可用並相容 LobeChat API 協議。切換後可能需要重新登入或重啟應用",
+      "invalid": "請輸入以 http:// 或 https:// 開頭的有效位址",
+      "notice": "自訂伺服器會取代預設 API 位址，請確保服務可用並相容 LobeChat API 協議。切換後可能需要重新登入或重啟應用",
       "noticeTitle": "切換前請注意",
       "placeholder": "https://your-server.example.com",
       "reset": "恢復預設",
-      "resetSuccess": "已恢復官方伺服器地址",
+      "resetSuccess": "已恢復官方伺服器位址",
       "save": "儲存",
       "title": "自部署實例",
-      "updated": "自訂伺服器地址已更新"
+      "updated": "自訂伺服器位址已更新"
     },
     "title": "開發者選項"
   },
-  "feedback": "意見回饋",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "問題描述：",
+        "footer": "發自我的 {{device}}",
+        "frequency": "出現頻率：",
+        "screenshots": "相關截圖：",
+        "template": "請詳細描述您遇到的問題，以便我們更好地協助您解決。"
+      },
+      "subject": "回饋 - LobeChat - {{version}}"
+    },
+    "error": "無法開啟郵件用戶端，請稍後再試",
+    "saved": "回饋已儲存至草稿匣",
+    "sent": "郵件已發送，感謝您的回饋！",
+    "title": "意見回饋",
+    "unavailable": "郵件功能無法使用，請確認您的裝置是否已設定郵件帳戶或啟用郵件功能"
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**如何調整字體大小？**\n\n使用下方的滑桿即可調節字體大小：向左變小，向右變大。拖動時，這裡會即時預覽效果。\n\n小提示：選擇「標準」刻度可快速恢復預設大小。",
-      "botGreat": "很高興你喜歡！這個預覽功能讓你可以在應用設定之前直觀地看到在對話框中的對話效果。",
-      "userGreat": "很棒！",
+      "botAnswer": "**如何調整字體大小？**\n\n使用下方的滑桿即可調整字體大小：向左變小，向右變大。拖動時，這裡會即時預覽效果。\n\n小提示：選擇「標準」刻度可快速恢復預設大小。",
+      "botGreat": "很高興你喜歡！這個預覽功能讓你可以在設定應用前直觀地看到對話框中的對話效果。",
+      "userGreat": "太棒了！",
       "userQuestion": "我想把對話字體調大一些，該怎麼做？"
     },
     "standard": "標準",
-    "text": "注意，該配置僅影響訊息內容的字體大小顯示",
+    "text": "注意，此設定僅影響訊息內容的字體大小顯示",
     "title": "字體大小"
   },
   "general": {
-    "group": "通用"
+    "group": "一般"
   },
   "help": "使用說明",
   "info": {
@@ -198,49 +214,49 @@
   },
   "locale": {
     "auto": {
-      "description": "跟隨系統語言設定",
-      "title": "跟隨系統"
+      "description": "依系統語言設定",
+      "title": "依系統"
     },
     "title": "語言設定"
   },
   "openai": "OpenAI 設定",
   "openaiSettings": {
     "apiKey": "API Key",
-    "apiKeyPlaceholder": "請輸入您的 OpenAI API Key",
+    "apiKeyPlaceholder": "請輸入你的 OpenAI API Key",
     "checkApiKey": "請檢查 API Key 是否正確",
-    "checkProxyAddress": "無法連接到伺服器，請檢查代理位址是否正確",
+    "checkProxyAddress": "無法連接伺服器，請檢查代理位址是否正確",
     "connectionSuccess": "連線成功，API Key 與代理位址設定正確",
-    "connectivityHint": "測試連通性後，將會驗證 API Key 與代理位址是否正確填寫",
+    "connectivityHint": "測試連線後，將會驗證 API Key 與代理位址是否正確填寫",
     "pleaseEnterApiKey": "請輸入 API Key",
     "proxyAddress": "API 代理位址",
     "proxyPlaceholder": "必須包含 http(s)://",
-    "testConnectivity": "測試連通性",
+    "testConnectivity": "測試連線",
     "validationFailed": "驗證失敗",
     "validationSuccess": "驗證成功"
   },
   "providerModels": {
     "config": {
-      "aesGcm": "您的密鑰與代理位址等將使用 <1>AES-GCM</1> 演算法進行加密",
+      "aesGcm": "您的金鑰與代理位址等將使用 <1>AES-GCM</1> 演算法進行加密",
       "checker": {
         "button": "測試連線",
-        "desc": "測試 Api Key 與代理位址是否正確填寫",
+        "desc": "測試 API Key 與代理位址是否正確填寫",
         "pass": "檢查通過",
         "selectModel": "選擇用於測試連線的模型",
-        "title": "連通性檢查"
+        "title": "連線檢查"
       }
     }
   },
   "providers": "AI 服務商",
   "providersDetail": {
     "tabs": {
-      "configuration": "配置",
+      "configuration": "設定",
       "models": "模型"
     }
   },
   "providersSearchPlaceholder": "以關鍵字搜尋供應商...",
   "support": "郵件支援",
   "themeMode": {
-    "auto": "跟隨系統",
+    "auto": "依系統",
     "dark": "深色模式",
     "light": "淺色模式",
     "title": "主題模式"
@@ -249,17 +265,17 @@
   "update": {
     "check": {
       "applyAction": "立即重新啟動",
-      "applyDescription": "需要重新啟動應用程式以套用最新更新，是否現在重新啟動？",
-      "applyError": "套用更新失敗，請稍後再試",
-      "applyTitle": "應用程式更新",
+      "applyDescription": "需要重新啟動應用以套用最新更新，是否現在重新啟動？",
+      "applyError": "套用更新失敗，請稍後重試",
+      "applyTitle": "套用更新",
       "applying": "正在重新啟動以套用更新...",
       "checking": "正在檢查更新...",
       "downloaded": "更新包已下載完成",
       "downloading": "偵測到新版本，正在下載更新...",
-      "error": "檢查更新失敗，請稍後再試",
+      "error": "檢查更新失敗，請稍後重試",
       "none": "目前已是最新版本",
       "title": "檢查更新",
-      "unavailable": "目前的建置版本不支援檢查更新，請在正式版本中使用此功能。"
+      "unavailable": "目前版本不支援檢查更新，請於正式版本中使用此功能。"
     }
   },
   "version": "目前版本"

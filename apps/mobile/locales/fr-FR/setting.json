@@ -15,7 +15,7 @@
     },
     "switchAccount": {
       "action": "Changer de compte",
-      "confirm": "Voulez-vous vraiment changer de compte ? Cela entraînera la déconnexion du compte actuel et une nouvelle connexion.",
+      "confirm": "Voulez-vous vraiment changer de compte ? Cela déconnectera le compte actuel et vous demandera de vous reconnecter.",
       "error": "Échec du changement de compte, veuillez réessayer.",
       "label": "Changer de compte"
     },
@@ -32,7 +32,7 @@
         "placeholder": "Veuillez saisir la clé API de {{name}}"
       },
       "proxyUrl": {
-        "desc": "Doit inclure http(s)://",
+        "desc": "Doit commencer par http(s)://",
         "invalid": "Veuillez saisir une URL valide commençant par http:// ou https://",
         "placeholder": "https://api.example.com/v1",
         "title": "Adresse du proxy API"
@@ -57,19 +57,19 @@
       "loadFailed": "Échec du chargement de la liste des fournisseurs"
     },
     "models": {
-      "allLoaded": "Tous les modèles affichés",
-      "copySuccess": "Copie réussie",
+      "allLoaded": "Tous les modèles sont affichés",
+      "copySuccess": "Copié avec succès",
       "disableFailed": "Échec de la désactivation du modèle",
       "emptyNoSearch": "Aucun modèle trouvé, essayez de récupérer depuis le serveur",
-      "emptyWithSearch": "Aucun modèle ne correspond aux critères de recherche",
+      "emptyWithSearch": "Aucun modèle ne correspond à votre recherche",
       "enableFailed": "Échec de l'activation du modèle",
-      "fetch": "Récupération des modèles",
+      "fetch": "Récupérer les modèles",
       "fetchFailed": "Échec de la récupération des modèles, veuillez réessayer",
       "fetchSuccess": "Liste des modèles récupérée avec succès !",
       "fetching": "Récupération en cours...",
-      "loading": "Chargement en cours...",
-      "loadingMore": "Chargement de plus...",
-      "modelsAvailable": "{{count}} modèles disponibles au total",
+      "loading": "Chargement...",
+      "loadingMore": "Chargement de plus de modèles...",
+      "modelsAvailable": "{{count}} modèles disponibles",
       "searchPlaceholder": "Rechercher un modèle...",
       "title": "Modèles"
     },
@@ -82,16 +82,16 @@
     "clear": {
       "confirm": {
         "action": "Vider le cache",
-        "description": "Cela supprimera les données en cache stockées localement. Le contenu devra être rechargé lors du prochain démarrage de l'application.",
-        "title": "Confirmer la suppression du cache ?"
+        "description": "Cela supprimera les données en cache stockées localement. Le contenu devra être rechargé au prochain démarrage de l'application.",
+        "title": "Confirmer le vidage du cache ?"
       },
-      "failure": "Échec du nettoyage du cache",
-      "success": "Le cache a été vidé"
+      "failure": "Échec du vidage du cache",
+      "success": "Cache vidé avec succès"
     },
-    "description": "Le cache permet d'accélérer le démarrage. Vous pouvez le vider pour libérer de l'espace.",
+    "description": "Le cache peut améliorer la vitesse de démarrage. Vous pouvez le vider pour libérer de l'espace.",
     "title": "Vider le cache"
   },
-  "changelog": "Journal des mises à jour",
+  "changelog": "Journal des modifications",
   "color": {
     "neutral": {
       "description": "Choisissez la teinte neutre de l'application",
@@ -99,16 +99,16 @@
     },
     "preview": "Aperçu",
     "previewMessages": {
-      "botGreat": "Ravi que cela vous plaise ! Cette fonction d'aperçu vous permet de voir visuellement l'effet du thème avant de l'appliquer.",
-      "botHowToUse": "Vous pouvez ajuster la couleur principale et les couleurs neutres avec le sélecteur ci-dessous, l'aperçu se mettra à jour en temps réel pour montrer l'effet.",
-      "userGreat": "Super !",
+      "botGreat": "Ravi que cela vous plaise ! Cette fonction d'aperçu vous permet de visualiser le thème avant de l'appliquer.",
+      "botHowToUse": "Utilisez le sélecteur de couleurs ci-dessous pour ajuster la couleur principale et la couleur neutre. L'aperçu se mettra à jour en temps réel.",
+      "userGreat": "Génial !",
       "userHowToUse": "Comment utiliser l'aperçu du thème ?"
     },
     "primary": {
       "description": "Choisissez la couleur principale de l'application",
       "title": "Configuration de la couleur principale"
     },
-    "title": "Paramètres des couleurs"
+    "title": "Paramètres de couleur"
   },
   "developer": {
     "auth": {
@@ -144,32 +144,32 @@
     "failurePrefix": "Échec de l'opération : ",
     "mode": {
       "already": "Vous êtes déjà en mode développeur",
-      "enabled": "Le mode développeur est activé",
+      "enabled": "Mode développeur activé",
       "remaining": "Appuyez encore {{count}} fois pour activer le mode développeur",
       "title": "Mode développeur"
     },
     "selfHostedEntry": {
-      "confirmAction": "Aller à la page de connexion",
-      "confirmDescription": "Une fois activé, une entrée de configuration auto-hébergée sera affichée sur la page de connexion. Voulez-vous vous déconnecter du compte actuel et aller à la page de connexion ?",
-      "confirmResetAction": "Réinitialiser et aller à la connexion",
-      "confirmResetDescription": "Désactiver le mode auto-hébergé réinitialisera l'adresse du serveur à l'instance officielle et déconnectera le compte actuel. Voulez-vous continuer ?",
+      "confirmAction": "Aller à la page de configuration",
+      "confirmDescription": "Une fois activé, vous serez redirigé vers la page de configuration de l'instance auto-hébergée. Voulez-vous vous déconnecter et continuer ?",
+      "confirmResetAction": "Réinitialiser et se reconnecter",
+      "confirmResetDescription": "Désactiver le mode auto-hébergé réinitialisera l'adresse du serveur vers l'instance officielle et vous déconnectera. Continuer ?",
       "confirmResetTitle": "Désactiver le mode auto-hébergé",
       "confirmTitle": "Activer l'entrée de connexion auto-hébergée",
       "description": "Contrôle l'affichage du bouton d'instance auto-hébergée sur la page de connexion",
       "title": "Activer le mode auto-hébergé"
     },
     "server": {
-      "confirmDescription": "Modifier l'adresse du serveur déconnectera l'utilisateur actuel et nécessitera une nouvelle connexion. Voulez-vous continuer ?",
+      "confirmDescription": "Changer l'adresse du serveur vous déconnectera et vous demandera de vous reconnecter. Continuer ?",
       "confirmTitle": "Confirmer le changement de serveur",
       "current": "Adresse actuelle",
-      "description": "Après configuration, toutes les requêtes utiliseront cette adresse serveur. Laisser vide pour revenir au serveur officiel.",
+      "description": "Une fois configurée, toutes les requêtes utiliseront cette adresse. Laisser vide pour revenir au serveur officiel.",
       "group": "Configuration du serveur",
-      "hint": "Doit commencer par http:// ou https://, une reconnexion peut être nécessaire.",
+      "hint": "Doit commencer par http:// ou https://. Une reconnexion peut être nécessaire.",
       "invalid": "Veuillez saisir une adresse valide commençant par http:// ou https://",
-      "notice": "Un serveur personnalisé remplacera l'adresse de l'API par défaut. Assurez-vous que le service est disponible et compatible avec le protocole LobeChat API. Un redémarrage ou une reconnexion peut être nécessaire après le changement.",
+      "notice": "Le serveur personnalisé remplacera l'URL par défaut. Assurez-vous qu'il est compatible avec le protocole LobeChat API. Une reconnexion ou un redémarrage peut être nécessaire.",
       "noticeTitle": "Attention avant de changer",
-      "placeholder": "https://votre-serveur.exemple.com",
-      "reset": "Restaurer par défaut",
+      "placeholder": "https://your-server.example.com",
+      "reset": "Réinitialiser par défaut",
       "resetSuccess": "Adresse du serveur officiel restaurée",
       "save": "Enregistrer",
       "title": "Instance auto-hébergée",
@@ -177,29 +177,45 @@
     },
     "title": "Options développeur"
   },
-  "feedback": "Retour d'information",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Description du problème :",
+        "footer": "Envoyé depuis mon {{device}}",
+        "frequency": "Fréquence d'apparition :",
+        "screenshots": "Captures d'écran associées :",
+        "template": "Veuillez décrire en détail le problème rencontré afin que nous puissions mieux vous aider."
+      },
+      "subject": "Retour - LobeChat - {{version}}"
+    },
+    "error": "Échec de l'ouverture du client de messagerie, veuillez réessayer plus tard.",
+    "saved": "Retour enregistré dans les brouillons",
+    "sent": "E-mail envoyé, merci pour votre retour !",
+    "title": "Retour d'expérience",
+    "unavailable": "La fonction de messagerie est indisponible. Veuillez vérifier si un compte e-mail est configuré sur votre appareil ou si la fonction de messagerie est activée."
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Comment ajuster la taille de la police ?**\n\nUtilisez le curseur ci-dessous pour régler la taille de la police : vers la gauche pour diminuer, vers la droite pour augmenter. Pendant le glissement, un aperçu en temps réel s'affiche ici.\n\nAstuce : sélectionnez l'échelle « Standard » pour revenir rapidement à la taille par défaut.",
-      "botGreat": "Ravi que cela vous plaise ! Cette fonction d'aperçu vous permet de voir directement l'effet dans la fenêtre de conversation avant d'appliquer les réglages.",
+      "botAnswer": "**Comment ajuster la taille de la police ?**\n\nUtilisez le curseur ci-dessous pour ajuster la taille de la police : vers la gauche pour réduire, vers la droite pour agrandir. L'aperçu s'actualise en temps réel.\n\nAstuce : sélectionnez \"Standard\" pour revenir rapidement à la taille par défaut.",
+      "botGreat": "Ravi que cela vous plaise ! Cette fonction d'aperçu vous permet de visualiser l'effet dans la boîte de dialogue avant d'appliquer les paramètres.",
       "userGreat": "Super !",
-      "userQuestion": "Je voudrais agrandir la taille de la police dans la conversation, comment faire ?"
+      "userQuestion": "Je veux agrandir la police des messages, comment faire ?"
     },
     "standard": "Standard",
-    "text": "Attention, cette configuration n'affecte que la taille d'affichage de la police du contenu des messages",
+    "text": "Remarque : ce paramètre n'affecte que la taille de la police du contenu des messages",
     "title": "Taille de la police"
   },
   "general": {
     "group": "Général"
   },
-  "help": "Aide à l'utilisation",
+  "help": "Aide",
   "info": {
     "group": "Informations"
   },
   "locale": {
     "auto": {
       "description": "Suivre la langue du système",
-      "title": "Suivre le système"
+      "title": "Langue du système"
     },
     "title": "Paramètres de langue"
   },
@@ -207,13 +223,13 @@
   "openaiSettings": {
     "apiKey": "Clé API",
     "apiKeyPlaceholder": "Veuillez saisir votre clé API OpenAI",
-    "checkApiKey": "Veuillez vérifier que la clé API est correcte",
+    "checkApiKey": "Veuillez vérifier si la clé API est correcte",
     "checkProxyAddress": "Impossible de se connecter au serveur, veuillez vérifier l'adresse du proxy",
-    "connectionSuccess": "Connexion réussie, clé API et adresse du proxy configurées correctement",
+    "connectionSuccess": "Connexion réussie, la clé API et l'adresse du proxy sont correctes",
     "connectivityHint": "Après le test de connectivité, la clé API et l'adresse du proxy seront vérifiées",
     "pleaseEnterApiKey": "Veuillez saisir la clé API",
     "proxyAddress": "Adresse du proxy API",
-    "proxyPlaceholder": "Doit inclure http(s)://",
+    "proxyPlaceholder": "Doit commencer par http(s)://",
     "testConnectivity": "Tester la connectivité",
     "validationFailed": "Échec de la validation",
     "validationSuccess": "Validation réussie"
@@ -223,9 +239,9 @@
       "aesGcm": "Votre clé et l'adresse du proxy seront chiffrées avec l'algorithme <1>AES-GCM</1>",
       "checker": {
         "button": "Tester la connexion",
-        "desc": "Tester si la clé API et l'adresse du proxy sont correctement saisies",
+        "desc": "Vérifie si la clé API et l'adresse du proxy sont correctement renseignées",
         "pass": "Vérification réussie",
-        "selectModel": "Sélectionner un modèle pour tester la connexion",
+        "selectModel": "Sélectionnez un modèle pour tester la connexion",
         "title": "Vérification de la connectivité"
       }
     }
@@ -243,23 +259,23 @@
     "auto": "Suivre le système",
     "dark": "Mode sombre",
     "light": "Mode clair",
-    "title": "Mode du thème"
+    "title": "Mode de thème"
   },
   "title": "Paramètres",
   "update": {
     "check": {
       "applyAction": "Redémarrer maintenant",
-      "applyDescription": "Un redémarrage de l'application est nécessaire pour appliquer la dernière mise à jour. Voulez-vous redémarrer maintenant ?",
-      "applyError": "Échec de l'application de la mise à jour. Veuillez réessayer plus tard.",
-      "applyTitle": "Mise à jour de l'application",
+      "applyDescription": "Un redémarrage est nécessaire pour appliquer la mise à jour. Voulez-vous redémarrer maintenant ?",
+      "applyError": "Échec de l'application de la mise à jour, veuillez réessayer plus tard",
+      "applyTitle": "Appliquer la mise à jour",
       "applying": "Redémarrage en cours pour appliquer la mise à jour...",
-      "checking": "Vérification des mises à jour en cours...",
-      "downloaded": "Le paquet de mise à jour a été téléchargé",
-      "downloading": "Nouvelle version détectée, téléchargement de la mise à jour en cours...",
-      "error": "Échec de la vérification des mises à jour. Veuillez réessayer plus tard.",
-      "none": "Vous utilisez déjà la dernière version",
+      "checking": "Vérification des mises à jour...",
+      "downloaded": "Mise à jour téléchargée",
+      "downloading": "Nouvelle version détectée, téléchargement en cours...",
+      "error": "Échec de la vérification des mises à jour, veuillez réessayer plus tard",
+      "none": "Vous utilisez la dernière version",
       "title": "Vérifier les mises à jour",
-      "unavailable": "La vérification des mises à jour n'est pas disponible pour cette version. Veuillez utiliser une version officielle pour accéder à cette fonctionnalité."
+      "unavailable": "Cette version ne prend pas en charge la vérification des mises à jour. Veuillez utiliser la version officielle."
     }
   },
   "version": "Version actuelle"

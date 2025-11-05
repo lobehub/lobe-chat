@@ -15,7 +15,7 @@
     },
     "switchAccount": {
       "action": "Konto wechseln",
-      "confirm": "Möchten Sie wirklich das Konto wechseln? Sie werden abgemeldet und müssen sich erneut anmelden.",
+      "confirm": "Möchten Sie das Konto wirklich wechseln? Sie werden abgemeldet und müssen sich erneut anmelden.",
       "error": "Kontowechsel fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "label": "Konto wechseln"
     },
@@ -32,19 +32,19 @@
         "placeholder": "Bitte geben Sie den API-Schlüssel für {{name}} ein"
       },
       "proxyUrl": {
-        "desc": "Muss http(s):// enthalten",
+        "desc": "Muss mit http(s):// beginnen",
         "invalid": "Bitte geben Sie eine gültige URL ein, die mit http:// oder https:// beginnt",
         "placeholder": "https://api.example.com/v1",
         "title": "API-Proxy-Adresse"
       },
-      "saving": "Konfiguration wird gespeichert...",
+      "saving": "Speichere Konfiguration...",
       "title": "Konfiguration",
-      "updateFailedDesc": "Speichern fehlgeschlagen, bitte erneut versuchen",
+      "updateFailedDesc": "Speichern fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "updateFailedTitle": "Speichern fehlgeschlagen"
     },
     "detail": {
       "loadFailed": "Laden der Anbieter-Konfiguration fehlgeschlagen",
-      "loading": "Anbieter-Konfiguration wird geladen..."
+      "loading": "Lade Anbieter-Konfiguration..."
     },
     "info": {
       "builtIn": "Integrierter Anbieter",
@@ -52,24 +52,24 @@
     },
     "list": {
       "disabled": "Deaktiviert",
-      "emptySearch": "Keine passenden Anbieter gefunden",
+      "emptySearch": "Kein passender Anbieter gefunden",
       "enabled": "Aktiviert",
-      "loadFailed": "Laden der Anbieter-Liste fehlgeschlagen"
+      "loadFailed": "Laden der Anbieterliste fehlgeschlagen"
     },
     "models": {
-      "allLoaded": "Alle Modelle werden angezeigt",
-      "copySuccess": "Kopieren erfolgreich",
-      "disableFailed": "Modell deaktivieren fehlgeschlagen",
-      "emptyNoSearch": "Keine Modelle gefunden, versuche vom Server zu laden",
-      "emptyWithSearch": "Keine Modelle entsprechen der Suche",
-      "enableFailed": "Modell aktivieren fehlgeschlagen",
+      "allLoaded": "Alle Modelle angezeigt",
+      "copySuccess": "Erfolgreich kopiert",
+      "disableFailed": "Deaktivieren des Modells fehlgeschlagen",
+      "emptyNoSearch": "Keine Modelle gefunden. Versuche, vom Server zu laden.",
+      "emptyWithSearch": "Keine Modelle entsprechen den Suchkriterien",
+      "enableFailed": "Aktivieren des Modells fehlgeschlagen",
       "fetch": "Modelle abrufen",
-      "fetchFailed": "Modelle abrufen fehlgeschlagen, bitte erneut versuchen",
+      "fetchFailed": "Abrufen der Modelle fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "fetchSuccess": "Modellliste erfolgreich abgerufen!",
-      "fetching": "Wird abgerufen...",
-      "loading": "Wird geladen...",
-      "loadingMore": "Mehr wird geladen...",
-      "modelsAvailable": "Insgesamt {{count}} verfügbare Modelle",
+      "fetching": "Abrufen...",
+      "loading": "Lade...",
+      "loadingMore": "Lade weitere...",
+      "modelsAvailable": "{{count}} verfügbare Modelle",
       "searchPlaceholder": "Modelle suchen...",
       "title": "Modelle"
     },
@@ -82,111 +82,127 @@
     "clear": {
       "confirm": {
         "action": "Cache leeren",
-        "description": "Dadurch werden lokal gespeicherte Cache-Daten entfernt. Beim nächsten Start der App müssen Inhalte neu geladen werden.",
+        "description": "Dies entfernt lokal gespeicherte Cache-Daten. Beim nächsten Start müssen Inhalte neu geladen werden.",
         "title": "Cache wirklich leeren?"
       },
       "failure": "Cache konnte nicht geleert werden",
-      "success": "Cache wurde geleert"
+      "success": "Cache erfolgreich geleert"
     },
-    "description": "Der Cache kann die Startgeschwindigkeit verbessern. Wenn Sie Speicherplatz freigeben möchten, können Sie ihn leeren.",
+    "description": "Der Cache beschleunigt den Start. Wenn Speicherplatz benötigt wird, können Sie ihn hier leeren.",
     "title": "Cache leeren"
   },
   "changelog": "Änderungsprotokoll",
   "color": {
     "neutral": {
-      "description": "Wählen Sie den neutralen Farbton der Anwendung",
+      "description": "Wählen Sie den neutralen Farbton der App",
       "title": "Neutrale Farbkonfiguration"
     },
     "preview": "Vorschau",
     "previewMessages": {
-      "botGreat": "Freut mich, dass es dir gefällt! Diese Vorschaufunktion ermöglicht es dir, das Thema vor der Anwendung der Einstellungen anschaulich zu sehen.",
-      "botHowToUse": "Sie können die Haupt- und Neutralfarben mit dem Farbwähler unten anpassen, die Vorschau aktualisiert sich in Echtzeit.",
-      "userGreat": "Großartig!",
-      "userHowToUse": "Wie benutzt man die Themenvorschau?"
+      "botGreat": "Schön, dass es dir gefällt! Mit dieser Vorschau kannst du das Thema vor dem Anwenden sehen.",
+      "botHowToUse": "Nutze den Farbwähler unten, um Primär- und Neutralfarben anzupassen. Die Vorschau wird in Echtzeit aktualisiert.",
+      "userGreat": "Super!",
+      "userHowToUse": "Wie funktioniert die Themenvorschau?"
     },
     "primary": {
-      "description": "Wählen Sie den Hauptfarbton der Anwendung",
-      "title": "Hauptfarbkonfiguration"
+      "description": "Wählen Sie die Primärfarbe der App",
+      "title": "Primärfarbkonfiguration"
     },
-    "title": "Farb-Einstellungen"
+    "title": "Farbeinstellungen"
   },
   "developer": {
     "auth": {
       "accessToken": {
         "expire": {
-          "success": "Der Zugriffstoken ist sofort abgelaufen",
+          "success": "Zugriffstoken sofort abgelaufen",
           "title": "Zugriffstoken abgelaufen"
         },
         "invalidate": {
-          "success": "Ungültiger Zugriffstoken wurde geschrieben",
+          "success": "Ungültiger Zugriffstoken gespeichert",
           "title": "Ungültiger Zugriffstoken"
         }
       },
       "clearAuthData": {
-        "success": "Authentifizierungsdaten wurden gelöscht",
+        "success": "Authentifizierungsdaten gelöscht",
         "title": "Authentifizierungsdaten löschen"
       },
       "error": {
-        "noToken": "Derzeit ist kein Token verfügbar"
+        "noToken": "Kein verfügbarer Token"
       },
-      "group": "Authentifizierungskonfiguration",
+      "group": "Authentifizierung",
       "refreshToken": {
         "expire": {
-          "success": "Der Aktualisierungstoken ist sofort abgelaufen",
+          "success": "Aktualisierungstoken sofort abgelaufen",
           "title": "Aktualisierungstoken abgelaufen"
         },
         "invalidate": {
-          "success": "Ungültiger Aktualisierungstoken wurde geschrieben",
+          "success": "Ungültiger Aktualisierungstoken gespeichert",
           "title": "Ungültiger Aktualisierungstoken"
         }
       }
     },
-    "failurePrefix": "Vorgang fehlgeschlagen: ",
+    "failurePrefix": "Aktion fehlgeschlagen: ",
     "mode": {
-      "already": "Sie befinden sich bereits im Entwicklermodus",
-      "enabled": "Entwicklermodus ist aktiviert",
-      "remaining": "Noch {{count}} Mal tippen, um den Entwicklermodus zu aktivieren",
+      "already": "Entwicklermodus ist bereits aktiviert",
+      "enabled": "Entwicklermodus aktiviert",
+      "remaining": "{{count}} weitere Klicks zum Aktivieren des Entwicklermodus",
       "title": "Entwicklermodus"
     },
     "selfHostedEntry": {
-      "confirmAction": "Zur Anmeldeseite wechseln",
-      "confirmDescription": "Nach der Aktivierung wird auf der Anmeldeseite ein Zugang zur selbstgehosteten Konfiguration angezeigt. Möchten Sie sich abmelden und zur Anmeldeseite wechseln?",
+      "confirmAction": "Zur Konfigurationsseite",
+      "confirmDescription": "Nach Aktivierung wird die Konfigurationsseite für die Selbst-Hosting-Instanz geöffnet. Möchten Sie sich abmelden und fortfahren?",
       "confirmResetAction": "Zurücksetzen und anmelden",
-      "confirmResetDescription": "Das Deaktivieren des Selbsthosting-Modus setzt die Serveradresse auf die offizielle Instanz zurück und meldet den aktuellen Benutzer ab. Möchten Sie fortfahren?",
-      "confirmResetTitle": "Selbsthosting-Modus deaktivieren",
-      "confirmTitle": "Selbstgehosteten Anmeldezugang aktivieren",
-      "description": "Steuert, ob auf der Anmeldeseite eine Schaltfläche für selbstgehostete Instanzen angezeigt wird",
-      "title": "Selbsthosting-Modus aktivieren"
+      "confirmResetDescription": "Das Deaktivieren des Selbst-Hosting-Modus setzt die Serveradresse auf die offizielle Instanz zurück und meldet Sie ab. Fortfahren?",
+      "confirmResetTitle": "Selbst-Hosting-Modus deaktivieren",
+      "confirmTitle": "Selbst-Hosting-Login aktivieren",
+      "description": "Steuert, ob auf der Login-Seite ein Button für selbst gehostete Instanzen angezeigt wird",
+      "title": "Selbst-Hosting-Modus aktivieren"
     },
     "server": {
-      "confirmDescription": "Nach Änderung der Serveradresse werden Sie abgemeldet und müssen sich erneut anmelden. Möchten Sie fortfahren?",
+      "confirmDescription": "Nach Änderung der Serveradresse werden Sie abgemeldet und müssen sich erneut anmelden. Fortfahren?",
       "confirmTitle": "Serverwechsel bestätigen",
       "current": "Aktuelle Adresse",
-      "description": "Nach der Konfiguration werden alle Anfragen an diese Serveradresse gesendet. Leer lassen, um zum offiziellen Server zurückzukehren.",
+      "description": "Alle Anfragen verwenden diese Serveradresse. Leer lassen, um zur offiziellen Adresse zurückzukehren.",
       "group": "Serverkonfiguration",
-      "hint": "Muss mit http:// oder https:// beginnen, möglicherweise ist eine erneute Anmeldung erforderlich.",
+      "hint": "Muss mit http:// oder https:// beginnen. Möglicherweise ist eine erneute Anmeldung erforderlich.",
       "invalid": "Bitte geben Sie eine gültige Adresse ein, die mit http:// oder https:// beginnt",
-      "notice": "Ein benutzerdefinierter Server ersetzt die Standard-API-Adresse. Bitte stellen Sie sicher, dass der Dienst verfügbar ist und mit dem LobeChat API-Protokoll kompatibel ist. Nach dem Wechsel ist möglicherweise eine erneute Anmeldung oder ein Neustart der Anwendung erforderlich.",
-      "noticeTitle": "Bitte vor dem Wechsel beachten",
+      "notice": "Ein benutzerdefinierter Server ersetzt die Standard-API-Adresse. Stellen Sie sicher, dass der Dienst verfügbar und mit dem LobeChat-API-Protokoll kompatibel ist. Ein Neustart oder erneutes Anmelden kann erforderlich sein.",
+      "noticeTitle": "Vor dem Wechsel beachten",
       "placeholder": "https://your-server.example.com",
-      "reset": "Standard wiederherstellen",
-      "resetSuccess": "Offizielle Serveradresse wurde wiederhergestellt",
+      "reset": "Zurücksetzen",
+      "resetSuccess": "Offizielle Serveradresse wiederhergestellt",
       "save": "Speichern",
-      "title": "Selbstgehostete Instanz",
-      "updated": "Benutzerdefinierte Serveradresse wurde aktualisiert"
+      "title": "Selbst gehostete Instanz",
+      "updated": "Benutzerdefinierte Serveradresse aktualisiert"
     },
     "title": "Entwickleroptionen"
   },
-  "feedback": "Feedback",
+  "feedback": {
+    "email": {
+      "body": {
+        "description": "Problembeschreibung:",
+        "footer": "Gesendet von meinem {{device}}",
+        "frequency": "Häufigkeit des Auftretens:",
+        "screenshots": "Relevante Screenshots:",
+        "template": "Bitte beschreiben Sie das Problem so detailliert wie möglich, damit wir Ihnen besser helfen können."
+      },
+      "subject": "Feedback - LobeChat - {{version}}"
+    },
+    "error": "E-Mail-Client konnte nicht geöffnet werden. Bitte versuchen Sie es später erneut.",
+    "saved": "Feedback wurde im Entwurfsordner gespeichert",
+    "sent": "E-Mail wurde gesendet. Vielen Dank für Ihr Feedback!",
+    "title": "Feedback",
+    "unavailable": "E-Mail-Funktion nicht verfügbar. Bitte überprüfen Sie, ob auf Ihrem Gerät ein E-Mail-Konto eingerichtet ist oder die E-Mail-Funktion aktiviert wurde."
+  },
   "fontSize": {
     "preview": {
-      "botAnswer": "**Wie kann ich die Schriftgröße anpassen?**\n\nVerwenden Sie den Schieberegler unten, um die Schriftgröße zu ändern: nach links für kleiner, nach rechts für größer. Während des Ziehens wird hier eine Echtzeitvorschau angezeigt.\n\nTipp: Wählen Sie die \"Standard\"-Markierung, um schnell zur Standardgröße zurückzukehren.",
-      "botGreat": "Freut mich, dass es Ihnen gefällt! Diese Vorschaufunktion ermöglicht es Ihnen, die Wirkung der Schriftgröße im Chatfenster vor der Anwendung der Einstellungen anschaulich zu sehen.",
-      "userGreat": "Großartig!",
-      "userQuestion": "Ich möchte die Schriftgröße im Chat etwas vergrößern. Wie mache ich das?"
+      "botAnswer": "**Wie ändere ich die Schriftgröße?**\n\nVerwenden Sie den Schieberegler unten, um die Schriftgröße anzupassen: nach links für kleiner, nach rechts für größer. Die Vorschau wird in Echtzeit aktualisiert.\n\nTipp: Wählen Sie \"Standard\", um zur Standardgröße zurückzukehren.",
+      "botGreat": "Schön, dass es dir gefällt! Mit dieser Vorschau kannst du sehen, wie der Text im Chat aussehen wird.",
+      "userGreat": "Super!",
+      "userQuestion": "Wie kann ich die Schriftgröße im Chat vergrößern?"
     },
     "standard": "Standard",
-    "text": "Hinweis: Diese Einstellung beeinflusst nur die Anzeigegröße der Schrift im Nachrichteninhalt.",
+    "text": "Diese Einstellung beeinflusst nur die Schriftgröße der Nachrichteninhalte",
     "title": "Schriftgröße"
   },
   "general": {
@@ -198,22 +214,22 @@
   },
   "locale": {
     "auto": {
-      "description": "Folgt der Systemsprache",
-      "title": "Systemsprache folgen"
+      "description": "Systemsprache verwenden",
+      "title": "Systemsprache"
     },
     "title": "Spracheinstellungen"
   },
-  "openai": "OpenAI Einstellungen",
+  "openai": "OpenAI-Einstellungen",
   "openaiSettings": {
     "apiKey": "API-Schlüssel",
     "apiKeyPlaceholder": "Bitte geben Sie Ihren OpenAI API-Schlüssel ein",
-    "checkApiKey": "Bitte überprüfen Sie, ob der API-Schlüssel korrekt ist",
-    "checkProxyAddress": "Verbindung zum Server fehlgeschlagen, bitte überprüfen Sie die Proxy-Adresse",
-    "connectionSuccess": "Verbindung erfolgreich, API-Schlüssel und Proxy-Adresse sind korrekt konfiguriert",
-    "connectivityHint": "Nach dem Verbindungstest wird überprüft, ob API-Schlüssel und Proxy-Adresse korrekt eingegeben wurden",
+    "checkApiKey": "Bitte überprüfen Sie den API-Schlüssel",
+    "checkProxyAddress": "Verbindung zum Server fehlgeschlagen. Bitte überprüfen Sie die Proxy-Adresse.",
+    "connectionSuccess": "Verbindung erfolgreich. API-Schlüssel und Proxy-Adresse sind korrekt.",
+    "connectivityHint": "Nach dem Verbindungstest wird überprüft, ob API-Schlüssel und Proxy-Adresse korrekt sind.",
     "pleaseEnterApiKey": "Bitte geben Sie den API-Schlüssel ein",
     "proxyAddress": "API-Proxy-Adresse",
-    "proxyPlaceholder": "Muss http(s):// enthalten",
+    "proxyPlaceholder": "Muss mit http(s):// beginnen",
     "testConnectivity": "Verbindung testen",
     "validationFailed": "Validierung fehlgeschlagen",
     "validationSuccess": "Validierung erfolgreich"
@@ -223,10 +239,10 @@
       "aesGcm": "Ihr Schlüssel und die Proxy-Adresse werden mit dem <1>AES-GCM</1>-Algorithmus verschlüsselt",
       "checker": {
         "button": "Verbindung testen",
-        "desc": "Testet, ob API-Schlüssel und Proxy-Adresse korrekt eingegeben wurden",
+        "desc": "Testet, ob API-Schlüssel und Proxy-Adresse korrekt sind",
         "pass": "Überprüfung bestanden",
         "selectModel": "Modell für Verbindungstest auswählen",
-        "title": "Verbindungstest"
+        "title": "Verbindungsprüfung"
       }
     }
   },
@@ -240,26 +256,26 @@
   "providersSearchPlaceholder": "Anbieter nach Stichwort suchen...",
   "support": "E-Mail-Support",
   "themeMode": {
-    "auto": "Systemeinstellung folgen",
+    "auto": "Systemeinstellung",
     "dark": "Dunkelmodus",
     "light": "Hellmodus",
-    "title": "Themenmodus"
+    "title": "Designmodus"
   },
   "title": "Einstellungen",
   "update": {
     "check": {
       "applyAction": "Jetzt neu starten",
-      "applyDescription": "Die Anwendung muss neu gestartet werden, um das neueste Update zu übernehmen. Jetzt neu starten?",
+      "applyDescription": "Die App muss neu gestartet werden, um das Update anzuwenden. Jetzt neu starten?",
       "applyError": "Update konnte nicht angewendet werden. Bitte versuchen Sie es später erneut.",
       "applyTitle": "Update anwenden",
-      "applying": "Neustart wird durchgeführt, um das Update anzuwenden...",
+      "applying": "Neustart zur Anwendung des Updates...",
       "checking": "Suche nach Updates...",
-      "downloaded": "Update-Paket wurde erfolgreich heruntergeladen",
-      "downloading": "Neue Version erkannt, Update wird heruntergeladen...",
-      "error": "Fehler bei der Update-Prüfung. Bitte versuchen Sie es später erneut.",
+      "downloaded": "Update heruntergeladen",
+      "downloading": "Neue Version gefunden. Update wird heruntergeladen...",
+      "error": "Updateprüfung fehlgeschlagen. Bitte versuchen Sie es später erneut.",
       "none": "Sie verwenden bereits die neueste Version",
       "title": "Nach Updates suchen",
-      "unavailable": "Diese Build-Version unterstützt keine Update-Prüfung. Bitte verwenden Sie die offizielle Version für diese Funktion."
+      "unavailable": "Diese Funktion ist in dieser Version nicht verfügbar. Bitte verwenden Sie die offizielle Version."
     }
   },
   "version": "Aktuelle Version"
