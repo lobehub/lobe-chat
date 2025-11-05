@@ -24,7 +24,7 @@ try {
 const colorPaletteCache = new Map<string, any>();
 
 // MMKV 缓存键前缀和版本（版本变更时自动失效旧缓存）
-const CACHE_VERSION = '1.1.0'; // 增加版本号以支持新的数字色阶
+const CACHE_VERSION = '1.2.0'; // 增加版本号：添加不带 color 前缀的语义化 token
 const CACHE_KEY_PREFIX = `theme-color-palette-v${CACHE_VERSION}`;
 
 /**
@@ -89,7 +89,20 @@ const generateCustomColorPalette = ({
     type: name,
   });
 
-  const result = { ...colorStepPalette, ...semanticColors };
+  // 生成不带 color 前缀的语义化 token（用于 Tag 等组件）
+  // 例如：redFillTertiary, blueBorder 等
+  const semanticColorsWithoutPrefix: Record<string, string> = {};
+  Object.entries(semanticColors).forEach(([key, value]) => {
+    // 移除 'color' 前缀，例如 'colorRedFillTertiary' => 'redFillTertiary'
+    if (key.startsWith('color')) {
+      const keyWithoutPrefix = key.slice(5); // 移除 'color'
+      // 将首字母小写，例如 'RedFillTertiary' => 'redFillTertiary'
+      const finalKey = keyWithoutPrefix.charAt(0).toLowerCase() + keyWithoutPrefix.slice(1);
+      semanticColorsWithoutPrefix[finalKey] = value as string;
+    }
+  });
+
+  const result = { ...colorStepPalette, ...semanticColors, ...semanticColorsWithoutPrefix };
 
   // 写入 L1 内存缓存
   colorPaletteCache.set(cacheKey, result);

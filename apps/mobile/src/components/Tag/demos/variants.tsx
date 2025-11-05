@@ -9,8 +9,8 @@ const VariantsDemo = () => {
         </Text>
         <Flexbox gap={8} horizontal wrap="wrap">
           <Tag variant="filled">Default</Tag>
-          <Tag color="blue" variant="filled">
-            Blue
+          <Tag color="info" variant="filled">
+            Info
           </Tag>
           <Tag color="success" variant="filled">
             Success
@@ -27,8 +27,8 @@ const VariantsDemo = () => {
         </Text>
         <Flexbox gap={8} horizontal wrap="wrap">
           <Tag variant="outlined">Default</Tag>
-          <Tag color="blue" variant="outlined">
-            Blue
+          <Tag color="info" variant="outlined">
+            Info
           </Tag>
           <Tag color="success" variant="outlined">
             Success
@@ -45,8 +45,8 @@ const VariantsDemo = () => {
         </Text>
         <Flexbox gap={8} horizontal wrap="wrap">
           <Tag variant="borderless">Default</Tag>
-          <Tag color="blue" variant="borderless">
-            Blue
+          <Tag color="info" variant="borderless">
+            Info
           </Tag>
           <Tag color="success" variant="borderless">
             Success
