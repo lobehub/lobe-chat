@@ -66,5 +66,85 @@
     "createdAt": 1704067203100,
     "updatedAt": 1704067203100,
     "meta": {}
+  },
+  {
+    "id": "msg-105",
+    "role": "assistant",
+    "content": "Let me also check the forecast for tomorrow to give you a better comparison.",
+    "parentId": "msg-103",
+    "tools": [
+      {
+        "id": "tool-sf-forecast",
+        "identifier": "weather",
+        "apiName": "getForecast",
+        "arguments": "{\"city\":\"San Francisco\",\"days\":1}",
+        "type": "default"
+      },
+      {
+        "id": "tool-bj-forecast",
+        "identifier": "weather",
+        "apiName": "getForecast",
+        "arguments": "{\"city\":\"Beijing\",\"days\":1}",
+        "type": "default"
+      }
+    ],
+    "createdAt": 1704067205000,
+    "updatedAt": 1704067205000,
+    "meta": {},
+    "usage": {
+      "totalInputTokens": 156,
+      "totalOutputTokens": 42,
+      "totalTokens": 198,
+      "cost": 0.000594
+    },
+    "performance": {
+      "tps": 48,
+      "ttft": 178,
+      "duration": 875,
+      "latency": 1053
+    }
+  },
+  {
+    "id": "msg-106",
+    "role": "tool",
+    "tool_call_id": "tool-sf-forecast",
+    "content": "{\"location\": \"San Francisco, CA\", \"date\": \"2024-01-02\", \"high\": 20, \"low\": 14, \"conditions\": \"Sunny\"}",
+    "pluginState": { "cached": false, "executionTime": 198 },
+    "parentId": "msg-105",
+    "createdAt": 1704067206000,
+    "updatedAt": 1704067206000,
+    "meta": {}
+  },
+  {
+    "id": "msg-107",
+    "role": "tool",
+    "tool_call_id": "tool-bj-forecast",
+    "content": "{\"location\": \"Beijing, China\", \"date\": \"2024-01-02\", \"high\": 15, \"low\": 8, \"conditions\": \"Partly Cloudy\"}",
+    "pluginState": { "cached": false, "executionTime": 176 },
+    "parentId": "msg-105",
+    "createdAt": 1704067206100,
+    "updatedAt": 1704067206100,
+    "meta": {}
+  },
+  {
+    "id": "msg-108",
+    "role": "assistant",
+    "content": "Based on both current weather and tomorrow's forecast:\n\n**Today:**\n- San Francisco: 18°C, partly cloudy\n- Beijing: 12°C, clear\n\n**Tomorrow:**\n- San Francisco: High 20°C / Low 14°C, sunny\n- Beijing: High 15°C / Low 8°C, partly cloudy\n\nSan Francisco will have pleasant sunny weather tomorrow with a slight temperature increase. Beijing will see some clouds moving in but will still be cooler overall.",
+    "parentId": "msg-106",
+    "createdAt": 1704067208000,
+    "updatedAt": 1704067208000,
+    "meta": {},
+    "usage": {
+      "totalInputTokens": 245,
+      "totalOutputTokens": 112,
+      "totalTokens": 357,
+      "cost": 0.001071
+    },
+    "performance": {
+      "tps": 54,
+      "ttft": 165,
+      "duration": 2074,
+      "latency": 2239
+    }
   }
 ]
