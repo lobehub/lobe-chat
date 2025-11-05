@@ -1,3 +1,5 @@
+import { ssrfSafeFetch } from 'ssrf-safe-fetch';
+
 export const imageToBase64 = ({
   size,
   img,
@@ -40,8 +42,6 @@ export const imageUrlToBase64 = async (
   imageUrl: string,
 ): Promise<{ base64: string; mimeType: string }> => {
   try {
-    // Dynamic import to avoid loading Node.js modules at build time
-    const { ssrfSafeFetch } = await import('ssrf-safe-fetch');
     const res = await ssrfSafeFetch(imageUrl);
     const blob = await res.blob();
     const arrayBuffer = await blob.arrayBuffer();
