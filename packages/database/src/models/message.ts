@@ -554,6 +554,7 @@ export class MessageModel {
   createNewMessage = async (
     params: CreateMessageParams,
     options: {
+      groupAssistantMessages?: boolean;
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
     } = {},
   ): Promise<CreateMessageResult> => {
@@ -570,7 +571,7 @@ export class MessageModel {
         sessionId: params.sessionId,
         topicId: params.topicId, // Get all messages
       },
-      { ...options, groupAssistantMessages: true },
+      { ...options, groupAssistantMessages: options.groupAssistantMessages ?? false },
     );
 
     // 3. Return the result

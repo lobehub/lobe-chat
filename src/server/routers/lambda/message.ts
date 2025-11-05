@@ -55,9 +55,11 @@ export const messageRouter = router({
     }),
 
   createNewMessage: messageProcedure
-    .input(CreateNewMessageParamsSchema)
+    .input(CreateNewMessageParamsSchema.extend({ useGroup: z.boolean().optional() }))
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.createNewMessage(input as any, {
+      const { useGroup, ...params } = input;
+      return ctx.messageModel.createNewMessage(params as any, {
+        groupAssistantMessages: useGroup ?? false,
         postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
       });
     }),

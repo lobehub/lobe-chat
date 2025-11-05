@@ -15,8 +15,8 @@ interface QueryOptions {
 /**
  * Message Service
  *
- * 主要封装 "mutation + conditional query" 的重复逻辑
- * 即：执行更新/删除操作后，根据 sessionId/topicId 条件返回消息列表
+ * Encapsulates repeated "mutation + conditional query" logic.
+ * After performing update/delete operations, conditionally returns message list based on sessionId/topicId.
  */
 export class MessageService {
   private messageModel: MessageModel;
@@ -28,14 +28,14 @@ export class MessageService {
   }
 
   /**
-   * 统一的 URL 处理函数
+   * Unified URL processing function
    */
   private get postProcessUrl() {
     return (path: string | null) => this.fileService.getFullFileUrl(path);
   }
 
   /**
-   * 统一的查询选项
+   * Unified query options
    */
   private getQueryOptions(options: QueryOptions) {
     return {
@@ -45,7 +45,7 @@ export class MessageService {
   }
 
   /**
-   * 查询消息并返回带 success 状态的响应 (mutation 后使用)
+   * Query messages and return response with success status (used after mutations)
    */
   private async queryWithSuccess(options?: QueryOptions) {
     if (!options || (options.sessionId === undefined && options.topicId === undefined)) {
@@ -99,26 +99,20 @@ export class MessageService {
   }
 
   /**
-   * Update plugin state (always returns result)
-   * Pattern: update with context options
+   * Update plugin state and return message list
+   * Pattern: update + conditional query
    */
   async updatePluginState(id: string, value: any, options: QueryOptions): Promise<any> {
-    return this.messageModel.updatePluginState(id, value, {
-      ...this.getQueryOptions(options),
-      sessionId: options.sessionId,
-      topicId: options.topicId,
-    });
+    await this.messageModel.updatePluginState(id, value);
+    return this.queryWithSuccess(options);
   }
 
   /**
-   * Update message (always returns result)
-   * Pattern: update with context options
+   * Update message and return message list
+   * Pattern: update + conditional query
    */
   async updateMessage(id: string, value: UpdateMessageParams, options: QueryOptions): Promise<any> {
-    return this.messageModel.update(id, value as any, {
-      ...this.getQueryOptions(options),
-      sessionId: options.sessionId,
-      topicId: options.topicId,
-    });
+    await this.messageModel.update(id, value as any);
+    return this.queryWithSuccess(options);
   }
 }
