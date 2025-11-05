@@ -1,5 +1,6 @@
 import { Empty, Flexbox, InputSearch, PageContainer } from '@lobehub/ui-rn';
 import { FlashList } from '@shopify/flash-list';
+import { AlertCircle } from 'lucide-react-native';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,7 +29,7 @@ const ProviderList = memo(() => {
       }
 
       case 'empty': {
-        return <Empty description={item.data.message} />;
+        return <Empty description={item.data.message} icon={AlertCircle} />;
       }
 
       default: {
@@ -69,7 +70,13 @@ const ProviderList = memo(() => {
   if (isLoading) {
     content = <ProviderListSkeleton />;
   } else if (error) {
-    content = <Empty description={t('aiProviders.list.loadFailed', { ns: 'setting' })} flex={1} />;
+    content = (
+      <Empty
+        description={t('aiProviders.list.loadFailed', { ns: 'setting' })}
+        flex={1}
+        icon={AlertCircle}
+      />
+    );
   } else {
     content = (
       <FlashList

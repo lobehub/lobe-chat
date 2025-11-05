@@ -1,5 +1,6 @@
 import { TopicDisplayMode } from '@lobechat/types';
 import { Empty, Flexbox, MaskShadow } from '@lobehub/ui-rn';
+import { MessagesSquare } from 'lucide-react-native';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -51,7 +52,7 @@ const TopicList = memo(() => {
   if (activeId === 'inbox' && topics?.length === 0) {
     return (
       <Flexbox flex={1} justify={'center'}>
-        <Empty description={t('empty')} />
+        <Empty description={t('empty')} icon={MessagesSquare} />
       </Flexbox>
     );
   }

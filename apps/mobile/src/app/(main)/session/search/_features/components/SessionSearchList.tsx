@@ -13,6 +13,7 @@ import {
 import { FlashList } from '@shopify/flash-list';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
+import { MessageCircleOff } from 'lucide-react-native';
 import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, InteractionManager } from 'react-native';
@@ -248,7 +249,7 @@ const SessionSearchList = memo(
         if (item.type === 'empty') {
           return (
             <Center paddingBlock={48}>
-              <Empty description={item.data.message} />
+              <Empty description={item.data.message} icon={MessageCircleOff} />
             </Center>
           );
         }

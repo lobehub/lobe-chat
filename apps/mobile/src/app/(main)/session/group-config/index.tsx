@@ -1,7 +1,7 @@
 import { SessionGroupItem } from '@lobechat/types';
 import { Cell, CenterProps, Empty, Flexbox, PageContainer, Toast, useTheme } from '@lobehub/ui-rn';
 import { useRouter } from 'expo-router';
-import { GripVertical, PencilLine, PlusIcon, Trash } from 'lucide-react-native';
+import { FolderOpen, GripVertical, PencilLine, PlusIcon, Trash } from 'lucide-react-native';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
@@ -157,7 +157,9 @@ export default function GroupConfigScreen() {
     >
       <Flexbox flex={1} style={{ position: 'relative' }}>
         <DraggableFlatList
-          ListEmptyComponent={<Empty description={t('sessionGroup.emptyGroup')} />}
+          ListEmptyComponent={
+            <Empty description={t('sessionGroup.emptyGroup')} icon={FolderOpen} />
+          }
           contentContainerStyle={{
             gap: 8,
             padding: 8,

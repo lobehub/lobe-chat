@@ -1,4 +1,5 @@
 import { Button, Divider, Empty, Flexbox, Markdown } from '@lobehub/ui-rn';
+import { FileText } from 'lucide-react-native';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
@@ -33,7 +34,7 @@ export const AgentRoleEditSection = memo<AgentRoleEditSectionProps>(
             {systemRole ? (
               <Markdown>{systemRole}</Markdown>
             ) : (
-              <Empty description={t('agentRoleEdit.placeholder')} />
+              <Empty description={t('agentRoleEdit.placeholder')} icon={FileText} />
             )}
           </Flexbox>
         </ScrollView>

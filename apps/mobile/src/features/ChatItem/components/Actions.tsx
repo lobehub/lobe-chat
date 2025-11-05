@@ -9,6 +9,7 @@ import { Alert, StyleProp, ViewStyle } from 'react-native';
 import { GestureResponderEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 
 import { useTheme } from '@/components/styles';
+import { loading } from '@/libs/loading';
 import { useChatStore } from '@/store/chat';
 
 interface ActionsProps {
@@ -82,8 +83,12 @@ const Actions = memo<ActionsProps>(({ message, hasError = false, style }) => {
           text: t('cancel', { ns: 'common' }),
         },
         {
-          onPress: () => {
-            deleteMessage(message.id);
+          onPress: async () => {
+            await loading.start(
+              (async () => {
+                await deleteMessage(message.id);
+              })(),
+            );
           },
           style: 'destructive',
           text: t('delete', { ns: 'common' }),
