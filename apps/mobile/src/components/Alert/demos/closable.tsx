@@ -1,9 +1,9 @@
-import { Alert, Space, Toast } from '@lobehub/ui-rn';
+import { Alert, Flexbox, Toast } from '@lobehub/ui-rn';
 import { Bell } from 'lucide-react-native';
 
 const ClosableDemo = () => {
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Flexbox gap={16}>
       <Alert
         closable
         description="点击右上角关闭按钮即可移除提示。"
@@ -20,7 +20,7 @@ const ClosableDemo = () => {
         message="自定义关闭图标"
         type="warning"
       />
-    </Space>
+    </Flexbox>
   );
 };
 

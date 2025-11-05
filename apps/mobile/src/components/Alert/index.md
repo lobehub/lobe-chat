@@ -7,8 +7,11 @@ description: React Native Alert component based on Ant Design Alert, used to dis
 ## Features
 
 - ✅ Supports four status styles: `info`, `success`, `warning`, `error`
+- ✅ Three style variants: `filled`, `outlined`, `borderless`
 - ✅ Allows displaying description text, action buttons, and custom icons
 - ✅ Closable alerts with close callback support
+- ✅ Extra content with expandable/collapsible support
+- ✅ Configurable text color (`colorfulText`)
 - ✅ Theme adaptation with automatic semantic color inheritance
 - ✅ Complete TypeScript type definitions
 
@@ -64,4 +67,48 @@ import { Info } from 'lucide-react-native';
   message="Custom Content"
   type="info"
 />
+```
+
+## Extra Content
+
+```tsx
+import { Alert, Highlighter } from '@lobehub/ui-rn';
+
+// Expandable extra content
+<Alert
+  extra={
+    <Highlighter
+      code={JSON.stringify(errorDetails, null, 2)}
+      lang="json"
+      showLanguage={false}
+      variant="borderless"
+    />
+  }
+  message="Request Failed"
+  type="error"
+/>
+
+// Default expanded
+<Alert
+  extra={<Text>Detailed error information...</Text>}
+  extraDefaultExpand
+  message="Server Error"
+  type="warning"
+/>
+
+// Isolated extra content
+<Alert
+  extra={<Alert message="Additional info" type="info" />}
+  extraIsolate
+  message="Main message"
+  type="success"
+/>
+```
+
+## Variants
+
+```tsx
+<Alert message="Filled Alert" variant="filled" />
+<Alert message="Outlined Alert" variant="outlined" />
+<Alert message="Borderless Alert" variant="borderless" />
 ```

@@ -31,22 +31,28 @@ const ChatItem = memo<ChatItemProps>(
     markdownProps,
     aboveMessage,
     belowMessage,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     errorMessage,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    primary = false,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    variant = 'bubble',
   }) => {
     const { styles, theme } = useStyles();
-    const hasError = !!error;
 
-    // 默认内容渲染
+    // 默认内容渲染 - 对齐 web 端逻辑
     const defaultContent =
-      hasError && error.type ? (
-        <ErrorContent error={error} />
+      error && (message === '...' || !message) ? (
+        // 如果有 error 且没有 message 内容，完全用 ErrorContent 替代
+        <ErrorContent error={error} message={errorMessage} />
       ) : (
-        <MessageContent content={message || ''} isLoading={loading} markdownProps={markdownProps} />
+        // 否则渲染 MessageContent，并在 messageExtra 中显示 ErrorContent
+        <MessageContent
+          content={message || ''}
+          isLoading={loading}
+          markdownProps={markdownProps}
+          messageExtra={
+            <>
+              {error && <ErrorContent error={error} message={errorMessage} />}
+              {messageExtra}
+            </>
+          }
+        />
       );
 
     // 使用 renderMessage 自定义渲染，或使用默认渲染
@@ -103,7 +109,7 @@ const ChatItem = memo<ChatItemProps>(
           <Flexbox gap={4}>
             <Block
               borderRadius={placement === 'right'}
-              style={[placement === 'right' && styles.userBubble, hasError && styles.errorBubble]}
+              style={placement === 'right' && styles.userBubble}
               variant={placement === 'right' ? 'outlined' : 'borderless'}
             >
               {content}

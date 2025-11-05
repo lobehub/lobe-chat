@@ -1,3 +1,5 @@
+import { StyleSheet } from 'react-native';
+
 import { type AliasToken, createStyles } from '@/components/styles';
 
 import type { AlertType } from './type';
@@ -48,34 +50,101 @@ export const useStyles = createStyles(({ token }, type: AlertType = 'info') => {
     action: {
       marginTop: token.marginSM,
     },
+    borderless: {
+      backgroundColor: 'transparent',
+      borderWidth: 0,
+    },
     close: {
       alignSelf: 'flex-start',
-      position: 'absolute',
+      position: 'absolute' as const,
       right: 8,
       top: 8,
     },
-    container: {
-      backgroundColor: status.backgroundColor,
-      borderColor: status.borderColor,
 
-      flexDirection: 'row',
-      gap: token.marginXS,
-      padding: token.padding,
+    container: {
       width: '100%',
     },
 
     description: {
-      color: token.colorTextSecondary,
       fontSize: token.fontSize,
       lineHeight: token.lineHeight,
-      marginTop: token.marginXS,
+      marginTop: 4,
+      opacity: 0.75,
     },
+    descriptionColorful: {
+      color: status.messageColor,
+    },
+    descriptionDefault: {
+      color: token.colorTextSecondary,
+    },
+
+    expandText: {
+      flex: 1,
+    },
+
+    // Extra styles
+    extra: {
+      borderBottomLeftRadius: token.borderRadiusLG * 1.5,
+      borderBottomRightRadius: token.borderRadiusLG * 1.5,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderColor: status.borderColor,
+      borderLeftWidth: StyleSheet.hairlineWidth,
+      borderRightWidth: StyleSheet.hairlineWidth,
+      borderTopWidth: 0,
+      overflow: 'hidden' as const,
+    },
+    extraBody: {
+      paddingHorizontal: 6,
+      paddingVertical: 4,
+    },
+    extraBodyBorderless: {
+      backgroundColor: 'transparent',
+      borderWidth: 0,
+    },
+
+    extraFilled: {
+      backgroundColor: status.backgroundColor,
+    },
+
+    extraHeader: {
+      borderColor: status.borderColor,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      paddingHorizontal: 6,
+      paddingVertical: 4,
+    },
+
+    extraOutlined: {
+      backgroundColor: 'transparent',
+    },
+
+    // Variant styles
+    filled: {
+      backgroundColor: status.backgroundColor,
+      borderColor: status.borderColor,
+    },
+
+    // hasExtra - 当有 extra 时，移除底部圆角
+    hasExtra: {
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      borderBottomWidth: 0,
+    },
+
     iconWrapper: {
       marginTop: 2,
     },
     message: {
-      fontSize: token.fontSizeLG,
       lineHeight: token.lineHeightLG,
+    },
+    messageColorful: {
+      color: status.messageColor,
+    },
+    messageDefault: {
+      color: token.colorText,
+    },
+    outlined: {
+      backgroundColor: 'transparent',
+      borderColor: status.borderColor,
     },
   };
 });

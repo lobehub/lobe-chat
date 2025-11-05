@@ -3,6 +3,7 @@ import { ReactNode, memo, useCallback, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
 import MessageContent from '@/features/ChatItem/components/MessageContent';
+import { useErrorContent } from '@/hooks/useErrorContent';
 
 import { UserMessageContent } from './MessageContent';
 
@@ -25,6 +26,8 @@ const UserMessage = memo<UserMessageProps>(
   ({ message, isLoading, showTime = false, showTitle = false }) => {
     // Create markdownProps for User messages (no animated)
     const markdownProps = useMemo(() => ({}), []);
+    const errorContent = useErrorContent(message.error);
+
     const renderMessage = useCallback(
       (editableContent: ReactNode) => (
         <UserMessageContent {...message} editableContent={editableContent} />
@@ -47,7 +50,7 @@ const UserMessage = memo<UserMessageProps>(
           backgroundColor: message.meta?.backgroundColor,
           title: message.meta?.title,
         }}
-        error={message.error}
+        error={errorContent}
         loading={isLoading}
         markdownProps={markdownProps}
         message={message.content}
