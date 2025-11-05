@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Should install new version after quit this instance."]
+    },
+    "date": "2025-11-05",
+    "version": "2.0.0-next.32"
+  },
+  {
     "children": {},
     "date": "2025-11-05",
     "version": "2.0.0-next.31"
