@@ -2,7 +2,6 @@ import { UIChatMessage } from '@lobechat/types';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 
 import ChatItem from '@/features/ChatItem';
-import MessageContent from '@/features/ChatItem/components/MessageContent';
 import { useErrorContent } from '@/hooks/useErrorContent';
 
 import { UserMessageContent } from './MessageContent';
@@ -28,19 +27,12 @@ const UserMessage = memo<UserMessageProps>(
     const markdownProps = useMemo(() => ({}), []);
     const errorContent = useErrorContent(message.error);
 
+    // 使用 renderMessage 来接管整个内容渲染，对齐 web 端逻辑
     const renderMessage = useCallback(
       (editableContent: ReactNode) => (
         <UserMessageContent {...message} editableContent={editableContent} />
       ),
       [message],
-    );
-
-    const editableContent = (
-      <MessageContent
-        content={message.content}
-        isLoading={isLoading}
-        markdownProps={markdownProps}
-      />
     );
 
     return (
@@ -56,7 +48,7 @@ const UserMessage = memo<UserMessageProps>(
         message={message.content}
         placement="right"
         primary={true}
-        renderMessage={renderMessage ? () => renderMessage(editableContent) : undefined}
+        renderMessage={renderMessage}
         showTime={showTime}
         showTitle={showTitle}
         time={message.createdAt}

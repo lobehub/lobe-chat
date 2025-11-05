@@ -21,7 +21,7 @@ export interface AssistantMessageContentProps extends UIChatMessage {
 }
 
 export const AssistantMessageContent = memo<AssistantMessageContentProps>(
-  ({ id, tools, imageList, videoList, fileList, ...props }) => {
+  ({ id, tools, imageList, videoList, fileList, editableContent, ...props }) => {
     const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
 
     // 功能开关
@@ -34,11 +34,6 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
 
     // TODO: 待实现功能
     // const showFileChunks = !!chunksList && chunksList.length > 0;
-
-    // 如果有 error 且没有 content，只显示 ErrorContent
-    // Note: 这里的 error 是原始的 ChatMessageError，需要通过 useErrorContent hook 转换
-    // 但在这个 MessageContent 组件中，error 展示应该由外层的 ChatItem 处理
-    // 所以这里不再渲染 ErrorContent
 
     return (
       <Flexbox gap={8}>
@@ -55,6 +50,9 @@ export const AssistantMessageContent = memo<AssistantMessageContentProps>(
             isGenerating={isReasoning}
           />
         )}
+
+        {/* 文本内容 - 由 renderMessage 传入的 editableContent */}
+        {editableContent}
 
         {/* 图片列表 - 复用 User 的 ImageFileListViewer */}
         {showImageItems && <ImageFileListViewer items={imageList} />}
