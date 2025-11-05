@@ -1,3 +1,5 @@
+import { ssrfSafeFetch } from 'ssrf-safe-fetch';
+
 export const imageToBase64 = ({
   size,
   img,
@@ -40,7 +42,7 @@ export const imageUrlToBase64 = async (
   imageUrl: string,
 ): Promise<{ base64: string; mimeType: string }> => {
   try {
-    const res = await fetch(imageUrl);
+    const res = await ssrfSafeFetch(imageUrl);
     const blob = await res.blob();
     const arrayBuffer = await blob.arrayBuffer();
 
