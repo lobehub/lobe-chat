@@ -26,6 +26,19 @@ describe('parse', () => {
 
       expect(serializeParseResult(result)).toEqual(outputs.assistantWithTools);
     });
+
+    it('should include follow-up messages after assistant chain', () => {
+      const result = parse(inputs.assistantChainWithFollowup);
+
+      // The critical assertion: flatList should contain all 5 messages
+      // msg-1 (user) + assistantGroup (msg-2+msg-3+tool-1) + msg-4 (user follow-up)
+      expect(result.flatList).toHaveLength(3);
+      expect(result.flatList[0].id).toBe('msg-1');
+      expect(result.flatList[1].role).toBe('assistantGroup');
+      expect(result.flatList[2].id).toBe('msg-4'); // This is the critical one that might be missing
+
+      expect(serializeParseResult(result)).toEqual(outputs.assistantChainWithFollowup);
+    });
   });
 
   describe('Branching', () => {

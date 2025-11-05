@@ -104,10 +104,28 @@ export class FlatListBuilder {
         assistantChain.forEach((m) => processedIds.add(m.id));
         allToolMessages.forEach((m) => processedIds.add(m.id));
 
-        // Continue after the last tool message
-        const lastToolMsg = allToolMessages.at(-1);
-        if (lastToolMsg) {
-          this.buildFlatListRecursive(lastToolMsg.id, flatList, processedIds, allMessages);
+        // Continue after the assistant chain
+        // Priority 1: If last assistant has non-tool children, continue from it
+        // Priority 2: Otherwise continue from tools (for cases where user replies to tool)
+        const lastAssistant = assistantChain.at(-1);
+        const toolIds = new Set(allToolMessages.map((t) => t.id));
+
+        const lastAssistantNonToolChildren = lastAssistant
+          ? this.childrenMap.get(lastAssistant.id)?.filter((childId) => !toolIds.has(childId))
+          : undefined;
+
+        if (
+          lastAssistantNonToolChildren &&
+          lastAssistantNonToolChildren.length > 0 &&
+          lastAssistant
+        ) {
+          // Follow-up messages exist after the last assistant (not tools)
+          this.buildFlatListRecursive(lastAssistant.id, flatList, processedIds, allMessages);
+        } else {
+          // No non-tool children of last assistant, check tools for children
+          for (const toolMsg of allToolMessages) {
+            this.buildFlatListRecursive(toolMsg.id, flatList, processedIds, allMessages);
+          }
         }
         continue;
       }
