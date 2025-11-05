@@ -133,25 +133,56 @@ export class Transformer {
    * Check if message has compare mode in metadata
    */
   private isCompareMode(message: Message): boolean {
-    return (message.metadata as any)?.presentation?.mode === 'compare';
+    return (message.metadata as any)?.compare === true;
   }
 
   /**
    * Create CompareNode from children messages
    */
   private createCompareNodeFromChildren(message: Message, idNode: IdNode): CompareNode {
-    // Each child is a column
+    // Find active column ID from children metadata
+    let activeColumnId: string | undefined;
+
+    // Each child is a column - need to recursively process to handle AssistantGroup
     const columns = idNode.children.map((child) => {
-      const messageNode: MessageNode = {
-        id: child.id,
-        type: 'message',
-      };
-      return [messageNode];
+      const childMessage = this.messageMap.get(child.id);
+      if (!childMessage) {
+        return [
+          {
+            id: child.id,
+            type: 'message',
+          } as MessageNode,
+        ];
+      }
+
+      // Check if this message is marked as active column
+      if ((childMessage.metadata as any)?.activeColumn === true) {
+        activeColumnId = child.id;
+      }
+
+      // Check if this column should be an AssistantGroup
+      if (this.isAssistantGroupNode(childMessage, child)) {
+        const assistantGroupNode = this.createAssistantGroupNode(childMessage, child);
+        return [assistantGroupNode];
+      }
+
+      // Otherwise, just a simple MessageNode
+      return [
+        {
+          id: child.id,
+          type: 'message',
+        } as MessageNode,
+      ];
     });
 
+    // Generate ID by joining parent message id and all column message ids
+    const columnIds = idNode.children.map((child) => child.id).join('-');
+    const compareId = `compare-${message.id}-${columnIds}`;
+
     return {
+      activeColumnId,
       columns,
-      id: this.generateNodeId('compare', message.id),
+      id: compareId,
       messageId: message.id,
       type: 'compare',
     };
@@ -212,7 +243,7 @@ export class Transformer {
     }
 
     // No more assistant messages, return the last tool node
-    return toolChildren[toolChildren.length - 1];
+    return toolChildren.at(-1);
   }
 
   /**
@@ -342,6 +373,11 @@ export class Transformer {
       }
     }
 
+    // Find active column ID from group messages metadata
+    const activeColumnId = groupMessages.find(
+      (msg) => (msg.metadata as any)?.activeColumn === true,
+    )?.id;
+
     // Each column is a message tree
     const columns = groupMessages.map((msg) => {
       const messageNode: MessageNode = {
@@ -352,6 +388,7 @@ export class Transformer {
     });
 
     return {
+      activeColumnId,
       columns,
       id: this.generateNodeId('compare', group.id),
       messageId: group.parentMessageId || message.id,
@@ -407,7 +444,13 @@ export class Transformer {
         // Collect the entire assistant group chain
         const assistantChain: Message[] = [];
         const allToolMessages: Message[] = [];
-        this.collectAssistantChain(message, allMessages, assistantChain, allToolMessages, processedIds);
+        this.collectAssistantChain(
+          message,
+          allMessages,
+          assistantChain,
+          allToolMessages,
+          processedIds,
+        );
 
         // Create assistantGroup virtual message
         const groupMessage = this.createAssistantGroupMessage(
@@ -422,7 +465,7 @@ export class Transformer {
         allToolMessages.forEach((m) => processedIds.add(m.id));
 
         // Continue after the last tool message
-        const lastToolMsg = allToolMessages[allToolMessages.length - 1];
+        const lastToolMsg = allToolMessages.at(-1);
         if (lastToolMsg) {
           this.buildFlatListRecursive(lastToolMsg.id, flatList, processedIds, allMessages);
         }
@@ -436,14 +479,14 @@ export class Transformer {
         flatList.push(message);
         processedIds.add(message.id);
 
-        // Create compare virtual message
-        const compareChildren = childMessages
-          .map((childId) => this.messageMap.get(childId))
-          .filter((m): m is Message => m !== undefined);
-
-        const compareMessage = this.createCompareMessageFromChildren(message, compareChildren);
+        // Create compare virtual message with proper handling of AssistantGroups
+        const compareMessage = this.createCompareMessageFromChildIds(
+          message,
+          childMessages,
+          allMessages,
+          processedIds,
+        );
         flatList.push(compareMessage);
-        compareChildren.forEach((m) => processedIds.add(m.id));
 
         // Don't continue after compare
         continue;
@@ -545,7 +588,13 @@ export class Transformer {
       for (const nextMsg of nextMessages) {
         if (nextMsg.role === 'assistant' && nextMsg.tools && nextMsg.tools.length > 0) {
           // Continue the chain
-          this.collectAssistantChain(nextMsg, allMessages, assistantChain, allToolMessages, processedIds);
+          this.collectAssistantChain(
+            nextMsg,
+            allMessages,
+            assistantChain,
+            allToolMessages,
+            processedIds,
+          );
           return;
         } else if (nextMsg.role === 'assistant') {
           // Final assistant without tools
@@ -559,6 +608,166 @@ export class Transformer {
   /**
    * Create compare virtual message from children (for metadata-based compare)
    */
+  /**
+   * Create compare virtual message from child IDs with AssistantGroup support
+   */
+  private createCompareMessageFromChildIds(
+    parentMessage: Message,
+    childIds: string[],
+    allMessages: Message[],
+    processedIds: Set<string>,
+  ): Message {
+    const columns: ContextNode[][] = [];
+    const children: AssistantContentBlock[] = [];
+    const columnFirstIds: string[] = [];
+    let activeColumnId: string | undefined;
+
+    // Process each child (column)
+    for (const childId of childIds) {
+      const childMessage = this.messageMap.get(childId);
+      if (!childMessage) continue;
+
+      columnFirstIds.push(childId);
+
+      // Check if this message is marked as active column
+      if ((childMessage.metadata as any)?.activeColumn === true) {
+        activeColumnId = childId;
+      }
+
+      // Check if this child is an AssistantGroup
+      if (
+        childMessage.role === 'assistant' &&
+        childMessage.tools &&
+        childMessage.tools.length > 0
+      ) {
+        // Collect the entire assistant group chain for this column
+        const assistantChain: Message[] = [];
+        const allToolMessages: Message[] = [];
+        const columnProcessedIds = new Set<string>();
+
+        this.collectAssistantChain(
+          childMessage,
+          allMessages,
+          assistantChain,
+          allToolMessages,
+          columnProcessedIds,
+        );
+
+        // Create column with AssistantGroup structure
+        const assistantGroupChildren: ContextNode[] = [];
+
+        // Build children MessageNodes for each assistant in the chain
+        for (const assistant of assistantChain) {
+          const toolIds = allToolMessages
+            .filter((tm) => tm.parentId === assistant.id)
+            .map((tm) => tm.id);
+
+          const messageNode: MessageNode = {
+            id: assistant.id,
+            type: 'message',
+          };
+
+          if (toolIds.length > 0) {
+            messageNode.tools = toolIds;
+          }
+
+          assistantGroupChildren.push(messageNode);
+        }
+
+        const assistantGroupColumn: AssistantGroupNode = {
+          children: assistantGroupChildren,
+          id: childMessage.id,
+          type: 'assistantGroup',
+        };
+
+        columns.push([assistantGroupColumn]);
+
+        // Add all assistant messages as content blocks to children array
+        for (const assistant of assistantChain) {
+          const toolsWithResults: ChatToolPayloadWithResult[] =
+            assistant.tools?.map((tool) => {
+              const toolMsg = allToolMessages.find((tm) => tm.tool_call_id === tool.id);
+              if (toolMsg) {
+                return {
+                  ...tool,
+                  result: {
+                    content: toolMsg.content || '',
+                    error: toolMsg.error,
+                    id: toolMsg.id,
+                    state: toolMsg.pluginState,
+                  },
+                  result_msg_id: toolMsg.id,
+                };
+              }
+              return tool;
+            }) || [];
+
+          const { usage: msgUsage, performance: msgPerformance } = this.splitMetadata(
+            assistant.metadata,
+          );
+
+          children.push({
+            content: assistant.content || '',
+            error: assistant.error,
+            id: assistant.id,
+            imageList:
+              assistant.imageList && assistant.imageList.length > 0
+                ? assistant.imageList
+                : undefined,
+            performance: msgPerformance,
+            reasoning: assistant.reasoning || undefined,
+            tools: toolsWithResults.length > 0 ? toolsWithResults : undefined,
+            usage: msgUsage,
+          });
+        }
+
+        // Mark all as processed
+        assistantChain.forEach((m) => processedIds.add(m.id));
+        allToolMessages.forEach((m) => processedIds.add(m.id));
+      } else {
+        // Regular message (not an AssistantGroup)
+        columns.push([
+          {
+            id: childId,
+            type: 'message',
+          },
+        ]);
+        children.push(this.messageToContentBlock(childMessage));
+        processedIds.add(childId);
+      }
+    }
+
+    // Generate ID with all column first message IDs
+    const columnIdsStr = columnFirstIds.join('-');
+    const compareId = `compare-${parentMessage.id}-${columnIdsStr}`;
+
+    // Calculate timestamps from first column's messages
+    const firstColumnMessages = childIds.map((id) => this.messageMap.get(id)).filter(Boolean);
+    const createdAt =
+      firstColumnMessages.length > 0
+        ? Math.min(...firstColumnMessages.map((m) => m!.createdAt))
+        : parentMessage.createdAt;
+    const updatedAt =
+      firstColumnMessages.length > 0
+        ? Math.max(...firstColumnMessages.map((m) => m!.updatedAt))
+        : parentMessage.updatedAt;
+
+    return {
+      activeColumnId,
+      children,
+      columns: columns as any,
+      content: '',
+      createdAt,
+      extra: {
+        parentMessageId: parentMessage.id,
+      },
+      id: compareId,
+      meta: parentMessage.meta || {},
+      role: 'compare' as any,
+      updatedAt,
+    } as Message;
+  }
+
   private createCompareMessageFromChildren(parentMessage: Message, children: Message[]): Message {
     // Create columns similar to contextTree
     const columns: ContextNode[][] = children.map((msg) => [
@@ -587,6 +796,9 @@ export class Transformer {
    * Create compare virtual message (for group-based compare)
    */
   private createCompareMessage(group: MessageGroupMetadata, members: Message[]): Message {
+    // Find active column ID from members metadata
+    const activeColumnId = members.find((msg) => (msg.metadata as any)?.activeColumn === true)?.id;
+
     // Create columns similar to contextTree
     const columns: ContextNode[][] = members.map((msg) => [
       {
@@ -596,6 +808,7 @@ export class Transformer {
     ]);
 
     return {
+      activeColumnId,
       children: members.map((msg) => this.messageToContentBlock(msg)),
       columns: columns as any,
       content: '',

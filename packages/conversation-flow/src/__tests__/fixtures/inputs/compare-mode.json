@@ -8,9 +8,7 @@
     "updatedAt": 1704067200000,
     "meta": {},
     "metadata": {
-      "presentation": {
-        "mode": "compare"
-      }
+      "compare": true
     }
   },
   {
@@ -23,13 +21,11 @@
     "createdAt": 1704067205000,
     "updatedAt": 1704067205000,
     "meta": {},
-    "usage": {
+    "metadata": {
       "totalInputTokens": 24,
       "totalOutputTokens": 198,
       "totalTokens": 222,
-      "cost": 0.00666
-    },
-    "performance": {
+      "cost": 0.00666,
       "tps": 45.0,
       "ttft": 456,
       "duration": 4400,
@@ -46,17 +42,100 @@
     "createdAt": 1704067205100,
     "updatedAt": 1704067205100,
     "meta": {},
-    "usage": {
+    "metadata": {
       "totalInputTokens": 24,
       "totalOutputTokens": 215,
       "totalTokens": 239,
-      "cost": 0.001195
-    },
-    "performance": {
+      "cost": 0.001195,
       "tps": 58.0,
       "ttft": 312,
       "duration": 3707,
-      "latency": 4019
+      "latency": 4019,
+      "activeColumn": true
+    }
+  },
+  {
+    "id": "msg-304",
+    "role": "assistant",
+    "content": "Let me run a benchmark test to compare these two sorting algorithms with real data.",
+    "parentId": "msg-301",
+    "model": "gpt-4",
+    "provider": "openai",
+    "tools": [
+      {
+        "id": "tool-benchmark-bubble",
+        "identifier": "code-runner",
+        "apiName": "runBenchmark",
+        "arguments": "{\"algorithm\":\"bubble_sort\",\"size\":1000}",
+        "type": "default"
+      },
+      {
+        "id": "tool-benchmark-quick",
+        "identifier": "code-runner",
+        "apiName": "runBenchmark",
+        "arguments": "{\"algorithm\":\"quicksort\",\"size\":1000}",
+        "type": "default"
+      }
+    ],
+    "createdAt": 1704067205200,
+    "updatedAt": 1704067205200,
+    "meta": {},
+    "metadata": {
+      "totalInputTokens": 24,
+      "totalOutputTokens": 38,
+      "totalTokens": 62,
+      "cost": 0.000186,
+      "tps": 52.0,
+      "ttft": 198,
+      "duration": 730,
+      "latency": 928
+    }
+  },
+  {
+    "id": "msg-305",
+    "role": "tool",
+    "tool_call_id": "tool-benchmark-bubble",
+    "content": "{\"algorithm\":\"bubble_sort\",\"arraySize\":1000,\"executionTime\":\"2.34s\",\"comparisons\":499500,\"swaps\":250000}",
+    "pluginState": {
+      "cached": false,
+      "executionTime": 2340
+    },
+    "parentId": "msg-304",
+    "createdAt": 1704067207540,
+    "updatedAt": 1704067207540,
+    "meta": {}
+  },
+  {
+    "id": "msg-306",
+    "role": "tool",
+    "tool_call_id": "tool-benchmark-quick",
+    "content": "{\"algorithm\":\"quicksort\",\"arraySize\":1000,\"executionTime\":\"0.012s\",\"comparisons\":9976,\"recursionDepth\":12}",
+    "pluginState": {
+      "cached": false,
+      "executionTime": 12
+    },
+    "parentId": "msg-304",
+    "createdAt": 1704067207552,
+    "updatedAt": 1704067207552,
+    "meta": {}
+  },
+  {
+    "id": "msg-307",
+    "role": "assistant",
+    "content": "**Benchmark Results (Array Size: 1000):**\n\n**Bubble Sort:**\n- Execution Time: 2.34 seconds\n- Comparisons: 499,500\n- Swaps: 250,000\n\n**QuickSort:**\n- Execution Time: 0.012 seconds\n- Comparisons: 9,976\n- Recursion Depth: 12\n\n**Conclusion:** QuickSort is approximately **195x faster** than Bubble Sort for an array of 1000 elements. This demonstrates why QuickSort is the industry standard for general-purpose sorting.",
+    "parentId": "msg-306",
+    "createdAt": 1704067208000,
+    "updatedAt": 1704067208000,
+    "meta": {},
+    "metadata": {
+      "totalInputTokens": 156,
+      "totalOutputTokens": 134,
+      "totalTokens": 290,
+      "cost": 0.00087,
+      "tps": 48.0,
+      "ttft": 234,
+      "duration": 2791,
+      "latency": 3025
     }
   }
 ]

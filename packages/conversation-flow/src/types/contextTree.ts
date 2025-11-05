@@ -37,6 +37,8 @@ export interface AssistantGroupNode extends BaseNode {
  * Compare node - renders multiple parallel outputs side by side
  */
 export interface CompareNode extends BaseNode {
+  /** ID of the active column that enters LLM context */
+  activeColumnId?: string;
   /** Each column represents a parallel output tree */
   columns: ContextNode[][];
   /** The message that triggered the comparison */
