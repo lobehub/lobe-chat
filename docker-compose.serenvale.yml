@@ -1,0 +1,82 @@
+name: serenvale-server
+# Serenvale Server Mode - Simplified from LobeChat
+# For MVP desktop mode, this is NOT needed
+# For future server deployment, run: docker-compose -f docker-compose.serenvale.yml up -d
+
+services:
+  # PostgreSQL with pgvector extension (for RAG)
+  postgresql:
+    image: pgvector/pgvector:pg17
+    container_name: serenvale-postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${SERENVALE_DB_NAME:-serenvale}
+      - POSTGRES_USER=${POSTGRES_USER:-serenvale}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-serenvale_password_change_me}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-serenvale}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - serenvale-network
+
+  # MinIO for file storage (audio, PDFs, images)
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    container_name: serenvale-minio
+    ports:
+      - '${MINIO_PORT:-9000}:9000'  # API
+      - '9001:9001'                   # Console
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-serenvale}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-serenvale123}
+      - MINIO_API_CORS_ALLOW_ORIGIN=*
+    restart: always
+    networks:
+      - serenvale-network
+    command: server /data --address ':${MINIO_PORT:-9000}' --console-address ':9001'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Serenvale Application (commented out for now - to be built)
+  # serenvale:
+  #   build: .
+  #   container_name: serenvale-app
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     postgresql:
+  #       condition: service_healthy
+  #     minio:
+  #       condition: service_healthy
+  #   environment:
+  #     - DATABASE_URL=postgresql://${POSTGRES_USER:-serenvale}:${POSTGRES_PASSWORD}@postgresql:5432/${SERENVALE_DB_NAME:-serenvale}
+  #     - S3_ENDPOINT=http://minio:9000
+  #     - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER:-serenvale}
+  #     - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-serenvale123}
+  #     - S3_BUCKET=serenvale-files
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+  #     - NEXT_PUBLIC_DESKTOP_MODE=0  # Server mode
+  #   networks:
+  #     - serenvale-network
+  #   restart: always
+
+volumes:
+  postgres_data:
+    driver: local
+  minio_data:
+    driver: local
+
+networks:
+  serenvale-network:
+    driver: bridge
