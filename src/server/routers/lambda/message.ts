@@ -58,10 +58,7 @@ export const messageRouter = router({
     .input(CreateNewMessageParamsSchema.extend({ useGroup: z.boolean().optional() }))
     .mutation(async ({ input, ctx }) => {
       const { useGroup, ...params } = input;
-      return ctx.messageModel.createNewMessage(params as any, {
-        groupAssistantMessages: useGroup ?? false,
-        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-      });
+      return ctx.messageService.createNewMessage(params as any, { useGroup });
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {

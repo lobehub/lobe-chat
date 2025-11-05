@@ -19,6 +19,7 @@ describe('MessageService', () => {
   beforeEach(() => {
     mockDB = {} as LobeChatDatabase;
     mockMessageModel = {
+      create: vi.fn(),
       deleteMessage: vi.fn(),
       deleteMessages: vi.fn(),
       query: vi.fn(),
@@ -251,6 +252,97 @@ describe('MessageService', () => {
           groupAssistantMessages: false,
         }),
       );
+    });
+  });
+
+  describe('createNewMessage', () => {
+    it('should create message and return message list', async () => {
+      const params = {
+        content: 'Hello',
+        role: 'user' as const,
+        sessionId: 'session-1',
+      };
+      const createdMessage = { id: 'msg-1', ...params };
+      const mockMessages = [createdMessage, { id: 'msg-2', content: 'Hi' }];
+
+      vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
+      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
+
+      const result = await messageService.createNewMessage(params as any);
+
+      expect(mockMessageModel.create).toHaveBeenCalledWith(params);
+      expect(mockMessageModel.query).toHaveBeenCalledWith(
+        {
+          current: 0,
+          groupId: undefined,
+          pageSize: 9999,
+          sessionId: 'session-1',
+          topicId: undefined,
+        },
+        expect.objectContaining({
+          groupAssistantMessages: false,
+        }),
+      );
+      expect(result).toEqual({
+        id: 'msg-1',
+        messages: mockMessages,
+      });
+    });
+
+    it('should create message with useGroup option', async () => {
+      const params = {
+        content: 'Hello',
+        role: 'assistant' as const,
+        sessionId: 'session-1',
+      };
+      const createdMessage = { id: 'msg-1', ...params };
+      const mockMessages = [createdMessage];
+
+      vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
+      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
+
+      const result = await messageService.createNewMessage(params as any, { useGroup: true });
+
+      expect(mockMessageModel.query).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          groupAssistantMessages: true,
+        }),
+      );
+      expect(result).toEqual({
+        id: 'msg-1',
+        messages: mockMessages,
+      });
+    });
+
+    it('should create message with topicId and groupId', async () => {
+      const params = {
+        content: 'Hello',
+        groupId: 'group-1',
+        role: 'user' as const,
+        sessionId: 'session-1',
+        topicId: 'topic-1',
+      };
+      const createdMessage = { id: 'msg-1', ...params };
+      const mockMessages = [createdMessage];
+
+      vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
+      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
+
+      const result = await messageService.createNewMessage(params as any);
+
+      expect(mockMessageModel.query).toHaveBeenCalledWith(
+        {
+          current: 0,
+          groupId: 'group-1',
+          pageSize: 9999,
+          sessionId: 'session-1',
+          topicId: 'topic-1',
+        },
+        expect.anything(),
+      );
+      expect(result.id).toBe('msg-1');
+      expect(result.messages).toEqual(mockMessages);
     });
   });
 });
