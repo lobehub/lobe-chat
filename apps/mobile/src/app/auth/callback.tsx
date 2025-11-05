@@ -1,7 +1,7 @@
-import { Center, PageContainer, Text } from '@lobehub/ui-rn';
+import { BrandLoading, Center, PageContainer, Text } from '@lobehub/ui-rn';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator } from 'react-native';
 
 import { safeReplaceLogin } from '@/navigation/safeLogin';
 
@@ -32,9 +32,11 @@ export default function AuthCallback() {
 
   return (
     <PageContainer>
-      <Center flex={1} gap={12} justify="center">
-        <ActivityIndicator size="large" />
-        <Text style={{ marginTop: 12 }}>{t('login.processing')}</Text>
+      <Center flex={1} justify="center">
+        <BrandLoading size={48} />
+        <Text style={{ marginTop: 12 }} type={'secondary'}>
+          {t('login.processing')}
+        </Text>
       </Center>
     </PageContainer>
   );

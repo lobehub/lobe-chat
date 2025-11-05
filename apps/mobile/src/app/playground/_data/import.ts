@@ -69,6 +69,8 @@ import MaskShadowDemos from '@lobehub/ui-rn/MaskShadow/demos';
 import MaterialFileTypeIconDemos from '@lobehub/ui-rn/MaterialFileTypeIcon/demos';
 // Mermaid
 import MermaidDemos from '@lobehub/ui-rn/Mermaid/demos';
+// NativePageContainer
+import NativePageContainerDemos from '@lobehub/ui-rn/NativePageContainer/demos';
 // ScrollShadow
 import ScrollShadowDemos from '@lobehub/ui-rn/ScrollShadow/demos';
 // Segmented
@@ -99,6 +101,8 @@ import ToastDemos from '@lobehub/ui-rn/Toast/demos';
 import TooltipDemos from '@lobehub/ui-rn/Tooltip/demos';
 // Video
 import VideoDemos from '@lobehub/ui-rn/Video/demos';
+// brand
+import brandDemos from '@lobehub/ui-rn/brand/demos';
 
 export const DEMOS_MAP: Record<string, any> = {
   ActionIcon: ActionIconDemos,
@@ -134,6 +138,7 @@ export const DEMOS_MAP: Record<string, any> = {
   MaskShadow: MaskShadowDemos,
   MaterialFileTypeIcon: MaterialFileTypeIconDemos,
   Mermaid: MermaidDemos,
+  NativePageContainer: NativePageContainerDemos,
   ScrollShadow: ScrollShadowDemos,
   Segmented: SegmentedDemos,
   Select: SelectDemos,
@@ -149,4 +154,5 @@ export const DEMOS_MAP: Record<string, any> = {
   Toast: ToastDemos,
   Tooltip: TooltipDemos,
   Video: VideoDemos,
+  brand: brandDemos,
 };

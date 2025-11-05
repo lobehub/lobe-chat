@@ -3,6 +3,7 @@ export { default as Alert, type AlertProps, type AlertType } from './Alert';
 export { default as Avatar, type AvatarProps } from './Avatar';
 export { default as Block, type BlockProps } from './Block';
 export { default as BottomSheet, type BottomSheetProps } from './BottomSheet';
+export * from './brand';
 export {
   default as Button,
   type ButtonColor,
