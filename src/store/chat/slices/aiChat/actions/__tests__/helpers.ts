@@ -58,7 +58,7 @@ export const createMockAbortController = () => {
  */
 export const spyOnMessageService = () => {
   const createMessageSpy = vi
-    .spyOn(messageService, 'createNewMessage')
+    .spyOn(messageService, 'createMessage')
     .mockResolvedValue({ id: TEST_IDS.NEW_MESSAGE_ID, messages: [] });
   const updateMessageSpy = vi
     .spyOn(messageService, 'updateMessage')

@@ -25,7 +25,7 @@ vi.mock('@/services/message', () => ({
     removeMessage: vi.fn(),
     removeMessagesByAssistant: vi.fn(),
     removeMessages: vi.fn(() => Promise.resolve()),
-    createNewMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
+    createMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
     updateMessage: vi.fn(),
     removeAllMessages: vi.fn(() => Promise.resolve()),
   },
@@ -71,7 +71,7 @@ describe('chatMessage actions', () => {
         await result.current.addAIMessage();
       });
 
-      expect(messageService.createNewMessage).not.toHaveBeenCalled();
+      expect(messageService.createMessage).not.toHaveBeenCalled();
       expect(updateInputMessageSpy).not.toHaveBeenCalled();
     });
 
@@ -84,7 +84,7 @@ describe('chatMessage actions', () => {
         await result.current.addAIMessage();
       });
 
-      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content: inputMessage,
         role: 'assistant',
         sessionId: mockState.activeId,
@@ -113,7 +113,7 @@ describe('chatMessage actions', () => {
         await result.current.addUserMessage({ message: 'test message' });
       });
 
-      expect(messageService.createNewMessage).not.toHaveBeenCalled();
+      expect(messageService.createMessage).not.toHaveBeenCalled();
       expect(updateInputMessageSpy).not.toHaveBeenCalled();
     });
 
@@ -130,7 +130,7 @@ describe('chatMessage actions', () => {
         await result.current.addUserMessage({ message, fileList });
       });
 
-      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content: message,
         files: fileList,
         role: 'user',
@@ -154,7 +154,7 @@ describe('chatMessage actions', () => {
         await result.current.addUserMessage({ message });
       });
 
-      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content: message,
         files: undefined,
         role: 'user',
@@ -184,7 +184,7 @@ describe('chatMessage actions', () => {
         await result.current.addUserMessage({ message });
       });
 
-      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content: message,
         files: undefined,
         role: 'user',

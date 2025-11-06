@@ -131,7 +131,7 @@ describe('generateAIChatV2 actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
         });
 
-        expect(messageService.createNewMessage).not.toHaveBeenCalled();
+        expect(messageService.createMessage).not.toHaveBeenCalled();
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
 
@@ -142,7 +142,7 @@ describe('generateAIChatV2 actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY });
         });
 
-        expect(messageService.createNewMessage).not.toHaveBeenCalled();
+        expect(messageService.createMessage).not.toHaveBeenCalled();
       });
 
       it('should not send when message is empty with empty files array', async () => {
@@ -152,7 +152,7 @@ describe('generateAIChatV2 actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files: [] });
         });
 
-        expect(messageService.createNewMessage).not.toHaveBeenCalled();
+        expect(messageService.createMessage).not.toHaveBeenCalled();
       });
     });
 
@@ -312,7 +312,7 @@ describe('generateAIChatV2 actions', () => {
           });
         });
 
-        expect(messageService.createNewMessage).toHaveBeenCalled();
+        expect(messageService.createMessage).toHaveBeenCalled();
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
 
@@ -749,7 +749,7 @@ describe('generateAIChatV2 actions', () => {
 
     beforeEach(() => {
       // Reset mocks
-      vi.spyOn(messageService, 'createNewMessage').mockResolvedValue({
+      vi.spyOn(messageService, 'createMessage').mockResolvedValue({
         id: 'new-assistant-block-id',
         messages: [] as any,
       });
@@ -814,8 +814,8 @@ describe('generateAIChatV2 actions', () => {
         }),
       );
 
-      // Verify that createNewMessage was called with message params
-      expect(messageService.createNewMessage).toHaveBeenCalledWith(
+      // Verify that createMessage was called with message params
+      expect(messageService.createMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           role: 'assistant',
           parentId: TOOL_RESULT_MSG_ID,
@@ -866,7 +866,7 @@ describe('generateAIChatV2 actions', () => {
         }),
       );
 
-      expect(messageService.createNewMessage).toHaveBeenCalledWith(
+      expect(messageService.createMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           role: 'assistant',
           parentId: 'non-existent-tool-result-id',

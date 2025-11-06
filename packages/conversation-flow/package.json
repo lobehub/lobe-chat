@@ -1,0 +1,13 @@
+{
+  "name": "@lobechat/conversation-flow",
+  "version": "0.0.1",
+  "description": "Scalable complex conversation flow rendering engine",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage --silent='passed-only'"
+  },
+  "dependencies": {
+    "@lobechat/types": "workspace:*"
+  }
+}

@@ -1,6 +1,26 @@
 [
   {
     "children": {
+      "improvements": ["Refactor message create name."],
+      "fixes": ["Model name display in the assistant panel disappears."]
+    },
+    "date": "2025-11-06",
+    "version": "2.0.0-next.33"
+  },
+  {
+    "children": {
+      "fixes": ["Should install new version after quit this instance."]
+    },
+    "date": "2025-11-05",
+    "version": "2.0.0-next.32"
+  },
+  {
+    "children": {},
+    "date": "2025-11-05",
+    "version": "2.0.0-next.31"
+  },
+  {
+    "children": {
       "improvements": ["Enhance message router with service layer and comprehensive tests."]
     },
     "date": "2025-11-05",

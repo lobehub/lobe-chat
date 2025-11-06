@@ -98,7 +98,7 @@ export const chatPlugin: StateCreator<
       topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
     };
 
-    const result = await messageService.createNewMessage(newMessage);
+    const result = await messageService.createMessage(newMessage);
     get().replaceMessages(result.messages);
   },
 

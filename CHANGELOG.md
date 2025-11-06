@@ -2,6 +2,81 @@
 
 # Changelog
 
+## [Version 2.0.0-next.33](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.32...v2.0.0-next.33)
+
+<sup>Released on **2025-11-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor message create name.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Model name display in the assistant panel disappears.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor message create name, closes [#10074](https://github.com/lobehub/lobe-chat/issues/10074) ([08ec29f](https://github.com/lobehub/lobe-chat/commit/08ec29f))
+
+#### What's fixed
+
+- **misc**: Model name display in the assistant panel disappears, closes [#9830](https://github.com/lobehub/lobe-chat/issues/9830) ([54f4e18](https://github.com/lobehub/lobe-chat/commit/54f4e18))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.32](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.31...v2.0.0-next.32)
+
+<sup>Released on **2025-11-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Should install new version after quit this instance.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Should install new version after quit this instance, closes [#10064](https://github.com/lobehub/lobe-chat/issues/10064) ([9ab77b2](https://github.com/lobehub/lobe-chat/commit/9ab77b2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.31](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.30...v2.0.0-next.31)
+
+<sup>Released on **2025-11-05**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.30](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.29...v2.0.0-next.30)
 
 <sup>Released on **2025-11-05**</sup>
