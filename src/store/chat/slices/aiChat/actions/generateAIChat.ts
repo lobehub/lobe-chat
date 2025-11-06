@@ -467,7 +467,7 @@ export const generateAIChat: StateCreator<
     const threadId = outThreadId ?? activeThreadId;
 
     const result = await messageService.updateMessageMetadata(
-      latestMsg.id,
+      messageId,
       {
         activeBranchIndex: item.metadata?.activeBranchIndex
           ? item.metadata?.activeBranchIndex + 1
@@ -475,13 +475,13 @@ export const generateAIChat: StateCreator<
       },
       { sessionId: get().activeId, topicId: get().activeTopicId },
     );
-    if (!result.success) return;
+    if (!result.success || !result.messages) return;
 
     get().replaceMessages(result.messages);
 
     await internal_execAgentRuntime({
       messages: contextMessages,
-      parentMessageId: latestMsg.id,
+      parentMessageId: messageId,
       parentMessageType: 'user',
       traceId,
       ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,

@@ -1121,17 +1121,27 @@ describe('AgentRuntime', () => {
             return [
               {
                 payload: {
-                  id: 'call_1',
-                  type: 'function' as const,
-                  function: { name: 'tool_1', arguments: '{}' },
+                  parentMessageId: 'user-msg-id',
+                  toolCalling: {
+                    id: 'call_1',
+                    type: 'default' as const,
+                    apiName: 'tool_1',
+                    identifier: 'tool_1',
+                    arguments: '{}',
+                  },
                 },
                 type: 'call_tool' as const,
               },
               {
                 payload: {
-                  id: 'call_2',
-                  type: 'function' as const,
-                  function: { name: 'tool_2', arguments: '{}' },
+                  parentMessageId: 'user-msg-id',
+                  toolCalling: {
+                    id: 'call_2',
+                    type: 'default' as const,
+                    apiName: 'tool_2',
+                    identifier: 'tool_2',
+                    arguments: '{}',
+                  },
                 },
                 type: 'call_tool' as const,
               },
@@ -1175,9 +1185,14 @@ describe('AgentRuntime', () => {
             return [
               {
                 payload: {
-                  id: 'call_safe',
-                  type: 'function' as const,
-                  function: { name: 'safe_tool', arguments: '{}' },
+                  parentMessageId: 'user-msg-id',
+                  toolCalling: {
+                    id: 'call_safe',
+                    type: 'default' as const,
+                    apiName: 'safe_tool',
+                    identifier: 'safe_tool',
+                    arguments: '{}',
+                  },
                 },
                 type: 'call_tool' as const,
               },
@@ -1252,18 +1267,25 @@ describe('AgentRuntime', () => {
         async runner(context: AgentRuntimeContext, _state: AgentState) {
           if (context.phase === 'user_input') {
             return {
-              payload: [
-                {
-                  id: 'call_expensive',
-                  type: 'function' as const,
-                  function: { name: 'expensive_tool', arguments: '{}' },
-                },
-                {
-                  id: 'call_cheap',
-                  type: 'function' as const,
-                  function: { name: 'cheap_tool', arguments: '{}' },
-                },
-              ],
+              payload: {
+                parentMessageId: 'user-msg-id',
+                toolsCalling: [
+                  {
+                    id: 'call_expensive',
+                    type: 'default' as const,
+                    apiName: 'expensive_tool',
+                    identifier: 'expensive_tool',
+                    arguments: '{}',
+                  },
+                  {
+                    id: 'call_cheap',
+                    type: 'default' as const,
+                    apiName: 'cheap_tool',
+                    identifier: 'cheap_tool',
+                    arguments: '{}',
+                  },
+                ],
+              },
               type: 'call_tools_batch' as const,
             };
           }
@@ -1380,11 +1402,14 @@ describe('AgentRuntime', () => {
           if (context.phase === 'user_input') {
             return {
               payload: {
-                apiName: 'expensive_tool',
-                arguments: '{}',
-                id: 'call_1',
-                identifier: 'expensive_tool',
-                type: 'default' as const,
+                parentMessageId: 'user-msg-id',
+                toolCalling: {
+                  apiName: 'expensive_tool',
+                  arguments: '{}',
+                  id: 'call_1',
+                  identifier: 'expensive_tool',
+                  type: 'default' as const,
+                },
               },
               type: 'call_tool' as const,
             };
@@ -1458,22 +1483,25 @@ describe('AgentRuntime', () => {
         async runner(context: AgentRuntimeContext, _state: AgentState) {
           if (context.phase === 'user_input') {
             return {
-              payload: [
-                {
-                  apiName: 'tool_1',
-                  arguments: '{}',
-                  id: 'call_1',
-                  identifier: 'tool_1',
-                  type: 'default' as const,
-                },
-                {
-                  apiName: 'tool_2',
-                  arguments: '{}',
-                  id: 'call_2',
-                  identifier: 'tool_2',
-                  type: 'default' as const,
-                },
-              ],
+              payload: {
+                parentMessageId: 'user-msg-id',
+                toolsCalling: [
+                  {
+                    apiName: 'tool_1',
+                    arguments: '{}',
+                    id: 'call_1',
+                    identifier: 'tool_1',
+                    type: 'default' as const,
+                  },
+                  {
+                    apiName: 'tool_2',
+                    arguments: '{}',
+                    id: 'call_2',
+                    identifier: 'tool_2',
+                    type: 'default' as const,
+                  },
+                ],
+              },
               type: 'call_tools_batch' as const,
             };
           }
@@ -1535,22 +1563,25 @@ describe('AgentRuntime', () => {
         async runner(context: AgentRuntimeContext, _state: AgentState) {
           if (context.phase === 'user_input') {
             return {
-              payload: [
-                {
-                  apiName: 'analytics_tool',
-                  arguments: '{}',
-                  id: 'call_analytics',
-                  identifier: 'analytics_tool',
-                  type: 'default' as const,
-                },
-                {
-                  apiName: 'logging_tool',
-                  arguments: '{}',
-                  id: 'call_logging',
-                  identifier: 'logging_tool',
-                  type: 'default' as const,
-                },
-              ],
+              payload: {
+                parentMessageId: 'user-msg-id',
+                toolsCalling: [
+                  {
+                    apiName: 'analytics_tool',
+                    arguments: '{}',
+                    id: 'call_analytics',
+                    identifier: 'analytics_tool',
+                    type: 'default' as const,
+                  },
+                  {
+                    apiName: 'logging_tool',
+                    arguments: '{}',
+                    id: 'call_logging',
+                    identifier: 'logging_tool',
+                    type: 'default' as const,
+                  },
+                ],
+              },
               type: 'call_tools_batch' as const,
             };
           }

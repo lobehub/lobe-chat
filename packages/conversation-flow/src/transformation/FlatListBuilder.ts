@@ -169,14 +169,65 @@ export class FlatListBuilder {
         flatList.push(userWithBranches);
         processedIds.add(message.id);
 
-        // Continue with active branch and process its message
+        // Continue with active branch - check if it's an assistantGroup
         const activeBranchMsg = this.messageMap.get(activeBranchId);
         if (activeBranchMsg) {
-          flatList.push(activeBranchMsg);
-          processedIds.add(activeBranchId);
+          // Check if active branch is assistant with tools (should be assistantGroup)
+          if (
+            activeBranchMsg.role === 'assistant' &&
+            activeBranchMsg.tools &&
+            activeBranchMsg.tools.length > 0
+          ) {
+            // Collect the entire assistant group chain
+            const assistantChain: Message[] = [];
+            const allToolMessages: Message[] = [];
+            this.messageCollector.collectAssistantChain(
+              activeBranchMsg,
+              allMessages,
+              assistantChain,
+              allToolMessages,
+              processedIds,
+            );
 
-          // Continue with active branch's children
-          this.buildFlatListRecursive(activeBranchId, flatList, processedIds, allMessages);
+            // Create assistantGroup virtual message
+            const groupMessage = this.createAssistantGroupMessage(
+              assistantChain[0],
+              assistantChain,
+              allToolMessages,
+            );
+            flatList.push(groupMessage);
+
+            // Mark all as processed
+            assistantChain.forEach((m) => processedIds.add(m.id));
+            allToolMessages.forEach((m) => processedIds.add(m.id));
+
+            // Continue after the assistant chain
+            const lastAssistant = assistantChain.at(-1);
+            const toolIds = new Set(allToolMessages.map((t) => t.id));
+
+            const lastAssistantNonToolChildren = lastAssistant
+              ? this.childrenMap.get(lastAssistant.id)?.filter((childId) => !toolIds.has(childId))
+              : undefined;
+
+            if (
+              lastAssistantNonToolChildren &&
+              lastAssistantNonToolChildren.length > 0 &&
+              lastAssistant
+            ) {
+              this.buildFlatListRecursive(lastAssistant.id, flatList, processedIds, allMessages);
+            } else {
+              for (const toolMsg of allToolMessages) {
+                this.buildFlatListRecursive(toolMsg.id, flatList, processedIds, allMessages);
+              }
+            }
+          } else {
+            // Regular message (not assistantGroup)
+            flatList.push(activeBranchMsg);
+            processedIds.add(activeBranchId);
+
+            // Continue with active branch's children
+            this.buildFlatListRecursive(activeBranchId, flatList, processedIds, allMessages);
+          }
         }
         continue;
       }

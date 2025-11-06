@@ -96,6 +96,7 @@ export const aiChatRouter = router({
       const userMessageItem = await ctx.messageModel.create({
         content: input.newUserMessage.content,
         files: input.newUserMessage.files,
+        parentId: input.newUserMessage.parentId,
         role: 'user',
         sessionId: input.sessionId!,
         threadId: input.threadId,

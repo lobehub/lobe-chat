@@ -170,6 +170,7 @@ export const generateAIChatV2: StateCreator<
           newUserMessage: {
             content: message,
             files: fileIdList,
+            parentId: messages.at(-1)?.id,
           },
           // if there is activeTopicId，then add topicId to message
           topicId: activeTopicId,
@@ -312,12 +313,10 @@ export const generateAIChatV2: StateCreator<
       'clearSendMessageError',
     );
   },
-  internal_refreshAiChat: ({ topics, messages, sessionId, topicId }) => {
+  internal_refreshAiChat: ({ topics, messages, sessionId }) => {
+    get().replaceMessages(messages);
     set(
-      {
-        topicMaps: topics ? { ...get().topicMaps, [sessionId]: topics } : get().topicMaps,
-        messagesMap: { ...get().messagesMap, [messageMapKey(sessionId, topicId)]: messages },
-      },
+      { topicMaps: topics ? { ...get().topicMaps, [sessionId]: topics } : get().topicMaps },
       false,
       'refreshAiChat',
     );

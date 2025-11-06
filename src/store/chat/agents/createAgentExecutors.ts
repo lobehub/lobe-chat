@@ -67,6 +67,12 @@ export const createAgentExecutors = (context: {
         assistantMessageId = context.parentId;
         shouldSkipCreateMessage = false;
       } else {
+        // 如果是 userMessage 的第一次 regenerated 创建， llmPayload 不存在 parentMessageId
+        // 因此用这种方式做个赋值
+        // TODO: 也许未来这个应该用 init 方法实现
+        if (!llmPayload.parentMessageId) {
+          llmPayload.parentMessageId = context.parentId;
+        }
         // Create assistant message (following server-side pattern)
         const assistantMessageItem = await context.get().internal_createMessage({
           content: '',

@@ -24,7 +24,7 @@ const MessageContent = memo<ContentBlockProps>(({ content, hasTools, markdownPro
   const message = normalizeThinkTags(processWithArtifact(content));
 
   const { styles, cx } = useStyles();
-
+  console.log('content:', content);
   if (content === LOADING_FLAT) {
     if (hasTools) return null;
 
