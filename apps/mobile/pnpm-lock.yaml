@@ -4,6 +4,14 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@expo/fingerprint':
+    hash: 3b653d67ac9594f3f0bc340b2fe266d8b49e77bd94eec95fb29cac8ebc692411
+    path: patches/@expo__fingerprint.patch
+  react-native-shiki-engine:
+    hash: c3ee9b61ea4cbcba5dd301c4c0113dc491070d901fcfc25a85c05f13a5188517
+    path: patches/react-native-shiki-engine.patch
+
 importers:
 
   .:
@@ -184,7 +192,7 @@ importers:
         version: 0.32.12(expo@54.0.19)(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-router:
         specifier: ~6.0.12
-        version: 6.0.13(3g7d44g3i3wn2uebqgx4ean5d4)
+        version: 6.0.13(2ba3551437b176bbc8f2d486257ca890)
       expo-secure-store:
         specifier: ~15.0.7
         version: 15.0.7(expo@54.0.19)
@@ -340,7 +348,7 @@ importers:
         version: 4.16.0(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-shiki-engine:
         specifier: ^0.2.0
-        version: 0.2.0(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        version: 0.2.0(patch_hash=c3ee9b61ea4cbcba5dd301c4c0113dc491070d901fcfc25a85c05f13a5188517)(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-sse:
         specifier: ^1.2.1
         version: 1.2.1
@@ -443,7 +451,7 @@ importers:
         version: 1.25.1(@types/react@19.1.17)(immer@10.1.3)(react-devtools-core@6.1.5)(typescript@5.9.3)(use-sync-external-store@1.6.0(react@19.1.0))(ws@8.18.3)(zod@3.25.76)
       '@lobehub/lint':
         specifier: ^1.26.2
-        version: 1.26.2(@octokit/core@4.2.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.12))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@25.0.1(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)
+        version: 1.26.2(@octokit/core@7.0.5)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.12))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@25.0.1(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)
       '@testing-library/react-native':
         specifier: ^13.3.3
         version: 13.3.3(jest@29.7.0(@types/node@22.18.12))(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react-test-renderer@19.1.0(react@19.1.0))(react@19.1.0)
@@ -537,7 +545,7 @@ importers:
     devDependencies:
       promptfoo:
         specifier: ^0.118.17
-        version: 0.118.17(bxlz4evs37qoixcgicpbz7myqe)
+        version: 0.118.17(ad0ef57f9b891aab2d546c9f98bfe50b)
       tsx:
         specifier: ^4.20.4
         version: 4.20.6
@@ -13692,10 +13700,10 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@achingbrain/semantic-release-github@0.0.2(@octokit/core@4.2.4)(semantic-release@25.0.1(typescript@5.9.3))':
+  '@achingbrain/semantic-release-github@0.0.2(@octokit/core@7.0.5)(semantic-release@25.0.1(typescript@5.9.3))':
     dependencies:
       '@octokit/plugin-retry': 3.0.9
-      '@octokit/plugin-throttling': 3.7.0(@octokit/core@4.2.4)
+      '@octokit/plugin-throttling': 3.7.0(@octokit/core@7.0.5)
       '@octokit/rest': 19.0.13
       '@semantic-release/error': 3.0.0
       aggregate-error: 3.1.0
@@ -15658,7 +15666,7 @@ snapshots:
       wrap-ansi: 7.0.0
       ws: 8.18.3
     optionalDependencies:
-      expo-router: 6.0.13(3g7d44g3i3wn2uebqgx4ean5d4)
+      expo-router: 6.0.13(2ba3551437b176bbc8f2d486257ca890)
       react-native: 0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0)
     transitivePeerDependencies:
       - '@modelcontextprotocol/sdk'
@@ -15736,7 +15744,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@expo/fingerprint@0.15.2':
+  '@expo/fingerprint@0.15.2(patch_hash=3b653d67ac9594f3f0bc340b2fe266d8b49e77bd94eec95fb29cac8ebc692411)':
     dependencies:
       '@expo/spawn-async': 1.7.2
       arg: 5.0.2
@@ -16549,7 +16557,7 @@ snapshots:
       react-native: 0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0)
       react-native-svg: 15.12.1(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
 
-  '@lobehub/lint@1.26.2(@octokit/core@4.2.4)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.12))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@25.0.1(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@lobehub/lint@1.26.2(@octokit/core@7.0.5)(eslint@8.57.1)(jest@29.7.0(@types/node@22.18.12))(postcss@8.5.6)(prettier@3.6.2)(semantic-release@25.0.1(typescript@5.9.3))(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@trivago/prettier-plugin-sort-imports': 5.2.2(prettier@3.6.2)
       '@typescript-eslint/eslint-plugin': 7.5.0(@typescript-eslint/parser@7.5.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
@@ -16608,7 +16616,7 @@ snapshots:
       remark-sort-definitions: 2.0.0
       remark-textr: 6.1.0
       remark-toc: 9.0.0
-      semantic-release-config-gitmoji: 1.5.3(@octokit/core@4.2.4)(semantic-release@25.0.1(typescript@5.9.3))
+      semantic-release-config-gitmoji: 1.5.3(@octokit/core@7.0.5)(semantic-release@25.0.1(typescript@5.9.3))
       stylelint-config-clean-order: 7.0.0(stylelint@15.11.0(typescript@5.9.3))
       stylelint-config-recommended: 14.0.1(stylelint@15.11.0(typescript@5.9.3))
       stylelint-less: 3.0.1(postcss@8.5.6)(stylelint@15.11.0(typescript@5.9.3))
@@ -16838,9 +16846,9 @@ snapshots:
       '@octokit/types': 15.0.1
       bottleneck: 2.19.5
 
-  '@octokit/plugin-throttling@3.7.0(@octokit/core@4.2.4)':
+  '@octokit/plugin-throttling@3.7.0(@octokit/core@7.0.5)':
     dependencies:
-      '@octokit/core': 4.2.4
+      '@octokit/core': 7.0.5
       '@octokit/types': 6.41.0
       bottleneck: 2.19.5
 
@@ -21962,7 +21970,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  expo-router@6.0.13(3g7d44g3i3wn2uebqgx4ean5d4):
+  expo-router@6.0.13(2ba3551437b176bbc8f2d486257ca890):
     dependencies:
       '@expo/metro-runtime': 6.1.2(expo@54.0.19)(react-dom@19.1.0(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@expo/schema-utils': 0.1.7
@@ -22089,7 +22097,7 @@ snapshots:
       '@expo/config': 12.0.10
       '@expo/config-plugins': 54.0.2
       '@expo/devtools': 0.1.7(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@expo/fingerprint': 0.15.2
+      '@expo/fingerprint': 0.15.2(patch_hash=3b653d67ac9594f3f0bc340b2fe266d8b49e77bd94eec95fb29cac8ebc692411)
       '@expo/metro': 54.1.0
       '@expo/metro-config': 54.0.7(expo@54.0.19)
       '@expo/vector-icons': 15.0.3(expo-font@14.0.9(expo@54.0.19)(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -26514,7 +26522,7 @@ snapshots:
     dependencies:
       asap: 2.0.6
 
-  promptfoo@0.118.17(bxlz4evs37qoixcgicpbz7myqe):
+  promptfoo@0.118.17(ad0ef57f9b891aab2d546c9f98bfe50b):
     dependencies:
       '@adaline/anthropic': 1.8.0
       '@adaline/azure': 1.6.2
@@ -27016,7 +27024,7 @@ snapshots:
       react-native-is-edge-to-edge: 1.2.1(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       warn-once: 0.1.1
 
-  react-native-shiki-engine@0.2.0(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
+  react-native-shiki-engine@0.2.0(patch_hash=c3ee9b61ea4cbcba5dd301c4c0113dc491070d901fcfc25a85c05f13a5188517)(react-native@0.81.5(@babel/core@7.28.4)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
       '@shikijs/types': 3.13.0
       '@shikijs/vscode-textmate': 10.0.2
@@ -28403,12 +28411,12 @@ snapshots:
 
   select-hose@2.0.0: {}
 
-  semantic-release-config-gitmoji@1.5.3(@octokit/core@4.2.4)(semantic-release@25.0.1(typescript@5.9.3)):
+  semantic-release-config-gitmoji@1.5.3(@octokit/core@7.0.5)(semantic-release@25.0.1(typescript@5.9.3)):
     dependencies:
       '@gitmoji/commit-types': 1.1.5
       '@semantic-release/changelog': 6.0.3(semantic-release@25.0.1(typescript@5.9.3))
       '@semantic-release/git': 10.0.1(semantic-release@25.0.1(typescript@5.9.3))
-      '@semantic-release/github': '@achingbrain/semantic-release-github@0.0.2(@octokit/core@4.2.4)(semantic-release@25.0.1(typescript@5.9.3))'
+      '@semantic-release/github': '@achingbrain/semantic-release-github@0.0.2(@octokit/core@7.0.5)(semantic-release@25.0.1(typescript@5.9.3))'
       '@semrel-extra/npm': 1.2.2
       '@types/semantic-release': 17.2.11
       conventional-changelog-gitmoji-config: 1.5.2
