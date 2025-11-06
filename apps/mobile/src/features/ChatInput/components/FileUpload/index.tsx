@@ -1,12 +1,12 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { ActionIcon, Toast, useTheme } from '@lobehub/ui-rn';
 import * as DocumentPicker from 'expo-document-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { PaperclipIcon } from 'lucide-react-native';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, type PressableProps } from 'react-native';
+import { Image, Video } from 'react-native-compressor';
 
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import { useModelSupportFiles } from '@/hooks/useModelSupportFiles';
@@ -15,6 +15,7 @@ import { mobileFileStorage, mobileUploadService } from '@/services/upload';
 import { useFileStore } from '@/store/file/store';
 
 const MAX_IMAGE_SIZE = 1024; // Maximum dimension for images (single side)
+const MAX_VIDEO_SIZE = 854; // 480p video max dimension (854×480 for 16:9)
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB in bytes
 
 interface FileUploadProps {
@@ -33,59 +34,101 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
   const canUpload = supportVision || enabledFiles;
 
   /**
-   * Process image: resize and compress
+   * Process image: resize and compress using react-native-compressor
    * @param uri - Image URI
    * @param mimeType - Original mime type (to determine output format)
    * @returns Processed image URI and final format
    */
   const processImage = useCallback(
-    async (
-      uri: string,
-      mimeType?: string,
-    ): Promise<{ format: ImageManipulator.SaveFormat; mimeType: string, uri: string; }> => {
+    async (uri: string, mimeType?: string): Promise<{ mimeType: string; uri: string }> => {
       try {
         // Determine output format based on input type
-        let outputFormat = ImageManipulator.SaveFormat.JPEG; // Default to JPEG (best for photos)
+        let outputFormat: 'jpg' | 'png' = 'jpg'; // Default to JPEG (best for photos)
         let outputMimeType = 'image/jpeg';
 
         if (mimeType?.includes('png')) {
-          outputFormat = ImageManipulator.SaveFormat.PNG;
+          outputFormat = 'png';
           outputMimeType = 'image/png';
         }
         // HEIC/HEIF -> JPEG (better compression for photos)
         // JPEG -> JPEG (keep original format)
 
-        const result = await ImageManipulator.manipulateAsync(
-          uri,
-          [
-            {
-              resize: {
-                height: MAX_IMAGE_SIZE,
-                width: MAX_IMAGE_SIZE,
-              },
-            },
-          ],
-          {
-            compress: 0.8,
-            format: outputFormat,
-          },
-        );
+        const compressedUri = await Image.compress(uri, {
+          compressionMethod: 'auto',
+          input: 'uri',
+          maxHeight: MAX_IMAGE_SIZE,
+          maxWidth: MAX_IMAGE_SIZE,
+          output: outputFormat,
+          quality: 0.8,
+        });
+
+        console.log('Image compressed:', { compressed: compressedUri, original: uri });
 
         return {
-          format: outputFormat,
           mimeType: outputMimeType,
-          uri: result.uri,
+          uri: compressedUri,
         };
       } catch (error) {
-        console.error('Failed to process image:', error);
+        console.error('Failed to compress image:', error);
+        // Return original URI if compression fails
         return {
-          format: ImageManipulator.SaveFormat.JPEG,
           mimeType: mimeType || 'image/jpeg',
           uri,
         };
       }
     },
     [],
+  );
+
+  /**
+   * Process video: compress to 480p MP4
+   * @param uri - Video URI
+   * @returns Compressed video URI
+   */
+  const processVideo = useCallback(
+    async (uri: string, tempId: string): Promise<{ mimeType: string, uri: string; }> => {
+      try {
+        console.log('Starting video compression to 480p...');
+
+        const compressedUri = await Video.compress(
+          uri,
+          {
+            compressionMethod: 'auto',
+            maxSize: MAX_VIDEO_SIZE, // 854px max dimension for 480p
+            minimumFileSizeForCompress: 5, // Only compress if > 5MB
+          },
+          (progress) => {
+            // Update compression progress (0-100)
+            const compressionProgress = Math.round(progress * 100);
+            console.log('Video compression progress:', compressionProgress);
+
+            // Update UI with compression progress
+            dispatchUploadFileList({
+              id: tempId,
+              type: 'updateFile',
+              value: {
+                status: 'uploading',
+                uploadState: { progress: compressionProgress * 0.5 }, // 0-50% for compression
+              } as any,
+            });
+          },
+        );
+
+        console.log('Video compression completed:', compressedUri);
+        return {
+          mimeType: 'video/mp4',
+          uri: compressedUri,
+        };
+      } catch (error) {
+        console.error('Failed to compress video:', error);
+        // Return original URI if compression fails
+        return {
+          mimeType: 'video/mp4',
+          uri,
+        };
+      }
+    },
+    [dispatchUploadFileList],
   );
 
   /**
@@ -123,6 +166,18 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
               const newExt = processed.mimeType.split('/')[1];
               finalFileName = fileName.replace(/\.(heic|heif)$/i, `.${newExt}`);
             }
+          }
+        }
+
+        // Process videos (compress to 480p MP4)
+        if (finalMimeType.startsWith('video')) {
+          const processed = await processVideo(uri, tempId);
+          processedUri = processed.uri;
+          finalMimeType = processed.mimeType;
+
+          // Update file extension to .mp4
+          if (!fileName.toLowerCase().endsWith('.mp4')) {
+            finalFileName = fileName.replace(/\.\w+$/, '.mp4');
           }
         }
 

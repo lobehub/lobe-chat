@@ -186,6 +186,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     'expo-secure-store',
     'expo-localization',
+    'react-native-compressor',
     './plugins/withFbjniFix.ts',
     './plugins/withAndroidTransparentNavigation.ts',
   ],
