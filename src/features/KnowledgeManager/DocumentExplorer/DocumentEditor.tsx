@@ -596,12 +596,11 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               </Flexbox>
             </Flexbox>
 
-            {/* Editor Content */}
             <Editor
               className={editorClassName}
               content={''}
               editor={editor}
-              onChange={handleContentChange}
+              onTextChange={handleContentChange}
               plugins={[
                 ReactListPlugin,
                 ReactCodePlugin,
