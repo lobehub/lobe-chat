@@ -85,11 +85,6 @@ export class LobeAzureAI implements LobeRuntimeAI {
               throw new Error('Azure AI response body is empty');
             }
 
-            console.error('Node version', process.version, process.versions);
-            console.error('Readable', Readable);
-            console.error('nodeStream', nodeStream, typeof nodeStream);
-            console.error('Readable.toWeb', typeof Readable.toWeb, Readable.toWeb);
-
             return Readable.toWeb(nodeStream as unknown as NodeReadable) as ReadableStream;
           }
 
