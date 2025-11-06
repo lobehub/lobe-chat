@@ -99,6 +99,7 @@ export const fileRouter = router({
         embeddingError: embeddingTask?.error,
         embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
         finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
+        metadata: item.metadata as Record<string, any> | null | undefined,
         sourceType: 'file' as const,
         url: await ctx.fileService.getFullFileUrl(item.url!),
       };
