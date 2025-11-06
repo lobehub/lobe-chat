@@ -1,7 +1,7 @@
 import { AssistantCategory, DiscoverAssistantItem } from '@lobechat/types';
 import { ActionIcon, CapsuleTabs, Center, Empty, PageContainer, useTheme } from '@lobehub/ui-rn';
 import { FlashList, FlashListRef } from '@shopify/flash-list';
-import { useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { AlertCircle, PackageOpen, SearchIcon } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,6 @@ const INITIAL_PAGE_SIZE = 21;
 
 const AssistantList = () => {
   const listRef = useRef<FlashListRef<any>>(null);
-  const router = useRouter();
   const theme = useTheme();
   const { t } = useTranslation(['common', 'discover']);
   const insets = useSafeAreaInsets();
@@ -134,11 +133,9 @@ const AssistantList = () => {
   return (
     <PageContainer
       extra={
-        <ActionIcon
-          icon={SearchIcon}
-          onPress={() => router.push('/discover/assistant/search')}
-          pressEffect={false}
-        />
+        <Link asChild href="/discover/assistant/search">
+          <ActionIcon icon={SearchIcon} pressEffect={false} />
+        </Link>
       }
       extraProps={{
         width: 40,
