@@ -350,12 +350,10 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                 const title = document.name || t('notesList.untitled');
                 const previewText = getPreviewText(document);
                 const emoji = document.metadata?.emoji;
+                const isSelected = selectedDocumentId === document.id;
                 return (
                   <div
-                    className={cx(
-                      styles.documentCard,
-                      selectedDocumentId === document.id && 'selected',
-                    )}
+                    className={cx(styles.documentCard, isSelected && 'selected')}
                     key={document.id}
                     onClick={() => handleDocumentSelect(document.id)}
                   >
@@ -376,7 +374,9 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                         {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
                         <div className={styles.documentTitle}>{title}</div>
                       </div>
-                      {previewText && <div className={styles.documentPreview}>{previewText}</div>}
+                      {!isSelected && previewText && (
+                        <div className={styles.documentPreview}>{previewText}</div>
+                      )}
                     </div>
                   </div>
                 );

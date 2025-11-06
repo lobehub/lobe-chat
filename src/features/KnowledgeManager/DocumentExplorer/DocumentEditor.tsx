@@ -492,10 +492,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           left={<ChatInputActions items={toolbarItems} />}
           right={
             saveStatus === 'saving' ? (
-              <Flexbox align="center" direction="horizontal" gap={8}>
-                <Icon icon={Loader2Icon} spin />
-                <span style={{ color: theme.colorTextSecondary }}>{t('notesEditor.saving')}</span>
-              </Flexbox>
+              <Icon icon={Loader2Icon} spin style={{ paddingRight: 12 }} />
             ) : null
           }
           style={{
