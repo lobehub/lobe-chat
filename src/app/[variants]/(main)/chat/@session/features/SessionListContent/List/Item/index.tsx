@@ -4,9 +4,8 @@ import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { isDesktop } from '@/const/version';
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -28,7 +27,6 @@ interface SessionItemProps {
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
-  const [defaultModel] = useAgentStore((s) => [agentSelectors.inboxAgentModel(s)]);
 
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
 
@@ -55,7 +53,8 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
       ];
     });
 
-  const showModel = sessionType === 'agent' && model && model !== defaultModel;
+  // Only hide the model tag for the inbox session itself (随便聊聊)
+  const showModel = sessionType === 'agent' && model && id !== INBOX_SESSION_ID;
 
   const handleDoubleClick = () => {
     if (isDesktop) {
