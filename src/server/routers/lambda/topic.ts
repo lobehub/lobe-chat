@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
@@ -103,10 +104,21 @@ export const topicRouter = router({
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
 
-      const serverDB = await getServerDB();
-      const topicModel = new TopicModel(serverDB, ctx.userId);
+      const cacheKey = `topics:${ctx.userId}:${JSON.stringify(input)}`;
 
-      return topicModel.query(input);
+      return unstable_cache(
+        async () => {
+          const serverDB = await getServerDB();
+          const topicModel = new TopicModel(serverDB, ctx.userId);
+
+          return topicModel.query(input);
+        },
+        [cacheKey],
+        {
+          tags: [`topics:${ctx.userId}`, `container:${input.containerId}`],
+          revalidate: 60, // Cache for 60 seconds
+        },
+      )();
     }),
 
   hasTopics: topicProcedure.query(async ({ ctx }) => {

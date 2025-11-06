@@ -3,6 +3,7 @@ import {
   UpdateMessageParamsSchema,
   UpdateMessageRAGParamsSchema,
 } from '@lobechat/types';
+import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/models/message';
@@ -79,17 +80,29 @@ export const messageRouter = router({
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
-      const serverDB = await getServerDB();
 
-      const { useGroup, ...queryParams } = input;
+      // Create cache key from input parameters
+      const cacheKey = `messages:${ctx.userId}:${JSON.stringify(input)}`;
 
-      const messageModel = new MessageModel(serverDB, ctx.userId);
-      const fileService = new FileService(serverDB, ctx.userId);
+      return unstable_cache(
+        async () => {
+          const serverDB = await getServerDB();
+          const { useGroup, ...queryParams } = input;
 
-      return messageModel.query(queryParams, {
-        groupAssistantMessages: useGroup ?? false,
-        postProcessUrl: (path) => fileService.getFullFileUrl(path),
-      });
+          const messageModel = new MessageModel(serverDB, ctx.userId);
+          const fileService = new FileService(serverDB, ctx.userId);
+
+          return messageModel.query(queryParams, {
+            groupAssistantMessages: useGroup ?? false,
+            postProcessUrl: (path) => fileService.getFullFileUrl(path),
+          });
+        },
+        [cacheKey],
+        {
+          tags: [`messages:${ctx.userId}`, `session:${input.sessionId}`, `topic:${input.topicId}`],
+          revalidate: 60, // Cache for 60 seconds
+        },
+      )();
     }),
 
   rankModels: messageProcedure.query(async ({ ctx }) => {

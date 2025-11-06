@@ -1,11 +1,11 @@
 import { memo } from 'react';
 
-import ChatHydration from '../(workspace)/@conversation/features/ChatHydration';
-import ChatInput from '../(workspace)/@conversation/features/ChatInput';
-import ChatList from '../(workspace)/@conversation/features/ChatList';
-import ChatMinimap from '../(workspace)/@conversation/features/ChatMinimap';
-import ThreadHydration from '../(workspace)/@conversation/features/ThreadHydration';
-import ZenModeToast from '../(workspace)/@conversation/features/ZenModeToast';
+import ChatHydration from './conversation/features/ChatHydration';
+import ChatInput from './conversation/features/ChatInput';
+import ChatList from './conversation/features/ChatList';
+import ChatMinimap from './conversation/features/ChatMinimap';
+import ThreadHydration from './conversation/features/ThreadHydration';
+import ZenModeToast from './conversation/features/ZenModeToast';
 
 interface ConversationAreaProps {
   mobile?: boolean;

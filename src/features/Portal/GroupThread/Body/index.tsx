@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ChatInput from '@/app/[variants]/(main)/chat/(workspace)/@conversation/features/ChatInput';
+import ChatInput from '@/app/[variants]/(main)/chat/components/conversation/features/ChatInput';
 import { useChatGroupStore } from '@/store/chatGroup';
 
 import ThreadChatList from './ThreadChatList';

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 
 import { BrandTextLoading } from '@/components/Loading';
 
-const ChatRouter = dynamic(() => import('../ChatRouter'), {
+const ChatRouter = dynamic(() => import('./ChatRouter'), {
   loading: BrandTextLoading,
   ssr: false,
 });

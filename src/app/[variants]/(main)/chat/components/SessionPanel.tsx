@@ -2,12 +2,12 @@ import { Suspense, lazy, memo } from 'react';
 
 import CircleLoading from '@/components/Loading/CircleLoading';
 
-import DesktopLayout from '../@session/_layout/Desktop';
-import MobileLayout from '../@session/_layout/Mobile';
-import SessionHydration from '../@session/features/SessionHydration';
-import SkeletonList from '../@session/features/SkeletonList';
+import DesktopLayout from '../session/layout/Desktop';
+import MobileLayout from '../session/layout/Mobile';
+import SessionHydration from '../session/features/SessionHydration';
+import SkeletonList from '../session/features/SkeletonList';
 
-const SessionListContent = lazy(() => import('../@session/features/SessionListContent'));
+const SessionListContent = lazy(() => import('../session/features/SessionListContent'));
 
 interface SessionPanelProps {
   mobile?: boolean;

@@ -5,11 +5,11 @@ import MainInterfaceTracker from '@/components/Analytics/MainInterfaceTracker';
 import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 
-import ChatHeaderDesktop from '../(workspace)/_layout/Desktop/ChatHeader';
-import Portal from '../(workspace)/_layout/Desktop/Portal';
-import TopicPanel from '../(workspace)/_layout/Desktop/TopicPanel';
-import ChatHeaderMobile from '../(workspace)/_layout/Mobile/ChatHeader';
-import TopicModal from '../(workspace)/_layout/Mobile/TopicModal';
+import ChatHeaderDesktop from '../components/layout/Desktop/ChatHeader';
+import Portal from '../components/layout/Desktop/Portal';
+import TopicPanel from '../components/layout/Desktop/TopicPanel';
+import ChatHeaderMobile from '../components/layout/Mobile/ChatHeader';
+import TopicModal from '../components/layout/Mobile/TopicModal';
 import ConversationArea from './ConversationArea';
 import PortalPanel from './PortalPanel';
 import TopicSidebar from './TopicSidebar';

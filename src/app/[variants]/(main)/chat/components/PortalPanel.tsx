@@ -2,8 +2,8 @@ import { Suspense, lazy, memo } from 'react';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 
-import DesktopLayout from '../(workspace)/@portal/_layout/Desktop';
-import MobileLayout from '../(workspace)/@portal/_layout/Mobile';
+import DesktopLayout from './portal/_layout/Desktop';
+import MobileLayout from './portal/_layout/Mobile';
 
 const PortalBody = lazy(() => import('@/features/Portal/router'));
 

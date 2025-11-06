@@ -1,31 +1,21 @@
 'use client';
 
-import { Suspense, memo } from 'react';
+import { memo } from 'react';
 
-import { isDesktop } from '@/const/version';
-
-import Changelog from '../(workspace)/features/ChangelogModal';
-import TelemetryNotification from '../(workspace)/features/TelemetryNotification';
+import TelemetryNotification from '../components/features/TelemetryNotification';
 import PageTitle from '../features/PageTitle';
 import WorkspaceLayout from './WorkspaceLayout';
 
 interface MainChatPageProps {
   mobile?: boolean;
-  showChangelog?: boolean;
-  hideDocs?: boolean;
 }
 
-const MainChatPage = memo<MainChatPageProps>(({ mobile, showChangelog, hideDocs }) => {
+const MainChatPage = memo<MainChatPageProps>(({ mobile }) => {
   return (
     <>
       <PageTitle />
       <WorkspaceLayout mobile={mobile} />
       <TelemetryNotification mobile={mobile} />
-      {!isDesktop && showChangelog && !hideDocs && !mobile && (
-        <Suspense>
-          <Changelog />
-        </Suspense>
-      )}
     </>
   );
 });
