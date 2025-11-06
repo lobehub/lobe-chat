@@ -6,9 +6,14 @@ import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import MobileContentLayout from '@/components/server/MobileNavLayout';
 import PageTitle from '@/components/PageTitle';
+import SafeSpacing from '@/components/SafeSpacing';
+import { HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
 import AgentSettings from '@/features/AgentSetting/AgentSettings';
+import Footer from '@/features/Setting/Footer';
+import SettingContainer from '@/features/Setting/SettingContainer';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -16,11 +21,14 @@ import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
+import DesktopHeader from '../settings/_layout/Desktop/Header';
+import MobileHeader from '../settings/_layout/Mobile/Header';
+
 interface SettingsPageProps {
   mobile?: boolean;
 }
 
-const SettingsPage = memo<SettingsPageProps>(() => {
+const SettingsPage = memo<SettingsPageProps>(({ mobile = false }) => {
   const { t } = useTranslation('setting');
   const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
   const theme = useTheme();
@@ -38,7 +46,7 @@ const SettingsPage = memo<SettingsPageProps>(() => {
 
   const { isLoading } = useInitAgentConfig();
 
-  return (
+  const content = (
     <>
       <PageTitle title={t('header.sessionWithName', { name: title })} />
       <Tabs
@@ -59,6 +67,24 @@ const SettingsPage = memo<SettingsPageProps>(() => {
         onMetaChange={updateAgentMeta}
         tab={tab}
       />
+    </>
+  );
+
+  if (mobile) {
+    return (
+      <MobileContentLayout header={<MobileHeader />}>
+        {content}
+        <Footer />
+      </MobileContentLayout>
+    );
+  }
+
+  return (
+    <>
+      <DesktopHeader />
+      <SettingContainer addonAfter={<Footer />} addonBefore={<SafeSpacing height={HEADER_HEIGHT} />}>
+        {content}
+      </SettingContainer>
     </>
   );
 });
