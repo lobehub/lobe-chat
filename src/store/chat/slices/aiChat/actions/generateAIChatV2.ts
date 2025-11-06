@@ -231,12 +231,6 @@ export const generateAIChatV2: StateCreator<
     //  update assistant update to make it rerank
     getSessionStoreState().triggerSessionUpdate(get().activeId);
 
-    // Get the current messages to generate AI response
-    // remove the latest assistant message id
-    const baseMessages = displayMessageSelectors
-      .activeDisplayMessages(get())
-      .filter((item) => item.id !== data.assistantMessageId);
-
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
 
     const summaryTitle = async () => {
@@ -251,18 +245,22 @@ export const generateAIChatV2: StateCreator<
       const topic = topicSelectors.getTopicById(data.topicId)(get());
 
       if (topic && !topic.title) {
-        const chats = displayMessageSelectors.getDisplayMessagesByKey(
-          messageMapKey(activeId, topic.id),
-        )(get());
+        const chats = displayMessageSelectors
+          .getDisplayMessagesByKey(messageMapKey(activeId, topic.id))(get())
+          .filter((item) => item.id !== data.assistantMessageId);
+
         await get().summaryTopicTitle(topic.id, chats);
       }
     };
 
     summaryTitle().catch(console.error);
 
+    // Get the current messages to generate AI response
+    const displayMessages = displayMessageSelectors.activeDisplayMessages(get());
+
     try {
       await internal_execAgentRuntime({
-        messages: baseMessages,
+        messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
