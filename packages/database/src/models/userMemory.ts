@@ -1,12 +1,11 @@
-import { and, cosineDistance, desc, eq, inArray, sql } from 'drizzle-orm';
-
 import {
   IdentityTypeEnum,
   LayersEnum,
   MergeStrategyEnum,
   RelationshipEnum,
   TypesEnum,
-} from '@/types/userMemory';
+} from '@lobechat/types';
+import { and, cosineDistance, desc, eq, inArray, sql } from 'drizzle-orm';
 
 import {
   UserMemoryContext,
@@ -53,6 +52,7 @@ const coerceDate = (input: unknown): Date | null => {
     const date = new Date(input);
     return Number.isNaN(date.getTime()) ? null : date;
   }
+
   return null;
 };
 
@@ -567,10 +567,6 @@ export class UserMemoryModel {
         .values(baseValues)
         .returning({ id: userMemories.id });
 
-      if (!userMemoryRecord) {
-        throw new Error('Failed to insert user memory for identity entry');
-      }
-
       const identity = params.identity ?? {};
       const identityValues: typeof userMemoriesIdentities.$inferInsert = {
         description: identity.description ?? null,
@@ -600,10 +596,6 @@ export class UserMemoryModel {
         .insert(userMemoriesIdentities)
         .values(identityValues)
         .returning({ id: userMemoriesIdentities.id });
-
-      if (!identityRecord) {
-        throw new Error('Failed to insert identity entry');
-      }
 
       return {
         identityId: identityRecord.id,
