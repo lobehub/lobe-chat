@@ -91,6 +91,7 @@ export default {
     errors: {
       camera: '打开相机时发生错误',
       file: '选择文件时发生错误',
+      fileSizeExceeded: '文件大小超过 {{size}}MB',
       gallery: '选择照片时发生错误',
       title: '错误',
     },

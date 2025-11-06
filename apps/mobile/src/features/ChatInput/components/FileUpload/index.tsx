@@ -1,5 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { ActionIcon, useTheme } from '@lobehub/ui-rn';
+import { ActionIcon, Toast, useTheme } from '@lobehub/ui-rn';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
@@ -14,7 +14,8 @@ import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { mobileFileStorage, mobileUploadService } from '@/services/upload';
 import { useFileStore } from '@/store/file/store';
 
-const MAX_IMAGE_SIZE = 2048; // Maximum dimension for images
+const MAX_IMAGE_SIZE = 1024; // Maximum dimension for images (single side)
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB in bytes
 
 interface FileUploadProps {
   onPress?: PressableProps['onPress'];
@@ -32,32 +33,60 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
   const canUpload = supportVision || enabledFiles;
 
   /**
-   * Convert HEIC/HEIF to PNG and resize if needed
+   * Process image: resize and compress
+   * @param uri - Image URI
+   * @param mimeType - Original mime type (to determine output format)
+   * @returns Processed image URI and final format
    */
-  const processImage = useCallback(async (uri: string): Promise<string> => {
-    try {
-      // Convert HEIC/HEIF to PNG and resize
-      const result = await ImageManipulator.manipulateAsync(
-        uri,
-        [
-          {
-            resize: {
-              height: MAX_IMAGE_SIZE,
-              width: MAX_IMAGE_SIZE,
+  const processImage = useCallback(
+    async (
+      uri: string,
+      mimeType?: string,
+    ): Promise<{ format: ImageManipulator.SaveFormat; mimeType: string, uri: string; }> => {
+      try {
+        // Determine output format based on input type
+        let outputFormat = ImageManipulator.SaveFormat.JPEG; // Default to JPEG (best for photos)
+        let outputMimeType = 'image/jpeg';
+
+        if (mimeType?.includes('png')) {
+          outputFormat = ImageManipulator.SaveFormat.PNG;
+          outputMimeType = 'image/png';
+        }
+        // HEIC/HEIF -> JPEG (better compression for photos)
+        // JPEG -> JPEG (keep original format)
+
+        const result = await ImageManipulator.manipulateAsync(
+          uri,
+          [
+            {
+              resize: {
+                height: MAX_IMAGE_SIZE,
+                width: MAX_IMAGE_SIZE,
+              },
             },
+          ],
+          {
+            compress: 0.8,
+            format: outputFormat,
           },
-        ],
-        {
-          compress: 0.8,
-          format: ImageManipulator.SaveFormat.PNG,
-        },
-      );
-      return result.uri;
-    } catch (error) {
-      console.error('Failed to process image:', error);
-      return uri;
-    }
-  }, []);
+        );
+
+        return {
+          format: outputFormat,
+          mimeType: outputMimeType,
+          uri: result.uri,
+        };
+      } catch (error) {
+        console.error('Failed to process image:', error);
+        return {
+          format: ImageManipulator.SaveFormat.JPEG,
+          mimeType: mimeType || 'image/jpeg',
+          uri,
+        };
+      }
+    },
+    [],
+  );
 
   /**
    * Process and upload file asynchronously (after adding to list)
@@ -75,7 +104,7 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
         let finalMimeType = mimeType || 'image/jpeg';
         let finalFileName = fileName;
 
-        // Process images (HEIC conversion, resizing)
+        // Process images (HEIC conversion, resizing, compression)
         if (finalMimeType.startsWith('image')) {
           const isHEIC =
             finalMimeType.includes('heic') ||
@@ -85,10 +114,14 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
 
           if (isHEIC || fileSize > 5 * 1024 * 1024) {
             // Convert HEIC or compress large images
-            processedUri = await processImage(uri);
+            const processed = await processImage(uri, finalMimeType);
+            processedUri = processed.uri;
+            finalMimeType = processed.mimeType;
+
+            // Update file extension if format changed
             if (isHEIC) {
-              finalMimeType = 'image/png';
-              finalFileName = fileName.replace(/\.(heic|heif)$/i, '.png');
+              const newExt = processed.mimeType.split('/')[1];
+              finalFileName = fileName.replace(/\.(heic|heif)$/i, `.${newExt}`);
             }
           }
         }
@@ -251,6 +284,13 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
       if (result.canceled) return;
 
       const asset = result.assets[0];
+
+      // Check file size (before compression)
+      if (asset.fileSize && asset.fileSize > MAX_FILE_SIZE) {
+        Toast.error(t('upload.errors.fileSizeExceeded', { size: 100 }));
+        return;
+      }
+
       const fileName = asset.fileName || `photo_${Date.now()}.png`;
       const tempId = `temp_${Date.now()}`;
 
@@ -304,8 +344,20 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
 
       if (result.canceled) return;
 
-      // 1. Create file items and add to list immediately
-      const fileItems = result.assets.map((asset: any) => {
+      // 1. Filter files by size and create file items
+      const validAssets = result.assets.filter((asset: any) => {
+        if (asset.fileSize && asset.fileSize > MAX_FILE_SIZE) {
+          Toast.error(
+            t('upload.errors.fileSizeExceeded', { size: 100 }) + `: ${asset.fileName || 'file'}`,
+          );
+          return false;
+        }
+        return true;
+      });
+
+      if (validAssets.length === 0) return;
+
+      const fileItems = validAssets.map((asset: any) => {
         const fileName =
           asset.fileName || `file_${Date.now()}.${(asset.mimeType || 'image/jpeg').split('/')[1]}`;
         const tempId = `temp_${Date.now()}_${Math.random()}`;
@@ -382,8 +434,20 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
 
       if (result.canceled) return;
 
-      // 1. Create file items and add to list immediately
-      const fileItems = result.assets.map((asset: any) => {
+      // 1. Filter files by size and create file items
+      const validAssets = result.assets.filter((asset: any) => {
+        if (asset.size && asset.size > MAX_FILE_SIZE) {
+          Toast.error(
+            t('upload.errors.fileSizeExceeded', { size: 100 }) + `: ${asset.name || 'file'}`,
+          );
+          return false;
+        }
+        return true;
+      });
+
+      if (validAssets.length === 0) return;
+
+      const fileItems = validAssets.map((asset: any) => {
         const tempId = `temp_${Date.now()}_${Math.random()}`;
 
         return {
