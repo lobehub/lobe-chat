@@ -63,14 +63,6 @@ const useStyles = createStyles(({ css, token }) => ({
     gap: 16px;
     justify-content: left;
   `,
-  hotArea: css`
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-color: transparent;
-    }
-  `,
   icon: css`
     position: absolute;
     z-index: 1;
@@ -78,6 +70,12 @@ const useStyles = createStyles(({ css, token }) => ({
     inset-inline-end: 8px;
 
     flex: none;
+  `,
+  uploadWrapper: css`
+    /* Make the wrapper transparent so hover passes through to the card */
+    & > span {
+      display: block;
+    }
   `,
 }));
 
@@ -158,37 +156,44 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
       </Flexbox>
 
       {/* Upload Files */}
-      <Upload beforeUpload={handleUploadFiles} multiple showUploadList={false}>
-        <div className={styles.hotArea}>
-          <Flexbox className={styles.card} padding={16}>
-            <span className={styles.actionTitle}>{t('home.uploadEntries.files.title')}</span>
-            <div className={styles.glow} style={{ background: theme.geekblue }} />
-            <FileTypeIcon
-              className={styles.icon}
-              color={theme.geekblue}
-              icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
-              size={ICON_SIZE}
-              type={'file'}
-            />
-          </Flexbox>
-        </div>
+      <Upload
+        beforeUpload={handleUploadFiles}
+        className={styles.uploadWrapper}
+        multiple
+        showUploadList={false}
+      >
+        <Flexbox className={styles.card} padding={16}>
+          <span className={styles.actionTitle}>{t('home.uploadEntries.files.title')}</span>
+          <div className={styles.glow} style={{ background: theme.geekblue }} />
+          <FileTypeIcon
+            className={styles.icon}
+            color={theme.geekblue}
+            icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
+            size={ICON_SIZE}
+            type={'file'}
+          />
+        </Flexbox>
       </Upload>
 
       {/* Upload Folder */}
-      <Upload beforeUpload={handleUploadFolder} directory multiple showUploadList={false}>
-        <div className={styles.hotArea}>
-          <Flexbox className={styles.card} padding={16}>
-            <span className={styles.actionTitle}>{t('home.uploadEntries.folder.title')}</span>
-            <div className={styles.glow} style={{ background: theme.green }} />
-            <FileTypeIcon
-              className={styles.icon}
-              color={theme.green}
-              icon={<Icon color={'#fff'} icon={FolderUp} />}
-              size={ICON_SIZE}
-              type={'file'}
-            />
-          </Flexbox>
-        </div>
+      <Upload
+        beforeUpload={handleUploadFolder}
+        className={styles.uploadWrapper}
+        directory
+        multiple
+        showUploadList={false}
+      >
+        <Flexbox className={styles.card} padding={16}>
+          <span className={styles.actionTitle}>{t('home.uploadEntries.folder.title')}</span>
+          <div className={styles.glow} style={{ background: theme.green }} />
+          <FileTypeIcon
+            className={styles.icon}
+            color={theme.green}
+            icon={<Icon color={'#fff'} icon={FolderUp} />}
+            size={ICON_SIZE}
+            type={'file'}
+          />
+        </Flexbox>
       </Upload>
     </div>
   );
