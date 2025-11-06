@@ -22,6 +22,7 @@ import {
 } from '@lobehub/editor/react';
 import { Button, Icon } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
+import { App } from 'antd';
 import { css, cx, useTheme } from 'antd-style';
 import {
   BoldIcon,
@@ -83,6 +84,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const { t } = useTranslation(['file', 'editor']);
     const theme = useTheme();
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
+    const { message } = App.useApp();
 
     const editor = useEditor();
     const editorState = useEditorState(editor);
@@ -380,6 +382,21 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       };
     }, [editor]);
 
+    // Handle Cmd+S / Ctrl+S keyboard shortcut
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+          e.preventDefault();
+          message.info(t('notesEditor.autoSaveMessage'));
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [t]);
+
     const toolbarItems: ChatInputActionsProps['items'] = useMemo(
       () =>
         [
@@ -599,6 +616,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               content={''}
               editor={editor}
               onTextChange={handleContentChange}
+              placeholder={t('notesEditor.editorPlaceholder')}
               plugins={[
                 ReactListPlugin,
                 ReactCodePlugin,

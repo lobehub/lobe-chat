@@ -102,6 +102,8 @@ export default {
   },
   notesEditor: {
     addIcon: '添加图标',
+    autoSaveMessage: '文档会自动保存，无需手动保存',
+    editorPlaceholder: '输入文档内容',
     emojiPicker: {
       tooltip: '选择图标',
     },

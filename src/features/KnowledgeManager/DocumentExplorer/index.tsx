@@ -3,7 +3,6 @@
 import { ActionIcon, SearchBar, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PlusIcon } from 'lucide-react';
-import markdownToTxt from 'markdown-to-txt';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -80,16 +79,6 @@ const useStyles = createStyles(({ css, token }) => ({
     flex: 1;
     padding-block: 4px;
   `,
-  documentPreview: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-
-    font-size: 13px;
-    line-height: 1.6;
-    color: ${token.colorTextSecondary};
-  `,
   documentTitle: css`
     overflow: hidden;
 
@@ -132,32 +121,6 @@ interface DocumentExplorerProps {
   documentId?: string;
   knowledgeBaseId?: string;
 }
-
-// Helper to extract title from markdown content
-const extractTitle = (content: string): string | null => {
-  if (!content) return null;
-
-  // Find first markdown header (# title)
-  const match = content.match(/^#\s+(.+)$/m);
-  return match ? match[1].trim() : null;
-};
-
-// Helper to extract preview text from note content
-const getPreviewText = (item: FileListItem): string => {
-  if (!item.content) return '';
-
-  // Convert markdown to plain text
-  let plainText = markdownToTxt(item.content);
-
-  // Remove the title line if it exists
-  const title = extractTitle(item.content);
-  if (title) {
-    plainText = plainText.replace(title, '').trim();
-  }
-
-  // Limit to first 200 characters for preview
-  return plainText.slice(0, 200);
-};
 
 const updateUrl = (docId: string | null) => {
   const newPath = docId ? `/knowledge/${docId}` : '/knowledge/';
@@ -348,7 +311,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
               data={filteredDocuments}
               itemContent={(_index, document) => {
                 const title = document.name || t('notesList.untitled');
-                const previewText = getPreviewText(document);
                 const emoji = document.metadata?.emoji;
                 const isSelected = selectedDocumentId === document.id;
                 return (
@@ -374,9 +336,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                         {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
                         <div className={styles.documentTitle}>{title}</div>
                       </div>
-                      {!isSelected && previewText && (
-                        <div className={styles.documentPreview}>{previewText}</div>
-                      )}
                     </div>
                   </div>
                 );
