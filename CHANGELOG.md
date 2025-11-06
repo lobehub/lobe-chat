@@ -2,6 +2,173 @@
 
 # Changelog
 
+## [Version 2.0.0-next.32](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.31...v2.0.0-next.32)
+
+<sup>Released on **2025-11-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Should install new version after quit this instance.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Should install new version after quit this instance, closes [#10064](https://github.com/lobehub/lobe-chat/issues/10064) ([9ab77b2](https://github.com/lobehub/lobe-chat/commit/9ab77b2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.31](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.30...v2.0.0-next.31)
+
+<sup>Released on **2025-11-05**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.30](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.29...v2.0.0-next.30)
+
+<sup>Released on **2025-11-05**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Enhance message router with service layer and comprehensive tests.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Enhance message router with service layer and comprehensive tests, closes [#10056](https://github.com/lobehub/lobe-chat/issues/10056) ([62110e0](https://github.com/lobehub/lobe-chat/commit/62110e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.29](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.28...v2.0.0-next.29)
+
+<sup>Released on **2025-11-04**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor chat message model to speed up.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor chat message model to speed up, closes [#10053](https://github.com/lobehub/lobe-chat/issues/10053) ([035994f](https://github.com/lobehub/lobe-chat/commit/035994f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.28](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.27...v2.0.0-next.28)
+
+<sup>Released on **2025-11-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Support install sreamable http mcp server on web.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support install sreamable http mcp server on web, closes [#10044](https://github.com/lobehub/lobe-chat/issues/10044) [#9916](https://github.com/lobehub/lobe-chat/issues/9916) ([85454c5](https://github.com/lobehub/lobe-chat/commit/85454c5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.27](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.26...v2.0.0-next.27)
+
+<sup>Released on **2025-11-04**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor services to a more clean structure.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor services to a more clean structure, closes [#10050](https://github.com/lobehub/lobe-chat/issues/10050) ([de61dfa](https://github.com/lobehub/lobe-chat/commit/de61dfa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.26](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.25...v2.0.0-next.26)
+
+<sup>Released on **2025-11-04**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add settings (jsonb) column to `ai_models` table.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add settings (jsonb) column to `ai_models` table, closes [#10042](https://github.com/lobehub/lobe-chat/issues/10042) ([7e1dd02](https://github.com/lobehub/lobe-chat/commit/7e1dd02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.25](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.24...v2.0.0-next.25)
 
 <sup>Released on **2025-11-04**</sup>

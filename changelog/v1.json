@@ -1,6 +1,53 @@
 [
   {
     "children": {
+      "fixes": ["Should install new version after quit this instance."]
+    },
+    "date": "2025-11-05",
+    "version": "2.0.0-next.32"
+  },
+  {
+    "children": {},
+    "date": "2025-11-05",
+    "version": "2.0.0-next.31"
+  },
+  {
+    "children": {
+      "improvements": ["Enhance message router with service layer and comprehensive tests."]
+    },
+    "date": "2025-11-05",
+    "version": "2.0.0-next.30"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor chat message model to speed up."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.29"
+  },
+  {
+    "children": {
+      "features": ["Support install sreamable http mcp server on web."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.28"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor services to a more clean structure."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.27"
+  },
+  {
+    "children": {
+      "improvements": ["Add settings (jsonb) column to ai_models table."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.26"
+  },
+  {
+    "children": {
       "features": ["Display assistant message in group."]
     },
     "date": "2025-11-04",

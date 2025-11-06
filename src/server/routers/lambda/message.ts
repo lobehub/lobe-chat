@@ -1,5 +1,4 @@
 import {
-  CreateMessageParamsSchema,
   CreateNewMessageParamsSchema,
   UpdateMessageParamsSchema,
   UpdateMessageRAGParamsSchema,
@@ -12,6 +11,7 @@ import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
+import { MessageService } from '@/server/services/message';
 
 const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -20,6 +20,7 @@ const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
     ctx: {
       fileService: new FileService(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      messageService: new MessageService(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -53,20 +54,11 @@ export const messageRouter = router({
       return ctx.messageModel.countWords(input);
     }),
 
-  createMessage: messageProcedure
-    .input(CreateMessageParamsSchema)
-    .mutation(async ({ input, ctx }) => {
-      const data = await ctx.messageModel.create(input as any);
-
-      return data.id;
-    }),
-
   createNewMessage: messageProcedure
-    .input(CreateNewMessageParamsSchema)
+    .input(CreateNewMessageParamsSchema.extend({ useGroup: z.boolean().optional() }))
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.createNewMessage(input as any, {
-        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-      });
+      const { useGroup, ...params } = input;
+      return ctx.messageService.createNewMessage(params as any, { useGroup });
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {
@@ -109,9 +101,17 @@ export const messageRouter = router({
   }),
 
   removeMessage: messageProcedure
-    .input(z.object({ id: z.string() }))
+    .input(
+      z.object({
+        id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessage(input.id);
+      const { id, ...options } = input;
+      return ctx.messageService.removeMessage(id, options);
     }),
 
   removeMessageQuery: messageProcedure
@@ -121,9 +121,17 @@ export const messageRouter = router({
     }),
 
   removeMessages: messageProcedure
-    .input(z.object({ ids: z.array(z.string()) }))
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessages(input.ids);
+      const { ids, ...options } = input;
+      return ctx.messageService.removeMessages(ids, options);
     }),
 
   removeMessagesByAssistant: messageProcedure
@@ -165,15 +173,13 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
         value: UpdateMessageParamsSchema,
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.update(input.id, input.value as any, {
-        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-        sessionId: input.sessionId,
-        topicId: input.topicId,
-      });
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessage(id, value as any, options);
     }),
 
   updateMessagePlugin: messageProcedure
@@ -188,9 +194,16 @@ export const messageRouter = router({
     }),
 
   updateMessageRAG: messageProcedure
-    .input(UpdateMessageRAGParamsSchema)
+    .input(
+      UpdateMessageRAGParamsSchema.extend({
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      await ctx.messageModel.updateMessageRAG(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessageRAG(id, value, options);
     }),
 
   updateMetadata: messageProcedure
@@ -208,22 +221,30 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough().nullable(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
+      const { id, value, ...options } = input;
+      return ctx.messageService.updatePluginError(id, value, options);
     }),
 
   updatePluginState: messageProcedure
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updatePluginState(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updatePluginState(id, value, options);
     }),
 
   updateTTS: messageProcedure

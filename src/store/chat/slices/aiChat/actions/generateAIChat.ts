@@ -220,9 +220,10 @@ export const generateAIChat: StateCreator<
       ragQueryId,
     };
 
-    const assistantId = await get().internal_createMessage(assistantMessage);
+    const result = await get().internal_createMessage(assistantMessage);
 
-    if (!assistantId) return;
+    if (!result) return;
+    const assistantId = result.id;
 
     // 3. place a search with the search working model if this model is not support tool use
     const aiInfraStoreState = getAiInfraStoreState();
