@@ -77,5 +77,30 @@
   },
   "share": "Paylaş",
   "stop": "Durdur",
-  "thinking": "Düşünüyor..."
+  "thinking": "Düşünüyor...",
+  "upload": {
+    "actions": {
+      "camera": "Fotoğraf Çek",
+      "cancel": "İptal",
+      "chooseFile": "Dosya Seç",
+      "chooseFromFile": "Dosyadan Seç",
+      "chooseFromGallery": "Galeriden Seç",
+      "title": "Dosya Yükle"
+    },
+    "errors": {
+      "camera": "Kamera açılırken bir hata oluştu",
+      "file": "Dosya seçilirken bir hata oluştu",
+      "gallery": "Fotoğraf seçilirken bir hata oluştu",
+      "title": "Hata"
+    },
+    "permissions": {
+      "camera": "Fotoğraf çekmek için kamera erişim izni gerekli",
+      "gallery": "Resim yüklemek için galeri erişim izni gerekli",
+      "title": "İzin Gerekli"
+    },
+    "status": {
+      "error": "Yükleme başarısız",
+      "pending": "Bekleniyor..."
+    }
+  }
 }

@@ -77,5 +77,30 @@
   },
   "share": "공유",
   "stop": "중지",
-  "thinking": "생각 중..."
+  "thinking": "생각 중...",
+  "upload": {
+    "actions": {
+      "camera": "사진 찍기",
+      "cancel": "취소",
+      "chooseFile": "파일 선택",
+      "chooseFromFile": "파일에서 선택",
+      "chooseFromGallery": "갤러리에서 선택",
+      "title": "파일 업로드"
+    },
+    "errors": {
+      "camera": "카메라를 여는 중 오류가 발생했습니다",
+      "file": "파일을 선택하는 중 오류가 발생했습니다",
+      "gallery": "사진을 선택하는 중 오류가 발생했습니다",
+      "title": "오류"
+    },
+    "permissions": {
+      "camera": "사진을 찍으려면 카메라 접근 권한이 필요합니다",
+      "gallery": "이미지를 업로드하려면 갤러리 접근 권한이 필요합니다",
+      "title": "권한 필요"
+    },
+    "status": {
+      "error": "업로드 실패",
+      "pending": "대기 중..."
+    }
+  }
 }

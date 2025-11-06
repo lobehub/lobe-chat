@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { fileSelectors } from '@/store/file/selectors';
+import { useFileStore } from '@/store/file/store';
 import { useSessionStore } from '@/store/session';
 
 import { useSendMessage } from './useSendMessage';
@@ -23,6 +25,10 @@ export function useChat() {
   const messages = useChatStore((s) => chatSelectors.mainDisplayChats(s));
   const isLoading = useChatStore((s) => chatSelectors.isAIGenerating(s)); // Separate loading state from canSend
 
+  // File Store state - check if there are successfully uploaded files (aligned with web)
+  const uploadFileList = useFileStore(fileSelectors.getChatUploadFileList);
+  const hasSuccessFiles = uploadFileList.some((f) => f.status === 'success');
+
   const handleInputChange = useCallback(
     (text: string) => {
       updateInputMessage(text);
@@ -34,7 +40,8 @@ export function useChat() {
     (e?: any) => {
       e?.preventDefault();
 
-      if (!input.trim() || !canSend) return;
+      // Can send if there's text OR files (aligned with web)
+      if ((!input.trim() && !hasSuccessFiles) || !canSend) return;
 
       console.log('Sending message:', input.trim());
 
@@ -47,7 +54,7 @@ export function useChat() {
         throw error;
       }
     },
-    [input, canSend, sendMessage],
+    [input, hasSuccessFiles, canSend, sendMessage],
   );
 
   const handleRegenerate = useCallback(
@@ -79,7 +86,8 @@ export function useChat() {
     // Session info
     activeId,
 
-    canSend: !!input.trim(),
+    // Can send if there's text OR files (aligned with web)
+    canSend: !!input.trim() || hasSuccessFiles,
 
     // Actions
     clearMessages: handleClearMessages,

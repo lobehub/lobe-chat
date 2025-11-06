@@ -77,5 +77,30 @@
   },
   "share": "分享",
   "stop": "停止",
-  "thinking": "思考中..."
+  "thinking": "思考中...",
+  "upload": {
+    "actions": {
+      "camera": "拍照",
+      "cancel": "取消",
+      "chooseFile": "選擇檔案",
+      "chooseFromFile": "從檔案選擇",
+      "chooseFromGallery": "從相簿選擇",
+      "title": "上傳檔案"
+    },
+    "errors": {
+      "camera": "開啟相機時發生錯誤",
+      "file": "選擇檔案時發生錯誤",
+      "gallery": "選擇照片時發生錯誤",
+      "title": "錯誤"
+    },
+    "permissions": {
+      "camera": "需要相機權限才能拍照",
+      "gallery": "需要相簿權限才能上傳圖片",
+      "title": "需要權限"
+    },
+    "status": {
+      "error": "上傳失敗",
+      "pending": "等待中..."
+    }
+  }
 }

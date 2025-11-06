@@ -3,7 +3,9 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { DEFAULT_AGENT_CHAT_CONFIG } from '@lobechat/const';
 import {
+  ChatImageItem,
   ChatTopic,
+  ChatVideoItem,
   SendMessageParams,
   SendMessageServerResponse,
   UIChatMessage,
@@ -18,6 +20,7 @@ import { aiChatService } from '@/services/aiChat';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import type { ChatStore } from '@/store/chat/store';
+import { useFileStore } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -110,11 +113,24 @@ export const generateAIChatV2: StateCreator<
       !!chatConfig.enableAutoCreateTopic &&
       messages.length + 2 >= autoCreateThreshold;
 
-    // TODO: MOBILE 暂不支持临时媒体预览
-    // 构造服务端模式临时消息的本地媒体预览（优先使用 S3 URL）
-    // const filesInStore = getFileStoreState().chatUploadFileList;
-    // const tempImages: ChatImageItem[] = ...
-    // const tempVideos: ChatVideoItem[] = ...
+    // 构造服务端模式临时消息的本地媒体预览（优先使用服务端返回的 URL）
+    const filesInStore = useFileStore.getState().chatUploadFileList as any[]; // Type cast for mobile extended properties
+    const tempImages: ChatImageItem[] = filesInStore
+      .filter((f) => f.fileType?.startsWith('image'))
+      .map((f) => ({
+        id: f.id,
+        // 优先使用服务端返回的 URL，fallback 到 base64（对齐 web）
+        url: f.fileUrl || f.base64Url || f.previewUrl || '',
+        alt: f.name || f.id,
+      }));
+    const tempVideos: ChatVideoItem[] = filesInStore
+      .filter((f) => f.fileType?.startsWith('video'))
+      .map((f) => ({
+        id: f.id,
+        // 优先使用服务端返回的 URL，fallback 到 base64（对齐 web）
+        url: f.fileUrl || f.base64Url || f.previewUrl || '',
+        alt: f.name || f.id,
+      }));
 
     // use optimistic update to avoid the slow waiting
     const tempId = get().internal_createTmpMessage({
@@ -126,9 +142,8 @@ export const generateAIChatV2: StateCreator<
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       threadId: activeThreadId,
-      // TODO: MOBILE 暂不支持临时媒体预览
-      // imageList: tempImages.length > 0 ? tempImages : undefined,
-      // videoList: tempVideos.length > 0 ? tempVideos : undefined,
+      imageList: tempImages.length > 0 ? tempImages : undefined,
+      videoList: tempVideos.length > 0 ? tempVideos : undefined,
     });
     get().internal_toggleMessageLoading(true, tempId);
 

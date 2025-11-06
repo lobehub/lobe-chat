@@ -77,5 +77,30 @@
   },
   "share": "Teilen",
   "stop": "Stopp",
-  "thinking": "Denke nach..."
+  "thinking": "Denke nach...",
+  "upload": {
+    "actions": {
+      "camera": "Foto aufnehmen",
+      "cancel": "Abbrechen",
+      "chooseFile": "Datei auswählen",
+      "chooseFromFile": "Aus Datei auswählen",
+      "chooseFromGallery": "Aus Galerie auswählen",
+      "title": "Datei hochladen"
+    },
+    "errors": {
+      "camera": "Fehler beim Öffnen der Kamera",
+      "file": "Fehler beim Auswählen der Datei",
+      "gallery": "Fehler beim Auswählen des Fotos",
+      "title": "Fehler"
+    },
+    "permissions": {
+      "camera": "Kamerazugriff erforderlich, um ein Foto aufzunehmen",
+      "gallery": "Zugriff auf die Galerie erforderlich, um ein Bild hochzuladen",
+      "title": "Berechtigungen erforderlich"
+    },
+    "status": {
+      "error": "Hochladen fehlgeschlagen",
+      "pending": "Wird verarbeitet..."
+    }
+  }
 }

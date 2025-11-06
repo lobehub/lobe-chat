@@ -20,7 +20,12 @@ const VideoFileListViewer = memo<VideoFileListViewerProps>(({ items }) => {
   if (!items || items.length === 0) return null;
 
   return (
-    <Flexbox gap={8}>
+    <Flexbox
+      gap={8}
+      style={{
+        marginBottom: 8,
+      }}
+    >
       {items.map((item) => (
         <Video key={item.id} src={item.url} width={'100%'} />
       ))}

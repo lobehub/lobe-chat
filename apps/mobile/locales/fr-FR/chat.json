@@ -77,5 +77,30 @@
   },
   "share": "Partager",
   "stop": "Arrêter",
-  "thinking": "Réflexion en cours..."
+  "thinking": "Réflexion en cours...",
+  "upload": {
+    "actions": {
+      "camera": "Prendre une photo",
+      "cancel": "Annuler",
+      "chooseFile": "Choisir un fichier",
+      "chooseFromFile": "Choisir depuis les fichiers",
+      "chooseFromGallery": "Choisir depuis la galerie",
+      "title": "Téléverser un fichier"
+    },
+    "errors": {
+      "camera": "Une erreur est survenue lors de l'ouverture de la caméra",
+      "file": "Une erreur est survenue lors de la sélection du fichier",
+      "gallery": "Une erreur est survenue lors de la sélection de la photo",
+      "title": "Erreur"
+    },
+    "permissions": {
+      "camera": "L'accès à la caméra est requis pour prendre une photo",
+      "gallery": "L'accès à la galerie est requis pour téléverser une image",
+      "title": "Autorisations requises"
+    },
+    "status": {
+      "error": "Échec du téléversement",
+      "pending": "En attente..."
+    }
+  }
 }

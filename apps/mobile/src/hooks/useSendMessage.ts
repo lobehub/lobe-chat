@@ -2,6 +2,8 @@ import { useCallback, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { fileSelectors } from '@/store/file/selectors';
+import { useFileStore } from '@/store/file/store';
 
 export type UseSendMessageParams = {
   isWelcomeQuestion?: boolean;
@@ -14,8 +16,8 @@ export const useSendMessage = () => {
     s.updateInputMessage,
   ]);
 
-  // Mobile端暂时没有文件上传功能，所以isUploadingFiles始终为false
-  const isUploadingFiles = false;
+  // Get file upload state from file store (aligned with web)
+  const isUploadingFiles = useFileStore(fileSelectors.isUploadingFiles);
   const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
   const isAIGenerating = useChatStore(chatSelectors.isAIGenerating);
 
@@ -33,11 +35,16 @@ export const useSendMessage = () => {
         useChatStore.getState(),
       );
 
+      // Get file list from file store (aligned with web)
+      const fileStore = useFileStore.getState();
+      const isUploadingFiles = fileSelectors.isUploadingFiles(fileStore);
+
       const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
       if (!canSend) return;
 
-      // Mobile端暂时没有文件列表，传空数组
-      const fileList: any[] = [];
+      // Get uploaded files (only send successfully uploaded files)
+      const uploadFileList = fileSelectors.getChatUploadFileList(fileStore);
+      const fileList = uploadFileList.filter((f) => f.status === 'success');
 
       // if there is no message and no files, then we should not send the message
       if (!store.inputMessage && fileList.length === 0) return;
@@ -48,9 +55,11 @@ export const useSendMessage = () => {
         ...params,
       });
 
+      // Clear input and file list after sending (aligned with web)
       updateInputMessage('');
+      fileStore.clearChatUploadFileList();
     },
-    [sendMessage, updateInputMessage, isUploadingFiles],
+    [sendMessage, updateInputMessage],
   );
 
   return useMemo(() => ({ canSend, generating, send }), [canSend, generating, send]);

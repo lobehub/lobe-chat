@@ -73,6 +73,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ['expo-build-properties', { ios: { deploymentTarget: '16.4' } }],
     'expo-router',
     'expo-video',
+    'expo-image-picker',
+    [
+      'expo-document-picker',
+      {
+        iCloudContainerEnvironment: 'Production',
+      },
+    ],
     ['react-native-edge-to-edge', { android: { enforceNavigationBarContrast: false } }],
     [
       'expo-notifications',

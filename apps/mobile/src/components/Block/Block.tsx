@@ -134,6 +134,7 @@ const Block = memo<BlockProps>(
               }
             : undefined
         }
+        pressEffect={pressEffect}
         style={({ hovered, pressed }) => [
           variants({
             active,

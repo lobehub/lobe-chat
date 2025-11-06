@@ -77,5 +77,30 @@
   },
   "share": "Delen",
   "stop": "Stoppen",
-  "thinking": "Bezig met nadenken..."
+  "thinking": "Bezig met nadenken...",
+  "upload": {
+    "actions": {
+      "camera": "Foto maken",
+      "cancel": "Annuleren",
+      "chooseFile": "Bestand kiezen",
+      "chooseFromFile": "Kies uit bestanden",
+      "chooseFromGallery": "Kies uit galerij",
+      "title": "Bestand uploaden"
+    },
+    "errors": {
+      "camera": "Fout bij het openen van de camera",
+      "file": "Fout bij het kiezen van een bestand",
+      "gallery": "Fout bij het kiezen van een foto",
+      "title": "Fout"
+    },
+    "permissions": {
+      "camera": "Camera-toestemming is vereist om een foto te maken",
+      "gallery": "Toestemming voor toegang tot de galerij is vereist om een afbeelding te uploaden",
+      "title": "Toestemming vereist"
+    },
+    "status": {
+      "error": "Upload mislukt",
+      "pending": "Bezig met wachten..."
+    }
+  }
 }

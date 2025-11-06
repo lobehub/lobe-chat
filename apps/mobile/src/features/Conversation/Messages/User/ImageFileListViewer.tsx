@@ -55,7 +55,16 @@ const ImageFileListViewer = memo<ImageFileListViewerProps>(({ items }) => {
   // 单张图片：宽度撑满，高度自适应
   if (gridConfig.isSingle) {
     const item = items[0];
-    return <Image key={item.id} maxWidth={gridConfig.imageSize} source={{ uri: item.url }} />;
+    return (
+      <Image
+        key={item.id}
+        maxWidth={gridConfig.imageSize}
+        source={{ uri: item.url }}
+        style={{
+          marginBottom: 8,
+        }}
+      />
+    );
   }
 
   // 多张图片：网格布局
@@ -65,9 +74,9 @@ const ImageFileListViewer = memo<ImageFileListViewerProps>(({ items }) => {
         gap={gridConfig.gap}
         horizontal
         style={{
-          maxWidth:
-            gridConfig.imageSize * gridConfig.perRow + gridConfig.gap * (gridConfig.perRow - 1),
+          marginBottom: 8,
         }}
+        width={gridConfig.imageSize * gridConfig.perRow + gridConfig.gap * (gridConfig.perRow - 1)}
         wrap="wrap"
       >
         {items.map((item) => (

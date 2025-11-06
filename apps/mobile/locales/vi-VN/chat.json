@@ -77,5 +77,30 @@
   },
   "share": "Chia sẻ",
   "stop": "Dừng",
-  "thinking": "Đang suy nghĩ..."
+  "thinking": "Đang suy nghĩ...",
+  "upload": {
+    "actions": {
+      "camera": "Chụp ảnh",
+      "cancel": "Hủy",
+      "chooseFile": "Chọn tệp",
+      "chooseFromFile": "Chọn từ tệp",
+      "chooseFromGallery": "Chọn từ thư viện",
+      "title": "Tải lên tệp"
+    },
+    "errors": {
+      "camera": "Đã xảy ra lỗi khi mở máy ảnh",
+      "file": "Đã xảy ra lỗi khi chọn tệp",
+      "gallery": "Đã xảy ra lỗi khi chọn ảnh",
+      "title": "Lỗi"
+    },
+    "permissions": {
+      "camera": "Cần quyền truy cập máy ảnh để chụp ảnh",
+      "gallery": "Cần quyền truy cập thư viện để tải ảnh lên",
+      "title": "Yêu cầu quyền"
+    },
+    "status": {
+      "error": "Tải lên thất bại",
+      "pending": "Đang chờ..."
+    }
+  }
 }

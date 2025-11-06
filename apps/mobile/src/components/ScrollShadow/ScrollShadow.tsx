@@ -166,6 +166,8 @@ const ScrollShadowInner = (props: ScrollShadowProps, forwardedRef: any) => {
         removeClippedSubviews={true}
         style={style}
         {...scrollViewProps}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       >
         {children}
       </ScrollView>
@@ -189,6 +191,8 @@ const ScrollShadowInner = (props: ScrollShadowProps, forwardedRef: any) => {
         nestedScrollEnabled={true}
         ref={mergeRefs([scrollRef, forwardedRef])}
         {...scrollViewProps}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         style={styles.scrollView}
       >
         {children}

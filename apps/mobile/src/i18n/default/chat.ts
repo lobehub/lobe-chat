@@ -79,4 +79,29 @@ export default {
   share: '分享',
   stop: '停止',
   thinking: '思考中...',
+  upload: {
+    actions: {
+      camera: '拍照',
+      cancel: '取消',
+      chooseFile: '选择文件',
+      chooseFromFile: '从文件选择',
+      chooseFromGallery: '从相册选择',
+      title: '上传文件',
+    },
+    errors: {
+      camera: '打开相机时发生错误',
+      file: '选择文件时发生错误',
+      gallery: '选择照片时发生错误',
+      title: '错误',
+    },
+    permissions: {
+      camera: '需要访问相机权限才能拍照',
+      gallery: '需要访问相册权限才能上传图片',
+      title: '需要权限',
+    },
+    status: {
+      error: '上传失败',
+      pending: '等待中...',
+    },
+  },
 };

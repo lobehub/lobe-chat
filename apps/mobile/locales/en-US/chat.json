@@ -77,5 +77,30 @@
   },
   "share": "Share",
   "stop": "Stop",
-  "thinking": "Thinking..."
+  "thinking": "Thinking...",
+  "upload": {
+    "actions": {
+      "camera": "Take Photo",
+      "cancel": "Cancel",
+      "chooseFile": "Choose File",
+      "chooseFromFile": "Select from Files",
+      "chooseFromGallery": "Select from Gallery",
+      "title": "Upload File"
+    },
+    "errors": {
+      "camera": "An error occurred while opening the camera",
+      "file": "An error occurred while selecting the file",
+      "gallery": "An error occurred while selecting the photo",
+      "title": "Error"
+    },
+    "permissions": {
+      "camera": "Camera access is required to take photos",
+      "gallery": "Gallery access is required to upload images",
+      "title": "Permission Required"
+    },
+    "status": {
+      "error": "Upload Failed",
+      "pending": "Pending..."
+    }
+  }
 }

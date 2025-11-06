@@ -77,5 +77,30 @@
   },
   "share": "Condividi",
   "stop": "Interrompi",
-  "thinking": "Sto pensando..."
+  "thinking": "Sto pensando...",
+  "upload": {
+    "actions": {
+      "camera": "Scatta foto",
+      "cancel": "Annulla",
+      "chooseFile": "Scegli file",
+      "chooseFromFile": "Scegli da file",
+      "chooseFromGallery": "Scegli dalla galleria",
+      "title": "Carica file"
+    },
+    "errors": {
+      "camera": "Si è verificato un errore durante l'apertura della fotocamera",
+      "file": "Si è verificato un errore durante la selezione del file",
+      "gallery": "Si è verificato un errore durante la selezione della foto",
+      "title": "Errore"
+    },
+    "permissions": {
+      "camera": "È necessario l'accesso alla fotocamera per scattare foto",
+      "gallery": "È necessario l'accesso alla galleria per caricare immagini",
+      "title": "Autorizzazioni richieste"
+    },
+    "status": {
+      "error": "Caricamento fallito",
+      "pending": "In attesa..."
+    }
+  }
 }

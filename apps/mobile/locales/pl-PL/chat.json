@@ -77,5 +77,30 @@
   },
   "share": "Udostępnij",
   "stop": "Zatrzymaj",
-  "thinking": "Myślę..."
+  "thinking": "Myślę...",
+  "upload": {
+    "actions": {
+      "camera": "Zrób zdjęcie",
+      "cancel": "Anuluj",
+      "chooseFile": "Wybierz plik",
+      "chooseFromFile": "Wybierz z plików",
+      "chooseFromGallery": "Wybierz z galerii",
+      "title": "Prześlij plik"
+    },
+    "errors": {
+      "camera": "Wystąpił błąd podczas otwierania aparatu",
+      "file": "Wystąpił błąd podczas wybierania pliku",
+      "gallery": "Wystąpił błąd podczas wybierania zdjęcia",
+      "title": "Błąd"
+    },
+    "permissions": {
+      "camera": "Dostęp do aparatu jest wymagany, aby zrobić zdjęcie",
+      "gallery": "Dostęp do galerii jest wymagany, aby przesłać zdjęcie",
+      "title": "Wymagane uprawnienia"
+    },
+    "status": {
+      "error": "Przesyłanie nie powiodło się",
+      "pending": "Oczekiwanie..."
+    }
+  }
 }

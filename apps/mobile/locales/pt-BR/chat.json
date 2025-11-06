@@ -77,5 +77,30 @@
   },
   "share": "Compartilhar",
   "stop": "Parar",
-  "thinking": "Pensando..."
+  "thinking": "Pensando...",
+  "upload": {
+    "actions": {
+      "camera": "Tirar foto",
+      "cancel": "Cancelar",
+      "chooseFile": "Selecionar arquivo",
+      "chooseFromFile": "Escolher de arquivos",
+      "chooseFromGallery": "Escolher da galeria",
+      "title": "Enviar arquivo"
+    },
+    "errors": {
+      "camera": "Ocorreu um erro ao abrir a câmera",
+      "file": "Ocorreu um erro ao selecionar o arquivo",
+      "gallery": "Ocorreu um erro ao selecionar a foto",
+      "title": "Erro"
+    },
+    "permissions": {
+      "camera": "Permissão da câmera é necessária para tirar fotos",
+      "gallery": "Permissão da galeria é necessária para enviar imagens",
+      "title": "Permissões necessárias"
+    },
+    "status": {
+      "error": "Falha no envio",
+      "pending": "Aguardando..."
+    }
+  }
 }

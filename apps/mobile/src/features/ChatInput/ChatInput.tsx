@@ -1,11 +1,13 @@
 import { Block, Flexbox, TextArea } from '@lobehub/ui-rn';
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TextInput, ViewStyle } from 'react-native';
+import { type PressableProps, TextInput, ViewStyle } from 'react-native';
 
 import { useChat } from '@/hooks/useChat';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 
+import FilePreview from './components/FilePreview';
+import FileUpload from './components/FileUpload';
 import ModelSwitch from './components/ModelSwitch';
 import SendButton from './components/SendButton';
 
@@ -29,14 +31,23 @@ const ChatInput = memo<ChatInputProps>(({ style }) => {
     handleSubmit();
   };
 
+  const handleActionButtonPress: PressableProps['onPress'] = (e) => {
+    e.stopPropagation();
+    textAreaRef.current?.blur();
+  };
+
   return (
     <Flexbox height={'auto'} paddingInline={16} style={[{ paddingBottom: 16 }, style]}>
+      {/* File Preview - show uploaded files */}
+      <FilePreview />
+
+      {/* Input Container */}
       <Block
         borderRadius={24}
         glass
         height={'auto'}
         onPress={handleContainerPress}
-        pressEffect
+        pressEffect={false}
         variant={'outlined'}
       >
         <TextArea
@@ -64,11 +75,8 @@ const ChatInput = memo<ChatInputProps>(({ style }) => {
           style={{ paddingBottom: 8 }}
         >
           <Flexbox align={'center'} gap={8} horizontal justify={'flex-start'}>
-            <ModelSwitch
-              onPress={() => {
-                textAreaRef.current?.blur();
-              }}
-            />
+            <ModelSwitch onPress={handleActionButtonPress} />
+            <FileUpload onPress={handleActionButtonPress} />
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal justify={'flex-end'}>
             <SendButton onSend={handleSend} />

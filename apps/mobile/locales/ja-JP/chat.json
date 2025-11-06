@@ -77,5 +77,30 @@
   },
   "share": "共有",
   "stop": "停止",
-  "thinking": "考え中..."
+  "thinking": "考え中...",
+  "upload": {
+    "actions": {
+      "camera": "写真を撮る",
+      "cancel": "キャンセル",
+      "chooseFile": "ファイルを選択",
+      "chooseFromFile": "ファイルから選択",
+      "chooseFromGallery": "ギャラリーから選択",
+      "title": "ファイルをアップロード"
+    },
+    "errors": {
+      "camera": "カメラを起動中にエラーが発生しました",
+      "file": "ファイル選択中にエラーが発生しました",
+      "gallery": "写真選択中にエラーが発生しました",
+      "title": "エラー"
+    },
+    "permissions": {
+      "camera": "写真を撮るにはカメラへのアクセス許可が必要です",
+      "gallery": "画像をアップロードするにはギャラリーへのアクセス許可が必要です",
+      "title": "アクセス許可が必要です"
+    },
+    "status": {
+      "error": "アップロードに失敗しました",
+      "pending": "待機中..."
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { ModelIcon } from '@lobehub/icons-rn';
 import { memo, useCallback, useState } from 'react';
-import { TouchableOpacity, ViewStyle } from 'react-native';
+import { type PressableProps, TouchableOpacity, ViewStyle } from 'react-native';
 
 import { ICON_SIZE_LARGE } from '@/_const/common';
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
@@ -8,7 +8,7 @@ import { useCurrentAgent } from '@/hooks/useCurrentAgent';
 import ModelSelectModal from './ModelSelectModal';
 
 interface ModelSwitchProps {
-  onPress?: () => void;
+  onPress?: PressableProps['onPress'];
   style?: ViewStyle;
 }
 
@@ -21,9 +21,8 @@ const ModelSwitch = memo<ModelSwitchProps>(({ onPress, style }) => {
   const { currentModel } = useCurrentAgent();
 
   const handleOpenModal = useCallback(() => {
-    onPress?.();
     setModalVisible(true);
-  }, [onPress]);
+  }, []);
 
   const handleCloseModal = useCallback(() => {
     setModalVisible(false);
@@ -31,7 +30,12 @@ const ModelSwitch = memo<ModelSwitchProps>(({ onPress, style }) => {
 
   return (
     <>
-      <TouchableOpacity onPress={handleOpenModal}>
+      <TouchableOpacity
+        onPress={(e) => {
+          onPress?.(e);
+          handleOpenModal();
+        }}
+      >
         <ModelIcon model={currentModel} size={ICON_SIZE_LARGE} style={style} />
       </TouchableOpacity>
 

@@ -30,6 +30,7 @@ const Flexbox = memo<FlexboxProps>(
     pressableStyle,
     glass,
     glassColor = 'transparent',
+    pressEffect,
     ...rest
   }) => {
     const { isDarkMode } = useThemeMode();
@@ -111,7 +112,7 @@ const Flexbox = memo<FlexboxProps>(
             <LiquidGlassView
               colorScheme={isDarkMode ? 'dark' : 'light'}
               effect={'regular'}
-              interactive
+              interactive={pressEffect}
               style={[
                 styles,
                 typeof style === 'function' ? style({ hovered: false, pressed: false }) : style,
