@@ -253,6 +253,8 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
 
       setSaveStatus('saving');
 
+      console.log('emoji', currentEmoji);
+
       try {
         if (currentDocId && !currentDocId.startsWith('temp-document-')) {
           // Update existing document with optimistic update (including metadata for emoji)
@@ -545,7 +547,10 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               <Flexbox style={{ marginBottom: 12 }}>
                 <Button
                   icon={<Icon icon={SmilePlus} />}
-                  onClick={() => setShowEmojiPicker(true)}
+                  onClick={() => {
+                    setCurrentEmoji('📄');
+                    setShowEmojiPicker(true);
+                  }}
                   size="small"
                   style={{
                     opacity: isHoveringTitle && !currentEmoji && !showEmojiPicker ? 1 : 0,
