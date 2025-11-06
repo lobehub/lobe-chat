@@ -1,6 +1,5 @@
 import { DEFAULT_AGENT_CONFIG, INBOX_SESSION_ID } from '@lobechat/const';
 import { KnowledgeItem, KnowledgeType } from '@lobechat/types';
-import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 
 import { AgentModel } from '@/database/models/agent';
@@ -85,36 +84,25 @@ export const agentRouter = router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      const cacheKey = `agentConfig:${ctx.userId}:${input.sessionId}`;
+      if (input.sessionId === INBOX_SESSION_ID) {
+        const item = await ctx.sessionModel.findByIdOrSlug(INBOX_SESSION_ID);
+        // if there is no session for user, create one
+        if (!item) {
+          // if there is no user, return default config
+          const user = await UserModel.findById(ctx.serverDB, ctx.userId);
+          if (!user) return DEFAULT_AGENT_CONFIG;
 
-      return unstable_cache(
-        async () => {
-          if (input.sessionId === INBOX_SESSION_ID) {
-            const item = await ctx.sessionModel.findByIdOrSlug(INBOX_SESSION_ID);
-            // if there is no session for user, create one
-            if (!item) {
-              // if there is no user, return default config
-              const user = await UserModel.findById(ctx.serverDB, ctx.userId);
-              if (!user) return DEFAULT_AGENT_CONFIG;
+          const res = await ctx.agentService.createInbox();
+          pino.info({ res }, 'create inbox session');
+        }
+      }
 
-              const res = await ctx.agentService.createInbox();
-              pino.info({ res }, 'create inbox session');
-            }
-          }
+      const session = await ctx.sessionModel.findByIdOrSlug(input.sessionId);
 
-          const session = await ctx.sessionModel.findByIdOrSlug(input.sessionId);
+      if (!session) throw new Error('Session not found');
+      const sessionId = session.id;
 
-          if (!session) throw new Error('Session not found');
-          const sessionId = session.id;
-
-          return ctx.agentModel.findBySessionId(sessionId);
-        },
-        [cacheKey],
-        {
-          tags: [`agentConfig:${ctx.userId}`, `session:${input.sessionId}`],
-          revalidate: 60, // Cache for 60 seconds
-        },
-      )();
+      return ctx.agentModel.findBySessionId(sessionId);
     }),
 
   getKnowledgeBasesAndFiles: agentProcedure
