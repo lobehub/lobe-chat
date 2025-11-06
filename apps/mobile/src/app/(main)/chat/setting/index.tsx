@@ -1,5 +1,5 @@
 import { Avatar, Cell, PageContainer } from '@lobehub/ui-rn';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { AgentRoleEditSection } from '@/features/AgentRoleEdit/AgentRoleEditSection';
@@ -18,21 +18,18 @@ export default function AgentDetail() {
       <AgentRoleEditSection
         header={
           <>
-            <Cell
-              extra={<Avatar alt={title} avatar={avatar || '🤖'} size={32} />}
-              onPress={() => router.push('/chat/setting/avatar')}
-              title={t('setting.avatar')}
-            />
-            <Cell
-              extra={title}
-              onPress={() => router.push('/chat/setting/name')}
-              title={t('setting.name')}
-            />
-            <Cell
-              extra={description}
-              onPress={() => router.push('/chat/setting/description')}
-              title={t('setting.description')}
-            />
+            <Link asChild href="/chat/setting/avatar">
+              <Cell
+                extra={<Avatar alt={title} avatar={avatar || '🤖'} size={32} />}
+                title={t('setting.avatar')}
+              />
+            </Link>
+            <Link asChild href="/chat/setting/name">
+              <Cell extra={title} title={t('setting.name')} />
+            </Link>
+            <Link asChild href="/chat/setting/description">
+              <Cell extra={description} title={t('setting.description')} />
+            </Link>
           </>
         }
         onSystemRolePress={() => router.push('/chat/setting/system-role')}
