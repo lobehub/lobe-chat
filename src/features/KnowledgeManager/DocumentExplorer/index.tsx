@@ -1,9 +1,10 @@
 'use client';
 
 import { ActionIcon, Icon, SearchBar, Text } from '@lobehub/ui';
+import { Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { FileText, PlusIcon } from 'lucide-react';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
@@ -131,6 +132,29 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: ${token.colorBgContainer};
   `,
+  renameInput: css`
+    flex: 1;
+    min-width: 0;
+    height: 20px;
+    padding: 0;
+
+    input {
+      height: 20px;
+      padding: 0;
+      border: none;
+
+      font-size: 14px;
+      line-height: 20px;
+
+      background: transparent;
+      box-shadow: none !important;
+
+      &:focus {
+        border: none;
+        box-shadow: none !important;
+      }
+    }
+  `,
 }));
 
 interface DocumentExplorerProps {
@@ -153,6 +177,9 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [searchKeywords, setSearchKeywords] = useState<string>('');
+  const [renamingDocumentId, setRenamingDocumentId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState<string>('');
+  const renameInputRef = useRef<any>(null);
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
   const getOptimisticDocuments = useFileStore((s) => s.getOptimisticDocuments);
@@ -160,6 +187,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const createDocument = useFileStore((s) => s.createDocument);
   const createOptimisticDocument = useFileStore((s) => s.createOptimisticDocument);
   const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
+  const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
   // Subscribe to localDocumentMap to trigger re-render when documents are updated
   useFileStore((s) => s.localDocumentMap);
 
@@ -286,6 +314,35 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
     updateUrl(newId);
   };
 
+  const handleStartRename = (documentId: string, currentName: string) => {
+    setRenamingDocumentId(documentId);
+    setRenameValue(currentName);
+    // Focus the input after state update
+    setTimeout(() => {
+      renameInputRef.current?.select();
+    }, 0);
+  };
+
+  const handleRenameSubmit = async () => {
+    if (!renamingDocumentId || !renameValue.trim()) {
+      setRenamingDocumentId(null);
+      return;
+    }
+
+    try {
+      await updateDocumentOptimistically(renamingDocumentId, { name: renameValue.trim() });
+    } catch (error) {
+      console.error('Failed to rename document:', error);
+    } finally {
+      setRenamingDocumentId(null);
+    }
+  };
+
+  const handleRenameCancel = () => {
+    setRenamingDocumentId(null);
+    setRenameValue('');
+  };
+
   return (
     <div className={styles.container}>
       {/* Left Panel - Documents List */}
@@ -329,11 +386,12 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                 const title = document.name || t('notesList.untitled');
                 const emoji = document.metadata?.emoji;
                 const isSelected = selectedDocumentId === document.id;
+                const isRenaming = renamingDocumentId === document.id;
                 return (
                   <div
                     className={cx(styles.documentCard, isSelected && 'selected')}
                     key={document.id}
-                    onClick={() => handleDocumentSelect(document.id)}
+                    onClick={() => !isRenaming && handleDocumentSelect(document.id)}
                   >
                     <div className={styles.documentContent}>
                       {emoji ? (
@@ -341,7 +399,26 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                       ) : (
                         <Icon className={styles.icon} icon={FileText} size={16} />
                       )}
-                      <div className={styles.documentTitle}>{title}</div>
+                      {isRenaming ? (
+                        <Input
+                          autoFocus
+                          className={styles.renameInput}
+                          onBlur={handleRenameSubmit}
+                          onChange={(e) => setRenameValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleRenameSubmit();
+                            } else if (e.key === 'Escape') {
+                              handleRenameCancel();
+                            }
+                          }}
+                          onPressEnter={handleRenameSubmit}
+                          ref={renameInputRef}
+                          value={renameValue}
+                        />
+                      ) : (
+                        <div className={styles.documentTitle}>{title}</div>
+                      )}
                     </div>
                     <div className={cx(styles.documentActions, 'document-actions')}>
                       <NoteActions
@@ -353,6 +430,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                             setIsCreatingNew(false);
                           }
                         }}
+                        onRename={() => handleStartRename(document.id, title)}
                       />
                     </div>
                   </div>

@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  HotkeyEnum,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -9,35 +8,23 @@ import {
   ReactListPlugin,
   ReactMathPlugin,
   ReactTablePlugin,
-  getHotkeyById,
 } from '@lobehub/editor';
-import {
-  ChatInputActionBar,
-  ChatInputActions,
-  type ChatInputActionsProps,
-  CodeLanguageSelect,
-  Editor,
-  useEditor,
-  useEditorState,
-} from '@lobehub/editor/react';
-import { Button, Icon } from '@lobehub/ui';
+import { Editor, useEditor } from '@lobehub/editor/react';
+import { ActionIcon, Button, Dropdown, Icon } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { App } from 'antd';
 import { css, cx, useTheme } from 'antd-style';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import {
-  BoldIcon,
-  CodeXmlIcon,
-  ItalicIcon,
-  ListIcon,
-  ListOrderedIcon,
-  ListTodoIcon,
+  Download,
+  FileText,
+  Link2,
   Loader2Icon,
-  MessageSquareQuote,
-  SigmaIcon,
+  MoreVertical,
   SmilePlus,
-  SquareDashedBottomCodeIcon,
-  StrikethroughIcon,
-  UnderlineIcon,
+  Trash2,
+  Upload,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -48,6 +35,8 @@ import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
+
+dayjs.extend(relativeTime);
 
 const SAVE_THROTTLE_TIME = 3000; // 3 seconds
 
@@ -87,7 +76,6 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const { message } = App.useApp();
 
     const editor = useEditor();
-    const editorState = useEditorState(editor);
 
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [currentTitle, setCurrentTitle] = useState('');
@@ -95,6 +83,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const [isHoveringTitle, setIsHoveringTitle] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [currentDocId, setCurrentDocId] = useState<string | undefined>(documentId);
+    const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
     const localDocumentMap = useFileStore((s) => s.localDocumentMap);
@@ -123,6 +112,8 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         setShowEmojiPicker(false);
         // Initialize emoji from cached value
         setCurrentEmoji(cachedEmoji);
+        // Reset last updated time
+        setLastUpdatedTime(null);
 
         // Check if this is an optimistic document from local map
         const localDocument = localDocumentMap.get(documentId);
@@ -185,6 +176,10 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               // Load emoji from metadata
               if (doc.metadata?.emoji) {
                 setCurrentEmoji(doc.metadata.emoji);
+              }
+              // Set last updated time
+              if (doc.updatedAt) {
+                setLastUpdatedTime(new Date(doc.updatedAt));
               }
 
               console.log('[DocumentEditor] Fetched doc.editorData:', {
@@ -330,6 +325,8 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         }
 
         setSaveStatus('saved');
+        // Update last updated time
+        setLastUpdatedTime(new Date());
 
         onSave?.();
       } catch (error) {
@@ -397,128 +394,136 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       };
     }, [t]);
 
-    const toolbarItems: ChatInputActionsProps['items'] = useMemo(
-      () =>
-        [
-          {
-            active: editorState.isBold,
-            icon: BoldIcon,
-            key: 'bold',
-            label: t('typobar.bold', { ns: 'editor' }),
-            onClick: editorState.bold,
-            tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.Bold).keys },
+    // Calculate word count
+    const wordCount = useMemo(() => {
+      if (!editor) return 0;
+      // const textContent = (editor.getDocument('markdown') as unknown as string) || '';
+      // return textContent.trim().split(/\s+/).filter(Boolean).length;
+      return 100;
+    }, [editor, saveStatus]); // Re-calculate when content changes (tracked by saveStatus)
+
+    // Menu items for the three-dot menu
+    const menuItems = useMemo(
+      () => [
+        {
+          icon: <Icon icon={Link2} />,
+          key: 'copy-link',
+          label: 'Copy Link',
+          onClick: () => {
+            // TODO: Implement copy link functionality
+            console.log('Copy link clicked');
           },
-          {
-            active: editorState.isItalic,
-            icon: ItalicIcon,
-            key: 'italic',
-            label: t('typobar.italic', { ns: 'editor' }),
-            onClick: editorState.italic,
-            tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.Italic).keys },
+        },
+        {
+          danger: true,
+          icon: <Icon icon={Trash2} />,
+          key: 'delete',
+          label: 'Delete',
+          onClick: () => {
+            // TODO: Implement delete functionality
+            console.log('Delete clicked');
           },
-          {
-            active: editorState.isUnderline,
-            icon: UnderlineIcon,
-            key: 'underline',
-            label: t('typobar.underline', { ns: 'editor' }),
-            onClick: editorState.underline,
-            tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.Underline).keys },
+        },
+        {
+          type: 'divider' as const,
+        },
+        {
+          icon: <Icon icon={Download} />,
+          key: 'export',
+          label: 'Export',
+          onClick: () => {
+            // TODO: Implement export functionality
+            console.log('Export clicked');
           },
-          {
-            active: editorState.isStrikethrough,
-            icon: StrikethroughIcon,
-            key: 'strikethrough',
-            label: t('typobar.strikethrough', { ns: 'editor' }),
-            onClick: editorState.strikethrough,
-            tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.Strikethrough).keys },
+        },
+        {
+          icon: <Icon icon={Upload} />,
+          key: 'import',
+          label: 'Import',
+          onClick: () => {
+            // TODO: Implement import functionality
+            console.log('Import clicked');
           },
-          {
-            type: 'divider',
-          },
-          {
-            icon: ListIcon,
-            key: 'bulletList',
-            label: t('typobar.bulletList', { ns: 'editor' }),
-            onClick: editorState.bulletList,
-            tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.BulletList).keys },
-          },
-          {
-            icon: ListOrderedIcon,
-            key: 'numberlist',
-            label: t('typobar.numberList', { ns: 'editor' }),
-            onClick: editorState.numberList,
-            tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.NumberList).keys },
-          },
-          {
-            icon: ListTodoIcon,
-            key: 'tasklist',
-            label: t('typobar.taskList', { ns: 'editor' }),
-            onClick: editorState.checkList,
-          },
-          {
-            type: 'divider',
-          },
-          {
-            active: editorState.isBlockquote,
-            icon: MessageSquareQuote,
-            key: 'blockquote',
-            label: t('typobar.blockquote', { ns: 'editor' }),
-            onClick: editorState.blockquote,
-          },
-          {
-            type: 'divider',
-          },
-          {
-            icon: SigmaIcon,
-            key: 'math',
-            label: t('typobar.tex', { ns: 'editor' }),
-            onClick: editorState.insertMath,
-          },
-          {
-            active: editorState.isCode,
-            icon: CodeXmlIcon,
-            key: 'code',
-            label: t('typobar.code', { ns: 'editor' }),
-            onClick: editorState.code,
-            tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.CodeInline).keys },
-          },
-          {
-            icon: SquareDashedBottomCodeIcon,
-            key: 'codeblock',
-            label: t('typobar.codeblock', { ns: 'editor' }),
-            onClick: editorState.codeblock,
-          },
-          editorState.isCodeblock && {
-            children: (
-              <CodeLanguageSelect
-                onSelect={(value) => editorState.updateCodeblockLang(value)}
-                value={editorState.codeblockLang}
-              />
-            ),
-            disabled: !editorState.isCodeblock,
-            key: 'codeblockLang',
-          },
-        ].filter(Boolean) as ChatInputActionsProps['items'],
-      [editorState, t],
+        },
+        {
+          disabled: true,
+          key: 'word-count',
+          label: (
+            <span style={{ color: theme.colorTextTertiary, fontSize: 12 }}>{wordCount} words</span>
+          ),
+        },
+      ],
+      [theme, wordCount],
     );
 
     return (
       <Flexbox height={'100%'} style={{ background: theme.colorBgContainer }}>
-        {/* Toolbar */}
-        <ChatInputActionBar
-          left={<ChatInputActions items={toolbarItems} />}
-          right={
-            saveStatus === 'saving' ? (
-              <Flexbox style={{ paddingRight: 12 }}>
-                <Icon icon={Loader2Icon} spin />
-              </Flexbox>
-            ) : null
-          }
+        {/* Header */}
+        <Flexbox
+          align="center"
+          direction="horizontal"
+          gap={8}
+          paddingBlock={8}
+          paddingInline={16}
           style={{
-            background: theme.colorFillQuaternary,
+            background: theme.colorBgContainer,
             borderBottom: `1px solid ${theme.colorBorderSecondary}`,
           }}
-        />
+        >
+          {/* Icon */}
+          {currentEmoji ? (
+            <span style={{ fontSize: 20, lineHeight: 1 }}>{currentEmoji}</span>
+          ) : (
+            <Icon icon={FileText} size={20} style={{ color: theme.colorTextSecondary }} />
+          )}
+
+          {/* Title */}
+          <Flexbox
+            flex={1}
+            style={{
+              color: theme.colorText,
+              fontSize: 14,
+              fontWeight: 500,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {currentTitle || t('notesEditor.titlePlaceholder')}
+          </Flexbox>
+
+          {/* Save Status Indicator */}
+          {saveStatus === 'saving' && (
+            <Flexbox>
+              <Icon icon={Loader2Icon} spin />
+            </Flexbox>
+          )}
+
+          {/* Last Updated Time */}
+          {lastUpdatedTime && (
+            <span
+              style={{
+                color: theme.colorTextTertiary,
+                fontSize: 12,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Edited {dayjs(lastUpdatedTime).fromNow()}
+            </span>
+          )}
+
+          {/* Three-dot menu */}
+          <Dropdown
+            menu={{
+              items: menuItems,
+              style: { minWidth: 200 },
+            }}
+            placement="bottomRight"
+            trigger={['click']}
+          >
+            <ActionIcon icon={MoreVertical} size={16} style={{ color: theme.colorText }} />
+          </Dropdown>
+        </Flexbox>
 
         {/* Editor with title */}
         <Flexbox flex={1} style={{ overflowY: 'auto' }}>
