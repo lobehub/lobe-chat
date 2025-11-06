@@ -35,6 +35,12 @@ export interface GeneralAgentCallToolsBatchInstructionPayload {
   toolsCalling: ChatToolPayload[];
 }
 
+export interface GeneralAgentCallToolsBatchResultPayload {
+  parentMessageId: string;
+  toolCount: number;
+  toolResults: GeneralAgentCallToolResultPayload[];
+}
+
 export interface GeneralAgentConfig {
   agentConfig?: {
     [key: string]: any;

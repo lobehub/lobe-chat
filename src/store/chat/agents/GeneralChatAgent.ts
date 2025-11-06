@@ -3,6 +3,7 @@ import {
   AgentInstruction,
   AgentRuntimeContext,
   AgentState,
+  GeneralAgentCallLLMInstructionPayload,
   GeneralAgentCallLLMResultPayload,
   GeneralAgentCallToolResultPayload,
   GeneralAgentCallToolsBatchInstructionPayload,
@@ -23,7 +24,7 @@ import {
  * Note: RAG and Search workflow preprocessing are handled externally
  * before creating the agent runtime, keeping the agent logic simple.
  */
-export class ChatAgent implements Agent {
+export class GeneralChatAgent implements Agent {
   private config: GeneralAgentConfig;
 
   constructor(config: GeneralAgentConfig) {
@@ -94,21 +95,21 @@ export class ChatAgent implements Agent {
             parentMessageId,
             provider: this.config.modelRuntimeConfig?.provider,
             tools: state.tools,
-          },
+          } as GeneralAgentCallLLMInstructionPayload,
           type: 'call_llm',
         };
       }
 
       case 'tools_batch_result': {
-        // console.log('toolResult:', context.payload);
-        // Continue calling LLM after tool execution completes
+        const { parentMessageId } = context.payload as GeneralAgentCallToolResultPayload;
         return {
           payload: {
             messages: state.messages,
             model: this.config.modelRuntimeConfig?.model,
+            parentMessageId,
             provider: this.config.modelRuntimeConfig?.provider,
             tools: state.tools,
-          },
+          } as GeneralAgentCallLLMInstructionPayload,
           type: 'call_llm',
         };
       }

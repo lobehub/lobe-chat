@@ -1,10 +1,16 @@
-import type {
+import { ChatToolPayload } from '@lobechat/types';
+import pMap from 'p-map';
+
+import {
   Agent,
   AgentEvent,
   AgentInstruction,
+  AgentInstructionCallTool,
+  AgentInstructionCallToolsBatch,
   AgentRuntimeContext,
   AgentState,
   Cost,
+  GeneralAgentCallToolsBatchResultPayload,
   InstructionExecutor,
   RuntimeConfig,
   ToolRegistry,
@@ -414,7 +420,7 @@ export class AgentRuntime {
   /** Create call_tool executor */
   private createCallToolExecutor(): InstructionExecutor {
     return async (instruction, state) => {
-      const { payload: toolCall } = instruction as Extract<AgentInstruction, { type: 'call_tool' }>;
+      const { payload } = instruction as AgentInstructionCallTool;
       const newState = structuredClone(state);
       const events: AgentEvent[] = [];
 
@@ -423,9 +429,10 @@ export class AgentRuntime {
 
       const tools = this.agent.tools || ({} as ToolRegistry);
 
+      const toolCall = payload.toolCalling;
       // Support both ToolsCalling (OpenAI format) and CallingToolPayload formats
-      const toolName = toolCall.apiName || toolCall.function?.name;
-      const toolArgs = toolCall.arguments || toolCall.function?.arguments;
+      const toolName = toolCall.apiName;
+      const toolArgs = toolCall.arguments;
       const toolId = toolCall.id;
 
       const handler = tools[toolName];
@@ -586,27 +593,30 @@ export class AgentRuntime {
    * Execute multiple tool calls concurrently
    */
   private async executeToolsBatch(
-    instruction: { payload: any[]; type: 'call_tools_batch' },
+    instruction: AgentInstructionCallToolsBatch,
     baseState: AgentState,
   ): Promise<{
     events: AgentEvent[];
     newState: AgentState;
     nextContext?: AgentRuntimeContext;
   }> {
-    const { payload: toolsCalling } = instruction;
+    const { payload } = instruction;
 
     // Execute all tools concurrently based on the same state
-    const results = await Promise.all(
-      toolsCalling.map((toolCall) =>
-        this.executors.call_tool(
-          { payload: toolCall, type: 'call_tool' } as any,
-          structuredClone(baseState), // Each tool starts from the same base state
-        ),
+    const results = await pMap(instruction.payload.toolsCalling, (toolCalling: ChatToolPayload) =>
+      this.executors.call_tool(
+        {
+          payload: { parentMessageId: payload.parentMessageId, toolCalling },
+          type: 'call_tool',
+        } as AgentInstructionCallTool,
+        structuredClone(baseState), // Each tool starts from the same base state
       ),
     );
 
+    const lastParentMessageId = (results.at(-1)!.nextContext?.payload as any)
+      ?.parentMessageId as string;
     // Merge results
-    return this.mergeToolResults(results, baseState);
+    return this.mergeToolResults(results, baseState, lastParentMessageId);
   }
 
   /**
@@ -619,6 +629,7 @@ export class AgentRuntime {
       nextContext?: AgentRuntimeContext;
     }>,
     baseState: AgentState,
+    lastParentMessageId: string,
   ): {
     events: AgentEvent[];
     newState: AgentState;
@@ -679,9 +690,10 @@ export class AgentRuntime {
       newState,
       nextContext: {
         payload: {
+          parentMessageId: lastParentMessageId,
           toolCount: results.length,
           toolResults: results.map((r) => r.nextContext?.payload),
-        },
+        } as GeneralAgentCallToolsBatchResultPayload,
         phase: 'tools_batch_result',
         session: this.createSessionContext(newState),
       },

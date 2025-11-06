@@ -22,7 +22,7 @@ import { aiChatService } from '@/services/aiChat';
 import { messageService } from '@/services/message';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
-import { ChatAgent } from '@/store/chat/agents/ChatAgent';
+import { GeneralChatAgent } from '@/store/chat/agents/GeneralChatAgent';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import { MainSendMessageOperation } from '@/store/chat/slices/aiChat/initialState';
 import type { ChatStore } from '@/store/chat/store';
@@ -403,7 +403,7 @@ export const generateAIChatV2: StateCreator<
     // ===========================================
     log('[internal_execAgentRuntime] Creating agent runtime');
 
-    const agent = new ChatAgent({
+    const agent = new GeneralChatAgent({
       agentConfig: { maxSteps: 1000 },
       sessionId: `${messageKey}/${params.parentMessageId}`,
       modelRuntimeConfig: {
