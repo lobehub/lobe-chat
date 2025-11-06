@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-import { UserMemoryContext, UserMemoryExperience, UserMemoryPreference } from '@/database/schemas';
-
+import { UserMemoryContext, UserMemoryExperience, UserMemoryPreference } from './layers';
 import {
   IdentityTypeEnum,
   LayersEnum,
