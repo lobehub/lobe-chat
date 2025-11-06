@@ -26,7 +26,7 @@ vi.mock('@/services/message', () => ({
     updateMessageError: vi.fn(),
     updateMessagePluginState: vi.fn(),
     updateMessagePluginArguments: vi.fn(),
-    createNewMessage: vi.fn(),
+    createMessage: vi.fn(),
   },
 }));
 
@@ -565,8 +565,8 @@ describe('ChatPluginAction', () => {
   describe('createAssistantMessageByPlugin', () => {
     it('should create an assistant message and replace messages', async () => {
       const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
-      // 模拟 messageService.createNewMessage 方法的实现
-      (messageService.createNewMessage as Mock).mockResolvedValue({
+      // 模拟 messageService.createMessage 方法的实现
+      (messageService.createMessage as Mock).mockResolvedValue({
         id: 'new-message-id',
         messages: mockMessages,
       });
@@ -588,8 +588,8 @@ describe('ChatPluginAction', () => {
         await result.current.createAssistantMessageByPlugin(content, parentId);
       });
 
-      // 验证 messageService.createNewMessage 是否被带有正确参数调用
-      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+      // 验证 messageService.createMessage 是否被带有正确参数调用
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',
@@ -604,7 +604,7 @@ describe('ChatPluginAction', () => {
     it('should handle errors when message creation fails', async () => {
       // 模拟 messageService.create 方法，使其抛出错误
       const errorMessage = 'Failed to create message';
-      (messageService.createNewMessage as Mock).mockRejectedValue(new Error(errorMessage));
+      (messageService.createMessage as Mock).mockRejectedValue(new Error(errorMessage));
 
       // 设置初始状态并模拟 refreshMessages 方法
       const initialState = {
@@ -626,7 +626,7 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 messageService.create 是否被带有正确参数调用
-      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',
