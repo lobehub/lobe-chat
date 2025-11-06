@@ -1,5 +1,5 @@
 {
-  "desc": "Quản lý kiến thức của bạn",
+  "desc": "Quản lý kiến thức công việc, học tập và cuộc sống của bạn.",
   "detail": {
     "basic": {
       "createdAt": "Thời gian tạo",
@@ -28,7 +28,46 @@
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
     },
+    "newNoteButton": "Tạo ghi chú mới",
+    "newNoteDialog": {
+      "cancel": "Hủy",
+      "editTitle": "Chỉnh sửa ghi chú",
+      "emptyContent": "Nội dung ghi chú không được để trống",
+      "loadError": "Tải ghi chú thất bại, vui lòng thử lại",
+      "loading": "Đang tải...",
+      "save": "Lưu",
+      "saveError": "Lưu ghi chú thất bại, vui lòng thử lại",
+      "saveSuccess": "Ghi chú đã được lưu thành công",
+      "title": "Tạo ghi chú mới",
+      "updateSuccess": "Ghi chú đã được cập nhật thành công"
+    },
     "uploadButton": "Tải lên"
+  },
+  "home": {
+    "getStarted": "Bắt đầu",
+    "greeting": {
+      "afternoon": "Chào buổi chiều",
+      "evening": "Chào buổi tối",
+      "morning": "Chào buổi sáng"
+    },
+    "quickActions": "Hành động nhanh",
+    "recentDocuments": "Tài liệu gần đây",
+    "recentFiles": "Tệp gần đây",
+    "subtitle": "Chào mừng đến với kho kiến thức, bắt đầu quản lý tài liệu và ghi chú của bạn từ đây",
+    "uploadEntries": {
+      "files": {
+        "title": "Tải lên tệp"
+      },
+      "folder": {
+        "title": "Tải lên thư mục"
+      },
+      "knowledgeBase": {
+        "title": "Tạo kho kiến thức mới"
+      },
+      "newDocument": {
+        "title": "Tạo tài liệu mới"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "Tạo kho tri thức mới",
     "title": "Kho tri thức"
+  },
+  "menu": {
+    "allDocuments": "Tất cả tài liệu"
   },
   "networkError": "Không thể lấy kho tri thức, vui lòng kiểm tra kết nối mạng và thử lại",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp"
   },
+  "notesEditor": {
+    "addIcon": "Thêm biểu tượng",
+    "emojiPicker": {
+      "tooltip": "Chọn biểu tượng"
+    },
+    "empty": {
+      "createNewDocument": "Tạo tài liệu mới",
+      "title": "Chọn một tài liệu để bắt đầu",
+      "uploadMarkdown": "Tải lên tệp Markdown"
+    },
+    "saving": "Đang lưu...",
+    "titlePlaceholder": "Không có tiêu đề"
+  },
+  "notesList": {
+    "empty": "Chưa có ghi chú nào, nhấn nút phía trên để tạo ghi chú đầu tiên của bạn",
+    "noResults": "Không tìm thấy ghi chú phù hợp",
+    "selectNote": "Chọn một ghi chú để bắt đầu chỉnh sửa",
+    "untitled": "Không có tiêu đề"
+  },
   "preview": {
     "downloadFile": "Tải tệp",
     "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
   },
   "searchFilePlaceholder": "Tìm kiếm tệp",
   "tab": {
-    "all": "Tất cả tệp",
+    "all": "Tất cả",
     "audios": "Âm thanh",
     "documents": "Tài liệu",
+    "home": "Trang chủ",
     "images": "Hình ảnh",
+    "moreTypes": "Thêm loại",
     "videos": "Video",
     "websites": "Trang web"
   },

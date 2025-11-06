@@ -1,5 +1,5 @@
 {
-  "desc": "あなたの知識を管理する",
+  "desc": "仕事、学習、生活の知識を管理しましょう。",
   "detail": {
     "basic": {
       "createdAt": "作成日時",
@@ -28,7 +28,46 @@
       "uploadFile": "ファイルをアップロード",
       "uploadFolder": "フォルダーをアップロード"
     },
+    "newNoteButton": "新規ノート",
+    "newNoteDialog": {
+      "cancel": "キャンセル",
+      "editTitle": "ノートを編集",
+      "emptyContent": "ノートの内容は空にできません",
+      "loadError": "ノートの読み込みに失敗しました。もう一度お試しください。",
+      "loading": "読み込み中...",
+      "save": "保存",
+      "saveError": "ノートの保存に失敗しました。もう一度お試しください。",
+      "saveSuccess": "ノートが保存されました",
+      "title": "新規ノート",
+      "updateSuccess": "ノートが更新されました"
+    },
     "uploadButton": "アップロード"
+  },
+  "home": {
+    "getStarted": "はじめに",
+    "greeting": {
+      "afternoon": "こんにちは",
+      "evening": "こんばんは",
+      "morning": "おはようございます"
+    },
+    "quickActions": "クイック操作",
+    "recentDocuments": "最近のドキュメント",
+    "recentFiles": "最近のファイル",
+    "subtitle": "ナレッジベースへようこそ。ここからドキュメントやノートの管理を始めましょう。",
+    "uploadEntries": {
+      "files": {
+        "title": "ファイルをアップロード"
+      },
+      "folder": {
+        "title": "フォルダをアップロード"
+      },
+      "knowledgeBase": {
+        "title": "新しいナレッジベースを作成"
+      },
+      "newDocument": {
+        "title": "新規ドキュメント"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "新しい知識ベース",
     "title": "知識ベース"
+  },
+  "menu": {
+    "allDocuments": "すべてのドキュメント"
   },
   "networkError": "知識ベースの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "現在のデプロイメントモードはファイル管理をサポートしていません"
   },
+  "notesEditor": {
+    "addIcon": "アイコンを追加",
+    "emojiPicker": {
+      "tooltip": "アイコンを選択"
+    },
+    "empty": {
+      "createNewDocument": "新しいドキュメントを作成",
+      "title": "ドキュメントを選択して開始してください",
+      "uploadMarkdown": "Markdownファイルをアップロード"
+    },
+    "saving": "保存中...",
+    "titlePlaceholder": "無題"
+  },
+  "notesList": {
+    "empty": "ノートがまだありません。上のボタンをクリックして最初のノートを作成しましょう。",
+    "noResults": "一致するノートが見つかりませんでした",
+    "selectNote": "編集を始めるにはノートを選択してください",
+    "untitled": "無題"
+  },
   "preview": {
     "downloadFile": "ファイルをダウンロード",
     "unsupportedFileAndContact": "このファイル形式はオンラインプレビューをサポートしていません。プレビューのリクエストがある場合は、ぜひ<1>ご連絡ください</1>。"
   },
   "searchFilePlaceholder": "ファイルを検索",
   "tab": {
-    "all": "すべてのファイル",
+    "all": "すべて",
     "audios": "音声",
     "documents": "文書",
+    "home": "ホーム",
     "images": "画像",
+    "moreTypes": "その他の種類",
     "videos": "動画",
     "websites": "ウェブサイト"
   },

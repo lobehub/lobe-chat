@@ -1,5 +1,5 @@
 {
-  "desc": "Gestisci le tue conoscenze",
+  "desc": "Gestisci le tue conoscenze su lavoro, studio e vita.",
   "detail": {
     "basic": {
       "createdAt": "Data di creazione",
@@ -28,7 +28,46 @@
       "uploadFile": "Carica file",
       "uploadFolder": "Carica cartella"
     },
+    "newNoteButton": "Nuova nota",
+    "newNoteDialog": {
+      "cancel": "Annulla",
+      "editTitle": "Modifica nota",
+      "emptyContent": "Il contenuto della nota non può essere vuoto",
+      "loadError": "Errore nel caricamento della nota, riprova",
+      "loading": "Caricamento in corso...",
+      "save": "Salva",
+      "saveError": "Errore nel salvataggio della nota, riprova",
+      "saveSuccess": "Nota salvata con successo",
+      "title": "Nuova nota",
+      "updateSuccess": "Nota aggiornata con successo"
+    },
     "uploadButton": "Carica"
+  },
+  "home": {
+    "getStarted": "Inizia subito",
+    "greeting": {
+      "afternoon": "Buon pomeriggio",
+      "evening": "Buona sera",
+      "morning": "Buongiorno"
+    },
+    "quickActions": "Azioni rapide",
+    "recentDocuments": "Documenti recenti",
+    "recentFiles": "File recenti",
+    "subtitle": "Benvenuto nel tuo archivio di conoscenze, inizia da qui a gestire documenti e note",
+    "uploadEntries": {
+      "files": {
+        "title": "Carica file"
+      },
+      "folder": {
+        "title": "Carica cartella"
+      },
+      "knowledgeBase": {
+        "title": "Crea nuova base di conoscenza"
+      },
+      "newDocument": {
+        "title": "Crea nuovo documento"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "Nuova knowledge base",
     "title": "Knowledge Base"
+  },
+  "menu": {
+    "allDocuments": "Tutti i documenti"
   },
   "networkError": "Impossibile ottenere la knowledge base, controlla la connessione di rete e riprova",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
   },
+  "notesEditor": {
+    "addIcon": "Aggiungi icona",
+    "emojiPicker": {
+      "tooltip": "Scegli un'icona"
+    },
+    "empty": {
+      "createNewDocument": "Crea nuovo documento",
+      "title": "Seleziona un documento per iniziare",
+      "uploadMarkdown": "Carica file Markdown"
+    },
+    "saving": "Salvataggio in corso...",
+    "titlePlaceholder": "Senza titolo"
+  },
+  "notesList": {
+    "empty": "Nessuna nota presente, clicca sul pulsante in alto per crearne una",
+    "noResults": "Nessuna nota corrispondente trovata",
+    "selectNote": "Seleziona una nota per iniziare a modificarla",
+    "untitled": "Senza titolo"
+  },
   "preview": {
     "downloadFile": "Scarica file",
     "unsupportedFileAndContact": "Questo formato di file non è attualmente supportato per la visualizzazione online. Se hai bisogno di una visualizzazione, ti preghiamo di <1>contattarci</1>."
   },
   "searchFilePlaceholder": "Cerca file",
   "tab": {
-    "all": "Tutti i file",
+    "all": "Tutti",
     "audios": "Audio",
     "documents": "Documenti",
+    "home": "Home",
     "images": "Immagini",
+    "moreTypes": "Altri tipi",
     "videos": "Video",
     "websites": "Siti web"
   },

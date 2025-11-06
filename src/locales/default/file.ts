@@ -1,5 +1,5 @@
 export default {
-  desc: '管理你的知识',
+  desc: '管理你的工作、学习与生活知识。',
   detail: {
     basic: {
       createdAt: '创建时间',
@@ -64,9 +64,8 @@ export default {
       knowledgeBase: {
         title: '新建知识库',
       },
-      newNote: {
-        defaultTitle: '未命名笔记',
-        title: '新建笔记',
+      newDocument: {
+        title: '新建文档',
       },
     },
   },
@@ -106,6 +105,11 @@ export default {
     emojiPicker: {
       tooltip: '选择图标',
     },
+    empty: {
+      createNewDocument: '创建新文档',
+      title: '选择一个文档以开始',
+      uploadMarkdown: '上传 Markdown 文件',
+    },
     saving: '保存中...',
     titlePlaceholder: '无标题',
   },
@@ -124,6 +128,7 @@ export default {
     all: '全部',
     audios: '语音',
     documents: '文档',
+    home: '首页',
     images: '图片',
     moreTypes: '更多类型',
     videos: '视频',

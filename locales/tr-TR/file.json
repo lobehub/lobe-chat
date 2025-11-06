@@ -1,5 +1,5 @@
 {
-  "desc": "Bilgini yönet",
+  "desc": "Çalışma, öğrenme ve yaşam bilginizi yönetin.",
   "detail": {
     "basic": {
       "createdAt": "Oluşturulma Zamanı",
@@ -28,7 +28,46 @@
       "uploadFile": "Dosya Yükle",
       "uploadFolder": "Klasör Yükle"
     },
+    "newNoteButton": "Yeni Not",
+    "newNoteDialog": {
+      "cancel": "İptal",
+      "editTitle": "Notu Düzenle",
+      "emptyContent": "Not içeriği boş olamaz",
+      "loadError": "Not yüklenemedi, lütfen tekrar deneyin",
+      "loading": "Yükleniyor...",
+      "save": "Kaydet",
+      "saveError": "Not kaydedilemedi, lütfen tekrar deneyin",
+      "saveSuccess": "Not başarıyla kaydedildi",
+      "title": "Yeni Not",
+      "updateSuccess": "Not başarıyla güncellendi"
+    },
     "uploadButton": "Yükle"
+  },
+  "home": {
+    "getStarted": "Başlarken",
+    "greeting": {
+      "afternoon": "İyi öğleden sonralar",
+      "evening": "İyi akşamlar",
+      "morning": "Günaydın"
+    },
+    "quickActions": "Hızlı İşlemler",
+    "recentDocuments": "Son Belgeler",
+    "recentFiles": "Son Dosyalar",
+    "subtitle": "Bilgi tabanına hoş geldiniz, belgelerinizi ve notlarınızı buradan yönetin",
+    "uploadEntries": {
+      "files": {
+        "title": "Dosya Yükle"
+      },
+      "folder": {
+        "title": "Klasör Yükle"
+      },
+      "knowledgeBase": {
+        "title": "Yeni Bilgi Tabanı"
+      },
+      "newDocument": {
+        "title": "Yeni Belge"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "Yeni Bilgi Tabanı",
     "title": "Bilgi Tabanı"
+  },
+  "menu": {
+    "allDocuments": "Tüm Belgeler"
   },
   "networkError": "Bilgi bankası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
   },
+  "notesEditor": {
+    "addIcon": "Simge Ekle",
+    "emojiPicker": {
+      "tooltip": "Simge Seç"
+    },
+    "empty": {
+      "createNewDocument": "Yeni Belge Oluştur",
+      "title": "Başlamak için bir belge seçin",
+      "uploadMarkdown": "Markdown Dosyası Yükle"
+    },
+    "saving": "Kaydediliyor...",
+    "titlePlaceholder": "Başlıksız"
+  },
+  "notesList": {
+    "empty": "Henüz not yok, ilk notunuzu oluşturmak için yukarıdaki butona tıklayın",
+    "noResults": "Eşleşen not bulunamadı",
+    "selectNote": "Düzenlemeye başlamak için bir not seçin",
+    "untitled": "Başlıksız"
+  },
   "preview": {
     "downloadFile": "Dosyayı İndir",
     "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
   },
   "searchFilePlaceholder": "Dosya Ara",
   "tab": {
-    "all": "Tüm Dosyalar",
+    "all": "Tümü",
     "audios": "Sesler",
     "documents": "Belgeler",
+    "home": "Ana Sayfa",
     "images": "Görseller",
+    "moreTypes": "Daha Fazla Tür",
     "videos": "Videolar",
     "websites": "Web Siteleri"
   },

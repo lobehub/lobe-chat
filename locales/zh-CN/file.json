@@ -1,5 +1,5 @@
 {
-  "desc": "管理你的知识",
+  "desc": "管理你的工作、学习与生活知识。",
   "detail": {
     "basic": {
       "createdAt": "创建时间",
@@ -64,9 +64,8 @@
       "knowledgeBase": {
         "title": "新建知识库"
       },
-      "newNote": {
-        "defaultTitle": "未命名笔记",
-        "title": "新建笔记"
+      "newDocument": {
+        "title": "新建文档"
       }
     }
   },
@@ -100,22 +99,24 @@
     },
     "title": "当前部署模式不支持文件管理"
   },
-  "notesList": {
-    "actions": {
-      "copy": "复制内容",
-      "delete": "删除笔记"
-    },
-    "empty": "暂无笔记，点击上方按钮创建你的第一篇笔记",
-    "noResults": "未找到匹配的笔记",
-    "selectNote": "选择一个笔记开始编辑",
-    "untitled": "无标题"
-  },
   "notesEditor": {
     "addIcon": "添加图标",
     "emojiPicker": {
       "tooltip": "选择图标"
     },
+    "empty": {
+      "createNewDocument": "创建新文档",
+      "title": "选择一个文档以开始",
+      "uploadMarkdown": "上传 Markdown 文件"
+    },
+    "saving": "保存中...",
     "titlePlaceholder": "无标题"
+  },
+  "notesList": {
+    "empty": "暂无笔记，点击上方按钮创建你的第一篇笔记",
+    "noResults": "未找到匹配的笔记",
+    "selectNote": "选择一个笔记开始编辑",
+    "untitled": "无标题"
   },
   "preview": {
     "downloadFile": "下载文件",
@@ -123,11 +124,12 @@
   },
   "searchFilePlaceholder": "搜索文件",
   "tab": {
-    "all": "全部文件",
+    "all": "全部",
     "audios": "语音",
     "documents": "文档",
+    "home": "首页",
     "images": "图片",
-    "notes": "笔记",
+    "moreTypes": "更多类型",
     "videos": "视频",
     "websites": "网页"
   },

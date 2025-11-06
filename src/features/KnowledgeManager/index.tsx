@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FilesTabs } from '@/types/files';
 
-import DocumentExplorer from './DocumentExplorer/DocumentExplorer';
+import DocumentExplorer from './DocumentExplorer';
 import FileExplorer from './FileExplorer';
 import Header from './Header';
 import Home from './Home';

@@ -1,5 +1,5 @@
 {
-  "desc": "Beheer je kennis",
+  "desc": "Beheer je kennis over werk, studie en leven.",
   "detail": {
     "basic": {
       "createdAt": "Aanmaakdatum",
@@ -28,7 +28,46 @@
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
     },
+    "newNoteButton": "Nieuwe notitie",
+    "newNoteDialog": {
+      "cancel": "Annuleren",
+      "editTitle": "Notitie bewerken",
+      "emptyContent": "De inhoud van de notitie mag niet leeg zijn",
+      "loadError": "Notitie laden mislukt, probeer het opnieuw",
+      "loading": "Bezig met laden...",
+      "save": "Opslaan",
+      "saveError": "Notitie opslaan mislukt, probeer het opnieuw",
+      "saveSuccess": "Notitie succesvol opgeslagen",
+      "title": "Nieuwe notitie",
+      "updateSuccess": "Notitie succesvol bijgewerkt"
+    },
     "uploadButton": "Uploaden"
+  },
+  "home": {
+    "getStarted": "Aan de slag",
+    "greeting": {
+      "afternoon": "Goedemiddag",
+      "evening": "Goedenavond",
+      "morning": "Goedemorgen"
+    },
+    "quickActions": "Snelle acties",
+    "recentDocuments": "Recente documenten",
+    "recentFiles": "Recente bestanden",
+    "subtitle": "Welkom bij de kennisbank. Begin hier met het beheren van je documenten en notities",
+    "uploadEntries": {
+      "files": {
+        "title": "Bestanden uploaden"
+      },
+      "folder": {
+        "title": "Map uploaden"
+      },
+      "knowledgeBase": {
+        "title": "Nieuwe kennisbank"
+      },
+      "newDocument": {
+        "title": "Nieuw document"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "Nieuwe kennisbank",
     "title": "Kennisbank"
+  },
+  "menu": {
+    "allDocuments": "Alle documenten"
   },
   "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
   },
+  "notesEditor": {
+    "addIcon": "Pictogram toevoegen",
+    "emojiPicker": {
+      "tooltip": "Kies een pictogram"
+    },
+    "empty": {
+      "createNewDocument": "Nieuw document aanmaken",
+      "title": "Selecteer een document om te beginnen",
+      "uploadMarkdown": "Markdown-bestand uploaden"
+    },
+    "saving": "Bezig met opslaan...",
+    "titlePlaceholder": "Zonder titel"
+  },
+  "notesList": {
+    "empty": "Nog geen notities. Klik op de knop hierboven om je eerste notitie te maken",
+    "noResults": "Geen overeenkomende notities gevonden",
+    "selectNote": "Selecteer een notitie om te beginnen met bewerken",
+    "untitled": "Zonder titel"
+  },
   "preview": {
     "downloadFile": "Bestand downloaden",
     "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
   },
   "searchFilePlaceholder": "Zoek bestand",
   "tab": {
-    "all": "Alle bestanden",
+    "all": "Alles",
     "audios": "Audio's",
     "documents": "Documenten",
+    "home": "Startpagina",
     "images": "Afbeeldingen",
+    "moreTypes": "Meer typen",
     "videos": "Video's",
     "websites": "Websites"
   },

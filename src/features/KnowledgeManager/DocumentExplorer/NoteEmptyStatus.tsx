@@ -3,6 +3,7 @@ import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
@@ -67,6 +68,7 @@ interface NoteEmptyStatusProps {
 
 const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
   ({ knowledgeBaseId, onCreateNewNote, onNoteCreated }) => {
+    const { t } = useTranslation(['file', 'common']);
     const theme = useTheme();
     const { styles } = useStyles();
     const [isUploading, setIsUploading] = useState(false);
@@ -100,13 +102,13 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
     return (
       <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
         <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-          <Text as={'h4'}>Select a note to get started</Text>
-          <Text type={'secondary'}>Or</Text>
+          <Text as={'h4'}>{t('notesEditor.empty.title')}</Text>
+          <Text type={'secondary'}>{t('or', { ns: 'common' })}</Text>
         </Flexbox>
         <Flexbox gap={12} horizontal>
           {/* Create New Note */}
           <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>
-            <span className={styles.actionTitle}>Create new note</span>
+            <span className={styles.actionTitle}>{t('notesEditor.empty.createNewDocument')}</span>
             <div className={styles.glow} style={{ background: theme.purple }} />
             <FileTypeIcon
               className={styles.icon}
@@ -131,7 +133,7 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
               style={{ opacity: isUploading ? 0.5 : 1 }}
             >
               <span className={styles.actionTitle}>
-                {isUploading ? 'Uploading...' : 'Upload markdown'}
+                {isUploading ? 'Uploading...' : t('notesEditor.empty.uploadMarkdown')}
               </span>
               <div className={styles.glow} style={{ background: theme.gold }} />
               <FileTypeIcon

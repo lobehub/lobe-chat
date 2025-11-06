@@ -99,7 +99,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
     createDocument({
       content: '',
       knowledgeBaseId,
-      title: t('home.uploadEntries.newNote.defaultTitle'),
+      title: t('home.uploadEntries.newDocument.title'),
     });
   };
 
@@ -133,7 +133,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
     <div className={styles.grid}>
       {/* Create New Note */}
       <Flexbox className={styles.card} onClick={handleCreateNote} padding={16}>
-        <span className={styles.actionTitle}>{t('home.uploadEntries.newNote.title')}</span>
+        <span className={styles.actionTitle}>{t('home.uploadEntries.newDocument.title')}</span>
         <div className={styles.glow} style={{ background: theme.purple }} />
         <FileTypeIcon
           className={styles.icon}

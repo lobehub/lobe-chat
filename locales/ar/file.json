@@ -1,5 +1,5 @@
 {
-  "desc": "إدارة معرفتك",
+  "desc": "نظّم معرفتك في العمل، الدراسة والحياة.",
   "detail": {
     "basic": {
       "createdAt": "تاريخ الإنشاء",
@@ -28,7 +28,46 @@
       "uploadFile": "رفع ملف",
       "uploadFolder": "رفع مجلد"
     },
+    "newNoteButton": "ملاحظة جديدة",
+    "newNoteDialog": {
+      "cancel": "إلغاء",
+      "editTitle": "تعديل الملاحظة",
+      "emptyContent": "لا يمكن أن يكون محتوى الملاحظة فارغًا",
+      "loadError": "فشل في تحميل الملاحظة، يرجى المحاولة مرة أخرى",
+      "loading": "جارٍ التحميل...",
+      "save": "حفظ",
+      "saveError": "فشل في حفظ الملاحظة، يرجى المحاولة مرة أخرى",
+      "saveSuccess": "تم حفظ الملاحظة بنجاح",
+      "title": "ملاحظة جديدة",
+      "updateSuccess": "تم تحديث الملاحظة بنجاح"
+    },
     "uploadButton": "رفع"
+  },
+  "home": {
+    "getStarted": "ابدأ الآن",
+    "greeting": {
+      "afternoon": "مساء الخير",
+      "evening": "مساء الخير",
+      "morning": "صباح الخير"
+    },
+    "quickActions": "إجراءات سريعة",
+    "recentDocuments": "المستندات الأخيرة",
+    "recentFiles": "الملفات الأخيرة",
+    "subtitle": "مرحبًا بك في قاعدة المعرفة، ابدأ من هنا لإدارة مستنداتك وملاحظاتك",
+    "uploadEntries": {
+      "files": {
+        "title": "رفع ملفات"
+      },
+      "folder": {
+        "title": "رفع مجلد"
+      },
+      "knowledgeBase": {
+        "title": "قاعدة معرفة جديدة"
+      },
+      "newDocument": {
+        "title": "مستند جديد"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "إنشاء مكتبة معرفية جديدة",
     "title": "المكتبة المعرفية"
+  },
+  "menu": {
+    "allDocuments": "جميع المستندات"
   },
   "networkError": "فشل في الحصول على قاعدة المعرفة، يرجى التحقق من اتصال الشبكة ثم إعادة المحاولة",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "الوضع الحالي للنشر لا يدعم إدارة الملفات"
   },
+  "notesEditor": {
+    "addIcon": "إضافة رمز",
+    "emojiPicker": {
+      "tooltip": "اختر رمزًا"
+    },
+    "empty": {
+      "createNewDocument": "إنشاء مستند جديد",
+      "title": "اختر مستندًا للبدء",
+      "uploadMarkdown": "رفع ملف Markdown"
+    },
+    "saving": "جارٍ الحفظ...",
+    "titlePlaceholder": "بدون عنوان"
+  },
+  "notesList": {
+    "empty": "لا توجد ملاحظات بعد، انقر على الزر أعلاه لإنشاء أول ملاحظة لك",
+    "noResults": "لم يتم العثور على ملاحظات مطابقة",
+    "selectNote": "اختر ملاحظة للبدء في التعديل",
+    "untitled": "بدون عنوان"
+  },
   "preview": {
     "downloadFile": "تحميل الملف",
     "unsupportedFileAndContact": "هذا التنسيق من الملفات غير مدعوم للمعاينة عبر الإنترنت، إذا كان لديك طلب للمعاينة، فلا تتردد في <1>إبلاغنا</1>"
   },
   "searchFilePlaceholder": "بحث عن ملف",
   "tab": {
-    "all": "جميع الملفات",
+    "all": "الكل",
     "audios": "الصوتيات",
     "documents": "المستندات",
+    "home": "الرئيسية",
     "images": "الصور",
+    "moreTypes": "أنواع أخرى",
     "videos": "الفيديوهات",
     "websites": "المواقع"
   },

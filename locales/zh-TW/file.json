@@ -1,5 +1,5 @@
 {
-  "desc": "管理你的知識",
+  "desc": "管理你的工作、學習與生活知識。",
   "detail": {
     "basic": {
       "createdAt": "創建時間",
@@ -28,7 +28,46 @@
       "uploadFile": "上傳檔案",
       "uploadFolder": "上傳資料夾"
     },
+    "newNoteButton": "新增筆記",
+    "newNoteDialog": {
+      "cancel": "取消",
+      "editTitle": "編輯筆記",
+      "emptyContent": "筆記內容不能為空",
+      "loadError": "載入筆記失敗，請重試",
+      "loading": "載入中...",
+      "save": "儲存",
+      "saveError": "儲存筆記失敗，請重試",
+      "saveSuccess": "筆記儲存成功",
+      "title": "新增筆記",
+      "updateSuccess": "筆記更新成功"
+    },
     "uploadButton": "上傳"
+  },
+  "home": {
+    "getStarted": "開始使用",
+    "greeting": {
+      "afternoon": "午安",
+      "evening": "晚安",
+      "morning": "早安"
+    },
+    "quickActions": "快速操作",
+    "recentDocuments": "最近文件",
+    "recentFiles": "最近檔案",
+    "subtitle": "歡迎使用知識庫，從這裡開始管理你的文件與筆記",
+    "uploadEntries": {
+      "files": {
+        "title": "上傳檔案"
+      },
+      "folder": {
+        "title": "上傳資料夾"
+      },
+      "knowledgeBase": {
+        "title": "新增知識庫"
+      },
+      "newDocument": {
+        "title": "新增文件"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "新建知識庫",
     "title": "知識庫"
+  },
+  "menu": {
+    "allDocuments": "全部文件"
   },
   "networkError": "獲取知識庫失敗，請檢查網路連接後重試",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "當前部署模式不支持檔案管理"
   },
+  "notesEditor": {
+    "addIcon": "新增圖示",
+    "emojiPicker": {
+      "tooltip": "選擇圖示"
+    },
+    "empty": {
+      "createNewDocument": "建立新文件",
+      "title": "選擇一個文件以開始",
+      "uploadMarkdown": "上傳 Markdown 檔案"
+    },
+    "saving": "儲存中...",
+    "titlePlaceholder": "無標題"
+  },
+  "notesList": {
+    "empty": "尚無筆記，點擊上方按鈕建立你的第一篇筆記",
+    "noResults": "找不到符合的筆記",
+    "selectNote": "選擇一篇筆記開始編輯",
+    "untitled": "無標題"
+  },
   "preview": {
     "downloadFile": "下載檔案",
     "unsupportedFileAndContact": "此檔案格式暫不支援線上預覽，如有預覽需求，歡迎<1>反饋給我們</1>"
   },
   "searchFilePlaceholder": "搜索檔案",
   "tab": {
-    "all": "全部檔案",
+    "all": "全部",
     "audios": "語音",
     "documents": "文檔",
+    "home": "首頁",
     "images": "圖片",
+    "moreTypes": "更多類型",
     "videos": "視頻",
     "websites": "網頁"
   },

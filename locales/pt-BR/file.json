@@ -1,5 +1,5 @@
 {
-  "desc": "Gerencie seu conhecimento",
+  "desc": "Gerencie seus conhecimentos de trabalho, estudo e vida.",
   "detail": {
     "basic": {
       "createdAt": "Data de criação",
@@ -28,7 +28,46 @@
       "uploadFile": "Enviar arquivo",
       "uploadFolder": "Enviar pasta"
     },
+    "newNoteButton": "Nova Nota",
+    "newNoteDialog": {
+      "cancel": "Cancelar",
+      "editTitle": "Editar Nota",
+      "emptyContent": "O conteúdo da nota não pode estar vazio",
+      "loadError": "Falha ao carregar a nota, tente novamente",
+      "loading": "Carregando...",
+      "save": "Salvar",
+      "saveError": "Falha ao salvar a nota, tente novamente",
+      "saveSuccess": "Nota salva com sucesso",
+      "title": "Nova Nota",
+      "updateSuccess": "Nota atualizada com sucesso"
+    },
     "uploadButton": "Enviar"
+  },
+  "home": {
+    "getStarted": "Começar",
+    "greeting": {
+      "afternoon": "Boa tarde",
+      "evening": "Boa noite",
+      "morning": "Bom dia"
+    },
+    "quickActions": "Ações Rápidas",
+    "recentDocuments": "Documentos Recentes",
+    "recentFiles": "Arquivos Recentes",
+    "subtitle": "Bem-vindo à base de conhecimento, comece a gerenciar seus documentos e notas aqui",
+    "uploadEntries": {
+      "files": {
+        "title": "Enviar Arquivos"
+      },
+      "folder": {
+        "title": "Enviar Pasta"
+      },
+      "knowledgeBase": {
+        "title": "Nova Base de Conhecimento"
+      },
+      "newDocument": {
+        "title": "Novo Documento"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "Novo repositório de conhecimento",
     "title": "Repositório de conhecimento"
+  },
+  "menu": {
+    "allDocuments": "Todos os Documentos"
   },
   "networkError": "Falha ao acessar a base de conhecimento, por favor verifique a conexão de rede e tente novamente",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "O modo de implantação atual não suporta gerenciamento de arquivos"
   },
+  "notesEditor": {
+    "addIcon": "Adicionar Ícone",
+    "emojiPicker": {
+      "tooltip": "Escolher Ícone"
+    },
+    "empty": {
+      "createNewDocument": "Criar Novo Documento",
+      "title": "Selecione um documento para começar",
+      "uploadMarkdown": "Enviar Arquivo Markdown"
+    },
+    "saving": "Salvando...",
+    "titlePlaceholder": "Sem título"
+  },
+  "notesList": {
+    "empty": "Nenhuma nota ainda, clique no botão acima para criar sua primeira nota",
+    "noResults": "Nenhuma nota correspondente encontrada",
+    "selectNote": "Selecione uma nota para começar a editar",
+    "untitled": "Sem título"
+  },
   "preview": {
     "downloadFile": "Baixar arquivo",
     "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
   },
   "searchFilePlaceholder": "Pesquisar arquivo",
   "tab": {
-    "all": "Todos os arquivos",
+    "all": "Todos",
     "audios": "Áudios",
     "documents": "Documentos",
+    "home": "Início",
     "images": "Imagens",
+    "moreTypes": "Mais Tipos",
     "videos": "Vídeos",
     "websites": "Sites"
   },

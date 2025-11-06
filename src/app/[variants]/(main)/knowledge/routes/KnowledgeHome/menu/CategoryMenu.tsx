@@ -107,7 +107,7 @@ const CategoryMenu = memo(() => {
               size={'small'}
             />
           </motion.div>
-          <div style={{ flex: 1, lineHeight: '14px' }}>Home</div>
+          <div style={{ flex: 1, lineHeight: '14px' }}>{t('tab.home')}</div>
         </Flexbox>
       </Flexbox>
 

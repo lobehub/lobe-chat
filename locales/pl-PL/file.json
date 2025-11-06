@@ -1,5 +1,5 @@
 {
-  "desc": "Zarządzaj swoją wiedzą",
+  "desc": "Zarządzaj swoją wiedzą z pracy, nauki i życia.",
   "detail": {
     "basic": {
       "createdAt": "Data utworzenia",
@@ -28,7 +28,46 @@
       "uploadFile": "Prześlij plik",
       "uploadFolder": "Prześlij folder"
     },
+    "newNoteButton": "Nowa notatka",
+    "newNoteDialog": {
+      "cancel": "Anuluj",
+      "editTitle": "Edytuj notatkę",
+      "emptyContent": "Treść notatki nie może być pusta",
+      "loadError": "Nie udało się załadować notatki, spróbuj ponownie",
+      "loading": "Ładowanie...",
+      "save": "Zapisz",
+      "saveError": "Nie udało się zapisać notatki, spróbuj ponownie",
+      "saveSuccess": "Notatka została zapisana",
+      "title": "Nowa notatka",
+      "updateSuccess": "Notatka została zaktualizowana"
+    },
     "uploadButton": "Prześlij"
+  },
+  "home": {
+    "getStarted": "Rozpocznij",
+    "greeting": {
+      "afternoon": "Dzień dobry",
+      "evening": "Dobry wieczór",
+      "morning": "Dzień dobry"
+    },
+    "quickActions": "Szybkie akcje",
+    "recentDocuments": "Ostatnie dokumenty",
+    "recentFiles": "Ostatnie pliki",
+    "subtitle": "Witamy w bazie wiedzy — zacznij zarządzać swoimi dokumentami i notatkami",
+    "uploadEntries": {
+      "files": {
+        "title": "Prześlij pliki"
+      },
+      "folder": {
+        "title": "Prześlij folder"
+      },
+      "knowledgeBase": {
+        "title": "Nowa baza wiedzy"
+      },
+      "newDocument": {
+        "title": "Nowy dokument"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +76,9 @@
     },
     "new": "Nowa baza wiedzy",
     "title": "Baza wiedzy"
+  },
+  "menu": {
+    "allDocuments": "Wszystkie dokumenty"
   },
   "networkError": "Nie udało się uzyskać dostępu do bazy wiedzy, proszę sprawdzić połączenie sieciowe i spróbować ponownie",
   "notSupportGuide": {
@@ -57,16 +99,37 @@
     },
     "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
   },
+  "notesEditor": {
+    "addIcon": "Dodaj ikonę",
+    "emojiPicker": {
+      "tooltip": "Wybierz ikonę"
+    },
+    "empty": {
+      "createNewDocument": "Utwórz nowy dokument",
+      "title": "Wybierz dokument, aby rozpocząć",
+      "uploadMarkdown": "Prześlij plik Markdown"
+    },
+    "saving": "Zapisywanie...",
+    "titlePlaceholder": "Bez tytułu"
+  },
+  "notesList": {
+    "empty": "Brak notatek. Kliknij przycisk powyżej, aby utworzyć swoją pierwszą notatkę",
+    "noResults": "Nie znaleziono pasujących notatek",
+    "selectNote": "Wybierz notatkę, aby rozpocząć edycję",
+    "untitled": "Bez tytułu"
+  },
   "preview": {
     "downloadFile": "Pobierz plik",
     "unsupportedFileAndContact": "Ten format pliku nie jest obecnie obsługiwany w podglądzie online. Jeśli chcesz uzyskać podgląd, zachęcamy do <1>skontaktowania się z nami</1>."
   },
   "searchFilePlaceholder": "Szukaj pliku",
   "tab": {
-    "all": "Wszystkie pliki",
+    "all": "Wszystko",
     "audios": "Audio",
     "documents": "Dokumenty",
+    "home": "Strona główna",
     "images": "Obrazy",
+    "moreTypes": "Więcej typów",
     "videos": "Wideo",
     "websites": "Strony internetowe"
   },

@@ -1,5 +1,5 @@
 {
-  "desc": "Manage your knowledge",
+  "desc": "Manage your knowledge for work, study, and life.",
   "detail": {
     "basic": {
       "createdAt": "Creation Time",
@@ -43,6 +43,32 @@
     },
     "uploadButton": "Upload"
   },
+  "home": {
+    "getStarted": "Get Started",
+    "greeting": {
+      "afternoon": "Good Afternoon",
+      "evening": "Good Evening",
+      "morning": "Good Morning"
+    },
+    "quickActions": "Quick Actions",
+    "recentDocuments": "Recent Documents",
+    "recentFiles": "Recent Files",
+    "subtitle": "Welcome to your knowledge base. Start managing your documents and notes here.",
+    "uploadEntries": {
+      "files": {
+        "title": "Upload Files"
+      },
+      "folder": {
+        "title": "Upload Folder"
+      },
+      "knowledgeBase": {
+        "title": "Create Knowledge Base"
+      },
+      "newDocument": {
+        "title": "Create Document"
+      }
+    }
+  },
   "knowledgeBase": {
     "list": {
       "confirmRemoveKnowledgeBase": "You are about to delete this knowledge base. The files within will not be deleted and will be moved to All Files. Once deleted, the knowledge base cannot be recovered. Please proceed with caution.",
@@ -50,6 +76,9 @@
     },
     "new": "New Knowledge Base",
     "title": "Knowledge Base"
+  },
+  "menu": {
+    "allDocuments": "All Documents"
   },
   "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
   "notSupportGuide": {
@@ -70,13 +99,24 @@
     },
     "title": "The current deployment mode does not support file management"
   },
-  "notesList": {
-    "actions": {
-      "copy": "Copy Content",
-      "delete": "Delete Note"
+  "notesEditor": {
+    "addIcon": "Add Icon",
+    "emojiPicker": {
+      "tooltip": "Choose Icon"
     },
+    "empty": {
+      "createNewDocument": "Create New Document",
+      "title": "Select a document to get started",
+      "uploadMarkdown": "Upload Markdown File"
+    },
+    "saving": "Saving...",
+    "titlePlaceholder": "Untitled"
+  },
+  "notesList": {
     "empty": "No notes yet, click the button above to create your first note",
-    "selectNote": "Select a note to start editing"
+    "noResults": "No matching notes found",
+    "selectNote": "Select a note to start editing",
+    "untitled": "Untitled"
   },
   "preview": {
     "downloadFile": "Download File",
@@ -84,11 +124,12 @@
   },
   "searchFilePlaceholder": "Search Files",
   "tab": {
-    "all": "All Files",
+    "all": "All",
     "audios": "Audio",
     "documents": "Documents",
+    "home": "Home",
     "images": "Images",
-    "notes": "Notes",
+    "moreTypes": "More Types",
     "videos": "Videos",
     "websites": "Websites"
   },
