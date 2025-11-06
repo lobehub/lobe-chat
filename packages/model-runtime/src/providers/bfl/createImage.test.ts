@@ -226,7 +226,7 @@ describe('createBflImage', () => {
 
       // Assert
       expect(mockParseDataUri).toHaveBeenCalledWith('https://example.com/input.jpg');
-      expect(mockImageUrlToBase64).toHaveBeenCalledWith('https://example.com/input.jpg');
+      expect(mockImageUrlToBase64).toHaveBeenCalledWith('https://example.com/input.jpg', undefined);
 
       const callArgs = mockFetch.mock.calls[0][1];
       const requestBody = JSON.parse(callArgs?.body as string);

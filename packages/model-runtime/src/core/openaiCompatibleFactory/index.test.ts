@@ -1251,6 +1251,7 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledWith(
           'https://example.com/image1.jpg',
+          undefined,
         );
         expect(instance['client'].images.edit).toHaveBeenCalledWith({
           image: expect.any(File),
@@ -1293,9 +1294,11 @@ describe('LobeOpenAICompatibleFactory', () => {
         expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledTimes(2);
         expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledWith(
           'https://example.com/image1.jpg',
+          undefined,
         );
         expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledWith(
           'https://example.com/image2.jpg',
+          undefined,
         );
 
         expect(instance['client'].images.edit).toHaveBeenCalledWith({

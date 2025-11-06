@@ -205,7 +205,10 @@ describe('createOpenAICompatibleImage', () => {
           provider: 'test-provider',
         });
 
-        expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(mockHttpImageUrl);
+        expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(
+          mockHttpImageUrl,
+          undefined,
+        );
         expect(result.imageUrl).toBe('data:image/png;base64,output');
       });
 

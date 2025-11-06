@@ -494,6 +494,7 @@ describe('createGoogleImage', () => {
       // Assert
       expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(
         'https://example.com/image.jpg',
+        undefined,
       );
       expect(mockClient.models.generateContent).toHaveBeenCalledWith({
         contents: [

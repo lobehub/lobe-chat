@@ -65,7 +65,7 @@ describe('anthropicHelpers', () => {
       const result = await buildAnthropicBlock(content);
 
       expect(parseDataUri).toHaveBeenCalledWith(content.image_url.url);
-      expect(imageUrlToBase64).toHaveBeenCalledWith(content.image_url.url);
+      expect(imageUrlToBase64).toHaveBeenCalledWith(content.image_url.url, undefined);
       expect(result).toEqual({
         source: {
           data: 'convertedBase64String',

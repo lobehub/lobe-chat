@@ -52,7 +52,7 @@ describe('convertMessageContent', () => {
     });
 
     expect(parseDataUri).toHaveBeenCalledWith('https://example.com/image.jpg');
-    expect(imageUrlToBase64).toHaveBeenCalledWith('https://example.com/image.jpg');
+    expect(imageUrlToBase64).toHaveBeenCalledWith('https://example.com/image.jpg', undefined);
   });
 
   it('should not convert image URL when not necessary', async () => {

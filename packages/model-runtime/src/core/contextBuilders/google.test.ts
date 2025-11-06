@@ -102,7 +102,7 @@ describe('google contextBuilders', () => {
         },
       });
 
-      expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(imageUrl);
+      expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(imageUrl, undefined);
     });
 
     it('should throw TypeError for unsupported image URL types', async () => {
