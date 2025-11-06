@@ -1,6 +1,6 @@
 import { LobeHub } from '@lobehub/icons-rn';
 import { ActionIcon, Block, Flexbox } from '@lobehub/ui-rn';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { CirclePlus, CompassIcon, LucideComponent } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
@@ -21,7 +21,6 @@ import { useStyles } from './style';
 export default function SideBar({ children }: { children: ReactNode }) {
   const { styles, theme } = useStyles();
   const winDim = useWindowDimensions();
-
   const [drawerOpen, setDrawerOpen] = useGlobalStore((s) => [s.drawerOpen, s.setDrawerOpen]);
   const createSession = useSessionStore((s) => s.createSession);
   const [isCreatingSession, setIsCreatingSession] = useState(false);
@@ -85,31 +84,21 @@ export default function SideBar({ children }: { children: ReactNode }) {
               <LobeHub.Text color={theme.colorText} size={20} style={{ marginLeft: 4 }} />
               <Flexbox align={'center'} gap={4} horizontal>
                 {isDev && (
-                  <ActionIcon
-                    icon={LucideComponent}
-                    onPress={() => {
-                      setDrawerOpen(false);
-                      router.push('/playground');
-                    }}
-                    size={{
-                      blockSize: 36,
-                      borderRadius: 36,
-                      size: ICON_SIZE,
-                    }}
-                  />
+                  <Link asChild href="/playground">
+                    <ActionIcon
+                      icon={LucideComponent}
+                      onPress={() => setDrawerOpen(false)}
+                      size={{ blockSize: 36, borderRadius: 36, size: ICON_SIZE }}
+                    />
+                  </Link>
                 )}
-                <ActionIcon
-                  icon={CompassIcon}
-                  onPress={() => {
-                    setDrawerOpen(false);
-                    router.push('/discover/assistant');
-                  }}
-                  size={{
-                    blockSize: 36,
-                    borderRadius: 36,
-                    size: ICON_SIZE,
-                  }}
-                />
+                <Link asChild href="/discover/assistant">
+                  <ActionIcon
+                    icon={CompassIcon}
+                    onPress={() => setDrawerOpen(false)}
+                    size={{ blockSize: 36, borderRadius: 36, size: ICON_SIZE }}
+                  />
+                </Link>
                 <ActionIcon
                   icon={CirclePlus}
                   loading={isCreatingSession}
