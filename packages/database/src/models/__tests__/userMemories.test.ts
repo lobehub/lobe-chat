@@ -375,6 +375,92 @@ describe('UserMemoryModel', () => {
     });
   });
 
+  describe('findById', () => {
+    it('returns own memories and updates access metrics', async () => {
+      const created = await userMemoryModel.create(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+
+      const before = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, created.id),
+      });
+
+      expect(before).toBeDefined();
+      expect(before?.accessedCount).toBe(0);
+
+      const found = await userMemoryModel.findById(created.id);
+
+      expect(found).toBeDefined();
+      expect(found?.id).toBe(created.id);
+
+      const after = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, created.id),
+      });
+
+      expect(after?.accessedCount).toBe((before?.accessedCount ?? 0) + 1);
+      expect(after?.lastAccessedAt.getTime()).toBeGreaterThanOrEqual(
+        before!.lastAccessedAt.getTime(),
+      );
+    });
+
+    it('does not expose or mutate memories belonging to other users', async () => {
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+      const otherMemory = await anotherUserModel.create(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+
+      const found = await userMemoryModel.findById(otherMemory.id);
+
+      expect(found).toBeUndefined();
+
+      const persisted = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, otherMemory.id),
+      });
+
+      expect(persisted?.accessedCount).toBe(0);
+    });
+  });
+
+  describe('update', () => {
+    it('updates mutable fields for own memories only', async () => {
+      const created = await userMemoryModel.create(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+
+      await userMemoryModel.update(created.id, {
+        memoryCategory: 'updated-category',
+        summary: 'Updated summary',
+        title: 'Updated title',
+      });
+
+      const updated = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, created.id),
+      });
+
+      expect(updated?.memoryCategory).toBe('updated-category');
+      expect(updated?.summary).toBe('Updated summary');
+      expect(updated?.title).toBe('Updated title');
+      expect(updated?.updatedAt.getTime()).toBeGreaterThan(created.createdAt.getTime());
+    });
+
+    it('ignores updates for memories owned by other users', async () => {
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+      const otherMemory = await anotherUserModel.create(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+
+      await userMemoryModel.update(otherMemory.id, {
+        summary: 'Should not update',
+      });
+
+      const persisted = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, otherMemory.id),
+      });
+
+      expect(persisted?.summary).not.toBe('Should not update');
+    });
+  });
+
   describe('update vector methods', () => {
     it('updates base user memory vectors', async () => {
       const memoryId = idGenerator('memory');
@@ -642,6 +728,71 @@ describe('UserMemoryModel', () => {
       expect(removed).toBe(true);
       expect(baseMemory).toBeUndefined();
       expect(identityMemory).toBeUndefined();
+    });
+  });
+
+  describe('getIdentitiesByType', () => {
+    it('returns the newest identities of the requested type for the current user', async () => {
+      const resultOne = await userMemoryModel.addIdentityEntry({
+        base: {
+          summary: 'personal-one',
+        },
+        identity: {
+          description: 'first personal',
+          type: 'personal',
+        },
+      });
+
+      const resultTwo = await userMemoryModel.addIdentityEntry({
+        base: {
+          summary: 'personal-two',
+        },
+        identity: {
+          description: 'second personal',
+          type: 'personal',
+        },
+      });
+
+      await userMemoryModel.addIdentityEntry({
+        base: {
+          summary: 'preference-not-personal',
+        },
+        identity: {
+          description: 'professional identity',
+          type: 'professional',
+        },
+      });
+
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+      await anotherUserModel.addIdentityEntry({
+        base: {
+          summary: 'other user personal',
+        },
+        identity: {
+          description: 'should not show',
+          type: 'personal',
+        },
+      });
+
+      // Ensure deterministic ordering by forcing createdAt values
+      await serverDB
+        .update(userMemoriesIdentities)
+        .set({ createdAt: new Date('2024-01-01T00:00:00.000Z') })
+        .where(eq(userMemoriesIdentities.id, resultOne.identityId));
+      await serverDB
+        .update(userMemoriesIdentities)
+        .set({ createdAt: new Date('2024-02-01T00:00:00.000Z') })
+        .where(eq(userMemoriesIdentities.id, resultTwo.identityId));
+
+      const identities = await userMemoryModel.getIdentitiesByType('personal');
+
+      expect(identities).toHaveLength(2);
+      expect(identities[0]?.id).toBe(resultTwo.identityId);
+      expect(identities[1]?.id).toBe(resultOne.identityId);
+      identities.forEach((identity) => {
+        expect(identity.type).toBe('personal');
+        expect(identity.userId).toBe(userId);
+      });
     });
   });
 

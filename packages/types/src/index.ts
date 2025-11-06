@@ -31,4 +31,5 @@ export * from './user';
 export * from './openai/chat';
 export * from './openai/plugin';
 export * from './trace';
+export * from './userMemory';
 export * from './zustand';
