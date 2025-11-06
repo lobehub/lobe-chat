@@ -58,7 +58,7 @@ const editorClassName = cx(css`
   }
 `);
 
-interface NoteEditorPanelProps {
+interface DocumentEditorPanelProps {
   content?: string | null;
   documentId?: string;
   documentTitle?: string;
@@ -69,7 +69,7 @@ interface NoteEditorPanelProps {
   onSave?: () => void;
 }
 
-const NoteEditor = memo<NoteEditorPanelProps>(
+const DocumentEditor = memo<DocumentEditorPanelProps>(
   ({
     content: cachedContent,
     documentId,
@@ -88,15 +88,15 @@ const NoteEditor = memo<NoteEditorPanelProps>(
     const editorState = useEditorState(editor);
 
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-    const [noteTitle, setNoteTitle] = useState('');
-    const [noteEmoji, setNoteEmoji] = useState<string | undefined>(undefined);
+    const [currentTitle, setCurrentTitle] = useState('');
+    const [currentEmoji, setCurrentEmoji] = useState<string | undefined>(undefined);
     const [isHoveringTitle, setIsHoveringTitle] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [currentDocId, setCurrentDocId] = useState<string | undefined>(documentId);
     const refreshFileList = useFileStore((s) => s.refreshFileList);
-    const updateNoteOptimistically = useFileStore((s) => s.updateNoteOptimistically);
-    const localNoteMap = useFileStore((s) => s.localNoteMap);
-    const replaceTempNoteWithReal = useFileStore((s) => s.replaceTempNoteWithReal);
+    const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
+    const localDocumentMap = useFileStore((s) => s.localDocumentMap);
+    const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
     const isInitialLoadRef = useRef(false);
 
     // Load document content when documentId changes
@@ -105,7 +105,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
       isInitialLoadRef.current = true;
 
       if (documentId && editor) {
-        console.log('[NoteEditorPanel] Loading content:', {
+        console.log('[DocumentEditor] Loading content:', {
           cachedEditorDataPreview: cachedEditorData
             ? JSON.stringify(cachedEditorData).slice(0, 100)
             : null,
@@ -114,20 +114,20 @@ const NoteEditor = memo<NoteEditorPanelProps>(
           documentId,
           documentTitle,
           hasCachedEditorData: !!cachedEditorData,
-          isTempNote: documentId.startsWith('temp-note-'),
+          isTempDocument: documentId.startsWith('temp-document-'),
         });
 
         // Reset emoji picker state when switching documents
         setShowEmojiPicker(false);
         // Initialize emoji from cached value
-        setNoteEmoji(cachedEmoji);
+        setCurrentEmoji(cachedEmoji);
 
-        // Check if this is an optimistic note from local map
-        const localNote = localNoteMap.get(documentId);
-        if (localNote && documentId.startsWith('temp-note-')) {
-          console.log('[NoteEditorPanel] Using optimistic note from local map');
-          setNoteTitle(localNote.name || 'Untitled Note');
-          // Start with empty editor for new notes
+        // Check if this is an optimistic document from local map
+        const localDocument = localDocumentMap.get(documentId);
+        if (localDocument && documentId.startsWith('temp-document-')) {
+          console.log('[DocumentEditor] Using optimistic document from local map');
+          setCurrentTitle(localDocument.name || 'Untitled Document');
+          // Start with empty editor for new documents
           editor.cleanDocument();
           // Reset flag after cleanDocument (no onChange should fire for cleanDocument)
           setTimeout(() => {
@@ -142,7 +142,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
           typeof cachedEditorData === 'object' &&
           Object.keys(cachedEditorData).length > 0;
 
-        console.log('[NoteEditorPanel] Cached data check:', {
+        console.log('[DocumentEditor] Cached data check:', {
           cachedContent,
           cachedEditorData,
           hasCachedContent: !!cachedContent,
@@ -151,8 +151,8 @@ const NoteEditor = memo<NoteEditorPanelProps>(
         });
 
         if (hasValidCachedEditorData) {
-          console.log('[NoteEditorPanel] Using cached editorData', cachedEditorData);
-          setNoteTitle(documentTitle || '');
+          console.log('[DocumentEditor] Using cached editorData', cachedEditorData);
+          setCurrentTitle(documentTitle || '');
           isInitialLoadRef.current = true;
           editor.setDocument('json', JSON.stringify(cachedEditorData));
           setTimeout(() => {
@@ -163,8 +163,8 @@ const NoteEditor = memo<NoteEditorPanelProps>(
 
         // If no valid editorData but has cached content, use markdown format
         if (!hasValidCachedEditorData && cachedContent) {
-          console.log('[NoteEditorPanel] Using cached markdown content');
-          setNoteTitle(documentTitle || '');
+          console.log('[DocumentEditor] Using cached markdown content');
+          setCurrentTitle(documentTitle || '');
           isInitialLoadRef.current = true;
           editor.setDocument('markdown', cachedContent);
           setTimeout(() => {
@@ -174,18 +174,18 @@ const NoteEditor = memo<NoteEditorPanelProps>(
         }
 
         // Otherwise, fetch full content from API
-        console.log('[NoteEditorPanel] Fetching from API');
+        console.log('[DocumentEditor] Fetching from API');
         documentService
           .getDocumentById(documentId)
           .then((doc) => {
             if (doc) {
-              setNoteTitle(doc.title || doc.filename || '');
+              setCurrentTitle(doc.title || doc.filename || '');
               // Load emoji from metadata
               if (doc.metadata?.emoji) {
-                setNoteEmoji(doc.metadata.emoji);
+                setCurrentEmoji(doc.metadata.emoji);
               }
 
-              console.log('[NoteEditorPanel] Fetched doc.editorData:', {
+              console.log('[DocumentEditor] Fetched doc.editorData:', {
                 editorDataPreview: doc.editorData
                   ? JSON.stringify(doc.editorData).slice(0, 100)
                   : null,
@@ -202,7 +202,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
 
               // If no valid editorData but has content, use markdown format
               if (!hasValidEditorData && doc.content) {
-                console.log('[NoteEditorPanel] Using markdown format for content');
+                console.log('[DocumentEditor] Using markdown format for content');
                 isInitialLoadRef.current = true;
                 editor.setDocument('markdown', doc.content);
                 setTimeout(() => {
@@ -221,7 +221,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
             }
           })
           .catch((error) => {
-            console.error('[NoteEditorPanel] Failed to load document:', error);
+            console.error('[DocumentEditor] Failed to load document:', error);
             // Reset flag on error
             isInitialLoadRef.current = false;
           });
@@ -236,7 +236,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
       cachedContent,
       documentTitle,
       cachedEmoji,
-      localNoteMap,
+      localDocumentMap,
     ]);
 
     // Auto-save function
@@ -254,23 +254,23 @@ const NoteEditor = memo<NoteEditorPanelProps>(
       setSaveStatus('saving');
 
       try {
-        if (currentDocId && !currentDocId.startsWith('temp-note-')) {
-          // Update existing note with optimistic update (including metadata for emoji)
-          await updateNoteOptimistically(currentDocId, {
+        if (currentDocId && !currentDocId.startsWith('temp-document-')) {
+          // Update existing document with optimistic update (including metadata for emoji)
+          await updateDocumentOptimistically(currentDocId, {
             content: textContent,
             editorData: structuredClone(editorData),
-            metadata: noteEmoji
+            metadata: currentEmoji
               ? {
-                  emoji: noteEmoji,
+                  emoji: currentEmoji,
                 }
               : {
                   emoji: undefined, // Explicitly set to undefined to remove emoji
                 },
-            name: noteTitle,
+            name: currentTitle,
             updatedAt: new Date(),
           });
         } else {
-          // Create new note (either no ID or temp ID)
+          // Create new document (either no ID or temp ID)
           const now = Date.now();
           const timestamp = new Date(now).toLocaleString('en-US', {
             day: '2-digit',
@@ -279,17 +279,17 @@ const NoteEditor = memo<NoteEditorPanelProps>(
             month: 'short',
             year: 'numeric',
           });
-          const title = noteTitle || `Note - ${timestamp}`;
+          const title = currentTitle || `Document - ${timestamp}`;
 
           const newDoc = await documentService.createNote({
             content: textContent,
             editorData: JSON.stringify(editorData),
             fileType: 'custom/note',
             knowledgeBaseId,
-            metadata: noteEmoji
+            metadata: currentEmoji
               ? {
                   createdAt: now,
-                  emoji: noteEmoji,
+                  emoji: currentEmoji,
                 }
               : {
                   createdAt: now,
@@ -297,8 +297,8 @@ const NoteEditor = memo<NoteEditorPanelProps>(
             title,
           });
 
-          // Create the real note object for optimistic update
-          const realNote = {
+          // Create the real document object for optimistic update
+          const realDocument = {
             chunkCount: null,
             chunkingError: null,
             chunkingStatus: null,
@@ -317,9 +317,9 @@ const NoteEditor = memo<NoteEditorPanelProps>(
             url: '',
           };
 
-          // Replace temp note with real note (smooth UX, no flicker)
-          if (currentDocId?.startsWith('temp-note-')) {
-            replaceTempNoteWithReal(currentDocId, realNote);
+          // Replace temp document with real document (smooth UX, no flicker)
+          if (currentDocId?.startsWith('temp-document-')) {
+            replaceTempDocumentWithReal(currentDocId, realDocument);
           }
 
           // Update state and notify parent
@@ -334,31 +334,31 @@ const NoteEditor = memo<NoteEditorPanelProps>(
 
         onSave?.();
       } catch (error) {
-        console.error('Failed to save note:', error);
+        console.error('Failed to save document:', error);
         setSaveStatus('idle');
       }
     }, [
       editor,
       currentDocId,
-      noteTitle,
-      noteEmoji,
+      currentTitle,
+      currentEmoji,
       knowledgeBaseId,
       refreshFileList,
-      updateNoteOptimistically,
+      updateDocumentOptimistically,
       onSave,
       onDocumentIdChange,
-      replaceTempNoteWithReal,
+      replaceTempDocumentWithReal,
     ]);
 
     // Handle content change - auto-save after debounce (with skip initial load)
     const handleContentChangeInternal = useCallback(() => {
       // Skip if we're in the initial load phase
       if (isInitialLoadRef.current) {
-        console.log('[NoteEditorPanel] Skipping onChange during initial load');
+        console.log('[DocumentEditor] Skipping onChange during initial load');
         return;
       }
 
-      console.log('[NoteEditorPanel] Content changed, triggering auto-save');
+      console.log('[DocumentEditor] Content changed, triggering auto-save');
       performSave();
     }, [performSave]);
 
@@ -517,17 +517,17 @@ const NoteEditor = memo<NoteEditorPanelProps>(
               style={{ marginBottom: 24 }}
             >
               {/* Emoji picker above Choose Icon button */}
-              {(noteEmoji || showEmojiPicker) && (
+              {(currentEmoji || showEmojiPicker) && (
                 <Flexbox style={{ marginBottom: 4 }}>
                   <EmojiPicker
                     allowDelete
                     locale={locale}
                     onChange={(emoji) => {
-                      setNoteEmoji(emoji);
+                      setCurrentEmoji(emoji);
                       debouncedSave();
                     }}
                     onDelete={() => {
-                      setNoteEmoji(undefined);
+                      setCurrentEmoji(undefined);
                       debouncedSave();
                     }}
                     size={80}
@@ -536,7 +536,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                       transform: 'translateX(-6px)',
                     }}
                     title={t('notesEditor.emojiPicker.tooltip')}
-                    value={noteEmoji}
+                    value={currentEmoji}
                   />
                 </Flexbox>
               )}
@@ -548,7 +548,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                   onClick={() => setShowEmojiPicker(true)}
                   size="small"
                   style={{
-                    opacity: isHoveringTitle && !noteEmoji && !showEmojiPicker ? 1 : 0,
+                    opacity: isHoveringTitle && !currentEmoji && !showEmojiPicker ? 1 : 0,
                     transform: 'translateX(-6px)',
                     transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
                     width: 'fit-content',
@@ -563,8 +563,17 @@ const NoteEditor = memo<NoteEditorPanelProps>(
               <Flexbox align="center" direction="horizontal" gap={8}>
                 <input
                   onChange={(e) => {
-                    setNoteTitle(e.target.value);
+                    setCurrentTitle(e.target.value);
                     debouncedSave();
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      // Save immediately and focus on the editor
+                      performSave().then(() => {
+                        editor?.focus();
+                      });
+                    }
                   }}
                   placeholder={t('notesEditor.titlePlaceholder')}
                   style={{
@@ -577,7 +586,7 @@ const NoteEditor = memo<NoteEditorPanelProps>(
                     lineHeight: 1.2,
                     outline: 'none',
                   }}
-                  value={noteTitle}
+                  value={currentTitle}
                 />
               </Flexbox>
             </Flexbox>
@@ -609,4 +618,4 @@ const NoteEditor = memo<NoteEditorPanelProps>(
   },
 );
 
-export default NoteEditor;
+export default DocumentEditor;

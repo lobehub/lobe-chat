@@ -4,15 +4,15 @@ import { UploadFileItem } from '@/types/files/upload';
 export interface ImageFileState {
   chatUploadFileList: UploadFileItem[];
   /**
-   * Local optimistic note map for immediate UI updates
-   * Key: note ID, Value: FileListItem
+   * Local optimistic document map for immediate UI updates
+   * Key: document ID, Value: FileListItem
    */
-  localNoteMap: Map<string, FileListItem>;
+  localDocumentMap: Map<string, FileListItem>;
   uploadingIds: string[];
 }
 
 export const initialImageFileState: ImageFileState = {
   chatUploadFileList: [],
-  localNoteMap: new Map(),
+  localDocumentMap: new Map(),
   uploadingIds: [],
 };

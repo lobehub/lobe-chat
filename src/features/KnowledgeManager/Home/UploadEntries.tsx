@@ -91,12 +91,12 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
   const { styles } = useStyles();
   const navigate = useNavigate();
 
-  const createNote = useFileStore((s) => s.createNote);
+  const createDocument = useFileStore((s) => s.createDocument);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
   const { open } = useCreateNewModal();
 
   const handleCreateNote = () => {
-    createNote({
+    createDocument({
       content: '',
       knowledgeBaseId,
       title: t('home.uploadEntries.newNote.defaultTitle'),

@@ -10,16 +10,93 @@ import { useTranslation } from 'react-i18next';
 import { useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
 
-import NoteActions from './NoteActions';
-import NoteEditor from './NoteEditorPanel';
+import NoteActions from './DocumentActions';
+import DocumentEditor from './DocumentEditor';
+import NoteListSkeleton from './DocumentListSkeleton';
 import NoteEmptyStatus from './NoteEmptyStatus';
-import NoteListSkeleton from './NoteListSkeleton';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     display: flex;
     width: 100%;
     height: 100%;
+  `,
+  documentActions: css`
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+
+    padding: 0;
+    border-radius: ${token.borderRadiusSM}px;
+
+    opacity: 0;
+    background: ${token.colorBgContainer};
+    box-shadow: ${token.boxShadowSecondary};
+
+    transition: opacity ${token.motionDurationMid};
+  `,
+  documentCard: css`
+    cursor: pointer;
+    user-select: none;
+
+    position: relative;
+
+    overflow: hidden;
+
+    margin: 12px;
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgContainer};
+
+    transition: all ${token.motionDurationMid};
+
+    &:hover {
+      border-color: ${token.colorPrimary};
+      box-shadow: ${token.boxShadowTertiary};
+
+      .document-actions {
+        opacity: 1;
+      }
+    }
+
+    &.selected {
+      border-color: ${token.colorPrimary};
+      background: ${token.colorPrimaryBg};
+      box-shadow: ${token.boxShadowTertiary};
+    }
+  `,
+  documentContent: css`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+  `,
+  documentList: css`
+    overflow-y: auto;
+    flex: 1;
+    padding-block: 4px;
+  `,
+  documentPreview: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+
+    font-size: 13px;
+    line-height: 1.6;
+    color: ${token.colorTextSecondary};
+  `,
+  documentTitle: css`
+    overflow: hidden;
+
+    font-size: 14px;
+    font-weight: ${token.fontWeightStrong};
+    line-height: 1.4;
+    color: ${token.colorText};
+    text-overflow: ellipsis;
+    white-space: nowrap;
   `,
   editorPanel: css`
     overflow: hidden;
@@ -46,83 +123,6 @@ const useStyles = createStyles(({ css, token }) => ({
     border-inline-end: 1px solid ${token.colorBorderSecondary};
 
     background: ${token.colorBgContainer};
-  `,
-  noteActions: css`
-    position: absolute;
-    z-index: 1;
-    inset-block-start: 8px;
-    inset-inline-end: 8px;
-
-    padding: 0;
-    border-radius: ${token.borderRadiusSM}px;
-
-    opacity: 0;
-    background: ${token.colorBgContainer};
-    box-shadow: ${token.boxShadowSecondary};
-
-    transition: opacity ${token.motionDurationMid};
-  `,
-  noteCard: css`
-    cursor: pointer;
-    user-select: none;
-
-    position: relative;
-
-    overflow: hidden;
-
-    margin: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorBgContainer};
-
-    transition: all ${token.motionDurationMid};
-
-    &:hover {
-      border-color: ${token.colorPrimary};
-      box-shadow: ${token.boxShadowTertiary};
-
-      .note-actions {
-        opacity: 1;
-      }
-    }
-
-    &.selected {
-      border-color: ${token.colorPrimary};
-      background: ${token.colorPrimaryBg};
-      box-shadow: ${token.boxShadowTertiary};
-    }
-  `,
-  noteContent: css`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-  `,
-  noteList: css`
-    overflow-y: auto;
-    flex: 1;
-    padding-block: 4px;
-  `,
-  notePreview: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-
-    font-size: 13px;
-    line-height: 1.6;
-    color: ${token.colorTextSecondary};
-  `,
-  noteTitle: css`
-    overflow: hidden;
-
-    font-size: 14px;
-    font-weight: ${token.fontWeightStrong};
-    line-height: 1.4;
-    color: ${token.colorText};
-    text-overflow: ellipsis;
-    white-space: nowrap;
   `,
 }));
 
@@ -169,88 +169,98 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
 
-  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [searchKeywords, setSearchKeywords] = useState<string>('');
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
-  const getOptimisticNotes = useFileStore((s) => s.getOptimisticNotes);
-  const syncNoteMapWithServer = useFileStore((s) => s.syncNoteMapWithServer);
-  const createNote = useFileStore((s) => s.createNote);
-  const createOptimisticNote = useFileStore((s) => s.createOptimisticNote);
-  const replaceTempNoteWithReal = useFileStore((s) => s.replaceTempNoteWithReal);
-  // Subscribe to localNoteMap to trigger re-render when notes are updated
-  useFileStore((s) => s.localNoteMap);
+  const getOptimisticDocuments = useFileStore((s) => s.getOptimisticDocuments);
+  const syncDocumentMapWithServer = useFileStore((s) => s.syncDocumentMapWithServer);
+  const createDocument = useFileStore((s) => s.createDocument);
+  const createOptimisticDocument = useFileStore((s) => s.createOptimisticDocument);
+  const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
+  // Subscribe to localDocumentMap to trigger re-render when documents are updated
+  useFileStore((s) => s.localDocumentMap);
 
   const { data: allFiles, isLoading } = useFetchKnowledgeItems({
     knowledgeBaseId,
   });
 
-  // Sync server data to local note map when it changes
+  // Sync server data to local document map when it changes
   useEffect(() => {
     if (allFiles) {
-      syncNoteMapWithServer(allFiles);
+      syncDocumentMapWithServer(allFiles);
     }
-  }, [allFiles, syncNoteMapWithServer]);
+  }, [allFiles, syncDocumentMapWithServer]);
 
   // If documentId is provided, automatically open that document
   useEffect(() => {
     if (documentId) {
-      setSelectedNoteId(documentId);
+      setSelectedDocumentId(documentId);
       setIsCreatingNew(false);
     }
   }, [documentId]);
 
-  // Get optimistic notes (merged local + server)
+  // Get optimistic documents (merged local + server)
   // Filter by knowledgeBaseId if provided
   // Since the API call already filters by knowledgeBaseId, we trust that data
   // But we also need to check local optimistic updates
-  // Re-compute when localNoteMap changes to ensure list updates when notes are edited
-  const notes = getOptimisticNotes();
+  // Re-compute when localDocumentMap changes to ensure list updates when documents are edited
+  const documents = getOptimisticDocuments();
 
-  // Filter notes based on search keywords
-  const filteredNotes = useMemo(() => {
-    if (!searchKeywords.trim()) return notes;
+  // Filter documents based on search keywords and sort by creation date (newest first)
+  const filteredDocuments = useMemo(() => {
+    let result = documents;
 
-    const lowerKeywords = searchKeywords.toLowerCase();
-    return notes.filter((note) => {
-      const content = note.content?.toLowerCase() || '';
-      const name = note.name?.toLowerCase() || '';
-      return content.includes(lowerKeywords) || name.includes(lowerKeywords);
+    // Filter by search keywords
+    if (searchKeywords.trim()) {
+      const lowerKeywords = searchKeywords.toLowerCase();
+      result = documents.filter((document) => {
+        const content = document.content?.toLowerCase() || '';
+        const name = document.name?.toLowerCase() || '';
+        return content.includes(lowerKeywords) || name.includes(lowerKeywords);
+      });
+    }
+
+    // Sort by creation date (newest first)
+    return result.sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return dateB - dateA;
     });
-  }, [notes, searchKeywords]);
+  }, [documents, searchKeywords]);
 
-  const selectedNote = notes.find((note) => note.id === selectedNoteId);
+  const selectedDocument = documents.find((document) => document.id === selectedDocumentId);
 
-  const handleNoteSelect = (noteId: string) => {
-    if (selectedNoteId === noteId) {
-      // Deselect if clicking the same note
-      setSelectedNoteId(null);
+  const handleDocumentSelect = (documentId: string) => {
+    if (selectedDocumentId === documentId) {
+      // Deselect if clicking the same document
+      setSelectedDocumentId(null);
     } else {
-      setSelectedNoteId(noteId);
-      updateUrl(noteId);
+      setSelectedDocumentId(documentId);
+      updateUrl(documentId);
     }
     setIsCreatingNew(false);
   };
 
-  const handleNewNote = async () => {
+  const handleNewDocument = async () => {
     const untitledTitle = t('notesList.untitled');
 
-    // Create optimistic note immediately for instant UX
-    const tempNoteId = createOptimisticNote(untitledTitle);
-    setSelectedNoteId(tempNoteId);
+    // Create optimistic document immediately for instant UX
+    const tempDocumentId = createOptimisticDocument(untitledTitle);
+    setSelectedDocumentId(tempDocumentId);
     setIsCreatingNew(true);
 
     try {
       // Create real document in background
-      const newDoc = await createNote({
+      const newDoc = await createDocument({
         content: '',
         knowledgeBaseId,
         title: untitledTitle,
       });
 
       // Convert DocumentItem to FileListItem
-      const realNote: FileListItem = {
+      const realDocument: FileListItem = {
         chunkCount: null,
         chunkingError: null,
         chunkingStatus: null,
@@ -273,31 +283,31 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
         url: '',
       };
 
-      // Replace optimistic note with real note (smooth UX, no flicker)
-      replaceTempNoteWithReal(tempNoteId, realNote);
+      // Replace optimistic document with real document (smooth UX, no flicker)
+      replaceTempDocumentWithReal(tempDocumentId, realDocument);
 
-      // Update selected note ID to real ID
-      setSelectedNoteId(newDoc.id);
+      // Update selected document ID to real ID
+      setSelectedDocumentId(newDoc.id);
       setIsCreatingNew(false);
     } catch (error) {
-      console.error('Failed to create note:', error);
-      // On error, remove the optimistic note and deselect
-      useFileStore.getState().removeTempNote(tempNoteId);
-      setSelectedNoteId(null);
+      console.error('Failed to create document:', error);
+      // On error, remove the optimistic document and deselect
+      useFileStore.getState().removeTempDocument(tempDocumentId);
+      setSelectedDocumentId(null);
       setIsCreatingNew(false);
     }
   };
 
   const handleDocumentIdChange = (newId: string) => {
-    // When a temp note gets a real ID, update the selected note ID
-    setSelectedNoteId(newId);
+    // When a temp document gets a real ID, update the selected document ID
+    setSelectedDocumentId(newId);
     setIsCreatingNew(false);
     updateUrl(newId);
   };
 
   return (
     <div className={styles.container}>
-      {/* Left Panel - Notes List */}
+      {/* Left Panel - Documents List */}
       <div className={styles.listPanel}>
         <div className={styles.header}>
           <SearchBar
@@ -310,47 +320,50 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           />
           <ActionIcon
             icon={PlusIcon}
-            onClick={handleNewNote}
+            onClick={handleNewDocument}
             // size={'large'}
             title={t('header.newNoteButton')}
           />
         </div>
-        <div className={styles.noteList}>
+        <div className={styles.documentList}>
           {isLoading ? (
             <NoteListSkeleton />
-          ) : filteredNotes.length === 0 ? (
+          ) : filteredDocuments.length === 0 ? (
             <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
               {searchKeywords.trim() ? t('notesList.noResults') : t('notesList.empty')}
             </div>
           ) : (
-            filteredNotes.map((note) => {
-              const title = note.name || t('notesList.untitled');
-              const previewText = getPreviewText(note);
-              const emoji = note.metadata?.emoji;
+            filteredDocuments.map((document) => {
+              const title = document.name || t('notesList.untitled');
+              const previewText = getPreviewText(document);
+              const emoji = document.metadata?.emoji;
               return (
                 <div
-                  className={cx(styles.noteCard, selectedNoteId === note.id && 'selected')}
-                  key={note.id}
-                  onClick={() => handleNoteSelect(note.id)}
+                  className={cx(
+                    styles.documentCard,
+                    selectedDocumentId === document.id && 'selected',
+                  )}
+                  key={document.id}
+                  onClick={() => handleDocumentSelect(document.id)}
                 >
-                  <div className={cx(styles.noteActions, 'note-actions')}>
+                  <div className={cx(styles.documentActions, 'document-actions')}>
                     <NoteActions
-                      noteContent={note.content || undefined}
-                      noteId={note.id}
+                      documentContent={document.content || undefined}
+                      documentId={document.id}
                       onDelete={() => {
-                        if (selectedNoteId === note.id) {
-                          setSelectedNoteId(null);
+                        if (selectedDocumentId === document.id) {
+                          setSelectedDocumentId(null);
                           setIsCreatingNew(false);
                         }
                       }}
                     />
                   </div>
-                  <div className={styles.noteContent}>
+                  <div className={styles.documentContent}>
                     <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
                       {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
-                      <div className={styles.noteTitle}>{title}</div>
+                      <div className={styles.documentTitle}>{title}</div>
                     </div>
-                    {previewText && <div className={styles.notePreview}>{previewText}</div>}
+                    {previewText && <div className={styles.documentPreview}>{previewText}</div>}
                   </div>
                 </div>
               );
@@ -361,22 +374,22 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
 
       {/* Right Panel - Editor */}
       <div className={styles.editorPanel}>
-        {selectedNoteId || isCreatingNew ? (
-          <NoteEditor
-            content={selectedNote?.content}
-            documentId={selectedNoteId || undefined}
-            documentTitle={selectedNote?.name}
-            editorData={selectedNote?.editorData}
-            emoji={selectedNote?.metadata?.emoji}
+        {selectedDocumentId || isCreatingNew ? (
+          <DocumentEditor
+            content={selectedDocument?.content}
+            documentId={selectedDocumentId || undefined}
+            documentTitle={selectedDocument?.name}
+            editorData={selectedDocument?.editorData}
+            emoji={selectedDocument?.metadata?.emoji}
             knowledgeBaseId={knowledgeBaseId}
             onDocumentIdChange={handleDocumentIdChange}
           />
         ) : (
           <NoteEmptyStatus
             knowledgeBaseId={knowledgeBaseId}
-            onCreateNewNote={handleNewNote}
-            onNoteCreated={(noteId) => {
-              setSelectedNoteId(noteId);
+            onCreateNewNote={handleNewDocument}
+            onNoteCreated={(documentId) => {
+              setSelectedDocumentId(documentId);
               setIsCreatingNew(false);
             }}
           />

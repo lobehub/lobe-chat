@@ -13,7 +13,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const NoteListSkeleton = () => {
+const DocumentListSkeleton = () => {
   const { styles } = useStyles();
 
   return (
@@ -30,4 +30,4 @@ const NoteListSkeleton = () => {
   );
 };
 
-export default NoteListSkeleton;
+export default DocumentListSkeleton;

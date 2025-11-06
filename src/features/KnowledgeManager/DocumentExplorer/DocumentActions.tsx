@@ -6,35 +6,35 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 
-interface NoteActionsProps {
-  noteContent?: string;
-  noteId: string;
+interface DocumentActionsProps {
+  documentContent?: string;
+  documentId: string;
   onDelete?: () => void;
 }
 
-const NoteActions = memo<NoteActionsProps>(({ noteId, noteContent, onDelete }) => {
+const DocumentActions = memo<DocumentActionsProps>(({ documentId, documentContent, onDelete }) => {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
-  const removeNote = useFileStore((s) => s.removeNote);
+  const removeDocument = useFileStore((s) => s.removeDocument);
 
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await removeNote(noteId);
+      await removeDocument(documentId);
       onDelete?.();
     } catch (error) {
-      console.error('Failed to delete note:', error);
+      console.error('Failed to delete document:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleCopy = async () => {
-    if (noteContent) {
+    if (documentContent) {
       try {
-        await navigator.clipboard.writeText(noteContent);
+        await navigator.clipboard.writeText(documentContent);
       } catch (error) {
-        console.error('Failed to copy note:', error);
+        console.error('Failed to copy document:', error);
       }
     }
   };
@@ -68,4 +68,4 @@ const NoteActions = memo<NoteActionsProps>(({ noteId, noteContent, onDelete }) =
   );
 });
 
-export default NoteActions;
+export default DocumentActions;

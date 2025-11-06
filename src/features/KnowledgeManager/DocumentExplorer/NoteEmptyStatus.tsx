@@ -70,7 +70,7 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
     const theme = useTheme();
     const { styles } = useStyles();
     const [isUploading, setIsUploading] = useState(false);
-    const createNote = useFileStore((s) => s.createNote);
+    const createDocument = useFileStore((s) => s.createDocument);
 
     const handleUploadMarkdown = async (file: File) => {
       try {
@@ -79,8 +79,8 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
         // Read markdown file content
         const content = await file.text();
 
-        // Create note with markdown content
-        const newDoc = await createNote({
+        // Create document with markdown content
+        const newDoc = await createDocument({
           content,
           knowledgeBaseId,
           title: file.name.replace(/\.md$|\.markdown$/i, ''),
