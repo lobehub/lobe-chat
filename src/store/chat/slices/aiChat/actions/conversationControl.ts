@@ -29,6 +29,10 @@ export interface ConversationControlAction {
    */
   clearSendMessageError: () => void;
   /**
+   * Switches to a different branch of a message
+   */
+  switchMessageBranch: (messageId: string, branchIndex: number) => Promise<void>;
+  /**
    * Toggle sendMessage operation state
    */
   internal_toggleSendMessageOperation: (
@@ -90,6 +94,10 @@ export const conversationControl: StateCreator<
       null,
       'clearSendMessageError',
     );
+  },
+
+  switchMessageBranch: async (messageId, branchIndex) => {
+    await get().optimisticUpdateMessageMetadata(messageId, { activeBranchIndex: branchIndex });
   },
 
   internal_toggleSendMessageOperation: (key, loading: boolean, cancelReason?: string) => {
