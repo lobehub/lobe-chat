@@ -42,9 +42,9 @@ export class GeneralChatAgent implements Agent {
         // At this point, messages may have been preprocessed with RAG/Search
         return {
           payload: {
+            ...(context.payload as any),
             messages: state.messages,
-            // Additional payload will be added by the executor
-          },
+          } as GeneralAgentCallLLMInstructionPayload,
           type: 'call_llm',
         };
       }

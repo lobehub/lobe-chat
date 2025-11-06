@@ -476,7 +476,7 @@ export const streamingExecutor: StateCreator<
     // Initial context - use 'init' phase since state already contains messages
     let nextContext: AgentRuntimeContext = {
       phase: 'init',
-      payload: {},
+      payload: { model, provider, parentMessageId: params.parentMessageId },
       session: {
         sessionId: activeId,
         messageCount: messages.length,

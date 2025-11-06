@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -23,9 +23,10 @@ interface AssistantActionsProps {
 }
 export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
   const { error, tools } = data;
-  const [isThreadMode, hasThread] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
+    messageStateSelectors.isMessageRegenerating(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
@@ -42,7 +43,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     share,
     tts,
     translate,
-  } = useChatListActionsBar({ hasThread });
+  } = useChatListActionsBar({ hasThread, isRegenerating });
 
   const hasTools = !!tools;
 

@@ -25,6 +25,7 @@ import {
   chatSelectors,
   dbMessageSelectors,
   displayMessageSelectors,
+  messageStateSelectors,
   topicSelectors,
 } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
@@ -288,58 +289,77 @@ export const conversationLifecycle: StateCreator<
     messageId,
     { traceId, messages: outChats, threadId: outThreadId, inPortalThread } = {},
   ) => {
-    // 1. 构造所有相关的历史记录
-    const chats = outChats ?? displayMessageSelectors.mainAIChats(get());
+    const isRegenerating = messageStateSelectors.isMessageRegenerating(messageId)(get());
+    if (isRegenerating) return;
 
-    const item = displayMessageSelectors.getDisplayMessageById(messageId)(get());
-    if (!item) return;
-    const currentIndex = chats.findIndex((c) => c.id === messageId);
-
-    const currentMessage = chats[currentIndex];
-
-    let contextMessages: UIChatMessage[] = [];
-
-    switch (currentMessage.role) {
-      case 'tool':
-      case 'user': {
-        contextMessages = chats.slice(0, currentIndex + 1);
-        break;
-      }
-      case 'assistant': {
-        // 消息是 AI 发出的因此需要找到它的 user 消息
-        const userId = currentMessage.parentId;
-        const userIndex = chats.findIndex((c) => c.id === userId);
-        // 如果消息没有 parentId，那么同 user/function 模式
-        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
-        break;
-      }
-    }
-
-    if (contextMessages.length <= 0) return;
-
-    const { internal_execAgentRuntime, activeThreadId } = get();
-
-    const latestMsg = contextMessages.findLast((s) => s.role === 'user');
-
-    if (!latestMsg) return;
-
-    const threadId = outThreadId ?? activeThreadId;
-
-    // 切一个新的激活分支
-    await get().switchMessageBranch(
-      messageId,
-      item.metadata?.activeBranchIndex ? item.metadata?.activeBranchIndex + 1 : 1,
+    // Mark message as regenerating
+    set(
+      { regeneratingIds: [...get().regeneratingIds, messageId] },
+      false,
+      'internal_resendMessage/start',
     );
 
-    await internal_execAgentRuntime({
-      messages: contextMessages,
-      parentMessageId: messageId,
-      parentMessageType: 'user',
-      traceId,
-      ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
-      threadId,
-      inPortalThread,
-    });
+    try {
+      // 1. 构造所有相关的历史记录
+      const chats = outChats ?? displayMessageSelectors.mainAIChats(get());
+
+      const item = displayMessageSelectors.getDisplayMessageById(messageId)(get());
+      if (!item) return;
+      const currentIndex = chats.findIndex((c) => c.id === messageId);
+
+      const currentMessage = chats[currentIndex];
+
+      let contextMessages: UIChatMessage[] = [];
+
+      switch (currentMessage.role) {
+        case 'tool':
+        case 'user': {
+          contextMessages = chats.slice(0, currentIndex + 1);
+          break;
+        }
+        case 'assistant': {
+          // 消息是 AI 发出的因此需要找到它的 user 消息
+          const userId = currentMessage.parentId;
+          const userIndex = chats.findIndex((c) => c.id === userId);
+          // 如果消息没有 parentId，那么同 user/function 模式
+          contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
+          break;
+        }
+      }
+
+      if (contextMessages.length <= 0) return;
+
+      const { internal_execAgentRuntime, activeThreadId } = get();
+
+      const latestMsg = contextMessages.findLast((s) => s.role === 'user');
+
+      if (!latestMsg) return;
+
+      const threadId = outThreadId ?? activeThreadId;
+
+      // 切一个新的激活分支
+      await get().switchMessageBranch(
+        messageId,
+        item.metadata?.activeBranchIndex ? item.metadata?.activeBranchIndex + 1 : 1,
+      );
+
+      await internal_execAgentRuntime({
+        messages: contextMessages,
+        parentMessageId: messageId,
+        parentMessageType: 'user',
+        traceId,
+        ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
+        threadId,
+        inPortalThread,
+      });
+    } finally {
+      // Remove message from regenerating state
+      set(
+        { regeneratingIds: get().regeneratingIds.filter((id) => id !== messageId) },
+        false,
+        'internal_resendMessage/end',
+      );
+    }
   },
 
   internal_refreshAiChat: ({ topics, messages, sessionId }) => {

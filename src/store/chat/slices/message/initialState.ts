@@ -49,6 +49,10 @@ export interface ChatMessageState {
    */
   messagesMap: Record<string, UIChatMessage[]>;
   /**
+   * is the message is regenerating (used for disable regenerate button)
+   */
+  regeneratingIds: string[];
+  /**
    * Supervisor decision debounce timers by group ID
    */
   supervisorDebounceTimers: Record<string, number>;
@@ -78,6 +82,7 @@ export const initialMessageState: ChatMessageState = {
   messageLoadingIds: [],
   messagesInit: false,
   messagesMap: {},
+  regeneratingIds: [],
   supervisorDebounceTimers: {},
   supervisorDecisionAbortControllers: {},
   supervisorDecisionLoading: [],

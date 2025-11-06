@@ -20,20 +20,22 @@ const Actions = memo<ActionsProps>(({ id, data, index, disableEditing }) => {
   const [editing] = useChatStore((s) => [messageStateSelectors.isMessageEditing(id)(s)]);
 
   return (
-    <Flexbox align={'center'} horizontal>
-      {!disableEditing && !editing && (
-        <Flexbox align={'flex-start'} role="menubar">
-          <UserActionsBar data={data} id={id} index={index} />
-        </Flexbox>
-      )}
-      {branch && (
-        <MessageBranch
-          activeBranchIndex={branch.activeBranchIndex}
-          count={branch.count}
-          messageId={id}
-        />
-      )}
-    </Flexbox>
+    !editing && (
+      <Flexbox align={'center'} horizontal>
+        {!disableEditing && (
+          <Flexbox align={'flex-start'} role="menubar">
+            <UserActionsBar data={data} id={id} index={index} />
+          </Flexbox>
+        )}
+        {branch && (
+          <MessageBranch
+            activeBranchIndex={branch.activeBranchIndex}
+            count={branch.count}
+            messageId={id}
+          />
+        )}
+      </Flexbox>
+    )
   );
 });
 
