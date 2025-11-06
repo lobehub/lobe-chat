@@ -229,15 +229,10 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         // Reset flag if no documentId or editor
         isInitialLoadRef.current = false;
       }
-    }, [
-      documentId,
-      editor,
-      cachedEditorData,
-      cachedContent,
-      documentTitle,
-      cachedEmoji,
-      localDocumentMap,
-    ]);
+      // IMPORTANT: Only re-run when documentId changes to prevent editor blur during auto-save.
+      // cachedEditorData and cachedContent are intentionally excluded from dependencies
+      // because they update after save, which would cause unnecessary re-initialization.
+    }, [documentId]);
 
     // Auto-save function
     const performSave = useCallback(async () => {
