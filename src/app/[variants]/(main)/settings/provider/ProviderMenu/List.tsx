@@ -4,7 +4,7 @@ import { ActionIcon, Dropdown, Icon, ScrollShadow, Text } from '@lobehub/ui';
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, LucideCheck } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -32,12 +32,17 @@ const ProviderList = (props: {
   const { t } = useTranslation('modelProvider');
   const [open, setOpen] = useState(false);
 
-  const [sortType, updateSortType] = useGlobalStore((s) => [
+  const [sortType, updateSystemStatus] = useGlobalStore((s) => [
     systemStatusSelectors.disabledModelProvidersSortType(s),
-    (newSortType: SortType) => {
-      s.updateSystemStatus({ disabledModelProvidersSortType: newSortType });
-    },
+    s.updateSystemStatus,
   ]);
+
+  const updateSortType = useCallback(
+    (newSortType: SortType) => {
+      updateSystemStatus({ disabledModelProvidersSortType: newSortType });
+    },
+    [updateSystemStatus],
+  );
 
   const enabledModelProviderList = useAiInfraStore(
     aiProviderSelectors.enabledAiProviderList,
