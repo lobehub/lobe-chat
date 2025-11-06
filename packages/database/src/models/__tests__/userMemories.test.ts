@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { idGenerator } from '@/database/utils/idGenerator';
 import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
@@ -48,6 +48,10 @@ function generateRandomEmbedding(dimensions: number = 1024): number[] {
 
 const mockEmbedding = generateRandomEmbedding();
 const mockEmbedding2 = generateRandomEmbedding();
+
+function createAxisVector(dimensions: number = 1024, index: number = 0): number[] {
+  return Array.from({ length: dimensions }, (_, i) => (i === index ? 1 : 0));
+}
 
 // Assert that two numeric vectors are equal within a precision tolerance
 function expectVectorToBeClose(
@@ -373,6 +377,152 @@ describe('UserMemoryModel', () => {
       expect(result.preferences).toHaveLength(1);
       expect(result.contexts).toHaveLength(1);
     });
+
+    it('ranks contexts, experiences, and preferences by embedding similarity', async () => {
+      const now = new Date('2024-01-01T00:00:00.000Z');
+      const axis0 = createAxisVector();
+      const axis1 = createAxisVector(1024, 1);
+
+      const closeContextId = idGenerator('memory');
+      const farContextId = idGenerator('memory');
+      await serverDB.insert(userMemoriesContexts).values([
+        {
+          accessedAt: now,
+          createdAt: now,
+          description: 'close context',
+          descriptionVector: axis0,
+          id: closeContextId,
+          updatedAt: now,
+          userId,
+        },
+        {
+          accessedAt: now,
+          createdAt: now,
+          description: 'far context',
+          descriptionVector: axis1,
+          id: farContextId,
+          updatedAt: now,
+          userId,
+        },
+      ]);
+
+      const closeExperienceMemoryId = idGenerator('memory');
+      const farExperienceMemoryId = idGenerator('memory');
+      await serverDB.insert(userMemories).values([
+        {
+          accessedAt: now,
+          createdAt: now,
+          id: closeExperienceMemoryId,
+          lastAccessedAt: now,
+          memoryLayer: 'experience',
+          summary: 'close experience base',
+          updatedAt: now,
+          userId,
+        },
+        {
+          accessedAt: now,
+          createdAt: now,
+          id: farExperienceMemoryId,
+          lastAccessedAt: now,
+          memoryLayer: 'experience',
+          summary: 'far experience base',
+          updatedAt: now,
+          userId,
+        },
+      ]);
+
+      const closeExperienceId = idGenerator('memory');
+      const farExperienceId = idGenerator('memory');
+      await serverDB.insert(userMemoriesExperiences).values([
+        {
+          accessedAt: now,
+          action: 'close action',
+          actionVector: axis0,
+          createdAt: now,
+          id: closeExperienceId,
+          situation: 'close situation',
+          situationVector: axis0,
+          updatedAt: now,
+          userId,
+          userMemoryId: closeExperienceMemoryId,
+        },
+        {
+          accessedAt: now,
+          action: 'far action',
+          actionVector: axis1,
+          createdAt: now,
+          id: farExperienceId,
+          situation: 'far situation',
+          situationVector: axis1,
+          updatedAt: now,
+          userId,
+          userMemoryId: farExperienceMemoryId,
+        },
+      ]);
+
+      const closePreferenceMemoryId = idGenerator('memory');
+      const farPreferenceMemoryId = idGenerator('memory');
+      await serverDB.insert(userMemories).values([
+        {
+          accessedAt: now,
+          createdAt: now,
+          id: closePreferenceMemoryId,
+          lastAccessedAt: now,
+          memoryLayer: 'preference',
+          summary: 'close preference base',
+          updatedAt: now,
+          userId,
+        },
+        {
+          accessedAt: now,
+          createdAt: now,
+          id: farPreferenceMemoryId,
+          lastAccessedAt: now,
+          memoryLayer: 'preference',
+          summary: 'far preference base',
+          updatedAt: now,
+          userId,
+        },
+      ]);
+
+      const closePreferenceId = idGenerator('memory');
+      const farPreferenceId = idGenerator('memory');
+      await serverDB.insert(userMemoriesPreferences).values([
+        {
+          accessedAt: now,
+          conclusionDirectives: 'close preference',
+          conclusionDirectivesVector: axis0,
+          createdAt: now,
+          id: closePreferenceId,
+          updatedAt: now,
+          userId,
+          userMemoryId: closePreferenceMemoryId,
+        },
+        {
+          accessedAt: now,
+          conclusionDirectives: 'far preference',
+          conclusionDirectivesVector: axis1,
+          createdAt: now,
+          id: farPreferenceId,
+          updatedAt: now,
+          userId,
+          userMemoryId: farPreferenceMemoryId,
+        },
+      ]);
+
+      const result = await userMemoryModel.searchWithEmbedding({
+        embedding: axis0,
+        limits: {
+          contexts: 2,
+          experiences: 2,
+          preferences: 2,
+        },
+      });
+
+      expect(result.contexts[0]?.id).toBe(closeContextId);
+      expect(result.experiences[0]?.id).toBe(closeExperienceId);
+      expect(result.preferences[0]?.id).toBe(closePreferenceId);
+    });
   });
 
   describe('findById', () => {
@@ -489,6 +639,37 @@ describe('UserMemoryModel', () => {
       expectVectorToBeClose(updated?.detailsVector1024, detailsVector);
     });
 
+    it('ignores user memory vector updates when payload is empty', async () => {
+      const memoryId = idGenerator('memory');
+      const timestamp = new Date('2024-01-01T00:00:00.000Z');
+      const summaryVector = generateRandomEmbedding();
+
+      await serverDB.insert(userMemories).values({
+        accessedAt: timestamp,
+        createdAt: timestamp,
+        details: 'details',
+        id: memoryId,
+        lastAccessedAt: timestamp,
+        summary: 'summary',
+        summaryVector1024: summaryVector,
+        updatedAt: timestamp,
+        userId,
+      });
+
+      const before = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, memoryId),
+      });
+
+      await userMemoryModel.updateUserMemoryVectors(memoryId, {});
+
+      const after = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, memoryId),
+      });
+
+      expect(after?.updatedAt.getTime()).toBe(before?.updatedAt.getTime());
+      expectVectorToBeClose(after?.summaryVector1024, summaryVector);
+    });
+
     it('updates context vectors', async () => {
       const contextId = idGenerator('memory');
       await serverDB.insert(userMemoriesContexts).values({
@@ -548,6 +729,31 @@ describe('UserMemoryModel', () => {
       expectVectorToBeClose(updated?.descriptionVector, descriptionVector);
     });
 
+    it('skips identity vector updates when no fields are provided', async () => {
+      const identityId = idGenerator('memory');
+      const timestamp = new Date('2024-03-01T00:00:00.000Z');
+      const descriptionVector = generateRandomEmbedding();
+
+      await serverDB.insert(userMemoriesIdentities).values({
+        accessedAt: timestamp,
+        createdAt: timestamp,
+        description: 'identity',
+        descriptionVector,
+        id: identityId,
+        updatedAt: timestamp,
+        userId,
+      });
+
+      await userMemoryModel.updateIdentityVectors(identityId, {});
+
+      const persisted = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+
+      expect(persisted?.updatedAt.getTime()).toBe(timestamp.getTime());
+      expectVectorToBeClose(persisted?.descriptionVector, descriptionVector);
+    });
+
     it('updates experience vectors without touching unspecified fields', async () => {
       const experienceId = idGenerator('memory');
       const originalSituationVector = generateRandomEmbedding();
@@ -578,6 +784,39 @@ describe('UserMemoryModel', () => {
       expectVectorToBeClose(updated?.actionVector, updatedActionVector);
       expectVectorToBeClose(updated?.situationVector, originalSituationVector);
       expectVectorToBeClose(updated?.keyLearningVector, originalKeyLearningVector);
+    });
+
+    it('updates multiple experience vector fields and supports null assignments', async () => {
+      const experienceId = idGenerator('memory');
+      const originalSituationVector = generateRandomEmbedding();
+      const originalKeyLearningVector = generateRandomEmbedding();
+      const originalActionVector = generateRandomEmbedding();
+
+      await serverDB.insert(userMemoriesExperiences).values({
+        action: 'action',
+        actionVector: originalActionVector,
+        id: experienceId,
+        keyLearning: 'key learning',
+        keyLearningVector: originalKeyLearningVector,
+        situation: 'situation',
+        situationVector: originalSituationVector,
+        userId,
+      });
+
+      const newSituationVector = generateRandomEmbedding();
+
+      await userMemoryModel.updateExperienceVectors(experienceId, {
+        keyLearningVector: null,
+        situationVector: newSituationVector,
+      });
+
+      const updated = await serverDB.query.userMemoriesExperiences.findFirst({
+        where: eq(userMemoriesExperiences.id, experienceId),
+      });
+
+      expectVectorToBeClose(updated?.situationVector, newSituationVector);
+      expect(updated?.keyLearningVector).toBeNull();
+      expectVectorToBeClose(updated?.actionVector, originalActionVector);
     });
   });
 
@@ -628,6 +867,74 @@ describe('UserMemoryModel', () => {
       expect(identityMemory?.userMemoryId).toBe(userMemoryId);
     });
 
+    it('normalizes identity fields and coerces date inputs when adding entries', async () => {
+      const baseDate = '2024-02-02T12:00:00.000Z';
+      const episodicDate = '2024-03-03T00:00:00.000Z';
+
+      const { identityId, userMemoryId } = await userMemoryModel.addIdentityEntry({
+        base: {
+          lastAccessedAt: baseDate,
+          summary: 'Normalize base',
+        },
+        identity: {
+          description: 'Normalize identity',
+          episodicDate,
+          relationship: '  FRIEND  ',
+          type: ' PERSONAL ',
+        },
+      });
+
+      const baseMemory = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, userMemoryId),
+      });
+      const identityMemory = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+
+      expect(baseMemory?.lastAccessedAt.toISOString()).toBe(new Date(baseDate).toISOString());
+      expect(identityMemory?.relationship).toBe('friend');
+      expect(identityMemory?.type).toBe('personal');
+      expect(identityMemory?.episodicDate?.toISOString()).toBe(
+        new Date(episodicDate).toISOString(),
+      );
+    });
+
+    it('falls back to defaults when invalid identity data is provided', async () => {
+      const frozenNow = new Date('2024-05-05T00:00:00.000Z');
+      vi.useFakeTimers();
+      vi.setSystemTime(frozenNow);
+
+      try {
+        const { identityId, userMemoryId } = await userMemoryModel.addIdentityEntry({
+          base: {
+            lastAccessedAt: 'not-a-date',
+            status: undefined,
+          },
+          identity: {
+            description: 'Invalid identity',
+            episodicDate: 'invalid',
+            relationship: 'bestie',
+            type: 'unknown',
+          },
+        });
+
+        const baseMemory = await serverDB.query.userMemories.findFirst({
+          where: eq(userMemories.id, userMemoryId),
+        });
+        const identityMemory = await serverDB.query.userMemoriesIdentities.findFirst({
+          where: eq(userMemoriesIdentities.id, identityId),
+        });
+
+        expect(baseMemory?.status).toBe('active');
+        expect(baseMemory?.lastAccessedAt.toISOString()).toBe(frozenNow.toISOString());
+        expect(identityMemory?.relationship).toBeNull();
+        expect(identityMemory?.type).toBeNull();
+        expect(identityMemory?.episodicDate).toBeNull();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('updates identity entry fields with merge strategy', async () => {
       const { identityId, userMemoryId } = await userMemoryModel.addIdentityEntry({
         base: {
@@ -669,6 +976,41 @@ describe('UserMemoryModel', () => {
       expect(identityMemory?.description).toBe('Updated identity description');
       expect(identityMemory?.relationship).toBe('mentor');
       expect(identityMemory?.role).toBe('developer');
+    });
+
+    it('normalizes identity values and coerces dates when updating entries', async () => {
+      const { identityId, userMemoryId } = await userMemoryModel.addIdentityEntry({
+        base: {
+          summary: 'base summary',
+        },
+        identity: {
+          description: 'base identity',
+        },
+      });
+
+      await userMemoryModel.updateIdentityEntry({
+        identityId,
+        base: {
+          lastAccessedAt: '2024-06-06T00:00:00.000Z',
+        },
+        identity: {
+          episodicDate: '2024-07-07T00:00:00.000Z',
+          relationship: '  COLLEAGUE  ',
+          type: ' PROFESSIONAL ',
+        },
+      });
+
+      const baseMemory = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, userMemoryId),
+      });
+      const identityMemory = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+
+      expect(baseMemory?.lastAccessedAt.toISOString()).toBe('2024-06-06T00:00:00.000Z');
+      expect(identityMemory?.relationship).toBe('colleague');
+      expect(identityMemory?.type).toBe('professional');
+      expect(identityMemory?.episodicDate?.toISOString()).toBe('2024-07-07T00:00:00.000Z');
     });
 
     it('replaces identity entry fields and clears unspecified values when mergeStrategy is replace', async () => {
