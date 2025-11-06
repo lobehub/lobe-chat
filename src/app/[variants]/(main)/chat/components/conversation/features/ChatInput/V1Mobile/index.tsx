@@ -39,7 +39,7 @@ const MobileChatInput = memo(() => {
   const [loading, value, onInput, onStop] = useChatStore((s) => [
     messageStateSelectors.isAIGenerating(s),
     s.inputMessage,
-    s.updateInputMessage,
+    s.updateMessageInput,
     s.stopGenerateMessage,
   ]);
 

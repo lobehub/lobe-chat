@@ -121,7 +121,7 @@ export const conversationLifecycle: StateCreator<
       }));
 
     // use optimistic update to avoid the slow waiting
-    const tempId = get().internal_createTmpMessage({
+    const tempId = get().optimisticCreateTmpMessage({
       content: message,
       // if message has attached with files, then add files to message and the agent
       files: fileIdList,

@@ -103,9 +103,9 @@ export const chatPlugin: StateCreator<
   },
 
   fillPluginMessageContent: async (id, content, triggerAiMessage) => {
-    const { triggerAIMessage, internal_updateMessageContent } = get();
+    const { triggerAIMessage, optimisticUpdateMessageContent } = get();
 
-    await internal_updateMessageContent(id, content);
+    await optimisticUpdateMessageContent(id, content);
 
     if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },
@@ -166,7 +166,7 @@ export const chatPlugin: StateCreator<
 
     // if there is error content, then clear the error
     if (!!message.pluginError) {
-      get().internal_updateMessagePluginError(id, null);
+      get().optimisticUpdateMessagePluginError(id, null);
     }
 
     const payload: ChatToolPayload = { ...message.plugin, id: message.tool_call_id! };
@@ -234,7 +234,7 @@ export const chatPlugin: StateCreator<
         groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
-      const result = await get().internal_createMessage(toolMessage);
+      const result = await get().optimisticCreateMessage(toolMessage);
       if (!result) return;
 
       // trigger the plugin call
@@ -369,7 +369,7 @@ export const chatPlugin: StateCreator<
   },
 
   internal_callPluginApi: async (id, payload) => {
-    const { internal_updateMessageContent, internal_togglePluginApiCalling } = get();
+    const { optimisticUpdateMessageContent, internal_togglePluginApiCalling } = get();
     let data: string;
 
     try {
@@ -410,7 +410,7 @@ export const chatPlugin: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await internal_updateMessageContent(id, data);
+    await optimisticUpdateMessageContent(id, data);
 
     return data;
   },
@@ -441,7 +441,7 @@ export const chatPlugin: StateCreator<
   },
   invokeMCPTypePlugin: async (id, payload) => {
     const {
-      internal_updateMessageContent,
+      optimisticUpdateMessageContent,
       internal_togglePluginApiCalling,
       internal_constructToolsCallingContext,
     } = get();
@@ -478,7 +478,7 @@ export const chatPlugin: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await internal_updateMessageContent(id, data);
+    await optimisticUpdateMessageContent(id, data);
 
     return data;
   },

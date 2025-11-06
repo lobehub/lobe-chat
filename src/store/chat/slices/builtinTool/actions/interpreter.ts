@@ -42,7 +42,7 @@ export const codeInterpreterSlice: StateCreator<
     const {
       toggleInterpreterExecuting,
       updatePluginState,
-      internal_updateMessageContent,
+      optimisticUpdateMessageContent,
       uploadInterpreterFiles,
     } = get();
 
@@ -77,10 +77,10 @@ export const codeInterpreterSlice: StateCreator<
     try {
       const result = await pythonService.runPython(params.code, params.packages, files);
       if (result?.files) {
-        await internal_updateMessageContent(id, JSON.stringify(result));
+        await optimisticUpdateMessageContent(id, JSON.stringify(result));
         await uploadInterpreterFiles(id, result.files);
       } else {
-        await internal_updateMessageContent(id, JSON.stringify(result));
+        await optimisticUpdateMessageContent(id, JSON.stringify(result));
       }
     } catch (error) {
       updatePluginState(id, { error });
@@ -113,7 +113,7 @@ export const codeInterpreterSlice: StateCreator<
 
     const nextResult = produce(result, updater);
 
-    await get().internal_updateMessageContent(id, JSON.stringify(nextResult));
+    await get().optimisticUpdateMessageContent(id, JSON.stringify(nextResult));
   },
 
   uploadInterpreterFiles: async (id: string, files: CodeInterpreterFileItem[]) => {

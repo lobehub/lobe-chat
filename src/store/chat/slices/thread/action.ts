@@ -132,7 +132,7 @@ export const chatThreadMessage: StateCreator<
     if (!portalThreadId) {
       if (!threadStartMessageId) return;
       // we need to create a temp message for optimistic update
-      tempMessageId = get().internal_createTmpMessage({
+      tempMessageId = get().optimisticCreateTmpMessage({
         ...newMessage,
         threadId: THREAD_DRAFT_ID,
       });
@@ -155,10 +155,10 @@ export const chatThreadMessage: StateCreator<
     } else {
       // if there is a thread, just append message
       // we need to create a temp message for optimistic update
-      tempMessageId = get().internal_createTmpMessage(newMessage);
+      tempMessageId = get().optimisticCreateTmpMessage(newMessage);
       get().internal_toggleMessageLoading(true, tempMessageId);
 
-      const result = await get().internal_createMessage(newMessage, { tempMessageId });
+      const result = await get().optimisticCreateMessage(newMessage, { tempMessageId });
       if (!result) return;
       parentMessageId = result.id;
     }

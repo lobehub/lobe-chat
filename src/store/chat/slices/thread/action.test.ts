@@ -622,7 +622,7 @@ describe('thread action', () => {
         const coreProcessSpy = vi
           .spyOn(result.current, 'internal_execAgentRuntime')
           .mockResolvedValue();
-        vi.spyOn(result.current, 'internal_createTmpMessage');
+        vi.spyOn(result.current, 'optimisticCreateTmpMessage');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         await act(async () => {
@@ -659,7 +659,7 @@ describe('thread action', () => {
         });
 
         const createTmpSpy = vi
-          .spyOn(result.current, 'internal_createTmpMessage')
+          .spyOn(result.current, 'optimisticCreateTmpMessage')
           .mockReturnValue('temp-msg-id');
 
         vi.spyOn(result.current, 'createThread').mockResolvedValue({
@@ -739,7 +739,7 @@ describe('thread action', () => {
           });
         });
         vi.spyOn(result.current, 'internal_execAgentRuntime').mockResolvedValue();
-        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
+        vi.spyOn(result.current, 'optimisticCreateTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         const summaryTitleSpy = vi.spyOn(result.current, 'summaryThreadTitle').mockResolvedValue();
@@ -763,12 +763,12 @@ describe('thread action', () => {
         });
 
         const createMessageSpy = vi
-          .spyOn(result.current, 'internal_createMessage')
+          .spyOn(result.current, 'optimisticCreateMessage')
           .mockResolvedValue({ id: 'new-msg-id', messages: [] });
         const coreProcessSpy = vi
           .spyOn(result.current, 'internal_execAgentRuntime')
           .mockResolvedValue();
-        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
+        vi.spyOn(result.current, 'optimisticCreateTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         await act(async () => {
@@ -803,12 +803,12 @@ describe('thread action', () => {
           });
         });
 
-        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue({
+        vi.spyOn(result.current, 'optimisticCreateMessage').mockResolvedValue({
           id: 'new-msg-id',
           messages: [],
         });
         vi.spyOn(result.current, 'internal_execAgentRuntime').mockResolvedValue();
-        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
+        vi.spyOn(result.current, 'optimisticCreateTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         const summaryTitleSpy = vi.spyOn(result.current, 'summaryThreadTitle').mockResolvedValue();
@@ -836,12 +836,12 @@ describe('thread action', () => {
           });
         });
 
-        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue({
+        vi.spyOn(result.current, 'optimisticCreateMessage').mockResolvedValue({
           id: 'new-msg-id',
           messages: [],
         });
         vi.spyOn(result.current, 'internal_execAgentRuntime').mockResolvedValue();
-        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
+        vi.spyOn(result.current, 'optimisticCreateTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         await act(async () => {
@@ -861,11 +861,11 @@ describe('thread action', () => {
         });
 
         vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(true);
-        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue({
+        vi.spyOn(result.current, 'optimisticCreateMessage').mockResolvedValue({
           id: 'new-msg-id',
           messages: [],
         });
-        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
+        vi.spyOn(result.current, 'optimisticCreateTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         const coreProcessSpy = vi

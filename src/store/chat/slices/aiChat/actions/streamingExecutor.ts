@@ -100,7 +100,7 @@ export const streamingExecutor: StateCreator<
     const {
       internal_toggleChatLoading,
       refreshMessages,
-      internal_updateMessageContent,
+      optimisticUpdateMessageContent,
       internal_dispatchMessage,
       internal_toggleToolCallingStreaming,
       internal_toggleChatReasoning,
@@ -229,7 +229,7 @@ export const streamingExecutor: StateCreator<
         internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
 
         // update the content after fetch result
-        await internal_updateMessageContent(messageId, content, {
+        await optimisticUpdateMessageContent(messageId, content, {
           toolCalls: parsedToolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
@@ -554,7 +554,7 @@ export const streamingExecutor: StateCreator<
       const finalMessages = get().messagesMap[messageKey] || [];
       const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
       if (assistantMessage) {
-        await get().internal_updateMessageRAG(assistantMessage.id, params.ragMetadata);
+        await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata);
         log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
       }
     }

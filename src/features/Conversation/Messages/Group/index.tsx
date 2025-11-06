@@ -90,7 +90,7 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
           avatar={avatar}
           onClick={onAvatarClick}
           placement={placement}
-          size={mobile ? MOBILE_AVATAR_SIZE : undefined}
+          size={MOBILE_AVATAR_SIZE}
           style={{ marginTop: 6 }}
         />
         <Title avatar={avatar} placement={placement} showTitle time={createdAt} />

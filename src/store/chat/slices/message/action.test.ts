@@ -65,17 +65,17 @@ describe('chatMessage actions', () => {
     it('should return early if activeId is undefined', async () => {
       useChatStore.setState({ activeId: undefined });
       const { result } = renderHook(() => useChatStore());
-      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+      const updateMessageInputSpy = vi.spyOn(result.current, 'updateMessageInput');
 
       await act(async () => {
         await result.current.addAIMessage();
       });
 
       expect(messageService.createMessage).not.toHaveBeenCalled();
-      expect(updateInputMessageSpy).not.toHaveBeenCalled();
+      expect(updateMessageInputSpy).not.toHaveBeenCalled();
     });
 
-    it('should call internal_createMessage with correct parameters', async () => {
+    it('should call optimisticCreateMessage with correct parameters', async () => {
       const inputMessage = 'Test input message';
       useChatStore.setState({ inputMessage });
       const { result } = renderHook(() => useChatStore());
@@ -92,14 +92,14 @@ describe('chatMessage actions', () => {
       });
     });
 
-    it('should call updateInputMessage with empty string', async () => {
+    it('should call updateMessageInput with empty string', async () => {
       const { result } = renderHook(() => useChatStore());
-      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+      const updateMessageInputSpy = vi.spyOn(result.current, 'updateMessageInput');
       await act(async () => {
         await result.current.addAIMessage();
       });
 
-      expect(updateInputMessageSpy).toHaveBeenCalledWith('');
+      expect(updateMessageInputSpy).toHaveBeenCalledWith('');
     });
   });
 
@@ -107,17 +107,17 @@ describe('chatMessage actions', () => {
     it('should return early if activeId is undefined', async () => {
       useChatStore.setState({ activeId: undefined });
       const { result } = renderHook(() => useChatStore());
-      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+      const updateMessageInputSpy = vi.spyOn(result.current, 'updateMessageInput');
 
       await act(async () => {
         await result.current.addUserMessage({ message: 'test message' });
       });
 
       expect(messageService.createMessage).not.toHaveBeenCalled();
-      expect(updateInputMessageSpy).not.toHaveBeenCalled();
+      expect(updateMessageInputSpy).not.toHaveBeenCalled();
     });
 
-    it('should call internal_createMessage with correct parameters', async () => {
+    it('should call optimisticCreateMessage with correct parameters', async () => {
       const message = 'Test user message';
       const fileList = ['file-id-1', 'file-id-2'];
       useChatStore.setState({
@@ -140,7 +140,7 @@ describe('chatMessage actions', () => {
       });
     });
 
-    it('should call internal_createMessage with threadId when activeThreadId is set', async () => {
+    it('should call optimisticCreateMessage with threadId when activeThreadId is set', async () => {
       const message = 'Test user message';
       const activeThreadId = 'thread-123';
       useChatStore.setState({
@@ -164,15 +164,15 @@ describe('chatMessage actions', () => {
       });
     });
 
-    it('should call updateInputMessage with empty string', async () => {
+    it('should call updateMessageInput with empty string', async () => {
       const { result } = renderHook(() => useChatStore());
-      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+      const updateMessageInputSpy = vi.spyOn(result.current, 'updateMessageInput');
 
       await act(async () => {
         await result.current.addUserMessage({ message: 'test' });
       });
 
-      expect(updateInputMessageSpy).toHaveBeenCalledWith('');
+      expect(updateMessageInputSpy).toHaveBeenCalledWith('');
     });
 
     it('should handle message without fileList', async () => {
@@ -478,12 +478,12 @@ describe('chatMessage actions', () => {
     });
   });
 
-  describe('updateInputMessage', () => {
-    it('updateInputMessage should update the input message state', () => {
+  describe('updateMessageInput', () => {
+    it('updateMessageInput should update the input message state', () => {
       const { result } = renderHook(() => useChatStore());
       const newInputMessage = 'Updated message';
       act(() => {
-        result.current.updateInputMessage(newInputMessage);
+        result.current.updateMessageInput(newInputMessage);
       });
 
       expect(result.current.inputMessage).toEqual(newInputMessage);
@@ -495,7 +495,7 @@ describe('chatMessage actions', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        result.current.updateInputMessage(inputMessage);
+        result.current.updateMessageInput(inputMessage);
       });
 
       expect(result.current.inputMessage).toBe(inputMessage);
@@ -608,15 +608,15 @@ describe('chatMessage actions', () => {
     });
   });
 
-  describe('internal_updateMessageContent', () => {
-    it('should call messageService.internal_updateMessageContent with correct parameters', async () => {
+  describe('optimisticUpdateMessageContent', () => {
+    it('should call messageService.optimisticUpdateMessageContent with correct parameters', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const newContent = 'Updated content';
 
       const spy = vi.spyOn(messageService, 'updateMessage');
       await act(async () => {
-        await result.current.internal_updateMessageContent(messageId, newContent);
+        await result.current.optimisticUpdateMessageContent(messageId, newContent);
       });
 
       expect(spy).toHaveBeenCalledWith(
@@ -633,7 +633,7 @@ describe('chatMessage actions', () => {
       const internal_dispatchMessageSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
 
       await act(async () => {
-        await result.current.internal_updateMessageContent(messageId, newContent);
+        await result.current.optimisticUpdateMessageContent(messageId, newContent);
       });
 
       expect(internal_dispatchMessageSpy).toHaveBeenCalledWith({
@@ -649,7 +649,7 @@ describe('chatMessage actions', () => {
       const newContent = 'Updated content';
 
       await act(async () => {
-        await result.current.internal_updateMessageContent(messageId, newContent);
+        await result.current.optimisticUpdateMessageContent(messageId, newContent);
       });
 
       expect(result.current.refreshMessages).toHaveBeenCalled();
@@ -781,7 +781,7 @@ describe('chatMessage actions', () => {
       });
     });
 
-    it('should call internal_updateMessageContent with correct parameters', async () => {
+    it('should call optimisticUpdateMessageContent with correct parameters', async () => {
       const messageId = 'message-id';
       const content = 'Updated content';
       const { result } = renderHook(() => useChatStore());

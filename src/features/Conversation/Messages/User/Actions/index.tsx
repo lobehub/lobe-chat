@@ -1,4 +1,3 @@
-import { Pagination } from 'antd';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -7,6 +6,7 @@ import { messageStateSelectors } from '@/store/chat/selectors';
 import { UIChatMessage } from '@/types/index';
 
 import { UserActionsBar } from './ActionsBar';
+import MessageBranch from './MessageBranch';
 
 interface ActionsProps {
   data: UIChatMessage;
@@ -20,19 +20,17 @@ const Actions = memo<ActionsProps>(({ id, data, index, disableEditing }) => {
   const [editing] = useChatStore((s) => [messageStateSelectors.isMessageEditing(id)(s)]);
 
   return (
-    <Flexbox horizontal>
+    <Flexbox horizontal align={'center'}>
       {!disableEditing && !editing && (
         <Flexbox align={'flex-start'} role="menubar">
           <UserActionsBar data={data} id={id} index={index} />
         </Flexbox>
       )}
       {branch && (
-        <Pagination
-          current={branch.activeBranchIndex + 1}
-          pageSize={1}
-          simple
-          size="small"
-          total={branch.count}
+        <MessageBranch
+          activeBranchIndex={branch.activeBranchIndex}
+          count={branch.count}
+          messageId={id}
         />
       )}
     </Flexbox>

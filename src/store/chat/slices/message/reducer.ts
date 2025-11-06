@@ -75,12 +75,19 @@ interface UpdateMessageExtra {
   value: any;
 }
 
+interface UpdateMessageMetadata {
+  id: string;
+  type: 'updateMessageMetadata';
+  value: Partial<UIChatMessage['metadata']>;
+}
+
 export type MessageDispatch =
   | CreateMessage
   | UpdateMessage
   | UpdateMessages
   | UpdatePluginState
   | UpdateMessageExtra
+  | UpdateMessageMetadata
   | DeleteMessage
   | UpdateMessagePlugin
   | UpdateMessageTools
@@ -116,6 +123,17 @@ export const messagesReducer = (
           message.extra[key as keyof ChatMessageExtra] = value;
         }
 
+        message.updatedAt = Date.now();
+      });
+    }
+
+    case 'updateMessageMetadata': {
+      return produce(state, (draftState) => {
+        const { id, value } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message) return;
+
+        message.metadata = merge(message.metadata, value);
         message.updatedAt = Date.now();
       });
     }

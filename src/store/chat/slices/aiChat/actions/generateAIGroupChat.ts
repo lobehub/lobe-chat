@@ -271,7 +271,7 @@ export const chatAiGroupChat: StateCreator<
   return {
     sendGroupMessage: async ({ groupId, message, files, onlyAddUserMessage, targetMemberId }) => {
       const {
-        internal_createMessage,
+        optimisticCreateMessage,
         internal_triggerSupervisorDecisionDebounced,
         internal_setActiveGroup,
         activeTopicId,
@@ -294,7 +294,7 @@ export const chatAiGroupChat: StateCreator<
           targetId: targetMemberId,
         };
 
-        const result = await internal_createMessage(userMessage);
+        const result = await optimisticCreateMessage(userMessage);
 
         // if only add user message, then stop
         if (onlyAddUserMessage) {
@@ -379,7 +379,7 @@ export const chatAiGroupChat: StateCreator<
       const {
         messagesMap,
         internal_toggleSupervisorLoading,
-        internal_createMessage,
+        optimisticCreateMessage,
         supervisorTodos,
       } = get();
 
@@ -408,7 +408,7 @@ export const chatAiGroupChat: StateCreator<
 
         console.log('Creating supervisor todo message:', supervisorMessage);
 
-        await internal_createMessage(supervisorMessage);
+        await optimisticCreateMessage(supervisorMessage);
       };
 
       const messages = messagesMap[messageMapKey(groupId, currentTopicId)] || [];
@@ -597,7 +597,7 @@ export const chatAiGroupChat: StateCreator<
       });
       const {
         messagesMap,
-        internal_createMessage,
+        optimisticCreateMessage,
         internal_fetchAIChatMessage,
         refreshMessages,
         activeTopicId,
@@ -671,7 +671,7 @@ export const chatAiGroupChat: StateCreator<
 
         console.log('DEBUG: Creating agent message with:', agentMessage);
 
-        const result = await internal_createMessage(agentMessage);
+        const result = await optimisticCreateMessage(agentMessage);
         if (!result) return;
         const assistantId = result.id;
 
@@ -936,7 +936,7 @@ export const chatAiGroupChat: StateCreator<
     },
 
     internal_createSupervisorErrorMessage: async (groupId: string, error: Error | string) => {
-      const { internal_createTmpMessage, activeTopicId } = get();
+      const { optimisticCreateTmpMessage, activeTopicId } = get();
 
       try {
         const errorMessage = error instanceof Error ? error.message : error;
@@ -957,7 +957,7 @@ export const chatAiGroupChat: StateCreator<
         };
 
         // Create a temporary message that only exists in UI state, no API call
-        internal_createTmpMessage(supervisorMessage);
+        optimisticCreateTmpMessage(supervisorMessage);
       } catch (createError) {
         console.error('Failed to create supervisor error message:', createError);
       }

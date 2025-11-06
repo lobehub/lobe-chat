@@ -277,4 +277,56 @@ describe('ConversationControl actions', () => {
       });
     });
   });
+
+  describe('switchMessageBranch', () => {
+    it('should switch to a different message branch', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = TEST_IDS.MESSAGE_ID;
+      const branchIndex = 1;
+
+      const optimisticUpdateSpy = vi
+        .spyOn(result.current, 'optimisticUpdateMessageMetadata')
+        .mockResolvedValue(undefined);
+
+      await act(async () => {
+        await result.current.switchMessageBranch(messageId, branchIndex);
+      });
+
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: branchIndex });
+    });
+
+    it('should handle switching to branch 0', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = TEST_IDS.MESSAGE_ID;
+      const branchIndex = 0;
+
+      const optimisticUpdateSpy = vi
+        .spyOn(result.current, 'optimisticUpdateMessageMetadata')
+        .mockResolvedValue(undefined);
+
+      await act(async () => {
+        await result.current.switchMessageBranch(messageId, branchIndex);
+      });
+
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: 0 });
+    });
+
+    it('should handle errors gracefully when optimistic update fails', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = TEST_IDS.MESSAGE_ID;
+      const branchIndex = 2;
+
+      const optimisticUpdateSpy = vi
+        .spyOn(result.current, 'optimisticUpdateMessageMetadata')
+        .mockRejectedValue(new Error('Update failed'));
+
+      await expect(
+        act(async () => {
+          await result.current.switchMessageBranch(messageId, branchIndex);
+        }),
+      ).rejects.toThrow('Update failed');
+
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: branchIndex });
+    });
+  });
 });

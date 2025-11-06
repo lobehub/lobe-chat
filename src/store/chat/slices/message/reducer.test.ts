@@ -127,6 +127,54 @@ describe('messagesReducer', () => {
     });
   });
 
+  describe('updateMessageMetadata', () => {
+    it('should merge update the metadata field of a message', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageMetadata',
+        id: 'message1',
+        value: { activeBranchIndex: 1 },
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      const updatedMessage = newState.find((m) => m.id === 'message1');
+
+      expect(updatedMessage?.metadata).toEqual({ activeBranchIndex: 1 });
+      expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
+    });
+
+    it('should merge update the metadata field if metadata already exists', () => {
+      const state = [
+        {
+          ...initialState[0],
+          metadata: { activeBranchIndex: 0 },
+        },
+      ];
+
+      const payload: MessageDispatch = {
+        type: 'updateMessageMetadata',
+        id: 'message1',
+        value: { activeBranchIndex: 2 },
+      };
+
+      const newState = messagesReducer(state, payload);
+      const updatedMessage = newState.find((m) => m.id === 'message1');
+
+      expect(updatedMessage?.metadata).toEqual({ activeBranchIndex: 2 });
+      expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
+    });
+
+    it('should not modify state if message is not found', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageMetadata',
+        id: 'nonexistent',
+        value: { activeBranchIndex: 1 },
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+  });
+
   describe('updatePluginState', () => {
     it('should update the plugin state of a message', () => {
       const payload: MessageDispatch = {

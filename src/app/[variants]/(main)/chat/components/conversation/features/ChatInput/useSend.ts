@@ -161,14 +161,14 @@ export const useSendGroupMessage = () => {
   const [
     isContentEmpty,
     sendGroupMessage,
-    updateInputMessage,
+    updateMessageInput,
     stopGenerateMessage,
     isSendButtonDisabledByMessage,
     isCreatingMessage,
   ] = useChatStore((s) => [
     !s.inputMessage,
     s.sendGroupMessage,
-    s.updateInputMessage,
+    s.updateMessageInput,
     s.stopGenerateMessage,
     messageStateSelectors.isSendButtonDisabledByMessage(s),
     messageStateSelectors.isCreatingMessage(s),
@@ -255,7 +255,7 @@ export const useSendGroupMessage = () => {
       mainInputEditor.setExpand(false);
       mainInputEditor.clearContent();
       mainInputEditor.focus();
-      updateInputMessage('');
+      updateMessageInput('');
       // clear mentioned users after sending
       mentionState.clearMentionedUsers();
 
@@ -284,7 +284,7 @@ export const useSendGroupMessage = () => {
       canNotSend,
       fileList,
       clearChatUploadFileList,
-      updateInputMessage,
+      updateMessageInput,
       analytics,
       checkGeminiChineseWarning,
     ],
@@ -314,8 +314,8 @@ export const useSendGroupMessage = () => {
       generating: isSupervisorThinking || isCreatingMessage,
       send: handleSend,
       stop,
-      updateInputMessage,
+      updateMessageInput,
     }),
-    [canNotSend, isSupervisorThinking, isCreatingMessage, handleSend, stop, updateInputMessage],
+    [canNotSend, isSupervisorThinking, isCreatingMessage, handleSend, stop, updateMessageInput],
   );
 };

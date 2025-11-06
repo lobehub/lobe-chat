@@ -138,7 +138,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
           avatar={{ avatar, title }}
           loading={loading}
           placement={placement}
-          size={mobile ? 32 : undefined}
+          size={32}
           style={{ marginTop: 6 }}
         />
         <Flexbox

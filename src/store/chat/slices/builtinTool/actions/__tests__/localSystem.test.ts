@@ -22,8 +22,8 @@ const mockSet = vi.fn();
 
 const mockStore = {
   internal_triggerLocalFileToolCalling: vi.fn(),
-  internal_updateMessageContent: vi.fn(),
-  internal_updateMessagePluginError: vi.fn(),
+  optimisticUpdateMessageContent: vi.fn(),
+  optimisticUpdateMessagePluginError: vi.fn(),
   set: mockSet,
   toggleLocalFileLoading: vi.fn(),
   updatePluginArguments: vi.fn(),
@@ -58,7 +58,7 @@ describe('localFileSlice', () => {
 
       expect(mockStore.toggleLocalFileLoading).toBeCalledWith('test-id', true);
       expect(mockStore.updatePluginState).toBeCalledWith('test-id', mockState);
-      expect(mockStore.internal_updateMessageContent).toBeCalledWith(
+      expect(mockStore.optimisticUpdateMessageContent).toBeCalledWith(
         'test-id',
         JSON.stringify(mockContent),
       );
@@ -71,7 +71,7 @@ describe('localFileSlice', () => {
 
       await store.internal_triggerLocalFileToolCalling('test-id', mockService);
 
-      expect(mockStore.internal_updateMessagePluginError).toBeCalledWith('test-id', {
+      expect(mockStore.optimisticUpdateMessagePluginError).toBeCalledWith('test-id', {
         body: mockError,
         message: 'test error',
         type: 'PluginServerError',

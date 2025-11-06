@@ -74,7 +74,7 @@ export const createAgentExecutors = (context: {
           llmPayload.parentMessageId = context.parentId;
         }
         // Create assistant message (following server-side pattern)
-        const assistantMessageItem = await context.get().internal_createMessage({
+        const assistantMessageItem = await context.get().optimisticCreateMessage({
           content: '',
           fromModel: llmPayload.model,
           fromProvider: llmPayload.provider,
@@ -259,7 +259,7 @@ export const createAgentExecutors = (context: {
           topicId: context.get().activeTopicId,
         };
 
-        const createResult = await context.get().internal_createMessage(toolMessageParams);
+        const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
 
         if (!createResult) {
           log(
@@ -277,7 +277,7 @@ export const createAgentExecutors = (context: {
         log('[%s][call_tool] Executing tool %s ...', sessionLogId, toolName);
         // This method handles:
         // - Tool execution (builtin, plugin, MCP)
-        // - Content updates via internal_updateMessageContent
+        // - Content updates via optimisticUpdateMessageContent
         // - Error handling via internal_updateMessageError
         const result = await context
           .get()
