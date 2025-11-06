@@ -30,7 +30,7 @@ import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../../selectors';
+import { dbMessageSelectors, displayMessageSelectors, topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
@@ -58,8 +58,8 @@ export interface AIGenerateV2Action {
    */
   internal_execAgentRuntime: (params: {
     messages: UIChatMessage[];
-    userMessageId?: string;
-    isWelcomeQuestion?: boolean;
+    parentMessageId: string;
+    parentMessageType: 'user' | 'assistant';
     inSearchWorkflow?: boolean;
     /**
      * the RAG query content, should be embedding and used in the semantic search
@@ -91,7 +91,7 @@ export const generateAIChatV2: StateCreator<
   [],
   AIGenerateV2Action
 > = (set, get) => ({
-  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
+  sendMessage: async ({ message, files, onlyAddUserMessage }) => {
     const { activeTopicId, activeId, activeThreadId, internal_execAgentRuntime, mainInputEditor } =
       get();
     if (!activeId) return;
@@ -109,7 +109,7 @@ export const generateAIChatV2: StateCreator<
       return;
     }
 
-    const messages = chatSelectors.activeBaseChats(get());
+    const messages = displayMessageSelectors.activeDisplayMessages(get());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
     const autoCreateThreshold =
       chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
@@ -232,8 +232,8 @@ export const generateAIChatV2: StateCreator<
 
     // Get the current messages to generate AI response
     // remove the latest assistant message id
-    const baseMessages = chatSelectors
-      .activeBaseChats(get())
+    const baseMessages = displayMessageSelectors
+      .activeDisplayMessages(get())
       .filter((item) => item.id !== data.assistantMessageId);
 
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
@@ -250,7 +250,9 @@ export const generateAIChatV2: StateCreator<
       const topic = topicSelectors.getTopicById(data.topicId)(get());
 
       if (topic && !topic.title) {
-        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
+        const chats = displayMessageSelectors.getDisplayMessagesByKey(
+          messageMapKey(activeId, topic.id),
+        )(get());
         await get().summaryTopicTitle(topic.id, chats);
       }
     };
@@ -260,8 +262,8 @@ export const generateAIChatV2: StateCreator<
     try {
       await internal_execAgentRuntime({
         messages: baseMessages,
-        userMessageId: data.userMessageId,
-        isWelcomeQuestion,
+        parentMessageId: data.assistantMessageId,
+        parentMessageType: 'assistant',
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
       });
@@ -269,7 +271,10 @@ export const generateAIChatV2: StateCreator<
       //
       // // if there is relative files, then add files to agent
       // // only available in server mode
-      const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
+      const userFiles = dbMessageSelectors
+        .dbUserFiles(get())
+        .map((f) => f?.id)
+        .filter(Boolean) as string[];
 
       await getAgentStoreState().addFilesToAgent(userFiles, false);
     } catch (e) {
@@ -319,11 +324,12 @@ export const generateAIChatV2: StateCreator<
   },
 
   internal_execAgentRuntime: async (params) => {
-    const { messages: originalMessages, userMessageId } = params;
+    const { messages: originalMessages, parentMessageId, parentMessageType } = params;
 
     log(
-      '[internal_execAgentRuntime] start, userMessageId: %s, messages count: %d',
-      userMessageId,
+      '[internal_execAgentRuntime] start, parentMessageId: %s,parentMessageType: %s, messages count: %d',
+      parentMessageId,
+      parentMessageType,
       originalMessages.length,
     );
 
@@ -344,7 +350,8 @@ export const generateAIChatV2: StateCreator<
     // ===========================================
     // Step 1: RAG Preprocessing (if enabled)
     // ===========================================
-    if (params.ragQuery && userMessageId) {
+    if (params.ragQuery && parentMessageType === 'user') {
+      const userMessageId = parentMessageId;
       log('[internal_execAgentRuntime] RAG preprocessing start');
 
       // Get relevant chunks from semantic search
@@ -385,7 +392,7 @@ export const generateAIChatV2: StateCreator<
       if (fileChunks.length > 0) {
         // Note: RAG metadata will be updated after assistant message is created by call_llm executor
         // Store RAG data temporarily in params for later use
-        params.ragMetadata = { ragQueryId, fileChunks };
+        params.ragMetadata = { ragQueryId: ragQueryId!, fileChunks };
       }
 
       log('[internal_execAgentRuntime] RAG preprocessing completed');
@@ -398,7 +405,7 @@ export const generateAIChatV2: StateCreator<
 
     const agent = new ChatAgent({
       agentConfig: { maxSteps: 1000 },
-      sessionId: `${messageKey}/${params.userMessageId || 'unknown'}`,
+      sessionId: `${messageKey}/${params.parentMessageId}`,
       modelRuntimeConfig: {
         model,
         provider: provider!,
@@ -408,7 +415,8 @@ export const generateAIChatV2: StateCreator<
       executors: createAgentExecutors({
         get,
         messageKey,
-        parentId: params.userMessageId || '',
+        parentId: params.parentMessageId,
+        parentMessageType,
         params,
       }),
     });

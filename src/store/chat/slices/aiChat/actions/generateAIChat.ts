@@ -23,7 +23,12 @@ import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, messageStateSelectors, topicSelectors } from '../../../selectors';
+import {
+  chatSelectors,
+  displayMessageSelectors,
+  messageStateSelectors,
+  topicSelectors,
+} from '../../../selectors';
 
 const n = setNamespace('ai');
 
@@ -424,7 +429,7 @@ export const generateAIChat: StateCreator<
     { traceId, messages: outChats, threadId: outThreadId, inPortalThread } = {},
   ) => {
     // 1. 构造所有相关的历史记录
-    const chats = outChats ?? chatSelectors.mainAIChats(get());
+    const chats = outChats ?? displayMessageSelectors.mainAIChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
     if (currentIndex < 0) return;
@@ -461,7 +466,8 @@ export const generateAIChat: StateCreator<
 
     await internal_execAgentRuntime({
       messages: contextMessages,
-      userMessageId: latestMsg.id,
+      parentMessageId: latestMsg.id,
+      parentMessageType: 'user',
       traceId,
       ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
       threadId,

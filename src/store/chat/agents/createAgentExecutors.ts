@@ -39,39 +39,52 @@ export const createAgentExecutors = (context: {
     traceId?: string;
   };
   parentId: string;
+  parentMessageType: 'user' | 'assistant';
 }) => {
+  // 当通过 sendMessageInServer 的时候，已经有一条消息了，那么就不需要触发创建
+  let shouldSkipCreateMessage = context.parentMessageType === 'assistant';
+
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
     /**
      * Custom call_llm executor
      * Creates assistant message and calls internal_fetchAIChatMessage
      */
     call_llm: async (instruction, state) => {
+      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const stagePrefix = `[${sessionLogId}][call_llm]`;
+
       const llmPayload = (instruction as AgentInstructionCallLlm)
         .payload as GeneralAgentCallLLMInstructionPayload;
 
       const events: AgentEvent[] = [];
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
-      const stagePrefix = `[${sessionLogId}][call_llm]`;
 
       log(`${stagePrefix} Starting session`);
 
-      // Create assistant message (following server-side pattern)
-      const assistantMessageItem = await context.get().internal_createMessage({
-        content: '',
-        fromModel: llmPayload.model,
-        fromProvider: llmPayload.provider,
-        parentId: llmPayload.parentMessageId,
-        role: 'assistant',
-        sessionId: state.metadata!.sessionId!,
-        threadId: state.metadata?.threadId,
-        topicId: state.metadata?.topicId,
-      });
+      let assistantMessageId: string;
 
-      if (!assistantMessageItem) {
-        throw new Error('Failed to create assistant message');
+      if (shouldSkipCreateMessage) {
+        // 跳过第一次创建，后续就不再跳过了
+        assistantMessageId = context.parentId;
+        shouldSkipCreateMessage = false;
+      } else {
+        // Create assistant message (following server-side pattern)
+        const assistantMessageItem = await context.get().internal_createMessage({
+          content: '',
+          fromModel: llmPayload.model,
+          fromProvider: llmPayload.provider,
+          parentId: llmPayload.parentMessageId,
+          role: 'assistant',
+          sessionId: state.metadata!.sessionId!,
+          threadId: state.metadata?.threadId,
+          topicId: state.metadata?.topicId,
+        });
+
+        if (!assistantMessageItem) {
+          throw new Error('Failed to create assistant message');
+        }
+        assistantMessageId = assistantMessageItem.id;
       }
 
-      const assistantMessageId = assistantMessageItem.id;
       log(`${stagePrefix} Created assistant message, id: %s`, assistantMessageId);
 
       log(

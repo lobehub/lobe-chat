@@ -115,18 +115,10 @@ const getChatsWithThread = (s: ChatStoreState, messages: UIChatMessage[]) => {
 // ============= Main Display Chats ========== //
 
 /**
- * Get display messages without tool messages
- */
-const activeDisplayMessagesWithoutTool = (s: ChatStoreState) => {
-  const messages = activeDisplayMessages(s);
-  return messages.filter((m) => m.role !== 'tool');
-};
-
-/**
  * Main display chats for UI rendering (without tool messages, with thread handling)
  */
 const mainDisplayChats = (s: ChatStoreState): UIChatMessage[] => {
-  const displayChats = activeDisplayMessagesWithoutTool(s);
+  const displayChats = activeDisplayMessages(s);
   return getChatsWithThread(s, displayChats);
 };
 
@@ -289,7 +281,6 @@ const inboxActiveTopicDisplayMessages = (state: ChatStoreState) => {
 
 export const displayMessageSelectors = {
   activeDisplayMessages,
-  activeDisplayMessagesWithoutTool,
   currentChatLoadingState,
   currentDisplayChatKey,
   getDisplayMessageById,

@@ -67,7 +67,6 @@ export const getMessageByToolCallId = displayMessageSelectors.getDisplayMessageB
 export const chatSelectors = {
   // Display message selectors (from messagesMap)
   activeBaseChats: displayMessageSelectors.activeDisplayMessages,
-  activeBaseChatsWithoutTool: displayMessageSelectors.activeDisplayMessagesWithoutTool,
   // DB message selectors (from dbMessagesMap)
   countMessagesByThreadId: dbMessageSelectors.countDbMessagesByThreadId,
 
