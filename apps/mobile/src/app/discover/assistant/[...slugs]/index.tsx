@@ -29,7 +29,7 @@ const AssistantDetail = () => {
   const { t } = useTranslation(['common', 'discover']);
   const [isAdding, setIsAdding] = useState(false);
   const createSession = useSessionStore((s) => s.createSession);
-  const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
+  const setDrawerOpen = useGlobalStore((s) => s.setDrawerOpen);
 
   const useAssistantDetail = useDiscoverStore((s) => s.useAssistantDetail);
   const {
@@ -75,7 +75,7 @@ const AssistantDetail = () => {
         },
         false,
       );
-      toggleDrawer();
+      setDrawerOpen(false);
       InteractionManager.runAfterInteractions(() => {
         // 导航到会话页面
         router.replace({

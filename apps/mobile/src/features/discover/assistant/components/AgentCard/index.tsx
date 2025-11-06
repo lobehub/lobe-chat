@@ -22,7 +22,7 @@ const AgentCardComponent = ({ item }: AgentCardProps) => {
   const { identifier } = item;
   const [isAdding, setIsAdding] = useState(false);
   const createSession = useSessionStore((s) => s.createSession);
-  const toggleDrawer = useGlobalStore((s) => s.toggleDrawer);
+  const setDrawerOpen = useGlobalStore((s) => s.setDrawerOpen);
 
   const handlePress = useCallback(() => {
     router.push({
@@ -55,7 +55,7 @@ const AgentCardComponent = ({ item }: AgentCardProps) => {
         },
         false,
       );
-      toggleDrawer();
+      setDrawerOpen(false);
       InteractionManager.runAfterInteractions(() => {
         // 导航到会话页面
         router.replace({
