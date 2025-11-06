@@ -4,12 +4,18 @@ import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   skeletonCard: css`
-    margin: 12px;
-    padding: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
 
-    background: ${token.colorBgContainer};
+    min-height: 36px;
+    margin-block: 4px;
+    margin-inline: 8px;
+    padding-block: 8px;
+    padding-inline: 12px;
+    border-radius: ${token.borderRadius}px;
+
+    background: transparent;
   `,
 }));
 
@@ -18,12 +24,12 @@ const DocumentListSkeleton = () => {
 
   return (
     <Flexbox>
-      {Array.from({ length: 5 }).map((_, index) => (
+      {Array.from({ length: 8 }).map((_, index) => (
         <div className={styles.skeletonCard} key={index}>
-          <Flexbox gap={12}>
-            {/* Preview content skeleton */}
-            <Skeleton.Button active block style={{ height: 120 }} />
-          </Flexbox>
+          {/* Icon skeleton */}
+          <Skeleton.Avatar active shape="square" size={16} />
+          {/* Title skeleton */}
+          <Skeleton.Input active size="small" style={{ height: 20, minWidth: 120, width: 120 }} />
         </div>
       ))}
     </Flexbox>

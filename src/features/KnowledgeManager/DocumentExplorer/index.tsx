@@ -1,8 +1,8 @@
 'use client';
 
-import { ActionIcon, SearchBar, Text } from '@lobehub/ui';
+import { ActionIcon, Icon, SearchBar, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { PlusIcon } from 'lucide-react';
+import { FileText, PlusIcon } from 'lucide-react';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -23,10 +23,8 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 100%;
   `,
   documentActions: css`
-    position: absolute;
-    z-index: 1;
-    inset-block-start: 8px;
-    inset-inline-end: 8px;
+    display: flex;
+    align-items: center;
 
     padding: 0;
     border-radius: ${token.borderRadiusSM}px;
@@ -43,19 +41,25 @@ const useStyles = createStyles(({ css, token }) => ({
 
     position: relative;
 
-    overflow: hidden;
+    display: flex;
+    gap: 12px;
+    align-items: center;
 
-    margin: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
+    min-height: 36px;
+    margin-block: 4px;
+    margin-inline: 8px;
+    padding-block: 8px;
+    padding-inline: 12px;
+    border-radius: ${token.borderRadius}px;
 
-    background: ${token.colorBgContainer};
+    color: ${token.colorTextSecondary};
+
+    background: transparent;
 
     transition: all ${token.motionDurationMid};
 
     &:hover {
-      border-color: ${token.colorPrimary};
-      box-shadow: ${token.boxShadowTertiary};
+      background: ${token.colorFillTertiary};
 
       .document-actions {
         opacity: 1;
@@ -63,16 +67,17 @@ const useStyles = createStyles(({ css, token }) => ({
     }
 
     &.selected {
-      border-color: ${token.colorPrimary};
-      background: ${token.colorPrimaryBg};
-      box-shadow: ${token.boxShadowTertiary};
+      color: ${token.colorText};
+      background: ${token.colorFillSecondary};
     }
   `,
   documentContent: css`
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
+    flex: 1;
+    gap: 12px;
+    align-items: center;
+
+    min-width: 0;
   `,
   documentList: css`
     overflow-y: auto;
@@ -81,11 +86,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   documentTitle: css`
     overflow: hidden;
+    flex: 1;
+
+    min-width: 0;
 
     font-size: 14px;
-    font-weight: ${token.fontWeightStrong};
-    line-height: 1.4;
-    color: ${token.colorText};
+    line-height: 20px;
     text-overflow: ellipsis;
     white-space: nowrap;
   `,
@@ -93,6 +99,10 @@ const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
     flex: 1;
     background: ${token.colorBgContainer};
+  `,
+  emoji: css`
+    font-size: 16px;
+    line-height: 1;
   `,
   header: css`
     display: flex;
@@ -104,6 +114,12 @@ const useStyles = createStyles(({ css, token }) => ({
     border-block-end: 1px solid ${token.colorBorderSecondary};
 
     background: ${token.colorBgContainer};
+  `,
+  icon: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${token.colorTextSecondary};
   `,
   listPanel: css`
     display: flex;
@@ -319,6 +335,14 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                     key={document.id}
                     onClick={() => handleDocumentSelect(document.id)}
                   >
+                    <div className={styles.documentContent}>
+                      {emoji ? (
+                        <span className={styles.emoji}>{emoji}</span>
+                      ) : (
+                        <Icon className={styles.icon} icon={FileText} size={16} />
+                      )}
+                      <div className={styles.documentTitle}>{title}</div>
+                    </div>
                     <div className={cx(styles.documentActions, 'document-actions')}>
                       <NoteActions
                         documentContent={document.content || undefined}
@@ -330,12 +354,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                           }
                         }}
                       />
-                    </div>
-                    <div className={styles.documentContent}>
-                      <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
-                        {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
-                        <div className={styles.documentTitle}>{title}</div>
-                      </div>
                     </div>
                   </div>
                 );
