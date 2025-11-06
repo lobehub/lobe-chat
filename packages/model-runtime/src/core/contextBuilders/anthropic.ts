@@ -1,12 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 import OpenAI from 'openai';
 
 import { OpenAIChatMessage, UserMessageContentPart } from '../../types';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 
 export const buildAnthropicBlock = async (
   content: UserMessageContentPart,
+  customFetch?: typeof fetch,
 ): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam | undefined> => {
   switch (content.type) {
     case 'thinking': {
@@ -34,7 +35,7 @@ export const buildAnthropicBlock = async (
         };
 
       if (type === 'url') {
-        const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
+        const { base64, mimeType } = await imageUrlToBase64(content.image_url.url, customFetch);
         return {
           source: {
             data: base64 as string,
@@ -50,9 +51,11 @@ export const buildAnthropicBlock = async (
   }
 };
 
-const buildArrayContent = async (content: UserMessageContentPart[]) => {
+const buildArrayContent = async (content: UserMessageContentPart[], customFetch?: typeof fetch) => {
   let messageContent = (await Promise.all(
-    (content as UserMessageContentPart[]).map(async (c) => await buildAnthropicBlock(c)),
+    (content as UserMessageContentPart[]).map(
+      async (c) => await buildAnthropicBlock(c, customFetch),
+    ),
   )) as Anthropic.Messages.ContentBlockParam[];
 
   messageContent = messageContent.filter(Boolean);
@@ -62,6 +65,7 @@ const buildArrayContent = async (content: UserMessageContentPart[]) => {
 
 export const buildAnthropicMessage = async (
   message: OpenAIChatMessage,
+  customFetch?: typeof fetch,
 ): Promise<Anthropic.Messages.MessageParam> => {
   const content = message.content as string | UserMessageContentPart[];
 
@@ -72,7 +76,8 @@ export const buildAnthropicMessage = async (
 
     case 'user': {
       return {
-        content: typeof content === 'string' ? content : await buildArrayContent(content),
+        content:
+          typeof content === 'string' ? content : await buildArrayContent(content, customFetch),
         role: 'user',
       };
     }
@@ -100,7 +105,7 @@ export const buildAnthropicMessage = async (
             ? ([{ text: message.content, type: 'text' }] as UserMessageContentPart[])
             : content;
 
-        const messageContent = await buildArrayContent(rawContent);
+        const messageContent = await buildArrayContent(rawContent, customFetch);
 
         return {
           content: [
@@ -129,7 +134,7 @@ export const buildAnthropicMessage = async (
 
 export const buildAnthropicMessages = async (
   oaiMessages: OpenAIChatMessage[],
-  options: { enabledContextCaching?: boolean } = {},
+  options: { customFetch?: typeof fetch; enabledContextCaching?: boolean } = {},
 ): Promise<Anthropic.Messages.MessageParam[]> => {
   const messages: Anthropic.Messages.MessageParam[] = [];
   let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
@@ -175,7 +180,7 @@ export const buildAnthropicMessages = async (
         });
       }
     } else {
-      const anthropicMessage = await buildAnthropicMessage(message);
+      const anthropicMessage = await buildAnthropicMessage(message, options.customFetch);
       messages.push({ ...anthropicMessage, role: anthropicMessage.role });
     }
   }

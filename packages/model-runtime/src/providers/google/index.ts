@@ -147,6 +147,7 @@ interface LobeGoogleAIParams {
   baseURL?: string;
   client?: GoogleGenAI;
   defaultHeaders?: Record<string, any>;
+  fetch?: typeof fetch;
   id?: string;
   isVertexAi?: boolean;
 }
@@ -165,6 +166,7 @@ const isAbortError = (error: Error): boolean => {
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenAI;
   private isVertexAi: boolean;
+  fetch?: typeof fetch;
   baseURL?: string;
   apiKey?: string;
   provider: string;
@@ -176,6 +178,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     isVertexAi,
     id,
     defaultHeaders,
+    fetch: customFetch,
   }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
@@ -184,7 +187,22 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       : undefined;
 
     this.apiKey = apiKey;
-    this.client = client ? client : new GoogleGenAI({ apiKey, httpOptions });
+
+    if (client) {
+      this.client = client;
+      this.fetch =
+        customFetch ??
+        (typeof (client as any).fetch === 'function'
+          ? ((client as any).fetch as typeof fetch)
+          : undefined);
+    } else {
+      const clientOptions: Record<string, any> = { apiKey };
+      if (httpOptions) clientOptions.httpOptions = httpOptions;
+      if (customFetch) clientOptions.fetch = customFetch;
+      this.client = new GoogleGenAI(clientOptions);
+      this.fetch = customFetch;
+    }
+
     this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
     this.isVertexAi = isVertexAi || false;
 
@@ -209,7 +227,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         thinkingBudget: resolvedThinkingBudget,
       };
 
-      const contents = await buildGoogleMessages(payload.messages);
+      const contents = await buildGoogleMessages(payload.messages, this.fetch);
 
       const controller = new AbortController();
       const originalSignal = options?.signal;
@@ -316,7 +334,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
    * @see https://ai.google.dev/gemini-api/docs/image-generation#imagen
    */
   async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
-    return createGoogleImage(this.client, this.provider, payload);
+    return createGoogleImage(this.client, this.provider, payload, this.fetch);
   }
 
   /**
@@ -326,7 +344,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
    */
   async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
     // Convert OpenAI messages to Google format
-    const contents = await buildGoogleMessages(payload.messages);
+    const contents = await buildGoogleMessages(payload.messages, this.fetch);
 
     // Handle tools-based structured output
     if (payload.tools && payload.tools.length > 0) {

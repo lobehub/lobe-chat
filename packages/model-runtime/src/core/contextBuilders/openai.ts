@@ -1,18 +1,19 @@
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 import OpenAI, { toFile } from 'openai';
 
 import { disableStreamModels, systemToUserModels } from '../../const/models';
 import { ChatStreamPayload, OpenAIChatMessage } from '../../types';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 
 export const convertMessageContent = async (
   content: OpenAI.ChatCompletionContentPart,
+  customFetch?: typeof fetch,
 ): Promise<OpenAI.ChatCompletionContentPart> => {
   if (content.type === 'image_url') {
     const { type } = parseDataUri(content.image_url.url);
 
     if (type === 'url' && process.env.LLM_VISION_IMAGE_USE_BASE64 === '1') {
-      const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
+      const { base64, mimeType } = await imageUrlToBase64(content.image_url.url, customFetch);
 
       return {
         ...content,
@@ -24,7 +25,10 @@ export const convertMessageContent = async (
   return content;
 };
 
-export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessageParam[]) => {
+export const convertOpenAIMessages = async (
+  messages: OpenAI.ChatCompletionMessageParam[],
+  customFetch?: typeof fetch,
+) => {
   return (await Promise.all(
     messages.map(async (message) => ({
       ...message,
@@ -33,7 +37,7 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
           ? message.content
           : await Promise.all(
               (message.content || []).map((c) =>
-                convertMessageContent(c as OpenAI.ChatCompletionContentPart),
+                convertMessageContent(c as OpenAI.ChatCompletionContentPart, customFetch),
               ),
             ),
     })),
@@ -42,6 +46,7 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
 
 export const convertOpenAIResponseInputs = async (
   messages: OpenAI.ChatCompletionMessageParam[],
+  customFetch?: typeof fetch,
 ) => {
   let input: OpenAI.Responses.ResponseInputItem[] = [];
   await Promise.all(
@@ -83,7 +88,10 @@ export const convertOpenAIResponseInputs = async (
                     return { ...c, type: 'input_text' };
                   }
 
-                  const image = await convertMessageContent(c as OpenAI.ChatCompletionContentPart);
+                  const image = await convertMessageContent(
+                    c as OpenAI.ChatCompletionContentPart,
+                    customFetch,
+                  );
                   return {
                     image_url: (image as OpenAI.ChatCompletionContentPartImage).image_url?.url,
                     type: 'input_image',
@@ -127,7 +135,7 @@ export const pruneReasoningPayload = (payload: ChatStreamPayload) => {
 /**
  * Convert image URL (data URL or HTTP URL) to File object for OpenAI API
  */
-export const convertImageUrlToFile = async (imageUrl: string) => {
+export const convertImageUrlToFile = async (imageUrl: string, customFetch?: typeof fetch) => {
   let buffer: Buffer;
   let mimeType: string;
 
@@ -138,7 +146,8 @@ export const convertImageUrlToFile = async (imageUrl: string) => {
     buffer = Buffer.from(base64Data, 'base64');
   } else {
     // a http url
-    const response = await fetch(imageUrl);
+    const fetchFn = customFetch || fetch;
+    const response = await fetchFn(imageUrl);
     if (!response.ok) {
       throw new Error(`Failed to fetch image from ${imageUrl}: ${response.statusText}`);
     }

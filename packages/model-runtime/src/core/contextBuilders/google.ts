@@ -5,9 +5,9 @@ import {
   Part,
   Type as SchemaType,
 } from '@google/genai';
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 
 import { ChatCompletionTool, OpenAIChatMessage, UserMessageContentPart } from '../../types';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 
@@ -16,6 +16,7 @@ import { parseDataUri } from '../../utils/uriParser';
  */
 export const buildGooglePart = async (
   content: UserMessageContentPart,
+  customFetch?: typeof fetch,
 ): Promise<Part | undefined> => {
   switch (content.type) {
     default: {
@@ -40,7 +41,7 @@ export const buildGooglePart = async (
       }
 
       if (type === 'url') {
-        const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
+        const { base64, mimeType } = await imageUrlToBase64(content.image_url.url, customFetch);
 
         return {
           inlineData: { data: base64, mimeType },
@@ -66,7 +67,8 @@ export const buildGooglePart = async (
       if (type === 'url') {
         // For video URLs, we need to fetch and convert to base64
         // Note: This might need size/duration limits for practical use
-        const response = await fetch(content.video_url.url);
+        const fetchFn = customFetch || fetch;
+        const response = await fetchFn(content.video_url.url);
         const arrayBuffer = await response.arrayBuffer();
         const base64 = Buffer.from(arrayBuffer).toString('base64');
         const mimeType = response.headers.get('content-type') || 'video/mp4';
@@ -87,6 +89,7 @@ export const buildGooglePart = async (
 export const buildGoogleMessage = async (
   message: OpenAIChatMessage,
   toolCallNameMap?: Map<string, string>,
+  customFetch?: typeof fetch,
 ): Promise<Content> => {
   const content = message.content as string | UserMessageContentPart[];
 
@@ -124,7 +127,9 @@ export const buildGoogleMessage = async (
   const getParts = async () => {
     if (typeof content === 'string') return [{ text: content }];
 
-    const parts = await Promise.all(content.map(async (c) => await buildGooglePart(c)));
+    const parts = await Promise.all(
+      content.map(async (c) => await buildGooglePart(c, customFetch)),
+    );
     return parts.filter(Boolean) as Part[];
   };
 
@@ -137,7 +142,10 @@ export const buildGoogleMessage = async (
 /**
  * Convert messages from the OpenAI format to Google GenAI SDK format
  */
-export const buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promise<Content[]> => {
+export const buildGoogleMessages = async (
+  messages: OpenAIChatMessage[],
+  customFetch?: typeof fetch,
+): Promise<Content[]> => {
   const toolCallNameMap = new Map<string, string>();
 
   // Build tool call id to name mapping
@@ -153,7 +161,7 @@ export const buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promis
 
   const pools = messages
     .filter((message) => message.role !== 'function')
-    .map(async (msg) => await buildGoogleMessage(msg, toolCallNameMap));
+    .map(async (msg) => await buildGoogleMessage(msg, toolCallNameMap, customFetch));
 
   const contents = await Promise.all(pools);
 

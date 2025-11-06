@@ -4,12 +4,15 @@ import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
 import { ClientSecretPayload } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
 import { ModelProvider } from 'model-bank';
+import { ssrfSafeFetch } from 'ssrf-safe-fetch';
 
 import { getLLMConfig } from '@/envs/llm';
 
 import apiKeyManager from './apiKeyManager';
 
 export * from './trace';
+
+type RuntimeInitializeParams = Parameters<typeof ModelRuntime.initializeWithProvider>[1];
 
 /**
  * Retrieves the options object from environment and apikeymanager
@@ -171,7 +174,10 @@ const buildVertexOptions = (
 
   const project = projectFromParams ?? projectFromCredentials ?? projectFromEnv;
   const location =
-    (params.location as string | undefined) ?? payload.vertexAIRegion ?? process.env.VERTEXAI_LOCATION ?? undefined;
+    (params.location as string | undefined) ??
+    payload.vertexAIRegion ??
+    process.env.VERTEXAI_LOCATION ??
+    undefined;
 
   const googleAuthOptions = params.googleAuthOptions ?? (credentials ? { credentials } : undefined);
 
@@ -197,12 +203,12 @@ const buildVertexOptions = (
 export const initModelRuntimeWithUserPayload = (
   provider: string,
   payload: ClientSecretPayload,
-  params: any = {},
+  params: RuntimeInitializeParams = {},
 ) => {
   const runtimeProvider = payload.runtimeProvider ?? provider;
 
   if (runtimeProvider === ModelProvider.VertexAI) {
-    const vertexOptions = buildVertexOptions(payload, params);
+    const vertexOptions = buildVertexOptions(payload, params as Partial<GoogleGenAIOptions>);
     const runtime = LobeVertexAI.initFromVertexAI(vertexOptions);
 
     return new ModelRuntime(runtime);
@@ -211,5 +217,6 @@ export const initModelRuntimeWithUserPayload = (
   return ModelRuntime.initializeWithProvider(runtimeProvider, {
     ...getParamsFromPayload(runtimeProvider, payload),
     ...params,
+    fetch: ssrfSafeFetch as any,
   });
 };

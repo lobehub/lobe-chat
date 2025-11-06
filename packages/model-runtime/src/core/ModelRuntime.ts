@@ -25,6 +25,16 @@ export interface AgentChatOptions {
   trace?: TracePayload;
 }
 
+export interface ModelRuntimeOptions
+  extends ClientOptions,
+    LobeBedrockAIParams,
+    LobeCloudflareParams {
+  apiKey?: string;
+  apiVersion?: string;
+  baseURL?: string;
+  fetch?: typeof fetch;
+}
+
 export class ModelRuntime {
   private _runtime: LobeRuntimeAI;
 
@@ -114,14 +124,7 @@ export class ModelRuntime {
    * - `src/app/api/chat/agentRuntime.ts: initAgentRuntimeWithUserPayload` on server
    * - `src/services/chat.ts: initializeWithClientStore` on client
    */
-  static initializeWithProvider(
-    provider: string,
-    params: Partial<
-      ClientOptions &
-        LobeBedrockAIParams &
-        LobeCloudflareParams & { apiKey?: string; apiVersion?: string; baseURL?: string }
-    >,
-  ) {
+  static initializeWithProvider(provider: string, params: Partial<ModelRuntimeOptions>) {
     // @ts-expect-error runtime map not include vertex so it will be undefined
     const providerAI = providerRuntimeMap[provider] ?? LobeOpenAI;
 

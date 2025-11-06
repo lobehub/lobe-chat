@@ -1,3 +1,4 @@
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 import createDebug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 
@@ -5,7 +6,6 @@ import { AgentRuntimeErrorType } from '../../types/error';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { type TaskResult, asyncifyPolling } from '../../utils/asyncifyPolling';
 import { AgentRuntimeError } from '../../utils/createError';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 import {
   BFL_ENDPOINTS,
@@ -23,13 +23,14 @@ const BASE_URL = 'https://api.bfl.ai';
 interface BflCreateImageOptions {
   apiKey: string;
   baseURL?: string;
+  fetch?: typeof fetch;
   provider: string;
 }
 
 /**
  * Convert image URL to base64 format required by BFL API
  */
-async function convertImageToBase64(imageUrl: string): Promise<string> {
+async function convertImageToBase64(imageUrl: string, fetchImpl?: typeof fetch): Promise<string> {
   try {
     const { type } = parseDataUri(imageUrl);
 
@@ -44,7 +45,7 @@ async function convertImageToBase64(imageUrl: string): Promise<string> {
 
     if (type === 'url') {
       // Convert URL to base64
-      const { base64 } = await imageUrlToBase64(imageUrl);
+      const { base64 } = await imageUrlToBase64(imageUrl, fetchImpl);
       return base64;
     }
 
@@ -61,6 +62,7 @@ async function convertImageToBase64(imageUrl: string): Promise<string> {
 async function buildRequestPayload(
   model: BflModelId,
   params: CreateImagePayload['params'],
+  fetchImpl?: typeof fetch,
 ): Promise<BflRequest> {
   log('Building request payload for model: %s', model);
 
@@ -88,7 +90,7 @@ async function buildRequestPayload(
   if (params.imageUrls && params.imageUrls.length > 0) {
     for (let i = 0; i < Math.min(params.imageUrls.length, 4); i++) {
       const fieldName = i === 0 ? 'input_image' : `input_image_${i + 1}`;
-      userPayload[fieldName] = await convertImageToBase64(params.imageUrls[i]);
+      userPayload[fieldName] = await convertImageToBase64(params.imageUrls[i], fetchImpl);
     }
     // Remove the original imageUrls field as it's now mapped to input_image_*
     delete userPayload.imageUrls;
@@ -96,7 +98,7 @@ async function buildRequestPayload(
 
   // Handle single image input (imageUrl)
   if (params.imageUrl) {
-    userPayload.image_prompt = await convertImageToBase64(params.imageUrl);
+    userPayload.image_prompt = await convertImageToBase64(params.imageUrl, fetchImpl);
     // Remove the original imageUrl field as it's now mapped to image_prompt
     delete userPayload.imageUrl;
   }
@@ -123,7 +125,9 @@ async function submitTask(
 
   log('Submitting task to: %s', url);
 
-  const response = await fetch(url, {
+  const fetchFn = options.fetch ?? fetch;
+
+  const response = await fetchFn(url, {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -160,7 +164,9 @@ async function queryTaskStatus(
 ): Promise<BflResultResponse> {
   log('Querying task status using polling URL: %s', pollingUrl);
 
-  const response = await fetch(pollingUrl, {
+  const fetchFn = options.fetch ?? fetch;
+
+  const response = await fetchFn(pollingUrl, {
     headers: {
       'accept': 'application/json',
       'x-key': options.apiKey,
@@ -203,7 +209,7 @@ export async function createBflImage(
 
   try {
     // 1. Build request payload
-    const requestPayload = await buildRequestPayload(model as BflModelId, params);
+    const requestPayload = await buildRequestPayload(model as BflModelId, params, options.fetch);
 
     // 2. Submit image generation task
     const taskResponse = await submitTask(model as BflModelId, requestPayload, options);

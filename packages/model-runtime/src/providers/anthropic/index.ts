@@ -73,6 +73,7 @@ const resolveCacheTTL = (
 };
 
 interface AnthropicAIParams extends ClientOptions {
+  fetch?: typeof fetch;
   id?: string;
 }
 
@@ -82,6 +83,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   baseURL: string;
   apiKey?: string;
   private id: string;
+  fetch?: typeof fetch;
 
   private isDebug() {
     return process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION === '1';
@@ -92,16 +94,20 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     baseURL = DEFAULT_BASE_URL,
     id,
     defaultHeaders,
+    fetch: customFetch,
     ...res
   }: AnthropicAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     const betaHeaders = process.env.ANTHROPIC_BETA_HEADERS;
 
+    this.fetch = customFetch;
+
     this.client = new Anthropic({
       apiKey,
       baseURL,
       defaultHeaders: { ...defaultHeaders, 'anthropic-beta': betaHeaders },
+      fetch: customFetch,
       ...res,
     });
     this.baseURL = this.client.baseURL;
@@ -200,7 +206,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         ] as Anthropic.TextBlockParam[])
       : undefined;
 
-    const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
+    const postMessages = await buildAnthropicMessages(user_messages, {
+      customFetch: this.fetch,
+      enabledContextCaching,
+    });
 
     let postTools: anthropicTools[] | undefined = buildAnthropicTools(tools, {
       enabledContextCaching,

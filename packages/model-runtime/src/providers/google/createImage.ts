@@ -1,11 +1,11 @@
 import { Content, GenerateContentConfig, GoogleGenAI, Part } from '@google/genai';
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 
 import { convertGoogleAIUsage } from '../../core/usageConverters/google-ai';
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../../utils/createError';
 import { getModelPricing } from '../../utils/getModelPricing';
 import { parseGoogleErrorMessage } from '../../utils/googleErrorParser';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 
 // Maximum number of images allowed for processing
@@ -14,7 +14,7 @@ const MAX_IMAGE_COUNT = 10;
 /**
  * Process a single image URL and convert it to Google AI Part format
  */
-async function processImageForParts(imageUrl: string): Promise<Part> {
+async function processImageForParts(imageUrl: string, fetchImpl?: typeof fetch): Promise<Part> {
   const { mimeType, base64, type } = parseDataUri(imageUrl);
 
   if (type === 'base64') {
@@ -29,7 +29,10 @@ async function processImageForParts(imageUrl: string): Promise<Part> {
       },
     };
   } else if (type === 'url') {
-    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(imageUrl);
+    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(
+      imageUrl,
+      fetchImpl,
+    );
 
     return {
       inlineData: {
@@ -104,6 +107,7 @@ async function generateImageByChatModel(
   client: GoogleGenAI,
   payload: CreateImagePayload,
   provider: string,
+  fetchImpl?: typeof fetch,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
   const actualModel = model.replace(':image', '');
@@ -118,7 +122,7 @@ async function generateImageByChatModel(
 
   // Add image for editing if provided
   if (params.imageUrl && params.imageUrl !== null) {
-    const imagePart = await processImageForParts(params.imageUrl);
+    const imagePart = await processImageForParts(params.imageUrl, fetchImpl);
     parts.push(imagePart);
   }
 
@@ -129,7 +133,7 @@ async function generateImageByChatModel(
     }
 
     const imageParts = await Promise.all(
-      params.imageUrls.map((imageUrl) => processImageForParts(imageUrl)),
+      params.imageUrls.map((imageUrl) => processImageForParts(imageUrl, fetchImpl)),
     );
     parts.push(...imageParts);
   }
@@ -174,13 +178,14 @@ export async function createGoogleImage(
   client: GoogleGenAI,
   provider: string,
   payload: CreateImagePayload,
+  fetchImpl?: typeof fetch,
 ): Promise<CreateImageResponse> {
   try {
     const { model } = payload;
 
     // Handle Gemini 2.5 Flash Image models that use generateContent
     if (model.endsWith(':image')) {
-      return await generateImageByChatModel(client, payload, provider);
+      return await generateImageByChatModel(client, payload, provider, fetchImpl);
     }
 
     // Handle traditional Imagen models that use generateImages

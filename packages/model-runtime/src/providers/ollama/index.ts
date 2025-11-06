@@ -35,12 +35,17 @@ export const params = {
   provider: ModelProvider.Ollama,
 };
 
+interface OllamaAIParams extends ClientOptions {
+  fetch?: typeof fetch;
+}
+
 export class LobeOllamaAI implements LobeRuntimeAI {
   private client: Ollama;
 
   baseURL?: string;
+  fetch?: typeof fetch;
 
-  constructor({ baseURL }: ClientOptions = {}) {
+  constructor({ baseURL, fetch: customFetch }: OllamaAIParams = {}) {
     try {
       if (baseURL) new URL(baseURL);
     } catch (e) {
@@ -50,6 +55,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     this.client = new Ollama(!baseURL ? undefined : { host: baseURL });
 
     if (baseURL) this.baseURL = baseURL;
+    this.fetch = customFetch;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
@@ -207,7 +213,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
           // If it's a URL, collect the promise for parallel processing
           else if (type === 'url') {
             urlImagePromises.push(
-              imageUrlToBase64(content.image_url.url)
+              imageUrlToBase64(content.image_url.url, this.fetch)
                 .then((result) =>
                   result.base64 && result.base64.trim() !== '' ? result.base64 : null,
                 )

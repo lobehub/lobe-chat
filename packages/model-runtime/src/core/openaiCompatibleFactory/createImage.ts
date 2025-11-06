@@ -1,3 +1,4 @@
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 import { cleanObject } from '@lobechat/utils/object';
 import createDebug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
@@ -5,24 +6,31 @@ import OpenAI from 'openai';
 
 import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { getModelPricing } from '../../utils/getModelPricing';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 import { convertImageUrlToFile } from '../contextBuilders/openai';
 import { convertOpenAIImageUsage } from '../usageConverters/openai';
+
+interface CreateImageContext {
+  client: OpenAI;
+  fetchImpl?: typeof fetch;
+  payload: CreateImagePayload;
+  provider: string;
+}
 
 const log = createDebug('lobe-image:openai-compatible');
 
 /**
  * Generate images using traditional OpenAI images API (DALL-E, etc.)
  */
-async function generateByImageMode(
-  client: OpenAI,
-  payload: CreateImagePayload,
-  provider: string,
-): Promise<CreateImageResponse> {
+async function generateByImageMode({
+  client,
+  payload,
+  provider,
+  fetchImpl,
+}: CreateImageContext): Promise<CreateImageResponse> {
   const { model, params } = payload;
 
-  log('Creating image with model: %s and params: %O', model, params);
+  log('Creating image with provider: %s, model: %s and params: %O', provider, model, params);
 
   // Map parameter names, mapping imageUrls to image
   const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
@@ -48,7 +56,7 @@ async function generateByImageMode(
     try {
       // Convert all image URLs to File objects
       const imageFiles = await Promise.all(
-        userInput.image.map((url: string) => convertImageUrlToFile(url)),
+        userInput.image.map((url: string) => convertImageUrlToFile(url, fetchImpl)),
       );
 
       // According to official docs, if there are multiple images, pass an array; if only one, pass a single File
@@ -127,7 +135,7 @@ async function generateByImageMode(
 /**
  * Process image URL for chat model input
  */
-async function processImageUrlForChat(imageUrl: string): Promise<string> {
+async function processImageUrlForChat(imageUrl: string, fetchImpl?: typeof fetch): Promise<string> {
   const { type, base64, mimeType } = parseDataUri(imageUrl);
 
   if (type === 'base64') {
@@ -137,7 +145,10 @@ async function processImageUrlForChat(imageUrl: string): Promise<string> {
     return `data:${mimeType || 'image/png'};base64,${base64}`;
   } else if (type === 'url') {
     // For URL type, convert to base64 first
-    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(imageUrl);
+    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(
+      imageUrl,
+      fetchImpl,
+    );
     return `data:${urlMimeType};base64,${urlBase64}`;
   } else {
     throw new TypeError(`Currently we don't support image url: ${imageUrl}`);
@@ -147,14 +158,21 @@ async function processImageUrlForChat(imageUrl: string): Promise<string> {
 /**
  * Generate images using chat completion API (OpenRouter Gemini, etc.)
  */
-async function generateByChatModel(
-  client: OpenAI,
-  payload: CreateImagePayload,
-): Promise<CreateImageResponse> {
+async function generateByChatModel({
+  client,
+  payload,
+  provider,
+  fetchImpl,
+}: CreateImageContext): Promise<CreateImageResponse> {
   const { model, params } = payload;
   const actualModel = model.replace(':image', ''); // Remove :image suffix
 
-  log('Creating image via chat API with model: %s and params: %O', actualModel, params);
+  log(
+    'Creating image via chat API with provider: %s, model: %s and params: %O',
+    provider,
+    actualModel,
+    params,
+  );
 
   // Build message content array
   const content: Array<any> = [
@@ -168,7 +186,7 @@ async function generateByChatModel(
   if (params.imageUrl && params.imageUrl !== null) {
     log('Processing image URL for editing mode: %s', params.imageUrl);
     try {
-      const processedImageUrl = await processImageUrlForChat(params.imageUrl);
+      const processedImageUrl = await processImageUrlForChat(params.imageUrl, fetchImpl);
       content.push({
         image_url: {
           url: processedImageUrl,
@@ -220,18 +238,19 @@ async function generateByChatModel(
 /**
  * Create image using OpenAI Compatible API
  */
-export async function createOpenAICompatibleImage(
-  client: OpenAI,
-  payload: CreateImagePayload,
-  provider: string,
-): Promise<CreateImageResponse> {
+export async function createOpenAICompatibleImage({
+  client,
+  payload,
+  provider,
+  fetchImpl,
+}: CreateImageContext): Promise<CreateImageResponse> {
   const { model } = payload;
 
   // Check if it's a chat model for image generation (via :image suffix)
   if (model.endsWith(':image')) {
-    return await generateByChatModel(client, payload);
+    return await generateByChatModel({ client, fetchImpl, payload, provider });
   }
 
   // Default to traditional images API
-  return await generateByImageMode(client, payload, provider);
+  return await generateByImageMode({ client, fetchImpl, payload, provider });
 }

@@ -1,9 +1,9 @@
 // @vitest-environment node
 import { Type as SchemaType } from '@google/genai';
+import * as imageToBase64Module from '@lobechat/utils/imageToBase64';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ChatCompletionTool, OpenAIChatMessage, UserMessageContentPart } from '../../types';
-import * as imageToBase64Module from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 import {
   buildGoogleMessage,
@@ -18,7 +18,7 @@ vi.mock('../../utils/uriParser', () => ({
   parseDataUri: vi.fn(),
 }));
 
-vi.mock('../../utils/imageToBase64', () => ({
+vi.mock('@lobechat/utils/imageToBase64', () => ({
   imageUrlToBase64: vi.fn(),
 }));
 

@@ -37,32 +37,29 @@ export const imageToBase64 = ({
 };
 
 /**
- * Convert image URL to base64
- * Uses SSRF-safe fetch on server-side to prevent SSRF attacks
+ * Convert image URL to base64.
+ * Accepts an optional custom fetch implementation (e.g., SSRF-safe fetch) for server environments.
  */
 export const imageUrlToBase64 = async (
   imageUrl: string,
+  customFetch?: typeof fetch,
 ): Promise<{ base64: string; mimeType: string }> => {
   try {
-    const isServer = typeof window === 'undefined';
-
-    // Use SSRF-safe fetch on server-side to prevent SSRF attacks
-    const res = isServer
-      ? await import('ssrf-safe-fetch').then((m) => m.ssrfSafeFetch(imageUrl))
-      : await fetch(imageUrl);
+    const fetchFn = customFetch || fetch;
+    const res = await fetchFn(imageUrl);
 
     const blob = await res.blob();
     const arrayBuffer = await blob.arrayBuffer();
 
-    // Client-side uses btoa, server-side uses Buffer
-    const base64 = isServer
-      ? Buffer.from(arrayBuffer).toString('base64')
-      : btoa(
-          new Uint8Array(arrayBuffer).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            '',
-          ),
-        );
+    const base64 =
+      typeof btoa === 'function'
+        ? btoa(
+            new Uint8Array(arrayBuffer).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          )
+        : Buffer.from(arrayBuffer).toString('base64');
 
     return { base64, mimeType: blob.type };
   } catch (error) {

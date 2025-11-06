@@ -1,9 +1,9 @@
 // @vitest-environment node
+import * as imageToBase64Module from '@lobechat/utils/imageToBase64';
 import OpenAI from 'openai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CreateImagePayload } from '../../types/image';
-import * as imageToBase64Module from '../../utils/imageToBase64';
 import * as uriParserModule from '../../utils/uriParser';
 import { createOpenAICompatibleImage } from './createImage';
 
@@ -81,7 +81,11 @@ describe('createOpenAICompatibleImage', () => {
           },
         };
 
-        const result = await createOpenAICompatibleImage(mockClient, payload, 'openrouter');
+        const result = await createOpenAICompatibleImage({
+          client: mockClient,
+          payload,
+          provider: 'openrouter',
+        });
 
         expect(result.imageUrl).toBe('data:image/png;base64,generatedImageData');
         expect(mockClient.chat.completions.create).toHaveBeenCalled();
@@ -122,7 +126,11 @@ describe('createOpenAICompatibleImage', () => {
           },
         };
 
-        const result = await createOpenAICompatibleImage(mockClient, payload, 'test-provider');
+        const result = await createOpenAICompatibleImage({
+          client: mockClient,
+          payload,
+          provider: 'test-provider',
+        });
 
         expect(result.imageUrl).toBe('data:image/png;base64,result');
       });
@@ -145,7 +153,7 @@ describe('createOpenAICompatibleImage', () => {
         };
 
         await expect(
-          createOpenAICompatibleImage(mockClient, payload, 'test-provider'),
+          createOpenAICompatibleImage({ client: mockClient, payload, provider: 'test-provider' }),
         ).rejects.toThrow(
           "Failed to process image URL: TypeError: Image URL doesn't contain base64 data",
         );
@@ -191,7 +199,11 @@ describe('createOpenAICompatibleImage', () => {
           },
         };
 
-        const result = await createOpenAICompatibleImage(mockClient, payload, 'test-provider');
+        const result = await createOpenAICompatibleImage({
+          client: mockClient,
+          payload,
+          provider: 'test-provider',
+        });
 
         expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(mockHttpImageUrl);
         expect(result.imageUrl).toBe('data:image/png;base64,output');
@@ -215,7 +227,7 @@ describe('createOpenAICompatibleImage', () => {
         };
 
         await expect(
-          createOpenAICompatibleImage(mockClient, payload, 'test-provider'),
+          createOpenAICompatibleImage({ client: mockClient, payload, provider: 'test-provider' }),
         ).rejects.toThrow(
           `Failed to process image URL: TypeError: Currently we don't support image url: ${mockInvalidUrl}`,
         );
@@ -249,7 +261,11 @@ describe('createOpenAICompatibleImage', () => {
           },
         };
 
-        const result = await createOpenAICompatibleImage(mockClient, payload, 'openrouter');
+        const result = await createOpenAICompatibleImage({
+          client: mockClient,
+          payload,
+          provider: 'openrouter',
+        });
 
         expect(result.imageUrl).toBe('data:image/png;base64,generatedWithoutInputImage');
         expect(mockClient.chat.completions.create).toHaveBeenCalledWith({
@@ -296,7 +312,11 @@ describe('createOpenAICompatibleImage', () => {
           },
         };
 
-        const result = await createOpenAICompatibleImage(mockClient, payload, 'test-provider');
+        const result = await createOpenAICompatibleImage({
+          client: mockClient,
+          payload,
+          provider: 'test-provider',
+        });
 
         expect(result.imageUrl).toBe('data:image/png;base64,generatedImage');
         // Should not include image in content array
@@ -324,7 +344,7 @@ describe('createOpenAICompatibleImage', () => {
         };
 
         await expect(
-          createOpenAICompatibleImage(mockClient, payload, 'test-provider'),
+          createOpenAICompatibleImage({ client: mockClient, payload, provider: 'test-provider' }),
         ).rejects.toThrow('No message in chat completion response');
       });
 
@@ -349,7 +369,7 @@ describe('createOpenAICompatibleImage', () => {
         };
 
         await expect(
-          createOpenAICompatibleImage(mockClient, payload, 'test-provider'),
+          createOpenAICompatibleImage({ client: mockClient, payload, provider: 'test-provider' }),
         ).rejects.toThrow('No image generated in chat completion response');
       });
 
@@ -374,7 +394,7 @@ describe('createOpenAICompatibleImage', () => {
         };
 
         await expect(
-          createOpenAICompatibleImage(mockClient, payload, 'test-provider'),
+          createOpenAICompatibleImage({ client: mockClient, payload, provider: 'test-provider' }),
         ).rejects.toThrow('No image generated in chat completion response');
       });
 
@@ -404,7 +424,7 @@ describe('createOpenAICompatibleImage', () => {
         };
 
         await expect(
-          createOpenAICompatibleImage(mockClient, payload, 'test-provider'),
+          createOpenAICompatibleImage({ client: mockClient, payload, provider: 'test-provider' }),
         ).rejects.toThrow('No image generated in chat completion response');
       });
 
@@ -436,7 +456,7 @@ describe('createOpenAICompatibleImage', () => {
         };
 
         await expect(
-          createOpenAICompatibleImage(mockClient, payload, 'test-provider'),
+          createOpenAICompatibleImage({ client: mockClient, payload, provider: 'test-provider' }),
         ).rejects.toThrow('No image generated in chat completion response');
       });
 
@@ -475,7 +495,11 @@ describe('createOpenAICompatibleImage', () => {
           },
         };
 
-        const result = await createOpenAICompatibleImage(mockClient, payload, 'openrouter');
+        const result = await createOpenAICompatibleImage({
+          client: mockClient,
+          payload,
+          provider: 'openrouter',
+        });
 
         expect(result.imageUrl).toBe('data:image/png;base64,processedResult');
 
@@ -522,7 +546,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'test-provider');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'test-provider',
+      });
 
       expect(result.imageUrl).toBe('data:image/png;base64,chatModelResult');
       expect(mockClient.chat.completions.create).toHaveBeenCalled();
@@ -548,7 +576,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'openai');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'openai',
+      });
 
       expect(result.imageUrl).toBe('data:image/png;base64,imageModelBase64Result');
       expect(mockClient.images.generate).toHaveBeenCalled();
@@ -586,7 +618,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'openai');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'openai',
+      });
 
       expect(result.imageUrl).toBe('data:image/png;base64,editedImageResult');
       expect(mockClient.images.edit).toHaveBeenCalled();
@@ -611,7 +647,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'openai');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'openai',
+      });
 
       expect(result.imageUrl).toBe('data:image/png;base64,generatedImage');
       expect(mockClient.images.generate).toHaveBeenCalled();
@@ -637,7 +677,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'openai');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'openai',
+      });
 
       expect(result.imageUrl).toBe('data:image/png;base64,generatedImage');
       expect(mockClient.images.generate).toHaveBeenCalled();
@@ -665,7 +709,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'openai');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'openai',
+      });
 
       expect(result.imageUrl).toBe(mockImageUrl);
       expect(mockClient.images.generate).toHaveBeenCalled();
@@ -690,9 +738,9 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      await expect(createOpenAICompatibleImage(mockClient, payload, 'openai')).rejects.toThrow(
-        'Invalid image response: missing both b64_json and url fields',
-      );
+      await expect(
+        createOpenAICompatibleImage({ client: mockClient, payload, provider: 'openai' }),
+      ).rejects.toThrow('Invalid image response: missing both b64_json and url fields');
     });
 
     it('should throw error when response data is not an array', async () => {
@@ -709,9 +757,9 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      await expect(createOpenAICompatibleImage(mockClient, payload, 'openai')).rejects.toThrow(
-        'Invalid image response: missing or empty data array',
-      );
+      await expect(
+        createOpenAICompatibleImage({ client: mockClient, payload, provider: 'openai' }),
+      ).rejects.toThrow('Invalid image response: missing or empty data array');
     });
 
     it('should throw error when imageData is undefined in array', async () => {
@@ -728,9 +776,9 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      await expect(createOpenAICompatibleImage(mockClient, payload, 'openai')).rejects.toThrow(
-        'Invalid image response: first data item is null or undefined',
-      );
+      await expect(
+        createOpenAICompatibleImage({ client: mockClient, payload, provider: 'openai' }),
+      ).rejects.toThrow('Invalid image response: first data item is null or undefined');
     });
   });
 
@@ -762,7 +810,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'openai');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'openai',
+      });
 
       expect(result.imageUrl).toBe('data:image/png;base64,imageWithUsage');
       expect(result.modelUsage).toBeDefined();
@@ -790,7 +842,11 @@ describe('createOpenAICompatibleImage', () => {
         },
       };
 
-      const result = await createOpenAICompatibleImage(mockClient, payload, 'openai');
+      const result = await createOpenAICompatibleImage({
+        client: mockClient,
+        payload,
+        provider: 'openai',
+      });
 
       expect(result.imageUrl).toBe('data:image/png;base64,imageWithoutUsage');
       expect(result.modelUsage).toBeUndefined();

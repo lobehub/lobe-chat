@@ -1,3 +1,4 @@
+import { imageUrlToBase64 } from '@lobechat/utils/imageToBase64';
 import createDebug from 'debug';
 import { RuntimeImageGenParamsValue } from 'model-bank';
 
@@ -5,7 +6,6 @@ import { CreateImageOptions } from '../../core/openaiCompatibleFactory';
 import { CreateImagePayload, CreateImageResponse } from '../../types';
 import { AgentRuntimeErrorType } from '../../types/error';
 import { AgentRuntimeError } from '../../utils/createError';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 
 const log = createDebug('lobe-image:siliconcloud');
@@ -16,7 +16,7 @@ interface SiliconCloudImageResponse {
   timings: { inference: number };
 }
 
-async function convertToDataURI(imageUrl: string): Promise<string> {
+async function convertToDataURI(imageUrl: string, fetchImpl?: typeof fetch): Promise<string> {
   const { type, base64, mimeType } = parseDataUri(imageUrl);
 
   if (type === 'base64') {
@@ -27,7 +27,10 @@ async function convertToDataURI(imageUrl: string): Promise<string> {
   }
 
   if (type === 'url') {
-    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(imageUrl);
+    const { base64: urlBase64, mimeType: urlMimeType } = await imageUrlToBase64(
+      imageUrl,
+      fetchImpl,
+    );
     return `data:${urlMimeType};base64,${urlBase64}`;
   }
 
@@ -39,7 +42,7 @@ export async function createSiliconCloudImage(
   options: CreateImageOptions,
 ): Promise<CreateImageResponse> {
   const { model, params } = payload;
-  const { apiKey, baseURL, provider } = options;
+  const { apiKey, baseURL, provider, fetch: customFetch } = options;
 
   log('Creating image with SiliconCloud model: %s, params: %O', model, params);
 
@@ -72,17 +75,17 @@ export async function createSiliconCloudImage(
 
     if (key === 'imageUrl') {
       if (typeof value === 'string') {
-        body['image'] = await convertToDataURI(value);
+        body['image'] = await convertToDataURI(value, customFetch);
       }
       continue;
     }
 
     if (key === 'imageUrls') {
       if (Array.isArray(value) && value.length > 0) {
-        body['image'] = await convertToDataURI(value[0]);
+        body['image'] = await convertToDataURI(value[0], customFetch);
         if (model === 'Qwen/Qwen-Image-Edit-2509') {
-          if (value.length > 1) body['image2'] = await convertToDataURI(value[1]);
-          if (value.length > 2) body['image3'] = await convertToDataURI(value[2]);
+          if (value.length > 1) body['image2'] = await convertToDataURI(value[1], customFetch);
+          if (value.length > 2) body['image3'] = await convertToDataURI(value[2], customFetch);
         }
       }
       continue;
@@ -94,7 +97,8 @@ export async function createSiliconCloudImage(
 
   log('Request body: %O', body);
 
-  const response = await fetch(endpoint, {
+  const fetchFn = customFetch ?? fetch;
+  const response = await fetchFn(endpoint, {
     body: JSON.stringify(body),
     headers: {
       'Authorization': `Bearer ${apiKey}`,

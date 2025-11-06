@@ -57,6 +57,7 @@ export const CHAT_MODELS_BLOCK_LIST = [
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
 export type CreateImageOptions = Omit<ClientOptions, 'apiKey'> & {
   apiKey: string;
+  fetch?: typeof fetch;
   provider: string;
 };
 
@@ -178,6 +179,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     baseURL!: string;
     protected _options: ConstructorOptions<T>;
+    protected _fetch?: typeof fetch;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
@@ -187,6 +189,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       };
       const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
       this._options = _options as ConstructorOptions<T>;
+      this._fetch = options.fetch as any;
 
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
@@ -252,7 +255,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           return this.handleResponseAPIMode(processedPayload, options);
         }
 
-        const messages = await convertOpenAIMessages(postPayload.messages);
+        const messages = await convertOpenAIMessages(postPayload.messages, this._fetch);
 
         let response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
 
@@ -361,16 +364,27 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       // If custom createImage implementation is provided, use it
       if (customCreateImage) {
         log('using custom createImage implementation');
-        return customCreateImage(payload, {
+        const fetchImpl = (this._fetch ?? (this._options as any).fetch) as typeof fetch | undefined;
+
+        const imageOptions: CreateImageOptions = {
           ...this._options,
           apiKey: this._options.apiKey!,
           provider,
-        });
+        } as CreateImageOptions;
+
+        if (fetchImpl) imageOptions.fetch = fetchImpl;
+
+        return customCreateImage(payload, imageOptions);
       }
 
       log('using default createOpenAICompatibleImage');
       // Use the new createOpenAICompatibleImage function
-      return createOpenAICompatibleImage(this.client, payload, this.id);
+      return createOpenAICompatibleImage({
+        client: this.client,
+        fetchImpl: this._fetch,
+        payload,
+        provider: this.id,
+      });
     }
 
     async models() {
@@ -776,7 +790,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       delete res.frequency_penalty;
       delete res.presence_penalty;
 
-      const input = await convertOpenAIResponseInputs(messages as any);
+      const input = await convertOpenAIResponseInputs(messages as any, this._fetch);
 
       const isStreaming = payload.stream !== false;
       log(
@@ -928,7 +942,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       if (shouldUseResponses) {
         log('calling responses.create for tool calling');
-        const input = await convertOpenAIResponseInputs(messages as any);
+        const input = await convertOpenAIResponseInputs(messages as any, this._fetch);
 
         const res = await this.client.responses.create(
           {

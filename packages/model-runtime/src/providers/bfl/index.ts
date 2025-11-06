@@ -9,15 +9,21 @@ import { createBflImage } from './createImage';
 
 const log = createDebug('lobe-image:bfl');
 
+interface BflAIParams extends ClientOptions {
+  fetch?: typeof fetch;
+}
+
 export class LobeBflAI implements LobeRuntimeAI {
   private apiKey: string;
+  fetch?: typeof fetch;
   baseURL?: string;
 
-  constructor({ apiKey, baseURL }: ClientOptions = {}) {
+  constructor({ apiKey, baseURL, fetch: customFetch }: BflAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.apiKey = apiKey;
     this.baseURL = baseURL || undefined;
+    this.fetch = customFetch;
 
     log('BFL AI initialized');
   }
@@ -30,6 +36,7 @@ export class LobeBflAI implements LobeRuntimeAI {
       return await createBflImage(payload, {
         apiKey: this.apiKey,
         baseURL: this.baseURL,
+        fetch: this.fetch,
         provider: 'bfl',
       });
     } catch (error) {
