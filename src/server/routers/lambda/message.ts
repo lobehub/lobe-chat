@@ -210,11 +210,15 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMetadata(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMetadata(id, value, options);
     }),
 
   updatePluginError: messageProcedure
@@ -267,7 +271,6 @@ export const messageRouter = router({
 
       return ctx.messageModel.updateTTS(input.id, input.value);
     }),
-
   updateTranslate: messageProcedure
     .input(
       z.object({

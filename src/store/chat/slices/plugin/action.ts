@@ -183,7 +183,8 @@ export const chatPlugin: StateCreator<
 
     await internal_execAgentRuntime({
       messages: chats,
-      userMessageId: parentId ?? chats.at(-1)!.id,
+      parentMessageId: parentId ?? chats.at(-1)!.id,
+      parentMessageType: 'user',
       traceId,
       threadId,
       inPortalThread,
@@ -209,7 +210,8 @@ export const chatPlugin: StateCreator<
           tool_call_id: undefined,
         },
       ] as UIChatMessage[],
-      userMessageId: message.id,
+      parentMessageId: message.id,
+      parentMessageType: 'assistant',
     });
   },
 

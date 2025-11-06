@@ -174,7 +174,8 @@ export const chatThreadMessage: StateCreator<
 
     await internal_execAgentRuntime({
       messages,
-      userMessageId: parentMessageId,
+      parentMessageId,
+      parentMessageType: 'user',
       ragQuery: get().internal_shouldUseRAG() ? message : undefined,
       threadId: get().portalThreadId,
       inPortalThread: true,

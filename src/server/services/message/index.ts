@@ -67,6 +67,43 @@ export class MessageService {
     return { messages, success: true };
   }
 
+
+  /**
+   * Create a new message and return the complete message list
+   * Pattern: create + query
+   *
+   * This method combines message creation and querying into a single operation,
+   * reducing the need for separate refresh calls and improving performance.
+   */
+  async createMessage(
+    params: CreateMessageParams,
+    options?: QueryOptions,
+  ): Promise<CreateMessageResult> {
+    // 1. Create the message
+    const item = await this.messageModel.create(params);
+
+    // 2. Query all messages for this session/topic
+    const messages = await this.messageModel.query(
+      {
+        current: 0,
+        groupId: params.groupId,
+        pageSize: 9999,
+        sessionId: params.sessionId,
+        topicId: params.topicId,
+      },
+      {
+        groupAssistantMessages: options?.useGroup ?? false,
+        postProcessUrl: this.postProcessUrl,
+      },
+    );
+
+    // 3. Return the result
+    return {
+      id: item.id,
+      messages,
+    };
+  }
+
   /**
    * Remove messages with optional message list return
    * Pattern: delete + conditional query
@@ -122,38 +159,12 @@ export class MessageService {
   }
 
   /**
-   * Create a new message and return the complete message list
-   * Pattern: create + query
-   *
-   * This method combines message creation and querying into a single operation,
-   * reducing the need for separate refresh calls and improving performance.
+   * Update message metadata with optional message list return
+   * Pattern: update + conditional query
    */
-  async createMessage(
-    params: CreateMessageParams,
-    options?: QueryOptions,
-  ): Promise<CreateMessageResult> {
-    // 1. Create the message
-    const item = await this.messageModel.create(params);
-
-    // 2. Query all messages for this session/topic
-    const messages = await this.messageModel.query(
-      {
-        current: 0,
-        groupId: params.groupId,
-        pageSize: 9999,
-        sessionId: params.sessionId,
-        topicId: params.topicId,
-      },
-      {
-        groupAssistantMessages: options?.useGroup ?? false,
-        postProcessUrl: this.postProcessUrl,
-      },
-    );
-
-    // 3. Return the result
-    return {
-      id: item.id,
-      messages,
-    };
+  async updateMetadata(id: string, value: any, options?: QueryOptions) {
+    await this.messageModel.updateMetadata(id, value);
+    return this.queryWithSuccess(options);
   }
+
 }

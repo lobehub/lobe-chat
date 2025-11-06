@@ -25,6 +25,7 @@ import { Action, setNamespace } from '@/utils/storeDebug';
 
 import {
   chatSelectors,
+  dbMessageSelectors,
   displayMessageSelectors,
   messageStateSelectors,
   topicSelectors,
@@ -139,7 +140,7 @@ export const generateAIChat: StateCreator<
     get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
   },
   regenerateMessage: async (id) => {
-    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
     await get().internal_resendMessage(id, { traceId });
 
     // trace the delete and regenerate message
@@ -431,8 +432,9 @@ export const generateAIChat: StateCreator<
     // 1. 构造所有相关的历史记录
     const chats = outChats ?? displayMessageSelectors.mainAIChats(get());
 
+    const item = displayMessageSelectors.getDisplayMessageById(messageId)(get());
+    if (!item) return;
     const currentIndex = chats.findIndex((c) => c.id === messageId);
-    if (currentIndex < 0) return;
 
     const currentMessage = chats[currentIndex];
 
@@ -463,6 +465,19 @@ export const generateAIChat: StateCreator<
     if (!latestMsg) return;
 
     const threadId = outThreadId ?? activeThreadId;
+
+    const result = await messageService.updateMessageMetadata(
+      latestMsg.id,
+      {
+        activeBranchIndex: item.metadata?.activeBranchIndex
+          ? item.metadata?.activeBranchIndex + 1
+          : 1,
+      },
+      { sessionId: get().activeId, topicId: get().activeTopicId },
+    );
+    if (!result.success) return;
+
+    get().replaceMessages(result.messages);
 
     await internal_execAgentRuntime({
       messages: contextMessages,

@@ -44,13 +44,13 @@ describe('ChatPluginAction', () => {
         content: 'Tool content to summarize',
       } as UIChatMessage;
 
-      const internal_coreProcessMessageMock = vi.fn();
+      const internal_execAgentRuntimeMock = vi.fn();
 
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [toolMessage] },
-          internal_coreProcessMessage: internal_coreProcessMessageMock,
+          internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
 
@@ -60,7 +60,7 @@ describe('ChatPluginAction', () => {
         await result.current.summaryPluginContent(messageId);
       });
 
-      expect(internal_coreProcessMessageMock).toHaveBeenCalledWith(
+      expect(internal_execAgentRuntimeMock).toHaveBeenCalledWith(
         [
           {
             role: 'assistant',
@@ -92,13 +92,13 @@ describe('ChatPluginAction', () => {
         content: 'User message',
       } as UIChatMessage;
 
-      const internal_coreProcessMessageMock = vi.fn();
+      const internal_execAgentRuntimeMock = vi.fn();
 
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [nonToolMessage] },
-          internal_coreProcessMessage: internal_coreProcessMessageMock,
+          internal_execAgentRuntime: internal_execAgentRuntimeMock,
         });
       });
 
@@ -108,7 +108,7 @@ describe('ChatPluginAction', () => {
         await result.current.summaryPluginContent(messageId);
       });
 
-      expect(internal_coreProcessMessageMock).not.toHaveBeenCalled();
+      expect(internal_execAgentRuntimeMock).not.toHaveBeenCalled();
     });
   });
 
@@ -156,7 +156,7 @@ describe('ChatPluginAction', () => {
       // 设置初始状态
       const initialState = {
         messages: [],
-        internal_coreProcessMessage: vi.fn(),
+        internal_execAgentRuntime: vi.fn(),
         refreshMessages: vi.fn(),
       };
       useChatStore.setState(initialState);
@@ -181,7 +181,7 @@ describe('ChatPluginAction', () => {
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
       // 验证 coreProcessMessage 是否被正确调用
-      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+      expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
         mockCurrentChats,
         messageId,
         {},
@@ -196,7 +196,7 @@ describe('ChatPluginAction', () => {
       const initialState = {
         messages: [],
         coreProcessMessage: vi.fn(),
-        internal_coreProcessMessage: vi.fn(),
+        internal_execAgentRuntime: vi.fn(),
         refreshMessages: vi.fn(),
       };
       useChatStore.setState(initialState);
@@ -221,7 +221,7 @@ describe('ChatPluginAction', () => {
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
       // 验证 coreProcessMessage 没有被正确调用
-      expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+      expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
     });
   });
 

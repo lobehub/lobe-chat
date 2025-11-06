@@ -620,7 +620,7 @@ describe('thread action', () => {
         const refreshMessagesSpy = vi.spyOn(result.current, 'refreshMessages').mockResolvedValue();
         const openThreadSpy = vi.spyOn(result.current, 'openThreadInPortal');
         const coreProcessSpy = vi
-          .spyOn(result.current, 'internal_coreProcessMessage')
+          .spyOn(result.current, 'internal_execAgentRuntime')
           .mockResolvedValue();
         vi.spyOn(result.current, 'internal_createTmpMessage');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
@@ -669,7 +669,7 @@ describe('thread action', () => {
         vi.spyOn(result.current, 'refreshThreads').mockResolvedValue();
         vi.spyOn(result.current, 'refreshMessages').mockResolvedValue();
         vi.spyOn(result.current, 'openThreadInPortal');
-        vi.spyOn(result.current, 'internal_coreProcessMessage').mockResolvedValue();
+        vi.spyOn(result.current, 'internal_execAgentRuntime').mockResolvedValue();
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         await act(async () => {
@@ -738,7 +738,7 @@ describe('thread action', () => {
             useChatStore.setState({ portalThreadId: threadId });
           });
         });
-        vi.spyOn(result.current, 'internal_coreProcessMessage').mockResolvedValue();
+        vi.spyOn(result.current, 'internal_execAgentRuntime').mockResolvedValue();
         vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
@@ -766,7 +766,7 @@ describe('thread action', () => {
           .spyOn(result.current, 'internal_createMessage')
           .mockResolvedValue({ id: 'new-msg-id', messages: [] });
         const coreProcessSpy = vi
-          .spyOn(result.current, 'internal_coreProcessMessage')
+          .spyOn(result.current, 'internal_execAgentRuntime')
           .mockResolvedValue();
         vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
@@ -807,7 +807,7 @@ describe('thread action', () => {
           id: 'new-msg-id',
           messages: [],
         });
-        vi.spyOn(result.current, 'internal_coreProcessMessage').mockResolvedValue();
+        vi.spyOn(result.current, 'internal_execAgentRuntime').mockResolvedValue();
         vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
@@ -840,7 +840,7 @@ describe('thread action', () => {
           id: 'new-msg-id',
           messages: [],
         });
-        vi.spyOn(result.current, 'internal_coreProcessMessage').mockResolvedValue();
+        vi.spyOn(result.current, 'internal_execAgentRuntime').mockResolvedValue();
         vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
@@ -869,7 +869,7 @@ describe('thread action', () => {
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 
         const coreProcessSpy = vi
-          .spyOn(result.current, 'internal_coreProcessMessage')
+          .spyOn(result.current, 'internal_execAgentRuntime')
           .mockResolvedValue();
 
         await act(async () => {

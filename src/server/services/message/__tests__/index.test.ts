@@ -26,6 +26,7 @@ describe('MessageService', () => {
       update: vi.fn(),
       updateMessagePlugin: vi.fn(),
       updateMessageRAG: vi.fn(),
+      updateMetadata: vi.fn(),
       updatePluginState: vi.fn(),
     } as any;
 
@@ -218,6 +219,54 @@ describe('MessageService', () => {
 
       expect(mockMessageModel.update).toHaveBeenCalledWith(messageId, value);
       expect(mockMessageModel.query).toHaveBeenCalled();
+      expect(result).toEqual({ messages: mockMessages, success: true });
+    });
+  });
+
+  describe('updateMetadata', () => {
+    it('should update metadata and return { success: true } when no sessionId/topicId provided', async () => {
+      const messageId = 'msg-1';
+      const metadata = { someKey: 'someValue', count: 42 };
+
+      const result = await messageService.updateMetadata(messageId, metadata);
+
+      expect(mockMessageModel.updateMetadata).toHaveBeenCalledWith(messageId, metadata);
+      expect(result).toEqual({ success: true });
+      expect(mockMessageModel.query).not.toHaveBeenCalled();
+    });
+
+    it('should update metadata and return message list when sessionId provided', async () => {
+      const messageId = 'msg-1';
+      const metadata = { someKey: 'someValue', count: 42 };
+      const mockMessages = [{ id: 'msg-1', content: 'test' }];
+      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
+
+      const result = await messageService.updateMetadata(messageId, metadata, {
+        sessionId: 'session-1',
+      });
+
+      expect(mockMessageModel.updateMetadata).toHaveBeenCalledWith(messageId, metadata);
+      expect(mockMessageModel.query).toHaveBeenCalled();
+      expect(result).toEqual({ messages: mockMessages, success: true });
+    });
+
+    it('should update metadata and return message list when topicId provided', async () => {
+      const messageId = 'msg-1';
+      const metadata = { key: 'value' };
+      const mockMessages = [{ id: 'msg-1', content: 'test' }];
+      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
+
+      const result = await messageService.updateMetadata(messageId, metadata, {
+        topicId: 'topic-1',
+      });
+
+      expect(mockMessageModel.updateMetadata).toHaveBeenCalledWith(messageId, metadata);
+      expect(mockMessageModel.query).toHaveBeenCalledWith(
+        { groupId: undefined, sessionId: undefined, topicId: 'topic-1' },
+        expect.objectContaining({
+          groupAssistantMessages: false,
+        }),
+      );
       expect(result).toEqual({ messages: mockMessages, success: true });
     });
   });

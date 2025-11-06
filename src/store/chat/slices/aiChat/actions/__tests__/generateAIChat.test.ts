@@ -21,7 +21,7 @@ import {
 // Keep zustand mock as it's needed globally
 vi.mock('zustand/traditional');
 
-const realCoreProcessMessage = useChatStore.getState().internal_coreProcessMessage;
+const realExecAgentRuntime = useChatStore.getState().internal_execAgentRuntime;
 
 beforeEach(() => {
   resetTestEnvironment();
@@ -36,7 +36,7 @@ beforeEach(() => {
     useChatStore.setState({
       refreshMessages: vi.fn(),
       refreshTopic: vi.fn(),
-      internal_coreProcessMessage: vi.fn(),
+      internal_execAgentRuntime: vi.fn(),
     });
   });
 });
@@ -62,7 +62,7 @@ describe('chatMessage actions', () => {
         });
 
         expect(messageService.createMessage).not.toHaveBeenCalled();
-        expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+        expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
 
       it('should not send when message is empty and no files are provided', async () => {
@@ -98,7 +98,7 @@ describe('chatMessage actions', () => {
         });
 
         expect(messageService.createMessage).toHaveBeenCalled();
-        expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+        expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
 
       it('should handle message creation errors gracefully', async () => {
@@ -115,7 +115,7 @@ describe('chatMessage actions', () => {
           }
         });
 
-        expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+        expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
     });
   });
@@ -205,114 +205,6 @@ describe('chatMessage actions', () => {
       });
 
       expect(toggleLoadingSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('internal_coreProcessMessage', () => {
-    it('should process user message and generate AI response', async () => {
-      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
-
-      act(() => {
-        useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-      const userMessage = createMockMessage({
-        id: TEST_IDS.USER_MESSAGE_ID,
-        role: 'user',
-        content: TEST_CONTENT.USER_MESSAGE,
-      });
-
-      // ✅ Spy the direct dependency instead of chatService
-      const fetchAIChatSpy = vi
-        .spyOn(result.current, 'internal_fetchAIChatMessage')
-        .mockResolvedValue({ isFunctionCall: false, content: 'AI response' });
-
-      const createMessageSpy = vi
-        .spyOn(messageService, 'createMessage')
-        .mockResolvedValue({ id: TEST_IDS.ASSISTANT_MESSAGE_ID, messages: mockMessages });
-
-      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
-
-      await act(async () => {
-        await result.current.internal_coreProcessMessage([userMessage], userMessage.id);
-      });
-
-      expect(createMessageSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          role: 'assistant',
-          content: LOADING_FLAT,
-          parentId: TEST_IDS.USER_MESSAGE_ID,
-          sessionId: TEST_IDS.SESSION_ID,
-          topicId: TEST_IDS.TOPIC_ID,
-        }),
-      );
-
-      expect(fetchAIChatSpy).toHaveBeenCalled();
-      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
-    });
-
-    it('should handle RAG flow when ragQuery is provided', async () => {
-      act(() => {
-        useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-      const userMessage = createMockMessage({
-        id: TEST_IDS.USER_MESSAGE_ID,
-        role: 'user',
-        content: TEST_CONTENT.RAG_QUERY,
-      });
-
-      const retrieveChunksSpy = vi
-        .spyOn(result.current, 'internal_retrieveChunks')
-        .mockResolvedValue({
-          chunks: [{ id: 'chunk-1', similarity: 0.9, text: 'chunk text' }] as any,
-          queryId: 'query-1',
-          rewriteQuery: 'rewritten query',
-        });
-
-      vi.spyOn(messageService, 'createMessage').mockResolvedValue({
-        id: TEST_IDS.ASSISTANT_MESSAGE_ID,
-        messages: [],
-      });
-
-      await act(async () => {
-        await result.current.internal_coreProcessMessage([userMessage], userMessage.id, {
-          ragQuery: TEST_CONTENT.RAG_QUERY,
-        });
-      });
-
-      expect(retrieveChunksSpy).toHaveBeenCalledWith(
-        TEST_IDS.USER_MESSAGE_ID,
-        TEST_CONTENT.RAG_QUERY,
-        [],
-      );
-    });
-
-    it('should not process when createMessage fails', async () => {
-      act(() => {
-        useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-      const userMessage = createMockMessage({
-        id: TEST_IDS.USER_MESSAGE_ID,
-        role: 'user',
-      });
-
-      // ✅ Spy the direct dependency instead of chatService
-      const fetchAIChatSpy = vi
-        .spyOn(result.current, 'internal_fetchAIChatMessage')
-        .mockResolvedValue({ isFunctionCall: false, content: '' });
-
-      vi.spyOn(messageService, 'createMessage').mockResolvedValue(undefined as any);
-
-      await act(async () => {
-        await result.current.internal_coreProcessMessage([userMessage], userMessage.id);
-      });
-
-      expect(fetchAIChatSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -652,7 +544,7 @@ describe('chatMessage actions', () => {
 
       act(() => {
         setupStoreWithMessages([]);
-        useChatStore.setState({ internal_coreProcessMessage: coreProcessSpy });
+        useChatStore.setState({ internal_execAgentRuntime: coreProcessSpy });
       });
 
       await act(async () => {
@@ -684,7 +576,7 @@ describe('chatMessage actions', () => {
           await result.current.internal_resendMessage(TEST_IDS.MESSAGE_ID);
         });
 
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
           expect.arrayContaining([
             expect.objectContaining({ id: 'msg-1' }),
             expect.objectContaining({ id: TEST_IDS.MESSAGE_ID }),
@@ -715,7 +607,7 @@ describe('chatMessage actions', () => {
           await result.current.internal_resendMessage(TEST_IDS.MESSAGE_ID);
         });
 
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
           expect.arrayContaining([
             expect.objectContaining({ id: 'msg-1' }),
             expect.objectContaining({ id: parentId }),
@@ -740,7 +632,7 @@ describe('chatMessage actions', () => {
           await result.current.internal_resendMessage(TEST_IDS.MESSAGE_ID);
         });
 
-        expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+        expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
       });
 
       it('should generate correct context for tool role message', async () => {
@@ -764,7 +656,7 @@ describe('chatMessage actions', () => {
         });
 
         // For tool role, it processes all messages up to tool but uses last user message as parentId
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
           expect.any(Array),
           'msg-1', // parentId is the last user message
           expect.objectContaining({ traceId: undefined }),
@@ -942,7 +834,7 @@ describe('chatMessage actions', () => {
         await result.current.internal_resendMessage('custom-msg', { messages: customMessages });
       });
 
-      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+      expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
         expect.arrayContaining([expect.objectContaining({ id: 'custom-msg' })]),
         'custom-msg',
         expect.anything(),
@@ -969,7 +861,7 @@ describe('chatMessage actions', () => {
       });
 
       // Should handle the case where parentId is not found
-      expect(result.current.internal_coreProcessMessage).toHaveBeenCalled();
+      expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
     });
   });
 });

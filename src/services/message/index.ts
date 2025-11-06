@@ -5,6 +5,7 @@ import {
   ChatTranslate,
   CreateMessageParams,
   CreateMessageResult,
+  MessageMetadata,
   ModelRankItem,
   UIChatMessage,
   UpdateMessageParams,
@@ -111,6 +112,20 @@ export class MessageService {
 
   updateMessageTTS = async (id: string, tts: Partial<ChatTTS> | false) => {
     return lambdaClient.message.updateTTS.mutate({ id, value: tts });
+  };
+
+  updateMessageMetadata = async (
+    id: string,
+    value: Partial<MessageMetadata>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updateMetadata.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value,
+    });
   };
 
   updateMessagePluginState = async (
