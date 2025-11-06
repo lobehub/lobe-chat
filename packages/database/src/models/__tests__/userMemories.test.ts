@@ -731,6 +731,54 @@ describe('UserMemoryModel', () => {
     });
   });
 
+  describe('getAllIdentities', () => {
+    it('returns all identities for current user ordered by newest first', async () => {
+      const first = await userMemoryModel.addIdentityEntry({
+        base: { summary: 'first' },
+        identity: { description: 'first identity', type: 'personal' },
+      });
+
+      const second = await userMemoryModel.addIdentityEntry({
+        base: { summary: 'second' },
+        identity: { description: 'second identity', type: 'professional' },
+      });
+
+      const third = await userMemoryModel.addIdentityEntry({
+        base: { summary: 'third' },
+        identity: { description: 'third identity', type: 'demographic' },
+      });
+
+      const anotherUserModel = new UserMemoryModel(serverDB, userId2);
+      await anotherUserModel.addIdentityEntry({
+        base: { summary: 'other-user' },
+        identity: { description: 'other identity', type: 'personal' },
+      });
+
+      await serverDB
+        .update(userMemoriesIdentities)
+        .set({ createdAt: new Date('2024-01-01T00:00:00.000Z') })
+        .where(eq(userMemoriesIdentities.id, first.identityId));
+      await serverDB
+        .update(userMemoriesIdentities)
+        .set({ createdAt: new Date('2024-02-01T00:00:00.000Z') })
+        .where(eq(userMemoriesIdentities.id, second.identityId));
+      await serverDB
+        .update(userMemoriesIdentities)
+        .set({ createdAt: new Date('2024-03-01T00:00:00.000Z') })
+        .where(eq(userMemoriesIdentities.id, third.identityId));
+
+      const identities = await userMemoryModel.getAllIdentities();
+
+      expect(identities).toHaveLength(3);
+      expect(identities[0]?.id).toBe(third.identityId);
+      expect(identities[1]?.id).toBe(second.identityId);
+      expect(identities[2]?.id).toBe(first.identityId);
+      identities.forEach((identity) => {
+        expect(identity.userId).toBe(userId);
+      });
+    });
+  });
+
   describe('getIdentitiesByType', () => {
     it('returns the newest identities of the requested type for the current user', async () => {
       const resultOne = await userMemoryModel.addIdentityEntry({
@@ -891,6 +939,40 @@ describe('UserMemoryModel', () => {
           expect(after!.accessedCount).toBe(before.accessedCount);
         }
       }
+    });
+
+    it('updates accessedAt on identity layer records when base memory is identity', async () => {
+      const { identityId, userMemoryId } = await userMemoryModel.addIdentityEntry({
+        base: {
+          memoryLayer: 'identity',
+          summary: 'identity base',
+        },
+        identity: {
+          description: 'identity description',
+          type: 'personal',
+        },
+      });
+
+      const past = new Date('2023-01-01T00:00:00.000Z');
+      await serverDB
+        .update(userMemoriesIdentities)
+        .set({ accessedAt: past })
+        .where(eq(userMemoriesIdentities.id, identityId));
+
+      const before = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+      expect(before).toBeDefined();
+      expect(before?.accessedAt.getTime()).toBe(past.getTime());
+
+      await userMemoryModel.findById(userMemoryId);
+
+      const after = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+
+      expect(after).toBeDefined();
+      expect(after!.accessedAt.getTime()).toBeGreaterThan(past.getTime());
     });
   });
 });
