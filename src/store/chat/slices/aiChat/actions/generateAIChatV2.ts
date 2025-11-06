@@ -646,7 +646,7 @@ export const generateAIChatV2: StateCreator<
           payload.type,
         );
 
-        // 2. 使用 createNewMessage 创建 tool 消息
+        // 2. 使用 createMessage 创建 tool 消息
         const toolMessage: CreateNewMessageParams = {
           content: '',
           parentId: assistantId,

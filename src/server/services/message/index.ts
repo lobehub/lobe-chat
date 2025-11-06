@@ -128,7 +128,7 @@ export class MessageService {
    * This method combines message creation and querying into a single operation,
    * reducing the need for separate refresh calls and improving performance.
    */
-  async createNewMessage(
+  async createMessage(
     params: CreateMessageParams,
     options?: QueryOptions,
   ): Promise<CreateMessageResult> {

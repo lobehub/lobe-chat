@@ -519,10 +519,10 @@ export const chatMessage: StateCreator<
     }
 
     try {
-      const result = await messageService.createNewMessage(message);
+      const result = await messageService.createMessage(message);
 
       if (!context?.skipRefresh) {
-        // Use the messages returned from createNewMessage (already grouped)
+        // Use the messages returned from createMessage (already grouped)
         replaceMessages(result.messages);
       }
 

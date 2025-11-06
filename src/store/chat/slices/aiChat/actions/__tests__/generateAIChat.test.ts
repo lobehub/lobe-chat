@@ -61,7 +61,7 @@ describe('chatMessage actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
         });
 
-        expect(messageService.createNewMessage).not.toHaveBeenCalled();
+        expect(messageService.createMessage).not.toHaveBeenCalled();
         expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
       });
 
@@ -72,7 +72,7 @@ describe('chatMessage actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY });
         });
 
-        expect(messageService.createNewMessage).not.toHaveBeenCalled();
+        expect(messageService.createMessage).not.toHaveBeenCalled();
       });
 
       it('should not send when message is empty with empty files array', async () => {
@@ -82,7 +82,7 @@ describe('chatMessage actions', () => {
           await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files: [] });
         });
 
-        expect(messageService.createNewMessage).not.toHaveBeenCalled();
+        expect(messageService.createMessage).not.toHaveBeenCalled();
       });
     });
 
@@ -97,13 +97,13 @@ describe('chatMessage actions', () => {
           });
         });
 
-        expect(messageService.createNewMessage).toHaveBeenCalled();
+        expect(messageService.createMessage).toHaveBeenCalled();
         expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
       });
 
       it('should handle message creation errors gracefully', async () => {
         const { result } = renderHook(() => useChatStore());
-        vi.spyOn(messageService, 'createNewMessage').mockRejectedValue(
+        vi.spyOn(messageService, 'createMessage').mockRejectedValue(
           new Error('create message error'),
         );
 
@@ -229,7 +229,7 @@ describe('chatMessage actions', () => {
         .mockResolvedValue({ isFunctionCall: false, content: 'AI response' });
 
       const createMessageSpy = vi
-        .spyOn(messageService, 'createNewMessage')
+        .spyOn(messageService, 'createMessage')
         .mockResolvedValue({ id: TEST_IDS.ASSISTANT_MESSAGE_ID, messages: mockMessages });
 
       const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
@@ -272,7 +272,7 @@ describe('chatMessage actions', () => {
           rewriteQuery: 'rewritten query',
         });
 
-      vi.spyOn(messageService, 'createNewMessage').mockResolvedValue({
+      vi.spyOn(messageService, 'createMessage').mockResolvedValue({
         id: TEST_IDS.ASSISTANT_MESSAGE_ID,
         messages: [],
       });
@@ -306,7 +306,7 @@ describe('chatMessage actions', () => {
         .spyOn(result.current, 'internal_fetchAIChatMessage')
         .mockResolvedValue({ isFunctionCall: false, content: '' });
 
-      vi.spyOn(messageService, 'createNewMessage').mockResolvedValue(undefined as any);
+      vi.spyOn(messageService, 'createMessage').mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.internal_coreProcessMessage([userMessage], userMessage.id);

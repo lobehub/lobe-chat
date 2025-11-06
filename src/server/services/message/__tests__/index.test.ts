@@ -255,7 +255,7 @@ describe('MessageService', () => {
     });
   });
 
-  describe('createNewMessage', () => {
+  describe('createMessage', () => {
     it('should create message and return message list', async () => {
       const params = {
         content: 'Hello',
@@ -268,7 +268,7 @@ describe('MessageService', () => {
       vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
       vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
 
-      const result = await messageService.createNewMessage(params as any);
+      const result = await messageService.createMessage(params as any);
 
       expect(mockMessageModel.create).toHaveBeenCalledWith(params);
       expect(mockMessageModel.query).toHaveBeenCalledWith(
@@ -301,7 +301,7 @@ describe('MessageService', () => {
       vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
       vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
 
-      const result = await messageService.createNewMessage(params as any, { useGroup: true });
+      const result = await messageService.createMessage(params as any, { useGroup: true });
 
       expect(mockMessageModel.query).toHaveBeenCalledWith(
         expect.anything(),
@@ -329,7 +329,7 @@ describe('MessageService', () => {
       vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
       vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
 
-      const result = await messageService.createNewMessage(params as any);
+      const result = await messageService.createMessage(params as any);
 
       expect(mockMessageModel.query).toHaveBeenCalledWith(
         {

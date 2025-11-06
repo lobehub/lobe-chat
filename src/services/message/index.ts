@@ -23,11 +23,11 @@ export class MessageService {
     return labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
   }
 
-  createNewMessage = async ({
+  createMessage = async ({
     sessionId,
     ...params
   }: CreateMessageParams): Promise<CreateMessageResult> => {
-    return lambdaClient.message.createNewMessage.mutate({
+    return lambdaClient.message.createMessage.mutate({
       ...params,
       sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
       useGroup: this.useGroup,

@@ -54,11 +54,11 @@ export const messageRouter = router({
       return ctx.messageModel.countWords(input);
     }),
 
-  createNewMessage: messageProcedure
+  createMessage: messageProcedure
     .input(CreateNewMessageParamsSchema.extend({ useGroup: z.boolean().optional() }))
     .mutation(async ({ input, ctx }) => {
       const { useGroup, ...params } = input;
-      return ctx.messageService.createNewMessage(params as any, { useGroup });
+      return ctx.messageService.createMessage(params as any, { useGroup });
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {
