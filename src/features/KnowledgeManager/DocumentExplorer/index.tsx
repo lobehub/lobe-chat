@@ -1,11 +1,13 @@
 'use client';
 
-import { ActionIcon, SearchBar } from '@lobehub/ui';
+import { ActionIcon, SearchBar, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PlusIcon } from 'lucide-react';
 import markdownToTxt from 'markdown-to-txt';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Center } from 'react-layout-kit';
+import { Virtuoso } from 'react-virtuoso';
 
 import { useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
@@ -333,41 +335,54 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
               {searchKeywords.trim() ? t('notesList.noResults') : t('notesList.empty')}
             </div>
           ) : (
-            filteredDocuments.map((document) => {
-              const title = document.name || t('notesList.untitled');
-              const previewText = getPreviewText(document);
-              const emoji = document.metadata?.emoji;
-              return (
-                <div
-                  className={cx(
-                    styles.documentCard,
-                    selectedDocumentId === document.id && 'selected',
-                  )}
-                  key={document.id}
-                  onClick={() => handleDocumentSelect(document.id)}
-                >
-                  <div className={cx(styles.documentActions, 'document-actions')}>
-                    <NoteActions
-                      documentContent={document.content || undefined}
-                      documentId={document.id}
-                      onDelete={() => {
-                        if (selectedDocumentId === document.id) {
-                          setSelectedDocumentId(null);
-                          setIsCreatingNew(false);
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className={styles.documentContent}>
-                    <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
-                      {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
-                      <div className={styles.documentTitle}>{title}</div>
+            <Virtuoso
+              components={{
+                Footer: () => (
+                  <Center style={{ paddingBlock: 16 }}>
+                    <Text style={{ fontSize: 12 }} type={'secondary'}>
+                      {t('notesList.documentCount', { count: filteredDocuments.length })}
+                    </Text>
+                  </Center>
+                ),
+              }}
+              data={filteredDocuments}
+              itemContent={(_index, document) => {
+                const title = document.name || t('notesList.untitled');
+                const previewText = getPreviewText(document);
+                const emoji = document.metadata?.emoji;
+                return (
+                  <div
+                    className={cx(
+                      styles.documentCard,
+                      selectedDocumentId === document.id && 'selected',
+                    )}
+                    key={document.id}
+                    onClick={() => handleDocumentSelect(document.id)}
+                  >
+                    <div className={cx(styles.documentActions, 'document-actions')}>
+                      <NoteActions
+                        documentContent={document.content || undefined}
+                        documentId={document.id}
+                        onDelete={() => {
+                          if (selectedDocumentId === document.id) {
+                            setSelectedDocumentId(null);
+                            setIsCreatingNew(false);
+                          }
+                        }}
+                      />
                     </div>
-                    {previewText && <div className={styles.documentPreview}>{previewText}</div>}
+                    <div className={styles.documentContent}>
+                      <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
+                        {emoji && <span style={{ fontSize: 20 }}>{emoji}</span>}
+                        <div className={styles.documentTitle}>{title}</div>
+                      </div>
+                      {previewText && <div className={styles.documentPreview}>{previewText}</div>}
+                    </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              }}
+              style={{ height: '100%' }}
+            />
           )}
         </div>
       </div>

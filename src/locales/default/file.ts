@@ -114,6 +114,7 @@ export default {
     titlePlaceholder: '无标题',
   },
   notesList: {
+    documentCount: '共 {{count}} 个文档',
     empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
     noResults: '未找到匹配的笔记',
     selectNote: '选择一个笔记开始编辑',
