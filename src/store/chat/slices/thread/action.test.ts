@@ -785,9 +785,10 @@ describe('thread action', () => {
         );
 
         expect(coreProcessSpy).toHaveBeenCalledWith(
-          expect.any(Array),
-          'new-msg-id',
           expect.objectContaining({
+            messages: expect.any(Array),
+            parentMessageId: 'new-msg-id',
+            parentMessageType: 'user',
             inPortalThread: true,
             threadId: 'existing-thread-id',
           }),
@@ -877,9 +878,10 @@ describe('thread action', () => {
         });
 
         expect(coreProcessSpy).toHaveBeenCalledWith(
-          expect.any(Array),
-          'new-msg-id',
           expect.objectContaining({
+            messages: expect.any(Array),
+            parentMessageId: 'new-msg-id',
+            parentMessageType: 'user',
             inPortalThread: true,
             ragQuery: 'test with rag',
             threadId: 'existing-thread-id',

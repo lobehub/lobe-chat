@@ -398,8 +398,8 @@ export const chatAiGroupChat: StateCreator<
         const content = formatSupervisorTodoContent(todoList);
         const supervisorMessage: CreateMessageParams = {
           content,
-          fromModel: groupConfig.orchestratorModel,
-          fromProvider: groupConfig.orchestratorProvider,
+          model: groupConfig.orchestratorModel,
+          provider: groupConfig.orchestratorProvider,
           groupId,
           role: 'supervisor',
           sessionId,
@@ -659,10 +659,10 @@ export const chatAiGroupChat: StateCreator<
         // Create agent message using real agent config
         const agentMessage: CreateMessageParams = {
           role: 'assistant',
-          fromModel: agentModel,
+          model: agentModel,
           groupId,
           content: LOADING_FLAT,
-          fromProvider: agentProvider,
+          provider: agentProvider,
           agentId,
           sessionId: useSessionStore.getState().activeId,
           topicId: activeTopicId,
@@ -944,8 +944,8 @@ export const chatAiGroupChat: StateCreator<
 
         const supervisorMessage: CreateMessageParams = {
           role: 'supervisor',
-          fromModel: groupConfig.orchestratorModel,
-          fromProvider: groupConfig.orchestratorProvider,
+          model: groupConfig.orchestratorModel,
+          provider: groupConfig.orchestratorProvider,
           groupId,
           sessionId: useSessionStore.getState().activeId || groupId,
           topicId: activeTopicId,

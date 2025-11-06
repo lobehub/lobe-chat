@@ -114,9 +114,9 @@ export const aiChatRouter = router({
       );
       const assistantMessageItem = await ctx.messageModel.create({
         content: LOADING_FLAT,
-        fromModel: input.newAssistantMessage.model,
-        fromProvider: input.newAssistantMessage.provider,
+        model: input.newAssistantMessage.model,
         parentId: messageId,
+        provider: input.newAssistantMessage.provider,
         role: 'assistant',
         sessionId: input.sessionId!,
         threadId: input.threadId,

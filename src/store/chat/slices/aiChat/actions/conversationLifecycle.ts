@@ -15,7 +15,6 @@ import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiChatService } from '@/services/aiChat';
-import { messageService } from '@/services/message';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import { ChatStore } from '@/store/chat/store';
@@ -326,18 +325,11 @@ export const conversationLifecycle: StateCreator<
 
     const threadId = outThreadId ?? activeThreadId;
 
-    const result = await messageService.updateMessageMetadata(
+    // 切一个新的激活分支
+    await get().switchMessageBranch(
       messageId,
-      {
-        activeBranchIndex: item.metadata?.activeBranchIndex
-          ? item.metadata?.activeBranchIndex + 1
-          : 1,
-      },
-      { sessionId: get().activeId, topicId: get().activeTopicId },
+      item.metadata?.activeBranchIndex ? item.metadata?.activeBranchIndex + 1 : 1,
     );
-    if (!result.success || !result.messages) return;
-
-    get().replaceMessages(result.messages);
 
     await internal_execAgentRuntime({
       messages: contextMessages,

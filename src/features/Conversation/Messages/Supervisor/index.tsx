@@ -128,8 +128,8 @@ const SupervisorMessage = memo<SupervisorMessageProps>((props) => {
 
   // Render todo message with dedicated component
   if (isTodoMessage && todoData) {
-    const model = props.extra?.fromModel;
-    const provider = props.extra?.fromProvider;
+    const model = props.extra?.model;
+    const provider = props.extra?.provider;
     const hasModelInfo = model || provider;
 
     return (

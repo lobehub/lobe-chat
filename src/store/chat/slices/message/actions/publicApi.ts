@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+/* eslint-disable sort-keys-fix/sort-keys-fix,typescript-sort-keys/interface */
 import { TraceEventType } from '@lobechat/types';
 import { copyToClipboard } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
@@ -53,13 +53,8 @@ export const messagePublicApi: StateCreator<
   MessagePublicApiAction
 > = (set, get) => ({
   addAIMessage: async () => {
-    const {
-      optimisticCreateMessage,
-      updateMessageInput,
-      activeTopicId,
-      activeId,
-      inputMessage,
-    } = get();
+    const { optimisticCreateMessage, updateMessageInput, activeTopicId, activeId, inputMessage } =
+      get();
     if (!activeId) return;
 
     const result = await optimisticCreateMessage({
@@ -76,13 +71,8 @@ export const messagePublicApi: StateCreator<
   },
 
   addUserMessage: async ({ message, fileList }) => {
-    const {
-      optimisticCreateMessage,
-      updateMessageInput,
-      activeTopicId,
-      activeId,
-      activeThreadId,
-    } = get();
+    const { optimisticCreateMessage, updateMessageInput, activeTopicId, activeId, activeThreadId } =
+      get();
     if (!activeId) return;
 
     const result = await optimisticCreateMessage({

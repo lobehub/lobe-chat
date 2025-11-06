@@ -28,7 +28,7 @@ export interface MessageOptimisticUpdateAction {
    */
   optimisticCreateMessage: (
     params: CreateMessageParams,
-    context?: { groupMessageId?: string, skipRefresh?: boolean; tempMessageId?: string; },
+    context?: { groupMessageId?: string; skipRefresh?: boolean; tempMessageId?: string },
   ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
 
   /**
@@ -216,7 +216,7 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessageMetadata: async (id, metadata) => {
-    const { internal_dispatchMessage, replaceMessages, refreshMessages } = get();
+    const { internal_dispatchMessage, refreshMessages } = get();
 
     // Optimistic update: update the frontend immediately
     internal_dispatchMessage({
@@ -231,9 +231,7 @@ export const messageOptimisticUpdate: StateCreator<
       topicId: get().activeTopicId,
     });
 
-    if (!result?.success && result.messages) {
-      replaceMessages(result.messages);
-    } else {
+    if (!result?.success) {
       await refreshMessages();
     }
   },

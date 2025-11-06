@@ -127,9 +127,8 @@ const UserMessage = memo<UserMessageProps>((props) => {
   );
 
   return (
-    <Flexbox>
+    <Flexbox className={styles.container} gap={8}>
       <Flexbox
-        className={styles.container}
         direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
         gap={mobile ? 6 : 12}
       >

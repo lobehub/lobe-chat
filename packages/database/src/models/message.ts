@@ -226,8 +226,8 @@ export class MessageModel {
             })),
 
           extra: {
-            fromModel: model,
-            fromProvider: provider,
+            model: model,
+            provider: provider,
             translate,
             tts: ttsId
               ? {
@@ -461,8 +461,8 @@ export class MessageModel {
 
   create = async (
     {
-      fromModel,
-      fromProvider,
+      model: fromModel,
+      provider: fromProvider,
       files,
       plugin,
       pluginState,

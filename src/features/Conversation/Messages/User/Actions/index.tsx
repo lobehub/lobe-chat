@@ -20,7 +20,7 @@ const Actions = memo<ActionsProps>(({ id, data, index, disableEditing }) => {
   const [editing] = useChatStore((s) => [messageStateSelectors.isMessageEditing(id)(s)]);
 
   return (
-    <Flexbox horizontal align={'center'}>
+    <Flexbox align={'center'} horizontal>
       {!disableEditing && !editing && (
         <Flexbox align={'flex-start'} role="menubar">
           <UserActionsBar data={data} id={id} index={index} />

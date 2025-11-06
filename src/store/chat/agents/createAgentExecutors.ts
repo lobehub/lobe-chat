@@ -76,9 +76,9 @@ export const createAgentExecutors = (context: {
         // Create assistant message (following server-side pattern)
         const assistantMessageItem = await context.get().optimisticCreateMessage({
           content: '',
-          fromModel: llmPayload.model,
-          fromProvider: llmPayload.provider,
+          model: llmPayload.model,
           parentId: llmPayload.parentMessageId,
+          provider: llmPayload.provider,
           role: 'assistant',
           sessionId: state.metadata!.sessionId!,
           threadId: state.metadata?.threadId,
