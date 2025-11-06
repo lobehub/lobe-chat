@@ -8,7 +8,7 @@ function shouldProceedBuild() {
   if (
     branchName === 'lighthouse' ||
     branchName.startsWith('mobile/') ||
-    branchName === 'feat/mobile-app' ||
+    branchName.startsWith('feat/mobile-app') ||
     branchName.startsWith('gru/')
   ) {
     return false;
@@ -22,6 +22,7 @@ function shouldProceedBuild() {
       ":!./Dockerfile" \
       ":!./.github" \
       ":!./.husky" \
+      ":!./apps/mobile" \
       ":!./scripts"';
 
     execSync(diffCommand);
