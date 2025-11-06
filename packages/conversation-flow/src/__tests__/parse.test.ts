@@ -71,6 +71,12 @@ describe('parse', () => {
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.nested);
     });
+
+    it('should handle multiple assistant group branches', () => {
+      const result = parse(inputs.branch.multiAssistantGroup);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.multiAssistantGroup);
+    });
   });
 
   describe('Compare Mode', () => {

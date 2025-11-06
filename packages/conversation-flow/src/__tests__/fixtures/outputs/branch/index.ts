@@ -3,6 +3,7 @@ import activeIndex1 from './active-index-1.json';
 import assistantBranch from './assistant-branch.json';
 import assistantUserBranch from './assistant-user-branch.json';
 import conversation from './conversation.json';
+import multiAssistantGroup from './multi-assistant-group.json';
 import nested from './nested.json';
 
 export const branch = {
@@ -10,5 +11,6 @@ export const branch = {
   assistantBranch: assistantBranch as unknown as SerializedParseResult,
   assistantUserBranch: assistantUserBranch as unknown as SerializedParseResult,
   conversation: conversation as unknown as SerializedParseResult,
+  multiAssistantGroup: multiAssistantGroup as unknown as SerializedParseResult,
   nested: nested as unknown as SerializedParseResult,
 };
