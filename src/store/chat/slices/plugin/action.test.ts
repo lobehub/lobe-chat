@@ -799,7 +799,7 @@ describe('ChatPluginAction', () => {
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [message] },
           internal_invokeDifferentTypePlugin: internal_invokeDifferentTypePluginMock,
-          internal_updateMessageError: vi.fn(),
+          optimisticUpdateMessagePluginError: vi.fn(),
         });
       });
 
