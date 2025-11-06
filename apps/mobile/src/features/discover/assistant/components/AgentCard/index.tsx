@@ -66,7 +66,7 @@ const AgentCardComponent = ({ item }: AgentCardProps) => {
     } catch (err) {
       console.error(t('assistant.detail.addFailed', { ns: 'discover' }), err);
       Alert.alert(
-        t('error', { ns: 'common' }),
+        t('status.error', { ns: 'common' }),
         t('assistant.detail.addFailedMessage', { ns: 'discover' }),
       );
     } finally {

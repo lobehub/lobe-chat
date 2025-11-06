@@ -32,25 +32,29 @@ export async function saveImageToLibrary(imageUrl: string): Promise<boolean> {
  */
 export async function saveImageWithToast(
   imageUrl: string,
-  t: (key: string) => string,
+  t: (key: string, options?: any) => string,
 ): Promise<void> {
   try {
     // 请求权限
     const { status } = await MediaLibrary.requestPermissionsAsync();
 
     if (status === 'denied') {
-      Alert.alert(t('common.image.permissionDenied'), t('common.image.permissionRequest'), [
-        { style: 'cancel', text: t('common.actions.cancel') },
-        {
-          onPress: () => {
-            if (Platform.OS === 'ios') {
-              // iOS 跳转到设置
-              // Linking.openURL('app-settings:');
-            }
+      Alert.alert(
+        t('image.permissionDenied', { ns: 'common' }),
+        t('image.permissionRequest', { ns: 'common' }),
+        [
+          { style: 'cancel', text: t('actions.cancel', { ns: 'common' }) },
+          {
+            onPress: () => {
+              if (Platform.OS === 'ios') {
+                // iOS 跳转到设置
+                // Linking.openURL('app-settings:');
+              }
+            },
+            text: t('actions.continue', { ns: 'common' }),
           },
-          text: t('common.actions.continue'),
-        },
-      ]);
+        ],
+      );
       return;
     }
 
@@ -62,12 +66,12 @@ export async function saveImageWithToast(
     const success = await saveImageToLibrary(imageUrl);
 
     if (success) {
-      Alert.alert(t('status.success'), t('image.saveSuccess'));
+      Alert.alert(t('status.success', { ns: 'common' }), t('image.saveSuccess', { ns: 'common' }));
     } else {
-      Alert.alert(t('status.error'), t('image.saveFailed'));
+      Alert.alert(t('status.error', { ns: 'common' }), t('image.saveFailed', { ns: 'common' }));
     }
   } catch (error) {
     console.error('Save image with toast failed:', error);
-    Alert.alert(t('status.error'), t('image.saveFailed'));
+    Alert.alert(t('status.error', { ns: 'common' }), t('image.saveFailed', { ns: 'common' }));
   }
 }
