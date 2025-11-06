@@ -35,7 +35,7 @@ const messageModel = new MessageModel(serverDB, userId);
 const embeddingsId = uuid();
 
 beforeEach(async () => {
-  // 在每个测试用例之前，清空表
+  // Clear tables before each test case
   await serverDB.transaction(async (trx) => {
     await trx.delete(users);
     await trx.insert(users).values([{ id: userId }, { id: '456' }]);
@@ -63,14 +63,14 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  // 在每个测试用例之后，清空表
+  // Clear tables after each test case
   await serverDB.delete(users);
 });
 
 describe('MessageModel', () => {
   describe('query', () => {
     it('should query messages by user ID', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1', createdAt: new Date('2023-01-01') },
         { id: '2', userId, role: 'user', content: 'message 2', createdAt: new Date('2023-02-01') },
@@ -83,39 +83,39 @@ describe('MessageModel', () => {
         },
       ]);
 
-      // 调用 query 方法
+      // Call query method
       const result = await messageModel.query();
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[1].id).toBe('2');
     });
 
     it('should return empty messages if not match the user ID', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId: '456', role: 'user', content: '1', createdAt: new Date('2023-01-01') },
         { id: '2', userId: '456', role: 'user', content: '2', createdAt: new Date('2023-02-01') },
         { id: '3', userId: '456', role: 'user', content: '3', createdAt: new Date('2023-03-01') },
       ]);
 
-      // 调用 query 方法
+      // Call query method
       const result = await messageModel.query();
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(0);
     });
 
     it('should query messages with pagination', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1', createdAt: new Date('2023-01-01') },
         { id: '2', userId, role: 'user', content: 'message 2', createdAt: new Date('2023-02-01') },
         { id: '3', userId, role: 'user', content: 'message 3', createdAt: new Date('2023-03-01') },
       ]);
 
-      // 测试分页
+      // Test pagination
       const result1 = await messageModel.query({ current: 0, pageSize: 2 });
       expect(result1).toHaveLength(2);
 
@@ -125,7 +125,7 @@ describe('MessageModel', () => {
     });
 
     it('should filter messages by sessionId', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(sessions).values([
         { id: 'session1', userId },
         { id: 'session2', userId },
@@ -150,7 +150,7 @@ describe('MessageModel', () => {
         { id: '3', userId, role: 'user', sessionId: 'session2', content: 'message 3' },
       ]);
 
-      // 测试根据 sessionId 过滤
+      // Test filtering by sessionId
       const result = await messageModel.query({ sessionId: 'session1' });
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
@@ -158,7 +158,7 @@ describe('MessageModel', () => {
     });
 
     it('should filter messages by topicId', async () => {
-      // 创建测试数据
+      // Create test data
       const sessionId = 'session1';
       await serverDB.insert(sessions).values([{ id: sessionId, userId }]);
       const topicId = 'topic1';
@@ -173,7 +173,7 @@ describe('MessageModel', () => {
         { id: '3', userId, role: 'user', topicId: 'topic2', content: 'message 3' },
       ]);
 
-      // 测试根据 topicId 过滤
+      // Test filtering by topicId
       const result = await messageModel.query({ topicId });
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
@@ -226,7 +226,7 @@ describe('MessageModel', () => {
     });
 
     it('should query messages with join', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.transaction(async (trx) => {
         await trx.insert(messages).values([
           {
@@ -268,13 +268,13 @@ describe('MessageModel', () => {
       });
 
       const domain = 'http://abc.com';
-      // 调用 query 方法
+      // Call query method
       const result = await messageModel.query(
         {},
         { postProcessUrl: async (path) => `${domain}/${path}` },
       );
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[0].imageList).toEqual([
@@ -287,7 +287,7 @@ describe('MessageModel', () => {
     });
 
     it('should include translate, tts and other extra fields in query result', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.transaction(async (trx) => {
         await trx.insert(messages).values([
           {
@@ -306,10 +306,10 @@ describe('MessageModel', () => {
           .values([{ id: '1', voice: 'voice1', fileId: 'f1', contentMd5: 'md5', userId }]);
       });
 
-      // 调用 query 方法
+      // Call query method
       const result = await messageModel.query();
 
-      // 断言结果
+      // Assert result
       expect(result[0].extra!.translate).toEqual({ content: 'translated', from: 'en', to: 'zh' });
       expect(result[0].extra!.tts).toEqual({
         contentMd5: 'md5',
@@ -319,7 +319,7 @@ describe('MessageModel', () => {
     });
 
     it('should handle edge cases of pagination parameters', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
@@ -339,7 +339,7 @@ describe('MessageModel', () => {
 
     describe('query with messageQueries', () => {
       it('should include ragQuery, ragQueryId and ragRawQuery in query results', async () => {
-        // 创建测试数据
+        // Create test data
         const messageId = 'msg-with-query';
         const queryId = uuid();
 
@@ -358,10 +358,10 @@ describe('MessageModel', () => {
           userId,
         });
 
-        // 调用 query 方法
+        // Call query method
         const result = await messageModel.query();
 
-        // 断言结果
+        // Assert result
         expect(result).toHaveLength(1);
         expect(result[0].id).toBe(messageId);
         expect(result[0].ragQueryId).toBe(queryId);
@@ -370,7 +370,7 @@ describe('MessageModel', () => {
       });
 
       it.skip('should handle multiple message queries for the same message', async () => {
-        // 创建测试数据
+        // Create test data
         const messageId = 'msg-multi-query';
         const queryId1 = uuid();
         const queryId2 = uuid();
@@ -400,10 +400,10 @@ describe('MessageModel', () => {
           },
         ]);
 
-        // 调用 query 方法
+        // Call query method
         const result = await messageModel.query();
 
-        // 断言结果 - 应该只包含最新的查询
+        // Assert result - 应该只包含最新的查询
         expect(result).toHaveLength(1);
         expect(result[0].id).toBe(messageId);
         expect(result[0].ragQueryId).toBe(queryId2);
@@ -505,7 +505,7 @@ describe('MessageModel', () => {
 
   describe('queryAll', () => {
     it('should return all messages belonging to the user in ascending order', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         {
           id: '1',
@@ -530,10 +530,10 @@ describe('MessageModel', () => {
         },
       ]);
 
-      // 调用 queryAll 方法
+      // Call queryAll method
       const result = await messageModel.queryAll();
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[1].id).toBe('2');
@@ -542,37 +542,37 @@ describe('MessageModel', () => {
 
   describe('findById', () => {
     it('should find message by ID', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId: '456', role: 'user', content: 'message 2' },
       ]);
 
-      // 调用 findById 方法
+      // Call findById method
       const result = await messageModel.findById('1');
 
-      // 断言结果
+      // Assert result
       expect(result?.id).toBe('1');
       expect(result?.content).toBe('message 1');
     });
 
     it('should return undefined if message does not belong to user', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB
         .insert(messages)
         .values([{ id: '1', userId: '456', role: 'user', content: 'message 1' }]);
 
-      // 调用 findById 方法
+      // Call findById method
       const result = await messageModel.findById('1');
 
-      // 断言结果
+      // Assert result
       expect(result).toBeUndefined();
     });
   });
 
   describe('queryBySessionId', () => {
     it('should query messages by sessionId', async () => {
-      // 创建测试数据
+      // Create test data
       const sessionId = 'session1';
       await serverDB.insert(sessions).values([
         { id: 'session1', userId },
@@ -598,10 +598,10 @@ describe('MessageModel', () => {
         { id: '3', userId, role: 'user', sessionId: 'session2', content: 'message 3' },
       ]);
 
-      // 调用 queryBySessionId 方法
+      // Call queryBySessionId method
       const result = await messageModel.queryBySessionId(sessionId);
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[1].id).toBe('2');
@@ -610,7 +610,7 @@ describe('MessageModel', () => {
 
   describe('queryByKeyWord', () => {
     it('should query messages by keyword', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'apple', createdAt: new Date('2022-02-01') },
         { id: '2', userId, role: 'user', content: 'banana' },
@@ -618,17 +618,17 @@ describe('MessageModel', () => {
         { id: '4', userId, role: 'user', content: 'apple pie', createdAt: new Date('2024-02-01') },
       ]);
 
-      // 测试查询包含特定关键字的消息
+      // Test querying messages with specific keyword
       const result = await messageModel.queryByKeyword('apple');
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('4');
       expect(result[1].id).toBe('1');
     });
 
     it('should return empty array when keyword is empty', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'apple' },
         { id: '2', userId, role: 'user', content: 'banana' },
@@ -636,20 +636,20 @@ describe('MessageModel', () => {
         { id: '4', userId, role: 'user', content: 'apple pie' },
       ]);
 
-      // 测试当关键字为空时返回空数组
+      // Test returning empty array when keyword is empty
       const result = await messageModel.queryByKeyword('');
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(0);
     });
   });
 
   describe('createMessage', () => {
     it('should create a new message', async () => {
-      // 调用 createMessage 方法
+      // Call createMessage method
       await messageModel.create({ role: 'user', content: 'new message', sessionId: '1' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result).toHaveLength(1);
       expect(result[0].content).toBe('new message');
@@ -673,21 +673,21 @@ describe('MessageModel', () => {
     });
 
     it('should generate message ID automatically', async () => {
-      // 调用 createMessage 方法
+      // Call createMessage method
       await messageModel.create({
         role: 'user',
         content: 'new message',
         sessionId: '1',
       });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result[0].id).toBeDefined();
       expect(result[0].id).toHaveLength(18);
     });
 
     it('should create a tool message and insert into messagePlugins table', async () => {
-      // 调用 create 方法
+      // Call create method
       const result = await messageModel.create({
         content: 'message 1',
         role: 'tool',
@@ -701,7 +701,7 @@ describe('MessageModel', () => {
         },
       });
 
-      // 断言结果
+      // Assert result
       expect(result.id).toBeDefined();
       expect(result.content).toBe('message 1');
       expect(result.role).toBe('tool');
@@ -716,7 +716,7 @@ describe('MessageModel', () => {
     });
 
     it('should create tool message ', async () => {
-      // 调用 create 方法
+      // Call create method
       const state = {
         query: 'Composio',
         answers: [],
@@ -768,7 +768,7 @@ describe('MessageModel', () => {
         sessionId: '1',
       });
 
-      // 断言结果
+      // Assert result
       expect(result.id).toBeDefined();
       expect(result.content).toBe('[{}]');
       expect(result.role).toBe('tool');
@@ -798,14 +798,14 @@ describe('MessageModel', () => {
 
         expect(result.id).toBe(customId);
 
-        // 验证数据库中的记录
+        // Verify database records
         const dbResult = await serverDB.select().from(messages).where(eq(messages.id, customId));
         expect(dbResult).toHaveLength(1);
         expect(dbResult[0].id).toBe(customId);
       });
 
       it.skip('should create a message with file chunks and RAG query ID', async () => {
-        // 创建测试数据
+        // Create test data
         const chunkId1 = uuid();
         const chunkId2 = uuid();
         const ragQueryId = uuid();
@@ -815,7 +815,7 @@ describe('MessageModel', () => {
           { id: chunkId2, text: 'chunk text 2' },
         ]);
 
-        // 调用 create 方法
+        // Call create method
         const result = await messageModel.create({
           role: 'assistant',
           content: 'message with file chunks',
@@ -827,10 +827,10 @@ describe('MessageModel', () => {
           sessionId: '1',
         });
 
-        // 验证消息创建成功
+        // Verify message created successfully
         expect(result.id).toBeDefined();
 
-        // 验证消息查询块关联创建成功
+        // Verify message query chunk associations created successfully
         const queryChunks = await serverDB
           .select()
           .from(messageQueryChunks)
@@ -845,7 +845,7 @@ describe('MessageModel', () => {
       });
 
       it('should create a message with files', async () => {
-        // 创建测试数据
+        // Create test data
         await serverDB.insert(files).values([
           {
             id: 'file1',
@@ -865,7 +865,7 @@ describe('MessageModel', () => {
           },
         ]);
 
-        // 调用 create 方法
+        // Call create method
         const result = await messageModel.create({
           role: 'user',
           content: 'message with files',
@@ -873,10 +873,10 @@ describe('MessageModel', () => {
           sessionId: '1',
         });
 
-        // 验证消息创建成功
+        // Verify message created successfully
         expect(result.id).toBeDefined();
 
-        // 验证消息文件关联创建成功
+        // Verify message file associations created successfully
         const messageFiles = await serverDB
           .select()
           .from(messagesFiles)
@@ -899,10 +899,10 @@ describe('MessageModel', () => {
           sessionId: '1',
         });
 
-        // 验证数据库中的记录
+        // Verify database records
         const dbResult = await serverDB.select().from(messages).where(eq(messages.id, result.id));
 
-        // 日期比较需要考虑时区和格式化问题，所以使用 toISOString 进行比较
+        // Date comparison needs to consider timezone and formatting, so use toISOString for comparison
         expect(new Date(dbResult[0].createdAt!).toISOString()).toBe(
           new Date(customCreatedAt).toISOString(),
         );
@@ -915,16 +915,16 @@ describe('MessageModel', () => {
 
   describe('batchCreateMessages', () => {
     it('should batch create messages', async () => {
-      // 准备测试数据
+      // Prepare test data
       const newMessages = [
         { id: '1', role: 'user', content: 'message 1' },
         { id: '2', role: 'assistant', content: 'message 2' },
       ] as DBMessageItem[];
 
-      // 调用 batchCreateMessages 方法
+      // Call batchCreateMessages method
       await messageModel.batchCreate(newMessages);
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result).toHaveLength(2);
       expect(result[0].content).toBe('message 1');
@@ -932,109 +932,37 @@ describe('MessageModel', () => {
     });
   });
 
-  describe('createNewMessage', () => {
-    it('should create message and return id with messages list', async () => {
-      // 调用 createNewMessage 方法
-      const result = await messageModel.createNewMessage({
-        role: 'user',
-        content: 'test message',
-        sessionId: '1',
-      });
-
-      // 断言返回结构
-      expect(result).toHaveProperty('id');
-      expect(result).toHaveProperty('messages');
-      expect(result.id).toBeDefined();
-      expect(result.messages).toBeInstanceOf(Array);
-    });
-
-    it('should return newly created message in messages list', async () => {
-      const content = 'new test message ' + Date.now();
-
-      const result = await messageModel.createNewMessage({
-        role: 'user',
-        content,
-        sessionId: '1',
-      });
-
-      // 验证新创建的消息在列表中
-      const createdMessage = result.messages.find((m) => m.id === result.id);
-      expect(createdMessage).toBeDefined();
-      expect(createdMessage?.content).toBe(content);
-      expect(createdMessage?.role).toBe('user');
-    });
-
-    it('should return all messages for the session', async () => {
-      // 创建多条消息
-      await messageModel.create({ role: 'user', content: 'message 1', sessionId: '1' });
-      await messageModel.create({ role: 'assistant', content: 'message 2', sessionId: '1' });
-
-      // 创建第三条消息并获取完整列表
-      const result = await messageModel.createNewMessage({
-        role: 'user',
-        content: 'message 3',
-        sessionId: '1',
-      });
-
-      // 验证返回了所有消息
-      expect(result.messages.length).toBeGreaterThanOrEqual(3);
-    });
-
-    it('should filter messages by topicId if provided', async () => {
-      const topicId = 'topic-1';
-      await serverDB.insert(topics).values({ id: topicId, sessionId: '1', userId });
-
-      // 创建不同 topic 的消息
-      await messageModel.create({ role: 'user', content: 'topic 1 msg', sessionId: '1', topicId });
-      await messageModel.create({ role: 'user', content: 'no topic msg', sessionId: '1' });
-
-      // 创建新消息并指定 topicId
-      const result = await messageModel.createNewMessage({
-        role: 'user',
-        content: 'new topic msg',
-        sessionId: '1',
-        topicId,
-      });
-
-      // 验证只返回该 topic 的消息
-      expect(result.messages.every((m) => m.topicId === topicId || m.topicId === undefined)).toBe(
-        true,
-      );
-      expect(result.messages.find((m) => m.content === 'no topic msg')).toBeUndefined();
-    });
-  });
-
   describe('updateMessage', () => {
     it('should update message content', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB
         .insert(messages)
         .values([{ id: '1', userId, role: 'user', content: 'message 1' }]);
 
-      // 调用 updateMessage 方法
+      // Call updateMessage method
       await messageModel.update('1', { content: 'updated message' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].content).toBe('updated message');
     });
 
     it('should only update messages belonging to the user', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB
         .insert(messages)
         .values([{ id: '1', userId: '456', role: 'user', content: 'message 1' }]);
 
-      // 调用 updateMessage 方法
+      // Call updateMessage method
       await messageModel.update('1', { content: 'updated message' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].content).toBe('message 1');
     });
 
     it('should update message tools', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         {
           id: '1',
@@ -1054,7 +982,7 @@ describe('MessageModel', () => {
         },
       ]);
 
-      // 调用 updateMessage 方法
+      // Call updateMessage method
       await messageModel.update('1', {
         tools: [
           {
@@ -1067,7 +995,7 @@ describe('MessageModel', () => {
         ],
       });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect((result[0].tools as any)[0].arguments).toBe(
         '{"query":"2024 杭州暴雨","searchEngines":["duckduckgo","google","brave"]}',
@@ -1076,7 +1004,7 @@ describe('MessageModel', () => {
 
     describe('update with imageList', () => {
       it('should update a message and add image files', async () => {
-        // 创建测试数据
+        // Create test data
         await serverDB.insert(messages).values({
           id: 'msg-to-update',
           userId,
@@ -1096,7 +1024,7 @@ describe('MessageModel', () => {
           { id: 'img2', name: 'image2.png', fileType: 'image/png', size: 200, url: 'url2', userId },
         ]);
 
-        // 调用 update 方法
+        // Call update method
         await messageModel.update('msg-to-update', {
           content: 'updated content',
           imageList: [
@@ -1105,7 +1033,7 @@ describe('MessageModel', () => {
           ],
         });
 
-        // 验证消息更新成功
+        // Verify message updated successfully
         const updatedMessage = await serverDB
           .select()
           .from(messages)
@@ -1113,7 +1041,7 @@ describe('MessageModel', () => {
 
         expect(updatedMessage[0].content).toBe('updated content');
 
-        // 验证消息文件关联创建成功
+        // Verify message file associations created successfully
         const messageFiles = await serverDB
           .select()
           .from(messagesFiles)
@@ -1125,7 +1053,7 @@ describe('MessageModel', () => {
       });
 
       it('should handle empty imageList', async () => {
-        // 创建测试数据
+        // Create test data
         await serverDB.insert(messages).values({
           id: 'msg-no-images',
           userId,
@@ -1133,12 +1061,12 @@ describe('MessageModel', () => {
           content: 'original content',
         });
 
-        // 调用 update 方法，不提供 imageList
+        // Call update method without providing imageList
         await messageModel.update('msg-no-images', {
           content: 'updated content',
         });
 
-        // 验证消息更新成功
+        // Verify message updated successfully
         const updatedMessage = await serverDB
           .select()
           .from(messages)
@@ -1146,7 +1074,7 @@ describe('MessageModel', () => {
 
         expect(updatedMessage[0].content).toBe('updated content');
 
-        // 验证没有创建消息文件关联
+        // Verify no message file associations created
         const messageFiles = await serverDB
           .select()
           .from(messagesFiles)
@@ -1156,7 +1084,7 @@ describe('MessageModel', () => {
       });
 
       it('should update multiple fields at once', async () => {
-        // 创建测试数据
+        // Create test data
         await serverDB.insert(messages).values({
           id: 'msg-multi-update',
           userId,
@@ -1165,7 +1093,7 @@ describe('MessageModel', () => {
           model: 'gpt-3.5',
         });
 
-        // 调用 update 方法，更新多个字段
+        // Call update method to update multiple fields
         await messageModel.update('msg-multi-update', {
           content: 'updated content',
           role: 'assistant',
@@ -1173,7 +1101,7 @@ describe('MessageModel', () => {
           metadata: { tps: 1 },
         });
 
-        // 验证消息更新成功
+        // Verify message updated successfully
         const updatedMessage = await serverDB
           .select()
           .from(messages)
@@ -1185,11 +1113,106 @@ describe('MessageModel', () => {
         expect(updatedMessage[0].metadata).toEqual({ tps: 1 });
       });
     });
+
+    describe('update with returnQuery option', () => {
+      it('should return updated message list when sessionId is provided', async () => {
+        // Create test data
+        const sessionId = '1';
+        await serverDB.insert(messages).values([
+          {
+            id: 'msg1',
+            userId,
+            sessionId,
+            role: 'user',
+            content: 'message 1',
+          },
+          {
+            id: 'msg2',
+            userId,
+            sessionId,
+            role: 'assistant',
+            content: 'message 2',
+          },
+        ]);
+
+        // Call update method with sessionId option
+        const result = await messageModel.update(
+          'msg1',
+          { content: 'updated message 1' },
+          { sessionId },
+        );
+
+        // Verify return result contains message list
+        expect(result.success).toBe(true);
+        expect(result.messages).toBeDefined();
+        expect(result.messages).toHaveLength(2);
+        expect(result.messages![0].content).toBe('updated message 1');
+        expect(result.messages![1].content).toBe('message 2');
+      });
+
+      it('should return updated message list when topicId is provided', async () => {
+        // Create test data
+        const sessionId = '1';
+        const topicId = 'topic-1';
+        await serverDB.insert(topics).values({ id: topicId, sessionId, userId });
+        await serverDB.insert(messages).values([
+          {
+            id: 'msg-topic1',
+            userId,
+            sessionId,
+            topicId,
+            role: 'user',
+            content: 'topic message 1',
+          },
+          {
+            id: 'msg-topic2',
+            userId,
+            sessionId,
+            topicId,
+            role: 'assistant',
+            content: 'topic message 2',
+          },
+        ]);
+
+        // Call update method with topicId option
+        const result = await messageModel.update(
+          'msg-topic1',
+          { content: 'updated topic message 1' },
+          { topicId, sessionId },
+        );
+
+        // Verify return result contains message list
+        expect(result.success).toBe(true);
+        expect(result.messages).toBeDefined();
+        expect(result.messages).toHaveLength(2);
+        expect(result.messages![0].content).toBe('updated topic message 1');
+        expect(result.messages![1].content).toBe('topic message 2');
+      });
+
+      it('should return success without messages when options not provided', async () => {
+        // Create test data
+        await serverDB.insert(messages).values({
+          id: 'msg-no-options',
+          userId,
+          role: 'user',
+          content: 'original content',
+        });
+
+        // Call update method，不提供选项
+        const result = await messageModel.update('msg-no-options', {
+          content: 'updated content',
+        });
+
+        // 验证返回结果不包含消息列表
+        expect(result.success).toBe(true);
+        expect(result.messages).toBeUndefined();
+      });
+    });
   });
 
   describe('deleteMessage', () => {
     it('should delete a message', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB
         .insert(messages)
         .values([{ id: '1', userId, role: 'user', content: 'message 1' }]);
@@ -1197,13 +1220,13 @@ describe('MessageModel', () => {
       // 调用 deleteMessage 方法
       await messageModel.deleteMessage('1');
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
     });
 
     it('should delete a message with tool calls', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.transaction(async (trx) => {
         await trx.insert(messages).values([
           { id: '1', userId, role: 'user', content: 'message 1', tools: [{ id: 'tool1' }] },
@@ -1217,7 +1240,7 @@ describe('MessageModel', () => {
       // 调用 deleteMessage 方法
       await messageModel.deleteMessage('1');
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
 
@@ -1230,7 +1253,7 @@ describe('MessageModel', () => {
     });
 
     it('should only delete messages belonging to the user', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB
         .insert(messages)
         .values([{ id: '1', userId: '456', role: 'user', content: 'message 1' }]);
@@ -1238,7 +1261,7 @@ describe('MessageModel', () => {
       // 调用 deleteMessage 方法
       await messageModel.deleteMessage('1');
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
@@ -1246,7 +1269,7 @@ describe('MessageModel', () => {
 
   describe('deleteMessages', () => {
     it('should delete 2 messages', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
@@ -1255,7 +1278,7 @@ describe('MessageModel', () => {
       // 调用 deleteMessage 方法
       await messageModel.deleteMessages(['1', '2']);
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
       const result2 = await serverDB.select().from(messages).where(eq(messages.id, '2'));
@@ -1263,7 +1286,7 @@ describe('MessageModel', () => {
     });
 
     it('should only delete messages belonging to the user', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId: '456', role: 'user', content: 'message 1' },
         { id: '2', userId: '456', role: 'user', content: 'message 1' },
@@ -1272,7 +1295,7 @@ describe('MessageModel', () => {
       // 调用 deleteMessage 方法
       await messageModel.deleteMessages(['1', '2']);
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
@@ -1280,7 +1303,7 @@ describe('MessageModel', () => {
 
   describe('deleteAllMessages', () => {
     it('should delete all messages belonging to the user', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
@@ -1290,7 +1313,7 @@ describe('MessageModel', () => {
       // 调用 deleteAllMessages 方法
       await messageModel.deleteAllMessages();
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
 
       expect(result).toHaveLength(0);
@@ -1303,7 +1326,7 @@ describe('MessageModel', () => {
 
   describe('updatePluginState', () => {
     it('should update the state field in messagePlugins table', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({ id: '1', content: 'abc', role: 'user', userId });
       await serverDB.insert(messagePlugins).values([
         {
@@ -1318,7 +1341,7 @@ describe('MessageModel', () => {
       // 调用 updatePluginState 方法
       await messageModel.updatePluginState('1', { key2: 'value2' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
 
       expect(result[0].state).toEqual({ key1: 'value1', key2: 'value2' });
@@ -1333,7 +1356,7 @@ describe('MessageModel', () => {
   });
   describe('updateMessagePlugin', () => {
     it('should update the state field in messagePlugins table', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({ id: '1', content: 'abc', role: 'user', userId });
       await serverDB.insert(messagePlugins).values([
         {
@@ -1348,7 +1371,7 @@ describe('MessageModel', () => {
       // 调用 updatePluginState 方法
       await messageModel.updateMessagePlugin('1', { identifier: 'plugin2' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
 
       expect(result[0].identifier).toEqual('plugin2');
@@ -1364,7 +1387,7 @@ describe('MessageModel', () => {
 
   describe('updateMetadata', () => {
     it('should update metadata for an existing message', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg-with-metadata',
         userId,
@@ -1376,7 +1399,7 @@ describe('MessageModel', () => {
       // 调用 updateMetadata 方法
       await messageModel.updateMetadata('msg-with-metadata', { newKey: 'newValue' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB
         .select()
         .from(messages)
@@ -1389,7 +1412,7 @@ describe('MessageModel', () => {
     });
 
     it('should merge new metadata with existing metadata using lodash merge behavior', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg-merge-metadata',
         userId,
@@ -1413,7 +1436,7 @@ describe('MessageModel', () => {
         newTopLevel: 'value',
       });
 
-      // 断言结果 - 应该使用 lodash merge 行为
+      // Assert result - 应该使用 lodash merge 行为
       const result = await serverDB
         .select()
         .from(messages)
@@ -1434,12 +1457,12 @@ describe('MessageModel', () => {
       // 调用 updateMetadata 方法，尝试更新不存在的消息
       const result = await messageModel.updateMetadata('non-existent-id', { key: 'value' });
 
-      // 断言结果 - 应该返回 undefined
+      // Assert result - 应该返回 undefined
       expect(result).toBeUndefined();
     });
 
     it('should handle empty metadata updates', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg-empty-metadata',
         userId,
@@ -1451,7 +1474,7 @@ describe('MessageModel', () => {
       // 调用 updateMetadata 方法，传递空对象
       await messageModel.updateMetadata('msg-empty-metadata', {});
 
-      // 断言结果 - 原始 metadata 应该保持不变
+      // Assert result - 原始 metadata 应该保持不变
       const result = await serverDB
         .select()
         .from(messages)
@@ -1461,7 +1484,7 @@ describe('MessageModel', () => {
     });
 
     it('should handle message with null metadata', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg-null-metadata',
         userId,
@@ -1473,7 +1496,7 @@ describe('MessageModel', () => {
       // 调用 updateMetadata 方法
       await messageModel.updateMetadata('msg-null-metadata', { key: 'value' });
 
-      // 断言结果 - 应该创建新的 metadata
+      // Assert result - 应该创建新的 metadata
       const result = await serverDB
         .select()
         .from(messages)
@@ -1483,7 +1506,7 @@ describe('MessageModel', () => {
     });
 
     it('should only update messages belonging to the current user', async () => {
-      // 创建测试数据 - 其他用户的消息
+      // Create test data - 其他用户的消息
       await serverDB.insert(messages).values({
         id: 'msg-other-user',
         userId: '456',
@@ -1497,7 +1520,7 @@ describe('MessageModel', () => {
         hackedKey: 'hackedValue',
       });
 
-      // 断言结果 - 应该返回 undefined
+      // Assert result - 应该返回 undefined
       expect(result).toBeUndefined();
 
       // 验证原始 metadata 未被修改
@@ -1510,7 +1533,7 @@ describe('MessageModel', () => {
     });
 
     it('should handle complex nested metadata updates', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg-complex-metadata',
         userId,
@@ -1539,7 +1562,7 @@ describe('MessageModel', () => {
         stats: { count: 10 },
       });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB
         .select()
         .from(messages)
@@ -1562,7 +1585,7 @@ describe('MessageModel', () => {
 
   describe('updateTranslate', () => {
     it('should insert a new record if message does not exist in messageTranslates table', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB
         .insert(messages)
         .values([{ id: '1', userId, role: 'user', content: 'message 1' }]);
@@ -1574,7 +1597,7 @@ describe('MessageModel', () => {
         to: 'zh',
       });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB
         .select()
         .from(messageTranslates)
@@ -1585,7 +1608,7 @@ describe('MessageModel', () => {
     });
 
     it('should update the corresponding fields if message exists in messageTranslates table', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.transaction(async (trx) => {
         await trx
           .insert(messages)
@@ -1598,7 +1621,7 @@ describe('MessageModel', () => {
       // 调用 updateTranslate 方法
       await messageModel.updateTranslate('1', { content: 'updated translated message 1' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB
         .select()
         .from(messageTranslates)
@@ -1610,7 +1633,7 @@ describe('MessageModel', () => {
 
   describe('updateTTS', () => {
     it('should insert a new record if message does not exist in messageTTS table', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB
         .insert(messages)
         .values([{ id: '1', userId, role: 'user', content: 'message 1' }]);
@@ -1618,7 +1641,7 @@ describe('MessageModel', () => {
       // 调用 updateTTS 方法
       await messageModel.updateTTS('1', { contentMd5: 'md5', file: 'f1', voice: 'voice1' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
 
       expect(result).toHaveLength(1);
@@ -1626,7 +1649,7 @@ describe('MessageModel', () => {
     });
 
     it('should update the corresponding fields if message exists in messageTTS table', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.transaction(async (trx) => {
         await trx
           .insert(messages)
@@ -1639,7 +1662,7 @@ describe('MessageModel', () => {
       // 调用 updateTTS 方法
       await messageModel.updateTTS('1', { voice: 'updated voice1' });
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
 
       expect(result[0].voice).toBe('updated voice1');
@@ -1648,14 +1671,14 @@ describe('MessageModel', () => {
 
   describe('deleteMessageTranslate', () => {
     it('should delete the message translate record', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([{ id: '1', role: 'abc', userId }]);
       await serverDB.insert(messageTranslates).values([{ id: '1', userId }]);
 
       // 调用 deleteMessageTranslate 方法
       await messageModel.deleteMessageTranslate('1');
 
-      // 断言结果
+      // Assert result
       const result = await serverDB
         .select()
         .from(messageTranslates)
@@ -1667,14 +1690,14 @@ describe('MessageModel', () => {
 
   describe('deleteMessageTTS', () => {
     it('should delete the message TTS record', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([{ id: '1', role: 'abc', userId }]);
       await serverDB.insert(messageTTS).values([{ userId, id: '1' }]);
 
       // 调用 deleteMessageTTS 方法
       await messageModel.deleteMessageTTS('1');
 
-      // 断言结果
+      // Assert result
       const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
       expect(result).toHaveLength(0);
     });
@@ -1682,7 +1705,7 @@ describe('MessageModel', () => {
 
   describe('count', () => {
     it('should return the count of messages belonging to the user', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
@@ -1692,13 +1715,13 @@ describe('MessageModel', () => {
       // 调用 count 方法
       const result = await messageModel.count();
 
-      // 断言结果
+      // Assert result
       expect(result).toBe(2);
     });
 
     describe('count with date filters', () => {
       beforeEach(async () => {
-        // 创建测试数据，包含不同日期的消息
+        // Create test data，包含不同日期的消息
         await serverDB.insert(messages).values([
           {
             id: 'date1',
@@ -1919,7 +1942,7 @@ describe('MessageModel', () => {
 
   describe('countWords', () => {
     it('should count total words of messages belonging to the user', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'hello world' },
         { id: '2', userId, role: 'user', content: 'test message' },
@@ -1929,12 +1952,12 @@ describe('MessageModel', () => {
       // 调用 countWords 方法
       const result = await messageModel.countWords();
 
-      // 断言结果 - 'hello world' + 'test message' = 23 characters
+      // Assert result - 'hello world' + 'test message' = 23 characters
       expect(result).toEqual(23);
     });
 
     it('should count words within date range', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         {
           id: '1',
@@ -1957,12 +1980,12 @@ describe('MessageModel', () => {
         range: ['2023-05-01', '2023-07-01'],
       });
 
-      // 断言结果 - 只计算 'new message' = 11 characters
+      // Assert result - 只计算 'new message' = 11 characters
       expect(result).toEqual(11);
     });
 
     it('should handle empty content', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: '' },
         { id: '2', userId, role: 'user', content: null },
@@ -1971,7 +1994,7 @@ describe('MessageModel', () => {
       // 调用 countWords 方法
       const result = await messageModel.countWords();
 
-      // 断言结果
+      // Assert result
       expect(result).toEqual(0);
     });
   });
@@ -1988,7 +2011,7 @@ describe('MessageModel', () => {
       const oneDayAgoDate = today.subtract(1, 'day').format('YYYY-MM-DD');
       const todayDate = today.format('YYYY-MM-DD');
 
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         {
           id: '1',
@@ -2016,7 +2039,7 @@ describe('MessageModel', () => {
       // 调用 getHeatmaps 方法
       const result = await messageModel.getHeatmaps();
 
-      // 断言结果
+      // Assert result
       expect(result.length).toBeGreaterThanOrEqual(366);
       expect(result.length).toBeLessThan(368);
 
@@ -2051,7 +2074,7 @@ describe('MessageModel', () => {
       const oneDayAgoDate = today.subtract(1, 'day').format('YYYY-MM-DD');
       const todayDate = today.format('YYYY-MM-DD');
 
-      // 创建测试数据 - 不同数量的消息以测试不同的等级
+      // Create test data - 不同数量的消息以测试不同的等级
       await serverDB.insert(messages).values([
         // 1 message - level 1
         {
@@ -2141,7 +2164,7 @@ describe('MessageModel', () => {
       const oneDayAgoDate = today.subtract(1, 'day').format('YYYY-MM-DD');
       const todayDate = today.format('YYYY-MM-DD');
 
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         {
           id: '1',
@@ -2169,7 +2192,7 @@ describe('MessageModel', () => {
       // 调用 getHeatmaps 方法
       const result = await messageModel.getHeatmaps();
 
-      // 断言结果
+      // Assert result
       expect(result.length).toBeGreaterThanOrEqual(366);
       expect(result.length).toBeLessThan(368);
 
@@ -2197,7 +2220,7 @@ describe('MessageModel', () => {
       // 调用 getHeatmaps 方法
       const result = await messageModel.getHeatmaps();
 
-      // 断言结果
+      // Assert result
       expect(result.length).toBeGreaterThanOrEqual(366);
       expect(result.length).toBeLessThan(368);
 
@@ -2211,7 +2234,7 @@ describe('MessageModel', () => {
 
   describe('rankModels', () => {
     it('should rank models by usage count', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'assistant', content: 'message 1', model: 'gpt-3.5' },
         { id: '2', userId, role: 'assistant', content: 'message 2', model: 'gpt-3.5' },
@@ -2222,14 +2245,14 @@ describe('MessageModel', () => {
       // 调用 rankModels 方法
       const result = await messageModel.rankModels();
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(2);
       expect(result[0]).toEqual({ id: 'gpt-3.5', count: 2 }); // 当前用户使用 gpt-3.5 两次
       expect(result[1]).toEqual({ id: 'gpt-4', count: 1 }); // 当前用户使用 gpt-4 一次
     });
 
     it('should only count messages with model field', async () => {
-      // 创建测试数据，包括没有 model 字段的消息
+      // Create test data，包括没有 model 字段的消息
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'assistant', content: 'message 1', model: 'gpt-3.5' },
         { id: '2', userId, role: 'assistant', content: 'message 2', model: null },
@@ -2239,13 +2262,13 @@ describe('MessageModel', () => {
       // 调用 rankModels 方法
       const result = await messageModel.rankModels();
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual({ id: 'gpt-3.5', count: 1 });
     });
 
     it('should return empty array when no models are used', async () => {
-      // 创建测试数据，所有消息都没有 model
+      // Create test data，所有消息都没有 model
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'assistant', content: 'message 2' },
@@ -2254,12 +2277,12 @@ describe('MessageModel', () => {
       // 调用 rankModels 方法
       const result = await messageModel.rankModels();
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(0);
     });
 
     it('should order models by count in descending order', async () => {
-      // 创建测试数据，使用不同次数的模型
+      // Create test data，使用不同次数的模型
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'assistant', content: 'message 1', model: 'gpt-4' },
         { id: '2', userId, role: 'assistant', content: 'message 2', model: 'gpt-3.5' },
@@ -2271,7 +2294,7 @@ describe('MessageModel', () => {
       // 调用 rankModels 方法
       const result = await messageModel.rankModels();
 
-      // 断言结果
+      // Assert result
       expect(result).toHaveLength(3);
       expect(result[0]).toEqual({ id: 'gpt-3.5', count: 3 }); // 最多使用
       expect(result[1]).toEqual({ id: 'claude', count: 1 });
@@ -2281,7 +2304,7 @@ describe('MessageModel', () => {
 
   describe('hasMoreThanN', () => {
     it('should return true when message count is greater than N', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
@@ -2299,7 +2322,7 @@ describe('MessageModel', () => {
     });
 
     it('should only count messages belonging to the user', async () => {
-      // 创建测试数据，包括其他用户的消息
+      // Create test data，包括其他用户的消息
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
@@ -2335,7 +2358,7 @@ describe('MessageModel', () => {
 
   describe('createMessageQuery', () => {
     it('should create a new message query', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg1',
         userId,
@@ -2351,7 +2374,7 @@ describe('MessageModel', () => {
         embeddingsId,
       });
 
-      // 断言结果
+      // Assert result
       expect(result).toBeDefined();
       expect(result.id).toBeDefined();
       expect(result.messageId).toBe('msg1');
@@ -2372,7 +2395,7 @@ describe('MessageModel', () => {
     });
 
     it('should create a message query with embeddings ID', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg2',
         userId,
@@ -2388,7 +2411,7 @@ describe('MessageModel', () => {
         embeddingsId,
       });
 
-      // 断言结果
+      // Assert result
       expect(result).toBeDefined();
       expect(result.embeddingsId).toBe(embeddingsId);
 
@@ -2402,7 +2425,7 @@ describe('MessageModel', () => {
     });
 
     it('should generate a unique ID for each message query', async () => {
-      // 创建测试数据
+      // Create test data
       await serverDB.insert(messages).values({
         id: 'msg3',
         userId,
@@ -2425,7 +2448,7 @@ describe('MessageModel', () => {
         embeddingsId,
       });
 
-      // 断言结果
+      // Assert result
       expect(result1.id).not.toBe(result2.id);
     });
   });
@@ -2473,7 +2496,7 @@ describe('MessageModel', () => {
 
   describe('deleteMessageQuery', () => {
     it('should delete a message query by ID', async () => {
-      // 创建测试数据
+      // Create test data
       const queryId = uuid();
       await serverDB.insert(messages).values({
         id: 'msg4',
@@ -2511,7 +2534,7 @@ describe('MessageModel', () => {
     });
 
     it('should only delete message queries belonging to the user', async () => {
-      // 创建测试数据 - 其他用户的查询
+      // Create test data - 其他用户的查询
       const queryId = uuid();
       await serverDB.insert(messages).values({
         id: 'msg5',

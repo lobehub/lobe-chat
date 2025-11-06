@@ -13,9 +13,8 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
-    "baseUrl": ".",
     "types": ["vitest/globals", "@serwist/next/typings"],
     "paths": {
       "@/database/*": ["./packages/database/src/*", "./src/database/*"],
@@ -41,5 +40,12 @@
     ".temp",
     "e2e"
   ],
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"]
+  "include": [
+    "**/*.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    ".next/dev/types/**/*.ts"
+  ]
 }

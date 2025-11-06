@@ -33,6 +33,8 @@ export const topics = pgTable(
     uniqueIndex('topics_client_id_user_id_unique').on(t.clientId, t.userId),
     index('topics_user_id_idx').on(t.userId),
     index('topics_id_user_id_idx').on(t.id, t.userId),
+    index('topics_session_id_idx').on(t.sessionId),
+    index('topics_group_id_idx').on(t.groupId),
   ],
 );
 
@@ -65,7 +67,10 @@ export const threads = pgTable(
     lastActiveAt: timestamptz('last_active_at').defaultNow(),
     ...timestamps,
   },
-  (t) => [uniqueIndex('threads_client_id_user_id_unique').on(t.clientId, t.userId)],
+  (t) => [
+    uniqueIndex('threads_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('threads_topic_id_idx').on(t.topicId),
+  ],
 );
 
 export type NewThread = typeof threads.$inferInsert;

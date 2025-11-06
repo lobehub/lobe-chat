@@ -18,7 +18,7 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json('tag query parameter is required', { status: 400 });
   }
 
-  revalidateTag(tag);
+  revalidateTag(tag, 'max');
 
   return Response.json({ now: Date.now(), revalidated: true });
 };

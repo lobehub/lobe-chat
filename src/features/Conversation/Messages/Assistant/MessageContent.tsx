@@ -4,7 +4,7 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { aiChatSelectors, chatSelectors } from '@/store/chat/selectors';
+import { aiChatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import { DefaultMessage } from '../Default';
 import ImageFileListViewer from '../User/ImageFileListViewer';
@@ -19,8 +19,10 @@ export const AssistantMessageContent = memo<
     editableContent: ReactNode;
   }
 >(({ id, tools, content, chunksList, search, imageList, ...props }) => {
-  const editing = useChatStore(chatSelectors.isMessageEditing(id));
-  const generating = useChatStore(chatSelectors.isMessageGenerating(id));
+  const [editing, generating] = useChatStore((s) => [
+    messageStateSelectors.isMessageEditing(id)(s),
+    messageStateSelectors.isMessageGenerating(id)(s),
+  ]);
 
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 

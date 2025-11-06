@@ -1,35 +1,33 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop, isServerMode } from '@lobechat/const';
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
   ChatImageItem,
   CreateMessageParams,
   MessageSemanticSearchChunk,
-  SendMessageParams,
   TraceEventType,
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
+import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { produce } from 'immer';
+import { throttle } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
-import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
 import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra';
 import { getAiInfraStoreState } from '@/store/aiInfra/store';
 import { ChatStore } from '@/store/chat/store';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { getFileStoreState } from '@/store/file/store';
-import { useSessionStore } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../../selectors';
+import { chatSelectors, messageStateSelectors, topicSelectors } from '../../../selectors';
 
 const n = setNamespace('ai');
 
@@ -50,10 +48,6 @@ interface ProcessMessageParams {
 }
 
 export interface AIGenerateAction {
-  /**
-   * Sends a new message to the AI chat system
-   */
-  sendMessage: (params: SendMessageParams) => Promise<void>;
   /**
    * Regenerates a specific message in the chat
    */
@@ -157,155 +151,6 @@ export const generateAIChat: StateCreator<
     get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
   },
 
-  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
-    const {
-      internal_coreProcessMessage,
-      activeTopicId,
-      activeId,
-      activeThreadId,
-      sendMessageInServer,
-    } = get();
-    if (!activeId) return;
-
-    const fileIdList = files?.map((f) => f.id);
-
-    const hasFile = !!fileIdList && fileIdList.length > 0;
-
-    // if message is empty or no files, then stop
-    if (!message && !hasFile) return;
-
-    // router to server mode send message
-    if (isServerMode)
-      return sendMessageInServer({ message, files, onlyAddUserMessage, isWelcomeQuestion });
-
-    set({ isCreatingMessage: true }, false, n('creatingMessage/start'));
-
-    const newMessage: CreateMessageParams = {
-      content: message,
-      // if message has attached with files, then add files to message and the agent
-      files: fileIdList,
-      role: 'user',
-      sessionId: activeId,
-      // if there is activeTopicId，then add topicId to message
-      topicId: activeTopicId,
-      threadId: activeThreadId,
-    };
-
-    const agentConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-
-    let tempMessageId: string | undefined = undefined;
-    let newTopicId: string | undefined = undefined;
-
-    // it should be the default topic, then
-    // if autoCreateTopic is enabled, check to whether we need to create a topic
-    if (!onlyAddUserMessage && !activeTopicId && agentConfig.enableAutoCreateTopic) {
-      // check activeTopic and then auto create topic
-      const chats = chatSelectors.activeBaseChats(get());
-
-      // we will add two messages (user and assistant), so the finial length should +2
-      const featureLength = chats.length + 2;
-
-      // if there is no activeTopicId and the feature length is greater than the threshold
-      // then create a new topic and active it
-      if (!activeTopicId && featureLength >= agentConfig.autoCreateTopicThreshold) {
-        // we need to create a temp message for optimistic update
-        tempMessageId = get().internal_createTmpMessage(newMessage);
-        get().internal_toggleMessageLoading(true, tempMessageId);
-
-        const topicId = await get().createTopic();
-
-        if (topicId) {
-          newTopicId = topicId;
-          newMessage.topicId = topicId;
-
-          // we need to copy the messages to the new topic or the message will disappear
-          const mapKey = chatSelectors.currentChatKey(get());
-          const newMaps = {
-            ...get().messagesMap,
-            [messageMapKey(activeId, topicId)]: get().messagesMap[mapKey],
-          };
-          set({ messagesMap: newMaps }, false, n('moveMessagesToNewTopic'));
-
-          // make the topic loading
-          get().internal_updateTopicLoading(topicId, true);
-        }
-      }
-    }
-    //  update assistant update to make it rerank
-    useSessionStore.getState().triggerSessionUpdate(get().activeId);
-
-    const id = await get().internal_createMessage(newMessage, {
-      tempMessageId,
-      skipRefresh: !onlyAddUserMessage && newMessage.fileList?.length === 0,
-    });
-
-    if (!id) {
-      set({ isCreatingMessage: false }, false, n('creatingMessage/start'));
-      if (!!newTopicId) get().internal_updateTopicLoading(newTopicId, false);
-      return;
-    }
-
-    if (tempMessageId) get().internal_toggleMessageLoading(false, tempMessageId);
-
-    // switch to the new topic if create the new topic
-    if (!!newTopicId) {
-      await get().switchTopic(newTopicId, true);
-      await get().internal_fetchMessages();
-
-      // delete previous messages
-      // remove the temp message map
-      const newMaps = { ...get().messagesMap, [messageMapKey(activeId, null)]: [] };
-      set({ messagesMap: newMaps }, false, 'internal_copyMessages');
-    }
-
-    // if only add user message, then stop
-    if (onlyAddUserMessage) {
-      set({ isCreatingMessage: false }, false, 'creatingMessage/start');
-      return;
-    }
-
-    // Get the current messages to generate AI response
-    const messages = chatSelectors.activeBaseChats(get());
-    const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
-
-    await internal_coreProcessMessage(messages, id, {
-      isWelcomeQuestion,
-      ragQuery: get().internal_shouldUseRAG() ? message : undefined,
-      threadId: activeThreadId,
-    });
-
-    set({ isCreatingMessage: false }, false, n('creatingMessage/stop'));
-
-    const summaryTitle = async () => {
-      // if autoCreateTopic is false, then stop
-      if (!agentConfig.enableAutoCreateTopic) return;
-
-      // check activeTopic and then auto update topic title
-      if (newTopicId) {
-        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, newTopicId))(get());
-        await get().summaryTopicTitle(newTopicId, chats);
-        return;
-      }
-
-      if (!activeTopicId) return;
-      const topic = topicSelectors.getTopicById(activeTopicId)(get());
-
-      if (topic && !topic.title) {
-        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
-        await get().summaryTopicTitle(topic.id, chats);
-      }
-    };
-
-    // if there is relative files, then add files to agent
-    // only available in server mode
-    const addFilesToAgent = async () => {
-      if (userFiles.length === 0 || !isServerMode) return;
-
-      await useAgentStore.getState().addFilesToAgent(userFiles, false);
-    };
-
-    await Promise.all([summaryTitle(), addFilesToAgent()]);
-  },
   stopGenerateMessage: () => {
     const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
 
@@ -375,9 +220,10 @@ export const generateAIChat: StateCreator<
       ragQueryId,
     };
 
-    const assistantId = await get().internal_createMessage(assistantMessage);
+    const result = await get().internal_createMessage(assistantMessage);
 
-    if (!assistantId) return;
+    if (!result) return;
+    const assistantId = result.id;
 
     // 3. place a search with the search working model if this model is not support tool use
     const aiInfraStoreState = getAiInfraStoreState();
@@ -579,6 +425,19 @@ export const generateAIChat: StateCreator<
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
+    // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
+    const throttledUpdateToolCalls = throttle(
+      (toolCalls: any[]) => {
+        internal_dispatchMessage({
+          id: messageId,
+          type: 'updateMessage',
+          value: { tools: get().internal_transformToolCalls(toolCalls) },
+        });
+      },
+      300,
+      { leading: true, trailing: true },
+    );
+
     const historySummary = chatConfig.enableCompressHistory
       ? topicSelectors.currentActiveTopicSummary(get())
       : undefined;
@@ -598,7 +457,6 @@ export const generateAIChat: StateCreator<
         topicId: get().activeTopicId,
         traceName: TraceNameMap.Conversation,
       },
-      isWelcomeQuestion: params?.isWelcomeQuestion,
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
@@ -610,7 +468,7 @@ export const generateAIChat: StateCreator<
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
-          await messageService.updateMessage(messageId, {
+          messageService.updateMessage(messageId, {
             traceId,
             observationId: observationId ?? undefined,
           });
@@ -633,6 +491,8 @@ export const generateAIChat: StateCreator<
 
         let parsedToolCalls = toolCalls;
         if (parsedToolCalls && parsedToolCalls.length > 0) {
+          // Flush any pending throttled updates before finalizing
+          throttledUpdateToolCalls.flush();
           internal_toggleToolCallingStreaming(messageId, undefined);
           parsedToolCalls = parsedToolCalls.map((item) => ({
             ...item,
@@ -643,6 +503,8 @@ export const generateAIChat: StateCreator<
           }));
           isFunctionCall = true;
         }
+
+        internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
 
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
@@ -707,7 +569,8 @@ export const generateAIChat: StateCreator<
             if (!duration) {
               duration = Date.now() - thinkingStartAt;
 
-              const isInChatReasoning = chatSelectors.isMessageInChatReasoning(messageId)(get());
+              const isInChatReasoning =
+                messageStateSelectors.isMessageInChatReasoning(messageId)(get());
               if (isInChatReasoning) {
                 internal_toggleChatReasoning(
                   false,
@@ -752,12 +615,17 @@ export const generateAIChat: StateCreator<
           // is this message is just a tool call
           case 'tool_calls': {
             internal_toggleToolCallingStreaming(messageId, chunk.isAnimationActives);
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
-            });
+            throttledUpdateToolCalls(chunk.tool_calls);
             isFunctionCall = true;
+            const isInChatReasoning =
+              messageStateSelectors.isMessageInChatReasoning(messageId)(get());
+            if (isInChatReasoning) {
+              internal_toggleChatReasoning(
+                false,
+                messageId,
+                n('toggleChatReasoning/false') as string,
+              );
+            }
           }
         }
       },
@@ -827,16 +695,19 @@ export const generateAIChat: StateCreator<
     return get().internal_toggleLoadingArrays('reasoningLoadingIds', loading, id, action);
   },
   internal_toggleToolCallingStreaming: (id, streaming) => {
+    const previous = get().toolCallingStreamIds;
+    const next = produce(previous, (draft) => {
+      if (!!streaming) {
+        draft[id] = streaming;
+      } else {
+        delete draft[id];
+      }
+    });
+
+    if (isEqual(previous, next)) return;
+
     set(
-      {
-        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
-          if (!!streaming) {
-            draft[id] = streaming;
-          } else {
-            delete draft[id];
-          }
-        }),
-      },
+      { toolCallingStreamIds: next },
 
       false,
       `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,

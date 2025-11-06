@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from 'next-auth';
 
-import { getServerDBConfig } from '@/config/db';
 import { getAuthConfig } from '@/envs/auth';
 
 import { LobeNextAuthDbAdapter } from './adapter';
@@ -13,8 +12,6 @@ const {
   NEXT_AUTH_SSO_PROVIDERS,
   NEXT_PUBLIC_ENABLE_NEXT_AUTH,
 } = getAuthConfig();
-
-const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
 export const initSSOProviders = () => {
   return NEXT_PUBLIC_ENABLE_NEXT_AUTH
@@ -30,7 +27,7 @@ export const initSSOProviders = () => {
 
 // Notice this is only an object, not a full Auth.js instance
 export default {
-  adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter() : undefined,
+  adapter: NEXT_PUBLIC_ENABLE_NEXT_AUTH ? LobeNextAuthDbAdapter() : undefined,
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
     async jwt({ token, user }) {
@@ -58,10 +55,10 @@ export default {
     signIn: '/next-auth/signin',
   },
   providers: initSSOProviders(),
-  secret: NEXT_AUTH_SECRET,
+  secret: NEXT_AUTH_SECRET ?? process.env.AUTH_SECRET,
   session: {
     // Force use JWT if server service is disabled
-    strategy: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? NEXT_AUTH_SSO_SESSION_STRATEGY : 'jwt',
+    strategy: NEXT_AUTH_SSO_SESSION_STRATEGY,
   },
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;

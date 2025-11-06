@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
@@ -43,7 +43,9 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
 
-  const isLoading = useChatStore(chatSelectors.isToolApiNameShining(messageId, index, toolCallId));
+  const isLoading = useChatStore(
+    messageStateSelectors.isToolApiNameShining(messageId, index, toolCallId),
+  );
 
   const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 

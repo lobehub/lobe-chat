@@ -1,6 +1,50 @@
 import { AIChatModelCard } from '../types/aiModel';
 
 const bedrockChatModels: AIChatModelCard[] = [
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description: 'Claude Sonnet 4.5 是 Anthropic 迄今为止最智能的模型。',
+    displayName: 'Claude Sonnet 4.5',
+    enabled: true,
+    id: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-09-29',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      structuredOutput: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description: 'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
+    displayName: 'Claude Haiku 4.5',
+    enabled: true,
+    id: 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+    maxOutput: 64_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-15',
+    type: 'chat',
+  },
   /*
     // TODO: Not support for now
     {

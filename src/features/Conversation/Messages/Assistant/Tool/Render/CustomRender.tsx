@@ -10,7 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import PluginResult from '@/features/Conversation/Messages/Assistant/Tool/Inspector/PluginResult';
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 
 import Arguments from './Arguments';
 import KeyValueEditor from './KeyValueEditor';
@@ -43,7 +43,7 @@ const CustomRender = memo<CustomRenderProps>(
     tool_call_id,
   }) => {
     const { t } = useTranslation(['tool', 'common']);
-    const [loading] = useChatStore((s) => [chatSelectors.isPluginApiInvoking(id)(s)]);
+    const [loading] = useChatStore((s) => [messageStateSelectors.isPluginApiInvoking(id)(s)]);
     const [isEditing, setIsEditing] = useState(false);
     const { message } = App.useApp();
     const [updatePluginArguments, reInvokeToolMessage] = useChatStore((s) => [

@@ -11,7 +11,7 @@ import InfoTooltip from '@/components/InfoTooltip';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { formatNumber } from '@/utils/format';
+import { formatNumber, formatShortenNumber } from '@/utils/format';
 
 import ModelCard from './ModelCard';
 import TokenProgress, { TokenProgressItem } from './TokenProgress';
@@ -111,10 +111,13 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
     },
   ].filter(Boolean) as TokenProgressItem[];
 
-  const displayTotal =
+  const totalCount =
     isShowCredit && !!detailTokens.totalTokens
-      ? formatNumber(detailTokens.totalTokens.credit)
-      : formatNumber(detailTokens.totalTokens!.token);
+      ? detailTokens.totalTokens.credit
+      : detailTokens.totalTokens!.token;
+
+  const shortTotal = (formatShortenNumber(totalCount) as string).toLowerCase?.();
+  const detailTotal = formatNumber(totalCount);
 
   const averagePricing = formatNumber(
     detailTokens.totalTokens!.credit / detailTokens.totalTokens!.token,
@@ -171,7 +174,7 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
                 <div style={{ color: theme.colorTextSecondary }}>
                   {t('messages.tokenDetails.total')}
                 </div>
-                <div style={{ fontWeight: 500 }}>{displayTotal}</div>
+                <div style={{ fontWeight: 500 }}>{detailTotal}</div>
               </Flexbox>
               {isShowCredit && (
                 <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
@@ -212,7 +215,7 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
     >
       <Center gap={2} horizontal style={{ cursor: 'default' }}>
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
-        {displayTotal}
+        {shortTotal}
       </Center>
     </Popover>
   );

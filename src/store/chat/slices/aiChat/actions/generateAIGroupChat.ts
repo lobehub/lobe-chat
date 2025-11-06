@@ -294,13 +294,16 @@ export const chatAiGroupChat: StateCreator<
           targetId: targetMemberId,
         };
 
-        const messageId = await internal_createMessage(userMessage);
+        const result = await internal_createMessage(userMessage);
 
         // if only add user message, then stop
         if (onlyAddUserMessage) {
           set({ isCreatingMessage: false }, false, n('creatingGroupMessage/onlyUser'));
           return;
         }
+
+        if (!result) return;
+        const messageId = result.id;
 
         if (messageId) {
           // Use the specific group's config rather than relying on active session
@@ -668,7 +671,9 @@ export const chatAiGroupChat: StateCreator<
 
         console.log('DEBUG: Creating agent message with:', agentMessage);
 
-        const assistantId = await internal_createMessage(agentMessage);
+        const result = await internal_createMessage(agentMessage);
+        if (!result) return;
+        const assistantId = result.id;
 
         const systemMessage: UIChatMessage = {
           id: 'group-system',

@@ -4,7 +4,6 @@ import { StateCreator } from 'zustand/vanilla';
 import { notification } from '@/components/AntdStaticMethods';
 import { FILE_UPLOAD_BLACKLIST } from '@/const/file';
 import { fileService } from '@/services/file';
-import { ServerService } from '@/services/file/server';
 import { ragService } from '@/services/rag';
 import { UPLOAD_NETWORK_ERROR } from '@/services/upload';
 import {
@@ -20,8 +19,6 @@ import { setNamespace } from '@/utils/storeDebug';
 import { FileStore } from '../../store';
 
 const n = setNamespace('chat');
-
-const serverFileService = new ServerService();
 
 export interface FileAction {
   clearChatUploadFileList: () => void;
@@ -71,7 +68,7 @@ export const createFileSlice: StateCreator<
       let fileItem: FileListItem | undefined = undefined;
 
       try {
-        fileItem = await serverFileService.getFileItem(id);
+        fileItem = await fileService.getFileItem(id);
       } catch (e) {
         console.error('getFileItem Error:', e);
         continue;

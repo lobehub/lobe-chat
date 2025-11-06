@@ -248,36 +248,6 @@ describe('contextEngineering', () => {
     ]);
   });
 
-  it('should inject INBOX_GUIDE_SYSTEM_ROLE for welcome questions in inbox session', async () => {
-    // Don't mock INBOX_GUIDE_SYSTEMROLE, use the real one
-    const messages: UIChatMessage[] = [
-      {
-        role: 'user',
-        content: 'Hello, this is my first question',
-        createdAt: Date.now(),
-        id: 'test-welcome',
-        meta: {},
-        updatedAt: Date.now(),
-      },
-    ];
-
-    const result = await contextEngineering({
-      messages,
-      model: 'gpt-4',
-      provider: 'openai',
-      isWelcomeQuestion: true,
-      sessionId: 'inbox',
-    });
-
-    // Should have system message with inbox guide content
-    const systemMessage = result.find((msg) => msg.role === 'system');
-    expect(systemMessage).toBeDefined();
-    // Check for characteristic content of the actual INBOX_GUIDE_SYSTEMROLE
-    expect(systemMessage!.content).toContain('LobeChat Support Assistant');
-    expect(systemMessage!.content).toContain('LobeHub');
-    expect(Object.keys(systemMessage!).length).toEqual(2);
-  });
-
   it('should inject historySummary into system message when provided', async () => {
     const historySummary = 'Previous conversation summary: User discussed AI topics.';
 

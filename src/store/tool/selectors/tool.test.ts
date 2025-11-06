@@ -78,7 +78,7 @@ describe('toolSelectors', () => {
 
   describe('metaList and getMetaById', () => {
     it('should return the correct list of tool metadata', () => {
-      const result = toolSelectors.metaList()(mockState);
+      const result = toolSelectors.metaList(mockState);
       expect(result).toEqual([
         {
           type: 'builtin',
