@@ -1,18 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { AgentRuntime, type AgentRuntimeContext } from '@lobechat/agent-runtime';
-import {
-  DEFAULT_AGENT_CHAT_CONFIG,
-  INBOX_SESSION_ID,
-  LOADING_FLAT,
-  isDesktop,
-} from '@lobechat/const';
+import { DEFAULT_AGENT_CHAT_CONFIG, INBOX_SESSION_ID, isDesktop } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
   ChatImageItem,
   ChatTopic,
   ChatVideoItem,
-  CreateNewMessageParams,
   SendMessageParams,
   SendMessageServerResponse,
   UIChatMessage,
@@ -22,26 +16,21 @@ import { TRPCClientError } from '@trpc/client';
 import debug from 'debug';
 import { t } from 'i18next';
 import { produce } from 'immer';
-import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiChatService } from '@/services/aiChat';
-import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
-import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra';
-import { getAiInfraStoreState } from '@/store/aiInfra/store';
 import { ChatAgent } from '@/store/chat/agents/ChatAgent';
 import { createChatExecutors } from '@/store/chat/agents/createChatExecutors';
 import { MainSendMessageOperation } from '@/store/chat/slices/aiChat/initialState';
 import type { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
-import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, threadSelectors, topicSelectors } from '../../../selectors';
+import { chatSelectors, topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
@@ -402,128 +391,6 @@ export const generateAIChatV2: StateCreator<
     }
 
     // ===========================================
-    // Step 2: Search Workflow Preprocessing (if needed)
-    // ===========================================
-    const aiInfraStoreState = getAiInfraStoreState();
-    const isModelSupportToolUse = aiModelSelectors.isModelSupportToolUse(
-      model,
-      provider!,
-    )(aiInfraStoreState);
-    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(provider!)(
-      aiInfraStoreState,
-    );
-    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
-      model,
-      provider!,
-    )(aiInfraStoreState);
-    const isModelBuiltinSearchInternal = aiModelSelectors.isModelBuiltinSearchInternal(
-      model,
-      provider!,
-    )(aiInfraStoreState);
-    const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(agentStoreState);
-    const useModelSearch =
-      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) ||
-      isModelBuiltinSearchInternal;
-    const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
-
-    // Use search workflow for models that don't support tool use natively
-    if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
-      log(
-        '[internal_execAgentRuntime] Search workflow start (model does not support tool use natively)',
-      );
-
-      const { model: searchModel, provider: searchProvider } =
-        agentChatConfigSelectors.searchFCModel(agentStoreState);
-
-      log('[internal_execAgentRuntime] Using search model: %s/%s', searchProvider, searchModel);
-
-      let isToolsCalling = false;
-      let isError = false;
-
-      const abortController = get().internal_toggleChatLoading(true, assistantMessageId);
-
-      get().internal_toggleSearchWorkflow(true, assistantMessageId);
-
-      await chatService.fetchPresetTaskResult({
-        params: {
-          messages,
-          model: searchModel,
-          provider: searchProvider,
-          plugins: [WebBrowsingManifest.identifier],
-        },
-        onFinish: async (_, { toolCalls, usage }) => {
-          if (toolCalls && toolCalls.length > 0) {
-            get().internal_toggleToolCallingStreaming(assistantMessageId, undefined);
-            await get().internal_updateMessageContent(assistantMessageId, '', {
-              toolCalls,
-              metadata: usage,
-              model: searchModel,
-              provider: searchProvider,
-            });
-          }
-        },
-        trace: params.traceId
-          ? {
-              traceId: params.traceId,
-              sessionId: activeId,
-              topicId: activeTopicId,
-              traceName: 'SearchIntentRecognition' as any,
-            }
-          : undefined,
-        abortController,
-        onMessageHandle: async (chunk) => {
-          if (chunk.type === 'tool_calls') {
-            get().internal_toggleSearchWorkflow(false, assistantMessageId);
-            get().internal_toggleToolCallingStreaming(assistantMessageId, chunk.isAnimationActives);
-            get().internal_dispatchMessage({
-              id: assistantMessageId,
-              type: 'updateMessage',
-              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
-            });
-            isToolsCalling = true;
-          }
-
-          if (chunk.type === 'text') {
-            abortController!.abort('not fc');
-          }
-        },
-        onErrorHandle: async (error) => {
-          isError = true;
-          await messageService.updateMessageError(assistantMessageId, error);
-          // Use replaceMessages instead of refreshMessages
-          const finalMessages = get().messagesMap[messageKey] || [];
-          get().replaceMessages(finalMessages);
-        },
-      });
-
-      get().internal_toggleChatLoading(false, assistantMessageId);
-      get().internal_toggleSearchWorkflow(false, assistantMessageId);
-
-      // If error or tool calling detected, return early
-      if (isError) {
-        log('[internal_execAgentRuntime] Search workflow error, returning early');
-        return;
-      }
-      if (isToolsCalling) {
-        log('[internal_execAgentRuntime] Search workflow detected tool calling, triggering tools');
-        get().internal_toggleMessageInToolsCalling(true, assistantMessageId);
-        // Use replaceMessages instead of refreshMessages
-        const currentMessages = get().messagesMap[messageKey] || [];
-        get().replaceMessages(currentMessages);
-
-        // Trigger tool calling using the legacy method
-        await get().triggerToolsCalling(assistantMessageId, {
-          threadId: params.threadId,
-          inPortalThread: params.inPortalThread,
-        });
-        log('[internal_execAgentRuntime] Search workflow tool calling completed');
-        return;
-      }
-
-      log('[internal_execAgentRuntime] Search workflow completed (no tools detected)');
-    }
-
-    // ===========================================
     // Step 3: Create and Execute Agent Runtime
     // ===========================================
     log('[internal_execAgentRuntime] Creating agent runtime');
@@ -535,7 +402,7 @@ export const generateAIChatV2: StateCreator<
         messageKey,
         assistantMessageId,
         model,
-        provider,
+        provider: provider!,
         params,
       }),
     });

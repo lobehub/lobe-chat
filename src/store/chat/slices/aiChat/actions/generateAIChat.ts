@@ -1,17 +1,14 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { LOADING_FLAT, MESSAGE_CANCEL_FLAT, isDesktop } from '@lobechat/const';
-import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import {
   ChatImageItem,
   CreateMessageParams,
-  MessageSemanticSearchChunk,
   TraceEventType,
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
-import { t } from 'i18next';
 import { produce } from 'immer';
 import { throttle } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
@@ -20,11 +17,8 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
-import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra';
-import { getAiInfraStoreState } from '@/store/aiInfra/store';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
-import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { Action, setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, messageStateSelectors, topicSelectors } from '../../../selectors';
@@ -85,6 +79,7 @@ export interface AIGenerateAction {
     provider: string;
   }) => Promise<{
     isFunctionCall: boolean;
+    tools?: any[];
     content: string;
     traceId?: string;
   }>;
@@ -230,6 +225,7 @@ export const generateAIChat: StateCreator<
       : undefined;
 
     let isFunctionCall = false;
+    let tools;
     let msgTraceId: string | undefined;
     let output = '';
     let thinking = '';
@@ -314,7 +310,9 @@ export const generateAIChat: StateCreator<
               arguments: !!item.function.arguments ? item.function.arguments : '{}',
             },
           }));
+
           isFunctionCall = true;
+          tools = parsedToolCalls;
         }
 
         internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
@@ -446,7 +444,7 @@ export const generateAIChat: StateCreator<
 
     internal_toggleChatLoading(false, messageId, n('generateMessage(end)') as string);
 
-    return { isFunctionCall, traceId: msgTraceId, content: output };
+    return { isFunctionCall, traceId: msgTraceId, content: output, tools };
   },
 
   internal_resendMessage: async (
