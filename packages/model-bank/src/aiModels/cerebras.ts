@@ -100,22 +100,6 @@ const cerebrasModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description: 'Qwen 3 Coder 480B：面向代码生成与复杂编程任务的长上下文模型。',
-    displayName: 'Qwen 3 Coder 480B',
-    id: 'qwen-3-coder-480b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
 ];
 
 export const allModels = [...cerebrasModels];
