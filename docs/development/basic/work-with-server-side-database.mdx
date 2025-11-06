@@ -1,8 +1,11 @@
 # Work with Server-Side Database
 
-LobeChat provides a battery-included experience with its client-side database. While some features you really care about is only available at a server-side development.
+LobeChat provides a battery-included experience with its client-side database.
+While some features you really care about is only available at a server-side development.
 
-In order to work with the aspect of server-side database, you can setup all the prerequisites by following the [Deploying Server-Side Database](https://lobehub.com/docs/self-hosting/server-database) story. But here is the easier approach that can reduce your pain.
+In order to work with the aspect of server-side database,
+you can setup all the prerequisites by following the [Deploying Server-Side Database](https://lobehub.com/docs/self-hosting/server-database) story.
+But here is the easier approach that can reduce your pain.
 
 ## Quick Setup
 
@@ -90,8 +93,8 @@ S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
 S3_ENDPOINT=http://localhost:${MINIO_PORT}
 S3_BUCKET=${MINIO_LOBE_BUCKET}
 S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}
-S3_ENABLE_PATH_STYLE=1 # Required for MinIO
-S3_SET_ACL=0           # MinIO compatibility
+S3_ENABLE_PATH_STYLE=1  # Required for MinIO
+S3_SET_ACL=0  # MinIO compatibility
 ```
 
 ### File Storage Structure
@@ -135,6 +138,7 @@ await fetch(uploadUrl, {
 });
 ```
 
+
 ### Service URLs
 
 When running with Docker Compose development setup:
@@ -160,6 +164,7 @@ docker-compose -f docker-compose.development.yml up -d
 pnpm db:migrate
 ```
 
+
 ### Troubleshooting
 
 #### Port Conflicts
@@ -168,9 +173,9 @@ If ports are already in use:
 
 ```bash
 # Check what's using the ports
-lsof -i :5432 # PostgreSQL
-lsof -i :9000 # MinIO API
-lsof -i :9001 # MinIO Console
+lsof -i :5432  # PostgreSQL
+lsof -i :9000  # MinIO API
+lsof -i :9001  # MinIO Console
 ```
 
 #### Database Migrations
