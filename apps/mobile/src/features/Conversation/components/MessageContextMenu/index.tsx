@@ -75,7 +75,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
       Alert.alert(t('confirmDelete', { ns: 'chat' }), t('deleteMessageConfirm', { ns: 'chat' }), [
         {
           style: 'cancel',
-          text: t('cancel', { ns: 'common' }),
+          text: t('actions.cancel', { ns: 'common' }),
         },
         {
           onPress: () => {
@@ -86,7 +86,7 @@ const MessageContextMenu: FC<MessageContextMenuProps> = ({ message, children, ..
             }
           },
           style: 'destructive',
-          text: t('delete', { ns: 'common' }),
+          text: t('actions.delete', { ns: 'common' }),
         },
       ]);
     }, 300);

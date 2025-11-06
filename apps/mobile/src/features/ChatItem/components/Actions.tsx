@@ -80,7 +80,7 @@ const Actions = memo<ActionsProps>(({ message, hasError = false, style }) => {
       Alert.alert(t('confirmDelete', { ns: 'chat' }), t('deleteMessageConfirm', { ns: 'chat' }), [
         {
           style: 'cancel',
-          text: t('cancel', { ns: 'common' }),
+          text: t('actions.cancel', { ns: 'common' }),
         },
         {
           onPress: async () => {
@@ -91,7 +91,7 @@ const Actions = memo<ActionsProps>(({ message, hasError = false, style }) => {
             );
           },
           style: 'destructive',
-          text: t('delete', { ns: 'common' }),
+          text: t('actions.delete', { ns: 'common' }),
         },
       ]);
     },
