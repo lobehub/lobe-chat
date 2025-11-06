@@ -6,7 +6,7 @@ import os from 'node:os';
 import { join } from 'node:path';
 
 import { name } from '@/../../package.json';
-import { LOCAL_DATABASE_DIR, buildDir, nextStandaloneDir } from '@/const/dir';
+import { buildDir, LOCAL_DATABASE_DIR, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
@@ -299,7 +299,7 @@ export class App {
   registerRequestHandler = (handler: CustomRequestHandler): (() => void) => {
     if (!this.registerCustomHandlerFn) {
       logger.warn('Custom request handler registration is not available');
-      return () => {};
+      return () => { };
     }
 
     logger.debug('Registering custom request handler');

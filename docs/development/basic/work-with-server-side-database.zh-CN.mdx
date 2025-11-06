@@ -1,11 +1,8 @@
 # 使用服务端数据库
 
-LobeChat 提供了内置的客户端数据库体验。
-但某些重要功能仅在服务端开发中可用。
+LobeChat 提供了内置的客户端数据库体验。但某些重要功能仅在服务端开发中可用。
 
-为了使用服务端数据库功能，
-需要参考 [部署服务端数据库](https://lobehub.com/docs/self-hosting/server-database) 的说明来配置所有前置条件。
-本文档提供了一个更简化的配置方法，能够在本地开发时快速启动简化的服务端环境。
+为了使用服务端数据库功能，需要参考 [部署服务端数据库](https://lobehub.com/docs/self-hosting/server-database) 的说明来配置所有前置条件。本文档提供了一个更简化的配置方法，能够在本地开发时快速启动简化的服务端环境。
 
 ## 快速设置
 
@@ -93,8 +90,8 @@ S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
 S3_ENDPOINT=http://localhost:${MINIO_PORT}
 S3_BUCKET=${MINIO_LOBE_BUCKET}
 S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}
-S3_ENABLE_PATH_STYLE=1  # MinIO 必需
-S3_SET_ACL=0  # MinIO 兼容性
+S3_ENABLE_PATH_STYLE=1 # MinIO 必需
+S3_SET_ACL=0           # MinIO 兼容性
 ```
 
 ### 文件存储结构
@@ -144,7 +141,7 @@ await fetch(uploadUrl, {
 
 - **PostgreSQL**：`postgres://postgres@localhost:5432/lobechat`
 - **MinIO API**：`http://localhost:9000`
-- **MinIO 控制台**：`http://localhost:9001` (admin/CHANGE\_THIS\_PASSWORD\_IN\_PRODUCTION)
+- **MinIO 控制台**：`http://localhost:9001` (admin/CHANGE_THIS_PASSWORD_IN_PRODUCTION)
 - **应用程序**：`http://localhost:3010`
 
 ### 重置服务
@@ -171,9 +168,9 @@ pnpm db:migrate
 
 ```bash
 # 检查端口使用情况
-lsof -i :5432  # PostgreSQL
-lsof -i :9000  # MinIO API
-lsof -i :9001  # MinIO 控制台
+lsof -i :5432 # PostgreSQL
+lsof -i :9000 # MinIO API
+lsof -i :9001 # MinIO 控制台
 ```
 
 #### 数据库迁移
