@@ -16,7 +16,11 @@ import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
-const EditPage = memo(() => {
+interface SettingsPageProps {
+  mobile?: boolean;
+}
+
+const SettingsPage = memo<SettingsPageProps>(() => {
   const { t } = useTranslation('setting');
   const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
   const theme = useTheme();
@@ -59,4 +63,6 @@ const EditPage = memo(() => {
   );
 });
 
-export default EditPage;
+SettingsPage.displayName = 'SettingsPage';
+
+export default SettingsPage;
