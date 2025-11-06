@@ -16,6 +16,7 @@ import { ChatList } from '@/features/Conversation';
 import Hydration from '@/features/Hydration';
 import SideBar from '@/features/SideBar';
 import TopicDrawer from '@/features/TopicDrawer';
+import { useSinglePress } from '@/hooks/useSinglePress';
 import { useSwitchTopic } from '@/hooks/useSwitchSession';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
@@ -34,6 +35,9 @@ export default function ChatWithDrawer() {
   const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
 
   const router = useRouter();
+  const { handlePress: handleTitlePress, isPressed: isNavigating } = useSinglePress(() => {
+    router.push('/chat/setting');
+  });
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const isInDefaultTopic = !activeTopicId;
@@ -60,7 +64,7 @@ export default function ChatWithDrawer() {
           }
           headerBackgroundColor={theme.colorBgContainerSecondary}
           left={<ActionIcon icon={TextAlignStartIcon} onPress={toggleDrawer} pressEffect={false} />}
-          onTitlePress={isInbox ? undefined : () => router.push('/chat/setting')}
+          onTitlePress={isInbox || isNavigating ? undefined : handleTitlePress}
           title={displayTitle}
           titleIcon={isInbox ? undefined : ChevronRightIcon}
         >
