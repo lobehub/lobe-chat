@@ -22,6 +22,7 @@ import {
   Link2,
   Loader2Icon,
   MoreVertical,
+  Pin,
   SmilePlus,
   Trash2,
   Upload,
@@ -35,6 +36,8 @@ import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 dayjs.extend(relativeTime);
 
@@ -74,6 +77,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const theme = useTheme();
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
     const { message } = App.useApp();
+    const username = useUserStore(userProfileSelectors.displayUserName);
 
     const editor = useEditor();
 
@@ -447,13 +451,21 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         },
         {
           disabled: true,
-          key: 'word-count',
+          key: 'document-info',
           label: (
-            <span style={{ color: theme.colorTextTertiary, fontSize: 12 }}>{wordCount} words</span>
+            <div style={{ color: theme.colorTextTertiary, fontSize: 12, lineHeight: 1.6 }}>
+              <div>{wordCount} words</div>
+              <div>Last edited by {username}</div>
+              <div>
+                {lastUpdatedTime
+                  ? dayjs(lastUpdatedTime).format('MMMM D, YYYY [at] h:mm A')
+                  : 'Not saved yet'}
+              </div>
+            </div>
           ),
         },
       ],
-      [theme, wordCount],
+      [theme, wordCount, username, lastUpdatedTime],
     );
 
     return (
@@ -511,6 +523,17 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               Edited {dayjs(lastUpdatedTime).fromNow()}
             </span>
           )}
+
+          {/* Pin action */}
+          <ActionIcon
+            icon={Pin}
+            onClick={() => {
+              // TODO: Implement pin functionality
+              console.log('Pin clicked');
+            }}
+            size={16}
+            style={{ color: theme.colorText }}
+          />
 
           {/* Three-dot menu */}
           <Dropdown
