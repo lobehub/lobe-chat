@@ -5,14 +5,14 @@ export const systemToUserModels = new Set([
   'o1-mini-2024-09-12',
 ]);
 
-// TODO: 临时写法，后续要重构成 model card 展示配置
+// TODO: temporary implementation, needs to be refactored into model card display configuration
 export const disableStreamModels = new Set([
   'o1',
   'o1-2024-12-17',
   'o1-pro',
   'o1-pro-2025-03-19',
   /*
-  官网显示不支持，但是实际试下来支持 Streaming，暂时注释掉
+  Official documentation shows no support, but actual testing shows Streaming is supported, temporarily commented out
   'o3-pro',
   'o3-pro-2025-06-10',
   */
