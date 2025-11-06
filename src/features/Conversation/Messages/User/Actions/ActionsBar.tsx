@@ -12,9 +12,9 @@ import { threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import { VirtuosoContext } from '../../components/VirtualizedList/VirtuosoContext';
-import { InPortalThreadContext } from '../../context/InPortalThreadContext';
-import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
+import { VirtuosoContext } from '../../../components/VirtualizedList/VirtuosoContext';
+import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
+import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 
 interface UserActionsProps {
   data: UIChatMessage;
@@ -153,6 +153,8 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         items: [edit, copy, divider, tts, translate, divider, regenerate, del],
       }}
       onActionClick={onActionClick}
+      size={'small'}
+      variant={'borderless'}
     />
   );
 });

@@ -577,12 +577,15 @@ describe('chatMessage actions', () => {
         });
 
         expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
-          expect.arrayContaining([
-            expect.objectContaining({ id: 'msg-1' }),
-            expect.objectContaining({ id: TEST_IDS.MESSAGE_ID }),
-          ]),
-          TEST_IDS.MESSAGE_ID,
-          expect.objectContaining({ traceId: undefined }),
+          expect.objectContaining({
+            messages: expect.arrayContaining([
+              expect.objectContaining({ id: 'msg-1' }),
+              expect.objectContaining({ id: TEST_IDS.MESSAGE_ID }),
+            ]),
+            parentMessageId: TEST_IDS.MESSAGE_ID,
+            parentMessageType: 'user',
+            traceId: undefined,
+          }),
         );
       });
 
@@ -608,12 +611,15 @@ describe('chatMessage actions', () => {
         });
 
         expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
-          expect.arrayContaining([
-            expect.objectContaining({ id: 'msg-1' }),
-            expect.objectContaining({ id: parentId }),
-          ]),
-          parentId,
-          expect.objectContaining({ traceId: undefined }),
+          expect.objectContaining({
+            messages: expect.arrayContaining([
+              expect.objectContaining({ id: 'msg-1' }),
+              expect.objectContaining({ id: parentId }),
+            ]),
+            parentMessageId: TEST_IDS.MESSAGE_ID,
+            parentMessageType: 'user',
+            traceId: undefined,
+          }),
         );
       });
 
@@ -657,9 +663,12 @@ describe('chatMessage actions', () => {
 
         // For tool role, it processes all messages up to tool but uses last user message as parentId
         expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
-          expect.any(Array),
-          'msg-1', // parentId is the last user message
-          expect.objectContaining({ traceId: undefined }),
+          expect.objectContaining({
+            messages: expect.any(Array),
+            parentMessageId: TEST_IDS.MESSAGE_ID,
+            parentMessageType: 'user',
+            traceId: undefined,
+          }),
         );
       });
     });
@@ -830,14 +839,24 @@ describe('chatMessage actions', () => {
       const { result } = renderHook(() => useChatStore());
       const customMessages = [createMockMessage({ id: 'custom-msg', role: 'user' })];
 
+      act(() => {
+        useChatStore.setState({
+          messagesMap: {
+            [chatSelectors.currentChatKey(useChatStore.getState() as any)]: customMessages,
+          },
+        });
+      });
+
       await act(async () => {
         await result.current.internal_resendMessage('custom-msg', { messages: customMessages });
       });
 
       expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
-        expect.arrayContaining([expect.objectContaining({ id: 'custom-msg' })]),
-        'custom-msg',
-        expect.anything(),
+        expect.objectContaining({
+          messages: expect.arrayContaining([expect.objectContaining({ id: 'custom-msg' })]),
+          parentMessageId: 'custom-msg',
+          parentMessageType: 'user',
+        }),
       );
     });
 

@@ -1,0 +1,149 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+// Disable the auto sort key eslint rule to make the code more logic and readable
+import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
+import { produce } from 'immer';
+import { StateCreator } from 'zustand/vanilla';
+
+import { ChatStore } from '@/store/chat/store';
+import { setNamespace } from '@/utils/storeDebug';
+
+import { messageMapKey } from '../../../utils/messageMapKey';
+import { MainSendMessageOperation } from '../initialState';
+
+const n = setNamespace('ai');
+
+/**
+ * Actions for controlling conversation operations like cancellation and error handling
+ */
+export interface ConversationControlAction {
+  /**
+   * Interrupts the ongoing ai message generation process
+   */
+  stopGenerateMessage: () => void;
+  /**
+   * Cancels sendMessage operation for a specific topic/session
+   */
+  cancelSendMessageInServer: (topicId?: string) => void;
+  /**
+   * Clears any error messages from the send message operation
+   */
+  clearSendMessageError: () => void;
+  /**
+   * Toggle sendMessage operation state
+   */
+  internal_toggleSendMessageOperation: (
+    key: string | { sessionId: string; topicId?: string | null },
+    loading: boolean,
+    cancelReason?: string,
+  ) => AbortController | undefined;
+  /**
+   * Update sendMessage operation metadata
+   */
+  internal_updateSendMessageOperation: (
+    key: string | { sessionId: string; topicId?: string | null },
+    value: Partial<MainSendMessageOperation> | null,
+    actionName?: any,
+  ) => void;
+}
+
+export const conversationControl: StateCreator<
+  ChatStore,
+  [['zustand/devtools', never]],
+  [],
+  ConversationControlAction
+> = (set, get) => ({
+  stopGenerateMessage: () => {
+    const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
+
+    if (!chatLoadingIdsAbortController) return;
+
+    chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
+
+    internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
+  },
+
+  cancelSendMessageInServer: (topicId?: string) => {
+    const { activeId, activeTopicId } = get();
+
+    // Determine which operation to cancel
+    const targetTopicId = topicId ?? activeTopicId;
+    const operationKey = messageMapKey(activeId, targetTopicId);
+
+    // Cancel the specific operation
+    get().internal_toggleSendMessageOperation(
+      operationKey,
+      false,
+      'User cancelled sendMessage operation',
+    );
+
+    // Only clear creating message state if it's the active session
+    if (operationKey === messageMapKey(activeId, activeTopicId)) {
+      const editorTempState = get().mainSendMessageOperations[operationKey]?.inputEditorTempState;
+
+      if (editorTempState) get().mainInputEditor?.setJSONState(editorTempState);
+    }
+  },
+
+  clearSendMessageError: () => {
+    get().internal_updateSendMessageOperation(
+      { sessionId: get().activeId, topicId: get().activeTopicId },
+      null,
+      'clearSendMessageError',
+    );
+  },
+
+  internal_toggleSendMessageOperation: (key, loading: boolean, cancelReason?: string) => {
+    if (loading) {
+      const abortController = new AbortController();
+
+      get().internal_updateSendMessageOperation(
+        key,
+        { isLoading: true, abortController },
+        n('toggleSendMessageOperation(start)', { key }),
+      );
+
+      return abortController;
+    } else {
+      const operationKey =
+        typeof key === 'string' ? key : messageMapKey(key.sessionId, key.topicId);
+
+      const operation = get().mainSendMessageOperations[operationKey];
+
+      // If cancelReason is provided, abort the operation first
+      if (cancelReason && operation?.isLoading) {
+        operation.abortController?.abort(cancelReason);
+      }
+
+      get().internal_updateSendMessageOperation(
+        key,
+        { isLoading: false, abortController: null },
+        n('toggleSendMessageOperation(stop)', { key, cancelReason }),
+      );
+
+      return undefined;
+    }
+  },
+
+  internal_updateSendMessageOperation: (key, value, actionName) => {
+    const operationKey = typeof key === 'string' ? key : messageMapKey(key.sessionId, key.topicId);
+
+    set(
+      produce((draft) => {
+        if (!draft.mainSendMessageOperations[operationKey])
+          draft.mainSendMessageOperations[operationKey] = value;
+        else {
+          if (value === null) {
+            delete draft.mainSendMessageOperations[operationKey];
+          } else {
+            draft.mainSendMessageOperations[operationKey] = {
+              ...draft.mainSendMessageOperations[operationKey],
+              ...value,
+            };
+          }
+        }
+      }),
+      false,
+      actionName ?? n('updateSendMessageOperation', { operationKey, value }),
+    );
+  },
+});

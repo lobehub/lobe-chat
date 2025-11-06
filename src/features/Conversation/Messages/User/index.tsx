@@ -1,6 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
-import { Pagination } from 'antd';
 import { useResponsive } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +22,7 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
-import { UserActionsBar } from './Actions';
+import Actions from './Actions';
 import { UserBelowMessage } from './BelowMessage';
 import { UserMessageExtra } from './Extra';
 import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
@@ -45,19 +44,8 @@ const remarkPlugins = markdownElements
   .filter(Boolean);
 
 const UserMessage = memo<UserMessageProps>((props) => {
-  const {
-    id,
-    ragQuery,
-    content,
-    createdAt,
-    error,
-    role,
-    index,
-    extra,
-    disableEditing,
-    targetId,
-    branch,
-  } = props;
+  const { id, ragQuery, content, createdAt, error, role, index, extra, disableEditing, targetId } =
+    props;
 
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -184,28 +172,15 @@ const UserMessage = memo<UserMessageProps>((props) => {
                 variant={variant}
               />
             </Flexbox>
-
-            {!disableEditing && !editing && (
-              <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-                <UserActionsBar data={props} id={id} index={index} />
-              </Flexbox>
-            )}
           </Flexbox>
           <UserBelowMessage content={content} id={id} ragQuery={ragQuery} />
         </Flexbox>
         {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
       </Flexbox>
-      {branch && (
-        <Flexbox direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}>
-          <Pagination
-            current={branch.activeBranchIndex + 1}
-            pageSize={1}
-            simple
-            size="small"
-            total={branch.count}
-          />
-        </Flexbox>
-      )}
+
+      <Flexbox direction={'horizontal-reverse'}>
+        <Actions data={props} disableEditing={disableEditing} id={id} index={index} />
+      </Flexbox>
     </Flexbox>
   );
 });

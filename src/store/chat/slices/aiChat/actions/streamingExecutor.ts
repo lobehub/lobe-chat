@@ -1,17 +1,19 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
+import { AgentRuntime, type AgentRuntimeContext } from '@lobechat/agent-runtime';
+import { isDesktop } from '@lobechat/const';
+import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
   ChatImageItem,
   ChatToolPayload,
   MessageToolCall,
   ModelUsage,
-  TraceEventType,
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
-import isEqual from 'fast-deep-equal';
-import { produce } from 'immer';
+import type { MessageSemanticSearchChunk } from '@lobechat/types';
+import debug from 'debug';
+import { t } from 'i18next';
 import { throttle } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -19,19 +21,17 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
+import { GeneralChatAgent } from '@/store/chat/agents/GeneralChatAgent';
+import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
-import { Action, setNamespace } from '@/utils/storeDebug';
+import { setNamespace } from '@/utils/storeDebug';
 
-import {
-  chatSelectors,
-  dbMessageSelectors,
-  displayMessageSelectors,
-  messageStateSelectors,
-  topicSelectors,
-} from '../../../selectors';
+import { topicSelectors } from '../../../selectors';
+import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
+const log = debug('lobe-store:streaming-executor');
 
 interface ProcessMessageParams {
   traceId?: string;
@@ -49,26 +49,12 @@ interface ProcessMessageParams {
   agentConfig?: any; // Agent configuration for group chat agents
 }
 
-export interface AIGenerateAction {
+/**
+ * Core streaming execution actions for AI chat
+ */
+export interface StreamingExecutorAction {
   /**
-   * Regenerates a specific message in the chat
-   */
-  regenerateMessage: (id: string) => Promise<void>;
-  /**
-   * Deletes an existing message and generates a new one in its place
-   */
-  delAndRegenerateMessage: (id: string) => Promise<void>;
-  /**
-   * Interrupts the ongoing ai message generation process
-   */
-  stopGenerateMessage: () => void;
-
-  // =========  ↓ Internal Method ↓  ========== //
-  // ========================================== //
-  // ========================================== //
-
-  /**
-   * Retrieves an AI-generated chat message from the backend service
+   * Retrieves an AI-generated chat message from the backend service with streaming
    */
   internal_fetchAIChatMessage: (input: {
     messages: UIChatMessage[];
@@ -85,77 +71,31 @@ export interface AIGenerateAction {
     usage?: ModelUsage;
   }>;
   /**
-   * Resends a specific message, optionally using a trace ID for tracking
+   * Executes the core processing logic for AI messages
+   * including preprocessing and postprocessing steps
    */
-  internal_resendMessage: (
-    id: string,
-    params?: {
-      traceId?: string;
-      messages?: UIChatMessage[];
-      threadId?: string;
-      inPortalThread?: boolean;
-    },
-  ) => Promise<void>;
-  /**
-   * Toggles the loading state for AI message generation, managing the UI feedback
-   */
-  internal_toggleChatLoading: (
-    loading: boolean,
-    id?: string,
-    action?: Action,
-  ) => AbortController | undefined;
-  internal_toggleMessageInToolsCalling: (
-    loading: boolean,
-    id?: string,
-    action?: Action,
-  ) => AbortController | undefined;
-  /**
-   * Controls the streaming state of tool calling processes, updating the UI accordingly
-   */
-  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
-  /**
-   * Toggles the loading state for AI message reasoning, managing the UI feedback
-   */
-  internal_toggleChatReasoning: (
-    loading: boolean,
-    id?: string,
-    action?: string,
-  ) => AbortController | undefined;
-
-  internal_toggleSearchWorkflow: (loading: boolean, id?: string) => void;
+  internal_execAgentRuntime: (params: {
+    messages: UIChatMessage[];
+    parentMessageId: string;
+    parentMessageType: 'user' | 'assistant';
+    inSearchWorkflow?: boolean;
+    /**
+     * the RAG query content, should be embedding and used in the semantic search
+     */
+    ragQuery?: string;
+    threadId?: string;
+    inPortalThread?: boolean;
+    traceId?: string;
+    ragMetadata?: { ragQueryId: string; fileChunks: MessageSemanticSearchChunk[] };
+  }) => Promise<void>;
 }
 
-export const generateAIChat: StateCreator<
+export const streamingExecutor: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  AIGenerateAction
+  StreamingExecutorAction
 > = (set, get) => ({
-  delAndRegenerateMessage: async (id) => {
-    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
-    get().internal_resendMessage(id, { traceId });
-    get().deleteMessage(id);
-
-    // trace the delete and regenerate message
-    get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
-  },
-  regenerateMessage: async (id) => {
-    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
-    await get().internal_resendMessage(id, { traceId });
-
-    // trace the delete and regenerate message
-    get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
-  },
-
-  stopGenerateMessage: () => {
-    const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
-
-    if (!chatLoadingIdsAbortController) return;
-
-    chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
-
-    internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
-  },
   internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
     const {
       internal_toggleChatLoading,
@@ -351,8 +291,7 @@ export const generateAIChat: StateCreator<
             if (!duration) {
               duration = Date.now() - thinkingStartAt;
 
-              const isInChatReasoning =
-                messageStateSelectors.isMessageInChatReasoning(messageId)(get());
+              const isInChatReasoning = get().reasoningLoadingIds.includes(messageId);
               if (isInChatReasoning) {
                 internal_toggleChatReasoning(
                   false,
@@ -399,8 +338,7 @@ export const generateAIChat: StateCreator<
             internal_toggleToolCallingStreaming(messageId, chunk.isAnimationActives);
             throttledUpdateToolCalls(chunk.tool_calls);
             isFunctionCall = true;
-            const isInChatReasoning =
-              messageStateSelectors.isMessageInChatReasoning(messageId)(get());
+            const isInChatReasoning = get().reasoningLoadingIds.includes(messageId);
             if (isInChatReasoning) {
               internal_toggleChatReasoning(
                 false,
@@ -425,102 +363,242 @@ export const generateAIChat: StateCreator<
     };
   },
 
-  internal_resendMessage: async (
-    messageId,
-    { traceId, messages: outChats, threadId: outThreadId, inPortalThread } = {},
-  ) => {
-    // 1. 构造所有相关的历史记录
-    const chats = outChats ?? displayMessageSelectors.mainAIChats(get());
+  internal_execAgentRuntime: async (params) => {
+    const { messages: originalMessages, parentMessageId, parentMessageType } = params;
 
-    const item = displayMessageSelectors.getDisplayMessageById(messageId)(get());
-    if (!item) return;
-    const currentIndex = chats.findIndex((c) => c.id === messageId);
+    log(
+      '[internal_execAgentRuntime] start, parentMessageId: %s,parentMessageType: %s, messages count: %d',
+      parentMessageId,
+      parentMessageType,
+      originalMessages.length,
+    );
 
-    const currentMessage = chats[currentIndex];
+    const { activeId, activeTopicId } = get();
+    const messageKey = messageMapKey(activeId, activeTopicId);
 
-    let contextMessages: UIChatMessage[] = [];
+    // Create a new array to avoid modifying the original messages
+    let messages = [...originalMessages];
 
-    switch (currentMessage.role) {
-      case 'tool':
-      case 'user': {
-        contextMessages = chats.slice(0, currentIndex + 1);
+    const agentStoreState = getAgentStoreState();
+    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+    const { chatConfig } = agentConfigData;
+
+    // Use current agent config
+    const model = agentConfigData.model;
+    const provider = agentConfigData.provider;
+
+    // ===========================================
+    // Step 1: RAG Preprocessing (if enabled)
+    // ===========================================
+    if (params.ragQuery && parentMessageType === 'user') {
+      const userMessageId = parentMessageId;
+      log('[internal_execAgentRuntime] RAG preprocessing start');
+
+      // Get relevant chunks from semantic search
+      const {
+        chunks,
+        queryId: ragQueryId,
+        rewriteQuery,
+      } = await get().internal_retrieveChunks(
+        userMessageId,
+        params.ragQuery,
+        // Skip the last message content when building context
+        messages.map((m) => m.content).slice(0, messages.length - 1),
+      );
+
+      log('[internal_execAgentRuntime] RAG chunks retrieved: %d chunks', chunks.length);
+
+      const lastMsg = messages.pop() as UIChatMessage;
+
+      // Build RAG context and append to user query
+      const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
+        chunks,
+        userQuery: lastMsg.content,
+        rewriteQuery,
+        knowledge: agentSelectors.currentEnabledKnowledge(agentStoreState),
+      });
+
+      messages.push({
+        ...lastMsg,
+        content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
+      });
+
+      // Update assistant message with RAG metadata
+      const fileChunks: MessageSemanticSearchChunk[] = chunks.map((c) => ({
+        id: c.id,
+        similarity: c.similarity,
+      }));
+
+      if (fileChunks.length > 0) {
+        // Note: RAG metadata will be updated after assistant message is created by call_llm executor
+        // Store RAG data temporarily in params for later use
+        params.ragMetadata = { ragQueryId: ragQueryId!, fileChunks };
+      }
+
+      log('[internal_execAgentRuntime] RAG preprocessing completed');
+    }
+
+    // ===========================================
+    // Step 3: Create and Execute Agent Runtime
+    // ===========================================
+    log('[internal_execAgentRuntime] Creating agent runtime');
+
+    const agent = new GeneralChatAgent({
+      agentConfig: { maxSteps: 1000 },
+      sessionId: `${messageKey}/${params.parentMessageId}`,
+      modelRuntimeConfig: {
+        model,
+        provider: provider!,
+      },
+    });
+    const runtime = new AgentRuntime(agent, {
+      executors: createAgentExecutors({
+        get,
+        messageKey,
+        parentId: params.parentMessageId,
+        parentMessageType,
+        params,
+      }),
+    });
+
+    // Create initial state
+    let state = AgentRuntime.createInitialState({
+      sessionId: activeId,
+      messages,
+      maxSteps: 20, // Prevent infinite loops
+      metadata: {
+        sessionId: activeId,
+        topicId: activeTopicId,
+        threadId: params.threadId,
+      },
+    });
+
+    // Initial context - use 'init' phase since state already contains messages
+    let nextContext: AgentRuntimeContext = {
+      phase: 'init',
+      payload: {},
+      session: {
+        sessionId: activeId,
+        messageCount: messages.length,
+        status: state.status,
+        stepCount: 0,
+      },
+    };
+
+    log(
+      '[internal_execAgentRuntime] Agent runtime loop start, initial phase: %s',
+      nextContext.phase,
+    );
+
+    // Execute the agent runtime loop
+    let stepCount = 0;
+    while (state.status !== 'done' && state.status !== 'error') {
+      stepCount++;
+      log(
+        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',
+        stepCount,
+        nextContext.phase,
+        state.status,
+      );
+
+      const result = await runtime.step(state, nextContext);
+
+      log(
+        '[internal_execAgentRuntime] Step %d completed, events: %d, newStatus=%s',
+        stepCount,
+        result.events.length,
+        result.newState.status,
+      );
+
+      // Handle completion and error events
+      for (const event of result.events) {
+        if (event.type === 'done') {
+          log('[internal_execAgentRuntime] Received done event, syncing to database');
+          // Sync final state to database
+          const finalMessages = get().messagesMap[messageKey] || [];
+          get().replaceMessages(finalMessages);
+        }
+
+        if (event.type === 'error') {
+          log('[internal_execAgentRuntime] Received error event: %o', event.error);
+          // Find the assistant message to update error
+          const currentMessages = get().messagesMap[messageKey] || [];
+          const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
+          if (assistantMessage) {
+            await messageService.updateMessageError(assistantMessage.id, event.error);
+          }
+          const finalMessages = get().messagesMap[messageKey] || [];
+          get().replaceMessages(finalMessages);
+        }
+      }
+
+      state = result.newState;
+
+      // If no nextContext, stop execution
+      if (!result.nextContext) {
+        log('[internal_execAgentRuntime] No next context, stopping loop');
         break;
       }
-      case 'assistant': {
-        // 消息是 AI 发出的因此需要找到它的 user 消息
-        const userId = currentMessage.parentId;
-        const userIndex = chats.findIndex((c) => c.id === userId);
-        // 如果消息没有 parentId，那么同 user/function 模式
-        contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
-        break;
+
+      nextContext = result.nextContext;
+    }
+
+    log(
+      '[internal_execAgentRuntime] Agent runtime loop finished, final status: %s, total steps: %d',
+      state.status,
+      stepCount,
+    );
+
+    // Update RAG metadata if available
+    if (params.ragMetadata) {
+      const finalMessages = get().messagesMap[messageKey] || [];
+      const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
+      if (assistantMessage) {
+        await get().internal_updateMessageRAG(assistantMessage.id, params.ragMetadata);
+        log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
       }
     }
 
-    if (contextMessages.length <= 0) return;
+    log('[internal_execAgentRuntime] completed');
 
-    const { internal_execAgentRuntime, activeThreadId } = get();
+    // Desktop notification (if not in tools calling mode)
+    if (isDesktop) {
+      try {
+        const messageKey = `${activeId}_${activeTopicId ?? null}`;
+        const finalMessages = get().messagesMap[messageKey] || [];
+        const lastAssistant = finalMessages.findLast((m) => m.role === 'assistant');
 
-    const latestMsg = contextMessages.findLast((s) => s.role === 'user');
+        // Only show notification if there's content and no tools
+        if (lastAssistant?.content && !lastAssistant?.tools) {
+          const { desktopNotificationService } = await import(
+            '@/services/electron/desktopNotification'
+          );
 
-    if (!latestMsg) return;
-
-    const threadId = outThreadId ?? activeThreadId;
-
-    const result = await messageService.updateMessageMetadata(
-      messageId,
-      {
-        activeBranchIndex: item.metadata?.activeBranchIndex
-          ? item.metadata?.activeBranchIndex + 1
-          : 1,
-      },
-      { sessionId: get().activeId, topicId: get().activeTopicId },
-    );
-    if (!result.success || !result.messages) return;
-
-    get().replaceMessages(result.messages);
-
-    await internal_execAgentRuntime({
-      messages: contextMessages,
-      parentMessageId: messageId,
-      parentMessageType: 'user',
-      traceId,
-      ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
-      threadId,
-      inPortalThread,
-    });
-  },
-
-  // ----- Loading ------- //
-  internal_toggleChatLoading: (loading, id, action) => {
-    return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
-  },
-  internal_toggleMessageInToolsCalling: (loading, id) => {
-    return get().internal_toggleLoadingArrays('messageInToolsCallingIds', loading, id);
-  },
-  internal_toggleChatReasoning: (loading, id, action) => {
-    return get().internal_toggleLoadingArrays('reasoningLoadingIds', loading, id, action);
-  },
-  internal_toggleToolCallingStreaming: (id, streaming) => {
-    const previous = get().toolCallingStreamIds;
-    const next = produce(previous, (draft) => {
-      if (!!streaming) {
-        draft[id] = streaming;
-      } else {
-        delete draft[id];
+          await desktopNotificationService.showNotification({
+            body: lastAssistant.content,
+            title: t('notification.finishChatGeneration', { ns: 'electron' }),
+          });
+        }
+      } catch (error) {
+        console.error('Desktop notification error:', error);
       }
-    });
+    }
 
-    if (isEqual(previous, next)) return;
+    // Summary history if context messages is larger than historyCount
+    const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
 
-    set(
-      { toolCallingStreamIds: next },
+    if (
+      agentChatConfigSelectors.enableHistoryCount(agentStoreState) &&
+      chatConfig.enableCompressHistory &&
+      messages.length > historyCount
+    ) {
+      // after generation: [u1,a1,u2,a2,u3,a3]
+      // but the `messages` is still: [u1,a1,u2,a2,u3]
+      // So if historyCount=2, we need to summary [u1,a1,u2,a2]
+      // because user find UI is [u1,a1,u2,a2 | u3,a3]
+      const historyMessages = messages.slice(0, -historyCount + 1);
 
-      false,
-      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
-    );
-  },
-
-  internal_toggleSearchWorkflow: (loading, id) => {
-    return get().internal_toggleLoadingArrays('searchWorkflowLoadingIds', loading, id);
+      await get().internal_summaryHistory(historyMessages);
+    }
   },
 });
