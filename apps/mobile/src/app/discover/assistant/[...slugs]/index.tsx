@@ -137,7 +137,7 @@ const AssistantDetail = () => {
             {agent.config.openingMessage && <Markdown>{agent.config.openingMessage}</Markdown>}
           </Flexbox>
           <Divider />
-          <Flexbox paddingBlock={16}>
+          <Flexbox gap={16} paddingBlock={16} paddingInline={16}>
             {agent.examples?.map((item, index) => {
               const isUser = item.role === 'user';
               const avatarMeta = isUser
@@ -157,7 +157,7 @@ const AssistantDetail = () => {
                   message={item.content}
                   placement={isUser ? 'right' : 'left'}
                   showTime={false}
-                  showTitle
+                  showTitle={!isUser}
                 />
               );
             })}
