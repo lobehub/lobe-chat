@@ -165,7 +165,12 @@ export class FlatListBuilder {
           childMessages,
           this.childrenMap,
         );
-        const userWithBranches = this.createUserMessageWithBranches(message);
+        const activeBranchIndex = childMessages.indexOf(activeBranchId);
+        const userWithBranches = this.createUserMessageWithBranches(
+          message,
+          childMessages.length,
+          activeBranchIndex,
+        );
         flatList.push(userWithBranches);
         processedIds.add(message.id);
 
@@ -415,58 +420,80 @@ export class FlatListBuilder {
         assistant.tools?.map((tool) => {
           const toolMsg = toolMap.get(tool.id);
           if (toolMsg) {
+            const result: any = {
+              content: toolMsg.content || '',
+              id: toolMsg.id,
+            };
+            if (toolMsg.error) result.error = toolMsg.error;
+            if (toolMsg.pluginState) result.state = toolMsg.pluginState;
+
             return {
               ...tool,
-              result: {
-                content: toolMsg.content || '',
-                error: toolMsg.error,
-                id: toolMsg.id,
-                state: toolMsg.pluginState,
-              },
+              result,
               result_msg_id: toolMsg.id,
             };
           }
           return tool;
         }) || [];
 
-      const { usage: msgUsage, performance: msgPerformance } =
+      // Prefer top-level usage/performance fields, fall back to metadata
+      const { usage: metaUsage, performance: metaPerformance } =
         this.messageTransformer.splitMetadata(assistant.metadata);
+      const msgUsage = assistant.usage || metaUsage;
+      const msgPerformance = assistant.performance || metaPerformance;
 
-      children.push({
+      const childBlock: AssistantContentBlock = {
         content: assistant.content || '',
-        error: assistant.error,
         id: assistant.id,
-        imageList:
-          assistant.imageList && assistant.imageList.length > 0 ? assistant.imageList : undefined,
-        performance: msgPerformance,
-        reasoning: assistant.reasoning || undefined,
-        tools: toolsWithResults.length > 0 ? toolsWithResults : undefined,
-        usage: msgUsage,
-      });
+      } as AssistantContentBlock;
+
+      if (assistant.error) childBlock.error = assistant.error;
+      if (assistant.imageList && assistant.imageList.length > 0)
+        childBlock.imageList = assistant.imageList;
+      if (msgPerformance) childBlock.performance = msgPerformance;
+      if (assistant.reasoning) childBlock.reasoning = assistant.reasoning;
+      if (toolsWithResults.length > 0) childBlock.tools = toolsWithResults;
+      if (msgUsage) childBlock.usage = msgUsage;
+
+      children.push(childBlock);
     }
 
     const aggregated = this.messageTransformer.aggregateMetadata(children);
 
-    return {
+    const result: Message = {
       ...firstAssistant,
       children,
       content: '',
-      imageList: undefined,
-      metadata: undefined,
-      performance: aggregated.performance,
-      reasoning: undefined,
       role: 'assistantGroup' as any,
-      tools: undefined,
-      usage: aggregated.usage,
     };
+
+    // Remove fields that should not be in assistantGroup
+    delete result.imageList;
+    delete result.metadata;
+    delete result.reasoning;
+    delete result.tools;
+
+    // Add aggregated fields if they exist
+    if (aggregated.performance) result.performance = aggregated.performance;
+    if (aggregated.usage) result.usage = aggregated.usage;
+
+    return result;
   }
 
   /**
    * Create user message with branch metadata
    */
-  private createUserMessageWithBranches(user: Message): Message {
-    // Just return the original user message with its metadata.activeBranchId
-    // No need to add extra.branches
-    return { ...user };
+  private createUserMessageWithBranches(
+    user: Message,
+    count: number,
+    activeBranchIndex: number,
+  ): Message {
+    return {
+      ...user,
+      branch: {
+        activeBranchIndex,
+        count,
+      },
+    } as Message;
   }
 }

@@ -40,10 +40,20 @@ export interface AssistantContentBlock {
   tools?: ChatToolPayloadWithResult[];
   usage?: ModelUsage;
 }
+interface UIMessageBranch {
+  /** Index of the active branch (0-based) */
+  activeBranchIndex: number;
+  /** Total number of branches */
+  count: number;
+}
 
 export interface UIChatMessage {
   // Group chat fields (alphabetically before other fields)
   agentId?: string | 'supervisor';
+  /**
+   * Branch information for user messages with multiple children
+   */
+  branch?: UIMessageBranch;
   /**
    * children messages for grouped display
    * Used to group tool messages under their parent assistant message

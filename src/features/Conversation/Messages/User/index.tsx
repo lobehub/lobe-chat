@@ -1,5 +1,6 @@
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
+import { Pagination } from 'antd';
 import { useResponsive } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,8 +45,19 @@ const remarkPlugins = markdownElements
   .filter(Boolean);
 
 const UserMessage = memo<UserMessageProps>((props) => {
-  const { id, ragQuery, content, createdAt, error, role, index, extra, disableEditing, targetId } =
-    props;
+  const {
+    id,
+    ragQuery,
+    content,
+    createdAt,
+    error,
+    role,
+    index,
+    extra,
+    disableEditing,
+    targetId,
+    branch,
+  } = props;
 
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -127,60 +139,73 @@ const UserMessage = memo<UserMessageProps>((props) => {
   );
 
   return (
-    <Flexbox
-      className={styles.container}
-      direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-      gap={mobile ? 6 : 12}
-    >
-      <Avatar
-        alt={title}
-        avatar={{ avatar, title }}
-        loading={loading}
-        placement={placement}
-        size={mobile ? 32 : undefined}
-        style={{ marginTop: 6 }}
-      />
+    <Flexbox>
       <Flexbox
-        align={placement === 'left' ? 'flex-start' : 'flex-end'}
-        className={styles.messageContainer}
+        className={styles.container}
+        direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
+        gap={mobile ? 6 : 12}
       >
-        <Title
+        <Avatar
+          alt={title}
           avatar={{ avatar, title }}
+          loading={loading}
           placement={placement}
-          showTitle={false}
-          time={createdAt}
-          titleAddon={dmIndicator}
+          size={mobile ? 32 : undefined}
+          style={{ marginTop: 6 }}
         />
         <Flexbox
           align={placement === 'left' ? 'flex-start' : 'flex-end'}
-          className={styles.messageContent}
-          direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-          gap={8}
+          className={styles.messageContainer}
         >
-          <Flexbox flex={1} style={{ maxWidth: '100%', minWidth: 0 }}>
-            <MessageContent
-              editing={editing}
-              id={id}
-              markdownProps={markdownProps}
-              message={content}
-              messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
-              onDoubleClick={onDoubleClick}
-              placement={placement}
-              primary
-              renderMessage={renderMessage}
-              variant={variant}
-            />
-          </Flexbox>
-
-          {!disableEditing && !editing && (
-            <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-              <UserActionsBar data={props} id={id} index={index} />
+          <Title
+            avatar={{ avatar, title }}
+            placement={placement}
+            showTitle={false}
+            time={createdAt}
+            titleAddon={dmIndicator}
+          />
+          <Flexbox
+            align={placement === 'left' ? 'flex-start' : 'flex-end'}
+            className={styles.messageContent}
+            direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
+            gap={8}
+          >
+            <Flexbox flex={1} style={{ maxWidth: '100%', minWidth: 0 }}>
+              <MessageContent
+                editing={editing}
+                id={id}
+                markdownProps={markdownProps}
+                message={content}
+                messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
+                onDoubleClick={onDoubleClick}
+                placement={placement}
+                primary
+                renderMessage={renderMessage}
+                variant={variant}
+              />
             </Flexbox>
-          )}
+
+            {!disableEditing && !editing && (
+              <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
+                <UserActionsBar data={props} id={id} index={index} />
+              </Flexbox>
+            )}
+          </Flexbox>
+          <UserBelowMessage content={content} id={id} ragQuery={ragQuery} />
         </Flexbox>
-        <UserBelowMessage content={content} id={id} ragQuery={ragQuery} />
+        {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
       </Flexbox>
-      {mobile && variant === 'bubble' && <BorderSpacing borderSpacing={32} />}
+      {branch && (
+        <Flexbox direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}>
+          <Pagination
+            current={branch.activeBranchIndex + 1}
+            pageSize={1}
+            simple
+            size="small"
+            total={branch.count}
+          />
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

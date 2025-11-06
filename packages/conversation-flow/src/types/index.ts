@@ -16,21 +16,10 @@ export type {
   CompareNode,
   ContextNode,
   MessageNode,
-} from './types/contextTree';
+} from './contextTree';
 
 // Flat Message List Types
-export type {
-  BranchMetadata,
-  FlatMessage,
-  FlatMessageExtra,
-  FlatMessageRole,
-} from './types/flatMessageList';
+export type { FlatMessage, FlatMessageExtra, FlatMessageRole } from './flatMessageList';
 
 // Shared Types
-export type {
-  HelperMaps,
-  IdNode,
-  Message,
-  MessageGroupMetadata,
-  ParseResult,
-} from './types/shared';
+export type { HelperMaps, IdNode, Message, MessageGroupMetadata, ParseResult } from './shared';

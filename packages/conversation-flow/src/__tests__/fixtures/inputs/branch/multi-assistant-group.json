@@ -3,6 +3,7 @@
     "id": "msg-user-1",
     "role": "user",
     "content": "杭州和北京天气如何",
+    "parentId": null,
     "createdAt": 1704067200000,
     "updatedAt": 1704067200000,
     "meta": {},
