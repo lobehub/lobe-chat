@@ -492,7 +492,9 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           left={<ChatInputActions items={toolbarItems} />}
           right={
             saveStatus === 'saving' ? (
-              <Icon icon={Loader2Icon} spin style={{ paddingRight: 12 }} />
+              <Flexbox style={{ paddingRight: 12 }}>
+                <Icon icon={Loader2Icon} spin />
+              </Flexbox>
             ) : null
           }
           style={{
@@ -503,7 +505,11 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
 
         {/* Editor with title */}
         <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-          <Flexbox paddingBlock={36} paddingInline={48}>
+          <Flexbox
+            paddingBlock={36}
+            paddingInline={48}
+            style={{ margin: '0 auto', maxWidth: 900, width: '100%' }}
+          >
             {/* Emoji and Title */}
             <Flexbox
               onMouseEnter={() => setIsHoveringTitle(true)}
