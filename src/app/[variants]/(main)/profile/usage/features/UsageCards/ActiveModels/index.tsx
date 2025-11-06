@@ -65,8 +65,7 @@ const ActiveModels = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
           description: (
             <Flexbox horizontal wrap={'wrap'}>
               {iconList.map((item, i) => {
-                if (iconList[i - 1] && item.slice(0, 3) === iconList[i - 1]?.slice(0, 3))
-                  return null;
+                if (!item) return null;
                 return groupBy === GroupBy.Model ? (
                   <ModelIcon
                     key={item}
