@@ -101,8 +101,13 @@ export default {
       title: '需要权限',
     },
     status: {
+      compressing: '压缩中...',
       error: '上传失败',
       pending: '等待中...',
+      uploading: '上传中...',
+    },
+    validation: {
+      videoSizeExceeded: '视频文件大小不能超过 20MB，当前文件大小为 {{actualSize}}',
     },
   },
 };

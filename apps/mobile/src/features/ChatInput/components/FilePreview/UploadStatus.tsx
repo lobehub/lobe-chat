@@ -38,12 +38,24 @@ const UploadStatus = memo<UploadStatusProps>(({ status, size, uploadState }) => 
 
     case 'uploading': {
       const progress = uploadState?.progress || 0;
-      const uploadedSize = size * (progress / 100);
+
+      // Distinguish between compression (0-50%) and upload (50-100%)
+      const isCompressing = progress < 50;
+
+      let displayText: string;
+      if (isCompressing) {
+        // Compression phase: show "压缩中..."
+        displayText = t('upload.status.compressing');
+      } else {
+        // Upload phase: show "上传中...B"
+        displayText = t('upload.status.uploading');
+      }
+
       return (
         <Flexbox align={'center'} gap={4} horizontal>
           <CircularProgress percent={progress} size={14} />
           <Text fontSize={12} type={'secondary'}>
-            {formatSize(uploadedSize, 0)}
+            {displayText}
           </Text>
         </Flexbox>
       );

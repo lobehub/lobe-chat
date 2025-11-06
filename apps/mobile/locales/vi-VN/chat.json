@@ -90,6 +90,7 @@
     "errors": {
       "camera": "Đã xảy ra lỗi khi mở máy ảnh",
       "file": "Đã xảy ra lỗi khi chọn tệp",
+      "fileSizeExceeded": "Kích thước tệp vượt quá {{size}}MB",
       "gallery": "Đã xảy ra lỗi khi chọn ảnh",
       "title": "Lỗi"
     },
@@ -99,8 +100,13 @@
       "title": "Yêu cầu quyền"
     },
     "status": {
+      "compressing": "Đang nén...",
       "error": "Tải lên thất bại",
-      "pending": "Đang chờ..."
+      "pending": "Đang chờ...",
+      "uploading": "Đang tải lên..."
+    },
+    "validation": {
+      "videoSizeExceeded": "Kích thước tệp video không được vượt quá 20MB, kích thước hiện tại là {{actualSize}}"
     }
   }
 }

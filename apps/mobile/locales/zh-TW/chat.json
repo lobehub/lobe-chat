@@ -90,6 +90,7 @@
     "errors": {
       "camera": "開啟相機時發生錯誤",
       "file": "選擇檔案時發生錯誤",
+      "fileSizeExceeded": "檔案大小超過 {{size}}MB",
       "gallery": "選擇照片時發生錯誤",
       "title": "錯誤"
     },
@@ -99,8 +100,13 @@
       "title": "需要權限"
     },
     "status": {
+      "compressing": "壓縮中...",
       "error": "上傳失敗",
-      "pending": "等待中..."
+      "pending": "等待中...",
+      "uploading": "上傳中..."
+    },
+    "validation": {
+      "videoSizeExceeded": "影片檔案大小不能超過 20MB，當前檔案大小為 {{actualSize}}"
     }
   }
 }

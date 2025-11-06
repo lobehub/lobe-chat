@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { PaperclipIcon } from 'lucide-react-native';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, type PressableProps } from 'react-native';
+import { Alert, type PressableProps, Image as RNImage } from 'react-native';
 import { Image, Video } from 'react-native-compressor';
 
 import { useCurrentAgent } from '@/hooks/useCurrentAgent';
@@ -16,6 +16,7 @@ import { useFileStore } from '@/store/file/store';
 
 const MAX_IMAGE_SIZE = 1024; // Maximum dimension for images (single side)
 const MAX_VIDEO_SIZE = 854; // 480p video max dimension (854×480 for 16:9)
+const MAX_VIDEO_FILE_SIZE = 20 * 1024 * 1024; // 20MB limit for video files (aligned with web)
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB in bytes
 
 interface FileUploadProps {
@@ -62,8 +63,6 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
           quality: 0.8,
         });
 
-        console.log('Image compressed:', { compressed: compressedUri, original: uri });
-
         return {
           mimeType: outputMimeType,
           uri: compressedUri,
@@ -86,10 +85,8 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
    * @returns Compressed video URI
    */
   const processVideo = useCallback(
-    async (uri: string, tempId: string): Promise<{ mimeType: string, uri: string; }> => {
+    async (uri: string, tempId: string): Promise<{ mimeType: string; uri: string }> => {
       try {
-        console.log('Starting video compression to 480p...');
-
         const compressedUri = await Video.compress(
           uri,
           {
@@ -100,7 +97,6 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
           (progress) => {
             // Update compression progress (0-100)
             const compressionProgress = Math.round(progress * 100);
-            console.log('Video compression progress:', compressionProgress);
 
             // Update UI with compression progress
             dispatchUploadFileList({
@@ -114,7 +110,6 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
           },
         );
 
-        console.log('Video compression completed:', compressedUri);
         return {
           mimeType: 'video/mp4',
           uri: compressedUri,
@@ -155,7 +150,32 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
             fileName.toLowerCase().endsWith('.heic') ||
             fileName.toLowerCase().endsWith('.heif');
 
-          if (isHEIC || fileSize > 5 * 1024 * 1024) {
+          // Check if image needs compression based on:
+          // 1. Format: HEIC/HEIF always needs conversion
+          // 2. File size: > 5MB
+          // 3. Dimensions: width or height > 1024px
+          let needsCompression = isHEIC || fileSize > 5 * 1024 * 1024;
+
+          if (!needsCompression) {
+            // Check image dimensions
+            try {
+              const { width, height } = await new Promise<{ height: number; width: number }>(
+                (resolve, reject) => {
+                  RNImage.getSize(
+                    processedUri,
+                    (width: number, height: number) => resolve({ height, width }),
+                    reject,
+                  );
+                },
+              );
+              needsCompression = width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE;
+            } catch {
+              // If we can't get dimensions, compress anyway to be safe
+              needsCompression = true;
+            }
+          }
+
+          if (needsCompression) {
             // Convert HEIC or compress large images
             const processed = await processImage(uri, finalMimeType);
             processedUri = processed.uri;
@@ -208,9 +228,8 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
           },
         });
 
-        // Create base64 for preview (for images)
-        const isImage = finalMimeType.startsWith('image');
-        const base64 = isImage ? await mobileFileStorage.readAsBase64(processedUri) : null;
+        // Read file as base64 for upload (all file types: images, videos, documents, etc.)
+        const base64 = await mobileFileStorage.readAsBase64(processedUri);
         const base64Url = base64 ? `data:${finalMimeType};base64,${base64}` : undefined;
 
         // Update to processing status (50% - preparing for S3 upload)
@@ -237,7 +256,7 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
           pathname: s3Key,
         });
 
-        // Upload base64 to S3
+        // Upload file to S3 (IMPORTANT: both images and videos need this!)
         if (base64Url) {
           const matches = base64Url.match(/^data:(.+?);base64,(.+)$/);
           if (matches) {
@@ -253,6 +272,9 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
               method: 'PUT',
             });
           }
+        } else {
+          console.error('Failed to read file as base64, cannot upload to S3');
+          throw new Error('Failed to read file for upload');
         }
 
         // S3 upload complete (70% progress)
@@ -297,7 +319,10 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
             fileType: finalMimeType,
             id: fileResult.id, // Server-assigned ID!
             name: finalFileName,
-            previewUrl: base64Url || processedUri,
+            // Use CDN URL for preview (works for all file types)
+            // For images: base64 works fine, but CDN is better for consistency
+            // For videos: must use CDN URL (base64 is too large)
+            previewUrl: fileResult.url,
             size: uploadData.size,
             status: 'success',
             uploadState: { progress: 100, restTime: 0, speed: 0 }, // Complete!
@@ -401,6 +426,20 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
 
       // 1. Filter files by size and create file items
       const validAssets = result.assets.filter((asset: any) => {
+        // Check video file size limit (20MB, aligned with web)
+        if (
+          asset.mimeType?.startsWith('video') &&
+          asset.fileSize &&
+          asset.fileSize > MAX_VIDEO_FILE_SIZE
+        ) {
+          Toast.error(
+            t('upload.validation.videoSizeExceeded', {
+              actualSize: `${(asset.fileSize / (1024 * 1024)).toFixed(1)} MB`,
+            }),
+          );
+          return false;
+        }
+        // Check general file size limit (100MB)
         if (asset.fileSize && asset.fileSize > MAX_FILE_SIZE) {
           Toast.error(
             t('upload.errors.fileSizeExceeded', { size: 100 }) + `: ${asset.fileName || 'file'}`,
@@ -491,6 +530,16 @@ const FileUpload = memo<FileUploadProps>(({ onPress }) => {
 
       // 1. Filter files by size and create file items
       const validAssets = result.assets.filter((asset: any) => {
+        // Check video file size limit (20MB, aligned with web)
+        if (asset.mimeType?.startsWith('video') && asset.size && asset.size > MAX_VIDEO_FILE_SIZE) {
+          Toast.error(
+            t('upload.validation.videoSizeExceeded', {
+              actualSize: `${(asset.size / (1024 * 1024)).toFixed(1)} MB`,
+            }),
+          );
+          return false;
+        }
+        // Check general file size limit (100MB)
         if (asset.size && asset.size > MAX_FILE_SIZE) {
           Toast.error(
             t('upload.errors.fileSizeExceeded', { size: 100 }) + `: ${asset.name || 'file'}`,

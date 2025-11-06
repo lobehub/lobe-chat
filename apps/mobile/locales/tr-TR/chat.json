@@ -90,6 +90,7 @@
     "errors": {
       "camera": "Kamera açılırken bir hata oluştu",
       "file": "Dosya seçilirken bir hata oluştu",
+      "fileSizeExceeded": "Dosya boyutu {{size}}MB sınırını aştı",
       "gallery": "Fotoğraf seçilirken bir hata oluştu",
       "title": "Hata"
     },
@@ -99,8 +100,13 @@
       "title": "İzin Gerekli"
     },
     "status": {
+      "compressing": "Sıkıştırılıyor...",
       "error": "Yükleme başarısız",
-      "pending": "Bekleniyor..."
+      "pending": "Bekleniyor...",
+      "uploading": "Yükleniyor..."
+    },
+    "validation": {
+      "videoSizeExceeded": "Video dosyası boyutu 20MB'ı geçemez, mevcut dosya boyutu {{actualSize}}"
     }
   }
 }

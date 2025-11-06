@@ -90,6 +90,7 @@
     "errors": {
       "camera": "カメラを起動中にエラーが発生しました",
       "file": "ファイル選択中にエラーが発生しました",
+      "fileSizeExceeded": "ファイルサイズが{{size}}MBを超えています",
       "gallery": "写真選択中にエラーが発生しました",
       "title": "エラー"
     },
@@ -99,8 +100,13 @@
       "title": "アクセス許可が必要です"
     },
     "status": {
+      "compressing": "圧縮中...",
       "error": "アップロードに失敗しました",
-      "pending": "待機中..."
+      "pending": "待機中...",
+      "uploading": "アップロード中..."
+    },
+    "validation": {
+      "videoSizeExceeded": "動画ファイルのサイズは20MBを超えることはできません。現在のファイルサイズは{{actualSize}}です"
     }
   }
 }

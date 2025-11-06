@@ -20,20 +20,26 @@ const FileContent = memo<FileContentProps>(({ fileType, name, previewUrl, url, s
   // Image files - show actual preview
   if (fileType?.startsWith('image') && displayUrl) {
     return (
-      <Image
-        autoSize={false}
-        contentFit="cover"
-        height={size}
-        preview={false}
-        source={displayUrl}
-        width={size}
-      />
+      <Block height={size} variant={'outlined'} width={size}>
+        <Image
+          autoSize={false}
+          contentFit="cover"
+          height={size}
+          preview={false}
+          source={displayUrl}
+          width={size}
+        />
+      </Block>
     );
   }
 
   // Video files - show video preview
   if (fileType?.startsWith('video') && displayUrl) {
-    return <Video contentFit="cover" height={size} muted src={displayUrl} width={size} />;
+    return (
+      <Block height={size} variant={'outlined'} width={size}>
+        <Video contentFit="cover" height={size} muted src={displayUrl} width={size} />
+      </Block>
+    );
   }
 
   // Other files - show file icon

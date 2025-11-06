@@ -90,6 +90,7 @@
     "errors": {
       "camera": "Wystąpił błąd podczas otwierania aparatu",
       "file": "Wystąpił błąd podczas wybierania pliku",
+      "fileSizeExceeded": "Rozmiar pliku przekracza {{size}}MB",
       "gallery": "Wystąpił błąd podczas wybierania zdjęcia",
       "title": "Błąd"
     },
@@ -99,8 +100,13 @@
       "title": "Wymagane uprawnienia"
     },
     "status": {
+      "compressing": "Kompresowanie...",
       "error": "Przesyłanie nie powiodło się",
-      "pending": "Oczekiwanie..."
+      "pending": "Oczekiwanie...",
+      "uploading": "Przesyłanie..."
+    },
+    "validation": {
+      "videoSizeExceeded": "Rozmiar pliku wideo nie może przekraczać 20MB, aktualny rozmiar to {{actualSize}}"
     }
   }
 }

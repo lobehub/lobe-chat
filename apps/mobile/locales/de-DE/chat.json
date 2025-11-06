@@ -90,6 +90,7 @@
     "errors": {
       "camera": "Fehler beim Öffnen der Kamera",
       "file": "Fehler beim Auswählen der Datei",
+      "fileSizeExceeded": "Dateigröße überschreitet {{size}}MB",
       "gallery": "Fehler beim Auswählen des Fotos",
       "title": "Fehler"
     },
@@ -99,8 +100,13 @@
       "title": "Berechtigungen erforderlich"
     },
     "status": {
+      "compressing": "Komprimierung läuft...",
       "error": "Hochladen fehlgeschlagen",
-      "pending": "Wird verarbeitet..."
+      "pending": "Wird verarbeitet...",
+      "uploading": "Hochladen läuft..."
+    },
+    "validation": {
+      "videoSizeExceeded": "Die Videodatei darf 20MB nicht überschreiten. Aktuelle Dateigröße: {{actualSize}}"
     }
   }
 }

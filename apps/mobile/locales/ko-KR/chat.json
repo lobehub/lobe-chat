@@ -90,6 +90,7 @@
     "errors": {
       "camera": "카메라를 여는 중 오류가 발생했습니다",
       "file": "파일을 선택하는 중 오류가 발생했습니다",
+      "fileSizeExceeded": "파일 크기가 {{size}}MB를 초과했습니다",
       "gallery": "사진을 선택하는 중 오류가 발생했습니다",
       "title": "오류"
     },
@@ -99,8 +100,13 @@
       "title": "권한 필요"
     },
     "status": {
+      "compressing": "압축 중...",
       "error": "업로드 실패",
-      "pending": "대기 중..."
+      "pending": "대기 중...",
+      "uploading": "업로드 중..."
+    },
+    "validation": {
+      "videoSizeExceeded": "비디오 파일 크기는 20MB를 초과할 수 없습니다. 현재 파일 크기: {{actualSize}}"
     }
   }
 }

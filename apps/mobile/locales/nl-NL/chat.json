@@ -90,6 +90,7 @@
     "errors": {
       "camera": "Fout bij het openen van de camera",
       "file": "Fout bij het kiezen van een bestand",
+      "fileSizeExceeded": "Bestandsgrootte overschrijdt {{size}}MB",
       "gallery": "Fout bij het kiezen van een foto",
       "title": "Fout"
     },
@@ -99,8 +100,13 @@
       "title": "Toestemming vereist"
     },
     "status": {
+      "compressing": "Bezig met comprimeren...",
       "error": "Upload mislukt",
-      "pending": "Bezig met wachten..."
+      "pending": "Bezig met wachten...",
+      "uploading": "Bezig met uploaden..."
+    },
+    "validation": {
+      "videoSizeExceeded": "De videobestandsgrootte mag niet groter zijn dan 20MB. Huidige bestandsgrootte is {{actualSize}}"
     }
   }
 }

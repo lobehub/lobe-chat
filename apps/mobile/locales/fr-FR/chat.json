@@ -90,6 +90,7 @@
     "errors": {
       "camera": "Une erreur est survenue lors de l'ouverture de la caméra",
       "file": "Une erreur est survenue lors de la sélection du fichier",
+      "fileSizeExceeded": "La taille du fichier dépasse {{size}} Mo",
       "gallery": "Une erreur est survenue lors de la sélection de la photo",
       "title": "Erreur"
     },
@@ -99,8 +100,13 @@
       "title": "Autorisations requises"
     },
     "status": {
+      "compressing": "Compression en cours...",
       "error": "Échec du téléversement",
-      "pending": "En attente..."
+      "pending": "En attente...",
+      "uploading": "Téléversement en cours..."
+    },
+    "validation": {
+      "videoSizeExceeded": "La taille du fichier vidéo ne doit pas dépasser 20 Mo. Taille actuelle : {{actualSize}}"
     }
   }
 }
