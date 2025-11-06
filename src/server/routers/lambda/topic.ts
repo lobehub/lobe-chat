@@ -1,9 +1,13 @@
 import { z } from 'zod';
 
+import { serverDBEnv } from '@/config/db';
+import { FileModel } from '@/database/models/file';
 import { TopicModel } from '@/database/models/topic';
+import { UserModel } from '@/database/models/user';
 import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { FileService } from '@/server/services/file';
 import { BatchTaskResult } from '@/types/service';
 
 const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
@@ -124,7 +128,71 @@ export const topicRouter = router({
   removeTopic: topicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      return ctx.topicModel.delete(input.id);
+      const topicId = input.id;
+
+      // 获取用户设置以检查是否需要删除相关文件
+      const userModel = new UserModel(ctx.serverDB, ctx.userId);
+      const userSettings = await userModel.getUserSettings();
+      const shouldDeleteFiles = (userSettings?.general as any)?.deleteTopicFiles || false;
+
+      // 如果需要删除文件，先获取话题关联的文件ID并检查使用情况
+      let filesToDelete: string[] = [];
+      if (shouldDeleteFiles) {
+        const fileIdsInTopic = await ctx.topicModel.getTopicFileIds(topicId);
+
+        if (fileIdsInTopic.length > 0) {
+          // 获取当前话题的所有消息ID
+          const topicMessages = await ctx.serverDB.query.messages.findMany({
+            where: (messages, { eq, and }) => {
+              return and(
+                eq(messages.topicId, topicId),
+                eq(messages.userId, ctx.userId),
+              );
+            },
+          });
+          const topicMessageIds = new Set(topicMessages.map((m) => m.id));
+
+          // 检查每个文件是否被其他话题的消息使用
+          for (const fileId of fileIdsInTopic) {
+            // 查询该文件在所有消息中的使用情况
+            const fileUsage = await ctx.serverDB.query.messagesFiles.findMany({
+              where: (messagesFiles, { eq, and }) => {
+                return and(
+                  eq(messagesFiles.fileId, fileId),
+                  eq(messagesFiles.userId, ctx.userId),
+                );
+              },
+            });
+
+            // 检查是否所有使用该文件的消息都属于当前话题
+            const usedByOtherTopics = fileUsage.some(
+              (usage) => !topicMessageIds.has(usage.messageId),
+            );
+
+            // 如果文件没有被其他话题使用，标记删除
+            if (!usedByOtherTopics) {
+              filesToDelete.push(fileId);
+            }
+          }
+        }
+      }
+
+      // 如果有仅属于该主题的文件，则先删除它们
+      if (filesToDelete.length > 0) {
+        const fileModel = new FileModel(ctx.serverDB, ctx.userId);
+        const fileService = new FileService(ctx.serverDB, ctx.userId);
+
+        const deletedFiles = await fileModel.deleteMany(filesToDelete, serverDBEnv.REMOVE_GLOBAL_FILE);
+
+        // 从文件存储中删除文件
+        if (deletedFiles && deletedFiles.length > 0) {
+          // deleteFiles 方法会自动处理 URL 到 key 的转换
+          await fileService.deleteFiles(deletedFiles.map((file) => file.url!));
+        }
+      }
+
+      // 删除主题本身（这将级联删除消息）
+      await ctx.topicModel.delete(topicId);
     }),
 
   searchTopics: topicProcedure

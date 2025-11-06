@@ -5,7 +5,10 @@ import {
 } from '@lobechat/types';
 import { z } from 'zod';
 
+import { serverDBEnv } from '@/config/db';
+import { FileModel } from '@/database/models/file';
 import { MessageModel } from '@/database/models/message';
+import { UserModel } from '@/database/models/user';
 import { updateMessagePluginSchema } from '@/database/schemas';
 import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
@@ -143,6 +146,92 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      // 获取用户设置以检查是否需要删除相关文件
+      const userModel = new UserModel(ctx.serverDB, ctx.userId);
+      const userSettings = await userModel.getUserSettings();
+      const shouldDeleteFiles = (userSettings?.general as any)?.deleteTopicFiles || false;
+
+      // 如果需要删除文件，则先收集文件信息
+      let filesToDelete: string[] = [];
+      if (shouldDeleteFiles) {
+        // 获取要删除的消息列表
+        const messagesToDelete = await ctx.serverDB.query.messages.findMany({
+          where: (messages, { eq, and, isNull }) => {
+            const conditions = [eq(messages.userId, ctx.userId)];
+
+            if (input.sessionId) {
+              conditions.push(eq(messages.sessionId, input.sessionId));
+            } else {
+              conditions.push(isNull(messages.sessionId));
+            }
+
+            if (input.topicId) {
+              conditions.push(eq(messages.topicId, input.topicId));
+            } else {
+              conditions.push(isNull(messages.topicId));
+            }
+
+            if (input.groupId) {
+              conditions.push(eq(messages.groupId, input.groupId));
+            }
+
+            return and(...conditions);
+          },
+        });
+
+        const messageIds = messagesToDelete.map((m) => m.id);
+
+        if (messageIds.length > 0) {
+          // 获取这些消息关联的文件
+          const filesInMessages = await ctx.serverDB.query.messagesFiles.findMany({
+            where: (messagesFiles, { inArray, eq, and }) => {
+              return and(
+                inArray(messagesFiles.messageId, messageIds),
+                eq(messagesFiles.userId, ctx.userId),
+              );
+            },
+          });
+
+          const fileIds = [...new Set(filesInMessages.map((f) => f.fileId))];
+
+          // 检查每个文件是否被其他消息使用
+          const messageIdSet = new Set(messageIds);
+          for (const fileId of fileIds) {
+            const fileUsage = await ctx.serverDB.query.messagesFiles.findMany({
+              where: (messagesFiles, { eq, and }) => {
+                return and(
+                  eq(messagesFiles.fileId, fileId),
+                  eq(messagesFiles.userId, ctx.userId),
+                );
+              },
+            });
+
+            // 如果文件只被当前要删除的消息使用，则标记删除
+            const usedByOtherMessages = fileUsage.some(
+              (usage) => !messageIdSet.has(usage.messageId),
+            );
+
+            if (!usedByOtherMessages) {
+              filesToDelete.push(fileId);
+            }
+          }
+        }
+      }
+
+      // 先删除文件（如果有）
+      if (filesToDelete.length > 0) {
+        const fileModel = new FileModel(ctx.serverDB, ctx.userId);
+        const fileService = new FileService(ctx.serverDB, ctx.userId);
+
+        const deletedFiles = await fileModel.deleteMany(filesToDelete, serverDBEnv.REMOVE_GLOBAL_FILE);
+
+        if (deletedFiles && deletedFiles.length > 0) {
+          // deleteFiles 方法会自动处理 URL 到 key 的转换
+          await fileService.deleteFiles(deletedFiles.map((file) => file.url!));
+        }
+      }
+
+      // 然后删除消息
       return ctx.messageModel.deleteMessagesBySession(
         input.sessionId,
         input.topicId,
