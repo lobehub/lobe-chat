@@ -35,8 +35,10 @@ const ChatList = memo<ChatListProps>(({ style }) => {
   const activeId = useChatStore((s) => s.activeId);
   const activeTopicId = useChatStore((s) => s.activeTopicId);
   const [atBottom, setAtBottom] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
   const atBottomRef = useRef(true);
   const isAtBottomRefWhenKeyboardStartShow = useRef(true);
+  const scrollingTimeoutRef = useRef<any>(null);
 
   const updateBottomRef = useCallback(() => {
     isAtBottomRefWhenKeyboardStartShow.current = atBottomRef.current;
@@ -82,16 +84,52 @@ const ChatList = memo<ChatListProps>(({ style }) => {
       contentSize.height,
       contentOffset.y,
     );
+
+    // Detect user scrolling away from bottom (key improvement!)
+    // If user was at bottom and now scrolling away, immediately mark as scrolling
+    if (atBottomRef.current && !nearBottom) {
+      setIsScrolling(true);
+      if (scrollingTimeoutRef.current) {
+        clearTimeout(scrollingTimeoutRef.current);
+      }
+    }
+
     setAtBottom(nearBottom);
+    atBottomRef.current = nearBottom;
+  }, []);
+
+  // Handle user scroll begin (aligned with web's isScrolling logic)
+  const handleScrollBeginDrag = useCallback(() => {
+    setIsScrolling(true);
+    if (scrollingTimeoutRef.current) {
+      clearTimeout(scrollingTimeoutRef.current);
+    }
+  }, []);
+
+  // Handle scroll end (aligned with web's isScrolling logic)
+  const handleScrollEnd = useCallback(() => {
+    // Delay setting isScrolling to false to ensure user has finished scrolling
+    // Longer delay prevents premature auto-scroll when user pauses briefly
+    if (scrollingTimeoutRef.current) {
+      clearTimeout(scrollingTimeoutRef.current);
+    }
+    scrollingTimeoutRef.current = setTimeout(() => {
+      setIsScrolling(false);
+    }, 300); // Increased from 150ms to 300ms for better UX
   }, []);
 
   let content;
+  // FlashList auto-scroll config (aligned with web)
+  // Only enable when user is NOT scrolling to prevent interrupting user's reading
   const maintainVisibleContentPosition = useMemo(
     () => ({
       animateAutoscrollToBottom: true,
-      autoscrollToBottomThreshold: isLoading || isGenerating ? 0.2 : undefined,
+      // Only auto-scroll when:
+      // 1. AI is generating OR loading
+      // 2. User is NOT actively scrolling (key fix!)
+      autoscrollToBottomThreshold: (isLoading || isGenerating) && !isScrolling ? 0.2 : undefined,
     }),
-    [isGenerating, isLoading],
+    [isGenerating, isLoading, isScrolling],
   );
 
   const initialScrollIndex = useMemo(
@@ -136,7 +174,10 @@ const ChatList = memo<ChatListProps>(({ style }) => {
             keyExtractor={keyExtractor}
             keyboardShouldPersistTaps="handled"
             maintainVisibleContentPosition={maintainVisibleContentPosition}
+            onMomentumScrollEnd={handleScrollEnd}
             onScroll={handleScroll}
+            onScrollBeginDrag={handleScrollBeginDrag}
+            onScrollEndDrag={handleScrollEnd}
             overrideProps={{ estimatedItemSize: ESTIMATED_MESSAGE_HEIGHT }}
             ref={listRef}
             renderItem={renderItem}
