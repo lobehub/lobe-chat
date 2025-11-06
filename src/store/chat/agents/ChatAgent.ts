@@ -1,8 +1,13 @@
-import type {
+import {
   Agent,
   AgentInstruction,
   AgentRuntimeContext,
   AgentState,
+  GeneralAgentCallLLMResultPayload,
+  GeneralAgentCallToolResultPayload,
+  GeneralAgentCallToolsBatchInstructionPayload,
+  GeneralAgentCallingToolInstructionPayload,
+  GeneralAgentConfig,
 } from '@lobechat/agent-runtime';
 
 /**
@@ -19,6 +24,12 @@ import type {
  * before creating the agent runtime, keeping the agent logic simple.
  */
 export class ChatAgent implements Agent {
+  private config: GeneralAgentConfig;
+
+  constructor(config: GeneralAgentConfig) {
+    this.config = config;
+  }
+
   async runner(
     context: AgentRuntimeContext,
     state: AgentState,
@@ -39,17 +50,30 @@ export class ChatAgent implements Agent {
 
       case 'llm_result': {
         // LLM response received, check if it contains tool calls
-        const { hasToolCalls, toolCalls } = context.payload as {
-          hasToolCalls: boolean;
-          toolCalls: any[];
-        };
+        const { hasToolsCalling, toolsCalling, parentMessageId } =
+          context.payload as GeneralAgentCallLLMResultPayload;
 
-        if (hasToolCalls && toolCalls && toolCalls.length > 0) {
-          // Execute all tool calls in parallel using call_tools_batch
-          return {
-            payload: toolCalls,
-            type: 'call_tools_batch',
-          };
+        if (hasToolsCalling && toolsCalling && toolsCalling.length > 0) {
+          // No intervention needed, proceed with tool execution
+          // Use batch execution for multiple tool calls to improve performance
+          if (toolsCalling.length > 1) {
+            return {
+              payload: {
+                parentMessageId,
+                toolsCalling,
+              } as GeneralAgentCallToolsBatchInstructionPayload,
+              type: 'call_tools_batch',
+            };
+          } else if (toolsCalling.length === 1) {
+            // Single tool executes directly
+            return {
+              payload: {
+                parentMessageId,
+                toolCalling: toolsCalling[0],
+              } as GeneralAgentCallingToolInstructionPayload,
+              type: 'call_tool',
+            };
+          }
         }
 
         // No tool calls, conversation is complete
@@ -60,22 +84,30 @@ export class ChatAgent implements Agent {
         };
       }
 
-      case 'tools_batch_result': {
-        // All tools have been executed, call LLM again to process the results
+      case 'tool_result': {
+        const { parentMessageId } = context.payload as GeneralAgentCallToolResultPayload;
+
         return {
           payload: {
             messages: state.messages,
+            model: this.config.modelRuntimeConfig?.model,
+            parentMessageId,
+            provider: this.config.modelRuntimeConfig?.provider,
+            tools: state.tools,
           },
           type: 'call_llm',
         };
       }
 
-      case 'tool_result': {
-        // Single tool result (shouldn't happen with call_tools_batch, but handle it)
-        // Call LLM to process the tool result
+      case 'tools_batch_result': {
+        // console.log('toolResult:', context.payload);
+        // Continue calling LLM after tool execution completes
         return {
           payload: {
             messages: state.messages,
+            model: this.config.modelRuntimeConfig?.model,
+            provider: this.config.modelRuntimeConfig?.provider,
+            tools: state.tools,
           },
           type: 'call_llm',
         };

@@ -100,7 +100,7 @@ export const chatThreadMessage: StateCreator<
   },
   sendThreadMessage: async ({ message }) => {
     const {
-      internal_coreProcessMessage,
+      internal_execAgentRuntime,
       activeTopicId,
       activeId,
       threadStartMessageId,
@@ -172,7 +172,9 @@ export const chatThreadMessage: StateCreator<
     // Get the current messages to generate AI response
     const messages = threadSelectors.portalAIChats(get());
 
-    await internal_coreProcessMessage(messages, parentMessageId, {
+    await internal_execAgentRuntime({
+      messages,
+      userMessageId: parentMessageId,
       ragQuery: get().internal_shouldUseRAG() ? message : undefined,
       threadId: get().portalThreadId,
       inPortalThread: true,

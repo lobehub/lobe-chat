@@ -175,13 +175,15 @@ export const chatPlugin: StateCreator<
   },
 
   triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread, inSearchWorkflow }) => {
-    const { internal_coreProcessMessage } = get();
+    const { internal_execAgentRuntime } = get();
 
     const chats = inPortalThread
       ? threadSelectors.portalAIChatsWithHistoryConfig(get())
       : displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
-    await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, {
+    await internal_execAgentRuntime({
+      messages: chats,
+      userMessageId: parentId ?? chats.at(-1)!.id,
       traceId,
       threadId,
       inPortalThread,
@@ -193,8 +195,8 @@ export const chatPlugin: StateCreator<
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
 
-    await get().internal_coreProcessMessage(
-      [
+    await get().internal_execAgentRuntime({
+      messages: [
         {
           role: 'assistant',
           content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
@@ -207,8 +209,8 @@ export const chatPlugin: StateCreator<
           tool_call_id: undefined,
         },
       ] as UIChatMessage[],
-      message.id,
-    );
+      userMessageId: message.id,
+    });
   },
 
   triggerToolCalls: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {

@@ -23,7 +23,7 @@ import { messageService } from '@/services/message';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import { ChatAgent } from '@/store/chat/agents/ChatAgent';
-import { createChatExecutors } from '@/store/chat/agents/createChatExecutors';
+import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import { MainSendMessageOperation } from '@/store/chat/slices/aiChat/initialState';
 import type { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
@@ -59,7 +59,6 @@ export interface AIGenerateV2Action {
   internal_execAgentRuntime: (params: {
     messages: UIChatMessage[];
     userMessageId?: string;
-    assistantMessageId: string;
     isWelcomeQuestion?: boolean;
     inSearchWorkflow?: boolean;
     /**
@@ -69,6 +68,7 @@ export interface AIGenerateV2Action {
     threadId?: string;
     inPortalThread?: boolean;
     traceId?: string;
+    ragMetadata?: { ragQueryId: string; fileChunks: MessageSemanticSearchChunk[] };
   }) => Promise<void>;
   /**
    * Toggle sendMessage operation state
@@ -261,7 +261,6 @@ export const generateAIChatV2: StateCreator<
       await internal_execAgentRuntime({
         messages: baseMessages,
         userMessageId: data.userMessageId,
-        assistantMessageId: data.assistantMessageId,
         isWelcomeQuestion,
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
@@ -320,11 +319,11 @@ export const generateAIChatV2: StateCreator<
   },
 
   internal_execAgentRuntime: async (params) => {
-    const { assistantMessageId, messages: originalMessages, userMessageId } = params;
+    const { messages: originalMessages, userMessageId } = params;
 
     log(
-      '[internal_execAgentRuntime] start, assistantId: %s, messages count: %d',
-      assistantMessageId,
+      '[internal_execAgentRuntime] start, userMessageId: %s, messages count: %d',
+      userMessageId,
       originalMessages.length,
     );
 
@@ -384,7 +383,9 @@ export const generateAIChatV2: StateCreator<
       }));
 
       if (fileChunks.length > 0) {
-        await get().internal_updateMessageRAG(assistantMessageId, { ragQueryId, fileChunks });
+        // Note: RAG metadata will be updated after assistant message is created by call_llm executor
+        // Store RAG data temporarily in params for later use
+        params.ragMetadata = { ragQueryId, fileChunks };
       }
 
       log('[internal_execAgentRuntime] RAG preprocessing completed');
@@ -395,14 +396,19 @@ export const generateAIChatV2: StateCreator<
     // ===========================================
     log('[internal_execAgentRuntime] Creating agent runtime');
 
-    const agent = new ChatAgent();
-    const runtime = new AgentRuntime(agent, {
-      executors: createChatExecutors({
-        get,
-        messageKey,
-        assistantMessageId,
+    const agent = new ChatAgent({
+      agentConfig: { maxSteps: 1000 },
+      sessionId: `${messageKey}/${params.userMessageId || 'unknown'}`,
+      modelRuntimeConfig: {
         model,
         provider: provider!,
+      },
+    });
+    const runtime = new AgentRuntime(agent, {
+      executors: createAgentExecutors({
+        get,
+        messageKey,
+        parentId: params.userMessageId || '',
         params,
       }),
     });
@@ -412,6 +418,11 @@ export const generateAIChatV2: StateCreator<
       sessionId: activeId,
       messages,
       maxSteps: 20, // Prevent infinite loops
+      metadata: {
+        sessionId: activeId,
+        topicId: activeTopicId,
+        threadId: params.threadId,
+      },
     });
 
     // Initial context - use 'init' phase since state already contains messages
@@ -462,8 +473,12 @@ export const generateAIChatV2: StateCreator<
 
         if (event.type === 'error') {
           log('[internal_execAgentRuntime] Received error event: %o', event.error);
-          // Update error in database
-          await messageService.updateMessageError(assistantMessageId, event.error);
+          // Find the assistant message to update error
+          const currentMessages = get().messagesMap[messageKey] || [];
+          const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
+          if (assistantMessage) {
+            await messageService.updateMessageError(assistantMessage.id, event.error);
+          }
           const finalMessages = get().messagesMap[messageKey] || [];
           get().replaceMessages(finalMessages);
         }
@@ -485,6 +500,16 @@ export const generateAIChatV2: StateCreator<
       state.status,
       stepCount,
     );
+
+    // Update RAG metadata if available
+    if (params.ragMetadata) {
+      const finalMessages = get().messagesMap[messageKey] || [];
+      const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
+      if (assistantMessage) {
+        await get().internal_updateMessageRAG(assistantMessage.id, params.ragMetadata);
+        log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
+      }
+    }
 
     log('[internal_execAgentRuntime] completed');
 

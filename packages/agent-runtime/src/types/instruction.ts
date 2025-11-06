@@ -86,6 +86,7 @@ export interface CallLLMPayload {
   isFirstMessage?: boolean;
   messages: any[];
   model: string;
+  parentId?: string;
   provider: string;
   tools: any[];
 }
@@ -109,7 +110,7 @@ export interface AgentInstructionCallTool {
 }
 
 export interface AgentInstructionCallToolsBatch {
-  payload: any[];
+  payload: any;
   type: 'call_tools_batch';
 }
 

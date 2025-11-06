@@ -1,9 +1,11 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@lobechat/const';
+import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import {
   ChatImageItem,
-  CreateMessageParams,
+  ChatToolPayload,
+  MessageToolCall,
+  ModelUsage,
   TraceEventType,
   TraceNameMap,
   UIChatMessage,
@@ -60,15 +62,6 @@ export interface AIGenerateAction {
   // ========================================== //
 
   /**
-   * Executes the core processing logic for AI messages
-   * including preprocessing and postprocessing steps
-   */
-  internal_coreProcessMessage: (
-    messages: UIChatMessage[],
-    parentId: string,
-    params?: ProcessMessageParams,
-  ) => Promise<void>;
-  /**
    * Retrieves an AI-generated chat message from the backend service
    */
   internal_fetchAIChatMessage: (input: {
@@ -79,9 +72,11 @@ export interface AIGenerateAction {
     provider: string;
   }) => Promise<{
     isFunctionCall: boolean;
-    tools?: any[];
+    tools?: ChatToolPayload[];
+    tool_calls?: MessageToolCall[];
     content: string;
     traceId?: string;
+    usage?: ModelUsage;
   }>;
   /**
    * Resends a specific message, optionally using a trace ID for tracking
@@ -155,42 +150,6 @@ export const generateAIChat: StateCreator<
 
     internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },
-
-  /**
-   * Convenience wrapper around internal_execAgentRuntime
-   * Creates an assistant message first, then calls internal_execAgentRuntime
-   *
-   * @deprecated Consider using internal_execAgentRuntime directly for better control
-   */
-  internal_coreProcessMessage: async (originalMessages, userMessageId, params) => {
-    const { activeTopicId, activeId, internal_execAgentRuntime } = get();
-
-    const agentStoreState = getAgentStoreState();
-    const { model, provider } = agentSelectors.currentAgentConfig(agentStoreState);
-
-    // 1. Create assistant message
-    const assistantMessage: CreateMessageParams = {
-      role: 'assistant',
-      content: LOADING_FLAT,
-      fromModel: model,
-      fromProvider: provider,
-      parentId: userMessageId,
-      sessionId: activeId,
-      topicId: activeTopicId,
-      threadId: params?.threadId,
-    };
-
-    const result = await get().internal_createMessage(assistantMessage);
-    if (!result) return;
-
-    // 2. Call internal_execAgentRuntime to handle the actual execution
-    await internal_execAgentRuntime({
-      messages: originalMessages,
-      userMessageId,
-      assistantMessageId: result.id,
-      ...params,
-    });
-  },
   internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
     const {
       internal_toggleChatLoading,
@@ -225,7 +184,9 @@ export const generateAIChat: StateCreator<
       : undefined;
 
     let isFunctionCall = false;
-    let tools;
+    let tools: ChatToolPayload[] | undefined;
+    let tool_calls: MessageToolCall[] | undefined;
+    let finalUsage;
     let msgTraceId: string | undefined;
     let output = '';
     let thinking = '';
@@ -303,6 +264,10 @@ export const generateAIChat: StateCreator<
           // Flush any pending throttled updates before finalizing
           throttledUpdateToolCalls.flush();
           internal_toggleToolCallingStreaming(messageId, undefined);
+
+          tools = get().internal_transformToolCalls(parsedToolCalls);
+          tool_calls = toolCalls;
+
           parsedToolCalls = parsedToolCalls.map((item) => ({
             ...item,
             function: {
@@ -312,9 +277,9 @@ export const generateAIChat: StateCreator<
           }));
 
           isFunctionCall = true;
-          tools = parsedToolCalls;
         }
 
+        finalUsage = usage;
         internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
 
         // update the content after fetch result
@@ -444,7 +409,14 @@ export const generateAIChat: StateCreator<
 
     internal_toggleChatLoading(false, messageId, n('generateMessage(end)') as string);
 
-    return { isFunctionCall, traceId: msgTraceId, content: output, tools };
+    return {
+      isFunctionCall,
+      traceId: msgTraceId,
+      content: output,
+      tools,
+      usage: finalUsage,
+      tool_calls,
+    };
   },
 
   internal_resendMessage: async (
@@ -479,7 +451,7 @@ export const generateAIChat: StateCreator<
 
     if (contextMessages.length <= 0) return;
 
-    const { internal_coreProcessMessage, activeThreadId } = get();
+    const { internal_execAgentRuntime, activeThreadId } = get();
 
     const latestMsg = contextMessages.findLast((s) => s.role === 'user');
 
@@ -487,7 +459,9 @@ export const generateAIChat: StateCreator<
 
     const threadId = outThreadId ?? activeThreadId;
 
-    await internal_coreProcessMessage(contextMessages, latestMsg.id, {
+    await internal_execAgentRuntime({
+      messages: contextMessages,
+      userMessageId: latestMsg.id,
       traceId,
       ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
       threadId,
