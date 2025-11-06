@@ -28,7 +28,7 @@ export default {
       uploadFile: '上传文件',
       uploadFolder: '上传文件夹',
     },
-    newNoteButton: '新建笔记',
+    newNoteButton: '新建文档',
     newNoteDialog: {
       cancel: '取消',
       editTitle: '编辑笔记',

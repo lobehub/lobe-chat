@@ -93,12 +93,19 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
   const { open } = useCreateNewModal();
 
-  const handleCreateNote = () => {
-    createDocument({
-      content: '',
-      knowledgeBaseId,
-      title: t('home.uploadEntries.newDocument.title'),
-    });
+  const handleCreateNote = async () => {
+    try {
+      const newDoc = await createDocument({
+        content: '',
+        knowledgeBaseId,
+        title: t('home.uploadEntries.newDocument.title'),
+      });
+      // Navigate to the newly created document
+      // The KnowledgeHomePage will automatically set category to 'documents' when it detects the id param
+      navigate(`/${newDoc.id}`);
+    } catch (error) {
+      console.error('Failed to create document:', error);
+    }
   };
 
   const handleCreateKnowledgeBase = () => {

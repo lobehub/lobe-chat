@@ -6,6 +6,7 @@ import { Clock, FileTextIcon, MoreHorizontal } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useFileCategory } from '@/app/[variants]/(main)/knowledge/hooks/useFileCategory';
 import { useFileStore } from '@/store/file';
@@ -17,18 +18,20 @@ import UploadEntries from './UploadEntries';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
-    padding: 20px 24px 48px 24px;
+    padding-block: 20px 48px;
+padding-inline: 24px;
   `,
   content: css`
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin-block: 0;
+    margin-inline: auto;
   `,
   greeting: css`
     font-size: 24px;
     font-weight: 600;
     color: ${token.colorText};
-    text-align: left;
+    text-align: start;
   `,
   section: css`
     margin-block-end: 36px;
@@ -37,27 +40,30 @@ const useStyles = createStyles(({ css, token }) => ({
     transition: opacity ${token.motionDurationMid} ${token.motionEaseInOut};
   `,
   sectionTitle: css`
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
     margin-block-end: 24px;
+
     font-size: 18px;
     font-weight: 600;
-    text-align: left;
     color: ${token.colorTextSecondary};
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    text-align: start;
   `,
   sectionTitleWrapper: css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-block-end: 24px;
+
     min-height: 36px;
+    margin-block-end: 24px;
   `,
   subText: css`
     margin-block-end: 48px;
     font-size: 16px;
     color: ${token.colorTextSecondary};
-    text-align: left;
+    text-align: start;
   `,
 }));
 
@@ -69,6 +75,7 @@ interface HomeProps {
 const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
   const { t } = useTranslation('file');
   const { styles } = useStyles();
+  const navigate = useNavigate();
   const [, setActiveKey] = useFileCategory();
   const [isDocumentsMenuOpen, setIsDocumentsMenuOpen] = useState(false);
   const [isDocumentsSectionHovered, setIsDocumentsSectionHovered] = useState(false);
@@ -96,6 +103,13 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
     const documents = allItems.filter((item) => item.sourceType === 'document');
     return documents.slice(0, 10);
   }, [allItems]);
+
+  // Handle document click - navigate to document explorer
+  const handleDocumentClick = (documentId: string) => {
+    // Navigate to the document in the explorer
+    // The KnowledgeHomePage will automatically set category to 'documents' when it detects the id param
+    navigate(`/${documentId}`);
+  };
 
   return (
     <div className={styles.container}>
@@ -167,7 +181,7 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
             <RecentDocuments
               documents={topRecentDocuments}
               isLoading={isLoading}
-              onOpenDocument={onOpenFile}
+              onOpenDocument={handleDocumentClick}
             />
           </div>
         )}
