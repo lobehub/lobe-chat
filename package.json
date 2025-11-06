@@ -209,7 +209,6 @@
     "fflate": "^0.8.2",
     "file-type": "^21.0.0",
     "framer-motion": "^12.23.24",
-    "gpt-tokenizer": "^3.2.0",
     "gray-matter": "^4.0.3",
     "html-to-text": "^9.0.5",
     "i18next": "^25.6.0",
