@@ -30,7 +30,7 @@
     "description": "Bedrock is a service provided by Amazon AWS, focusing on delivering advanced AI language and visual models for enterprises. Its model family includes Anthropic's Claude series, Meta's Llama 3.1 series, and more, offering a range of options from lightweight to high-performance, supporting tasks such as text generation, conversation, and image processing for businesses of varying scales and needs."
   },
   "bfl": {
-    "description": "A leading, cutting-edge artificial intelligence research lab building the visual infrastructure of tomorrow."
+    "description": "A leading, cutting-edge AI research lab building the visual infrastructure of tomorrow."
   },
   "cerebras": {
     "description": "Cerebras is an AI inference platform built on its dedicated CS-3 system, designed to deliver the world's fastest, real-time, high-throughput LLM services. It is specifically engineered to eliminate latency and accelerate complex AI workflows such as real-time code generation and agent-based tasks."
@@ -43,6 +43,9 @@
   },
   "cometapi": {
     "description": "CometAPI is a service platform offering a variety of cutting-edge large model interfaces, supporting OpenAI, Anthropic, Google, and more. It caters to diverse development and application needs, allowing users to flexibly choose the optimal model and pricing according to their requirements, enhancing the AI experience."
+  },
+  "comfyui": {
+    "description": "A powerful open-source workflow engine for generating images, videos, and audio. Supports advanced models such as SD, FLUX, Qwen, Hunyuan, and WAN, offering node-based workflow editing and private deployment capabilities."
   },
   "deepseek": {
     "description": "DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following."

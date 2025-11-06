@@ -35,12 +35,16 @@ export const responsesAPIModels = new Set([
   'codex-mini-latest',
   'computer-use-preview',
   'computer-use-preview-2025-03-11',
+  'gpt-5-codex',
+  'gpt-5-pro',
+  'gpt-5-pro-2025-10-06',
 ]);
 
 /**
  * models support context caching
  */
 export const contextCachingModels = new Set([
+  'claude-haiku-4-5-20251001',
   'claude-sonnet-4-5-latest',
   'claude-sonnet-4-5-20250929',
   'anthropic/claude-sonnet-4.5',
@@ -55,6 +59,11 @@ export const contextCachingModels = new Set([
   'claude-3-5-sonnet-20240620',
   'claude-3-5-haiku-latest',
   'claude-3-5-haiku-20241022',
+  // Bedrock model IDs
+  'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+  'anthropic.claude-sonnet-4-5-20250929-v1:0',
+  'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+  'anthropic.claude-haiku-4-5-20251001-v1:0',
 ]);
 
 export const thinkingWithToolClaudeModels = new Set([
@@ -64,7 +73,13 @@ export const thinkingWithToolClaudeModels = new Set([
   'claude-sonnet-4-20250514',
   'claude-sonnet-4-5-latest',
   'claude-sonnet-4-5-20250929',
+  'claude-haiku-4-5-20251001',
   'anthropic/claude-sonnet-4.5',
   'claude-3-7-sonnet-latest',
   'claude-3-7-sonnet-20250219',
+  // Bedrock model IDs
+  'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+  'anthropic.claude-sonnet-4-5-20250929-v1:0',
+  'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+  'anthropic.claude-haiku-4-5-20251001-v1:0',
 ]);

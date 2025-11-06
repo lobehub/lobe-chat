@@ -1,8 +1,8 @@
+import { UIChatMessage } from '@lobechat/types';
+import { LobeAgentChatConfig } from '@lobechat/types';
+import { OpenAIChatMessage } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
-import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
-import { ChatMessage } from '@/types/message';
-import { OpenAIChatMessage } from '@/types/openai/chat';
 import { encodeAsync } from '@/utils/tokenizer';
 import * as tokenizerObj from '@/utils/tokenizer';
 
@@ -48,7 +48,7 @@ describe('chatHelpers', () => {
     const messages = [
       { id: '1', content: 'Hello' },
       { id: '2', content: 'World' },
-    ] as ChatMessage[];
+    ] as UIChatMessage[];
 
     it('finds a message by id', () => {
       const message = chatHelpers.getMessageById(messages, '1');
@@ -64,6 +64,105 @@ describe('chatHelpers', () => {
       const message = chatHelpers.getMessageById([], '1');
       expect(message).toBeUndefined();
     });
+
+    it('finds a block within a group message', () => {
+      const messagesWithGroup = [
+        { id: '1', content: 'Hello' },
+        {
+          id: 'group1',
+          role: 'group',
+          content: '',
+          children: [
+            { id: 'block1', content: 'First block' },
+            { id: 'block2', content: 'Second block' },
+          ],
+        },
+      ] as UIChatMessage[];
+
+      const block = chatHelpers.getMessageById(messagesWithGroup, 'block1');
+      expect(block).toBeDefined();
+      expect(block?.id).toBe('block1');
+      expect(block?.content).toBe('First block');
+    });
+
+    it('returns block with parentId set to group message id', () => {
+      const messagesWithGroup = [
+        {
+          id: 'group1',
+          role: 'group',
+          content: '',
+          children: [{ id: 'block1', content: 'Block content' }],
+        },
+      ] as UIChatMessage[];
+
+      const block = chatHelpers.getMessageById(messagesWithGroup, 'block1');
+      expect(block).toBeDefined();
+      expect(block?.parentId).toBe('group1');
+    });
+
+    it('searches across multiple group messages', () => {
+      const messagesWithGroups = [
+        {
+          id: 'group1',
+          role: 'group',
+          content: '',
+          children: [{ id: 'block1', content: 'First group block' }],
+        },
+        {
+          id: 'group2',
+          role: 'group',
+          content: '',
+          children: [{ id: 'block2', content: 'Second group block' }],
+        },
+      ] as UIChatMessage[];
+
+      const block = chatHelpers.getMessageById(messagesWithGroups, 'block2');
+      expect(block).toBeDefined();
+      expect(block?.id).toBe('block2');
+      expect(block?.parentId).toBe('group2');
+      expect(block?.content).toBe('Second group block');
+    });
+
+    it('prioritizes top-level message over block with same id', () => {
+      const messagesWithConflict = [
+        { id: 'duplicate', content: 'Top-level message', role: 'user' },
+        {
+          id: 'group1',
+          role: 'group',
+          content: '',
+          children: [{ id: 'duplicate', content: 'Block message' }],
+        },
+      ] as UIChatMessage[];
+
+      const message = chatHelpers.getMessageById(messagesWithConflict, 'duplicate');
+      expect(message).toBeDefined();
+      expect(message?.content).toBe('Top-level message');
+      expect(message?.role).toBe('user');
+      expect(message?.parentId).toBeUndefined();
+    });
+
+    it('returns undefined when block is not found in any group', () => {
+      const messagesWithGroup = [
+        {
+          id: 'group1',
+          role: 'group',
+          content: '',
+          children: [{ id: 'block1', content: 'Block content' }],
+        },
+      ] as UIChatMessage[];
+
+      const block = chatHelpers.getMessageById(messagesWithGroup, 'nonexistent');
+      expect(block).toBeUndefined();
+    });
+
+    it('handles group message without children', () => {
+      const messagesWithEmptyGroup = [
+        { id: 'group1', role: 'group', content: '' },
+      ] as UIChatMessage[];
+
+      const block = chatHelpers.getMessageById(messagesWithEmptyGroup, 'block1');
+      expect(block).toBeUndefined();
+    });
   });
 
   describe('getSlicedMessages', () => {
@@ -71,7 +170,7 @@ describe('chatHelpers', () => {
       { id: '1', content: 'First' },
       { id: '2', content: 'Second' },
       { id: '3', content: 'Third' },
-    ] as ChatMessage[];
+    ] as UIChatMessage[];
 
     it('returns all messages if history is disabled', () => {
       const config = { enableHistoryCount: false, historyCount: undefined } as LobeAgentChatConfig;

@@ -11,6 +11,7 @@ export * from './discover';
 export * from './eval';
 export * from './fetch';
 export * from './files';
+export * from './generation';
 export * from './hotkey';
 export * from './knowledgeBase';
 export * from './llm';
@@ -20,11 +21,11 @@ export * from './plugins';
 export * from './rag';
 export * from './search';
 export * from './serverConfig';
+export * from './service';
 export * from './session';
 export * from './tool';
 export * from './topic';
 export * from './user';
-export * from './user/settings';
 // FIXME: I think we need a refactor for the "openai" types
 // it more likes the UI message payload
 export * from './openai/chat';

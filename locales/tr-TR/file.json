@@ -1,5 +1,5 @@
 {
-  "desc": "Dosyalarınızı ve bilgi tabanınızı yönetin",
+  "desc": "Bilgini yönet",
   "detail": {
     "basic": {
       "createdAt": "Oluşturulma Zamanı",
@@ -70,7 +70,7 @@
     "videos": "Videolar",
     "websites": "Web Siteleri"
   },
-  "title": "Dosya",
+  "title": "Bilgi Bankası",
   "toggleLeftPanel": {
     "title": "Sol Panelini Göster/Gizle"
   },
@@ -85,6 +85,7 @@
         "restTime": "Kalan {{time}}"
       }
     },
+    "fileQueueInfo": "{{count}} dosya yükleniyor, kalan {{remaining}} dosya sıraya alınacak",
     "totalCount": "Toplam {{count}} öğe",
     "uploadStatus": {
       "error": "Yükleme hatası",

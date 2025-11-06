@@ -51,3 +51,17 @@ export interface TopicRankItem {
   sessionId: string | null;
   title: string | null;
 }
+
+export interface CreateTopicParams {
+  favorite?: boolean;
+  groupId?: string | null;
+  messages?: string[];
+  sessionId?: string | null;
+  title: string;
+}
+
+export interface QueryTopicParams {
+  containerId?: string | null; // sessionId or groupId
+  current?: number;
+  pageSize?: number;
+}

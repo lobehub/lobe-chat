@@ -1,5 +1,8 @@
+import { GoogleGenAIOptions } from '@google/genai';
 import { ModelRuntime } from '@lobechat/model-runtime';
+import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
 import { ClientSecretPayload } from '@lobechat/types';
+import { safeParseJSON } from '@lobechat/utils';
 import { ModelProvider } from 'model-bank';
 
 import { getLLMConfig } from '@/envs/llm';
@@ -20,6 +23,10 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
   const llmConfig = getLLMConfig() as Record<string, any>;
 
   switch (provider) {
+    case ModelProvider.VertexAI: {
+      return {};
+    }
+
     default: {
       let upperProvider = provider.toUpperCase();
 
@@ -82,6 +89,41 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       return { apiKey, baseURLOrAccountID };
     }
 
+    case ModelProvider.ComfyUI: {
+      const {
+        COMFYUI_BASE_URL,
+        COMFYUI_AUTH_TYPE,
+        COMFYUI_API_KEY,
+        COMFYUI_USERNAME,
+        COMFYUI_PASSWORD,
+        COMFYUI_CUSTOM_HEADERS,
+      } = llmConfig;
+
+      // ComfyUI specific handling with environment variables fallback
+      const baseURL = payload?.baseURL || COMFYUI_BASE_URL || 'http://127.0.0.1:8000';
+
+      // ComfyUI supports multiple auth types: none, basic, bearer, custom
+      // Extract all relevant auth fields from the payload or environment
+      const authType = payload?.authType || COMFYUI_AUTH_TYPE || 'none';
+      const apiKey = payload?.apiKey || COMFYUI_API_KEY;
+      const username = payload?.username || COMFYUI_USERNAME;
+      const password = payload?.password || COMFYUI_PASSWORD;
+
+      // Parse customHeaders from JSON string (similar to Vertex AI credentials handling)
+      // Support both payload object and environment variable JSON string
+      const customHeaders = payload?.customHeaders || safeParseJSON(COMFYUI_CUSTOM_HEADERS);
+
+      // Return all authentication parameters
+      return {
+        apiKey,
+        authType,
+        baseURL,
+        customHeaders,
+        password,
+        username,
+      };
+    }
+
     case ModelProvider.GiteeAI: {
       const { GITEE_AI_API_KEY } = llmConfig;
 
@@ -116,6 +158,35 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
   }
 };
 
+const buildVertexOptions = (
+  payload: ClientSecretPayload,
+  params: Partial<GoogleGenAIOptions> = {},
+): GoogleGenAIOptions => {
+  const rawCredentials = payload.apiKey ?? process.env.VERTEXAI_CREDENTIALS ?? '';
+  const credentials = safeParseJSON<Record<string, string>>(rawCredentials);
+
+  const projectFromParams = params.project as string | undefined;
+  const projectFromCredentials = credentials?.project_id;
+  const projectFromEnv = process.env.VERTEXAI_PROJECT;
+
+  const project = projectFromParams ?? projectFromCredentials ?? projectFromEnv;
+  const location =
+    (params.location as string | undefined) ?? payload.vertexAIRegion ?? process.env.VERTEXAI_LOCATION ?? undefined;
+
+  const googleAuthOptions = params.googleAuthOptions ?? (credentials ? { credentials } : undefined);
+
+  const options: GoogleGenAIOptions = {
+    ...params,
+    vertexai: true,
+  };
+
+  if (googleAuthOptions) options.googleAuthOptions = googleAuthOptions;
+  if (project) options.project = project;
+  if (location) options.location = location as GoogleGenAIOptions['location'];
+
+  return options;
+};
+
 /**
  * Initializes the agent runtime with the user payload in backend
  * @param provider - The provider name.
@@ -129,6 +200,13 @@ export const initModelRuntimeWithUserPayload = (
   params: any = {},
 ) => {
   const runtimeProvider = payload.runtimeProvider ?? provider;
+
+  if (runtimeProvider === ModelProvider.VertexAI) {
+    const vertexOptions = buildVertexOptions(payload, params);
+    const runtime = LobeVertexAI.initFromVertexAI(vertexOptions);
+
+    return new ModelRuntime(runtime);
+  }
 
   return ModelRuntime.initializeWithProvider(runtimeProvider, {
     ...getParamsFromPayload(runtimeProvider, payload),

@@ -1,6 +1,6 @@
 import type { PartialDeep } from 'type-fest';
 
-import { IFeatureFlags } from '@/config/featureFlags';
+import { IFeatureFlagsState } from '@/config/featureFlags';
 
 import { ChatModelCard } from './llm';
 import {
@@ -15,9 +15,9 @@ export interface ServerModelProviderConfig {
   enabledModels?: string[];
   fetchOnClient?: boolean;
   /**
-   * the model cards defined in server
+   * the model lists defined in server
    */
-  serverModelCards?: ChatModelCard[];
+  serverModelLists?: ChatModelCard[];
 }
 
 export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;
@@ -32,10 +32,6 @@ export interface GlobalServerConfig {
    */
   enabledOAuthSSO?: boolean;
   image?: PartialDeep<UserImageConfig>;
-  /**
-   * @deprecated
-   */
-  languageModel?: ServerLanguageModel;
   oAuthSSOProviders?: string[];
   systemAgent?: PartialDeep<UserSystemAgentConfig>;
   telemetry: {
@@ -45,5 +41,5 @@ export interface GlobalServerConfig {
 
 export interface GlobalRuntimeConfig {
   serverConfig: GlobalServerConfig;
-  serverFeatureFlags: IFeatureFlags;
+  serverFeatureFlags: IFeatureFlagsState;
 }

@@ -3,7 +3,7 @@ import isEqual from 'fast-deep-equal';
 import { Suspense, memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
@@ -31,7 +31,7 @@ const Render = memo<RenderProps>(
     identifier,
     apiName,
   }) => {
-    const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, toolIndex));
+    const loading = useChatStore(messageStateSelectors.isToolCallStreaming(messageId, toolIndex));
     const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId), isEqual);
 
     if (loading || !toolMessage) return null;
@@ -52,8 +52,10 @@ const Render = memo<RenderProps>(
 
       // 如果是 LOADING_FLAT 则说明还在加载中
       // 而 standalone 模式的插件 content 应该始终是 LOADING_FLAT
-      if (toolMessage.content === LOADING_FLAT && toolMessage.plugin?.type !== 'standalone')
-        return placeholder;
+      const inPlaceholder =
+        toolMessage.content === LOADING_FLAT && toolMessage.plugin?.type !== 'standalone';
+
+      if (inPlaceholder) return placeholder;
 
       return (
         <Suspense fallback={placeholder}>

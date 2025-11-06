@@ -11,15 +11,22 @@ import { getContainer, useDragUpload } from './useDragUpload';
 // Mock the hooks and components
 vi.mock('@/hooks/useModelSupportVision');
 vi.mock('@/store/agent');
-vi.mock('antd', () => ({
-  App: {
-    useApp: () => ({
-      message: {
-        warning: vi.fn(),
-      },
-    }),
-  },
-}));
+vi.mock('antd', async () => {
+  const actual = await vi.importActual<typeof import('antd')>('antd');
+  const mockWarning = vi.fn();
+
+  return {
+    ...actual,
+    App: {
+      ...actual.App,
+      useApp: () => ({
+        message: {
+          warning: mockWarning,
+        },
+      }),
+    },
+  };
+});
 
 describe('useDragUpload', () => {
   let mockOnUploadFiles: Mock;

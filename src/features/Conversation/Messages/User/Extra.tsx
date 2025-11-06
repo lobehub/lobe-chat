@@ -1,10 +1,11 @@
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import ExtraContainer from '@/features/Conversation/components/Extras/ExtraContainer';
 import TTS from '@/features/Conversation/components/Extras/TTS';
 import Translate from '@/features/Conversation/components/Extras/Translate';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 
 interface UserMessageExtraProps {
   content: string;
@@ -12,7 +13,7 @@ interface UserMessageExtraProps {
   id: string;
 }
 export const UserMessageExtra = memo<UserMessageExtraProps>(({ extra, id, content }) => {
-  const loading = useChatStore(chatSelectors.isMessageGenerating(id));
+  const loading = useChatStore(messageStateSelectors.isMessageGenerating(id));
 
   const showTranslate = !!extra?.translate;
   const showTTS = !!extra?.tts;
@@ -22,7 +23,7 @@ export const UserMessageExtra = memo<UserMessageExtraProps>(({ extra, id, conten
   if (!showExtra) return;
 
   return (
-    <div style={{ marginTop: 8 }}>
+    <Flexbox gap={8} style={{ marginTop: 8 }}>
       {extra?.tts && (
         <ExtraContainer>
           <TTS content={content} id={id} loading={loading} {...extra?.tts} />
@@ -33,6 +34,6 @@ export const UserMessageExtra = memo<UserMessageExtraProps>(({ extra, id, conten
           <Translate id={id} {...extra?.translate} loading={loading} />
         </ExtraContainer>
       )}
-    </div>
+    </Flexbox>
   );
 });

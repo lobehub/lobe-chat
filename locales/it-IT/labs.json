@@ -1,6 +1,10 @@
 {
   "desc": "Qui troverai aggiornamenti periodici sulle nuove funzionalità che stiamo esplorando. Sentiti libero di provarle!",
   "features": {
+    "assistantMessageGroup": {
+      "desc": "Raggruppa i messaggi dell'assistente e i risultati delle chiamate agli strumenti in un unico gruppo",
+      "title": "Raggruppamento dei messaggi dell'assistente"
+    },
     "groupChat": {
       "desc": "Abilita la capacità di coordinamento in chat di gruppo con più agenti intelligenti.",
       "title": "Chat di gruppo (multi-agente)"

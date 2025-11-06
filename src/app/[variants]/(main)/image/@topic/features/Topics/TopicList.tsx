@@ -34,6 +34,7 @@ const TopicsList = memo(() => {
     <Flexbox
       align="center"
       gap={12}
+      padding={12}
       ref={ref}
       style={{
         maxHeight: '100%',

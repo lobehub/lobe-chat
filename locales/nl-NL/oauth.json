@@ -18,6 +18,7 @@
     },
     "permissionsTitle": "Vraag om de volgende toestemmingen:",
     "redirectUri": "U wordt omgeleid naar na succesvolle autorisatie",
+    "redirecting": "Autorisatie geslaagd, doorverwijzen...",
     "scope": {
       "email": "Toegang tot uw e-mailadres",
       "offline_access": "Toestaan dat de client toegang heeft tot uw gegevens",

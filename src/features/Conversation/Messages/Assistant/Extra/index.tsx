@@ -1,3 +1,4 @@
+import { type MessageMetadata } from '@lobechat/types';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -7,8 +8,7 @@ import TTS from '@/features/Conversation/components/Extras/TTS';
 import Translate from '@/features/Conversation/components/Extras/Translate';
 import Usage from '@/features/Conversation/components/Extras/Usage';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
-import { type MessageMetadata } from '@/types/message';
+import { messageStateSelectors } from '@/store/chat/selectors';
 
 interface AssistantMessageExtraProps {
   content: string;
@@ -20,7 +20,7 @@ interface AssistantMessageExtraProps {
 
 export const AssistantMessageExtra = memo<AssistantMessageExtraProps>(
   ({ extra, id, content, metadata, tools }) => {
-    const loading = useChatStore(chatSelectors.isMessageGenerating(id));
+    const loading = useChatStore(messageStateSelectors.isMessageGenerating(id));
 
     return (
       <Flexbox gap={8} style={{ marginTop: !!tools?.length ? 8 : 4 }}>

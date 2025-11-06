@@ -1,4 +1,5 @@
 import { TraceEventType } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 import * as lobeUIModules from '@lobehub/ui';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { mutate } from 'swr';
@@ -7,7 +8,6 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
 
@@ -25,7 +25,7 @@ vi.mock('@/services/message', () => ({
     removeMessage: vi.fn(),
     removeMessagesByAssistant: vi.fn(),
     removeMessages: vi.fn(() => Promise.resolve()),
-    createMessage: vi.fn(() => Promise.resolve('new-message-id')),
+    createNewMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
     updateMessage: vi.fn(),
     removeAllMessages: vi.fn(() => Promise.resolve()),
   },
@@ -71,7 +71,7 @@ describe('chatMessage actions', () => {
         await result.current.addAIMessage();
       });
 
-      expect(messageService.createMessage).not.toHaveBeenCalled();
+      expect(messageService.createNewMessage).not.toHaveBeenCalled();
       expect(updateInputMessageSpy).not.toHaveBeenCalled();
     });
 
@@ -84,7 +84,7 @@ describe('chatMessage actions', () => {
         await result.current.addAIMessage();
       });
 
-      expect(messageService.createMessage).toHaveBeenCalledWith({
+      expect(messageService.createNewMessage).toHaveBeenCalledWith({
         content: inputMessage,
         role: 'assistant',
         sessionId: mockState.activeId,
@@ -103,18 +103,119 @@ describe('chatMessage actions', () => {
     });
   });
 
+  describe('addUserMessage', () => {
+    it('should return early if activeId is undefined', async () => {
+      useChatStore.setState({ activeId: undefined });
+      const { result } = renderHook(() => useChatStore());
+      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+
+      await act(async () => {
+        await result.current.addUserMessage({ message: 'test message' });
+      });
+
+      expect(messageService.createNewMessage).not.toHaveBeenCalled();
+      expect(updateInputMessageSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call internal_createMessage with correct parameters', async () => {
+      const message = 'Test user message';
+      const fileList = ['file-id-1', 'file-id-2'];
+      useChatStore.setState({
+        activeId: mockState.activeId,
+        activeTopicId: mockState.activeTopicId,
+      });
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.addUserMessage({ message, fileList });
+      });
+
+      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+        content: message,
+        files: fileList,
+        role: 'user',
+        sessionId: mockState.activeId,
+        topicId: mockState.activeTopicId,
+        threadId: undefined,
+      });
+    });
+
+    it('should call internal_createMessage with threadId when activeThreadId is set', async () => {
+      const message = 'Test user message';
+      const activeThreadId = 'thread-123';
+      useChatStore.setState({
+        activeId: mockState.activeId,
+        activeTopicId: mockState.activeTopicId,
+        activeThreadId,
+      });
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.addUserMessage({ message });
+      });
+
+      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+        content: message,
+        files: undefined,
+        role: 'user',
+        sessionId: mockState.activeId,
+        topicId: mockState.activeTopicId,
+        threadId: activeThreadId,
+      });
+    });
+
+    it('should call updateInputMessage with empty string', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+
+      await act(async () => {
+        await result.current.addUserMessage({ message: 'test' });
+      });
+
+      expect(updateInputMessageSpy).toHaveBeenCalledWith('');
+    });
+
+    it('should handle message without fileList', async () => {
+      const message = 'Test user message without files';
+      useChatStore.setState({ activeId: mockState.activeId });
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.addUserMessage({ message });
+      });
+
+      expect(messageService.createNewMessage).toHaveBeenCalledWith({
+        content: message,
+        files: undefined,
+        role: 'user',
+        sessionId: mockState.activeId,
+        topicId: mockState.activeTopicId,
+        threadId: undefined,
+      });
+    });
+  });
+
   describe('deleteMessage', () => {
     it('deleteMessage should remove a message by id', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const deleteSpy = vi.spyOn(result.current, 'deleteMessage');
+      const mockMessages = [{ id: 'other-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       act(() => {
         useChatStore.setState({
           activeId: 'session-id',
           activeTopicId: undefined,
           messagesMap: {
-            [messageMapKey('session-id')]: [{ id: messageId } as ChatMessage],
+            [messageMapKey('session-id')]: [{ id: messageId } as UIChatMessage],
           },
         });
       });
@@ -123,13 +224,22 @@ describe('chatMessage actions', () => {
       });
 
       expect(deleteSpy).toHaveBeenCalledWith(messageId);
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
 
     it('deleteMessage should remove messages with tools', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       act(() => {
         useChatStore.setState({
@@ -137,9 +247,9 @@ describe('chatMessage actions', () => {
           activeTopicId: undefined,
           messagesMap: {
             [messageMapKey('session-id')]: [
-              { id: messageId, tools: [{ id: 'tool1' }, { id: 'tool2' }] } as ChatMessage,
-              { id: '2', tool_call_id: 'tool1', role: 'tool' } as ChatMessage,
-              { id: '3', tool_call_id: 'tool2', role: 'tool' } as ChatMessage,
+              { id: messageId, tools: [{ id: 'tool1' }, { id: 'tool2' }] } as UIChatMessage,
+              { id: '2', tool_call_id: 'tool1', role: 'tool' } as UIChatMessage,
+              { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
             ],
           },
         });
@@ -148,8 +258,120 @@ describe('chatMessage actions', () => {
         await result.current.deleteMessage(messageId);
       });
 
-      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3']);
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3'], {
+        sessionId: 'session-id',
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+    });
+
+    it('deleteMessage should remove group message with all children', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupMessageId = 'group-message-id';
+      const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
+              {
+                id: 'child-1',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 1',
+              } as UIChatMessage,
+              {
+                id: 'child-2',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 2',
+              } as UIChatMessage,
+              { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteMessage(groupMessageId);
+      });
+
+      expect(removeMessagesSpy).toHaveBeenCalledWith([groupMessageId, 'child-1', 'child-2'], {
+        sessionId: 'session-id',
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+    });
+
+    it('deleteMessage should remove group message with children that have tool calls', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupMessageId = 'group-message-id';
+      const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
+              {
+                id: 'child-1',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child with tools',
+                tools: [{ id: 'tool1' }],
+              } as UIChatMessage,
+              {
+                id: 'tool-result-1',
+                tool_call_id: 'tool1',
+                role: 'tool',
+                content: 'Tool result',
+              } as UIChatMessage,
+              {
+                id: 'child-2',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 2',
+              } as UIChatMessage,
+              { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteMessage(groupMessageId);
+      });
+
+      // Should delete group message + all children + tool results of children
+      expect(removeMessagesSpy).toHaveBeenCalledWith(
+        [groupMessageId, 'child-1', 'child-2', 'tool-result-1'],
+        {
+          sessionId: 'session-id',
+          topicId: undefined,
+        },
+      );
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
   });
 
@@ -200,9 +422,14 @@ describe('chatMessage actions', () => {
                 id: messageId,
                 role: 'assistant',
                 tools: [{ id: 'tool1' }, { id: 'tool2' }],
-              } as ChatMessage,
-              { id: '2', parentId: messageId, tool_call_id: 'tool1', role: 'tool' } as ChatMessage,
-              { id: '3', tool_call_id: 'tool2', role: 'tool' } as ChatMessage,
+              } as UIChatMessage,
+              {
+                id: '2',
+                parentId: messageId,
+                tool_call_id: 'tool1',
+                role: 'tool',
+              } as UIChatMessage,
+              { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
             ],
           },
         });
@@ -212,10 +439,16 @@ describe('chatMessage actions', () => {
       });
 
       expect(removeMessageSpy).toHaveBeenCalled();
-      expect(updateMessageSpy).toHaveBeenCalledWith('message-id', {
-        tools: [{ id: 'tool2' }],
-      });
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(updateMessageSpy).toHaveBeenCalledWith(
+        'message-id',
+        {
+          tools: [{ id: 'tool2' }],
+        },
+        {
+          sessionId: 'session-id',
+          topicId: undefined,
+        },
+      );
     });
   });
 
@@ -223,13 +456,14 @@ describe('chatMessage actions', () => {
     it('clearAllMessages should remove all messages', async () => {
       const { result } = renderHook(() => useChatStore());
       const clearAllSpy = vi.spyOn(result.current, 'clearAllMessages');
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       await act(async () => {
         await result.current.clearAllMessages();
       });
 
       expect(clearAllSpy).toHaveBeenCalled();
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith([]);
     });
   });
 
@@ -374,7 +608,11 @@ describe('chatMessage actions', () => {
         await result.current.internal_updateMessageContent(messageId, newContent);
       });
 
-      expect(spy).toHaveBeenCalledWith(messageId, { content: newContent });
+      expect(spy).toHaveBeenCalledWith(
+        messageId,
+        { content: newContent },
+        { sessionId: 'session-id', topicId: 'topic-id' },
+      );
     });
 
     it('should dispatch message update action', async () => {
@@ -421,7 +659,7 @@ describe('chatMessage actions', () => {
       // 在每个测试用例开始前恢复到实际的 SWR 实现
       vi.resetAllMocks();
     });
-    it('should refresh messages by calling mutate with current activeId and activeTopicId', async () => {
+    it('should refresh messages by calling mutate for both session and group types', async () => {
       useChatStore.setState({ refreshMessages: realRefreshMessages });
 
       const { result } = renderHook(() => useChatStore());
@@ -433,8 +671,20 @@ describe('chatMessage actions', () => {
         await result.current.refreshMessages();
       });
 
-      // 确保 mutate 调用了正确的参数
-      expect(mutate).toHaveBeenCalledWith(['SWR_USE_FETCH_MESSAGES', activeId, activeTopicId]);
+      // 确保 mutate 调用了正确的参数（session 和 group 两次）
+      expect(mutate).toHaveBeenCalledWith([
+        'SWR_USE_FETCH_MESSAGES',
+        activeId,
+        activeTopicId,
+        'session',
+      ]);
+      expect(mutate).toHaveBeenCalledWith([
+        'SWR_USE_FETCH_MESSAGES',
+        activeId,
+        activeTopicId,
+        'group',
+      ]);
+      expect(mutate).toHaveBeenCalledTimes(2);
     });
     it('should handle errors during refreshing messages', async () => {
       useChatStore.setState({ refreshMessages: realRefreshMessages });

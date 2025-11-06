@@ -1,18 +1,28 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { INBOX_SESSION_ID, isDesktop } from '@lobechat/const';
+import {
+  DEFAULT_AGENT_CHAT_CONFIG,
+  INBOX_SESSION_ID,
+  LOADING_FLAT,
+  isDesktop,
+} from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
-  ChatMessage,
+  ChatImageItem,
   ChatTopic,
+  ChatVideoItem,
+  CreateNewMessageParams,
   MessageSemanticSearchChunk,
   SendMessageParams,
   SendMessageServerResponse,
   TraceNameMap,
+  UIChatMessage,
 } from '@lobechat/types';
 import { TRPCClientError } from '@trpc/client';
+import debug from 'debug';
 import { t } from 'i18next';
 import { produce } from 'immer';
+import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 
 import { aiChatService } from '@/services/aiChat';
@@ -26,28 +36,41 @@ import type { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-import { ChatImageItem } from '@/types/message/image';
-import { ChatVideoItem } from '@/types/message/video';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../../selectors';
+import { chatSelectors, threadSelectors, topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
+const log = debug('lobe-store:ai-chat-v2');
 
 export interface AIGenerateV2Action {
   /**
    * Sends a new message to the AI chat system
    */
-  sendMessageInServer: (params: SendMessageParams) => Promise<void>;
+  sendMessage: (params: SendMessageParams) => Promise<void>;
   /**
-   * Cancels sendMessageInServer operation for a specific topic/session
+   * Cancels sendMessage operation for a specific topic/session
    */
   cancelSendMessageInServer: (topicId?: string) => void;
   clearSendMessageError: () => void;
+  /**
+   */
+  triggerToolsCalling: (
+    id: string,
+    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
+  ) => Promise<void>;
+  callToolFollowAssistantMessage: (params: {
+    parentId: string;
+    traceId?: string;
+    threadId?: string;
+    inPortalThread?: boolean;
+    inSearchWorkflow?: boolean;
+  }) => Promise<void>;
+
   internal_refreshAiChat: (params: {
     topics?: ChatTopic[];
-    messages: ChatMessage[];
+    messages: UIChatMessage[];
     sessionId: string;
     topicId?: string;
   }) => void;
@@ -56,8 +79,8 @@ export interface AIGenerateV2Action {
    * including preprocessing and postprocessing steps
    */
   internal_execAgentRuntime: (params: {
-    messages: ChatMessage[];
-    userMessageId: string;
+    messages: UIChatMessage[];
+    userMessageId?: string;
     assistantMessageId: string;
     isWelcomeQuestion?: boolean;
     inSearchWorkflow?: boolean;
@@ -70,7 +93,7 @@ export interface AIGenerateV2Action {
     traceId?: string;
   }) => Promise<void>;
   /**
-   * Toggle sendMessageInServer operation state
+   * Toggle sendMessage operation state
    */
   internal_toggleSendMessageOperation: (
     key: string | { sessionId: string; topicId?: string | null },
@@ -90,7 +113,7 @@ export const generateAIChatV2: StateCreator<
   [],
   AIGenerateV2Action
 > = (set, get) => ({
-  sendMessageInServer: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
+  sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
     const { activeTopicId, activeId, activeThreadId, internal_execAgentRuntime, mainInputEditor } =
       get();
     if (!activeId) return;
@@ -109,6 +132,13 @@ export const generateAIChatV2: StateCreator<
     }
 
     const messages = chatSelectors.activeBaseChats(get());
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+    const autoCreateThreshold =
+      chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
+    const shouldCreateNewTopic =
+      !activeTopicId &&
+      !!chatConfig.enableAutoCreateTopic &&
+      messages.length + 2 >= autoCreateThreshold;
 
     // 构造服务端模式临时消息的本地媒体预览（优先使用 S3 URL）
     const filesInStore = getFileStoreState().chatUploadFileList;
@@ -144,7 +174,7 @@ export const generateAIChatV2: StateCreator<
 
     const operationKey = messageMapKey(activeId, activeTopicId);
 
-    // Start tracking sendMessageInServer operation with AbortController
+    // Start tracking sendMessage operation with AbortController
     const abortController = get().internal_toggleSendMessageOperation(operationKey, true)!;
 
     const jsonState = mainInputEditor?.getJSONState();
@@ -166,7 +196,7 @@ export const generateAIChatV2: StateCreator<
           // if there is activeTopicId，then add topicId to message
           topicId: activeTopicId,
           threadId: activeThreadId,
-          newTopic: !activeTopicId
+          newTopic: shouldCreateNewTopic
             ? {
                 topicMessageIds: messages.map((m) => m.id),
                 title: t('defaultTitle', { ns: 'topic' }),
@@ -185,8 +215,8 @@ export const generateAIChatV2: StateCreator<
         topicId: data.topicId,
       });
 
-      if (!activeTopicId) {
-        await get().switchTopic(data.topicId!, true);
+      if (data.isCreateNewTopic && data.topicId) {
+        await get().switchTopic(data.topicId, true);
       }
     } catch (e) {
       if (e instanceof TRPCClientError) {
@@ -198,12 +228,12 @@ export const generateAIChatV2: StateCreator<
         }
       }
     } finally {
-      // Stop tracking sendMessageInServer operation
+      // Stop tracking sendMessage operation
       get().internal_toggleSendMessageOperation(operationKey, false);
     }
 
     // remove temporally message
-    if (data?.isCreatNewTopic) {
+    if (data?.isCreateNewTopic) {
       get().internal_dispatchMessage(
         { type: 'deleteMessage', id: tempId },
         { topicId: activeTopicId, sessionId: activeId },
@@ -232,7 +262,7 @@ export const generateAIChatV2: StateCreator<
 
     const summaryTitle = async () => {
       // check activeTopic and then auto update topic title
-      if (data.isCreatNewTopic) {
+      if (data.isCreateNewTopic) {
         await get().summaryTopicTitle(data.topicId, data.messages);
         return;
       }
@@ -283,7 +313,7 @@ export const generateAIChatV2: StateCreator<
     get().internal_toggleSendMessageOperation(
       operationKey,
       false,
-      'User cancelled sendMessageInServer operation',
+      'User cancelled sendMessage operation',
     );
 
     // Only clear creating message state if it's the active session
@@ -318,9 +348,16 @@ export const generateAIChatV2: StateCreator<
       ragQuery,
       messages: originalMessages,
     } = params;
+
+    log(
+      '[internal_execAgentRuntime] start, assistantId: %s, messages count: %d',
+      assistantId,
+      originalMessages.length,
+    );
+
     const {
       internal_fetchAIChatMessage,
-      triggerToolCalls,
+      triggerToolsCalling,
       refreshMessages,
       internal_updateMessageRAG,
     } = get();
@@ -331,11 +368,14 @@ export const generateAIChatV2: StateCreator<
     const agentStoreState = getAgentStoreState();
     const { model, provider, chatConfig } = agentSelectors.currentAgentConfig(agentStoreState);
 
+    log('[internal_execAgentRuntime] Agent config: model=%s, provider=%s', model, provider);
+
     let fileChunks: MessageSemanticSearchChunk[] | undefined;
     let ragQueryId;
 
     // go into RAG flow if there is ragQuery flag
-    if (ragQuery) {
+    if (ragQuery && userMessageId) {
+      log('[internal_execAgentRuntime] Entering RAG flow with query: %s', ragQuery);
       // 1. get the relative chunks from semantic search
       const { chunks, queryId, rewriteQuery } = await get().internal_retrieveChunks(
         userMessageId,
@@ -346,7 +386,7 @@ export const generateAIChatV2: StateCreator<
 
       ragQueryId = queryId;
 
-      const lastMsg = messages.pop() as ChatMessage;
+      const lastMsg = messages.pop() as UIChatMessage;
 
       // 2. build the retrieve context messages
       const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
@@ -388,7 +428,8 @@ export const generateAIChatV2: StateCreator<
     )(aiInfraStoreState);
     const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(agentStoreState);
     const useModelSearch =
-      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) || isModelBuiltinSearchInternal;
+      ((isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && useModelBuiltinSearch) ||
+      isModelBuiltinSearchInternal;
     const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(agentStoreState);
 
     if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
@@ -462,7 +503,7 @@ export const generateAIChatV2: StateCreator<
       if (isToolsCalling) {
         get().internal_toggleMessageInToolsCalling(true, assistantId);
         await refreshMessages();
-        await triggerToolCalls(assistantId, {
+        await triggerToolsCalling(assistantId, {
           threadId: params?.threadId,
           inPortalThread: params?.inPortalThread,
         });
@@ -473,6 +514,7 @@ export const generateAIChatV2: StateCreator<
     }
 
     // 4. fetch the AI response
+    log('[internal_execAgentRuntime] Fetching AI response for assistantId: %s', assistantId);
     const { isFunctionCall, content } = await internal_fetchAIChatMessage({
       messages,
       messageId: assistantId,
@@ -483,13 +525,18 @@ export const generateAIChatV2: StateCreator<
 
     // 5. if it's the function call message, trigger the function method
     if (isFunctionCall) {
+      log('[internal_execAgentRuntime] AI response is function call, triggering tools calling');
       get().internal_toggleMessageInToolsCalling(true, assistantId);
       await refreshMessages();
-      await triggerToolCalls(assistantId, {
+      await triggerToolsCalling(assistantId, {
         threadId: params?.threadId,
         inPortalThread: params?.inPortalThread,
       });
     } else {
+      log(
+        '[internal_execAgentRuntime] AI response completed, content length: %d',
+        content?.length || 0,
+      );
       // 显示桌面通知（仅在桌面端且窗口隐藏时）
       if (isDesktop) {
         try {
@@ -525,6 +572,225 @@ export const generateAIChatV2: StateCreator<
 
       await get().internal_summaryHistory(historyMessages);
     }
+  },
+  triggerToolsCalling: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
+    log('[triggerToolsCalling] start, assistantId (block ID): %s', assistantId);
+
+    const foundMessage = chatSelectors.getMessageById(assistantId)(get());
+    if (!foundMessage) {
+      log('[triggerToolsCalling] Message not found, returning');
+      return;
+    }
+
+    // Determine if this is a group message or a block
+    let groupMessage: UIChatMessage;
+    let latestBlock: UIChatMessage;
+
+    if (foundMessage.role === 'group') {
+      // Case 1: assistantId matches a group message ID directly
+      // Find the block within children that matches assistantId
+      groupMessage = foundMessage;
+      const block = foundMessage.children?.find((item) => item.id === assistantId);
+
+      if (!block) {
+        log(
+          '[triggerToolsCalling] Block with id %s not found in group message children, returning',
+          assistantId,
+        );
+        return;
+      }
+      latestBlock = block as UIChatMessage;
+    } else if (foundMessage.parentId) {
+      // Case 2: assistantId is a block ID, need to get parent group message
+      const parentMsg = chatSelectors.getMessageById(foundMessage.parentId)(get());
+      if (!parentMsg || parentMsg.role !== 'group') {
+        log('[triggerToolsCalling] Parent group message not found, returning');
+        return;
+      }
+      groupMessage = parentMsg;
+      latestBlock = foundMessage;
+    } else {
+      log(
+        '[triggerToolsCalling] Message is neither a group message nor a block with parentId, returning',
+      );
+      return;
+    }
+
+    log('[triggerToolsCalling] Found group message: %O', {
+      id: groupMessage.id,
+      groupId: groupMessage.groupId,
+      childrenCount: groupMessage.children?.length,
+      latestBlockId: latestBlock.id,
+    });
+
+    if (!latestBlock.tools) {
+      log('[triggerToolsCalling] Latest block has no tools, returning');
+      return;
+    }
+
+    log(
+      '[triggerToolsCalling] Latest block found with %d tools: %O',
+      latestBlock.tools.length,
+      latestBlock.tools.map((t) => ({ id: t.id, type: t.type, identifier: t.identifier })),
+    );
+
+    let shouldCreateMessage = false;
+    let latestToolId = '';
+
+    await pMap(
+      latestBlock.tools,
+      async (payload) => {
+        log(
+          '[triggerToolsCalling] Processing tool: %s (type: %s)',
+          payload.identifier,
+          payload.type,
+        );
+
+        // 2. 使用 createNewMessage 创建 tool 消息
+        const toolMessage: CreateNewMessageParams = {
+          content: '',
+          parentId: assistantId,
+          plugin: payload,
+          role: 'tool',
+          sessionId: get().activeId,
+          tool_call_id: payload.id,
+          threadId,
+          topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
+          groupId: groupMessage.groupId, // Propagate groupId from parent message for group chat
+        };
+
+        const result = await get().internal_createMessage(toolMessage);
+
+        if (!result) {
+          log('[triggerToolsCalling] Failed to create tool message for %s', payload.identifier);
+          return;
+        }
+
+        log('[triggerToolsCalling] Tool message created: %s', result.id);
+
+        // 3. 执行 tool（这时 tool 消息已经创建，且 UI 已更新）
+        const data = await get().internal_invokeDifferentTypePlugin(result.id, payload);
+
+        if (data && !['markdown', 'standalone'].includes(payload.type)) {
+          shouldCreateMessage = true;
+          latestToolId = result.id;
+          log(
+            '[triggerToolsCalling] Tool %s requires follow-up assistant message',
+            payload.identifier,
+          );
+        } else {
+          log('[triggerToolsCalling] Tool %s completed without follow-up', payload.identifier);
+        }
+      },
+      { concurrency: 5 },
+    );
+
+    await get().internal_toggleMessageInToolsCalling(false, assistantId);
+
+    if (!shouldCreateMessage) {
+      log('[triggerToolsCalling] No follow-up message needed, completed');
+      return;
+    }
+
+    const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
+    log(
+      '[triggerToolsCalling] Calling follow-up assistant message with latestToolId: %s',
+      latestToolId,
+    );
+
+    await get().callToolFollowAssistantMessage({
+      traceId,
+      threadId,
+      inPortalThread,
+      inSearchWorkflow,
+      parentId: latestToolId,
+    });
+    log('[triggerToolsCalling] completed');
+  },
+
+  callToolFollowAssistantMessage: async ({
+    parentId,
+    traceId,
+    threadId,
+    inPortalThread,
+    inSearchWorkflow,
+  }) => {
+    log('[callToolFollowAssistantMessage] start, parentId: %s', parentId);
+
+    const chats = inPortalThread
+      ? threadSelectors.portalAIChatsWithHistoryConfig(get())
+      : chatSelectors.mainAIChatsWithHistoryConfig(get());
+
+    let assistantMessageId: string;
+
+    // 获取 agent 配置
+    const agentStoreState = getAgentStoreState();
+    const { model, provider } = agentSelectors.currentAgentConfig(agentStoreState);
+
+    // 查找包含 parentId 的 group message
+    // parentId 是 tool result message 的 id，它存储在 assistant block 的 tools[].result_msg_id 中
+    let groupMessageId: string | undefined;
+
+    // 遍历所有 group messages，找到包含该 tool result 的那个
+    for (const msg of chats) {
+      if (msg.role === 'group' && msg.children) {
+        for (const child of msg.children) {
+          // 检查 child 的 tools 中是否有 result_msg_id === parentId
+          if (child.tools?.some((tool) => tool.result_msg_id === parentId)) {
+            groupMessageId = msg.id;
+            log('[callToolFollowAssistantMessage] Found group message: %s', groupMessageId);
+            break;
+          }
+        }
+        if (groupMessageId) break;
+      }
+    }
+
+    // 创建新的 assistant message，作为 group message 的新 block
+    const assistantMessage: CreateNewMessageParams = {
+      role: 'assistant',
+      content: LOADING_FLAT,
+      parentId,
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+      threadId,
+      traceId,
+      model,
+      provider,
+    };
+
+    log('[callToolFollowAssistantMessage] Creating new assistant message block with params: %O', {
+      parentId,
+      groupMessageId,
+      model,
+      provider,
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+
+    const result = await get().internal_createMessage(assistantMessage, { groupMessageId });
+
+    if (!result) {
+      log('[callToolFollowAssistantMessage] Failed to create assistant message');
+      return;
+    }
+
+    assistantMessageId = result.id;
+    log(
+      '[callToolFollowAssistantMessage] Assistant message created successfully, id: %s',
+      assistantMessageId,
+    );
+
+    log('[callToolFollowAssistantMessage] Starting agent runtime with %d messages', chats.length);
+    await get().internal_execAgentRuntime({
+      messages: chats,
+      assistantMessageId,
+      traceId,
+      threadId,
+      inPortalThread,
+      inSearchWorkflow,
+    });
+    log('[callToolFollowAssistantMessage] completed');
   },
 
   internal_updateSendMessageOperation: (key, value, actionName) => {

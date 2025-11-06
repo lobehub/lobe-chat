@@ -1,11 +1,11 @@
-import { ChatMessage } from '@lobechat/types';
+import { UIChatMessage } from '@lobechat/types';
 
 /**
  * 智能体状态 - 从原项目类型推断
  */
 export interface AgentState {
   [key: string]: any;
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
   model?: string;
   provider?: string;
   systemRole?: string;
@@ -60,9 +60,9 @@ export interface PipelineContext {
     /** 当前 token 估算值 */
     currentTokenCount?: number;
     /** 最大 token 限制 */
-    maxTokens: number;
+    maxTokens?: number;
     /** 模型标识 */
-    model: string;
+    model?: string;
   };
 }
 
@@ -129,7 +129,7 @@ export type ProcessorTypeLegacy =
  * Token 计数器接口
  */
 export interface TokenCounter {
-  count: (messages: ChatMessage[] | string) => Promise<number>;
+  count: (messages: UIChatMessage[] | string) => Promise<number>;
 }
 
 /**
@@ -198,4 +198,4 @@ export class PipelineError extends Error {
   }
 }
 
-export type { ChatMessage } from '@lobechat/types';
+export type { UIChatMessage } from '@lobechat/types';

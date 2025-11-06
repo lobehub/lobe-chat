@@ -1,10 +1,9 @@
-import { INBOX_GUIDE_SYSTEMROLE, INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
+import { isDesktop, isServerMode } from '@lobechat/const';
 import {
-  type AgentState,
   ContextEngine,
+  GroupMessageFlattenProcessor,
   HistorySummaryProvider,
   HistoryTruncateProcessor,
-  InboxGuideProvider,
   InputTemplateProcessor,
   MessageCleanupProcessor,
   MessageContentProcessor,
@@ -16,7 +15,7 @@ import {
   ToolSystemRoleProvider,
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
-import { ChatMessage, OpenAIChatMessage } from '@lobechat/types';
+import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 
 import { isCanUseFC } from '@/helpers/isCanUseFC';
@@ -30,8 +29,7 @@ interface ContextEngineeringContext {
   historyCount?: number;
   historySummary?: string;
   inputTemplate?: string;
-  isWelcomeQuestion?: boolean;
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
   model: string;
   provider: string;
   sessionId?: string;
@@ -49,8 +47,6 @@ export const contextEngineering = async ({
   enableHistoryCount,
   historyCount,
   historySummary,
-  sessionId,
-  isWelcomeQuestion,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
 
@@ -63,14 +59,6 @@ export const contextEngineering = async ({
 
       // 2. System role injection (agent's system role)
       new SystemRoleInjector({ systemRole }),
-
-      // 3. Inbox guide system role injection
-      new InboxGuideProvider({
-        inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
-        inboxSessionId: INBOX_SESSION_ID,
-        isWelcomeQuestion: isWelcomeQuestion,
-        sessionId: sessionId,
-      }),
 
       // 4. Tool system role injection
       new ToolSystemRoleProvider({
@@ -90,14 +78,15 @@ export const contextEngineering = async ({
       // Create message processing processors
 
       // 6. Input template processing
-      new InputTemplateProcessor({
-        inputTemplate,
-      }),
+      new InputTemplateProcessor({ inputTemplate }),
 
       // 7. Placeholder variables processing
       new PlaceholderVariablesProcessor({ variableGenerators: VARIABLE_GENERATORS }),
 
-      // 8. Message content processing
+      // 8. Group message flatten (convert role=group to standard assistant + tool messages)
+      new GroupMessageFlattenProcessor(),
+
+      // 8.5 Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
         isCanUseVideo,
@@ -122,14 +111,7 @@ export const contextEngineering = async ({
     ],
   });
 
-  const initialState: AgentState = { messages, model, provider, systemRole, tools };
-
-  const result = await pipeline.process({
-    initialState,
-    maxTokens: 10_000_000,
-    messages,
-    model,
-  });
+  const result = await pipeline.process({ messages });
 
   return result.messages;
 };

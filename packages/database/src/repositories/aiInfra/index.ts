@@ -86,11 +86,12 @@ const inferProviderSearchDefaults = (
 const injectSearchSettings = (providerId: string, item: any) => {
   const abilities = item?.abilities || {};
 
-  // 模型未开启搜索能力：移除 settings 中的 search 相关字段，确保 UI 不显示启用模型内置搜索
-  if (abilities.search !== true) {
+  // 模型显式关闭搜索能力：移除 settings 中的 search 相关字段，确保 UI 不显示启用模型内置搜索
+  if (abilities.search === false) {
     if (item?.settings?.searchImpl || item?.settings?.searchProvider) {
       const next = { ...item } as any;
       if (next.settings) {
+        // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
         const { searchImpl, searchProvider, ...restSettings } = next.settings;
         next.settings = Object.keys(restSettings).length > 0 ? restSettings : undefined;
       }
@@ -99,19 +100,25 @@ const injectSearchSettings = (providerId: string, item: any) => {
     return item;
   }
 
-  // 内置（本地）模型如果已经带了任一字段，直接保留，不覆盖
-  if (item?.settings?.searchImpl || item?.settings?.searchProvider) return item;
+  // 模型显式开启搜索能力：添加 settings 中的 search 相关字段
+  else if (abilities.search === true) {
+    // 内置（本地）模型如果已经带了任一字段，直接保留，不覆盖
+    if (item?.settings?.searchImpl || item?.settings?.searchProvider) return item;
 
-  // 否则按 providerId + modelId
-  const searchSettings = inferProviderSearchDefaults(providerId, item.id);
+    // 否则按 providerId + modelId
+    const searchSettings = inferProviderSearchDefaults(providerId, item.id);
 
-  return {
-    ...item,
-    settings: {
-      ...item.settings,
-      ...searchSettings,
-    },
-  };
+    return {
+      ...item,
+      settings: {
+        ...item.settings,
+        ...searchSettings,
+      },
+    };
+  }
+
+  // 兼容老版本中数据库没有存储 abilities.search 字段的情况
+  return item;
 };
 
 export class AiInfraRepos {
@@ -218,7 +225,7 @@ export class AiInfraRepos {
               enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
-              settings: item.settings,
+              settings: user.settings || item.settings,
               sort: user.sort || undefined,
               type: user.type || item.type,
             };
