@@ -1,7 +1,7 @@
 import { ActionIcon, ActionIconProps } from '@lobehub/ui';
 import { FlaskConical, Github } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -22,16 +22,16 @@ const BottomActions = memo(() => {
   return (
     <Flexbox gap={8}>
       {!hideGitHub && (
-        <Link aria-label={'GitHub'} href={GITHUB} target={'_blank'}>
+        <a aria-label={'GitHub'} href={GITHUB} rel="noopener noreferrer" target={'_blank'}>
           <ActionIcon
             icon={Github}
             size={ICON_SIZE}
             title={'GitHub'}
             tooltipProps={{ placement: 'right' }}
           />
-        </Link>
+        </a>
       )}
-      <Link aria-label={t('labs')} href={'/labs'}>
+      <Link aria-label={t('labs')} to={'/labs'}>
         <ActionIcon
           icon={FlaskConical}
           size={ICON_SIZE}
