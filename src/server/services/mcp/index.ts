@@ -178,18 +178,20 @@ export class MCPService {
 
       // TODO: map more type
       const content = result.content
-        .map((item) => {
-          switch (item.type) {
-            case 'text': {
-              return item.text;
-            }
-            default: {
-              return '';
-            }
-          }
-        })
-        .filter(Boolean)
-        .join('\n\n');
+        ? result.content
+            .map((item) => {
+              switch (item.type) {
+                case 'text': {
+                  return item.text;
+                }
+                default: {
+                  return '';
+                }
+              }
+            })
+            .filter(Boolean)
+            .join('\n\n')
+        : '';
 
       if (result.isError) return { content, state: result, success: true };
 
