@@ -209,6 +209,7 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
         <Avatar
           alt={avatar.title || 'avatar'}
           avatar={avatar}
+          loading={loading}
           onClick={onAvatarClick}
           placement={placement}
           size={MOBILE_AVATAR_SIZE}
