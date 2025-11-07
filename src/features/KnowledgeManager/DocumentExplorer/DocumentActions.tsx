@@ -18,6 +18,7 @@ const DocumentActions = memo<DocumentActionsProps>(
     const { t } = useTranslation(['common', 'file']);
     const [loading, setLoading] = useState(false);
     const removeDocument = useFileStore((s) => s.removeDocument);
+    const duplicateDocument = useFileStore((s) => s.duplicateDocument);
 
     const handleDelete = async () => {
       setLoading(true);
@@ -42,13 +43,13 @@ const DocumentActions = memo<DocumentActionsProps>(
     };
 
     const handleDuplicate = async () => {
-      // TODO: Implement duplicate functionality
-      if (documentContent) {
-        try {
-          await navigator.clipboard.writeText(documentContent);
-        } catch (error) {
-          console.error('Failed to copy document:', error);
-        }
+      setLoading(true);
+      try {
+        await duplicateDocument(documentId);
+      } catch (error) {
+        console.error('Failed to duplicate document:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -71,7 +72,7 @@ const DocumentActions = memo<DocumentActionsProps>(
               },
               {
                 icon: <Icon icon={Copy} />,
-                key: 'copy',
+                key: 'duplicate',
                 label: t('documentList.duplicate', { ns: 'file' }),
                 onClick: handleDuplicate,
               },
@@ -87,7 +88,7 @@ const DocumentActions = memo<DocumentActionsProps>(
           placement="bottomRight"
           trigger={['click']}
         >
-          <ActionIcon icon={MoreHorizontal} loading={loading} size="small" />
+          <ActionIcon icon={MoreHorizontal} loading={loading} size="small" variant="borderless" />
         </Dropdown>
       </Flexbox>
     );

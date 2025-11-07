@@ -38,7 +38,11 @@ export interface FileAction {
    */
   createOptimisticDocument: (title?: string) => string;
   dispatchChatUploadFileList: (payload: UploadFileListDispatch) => void;
-
+  /**
+   * Duplicate an existing document
+   * Returns the created document
+   */
+  duplicateDocument: (documentId: string) => Promise<{ [key: string]: any; id: string }>;
   /**
    * Get documents from local optimistic map merged with server data
    */
@@ -147,6 +151,65 @@ export const createFileSlice: StateCreator<
     if (nextValue === get().chatUploadFileList) return;
 
     set({ chatUploadFileList: nextValue }, false, `dispatchChatFileList/${payload.type}`);
+  },
+
+  duplicateDocument: async (documentId) => {
+    // Fetch the source document
+    const sourceDoc = await documentService.getDocumentById(documentId);
+
+    if (!sourceDoc) {
+      throw new Error(`Document with ID ${documentId} not found`);
+    }
+
+    // Create a new document with copied properties
+    const newDoc = await documentService.createNote({
+      content: sourceDoc.content || '',
+      editorData: sourceDoc.editorData
+        ? typeof sourceDoc.editorData === 'string'
+          ? sourceDoc.editorData
+          : JSON.stringify(sourceDoc.editorData)
+        : '{}',
+      fileType: sourceDoc.fileType,
+      metadata: {
+        ...sourceDoc.metadata,
+        createdAt: Date.now(),
+        duplicatedFrom: documentId,
+      },
+      title: `${sourceDoc.title} (Copy)`,
+    });
+
+    // Add the new document to local map immediately for instant UI update
+    const { localDocumentMap } = get();
+    const newMap = new Map(localDocumentMap);
+    const fileListItem: FileListItem = {
+      chunkCount: null,
+      chunkingError: null,
+      chunkingStatus: null,
+      content: newDoc.content || '',
+      createdAt: newDoc.createdAt ? new Date(newDoc.createdAt) : new Date(),
+      editorData:
+        typeof newDoc.editorData === 'string'
+          ? JSON.parse(newDoc.editorData)
+          : newDoc.editorData || null,
+      embeddingError: null,
+      embeddingStatus: null,
+      fileType: newDoc.fileType,
+      finishEmbedding: false,
+      id: newDoc.id,
+      metadata: newDoc.metadata as any,
+      name: newDoc.title || '',
+      size: newDoc.content?.length || 0,
+      sourceType: 'document',
+      updatedAt: newDoc.updatedAt ? new Date(newDoc.updatedAt) : new Date(),
+      url: '',
+    };
+    newMap.set(newDoc.id, fileListItem);
+    set({ localDocumentMap: newMap }, false, n('duplicateDocument'));
+
+    // Refresh file list in background to sync with server
+    await get().refreshFileList();
+
+    return newDoc;
   },
 
   getOptimisticDocuments: () => {
