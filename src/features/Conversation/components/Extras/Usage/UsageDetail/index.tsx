@@ -215,6 +215,8 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
     >
       <Center gap={2} horizontal style={{ cursor: 'default' }}>
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
+        {/* Force remount when switching between token/credit to prevent unwanted animation
+            See: https://github.com/lobehub/lobe-chat/pull/10098 */}
         <AnimatedNumber
           formatter={(value) => (formatShortenNumber(value) as string).toLowerCase?.()}
           key={isShowCredit ? 'credit' : 'token'}
