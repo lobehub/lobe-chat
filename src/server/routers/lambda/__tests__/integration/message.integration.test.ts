@@ -358,32 +358,6 @@ describe('Message Router Integration Tests', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(msg1.id);
     });
-
-    it('should support useGroup parameter', async () => {
-      const caller = messageRouter.createCaller(createTestContext(userId));
-
-      // 创建多个消息
-      await caller.createMessage({
-        content: 'Message 1',
-        role: 'assistant',
-        sessionId: testSessionId,
-      });
-
-      await caller.createMessage({
-        content: 'Message 2',
-        role: 'assistant',
-        sessionId: testSessionId,
-      });
-
-      // useGroup 参数应该影响消息分组展示
-      const result = await caller.getMessages({
-        sessionId: testSessionId,
-        useGroup: true,
-      });
-
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
-    });
   });
 
   describe('removeMessages', () => {

@@ -55,10 +55,9 @@ export const messageRouter = router({
     }),
 
   createMessage: messageProcedure
-    .input(CreateNewMessageParamsSchema.extend({ useGroup: z.boolean().optional() }))
+    .input(CreateNewMessageParamsSchema)
     .mutation(async ({ input, ctx }) => {
-      const { useGroup, ...params } = input;
-      return ctx.messageService.createMessage(params as any, { useGroup });
+      return ctx.messageService.createMessage(input as any);
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {
@@ -74,20 +73,17 @@ export const messageRouter = router({
         pageSize: z.number().optional(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
       const serverDB = await getServerDB();
 
-      const { useGroup, ...queryParams } = input;
-
       const messageModel = new MessageModel(serverDB, ctx.userId);
       const fileService = new FileService(serverDB, ctx.userId);
 
-      return messageModel.query(queryParams, {
-        groupAssistantMessages: useGroup ?? false,
+      return messageModel.query(input, {
+        groupAssistantMessages: false,
         postProcessUrl: (path) => fileService.getFullFileUrl(path),
       });
     }),
@@ -106,7 +102,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -126,7 +121,6 @@ export const messageRouter = router({
         ids: z.array(z.string()),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -173,7 +167,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
         value: UpdateMessageParamsSchema,
       }),
     )
@@ -198,7 +191,6 @@ export const messageRouter = router({
       UpdateMessageRAGParamsSchema.extend({
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -212,7 +204,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough(),
       }),
     )
@@ -227,7 +218,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough().nullable(),
       }),
     )
@@ -242,7 +232,6 @@ export const messageRouter = router({
         id: z.string(),
         sessionId: z.string().nullable().optional(),
         topicId: z.string().nullable().optional(),
-        useGroup: z.boolean().optional(),
         value: z.object({}).passthrough(),
       }),
     )

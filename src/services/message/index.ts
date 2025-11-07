@@ -16,14 +16,8 @@ import type { HeatmapsProps } from '@lobehub/charts';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { useUserStore } from '@/store/user';
-import { labPreferSelectors } from '@/store/user/selectors';
 
 export class MessageService {
-  private get useGroup() {
-    return labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-  }
-
   createMessage = async ({
     sessionId,
     ...params
@@ -31,7 +25,6 @@ export class MessageService {
     return lambdaClient.message.createMessage.mutate({
       ...params,
       sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
-      useGroup: this.useGroup,
     });
   };
 
@@ -44,7 +37,6 @@ export class MessageService {
       groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
-      useGroup: this.useGroup,
     });
 
     return data as unknown as UIChatMessage[];
@@ -54,7 +46,6 @@ export class MessageService {
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       topicId,
-      useGroup: this.useGroup,
     });
     return data as unknown as UIChatMessage[];
   };
@@ -101,7 +92,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value,
     });
   };
@@ -123,7 +113,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value,
     });
   };
@@ -137,7 +126,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value,
     });
   };
@@ -151,7 +139,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value: error as any,
     });
   };
@@ -165,7 +152,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value: data,
     });
   };
@@ -178,7 +164,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
     });
   };
 
@@ -190,7 +175,6 @@ export class MessageService {
       ids,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
     });
   };
 

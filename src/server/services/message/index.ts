@@ -9,7 +9,6 @@ interface QueryOptions {
   groupId?: string | null;
   sessionId?: string | null;
   topicId?: string | null;
-  useGroup?: boolean;
 }
 
 interface CreateMessageResult {
@@ -42,9 +41,9 @@ export class MessageService {
   /**
    * Unified query options
    */
-  private getQueryOptions(options: QueryOptions) {
+  private getQueryOptions() {
     return {
-      groupAssistantMessages: options.useGroup ?? false,
+      groupAssistantMessages: false,
       postProcessUrl: this.postProcessUrl,
     };
   }
@@ -61,12 +60,11 @@ export class MessageService {
 
     const messages = await this.messageModel.query(
       { groupId, sessionId, topicId },
-      this.getQueryOptions(options),
+      this.getQueryOptions(),
     );
 
     return { messages, success: true };
   }
-
 
   /**
    * Create a new message and return the complete message list
@@ -75,10 +73,7 @@ export class MessageService {
    * This method combines message creation and querying into a single operation,
    * reducing the need for separate refresh calls and improving performance.
    */
-  async createMessage(
-    params: CreateMessageParams,
-    options?: QueryOptions,
-  ): Promise<CreateMessageResult> {
+  async createMessage(params: CreateMessageParams): Promise<CreateMessageResult> {
     // 1. Create the message
     const item = await this.messageModel.create(params);
 
@@ -92,7 +87,7 @@ export class MessageService {
         topicId: params.topicId,
       },
       {
-        groupAssistantMessages: options?.useGroup ?? false,
+        groupAssistantMessages: false,
         postProcessUrl: this.postProcessUrl,
       },
     );
@@ -166,5 +161,4 @@ export class MessageService {
     await this.messageModel.updateMetadata(id, value);
     return this.queryWithSuccess(options);
   }
-
 }

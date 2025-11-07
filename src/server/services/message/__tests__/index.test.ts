@@ -271,39 +271,6 @@ describe('MessageService', () => {
     });
   });
 
-  describe('useGroup option', () => {
-    it('should pass useGroup option to query', async () => {
-      const mockMessages = [{ id: 'msg-1', content: 'test' }];
-      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
-
-      await messageService.removeMessage('msg-1', {
-        sessionId: 'session-1',
-        useGroup: true,
-      });
-
-      expect(mockMessageModel.query).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          groupAssistantMessages: true,
-        }),
-      );
-    });
-
-    it('should default useGroup to false', async () => {
-      const mockMessages = [{ id: 'msg-1', content: 'test' }];
-      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
-
-      await messageService.removeMessage('msg-1', { sessionId: 'session-1' });
-
-      expect(mockMessageModel.query).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          groupAssistantMessages: false,
-        }),
-      );
-    });
-  });
-
   describe('createMessage', () => {
     it('should create message and return message list', async () => {
       const params = {
@@ -330,32 +297,6 @@ describe('MessageService', () => {
         },
         expect.objectContaining({
           groupAssistantMessages: false,
-        }),
-      );
-      expect(result).toEqual({
-        id: 'msg-1',
-        messages: mockMessages,
-      });
-    });
-
-    it('should create message with useGroup option', async () => {
-      const params = {
-        content: 'Hello',
-        role: 'assistant' as const,
-        sessionId: 'session-1',
-      };
-      const createdMessage = { id: 'msg-1', ...params };
-      const mockMessages = [createdMessage];
-
-      vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
-      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
-
-      const result = await messageService.createMessage(params as any, { useGroup: true });
-
-      expect(mockMessageModel.query).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          groupAssistantMessages: true,
         }),
       );
       expect(result).toEqual({
