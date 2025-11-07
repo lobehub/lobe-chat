@@ -901,20 +901,15 @@ describe('thread action', () => {
         });
       });
 
-      const resendSpy = vi.spyOn(result.current, 'internal_resendMessage').mockResolvedValue();
+      const resendSpy = vi
+        .spyOn(result.current, 'regenerateUserMessage')
+        .mockResolvedValue(undefined);
 
       await act(async () => {
         await result.current.resendThreadMessage('message-id');
       });
 
-      expect(resendSpy).toHaveBeenCalledWith(
-        'message-id',
-        expect.objectContaining({
-          inPortalThread: true,
-          messages: expect.any(Array),
-          threadId: 'thread-id',
-        }),
-      );
+      expect(resendSpy).toHaveBeenCalledWith('message-id', {});
     });
   });
 
