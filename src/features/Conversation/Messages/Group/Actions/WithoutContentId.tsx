@@ -1,12 +1,14 @@
 import { UIChatMessage } from '@lobechat/types';
-import { ActionIconGroup, type ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
+import { ActionIconGroup, type ActionIconGroupEvent } from '@lobehub/ui';
 import { useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext, useMemo } from 'react';
+import { memo, useCallback, useContext } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import {
+  displayMessageSelectors,
+  messageStateSelectors,
+  threadSelectors,
+} from '@/store/chat/selectors';
 
 import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
 import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
@@ -17,28 +19,45 @@ interface GroupActionsProps {
 }
 
 const WithoutContentId = memo<GroupActionsProps>(({ id, data }) => {
-  const [isThreadMode, hasThread] = useChatStore((s) => [
-    !!s.activeThreadId,
+  const [
+    // isThreadMode,
+    hasThread,
+    displayMessage,
+  ] = useChatStore((s) => [
+    // !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
+    displayMessageSelectors.getDisplayMessageById(id)(s),
   ]);
-  const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
 
-  const { delAndRegenerate, del } = useChatListActionsBar({ hasThread });
+  // Get the last block id for checking continuing state
+  const lastBlockId = displayMessage?.children?.at(-1)?.id;
+  const isContinuing = useChatStore((s) =>
+    lastBlockId ? messageStateSelectors.isMessageContinuing(lastBlockId)(s) : false,
+  );
+
+  const { delAndRegenerate, del, continueGeneration } = useChatListActionsBar({
+    hasThread,
+    isContinuing,
+  });
 
   const inPortalThread = useContext(InPortalThreadContext);
-  const inThread = isThreadMode || inPortalThread;
+  // const inThread = isThreadMode || inPortalThread;
 
-  const items = useMemo(() => {
-    return [delAndRegenerate, del].filter(Boolean) as ActionIconGroupItemType[];
-  }, [inThread, isGroupSession]);
+  const items = [continueGeneration, delAndRegenerate, del];
 
   const searchParams = useSearchParams();
   const topic = searchParams.get('topic');
 
-  const [deleteMessage, delAndRegenerateMessage, delAndResendThreadMessage] = useChatStore((s) => [
+  const [
+    deleteMessage,
+    delAndRegenerateMessage,
+    delAndResendThreadMessage,
+    continueGenerationMessage,
+  ] = useChatStore((s) => [
     s.deleteMessage,
     s.delAndRegenerateMessage,
     s.delAndResendThreadMessage,
+    s.continueGenerationMessage,
   ]);
 
   const onActionClick = useCallback(
@@ -46,6 +65,18 @@ const WithoutContentId = memo<GroupActionsProps>(({ id, data }) => {
       if (!data) return;
 
       switch (action.key) {
+        case 'continueGeneration': {
+          const displayMessage = displayMessageSelectors.getDisplayMessageById(id)(
+            useChatStore.getState(),
+          );
+
+          const block = displayMessage?.children?.at(-1);
+          if (!block) return;
+
+          continueGenerationMessage(block.id);
+          break;
+        }
+
         case 'del': {
           deleteMessage(id);
           break;

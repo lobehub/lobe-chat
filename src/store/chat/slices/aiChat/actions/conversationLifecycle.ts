@@ -45,6 +45,10 @@ export interface ConversationLifecycleAction {
     params?: { skipTrace?: boolean; traceId?: string },
   ) => Promise<void>;
   /**
+   * Continue generating from current assistant message
+   */
+  continueGenerationMessage: (id: string) => Promise<void>;
+  /**
    * Deletes an existing message and generates a new one in its place
    */
   delAndRegenerateMessage: (id: string) => Promise<void>;
@@ -230,6 +234,7 @@ export const conversationLifecycle: StateCreator<
         parentMessageType: 'assistant',
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
+        skipCreateFirstMessage: true,
       });
 
       //
@@ -316,6 +321,36 @@ export const conversationLifecycle: StateCreator<
     if (contextMessages.length <= 0 || !userId) return;
 
     await get().regenerateUserMessage(userId, params);
+  },
+
+  continueGenerationMessage: async (id) => {
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+    console.log(message);
+    if (!message) return;
+
+    try {
+      // Mark message as continuing
+      set(
+        { continuingIds: [...get().continuingIds, id] },
+        false,
+        'continueGenerationMessage/start',
+      );
+
+      const chats = displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
+
+      await get().internal_execAgentRuntime({
+        messages: chats,
+        parentMessageId: id,
+        parentMessageType: message.role as 'assistant' | 'tool' | 'user',
+      });
+    } finally {
+      // Remove message from continuing state
+      set(
+        { continuingIds: get().continuingIds.filter((msgId) => msgId !== id) },
+        false,
+        'continueGenerationMessage/end',
+      );
+    }
   },
 
   delAndRegenerateMessage: async (id) => {

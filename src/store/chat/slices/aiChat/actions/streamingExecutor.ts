@@ -77,7 +77,7 @@ export interface StreamingExecutorAction {
   internal_execAgentRuntime: (params: {
     messages: UIChatMessage[];
     parentMessageId: string;
-    parentMessageType: 'user' | 'assistant';
+    parentMessageType: 'user' | 'assistant' | 'tool';
     inSearchWorkflow?: boolean;
     /**
      * the RAG query content, should be embedding and used in the semantic search
@@ -85,6 +85,7 @@ export interface StreamingExecutorAction {
     ragQuery?: string;
     threadId?: string;
     inPortalThread?: boolean;
+    skipCreateFirstMessage?: boolean;
     traceId?: string;
     ragMetadata?: { ragQueryId: string; fileChunks: MessageSemanticSearchChunk[] };
   }) => Promise<void>;
@@ -458,6 +459,7 @@ export const streamingExecutor: StateCreator<
         parentId: params.parentMessageId,
         parentMessageType,
         params,
+        skipCreateFirstMessage: params.skipCreateFirstMessage,
       }),
     });
 

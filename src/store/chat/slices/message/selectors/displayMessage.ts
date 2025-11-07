@@ -250,6 +250,8 @@ const getGroupLatestMessageWithoutTools = (id: string) => (s: ChatStoreState) =>
 
   // Return the last child only if it doesn't have tools
   if (!lastChild.tools || lastChild.tools.length === 0) {
+    if (!lastChild.content) return;
+
     return lastChild;
   }
 

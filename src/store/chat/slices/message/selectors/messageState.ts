@@ -5,6 +5,7 @@ import { getDbMessageByToolCallId } from './dbMessage';
 const isMessageEditing = (id: string) => (s: ChatStoreState) => s.messageEditingIds.includes(id);
 const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoadingIds.includes(id);
 const isMessageRegenerating = (id: string) => (s: ChatStoreState) => s.regeneratingIds.includes(id);
+const isMessageContinuing = (id: string) => (s: ChatStoreState) => s.continuingIds.includes(id);
 
 const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
 const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
@@ -70,6 +71,7 @@ export const messageStateSelectors = {
   isHasMessageLoading,
   isInRAGFlow,
   isInToolsCalling,
+  isMessageContinuing,
   isMessageEditing,
   isMessageGenerating,
   isMessageInChatReasoning,

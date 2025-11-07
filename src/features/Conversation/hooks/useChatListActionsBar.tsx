@@ -1,6 +1,7 @@
 import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import {
+  ArrowDownFromLine,
   Copy,
   DownloadIcon,
   Edit,
@@ -26,6 +27,7 @@ const translateStyle = css`
 
 interface ChatListActionsBar {
   branching: ActionIconGroupItemType;
+  continueGeneration: ActionIconGroupItemType;
   copy: ActionIconGroupItemType;
   del: ActionIconGroupItemType;
   delAndRegenerate: ActionIconGroupItemType;
@@ -40,8 +42,13 @@ interface ChatListActionsBar {
 
 export const useChatListActionsBar = ({
   hasThread,
+  isContinuing,
   isRegenerating,
-}: { hasThread?: boolean; isRegenerating?: boolean } = {}): ChatListActionsBar => {
+}: {
+  hasThread?: boolean;
+  isContinuing?: boolean;
+  isRegenerating?: boolean;
+} = {}): ChatListActionsBar => {
   const { t } = useTranslation(['common', 'chat']);
 
   return useMemo<ChatListActionsBar>(
@@ -49,7 +56,14 @@ export const useChatListActionsBar = ({
       branching: {
         icon: Split,
         key: 'branching',
-        label: t('branching', { defaultValue: 'Create Sub Topic' }),
+        label: t('branching'),
+      },
+      continueGeneration: {
+        disabled: isContinuing,
+        icon: ArrowDownFromLine,
+        key: 'continueGeneration',
+        label: t('messageAction.continueGeneration', { ns: 'chat' }),
+        spin: isContinuing,
       },
       copy: {
         icon: Copy,
@@ -68,7 +82,6 @@ export const useChatListActionsBar = ({
         icon: ListRestart,
         key: 'delAndRegenerate',
         label: t('messageAction.delAndRegenerate', {
-          defaultValue: 'Delete and regenerate',
           ns: 'chat',
         }),
       },
@@ -78,7 +91,7 @@ export const useChatListActionsBar = ({
       edit: {
         icon: Edit,
         key: 'edit',
-        label: t('edit', { defaultValue: 'Edit' }),
+        label: t('edit'),
       },
       export: {
         icon: DownloadIcon,
@@ -89,12 +102,13 @@ export const useChatListActionsBar = ({
         disabled: isRegenerating,
         icon: RotateCcw,
         key: 'regenerate',
-        label: t('regenerate', { defaultValue: 'Regenerate' }),
+        label: t('regenerate'),
+        spin: isRegenerating,
       },
       share: {
         icon: Share2,
         key: 'share',
-        label: t('share', { defaultValue: 'Share' }),
+        label: t('share'),
       },
       translate: {
         children: localeOptions.map((i) => ({
@@ -112,6 +126,6 @@ export const useChatListActionsBar = ({
         label: t('tts.action', { ns: 'chat' }),
       },
     }),
-    [hasThread, isRegenerating],
+    [hasThread, isContinuing, isRegenerating],
   );
 };

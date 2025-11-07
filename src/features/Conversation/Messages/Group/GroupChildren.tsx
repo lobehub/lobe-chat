@@ -53,16 +53,7 @@ const GroupChildren = memo<GroupChildrenProps>(
               <ContentBlock index={index} {...item} />
             </Flexbox>
           ) : (
-            // <motion.div
-            //   animate={{ height: 'auto', opacity: 1 }}
-            //   exit={{ height: 0, opacity: 0 }}
-            //   initial={{ height: 0, opacity: 0 }}
-            //   key={`${id}_${index}`}
-            //   style={{ overflow: 'hidden' }}
-            //   transition={{ duration: 0.3, ease: 'easeInOut' }}
-            // >
             <ContentBlock index={index} key={`${id}_${index}`} {...item} />
-            // </motion.div>
           );
         })}
       </Flexbox>
