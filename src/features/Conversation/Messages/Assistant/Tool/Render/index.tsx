@@ -1,9 +1,8 @@
 import { LOADING_FLAT } from '@lobechat/const';
-import isEqual from 'fast-deep-equal';
 import { Suspense, memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
@@ -32,7 +31,7 @@ const Render = memo<RenderProps>(
     apiName,
   }) => {
     const loading = useChatStore(messageStateSelectors.isToolCallStreaming(messageId, toolIndex));
-    const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId), isEqual);
+    const toolMessage = useChatStore(dbMessageSelectors.getDbMessageByToolCallId(toolCallId));
 
     if (loading || !toolMessage) return null;
 

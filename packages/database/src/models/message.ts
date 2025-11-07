@@ -768,17 +768,19 @@ export class MessageModel {
     sessionId?: string | null,
     topicId?: string | null,
     groupId?: string | null,
-  ) =>
-    this.db
-      .delete(messages)
-      .where(
-        and(
-          eq(messages.userId, this.userId),
-          this.matchSession(sessionId),
-          this.matchTopic(topicId),
-          this.matchGroup(groupId),
-        ),
-      );
+  ) => {
+    const conditions = [eq(messages.userId, this.userId), this.matchSession(sessionId)];
+
+    // For deletion: only filter by topicId/groupId if explicitly provided
+    if (topicId !== undefined && topicId !== null) {
+      conditions.push(eq(messages.topicId, topicId));
+    }
+    if (groupId !== undefined && groupId !== null) {
+      conditions.push(eq(messages.groupId, groupId));
+    }
+
+    return this.db.delete(messages).where(and(...conditions));
+  };
 
   deleteAllMessages = async () => {
     return this.db.delete(messages).where(eq(messages.userId, this.userId));

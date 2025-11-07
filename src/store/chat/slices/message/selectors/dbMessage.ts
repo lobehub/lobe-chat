@@ -52,7 +52,7 @@ const getDbMessageById = (id: string) => (s: ChatStoreState) =>
 /**
  * Get raw message by tool_call_id from database
  */
-const getDbMessageByToolCallId = (id: string) => (s: ChatStoreState) => {
+export const getDbMessageByToolCallId = (id: string) => (s: ChatStoreState) => {
   const messages = activeDbMessages(s);
   return messages.find((m) => m.tool_call_id === id);
 };

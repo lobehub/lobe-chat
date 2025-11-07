@@ -56,11 +56,6 @@ export const currentChatKey = displayMessageSelectors.currentDisplayChatKey;
 export const mainDisplayChatIDs = displayMessageSelectors.mainDisplayChatIDs;
 
 /**
- * @deprecated Use displayMessageSelectors.getDisplayMessageByToolCallId instead
- */
-export const getMessageByToolCallId = displayMessageSelectors.getDisplayMessageByToolCallId;
-
-/**
  * Legacy chatSelectors object for backward compatibility
  * @deprecated Import dbMessageSelectors or displayMessageSelectors directly
  */
@@ -84,8 +79,6 @@ export const chatSelectors = {
   getGroupLatestMessageWithoutTools: displayMessageSelectors.getGroupLatestMessageWithoutTools,
 
   getMessageById: displayMessageSelectors.getDisplayMessageById,
-
-  getMessageByToolCallId: displayMessageSelectors.getDisplayMessageByToolCallId,
 
   getSupervisorTodos: displayMessageSelectors.getSupervisorTodos,
 

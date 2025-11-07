@@ -92,6 +92,7 @@ export const messagePublicApi: StateCreator<
 
   deleteMessage: async (id) => {
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
+    console.log(id, 'message', message);
     if (!message) return;
 
     let ids = [message.id];

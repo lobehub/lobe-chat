@@ -11,7 +11,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { useClientDataSWR } from '@/libs/swr';
 import { fileService } from '@/services/file';
 import { pythonService } from '@/services/python';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
 import { CodeInterpreterIdentifier } from '@/tools/code-interpreter';
@@ -50,7 +50,7 @@ export const codeInterpreterSlice: StateCreator<
 
     // TODO: 应该只下载 AI 用到的文件
     const files: File[] = [];
-    for (const message of chatSelectors.mainDisplayChats(get())) {
+    for (const message of dbMessageSelectors.dbUserMessages(get())) {
       for (const file of message.fileList ?? []) {
         const blob = await fetch(file.url).then((res) => res.blob());
         files.push(new File([blob], file.name));
@@ -61,7 +61,7 @@ export const codeInterpreterSlice: StateCreator<
       }
       for (const tool of message.tools ?? []) {
         if (tool.identifier === CodeInterpreterIdentifier) {
-          const message = chatSelectors.getMessageByToolCallId(tool.id)(get());
+          const message = dbMessageSelectors.getDbMessageByToolCallId(tool.id)(get());
           if (message?.content) {
             const content = JSON.parse(message.content) as CodeInterpreterResponse;
             for (const file of content.files ?? []) {
@@ -105,7 +105,7 @@ export const codeInterpreterSlice: StateCreator<
     id: string,
     updater: (data: CodeInterpreterResponse) => void,
   ) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
     const result: CodeInterpreterResponse = JSON.parse(message.content);

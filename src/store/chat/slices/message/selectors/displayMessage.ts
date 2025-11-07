@@ -88,14 +88,6 @@ const activeDisplayMessages = (s: ChatStoreState): UIChatMessage[] => {
 const getDisplayMessageById = (id: string) => (s: ChatStoreState) =>
   chatHelpers.getMessageById(activeDisplayMessages(s), id);
 
-/**
- * Get display message by tool_call_id
- */
-const getDisplayMessageByToolCallId = (id: string) => (s: ChatStoreState) => {
-  const messages = activeDisplayMessages(s);
-  return messages.find((m) => m.tool_call_id === id);
-};
-
 // ============= Thread Handling ========== //
 
 const getChatsWithThread = (s: ChatStoreState, messages: UIChatMessage[]) => {
@@ -284,7 +276,6 @@ export const displayMessageSelectors = {
   currentChatLoadingState,
   currentDisplayChatKey,
   getDisplayMessageById,
-  getDisplayMessageByToolCallId,
   getDisplayMessagesByKey,
   getGroupLatestMessageWithoutTools,
   getSupervisorTodos,
