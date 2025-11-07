@@ -1,10 +1,9 @@
 'use client';
 
-import { ActionIcon, Icon, SearchBar, Text } from '@lobehub/ui';
-import { Input } from 'antd';
+import { ActionIcon, SearchBar, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { FileText, PlusIcon } from 'lucide-react';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { PlusIcon } from 'lucide-react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
@@ -12,9 +11,9 @@ import { Virtuoso } from 'react-virtuoso';
 import { useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
 
-import NoteActions from './DocumentActions';
 import DocumentEditor from './DocumentEditor';
 import DocumentEditorPlaceholder from './DocumentEditorPlaceholder';
+import DocumentListItem from './DocumentListItem';
 import NoteListSkeleton from './DocumentListSkeleton';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -23,87 +22,15 @@ const useStyles = createStyles(({ css, token }) => ({
     width: 100%;
     height: 100%;
   `,
-  documentActions: css`
-    display: flex;
-    align-items: center;
-
-    padding: 0;
-    border-radius: ${token.borderRadiusSM}px;
-
-    opacity: 0;
-    background: ${token.colorBgContainer};
-    box-shadow: ${token.boxShadowSecondary};
-
-    transition: opacity ${token.motionDurationMid};
-  `,
-  documentCard: css`
-    cursor: pointer;
-    user-select: none;
-
-    position: relative;
-
-    display: flex;
-    gap: 12px;
-    align-items: center;
-
-    min-height: 36px;
-    margin-block: 4px;
-    margin-inline: 8px;
-    padding-block: 8px;
-    padding-inline: 12px;
-    border-radius: ${token.borderRadius}px;
-
-    color: ${token.colorTextSecondary};
-
-    background: transparent;
-
-    transition: all ${token.motionDurationMid};
-
-    &:hover {
-      background: ${token.colorFillTertiary};
-
-      .document-actions {
-        opacity: 1;
-      }
-    }
-
-    &.selected {
-      color: ${token.colorText};
-      background: ${token.colorFillSecondary};
-    }
-  `,
-  documentContent: css`
-    display: flex;
-    flex: 1;
-    gap: 12px;
-    align-items: center;
-
-    min-width: 0;
-  `,
   documentList: css`
     overflow-y: auto;
     flex: 1;
     padding-block: 4px;
   `,
-  documentTitle: css`
-    overflow: hidden;
-    flex: 1;
-
-    min-width: 0;
-
-    font-size: 14px;
-    line-height: 20px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  `,
   editorPanel: css`
     overflow: hidden;
     flex: 1;
     background: ${token.colorBgContainer};
-  `,
-  emoji: css`
-    font-size: 16px;
-    line-height: 1;
   `,
   header: css`
     display: flex;
@@ -116,12 +43,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: ${token.colorBgContainer};
   `,
-  icon: css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: ${token.colorTextSecondary};
-  `,
   listPanel: css`
     display: flex;
     flex-direction: column;
@@ -131,29 +52,6 @@ const useStyles = createStyles(({ css, token }) => ({
     border-inline-end: 1px solid ${token.colorBorderSecondary};
 
     background: ${token.colorBgContainer};
-  `,
-  renameInput: css`
-    flex: 1;
-    min-width: 0;
-    height: 20px;
-    padding: 0;
-
-    input {
-      height: 20px;
-      padding: 0;
-      border: none;
-
-      font-size: 14px;
-      line-height: 20px;
-
-      background: transparent;
-      box-shadow: none !important;
-
-      &:focus {
-        border: none;
-        box-shadow: none !important;
-      }
-    }
   `,
 }));
 
@@ -172,14 +70,13 @@ const updateUrl = (docId: string | null) => {
  */
 const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documentId }) => {
   const { t } = useTranslation('file');
-  const { styles, cx } = useStyles();
+  const { styles } = useStyles();
 
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [searchKeywords, setSearchKeywords] = useState<string>('');
   const [renamingDocumentId, setRenamingDocumentId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState<string>('');
-  const renameInputRef = useRef<any>(null);
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
   const getOptimisticDocuments = useFileStore((s) => s.getOptimisticDocuments);
@@ -317,10 +214,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const handleStartRename = (documentId: string, currentName: string) => {
     setRenamingDocumentId(documentId);
     setRenameValue(currentName);
-    // Focus the input after state update
-    setTimeout(() => {
-      renameInputRef.current?.select();
-    }, 0);
   };
 
   const handleRenameSubmit = async () => {
@@ -383,57 +276,28 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
               }}
               data={filteredDocuments}
               itemContent={(_index, document) => {
-                const title = document.name || t('documentList.untitled');
-                const emoji = document.metadata?.emoji;
                 const isSelected = selectedDocumentId === document.id;
                 const isRenaming = renamingDocumentId === document.id;
                 return (
-                  <div
-                    className={cx(styles.documentCard, isSelected && 'selected')}
+                  <DocumentListItem
+                    document={document}
+                    isRenaming={isRenaming}
+                    isSelected={isSelected}
                     key={document.id}
-                    onClick={() => !isRenaming && handleDocumentSelect(document.id)}
-                  >
-                    <div className={styles.documentContent}>
-                      {emoji ? (
-                        <span className={styles.emoji}>{emoji}</span>
-                      ) : (
-                        <Icon className={styles.icon} icon={FileText} size={16} />
-                      )}
-                      {isRenaming ? (
-                        <Input
-                          autoFocus
-                          className={styles.renameInput}
-                          onBlur={handleRenameSubmit}
-                          onChange={(e) => setRenameValue(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleRenameSubmit();
-                            } else if (e.key === 'Escape') {
-                              handleRenameCancel();
-                            }
-                          }}
-                          onPressEnter={handleRenameSubmit}
-                          ref={renameInputRef}
-                          value={renameValue}
-                        />
-                      ) : (
-                        <div className={styles.documentTitle}>{title}</div>
-                      )}
-                    </div>
-                    <div className={cx(styles.documentActions, 'document-actions')}>
-                      <NoteActions
-                        documentContent={document.content || undefined}
-                        documentId={document.id}
-                        onDelete={() => {
-                          if (selectedDocumentId === document.id) {
-                            setSelectedDocumentId(null);
-                            setIsCreatingNew(false);
-                          }
-                        }}
-                        onRename={() => handleStartRename(document.id, title)}
-                      />
-                    </div>
-                  </div>
+                    onDelete={() => {
+                      if (selectedDocumentId === document.id) {
+                        setSelectedDocumentId(null);
+                        setIsCreatingNew(false);
+                      }
+                    }}
+                    onRename={handleStartRename}
+                    onRenameCancel={handleRenameCancel}
+                    onRenameSubmit={handleRenameSubmit}
+                    onSelect={handleDocumentSelect}
+                    renameValue={renameValue}
+                    setRenameValue={setRenameValue}
+                    untitledText={t('documentList.untitled')}
+                  />
                 );
               }}
               style={{ height: '100%' }}
