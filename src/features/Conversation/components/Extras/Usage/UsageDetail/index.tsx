@@ -217,6 +217,7 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
         <AnimatedNumber
           formatter={(value) => (formatShortenNumber(value) as string).toLowerCase?.()}
+          key={isShowCredit ? 'credit' : 'token'}
           value={totalCount}
         />
       </Center>
