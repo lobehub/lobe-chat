@@ -90,7 +90,6 @@ const Inspectors = memo<InspectorProps>(
     setShowRender,
     showPluginRender,
     setShowPluginRender,
-    hidePluginUI = false,
     type,
   }) => {
     const { t } = useTranslation('plugin');
@@ -127,7 +126,7 @@ const Inspectors = memo<InspectorProps>(
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal>
             <Flexbox className={styles.actions} horizontal>
-              {showRender && !hidePluginUI && (
+              {showRender && (
                 <ActionIcon
                   icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                   onClick={() => {
