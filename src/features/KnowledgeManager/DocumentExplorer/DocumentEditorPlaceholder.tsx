@@ -60,13 +60,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface NoteEmptyStatusProps {
+interface DocumentEditorPlaceholderProps {
   knowledgeBaseId?: string;
   onCreateNewNote: () => void;
   onNoteCreated?: (noteId: string) => void;
 }
 
-const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
+const DocumentEditorPlaceholder = memo<DocumentEditorPlaceholderProps>(
   ({ knowledgeBaseId, onCreateNewNote, onNoteCreated }) => {
     const { t } = useTranslation(['file', 'common']);
     const theme = useTheme();
@@ -166,4 +166,4 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
   },
 );
 
-export default NoteEmptyStatus;
+export default DocumentEditorPlaceholder;

@@ -14,8 +14,8 @@ import { FileListItem } from '@/types/files';
 
 import NoteActions from './DocumentActions';
 import DocumentEditor from './DocumentEditor';
+import DocumentEditorPlaceholder from './DocumentEditorPlaceholder';
 import NoteListSkeleton from './DocumentListSkeleton';
-import NoteEmptyStatus from './NoteEmptyStatus';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -455,7 +455,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
             onDocumentIdChange={handleDocumentIdChange}
           />
         ) : (
-          <NoteEmptyStatus
+          <DocumentEditorPlaceholder
             knowledgeBaseId={knowledgeBaseId}
             onCreateNewNote={handleNewDocument}
             onNoteCreated={(documentId) => {

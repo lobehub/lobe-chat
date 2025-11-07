@@ -24,16 +24,20 @@ export default {
   documentEditor: {
     addIcon: '添加图标',
     autoSaveMessage: '文档会自动保存，无需手动保存',
+    chooseIcon: '选择图标',
     editorPlaceholder: '输入文档内容',
-    emojiPicker: {
-      tooltip: '选择图标',
-    },
     empty: {
       createNewDocument: '创建新文档',
       title: '选择一个文档以开始',
       uploadMarkdown: '上传 Markdown 文件',
     },
     linkCopied: '链接已复制',
+    menu: {
+      copyLink: '复制链接',
+      exportDocument: '导出文档',
+      importDocument: '导入文档',
+      pin: '置顶文档',
+    },
     saving: '保存中...',
     titlePlaceholder: '无标题',
   },

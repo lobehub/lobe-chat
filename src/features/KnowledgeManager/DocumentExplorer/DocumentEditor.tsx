@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  INSERT_HEADING_COMMAND,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -413,7 +414,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         {
           icon: <Icon icon={Link2} />,
           key: 'copy-link',
-          label: 'Copy Link',
+          label: t('documentEditor.menu.copyLink'),
           onClick: () => {
             if (currentDocId) {
               const url = `${window.location.origin}${window.location.pathname}?documentId=${currentDocId}`;
@@ -426,7 +427,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           danger: true,
           icon: <Icon icon={Trash2} />,
           key: 'delete',
-          label: 'Delete',
+          label: t('delete', { ns: 'common' }),
           onClick: () => {
             // TODO: Implement delete functionality
             console.log('Delete clicked');
@@ -438,7 +439,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         {
           icon: <Icon icon={Download} />,
           key: 'export',
-          label: 'Export',
+          label: t('documentEditor.menu.exportDocument'),
           onClick: () => {
             // TODO: Implement export functionality
             console.log('Export clicked');
@@ -447,7 +448,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         {
           icon: <Icon icon={Upload} />,
           key: 'import',
-          label: 'Import',
+          label: t('documentEditor.menu.importDocument'),
           onClick: () => {
             // TODO: Implement import functionality
             console.log('Import clicked');
@@ -592,7 +593,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                       fontSize: 80,
                       transform: 'translateX(-6px)',
                     }}
-                    title={t('documentEditor.emojiPicker.tooltip')}
+                    title={t('documentEditor.chooseIcon')}
                     value={currentEmoji}
                   />
                 </Flexbox>
@@ -615,7 +616,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                   }}
                   type="text"
                 >
-                  Choose Icon
+                  {t('documentEditor.chooseIcon')}
                 </Button>
               </Flexbox>
 
@@ -667,6 +668,25 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                 ReactMathPlugin,
                 ReactImagePlugin,
               ]}
+              slashOption={{
+                items: [
+                  {
+                    key: 'h1',
+                    label: 'Heading 1',
+                    onSelect: (editor) => {
+                      editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h1' });
+                    },
+                  },
+                  {
+                    key: 'h2',
+                    label: 'Heading 2',
+                    onSelect: (editor) => {
+                      editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h2' });
+                    },
+                  },
+                  // More slash commands...
+                ],
+              }}
               style={{
                 minHeight: '400px',
                 paddingBottom: '200px',
