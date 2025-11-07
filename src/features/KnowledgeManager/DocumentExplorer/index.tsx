@@ -14,7 +14,7 @@ import { FileListItem } from '@/types/files';
 import DocumentEditor from './DocumentEditor';
 import DocumentEditorPlaceholder from './DocumentEditorPlaceholder';
 import DocumentListItem from './DocumentListItem';
-import NoteListSkeleton from './DocumentListSkeleton';
+import DocumentListSkeleton from './DocumentListSkeleton';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -258,7 +258,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
         </div>
         <div className={styles.documentList}>
           {isLoading ? (
-            <NoteListSkeleton />
+            <DocumentListSkeleton />
           ) : filteredDocuments.length === 0 ? (
             <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
               {searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')}

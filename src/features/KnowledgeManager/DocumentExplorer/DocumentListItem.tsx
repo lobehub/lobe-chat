@@ -12,16 +12,7 @@ import DocumentActions from './DocumentActions';
 
 const useStyles = createStyles(({ css, token }) => ({
   documentActions: css`
-    display: flex;
-    align-items: center;
-
-    padding: 0;
-    border-radius: ${token.borderRadiusSM}px;
-
     opacity: 0;
-    background: ${token.colorBgContainer};
-    box-shadow: ${token.boxShadowSecondary};
-
     transition: opacity ${token.motionDurationMid};
   `,
   documentCard: css`
