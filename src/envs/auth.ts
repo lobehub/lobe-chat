@@ -11,6 +11,10 @@ declare global {
       CLERK_SECRET_KEY?: string;
       CLERK_WEBHOOK_SECRET?: string;
 
+      // ===== Better Auth ===== //
+      BETTER_AUTH_SECRET?: string;
+      BETTER_AUTH_URL?: string;
+
       // ===== Next Auth ===== //
       NEXT_AUTH_SECRET?: string;
 
@@ -53,6 +57,10 @@ export const getAuthConfig = () => {
       CLERK_SECRET_KEY: z.string().optional(),
       CLERK_WEBHOOK_SECRET: z.string().optional(),
 
+      // Better Auth
+      BETTER_AUTH_SECRET: z.string().optional(),
+      BETTER_AUTH_URL: z.string().optional(),
+
       // NEXT-AUTH
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
@@ -76,6 +84,10 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
+
+      // Better Auth
+      BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+      BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
 
       // Next Auth
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',

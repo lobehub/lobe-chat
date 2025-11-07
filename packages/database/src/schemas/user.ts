@@ -1,8 +1,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import { DEFAULT_PREFERENCE } from '@lobechat/const';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { boolean, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
-import { DEFAULT_PREFERENCE } from '@/const/user';
 import { CustomPluginParams } from '@/types/tool/plugin';
 
 import { timestamps, timestamptz } from './_helpers';
@@ -22,6 +22,8 @@ export const users = pgTable('users', {
   // Time user was created in Clerk
   clerkCreatedAt: timestamptz('clerk_created_at'),
 
+  // Required by better-auth
+  emailVerified: boolean('email_verified').default(false).notNull(),
   // Required by nextauth, all null allowed
   emailVerifiedAt: timestamptz('email_verified_at'),
 
