@@ -54,6 +54,8 @@ export enum ProfileTabs {
 
 export interface SystemStatus {
   chatInputHeight?: number;
+  disabledModelProvidersSortType?: string;
+  disabledModelsSortType?: string;
   expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
@@ -124,6 +126,8 @@ export interface GlobalState {
 
 export const INITIAL_STATUS = {
   chatInputHeight: 64,
+  disabledModelProvidersSortType: 'default',
+  disabledModelsSortType: 'default',
   expandInputActionbar: true,
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
   fileManagerViewMode: 'list' as const,
