@@ -400,13 +400,17 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       };
     }, [t]);
 
-    // Calculate word count
     const wordCount = useMemo(() => {
-      if (!editor) return 0;
-      // const textContent = (editor.getDocument('markdown') as unknown as string) || '';
-      // return textContent.trim().split(/\s+/).filter(Boolean).length;
-      return 100;
-    }, [editor, saveStatus]); // Re-calculate when content changes (tracked by saveStatus)
+      if (!editor || isInitialLoadRef.current) return 0;
+
+      try {
+        const textContent = (editor.getDocument('markdown') as unknown as string) || '';
+        return textContent.trim().split(/\s+/).filter(Boolean).length;
+      } catch (error) {
+        console.error('Failed to calculate word count:', error);
+        return 0;
+      }
+    }, [editor, isInitialLoadRef.current, cachedEditorData]); // Re-calculate when content changes (tracked by saveStatus)
 
     // Menu items for the three-dot menu
     const menuItems = useMemo(
@@ -462,12 +466,14 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           key: 'document-info',
           label: (
             <div style={{ color: theme.colorTextTertiary, fontSize: 12, lineHeight: 1.6 }}>
-              <div>{wordCount} words</div>
-              <div>Last edited by {username}</div>
+              <div>{t('documentEditor.wordCount', { wordCount })}</div>
+              <div>{t('documentEditor.editedBy', { name: username })}</div>
               <div>
                 {lastUpdatedTime
-                  ? dayjs(lastUpdatedTime).format('MMMM D, YYYY [at] h:mm A')
-                  : 'Not saved yet'}
+                  ? t('documentEditor.editedAt', {
+                      time: dayjs(lastUpdatedTime).format('MMMM D, YYYY [at] h:mm A'),
+                    })
+                  : ''}
               </div>
             </div>
           ),

@@ -25,6 +25,8 @@ export default {
     addIcon: '添加图标',
     autoSaveMessage: '文档会自动保存，无需手动保存',
     chooseIcon: '选择图标',
+    editedAt: '最后编辑于 {{time}}',
+    editedBy: '最后编辑者 {{name}}',
     editorPlaceholder: '输入文档内容',
     empty: {
       createNewDocument: '创建新文档',
@@ -40,6 +42,7 @@ export default {
     },
     saving: '保存中...',
     titlePlaceholder: '无标题',
+    wordCount: '{{wordCount}} 字',
   },
   documentList: {
     copyContent: '复制全文',
