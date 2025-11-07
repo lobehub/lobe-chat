@@ -29,7 +29,7 @@ const KnowledgeBase = () => {
   const handleCreate = () => {
     open({
       onSuccess: (id) => {
-        navigate(`/bases/${id}`);
+        navigate(`/knowledge/bases/${id}`);
       },
     });
   };
