@@ -128,8 +128,12 @@ const defaultMiddleware = (request: NextRequest) => {
   // new handle segment rewrite: /${route}${originalPathname}
   // / -> /zh-CN__0__dark
   // /discover -> /zh-CN__0__dark/discover
+  // All SPA routes that use react-router-dom should be rewritten to just /${route}
+  const spaRoutes = ['/chat', '/discover', '/knowledge', '/settings', '/image', '/labs', '/changelog', '/profile'];
+  const isSpaRoute = spaRoutes.some(route => url.pathname.startsWith(route));
+
   let nextPathname: string;
-  if (url.pathname.startsWith('/chat') || url.pathname.startsWith('/discover')) {
+  if (isSpaRoute) {
     nextPathname = `/${route}`;
   } else {
     nextPathname = `/${route}` + (url.pathname === '/' ? '' : url.pathname);
