@@ -47,7 +47,7 @@ export interface ConversationLifecycleAction {
   /**
    * Continue generating from current assistant message
    */
-  continueGenerationMessage: (id: string) => Promise<void>;
+  continueGenerationMessage: (lastBlockId: string, messageId: string) => Promise<void>;
   /**
    * Deletes an existing message and generates a new one in its place
    */
@@ -323,15 +323,14 @@ export const conversationLifecycle: StateCreator<
     await get().regenerateUserMessage(userId, params);
   },
 
-  continueGenerationMessage: async (id) => {
+  continueGenerationMessage: async (id, messageId) => {
     const message = dbMessageSelectors.getDbMessageById(id)(get());
-    console.log(message);
     if (!message) return;
 
     try {
       // Mark message as continuing
       set(
-        { continuingIds: [...get().continuingIds, id] },
+        { continuingIds: [...get().continuingIds, messageId] },
         false,
         'continueGenerationMessage/start',
       );
@@ -346,7 +345,7 @@ export const conversationLifecycle: StateCreator<
     } finally {
       // Remove message from continuing state
       set(
-        { continuingIds: get().continuingIds.filter((msgId) => msgId !== id) },
+        { continuingIds: get().continuingIds.filter((msgId) => msgId !== messageId) },
         false,
         'continueGenerationMessage/end',
       );

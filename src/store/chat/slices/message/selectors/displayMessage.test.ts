@@ -645,4 +645,174 @@ describe('displayMessageSelectors', () => {
       expect(result).toBeUndefined();
     });
   });
+
+  describe('findLastMessageId', () => {
+    it('should return message id when no children or tools', () => {
+      const message = {
+        id: 'msg-1',
+        role: 'assistant',
+        content: 'Simple message',
+      } as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [message],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('msg-1')(state as ChatStore);
+      expect(result).toBe('msg-1');
+    });
+
+    it('should find the last child id', () => {
+      const groupMessage = {
+        id: 'group-1',
+        role: 'assistantGroup',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'First response',
+          },
+          {
+            id: 'child-2',
+            content: 'Second response',
+          },
+        ],
+      } as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [groupMessage],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('group-1')(state as ChatStore);
+      expect(result).toBe('child-2');
+    });
+
+    it('should return tool result_msg_id when no children', () => {
+      const messageWithTools = {
+        id: 'msg-with-tools',
+        role: 'assistant',
+        content: 'Message with tools',
+        tools: [
+          {
+            id: 'tool-1',
+            identifier: 'test',
+            apiName: 'test',
+            arguments: '{}',
+            type: 'default',
+            result_msg_id: 'tool-result-1',
+          },
+          {
+            id: 'tool-2',
+            identifier: 'test2',
+            apiName: 'test2',
+            arguments: '{}',
+            type: 'default',
+            result_msg_id: 'tool-result-2',
+          },
+        ],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [messageWithTools],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('msg-with-tools')(
+        state as ChatStore,
+      );
+      expect(result).toBe('tool-result-2');
+    });
+
+    it('should prioritize children over tools', () => {
+      const message = {
+        id: 'msg-1',
+        role: 'assistantGroup',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'Child message',
+          },
+        ],
+        tools: [
+          {
+            id: 'tool-1',
+            identifier: 'test',
+            apiName: 'test',
+            arguments: '{}',
+            type: 'default',
+            result_msg_id: 'tool-result-1',
+          },
+        ],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [message],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('msg-1')(state as ChatStore);
+      expect(result).toBe('child-1');
+    });
+
+    it('should return undefined for non-existent message', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('non-existent')(state as ChatStore);
+      expect(result).toBeUndefined();
+    });
+
+    it('should return last child with tools result_msg_id', () => {
+      const messageWithChildrenAndTools = {
+        id: 'msg-1',
+        role: 'assistantGroup',
+        content: '',
+        children: [
+          {
+            id: 'child-1',
+            content: 'First child',
+          },
+          {
+            id: 'child-2',
+            content: 'Second child with tools',
+            tools: [
+              {
+                id: 'tool-1',
+                identifier: 'test',
+                apiName: 'test',
+                arguments: '{}',
+                type: 'default',
+                result_msg_id: 'tool-result-id',
+              },
+            ],
+          },
+        ],
+      } as unknown as UIChatMessage;
+
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [messageWithChildrenAndTools],
+        },
+      };
+
+      const result = displayMessageSelectors.findLastMessageId('msg-1')(state as ChatStore);
+      expect(result).toBe('tool-result-id');
+    });
+  });
 });

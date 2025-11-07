@@ -19,18 +19,11 @@ interface GroupActionsProps {
 }
 
 const WithoutContentId = memo<GroupActionsProps>(({ id, data }) => {
-  const [
-    // isThreadMode,
-    hasThread,
-    displayMessage,
-  ] = useChatStore((s) => [
-    // !!s.activeThreadId,
+  const [hasThread, lastBlockId] = useChatStore((s) => [
     threadSelectors.hasThreadBySourceMsgId(id)(s),
-    displayMessageSelectors.getDisplayMessageById(id)(s),
+    displayMessageSelectors.findLastMessageId(id)(s),
   ]);
 
-  // Get the last block id for checking continuing state
-  const lastBlockId = displayMessage?.children?.at(-1)?.id;
   const isContinuing = useChatStore((s) =>
     lastBlockId ? messageStateSelectors.isMessageContinuing(lastBlockId)(s) : false,
   );
@@ -66,14 +59,13 @@ const WithoutContentId = memo<GroupActionsProps>(({ id, data }) => {
 
       switch (action.key) {
         case 'continueGeneration': {
-          const displayMessage = displayMessageSelectors.getDisplayMessageById(id)(
+          const lastMessageId = displayMessageSelectors.findLastMessageId(id)(
             useChatStore.getState(),
           );
 
-          const block = displayMessage?.children?.at(-1);
-          if (!block) return;
+          if (!lastMessageId) return;
 
-          continueGenerationMessage(block.id);
+          continueGenerationMessage(lastMessageId, id);
           break;
         }
 
