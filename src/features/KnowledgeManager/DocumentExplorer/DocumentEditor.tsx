@@ -2,6 +2,7 @@
 
 import {
   INSERT_HEADING_COMMAND,
+  INSERT_TABLE_COMMAND,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -21,11 +22,15 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import {
   Download,
   FileText,
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
   Link2,
   Loader2Icon,
   MoreVertical,
   Pin,
   SmilePlus,
+  Table2Icon,
   Trash2,
   Upload,
 } from 'lucide-react';
@@ -44,7 +49,7 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 dayjs.extend(relativeTime);
 
-const SAVE_THROTTLE_TIME = 3000; // 3 seconds
+const SAVE_THROTTLE_TIME = 3000; // ms
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
@@ -690,6 +695,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               slashOption={{
                 items: [
                   {
+                    icon: Heading1Icon,
                     key: 'h1',
                     label: 'Heading 1',
                     onSelect: (editor) => {
@@ -697,13 +703,29 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                     },
                   },
                   {
+                    icon: Heading2Icon,
                     key: 'h2',
                     label: 'Heading 2',
                     onSelect: (editor) => {
                       editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h2' });
                     },
                   },
-                  // More slash commands...
+                  {
+                    icon: Heading3Icon,
+                    key: 'h3',
+                    label: 'Heading 3',
+                    onSelect: (editor) => {
+                      editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h3' });
+                    },
+                  },
+                  {
+                    icon: Table2Icon,
+                    key: 'table',
+                    label: 'Table',
+                    onSelect: (editor) => {
+                      editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
+                    },
+                  },
                 ],
               }}
               style={{

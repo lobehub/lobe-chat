@@ -27,7 +27,7 @@ export default {
     chooseIcon: '选择图标',
     editedAt: '最后编辑于 {{time}}',
     editedBy: '最后编辑者 {{name}}',
-    editorPlaceholder: '输入文档内容',
+    editorPlaceholder: '输入文档内容，按 / 打开命令菜单',
     empty: {
       createNewDocument: '创建新文档',
       title: '选择一个文档以开始',
