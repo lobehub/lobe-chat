@@ -180,7 +180,10 @@ const ToolBar = memo<MultiSelectActionsProps>(
                     });
                     setSelectedFileIds([]);
                   } else {
-                    message.destroy?.();
+                    message.warning({
+                      content: `${t('FileManager.actions.batchDownloadPartialSuccess')}: ${event.downloadedCount}/${selectFileIds.length}`,
+                      key: 'batch-download',
+                    });
                   }
                   const blob = new Blob(blobParts as BlobPart[], { type: 'application/zip' });
                   const url = window.URL.createObjectURL(blob);

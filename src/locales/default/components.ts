@@ -17,6 +17,7 @@ export default {
       batchChunking: '批量分块',
       batchDownload: '批量下载',
       batchDownloadFailed: '文件压缩失败',
+      batchDownloadPartialSuccess: '部分文件压缩成功',
       batchDownloadSuccess: '所有文件压缩成功',
       batchDownloading: '批量压缩中...',
       chunking: '分块',

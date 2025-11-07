@@ -15,6 +15,15 @@ import { nanoid } from '@/utils/uuid';
 
 import { FileServiceImpl, createFileServiceModule } from './impls';
 
+const SIGNAL_SENTINEL = Symbol('eventSignal');
+const createResolvablePromise = <T>() => {
+  let resolveFn: (value: T | PromiseLike<T>) => void;
+  const promise = new Promise<T>((resolve) => {
+    resolveFn = resolve;
+  });
+  return { promise, resolve: resolveFn! };
+};
+
 /**
  * 文件服务类
  * 使用模块化实现方式，提供文件操作服务
@@ -153,37 +162,33 @@ export class FileService {
       return;
     }
 
-    try {
-      const files = await this.findFilesByIds(fileIds);
-      if (files.length === 0) {
-        yield { message: 'No files found for the given IDs', type: 'error' };
-        return;
-      }
+    const archive = archiver('zip', { zlib: { level: 1 } });
+    const passThrough = new PassThrough();
+    archive.pipe(passThrough);
 
-      const archive = archiver('zip', { zlib: { level: 1 } });
-      const passThrough = new PassThrough();
-      archive.pipe(passThrough);
+    const eventQueue: BatchDownloadEventType[] = [];
+    let eventSignal = createResolvablePromise<typeof SIGNAL_SENTINEL>();
 
-      // 创建一个 Promise 来捕获来自 archiver 的底层错误
-      const archiveFinished = new Promise((resolve, reject) => {
-        archive.on('end', resolve);
-        archive.on('error', reject);
-        passThrough.on('error', reject);
-      });
-
-      // 1. **执行文件处理循环**
-      // `archive.append` 是非阻塞的，它会把任务加入队列，压缩在后台进行。
+    const producerPromise = (async () => {
       let downloadedFileCount = 0;
       const failedFiles: string[] = [];
+      const files = await this.findFilesByIds(fileIds);
+
+      if (files.length === 0) {
+        archive.finalize();
+        return { downloadedFileCount, failedFiles, filesFound: false, totalCount: 0 };
+      }
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const progress = ((i + 1) / files.length) * 100;
 
-        yield {
+        const progressEvent: BatchDownloadEventType = {
           message: `${i + 1}/${files.length}`,
-          percent: progress,
+          percent: ((i + 1) / files.length) * 100,
           type: 'progress',
         };
+        eventQueue.push(progressEvent);
+        eventSignal.resolve(SIGNAL_SENTINEL);
 
         try {
           const fileContent = await this.getFileByteArray(file.url);
@@ -198,10 +203,52 @@ export class FileService {
         }
       }
 
-      // 2. **完成归档**
       archive.finalize();
+      return { downloadedFileCount, failedFiles, filesFound: true, totalCount: files.length };
+    })();
 
-      if (downloadedFileCount === 0 && files.length > 0) {
+    producerPromise.catch((err) => {
+      passThrough.emit('error', err);
+    });
+
+    try {
+      const streamIterator = passThrough[Symbol.asyncIterator]();
+      let streamEnded = false;
+
+      while (!streamEnded) {
+        const nextChunkPromise = streamIterator.next();
+
+        const raceWinner = await Promise.race([nextChunkPromise, eventSignal.promise]);
+
+        while (eventQueue.length > 0) {
+          yield eventQueue.shift()!;
+        }
+
+        if (raceWinner === SIGNAL_SENTINEL) {
+          eventSignal = createResolvablePromise();
+        } else {
+          const chunkResult = raceWinner as IteratorResult<Buffer>;
+          if (chunkResult.done) {
+            streamEnded = true;
+          } else {
+            const bufferChunk = chunkResult.value;
+            yield {
+              data: bufferChunk.toString('base64'),
+              size: bufferChunk.length,
+              type: 'chunk',
+            };
+          }
+        }
+      }
+
+      const { downloadedFileCount, failedFiles, totalCount, filesFound } = await producerPromise;
+
+      if (!filesFound) {
+        yield { message: 'No files found for the given IDs', type: 'error' };
+        return;
+      }
+
+      if (downloadedFileCount === 0 && totalCount > 0) {
         yield { message: 'All files failed to process.', type: 'error' };
         return;
       }
@@ -210,26 +257,11 @@ export class FileService {
         yield { message: `Failed to process files: ${failedFiles.join(', ')}`, type: 'warning' };
       }
 
-      // 3. **消费数据流**
-      // `for await...of` 会等待后台的 archiver 生成数据块，然后 yield 出去。
-      for await (const chunk of passThrough) {
-        const bufferChunk = chunk as Buffer;
-        yield {
-          data: bufferChunk.toString('base64'),
-          size: bufferChunk.length,
-          type: 'chunk',
-        };
-      }
-
-      // 等待 archiver 确认所有数据都已写完
-      await archiveFinished;
-
-      // 4. **发送最终信号**
       const fileName = `${BRANDING_NAME}_batch_download_${getYYYYmmddHHMMss(new Date())}.zip`;
       yield {
         downloadedCount: downloadedFileCount,
-        fileName,
-        totalCount: files.length,
+        fileName: fileName,
+        totalCount: totalCount,
         type: 'done',
       };
     } catch (error: any) {
