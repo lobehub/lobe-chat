@@ -409,13 +409,21 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       if (!editor || isInitialLoadRef.current) return 0;
 
       try {
-        const textContent = (editor.getDocument('markdown') as unknown as string) || '';
+        const textContent = (editor.getDocument('text') as unknown as string) || '';
         return textContent.trim().split(/\s+/).filter(Boolean).length;
       } catch (error) {
         console.error('Failed to calculate word count:', error);
+
+        if (documentId) {
+          const localDocument = localDocumentMap.get(documentId);
+          if (localDocument) {
+            return localDocument.content?.trim().split(/\s+/).filter(Boolean).length || 0;
+          }
+        }
+
         return 0;
       }
-    }, [editor, isInitialLoadRef.current, cachedEditorData]); // Re-calculate when content changes (tracked by saveStatus)
+    }, [editor, isInitialLoadRef.current, cachedEditorData]);
 
     // Menu items for the three-dot menu
     const menuItems = useMemo(
