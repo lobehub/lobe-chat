@@ -52,12 +52,12 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
   abortController?: AbortController;
   onError?: (e: Error, rawError?: any) => void;
   /**
-   * 加载状态变化处理函数
-   * @param loading - 是否处于加载状态
+   * Loading state change handler function
+   * @param loading - Whether in loading state
    */
   onLoadingChange?: (loading: boolean) => void;
   /**
-   * 请求对象
+   * Request object
    */
   params: ChatStreamInputParams;
   trace?: TracePayload;
@@ -66,7 +66,6 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   historySummary?: string;
-  isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
 }
@@ -113,10 +112,8 @@ class ChatService {
       enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
       // include user messages
       historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
-      historySummary: options?.historySummary,
       includeHistoricalThinking: chatConfig.includeHistoricalThinking,
       inputTemplate: chatConfig.inputTemplate,
-      isWelcomeQuestion: options?.isWelcomeQuestion,
       messages,
       model: payload.model,
       provider: payload.provider!,
@@ -218,12 +215,10 @@ class ChatService {
     onErrorHandle,
     onFinish,
     trace,
-    isWelcomeQuestion,
     historySummary,
   }: CreateAssistantMessageStream) => {
     await this.createAssistantMessage(params, {
       historySummary,
-      isWelcomeQuestion,
       onAbort,
       onErrorHandle,
       onFinish,
@@ -405,7 +400,7 @@ class ChatService {
     onLoadingChange?.(true);
 
     try {
-      const oaiMessages = await contextEngineering({
+      const llmMessages = await contextEngineering({
         messages: params.messages as any,
         model: params.model!,
         provider: params.provider!,
@@ -422,7 +417,7 @@ class ChatService {
       // remove plugins
       delete params.plugins;
       await this.getChatCompletion(
-        { ...params, messages: oaiMessages, tools },
+        { ...params, messages: llmMessages, tools },
         {
           onErrorHandle: (error) => {
             errorHandle(new Error(error.message), error);

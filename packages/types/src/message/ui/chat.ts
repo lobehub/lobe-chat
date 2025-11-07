@@ -26,10 +26,11 @@ export interface ChatFileItem {
 
 export interface AssistantContentBlock {
   content: string;
-  fileList?: ChatFileItem[];
+  error?: ChatMessageError | null;
   id: string;
   imageList?: ChatImageItem[];
   performance?: ModelPerformance;
+  reasoning?: ModelReasoning;
   tools?: ChatToolPayloadWithResult[];
   usage?: ModelUsage;
 }
@@ -62,6 +63,7 @@ export interface UIChatMessage {
   imageList?: ChatImageItem[];
   meta: MetaData;
   metadata?: MessageMetadata | null;
+  model?: string | null;
   /**
    * observation id
    */
@@ -78,6 +80,7 @@ export interface UIChatMessage {
   plugin?: ChatPluginPayload;
   pluginError?: any;
   pluginState?: any;
+  provider?: string | null;
   /**
    * quoted other message's id
    */

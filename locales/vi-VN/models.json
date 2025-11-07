@@ -191,6 +191,9 @@
   "Kwai-Kolors/Kolors": {
     "description": "Kolors là mô hình tạo hình ảnh từ văn bản quy mô lớn dựa trên khuếch tán tiềm ẩn do nhóm Kolors của Kuaishou phát triển. Mô hình được huấn luyện trên hàng tỷ cặp văn bản-hình ảnh, thể hiện ưu thế rõ rệt về chất lượng hình ảnh, độ chính xác ngữ nghĩa phức tạp và khả năng hiển thị ký tự tiếng Trung và tiếng Anh. Nó hỗ trợ đầu vào tiếng Trung và tiếng Anh, đồng thời thể hiện xuất sắc trong việc hiểu và tạo nội dung đặc thù tiếng Trung."
   },
+  "Kwaipilot/KAT-Dev": {
+    "description": "KAT-Dev (32B) là một mô hình mã nguồn mở với 32 tỷ tham số, được thiết kế đặc biệt cho các tác vụ kỹ thuật phần mềm. Trong bài kiểm tra chuẩn SWE-Bench Verified, mô hình đạt tỷ lệ giải quyết 62,4%, xếp hạng thứ năm trong số các mô hình mã nguồn mở có quy mô khác nhau. Mô hình này được tối ưu hóa qua nhiều giai đoạn, bao gồm huấn luyện trung gian, tinh chỉnh có giám sát (SFT) và học tăng cường (RL), nhằm cung cấp hỗ trợ mạnh mẽ cho các nhiệm vụ lập trình phức tạp như hoàn thành mã, sửa lỗi, đánh giá mã và nhiều hơn nữa."
+  },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Khả năng suy luận hình ảnh xuất sắc trên hình ảnh độ phân giải cao, phù hợp cho các ứng dụng hiểu biết thị giác."
   },
@@ -787,12 +790,6 @@
   },
   "claude-3-5-haiku-latest": {
     "description": "Claude 3.5 Haiku cung cấp phản hồi nhanh, phù hợp cho các tác vụ nhẹ."
-  },
-  "claude-3-5-sonnet-20240620": {
-    "description": "Claude 3.5 Sonnet cung cấp khả năng vượt trội so với Opus và tốc độ nhanh hơn Sonnet, đồng thời giữ nguyên mức giá như Sonnet. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại lý."
-  },
-  "claude-3-5-sonnet-20241022": {
-    "description": "Claude 3.5 Sonnet cung cấp khả năng vượt xa Opus và tốc độ nhanh hơn Sonnet, đồng thời giữ mức giá giống như Sonnet. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại diện."
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet là mô hình AI mạnh nhất của Anthropic, với hiệu suất vượt trội so với các mô hình đối thủ và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá rộng rãi, đồng thời có tốc độ và chi phí tương đương với các mô hình tầm trung của chúng tôi."
@@ -2404,6 +2401,9 @@
   },
   "minicpm-v": {
     "description": "MiniCPM-V là mô hình đa phương thức thế hệ mới do OpenBMB phát triển, có khả năng nhận diện OCR xuất sắc và hiểu biết đa phương thức, hỗ trợ nhiều ứng dụng khác nhau."
+  },
+  "minimax-m2": {
+    "description": "MiniMax M2 là một mô hình ngôn ngữ lớn hiệu quả, được xây dựng dành riêng cho quy trình làm việc liên quan đến lập trình và tác vụ đại lý."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B là mô hình hàng đầu thế giới của Mistral về hiệu suất cạnh biên."

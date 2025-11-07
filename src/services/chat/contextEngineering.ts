@@ -1,9 +1,9 @@
-import { INBOX_GUIDE_SYSTEMROLE, INBOX_SESSION_ID, isDesktop, isServerMode } from '@lobechat/const';
+import { isDesktop, isServerMode } from '@lobechat/const';
 import {
   ContextEngine,
+  GroupMessageFlattenProcessor,
   HistorySummaryProvider,
   HistoryTruncateProcessor,
-  InboxGuideProvider,
   InputTemplateProcessor,
   MessageCleanupProcessor,
   MessageContentProcessor,
@@ -30,7 +30,6 @@ interface ContextEngineeringContext {
   historySummary?: string;
   includeHistoricalThinking?: boolean;
   inputTemplate?: string;
-  isWelcomeQuestion?: boolean;
   messages: UIChatMessage[];
   model: string;
   provider: string;
@@ -49,8 +48,6 @@ export const contextEngineering = async ({
   enableHistoryCount,
   historyCount,
   historySummary,
-  sessionId,
-  isWelcomeQuestion,
   includeHistoricalThinking,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
@@ -64,14 +61,6 @@ export const contextEngineering = async ({
 
       // 2. System role injection (agent's system role)
       new SystemRoleInjector({ systemRole }),
-
-      // 3. Inbox guide system role injection
-      new InboxGuideProvider({
-        inboxGuideSystemRole: INBOX_GUIDE_SYSTEMROLE,
-        inboxSessionId: INBOX_SESSION_ID,
-        isWelcomeQuestion: isWelcomeQuestion,
-        sessionId: sessionId,
-      }),
 
       // 4. Tool system role injection
       new ToolSystemRoleProvider({
@@ -91,14 +80,15 @@ export const contextEngineering = async ({
       // Create message processing processors
 
       // 6. Input template processing
-      new InputTemplateProcessor({
-        inputTemplate,
-      }),
+      new InputTemplateProcessor({ inputTemplate }),
 
       // 7. Placeholder variables processing
       new PlaceholderVariablesProcessor({ variableGenerators: VARIABLE_GENERATORS }),
 
-      // 8. Message content processing
+      // 8. Group message flatten (convert role=group to standard assistant + tool messages)
+      new GroupMessageFlattenProcessor(),
+
+      // 8.5 Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
         includeHistoricalThinking,

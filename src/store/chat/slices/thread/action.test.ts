@@ -764,7 +764,7 @@ describe('thread action', () => {
 
         const createMessageSpy = vi
           .spyOn(result.current, 'internal_createMessage')
-          .mockResolvedValue('new-msg-id');
+          .mockResolvedValue({ id: 'new-msg-id', messages: [] });
         const coreProcessSpy = vi
           .spyOn(result.current, 'internal_coreProcessMessage')
           .mockResolvedValue();
@@ -803,7 +803,10 @@ describe('thread action', () => {
           });
         });
 
-        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue('new-msg-id');
+        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue({
+          id: 'new-msg-id',
+          messages: [],
+        });
         vi.spyOn(result.current, 'internal_coreProcessMessage').mockResolvedValue();
         vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
@@ -833,7 +836,10 @@ describe('thread action', () => {
           });
         });
 
-        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue('new-msg-id');
+        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue({
+          id: 'new-msg-id',
+          messages: [],
+        });
         vi.spyOn(result.current, 'internal_coreProcessMessage').mockResolvedValue();
         vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
@@ -855,7 +861,10 @@ describe('thread action', () => {
         });
 
         vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(true);
-        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue('new-msg-id');
+        vi.spyOn(result.current, 'internal_createMessage').mockResolvedValue({
+          id: 'new-msg-id',
+          messages: [],
+        });
         vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-msg-id');
         vi.spyOn(result.current, 'internal_toggleMessageLoading');
 

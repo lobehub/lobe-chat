@@ -34,8 +34,8 @@ const AgentPlugin = memo(() => {
     s.toggleAgentPlugin,
   ]);
 
-  const { showDalle, showMarket } = useServerConfigStore(featureFlagsSelectors);
-  const installedPlugins = useToolStore(toolSelectors.metaList(showDalle), isEqual);
+  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
+  const installedPlugins = useToolStore(toolSelectors.metaList, isEqual);
 
   const { isLoading } = useFetchInstalledPlugins();
 

@@ -25,7 +25,7 @@ vi.mock('@/services/message', () => ({
     removeMessage: vi.fn(),
     removeMessagesByAssistant: vi.fn(),
     removeMessages: vi.fn(() => Promise.resolve()),
-    createMessage: vi.fn(() => Promise.resolve('new-message-id')),
+    createMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
     updateMessage: vi.fn(),
     removeAllMessages: vi.fn(() => Promise.resolve()),
   },
@@ -200,6 +200,15 @@ describe('chatMessage actions', () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const deleteSpy = vi.spyOn(result.current, 'deleteMessage');
+      const mockMessages = [{ id: 'other-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       act(() => {
         useChatStore.setState({
@@ -215,13 +224,22 @@ describe('chatMessage actions', () => {
       });
 
       expect(deleteSpy).toHaveBeenCalledWith(messageId);
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
 
     it('deleteMessage should remove messages with tools', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       act(() => {
         useChatStore.setState({
@@ -240,8 +258,120 @@ describe('chatMessage actions', () => {
         await result.current.deleteMessage(messageId);
       });
 
-      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3']);
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3'], {
+        sessionId: 'session-id',
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+    });
+
+    it('deleteMessage should remove group message with all children', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupMessageId = 'group-message-id';
+      const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
+              {
+                id: 'child-1',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 1',
+              } as UIChatMessage,
+              {
+                id: 'child-2',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 2',
+              } as UIChatMessage,
+              { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteMessage(groupMessageId);
+      });
+
+      expect(removeMessagesSpy).toHaveBeenCalledWith([groupMessageId, 'child-1', 'child-2'], {
+        sessionId: 'session-id',
+        topicId: undefined,
+      });
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
+    });
+
+    it('deleteMessage should remove group message with children that have tool calls', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const groupMessageId = 'group-message-id';
+      const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+      const mockMessages = [{ id: 'remaining-message' }] as any;
+
+      // Mock the service to return messages
+      (messageService.removeMessages as Mock).mockResolvedValue({
+        success: true,
+        messages: mockMessages,
+      });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: groupMessageId, role: 'group', content: 'Group message' } as UIChatMessage,
+              {
+                id: 'child-1',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child with tools',
+                tools: [{ id: 'tool1' }],
+              } as UIChatMessage,
+              {
+                id: 'tool-result-1',
+                tool_call_id: 'tool1',
+                role: 'tool',
+                content: 'Tool result',
+              } as UIChatMessage,
+              {
+                id: 'child-2',
+                parentId: groupMessageId,
+                role: 'assistant',
+                content: 'Child 2',
+              } as UIChatMessage,
+              { id: 'other-message', role: 'user', content: 'Other' } as UIChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteMessage(groupMessageId);
+      });
+
+      // Should delete group message + all children + tool results of children
+      expect(removeMessagesSpy).toHaveBeenCalledWith(
+        [groupMessageId, 'child-1', 'child-2', 'tool-result-1'],
+        {
+          sessionId: 'session-id',
+          topicId: undefined,
+        },
+      );
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
   });
 
@@ -309,10 +439,16 @@ describe('chatMessage actions', () => {
       });
 
       expect(removeMessageSpy).toHaveBeenCalled();
-      expect(updateMessageSpy).toHaveBeenCalledWith('message-id', {
-        tools: [{ id: 'tool2' }],
-      });
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(updateMessageSpy).toHaveBeenCalledWith(
+        'message-id',
+        {
+          tools: [{ id: 'tool2' }],
+        },
+        {
+          sessionId: 'session-id',
+          topicId: undefined,
+        },
+      );
     });
   });
 
@@ -320,13 +456,14 @@ describe('chatMessage actions', () => {
     it('clearAllMessages should remove all messages', async () => {
       const { result } = renderHook(() => useChatStore());
       const clearAllSpy = vi.spyOn(result.current, 'clearAllMessages');
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       await act(async () => {
         await result.current.clearAllMessages();
       });
 
       expect(clearAllSpy).toHaveBeenCalled();
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith([]);
     });
   });
 
@@ -471,7 +608,11 @@ describe('chatMessage actions', () => {
         await result.current.internal_updateMessageContent(messageId, newContent);
       });
 
-      expect(spy).toHaveBeenCalledWith(messageId, { content: newContent });
+      expect(spy).toHaveBeenCalledWith(
+        messageId,
+        { content: newContent },
+        { sessionId: 'session-id', topicId: 'topic-id' },
+      );
     });
 
     it('should dispatch message update action', async () => {

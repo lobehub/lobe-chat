@@ -15,7 +15,7 @@ import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -55,9 +55,9 @@ const UserMessage = memo<UserMessageProps>((props) => {
   const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
 
   const [editing, generating, isInRAGFlow] = useChatStore((s) => [
-    chatSelectors.isMessageEditing(id)(s),
-    chatSelectors.isMessageGenerating(id)(s),
-    chatSelectors.isMessageInRAGFlow(id)(s),
+    messageStateSelectors.isMessageEditing(id)(s),
+    messageStateSelectors.isMessageGenerating(id)(s),
+    messageStateSelectors.isMessageInRAGFlow(id)(s),
   ]);
 
   const loading = isInRAGFlow || generating;

@@ -87,57 +87,6 @@ describe('chatMessage actions', () => {
     });
 
     describe('message creation', () => {
-      it('should create user message and trigger AI processing', async () => {
-        const { result } = renderHook(() => useChatStore());
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
-        });
-
-        expect(messageService.createMessage).toHaveBeenCalledWith({
-          content: TEST_CONTENT.USER_MESSAGE,
-          files: undefined,
-          role: 'user',
-          sessionId: TEST_IDS.SESSION_ID,
-          topicId: TEST_IDS.TOPIC_ID,
-        });
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalled();
-      });
-
-      it('should send message with files attached', async () => {
-        const { result } = renderHook(() => useChatStore());
-        const files = [{ id: TEST_IDS.FILE_ID } as UploadFileItem];
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE, files });
-        });
-
-        expect(messageService.createMessage).toHaveBeenCalledWith({
-          content: TEST_CONTENT.USER_MESSAGE,
-          files: [TEST_IDS.FILE_ID],
-          role: 'user',
-          sessionId: TEST_IDS.SESSION_ID,
-          topicId: TEST_IDS.TOPIC_ID,
-        });
-      });
-
-      it('should send files without message content', async () => {
-        const { result } = renderHook(() => useChatStore());
-        const files = [{ id: TEST_IDS.FILE_ID } as UploadFileItem];
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files });
-        });
-
-        expect(messageService.createMessage).toHaveBeenCalledWith({
-          content: TEST_CONTENT.EMPTY,
-          files: [TEST_IDS.FILE_ID],
-          role: 'user',
-          sessionId: TEST_IDS.SESSION_ID,
-          topicId: TEST_IDS.TOPIC_ID,
-        });
-      });
-
       it('should not process AI when onlyAddUserMessage is true', async () => {
         const { result } = renderHook(() => useChatStore());
 
@@ -167,196 +116,6 @@ describe('chatMessage actions', () => {
         });
 
         expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('auto-create topic', () => {
-      const TOPIC_THRESHOLD = 5;
-
-      it('should create topic when threshold is reached and feature is enabled', async () => {
-        const { result } = renderHook(() => useChatStore());
-
-        const createTopicMock = vi.fn(() => Promise.resolve(TEST_IDS.NEW_TOPIC_ID));
-        const switchTopicMock = vi.fn();
-
-        act(() => {
-          setupMockSelectors({
-            agentConfig: {
-              enableAutoCreateTopic: true,
-              autoCreateTopicThreshold: TOPIC_THRESHOLD,
-            },
-          });
-
-          useChatStore.setState({
-            activeTopicId: undefined,
-            messagesMap: {
-              [messageMapKey(TEST_IDS.SESSION_ID)]: createMockMessages(TOPIC_THRESHOLD),
-            },
-            createTopic: createTopicMock,
-            switchTopic: switchTopicMock,
-          });
-        });
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
-        });
-
-        expect(createTopicMock).toHaveBeenCalled();
-        expect(switchTopicMock).toHaveBeenCalledWith(TEST_IDS.NEW_TOPIC_ID, true);
-      });
-    });
-
-    describe('RAG integration', () => {
-      it('should include RAG query when RAG is enabled', async () => {
-        const { result } = renderHook(() => useChatStore());
-        vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(true);
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.RAG_QUERY });
-        });
-
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
-          expect.any(Array),
-          expect.any(String),
-          expect.objectContaining({
-            ragQuery: TEST_CONTENT.RAG_QUERY,
-          }),
-        );
-      });
-
-      it('should not use RAG when feature is disabled', async () => {
-        const { result } = renderHook(() => useChatStore());
-        vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(false);
-        const retrieveChunksSpy = vi.spyOn(result.current, 'internal_retrieveChunks');
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
-        });
-
-        expect(retrieveChunksSpy).not.toHaveBeenCalled();
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
-          expect.any(Array),
-          expect.any(String),
-          expect.not.objectContaining({
-            ragQuery: expect.anything(),
-          }),
-        );
-      });
-    });
-
-    describe('special flags', () => {
-      it('should pass isWelcomeQuestion flag to processing', async () => {
-        const { result } = renderHook(() => useChatStore());
-
-        await act(async () => {
-          await result.current.sendMessage({
-            message: TEST_CONTENT.USER_MESSAGE,
-            isWelcomeQuestion: true,
-          });
-        });
-
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.anything(),
-          { isWelcomeQuestion: true },
-        );
-      });
-
-      it('should return early when onlyAddUserMessage is true', async () => {
-        const { result } = renderHook(() => useChatStore());
-
-        await act(async () => {
-          await result.current.sendMessage({
-            message: TEST_CONTENT.USER_MESSAGE,
-            onlyAddUserMessage: true,
-          });
-        });
-
-        expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('topic creation flow', () => {
-      it('should handle tempMessage during topic creation', async () => {
-        setupMockSelectors({
-          chatConfig: { enableAutoCreateTopic: true, autoCreateTopicThreshold: 2 },
-        });
-
-        act(() => {
-          useChatStore.setState({ activeTopicId: undefined });
-          setupStoreWithMessages(createMockMessages(5));
-        });
-
-        const { result } = renderHook(() => useChatStore());
-        const createTopicMock = vi
-          .spyOn(result.current, 'createTopic')
-          .mockResolvedValue(TEST_IDS.NEW_TOPIC_ID);
-        const toggleMessageLoadingSpy = vi.spyOn(result.current, 'internal_toggleMessageLoading');
-        const createTmpMessageSpy = vi
-          .spyOn(result.current, 'internal_createTmpMessage')
-          .mockReturnValue('temp-id');
-        vi.spyOn(result.current, 'internal_fetchMessages').mockResolvedValue();
-        vi.spyOn(result.current, 'switchTopic').mockResolvedValue();
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
-        });
-
-        expect(createTmpMessageSpy).toHaveBeenCalled();
-        expect(toggleMessageLoadingSpy).toHaveBeenCalledWith(true, 'temp-id');
-        expect(createTopicMock).toHaveBeenCalled();
-      });
-
-      it('should call summaryTopicTitle after processing when new topic created', async () => {
-        setupMockSelectors({
-          chatConfig: { enableAutoCreateTopic: true, autoCreateTopicThreshold: 2 },
-        });
-
-        act(() => {
-          useChatStore.setState({ activeTopicId: undefined });
-          setupStoreWithMessages(createMockMessages(5));
-        });
-
-        const { result } = renderHook(() => useChatStore());
-        vi.spyOn(result.current, 'createTopic').mockResolvedValue(TEST_IDS.NEW_TOPIC_ID);
-        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-id');
-        vi.spyOn(result.current, 'internal_fetchMessages').mockResolvedValue();
-        vi.spyOn(result.current, 'switchTopic').mockResolvedValue();
-
-        const summaryTopicTitleSpy = vi
-          .spyOn(result.current, 'summaryTopicTitle')
-          .mockResolvedValue();
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
-        });
-
-        expect(summaryTopicTitleSpy).toHaveBeenCalledWith(TEST_IDS.NEW_TOPIC_ID, expect.any(Array));
-      });
-
-      it('should handle topic creation failure gracefully', async () => {
-        setupMockSelectors({
-          chatConfig: { enableAutoCreateTopic: true, autoCreateTopicThreshold: 2 },
-        });
-
-        act(() => {
-          useChatStore.setState({ activeTopicId: undefined });
-          setupStoreWithMessages(createMockMessages(5));
-        });
-
-        const { result } = renderHook(() => useChatStore());
-        vi.spyOn(result.current, 'createTopic').mockResolvedValue(undefined);
-        vi.spyOn(result.current, 'internal_createTmpMessage').mockReturnValue('temp-id');
-        const toggleLoadingSpy = vi.spyOn(result.current, 'internal_toggleMessageLoading');
-        const updateTopicLoadingSpy = vi.spyOn(result.current, 'internal_updateTopicLoading');
-
-        await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
-        });
-
-        // Should still call the AI processing even if topic creation fails
-        expect(result.current.internal_coreProcessMessage).toHaveBeenCalled();
-        expect(updateTopicLoadingSpy).not.toHaveBeenCalled();
       });
     });
   });
@@ -451,6 +210,8 @@ describe('chatMessage actions', () => {
 
   describe('internal_coreProcessMessage', () => {
     it('should process user message and generate AI response', async () => {
+      const mockMessages = [{ id: 'msg-1', content: 'test' }] as any;
+
       act(() => {
         useChatStore.setState({ internal_coreProcessMessage: realCoreProcessMessage });
       });
@@ -469,7 +230,9 @@ describe('chatMessage actions', () => {
 
       const createMessageSpy = vi
         .spyOn(messageService, 'createMessage')
-        .mockResolvedValue(TEST_IDS.ASSISTANT_MESSAGE_ID);
+        .mockResolvedValue({ id: TEST_IDS.ASSISTANT_MESSAGE_ID, messages: mockMessages });
+
+      const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
       await act(async () => {
         await result.current.internal_coreProcessMessage([userMessage], userMessage.id);
@@ -486,7 +249,7 @@ describe('chatMessage actions', () => {
       );
 
       expect(fetchAIChatSpy).toHaveBeenCalled();
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
 
     it('should handle RAG flow when ragQuery is provided', async () => {
@@ -509,7 +272,10 @@ describe('chatMessage actions', () => {
           rewriteQuery: 'rewritten query',
         });
 
-      vi.spyOn(messageService, 'createMessage').mockResolvedValue(TEST_IDS.ASSISTANT_MESSAGE_ID);
+      vi.spyOn(messageService, 'createMessage').mockResolvedValue({
+        id: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        messages: [],
+      });
 
       await act(async () => {
         await result.current.internal_coreProcessMessage([userMessage], userMessage.id, {

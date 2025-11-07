@@ -59,12 +59,16 @@ export const createMockAbortController = () => {
 export const spyOnMessageService = () => {
   const createMessageSpy = vi
     .spyOn(messageService, 'createMessage')
-    .mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
-  const updateMessageSpy = vi.spyOn(messageService, 'updateMessage').mockResolvedValue(undefined);
-  const removeMessageSpy = vi.spyOn(messageService, 'removeMessage').mockResolvedValue(undefined);
+    .mockResolvedValue({ id: TEST_IDS.NEW_MESSAGE_ID, messages: [] });
+  const updateMessageSpy = vi
+    .spyOn(messageService, 'updateMessage')
+    .mockResolvedValue({ messages: [], success: true });
+  const removeMessageSpy = vi
+    .spyOn(messageService, 'removeMessage')
+    .mockResolvedValue(undefined as any);
   const updateMessageErrorSpy = vi
     .spyOn(messageService, 'updateMessageError')
-    .mockResolvedValue(undefined);
+    .mockResolvedValue(undefined as any);
 
   return {
     createMessageSpy,

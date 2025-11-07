@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import {
   GetStreamableMcpServerManifestInputSchema,
   StreamableHTTPAuthSchema,
@@ -5,8 +6,6 @@ import {
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { isDesktop, isServerMode } from '@/const/version';
-import { passwordProcedure } from '@/libs/trpc/edge';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { mcpService } from '@/server/services/mcp';
 
@@ -38,7 +37,7 @@ const checkStdioEnvironment = (params: z.infer<typeof mcpClientParamsSchema>) =>
   }
 };
 
-const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
+const mcpProcedure = authedProcedure;
 
 export const mcpRouter = router({
   getStreamableMcpServerManifest: mcpProcedure

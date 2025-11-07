@@ -12,11 +12,12 @@ import {
   topics,
   users,
 } from '@/database/schemas';
-import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImporterEntryData } from '@/types/importer';
 
 import { DeprecatedDataImporterRepos as DataImporterRepos } from '../index';
 import mockImportData from './fixtures/messages.json';
+
+const CURRENT_CONFIG_VERSION = 7;
 
 const serverDB = await getTestDBInstance();
 

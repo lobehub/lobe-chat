@@ -1,6 +1,10 @@
 {
   "desc": "Nous mettons à jour régulièrement cette section avec de nouvelles fonctionnalités en cours d'exploration. N'hésitez pas à les essayer !",
   "features": {
+    "assistantMessageGroup": {
+      "desc": "Regrouper les messages de l'assistant et les résultats des appels d'outils pour les afficher ensemble",
+      "title": "Regroupement des messages de l'assistant"
+    },
     "groupChat": {
       "desc": "Activez la coordination de discussions de groupe avec plusieurs agents intelligents.",
       "title": "Discussion de groupe (multi-agents)"

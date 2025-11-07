@@ -2,15 +2,15 @@ import { dispatch } from '@lobechat/electron-client-ipc';
 import { FileMetadata } from '@lobechat/types';
 
 /**
- * 桌面应用文件API客户端服务
+ * Desktop application file API client service
  */
 class DesktopFileAPI {
   /**
-   * 上传文件到桌面应用
-   * @param file 文件对象
-   * @param hash 文件哈希
-   * @param path 文件存储路径
-   * @returns 上传结果
+   * Upload file to desktop application
+   * @param file File object
+   * @param hash File hash
+   * @param path File storage path
+   * @returns Upload result
    */
   async uploadFile(
     file: File,

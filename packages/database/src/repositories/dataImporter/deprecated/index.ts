@@ -1,6 +1,5 @@
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
-import { ImportResult } from '@/services/import/_deprecated';
 import { ImporterEntryData } from '@/types/importer';
 import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
 
@@ -15,6 +14,13 @@ import {
   topics,
 } from '../../../schemas';
 import { LobeChatDatabase } from '../../../type';
+
+interface ImportResult {
+  added: number;
+  errors: number;
+  skips: number;
+  updated?: number;
+}
 
 export class DeprecatedDataImporterRepos {
   private userId: string;

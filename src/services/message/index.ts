@@ -1,13 +1,205 @@
-import { isDesktop } from '@/const/version';
+import {
+  ChatMessageError,
+  ChatMessagePluginError,
+  ChatTTS,
+  ChatTranslate,
+  CreateMessageParams,
+  CreateMessageResult,
+  ModelRankItem,
+  UIChatMessage,
+  UpdateMessageParams,
+  UpdateMessageRAGParams,
+  UpdateMessageResult,
+} from '@lobechat/types';
+import type { HeatmapsProps } from '@lobehub/charts';
 
-import { ClientService as DeprecatedService } from './_deprecated';
-import { ClientService } from './client';
-import { ServerService } from './server';
+import { INBOX_SESSION_ID } from '@/const/session';
+import { lambdaClient } from '@/libs/trpc/client';
+import { useUserStore } from '@/store/user';
+import { labPreferSelectors } from '@/store/user/selectors';
 
-const clientService =
-  process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite' ? new ClientService() : new DeprecatedService();
+export class MessageService {
+  private get useGroup() {
+    return labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
+  }
 
-export const messageService =
-  process.env.NEXT_PUBLIC_SERVICE_MODE === 'server' || isDesktop
-    ? new ServerService()
-    : clientService;
+  createMessage = async ({
+    sessionId,
+    ...params
+  }: CreateMessageParams): Promise<CreateMessageResult> => {
+    return lambdaClient.message.createMessage.mutate({
+      ...params,
+      sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
+      useGroup: this.useGroup,
+    });
+  };
+
+  getMessages = async (
+    sessionId: string,
+    topicId?: string,
+    groupId?: string,
+  ): Promise<UIChatMessage[]> => {
+    const data = await lambdaClient.message.getMessages.query({
+      groupId,
+      sessionId: this.toDbSessionId(sessionId),
+      topicId,
+      useGroup: this.useGroup,
+    });
+
+    return data as unknown as UIChatMessage[];
+  };
+
+  getGroupMessages = async (groupId: string, topicId?: string): Promise<UIChatMessage[]> => {
+    const data = await lambdaClient.message.getMessages.query({
+      groupId,
+      topicId,
+      useGroup: this.useGroup,
+    });
+    return data as unknown as UIChatMessage[];
+  };
+
+  countMessages = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
+    return lambdaClient.message.count.query(params);
+  };
+
+  countWords = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
+    return lambdaClient.message.countWords.query(params);
+  };
+
+  rankModels = async (): Promise<ModelRankItem[]> => {
+    return lambdaClient.message.rankModels.query();
+  };
+
+  getHeatmaps = async (): Promise<HeatmapsProps['data']> => {
+    return lambdaClient.message.getHeatmaps.query();
+  };
+
+  updateMessageError = async (id: string, error: ChatMessageError) => {
+    return lambdaClient.message.update.mutate({ id, value: { error } });
+  };
+
+  updateMessagePluginArguments = async (id: string, value: string | Record<string, any>) => {
+    const args = typeof value === 'string' ? value : JSON.stringify(value);
+    return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
+  };
+
+  updateMessage = async (
+    id: string,
+    value: Partial<UpdateMessageParams>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.update.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value,
+    });
+  };
+
+  updateMessageTranslate = async (id: string, translate: Partial<ChatTranslate> | false) => {
+    return lambdaClient.message.updateTranslate.mutate({ id, value: translate as ChatTranslate });
+  };
+
+  updateMessageTTS = async (id: string, tts: Partial<ChatTTS> | false) => {
+    return lambdaClient.message.updateTTS.mutate({ id, value: tts });
+  };
+
+  updateMessagePluginState = async (
+    id: string,
+    value: Record<string, any>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updatePluginState.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value,
+    });
+  };
+
+  updateMessagePluginError = async (
+    id: string,
+    error: ChatMessagePluginError | null,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updatePluginError.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value: error as any,
+    });
+  };
+
+  updateMessageRAG = async (
+    id: string,
+    data: UpdateMessageRAGParams,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updateMessageRAG.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+      value: data,
+    });
+  };
+
+  removeMessage = async (
+    id: string,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessage.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+    });
+  };
+
+  removeMessages = async (
+    ids: string[],
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.removeMessages.mutate({
+      ids,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      useGroup: this.useGroup,
+    });
+  };
+
+  removeMessagesByAssistant = async (sessionId: string, topicId?: string) => {
+    return lambdaClient.message.removeMessagesByAssistant.mutate({
+      sessionId: this.toDbSessionId(sessionId),
+      topicId,
+    });
+  };
+
+  removeMessagesByGroup = async (groupId: string, topicId?: string) => {
+    return lambdaClient.message.removeMessagesByGroup.mutate({
+      groupId,
+      topicId,
+    });
+  };
+
+  removeAllMessages = async () => {
+    return lambdaClient.message.removeAllMessages.mutate();
+  };
+
+  private toDbSessionId = (sessionId: string | undefined) => {
+    return sessionId === INBOX_SESSION_ID ? null : sessionId;
+  };
+}
+
+export const messageService = new MessageService();

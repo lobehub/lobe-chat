@@ -54,6 +54,7 @@ describe('groupAssistantMessages', () => {
           content: 'Beijing: Sunny, 25°C',
           state: { cached: true },
         },
+        result_msg_id: 'msg-2',
       });
     });
 
@@ -112,7 +113,9 @@ describe('groupAssistantMessages', () => {
       const block = result[0].children![0];
       expect(block.tools).toHaveLength(2);
       expect(block.tools![0].result?.content).toBe('Beijing: Sunny, 25°C');
+      expect(block.tools![0].result_msg_id).toBe('msg-2');
       expect(block.tools![1].result?.content).toBe('Latest tech news: AI breakthrough');
+      expect(block.tools![1].result_msg_id).toBe('msg-3');
     });
 
     it('should handle assistant message without tools', () => {
@@ -165,6 +168,7 @@ describe('groupAssistantMessages', () => {
       const block = result[0].children![0];
       expect(block.tools).toHaveLength(1);
       expect(block.tools![0].result).toBeUndefined();
+      expect(block.tools![0].result_msg_id).toBeUndefined();
     });
   });
 
@@ -366,11 +370,13 @@ describe('groupAssistantMessages', () => {
       // First child: original assistant with tool result
       expect(result[0].children![0].id).toBe('msg-1');
       expect(result[0].children![0].tools![0].result?.content).toBe('Sunny, 25°C');
+      expect(result[0].children![0].tools![0].result_msg_id).toBe('msg-2');
 
       // Second child: follow-up assistant with its own tool result
       expect(result[0].children![1].id).toBe('msg-3');
       expect(result[0].children![1].tools).toHaveLength(1);
       expect(result[0].children![1].tools![0].result?.content).toBe('Breaking news');
+      expect(result[0].children![1].tools![0].result_msg_id).toBe('msg-4');
     });
 
     it('should group multiple follow-up assistants in chain (3+ assistants)', () => {
@@ -448,9 +454,11 @@ describe('groupAssistantMessages', () => {
 
       expect(result[0].children![0].id).toBe('msg-1');
       expect(result[0].children![0].tools![0].result?.content).toBe('Result 1');
+      expect(result[0].children![0].tools![0].result_msg_id).toBe('msg-2');
 
       expect(result[0].children![1].id).toBe('msg-3');
       expect(result[0].children![1].tools![0].result?.content).toBe('Result 2');
+      expect(result[0].children![1].tools![0].result_msg_id).toBe('msg-4');
 
       expect(result[0].children![2].id).toBe('msg-5');
       expect(result[0].children![2].content).toBe('Step 3 final');
@@ -677,7 +685,6 @@ describe('groupAssistantMessages', () => {
       expect(block.content).toBe('Test');
       expect(block.tools).toHaveLength(1);
       expect(block.imageList).toHaveLength(1);
-      expect(block.fileList).toHaveLength(1);
     });
 
     it('should preserve all tool result fields', () => {
@@ -720,6 +727,7 @@ describe('groupAssistantMessages', () => {
         state: { step: 1 },
         error: null,
       });
+      expect(block.tools![0].result_msg_id).toBe('msg-2');
     });
   });
 
@@ -928,6 +936,142 @@ describe('groupAssistantMessages', () => {
       expect(result[0].performance).toBeUndefined();
       expect(result[0].metadata).toBeUndefined();
     });
+
+    it('should map reasoning field to reasoning in children blocks', () => {
+      const input: UIChatMessage[] = [
+        {
+          id: 'msg-1',
+          role: 'assistant',
+          content: 'Test response',
+          reasoning: {
+            content: 'This is my reasoning process',
+            duration: 1500,
+          },
+          tools: [
+            {
+              id: 'tool-1',
+              identifier: 'test',
+              apiName: 'test',
+              arguments: '{}',
+              type: 'default',
+            },
+          ],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        } as UIChatMessage,
+        {
+          id: 'msg-2',
+          role: 'tool',
+          tool_call_id: 'tool-1',
+          content: 'Tool result',
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        } as UIChatMessage,
+        {
+          id: 'msg-3',
+          role: 'assistant',
+          content: 'Follow-up response',
+          parentId: 'msg-2',
+          reasoning: {
+            content: 'Follow-up reasoning',
+            duration: 2000,
+          },
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        } as UIChatMessage,
+      ];
+
+      const result = groupAssistantMessages(input);
+
+      // First block should have reasoning
+      expect(result[0].children![0].reasoning).toEqual({
+        content: 'This is my reasoning process',
+        duration: 1500,
+      });
+
+      // Second block (follow-up) should also have reasoning
+      expect(result[0].children![1].reasoning).toEqual({
+        content: 'Follow-up reasoning',
+        duration: 2000,
+      });
+
+      // Group message should not have reasoning (moved to children)
+      expect(result[0].reasoning).toBeUndefined();
+    });
+
+    it('should preserve error field in children blocks', () => {
+      const input = [
+        {
+          id: 'msg-1',
+          role: 'assistant',
+          content: 'Failed to process',
+          error: {
+            type: 'InvalidAPIKey',
+            message: 'API key is invalid',
+          },
+          tools: [
+            {
+              id: 'tool-1',
+              identifier: 'test',
+              apiName: 'test',
+              arguments: '{}',
+              type: 'default',
+            },
+          ],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        } as unknown as UIChatMessage,
+      ] as UIChatMessage[];
+
+      const result = groupAssistantMessages(input);
+
+      // Child block should have error
+      expect(result[0].children![0].error).toEqual({
+        type: 'InvalidAPIKey',
+        message: 'API key is invalid',
+      });
+    });
+
+    it('should preserve imageList in children blocks', () => {
+      const input: UIChatMessage[] = [
+        {
+          id: 'msg-1',
+          role: 'assistant',
+          content: 'Here are the images',
+          imageList: [
+            { id: 'img-1', url: 'https://example.com/img1.jpg', alt: 'Image 1' },
+            { id: 'img-2', url: 'https://example.com/img2.jpg', alt: 'Image 2' },
+          ],
+          tools: [
+            {
+              id: 'tool-1',
+              identifier: 'test',
+              apiName: 'test',
+              arguments: '{}',
+              type: 'default',
+            },
+          ],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        } as UIChatMessage,
+      ];
+
+      const result = groupAssistantMessages(input);
+
+      // Child block should have imageList
+      expect(result[0].children![0].imageList).toEqual([
+        { id: 'img-1', url: 'https://example.com/img1.jpg', alt: 'Image 1' },
+        { id: 'img-2', url: 'https://example.com/img2.jpg', alt: 'Image 2' },
+      ]);
+
+      // Parent should not have imageList (moved to children)
+      expect(result[0].imageList).toBeUndefined();
+    });
   });
 
   describe('Empty and Null Cases', () => {
@@ -958,7 +1102,6 @@ describe('groupAssistantMessages', () => {
 
       // Empty arrays should become undefined
       expect(result[0].children![0].imageList).toBeUndefined();
-      expect(result[0].children![0].fileList).toBeUndefined();
     });
 
     it('should handle empty message list', () => {

@@ -5,13 +5,13 @@ import {
 } from '@lobechat/electron-client-ipc';
 
 /**
- * 桌面通知服务
+ * Desktop notification service
  */
 export class DesktopNotificationService {
   /**
-   * 显示桌面通知（仅在窗口隐藏时）
-   * @param params 通知参数
-   * @returns 通知结果
+   * Show desktop notification (only when window is hidden)
+   * @param params Notification parameters
+   * @returns Notification result
    */
   async showNotification(
     params: ShowDesktopNotificationParams,
@@ -20,8 +20,8 @@ export class DesktopNotificationService {
   }
 
   /**
-   * 检查主窗口是否隐藏
-   * @returns 是否隐藏
+   * Check if main window is hidden
+   * @returns Whether it is hidden
    */
   async isMainWindowHidden(): Promise<boolean> {
     return dispatch('isMainWindowHidden');

@@ -4,8 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
 import { useClientDataSWR } from '@/libs/swr';
-import { fileService } from '@/services/file';
-import { ServerService } from '@/services/file/server';
+import { fileService , FileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import {
   UploadFileListDispatch,
@@ -18,7 +17,7 @@ import { unzipFile } from '@/utils/unzipFile';
 import { FileStore } from '../../store';
 import { fileManagerSelectors } from './selectors';
 
-const serverFileService = new ServerService();
+const serverFileService = new FileService();
 
 export interface FileManageAction {
   dispatchDockFileList: (payload: UploadFileListDispatch) => void;

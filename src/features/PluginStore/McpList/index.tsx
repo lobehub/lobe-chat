@@ -5,7 +5,7 @@ import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
-
+import { useServerConfigStore } from '@/store/serverConfig';
 import DetailLoading from './Detail/Loading';
 import List from './List';
 
@@ -14,6 +14,8 @@ const Detail = dynamic(() => import('./Detail'), { loading: DetailLoading, ssr: 
 export const MCPPluginList = memo(() => {
   const ref = useRef<HTMLDivElement>(null);
   const theme = useTheme();
+
+  const mobile = useServerConfigStore((s) => s.isMobile);
 
   return (
     <Flexbox
@@ -26,7 +28,9 @@ export const MCPPluginList = memo(() => {
       }}
       width={'100%'}
     >
-      <DraggablePanel maxWidth={1024} minWidth={420} placement={'left'}>
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/* @ts-ignore */}
+      <DraggablePanel maxWidth={1024} minWidth={mobile ? '100vw' : 420} placement={'left'}>
         <List
           setIdentifier={(identifier) => {
             useToolStore.setState({ activeMCPIdentifier: identifier });

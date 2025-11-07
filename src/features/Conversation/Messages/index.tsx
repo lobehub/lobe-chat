@@ -1,21 +1,22 @@
 'use client';
 
+import { isDesktop } from '@lobechat/const';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { isDesktop } from '@/const/version';
 import {
   removeVirtuosoVisibleItem,
   upsertVirtuosoVisibleItem,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import AssistantMessage from './Assistant';
+import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
 import UserMessage from './User';
 
@@ -57,7 +58,7 @@ const Item = memo<ChatListItemProps>(
 
     const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
 
-    const [isMessageLoading] = useChatStore((s) => [chatSelectors.isMessageLoading(id)(s)]);
+    const [isMessageLoading] = useChatStore((s) => [messageStateSelectors.isMessageLoading(id)(s)]);
 
     // ======================= Performance Optimization ======================= //
     // these useMemo/useCallback are all for the performance optimization
@@ -124,6 +125,17 @@ const Item = memo<ChatListItemProps>(
         case 'assistant': {
           return (
             <AssistantMessage
+              {...item}
+              disableEditing={disableEditing}
+              index={index}
+              showTitle={item.groupId ? true : false}
+            />
+          );
+        }
+
+        case 'group': {
+          return (
+            <GroupMessage
               {...item}
               disableEditing={disableEditing}
               index={index}

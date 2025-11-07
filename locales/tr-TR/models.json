@@ -191,6 +191,9 @@
   "Kwai-Kolors/Kolors": {
     "description": "Kolors, Kuaishou Kolors ekibi tarafından geliştirilen, latent difüzyon tabanlı büyük ölçekli metinden görüntüye üretim modelidir. Milyarlarca metin-görüntü çiftinden eğitilerek görsel kalite, karmaşık anlamsal doğruluk ve Çince-İngilizce karakter işleme alanlarında üstün performans gösterir. Hem Çince hem İngilizce girişleri destekler ve özellikle Çince içerik anlama ve üretiminde başarılıdır."
   },
+  "Kwaipilot/KAT-Dev": {
+    "description": "KAT-Dev (32B), yazılım mühendisliği görevleri için özel olarak tasarlanmış açık kaynaklı bir 32B parametreli modeldir. SWE-Bench Verified kıyaslamasında %62,4 başarı oranı elde etmiş ve farklı boyutlardaki tüm açık kaynak modeller arasında beşinci sırada yer almıştır. Model; ara eğitim, denetimli ince ayar (SFT) ve pekiştirmeli öğrenme (RL) dahil olmak üzere çok aşamalı bir süreçle optimize edilmiştir. Kod tamamlama, hata düzeltme, kod incelemesi gibi karmaşık programlama görevlerinde güçlü destek sunmak üzere tasarlanmıştır."
+  },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Yüksek çözünürlüklü görüntülerde mükemmel görüntü akıl yürütme yeteneği, görsel anlama uygulamaları için uygundur."
   },
@@ -787,12 +790,6 @@
   },
   "claude-3-5-haiku-latest": {
     "description": "Claude 3.5 Haiku hızlı yanıtlar sunar ve hafif görevler için uygundur."
-  },
-  "claude-3-5-sonnet-20240620": {
-    "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı bir performans sunar, aynı zamanda Sonnet ile aynı fiyatı korur. Sonnet, programlama, veri bilimi, görsel işleme ve ajan görevlerinde özellikle başarılıdır."
-  },
-  "claude-3-5-sonnet-20241022": {
-    "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı performans sunarken, aynı fiyatta kalmaktadır. Sonnet, programlama, veri bilimi, görsel işleme ve aracı görevlerde özellikle güçlüdür."
   },
   "claude-3-7-sonnet-20250219": {
     "description": "Claude 3.7 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak, geniş bir değerlendirme yelpazesinde mükemmel performans sergilemekte, orta seviye modellerimizin hız ve maliyet avantajlarını sunmaktadır."
@@ -2404,6 +2401,9 @@
   },
   "minicpm-v": {
     "description": "MiniCPM-V, OpenBMB tarafından sunulan yeni nesil çok modlu büyük bir modeldir; olağanüstü OCR tanıma ve çok modlu anlama yeteneklerine sahiptir ve geniş bir uygulama yelpazesini destekler."
+  },
+  "minimax-m2": {
+    "description": "MiniMax M2, kodlama ve yardımcı iş akışları için özel olarak geliştirilmiş, verimli bir büyük dil modelidir."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B, Mistral'ın dünya çapında en üst düzey kenar modelidir."

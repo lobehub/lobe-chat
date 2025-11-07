@@ -4,7 +4,7 @@ import { ReactNode, memo } from 'react';
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 
 export const DefaultMessage = memo<
   UIChatMessage & {
@@ -13,7 +13,7 @@ export const DefaultMessage = memo<
     isToolCallGenerating?: boolean;
   }
 >(({ id, editableContent, content, isToolCallGenerating, addIdOnDOM = true }) => {
-  const editing = useChatStore(chatSelectors.isMessageEditing(id));
+  const editing = useChatStore(messageStateSelectors.isMessageEditing(id));
 
   if (isToolCallGenerating) return;
 

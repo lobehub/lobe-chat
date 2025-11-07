@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { SkeletonSwitch } from '@/components/Skeleton';
+
 interface LabCardProps {
   checked: boolean;
   cover?: string;
@@ -71,18 +73,18 @@ const LabCard = memo<PropsWithChildren<LabCardProps>>(
         <div className={styles.card}>
           <div className={styles.row}>
             <div className={styles.thumb}>
-              {cover && <Image alt={title} fill src={cover} style={{ objectFit: 'cover' }} />}
+              {cover && (
+                <Image alt={title} fill src={cover} style={{ objectFit: 'cover' }} unoptimized />
+              )}
             </div>
             <Flexbox gap={6}>
               <div className={styles.title}>{title}</div>
               <div className={styles.desc}>{desc}</div>
               {meta ? <div className={styles.meta}>{meta}</div> : null}
             </Flexbox>
-            {!loading && (
-              <Flexbox align={'flex-end'} height={'100%'} justify={'center'} paddingInline={8}>
-                <Switch checked={checked} onChange={onChange} />
-              </Flexbox>
-            )}
+            <Flexbox align={'flex-end'} height={'100%'} justify={'center'} paddingInline={8}>
+              {loading ? <SkeletonSwitch /> : <Switch checked={checked} onChange={onChange} />}
+            </Flexbox>
           </div>
         </div>
       </div>

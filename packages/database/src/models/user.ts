@@ -82,7 +82,8 @@ export class UserModel {
       })
       .from(users)
       .where(eq(users.id, this.userId))
-      .leftJoin(userSettings, eq(users.id, userSettings.id));
+      .leftJoin(userSettings, eq(users.id, userSettings.id))
+      .limit(1);
 
     if (!result || !result[0]) {
       throw new UserNotFoundError();

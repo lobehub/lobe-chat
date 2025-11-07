@@ -158,7 +158,9 @@ export const chatThreadMessage: StateCreator<
       tempMessageId = get().internal_createTmpMessage(newMessage);
       get().internal_toggleMessageLoading(true, tempMessageId);
 
-      parentMessageId = await get().internal_createMessage(newMessage, { tempMessageId });
+      const result = await get().internal_createMessage(newMessage, { tempMessageId });
+      if (!result) return;
+      parentMessageId = result.id;
     }
 
     get().internal_toggleMessageLoading(false, tempMessageId);
