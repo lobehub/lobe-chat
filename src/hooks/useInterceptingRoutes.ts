@@ -24,7 +24,7 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
       // Check if we're inside ChatRouter (location.pathname will be relative to MemoryRouter)
       // When inside ChatRouter, location.pathname is like "/" or "/settings"
       // We navigate to "/settings" with session param within ChatRouter context
-      return () => navigate(`/chat/settings?session=${activeId}`);
+      return () => navigate(`/chat/settings?session=${activeId}&showMobileWorkspace=true`);
     }
 
     return () => {
