@@ -16,6 +16,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
+        { name: 'textInput_cacheRead', rate: 0.21, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 2.625, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 2.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 8.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
