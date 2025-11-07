@@ -3,6 +3,11 @@ import debug from 'debug';
 import { BaseProcessor } from '../base/BaseProcessor';
 import type { PipelineContext, ProcessorOptions } from '../types';
 
+interface MessageCleanupConfig {
+  includeHistoricalThinking?: boolean;
+  provider?: string;
+}
+
 const log = debug('context-engine:processor:MessageCleanupProcessor');
 
 /**
@@ -12,8 +17,26 @@ const log = debug('context-engine:processor:MessageCleanupProcessor');
 export class MessageCleanupProcessor extends BaseProcessor {
   readonly name = 'MessageCleanupProcessor';
 
-  constructor(options: ProcessorOptions = {}) {
-    super(options);
+  private readonly config: MessageCleanupConfig;
+
+  constructor(
+    configOrOptions: MessageCleanupConfig | ProcessorOptions = {},
+    options: ProcessorOptions = {},
+  ) {
+    if (MessageCleanupProcessor.isProcessorOptions(configOrOptions)) {
+      super(configOrOptions);
+      this.config = {};
+    } else {
+      super(options);
+      this.config = configOrOptions;
+    }
+  }
+
+  private static isProcessorOptions(value: any): value is ProcessorOptions {
+    if (!value || typeof value !== 'object') return false;
+    const keys = Object.keys(value);
+    if (keys.length === 0) return false;
+    return keys.every((key) => key === 'debug' || key === 'logger');
   }
 
   protected async doProcess(context: PipelineContext): Promise<PipelineContext> {
@@ -62,11 +85,30 @@ export class MessageCleanupProcessor extends BaseProcessor {
       }
 
       case 'assistant': {
-        return {
+        const baseMessage = {
           content: message.content,
           role: message.role,
           ...(message.tool_calls && { tool_calls: message.tool_calls }),
         };
+
+        const shouldPreserveReasoning = (() => {
+          if (!this.config.includeHistoricalThinking) return false;
+          const provider = this.config.provider?.toLowerCase();
+          if (!provider) return false;
+          if (provider !== 'minimax' && provider !== 'moonshot') return false;
+          if (!message.reasoning) return false;
+          const { content, signature } = message.reasoning;
+          return !!content && !signature;
+        })();
+
+        if (shouldPreserveReasoning) {
+          return {
+            ...baseMessage,
+            reasoning: message.reasoning,
+          };
+        }
+
+        return baseMessage;
       }
 
       case 'tool': {

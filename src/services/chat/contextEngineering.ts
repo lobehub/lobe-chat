@@ -110,7 +110,7 @@ export const contextEngineering = async ({
       new ToolMessageReorder(),
 
       // 11. Message cleanup (final step, keep only necessary fields)
-      new MessageCleanupProcessor(),
+      new MessageCleanupProcessor({ includeHistoricalThinking, provider }),
     ],
   });
 

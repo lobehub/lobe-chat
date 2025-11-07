@@ -265,6 +265,17 @@ const transformOpenAIStream = (
       let reasoning_content = (() => {
         if ('reasoning_content' in item.delta) return item.delta.reasoning_content;
         if ('reasoning' in item.delta) return item.delta.reasoning;
+        // Handle MiniMax M2 reasoning_details format (array of objects with text field)
+        if ('reasoning_details' in item.delta) {
+          const details = item.delta.reasoning_details;
+          if (Array.isArray(details)) {
+            return details
+              .filter((detail: any) => detail.text)
+              .map((detail: any) => detail.text)
+              .join('');
+          }
+          return details;
+        }
         // Handle content array format with thinking blocks (e.g. mistral AI Magistral model)
         if ('content' in item.delta && Array.isArray(item.delta.content)) {
           return item.delta.content

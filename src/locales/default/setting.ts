@@ -423,8 +423,8 @@ export default {
       title: '词汇丰富度',
     },
     includeHistoricalThinking: {
-      desc: '将历史消息的思考过程嵌入到消息内容中，帮助模型更好地理解上下文推理链路',
-      title: '携带历史思考内容',
+      desc: '将历史消息的思考过程嵌入到上下文中，帮助模型更好地理解上下文推理链路',
+      title: '交错思考',
     },
     maxTokens: {
       desc: '单次交互所用的最大 Token 数',

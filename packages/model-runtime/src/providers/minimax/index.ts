@@ -13,16 +13,42 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.minimaxi.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, max_tokens, temperature, tools, top_p, ...params } = payload;
+      const { enabledSearch, max_tokens, messages, temperature, tools, top_p, ...params } = payload;
 
       const minimaxTools = enabledSearch
         ? [
-          ...(tools || []),
-          {
-            type: 'web_search',
-          },
-        ]
+            ...(tools || []),
+            {
+              type: 'web_search',
+            },
+          ]
         : tools;
+
+      // Process messages to add reasoning_details for assistant messages with reasoning field
+      const processedMessages = messages.map((message: any) => {
+        if (
+          message.role === 'assistant' &&
+          message.reasoning &&
+          !message.reasoning.signature &&
+          message.reasoning.content
+        ) {
+          // Add reasoning_details field in MiniMax format at the same level as content
+          const { reasoning, ...messageWithoutReasoning } = message;
+          return {
+            ...messageWithoutReasoning,
+            reasoning_details: [
+              {
+                format: 'MiniMax-response-v1',
+                id: 'reasoning-text-0',
+                index: 0,
+                text: reasoning.content,
+                type: 'reasoning.text',
+              },
+            ],
+          };
+        }
+        return message;
+      });
 
       // Resolve parameters with constraints
       const resolvedParams = resolveParameters(
@@ -46,6 +72,8 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
       return {
         ...params,
         max_tokens: resolvedParams.max_tokens,
+        messages: processedMessages,
+        reasoning_split: true,
         temperature: finalTemperature,
         tools: minimaxTools,
         top_p: resolvedParams.top_p,

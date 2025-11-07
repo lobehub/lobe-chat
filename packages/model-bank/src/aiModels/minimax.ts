@@ -8,10 +8,34 @@ const minimaxChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 204_800,
-    description: '专为高效编码与Agent工作流而生',
+    description: '专为高效编码与Agent工作流而生。',
     displayName: 'MiniMax M2',
     enabled: true,
     id: 'MiniMax-M2',
+    maxOutput: 131_072,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 2.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-27',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 204_800,
+    description: '专为高效编码与Agent工作流而生，更高并发，商业使用。',
+    displayName: 'MiniMax M2 Stable',
+    id: 'MiniMax-M2-Stable',
     maxOutput: 131_072,
     pricing: {
       currency: 'CNY',

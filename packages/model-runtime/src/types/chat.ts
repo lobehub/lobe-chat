@@ -71,7 +71,7 @@ export interface ChatStreamPayload {
    */
   frequency_penalty?: number;
   /**
-   * @title 是否携带历史思考内容
+   * @title 上下文是否携带历史思考内容
    */
   includeHistoricalThinking?: boolean;
   /**

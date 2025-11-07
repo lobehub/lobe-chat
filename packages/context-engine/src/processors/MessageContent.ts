@@ -237,12 +237,14 @@ export class MessageContentProcessor extends BaseProcessor {
       };
     }
 
-    // 如果开启了携带历史思考内容，并且消息有 reasoning content（非 signature 模式）
-    // 排除 Anthropic、Google 和 Vertex，因为它们有自己的推理格式
-    const excludedProviders = ['anthropic', 'google', 'vertex'];
+    // 如果开启了携带历史思考内容，并且消息有 reasoning content
+    // 排除部分 provider，因为它们有自己的推理格式
+    // - Anthropic、Google、Vertex: 有自己的推理格式，不需要处理
+    // - MiniMax、Moonshot: 需要保留原始 reasoning 字段，在各自的 runtime 中处理
+    const excludedFromThinkTag = new Set(['anthropic', 'google', 'vertex', 'minimax', 'moonshot']);
     const shouldIncludeHistoricalThinking =
       this.config.includeHistoricalThinking &&
-      !excludedProviders.includes(this.config.provider.toLowerCase()) &&
+      !excludedFromThinkTag.has(this.config.provider.toLowerCase()) &&
       message.reasoning &&
       !message.reasoning.signature &&
       message.reasoning.content;
@@ -257,6 +259,13 @@ export class MessageContentProcessor extends BaseProcessor {
         content: newContent,
       };
     }
+
+    const shouldPreserveReasoning =
+      this.config.includeHistoricalThinking &&
+      new Set(['minimax', 'moonshot']).has(this.config.provider.toLowerCase()) &&
+      message.reasoning &&
+      !message.reasoning.signature &&
+      message.reasoning.content;
 
     // 检查是否有图片（助手消息也可能包含图片）
     const hasImages = message.imageList && message.imageList.length > 0;
@@ -276,16 +285,23 @@ export class MessageContentProcessor extends BaseProcessor {
       const imageContentParts = await this.processImageList(message.imageList || []);
       contentParts.push(...imageContentParts);
 
+      const { reasoning, ...messageWithoutReasoning } = message;
+
       return {
-        ...message,
+        ...messageWithoutReasoning,
         content: contentParts,
+        ...(shouldPreserveReasoning && { reasoning }),
       };
     }
 
     // 普通助手消息，返回纯文本内容
+    const { reasoning, ...messageWithoutReasoning } = message;
+
     return {
-      ...message,
+      ...messageWithoutReasoning,
       content: message.content,
+      // For MiniMax and Moonshot with reasoning, preserve the reasoning field
+      ...(shouldPreserveReasoning && { reasoning }),
     };
   }
 

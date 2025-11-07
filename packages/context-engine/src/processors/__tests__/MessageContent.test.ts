@@ -693,6 +693,8 @@ describe('MessageContentProcessor', () => {
       const content = result.messages[0].content as string;
       // Should NOT embed thinking content for Anthropic
       expect(content).toBe('The answer is correct.');
+      // Should NOT preserve reasoning field (Anthropic has its own format)
+      expect(result.messages[0].reasoning).toBeUndefined();
     });
 
     it('should not embed thinking content for Google provider', async () => {
@@ -724,6 +726,8 @@ describe('MessageContentProcessor', () => {
       const content = result.messages[0].content as string;
       // Should NOT embed thinking content for Google
       expect(content).toBe('The answer is correct.');
+      // Should NOT preserve reasoning field (Google has its own format)
+      expect(result.messages[0].reasoning).toBeUndefined();
     });
 
     it('should not embed thinking content for Vertex provider', async () => {
@@ -755,6 +759,8 @@ describe('MessageContentProcessor', () => {
       const content = result.messages[0].content as string;
       // Should NOT embed thinking content for Vertex
       expect(content).toBe('The answer is correct.');
+      // Should NOT preserve reasoning field (Vertex has its own format)
+      expect(result.messages[0].reasoning).toBeUndefined();
     });
 
     it('should not embed thinking content when reasoning content is missing', async () => {
@@ -874,6 +880,105 @@ describe('MessageContentProcessor', () => {
       const content = result.messages[0].content as string;
       // Should embed thinking for azure-openai (not in excluded list)
       expect(content).toBe('<think>Let me think about this.</think>\nThe answer is correct.');
+    });
+
+    it('should preserve reasoning field for MiniMax provider when includeHistoricalThinking is enabled', async () => {
+      const processor = new MessageContentProcessor({
+        model: 'MiniMax-M2',
+        provider: 'minimax',
+        isCanUseVision: mockIsCanUseVision,
+        fileContext: { enabled: false },
+        includeHistoricalThinking: true,
+      });
+
+      const messages: UIChatMessage[] = [
+        {
+          id: 'test',
+          role: 'assistant',
+          content: 'The answer is correct.',
+          reasoning: {
+            content: 'Let me think about this carefully.',
+            signature: undefined,
+          },
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        },
+      ];
+
+      const result = await processor.process(createContext(messages));
+
+      // Should preserve the original reasoning field for minimax
+      expect(result.messages[0].content).toBe('The answer is correct.');
+      expect(result.messages[0].reasoning).toEqual({
+        content: 'Let me think about this carefully.',
+        signature: undefined,
+      });
+    });
+
+    it('should preserve reasoning field for Moonshot provider when includeHistoricalThinking is enabled', async () => {
+      const processor = new MessageContentProcessor({
+        model: 'moonshot-v1',
+        provider: 'moonshot',
+        isCanUseVision: mockIsCanUseVision,
+        fileContext: { enabled: false },
+        includeHistoricalThinking: true,
+      });
+
+      const messages: UIChatMessage[] = [
+        {
+          id: 'test',
+          role: 'assistant',
+          content: 'The answer is correct.',
+          reasoning: {
+            content: 'Analyzing the problem step by step.',
+            signature: undefined,
+          },
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        },
+      ];
+
+      const result = await processor.process(createContext(messages));
+
+      // Should preserve the original reasoning field for moonshot
+      expect(result.messages[0].content).toBe('The answer is correct.');
+      expect(result.messages[0].reasoning).toEqual({
+        content: 'Analyzing the problem step by step.',
+        signature: undefined,
+      });
+    });
+
+    it('should not preserve reasoning field for excluded providers when includeHistoricalThinking is disabled', async () => {
+      const processor = new MessageContentProcessor({
+        model: 'MiniMax-M2',
+        provider: 'minimax',
+        isCanUseVision: mockIsCanUseVision,
+        fileContext: { enabled: false },
+        includeHistoricalThinking: false,
+      });
+
+      const messages: UIChatMessage[] = [
+        {
+          id: 'test',
+          role: 'assistant',
+          content: 'The answer is correct.',
+          reasoning: {
+            content: 'Let me think about this.',
+            signature: undefined,
+          },
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          meta: {},
+        },
+      ];
+
+      const result = await processor.process(createContext(messages));
+
+      // When includeHistoricalThinking is false, reasoning field will be removed
+      expect(result.messages[0].content).toBe('The answer is correct.');
+      expect(result.messages[0].reasoning).toBeUndefined();
     });
   });
 });

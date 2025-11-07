@@ -2317,6 +2317,155 @@ describe('OpenAIStream', () => {
       );
     });
 
+    it('should handle reasoning_details array format from MiniMax M2', async () => {
+      const data = [
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '',
+                role: 'assistant',
+                name: 'MiniMax AI',
+                audio_content: '',
+                reasoning_details: [
+                  {
+                    type: 'reasoning.text',
+                    id: 'reasoning-text-1',
+                    format: 'MiniMax-response-v1',
+                    index: 0,
+                    text: '中文打招呼说"你好"，',
+                  },
+                ],
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                reasoning_details: [
+                  {
+                    type: 'reasoning.text',
+                    id: 'reasoning-text-2',
+                    format: 'MiniMax-response-v1',
+                    index: 0,
+                    text: '我需要用中文回复。',
+                  },
+                ],
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '你好',
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '！',
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '',
+              },
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 10,
+            completion_tokens: 20,
+            total_tokens: 30,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: reasoning',
+          `data: "中文打招呼说\\"你好\\"，"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: reasoning',
+          `data: "我需要用中文回复。"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: text',
+          `data: "你好"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: text',
+          `data: "！"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: usage',
+          `data: {"inputTextTokens":10,"outputTextTokens":20,"totalInputTokens":10,"totalOutputTokens":20,"totalTokens":30}\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
     it('should handle claude reasoning in litellm openai mode', async () => {
       const data = [
         {

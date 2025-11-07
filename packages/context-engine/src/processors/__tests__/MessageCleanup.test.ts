@@ -342,5 +342,77 @@ describe('MessageCleanupProcessor', () => {
       expect(result.messages).toBeDefined();
       expect(result.metadata).toBeDefined();
     });
+
+    it('should preserve reasoning for MiniMax when includeHistoricalThinking is enabled', async () => {
+      const processor = new MessageCleanupProcessor({
+        includeHistoricalThinking: true,
+        provider: 'minimax',
+      });
+
+      const reasoningContent = {
+        content: 'Let me think about this.',
+        signature: undefined,
+      };
+
+      const context = createContext([
+        {
+          content: 'Final answer',
+          reasoning: reasoningContent,
+          role: 'assistant',
+        },
+      ]);
+
+      const result = await processor.process(context);
+
+      expect(result.messages[0]).toEqual({
+        content: 'Final answer',
+        reasoning: reasoningContent,
+        role: 'assistant',
+      });
+    });
+
+    it('should drop reasoning when includeHistoricalThinking is disabled', async () => {
+      const processor = new MessageCleanupProcessor({
+        includeHistoricalThinking: false,
+        provider: 'minimax',
+      });
+
+      const context = createContext([
+        {
+          content: 'Answer',
+          reasoning: { content: 'Thoughts', signature: undefined },
+          role: 'assistant',
+        },
+      ]);
+
+      const result = await processor.process(context);
+
+      expect(result.messages[0]).toEqual({
+        content: 'Answer',
+        role: 'assistant',
+      });
+    });
+
+    it('should drop reasoning for other providers even when includeHistoricalThinking is enabled', async () => {
+      const processor = new MessageCleanupProcessor({
+        includeHistoricalThinking: true,
+        provider: 'openai',
+      });
+
+      const context = createContext([
+        {
+          content: 'Answer',
+          reasoning: { content: 'Thoughts', signature: undefined },
+          role: 'assistant',
+        },
+      ]);
+
+      const result = await processor.process(context);
+
+      expect(result.messages[0]).toEqual({
+        content: 'Answer',
+        role: 'assistant',
+      });
+    });
   });
 });
