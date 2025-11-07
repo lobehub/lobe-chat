@@ -4,6 +4,7 @@ import {
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
+  ReactImagePlugin,
   ReactLinkHighlightPlugin,
   ReactListPlugin,
   ReactMathPlugin,
@@ -73,7 +74,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     onDocumentIdChange,
     onSave,
   }) => {
-    const { t } = useTranslation(['file', 'editor']);
+    const { t } = useTranslation(['file']);
     const theme = useTheme();
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
     const { message } = App.useApp();
@@ -388,7 +389,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       const handleKeyDown = (e: KeyboardEvent) => {
         if ((e.metaKey || e.ctrlKey) && e.key === 's') {
           e.preventDefault();
-          message.info(t('notesEditor.autoSaveMessage'));
+          message.info(t('documentEditor.autoSaveMessage'));
         }
       };
 
@@ -414,8 +415,11 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           key: 'copy-link',
           label: 'Copy Link',
           onClick: () => {
-            // TODO: Implement copy link functionality
-            console.log('Copy link clicked');
+            if (currentDocId) {
+              const url = `${window.location.origin}${window.location.pathname}?documentId=${currentDocId}`;
+              navigator.clipboard.writeText(url);
+              message.success(t('documentEditor.linkCopied'));
+            }
           },
         },
         {
@@ -448,6 +452,9 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
             // TODO: Implement import functionality
             console.log('Import clicked');
           },
+        },
+        {
+          type: 'divider' as const,
         },
         {
           disabled: true,
@@ -501,7 +508,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               whiteSpace: 'nowrap',
             }}
           >
-            {currentTitle || t('notesEditor.titlePlaceholder')}
+            {currentTitle || t('documentEditor.titlePlaceholder')}
           </Flexbox>
 
           {/* Save Status Indicator */}
@@ -531,7 +538,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               // TODO: Implement pin functionality
               console.log('Pin clicked');
             }}
-            size={16}
+            size={15.5}
             style={{ color: theme.colorText }}
           />
 
@@ -544,7 +551,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
             placement="bottomRight"
             trigger={['click']}
           >
-            <ActionIcon icon={MoreVertical} size={16} style={{ color: theme.colorText }} />
+            <ActionIcon icon={MoreVertical} size={15.5} style={{ color: theme.colorText }} />
           </Dropdown>
         </Flexbox>
 
@@ -552,8 +559,13 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         <Flexbox flex={1} style={{ overflowY: 'auto' }}>
           <Flexbox
             paddingBlock={36}
-            paddingInline={48}
-            style={{ margin: '0 auto', maxWidth: 900, width: '100%' }}
+            style={{
+              margin: '0 auto',
+              maxWidth: 900,
+              paddingLeft: 32,
+              paddingRight: 48,
+              width: '100%',
+            }}
           >
             {/* Emoji and Title */}
             <Flexbox
@@ -580,7 +592,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                       fontSize: 80,
                       transform: 'translateX(-6px)',
                     }}
-                    title={t('notesEditor.emojiPicker.tooltip')}
+                    title={t('documentEditor.emojiPicker.tooltip')}
                     value={currentEmoji}
                   />
                 </Flexbox>
@@ -623,7 +635,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                       });
                     }
                   }}
-                  placeholder={t('notesEditor.titlePlaceholder')}
+                  placeholder={t('documentEditor.titlePlaceholder')}
                   style={{
                     background: 'transparent',
                     border: 'none',
@@ -644,7 +656,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               content={''}
               editor={editor}
               onTextChange={handleContentChange}
-              placeholder={t('notesEditor.editorPlaceholder')}
+              placeholder={t('documentEditor.editorPlaceholder')}
               plugins={[
                 ReactListPlugin,
                 ReactCodePlugin,
@@ -653,9 +665,11 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                 ReactLinkHighlightPlugin,
                 ReactTablePlugin,
                 ReactMathPlugin,
+                ReactImagePlugin,
               ]}
               style={{
                 minHeight: '400px',
+                paddingBottom: '200px',
               }}
               type={'text'}
             />

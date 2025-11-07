@@ -21,6 +21,31 @@ export default {
       embeddingStatus: '向量化',
     },
   },
+  documentEditor: {
+    addIcon: '添加图标',
+    autoSaveMessage: '文档会自动保存，无需手动保存',
+    editorPlaceholder: '输入文档内容',
+    emojiPicker: {
+      tooltip: '选择图标',
+    },
+    empty: {
+      createNewDocument: '创建新文档',
+      title: '选择一个文档以开始',
+      uploadMarkdown: '上传 Markdown 文件',
+    },
+    linkCopied: '链接已复制',
+    saving: '保存中...',
+    titlePlaceholder: '无标题',
+  },
+  documentList: {
+    copyContent: '复制全文',
+    documentCount: '共 {{count}} 个文档',
+    duplicate: '创建副本',
+    empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
+    noResults: '未找到匹配的笔记',
+    selectNote: '选择一个笔记开始编辑',
+    untitled: '无标题',
+  },
   empty: '暂无已上传文件/文件夹',
   header: {
     actions: {
@@ -99,28 +124,6 @@ export default {
       },
     },
     title: '当前部署模式不支持文件管理',
-  },
-  notesEditor: {
-    addIcon: '添加图标',
-    autoSaveMessage: '文档会自动保存，无需手动保存',
-    editorPlaceholder: '输入文档内容',
-    emojiPicker: {
-      tooltip: '选择图标',
-    },
-    empty: {
-      createNewDocument: '创建新文档',
-      title: '选择一个文档以开始',
-      uploadMarkdown: '上传 Markdown 文件',
-    },
-    saving: '保存中...',
-    titlePlaceholder: '无标题',
-  },
-  notesList: {
-    documentCount: '共 {{count}} 个文档',
-    empty: '暂无笔记，点击上方按钮创建你的第一篇笔记',
-    noResults: '未找到匹配的笔记',
-    selectNote: '选择一个笔记开始编辑',
-    untitled: '无标题',
   },
   preview: {
     downloadFile: '下载文件',

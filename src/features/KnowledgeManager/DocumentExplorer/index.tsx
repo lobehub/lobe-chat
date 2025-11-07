@@ -253,7 +253,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   };
 
   const handleNewDocument = async () => {
-    const untitledTitle = t('notesList.untitled');
+    const untitledTitle = t('documentList.untitled');
 
     // Create optimistic document immediately for instant UX
     const tempDocumentId = createOptimisticDocument(untitledTitle);
@@ -368,7 +368,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
             <NoteListSkeleton />
           ) : filteredDocuments.length === 0 ? (
             <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>
-              {searchKeywords.trim() ? t('notesList.noResults') : t('notesList.empty')}
+              {searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')}
             </div>
           ) : (
             <Virtuoso
@@ -376,14 +376,14 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                 Footer: () => (
                   <Center style={{ paddingBlock: 16 }}>
                     <Text style={{ fontSize: 12 }} type={'secondary'}>
-                      {t('notesList.documentCount', { count: filteredDocuments.length })}
+                      {t('documentList.documentCount', { count: filteredDocuments.length })}
                     </Text>
                   </Center>
                 ),
               }}
               data={filteredDocuments}
               itemContent={(_index, document) => {
-                const title = document.name || t('notesList.untitled');
+                const title = document.name || t('documentList.untitled');
                 const emoji = document.metadata?.emoji;
                 const isSelected = selectedDocumentId === document.id;
                 const isRenaming = renamingDocumentId === document.id;

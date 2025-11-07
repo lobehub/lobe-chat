@@ -129,7 +129,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     const displayTitle = useMemo(() => {
       if (isNote && content) {
         const extractedTitle = extractTitle(content);
-        return extractedTitle || name || t('file:notesList.untitled');
+        return extractedTitle || name || t('file:documentList.untitled');
       }
       return name;
     }, [isNote, content, name, t]);

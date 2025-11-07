@@ -15,7 +15,7 @@ interface DocumentActionsProps {
 
 const DocumentActions = memo<DocumentActionsProps>(
   ({ documentId, documentContent, onDelete, onRename }) => {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation(['common', 'file']);
     const [loading, setLoading] = useState(false);
     const removeDocument = useFileStore((s) => s.removeDocument);
 
@@ -41,6 +41,17 @@ const DocumentActions = memo<DocumentActionsProps>(
       }
     };
 
+    const handleDuplicate = async () => {
+      // TODO: Implement duplicate functionality
+      if (documentContent) {
+        try {
+          await navigator.clipboard.writeText(documentContent);
+        } catch (error) {
+          console.error('Failed to copy document:', error);
+        }
+      }
+    };
+
     return (
       <Flexbox align={'center'} horizontal onClick={(e) => e.stopPropagation()}>
         <Dropdown
@@ -55,8 +66,14 @@ const DocumentActions = memo<DocumentActionsProps>(
               {
                 icon: <Icon icon={Copy} />,
                 key: 'copy',
-                label: t('copy'),
+                label: t('documentList.copyContent', { ns: 'file' }),
                 onClick: handleCopy,
+              },
+              {
+                icon: <Icon icon={Copy} />,
+                key: 'copy',
+                label: t('documentList.duplicate', { ns: 'file' }),
+                onClick: handleDuplicate,
               },
               {
                 danger: true,

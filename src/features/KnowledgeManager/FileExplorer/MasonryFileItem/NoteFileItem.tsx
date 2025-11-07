@@ -76,8 +76,8 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   noteTitle: css`
     display: flex;
-    align-items: center;
     gap: 8px;
+    align-items: center;
 
     font-size: 16px;
     font-weight: ${token.fontWeightStrong};
@@ -152,7 +152,7 @@ const NoteFileItem = memo<NoteFileItemProps>(
     const isSupportedForChunking = !isChunkingUnsupported(fileType || '');
 
     const extractedTitle = markdownContent ? extractTitle(markdownContent) : null;
-    const displayTitle = extractedTitle || name || t('file:notesList.untitled');
+    const displayTitle = extractedTitle || name || t('file:documentList.untitled');
     const emoji = metadata?.emoji;
     const previewText = markdownContent ? getPreviewText(markdownContent) : '';
 

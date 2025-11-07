@@ -102,13 +102,15 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
     return (
       <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
         <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-          <Text as={'h4'}>{t('notesEditor.empty.title')}</Text>
+          <Text as={'h4'}>{t('documentEditor.empty.title')}</Text>
           <Text type={'secondary'}>{t('or', { ns: 'common' })}</Text>
         </Flexbox>
         <Flexbox gap={12} horizontal>
           {/* Create New Note */}
           <Flexbox className={styles.card} onClick={onCreateNewNote} padding={16}>
-            <span className={styles.actionTitle}>{t('notesEditor.empty.createNewDocument')}</span>
+            <span className={styles.actionTitle}>
+              {t('documentEditor.empty.createNewDocument')}
+            </span>
             <div className={styles.glow} style={{ background: theme.purple }} />
             <FileTypeIcon
               className={styles.icon}
@@ -133,7 +135,7 @@ const NoteEmptyStatus = memo<NoteEmptyStatusProps>(
               style={{ opacity: isUploading ? 0.5 : 1 }}
             >
               <span className={styles.actionTitle}>
-                {isUploading ? 'Uploading...' : t('notesEditor.empty.uploadMarkdown')}
+                {isUploading ? 'Uploading...' : t('documentEditor.empty.uploadMarkdown')}
               </span>
               <div className={styles.glow} style={{ background: theme.gold }} />
               <FileTypeIcon
