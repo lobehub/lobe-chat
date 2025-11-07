@@ -1,4 +1,5 @@
 import { ActionIcon, Dropdown, Icon } from '@lobehub/ui';
+import { App } from 'antd';
 import { Copy, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,20 +17,32 @@ interface DocumentActionsProps {
 const DocumentActions = memo<DocumentActionsProps>(
   ({ documentId, documentContent, onDelete, onRename }) => {
     const { t } = useTranslation(['common', 'file']);
+    const { message, modal } = App.useApp();
     const [loading, setLoading] = useState(false);
     const removeDocument = useFileStore((s) => s.removeDocument);
     const duplicateDocument = useFileStore((s) => s.duplicateDocument);
 
-    const handleDelete = async () => {
-      setLoading(true);
-      try {
-        await removeDocument(documentId);
-        onDelete?.();
-      } catch (error) {
-        console.error('Failed to delete document:', error);
-      } finally {
-        setLoading(false);
-      }
+    const handleDelete = () => {
+      modal.confirm({
+        cancelText: t('cancel'),
+        content: t('documentEditor.deleteConfirm.content', { ns: 'file' }),
+        okButtonProps: { danger: true },
+        okText: t('delete'),
+        onOk: async () => {
+          setLoading(true);
+          try {
+            await removeDocument(documentId);
+            message.success(t('documentEditor.deleteSuccess', { ns: 'file' }));
+            onDelete?.();
+          } catch (error) {
+            console.error('Failed to delete document:', error);
+            message.error(t('documentEditor.deleteError', { ns: 'file' }));
+          } finally {
+            setLoading(false);
+          }
+        },
+        title: t('documentEditor.deleteConfirm.title', { ns: 'file' }),
+      });
     };
 
     const handleCopy = async () => {

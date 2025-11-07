@@ -25,6 +25,12 @@ export default {
     addIcon: '添加图标',
     autoSaveMessage: '文档会自动保存，无需手动保存',
     chooseIcon: '选择图标',
+    deleteConfirm: {
+      content: '即将删除该文档，删除后将不可恢复，请谨慎操作。',
+      title: '删除文档',
+    },
+    deleteError: '删除文档失败',
+    deleteSuccess: '文档删除成功',
     editedAt: '最后编辑于 {{time}}',
     editedBy: '最后编辑者 {{name}}',
     editorPlaceholder: '输入文档内容，按 / 打开命令菜单',

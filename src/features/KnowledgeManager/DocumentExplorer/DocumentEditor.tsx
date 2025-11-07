@@ -62,16 +62,17 @@ const editorClassName = cx(css`
 interface DocumentEditorPanelProps {
   documentId?: string;
   knowledgeBaseId?: string;
+  onDelete?: () => void;
   onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
 }
 
 const DocumentEditor = memo<DocumentEditorPanelProps>(
-  ({ documentId, knowledgeBaseId, onDocumentIdChange, onSave }) => {
-    const { t } = useTranslation(['file']);
+  ({ documentId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete }) => {
+    const { t } = useTranslation(['file', 'common']);
     const theme = useTheme();
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
-    const { message } = App.useApp();
+    const { message, modal } = App.useApp();
     const username = useUserStore(userProfileSelectors.displayUserName);
 
     const editor = useEditor();
@@ -94,6 +95,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
     const localDocumentMap = useFileStore((s) => s.localDocumentMap);
     const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
+    const removeDocument = useFileStore((s) => s.removeDocument);
     const isInitialLoadRef = useRef(false);
 
     // Sync title and emoji when document data changes (e.g., from rename)
@@ -428,6 +430,29 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       }
     }, [editor, isInitialLoadRef.current, cachedEditorData]);
 
+    // Handle delete document
+    const handleDelete = useCallback(async () => {
+      if (!currentDocId) return;
+
+      modal.confirm({
+        cancelText: t('cancel', { ns: 'common' }),
+        content: t('documentEditor.deleteConfirm.content'),
+        okButtonProps: { danger: true },
+        okText: t('delete', { ns: 'common' }),
+        onOk: async () => {
+          try {
+            await removeDocument(currentDocId);
+            message.success(t('documentEditor.deleteSuccess'));
+            onDelete?.();
+          } catch (error) {
+            console.error('Failed to delete document:', error);
+            message.error(t('documentEditor.deleteError'));
+          }
+        },
+        title: t('documentEditor.deleteConfirm.title'),
+      });
+    }, [currentDocId, modal, removeDocument, message, onDelete, t]);
+
     // Menu items for the three-dot menu
     const menuItems = useMemo(
       () => [
@@ -448,10 +473,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           icon: <Icon icon={Trash2} />,
           key: 'delete',
           label: t('delete', { ns: 'common' }),
-          onClick: () => {
-            // TODO: Implement delete functionality
-            console.log('Delete clicked');
-          },
+          onClick: handleDelete,
         },
         {
           type: 'divider' as const,
@@ -495,7 +517,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           ),
         },
       ],
-      [theme, wordCount, username, lastUpdatedTime],
+      [theme, wordCount, username, lastUpdatedTime, handleDelete, currentDocId, message, t],
     );
 
     return (

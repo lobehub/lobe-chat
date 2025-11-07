@@ -21,6 +21,44 @@
       "embeddingStatus": "embedding"
     }
   },
+  "documentEditor": {
+    "addIcon": "Add Icon",
+    "autoSaveMessage": "Document auto-saves, no manual save needed",
+    "chooseIcon": "Choose Icon",
+    "deleteConfirm": {
+      "content": "This document will be deleted permanently and cannot be recovered. Please proceed with caution.",
+      "title": "Delete Document"
+    },
+    "deleteError": "Failed to delete document",
+    "deleteSuccess": "Document deleted successfully",
+    "editedAt": "Edited {{time}}",
+    "editedBy": "Edited by {{name}}",
+    "editorPlaceholder": "Type document content, press / to open command menu",
+    "empty": {
+      "createNewDocument": "Create New Document",
+      "title": "Select a document to start",
+      "uploadMarkdown": "Upload Markdown File"
+    },
+    "linkCopied": "Link copied",
+    "menu": {
+      "copyLink": "Copy Link",
+      "exportDocument": "Export Document",
+      "importDocument": "Import Document",
+      "pin": "Pin Document"
+    },
+    "saving": "Saving...",
+    "titlePlaceholder": "Untitled",
+    "wordCount": "{{wordCount}} words"
+  },
+  "documentList": {
+    "copyContent": "Copy All",
+    "documentCount": "Total {{count}} documents",
+    "duplicate": "Duplicate",
+    "empty": "No notes yet, click the button above to create your first note",
+    "noResults": "No matching notes found",
+    "selectNote": "Select a note to start editing",
+    "untitled": "Untitled"
+  },
   "empty": "No files or folders have been uploaded yet.",
   "header": {
     "actions": {
@@ -122,6 +160,7 @@
     "downloadFile": "Download File",
     "unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>."
   },
+  "searchDocumentPlaceholder": "Search documents",
   "searchFilePlaceholder": "Search Files",
   "tab": {
     "all": "All",

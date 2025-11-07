@@ -21,6 +21,44 @@
       "embeddingStatus": "向量化"
     }
   },
+  "documentEditor": {
+    "addIcon": "添加图标",
+    "autoSaveMessage": "文档会自动保存，无需手动保存",
+    "chooseIcon": "选择图标",
+    "deleteConfirm": {
+      "content": "即将删除该文档，删除后将不可恢复，请谨慎操作。",
+      "title": "删除文档"
+    },
+    "deleteError": "删除文档失败",
+    "deleteSuccess": "文档删除成功",
+    "editedAt": "最后编辑于 {{time}}",
+    "editedBy": "最后编辑者 {{name}}",
+    "editorPlaceholder": "输入文档内容，按 / 打开命令菜单",
+    "empty": {
+      "createNewDocument": "创建新文档",
+      "title": "选择一个文档以开始",
+      "uploadMarkdown": "上传 Markdown 文件"
+    },
+    "linkCopied": "链接已复制",
+    "menu": {
+      "copyLink": "复制链接",
+      "exportDocument": "导出文档",
+      "importDocument": "导入文档",
+      "pin": "置顶文档"
+    },
+    "saving": "保存中...",
+    "titlePlaceholder": "无标题",
+    "wordCount": "{{wordCount}} 字"
+  },
+  "documentList": {
+    "copyContent": "复制全文",
+    "documentCount": "共 {{count}} 个文档",
+    "duplicate": "创建副本",
+    "empty": "暂无笔记，点击上方按钮创建你的第一篇笔记",
+    "noResults": "未找到匹配的笔记",
+    "selectNote": "选择一个笔记开始编辑",
+    "untitled": "无标题"
+  },
   "empty": "暂无已上传文件/文件夹",
   "header": {
     "actions": {
@@ -122,6 +160,7 @@
     "downloadFile": "下载文件",
     "unsupportedFileAndContact": "此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>"
   },
+  "searchDocumentPlaceholder": "搜索文档",
   "searchFilePlaceholder": "搜索文件",
   "tab": {
     "all": "全部",

@@ -309,6 +309,11 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           <DocumentEditor
             documentId={selectedDocumentId || undefined}
             knowledgeBaseId={knowledgeBaseId}
+            onDelete={() => {
+              setSelectedDocumentId(null);
+              setIsCreatingNew(false);
+              updateUrl(null);
+            }}
             onDocumentIdChange={handleDocumentIdChange}
           />
         ) : (
