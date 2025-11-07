@@ -34,12 +34,12 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
   `,
   container: css`
     user-select: none;
-    height: 20px;
 
     display: inline-flex;
     gap: 4px;
     align-items: center;
 
+    height: 20px;
     padding-inline: 4px;
     border-radius: ${token.borderRadiusSM}px;
   `,
