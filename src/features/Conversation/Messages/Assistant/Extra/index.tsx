@@ -24,12 +24,8 @@ export const AssistantMessageExtra = memo<AssistantMessageExtraProps>(
 
     return (
       <Flexbox gap={8} style={{ marginTop: !!tools?.length ? 8 : 4 }}>
-        {content !== LOADING_FLAT && extra?.fromModel && (
-          <Usage
-            metadata={metadata || {}}
-            model={extra?.fromModel}
-            provider={extra.fromProvider!}
-          />
+        {content !== LOADING_FLAT && extra?.model && (
+          <Usage metadata={metadata || {}} model={extra?.model} provider={extra.provider!} />
         )}
         <>
           {!!extra?.tts && (

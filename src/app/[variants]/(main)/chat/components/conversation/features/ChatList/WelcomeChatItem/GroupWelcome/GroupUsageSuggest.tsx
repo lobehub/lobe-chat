@@ -77,7 +77,7 @@ const getFallbackActivities = (t: any) => {
 const GroupUsageSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
-  const { updateInputMessage, send } = useSendGroupMessage();
+  const { updateMessageInput, send } = useSendGroupMessage();
   const templateMatch = useTemplateMatching();
 
   const itemsPerPage = mobile ? 2 : 4;
@@ -139,7 +139,7 @@ const GroupUsageSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
               horizontal
               key={activityKey}
               onClick={() => {
-                updateInputMessage(prompt);
+                updateMessageInput(prompt);
                 send();
               }}
               variant={'outlined'}

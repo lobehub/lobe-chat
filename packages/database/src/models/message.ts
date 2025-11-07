@@ -40,7 +40,6 @@ import {
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
-import { groupAssistantMessages } from '../utils/groupMessages';
 import { idGenerator } from '../utils/idGenerator';
 
 export class MessageModel {
@@ -227,8 +226,8 @@ export class MessageModel {
             })),
 
           extra: {
-            fromModel: model,
-            fromProvider: provider,
+            model: model,
+            provider: provider,
             translate,
             tts: ttsId
               ? {
@@ -269,9 +268,7 @@ export class MessageModel {
       },
     );
 
-    // Group assistant messages with their tool results
-    const { groupAssistantMessages: useGroup = false } = options;
-    return useGroup ? groupAssistantMessages(mappedMessages) : mappedMessages;
+    return mappedMessages;
   };
 
   findById = async (id: string) => {
@@ -464,8 +461,8 @@ export class MessageModel {
 
   create = async (
     {
-      fromModel,
-      fromProvider,
+      model: fromModel,
+      provider: fromProvider,
       files,
       plugin,
       pluginState,
@@ -771,17 +768,19 @@ export class MessageModel {
     sessionId?: string | null,
     topicId?: string | null,
     groupId?: string | null,
-  ) =>
-    this.db
-      .delete(messages)
-      .where(
-        and(
-          eq(messages.userId, this.userId),
-          this.matchSession(sessionId),
-          this.matchTopic(topicId),
-          this.matchGroup(groupId),
-        ),
-      );
+  ) => {
+    const conditions = [eq(messages.userId, this.userId), this.matchSession(sessionId)];
+
+    // For deletion: only filter by topicId/groupId if explicitly provided
+    if (topicId !== undefined && topicId !== null) {
+      conditions.push(eq(messages.topicId, topicId));
+    }
+    if (groupId !== undefined && groupId !== null) {
+      conditions.push(eq(messages.groupId, groupId));
+    }
+
+    return this.db.delete(messages).where(and(...conditions));
+  };
 
   deleteAllMessages = async () => {
     return this.db.delete(messages).where(eq(messages.userId, this.userId));

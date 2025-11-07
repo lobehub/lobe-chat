@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -23,9 +23,10 @@ interface AssistantActionsProps {
 }
 export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
   const { error, tools } = data;
-  const [isThreadMode, hasThread] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
+    messageStateSelectors.isMessageRegenerating(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
@@ -42,7 +43,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     share,
     tts,
     translate,
-  } = useChatListActionsBar({ hasThread });
+  } = useChatListActionsBar({ hasThread, isRegenerating });
 
   const hasTools = !!tools;
 
@@ -52,17 +53,19 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
   const items = useMemo(() => {
     if (hasTools) return [delAndRegenerate, copy];
 
-    return [edit, copy, inThread || isGroupSession ? null : branching].filter(
-      Boolean,
-    ) as ActionIconGroupItemType[];
-  }, [inThread, hasTools, isGroupSession]);
+    return [
+      edit,
+      copy,
+      // inThread || isGroupSession ? null : branching
+    ].filter(Boolean) as ActionIconGroupItemType[];
+  }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching]);
 
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
   const topic = searchParams.get('topic');
   const [
     deleteMessage,
-    regenerateMessage,
+    regenerateAssistantMessage,
     translateMessage,
     ttsMessage,
     delAndRegenerateMessage,
@@ -73,7 +76,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     toggleMessageEditing,
   ] = useChatStore((s) => [
     s.deleteMessage,
-    s.regenerateMessage,
+    s.regenerateAssistantMessage,
     s.translateMessage,
     s.ttsMessage,
     s.delAndRegenerateMessage,
@@ -120,7 +123,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         case 'regenerate': {
           if (inPortalThread) {
             resendThreadMessage(id);
-          } else regenerateMessage(id);
+          } else regenerateAssistantMessage(id);
 
           // if this message is an error message, we need to delete it
           if (data.error) deleteMessage(id);

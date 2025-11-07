@@ -40,7 +40,7 @@ interface OpeningQuestionsProps {
 
 const OpeningQuestions = memo<OpeningQuestionsProps>(({ mobile, questions }) => {
   const { t } = useTranslation('welcome');
-  const [updateInputMessage] = useChatStore((s) => [s.updateInputMessage]);
+  const [updateMessageInput] = useChatStore((s) => [s.updateMessageInput]);
 
   const { styles } = useStyles();
   const { send: sendMessage } = useSend();
@@ -56,7 +56,7 @@ const OpeningQuestions = memo<OpeningQuestionsProps>(({ mobile, questions }) => 
               clickable
               key={question}
               onClick={() => {
-                updateInputMessage(question);
+                updateMessageInput(question);
                 sendMessage({ isWelcomeQuestion: true });
               }}
               paddingBlock={8}

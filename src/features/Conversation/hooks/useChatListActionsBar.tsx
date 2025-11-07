@@ -15,7 +15,6 @@ import {
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isDeprecatedEdition } from '@/const/version';
 import { localeOptions } from '@/locales/resources';
 
 const translateStyle = css`
@@ -41,18 +40,16 @@ interface ChatListActionsBar {
 
 export const useChatListActionsBar = ({
   hasThread,
-}: { hasThread?: boolean } = {}): ChatListActionsBar => {
+  isRegenerating,
+}: { hasThread?: boolean; isRegenerating?: boolean } = {}): ChatListActionsBar => {
   const { t } = useTranslation(['common', 'chat']);
 
-  return useMemo(
+  return useMemo<ChatListActionsBar>(
     () => ({
       branching: {
-        disable: isDeprecatedEdition || undefined,
         icon: Split,
         key: 'branching',
-        label: !isDeprecatedEdition
-          ? t('branching', { defaultValue: 'Create Sub Topic' })
-          : t('branchingDisable'),
+        label: t('branching', { defaultValue: 'Create Sub Topic' }),
       },
       copy: {
         icon: Copy,
@@ -61,13 +58,13 @@ export const useChatListActionsBar = ({
       },
       del: {
         danger: true,
-        disable: hasThread || undefined,
+        disabled: hasThread,
         icon: Trash,
         key: 'del',
         label: hasThread ? t('messageAction.deleteDisabledByThreads', { ns: 'chat' }) : t('delete'),
       },
       delAndRegenerate: {
-        disable: hasThread || undefined,
+        disabled: hasThread || isRegenerating,
         icon: ListRestart,
         key: 'delAndRegenerate',
         label: t('messageAction.delAndRegenerate', {
@@ -89,6 +86,7 @@ export const useChatListActionsBar = ({
         label: '导出为 PDF',
       },
       regenerate: {
+        disabled: isRegenerating,
         icon: RotateCcw,
         key: 'regenerate',
         label: t('regenerate', { defaultValue: 'Regenerate' }),
@@ -114,6 +112,6 @@ export const useChatListActionsBar = ({
         label: t('tts.action', { ns: 'chat' }),
       },
     }),
-    [hasThread],
+    [hasThread, isRegenerating],
   );
 };

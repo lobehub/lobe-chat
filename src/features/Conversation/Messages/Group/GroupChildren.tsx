@@ -1,6 +1,5 @@
 import { AssistantContentBlock } from '@lobechat/types';
 import { createStyles } from 'antd-style';
-import { motion } from 'framer-motion';
 import { memo, use } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -23,11 +22,12 @@ interface GroupChildrenProps {
   blocks: AssistantContentBlock[];
   contentId?: string;
   disableEditing?: boolean;
+  id: string;
   messageIndex: number;
 }
 
 const GroupChildren = memo<GroupChildrenProps>(
-  ({ blocks, contentId, disableEditing, messageIndex }) => {
+  ({ blocks, contentId, disableEditing, messageIndex, id }) => {
     const { styles } = useStyles();
 
     const [toggleMessageEditing] = useChatStore((s) => [s.toggleMessageEditing]);
@@ -53,16 +53,16 @@ const GroupChildren = memo<GroupChildrenProps>(
               <ContentBlock index={index} {...item} />
             </Flexbox>
           ) : (
-            <motion.div
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              initial={{ height: 0, opacity: 0 }}
-              key={index}
-              style={{ overflow: 'hidden' }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              <ContentBlock index={index} {...item} />
-            </motion.div>
+            // <motion.div
+            //   animate={{ height: 'auto', opacity: 1 }}
+            //   exit={{ height: 0, opacity: 0 }}
+            //   initial={{ height: 0, opacity: 0 }}
+            //   key={`${id}_${index}`}
+            //   style={{ overflow: 'hidden' }}
+            //   transition={{ duration: 0.3, ease: 'easeInOut' }}
+            // >
+            <ContentBlock index={index} key={`${id}_${index}`} {...item} />
+            // </motion.div>
           );
         })}
       </Flexbox>

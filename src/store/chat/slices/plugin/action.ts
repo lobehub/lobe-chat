@@ -24,7 +24,7 @@ import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors } from '../message/selectors';
+import { dbMessageSelectors, displayMessageSelectors } from '../message/selectors';
 import { threadSelectors } from '../thread/selectors';
 
 const n = setNamespace('plugin');
@@ -103,9 +103,9 @@ export const chatPlugin: StateCreator<
   },
 
   fillPluginMessageContent: async (id, content, triggerAiMessage) => {
-    const { triggerAIMessage, internal_updateMessageContent } = get();
+    const { triggerAIMessage, optimisticUpdateMessageContent } = get();
 
-    await internal_updateMessageContent(id, content);
+    await optimisticUpdateMessageContent(id, content);
 
     if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },
@@ -161,12 +161,12 @@ export const chatPlugin: StateCreator<
   },
 
   reInvokeToolMessage: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || message.role !== 'tool' || !message.plugin) return;
 
     // if there is error content, then clear the error
     if (!!message.pluginError) {
-      get().internal_updateMessagePluginError(id, null);
+      get().optimisticUpdateMessagePluginError(id, null);
     }
 
     const payload: ChatToolPayload = { ...message.plugin, id: message.tool_call_id! };
@@ -175,13 +175,16 @@ export const chatPlugin: StateCreator<
   },
 
   triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread, inSearchWorkflow }) => {
-    const { internal_coreProcessMessage } = get();
+    const { internal_execAgentRuntime } = get();
 
     const chats = inPortalThread
       ? threadSelectors.portalAIChatsWithHistoryConfig(get())
-      : chatSelectors.mainAIChatsWithHistoryConfig(get());
+      : displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
-    await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, {
+    await internal_execAgentRuntime({
+      messages: chats,
+      parentMessageId: parentId ?? chats.at(-1)!.id,
+      parentMessageType: 'user',
       traceId,
       threadId,
       inPortalThread,
@@ -190,11 +193,11 @@ export const chatPlugin: StateCreator<
   },
 
   summaryPluginContent: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
 
-    await get().internal_coreProcessMessage(
-      [
+    await get().internal_execAgentRuntime({
+      messages: [
         {
           role: 'assistant',
           content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
@@ -207,12 +210,13 @@ export const chatPlugin: StateCreator<
           tool_call_id: undefined,
         },
       ] as UIChatMessage[],
-      message.id,
-    );
+      parentMessageId: message.id,
+      parentMessageType: 'assistant',
+    });
   },
 
   triggerToolCalls: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
-    const message = chatSelectors.getMessageById(assistantId)(get());
+    const message = displayMessageSelectors.getDisplayMessageById(assistantId)(get());
     if (!message || !message.tools) return;
 
     let shouldCreateMessage = false;
@@ -230,7 +234,7 @@ export const chatPlugin: StateCreator<
         groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
-      const result = await get().internal_createMessage(toolMessage);
+      const result = await get().optimisticCreateMessage(toolMessage);
       if (!result) return;
 
       // trigger the plugin call
@@ -249,7 +253,7 @@ export const chatPlugin: StateCreator<
     // only default type tool calls should trigger AI message
     if (!shouldCreateMessage) return;
 
-    const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
+    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(latestToolId)(get());
 
     await get().triggerAIMessage({ traceId, threadId, inPortalThread, inSearchWorkflow });
   },
@@ -271,10 +275,12 @@ export const chatPlugin: StateCreator<
 
   updatePluginArguments: async (id, value, replace = false) => {
     const { refreshMessages } = get();
-    const toolMessage = chatSelectors.getMessageById(id)(get());
+    const toolMessage = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!toolMessage || !toolMessage?.tool_call_id) return;
 
-    let assistantMessage = chatSelectors.getMessageById(toolMessage?.parentId || '')(get());
+    let assistantMessage = displayMessageSelectors.getDisplayMessageById(
+      toolMessage?.parentId || '',
+    )(get());
 
     const prevArguments = toolMessage?.plugin?.arguments;
     const prevJson = safeParseJSON(prevArguments || '');
@@ -296,7 +302,7 @@ export const chatPlugin: StateCreator<
         tool_call_id: toolMessage?.tool_call_id,
         value: { arguments: JSON.stringify(nextValue) },
       });
-      assistantMessage = chatSelectors.getMessageById(assistantMessage?.id)(get());
+      assistantMessage = displayMessageSelectors.getDisplayMessageById(assistantMessage?.id)(get());
     }
 
     const updateAssistantMessage = async () => {
@@ -315,7 +321,7 @@ export const chatPlugin: StateCreator<
   },
 
   internal_addToolToAssistantMessage: async (id, tool) => {
-    const assistantMessage = chatSelectors.getMessageById(id)(get());
+    const assistantMessage = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!assistantMessage) return;
 
     const { internal_dispatchMessage, internal_refreshToUpdateMessageTools } = get();
@@ -329,7 +335,7 @@ export const chatPlugin: StateCreator<
   },
 
   internal_removeToolToAssistantMessage: async (id, tool_call_id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || !tool_call_id) return;
 
     const { internal_dispatchMessage, internal_refreshToUpdateMessageTools } = get();
@@ -341,7 +347,7 @@ export const chatPlugin: StateCreator<
     await internal_refreshToUpdateMessageTools(id);
   },
   internal_refreshToUpdateMessageTools: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || !message.tools) return;
 
     const { internal_toggleMessageLoading, replaceMessages } = get();
@@ -363,7 +369,7 @@ export const chatPlugin: StateCreator<
   },
 
   internal_callPluginApi: async (id, payload) => {
-    const { internal_updateMessageContent, internal_togglePluginApiCalling } = get();
+    const { optimisticUpdateMessageContent, internal_togglePluginApiCalling } = get();
     let data: string;
 
     try {
@@ -373,7 +379,7 @@ export const chatPlugin: StateCreator<
         n('fetchPlugin/start') as string,
       );
 
-      const message = chatSelectors.getMessageById(id)(get());
+      const message = displayMessageSelectors.getDisplayMessageById(id)(get());
 
       const res = await chatService.runPluginApi(payload, {
         signal: abortController?.signal,
@@ -404,7 +410,7 @@ export const chatPlugin: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await internal_updateMessageContent(id, data);
+    await optimisticUpdateMessageContent(id, data);
 
     return data;
   },
@@ -435,7 +441,7 @@ export const chatPlugin: StateCreator<
   },
   invokeMCPTypePlugin: async (id, payload) => {
     const {
-      internal_updateMessageContent,
+      optimisticUpdateMessageContent,
       internal_togglePluginApiCalling,
       internal_constructToolsCallingContext,
     } = get();
@@ -472,7 +478,7 @@ export const chatPlugin: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await internal_updateMessageContent(id, data);
+    await optimisticUpdateMessageContent(id, data);
 
     return data;
   },
@@ -523,7 +529,7 @@ export const chatPlugin: StateCreator<
   },
 
   internal_constructToolsCallingContext: (id: string) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message) return;
 
     return {

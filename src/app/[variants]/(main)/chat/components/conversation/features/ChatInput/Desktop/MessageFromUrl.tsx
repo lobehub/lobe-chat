@@ -8,7 +8,7 @@ import { useChatStore } from '@/store/chat';
 import { useSend } from '../useSend';
 
 const MessageFromUrl = () => {
-  const updateInputMessage = useChatStore((s) => s.updateInputMessage);
+  const updateMessageInput = useChatStore((s) => s.updateMessageInput);
   const { send: sendMessage } = useSend();
   const searchParams = useSearchParams();
 
@@ -21,10 +21,10 @@ const MessageFromUrl = () => {
       const newUrl = `${window.location.pathname}?${params.toString()}`;
       window.history.replaceState({}, '', newUrl);
 
-      updateInputMessage(message);
+      updateMessageInput(message);
       sendMessage();
     }
-  }, [searchParams, updateInputMessage, sendMessage]);
+  }, [searchParams, updateMessageInput, sendMessage]);
 
   return null;
 };

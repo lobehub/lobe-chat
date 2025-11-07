@@ -5,6 +5,7 @@ import {
   ChatTranslate,
   CreateMessageParams,
   CreateMessageResult,
+  MessageMetadata,
   ModelRankItem,
   UIChatMessage,
   UpdateMessageParams,
@@ -15,14 +16,10 @@ import type { HeatmapsProps } from '@lobehub/charts';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { useUserStore } from '@/store/user';
-import { labPreferSelectors } from '@/store/user/selectors';
+
+import { abortableRequest } from '../utils/abortableRequest';
 
 export class MessageService {
-  private get useGroup() {
-    return labPreferSelectors.enableAssistantMessageGroup(useUserStore.getState());
-  }
-
   createMessage = async ({
     sessionId,
     ...params
@@ -30,7 +27,6 @@ export class MessageService {
     return lambdaClient.message.createMessage.mutate({
       ...params,
       sessionId: sessionId ? this.toDbSessionId(sessionId) : undefined,
-      useGroup: this.useGroup,
     });
   };
 
@@ -43,7 +39,6 @@ export class MessageService {
       groupId,
       sessionId: this.toDbSessionId(sessionId),
       topicId,
-      useGroup: this.useGroup,
     });
 
     return data as unknown as UIChatMessage[];
@@ -53,7 +48,6 @@ export class MessageService {
     const data = await lambdaClient.message.getMessages.query({
       groupId,
       topicId,
-      useGroup: this.useGroup,
     });
     return data as unknown as UIChatMessage[];
   };
@@ -100,7 +94,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value,
     });
   };
@@ -113,6 +106,24 @@ export class MessageService {
     return lambdaClient.message.updateTTS.mutate({ id, value: tts });
   };
 
+  updateMessageMetadata = async (
+    id: string,
+    value: Partial<MessageMetadata>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return abortableRequest.execute(`message-metadata-${id}`, (signal) =>
+      lambdaClient.message.updateMetadata.mutate(
+        {
+          id,
+          sessionId: options?.sessionId,
+          topicId: options?.topicId,
+          value,
+        },
+        { signal },
+      ),
+    );
+  };
+
   updateMessagePluginState = async (
     id: string,
     value: Record<string, any>,
@@ -122,7 +133,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value,
     });
   };
@@ -136,7 +146,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value: error as any,
     });
   };
@@ -150,7 +159,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
       value: data,
     });
   };
@@ -163,7 +171,6 @@ export class MessageService {
       id,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
     });
   };
 
@@ -175,7 +182,6 @@ export class MessageService {
       ids,
       sessionId: options?.sessionId,
       topicId: options?.topicId,
-      useGroup: this.useGroup,
     });
   };
 

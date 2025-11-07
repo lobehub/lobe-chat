@@ -16,9 +16,9 @@ export type UseSendMessageParams = Pick<
 >;
 
 export const useSendMessage = () => {
-  const [sendMessage, updateInputMessage] = useChatStore((s) => [
+  const [sendMessage, updateMessageInput] = useChatStore((s) => [
     s.sendMessage,
-    s.updateInputMessage,
+    s.updateMessageInput,
   ]);
   const { analytics } = useAnalytics();
   const checkGeminiChineseWarning = useGeminiChineseWarning();
@@ -66,7 +66,7 @@ export const useSendMessage = () => {
       ...params,
     });
 
-    updateInputMessage('');
+    updateMessageInput('');
     clearChatUploadFileList();
 
     // 获取分析数据

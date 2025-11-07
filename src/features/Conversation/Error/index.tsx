@@ -12,7 +12,6 @@ import { useProviderName } from '@/hooks/useProviderName';
 import ChatInvalidAPIKey from './ChatInvalidApiKey';
 import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
-import InvalidAccessCode from './InvalidAccessCode';
 import { ErrorActionContainer } from './style';
 
 interface ErrorMessageData {
@@ -116,10 +115,6 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(({ data, block }) => {
 
     case ChatErrorType.InvalidClerkUser: {
       return <ClerkLogin id={data.id} />;
-    }
-
-    case ChatErrorType.InvalidAccessCode: {
-      return <InvalidAccessCode id={data.id} provider={data.error?.body?.provider} />;
     }
 
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {

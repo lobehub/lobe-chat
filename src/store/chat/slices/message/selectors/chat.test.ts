@@ -154,36 +154,6 @@ describe('chatSelectors', () => {
     });
   });
 
-  describe('getMessageByToolCallId', () => {
-    it('should return undefined if the message with the given id does not exist', () => {
-      const message = chatSelectors.getMessageByToolCallId('non-existent-id')(initialStore);
-      expect(message).toBeUndefined();
-    });
-
-    it('should return the message object with the matching tool_call_id', () => {
-      const toolMessage = {
-        id: 'msg3',
-        content: 'Function Message',
-        role: 'tool',
-        tool_call_id: 'ttt',
-        plugin: {
-          arguments: 'arg1',
-          identifier: 'func1',
-          apiName: 'ttt',
-          type: 'default',
-        },
-      } as UIChatMessage;
-      const state = merge(initialStore, {
-        messagesMap: {
-          [messageMapKey('abc')]: [...mockMessages, toolMessage],
-        },
-        activeId: 'abc',
-      });
-      const message = chatSelectors.getMessageByToolCallId('ttt')(state);
-      expect(message).toMatchObject(toolMessage);
-    });
-  });
-
   describe('currentChatsWithHistoryConfig', () => {
     it('should slice the messages according to the current agent config', () => {
       const state = merge(initialStore, {
@@ -252,19 +222,6 @@ describe('chatSelectors', () => {
           ],
         },
       ]);
-    });
-  });
-
-  describe('mainDisplayChats', () => {
-    it('should return existing messages except tool message', () => {
-      const state = merge(initialStore, {
-        messagesMap: {
-          [messageMapKey('someActiveId')]: mockMessages,
-        },
-        activeId: 'someActiveId',
-      });
-      const chats = chatSelectors.mainDisplayChats(state);
-      expect(chats).toEqual(mockedChats.slice(0, 2));
     });
   });
 
@@ -353,6 +310,9 @@ describe('chatSelectors', () => {
       ] as UIChatMessage[];
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
+        dbMessagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
         messagesMap: {
           [messageMapKey('test-id')]: messages,
         },
@@ -369,6 +329,9 @@ describe('chatSelectors', () => {
       ] as UIChatMessage[];
       const state: Partial<ChatStore> = {
         activeId: 'test-id',
+        dbMessagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
         messagesMap: {
           [messageMapKey('test-id')]: messages,
         },
@@ -446,7 +409,7 @@ describe('chatSelectors', () => {
     it('should return the last child without tools', () => {
       const groupMessage = {
         id: 'group-1',
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         children: [
           {
@@ -490,7 +453,7 @@ describe('chatSelectors', () => {
     it('should return null if the last child has tools', () => {
       const groupMessage = {
         id: 'group-2',
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         children: [
           {
@@ -527,7 +490,7 @@ describe('chatSelectors', () => {
     it('should return the last child when it has empty tools array', () => {
       const groupMessage = {
         id: 'group-3',
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         children: [
           {
@@ -585,7 +548,7 @@ describe('chatSelectors', () => {
     it('should return null for group messages without children', () => {
       const groupMessage = {
         id: 'group-4',
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         children: undefined,
       } as UIChatMessage;
@@ -604,7 +567,7 @@ describe('chatSelectors', () => {
     it('should return null for group messages with empty children array', () => {
       const groupMessage = {
         id: 'group-5',
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         children: [],
       } as unknown as UIChatMessage;
@@ -623,7 +586,7 @@ describe('chatSelectors', () => {
     it('should return null if all children have tools', () => {
       const groupMessage = {
         id: 'group-6',
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         children: [
           {
@@ -669,7 +632,7 @@ describe('chatSelectors', () => {
     it('should handle empty tools array as no tools', () => {
       const groupMessage = {
         id: 'group-7',
-        role: 'group',
+        role: 'assistantGroup',
         content: '',
         children: [
           {

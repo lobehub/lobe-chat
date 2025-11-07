@@ -11,7 +11,7 @@ import {
   upsertVirtuosoVisibleItem,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
@@ -56,7 +56,7 @@ const Item = memo<ChatListItemProps>(
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
+    const item = useChatStore(displayMessageSelectors.getDisplayMessageById(id), isEqual);
 
     const [isMessageLoading] = useChatStore((s) => [messageStateSelectors.isMessageLoading(id)(s)]);
 
@@ -133,7 +133,7 @@ const Item = memo<ChatListItemProps>(
           );
         }
 
-        case 'group': {
+        case 'assistantGroup': {
           return (
             <GroupMessage
               {...item}
