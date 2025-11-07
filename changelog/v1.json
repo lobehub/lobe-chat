@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Use react-router-dom change /chat page to spa mode."]
+    },
+    "date": "2025-11-07",
+    "version": "2.0.0-next.35"
+  },
+  {
+    "children": {
       "improvements": [
         "Add sorting functionality for disabled models and model providers with tooltip support."
       ]
