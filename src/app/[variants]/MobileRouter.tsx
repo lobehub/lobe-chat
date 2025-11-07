@@ -9,6 +9,7 @@ import { MobileDiscoverRoutes } from './(main)/discover/DiscoverRouter';
 import { MobileImageRoutes } from './(main)/image/ImageRouter';
 import { MobileKnowledgeRoutes } from './(main)/knowledge/KnowledgeRouter';
 import { MobileLabsRoutes } from './(main)/labs/LabsRouter';
+import { MobileMeRoutes } from './(main)/(mobile)/me/MeRouter';
 import { MobileProfileRoutes } from './(main)/profile/ProfileRouter';
 import { MobileSettingsRoutes } from './(main)/settings/SettingsRouter';
 
@@ -38,6 +39,9 @@ const MobileRouter = memo(() => {
 
       {/* Profile routes */}
       <Route element={<MobileProfileRoutes />} path="/profile/*" />
+
+      {/* Me routes (mobile personal center) */}
+      <Route element={<MobileMeRoutes />} path="/me/*" />
 
       {/* Default route */}
       <Route element={<Navigate replace to="/chat" />} path="*" />

@@ -1,10 +1,11 @@
 import NProgress from '@/components/NProgress';
+import { PropsWithChildren } from 'react';
 
-const Layout = () => {
+const Layout = (props: PropsWithChildren) => {
   return (
     <>
       <NProgress />
-      <h2>Coming Soon!</h2>
+      {props.children}
     </>
   );
 };

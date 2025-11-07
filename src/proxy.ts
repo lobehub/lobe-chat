@@ -129,7 +129,7 @@ const defaultMiddleware = (request: NextRequest) => {
   // / -> /zh-CN__0__dark
   // /discover -> /zh-CN__0__dark/discover
   // All SPA routes that use react-router-dom should be rewritten to just /${route}
-  const spaRoutes = ['/chat', '/discover', '/knowledge', '/settings', '/image', '/labs', '/changelog', '/profile'];
+  const spaRoutes = ['/chat', '/discover', '/knowledge', '/settings', '/image', '/labs', '/changelog', '/profile', '/me'];
   const isSpaRoute = spaRoutes.some(route => url.pathname.startsWith(route));
 
   let nextPathname: string;

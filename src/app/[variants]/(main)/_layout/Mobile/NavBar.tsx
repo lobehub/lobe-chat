@@ -4,10 +4,10 @@ import { Icon } from '@lobehub/ui';
 import { TabBar, type TabBarProps } from '@lobehub/ui/mobile';
 import { createStyles } from 'antd-style';
 import { Compass, MessageSquare, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { MOBILE_TABBAR_HEIGHT } from '@/const/layoutTokens';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
@@ -32,7 +32,7 @@ const NavBar = memo(() => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const activeKey = useActiveTabKey();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const { showMarket } = useServerConfigStore(featureFlagsSelectors);
 
@@ -45,7 +45,7 @@ const NavBar = memo(() => {
           ),
           key: SidebarTabKey.Chat,
           onClick: () => {
-            router.push('/chat');
+            navigate('/chat');
           },
           title: t('tab.chat'),
         },
@@ -55,7 +55,7 @@ const NavBar = memo(() => {
           ),
           key: SidebarTabKey.Discover,
           onClick: () => {
-            router.push('/discover');
+            navigate('/discover');
           },
           title: t('tab.discover'),
         },
@@ -65,7 +65,7 @@ const NavBar = memo(() => {
           ),
           key: SidebarTabKey.Me,
           onClick: () => {
-            router.push('/me');
+            navigate('/me');
           },
           title: t('tab.me'),
         },

@@ -8,8 +8,8 @@ import {
   FileClockIcon,
   Settings2,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { CellProps } from '@/components/Cell';
 import { enableAuth } from '@/const/auth';
@@ -24,7 +24,7 @@ import { authSelectors } from '@/store/user/selectors';
 import { useCategory as useSettingsCategory } from '../../settings/features/useCategory';
 
 export const useCategory = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
@@ -38,7 +38,7 @@ export const useCategory = () => {
       icon: CircleUserRound,
       key: 'profile',
       label: t('userPanel.profile'),
-      onClick: () => router.push('/me/profile'),
+      onClick: () => navigate('/me/profile'),
     },
   ];
 
@@ -47,7 +47,7 @@ export const useCategory = () => {
       icon: Settings2,
       key: 'setting',
       label: t('userPanel.setting'),
-      onClick: () => router.push('/me/settings'),
+      onClick: () => navigate('/me/settings'),
     },
     {
       type: 'divider',
@@ -82,7 +82,7 @@ export const useCategory = () => {
       icon: Database,
       key: 'data',
       label: t('userPanel.data'),
-      onClick: () => router.push('/me/data'),
+      onClick: () => navigate('/me/data'),
     },
     {
       type: 'divider',
@@ -112,7 +112,7 @@ export const useCategory = () => {
       icon: FileClockIcon,
       key: 'changelog',
       label: t('changelog'),
-      onClick: () => router.push('/changelog'),
+      onClick: () => navigate('/changelog'),
     },
   ].filter(Boolean) as CellProps[];
 

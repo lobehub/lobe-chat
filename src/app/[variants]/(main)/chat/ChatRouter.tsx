@@ -8,7 +8,7 @@ import MainChatPage from './components/MainChatPage';
 import SettingsPage from './components/SettingsPage';
 
 import Desktop from './_layout/Desktop';
-import Mobile from '../_layout/Mobile';
+import Mobile from './_layout/Mobile';
 
 // Get initial path from URL
 const getInitialPath = () => {
