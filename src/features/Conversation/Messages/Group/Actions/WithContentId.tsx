@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -24,16 +24,19 @@ interface GroupActionsProps {
 
 const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }) => {
   const { tools } = data;
-  const [isThreadMode, hasThread] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
+    messageStateSelectors.isMessageRegenerating(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
 
-  const { edit, delAndRegenerate, copy, divider, del, branching, share } = useChatListActionsBar({
-    hasThread,
-  });
+  const { edit, delAndRegenerate, regenerate, copy, divider, del, branching, share } =
+    useChatListActionsBar({
+      hasThread,
+      isRegenerating,
+    });
 
   const hasTools = !!tools;
 
@@ -46,25 +49,29 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     return [edit, copy, inThread || isGroupSession ? null : branching].filter(
       Boolean,
     ) as ActionIconGroupItemType[];
-  }, [inThread, hasTools, isGroupSession]);
+  }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching]);
 
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
   const topic = searchParams.get('topic');
   const [
     deleteMessage,
+    regenerateMessage,
     translateMessage,
     delAndRegenerateMessage,
     copyMessage,
     openThreadCreator,
+    resendThreadMessage,
     delAndResendThreadMessage,
     toggleMessageEditing,
   ] = useChatStore((s) => [
     s.deleteMessage,
+    s.regenerateMessage,
     s.translateMessage,
     s.delAndRegenerateMessage,
     s.copyMessage,
     s.openThreadCreator,
+    s.resendThreadMessage,
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
   ]);
@@ -103,6 +110,16 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
           break;
         }
 
+        case 'regenerate': {
+          if (inPortalThread) {
+            resendThreadMessage(id);
+          } else regenerateMessage(id);
+
+          // if this message is an error message, we need to delete it
+          if (data.error) deleteMessage(id);
+          break;
+        }
+
         case 'delAndRegenerate': {
           if (inPortalThread) {
             delAndResendThreadMessage(id);
@@ -134,7 +151,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
       <ActionIconGroup
         items={items}
         menu={{
-          items: [edit, copy, divider, share, divider, delAndRegenerate, del],
+          items: [edit, copy, divider, share, divider, regenerate, delAndRegenerate, del],
         }}
         onActionClick={onActionClick}
       />
