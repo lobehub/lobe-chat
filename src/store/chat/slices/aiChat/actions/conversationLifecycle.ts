@@ -338,10 +338,7 @@ export const conversationLifecycle: StateCreator<
       const threadId = outThreadId ?? activeThreadId;
 
       // 切一个新的激活分支
-      await get().switchMessageBranch(
-        messageId,
-        item.metadata?.activeBranchIndex ? item.metadata?.activeBranchIndex + 1 : 1,
-      );
+      await get().switchMessageBranch(messageId, item.branch ? item.branch.count : 1);
 
       await internal_execAgentRuntime({
         messages: contextMessages,

@@ -9,8 +9,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 
 import { VirtuosoContext } from '../../../components/VirtualizedList/VirtuosoContext';
 import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
@@ -28,7 +26,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
   const topic = searchParams.get('topic');
 
   const [
-    isThreadMode,
+    // isThreadMode,
     hasThread,
     isRegenerating,
     toggleMessageEditing,
@@ -42,7 +40,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     resendThreadMessage,
     delAndResendThreadMessage,
   ] = useChatStore((s) => [
-    !!s.activeThreadId,
+    // !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     messageStateSelectors.isMessageRegenerating(id)(s),
 
@@ -58,18 +56,21 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     s.delAndResendThreadMessage,
   ]);
 
-  const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
+  // const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
 
-  const { regenerate, edit, copy, divider, del, branching, tts, translate } = useChatListActionsBar(
-    { hasThread, isRegenerating },
-  );
+  const { regenerate, edit, copy, divider, del, tts, translate } = useChatListActionsBar({
+    hasThread,
+    isRegenerating,
+  });
 
   const inPortalThread = use(InPortalThreadContext);
-  const inThread = isThreadMode || inPortalThread;
+  // const inThread = isThreadMode || inPortalThread;
 
-  const items = [regenerate, edit, inThread || isGroupSession ? null : branching].filter(
-    Boolean,
-  ) as ActionIconGroupItemType[];
+  const items = [
+    regenerate,
+    edit,
+    // inThread || isGroupSession ? null : branching
+  ].filter(Boolean) as ActionIconGroupItemType[];
 
   const { message } = App.useApp();
 

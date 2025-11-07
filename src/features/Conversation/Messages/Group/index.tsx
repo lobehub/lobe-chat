@@ -111,6 +111,7 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
               blocks={children}
               contentId={contentId}
               disableEditing={disableEditing}
+              id={id}
               messageIndex={index}
             />
           )}
