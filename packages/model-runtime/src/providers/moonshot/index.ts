@@ -18,11 +18,26 @@ export const params = {
     handlePayload: (payload: ChatStreamPayload) => {
       const { enabledSearch, messages, temperature, tools, ...rest } = payload;
 
-      // 为 assistant 空消息添加一个空格 (#8418)
-      const filteredMessages = messages.map((message) => {
+      const filteredMessages = messages.map((message: any) => {
+        // 为 assistant 空消息添加一个空格 (#8418)
         if (message.role === 'assistant' && (!message.content || message.content === '')) {
           return { ...message, content: ' ' };
         }
+
+        // Interleaved thinking
+        if (
+          message.role === 'assistant' &&
+          message.reasoning &&
+          !message.reasoning.signature &&
+          message.reasoning.content
+        ) {
+          const { reasoning, ...messageWithoutReasoning } = message;
+          return {
+            ...messageWithoutReasoning,
+            reasoning_content: reasoning.content,
+          };
+        }
+
         return message;
       });
 

@@ -24,7 +24,7 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
           ]
         : tools;
 
-      // Process messages to add reasoning_details for assistant messages with reasoning field
+      // Interleaved thinking
       const processedMessages = messages.map((message: any) => {
         if (
           message.role === 'assistant' &&
@@ -32,7 +32,6 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
           !message.reasoning.signature &&
           message.reasoning.content
         ) {
-          // Add reasoning_details field in MiniMax format at the same level as content
           const { reasoning, ...messageWithoutReasoning } = message;
           return {
             ...messageWithoutReasoning,
