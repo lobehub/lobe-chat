@@ -13,6 +13,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { formatNumber, formatShortenNumber } from '@/utils/format';
 
+import AnimatedNumber from './AnimatedNumber';
 import ModelCard from './ModelCard';
 import TokenProgress, { TokenProgressItem } from './TokenProgress';
 import { getDetailsToken } from './tokens';
@@ -116,7 +117,6 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
       ? detailTokens.totalTokens.credit
       : detailTokens.totalTokens!.token;
 
-  const shortTotal = (formatShortenNumber(totalCount) as string).toLowerCase?.();
   const detailTotal = formatNumber(totalCount);
 
   const averagePricing = formatNumber(
@@ -215,7 +215,10 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
     >
       <Center gap={2} horizontal style={{ cursor: 'default' }}>
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
-        {shortTotal}
+        <AnimatedNumber
+          formatter={(value) => (formatShortenNumber(value) as string).toLowerCase?.()}
+          value={totalCount}
+        />
       </Center>
     </Popover>
   );

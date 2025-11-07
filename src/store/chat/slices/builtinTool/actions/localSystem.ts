@@ -309,9 +309,9 @@ export const localSystemSlice: StateCreator<
       if (state) {
         await get().updatePluginState(id, state as any);
       }
-      await get().internal_updateMessageContent(id, JSON.stringify(content));
+      await get().optimisticUpdateMessageContent(id, JSON.stringify(content));
     } catch (error) {
-      await get().internal_updateMessagePluginError(id, {
+      await get().optimisticUpdateMessagePluginError(id, {
         body: error,
         message: (error as Error).message,
         type: 'PluginServerError',

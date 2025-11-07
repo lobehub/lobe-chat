@@ -1,8 +1,10 @@
 import type { ChatStoreState } from '../../../initialState';
-import { getMessageByToolCallId, mainDisplayChatIDs } from './chat';
+import { mainDisplayChatIDs } from './chat';
+import { getDbMessageByToolCallId } from './dbMessage';
 
 const isMessageEditing = (id: string) => (s: ChatStoreState) => s.messageEditingIds.includes(id);
 const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoadingIds.includes(id);
+const isMessageRegenerating = (id: string) => (s: ChatStoreState) => s.regeneratingIds.includes(id);
 
 const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
 const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
@@ -31,7 +33,7 @@ const isInToolsCalling = (id: string, index: number) => (s: ChatStoreState) => {
 
 const isToolApiNameShining =
   (messageId: string, index: number, toolCallId: string) => (s: ChatStoreState) => {
-    const toolMessageId = getMessageByToolCallId(toolCallId)(s)?.id;
+    const toolMessageId = getDbMessageByToolCallId(toolCallId)(s)?.id;
     const isStreaming = isToolCallStreaming(messageId, index)(s);
     const isPluginInvoking = !toolMessageId ? true : isPluginApiInvoking(toolMessageId)(s);
 
@@ -73,6 +75,7 @@ export const messageStateSelectors = {
   isMessageInChatReasoning,
   isMessageInRAGFlow,
   isMessageLoading,
+  isMessageRegenerating,
   isPluginApiInvoking,
   isSendButtonDisabledByMessage,
   isToolApiNameShining,

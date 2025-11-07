@@ -71,6 +71,18 @@ describe('parse', () => {
 
       expect(serializeParseResult(result)).toEqual(outputs.branch.nested);
     });
+
+    it('should handle multiple assistant group branches', () => {
+      const result = parse(inputs.branch.multiAssistantGroup);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.multiAssistantGroup);
+    });
+
+    it('should handle assistant group with branches', () => {
+      const result = parse(inputs.branch.assistantGroupBranches);
+
+      expect(serializeParseResult(result)).toEqual(outputs.branch.assistantGroupBranches);
+    });
   });
 
   describe('Compare Mode', () => {

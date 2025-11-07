@@ -28,8 +28,8 @@ export interface ImportMessage {
 
   // 扩展字段
   extra?: {
-    fromModel?: string;
-    fromProvider?: string;
+    model?: string;
+    provider?: string;
     // 翻译
     translate?: ChatTranslate | false | null;
     // TTS

@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.36](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.35...v2.0.0-next.36)
+
+<sup>Released on **2025-11-07**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor to use agent runtime as the generation core and support branch mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor to use agent runtime as the generation core and support branch mode, closes [#10080](https://github.com/lobehub/lobe-chat/issues/10080) ([b95e741](https://github.com/lobehub/lobe-chat/commit/b95e741))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.35](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.34...v2.0.0-next.35)
 
 <sup>Released on **2025-11-07**</sup>

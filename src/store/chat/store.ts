@@ -9,7 +9,7 @@ import { ChatStoreState, initialState } from './initialState';
 import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/actions';
 import { ChatPortalAction, chatPortalSlice } from './slices/portal/action';
 import { ChatTranslateAction, chatTranslate } from './slices/translate/action';
-import { ChatMessageAction, chatMessage } from './slices/message/action';
+import { ChatMessageAction, chatMessage } from './slices/message/actions';
 import { ChatPluginAction, chatPlugin } from './slices/plugin/action';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
 import { ChatAIChatAction, chatAiChat } from './slices/aiChat/actions';

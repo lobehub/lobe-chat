@@ -16,8 +16,8 @@ export interface CreateMessageParams
   error?: ChatMessageError | null;
   fileChunks?: MessageSemanticSearchChunk[];
   files?: string[];
-  fromModel?: string;
-  fromProvider?: string;
+  model?: string;
+  provider?: string;
   groupId?: string;
   role: CreateMessageRoleType;
   sessionId: string;

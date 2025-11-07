@@ -4,17 +4,15 @@ import { ActionIconGroupItemType } from '@lobehub/ui/es/ActionIconGroup';
 import { ActionIconGroupEvent } from '@lobehub/ui/es/ActionIconGroup/type';
 import { App } from 'antd';
 import { useSearchParams } from 'next/navigation';
-import { memo, use, useCallback, useMemo } from 'react';
+import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 
-import { VirtuosoContext } from '../../components/VirtualizedList/VirtuosoContext';
-import { InPortalThreadContext } from '../../context/InPortalThreadContext';
-import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
+import { VirtuosoContext } from '../../../components/VirtualizedList/VirtuosoContext';
+import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
+import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 
 interface UserActionsProps {
   data: UIChatMessage;
@@ -28,11 +26,12 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
   const topic = searchParams.get('topic');
 
   const [
-    isThreadMode,
+    // isThreadMode,
     hasThread,
+    isRegenerating,
     toggleMessageEditing,
     deleteMessage,
-    regenerateMessage,
+    regenerateUserMessage,
     translateMessage,
     ttsMessage,
     delAndRegenerateMessage,
@@ -41,12 +40,13 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     resendThreadMessage,
     delAndResendThreadMessage,
   ] = useChatStore((s) => [
-    !!s.activeThreadId,
+    // !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
+    messageStateSelectors.isMessageRegenerating(id)(s),
 
     s.toggleMessageEditing,
     s.deleteMessage,
-    s.regenerateMessage,
+    s.regenerateUserMessage,
     s.translateMessage,
     s.ttsMessage,
     s.delAndRegenerateMessage,
@@ -56,22 +56,21 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     s.delAndResendThreadMessage,
   ]);
 
-  const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
+  // const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
 
-  const { regenerate, edit, copy, divider, del, branching, tts, translate } = useChatListActionsBar(
-    { hasThread },
-  );
+  const { regenerate, edit, copy, divider, del, tts, translate } = useChatListActionsBar({
+    hasThread,
+    isRegenerating,
+  });
 
   const inPortalThread = use(InPortalThreadContext);
-  const inThread = isThreadMode || inPortalThread;
+  // const inThread = isThreadMode || inPortalThread;
 
-  const items = useMemo(
-    () =>
-      [regenerate, edit, inThread || isGroupSession ? null : branching].filter(
-        Boolean,
-      ) as ActionIconGroupItemType[],
-    [inThread, isGroupSession],
-  );
+  const items = [
+    regenerate,
+    edit,
+    // inThread || isGroupSession ? null : branching
+  ].filter(Boolean) as ActionIconGroupItemType[];
 
   const { message } = App.useApp();
 
@@ -113,7 +112,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         case 'regenerate': {
           if (inPortalThread) {
             resendThreadMessage(id);
-          } else regenerateMessage(id);
+          } else regenerateUserMessage(id);
 
           // if this message is an error message, we need to delete it
           if (data.error) deleteMessage(id);
@@ -153,6 +152,8 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         items: [edit, copy, divider, tts, translate, divider, regenerate, del],
       }}
       onActionClick={onActionClick}
+      size={'small'}
+      variant={'borderless'}
     />
   );
 });

@@ -16,6 +16,6 @@ export const GroupActionsBar = memo<GroupActionsProps>(
   ({ id, data, contentBlock, index, contentId }) => {
     if (!contentId) return <WithoutContentId data={data} id={id} />;
 
-    return <WithContentId contentBlock={contentBlock} data={data} id={contentId} index={index} />;
+    return <WithContentId contentBlock={contentBlock} data={data} id={id} index={index} />;
   },
 );
