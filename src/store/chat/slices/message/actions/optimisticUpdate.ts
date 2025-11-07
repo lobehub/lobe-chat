@@ -216,7 +216,7 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessageMetadata: async (id, metadata) => {
-    const { internal_dispatchMessage, refreshMessages } = get();
+    const { internal_dispatchMessage, refreshMessages, replaceMessages } = get();
 
     // Optimistic update: update the frontend immediately
     internal_dispatchMessage({
@@ -231,7 +231,9 @@ export const messageOptimisticUpdate: StateCreator<
       topicId: get().activeTopicId,
     });
 
-    if (!result?.success) {
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages);
+    } else {
       await refreshMessages();
     }
   },

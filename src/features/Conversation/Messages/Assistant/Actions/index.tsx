@@ -53,9 +53,11 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
   const items = useMemo(() => {
     if (hasTools) return [delAndRegenerate, copy];
 
-    return [edit, copy, inThread || isGroupSession ? null : branching].filter(
-      Boolean,
-    ) as ActionIconGroupItemType[];
+    return [
+      edit,
+      copy,
+      // inThread || isGroupSession ? null : branching
+    ].filter(Boolean) as ActionIconGroupItemType[];
   }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching]);
 
   const { t } = useTranslation('common');
