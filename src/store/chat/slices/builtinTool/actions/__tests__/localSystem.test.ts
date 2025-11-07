@@ -24,10 +24,10 @@ const mockStore = {
   internal_triggerLocalFileToolCalling: vi.fn(),
   optimisticUpdateMessageContent: vi.fn(),
   optimisticUpdateMessagePluginError: vi.fn(),
+  optimisticUpdatePluginArguments: vi.fn(),
+  optimisticUpdatePluginState: vi.fn(),
   set: mockSet,
   toggleLocalFileLoading: vi.fn(),
-  updatePluginArguments: vi.fn(),
-  updatePluginState: vi.fn(),
 } as unknown as ChatStore;
 
 const createStore = () => {
