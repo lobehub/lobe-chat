@@ -145,6 +145,23 @@ export const generateAIChat: StateCreator<
   },
   regenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
+    const message = chatSelectors.getMessageById(id)(get());
+    const isGenerating = messageStateSelectors.isMessageGenerating(id)(get());
+
+    // Preserve message content during regeneration to prevent it from disappearing
+    // Immediately update the message content to LOADING_FLAT to show loading state
+    // while the new message is being generated. This prevents the message from
+    // appearing empty during the regeneration process, which was causing the
+    // message to disappear briefly before the new content arrives.
+    if (message && message.content !== LOADING_FLAT && !isGenerating) {
+      // Optimistically update the message content to LOADING_FLAT to prevent empty state
+      get().internal_dispatchMessage({
+        id,
+        type: 'updateMessage',
+        value: { content: LOADING_FLAT },
+      });
+    }
+
     await get().internal_resendMessage(id, { traceId });
 
     // trace the delete and regenerate message
