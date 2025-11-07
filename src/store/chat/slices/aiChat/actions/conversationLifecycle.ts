@@ -3,12 +3,10 @@
 import { DEFAULT_AGENT_CHAT_CONFIG, INBOX_SESSION_ID } from '@lobechat/const';
 import {
   ChatImageItem,
-  ChatTopic,
   ChatVideoItem,
   SendMessageParams,
   SendMessageServerResponse,
   TraceEventType,
-  UIChatMessage,
 } from '@lobechat/types';
 import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
@@ -22,7 +20,6 @@ import { getFileStoreState } from '@/store/file/store';
 import { getSessionStoreState } from '@/store/session';
 
 import {
-  chatSelectors,
   dbMessageSelectors,
   displayMessageSelectors,
   messageStateSelectors,
@@ -39,35 +36,18 @@ export interface ConversationLifecycleAction {
    * Sends a new message to the AI chat system
    */
   sendMessage: (params: SendMessageParams) => Promise<void>;
-  /**
-   * Regenerates a specific message in the chat
-   */
-  regenerateMessage: (id: string) => Promise<void>;
+  regenerateUserMessage: (
+    id: string,
+    params?: { skipTrace?: boolean; traceId?: string },
+  ) => Promise<void>;
+  regenerateAssistantMessage: (
+    id: string,
+    params?: { skipTrace?: boolean; traceId?: string },
+  ) => Promise<void>;
   /**
    * Deletes an existing message and generates a new one in its place
    */
   delAndRegenerateMessage: (id: string) => Promise<void>;
-  /**
-   * Resends a specific message, optionally using a trace ID for tracking
-   */
-  internal_resendMessage: (
-    id: string,
-    params?: {
-      traceId?: string;
-      messages?: UIChatMessage[];
-      threadId?: string;
-      inPortalThread?: boolean;
-    },
-  ) => Promise<void>;
-  /**
-   * Refreshes the AI chat state with new data
-   */
-  internal_refreshAiChat: (params: {
-    topics?: ChatTopic[];
-    messages: UIChatMessage[];
-    sessionId: string;
-    topicId?: string;
-  }) => void;
 }
 
 export const conversationLifecycle: StateCreator<
@@ -172,12 +152,10 @@ export const conversationLifecycle: StateCreator<
         abortController,
       );
       // refresh the total data
-      get().internal_refreshAiChat({
-        messages: data.messages,
-        topics: data.topics,
-        sessionId: activeId,
-        topicId: data.topicId,
-      });
+      if (data?.topics) {
+        get().internal_dispatchTopic({ type: 'updateTopics', value: data.topics });
+        get().replaceMessages(data.messages, { sessionId: activeId, topicId: data.topicId });
+      }
 
       if (data.isCreateNewTopic && data.topicId) {
         await get().switchTopic(data.topicId, true);
@@ -268,103 +246,82 @@ export const conversationLifecycle: StateCreator<
     }
   },
 
-  regenerateMessage: async (id) => {
-    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
-    await get().internal_resendMessage(id, { traceId });
-
-    // trace the delete and regenerate message
-    get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
-  },
-
-  delAndRegenerateMessage: async (id) => {
-    const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
-    get().internal_resendMessage(id, { traceId });
-    get().deleteMessage(id);
-
-    // trace the delete and regenerate message
-    get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
-  },
-
-  internal_resendMessage: async (
-    messageId,
-    { traceId, messages: outChats, threadId: outThreadId, inPortalThread } = {},
-  ) => {
-    const isRegenerating = messageStateSelectors.isMessageRegenerating(messageId)(get());
+  regenerateUserMessage: async (id, params) => {
+    const isRegenerating = messageStateSelectors.isMessageRegenerating(id)(get());
     if (isRegenerating) return;
 
-    // Mark message as regenerating
-    set(
-      { regeneratingIds: [...get().regeneratingIds, messageId] },
-      false,
-      'internal_resendMessage/start',
-    );
+    const item = displayMessageSelectors.getDisplayMessageById(id)(get());
+    if (!item) return;
+
+    const chats = displayMessageSelectors.mainAIChats(get());
+
+    const currentIndex = chats.findIndex((c) => c.id === id);
+    const contextMessages = chats.slice(0, currentIndex + 1);
+
+    if (contextMessages.length <= 0) return;
 
     try {
-      // 1. 构造所有相关的历史记录
-      const chats = outChats ?? displayMessageSelectors.mainAIChats(get());
-
-      const item = displayMessageSelectors.getDisplayMessageById(messageId)(get());
-      if (!item) return;
-      const currentIndex = chats.findIndex((c) => c.id === messageId);
-
-      const currentMessage = chats[currentIndex];
-
-      let contextMessages: UIChatMessage[] = [];
-
-      switch (currentMessage.role) {
-        case 'tool':
-        case 'user': {
-          contextMessages = chats.slice(0, currentIndex + 1);
-          break;
-        }
-        case 'assistant': {
-          // 消息是 AI 发出的因此需要找到它的 user 消息
-          const userId = currentMessage.parentId;
-          const userIndex = chats.findIndex((c) => c.id === userId);
-          // 如果消息没有 parentId，那么同 user/function 模式
-          contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
-          break;
-        }
-      }
-
-      if (contextMessages.length <= 0) return;
-
       const { internal_execAgentRuntime, activeThreadId } = get();
 
-      const latestMsg = contextMessages.findLast((s) => s.role === 'user');
+      // Mark message as regenerating
+      set(
+        { regeneratingIds: [...get().regeneratingIds, id] },
+        false,
+        'regenerateUserMessage/start',
+      );
 
-      if (!latestMsg) return;
-
-      const threadId = outThreadId ?? activeThreadId;
+      const traceId = params?.traceId ?? dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
 
       // 切一个新的激活分支
-      await get().switchMessageBranch(messageId, item.branch ? item.branch.count : 1);
+      await get().switchMessageBranch(id, item.branch ? item.branch.count : 1);
 
       await internal_execAgentRuntime({
         messages: contextMessages,
-        parentMessageId: messageId,
+        parentMessageId: id,
         parentMessageType: 'user',
         traceId,
-        ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
-        threadId,
-        inPortalThread,
+        ragQuery: get().internal_shouldUseRAG() ? item.content : undefined,
+        threadId: activeThreadId,
       });
+
+      // trace the regenerate message
+      if (!params?.skipTrace)
+        get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
     } finally {
       // Remove message from regenerating state
       set(
-        { regeneratingIds: get().regeneratingIds.filter((id) => id !== messageId) },
+        { regeneratingIds: get().regeneratingIds.filter((msgId) => msgId !== id) },
         false,
-        'internal_resendMessage/end',
+        'regenerateUserMessage/end',
       );
     }
   },
 
-  internal_refreshAiChat: ({ topics, messages, sessionId }) => {
-    get().replaceMessages(messages);
-    set(
-      { topicMaps: topics ? { ...get().topicMaps, [sessionId]: topics } : get().topicMaps },
-      false,
-      'refreshAiChat',
-    );
+  regenerateAssistantMessage: async (id, params) => {
+    const isRegenerating = messageStateSelectors.isMessageRegenerating(id)(get());
+    if (isRegenerating) return;
+
+    const chats = displayMessageSelectors.mainAIChats(get());
+    const currentIndex = chats.findIndex((c) => c.id === id);
+    const currentMessage = chats[currentIndex];
+
+    // 消息是 AI 发出的因此需要找到它的 user 消息
+    const userId = currentMessage.parentId;
+    const userIndex = chats.findIndex((c) => c.id === userId);
+    // 如果消息没有 parentId，那么同 user 模式
+    const contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
+
+    if (contextMessages.length <= 0 || !userId) return;
+
+    await get().regenerateUserMessage(userId, params);
+  },
+
+  delAndRegenerateMessage: async (id) => {
+    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
+    get().regenerateAssistantMessage(id, { skipTrace: true, traceId });
+    get().deleteMessage(id);
+
+    // trace the delete and regenerate message
+    get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
   },
 });

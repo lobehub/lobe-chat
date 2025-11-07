@@ -31,7 +31,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     isRegenerating,
     toggleMessageEditing,
     deleteMessage,
-    regenerateMessage,
+    regenerateUserMessage,
     translateMessage,
     ttsMessage,
     delAndRegenerateMessage,
@@ -46,7 +46,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
 
     s.toggleMessageEditing,
     s.deleteMessage,
-    s.regenerateMessage,
+    s.regenerateUserMessage,
     s.translateMessage,
     s.ttsMessage,
     s.delAndRegenerateMessage,
@@ -112,7 +112,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         case 'regenerate': {
           if (inPortalThread) {
             resendThreadMessage(id);
-          } else regenerateMessage(id);
+          } else regenerateUserMessage(id);
 
           // if this message is an error message, we need to delete it
           if (data.error) deleteMessage(id);

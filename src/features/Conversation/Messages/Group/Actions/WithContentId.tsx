@@ -58,7 +58,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
   const topic = searchParams.get('topic');
   const [
     deleteMessage,
-    regenerateMessage,
+    regenerateAssistantMessage,
     translateMessage,
     delAndRegenerateMessage,
     copyMessage,
@@ -68,7 +68,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     toggleMessageEditing,
   ] = useChatStore((s) => [
     s.deleteMessage,
-    s.regenerateMessage,
+    s.regenerateAssistantMessage,
     s.translateMessage,
     s.delAndRegenerateMessage,
     s.copyMessage,
@@ -115,7 +115,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
         case 'regenerate': {
           if (inPortalThread) {
             resendThreadMessage(id);
-          } else regenerateMessage(id);
+          } else regenerateAssistantMessage(id);
 
           // if this message is an error message, we need to delete it
           if (data.error) deleteMessage(id);

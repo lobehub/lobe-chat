@@ -194,12 +194,12 @@ export const chatThreadMessage: StateCreator<
     }
   },
   resendThreadMessage: async (messageId) => {
-    const chats = threadSelectors.portalAIChats(get());
+    // const chats = threadSelectors.portalAIChats(get());
 
-    await get().internal_resendMessage(messageId, {
-      messages: chats,
-      threadId: get().portalThreadId,
-      inPortalThread: true,
+    await get().regenerateUserMessage(messageId, {
+      // messages: chats,
+      // threadId: get().portalThreadId,
+      // inPortalThread: true,
     });
   },
   delAndResendThreadMessage: async (id) => {

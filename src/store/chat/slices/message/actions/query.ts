@@ -28,7 +28,14 @@ export interface MessageQueryAction {
   /**
    * Replace current messages with new data
    */
-  replaceMessages: (messages: UIChatMessage[], action?: any) => void;
+  replaceMessages: (
+    messages: UIChatMessage[],
+    params?: {
+      action?: any;
+      sessionId?: string;
+      topicId?: string;
+    },
+  ) => void;
 
   /**
    * Fetch messages using SWR
@@ -56,8 +63,11 @@ export const messageQuery: StateCreator<
     await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'group']);
   },
 
-  replaceMessages: (messages, action) => {
-    const messagesKey = messageMapKey(get().activeId, get().activeTopicId);
+  replaceMessages: (messages, params) => {
+    const messagesKey = messageMapKey(
+      params?.sessionId ?? get().activeId,
+      params?.topicId ?? get().activeTopicId,
+    );
 
     // Get raw messages from dbMessagesMap and apply reducer
     const nextDbMap = { ...get().dbMessagesMap, [messagesKey]: messages };
@@ -75,7 +85,7 @@ export const messageQuery: StateCreator<
         messagesMap: { ...get().messagesMap, [messagesKey]: flatList },
       },
       false,
-      action ?? 'replaceMessages',
+      params?.action ?? 'replaceMessages',
     );
   },
 
@@ -101,7 +111,9 @@ export const messageQuery: StateCreator<
             false,
             n('useFetchMessages(success)', { messages, queryKey: key }),
           );
-          get().replaceMessages(messages, n('useFetchMessages/updateMessages'));
+          get().replaceMessages(messages, {
+            action: n('useFetchMessages/updateMessages'),
+          });
         },
       },
     ),
