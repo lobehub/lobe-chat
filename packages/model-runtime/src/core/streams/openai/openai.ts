@@ -274,7 +274,14 @@ const transformOpenAIStream = (
               .map((detail: any) => detail.text)
               .join('');
           }
-          return details;
+          if (typeof details === 'string') {
+            return details;
+          }
+          if (typeof details === 'object' && details !== null && 'text' in details) {
+            return details.text;
+          }
+          // Fallback for unexpected types
+          return '';
         }
         // Handle content array format with thinking blocks (e.g. mistral AI Magistral model)
         if ('content' in item.delta && Array.isArray(item.delta.content)) {
