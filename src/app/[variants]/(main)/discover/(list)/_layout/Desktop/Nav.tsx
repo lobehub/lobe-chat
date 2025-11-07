@@ -75,7 +75,7 @@ const Nav = memo(() => {
             compact
             items={items as any}
             onChange={(key) => {
-              const path = key === DiscoverTab.Home ? '/' : `/${key}`;
+              const path = key === DiscoverTab.Home ? '/discover' : `/discover/${key}`;
               const search = q ? `?q=${encodeURIComponent(q)}` : '';
               navigate(path + search, { replace: true });
               const scrollableElement = document?.querySelector(`#${SCROLL_PARENT_ID}`);

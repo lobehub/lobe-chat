@@ -1,6 +1,6 @@
 import { ActionIcon, ActionIconProps, Hotkey } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare, Palette } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -41,17 +41,11 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
     <Flexbox gap={8}>
       <Link
         aria-label={t('tab.chat')}
-        href={'/chat'}
         onClick={(e) => {
-          // If Cmd key is pressed, let the default link behavior happen (open in new tab)
-          if (e.metaKey || e.ctrlKey) {
-            return;
-          }
-
-          // Otherwise, prevent default and switch session within the current tab
-          e.preventDefault();
+          if (e.metaKey || e.ctrlKey) return;
           switchBackToChat(useSessionStore.getState().activeId);
         }}
+        to={'/chat'}
       >
         <ActionIcon
           active={isChatActive}
@@ -67,7 +61,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         />
       </Link>
       {enableKnowledgeBase && (
-        <Link aria-label={t('tab.knowledgeBase')} href={'/knowledge'}>
+        <Link aria-label={t('tab.knowledgeBase')} to={'/knowledge'}>
           <ActionIcon
             active={isFilesActive}
             icon={FolderClosed}
@@ -78,7 +72,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         </Link>
       )}
       {showAiImage && (
-        <Link aria-label={t('tab.aiImage')} href={'/image'}>
+        <Link aria-label={t('tab.aiImage')} to={'/image'}>
           <ActionIcon
             active={isImageActive}
             icon={Palette}
@@ -89,7 +83,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         </Link>
       )}
       {showMarket && (
-        <Link aria-label={t('tab.discover')} href={'/discover'}>
+        <Link aria-label={t('tab.discover')} to={'/discover'}>
           <ActionIcon
             active={isDiscoverActive}
             icon={Compass}

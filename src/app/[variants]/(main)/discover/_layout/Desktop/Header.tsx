@@ -14,7 +14,7 @@ const Header = memo(() => {
   return (
     <ChatHeader
       left={
-        <Link style={{ color: 'inherit' }} to={'/'}>
+        <Link style={{ color: 'inherit' }} to={'/discover'}>
           <ProductLogo extra={'Discover'} size={36} type={'text'} />
         </Link>
       }

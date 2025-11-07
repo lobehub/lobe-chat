@@ -7,6 +7,9 @@ import { MemoryRouter, Navigate, Route, Routes, useLocation, useNavigate } from 
 import MainChatPage from './components/MainChatPage';
 import SettingsPage from './components/SettingsPage';
 
+import Desktop from './_layout/Desktop';
+import Mobile from '../_layout/Mobile';
+
 // Get initial path from URL
 const getInitialPath = () => {
   if (typeof window === 'undefined') return '/';
@@ -54,26 +57,42 @@ const UrlSynchronizer = () => {
   return null;
 };
 
+// Mobile Chat Routes
+export const MobileChatRoutes = memo(() => {
+  return (
+    <Mobile>
+      <Routes>
+        <Route element={<MainChatPage mobile={true} />} path="/" />
+        <Route element={<SettingsPage mobile={true} />} path="/settings" />
+        <Route element={<Navigate replace to="/" />} path="*" />
+      </Routes>
+    </Mobile>
+  );
+});
+
+MobileChatRoutes.displayName = 'MobileChatRoutes';
+
+// Desktop Chat Routes
+export const DesktopChatRoutes = memo(() => {
+  return (
+    <Desktop>
+      <Routes>
+        <Route element={<MainChatPage mobile={false} />} path="/" />
+        <Route element={<MainChatPage mobile={false} />} path="/*" />
+      </Routes>
+    </Desktop>
+  );
+});
+
+DesktopChatRoutes.displayName = 'DesktopChatRoutes';
+
 const ChatRouter = memo(() => {
   const mobile = useMediaQuery({ maxWidth: 768 });
-  const routes = (
-    <Routes>
-      <Route element={<MainChatPage mobile={true} />} path="/" />
-      <Route element={<SettingsPage mobile={true} />} path="/settings" />
-      <Route element={<Navigate replace to="/" />} path="*" />
-    </Routes>
-  );
 
   return (
     <MemoryRouter initialEntries={[getInitialPath()]} initialIndex={0}>
       <UrlSynchronizer />
-      {mobile ? (
-        // Mobile Layout
-        routes
-      ) : (
-        // Desktop Layout
-        <MainChatPage mobile={false} />
-      )}
+      {mobile ? <MobileChatRoutes /> : <DesktopChatRoutes />}
     </MemoryRouter>
   );
 });

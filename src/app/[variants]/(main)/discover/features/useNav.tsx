@@ -13,7 +13,6 @@ const ICON_SIZE = 16;
 export const useNav = () => {
   const location = useLocation();
   const { t } = useTranslation('discover');
-
   const activeKey = useMemo(() => {
     const pathname = location.pathname;
     for (const value of Object.values(DiscoverTab)) {
