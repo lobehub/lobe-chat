@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.35](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.34...v2.0.0-next.35)
+
+<sup>Released on **2025-11-07**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Use react-router-dom change /chat page to spa mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Use react-router-dom change /chat page to spa mode, closes [#10077](https://github.com/lobehub/lobe-chat/issues/10077) ([9154606](https://github.com/lobehub/lobe-chat/commit/9154606))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.34](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.33...v2.0.0-next.34)
 
 <sup>Released on **2025-11-07**</sup>
