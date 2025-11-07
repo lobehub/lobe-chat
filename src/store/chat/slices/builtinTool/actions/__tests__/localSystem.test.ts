@@ -57,7 +57,7 @@ describe('localFileSlice', () => {
       await store.internal_triggerLocalFileToolCalling('test-id', mockService);
 
       expect(mockStore.toggleLocalFileLoading).toBeCalledWith('test-id', true);
-      expect(mockStore.updatePluginState).toBeCalledWith('test-id', mockState);
+      expect(mockStore.optimisticUpdatePluginState).toBeCalledWith('test-id', mockState);
       expect(mockStore.optimisticUpdateMessageContent).toBeCalledWith(
         'test-id',
         JSON.stringify(mockContent),

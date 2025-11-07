@@ -141,7 +141,7 @@ export const messagePublicApi: StateCreator<
 
     const removeToolInAssistantMessage = async () => {
       if (!message.parentId) return;
-      await get().internal_removeToolToAssistantMessage(message.parentId, message.tool_call_id);
+      await get().optimisticRemoveToolFromAssistantMessage(message.parentId, message.tool_call_id);
     };
 
     await Promise.all([

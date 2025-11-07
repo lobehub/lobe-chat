@@ -10,7 +10,7 @@ import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/actio
 import { ChatPortalAction, chatPortalSlice } from './slices/portal/action';
 import { ChatTranslateAction, chatTranslate } from './slices/translate/action';
 import { ChatMessageAction, chatMessage } from './slices/message/actions';
-import { ChatPluginAction, chatPlugin } from './slices/plugin/action';
+import { ChatPluginAction, chatPlugin } from './slices/plugin/actions';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
 import { ChatAIChatAction, chatAiChat } from './slices/aiChat/actions';
 import { ChatTTSAction, chatTTS } from './slices/tts/action';

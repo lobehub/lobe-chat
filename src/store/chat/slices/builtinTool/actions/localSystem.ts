@@ -220,7 +220,7 @@ export const localSystemSlice: StateCreator<
   reSearchLocalFiles: async (id, params) => {
     get().toggleLocalFileLoading(id, true);
 
-    await get().updatePluginArguments(id, params);
+    await get().optimisticUpdatePluginArguments(id, params);
 
     return get().searchLocalFiles(id, params);
   },
@@ -307,7 +307,7 @@ export const localSystemSlice: StateCreator<
     try {
       const { state, content } = await callingService();
       if (state) {
-        await get().updatePluginState(id, state as any);
+        await get().optimisticUpdatePluginState(id, state as any);
       }
       await get().optimisticUpdateMessageContent(id, JSON.stringify(content));
     } catch (error) {
