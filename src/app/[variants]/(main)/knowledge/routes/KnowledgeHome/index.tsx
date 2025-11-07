@@ -56,7 +56,7 @@ const MainContent = memo(() => {
     if (id) {
       setCategory(FilesTabs.Documents);
     }
-  }, [id, setCategory]);
+  }, [id]);
 
   return (
     <KnowledgeItemManager
