@@ -85,8 +85,16 @@ export class AgentRuntime {
 
       // Handle human approved tool calls
       if (runtimeContext.phase === 'human_approved_tool') {
-        const approvedPayload = runtimeContext.payload as { approvedToolCall: ToolsCalling };
-        rawInstructions = { payload: approvedPayload.approvedToolCall, type: 'call_tool' };
+        const approvedPayload = runtimeContext.payload as { approvedToolCall: ChatToolPayload };
+        const toolCalling = approvedPayload.approvedToolCall;
+
+        rawInstructions = {
+          payload: {
+            parentMessageId: '', // Not required for approval flow
+            toolCalling,
+          },
+          type: 'call_tool',
+        };
       } else {
         // Standard flow: Plan -> Execute
         rawInstructions = await this.agent.runner(runtimeContext, newState);
@@ -95,12 +103,37 @@ export class AgentRuntime {
       // Normalize to array
       const instructions = Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions];
 
+      // Convert old format to new format
+      const normalizedInstructions = instructions.map((instruction) => {
+        if (
+          instruction.type === 'call_tools_batch' && // Check if payload is array of ToolsCalling (old format)
+          Array.isArray(instruction.payload)
+        ) {
+          const toolsCalling = instruction.payload.map((tc: ToolsCalling) => ({
+            apiName: tc.function.name,
+            arguments: tc.function.arguments,
+            id: tc.id,
+            identifier: tc.function.name,
+            type: 'default' as any,
+          }));
+
+          return {
+            payload: {
+              parentMessageId: '',
+              toolsCalling,
+            },
+            type: 'call_tools_batch',
+          };
+        }
+        return instruction;
+      });
+
       // Execute all instructions sequentially
       let currentState = newState;
       const allEvents: AgentEvent[] = [];
       let finalNextContext: AgentRuntimeContext | undefined = undefined;
 
-      for (const instruction of instructions) {
+      for (const instruction of normalizedInstructions) {
         let result;
 
         // Special handling for batch tool execution
@@ -153,7 +186,7 @@ export class AgentRuntime {
    */
   async approveToolCall(
     state: AgentState,
-    approvedToolCall: any,
+    approvedToolCall: ChatToolPayload,
   ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
     const context: AgentRuntimeContext = {
       payload: { approvedToolCall },

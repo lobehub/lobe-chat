@@ -117,13 +117,12 @@ describe('AgentRuntime', () => {
       const runtime = new AgentRuntime(agent);
       const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
 
-      const toolCall: ToolsCalling = {
+      const toolCall = {
         id: 'call_123',
-        type: 'function',
-        function: {
-          name: 'test_tool',
-          arguments: '{"input": "test"}',
-        },
+        apiName: 'test_tool',
+        identifier: 'test_tool',
+        arguments: '{"input": "test"}',
+        type: 'default' as const,
       };
 
       const result = await runtime.approveToolCall(state, toolCall);
@@ -288,13 +287,12 @@ describe('AgentRuntime', () => {
         const runtime = new AgentRuntime(agent);
         const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
 
-        const toolCall: ToolsCalling = {
+        const toolCall = {
           id: 'call_123',
-          type: 'function',
-          function: {
-            name: 'calculator',
-            arguments: '{"expression": "2+2"}',
-          },
+          apiName: 'calculator',
+          identifier: 'calculator',
+          arguments: '{"expression": "2+2"}',
+          type: 'default' as const,
         };
 
         const result = await runtime.approveToolCall(state, toolCall);
@@ -320,13 +318,12 @@ describe('AgentRuntime', () => {
         const runtime = new AgentRuntime(agent);
         const state = AgentRuntime.createInitialState({ sessionId: 'test-session' });
 
-        const toolCall: ToolsCalling = {
+        const toolCall = {
           id: 'call_123',
-          type: 'function',
-          function: {
-            name: 'unknown_tool',
-            arguments: '{}',
-          },
+          apiName: 'unknown_tool',
+          identifier: 'unknown_tool',
+          arguments: '{}',
+          type: 'default' as const,
         };
 
         const result = await runtime.approveToolCall(state, toolCall);
@@ -1022,7 +1019,14 @@ describe('AgentRuntime', () => {
       expect(result.newState.pendingToolsCalling).toHaveLength(1);
 
       // Step 2: Approve and execute tool call
-      const toolCall = result.newState.pendingToolsCalling![0];
+      const pendingToolCall = result.newState.pendingToolsCalling![0];
+      const toolCall = {
+        id: pendingToolCall.id,
+        apiName: pendingToolCall.function.name,
+        identifier: pendingToolCall.function.name,
+        arguments: pendingToolCall.function.arguments,
+        type: 'default' as const,
+      };
       result = await runtime.approveToolCall(result.newState, toolCall);
 
       // Should have executed tool
