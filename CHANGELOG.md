@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.34](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.33...v2.0.0-next.34)
+
+<sup>Released on **2025-11-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add sorting functionality for disabled models and model providers with tooltip support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add sorting functionality for disabled models and model providers with tooltip support, closes [#10000](https://github.com/lobehub/lobe-chat/issues/10000) ([68e98b1](https://github.com/lobehub/lobe-chat/commit/68e98b1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.33](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.32...v2.0.0-next.33)
 
 <sup>Released on **2025-11-06**</sup>
