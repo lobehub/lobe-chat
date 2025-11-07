@@ -100,8 +100,6 @@ export const mcpRouter = router({
       checkStdioEnvironment(input.params);
 
       // Pass the validated params, toolName, and args to the service
-      const data = await mcpService.callTool(input.params, input.toolName, input.args);
-
-      return JSON.stringify(data);
+      return await mcpService.callTool(input.params, input.toolName, input.args);
     }),
 });

@@ -4,6 +4,7 @@ import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
+import { MCPToolCallResult } from '@/libs/mcp';
 import { chatService } from '@/services/chat';
 import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
@@ -114,8 +115,10 @@ export const pluginTypes: StateCreator<
       optimisticUpdateMessageContent,
       internal_togglePluginApiCalling,
       internal_constructToolsCallingContext,
+      optimisticUpdatePluginState,
+      optimisticUpdateMessagePluginError,
     } = get();
-    let data: string = '';
+    let data: MCPToolCallResult | undefined;
 
     try {
       const abortController = internal_togglePluginApiCalling(
@@ -145,12 +148,20 @@ export const pluginTypes: StateCreator<
     }
 
     internal_togglePluginApiCalling(false, id, n('fetchPlugin/end') as string);
+
     // 如果报错则结束了
+
     if (!data) return;
 
-    await optimisticUpdateMessageContent(id, data);
+    await Promise.all([
+      optimisticUpdateMessageContent(id, data.content),
+      (async () => {
+        if (data.success) await optimisticUpdatePluginState(id, data.state);
+        else await optimisticUpdateMessagePluginError(id, data.error);
+      })(),
+    ]);
 
-    return data;
+    return data.content;
   },
 
   internal_callPluginApi: async (id, payload) => {
