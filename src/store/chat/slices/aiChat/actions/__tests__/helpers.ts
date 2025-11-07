@@ -35,11 +35,16 @@ export const setupMockSelectors = (
 /**
  * Setup store state with messages
  */
-export const setupStoreWithMessages = (messages: any[], sessionId = TEST_IDS.SESSION_ID) => {
+export const setupStoreWithMessages = (
+  messages: any[],
+  sessionId = TEST_IDS.SESSION_ID,
+  topicId: string | null | undefined = TEST_IDS.TOPIC_ID,
+) => {
   useChatStore.setState({
     activeId: sessionId,
+    activeTopicId: topicId ?? undefined,
     messagesMap: {
-      [messageMapKey(sessionId)]: messages,
+      [messageMapKey(sessionId, topicId ?? undefined)]: messages,
     },
   });
 };

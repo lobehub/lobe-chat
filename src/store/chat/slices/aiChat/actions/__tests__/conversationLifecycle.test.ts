@@ -194,7 +194,7 @@ describe('ConversationLifecycle actions', () => {
 
       expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
         expect.objectContaining({
-          parentMessageId: TEST_IDS.MESSAGE_ID,
+          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
           parentMessageType: 'user',
         }),
       );
@@ -246,7 +246,10 @@ describe('ConversationLifecycle actions', () => {
         await result.current.delAndRegenerateMessage(TEST_IDS.MESSAGE_ID);
       });
 
-      expect(result.current.regenerateAssistantMessage).toHaveBeenCalledWith(TEST_IDS.MESSAGE_ID);
+      expect(result.current.regenerateAssistantMessage).toHaveBeenCalledWith(
+        TEST_IDS.MESSAGE_ID,
+        expect.objectContaining({ skipTrace: true }),
+      );
       expect(result.current.deleteMessage).toHaveBeenCalledWith(TEST_IDS.MESSAGE_ID);
       expect(result.current.internal_traceMessage).toHaveBeenCalled();
     });

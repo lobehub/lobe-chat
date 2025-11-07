@@ -17,6 +17,8 @@ import type { HeatmapsProps } from '@lobehub/charts';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
 
+import { abortableRequest } from '../utils/abortableRequest';
+
 export class MessageService {
   createMessage = async ({
     sessionId,
@@ -109,12 +111,17 @@ export class MessageService {
     value: Partial<MessageMetadata>,
     options?: { sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
-    return lambdaClient.message.updateMetadata.mutate({
-      id,
-      sessionId: options?.sessionId,
-      topicId: options?.topicId,
-      value,
-    });
+    return abortableRequest.execute(`message-metadata-${id}`, (signal) =>
+      lambdaClient.message.updateMetadata.mutate(
+        {
+          id,
+          sessionId: options?.sessionId,
+          topicId: options?.topicId,
+          value,
+        },
+        { signal },
+      ),
+    );
   };
 
   updateMessagePluginState = async (
