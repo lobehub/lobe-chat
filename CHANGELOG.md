@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.37](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.36...v2.0.0-next.37)
+
+<sup>Released on **2025-11-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Don't include runtimeProvider in JWT for non-image operations.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Don't include runtimeProvider in JWT for non-image operations, closes [#9959](https://github.com/lobehub/lobe-chat/issues/9959) [#9569](https://github.com/lobehub/lobe-chat/issues/9569) ([b8f25de](https://github.com/lobehub/lobe-chat/commit/b8f25de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.36](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.35...v2.0.0-next.36)
 
 <sup>Released on **2025-11-07**</sup>
