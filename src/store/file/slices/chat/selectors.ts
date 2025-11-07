@@ -22,9 +22,15 @@ export const filesSelectors = {
   isImageUploading,
 };
 
+const getDocumentById = (documentId: string | undefined) => (s: FilesStoreState) => {
+  if (!documentId) return undefined;
+  return s.localDocumentMap.get(documentId) || s.fileList?.find((f) => f.id === documentId);
+};
+
 export const fileChatSelectors = {
   chatRawFileList,
   chatUploadFileList,
   chatUploadFileListHasItem,
+  getDocumentById,
   isUploadingFiles,
 };

@@ -36,6 +36,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
+import { fileChatSelectors } from '@/store/file/slices/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
@@ -54,27 +55,14 @@ const editorClassName = cx(css`
 `);
 
 interface DocumentEditorPanelProps {
-  content?: string | null;
   documentId?: string;
-  documentTitle?: string;
-  editorData?: Record<string, any> | null;
-  emoji?: string;
   knowledgeBaseId?: string;
   onDocumentIdChange?: (newId: string) => void;
   onSave?: () => void;
 }
 
 const DocumentEditor = memo<DocumentEditorPanelProps>(
-  ({
-    content: cachedContent,
-    documentId,
-    documentTitle,
-    editorData: cachedEditorData,
-    emoji: cachedEmoji,
-    knowledgeBaseId,
-    onDocumentIdChange,
-    onSave,
-  }) => {
+  ({ documentId, knowledgeBaseId, onDocumentIdChange, onSave }) => {
     const { t } = useTranslation(['file']);
     const theme = useTheme();
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
@@ -82,6 +70,13 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const username = useUserStore(userProfileSelectors.displayUserName);
 
     const editor = useEditor();
+
+    // Get document data from Zustand store
+    const currentDocument = useFileStore(fileChatSelectors.getDocumentById(documentId));
+    const cachedContent = currentDocument?.content;
+    const cachedEditorData = currentDocument?.editorData;
+    const cachedEmoji = currentDocument?.metadata?.emoji;
+    const documentTitle = currentDocument?.name;
 
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [currentTitle, setCurrentTitle] = useState('');
@@ -95,6 +90,16 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const localDocumentMap = useFileStore((s) => s.localDocumentMap);
     const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
     const isInitialLoadRef = useRef(false);
+
+    // Sync title and emoji when document data changes (e.g., from rename)
+    useEffect(() => {
+      if (documentTitle !== undefined && documentTitle !== currentTitle) {
+        setCurrentTitle(documentTitle);
+      }
+      if (cachedEmoji !== currentEmoji) {
+        setCurrentEmoji(cachedEmoji);
+      }
+    }, [documentTitle, cachedEmoji]);
 
     // Load document content when documentId changes
     useEffect(() => {
@@ -534,7 +539,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                 whiteSpace: 'nowrap',
               }}
             >
-              Edited {dayjs(lastUpdatedTime).fromNow()}
+              {t('documentEditor.editedAt', { time: dayjs(lastUpdatedTime).fromNow() })}
             </span>
           )}
 

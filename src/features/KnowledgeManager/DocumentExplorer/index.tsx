@@ -136,8 +136,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
     });
   }, [documents, searchKeywords]);
 
-  const selectedDocument = documents.find((document) => document.id === selectedDocumentId);
-
   const handleDocumentSelect = (documentId: string) => {
     if (selectedDocumentId === documentId) {
       // Deselect if clicking the same document
@@ -310,11 +308,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
       <div className={styles.editorPanel}>
         {selectedDocumentId || isCreatingNew ? (
           <DocumentEditor
-            content={selectedDocument?.content}
             documentId={selectedDocumentId || undefined}
-            documentTitle={selectedDocument?.name}
-            editorData={selectedDocument?.editorData}
-            emoji={selectedDocument?.metadata?.emoji}
             knowledgeBaseId={knowledgeBaseId}
             onDocumentIdChange={handleDocumentIdChange}
           />
