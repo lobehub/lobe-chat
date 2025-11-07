@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Don't include runtimeProvider in JWT for non-image operations."]
+    },
+    "date": "2025-11-07",
+    "version": "2.0.0-next.37"
+  },
+  {
+    "children": {
       "features": ["Refactor to use agent runtime as the generation core and support branch mode."]
     },
     "date": "2025-11-07",
