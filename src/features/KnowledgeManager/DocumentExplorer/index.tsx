@@ -242,7 +242,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           <SearchBar
             allowClear
             onChange={(e) => setSearchKeywords(e.target.value)}
-            placeholder={t('searchFilePlaceholder')}
+            placeholder={t('searchDocumentPlaceholder')}
             style={{ flex: 1 }}
             value={searchKeywords}
             variant={'borderless'}
@@ -250,7 +250,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           <ActionIcon
             icon={PlusIcon}
             onClick={handleNewDocument}
-            // size={'large'}
             title={t('header.newNoteButton')}
           />
         </div>

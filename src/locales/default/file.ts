@@ -136,6 +136,7 @@ export default {
     downloadFile: '下载文件',
     unsupportedFileAndContact: '此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>',
   },
+  searchDocumentPlaceholder: '搜索文档',
   searchFilePlaceholder: '搜索文件',
   tab: {
     all: '全部',

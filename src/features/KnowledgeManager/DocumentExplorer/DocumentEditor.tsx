@@ -261,8 +261,6 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
 
       setSaveStatus('saving');
 
-      console.log('emoji', currentEmoji);
-
       try {
         if (currentDocId && !currentDocId.startsWith('temp-document-')) {
           // Update existing document with optimistic update (including metadata for emoji)
