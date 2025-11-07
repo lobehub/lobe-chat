@@ -1,6 +1,7 @@
 import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { SESSION_CHAT_URL } from '@/const/url';
 import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
@@ -38,10 +39,10 @@ afterEach(() => {
   cleanup();
 });
 
-vi.mock('next/link', () => ({
-  default: vi.fn(({ children, ...rest }: { children: React.ReactNode; href: string }) => (
+vi.mock('react-router-dom', () => ({
+  Link: vi.fn(({ children, to, ...rest }: { children: React.ReactNode; to: string }) => (
     <div {...rest}>
-      {`Mocked Link ${rest.href}`}
+      {`Mocked Link ${to}`}
       {children}
     </div>
   )),
@@ -134,7 +135,8 @@ describe('TopActions', () => {
     const switchBackToChat = vi.spyOn(store.current, 'switchBackToChat');
 
     renderTopActions({ tab: SidebarTabKey.Discover });
-    fireEvent.click(screen.getByText('Mocked Link /chat'));
+    const chatHref = SESSION_CHAT_URL('1');
+    fireEvent.click(screen.getByText(`Mocked Link ${chatHref}`));
 
     expect(switchBackToChat).toBeCalledWith('1');
   });

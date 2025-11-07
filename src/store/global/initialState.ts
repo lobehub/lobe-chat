@@ -1,5 +1,5 @@
 import type { ThemeMode } from 'antd-style';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import type { NavigateFunction } from 'react-router-dom';
 
 import { DatabaseLoadingState, MigrationSQL, MigrationTableItem } from '@/types/clientDB';
 import { LocaleMode } from '@/types/locale';
@@ -118,7 +118,7 @@ export interface GlobalState {
   isMobile?: boolean;
   isStatusInit?: boolean;
   latestVersion?: string;
-  router?: AppRouterInstance;
+  navigate?: NavigateFunction;
   sidebarKey: SidebarTabKey;
   status: SystemStatus;
   statusStorage: AsyncLocalStorage<SystemStatus>;

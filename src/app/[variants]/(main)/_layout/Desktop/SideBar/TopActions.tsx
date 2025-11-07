@@ -1,10 +1,12 @@
 import { ActionIcon, ActionIconProps, Hotkey } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare, Palette } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { INBOX_SESSION_ID } from '@/const/session';
+import { SESSION_CHAT_URL } from '@/const/url';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -27,10 +29,18 @@ export interface TopActionProps {
 //  TODO Change icons
 const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
-  const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
+  const [switchBackToChat, isMobile] = useGlobalStore((s) => [
+    s.switchBackToChat,
+    s.isMobile,
+  ]);
   const { showMarket, enableKnowledgeBase, showAiImage } =
     useServerConfigStore(featureFlagsSelectors);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.NavigateToChat));
+  const activeSessionId = useSessionStore((s) => s.activeId);
+  const chatHref = useMemo(
+    () => SESSION_CHAT_URL(activeSessionId || INBOX_SESSION_ID, isMobile),
+    [activeSessionId, isMobile],
+  );
 
   const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
   const isFilesActive = tab === SidebarTabKey.Files;
@@ -43,9 +53,10 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         aria-label={t('tab.chat')}
         onClick={(e) => {
           if (e.metaKey || e.ctrlKey) return;
-          switchBackToChat(useSessionStore.getState().activeId);
+          e.preventDefault();
+          switchBackToChat(activeSessionId);
         }}
-        to={'/chat'}
+        to={chatHref}
       >
         <ActionIcon
           active={isChatActive}

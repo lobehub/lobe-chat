@@ -11,6 +11,7 @@ import Desktop from './(main)/_layout/Desktop';
 import Mobile from './(main)/_layout/Mobile';
 
 import { RouteVariants } from '@/utils/server/routeVariants';
+import { useGlobalStore } from '@/store/global';
 
 const VARIANT_SEGMENT_REG = /^\/([^/]+)(.*)$/;
 
@@ -76,13 +77,36 @@ const UrlSynchronizer = () => {
   return null;
 };
 
+const NavigatorRegistrar = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    useGlobalStore.setState({ navigate });
+
+    return () => {
+      useGlobalStore.setState({ navigate: undefined });
+    };
+  }, [navigate]);
+
+  return null;
+};
+
 export default function AppRouter() {
   const mobile = useMediaQuery({ maxWidth: 768 });
 
   return (
     <MemoryRouter initialEntries={[getInitialPath()]} initialIndex={0}>
       <UrlSynchronizer />
-      {mobile ? <Mobile><MobileRouter /></Mobile> : <Desktop><DesktopRouter /></Desktop>}
+      <NavigatorRegistrar />
+      {mobile ? (
+        <Mobile>
+          <MobileRouter />
+        </Mobile>
+      ) : (
+        <Desktop>
+          <DesktopRouter />
+        </Desktop>
+      )}
     </MemoryRouter>
   );
 }
