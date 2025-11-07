@@ -119,26 +119,32 @@ describe('MessageService - Race Condition Control', () => {
         },
       );
 
-      // Trigger 5 rapid updates sequentially
-      const promise1 = messageService.updateMessageMetadata(messageId, { cost: 0.001 });
+      // Trigger 5 rapid updates sequentially with catch to prevent unhandled rejections
+      const promise1 = messageService
+        .updateMessageMetadata(messageId, { cost: 0.001 })
+        .catch((e) => e);
       await new Promise((resolve) => setTimeout(resolve, 5));
-      const promise2 = messageService.updateMessageMetadata(messageId, { cost: 0.002 });
+      const promise2 = messageService
+        .updateMessageMetadata(messageId, { cost: 0.002 })
+        .catch((e) => e);
       await new Promise((resolve) => setTimeout(resolve, 5));
-      const promise3 = messageService.updateMessageMetadata(messageId, { tps: 10 });
+      const promise3 = messageService.updateMessageMetadata(messageId, { tps: 10 }).catch((e) => e);
       await new Promise((resolve) => setTimeout(resolve, 5));
-      const promise4 = messageService.updateMessageMetadata(messageId, { tps: 20 });
+      const promise4 = messageService.updateMessageMetadata(messageId, { tps: 20 }).catch((e) => e);
       await new Promise((resolve) => setTimeout(resolve, 5));
-      const promise5 = messageService.updateMessageMetadata(messageId, { compare: true });
+      const promise5 = messageService
+        .updateMessageMetadata(messageId, { compare: true })
+        .catch((e) => e);
 
       // Wait for all to settle
-      const results = await Promise.allSettled([promise1, promise2, promise3, promise4, promise5]);
+      const results = await Promise.all([promise1, promise2, promise3, promise4, promise5]);
 
-      // First 4 should be rejected (aborted), last should succeed
-      expect(results[0].status).toBe('rejected');
-      expect(results[1].status).toBe('rejected');
-      expect(results[2].status).toBe('rejected');
-      expect(results[3].status).toBe('rejected');
-      expect(results[4].status).toBe('fulfilled');
+      // First 4 should be errors (aborted), last should succeed
+      expect(results[0]).toBeInstanceOf(Error);
+      expect(results[1]).toBeInstanceOf(Error);
+      expect(results[2]).toBeInstanceOf(Error);
+      expect(results[3]).toBeInstanceOf(Error);
+      expect(results[4]).toEqual({ success: true, messages: [] });
 
       // 4 requests should have been aborted
       expect(abortedUpdates.length).toBe(4);
