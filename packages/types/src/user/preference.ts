@@ -36,10 +36,6 @@ export type UserGuide = z.infer<typeof UserGuideSchema>;
 
 export const UserLabSchema = z.object({
   /**
-   * enable assistant message grouping in chat display
-   */
-  enableAssistantMessageGroup: z.boolean().optional(),
-  /**
    * enable multi-agent group chat mode
    */
   enableGroupChat: z.boolean().optional(),
