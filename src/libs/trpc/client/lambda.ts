@@ -108,20 +108,19 @@ const getTrpcClientOptions = () => ({
     log('Headers: %O', headers);
     return headers;
   },
+  maxURLLength: 2083,
   transformer: superjson,
+  url: '/trpc/lambda',
 });
 
 // 2. 创建一个用于 query 和 mutation 的 Link (可以是 httpBatchLink 或 httpLink)
 const mainHttpLink = httpBatchLink({
   ...getTrpcClientOptions(),
-  maxURLLength: 2083,
-  url: '/trpc/lambda',
 });
 
 // 3. 创建一个专门用于 subscription 的 Link
 const subscriptionLink = httpSubscriptionLink({
   ...getTrpcClientOptions(),
-  url: '/trpc/lambda',
 });
 
 // 4. 使用 splitLink 来根据操作类型分发请求
