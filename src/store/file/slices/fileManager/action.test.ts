@@ -61,6 +61,7 @@ vi.mock('@/libs/trpc/client', () => ({
     file: {
       getFileItemById: { query: vi.fn() },
       getFiles: { query: vi.fn() },
+      getKnowledgeItems: { query: vi.fn() },
       removeFileAsyncTask: { mutate: vi.fn() },
     },
   },
@@ -610,7 +611,7 @@ describe('FileManagerActions', () => {
         await result.current.refreshFileList();
       });
 
-      expect(mutate).toHaveBeenCalledWith(['useFetchFileManage', params]);
+      expect(mutate).toHaveBeenCalledWith(['useFetchKnowledgeItems', params]);
     });
 
     it('should call mutate with undefined params', async () => {
@@ -620,7 +621,7 @@ describe('FileManagerActions', () => {
         await result.current.refreshFileList();
       });
 
-      expect(mutate).toHaveBeenCalledWith(['useFetchFileManage', undefined]);
+      expect(mutate).toHaveBeenCalledWith(['useFetchKnowledgeItems', undefined]);
     });
   });
 
@@ -837,7 +838,7 @@ describe('FileManagerActions', () => {
     });
   });
 
-  describe('useFetchFileManage', () => {
+  describe('useFetchKnowledgeItems', () => {
     it('should fetch file list with params', async () => {
       const { result } = renderHook(() => useStore());
 
@@ -872,7 +873,7 @@ describe('FileManagerActions', () => {
         },
       ];
 
-      vi.mocked(lambdaClient.file.getFiles.query).mockResolvedValue(mockFiles);
+      vi.mocked(lambdaClient.file.getKnowledgeItems.query).mockResolvedValue(mockFiles);
 
       const params = { category: 'all' as any };
       const { result: swrResult } = renderHook(() => result.current.useFetchKnowledgeItems(params));
@@ -902,7 +903,7 @@ describe('FileManagerActions', () => {
         },
       ];
 
-      vi.mocked(lambdaClient.file.getFiles.query).mockResolvedValue(mockFiles);
+      vi.mocked(lambdaClient.file.getKnowledgeItems.query).mockResolvedValue(mockFiles);
 
       const params = { category: 'all' as any };
       renderHook(() => result.current.useFetchKnowledgeItems(params));

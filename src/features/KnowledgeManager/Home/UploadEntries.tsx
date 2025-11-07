@@ -3,13 +3,12 @@
 import { FileTypeIcon, Icon } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { ArrowUpIcon, FolderUp, LibraryBig, PlusIcon } from 'lucide-react';
+import { ArrowUpIcon, FolderUp, PlusIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
-import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
 import { useFileStore } from '@/store/file';
 
 const ICON_SIZE = 64;
@@ -91,7 +90,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
 
   const createDocument = useFileStore((s) => s.createDocument);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
-  const { open } = useCreateNewModal();
+  // const { open } = useCreateNewModal();
 
   const handleCreateNote = async () => {
     try {
@@ -108,13 +107,13 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
     }
   };
 
-  const handleCreateKnowledgeBase = () => {
-    open({
-      onSuccess: (id) => {
-        navigate(`/bases/${id}`);
-      },
-    });
-  };
+  // const handleCreateKnowledgeBase = () => {
+  //   open({
+  //     onSuccess: (id) => {
+  //       navigate(`/bases/${id}`);
+  //     },
+  //   });
+  // };
 
   const handleUploadFiles = async (file: File) => {
     try {
@@ -150,7 +149,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
       </Flexbox>
 
       {/* Create Knowledge Base */}
-      <Flexbox className={styles.card} onClick={handleCreateKnowledgeBase} padding={16}>
+      {/* <Flexbox className={styles.card} onClick={handleCreateKnowledgeBase} padding={16}>
         <span className={styles.actionTitle}>{t('home.uploadEntries.knowledgeBase.title')}</span>
         <div className={styles.glow} style={{ background: theme.colorPrimary }} />
         <FileTypeIcon
@@ -160,7 +159,7 @@ const UploadEntries = memo<UploadEntriesProps>(({ knowledgeBaseId }) => {
           size={ICON_SIZE}
           type={'file'}
         />
-      </Flexbox>
+      </Flexbox> */}
 
       {/* Upload Files */}
       <Upload
