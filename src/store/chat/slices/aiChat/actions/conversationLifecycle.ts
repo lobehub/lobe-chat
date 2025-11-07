@@ -75,6 +75,8 @@ export const conversationLifecycle: StateCreator<
     }
 
     const messages = displayMessageSelectors.activeDisplayMessages(get());
+    const parentId = displayMessageSelectors.lastDisplayMessageId(get());
+
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
     const autoCreateThreshold =
       chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
@@ -130,13 +132,10 @@ export const conversationLifecycle: StateCreator<
     let data: SendMessageServerResponse | undefined;
     try {
       const { model, provider } = agentSelectors.currentAgentConfig(getAgentStoreState());
+
       data = await aiChatService.sendMessageInServer(
         {
-          newUserMessage: {
-            content: message,
-            files: fileIdList,
-            parentId: messages.at(-1)?.id,
-          },
+          newUserMessage: { content: message, files: fileIdList, parentId },
           // if there is activeTopicId，then add topicId to message
           topicId: activeTopicId,
           threadId: activeThreadId,
@@ -151,11 +150,14 @@ export const conversationLifecycle: StateCreator<
         },
         abortController,
       );
+      let topicId = activeTopicId;
       // refresh the total data
       if (data?.topics) {
         get().internal_dispatchTopic({ type: 'updateTopics', value: data.topics });
-        get().replaceMessages(data.messages, { sessionId: activeId, topicId: data.topicId });
+        topicId = data.topicId;
       }
+
+      get().replaceMessages(data.messages, { sessionId: activeId, topicId: topicId });
 
       if (data.isCreateNewTopic && data.topicId) {
         await get().switchTopic(data.topicId, true);

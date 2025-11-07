@@ -88,6 +88,12 @@ const activeDisplayMessages = (s: ChatStoreState): UIChatMessage[] => {
 const getDisplayMessageById = (id: string) => (s: ChatStoreState) =>
   chatHelpers.getMessageById(activeDisplayMessages(s), id);
 
+const lastDisplayMessageId = (s: ChatStoreState) => {
+  const messages = activeDisplayMessages(s);
+  if (messages.length === 0) return undefined;
+  return messages.at(-1)?.id;
+};
+
 // ============= Thread Handling ========== //
 
 const getChatsWithThread = (s: ChatStoreState, messages: UIChatMessage[]) => {
@@ -284,6 +290,7 @@ export const displayMessageSelectors = {
   inboxActiveTopicDisplayMessages,
   isCurrentDisplayChatLoaded,
   isSupervisorLoading,
+  lastDisplayMessageId,
   mainAIChats,
   mainAIChatsMessageString,
   mainAIChatsWithHistoryConfig,

@@ -57,12 +57,15 @@ export const messagePublicApi: StateCreator<
       get();
     if (!activeId) return;
 
+    const parentId = displayMessageSelectors.lastDisplayMessageId(get());
+
     const result = await optimisticCreateMessage({
       content: inputMessage,
       role: 'assistant',
       sessionId: activeId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
+      parentId,
     });
 
     if (result) {
@@ -75,6 +78,8 @@ export const messagePublicApi: StateCreator<
       get();
     if (!activeId) return;
 
+    const parentId = displayMessageSelectors.lastDisplayMessageId(get());
+
     const result = await optimisticCreateMessage({
       content: message,
       files: fileList,
@@ -83,6 +88,7 @@ export const messagePublicApi: StateCreator<
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
       threadId: activeThreadId,
+      parentId,
     });
 
     if (result) {
@@ -92,7 +98,6 @@ export const messagePublicApi: StateCreator<
 
   deleteMessage: async (id) => {
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
-    console.log(id, 'message', message);
     if (!message) return;
 
     let ids = [message.id];

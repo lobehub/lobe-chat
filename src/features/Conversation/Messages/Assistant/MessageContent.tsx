@@ -58,15 +58,13 @@ export const AssistantMessageContent = memo<
       {isIntentUnderstanding ? (
         <IntentUnderstanding />
       ) : (
-        content && (
-          <DefaultMessage
-            addIdOnDOM={false}
-            content={content}
-            id={id}
-            isToolCallGenerating={isToolCallGenerating}
-            {...props}
-          />
-        )
+        <DefaultMessage
+          addIdOnDOM={false}
+          content={content}
+          id={id}
+          isToolCallGenerating={isToolCallGenerating}
+          {...props}
+        />
       )}
       {showImageItems && <ImageFileListViewer items={imageList} />}
       {tools && (
