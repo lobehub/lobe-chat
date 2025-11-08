@@ -154,7 +154,7 @@ export interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = 
 export const createOpenAICompatibleRuntime = <T extends Record<string, any> = any>({
   provider,
   baseURL: DEFAULT_BASE_URL,
-  apiKey: DEFAULT_API_LEY,
+  apiKey: DEFAULT_API_KEY,
   errorType,
   debug: debugParams,
   constructorOptions,
@@ -182,7 +182,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
         ...options,
-        apiKey: options.apiKey?.trim() || DEFAULT_API_LEY,
+        apiKey: options.apiKey?.trim() || DEFAULT_API_KEY,
         baseURL: options.baseURL?.trim() || DEFAULT_BASE_URL,
       };
       const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
@@ -268,7 +268,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           delete restOptions.apiKey;
           delete restOptions.baseURL;
 
-          const sanitizedApiKey = optionApiKey?.toString().trim() || DEFAULT_API_LEY;
+          const sanitizedApiKey = optionApiKey?.toString().trim() || DEFAULT_API_KEY;
 
           const nextOptions = {
             ...restOptions,
