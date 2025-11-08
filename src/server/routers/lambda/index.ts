@@ -30,8 +30,8 @@ import { sessionGroupRouter } from './sessionGroup';
 import { threadRouter } from './thread';
 import { topicRouter } from './topic';
 import { uploadRouter } from './upload';
-import { userRouter } from './user';
 import { usageRouter } from './usage';
+import { userRouter } from './user';
 
 export const lambdaRouter = router({
   agent: agentRouter,
@@ -62,8 +62,8 @@ export const lambdaRouter = router({
   thread: threadRouter,
   topic: topicRouter,
   upload: uploadRouter,
-  user: userRouter,
   usage: usageRouter,
+  user: userRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;
