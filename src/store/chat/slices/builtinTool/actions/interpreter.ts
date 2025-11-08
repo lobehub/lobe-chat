@@ -41,7 +41,7 @@ export const codeInterpreterSlice: StateCreator<
   python: async (id: string, params: CodeInterpreterParams) => {
     const {
       toggleInterpreterExecuting,
-      updatePluginState,
+      optimisticUpdatePluginState,
       optimisticUpdateMessageContent,
       uploadInterpreterFiles,
     } = get();
@@ -83,7 +83,7 @@ export const codeInterpreterSlice: StateCreator<
         await optimisticUpdateMessageContent(id, JSON.stringify(result));
       }
     } catch (error) {
-      updatePluginState(id, { error });
+      optimisticUpdatePluginState(id, { error });
       // 如果调用过程中出现了错误，不要触发 AI 消息
       return;
     } finally {

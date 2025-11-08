@@ -24,10 +24,10 @@ const mockStore = {
   internal_triggerLocalFileToolCalling: vi.fn(),
   optimisticUpdateMessageContent: vi.fn(),
   optimisticUpdateMessagePluginError: vi.fn(),
+  optimisticUpdatePluginArguments: vi.fn(),
+  optimisticUpdatePluginState: vi.fn(),
   set: mockSet,
   toggleLocalFileLoading: vi.fn(),
-  updatePluginArguments: vi.fn(),
-  updatePluginState: vi.fn(),
 } as unknown as ChatStore;
 
 const createStore = () => {
@@ -57,7 +57,7 @@ describe('localFileSlice', () => {
       await store.internal_triggerLocalFileToolCalling('test-id', mockService);
 
       expect(mockStore.toggleLocalFileLoading).toBeCalledWith('test-id', true);
-      expect(mockStore.updatePluginState).toBeCalledWith('test-id', mockState);
+      expect(mockStore.optimisticUpdatePluginState).toBeCalledWith('test-id', mockState);
       expect(mockStore.optimisticUpdateMessageContent).toBeCalledWith(
         'test-id',
         JSON.stringify(mockContent),

@@ -31,6 +31,7 @@ export interface MessagePublicApiAction {
    */
   clearMessage: () => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  deleteDBMessage: (id: string) => Promise<void>;
   deleteToolMessage: (id: string) => Promise<void>;
   clearAllMessages: () => Promise<void>;
 
@@ -135,13 +136,30 @@ export const messagePublicApi: StateCreator<
     }
   },
 
+  deleteDBMessage: async (id) => {
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+    if (!message) return;
+
+    let ids = [message.id];
+
+    get().internal_dispatchMessage({ type: 'deleteMessages', ids });
+    const result = await messageService.removeMessages(ids, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
+  },
+
   deleteToolMessage: async (id) => {
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || message.role !== 'tool') return;
 
     const removeToolInAssistantMessage = async () => {
       if (!message.parentId) return;
-      await get().internal_removeToolToAssistantMessage(message.parentId, message.tool_call_id);
+      await get().optimisticRemoveToolFromAssistantMessage(message.parentId, message.tool_call_id);
     };
 
     await Promise.all([

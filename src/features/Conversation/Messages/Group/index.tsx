@@ -15,7 +15,10 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors } from '@/store/chat/slices/message/selectors';
+import {
+  displayMessageSelectors,
+  messageStateSelectors,
+} from '@/store/chat/slices/message/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -64,7 +67,9 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
   const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
   const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
   const openChatSettings = useOpenChatSettings();
-  const lastAssistantMsg = useChatStore(chatSelectors.getGroupLatestMessageWithoutTools(id));
+  const lastAssistantMsg = useChatStore(
+    displayMessageSelectors.getGroupLatestMessageWithoutTools(id),
+  );
 
   const contentId = lastAssistantMsg?.id;
 

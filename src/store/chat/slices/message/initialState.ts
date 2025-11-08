@@ -16,6 +16,10 @@ export interface ChatMessageState {
    */
   activeSessionType?: 'agent' | 'group';
   /**
+   * is the message is continuing generation (used for disable continue button)
+   */
+  continuingIds: string[];
+  /**
    * Raw messages from database (flat structure)
    */
   dbMessagesMap: Record<string, UIChatMessage[]>;
@@ -73,6 +77,7 @@ export interface ChatMessageState {
 export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
   activeSessionType: undefined,
+  continuingIds: [],
   dbMessagesMap: {},
   groupAgentMaps: {},
   groupMaps: {},

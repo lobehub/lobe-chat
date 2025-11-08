@@ -15,6 +15,7 @@ import {
   McpPrompt,
   McpResource,
   McpTool,
+  ToolCallResult,
   createMCPError,
 } from './types';
 
@@ -374,12 +375,12 @@ export class MCPClient {
     return manifest;
   }
 
-  async callTool(toolName: string, args: any) {
+  async callTool(toolName: string, args: any): Promise<ToolCallResult> {
     log('Calling tool: %s with args: %O, timeout: %O', toolName, args, MCP_TOOL_TIMEOUT);
     const result = await this.mcp.callTool({ arguments: args, name: toolName }, undefined, {
       timeout: MCP_TOOL_TIMEOUT,
     });
     log('Tool call result: %O', result);
-    return result;
+    return result as ToolCallResult;
   }
 }

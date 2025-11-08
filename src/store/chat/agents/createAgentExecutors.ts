@@ -39,10 +39,9 @@ export const createAgentExecutors = (context: {
     traceId?: string;
   };
   parentId: string;
-  parentMessageType: 'user' | 'assistant';
+  skipCreateFirstMessage?: boolean;
 }) => {
-  // 当通过 sendMessageInServer 的时候，已经有一条消息了，那么就不需要触发创建
-  let shouldSkipCreateMessage = context.parentMessageType === 'assistant';
+  let shouldSkipCreateMessage = context.skipCreateFirstMessage;
 
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
     /**
