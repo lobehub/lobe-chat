@@ -29,15 +29,17 @@ import { codeEmbedding } from '../fixtures/embedding';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
-const userId = 'message-db';
+const userId = 'message-query-test';
+const otherUserId = 'message-query-test-other';
 const messageModel = new MessageModel(serverDB, userId);
 const embeddingsId = uuid();
 
 beforeEach(async () => {
   // Clear tables before each test case
   await serverDB.transaction(async (trx) => {
-    await trx.delete(users);
-    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+    await trx.delete(users).where(eq(users.id, userId));
+    await trx.delete(users).where(eq(users.id, otherUserId));
+    await trx.insert(users).values([{ id: userId }, { id: otherUserId }]);
 
     await trx.insert(sessions).values([
       // { id: 'session1', userId },
@@ -63,7 +65,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clear tables after each test case
-  await serverDB.delete(users);
+  await serverDB.delete(users).where(eq(users.id, userId));
+  await serverDB.delete(users).where(eq(users.id, otherUserId));
 });
 
 describe('MessageModel Query Tests', () => {
@@ -75,7 +78,7 @@ describe('MessageModel Query Tests', () => {
         { id: '2', userId, role: 'user', content: 'message 2', createdAt: new Date('2023-02-01') },
         {
           id: '3',
-          userId: '456',
+          userId: otherUserId,
           role: 'user',
           content: 'message 3',
           createdAt: new Date('2023-03-01'),
@@ -94,9 +97,27 @@ describe('MessageModel Query Tests', () => {
     it('should return empty messages if not match the user ID', async () => {
       // Create test data
       await serverDB.insert(messages).values([
-        { id: '1', userId: '456', role: 'user', content: '1', createdAt: new Date('2023-01-01') },
-        { id: '2', userId: '456', role: 'user', content: '2', createdAt: new Date('2023-02-01') },
-        { id: '3', userId: '456', role: 'user', content: '3', createdAt: new Date('2023-03-01') },
+        {
+          id: '1',
+          userId: otherUserId,
+          role: 'user',
+          content: '1',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: '2',
+          userId: otherUserId,
+          role: 'user',
+          content: '2',
+          createdAt: new Date('2023-02-01'),
+        },
+        {
+          id: '3',
+          userId: otherUserId,
+          role: 'user',
+          content: '3',
+          createdAt: new Date('2023-03-01'),
+        },
       ]);
 
       // Call query method
@@ -244,7 +265,7 @@ describe('MessageModel Query Tests', () => {
           },
           {
             id: '3',
-            userId: '456',
+            userId: otherUserId,
             role: 'user',
             content: 'message 3',
             createdAt: new Date('2023-03-01'),
@@ -719,7 +740,7 @@ describe('MessageModel Query Tests', () => {
         },
         {
           id: '3',
-          userId: '456',
+          userId: otherUserId,
           role: 'user',
           content: 'message 3',
           createdAt: new Date('2023-03-01'),
@@ -741,7 +762,7 @@ describe('MessageModel Query Tests', () => {
       // Create test data
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
-        { id: '2', userId: '456', role: 'user', content: 'message 2' },
+        { id: '2', userId: otherUserId, role: 'user', content: 'message 2' },
       ]);
 
       // Call findById method
@@ -756,7 +777,7 @@ describe('MessageModel Query Tests', () => {
       // Create test data
       await serverDB
         .insert(messages)
-        .values([{ id: '1', userId: '456', role: 'user', content: 'message 1' }]);
+        .values([{ id: '1', userId: otherUserId, role: 'user', content: 'message 1' }]);
 
       // Call findById method
       const result = await messageModel.findById('1');

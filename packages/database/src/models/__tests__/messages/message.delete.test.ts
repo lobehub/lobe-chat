@@ -21,15 +21,17 @@ import { codeEmbedding } from '../fixtures/embedding';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
-const userId = 'message-db';
+const userId = 'message-delete-test';
+const otherUserId = 'message-delete-test-other';
 const messageModel = new MessageModel(serverDB, userId);
 const embeddingsId = uuid();
 
 beforeEach(async () => {
   // Clear tables before each test case
   await serverDB.transaction(async (trx) => {
-    await trx.delete(users);
-    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+    await trx.delete(users).where(eq(users.id, userId));
+    await trx.delete(users).where(eq(users.id, otherUserId));
+    await trx.insert(users).values([{ id: userId }, { id: otherUserId }]);
 
     await trx.insert(sessions).values([{ id: '1', userId }]);
   });
@@ -37,7 +39,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clear tables after each test case
-  await serverDB.delete(users);
+  await serverDB.delete(users).where(eq(users.id, userId));
+  await serverDB.delete(users).where(eq(users.id, otherUserId));
 });
 
 describe('MessageModel Delete Tests', () => {
@@ -87,7 +90,7 @@ describe('MessageModel Delete Tests', () => {
       // Create test data
       await serverDB
         .insert(messages)
-        .values([{ id: '1', userId: '456', role: 'user', content: 'message 1' }]);
+        .values([{ id: '1', userId: otherUserId, role: 'user', content: 'message 1' }]);
 
       // 调用 deleteMessage 方法
       await messageModel.deleteMessage('1');
@@ -119,8 +122,8 @@ describe('MessageModel Delete Tests', () => {
     it('should only delete messages belonging to the user', async () => {
       // Create test data
       await serverDB.insert(messages).values([
-        { id: '1', userId: '456', role: 'user', content: 'message 1' },
-        { id: '2', userId: '456', role: 'user', content: 'message 1' },
+        { id: '1', userId: otherUserId, role: 'user', content: 'message 1' },
+        { id: '2', userId: otherUserId, role: 'user', content: 'message 1' },
       ]);
 
       // 调用 deleteMessage 方法
@@ -441,7 +444,7 @@ describe('MessageModel Delete Tests', () => {
       const queryId = uuid();
       await serverDB.insert(messages).values({
         id: 'msg5',
-        userId: '456',
+        userId: otherUserId,
         role: 'user',
         content: 'test message',
       });
@@ -451,7 +454,7 @@ describe('MessageModel Delete Tests', () => {
         messageId: 'msg5',
         userQuery: 'test query',
         rewriteQuery: 'rewritten query',
-        userId: '456', // 其他用户
+        userId: otherUserId, // 其他用户
       });
 
       // 调用 deleteMessageQuery 方法

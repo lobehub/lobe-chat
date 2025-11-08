@@ -28,15 +28,17 @@ import { codeEmbedding } from '../fixtures/embedding';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
-const userId = 'message-db';
+const userId = 'message-update-test';
+const otherUserId = 'message-update-test-other';
 const messageModel = new MessageModel(serverDB, userId);
 const embeddingsId = uuid();
 
 beforeEach(async () => {
   // Clear tables before each test case
   await serverDB.transaction(async (trx) => {
-    await trx.delete(users);
-    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+    await trx.delete(users).where(eq(users.id, userId));
+    await trx.delete(users).where(eq(users.id, otherUserId));
+    await trx.insert(users).values([{ id: userId }, { id: otherUserId }]);
 
     await trx.insert(sessions).values([
       // { id: 'session1', userId },
@@ -62,7 +64,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clear tables after each test case
-  await serverDB.delete(users);
+  await serverDB.delete(users).where(eq(users.id, userId));
+  await serverDB.delete(users).where(eq(users.id, otherUserId));
 });
 
 describe('MessageModel Update Tests', () => {
@@ -85,7 +88,7 @@ describe('MessageModel Update Tests', () => {
       // Create test data
       await serverDB
         .insert(messages)
-        .values([{ id: '1', userId: '456', role: 'user', content: 'message 1' }]);
+        .values([{ id: '1', userId: otherUserId, role: 'user', content: 'message 1' }]);
 
       // Call updateMessage method
       await messageModel.update('1', { content: 'updated message' });
@@ -390,7 +393,7 @@ describe('MessageModel Update Tests', () => {
       // Create test data
       await serverDB
         .insert(messages)
-        .values([{ id: '1', userId: '456', role: 'user', content: 'message 1' }]);
+        .values([{ id: '1', userId: otherUserId, role: 'user', content: 'message 1' }]);
 
       // 调用 deleteMessage 方法
       await messageModel.deleteMessage('1');
@@ -422,8 +425,8 @@ describe('MessageModel Update Tests', () => {
     it('should only delete messages belonging to the user', async () => {
       // Create test data
       await serverDB.insert(messages).values([
-        { id: '1', userId: '456', role: 'user', content: 'message 1' },
-        { id: '2', userId: '456', role: 'user', content: 'message 1' },
+        { id: '1', userId: otherUserId, role: 'user', content: 'message 1' },
+        { id: '2', userId: otherUserId, role: 'user', content: 'message 1' },
       ]);
 
       // 调用 deleteMessage 方法
@@ -441,7 +444,7 @@ describe('MessageModel Update Tests', () => {
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
-        { id: '3', userId: '456', role: 'user', content: 'message 3' },
+        { id: '3', userId: otherUserId, role: 'user', content: 'message 3' },
       ]);
 
       // 调用 deleteAllMessages 方法
@@ -452,7 +455,10 @@ describe('MessageModel Update Tests', () => {
 
       expect(result).toHaveLength(0);
 
-      const otherResult = await serverDB.select().from(messages).where(eq(messages.userId, '456'));
+      const otherResult = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.userId, otherUserId));
 
       expect(otherResult).toHaveLength(1);
     });
@@ -643,7 +649,7 @@ describe('MessageModel Update Tests', () => {
       // Create test data - 其他用户的消息
       await serverDB.insert(messages).values({
         id: 'msg-other-user',
-        userId: '456',
+        userId: otherUserId,
         role: 'user',
         content: 'test message',
         metadata: { originalKey: 'originalValue' },

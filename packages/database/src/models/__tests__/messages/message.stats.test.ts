@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { uuid } from '@/utils/uuid';
@@ -11,15 +12,17 @@ import { codeEmbedding } from '../fixtures/embedding';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
-const userId = 'message-db';
+const userId = 'message-stats-test';
+const otherUserId = 'message-stats-test-other';
 const messageModel = new MessageModel(serverDB, userId);
 const embeddingsId = uuid();
 
 beforeEach(async () => {
   // Clear tables before each test case
   await serverDB.transaction(async (trx) => {
-    await trx.delete(users);
-    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+    await trx.delete(users).where(eq(users.id, userId));
+    await trx.delete(users).where(eq(users.id, otherUserId));
+    await trx.insert(users).values([{ id: userId }, { id: otherUserId }]);
 
     await trx.insert(sessions).values([{ id: '1', userId }]);
     await trx.insert(files).values({
@@ -41,7 +44,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clear tables after each test case
-  await serverDB.delete(users);
+  await serverDB.delete(users).where(eq(users.id, userId));
+  await serverDB.delete(users).where(eq(users.id, otherUserId));
 });
 
 describe('MessageModel Statistics Tests', () => {
@@ -51,7 +55,7 @@ describe('MessageModel Statistics Tests', () => {
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
-        { id: '3', userId: '456', role: 'user', content: 'message 3' },
+        { id: '3', userId: otherUserId, role: 'user', content: 'message 3' },
       ]);
 
       // 调用 count 方法
@@ -168,7 +172,7 @@ describe('MessageModel Statistics Tests', () => {
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'hello world' },
         { id: '2', userId, role: 'user', content: 'test message' },
-        { id: '3', userId: '456', role: 'user', content: 'other user message' },
+        { id: '3', userId: otherUserId, role: 'user', content: 'other user message' },
       ]);
 
       // 调用 countWords 方法
@@ -461,7 +465,7 @@ describe('MessageModel Statistics Tests', () => {
         { id: '1', userId, role: 'assistant', content: 'message 1', model: 'gpt-3.5' },
         { id: '2', userId, role: 'assistant', content: 'message 2', model: 'gpt-3.5' },
         { id: '3', userId, role: 'assistant', content: 'message 3', model: 'gpt-4' },
-        { id: '4', userId: '456', role: 'assistant', content: 'message 4', model: 'gpt-3.5' }, // 其他用户的消息
+        { id: '4', userId: otherUserId, role: 'assistant', content: 'message 4', model: 'gpt-3.5' }, // 其他用户的消息
       ]);
 
       // 调用 rankModels 方法
@@ -548,7 +552,7 @@ describe('MessageModel Statistics Tests', () => {
       await serverDB.insert(messages).values([
         { id: '1', userId, role: 'user', content: 'message 1' },
         { id: '2', userId, role: 'user', content: 'message 2' },
-        { id: '3', userId: '456', role: 'user', content: 'message 3' }, // 其他用户的消息
+        { id: '3', userId: otherUserId, role: 'user', content: 'message 3' }, // 其他用户的消息
       ]);
 
       const result = await messageModel.hasMoreThanN(2);

@@ -23,15 +23,17 @@ import { codeEmbedding } from '../fixtures/embedding';
 
 const serverDB: LobeChatDatabase = await getTestDB();
 
-const userId = 'message-db';
+const userId = 'message-create-test';
+const otherUserId = 'message-create-test-other';
 const messageModel = new MessageModel(serverDB, userId);
 const embeddingsId = uuid();
 
 beforeEach(async () => {
   // Clear tables before each test case
   await serverDB.transaction(async (trx) => {
-    await trx.delete(users);
-    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+    await trx.delete(users).where(eq(users.id, userId));
+    await trx.delete(users).where(eq(users.id, otherUserId));
+    await trx.insert(users).values([{ id: userId }, { id: otherUserId }]);
 
     await trx.insert(sessions).values([
       // { id: 'session1', userId },
@@ -57,7 +59,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clear tables after each test case
-  await serverDB.delete(users);
+  await serverDB.delete(users).where(eq(users.id, userId));
+  await serverDB.delete(users).where(eq(users.id, otherUserId));
 });
 
 describe('MessageModel Create Tests', () => {
