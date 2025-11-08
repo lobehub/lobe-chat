@@ -2,6 +2,7 @@ import { Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Arguments from '@/features/Conversation/Messages/Group/Tool/Render/Arguments';
 import { ToolCallResult } from '@/libs/mcp';
 
 export interface MCPTypeProps {
@@ -15,29 +16,34 @@ export interface MCPTypeProps {
   pluginState?: ToolCallResult;
 }
 
-const MCPType = memo<MCPTypeProps>(({ pluginState }) => {
+const MCPType = memo<MCPTypeProps>(({ pluginState, arguments: args }) => {
   if (!pluginState) return;
 
   const { content } = pluginState;
 
   return (
-    <Flexbox style={{ maxHeight: 200, overflow: 'scroll', padding: 8, width: '100%' }}>
+    <Flexbox gap={8} style={{ maxHeight: 400, overflow: 'scroll', padding: 8, width: '100%' }}>
+      <div>
+        <Arguments arguments={args} />
+      </div>
       <Flexbox>
-        {content.map((item) => {
-          switch (item.type) {
-            case 'text': {
-              return (
-                <Markdown key={item.text} variant={'chat'}>
-                  {item.text}
-                </Markdown>
-              );
-            }
+        <Flexbox>
+          {content.map((item) => {
+            switch (item.type) {
+              case 'text': {
+                return (
+                  <Markdown key={item.text} variant={'chat'}>
+                    {item.text}
+                  </Markdown>
+                );
+              }
 
-            default: {
-              return null;
+              default: {
+                return null;
+              }
             }
-          }
-        })}
+          })}
+        </Flexbox>
       </Flexbox>
     </Flexbox>
   );
