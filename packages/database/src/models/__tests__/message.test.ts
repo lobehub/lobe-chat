@@ -2187,6 +2187,63 @@ describe('MessageModel', () => {
       expect(remainingMessages[0].id).toBe('2');
     });
 
+    it('should delete only non-topic messages when topicId is null', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([
+        { id: 'topic1', sessionId: 'session1', userId },
+        { id: 'topic2', sessionId: 'session1', userId },
+      ]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          sessionId: 'session1',
+          topicId: null,
+          role: 'user',
+          content: 'message without topic 1',
+        },
+        {
+          id: '2',
+          userId,
+          sessionId: 'session1',
+          topicId: null,
+          role: 'assistant',
+          content: 'message without topic 2',
+        },
+        {
+          id: '3',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          role: 'user',
+          content: 'message in topic1',
+        },
+        {
+          id: '4',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic2',
+          role: 'assistant',
+          content: 'message in topic2',
+        },
+      ]);
+
+      // Delete messages in session1 with null topicId
+      await messageModel.deleteMessagesBySession('session1', null);
+
+      const remainingMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.userId, userId))
+        .orderBy(messages.id);
+
+      // Should only keep messages with topics
+      expect(remainingMessages).toHaveLength(2);
+      expect(remainingMessages[0].id).toBe('3');
+      expect(remainingMessages[1].id).toBe('4');
+    });
+
     it('should delete messages with specific groupId in session', async () => {
       await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
       await serverDB.insert(chatGroups).values([
