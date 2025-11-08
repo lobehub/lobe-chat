@@ -138,7 +138,7 @@ export const streamingExecutor: StateCreator<
     let output = '';
     let thinking = '';
     let thinkingStartAt: number;
-    let duration: number;
+    let duration: number | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
@@ -232,7 +232,9 @@ export const streamingExecutor: StateCreator<
         // update the content after fetch result
         await optimisticUpdateMessageContent(messageId, content, {
           toolCalls: parsedToolCalls,
-          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
+          reasoning: !!reasoning
+            ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
+            : undefined,
           search: !!grounding?.citations ? grounding : undefined,
           imageList: finalImages.length > 0 ? finalImages : undefined,
           metadata: speed ? { ...usage, ...speed } : usage,
@@ -341,6 +343,10 @@ export const streamingExecutor: StateCreator<
             isFunctionCall = true;
             const isInChatReasoning = get().reasoningLoadingIds.includes(messageId);
             if (isInChatReasoning) {
+              if (!duration) {
+                duration = Date.now() - thinkingStartAt;
+              }
+
               internal_toggleChatReasoning(
                 false,
                 messageId,
