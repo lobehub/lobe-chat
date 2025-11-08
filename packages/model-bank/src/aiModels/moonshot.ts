@@ -56,9 +56,9 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput_cacheRead', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 58, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-09-05',
