@@ -9,7 +9,7 @@ import { BRANDING_NAME } from '@/const/branding';
 import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
 import { TempFileManager } from '@/server/utils/tempFileManager';
-import { BatchDownloadEventType } from '@/types/files';
+import { BatchDownloadEventType } from '@/services/file/type';
 import { getUserAuth } from '@/utils/server';
 import { getYYYYmmddHHMMss } from '@/utils/time';
 import { nanoid } from '@/utils/uuid';
