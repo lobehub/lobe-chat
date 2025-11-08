@@ -3,7 +3,7 @@ import { Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import { BadgeCent, CoinsIcon } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -25,26 +25,14 @@ interface TokenDetailProps {
   provider: string;
 }
 
-const STORAGE_KEY = 'lobe-chat-token-display-format';
-
 const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
   const isMobile = useIsMobile();
 
-  // 从 localStorage 读取初始值，默认为 true (短格式)
-  const [isShortFormat, setIsShortFormat] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === null ? true : stored === 'true';
-  });
-
-  // 持久化到 localStorage
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, String(isShortFormat));
-    }
-  }, [isShortFormat]);
+  // 使用 systemStatus 管理短格式显示状态
+  const isShortFormat = useGlobalStore(systemStatusSelectors.tokenDisplayFormatShort);
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
   const modelCard = useAiInfraStore(aiModelSelectors.getModelCard(model, provider));
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!modelCard?.pricing;
@@ -241,7 +229,7 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
           // 桌面端：阻止 Popover 并切换格式
           e.preventDefault();
           e.stopPropagation();
-          setIsShortFormat(!isShortFormat);
+          updateSystemStatus({ tokenDisplayFormatShort: !isShortFormat });
         }}
         style={{ cursor: isMobile ? 'default' : 'pointer' }}
       >
