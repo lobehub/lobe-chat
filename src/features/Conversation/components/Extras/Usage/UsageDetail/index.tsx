@@ -3,7 +3,7 @@ import { Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import { BadgeCent, CoinsIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -24,10 +24,25 @@ interface TokenDetailProps {
   provider: string;
 }
 
+const STORAGE_KEY = 'lobe-chat-token-display-format';
+
 const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
-  const [isShortFormat, setIsShortFormat] = useState(true);
+
+  // 从 localStorage 读取初始值，默认为 true (短格式)
+  const [isShortFormat, setIsShortFormat] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored === null ? true : stored === 'true';
+  });
+
+  // 持久化到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, String(isShortFormat));
+    }
+  }, [isShortFormat]);
 
   const modelCard = useAiInfraStore(aiModelSelectors.getModelCard(model, provider));
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!modelCard?.pricing;
@@ -212,12 +227,13 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
         </Flexbox>
       }
       placement={'top'}
-      trigger={['hover', 'click']}
+      trigger={['hover']}
     >
       <Center
         gap={2}
         horizontal
         onClick={(e) => {
+          e.preventDefault();
           e.stopPropagation();
           setIsShortFormat(!isShortFormat);
         }}
@@ -232,9 +248,6 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
             }
             return new Intl.NumberFormat('en-US').format(roundedValue);
           }}
-          // Force remount when switching between token/credit to prevent unwanted animation
-          // See: https://github.com/lobehub/lobe-chat/pull/10098
-          key={isShowCredit ? 'credit' : 'token'}
           value={totalCount}
         />
       </Center>
