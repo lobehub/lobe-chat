@@ -472,7 +472,8 @@ export const streamingExecutor: StateCreator<
     let state = AgentRuntime.createInitialState({
       sessionId: activeId,
       messages,
-      maxSteps: 20, // Prevent infinite loops
+      // Prevent infinite loops
+      maxSteps: 400,
       metadata: {
         sessionId: activeId,
         topicId: activeTopicId,
