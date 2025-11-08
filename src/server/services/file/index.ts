@@ -7,7 +7,7 @@ import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
 import { TempFileManager } from '@/server/utils/tempFileManager';
 import { inferContentTypeFromImageUrl } from '@/utils/url';
-import { nanoid } from '@/utils/uuid';
+import { nanoid, uuid } from '@/utils/uuid';
 
 import { FileServiceImpl, createFileServiceModule } from './impls';
 
@@ -97,10 +97,50 @@ export class FileService {
   }
 
   /**
-   * 上传 base64 数据并创建数据库记录
-   * @param base64Data - Base64 数据 (支持 data URI 格式或纯 base64)
-   * @param pathname - 文件存储路径 (需包含文件扩展名)
-   * @returns 包含 key（存储路径）、fileId（数据库记录ID）和 url（代理访问路径）
+   * Create file record (common method)
+   * Automatically handles globalFiles deduplication logic
+   *
+   * @param params - File parameters
+   * @param params.id - Optional custom file ID (defaults to auto-generated)
+   * @returns File record and proxy URL
+   */
+  public async createFileRecord(params: {
+    fileHash: string;
+    fileType: string;
+    id?: string;
+    name: string;
+    size: number;
+    url: string;
+  }): Promise<{ fileId: string; url: string }> {
+    // Check if hash already exists in globalFiles
+    const { isExist } = await this.fileModel.checkHash(params.fileHash);
+
+    // Create database record
+    // If hash doesn't exist, also create globalFiles record
+    const { id } = await this.fileModel.create(
+      {
+        fileHash: params.fileHash,
+        fileType: params.fileType,
+        id: params.id, // Use custom ID if provided
+        name: params.name,
+        size: params.size,
+        url: params.url,
+      },
+      !isExist, // insertToGlobalFiles
+    );
+
+    // Return unified proxy URL: /f/:id
+    return {
+      fileId: id,
+      url: `/f/${id}`,
+    };
+  }
+
+  /**
+   * Upload base64 data and create database record
+   * @param base64Data - Base64 data (supports data URI format or pure base64)
+   * @param pathname - File storage path (must include file extension)
+   * @returns Contains key (storage path), fileId (database record ID) and url (proxy access path)
    */
   public async uploadBase64(
     base64Data: string,
@@ -108,7 +148,7 @@ export class FileService {
   ): Promise<{ fileId: string; key: string; url: string }> {
     let base64String: string;
 
-    // 如果是 data URI 格式 (data:image/png;base64,xxx)
+    // If data URI format (data:image/png;base64,xxx)
     if (base64Data.startsWith('data:')) {
       const commaIndex = base64Data.indexOf(',');
       if (commaIndex === -1) {
@@ -116,35 +156,38 @@ export class FileService {
       }
       base64String = base64Data.slice(commaIndex + 1);
     } else {
-      // 纯 base64 字符串
+      // Pure base64 string
       base64String = base64Data;
     }
 
-    // 转换为 Buffer
+    // Convert to Buffer
     const buffer = Buffer.from(base64String, 'base64');
 
-    // 上传到存储（S3 或本地）
+    // Upload to storage (S3 or local)
     const { key } = await this.uploadMedia(pathname, buffer);
 
-    // 从 pathname 提取文件名
+    // Extract filename from pathname
     const name = pathname.split('/').pop() || 'unknown';
 
-    // 计算文件元信息
+    // Calculate file metadata
     const size = buffer.length;
     const fileType = inferContentTypeFromImageUrl(pathname) || 'application/octet-stream';
     const hash = sha256(buffer);
 
-    // 创建数据库记录
-    const { id } = await this.fileModel.create({
+    // Generate UUID for cleaner URLs
+    const fileId = uuid();
+
+    // Use common method to create file record
+    const { fileId: createdId, url } = await this.createFileRecord({
       fileHash: hash,
       fileType,
+      id: fileId, // Use UUID instead of auto-generated ID
       name,
       size,
-      url: key, // 存储原始 key（S3 key 或 desktop://）
+      url: key, // Store original key (S3 key or desktop://)
     });
 
-    // 返回统一的代理 URL：/f/:id
-    return { fileId: id, key, url: `/f/${id}` };
+    return { fileId: createdId, key, url };
   }
 
   async downloadFileToLocal(

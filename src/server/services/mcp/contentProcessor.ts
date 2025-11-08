@@ -1,6 +1,8 @@
 import debug from 'debug';
 import pMap from 'p-map';
+import urlJoin from 'url-join';
 
+import { appEnv } from '@/envs/app';
 import { fileEnv } from '@/envs/file';
 import { AudioContent, ImageContent, ToolCallContent } from '@/libs/mcp';
 import { FileService } from '@/server/services/file';
@@ -74,10 +76,19 @@ export const contentBlocksToString = (blocks: ToolCallContent[]): string => {
         case 'text': {
           return item.text;
         }
-        case 'image':
-        case 'audio': {
-          return item.data;
+
+        case 'image': {
+          return `![](${urlJoin(appEnv.APP_URL, item.data)})`;
         }
+
+        case 'audio': {
+          return `<resource type="${item.type}" url="${urlJoin(appEnv.APP_URL, item.data)}" />`;
+        }
+
+        case 'resource': {
+          return `<resource type="${item.type}">${JSON.stringify(item.resource)}</resource>}`;
+        }
+
         default: {
           return '';
         }
