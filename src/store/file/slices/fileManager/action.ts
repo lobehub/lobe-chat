@@ -5,13 +5,13 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
 import { useClientDataSWR } from '@/libs/swr';
-import { FileService, TrpcSubscriptionCallback, fileService } from '@/services/file';
+import { FileService, fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import {
   UploadFileListDispatch,
   uploadFileListReducer,
 } from '@/store/file/reducers/uploadFileList';
-import { FileListItem, QueryFileListParams } from '@/types/files';
+import { FileListItem, QueryFileListParams, TrpcSubscriptionCallback } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { unzipFile } from '@/utils/unzipFile';
 

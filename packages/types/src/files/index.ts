@@ -1,4 +1,7 @@
+import { TRPCClientError } from '@trpc/client';
 import { z } from 'zod';
+
+import { LambdaRouter } from '@/server/routers/lambda';
 
 export enum FilesTabs {
   All = 'all',
@@ -38,6 +41,12 @@ const BatchDownloadEventSchema = z.union([
 ]);
 
 export type BatchDownloadEventType = z.infer<typeof BatchDownloadEventSchema>;
+
+export type TrpcSubscriptionCallback = {
+  onComplete?: () => void;
+  onData?: (data: BatchDownloadEventType) => void;
+  onError?: (err: TRPCClientError<LambdaRouter>) => void;
+};
 
 export * from './list';
 export * from './upload';

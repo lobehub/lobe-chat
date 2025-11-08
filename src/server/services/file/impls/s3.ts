@@ -1,3 +1,4 @@
+import { Readable } from 'node:stream';
 import urlJoin from 'url-join';
 
 import { fileEnv } from '@/envs/file';
@@ -26,6 +27,10 @@ export class S3StaticFileImpl implements FileServiceImpl {
 
   async getFileContent(key: string): Promise<string> {
     return this.s3.getFileContent(key);
+  }
+
+  async getFileStream(key: string): Promise<Readable> {
+    return this.s3.getFileStream(key);
   }
 
   async getFileByteArray(key: string): Promise<Uint8Array> {

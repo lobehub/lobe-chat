@@ -6,6 +6,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Readable } from 'node:stream';
 import { z } from 'zod';
 
 import { fileEnv } from '@/envs/file';
@@ -156,5 +157,26 @@ export class S3 {
     });
 
     await this.client.send(command);
+  }
+
+  public async getFileStream(key: string): Promise<Readable> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+
+    const response = await this.client.send(command);
+
+    if (!response.Body) {
+      throw new Error(`S3 response for key "${key}" has no body.`);
+    }
+
+    if (response.Body instanceof Readable) {
+      return response.Body;
+    }
+
+    throw new Error(
+      `S3 response body for key "${key}" is not a Node.js Readable stream. This might happen if the code is run in a browser environment.`,
+    );
   }
 }

@@ -1,7 +1,8 @@
 import { LobeChatDatabase } from '@lobechat/database';
 import { TRPCError } from '@trpc/server';
 import archiver from 'archiver';
-import { PassThrough } from 'node:stream';
+import { PassThrough, Readable } from 'node:stream';
+import pLimit from 'p-limit';
 
 import { serverDBEnv } from '@/config/db';
 import { BRANDING_NAME } from '@/const/branding';
@@ -65,6 +66,13 @@ export class FileService {
    */
   public async getFileByteArray(key: string): Promise<Uint8Array> {
     return this.impl.getFileByteArray(key);
+  }
+
+  /**
+   * 获取文件流
+   */
+  public async getFileStream(key: string): Promise<Readable> {
+    return this.impl.getFileStream(key);
   }
 
   /**
@@ -156,7 +164,6 @@ export class FileService {
       yield { message: 'User not authorized', type: 'error' };
       return;
     }
-
     if (!fileIds || fileIds.length === 0) {
       yield { message: 'No file IDs provided', type: 'error' };
       return;
@@ -164,68 +171,115 @@ export class FileService {
 
     const archive = archiver('zip', { zlib: { level: 1 } });
     const passThrough = new PassThrough();
+    const eventQueue: BatchDownloadEventType[] = [];
+
+    const signal = {
+      create() {
+        const { promise, resolve } = createResolvablePromise<typeof SIGNAL_SENTINEL>();
+        this.promise = promise;
+        this.resolve = resolve;
+      },
+      promise: null as Promise<typeof SIGNAL_SENTINEL> | null,
+      resolve: null as ((value: typeof SIGNAL_SENTINEL) => void) | null,
+    };
+    signal.create();
+
+    let totalFiles = 0; // 记录总文件数(数据库中存在的)
+    let handledFileCount = 0; // 记录已处理（成功或失败）的文件总数
+    let processedFileCount = 0; // 记录成功的文件数
+    const failedFiles: string[] = []; // 记录失败的文件列表
+
+    // 进度发送函数，现在接收一个参数来表示当前进度
+    const sendProgress = (currentCount: number) => {
+      if (totalFiles > 0 && currentCount <= totalFiles) {
+        eventQueue.push({
+          message: `${currentCount}/${totalFiles}`,
+          percent: (currentCount / totalFiles) * 100,
+          type: 'progress',
+        });
+        signal.resolve?.(SIGNAL_SENTINEL);
+      }
+    };
+
+    const producerPromise = new Promise<void>((resolve) => {
+      archive.on('finish', resolve);
+    });
+
+    archive.on('warning', (warn) => {
+      console.warn('Archiver warning:', warn);
+    });
+    archive.on('error', (err) => passThrough.emit('error', err));
+
+    const handleFileCompletion = () => {
+      handledFileCount++;
+      sendProgress(handledFileCount);
+    };
+
     archive.pipe(passThrough);
 
-    const eventQueue: BatchDownloadEventType[] = [];
-    let eventSignal = createResolvablePromise<typeof SIGNAL_SENTINEL>();
-
-    const producerPromise = (async () => {
-      let downloadedFileCount = 0;
-      const failedFiles: string[] = [];
+    // 开始生产压缩包
+    const startProduction = async () => {
       const files = await this.findFilesByIds(fileIds);
-
       if (files.length === 0) {
         archive.finalize();
-        return { downloadedFileCount, failedFiles, filesFound: false, totalCount: 0 };
+        return;
+      }
+      const limit = pLimit(10); // 限制并发数为 10
+
+      totalFiles = files.length;
+
+      // 立即发送第一个进度，让UI马上有响应
+      if (totalFiles > 0) {
+        sendProgress(0);
       }
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+      const promises = files.map((file) =>
+        limit(async () => {
+          try {
+            const stream = await this.impl.getFileStream(file.url);
+            return new Promise<void>((resolve) => {
+              stream.once('error', (err) => {
+                console.error(`Stream error for file "${file.name}":`, err);
+                failedFiles.push(file.name);
+                handleFileCompletion();
+                resolve(); // 出错时也要 resolve，让 Promise.all 继续
+              });
 
-        const progressEvent: BatchDownloadEventType = {
-          message: `${i + 1}/${files.length}`,
-          percent: ((i + 1) / files.length) * 100,
-          type: 'progress',
-        };
-        eventQueue.push(progressEvent);
-        eventSignal.resolve(SIGNAL_SENTINEL);
+              stream.once('end', () => {
+                processedFileCount++; // 成功数 +1
+                handleFileCompletion();
+                resolve();
+              });
 
-        try {
-          const fileContent = await this.getFileByteArray(file.url);
-          if (fileContent && fileContent.length > 0) {
-            archive.append(Buffer.from(fileContent), { name: file.name });
-            downloadedFileCount++;
-          } else {
+              archive.append(stream, { name: file.name });
+            });
+          } catch (error) {
+            console.error(`Failed to get stream for file "${file.name}":`, error);
             failedFiles.push(file.name);
+            handleFileCompletion();
           }
-        } catch {
-          failedFiles.push(file.name);
-        }
-      }
-
+        }),
+      );
+      await Promise.all(promises);
       archive.finalize();
-      return { downloadedFileCount, failedFiles, filesFound: true, totalCount: files.length };
-    })();
+    };
 
-    producerPromise.catch((err) => {
-      passThrough.emit('error', err);
-    });
+    startProduction().catch((err) => passThrough.emit('error', err));
 
     try {
       const streamIterator = passThrough[Symbol.asyncIterator]();
       let streamEnded = false;
+      let nextChunkPromise = streamIterator.next();
 
       while (!streamEnded) {
-        const nextChunkPromise = streamIterator.next();
-
-        const raceWinner = await Promise.race([nextChunkPromise, eventSignal.promise]);
+        const raceWinner = await Promise.race([nextChunkPromise, signal.promise!]);
 
         while (eventQueue.length > 0) {
           yield eventQueue.shift()!;
         }
 
         if (raceWinner === SIGNAL_SENTINEL) {
-          eventSignal = createResolvablePromise();
+          signal.create();
         } else {
           const chunkResult = raceWinner as IteratorResult<Buffer>;
           if (chunkResult.done) {
@@ -237,19 +291,20 @@ export class FileService {
               size: bufferChunk.length,
               type: 'chunk',
             };
+            nextChunkPromise = streamIterator.next();
           }
         }
       }
 
-      const { downloadedFileCount, failedFiles, totalCount, filesFound } = await producerPromise;
+      await producerPromise;
 
-      if (!filesFound) {
-        yield { message: 'No files found for the given IDs', type: 'error' };
+      if (totalFiles > 0 && processedFileCount === 0) {
+        yield { message: 'All files failed to process.', type: 'error' };
         return;
       }
 
-      if (downloadedFileCount === 0 && totalCount > 0) {
-        yield { message: 'All files failed to process.', type: 'error' };
+      if (totalFiles === 0) {
+        yield { message: 'No files found for the given IDs', type: 'error' };
         return;
       }
 
@@ -259,13 +314,15 @@ export class FileService {
 
       const fileName = `${BRANDING_NAME}_batch_download_${getYYYYmmddHHMMss(new Date())}.zip`;
       yield {
-        downloadedCount: downloadedFileCount,
+        downloadedCount: processedFileCount,
         fileName: fileName,
-        totalCount: totalCount,
+        totalCount: totalFiles,
         type: 'done',
       };
     } catch (error: any) {
       yield { message: error instanceof Error ? error.message : 'Unknown error.', type: 'error' };
+      archive.destroy();
+      passThrough.destroy();
     }
   }
 }

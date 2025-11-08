@@ -1,26 +1,19 @@
+import { Unsubscribable } from '@trpc/server/observable';
+
 import { lambdaClient } from '@/libs/trpc/client';
 import {
-  BatchDownloadEventType,
   CheckFileHashResult,
   FileItem,
   QueryFileListParams,
   QueryFileListSchemaType,
+  TrpcSubscriptionCallback,
   UploadFileParams,
 } from '@/types/files';
-import { TRPCClientError } from '@trpc/client';
-import { LambdaRouter } from '@/server/routers/lambda';
-import { Unsubscribable } from '@trpc/server/observable';
 
 interface CreateFileParams extends Omit<UploadFileParams, 'url'> {
   knowledgeBaseId?: string;
   url: string;
 }
-
-export type TrpcSubscriptionCallback = {
-  onComplete?: () => void;
-  onData?: (data: BatchDownloadEventType) => void;
-  onError?: (err: TRPCClientError<LambdaRouter>) => void;
-};
 
 export class FileService {
   batchDownload = (fileIds: string[], callbacks: TrpcSubscriptionCallback): Unsubscribable => {

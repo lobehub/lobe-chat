@@ -245,6 +245,7 @@
     "ollama": "^0.6.2",
     "openai": "^4.104.0",
     "openapi-fetch": "^0.14.1",
+    "p-limit": "^7.2.0",
     "partial-json": "^0.1.7",
     "path-browserify-esm": "^1.0.6",
     "pdf-parse": "^1.1.4",
