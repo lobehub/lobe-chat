@@ -39,7 +39,6 @@ export const createAgentExecutors = (context: {
     traceId?: string;
   };
   parentId: string;
-  parentMessageType: 'user' | 'assistant' | 'tool';
   skipCreateFirstMessage?: boolean;
 }) => {
   let shouldSkipCreateMessage = context.skipCreateFirstMessage;

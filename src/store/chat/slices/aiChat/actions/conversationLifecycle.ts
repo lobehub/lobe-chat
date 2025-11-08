@@ -79,7 +79,12 @@ export const conversationLifecycle: StateCreator<
     }
 
     const messages = displayMessageSelectors.activeDisplayMessages(get());
-    const parentId = displayMessageSelectors.lastDisplayMessageId(get());
+    const lastDisplayMessageId = displayMessageSelectors.lastDisplayMessageId(get());
+
+    let parentId: string | undefined;
+    if (lastDisplayMessageId) {
+      parentId = displayMessageSelectors.findLastMessageId(lastDisplayMessageId)(get());
+    }
 
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
     const autoCreateThreshold =

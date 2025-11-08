@@ -457,7 +457,6 @@ export const streamingExecutor: StateCreator<
         get,
         messageKey,
         parentId: params.parentMessageId,
-        parentMessageType,
         params,
         skipCreateFirstMessage: params.skipCreateFirstMessage,
       }),
