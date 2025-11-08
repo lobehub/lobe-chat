@@ -146,11 +146,7 @@ const ToolBar = memo<MultiSelectActionsProps>(
             onData: (event) => {
               switch (event.type) {
                 case 'chunk': {
-                  const binaryString = atob(event.data);
-                  const bytes = new Uint8Array(binaryString.length);
-                  for (let i = 0; i < binaryString.length; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                  }
+                  const bytes = Uint8Array.from(Buffer.from(event.data, 'base64'));
                   blobParts.push(bytes);
                   break;
                 }
