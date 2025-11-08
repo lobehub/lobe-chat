@@ -501,6 +501,203 @@ describe('MessageModel', () => {
       expect(result[0].imageList).toEqual([]);
       expect(result[0].chunksList).toEqual([]);
     });
+
+    it('should query messages in session with null topicId (only non-topic messages)', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([
+        { id: 'topic1', sessionId: 'session1', userId },
+        { id: 'topic2', sessionId: 'session1', userId },
+      ]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-no-topic-1',
+          userId,
+          sessionId: 'session1',
+          topicId: null,
+          role: 'user',
+          content: 'message without topic 1',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: 'msg-no-topic-2',
+          userId,
+          sessionId: 'session1',
+          topicId: null,
+          role: 'assistant',
+          content: 'message without topic 2',
+          createdAt: new Date('2023-01-02'),
+        },
+        {
+          id: 'msg-topic1',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          role: 'user',
+          content: 'message in topic1',
+          createdAt: new Date('2023-01-03'),
+        },
+        {
+          id: 'msg-topic2',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic2',
+          role: 'assistant',
+          content: 'message in topic2',
+          createdAt: new Date('2023-01-04'),
+        },
+      ]);
+
+      // Query with explicit null topicId should return only non-topic messages
+      const result = await messageModel.query({ sessionId: 'session1', topicId: null });
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('msg-no-topic-1');
+      expect(result[1].id).toBe('msg-no-topic-2');
+    });
+
+    it('should query messages in session with null groupId (only non-group messages)', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(chatGroups).values([
+        { id: 'group1', userId, title: 'Group 1' },
+        { id: 'group2', userId, title: 'Group 2' },
+      ]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-no-group-1',
+          userId,
+          sessionId: 'session1',
+          groupId: null,
+          role: 'user',
+          content: 'message without group 1',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: 'msg-no-group-2',
+          userId,
+          sessionId: 'session1',
+          groupId: null,
+          role: 'assistant',
+          content: 'message without group 2',
+          createdAt: new Date('2023-01-02'),
+        },
+        {
+          id: 'msg-group1',
+          userId,
+          sessionId: 'session1',
+          groupId: 'group1',
+          role: 'user',
+          content: 'message in group1',
+          createdAt: new Date('2023-01-03'),
+        },
+        {
+          id: 'msg-group2',
+          userId,
+          sessionId: 'session1',
+          groupId: 'group2',
+          role: 'assistant',
+          content: 'message in group2',
+          createdAt: new Date('2023-01-04'),
+        },
+      ]);
+
+      // Query with explicit null groupId should return only non-group messages
+      const result = await messageModel.query({ sessionId: 'session1', groupId: null });
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('msg-no-group-1');
+      expect(result[1].id).toBe('msg-no-group-2');
+    });
+
+    it('should query inbox messages with null topicId when no sessionId specified', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-inbox-no-topic',
+          userId,
+          sessionId: null, // inbox message
+          topicId: null,
+          role: 'user',
+          content: 'inbox message without topic',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: 'msg-session-no-topic',
+          userId,
+          sessionId: 'session1',
+          topicId: null,
+          role: 'user',
+          content: 'session message without topic',
+          createdAt: new Date('2023-01-02'),
+        },
+        {
+          id: 'msg-session-with-topic',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          role: 'user',
+          content: 'session message with topic',
+          createdAt: new Date('2023-01-03'),
+        },
+      ]);
+
+      // When no sessionId specified (defaults to inbox), query with topicId null
+      // should return only inbox messages without topics
+      const result = await messageModel.query({ topicId: null });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg-inbox-no-topic');
+    });
+
+    it('should query messages with combined sessionId and topicId filters', async () => {
+      await serverDB.insert(sessions).values([
+        { id: 'session1', userId },
+        { id: 'session2', userId },
+      ]);
+      await serverDB.insert(topics).values([
+        { id: 'topic1', sessionId: 'session1', userId },
+        { id: 'topic2', sessionId: 'session1', userId },
+      ]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-s1-t1',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          role: 'user',
+          content: 'session1 topic1',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: 'msg-s1-t2',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic2',
+          role: 'user',
+          content: 'session1 topic2',
+          createdAt: new Date('2023-01-02'),
+        },
+        {
+          id: 'msg-s2',
+          userId,
+          sessionId: 'session2',
+          topicId: null,
+          role: 'user',
+          content: 'session2 no topic',
+          createdAt: new Date('2023-01-03'),
+        },
+      ]);
+
+      // Query specific session and topic combination
+      const result = await messageModel.query({ sessionId: 'session1', topicId: 'topic1' });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('msg-s1-t1');
+    });
   });
 
   describe('queryAll', () => {
@@ -605,6 +802,73 @@ describe('MessageModel', () => {
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[1].id).toBe('2');
+    });
+
+    it('should query inbox messages when sessionId is null', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'inbox-msg-1',
+          userId,
+          sessionId: null, // inbox message
+          role: 'user',
+          content: 'inbox message 1',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: 'inbox-msg-2',
+          userId,
+          sessionId: null, // inbox message
+          role: 'assistant',
+          content: 'inbox message 2',
+          createdAt: new Date('2023-01-02'),
+        },
+        {
+          id: 'session-msg',
+          userId,
+          sessionId: 'session1',
+          role: 'user',
+          content: 'session message',
+          createdAt: new Date('2023-01-03'),
+        },
+      ]);
+
+      // Query with null sessionId should return only inbox messages
+      const result = await messageModel.queryBySessionId(null);
+
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('inbox-msg-1');
+      expect(result[1].id).toBe('inbox-msg-2');
+    });
+
+    it('should query inbox messages when sessionId is undefined', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'inbox-msg',
+          userId,
+          sessionId: null,
+          role: 'user',
+          content: 'inbox message',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: 'session-msg',
+          userId,
+          sessionId: 'session1',
+          role: 'user',
+          content: 'session message',
+          createdAt: new Date('2023-01-02'),
+        },
+      ]);
+
+      // Query with undefined sessionId should also return inbox messages
+      const result = await messageModel.queryBySessionId(undefined);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('inbox-msg');
     });
   });
 
@@ -1923,50 +2187,42 @@ describe('MessageModel', () => {
       expect(remainingMessages[0].id).toBe('2');
     });
 
-    it('should delete only non-topic messages when topicId is null', async () => {
+    it('should delete messages with specific groupId in session', async () => {
       await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
-      await serverDB.insert(topics).values([
-        { id: 'topic1', sessionId: 'session1', userId },
-        { id: 'topic2', sessionId: 'session1', userId },
+      await serverDB.insert(chatGroups).values([
+        { id: 'group1', userId, title: 'Group 1' },
+        { id: 'group2', userId, title: 'Group 2' },
       ]);
 
       await serverDB.insert(messages).values([
         {
-          id: '1',
+          id: 'msg-group1',
           userId,
           sessionId: 'session1',
-          topicId: null,
+          groupId: 'group1',
           role: 'user',
-          content: 'message without topic 1',
+          content: 'message in group1',
         },
         {
-          id: '2',
+          id: 'msg-group2',
           userId,
           sessionId: 'session1',
-          topicId: null,
+          groupId: 'group2',
           role: 'assistant',
-          content: 'message without topic 2',
+          content: 'message in group2',
         },
         {
-          id: '3',
+          id: 'msg-no-group',
           userId,
           sessionId: 'session1',
-          topicId: 'topic1',
+          groupId: null,
           role: 'user',
-          content: 'message in topic1',
-        },
-        {
-          id: '4',
-          userId,
-          sessionId: 'session1',
-          topicId: 'topic2',
-          role: 'assistant',
-          content: 'message in topic2',
+          content: 'message without group',
         },
       ]);
 
-      // Delete messages in session1 with null topicId
-      await messageModel.deleteMessagesBySession('session1', null);
+      // Delete messages with specific groupId
+      await messageModel.deleteMessagesBySession('session1', null, 'group1');
 
       const remainingMessages = await serverDB
         .select()
@@ -1974,10 +2230,58 @@ describe('MessageModel', () => {
         .where(eq(messages.userId, userId))
         .orderBy(messages.id);
 
-      // Should only keep messages with topics
       expect(remainingMessages).toHaveLength(2);
-      expect(remainingMessages[0].id).toBe('3');
-      expect(remainingMessages[1].id).toBe('4');
+      expect(remainingMessages[0].id).toBe('msg-group2');
+      expect(remainingMessages[1].id).toBe('msg-no-group');
+    });
+
+    it('should delete messages with combined topicId and groupId filters', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+      await serverDB.insert(chatGroups).values([{ id: 'group1', userId, title: 'Group 1' }]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-t1-g1',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          groupId: 'group1',
+          role: 'user',
+          content: 'topic1 group1',
+        },
+        {
+          id: 'msg-t1-no-group',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          groupId: null,
+          role: 'user',
+          content: 'topic1 no group',
+        },
+        {
+          id: 'msg-no-topic-g1',
+          userId,
+          sessionId: 'session1',
+          topicId: null,
+          groupId: 'group1',
+          role: 'user',
+          content: 'no topic group1',
+        },
+      ]);
+
+      // Delete messages with specific topic and group combination
+      await messageModel.deleteMessagesBySession('session1', 'topic1', 'group1');
+
+      const remainingMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.userId, userId))
+        .orderBy(messages.id);
+
+      expect(remainingMessages).toHaveLength(2);
+      expect(remainingMessages[0].id).toBe('msg-no-topic-g1');
+      expect(remainingMessages[1].id).toBe('msg-t1-no-group');
     });
   });
 
