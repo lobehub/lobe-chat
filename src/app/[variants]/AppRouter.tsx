@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useMediaQuery } from 'react-responsive';
 import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
 
 import DesktopRouter from './DesktopRouter';
@@ -12,6 +11,7 @@ import Mobile from './(main)/_layout/Mobile';
 
 import { RouteVariants } from '@/utils/server/routeVariants';
 import { useGlobalStore } from '@/store/global';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 const VARIANT_SEGMENT_REG = /^\/([^/]+)(.*)$/;
 
@@ -92,7 +92,8 @@ const NavigatorRegistrar = () => {
 };
 
 export default function AppRouter() {
-  const mobile = useMediaQuery({ maxWidth: 768 });
+  
+  const mobile = useServerConfigStore((s) => s.isMobile);
 
   return (
     <MemoryRouter initialEntries={[getInitialPath()]} initialIndex={0}>
