@@ -15,6 +15,7 @@ import {
   StdioMCPParams,
 } from '@/libs/mcp';
 
+import { ProcessContentBlocksFn, contentBlocksToString } from './contentProcessor';
 import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
@@ -154,12 +155,19 @@ export class MCPService {
     }
   }
 
-  // callTool now accepts MCPClientParams, toolName, and args
-  async callTool(params: MCPClientParams, toolName: string, argsStr: any): Promise<any> {
-    const client = await this.getClient(params); // Get client using params
+  // callTool now accepts an object with clientParams, toolName, argsStr, and processContentBlocks
+  async callTool(options: {
+    argsStr: any;
+    clientParams: MCPClientParams;
+    processContentBlocks: ProcessContentBlocksFn;
+    toolName: string;
+  }): Promise<any> {
+    const { clientParams, toolName, argsStr, processContentBlocks } = options;
+
+    const client = await this.getClient(clientParams); // Get client using params
 
     const args = safeParseJSON(argsStr);
-    const loggableParams = this.sanitizeForLogging(params);
+    const loggableParams = this.sanitizeForLogging(clientParams);
 
     log(
       `Calling tool "${toolName}" using client for params: %O with args: %O`,
@@ -170,32 +178,26 @@ export class MCPService {
     try {
       // Delegate the call to the MCPClient instance
       const result = await client.callTool(toolName, args); // Pass args directly
+
+      // Process content blocks (upload images, etc.)
+      const newContent = result.isError
+        ? result.content
+        : await processContentBlocks(result.content);
+
+      // Convert content blocks to string
+      const content = contentBlocksToString(newContent);
+
+      const state = { ...result, content: newContent };
+
       log(
         `Tool "${toolName}" called successfully for params: %O, result: %O`,
         loggableParams,
-        result,
+        state,
       );
 
-      // TODO: map more type
-      const content = result.content
-        ? result.content
-            .map((item) => {
-              switch (item.type) {
-                case 'text': {
-                  return item.text;
-                }
-                default: {
-                  return '';
-                }
-              }
-            })
-            .filter(Boolean)
-            .join('\n\n')
-        : '';
+      if (result.isError) return { content, state, success: true };
 
-      if (result.isError) return { content, state: result, success: true };
-
-      return { content, state: result, success: true };
+      return { content, state, success: true };
     } catch (error) {
       if (error instanceof McpError) {
         const mcpError = error as McpError;
@@ -213,7 +215,7 @@ export class MCPService {
 
       console.error(
         `Error calling tool "${toolName}" for params %O:`,
-        this.sanitizeForLogging(params),
+        this.sanitizeForLogging(clientParams),
         error,
       );
       // Propagate a TRPCError

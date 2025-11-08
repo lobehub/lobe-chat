@@ -1,10 +1,12 @@
 import { LobeChatDatabase } from '@lobechat/database';
 import { TRPCError } from '@trpc/server';
+import { sha256 } from 'js-sha256';
 
 import { serverDBEnv } from '@/config/db';
 import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
 import { TempFileManager } from '@/server/utils/tempFileManager';
+import { inferContentTypeFromImageUrl } from '@/utils/url';
 import { nanoid } from '@/utils/uuid';
 
 import { FileServiceImpl, createFileServiceModule } from './impls';
@@ -92,6 +94,57 @@ export class FileService {
    */
   public async uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }> {
     return this.impl.uploadMedia(key, buffer);
+  }
+
+  /**
+   * 上传 base64 数据并创建数据库记录
+   * @param base64Data - Base64 数据 (支持 data URI 格式或纯 base64)
+   * @param pathname - 文件存储路径 (需包含文件扩展名)
+   * @returns 包含 key（存储路径）、fileId（数据库记录ID）和 url（代理访问路径）
+   */
+  public async uploadBase64(
+    base64Data: string,
+    pathname: string,
+  ): Promise<{ fileId: string; key: string; url: string }> {
+    let base64String: string;
+
+    // 如果是 data URI 格式 (data:image/png;base64,xxx)
+    if (base64Data.startsWith('data:')) {
+      const commaIndex = base64Data.indexOf(',');
+      if (commaIndex === -1) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid base64 data format' });
+      }
+      base64String = base64Data.slice(commaIndex + 1);
+    } else {
+      // 纯 base64 字符串
+      base64String = base64Data;
+    }
+
+    // 转换为 Buffer
+    const buffer = Buffer.from(base64String, 'base64');
+
+    // 上传到存储（S3 或本地）
+    const { key } = await this.uploadMedia(pathname, buffer);
+
+    // 从 pathname 提取文件名
+    const name = pathname.split('/').pop() || 'unknown';
+
+    // 计算文件元信息
+    const size = buffer.length;
+    const fileType = inferContentTypeFromImageUrl(pathname) || 'application/octet-stream';
+    const hash = sha256(buffer);
+
+    // 创建数据库记录
+    const { id } = await this.fileModel.create({
+      fileHash: hash,
+      fileType,
+      name,
+      size,
+      url: key, // 存储原始 key（S3 key 或 desktop://）
+    });
+
+    // 返回统一的代理 URL：/f/:id
+    return { fileId: id, key, url: `/f/${id}` };
   }
 
   async downloadFileToLocal(
