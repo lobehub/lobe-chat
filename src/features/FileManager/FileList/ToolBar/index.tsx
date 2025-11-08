@@ -60,7 +60,7 @@ const ToolBar = memo<MultiSelectActionsProps>(
     setDownloading,
   }) => {
     const { styles } = useStyles();
-    const { t } = useTranslation('components');
+    const { t } = useTranslation(['components', 'file']);
 
     const [removeFiles, parseFilesToChunks, fileList, batchDownload] = useFileStore((s) => [
       s.removeFiles,
@@ -125,13 +125,13 @@ const ToolBar = memo<MultiSelectActionsProps>(
               downloadFile(file.url, file.name);
               setSelectedFileIds([]);
             } else {
-              message.error(t('FileManager.actions.batchDownloadFailed'));
+              message.error(t('file:batchDownload.failed'));
             }
             return;
           }
           setDownloading(true);
           message.loading({
-            content: t('FileManager.actions.batchDownloading'),
+            content: t('file:batchDownload.downloading'),
             duration: 0,
             key: 'batch-download',
           });
@@ -156,7 +156,7 @@ const ToolBar = memo<MultiSelectActionsProps>(
                 }
                 case 'progress': {
                   message.loading({
-                    content: `${t('FileManager.actions.batchDownloading')} ${event.message} (${Math.round(
+                    content: `${t('file:batchDownload.downloading')} ${event.message} (${Math.round(
                       event.percent,
                     )}%)`,
                     duration: 0,
@@ -167,7 +167,7 @@ const ToolBar = memo<MultiSelectActionsProps>(
                 case 'warning': {
                   // 部分文件下载失败，不影响其他文件
                   fetchErrorNotification.error({
-                    errorMessage: `${t('FileManager.actions.batchDownloadFailed')}: ${event.message}`,
+                    errorMessage: `${t('file:batchDownload.failed')}: ${event.message}`,
                     status: 500,
                   });
                   break;
@@ -175,13 +175,13 @@ const ToolBar = memo<MultiSelectActionsProps>(
                 case 'done': {
                   if (event.downloadedCount === selectFileIds.length) {
                     message.success({
-                      content: t('FileManager.actions.batchDownloadSuccess'),
+                      content: t('file:batchDownload.success'),
                       key: 'batch-download',
                     });
                     setSelectedFileIds([]);
                   } else {
                     message.warning({
-                      content: `${t('FileManager.actions.batchDownloadPartialSuccess')}: ${event.downloadedCount}/${selectFileIds.length}`,
+                      content: `${t('file:batchDownload.partialSuccess')}: ${event.downloadedCount}/${selectFileIds.length}`,
                       key: 'batch-download',
                     });
                   }
@@ -200,7 +200,7 @@ const ToolBar = memo<MultiSelectActionsProps>(
                 case 'error': {
                   message.destroy?.();
                   fetchErrorNotification.error({
-                    errorMessage: `${t('FileManager.actions.batchDownloadFailed')}: ${event.message}`,
+                    errorMessage: `${t('file:batchDownload.failed')}: ${event.message}`,
                     status: 500,
                   });
                   setDownloading(false);
@@ -209,9 +209,24 @@ const ToolBar = memo<MultiSelectActionsProps>(
               }
             },
             onError: (err: TRPCClientError<LambdaRouter>) => {
+              console.error('Caught subscription error:', err);
+              console.error('Caught subscription error message:', err.message);
+
               message.destroy?.();
+
+              let finalErrorMessage: string;
+
+              // tRPC 错误无法解析
+              if (err && (!err.message || err.message === 'TRPCClientError')) {
+                finalErrorMessage = `${t('file:batchDownload.failed')}: ${t(
+                  'file:batchDownload.tooManyFiles',
+                )}`;
+              } else {
+                finalErrorMessage = `${t('file:batchDownload.failed')}: ${err.message}`;
+              }
+
               fetchErrorNotification.error({
-                errorMessage: `${t('FileManager.actions.batchDownloadFailed')}: ${err.message}`,
+                errorMessage: finalErrorMessage,
                 status: 500,
               });
               setDownloading(false);

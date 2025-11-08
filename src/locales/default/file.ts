@@ -1,4 +1,12 @@
 export default {
+  batchDownload: {
+    desc: '批量下载',
+    downloading: '批量压缩中...',
+    failed: '文件压缩失败',
+    partialSuccess: '部分文件压缩成功',
+    success: '所有文件压缩成功',
+    tooManyFiles: '若选择文件过多，请尝试减少选择的文件数量后重试',
+  },
   desc: '管理你的知识',
   detail: {
     basic: {

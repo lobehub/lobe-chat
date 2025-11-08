@@ -43,155 +43,147 @@ interface MultiSelectActionsProps {
   total?: number;
 }
 
-const MultiSelectActions = memo<MultiSelectActionsProps>(
-  (props) => {
-    const {
-      downloading,
-      selectCount,
-      isInKnowledgeBase,
-      total,
-      onActionClick,
-      onClickCheckbox,
-    } = props;
-    const { t } = useTranslation(['components', 'common']);
-    const { styles } = useStyles();
+const MultiSelectActions = memo<MultiSelectActionsProps>((props) => {
+  const { downloading, selectCount, isInKnowledgeBase, total, onActionClick, onClickCheckbox } =
+    props;
+  const { t } = useTranslation(['components', 'common', 'file']);
+  const { styles } = useStyles();
 
-    const isSelectedFiles = selectCount > 0;
-    const { modal, message } = App.useApp();
-    return (
-      <Flexbox align={'center'} gap={12} horizontal>
-        <Flexbox
-          align={'center'}
-          className={styles.total}
-          gap={8}
-          horizontal
-          onClick={() => {
-            if (!downloading) onClickCheckbox();
-          }}
-          paddingInline={4}
-        >
-          <Checkbox
-            checked={selectCount === total}
-            disabled={downloading}
-            indeterminate={isSelectedFiles && selectCount !== total}
+  const isSelectedFiles = selectCount > 0;
+  const { modal, message } = App.useApp();
+  return (
+    <Flexbox align={'center'} gap={12} horizontal>
+      <Flexbox
+        align={'center'}
+        className={styles.total}
+        gap={8}
+        horizontal
+        onClick={() => {
+          if (!downloading) onClickCheckbox();
+        }}
+        paddingInline={4}
+      >
+        <Checkbox
+          checked={selectCount === total}
+          disabled={downloading}
+          indeterminate={isSelectedFiles && selectCount !== total}
+        />
+        {typeof total === 'undefined' ? (
+          <Skeleton
+            active
+            paragraph={{ rows: 1, style: { marginBottom: 0, width: 60 }, width: '100%' }}
+            title={false}
           />
-          {typeof total === 'undefined' ? (
-            <Skeleton
-              active
-              paragraph={{ rows: 1, style: { marginBottom: 0, width: 60 }, width: '100%' }}
-              title={false}
-            />
-          ) : (
-            <div style={{ height: 18 }}>
-              {isSelectedFiles
-                ? t('FileManager.total.selectedCount', { count: selectCount })
-                : t('FileManager.total.fileCount', { count: total })}
-            </div>
-          )}
-        </Flexbox>
-        {isSelectedFiles && (
-          <Flexbox gap={8} horizontal>
-            {isInKnowledgeBase ? (
-              <>
-                <Button
-                  disabled={downloading}
-                  icon={BookMinusIcon}
-                  onClick={() => {
-                    modal.confirm({
-                      okButtonProps: {
-                        danger: true,
-                      },
-                      onOk: async () => {
-                        await onActionClick('removeFromKnowledgeBase');
-                        message.success(t('FileManager.actions.removeFromKnowledgeBaseSuccess'));
-                      },
-                      title: t('FileManager.actions.confirmRemoveFromKnowledgeBase', {
-                        count: selectCount,
-                      }),
-                    });
-                  }}
-                  size={'small'}
-                >
-                  {t('FileManager.actions.removeFromKnowledgeBase')}
-                </Button>
-                <Button
-                  color={'default'}
-                  disabled={downloading}
-                  icon={<Icon icon={BookPlusIcon} />}
-                  onClick={() => {
-                    onActionClick('addToOtherKnowledgeBase');
-                  }}
-                  size={'small'}
-                  variant={'filled'}
-                >
-                  {t('FileManager.actions.addToOtherKnowledgeBase')}
-                </Button>
-              </>
-            ) : (
+        ) : (
+          <div style={{ height: 18 }}>
+            {isSelectedFiles
+              ? t('FileManager.total.selectedCount', { count: selectCount })
+              : t('FileManager.total.fileCount', { count: total })}
+          </div>
+        )}
+      </Flexbox>
+      {isSelectedFiles && (
+        <Flexbox gap={8} horizontal>
+          {isInKnowledgeBase ? (
+            <>
+              <Button
+                disabled={downloading}
+                icon={BookMinusIcon}
+                onClick={() => {
+                  modal.confirm({
+                    okButtonProps: {
+                      danger: true,
+                    },
+                    onOk: async () => {
+                      await onActionClick('removeFromKnowledgeBase');
+                      message.success(t('FileManager.actions.removeFromKnowledgeBaseSuccess'));
+                    },
+                    title: t('FileManager.actions.confirmRemoveFromKnowledgeBase', {
+                      count: selectCount,
+                    }),
+                  });
+                }}
+                size={'small'}
+              >
+                {t('FileManager.actions.removeFromKnowledgeBase')}
+              </Button>
               <Button
                 color={'default'}
                 disabled={downloading}
                 icon={<Icon icon={BookPlusIcon} />}
                 onClick={() => {
-                  onActionClick('addToKnowledgeBase');
+                  onActionClick('addToOtherKnowledgeBase');
                 }}
                 size={'small'}
                 variant={'filled'}
               >
-                {t('FileManager.actions.addToKnowledgeBase')}
+                {t('FileManager.actions.addToOtherKnowledgeBase')}
               </Button>
-            )}
+            </>
+          ) : (
             <Button
               color={'default'}
               disabled={downloading}
-              icon={<Icon icon={FileBoxIcon} />}
-              onClick={async () => {
-                await onActionClick('batchChunking');
+              icon={<Icon icon={BookPlusIcon} />}
+              onClick={() => {
+                onActionClick('addToKnowledgeBase');
               }}
               size={'small'}
               variant={'filled'}
             >
-              {t('FileManager.actions.batchChunking')}
+              {t('FileManager.actions.addToKnowledgeBase')}
             </Button>
-            <Button
-              color={'default'}
-              disabled={downloading}
-              icon={downloading ? <Icon icon={LoaderCircle} spin /> : <Icon icon={DownloadIcon} />}
-              onClick={async () => {
-                await onActionClick('batchDownload');
-              }}
-              size={'small'}
-              variant={'filled'}
-            >
-              {t('FileManager.actions.batchDownload')}
-            </Button>
-            <Button
-              color={'danger'}
-              danger
-              disabled={downloading}
-              icon={<Icon icon={Trash2Icon} />}
-              onClick={async () => {
-                modal.confirm({
-                  okButtonProps: {
-                    danger: true,
-                  },
-                  onOk: async () => {
-                    await onActionClick('delete');
-                    message.success(t('FileManager.actions.deleteSuccess'));
-                  },
-                  title: t('FileManager.actions.confirmDeleteMultiFiles', { count: selectCount }),
-                });
-              }}
-              size={'small'}
-              variant={'filled'}
-            >
-              {t('delete', { ns: 'common' })}
-            </Button>
-          </Flexbox>
-        )}
-      </Flexbox>
-    );
-  },
-);
+          )}
+          <Button
+            color={'default'}
+            disabled={downloading}
+            icon={<Icon icon={FileBoxIcon} />}
+            onClick={async () => {
+              await onActionClick('batchChunking');
+            }}
+            size={'small'}
+            variant={'filled'}
+          >
+            {t('FileManager.actions.batchChunking')}
+          </Button>
+          <Button
+            color={'default'}
+            disabled={downloading}
+            icon={downloading ? <Icon icon={LoaderCircle} spin /> : <Icon icon={DownloadIcon} />}
+            onClick={async () => {
+              await onActionClick('batchDownload');
+            }}
+            size={'small'}
+            variant={'filled'}
+          >
+            {t('file:batchDownload.desc')}
+          </Button>
+          <Button
+            color={'danger'}
+            danger
+            disabled={downloading}
+            icon={<Icon icon={Trash2Icon} />}
+            onClick={async () => {
+              modal.confirm({
+                okButtonProps: {
+                  danger: true,
+                },
+                onOk: async () => {
+                  await onActionClick('delete');
+                  message.success(t('FileManager.actions.deleteSuccess'));
+                },
+                title: t('FileManager.actions.confirmDeleteMultiFiles', { count: selectCount }),
+              });
+            }}
+            size={'small'}
+            variant={'filled'}
+          >
+            {t('delete', { ns: 'common' })}
+          </Button>
+        </Flexbox>
+      )}
+    </Flexbox>
+  );
+});
 
 export default MultiSelectActions;
