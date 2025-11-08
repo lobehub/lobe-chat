@@ -3,7 +3,7 @@ import { Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import { BadgeCent, CoinsIcon } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -27,6 +27,7 @@ interface TokenDetailProps {
 const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
+  const [isShortFormat, setIsShortFormat] = useState(true);
 
   const modelCard = useAiInfraStore(aiModelSelectors.getModelCard(model, provider));
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!modelCard?.pricing;
@@ -213,10 +214,24 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
       placement={'top'}
       trigger={['hover', 'click']}
     >
-      <Center gap={2} horizontal style={{ cursor: 'default' }}>
+      <Center
+        gap={2}
+        horizontal
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsShortFormat(!isShortFormat);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
         <AnimatedNumber
-          formatter={(value) => (formatShortenNumber(value) as string).toLowerCase?.()}
+          formatter={(value) => {
+            const roundedValue = Math.round(value);
+            if (isShortFormat) {
+              return (formatShortenNumber(roundedValue) as string).toLowerCase?.();
+            }
+            return new Intl.NumberFormat('en-US').format(roundedValue);
+          }}
           // Force remount when switching between token/credit to prevent unwanted animation
           // See: https://github.com/lobehub/lobe-chat/pull/10098
           key={isShowCredit ? 'credit' : 'token'}
