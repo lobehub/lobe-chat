@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-08",
+    "version": "2.0.0-next.38"
+  },
+  {
+    "children": {
       "fixes": ["Don't include runtimeProvider in JWT for non-image operations."]
     },
     "date": "2025-11-07",
