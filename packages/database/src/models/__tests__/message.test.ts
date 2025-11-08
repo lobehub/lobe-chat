@@ -2187,50 +2187,42 @@ describe('MessageModel', () => {
       expect(remainingMessages[0].id).toBe('2');
     });
 
-    it('should delete only non-topic messages when topicId is null', async () => {
+    it('should delete messages with specific groupId in session', async () => {
       await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
-      await serverDB.insert(topics).values([
-        { id: 'topic1', sessionId: 'session1', userId },
-        { id: 'topic2', sessionId: 'session1', userId },
+      await serverDB.insert(chatGroups).values([
+        { id: 'group1', userId, title: 'Group 1' },
+        { id: 'group2', userId, title: 'Group 2' },
       ]);
 
       await serverDB.insert(messages).values([
         {
-          id: '1',
+          id: 'msg-group1',
           userId,
           sessionId: 'session1',
-          topicId: null,
+          groupId: 'group1',
           role: 'user',
-          content: 'message without topic 1',
+          content: 'message in group1',
         },
         {
-          id: '2',
+          id: 'msg-group2',
           userId,
           sessionId: 'session1',
-          topicId: null,
+          groupId: 'group2',
           role: 'assistant',
-          content: 'message without topic 2',
+          content: 'message in group2',
         },
         {
-          id: '3',
+          id: 'msg-no-group',
           userId,
           sessionId: 'session1',
-          topicId: 'topic1',
+          groupId: null,
           role: 'user',
-          content: 'message in topic1',
-        },
-        {
-          id: '4',
-          userId,
-          sessionId: 'session1',
-          topicId: 'topic2',
-          role: 'assistant',
-          content: 'message in topic2',
+          content: 'message without group',
         },
       ]);
 
-      // Delete messages in session1 with null topicId
-      await messageModel.deleteMessagesBySession('session1', null);
+      // Delete messages with specific groupId
+      await messageModel.deleteMessagesBySession('session1', null, 'group1');
 
       const remainingMessages = await serverDB
         .select()
@@ -2238,10 +2230,58 @@ describe('MessageModel', () => {
         .where(eq(messages.userId, userId))
         .orderBy(messages.id);
 
-      // Should only keep messages with topics
       expect(remainingMessages).toHaveLength(2);
-      expect(remainingMessages[0].id).toBe('3');
-      expect(remainingMessages[1].id).toBe('4');
+      expect(remainingMessages[0].id).toBe('msg-group2');
+      expect(remainingMessages[1].id).toBe('msg-no-group');
+    });
+
+    it('should delete messages with combined topicId and groupId filters', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([{ id: 'topic1', sessionId: 'session1', userId }]);
+      await serverDB.insert(chatGroups).values([{ id: 'group1', userId, title: 'Group 1' }]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: 'msg-t1-g1',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          groupId: 'group1',
+          role: 'user',
+          content: 'topic1 group1',
+        },
+        {
+          id: 'msg-t1-no-group',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          groupId: null,
+          role: 'user',
+          content: 'topic1 no group',
+        },
+        {
+          id: 'msg-no-topic-g1',
+          userId,
+          sessionId: 'session1',
+          topicId: null,
+          groupId: 'group1',
+          role: 'user',
+          content: 'no topic group1',
+        },
+      ]);
+
+      // Delete messages with specific topic and group combination
+      await messageModel.deleteMessagesBySession('session1', 'topic1', 'group1');
+
+      const remainingMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.userId, userId))
+        .orderBy(messages.id);
+
+      expect(remainingMessages).toHaveLength(2);
+      expect(remainingMessages[0].id).toBe('msg-no-topic-g1');
+      expect(remainingMessages[1].id).toBe('msg-t1-no-group');
     });
 
     it('should delete messages with specific groupId in session', async () => {
