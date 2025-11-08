@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.40](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.39...v2.0.0-next.40)
+
+<sup>Released on **2025-11-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **database**: Fix deleteMessagesBySession incorrectly deleting all messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **database**: Fix deleteMessagesBySession incorrectly deleting all messages, closes [#10110](https://github.com/lobehub/lobe-chat/issues/10110) ([1d7f67d](https://github.com/lobehub/lobe-chat/commit/1d7f67d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.39](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.38...v2.0.0-next.39)
 
 <sup>Released on **2025-11-08**</sup>
