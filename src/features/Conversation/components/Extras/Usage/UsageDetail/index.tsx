@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import InfoTooltip from '@/components/InfoTooltip';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -29,6 +30,7 @@ const STORAGE_KEY = 'lobe-chat-token-display-format';
 const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
+  const isMobile = useIsMobile();
 
   // 从 localStorage 读取初始值，默认为 true (短格式)
   const [isShortFormat, setIsShortFormat] = useState(() => {
@@ -227,17 +229,21 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
         </Flexbox>
       }
       placement={'top'}
-      trigger={['hover']}
+      trigger={isMobile ? ['click'] : ['hover']}
     >
       <Center
         gap={2}
         horizontal
         onClick={(e) => {
+          // 移动端：让 Popover 处理点击事件
+          if (isMobile) return;
+
+          // 桌面端：阻止 Popover 并切换格式
           e.preventDefault();
           e.stopPropagation();
           setIsShortFormat(!isShortFormat);
         }}
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: isMobile ? 'default' : 'pointer' }}
       >
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
         <AnimatedNumber
