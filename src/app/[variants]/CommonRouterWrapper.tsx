@@ -1,17 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
-
-import DesktopRouter from './DesktopRouter';
-import MobileRouter from './MobileRouter';
-
-import Desktop from './(main)/_layout/Desktop';
-import Mobile from './(main)/_layout/Mobile';
 
 import { RouteVariants } from '@/utils/server/routeVariants';
 import { useGlobalStore } from '@/store/global';
-import { useServerConfigStore } from '@/store/serverConfig';
 
 const VARIANT_SEGMENT_REG = /^\/([^/]+)(.*)$/;
 
@@ -91,23 +84,16 @@ const NavigatorRegistrar = () => {
   return null;
 };
 
-export default function AppRouter() {
-  
-  const mobile = useServerConfigStore((s) => s.isMobile);
+interface CommonRouterWrapperProps {
+  children: ReactNode;
+}
 
+export default function CommonRouterWrapper({ children }: CommonRouterWrapperProps) {
   return (
     <MemoryRouter initialEntries={[getInitialPath()]} initialIndex={0}>
       <UrlSynchronizer />
       <NavigatorRegistrar />
-      {mobile ? (
-        <Mobile>
-          <MobileRouter />
-        </Mobile>
-      ) : (
-        <Desktop>
-          <DesktopRouter />
-        </Desktop>
-      )}
+      {children}
     </MemoryRouter>
   );
 }
