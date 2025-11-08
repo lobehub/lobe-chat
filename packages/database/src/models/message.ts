@@ -14,7 +14,6 @@ import {
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
-  UpdateMessageResult,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
@@ -550,13 +549,7 @@ export class MessageModel {
   update = async (
     id: string,
     { imageList, ...message }: Partial<UpdateMessageParams>,
-    options?: {
-      groupAssistantMessages?: boolean;
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-      sessionId?: string | null;
-      topicId?: string | null;
-    },
-  ): Promise<UpdateMessageResult> => {
+  ): Promise<{ success: boolean }> => {
     try {
       await this.db.transaction(async (trx) => {
         // 1. insert message files
@@ -573,22 +566,6 @@ export class MessageModel {
           .set({ ...message })
           .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
       });
-
-      // if sessionId or topicId provided, return the updated message list
-      if (options?.sessionId !== undefined || options?.topicId !== undefined) {
-        const messageList = await this.query(
-          {
-            sessionId: options.sessionId,
-            topicId: options.topicId,
-          },
-          {
-            groupAssistantMessages: options.groupAssistantMessages ?? false,
-            postProcessUrl: options.postProcessUrl,
-          },
-        );
-
-        return { messages: messageList, success: true };
-      }
 
       return { success: true };
     } catch (error) {
@@ -610,16 +587,7 @@ export class MessageModel {
       .where(and(eq(messages.userId, this.userId), eq(messages.id, id)));
   };
 
-  updatePluginState = async (
-    id: string,
-    state: Record<string, any>,
-    options?: {
-      groupAssistantMessages?: boolean;
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-      sessionId?: string | null;
-      topicId?: string | null;
-    },
-  ): Promise<UpdateMessageResult> => {
+  updatePluginState = async (id: string, state: Record<string, any>): Promise<void> => {
     const item = await this.db.query.messagePlugins.findFirst({
       where: eq(messagePlugins.id, id),
     });
@@ -629,22 +597,6 @@ export class MessageModel {
       .update(messagePlugins)
       .set({ state: merge(item.state || {}, state) })
       .where(eq(messagePlugins.id, id));
-
-    // Return updated messages if sessionId or topicId is provided
-    if (options?.sessionId !== undefined || options?.topicId !== undefined) {
-      const messageList = await this.query(
-        {
-          sessionId: options.sessionId,
-          topicId: options.topicId,
-        },
-        {
-          groupAssistantMessages: options.groupAssistantMessages ?? false,
-          postProcessUrl: options.postProcessUrl,
-        },
-      );
-      return { messages: messageList, success: true };
-    }
-    return { success: true };
   };
 
   updateMessagePlugin = async (id: string, value: Partial<MessagePluginItem>) => {

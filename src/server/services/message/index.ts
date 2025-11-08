@@ -1,5 +1,5 @@
 import { LobeChatDatabase } from '@lobechat/database';
-import { CreateMessageParams, UpdateMessageParams } from '@lobechat/types';
+import { CreateMessageParams, UIChatMessage, UpdateMessageParams } from '@lobechat/types';
 
 import { MessageModel } from '@/database/models/message';
 
@@ -51,7 +51,9 @@ export class MessageService {
   /**
    * Query messages and return response with success status (used after mutations)
    */
-  private async queryWithSuccess(options?: QueryOptions) {
+  private async queryWithSuccess(
+    options?: QueryOptions,
+  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
     if (!options || (options.sessionId === undefined && options.topicId === undefined)) {
       return { success: true };
     }
@@ -139,7 +141,11 @@ export class MessageService {
    * Update plugin state and return message list
    * Pattern: update + conditional query
    */
-  async updatePluginState(id: string, value: any, options: QueryOptions): Promise<any> {
+  async updatePluginState(
+    id: string,
+    value: any,
+    options: QueryOptions,
+  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
     await this.messageModel.updatePluginState(id, value);
     return this.queryWithSuccess(options);
   }
@@ -148,7 +154,11 @@ export class MessageService {
    * Update message and return message list
    * Pattern: update + conditional query
    */
-  async updateMessage(id: string, value: UpdateMessageParams, options: QueryOptions): Promise<any> {
+  async updateMessage(
+    id: string,
+    value: UpdateMessageParams,
+    options: QueryOptions,
+  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
     await this.messageModel.update(id, value as any);
     return this.queryWithSuccess(options);
   }
