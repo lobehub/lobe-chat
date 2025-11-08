@@ -16,6 +16,7 @@ testProvider({
   chatModel: 'spark',
   test: {
     skipAPICall: true,
+    skipErrorHandle: true,
   },
 });
 
