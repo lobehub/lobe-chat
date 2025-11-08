@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 2.0.0-next.38](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.37...v2.0.0-next.38)
+
+<sup>Released on **2025-11-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **TokenUsage**: Prevent animation when toggling between token and credit display.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **TokenUsage**: Prevent animation when toggling between token and credit display, closes [#10098](https://github.com/lobehub/lobe-chat/issues/10098) ([f20a910](https://github.com/lobehub/lobe-chat/commit/f20a910))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10100](https://github.com/lobehub/lobe-chat/issues/10100) ([deb6b5e](https://github.com/lobehub/lobe-chat/commit/deb6b5e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.37](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.36...v2.0.0-next.37)
 
 <sup>Released on **2025-11-07**</sup>
