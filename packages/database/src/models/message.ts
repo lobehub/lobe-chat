@@ -212,7 +212,7 @@ export class MessageModel {
       .from(messageQueries)
       .where(inArray(messageQueries.messageId, messageIds));
 
-    const mappedMessages = result.map(
+    return result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
@@ -221,7 +221,7 @@ export class MessageModel {
             .filter((relation) => relation.messageId === item.id)
             .map((c) => ({
               ...c,
-              similarity: Number(c.similarity) ?? undefined,
+              similarity: c.similarity === null ? undefined : Number(c.similarity),
             })),
 
           extra: {
@@ -266,8 +266,6 @@ export class MessageModel {
         } as unknown as UIChatMessage;
       },
     );
-
-    return mappedMessages;
   };
 
   findById = async (id: string) => {
@@ -423,7 +421,7 @@ export class MessageModel {
     for (const item of result) {
       if (item?.date) {
         const dateStr = dayjs(item.date as string).format('YYYY-MM-DD');
-        dateCountMap.set(dateStr, Number(item.count) || 0);
+        dateCountMap.set(dateStr, item.count);
       }
     }
 
