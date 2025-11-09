@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+// Mock ssrfSafeFetch before importing
+vi.mock('ssrf-safe-fetch', () => ({
+  ssrfSafeFetch: vi.fn(),
+}));
+
+import { ssrfSafeFetch } from 'ssrf-safe-fetch';
+
 import { imageToBase64, imageUrlToBase64 } from './imageToBase64';
 
 describe('imageToBase64', () => {
@@ -57,11 +64,10 @@ describe('imageToBase64', () => {
 });
 
 describe('imageUrlToBase64', () => {
-  const mockFetch = vi.fn();
   const mockArrayBuffer = new ArrayBuffer(8);
 
   beforeEach(() => {
-    global.fetch = mockFetch;
+    vi.clearAllMocks();
     global.btoa = vi.fn().mockReturnValue('mockBase64String');
   });
 
@@ -70,21 +76,21 @@ describe('imageUrlToBase64', () => {
   });
 
   it('should convert image URL to base64 string', async () => {
-    mockFetch.mockResolvedValue({
-      arrayBuffer: () => Promise.resolve(mockArrayBuffer),
-      blob: () => Promise.resolve(new Blob([mockArrayBuffer], { type: 'image/jpg' })),
+    const mockBlob = new Blob([mockArrayBuffer], { type: 'image/jpg' });
+    (ssrfSafeFetch as any).mockResolvedValue({
+      blob: () => Promise.resolve(mockBlob),
     });
 
     const result = await imageUrlToBase64('https://example.com/image.jpg');
 
-    expect(mockFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
+    expect(ssrfSafeFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
     expect(global.btoa).toHaveBeenCalled();
     expect(result).toEqual({ base64: 'mockBase64String', mimeType: 'image/jpg' });
   });
 
   it('should throw an error when fetch fails', async () => {
     const mockError = new Error('Fetch failed');
-    mockFetch.mockRejectedValue(mockError);
+    (ssrfSafeFetch as any).mockRejectedValue(mockError);
 
     await expect(imageUrlToBase64('https://example.com/image.jpg')).rejects.toThrow('Fetch failed');
   });
