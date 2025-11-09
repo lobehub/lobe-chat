@@ -138,16 +138,16 @@ export const transformToAiModelList = async ({
   const modelConfig = await parseModelString(providerId, modelString, withDeploymentName);
   let chatModels = modelConfig.removeAll ? [] : defaultModels;
 
-  // 处理移除逻辑
+  // Handle removal logic
   if (!modelConfig.removeAll) {
     chatModels = chatModels.filter((m) => !modelConfig.removed.includes(m.id));
   }
 
-  // 异步获取配置
+  // Asynchronously load configuration
   const { LOBE_DEFAULT_MODEL_LIST } = await import('model-bank');
 
   return produce(chatModels, (draft) => {
-    // 处理添加或替换逻辑
+    // Handle add or replace logic
     for (const toAddModel of modelConfig.add) {
       // first try to find the model in LOBE_DEFAULT_MODEL_LIST to confirm if it is a known model
       let knownModel = LOBE_DEFAULT_MODEL_LIST.find(
