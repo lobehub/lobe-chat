@@ -173,6 +173,7 @@
     "title": "ذکر اعضا"
   },
   "messageAction": {
+    "continueGeneration": "ادامه تولید",
     "delAndRegenerate": "حذف و بازتولید",
     "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
     "regenerate": "بازتولید"

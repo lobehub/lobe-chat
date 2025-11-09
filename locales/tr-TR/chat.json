@@ -173,6 +173,7 @@
     "title": "Üyeleri Etiketle"
   },
   "messageAction": {
+    "continueGeneration": "Oluşturmaya devam et",
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
     "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
     "regenerate": "Yeniden Oluştur"
