@@ -223,6 +223,54 @@ describe('MessageModel Statistics Tests', () => {
       // Assert result
       expect(result).toEqual(0);
     });
+
+    it('should count words with startDate filter', async () => {
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          role: 'user',
+          content: 'old message',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: '2',
+          userId,
+          role: 'user',
+          content: 'new message',
+          createdAt: new Date('2023-03-01'),
+        },
+      ]);
+
+      const result = await messageModel.countWords({ startDate: '2023-02-01' });
+
+      // Only 'new message' should be counted = 11 characters
+      expect(result).toEqual(11);
+    });
+
+    it('should count words with endDate filter', async () => {
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          role: 'user',
+          content: 'old message',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: '2',
+          userId,
+          role: 'user',
+          content: 'new message',
+          createdAt: new Date('2023-03-01'),
+        },
+      ]);
+
+      const result = await messageModel.countWords({ endDate: '2023-02-01' });
+
+      // Only 'old message' should be counted = 11 characters
+      expect(result).toEqual(11);
+    });
   });
 
   describe('getHeatmaps', () => {

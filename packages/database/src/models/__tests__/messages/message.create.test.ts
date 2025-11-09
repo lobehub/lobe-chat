@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { uuid } from '@/utils/uuid';
 
 import {
+  chatGroups,
   chunks,
   embeddings,
   files,
@@ -371,6 +372,40 @@ describe('MessageModel Create Tests', () => {
       expect(result).toHaveLength(2);
       expect(result[0].content).toBe('message 1');
       expect(result[1].content).toBe('message 2');
+    });
+
+    it('should handle messages with and without groupId', async () => {
+      await serverDB.insert(sessions).values({ id: 'session1', userId });
+      await serverDB.insert(chatGroups).values({ id: 'group1', userId, title: 'Group 1' });
+
+      // Message without groupId - should keep sessionId
+      const msgWithoutGroup = await messageModel.create({
+        role: 'user',
+        content: 'message without group',
+        sessionId: 'session1',
+      });
+
+      // Message with groupId - sessionId should be set to null
+      const msgWithGroup = await messageModel.create({
+        role: 'user',
+        content: 'message with group',
+        sessionId: 'session1',
+        groupId: 'group1',
+      });
+
+      // Verify from database
+      const dbMsgWithoutGroup = await serverDB.query.messages.findFirst({
+        where: eq(messages.id, msgWithoutGroup.id),
+      });
+      const dbMsgWithGroup = await serverDB.query.messages.findFirst({
+        where: eq(messages.id, msgWithGroup.id),
+      });
+
+      expect(dbMsgWithoutGroup?.sessionId).toBe('session1');
+      expect(dbMsgWithoutGroup?.groupId).toBeNull();
+
+      expect(dbMsgWithGroup?.sessionId).toBeNull();
+      expect(dbMsgWithGroup?.groupId).toBe('group1');
     });
   });
 
