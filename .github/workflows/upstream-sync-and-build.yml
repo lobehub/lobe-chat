@@ -1,64 +1,58 @@
 name: Upstream Sync and Build Docker
 
 permissions:
-  contents: write   # 推送同步代码
-  issues: write     # 同步失败时创建 issue
-  # 如果你推 GHCR 还需要 packages: write
+  contents: write # 同步到 fork 需要
+  issues: write   # 同步失败时建 issue
+  # 如果你推到 GHCR 还需要 packages: write
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # 每 6 小时运行
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
   sync_and_build:
-    name: Sync Upstream (default branch) and Build Docker Image
+    name: Sync Upstream (default branch) and Build Docker
     runs-on: ubuntu-latest
-    if: ${{ github.event.repository.fork }}  # 仅在 fork 仓库中运行
+    if: ${{ github.event.repository.fork }}
 
     steps:
-      # 1) 检出当前仓库
+      # 0. 读取上游仓库默认分支（比如现在是 next，之后改回 main 也可自动适配）
+      - name: Get upstream default branch
+        id: get-default
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          UPSTREAM_REPO="lobehub/lobe-chat"
+          DEFAULT_BRANCH=$(gh api repos/$UPSTREAM_REPO --jq .default_branch)
+          echo "branch=$DEFAULT_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "repo=$UPSTREAM_REPO" >> "$GITHUB_OUTPUT"
+
+      # 1. 检出当前仓库代码（获取完整历史）
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2) 读取上游仓库的 default branch（失败兜底为 main）
-      - name: Detect upstream default branch
-        id: upstream
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const repo = 'lobehub/lobe-chat';
-            const [owner, name] = repo.split('/');
-            try {
-              const { data } = await github.rest.repos.get({ owner, repo: name });
-              core.info(`Upstream default branch: ${data.default_branch}`);
-              core.setOutput('default_branch', data.default_branch);
-            } catch (e) {
-              core.warning(`Failed to get default branch, fallback to 'main': ${e.message}`);
-              core.setOutput('default_branch', 'main');
-            }
-
-      # 3) 清理旧的“同步失败” issue 提示
+      # 2. 关闭旧的“同步失败”提示 issue（可选）
       - name: Clean issue notice
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'close-issues'
           labels: '🚨 Sync Fail'
 
-      # 4) 执行上游同步（从“上游 default branch”到“本仓库同名分支”）
-      - name: Sync upstream changes (track upstream default branch)
+      # 3. 按“上游默认分支”进行同步；目标分支与上游分支同名（main->main / next->next）
+      - name: Sync upstream changes
         id: sync
         uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
         with:
-          upstream_sync_repo: lobehub/lobe-chat
-          upstream_sync_branch: ${{ steps.upstream.outputs.default_branch }}
-          target_sync_branch:  ${{ steps.upstream.outputs.default_branch }}
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_sync_repo: ${{ steps.get-default.outputs.repo }}
+          upstream_sync_branch: ${{ steps.get-default.outputs.branch }}
+          target_sync_branch:  ${{ steps.get-default.outputs.branch }}
+          target_repo_token:   ${{ secrets.GITHUB_TOKEN }}
           test_mode: false
 
-      # 5) 如同步失败则创建 issue
+      # 4. 同步失败则建 issue
       - name: Sync check
         if: failure() && steps.sync.outcome == 'failure'
         uses: actions-cool/issues-helper@v3
@@ -73,15 +67,15 @@ jobs:
             [tutorial-zh-CN]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN
             [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
 
-      # --- Docker 构建与推送，仅在有新提交时执行 ---
-      # 切换到刚同步的分支进行构建
-      - name: Switch to synced branch
+      # 5. 重新检出“刚同步的目标分支”作为构建上下文（确保用的是最新代码）
+      - name: Checkout synced branch for build
         if: success() && steps.sync.outputs.has_new_commits == 'true'
-        run: |
-          git checkout "${{ steps.upstream.outputs.default_branch }}"
-          echo "Switched to branch: ${{ steps.upstream.outputs.default_branch }}"
-          git log --oneline -n 5
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.get-default.outputs.branch }}
+          fetch-depth: 0
 
+      # --- Docker 构建与推送，仅当本次确实拉到新提交 ---
       - name: Set up Docker Buildx
         if: success() && steps.sync.outputs.has_new_commits == 'true'
         uses: docker/setup-buildx-action@v3
@@ -93,6 +87,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # 这里的分支标签与上游默认分支保持一致（例如 next 或 main），同时保留 latest
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         if: success() && steps.sync.outputs.has_new_commits == 'true'
@@ -100,11 +95,8 @@ jobs:
         with:
           images: marvinlee514/lobechat-docker-clerk
           tags: |
-            # 始终推 latest
             type=raw,value=latest
-            # 额外加一个“分支名”标签，例如 next 或 main，便于区分
-            type=raw,value=${{ steps.upstream.outputs.default_branch }}
-            # 再加一个短 SHA 标签
+            type=raw,value=${{ steps.get-default.outputs.branch }}
             type=sha,format=short
 
       - name: Build and push Docker image (amd64)
@@ -112,8 +104,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          # ⚠️ 确认 Dockerfile 路径正确
-          file: ./Dockerfile.database
+          file: ./Dockerfile.database   # 确认此路径在仓库中存在
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
