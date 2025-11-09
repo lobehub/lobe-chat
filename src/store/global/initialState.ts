@@ -99,6 +99,10 @@ export interface SystemStatus {
    * theme mode
    */
   themeMode?: ThemeMode;
+  /**
+   * 是否使用短格式显示 token
+   */
+  tokenDisplayFormatShort?: boolean;
   zenMode?: boolean;
 }
 
@@ -151,6 +155,7 @@ export const INITIAL_STATUS = {
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',
+  tokenDisplayFormatShort: true,
   zenMode: false,
 } satisfies SystemStatus;
 
