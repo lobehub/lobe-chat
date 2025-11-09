@@ -235,6 +235,7 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
       >
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
         <AnimatedNumber
+          duration={1500}
           formatter={(value) => {
             const roundedValue = Math.round(value);
             if (isShortFormat) {
