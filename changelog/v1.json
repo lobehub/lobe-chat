@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix missing messages when finish runtime."]
+    },
+    "date": "2025-11-09",
+    "version": "2.0.0-next.42"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-09",
