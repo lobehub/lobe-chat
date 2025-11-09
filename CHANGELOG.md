@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.42](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.41...v2.0.0-next.42)
+
+<sup>Released on **2025-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix missing messages when finish runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix missing messages when finish runtime, closes [#10138](https://github.com/lobehub/lobe-chat/issues/10138) ([b94d477](https://github.com/lobehub/lobe-chat/commit/b94d477))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.41](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.40...v2.0.0-next.41)
 
 <sup>Released on **2025-11-09**</sup>
