@@ -1,52 +1,66 @@
 name: Upstream Sync and Build Docker
 
 permissions:
-  contents: write # Fork-Sync-With-Upstream-action 需要写权限来推送同步的代码
-  issues: write   # 用于同步失败时创建 issue
-  # Docker build/push 不需要特殊权限，但 packages:write 可能需要（如果推送到 GHCR 而不是 Docker Hub）
+  contents: write   # 推送同步代码
+  issues: write     # 同步失败时创建 issue
+  # 如果你推 GHCR 还需要 packages: write
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # 每 6 小时运行一次
-  workflow_dispatch: # 允许手动触发
+    - cron: '0 */6 * * *'   # 每 6 小时运行
+  workflow_dispatch:
 
 jobs:
-  sync_and_build: # 将两个任务合并到一个 job 中
-    name: Sync Upstream and Build Docker Image
+  sync_and_build:
+    name: Sync Upstream (default branch) and Build Docker Image
     runs-on: ubuntu-latest
-    # 仅在 fork 仓库中运行同步逻辑
-    if: ${{ github.event.repository.fork }}
+    if: ${{ github.event.repository.fork }}  # 仅在 fork 仓库中运行
 
     steps:
-      # 1. 检出当前 fork 的代码
+      # 1) 检出当前仓库
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # 需要获取历史记录，以便 aormsby action 能正确判断是否有新提交
           fetch-depth: 0
 
-      # 2. 清理可能存在的旧的同步失败 issue
+      # 2) 读取上游仓库的 default branch（失败兜底为 main）
+      - name: Detect upstream default branch
+        id: upstream
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const repo = 'lobehub/lobe-chat';
+            const [owner, name] = repo.split('/');
+            try {
+              const { data } = await github.rest.repos.get({ owner, repo: name });
+              core.info(`Upstream default branch: ${data.default_branch}`);
+              core.setOutput('default_branch', data.default_branch);
+            } catch (e) {
+              core.warning(`Failed to get default branch, fallback to 'main': ${e.message}`);
+              core.setOutput('default_branch', 'main');
+            }
+
+      # 3) 清理旧的“同步失败” issue 提示
       - name: Clean issue notice
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'close-issues'
           labels: '🚨 Sync Fail'
 
-      # 3. 执行上游同步
-      - name: Sync upstream changes
-        id: sync # 给这个步骤一个 id，方便后面引用它的输出
+      # 4) 执行上游同步（从“上游 default branch”到“本仓库同名分支”）
+      - name: Sync upstream changes (track upstream default branch)
+        id: sync
         uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
         with:
-          upstream_sync_repo: lobehub/lobe-chat # 上游仓库
-          upstream_sync_branch: main           # 上游分支
-          target_sync_branch: main             # 同步到你的 fork 的哪个分支
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # 使用 GitHub 自动生成的 Token
-          # fetch-depth: 0 # aormsby action v3.4 默认会获取完整历史记录
-          test_mode: false # 设置为 false 以实际执行同步
+          upstream_sync_repo: lobehub/lobe-chat
+          upstream_sync_branch: ${{ steps.upstream.outputs.default_branch }}
+          target_sync_branch:  ${{ steps.upstream.outputs.default_branch }}
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          test_mode: false
 
-      # 4. 检查同步是否成功，如果失败则创建 issue (这部分保持不变)
+      # 5) 如同步失败则创建 issue
       - name: Sync check
-        if: failure() && steps.sync.outcome == 'failure' # 仅在 sync 步骤明确失败时运行
+        if: failure() && steps.sync.outcome == 'failure'
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'create-issue'
@@ -59,45 +73,52 @@ jobs:
             [tutorial-zh-CN]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN
             [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
 
-      # --- Docker 构建和推送步骤 ---
-      # 仅在同步成功 (steps.sync.outcome == 'success')
-      # 并且 aormsby action 确认有新的提交被拉取 (steps.sync.outputs.has_new_commits == 'true') 时运行
+      # --- Docker 构建与推送，仅在有新提交时执行 ---
+      # 切换到刚同步的分支进行构建
+      - name: Switch to synced branch
+        if: success() && steps.sync.outputs.has_new_commits == 'true'
+        run: |
+          git checkout "${{ steps.upstream.outputs.default_branch }}"
+          echo "Switched to branch: ${{ steps.upstream.outputs.default_branch }}"
+          git log --oneline -n 5
+
       - name: Set up Docker Buildx
-        if: success() && steps.sync.outputs.has_new_commits == 'true' # 条件：同步成功且有新提交
+        if: success() && steps.sync.outputs.has_new_commits == 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to Docker Hub
         if: success() && steps.sync.outputs.has_new_commits == 'true'
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }} # 使用你自己的 Docker Hub 用户名 Secret
-          password: ${{ secrets.DOCKERHUB_TOKEN }}    # 使用你自己的 Docker Hub Token Secret
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         if: success() && steps.sync.outputs.has_new_commits == 'true'
         uses: docker/metadata-action@v5
         with:
-          # 修改为你自己的 Docker Hub 镜像名称
           images: marvinlee514/lobechat-docker-clerk
           tags: |
-            type=raw,value=latest # 始终推送 latest 标签
-            # 可以选择性地添加基于 commit SHA 的标签
-            type=sha,prefix=,suffix=,format=short
+            # 始终推 latest
+            type=raw,value=latest
+            # 额外加一个“分支名”标签，例如 next 或 main，便于区分
+            type=raw,value=${{ steps.upstream.outputs.default_branch }}
+            # 再加一个短 SHA 标签
+            type=sha,format=short
 
       - name: Build and push Docker image (amd64)
         if: success() && steps.sync.outputs.has_new_commits == 'true'
         uses: docker/build-push-action@v5
         with:
-          context: . # Docker 构建上下文为仓库根目录
-          # 确认 LobeChat 数据库版本的 Dockerfile 路径是否正确！
-          file: ./Dockerfile.database # <--- 确认这个路径是否是 LobeChat 实际的 Dockerfile 路径
-          platforms: linux/amd64 # 只构建 amd64 平台
-          push: true # 推送镜像
-          tags: ${{ steps.meta.outputs.tags }} # 使用 metadata action 生成的标签
+          context: .
+          # ⚠️ 确认 Dockerfile 路径正确
+          file: ./Dockerfile.database
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_ARG=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-            CLERK_WEBHOOK_SECRET_ARG=${{ secrets.CLERK_WEBHOOK_SECRET }} 
-            CLERK_SECRET_KEY_ARG=${{ secrets.CLERK_SECRET_KEY }}         
-            # SHA=${{ github.sha }} # 如果需要 SHA
+            CLERK_WEBHOOK_SECRET_ARG=${{ secrets.CLERK_WEBHOOK_SECRET }}
+            CLERK_SECRET_KEY_ARG=${{ secrets.CLERK_SECRET_KEY }}
