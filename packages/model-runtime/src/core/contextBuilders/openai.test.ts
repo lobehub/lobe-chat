@@ -287,6 +287,46 @@ describe('convertOpenAIResponseInputs', () => {
       },
     ]);
   });
+
+  it('应该过滤掉消息中不支持的字段（如reasoning）', async () => {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
+      {
+        role: 'user',
+        content: 'What is the weather like?',
+        // @ts-ignore - Adding reasoning field to simulate the bug scenario
+        reasoning: { effort: 'high' },
+        // @ts-ignore - Adding other unsupported fields
+        customField: 'should be filtered',
+      },
+      {
+        role: 'assistant',
+        content: 'Let me check that for you.',
+        // @ts-ignore - Adding reasoning field to simulate the bug scenario
+        reasoning: { summary: 'auto' },
+        name: 'assistant',
+      },
+    ];
+
+    const result = await convertOpenAIResponseInputs(messages);
+
+    // Result should only include allowed fields: role, content, and name (if present)
+    expect(result).toEqual([
+      {
+        role: 'user',
+        content: 'What is the weather like?',
+      },
+      {
+        role: 'assistant',
+        content: 'Let me check that for you.',
+        name: 'assistant',
+      },
+    ]);
+
+    // Ensure reasoning and other fields are not present
+    expect(result[0]).not.toHaveProperty('reasoning');
+    expect(result[0]).not.toHaveProperty('customField');
+    expect(result[1]).not.toHaveProperty('reasoning');
+  });
 });
 
 describe('convertImageUrlToFile', () => {

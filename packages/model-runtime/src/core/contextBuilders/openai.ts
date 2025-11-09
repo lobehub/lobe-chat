@@ -72,13 +72,16 @@ export const convertOpenAIResponseInputs = async (
 
       // default item
       // also need handle image
+      // Only include allowed fields for OpenAI Responses API input items
+      const { role, content, name } = message;
       const item = {
-        ...message,
+        role,
+        ...(name && { name }),
         content:
-          typeof message.content === 'string'
-            ? message.content
+          typeof content === 'string'
+            ? content
             : await Promise.all(
-                (message.content || []).map(async (c) => {
+                (content || []).map(async (c) => {
                   if (c.type === 'text') {
                     return { ...c, type: 'input_text' };
                   }
