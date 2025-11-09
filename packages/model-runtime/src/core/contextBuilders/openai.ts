@@ -43,31 +43,24 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
 export const convertOpenAIResponseInputs = async (
   messages: OpenAI.ChatCompletionMessageParam[],
 ) => {
-  let input: OpenAI.Responses.ResponseInputItem[] = [];
-  await Promise.all(
+  const input = await Promise.all(
     messages.map(async (message) => {
       // if message is assistant messages with tool calls , transform it to function type item
       if (message.role === 'assistant' && message.tool_calls && message.tool_calls?.length > 0) {
-        message.tool_calls?.forEach((tool) => {
-          input.push({
-            arguments: tool.function.name,
-            call_id: tool.id,
-            name: tool.function.name,
-            type: 'function_call',
-          });
-        });
-
-        return;
+        return message.tool_calls.map((tool) => ({
+          arguments: tool.function.name,
+          call_id: tool.id,
+          name: tool.function.name,
+          type: 'function_call',
+        }));
       }
 
       if (message.role === 'tool') {
-        input.push({
+        return [{
           call_id: message.tool_call_id,
           output: message.content,
           type: 'function_call_output',
-        } as OpenAI.Responses.ResponseFunctionToolCallOutputItem);
-
-        return;
+        }];
       }
 
       // default item
@@ -92,11 +85,11 @@ export const convertOpenAIResponseInputs = async (
               ),
       } as OpenAI.Responses.ResponseInputItem;
 
-      input.push(item);
+      return [item]
     }),
   );
 
-  return input;
+  return input.flat();
 };
 
 export const pruneReasoningPayload = (payload: ChatStreamPayload) => {
