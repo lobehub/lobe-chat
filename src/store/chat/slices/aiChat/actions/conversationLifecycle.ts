@@ -166,7 +166,11 @@ export const conversationLifecycle: StateCreator<
         topicId = data.topicId;
       }
 
-      get().replaceMessages(data.messages, { sessionId: activeId, topicId: topicId });
+      get().replaceMessages(data.messages, {
+        sessionId: activeId,
+        topicId: topicId,
+        action: 'sendMessage/serverResponse',
+      });
 
       if (data.isCreateNewTopic && data.topicId) {
         await get().switchTopic(data.topicId, true);
@@ -250,7 +254,9 @@ export const conversationLifecycle: StateCreator<
         .map((f) => f?.id)
         .filter(Boolean) as string[];
 
-      await getAgentStoreState().addFilesToAgent(userFiles, false);
+      if (userFiles.length > 0) {
+        await getAgentStoreState().addFilesToAgent(userFiles, false);
+      }
     } catch (e) {
       console.error(e);
     } finally {
