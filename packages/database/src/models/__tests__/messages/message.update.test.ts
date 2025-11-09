@@ -367,6 +367,25 @@ describe('MessageModel Update Tests', () => {
 
       expect(otherResult).toHaveLength(1);
     });
+
+    it('should handle database errors gracefully', async () => {
+      // Create test message
+      await serverDB.insert(messages).values({
+        id: '1',
+        content: 'test message',
+        role: 'user',
+        userId,
+      });
+
+      // Mock database to throw error by trying to update with invalid sessionId reference
+      // This should trigger the catch block in the update method
+      const result = await messageModel.update('1', {
+        // @ts-expect-error - intentionally passing invalid sessionId to trigger error
+        sessionId: 'non-existent-session-that-violates-fk',
+      });
+
+      expect(result.success).toBe(false);
+    });
   });
 
   describe('updatePluginState', () => {

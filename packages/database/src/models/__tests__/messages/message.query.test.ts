@@ -8,6 +8,7 @@ import {
   agents,
   chatGroups,
   chunks,
+  documents,
   embeddings,
   fileChunks,
   files,
@@ -928,6 +929,61 @@ describe('MessageModel Query Tests', () => {
 
       // Assert result
       expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('query with documents', () => {
+    it('should include document content when files have associated documents', async () => {
+      // Create a file with an associated document
+      const fileId = uuid();
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values({ id: 'session1', userId });
+
+        await trx.insert(files).values({
+          id: fileId,
+          userId,
+          url: 'document.pdf',
+          name: 'test.pdf',
+          fileType: 'application/pdf',
+          size: 5000,
+        });
+
+        await trx.insert(documents).values({
+          fileId,
+          userId,
+          content: 'This is the document content for testing',
+          fileType: 'application/pdf',
+          sourceType: 'file',
+          source: 'document.pdf',
+          totalCharCount: 42,
+          totalLineCount: 1,
+        });
+
+        const messageId = uuid();
+        await trx.insert(messages).values({
+          id: messageId,
+          userId,
+          role: 'user',
+          content: 'Message with document',
+          sessionId: 'session1',
+        });
+
+        await trx.insert(messagesFiles).values({
+          messageId,
+          fileId,
+          userId,
+        });
+      });
+
+      // Query messages - this should trigger the documents processing code
+      const result = await messageModel.query({ sessionId: 'session1' });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].fileList).toBeDefined();
+      expect(result[0].fileList).toHaveLength(1);
+      expect(result[0].fileList![0].id).toBe(fileId);
+      expect(result[0].fileList![0].content).toBe('This is the document content for testing');
     });
   });
 
