@@ -4,6 +4,7 @@ import { LOADING_FLAT } from '@lobechat/const';
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -213,12 +214,12 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
           onClick={onAvatarClick}
           placement={placement}
           size={MOBILE_AVATAR_SIZE}
-          style={{ marginTop: 6 }}
         />
         <Title
           avatar={avatar}
           placement={placement}
           showTitle
+          style={{ marginBlockEnd: 0 }}
           time={createdAt}
           titleAddon={dmIndicator}
         />
@@ -274,6 +275,6 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
       {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
     </Flexbox>
   );
-});
+}, isEqual);
 
 export default AssistantMessage;

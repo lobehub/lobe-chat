@@ -2,6 +2,7 @@
 
 import { UIChatMessage } from '@lobechat/types';
 import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -49,6 +50,7 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
     provider,
   } = props;
   const avatar = meta;
+  console.log('render');
   const { mobile } = useResponsive();
   const placement = 'left';
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
@@ -96,9 +98,14 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
           onClick={onAvatarClick}
           placement={placement}
           size={MOBILE_AVATAR_SIZE}
-          style={{ marginTop: 6 }}
         />
-        <Title avatar={avatar} placement={placement} showTitle time={createdAt} />
+        <Title
+          avatar={avatar}
+          placement={placement}
+          showTitle
+          style={{ marginBlockEnd: 0 }}
+          time={createdAt}
+        />
       </Flexbox>
       {isEditing && contentId ? (
         <EditState content={lastAssistantMsg?.content} id={contentId} />
@@ -141,6 +148,6 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
       {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
     </Flexbox>
   );
-});
+}, isEqual);
 
 export default GroupMessage;
