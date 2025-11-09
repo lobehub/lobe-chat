@@ -5,10 +5,11 @@ import { ActionIcon, Avatar, Block, Icon, Tag, Text, Tooltip } from '@lobehub/ui
 import { Spotlight } from '@lobehub/ui/awesome';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
+import NextLink from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import InstallationIcon from '@/components/MCPDepsIcon';
@@ -128,11 +129,15 @@ const McpItem = memo<DiscoverMcpItem>(
                   overflow: 'hidden',
                 }}
               >
-                <Link style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
+                <NextLink
+                  href={urlJoin('/discover/mcp', identifier)}
+                  onClick={(e) => e.preventDefault()}
+                  style={{ color: 'inherit', overflow: 'hidden' }}
+                >
                   <Text as={'h2'} className={styles.title} ellipsis>
                     {name}
                   </Text>
-                </Link>
+                </NextLink>
                 {isOfficial && (
                   <Tooltip title={t('isOfficial')}>
                     <OfficialIcon />

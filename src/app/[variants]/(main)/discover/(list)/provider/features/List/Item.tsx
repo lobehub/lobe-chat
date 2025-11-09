@@ -2,10 +2,11 @@ import { Github, ModelTag, ProviderCombine } from '@lobehub/icons';
 import { ActionIcon, Block, MaskShadow, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { GlobeIcon } from 'lucide-react';
+import NextLink from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { DiscoverProviderItem } from '@/types/discover';
@@ -80,9 +81,13 @@ const ProviderItem = memo<DiscoverProviderItem>(
             }}
             title={identifier}
           >
-            <Link style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
+            <NextLink
+              href={urlJoin('/discover/provider', identifier)}
+              onClick={(e) => e.preventDefault()}
+              style={{ color: 'inherit', overflow: 'hidden' }}
+            >
               <ProviderCombine provider={identifier} size={28} style={{ flex: 'none' }} />
-            </Link>
+            </NextLink>
             <div className={styles.author}>@{name}</div>
           </Flexbox>
           <Flexbox align={'center'} horizontal>
@@ -128,9 +133,13 @@ const ProviderItem = memo<DiscoverProviderItem>(
               .slice(0, 6)
               .filter(Boolean)
               .map((tag: string) => (
-                <Link key={tag} to={urlJoin('/model', tag)}>
+                <NextLink
+                  href={urlJoin('/discover/model', tag)}
+                  key={tag}
+                  onClick={(e) => e.preventDefault()}
+                >
                   <ModelTag model={tag} style={{ margin: 0 }} />
-                </Link>
+                </NextLink>
               ))}
           </MaskShadow>
         </Flexbox>

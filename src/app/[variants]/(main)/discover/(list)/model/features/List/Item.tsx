@@ -6,10 +6,11 @@ import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { ClockIcon } from 'lucide-react';
+import NextLink from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { ModelInfoTags } from '@/components/ModelSelect';
@@ -106,11 +107,15 @@ const ModelItem = memo<DiscoverModelItem>(
                   overflow: 'hidden',
                 }}
               >
-                <Link style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
+                <NextLink
+                  href={urlJoin('/discover/model', identifier)}
+                  onClick={(e) => e.preventDefault()}
+                  style={{ color: 'inherit', overflow: 'hidden' }}
+                >
                   <Text as={'h2'} className={styles.title} ellipsis>
                     {displayName}
                   </Text>
-                </Link>
+                </NextLink>
               </Flexbox>
               <div className={styles.author}>{identifier}</div>
             </Flexbox>
