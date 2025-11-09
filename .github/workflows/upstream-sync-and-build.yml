@@ -27,16 +27,6 @@ jobs:
           DEFAULT_BRANCH=$(gh api repos/$UPSTREAM_REPO --jq .default_branch)
           echo "branch=$DEFAULT_BRANCH" >> "$GITHUB_OUTPUT"
           echo "repo=$UPSTREAM_REPO" >> "$GITHUB_OUTPUT"
-      - name: Ensure target branch exists
-        run: |
-          git fetch origin
-          if ! git show-ref --verify --quiet refs/heads/${{ steps.get-default.outputs.branch }}; then
-            echo "Creating branch ${{ steps.get-default.outputs.branch }}..."
-            git checkout -b ${{ steps.get-default.outputs.branch }}
-            git push origin ${{ steps.get-default.outputs.branch }}
-          else
-            echo "Branch ${{ steps.get-default.outputs.branch }} already exists."
-          fi
       # 1. 检出当前仓库代码（获取完整历史）
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -50,6 +40,16 @@ jobs:
           actions: 'close-issues'
           labels: '🚨 Sync Fail'
 
+      - name: Ensure target branch exists
+        run: |
+          git fetch origin
+          if ! git show-ref --verify --quiet refs/heads/${{ steps.get-default.outputs.branch }}; then
+            echo "Creating branch ${{ steps.get-default.outputs.branch }}..."
+            git checkout -b ${{ steps.get-default.outputs.branch }}
+            git push origin ${{ steps.get-default.outputs.branch }}
+          else
+            echo "Branch ${{ steps.get-default.outputs.branch }} already exists."
+          fi
       # 3. 按“上游默认分支”进行同步；目标分支与上游分支同名（main->main / next->next）
       - name: Sync upstream changes
         id: sync
