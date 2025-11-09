@@ -159,7 +159,7 @@ export class MCPService {
   async callTool(options: {
     argsStr: any;
     clientParams: MCPClientParams;
-    processContentBlocks: ProcessContentBlocksFn;
+    processContentBlocks?: ProcessContentBlocksFn;
     toolName: string;
   }): Promise<any> {
     const { clientParams, toolName, argsStr, processContentBlocks } = options;
@@ -180,9 +180,10 @@ export class MCPService {
       const result = await client.callTool(toolName, args); // Pass args directly
 
       // Process content blocks (upload images, etc.)
-      const newContent = result.isError
-        ? result.content
-        : await processContentBlocks(result.content);
+      const newContent =
+        result.isError || !processContentBlocks
+          ? result.content
+          : await processContentBlocks(result.content);
 
       // Convert content blocks to string
       const content = contentBlocksToString(newContent);
