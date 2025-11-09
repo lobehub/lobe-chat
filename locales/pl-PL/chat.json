@@ -173,6 +173,7 @@
     "title": "Wzmianka o członkach"
   },
   "messageAction": {
+    "continueGeneration": "Kontynuuj generowanie",
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
     "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
     "regenerate": "Wygeneruj ponownie"
