@@ -217,6 +217,6 @@ export const initModelRuntimeWithUserPayload = (
   return ModelRuntime.initializeWithProvider(runtimeProvider, {
     ...getParamsFromPayload(runtimeProvider, payload),
     ...params,
-    fetch: ssrfSafeFetch as any,
+    fetch: ssrfSafeFetch as typeof fetch,
   });
 };
