@@ -205,18 +205,26 @@ export const initModelRuntimeWithUserPayload = (
   payload: ClientSecretPayload,
   params: RuntimeInitializeParams = {},
 ) => {
+  const { fetch: customFetch, ...restParams } = params ?? {};
+  const fetchImpl = (customFetch ?? ssrfSafeFetch) as typeof fetch;
   const runtimeProvider = payload.runtimeProvider ?? provider;
 
   if (runtimeProvider === ModelProvider.VertexAI) {
-    const vertexOptions = buildVertexOptions(payload, params as Partial<GoogleGenAIOptions>);
-    const runtime = LobeVertexAI.initFromVertexAI(vertexOptions);
+    const vertexOptions = buildVertexOptions(payload, restParams as Partial<GoogleGenAIOptions>);
+    const runtime = LobeVertexAI.initFromVertexAI(vertexOptions, fetchImpl);
 
     return new ModelRuntime(runtime);
   }
 
-  return ModelRuntime.initializeWithProvider(runtimeProvider, {
+  const mergedParams = {
     ...getParamsFromPayload(runtimeProvider, payload),
-    ...params,
-    fetch: ssrfSafeFetch as typeof fetch,
-  });
+    ...restParams,
+  };
+
+  const runtimeParams = {
+    ...mergedParams,
+    fetch: (mergedParams as Record<string, any>).fetch ?? fetchImpl,
+  };
+
+  return ModelRuntime.initializeWithProvider(runtimeProvider, runtimeParams);
 };

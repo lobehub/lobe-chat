@@ -7,7 +7,7 @@ import { LobeGoogleAI } from '../google';
 const DEFAULT_VERTEXAI_LOCATION = 'global';
 
 export class LobeVertexAI extends LobeGoogleAI {
-  static initFromVertexAI(params?: GoogleGenAIOptions) {
+  static initFromVertexAI(params?: GoogleGenAIOptions, customFetch?: typeof fetch) {
     try {
       const client = new GoogleGenAI({
         ...params,
@@ -15,7 +15,12 @@ export class LobeVertexAI extends LobeGoogleAI {
         vertexai: true,
       });
 
-      return new LobeGoogleAI({ apiKey: 'avoid-error', client, isVertexAi: true });
+      return new LobeGoogleAI({
+        apiKey: 'avoid-error',
+        client,
+        fetch: customFetch,
+        isVertexAi: true,
+      });
     } catch (e) {
       const err = e as Error;
 
