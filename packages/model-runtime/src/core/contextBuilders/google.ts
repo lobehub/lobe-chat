@@ -69,7 +69,10 @@ export const buildGooglePart = async (
         // Note: This might need size/duration limits for practical use
         const fetchFn = customFetch || fetch;
         const ssrfOptions = customFetch ? ({ ssrf: true } as RequestInit) : undefined;
-        const response = await fetchFn(content.video_url.url, ssrfOptions);
+        const response =
+          ssrfOptions === undefined
+            ? await fetchFn(content.video_url.url)
+            : await fetchFn(content.video_url.url, ssrfOptions);
         const arrayBuffer = await response.arrayBuffer();
         const base64 = Buffer.from(arrayBuffer).toString('base64');
         const mimeType = response.headers.get('content-type') || 'video/mp4';
