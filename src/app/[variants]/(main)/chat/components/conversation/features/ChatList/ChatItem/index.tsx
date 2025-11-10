@@ -1,13 +1,13 @@
 import { createStyles } from 'antd-style';
 import React, { memo } from 'react';
 
-import SupervisorThinkingTag from '@/app/[variants]/(main)/chat/components/conversation/features/ChatList/ChatItem/OrchestratorThinking';
 import { ChatItem } from '@/features/Conversation';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors, threadSelectors } from '@/store/chat/selectors';
 
+import SupervisorThinkingTag from './OrchestratorThinking';
 import Thread from './Thread';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => {
