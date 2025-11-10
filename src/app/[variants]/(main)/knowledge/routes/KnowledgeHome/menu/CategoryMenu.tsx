@@ -40,7 +40,7 @@ const CategoryMenu = memo(() => {
   const { t } = useTranslation('file');
   const { styles, cx } = useStyles();
   const [activeKey] = useFileCategory();
-  const [showCollapsed, setShowCollapsed] = useState(true);
+  const [showCollapsed, setShowCollapsed] = useState(activeKey !== FilesTabs.Home);
   const navigate = useNavigate();
 
   const collapsedItems: MenuProps['items'] = useMemo(
