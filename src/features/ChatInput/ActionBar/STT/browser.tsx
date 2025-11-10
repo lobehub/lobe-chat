@@ -42,9 +42,9 @@ const BrowserSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [error, setError] = useState<ChatMessageError>();
   const { t } = useTranslation('chat');
 
-  const [loading, updateInputMessage] = useChatStore((s) => [
+  const [loading, updateMessageInput] = useChatStore((s) => [
     messageStateSelectors.isAIGenerating(s),
-    s.updateInputMessage,
+    s.updateMessageInput,
   ]);
 
   const setDefaultError = useCallback(
@@ -76,7 +76,7 @@ const BrowserSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
     },
     onTextChange: (text) => {
       if (loading) stop();
-      if (text) updateInputMessage(text);
+      if (text) updateMessageInput(text);
     },
   });
 

@@ -6,25 +6,25 @@ import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 import { DEFAULT_TIMEOUT, withTimeout } from '../utils/withTimeout';
 
 const mixinHeaders = {
-  // 接受的内容类型
+  // Accepted content types
   'Accept':
     'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-  // 接受的编码方式
+  // Accepted encoding methods
   'Accept-Encoding': 'gzip, deflate, br',
-  // 接受的语言
+  // Accepted languages
   'Accept-Language': 'en-US,en;q=0.9,zh;q=0.8',
-  // 缓存控制
+  // Cache control
   'Cache-Control': 'max-age=0',
-  // 连接类型
+  // Connection type
   'Connection': 'keep-alive',
-  // 表明请求来自哪个站点
+  // Indicates which site the request is from
   'Referer': 'https://www.google.com/',
-  // 升级不安全请求
+  // Upgrade insecure requests
   'Upgrade-Insecure-Requests': '1',
-  // 模拟真实浏览器的 User-Agent
+  // Simulate real browser User-Agent
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-  // 防止跨站请求伪造
+  // Prevent cross-site request forgery
   'sec-ch-ua': '"Google Chrome";v="121", "Not A(Brand";v="99", "Chromium";v="121"',
   'sec-ch-ua-mobile': '?0',
   'sec-ch-ua-platform': '"Windows"',

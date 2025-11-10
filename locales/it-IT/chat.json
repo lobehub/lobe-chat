@@ -173,6 +173,7 @@
     "title": "Menziona membri"
   },
   "messageAction": {
+    "continueGeneration": "Continua a generare",
     "delAndRegenerate": "Elimina e rigenera",
     "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
     "regenerate": "Rigenera"

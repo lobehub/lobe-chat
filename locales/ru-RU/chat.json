@@ -173,6 +173,7 @@
     "title": "Упомянуть участника"
   },
   "messageAction": {
+    "continueGeneration": "Продолжить генерацию",
     "delAndRegenerate": "Удалить и пересоздать",
     "deleteDisabledByThreads": "Существуют подтемы, удаление невозможно",
     "regenerate": "Пересоздать"

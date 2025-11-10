@@ -2,6 +2,7 @@
 
 import { UIChatMessage } from '@lobechat/types';
 import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -15,7 +16,10 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors } from '@/store/chat/slices/message/selectors';
+import {
+  displayMessageSelectors,
+  messageStateSelectors,
+} from '@/store/chat/slices/message/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -46,6 +50,7 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
     provider,
   } = props;
   const avatar = meta;
+  console.log('render');
   const { mobile } = useResponsive();
   const placement = 'left';
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
@@ -64,7 +69,9 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
   const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
   const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
   const openChatSettings = useOpenChatSettings();
-  const lastAssistantMsg = useChatStore(chatSelectors.getGroupLatestMessageWithoutTools(id));
+  const lastAssistantMsg = useChatStore(
+    displayMessageSelectors.getGroupLatestMessageWithoutTools(id),
+  );
 
   const contentId = lastAssistantMsg?.id;
 
@@ -90,10 +97,15 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
           avatar={avatar}
           onClick={onAvatarClick}
           placement={placement}
-          size={mobile ? MOBILE_AVATAR_SIZE : undefined}
-          style={{ marginTop: 6 }}
+          size={MOBILE_AVATAR_SIZE}
         />
-        <Title avatar={avatar} placement={placement} showTitle time={createdAt} />
+        <Title
+          avatar={avatar}
+          placement={placement}
+          showTitle
+          style={{ marginBlockEnd: 0 }}
+          time={createdAt}
+        />
       </Flexbox>
       {isEditing && contentId ? (
         <EditState content={lastAssistantMsg?.content} id={contentId} />
@@ -111,6 +123,7 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
               blocks={children}
               contentId={contentId}
               disableEditing={disableEditing}
+              id={id}
               messageIndex={index}
             />
           )}
@@ -135,6 +148,6 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
       {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
     </Flexbox>
   );
-});
+}, isEqual);
 
 export default GroupMessage;

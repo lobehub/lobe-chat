@@ -46,8 +46,8 @@ const CustomRender = memo<CustomRenderProps>(
     const [loading] = useChatStore((s) => [messageStateSelectors.isPluginApiInvoking(id)(s)]);
     const [isEditing, setIsEditing] = useState(false);
     const { message } = App.useApp();
-    const [updatePluginArguments, reInvokeToolMessage] = useChatStore((s) => [
-      s.updatePluginArguments,
+    const [optimisticUpdatePluginArguments, reInvokeToolMessage] = useChatStore((s) => [
+      s.optimisticUpdatePluginArguments,
       s.reInvokeToolMessage,
     ]);
     const handleCancel = useCallback(() => {
@@ -62,7 +62,7 @@ const CustomRender = memo<CustomRenderProps>(
           const newArgsString = JSON.stringify(editedObject, null, 2);
 
           if (newArgsString !== requestArgs) {
-            await updatePluginArguments(id, editedObject, true);
+            await optimisticUpdatePluginArguments(id, editedObject, true);
             await reInvokeToolMessage(id);
           }
           setIsEditing(false);

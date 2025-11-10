@@ -46,20 +46,15 @@ describe('AssistantMessageExtra', () => {
     expect(screen.queryByText('Translate Component')).toBeNull();
   });
 
-  it('should not render content if extra is defined but does not contain fromModel, tts, or translate', async () => {
+  it('should not render content if extra is defined but does not contain model, tts, or translate', async () => {
     render(<AssistantMessageExtra {...mockData} extra={{}} />);
     expect(screen.queryByText('Usage Component')).toBeNull();
     expect(screen.queryByText('TTS Component')).toBeNull();
     expect(screen.queryByText('Translate Component')).toBeNull();
   });
 
-  it('should render Usage component if extra.fromModel exists', async () => {
-    render(
-      <AssistantMessageExtra
-        {...mockData}
-        extra={{ fromModel: 'gpt-4', fromProvider: 'openai' }}
-      />,
-    );
+  it('should render Usage component if extra.model exists', async () => {
+    render(<AssistantMessageExtra {...mockData} extra={{ model: 'gpt-4', provider: 'openai' }} />);
 
     expect(screen.getByText('Usage Component')).toBeInTheDocument();
   });

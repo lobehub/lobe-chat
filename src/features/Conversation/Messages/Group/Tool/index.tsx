@@ -39,8 +39,6 @@ const Tool = memo<GroupToolProps>(
         <Inspectors
           apiName={apiName}
           arguments={requestArgs}
-          // mcp don't have ui render
-          hidePluginUI={type === 'mcp'}
           id={id}
           identifier={identifier}
           index={index}

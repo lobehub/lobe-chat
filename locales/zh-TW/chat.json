@@ -173,6 +173,7 @@
     "title": "提及成員"
   },
   "messageAction": {
+    "continueGeneration": "繼續生成",
     "delAndRegenerate": "刪除並重新生成",
     "deleteDisabledByThreads": "存在子話題，無法刪除",
     "regenerate": "重新生成"

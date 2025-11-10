@@ -36,7 +36,6 @@ const nextConfig: NextConfig = {
       '@icons-pack/react-simple-icons',
       '@lobehub/ui',
       '@lobehub/icons',
-      'gpt-tokenizer',
     ],
     // oidc provider depend on constructor.name
     // but swc minification will remove the name

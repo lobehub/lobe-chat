@@ -1,7 +1,7 @@
+import { safeParseJSON } from '@lobechat/utils';
 import { memo } from 'react';
 
 import { BuiltinToolsRenders } from '@/tools/renders';
-import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { useParseContent } from '../useParseContent';
 

@@ -87,13 +87,11 @@ export const mcpRouter = router({
     )
     .mutation(async ({ input }) => {
       // Pass the validated params, toolName, and args to the service
-      const data = await mcpService.callTool(
+      return await mcpService.callTool(
         { ...input.params, env: input.env },
         input.toolName,
         input.args,
       );
-
-      return JSON.stringify(data);
     }),
 
   validMcpServerInstallable: mcpProcedure

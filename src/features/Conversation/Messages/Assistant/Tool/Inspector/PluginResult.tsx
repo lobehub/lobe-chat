@@ -2,7 +2,7 @@ import { Highlighter } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 
 export interface FunctionMessageProps {
   toolCallId: string;
@@ -10,7 +10,7 @@ export interface FunctionMessageProps {
 }
 
 const PluginResult = memo<FunctionMessageProps>(({ toolCallId, variant }) => {
-  const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId));
+  const toolMessage = useChatStore(dbMessageSelectors.getDbMessageByToolCallId(toolCallId));
 
   const { data, language } = useMemo(() => {
     try {

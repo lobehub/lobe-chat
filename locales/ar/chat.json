@@ -173,6 +173,7 @@
     "title": "الإشارة إلى الأعضاء"
   },
   "messageAction": {
+    "continueGeneration": "متابعة التوليد",
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"

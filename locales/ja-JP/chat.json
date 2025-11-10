@@ -173,6 +173,7 @@
     "title": "メンバーをメンション"
   },
   "messageAction": {
+    "continueGeneration": "生成を続ける",
     "delAndRegenerate": "削除して再生成",
     "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
     "regenerate": "再生成"

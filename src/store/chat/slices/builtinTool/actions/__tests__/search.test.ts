@@ -30,12 +30,12 @@ describe('search actions', () => {
       activeId: 'session-id',
       activeTopicId: 'topic-id',
       searchLoading: {},
-      internal_updateMessageContent: vi.fn(),
-      internal_updateMessagePluginError: vi.fn(),
-      updatePluginArguments: vi.fn(),
-      updatePluginState: vi.fn(),
-      internal_createMessage: vi.fn(),
-      internal_addToolToAssistantMessage: vi.fn(),
+      optimisticUpdateMessageContent: vi.fn(),
+      optimisticUpdateMessagePluginError: vi.fn(),
+      optimisticUpdatePluginArguments: vi.fn(),
+      optimisticUpdatePluginState: vi.fn(),
+      optimisticCreateMessage: vi.fn(),
+      optimisticAddToolToAssistantMessage: vi.fn(),
       openToolUI: vi.fn(),
     });
   });
@@ -87,7 +87,7 @@ describe('search actions', () => {
         query: 'test query',
       });
       expect(result.current.searchLoading[messageId]).toBe(false);
-      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         searchResultsPrompt(expectedContent),
       );
@@ -123,7 +123,7 @@ describe('search actions', () => {
         query: 'test query',
       });
       expect(result.current.searchLoading[messageId]).toBe(false);
-      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         searchResultsPrompt([]),
       );
@@ -145,13 +145,13 @@ describe('search actions', () => {
         await search(messageId, query);
       });
 
-      expect(result.current.internal_updateMessagePluginError).toHaveBeenCalledWith(messageId, {
+      expect(result.current.optimisticUpdateMessagePluginError).toHaveBeenCalledWith(messageId, {
         body: error,
         message: 'Search failed',
         type: 'PluginServerError',
       });
       expect(result.current.searchLoading[messageId]).toBe(false);
-      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         'Search failed',
       );
@@ -190,7 +190,7 @@ describe('search actions', () => {
         },
       ];
 
-      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         crawlResultsPrompt(expectedContent as any),
       );
@@ -216,7 +216,7 @@ describe('search actions', () => {
         await result.current.crawlMultiPages(messageId, { urls: ['https://test.com'] });
       });
 
-      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         crawlResultsPrompt(mockResponse.results),
       );
@@ -238,7 +238,7 @@ describe('search actions', () => {
         await triggerSearchAgain(messageId, query, { aiSummary: true });
       });
 
-      expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, query);
+      expect(result.current.optimisticUpdatePluginArguments).toHaveBeenCalledWith(messageId, query);
       expect(spy).toHaveBeenCalledWith(messageId, query, true);
     });
   });
@@ -275,7 +275,7 @@ describe('search actions', () => {
         await saveSearchResult(messageId);
       });
 
-      expect(result.current.internal_createMessage).toHaveBeenCalledWith(
+      expect(result.current.optimisticCreateMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           content: 'test content',
           parentId,
@@ -285,7 +285,7 @@ describe('search actions', () => {
         }),
       );
 
-      expect(result.current.internal_addToolToAssistantMessage).toHaveBeenCalledWith(
+      expect(result.current.optimisticAddToolToAssistantMessage).toHaveBeenCalledWith(
         parentId,
         expect.objectContaining({
           identifier: 'search',
@@ -304,8 +304,8 @@ describe('search actions', () => {
         await saveSearchResult('non-existent-id');
       });
 
-      expect(result.current.internal_createMessage).not.toHaveBeenCalled();
-      expect(result.current.internal_addToolToAssistantMessage).not.toHaveBeenCalled();
+      expect(result.current.optimisticCreateMessage).not.toHaveBeenCalled();
+      expect(result.current.optimisticAddToolToAssistantMessage).not.toHaveBeenCalled();
     });
   });
 

@@ -173,6 +173,7 @@
     "title": "Mentionner un membre"
   },
   "messageAction": {
+    "continueGeneration": "Continuer la génération",
     "delAndRegenerate": "Supprimer et régénérer",
     "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
     "regenerate": "Régénérer"
