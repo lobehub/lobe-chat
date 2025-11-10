@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Edge to node runtime."]
+    },
+    "date": "2025-11-10",
+    "version": "2.0.0-next.45"
+  },
+  {
+    "children": {
       "fixes": ["Fix reasoning issue with claude and Response API thinking."]
     },
     "date": "2025-11-10",
