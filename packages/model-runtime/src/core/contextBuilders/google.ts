@@ -5,9 +5,9 @@ import {
   Part,
   Type as SchemaType,
 } from '@google/genai';
+import { imageUrlToBase64 } from '@lobechat/utils';
 
 import { ChatCompletionTool, OpenAIChatMessage, UserMessageContentPart } from '../../types';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 
