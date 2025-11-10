@@ -6,7 +6,7 @@ import { memo, use, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
-import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
+import { VirtuaContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
@@ -89,7 +89,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     s.toggleMessageCollapsed,
   ]);
   const { message } = App.useApp();
-  const virtuosoRef = use(VirtuosoContext);
+  const virtuaRef = use(VirtuaContext);
 
   const onActionClick = useCallback(
     async (action: ActionIconGroupEvent) => {
@@ -97,7 +97,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
         case 'edit': {
           toggleMessageEditing(id, true);
 
-          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+          virtuaRef?.current?.scrollToIndex(index, { align: 'start' });
         }
       }
       if (!data) return;
