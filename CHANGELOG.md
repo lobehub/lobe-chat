@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.45](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.44...v2.0.0-next.45)
+
+<sup>Released on **2025-11-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Edge to node runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Edge to node runtime, closes [#10149](https://github.com/lobehub/lobe-chat/issues/10149) ([2f4c25d](https://github.com/lobehub/lobe-chat/commit/2f4c25d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.44](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.43...v2.0.0-next.44)
 
 <sup>Released on **2025-11-10**</sup>
