@@ -11,6 +11,7 @@ import NProgress from '@/components/NProgress';
 import PanelTitle from '@/components/PanelTitle';
 import FilePanel from '@/features/FileSidePanel';
 import KnowledgeItemManager from '@/features/KnowledgeManager';
+import TogglePanelButton from '@/features/KnowledgeManager/Header/TogglePanelButton';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { FilesTabs } from '@/types/files';
 
@@ -28,13 +29,34 @@ const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
     background: ${token.colorBgLayout};
   `,
+  sidebar: css`
+    position: relative;
+
+    &:hover .toggle-button {
+      opacity: 1;
+    }
+  `,
+  toggleButton: css`
+    position: absolute;
+    z-index: 10;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
+
+    opacity: 0;
+
+    transition: opacity ${token.motionDurationSlow};
+  `,
 }));
 
 const Sidebar = memo(() => {
   const { t } = useTranslation('file');
+  const { styles } = useStyles();
 
   return (
-    <Flexbox gap={16} height={'100%'}>
+    <Flexbox className={styles.sidebar} gap={16} height={'100%'}>
+      <div className={`${styles.toggleButton} toggle-button`}>
+        <TogglePanelButton />
+      </div>
       <Flexbox paddingInline={8}>
         <PanelTitle desc={t('desc')} title={t('title')} />
         <CategoryMenu />
