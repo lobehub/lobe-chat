@@ -4,6 +4,7 @@ import { isCommandPressed } from '@lobechat/utils';
 import {
   INSERT_MENTION_COMMAND,
   INSERT_TABLE_COMMAND,
+  ReactAutoCompletePlugin,
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
@@ -33,15 +34,23 @@ const className = cx(css`
 `);
 
 const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
-  const [editor, slashMenuRef, send, updateMarkdownContent, expand, mentionItems] =
-    useChatInputStore((s) => [
-      s.editor,
-      s.slashMenuRef,
-      s.handleSendButton,
-      s.updateMarkdownContent,
-      s.expand,
-      s.mentionItems,
-    ]);
+  const [
+    editor,
+    slashMenuRef,
+    send,
+    updateMarkdownContent,
+    expand,
+    mentionItems,
+    autoCompleteInput,
+  ] = useChatInputStore((s) => [
+    s.editor,
+    s.slashMenuRef,
+    s.handleSendButton,
+    s.updateMarkdownContent,
+    s.expand,
+    s.mentionItems,
+    s.autoCompleteInput,
+  ]);
 
   const storeApi = useStoreApi();
   const state = useEditorState(editor);
@@ -104,6 +113,10 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
                         getPopupContainer={() => (slashMenuRef as any)?.current}
                       />
                     ),
+              }),
+              Editor.withProps(ReactAutoCompletePlugin, {
+                delay: 1000,
+                onAutoComplete: autoCompleteInput,
               }),
             ],
           },

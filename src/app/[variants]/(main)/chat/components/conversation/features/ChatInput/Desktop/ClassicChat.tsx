@@ -1,14 +1,14 @@
 'use client';
 
 import { Alert } from '@lobehub/ui';
-import { Suspense, memo } from 'react';
+import { Suspense, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
-import { useChatStore } from '@/store/chat';
-import { aiChatSelectors } from '@/store/chat/selectors';
+import { getChatStoreState, useChatStore } from '@/store/chat';
+import { aiChatSelectors, displayMessageSelectors } from '@/store/chat/selectors';
 
 import { useSend } from '../useSend';
 import MessageFromUrl from './MessageFromUrl';
@@ -39,12 +39,17 @@ const ClassicChatInput = memo(() => {
 
   const sendMenuItems = useSendMenuItems();
 
+  const getMessages = useCallback(() => {
+    return displayMessageSelectors.mainAIChats(getChatStoreState());
+  }, []);
+
   return (
     <ChatInputProvider
       chatInputEditorRef={(instance) => {
         if (!instance) return;
         useChatStore.setState({ mainInputEditor: instance });
       }}
+      getMessages={getMessages}
       leftActions={leftActions}
       onMarkdownContentChange={(content) => {
         useChatStore.setState({ inputMessage: content });
