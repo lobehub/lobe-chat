@@ -105,8 +105,8 @@ export const createFileSlice: StateCreator<
       title,
     });
 
-    // Refresh file list to show the new document
-    await get().refreshFileList();
+    // Refresh file list in the background without blocking navigation
+    get().refreshFileList();
 
     return newDoc;
   },
