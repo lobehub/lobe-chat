@@ -66,6 +66,8 @@ const getAgentSystemRoleExpanded =
 const disabledModelProvidersSortType = (s: GlobalState) =>
   s.status.disabledModelProvidersSortType || 'default';
 const disabledModelsSortType = (s: GlobalState) => s.status.disabledModelsSortType || 'default';
+const tokenDisplayFormatShort = (s: GlobalState) =>
+  s.status.tokenDisplayFormatShort !== undefined ? s.status.tokenDisplayFormatShort : true;
 
 export const systemStatusSelectors = {
   chatInputHeight,
@@ -99,5 +101,6 @@ export const systemStatusSelectors = {
   showSystemRole,
   systemStatus,
   themeMode,
+  tokenDisplayFormatShort,
   wideScreen,
 };

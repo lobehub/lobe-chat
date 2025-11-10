@@ -106,6 +106,7 @@ export const createAgentExecutors = (context: {
       // - Loading state management
       // - Error handling
       // Use messages from state (already contains full conversation history)
+      const messages = llmPayload.messages.filter((message) => message.id !== assistantMessageId);
       const {
         isFunctionCall,
         content,
@@ -114,7 +115,7 @@ export const createAgentExecutors = (context: {
         tool_calls,
       } = await context.get().internal_fetchAIChatMessage({
         messageId: assistantMessageId,
-        messages: llmPayload.messages,
+        messages: messages,
         model: llmPayload.model,
         params: context.params,
         provider: llmPayload.provider,

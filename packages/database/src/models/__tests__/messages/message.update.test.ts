@@ -367,6 +367,25 @@ describe('MessageModel Update Tests', () => {
 
       expect(otherResult).toHaveLength(1);
     });
+
+    it('should handle database errors gracefully', async () => {
+      // Create test message
+      await serverDB.insert(messages).values({
+        id: '1',
+        content: 'test message',
+        role: 'user',
+        userId,
+      });
+
+      // Mock database to throw error by trying to update with invalid sessionId reference
+      // This should trigger the catch block in the update method
+      const result = await messageModel.update('1', {
+        // @ts-expect-error - intentionally passing invalid sessionId to trigger error
+        sessionId: 'non-existent-session-that-violates-fk',
+      });
+
+      expect(result.success).toBe(false);
+    });
   });
 
   describe('updatePluginState', () => {
@@ -390,6 +409,28 @@ describe('MessageModel Update Tests', () => {
       const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
 
       expect(result[0].state).toEqual({ key1: 'value1', key2: 'value2' });
+    });
+
+    it('should handle null state in plugin', async () => {
+      // Create test data with null state
+      await serverDB.insert(messages).values({ id: '1', content: 'abc', role: 'user', userId });
+      await serverDB.insert(messagePlugins).values([
+        {
+          id: '1',
+          toolCallId: 'tool1',
+          identifier: 'plugin1',
+          state: null,
+          userId,
+        },
+      ]);
+
+      // Call updatePluginState method
+      await messageModel.updatePluginState('1', { key1: 'value1' });
+
+      // Assert result - should merge with empty object when state is null
+      const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
+
+      expect(result[0].state).toEqual({ key1: 'value1' });
     });
 
     it('should throw an error if plugin does not exist', async () => {
@@ -423,10 +464,10 @@ describe('MessageModel Update Tests', () => {
     });
 
     it('should throw an error if plugin does not exist', async () => {
-      // 调用 updatePluginState 方法
-      await expect(messageModel.updatePluginState('1', { key: 'value' })).rejects.toThrowError(
-        'Plugin not found',
-      );
+      // 调用 updateMessagePlugin 方法（修复：之前错误地调用了 updatePluginState）
+      await expect(
+        messageModel.updateMessagePlugin('non-existent-id', { identifier: 'test' }),
+      ).rejects.toThrowError('Plugin not found');
     });
   });
 

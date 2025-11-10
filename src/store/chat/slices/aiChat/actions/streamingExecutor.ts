@@ -521,10 +521,7 @@ export const streamingExecutor: StateCreator<
       // Handle completion and error events
       for (const event of result.events) {
         if (event.type === 'done') {
-          log('[internal_execAgentRuntime] Received done event, syncing to database');
-          // Sync final state to database
-          const finalMessages = get().messagesMap[messageKey] || [];
-          get().replaceMessages(finalMessages);
+          log('[internal_execAgentRuntime] Received done event');
         }
 
         if (event.type === 'error') {

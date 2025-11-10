@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "improvements": ["Edge to node runtime."]
+    },
+    "date": "2025-11-10",
+    "version": "2.0.0-next.45"
+  },
+  {
+    "children": {
+      "fixes": ["Fix reasoning issue with claude and Response API thinking."]
+    },
+    "date": "2025-11-10",
+    "version": "2.0.0-next.44"
+  },
+  {
+    "children": {
+      "fixes": ["Abnormal animation of tokens."]
+    },
+    "date": "2025-11-09",
+    "version": "2.0.0-next.43"
+  },
+  {
+    "children": {
+      "fixes": ["Fix missing messages when finish runtime."]
+    },
+    "date": "2025-11-09",
+    "version": "2.0.0-next.42"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-09",

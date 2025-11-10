@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { uuid } from '@/utils/uuid';
 
 import {
+  chatGroups,
   chunks,
   embeddings,
   files,
@@ -224,31 +225,53 @@ describe('MessageModel Create Tests', () => {
         expect(dbResult[0].id).toBe(customId);
       });
 
-      it.skip('should create a message with file chunks and RAG query ID', async () => {
-        // Create test data
+      it('should create a message with file chunks and RAG query ID', async () => {
+        // Create test data following proper order: message -> query -> message with chunks
         const chunkId1 = uuid();
         const chunkId2 = uuid();
-        const ragQueryId = uuid();
+        const firstMessageId = uuid();
+        const secondMessageId = uuid();
 
+        // 1. Create chunks first
         await serverDB.insert(chunks).values([
-          { id: chunkId1, text: 'chunk text 1' },
-          { id: chunkId2, text: 'chunk text 2' },
+          { id: chunkId1, text: 'chunk text 1', userId },
+          { id: chunkId2, text: 'chunk text 2', userId },
         ]);
 
-        // Call create method
-        const result = await messageModel.create({
-          role: 'assistant',
-          content: 'message with file chunks',
-          fileChunks: [
-            { id: chunkId1, similarity: 0.95 },
-            { id: chunkId2, similarity: 0.85 },
-          ],
-          ragQueryId,
+        // 2. Create first message (required for messageQuery FK)
+        await serverDB.insert(messages).values({
+          id: firstMessageId,
+          userId,
+          role: 'user',
+          content: 'user query',
           sessionId: '1',
         });
 
+        // 3. Create message query linked to first message
+        const messageQuery = await messageModel.createMessageQuery({
+          messageId: firstMessageId,
+          rewriteQuery: 'test query',
+          userQuery: 'original query',
+          embeddingsId,
+        });
+
+        // 4. Create second message with file chunks referencing the query
+        const result = await messageModel.create(
+          {
+            role: 'assistant',
+            content: 'message with file chunks',
+            fileChunks: [
+              { id: chunkId1, similarity: 0.95 },
+              { id: chunkId2, similarity: 0.85 },
+            ],
+            ragQueryId: messageQuery.id,
+            sessionId: '1',
+          },
+          secondMessageId,
+        );
+
         // Verify message created successfully
-        expect(result.id).toBeDefined();
+        expect(result.id).toBe(secondMessageId);
 
         // Verify message query chunk associations created successfully
         const queryChunks = await serverDB
@@ -258,10 +281,10 @@ describe('MessageModel Create Tests', () => {
 
         expect(queryChunks).toHaveLength(2);
         expect(queryChunks[0].chunkId).toBe(chunkId1);
-        expect(queryChunks[0].queryId).toBe(ragQueryId);
-        expect(queryChunks[0].similarity).toBe('0.95');
+        expect(queryChunks[0].queryId).toBe(messageQuery.id);
+        expect(queryChunks[0].similarity).toBe('0.95000');
         expect(queryChunks[1].chunkId).toBe(chunkId2);
-        expect(queryChunks[1].similarity).toBe('0.85');
+        expect(queryChunks[1].similarity).toBe('0.85000');
       });
 
       it('should create a message with files', async () => {
@@ -349,6 +372,40 @@ describe('MessageModel Create Tests', () => {
       expect(result).toHaveLength(2);
       expect(result[0].content).toBe('message 1');
       expect(result[1].content).toBe('message 2');
+    });
+
+    it('should handle messages with and without groupId', async () => {
+      await serverDB.insert(sessions).values({ id: 'session1', userId });
+      await serverDB.insert(chatGroups).values({ id: 'group1', userId, title: 'Group 1' });
+
+      // Message without groupId - should keep sessionId
+      const msgWithoutGroup = await messageModel.create({
+        role: 'user',
+        content: 'message without group',
+        sessionId: 'session1',
+      });
+
+      // Message with groupId - sessionId should be set to null
+      const msgWithGroup = await messageModel.create({
+        role: 'user',
+        content: 'message with group',
+        sessionId: 'session1',
+        groupId: 'group1',
+      });
+
+      // Verify from database
+      const dbMsgWithoutGroup = await serverDB.query.messages.findFirst({
+        where: eq(messages.id, msgWithoutGroup.id),
+      });
+      const dbMsgWithGroup = await serverDB.query.messages.findFirst({
+        where: eq(messages.id, msgWithGroup.id),
+      });
+
+      expect(dbMsgWithoutGroup?.sessionId).toBe('session1');
+      expect(dbMsgWithoutGroup?.groupId).toBeNull();
+
+      expect(dbMsgWithGroup?.sessionId).toBeNull();
+      expect(dbMsgWithGroup?.groupId).toBe('group1');
     });
   });
 
