@@ -12,7 +12,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { SortType } from '@/types/files';
+import { FilesTabs, SortType } from '@/types/files';
 
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
@@ -56,7 +56,11 @@ const FileExplorer = memo<FileExplorerProps>(({ knowledgeBaseId, category, onOpe
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMasonryReady, setIsMasonryReady] = useState(false);
 
-  const viewMode = useGlobalStore((s) => s.status.fileManagerViewMode || 'list') as ViewMode;
+  // Always use masonry view for Images category, ignore stored preference
+  const storedViewMode = useGlobalStore((s) => s.status.fileManagerViewMode);
+  const viewMode = (
+    category === FilesTabs.Images ? 'masonry' : storedViewMode || 'list'
+  ) as ViewMode;
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
   const setViewMode = (mode: ViewMode) => {
     setIsTransitioning(true);
