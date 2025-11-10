@@ -1,10 +1,10 @@
-import { Button, Tooltip } from '@lobehub/ui';
+import { Button, Icon, Tooltip } from '@lobehub/ui';
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
-import { FileBoxIcon } from 'lucide-react';
+import { FileBoxIcon, FileText } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,9 +42,8 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     checkbox: hover,
     container: css`
       cursor: pointer;
-      margin-inline: 24px;
+      margin-inline: 16px;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
-      border-radius: ${token.borderRadius}px;
 
       &:hover {
         background: ${token.colorFillTertiary};
@@ -145,7 +144,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
       <Flexbox
         align={'center'}
         className={cx(styles.container, selected && styles.selected)}
-        height={64}
+        height={48}
         horizontal
         paddingInline={8}
       >
@@ -182,13 +181,23 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 style={{ borderRadius: '50%' }}
               />
             </Center>
-            {isNote && emoji ? (
-              <Flexbox align={'center'} justify={'center'} style={{ fontSize: 24, width: 48 }}>
-                {emoji}
-              </Flexbox>
-            ) : (
-              <FileIcon fileName={name} fileType={fileType} />
-            )}
+            <Flexbox
+              align={'center'}
+              justify={'center'}
+              style={{ fontSize: 24, marginInline: 8, width: 24 }}
+            >
+              {isNote ? (
+                emoji ? (
+                  <span style={{ fontSize: 24 }}>{emoji}</span>
+                ) : (
+                  <Center height={24} width={24}>
+                    <Icon icon={FileText} size={24} />
+                  </Center>
+                )
+              ) : (
+                <FileIcon fileName={name} fileType={fileType} size={24} />
+              )}
+            </Flexbox>
             <span className={styles.name}>{displayTitle}</span>
           </Flexbox>
           <Flexbox
