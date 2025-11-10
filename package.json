@@ -298,7 +298,7 @@
     "ws": "^8.18.3",
     "yaml": "^2.8.1",
     "zod": "^3.25.76",
-    "zustand": "5.0.4",
+    "zustand": "5.0.8",
     "zustand-utils": "^2.1.1"
   },
   "devDependencies": {
