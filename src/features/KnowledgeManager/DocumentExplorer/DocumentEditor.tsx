@@ -462,7 +462,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           label: t('documentEditor.menu.copyLink'),
           onClick: () => {
             if (currentDocId) {
-              const url = `${window.location.origin}${window.location.pathname}?documentId=${currentDocId}`;
+              const url = `${window.location.origin}${window.location.pathname}`;
               navigator.clipboard.writeText(url);
               message.success(t('documentEditor.linkCopied'));
             }
