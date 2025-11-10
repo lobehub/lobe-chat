@@ -44,7 +44,7 @@
     "@lobechat/electron-client-ipc": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",
     "@lobechat/file-loaders": "workspace:*",
-    "@lobehub/i18n-cli": "^1.20.3",
+    "@lobehub/i18n-cli": "^1.25.1",
     "@types/lodash": "^4.17.0",
     "@types/resolve": "^1.20.6",
     "@types/semver": "^7.7.0",
