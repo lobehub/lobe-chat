@@ -76,6 +76,13 @@ export const convertOpenAIResponseInputs = async (messages: OpenAIChatMessage[])
         return;
       }
 
+      if (message.role === 'system') {
+        return {
+          ...message,
+          role: 'developer',
+        };
+      }
+
       // default item
       // also need handle image
       const item = {
