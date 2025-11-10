@@ -1,11 +1,11 @@
-// 定义主题类型
+// Define theme type
 import { ThemeAppearance } from 'antd-style/lib/types/appearance';
 
 import { DEFAULT_LANG } from '@/const/locale';
 import { Locales, locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
 
-// 定义变体接口
+// Define variant interface
 export interface IRouteVariants {
   isMobile: boolean;
   locale: Locales;
@@ -14,10 +14,10 @@ export interface IRouteVariants {
   theme: ThemeAppearance;
 }
 
-// 支持的主题
+// Supported themes
 const SUPPORTED_THEMES = ['dark', 'light'] as const;
 
-// 默认变体配置
+// Default variant configuration
 export const DEFAULT_VARIANTS: IRouteVariants = {
   isMobile: false,
   locale: DEFAULT_LANG,
@@ -28,8 +28,8 @@ const SPLITTER = '__';
 
 export class RouteVariants {
   static serializeVariants = (variants: IRouteVariants): string => {
-    // 使用紧凑的格式: locale_isMobile_theme
-    // 例如: "en-US_0_dark" 表示 英文_非移动端_深色主题
+    // Use compact format: locale_isMobile_theme
+    // Example: "en-US_0_dark" represents English_Non-mobile_Dark theme
     return [variants.locale, Number(variants.isMobile), variants.theme].join(SPLITTER);
   };
 
@@ -37,14 +37,14 @@ export class RouteVariants {
     try {
       const [locale, isMobile, theme] = serialized.split(SPLITTER);
 
-      // 验证并返回变体
+      // Validate and return variant
       return {
         isMobile: isMobile === '1',
         locale: this.isValidLocale(locale) ? (locale as Locales) : DEFAULT_VARIANTS.locale,
         theme: this.isValidTheme(theme) ? theme : DEFAULT_VARIANTS.theme,
       };
     } catch {
-      // 解析失败时返回默认值
+      // Return default value on parse failure
       return { ...DEFAULT_VARIANTS };
     }
   };
@@ -66,14 +66,14 @@ export class RouteVariants {
     return locale;
   };
 
-  // 工具函数：创建变体
+  // Utility function: create variant
 
   static createVariants = (options: Partial<IRouteVariants> = {}): IRouteVariants => ({
     ...DEFAULT_VARIANTS,
     ...options,
   });
 
-  // 验证函数
+  // Validation functions
   private static isValidLocale = (locale: string): boolean => locales.includes(locale as any);
 
   private static isValidTheme = (theme: string): boolean => SUPPORTED_THEMES.includes(theme as any);
