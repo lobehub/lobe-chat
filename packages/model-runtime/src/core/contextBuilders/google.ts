@@ -64,12 +64,9 @@ export const buildGooglePart = async (
       }
 
       if (type === 'url') {
-        // For video URLs, we need to fetch and convert to base64
+        // Use imageUrlToBase64 for SSRF protection (works for any binary data including videos)
         // Note: This might need size/duration limits for practical use
-        const response = await fetch(content.video_url.url);
-        const arrayBuffer = await response.arrayBuffer();
-        const base64 = Buffer.from(arrayBuffer).toString('base64');
-        const mimeType = response.headers.get('content-type') || 'video/mp4';
+        const { base64, mimeType } = await imageUrlToBase64(content.video_url.url);
 
         return {
           inlineData: { data: base64, mimeType },
