@@ -121,7 +121,7 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing }) => 
           )}
 
           {model && (
-            <Usage metadata={{ ...performance, ...usage }} model={model} provider={provider!} />
+            <Usage model={model} performance={performance} provider={provider!} usage={usage} />
           )}
           {!disableEditing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">

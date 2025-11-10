@@ -68,10 +68,14 @@ const AssistantMessage = memo<AssistantMessageProps>(({ id, index, disableEditin
     createdAt,
     tools,
     extra,
-    metadata,
+    model,
+    provider,
     meta,
     targetId,
     groupId,
+    performance,
+    usage,
+    metadata,
   } = item;
 
   const showTitle = !!groupId;
@@ -261,8 +265,11 @@ const AssistantMessage = memo<AssistantMessageProps>(({ id, index, disableEditin
                     content={content}
                     extra={extra}
                     id={id}
-                    metadata={metadata}
+                    model={model!}
+                    performance={performance! || metadata}
+                    provider={provider!}
                     tools={tools}
+                    usage={usage! || metadata}
                   />
                 </>
               }

@@ -1,4 +1,4 @@
-import { MessageMetadata } from '@lobechat/types';
+import { ModelPerformance, ModelUsage } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
 import { useTheme } from 'antd-style';
@@ -20,12 +20,13 @@ import TokenProgress, { TokenProgressItem } from './TokenProgress';
 import { getDetailsToken } from './tokens';
 
 interface TokenDetailProps {
-  meta: MessageMetadata;
   model: string;
+  performance?: ModelPerformance;
   provider: string;
+  usage: ModelUsage;
 }
 
-const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
+const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
   const isMobile = useIsMobile();
@@ -37,7 +38,7 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
   const modelCard = useAiInfraStore(aiModelSelectors.getModelCard(model, provider));
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!modelCard?.pricing;
 
-  const detailTokens = getDetailsToken(meta, modelCard);
+  const detailTokens = getDetailsToken(usage, modelCard);
   const inputDetails = [
     !!detailTokens.inputAudio && {
       color: theme.cyan9,
@@ -130,8 +131,8 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
     2,
   );
 
-  const tps = meta?.tps ? formatNumber(meta.tps, 2) : undefined;
-  const ttft = meta?.ttft ? formatNumber(meta.ttft / 1000, 2) : undefined;
+  const tps = performance?.tps ? formatNumber(performance.tps, 2) : undefined;
+  const ttft = performance?.ttft ? formatNumber(performance.ttft / 1000, 2) : undefined;
 
   return (
     <Popover

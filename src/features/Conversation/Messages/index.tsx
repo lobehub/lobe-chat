@@ -139,7 +139,7 @@ const Item = memo<ChatListItemProps>(
       }
 
       return null;
-    }, [role]);
+    }, [role, disableEditing, id, index]);
 
     if (!role) return;
 

@@ -1,6 +1,7 @@
-import { MessageMetadata } from '@lobechat/types';
+import { ModelPerformance, ModelUsage } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons';
 import { createStyles } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -14,12 +15,13 @@ export const useStyles = createStyles(({ token, css, cx }) => ({
 }));
 
 interface UsageProps {
-  metadata: MessageMetadata;
   model: string;
+  performance?: ModelPerformance;
   provider: string;
+  usage?: ModelUsage;
 }
 
-const Usage = memo<UsageProps>(({ model, metadata, provider }) => {
+const Usage = memo<UsageProps>(({ model, usage, performance, provider }) => {
   const { styles } = useStyles();
 
   return (
@@ -35,11 +37,16 @@ const Usage = memo<UsageProps>(({ model, metadata, provider }) => {
         {model}
       </Center>
 
-      {!!metadata.totalTokens && (
-        <TokenDetail meta={metadata} model={model as string} provider={provider} />
+      {!!usage?.totalTokens && (
+        <TokenDetail
+          model={model as string}
+          performance={performance}
+          provider={provider}
+          usage={usage}
+        />
       )}
     </Flexbox>
   );
-});
+}, isEqual);
 
 export default Usage;
