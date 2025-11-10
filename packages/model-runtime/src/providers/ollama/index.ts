@@ -186,6 +186,9 @@ export class LobeOllamaAI implements LobeRuntimeAI {
       role: message.role,
     };
 
+    // Collect image processing tasks for parallel execution
+    const imagePromises: Array<Promise<string | null> | string> = [];
+
     for (const content of message.content) {
       switch (content.type) {
         case 'text': {
@@ -198,17 +201,27 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
           // If already base64 format, use it directly
           if (base64) {
-            ollamaMessage.images ??= [];
-            ollamaMessage.images.push(base64);
+            imagePromises.push(base64);
           }
-          // If it's a URL, convert to base64
+          // If it's a URL, add async conversion task with error handling
           else if (type === 'url') {
-            const result = await imageUrlToBase64(content.image_url.url);
-            ollamaMessage.images ??= [];
-            ollamaMessage.images.push(result.base64);
+            imagePromises.push(
+              imageUrlToBase64(content.image_url.url)
+                .then((result) => result.base64)
+                .catch(() => null), // Silently ignore failed conversions
+            );
           }
           break;
         }
+      }
+    }
+
+    // Process all images in parallel and filter out failed conversions
+    if (imagePromises.length > 0) {
+      const results = await Promise.all(imagePromises);
+      const validImages = results.filter((img): img is string => img !== null);
+      if (validImages.length > 0) {
+        ollamaMessage.images = validImages;
       }
     }
 
