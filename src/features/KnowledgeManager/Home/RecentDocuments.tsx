@@ -15,25 +15,28 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   fadeEdge: css`
     pointer-events: none;
+
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    inset-block: 0 0;
+    inset-inline-end: 0;
 
     width: 80px;
 
     background: linear-gradient(to left, ${token.colorBgContainerSecondary}, transparent);
   `,
   scrollContainer: css`
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 8px;
     scroll-behavior: smooth;
 
     /* Hide scrollbar */
     scrollbar-width: none;
+
+    overflow: auto hidden;
+    display: flex;
+    gap: 16px;
+
+    padding-block-end: 8px;
+    padding-inline-end: 80px;
+
     -ms-overflow-style: none;
 
     &::-webkit-scrollbar {

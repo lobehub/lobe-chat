@@ -19,7 +19,7 @@ import UploadEntries from './UploadEntries';
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     padding-block: 20px 48px;
-padding-inline: 24px;
+    padding-inline: 24px;
   `,
   content: css`
     width: 100%;
@@ -79,6 +79,8 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
   const [, setActiveKey] = useFileCategory();
   const [isDocumentsMenuOpen, setIsDocumentsMenuOpen] = useState(false);
   const [isDocumentsSectionHovered, setIsDocumentsSectionHovered] = useState(false);
+  const [isFilesMenuOpen, setIsFilesMenuOpen] = useState(false);
+  const [isFilesSectionHovered, setIsFilesSectionHovered] = useState(false);
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
 
@@ -126,13 +128,47 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
 
         {/* Recent Files Section */}
         {(isLoading || topRecentFiles.length > 0) && (
-          <Flexbox className={styles.section}>
-            <Text className={styles.sectionTitle}>
-              <Clock size={18} />
-              {t('home.recentFiles')}
-            </Text>
+          <div
+            className={styles.section}
+            onMouseEnter={() => {
+              setIsFilesSectionHovered(true);
+            }}
+            onMouseLeave={() => {
+              setIsFilesSectionHovered(false);
+            }}
+          >
+            <div className={styles.sectionTitleWrapper}>
+              <Text className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+                <Clock size={18} />
+                {t('home.recentFiles')}
+              </Text>
+              <div
+                className={styles.sectionActions}
+                style={{
+                  opacity: isFilesSectionHovered || isFilesMenuOpen ? 1 : 0,
+                }}
+              >
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        key: 'all-files',
+                        label: t('menu.allFiles'),
+                        onClick: () => {
+                          setActiveKey(FilesTabs.All);
+                        },
+                      },
+                    ],
+                  }}
+                  onOpenChange={setIsFilesMenuOpen}
+                  open={isFilesMenuOpen}
+                >
+                  <ActionIcon icon={MoreHorizontal} size="small" />
+                </Dropdown>
+              </div>
+            </div>
             <RecentFiles files={topRecentFiles} isLoading={isLoading} onOpenFile={onOpenFile} />
-          </Flexbox>
+          </div>
         )}
 
         {/* Recent Documents Section */}
@@ -140,11 +176,9 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
           <div
             className={styles.section}
             onMouseEnter={() => {
-              console.log('onMouseEnter');
               setIsDocumentsSectionHovered(true);
             }}
             onMouseLeave={() => {
-              console.log('onMouseLeave');
               setIsDocumentsSectionHovered(false);
             }}
           >

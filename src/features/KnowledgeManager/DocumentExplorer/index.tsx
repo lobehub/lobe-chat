@@ -250,7 +250,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           <ActionIcon
             icon={PlusIcon}
             onClick={handleNewDocument}
-            title={t('header.newNoteButton')}
+            title={t('header.newDocumentButton')}
           />
         </div>
         <div className={styles.documentList}>

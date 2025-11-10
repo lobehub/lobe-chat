@@ -66,7 +66,7 @@ export default {
       uploadFile: '上传文件',
       uploadFolder: '上传文件夹',
     },
-    newNoteButton: '新建文档',
+    newDocumentButton: '新建文档',
     newNoteDialog: {
       cancel: '取消',
       editTitle: '编辑笔记',
@@ -118,6 +118,7 @@ export default {
   },
   menu: {
     allDocuments: '全部文档',
+    allFiles: '全部文件',
   },
   networkError: '获取知识库失败，请检测网络连接后重试',
   notSupportGuide: {

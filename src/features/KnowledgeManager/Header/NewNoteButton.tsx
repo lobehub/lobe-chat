@@ -22,7 +22,7 @@ const NewNoteButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
   return (
     <>
       <Button icon={FilePenLine} onClick={handleOpen} type="primary">
-        {t('header.newNoteButton')}
+        {t('header.newDocumentButton')}
       </Button>
 
       <NoteEditorModal knowledgeBaseId={knowledgeBaseId} onClose={handleClose} open={isModalOpen} />
