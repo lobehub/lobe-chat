@@ -10,6 +10,10 @@ export interface EnsureNodeResponseOptions {
    * Sets a default content-type header when the original Response omitted it.
    */
   defaultContentType?: string;
+  /**
+   * Force buffering even if a readable body stream exists.
+   */
+  forceBuffering?: boolean;
 }
 
 /**
@@ -49,9 +53,9 @@ export const ensureNodeResponse = async (
     headers.set('cache-control', options.cacheControl);
   }
 
-  const bufferedBody = await source.arrayBuffer();
+  const body = !options.forceBuffering && source.body ? source.body : await source.arrayBuffer();
 
-  return new Response(bufferedBody, {
+  return new Response(body, {
     headers,
     status: source.status,
     statusText: source.statusText,
