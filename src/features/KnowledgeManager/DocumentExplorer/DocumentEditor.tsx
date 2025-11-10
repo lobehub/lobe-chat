@@ -20,7 +20,6 @@ import { css, cx, useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {
-  Download,
   FileText,
   Heading1Icon,
   Heading2Icon,
@@ -28,11 +27,9 @@ import {
   Link2,
   Loader2Icon,
   MoreVertical,
-  Pin,
   SmilePlus,
   Table2Icon,
   Trash2,
-  Upload,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -475,27 +472,27 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           label: t('delete', { ns: 'common' }),
           onClick: handleDelete,
         },
-        {
-          type: 'divider' as const,
-        },
-        {
-          icon: <Icon icon={Download} />,
-          key: 'export',
-          label: t('documentEditor.menu.exportDocument'),
-          onClick: () => {
-            // TODO: Implement export functionality
-            console.log('Export clicked');
-          },
-        },
-        {
-          icon: <Icon icon={Upload} />,
-          key: 'import',
-          label: t('documentEditor.menu.importDocument'),
-          onClick: () => {
-            // TODO: Implement import functionality
-            console.log('Import clicked');
-          },
-        },
+        // {
+        //   type: 'divider' as const,
+        // },
+        // {
+        //   icon: <Icon icon={Download} />,
+        //   key: 'export',
+        //   label: t('documentEditor.menu.exportDocument'),
+        //   onClick: () => {
+        //     // TODO: Implement export functionality
+        //     console.log('Export clicked');
+        //   },
+        // },
+        // {
+        //   icon: <Icon icon={Upload} />,
+        //   key: 'import',
+        //   label: t('documentEditor.menu.importDocument'),
+        //   onClick: () => {
+        //     // TODO: Implement import functionality
+        //     console.log('Import clicked');
+        //   },
+        // },
         {
           type: 'divider' as const,
         },
@@ -505,7 +502,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           label: (
             <div style={{ color: theme.colorTextTertiary, fontSize: 12, lineHeight: 1.6 }}>
               <div>{t('documentEditor.wordCount', { wordCount })}</div>
-              <div>{t('documentEditor.editedBy', { name: username })}</div>
+              {/* <div>{t('documentEditor.editedBy', { name: username })}</div> */}
               <div>
                 {lastUpdatedTime
                   ? t('documentEditor.editedAt', {
@@ -576,7 +573,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           )}
 
           {/* Pin action */}
-          <ActionIcon
+          {/* <ActionIcon
             icon={Pin}
             onClick={() => {
               // TODO: Implement pin functionality
@@ -584,7 +581,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
             }}
             size={15.5}
             style={{ color: theme.colorText }}
-          />
+          /> */}
 
           {/* Three-dot menu */}
           <Dropdown
