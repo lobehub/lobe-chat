@@ -34,7 +34,7 @@ const useStyles = createStyles(({ css, token }) => ({
     text-align: start;
   `,
   section: css`
-    margin-block-end: 36px;
+    margin-block: 6px 36px;
   `,
   sectionActions: css`
     transition: opacity ${token.motionDurationMid} ${token.motionEaseInOut};
@@ -58,12 +58,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     min-height: 36px;
     margin-block-end: 24px;
-  `,
-  subText: css`
-    margin-block-end: 48px;
-    font-size: 16px;
-    color: ${token.colorTextSecondary};
-    text-align: start;
   `,
 }));
 
