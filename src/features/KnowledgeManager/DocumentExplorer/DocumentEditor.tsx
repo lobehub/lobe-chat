@@ -531,7 +531,6 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           paddingInline={16}
           style={{
             background: theme.colorBgContainer,
-            borderBottom: `1px solid ${theme.colorBorderSecondary}`,
           }}
         >
           {/* Icon */}
@@ -696,64 +695,73 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               </Flexbox>
             </Flexbox>
 
-            <Editor
-              className={editorClassName}
-              content={''}
-              editor={editor}
-              onTextChange={handleContentChange}
-              placeholder={t('documentEditor.editorPlaceholder')}
-              plugins={[
-                ReactListPlugin,
-                ReactCodePlugin,
-                ReactCodeblockPlugin,
-                ReactHRPlugin,
-                ReactLinkHighlightPlugin,
-                ReactTablePlugin,
-                ReactMathPlugin,
-                ReactImagePlugin,
-              ]}
-              slashOption={{
-                items: [
-                  {
-                    icon: Heading1Icon,
-                    key: 'h1',
-                    label: 'Heading 1',
-                    onSelect: (editor) => {
-                      editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h1' });
-                    },
-                  },
-                  {
-                    icon: Heading2Icon,
-                    key: 'h2',
-                    label: 'Heading 2',
-                    onSelect: (editor) => {
-                      editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h2' });
-                    },
-                  },
-                  {
-                    icon: Heading3Icon,
-                    key: 'h3',
-                    label: 'Heading 3',
-                    onSelect: (editor) => {
-                      editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h3' });
-                    },
-                  },
-                  {
-                    icon: Table2Icon,
-                    key: 'table',
-                    label: 'Table',
-                    onSelect: (editor) => {
-                      editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
-                    },
-                  },
-                ],
-              }}
+            <div
+              onClick={() => editor?.focus()}
               style={{
+                cursor: 'text',
+                flex: 1,
                 minHeight: '400px',
-                paddingBottom: '200px',
               }}
-              type={'text'}
-            />
+            >
+              <Editor
+                className={editorClassName}
+                content={''}
+                editor={editor}
+                onTextChange={handleContentChange}
+                placeholder={t('documentEditor.editorPlaceholder')}
+                plugins={[
+                  ReactListPlugin,
+                  ReactCodePlugin,
+                  ReactCodeblockPlugin,
+                  ReactHRPlugin,
+                  ReactLinkHighlightPlugin,
+                  ReactTablePlugin,
+                  ReactMathPlugin,
+                  ReactImagePlugin,
+                ]}
+                slashOption={{
+                  items: [
+                    {
+                      icon: Heading1Icon,
+                      key: 'h1',
+                      label: 'Heading 1',
+                      onSelect: (editor) => {
+                        editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h1' });
+                      },
+                    },
+                    {
+                      icon: Heading2Icon,
+                      key: 'h2',
+                      label: 'Heading 2',
+                      onSelect: (editor) => {
+                        editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h2' });
+                      },
+                    },
+                    {
+                      icon: Heading3Icon,
+                      key: 'h3',
+                      label: 'Heading 3',
+                      onSelect: (editor) => {
+                        editor.dispatchCommand(INSERT_HEADING_COMMAND, { tag: 'h3' });
+                      },
+                    },
+                    {
+                      icon: Table2Icon,
+                      key: 'table',
+                      label: 'Table',
+                      onSelect: (editor) => {
+                        editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns: '3', rows: '3' });
+                      },
+                    },
+                  ],
+                }}
+                style={{
+                  minHeight: '400px',
+                  paddingBottom: '200px',
+                }}
+                type={'text'}
+              />
+            </div>
           </Flexbox>
         </Flexbox>
       </Flexbox>
