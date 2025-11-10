@@ -266,7 +266,7 @@
     "react-i18next": "^15.7.4",
     "react-layout-kit": "^2.0.0",
     "react-lazy-load": "^4.0.1",
-    "react-pdf": "^9.2.1",
+    "react-pdf": "^10.2.0",
     "react-responsive": "^10.0.1",
     "react-rnd": "^10.5.2",
     "react-router-dom": "^7.9.5",
