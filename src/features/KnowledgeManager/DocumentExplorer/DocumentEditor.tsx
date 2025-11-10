@@ -619,6 +619,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
                 <Flexbox style={{ marginBottom: 4 }}>
                   <EmojiPicker
                     allowDelete
+                    defaultOpen={true}
                     locale={locale}
                     onChange={(emoji) => {
                       setCurrentEmoji(emoji);
