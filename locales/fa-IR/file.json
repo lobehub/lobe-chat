@@ -21,6 +21,44 @@
       "embeddingStatus": "برداری‌سازی"
     }
   },
+  "documentEditor": {
+    "addIcon": "افزودن آیکون",
+    "autoSaveMessage": "سند به‌صورت خودکار ذخیره می‌شود، نیازی به ذخیره دستی نیست",
+    "chooseIcon": "انتخاب آیکون",
+    "deleteConfirm": {
+      "content": "در شرف حذف این سند هستید. پس از حذف، قابل بازیابی نخواهد بود. لطفاً با احتیاط عمل کنید.",
+      "title": "حذف سند"
+    },
+    "deleteError": "حذف سند ناموفق بود",
+    "deleteSuccess": "سند با موفقیت حذف شد",
+    "editedAt": "آخرین ویرایش در {{time}}",
+    "editedBy": "آخرین ویرایش توسط {{name}}",
+    "editorPlaceholder": "محتوای سند را وارد کنید، برای باز کردن منوی دستورات / را فشار دهید",
+    "empty": {
+      "createNewDocument": "ایجاد سند جدید",
+      "title": "برای شروع یک سند انتخاب کنید",
+      "uploadMarkdown": "بارگذاری فایل Markdown"
+    },
+    "linkCopied": "پیوند کپی شد",
+    "menu": {
+      "copyLink": "کپی پیوند",
+      "exportDocument": "صادرات سند",
+      "importDocument": "وارد کردن سند",
+      "pin": "سند را سنجاق کن"
+    },
+    "saving": "در حال ذخیره‌سازی...",
+    "titlePlaceholder": "بدون عنوان",
+    "wordCount": "{{wordCount}} کلمه"
+  },
+  "documentList": {
+    "copyContent": "کپی کل محتوا",
+    "documentCount": "مجموع {{count}} سند",
+    "duplicate": "ایجاد نسخه مشابه",
+    "empty": "هیچ سندی موجود نیست، برای ایجاد اولین سند خود روی دکمه بالا کلیک کنید",
+    "noResults": "سندی مطابق با جستجو یافت نشد",
+    "selectNote": "برای ویرایش یک سند انتخاب کنید",
+    "untitled": "بدون عنوان"
+  },
   "empty": "هیچ فایل/پوشه‌ای بارگذاری نشده است",
   "header": {
     "actions": {
@@ -28,32 +66,28 @@
       "uploadFile": "بارگذاری فایل",
       "uploadFolder": "بارگذاری پوشه"
     },
-    "newNoteButton": "یادداشت جدید",
+    "newDocumentButton": "سند جدید",
     "newNoteDialog": {
       "cancel": "لغو",
-      "editTitle": "ویرایش یادداشت",
-      "emptyContent": "محتوای یادداشت نمی‌تواند خالی باشد",
-      "loadError": "بارگذاری یادداشت ناموفق بود، لطفاً دوباره تلاش کنید",
+      "editTitle": "ویرایش سند",
+      "emptyContent": "محتوای سند نمی‌تواند خالی باشد",
+      "loadError": "بارگذاری سند ناموفق بود، لطفاً دوباره تلاش کنید",
       "loading": "در حال بارگذاری...",
       "save": "ذخیره",
-      "saveError": "ذخیره یادداشت ناموفق بود، لطفاً دوباره تلاش کنید",
-      "saveSuccess": "یادداشت با موفقیت ذخیره شد",
-      "title": "یادداشت جدید",
-      "updateSuccess": "یادداشت با موفقیت به‌روزرسانی شد"
+      "saveError": "ذخیره سند ناموفق بود، لطفاً دوباره تلاش کنید",
+      "saveSuccess": "سند با موفقیت ذخیره شد",
+      "title": "سند جدید",
+      "updateSuccess": "سند با موفقیت به‌روزرسانی شد"
     },
     "uploadButton": "بارگذاری"
   },
   "home": {
     "getStarted": "شروع کنید",
-    "greeting": {
-      "afternoon": "عصر بخیر",
-      "evening": "شب بخیر",
-      "morning": "صبح بخیر"
-    },
+    "greeting": "شروع",
     "quickActions": "دسترسی سریع",
     "recentDocuments": "اسناد اخیر",
     "recentFiles": "فایل‌های اخیر",
-    "subtitle": "به پایگاه دانش خوش آمدید، از اینجا مدیریت اسناد و یادداشت‌های خود را آغاز کنید",
+    "subtitle": "به پایگاه دانش خوش آمدید، از اینجا مدیریت اسناد خود را آغاز کنید",
     "uploadEntries": {
       "files": {
         "title": "بارگذاری فایل"
@@ -78,7 +112,8 @@
     "title": "پایگاه دانش"
   },
   "menu": {
-    "allDocuments": "همه اسناد"
+    "allDocuments": "همه اسناد",
+    "allFiles": "تمام فایل‌ها"
   },
   "networkError": "دریافت مخزن دانش ناموفق بود، لطفاً پس از بررسی اتصال شبکه دوباره تلاش کنید.",
   "notSupportGuide": {
@@ -99,29 +134,11 @@
     },
     "title": "حالت استقرار فعلی از مدیریت فایل پشتیبانی نمی‌کند"
   },
-  "notesEditor": {
-    "addIcon": "افزودن آیکون",
-    "emojiPicker": {
-      "tooltip": "انتخاب آیکون"
-    },
-    "empty": {
-      "createNewDocument": "ایجاد سند جدید",
-      "title": "برای شروع یک سند انتخاب کنید",
-      "uploadMarkdown": "بارگذاری فایل Markdown"
-    },
-    "saving": "در حال ذخیره...",
-    "titlePlaceholder": "بدون عنوان"
-  },
-  "notesList": {
-    "empty": "یادداشتی وجود ندارد، برای ایجاد اولین یادداشت روی دکمه بالا کلیک کنید",
-    "noResults": "یادداشت مطابقی یافت نشد",
-    "selectNote": "برای ویرایش یک یادداشت انتخاب کنید",
-    "untitled": "بدون عنوان"
-  },
   "preview": {
     "downloadFile": "دانلود فایل",
     "unsupportedFileAndContact": "فرمت این فایل در حال حاضر از پیش‌نمایش آنلاین پشتیبانی نمی‌کند. در صورت نیاز به پیش‌نمایش، لطفاً <1>به ما بازخورد دهید</1>."
   },
+  "searchDocumentPlaceholder": "جستجوی سند",
   "searchFilePlaceholder": "جستجوی فایل",
   "tab": {
     "all": "همه",

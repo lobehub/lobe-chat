@@ -21,6 +21,44 @@
       "embeddingStatus": "ベクトル化"
     }
   },
+  "documentEditor": {
+    "addIcon": "アイコンを追加",
+    "autoSaveMessage": "ドキュメントは自動的に保存されます。手動で保存する必要はありません。",
+    "chooseIcon": "アイコンを選択",
+    "deleteConfirm": {
+      "content": "このドキュメントを削除しようとしています。削除後は復元できませんので、ご注意ください。",
+      "title": "ドキュメントの削除"
+    },
+    "deleteError": "ドキュメントの削除に失敗しました",
+    "deleteSuccess": "ドキュメントを削除しました",
+    "editedAt": "最終編集：{{time}}",
+    "editedBy": "最終編集者：{{name}}",
+    "editorPlaceholder": "ドキュメントの内容を入力し、「/」でコマンドメニューを開く",
+    "empty": {
+      "createNewDocument": "新しいドキュメントを作成",
+      "title": "ドキュメントを選択して開始",
+      "uploadMarkdown": "Markdownファイルをアップロード"
+    },
+    "linkCopied": "リンクをコピーしました",
+    "menu": {
+      "copyLink": "リンクをコピー",
+      "exportDocument": "ドキュメントをエクスポート",
+      "importDocument": "ドキュメントをインポート",
+      "pin": "ドキュメントをピン留め"
+    },
+    "saving": "保存中...",
+    "titlePlaceholder": "無題",
+    "wordCount": "{{wordCount}} 文字"
+  },
+  "documentList": {
+    "copyContent": "全文をコピー",
+    "documentCount": "全{{count}}件のドキュメント",
+    "duplicate": "複製を作成",
+    "empty": "ドキュメントがありません。上のボタンをクリックして最初のドキュメントを作成しましょう。",
+    "noResults": "一致するドキュメントが見つかりませんでした",
+    "selectNote": "ドキュメントを選択して編集を開始",
+    "untitled": "無題"
+  },
   "empty": "アップロードされたファイル/フォルダーはありません",
   "header": {
     "actions": {
@@ -28,32 +66,28 @@
       "uploadFile": "ファイルをアップロード",
       "uploadFolder": "フォルダーをアップロード"
     },
-    "newNoteButton": "新規ノート",
+    "newDocumentButton": "新規ドキュメント",
     "newNoteDialog": {
       "cancel": "キャンセル",
-      "editTitle": "ノートを編集",
-      "emptyContent": "ノートの内容は空にできません",
-      "loadError": "ノートの読み込みに失敗しました。もう一度お試しください。",
+      "editTitle": "ドキュメントを編集",
+      "emptyContent": "ドキュメントの内容は空にできません",
+      "loadError": "ドキュメントの読み込みに失敗しました。再試行してください。",
       "loading": "読み込み中...",
       "save": "保存",
-      "saveError": "ノートの保存に失敗しました。もう一度お試しください。",
-      "saveSuccess": "ノートが保存されました",
-      "title": "新規ノート",
-      "updateSuccess": "ノートが更新されました"
+      "saveError": "ドキュメントの保存に失敗しました。再試行してください。",
+      "saveSuccess": "ドキュメントを保存しました",
+      "title": "新規ドキュメント",
+      "updateSuccess": "ドキュメントを更新しました"
     },
     "uploadButton": "アップロード"
   },
   "home": {
     "getStarted": "はじめに",
-    "greeting": {
-      "afternoon": "こんにちは",
-      "evening": "こんばんは",
-      "morning": "おはようございます"
-    },
+    "greeting": "はじめに",
     "quickActions": "クイック操作",
     "recentDocuments": "最近のドキュメント",
     "recentFiles": "最近のファイル",
-    "subtitle": "ナレッジベースへようこそ。ここからドキュメントやノートの管理を始めましょう。",
+    "subtitle": "ナレッジベースへようこそ。ここからドキュメントの管理を始めましょう。",
     "uploadEntries": {
       "files": {
         "title": "ファイルをアップロード"
@@ -78,7 +112,8 @@
     "title": "知識ベース"
   },
   "menu": {
-    "allDocuments": "すべてのドキュメント"
+    "allDocuments": "すべてのドキュメント",
+    "allFiles": "すべてのファイル"
   },
   "networkError": "知識ベースの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
   "notSupportGuide": {
@@ -99,29 +134,11 @@
     },
     "title": "現在のデプロイメントモードはファイル管理をサポートしていません"
   },
-  "notesEditor": {
-    "addIcon": "アイコンを追加",
-    "emojiPicker": {
-      "tooltip": "アイコンを選択"
-    },
-    "empty": {
-      "createNewDocument": "新しいドキュメントを作成",
-      "title": "ドキュメントを選択して開始してください",
-      "uploadMarkdown": "Markdownファイルをアップロード"
-    },
-    "saving": "保存中...",
-    "titlePlaceholder": "無題"
-  },
-  "notesList": {
-    "empty": "ノートがまだありません。上のボタンをクリックして最初のノートを作成しましょう。",
-    "noResults": "一致するノートが見つかりませんでした",
-    "selectNote": "編集を始めるにはノートを選択してください",
-    "untitled": "無題"
-  },
   "preview": {
     "downloadFile": "ファイルをダウンロード",
     "unsupportedFileAndContact": "このファイル形式はオンラインプレビューをサポートしていません。プレビューのリクエストがある場合は、ぜひ<1>ご連絡ください</1>。"
   },
+  "searchDocumentPlaceholder": "ドキュメントを検索",
   "searchFilePlaceholder": "ファイルを検索",
   "tab": {
     "all": "すべて",

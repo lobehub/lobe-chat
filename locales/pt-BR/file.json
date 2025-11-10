@@ -21,6 +21,44 @@
       "embeddingStatus": "Vetorização"
     }
   },
+  "documentEditor": {
+    "addIcon": "Adicionar ícone",
+    "autoSaveMessage": "O documento é salvo automaticamente, não é necessário salvar manualmente",
+    "chooseIcon": "Escolher ícone",
+    "deleteConfirm": {
+      "content": "Este documento será excluído permanentemente e não poderá ser recuperado. Por favor, tenha cuidado.",
+      "title": "Excluir documento"
+    },
+    "deleteError": "Falha ao excluir o documento",
+    "deleteSuccess": "Documento excluído com sucesso",
+    "editedAt": "Última edição em {{time}}",
+    "editedBy": "Última edição por {{name}}",
+    "editorPlaceholder": "Digite o conteúdo do documento, pressione / para abrir o menu de comandos",
+    "empty": {
+      "createNewDocument": "Criar novo documento",
+      "title": "Selecione um documento para começar",
+      "uploadMarkdown": "Carregar arquivo Markdown"
+    },
+    "linkCopied": "Link copiado",
+    "menu": {
+      "copyLink": "Copiar link",
+      "exportDocument": "Exportar documento",
+      "importDocument": "Importar documento",
+      "pin": "Fixar documento"
+    },
+    "saving": "Salvando...",
+    "titlePlaceholder": "Sem título",
+    "wordCount": "{{wordCount}} palavras"
+  },
+  "documentList": {
+    "copyContent": "Copiar conteúdo completo",
+    "documentCount": "Total de {{count}} documentos",
+    "duplicate": "Criar uma cópia",
+    "empty": "Nenhum documento disponível. Clique no botão acima para criar seu primeiro documento",
+    "noResults": "Nenhum documento correspondente encontrado",
+    "selectNote": "Selecione um documento para começar a editar",
+    "untitled": "Sem título"
+  },
   "empty": "Nenhum arquivo/pasta enviado até o momento",
   "header": {
     "actions": {
@@ -28,32 +66,28 @@
       "uploadFile": "Enviar arquivo",
       "uploadFolder": "Enviar pasta"
     },
-    "newNoteButton": "Nova Nota",
+    "newDocumentButton": "Novo documento",
     "newNoteDialog": {
       "cancel": "Cancelar",
-      "editTitle": "Editar Nota",
-      "emptyContent": "O conteúdo da nota não pode estar vazio",
-      "loadError": "Falha ao carregar a nota, tente novamente",
+      "editTitle": "Editar documento",
+      "emptyContent": "O conteúdo do documento não pode estar vazio",
+      "loadError": "Falha ao carregar o documento, tente novamente",
       "loading": "Carregando...",
       "save": "Salvar",
-      "saveError": "Falha ao salvar a nota, tente novamente",
-      "saveSuccess": "Nota salva com sucesso",
-      "title": "Nova Nota",
-      "updateSuccess": "Nota atualizada com sucesso"
+      "saveError": "Falha ao salvar o documento, tente novamente",
+      "saveSuccess": "Documento salvo com sucesso",
+      "title": "Novo documento",
+      "updateSuccess": "Documento atualizado com sucesso"
     },
     "uploadButton": "Enviar"
   },
   "home": {
     "getStarted": "Começar",
-    "greeting": {
-      "afternoon": "Boa tarde",
-      "evening": "Boa noite",
-      "morning": "Bom dia"
-    },
+    "greeting": "Início",
     "quickActions": "Ações Rápidas",
     "recentDocuments": "Documentos Recentes",
     "recentFiles": "Arquivos Recentes",
-    "subtitle": "Bem-vindo à base de conhecimento, comece a gerenciar seus documentos e notas aqui",
+    "subtitle": "Bem-vindo ao seu repositório de conhecimento. Comece a gerenciar seus documentos aqui",
     "uploadEntries": {
       "files": {
         "title": "Enviar Arquivos"
@@ -78,7 +112,8 @@
     "title": "Repositório de conhecimento"
   },
   "menu": {
-    "allDocuments": "Todos os Documentos"
+    "allDocuments": "Todos os Documentos",
+    "allFiles": "Todos os arquivos"
   },
   "networkError": "Falha ao acessar a base de conhecimento, por favor verifique a conexão de rede e tente novamente",
   "notSupportGuide": {
@@ -99,29 +134,11 @@
     },
     "title": "O modo de implantação atual não suporta gerenciamento de arquivos"
   },
-  "notesEditor": {
-    "addIcon": "Adicionar Ícone",
-    "emojiPicker": {
-      "tooltip": "Escolher Ícone"
-    },
-    "empty": {
-      "createNewDocument": "Criar Novo Documento",
-      "title": "Selecione um documento para começar",
-      "uploadMarkdown": "Enviar Arquivo Markdown"
-    },
-    "saving": "Salvando...",
-    "titlePlaceholder": "Sem título"
-  },
-  "notesList": {
-    "empty": "Nenhuma nota ainda, clique no botão acima para criar sua primeira nota",
-    "noResults": "Nenhuma nota correspondente encontrada",
-    "selectNote": "Selecione uma nota para começar a editar",
-    "untitled": "Sem título"
-  },
   "preview": {
     "downloadFile": "Baixar arquivo",
     "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
   },
+  "searchDocumentPlaceholder": "Pesquisar documentos",
   "searchFilePlaceholder": "Pesquisar arquivo",
   "tab": {
     "all": "Todos",

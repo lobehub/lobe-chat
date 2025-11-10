@@ -54,9 +54,9 @@
     "copyContent": "复制全文",
     "documentCount": "共 {{count}} 个文档",
     "duplicate": "创建副本",
-    "empty": "暂无笔记，点击上方按钮创建你的第一篇笔记",
-    "noResults": "未找到匹配的笔记",
-    "selectNote": "选择一个笔记开始编辑",
+    "empty": "暂无文档，点击上方按钮创建你的第一篇文档",
+    "noResults": "未找到匹配的文档",
+    "selectNote": "选择一个文档开始编辑",
     "untitled": "无标题"
   },
   "empty": "暂无已上传文件/文件夹",
@@ -66,32 +66,28 @@
       "uploadFile": "上传文件",
       "uploadFolder": "上传文件夹"
     },
-    "newNoteButton": "新建笔记",
+    "newDocumentButton": "新建文档",
     "newNoteDialog": {
       "cancel": "取消",
-      "editTitle": "编辑笔记",
-      "emptyContent": "笔记内容不能为空",
-      "loadError": "加载笔记失败,请重试",
+      "editTitle": "编辑文档",
+      "emptyContent": "文档内容不能为空",
+      "loadError": "加载文档失败,请重试",
       "loading": "加载中...",
       "save": "保存",
-      "saveError": "保存笔记失败,请重试",
-      "saveSuccess": "笔记保存成功",
-      "title": "新建笔记",
-      "updateSuccess": "笔记更新成功"
+      "saveError": "保存文档失败,请重试",
+      "saveSuccess": "文档保存成功",
+      "title": "新建文档",
+      "updateSuccess": "文档更新成功"
     },
     "uploadButton": "上传"
   },
   "home": {
     "getStarted": "开始使用",
-    "greeting": {
-      "afternoon": "下午好",
-      "evening": "晚上好",
-      "morning": "早上好"
-    },
+    "greeting": "开始",
     "quickActions": "快捷操作",
     "recentDocuments": "最近文档",
     "recentFiles": "最近文件",
-    "subtitle": "欢迎使用知识库，从这里开始管理你的文档和笔记",
+    "subtitle": "欢迎使用知识库，从这里开始管理你的文档和文档",
     "uploadEntries": {
       "files": {
         "title": "上传文件"
@@ -116,7 +112,8 @@
     "title": "知识库"
   },
   "menu": {
-    "allDocuments": "全部文档"
+    "allDocuments": "全部文档",
+    "allFiles": "全部文件"
   },
   "networkError": "获取知识库失败，请检测网络连接后重试",
   "notSupportGuide": {
@@ -136,25 +133,6 @@
       }
     },
     "title": "当前部署模式不支持文件管理"
-  },
-  "notesEditor": {
-    "addIcon": "添加图标",
-    "emojiPicker": {
-      "tooltip": "选择图标"
-    },
-    "empty": {
-      "createNewDocument": "创建新文档",
-      "title": "选择一个文档以开始",
-      "uploadMarkdown": "上传 Markdown 文件"
-    },
-    "saving": "保存中...",
-    "titlePlaceholder": "无标题"
-  },
-  "notesList": {
-    "empty": "暂无笔记，点击上方按钮创建你的第一篇笔记",
-    "noResults": "未找到匹配的笔记",
-    "selectNote": "选择一个笔记开始编辑",
-    "untitled": "无标题"
   },
   "preview": {
     "downloadFile": "下载文件",

@@ -21,6 +21,44 @@
       "embeddingStatus": "Trạng thái vector hóa"
     }
   },
+  "documentEditor": {
+    "addIcon": "Thêm biểu tượng",
+    "autoSaveMessage": "Tài liệu sẽ được tự động lưu, không cần lưu thủ công",
+    "chooseIcon": "Chọn biểu tượng",
+    "deleteConfirm": {
+      "content": "Tài liệu này sẽ bị xóa và không thể khôi phục. Vui lòng cẩn trọng.",
+      "title": "Xóa tài liệu"
+    },
+    "deleteError": "Xóa tài liệu thất bại",
+    "deleteSuccess": "Xóa tài liệu thành công",
+    "editedAt": "Chỉnh sửa lần cuối vào {{time}}",
+    "editedBy": "Người chỉnh sửa cuối cùng: {{name}}",
+    "editorPlaceholder": "Nhập nội dung tài liệu, nhấn / để mở menu lệnh",
+    "empty": {
+      "createNewDocument": "Tạo tài liệu mới",
+      "title": "Chọn một tài liệu để bắt đầu",
+      "uploadMarkdown": "Tải lên tệp Markdown"
+    },
+    "linkCopied": "Đã sao chép liên kết",
+    "menu": {
+      "copyLink": "Sao chép liên kết",
+      "exportDocument": "Xuất tài liệu",
+      "importDocument": "Nhập tài liệu",
+      "pin": "Ghim tài liệu"
+    },
+    "saving": "Đang lưu...",
+    "titlePlaceholder": "Không có tiêu đề",
+    "wordCount": "{{wordCount}} từ"
+  },
+  "documentList": {
+    "copyContent": "Sao chép toàn bộ nội dung",
+    "documentCount": "Tổng cộng {{count}} tài liệu",
+    "duplicate": "Tạo bản sao",
+    "empty": "Chưa có tài liệu nào, nhấn nút phía trên để tạo tài liệu đầu tiên của bạn",
+    "noResults": "Không tìm thấy tài liệu phù hợp",
+    "selectNote": "Chọn một tài liệu để bắt đầu chỉnh sửa",
+    "untitled": "Không có tiêu đề"
+  },
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
   "header": {
     "actions": {
@@ -28,32 +66,28 @@
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
     },
-    "newNoteButton": "Tạo ghi chú mới",
+    "newDocumentButton": "Tạo tài liệu mới",
     "newNoteDialog": {
       "cancel": "Hủy",
-      "editTitle": "Chỉnh sửa ghi chú",
-      "emptyContent": "Nội dung ghi chú không được để trống",
-      "loadError": "Tải ghi chú thất bại, vui lòng thử lại",
+      "editTitle": "Chỉnh sửa tài liệu",
+      "emptyContent": "Nội dung tài liệu không được để trống",
+      "loadError": "Tải tài liệu thất bại, vui lòng thử lại",
       "loading": "Đang tải...",
       "save": "Lưu",
-      "saveError": "Lưu ghi chú thất bại, vui lòng thử lại",
-      "saveSuccess": "Ghi chú đã được lưu thành công",
-      "title": "Tạo ghi chú mới",
-      "updateSuccess": "Ghi chú đã được cập nhật thành công"
+      "saveError": "Lưu tài liệu thất bại, vui lòng thử lại",
+      "saveSuccess": "Lưu tài liệu thành công",
+      "title": "Tạo tài liệu mới",
+      "updateSuccess": "Cập nhật tài liệu thành công"
     },
     "uploadButton": "Tải lên"
   },
   "home": {
     "getStarted": "Bắt đầu",
-    "greeting": {
-      "afternoon": "Chào buổi chiều",
-      "evening": "Chào buổi tối",
-      "morning": "Chào buổi sáng"
-    },
+    "greeting": "Bắt đầu",
     "quickActions": "Hành động nhanh",
     "recentDocuments": "Tài liệu gần đây",
     "recentFiles": "Tệp gần đây",
-    "subtitle": "Chào mừng đến với kho kiến thức, bắt đầu quản lý tài liệu và ghi chú của bạn từ đây",
+    "subtitle": "Chào mừng đến với kho tri thức, bắt đầu quản lý tài liệu của bạn từ đây",
     "uploadEntries": {
       "files": {
         "title": "Tải lên tệp"
@@ -78,7 +112,8 @@
     "title": "Kho tri thức"
   },
   "menu": {
-    "allDocuments": "Tất cả tài liệu"
+    "allDocuments": "Tất cả tài liệu",
+    "allFiles": "Tất cả tệp"
   },
   "networkError": "Không thể lấy kho tri thức, vui lòng kiểm tra kết nối mạng và thử lại",
   "notSupportGuide": {
@@ -99,29 +134,11 @@
     },
     "title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp"
   },
-  "notesEditor": {
-    "addIcon": "Thêm biểu tượng",
-    "emojiPicker": {
-      "tooltip": "Chọn biểu tượng"
-    },
-    "empty": {
-      "createNewDocument": "Tạo tài liệu mới",
-      "title": "Chọn một tài liệu để bắt đầu",
-      "uploadMarkdown": "Tải lên tệp Markdown"
-    },
-    "saving": "Đang lưu...",
-    "titlePlaceholder": "Không có tiêu đề"
-  },
-  "notesList": {
-    "empty": "Chưa có ghi chú nào, nhấn nút phía trên để tạo ghi chú đầu tiên của bạn",
-    "noResults": "Không tìm thấy ghi chú phù hợp",
-    "selectNote": "Chọn một ghi chú để bắt đầu chỉnh sửa",
-    "untitled": "Không có tiêu đề"
-  },
   "preview": {
     "downloadFile": "Tải tệp",
     "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
   },
+  "searchDocumentPlaceholder": "Tìm kiếm tài liệu",
   "searchFilePlaceholder": "Tìm kiếm tệp",
   "tab": {
     "all": "Tất cả",

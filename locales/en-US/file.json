@@ -54,9 +54,9 @@
     "copyContent": "Copy All",
     "documentCount": "Total {{count}} documents",
     "duplicate": "Duplicate",
-    "empty": "No notes yet, click the button above to create your first note",
-    "noResults": "No matching notes found",
-    "selectNote": "Select a note to start editing",
+    "empty": "No documents yet. Click the button above to create your first one.",
+    "noResults": "No matching documents found.",
+    "selectNote": "Select a document to start editing.",
     "untitled": "Untitled"
   },
   "empty": "No files or folders have been uploaded yet.",
@@ -66,32 +66,28 @@
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },
-    "newNoteButton": "New Note",
+    "newDocumentButton": "New Document",
     "newNoteDialog": {
       "cancel": "Cancel",
-      "editTitle": "Edit Note",
-      "emptyContent": "Note content cannot be empty",
-      "loadError": "Failed to load note, please try again",
+      "editTitle": "Edit Document",
+      "emptyContent": "Document content cannot be empty.",
+      "loadError": "Failed to load the document. Please try again.",
       "loading": "Loading...",
       "save": "Save",
-      "saveError": "Failed to save note, please try again",
-      "saveSuccess": "Note saved successfully",
-      "title": "New Note",
-      "updateSuccess": "Note updated successfully"
+      "saveError": "Failed to save the document. Please try again.",
+      "saveSuccess": "Document saved successfully.",
+      "title": "New Document",
+      "updateSuccess": "Document updated successfully."
     },
     "uploadButton": "Upload"
   },
   "home": {
     "getStarted": "Get Started",
-    "greeting": {
-      "afternoon": "Good Afternoon",
-      "evening": "Good Evening",
-      "morning": "Good Morning"
-    },
+    "greeting": "Get Started",
     "quickActions": "Quick Actions",
     "recentDocuments": "Recent Documents",
     "recentFiles": "Recent Files",
-    "subtitle": "Welcome to your knowledge base. Start managing your documents and notes here.",
+    "subtitle": "Welcome to your knowledge base. Start managing your documents here.",
     "uploadEntries": {
       "files": {
         "title": "Upload Files"
@@ -116,7 +112,8 @@
     "title": "Knowledge Base"
   },
   "menu": {
-    "allDocuments": "All Documents"
+    "allDocuments": "All Documents",
+    "allFiles": "All Files"
   },
   "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
   "notSupportGuide": {
@@ -136,25 +133,6 @@
       }
     },
     "title": "The current deployment mode does not support file management"
-  },
-  "notesEditor": {
-    "addIcon": "Add Icon",
-    "emojiPicker": {
-      "tooltip": "Choose Icon"
-    },
-    "empty": {
-      "createNewDocument": "Create New Document",
-      "title": "Select a document to get started",
-      "uploadMarkdown": "Upload Markdown File"
-    },
-    "saving": "Saving...",
-    "titlePlaceholder": "Untitled"
-  },
-  "notesList": {
-    "empty": "No notes yet, click the button above to create your first note",
-    "noResults": "No matching notes found",
-    "selectNote": "Select a note to start editing",
-    "untitled": "Untitled"
   },
   "preview": {
     "downloadFile": "Download File",

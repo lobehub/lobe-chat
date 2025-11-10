@@ -21,6 +21,44 @@
       "embeddingStatus": "Indeksowanie"
     }
   },
+  "documentEditor": {
+    "addIcon": "Dodaj ikonę",
+    "autoSaveMessage": "Dokument jest zapisywany automatycznie, nie ma potrzeby zapisywania ręcznego",
+    "chooseIcon": "Wybierz ikonę",
+    "deleteConfirm": {
+      "content": "Zamierzasz usunąć ten dokument. Po usunięciu nie będzie można go odzyskać. Proszę postępować ostrożnie.",
+      "title": "Usuń dokument"
+    },
+    "deleteError": "Nie udało się usunąć dokumentu",
+    "deleteSuccess": "Dokument został pomyślnie usunięty",
+    "editedAt": "Ostatnia edycja: {{time}}",
+    "editedBy": "Ostatnio edytował: {{name}}",
+    "editorPlaceholder": "Wpisz treść dokumentu, naciśnij / aby otworzyć menu poleceń",
+    "empty": {
+      "createNewDocument": "Utwórz nowy dokument",
+      "title": "Wybierz dokument, aby rozpocząć",
+      "uploadMarkdown": "Prześlij plik Markdown"
+    },
+    "linkCopied": "Link został skopiowany",
+    "menu": {
+      "copyLink": "Kopiuj link",
+      "exportDocument": "Eksportuj dokument",
+      "importDocument": "Importuj dokument",
+      "pin": "Przypnij dokument"
+    },
+    "saving": "Zapisywanie...",
+    "titlePlaceholder": "Bez tytułu",
+    "wordCount": "{{wordCount}} słów"
+  },
+  "documentList": {
+    "copyContent": "Kopiuj całą treść",
+    "documentCount": "Łącznie {{count}} dokumentów",
+    "duplicate": "Utwórz kopię",
+    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć pierwszy dokument",
+    "noResults": "Nie znaleziono pasujących dokumentów",
+    "selectNote": "Wybierz dokument, aby rozpocząć edycję",
+    "untitled": "Bez tytułu"
+  },
   "empty": "Brak przesłanych plików/folderów",
   "header": {
     "actions": {
@@ -28,32 +66,28 @@
       "uploadFile": "Prześlij plik",
       "uploadFolder": "Prześlij folder"
     },
-    "newNoteButton": "Nowa notatka",
+    "newDocumentButton": "Nowy dokument",
     "newNoteDialog": {
       "cancel": "Anuluj",
-      "editTitle": "Edytuj notatkę",
-      "emptyContent": "Treść notatki nie może być pusta",
-      "loadError": "Nie udało się załadować notatki, spróbuj ponownie",
+      "editTitle": "Edytuj dokument",
+      "emptyContent": "Treść dokumentu nie może być pusta",
+      "loadError": "Nie udało się załadować dokumentu, spróbuj ponownie",
       "loading": "Ładowanie...",
       "save": "Zapisz",
-      "saveError": "Nie udało się zapisać notatki, spróbuj ponownie",
-      "saveSuccess": "Notatka została zapisana",
-      "title": "Nowa notatka",
-      "updateSuccess": "Notatka została zaktualizowana"
+      "saveError": "Nie udało się zapisać dokumentu, spróbuj ponownie",
+      "saveSuccess": "Dokument został zapisany pomyślnie",
+      "title": "Nowy dokument",
+      "updateSuccess": "Dokument został zaktualizowany pomyślnie"
     },
     "uploadButton": "Prześlij"
   },
   "home": {
     "getStarted": "Rozpocznij",
-    "greeting": {
-      "afternoon": "Dzień dobry",
-      "evening": "Dobry wieczór",
-      "morning": "Dzień dobry"
-    },
+    "greeting": "Zaczynamy",
     "quickActions": "Szybkie akcje",
     "recentDocuments": "Ostatnie dokumenty",
     "recentFiles": "Ostatnie pliki",
-    "subtitle": "Witamy w bazie wiedzy — zacznij zarządzać swoimi dokumentami i notatkami",
+    "subtitle": "Witamy w bazie wiedzy. Zacznij zarządzać swoimi dokumentami już teraz",
     "uploadEntries": {
       "files": {
         "title": "Prześlij pliki"
@@ -78,7 +112,8 @@
     "title": "Baza wiedzy"
   },
   "menu": {
-    "allDocuments": "Wszystkie dokumenty"
+    "allDocuments": "Wszystkie dokumenty",
+    "allFiles": "Wszystkie pliki"
   },
   "networkError": "Nie udało się uzyskać dostępu do bazy wiedzy, proszę sprawdzić połączenie sieciowe i spróbować ponownie",
   "notSupportGuide": {
@@ -99,29 +134,11 @@
     },
     "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
   },
-  "notesEditor": {
-    "addIcon": "Dodaj ikonę",
-    "emojiPicker": {
-      "tooltip": "Wybierz ikonę"
-    },
-    "empty": {
-      "createNewDocument": "Utwórz nowy dokument",
-      "title": "Wybierz dokument, aby rozpocząć",
-      "uploadMarkdown": "Prześlij plik Markdown"
-    },
-    "saving": "Zapisywanie...",
-    "titlePlaceholder": "Bez tytułu"
-  },
-  "notesList": {
-    "empty": "Brak notatek. Kliknij przycisk powyżej, aby utworzyć swoją pierwszą notatkę",
-    "noResults": "Nie znaleziono pasujących notatek",
-    "selectNote": "Wybierz notatkę, aby rozpocząć edycję",
-    "untitled": "Bez tytułu"
-  },
   "preview": {
     "downloadFile": "Pobierz plik",
     "unsupportedFileAndContact": "Ten format pliku nie jest obecnie obsługiwany w podglądzie online. Jeśli chcesz uzyskać podgląd, zachęcamy do <1>skontaktowania się z nami</1>."
   },
+  "searchDocumentPlaceholder": "Szukaj dokumentu",
   "searchFilePlaceholder": "Szukaj pliku",
   "tab": {
     "all": "Wszystko",

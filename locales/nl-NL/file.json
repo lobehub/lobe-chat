@@ -21,6 +21,44 @@
       "embeddingStatus": "Vectorisatie"
     }
   },
+  "documentEditor": {
+    "addIcon": "Pictogram toevoegen",
+    "autoSaveMessage": "Documenten worden automatisch opgeslagen, handmatig opslaan is niet nodig",
+    "chooseIcon": "Pictogram kiezen",
+    "deleteConfirm": {
+      "content": "Je staat op het punt dit document te verwijderen. Dit kan niet ongedaan worden gemaakt. Wees voorzichtig.",
+      "title": "Document verwijderen"
+    },
+    "deleteError": "Verwijderen van document mislukt",
+    "deleteSuccess": "Document succesvol verwijderd",
+    "editedAt": "Laatst bewerkt op {{time}}",
+    "editedBy": "Laatst bewerkt door {{name}}",
+    "editorPlaceholder": "Voer documentinhoud in, druk op / om het opdrachtmenu te openen",
+    "empty": {
+      "createNewDocument": "Nieuw document aanmaken",
+      "title": "Selecteer een document om te beginnen",
+      "uploadMarkdown": "Markdown-bestand uploaden"
+    },
+    "linkCopied": "Link gekopieerd",
+    "menu": {
+      "copyLink": "Link kopiëren",
+      "exportDocument": "Document exporteren",
+      "importDocument": "Document importeren",
+      "pin": "Document vastzetten"
+    },
+    "saving": "Bezig met opslaan...",
+    "titlePlaceholder": "Zonder titel",
+    "wordCount": "{{wordCount}} woorden"
+  },
+  "documentList": {
+    "copyContent": "Volledige inhoud kopiëren",
+    "documentCount": "Totaal {{count}} documenten",
+    "duplicate": "Kopie maken",
+    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken",
+    "noResults": "Geen overeenkomende documenten gevonden",
+    "selectNote": "Selecteer een document om te beginnen met bewerken",
+    "untitled": "Zonder titel"
+  },
   "empty": "Geen bestanden/mappen geüpload",
   "header": {
     "actions": {
@@ -28,32 +66,28 @@
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
     },
-    "newNoteButton": "Nieuwe notitie",
+    "newDocumentButton": "Nieuw document",
     "newNoteDialog": {
       "cancel": "Annuleren",
-      "editTitle": "Notitie bewerken",
-      "emptyContent": "De inhoud van de notitie mag niet leeg zijn",
-      "loadError": "Notitie laden mislukt, probeer het opnieuw",
+      "editTitle": "Document bewerken",
+      "emptyContent": "Documentinhoud mag niet leeg zijn",
+      "loadError": "Laden van document mislukt, probeer het opnieuw",
       "loading": "Bezig met laden...",
       "save": "Opslaan",
-      "saveError": "Notitie opslaan mislukt, probeer het opnieuw",
-      "saveSuccess": "Notitie succesvol opgeslagen",
-      "title": "Nieuwe notitie",
-      "updateSuccess": "Notitie succesvol bijgewerkt"
+      "saveError": "Opslaan van document mislukt, probeer het opnieuw",
+      "saveSuccess": "Document succesvol opgeslagen",
+      "title": "Nieuw document",
+      "updateSuccess": "Document succesvol bijgewerkt"
     },
     "uploadButton": "Uploaden"
   },
   "home": {
     "getStarted": "Aan de slag",
-    "greeting": {
-      "afternoon": "Goedemiddag",
-      "evening": "Goedenavond",
-      "morning": "Goedemorgen"
-    },
+    "greeting": "Aan de slag",
     "quickActions": "Snelle acties",
     "recentDocuments": "Recente documenten",
     "recentFiles": "Recente bestanden",
-    "subtitle": "Welkom bij de kennisbank. Begin hier met het beheren van je documenten en notities",
+    "subtitle": "Welkom bij je kennisbank. Begin hier met het beheren van je documenten",
     "uploadEntries": {
       "files": {
         "title": "Bestanden uploaden"
@@ -78,7 +112,8 @@
     "title": "Kennisbank"
   },
   "menu": {
-    "allDocuments": "Alle documenten"
+    "allDocuments": "Alle documenten",
+    "allFiles": "Alle bestanden"
   },
   "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
   "notSupportGuide": {
@@ -99,29 +134,11 @@
     },
     "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
   },
-  "notesEditor": {
-    "addIcon": "Pictogram toevoegen",
-    "emojiPicker": {
-      "tooltip": "Kies een pictogram"
-    },
-    "empty": {
-      "createNewDocument": "Nieuw document aanmaken",
-      "title": "Selecteer een document om te beginnen",
-      "uploadMarkdown": "Markdown-bestand uploaden"
-    },
-    "saving": "Bezig met opslaan...",
-    "titlePlaceholder": "Zonder titel"
-  },
-  "notesList": {
-    "empty": "Nog geen notities. Klik op de knop hierboven om je eerste notitie te maken",
-    "noResults": "Geen overeenkomende notities gevonden",
-    "selectNote": "Selecteer een notitie om te beginnen met bewerken",
-    "untitled": "Zonder titel"
-  },
   "preview": {
     "downloadFile": "Bestand downloaden",
     "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
   },
+  "searchDocumentPlaceholder": "Documenten zoeken",
   "searchFilePlaceholder": "Zoek bestand",
   "tab": {
     "all": "Alles",

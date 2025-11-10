@@ -21,6 +21,44 @@
       "embeddingStatus": "تحويل إلى متجهات"
     }
   },
+  "documentEditor": {
+    "addIcon": "إضافة أيقونة",
+    "autoSaveMessage": "يتم حفظ المستند تلقائيًا، لا حاجة للحفظ اليدوي",
+    "chooseIcon": "اختر أيقونة",
+    "deleteConfirm": {
+      "content": "سيتم حذف هذا المستند، ولا يمكن استعادته بعد الحذف. يرجى توخي الحذر.",
+      "title": "حذف المستند"
+    },
+    "deleteError": "فشل في حذف المستند",
+    "deleteSuccess": "تم حذف المستند بنجاح",
+    "editedAt": "آخر تعديل في {{time}}",
+    "editedBy": "آخر من عدّل: {{name}}",
+    "editorPlaceholder": "أدخل محتوى المستند، اضغط / لفتح قائمة الأوامر",
+    "empty": {
+      "createNewDocument": "إنشاء مستند جديد",
+      "title": "اختر مستندًا للبدء",
+      "uploadMarkdown": "رفع ملف Markdown"
+    },
+    "linkCopied": "تم نسخ الرابط",
+    "menu": {
+      "copyLink": "نسخ الرابط",
+      "exportDocument": "تصدير المستند",
+      "importDocument": "استيراد مستند",
+      "pin": "تثبيت المستند"
+    },
+    "saving": "جارٍ الحفظ...",
+    "titlePlaceholder": "بدون عنوان",
+    "wordCount": "{{wordCount}} كلمة"
+  },
+  "documentList": {
+    "copyContent": "نسخ المحتوى الكامل",
+    "documentCount": "إجمالي {{count}} مستند",
+    "duplicate": "إنشاء نسخة",
+    "empty": "لا توجد مستندات حاليًا، انقر على الزر أعلاه لإنشاء أول مستند لك",
+    "noResults": "لم يتم العثور على مستندات مطابقة",
+    "selectNote": "اختر مستندًا للبدء في التحرير",
+    "untitled": "بدون عنوان"
+  },
   "empty": "لا توجد ملفات/مجلدات تم تحميلها بعد",
   "header": {
     "actions": {
@@ -28,28 +66,24 @@
       "uploadFile": "رفع ملف",
       "uploadFolder": "رفع مجلد"
     },
-    "newNoteButton": "ملاحظة جديدة",
+    "newDocumentButton": "مستند جديد",
     "newNoteDialog": {
       "cancel": "إلغاء",
-      "editTitle": "تعديل الملاحظة",
-      "emptyContent": "لا يمكن أن يكون محتوى الملاحظة فارغًا",
-      "loadError": "فشل في تحميل الملاحظة، يرجى المحاولة مرة أخرى",
+      "editTitle": "تحرير المستند",
+      "emptyContent": "لا يمكن أن يكون محتوى المستند فارغًا",
+      "loadError": "فشل في تحميل المستند، يرجى المحاولة مرة أخرى",
       "loading": "جارٍ التحميل...",
       "save": "حفظ",
-      "saveError": "فشل في حفظ الملاحظة، يرجى المحاولة مرة أخرى",
-      "saveSuccess": "تم حفظ الملاحظة بنجاح",
-      "title": "ملاحظة جديدة",
-      "updateSuccess": "تم تحديث الملاحظة بنجاح"
+      "saveError": "فشل في حفظ المستند، يرجى المحاولة مرة أخرى",
+      "saveSuccess": "تم حفظ المستند بنجاح",
+      "title": "مستند جديد",
+      "updateSuccess": "تم تحديث المستند بنجاح"
     },
     "uploadButton": "رفع"
   },
   "home": {
     "getStarted": "ابدأ الآن",
-    "greeting": {
-      "afternoon": "مساء الخير",
-      "evening": "مساء الخير",
-      "morning": "صباح الخير"
-    },
+    "greeting": "ابدأ",
     "quickActions": "إجراءات سريعة",
     "recentDocuments": "المستندات الأخيرة",
     "recentFiles": "الملفات الأخيرة",
@@ -78,7 +112,8 @@
     "title": "المكتبة المعرفية"
   },
   "menu": {
-    "allDocuments": "جميع المستندات"
+    "allDocuments": "جميع المستندات",
+    "allFiles": "جميع الملفات"
   },
   "networkError": "فشل في الحصول على قاعدة المعرفة، يرجى التحقق من اتصال الشبكة ثم إعادة المحاولة",
   "notSupportGuide": {
@@ -99,29 +134,11 @@
     },
     "title": "الوضع الحالي للنشر لا يدعم إدارة الملفات"
   },
-  "notesEditor": {
-    "addIcon": "إضافة رمز",
-    "emojiPicker": {
-      "tooltip": "اختر رمزًا"
-    },
-    "empty": {
-      "createNewDocument": "إنشاء مستند جديد",
-      "title": "اختر مستندًا للبدء",
-      "uploadMarkdown": "رفع ملف Markdown"
-    },
-    "saving": "جارٍ الحفظ...",
-    "titlePlaceholder": "بدون عنوان"
-  },
-  "notesList": {
-    "empty": "لا توجد ملاحظات بعد، انقر على الزر أعلاه لإنشاء أول ملاحظة لك",
-    "noResults": "لم يتم العثور على ملاحظات مطابقة",
-    "selectNote": "اختر ملاحظة للبدء في التعديل",
-    "untitled": "بدون عنوان"
-  },
   "preview": {
     "downloadFile": "تحميل الملف",
     "unsupportedFileAndContact": "هذا التنسيق من الملفات غير مدعوم للمعاينة عبر الإنترنت، إذا كان لديك طلب للمعاينة، فلا تتردد في <1>إبلاغنا</1>"
   },
+  "searchDocumentPlaceholder": "ابحث في المستندات",
   "searchFilePlaceholder": "بحث عن ملف",
   "tab": {
     "all": "الكل",
