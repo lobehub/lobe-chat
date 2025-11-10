@@ -4,7 +4,7 @@ import { CaretDownFilled } from '@ant-design/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { motion } from 'framer-motion';
-import { FileText, FolderOpen, Globe, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
+import { FileText, FolderOpen, ImageIcon, Mic2, SquarePlay } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -70,11 +70,11 @@ const CategoryMenu = memo(() => {
         key: FilesTabs.Videos,
         label: t('tab.videos'),
       },
-      {
-        icon: <Icon icon={Globe} />,
-        key: FilesTabs.Websites,
-        label: t('tab.websites'),
-      },
+      // {
+      //   icon: <Icon icon={Globe} />,
+      //   key: FilesTabs.Websites,
+      //   label: t('tab.websites'),
+      // },
     ],
     [t],
   );
