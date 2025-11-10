@@ -44,6 +44,7 @@ const RenamePopover = memo<RenamePopoverProps>(
     const [emoji, setEmoji] = useState<string | undefined>(currentEmoji);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const inputRef = useRef<any>(null);
+    const isInteractingWithEmojiPicker = useRef(false);
 
     // Reset state when popover opens
     const handleOpenChange = (nextOpen: boolean) => {
@@ -74,11 +75,19 @@ const RenamePopover = memo<RenamePopoverProps>(
     };
 
     const handleBlur = () => {
-      // Save title on blur if it changed
-      if (title.trim() && title.trim() !== currentTitle) {
-        onConfirm(title.trim(), emoji);
-      }
-      onOpenChange(false);
+      // Use setTimeout to check if we're interacting with emoji picker
+      setTimeout(() => {
+        // Don't close if emoji picker interaction is in progress
+        if (isInteractingWithEmojiPicker.current) {
+          return;
+        }
+
+        // Save title on blur if it changed
+        if (title.trim() && title.trim() !== currentTitle) {
+          onConfirm(title.trim(), emoji);
+        }
+        onOpenChange(false);
+      }, 150);
     };
 
     const content = (
@@ -90,17 +99,24 @@ const RenamePopover = memo<RenamePopoverProps>(
             onChange={(newEmoji) => {
               setEmoji(newEmoji);
               setShowEmojiPicker(false);
+              isInteractingWithEmojiPicker.current = false;
               // Update emoji immediately
               onConfirm(title, newEmoji);
+              // Refocus input after emoji selection
+              setTimeout(() => inputRef.current?.focus(), 100);
             }}
             onDelete={() => {
               setEmoji(undefined);
               setShowEmojiPicker(false);
+              isInteractingWithEmojiPicker.current = false;
               // Update to remove emoji immediately
               onConfirm(title, undefined);
+              // Refocus input after emoji deletion
+              setTimeout(() => inputRef.current?.focus(), 100);
             }}
             onOpenChange={(isOpen) => {
               setShowEmojiPicker(isOpen);
+              isInteractingWithEmojiPicker.current = isOpen;
             }}
             open={showEmojiPicker}
             size={32}
