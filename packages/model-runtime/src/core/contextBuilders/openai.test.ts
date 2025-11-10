@@ -303,21 +303,13 @@ describe('convertOpenAIResponseInputs', () => {
 
     const result = await convertOpenAIResponseInputs(messages);
 
-    expect(result).toHaveLength(5);
-    expect(result[0]).toEqual({ content: 'system prompts', role: 'developer' });
-    expect(result[1]).toEqual({ content: '你好', role: 'user' });
-
-    // reasoning should be a separate item
-    expect(result[2]).toMatchObject({
-      type: 'reasoning',
-      summary: [{ text: 'reasoning content', type: 'summary_text' }],
-    });
-    expect(result[2]).toHaveProperty('id');
-
-    // assistant message should not contain reasoning field
-    expect(result[3]).toEqual({ content: 'hello', role: 'assistant' });
-
-    expect(result[4]).toEqual({ content: '杭州天气如何', role: 'user' });
+    expect(result).toEqual([
+      { content: 'system prompts', role: 'developer' },
+      { content: '你好', role: 'user' },
+      { summary: [{ text: 'reasoning content', type: 'summary_text' }], type: 'reasoning' },
+      { content: 'hello', role: 'assistant' },
+      { content: '杭州天气如何', role: 'user' },
+    ]);
   });
 });
 

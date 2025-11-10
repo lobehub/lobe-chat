@@ -77,10 +77,8 @@ export const convertOpenAIResponseInputs = async (messages: OpenAIChatMessage[])
       }
 
       if (message.role === 'system') {
-        return {
-          ...message,
-          role: 'developer',
-        };
+        input.push({ ...message, role: 'developer' } as OpenAI.Responses.ResponseInputItem);
+        return;
       }
 
       // default item
