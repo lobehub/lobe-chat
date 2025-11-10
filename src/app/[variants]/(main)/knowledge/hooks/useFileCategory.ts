@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { FilesTabs } from '@/types/files';
 
@@ -8,8 +8,11 @@ import { FilesTabs } from '@/types/files';
  */
 export const useFileCategory = (): [string, (value: string) => void] => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { id } = useParams<{ id: string }>();
 
-  const category = searchParams.get('category') ?? FilesTabs.Home;
+  // If there's an ID in the path, default to Documents instead of Home
+  const defaultCategory = id ? FilesTabs.Documents : FilesTabs.Home;
+  const category = searchParams.get('category') ?? defaultCategory;
 
   const setCategory = (value: string) => {
     setSearchParams(

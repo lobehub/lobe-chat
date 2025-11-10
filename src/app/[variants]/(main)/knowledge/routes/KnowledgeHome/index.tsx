@@ -1,7 +1,7 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useMediaQuery } from 'react-responsive';
@@ -71,14 +71,8 @@ Sidebar.displayName = 'Sidebar';
 // Main files list component
 const MainContent = memo(() => {
   const { id } = useParams<{ id: string }>();
-  const [category, setCategory] = useFileCategory();
+  const [category] = useFileCategory();
   const setFileModalId = useSetFileModalId();
-
-  useEffect(() => {
-    if (id) {
-      setCategory(FilesTabs.Documents);
-    }
-  }, [id]);
 
   return (
     <KnowledgeItemManager
