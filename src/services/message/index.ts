@@ -76,7 +76,10 @@ export class MessageService {
     return lambdaClient.message.getHeatmaps.query();
   };
 
-  updateMessageError = async (id: string, error: ChatMessageError) => {
+  updateMessageError = async (id: string, value: ChatMessageError) => {
+    const error = value.type ? value : { body: value, message: value.message, type: 'ApplicationRuntimeError' };
+
+
     return lambdaClient.message.update.mutate({ id, value: { error } });
   };
 
