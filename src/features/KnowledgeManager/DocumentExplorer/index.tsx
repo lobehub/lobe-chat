@@ -76,7 +76,6 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [searchKeywords, setSearchKeywords] = useState<string>('');
   const [renamingDocumentId, setRenamingDocumentId] = useState<string | null>(null);
-  const [renameValue, setRenameValue] = useState<string>('');
 
   const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
   const getOptimisticDocuments = useFileStore((s) => s.getOptimisticDocuments);
@@ -209,29 +208,23 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
     updateUrl(newId);
   };
 
-  const handleStartRename = (documentId: string, currentName: string) => {
-    setRenamingDocumentId(documentId);
-    setRenameValue(currentName);
+  const handleRenameOpenChange = (documentId: string, open: boolean) => {
+    setRenamingDocumentId(open ? documentId : null);
   };
 
-  const handleRenameSubmit = async () => {
-    if (!renamingDocumentId || !renameValue.trim()) {
-      setRenamingDocumentId(null);
-      return;
-    }
-
+  const handleRenameConfirm = async (documentId: string, title: string, emoji?: string) => {
     try {
-      await updateDocumentOptimistically(renamingDocumentId, { name: renameValue.trim() });
+      await updateDocumentOptimistically(documentId, {
+        metadata: {
+          emoji,
+        },
+        name: title,
+      });
     } catch (error) {
       console.error('Failed to rename document:', error);
     } finally {
       setRenamingDocumentId(null);
     }
-  };
-
-  const handleRenameCancel = () => {
-    setRenamingDocumentId(null);
-    setRenameValue('');
   };
 
   return (
@@ -287,12 +280,9 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                         setIsCreatingNew(false);
                       }
                     }}
-                    onRename={handleStartRename}
-                    onRenameCancel={handleRenameCancel}
-                    onRenameSubmit={handleRenameSubmit}
+                    onRenameConfirm={handleRenameConfirm}
+                    onRenameOpenChange={handleRenameOpenChange}
                     onSelect={handleDocumentSelect}
-                    renameValue={renameValue}
-                    setRenameValue={setRenameValue}
                     untitledText={t('documentList.untitled')}
                   />
                 );

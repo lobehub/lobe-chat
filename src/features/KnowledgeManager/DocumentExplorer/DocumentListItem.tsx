@@ -1,14 +1,14 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { FileText } from 'lucide-react';
-import { memo, useRef } from 'react';
+import { memo } from 'react';
 
 import { FileListItem } from '@/types/files';
 
 import DocumentActions from './DocumentActions';
+import RenamePopover from './RenamePopover';
 
 const useStyles = createStyles(({ css, token }) => ({
   documentActions: css`
@@ -80,29 +80,6 @@ const useStyles = createStyles(({ css, token }) => ({
     justify-content: center;
     color: ${token.colorTextSecondary};
   `,
-  renameInput: css`
-    flex: 1;
-    min-width: 0;
-    height: 20px;
-    padding: 0;
-
-    input {
-      height: 20px;
-      padding: 0;
-      border: none;
-
-      font-size: 14px;
-      line-height: 20px;
-
-      background: transparent;
-      box-shadow: none !important;
-
-      &:focus {
-        border: none;
-        box-shadow: none !important;
-      }
-    }
-  `,
 }));
 
 interface DocumentListItemProps {
@@ -110,12 +87,9 @@ interface DocumentListItemProps {
   isRenaming: boolean;
   isSelected: boolean;
   onDelete: () => void;
-  onRename: (documentId: string, currentName: string) => void;
-  onRenameCancel: () => void;
-  onRenameSubmit: () => void;
+  onRenameConfirm: (documentId: string, title: string, emoji?: string) => void;
+  onRenameOpenChange: (documentId: string, open: boolean) => void;
   onSelect: (documentId: string) => void;
-  renameValue: string;
-  setRenameValue: (value: string) => void;
   untitledText: string;
 }
 
@@ -125,61 +99,48 @@ const DocumentListItem = memo<DocumentListItemProps>(
     isRenaming,
     isSelected,
     onDelete,
-    onRename,
-    onRenameCancel,
-    onRenameSubmit,
+    onRenameConfirm,
+    onRenameOpenChange,
     onSelect,
-    renameValue,
-    setRenameValue,
     untitledText,
   }) => {
     const { styles, cx } = useStyles();
-    const renameInputRef = useRef<any>(null);
 
     const title = document.name || untitledText;
     const emoji = document.metadata?.emoji;
 
     return (
-      <div
-        className={cx(styles.documentCard, isSelected && 'selected')}
-        onClick={() => !isRenaming && onSelect(document.id)}
+      <RenamePopover
+        currentEmoji={emoji}
+        currentTitle={title}
+        onConfirm={(newTitle, newEmoji) => {
+          onRenameConfirm(document.id, newTitle, newEmoji);
+        }}
+        onOpenChange={(open) => onRenameOpenChange(document.id, open)}
+        open={isRenaming}
       >
-        <div className={styles.documentContent}>
-          {emoji ? (
-            <span className={styles.emoji}>{emoji}</span>
-          ) : (
-            <Icon className={styles.icon} icon={FileText} size={16} />
-          )}
-          {isRenaming ? (
-            <Input
-              autoFocus
-              className={styles.renameInput}
-              onBlur={onRenameSubmit}
-              onChange={(e) => setRenameValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  onRenameSubmit();
-                } else if (e.key === 'Escape') {
-                  onRenameCancel();
-                }
-              }}
-              onPressEnter={onRenameSubmit}
-              ref={renameInputRef}
-              value={renameValue}
-            />
-          ) : (
+        <div
+          className={cx(styles.documentCard, isSelected && 'selected')}
+          onClick={() => !isRenaming && onSelect(document.id)}
+        >
+          <div className={styles.documentContent}>
+            {emoji ? (
+              <span className={styles.emoji}>{emoji}</span>
+            ) : (
+              <Icon className={styles.icon} icon={FileText} size={16} />
+            )}
             <div className={styles.documentTitle}>{title}</div>
-          )}
+          </div>
+          <div className={cx(styles.documentActions, 'document-actions')}>
+            <DocumentActions
+              documentContent={document.content || undefined}
+              documentId={document.id}
+              onDelete={onDelete}
+              onRename={() => onRenameOpenChange(document.id, true)}
+            />
+          </div>
         </div>
-        <div className={cx(styles.documentActions, 'document-actions')}>
-          <DocumentActions
-            documentContent={document.content || undefined}
-            documentId={document.id}
-            onDelete={onDelete}
-            onRename={() => onRename(document.id, title)}
-          />
-        </div>
-      </div>
+      </RenamePopover>
     );
   },
 );
