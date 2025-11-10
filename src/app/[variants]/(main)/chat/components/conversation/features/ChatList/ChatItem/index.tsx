@@ -6,7 +6,7 @@ import { ChatItem } from '@/features/Conversation';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, threadSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors, threadSelectors } from '@/store/chat/selectors';
 
 import Thread from './Thread';
 
@@ -26,15 +26,16 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => {
         content: '';
 
         position: absolute;
-        inset-block: 56px 50px;
+        inset-block-end: 60px;
 
-        width: 32px;
+        width: 38px;
+        height: 53px;
         border-block-end: 2px solid ${borderColor};
       }
     `,
     start: css`
       &::after {
-        inset-inline-start: 36px;
+        inset-inline-start: 30px;
         border-inline-start: 2px solid ${borderColor};
         border-end-start-radius: 8px;
       }
@@ -52,7 +53,7 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
 
   const [showThread, historyLength] = useChatStore((s) => [
     threadSelectors.hasThreadBySourceMsgId(id)(s),
-    chatSelectors.mainDisplayChatIDs(s).length,
+    displayMessageSelectors.mainDisplayChatIDs(s).length,
   ]);
 
   const [displayMode, enableHistoryDivider] = useAgentStore((s) => [
@@ -60,7 +61,7 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
     agentChatConfigSelectors.enableHistoryDivider(historyLength, index)(s),
   ]);
 
-  const userRole = useChatStore((s) => chatSelectors.getMessageById(id)(s)?.role);
+  const userRole = useChatStore((s) => displayMessageSelectors.getDisplayMessageById(id)(s)?.role);
 
   const placement = displayMode === 'chat' && userRole === 'user' ? 'end' : 'start';
 
