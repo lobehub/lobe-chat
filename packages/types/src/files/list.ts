@@ -29,7 +29,7 @@ export const QueryFileListSchema = z.object({
   q: z.string().nullable().optional(),
   showFilesInKnowledgeBase: z.boolean().default(false),
   sortType: z.enum(['desc', 'asc']).optional(),
-  sorter: z.enum(['createdAt', 'size']).optional(),
+  sorter: z.enum(['createdAt', 'name', 'size']).optional(),
 });
 
 export type QueryFileListSchemaType = z.infer<typeof QueryFileListSchema>;
