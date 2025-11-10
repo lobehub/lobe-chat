@@ -118,7 +118,7 @@ const Home = memo<HomeProps>(({ knowledgeBaseId, onOpenFile }) => {
       <Flexbox className={styles.content}>
         {/* Greeting Section */}
         <Flexbox className={styles.section}>
-          <Text className={styles.greeting}>开始</Text>
+          <Text className={styles.greeting}>{t('home.greeting')}</Text>
         </Flexbox>
 
         {/* Upload Entries Section */}

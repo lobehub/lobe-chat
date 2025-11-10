@@ -83,11 +83,7 @@ export default {
   },
   home: {
     getStarted: '开始使用',
-    greeting: {
-      afternoon: '下午好',
-      evening: '晚上好',
-      morning: '早上好',
-    },
+    greeting: '开始',
     quickActions: '快捷操作',
     recentDocuments: '最近文档',
     recentFiles: '最近文件',
