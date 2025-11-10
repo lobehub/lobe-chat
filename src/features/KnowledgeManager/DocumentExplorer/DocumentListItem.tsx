@@ -110,18 +110,18 @@ const DocumentListItem = memo<DocumentListItemProps>(
     const emoji = document.metadata?.emoji;
 
     return (
-      <RenamePopover
-        currentEmoji={emoji}
-        currentTitle={title}
-        onConfirm={(newTitle, newEmoji) => {
-          onRenameConfirm(document.id, newTitle, newEmoji);
-        }}
-        onOpenChange={(open) => onRenameOpenChange(document.id, open)}
-        open={isRenaming}
+      <div
+        className={cx(styles.documentCard, isSelected && 'selected')}
+        onClick={() => !isRenaming && onSelect(document.id)}
       >
-        <div
-          className={cx(styles.documentCard, isSelected && 'selected')}
-          onClick={() => !isRenaming && onSelect(document.id)}
+        <RenamePopover
+          currentEmoji={emoji}
+          currentTitle={title}
+          onConfirm={(newTitle, newEmoji) => {
+            onRenameConfirm(document.id, newTitle, newEmoji);
+          }}
+          onOpenChange={(open) => onRenameOpenChange(document.id, open)}
+          open={isRenaming}
         >
           <div className={styles.documentContent}>
             {emoji ? (
@@ -131,16 +131,16 @@ const DocumentListItem = memo<DocumentListItemProps>(
             )}
             <div className={styles.documentTitle}>{title}</div>
           </div>
-          <div className={cx(styles.documentActions, 'document-actions')}>
-            <DocumentActions
-              documentContent={document.content || undefined}
-              documentId={document.id}
-              onDelete={onDelete}
-              onRename={() => onRenameOpenChange(document.id, true)}
-            />
-          </div>
+        </RenamePopover>
+        <div className={cx(styles.documentActions, 'document-actions')}>
+          <DocumentActions
+            documentContent={document.content || undefined}
+            documentId={document.id}
+            onDelete={onDelete}
+            onRename={() => onRenameOpenChange(document.id, true)}
+          />
         </div>
-      </RenamePopover>
+      </div>
     );
   },
 );
