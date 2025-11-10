@@ -147,7 +147,8 @@ export const convertImageUrlToFile = async (imageUrl: string, customFetch?: type
   } else {
     // a http url
     const fetchFn = customFetch || fetch;
-    const response = await fetchFn(imageUrl);
+    const ssrfOptions = customFetch ? ({ ssrf: true } as RequestInit) : undefined;
+    const response = await fetchFn(imageUrl, ssrfOptions);
     if (!response.ok) {
       throw new Error(`Failed to fetch image from ${imageUrl}: ${response.statusText}`);
     }

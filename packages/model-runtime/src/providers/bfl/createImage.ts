@@ -125,9 +125,9 @@ async function submitTask(
 
   log('Submitting task to: %s', url);
 
-  const fetchFn = options.fetch ?? fetch;
+  const fetchImpl = options.fetch ?? fetch;
 
-  const response = await fetchFn(url, {
+  const response = await fetchImpl(url, {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -164,9 +164,9 @@ async function queryTaskStatus(
 ): Promise<BflResultResponse> {
   log('Querying task status using polling URL: %s', pollingUrl);
 
-  const fetchFn = options.fetch ?? fetch;
+  const fetchImpl = options.fetch ?? fetch;
 
-  const response = await fetchFn(pollingUrl, {
+  const response = await fetchImpl(pollingUrl, {
     headers: {
       'accept': 'application/json',
       'x-key': options.apiKey,

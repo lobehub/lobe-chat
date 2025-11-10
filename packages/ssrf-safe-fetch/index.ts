@@ -1,13 +1,34 @@
 import fetch from 'node-fetch';
+import type { RequestInit as NodeFetchOptions } from 'node-fetch';
 import { RequestFilteringAgentOptions, useAgent as ssrfAgent } from 'request-filtering-agent';
+
+interface FetchOptions extends RequestInit {
+  ssrf?: boolean;
+}
+
+const toStandardResponse = async (response: Awaited<ReturnType<typeof fetch>>) => {
+  return new Response(await response.arrayBuffer(), {
+    headers: response.headers as any,
+    status: response.status,
+    statusText: response.statusText,
+  });
+};
 
 /**
  * SSRF-safe fetch implementation for server-side use
  * Uses request-filtering-agent to prevent requests to private IP addresses
  */
 // eslint-disable-next-line no-undef
-export const ssrfSafeFetch = async (url: string, options?: RequestInit): Promise<Response> => {
+export const ssrfSafeFetch = async (url: string, options?: FetchOptions): Promise<Response> => {
+  const { ssrf, ...restOptions } = options ?? {};
+  const fetchOptions = restOptions as NodeFetchOptions;
+
   try {
+    if (!ssrf) {
+      const response = await fetch(url, fetchOptions);
+      return await toStandardResponse(response);
+    }
+
     // Configure SSRF protection options
     const agentOptions: RequestFilteringAgentOptions = {
       allowIPAddressList: process.env.SSRF_ALLOW_IP_ADDRESS_LIST?.split(',') || [],
@@ -18,16 +39,11 @@ export const ssrfSafeFetch = async (url: string, options?: RequestInit): Promise
 
     // Use node-fetch with SSRF protection agent
     const response = await fetch(url, {
-      ...options,
+      ...fetchOptions,
       agent: ssrfAgent(url, agentOptions),
-    } as any);
-
-    // Convert node-fetch Response to standard Response
-    return new Response(await response.arrayBuffer(), {
-      headers: response.headers as any,
-      status: response.status,
-      statusText: response.statusText,
     });
+
+    return await toStandardResponse(response);
   } catch (error) {
     console.error('SSRF-safe fetch error:', error);
     throw new Error(

@@ -3,13 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "",
-  "exports": {
-    ".": {
-      "browser": "./browser.ts",
-      "edge-light": "./browser.ts",
-      "default": "./index.ts"
-    }
-  },
+  "exports": "./index.ts",
   "main": "index.ts",
   "types": "index.ts",
   "scripts": {
