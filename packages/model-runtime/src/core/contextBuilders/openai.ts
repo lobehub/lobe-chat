@@ -40,12 +40,18 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
   )) as OpenAI.ChatCompletionMessageParam[];
 };
 
-export const convertOpenAIResponseInputs = async (
-  messages: OpenAI.ChatCompletionMessageParam[],
-) => {
+export const convertOpenAIResponseInputs = async (messages: OpenAIChatMessage[]) => {
   let input: OpenAI.Responses.ResponseInputItem[] = [];
   await Promise.all(
     messages.map(async (message) => {
+      // if message has reasoning, add it as a separate reasoning item
+      if (message.reasoning?.content) {
+        input.push({
+          summary: [{ text: message.reasoning.content, type: 'summary_text' }],
+          type: 'reasoning',
+        } as OpenAI.Responses.ResponseReasoningItem);
+      }
+
       // if message is assistant messages with tool calls , transform it to function type item
       if (message.role === 'assistant' && message.tool_calls && message.tool_calls?.length > 0) {
         message.tool_calls?.forEach((tool) => {
@@ -91,6 +97,9 @@ export const convertOpenAIResponseInputs = async (
                 }),
               ),
       } as OpenAI.Responses.ResponseInputItem;
+
+      // remove reasoning field from the message item
+      delete (item as any).reasoning;
 
       input.push(item);
     }),
