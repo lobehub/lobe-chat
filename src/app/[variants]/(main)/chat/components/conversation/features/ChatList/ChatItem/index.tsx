@@ -72,15 +72,7 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
       <ChatItem
         className={showThread ? cx(styles.line, styles[placement]) : ''}
         enableHistoryDivider={enableHistoryDivider}
-        endRender={
-          showThread && (
-            <Thread
-              id={id}
-              placement={placement}
-              style={{ marginTop: displayMode === 'docs' ? 12 : undefined }}
-            />
-          )
-        }
+        endRender={showThread && <Thread id={id} placement={placement} />}
         id={id}
         index={index}
       />
