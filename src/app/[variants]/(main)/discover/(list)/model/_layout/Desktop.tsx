@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { Outlet } from 'react-router-dom';
 
 import CategoryContainer from '../../../components/CategoryContainer';
 import Category from '../features/Category';
@@ -11,7 +12,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         <Category />
       </CategoryContainer>
       <Flexbox flex={1} gap={16}>
-        {children}
+        {children || <Outlet />}
       </Flexbox>
     </Flexbox>
   );

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
 
-import { SCROLL_PARENT_ID } from '../../features/const';
+import { SCROLL_PARENT_ID } from '../../../features/const';
 import Footer from '@/features/Setting/Footer';
 
 const MAX_WIDTH = 1440;

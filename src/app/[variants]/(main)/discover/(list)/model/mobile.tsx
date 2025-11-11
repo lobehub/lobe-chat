@@ -3,7 +3,7 @@
 import { memo } from 'react';
 
 import ModelLayout from '../../(list)/model/ModelLayout';
-import ModelPage from '../../(list)/model/ModelPage';
+import ModelPage from '../../(list)/model';
 
 /**
  * Mobile Discover Model List Page

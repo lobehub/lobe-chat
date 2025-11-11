@@ -3,7 +3,6 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { AssistantQueryParams, DiscoverTab } from '@/types/discover';
@@ -41,4 +40,21 @@ const AssistantPage = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-export default withSuspense(AssistantPage);
+const MobileAssistantPage = memo<{ mobile?: boolean }>(() => {
+  return (
+    <AssistantPage mobile={true} />
+  );
+});
+
+const DesktopAssistantPage = memo<{ mobile?: boolean }>(() => {
+  return (
+    <AssistantPage mobile={false} />
+  );
+});
+
+MobileAssistantPage.displayName = 'MobileAssistantPage';
+
+DesktopAssistantPage.displayName = 'DesktopAssistantPage';
+
+export { DesktopAssistantPage, MobileAssistantPage };
+export default AssistantPage;

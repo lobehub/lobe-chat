@@ -6,8 +6,8 @@ import { Outlet } from 'react-router-dom';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import Footer from '@/features/Setting/Footer';
 
-import { SCROLL_PARENT_ID } from '../../features/const';
-import Header from '../../(list)/_layout/Mobile/Header';
+import { SCROLL_PARENT_ID } from '../../../features/const';
+import Header from './Header';
 
 /**
  * Mobile Discover List Layout

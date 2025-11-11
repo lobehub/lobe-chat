@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import HomePage from '../../(list)/(home)/HomePage';
+import HomePage from './index';
 
 /**
  * Mobile Discover Home Page

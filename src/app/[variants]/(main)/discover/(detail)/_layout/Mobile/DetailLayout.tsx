@@ -3,11 +3,11 @@
 import { memo } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { SCROLL_PARENT_ID } from '../../features/const';
+import { SCROLL_PARENT_ID } from '../../../features/const';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import Footer from '@/features/Setting/Footer';
 
-import Header from '../../(detail)/_layout/Mobile/Header';
+import Header from './Header';
 
 /**
  * Mobile Discover Detail Layout

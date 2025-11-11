@@ -42,4 +42,18 @@ const HomePage = memo<{ mobile?: boolean }>(() => {
   );
 });
 
+const MobileHomePage = memo<{ mobile?: boolean }>(() => {
+  return <HomePage mobile={true} />;
+});
+
+MobileHomePage.displayName = 'MobileHomePage';
+
+const DesktopHomePage = memo<{ mobile?: boolean }>(() => {
+  return <HomePage mobile={false} />;
+});
+
+DesktopHomePage.displayName = 'DesktopHomePage';
+
+export { DesktopHomePage, MobileHomePage };
 export default HomePage;
+

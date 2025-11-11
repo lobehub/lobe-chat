@@ -2,15 +2,15 @@
 
 import { memo } from 'react';
 
-import AssistantLayout from '../../(list)/assistant/AssistantLayout';
-import AssistantPage from '../../(list)/assistant/AssistantPage';
+import AssistantLayout from './_layout/Desktop';
+import AssistantPage from './index';
 
 /**
  * Desktop Discover Assistant List Page
  */
 export const DesktopDiscoverAssistantPage = memo(() => {
   return (
-    <AssistantLayout mobile={false}>
+    <AssistantLayout>
       <AssistantPage mobile={false} />
     </AssistantLayout>
   );

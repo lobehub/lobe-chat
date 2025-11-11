@@ -6,8 +6,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/features/Setting/Footer';
 
-import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../features/const';
-import Nav from '../../(list)/_layout/Desktop/Nav';
+import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
+import Nav from './Nav';
 
 /**
  * Desktop Discover List Layout
