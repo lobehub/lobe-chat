@@ -37,8 +37,6 @@ export const GET = async (_req: Request, segmentData: { params: Params }) => {
       });
     }
 
-    log('File found: %s, url: %s, userId: %s', id, file.url, file.userId);
-
     // Create file service with file owner's userId
     const fileService = new FileService(db, file.userId);
 
