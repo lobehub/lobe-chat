@@ -165,6 +165,7 @@ ENV HOSTNAME="0.0.0.0" \
 # General Variables
 ENV ACCESS_CODE="" \
     APP_URL="" \
+    INTERNAL_APP_URL="" \
     API_KEY_SELECT_MODE="" \
     DEFAULT_AGENT_CONFIG="" \
     SYSTEM_AGENT="" \

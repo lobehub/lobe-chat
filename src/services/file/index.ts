@@ -1,4 +1,7 @@
+import { Unsubscribable } from '@trpc/server/observable';
+
 import { lambdaClient } from '@/libs/trpc/client';
+import { TrpcSubscriptionCallback } from '@/services/file/type';
 import {
   CheckFileHashResult,
   FileItem,
@@ -13,6 +16,10 @@ interface CreateFileParams extends Omit<UploadFileParams, 'url'> {
 }
 
 export class FileService {
+  batchDownload = (fileIds: string[], callbacks: TrpcSubscriptionCallback): Unsubscribable => {
+    return lambdaClient.file.batchDownload.subscribe({ fileIds }, callbacks);
+  };
+
   createFile = async (
     params: UploadFileParams,
     knowledgeBaseId?: string,

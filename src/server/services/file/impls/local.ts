@@ -1,6 +1,8 @@
 import { sha256 } from 'js-sha256';
-import { existsSync, readFileSync } from 'node:fs';
+import { constants, createReadStream, existsSync, readFileSync } from 'node:fs';
+import fsPromises from 'node:fs/promises';
 import path from 'node:path';
+import { Readable } from 'node:stream';
 
 import { electronIpcClient } from '@/server/modules/ElectronIPCClient';
 import { inferContentTypeFromImageUrl } from '@/utils/url';
@@ -121,6 +123,21 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
       console.error('Failed to get file content:', e);
       return '';
     }
+  }
+
+  /**
+   * 获取文件流
+   */
+  async getFileStream(key: string): Promise<Readable> {
+    let filePath: string;
+    try {
+      filePath = await electronIpcClient.getFilePathById(key);
+      await fsPromises.access(filePath, constants.R_OK);
+    } catch (error) {
+      console.error(`Failed to access file for key "${key}":`, error);
+      throw new Error(`File for key "${key}" could not be found or accessed.`);
+    }
+    return createReadStream(filePath);
   }
 
   /**

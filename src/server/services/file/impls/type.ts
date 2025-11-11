@@ -1,3 +1,5 @@
+import { Readable } from 'node:stream';
+
 /**
  * S3文件服务实现
  */
@@ -33,6 +35,11 @@ export interface FileServiceImpl {
   getFileContent(key: string): Promise<string>;
 
   /**
+   * 获取文件流
+   */
+  getFileStream(key: string): Promise<Readable>;
+
+  /**
    * 获取完整文件URL
    */
   getFullFileUrl(url?: string | null, expiresIn?: number): Promise<string>;
@@ -46,7 +53,6 @@ export interface FileServiceImpl {
    * 上传内容
    */
   uploadContent(path: string, content: string): Promise<any>;
-
   /**
    * 上传媒体文件
    */
