@@ -4,6 +4,7 @@ import { Icon } from '@lobehub/ui';
 import { Card, Result } from 'antd';
 import { CheckCircle, Clock, ShieldX } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 type CallbackStatus = 'loading' | 'success' | 'error';
@@ -13,8 +14,9 @@ type CallbackStatus = 'loading' | 'success' | 'error';
  * 处理从 OIDC 服务器返回的授权码
  */
 const MarketAuthCallbackPage = () => {
+  const { t } = useTranslation('marketAuth');
   const [status, setStatus] = useState<CallbackStatus>('loading');
-  const [message, setMessage] = useState('正在处理授权...');
+  const [message, setMessage] = useState('');
   const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const MarketAuthCallbackPage = () => {
     if (error) {
       console.error('[MarketAuthCallback] Authorization error:', error, errorDescription);
       setStatus('error');
-      setMessage(`授权失败: ${errorDescription || error}`);
+      setMessage(t('callback.messages.authFailed', { error: errorDescription || error }));
 
       // 向父窗口发送错误消息
       if (window.opener) {
@@ -47,7 +49,7 @@ const MarketAuthCallbackPage = () => {
     if (code && state) {
       console.log('[MarketAuthCallback] Authorization successful, code received');
       setStatus('success');
-      setMessage('授权成功！正在跳转...');
+      setMessage(t('callback.messages.successWithRedirect'));
 
       // 向父窗口发送成功消息
       if (window.opener) {
@@ -77,7 +79,7 @@ const MarketAuthCallbackPage = () => {
     } else {
       console.error('[MarketAuthCallback] Missing code or state parameter');
       setStatus('error');
-      setMessage('授权参数缺失');
+      setMessage(t('callback.messages.missingParams'));
 
       if (window.opener) {
         window.opener.postMessage(
@@ -89,7 +91,7 @@ const MarketAuthCallbackPage = () => {
         );
       }
     }
-  }, []);
+  }, [t]);
 
   const getStatusIcon = () => {
     switch (status) {
@@ -122,20 +124,23 @@ const MarketAuthCallbackPage = () => {
   const getTitle = () => {
     switch (status) {
       case 'loading': {
-        return 'LobeHub Market 授权';
+        return t('callback.titles.loading');
       }
       case 'success': {
-        return '授权成功';
+        return t('callback.titles.success');
       }
       case 'error': {
-        return '授权失败';
+        return t('callback.titles.error');
       }
     }
   };
 
   const getSubTitle = () => {
+    if (status === 'loading') {
+      return t('callback.messages.processing');
+    }
     if (status === 'success') {
-      return `${message} 窗口将在 ${countdown} 秒后自动关闭`;
+      return t('callback.messages.successWithCountdown', { countdown, message });
     }
     return message;
   };
@@ -156,7 +161,7 @@ const MarketAuthCallbackPage = () => {
           }}
           type="button"
         >
-          关闭窗口
+          {t('callback.buttons.close')}
         </button>
       );
     }

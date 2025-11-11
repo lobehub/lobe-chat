@@ -190,6 +190,44 @@ export default {
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
   },
   marketPublish: {
+    modal: {
+      changelog: {
+        extra: '描述此版本的主要变更和改进',
+        label: '变更日志',
+        maxLengthError: '变更日志不能超过500个字符',
+        placeholder: '请输入变更日志',
+        required: '请输入变更日志',
+      },
+      comparison: {
+        local: '本地当前版本',
+        remote: '当前发布版本',
+      },
+      identifier: {
+        extra: '标识符将作为助手的唯一标识，建议使用小写字母、数字和连字符',
+        label: '助手标识符',
+        lengthError: '标识符长度应在3-50个字符之间',
+        patternError: '标识符只能包含小写字母、数字和连字符',
+        placeholder: '请输入助手的唯一标识符，如: web-development',
+        required: '请输入助手标识符',
+      },
+      loading: {
+        fetchingRemote: '正在加载远程数据...',
+        submit: '正在发布助手...',
+        upload: '正在发布新版本...',
+      },
+      messages: {
+        createVersionFailed: '版本创建失败: {{message}}',
+        fetchRemoteFailed: '获取远程助手数据失败',
+        missingIdentifier: '当前助手还没有市场标识符',
+        notAuthenticated: '请先登录市场账户',
+        publishFailed: '发布失败: {{message}}',
+      },
+      submitButton: '发布',
+      title: {
+        submit: '分享到助手市场',
+        upload: '发布新版本',
+      },
+    },
     resultModal: {
       message: '助手已提交审核，审核通过后将自动上线。点击「在市场查看」查看已发布的助手。',
       view: '在市场查看',

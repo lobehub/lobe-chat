@@ -63,9 +63,13 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
     const [publishResult, setPublishResult] = useState<{ identifier?: string }>({});
 
     const messageKey = isSubmit ? 'submit' : 'upload-version';
-    const loadingMessage = isSubmit ? '正在发布助手...' : '正在发布新版本...';
-    const submitButtonText = isSubmit ? '发布' : '发布新版本';
-    const modalTitle = isSubmit ? t('submitAgentModal.tooltips') : '发布新版本';
+    const loadingMessage = isSubmit
+      ? t('marketPublish.modal.loading.submit')
+      : t('marketPublish.modal.loading.upload');
+    const submitButtonText = t('marketPublish.modal.submitButton');
+    const modalTitle = isSubmit
+      ? t('marketPublish.modal.title.submit')
+      : t('marketPublish.modal.title.upload');
 
     useEffect(() => {
       if (!isUpload) return;
@@ -87,7 +91,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
         } catch (error) {
           console.error('Failed to fetch remote agent data:', error);
           if (!cancelled) {
-            message.error('获取远程助手数据失败');
+            message.error(t('marketPublish.modal.messages.fetchRemoteFailed'));
           }
         } finally {
           if (!cancelled) {
@@ -108,13 +112,13 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
     const handleSubmit = useCallback(
       async (values: MarketPublishFormValues) => {
         if (!isAuthenticated || !marketSession?.accessToken) {
-          message.error('请先登录市场账户');
+          message.error(t('marketPublish.modal.messages.notAuthenticated'));
           return false;
         }
 
         const changelog = values.changelog?.trim();
         if (!changelog) {
-          message.error({ content: '请输入变更日志', key: messageKey });
+          message.error({ content: t('marketPublish.modal.changelog.required'), key: messageKey });
           return false;
         }
 
@@ -127,7 +131,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
           if (isSubmit) {
             identifier = values.identifier?.trim();
             if (!identifier) {
-              message.error({ content: '请输入助手标识符', key: messageKey });
+              message.error({ content: t('marketPublish.modal.identifier.required'), key: messageKey });
               return false;
             }
 
@@ -141,7 +145,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
               await marketApiService.createAgent(createPayload as any);
             }
           } else if (!identifier) {
-            message.error({ content: '当前助手还没有市场标识符', key: messageKey });
+            message.error({ content: t('marketPublish.modal.messages.missingIdentifier'), key: messageKey });
             return false;
           }
 
@@ -185,7 +189,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
           } catch (versionError) {
             const errorMessage = versionError instanceof Error ? versionError.message : '未知错误';
             message.error({
-              content: `版本创建失败: ${errorMessage}`,
+              content: t('marketPublish.modal.messages.createVersionFailed', { message: errorMessage }),
               key: messageKey,
             });
             return false;
@@ -204,7 +208,7 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
         } catch (error) {
           console.error('Market publish failed:', error);
           const errorMessage = error instanceof Error ? error.message : '发布失败';
-          message.error({ content: `发布失败: ${errorMessage}`, key: messageKey });
+          message.error({ content: t('marketPublish.modal.messages.publishFailed', { message: errorMessage }), key: messageKey });
           return false;
         }
       },
@@ -259,26 +263,26 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
         >
           {isSubmit && (
             <ProFormText
-              extra="标识符将作为助手的唯一标识，建议使用小写字母、数字和连字符"
-              label="助手标识符"
+              extra={t('marketPublish.modal.identifier.extra')}
+              label={t('marketPublish.modal.identifier.label')}
               name="identifier"
-              placeholder="请输入助手的唯一标识符，如: web-development"
+              placeholder={t('marketPublish.modal.identifier.placeholder')}
               rules={[
-                { message: '请输入助手标识符', required: true },
-                { message: '标识符只能包含小写字母、数字和连字符', pattern: /^[\da-z-]+$/ },
-                { max: 50, message: '标识符长度应在3-50个字符之间', min: 3 },
+                { message: t('marketPublish.modal.identifier.required'), required: true },
+                { message: t('marketPublish.modal.identifier.patternError'), pattern: /^[\da-z-]+$/ },
+                { max: 50, message: t('marketPublish.modal.identifier.lengthError'), min: 3 },
               ]}
             />
           )}
 
           <ProFormText
-            extra="描述此版本的主要变更和改进"
-            label="变更日志"
+            extra={t('marketPublish.modal.changelog.extra')}
+            label={t('marketPublish.modal.changelog.label')}
             name="changelog"
-            placeholder="请输入变更日志"
+            placeholder={t('marketPublish.modal.changelog.placeholder')}
             rules={[
-              { message: '请输入变更日志', required: true },
-              { max: 500, message: '变更日志不能超过500个字符' },
+              { message: t('marketPublish.modal.changelog.required'), required: true },
+              { max: 500, message: t('marketPublish.modal.changelog.maxLengthError') },
             ]}
           />
 
@@ -286,11 +290,15 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
             <Row gutter={24}>
               <Col span={12}>
                 <div style={{ border: '1px solid #d9d9d9', borderRadius: '6px', padding: '16px' }}>
-                  <h3 style={{ marginBottom: '16px', textAlign: 'center' }}>当前发布版本</h3>
+                  <h3 style={{ marginBottom: '16px', textAlign: 'center' }}>
+                    {t('marketPublish.modal.comparison.remote')}
+                  </h3>
                   {loadingRemoteData ? (
                     <div style={{ padding: '40px', textAlign: 'center' }}>
                       <Spin size="large" />
-                      <div style={{ marginTop: '16px' }}>正在加载远程数据...</div>
+                      <div style={{ marginTop: '16px' }}>
+                        {t('marketPublish.modal.loading.fetchingRemote')}
+                      </div>
                     </div>
                   ) : (
                     <AgentInfoDescription isRemote={true} meta={remoteAgentData || undefined} />
@@ -299,7 +307,9 @@ const MarketPublishModal = memo<MarketPublishModalProps>(
               </Col>
               <Col span={12}>
                 <div style={{ border: '1px solid #d9d9d9', borderRadius: '6px', padding: '16px' }}>
-                  <h3 style={{ marginBottom: '16px', textAlign: 'center' }}>本地当前版本</h3>
+                  <h3 style={{ marginBottom: '16px', textAlign: 'center' }}>
+                    {t('marketPublish.modal.comparison.local')}
+                  </h3>
                   <AgentInfoDescription
                     agentConfig={agentConfig}
                     chatConfig={chatConfig}

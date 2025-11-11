@@ -1,4 +1,21 @@
 export default {
+  callback: {
+    buttons: {
+      close: '关闭窗口',
+    },
+    messages: {
+      authFailed: '授权失败: {{error}}',
+      missingParams: '授权参数缺失',
+      processing: '正在处理授权...',
+      successWithCountdown: '{{message}} 窗口将在 {{countdown}} 秒后自动关闭',
+      successWithRedirect: '授权成功！正在跳转...',
+    },
+    titles: {
+      error: '授权失败',
+      loading: 'LobeHub Market 授权',
+      success: '授权成功',
+    },
+  },
   errors: {
     authorizationFailed: '授权失败，请重试。',
     browserOnly: '授权流程只能在浏览器中发起。',

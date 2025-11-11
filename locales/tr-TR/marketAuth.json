@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Pencereyi Kapat"
+    },
+    "messages": {
+      "authFailed": "Yetkilendirme başarısız: {{error}}",
+      "missingParams": "Yetkilendirme parametreleri eksik",
+      "processing": "Yetkilendirme işleniyor...",
+      "successWithCountdown": "{{message}} Pencere {{countdown}} saniye içinde otomatik olarak kapanacak",
+      "successWithRedirect": "Yetkilendirme başarılı! Yönlendiriliyor..."
+    },
+    "titles": {
+      "error": "Yetkilendirme Başarısız",
+      "loading": "LobeHub Market Yetkilendirmesi",
+      "success": "Yetkilendirme Başarılı"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Yetkilendirme başarısız, lütfen tekrar deneyin.",
+    "browserOnly": "Yetkilendirme süreci yalnızca tarayıcıda başlatılabilir.",
+    "codeConsumed": "Yetkilendirme kodu zaten kullanılmış, lütfen tekrar deneyin.",
+    "codeVerifierMissing": "Yetkilendirme oturumu geçersiz, lütfen giriş sürecini yeniden başlatın.",
+    "general": "Yetkilendirme sırasında bir hata oluştu, lütfen tekrar deneyin.",
+    "handoffFailed": "Yetkilendirme sonucu alınamadı, lütfen tekrar deneyin.",
+    "handoffTimeout": "Yetkilendirme zaman aşımına uğradı, lütfen tarayıcıda işlemi tamamladıktan sonra tekrar deneyin.",
+    "oidcNotReady": "Yetkilendirme hizmeti henüz hazır değil, lütfen daha sonra tekrar deneyin.",
+    "openBrowserFailed": "Sistem tarayıcısı açılamadı, lütfen tekrar deneyin.",
+    "openPopupFailed": "Yetkilendirme penceresi açılamadı, lütfen tarayıcınızın açılır pencere engelleme ayarlarını kontrol edin.",
+    "popupClosed": "Yetkilendirme penceresi tamamlanmadan kapatıldı.",
+    "sessionExpired": "Yetkilendirme oturumu sona erdi, lütfen tekrar giriş yapın.",
+    "stateMismatch": "Yetkilendirme durumu uyuşmuyor, lütfen tekrar deneyin.",
+    "stateMissing": "Yetkilendirme durumu bulunamadı, lütfen tekrar deneyin."
+  },
+  "messages": {
+    "loading": "Yetkilendirme süreci başlatılıyor...",
+    "success": {
+      "submit": "Yetkilendirme başarılı! Artık asistan yayınlayabilirsiniz.",
+      "upload": "Yetkilendirme başarılı! Artık yeni bir sürüm yayınlayabilirsiniz."
+    }
+  }
+}

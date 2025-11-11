@@ -77,6 +77,30 @@ export default {
       tokenUsage: 'Token 使用量',
     },
     suggestions: '相关推荐',
+    status: {
+      archived: {
+        reasons: {
+          official: '助手有安全/政治等问题，被官方下架',
+          owner: '开发助手的 owner 主动下架/归档该助手',
+        },
+        subtitle: '当前访问的助手已经因为以下可能的原因被归档了：',
+        title: '助手已被归档',
+      },
+      backToMarket: '返回助手市场',
+      deprecated: {
+        reasons: {
+          official: '助手有安全/政治等问题，被官方下架',
+          owner: '开发助手的 owner 主动下架/拒绝该助手',
+        },
+        subtitle: '当前访问的助手已经因为以下可能的原因被拒绝了：',
+        title: '助手已被拒绝',
+      },
+      support: '有各种问题请复制链接发送到 <1>support@lobehub.com</1> 进行咨询。',
+      unpublished: {
+        subtitle: '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <1>support@lobehub.com</1> 进行咨询。',
+        title: '助手正在审核中',
+      },
+    },
     systemRole: '助手设定',
     tokenUsage: '助手提示词 Token 使用量',
     try: '试一下',
