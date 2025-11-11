@@ -1,8 +1,8 @@
+import { imageUrlToBase64 } from '@lobechat/utils';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OpenAIChatMessage } from '../../types';
-import { imageUrlToBase64 } from '../../utils/imageToBase64';
 import { parseDataUri } from '../../utils/uriParser';
 import {
   convertImageUrlToFile,
@@ -12,7 +12,9 @@ import {
 } from './openai';
 
 // 模拟依赖
-vi.mock('../../utils/imageToBase64');
+vi.mock('@lobechat/utils', () => ({
+  imageUrlToBase64: vi.fn(),
+}));
 vi.mock('../../utils/uriParser');
 
 describe('convertMessageContent', () => {
