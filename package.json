@@ -133,7 +133,7 @@
     "@azure-rest/ai-inference": "1.0.0-beta.5",
     "@azure/core-auth": "^1.10.1",
     "@cfworker/json-schema": "^4.1.1",
-    "@clerk/localizations": "^3.26.4",
+    "@clerk/localizations": "^3.27.2",
     "@clerk/nextjs": "^6.34.1",
     "@clerk/themes": "^2.4.30",
     "@codesandbox/sandpack-react": "^2.20.0",
