@@ -45,7 +45,8 @@ const mistralChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 128_000,
-    description: 'Magistral Small 1.2 是Mistral AI于2025年9月发布的开源小型推理模型，具有视觉支持。',
+    description:
+      'Magistral Small 1.2 是Mistral AI于2025年9月发布的开源小型推理模型，具有视觉支持。',
     displayName: 'Magistral Small 1.2',
     id: 'magistral-small-2509',
     pricing: {

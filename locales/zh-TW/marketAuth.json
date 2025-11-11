@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "關閉視窗"
+    },
+    "messages": {
+      "authFailed": "授權失敗：{{error}}",
+      "missingParams": "授權參數缺失",
+      "processing": "正在處理授權中⋯⋯",
+      "successWithCountdown": "{{message}} 視窗將於 {{countdown}} 秒後自動關閉",
+      "successWithRedirect": "授權成功！正在重新導向⋯⋯"
+    },
+    "titles": {
+      "error": "授權失敗",
+      "loading": "LobeHub Market 授權中",
+      "success": "授權成功"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "授權失敗，請重試。",
+    "browserOnly": "授權流程僅能在瀏覽器中啟動。",
+    "codeConsumed": "授權碼已被使用，請重新嘗試。",
+    "codeVerifierMissing": "授權會話無效，請重新啟動登入流程。",
+    "general": "授權發生錯誤，請重試。",
+    "handoffFailed": "無法取得授權結果，請重試。",
+    "handoffTimeout": "授權逾時，請在瀏覽器中完成操作後重試。",
+    "oidcNotReady": "授權服務尚未準備就緒，請稍後再試。",
+    "openBrowserFailed": "無法開啟系統瀏覽器，請重試。",
+    "openPopupFailed": "無法開啟授權彈出視窗，請檢查瀏覽器的彈出視窗封鎖設定。",
+    "popupClosed": "授權視窗尚未完成即被關閉。",
+    "sessionExpired": "授權會話已過期，請重新登入。",
+    "stateMismatch": "授權狀態不符，請重試。",
+    "stateMissing": "找不到授權狀態，請重試。"
+  },
+  "messages": {
+    "loading": "正在啟動授權流程⋯⋯",
+    "success": {
+      "submit": "授權成功！現在可以發佈助手了。",
+      "upload": "授權成功！現在可以發佈新版本了。"
+    }
+  }
+}

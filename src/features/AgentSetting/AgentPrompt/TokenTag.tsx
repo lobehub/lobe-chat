@@ -1,9 +1,9 @@
 import { Tag } from '@lobehub/ui';
-import { memo } from 'react';
+import React, { memo } from 'react';
 
 import { useTokenCount } from '@/hooks/useTokenCount';
 
-const Tokens = memo<{ value: string }>(({ value }) => {
+const Tokens = memo<{ style?: React.CSSProperties, value: string; }>(({ value, style }) => {
   const systemTokenCount = useTokenCount(value);
   if (!value || !systemTokenCount) return;
 
@@ -12,6 +12,7 @@ const Tokens = memo<{ value: string }>(({ value }) => {
       style={{
         marginTop: 24,
         width: 'fit-content',
+        ...style,
       }}
     >
       Token: {systemTokenCount}

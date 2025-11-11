@@ -41,9 +41,29 @@
         "openingMessage": "Tin nhắn mở đầu",
         "openingQuestions": "Câu hỏi mở đầu",
         "title": "Cài đặt trợ lý"
+      },
+      "version": {
+        "empty": "Chưa có phiên bản lịch sử",
+        "status": {
+          "archived": "Đã lưu trữ",
+          "deprecated": "Đã từ chối",
+          "unpublished": "Đang chờ duyệt"
+        },
+        "table": {
+          "isLatest": "Phiên bản mới nhất",
+          "isValidated": "Đã xác minh",
+          "publishAt": "Ngày phát hành",
+          "version": "Số phiên bản"
+        },
+        "title": "Lịch sử phiên bản"
       }
     },
     "list": "Danh sách trợ lý",
+    "marketSource": {
+      "label": "Chuyển đổi nguồn thị trường",
+      "legacy": "Thị trường cũ",
+      "new": "Thị trường mới"
+    },
     "more": "Thêm",
     "plugins": "Tích hợp plugin",
     "recentSubmits": "Cập nhật gần đây",
@@ -51,9 +71,34 @@
       "createdAt": "Mới phát hành",
       "identifier": "ID trợ lý",
       "knowledgeCount": "Số kho tri thức",
+      "myown": "Xem của tôi",
       "pluginCount": "Số plugin",
       "title": "Tên trợ lý",
       "tokenUsage": "Lượng Token sử dụng"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "Trợ lý bị gỡ bỏ do vấn đề an toàn/chính trị bởi cơ quan chính thức",
+          "owner": "Chủ sở hữu của trợ lý đã chủ động gỡ bỏ/lưu trữ trợ lý này"
+        },
+        "subtitle": "Trợ lý bạn đang truy cập đã bị lưu trữ vì một trong các lý do sau:",
+        "title": "Trợ lý đã bị lưu trữ"
+      },
+      "backToMarket": "Quay lại thị trường trợ lý",
+      "deprecated": {
+        "reasons": {
+          "official": "Trợ lý bị gỡ bỏ do vấn đề an toàn/chính trị bởi cơ quan chính thức",
+          "owner": "Chủ sở hữu của trợ lý đã chủ động gỡ bỏ/từ chối trợ lý này"
+        },
+        "subtitle": "Trợ lý bạn đang truy cập đã bị từ chối vì một trong các lý do sau:",
+        "title": "Trợ lý đã bị từ chối"
+      },
+      "support": "Nếu gặp bất kỳ vấn đề nào, vui lòng sao chép liên kết và gửi đến <1>support@lobehub.com</1> để được hỗ trợ.",
+      "unpublished": {
+        "subtitle": "Trợ lý bạn đang truy cập hiện đang trong quá trình kiểm duyệt phiên bản. Nếu có thắc mắc, vui lòng sao chép liên kết và gửi câu hỏi đến <1>support@lobehub.com</1> để được hỗ trợ.",
+        "title": "Trợ lý đang chờ duyệt"
+      }
     },
     "suggestions": "Gợi ý liên quan",
     "systemRole": "Cài đặt trợ lý",

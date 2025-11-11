@@ -42,8 +42,28 @@ export default {
         openingQuestions: '开场问题',
         title: '助手设定',
       },
+      version: {
+        empty: '暂无历史版本',
+        status: {
+          archived: '已归档',
+          deprecated: '已拒绝',
+          unpublished: '审核中',
+        },
+        table: {
+          isLatest: '最新版本',
+          isValidated: '已验证',
+          publishAt: '发布日期',
+          version: '版本号',
+        },
+        title: '版本历史',
+      },
     },
     list: '助手列表',
+    marketSource: {
+      label: '切换市场源',
+      legacy: '旧市场',
+      new: '新市场',
+    },
     more: '更多',
     plugins: '集成插件',
     recentSubmits: '最近更新',
@@ -51,9 +71,35 @@ export default {
       createdAt: '最近发布',
       identifier: '助手 ID',
       knowledgeCount: '知识库数量',
+      myown: '查看我的',
       pluginCount: '插件数量',
       title: '助手名称',
       tokenUsage: 'Token 使用量',
+    },
+    status: {
+      archived: {
+        reasons: {
+          official: '助手有安全/政治等问题，被官方下架',
+          owner: '开发助手的 owner 主动下架/归档该助手',
+        },
+        subtitle: '当前访问的助手已经因为以下可能的原因被归档了：',
+        title: '助手已被归档',
+      },
+      backToMarket: '返回助手市场',
+      deprecated: {
+        reasons: {
+          official: '助手有安全/政治等问题，被官方下架',
+          owner: '开发助手的 owner 主动下架/拒绝该助手',
+        },
+        subtitle: '当前访问的助手已经因为以下可能的原因被拒绝了：',
+        title: '助手已被拒绝',
+      },
+      support: '有各种问题请复制链接发送到 <1>support@lobehub.com</1> 进行咨询。',
+      unpublished: {
+        subtitle:
+          '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <1>support@lobehub.com</1> 进行咨询。',
+        title: '助手正在审核中',
+      },
     },
     suggestions: '相关推荐',
     systemRole: '助手设定',
