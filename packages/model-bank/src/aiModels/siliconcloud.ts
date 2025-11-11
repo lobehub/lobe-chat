@@ -5,6 +5,29 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      "Kimi K2 Thinking 是最新、最强大的开源思考模型。它通过大幅扩展多步推理深度，并在 200–300 次连续工具调用中保持稳定的工具使用，在 Humanity's Last Exam (HLE)、BrowseComp 及其他基准测试中树立了新的标杆。同时，K2 Thinking 在编程、数学、逻辑推理和 Agent 场景中表现卓越。该模型基于混合专家（MoE）架构，总参数约 1T，支持 256K 上下文窗口并支持工具调用。",
+    displayName: 'Kimi K2 Thinking',
+    id: 'moonshotai/Kimi-K2-Thinking',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-07',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       vision: true,
     },
     contextWindowTokens: 262_144,
