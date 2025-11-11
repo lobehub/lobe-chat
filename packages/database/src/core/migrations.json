@@ -746,5 +746,21 @@
     "bps": true,
     "folderMillis": 1761878697451,
     "hash": "2f740719356c4ea28a4f71b6089595871f6e185e056b43288a7d16f7d0aae196"
+  },
+  {
+    "sql": [
+      "CREATE INDEX IF NOT EXISTS \"agents_knowledge_bases_agent_id_idx\" ON \"agents_knowledge_bases\" USING btree (\"agent_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1762232313711,
+    "hash": "fd8e7ff36bf877ddc1a45d360edfe1fe9a579cd02d68d7664545d7df95b8eb09"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"ai_models\" ADD COLUMN IF NOT EXISTS \"settings\" jsonb DEFAULT '{}'::jsonb;"
+    ],
+    "bps": true,
+    "folderMillis": 1762251112601,
+    "hash": "923ccbdf46c32be9a981dabd348e6923b4a365444241e9b8cc174bf5b914cbc5"
   }
 ]

@@ -26,7 +26,6 @@ export * from './session';
 export * from './tool';
 export * from './topic';
 export * from './user';
-export * from './user/settings';
 // FIXME: I think we need a refactor for the "openai" types
 // it more likes the UI message payload
 export * from './openai/chat';

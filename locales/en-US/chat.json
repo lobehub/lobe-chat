@@ -173,6 +173,7 @@
     "title": "Mention Members"
   },
   "messageAction": {
+    "continueGeneration": "Continue Generating",
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
     "regenerate": "Regenerate"

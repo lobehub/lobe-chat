@@ -54,6 +54,7 @@ const ProviderItem = memo<DiscoverProviderItem>(
     return (
       <Block
         clickable
+        data-testid="provider-item"
         height={'100%'}
         onClick={() => {
           navigate(link);

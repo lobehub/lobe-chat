@@ -199,6 +199,12 @@
     "all": "すべて",
     "list": {
       "disabled": "未使用",
+      "disabledActions": {
+        "sort": "並び替え方法",
+        "sortAlphabetical": "アルファベット順に並び替え",
+        "sortAlphabeticalDesc": "アルファベット逆順に並び替え",
+        "sortDefault": "デフォルトの並び順"
+      },
       "enabled": "使用中"
     },
     "notFound": "検索結果が見つかりません",
@@ -391,7 +397,13 @@
       "addNew": "モデルを追加",
       "disabled": "無効",
       "disabledActions": {
-        "showMore": "すべて表示"
+        "showMore": "すべて表示",
+        "sort": "並び替え方法",
+        "sortAlphabetical": "アルファベット順に並び替え",
+        "sortAlphabeticalDesc": "アルファベット逆順に並び替え",
+        "sortDefault": "デフォルトの並び順",
+        "sortReleasedAt": "公開日が早い順に並び替え",
+        "sortReleasedAtDesc": "公開日が新しい順に並び替え"
       },
       "empty": {
         "desc": "カスタムモデルを作成するか、モデルを取得してから使用を開始してください",

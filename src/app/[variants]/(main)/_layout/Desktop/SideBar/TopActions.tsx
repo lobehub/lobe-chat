@@ -32,9 +32,6 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
     useServerConfigStore(featureFlagsSelectors);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.NavigateToChat));
 
-  // Check if server mode is enabled
-  const isServerMode = process.env.NEXT_PUBLIC_SERVICE_MODE === 'server';
-
   const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
   const isFilesActive = tab === SidebarTabKey.Files;
   const isDiscoverActive = tab === SidebarTabKey.Discover;
@@ -69,7 +66,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           tooltipProps={{ placement: 'right' }}
         />
       </Link>
-      {enableKnowledgeBase && isServerMode && (
+      {enableKnowledgeBase && (
         <Link aria-label={t('tab.knowledgeBase')} href={'/knowledge'}>
           <ActionIcon
             active={isFilesActive}

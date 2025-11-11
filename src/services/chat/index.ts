@@ -52,12 +52,12 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
   abortController?: AbortController;
   onError?: (e: Error, rawError?: any) => void;
   /**
-   * 加载状态变化处理函数
-   * @param loading - 是否处于加载状态
+   * Loading state change handler function
+   * @param loading - Whether in loading state
    */
   onLoadingChange?: (loading: boolean) => void;
   /**
-   * 请求对象
+   * Request object
    */
   params: ChatStreamInputParams;
   trace?: TracePayload;

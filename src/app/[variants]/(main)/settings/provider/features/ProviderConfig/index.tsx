@@ -21,6 +21,7 @@ import urlJoin from 'url-join';
 import { z } from 'zod';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
+import { SkeletonInput, SkeletonSwitch } from '@/components/Skeleton';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AES_GCM_URL, BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { isDesktop, isServerMode } from '@/const/version';
@@ -34,7 +35,6 @@ import {
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import Checker, { CheckErrorRender } from './Checker';
 import EnableSwitch from './EnableSwitch';
-import { SkeletonInput } from './SkeletonInput';
 import UpdateProviderInfo from './UpdateProviderInfo';
 
 const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
@@ -298,7 +298,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         (showApiKey && isProviderApiKeyNotEmpty));
     const clientFetchItem = showClientFetch && {
       children: isLoading ? (
-        <Skeleton.Button active className={styles.switchLoading} />
+        <SkeletonSwitch />
       ) : (
         <Switch checked={isFetchOnClient} disabled={configUpdating} />
       ),
@@ -424,5 +424,3 @@ const ProviderConfig = memo<ProviderConfigProps>(
 );
 
 export default ProviderConfig;
-
-export { SkeletonInput } from './SkeletonInput';

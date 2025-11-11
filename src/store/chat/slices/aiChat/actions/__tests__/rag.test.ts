@@ -6,7 +6,7 @@ import { chatService } from '@/services/chat';
 import { ragService } from '@/services/rag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, dbMessageSelectors, displayMessageSelectors } from '@/store/chat/selectors';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { QueryRewriteSystemAgent } from '@/types/user/settings';
 
@@ -70,7 +70,7 @@ describe('chatRAG actions', () => {
       const userQuery = 'user-query';
 
       // Mock the message with existing ragQuery
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(
         () =>
           ({
             id: messageId,
@@ -113,7 +113,7 @@ describe('chatRAG actions', () => {
       const rewrittenQuery = 'rewritten-query';
 
       // Mock the message without ragQuery
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(
         () =>
           ({
             id: messageId,
@@ -220,7 +220,7 @@ describe('chatRAG actions', () => {
     it('should not rewrite if message not found', async () => {
       const { result } = renderHook(() => useChatStore());
 
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(() => undefined);
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(() => undefined);
       const rewriteSpy = vi.spyOn(result.current, 'internal_rewriteQuery');
 
       await act(async () => {
@@ -235,7 +235,7 @@ describe('chatRAG actions', () => {
       const messageId = 'message-id';
       const content = 'message content';
 
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(
         () =>
           ({
             id: messageId,
@@ -243,7 +243,7 @@ describe('chatRAG actions', () => {
           }) as UIChatMessage,
       );
 
-      vi.spyOn(chatSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
+      vi.spyOn(displayMessageSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
         { content: 'history' },
       ] as UIChatMessage[]);
 

@@ -175,29 +175,40 @@ export class MCPService {
         loggableParams,
         result,
       );
-      const { content, isError } = result;
 
-      if (isError) return result;
+      // TODO: map more type
+      const content = result.content
+        ? result.content
+            .map((item) => {
+              switch (item.type) {
+                case 'text': {
+                  return item.text;
+                }
+                default: {
+                  return '';
+                }
+              }
+            })
+            .filter(Boolean)
+            .join('\n\n')
+        : '';
 
-      const data = content as { text: string; type: 'text' }[];
+      if (result.isError) return { content, state: result, success: true };
 
-      if (!data || data.length === 0) return data;
-
-      if (data.length > 1) return data;
-
-      const text = data[0]?.text;
-      if (!text) return data;
-
-      // try to get json object, which will be stringify in the client
-      const json = safeParseJSON(text);
-      if (json) return json;
-
-      return text;
+      return { content, state: result, success: true };
     } catch (error) {
       if (error instanceof McpError) {
         const mcpError = error as McpError;
 
-        return mcpError.message;
+        return {
+          content: mcpError.message,
+          error: error,
+          state: {
+            content: [{ text: mcpError.message, type: 'text' }],
+            isError: true,
+          },
+          success: false,
+        };
       }
 
       console.error(

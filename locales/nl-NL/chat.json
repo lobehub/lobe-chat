@@ -173,6 +173,7 @@
     "title": "Leden vermelden"
   },
   "messageAction": {
+    "continueGeneration": "Doorgaan met genereren",
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
     "regenerate": "Opnieuw genereren"

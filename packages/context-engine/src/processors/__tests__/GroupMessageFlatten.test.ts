@@ -18,7 +18,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           createdAt: '2025-10-27T10:00:00.000Z',
           updatedAt: '2025-10-27T10:00:10.000Z',
@@ -98,7 +98,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             {
@@ -168,7 +168,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             {
@@ -207,7 +207,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             {
@@ -255,7 +255,7 @@ describe('GroupMessageFlattenProcessor', () => {
         },
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             {
@@ -307,7 +307,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [],
         },
@@ -326,7 +326,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           // No children field
         },
@@ -346,7 +346,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             {
@@ -378,7 +378,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             {
@@ -410,7 +410,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           children: [
             {
@@ -442,7 +442,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg-group-1',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           parentId: 'parent-1',
           threadId: 'thread-1',
@@ -497,7 +497,7 @@ describe('GroupMessageFlattenProcessor', () => {
       const input: any[] = [
         {
           id: 'msg_LnIlOyMUnX1ylf',
-          role: 'group',
+          role: 'assistantGroup',
           content: '',
           createdAt: '2025-10-27T10:47:59.475Z',
           updatedAt: '2025-10-27T10:48:10.768Z',

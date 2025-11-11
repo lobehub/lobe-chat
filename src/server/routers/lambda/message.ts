@@ -1,6 +1,5 @@
 import {
-  BatchTaskResult,
-  UIChatMessage,
+  CreateNewMessageParamsSchema,
   UpdateMessageParamsSchema,
   UpdateMessageRAGParamsSchema,
 } from '@lobechat/types';
@@ -12,8 +11,7 @@ import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
-
-type ChatMessageList = UIChatMessage[];
+import { MessageService } from '@/server/services/message';
 
 const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -22,19 +20,12 @@ const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
     ctx: {
       fileService: new FileService(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      messageService: new MessageService(ctx.serverDB, ctx.userId),
     },
   });
 });
 
 export const messageRouter = router({
-  batchCreateMessages: messageProcedure
-    .input(z.array(z.any()))
-    .mutation(async ({ input, ctx }): Promise<BatchTaskResult> => {
-      const data = await ctx.messageModel.batchCreate(input);
-
-      return { added: data.rowCount as number, ids: [], skips: [], success: true };
-    }),
-
   count: messageProcedure
     .input(
       z
@@ -64,35 +55,9 @@ export const messageRouter = router({
     }),
 
   createMessage: messageProcedure
-    .input(z.object({}).passthrough().partial())
+    .input(CreateNewMessageParamsSchema)
     .mutation(async ({ input, ctx }) => {
-      const data = await ctx.messageModel.create(input as any);
-
-      return data.id;
-    }),
-
-  createNewMessage: messageProcedure
-    .input(z.object({}).passthrough().partial())
-    .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.createNewMessage(input as any, {
-        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-      });
-    }),
-
-  // TODO: it will be removed in V2
-  getAllMessages: messageProcedure.query(async ({ ctx }): Promise<ChatMessageList> => {
-    return ctx.messageModel.queryAll() as any;
-  }),
-
-  // TODO: it will be removed in V2
-  getAllMessagesInSession: messageProcedure
-    .input(
-      z.object({
-        sessionId: z.string().nullable().optional(),
-      }),
-    )
-    .query(async ({ ctx, input }): Promise<ChatMessageList> => {
-      return ctx.messageModel.queryBySessionId(input.sessionId) as any;
+      return ctx.messageService.createMessage(input as any);
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {
@@ -118,6 +83,7 @@ export const messageRouter = router({
       const fileService = new FileService(serverDB, ctx.userId);
 
       return messageModel.query(input, {
+        groupAssistantMessages: false,
         postProcessUrl: (path) => fileService.getFullFileUrl(path),
       });
     }),
@@ -131,9 +97,16 @@ export const messageRouter = router({
   }),
 
   removeMessage: messageProcedure
-    .input(z.object({ id: z.string() }))
+    .input(
+      z.object({
+        id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessage(input.id);
+      const { id, ...options } = input;
+      return ctx.messageService.removeMessage(id, options);
     }),
 
   removeMessageQuery: messageProcedure
@@ -143,9 +116,16 @@ export const messageRouter = router({
     }),
 
   removeMessages: messageProcedure
-    .input(z.object({ ids: z.array(z.string()) }))
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessages(input.ids);
+      const { ids, ...options } = input;
+      return ctx.messageService.removeMessages(ids, options);
     }),
 
   removeMessagesByAssistant: messageProcedure
@@ -191,11 +171,8 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.update(input.id, input.value as any, {
-        postProcessUrl: (path) => ctx.fileService.getFullFileUrl(path),
-        sessionId: input.sessionId,
-        topicId: input.topicId,
-      });
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessage(id, value as any, options);
     }),
 
   updateMessagePlugin: messageProcedure
@@ -210,42 +187,57 @@ export const messageRouter = router({
     }),
 
   updateMessageRAG: messageProcedure
-    .input(UpdateMessageRAGParamsSchema)
+    .input(
+      UpdateMessageRAGParamsSchema.extend({
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
-      await ctx.messageModel.updateMessageRAG(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessageRAG(id, value, options);
     }),
 
   updateMetadata: messageProcedure
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
         value: z.object({}).passthrough(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMetadata(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMetadata(id, value, options);
     }),
 
   updatePluginError: messageProcedure
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
         value: z.object({}).passthrough().nullable(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
+      const { id, value, ...options } = input;
+      return ctx.messageService.updatePluginError(id, value, options);
     }),
 
   updatePluginState: messageProcedure
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
         value: z.object({}).passthrough(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updatePluginState(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updatePluginState(id, value, options);
     }),
 
   updateTTS: messageProcedure
@@ -268,7 +260,6 @@ export const messageRouter = router({
 
       return ctx.messageModel.updateTTS(input.id, input.value);
     }),
-
   updateTranslate: messageProcedure
     .input(
       z.object({
@@ -290,5 +281,3 @@ export const messageRouter = router({
       return ctx.messageModel.updateTranslate(input.id, input.value);
     }),
 });
-
-export type MessageRouter = typeof messageRouter;

@@ -18,6 +18,7 @@
     },
     "permissionsTitle": "Yêu cầu các quyền sau:",
     "redirectUri": "Sẽ được chuyển hướng đến sau khi ủy quyền thành công",
+    "redirecting": "Ủy quyền thành công, đang chuyển hướng...",
     "scope": {
       "email": "Truy cập địa chỉ email của bạn",
       "offline_access": "Cho phép ứng dụng truy cập dữ liệu của bạn",
