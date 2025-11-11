@@ -29,28 +29,20 @@ import EditState from './EditState';
 
 const MOBILE_AVATAR_SIZE = 32;
 
-interface GroupMessageProps extends UIChatMessage {
+interface GroupMessageProps {
   disableEditing?: boolean;
+  id: string;
   index: number;
-  showTitle?: boolean;
 }
 
-const GroupMessage = memo<GroupMessageProps>((props) => {
-  const {
-    showTitle,
-    id,
-    disableEditing,
-    usage,
-    index,
-    createdAt,
-    meta,
-    children,
-    performance,
-    model,
-    provider,
-  } = props;
+const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing }) => {
+  const item = useChatStore(
+    displayMessageSelectors.getDisplayMessageById(id),
+    isEqual,
+  ) as UIChatMessage;
+  const { usage, createdAt, meta, children, performance, model, provider } = item;
   const avatar = meta;
-  console.log('render');
+
   const { mobile } = useResponsive();
   const placement = 'left';
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
@@ -60,7 +52,7 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
     editing: false,
     placement,
     primary: false,
-    showTitle,
+    showTitle: true,
     time: createdAt,
     title: avatar.title,
     variant,
@@ -129,14 +121,14 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
           )}
 
           {model && (
-            <Usage metadata={{ ...performance, ...usage }} model={model} provider={provider!} />
+            <Usage model={model} performance={performance} provider={provider!} usage={usage} />
           )}
           {!disableEditing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
               <GroupActionsBar
                 contentBlock={lastAssistantMsg}
                 contentId={contentId}
-                data={props}
+                data={item}
                 id={id}
                 index={index}
               />
