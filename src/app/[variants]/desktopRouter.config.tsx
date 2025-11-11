@@ -45,21 +45,21 @@ export const desktopRouter = createBrowserRouter([
           {
             index: true,
             lazy: () =>
-              import('./(main)/chat/pages/desktop/chat.page').then((m) => ({
+              import('./(main)/chat/index').then((m) => ({
                 Component: m.DesktopChatPage,
               })),
           },
           {
             lazy: () =>
-              import('./(main)/chat/pages/desktop/chat.page').then((m) => ({
+              import('./(main)/chat/index').then((m) => ({
                 Component: m.DesktopChatPage,
               })),
             path: '*',
           },
         ],
         lazy: () =>
-          import('./(main)/chat/layouts/desktop/chat.layout').then((m) => ({
-            Component: m.ChatDesktopLayout,
+          import('./(main)/chat/_layout/Desktop').then((m) => ({
+            Component: m.default,
           })),
         path: 'chat',
       },

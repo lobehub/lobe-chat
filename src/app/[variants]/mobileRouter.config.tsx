@@ -43,21 +43,21 @@ export const mobileRouter = createBrowserRouter([
           {
             index: true,
             lazy: () =>
-              import('./(main)/chat/pages/mobile/chat.page').then((m) => ({
+              import('./(main)/chat/index').then((m) => ({
                 Component: m.MobileChatPage,
               })),
           },
           {
             lazy: () =>
-              import('./(main)/chat/pages/mobile/settings.page').then((m) => ({
-                Component: m.MobileChatSettingsPage,
+              import('./(main)/chat/settings').then((m) => ({
+                Component: m.default,
               })),
             path: 'settings',
           },
         ],
         lazy: () =>
-          import('./(main)/chat/layouts/mobile/chat.layout').then((m) => ({
-            Component: m.MobileChatLayout,
+          import('./(main)/chat/_layout/Mobile').then((m) => ({
+            Component: m.default,
           })),
         path: 'chat',
       },

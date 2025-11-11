@@ -18,9 +18,9 @@ import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
-import MobileHeader from '../../settings/_layout/Mobile/Header';
+import MobileHeader from './_layout/Mobile/Header';
 
-export const MobileChatSettingsPage = memo(() => {
+export default memo(() => {
   const { t } = useTranslation('setting');
   const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
   const theme = useTheme();
@@ -63,5 +63,3 @@ export const MobileChatSettingsPage = memo(() => {
     </MobileContentLayout>
   );
 });
-
-MobileChatSettingsPage.displayName = 'MobileChatSettingsPage';
