@@ -26,7 +26,7 @@ const IMAGE_TYPES = new Set([
 const MARKDOWN_TYPES = new Set(['text/markdown', 'text/x-markdown']);
 
 // Custom note file type
-const CUSTOM_NOTE_TYPE = 'custom/note';
+const CUSTOM_NOTE_TYPE = 'custom/document';
 
 // Helper to check if filename ends with .md or is a custom note
 const isMarkdownFile = (name: string, fileType?: string) => {

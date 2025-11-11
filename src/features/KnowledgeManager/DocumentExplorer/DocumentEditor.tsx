@@ -38,11 +38,12 @@ import { Flexbox } from 'react-layout-kit';
 
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
-import { fileChatSelectors } from '@/store/file/slices/chat/selectors';
+import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
+import { DocumentSourceType, LobeDocument } from '@/types/document';
 
 dayjs.extend(relativeTime);
 
@@ -74,12 +75,10 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
 
     const editor = useEditor();
 
-    // Get document data from Zustand store
-    const currentDocument = useFileStore(fileChatSelectors.getDocumentById(documentId));
-    const cachedContent = currentDocument?.content;
-    const cachedEditorData = currentDocument?.editorData;
-    const cachedEmoji = currentDocument?.metadata?.emoji;
-    const documentTitle = currentDocument?.name;
+    const currentDocument = useFileStore(documentSelectors.getDocumentById(documentId));
+    const documentTitle = currentDocument?.title;
+
+    const docEmoji = currentDocument?.metadata?.emoji;
 
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [currentTitle, setCurrentTitle] = useState('');
@@ -88,22 +87,29 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [currentDocId, setCurrentDocId] = useState<string | undefined>(documentId);
     const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
+
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
-    const localDocumentMap = useFileStore((s) => s.localDocumentMap);
     const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
     const removeDocument = useFileStore((s) => s.removeDocument);
+
     const isInitialLoadRef = useRef(false);
+
+    // Helper function to extract content from pages array
+    const extractContentFromPages = useCallback((pages?: Array<{ pageContent: string }>) => {
+      if (!pages || pages.length === 0) return null;
+      return pages.map((page) => page.pageContent).join('\n\n');
+    }, []);
 
     // Sync title and emoji when document data changes (e.g., from rename)
     useEffect(() => {
       if (documentTitle !== undefined && documentTitle !== currentTitle) {
         setCurrentTitle(documentTitle);
       }
-      if (cachedEmoji !== currentEmoji) {
-        setCurrentEmoji(cachedEmoji);
+      if (docEmoji !== currentEmoji) {
+        setCurrentEmoji(docEmoji);
       }
-    }, [documentTitle, cachedEmoji]);
+    }, [documentTitle, docEmoji]);
 
     // Load document content when documentId changes
     useEffect(() => {
@@ -111,30 +117,14 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       isInitialLoadRef.current = true;
 
       if (documentId && editor) {
-        console.log('[DocumentEditor] Loading content:', {
-          cachedEditorDataPreview: cachedEditorData
-            ? JSON.stringify(cachedEditorData).slice(0, 100)
-            : null,
-          cachedEditorDataType: typeof cachedEditorData,
-          cachedEmoji,
-          documentId,
-          documentTitle,
-          hasCachedEditorData: !!cachedEditorData,
-          isTempDocument: documentId.startsWith('temp-document-'),
-        });
-
-        // Reset emoji picker state when switching documents
         setShowEmojiPicker(false);
-        // Initialize emoji from cached value
-        setCurrentEmoji(cachedEmoji);
-        // Reset last updated time
+        setCurrentEmoji(docEmoji);
         setLastUpdatedTime(null);
 
-        // Check if this is an optimistic document from local map
-        const localDocument = localDocumentMap.get(documentId);
-        if (localDocument && documentId.startsWith('temp-document-')) {
-          console.log('[DocumentEditor] Using optimistic document from local map');
-          setCurrentTitle(localDocument.name || 'Untitled Document');
+        // Check if this is an optimistic temp document
+        if (currentDocument && documentId.startsWith('temp-document-')) {
+          console.log('[DocumentEditor] Using optimistic document from currentDocument');
+          setCurrentTitle(currentDocument.title || 'Untitled Document');
           // Start with empty editor for new documents
           editor.cleanDocument();
           // Reset flag after cleanDocument (no onChange should fire for cleanDocument)
@@ -144,107 +134,38 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           return;
         }
 
-        // If editorData is already cached (from list), check if it's valid
-        const hasValidCachedEditorData =
-          cachedEditorData &&
-          typeof cachedEditorData === 'object' &&
-          Object.keys(cachedEditorData).length > 0;
-
-        console.log('[DocumentEditor] Cached data check:', {
-          cachedContent,
-          cachedEditorData,
-          hasCachedContent: !!cachedContent,
-          hasValidCachedEditorData,
-          keys: cachedEditorData ? Object.keys(cachedEditorData) : null,
-        });
-
-        if (hasValidCachedEditorData) {
-          console.log('[DocumentEditor] Using cached editorData', cachedEditorData);
+        if (currentDocument?.editorData) {
           setCurrentTitle(documentTitle || '');
           isInitialLoadRef.current = true;
-          editor.setDocument('json', JSON.stringify(cachedEditorData));
+          editor.setDocument('json', JSON.stringify(currentDocument.editorData));
           setTimeout(() => {
             isInitialLoadRef.current = false;
           }, 500);
           return;
-        }
-
-        // If no valid editorData but has cached content, use markdown format
-        if (!hasValidCachedEditorData && cachedContent) {
-          console.log('[DocumentEditor] Using cached markdown content');
-          setCurrentTitle(documentTitle || '');
-          isInitialLoadRef.current = true;
-          editor.setDocument('markdown', cachedContent);
-          setTimeout(() => {
-            isInitialLoadRef.current = false;
-          }, 500);
+        } else if (currentDocument?.pages) {
+          const pagesContent = extractContentFromPages(currentDocument.pages);
+          if (pagesContent) {
+            console.log('[DocumentEditor] Using pages content as fallback');
+            setCurrentTitle(documentTitle || '');
+            isInitialLoadRef.current = true;
+            editor.setDocument('markdown', pagesContent);
+            setTimeout(() => {
+              isInitialLoadRef.current = false;
+            }, 500);
+            return;
+          }
+        } else {
+          // Reset editor
+          editor.cleanDocument();
+          isInitialLoadRef.current = false;
           return;
         }
-
-        // Otherwise, fetch full content from API
-        console.log('[DocumentEditor] Fetching from API');
-        documentService
-          .getDocumentById(documentId)
-          .then((doc) => {
-            if (doc) {
-              setCurrentTitle(doc.title || doc.filename || '');
-              // Load emoji from metadata
-              if (doc.metadata?.emoji) {
-                setCurrentEmoji(doc.metadata.emoji);
-              }
-              // Set last updated time
-              if (doc.updatedAt) {
-                setLastUpdatedTime(new Date(doc.updatedAt));
-              }
-
-              console.log('[DocumentEditor] Fetched doc.editorData:', {
-                editorDataPreview: doc.editorData
-                  ? JSON.stringify(doc.editorData).slice(0, 100)
-                  : null,
-                editorDataType: typeof doc.editorData,
-                hasContent: !!doc.content,
-                hasEditorData: !!doc.editorData,
-              });
-
-              // Check if editorData is empty or just an empty object
-              const hasValidEditorData =
-                doc.editorData &&
-                typeof doc.editorData === 'object' &&
-                Object.keys(doc.editorData).length > 0;
-
-              // If no valid editorData but has content, use markdown format
-              if (!hasValidEditorData && doc.content) {
-                console.log('[DocumentEditor] Using markdown format for content');
-                isInitialLoadRef.current = true;
-                editor.setDocument('markdown', doc.content);
-                setTimeout(() => {
-                  isInitialLoadRef.current = false;
-                }, 500);
-              } else if (hasValidEditorData) {
-                isInitialLoadRef.current = true;
-                editor.setDocument('json', doc.editorData);
-                setTimeout(() => {
-                  isInitialLoadRef.current = false;
-                }, 500);
-              } else {
-                // No valid content, reset flag
-                isInitialLoadRef.current = false;
-              }
-            }
-          })
-          .catch((error) => {
-            console.error('[DocumentEditor] Failed to load document:', error);
-            // Reset flag on error
-            isInitialLoadRef.current = false;
-          });
       } else {
         // Reset flag if no documentId or editor
+        editor.cleanDocument();
         isInitialLoadRef.current = false;
       }
-      // IMPORTANT: Only re-run when documentId changes to prevent editor blur during auto-save.
-      // cachedEditorData and cachedContent are intentionally excluded from dependencies
-      // because they update after save, which would cause unnecessary re-initialization.
-    }, [documentId]);
+    }, [documentId, editor, extractContentFromPages]);
 
     // Auto-save function
     const performSave = useCallback(async () => {
@@ -273,7 +194,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               : {
                   emoji: undefined, // Explicitly set to undefined to remove emoji
                 },
-            name: currentTitle,
+            title: currentTitle,
             updatedAt: new Date(),
           });
         } else {
@@ -288,10 +209,10 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           });
           const title = currentTitle || `Document - ${timestamp}`;
 
-          const newDoc = await documentService.createNote({
+          const newDoc = await documentService.createDocument({
             content: textContent,
             editorData: JSON.stringify(editorData),
-            fileType: 'custom/note',
+            fileType: 'custom/document',
             knowledgeBaseId,
             metadata: currentEmoji
               ? {
@@ -305,23 +226,27 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           });
 
           // Create the real document object for optimistic update
-          const realDocument = {
-            chunkCount: null,
-            chunkingError: null,
-            chunkingStatus: null,
+          const realDocument: LobeDocument = {
             content: textContent,
             createdAt: new Date(now),
-            editorData: structuredClone(editorData),
-            embeddingError: null,
-            embeddingStatus: null,
-            fileType: 'custom/note' as const,
-            finishEmbedding: false,
+            editorData: structuredClone(editorData) || null,
+            fileType: 'custom/document' as const,
+            filename: title,
             id: newDoc.id,
-            name: title,
-            size: textContent.length,
-            sourceType: 'document' as const,
+            metadata: currentEmoji
+              ? {
+                  createdAt: now,
+                  emoji: currentEmoji,
+                }
+              : {
+                  createdAt: now,
+                },
+            source: 'document',
+            sourceType: DocumentSourceType.EDITOR,
+            title,
+            totalCharCount: textContent.length,
+            totalLineCount: 0,
             updatedAt: new Date(now),
-            url: '',
           };
 
           // Replace temp document with real document (smooth UX, no flicker)
@@ -416,16 +341,14 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       } catch (error) {
         console.error('Failed to calculate word count:', error);
 
-        if (documentId) {
-          const localDocument = localDocumentMap.get(documentId);
-          if (localDocument) {
-            return localDocument.content?.trim().split(/\s+/).filter(Boolean).length || 0;
-          }
+        // Fallback to currentDocument content if available
+        if (currentDocument?.content) {
+          return currentDocument.content.trim().split(/\s+/).filter(Boolean).length || 0;
         }
 
         return 0;
       }
-    }, [editor, isInitialLoadRef.current, cachedEditorData]);
+    }, [editor, isInitialLoadRef.current, currentDocument]);
 
     // Handle delete document
     const handleDelete = useCallback(async () => {

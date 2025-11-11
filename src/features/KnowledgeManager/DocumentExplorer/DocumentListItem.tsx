@@ -5,7 +5,7 @@ import { createStyles } from 'antd-style';
 import { FileText } from 'lucide-react';
 import { memo } from 'react';
 
-import { FileListItem } from '@/types/files';
+import { LobeDocument } from '@/types/document';
 
 import DocumentActions from './DocumentActions';
 import RenamePopover from './RenamePopover';
@@ -83,7 +83,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface DocumentListItemProps {
-  document: FileListItem;
+  document: LobeDocument;
   isRenaming: boolean;
   isSelected: boolean;
   onDelete: () => void;
@@ -106,7 +106,7 @@ const DocumentListItem = memo<DocumentListItemProps>(
   }) => {
     const { styles, cx } = useStyles();
 
-    const title = document.name || untitledText;
+    const title = document.title || untitledText;
     const emoji = document.metadata?.emoji;
 
     return (

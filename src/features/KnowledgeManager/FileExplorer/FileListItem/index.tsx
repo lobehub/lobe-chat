@@ -122,7 +122,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
     ]);
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
-    const isNote = sourceType === 'document' || fileType === 'custom/note';
+    const isNote = sourceType === 'document' || fileType === 'custom/document';
 
     // Extract title and emoji for notes
     const displayTitle = useMemo(() => {

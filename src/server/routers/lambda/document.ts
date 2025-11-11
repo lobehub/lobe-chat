@@ -21,7 +21,7 @@ const documentProcedure = authedProcedure.use(serverDatabase).use(async (opts) =
 });
 
 export const documentRouter = router({
-  createNote: documentProcedure
+  createDocument: documentProcedure
     .input(
       z.object({
         content: z.string().optional(),
@@ -35,7 +35,7 @@ export const documentRouter = router({
     .mutation(async ({ ctx, input }) => {
       // Parse editorData from JSON string to object
       const editorData = JSON.parse(input.editorData);
-      return ctx.documentService.createNote({
+      return ctx.documentService.createDocument({
         ...input,
         editorData,
       });

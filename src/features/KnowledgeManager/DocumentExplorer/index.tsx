@@ -9,7 +9,7 @@ import { Center } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useFileStore } from '@/store/file';
-import { FileListItem } from '@/types/files';
+import { DocumentSourceType, LobeDocument } from '@/types/document';
 
 import DocumentEditor from './DocumentEditor';
 import DocumentEditorPlaceholder from './DocumentEditorPlaceholder';
@@ -77,9 +77,9 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const [searchKeywords, setSearchKeywords] = useState<string>('');
   const [renamingDocumentId, setRenamingDocumentId] = useState<string | null>(null);
 
-  const useFetchKnowledgeItems = useFileStore((s) => s.useFetchKnowledgeItems);
+  const fetchDocuments = useFileStore((s) => s.fetchDocuments);
   const getOptimisticDocuments = useFileStore((s) => s.getOptimisticDocuments);
-  const syncDocumentMapWithServer = useFileStore((s) => s.syncDocumentMapWithServer);
+  const isDocumentListLoading = useFileStore((s) => s.isDocumentListLoading);
   const createDocument = useFileStore((s) => s.createDocument);
   const createOptimisticDocument = useFileStore((s) => s.createOptimisticDocument);
   const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
@@ -87,16 +87,10 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   // Subscribe to localDocumentMap to trigger re-render when documents are updated
   useFileStore((s) => s.localDocumentMap);
 
-  const { data: allFiles, isLoading } = useFetchKnowledgeItems({
-    knowledgeBaseId,
-  });
-
-  // Sync server data to local document map when it changes
+  // Fetch documents on mount
   useEffect(() => {
-    if (allFiles) {
-      syncDocumentMapWithServer(allFiles);
-    }
-  }, [allFiles, syncDocumentMapWithServer]);
+    fetchDocuments();
+  }, [fetchDocuments]);
 
   // If documentId is provided, automatically open that document
   useEffect(() => {
@@ -122,8 +116,8 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
       const lowerKeywords = searchKeywords.toLowerCase();
       result = documents.filter((document) => {
         const content = document.content?.toLowerCase() || '';
-        const name = document.name?.toLowerCase() || '';
-        return content.includes(lowerKeywords) || name.includes(lowerKeywords);
+        const title = document.title?.toLowerCase() || '';
+        return content.includes(lowerKeywords) || title.includes(lowerKeywords);
       });
     }
 
@@ -162,28 +156,24 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
         title: untitledTitle,
       });
 
-      // Convert DocumentItem to FileListItem
-      const realDocument: FileListItem = {
-        chunkCount: null,
-        chunkingError: null,
-        chunkingStatus: null,
+      // Convert DocumentItem to EditorDocument
+      const realDocument: LobeDocument = {
         content: newDoc.content || '',
         createdAt: newDoc.createdAt ? new Date(newDoc.createdAt) : new Date(),
         editorData:
           typeof newDoc.editorData === 'string'
             ? JSON.parse(newDoc.editorData)
             : newDoc.editorData || null,
-        embeddingError: null,
-        embeddingStatus: null,
-        fileType: 'custom/note',
-        finishEmbedding: false,
+        fileType: 'custom/document',
+        filename: newDoc.title || untitledTitle,
         id: newDoc.id,
-        metadata: newDoc.metadata as any,
-        name: newDoc.title || untitledTitle,
-        size: newDoc.content?.length || 0,
-        sourceType: 'document',
+        metadata: newDoc.metadata || {},
+        source: 'document',
+        sourceType: DocumentSourceType.EDITOR,
+        title: newDoc.title || untitledTitle,
+        totalCharCount: newDoc.content?.length || 0,
+        totalLineCount: 0,
         updatedAt: newDoc.updatedAt ? new Date(newDoc.updatedAt) : new Date(),
-        url: '',
       };
 
       // Replace optimistic document with real document (smooth UX, no flicker)
@@ -218,7 +208,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
         metadata: {
           emoji,
         },
-        name: title,
+        title,
       });
     } catch (error) {
       console.error('Failed to rename document:', error);
@@ -247,7 +237,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
           />
         </div>
         <div className={styles.documentList}>
-          {isLoading ? (
+          {isDocumentListLoading ? (
             <DocumentListSkeleton />
           ) : filteredDocuments.length === 0 ? (
             <div style={{ color: 'var(--lobe-text-secondary)', padding: 24, textAlign: 'center' }}>

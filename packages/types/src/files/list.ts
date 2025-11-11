@@ -23,12 +23,7 @@ export interface FileListItem {
   metadata?: Record<string, any> | null;
   name: string;
   size: number;
-  /**
-   * Source type to distinguish between files and documents
-   * - 'file': from files table
-   * - 'document': from documents table (notes)
-   */
-  sourceType: 'file' | 'document';
+  sourceType: string;
   updatedAt: Date;
   url: string;
 }

@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
 import { useClientDataSWR } from '@/libs/swr';
-import { fileService , FileService } from '@/services/file';
+import { FileService, fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import {
   UploadFileListDispatch,
@@ -39,7 +39,7 @@ export interface FileManageAction {
   useFetchKnowledgeItems: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
 }
 
-const FETCH_FILE_LIST_KEY = 'useFetchKnowledgeItems';
+const FETCH_ALL_KNOWLEDGE_KEY = 'useFetchKnowledgeItems';
 
 export const createFileManageSlice: StateCreator<
   FileStore,
@@ -171,7 +171,7 @@ export const createFileManageSlice: StateCreator<
     get().toggleParsingIds([id], false);
   },
   refreshFileList: async () => {
-    await mutate([FETCH_FILE_LIST_KEY, get().queryListParams]);
+    await mutate([FETCH_ALL_KNOWLEDGE_KEY, get().queryListParams]);
   },
   removeAllFiles: async () => {
     await fileService.removeAllFiles();
@@ -227,7 +227,7 @@ export const createFileManageSlice: StateCreator<
 
   useFetchKnowledgeItems: (params) =>
     useClientDataSWR<FileListItem[]>(
-      [FETCH_FILE_LIST_KEY, params],
+      [FETCH_ALL_KNOWLEDGE_KEY, params],
       () => serverFileService.getKnowledgeItems(params),
       {
         onSuccess: (data) => {

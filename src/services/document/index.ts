@@ -2,7 +2,7 @@ import { DocumentItem } from '@lobechat/database/schemas';
 
 import { lambdaClient } from '@/libs/trpc/client';
 
-export interface CreateNoteParams {
+export interface CreateDocumentParams {
   content?: string;
   editorData: string;
   fileType?: string;
@@ -20,8 +20,8 @@ export interface UpdateDocumentParams {
 }
 
 export class DocumentService {
-  async createNote(params: CreateNoteParams): Promise<DocumentItem> {
-    return lambdaClient.document.createNote.mutate(params);
+  async createDocument(params: CreateDocumentParams): Promise<DocumentItem> {
+    return lambdaClient.document.createDocument.mutate(params);
   }
 
   async queryDocuments(): Promise<DocumentItem[]> {

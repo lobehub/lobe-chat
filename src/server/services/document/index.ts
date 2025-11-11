@@ -27,9 +27,9 @@ export class DocumentService {
   }
 
   /**
-   * Create a note document (without associated file)
+   * Create a document
    */
-  async createNote(params: {
+  async createDocument(params: {
     content?: string;
     editorData: Record<string, any>;
     fileType?: string;
@@ -42,7 +42,7 @@ export class DocumentService {
       content,
       editorData,
       title,
-      fileType = 'custom/note',
+      fileType = 'custom/document',
       metadata,
       knowledgeBaseId,
     } = params;
@@ -59,7 +59,7 @@ export class DocumentService {
       filename: title,
       metadata,
       pages: undefined,
-      source: 'note',
+      source: 'document',
       sourceType: 'api',
       title,
       totalCharCount,

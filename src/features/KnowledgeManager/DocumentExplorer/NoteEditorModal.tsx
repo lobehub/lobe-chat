@@ -115,10 +115,10 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
           });
           const title = noteTitle || `Note - ${timestamp}`;
 
-          await documentService.createNote({
+          await documentService.createDocument({
             content: textContent,
             editorData: JSON.stringify(editorData),
-            fileType: 'custom/note',
+            fileType: 'custom/document',
             knowledgeBaseId,
             metadata: {
               createdAt: now,
