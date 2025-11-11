@@ -14,7 +14,6 @@ import {
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
-  UpdateMessageResult,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
@@ -213,7 +212,7 @@ export class MessageModel {
       .from(messageQueries)
       .where(inArray(messageQueries.messageId, messageIds));
 
-    const mappedMessages = result.map(
+    return result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
@@ -222,7 +221,7 @@ export class MessageModel {
             .filter((relation) => relation.messageId === item.id)
             .map((c) => ({
               ...c,
-              similarity: Number(c.similarity) ?? undefined,
+              similarity: c.similarity === null ? undefined : Number(c.similarity),
             })),
 
           extra: {
@@ -267,8 +266,6 @@ export class MessageModel {
         } as unknown as UIChatMessage;
       },
     );
-
-    return mappedMessages;
   };
 
   findById = async (id: string) => {
@@ -424,7 +421,7 @@ export class MessageModel {
     for (const item of result) {
       if (item?.date) {
         const dateStr = dayjs(item.date as string).format('YYYY-MM-DD');
-        dateCountMap.set(dateStr, Number(item.count) || 0);
+        dateCountMap.set(dateStr, item.count);
       }
     }
 
@@ -550,13 +547,7 @@ export class MessageModel {
   update = async (
     id: string,
     { imageList, ...message }: Partial<UpdateMessageParams>,
-    options?: {
-      groupAssistantMessages?: boolean;
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-      sessionId?: string | null;
-      topicId?: string | null;
-    },
-  ): Promise<UpdateMessageResult> => {
+  ): Promise<{ success: boolean }> => {
     try {
       await this.db.transaction(async (trx) => {
         // 1. insert message files
@@ -573,22 +564,6 @@ export class MessageModel {
           .set({ ...message })
           .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
       });
-
-      // if sessionId or topicId provided, return the updated message list
-      if (options?.sessionId !== undefined || options?.topicId !== undefined) {
-        const messageList = await this.query(
-          {
-            sessionId: options.sessionId,
-            topicId: options.topicId,
-          },
-          {
-            groupAssistantMessages: options.groupAssistantMessages ?? false,
-            postProcessUrl: options.postProcessUrl,
-          },
-        );
-
-        return { messages: messageList, success: true };
-      }
 
       return { success: true };
     } catch (error) {
@@ -610,16 +585,7 @@ export class MessageModel {
       .where(and(eq(messages.userId, this.userId), eq(messages.id, id)));
   };
 
-  updatePluginState = async (
-    id: string,
-    state: Record<string, any>,
-    options?: {
-      groupAssistantMessages?: boolean;
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-      sessionId?: string | null;
-      topicId?: string | null;
-    },
-  ): Promise<UpdateMessageResult> => {
+  updatePluginState = async (id: string, state: Record<string, any>): Promise<void> => {
     const item = await this.db.query.messagePlugins.findFirst({
       where: eq(messagePlugins.id, id),
     });
@@ -629,22 +595,6 @@ export class MessageModel {
       .update(messagePlugins)
       .set({ state: merge(item.state || {}, state) })
       .where(eq(messagePlugins.id, id));
-
-    // Return updated messages if sessionId or topicId is provided
-    if (options?.sessionId !== undefined || options?.topicId !== undefined) {
-      const messageList = await this.query(
-        {
-          sessionId: options.sessionId,
-          topicId: options.topicId,
-        },
-        {
-          groupAssistantMessages: options.groupAssistantMessages ?? false,
-          postProcessUrl: options.postProcessUrl,
-        },
-      );
-      return { messages: messageList, success: true };
-    }
-    return { success: true };
   };
 
   updateMessagePlugin = async (id: string, value: Partial<MessagePluginItem>) => {
@@ -768,19 +718,17 @@ export class MessageModel {
     sessionId?: string | null,
     topicId?: string | null,
     groupId?: string | null,
-  ) => {
-    const conditions = [eq(messages.userId, this.userId), this.matchSession(sessionId)];
-
-    // For deletion: only filter by topicId/groupId if explicitly provided
-    if (topicId !== undefined && topicId !== null) {
-      conditions.push(eq(messages.topicId, topicId));
-    }
-    if (groupId !== undefined && groupId !== null) {
-      conditions.push(eq(messages.groupId, groupId));
-    }
-
-    return this.db.delete(messages).where(and(...conditions));
-  };
+  ) =>
+    this.db
+      .delete(messages)
+      .where(
+        and(
+          eq(messages.userId, this.userId),
+          this.matchSession(sessionId),
+          this.matchTopic(topicId),
+          this.matchGroup(groupId),
+        ),
+      );
 
   deleteAllMessages = async () => {
     return this.db.delete(messages).where(eq(messages.userId, this.userId));

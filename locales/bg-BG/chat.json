@@ -173,6 +173,7 @@
     "title": "Споменаване на членове"
   },
   "messageAction": {
+    "continueGeneration": "Продължи генерирането",
     "delAndRegenerate": "Изтрий и прегенерирай",
     "deleteDisabledByThreads": "Съществуват подтеми, не можете да изтриете.",
     "regenerate": "Прегенерирай"

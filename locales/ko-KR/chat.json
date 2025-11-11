@@ -173,6 +173,7 @@
     "title": "멤버 언급"
   },
   "messageAction": {
+    "continueGeneration": "계속 생성하기",
     "delAndRegenerate": "삭제하고 다시 생성",
     "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
     "regenerate": "다시 생성"

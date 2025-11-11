@@ -1,4 +1,4 @@
-import { UIChatMessage } from '@lobechat/types';
+import { AssistantContentBlock, UIChatMessage } from '@lobechat/types';
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -250,10 +250,60 @@ const getGroupLatestMessageWithoutTools = (id: string) => (s: ChatStoreState) =>
 
   // Return the last child only if it doesn't have tools
   if (!lastChild.tools || lastChild.tools.length === 0) {
+    if (!lastChild.content) return;
+
     return lastChild;
   }
 
   return;
+};
+
+/**
+ * Helper to find last message ID in an AssistantContentBlock
+ */
+const findLastBlockId = (block: AssistantContentBlock | undefined): string | undefined => {
+  if (!block) return undefined;
+
+  // Check tools for result message ID
+  if (block.tools && block.tools.length > 0) {
+    const lastTool = block.tools.at(-1);
+    return lastTool?.result_msg_id;
+  }
+
+  // Return block ID
+  return block.id;
+};
+
+/**
+ * Recursively finds the last message ID in a message tree
+ * Priority: children > tools > self
+ */
+const findLastMessageIdRecursive = (node: UIChatMessage | undefined): string | undefined => {
+  if (!node) return undefined;
+
+  // Priority 1: Dive into children recursively
+  if (node.children && node.children.length > 0) {
+    const lastChild = node.children.at(-1);
+    return findLastBlockId(lastChild);
+  }
+
+  // Priority 2: Check tools for result message ID
+  if (node.tools && node.tools.length > 0) {
+    const lastTool = node.tools.at(-1);
+    return lastTool?.result_msg_id;
+  }
+
+  // Priority 3: Return self ID
+  return node.id;
+};
+
+/**
+ * Finds the last (deepest) message ID from a display message
+ * Recursively traverses children and tools to find the actual last message
+ */
+const findLastMessageId = (id: string) => (s: ChatStoreState) => {
+  const message = getDisplayMessageById(id)(s);
+  return findLastMessageIdRecursive(message);
 };
 
 // ============= Supervisor Selectors ========== //
@@ -281,6 +331,7 @@ export const displayMessageSelectors = {
   activeDisplayMessages,
   currentChatLoadingState,
   currentDisplayChatKey,
+  findLastMessageId,
   getDisplayMessageById,
   getDisplayMessagesByKey,
   getGroupLatestMessageWithoutTools,

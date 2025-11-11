@@ -173,6 +173,7 @@
     "title": "Nhắc đến thành viên"
   },
   "messageAction": {
+    "continueGeneration": "Tiếp tục tạo",
     "delAndRegenerate": "Xóa và tạo lại",
     "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
     "regenerate": "Tạo lại"

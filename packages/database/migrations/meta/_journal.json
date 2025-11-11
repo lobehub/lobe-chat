@@ -308,6 +308,13 @@
       "when": 1762251112601,
       "tag": "0043_add_ai_model_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1762870034882,
+      "tag": "0044_high_toxin",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -1,5 +1,6 @@
 'use client';
 
+import isEqual from 'fast-deep-equal';
 import {
   ReactNode,
   forwardRef,
@@ -132,6 +133,6 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
       </WideScreenContainer>
     </VirtuosoContext>
   );
-});
+}, isEqual);
 
 export default VirtualizedList;

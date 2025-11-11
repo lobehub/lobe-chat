@@ -39,10 +39,9 @@ export const createAgentExecutors = (context: {
     traceId?: string;
   };
   parentId: string;
-  parentMessageType: 'user' | 'assistant';
+  skipCreateFirstMessage?: boolean;
 }) => {
-  // 当通过 sendMessageInServer 的时候，已经有一条消息了，那么就不需要触发创建
-  let shouldSkipCreateMessage = context.parentMessageType === 'assistant';
+  let shouldSkipCreateMessage = context.skipCreateFirstMessage;
 
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
     /**
@@ -107,6 +106,7 @@ export const createAgentExecutors = (context: {
       // - Loading state management
       // - Error handling
       // Use messages from state (already contains full conversation history)
+      const messages = llmPayload.messages.filter((message) => message.id !== assistantMessageId);
       const {
         isFunctionCall,
         content,
@@ -115,7 +115,7 @@ export const createAgentExecutors = (context: {
         tool_calls,
       } = await context.get().internal_fetchAIChatMessage({
         messageId: assistantMessageId,
-        messages: llmPayload.messages,
+        messages: messages,
         model: llmPayload.model,
         params: context.params,
         provider: llmPayload.provider,

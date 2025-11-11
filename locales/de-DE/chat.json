@@ -173,6 +173,7 @@
     "title": "Mitglieder erwähnen"
   },
   "messageAction": {
+    "continueGeneration": "Generierung fortsetzen",
     "delAndRegenerate": "Löschen und neu generieren",
     "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
     "regenerate": "Neu generieren"

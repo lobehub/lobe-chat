@@ -76,8 +76,6 @@ export const chatSelectors = {
 
   getBaseChatsByKey: displayMessageSelectors.getDisplayMessagesByKey,
 
-  getGroupLatestMessageWithoutTools: displayMessageSelectors.getGroupLatestMessageWithoutTools,
-
   getMessageById: displayMessageSelectors.getDisplayMessageById,
 
   getSupervisorTodos: displayMessageSelectors.getSupervisorTodos,

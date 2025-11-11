@@ -32,10 +32,10 @@ describe('search actions', () => {
       searchLoading: {},
       optimisticUpdateMessageContent: vi.fn(),
       optimisticUpdateMessagePluginError: vi.fn(),
-      updatePluginArguments: vi.fn(),
-      updatePluginState: vi.fn(),
+      optimisticUpdatePluginArguments: vi.fn(),
+      optimisticUpdatePluginState: vi.fn(),
       optimisticCreateMessage: vi.fn(),
-      internal_addToolToAssistantMessage: vi.fn(),
+      optimisticAddToolToAssistantMessage: vi.fn(),
       openToolUI: vi.fn(),
     });
   });
@@ -238,7 +238,7 @@ describe('search actions', () => {
         await triggerSearchAgain(messageId, query, { aiSummary: true });
       });
 
-      expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, query);
+      expect(result.current.optimisticUpdatePluginArguments).toHaveBeenCalledWith(messageId, query);
       expect(spy).toHaveBeenCalledWith(messageId, query, true);
     });
   });
@@ -285,7 +285,7 @@ describe('search actions', () => {
         }),
       );
 
-      expect(result.current.internal_addToolToAssistantMessage).toHaveBeenCalledWith(
+      expect(result.current.optimisticAddToolToAssistantMessage).toHaveBeenCalledWith(
         parentId,
         expect.objectContaining({
           identifier: 'search',
@@ -305,7 +305,7 @@ describe('search actions', () => {
       });
 
       expect(result.current.optimisticCreateMessage).not.toHaveBeenCalled();
-      expect(result.current.internal_addToolToAssistantMessage).not.toHaveBeenCalled();
+      expect(result.current.optimisticAddToolToAssistantMessage).not.toHaveBeenCalled();
     });
   });
 

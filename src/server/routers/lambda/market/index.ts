@@ -10,6 +10,8 @@ import { AssistantSorts, McpConnectionType, McpSorts, ModelSorts, PluginSorts, P
 
 const log = debug('lambda-router:market');
 
+const marketSourceSchema = z.enum(['legacy', 'new']);
+
 const marketProcedure = publicProcedure.use(async ({ ctx, next }) => {
   return next({
     ctx: {
@@ -26,6 +28,7 @@ export const marketRouter = router({
         .object({
           locale: z.string().optional(),
           q: z.string().optional(),
+          source: marketSourceSchema.optional(),
         })
         .optional(),
     )
@@ -48,6 +51,8 @@ export const marketRouter = router({
       z.object({
         identifier: z.string(),
         locale: z.string().optional(),
+        source: marketSourceSchema.optional(),
+        version: z.string().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
@@ -64,19 +69,27 @@ export const marketRouter = router({
       }
     }),
 
-  getAssistantIdentifiers: marketProcedure.query(async ({ ctx }) => {
-    log('getAssistantIdentifiers called');
+  getAssistantIdentifiers: marketProcedure
+    .input(
+      z
+        .object({
+          source: marketSourceSchema.optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ input, ctx }) => {
+      log('getAssistantIdentifiers called with input: %O', input);
 
-    try {
-      return await ctx.discoverService.getAssistantIdentifiers();
-    } catch (error) {
-      log('Error fetching assistant identifiers: %O', error);
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to fetch assistant identifiers',
-      });
-    }
-  }),
+      try {
+        return await ctx.discoverService.getAssistantIdentifiers(input);
+      } catch (error) {
+        log('Error fetching assistant identifiers: %O', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch assistant identifiers',
+        });
+      }
+    }),
 
   getAssistantList: marketProcedure
     .input(
@@ -86,9 +99,11 @@ export const marketRouter = router({
           connectionType: z.nativeEnum(McpConnectionType).optional(),
           locale: z.string().optional(),
           order: z.enum(['asc', 'desc']).optional(),
+          ownerId: z.string().optional(),
           page: z.number().optional(),
           pageSize: z.number().optional(),
           q: z.string().optional(),
+          source: marketSourceSchema.optional(),
           sort: z.nativeEnum(AssistantSorts).optional(),
         })
         .optional(),
