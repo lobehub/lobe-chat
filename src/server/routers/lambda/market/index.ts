@@ -1,12 +1,19 @@
+import { isDesktop } from '@lobechat/const';
 import { TRPCError } from '@trpc/server';
 import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { isDesktop } from '@lobechat/const';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { DiscoverService } from '@/server/services/discover';
-import { AssistantSorts, McpConnectionType, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
+import {
+  AssistantSorts,
+  McpConnectionType,
+  McpSorts,
+  ModelSorts,
+  PluginSorts,
+  ProviderSorts,
+} from '@/types/discover';
 
 const log = debug('lambda-router:market');
 
@@ -103,8 +110,8 @@ export const marketRouter = router({
           page: z.number().optional(),
           pageSize: z.number().optional(),
           q: z.string().optional(),
-          source: marketSourceSchema.optional(),
           sort: z.nativeEnum(AssistantSorts).optional(),
+          source: marketSourceSchema.optional(),
         })
         .optional(),
     )
