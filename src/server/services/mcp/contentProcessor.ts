@@ -69,7 +69,9 @@ export const processContentBlocks = async (
  * - image/audio: 提取 data 字段（通常是上传后的代理 URL）
  * - 其他: 返回空字符串
  */
-export const contentBlocksToString = (blocks: ToolCallContent[]): string => {
+export const contentBlocksToString = (blocks: ToolCallContent[] | null | undefined): string => {
+  if (!blocks) return '';
+
   return blocks
     .map((item) => {
       switch (item.type) {
