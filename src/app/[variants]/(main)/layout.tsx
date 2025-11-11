@@ -1,7 +1,7 @@
 import ServerLayout from '@/components/server/ServerLayout';
 
-import Desktop from './_layout/Desktop';
-import Mobile from './_layout/Mobile';
+import Desktop from './layouts/desktop';
+import Mobile from './layouts/mobile';
 
 const MainLayout = ServerLayout({ Desktop, Mobile });
 

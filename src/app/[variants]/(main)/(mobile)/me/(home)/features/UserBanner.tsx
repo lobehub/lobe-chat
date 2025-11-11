@@ -20,10 +20,10 @@ const UserBanner = memo(() => {
     <Flexbox gap={12} paddingBlock={8}>
       {!enableAuth || (enableAuth && isLoginWithAuth) ? (
         <>
-          <Link to="/profile" style={{ color: 'inherit' }}>
+          <Link style={{ color: 'inherit' }} to="/profile">
             <UserInfo />
           </Link>
-          <Link to="/profile/stats" style={{ color: 'inherit' }}>
+          <Link style={{ color: 'inherit' }} to="/profile/stats">
             <DataStatistics paddingInline={12} />
           </Link>
         </>

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 
-const DesktopRouter = dynamic(() => import('./_DesktopRouter'), {
+const DesktopRouter = dynamic(() => import('./_DesktopClientRouter'), {
   loading: () => <Loading />,
   ssr: false,
 });
