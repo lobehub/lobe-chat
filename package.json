@@ -156,6 +156,7 @@
     "@lobechat/database": "workspace:*",
     "@lobechat/electron-client-ipc": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",
+    "@lobechat/fetch-sse": "workspace:*",
     "@lobechat/file-loaders": "workspace:*",
     "@lobechat/model-runtime": "workspace:*",
     "@lobechat/observability-otel": "workspace:*",
