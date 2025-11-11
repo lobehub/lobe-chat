@@ -8,6 +8,7 @@ import {
   ChatVideoItem,
   CreateMessageParams,
   DBMessageItem,
+  MessagePluginItem,
   ModelRankItem,
   NewMessageQueryParams,
   QueryMessageParams,
@@ -23,7 +24,6 @@ import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
 import {
-  MessagePluginItem,
   chunks,
   documents,
   embeddings,
