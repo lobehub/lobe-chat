@@ -39,9 +39,13 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
   sortButton: css`
     cursor: pointer;
+
     display: inline-flex;
+
     border: none;
+
     vertical-align: middle;
+
     background: transparent;
   `,
 
@@ -151,8 +155,10 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
         fileListSortType: sortType === SortType.Asc ? SortType.Desc : SortType.Asc,
       });
     } else {
-      updateSystemStatus({ fileListSorter: key });
-      updateSystemStatus({ fileListSortType: key === 'name' ? SortType.Asc : SortType.Desc });
+      updateSystemStatus({
+        fileListSortType: key === 'name' ? SortType.Asc : SortType.Desc,
+        fileListSorter: key,
+      });
     }
   };
 
@@ -311,7 +317,12 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
               key={item.id}
               knowledgeBaseId={knowledgeBaseId}
               onSelectedChange={(id, checked, shiftKey, clickedIndex) => {
-                if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && sortedData) {
+                if (
+                  shiftKey &&
+                  lastSelectedIndex !== null &&
+                  selectFileIds.length > 0 &&
+                  sortedData
+                ) {
                   // Range selection with shift key
                   const start = Math.min(lastSelectedIndex, clickedIndex);
                   const end = Math.max(lastSelectedIndex, clickedIndex);
