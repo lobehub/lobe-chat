@@ -15,7 +15,7 @@ const EDITOR_DOCUMENT_FILE_TYPE = 'custom/document';
 /**
  * Check if a document should be displayed in the document list
  */
-const isAllowedDocument = (document: LobeDocument) => {
+const isAllowedDocument = (document: { fileType: string; sourceType: string }) => {
   return (
     ALLOWED_DOCUMENT_SOURCE_TYPES.has(document.sourceType) &&
     ALLOWED_DOCUMENT_FILE_TYPES.has(document.fileType)
@@ -189,9 +189,10 @@ export const createDocumentSlice: StateCreator<
 
     try {
       const documentItems = await documentService.queryDocuments();
-      console.log('[fetchDocuments] documentItems:', documentItems);
-      const documents = documentItems.filter(isAllowedDocument);
-      console.log('[fetchDocuments] documents:', documents);
+      const documents = documentItems.filter(isAllowedDocument).map((doc) => ({
+        ...doc,
+        filename: doc.filename ?? doc.title ?? 'Untitled',
+      })) as LobeDocument[];
       set({ documents, isDocumentListLoading: false }, false, n('fetchDocuments/success'));
 
       // Sync with local map: remove temp documents that now exist on server

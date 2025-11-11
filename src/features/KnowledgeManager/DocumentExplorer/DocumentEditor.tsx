@@ -16,7 +16,7 @@ import { Editor, useEditor } from '@lobehub/editor/react';
 import { ActionIcon, Button, Dropdown, Icon } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { App } from 'antd';
-import { css, cx, useTheme } from 'antd-style';
+import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {
@@ -51,12 +51,6 @@ const SAVE_THROTTLE_TIME = 3000; // ms
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
-const editorClassName = cx(css`
-  p {
-    margin-block-end: 0;
-  }
-`);
-
 interface DocumentEditorPanelProps {
   documentId?: string;
   knowledgeBaseId?: string;
@@ -76,9 +70,8 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const editor = useEditor();
 
     const currentDocument = useFileStore(documentSelectors.getDocumentById(documentId));
-    const documentTitle = currentDocument?.title;
-
-    const docEmoji = currentDocument?.metadata?.emoji;
+    const currentDocumentTitle = currentDocument?.title;
+    const currentDocumentEmoji = currentDocument?.metadata?.emoji;
 
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
     const [currentTitle, setCurrentTitle] = useState('');
@@ -103,13 +96,13 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
 
     // Sync title and emoji when document data changes (e.g., from rename)
     useEffect(() => {
-      if (documentTitle !== undefined && documentTitle !== currentTitle) {
-        setCurrentTitle(documentTitle);
+      if (currentDocumentTitle !== undefined && currentDocumentTitle !== currentTitle) {
+        setCurrentTitle(currentDocumentTitle);
       }
-      if (docEmoji !== currentEmoji) {
-        setCurrentEmoji(docEmoji);
+      if (currentDocumentEmoji !== currentEmoji) {
+        setCurrentEmoji(currentDocumentEmoji);
       }
-    }, [documentTitle, docEmoji]);
+    }, [currentDocumentTitle, currentDocumentEmoji]);
 
     // Load document content when documentId changes
     useEffect(() => {
@@ -118,7 +111,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
 
       if (documentId && editor) {
         setShowEmojiPicker(false);
-        setCurrentEmoji(docEmoji);
+        setCurrentEmoji(currentDocumentEmoji);
         setLastUpdatedTime(null);
 
         // Check if this is an optimistic temp document
@@ -135,7 +128,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         }
 
         if (currentDocument?.editorData) {
-          setCurrentTitle(documentTitle || '');
+          setCurrentTitle(currentDocumentTitle || '');
           isInitialLoadRef.current = true;
           editor.setDocument('json', JSON.stringify(currentDocument.editorData));
           setTimeout(() => {
@@ -146,7 +139,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           const pagesContent = extractContentFromPages(currentDocument.pages);
           if (pagesContent) {
             console.log('[DocumentEditor] Using pages content as fallback');
-            setCurrentTitle(documentTitle || '');
+            setCurrentTitle(currentDocumentTitle || '');
             isInitialLoadRef.current = true;
             editor.setDocument('markdown', pagesContent);
             setTimeout(() => {
@@ -160,12 +153,8 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           isInitialLoadRef.current = false;
           return;
         }
-      } else {
-        // Reset flag if no documentId or editor
-        editor.cleanDocument();
-        isInitialLoadRef.current = false;
       }
-    }, [documentId, editor, extractContentFromPages]);
+    }, [documentId, currentDocument, currentDocumentTitle, currentDocumentEmoji, editor]);
 
     // Auto-save function
     const performSave = useCallback(async () => {
@@ -630,7 +619,6 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
               }}
             >
               <Editor
-                className={editorClassName}
                 content={''}
                 editor={editor}
                 onTextChange={handleContentChange}
