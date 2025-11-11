@@ -63,11 +63,11 @@ export const agents = pgTable(
 
     ...timestamps,
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('client_id_user_id_unique').on(t.clientId, t.userId),
-    titleIndex: index('agents_title_idx').on(t.title),
-    descriptionIndex: index('agents_description_idx').on(t.description),
-  }),
+  (t) => [
+    uniqueIndex('client_id_user_id_unique').on(t.clientId, t.userId),
+    index('agents_title_idx').on(t.title),
+    index('agents_description_idx').on(t.description),
+  ],
 );
 
 export const insertAgentSchema = createInsertSchema(agents);
@@ -91,9 +91,10 @@ export const agentsKnowledgeBases = pgTable(
 
     ...timestamps,
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.agentId, t.knowledgeBaseId] }),
-  }),
+  (t) => [
+    primaryKey({ columns: [t.agentId, t.knowledgeBaseId] }),
+    index('agents_knowledge_bases_agent_id_idx').on(t.agentId),
+  ],
 );
 
 export const agentsFiles = pgTable(
@@ -112,7 +113,8 @@ export const agentsFiles = pgTable(
 
     ...timestamps,
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.fileId, t.agentId, t.userId] }),
-  }),
+  (t) => [
+    primaryKey({ columns: [t.fileId, t.agentId, t.userId] }),
+    index('agents_files_agent_id_idx').on(t.agentId),
+  ],
 );

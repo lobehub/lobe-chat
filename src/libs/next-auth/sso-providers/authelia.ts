@@ -1,7 +1,5 @@
 import type { OIDCConfig } from '@auth/core/providers';
 
-import { authEnv } from '@/envs/auth';
-
 import { CommonProviderConfig } from './sso.config';
 
 export type AutheliaProfile = {
@@ -21,10 +19,10 @@ const provider = {
     ...CommonProviderConfig,
     authorization: { params: { scope: 'openid email profile' } },
     checks: ['state', 'pkce'],
-    clientId: authEnv.AUTHELIA_CLIENT_ID ?? process.env.AUTH_AUTHELIA_ID,
-    clientSecret: authEnv.AUTHELIA_CLIENT_SECRET ?? process.env.AUTH_AUTHELIA_SECRET,
+    clientId: process.env.AUTH_AUTHELIA_ID,
+    clientSecret: process.env.AUTH_AUTHELIA_SECRET,
     id: 'authelia',
-    issuer: authEnv.AUTHELIA_ISSUER ?? process.env.AUTH_AUTHELIA_ISSUER,
+    issuer: process.env.AUTH_AUTHELIA_ISSUER,
     name: 'Authelia',
     profile(profile) {
       return {

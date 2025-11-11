@@ -199,6 +199,12 @@
     "all": "전체",
     "list": {
       "disabled": "비활성화됨",
+      "disabledActions": {
+        "sort": "정렬 방식",
+        "sortAlphabetical": "가나다순 정렬",
+        "sortAlphabeticalDesc": "가나다역순 정렬",
+        "sortDefault": "기본 정렬"
+      },
       "enabled": "활성화됨"
     },
     "notFound": "검색 결과가 없습니다",
@@ -391,7 +397,13 @@
       "addNew": "모델 추가",
       "disabled": "비활성화됨",
       "disabledActions": {
-        "showMore": "모두 보기"
+        "showMore": "모두 보기",
+        "sort": "정렬 방식",
+        "sortAlphabetical": "가나다순 정렬",
+        "sortAlphabeticalDesc": "가나다역순 정렬",
+        "sortDefault": "기본 정렬",
+        "sortReleasedAt": "최초 출시일 순 정렬",
+        "sortReleasedAtDesc": "최신 출시일 순 정렬"
       },
       "empty": {
         "desc": "사용자 정의 모델을 생성하거나 모델을 가져온 후 사용을 시작해 보세요",

@@ -1,29 +1,32 @@
 name: Publish Docker Image
 permissions:
   contents: read
+  pull-requests: write
 
 on:
   workflow_dispatch:
   release:
     types: [published]
-  pull_request:
+  pull_request_target:
     types: [synchronize, labeled, unlabeled]
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
+  # PR 构建时取消旧的运行,但 release 构建不取消
+  cancel-in-progress: ${{ github.event_name != 'release' }}
 
 env:
-  REGISTRY_IMAGE: lobehub/lobe-chat
+  REGISTRY_IMAGE: lobehub/lobehub
   PR_TAG_PREFIX: pr-
 
 jobs:
   build:
     # 添加 PR label 触发条件
     if: |
-      (github.event_name == 'pull_request' &&
-       contains(github.event.pull_request.labels.*.name, 'trigger:build-docker')) ||
-      github.event_name != 'pull_request'
+      github.event_name == 'release' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request_target' &&
+       contains(github.event.pull_request.labels.*.name, 'trigger:build-docker'))
 
     strategy:
       matrix:
@@ -50,11 +53,12 @@ jobs:
 
       # 为 PR 生成特殊的 tag
       - name: Generate PR metadata
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         id: pr_meta
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
         run: |
-          branch_name="${{ github.head_ref }}"
-          sanitized_branch=$(echo "${branch_name}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
+          sanitized_branch=$(echo "${BRANCH_NAME}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
           echo "pr_tag=${sanitized_branch}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Docker meta
@@ -64,10 +68,10 @@ jobs:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
             # PR 构建使用特殊的 tag
-            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request' }}
+            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request_target' }}
             # release 构建使用版本号
-            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request' }}
-            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
+            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request_target' }}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request_target' }}
 
       - name: Docker login
         uses: docker/login-action@v3
@@ -100,7 +104,7 @@ jobs:
           touch "/tmp/digests/${digest#sha256:}"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: digest-${{ env.PLATFORM_PAIR }}
           path: /tmp/digests/*
@@ -118,7 +122,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download digests
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: /tmp/digests
           pattern: digest-*
@@ -129,11 +133,12 @@ jobs:
 
       # 为 merge job 添加 PR metadata 生成
       - name: Generate PR metadata
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         id: pr_meta
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
         run: |
-          branch_name="${{ github.head_ref }}"
-          sanitized_branch=$(echo "${branch_name}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
+          sanitized_branch=$(echo "${BRANCH_NAME}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
           echo "pr_tag=${sanitized_branch}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Docker meta
@@ -142,9 +147,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
-            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request' }}
-            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request' }}
-            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
+            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request_target' }}
+            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request_target' }}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request_target' }}
 
       - name: Docker login
         uses: docker/login-action@v3
@@ -161,3 +166,21 @@ jobs:
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+
+      - name: Comment on PR with Docker build info
+        if: github.event_name == 'pull_request_target'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prComment = require('${{ github.workspace }}/.github/scripts/docker-pr-comment.js');
+            const result = await prComment({
+              github,
+              context,
+              dockerMetaJson: ${{ toJSON(steps.meta.outputs.json) }},
+              image: "${{ env.REGISTRY_IMAGE }}",
+              version: "${{ steps.meta.outputs.version }}",
+              dockerhubUrl: "https://hub.docker.com/r/${{ env.REGISTRY_IMAGE }}/tags",
+              platforms: "linux/amd64, linux/arm64",
+            });
+            core.info(`Status: ${result.updated ? 'Updated' : 'Created'}, ID: ${result.id}`);

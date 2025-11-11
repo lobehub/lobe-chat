@@ -1,4 +1,4 @@
-import type { ModelUsage } from '@lobechat/types';
+import { ChatToolPayload, ModelUsage } from '@lobechat/types';
 
 import type { FinishReason } from './event';
 import { AgentState, ToolRegistry, ToolsCalling } from './state';
@@ -29,7 +29,7 @@ export interface AgentRuntimeContext {
     stepCount: number;
   };
   /** Usage statistics from the current step (if applicable) */
-  stepUsage?: ModelUsage;
+  stepUsage?: ModelUsage | unknown;
 }
 
 /**
@@ -86,6 +86,7 @@ export interface CallLLMPayload {
   isFirstMessage?: boolean;
   messages: any[];
   model: string;
+  parentId?: string;
   provider: string;
   tools: any[];
 }
@@ -104,12 +105,18 @@ export interface AgentInstructionCallLlm {
 }
 
 export interface AgentInstructionCallTool {
-  payload: any;
+  payload: {
+    parentMessageId: string;
+    toolCalling: ChatToolPayload;
+  };
   type: 'call_tool';
 }
 
 export interface AgentInstructionCallToolsBatch {
-  payload: any[];
+  payload: {
+    parentMessageId: string;
+    toolsCalling: ChatToolPayload[];
+  } & any;
   type: 'call_tools_batch';
 }
 

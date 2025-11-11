@@ -1,3 +1,4 @@
+import { ChatPluginPayload } from '@lobechat/types';
 import { Avatar, Button } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
@@ -10,7 +11,6 @@ import PluginSettingsConfig from '@/features/PluginSettings';
 import { useChatStore } from '@/store/chat';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { ChatPluginPayload } from '@/types/message';
 
 import { ErrorActionContainer, useStyles } from '../../../../Error/style';
 
@@ -23,7 +23,10 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('error');
   const theme = useTheme();
-  const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [
+    s.regenerateAssistantMessage,
+    s.deleteMessage,
+  ]);
   const pluginIdentifier = plugin?.identifier as string;
   const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
   const manifest = useToolStore(pluginSelectors.getToolManifestById(pluginIdentifier), isEqual);

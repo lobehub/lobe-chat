@@ -1,14 +1,15 @@
 'use client';
 
-import { ChatMessage } from '@lobechat/types';
+import { LOADING_FLAT } from '@lobechat/const';
+import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HtmlPreviewAction } from '@/components/HtmlPreview';
-import { LOADING_FLAT } from '@/const/message';
 import Avatar from '@/features/ChatItem/components/Avatar';
 import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import ErrorContent from '@/features/ChatItem/components/ErrorContent';
@@ -17,9 +18,9 @@ import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -30,7 +31,7 @@ import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { markdownElements } from '../../MarkdownElements';
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
-import { normalizeThinkTags, processWithArtifact } from '../../utils';
+import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
 import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
 import { AssistantMessageContent } from './MessageContent';
@@ -47,28 +48,38 @@ const isHtmlCode = (content: string, language: string) => {
 };
 const MOBILE_AVATAR_SIZE = 32;
 
-interface AssistantMessageProps extends ChatMessage {
+interface AssistantMessageProps {
   disableEditing?: boolean;
+  id: string;
   index: number;
-  showTitle?: boolean;
 }
-const AssistantMessage = memo<AssistantMessageProps>((props) => {
+
+const AssistantMessage = memo<AssistantMessageProps>(({ id, index, disableEditing }) => {
+  const item = useChatStore(
+    displayMessageSelectors.getDisplayMessageById(id),
+    isEqual,
+  ) as UIChatMessage;
+
   const {
     error,
-    showTitle,
-    id,
     role,
     search,
-    disableEditing,
-    index,
     content,
     createdAt,
     tools,
     extra,
-    metadata,
+    model,
+    provider,
     meta,
     targetId,
-  } = props;
+    groupId,
+    performance,
+    usage,
+    metadata,
+  } = item;
+
+  const showTitle = !!groupId;
+
   const avatar = meta;
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -81,9 +92,9 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
   );
 
   const [generating, isInRAGFlow, editing] = useChatStore((s) => [
-    chatSelectors.isMessageGenerating(id)(s),
-    chatSelectors.isMessageInRAGFlow(id)(s),
-    chatSelectors.isMessageEditing(id)(s),
+    messageStateSelectors.isMessageGenerating(id)(s),
+    messageStateSelectors.isMessageInRAGFlow(id)(s),
+    messageStateSelectors.isMessageEditing(id)(s),
   ]);
 
   const { styles } = useStyles({
@@ -198,85 +209,86 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
 
   const renderMessage = useCallback(
     (editableContent: ReactNode) => (
-      <AssistantMessageContent {...props} editableContent={editableContent} />
+      <AssistantMessageContent {...item} editableContent={editableContent} />
     ),
-    [props],
+    [item],
   );
-  const errorMessage = <ErrorMessageExtra data={props} />;
+  const errorMessage = <ErrorMessageExtra data={item} />;
+
   return (
-    <Flexbox
-      className={styles.container}
-      direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-      gap={mobile ? 6 : 12}
-    >
-      <Avatar
-        alt={avatar.title || 'avatar'}
-        avatar={avatar}
-        loading={loading}
-        onClick={onAvatarClick}
-        placement={placement}
-        size={mobile ? MOBILE_AVATAR_SIZE : undefined}
-        style={{ marginTop: 6 }}
-      />
-      <Flexbox align={'flex-start'} className={styles.messageContainer}>
+    <Flexbox className={styles.container} gap={mobile ? 6 : 12}>
+      <Flexbox gap={4} horizontal>
+        <Avatar
+          alt={avatar.title || 'avatar'}
+          avatar={avatar}
+          loading={loading}
+          onClick={onAvatarClick}
+          placement={placement}
+          size={MOBILE_AVATAR_SIZE}
+        />
         <Title
           avatar={avatar}
           placement={placement}
-          showTitle={showTitle}
+          showTitle
+          style={{ marginBlockEnd: 0 }}
           time={createdAt}
           titleAddon={dmIndicator}
         />
-        <Flexbox
-          align={'flex-start'}
-          className={styles.messageContent}
-          data-layout={'vertical'} // 添加数据属性以方便样式选择
-          direction={'vertical'}
-          gap={8}
-        >
-          <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
-            {error && (message === LOADING_FLAT || !message) ? (
-              <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
-            ) : (
-              <MessageContent
-                editing={editing}
-                id={id}
-                markdownProps={markdownProps}
-                message={reducted ? `*${t('hideForYou')}*` : message}
-                messageExtra={
-                  <>
-                    {errorContent && (
-                      <ErrorContent
-                        error={errorContent}
-                        message={errorMessage}
-                        placement={placement}
-                      />
-                    )}
-                    <AssistantMessageExtra
-                      content={content}
-                      extra={extra}
-                      id={id}
-                      metadata={metadata}
-                      tools={tools}
+      </Flexbox>
+      <Flexbox
+        align={'flex-start'}
+        className={styles.messageContent}
+        data-layout={'vertical'} // 添加数据属性以方便样式选择
+        direction={'vertical'}
+        gap={8}
+        width={'fit-content'}
+      >
+        <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
+          {error && (message === LOADING_FLAT || !message) ? (
+            <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
+          ) : (
+            <MessageContent
+              editing={editing}
+              id={id}
+              markdownProps={markdownProps}
+              message={reducted ? `*${t('hideForYou')}*` : message}
+              messageExtra={
+                <>
+                  {errorContent && (
+                    <ErrorContent
+                      error={errorContent}
+                      message={errorMessage}
+                      placement={placement}
                     />
-                  </>
-                }
-                onDoubleClick={onDoubleClick}
-                placement={placement}
-                renderMessage={renderMessage}
-                variant={variant}
-              />
-            )}
-          </Flexbox>
-          {!disableEditing && !editing && (
-            <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-              <AssistantActionsBar data={props} id={id} index={index} />
-            </Flexbox>
+                  )}
+                  <AssistantMessageExtra
+                    content={content}
+                    extra={extra}
+                    id={id}
+                    model={model!}
+                    performance={performance! || metadata}
+                    provider={provider!}
+                    tools={tools}
+                    usage={usage! || metadata}
+                  />
+                </>
+              }
+              onDoubleClick={onDoubleClick}
+              placement={placement}
+              renderMessage={renderMessage}
+              variant={variant}
+            />
           )}
         </Flexbox>
+        {!disableEditing && !editing && (
+          <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
+            <AssistantActionsBar data={item} id={id} index={index} />
+          </Flexbox>
+        )}
       </Flexbox>
       {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
     </Flexbox>
   );
-});
+}, isEqual);
 
 export default AssistantMessage;

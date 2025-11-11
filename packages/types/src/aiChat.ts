@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ChatMessage } from './message';
+import { UIChatMessage } from './message';
 import { OpenAIChatMessage } from './openai/chat';
 import { LobeUniformTool, LobeUniformToolSchema } from './tool';
 import { ChatTopic } from './topic';
@@ -9,6 +9,7 @@ export interface SendNewMessage {
   content: string;
   // if message has attached with files, then add files to message and the agent
   files?: string[];
+  parentId?: string;
 }
 
 export interface SendMessageServerParams {
@@ -41,6 +42,7 @@ export const AiSendMessageServerSchema = z.object({
   newUserMessage: z.object({
     content: z.string(),
     files: z.array(z.string()).optional(),
+    parentId: z.string().optional(),
   }),
   sessionId: z.string().optional(),
   threadId: z.string().optional(),
@@ -50,7 +52,7 @@ export const AiSendMessageServerSchema = z.object({
 export interface SendMessageServerResponse {
   assistantMessageId: string;
   isCreateNewTopic: boolean;
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
   topicId: string;
   topics?: ChatTopic[];
   userMessageId: string;

@@ -163,9 +163,9 @@
     "addMember": "Lid toevoegen",
     "allMembers": "Alle leden",
     "createGroup": "Agent-team aanmaken",
-    "noAvailableAgents": "Geen assistenten beschikbaar om uit te nodigen",
-    "noSelectedAgents": "Nog geen assistenten geselecteerd",
-    "searchAgents": "Assistenten zoeken...",
+    "noAvailableAgents": "Geen beschikbare Agent om uit te nodigen",
+    "noSelectedAgents": "Nog geen Agent geselecteerd",
+    "searchAgents": "Zoek Agent...",
     "setInitialMembers": "Selecteer teamleden"
   },
   "members": "Leden",
@@ -173,6 +173,7 @@
     "title": "Leden vermelden"
   },
   "messageAction": {
+    "continueGeneration": "Doorgaan met genereren",
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
     "regenerate": "Opnieuw genereren"
@@ -229,7 +230,7 @@
     "jumpToMessage": "Ga naar bericht {{index}}",
     "nextMessage": "Volgend bericht",
     "previousMessage": "Vorig bericht",
-    "senderAssistant": "Assistent",
+    "senderAssistant": "Agent",
     "senderUser": "Jij"
   },
   "newAgent": "Nieuwe assistent",

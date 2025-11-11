@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { relations } from 'drizzle-orm';
-import { pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
+import { index, pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAt } from './_helpers';
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
@@ -28,9 +28,11 @@ export const agentsToSessions = pgTable(
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.agentId, t.sessionId] }),
-  }),
+  (t) => [
+    primaryKey({ columns: [t.agentId, t.sessionId] }),
+    index('agents_to_sessions_session_id_idx').on(t.sessionId),
+    index('agents_to_sessions_agent_id_idx').on(t.agentId),
+  ],
 );
 
 export const filesToSessions = pgTable(

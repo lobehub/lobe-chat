@@ -1,9 +1,9 @@
-import { ChatMessage, ChatToolPayload } from '@/types/message';
+import { ChatToolPayload, UIChatMessage } from '@lobechat/types';
 
 import { MessageDispatch, messagesReducer } from './reducer';
 
 describe('messagesReducer', () => {
-  let initialState: ChatMessage[];
+  let initialState: UIChatMessage[];
 
   beforeEach(() => {
     initialState = [
@@ -43,18 +43,6 @@ describe('messagesReducer', () => {
       expect(newMessage).not.toBeUndefined();
       expect(newMessage?.content).toBe('Updated Message');
       expect(newMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
-    });
-
-    it('should not modify the state if the specified message does not exist', () => {
-      const payload: MessageDispatch = {
-        type: 'updateMessage',
-        id: 'nonexistentMessage',
-        value: { content: 'Updated Message' },
-      };
-
-      const newState = messagesReducer(initialState, payload);
-
-      expect(newState).toEqual(initialState);
     });
 
     it('should not modify the state if the specified message does not exist', () => {
@@ -115,7 +103,7 @@ describe('messagesReducer', () => {
             role: 'user',
             meta: {},
             extra: { abc: '1' },
-          } as ChatMessage,
+          } as UIChatMessage,
           ...initialState,
         ],
         payload,
@@ -132,6 +120,54 @@ describe('messagesReducer', () => {
         id: 'nonexistent',
         key: 'testKey',
         value: 'testValue',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+  });
+
+  describe('updateMessageMetadata', () => {
+    it('should merge update the metadata field of a message', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageMetadata',
+        id: 'message1',
+        value: { activeBranchIndex: 1 },
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      const updatedMessage = newState.find((m) => m.id === 'message1');
+
+      expect(updatedMessage?.metadata).toEqual({ activeBranchIndex: 1 });
+      expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
+    });
+
+    it('should merge update the metadata field if metadata already exists', () => {
+      const state = [
+        {
+          ...initialState[0],
+          metadata: { activeBranchIndex: 0 },
+        },
+      ];
+
+      const payload: MessageDispatch = {
+        type: 'updateMessageMetadata',
+        id: 'message1',
+        value: { activeBranchIndex: 2 },
+      };
+
+      const newState = messagesReducer(state, payload);
+      const updatedMessage = newState.find((m) => m.id === 'message1');
+
+      expect(updatedMessage?.metadata).toEqual({ activeBranchIndex: 2 });
+      expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
+    });
+
+    it('should not modify state if message is not found', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageMetadata',
+        id: 'nonexistent',
+        value: { activeBranchIndex: 1 },
       };
 
       const newState = messagesReducer(initialState, payload);
@@ -189,7 +225,7 @@ describe('messagesReducer', () => {
 
   describe('updateMessagePlugin', () => {
     it('should update the plugin of a tool message', () => {
-      const toolMessage: ChatMessage = {
+      const toolMessage: UIChatMessage = {
         id: 'toolMessage',
         role: 'tool',
         content: 'Tool content',
@@ -302,7 +338,7 @@ describe('messagesReducer', () => {
       };
 
       const newState = messagesReducer(
-        [...initialState, { id: messageId, role: 'assistant', content: '' } as ChatMessage],
+        [...initialState, { id: messageId, role: 'assistant', content: '' } as UIChatMessage],
         payload,
       );
       const updatedMessage = newState.find((m) => m.id === messageId);
@@ -330,7 +366,7 @@ describe('messagesReducer', () => {
       };
 
       const newState = messagesReducer(
-        [...initialState, { id: messageId, role: 'assistant', content: '' } as ChatMessage],
+        [...initialState, { id: messageId, role: 'assistant', content: '' } as UIChatMessage],
         payload,
       );
       const updatedMessage = newState.find((m) => m.id === messageId);

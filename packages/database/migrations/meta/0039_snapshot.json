@@ -60,12 +60,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "market_identifier": {
-          "name": "market_identifier",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "plugins": {
           "name": "plugins",
           "type": "jsonb",

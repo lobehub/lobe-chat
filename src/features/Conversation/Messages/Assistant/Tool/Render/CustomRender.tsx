@@ -1,3 +1,4 @@
+import { UIChatMessage } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import { App } from 'antd';
 import { Edit3Icon, PlayCircleIcon } from 'lucide-react';
@@ -9,8 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import PluginResult from '@/features/Conversation/Messages/Assistant/Tool/Inspector/PluginResult';
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
-import { ChatMessage } from '@/types/message';
+import { messageStateSelectors } from '@/store/chat/selectors';
 
 import Arguments from './Arguments';
 import KeyValueEditor from './KeyValueEditor';
@@ -24,7 +24,7 @@ const safeParseJson = (str: string): Record<string, any> => {
   }
 };
 
-interface CustomRenderProps extends ChatMessage {
+interface CustomRenderProps extends UIChatMessage {
   requestArgs?: string;
   setShowPluginRender: (value: boolean) => void;
   showPluginRender: boolean;
@@ -43,11 +43,11 @@ const CustomRender = memo<CustomRenderProps>(
     tool_call_id,
   }) => {
     const { t } = useTranslation(['tool', 'common']);
-    const [loading] = useChatStore((s) => [chatSelectors.isPluginApiInvoking(id)(s)]);
+    const [loading] = useChatStore((s) => [messageStateSelectors.isPluginApiInvoking(id)(s)]);
     const [isEditing, setIsEditing] = useState(false);
     const { message } = App.useApp();
-    const [updatePluginArguments, reInvokeToolMessage] = useChatStore((s) => [
-      s.updatePluginArguments,
+    const [optimisticUpdatePluginArguments, reInvokeToolMessage] = useChatStore((s) => [
+      s.optimisticUpdatePluginArguments,
       s.reInvokeToolMessage,
     ]);
     const handleCancel = useCallback(() => {
@@ -62,7 +62,7 @@ const CustomRender = memo<CustomRenderProps>(
           const newArgsString = JSON.stringify(editedObject, null, 2);
 
           if (newArgsString !== requestArgs) {
-            await updatePluginArguments(id, editedObject, true);
+            await optimisticUpdatePluginArguments(id, editedObject, true);
             await reInvokeToolMessage(id);
           }
           setIsEditing(false);

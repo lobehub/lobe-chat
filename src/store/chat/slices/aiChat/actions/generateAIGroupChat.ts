@@ -5,6 +5,12 @@ import {
   buildGroupChatSystemPrompt,
   filterMessagesForAgent,
 } from '@lobechat/prompts';
+import {
+  ChatErrorType,
+  CreateMessageParams,
+  SendGroupMessageParams,
+  UIChatMessage,
+} from '@lobechat/types';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -16,8 +22,6 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
-import { ChatErrorType } from '@/types/fetch';
-import { ChatMessage, CreateMessageParams, SendGroupMessageParams } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -99,7 +103,7 @@ const extractMentionsFromContent = (
 /**
  * Check if a message is a tool calling message that requires a follow-up
  */
-const isToolCallMessage = (message: ChatMessage): boolean => {
+const isToolCallMessage = (message: UIChatMessage): boolean => {
   return message.role === 'assistant' && !!message.tools && message.tools.length > 0;
 };
 
@@ -107,7 +111,7 @@ const isToolCallMessage = (message: ChatMessage): boolean => {
  * Count consecutive assistant messages from the end of the message list
  * This helps enforce maxResponseInRow limit
  */
-const countConsecutiveAssistantMessages = (messages: ChatMessage[]): number => {
+const countConsecutiveAssistantMessages = (messages: UIChatMessage[]): number => {
   let count = 0;
 
   // Count from the end of the array backwards
@@ -135,7 +139,7 @@ const countConsecutiveAssistantMessages = (messages: ChatMessage[]): number => {
  * Returns true if the conversation flow should continue without supervisor intervention
  */
 const shouldAvoidSupervisorDecision = (
-  messages: ChatMessage[],
+  messages: UIChatMessage[],
   maxResponseInRow?: number,
   isManualTrigger: boolean = false,
 ): boolean => {
@@ -267,7 +271,7 @@ export const chatAiGroupChat: StateCreator<
   return {
     sendGroupMessage: async ({ groupId, message, files, onlyAddUserMessage, targetMemberId }) => {
       const {
-        internal_createMessage,
+        optimisticCreateMessage,
         internal_triggerSupervisorDecisionDebounced,
         internal_setActiveGroup,
         activeTopicId,
@@ -290,13 +294,16 @@ export const chatAiGroupChat: StateCreator<
           targetId: targetMemberId,
         };
 
-        const messageId = await internal_createMessage(userMessage);
+        const result = await optimisticCreateMessage(userMessage);
 
         // if only add user message, then stop
         if (onlyAddUserMessage) {
           set({ isCreatingMessage: false }, false, n('creatingGroupMessage/onlyUser'));
           return;
         }
+
+        if (!result) return;
+        const messageId = result.id;
 
         if (messageId) {
           // Use the specific group's config rather than relying on active session
@@ -372,7 +379,7 @@ export const chatAiGroupChat: StateCreator<
       const {
         messagesMap,
         internal_toggleSupervisorLoading,
-        internal_createMessage,
+        optimisticCreateMessage,
         supervisorTodos,
       } = get();
 
@@ -391,8 +398,8 @@ export const chatAiGroupChat: StateCreator<
         const content = formatSupervisorTodoContent(todoList);
         const supervisorMessage: CreateMessageParams = {
           content,
-          fromModel: groupConfig.orchestratorModel,
-          fromProvider: groupConfig.orchestratorProvider,
+          model: groupConfig.orchestratorModel,
+          provider: groupConfig.orchestratorProvider,
           groupId,
           role: 'supervisor',
           sessionId,
@@ -401,7 +408,7 @@ export const chatAiGroupChat: StateCreator<
 
         console.log('Creating supervisor todo message:', supervisorMessage);
 
-        await internal_createMessage(supervisorMessage);
+        await optimisticCreateMessage(supervisorMessage);
       };
 
       const messages = messagesMap[messageMapKey(groupId, currentTopicId)] || [];
@@ -590,7 +597,7 @@ export const chatAiGroupChat: StateCreator<
       });
       const {
         messagesMap,
-        internal_createMessage,
+        optimisticCreateMessage,
         internal_fetchAIChatMessage,
         refreshMessages,
         activeTopicId,
@@ -652,10 +659,10 @@ export const chatAiGroupChat: StateCreator<
         // Create agent message using real agent config
         const agentMessage: CreateMessageParams = {
           role: 'assistant',
-          fromModel: agentModel,
+          model: agentModel,
           groupId,
           content: LOADING_FLAT,
-          fromProvider: agentProvider,
+          provider: agentProvider,
           agentId,
           sessionId: useSessionStore.getState().activeId,
           topicId: activeTopicId,
@@ -664,9 +671,11 @@ export const chatAiGroupChat: StateCreator<
 
         console.log('DEBUG: Creating agent message with:', agentMessage);
 
-        const assistantId = await internal_createMessage(agentMessage);
+        const result = await optimisticCreateMessage(agentMessage);
+        if (!result) return;
+        const assistantId = result.id;
 
-        const systemMessage: ChatMessage = {
+        const systemMessage: UIChatMessage = {
           id: 'group-system',
           role: 'system',
           content: groupChatSystemPrompt,
@@ -927,7 +936,7 @@ export const chatAiGroupChat: StateCreator<
     },
 
     internal_createSupervisorErrorMessage: async (groupId: string, error: Error | string) => {
-      const { internal_createTmpMessage, activeTopicId } = get();
+      const { optimisticCreateTmpMessage, activeTopicId } = get();
 
       try {
         const errorMessage = error instanceof Error ? error.message : error;
@@ -935,8 +944,8 @@ export const chatAiGroupChat: StateCreator<
 
         const supervisorMessage: CreateMessageParams = {
           role: 'supervisor',
-          fromModel: groupConfig.orchestratorModel,
-          fromProvider: groupConfig.orchestratorProvider,
+          model: groupConfig.orchestratorModel,
+          provider: groupConfig.orchestratorProvider,
           groupId,
           sessionId: useSessionStore.getState().activeId || groupId,
           topicId: activeTopicId,
@@ -948,7 +957,7 @@ export const chatAiGroupChat: StateCreator<
         };
 
         // Create a temporary message that only exists in UI state, no API call
-        internal_createTmpMessage(supervisorMessage);
+        optimisticCreateTmpMessage(supervisorMessage);
       } catch (createError) {
         console.error('Failed to create supervisor error message:', createError);
       }

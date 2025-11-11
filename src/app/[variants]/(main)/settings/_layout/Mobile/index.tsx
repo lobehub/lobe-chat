@@ -3,7 +3,6 @@
 import { useQueryState } from 'nuqs';
 
 import MobileContentLayout from '@/components/server/MobileNavLayout';
-import InitClientDB from '@/features/InitClientDB';
 import Footer from '@/features/Setting/Footer';
 import { SettingsTabs } from '@/store/global/initialState';
 
@@ -19,7 +18,6 @@ const Layout = () => {
     <MobileContentLayout header={<Header />}>
       <SettingsContent activeTab={activeTab} mobile={true} />
       <Footer />
-      <InitClientDB />
     </MobileContentLayout>
   );
 };

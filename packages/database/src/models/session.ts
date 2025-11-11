@@ -1,3 +1,11 @@
+import { DEFAULT_AGENT_CONFIG, DEFAULT_INBOX_AVATAR, INBOX_SESSION_ID } from '@lobechat/const';
+import {
+  ChatSessionList,
+  LobeAgentConfig,
+  LobeAgentSession,
+  LobeGroupSession,
+  SessionRankItem,
+} from '@lobechat/types';
 import {
   Column,
   and,
@@ -15,16 +23,6 @@ import {
 } from 'drizzle-orm';
 import type { PartialDeep } from 'type-fest';
 
-import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LobeAgentConfig } from '@/types/agent';
-import {
-  ChatSessionList,
-  LobeAgentSession,
-  LobeGroupSession,
-  SessionRankItem,
-} from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import {
@@ -55,13 +53,44 @@ export class SessionModel {
   query = async ({ current = 0, pageSize = 9999 } = {}) => {
     const offset = current * pageSize;
 
-    return this.db.query.sessions.findMany({
-      limit: pageSize,
-      offset,
-      orderBy: [desc(sessions.updatedAt)],
-      where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
+    // Use leftJoin instead of nested with for better performance
+    const result = await this.db
+      .select({
+        // Agent fields (from agentsToSessions join)
+        agent: agents,
+        // Group fields
+        group: sessionGroups,
+        // Session fields
+        session: sessions,
+      })
+      .from(sessions)
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
+      .where(and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))))
+      .orderBy(desc(sessions.updatedAt))
+      .limit(pageSize)
+      .offset(offset);
+
+    // Group results by session (since leftJoin can create multiple rows per session)
+    // Use Map to preserve order
+    const groupedResults = new Map<string, any>();
+
+    for (const row of result) {
+      const sessionId = row.session.id;
+      if (!groupedResults.has(sessionId)) {
+        groupedResults.set(sessionId, {
+          ...row.session,
+          agentsToSessions: [],
+          group: row.group,
+        });
+      }
+      if (row.agent) {
+        groupedResults.get(sessionId)!.agentsToSessions.push({ agent: row.agent });
+      }
+    }
+
+    return Array.from(groupedResults.values());
   };
 
   queryWithGroups = async (): Promise<ChatSessionList> => {
@@ -73,9 +102,11 @@ export class SessionModel {
       where: eq(sessions.userId, this.userId),
     });
 
+    const mappedSessions = result.map((item) => this.mapSessionItem(item as any));
+
     return {
       sessionGroups: groups as unknown as ChatSessionList['sessionGroups'],
-      sessions: result.map((item) => this.mapSessionItem(item as any)),
+      sessions: mappedSessions,
     };
   };
 
@@ -92,17 +123,28 @@ export class SessionModel {
   findByIdOrSlug = async (
     idOrSlug: string,
   ): Promise<(SessionItem & { agent: AgentItem }) | undefined> => {
-    const result = await this.db.query.sessions.findFirst({
-      where: and(
-        or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
-        eq(sessions.userId, this.userId),
-      ),
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
+    // Use leftJoin instead of nested 'with' for better performance
+    const result = await this.db
+      .select({
+        agent: agents,
+        group: sessionGroups,
+        session: sessions,
+      })
+      .from(sessions)
+      .where(
+        and(
+          or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
+          eq(sessions.userId, this.userId),
+        ),
+      )
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
+      .limit(1);
 
-    if (!result) return;
+    if (!result || !result[0]) return;
 
-    return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
+    return { ...result[0].session, agent: result[0].agent, group: result[0].group } as any;
   };
 
   count = async (params?: {
@@ -374,7 +416,7 @@ export class SessionModel {
         .delete(agentsToSessions)
         .where(and(eq(agentsToSessions.sessionId, id), eq(agentsToSessions.userId, this.userId)));
 
-      // Delete the session
+      // Delete the session (this will cascade delete messages, topics, etc.)
       const result = await trx
         .delete(sessions)
         .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)));
@@ -439,17 +481,25 @@ export class SessionModel {
   };
 
   clearOrphanAgent = async (agentIds: string[], trx: any) => {
-    // Delete orphaned agents (those not linked to any other sessions)
-    for (const agentId of agentIds) {
-      const remaining = await trx
-        .select()
-        .from(agentsToSessions)
-        .where(eq(agentsToSessions.agentId, agentId))
-        .limit(1);
+    if (agentIds.length === 0) return;
 
-      if (remaining.length === 0) {
-        await trx.delete(agents).where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
-      }
+    // Batch query to find which agents still have sessions
+    const remainingLinks = (await trx
+      .select({ agentId: agentsToSessions.agentId })
+      .from(agentsToSessions)
+      .where(inArray(agentsToSessions.agentId, agentIds))) as { agentId: string }[];
+
+    const linkedAgentIds = new Set(remainingLinks.map((link) => link.agentId));
+
+    // Find orphaned agents (those not in the linked set)
+    const orphanedAgentIds = agentIds.filter((id) => !linkedAgentIds.has(id));
+
+    // Batch delete orphaned agents (this will cascade to agentsFiles, agentsKnowledgeBases, etc.)
+    // and SET NULL on messages.agentId
+    if (orphanedAgentIds.length > 0) {
+      await trx
+        .delete(agents)
+        .where(and(inArray(agents.id, orphanedAgentIds), eq(agents.userId, this.userId)));
     }
   };
 

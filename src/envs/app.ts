@@ -2,8 +2,6 @@
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
-import { isServerMode } from '@/const/version';
-
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
@@ -16,12 +14,15 @@ const isInVercel = process.env.VERCEL === '1';
 
 const vercelUrl = `https://${process.env.VERCEL_URL}`;
 
-const APP_URL = process.env.APP_URL ? process.env.APP_URL : isInVercel ? vercelUrl : undefined;
+const APP_URL = process.env.APP_URL
+  ? process.env.APP_URL
+  : isInVercel
+    ? vercelUrl
+    : 'http://localhost:3010';
 
-// only throw error in server mode and server side
-if (typeof window === 'undefined' && isServerMode && !APP_URL) {
-  throw new Error('`APP_URL` is required in server mode');
-}
+// INTERNAL_APP_URL is used for server-to-server calls to bypass CDN/proxy
+// Falls back to APP_URL if not set
+const INTERNAL_APP_URL = process.env.INTERNAL_APP_URL || APP_URL;
 
 const ASSISTANT_INDEX_URL = 'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public';
 
@@ -46,6 +47,7 @@ export const getAppConfig = () => {
       PLUGIN_SETTINGS: z.string().optional(),
 
       APP_URL: z.string().optional(),
+      INTERNAL_APP_URL: z.string().optional(),
       VERCEL_EDGE_CONFIG: z.string().optional(),
       MIDDLEWARE_REWRITE_THROUGH_LOCAL: z.boolean().optional(),
       ENABLE_AUTH_PROTECTION: z.boolean().optional(),
@@ -56,6 +58,7 @@ export const getAppConfig = () => {
 
       SSRF_ALLOW_PRIVATE_IP_ADDRESS: z.boolean().optional(),
       SSRF_ALLOW_IP_ADDRESS_LIST: z.string().optional(),
+      MARKET_BASE_URL: z.string().optional(),
     },
     runtimeEnv: {
       // Sentry
@@ -79,6 +82,7 @@ export const getAppConfig = () => {
       VERCEL_EDGE_CONFIG: process.env.VERCEL_EDGE_CONFIG,
 
       APP_URL,
+      INTERNAL_APP_URL,
       MIDDLEWARE_REWRITE_THROUGH_LOCAL: process.env.MIDDLEWARE_REWRITE_THROUGH_LOCAL === '1',
       ENABLE_AUTH_PROTECTION: process.env.ENABLE_AUTH_PROTECTION === '1',
 
@@ -88,6 +92,7 @@ export const getAppConfig = () => {
 
       SSRF_ALLOW_PRIVATE_IP_ADDRESS: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
       SSRF_ALLOW_IP_ADDRESS_LIST: process.env.SSRF_ALLOW_IP_ADDRESS_LIST,
+      MARKET_BASE_URL: process.env.MARKET_BASE_URL,
     },
   });
 };

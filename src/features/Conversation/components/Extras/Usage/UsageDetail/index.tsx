@@ -1,3 +1,4 @@
+import { ModelPerformance, ModelUsage } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
 import { useTheme } from 'antd-style';
@@ -7,30 +8,37 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import InfoTooltip from '@/components/InfoTooltip';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { MessageMetadata } from '@/types/message';
-import { formatNumber } from '@/utils/format';
+import { formatNumber, formatShortenNumber } from '@/utils/format';
 
+import AnimatedNumber from './AnimatedNumber';
 import ModelCard from './ModelCard';
 import TokenProgress, { TokenProgressItem } from './TokenProgress';
 import { getDetailsToken } from './tokens';
 
 interface TokenDetailProps {
-  meta: MessageMetadata;
   model: string;
+  performance?: ModelPerformance;
   provider: string;
+  usage: ModelUsage;
 }
 
-const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
+const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
+  const isMobile = useIsMobile();
+
+  // 使用 systemStatus 管理短格式显示状态
+  const isShortFormat = useGlobalStore(systemStatusSelectors.tokenDisplayFormatShort);
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
   const modelCard = useAiInfraStore(aiModelSelectors.getModelCard(model, provider));
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!modelCard?.pricing;
 
-  const detailTokens = getDetailsToken(meta, modelCard);
+  const detailTokens = getDetailsToken(usage, modelCard);
   const inputDetails = [
     !!detailTokens.inputAudio && {
       color: theme.cyan9,
@@ -111,18 +119,20 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
     },
   ].filter(Boolean) as TokenProgressItem[];
 
-  const displayTotal =
+  const totalCount =
     isShowCredit && !!detailTokens.totalTokens
-      ? formatNumber(detailTokens.totalTokens.credit)
-      : formatNumber(detailTokens.totalTokens!.token);
+      ? detailTokens.totalTokens.credit
+      : detailTokens.totalTokens!.token;
+
+  const detailTotal = formatNumber(totalCount);
 
   const averagePricing = formatNumber(
     detailTokens.totalTokens!.credit / detailTokens.totalTokens!.token,
     2,
   );
 
-  const tps = meta?.tps ? formatNumber(meta.tps, 2) : undefined;
-  const ttft = meta?.ttft ? formatNumber(meta.ttft / 1000, 2) : undefined;
+  const tps = performance?.tps ? formatNumber(performance.tps, 2) : undefined;
+  const ttft = performance?.ttft ? formatNumber(performance.ttft / 1000, 2) : undefined;
 
   return (
     <Popover
@@ -171,7 +181,7 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
                 <div style={{ color: theme.colorTextSecondary }}>
                   {t('messages.tokenDetails.total')}
                 </div>
-                <div style={{ fontWeight: 500 }}>{displayTotal}</div>
+                <div style={{ fontWeight: 500 }}>{detailTotal}</div>
               </Flexbox>
               {isShowCredit && (
                 <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
@@ -208,11 +218,37 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
         </Flexbox>
       }
       placement={'top'}
-      trigger={['hover', 'click']}
+      trigger={isMobile ? ['click'] : ['hover']}
     >
-      <Center gap={2} horizontal style={{ cursor: 'default' }}>
+      <Center
+        gap={2}
+        horizontal
+        onClick={(e) => {
+          // 移动端：让 Popover 处理点击事件
+          if (isMobile) return;
+
+          // 桌面端：阻止 Popover 并切换格式
+          e.preventDefault();
+          e.stopPropagation();
+          updateSystemStatus({ tokenDisplayFormatShort: !isShortFormat });
+        }}
+        style={{ cursor: isMobile ? 'default' : 'pointer' }}
+      >
         <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
-        {displayTotal}
+        <AnimatedNumber
+          duration={1500}
+          formatter={(value) => {
+            const roundedValue = Math.round(value);
+            if (isShortFormat) {
+              return (formatShortenNumber(roundedValue) as string).toLowerCase?.();
+            }
+            return new Intl.NumberFormat('en-US').format(roundedValue);
+          }}
+          // Force remount when switching between token/credit to prevent unwanted animation
+          // See: https://github.com/lobehub/lobe-chat/pull/10098
+          key={isShowCredit ? 'credit' : 'token'}
+          value={totalCount}
+        />
       </Center>
     </Popover>
   );

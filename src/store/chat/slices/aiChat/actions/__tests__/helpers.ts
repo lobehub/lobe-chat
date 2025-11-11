@@ -35,11 +35,16 @@ export const setupMockSelectors = (
 /**
  * Setup store state with messages
  */
-export const setupStoreWithMessages = (messages: any[], sessionId = TEST_IDS.SESSION_ID) => {
+export const setupStoreWithMessages = (
+  messages: any[],
+  sessionId = TEST_IDS.SESSION_ID,
+  topicId: string | null | undefined = TEST_IDS.TOPIC_ID,
+) => {
   useChatStore.setState({
     activeId: sessionId,
+    activeTopicId: topicId ?? undefined,
     messagesMap: {
-      [messageMapKey(sessionId)]: messages,
+      [messageMapKey(sessionId, topicId ?? undefined)]: messages,
     },
   });
 };
@@ -59,17 +64,25 @@ export const createMockAbortController = () => {
 export const spyOnMessageService = () => {
   const createMessageSpy = vi
     .spyOn(messageService, 'createMessage')
-    .mockResolvedValue(TEST_IDS.NEW_MESSAGE_ID);
-  const updateMessageSpy = vi.spyOn(messageService, 'updateMessage').mockResolvedValue(undefined);
-  const removeMessageSpy = vi.spyOn(messageService, 'removeMessage').mockResolvedValue(undefined);
+    .mockResolvedValue({ id: TEST_IDS.NEW_MESSAGE_ID, messages: [] });
+  const updateMessageSpy = vi
+    .spyOn(messageService, 'updateMessage')
+    .mockResolvedValue({ messages: [], success: true });
+  const updateMessageMetadataSpy = vi
+    .spyOn(messageService, 'updateMessageMetadata')
+    .mockResolvedValue({ messages: [], success: true });
+  const removeMessageSpy = vi
+    .spyOn(messageService, 'removeMessage')
+    .mockResolvedValue(undefined as any);
   const updateMessageErrorSpy = vi
     .spyOn(messageService, 'updateMessageError')
-    .mockResolvedValue(undefined);
+    .mockResolvedValue(undefined as any);
 
   return {
     createMessageSpy,
     removeMessageSpy,
     updateMessageErrorSpy,
+    updateMessageMetadataSpy,
     updateMessageSpy,
   };
 };

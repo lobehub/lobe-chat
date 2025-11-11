@@ -1,5 +1,5 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
-import { ChatErrorType, ErrorType } from '@lobechat/types';
+import { ChatErrorType, ChatMessageError, ErrorType } from '@lobechat/types';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';
@@ -8,13 +8,16 @@ import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
-import { ChatMessage, ChatMessageError } from '@/types/message';
 
 import ChatInvalidAPIKey from './ChatInvalidApiKey';
 import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
-import InvalidAccessCode from './InvalidAccessCode';
 import { ErrorActionContainer } from './style';
+
+interface ErrorMessageData {
+  error?: ChatMessageError | null;
+  id: string;
+}
 
 const loading = () => <Skeleton active />;
 
@@ -88,7 +91,12 @@ export const useErrorContent = (error: any) => {
   }, [error]);
 };
 
-const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
+interface ErrorExtraProps {
+  block?: boolean;
+  data: ErrorMessageData;
+}
+
+const ErrorMessageExtra = memo<ErrorExtraProps>(({ data, block }) => {
   const error = data.error as ChatMessageError;
   if (!error?.type) return;
 
@@ -109,10 +117,6 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
       return <ClerkLogin id={data.id} />;
     }
 
-    case ChatErrorType.InvalidAccessCode: {
-      return <InvalidAccessCode id={data.id} provider={data.error?.body?.provider} />;
-    }
-
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       {
         return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
@@ -124,10 +128,10 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
     return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
   }
 
-  return <ErrorJsonViewer error={data.error} id={data.id} />;
+  return <ErrorJsonViewer block={block} error={data.error} id={data.id} />;
 });
 
-export default memo<{ data: ChatMessage }>(({ data }) => (
+export default memo<ErrorExtraProps>(({ data, block }) => (
   <Suspense
     fallback={
       <ErrorActionContainer>
@@ -135,6 +139,6 @@ export default memo<{ data: ChatMessage }>(({ data }) => (
       </ErrorActionContainer>
     }
   >
-    <ErrorMessageExtra data={data} />
+    <ErrorMessageExtra block={block} data={data} />
   </Suspense>
 ));

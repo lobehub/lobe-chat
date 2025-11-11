@@ -29,9 +29,7 @@ export function register(options?: { debug?: true | DiagLogLevel; version?: stri
       new HttpInstrumentation(),
       getNodeAutoInstrumentations(),
     ],
-    metricReader: new PeriodicExportingMetricReader({
-      exporter: new OTLPMetricExporter(),
-    }),
+    metricReaders: [new PeriodicExportingMetricReader({ exporter: new OTLPMetricExporter() })],
     resource: resourceFromAttributes(attributes),
     traceExporter: new OTLPTraceExporter(),
   });

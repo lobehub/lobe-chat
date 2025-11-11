@@ -4,7 +4,7 @@ import { memo, useMemo } from 'react';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/slices/preference/selectors';
+import { labPreferSelectors } from '@/store/user/slices/preference/selectors';
 
 import { ActionKeys, actionMap } from '../ActionBar/config';
 import { useChatInputStore } from '../store';
@@ -44,7 +44,7 @@ const ActionToolbar = memo(() => {
     systemStatusSelectors.expandInputActionbar(s),
     s.toggleExpandInputActionbar,
   ]);
-  const enableRichRender = useUserStore(preferenceSelectors.inputMarkdownRender);
+  const enableRichRender = useUserStore(labPreferSelectors.enableInputMarkdown);
 
   const leftActions = useChatInputStore((s) =>
     s.leftActions.filter((item) => (enableRichRender ? true : item !== 'typo')),

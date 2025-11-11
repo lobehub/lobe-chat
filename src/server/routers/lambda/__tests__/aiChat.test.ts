@@ -66,7 +66,7 @@ describe('aiChatRouter', () => {
       2,
       expect.objectContaining({
         content: expect.any(String),
-        fromModel: 'gpt-4o',
+        model: 'gpt-4o',
         parentId: 'm-user',
         role: 'assistant',
         sessionId: 's1',

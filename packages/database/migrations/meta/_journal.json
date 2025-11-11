@@ -277,8 +277,36 @@
     {
       "idx": 39,
       "version": "7",
-      "when": 1760200000000,
-      "tag": "0039_add_agent_market_identifier",
+      "when": 1761554153406,
+      "tag": "0039_add_editor_data",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1761563458595,
+      "tag": "0040_improve_user_memory_field",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1761878697451,
+      "tag": "0041_improve_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1762232313711,
+      "tag": "0042_improve_agent_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1762251112601,
+      "tag": "0043_add_ai_model_settings",
       "breakpoints": true
     }
   ],

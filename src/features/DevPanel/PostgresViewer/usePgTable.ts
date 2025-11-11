@@ -25,7 +25,8 @@ export const useTableColumns = (tableName?: string) => {
 export const usePgTable = (tableName?: string) => {
   const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
 
-  return useSWR(isDBInited && tableName ? FETCH_TABLE_DATA_KEY(tableName) : null, ([, table]) =>
-    tableViewerService.getTableData(table),
+  return useSWR(
+    isDBInited && tableName ? FETCH_TABLE_DATA_KEY(tableName) : null,
+    ([, table]) => tableViewerService.getTableData(table) as any,
   );
 };

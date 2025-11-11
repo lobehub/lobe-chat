@@ -1,8 +1,10 @@
 'use client';
 
+import { UIChatMessage } from '@lobechat/types';
 import { ModelIcon } from '@lobehub/icons';
 import { Button, Text } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { LucideRefreshCw } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +13,8 @@ import { Flexbox } from 'react-layout-kit';
 import { DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
 import { ChatItem } from '@/features/ChatItem';
 import { useChatStore } from '@/store/chat';
+import { displayMessageSelectors } from '@/store/chat/slices/message/selectors';
 import { ChatErrorType } from '@/types/fetch';
-import { ChatMessage } from '@/types/message';
 
 import TodoList, { TodoData } from './TodoList';
 
@@ -54,13 +56,20 @@ const parseMarkdownTodos = (content: string): TodoData => {
   };
 };
 
-interface SupervisorMessageProps extends ChatMessage {
+interface SupervisorMessageProps {
   disableEditing?: boolean;
+  id: string;
   index: number;
 }
 
-const SupervisorMessage = memo<SupervisorMessageProps>((props) => {
-  const { id, content, error, groupId, role, updatedAt, createdAt } = props;
+const SupervisorMessage = memo<SupervisorMessageProps>(({ id }) => {
+  const item = useChatStore(
+    displayMessageSelectors.getDisplayMessageById(id),
+    isEqual,
+  ) as UIChatMessage;
+
+  const { content, error, groupId, role, updatedAt, createdAt } = item;
+
   const { t } = useTranslation('chat');
   const theme = useTheme();
   const { styles } = useStyles();
@@ -128,8 +137,8 @@ const SupervisorMessage = memo<SupervisorMessageProps>((props) => {
 
   // Render todo message with dedicated component
   if (isTodoMessage && todoData) {
-    const model = props.extra?.fromModel;
-    const provider = props.extra?.fromProvider;
+    const model = item.extra?.model;
+    const provider = item.extra?.provider;
     const hasModelInfo = model || provider;
 
     return (

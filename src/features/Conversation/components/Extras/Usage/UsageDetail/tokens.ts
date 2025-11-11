@@ -1,6 +1,6 @@
+import { ModelUsage } from '@lobechat/types';
 import { LobeDefaultAiModelListItem } from 'model-bank';
 
-import type { ModelTokensUsage } from '@/types/message';
 import { getAudioInputUnitRate, getAudioOutputUnitRate } from '@/utils/pricing';
 
 import { getPrice } from './pricing';
@@ -11,10 +11,7 @@ const calcCredit = (token: number, pricing?: number) => {
   return parseInt((token * pricing).toFixed(0));
 };
 
-export const getDetailsToken = (
-  usage: ModelTokensUsage,
-  modelCard?: LobeDefaultAiModelListItem,
-) => {
+export const getDetailsToken = (usage: ModelUsage, modelCard?: LobeDefaultAiModelListItem) => {
   const inputTextTokens = usage.inputTextTokens || (usage as any).inputTokens || 0;
   const totalInputTokens = usage.totalInputTokens || (usage as any).inputTokens || 0;
 

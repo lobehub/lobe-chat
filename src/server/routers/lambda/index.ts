@@ -30,6 +30,7 @@ import { sessionGroupRouter } from './sessionGroup';
 import { threadRouter } from './thread';
 import { topicRouter } from './topic';
 import { uploadRouter } from './upload';
+import { usageRouter } from './usage';
 import { userRouter } from './user';
 
 export const lambdaRouter = router({
@@ -61,6 +62,7 @@ export const lambdaRouter = router({
   thread: threadRouter,
   topic: topicRouter,
   upload: uploadRouter,
+  usage: usageRouter,
   user: userRouter,
 });
 

@@ -1,3 +1,4 @@
+import { UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -5,9 +6,8 @@ import { chatService } from '@/services/chat';
 import { ragService } from '@/services/rag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, dbMessageSelectors, displayMessageSelectors } from '@/store/chat/selectors';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ChatMessage } from '@/types/message';
 import { QueryRewriteSystemAgent } from '@/types/user/settings';
 
 import { useChatStore } from '../../../../store';
@@ -49,7 +49,7 @@ describe('chatRAG actions', () => {
       act(() => {
         useChatStore.setState({
           messagesMap: {
-            default: [{ id: messageId }] as ChatMessage[],
+            default: [{ id: messageId }] as UIChatMessage[],
           },
         });
       });
@@ -70,12 +70,12 @@ describe('chatRAG actions', () => {
       const userQuery = 'user-query';
 
       // Mock the message with existing ragQuery
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(
         () =>
           ({
             id: messageId,
             ragQuery: existingRagQuery,
-          }) as ChatMessage,
+          }) as UIChatMessage,
       );
 
       // Mock the semantic search response
@@ -113,11 +113,11 @@ describe('chatRAG actions', () => {
       const rewrittenQuery = 'rewritten-query';
 
       // Mock the message without ragQuery
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(
         () =>
           ({
             id: messageId,
-          }) as ChatMessage,
+          }) as UIChatMessage,
       );
 
       // Mock the rewrite query function
@@ -220,7 +220,7 @@ describe('chatRAG actions', () => {
     it('should not rewrite if message not found', async () => {
       const { result } = renderHook(() => useChatStore());
 
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(() => undefined);
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(() => undefined);
       const rewriteSpy = vi.spyOn(result.current, 'internal_rewriteQuery');
 
       await act(async () => {
@@ -235,17 +235,17 @@ describe('chatRAG actions', () => {
       const messageId = 'message-id';
       const content = 'message content';
 
-      vi.spyOn(chatSelectors, 'getMessageById').mockReturnValue(
+      vi.spyOn(dbMessageSelectors, 'getDbMessageById').mockReturnValue(
         () =>
           ({
             id: messageId,
             content,
-          }) as ChatMessage,
+          }) as UIChatMessage,
       );
 
-      vi.spyOn(chatSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
+      vi.spyOn(displayMessageSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
         { content: 'history' },
-      ] as ChatMessage[]);
+      ] as UIChatMessage[]);
 
       const rewriteSpy = vi.spyOn(result.current, 'internal_rewriteQuery');
       const deleteSpy = vi.spyOn(result.current, 'deleteUserMessageRagQuery');

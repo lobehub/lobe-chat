@@ -5,7 +5,7 @@ import {
   ChatTTS,
   ChatToolPayload,
   ChatTranslate,
-  MessageRoleType,
+  UIMessageRoleType,
 } from './message';
 import { MetaData } from './meta';
 import { SessionGroupId } from './session';
@@ -28,8 +28,8 @@ export interface ImportMessage {
 
   // 扩展字段
   extra?: {
-    fromModel?: string;
-    fromProvider?: string;
+    model?: string;
+    provider?: string;
     // 翻译
     translate?: ChatTranslate | false | null;
     // TTS
@@ -51,7 +51,7 @@ export interface ImportMessage {
   pluginState?: any;
 
   quotaId?: string;
-  role: MessageRoleType;
+  role: UIMessageRoleType;
 
   sessionId?: string;
   tool_call_id?: string;

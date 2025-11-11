@@ -199,6 +199,12 @@
     "all": "همه",
     "list": {
       "disabled": "غیرفعال",
+      "disabledActions": {
+        "sort": "نحوه مرتب‌سازی",
+        "sortAlphabetical": "مرتب‌سازی الفبایی",
+        "sortAlphabeticalDesc": "مرتب‌سازی الفبایی معکوس",
+        "sortDefault": "مرتب‌سازی پیش‌فرض"
+      },
       "enabled": "فعال"
     },
     "notFound": "نتیجه‌ای برای جستجو پیدا نشد",
@@ -391,7 +397,13 @@
       "addNew": "مدل جدید اضافه کنید",
       "disabled": "غیرفعال",
       "disabledActions": {
-        "showMore": "نمایش همه"
+        "showMore": "نمایش همه",
+        "sort": "نحوه مرتب‌سازی",
+        "sortAlphabetical": "مرتب‌سازی الفبایی",
+        "sortAlphabeticalDesc": "مرتب‌سازی الفبایی معکوس",
+        "sortDefault": "مرتب‌سازی پیش‌فرض",
+        "sortReleasedAt": "مرتب‌سازی بر اساس تاریخ انتشار قدیمی‌تر",
+        "sortReleasedAtDesc": "مرتب‌سازی بر اساس جدیدترین تاریخ انتشار"
       },
       "empty": {
         "desc": "لطفاً یک مدل سفارشی ایجاد کنید یا پس از بارگذاری مدل‌ها، شروع به استفاده کنید",

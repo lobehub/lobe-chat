@@ -21,7 +21,7 @@ interface LoginConfirmProps {
   uid: string;
 }
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, responsive }) => ({
   authButton: css`
     width: 100%;
     height: 40px;
@@ -35,12 +35,21 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 12px;
 
     background: ${token.colorBgContainer};
+
+    ${responsive.mobile} {
+      min-width: auto;
+    }
   `,
   container: css`
     width: 100%;
     min-height: 100vh;
     color: ${token.colorTextBase};
     background-color: ${token.colorBgLayout};
+
+    ${responsive.mobile} {
+      justify-content: flex-start;
+      padding-block-start: 64px;
+    }
   `,
   title: css`
     margin-block-end: ${token.marginLG}px;
@@ -58,6 +67,8 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
   const isUserStateInit = useUserStore((s) => s.isUserStateInit);
   const avatar = useUserStore(userProfileSelectors.userAvatar);
   const nickName = useUserStore(userProfileSelectors.nickName);
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const titleText = t('login.title', { clientName: clientDisplayName });
   const descriptionText = t('login.description', { clientName: clientDisplayName });
@@ -99,7 +110,12 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
 
           <Flexbox gap={16}>
             {/* Form points to the endpoint handling login confirmation */}
-            <form action="/oidc/consent" method="post" style={{ width: '100%' }}>
+            <form
+              action="/oidc/consent"
+              method="post"
+              onSubmit={() => setIsLoading(true)}
+              style={{ width: '100%' }}
+            >
               {/* Adjust action URL */}
               <input name="uid" type="hidden" value={uid} />
               <input name="choice" type="hidden" value={'accept'} />
@@ -108,6 +124,7 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
                 className={styles.authButton}
                 disabled={!isUserStateInit}
                 htmlType="submit"
+                loading={isLoading}
                 name="consent"
                 size="large"
                 type="primary"

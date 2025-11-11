@@ -73,6 +73,7 @@ export const generateViewport = async (props: DynamicLayoutProps): ResolvingView
 
   return {
     ...dynamicScale,
+    colorScheme: null,
     initialScale: 1,
     minimumScale: 1,
     themeColor: [

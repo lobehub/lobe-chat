@@ -1,3 +1,5 @@
+import { OFFICIAL_DOMAIN } from '@lobechat/const';
+import { UIChatMessage } from '@lobechat/types';
 import { ModelTag } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
 import { ChatHeaderTitle } from '@lobehub/ui/chat';
@@ -12,15 +14,13 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
-import { ChatMessage } from '@/types/message';
 
-import pkg from '../../../../../../package.json';
 import { useContainerStyles } from '../style';
 import { useStyles } from './style';
 import { FieldType } from './type';
 
 interface PreviewProps extends FieldType {
-  message: ChatMessage;
+  message: UIChatMessage;
   previewId?: string;
   title?: string;
 }
@@ -75,7 +75,7 @@ const Preview = memo<PreviewProps>(
             {withFooter ? (
               <Flexbox align={'center'} className={styles.footer} gap={4}>
                 <ProductLogo type={'combine'} />
-                <div className={styles.url}>{pkg.homepage}</div>
+                <div className={styles.url}>{OFFICIAL_DOMAIN}</div>
               </Flexbox>
             ) : (
               <div />

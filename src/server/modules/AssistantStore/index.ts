@@ -93,7 +93,7 @@ export class AssistantStore {
       },
     });
     if (!res.ok) {
-      res = await fetch(this.getAgentUrl(DEFAULT_LANG), {
+      res = await fetch(this.getAgentUrl(identifier, DEFAULT_LANG), {
         cache: 'force-cache',
         next: {
           revalidate: CacheRevalidate.Details,

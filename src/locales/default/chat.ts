@@ -175,9 +175,9 @@ export default {
     addMember: '添加成员',
     allMembers: '全体成员',
     createGroup: '创建 Agent 团队',
-    noAvailableAgents: '没有可邀请的助手',
-    noSelectedAgents: '还未选择助手',
-    searchAgents: '搜索助手...',
+    noAvailableAgents: '没有可邀请的 Agent',
+    noSelectedAgents: '还未选择 Agent',
+    searchAgents: '搜索 Agent...',
     setInitialMembers: '选择团队成员',
   },
 
@@ -188,6 +188,7 @@ export default {
   },
 
   messageAction: {
+    continueGeneration: '继续生成',
     delAndRegenerate: '删除并重新生成',
     deleteDisabledByThreads: '存在子话题，不能删除',
     regenerate: '重新生成',
@@ -247,7 +248,7 @@ export default {
     jumpToMessage: '跳转至第 {{index}} 条消息',
     nextMessage: '下一条消息',
     previousMessage: '上一条消息',
-    senderAssistant: '助手',
+    senderAssistant: 'Agent',
     senderUser: '你',
   },
 

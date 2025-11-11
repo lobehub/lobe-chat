@@ -1,16 +1,29 @@
 'use client';
 
-import { ReactNode, forwardRef, memo, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ReactNode,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors } from '@/store/chat/selectors';
 
 import AutoScroll from '../AutoScroll';
 import SkeletonList from '../SkeletonList';
-import { VirtuosoContext, resetVirtuosoVisibleItems, setVirtuosoGlobalRef } from './VirtuosoContext';
+import {
+  VirtuosoContext,
+  resetVirtuosoVisibleItems,
+  setVirtuosoGlobalRef,
+} from './VirtuosoContext';
 
 interface VirtualizedListProps {
   dataSource: string[];
@@ -32,10 +45,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
 
-  const [id, isFirstLoading, isCurrentChatLoaded] = useChatStore((s) => [
-    chatSelectors.currentChatKey(s),
-    chatSelectors.currentChatLoadingState(s),
-    chatSelectors.isCurrentChatLoaded(s),
+  const [isFirstLoading, isCurrentChatLoaded] = useChatStore((s) => [
+    displayMessageSelectors.currentChatLoadingState(s),
+    displayMessageSelectors.isCurrentDisplayChatLoaded(s),
   ]);
 
   const getFollowOutput = useCallback(() => {
@@ -53,9 +65,8 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     [atBottom],
   );
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [id]);
+  const components = useMemo(() => ({ List }), []);
+  const computeItemKey = useCallback((index: number, item: string) => item, []);
 
   useEffect(() => {
     setVirtuosoGlobalRef(virtuosoRef);
@@ -71,8 +82,8 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     };
   }, []);
 
-  // overscan should be 3 times the height of the window
-  const overscan = typeof window !== 'undefined' ? window.innerHeight * 3 : 0;
+  // overscan should be 2 times the height of the window
+  const overscan = typeof window !== 'undefined' ? window.innerHeight * 2 : 0;
 
   // first time loading or not loaded
   if (isFirstLoading || !isCurrentChatLoaded) return <SkeletonList mobile={mobile} />;
@@ -81,12 +92,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     <VirtuosoContext value={virtuosoRef}>
       <Virtuoso
         atBottomStateChange={setAtBottom}
-        atBottomThreshold={50 * (mobile ? 2 : 1)}
-        components={{
-          List,
-        }}
-
-        computeItemKey={(_, item) => item}
+        atBottomThreshold={200 * (mobile ? 2 : 1)}
+        components={components}
+        computeItemKey={computeItemKey}
         data={dataSource}
         followOutput={getFollowOutput}
         increaseViewportBy={overscan}
@@ -108,13 +116,14 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
           atBottom={atBottom}
           isScrolling={isScrolling}
           onScrollToBottom={(type) => {
+            const virtuoso = virtuosoRef.current;
             switch (type) {
               case 'auto': {
-                scrollToBottom();
+                virtuoso?.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
                 break;
               }
               case 'click': {
-                scrollToBottom('smooth');
+                virtuoso?.scrollToIndex({ align: 'end', behavior: 'smooth', index: 'LAST' });
                 break;
               }
             }

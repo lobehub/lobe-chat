@@ -1,5 +1,6 @@
+import { UIChatMessage } from '@lobechat/types';
+
 import { ChatGroupAgentItem, ChatGroupItem } from '@/database/schemas/chatGroup';
-import { ChatMessage } from '@/types/message';
 
 import type { SupervisorTodoItem } from './supervisor';
 
@@ -14,6 +15,14 @@ export interface ChatMessageState {
    * Derived from session.type, used for caching to avoid repeated lookups
    */
   activeSessionType?: 'agent' | 'group';
+  /**
+   * is the message is continuing generation (used for disable continue button)
+   */
+  continuingIds: string[];
+  /**
+   * Raw messages from database (flat structure)
+   */
+  dbMessagesMap: Record<string, UIChatMessage[]>;
   /**
    * Group agents maps by group ID
    */
@@ -39,7 +48,14 @@ export interface ChatMessageState {
    * whether messages have fetched
    */
   messagesInit: boolean;
-  messagesMap: Record<string, ChatMessage[]>;
+  /**
+   * Parsed messages for display (includes assistantGroup from conversation-flow)
+   */
+  messagesMap: Record<string, UIChatMessage[]>;
+  /**
+   * is the message is regenerating (used for disable regenerate button)
+   */
+  regeneratingIds: string[];
   /**
    * Supervisor decision debounce timers by group ID
    */
@@ -61,6 +77,8 @@ export interface ChatMessageState {
 export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
   activeSessionType: undefined,
+  continuingIds: [],
+  dbMessagesMap: {},
   groupAgentMaps: {},
   groupMaps: {},
   groupsInit: false,
@@ -69,6 +87,7 @@ export const initialMessageState: ChatMessageState = {
   messageLoadingIds: [],
   messagesInit: false,
   messagesMap: {},
+  regeneratingIds: [],
   supervisorDebounceTimers: {},
   supervisorDecisionAbortControllers: {},
   supervisorDecisionLoading: [],

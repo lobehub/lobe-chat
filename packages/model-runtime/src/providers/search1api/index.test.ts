@@ -830,9 +830,9 @@ describe('LobeSearch1API - custom features', () => {
     it('should handle mix of known and unknown models', async () => {
       mockClient.models.list.mockResolvedValue({
         data: [
-          { id: 'gpt-4o-mini' },
+          { id: 'gpt-4o' },
           { id: 'unknown-model-1' },
-          { id: 'claude-3-5-sonnet-20241022' },
+          { id: 'gpt-4o-mini' },
           { id: 'unknown-model-2' },
         ],
       });
