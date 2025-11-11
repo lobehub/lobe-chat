@@ -151,6 +151,31 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      '仅支持深度思考模式，具有卓越的编码和工具调用能力，适用于需要逻辑分析、规划或深度理解的场景。',
+    displayName: 'Kimi K2 Thinking',
+    id: 'kimi-k2-thinking',
+    maxOutput: 16_384,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-10',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       search: true,
     },
     contextWindowTokens: 131_072,
@@ -159,7 +184,6 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Kimi K2 Instruct',
     id: 'Moonshot-Kimi-K2-Instruct',
     maxOutput: 8192,
-    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       units: [
