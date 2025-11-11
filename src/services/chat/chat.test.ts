@@ -988,7 +988,7 @@ describe('ChatService', () => {
 
     beforeEach(async () => {
       // Setup common fetchSSE mock for getChatCompletion tests
-      const { fetchSSE } = await import('@/utils/fetch');
+      const { fetchSSE } = await import('@lobechat/fetch-sse');
       mockFetchSSE = vi.fn().mockResolvedValue(new Response('mock response'));
       vi.mocked(fetchSSE).mockImplementation(mockFetchSSE);
     });
@@ -1049,7 +1049,7 @@ describe('ChatService', () => {
 
     it('should return InvalidAccessCode error when enableFetchOnClient is true and auth is enabled but user is not signed in', async () => {
       // Mock fetchSSE to call onErrorHandle with the error
-      const { fetchSSE } = await import('@/utils/fetch');
+      const { fetchSSE } = await import('@lobechat/fetch-sse');
 
       const mockFetchSSEWithError = vi.fn().mockImplementation((url, options) => {
         // Simulate the error being caught and passed to onErrorHandle
@@ -1211,7 +1211,7 @@ vi.mock('../_auth', async (importOriginal) => {
 describe('ChatService private methods', () => {
   describe('getChatCompletion', () => {
     it('should merge responseAnimation styles correctly', async () => {
-      const { fetchSSE } = await import('@/utils/fetch');
+      const { fetchSSE } = await import('@lobechat/fetch-sse');
       vi.mock('@/utils/fetch', async (importOriginal) => {
         const module = await importOriginal();
         return {
