@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { imageUrlToBase64 } from '@lobechat/utils';
 import { ModelProvider } from 'model-bank';
 import { Ollama } from 'ollama/browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -9,6 +10,13 @@ import * as debugStreamModule from '../../utils/debugStream';
 import { LobeOllamaAI, params } from './index';
 
 vi.mock('ollama/browser');
+vi.mock('@lobechat/utils', async () => {
+  const actual = await vi.importActual('@lobechat/utils');
+  return {
+    ...actual,
+    imageUrlToBase64: vi.fn(),
+  };
+});
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -650,6 +658,9 @@ describe('LobeOllamaAI', () => {
     });
 
     it('should ignore images with invalid data URIs', async () => {
+      // Mock imageUrlToBase64 to simulate conversion failure for external URLs
+      vi.mocked(imageUrlToBase64).mockRejectedValue(new Error('Network error'));
+
       const message = {
         content: [
           { type: 'text', text: 'Hello' },
