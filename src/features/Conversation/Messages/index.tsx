@@ -7,8 +7,8 @@ import { ReactNode, memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Flexbox } from 'react-layout-kit';
 
 import {
-  removeVirtuosoVisibleItem,
-  upsertVirtuosoVisibleItem,
+  removeVirtuaVisibleItem,
+  upsertVirtuaVisibleItem,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { getChatStoreState, useChatStore } from '@/store/chat';
 import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
@@ -85,13 +85,13 @@ const Item = memo<ChatListItemProps>(
           if (entry.isIntersecting) {
             const { bottom, top } = entry.intersectionRect;
 
-            upsertVirtuosoVisibleItem(index, {
+            upsertVirtuaVisibleItem(index, {
               bottom,
               ratio: entry.intersectionRatio,
               top,
             });
           } else {
-            removeVirtuosoVisibleItem(index);
+            removeVirtuaVisibleItem(index);
           }
         });
       }, options);
@@ -100,7 +100,7 @@ const Item = memo<ChatListItemProps>(
 
       return () => {
         observer.disconnect();
-        removeVirtuosoVisibleItem(index);
+        removeVirtuaVisibleItem(index);
       };
     }, [index]);
 

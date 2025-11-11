@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 
-import { VirtuosoContext } from '../../../components/VirtualizedList/VirtuosoContext';
+import { VirtuaContext } from '../../../components/VirtualizedList/VirtuosoContext';
 import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
 import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 
@@ -76,7 +76,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
 
   // remove line breaks in artifact tag to make the ast transform easier
 
-  const virtuosoRef = use(VirtuosoContext);
+  const virtuaRef = use(VirtuaContext);
 
   const onActionClick = useCallback(
     async (action: ActionIconGroupEvent) => {
@@ -84,7 +84,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         case 'edit': {
           toggleMessageEditing(id, true);
 
-          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+          virtuaRef?.current?.scrollToIndex(index, { align: 'start' });
         }
       }
 
