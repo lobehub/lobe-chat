@@ -13,15 +13,16 @@ import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import DesktopLayout from './_layout/Desktop'
-import MobileLayout from './_layout/Mobile'
+
+import DesktopLayout from './_layout/Desktop';
+import MobileLayout from './_layout/Mobile';
 
 type AgentPageType = {
   mobile?: boolean;
-}
+};
 
 const Page = memo((props: AgentPageType) => {
-  const { mobile } = props
+  const { mobile } = props;
   const cateItems = useCategory();
   const [tab, setTab] = useQueryState('tab', {
     defaultValue: ChatSettingsTabs.Prompt,
@@ -36,7 +37,6 @@ const Page = memo((props: AgentPageType) => {
   const theme = useTheme();
 
   if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
-
 
   const PageContent = (
     <>
@@ -65,12 +65,13 @@ const Page = memo((props: AgentPageType) => {
         tab={tab as ChatSettingsTabs}
       />
     </>
-  )
+  );
 
-  return mobile ? <MobileLayout>
-    {PageContent}
-  </MobileLayout> : <DesktopLayout>
-    {PageContent}</DesktopLayout>;
+  return mobile ? (
+    <MobileLayout>{PageContent}</MobileLayout>
+  ) : (
+    <DesktopLayout>{PageContent}</DesktopLayout>
+  );
 });
 
 Page.displayName = 'AgentSetting';

@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Chiudi finestra"
+    },
+    "messages": {
+      "authFailed": "Autorizzazione fallita: {{error}}",
+      "missingParams": "Parametri di autorizzazione mancanti",
+      "processing": "Autorizzazione in corso...",
+      "successWithCountdown": "{{message}} La finestra si chiuderà automaticamente tra {{countdown}} secondi",
+      "successWithRedirect": "Autorizzazione riuscita! Reindirizzamento in corso..."
+    },
+    "titles": {
+      "error": "Autorizzazione fallita",
+      "loading": "Autorizzazione LobeHub Market",
+      "success": "Autorizzazione riuscita"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Autorizzazione fallita, riprova.",
+    "browserOnly": "Il processo di autorizzazione può essere avviato solo nel browser.",
+    "codeConsumed": "Il codice di autorizzazione è già stato utilizzato, riprova.",
+    "codeVerifierMissing": "Sessione di autorizzazione non valida, avvia nuovamente il login.",
+    "general": "Si è verificato un errore durante l'autorizzazione, riprova.",
+    "handoffFailed": "Impossibile ottenere il risultato dell'autorizzazione, riprova.",
+    "handoffTimeout": "Autorizzazione scaduta, completa l'operazione nel browser e riprova.",
+    "oidcNotReady": "Il servizio di autorizzazione non è ancora pronto, riprova più tardi.",
+    "openBrowserFailed": "Impossibile aprire il browser di sistema, riprova.",
+    "openPopupFailed": "Impossibile aprire la finestra di autorizzazione, controlla le impostazioni del blocco popup del browser.",
+    "popupClosed": "La finestra di autorizzazione è stata chiusa prima del completamento.",
+    "sessionExpired": "La sessione di autorizzazione è scaduta, effettua nuovamente l'accesso.",
+    "stateMismatch": "Stato di autorizzazione non corrispondente, riprova.",
+    "stateMissing": "Stato di autorizzazione non trovato, riprova."
+  },
+  "messages": {
+    "loading": "Avvio del processo di autorizzazione in corso...",
+    "success": {
+      "submit": "Autorizzazione riuscita! Ora puoi pubblicare l'assistente.",
+      "upload": "Autorizzazione riuscita! Ora puoi pubblicare una nuova versione."
+    }
+  }
+}
