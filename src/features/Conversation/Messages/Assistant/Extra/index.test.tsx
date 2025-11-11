@@ -24,7 +24,7 @@ vi.mock('@/store/chat', () => ({
   useChatStore: vi.fn(),
 }));
 
-const mockData: UIChatMessage = {
+const mockData = {
   content: 'test-content',
   createdAt: 0,
   id: 'abc',
@@ -53,8 +53,8 @@ describe('AssistantMessageExtra', () => {
     expect(screen.queryByText('Translate Component')).toBeNull();
   });
 
-  it('should render Usage component if extra.model exists', async () => {
-    render(<AssistantMessageExtra {...mockData} extra={{ model: 'gpt-4', provider: 'openai' }} />);
+  it('should render Usage component if model prop exists', async () => {
+    render(<AssistantMessageExtra {...mockData} model="gpt-4" provider="openai" />);
 
     expect(screen.getByText('Usage Component')).toBeInTheDocument();
   });
