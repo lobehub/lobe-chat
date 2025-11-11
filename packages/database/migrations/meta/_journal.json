@@ -308,6 +308,13 @@
       "when": 1762251112601,
       "tag": "0043_add_ai_model_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1762858386084,
+      "tag": "0044_bent_whizzer",
+      "breakpoints": true
     }
   ],
   "version": "6"

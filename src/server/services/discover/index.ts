@@ -224,9 +224,9 @@ export class DiscoverService {
         url?: unknown;
       };
 
+      if (typeof name === 'string' && name.length > 0) return name;
       if (typeof avatar === 'string' && avatar.length > 0) return avatar;
       if (typeof url === 'string' && url.length > 0) return url;
-      if (typeof name === 'string' && name.length > 0) return name;
     }
 
     return '';
@@ -488,6 +488,7 @@ export class DiscoverService {
     const normalizedLocale = normalizeLocale(locale);
 
     try {
+      // @ts-ignore
       const categories = await this.market.agents.getCategories({
         locale: normalizedLocale,
         q,
@@ -516,6 +517,7 @@ export class DiscoverService {
     const normalizedLocale = normalizeLocale(locale);
 
     try {
+      // @ts-ignore
       const data = await this.market.agents.getAgentDetail(identifier, {
         locale: normalizedLocale,
         version,
@@ -537,9 +539,9 @@ export class DiscoverService {
         description: (data as any).description || data.summary,
         examples: Array.isArray((data as any).examples)
           ? (data as any).examples.map((example: any) => ({
-              content: typeof example === 'string' ? example : example.content || '',
-              role: example.role || 'user',
-            }))
+            content: typeof example === 'string' ? example : example.content || '',
+            role: example.role || 'user',
+          }))
           : [],
         homepage:
           (data as any).homepage ||
@@ -557,6 +559,7 @@ export class DiscoverService {
         title: (data as any).name || (data as any).identifier,
         tokenUsage: data.tokenUsage || 0,
         versions:
+          // @ts-ignore
           data.versions?.map((item) => ({
             createdAt: (item as any).createdAt || item.updatedAt,
             isLatest: item.isLatest,
@@ -597,7 +600,9 @@ export class DiscoverService {
     }
 
     try {
+      // @ts-ignore
       const identifiers = await this.market.agents.getPublishedIdentifiers();
+      // @ts-ignore
       const result = identifiers.map((item) => ({
         identifier: item.id,
         lastModified: item.lastModified,
@@ -648,6 +653,7 @@ export class DiscoverService {
         }
       }
 
+      // @ts-ignore
       const data = await this.market.agents.getAgentList({
         category,
         locale: normalizedLocale,

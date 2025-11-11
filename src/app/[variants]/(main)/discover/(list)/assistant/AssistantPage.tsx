@@ -25,6 +25,8 @@ const AssistantPage = memo<{ mobile?: boolean }>(() => {
     source,
   });
 
+  console.log("data",data)
+
   if (isLoading || !data) return <Loading />;
 
   const { items, currentPage, pageSize, totalCount } = data;

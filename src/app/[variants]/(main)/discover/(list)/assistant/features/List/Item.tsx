@@ -63,6 +63,8 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     knowledgeCount,
     backgroundColor,
   }) => {
+
+    console.log("author",author)
     const { styles, theme } = useStyles();
     const navigate = useNavigate();
     const { source } = useQuery() as { source?: AssistantMarketSource };

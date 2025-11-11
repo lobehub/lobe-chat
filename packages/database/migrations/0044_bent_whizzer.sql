@@ -1,0 +1,1 @@
+ALTER TABLE "agents" ADD COLUMN "market_identifier" text;
