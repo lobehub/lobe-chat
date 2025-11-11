@@ -4,16 +4,16 @@ export type SearchMode = 'off' | 'auto' | 'on';
 
 export enum ModelSearchImplement {
   /**
-   * 模型内置了搜索功能
-   * 类似 Jina 、PPLX 等模型的搜索模式，让调用方无感知
+   * Model has built-in search functionality
+   * Similar to search modes of models like Jina, PPLX, transparent to the caller
    */
   Internal = 'internal',
   /**
-   * 使用参数开关的方式，例如 Qwen、Google、OpenRouter，搜索结果在
+   * Uses parameter toggle approach, e.g. Qwen, Google, OpenRouter, search results in
    */
   Params = 'params',
   /**
-   * 使用工具调用的方式
+   * Uses tool calling approach
    */
   Tool = 'tool',
 }
