@@ -48,6 +48,7 @@ import { DocumentSourceType, LobeDocument } from '@/types/document';
 dayjs.extend(relativeTime);
 
 const SAVE_THROTTLE_TIME = 3000; // ms
+const RESET_DELAY = 100; // ms
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
@@ -80,6 +81,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [currentDocId, setCurrentDocId] = useState<string | undefined>(documentId);
     const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
+    const [wordCount, setWordCount] = useState(0);
 
     const refreshFileList = useFileStore((s) => s.refreshFileList);
     const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
@@ -87,6 +89,11 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
     const removeDocument = useFileStore((s) => s.removeDocument);
 
     const isInitialLoadRef = useRef(false);
+
+    // Helper function to calculate word count from text
+    const calculateWordCount = useCallback((text: string) => {
+      return text.trim().split(/\s+/).filter(Boolean).length;
+    }, []);
 
     // Helper function to extract content from pages array
     const extractContentFromPages = useCallback((pages?: Array<{ pageContent: string }>) => {
@@ -120,10 +127,11 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           setCurrentTitle(currentDocument.title || 'Untitled Document');
           // Start with empty editor for new documents
           editor.cleanDocument();
+          setWordCount(0);
           // Reset flag after cleanDocument (no onChange should fire for cleanDocument)
           setTimeout(() => {
             isInitialLoadRef.current = false;
-          }, 500);
+          }, RESET_DELAY);
           return;
         }
 
@@ -131,9 +139,12 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           setCurrentTitle(currentDocumentTitle || '');
           isInitialLoadRef.current = true;
           editor.setDocument('json', JSON.stringify(currentDocument.editorData));
+          // Calculate word count from content
+          const textContent = currentDocument.content || '';
+          setWordCount(calculateWordCount(textContent));
           setTimeout(() => {
             isInitialLoadRef.current = false;
-          }, 500);
+          }, RESET_DELAY);
           return;
         } else if (currentDocument?.pages) {
           const pagesContent = extractContentFromPages(currentDocument.pages);
@@ -142,19 +153,30 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
             setCurrentTitle(currentDocumentTitle || '');
             isInitialLoadRef.current = true;
             editor.setDocument('markdown', pagesContent);
+            // Calculate word count from pages content
+            setWordCount(calculateWordCount(pagesContent));
             setTimeout(() => {
               isInitialLoadRef.current = false;
-            }, 500);
+            }, RESET_DELAY);
             return;
           }
         } else {
           // Reset editor
           editor.cleanDocument();
+          setWordCount(0);
           isInitialLoadRef.current = false;
           return;
         }
       }
-    }, [documentId, currentDocument, currentDocumentTitle, currentDocumentEmoji, editor]);
+    }, [
+      documentId,
+      currentDocument,
+      currentDocumentTitle,
+      currentDocumentEmoji,
+      editor,
+      calculateWordCount,
+      extractContentFromPages,
+    ]);
 
     // Auto-save function
     const performSave = useCallback(async () => {
@@ -256,8 +278,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         setLastUpdatedTime(new Date());
 
         onSave?.();
-      } catch (error) {
-        console.error('Failed to save document:', error);
+      } catch {
         setSaveStatus('idle');
       }
     }, [
@@ -282,8 +303,19 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
       }
 
       console.log('[DocumentEditor] Content changed, triggering auto-save');
+
+      // Update word count from editor
+      if (editor) {
+        try {
+          const textContent = (editor.getDocument('text') as unknown as string) || '';
+          setWordCount(calculateWordCount(textContent));
+        } catch (error) {
+          console.error('Failed to update word count:', error);
+        }
+      }
+
       performSave();
-    }, [performSave]);
+    }, [performSave, editor, calculateWordCount]);
 
     const { run: handleContentChange } = useDebounceFn(handleContentChangeInternal, {
       wait: SAVE_THROTTLE_TIME,
@@ -320,24 +352,6 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         document.removeEventListener('keydown', handleKeyDown);
       };
     }, [t]);
-
-    const wordCount = useMemo(() => {
-      if (!editor || isInitialLoadRef.current) return 0;
-
-      try {
-        const textContent = (editor.getDocument('text') as unknown as string) || '';
-        return textContent.trim().split(/\s+/).filter(Boolean).length;
-      } catch (error) {
-        console.error('Failed to calculate word count:', error);
-
-        // Fallback to currentDocument content if available
-        if (currentDocument?.content) {
-          return currentDocument.content.trim().split(/\s+/).filter(Boolean).length || 0;
-        }
-
-        return 0;
-      }
-    }, [editor, isInitialLoadRef.current, currentDocument]);
 
     // Handle delete document
     const handleDelete = useCallback(async () => {
