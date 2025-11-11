@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { MemoryRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
@@ -38,9 +38,16 @@ const getInitialPath = () => {
 const UrlSynchronizer = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const isInitialMount = useRef(true);
+  const hasInitialSyncRef = useRef(false);
+  const lastUrlRef = useRef<string>('');
 
-  // Sync initial URL
+  // Sync initial URL (only once on mount)
   useEffect(() => {
+    // Only run once on initial mount
+    if (hasInitialSyncRef.current) return;
+    hasInitialSyncRef.current = true;
+
     const fullPath = window.location.pathname;
     const searchParams = window.location.search;
     const discoverIndex = fullPath.indexOf('/discover');
@@ -53,16 +60,51 @@ const UrlSynchronizer = () => {
         navigate(targetPath, { replace: true });
       }
     }
-  }, []);
+    lastUrlRef.current = window.location.pathname + window.location.search;
+  }, [navigate, location.pathname, location.search]);
 
   // Update browser URL when location changes
   useEffect(() => {
+    // Skip on initial mount to avoid duplicate history entry
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     const normalizedPath = location.pathname === '/' ? '' : location.pathname;
     const newUrl = `/discover${normalizedPath}${location.search}`;
-    if (window.location.pathname + window.location.search !== newUrl) {
-      window.history.replaceState({}, '', newUrl);
+    const currentUrl = window.location.pathname + window.location.search;
+
+    // Only update if URL actually needs to change
+    if (currentUrl !== newUrl) {
+      // Use pushState to add to history, not replaceState, so browser back/forward work
+      window.history.pushState({}, '', newUrl);
+      lastUrlRef.current = newUrl;
     }
   }, [location.pathname, location.search]);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const fullPath = window.location.pathname;
+      const searchParams = window.location.search;
+      const discoverIndex = fullPath.indexOf('/discover');
+
+      if (discoverIndex !== -1) {
+        const pathAfterDiscover = fullPath.slice(discoverIndex + '/discover'.length) || '/';
+        const targetPath = pathAfterDiscover + searchParams;
+
+        if (location.pathname + location.search !== targetPath) {
+          navigate(targetPath, { replace: true });
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [location.pathname, location.search, navigate]);
 
   return null;
 };
