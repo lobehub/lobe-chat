@@ -1,8 +1,5 @@
-// @vitest-environment edge-runtime
+// @vitest-environment node
 import { GenerateContentResponse, Tool } from '@google/genai';
-import { OpenAIChatMessage } from '@lobechat/model-runtime';
-import { ChatStreamPayload } from '@lobechat/types';
-import * as imageToBase64Module from '@lobechat/utils';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
