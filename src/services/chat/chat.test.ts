@@ -27,7 +27,7 @@ vi.stubGlobal(
 );
 
 // Mock image processing utilities
-vi.mock('@/utils/fetch', async (importOriginal) => {
+vi.mock('@lobechat/fetch-sse', async (importOriginal) => {
   const module = await importOriginal();
 
   return { ...(module as any), getMessageError: vi.fn() };
@@ -1212,7 +1212,7 @@ describe('ChatService private methods', () => {
   describe('getChatCompletion', () => {
     it('should merge responseAnimation styles correctly', async () => {
       const { fetchSSE } = await import('@lobechat/fetch-sse');
-      vi.mock('@/utils/fetch', async (importOriginal) => {
+      vi.mock('@lobechat/fetch-sse', async (importOriginal) => {
         const module = await importOriginal();
         return {
           ...(module as any),
