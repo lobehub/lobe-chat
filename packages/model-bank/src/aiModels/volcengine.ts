@@ -7,6 +7,59 @@ const doubaoChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-seed-code-preview-251028',
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Doubao-Seed-Code 面向 Agentic 编程任务进行了深度优化，支持多模态（文字/图片/视频）与 256k 长上下文，兼容 Anthropic API，适用于编程、视觉理解与 Agent 场景。',
+    displayName: 'Doubao Seed Code',
+    id: 'doubao-seed-code',
+    maxOutput: 32_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 1.2,
+              '[0.032, 0.128]': 1.4,
+              '[0.128, 0.256]': 2.8,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textInput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        {
+          lookup: {
+            prices: {
+              '[0, 0.032]': 8,
+              '[0.032, 0.128]': 12,
+              '[0.128, 0.256]': 16,
+            },
+            pricingParams: ['textInputRange'],
+          },
+          name: 'textOutput',
+          strategy: 'lookup',
+          unit: 'millionTokens',
+        },
+        { name: 'textInput_cacheRead', rate: 0.24, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 0.017, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
     config: {
       deploymentName: 'deepseek-v3-1-terminus',
