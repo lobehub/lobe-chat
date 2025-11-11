@@ -39,7 +39,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe('');
       expect(result.success).toBe(true);
@@ -52,7 +56,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe('');
       expect(result.success).toBe(true);
@@ -65,7 +73,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe(JSON.stringify(jsonData));
       expect(result.success).toBe(true);
@@ -78,7 +90,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe(textData);
       expect(result.success).toBe(true);
@@ -92,7 +108,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe('');
       expect(result.success).toBe(true);
@@ -111,7 +131,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe('First message\n\nSecond message\n\n{"json": "data"}');
       expect(result.success).toBe(true);
@@ -129,7 +153,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe('First message\n\nSecond message');
       expect(result.success).toBe(true);
@@ -144,7 +172,11 @@ describe('MCPService', () => {
 
       mockClient.callTool.mockResolvedValue(errorResult);
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
       expect(result.content).toBe('Error occurred');
       expect(result.success).toBe(true);
@@ -155,7 +187,13 @@ describe('MCPService', () => {
       const error = new Error('MCP client error');
       mockClient.callTool.mockRejectedValue(error);
 
-      await expect(mcpService.callTool(mockParams, 'testTool', '{}')).rejects.toThrow(TRPCError);
+      await expect(
+        mcpService.callTool({
+          clientParams: mockParams,
+          toolName: 'testTool',
+          argsStr: '{}',
+        }),
+      ).rejects.toThrow(TRPCError);
     });
 
     it('should parse args string correctly', async () => {
@@ -167,7 +205,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      await mcpService.callTool(mockParams, 'testTool', argsString);
+      await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: argsString,
+      });
 
       expect(mockClient.callTool).toHaveBeenCalledWith('testTool', argsObject);
     });
