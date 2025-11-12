@@ -1,13 +1,13 @@
 import { Block, Icon, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { CheckIcon, MinusIcon } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import Link from '@/app/[variants]/(main)/components/Link';
+import { usePathname } from '@/app/[variants]/(main)/hooks/usePathname';
 import InlineTable from '@/components/InlineTable';
 
 import PublishedTime from '../../../../../../../../../components/PublishedTime';

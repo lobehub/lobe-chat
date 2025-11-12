@@ -72,37 +72,32 @@ export const desktopRouter = createBrowserRouter([
           {
             children: [
               {
-                index: true,
-                lazy: () =>
-                  import('./(main)/discover/(list)/(home)/index').then((m) => ({
-                    Component: m.DesktopHomePage,
-                  })),
-              },
-              {
                 children: [
                   {
+                    index: true,
                     lazy: () =>
                       import('./(main)/discover/(list)/assistant/index').then((m) => ({
                         Component: m.DesktopAssistantPage,
                       })),
-                    path: 'assistant',
                   },
                 ],
                 lazy: (() => import('./(main)/discover/(list)/assistant/_layout/Desktop').then((m) => ({
                   Component: m.default,
-                })))
+                }))),
+                path: 'assistant',
               },
               {
                 children: [{
+                  index: true,
                   lazy: () =>
                     import('./(main)/discover/(list)/model/index').then((m) => ({
                       Component: m.DesktopModelPage,
                     })),
-                  path: 'model',
                 },],
                 lazy: (() => import('./(main)/discover/(list)/model/_layout/Desktop').then((m) => ({
                   Component: m.default,
-                })))
+                }))),
+                path: 'model',
               },
               {
                 lazy: () =>
@@ -114,17 +109,25 @@ export const desktopRouter = createBrowserRouter([
               {
                 children: [
                   {
-                    lazy: () =>
+                    index: true,
+                      lazy: () =>
                       import('./(main)/discover/(list)/mcp/index').then((m) => ({
                         Component: m.DesktopMcpPage,
                       })),
-                      path: 'mcp',
                   },
                 ],
                 lazy: (() => import('./(main)/discover/(list)/mcp/_layout/Desktop').then((m) => ({
                   Component: m.default,
                 }))),
-              }
+                path: 'mcp',
+              },
+              {
+                index: true,
+                lazy: () =>
+                  import('./(main)/discover/(list)/(home)/index').then((m) => ({
+                    Component: m.DesktopHomePage,
+                  })),
+              },
             ],
             lazy: () =>
               import('./(main)/discover/(list)/_layout/Desktop/index').then((m) => ({

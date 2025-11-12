@@ -7,7 +7,6 @@ import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { DiscoverTab } from '@/types/discover';
 
@@ -99,4 +98,4 @@ const Nav = memo(() => {
   );
 });
 
-export default withSuspense(Nav);
+export default Nav;

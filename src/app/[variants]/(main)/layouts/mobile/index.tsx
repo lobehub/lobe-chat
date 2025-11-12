@@ -1,11 +1,11 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { usePathname } from 'next/navigation';
 import { memo } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import { withSuspense } from '@/components/withSuspense';
+import { ReactRouterProvider } from '@/app/[variants]/(main)/context/ReactRouterContext';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -25,17 +25,18 @@ const MOBILE_NAV_ROUTES = new Set([
 
 export const MobileMainLayout = memo(() => {
   const showMobileWorkspace = useShowMobileWorkspace();
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
   const showNav = !showMobileWorkspace && MOBILE_NAV_ROUTES.has(pathname);
 
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <>
+    <ReactRouterProvider>
       {showCloudPromotion && <CloudBanner mobile />}
       <Outlet />
       {showNav && <NavBar />}
-    </>
+    </ReactRouterProvider>
   );
 });
 
