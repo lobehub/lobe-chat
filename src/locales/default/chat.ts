@@ -414,9 +414,10 @@ export default {
       reject: '拒绝',
       rejectReasonPlaceholder: '输入拒绝原因将帮助 Agent 理解并优化后续行动',
       rejectTitle: '拒绝本次工具调用',
+      rejectedWithReason: '本次工具调用被主动拒绝:{{reason}}',
+      toolRejected: '本次工具调用被主动拒绝',
     },
   },
-  toolRejected: '本次工具调用被主动拒绝',
   topic: {
     checkOpenNewTopic: '是否开启新话题?',
     checkSaveCurrentMessages: '是否保存当前会话为话题?',

@@ -23,6 +23,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     const { t } = useTranslation(['chat', 'common']);
     const [rejectReason, setRejectReason] = useState('');
     const [rejectPopoverOpen, setRejectPopoverOpen] = useState(false);
+    const [rejectLoading, setRejectLoading] = useState(false);
 
     const [approveToolIntervention, rejectToolIntervention] = useChatStore((s) => [
       s.approveToolCalling,
@@ -42,7 +43,9 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     };
 
     const handleReject = async (reason?: string) => {
+      setRejectLoading(true);
       await rejectToolIntervention(messageId, reason);
+      setRejectLoading(false);
       setRejectPopoverOpen(false);
       setRejectReason('');
     };
@@ -53,10 +56,15 @@ const ApprovalActions = memo<ApprovalActionsProps>(
           arrow={false}
           content={
             <Flexbox gap={12} style={{ width: 400 }}>
-              <Flexbox horizontal justify={'space-between'}>
+              <Flexbox align={'center'} horizontal justify={'space-between'}>
                 <div>{t('tool.intervention.rejectTitle')}</div>
 
-                <Button onClick={() => handleReject(rejectReason)} size="small" type="primary">
+                <Button
+                  loading={rejectLoading}
+                  onClick={() => handleReject(rejectReason)}
+                  size="small"
+                  type="primary"
+                >
                   {t('confirm', { ns: 'common' })}
                 </Button>
               </Flexbox>
@@ -70,7 +78,11 @@ const ApprovalActions = memo<ApprovalActionsProps>(
               />
             </Flexbox>
           }
-          onOpenChange={setRejectPopoverOpen}
+          onOpenChange={(open) => {
+            if (rejectLoading) return;
+
+            setRejectPopoverOpen(open);
+          }}
           open={rejectPopoverOpen}
           placement="bottomRight"
           trigger="click"

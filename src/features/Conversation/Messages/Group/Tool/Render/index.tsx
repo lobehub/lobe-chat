@@ -6,6 +6,7 @@ import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
 import Intervention from './Intervention';
 import LoadingPlaceholder from './LoadingPlaceholder';
+import RejectedResponse from './RejectedResponse';
 
 interface RenderProps {
   apiName: string;
@@ -54,6 +55,10 @@ const Render = memo<RenderProps>(
           toolCallId={toolCallId}
         />
       );
+    }
+
+    if (intervention?.status === 'rejected') {
+      return <RejectedResponse reason={intervention.rejectedReason} />;
     }
 
     if (!result) return null;

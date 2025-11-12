@@ -106,8 +106,10 @@ const Inspectors = memo<InspectorProps>(
     const hasResult = hasSuccessResult || hasError;
 
     const isPending = intervention?.status === 'pending';
+    const isReject = intervention?.status === 'rejected';
     const isTitleLoading = !hasResult && !isPending;
 
+    const showCustomPluginRender = showRender && !isPending && !isReject;
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -132,7 +134,7 @@ const Inspectors = memo<InspectorProps>(
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal>
             <Flexbox className={styles.actions} horizontal>
-              {showRender && !isPending && (
+              {showCustomPluginRender && (
                 <ActionIcon
                   icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                   onClick={() => {
@@ -154,8 +156,8 @@ const Inspectors = memo<InspectorProps>(
             </Flexbox>
             {hasResult && (
               <Flexbox align={'center'} gap={4} horizontal style={{ fontSize: 12 }}>
-                {intervention?.status === 'rejected' ? (
-                  <Tooltip title={t('toolRejected', { ns: 'chat' })}>
+                {isReject ? (
+                  <Tooltip title={t('tool.intervention.toolRejected', { ns: 'chat' })}>
                     <Icon color={theme.colorTextTertiary} icon={Ban} />
                   </Tooltip>
                 ) : hasError ? (

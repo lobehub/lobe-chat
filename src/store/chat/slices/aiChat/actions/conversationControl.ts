@@ -4,6 +4,7 @@ import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
+import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -138,6 +139,55 @@ export const conversationControl: StateCreator<
 
       return undefined;
     }
+  },
+  approveToolCalling: async (messageId, toolCallId) => {
+    const { dbMessageSelectors } = await import('../../message/selectors');
+    const toolMessage = dbMessageSelectors.getDbMessageById(messageId)(get());
+    if (!toolMessage || !toolMessage.parentId) return;
+
+    const assistantMessage = dbMessageSelectors.getDbMessageById(toolMessage.parentId)(get());
+    if (!assistantMessage || !assistantMessage.tools) return;
+
+    // Optimistic update - update intervention status to approved
+    get().internal_dispatchMessage({
+      id: assistantMessage.id,
+      tool_call_id: toolCallId,
+      type: 'updateMessageTools',
+      value: { intervention: { status: 'approved' } },
+    });
+
+    // Persist to database
+    await get().internal_refreshToUpdateMessageTools(assistantMessage.id);
+  },
+
+  rejectToolCalling: async (messageId, reason) => {
+    const { dbMessageSelectors } = await import('../../message/selectors');
+    const toolMessage = dbMessageSelectors.getDbMessageById(messageId)(get());
+    if (!toolMessage) return;
+
+    // Optimistic update - update status to rejected and save reason
+    const intervention = {
+      rejectedReason: reason,
+      status: 'rejected',
+    } as const;
+    get().internal_dispatchMessage({
+      id: toolMessage.id,
+      type: 'updateMessagePlugin',
+      value: { intervention },
+    });
+
+    // Persist to database
+    await messageService.updateMessagePlugin(
+      messageId,
+      { intervention },
+      { sessionId: get().activeId, topicId: get().activeTopicId },
+    );
+
+    const toolContent = !!reason
+      ? `User reject this tool calling with reason: ${reason}`
+      : 'User reject this tool calling without reason';
+
+    await get().optimisticUpdateMessageContent(messageId, toolContent);
   },
 
   internal_updateSendMessageOperation: (key, value, actionName) => {
