@@ -786,10 +786,10 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"message_plugins\" ADD COLUMN \"intervention\" jsonb;"
+      "ALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"intervention\" jsonb;\n"
     ],
     "bps": true,
     "folderMillis": 1762911968658,
-    "hash": "2b304e85d2cd355084b2b3574cb1b0436b57590f3f113835ccd9edd273be06cc"
+    "hash": "552a032cc0e595277232e70b5f9338658585bafe9481ae8346a5f322b673a68b"
   }
 ]
