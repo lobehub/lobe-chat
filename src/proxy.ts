@@ -323,18 +323,7 @@ const betterAuthMiddleware = async (req: NextRequest) => {
     userId: session?.user?.id,
   });
 
-  // Remove & amend OAuth authorized header
-  response.headers.delete(OAUTH_AUTHORIZED);
-  if (isLoggedIn) {
-    logBetterAuth('Setting auth header: %s = %s', OAUTH_AUTHORIZED, 'true');
-    response.headers.set(OAUTH_AUTHORIZED, 'true');
-
-    // If OIDC is enabled and user is logged in, add OIDC session pre-sync header
-    if (oidcEnv.ENABLE_OIDC && session?.user?.id) {
-      logBetterAuth('OIDC session pre-sync: Setting %s = %s', OIDC_SESSION_HEADER, session.user.id);
-      response.headers.set(OIDC_SESSION_HEADER, session.user.id);
-    }
-  } else {
+  if (!isLoggedIn) {
     // If request a protected route, redirect to sign-in page
     if (isProtected) {
       logBetterAuth('Request a protected route, redirecting to sign-in page');
