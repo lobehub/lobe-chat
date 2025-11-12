@@ -138,6 +138,7 @@ export default {
     },
   },
   close: '关闭',
+  confirm: '确认',
   contact: '联系我们',
   copy: '复制',
   copyFail: '复制失败',

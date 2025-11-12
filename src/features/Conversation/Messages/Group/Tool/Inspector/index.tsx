@@ -105,7 +105,8 @@ const Inspectors = memo<InspectorProps>(
 
     const hasResult = hasSuccessResult || hasError;
 
-    const isTitleLoading = !hasResult && intervention?.status !== 'pending';
+    const isPending = intervention?.status === 'pending';
+    const isTitleLoading = !hasResult && !isPending;
 
     return (
       <Flexbox className={styles.container} gap={4}>
@@ -131,7 +132,7 @@ const Inspectors = memo<InspectorProps>(
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal>
             <Flexbox className={styles.actions} horizontal>
-              {showRender && (
+              {showRender && !isPending && (
                 <ActionIcon
                   icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                   onClick={() => {

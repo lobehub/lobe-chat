@@ -1,46 +1,33 @@
 import { safeParseJSON } from '@lobechat/utils';
-import { ActionIcon, Button } from '@lobehub/ui';
-import { Checkbox } from 'antd';
-import { createStyles } from 'antd-style';
+import { ActionIcon } from '@lobehub/ui';
 import { Edit3Icon } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { Suspense, memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
 
 import Arguments from '../Arguments';
+import ApprovalActions from './ApprovalActions';
 import KeyValueEditor from './KeyValueEditor';
+import ModeSelector from './ModeSelector';
 
-const useStyles = createStyles(({ css, token }) => ({
-  actions: css`
-    gap: ${token.marginSM}px;
-  `,
-  checkbox: css`
-    font-size: ${token.fontSizeSM}px;
-    color: ${token.colorTextSecondary};
-
-    .ant-checkbox {
-      margin-inline-end: ${token.marginXS}px;
-    }
-  `,
-}));
+export type ApprovalMode = 'auto-run' | 'allow-list' | 'manual';
 
 interface InterventionProps {
   id: string;
-  onApprove?: (remember: boolean) => void;
-  onReject?: (remember: boolean) => void;
   requestArgs: string;
 }
 
-const Intervention = memo<InterventionProps>(({ requestArgs, onApprove, onReject, id }) => {
+const Intervention = memo<InterventionProps>(({ requestArgs, id }) => {
   const { t } = useTranslation('chat');
-  const { styles } = useStyles();
-  const [remember, setRemember] = useState(false);
+  const approvalMode = useUserStore((s) => s.settings.tool?.approvalMode || 'manual');
   const [isEditing, setIsEditing] = useState(false);
   const [optimisticUpdatePluginArguments] = useChatStore((s) => [
     s.optimisticUpdatePluginArguments,
   ]);
+
   const handleCancel = useCallback(() => {
     setIsEditing(false);
   }, []);
@@ -65,11 +52,13 @@ const Intervention = memo<InterventionProps>(({ requestArgs, onApprove, onReject
 
   if (isEditing)
     return (
-      <KeyValueEditor
-        initialValue={safeParseJSON(requestArgs || '')}
-        onCancel={handleCancel}
-        onFinish={handleFinish}
-      />
+      <Suspense fallback={<Arguments arguments={requestArgs} />}>
+        <KeyValueEditor
+          initialValue={safeParseJSON(requestArgs || '')}
+          onCancel={handleCancel}
+          onFinish={handleFinish}
+        />
+      </Suspense>
     );
 
   return (
@@ -89,21 +78,8 @@ const Intervention = memo<InterventionProps>(({ requestArgs, onApprove, onReject
       />
 
       <Flexbox horizontal justify={'space-between'}>
-        <Checkbox
-          checked={remember}
-          className={styles.checkbox}
-          onChange={(e) => setRemember(e.target.checked)}
-        >
-          {t('tool.intervention.rememberDecision', { ns: 'chat' })}
-        </Checkbox>
-        <Flexbox className={styles.actions} gap={8} horizontal>
-          <Button onClick={() => onReject?.(remember)} size="small" type="default">
-            {t('tool.intervention.reject', { ns: 'chat' })}
-          </Button>
-          <Button onClick={() => onApprove?.(remember)} size="small" type="primary">
-            {t('tool.intervention.approve', { ns: 'chat' })}
-          </Button>
-        </Flexbox>
+        <ModeSelector />
+        <ApprovalActions approvalMode={approvalMode} />
       </Flexbox>
     </Flexbox>
   );

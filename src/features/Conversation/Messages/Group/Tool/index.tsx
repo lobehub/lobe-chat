@@ -47,7 +47,6 @@ const Tool = memo<GroupToolProps>(
     const [showToolContent, setShowToolDetail] = useState(false);
     const [showCustomPluginUI, setShowCustomPluginUI] = useState(false);
 
-    console.log(intervention);
     useEffect(() => {
       if (intervention?.status === 'pending') {
         setShowToolDetail(true);
