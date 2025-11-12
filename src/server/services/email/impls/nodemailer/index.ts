@@ -3,6 +3,8 @@ import debug from 'debug';
 import nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 
+import { emailEnv } from '@/envs/email';
+
 import { EmailPayload, EmailResponse, EmailServiceImpl } from '../type';
 import { NodemailerConfig } from './type';
 
@@ -18,14 +20,14 @@ export class NodemailerImpl implements EmailServiceImpl {
     log('Initializing Nodemailer with config: %o', config);
 
     // Use environment variables if config is not provided
-    const transportConfig: NodemailerConfig = config || {
+    const transportConfig: NodemailerConfig = config ?? {
       auth: {
-        pass: process.env.SMTP_PASS || '',
-        user: process.env.SMTP_USER || '',
+        pass: emailEnv.SMTP_PASS ?? '',
+        user: emailEnv.SMTP_USER ?? '',
       },
-      host: process.env.SMTP_HOST || 'localhost',
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === 'true',
+      host: emailEnv.SMTP_HOST ?? 'localhost',
+      port: emailEnv.SMTP_PORT ?? 587,
+      secure: emailEnv.SMTP_SECURE ?? false,
     };
 
     // Validate configuration
@@ -62,7 +64,7 @@ export class NodemailerImpl implements EmailServiceImpl {
 
   async sendMail(payload: EmailPayload): Promise<EmailResponse> {
     // Use SMTP_USER as default sender if not provided
-    const from = payload.from || process.env.SMTP_USER!;
+    const from = payload.from ?? emailEnv.SMTP_USER!;
 
     log('Sending email with payload: %o', {
       from,

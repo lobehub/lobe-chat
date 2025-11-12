@@ -1,3 +1,5 @@
+import { emailEnv } from '@/envs/email';
+
 import { EmailImplType, EmailPayload, EmailResponse, createEmailServiceImpl } from './impls';
 import type { EmailServiceImpl } from './impls';
 
@@ -10,7 +12,7 @@ export class EmailService {
 
   constructor(implType?: EmailImplType) {
     // Validate SMTP_USER is configured
-    if (!process.env.SMTP_USER) {
+    if (!emailEnv.SMTP_USER) {
       throw new Error(
         'SMTP_USER environment variable is required to use email service. Please configure SMTP settings in your .env file.',
       );
