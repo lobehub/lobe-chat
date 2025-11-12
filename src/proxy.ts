@@ -47,6 +47,7 @@ export const config = {
 
     '/login(.*)',
     '/signup(.*)',
+    '/verify-email(.*)',
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
@@ -182,6 +183,7 @@ const isPublicRoute = createRouteMatcher([
   // clerk
   '/login',
   '/signup',
+  '/verify-email',
   // oauth
   // Make only the consent view public (GET page), not other oauth paths
   '/oauth/consent/(.*)',
