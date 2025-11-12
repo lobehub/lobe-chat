@@ -9,6 +9,13 @@ export class EmailService {
   private emailImpl: EmailServiceImpl;
 
   constructor(implType?: EmailImplType) {
+    // Validate SMTP_USER is configured
+    if (!process.env.SMTP_USER) {
+      throw new Error(
+        'SMTP_USER environment variable is required to use email service. Please configure SMTP settings in your .env file.',
+      );
+    }
+
     this.emailImpl = createEmailServiceImpl(implType);
   }
 

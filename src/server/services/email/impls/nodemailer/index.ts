@@ -61,8 +61,11 @@ export class NodemailerImpl implements EmailServiceImpl {
   }
 
   async sendMail(payload: EmailPayload): Promise<EmailResponse> {
+    // Use SMTP_USER as default sender if not provided
+    const from = payload.from || process.env.SMTP_USER!;
+
     log('Sending email with payload: %o', {
-      from: payload.from,
+      from,
       subject: payload.subject,
       to: payload.to,
     });
@@ -70,7 +73,7 @@ export class NodemailerImpl implements EmailServiceImpl {
     try {
       const info = await this.transporter.sendMail({
         attachments: payload.attachments,
-        from: payload.from,
+        from,
         html: payload.html,
         replyTo: payload.replyTo,
         subject: payload.subject,

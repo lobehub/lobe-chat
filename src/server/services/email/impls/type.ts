@@ -11,9 +11,9 @@ export interface EmailPayload {
     path?: string;
   }>;
   /**
-   * Sender address
+   * Sender address (defaults to SMTP_USER if not provided)
    */
-  from: string;
+  from?: string;
   /**
    * HTML body of the email
    */
