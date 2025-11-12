@@ -70,34 +70,34 @@ const AiModelAbilitiesSchema = z.object({
   vision: z.boolean().optional(),
 });
 
-// 语言模型的设置参数
+// Language model configuration parameters
 export interface LLMParams {
   /**
-   * 控制生成文本中的惩罚系数，用于减少重复性
+   * Controls the penalty coefficient in generated text to reduce repetitiveness
    * @default 0
    */
   frequency_penalty?: number;
   /**
-   * 生成文本的最大长度
+   * Maximum length of generated text
    */
   max_tokens?: number;
   /**
-   * 控制生成文本中的惩罚系数，用于减少主题的变化
+   * Controls the penalty coefficient in generated text to reduce topic variation
    * @default 0
    */
   presence_penalty?: number;
   /**
-   * 生成文本的随机度量，用于控制文本的创造性和多样性
+   * Randomness measure for generated text, used to control creativity and diversity
    * @default 1
    */
   reasoning_effort?: string;
   /**
-   * 生成文本的随机度量，用于控制文本的创造性和多样性
+   * Randomness measure for generated text, used to control creativity and diversity
    * @default 1
    */
   temperature?: number;
   /**
-   * 控制生成文本中最高概率的单个 token
+   * Controls the highest probability single token in generated text
    * @default 1
    */
   top_p?: number;
@@ -242,7 +242,7 @@ export type ExtendParamsType =
 export interface AiModelSettings {
   extendParams?: ExtendParamsType[];
   /**
-   * 模型层实现搜索的方式
+   * The method used to implement search at the model layer
    */
   searchImpl?: ModelSearchImplementType;
   searchProvider?: string;

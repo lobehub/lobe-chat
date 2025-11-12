@@ -8,7 +8,7 @@ const baichuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
+      'Top-ranked model in China, surpassing mainstream international models in Chinese tasks such as knowledge encyclopedia, long text, and generative creation. Also features industry-leading multimodal capabilities with excellent performance on multiple authoritative evaluation benchmarks.',
     displayName: 'Baichuan 4',
     enabled: true,
     id: 'Baichuan4',
@@ -32,7 +32,7 @@ const baichuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
+      'Top-ranked model in China, surpassing mainstream international models in Chinese tasks such as knowledge encyclopedia, long text, and generative creation. Also features industry-leading multimodal capabilities with excellent performance on multiple authoritative evaluation benchmarks.',
     displayName: 'Baichuan 4 Turbo',
     enabled: true,
     id: 'Baichuan4-Turbo',
@@ -56,7 +56,7 @@ const baichuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
+      'Top-ranked model in China, surpassing mainstream international models in Chinese tasks such as knowledge encyclopedia, long text, and generative creation. Also features industry-leading multimodal capabilities with excellent performance on multiple authoritative evaluation benchmarks.',
     displayName: 'Baichuan 4 Air',
     enabled: true,
     id: 'Baichuan4-Air',
@@ -80,7 +80,7 @@ const baichuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。',
+      'Optimized for enterprise high-frequency scenarios with significantly improved performance and high cost-effectiveness. Compared to Baichuan2 model: 20% improvement in content creation, 17% improvement in knowledge Q&A, 40% improvement in role-playing capabilities. Overall performance superior to GPT-3.5.',
     displayName: 'Baichuan 3 Turbo',
     id: 'Baichuan3-Turbo',
     maxOutput: 8192,
@@ -99,7 +99,7 @@ const baichuanChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 128_000,
     description:
-      '具备 128K 超长上下文窗口，针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。',
+      'Features 128K ultra-long context window, optimized for enterprise high-frequency scenarios with significantly improved performance and high cost-effectiveness. Compared to Baichuan2 model: 20% improvement in content creation, 17% improvement in knowledge Q&A, 40% improvement in role-playing capabilities. Overall performance superior to GPT-3.5.',
     displayName: 'Baichuan 3 Turbo 128k',
     id: 'Baichuan3-Turbo-128k',
     maxOutput: 4096,
@@ -115,7 +115,7 @@ const baichuanChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 32_768,
     description:
-      '采用搜索增强技术实现大模型与领域知识、全网知识的全面链接。支持PDF、Word等多种文档上传及网址输入，信息获取及时、全面，输出结果准确、专业。',
+      'Utilizes search enhancement technology to achieve comprehensive integration between large models and domain knowledge, as well as web-wide knowledge. Supports uploading various documents such as PDF and Word, and URL input for timely and comprehensive information retrieval with accurate and professional output.',
     displayName: 'Baichuan 2 Turbo',
     id: 'Baichuan2-Turbo',
     maxOutput: 8192,
