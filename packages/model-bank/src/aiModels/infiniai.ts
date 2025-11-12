@@ -22,9 +22,6 @@ const infiniaiChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-11-07',
-    settings: {
-      extendParams: ['reasoningBudgetToken'],
-    },
     type: 'chat',
   },
   {
