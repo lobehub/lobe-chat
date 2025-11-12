@@ -7,7 +7,7 @@ import urlJoin from 'url-join';
 
 import { OFFICIAL_URL } from '@/const/url';
 
-import ShareButton from '../../../../../features/ShareButton';
+import ShareButton from '../../../../features/ShareButton';
 import { useDetailContext } from '../../DetailProvider';
 import ChatWithModel from './ChatWithModel';
 

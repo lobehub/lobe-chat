@@ -1,1 +1,1 @@
-export { DetailsLoading as default } from '../../../components/ListLoading';
+export { DetailsLoading as default } from '../../components/ListLoading';

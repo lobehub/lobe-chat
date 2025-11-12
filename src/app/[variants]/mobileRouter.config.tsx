@@ -158,37 +158,78 @@ export const mobileRouter = createBrowserRouter([
           },
         ],
         lazy: () =>
-          import('./(main)/discover/_layout/Mobile/DiscoverLayout').then((m) => ({
-            Component: m.MobileDiscoverLayout,
+          import('./(main)/discover/_layout/Mobile/index').then((m) => ({
+            Component: m.default,
           })),
         path: 'discover',
       },
 
       // Knowledge routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/knowledge/routes/KnowledgeHome').then((m) => ({
+                Component: m.default,
+              })),
+          },
+          {
+            lazy: () =>
+              import('./(main)/knowledge/routes/KnowledgeBasesList').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'bases',
+          },
+          {
+            lazy: () =>
+              import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'bases/:id',
+          },
+        ],
         lazy: () =>
-          import('./(main)/knowledge/mobile.router').then((m) => ({
-            Component: m.MobileKnowledgeRoutes,
+          import('./(main)/knowledge/_layout/Mobile').then((m) => ({
+            Component: m.default,
           })),
-        path: 'knowledge/*',
+        path: 'knowledge',
       },
 
       // Settings routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/settings/_layout/Mobile').then((m) => ({
+                Component: m.default,
+              })),
+          },
+        ],
         lazy: () =>
-          import('./(main)/settings/mobile.router').then((m) => ({
-            Component: m.MobileSettingsRoutes,
+          import('./(main)/settings/_layout/MobileWrapper').then((m) => ({
+            Component: m.default,
           })),
-        path: 'settings/*',
+        path: 'settings',
       },
 
       // Image routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/image/ComingSoon').then((m) => ({
+                Component: m.default,
+              })),
+          },
+        ],
         lazy: () =>
-          import('./(main)/image/mobile.router').then((m) => ({
-            Component: m.MobileImageRoutes,
+          import('./(main)/image/_layout/Mobile').then((m) => ({
+            Component: m.default,
           })),
-        path: 'image/*',
+        path: 'image',
       },
 
       // Labs routes
@@ -211,20 +252,69 @@ export const mobileRouter = createBrowserRouter([
 
       // Profile routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/profile/(home)').then((m) => ({
+                Component: m.default,
+              })),
+          },
+          {
+            lazy: () =>
+              import('./(main)/profile/apikey/Client').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'apikey',
+          },
+          {
+            lazy: () =>
+              import('./(main)/profile/security').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'security',
+          },
+          {
+            lazy: () =>
+              import('./(main)/profile/stats').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'stats',
+          },
+        ],
         lazy: () =>
-          import('./(main)/profile/mobile.router').then((m) => ({
-            Component: m.MobileProfileRoutes,
+          import('./(main)/profile/_layout/Mobile').then((m) => ({
+            Component: m.default,
           })),
-        path: 'profile/*',
+        path: 'profile',
       },
 
       // Me routes (mobile personal center)
       {
-        lazy: () =>
-          import('./(main)/(mobile)/me/mobile.router').then((m) => ({
-            Component: m.MobileMeRoutes,
-          })),
-        path: 'me/*',
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/(mobile)/me/(home)').then((m) => ({
+                Component: m.default,
+              })),
+          },
+          {
+            lazy: () =>
+              import('./(main)/(mobile)/me/profile').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'profile',
+          },
+          {
+            lazy: () =>
+              import('./(main)/(mobile)/me/settings').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'settings',
+          },
+        ],
+        path: 'me',
       },
 
       // Default route - redirect to chat

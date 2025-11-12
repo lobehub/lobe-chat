@@ -5,9 +5,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import TokenTag from '../../../../../../(list)/assistant/features/List/TokenTag';
-import Title from '../../../../../../features/Title';
-import MarkdownRender from '../../../../../features/MakedownRender';
+import TokenTag from '../../../../../(list)/assistant/features/List/TokenTag';
+import Title from '../../../../../features/Title';
+import MarkdownRender from '../../../../features/MakedownRender';
 import { useDetailContext } from '../../DetailProvider';
 import TagList from './TagList';
 

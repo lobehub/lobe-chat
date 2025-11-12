@@ -3,8 +3,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import List from '../../../../../../(list)/model/features/List';
-import Title from '../../../../../../features/Title';
+import List from '../../../../../(list)/model/features/List';
+import Title from '../../../../../features/Title';
 import { useDetailContext } from '../../DetailProvider';
 
 const Related = memo(() => {

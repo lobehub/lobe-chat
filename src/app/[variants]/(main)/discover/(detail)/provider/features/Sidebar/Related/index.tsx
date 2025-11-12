@@ -4,7 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
-import Title from '../../../../../../features/Title';
+import Title from '../../../../../features/Title';
 import { useDetailContext } from '../../DetailProvider';
 import Item from './Item';
 

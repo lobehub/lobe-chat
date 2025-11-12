@@ -10,9 +10,9 @@ import { Flexbox } from 'react-layout-kit';
 
 import InlineTable from '@/components/InlineTable';
 
-import PublishedTime from '../../../../../../../../../../components/PublishedTime';
-import { useDetailContext } from '../../../../../../../../../../features/MCPPluginDetail/DetailProvider';
-import Title from '../../../../../../features/Title';
+import PublishedTime from '../../../../../../../../../components/PublishedTime';
+import { useDetailContext } from '../../../../../../../../../features/MCPPluginDetail/DetailProvider';
+import Title from '../../../../../features/Title';
 
 const Versions = memo(() => {
   const theme = useTheme();

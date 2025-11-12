@@ -6,8 +6,8 @@ import { Flexbox } from 'react-layout-kit';
 import { useQuery } from '@/hooks/useQuery';
 import { AssistantMarketSource } from '@/types/discover';
 
-import McpList from '../../../../../../(list)/assistant/features/List';
-import Title from '../../../../../../features/Title';
+import McpList from '../../../../../(list)/assistant/features/List';
+import Title from '../../../../../features/Title';
 import { useDetailContext } from '../../DetailProvider';
 
 const Related = memo(() => {

@@ -5,8 +5,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 
-import McpList from '../../../../../../(list)/mcp/features/List';
-import Title from '../../../../../../features/Title';
+import McpList from '../../../../../(list)/mcp/features/List';
+import Title from '../../../../../features/Title';
 
 const Related = memo(() => {
   const { t } = useTranslation('discover');

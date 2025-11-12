@@ -11,8 +11,8 @@ import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 import { useQuery } from '@/hooks/useQuery';
 import { McpNavKey } from '@/types/discover';
 
-import Title from '../../../../../../features/Title';
-import Toc from '../../../../../features/Toc';
+import Title from '../../../../../features/Title';
+import Toc from '../../../../features/Toc';
 
 const TocList = memo(() => {
   const { t } = useTranslation('discover');

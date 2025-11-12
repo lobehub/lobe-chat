@@ -7,7 +7,7 @@ import urlJoin from 'url-join';
 
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 
-import Title from '../../../../../../features/Title';
+import Title from '../../../../../features/Title';
 import Item from './Item';
 
 const Related = memo(() => {

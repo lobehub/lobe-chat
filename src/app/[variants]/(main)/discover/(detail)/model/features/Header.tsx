@@ -11,7 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import ModelTypeIcon from '@/app/[variants]/(main)/discover/(list)/model/features/List/ModelTypeIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
 
-import PublishedTime from '../../../../../../../../components/PublishedTime';
+import PublishedTime from '../../../../../../../components/PublishedTime';
 import { useDetailContext } from './DetailProvider';
 
 const useStyles = createStyles(({ css, token }) => {

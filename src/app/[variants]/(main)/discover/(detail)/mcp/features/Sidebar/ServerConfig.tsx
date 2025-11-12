@@ -9,7 +9,7 @@ import Platform from '@/features/MCPPluginDetail/Deployment/Platform';
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 import { McpNavKey } from '@/types/discover';
 
-import Title from '../../../../../features/Title';
+import Title from '../../../../features/Title';
 
 const ServerConfig = memo(() => {
   const { t } = useTranslation('discover');

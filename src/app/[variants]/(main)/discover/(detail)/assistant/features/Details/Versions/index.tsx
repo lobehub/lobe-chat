@@ -13,7 +13,7 @@ import PublishedTime from '@/components/PublishedTime';
 import { useQuery } from '@/hooks/useQuery';
 import { AssistantMarketSource, AssistantNavKey } from '@/types/discover';
 
-import Title from '../../../../../../features/Title';
+import Title from '../../../../../features/Title';
 import { useDetailContext } from '../../DetailProvider';
 
 const Versions = memo(() => {

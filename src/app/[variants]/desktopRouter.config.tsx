@@ -163,37 +163,78 @@ export const desktopRouter = createBrowserRouter([
           },
         ],
         lazy: () =>
-          import('./(main)/discover/_layout/Desktop/DiscoverLayout').then((m) => ({
-            Component: m.DesktopDiscoverLayout,
+          import('./(main)/discover/_layout/Desktop/index').then((m) => ({
+            Component: m.default,
           })),
         path: 'discover',
       },
 
       // Knowledge routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/knowledge/routes/KnowledgeHome').then((m) => ({
+                Component: m.default,
+              })),
+          },
+          {
+            lazy: () =>
+              import('./(main)/knowledge/routes/KnowledgeBasesList').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'bases',
+          },
+          {
+            lazy: () =>
+              import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'bases/:id',
+          },
+        ],
         lazy: () =>
-          import('./(main)/knowledge/desktop.router').then((m) => ({
-            Component: m.DesktopKnowledgeRoutes,
+          import('./(main)/knowledge/_layout/Desktop').then((m) => ({
+            Component: m.default,
           })),
-        path: 'knowledge/*',
+        path: 'knowledge',
       },
 
       // Settings routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/settings/_layout/Desktop').then((m) => ({
+                Component: m.default,
+              })),
+          },
+        ],
         lazy: () =>
-          import('./(main)/settings/desktop.router').then((m) => ({
-            Component: m.DesktopSettingsRoutes,
+          import('./(main)/settings/_layout/DesktopWrapper').then((m) => ({
+            Component: m.default,
           })),
-        path: 'settings/*',
+        path: 'settings',
       },
 
       // Image routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/image').then((m) => ({
+                Component: m.default,
+              })),
+          },
+        ],
         lazy: () =>
-          import('./(main)/image/desktop.router').then((m) => ({
-            Component: m.DesktopImageRoutes,
+          import('./(main)/image/_layout/DesktopWrapper').then((m) => ({
+            Component: m.default,
           })),
-        path: 'image/*',
+        path: 'image',
       },
 
       // Labs routes
@@ -216,11 +257,41 @@ export const desktopRouter = createBrowserRouter([
 
       // Profile routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/profile/(home)/desktop').then((m) => ({
+                Component: m.default,
+              })),
+          },
+          {
+            lazy: () =>
+              import('./(main)/profile/apikey/Client').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'apikey',
+          },
+          {
+            lazy: () =>
+              import('./(main)/profile/security/desktop').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'security',
+          },
+          {
+            lazy: () =>
+              import('./(main)/profile/stats/desktop').then((m) => ({
+                Component: m.default,
+              })),
+            path: 'stats',
+          },
+        ],
         lazy: () =>
-          import('./(main)/profile/desktop.router').then((m) => ({
-            Component: m.DesktopProfileRoutes,
+          import('./(main)/profile/_layout/DesktopWrapper').then((m) => ({
+            Component: m.default,
           })),
-        path: 'profile/*',
+        path: 'profile',
       },
 
       // Default route - redirect to chat

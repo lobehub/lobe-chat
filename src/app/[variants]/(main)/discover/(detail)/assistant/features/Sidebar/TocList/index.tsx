@@ -9,8 +9,8 @@ import { useToc } from '@/app/[variants]/(main)/discover/(detail)/features/Toc/u
 import { useQuery } from '@/hooks/useQuery';
 import { AssistantNavKey } from '@/types/discover';
 
-import Title from '../../../../../../features/Title';
-import Toc from '../../../../../features/Toc';
+import Title from '../../../../../features/Title';
+import Toc from '../../../../features/Toc';
 
 const TocList = memo(() => {
   const { t } = useTranslation('discover');
