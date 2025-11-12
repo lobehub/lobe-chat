@@ -2,7 +2,7 @@ import { BRANDING_NAME, isDesktop } from '@lobechat/const';
 import { LobeUser } from '@lobechat/types';
 import { t } from 'i18next';
 
-import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
+import { enableAuth, enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
 import type { UserStore } from '@/store/user';
 
 const DEFAULT_USERNAME = BRANDING_NAME;
@@ -59,6 +59,7 @@ export const authSelectors = {
   isLoaded: (s: UserStore) => s.isLoaded,
   isLogin,
   isLoginWithAuth: (s: UserStore) => s.isSignedIn,
+  isLoginWithBetterAuth: (s: UserStore): boolean => (s.isSignedIn && enableBetterAuth) || false,
   isLoginWithClerk: (s: UserStore): boolean => (s.isSignedIn && enableClerk) || false,
   isLoginWithNextAuth: (s: UserStore): boolean => (s.isSignedIn && !!enableNextAuth) || false,
 };
