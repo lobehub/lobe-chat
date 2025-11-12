@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
 import { shinyTextStylish } from '@/styles/loading';
+import { ToolIntervention } from '@/types/message';
 
 import Debug from './Debug';
 import Settings from './Settings';
@@ -66,6 +67,7 @@ interface InspectorProps {
   id: string;
   identifier: string;
   index: number;
+  intervention?: ToolIntervention;
   messageId: string;
   result?: { content: string | null; error?: any; state?: any };
   setShowPluginRender: (show: boolean) => void;
@@ -91,6 +93,7 @@ const Inspectors = memo<InspectorProps>(
     showPluginRender,
     setShowPluginRender,
     type,
+    intervention,
   }) => {
     const { t } = useTranslation('plugin');
     const { styles, theme } = useStyles();
@@ -101,6 +104,8 @@ const Inspectors = memo<InspectorProps>(
     const hasSuccessResult = !!result?.content && result.content !== LOADING_FLAT;
 
     const hasResult = hasSuccessResult || hasError;
+
+    const isTitleLoading = !hasResult && intervention?.status !== 'pending';
 
     return (
       <Flexbox className={styles.container} gap={4}>
@@ -117,9 +122,9 @@ const Inspectors = memo<InspectorProps>(
           >
             <ToolTitle
               apiName={apiName}
-              hasResult={hasResult}
               identifier={identifier}
               index={index}
+              isLoading={isTitleLoading}
               messageId={messageId}
               toolCallId={id}
             />

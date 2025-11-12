@@ -398,6 +398,13 @@ export default {
     remained: '剩余',
     used: '使用',
   },
+  tool: {
+    intervention: {
+      approve: '批准',
+      reject: '拒绝',
+      rememberDecision: '记住决策',
+    },
+  },
   topic: {
     checkOpenNewTopic: '是否开启新话题?',
     checkSaveCurrentMessages: '是否保存当前会话为话题?',

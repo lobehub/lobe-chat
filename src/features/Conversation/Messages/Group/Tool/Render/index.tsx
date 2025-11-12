@@ -1,15 +1,17 @@
 import { LOADING_FLAT } from '@lobechat/const';
-import { ChatToolResult } from '@lobechat/types';
+import { ChatToolResult, ToolIntervention } from '@lobechat/types';
 import { Suspense, memo } from 'react';
 
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
+import Intervention from './Intervention';
 import LoadingPlaceholder from './LoadingPlaceholder';
 
 interface RenderProps {
   apiName: string;
   arguments?: string;
   identifier: string;
+  intervention?: ToolIntervention;
   /**
    * ContentBlock ID (not the group message ID)
    */
@@ -38,7 +40,12 @@ const Render = memo<RenderProps>(
     apiName,
     result,
     type,
+    intervention,
   }) => {
+    if (intervention?.status) {
+      return <Intervention id={messageId} requestArgs={requestArgs || ''} />;
+    }
+
     if (!result) return null;
 
     // Handle error state

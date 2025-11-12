@@ -150,17 +150,3 @@ export const ShouldInterveneParamsSchema = z.object({
   toolArgs: z.record(z.string(), z.any()).optional(),
   toolKey: z.string().optional(),
 });
-
-/**
- * Tool Intervention Status
- * Tracks the approval status of a tool execution
- */
-export interface ToolIntervention {
-  rejectedReason?: string;
-  status?: 'pending' | 'approved' | 'rejected' | 'none';
-}
-
-export const ToolInterventionSchema = z.object({
-  rejectedReason: z.string().optional(),
-  status: z.enum(['pending', 'approved', 'rejected', 'none']).optional(),
-});

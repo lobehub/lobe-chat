@@ -344,9 +344,11 @@ describe('AgentRuntime', () => {
             type: 'request_human_approve',
             pendingToolsCalling: [
               {
+                apiName: 'test_tool',
+                arguments: '{}',
                 id: 'call_123',
-                type: 'function',
-                function: { name: 'test_tool', arguments: '{}' },
+                identifier: 'test_tool',
+                type: 'default',
               },
             ],
           }),
@@ -357,13 +359,10 @@ describe('AgentRuntime', () => {
 
         const result = await runtime.step(state);
 
-        expect(result.events).toHaveLength(2);
+        expect(result.events).toHaveLength(1);
         expect(result.events[0]).toMatchObject({
           type: 'human_approve_required',
           sessionId: 'test-session',
-        });
-        expect(result.events[1]).toMatchObject({
-          type: 'tool_pending',
         });
 
         expect(result.newState.status).toBe('waiting_for_human');
@@ -1021,10 +1020,10 @@ describe('AgentRuntime', () => {
       // Step 2: Approve and execute tool call
       const pendingToolCall = result.newState.pendingToolsCalling![0];
       const toolCall = {
+        apiName: pendingToolCall.apiName,
+        arguments: pendingToolCall.arguments,
         id: pendingToolCall.id,
-        apiName: pendingToolCall.function.name,
-        identifier: pendingToolCall.function.name,
-        arguments: pendingToolCall.function.arguments,
+        identifier: pendingToolCall.identifier,
         type: 'default' as const,
       };
       result = await runtime.approveToolCall(result.newState, toolCall);
@@ -1203,9 +1202,11 @@ describe('AgentRuntime', () => {
               {
                 pendingToolsCalling: [
                   {
+                    apiName: 'danger_tool',
+                    arguments: '{}',
                     id: 'call_danger',
-                    type: 'function' as const,
-                    function: { name: 'danger_tool', arguments: '{}' },
+                    identifier: 'danger_tool',
+                    type: 'default' as const,
                   },
                 ],
                 type: 'request_human_approve' as const,
@@ -1233,7 +1234,7 @@ describe('AgentRuntime', () => {
 
       // Should have pending tool calls
       expect(result.newState.pendingToolsCalling).toHaveLength(1);
-      expect(result.newState.pendingToolsCalling![0].function.name).toBe('danger_tool');
+      expect(result.newState.pendingToolsCalling![0].apiName).toBe('danger_tool');
 
       // Should have both tool_result and human_approve_required events
       expect(result.events).toContainEqual(expect.objectContaining({ type: 'tool_result' }));

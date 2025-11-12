@@ -35,6 +35,7 @@ export const Tools = memo<ToolsRendererProps>(({ messageId, tools }) => {
           id={tool.id}
           identifier={tool.identifier}
           index={index}
+          intervention={tool.intervention}
           key={tool.id}
           messageId={messageId}
           result={tool.result}
