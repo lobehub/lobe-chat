@@ -4,16 +4,15 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useParams } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab } from '@/types/discover';
 
 import NotFound from '../components/NotFound';
 import Breadcrumb from '../features/Breadcrumb';
-import { DetailProvider } from './[...slugs]/features/DetailProvider';
-import Details from './[...slugs]/features/Details';
-import Header from './[...slugs]/features/Header';
-import Loading from './[...slugs]/loading';
+import { DetailProvider } from './features/DetailProvider';
+import Details from './features/Details';
+import Header from './features/Header';
+import Loading from './loading';
 
 interface ProviderDetailPageProps {
   mobile?: boolean;
@@ -41,4 +40,12 @@ const ProviderDetailPage = memo<ProviderDetailPageProps>(({ mobile }) => {
   );
 });
 
-export default withSuspense(ProviderDetailPage);
+const DesktopProviderPage = memo<{ mobile?: boolean }>(() => {
+  return <ProviderDetailPage mobile={false} />;
+});
+
+const MobileProviderPage = memo<{ mobile?: boolean }>(() => {
+  return <ProviderDetailPage mobile={true} />;
+});
+
+export { DesktopProviderPage, MobileProviderPage };

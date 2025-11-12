@@ -3,19 +3,19 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { DiscoverTab, ProviderQueryParams } from '@/types/discover';
+import { DiscoverTab, McpQueryParams } from '@/types/discover';
 
 import Pagination from '../features/Pagination';
 import List from './features/List';
 import Loading from './loading';
 
-const ProviderPage = memo<{ mobile?: boolean }>(() => {
-  const { q, page, sort, order } = useQuery() as ProviderQueryParams;
-  const useProviderList = useDiscoverStore((s) => s.useProviderList);
-  const { data, isLoading } = useProviderList({
+const McpPage = memo<{ mobile?: boolean }>(() => {
+  const { q, page, category, sort, order } = useQuery() as McpQueryParams;
+  const useMcpList = useDiscoverStore((s) => s.useFetchMcpList);
+  const { data, isLoading } = useMcpList({
+    category,
     order,
     page,
     pageSize: 21,
@@ -33,11 +33,19 @@ const ProviderPage = memo<{ mobile?: boolean }>(() => {
       <Pagination
         currentPage={currentPage}
         pageSize={pageSize}
-        tab={DiscoverTab.Providers}
+        tab={DiscoverTab.Mcp}
         total={totalCount}
       />
     </Flexbox>
   );
 });
 
-export default withSuspense(ProviderPage);
+const DesktopMcpPage = memo<{ mobile?: boolean }>(() => {
+  return <McpPage mobile={false} />;
+});
+
+const MobileMcpPage = memo<{ mobile?: boolean }>(() => {
+  return <McpPage mobile={true} />;
+});
+
+export { DesktopMcpPage, MobileMcpPage };

@@ -1,30 +1,33 @@
 'use client';
 
-import { notFound } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { useParams } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab } from '@/types/discover';
 
-import Breadcrumb from '../../features/Breadcrumb';
+import NotFound from '../components/NotFound';
+import Breadcrumb from '../features/Breadcrumb';
 import { DetailProvider } from './features/DetailProvider';
 import Details from './features/Details';
 import Header from './features/Header';
 import Loading from './loading';
 
-interface ClientProps {
-  identifier: string;
+interface ModelDetailPageProps {
   mobile?: boolean;
 }
 
-const Client = memo<ClientProps>(({ identifier, mobile }) => {
+const ModelDetailPage = memo<ModelDetailPageProps>(({ mobile }) => {
+  const params = useParams();
+  const slugs = params['*']?.split('/') || [];
+  const identifier = decodeURIComponent(slugs.join('/'));
+
   const useModelDetail = useDiscoverStore((s) => s.useModelDetail);
   const { data, isLoading } = useModelDetail({ identifier });
 
   if (isLoading) return <Loading />;
-  if (!data) return notFound();
+  if (!data) return <NotFound />;
 
   return (
     <DetailProvider config={data}>
@@ -37,4 +40,12 @@ const Client = memo<ClientProps>(({ identifier, mobile }) => {
   );
 });
 
-export default withSuspense(Client);
+const DesktopModelPage = memo<{ mobile?: boolean }>(() => {
+  return <ModelDetailPage mobile={false} />;
+});
+
+const MobileModelPage = memo<{ mobile?: boolean }>(() => {
+  return <ModelDetailPage mobile={true} />;
+});
+
+export { DesktopModelPage, MobileModelPage };

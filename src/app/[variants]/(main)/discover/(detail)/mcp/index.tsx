@@ -4,7 +4,6 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useParams } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import { DetailProvider } from '@/features/MCPPluginDetail/DetailProvider';
 import Header from '@/features/MCPPluginDetail/Header';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
@@ -15,8 +14,8 @@ import { DiscoverTab } from '@/types/discover';
 import NotFound from '../components/NotFound';
 import Breadcrumb from '../features/Breadcrumb';
 import { TocProvider } from '../features/Toc/useToc';
-import Details from './[slug]/features/Details';
-import Loading from './[slug]/loading';
+import Details from './features/Details';
+import Loading from './loading';
 
 interface McpDetailPageProps {
   mobile?: boolean;
@@ -48,4 +47,12 @@ const McpDetailPage = memo<McpDetailPageProps>(({ mobile }) => {
   );
 });
 
-export default withSuspense(McpDetailPage);
+const DesktopMcpPage = memo<{ mobile?: boolean }>(() => {
+  return <McpDetailPage mobile={false} />;
+});
+
+const MobileMcpPage = memo<{ mobile?: boolean }>(() => {
+  return <McpDetailPage mobile={true} />;
+});
+
+export { DesktopMcpPage, MobileMcpPage };

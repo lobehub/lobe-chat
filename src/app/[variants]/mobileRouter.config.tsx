@@ -76,37 +76,47 @@ export const mobileRouter = createBrowserRouter([
                   })),
               },
               {
-                lazy: () =>
-                  import('./(main)/discover/(list)/assistant/index').then((m) => ({
-                    Component: m.MobileAssistantPage,
-                  })),
-                path: 'assistant',
+                children: [{
+                  lazy: () =>
+                    import('./(main)/discover/(list)/assistant/index').then((m) => ({
+                      Component: m.MobileAssistantPage,
+                    })),
+                  path: 'assistant',
+                },],
+                lazy: (() => import('./(main)/discover/(list)/_layout/Mobile').then((m) => ({
+                  Component: m.default,
+                })))
               },
-              {
+             {
+              children: [{
                 lazy: () =>
-                  import('./(main)/discover/(list)/model/mobile').then((m) => ({
-                    Component: m.MobileDiscoverModelPage,
+                  import('./(main)/discover/(list)/model/index').then((m) => ({
+                    Component: m.MobileModelPage,
                   })),
                 path: 'model',
-              },
+              },],
+              lazy: (() => import('./(main)/discover/(list)/model/_layout/Mobile').then((m) => ({
+                Component: m.default,
+              })))
+             },
               {
                 lazy: () =>
-                  import('./(main)/discover/(list)/provider/mobile').then((m) => ({
-                    Component: m.MobileDiscoverProviderPage,
+                  import('./(main)/discover/(list)/provider/index').then((m) => ({
+                    Component: m.MobileProviderPage,
                   })),
                 path: 'provider',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(list)/mcp/mobile').then((m) => ({
-                    Component: m.MobileDiscoverMcpPage,
+                  import('./(main)/discover/(list)/mcp/index').then((m) => ({
+                    Component: m.MobileMcpPage,
                   })),
                 path: 'mcp',
               },
             ],
             lazy: () =>
-              import('./(main)/discover/(list)/_layout/Mobile/ListLayout').then((m) => ({
-                Component: m.MobileDiscoverListLayout,
+              import('./(main)/discover/(list)/_layout/Mobile/index').then((m) => ({
+                Component: m.default,
               })),
           },
           // Detail routes (with DetailLayout)
@@ -114,36 +124,36 @@ export const mobileRouter = createBrowserRouter([
             children: [
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/assistant/mobile').then((m) => ({
+                  import('./(main)/discover/(detail)/assistant/index').then((m) => ({
                     Component: m.MobileDiscoverAssistantDetailPage,
                   })),
                 path: 'assistant/:slug',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/model/mobile').then((m) => ({
-                    Component: m.MobileDiscoverModelDetailPage,
+                  import('./(main)/discover/(detail)/model/index').then((m) => ({
+                    Component: m.MobileModelPage,
                   })),
                 path: 'model/:slug',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/provider/mobile').then((m) => ({
-                    Component: m.MobileDiscoverProviderDetailPage,
+                  import('./(main)/discover/(detail)/provider/index').then((m) => ({
+                    Component: m.MobileProviderPage,
                   })),
                 path: 'provider/:slug',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/mcp/mobile').then((m) => ({
-                    Component: m.MobileDiscoverMcpDetailPage,
+                  import('./(main)/discover/(detail)/mcp/index').then((m) => ({
+                    Component: m.MobileMcpPage,
                   })),
                 path: 'mcp/:slug',
               },
             ],
             lazy: () =>
-              import('./(main)/discover/(detail)/_layout/Mobile/DetailLayout').then((m) => ({
-                Component: m.MobileDiscoverDetailLayout,
+              import('./(main)/discover/(detail)/_layout/Mobile/index').then((m) => ({
+                Component: m.default,
               })),
           },
         ],

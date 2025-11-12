@@ -5,7 +5,7 @@ import { createBrowserRouter, Navigate, useNavigate } from 'react-router-dom';
 
 import { useGlobalStore } from '@/store/global';
 import DesktopMainLayout from './(main)/layouts/desktop';
-import DiscoverListLayout from './(main)/discover/(list)/_layout/Desktop';
+
 
 import Loading from '@/components/Loading/BrandTextLoading';
 
@@ -88,33 +88,40 @@ export const desktopRouter = createBrowserRouter([
                     path: 'assistant',
                   },
                 ],
-                element: <DiscoverListLayout />,
+                lazy: (() => import('./(main)/discover/(list)/_layout/Desktop').then((m) => ({
+                  Component: m.default,
+                })))
+              },
+              {
+                children: [{
+                  lazy: () =>
+                    import('./(main)/discover/(list)/model/index').then((m) => ({
+                      Component: m.DesktopModelPage,
+                    })),
+                  path: 'model',
+                },],
+                lazy: (() => import('./(main)/discover/(list)/model/_layout/Desktop').then((m) => ({
+                  Component: m.default,
+                })))
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(list)/model/desktop').then((m) => ({
-                    Component: m.DesktopDiscoverModelPage,
-                  })),
-                path: 'model',
-              },
-              {
-                lazy: () =>
-                  import('./(main)/discover/(list)/provider/desktop').then((m) => ({
-                    Component: m.DesktopDiscoverProviderPage,
+                  import('./(main)/discover/(list)/provider/index').then((m) => ({
+                    Component: m.DesktopProviderPage,
                   })),
                 path: 'provider',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(list)/mcp/desktop').then((m) => ({
-                    Component: m.DesktopDiscoverMcpPage,
+                  import('./(main)/discover/(list)/mcp/index').then((m) => ({
+                    Component: m.DesktopMcpPage,
                   })),
                 path: 'mcp',
               },
             ],
             lazy: () =>
-              import('./(main)/discover/(list)/_layout/Desktop/ListLayout').then((m) => ({
-                Component: m.DesktopDiscoverListLayout,
+              import('./(main)/discover/(list)/_layout/Desktop/index').then((m) => ({
+                Component: m.default,
               })),
           },
           // Detail routes (with DetailLayout)
@@ -122,36 +129,36 @@ export const desktopRouter = createBrowserRouter([
             children: [
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/assistant/desktop').then((m) => ({
+                  import('./(main)/discover/(detail)/assistant/index').then((m) => ({
                     Component: m.DesktopDiscoverAssistantDetailPage,
                   })),
                 path: 'assistant/:slug',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/model/desktop').then((m) => ({
-                    Component: m.DesktopDiscoverModelDetailPage,
+                  import('./(main)/discover/(detail)/model/index').then((m) => ({
+                    Component: m.DesktopModelPage,
                   })),
                 path: 'model/:slug',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/provider/desktop').then((m) => ({
-                    Component: m.DesktopDiscoverProviderDetailPage,
+                  import('./(main)/discover/(detail)/provider/index').then((m) => ({
+                    Component: m.DesktopProviderPage,
                   })),
                 path: 'provider/:slug',
               },
               {
                 lazy: () =>
-                  import('./(main)/discover/(detail)/mcp/desktop').then((m) => ({
-                    Component: m.DesktopDiscoverMcpDetailPage,
+                  import('./(main)/discover/(detail)/mcp/index').then((m) => ({
+                    Component: m.DesktopMcpPage,
                   })),
                 path: 'mcp/:slug',
               },
             ],
             lazy: () =>
-              import('./(main)/discover/(detail)/_layout/Desktop/DetailLayout').then((m) => ({
-                Component: m.DesktopDiscoverDetailLayout,
+              import('./(main)/discover/(detail)/_layout/Desktop').then((m) => ({
+                Component: m.default,
               })),
           },
         ],

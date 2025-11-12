@@ -3,7 +3,6 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab, ModelQueryParams } from '@/types/discover';
@@ -41,4 +40,12 @@ const ModelPage = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-export default withSuspense(ModelPage);
+const DesktopModelPage = memo<{ mobile?: boolean }>(() => {
+  return <ModelPage mobile={false} />;
+});
+
+const MobileModelPage = memo<{ mobile?: boolean }>(() => {
+  return <ModelPage mobile={true} />;
+});
+
+export { DesktopModelPage, MobileModelPage };

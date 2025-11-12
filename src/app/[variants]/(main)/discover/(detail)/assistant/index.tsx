@@ -1,34 +1,37 @@
 'use client';
 
-import { notFound } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { useParams } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { AssistantMarketSource } from '@/types/discover';
+import { AssistantMarketSource, DiscoverTab } from '@/types/discover';
 
-import { TocProvider } from '../../features/Toc/useToc';
+import NotFound from '../components/NotFound';
+import Breadcrumb from '../features/Breadcrumb';
+import { TocProvider } from '../features/Toc/useToc';
 import { DetailProvider } from './features/DetailProvider';
 import Details from './features/Details';
 import Header from './features/Header';
 import StatusPage from './features/StatusPage';
 import Loading from './loading';
 
-interface ClientProps {
-  identifier: string;
+interface AssistantDetailPageProps {
   mobile?: boolean;
 }
 
-const Client = memo<ClientProps>(({ identifier, mobile }) => {
+const AssistantDetailPage = memo<AssistantDetailPageProps>(({ mobile }) => {
+  const params = useParams();
+  const slugs = params['*']?.split('/') || [];
+  const identifier = decodeURIComponent(slugs.join('/'));
   const { version, source } = useQuery() as { source?: AssistantMarketSource; version?: string };
-  const marketSource = source as AssistantMarketSource | undefined;
+
   const useAssistantDetail = useDiscoverStore((s) => s.useAssistantDetail);
-  const { data, isLoading } = useAssistantDetail({ identifier, source: marketSource, version });
+  const { data, isLoading } = useAssistantDetail({ identifier, source, version });
 
   if (isLoading) return <Loading />;
-  if (!data) return notFound();
+  if (!data) return <NotFound />;
 
   // 检查助手状态
   const status = (data as any)?.status;
@@ -39,6 +42,7 @@ const Client = memo<ClientProps>(({ identifier, mobile }) => {
   return (
     <TocProvider>
       <DetailProvider config={data}>
+        {!mobile && <Breadcrumb identifier={identifier} tab={DiscoverTab.Assistants} />}
         <Flexbox gap={16}>
           <Header mobile={mobile} />
           <Details mobile={mobile} />
@@ -48,4 +52,12 @@ const Client = memo<ClientProps>(({ identifier, mobile }) => {
   );
 });
 
-export default withSuspense(Client);
+const DesktopDiscoverAssistantDetailPage = memo<{ mobile?: boolean }>(() => {
+  return <AssistantDetailPage mobile={false} />;
+});
+
+const MobileDiscoverAssistantDetailPage = memo<{ mobile?: boolean }>(() => {
+  return <AssistantDetailPage mobile={true} />;
+});
+
+export { DesktopDiscoverAssistantDetailPage, MobileDiscoverAssistantDetailPage };
