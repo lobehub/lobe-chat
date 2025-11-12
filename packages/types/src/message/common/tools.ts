@@ -2,12 +2,30 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 
+
+
 import { LobeToolRenderType } from '../../tool';
+
+
+
+
+
+// ToolIntervention must be defined first to avoid circular dependency
+export interface ToolIntervention {
+  rejectedReason?: string;
+  status?: 'pending' | 'approved' | 'rejected' | 'none';
+}
+
+export const ToolInterventionSchema = z.object({
+  rejectedReason: z.string().optional(),
+  status: z.enum(['pending', 'approved', 'rejected', 'none']).optional(),
+});
 
 export interface ChatPluginPayload {
   apiName: string;
   arguments: string;
   identifier: string;
+  intervention?: ToolIntervention;
   type: LobeToolRenderType;
 }
 
@@ -16,6 +34,7 @@ export interface ChatToolPayload {
   arguments: string;
   id: string;
   identifier: string;
+  intervention?: ToolIntervention;
   result_msg_id?: string;
   type: LobeToolRenderType;
 }
@@ -34,6 +53,7 @@ export interface ChatToolResult {
  * Chat tool payload with merged execution result
  */
 export interface ChatToolPayloadWithResult extends ChatToolPayload {
+  intervention?: ToolIntervention;
   result?: ChatToolResult;
 }
 
@@ -91,6 +111,7 @@ export const ChatToolPayloadSchema = z.object({
   arguments: z.string(),
   id: z.string(),
   identifier: z.string(),
+  intervention: ToolInterventionSchema.optional(),
   result_msg_id: z.string().optional(),
   type: z.string(),
 });
@@ -103,13 +124,3 @@ export interface ChatMessagePluginError {
   message: string;
   type: IPluginErrorType;
 }
-
-export interface ToolIntervention {
-  rejectedReason?: string;
-  status?: 'pending' | 'approved' | 'rejected' | 'none';
-}
-
-export const ToolInterventionSchema = z.object({
-  rejectedReason: z.string().optional(),
-  status: z.enum(['pending', 'approved', 'rejected', 'none']).optional(),
-});

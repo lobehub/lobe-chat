@@ -153,6 +153,19 @@ export class MessageService {
     });
   };
 
+  updateMessagePlugin = async (
+    id: string,
+    value: Record<string, any>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updateMessagePlugin.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      value,
+    });
+  };
+
   updateMessageRAG = async (
     id: string,
     data: UpdateMessageRAGParams,

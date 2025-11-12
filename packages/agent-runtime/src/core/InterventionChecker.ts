@@ -17,36 +17,25 @@ export class InterventionChecker {
    * @returns Policy to apply
    */
   static shouldIntervene(params: ShouldInterveneParams): HumanInterventionPolicy {
-    const { config, toolArgs = {}, confirmedHistory = [], toolKey } = params;
+    const { config, toolArgs = {} } = params;
 
     // No config means never intervene (auto-execute)
     if (!config) return 'never';
 
     // Simple policy string
     if (typeof config === 'string') {
-      // For 'first' policy, check if already confirmed
-      if (config === 'first' && toolKey && confirmedHistory.includes(toolKey)) {
-        return 'never';
-      }
       return config;
     }
 
     // Array of rules - find first matching rule
     for (const rule of config) {
       if (this.matchesRule(rule, toolArgs)) {
-        const policy = rule.policy;
-
-        // For 'first' policy, check if already confirmed
-        if (policy === 'first' && toolKey && confirmedHistory.includes(toolKey)) {
-          return 'never';
-        }
-
-        return policy;
+        return rule.policy;
       }
     }
 
-    // No rule matched - default to always for safety
-    return 'always';
+    // No rule matched - default to require for safety
+    return 'require';
   }
 
   /**
@@ -151,7 +140,7 @@ export class InterventionChecker {
   }
 
   /**
-   * Generate simple hash of arguments for 'once' policy
+   * Generate simple hash of arguments for tool tracking
    *
    * @param args - Tool call arguments
    * @returns Hash string

@@ -23,6 +23,7 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { getAgentStoreState } from '@/store/agent/store';
 import { GeneralChatAgent } from '@/store/chat/agents/GeneralChatAgent';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
+import { createAgentToolsEngine } from '@/store/chat/agents/createToolEngine';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { setNamespace } from '@/utils/storeDebug';
@@ -458,6 +459,17 @@ export const streamingExecutor: StateCreator<
         provider: provider!,
       },
     });
+
+    const toolsEngine = createAgentToolsEngine({ model: model, provider: provider! });
+    const { enabledToolIds } = toolsEngine.generateToolsDetailed({
+      model: model,
+      provider: provider!,
+      toolIds: agentConfigData.plugins,
+    });
+    const toolManifestMap = Object.fromEntries(
+      toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
+    );
+
     const runtime = new AgentRuntime(agent, {
       executors: createAgentExecutors({
         get,
@@ -479,6 +491,7 @@ export const streamingExecutor: StateCreator<
         topicId: activeTopicId,
         threadId: params.threadId,
       },
+      toolManifestMap,
     });
 
     // Initial context - use 'init' phase since state already contains messages
@@ -520,20 +533,24 @@ export const streamingExecutor: StateCreator<
 
       // Handle completion and error events
       for (const event of result.events) {
-        if (event.type === 'done') {
-          log('[internal_execAgentRuntime] Received done event');
-        }
-
-        if (event.type === 'error') {
-          log('[internal_execAgentRuntime] Received error event: %o', event.error);
-          // Find the assistant message to update error
-          const currentMessages = get().messagesMap[messageKey] || [];
-          const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
-          if (assistantMessage) {
-            await messageService.updateMessageError(assistantMessage.id, event.error);
+        switch (event.type) {
+          case 'done': {
+            log('[internal_execAgentRuntime] Received done event');
+            break;
           }
-          const finalMessages = get().messagesMap[messageKey] || [];
-          get().replaceMessages(finalMessages);
+
+          case 'error': {
+            log('[internal_execAgentRuntime] Received error event: %o', event.error);
+            // Find the assistant message to update error
+            const currentMessages = get().messagesMap[messageKey] || [];
+            const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
+            if (assistantMessage) {
+              await messageService.updateMessageError(assistantMessage.id, event.error);
+            }
+            const finalMessages = get().messagesMap[messageKey] || [];
+            get().replaceMessages(finalMessages);
+            break;
+          }
         }
       }
 

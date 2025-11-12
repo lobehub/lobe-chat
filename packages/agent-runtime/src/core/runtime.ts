@@ -538,7 +538,6 @@ export class AgentRuntime {
           sessionId: newState.sessionId,
           type: 'human_approve_required',
         },
-        { toolCalls: pendingToolsCalling, type: 'tool_pending' },
       ];
 
       return { events, newState };

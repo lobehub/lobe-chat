@@ -179,11 +179,14 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
+        sessionId: z.string().nullable().optional(),
+        topicId: z.string().nullable().optional(),
         value: UpdateMessagePluginSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.updateMessagePlugin(input.id, input.value);
+      const { id, value, ...options } = input;
+      return ctx.messageService.updateMessagePlugin(id, value, options);
     }),
 
   updateMessageRAG: messageProcedure

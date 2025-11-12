@@ -427,11 +427,14 @@ export class FlatListBuilder {
             if (toolMsg.error) result.error = toolMsg.error;
             if (toolMsg.pluginState) result.state = toolMsg.pluginState;
 
-            return {
+            const toolWithResult: ChatToolPayloadWithResult = {
               ...tool,
+              intervention: toolMsg.pluginIntervention,
               result,
               result_msg_id: toolMsg.id,
             };
+
+            return toolWithResult;
           }
           return tool;
         }) || [];

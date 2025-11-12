@@ -13,6 +13,7 @@ import {
 } from '@lobechat/agent-runtime';
 import type { ChatToolPayload, CreateMessageParams } from '@lobechat/types';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import type { ChatStore } from '@/store/chat/store';
 
@@ -43,6 +44,7 @@ export const createAgentExecutors = (context: {
 }) => {
   let shouldSkipCreateMessage = context.skipCreateFirstMessage;
 
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
     /**
      * Custom call_llm executor
@@ -371,6 +373,100 @@ export const createAgentExecutors = (context: {
       }
     },
 
+    /** Create human approve executor */
+    request_human_approve: async (instruction, state) => {
+      const { pendingToolsCalling, reason } = instruction as Extract<
+        AgentInstruction,
+        { type: 'request_human_approve' }
+      >;
+      const newState = structuredClone(state);
+      const events: AgentEvent[] = [];
+      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+
+      log(
+        '[%s][request_human_approve] Executor start, pending tools count: %d, reason: %s',
+        sessionLogId,
+        pendingToolsCalling.length,
+        reason || 'human_intervention_required',
+      );
+
+      // Update state to waiting_for_human
+      newState.lastModified = new Date().toISOString();
+      newState.status = 'waiting_for_human';
+      newState.pendingToolsCalling = pendingToolsCalling;
+
+      // Get assistant message to extract groupId and parentId
+      const latestMessages = context.get().dbMessagesMap[context.messageKey] || [];
+      const assistantMessage = latestMessages.findLast((m) => m.role === 'assistant');
+
+      if (!assistantMessage) {
+        log('[%s][request_human_approve] ERROR: No assistant message found', sessionLogId);
+        throw new Error('No assistant message found for intervention');
+      }
+
+      log(
+        '[%s][request_human_approve] Found assistant message: %s',
+        sessionLogId,
+        assistantMessage.id,
+      );
+
+      // Create tool messages for each pending tool call with intervention status
+      await pMap(pendingToolsCalling, async (toolPayload) => {
+        const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
+        log(
+          '[%s][request_human_approve] Creating tool message for %s with tool_call_id: %s',
+          sessionLogId,
+          toolName,
+          toolPayload.id,
+        );
+
+        const toolMessageParams: CreateMessageParams = {
+          content: '',
+          groupId: assistantMessage.groupId,
+          parentId: assistantMessage.id,
+          plugin: {
+            ...toolPayload,
+          },
+          pluginIntervention: { status: 'pending' },
+          role: 'tool',
+          sessionId: context.get().activeId,
+          threadId: context.params.threadId,
+          tool_call_id: toolPayload.id,
+          topicId: context.get().activeTopicId,
+        };
+
+        const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+
+        if (!createResult) {
+          log(
+            '[%s][request_human_approve] ERROR: Failed to create tool message for %s',
+            sessionLogId,
+            toolName,
+          );
+          throw new Error(`Failed to create tool message for ${toolName}`);
+        }
+
+        log(
+          '[%s][request_human_approve] Created tool message: %s for %s',
+          sessionLogId,
+          createResult.id,
+          toolName,
+        );
+      });
+
+      log(
+        '[%s][request_human_approve] All tool messages created, emitting human_approve_required event',
+        sessionLogId,
+      );
+
+      events.push({
+        pendingToolsCalling,
+        sessionId: newState.sessionId,
+        type: 'human_approve_required',
+      });
+
+      return { events, newState };
+    },
     /**
      * Finish executor
      * Completes the runtime execution

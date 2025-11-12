@@ -1,7 +1,7 @@
 import { ChatToolPayload, ModelUsage } from '@lobechat/types';
 
 import type { FinishReason } from './event';
-import { AgentState, ToolRegistry, ToolsCalling } from './state';
+import { AgentState, ToolRegistry } from './state';
 import type { Cost, CostCalculationContext, Usage } from './usage';
 
 /**
@@ -137,7 +137,7 @@ export interface AgentInstructionRequestHumanSelect {
 }
 
 export interface AgentInstructionRequestHumanApprove {
-  pendingToolsCalling: ToolsCalling[];
+  pendingToolsCalling: ChatToolPayload[];
   reason?: string;
   type: 'request_human_approve';
 }

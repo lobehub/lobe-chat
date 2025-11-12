@@ -5,10 +5,9 @@ import { z } from 'zod';
  */
 export type HumanInterventionPolicy =
   | 'never' // Never intervene, auto-execute
-  | 'always' // Always require intervention
-  | 'first'; // Require intervention on first call only
+  | 'require'; // Always require intervention
 
-export const HumanInterventionPolicySchema = z.enum(['never', 'always', 'first']);
+export const HumanInterventionPolicySchema = z.enum(['never', 'require']);
 
 /**
  * Argument Matcher for parameter-level filtering
@@ -150,4 +149,18 @@ export const ShouldInterveneParamsSchema = z.object({
   confirmedHistory: z.array(z.string()).optional(),
   toolArgs: z.record(z.string(), z.any()).optional(),
   toolKey: z.string().optional(),
+});
+
+/**
+ * Tool Intervention Status
+ * Tracks the approval status of a tool execution
+ */
+export interface ToolIntervention {
+  rejectedReason?: string;
+  status?: 'pending' | 'approved' | 'rejected' | 'none';
+}
+
+export const ToolInterventionSchema = z.object({
+  rejectedReason: z.string().optional(),
+  status: z.enum(['pending', 'approved', 'rejected', 'none']).optional(),
 });
