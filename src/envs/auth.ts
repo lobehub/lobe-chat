@@ -13,7 +13,7 @@ declare global {
 
       // ===== Better Auth ===== //
       BETTER_AUTH_SECRET?: string;
-      BETTER_AUTH_URL?: string;
+      NEXT_PUBLIC_BETTER_AUTH_URL?: string;
 
       // ===== Next Auth ===== //
       NEXT_AUTH_SECRET?: string;
@@ -50,6 +50,9 @@ export const getAuthConfig = () => {
        */
       NEXT_PUBLIC_ENABLE_CLERK_AUTH: z.boolean().optional(),
 
+      NEXT_PUBLIC_ENABLE_BETTER_AUTH: z.boolean().optional(),
+      NEXT_PUBLIC_BETTER_AUTH_URL: z.string().optional(),
+
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: z.boolean().optional(),
     },
     server: {
@@ -59,7 +62,6 @@ export const getAuthConfig = () => {
 
       // Better Auth
       BETTER_AUTH_SECRET: z.string().optional(),
-      BETTER_AUTH_URL: z.string().optional(),
 
       // NEXT-AUTH
       NEXT_AUTH_SECRET: z.string().optional(),
@@ -86,8 +88,9 @@ export const getAuthConfig = () => {
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
       // Better Auth
+      NEXT_PUBLIC_ENABLE_BETTER_AUTH: process.env.NEXT_PUBLIC_ENABLE_BETTER_AUTH === '1',
+      NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-      BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
 
       // Next Auth
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',
