@@ -1,4 +1,6 @@
 export default {
+  addKnowledge: '添加知识',
+  addPage: '创建文稿',
   desc: '管理你的工作、学习与生活知识。',
   detail: {
     basic: {

@@ -1,4 +1,6 @@
 {
+  "addKnowledge": "Agregar conocimiento",
+  "addPage": "Crear documento",
   "desc": "Gestiona tus conocimientos de trabajo, estudio y vida.",
   "detail": {
     "basic": {

@@ -5,6 +5,7 @@ import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderUp, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import DragUpload from '@/components/DragUpload';
 import { useFileStore } from '@/store/file';
@@ -21,6 +22,7 @@ const hotArea = css`
 `;
 
 const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
+  const { t } = useTranslation('file');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
 
@@ -37,7 +39,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
       {
         icon: <Icon icon={FilePenLine} />,
         key: 'create-note',
-        label: 'Create Note',
+        label: t('addPage'),
         onClick: handleOpenNoteEditor,
       },
       {
@@ -86,7 +88,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
     <>
       <Dropdown menu={{ items }} placement="bottomRight">
         <Button icon={Plus} type="primary">
-          Add Knowledge
+          {t('addKnowledge')}
         </Button>
       </Dropdown>
       <DragUpload

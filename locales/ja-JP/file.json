@@ -1,4 +1,6 @@
 {
+  "addKnowledge": "知識を追加",
+  "addPage": "ドキュメントを作成",
   "desc": "仕事、学習、生活の知識を管理しましょう。",
   "detail": {
     "basic": {
