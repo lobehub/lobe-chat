@@ -4,16 +4,11 @@ import { memo } from 'react';
 
 import PageTitle from '@/components/PageTitle';
 import { withSuspense } from '@/components/withSuspense';
-import { useChatStore } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
 const Title = memo(() => {
-  const agentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
-
-  const topicTitle = useChatStore((s) => topicSelectors.currentActiveTopic(s)?.title);
-  return <PageTitle title={[topicTitle, agentTitle].filter(Boolean).join(' · ')} />;
+  // 固定显示"AI对话"，不显示任何动态标题以保护隐私
+  // 避免在浏览器标签页和浏览历史中显示AI生成的话题标题或代理标题
+  return <PageTitle title="AI对话" />;
 });
 
 export default withSuspense(Title);
