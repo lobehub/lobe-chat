@@ -10,7 +10,7 @@ export const useActiveTabKey = () => {
   const location = useLocation();
   const pathname = location.pathname;
 
-  return pathname.split('/').filter(Boolean)[0] as SidebarTabKey;
+  return pathname.split('/').find(Boolean) as SidebarTabKey;
 };
 
 /**
@@ -32,7 +32,7 @@ export const useActiveProfileKey = () => {
   const location = useLocation();
   const pathname = location.pathname;
 
-  const tabs = pathname.split('/').filter(Boolean).at(-1);
+  const tabs = pathname.split('/').findLast(Boolean);
 
   if (tabs === 'profile') return ProfileTabs.Profile;
 

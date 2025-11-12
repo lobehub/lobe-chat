@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, memo, useContext } from 'react';
+import React, { createContext, memo, useContext } from 'react';
 
 /**
  * Context to indicate if we're in a React Router environment
