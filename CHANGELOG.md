@@ -2,6 +2,23 @@
 
 # Changelog
 
+## [Version 2.0.0-next.48](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.47...v2.0.0-next.48)
+
+<sup>Released on **2025-11-12**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.47](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.46...v2.0.0-next.47)
 
 <sup>Released on **2025-11-11**</sup>
