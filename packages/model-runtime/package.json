@@ -12,13 +12,31 @@
     "test:update": "vitest -u"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.67.1",
     "@aws-sdk/client-bedrock-runtime": "^3.862.0",
+    "@azure-rest/ai-inference": "1.0.0-beta.5",
+    "@azure/core-auth": "^1.10.1",
+    "@fal-ai/client": "^1.7.2",
+    "@google/genai": "^1.29.0",
     "@huggingface/inference": "^4.11.3",
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
+    "dayjs": "^1.11.19",
     "debug": "^4.4.1",
+    "immer": "^10.2.0",
+    "langfuse": "^3.38.6",
+    "langfuse-core": "^3.38.6",
+    "lodash-es": "^4.17.21",
     "model-bank": "workspace:*",
-    "openai": "^4.104.0"
+    "nanoid": "^5.1.6",
+    "ollama": "^0.6.2",
+    "openai": "^4.104.0",
+    "type-fest": "^5.2.0",
+    "url-join": "^5.0.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }

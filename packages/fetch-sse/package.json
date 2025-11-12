@@ -25,5 +25,8 @@
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "i18next": "^24.2.1"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }

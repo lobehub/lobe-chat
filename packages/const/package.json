@@ -8,8 +8,14 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
+    "@lobechat/types": "workspace:*",
+    "@lobehub/ui": "^2.13.8",
+    "lodash-es": "^4.17.21",
     "model-bank": "workspace:*",
     "query-string": "^9.2.2",
     "url-join": "^5.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }

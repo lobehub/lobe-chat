@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
-    "@types/lodash-es": "^4.17.12"
+    "@types/lodash-es": "^4.17.12",
+    "vitest": "^3.2.4"
   }
 }

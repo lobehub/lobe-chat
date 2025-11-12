@@ -39,7 +39,8 @@
   "devDependencies": {
     "@types/concat-stream": "^2.0.3",
     "@types/yauzl": "^2.10.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "typescript": ">=5"
