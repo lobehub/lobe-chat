@@ -20,6 +20,7 @@ interface RenderProps {
   setShowPluginRender: (show: boolean) => void;
   showPluginRender: boolean;
   toolCallId: string;
+  toolMessageId?: string;
   type?: string;
 }
 
@@ -41,9 +42,18 @@ const Render = memo<RenderProps>(
     result,
     type,
     intervention,
+    toolMessageId,
   }) => {
-    if (intervention?.status) {
-      return <Intervention id={messageId} requestArgs={requestArgs || ''} />;
+    if (toolMessageId && intervention?.status === 'pending') {
+      return (
+        <Intervention
+          apiName={apiName}
+          id={toolMessageId}
+          identifier={identifier}
+          requestArgs={requestArgs || ''}
+          toolCallId={toolCallId}
+        />
+      );
     }
 
     if (!result) return null;

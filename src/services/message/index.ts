@@ -6,6 +6,7 @@ import {
   CreateMessageParams,
   CreateMessageResult,
   MessageMetadata,
+  MessagePluginItem,
   ModelRankItem,
   UIChatMessage,
   UpdateMessageParams,
@@ -77,8 +78,9 @@ export class MessageService {
   };
 
   updateMessageError = async (id: string, value: ChatMessageError) => {
-    const error = value.type ? value : { body: value, message: value.message, type: 'ApplicationRuntimeError' };
-
+    const error = value.type
+      ? value
+      : { body: value, message: value.message, type: 'ApplicationRuntimeError' };
 
     return lambdaClient.message.update.mutate({ id, value: { error } });
   };
@@ -155,7 +157,7 @@ export class MessageService {
 
   updateMessagePlugin = async (
     id: string,
-    value: Record<string, any>,
+    value: Partial<Omit<MessagePluginItem, 'id'>>,
     options?: { sessionId?: string | null; topicId?: string | null },
   ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.updateMessagePlugin.mutate({

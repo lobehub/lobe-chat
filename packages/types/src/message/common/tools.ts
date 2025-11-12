@@ -2,13 +2,7 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 
-
-
 import { LobeToolRenderType } from '../../tool';
-
-
-
-
 
 // ToolIntervention must be defined first to avoid circular dependency
 export interface ToolIntervention {
@@ -55,6 +49,7 @@ export interface ChatToolResult {
 export interface ChatToolPayloadWithResult extends ChatToolPayload {
   intervention?: ToolIntervention;
   result?: ChatToolResult;
+  result_msg_id?: string;
 }
 
 export interface ToolsCallingContext {

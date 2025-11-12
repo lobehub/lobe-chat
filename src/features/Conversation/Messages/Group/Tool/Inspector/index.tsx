@@ -1,6 +1,6 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Check, LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, X } from 'lucide-react';
+import { Ban, Check, LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, X } from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -154,10 +154,14 @@ const Inspectors = memo<InspectorProps>(
             </Flexbox>
             {hasResult && (
               <Flexbox align={'center'} gap={4} horizontal style={{ fontSize: 12 }}>
-                {hasError ? (
-                  <X color={theme.colorError} size={14} />
+                {intervention?.status === 'rejected' ? (
+                  <Tooltip title={t('toolRejected', { ns: 'chat' })}>
+                    <Icon color={theme.colorTextTertiary} icon={Ban} />
+                  </Tooltip>
+                ) : hasError ? (
+                  <Icon color={theme.colorError} icon={X} />
                 ) : (
-                  <Check color={theme.colorSuccess} size={14} />
+                  <Icon color={theme.colorSuccess} icon={Check} />
                 )}
               </Flexbox>
             )}

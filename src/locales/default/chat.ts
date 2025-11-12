@@ -416,6 +416,7 @@ export default {
       rejectTitle: '拒绝本次工具调用',
     },
   },
+  toolRejected: '本次工具调用被主动拒绝',
   topic: {
     checkOpenNewTopic: '是否开启新话题?',
     checkSaveCurrentMessages: '是否保存当前会话为话题?',

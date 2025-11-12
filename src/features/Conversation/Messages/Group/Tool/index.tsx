@@ -10,16 +10,17 @@ import Render from './Render';
 export interface GroupToolProps {
   apiName: string;
   arguments?: string;
+  /**
+   * ContentBlock ID (not the group message ID)
+   */
+  assistantMessageId: string;
   id: string;
   identifier: string;
   index: number;
   intervention?: ToolIntervention;
-  /**
-   * ContentBlock ID (not the group message ID)
-   */
-  messageId: string;
   result?: ChatToolResult;
   style?: CSSProperties;
+  toolMessageId?: string;
   type?: string;
 }
 
@@ -33,7 +34,7 @@ const Tool = memo<GroupToolProps>(
   ({
     arguments: requestArgs,
     apiName,
-    messageId,
+    assistantMessageId,
     id,
     intervention,
     index,
@@ -41,6 +42,7 @@ const Tool = memo<GroupToolProps>(
     style,
     result,
     type,
+    toolMessageId,
   }) => {
     // Default to false since group messages are all completed
 
@@ -62,7 +64,7 @@ const Tool = memo<GroupToolProps>(
           identifier={identifier}
           index={index}
           intervention={intervention}
-          messageId={messageId}
+          messageId={assistantMessageId}
           result={result}
           setShowPluginRender={setShowCustomPluginUI}
           setShowRender={setShowToolDetail}
@@ -76,11 +78,12 @@ const Tool = memo<GroupToolProps>(
             arguments={requestArgs}
             identifier={identifier}
             intervention={intervention}
-            messageId={messageId}
+            messageId={assistantMessageId}
             result={result}
             setShowPluginRender={setShowCustomPluginUI}
             showPluginRender={showCustomPluginUI}
             toolCallId={id}
+            toolMessageId={toolMessageId}
             type={type}
           />
         </AnimatedCollapsed>

@@ -33,6 +33,14 @@ export interface ConversationControlAction {
    */
   switchMessageBranch: (messageId: string, branchIndex: number) => Promise<void>;
   /**
+   * Approve tool intervention
+   */
+  approveToolCalling: (messageId: string, toolCallId: string) => Promise<void>;
+  /**
+   * Reject tool intervention
+   */
+  rejectToolCalling: (messageId: string, reason?: string) => Promise<void>;
+  /**
    * Toggle sendMessage operation state
    */
   internal_toggleSendMessageOperation: (

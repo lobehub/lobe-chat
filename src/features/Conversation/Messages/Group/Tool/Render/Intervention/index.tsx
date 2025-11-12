@@ -16,73 +16,84 @@ import ModeSelector from './ModeSelector';
 export type ApprovalMode = 'auto-run' | 'allow-list' | 'manual';
 
 interface InterventionProps {
+  apiName: string;
   id: string;
+  identifier: string;
   requestArgs: string;
+  toolCallId: string;
 }
 
-const Intervention = memo<InterventionProps>(({ requestArgs, id }) => {
-  const { t } = useTranslation('chat');
-  const approvalMode = useUserStore((s) => s.settings.tool?.approvalMode || 'manual');
-  const [isEditing, setIsEditing] = useState(false);
-  const [optimisticUpdatePluginArguments] = useChatStore((s) => [
-    s.optimisticUpdatePluginArguments,
-  ]);
+const Intervention = memo<InterventionProps>(
+  ({ requestArgs, id, identifier, apiName, toolCallId }) => {
+    const { t } = useTranslation('chat');
+    const approvalMode = useUserStore((s) => s.settings.tool?.approvalMode || 'manual');
+    const [isEditing, setIsEditing] = useState(false);
+    const [optimisticUpdatePluginArguments] = useChatStore((s) => [
+      s.optimisticUpdatePluginArguments,
+    ]);
 
-  const handleCancel = useCallback(() => {
-    setIsEditing(false);
-  }, []);
+    const handleCancel = useCallback(() => {
+      setIsEditing(false);
+    }, []);
 
-  const handleFinish = useCallback(
-    async (editedObject: Record<string, any>) => {
-      if (!id) return;
+    const handleFinish = useCallback(
+      async (editedObject: Record<string, any>) => {
+        if (!id) return;
 
-      try {
-        const newArgsString = JSON.stringify(editedObject, null, 2);
+        try {
+          const newArgsString = JSON.stringify(editedObject, null, 2);
 
-        if (newArgsString !== requestArgs) {
-          await optimisticUpdatePluginArguments(id, editedObject, true);
+          if (newArgsString !== requestArgs) {
+            await optimisticUpdatePluginArguments(id, editedObject, true);
+          }
+          setIsEditing(false);
+        } catch (error) {
+          console.error('Error stringifying arguments:', error);
         }
-        setIsEditing(false);
-      } catch (error) {
-        console.error('Error stringifying arguments:', error);
-      }
-    },
-    [requestArgs, id],
-  );
-
-  if (isEditing)
-    return (
-      <Suspense fallback={<Arguments arguments={requestArgs} />}>
-        <KeyValueEditor
-          initialValue={safeParseJSON(requestArgs || '')}
-          onCancel={handleCancel}
-          onFinish={handleFinish}
-        />
-      </Suspense>
+      },
+      [requestArgs, id],
     );
 
-  return (
-    <Flexbox gap={12}>
-      <Arguments
-        actions={
-          <ActionIcon
-            icon={Edit3Icon}
-            onClick={() => {
-              setIsEditing(true);
-            }}
-            size={'small'}
-            title={t('edit', { ns: 'common' })}
+    if (isEditing)
+      return (
+        <Suspense fallback={<Arguments arguments={requestArgs} />}>
+          <KeyValueEditor
+            initialValue={safeParseJSON(requestArgs || '')}
+            onCancel={handleCancel}
+            onFinish={handleFinish}
           />
-        }
-        arguments={requestArgs}
-      />
+        </Suspense>
+      );
 
-      <Flexbox horizontal justify={'space-between'}>
-        <ModeSelector />
-        <ApprovalActions approvalMode={approvalMode} />
+    return (
+      <Flexbox gap={12}>
+        <Arguments
+          actions={
+            <ActionIcon
+              icon={Edit3Icon}
+              onClick={() => {
+                setIsEditing(true);
+              }}
+              size={'small'}
+              title={t('edit', { ns: 'common' })}
+            />
+          }
+          arguments={requestArgs}
+        />
+
+        <Flexbox horizontal justify={'space-between'}>
+          <ModeSelector />
+          <ApprovalActions
+            apiName={apiName}
+            approvalMode={approvalMode}
+            identifier={identifier}
+            messageId={id}
+            toolCallId={toolCallId}
+          />
+        </Flexbox>
       </Flexbox>
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default Intervention;
