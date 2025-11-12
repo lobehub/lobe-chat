@@ -30,5 +30,6 @@ export * from './user';
 // it more likes the UI message payload
 export * from './openai/chat';
 export * from './openai/plugin';
+export * from './subscription';
 export * from './trace';
 export * from './zustand';

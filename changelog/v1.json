@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-11-12",
+    "version": "2.0.0-next.48"
+  },
+  {
     "children": {
       "fixes": ["Fix mcp server return image error."]
     },

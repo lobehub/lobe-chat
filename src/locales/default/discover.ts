@@ -76,7 +76,6 @@ export default {
       title: '助手名称',
       tokenUsage: 'Token 使用量',
     },
-    suggestions: '相关推荐',
     status: {
       archived: {
         reasons: {
@@ -97,10 +96,12 @@ export default {
       },
       support: '有各种问题请复制链接发送到 <1>support@lobehub.com</1> 进行咨询。',
       unpublished: {
-        subtitle: '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <1>support@lobehub.com</1> 进行咨询。',
+        subtitle:
+          '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <1>support@lobehub.com</1> 进行咨询。',
         title: '助手正在审核中',
       },
     },
+    suggestions: '相关推荐',
     systemRole: '助手设定',
     tokenUsage: '助手提示词 Token 使用量',
     try: '试一下',
