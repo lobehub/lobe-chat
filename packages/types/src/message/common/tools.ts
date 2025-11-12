@@ -103,3 +103,13 @@ export interface ChatMessagePluginError {
   message: string;
   type: IPluginErrorType;
 }
+
+export interface ToolIntervention {
+  rejectedReason?: string;
+  status?: 'pending' | 'approved' | 'rejected' | 'none';
+}
+
+export const ToolInterventionSchema = z.object({
+  rejectedReason: z.string().optional(),
+  status: z.enum(['pending', 'approved', 'rejected', 'none']).optional(),
+});

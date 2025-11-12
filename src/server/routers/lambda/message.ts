@@ -1,12 +1,12 @@
 import {
   CreateNewMessageParamsSchema,
   UpdateMessageParamsSchema,
+  UpdateMessagePluginSchema,
   UpdateMessageRAGParamsSchema,
 } from '@lobechat/types';
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/models/message';
-import { updateMessagePluginSchema } from '@/database/schemas';
 import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -179,7 +179,7 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: updateMessagePluginSchema.partial(),
+        value: UpdateMessagePluginSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
