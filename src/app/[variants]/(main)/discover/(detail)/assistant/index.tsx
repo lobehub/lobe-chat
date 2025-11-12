@@ -2,8 +2,9 @@
 
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { useParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 
+import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { AssistantMarketSource, DiscoverTab } from '@/types/discover';
@@ -22,9 +23,8 @@ interface AssistantDetailPageProps {
 }
 
 const AssistantDetailPage = memo<AssistantDetailPageProps>(({ mobile }) => {
-  const params = useParams();
-  const slugs = params['*']?.split('/') || [];
-  const identifier = decodeURIComponent(slugs.join('/'));
+  const { slug } = useLoaderData() as SlugParams;
+  const identifier = decodeURIComponent(slug);
   const { version, source } = useQuery() as { source?: AssistantMarketSource; version?: string };
 
   const useAssistantDetail = useDiscoverStore((s) => s.useAssistantDetail);

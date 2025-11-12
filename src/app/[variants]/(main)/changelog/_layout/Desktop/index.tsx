@@ -1,15 +1,13 @@
-import { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import Hero from '../../features/Hero';
 import Container from './Container';
 
-type Props = { children: ReactNode };
-
-const Layout = ({ children }: Props) => {
+const Layout = () => {
   return (
     <Container>
       <Hero />
-      {children}
+      <Outlet />
     </Container>
   );
 };

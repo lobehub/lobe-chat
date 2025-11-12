@@ -2,8 +2,9 @@
 
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { useParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 
+import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab } from '@/types/discover';
 
@@ -19,9 +20,8 @@ interface ModelDetailPageProps {
 }
 
 const ModelDetailPage = memo<ModelDetailPageProps>(({ mobile }) => {
-  const params = useParams();
-  const slugs = params['*']?.split('/') || [];
-  const identifier = decodeURIComponent(slugs.join('/'));
+  const { slug } = useLoaderData() as SlugParams;
+  const identifier = decodeURIComponent(slug);
 
   const useModelDetail = useDiscoverStore((s) => s.useModelDetail);
   const { data, isLoading } = useModelDetail({ identifier });

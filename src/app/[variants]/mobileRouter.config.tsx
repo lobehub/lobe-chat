@@ -7,6 +7,7 @@ import { MobileMainLayout } from './(main)/layouts/mobile';
 import { useGlobalStore } from '@/store/global';
 
 import Loading from '@/components/Loading/BrandTextLoading';
+import { idLoader, slugLoader } from './loaders/routeParams';
 
 // Component to register navigate function in global store
 const NavigatorRegistrar = () => {
@@ -83,7 +84,7 @@ export const mobileRouter = createBrowserRouter([
                     })),
                   path: 'assistant',
                 },],
-                lazy: (() => import('./(main)/discover/(list)/_layout/Mobile').then((m) => ({
+                lazy: (() => import('./(main)/discover/(list)/assistant/_layout/Mobile').then((m) => ({
                   Component: m.default,
                 })))
               },
@@ -107,12 +108,19 @@ export const mobileRouter = createBrowserRouter([
                 path: 'provider',
               },
               {
-                lazy: () =>
-                  import('./(main)/discover/(list)/mcp/index').then((m) => ({
-                    Component: m.MobileMcpPage,
-                  })),
-                path: 'mcp',
-              },
+                children: [
+                  {
+                    lazy: () =>
+                      import('./(main)/discover/(list)/mcp/index').then((m) => ({
+                        Component: m.MobileMcpPage,
+                      })),
+                    path: 'mcp',
+                  },
+                ],
+                lazy: (() => import('./(main)/discover/(list)/mcp/_layout/Mobile').then((m) => ({
+                  Component: m.default,
+                })))
+              }
             ],
             lazy: () =>
               import('./(main)/discover/(list)/_layout/Mobile/index').then((m) => ({
@@ -127,6 +135,7 @@ export const mobileRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/assistant/index').then((m) => ({
                     Component: m.MobileDiscoverAssistantDetailPage,
                   })),
+                loader: slugLoader,
                 path: 'assistant/:slug',
               },
               {
@@ -134,6 +143,7 @@ export const mobileRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/model/index').then((m) => ({
                     Component: m.MobileModelPage,
                   })),
+                loader: slugLoader,
                 path: 'model/:slug',
               },
               {
@@ -141,6 +151,7 @@ export const mobileRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/provider/index').then((m) => ({
                     Component: m.MobileProviderPage,
                   })),
+                loader: slugLoader,
                 path: 'provider/:slug',
               },
               {
@@ -148,6 +159,7 @@ export const mobileRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/mcp/index').then((m) => ({
                     Component: m.MobileMcpPage,
                   })),
+                loader: slugLoader,
                 path: 'mcp/:slug',
               },
             ],
@@ -186,6 +198,7 @@ export const mobileRouter = createBrowserRouter([
               import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
                 Component: m.default,
               })),
+            loader: idLoader,
             path: 'bases/:id',
           },
         ],
@@ -235,17 +248,26 @@ export const mobileRouter = createBrowserRouter([
       // Labs routes
       {
         lazy: () =>
-          import('./(main)/labs/mobile.page').then((m) => ({
-            Component: m.MobileLabsPage,
+          import('./(main)/labs').then((m) => ({
+            Component: m.default,
           })),
         path: 'labs',
       },
 
       // Changelog routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/changelog').then((m) => ({
+                Component: m.default,
+              })),
+          },
+        ],
         lazy: () =>
-          import('./(main)/changelog/mobile.page').then((m) => ({
-            Component: m.MobileChangelogPage,
+          import('./(main)/changelog/_layout/Mobile').then((m) => ({
+            Component: m.default,
           })),
         path: 'changelog',
       },

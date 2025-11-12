@@ -2,8 +2,9 @@
 
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { useParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 
+import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { DetailProvider } from '@/features/MCPPluginDetail/DetailProvider';
 import Header from '@/features/MCPPluginDetail/Header';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
@@ -22,8 +23,8 @@ interface McpDetailPageProps {
 }
 
 const McpDetailPage = memo<McpDetailPageProps>(({ mobile }) => {
-  const params = useParams();
-  const identifier = params['*'] || params.slug || '';
+  const { slug } = useLoaderData() as SlugParams;
+  const identifier = slug;
 
   const { version } = useQuery() as { version?: string };
   const useMcpDetail = useDiscoverStore((s) => s.useFetchMcpDetail);

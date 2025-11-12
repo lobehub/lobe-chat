@@ -13,7 +13,7 @@ const MAX_WIDTH = 1440;
  * Desktop Discover Detail Layout
  * Layout for detail pages (assistant, model, provider, mcp details)
  */
-export const DesktopDiscoverDetailLayout = memo(() => {
+const DesktopDiscoverDetailLayout = memo(() => {
   return (
     <Flexbox
       align={'center'}
@@ -33,3 +33,6 @@ export const DesktopDiscoverDetailLayout = memo(() => {
 });
 
 DesktopDiscoverDetailLayout.displayName = 'DesktopDiscoverDetailLayout';
+
+
+export default DesktopDiscoverDetailLayout;

@@ -6,8 +6,8 @@ import { createBrowserRouter, Navigate, useNavigate } from 'react-router-dom';
 import { useGlobalStore } from '@/store/global';
 import DesktopMainLayout from './(main)/layouts/desktop';
 
-
 import Loading from '@/components/Loading/BrandTextLoading';
+import { idLoader, slugLoader } from './loaders/routeParams';
 
 // Component to register navigate function in global store
 const NavigatorRegistrar = () => {
@@ -88,7 +88,7 @@ export const desktopRouter = createBrowserRouter([
                     path: 'assistant',
                   },
                 ],
-                lazy: (() => import('./(main)/discover/(list)/_layout/Desktop').then((m) => ({
+                lazy: (() => import('./(main)/discover/(list)/assistant/_layout/Desktop').then((m) => ({
                   Component: m.default,
                 })))
               },
@@ -112,12 +112,19 @@ export const desktopRouter = createBrowserRouter([
                 path: 'provider',
               },
               {
-                lazy: () =>
-                  import('./(main)/discover/(list)/mcp/index').then((m) => ({
-                    Component: m.DesktopMcpPage,
-                  })),
-                path: 'mcp',
-              },
+                children: [
+                  {
+                    lazy: () =>
+                      import('./(main)/discover/(list)/mcp/index').then((m) => ({
+                        Component: m.DesktopMcpPage,
+                      })),
+                      path: 'mcp',
+                  },
+                ],
+                lazy: (() => import('./(main)/discover/(list)/mcp/_layout/Desktop').then((m) => ({
+                  Component: m.default,
+                }))),
+              }
             ],
             lazy: () =>
               import('./(main)/discover/(list)/_layout/Desktop/index').then((m) => ({
@@ -132,6 +139,7 @@ export const desktopRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/assistant/index').then((m) => ({
                     Component: m.DesktopDiscoverAssistantDetailPage,
                   })),
+                loader: slugLoader,
                 path: 'assistant/:slug',
               },
               {
@@ -139,6 +147,7 @@ export const desktopRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/model/index').then((m) => ({
                     Component: m.DesktopModelPage,
                   })),
+                loader: slugLoader,
                 path: 'model/:slug',
               },
               {
@@ -146,6 +155,7 @@ export const desktopRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/provider/index').then((m) => ({
                     Component: m.DesktopProviderPage,
                   })),
+                loader: slugLoader,
                 path: 'provider/:slug',
               },
               {
@@ -153,6 +163,7 @@ export const desktopRouter = createBrowserRouter([
                   import('./(main)/discover/(detail)/mcp/index').then((m) => ({
                     Component: m.DesktopMcpPage,
                   })),
+                loader: slugLoader,
                 path: 'mcp/:slug',
               },
             ],
@@ -191,6 +202,7 @@ export const desktopRouter = createBrowserRouter([
               import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
                 Component: m.default,
               })),
+            loader: idLoader,
             path: 'bases/:id',
           },
         ],
@@ -240,17 +252,26 @@ export const desktopRouter = createBrowserRouter([
       // Labs routes
       {
         lazy: () =>
-          import('./(main)/labs/desktop.page').then((m) => ({
-            Component: m.DesktopLabsPage,
+          import('./(main)/labs').then((m) => ({
+            Component: m.default,
           })),
         path: 'labs',
       },
 
       // Changelog routes
       {
+        children: [
+          {
+            index: true,
+            lazy: () =>
+              import('./(main)/changelog').then((m) => ({
+                Component: m.default,
+              })),
+          },
+        ],
         lazy: () =>
-          import('./(main)/changelog/desktop.page').then((m) => ({
-            Component: m.DesktopChangelogPage,
+          import('./(main)/changelog/_layout/Desktop').then((m) => ({
+            Component: m.default,
           })),
         path: 'changelog',
       },

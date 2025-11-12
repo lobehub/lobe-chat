@@ -1,17 +1,15 @@
-import { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 
 import Hero from '../../features/Hero';
 import Header from './Header';
 
-type Props = { children: ReactNode };
-
-const Layout = ({ children }: Props) => {
+const Layout = () => {
   return (
     <MobileContentLayout header={<Header />} padding={16}>
       <Hero />
-      {children}
+      <Outlet />
     </MobileContentLayout>
   );
 };
