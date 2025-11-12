@@ -33,7 +33,7 @@ interface KnowledgeManagerProps {
  */
 const KnowledgeManager = memo<KnowledgeManagerProps>(
   ({ title, knowledgeBaseId, category, onOpenFile, documentId }) => {
-    const isDocumentsView = category === FilesTabs.Documents;
+    const isDocumentsView = category === FilesTabs.Pages;
     const isHomeView = category === FilesTabs.Home;
 
     if (isHomeView) {

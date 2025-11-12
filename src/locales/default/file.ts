@@ -148,6 +148,7 @@ export default {
     home: '首页',
     images: '图片',
     moreTypes: '更多类型',
+    pages: '文稿',
     videos: '视频',
     websites: '网页',
   },

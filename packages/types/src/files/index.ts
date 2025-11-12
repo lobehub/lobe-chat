@@ -4,6 +4,7 @@ export enum FilesTabs {
   Documents = 'documents',
   Home = 'home',
   Images = 'images',
+  Pages = 'pages',
   Videos = 'videos',
   Websites = 'websites',
 }
