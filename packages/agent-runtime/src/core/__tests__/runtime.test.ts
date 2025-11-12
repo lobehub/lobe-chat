@@ -1,3 +1,4 @@
+import { ChatToolPayload } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -946,12 +947,29 @@ describe('AgentRuntime', () => {
             case 'llm_result':
               const llmPayload = context.payload as { result: any; hasToolCalls: boolean };
               if (llmPayload.hasToolCalls) {
+                // Convert OpenAI format tool_calls to ChatToolPayload format
+                const pendingToolsCalling = llmPayload.result.tool_calls.map((tc: any) => ({
+                  apiName: tc.function.name,
+                  arguments: tc.function.arguments,
+                  id: tc.id,
+                  identifier: tc.function.name,
+                  type: 'default' as const,
+                }));
                 return Promise.resolve({
+                  pendingToolsCalling,
                   type: 'request_human_approve',
-                  pendingToolsCalling: llmPayload.result.tool_calls,
                 });
               }
               return Promise.resolve({ type: 'finish', reason: 'completed', reasonDetail: 'Done' });
+            case 'human_approved_tool':
+              const approvedPayload = context.payload as { approvedToolCall: ChatToolPayload };
+              return Promise.resolve({
+                payload: {
+                  parentMessageId: 'user-msg-id',
+                  toolCalling: approvedPayload.approvedToolCall,
+                },
+                type: 'call_tool',
+              });
             case 'tool_result':
               return Promise.resolve({ type: 'call_llm', payload: { messages: state.messages } });
             default:
