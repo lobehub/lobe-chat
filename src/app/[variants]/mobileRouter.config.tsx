@@ -8,7 +8,6 @@ import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import MobileChangelogLayout from './(main)/changelog/_layout/Mobile';
-import MobileMeLayout from './(main)/(mobile)/me/_layout/index';
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
@@ -323,28 +322,49 @@ export const createMobileRouter = (locale: Locales) =>
         {
           children: [
             {
-              index: true,
+              children: [
+                {
+                  index: true,
+                  lazy: () =>
+                    import('./(main)/(mobile)/me/(home)').then((m) => ({
+                      Component: m.default,
+                    })),
+                },
+              ],
               lazy: () =>
-                import('./(main)/(mobile)/me/(home)').then((m) => ({
+                import('./(main)/(mobile)/me/(home)/layout').then((m) => ({
                   Component: m.default,
                 })),
             },
             {
+              children: [{
+                lazy: () =>
+                  import('./(main)/(mobile)/me/profile').then((m) => ({
+                    Component: m.default,
+                  })),
+                path: 'profile',
+              }],
               lazy: () =>
-                import('./(main)/(mobile)/me/profile').then((m) => ({
+                import('./(main)/(mobile)/me/profile/layout').then((m) => ({
                   Component: m.default,
                 })),
-              path: 'profile',
             },
             {
+              children: [
+                {
+                  lazy: () =>
+                    import('./(main)/(mobile)/me/settings').then((m) => ({
+                      Component: m.default,
+                    })),
+                  path: 'settings',
+                },
+              ],
               lazy: () =>
-                import('./(main)/(mobile)/me/settings').then((m) => ({
+                import('./(main)/(mobile)/me/settings/layout').then((m) => ({
                   Component: m.default,
                 })),
-              path: 'settings',
-            },
+            }
           ],
-          element: <MobileMeLayout />,
           path: 'me',
         },
 

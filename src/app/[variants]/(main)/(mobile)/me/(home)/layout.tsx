@@ -1,7 +1,7 @@
 import MobileContentLayout from "@/components/server/MobileNavLayout";
 import Loading from "@/components/Loading/BrandTextLoading";
 import { Outlet } from "react-router-dom";
-import { Header } from "@lobehub/ui";
+import Header from "./features/Header";
 import { Suspense } from "react";
 
 const Layout = () => {
