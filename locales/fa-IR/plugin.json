@@ -255,6 +255,7 @@
       "moveLocalFiles": "جابجایی فایل‌ها",
       "readLocalFile": "خواندن محتوای فایل",
       "renameLocalFile": "تغییر نام",
+      "runCommand": "اجرای کد",
       "searchLocalFiles": "جستجوی فایل‌ها",
       "writeLocalFile": "نوشتن در فایل"
     },

@@ -255,6 +255,7 @@
       "moveLocalFiles": "Dateien verschieben",
       "readLocalFile": "Dateiinhalt lesen",
       "renameLocalFile": "Datei umbenennen",
+      "runCommand": "Befehl ausführen",
       "searchLocalFiles": "Dateien suchen",
       "writeLocalFile": "Datei schreiben"
     },

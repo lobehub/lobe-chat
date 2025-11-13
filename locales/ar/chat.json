@@ -369,6 +369,26 @@
     "remained": "متبقي",
     "used": "مستخدم"
   },
+  "tool": {
+    "intervention": {
+      "approve": "الموافقة",
+      "approveAndRemember": "الموافقة والتذكر",
+      "approveOnce": "الموافقة لمرة واحدة فقط",
+      "mode": {
+        "allowList": "قائمة السماح",
+        "allowListDesc": "تنفيذ الأدوات المعتمدة فقط تلقائيًا",
+        "autoRun": "الموافقة التلقائية",
+        "autoRunDesc": "الموافقة تلقائيًا على تنفيذ جميع الأدوات",
+        "manual": "يدوي",
+        "manualDesc": "يتطلب الموافقة اليدوية في كل مرة يتم فيها الاستدعاء"
+      },
+      "reject": "رفض",
+      "rejectReasonPlaceholder": "إدخال سبب الرفض سيساعد الوكيل على الفهم وتحسين الإجراءات المستقبلية",
+      "rejectTitle": "رفض استدعاء الأداة هذه المرة",
+      "rejectedWithReason": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي: {{reason}}",
+      "toolRejected": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي"
+    }
+  },
   "topic": {
     "checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
     "checkSaveCurrentMessages": "هل ترغب في حفظ الدردشة الحالية كموضوع؟",

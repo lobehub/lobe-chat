@@ -54,6 +54,7 @@ export class GeneralChatAgent implements Agent {
 
   /**
    * Check if tool calls need human intervention
+   * Combines user's global config with tool's own config
    * Returns [toolsNeedingIntervention, toolsToExecute]
    */
   private checkInterventionNeeded(
@@ -63,7 +64,31 @@ export class GeneralChatAgent implements Agent {
     const toolsNeedingIntervention: ChatToolPayload[] = [];
     const toolsToExecute: ChatToolPayload[] = [];
 
+    // Get user config (default to 'manual' mode)
+    const userConfig = state.userInterventionConfig || { approvalMode: 'manual' };
+    const { approvalMode, allowList = [] } = userConfig;
+
     for (const toolCalling of toolsCalling) {
+      const { identifier, apiName } = toolCalling;
+      const toolKey = `${identifier}/${apiName}`;
+
+      // Priority 1: User config is 'auto-run', all tools execute directly
+      if (approvalMode === 'auto-run') {
+        toolsToExecute.push(toolCalling);
+        continue;
+      }
+
+      // Priority 2: User config is 'allow-list', check if tool is in whitelist
+      if (approvalMode === 'allow-list') {
+        if (allowList.includes(toolKey)) {
+          toolsToExecute.push(toolCalling);
+        } else {
+          toolsNeedingIntervention.push(toolCalling);
+        }
+        continue;
+      }
+
+      // Priority 3: User config is 'manual' (default), use tool's own config
       const config = this.getToolInterventionConfig(toolCalling, state);
 
       // Parse arguments for intervention checking
@@ -82,7 +107,7 @@ export class GeneralChatAgent implements Agent {
       if (policy === 'never') {
         toolsToExecute.push(toolCalling);
       } else {
-        // 'require' or 'first' (when not confirmed) requires intervention
+        // 'required' or undefined requires intervention
         toolsNeedingIntervention.push(toolCalling);
       }
     }

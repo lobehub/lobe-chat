@@ -369,6 +369,26 @@
     "remained": "Kalan",
     "used": "Kullanılan"
   },
+  "tool": {
+    "intervention": {
+      "approve": "Onayla",
+      "approveAndRemember": "Onayla ve Hatırla",
+      "approveOnce": "Sadece Bu Sefer Onayla",
+      "mode": {
+        "allowList": "Beyaz Liste",
+        "allowListDesc": "Yalnızca onaylanmış araçlar otomatik olarak çalıştırılır",
+        "autoRun": "Otomatik Onay",
+        "autoRunDesc": "Tüm araçların çalıştırılmasını otomatik olarak onayla",
+        "manual": "Manuel",
+        "manualDesc": "Her çağrı için manuel onay gerekir"
+      },
+      "reject": "Reddet",
+      "rejectReasonPlaceholder": "Reddetme nedenini girmek, Agent'ın anlamasına ve sonraki eylemleri iyileştirmesine yardımcı olur",
+      "rejectTitle": "Bu Araç Çağrısını Reddet",
+      "rejectedWithReason": "Bu araç çağrısı şu nedenle reddedildi: {{reason}}",
+      "toolRejected": "Bu araç çağrısı kullanıcı tarafından reddedildi"
+    }
+  },
   "topic": {
     "checkOpenNewTopic": "Yeni bir konu açılsın mı?",
     "checkSaveCurrentMessages": "Mevcut sohbeti konu olarak kaydetmek istiyor musunuz?",

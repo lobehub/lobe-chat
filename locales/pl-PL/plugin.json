@@ -255,6 +255,7 @@
       "moveLocalFiles": "Przenieś pliki",
       "readLocalFile": "Odczytaj zawartość pliku",
       "renameLocalFile": "Zmień nazwę",
+      "runCommand": "Wykonaj kod",
       "searchLocalFiles": "Wyszukaj pliki",
       "writeLocalFile": "Zapisz do pliku"
     },

@@ -255,6 +255,7 @@
       "moveLocalFiles": "移動檔案",
       "readLocalFile": "讀取檔案內容",
       "renameLocalFile": "重新命名",
+      "runCommand": "執行程式碼",
       "searchLocalFiles": "搜尋檔案",
       "writeLocalFile": "寫入檔案"
     },

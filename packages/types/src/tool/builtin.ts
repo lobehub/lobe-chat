@@ -151,3 +151,12 @@ export interface BuiltinServerRuntimeOutput {
   state?: any;
   success: boolean;
 }
+
+export interface BuiltinInterventionProps<Arguments = any> {
+  apiName?: string;
+  args: Arguments;
+  identifier?: string;
+  messageId: string;
+}
+
+export type BuiltinIntervention = (props: BuiltinInterventionProps) => ReactNode;

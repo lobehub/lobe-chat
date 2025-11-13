@@ -255,6 +255,7 @@
       "moveLocalFiles": "Dosya taşı",
       "readLocalFile": "Dosya içeriğini oku",
       "renameLocalFile": "Dosya adını değiştir",
+      "runCommand": "Komutu Çalıştır",
       "searchLocalFiles": "Dosya ara",
       "writeLocalFile": "Dosyaya yaz"
     },
