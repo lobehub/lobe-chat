@@ -10,11 +10,17 @@ import { Flexbox } from 'react-layout-kit';
 const POPOVER_MAX_WIDTH = 320;
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+  descriptionText: css`
+    color: ${isDarkMode ? token.colorText : token.colorTextSecondary};
+  `,
   popover: css`
     .ant-popover-inner {
-      color: ${isDarkMode ? token.colorTextLightSolid : token.colorText};
       background: ${isDarkMode ? token.colorBgSpotlight : token.colorBgElevated};
     }
+  `,
+  priceText: css`
+    font-weight: 500;
+    color: ${isDarkMode ? token.colorTextLightSolid : token.colorTextTertiary};
   `,
 }));
 
@@ -49,15 +55,11 @@ const ImageModelItem = memo<ImageModelItemProps>(
 
       return (
         <Flexbox gap={8} style={{ maxWidth: POPOVER_MAX_WIDTH }}>
-          {description && <Text type={'secondary'}>{description}</Text>}
-          {priceLabel && (
-            <Text style={{ fontWeight: 500 }} type={'secondary'}>
-              {priceLabel}
-            </Text>
-          )}
+          {description && <Text className={styles.descriptionText}>{description}</Text>}
+          {priceLabel && <Text className={styles.priceText}>{priceLabel}</Text>}
         </Flexbox>
       );
-    }, [description, priceLabel]);
+    }, [description, priceLabel, styles.descriptionText, styles.priceText]);
 
     const content = (
       <Flexbox align={'center'} gap={8} horizontal style={{ overflow: 'hidden' }}>

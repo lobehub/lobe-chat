@@ -40,13 +40,13 @@ const getImageModelList = async (enabledAiModels: EnabledAiModel[], providerId: 
 
   const models = await Promise.all(
     filteredModels.map(async (model) => {
-      const fallbackParametersPromise = !model.parameters
-        ? getModelPropertyWithFallback<ModelParamsSchema | undefined>(
+      const fallbackParametersPromise = model.parameters
+        ? Promise.resolve<ModelParamsSchema | undefined>(undefined)
+        : getModelPropertyWithFallback<ModelParamsSchema | undefined>(
             model.id,
             'parameters',
             model.providerId,
-          )
-        : Promise.resolve<ModelParamsSchema | undefined>(undefined);
+          );
 
       const modelWithPricing = model as AIImageModelCard;
       const fallbackPricingPromise = modelWithPricing.pricing
