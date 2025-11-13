@@ -64,7 +64,7 @@ export class MessageContentProcessor extends BaseProcessor {
     let userMessagesProcessed = 0;
     let assistantMessagesProcessed = 0;
 
-    // 处理每条消息的内容
+    // Process the content of each message
     for (let i = 0; i < clonedContext.messages.length; i++) {
       const message = clonedContext.messages[i];
 
@@ -91,11 +91,11 @@ export class MessageContentProcessor extends BaseProcessor {
         }
       } catch (error) {
         log.extend('error')(`Error processing message ${message.id} content: ${error}`);
-        // 继续处理其他消息
+        // Continue processing other messages
       }
     }
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.messageContentProcessed = processedCount;
     clonedContext.metadata.userMessagesProcessed = userMessagesProcessed;
     clonedContext.metadata.assistantMessagesProcessed = assistantMessagesProcessed;
