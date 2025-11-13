@@ -1,8 +1,8 @@
 import { ActionIcon, ActionIconProps, Hotkey } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare, Palette } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useTransition } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -29,6 +29,9 @@ export interface TopActionProps {
 //  TODO Change icons
 const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
+  const navigate = useNavigate();
+  const [, startTransition] = useTransition();
+
   const [switchBackToChat, isMobile] = useGlobalStore((s) => [
     s.switchBackToChat,
     s.isMobile,
@@ -43,66 +46,69 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   );
 
   const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
-  const isFilesActive = tab === SidebarTabKey.Files;
+  const isKnowledgeActive = tab === SidebarTabKey.Knowledge;
   const isDiscoverActive = tab === SidebarTabKey.Discover;
   const isImageActive = tab === SidebarTabKey.Image;
 
+  const handleNavigate = (path: string) => {
+    startTransition(() => {
+      navigate(path);
+    });
+  };
+
   return (
     <Flexbox gap={8}>
-      <Link
-        aria-label={t('tab.chat')}
+      <ActionIcon
+        active={isChatActive}
+        icon={MessageSquare}
         onClick={(e) => {
-          if (e.metaKey || e.ctrlKey) return;
-          e.preventDefault();
-          switchBackToChat(activeSessionId);
-        }}
-        to={chatHref}
-      >
-        <ActionIcon
-          active={isChatActive}
-          icon={MessageSquare}
-          size={ICON_SIZE}
-          title={
-            <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
-              <span>{t('tab.chat')}</span>
-              <Hotkey inverseTheme keys={hotkey} />
-            </Flexbox>
+          if (e.metaKey || e.ctrlKey) {
+            window.open(chatHref, '_blank');
+            return;
           }
+          e.preventDefault();
+          startTransition(() => {
+            switchBackToChat(activeSessionId);
+          });
+        }}
+        size={ICON_SIZE}
+        title={
+          <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
+            <span>{t('tab.chat')}</span>
+            <Hotkey inverseTheme keys={hotkey} />
+          </Flexbox>
+        }
+        tooltipProps={{ placement: 'right' }}
+      />
+      {enableKnowledgeBase && (
+        <ActionIcon
+          active={isKnowledgeActive}
+          icon={FolderClosed}
+          onClick={() => handleNavigate('/knowledge')}
+          size={ICON_SIZE}
+          title={t('tab.knowledgeBase')}
           tooltipProps={{ placement: 'right' }}
         />
-      </Link>
-      {enableKnowledgeBase && (
-        <Link aria-label={t('tab.knowledgeBase')} to={'/knowledge'}>
-          <ActionIcon
-            active={isFilesActive}
-            icon={FolderClosed}
-            size={ICON_SIZE}
-            title={t('tab.knowledgeBase')}
-            tooltipProps={{ placement: 'right' }}
-          />
-        </Link>
       )}
       {showAiImage && (
-        <Link aria-label={t('tab.aiImage')} to={'/image'}>
-          <ActionIcon
-            active={isImageActive}
-            icon={Palette}
-            size={ICON_SIZE}
-            title={t('tab.aiImage')}
-            tooltipProps={{ placement: 'right' }}
-          />
-        </Link>
+        <ActionIcon
+          active={isImageActive}
+          icon={Palette}
+          onClick={() => handleNavigate('/image')}
+          size={ICON_SIZE}
+          title={t('tab.aiImage')}
+          tooltipProps={{ placement: 'right' }}
+        />
       )}
       {showMarket && (
-        <Link aria-label={t('tab.discover')} to={'/discover'}>
-          <ActionIcon
-            active={isDiscoverActive}
-            icon={Compass}
-            size={ICON_SIZE}
-            title={t('tab.discover')}
-            tooltipProps={{ placement: 'right' }}
-          />
-        </Link>
+        <ActionIcon
+          active={isDiscoverActive}
+          icon={Compass}
+          onClick={() => handleNavigate('/discover')}
+          size={ICON_SIZE}
+          title={t('tab.discover')}
+          tooltipProps={{ placement: 'right' }}
+        />
       )}
     </Flexbox>
   );
