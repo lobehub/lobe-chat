@@ -55,12 +55,32 @@ export default {
   betterAuth: {
     errors: {
       emailInvalid: '请输入有效的邮箱地址',
+      emailNotRegistered: '该邮箱尚未注册',
+      emailNotVerified: '邮箱尚未验证，请先验证邮箱',
       emailRequired: '请输入邮箱地址',
       firstNameRequired: '请输入名字',
       lastNameRequired: '请输入姓氏',
+      loginFailed: '登录失败，请检查邮箱和密码',
       passwordMinLength: '密码至少需要 8 个字符',
       passwordRequired: '请输入密码',
       usernameRequired: '请输入用户名',
+    },
+    signin: {
+      backToEmail: '返回修改邮箱',
+      emailPlaceholder: '请输入邮箱地址',
+      emailStep: {
+        subtitle: '请输入您的邮箱地址以继续',
+        title: '登录',
+      },
+      error: '登录失败，请检查邮箱和密码',
+      nextStep: '下一步',
+      noAccount: '还没有账号？',
+      passwordPlaceholder: '请输入密码',
+      passwordStep: {
+        subtitle: '请输入密码以继续',
+      },
+      signupLink: '立即注册',
+      submit: '登录',
     },
     signup: {
       emailPlaceholder: '请输入邮箱地址',
