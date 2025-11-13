@@ -16,6 +16,8 @@ export const auth = betterAuth({
   emailAndPassword: {
     autoSignIn: true,
     enabled: true,
+    maxPasswordLength: 64,
+    minPasswordLength: 8,
     requireEmailVerification: authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION,
 
     sendResetPassword: async ({ user, url }) => {

@@ -92,9 +92,6 @@ export default function SignUpPage() {
         return;
       }
 
-      // Registration successful
-      message.success(t('betterAuth.signup.success'));
-
       // Redirect based on email verification requirement
       if (authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION) {
         // Email verification required, redirect to verification notice page
@@ -145,6 +142,19 @@ export default function SignUpPage() {
               rules={[
                 { message: t('betterAuth.errors.passwordRequired'), required: true },
                 { message: t('betterAuth.errors.passwordMinLength'), min: 8 },
+                { max: 64, message: t('betterAuth.errors.passwordMaxLength') },
+                {
+                  message: t('betterAuth.errors.passwordFormat'),
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+                    const hasLetter = /[A-Za-z]/.test(value);
+                    const hasNumber = /\d/.test(value);
+                    if (hasLetter && hasNumber) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject();
+                  },
+                },
               ]}
             >
               <Input.Password
