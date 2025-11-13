@@ -8,7 +8,7 @@ import { FileStore } from '../../store';
 
 const n = setNamespace('document');
 
-const ALLOWED_DOCUMENT_SOURCE_TYPES = new Set(['editor', 'file']);
+const ALLOWED_DOCUMENT_SOURCE_TYPES = new Set(['editor', 'file', 'api']);
 const ALLOWED_DOCUMENT_FILE_TYPES = new Set(['custom/document', 'application/pdf']);
 const EDITOR_DOCUMENT_FILE_TYPE = 'custom/document';
 
@@ -92,8 +92,9 @@ export const createDocumentSlice: StateCreator<
       title,
     });
 
-    // Refresh documents in the background without blocking navigation
-    get().fetchDocuments();
+    // Don't refresh documents here - the caller will handle replacing the temp document
+    // with the real one via replaceTempDocumentWithReal, which provides a smooth UX
+    // without triggering the loading skeleton
 
     return newDoc;
   },
@@ -178,8 +179,8 @@ export const createDocumentSlice: StateCreator<
     newMap.set(newDoc.id, editorDoc);
     set({ localDocumentMap: newMap }, false, n('duplicateDocument'));
 
-    // Refresh documents in background to sync with server
-    await get().fetchDocuments();
+    // Don't refresh documents here - we've already added it to the local map
+    // This prevents the loading skeleton from appearing
 
     return newDoc;
   },

@@ -135,9 +135,12 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
           return;
         }
 
-        if (currentDocument?.editorData) {
+        if (currentDocument?.editorData && Object.keys(currentDocument.editorData).length > 0) {
           setCurrentTitle(currentDocumentTitle || '');
           isInitialLoadRef.current = true;
+
+          console.log('[DocumentEditor] Setting editor data', currentDocument.editorData);
+
           editor.setDocument('json', JSON.stringify(currentDocument.editorData));
           // Calculate word count from content
           const textContent = currentDocument.content || '';
@@ -146,7 +149,7 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
             isInitialLoadRef.current = false;
           }, RESET_DELAY);
           return;
-        } else if (currentDocument?.pages) {
+        } else if (currentDocument?.pages && editor) {
           const pagesContent = extractContentFromPages(currentDocument.pages);
           if (pagesContent) {
             console.log('[DocumentEditor] Using pages content as fallback');
@@ -190,6 +193,11 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
         return;
       }
 
+      // Store focus state before saving
+      // Check if the editor's root element or any of its descendants has focus
+      const editorElement = editor.getRootElement();
+      const hadFocus = editorElement?.contains(document.activeElement) ?? false;
+
       setSaveStatus('saving');
 
       try {
@@ -208,6 +216,14 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
             title: currentTitle,
             updatedAt: new Date(),
           });
+
+          // Restore focus if editor had it before save
+          if (hadFocus) {
+            // Use setTimeout to ensure focus is restored after any re-renders
+            setTimeout(() => {
+              editor.focus();
+            }, 0);
+          }
         } else {
           // Create new document (either no ID or temp ID)
           const now = Date.now();
@@ -271,6 +287,13 @@ const DocumentEditor = memo<DocumentEditorPanelProps>(
 
           // Refresh in background to sync with server
           refreshFileList();
+
+          // Restore focus if editor had it before save
+          if (hadFocus) {
+            setTimeout(() => {
+              editor.focus();
+            }, 0);
+          }
         }
 
         setSaveStatus('saved');

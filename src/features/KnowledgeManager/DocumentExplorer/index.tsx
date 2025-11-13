@@ -179,9 +179,10 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
       // Replace optimistic document with real document (smooth UX, no flicker)
       replaceTempDocumentWithReal(tempDocumentId, realDocument);
 
-      // Update selected document ID to real ID
+      // Update selected document ID to real ID and update URL
       setSelectedDocumentId(newDoc.id);
       setIsCreatingNew(false);
+      updateUrl(newDoc.id);
     } catch (error) {
       console.error('Failed to create document:', error);
       // On error, remove the optimistic document and deselect
