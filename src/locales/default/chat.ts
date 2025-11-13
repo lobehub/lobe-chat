@@ -192,6 +192,7 @@ export default {
     delAndRegenerate: '删除并重新生成',
     deleteDisabledByThreads: '存在子话题，不能删除',
     regenerate: '重新生成',
+    toggleRawPreview: '切换原文显示',
   },
 
   messages: {

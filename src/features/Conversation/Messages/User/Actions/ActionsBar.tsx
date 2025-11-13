@@ -29,6 +29,7 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     // isThreadMode,
     hasThread,
     isRegenerating,
+    isRawPreview,
     toggleMessageEditing,
     deleteMessage,
     regenerateUserMessage,
@@ -39,10 +40,12 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     openThreadCreator,
     resendThreadMessage,
     delAndResendThreadMessage,
+    toggleMessageRawPreview,
   ] = useChatStore((s) => [
     // !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     messageStateSelectors.isMessageRegenerating(id)(s),
+    messageStateSelectors.isMessageInRawPreview(id)(s),
 
     s.toggleMessageEditing,
     s.deleteMessage,
@@ -54,13 +57,15 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
     s.openThreadCreator,
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
+    s.toggleMessageRawPreview,
   ]);
 
   // const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
 
-  const { regenerate, edit, copy, divider, del, tts, translate } = useChatListActionsBar({
+  const { regenerate, edit, copy, divider, del, tts, translate, toggleRawPreview } = useChatListActionsBar({
     hasThread,
     isRegenerating,
+    isRawPreview,
   });
 
   const inPortalThread = use(InPortalThreadContext);
@@ -132,6 +137,11 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
           ttsMessage(id);
           break;
         }
+
+        case 'toggleRawPreview': {
+          toggleMessageRawPreview(id);
+          break;
+        }
       }
 
       if (action.keyPath.at(-1) === 'translate') {
@@ -142,14 +152,14 @@ export const UserActionsBar = memo<UserActionsProps>(({ id, data, index }) => {
         translateMessage(id, lang);
       }
     },
-    [data.content, data.error, inPortalThread, topic],
+    [data.content, data.error, inPortalThread, topic, id],
   );
 
   return (
     <ActionIconGroup
       items={items}
       menu={{
-        items: [edit, copy, divider, tts, translate, divider, regenerate, del],
+        items: [edit, copy, divider, toggleRawPreview, tts, translate, divider, regenerate, del],
       }}
       onActionClick={onActionClick}
       size={'small'}

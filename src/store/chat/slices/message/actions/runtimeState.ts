@@ -39,6 +39,11 @@ export interface MessageRuntimeStateAction {
    * Update active session type
    */
   internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => void;
+
+  /**
+   * Toggle message raw text preview mode
+   */
+  toggleMessageRawPreview: (id: string) => void;
 }
 
 export const messageRuntimeState: StateCreator<
@@ -104,5 +109,15 @@ export const messageRuntimeState: StateCreator<
     if (get().activeSessionType === sessionType) return;
 
     set({ activeSessionType: sessionType }, false, n('updateActiveSessionType'));
+  },
+
+  toggleMessageRawPreview: (id: string) => {
+    set(
+      {
+        messageRawPreviewIds: toggleBooleanList(get().messageRawPreviewIds, id, undefined),
+      },
+      false,
+      n(`toggleMessageRawPreview/${id}`),
+    );
   },
 });

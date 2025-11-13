@@ -60,10 +60,11 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
 
   const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
 
-  const [editing, generating, isInRAGFlow] = useChatStore((s) => [
+  const [editing, generating, isInRAGFlow, isRawPreview] = useChatStore((s) => [
     messageStateSelectors.isMessageEditing(id)(s),
     messageStateSelectors.isMessageGenerating(id)(s),
     messageStateSelectors.isMessageInRAGFlow(id)(s),
+    messageStateSelectors.isMessageInRawPreview(id)(s),
   ]);
 
   const loading = isInRAGFlow || generating;
@@ -122,14 +123,17 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
 
   const markdownProps = useMemo(
     () => ({
-      components,
-      customRender: (dom: ReactNode, { text }: { text: string }) => (
-        <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
-      ),
-      rehypePlugins,
-      remarkPlugins,
+      components: isRawPreview ? {} : components,
+      customRender: isRawPreview 
+        ? undefined
+        : (dom: ReactNode, { text }: { text: string }) => (
+            <UserMarkdownRender displayMode={displayMode} dom={dom} id={id} text={text} />
+          ),
+      rehypePlugins: isRawPreview ? [] : rehypePlugins,
+      remarkPlugins: isRawPreview ? [] : remarkPlugins,
+      disableMarkdown: isRawPreview,
     }),
-    [displayMode],
+    [displayMode, isRawPreview, components, id],
   );
 
   return (

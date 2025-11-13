@@ -72,6 +72,10 @@ export interface ChatMessageState {
    * Supervisor todo list map keyed by session/topic combination
    */
   supervisorTodos: Record<string, SupervisorTodoItem[]>;
+  /**
+   * is the message in raw text preview mode (no markdown rendering)
+   */
+  messageRawPreviewIds: string[];
 }
 
 export const initialMessageState: ChatMessageState = {
@@ -92,4 +96,5 @@ export const initialMessageState: ChatMessageState = {
   supervisorDecisionAbortControllers: {},
   supervisorDecisionLoading: [],
   supervisorTodos: {},
+  messageRawPreviewIds: [],
 };

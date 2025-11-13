@@ -6,6 +6,7 @@ const isMessageEditing = (id: string) => (s: ChatStoreState) => s.messageEditing
 const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoadingIds.includes(id);
 const isMessageRegenerating = (id: string) => (s: ChatStoreState) => s.regeneratingIds.includes(id);
 const isMessageContinuing = (id: string) => (s: ChatStoreState) => s.continuingIds.includes(id);
+const isMessageInRawPreview = (id: string) => (s: ChatStoreState) => s.messageRawPreviewIds.includes(id);
 
 const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
 const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
@@ -76,6 +77,7 @@ export const messageStateSelectors = {
   isMessageGenerating,
   isMessageInChatReasoning,
   isMessageInRAGFlow,
+  isMessageInRawPreview,
   isMessageLoading,
   isMessageRegenerating,
   isPluginApiInvoking,

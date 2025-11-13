@@ -5,6 +5,7 @@ import {
   Copy,
   DownloadIcon,
   Edit,
+  Eye,
   LanguagesIcon,
   ListRestart,
   Play,
@@ -36,6 +37,7 @@ interface ChatListActionsBar {
   export: ActionIconGroupItemType;
   regenerate: ActionIconGroupItemType;
   share: ActionIconGroupItemType;
+  toggleRawPreview: ActionIconGroupItemType;
   translate: ActionIconGroupItemType;
   tts: ActionIconGroupItemType;
 }
@@ -44,10 +46,12 @@ export const useChatListActionsBar = ({
   hasThread,
   isContinuing,
   isRegenerating,
+  isRawPreview,
 }: {
   hasThread?: boolean;
   isContinuing?: boolean;
   isRegenerating?: boolean;
+  isRawPreview?: boolean;
 } = {}): ChatListActionsBar => {
   const { t } = useTranslation(['common', 'chat']);
 
@@ -120,12 +124,18 @@ export const useChatListActionsBar = ({
         label: t('translate.action', { ns: 'chat' }),
         popupClassName: cx(translateStyle),
       },
+      toggleRawPreview: {
+        icon: Eye,
+        key: 'toggleRawPreview',
+        label: t('messageAction.toggleRawPreview', { ns: 'chat' }),
+        style: isRawPreview ? { backgroundColor: 'rgba(0, 0, 255, 0.1)' } : undefined,
+      },
       tts: {
         icon: Play,
         key: 'tts',
         label: t('tts.action', { ns: 'chat' }),
       },
     }),
-    [hasThread, isContinuing, isRegenerating],
+    [hasThread, isContinuing, isRegenerating, isRawPreview],
   );
 };

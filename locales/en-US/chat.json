@@ -176,7 +176,8 @@
     "continueGeneration": "Continue Generating",
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
-    "regenerate": "Regenerate"
+    "regenerate": "Regenerate",
+    "toggleRawPreview": "Toggle Raw Text"
   },
   "messages": {
     "dm": {
