@@ -4,6 +4,11 @@ import {
   OpenAICompatibleFactoryOptions,
   createOpenAICompatibleRuntime,
 } from '../../core/openaiCompatibleFactory';
+import { processMultiProviderModelList } from '../../utils/modelParse';
+
+export interface WenxinModelCard {
+  id: string;
+}
 
 export const params = {
   baseURL: 'https://qianfan.baidubce.com/v2',
@@ -26,6 +31,16 @@ export const params = {
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_WENXIN_CHAT_COMPLETION === '1',
+  },
+  models: async ({ client }) => {
+    const modelsPage = (await client.models.list()) as any;
+    const modelList: WenxinModelCard[] = modelsPage.data;
+
+    const standardModelList = modelList.map((model) => ({
+      id: model.id,
+    }));
+
+    return processMultiProviderModelList(standardModelList, 'wenxin');
   },
   provider: ModelProvider.Wenxin,
 } satisfies OpenAICompatibleFactoryOptions;
