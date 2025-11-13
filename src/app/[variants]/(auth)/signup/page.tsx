@@ -4,7 +4,7 @@ import { Button } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { Form, Input } from 'antd';
 import { createStyles } from 'antd-style';
-import { ChevronRight, Lock, Mail, User } from 'lucide-react';
+import { ChevronRight, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -53,10 +53,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface SignUpFormValues {
   email: string;
-  firstName: string;
-  lastName: string;
   password: string;
-  username: string;
 }
 
 export default function SignUpPage() {
@@ -80,12 +77,13 @@ export default function SignUpPage() {
     try {
       const callbackUrl = searchParams.get('callbackUrl') || '/';
 
+      // Generate username from email (use the part before @)
+      const username = values.email.split('@')[0];
+
       const { error } = await signUp.email({
         callbackURL: callbackUrl,
         email: values.email,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        name: values.username,
+        name: username,
         password: values.password,
       });
 
@@ -128,44 +126,6 @@ export default function SignUpPage() {
           <p className={styles.subtitle}>{t('betterAuth.signup.subtitle')}</p>
 
           <Form form={form} layout="vertical" onFinish={handleSignUp} style={{ marginTop: '2rem' }}>
-            <Flexbox gap={12} horizontal>
-              <Form.Item
-                name="firstName"
-                rules={[{ message: t('betterAuth.errors.firstNameRequired'), required: true }]}
-                style={{ flex: 1, marginBottom: 0 }}
-              >
-                <Input
-                  placeholder={t('betterAuth.signup.firstNamePlaceholder')}
-                  prefix={<User size={16} />}
-                  size="large"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="lastName"
-                rules={[{ message: t('betterAuth.errors.lastNameRequired'), required: true }]}
-                style={{ flex: 1, marginBottom: 0 }}
-              >
-                <Input
-                  placeholder={t('betterAuth.signup.lastNamePlaceholder')}
-                  prefix={<User size={16} />}
-                  size="large"
-                />
-              </Form.Item>
-            </Flexbox>
-
-            <Form.Item
-              name="username"
-              rules={[{ message: t('betterAuth.errors.usernameRequired'), required: true }]}
-              style={{ marginTop: 24 }}
-            >
-              <Input
-                placeholder={t('betterAuth.signup.usernamePlaceholder')}
-                prefix={<User size={16} />}
-                size="large"
-              />
-            </Form.Item>
-
             <Form.Item
               name="email"
               rules={[
