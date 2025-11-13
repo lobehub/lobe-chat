@@ -14,6 +14,15 @@ import { DiscoverTab } from '@/types/discover';
 
 import { useNav } from '../../../features/useNav';
 
+const SCROLL_CONTAINER_ID = 'lobe-mobile-scroll-container';
+
+const scrollToTop = () => {
+  const scrollableElement = document?.querySelector(`#${SCROLL_CONTAINER_ID}`);
+
+  if (!scrollableElement) return;
+  scrollableElement.scrollTo({ behavior: 'smooth', top: 0 });
+};
+
 export const useStyles = createStyles(({ css, token }) => ({
   activeNavItem: css`
     background: ${token.colorFillTertiary};
@@ -45,10 +54,20 @@ const Nav = memo(() => {
         <ActionIcon
           color={theme.colorText}
           icon={MenuIcon}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true);
+          }}
           size={{ blockSize: 32, size: 18 }}
         />
-        {activeItem?.label}
+        <span
+          onClickCapture={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          style={{ cursor: 'default', userSelect: 'text' }}
+        >
+          {activeItem?.label}
+        </span>
       </Flexbox>
 
       <Drawer
@@ -77,6 +96,7 @@ const Nav = memo(() => {
           compact
           items={items}
           onClick={({ key }) => {
+            scrollToTop();
             if (key === DiscoverTab.Home) {
               navigate('/');
             } else {
