@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix oidc accountId mismatch."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.50"
+  },
+  {
+    "children": {
       "features": ["Support tool invention."],
       "fixes": ["Update lost i18n files."]
     },
