@@ -7,7 +7,7 @@ import { createStyles } from 'antd-style';
 import { ChevronRight, Lock, Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -66,6 +66,14 @@ export default function SignUpPage() {
   const searchParams = useSearchParams();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+
+  // Pre-fill email from query params (from signin page redirect)
+  useEffect(() => {
+    const email = searchParams.get('email');
+    if (email) {
+      form.setFieldsValue({ email });
+    }
+  }, [searchParams, form]);
 
   const handleSignUp = async (values: SignUpFormValues) => {
     setLoading(true);
