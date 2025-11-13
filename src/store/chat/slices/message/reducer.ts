@@ -3,6 +3,7 @@ import {
   ChatPluginPayload,
   ChatToolPayload,
   CreateMessageParams,
+  MessagePluginItem,
   UIChatMessage,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
@@ -47,7 +48,7 @@ interface UpdatePluginState {
 interface UpdateMessagePlugin {
   id: string;
   type: 'updateMessagePlugin';
-  value: Partial<ChatPluginPayload>;
+  value: Partial<MessagePluginItem>;
 }
 
 interface UpdateMessageTools {

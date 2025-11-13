@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "즐겨찾기하지 않은 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주세요.",
     "duplicate": "복사본 만들기",
     "export": "주제 내보내기",
+    "openInNewWindow": "새 창에서 열기",
     "removeAll": "모든 주제 삭제",
     "removeUnstarred": "즐겨찾기하지 않은 주제 삭제"
   },

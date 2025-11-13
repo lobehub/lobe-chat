@@ -151,6 +151,19 @@ export class MessageService {
   }
 
   /**
+   * Update message plugin and return message list
+   * Pattern: update + conditional query
+   */
+  async updateMessagePlugin(
+    id: string,
+    value: any,
+    options: QueryOptions,
+  ): Promise<{ messages?: UIChatMessage[], success: boolean; }> {
+    await this.messageModel.updateMessagePlugin(id, value);
+    return this.queryWithSuccess(options);
+  }
+
+  /**
    * Update message and return message list
    * Pattern: update + conditional query
    */

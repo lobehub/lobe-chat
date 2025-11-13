@@ -6,6 +6,7 @@ export default {
     confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',
     duplicate: '创建副本',
     export: '导出话题',
+    openInNewWindow: '单独打开页面',
     removeAll: '删除全部话题',
     removeUnstarred: '删除未收藏话题',
   },

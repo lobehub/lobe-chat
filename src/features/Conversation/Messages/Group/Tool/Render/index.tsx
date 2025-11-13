@@ -1,15 +1,18 @@
 import { LOADING_FLAT } from '@lobechat/const';
-import { ChatToolResult } from '@lobechat/types';
+import { ChatToolResult, ToolIntervention } from '@lobechat/types';
 import { Suspense, memo } from 'react';
 
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
+import Intervention from './Intervention';
 import LoadingPlaceholder from './LoadingPlaceholder';
+import RejectedResponse from './RejectedResponse';
 
 interface RenderProps {
   apiName: string;
   arguments?: string;
   identifier: string;
+  intervention?: ToolIntervention;
   /**
    * ContentBlock ID (not the group message ID)
    */
@@ -18,6 +21,7 @@ interface RenderProps {
   setShowPluginRender: (show: boolean) => void;
   showPluginRender: boolean;
   toolCallId: string;
+  toolMessageId?: string;
   type?: string;
 }
 
@@ -38,7 +42,25 @@ const Render = memo<RenderProps>(
     apiName,
     result,
     type,
+    intervention,
+    toolMessageId,
   }) => {
+    if (toolMessageId && intervention?.status === 'pending') {
+      return (
+        <Intervention
+          apiName={apiName}
+          id={toolMessageId}
+          identifier={identifier}
+          requestArgs={requestArgs || ''}
+          toolCallId={toolCallId}
+        />
+      );
+    }
+
+    if (intervention?.status === 'rejected') {
+      return <RejectedResponse reason={intervention.rejectedReason} />;
+    }
+
     if (!result) return null;
 
     // Handle error state

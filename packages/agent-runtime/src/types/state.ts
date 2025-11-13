@@ -1,4 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { ChatToolPayload } from '@/types/message';
+
 import type { Cost, CostLimit, Usage } from './usage';
 
 /**
@@ -49,7 +51,7 @@ export interface AgentState {
    * When status is 'waiting_for_human', this stores pending requests
    * for human-in-the-loop operations.
    */
-  pendingToolsCalling?: ToolsCalling[];
+  pendingToolsCalling?: ChatToolPayload[];
   pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
   pendingHumanSelect?: {
     metadata?: Record<string, unknown>;
