@@ -14,7 +14,6 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
     {
       description:
         'a search service. Useful for when you need to answer questions about current events. Input should be a search query. Output is a JSON array of the query results',
-      humanIntervention: 'require',
       name: WebBrowsingApiName.search,
       parameters: {
         properties: {
