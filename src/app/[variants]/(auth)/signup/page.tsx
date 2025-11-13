@@ -2,7 +2,7 @@
 
 import { Button } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
-import { Form, Input, message } from 'antd';
+import { Form, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronRight, Lock, Mail, User } from 'lucide-react';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { message } from '@/components/AntdStaticMethods';
 import { signUp } from '@/libs/better-auth/auth-client';
 
 const useStyles = createStyles(({ css, token }) => ({
