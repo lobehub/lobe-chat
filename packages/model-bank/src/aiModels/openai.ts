@@ -1171,31 +1171,13 @@ export const openaiImageModels: AIImageModelCard[] = [
     id: 'gpt-image-1',
     parameters: gptImage1ParamsSchema,
     pricing: {
+      pricePerImage: 0.042,
       units: [
         { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 10, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput_cacheRead', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageOutput', rate: 40, strategy: 'fixed', unit: 'millionTokens' },
-        {
-          lookup: {
-            prices: {
-              high_1024x1024: 0.167,
-              high_1024x1536: 0.25,
-              high_1536x1024: 0.25,
-              low_1024x1024: 0.011,
-              low_1024x1536: 0.016,
-              low_1536x1024: 0.016,
-              medium_1024x1024: 0.042,
-              medium_1024x1536: 0.063,
-              medium_1536x1024: 0.063,
-            },
-            pricingParams: ['quality', 'size'],
-          },
-          name: 'imageGeneration',
-          strategy: 'lookup',
-          unit: 'image',
-        },
       ],
     },
     resolutions: ['1024x1024', '1024x1536', '1536x1024'],
@@ -1208,28 +1190,13 @@ export const openaiImageModels: AIImageModelCard[] = [
     id: 'gpt-image-1-mini',
     parameters: gptImage1ParamsSchema,
     pricing: {
+      pricePerImage: 0.011,
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput_cacheRead', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
-        {
-          lookup: {
-            prices: {
-              low_1024x1024: 0.005,
-              low_1024x1536: 0.006,
-              low_1536x1024: 0.006,
-              medium_1024x1024: 0.011,
-              medium_1024x1536: 0.015,
-              medium_1536x1024: 0.015,
-            },
-            pricingParams: ['quality', 'size'],
-          },
-          name: 'imageGeneration',
-          strategy: 'lookup',
-          unit: 'image',
-        },
       ],
     },
     releasedAt: '2025-10-06',
