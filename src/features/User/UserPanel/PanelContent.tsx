@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
-import { enableAuth, enableNextAuth } from '@/const/auth';
+import { enableAuth, enableBetterAuth, enableNextAuth } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
@@ -31,8 +31,9 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const handleSignOut = () => {
     signOut();
     closePopover();
-    // NextAuth doesn't need to redirect to login page
-    if (enableNextAuth) return;
+    // NextAuth and Better Auth handle redirect in their own signOut methods
+    if (enableNextAuth || enableBetterAuth) return;
+    // Clerk uses /login page
     router.push('/login');
   };
 
