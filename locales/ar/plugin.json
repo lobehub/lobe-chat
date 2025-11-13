@@ -255,6 +255,7 @@
       "moveLocalFiles": "نقل الملفات",
       "readLocalFile": "قراءة محتوى الملف",
       "renameLocalFile": "إعادة تسمية",
+      "runCommand": "تشغيل الأمر",
       "searchLocalFiles": "بحث في الملفات",
       "writeLocalFile": "كتابة في الملف"
     },
