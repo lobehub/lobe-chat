@@ -240,6 +240,7 @@
   "noMatchingAgents": "一致するメンバーが見つかりません",
   "noMembersYet": "このグループにはまだメンバーがいません。「＋」ボタンをクリックしてアシスタントを招待してください。",
   "noSelectedAgents": "メンバーがまだ選択されていません",
+  "openInNewWindow": "新しいウィンドウで開く",
   "owner": "グループ管理者",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",

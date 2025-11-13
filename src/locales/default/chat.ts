@@ -266,6 +266,8 @@ export default {
 
   noSelectedAgents: '还未选择成员',
 
+  openInNewWindow: '单独打开页面',
+
   owner: '群主',
 
   pin: '置顶',
