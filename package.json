@@ -397,6 +397,9 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vercel/speed-insights"
-    ]
+    ],
+    "overrides": {
+      "eta": "4.0.1"
+    }
   }
 }
