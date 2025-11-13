@@ -19,7 +19,7 @@ export class ToolMessageReorder extends BaseProcessor {
   protected async doProcess(context: PipelineContext): Promise<PipelineContext> {
     const clonedContext = this.cloneContext(context);
 
-    // 重新排序消息
+    // Reorder messages
     const reorderedMessages = this.reorderToolMessages(clonedContext.messages);
 
     const originalCount = clonedContext.messages.length;
@@ -27,7 +27,7 @@ export class ToolMessageReorder extends BaseProcessor {
 
     clonedContext.messages = reorderedMessages;
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.toolMessageReorder = {
       originalCount,
       removedInvalidTools: originalCount - reorderedCount,
@@ -48,10 +48,10 @@ export class ToolMessageReorder extends BaseProcessor {
   }
 
   /**
-   * 重新排序工具消息
+   * Reorder tool messages
    */
   private reorderToolMessages(messages: any[]): any[] {
-    // 1. 先收集所有 assistant 消息中的有效 tool_call_id
+    // 1. First collect all valid tool_call_ids from assistant messages
     const validToolCallIds = new Set<string>();
     messages.forEach((message) => {
       if (message.role === 'assistant' && message.tool_calls) {
@@ -61,7 +61,7 @@ export class ToolMessageReorder extends BaseProcessor {
       }
     });
 
-    // 2. 收集所有有效的 tool 消息
+    // 2. Collect all valid tool messages
     const toolMessages: Record<string, any> = {};
     messages.forEach((message) => {
       if (
@@ -73,10 +73,10 @@ export class ToolMessageReorder extends BaseProcessor {
       }
     });
 
-    // 3. 重新排序消息
+    // 3. Reorder messages
     const reorderedMessages: any[] = [];
     messages.forEach((message) => {
-      // 跳过无效的 tool 消息
+      // Skip invalid tool messages
       if (
         message.role === 'tool' &&
         (!message.tool_call_id || !validToolCallIds.has(message.tool_call_id))
@@ -85,7 +85,7 @@ export class ToolMessageReorder extends BaseProcessor {
         return;
       }
 
-      // 检查是否已经添加过该 tool 消息
+      // Check if this tool message has already been added
       const hasPushed = reorderedMessages.some(
         (m) => !!message.tool_call_id && m.tool_call_id === message.tool_call_id,
       );
@@ -94,7 +94,7 @@ export class ToolMessageReorder extends BaseProcessor {
 
       reorderedMessages.push(message);
 
-      // 如果是 assistant 消息且有 tool_calls，添加对应的 tool 消息
+      // If assistant message with tool_calls, add corresponding tool messages
       if (message.role === 'assistant' && message.tool_calls) {
         message.tool_calls.forEach((toolCall: any) => {
           const correspondingToolMessage = toolMessages[toolCall.id];
@@ -109,5 +109,5 @@ export class ToolMessageReorder extends BaseProcessor {
     return reorderedMessages;
   }
 
-  // 简化：移除验证/统计等辅助方法
+  // Simplified: removed validation/statistics helper methods
 }
