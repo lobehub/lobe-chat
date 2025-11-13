@@ -1,16 +1,34 @@
 import { ModelIcon } from '@lobehub/icons';
 import { Text } from '@lobehub/ui';
-import { useResponsive } from 'antd-style';
+import { Popover } from 'antd';
+import { createStyles } from 'antd-style';
 import { AiModelForSelect } from 'model-bank';
 import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-type ImageModelItemProps = AiModelForSelect;
+const POPOVER_MAX_WIDTH = 320;
+
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+  popover: css`
+    .ant-popover-inner {
+      color: ${isDarkMode ? token.colorTextLightSolid : token.colorText};
+      background: ${isDarkMode ? token.colorBgSpotlight : token.colorBgElevated};
+    }
+  `,
+}));
+
+type ImageModelItemProps = AiModelForSelect & {
+  /**
+   * Whether to show popover on hover
+   * @default true
+   */
+  showPopover?: boolean;
+};
 
 const ImageModelItem = memo<ImageModelItemProps>(
-  ({ approximatePricePerImage, pricePerImage, ...model }) => {
-    const { mobile } = useResponsive();
+  ({ approximatePricePerImage, description, pricePerImage, showPopover = true, ...model }) => {
+    const { styles } = useStyles();
 
     const priceLabel = useMemo(() => {
       // Priority 1: Use exact price
@@ -26,36 +44,44 @@ const ImageModelItem = memo<ImageModelItemProps>(
       return undefined;
     }, [approximatePricePerImage, pricePerImage]);
 
-    return (
-      <Flexbox
-        align={'center'}
-        gap={32}
-        horizontal
-        justify={'space-between'}
-        style={{
-          minWidth: mobile ? '100%' : undefined,
-          overflow: 'hidden',
-          position: 'relative',
-          width: mobile ? '80vw' : 'auto',
-        }}
-      >
-        <Flexbox
-          align={'center'}
-          gap={8}
-          horizontal
-          style={{ flexShrink: 1, minWidth: 0, overflow: 'hidden' }}
-        >
-          <ModelIcon model={model.id} size={20} />
-          <Text style={mobile ? { maxWidth: '60vw', overflowX: 'auto', whiteSpace: 'nowrap' } : {}}>
-            {model.displayName || model.id}
-          </Text>
+    const popoverContent = useMemo(() => {
+      if (!description && !priceLabel) return null;
+
+      return (
+        <Flexbox gap={8} style={{ maxWidth: POPOVER_MAX_WIDTH }}>
+          {description && <Text type={'secondary'}>{description}</Text>}
+          {priceLabel && (
+            <Text style={{ fontWeight: 500 }} type={'secondary'}>
+              {priceLabel}
+            </Text>
+          )}
         </Flexbox>
-        {priceLabel && (
-          <Text style={{ whiteSpace: 'nowrap' }} type={'secondary'}>
-            {priceLabel}
-          </Text>
-        )}
+      );
+    }, [description, priceLabel]);
+
+    const content = (
+      <Flexbox align={'center'} gap={8} horizontal style={{ overflow: 'hidden' }}>
+        <ModelIcon model={model.id} size={20} />
+        <Text ellipsis title={model.displayName || model.id}>
+          {model.displayName || model.id}
+        </Text>
       </Flexbox>
+    );
+
+    if (!showPopover || !popoverContent) return content;
+
+    return (
+      <Popover
+        align={{
+          offset: [24, -10],
+        }}
+        arrow={false}
+        classNames={{ root: styles.popover }}
+        content={popoverContent}
+        placement="rightTop"
+      >
+        {content}
+      </Popover>
     );
   },
 );

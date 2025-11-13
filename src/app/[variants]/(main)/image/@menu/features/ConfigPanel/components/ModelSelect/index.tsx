@@ -135,11 +135,24 @@ const ModelSelect = memo(() => {
     }));
   }, [enabledImageModelList, showLLM, t, theme.colorTextTertiary, router]);
 
+  const labelRender: SelectProps['labelRender'] = (props) => {
+    const modelInfo = enabledImageModelList
+      .flatMap((provider) =>
+        provider.children.map((model) => ({ ...model, providerId: provider.id })),
+      )
+      .find((model) => props.value === `${model.providerId}/${model.id}`);
+
+    if (!modelInfo) return props.label;
+
+    return <ImageModelItem {...modelInfo} showPopover={false} />;
+  };
+
   return (
     <Select
       classNames={{
         root: styles.popup,
       }}
+      labelRender={labelRender}
       onChange={(value, option) => {
         // Skip onChange for disabled options (empty states)
         if (value === 'no-provider' || value.includes('/empty')) return;

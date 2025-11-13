@@ -395,8 +395,6 @@ export const ToggleAiModelEnableSchema = z.object({
 
 export type ToggleAiModelEnableParams = z.infer<typeof ToggleAiModelEnableSchema>;
 
-//
-
 export interface AiModelForSelect {
   abilities: ModelAbilities;
   /**
@@ -404,6 +402,7 @@ export interface AiModelForSelect {
    */
   approximatePricePerImage?: number;
   contextWindowTokens?: number;
+  description?: string;
   displayName?: string;
   id: string;
   parameters?: ModelParamsSchema;
