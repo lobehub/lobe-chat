@@ -259,7 +259,7 @@
       "searchLocalFiles": "Wyszukaj pliki",
       "writeLocalFile": "Zapisz do pliku"
     },
-    "title": "Pliki lokalne"
+    "title": "System lokalny"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",

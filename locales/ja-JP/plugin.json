@@ -259,7 +259,7 @@
       "searchLocalFiles": "ファイルを検索",
       "writeLocalFile": "ファイルに書き込み"
     },
-    "title": "ローカルファイル"
+    "title": "ローカルシステム"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "インストール環境を確認中...",

@@ -1049,6 +1049,9 @@
   "deepseek-r1-0528": {
     "description": "685B 풀스펙 모델로, 2025년 5월 28일에 출시되었습니다. DeepSeek-R1은 후학습 단계에서 대규모 강화 학습 기술을 활용하여 극소수의 라벨 데이터만으로도 모델의 추론 능력을 크게 향상시켰습니다. 수학, 코드, 자연어 추론 등 과제에서 높은 성능과 강력한 능력을 자랑합니다."
   },
+  "deepseek-r1-250528": {
+    "description": "DeepSeek R1 250528, 풀스펙 DeepSeek-R1 추론 모델로, 고난이도 수학 및 논리 과제에 적합합니다."
+  },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B 빠른 버전으로, 실시간 온라인 검색을 지원하며 모델 성능을 유지하면서 더 빠른 응답 속도를 제공합니다."
   },
@@ -1059,31 +1062,34 @@
     "description": "deepseek-r1-distill-llama는 DeepSeek-R1에서 추출한 Llama 기반 모델입니다."
   },
   "deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek R1 - DeepSeek 패키지에서 더 크고 더 스마트한 모델이 Llama 70B 아키텍처로 증류되었습니다. 기준 테스트와 인공지능 평가에 따르면, 이 모델은 원래 Llama 70B보다 더 스마트하며, 특히 수학 및 사실 정확성이 필요한 작업에서 뛰어난 성능을 보입니다."
+    "description": "DeepSeek R1 Distill Llama 70B, 범용 R1 추론 능력과 Llama 생태계를 결합한 증류 모델입니다."
   },
   "deepseek-r1-distill-llama-8b": {
-    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+    "description": "DeepSeek-R1-Distill-Llama-8B는 Llama-3.1-8B를 기반으로 한 증류 대형 언어 모델로, DeepSeek R1의 출력을 활용합니다."
+  },
+  "deepseek-r1-distill-qianfan-70b": {
+    "description": "DeepSeek R1 Distill Qianfan 70B, Qianfan-70B 기반의 R1 증류 모델로, 뛰어난 가성비를 자랑합니다."
+  },
+  "deepseek-r1-distill-qianfan-8b": {
+    "description": "DeepSeek R1 Distill Qianfan 8B, Qianfan-8B 기반의 R1 증류 모델로, 중소형 애플리케이션에 적합합니다."
   },
   "deepseek-r1-distill-qianfan-llama-70b": {
-    "description": "2025년 2월 14일 최초 출시된 이 모델은 천범 대모델 연구팀이 Llama3_70B를 기반 모델로 하여(메타 라마로 구축) 증류한 것입니다. 증류 데이터에는 천범의 말뭉치도 동기화되어 추가되었습니다."
-  },
-  "deepseek-r1-distill-qianfan-llama-8b": {
-    "description": "2025년 2월 14일 최초 출시된 이 모델은 천범 대모델 연구팀이 Llama3_8B를 기반 모델로 하여(메타 라마로 구축) 증류한 것입니다. 증류 데이터에는 천범의 말뭉치도 동기화되어 추가되었습니다."
+    "description": "DeepSeek R1 Distill Qianfan Llama 70B, Llama-70B 기반의 R1 증류 모델입니다."
   },
   "deepseek-r1-distill-qwen": {
     "description": "deepseek-r1-distill-qwen은 DeepSeek-R1에서 Qwen을 기반으로 증류된 모델입니다."
   },
   "deepseek-r1-distill-qwen-1.5b": {
-    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+    "description": "DeepSeek R1 Distill Qwen 1.5B, 초경량 R1 증류 모델로, 극한의 저자원 환경에 적합합니다."
   },
   "deepseek-r1-distill-qwen-14b": {
-    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+    "description": "DeepSeek R1 Distill Qwen 14B, 중간 규모의 R1 증류 모델로, 다양한 환경에 유연하게 배포할 수 있습니다."
   },
   "deepseek-r1-distill-qwen-32b": {
-    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+    "description": "DeepSeek R1 Distill Qwen 32B, Qwen-32B 기반의 R1 증류 모델로, 성능과 비용의 균형을 이룹니다."
   },
   "deepseek-r1-distill-qwen-7b": {
-    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+    "description": "DeepSeek R1 Distill Qwen 7B, 경량 R1 증류 모델로, 엣지 및 기업 프라이빗 환경에 적합합니다."
   },
   "deepseek-r1-fast-online": {
     "description": "DeepSeek R1 풀 빠른 버전으로, 실시간 온라인 검색을 지원하며 671B 매개변수의 강력한 능력과 더 빠른 응답 속도를 결합합니다."
@@ -1112,11 +1118,23 @@
   "deepseek-v3.1-terminus": {
     "description": "DeepSeek-V3.1-Terminus는 DeepSeek에서 출시한 종단 최적화 대형 언어 모델로, 단말기 환경에 최적화되어 있습니다."
   },
+  "deepseek-v3.1-think-250821": {
+    "description": "DeepSeek V3.1 Think 250821, Terminus 버전에 대응하는 심층 사고 모델로, 고성능 추론 환경에 적합합니다."
+  },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: 차세대 추론 모델로, 복잡한 추론 및 연쇄 사고 능력을 향상시켜 심층 분석이 필요한 작업에 적합합니다."
   },
   "deepseek-v3.2-exp": {
     "description": "deepseek-v3.2-exp는 희소 주의 메커니즘을 도입하여 긴 텍스트 처리 시 훈련 및 추론 효율을 향상시키며, 가격은 deepseek-v3.1보다 저렴합니다."
+  },
+  "deepseek-v3.2-think": {
+    "description": "DeepSeek V3.2 Think, 풀스펙 심층 사고 모델로, 장거리 추론 능력을 강화했습니다."
+  },
+  "deepseek-vl2": {
+    "description": "DeepSeek VL2, 멀티모달 모델로, 이미지-텍스트 이해 및 정밀 시각 질의응답을 지원합니다."
+  },
+  "deepseek-vl2-small": {
+    "description": "DeepSeek VL2 Small, 경량 멀티모달 버전으로, 자원이 제한되거나 고동시 환경에 적합합니다."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3는 685B 매개변수를 가진 전문가 혼합 모델로, DeepSeek 팀의 플래그십 채팅 모델 시리즈의 최신 반복입니다.\n\n이 모델은 [DeepSeek V3](/deepseek/deepseek-chat-v3) 모델을 계승하며 다양한 작업에서 뛰어난 성능을 보입니다."
@@ -1253,83 +1271,89 @@
   "emohaa": {
     "description": "Emohaa는 심리 모델로, 전문 상담 능력을 갖추고 있어 사용자가 감정 문제를 이해하는 데 도움을 줍니다."
   },
-  "ernie-3.5-128k": {
-    "description": "바이두가 자체 개발한 플래그십 대규모 언어 모델로, 방대한 중영문 자료를 포함하고 있으며, 강력한 일반 능력을 가지고 있어 대부분의 대화 질문 답변, 창작 생성, 플러그인 응용 시나리오 요구를 충족할 수 있습니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다."
-  },
-  "ernie-3.5-8k": {
-    "description": "바이두가 자체 개발한 플래그십 대규모 언어 모델로, 방대한 중영문 자료를 포함하고 있으며, 강력한 일반 능력을 가지고 있어 대부분의 대화 질문 답변, 창작 생성, 플러그인 응용 시나리오 요구를 충족할 수 있습니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다."
-  },
-  "ernie-3.5-8k-preview": {
-    "description": "바이두가 자체 개발한 플래그십 대규모 언어 모델로, 방대한 중영문 자료를 포함하고 있으며, 강력한 일반 능력을 가지고 있어 대부분의 대화 질문 답변, 창작 생성, 플러그인 응용 시나리오 요구를 충족할 수 있습니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다."
-  },
-  "ernie-4.0-8k-latest": {
-    "description": "바이두가 자체 개발한 플래그십 초대규모 언어 모델로, ERNIE 3.5에 비해 모델 능력이 전면 업그레이드되었으며, 다양한 분야의 복잡한 작업 시나리오에 널리 적용됩니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다."
-  },
-  "ernie-4.0-8k-preview": {
-    "description": "바이두가 자체 개발한 플래그십 초대규모 언어 모델로, ERNIE 3.5에 비해 모델 능력이 전면 업그레이드되었으며, 다양한 분야의 복잡한 작업 시나리오에 널리 적용됩니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다."
-  },
-  "ernie-4.0-turbo-128k": {
-    "description": "바이두가 자체 개발한 플래그십 초대규모 언어 모델로, 종합적인 성능이 뛰어나며, 다양한 분야의 복잡한 작업 시나리오에 널리 적용됩니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다. ERNIE 4.0에 비해 성능이 더 우수합니다."
-  },
-  "ernie-4.0-turbo-8k-latest": {
-    "description": "바이두가 자체 개발한 플래그십 초대규모 언어 모델로, 종합적인 성능이 뛰어나며, 다양한 분야의 복잡한 작업 시나리오에 널리 적용됩니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다. ERNIE 4.0에 비해 성능이 더 우수합니다."
-  },
-  "ernie-4.0-turbo-8k-preview": {
-    "description": "바이두가 자체 개발한 플래그십 초대규모 언어 모델로, 종합적인 성능이 뛰어나며, 다양한 분야의 복잡한 작업 시나리오에 널리 적용됩니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다. ERNIE 4.0에 비해 성능이 더 우수합니다."
+  "ernie-4.5-0.3b": {
+    "description": "ERNIE 4.5 0.3B, 오픈소스 경량 모델로, 로컬 및 맞춤형 배포에 적합합니다."
   },
   "ernie-4.5-21b-a3b": {
-    "description": "ERNIE 4.5 21B A3B는 바이두 원신에서 출시한 하이브리드 전문가 모델로, 강력한 추론 능력과 다국어 처리 능력을 갖추고 있습니다."
+    "description": "ERNIE 4.5 21B A3B, 대규모 파라미터 오픈소스 모델로, 이해 및 생성 작업에서 뛰어난 성능을 보입니다."
   },
   "ernie-4.5-300b-a47b": {
     "description": "ERNIE 4.5 300B A47B는 바이두 원신에서 출시한 초대규모 하이브리드 전문가 모델로, 탁월한 추론 능력을 자랑합니다."
   },
   "ernie-4.5-8k-preview": {
-    "description": "문심 대모델 4.5는 바이두가 독자적으로 개발한 차세대 원주율 다중 모달 기본 대모델로, 여러 모달의 공동 모델링을 통해 협동 최적화를 실현하며, 다중 모달 이해 능력이 뛰어납니다. 언어 능력이 더욱 향상되어 이해, 생성, 논리, 기억 능력이 전반적으로 향상되었으며, 환각 제거, 논리 추론, 코드 능력이 현저히 향상되었습니다."
+    "description": "ERNIE 4.5 8K Preview, 8K 컨텍스트 프리뷰 모델로, Wenxin 4.5의 기능을 체험하고 테스트할 수 있습니다."
   },
   "ernie-4.5-turbo-128k": {
-    "description": "문신 4.5 Turbo는 환각 제거, 논리적 추론 및 코드 능력 등에서 뚜렷한 향상을 보였습니다. 문신 4.5와 비교할 때, 속도가 더 빠르고 가격이 더 저렴합니다. 모델의 능력이 전반적으로 향상되어 다중 회차 긴 역사 대화 처리 및 긴 문서 이해 질문 응답 작업을 더 잘 충족합니다."
+    "description": "ERNIE 4.5 Turbo 128K, 고성능 범용 모델로, 검색 강화 및 도구 호출을 지원하며, 질의응답, 코드, 에이전트 등 다양한 비즈니스 시나리오에 적합합니다."
+  },
+  "ernie-4.5-turbo-128k-preview": {
+    "description": "ERNIE 4.5 Turbo 128K Preview, 정식 버전과 동일한 기능을 제공하는 프리뷰 버전으로, 통합 테스트 및 그레이 테스트에 적합합니다."
   },
   "ernie-4.5-turbo-32k": {
-    "description": "문신 4.5 Turbo는 환각 제거, 논리적 추론 및 코드 능력 등에서 뚜렷한 향상을 보였습니다. 문신 4.5와 비교할 때, 속도가 더 빠르고 가격이 더 저렴합니다. 텍스트 창작, 지식 질문 응답 등의 능력이 크게 향상되었습니다. 출력 길이 및 전체 문장 지연은 ERNIE 4.5에 비해 증가했습니다."
+    "description": "ERNIE 4.5 Turbo 32K, 중장기 컨텍스트 버전으로, 질의응답, 지식 검색, 다중 회화 등에 적합합니다."
+  },
+  "ernie-4.5-turbo-latest": {
+    "description": "ERNIE 4.5 Turbo 최신 버전, 종합 성능이 최적화된 범용 모델로, 프로덕션 환경에 적합합니다."
+  },
+  "ernie-4.5-turbo-vl": {
+    "description": "ERNIE 4.5 Turbo VL, 성숙한 멀티모달 모델로, 프로덕션 환경에서 이미지-텍스트 이해 및 인식 작업에 적합합니다."
   },
   "ernie-4.5-turbo-vl-32k": {
-    "description": "문신 일언 대모델의 새로운 버전으로, 이미지 이해, 창작, 번역, 코드 등의 능력이 크게 향상되었으며, 처음으로 32K의 맥락 길이를 지원하고 첫 번째 토큰 지연이 현저히 감소했습니다."
+    "description": "ERNIE 4.5 Turbo VL 32K, 중장기 텍스트 멀티모달 버전으로, 긴 문서와 이미지의 통합 이해에 적합합니다."
+  },
+  "ernie-4.5-turbo-vl-32k-preview": {
+    "description": "ERNIE 4.5 Turbo VL 32K Preview, 멀티모달 32K 프리뷰 버전으로, 장기 컨텍스트 시각 능력 평가에 용이합니다."
+  },
+  "ernie-4.5-turbo-vl-latest": {
+    "description": "ERNIE 4.5 Turbo VL 최신 버전, 최신 멀티모달 모델로, 이미지-텍스트 이해 및 추론 성능이 향상되었습니다."
+  },
+  "ernie-4.5-turbo-vl-preview": {
+    "description": "ERNIE 4.5 Turbo VL Preview, 멀티모달 프리뷰 모델로, 이미지-텍스트 이해 및 생성을 지원하며, 시각 질의응답 및 콘텐츠 이해 체험에 적합합니다."
+  },
+  "ernie-4.5-vl-28b-a3b": {
+    "description": "ERNIE 4.5 VL 28B A3B, 멀티모달 오픈소스 모델로, 이미지-텍스트 이해 및 추론 작업을 지원합니다."
+  },
+  "ernie-5.0-thinking-preview": {
+    "description": "Wenxin 5.0 Thinking 프리뷰 버전, 텍스트, 이미지, 오디오, 비디오를 통합 모델링하는 네이티브 풀모달 플래그십 모델로, 복잡한 질의응답, 창작 및 에이전트 시나리오에 적합합니다."
   },
   "ernie-char-8k": {
-    "description": "바이두가 자체 개발한 수직 장면 대형 언어 모델로, 게임 NPC, 고객 서비스 대화, 대화 역할극 등 응용 시나리오에 적합하며, 캐릭터 스타일이 더 뚜렷하고 일관되며, 지시 따르기 능력이 더 강하고 추론 성능이 우수합니다."
+    "description": "ERNIE Character 8K, 캐릭터 성격 대화 모델로, IP 캐릭터 구축 및 장기 동반 대화에 적합합니다."
   },
   "ernie-char-fiction-8k": {
-    "description": "바이두가 자체 개발한 수직 장면 대형 언어 모델로, 게임 NPC, 고객 서비스 대화, 대화 역할극 등 응용 시나리오에 적합하며, 캐릭터 스타일이 더 뚜렷하고 일관되며, 지시 따르기 능력이 더 강하고 추론 성능이 우수합니다."
+    "description": "ERNIE Character Fiction 8K, 소설 및 스토리 창작을 위한 성격 모델로, 장문 스토리 생성에 적합합니다."
+  },
+  "ernie-char-fiction-8k-preview": {
+    "description": "ERNIE Character Fiction 8K Preview, 캐릭터 및 스토리 창작 모델 프리뷰 버전으로, 기능 체험 및 테스트에 사용됩니다."
   },
   "ernie-irag-edit": {
-    "description": "바이두가 자체 개발한 ERNIE iRAG Edit 이미지 편집 모델로, 이미지 기반으로 객체 제거(erase), 재도색(repaint), 변형(variation) 생성 등의 작업을 지원합니다."
+    "description": "ERNIE iRAG Edit, 이미지 지우기, 리드로잉 및 변형 생성을 지원하는 이미지 편집 모델입니다."
   },
   "ernie-lite-8k": {
-    "description": "ERNIE Lite는 바이두가 자체 개발한 경량 대형 언어 모델로, 우수한 모델 효과와 추론 성능을 겸비하여 저전력 AI 가속 카드 추론에 적합합니다."
+    "description": "ERNIE Lite 8K, 경량 범용 모델로, 비용에 민감한 일상 질의응답 및 콘텐츠 생성에 적합합니다."
   },
   "ernie-lite-pro-128k": {
-    "description": "바이두가 자체 개발한 경량 대형 언어 모델로, 우수한 모델 효과와 추론 성능을 겸비하여 ERNIE Lite보다 더 우수하며, 저전력 AI 가속 카드 추론에 적합합니다."
+    "description": "ERNIE Lite Pro 128K, 경량 고성능 모델로, 지연 및 비용에 민감한 비즈니스 시나리오에 적합합니다."
   },
   "ernie-novel-8k": {
-    "description": "바이두가 자체 개발한 일반 대형 언어 모델로, 소설 연속 작성 능력에서 뚜렷한 장점을 가지고 있으며, 단편극, 영화 등 시나리오에서도 사용할 수 있습니다."
+    "description": "ERNIE Novel 8K, 장편 소설 및 IP 스토리 창작 모델로, 다중 캐릭터 및 복선 서사에 능숙합니다."
   },
   "ernie-speed-128k": {
-    "description": "바이두가 2024년에 최신 출시한 고성능 대형 언어 모델로, 일반 능력이 우수하여 특정 시나리오 문제를 더 잘 처리하기 위해 기초 모델로 미세 조정하는 데 적합하며, 뛰어난 추론 성능을 가지고 있습니다."
+    "description": "ERNIE Speed 128K, 입출력 비용이 없는 대형 모델로, 장문 이해 및 대규모 테스트에 적합합니다."
+  },
+  "ernie-speed-8k": {
+    "description": "ERNIE Speed 8K, 무료 고속 모델로, 일상 대화 및 경량 텍스트 작업에 적합합니다."
   },
   "ernie-speed-pro-128k": {
-    "description": "바이두가 2024년에 최신 출시한 고성능 대형 언어 모델로, 일반 능력이 우수하여 ERNIE Speed보다 더 우수하며, 특정 시나리오 문제를 더 잘 처리하기 위해 기초 모델로 미세 조정하는 데 적합하며, 뛰어난 추론 성능을 가지고 있습니다."
+    "description": "ERNIE Speed Pro 128K, 고동시 고가성비 모델로, 대규모 온라인 서비스 및 기업 애플리케이션에 적합합니다."
   },
   "ernie-tiny-8k": {
-    "description": "ERNIE Tiny는 바이두가 자체 개발한 초고성능 대형 언어 모델로, 문신 시리즈 모델 중 배포 및 미세 조정 비용이 가장 낮습니다."
-  },
-  "ernie-x1-32k": {
-    "description": "더 강력한 이해, 계획, 반성, 진화 능력을 갖추고 있습니다. 보다 포괄적인 심층 사고 모델로서, 문신 X1은 정확성, 창의성 및 문체를 겸비하여 중국어 지식 질문 응답, 문학 창작, 문서 작성, 일상 대화, 논리적 추론, 복잡한 계산 및 도구 호출 등에서 특히 뛰어난 성능을 발휘합니다."
-  },
-  "ernie-x1-32k-preview": {
-    "description": "문심 대모델 X1은 더 강력한 이해, 계획, 반성 및 진화 능력을 갖추고 있습니다. 보다 포괄적인 심층 사고 모델로서, 문심 X1은 정확성, 창의성 및 문체를 겸비하여 중국어 지식 질문 응답, 문학 창작, 문서 작성, 일상 대화, 논리 추론, 복잡한 계산 및 도구 호출 등에서 특히 뛰어난 성과를 보입니다."
+    "description": "ERNIE Tiny 8K, 초경량 모델로, 간단한 질의응답, 분류 등 저비용 추론 시나리오에 적합합니다."
   },
   "ernie-x1-turbo-32k": {
-    "description": "ERNIE-X1-32K에 비해 모델의 효과와 성능이 더 우수합니다."
+    "description": "ERNIE X1 Turbo 32K, 고속 사고 모델로, 32K 장기 컨텍스트를 지원하며 복잡한 추론 및 다중 회화에 적합합니다."
+  },
+  "ernie-x1.1-preview": {
+    "description": "ERNIE X1.1 Preview, ERNIE X1.1 사고 모델 프리뷰 버전으로, 기능 검증 및 테스트에 적합합니다."
   },
   "fal-ai/bytedance/seedream/v4": {
     "description": "Seedream 4.0 이미지 생성 모델은 ByteDance Seed 팀이 개발했으며, 텍스트와 이미지 입력을 지원하여 높은 제어력과 고품질 이미지 생성 경험을 제공합니다. 텍스트 프롬프트를 기반으로 이미지를 생성합니다."
@@ -1389,7 +1413,7 @@
     "description": "FLUX.1 [schnell]은 현재 공개된 가장 진보된 소단계 모델로, 동종 경쟁 모델을 능가할 뿐만 아니라 Midjourney v6.0, DALL·E 3 (HD) 같은 강력한 비증류 모델보다도 우수합니다. 이 모델은 사전 학습 단계의 모든 출력 다양성을 유지하도록 특별히 미세 조정되었으며, 시각 품질, 명령 준수, 크기/비율 변화, 글꼴 처리 및 출력 다양성 등에서 현존 최고 모델 대비 현저한 향상을 이루어 사용자에게 더욱 풍부하고 다양한 창의적 이미지 생성 경험을 제공합니다."
   },
   "flux.1-schnell": {
-    "description": "120억 파라미터의 수정 흐름 변환기로, 텍스트 설명에 따라 이미지를 생성할 수 있습니다."
+    "description": "FLUX.1-schnell, 고성능 이미지 생성 모델로, 다양한 스타일의 이미지를 빠르게 생성할 수 있습니다."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning)은 안정적이고 조정 가능한 성능을 제공하며, 복잡한 작업 솔루션의 이상적인 선택입니다."
@@ -1537,6 +1561,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520은 최신 모델 버전으로, 매우 복잡하고 다양한 작업을 위해 설계되어 뛰어난 성능을 발휘합니다."
+  },
+  "glm-4-32b-0414": {
+    "description": "GLM-4 32B 0414, GLM 시리즈 범용 대형 모델 버전으로, 다중 작업 텍스트 생성 및 이해를 지원합니다."
   },
   "glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat은 의미 이해, 수학, 추론, 코드 작성 및 지식 등 다양한 분야에서 높은 성능을 보입니다. 웹 브라우징, 코드 실행, 사용자 정의 도구 호출 및 장문 추론 기능을 지원하며, 일본어, 한국어, 독일어를 포함한 26개 언어를 지원합니다."
@@ -2036,14 +2063,26 @@
   "internlm3-latest": {
     "description": "우리의 최신 모델 시리즈는 뛰어난 추론 성능을 가지고 있으며, 동급 오픈 소스 모델 중에서 선두를 달리고 있습니다. 기본적으로 최신 출시된 InternLM3 시리즈 모델을 가리킵니다."
   },
+  "internvl2.5-38b-mpo": {
+    "description": "InternVL2.5 38B MPO, 멀티모달 사전학습 모델로, 복잡한 이미지-텍스트 추론 작업을 지원합니다."
+  },
   "internvl2.5-latest": {
     "description": "우리가 여전히 유지 관리하는 InternVL2.5 버전으로, 우수하고 안정적인 성능을 제공합니다. 기본적으로 최신 발표된 InternVL2.5 시리즈 모델을 가리키며, 현재 internvl2.5-78b를 가리킵니다."
+  },
+  "internvl3-14b": {
+    "description": "InternVL3 14B, 중간 규모 멀티모달 모델로, 성능과 비용의 균형을 이룹니다."
+  },
+  "internvl3-1b": {
+    "description": "InternVL3 1B, 경량 멀티모달 모델로, 자원이 제한된 환경에 적합합니다."
+  },
+  "internvl3-38b": {
+    "description": "InternVL3 38B, 대규모 멀티모달 오픈소스 모델로, 고정밀 이미지-텍스트 이해 작업에 적합합니다."
   },
   "internvl3-latest": {
     "description": "우리가 최근 발표한 다중 모달 대형 모델로, 더 강력한 이미지 및 텍스트 이해 능력과 장기 이미지 이해 능력을 갖추고 있으며, 성능은 최상급 폐쇄형 모델에 필적합니다. 기본적으로 최신 발표된 InternVL 시리즈 모델을 가리키며, 현재 internvl3-78b를 가리킵니다."
   },
   "irag-1.0": {
-    "description": "바이두가 자체 개발한 iRAG(image based RAG)로, 검색 강화 텍스트-이미지 생성 기술입니다. 바이두 검색의 수억 장 이미지 자원과 강력한 기본 모델 능력을 결합하여 매우 사실적인 이미지를 생성하며, 기존 텍스트-이미지 시스템을 훨씬 능가합니다. AI 느낌이 없고 비용도 매우 낮습니다. iRAG는 환각이 없고, 초현실적이며 즉시 사용 가능한 특징을 갖추고 있습니다."
+    "description": "ERNIE iRAG, 이미지 검색 강화 생성 모델로, 이미지 검색, 이미지-텍스트 검색 및 콘텐츠 생성을 지원합니다."
   },
   "jamba-large": {
     "description": "가장 강력하고 진보된 모델로, 기업급 복잡한 작업을 처리하도록 설계되었으며, 뛰어난 성능을 제공합니다."
@@ -2064,7 +2103,7 @@
     "description": "kimi-k2-0905-preview 모델은 256k 문맥 길이를 가지며, 더욱 강력한 에이전틱 코딩(Agentic Coding) 능력, 뛰어난 프론트엔드 코드의 미적 감각과 실용성, 그리고 향상된 문맥 이해 능력을 갖추고 있습니다."
   },
   "kimi-k2-instruct": {
-    "description": "Kimi K2 Instruct는 Moonshot AI에서 출시한 대형 언어 모델로, 매우 긴 문맥 처리 능력을 갖추고 있습니다."
+    "description": "Kimi K2 Instruct, Kimi 공식 추론 모델로, 장기 컨텍스트, 코드, 질의응답 등 다양한 시나리오를 지원합니다."
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2는 강력한 코드 처리 및 에이전트(Agent) 기능을 갖춘 MoE(혼합 전문가) 아키텍처 기반 모델로, 총 파라미터 수는 1T(1조), 활성화 파라미터는 32B(320억)입니다. 일반 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야의 벤치마크 성능 테스트에서 K2 모델은 다른 주요 오픈 소스 모델들을 능가합니다."
@@ -2885,9 +2924,7 @@
   "qwen2.5-72b-instruct": {
     "description": "통의 천문 2.5 외부 오픈 소스 72B 규모 모델입니다."
   },
-  "qwen2.5-7b-instruct": {
-    "description": "통의 천문 2.5 외부 오픈 소스 7B 규모 모델입니다."
-  },
+  "qwen2.5-7b-instruct": {},
   "qwen2.5-coder-1.5b-instruct": {
     "description": "통의천문 코드 모델 오픈 소스 버전입니다."
   },
@@ -2918,15 +2955,11 @@
   "qwen2.5-omni-7b": {
     "description": "Qwen-Omni 시리즈 모델은 비디오, 오디오, 이미지, 텍스트 등 다양한 모드의 데이터를 입력으로 지원하며, 오디오와 텍스트를 출력합니다."
   },
-  "qwen2.5-vl-32b-instruct": {
-    "description": "Qwen2.5-VL 시리즈 모델은 모델의 지능 수준, 실용성 및 적용성을 향상시켜 자연스러운 대화, 콘텐츠 제작, 전문 지식 서비스 및 코드 개발 등 다양한 시나리오에서 더 나은 성능을 발휘합니다. 32B 버전은 강화 학습 기술을 활용하여 최적화되었으며, Qwen2.5 VL 시리즈의 다른 모델들과 비교하여 인간의 선호도에 더 부합하는 출력 스타일, 복잡한 수학 문제의 추론 능력, 그리고 이미지의 세밀한 이해와 추론 능력을 제공합니다."
-  },
+  "qwen2.5-vl-32b-instruct": {},
   "qwen2.5-vl-72b-instruct": {
     "description": "지시 따르기, 수학, 문제 해결, 코드 전반적인 향상, 모든 사물 인식 능력 향상, 다양한 형식의 시각적 요소를 직접 정확하게 위치 지정할 수 있으며, 최대 10분 길이의 긴 비디오 파일을 이해하고 초 단위의 사건 시점을 위치 지정할 수 있습니다. 시간의 선후와 속도를 이해할 수 있으며, 분석 및 위치 지정 능력을 기반으로 OS 또는 모바일 에이전트를 조작할 수 있습니다. 주요 정보 추출 능력과 Json 형식 출력 능력이 뛰어나며, 이 버전은 72B 버전으로, 이 시리즈에서 가장 강력한 버전입니다."
   },
-  "qwen2.5-vl-7b-instruct": {
-    "description": "지시 따르기, 수학, 문제 해결, 코드 전반적인 향상, 모든 사물 인식 능력 향상, 다양한 형식의 시각적 요소를 직접 정확하게 위치 지정할 수 있으며, 최대 10분 길이의 긴 비디오 파일을 이해하고 초 단위의 사건 시점을 위치 지정할 수 있습니다. 시간의 선후와 속도를 이해할 수 있으며, 분석 및 위치 지정 능력을 기반으로 OS 또는 모바일 에이전트를 조작할 수 있습니다. 주요 정보 추출 능력과 Json 형식 출력 능력이 뛰어나며, 이 버전은 72B 버전으로, 이 시리즈에서 가장 강력한 버전입니다."
-  },
+  "qwen2.5-vl-7b-instruct": {},
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL은 Qwen 모델 패밀리의 최신 버전 시각 언어 모델입니다."
   },
@@ -2951,48 +2984,22 @@
   "qwen3": {
     "description": "Qwen3는 알리바바의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
   },
-  "qwen3-0.6b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
-  "qwen3-1.7b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
-  "qwen3-14b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
-  "qwen3-235b-a22b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
-  "qwen3-235b-a22b-instruct-2507": {
-    "description": "Qwen3 기반 비사고 모드 오픈 소스 모델로, 이전 버전(통의천문3-235B-A22B) 대비 주관적 창작 능력과 모델 안전성이 소폭 향상되었습니다."
-  },
-  "qwen3-235b-a22b-thinking-2507": {
-    "description": "Qwen3 기반 사고 모드 오픈 소스 모델로, 이전 버전(통의천문3-235B-A22B) 대비 논리 능력, 범용 능력, 지식 강화 및 창작 능력이 크게 향상되어 고난도 강추론 시나리오에 적합합니다."
-  },
-  "qwen3-30b-a3b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
-  "qwen3-30b-a3b-instruct-2507": {
-    "description": "이전 버전(Qwen3-30B-A3B) 대비 중영 및 다국어 전반적인 일반 능력이 크게 향상되었습니다. 주관적이고 개방형 작업에 특화된 최적화로 사용자 선호에 훨씬 더 부합하며, 보다 유용한 응답을 제공할 수 있습니다."
-  },
-  "qwen3-30b-a3b-thinking-2507": {
-    "description": "Qwen3 기반 사고 모드 오픈소스 모델로, 이전 버전(通义千问3-30B-A3B) 대비 논리 능력, 일반 능력, 지식 강화 및 창작 능력이 크게 향상되어 고난도 강력 추론 시나리오에 적합합니다."
-  },
-  "qwen3-32b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
-  "qwen3-4b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
-  "qwen3-8b": {
-    "description": "Qwen3는 능력이 대폭 향상된 새로운 세대의 통합 지식 모델로, 추론, 일반, 에이전트 및 다국어 등 여러 핵심 능력에서 업계 선두 수준에 도달하며, 사고 모드 전환을 지원합니다."
-  },
+  "qwen3-0.6b": {},
+  "qwen3-1.7b": {},
+  "qwen3-14b": {},
+  "qwen3-235b-a22b": {},
+  "qwen3-235b-a22b-instruct-2507": {},
+  "qwen3-235b-a22b-thinking-2507": {},
+  "qwen3-30b-a3b": {},
+  "qwen3-30b-a3b-instruct-2507": {},
+  "qwen3-30b-a3b-thinking-2507": {},
+  "qwen3-32b": {},
+  "qwen3-4b": {},
+  "qwen3-8b": {},
   "qwen3-coder-30b-a3b-instruct": {
     "description": "통의천문 코드 모델 오픈소스 버전입니다. 최신 qwen3-coder-30b-a3b-instruct는 Qwen3 기반의 코드 생성 모델로, 강력한 Coding Agent 기능을 갖추고 있으며, 도구 호출 및 환경 상호작용에 능숙합니다. 자율적인 프로그래밍이 가능하며, 뛰어난 코드 처리 능력과 일반적인 언어 능력을 겸비하고 있습니다."
   },
-  "qwen3-coder-480b-a35b-instruct": {
-    "description": "통의천문 코드 모델 오픈 소스 버전입니다. 최신 qwen3-coder-480b-a35b-instruct는 Qwen3 기반 코드 생성 모델로, 강력한 코딩 에이전트 능력을 갖추고 도구 호출 및 환경 상호작용에 능하며, 자율 프로그래밍과 뛰어난 코드 능력 및 범용 능력을 동시에 구현합니다."
-  },
+  "qwen3-coder-480b-a35b-instruct": {},
   "qwen3-coder-flash": {
     "description": "통의천문 코드 모델입니다. 최신 Qwen3-Coder 시리즈 모델은 Qwen3 기반의 코드 생성 모델로, 강력한 코딩 에이전트 능력을 보유하고 있으며 도구 호출과 환경 상호작용에 능숙하여 자율 프로그래밍이 가능하며, 뛰어난 코드 능력과 함께 범용 능력도 겸비하고 있습니다."
   },
@@ -3008,30 +3015,16 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 기반의 차세대 비사고 모드 오픈 소스 모델로, 이전 버전(통의천문3-235B-A22B-Instruct-2507)과 비교하여 중국어 텍스트 이해 능력이 향상되었고, 논리 추론 능력이 강화되었으며, 텍스트 생성 작업에서 더 우수한 성능을 보입니다."
   },
-  "qwen3-next-80b-a3b-thinking": {
-    "description": "Qwen3 기반의 차세대 사고 모드 오픈 소스 모델로, 이전 버전(통의천문3-235B-A22B-Thinking-2507)과 비교하여 명령 준수 능력이 향상되었고, 모델의 요약 응답이 더욱 간결해졌습니다."
-  },
+  "qwen3-next-80b-a3b-thinking": {},
   "qwen3-omni-flash": {
     "description": "Qwen-Omni 모델은 텍스트, 이미지, 오디오, 비디오 등 다양한 모달의 조합 입력을 수용할 수 있으며, 텍스트 또는 음성 형태의 응답을 생성할 수 있습니다. 다양한 인간 음색을 제공하며, 다국어 및 방언 음성 출력도 지원합니다. 텍스트 창작, 시각 인식, 음성 비서 등 다양한 분야에 활용 가능합니다."
   },
-  "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B 비사고 모드(Instruct)는 사고가 필요 없는 지시 기반 작업에 적합하며, 강력한 시각 이해 능력을 유지합니다."
-  },
-  "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B 사고 모드(오픈소스 버전)는 고난도 추론 및 장시간 비디오 이해 시나리오에 최적화되어 있으며, 최고 수준의 시각+텍스트 추론 능력을 제공합니다."
-  },
-  "qwen3-vl-30b-a3b-instruct": {
-    "description": "Qwen3 VL 30B 비사고 모드(Instruct)는 일반적인 지시 수행 시나리오에 적합하며, 우수한 멀티모달 이해 및 생성 능력을 유지합니다."
-  },
-  "qwen3-vl-30b-a3b-thinking": {
-    "description": "Qwen-VL(오픈소스 버전)은 시각 이해 및 텍스트 생성 능력을 제공하며, 에이전트 상호작용, 시각 인코딩, 공간 인식, 장시간 비디오 이해 및 심층 사고를 지원합니다. 복잡한 상황에서도 뛰어난 문자 인식 및 다국어 지원 능력을 갖추고 있습니다."
-  },
-  "qwen3-vl-8b-instruct": {
-    "description": "Qwen3 VL 8B 비사고 모드(Instruct)는 일반적인 멀티모달 생성 및 인식 작업에 적합합니다."
-  },
-  "qwen3-vl-8b-thinking": {
-    "description": "Qwen3 VL 8B 사고 모드는 경량 멀티모달 추론 및 상호작용 시나리오에 적합하며, 긴 컨텍스트 이해 능력을 유지합니다."
-  },
+  "qwen3-vl-235b-a22b-instruct": {},
+  "qwen3-vl-235b-a22b-thinking": {},
+  "qwen3-vl-30b-a3b-instruct": {},
+  "qwen3-vl-30b-a3b-thinking": {},
+  "qwen3-vl-8b-instruct": {},
+  "qwen3-vl-8b-thinking": {},
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash는 경량 고속 추론 버전으로, 지연에 민감하거나 대량 요청이 필요한 상황에 적합합니다."
   },

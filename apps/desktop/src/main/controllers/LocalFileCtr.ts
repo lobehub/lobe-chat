@@ -467,15 +467,35 @@ export default class LocalFileCtr extends ControllerModule {
    */
   @ipcClientEvent('searchLocalFiles')
   async handleLocalFilesSearch(params: LocalSearchFilesParams): Promise<FileResult[]> {
-    logger.debug('Received file search request:', { keywords: params.keywords });
+    logger.debug('Received file search request:', {
+      directory: params.directory,
+      keywords: params.keywords,
+    });
 
-    const options: Omit<SearchOptions, 'keywords'> = {
-      limit: 30,
+    // Build search options from params, mapping directory to onlyIn
+    const options: SearchOptions = {
+      contentContains: params.contentContains,
+      createdAfter: params.createdAfter ? new Date(params.createdAfter) : undefined,
+      createdBefore: params.createdBefore ? new Date(params.createdBefore) : undefined,
+      detailed: params.detailed,
+      exclude: params.exclude,
+      fileTypes: params.fileTypes,
+      keywords: params.keywords,
+      limit: params.limit || 30,
+      liveUpdate: params.liveUpdate,
+      modifiedAfter: params.modifiedAfter ? new Date(params.modifiedAfter) : undefined,
+      modifiedBefore: params.modifiedBefore ? new Date(params.modifiedBefore) : undefined,
+      onlyIn: params.directory, // Map directory param to onlyIn option
+      sortBy: params.sortBy,
+      sortDirection: params.sortDirection,
     };
 
     try {
-      const results = await this.searchService.search(params.keywords, options);
-      logger.debug('File search completed', { count: results.length });
+      const results = await this.searchService.search(options.keywords, options);
+      logger.debug('File search completed', {
+        count: results.length,
+        directory: params.directory,
+      });
       return results;
     } catch (error) {
       logger.error('File search failed:', error);

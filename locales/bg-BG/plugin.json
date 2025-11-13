@@ -259,7 +259,7 @@
       "searchLocalFiles": "Търсене на файлове",
       "writeLocalFile": "Запис в файл"
     },
-    "title": "Локални файлове"
+    "title": "Локална система"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Проверка на инсталационната среда...",
