@@ -34,8 +34,15 @@ export const createAuthSlice: StateCreator<
 
     if (enableBetterAuth) {
       const { signOut } = await import('@/libs/better-auth/auth-client');
-      await signOut();
-      window.location.href = '/signin';
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            // Use window.location.href to trigger a full page reload
+            // This ensures all client-side state (React, Zustand, cache) is cleared
+            window.location.href = '/signin';
+          },
+        },
+      });
 
       return;
     }
