@@ -208,12 +208,12 @@ export class KnowledgeRepo {
     if (knowledgeBaseId) {
       // Build where conditions using proper table references (f.column instead of files.column)
       const kbWhereConditions: any[] = [sql`f.user_id = ${this.userId}`];
-      
+
       // Search filter
       if (q) {
         kbWhereConditions.push(sql`f.name ILIKE ${`%${q}%`}`);
       }
-      
+
       // Category filter
       if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
         const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
@@ -226,7 +226,7 @@ export class KnowledgeRepo {
           kbWhereConditions.push(sql`f.file_type ILIKE ${`${fileTypePrefix}%`}`);
         }
       }
-      
+
       return sql`
         SELECT
           f.id,
@@ -305,12 +305,17 @@ export class KnowledgeRepo {
           (prefix) => sql`${documents.fileType} ILIKE ${`${prefix}%`}`,
         );
         whereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
+
+        // Exclude custom/document and source_type='file' from Documents category
+        if (category === FilesTabs.Documents) {
+          whereConditions.push(sql`${documents.fileType} != ${'custom/document'}`, sql`${documents.sourceType} != ${'file'}`);
+        }
       } else if (fileTypePrefix) {
         whereConditions.push(sql`${documents.fileType} ILIKE ${`${fileTypePrefix}%`}`);
       } else {
         // Exclude documents from other categories (Images, Videos, Audios, Websites)
         return sql`
-          SELECT 
+          SELECT
             NULL::varchar(30) as id,
             NULL::text as name,
             NULL::varchar(255) as file_type,
