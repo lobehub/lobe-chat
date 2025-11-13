@@ -26,6 +26,8 @@ import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import { createAgentToolsEngine } from '@/store/chat/agents/createToolEngine';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
+import { toolInterventionSelectors } from '@/store/user/selectors';
+import { getUserStoreState } from '@/store/user/store';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { topicSelectors } from '../../../selectors';
@@ -54,6 +56,19 @@ interface ProcessMessageParams {
  * Core streaming execution actions for AI chat
  */
 export interface StreamingExecutorAction {
+  /**
+   * Creates initial agent state and context with user intervention config
+   */
+  internal_createAgentState: (params: {
+    messages: UIChatMessage[];
+    parentMessageId: string;
+    threadId?: string;
+    initialState?: AgentState;
+    initialContext?: AgentRuntimeContext;
+  }) => {
+    state: AgentState;
+    context: AgentRuntimeContext;
+  };
   /**
    * Retrieves an AI-generated chat message from the backend service with streaming
    */
@@ -106,6 +121,73 @@ export const streamingExecutor: StateCreator<
   [],
   StreamingExecutorAction
 > = (set, get) => ({
+  internal_createAgentState: ({
+    messages,
+    parentMessageId,
+    threadId,
+    initialState,
+    initialContext,
+  }) => {
+    const { activeId, activeTopicId } = get();
+    const agentStoreState = getAgentStoreState();
+    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+
+    // Get tools manifest map
+    const toolsEngine = createAgentToolsEngine({
+      model: agentConfigData.model,
+      provider: agentConfigData.provider!,
+    });
+    const { enabledToolIds } = toolsEngine.generateToolsDetailed({
+      model: agentConfigData.model,
+      provider: agentConfigData.provider!,
+      toolIds: agentConfigData.plugins,
+    });
+    const toolManifestMap = Object.fromEntries(
+      toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
+    );
+
+    // Get user intervention config
+    const userStore = getUserStoreState();
+    const userInterventionConfig = {
+      approvalMode: toolInterventionSelectors.approvalMode(userStore),
+      allowList: toolInterventionSelectors.allowList(userStore),
+    };
+
+    // Create initial state or use provided state
+    const state =
+      initialState ||
+      AgentRuntime.createInitialState({
+        sessionId: activeId,
+        messages,
+        maxSteps: 400,
+        metadata: {
+          sessionId: activeId,
+          topicId: activeTopicId,
+          threadId,
+        },
+        toolManifestMap,
+        userInterventionConfig,
+      });
+
+    // Create initial context or use provided context
+    const context: AgentRuntimeContext = initialContext || {
+      phase: 'init',
+      payload: {
+        model: agentConfigData.model,
+        provider: agentConfigData.provider,
+        parentMessageId,
+      },
+      session: {
+        sessionId: activeId,
+        messageCount: messages.length,
+        status: state.status,
+        stepCount: 0,
+      },
+    };
+
+    return { state, context };
+  },
+
   internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
     const {
       internal_toggleChatLoading,
@@ -469,16 +551,6 @@ export const streamingExecutor: StateCreator<
       },
     });
 
-    const toolsEngine = createAgentToolsEngine({ model: model, provider: provider! });
-    const { enabledToolIds } = toolsEngine.generateToolsDetailed({
-      model: model,
-      provider: provider!,
-      toolIds: agentConfigData.plugins,
-    });
-    const toolManifestMap = Object.fromEntries(
-      toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
-    );
-
     const runtime = new AgentRuntime(agent, {
       executors: createAgentExecutors({
         get,
@@ -489,33 +561,18 @@ export const streamingExecutor: StateCreator<
       }),
     });
 
-    // Create initial state or use provided state
-    let state =
-      params.initialState ||
-      AgentRuntime.createInitialState({
-        sessionId: activeId,
+    // Create agent state and context with user intervention config
+    const { state: initialAgentState, context: initialAgentContext } =
+      get().internal_createAgentState({
         messages,
-        // Prevent infinite loops
-        maxSteps: 400,
-        metadata: {
-          sessionId: activeId,
-          topicId: activeTopicId,
-          threadId: params.threadId,
-        },
-        toolManifestMap,
+        parentMessageId: params.parentMessageId,
+        threadId: params.threadId,
+        initialState: params.initialState,
+        initialContext: params.initialContext,
       });
 
-    // Initial context - use provided context or create default 'init' phase
-    let nextContext: AgentRuntimeContext = params.initialContext || {
-      phase: 'init',
-      payload: { model, provider, parentMessageId: params.parentMessageId },
-      session: {
-        sessionId: activeId,
-        messageCount: messages.length,
-        status: state.status,
-        stepCount: 0,
-      },
-    };
+    let state = initialAgentState;
+    let nextContext = initialAgentContext;
 
     log(
       '[internal_execAgentRuntime] Agent runtime loop start, initial phase: %s',

@@ -601,5 +601,178 @@ describe('GeneralChatAgent', () => {
         },
       ]);
     });
+
+    it('should execute all tools when user approvalMode is auto-run', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCall: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'dangerous-tool',
+        apiName: 'delete',
+        arguments: '{}',
+        type: 'default',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'dangerous-tool': {
+            identifier: 'dangerous-tool',
+            humanIntervention: 'required', // Tool requires approval
+          },
+        },
+        userInterventionConfig: {
+          approvalMode: 'auto-run', // But user config overrides
+          allowList: [],
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [toolCall],
+        parentMessageId: 'msg-1',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should execute directly despite tool requiring approval
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: toolCall,
+          },
+        },
+      ]);
+    });
+
+    it('should respect allowList when approvalMode is allow-list', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const allowedTool: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'bash',
+        apiName: 'bash',
+        arguments: '{"command":"ls"}',
+        type: 'builtin',
+      };
+
+      const blockedTool: ChatToolPayload = {
+        id: 'call-2',
+        identifier: 'bash',
+        apiName: 'dangerous-command',
+        arguments: '{"command":"rm -rf"}',
+        type: 'builtin',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          bash: {
+            identifier: 'bash',
+            humanIntervention: 'never', // Tool doesn't require approval by default
+          },
+        },
+        userInterventionConfig: {
+          approvalMode: 'allow-list',
+          allowList: ['bash/bash'], // Only bash/bash is allowed
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [allowedTool, blockedTool],
+        parentMessageId: 'msg-1',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should execute allowed tool first, then request approval for blocked tool
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: allowedTool,
+          },
+        },
+        {
+          type: 'request_human_approve',
+          pendingToolsCalling: [blockedTool],
+          reason: 'human_intervention_required',
+        },
+      ]);
+    });
+
+    it('should use tool config when approvalMode is manual', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const safeTool: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'web-search',
+        apiName: 'search',
+        arguments: '{}',
+        type: 'default',
+      };
+
+      const dangerousTool: ChatToolPayload = {
+        id: 'call-2',
+        identifier: 'bash',
+        apiName: 'bash',
+        arguments: '{}',
+        type: 'builtin',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'web-search': {
+            identifier: 'web-search',
+            humanIntervention: 'never', // Safe tool
+          },
+          'bash': {
+            identifier: 'bash',
+            humanIntervention: 'required', // Dangerous tool
+          },
+        },
+        userInterventionConfig: {
+          approvalMode: 'manual', // Use tool's own config
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [safeTool, dangerousTool],
+        parentMessageId: 'msg-1',
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should execute safe tool, request approval for dangerous tool
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: safeTool,
+          },
+        },
+        {
+          type: 'request_human_approve',
+          pendingToolsCalling: [dangerousTool],
+          reason: 'human_intervention_required',
+        },
+      ]);
+    });
   });
 });

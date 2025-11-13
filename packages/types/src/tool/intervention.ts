@@ -117,6 +117,36 @@ export const HumanInterventionResponseSchema = z.object({
 });
 
 /**
+ * User's global intervention configuration
+ * Applied across all tools in the session
+ */
+export interface UserInterventionConfig {
+  /**
+   * Allow list of approved tools (used in 'allow-list' mode)
+   * Format: "identifier/apiName"
+   *
+   * Examples:
+   * - "bash/bash"
+   * - "web-browsing/crawlSinglePage"
+   * - "search/search"
+   */
+  allowList?: string[];
+
+  /**
+   * Tool approval mode
+   * - auto-run: Automatically approve all tools without user consent
+   * - allow-list: Only approve tools in the allow list
+   * - manual: Use tool's own humanIntervention config (default)
+   */
+  approvalMode: 'auto-run' | 'allow-list' | 'manual';
+}
+
+export const UserInterventionConfigSchema = z.object({
+  allowList: z.array(z.string()).optional(),
+  approvalMode: z.enum(['auto-run', 'allow-list', 'manual']),
+});
+
+/**
  * Parameters for shouldIntervene method
  */
 export interface ShouldInterveneParams {
