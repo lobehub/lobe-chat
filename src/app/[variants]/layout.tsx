@@ -13,6 +13,7 @@ import GlobalProvider from '@/layout/GlobalProvider';
 import { Locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 const inVercel = process.env.VERCEL === '1';
 
@@ -38,20 +39,22 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
         )}
       </head>
       <body>
-        <GlobalProvider
-          appearance={theme}
-          isMobile={isMobile}
-          locale={locale}
-          neutralColor={neutralColor}
-          primaryColor={primaryColor}
-          variants={variants}
-        >
-          <AuthProvider>
-            {children}
-            {!isMobile && modal}
-          </AuthProvider>
-          <PWAInstall />
-        </GlobalProvider>
+        <NuqsAdapter>
+          <GlobalProvider
+            appearance={theme}
+            isMobile={isMobile}
+            locale={locale}
+            neutralColor={neutralColor}
+            primaryColor={primaryColor}
+            variants={variants}
+          >
+            <AuthProvider>
+              {children}
+              {!isMobile && modal}
+            </AuthProvider>
+            <PWAInstall />
+          </GlobalProvider>
+        </NuqsAdapter>
         <Analytics />
         {inVercel && <SpeedInsights />}
       </body>
