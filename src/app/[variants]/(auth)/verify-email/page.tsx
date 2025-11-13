@@ -1,14 +1,29 @@
 'use client';
 
-import { Button } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { createStyles, useTheme } from 'antd-style';
-import { Mail } from 'lucide-react';
+import { ArrowLeft, Mail } from 'lucide-react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
+  backLink: css`
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+
+    font-size: 14px;
+    color: ${token.colorTextSecondary};
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: ${token.colorText};
+    }
+  `,
   container: css`
     max-width: 480px;
     padding: 2rem;
@@ -38,6 +53,15 @@ const useStyles = createStyles(({ css, token }) => ({
       ${token.colorPrimaryBg} 0%,
       ${token.colorPrimaryBgHover} 100%
     );
+  `,
+  mailLink: css`
+    font-weight: 500;
+    color: ${token.colorPrimary};
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   `,
   textGroup: css`
     display: flex;
@@ -71,13 +95,20 @@ export default function VerifyEmailPage() {
         </div>
 
         <div className={styles.textGroup}>
-          <p className={styles.description}>{t('betterAuth.verifyEmail.description', { email })}</p>
+          <p className={styles.description}>
+            {t('betterAuth.verifyEmail.descriptionPrefix')}{' '}
+            <a className={styles.mailLink} href={`mailto:${email}`}>
+              {email}
+            </a>{' '}
+            {t('betterAuth.verifyEmail.descriptionSuffix')}
+          </p>
           <p className={styles.hint}>{t('betterAuth.verifyEmail.checkSpam')}</p>
         </div>
 
-        <Button href="/signin" size="large" style={{ marginTop: '0.5rem' }} type="primary">
+        <Link className={styles.backLink} href="/signin">
+          <ArrowLeft size={16} />
           {t('betterAuth.verifyEmail.backToSignIn')}
-        </Button>
+        </Link>
       </Flexbox>
     </Center>
   );
