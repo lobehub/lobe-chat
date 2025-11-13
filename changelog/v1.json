@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update ERNIE-5.0-Thinking-Preview model."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.51"
+  },
+  {
+    "children": {
       "fixes": ["Fix oidc accountId mismatch."]
     },
     "date": "2025-11-13",
