@@ -2,6 +2,7 @@ import { serverDB } from '@lobechat/database';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
+import { authEnv } from '@/envs/auth';
 import {
   getResetPasswordEmailTemplate,
   getVerificationEmailTemplate,
@@ -14,7 +15,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION,
 
     sendResetPassword: async ({ user, url }) => {
       const template = getResetPasswordEmailTemplate({ url });
