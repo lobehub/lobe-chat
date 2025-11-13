@@ -1049,6 +1049,9 @@
   "deepseek-r1-0528": {
     "description": "685B 滿血版模型，2025年5月28日發布。DeepSeek-R1 在後訓練階段大規模使用了強化學習技術，在僅有極少標註資料的情況下，大幅提升了模型推理能力。在數學、程式碼、自然語言推理等任務上，性能較高，能力較強。"
   },
+  "deepseek-r1-250528": {
+    "description": "DeepSeek R1 250528，完整版 DeepSeek-R1 推理模型，適用於高難度數學與邏輯任務。"
+  },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B 快速版，支持即時聯網搜索，在保持模型性能的同時提供更快的響應速度。"
   },
@@ -1059,31 +1062,34 @@
     "description": "deepseek-r1-distill-llama 是基於 Llama 從 DeepSeek-R1 蒸餾而來的模型。"
   },
   "deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek R1——DeepSeek 套件中更大更智能的模型——被蒸餾到 Llama 70B 架構中。基於基準測試和人工評估，該模型比原始 Llama 70B 更智能，尤其在需要數學和事實精確性的任務上表現出色。"
+    "description": "DeepSeek R1 Distill Llama 70B，結合通用 R1 推理能力與 Llama 生態的蒸餾模型。"
   },
   "deepseek-r1-distill-llama-8b": {
-    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+    "description": "DeepSeek-R1-Distill-Llama-8B 是一款基於 Llama-3.1-8B 的蒸餾大型語言模型，採用 DeepSeek R1 的輸出。"
+  },
+  "deepseek-r1-distill-qianfan-70b": {
+    "description": "DeepSeek R1 Distill Qianfan 70B，基於 Qianfan-70B 的 R1 蒸餾模型，具高性價比。"
+  },
+  "deepseek-r1-distill-qianfan-8b": {
+    "description": "DeepSeek R1 Distill Qianfan 8B，基於 Qianfan-8B 的 R1 蒸餾模型，適用於中小型應用。"
   },
   "deepseek-r1-distill-qianfan-llama-70b": {
-    "description": "2025年2月14日首次發布，由千帆大模型研發團隊以 Llama3_70B為base模型（Built with Meta Llama）蒸餾所得，蒸餾數據中也同步添加了千帆的語料。"
-  },
-  "deepseek-r1-distill-qianfan-llama-8b": {
-    "description": "2025年2月14日首次發布，由千帆大模型研發團隊以 Llama3_8B為base模型（Built with Meta Llama）蒸餾所得，蒸餾數據中也同步添加了千帆的語料。"
+    "description": "DeepSeek R1 Distill Qianfan Llama 70B，基於 Llama-70B 的 R1 蒸餾模型。"
   },
   "deepseek-r1-distill-qwen": {
     "description": "deepseek-r1-distill-qwen 是基於 Qwen 從 DeepSeek-R1 蒸餾而來的模型。"
   },
   "deepseek-r1-distill-qwen-1.5b": {
-    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+    "description": "DeepSeek R1 Distill Qwen 1.5B，超輕量 R1 蒸餾模型，適用於極低資源環境。"
   },
   "deepseek-r1-distill-qwen-14b": {
-    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+    "description": "DeepSeek R1 Distill Qwen 14B，中等規模 R1 蒸餾模型，適合多場景部署。"
   },
   "deepseek-r1-distill-qwen-32b": {
-    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+    "description": "DeepSeek R1 Distill Qwen 32B，基於 Qwen-32B 的 R1 蒸餾模型，兼顧效能與成本。"
   },
   "deepseek-r1-distill-qwen-7b": {
-    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+    "description": "DeepSeek R1 Distill Qwen 7B，輕量級 R1 蒸餾模型，適合邊緣與企業私有化部署環境。"
   },
   "deepseek-r1-fast-online": {
     "description": "DeepSeek R1 滿血快速版，支持即時聯網搜索，結合了 671B 參數的強大能力和更快的響應速度。"
@@ -1112,11 +1118,23 @@
   "deepseek-v3.1-terminus": {
     "description": "DeepSeek-V3.1-Terminus 是深度求索推出的終端優化版本大型語言模型，專為終端設備優化。"
   },
+  "deepseek-v3.1-think-250821": {
+    "description": "DeepSeek V3.1 Think 250821，對應 Terminus 版本的深度思考模型，適用於高效能推理場景。"
+  },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1：下一代推理模型，提升了複雜推理與鏈路思考能力，適合需要深入分析的任務。"
   },
   "deepseek-v3.2-exp": {
     "description": "deepseek-v3.2-exp 引入稀疏注意力機制，旨在提升處理長文本時的訓練與推理效率，價格低於 deepseek-v3.1。"
+  },
+  "deepseek-v3.2-think": {
+    "description": "DeepSeek V3.2 Think，完整版深度思考模型，強化長鏈推理能力。"
+  },
+  "deepseek-vl2": {
+    "description": "DeepSeek VL2，多模態模型，支援圖文理解與細緻視覺問答。"
+  },
+  "deepseek-vl2-small": {
+    "description": "DeepSeek VL2 Small，輕量多模態版本，適用於資源受限與高併發場景。"
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 是一個 685B 參數的專家混合模型，是 DeepSeek 團隊旗艦聊天模型系列的最新迭代。\n\n它繼承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，並在各種任務上表現出色。"
@@ -1253,83 +1271,89 @@
   "emohaa": {
     "description": "Emohaa是一個心理模型，具備專業諮詢能力，幫助用戶理解情感問題。"
   },
-  "ernie-3.5-128k": {
-    "description": "百度自研的旗艦級大規模大語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
-  },
-  "ernie-3.5-8k": {
-    "description": "百度自研的旗艦級大規模大語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
-  },
-  "ernie-3.5-8k-preview": {
-    "description": "百度自研的旗艦級大規模大語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
-  },
-  "ernie-4.0-8k-latest": {
-    "description": "百度自研的旗艦級超大規模大語言模型，相較ERNIE 3.5實現了模型能力全面升級，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。"
-  },
-  "ernie-4.0-8k-preview": {
-    "description": "百度自研的旗艦級超大規模大語言模型，相較ERNIE 3.5實現了模型能力全面升級，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。"
-  },
-  "ernie-4.0-turbo-128k": {
-    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
-  },
-  "ernie-4.0-turbo-8k-latest": {
-    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
-  },
-  "ernie-4.0-turbo-8k-preview": {
-    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
+  "ernie-4.5-0.3b": {
+    "description": "ERNIE 4.5 0.3B，開源輕量版模型，適合作為本地與客製化部署方案。"
   },
   "ernie-4.5-21b-a3b": {
-    "description": "ERNIE 4.5 21B A3B 是百度文心推出的混合專家模型，具備強大的推理與多語言能力。"
+    "description": "ERNIE 4.5 21B A3B，開源大參數模型，在理解與生成任務上表現更佳。"
   },
   "ernie-4.5-300b-a47b": {
     "description": "ERNIE 4.5 300B A47B 是百度文心推出的超大規模混合專家模型，具備卓越的推理能力。"
   },
   "ernie-4.5-8k-preview": {
-    "description": "文心大模型4.5是百度自主研發的新一代原生多模態基礎大模型，通過多個模態聯合建模實現協同優化，多模態理解能力優秀；具備更精進的語言能力，理解、生成、邏輯、記憶能力全面提升，去幻覺、邏輯推理、代碼能力顯著提升。"
+    "description": "ERNIE 4.5 8K Preview，8K 上下文預覽模型，用於體驗與測試文心 4.5 能力。"
   },
   "ernie-4.5-turbo-128k": {
-    "description": "文心4.5 Turbo在去幻覺、邏輯推理和程式碼能力等方面也有著明顯增強。對比文心4.5，速度更快、價格更低。模型能力全面提升，更好滿足多輪長歷史對話處理、長文檔理解問答任務。"
+    "description": "ERNIE 4.5 Turbo 128K，高效能通用模型，支援搜尋增強與工具調用，適用於問答、程式碼、智能體等多種業務場景。"
+  },
+  "ernie-4.5-turbo-128k-preview": {
+    "description": "ERNIE 4.5 Turbo 128K 預覽版，提供與正式版一致的能力體驗，適合聯調與灰度測試。"
   },
   "ernie-4.5-turbo-32k": {
-    "description": "文心4.5 Turbo在去幻覺、邏輯推理和程式碼能力等方面也有著明顯增強。對比文心4.5，速度更快、價格更低。文本創作、知識問答等能力提升顯著。輸出長度及整句時延相較ERNIE 4.5有所增加。"
+    "description": "ERNIE 4.5 Turbo 32K，中長上下文版本，適用於問答、知識庫檢索與多輪對話等場景。"
+  },
+  "ernie-4.5-turbo-latest": {
+    "description": "ERNIE 4.5 Turbo 最新版，整體效能優化，適合作為生產環境通用主力模型。"
+  },
+  "ernie-4.5-turbo-vl": {
+    "description": "ERNIE 4.5 Turbo VL，成熟多模態模型，適合生產環境中的圖文理解與識別任務。"
   },
   "ernie-4.5-turbo-vl-32k": {
-    "description": "文心一言大模型全新版本，圖片理解、創作、翻譯、程式碼等能力顯著提升，首次支持32K上下文長度，首Token時延顯著降低。"
+    "description": "ERNIE 4.5 Turbo VL 32K，中長文本多模態版本，適用於長文檔與圖片的聯合理解。"
+  },
+  "ernie-4.5-turbo-vl-32k-preview": {
+    "description": "ERNIE 4.5 Turbo VL 32K Preview，多模態 32K 預覽版，便於評估長上下文視覺能力。"
+  },
+  "ernie-4.5-turbo-vl-latest": {
+    "description": "ERNIE 4.5 Turbo VL Latest，多模態最新版本，提供更佳圖文理解與推理效果。"
+  },
+  "ernie-4.5-turbo-vl-preview": {
+    "description": "ERNIE 4.5 Turbo VL Preview，多模態預覽模型，支援圖文理解與生成，適合視覺問答與內容理解體驗。"
+  },
+  "ernie-4.5-vl-28b-a3b": {
+    "description": "ERNIE 4.5 VL 28B A3B，多模態開源模型，支援圖文理解與推理任務。"
+  },
+  "ernie-5.0-thinking-preview": {
+    "description": "文心 5.0 Thinking 預覽版，原生全模態旗艦模型，支援文字、圖像、音訊、影片統一建模，整體能力全面升級，適用於複雜問答、創作與智能體場景。"
   },
   "ernie-char-8k": {
-    "description": "百度自研的垂直場景大語言模型，適合遊戲NPC、客服對話、對話角色扮演等應用場景，人設風格更為鮮明、一致，指令遵循能力更強，推理性能更優。"
+    "description": "ERNIE Character 8K，角色人格對話模型，適合 IP 角色建構與長期陪伴對話。"
   },
   "ernie-char-fiction-8k": {
-    "description": "百度自研的垂直場景大語言模型，適合遊戲NPC、客服對話、對話角色扮演等應用場景，人設風格更為鮮明、一致，指令遵循能力更強，推理性能更優。"
+    "description": "ERNIE Character Fiction 8K，面向小說與劇情創作的人格模型，適合長文本故事生成。"
+  },
+  "ernie-char-fiction-8k-preview": {
+    "description": "ERNIE Character Fiction 8K Preview，人物與劇情創作模型預覽版，用於功能體驗與測試。"
   },
   "ernie-irag-edit": {
-    "description": "百度自研的 ERNIE iRAG Edit 圖像編輯模型支持基於圖片進行 erase（消除物件）、repaint（重繪物件）、variation（生成變體）等操作。"
+    "description": "ERNIE iRAG Edit，支援圖片擦除、重繪與變體生成的圖像編輯模型。"
   },
   "ernie-lite-8k": {
-    "description": "ERNIE Lite是百度自研的輕量級大語言模型，兼顧優異的模型效果與推理性能，適合低算力AI加速卡推理使用。"
+    "description": "ERNIE Lite 8K，輕量級通用模型，適合對成本敏感的日常問答與內容生成場景。"
   },
   "ernie-lite-pro-128k": {
-    "description": "百度自研的輕量級大語言模型，兼顧優異的模型效果與推理性能，效果比ERNIE Lite更優，適合低算力AI加速卡推理使用。"
+    "description": "ERNIE Lite Pro 128K，輕量高效能模型，適合對延遲與成本敏感的業務場景。"
   },
   "ernie-novel-8k": {
-    "description": "百度自研通用大語言模型，在小說續寫能力上有明顯優勢，也可用在短劇、電影等場景。"
+    "description": "ERNIE Novel 8K，長篇小說與 IP 劇情創作模型，擅長多角色、多線敘事。"
   },
   "ernie-speed-128k": {
-    "description": "百度2024年最新發布的自研高性能大語言模型，通用能力優異，適合作為基座模型進行精調，更好地處理特定場景問題，同時具備極佳的推理性能。"
+    "description": "ERNIE Speed 128K，免輸入輸出費用的大模型，適合長文本理解與大規模試用場景。"
+  },
+  "ernie-speed-8k": {
+    "description": "ERNIE Speed 8K，免費快速模型，適合日常對話與輕量文本任務。"
   },
   "ernie-speed-pro-128k": {
-    "description": "百度2024年最新發布的自研高性能大語言模型，通用能力優異，效果比ERNIE Speed更優，適合作為基座模型進行精調，更好地處理特定場景問題，同時具備極佳的推理性能。"
+    "description": "ERNIE Speed Pro 128K，高併發高性價比模型，適合大規模線上服務與企業應用。"
   },
   "ernie-tiny-8k": {
-    "description": "ERNIE Tiny是百度自研的超高性能大語言模型，部署與精調成本在文心系列模型中最低。"
-  },
-  "ernie-x1-32k": {
-    "description": "具備更強的理解、規劃、反思、進化能力。作為能力更全面的深度思考模型，文心X1兼具準確、創意和文采，在中文知識問答、文學創作、文稿寫作、日常對話、邏輯推理、複雜計算及工具調用等方面表現尤為出色。"
-  },
-  "ernie-x1-32k-preview": {
-    "description": "文心大模型X1具備更強的理解、規劃、反思、進化能力。作為能力更全面的深度思考模型，文心X1兼具準確、創意和文采，在中文知識問答、文學創作、文稿寫作、日常對話、邏輯推理、複雜計算及工具調用等方面表現尤為出色。"
+    "description": "ERNIE Tiny 8K，極輕量模型，適合簡單問答、分類等低成本推理場景。"
   },
   "ernie-x1-turbo-32k": {
-    "description": "與ERNIE-X1-32K相比，模型效果和性能更佳。"
+    "description": "ERNIE X1 Turbo 32K，高速思考模型，32K 長上下文，適合複雜推理與多輪對話。"
+  },
+  "ernie-x1.1-preview": {
+    "description": "ERNIE X1.1 Preview，ERNIE X1.1 思考模型預覽版，適合能力驗證與測試。"
   },
   "fal-ai/bytedance/seedream/v4": {
     "description": "Seedream 4.0 圖片生成模型由字節跳動 Seed 團隊研發，支援文字與圖片輸入，提供高可控、高品質的圖片生成體驗。基於文字提示詞生成圖片。"
@@ -1389,7 +1413,7 @@
     "description": "FLUX.1 [schnell] 作為目前開源最先進的少步模型，不僅超越了同類競爭者，甚至還優於諸如 Midjourney v6.0 和 DALL·E 3 (HD) 等強大的非精煉模型。該模型經過專門微調，以保留預訓練階段的全部輸出多樣性，相較於當前市場上的最先進模型，FLUX.1 [schnell] 顯著提升了在視覺品質、指令遵從、尺寸/比例變化、字體處理及輸出多樣性等方面的可能，為用戶帶來更為豐富多樣的創意圖像生成體驗。"
   },
   "flux.1-schnell": {
-    "description": "具有120億參數的修正流變換器，能夠根據文本描述生成圖像。"
+    "description": "FLUX.1-schnell，高效能圖像生成模型，適合快速生成多風格圖片。"
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供穩定並可調優的性能，是複雜任務解決方案的理想選擇。"
@@ -1537,6 +1561,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520是最新模型版本，專為高度複雜和多樣化任務設計，表現卓越。"
+  },
+  "glm-4-32b-0414": {
+    "description": "GLM-4 32B 0414，GLM 系列通用大型模型版本，支援多任務文本生成與理解。"
   },
   "glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat 在語意、數學、推理、程式碼與知識等多方面均展現出高效能。還具備網頁瀏覽、程式碼執行、自訂工具調用與長文本推理能力。支援包括日語、韓語、德語在內的 26 種語言。"
@@ -2036,14 +2063,26 @@
   "internlm3-latest": {
     "description": "我們最新的模型系列，有著卓越的推理性能，領跑同量級開源模型。默認指向我們最新發布的 InternLM3 系列模型"
   },
+  "internvl2.5-38b-mpo": {
+    "description": "InternVL2.5 38B MPO，多模態預訓練模型，支援複雜圖文推理任務。"
+  },
   "internvl2.5-latest": {
     "description": "我們仍在維護的 InternVL2.5 版本，具備優異且穩定的性能。默認指向我們最新發布的 InternVL2.5 系列模型，當前指向 internvl2.5-78b。"
+  },
+  "internvl3-14b": {
+    "description": "InternVL3 14B，中等規模多模態模型，在效能與成本間取得平衡。"
+  },
+  "internvl3-1b": {
+    "description": "InternVL3 1B，輕量多模態模型，適合資源受限環境部署。"
+  },
+  "internvl3-38b": {
+    "description": "InternVL3 38B，大規模多模態開源模型，適用於高精度圖文理解任務。"
   },
   "internvl3-latest": {
     "description": "我們最新發布的多模態大模型，具備更強的圖文理解能力、長時序圖片理解能力，性能比肩頂尖閉源模型。默認指向我們最新發布的 InternVL 系列模型，當前指向 internvl3-78b。"
   },
   "irag-1.0": {
-    "description": "百度自研的 iRAG（image based RAG），檢索增強的文生圖技術，將百度搜尋的億級圖片資源與強大的基礎模型能力結合，即可生成各種超真實的圖片，整體效果遠遠超過文生圖原生系統，去除了 AI 味道，且成本極低。iRAG 具備無幻覺、超真實、立等可取等特點。"
+    "description": "ERNIE iRAG，圖像檢索增強生成模型，支援以圖搜圖、圖文檢索與內容生成。"
   },
   "jamba-large": {
     "description": "我們最強大、最先進的模型，專為處理企業級複雜任務而設計，具備卓越的性能。"
@@ -2064,7 +2103,7 @@
     "description": "kimi-k2-0905-preview 模型上下文長度為 256k，具備更強的 Agentic Coding 能力、更突出的前端程式碼的美觀度和實用性、以及更好的上下文理解能力。"
   },
   "kimi-k2-instruct": {
-    "description": "Kimi K2 Instruct 是月之暗面推出的大型語言模型，具備超長上下文處理能力。"
+    "description": "Kimi K2 Instruct，Kimi 官方推理模型，支援長上下文與程式碼、問答等多場景。"
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 是一款具備超強程式碼與 Agent 能力的 MoE 架構的基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學與 Agent 等主要類別的基準效能測試中，K2 模型的表現超越其他主流開源模型。"
@@ -2885,9 +2924,7 @@
   "qwen2.5-72b-instruct": {
     "description": "通義千問2.5對外開源的72B規模的模型。"
   },
-  "qwen2.5-7b-instruct": {
-    "description": "通義千問2.5對外開源的7B規模的模型。"
-  },
+  "qwen2.5-7b-instruct": {},
   "qwen2.5-coder-1.5b-instruct": {
     "description": "通義千問代碼模型開源版。"
   },
@@ -2918,15 +2955,11 @@
   "qwen2.5-omni-7b": {
     "description": "Qwen-Omni 系列模型支援輸入多種模態的數據，包括視頻、音頻、圖片、文本，並輸出音頻與文本。"
   },
-  "qwen2.5-vl-32b-instruct": {
-    "description": "Qwen2.5-VL 系列模型提升了模型的智能水準、實用性和適用性，使其在自然對話、內容創作、專業知識服務及程式碼開發等場景中表現更優。32B 版本使用了強化學習技術優化模型，與 Qwen2.5 VL 系列的其他模型相比，提供了更符合人類偏好的輸出風格、複雜數學問題的推理能力，以及影像細粒度理解與推理能力。"
-  },
+  "qwen2.5-vl-32b-instruct": {},
   "qwen2.5-vl-72b-instruct": {
     "description": "指令跟隨、數學、解題、代碼整體提升，萬物識別能力提升，支持多樣格式直接精準定位視覺元素，支持對長視頻文件（最長10分鐘）進行理解和秒級別的事件時刻定位，能理解時間先後和快慢，基於解析和定位能力支持操控OS或Mobile的Agent，關鍵信息抽取能力和Json格式輸出能力強，此版本為72B版本，本系列能力最強的版本。"
   },
-  "qwen2.5-vl-7b-instruct": {
-    "description": "指令跟隨、數學、解題、代碼整體提升，萬物識別能力提升，支持多樣格式直接精準定位視覺元素，支持對長視頻文件（最長10分鐘）進行理解和秒級別的事件時刻定位，能理解時間先後和快慢，基於解析和定位能力支持操控OS或Mobile的Agent，關鍵信息抽取能力和Json格式輸出能力強，此版本為72B版本，本系列能力最強的版本。"
-  },
+  "qwen2.5-vl-7b-instruct": {},
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL 是 Qwen 模型系列中最新版本的視覺語言模型。"
   },
@@ -2951,48 +2984,22 @@
   "qwen3": {
     "description": "Qwen3 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
   },
-  "qwen3-0.6b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
-  "qwen3-1.7b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
-  "qwen3-14b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
-  "qwen3-235b-a22b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
-  "qwen3-235b-a22b-instruct-2507": {
-    "description": "基於 Qwen3 的非思考模式開源模型，相較上一版本（通義千問3-235B-A22B）主觀創作能力與模型安全性均有小幅度提升。"
-  },
-  "qwen3-235b-a22b-thinking-2507": {
-    "description": "基於 Qwen3 的思考模式開源模型，相較上一版本（通義千問3-235B-A22B）邏輯能力、通用能力、知識增強及創作能力均有大幅提升，適用於高難度強推理場景。"
-  },
-  "qwen3-30b-a3b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
-  "qwen3-30b-a3b-instruct-2507": {
-    "description": "相較上一版本（Qwen3-30B-A3B）中英文和多語言整體通用能力有大幅提升。主觀開放類任務專項優化，顯著更加符合用戶偏好，能夠提供更有幫助性的回覆。"
-  },
-  "qwen3-30b-a3b-thinking-2507": {
-    "description": "基於Qwen3的思考模式開源模型，相較上一版本（通義千問3-30B-A3B）邏輯能力、通用能力、知識增強及創作能力均有大幅提升，適用於高難度強推理場景。"
-  },
-  "qwen3-32b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
-  "qwen3-4b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
-  "qwen3-8b": {
-    "description": "Qwen3是一款能力大幅提升的新一代通義千問大模型，在推理、通用、Agent和多語言等多個核心能力上均達到業界領先水平，並支持思考模式切換。"
-  },
+  "qwen3-0.6b": {},
+  "qwen3-1.7b": {},
+  "qwen3-14b": {},
+  "qwen3-235b-a22b": {},
+  "qwen3-235b-a22b-instruct-2507": {},
+  "qwen3-235b-a22b-thinking-2507": {},
+  "qwen3-30b-a3b": {},
+  "qwen3-30b-a3b-instruct-2507": {},
+  "qwen3-30b-a3b-thinking-2507": {},
+  "qwen3-32b": {},
+  "qwen3-4b": {},
+  "qwen3-8b": {},
   "qwen3-coder-30b-a3b-instruct": {
     "description": "通義千問程式碼模型開源版。最新的 qwen3-coder-30b-a3b-instruct 是基於 Qwen3 的程式碼生成模型，具備強大的 Coding Agent 能力，擅長工具調用與環境互動，能夠實現自主編程，程式能力卓越，同時兼具通用能力。"
   },
-  "qwen3-coder-480b-a35b-instruct": {
-    "description": "通義千問程式碼模型開源版。最新的 qwen3-coder-480b-a35b-instruct 是基於 Qwen3 的程式碼生成模型，具有強大的 Coding Agent 能力，擅長工具調用和環境互動，能夠實現自主程式設計、程式碼能力卓越的同時兼具通用能力。"
-  },
+  "qwen3-coder-480b-a35b-instruct": {},
   "qwen3-coder-flash": {
     "description": "通義千問程式碼模型。最新的 Qwen3-Coder 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的Coding Agent能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
   },
@@ -3008,30 +3015,16 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "基於 Qwen3 的新一代非思考模式開源模型，相較上一版本（通義千問3-235B-A22B-Instruct-2507）中文文本理解能力更佳、邏輯推理能力有增強、文本生成類任務表現更好。"
   },
-  "qwen3-next-80b-a3b-thinking": {
-    "description": "基於 Qwen3 的新一代思考模式開源模型，相較上一版本（通義千問3-235B-A22B-Thinking-2507）指令遵循能力有提升、模型總結回覆更加精簡。"
-  },
+  "qwen3-next-80b-a3b-thinking": {},
   "qwen3-omni-flash": {
     "description": "Qwen-Omni 模型能夠接收文字、圖片、音訊、影片等多種模態的組合輸入，並生成文字或語音形式的回應，提供多種擬人化音色，支援多語言與方言語音輸出，適用於文字創作、視覺辨識、語音助理等場景。"
   },
-  "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B 非思考模式（Instruct），適用於非思考指令場景，維持強大的視覺理解能力。"
-  },
-  "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B 思考模式（開源版），針對高難度強推理與長影片理解場景，提供頂尖的視覺與文字推理能力。"
-  },
-  "qwen3-vl-30b-a3b-instruct": {
-    "description": "Qwen3 VL 30B 非思考模式（Instruct），面向一般指令跟隨場景，維持優異的多模態理解與生成能力。"
-  },
-  "qwen3-vl-30b-a3b-thinking": {
-    "description": "Qwen-VL（開源版）提供視覺理解與文字生成能力，支援智慧體互動、視覺編碼、空間感知、長影片理解與深度思考，並在複雜場景下具備更強的文字辨識與多語言支援。"
-  },
-  "qwen3-vl-8b-instruct": {
-    "description": "Qwen3 VL 8B 非思考模式（Instruct），適合常規多模態生成與辨識任務。"
-  },
-  "qwen3-vl-8b-thinking": {
-    "description": "Qwen3 VL 8B 思考模式，面向輕量級多模態推理與互動場景，保留長上下文理解能力。"
-  },
+  "qwen3-vl-235b-a22b-instruct": {},
+  "qwen3-vl-235b-a22b-thinking": {},
+  "qwen3-vl-30b-a3b-instruct": {},
+  "qwen3-vl-30b-a3b-thinking": {},
+  "qwen3-vl-8b-instruct": {},
+  "qwen3-vl-8b-thinking": {},
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash：輕量化高速推理版本，適用於對延遲敏感或大量請求的場景。"
   },

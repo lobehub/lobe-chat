@@ -260,7 +260,7 @@ export default {
       searchLocalFiles: '搜索文件',
       writeLocalFile: '写入文件',
     },
-    title: '本地文件',
+    title: '本地系统',
   },
   mcpInstall: {
     CHECKING_INSTALLATION: '检查安装环境...',
