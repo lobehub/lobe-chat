@@ -31,19 +31,17 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 interface ToolTitleProps {
   apiName: string;
-  hasResult?: boolean;
   identifier: string;
   index: number;
+  isLoading?: boolean;
   messageId: string;
   toolCallId: string;
 }
 
 const ToolTitle = memo<ToolTitleProps>(
-  ({ identifier, apiName, hasResult, index, toolCallId, messageId }) => {
+  ({ identifier, apiName, isLoading, index, toolCallId, messageId }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
-
-    const isLoading = !hasResult;
 
     const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
@@ -69,9 +67,9 @@ const ToolTitle = memo<ToolTitleProps>(
       return (
         <BuiltinPluginTitle
           {...builtinPluginTitle}
-          hasResult={hasResult}
           identifier={identifier}
           index={index}
+          isLoading={isLoading}
           messageId={messageId}
           toolCallId={toolCallId}
         />

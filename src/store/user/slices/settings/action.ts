@@ -18,6 +18,7 @@ import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
 export interface UserSettingsAction {
+  addToolToAllowList: (toolKey: string) => Promise<void>;
   importAppSettings: (settings: UserSettings) => Promise<void>;
   importUrlShareSettings: (settingsParams: string | null) => Promise<void>;
   internal_createSignal: () => AbortController;
@@ -39,6 +40,20 @@ export const createSettingsSlice: StateCreator<
   [],
   UserSettingsAction
 > = (set, get) => ({
+  addToolToAllowList: async (toolKey) => {
+    const currentAllowList = get().settings.tool?.humanIntervention?.allowList || [];
+
+    if (currentAllowList.includes(toolKey)) return;
+
+    await get().setSettings({
+      tool: {
+        humanIntervention: {
+          allowList: [...currentAllowList, toolKey],
+        },
+      },
+    });
+  },
+
   importAppSettings: async (importAppSettings) => {
     const { setSettings } = get();
 

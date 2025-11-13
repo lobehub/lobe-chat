@@ -9,26 +9,85 @@ import {
   GeneralAgentCallToolsBatchInstructionPayload,
   GeneralAgentCallingToolInstructionPayload,
   GeneralAgentConfig,
+  InterventionChecker,
 } from '@lobechat/agent-runtime';
+import type { ChatToolPayload, HumanInterventionConfig } from '@lobechat/types';
 
 /**
  * ChatAgent - The "Brain" of the chat agent
  *
  * This agent implements a simple but powerful decision loop:
  * 1. user_input → call_llm (with optional RAG/Search preprocessing)
- * 2. llm_result → check for tool_calls
- *    - If has tool_calls → call_tools_batch (parallel execution)
- *    - If no tool_calls → finish
+ * 2. llm_result → check for tool_calls and intervention requirements
+ *    - Tools not requiring intervention → call_tools_batch (execute immediately)
+ *    - Tools requiring intervention → request_human_approve (wait for approval)
+ *    - Mixed (both types) → [call_tools_batch, request_human_approve] (execute safe ones first, then request approval)
+ *    - No tool_calls → finish
  * 3. tools_batch_result → call_llm (process tool results)
  *
- * Note: RAG and Search workflow preprocessing are handled externally
- * before creating the agent runtime, keeping the agent logic simple.
  */
 export class GeneralChatAgent implements Agent {
   private config: GeneralAgentConfig;
 
   constructor(config: GeneralAgentConfig) {
     this.config = config;
+  }
+
+  /**
+   * Get intervention configuration for a specific tool call
+   */
+  private getToolInterventionConfig(
+    toolCalling: ChatToolPayload,
+    state: AgentState,
+  ): HumanInterventionConfig | undefined {
+    const { identifier, apiName } = toolCalling;
+    const manifest = state.toolManifestMap[identifier];
+
+    if (!manifest) return undefined;
+
+    // Find the specific API in the manifest
+    const api = manifest.api?.find((a: any) => a.name === apiName);
+
+    // API-level config takes precedence over tool-level config
+    return api?.humanIntervention ?? manifest.humanIntervention;
+  }
+
+  /**
+   * Check if tool calls need human intervention
+   * Returns [toolsNeedingIntervention, toolsToExecute]
+   */
+  private checkInterventionNeeded(
+    toolsCalling: ChatToolPayload[],
+    state: AgentState,
+  ): [ChatToolPayload[], ChatToolPayload[]] {
+    const toolsNeedingIntervention: ChatToolPayload[] = [];
+    const toolsToExecute: ChatToolPayload[] = [];
+
+    for (const toolCalling of toolsCalling) {
+      const config = this.getToolInterventionConfig(toolCalling, state);
+
+      // Parse arguments for intervention checking
+      let toolArgs: Record<string, any> = {};
+      try {
+        toolArgs = JSON.parse(toolCalling.arguments || '{}');
+      } catch {
+        // Invalid JSON, treat as empty args
+      }
+
+      const policy = InterventionChecker.shouldIntervene({
+        config,
+        toolArgs,
+      });
+
+      if (policy === 'never') {
+        toolsToExecute.push(toolCalling);
+      } else {
+        // 'require' or 'first' (when not confirmed) requires intervention
+        toolsNeedingIntervention.push(toolCalling);
+      }
+    }
+
+    return [toolsNeedingIntervention, toolsToExecute];
   }
 
   async runner(
@@ -55,26 +114,47 @@ export class GeneralChatAgent implements Agent {
           context.payload as GeneralAgentCallLLMResultPayload;
 
         if (hasToolsCalling && toolsCalling && toolsCalling.length > 0) {
-          // No intervention needed, proceed with tool execution
-          // Use batch execution for multiple tool calls to improve performance
-          if (toolsCalling.length > 1) {
-            return {
-              payload: {
-                parentMessageId,
-                toolsCalling,
-              } as GeneralAgentCallToolsBatchInstructionPayload,
-              type: 'call_tools_batch',
-            };
-          } else if (toolsCalling.length === 1) {
-            // Single tool executes directly
-            return {
-              payload: {
-                parentMessageId,
-                toolCalling: toolsCalling[0],
-              } as GeneralAgentCallingToolInstructionPayload,
-              type: 'call_tool',
-            };
+          // Check which tools need human intervention
+          const [toolsNeedingIntervention, toolsToExecute] = this.checkInterventionNeeded(
+            toolsCalling,
+            state,
+          );
+
+          const instructions: AgentInstruction[] = [];
+
+          // Execute tools that don't need intervention first
+          // These will run immediately before any approval requests
+          if (toolsToExecute.length > 0) {
+            if (toolsToExecute.length > 1) {
+              instructions.push({
+                payload: {
+                  parentMessageId,
+                  toolsCalling: toolsToExecute,
+                } as GeneralAgentCallToolsBatchInstructionPayload,
+                type: 'call_tools_batch',
+              });
+            } else {
+              instructions.push({
+                payload: {
+                  parentMessageId,
+                  toolCalling: toolsToExecute[0],
+                } as GeneralAgentCallingToolInstructionPayload,
+                type: 'call_tool',
+              });
+            }
           }
+
+          // Request approval for tools that need intervention
+          // Runtime will execute this after safe tools and pause with status='waiting_for_human'
+          if (toolsNeedingIntervention.length > 0) {
+            instructions.push({
+              pendingToolsCalling: toolsNeedingIntervention,
+              reason: 'human_intervention_required',
+              type: 'request_human_approve',
+            });
+          }
+
+          return instructions;
         }
 
         // No tool calls, conversation is complete
@@ -88,6 +168,24 @@ export class GeneralChatAgent implements Agent {
       case 'tool_result': {
         const { parentMessageId } = context.payload as GeneralAgentCallToolResultPayload;
 
+        // Check if there are still pending tool messages waiting for approval
+        const pendingToolMessages = state.messages.filter(
+          (m: any) => m.role === 'tool' && m.pluginIntervention?.status === 'pending',
+        );
+
+        // If there are pending tools, wait for human approval
+        if (pendingToolMessages.length > 0) {
+          const pendingTools = pendingToolMessages.map((m: any) => m.plugin).filter(Boolean);
+
+          return {
+            pendingToolsCalling: pendingTools,
+            reason: 'Some tools still pending approval',
+            skipCreateToolMessage: true,
+            type: 'request_human_approve',
+          };
+        }
+
+        // No pending tools, continue to call LLM with tool results
         return {
           payload: {
             messages: state.messages,
@@ -102,6 +200,25 @@ export class GeneralChatAgent implements Agent {
 
       case 'tools_batch_result': {
         const { parentMessageId } = context.payload as GeneralAgentCallToolResultPayload;
+
+        // Check if there are still pending tool messages waiting for approval
+        const pendingToolMessages = state.messages.filter(
+          (m: any) => m.role === 'tool' && m.pluginIntervention?.status === 'pending',
+        );
+
+        // If there are pending tools, wait for human approval
+        if (pendingToolMessages.length > 0) {
+          const pendingTools = pendingToolMessages.map((m: any) => m.plugin).filter(Boolean);
+
+          return {
+            pendingToolsCalling: pendingTools,
+            reason: 'Some tools still pending approval',
+            skipCreateToolMessage: true,
+            type: 'request_human_approve',
+          };
+        }
+
+        // No pending tools, continue to call LLM with tool results
         return {
           payload: {
             messages: state.messages,

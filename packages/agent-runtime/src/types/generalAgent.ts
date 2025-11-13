@@ -18,6 +18,7 @@ export interface GeneralAgentCallLLMResultPayload {
 
 export interface GeneralAgentCallingToolInstructionPayload {
   parentMessageId: string;
+  skipCreateToolMessage?: boolean;
   toolCalling: ChatToolPayload;
 }
 

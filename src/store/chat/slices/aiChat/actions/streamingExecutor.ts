@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { AgentRuntime, type AgentRuntimeContext } from '@lobechat/agent-runtime';
+import { AgentRuntime, type AgentRuntimeContext, type AgentState } from '@lobechat/agent-runtime';
 import { isDesktop } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
@@ -23,6 +23,7 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { getAgentStoreState } from '@/store/agent/store';
 import { GeneralChatAgent } from '@/store/chat/agents/GeneralChatAgent';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
+import { createAgentToolsEngine } from '@/store/chat/agents/createToolEngine';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { setNamespace } from '@/utils/storeDebug';
@@ -88,6 +89,14 @@ export interface StreamingExecutorAction {
     skipCreateFirstMessage?: boolean;
     traceId?: string;
     ragMetadata?: { ragQueryId: string; fileChunks: MessageSemanticSearchChunk[] };
+    /**
+     * Initial agent state (for resuming execution from a specific point)
+     */
+    initialState?: AgentState;
+    /**
+     * Initial agent runtime context (for resuming execution from a specific phase)
+     */
+    initialContext?: AgentRuntimeContext;
   }) => Promise<void>;
 }
 
@@ -397,6 +406,7 @@ export const streamingExecutor: StateCreator<
     // ===========================================
     // Step 1: RAG Preprocessing (if enabled)
     // ===========================================
+    // Skip RAG preprocessing if initialState is provided (messages already preprocessed)
     if (params.ragQuery && parentMessageType === 'user') {
       const userMessageId = parentMessageId;
       log('[internal_execAgentRuntime] RAG preprocessing start');
@@ -458,6 +468,17 @@ export const streamingExecutor: StateCreator<
         provider: provider!,
       },
     });
+
+    const toolsEngine = createAgentToolsEngine({ model: model, provider: provider! });
+    const { enabledToolIds } = toolsEngine.generateToolsDetailed({
+      model: model,
+      provider: provider!,
+      toolIds: agentConfigData.plugins,
+    });
+    const toolManifestMap = Object.fromEntries(
+      toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
+    );
+
     const runtime = new AgentRuntime(agent, {
       executors: createAgentExecutors({
         get,
@@ -468,21 +489,24 @@ export const streamingExecutor: StateCreator<
       }),
     });
 
-    // Create initial state
-    let state = AgentRuntime.createInitialState({
-      sessionId: activeId,
-      messages,
-      // Prevent infinite loops
-      maxSteps: 400,
-      metadata: {
+    // Create initial state or use provided state
+    let state =
+      params.initialState ||
+      AgentRuntime.createInitialState({
         sessionId: activeId,
-        topicId: activeTopicId,
-        threadId: params.threadId,
-      },
-    });
+        messages,
+        // Prevent infinite loops
+        maxSteps: 400,
+        metadata: {
+          sessionId: activeId,
+          topicId: activeTopicId,
+          threadId: params.threadId,
+        },
+        toolManifestMap,
+      });
 
-    // Initial context - use 'init' phase since state already contains messages
-    let nextContext: AgentRuntimeContext = {
+    // Initial context - use provided context or create default 'init' phase
+    let nextContext: AgentRuntimeContext = params.initialContext || {
       phase: 'init',
       payload: { model, provider, parentMessageId: params.parentMessageId },
       session: {
@@ -520,20 +544,24 @@ export const streamingExecutor: StateCreator<
 
       // Handle completion and error events
       for (const event of result.events) {
-        if (event.type === 'done') {
-          log('[internal_execAgentRuntime] Received done event');
-        }
-
-        if (event.type === 'error') {
-          log('[internal_execAgentRuntime] Received error event: %o', event.error);
-          // Find the assistant message to update error
-          const currentMessages = get().messagesMap[messageKey] || [];
-          const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
-          if (assistantMessage) {
-            await messageService.updateMessageError(assistantMessage.id, event.error);
+        switch (event.type) {
+          case 'done': {
+            log('[internal_execAgentRuntime] Received done event');
+            break;
           }
-          const finalMessages = get().messagesMap[messageKey] || [];
-          get().replaceMessages(finalMessages);
+
+          case 'error': {
+            log('[internal_execAgentRuntime] Received error event: %o', event.error);
+            // Find the assistant message to update error
+            const currentMessages = get().messagesMap[messageKey] || [];
+            const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
+            if (assistantMessage) {
+              await messageService.updateMessageError(assistantMessage.id, event.error);
+            }
+            const finalMessages = get().messagesMap[messageKey] || [];
+            get().replaceMessages(finalMessages);
+            break;
+          }
         }
       }
 

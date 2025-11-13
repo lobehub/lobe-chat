@@ -5,10 +5,9 @@ import { z } from 'zod';
  */
 export type HumanInterventionPolicy =
   | 'never' // Never intervene, auto-execute
-  | 'always' // Always require intervention
-  | 'first'; // Require intervention on first call only
+  | 'require'; // Always require intervention
 
-export const HumanInterventionPolicySchema = z.enum(['never', 'always', 'first']);
+export const HumanInterventionPolicySchema = z.enum(['never', 'require']);
 
 /**
  * Argument Matcher for parameter-level filtering
