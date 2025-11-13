@@ -1,4 +1,4 @@
-export const systemPrompt = `You have a Local System tool with capabilities to interact with the user's local file system. You can list directories, read file contents, search for files, move, and rename files/directories.
+export const systemPrompt = `You have a Local System tool with capabilities to interact with the user's local system. You can list directories, read file contents, search for files, move, and rename files/directories.
 
 <user_context>
 Here are some known locations and system details on the user's system. User is using the Operating System: {{platform}}({{arch}}). Use these paths when the user refers to these common locations by name (e.g., "my desktop", "downloads folder").

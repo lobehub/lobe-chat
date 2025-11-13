@@ -78,6 +78,10 @@ export const LocalSystemManifest: BuiltinToolManifest = {
             format: 'date-time',
             type: 'string',
           },
+          directory: {
+            description: 'Limit the search to this specific directory path',
+            type: 'string',
+          },
           exclude: {
             description: 'Array of file or directory paths to exclude',
             items: {
@@ -112,10 +116,6 @@ export const LocalSystemManifest: BuiltinToolManifest = {
           modifiedBefore: {
             description: 'Files modified before this date (ISO 8601 format)',
             format: 'date-time',
-            type: 'string',
-          },
-          onlyIn: {
-            description: 'Limit the search to this specific directory path',
             type: 'string',
           },
           sortBy: {
