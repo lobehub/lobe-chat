@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { ReactRouterProvider } from '@/app/[variants]/(main)/context/ReactRouterContext';
 import { withSuspense } from '@/components/withSuspense';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { Locales } from '@/locales/resources';
@@ -34,11 +33,11 @@ export const MobileMainLayout = memo((props: { locale: Locales }) => {
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <ReactRouterProvider>
+    <>
       {showCloudPromotion && <CloudBanner mobile />}
       <Outlet context={{ locale: locale }} />
       {showNav && <NavBar />}
-    </ReactRouterProvider>
+    </>
   );
 });
 
