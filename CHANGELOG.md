@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 2.0.0-next.49](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.48...v2.0.0-next.49)
+
+<sup>Released on **2025-11-13**</sup>
+
+#### ✨ Features
+
+- **misc**: Support tool invention.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update lost i18n files.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support tool invention, closes [#10182](https://github.com/lobehub/lobe-chat/issues/10182) ([4dca708](https://github.com/lobehub/lobe-chat/commit/4dca708))
+
+#### What's fixed
+
+- **misc**: Update lost i18n files, closes [#10179](https://github.com/lobehub/lobe-chat/issues/10179) ([b69c7ff](https://github.com/lobehub/lobe-chat/commit/b69c7ff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.48](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.47...v2.0.0-next.48)
 
 <sup>Released on **2025-11-12**</sup>
