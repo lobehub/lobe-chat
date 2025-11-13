@@ -515,6 +515,10 @@ export default {
       desc: '值越大，用词越丰富多样；值越低，用词更朴实简单',
       title: '词汇丰富度',
     },
+    includeHistoricalThinking: {
+      desc: '将历史消息的思考过程嵌入到上下文中，帮助模型更好地理解上下文推理链路',
+      title: '交错思考',
+    },
     maxTokens: {
       desc: '单次交互所用的最大 Token 数',
       title: '单次回复限制',

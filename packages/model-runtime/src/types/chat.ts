@@ -75,6 +75,10 @@ export interface ChatStreamPayload {
    */
   frequency_penalty?: number;
   /**
+   * @title 上下文是否携带历史思考内容
+   */
+  includeHistoricalThinking?: boolean;
+  /**
    * @title 生成文本的最大长度
    */
   max_tokens?: number;

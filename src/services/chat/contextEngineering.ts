@@ -28,6 +28,7 @@ interface ContextEngineeringContext {
   enableHistoryCount?: boolean;
   historyCount?: number;
   historySummary?: string;
+  includeHistoricalThinking?: boolean;
   inputTemplate?: string;
   messages: UIChatMessage[];
   model: string;
@@ -47,6 +48,7 @@ export const contextEngineering = async ({
   enableHistoryCount,
   historyCount,
   historySummary,
+  includeHistoricalThinking,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   const toolNameResolver = new ToolNameResolver();
 
@@ -89,6 +91,7 @@ export const contextEngineering = async ({
       // 8.5 Message content processing
       new MessageContentProcessor({
         fileContext: { enabled: isServerMode, includeFileUrl: !isDesktop },
+        includeHistoricalThinking,
         isCanUseVideo,
         isCanUseVision,
         model,
@@ -107,7 +110,7 @@ export const contextEngineering = async ({
       new ToolMessageReorder(),
 
       // 11. Message cleanup (final step, keep only necessary fields)
-      new MessageCleanupProcessor(),
+      new MessageCleanupProcessor({ includeHistoricalThinking, provider }),
     ],
   });
 
