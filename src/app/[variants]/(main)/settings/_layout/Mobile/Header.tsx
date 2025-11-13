@@ -1,12 +1,12 @@
 'use client';
 
 import { ChatHeader } from '@lobehub/ui/mobile';
-import { useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { enableAuth } from '@/const/auth';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { SettingsTabs } from '@/store/global/initialState';

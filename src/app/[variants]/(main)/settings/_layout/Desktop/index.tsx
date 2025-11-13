@@ -1,11 +1,11 @@
 'use client';
 
 import { useResponsive, useTheme } from 'antd-style';
-import { parseAsStringEnum, useQueryState } from 'nuqs';
 import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SettingContainer from '@/features/Setting/SettingContainer';
+import { parseAsStringEnum, useQueryParam } from '@/hooks/useQueryParam';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import CategoryContent from '../CategoryContent';
@@ -20,7 +20,7 @@ const Layout = memo<LayoutProps>((props) => {
   const { md = true } = useResponsive();
   const theme = useTheme();
 
-  const [activeTab, setActiveTab] = useQueryState(
+  const [activeTab, setActiveTab] = useQueryParam(
     'active',
     parseAsStringEnum(Object.values(SettingsTabs)).withDefault(SettingsTabs.Common),
   );

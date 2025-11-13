@@ -6,7 +6,6 @@ import { isCustomBranding } from '@/const/version';
 import CircleLoading from '../CircleLoading';
 
 export default () => {
-  
   if (isCustomBranding) return <CircleLoading />;
 
   return (

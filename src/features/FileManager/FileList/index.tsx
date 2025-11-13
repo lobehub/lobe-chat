@@ -3,13 +3,13 @@
 import { Text } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
-import { useQueryState } from 'nuqs';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { SortType } from '@/types/files';
@@ -105,9 +105,9 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
   const { data, isLoading } = useFetchFileManage({
     category,
     knowledgeBaseId,
-    q: query,
-    sortType,
-    sorter,
+    q: query ?? undefined,
+    sortType: sortType ?? undefined,
+    sorter: sorter ?? undefined,
     ...viewConfig,
   });
 

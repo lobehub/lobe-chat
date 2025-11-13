@@ -1,7 +1,6 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
@@ -39,22 +38,20 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
         )}
       </head>
       <body>
-        <NuqsAdapter>
-          <GlobalProvider
-            appearance={theme}
-            isMobile={isMobile}
-            locale={locale}
-            neutralColor={neutralColor}
-            primaryColor={primaryColor}
-            variants={variants}
-          >
-            <AuthProvider>
-              {children}
-              {!isMobile && modal}
-            </AuthProvider>
-            <PWAInstall />
-          </GlobalProvider>
-        </NuqsAdapter>
+        <GlobalProvider
+          appearance={theme}
+          isMobile={isMobile}
+          locale={locale}
+          neutralColor={neutralColor}
+          primaryColor={primaryColor}
+          variants={variants}
+        >
+          <AuthProvider>
+            {children}
+            {!isMobile && modal}
+          </AuthProvider>
+          <PWAInstall />
+        </GlobalProvider>
         <Analytics />
         {inVercel && <SpeedInsights />}
       </body>
