@@ -205,6 +205,7 @@ export const LocalSystemManifest: BuiltinToolManifest = {
     {
       description:
         'Execute a shell command and return its output. Supports both synchronous and background execution with timeout control.',
+      humanIntervention: 'required',
       name: LocalSystemApiName.runCommand,
       parameters: {
         properties: {
