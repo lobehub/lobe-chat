@@ -14,6 +14,7 @@ export const auth = betterAuth({
     provider: 'pg',
   }),
   emailAndPassword: {
+    autoSignIn: true,
     enabled: true,
     requireEmailVerification: authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION,
 
@@ -28,6 +29,7 @@ export const auth = betterAuth({
   },
 
   emailVerification: {
+    autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       const template = getVerificationEmailTemplate({ url, userName: user.name });
 

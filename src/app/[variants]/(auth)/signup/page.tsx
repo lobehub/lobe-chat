@@ -70,7 +70,10 @@ export default function SignUpPage() {
   const handleSignUp = async (values: SignUpFormValues) => {
     setLoading(true);
     try {
+      const callbackUrl = searchParams.get('callbackUrl') || '/';
+
       const { error } = await signUp.email({
+        callbackURL: callbackUrl,
         email: values.email,
         firstName: values.firstName,
         lastName: values.lastName,
@@ -89,10 +92,14 @@ export default function SignUpPage() {
       // Redirect based on email verification requirement
       if (authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION) {
         // Email verification required, redirect to verification notice page
-        router.push('/verify-email?email=' + encodeURIComponent(values.email));
+        // callbackURL is already passed to signUp.email for verification link
+        router.push(
+          `/verify-email?email=${encodeURIComponent(values.email)}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
+        );
       } else {
-        // Email verification not required, redirect to signin page
-        router.push('/signin?email=' + encodeURIComponent(values.email));
+        // Email verification not required, user is already logged in (autoSignIn: true)
+        // Redirect to callback URL or home
+        router.push(callbackUrl);
       }
     } catch {
       message.error(t('betterAuth.signup.error'));
