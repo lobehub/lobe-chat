@@ -3,6 +3,7 @@ import { Popover, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink, FolderOpen } from 'lucide-react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
@@ -42,6 +43,7 @@ interface LocalFileProps {
 
 export const LocalFile = ({ name, path, isDirectory = false }: LocalFileProps) => {
   const { styles } = useStyles();
+  const { t } = useTranslation('components');
 
   const handleOpenFile = () => {
     if (!path) return;
@@ -53,18 +55,45 @@ export const LocalFile = ({ name, path, isDirectory = false }: LocalFileProps) =
     localFileService.openFileFolder(path);
   };
 
+  const fileContent = (
+    <Flexbox
+      align={'center'}
+      className={styles.container}
+      gap={4}
+      horizontal
+      onClick={isDirectory ? handleOpenFile : undefined}
+      style={{ display: 'inline-flex', verticalAlign: 'middle' }}
+    >
+      <FileIcon fileName={name} isDirectory={isDirectory} size={22} variant={'raw'} />
+      <Flexbox align={'baseline'} gap={4} horizontal style={{ overflow: 'hidden', width: '100%' }}>
+        <div className={styles.title}>{name}</div>
+      </Flexbox>
+    </Flexbox>
+  );
+
+  // Directory: no popover, just click to open
+  if (isDirectory) {
+    return fileContent;
+  }
+
+  // File: show popover with two actions
   const popoverContent = (
     <Space.Compact>
       <Button
         icon={ExternalLink}
         onClick={handleOpenFile}
         size="small"
-        title={isDirectory ? 'Open Folder' : 'Open File'}
+        title={t('LocalFile.action.open')}
       >
-        {isDirectory ? 'Open' : 'Open'}
+        {t('LocalFile.action.open')}
       </Button>
-      <Button icon={FolderOpen} onClick={handleOpenFolder} size="small" title="Show in Folder">
-        Show in Folder
+      <Button
+        icon={FolderOpen}
+        onClick={handleOpenFolder}
+        size="small"
+        title={t('LocalFile.action.showInFolder')}
+      >
+        {t('LocalFile.action.showInFolder')}
       </Button>
     </Space.Compact>
   );
@@ -78,23 +107,7 @@ export const LocalFile = ({ name, path, isDirectory = false }: LocalFileProps) =
       }}
       trigger={['hover']}
     >
-      <Flexbox
-        align={'center'}
-        className={styles.container}
-        gap={4}
-        horizontal
-        style={{ display: 'inline-flex', verticalAlign: 'middle' }}
-      >
-        <FileIcon fileName={name} isDirectory={isDirectory} size={22} variant={'raw'} />
-        <Flexbox
-          align={'baseline'}
-          gap={4}
-          horizontal
-          style={{ overflow: 'hidden', width: '100%' }}
-        >
-          <div className={styles.title}>{name}</div>
-        </Flexbox>
-      </Flexbox>
+      {fileContent}
     </Popover>
   );
 };
