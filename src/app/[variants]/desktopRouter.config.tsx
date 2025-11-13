@@ -7,6 +7,7 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
+import DesktopChangelogLayout from './(main)/changelog/_layout/Desktop';
 import DesktopMainLayout from './(main)/layouts/desktop';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
@@ -280,10 +281,7 @@ export const createDesktopRouter = (locale: Locales) =>
               path: '*',
             },
           ],
-          lazy: () =>
-            import('./(main)/changelog/_layout/Desktop').then((m) => ({
-              Component: m.default,
-            })),
+          element: <DesktopChangelogLayout locale={locale} />,
           path: 'changelog',
         },
 

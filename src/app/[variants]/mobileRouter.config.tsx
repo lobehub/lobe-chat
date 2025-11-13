@@ -7,6 +7,7 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
+import MobileChangelogLayout from './(main)/changelog/_layout/Mobile';
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
@@ -274,10 +275,7 @@ export const createMobileRouter = (locale: Locales) =>
                 })),
             },
           ],
-          lazy: () =>
-            import('./(main)/changelog/_layout/Mobile').then((m) => ({
-              Component: m.default,
-            })),
+          element: <MobileChangelogLayout locale={locale} />,
           path: 'changelog',
         },
 

@@ -1,43 +1,38 @@
-import { Divider, Skeleton } from 'antd';
-import { notFound } from 'next/navigation';
-import { Fragment, Suspense } from 'react';
+import { Fragment } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { useOutletContext } from 'react-router-dom';
+import useSWR from 'swr';
 
-import Pagination from '@/app/[variants]/@modal/(.)changelog/modal/features/Pagination';
-import UpdateChangelogStatus from '@/app/[variants]/@modal/(.)changelog/modal/features/UpdateChangelogStatus';
-import { serverFeatureFlags } from '@/config/featureFlags';
+import NotFound from '@/components/404';
 import { Locales } from '@/locales/resources';
 import { ChangelogService } from '@/server/services/changelog';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import GridLayout from './features/GridLayout';
+import Pagination from './features/Pagination';
 import Post from './features/Post';
+import UpdateChangelogStatus from './features/UpdateChangelogStatus';
 
-const Page = async (props: { isMobile: boolean }) => {
+const Page = (props: { isMobile: boolean }) => {
   const { locale } = useOutletContext<{ locale: Locales }>();
   const { isMobile } = props;
-  const hideDocs = serverFeatureFlags().hideDocs;
-  if (hideDocs) return notFound();
-  const changelogService = new ChangelogService();
-  const data = await changelogService.getChangelogIndex();
+  const { hideDocs } = useServerConfigStore(featureFlagsSelectors);
 
-  if (!data) return notFound();
+  const { data } = useSWR('changelog-index', async () => {
+    const changelogService = new ChangelogService();
+    return await changelogService.getChangelogIndex();
+  });
+
+  if (hideDocs) return <NotFound />;
+
+  if (!data) return <NotFound />;
 
   return (
     <>
       <Flexbox gap={isMobile ? 16 : 48}>
         {data?.map((item) => (
           <Fragment key={item.id}>
-            <Suspense
-              fallback={
-                <GridLayout>
-                  <Divider />
-                  <Skeleton active paragraph={{ rows: 5 }} />
-                </GridLayout>
-              }
-            >
-              <Post locale={locale} mobile={isMobile} {...item} />
-            </Suspense>
+            <Post locale={locale} mobile={isMobile} {...item} />
           </Fragment>
         ))}
       </Flexbox>
@@ -49,11 +44,11 @@ const Page = async (props: { isMobile: boolean }) => {
   );
 };
 
-const DesktopPage = async () => {
+const DesktopPage = () => {
   return <Page isMobile={false} />;
 };
 
-const MobilePage = async () => {
+const MobilePage = () => {
   return <Page isMobile={true} />;
 };
 
