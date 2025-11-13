@@ -2,12 +2,12 @@
 
 import { ActionIcon } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
-import { Form, Input } from 'antd';
+import { Form, Input, type InputRef } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ChevronLeft, ChevronRight, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -81,6 +81,17 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
+  const emailInputRef = useRef<InputRef>(null);
+  const passwordInputRef = useRef<InputRef>(null);
+
+  // Auto-focus input when step changes
+  useEffect(() => {
+    if (step === 'email') {
+      emailInputRef.current?.focus();
+    } else if (step === 'password') {
+      passwordInputRef.current?.focus();
+    }
+  }, [step]);
 
   // Check if user exists
   const handleCheckUser = async (values: Pick<SignInFormValues, 'email'>) => {
@@ -190,6 +201,7 @@ export default function SignInPage() {
                   <Input
                     placeholder={t('betterAuth.signin.emailPlaceholder')}
                     prefix={<Mail size={16} />}
+                    ref={emailInputRef}
                     size="large"
                     suffix={
                       <ActionIcon
@@ -237,6 +249,7 @@ export default function SignInPage() {
                   <Input.Password
                     placeholder={t('betterAuth.signin.passwordPlaceholder')}
                     prefix={<Lock size={16} />}
+                    ref={passwordInputRef}
                     size="large"
                     suffix={
                       <ActionIcon
