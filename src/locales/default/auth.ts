@@ -103,6 +103,12 @@ export default {
       checkSpam: '如果没有收到邮件，请检查垃圾邮件文件夹',
       descriptionPrefix: '我们已向',
       descriptionSuffix: '发送了验证邮件',
+      resend: {
+        button: '重新发送验证邮件',
+        error: '发送失败，请稍后重试',
+        noEmail: '邮箱地址缺失',
+        success: '验证邮件已重新发送，请检查您的邮箱',
+      },
       title: '验证您的邮箱',
     },
   },

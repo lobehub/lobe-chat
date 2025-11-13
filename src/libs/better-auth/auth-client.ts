@@ -6,7 +6,7 @@ import { getAuthConfig } from '@/envs/auth';
 
 const { NEXT_PUBLIC_BETTER_AUTH_URL } = getAuthConfig();
 
-export const { signIn, signOut, signUp, useSession } = createAuthClient({
+export const { sendVerificationEmail, signIn, signOut, signUp, useSession } = createAuthClient({
   /** The base URL of the server (optional if you're using the same domain) */
   baseURL: NEXT_PUBLIC_BETTER_AUTH_URL,
   plugins: [inferAdditionalFields<typeof auth>()],
