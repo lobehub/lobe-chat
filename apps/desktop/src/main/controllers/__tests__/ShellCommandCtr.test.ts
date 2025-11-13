@@ -366,6 +366,76 @@ describe('ShellCommandCtr', () => {
 
       expect(exitedResult.running).toBe(false);
     });
+
+    it('should track stdout and stderr offsets separately when streaming output', async () => {
+      // Create a new background process with manual control over stdout/stderr
+      let stdoutCallback: (data: Buffer) => void;
+      let stderrCallback: (data: Buffer) => void;
+
+      mockChildProcess.stdout.on.mockImplementation((event: string, callback: any) => {
+        if (event === 'data') {
+          stdoutCallback = callback;
+        }
+        return mockChildProcess.stdout;
+      });
+
+      mockChildProcess.stderr.on.mockImplementation((event: string, callback: any) => {
+        if (event === 'data') {
+          stderrCallback = callback;
+        }
+        return mockChildProcess.stderr;
+      });
+
+      // Start a new background process
+      await shellCommandCtr.handleRunCommand({
+        command: 'test-interleaved',
+        run_in_background: true,
+      });
+
+      // Simulate stderr output first
+      stderrCallback(Buffer.from('error 1\n'));
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
+      // First read - should get stderr
+      const firstRead = await shellCommandCtr.handleGetCommandOutput({
+        shell_id: 'test-uuid-123',
+      });
+      expect(firstRead.stderr).toBe('error 1\n');
+      expect(firstRead.stdout).toBe('');
+
+      // Simulate stdout output after stderr
+      stdoutCallback(Buffer.from('output 1\n'));
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
+      // Second read - should get stdout without losing data
+      const secondRead = await shellCommandCtr.handleGetCommandOutput({
+        shell_id: 'test-uuid-123',
+      });
+      expect(secondRead.stdout).toBe('output 1\n');
+      expect(secondRead.stderr).toBe('');
+
+      // Simulate more stderr
+      stderrCallback(Buffer.from('error 2\n'));
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
+      // Third read - should get new stderr
+      const thirdRead = await shellCommandCtr.handleGetCommandOutput({
+        shell_id: 'test-uuid-123',
+      });
+      expect(thirdRead.stderr).toBe('error 2\n');
+      expect(thirdRead.stdout).toBe('');
+
+      // Simulate more stdout
+      stdoutCallback(Buffer.from('output 2\n'));
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
+      // Fourth read - should get new stdout
+      const fourthRead = await shellCommandCtr.handleGetCommandOutput({
+        shell_id: 'test-uuid-123',
+      });
+      expect(fourthRead.stdout).toBe('output 2\n');
+      expect(fourthRead.stderr).toBe('');
+    });
   });
 
   describe('handleKillCommand', () => {

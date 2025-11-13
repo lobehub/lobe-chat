@@ -16,7 +16,8 @@ import { ControllerModule, ipcClientEvent } from './index';
 const logger = createLogger('controllers:ShellCommandCtr');
 
 interface ShellProcess {
-  lastRead: number;
+  lastReadStderr: number;
+  lastReadStdout: number;
   process: ChildProcess;
   stderr: string[];
   stdout: string[];
@@ -45,8 +46,8 @@ export default class ShellCommandCtr extends ControllerModule {
     // Cross-platform shell selection
     const shellConfig =
       process.platform === 'win32'
-        ? { cmd: 'cmd.exe', args: ['/c', command] }
-        : { cmd: '/bin/sh', args: ['-c', command] };
+        ? { args: ['/c', command], cmd: 'cmd.exe' }
+        : { args: ['-c', command], cmd: '/bin/sh' };
 
     try {
       if (run_in_background) {
@@ -58,7 +59,8 @@ export default class ShellCommandCtr extends ControllerModule {
         });
 
         const shellProcess: ShellProcess = {
-          lastRead: 0,
+          lastReadStderr: 0,
+          lastReadStdout: 0,
           process: childProcess,
           stderr: [],
           stdout: [],
@@ -172,11 +174,11 @@ export default class ShellCommandCtr extends ControllerModule {
       };
     }
 
-    const { lastRead, process: childProcess, stderr, stdout } = shellProcess;
+    const { lastReadStderr, lastReadStdout, process: childProcess, stderr, stdout } = shellProcess;
 
     // Get new output since last read
-    const newStdout = stdout.slice(lastRead).join('');
-    const newStderr = stderr.slice(lastRead).join('');
+    const newStdout = stdout.slice(lastReadStdout).join('');
+    const newStderr = stderr.slice(lastReadStderr).join('');
     let output = newStdout + newStderr;
 
     // Apply filter if provided
@@ -190,8 +192,9 @@ export default class ShellCommandCtr extends ControllerModule {
       }
     }
 
-    // Update last read position
-    shellProcess.lastRead = stdout.length + stderr.length;
+    // Update last read positions separately
+    shellProcess.lastReadStdout = stdout.length;
+    shellProcess.lastReadStderr = stderr.length;
 
     const running = childProcess.exitCode === null;
 
