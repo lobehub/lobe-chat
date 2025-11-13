@@ -1,12 +1,20 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
-import { desktopRouter } from './desktopRouter.config';
+import type { Locales } from '@/types/locale';
 
-const DesktopClientRouter = memo(() => {
-  return <RouterProvider router={desktopRouter}/>;
+import { createDesktopRouter } from './desktopRouter.config';
+
+interface DesktopClientRouterProps {
+  locale: Locales;
+}
+
+const DesktopClientRouter = memo<DesktopClientRouterProps>(({ locale }) => {
+  const router = useMemo(() => createDesktopRouter(locale), [locale]);
+
+  return <RouterProvider router={router} />;
 });
 
 DesktopClientRouter.displayName = 'DesktopClientRouter';

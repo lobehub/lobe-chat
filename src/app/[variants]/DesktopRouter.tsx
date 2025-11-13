@@ -3,10 +3,19 @@
 import dynamic from 'next/dynamic';
 
 import Loading from '@/components/Loading/BrandTextLoading';
+import type { Locales } from '@/types/locale';
 
-const DesktopRouter = dynamic(() => import('./_DesktopClientRouter'), {
+const DesktopRouterClient = dynamic(() => import('./_DesktopClientRouter'), {
   loading: () => <Loading />,
   ssr: false,
 });
+
+interface DesktopRouterProps {
+  locale: Locales;
+}
+
+const DesktopRouter = ({ locale }: DesktopRouterProps) => {
+  return <DesktopRouterClient locale={locale} />;
+};
 
 export default DesktopRouter;

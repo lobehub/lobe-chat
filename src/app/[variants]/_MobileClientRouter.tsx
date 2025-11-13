@@ -1,12 +1,20 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
-import { mobileRouter } from './mobileRouter.config';
+import type { Locales } from '@/types/locale';
 
-const MobileClientRouter = memo(() => {
-  return <RouterProvider router={mobileRouter} />;
+import { createMobileRouter } from './mobileRouter.config';
+
+interface MobileClientRouterProps {
+  locale: Locales;
+}
+
+const MobileClientRouter = memo<MobileClientRouterProps>(({ locale }) => {
+  const router = useMemo(() => createMobileRouter(locale), [locale]);
+
+  return <RouterProvider router={router} />;
 });
 
 MobileClientRouter.displayName = 'MobileClientRouter';
