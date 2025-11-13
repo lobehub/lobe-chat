@@ -44,7 +44,6 @@ export const createDesktopRouter = (locale: Locales) =>
       children: [
         // Chat routes
         {
-          HydrateFallback: () => <Loading />,
           children: [
             {
               index: true,
@@ -278,13 +277,14 @@ export const createDesktopRouter = (locale: Locales) =>
                 import('./(main)/changelog').then((m) => ({
                   Component: m.DesktopPage,
                 })),
+              path: '*',
             },
           ],
           lazy: () =>
             import('./(main)/changelog/_layout/Desktop').then((m) => ({
               Component: m.default,
             })),
-          path: 'changelog/*',
+          path: 'changelog',
         },
 
         // Profile routes

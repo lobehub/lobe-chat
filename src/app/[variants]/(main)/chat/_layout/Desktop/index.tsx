@@ -1,5 +1,5 @@
-  import { Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { Outlet } from 'react-router-dom';
 
 import { isDesktop } from '@/const/version';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
@@ -7,7 +7,6 @@ import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
 import RegisterHotkeys from './RegisterHotkeys';
 import SessionPanel from './SessionPanel';
 import Workspace from './Workspace';
-import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
@@ -26,9 +25,7 @@ const Layout = () => {
       {/* ↓ cloud slot ↓ */}
 
       {/* ↑ cloud slot ↑ */}
-      <Suspense>
-        <RegisterHotkeys />
-      </Suspense>
+      <RegisterHotkeys />
       {isDesktop && <ProtocolUrlHandler />}
     </>
   );
