@@ -397,6 +397,7 @@ describe('GeneralChatAgent', () => {
         type: 'request_human_approve',
         pendingToolsCalling: [pendingPlugin],
         reason: 'Some tools still pending approval',
+        skipCreateToolMessage: true,
       });
     });
   });
@@ -477,6 +478,7 @@ describe('GeneralChatAgent', () => {
         type: 'request_human_approve',
         pendingToolsCalling: [pendingPlugin],
         reason: 'Some tools still pending approval',
+        skipCreateToolMessage: true,
       });
     });
   });
