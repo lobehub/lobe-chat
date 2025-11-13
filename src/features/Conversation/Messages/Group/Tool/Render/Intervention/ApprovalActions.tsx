@@ -5,6 +5,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useGroupMessage } from '@/features/Conversation/Messages/Group/GroupContext';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 
@@ -19,12 +20,13 @@ interface ApprovalActionsProps {
 }
 
 const ApprovalActions = memo<ApprovalActionsProps>(
-  ({ approvalMode, messageId, toolCallId, identifier, apiName }) => {
+  ({ approvalMode, messageId, identifier, apiName }) => {
     const { t } = useTranslation(['chat', 'common']);
     const [rejectReason, setRejectReason] = useState('');
     const [rejectPopoverOpen, setRejectPopoverOpen] = useState(false);
     const [rejectLoading, setRejectLoading] = useState(false);
 
+    const { assistantGroupId } = useGroupMessage();
     const [approveToolIntervention, rejectToolIntervention] = useChatStore((s) => [
       s.approveToolCalling,
       s.rejectToolCalling,
@@ -33,9 +35,9 @@ const ApprovalActions = memo<ApprovalActionsProps>(
 
     const handleApprove = async (remember?: boolean) => {
       // 1. Update intervention status
-      await approveToolIntervention(messageId, toolCallId);
+      await approveToolIntervention(messageId, assistantGroupId);
 
-      // 2. If remember, add to allowList
+      // 2. If remembered, add to allowList
       if (remember) {
         const toolKey = `${identifier}/${apiName}`;
         await addToolToAllowList(toolKey);
