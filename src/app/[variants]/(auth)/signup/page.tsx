@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { message } from '@/components/AntdStaticMethods';
+import { authEnv } from '@/envs/auth';
 import { signUp } from '@/libs/better-auth/auth-client';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -82,11 +83,17 @@ export default function SignUpPage() {
         return;
       }
 
-      // Registration successful, prompt user to verify email
+      // Registration successful
       message.success(t('betterAuth.signup.success'));
 
-      // Redirect to verification notice page
-      router.push('/verify-email?email=' + encodeURIComponent(values.email));
+      // Redirect based on email verification requirement
+      if (authEnv.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION) {
+        // Email verification required, redirect to verification notice page
+        router.push('/verify-email?email=' + encodeURIComponent(values.email));
+      } else {
+        // Email verification not required, redirect to signin page
+        router.push('/signin?email=' + encodeURIComponent(values.email));
+      }
     } catch {
       message.error(t('betterAuth.signup.error'));
     } finally {
