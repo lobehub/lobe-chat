@@ -256,6 +256,7 @@ export default {
       moveLocalFiles: '移动文件',
       readLocalFile: '读取文件内容',
       renameLocalFile: '重命名',
+      runCommand: '执行代码',
       searchLocalFiles: '搜索文件',
       writeLocalFile: '写入文件',
     },

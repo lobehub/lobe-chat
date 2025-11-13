@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
+import { toolInterventionSelectors } from '@/store/user/selectors';
 
 import Arguments from '../Arguments';
 import ApprovalActions from './ApprovalActions';
@@ -24,7 +25,7 @@ interface FallbackInterventionProps {
 const FallbackIntervention = memo<FallbackInterventionProps>(
   ({ requestArgs, id, identifier, apiName, toolCallId }) => {
     const { t } = useTranslation('chat');
-    const approvalMode = useUserStore((s) => s.settings.tool?.approvalMode || 'manual');
+    const approvalMode = useUserStore(toolInterventionSelectors.approvalMode);
     const [isEditing, setIsEditing] = useState(false);
     const [optimisticUpdatePluginArguments] = useChatStore((s) => [
       s.optimisticUpdatePluginArguments,

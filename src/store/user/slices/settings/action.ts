@@ -26,6 +26,10 @@ export interface UserSettingsAction {
   setSettings: (settings: PartialDeep<UserSettings>) => Promise<void>;
   updateDefaultAgent: (agent: PartialDeep<LobeAgentSettings>) => Promise<void>;
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
+  updateHumanIntervention: (config: {
+    allowList?: string[];
+    approvalMode?: 'auto-run' | 'allow-list' | 'manual';
+  }) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
 
   updateSystemAgent: (
@@ -110,6 +114,14 @@ export const createSettingsSlice: StateCreator<
   },
   updateGeneralConfig: async (general) => {
     await get().setSettings({ general });
+  },
+  updateHumanIntervention: async (config) => {
+    const current = get().settings.tool?.humanIntervention || {};
+    await get().setSettings({
+      tool: {
+        humanIntervention: { ...current, ...config },
+      },
+    });
   },
   updateKeyVaults: async (keyVaults) => {
     await get().setSettings({ keyVaults });

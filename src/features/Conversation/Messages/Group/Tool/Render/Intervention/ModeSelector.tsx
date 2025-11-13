@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
+import { toolInterventionSelectors } from '@/store/user/selectors';
 
 import { ApprovalMode } from './index';
 
@@ -39,10 +40,8 @@ const useStyles = createStyles(({ css, token }) => ({
 const ModeSelector = memo(() => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
-  const [approvalMode, setSettings] = useUserStore((s) => [
-    s.settings.tool?.approvalMode || 'manual',
-    s.setSettings,
-  ]);
+  const approvalMode = useUserStore(toolInterventionSelectors.approvalMode);
+  const updateHumanIntervention = useUserStore((s) => s.updateHumanIntervention);
 
   const modeLabels = useMemo(
     () => ({
@@ -55,9 +54,9 @@ const ModeSelector = memo(() => {
 
   const handleModeChange = useCallback(
     async (mode: ApprovalMode) => {
-      await setSettings({ tool: { approvalMode: mode } });
+      await updateHumanIntervention({ approvalMode: mode });
     },
-    [setSettings],
+    [updateHumanIntervention],
   );
 
   const menuItems = useMemo<MenuProps['items']>(

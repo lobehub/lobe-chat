@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
+import { toolInterventionSelectors } from '@/store/user/selectors';
 import { BuiltinToolInterventions } from '@/tools/interventions';
 
 import Arguments from '../Arguments';
@@ -24,7 +25,7 @@ interface InterventionProps {
 
 const Intervention = memo<InterventionProps>(
   ({ requestArgs, id, identifier, apiName, toolCallId }) => {
-    const approvalMode = useUserStore((s) => s.settings.tool?.approvalMode || 'manual');
+    const approvalMode = useUserStore(toolInterventionSelectors.approvalMode);
     const [isEditing, setIsEditing] = useState(false);
     const [optimisticUpdatePluginArguments] = useChatStore((s) => [
       s.optimisticUpdatePluginArguments,
