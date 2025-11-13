@@ -1,12 +1,17 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { AgentRuntime, type AgentRuntimeContext } from '@lobechat/agent-runtime';
 import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
+import { getAgentStoreState } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/slices/chat';
+import { createAgentToolsEngine } from '@/store/chat/agents/createToolEngine';
 import { ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { displayMessageSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 import { dbMessageSelectors } from '../../message/selectors';
 import { MainSendMessageOperation } from '../initialState';
@@ -141,10 +146,78 @@ export const conversationControl: StateCreator<
     }
   },
   approveToolCalling: async (toolMessageId) => {
-    // Optimistic update - update intervention status to approved
-    await get().optimisticUpdatePlugin(toolMessageId, {
-      intervention: { status: 'approved' },
+    const { activeId, activeTopicId, activeThreadId, internal_execAgentRuntime } = get();
+
+    // 1. Get tool message and verify it exists
+    const toolMessage = dbMessageSelectors.getDbMessageById(toolMessageId)(get());
+    if (!toolMessage) return;
+
+    // 2. Update intervention status to approved
+    await get().optimisticUpdatePlugin(toolMessageId, { intervention: { status: 'approved' } });
+
+    // 3. Get current messages for state construction
+    const currentMessages = displayMessageSelectors.mainAIChats(get());
+
+    // 4. Get agent configuration and tools information
+    const agentStoreState = getAgentStoreState();
+    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+
+    const toolsEngine = createAgentToolsEngine({
+      model: agentConfigData.model,
+      provider: agentConfigData.provider!,
     });
+    const { enabledToolIds } = toolsEngine.generateToolsDetailed({
+      model: agentConfigData.model,
+      provider: agentConfigData.provider!,
+      toolIds: agentConfigData.plugins,
+    });
+    const toolManifestMap = Object.fromEntries(
+      toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
+    );
+
+    // 5. Construct AgentState
+    const state = AgentRuntime.createInitialState({
+      sessionId: activeId,
+      messages: currentMessages,
+      maxSteps: 400,
+      metadata: {
+        sessionId: activeId,
+        topicId: activeTopicId,
+        threadId: activeThreadId,
+      },
+      toolManifestMap,
+    });
+
+    console.log('toolMessage:', toolMessage);
+    // 6. Construct AgentRuntimeContext with 'human_approved_tool' phase
+    const context: AgentRuntimeContext = {
+      phase: 'human_approved_tool',
+      payload: {
+        approvedToolCall: toolMessage.plugin,
+        parentMessageId: toolMessageId,
+        skipCreateToolMessage: true,
+      },
+      session: {
+        sessionId: activeId,
+        messageCount: currentMessages.length,
+        status: 'running',
+        stepCount: 0,
+      },
+    };
+
+    // 7. Execute agent runtime from tool message position
+    try {
+      await internal_execAgentRuntime({
+        messages: currentMessages,
+        parentMessageId: toolMessageId, // Start from tool message
+        parentMessageType: 'tool', // Type is 'tool'
+        threadId: activeThreadId,
+        initialState: state,
+        initialContext: context,
+      });
+    } catch (error) {
+      console.error('[approveToolCalling] Error executing agent runtime:', error);
+    }
   },
 
   rejectToolCalling: async (messageId, reason) => {

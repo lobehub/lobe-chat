@@ -25,6 +25,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     const [rejectReason, setRejectReason] = useState('');
     const [rejectPopoverOpen, setRejectPopoverOpen] = useState(false);
     const [rejectLoading, setRejectLoading] = useState(false);
+    const [approveLoading, setApproveLoading] = useState(false);
 
     const { assistantGroupId } = useGroupMessage();
     const [approveToolIntervention, rejectToolIntervention] = useChatStore((s) => [
@@ -34,13 +35,18 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     const addToolToAllowList = useUserStore((s) => s.addToolToAllowList);
 
     const handleApprove = async (remember?: boolean) => {
-      // 1. Update intervention status
-      await approveToolIntervention(messageId, assistantGroupId);
+      setApproveLoading(true);
+      try {
+        // 1. Update intervention status
+        await approveToolIntervention(messageId, assistantGroupId);
 
-      // 2. If remembered, add to allowList
-      if (remember) {
-        const toolKey = `${identifier}/${apiName}`;
-        await addToolToAllowList(toolKey);
+        // 2. If remembered, add to allowList
+        if (remember) {
+          const toolKey = `${identifier}/${apiName}`;
+          await addToolToAllowList(toolKey);
+        }
+      } finally {
+        setApproveLoading(false);
       }
     };
 
@@ -96,13 +102,19 @@ const ApprovalActions = memo<ApprovalActionsProps>(
 
         {approvalMode === 'allow-list' ? (
           <Space.Compact>
-            <Button onClick={() => handleApprove(true)} size="small" type="primary">
+            <Button
+              loading={approveLoading}
+              onClick={() => handleApprove(true)}
+              size="small"
+              type="primary"
+            >
               {t('tool.intervention.approveAndRemember')}
             </Button>
             <Dropdown
               menu={{
                 items: [
                   {
+                    disabled: approveLoading,
                     key: 'once',
                     label: t('tool.intervention.approveOnce'),
                     onClick: () => handleApprove(false),
@@ -110,11 +122,16 @@ const ApprovalActions = memo<ApprovalActionsProps>(
                 ],
               }}
             >
-              <Button icon={ChevronDown} size="small" type="primary" />
+              <Button disabled={approveLoading} icon={ChevronDown} size="small" type="primary" />
             </Dropdown>
           </Space.Compact>
         ) : (
-          <Button onClick={() => handleApprove()} size="small" type="primary">
+          <Button
+            loading={approveLoading}
+            onClick={() => handleApprove()}
+            size="small"
+            type="primary"
+          >
             {t('tool.intervention.approve')}
           </Button>
         )}

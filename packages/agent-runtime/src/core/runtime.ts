@@ -85,12 +85,17 @@ export class AgentRuntime {
 
       // Handle human approved tool calls
       if (runtimeContext.phase === 'human_approved_tool') {
-        const approvedPayload = runtimeContext.payload as { approvedToolCall: ChatToolPayload };
+        const approvedPayload = runtimeContext.payload as {
+          approvedToolCall: ChatToolPayload;
+          parentMessageId: string;
+          skipCreateToolMessage: boolean;
+        };
         const toolCalling = approvedPayload.approvedToolCall;
 
         rawInstructions = {
           payload: {
-            parentMessageId: '', // Not required for approval flow
+            parentMessageId: approvedPayload.parentMessageId,
+            skipCreateToolMessage: approvedPayload.skipCreateToolMessage,
             toolCalling,
           },
           type: 'call_tool',

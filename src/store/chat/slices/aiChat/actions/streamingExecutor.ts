@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { AgentRuntime, type AgentRuntimeContext } from '@lobechat/agent-runtime';
+import { AgentRuntime, type AgentRuntimeContext, type AgentState } from '@lobechat/agent-runtime';
 import { isDesktop } from '@lobechat/const';
 import { knowledgeBaseQAPrompts } from '@lobechat/prompts';
 import {
@@ -89,6 +89,14 @@ export interface StreamingExecutorAction {
     skipCreateFirstMessage?: boolean;
     traceId?: string;
     ragMetadata?: { ragQueryId: string; fileChunks: MessageSemanticSearchChunk[] };
+    /**
+     * Initial agent state (for resuming execution from a specific point)
+     */
+    initialState?: AgentState;
+    /**
+     * Initial agent runtime context (for resuming execution from a specific phase)
+     */
+    initialContext?: AgentRuntimeContext;
   }) => Promise<void>;
 }
 
@@ -398,6 +406,7 @@ export const streamingExecutor: StateCreator<
     // ===========================================
     // Step 1: RAG Preprocessing (if enabled)
     // ===========================================
+    // Skip RAG preprocessing if initialState is provided (messages already preprocessed)
     if (params.ragQuery && parentMessageType === 'user') {
       const userMessageId = parentMessageId;
       log('[internal_execAgentRuntime] RAG preprocessing start');
@@ -480,22 +489,24 @@ export const streamingExecutor: StateCreator<
       }),
     });
 
-    // Create initial state
-    let state = AgentRuntime.createInitialState({
-      sessionId: activeId,
-      messages,
-      // Prevent infinite loops
-      maxSteps: 400,
-      metadata: {
+    // Create initial state or use provided state
+    let state =
+      params.initialState ||
+      AgentRuntime.createInitialState({
         sessionId: activeId,
-        topicId: activeTopicId,
-        threadId: params.threadId,
-      },
-      toolManifestMap,
-    });
+        messages,
+        // Prevent infinite loops
+        maxSteps: 400,
+        metadata: {
+          sessionId: activeId,
+          topicId: activeTopicId,
+          threadId: params.threadId,
+        },
+        toolManifestMap,
+      });
 
-    // Initial context - use 'init' phase since state already contains messages
-    let nextContext: AgentRuntimeContext = {
+    // Initial context - use provided context or create default 'init' phase
+    let nextContext: AgentRuntimeContext = params.initialContext || {
       phase: 'init',
       payload: { model, provider, parentMessageId: params.parentMessageId },
       session: {

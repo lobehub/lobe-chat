@@ -168,6 +168,23 @@ export class GeneralChatAgent implements Agent {
       case 'tool_result': {
         const { parentMessageId } = context.payload as GeneralAgentCallToolResultPayload;
 
+        // Check if there are still pending tool messages waiting for approval
+        const pendingToolMessages = state.messages.filter(
+          (m: any) => m.role === 'tool' && m.pluginIntervention?.status === 'pending',
+        );
+
+        // If there are pending tools, wait for human approval
+        if (pendingToolMessages.length > 0) {
+          const pendingTools = pendingToolMessages.map((m: any) => m.plugin).filter(Boolean);
+
+          return {
+            pendingToolsCalling: pendingTools,
+            reason: 'Some tools still pending approval',
+            type: 'request_human_approve',
+          };
+        }
+
+        // No pending tools, continue to call LLM with tool results
         return {
           payload: {
             messages: state.messages,
@@ -182,6 +199,24 @@ export class GeneralChatAgent implements Agent {
 
       case 'tools_batch_result': {
         const { parentMessageId } = context.payload as GeneralAgentCallToolResultPayload;
+
+        // Check if there are still pending tool messages waiting for approval
+        const pendingToolMessages = state.messages.filter(
+          (m: any) => m.role === 'tool' && m.pluginIntervention?.status === 'pending',
+        );
+
+        // If there are pending tools, wait for human approval
+        if (pendingToolMessages.length > 0) {
+          const pendingTools = pendingToolMessages.map((m: any) => m.plugin).filter(Boolean);
+
+          return {
+            pendingToolsCalling: pendingTools,
+            reason: 'Some tools still pending approval',
+            type: 'request_human_approve',
+          };
+        }
+
+        // No pending tools, continue to call LLM with tool results
         return {
           payload: {
             messages: state.messages,
