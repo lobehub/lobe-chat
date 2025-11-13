@@ -139,6 +139,14 @@ export default function SignInPage() {
         {
           onError: (ctx) => {
             console.error('Sign in error:', ctx.error);
+            // Check if error is due to unverified email (403 status)
+            if (ctx.error.status === 403) {
+              // Redirect to verify-email page instead of showing error
+              router.push(
+                `/verify-email?email=${encodeURIComponent(email)}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
+              );
+              return;
+            }
           },
           onSuccess: () => {
             router.push(callbackUrl);
@@ -146,7 +154,8 @@ export default function SignInPage() {
         },
       );
 
-      if (result.error) {
+      // Only show error if not already handled in onError callback
+      if (result.error && result.error.status !== 403) {
         message.error(result.error.message || t('betterAuth.signin.error'));
         return;
       }
