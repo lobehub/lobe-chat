@@ -38,15 +38,17 @@ const RunCommand = memo<RunCommandProps>(({ description, command, timeout }) => 
           </Text>
         )}
       </Flexbox>
-      <Highlighter
-        language={'sh'}
-        showLanguage={false}
-        style={{ padding: '4px 8px' }}
-        variant={'outlined'}
-        wrap
-      >
-        {command}
-      </Highlighter>
+      {command && (
+        <Highlighter
+          language={'sh'}
+          showLanguage={false}
+          style={{ padding: '4px 8px' }}
+          variant={'outlined'}
+          wrap
+        >
+          {command}
+        </Highlighter>
+      )}
     </Flexbox>
   );
 });
