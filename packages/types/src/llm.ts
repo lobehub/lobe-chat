@@ -47,16 +47,6 @@ export interface ChatModelCard {
   maxOutput?: number;
   parameters?: ModelParamsSchema;
 
-  /**
-   * Resolved price per generated image (USD)
-   */
-  pricePerImage?: number;
-
-  /**
-   * Whether the image price is an approximate value
-   */
-  pricePerImageIsApproximate?: boolean;
-
   pricing?: Pricing;
 
   /**

@@ -66,20 +66,17 @@ export const getModelListByType = async (
 
       const parameters = imageModel.parameters ?? fallbackParameters;
       const pricing = imageModel.pricing ?? fallbackPricing;
-      const { price: pricePerImage, isApproximate: pricePerImageIsApproximate } =
-        resolveImageSinglePrice(pricing);
+      const { price, approximatePrice } = resolveImageSinglePrice(pricing);
 
       return {
         abilities: (model.abilities || {}) as ModelAbilities,
+        ...(typeof approximatePrice === 'number' && { approximatePricePerImage: approximatePrice }),
         contextWindowTokens: model.contextWindowTokens,
         displayName: model.displayName ?? '',
         id: model.id,
         ...(parameters && { parameters }),
+        ...(typeof price === 'number' && { pricePerImage: price }),
         ...(pricing && { pricing }),
-        ...(typeof pricePerImage === 'number' && { pricePerImage }),
-        ...(typeof pricePerImage === 'number' && {
-          pricePerImageIsApproximate,
-        }),
       };
     }),
   );

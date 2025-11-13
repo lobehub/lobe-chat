@@ -1171,7 +1171,7 @@ export const openaiImageModels: AIImageModelCard[] = [
     id: 'gpt-image-1',
     parameters: gptImage1ParamsSchema,
     pricing: {
-      pricePerImage: 0.042,
+      approximatePricePerImage: 0.042,
       units: [
         { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 1.25, strategy: 'fixed', unit: 'millionTokens' },
@@ -1190,7 +1190,7 @@ export const openaiImageModels: AIImageModelCard[] = [
     id: 'gpt-image-1-mini',
     parameters: gptImage1ParamsSchema,
     pricing: {
-      pricePerImage: 0.011,
+      approximatePricePerImage: 0.011,
       units: [
         { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput_cacheRead', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },

@@ -41,7 +41,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
-      pricePerImage: 0.039,
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'imageOutput', rate: 30, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },

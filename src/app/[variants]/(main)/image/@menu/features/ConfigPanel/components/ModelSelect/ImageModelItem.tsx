@@ -9,17 +9,22 @@ import { Flexbox } from 'react-layout-kit';
 type ImageModelItemProps = AiModelForSelect;
 
 const ImageModelItem = memo<ImageModelItemProps>(
-  ({ pricePerImage, pricePerImageIsApproximate, ...model }) => {
+  ({ approximatePricePerImage, pricePerImage, ...model }) => {
     const { mobile } = useResponsive();
 
     const priceLabel = useMemo(() => {
-      if (typeof pricePerImage !== 'number') return undefined;
+      // Priority 1: Use exact price
+      if (typeof pricePerImage === 'number') {
+        return `${numeral(pricePerImage).format('$0,0.00[000]')} / image`;
+      }
 
-      const formatted = numeral(pricePerImage).format('$0,0.00[000]');
-      const prefix = pricePerImageIsApproximate ? '~ ' : '';
+      // Priority 2: Use approximate price with prefix
+      if (typeof approximatePricePerImage === 'number') {
+        return `~ ${numeral(approximatePricePerImage).format('$0,0.00[000]')} / image`;
+      }
 
-      return `${prefix}${formatted} / image`;
-    }, [pricePerImage, pricePerImageIsApproximate]);
+      return undefined;
+    }, [approximatePricePerImage, pricePerImage]);
 
     return (
       <Flexbox
