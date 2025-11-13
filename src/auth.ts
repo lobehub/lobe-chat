@@ -9,6 +9,10 @@ import {
 } from '@/libs/better-auth/email-templates';
 import { emailService } from '@/server/services/email';
 
+// Email verification link expiration time (in seconds)
+// Default is 1 hour (3600 seconds) as per Better Auth documentation
+const VERIFICATION_LINK_EXPIRES_IN = 3600;
+
 export const auth = betterAuth({
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
@@ -32,8 +36,13 @@ export const auth = betterAuth({
 
   emailVerification: {
     autoSignInAfterVerification: true,
+    expiresIn: VERIFICATION_LINK_EXPIRES_IN,
     sendVerificationEmail: async ({ user, url }) => {
-      const template = getVerificationEmailTemplate({ url, userName: user.name });
+      const template = getVerificationEmailTemplate({
+        expiresInSeconds: VERIFICATION_LINK_EXPIRES_IN,
+        url,
+        userName: user.name,
+      });
 
       await emailService.sendMail({
         to: user.email,
