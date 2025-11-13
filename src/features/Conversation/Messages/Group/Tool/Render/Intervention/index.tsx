@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 import { toolInterventionSelectors } from '@/store/user/selectors';
-import { BuiltinToolInterventions } from '@/tools/interventions';
+import { getBuiltinIntervention } from '@/tools/interventions';
 
 import Arguments from '../Arguments';
 import ApprovalActions from './ApprovalActions';
@@ -52,7 +52,7 @@ const Intervention = memo<InterventionProps>(
       },
       [requestArgs, id],
     );
-    const BuiltinToolInterventionRender = BuiltinToolInterventions[identifier];
+    const BuiltinToolInterventionRender = getBuiltinIntervention(identifier, apiName);
 
     if (BuiltinToolInterventionRender) {
       if (isEditing)
