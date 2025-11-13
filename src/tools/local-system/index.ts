@@ -136,6 +136,7 @@ export const LocalSystemManifest: BuiltinToolManifest = {
     {
       description:
         'Moves or renames multiple files/directories. Input is an array of objects, each containing an oldPath and a newPath.',
+      humanIntervention: 'required',
       name: LocalSystemApiName.moveLocalFiles,
       parameters: {
         properties: {

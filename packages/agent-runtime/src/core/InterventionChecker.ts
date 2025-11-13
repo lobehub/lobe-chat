@@ -35,7 +35,7 @@ export class InterventionChecker {
     }
 
     // No rule matched - default to require for safety
-    return 'require';
+    return 'required';
   }
 
   /**
