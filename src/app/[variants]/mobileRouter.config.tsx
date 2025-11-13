@@ -8,6 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import MobileChangelogLayout from './(main)/changelog/_layout/Mobile';
+import MobileMeLayout from './(main)/(mobile)/me/_layout/index';
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
@@ -343,6 +344,7 @@ export const createMobileRouter = (locale: Locales) =>
               path: 'settings',
             },
           ],
+          element: <MobileMeLayout />,
           path: 'me',
         },
 

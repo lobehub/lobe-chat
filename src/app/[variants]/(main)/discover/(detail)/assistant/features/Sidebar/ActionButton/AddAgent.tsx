@@ -4,9 +4,9 @@ import { Icon } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
-import { useRouter } from 'nextjs-toploader/app';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSessionStore } from '@/store/session';
@@ -70,7 +70,7 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const createSession = useSessionStore((s) => s.createSession);
   const sessions = useSessionStore((s) => s.sessions);
   const { message, modal } = App.useApp();
-  const router = useRouter();
+  const navigate = useNavigate();
   const { t } = useTranslation('discover');
 
   const meta = {
@@ -114,7 +114,7 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
     try {
       const session = await createSessionWithMarketIdentifier(true);
       message.success(t('assistants.addAgentSuccess'));
-      router.push(SESSION_CHAT_URL(session, mobile));
+      navigate(SESSION_CHAT_URL(session, mobile));
     } finally {
       setIsLoading(false);
     }
