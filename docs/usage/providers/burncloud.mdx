@@ -1,0 +1,67 @@
+---
+title: Using BurnCloud in LobeChat
+description: Learn how to connect BurnCloud's OpenAI-compatible LLMs Gateway to LobeChat.
+tags:
+  - LobeChat
+  - BurnCloud
+  - API Key
+  - Web UI
+---
+
+# Using BurnCloud in LobeChat
+
+[BurnCloud LLMs Gateway](https://www.burncloud.com/) exposes GPT-4.1, GPT-4o, o3 and other flagship models through a single OpenAI-compatible API endpoint, plus multi-tenant access control, unified routing and observability tooling. Follow the steps below to bring those models into LobeChat.
+
+<Steps>
+  ### Step 1: Confirm your BurnCloud endpoint & account
+
+  - BurnCloud exposes two entry points: the standard **C-end** `https://ai.burncloud.com` and the **B-end** `https://b.burncloud.com`. Pick the base URL that matches the account issued to you before wiring it into LobeChat.
+  - Visit the console to create/login your account (`ai.burncloud.com/register` / `ai.burncloud.com/login`).
+
+  ### Step 2: Generate an Access Token
+
+  - In the console’s **用户模块 / User module → Token 管理**, click **生成 Access Token**
+
+  - Give the token a name, select the model group the token should be able to call, optionally keep “unlimited quota” on, and submit
+
+  - Copy the issued token immediately; it becomes your `$Burncloud_API_KEY`
+
+  - BurnCloud requires standard OpenAI-compatible headers: `Authorization: Bearer <token>` (and `Content-Type: application/json`) when you call `/v1/chat/completions` or `/v1/responses`
+
+    ### Step 3: Configure BurnCloud in LobeChat
+
+    - Visit the `Settings` page in LobeChat and open `Model Provider → BurnCloud`
+    - Paste the Access Token from Step 1 into the `API Key` field
+    - Leave the Base URL as `https://ai.burncloud.com/v1` unless your account is provisioned on `https://b.burncloud.com`
+    - Choose any preloaded BurnCloud model for your assistant:
+      - `gpt-4.1` / `gpt-4.1-mini` / `gpt-4.1-nano`
+      - `gpt-4o`、`gpt-4o-mini` 和 `gpt-4o-2024-05-13` / `2024-08-06` / `2024-11-20`
+      - DeepSeek (`deepseek-reasoner`, `deepseek-chat`)
+      - Anthropic / xAI (`claude-3-5-sonnet-v2`, `grok-3`, `grok-3-fast`)
+
+    ### Step 4: Verify the Connection (optional)
+
+  - Run a quick curl to confirm the credentials:
+
+  ```bash
+  curl https://ai.burncloud.com/v1/chat/completions \
+    -H "Authorization: Bearer $BURN_CLOUD_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "gpt-4o-mini",
+      "messages": [{"role":"user","content":"Hello from LobeChat"}]
+    }'
+  ```
+
+  - If the curl succeeds, LobeChat can now use the same token for conversations
+
+    <Callout type={'warning'}>
+      BurnCloud follows a pay-as-you-go model. Monitor usage（充值入口位于控制台 “充值” 页）以避免使用 GPT-4.1 /o3 等高价模型时产生意外账单。
+    </Callout>
+</Steps>
+
+You're all set — BurnCloud is now available as a first-class provider when you create or edit assistants inside LobeChat.
+
+## Full Model Lineup
+
+The list above only highlights the most common presets. BurnCloud 的模型池会不断扩充，包含 OpenAI、DeepSeek、Anthropic、xAI、Gemini 等多家供应商。要查看 LobeChat 当前内置的完整映射，可直接审阅仓库根目录的 [`models.txt`](https://github.com/lobehub/lobe-chat/blob/main/models.txt) 或在设置面板中使用模型选择器搜索。该文件同步自 BurnCloud 官方渠道，记录了 `supported_endpoint_types`（例如 `openai`、`anthropic`、`gemini`），因此即使不是 OpenAI 语义的模型，也能通过 BurnCloud 的统一入口在 LobeChat 中启用。

@@ -11,6 +11,7 @@ import AzureAIProvider from './azureai';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import BflProvider from './bfl';
+import BurnCloudProvider from './burncloud';
 import CerebrasProvider from './cerebras';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
@@ -100,6 +101,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
+  BurnCloudProvider.chatModels,
   NvidiaProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
@@ -146,6 +148,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   GithubProvider,
   NewAPIProvider,
   BflProvider,
+  BurnCloudProvider,
   NovitaProvider,
   PPIOProvider,
   Ai302Provider,
@@ -212,6 +215,7 @@ export { default as AzureAIProviderCard } from './azureai';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as BflProviderCard } from './bfl';
+export { default as BurnCloudProviderCard } from './burncloud';
 export { default as CerebrasProviderCard } from './cerebras';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
