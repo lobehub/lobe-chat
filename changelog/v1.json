@@ -1,5 +1,13 @@
 [
   {
+    "children": {
+      "features": ["Support tool invention."],
+      "fixes": ["Update lost i18n files."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.49"
+  },
+  {
     "children": {},
     "date": "2025-11-12",
     "version": "2.0.0-next.48"
