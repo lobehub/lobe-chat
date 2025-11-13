@@ -1,7 +1,6 @@
 import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { SESSION_CHAT_URL } from '@/const/url';
 import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from '@/config/featureFlags';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
@@ -40,16 +39,15 @@ afterEach(() => {
 });
 
 vi.mock('react-router-dom', () => ({
-  Link: vi.fn(({ children, to, ...rest }: { children: React.ReactNode; to: string }) => (
-    <div {...rest}>
-      {`Mocked Link ${to}`}
-      {children}
-    </div>
-  )),
+  useNavigate: vi.fn(() => vi.fn()),
 }));
 
 vi.mock('@lobehub/ui', () => ({
-  ActionIcon: vi.fn(({ title }) => <div>{title}</div>),
+  ActionIcon: vi.fn(({ title, onClick, icon }) => (
+    <div data-testid={`action-icon-${icon?.name || 'unknown'}`} onClick={onClick}>
+      {title}
+    </div>
+  )),
   combineKeys: vi.fn((keys) => keys.join('+')),
   KeyMapEnum: { Alt: 'alt', Ctrl: 'ctrl', Shift: 'shift' },
   Hotkey: vi.fn(({ keys = [] }) => <div>{keys}</div>),
@@ -135,8 +133,8 @@ describe('TopActions', () => {
     const switchBackToChat = vi.spyOn(store.current, 'switchBackToChat');
 
     renderTopActions({ tab: SidebarTabKey.Discover });
-    const chatHref = SESSION_CHAT_URL('1');
-    fireEvent.click(screen.getByText(`Mocked Link ${chatHref}`));
+    const chatIcon = screen.getByText('tab.chat');
+    fireEvent.click(chatIcon);
 
     expect(switchBackToChat).toBeCalledWith('1');
   });
