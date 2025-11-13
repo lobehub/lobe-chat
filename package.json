@@ -239,6 +239,7 @@
     "nextjs-toploader": "^3.9.17",
     "node-machine-id": "^1.1.12",
     "numeral": "^2.0.6",
+    "nuqs": "^2.7.3",
     "officeparser": "5.1.1",
     "oidc-provider": "^9.5.2",
     "ollama": "^0.6.2",
