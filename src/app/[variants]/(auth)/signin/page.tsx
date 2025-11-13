@@ -5,7 +5,6 @@ import { LobeHub } from '@lobehub/ui/brand';
 import { Form, Input, type InputRef } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ChevronLeft, ChevronRight, Lock, Mail } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -106,16 +105,10 @@ export default function SignInPage() {
       const data = await response.json();
 
       if (!data.exists) {
-        // User not found, show error with signup link
-        message.error(
-          <>
-            {t('betterAuth.errors.emailNotRegistered')}
-            {' · '}
-            <Link href={`/signup?email=${encodeURIComponent(values.email)}`}>
-              {t('betterAuth.signin.signupLink')}
-            </Link>
-          </>,
-          5,
+        // User not found, redirect to signup page with email pre-filled
+        const callbackUrl = searchParams.get('callbackUrl') || '/';
+        router.push(
+          `/signup?email=${encodeURIComponent(values.email)}&callbackUrl=${encodeURIComponent(callbackUrl)}`,
         );
         return;
       }
@@ -168,6 +161,17 @@ export default function SignInPage() {
   const handleBackToEmail = () => {
     setStep('email');
     setEmail('');
+  };
+
+  const handleGoToSignup = () => {
+    const currentEmail = form.getFieldValue('email');
+    const callbackUrl = searchParams.get('callbackUrl') || '/';
+    const params = new URLSearchParams();
+    if (currentEmail) {
+      params.set('email', currentEmail);
+    }
+    params.set('callbackUrl', callbackUrl);
+    router.push(`/signup?${params.toString()}`);
   };
 
   return (
@@ -271,9 +275,12 @@ export default function SignInPage() {
 
         <div className={styles.footer}>
           {t('betterAuth.signin.noAccount')}{' '}
-          <Link href={`/signup?${searchParams.toString()}`}>
+          <a
+            onClick={handleGoToSignup}
+            style={{ color: 'inherit', cursor: 'pointer', textDecoration: 'underline' }}
+          >
             {t('betterAuth.signin.signupLink')}
-          </Link>
+          </a>
         </div>
       </div>
     </Flexbox>
