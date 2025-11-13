@@ -48,7 +48,6 @@ const wenxinChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-11-12',
     settings: {
-      extendParams: ['enableReasoning'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -1067,7 +1066,6 @@ const wenxinChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning'],
       searchImpl: 'params',
     },
     type: 'chat',
