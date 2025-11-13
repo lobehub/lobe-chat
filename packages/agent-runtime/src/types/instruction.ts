@@ -139,6 +139,7 @@ export interface AgentInstructionRequestHumanSelect {
 export interface AgentInstructionRequestHumanApprove {
   pendingToolsCalling: ChatToolPayload[];
   reason?: string;
+  skipCreateToolMessage?: boolean;
   type: 'request_human_approve';
 }
 

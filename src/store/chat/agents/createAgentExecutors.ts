@@ -392,7 +392,7 @@ export const createAgentExecutors = (context: {
 
     /** Create human approve executor */
     request_human_approve: async (instruction, state) => {
-      const { pendingToolsCalling, reason } = instruction as Extract<
+      const { pendingToolsCalling, reason, skipCreateToolMessage } = instruction as Extract<
         AgentInstruction,
         { type: 'request_human_approve' }
       >;
@@ -427,49 +427,54 @@ export const createAgentExecutors = (context: {
         assistantMessage.id,
       );
 
-      // Create tool messages for each pending tool call with intervention status
-      await pMap(pendingToolsCalling, async (toolPayload) => {
-        const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
-        log(
-          '[%s][request_human_approve] Creating tool message for %s with tool_call_id: %s',
-          sessionLogId,
-          toolName,
-          toolPayload.id,
-        );
-
-        const toolMessageParams: CreateMessageParams = {
-          content: '',
-          groupId: assistantMessage.groupId,
-          parentId: assistantMessage.id,
-          plugin: {
-            ...toolPayload,
-          },
-          pluginIntervention: { status: 'pending' },
-          role: 'tool',
-          sessionId: context.get().activeId,
-          threadId: context.params.threadId,
-          tool_call_id: toolPayload.id,
-          topicId: context.get().activeTopicId,
-        };
-
-        const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
-
-        if (!createResult) {
+      if (skipCreateToolMessage) {
+        // Resumption mode: Tool messages already exist, just verify them
+        log('[%s][request_human_approve] Resuming with existing tool messages', sessionLogId);
+      } else {
+        // Create tool messages for each pending tool call with intervention status
+        await pMap(pendingToolsCalling, async (toolPayload) => {
+          const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
           log(
-            '[%s][request_human_approve] ERROR: Failed to create tool message for %s',
+            '[%s][request_human_approve] Creating tool message for %s with tool_call_id: %s',
             sessionLogId,
             toolName,
+            toolPayload.id,
           );
-          throw new Error(`Failed to create tool message for ${toolName}`);
-        }
 
-        log(
-          '[%s][request_human_approve] Created tool message: %s for %s',
-          sessionLogId,
-          createResult.id,
-          toolName,
-        );
-      });
+          const toolMessageParams: CreateMessageParams = {
+            content: '',
+            groupId: assistantMessage.groupId,
+            parentId: assistantMessage.id,
+            plugin: {
+              ...toolPayload,
+            },
+            pluginIntervention: { status: 'pending' },
+            role: 'tool',
+            sessionId: context.get().activeId,
+            threadId: context.params.threadId,
+            tool_call_id: toolPayload.id,
+            topicId: context.get().activeTopicId,
+          };
+
+          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+
+          if (!createResult) {
+            log(
+              '[%s][request_human_approve] ERROR: Failed to create tool message for %s',
+              sessionLogId,
+              toolName,
+            );
+            throw new Error(`Failed to create tool message for ${toolName}`);
+          }
+
+          log(
+            '[%s][request_human_approve] Created tool message: %s for %s',
+            sessionLogId,
+            createResult.id,
+            toolName,
+          );
+        });
+      }
 
       log(
         '[%s][request_human_approve] All tool messages created, emitting human_approve_required event',

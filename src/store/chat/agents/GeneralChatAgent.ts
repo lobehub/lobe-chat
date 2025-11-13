@@ -180,6 +180,7 @@ export class GeneralChatAgent implements Agent {
           return {
             pendingToolsCalling: pendingTools,
             reason: 'Some tools still pending approval',
+            skipCreateToolMessage: true,
             type: 'request_human_approve',
           };
         }
