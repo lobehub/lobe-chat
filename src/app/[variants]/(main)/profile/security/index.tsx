@@ -20,6 +20,10 @@ const MobileProfileSecurityPage = memo(() => {
   return enableClerk ? <ClerkProfile mobile={mobile} /> : <Navigate replace to="/profile" />;
 });
 
-MobileProfileSecurityPage.displayName = 'MobileProfileSecurityPage';
 
-export default MobileProfileSecurityPage;
+const DesktopProfileSecurityPage = memo(() => {
+  const mobile = false;
+  return enableClerk ? <ClerkProfile mobile={mobile} /> : <Navigate replace to="/profile" />;
+});
+
+export { DesktopProfileSecurityPage,MobileProfileSecurityPage };

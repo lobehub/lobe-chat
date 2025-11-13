@@ -11,4 +11,10 @@ const MobileProfileStatsPage = memo(() => {
 
 MobileProfileStatsPage.displayName = 'MobileProfileStatsPage';
 
-export default MobileProfileStatsPage;
+
+const DesktopProfileStatsPage = memo(() => {
+  const mobile = false;
+  return <StatsClient mobile={mobile} />;
+});
+
+export { DesktopProfileStatsPage,MobileProfileStatsPage };

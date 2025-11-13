@@ -293,7 +293,7 @@ export const createMobileRouter = (locale: Locales) =>
             },
             {
               lazy: () =>
-                import('./(main)/profile/apikey/Client').then((m) => ({
+                import('./(main)/profile/apikey/index').then((m) => ({
                   Component: m.default,
                 })),
               path: 'apikey',
@@ -301,14 +301,14 @@ export const createMobileRouter = (locale: Locales) =>
             {
               lazy: () =>
                 import('./(main)/profile/security').then((m) => ({
-                  Component: m.default,
+                  Component: m.MobileProfileSecurityPage,
                 })),
               path: 'security',
             },
             {
               lazy: () =>
                 import('./(main)/profile/stats').then((m) => ({
-                  Component: m.default,
+                  Component: m.MobileProfileStatsPage,
                 })),
               path: 'stats',
             },

@@ -299,22 +299,22 @@ export const createDesktopRouter = (locale: Locales) =>
             },
             {
               lazy: () =>
-                import('./(main)/profile/apikey/Client').then((m) => ({
+                import('./(main)/profile/apikey/index').then((m) => ({
                   Component: m.default,
                 })),
               path: 'apikey',
             },
             {
               lazy: () =>
-                import('./(main)/profile/security/desktop').then((m) => ({
-                  Component: m.default,
+                import('./(main)/profile/security/index').then((m) => ({
+                  Component: m.DesktopProfileSecurityPage,
                 })),
               path: 'security',
             },
             {
               lazy: () =>
-                import('./(main)/profile/stats/desktop').then((m) => ({
-                  Component: m.default,
+                import('./(main)/profile/stats/index').then((m) => ({
+                  Component: m.DesktopProfileStatsPage,
                 })),
               path: 'stats',
             },
