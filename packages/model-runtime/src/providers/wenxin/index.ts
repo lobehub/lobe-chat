@@ -14,7 +14,7 @@ export const params = {
   baseURL: 'https://qianfan.baidubce.com/v2',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, ...rest } = payload;
+      const { enabledSearch, thinking, ...rest } = payload;
 
       return {
         ...rest,
@@ -25,6 +25,10 @@ export const params = {
             enable_citation: true,
             enable_trace: true,
           },
+        }),
+        ...(thinking && {
+          enable_thinking: { disabled: false, enabled: true }[thinking.type],
+          thinking_budget: thinking?.budget_tokens,
         }),
       } as any;
     },

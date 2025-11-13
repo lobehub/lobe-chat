@@ -46,6 +46,9 @@ const wenxinChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-11-12',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -330,6 +333,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -435,6 +441,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -491,6 +500,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
     },
     type: 'chat',
   },
@@ -1039,6 +1051,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -1115,6 +1130,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1311,6 +1329,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -1329,6 +1350,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 7.5, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1458,6 +1482,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -1472,6 +1499,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1488,6 +1518,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -1502,6 +1535,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1518,6 +1554,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -1532,6 +1571,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -1548,6 +1590,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -1562,6 +1607,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 1.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
