@@ -28,7 +28,7 @@ export const params = {
         }),
         ...(thinking && {
           enable_thinking: { disabled: false, enabled: true }[thinking.type],
-          thinking_budget: thinking?.budget_tokens,
+          ...(thinking?.budget_tokens !== 0 && { thinking_budget: thinking?.budget_tokens }),
         }),
       } as any;
     },

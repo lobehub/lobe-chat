@@ -7,6 +7,7 @@ const wenxinChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 131_072,
@@ -48,6 +49,7 @@ const wenxinChatModels: AIChatModelCard[] = [
     releasedAt: '2025-11-12',
     settings: {
       extendParams: ['enableReasoning'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -70,6 +72,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -110,6 +115,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 3.2, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -303,6 +311,9 @@ const wenxinChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 131_072,
     description: 'ERNIE 4.5 21B A3B，开源大参数版模型，在理解和生成任务上表现更强。',
     displayName: 'ERNIE 4.5 21B A3B',
@@ -314,6 +325,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -1037,6 +1051,7 @@ const wenxinChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 65_536,
     description: 'ERNIE X1.1 Preview，ERNIE X1.1 思考模型预览版，适合能力验证与测试。',
@@ -1053,12 +1068,14 @@ const wenxinChatModels: AIChatModelCard[] = [
     },
     settings: {
       extendParams: ['enableReasoning'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description: 'ERNIE X1 Turbo 32K，高速思考模型，32K 长上下文，适合复杂推理与多轮对话。',
@@ -1072,12 +1089,16 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 144_000,
     description: 'DeepSeek V3.2 Think，满血版深度思考模型，强化长链路推理能力。',
@@ -1092,12 +1113,16 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 144_000,
     description:
@@ -1111,6 +1136,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -1140,6 +1168,7 @@ const wenxinChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 144_000,
     description: 'DeepSeek R1（当前 250120 版本），开放思维链输出的深度推理模型。',
@@ -1152,6 +1181,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -1454,6 +1486,7 @@ const wenxinChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description: 'Qwen3 30B A3B Instruct 2507，中大型 Instruct 模型，适合高质量生成与问答。',
@@ -1466,6 +1499,9 @@ const wenxinChatModels: AIChatModelCard[] = [
         { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
       ],
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
