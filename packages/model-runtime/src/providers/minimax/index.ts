@@ -13,16 +13,7 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.minimaxi.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, max_tokens, temperature, tools, top_p, ...params } = payload;
-
-      const minimaxTools = enabledSearch
-        ? [
-          ...(tools || []),
-          {
-            type: 'web_search',
-          },
-        ]
-        : tools;
+      const { enabledSearch, max_tokens, temperature, top_p, ...params } = payload;
 
       // Resolve parameters with constraints
       const resolvedParams = resolveParameters(
@@ -47,7 +38,6 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
         ...params,
         max_tokens: resolvedParams.max_tokens,
         temperature: finalTemperature,
-        tools: minimaxTools,
         top_p: resolvedParams.top_p,
       } as any;
     },
