@@ -240,6 +240,7 @@
   "noMatchingAgents": "일치하는 멤버가 없습니다",
   "noMembersYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
   "noSelectedAgents": "아직 멤버를 선택하지 않았습니다",
+  "openInNewWindow": "새 창에서 열기",
   "owner": "그룹 소유자",
   "pin": "고정",
   "pinOff": "고정 해제",
