@@ -61,7 +61,7 @@ interface DocumentExplorerProps {
 }
 
 const updateUrl = (docId: string | null) => {
-  const newPath = docId ? `/knowledge/${docId}` : '/knowledge/';
+  const newPath = docId ? `/knowledge/${docId}` : '/knowledge';
   window.history.replaceState({}, '', newPath);
 };
 
@@ -84,8 +84,9 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
   const createOptimisticDocument = useFileStore((s) => s.createOptimisticDocument);
   const replaceTempDocumentWithReal = useFileStore((s) => s.replaceTempDocumentWithReal);
   const updateDocumentOptimistically = useFileStore((s) => s.updateDocumentOptimistically);
-  // Subscribe to localDocumentMap to trigger re-render when documents are updated
+  // Subscribe to localDocumentMap and documents to trigger re-render when documents are updated
   useFileStore((s) => s.localDocumentMap);
+  useFileStore((s) => s.documents);
 
   // Fetch documents on mount
   useEffect(() => {
@@ -133,6 +134,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
     if (selectedDocumentId === documentId) {
       // Deselect if clicking the same document
       setSelectedDocumentId(null);
+      updateUrl(null);
     } else {
       setSelectedDocumentId(documentId);
       updateUrl(documentId);
@@ -269,6 +271,7 @@ const DocumentExplorer = memo<DocumentExplorerProps>(({ knowledgeBaseId, documen
                       if (selectedDocumentId === document.id) {
                         setSelectedDocumentId(null);
                         setIsCreatingNew(false);
+                        updateUrl(null);
                       }
                     }}
                     onRenameConfirm={handleRenameConfirm}

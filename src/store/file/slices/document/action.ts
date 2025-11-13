@@ -244,21 +244,28 @@ export const createDocumentSlice: StateCreator<
 
   removeDocument: async (documentId) => {
     // Remove from local optimistic map first (optimistic update)
-    const { localDocumentMap } = get();
+    const { localDocumentMap, documents } = get();
     const newMap = new Map(localDocumentMap);
     newMap.delete(documentId);
-    set({ localDocumentMap: newMap }, false, n('removeDocument/optimistic'));
+
+    // Also remove from documents array to update the list immediately
+    const newDocuments = documents.filter((doc) => doc.id !== documentId);
+
+    set(
+      { documents: newDocuments, localDocumentMap: newMap },
+      false,
+      n('removeDocument/optimistic'),
+    );
 
     try {
       // Delete from documents table
       await documentService.deleteDocument(documentId);
-      // Refresh documents to sync with server
-      await get().fetchDocuments();
+      // No need to call fetchDocuments() - optimistic update is enough
     } catch (error) {
       console.error('Failed to delete document:', error);
-      // Restore the document in local map on error
+      // Restore the document in local map and documents array on error
       const restoredMap = new Map(localDocumentMap);
-      set({ localDocumentMap: restoredMap }, false, n('removeDocument/restore'));
+      set({ documents, localDocumentMap: restoredMap }, false, n('removeDocument/restore'));
       throw error;
     }
   },
