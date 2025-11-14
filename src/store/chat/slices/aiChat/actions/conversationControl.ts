@@ -44,6 +44,10 @@ export interface ConversationControlAction {
    */
   rejectToolCalling: (messageId: string, reason?: string) => Promise<void>;
   /**
+   * Reject tool intervention and continue
+   */
+  rejectAndContinueToolCalling: (messageId: string, reason?: string) => Promise<void>;
+  /**
    * Toggle sendMessage operation state
    */
   internal_toggleSendMessageOperation: (
@@ -204,6 +208,44 @@ export const conversationControl: StateCreator<
       : 'User reject this tool calling without reason';
 
     await get().optimisticUpdateMessageContent(messageId, toolContent);
+  },
+
+  rejectAndContinueToolCalling: async (messageId, reason) => {
+    await get().rejectToolCalling(messageId, reason);
+
+    const toolMessage = dbMessageSelectors.getDbMessageById(messageId)(get());
+    if (!toolMessage) return;
+
+    // Get current messages for state construction
+    const currentMessages = displayMessageSelectors.mainAIChats(get());
+    const { activeThreadId, internal_execAgentRuntime } = get();
+
+    // Create agent state and context to continue from rejected tool message
+    const { state, context: initialContext } = get().internal_createAgentState({
+      messages: currentMessages,
+      parentMessageId: messageId,
+      threadId: activeThreadId,
+    });
+
+    // Override context with 'userInput' phase to continue as if user provided feedback
+    const context: AgentRuntimeContext = {
+      ...initialContext,
+      phase: 'user_input',
+    };
+
+    // Execute agent runtime from rejected tool message position to continue
+    try {
+      await internal_execAgentRuntime({
+        messages: currentMessages,
+        parentMessageId: messageId,
+        parentMessageType: 'tool',
+        threadId: activeThreadId,
+        initialState: state,
+        initialContext: context,
+      });
+    } catch (error) {
+      console.error('[rejectAndContinueToolCalling] Error executing agent runtime:', error);
+    }
   },
 
   internal_updateSendMessageOperation: (key, value, actionName) => {
