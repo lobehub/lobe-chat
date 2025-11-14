@@ -2,6 +2,33 @@
 
 # Changelog
 
+## [Version 2.0.0-next.55](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.54...v2.0.0-next.55)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### ✨ Features
+
+- **image**: Image model show price.
+- **misc**: Create Pages in Knowledge Base.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **image**: Image model show price, closes [#10198](https://github.com/lobehub/lobe-chat/issues/10198) ([b87e0e4](https://github.com/lobehub/lobe-chat/commit/b87e0e4))
+- **misc**: Create Pages in Knowledge Base, closes [#9895](https://github.com/lobehub/lobe-chat/issues/9895) ([f46edeb](https://github.com/lobehub/lobe-chat/commit/f46edeb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.54](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.53...v2.0.0-next.54)
 
 <sup>Released on **2025-11-14**</sup>
