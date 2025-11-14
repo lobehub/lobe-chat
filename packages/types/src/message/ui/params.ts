@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { UploadFileItem } from '../../files';
 import { MessageSemanticSearchChunk } from '../../rag';
 import { ChatMessageError, ChatMessageErrorSchema } from '../common/base';
-import { ChatPluginPayload } from '../common/tools';
+import { ChatPluginPayload, ToolInterventionSchema } from '../common/tools';
 import { UIChatMessage } from './chat';
 import { SemanticSearchChunkSchema } from './rag';
 
@@ -148,3 +148,17 @@ export const CreateNewMessageParamsSchema = z
     fileChunks: z.array(SemanticSearchChunkSchema).optional(),
   })
   .passthrough();
+
+export const UpdateMessagePluginSchema = z.object({
+  id: z.string().optional(),
+  toolCallId: z.string().optional(),
+  type: z.string().optional(),
+  intervention: ToolInterventionSchema.optional(),
+  apiName: z.string().optional(),
+  arguments: z.string().optional(),
+  identifier: z.string().optional(),
+  state: z.any().optional(),
+  error: z.any().optional(),
+  clientId: z.string().optional(),
+  userId: z.string().optional(),
+});

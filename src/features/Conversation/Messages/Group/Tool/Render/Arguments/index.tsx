@@ -115,18 +115,20 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }
           {actions}
         </Flexbox>
       )}
-      {Object.entries(displayArgs).map(([key, value]) => {
-        return (
-          <ObjectEntity
-            editable={false}
-            hasMinWidth={hasMinWidth}
-            key={key}
-            objectKey={key}
-            shine={shine}
-            value={value}
-          />
-        );
-      })}
+      <Flexbox>
+        {Object.entries(displayArgs).map(([key, value]) => {
+          return (
+            <ObjectEntity
+              editable={false}
+              hasMinWidth={hasMinWidth}
+              key={key}
+              objectKey={key}
+              shine={shine}
+              value={value}
+            />
+          );
+        })}
+      </Flexbox>
     </div>
   );
 });

@@ -29,11 +29,9 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
     font-weight: 500;
   `,
   card: css`
-    width: 100%;
     max-width: 500px;
     border-color: ${token.colorBorderSecondary};
     border-radius: 12px;
-
     background: ${token.colorBgContainer};
 
     ${responsive.mobile} {

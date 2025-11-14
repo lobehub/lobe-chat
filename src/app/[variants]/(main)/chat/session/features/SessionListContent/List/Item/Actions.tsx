@@ -97,7 +97,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
                 {
                   icon: <Icon icon={ExternalLink} />,
                   key: 'openInNewWindow',
-                  label: '单独打开页面',
+                  label: t('openInNewWindow'),
                   onClick: ({ domEvent }: { domEvent: Event }) => {
                     domEvent.stopPropagation();
                     openSessionInNewWindow(id);

@@ -135,6 +135,7 @@
     }
   },
   "close": "關閉",
+  "confirm": "確認",
   "contact": "聯繫我們",
   "copy": "複製",
   "copyFail": "複製失敗",
