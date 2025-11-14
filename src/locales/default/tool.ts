@@ -17,6 +17,14 @@ export default {
   localFiles: {
     file: '文件',
     folder: '文件夹',
+    moveFiles: {
+      itemsMoved: '已移动 {{count}} 个项目：',
+      itemsMoved_one: '已移动 {{count}} 个项目：',
+      itemsMoved_other: '已移动 {{count}} 个项目：',
+      itemsToMove: '{{count}} 个项目待移动：',
+      itemsToMove_one: '{{count}} 个项目待移动：',
+      itemsToMove_other: '{{count}} 个项目待移动：',
+    },
     open: '打开',
     openFile: '打开文件',
     openFolder: '打开文件夹',
