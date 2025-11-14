@@ -2774,6 +2774,54 @@
   "pro-deepseek-v3": {
     "description": "Model voor exclusieve bedrijfsdiensten, inclusief gelijktijdige service."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, een grootschalig Chinees model, geschikt voor hoogwaardige contentgeneratie en complexe redeneertaken."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, een middelgroot algemeen model, geschikt voor tekstgeneratie en vraag-en-antwoordtoepassingen met een goede balans tussen kosten en prestaties."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, een model gericht op intentieherkenning en agent-orkestratie, ondersteunt scenario's met lange context."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, een lichtgewicht agentmodel, geschikt voor kostenefficiënte meerstapsdialogen en bedrijfsprocessen."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, een high-throughput agentmodel, ideaal voor grootschalige en multitask agenttoepassingen."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, een agentmodel met hoge gelijktijdigheid, ontworpen voor korte tot middellange dialogen en snelle reacties."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, een multimodaal model voor contentcontrole en detectie, ondersteunt naleving en herkenning van beeld- en tekstinhoud."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, een multimodaal creatiemodel, ondersteunt gecombineerde interpretatie en generatie van beeld en tekst."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, een multimodaal herkenningsmodel gericht op Engelstalige scenario's."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, een krachtig Chinees algemeen model, geschikt voor complexe vraag-en-antwoordtoepassingen en grootschalige redeneertaken."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, een multimodaal model gebaseerd op Llama, ontworpen voor algemene beeld- en tekstbegripstaken."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, een OCR-model voor meerdere afbeeldingen, ondersteunt tekstdetectie en -herkenning op meerdere beelden."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, een multimodaal vraag-en-antwoordmodel, ondersteunt nauwkeurige zoekopdrachten en antwoorden in complexe beeld- en tekstscenario's."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, een OCR-model voor één afbeelding, ondersteunt zeer nauwkeurige tekenherkenning."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, een grootschalig visueel-taalmodel, geschikt voor complexe beeld- en tekstbegripscenario's."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, een lichtgewicht visueel-taalmodel, geschikt voor dagelijkse beeld- en tekstvraagstukken en analyses."
+  },
   "qvq-72b-preview": {
     "description": "Het QVQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van visuele redeneervaardigheden, vooral in het domein van wiskundige redenering."
   },
@@ -2924,7 +2972,9 @@
   "qwen2.5-72b-instruct": {
     "description": "Het 72B model van Tongyi Qianwen 2.5 is open source beschikbaar."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, een volwassen open-source instructiemodel, geschikt voor dialogen en generatietaken in diverse scenario's."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Qwen-code model open source versie."
   },
@@ -2955,11 +3005,15 @@
   "qwen2.5-omni-7b": {
     "description": "Het Qwen-Omni serie model ondersteunt het invoeren van verschillende modaliteiten van gegevens, waaronder video, audio, afbeeldingen en tekst, en kan audio en tekst als output genereren."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, een multimodaal open-source model, geschikt voor private implementatie en veelzijdige toepassingen."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Verbeterde instructievolging, wiskunde, probleemoplossing en code, met verbeterde herkenningscapaciteiten voor verschillende formaten, directe en nauwkeurige lokalisatie van visuele elementen, ondersteuning voor lange videobestanden (maximaal 10 minuten) en seconde-niveau gebeurtenislocatie, kan tijdsvolgorde en snelheid begrijpen, en ondersteunt het bedienen van OS of mobiele agenten op basis van analyse- en lokalisatiecapaciteiten, sterke capaciteiten voor het extraheren van belangrijke informatie en JSON-formaat uitvoer, deze versie is de 72B versie, de krachtigste versie in deze serie."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, een lichtgewicht multimodaal model, combineert lage implementatiekosten met sterke herkenningscapaciteiten."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL is de nieuwste versie van het visueel-taalmodel in de Qwen-modelserie."
   },
@@ -2984,22 +3038,48 @@
   "qwen3": {
     "description": "Qwen3 is het nieuwe generatie grootschalige taalmodel van Alibaba, dat uitstekende prestaties levert ter ondersteuning van diverse applicatiebehoeften."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, een instapmodel, geschikt voor eenvoudige redeneertaken en omgevingen met zeer beperkte middelen."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, een ultralicht model, eenvoudig te implementeren op edge- en eindapparaten."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, een middelgroot model, geschikt voor meertalige vraag-en-antwoordtoepassingen en tekstgeneratie."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, een algemeen grootschalig model, ontworpen voor diverse complexe taken."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, een toonaangevend algemeen instructiemodel, geschikt voor uiteenlopende generatie- en redeneertaken."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, een grootschalig denkmodel, geoptimaliseerd voor geavanceerde redeneertaken."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, een middelgroot tot groot algemeen model, biedt een goede balans tussen kosten en prestaties."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, een instructiemodel van middelgroot formaat, geschikt voor hoogwaardige generatie en vraag-en-antwoordtoepassingen."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, een denkmodel van middelgroot formaat, combineert nauwkeurigheid met kostenefficiëntie."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, geschikt voor algemene taken die een sterkere begripsvaardigheid vereisen."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, geschikt voor middelgrote tot kleine toepassingen en lokale redeneerscenario's."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, een lichtgewicht model met flexibele implementatie, geschikt voor toepassingen met hoge gelijktijdigheid."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Open-source versie van het Tongyi Qianwen codeermodel. De nieuwste qwen3-coder-30b-a3b-instruct is gebaseerd op Qwen3 en blinkt uit in codegeneratie, met krachtige mogelijkheden als Coding Agent. Het is bedreven in toolgebruik en omgevingsinteractie, en combineert uitstekende programmeervaardigheden met algemene capaciteiten."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, een vlaggenschipmodel voor codering, ondersteunt meertalige programmering en complexe codebegrip."
+  },
   "qwen3-coder-flash": {
     "description": "Tongyi Qianwen codeermodel. De nieuwste Qwen3-Coder-serie is gebaseerd op Qwen3 en is een codegeneratiemodel met krachtige Coding Agent-capaciteiten, bedreven in het aanroepen van tools en interactie met omgevingen, in staat tot autonoom programmeren, met uitstekende codeervaardigheden en tevens algemene capaciteiten."
   },
@@ -3015,16 +3095,36 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "Een nieuwe generatie open-source model zonder denkmodus gebaseerd op Qwen3, met verbeterde Chinese tekstbegrip, versterkte logische redeneervaardigheden en betere prestaties bij tekstgeneratietaken vergeleken met de vorige versie (Tongyi Qianwen 3-235B-A22B-Instruct-2507)."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, een vlaggenschipversie voor redeneertaken, ontworpen voor complexe toepassingen."
+  },
   "qwen3-omni-flash": {
     "description": "Het Qwen-Omni model accepteert gecombineerde invoer van tekst, afbeeldingen, audio en video, en genereert antwoorden in tekst- of spraakvorm. Het biedt diverse natuurlijke stemklanken, ondersteunt meertalige en dialectische spraakuitvoer, en is toepasbaar in tekstcreatie, visuele herkenning, spraakassistenten en meer."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, een vlaggenschip multimodaal model, ontworpen voor veeleisende begrip- en creatiescenario's."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, een vlaggenschip denkversie, geschikt voor complexe multimodale redeneer- en planningsopdrachten."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, een grootschalig multimodaal model, combineert nauwkeurigheid met redeneerprestaties."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, een diepgaand denkmodel voor complexe multimodale taken."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, een multimodaal instructiemodel, geschikt voor hoogwaardige beeld- en tekstvraagstukken en creatieve toepassingen."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, een diepgaand multimodaal denkmodel, versterkt complexe redeneer- en ketenanalysetaken."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, een lichtgewicht multimodaal model, geschikt voor dagelijkse visuele vraagstukken en applicatie-integratie."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, een multimodaal denkmodel, geschikt voor gedetailleerde redenatie over visuele informatie."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: een lichtgewicht, snelle redeneerversie, ideaal voor latency-gevoelige of grootschalige aanvraagscenario’s."
   },

@@ -11,6 +11,8 @@ export interface LobeDocument {
    */
   createdAt: Date;
 
+  editorData: Record<string, any> | null;
+
   /**
    * File type or extension
    */
@@ -54,7 +56,12 @@ export interface LobeDocument {
   source: string;
 
   /**
-   * Document title (if available)
+   * 文档来源类型
+   */
+  sourceType: DocumentSourceType;
+
+  /**
+   * 文档标题 (如果可用)。
    */
   title?: string;
 
@@ -161,7 +168,12 @@ export enum DocumentSourceType {
   API = 'api',
 
   /**
-   * Local or uploaded files
+   * 编辑器创建的文档
+   */
+  EDITOR = 'editor',
+
+  /**
+   * 本地或上传的文件
    */
   FILE = 'file',
 

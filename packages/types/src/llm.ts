@@ -1,4 +1,4 @@
-import { ModelParamsSchema , AiModelType, Pricing } from 'model-bank';
+import { AiModelType, ModelParamsSchema, Pricing } from 'model-bank';
 import { ReactNode } from 'react';
 
 import { AiProviderSettings } from './aiProvider';

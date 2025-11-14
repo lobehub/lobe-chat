@@ -289,6 +289,7 @@ export default {
   oauth: 'SSO 登录',
   officialSite: '官方网站',
   ok: '确定',
+  or: '或',
   password: '密码',
   pin: '置顶',
   pinOff: '取消置顶',

@@ -2774,6 +2774,54 @@
   "pro-deepseek-v3": {
     "description": "Kurumsal özel hizmetler için tasarlanmış modeldir ve eşzamanlı hizmetleri içerir."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, yüksek parametreli Çince model, yüksek kaliteli içerik üretimi ve karmaşık akıl yürütme görevleri için uygundur."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, orta ölçekli genel amaçlı model, maliyet ve performans dengesi gerektiren metin üretimi ve soru-cevap senaryoları için uygundur."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, niyet tanıma ve akıllı ajan düzenlemesi için tasarlanmış model, uzun bağlam senaryolarını destekler."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, hafif akıllı ajan modeli, düşük maliyetli çok turlu diyaloglar ve iş akışı düzenlemeleri için uygundur."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, yüksek akış kontrolüne sahip akıllı ajan modeli, büyük ölçekli ve çok görevli ajan uygulamaları için uygundur."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, orta ve kısa diyaloglar ile hızlı yanıt gerektiren yüksek eşzamanlı akıllı ajan modeli."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, çok modlu içerik denetimi ve tespit modeli, görsel ve metin uyumluluğu ile tanıma görevlerini destekler."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, çok modlu içerik üretim modeli, görsel ve metinlerin birleşik anlaşılması ve üretimini destekler."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, İngilizce odaklı çok modlu tanıma modeli."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, yüksek performanslı Çince genel model, karmaşık soru-cevap ve büyük ölçekli akıl yürütme görevleri için uygundur."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, Llama tabanlı çok modlu model, genel görsel-metin anlama görevlerine yöneliktir."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, çoklu görsel OCR modeli, birden fazla görseldeki metinleri tespit ve tanıma yeteneğine sahiptir."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, çok modlu soru-cevap modeli, karmaşık görsel-metin senaryolarında hassas arama ve cevaplama desteği sunar."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, tek görsel OCR modeli, yüksek doğrulukta karakter tanıma sağlar."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, yüksek parametreli görsel-dil modeli, karmaşık görsel-metin anlama senaryoları için uygundur."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, hafif görsel-dil modeli, günlük görsel-metin soru-cevap ve analiz için uygundur."
+  },
   "qvq-72b-preview": {
     "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
   },
@@ -2924,7 +2972,9 @@
   "qwen2.5-72b-instruct": {
     "description": "Tongyi Qianwen 2.5, halka açık 72B ölçeğinde bir modeldir."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, olgun açık kaynaklı talimat modeli, çoklu senaryolarda diyalog ve üretim için uygundur."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Tongyi Qianwen kodlama modelinin açık kaynak sürümüdür."
   },
@@ -2955,11 +3005,15 @@
   "qwen2.5-omni-7b": {
     "description": "Qwen-Omni serisi modeller, video, ses, resim ve metin gibi çeşitli modlarda veri girişi destekler ve ses ile metin çıktısı verir."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, çok modlu açık kaynak modeli, özelleştirilmiş kurulum ve çoklu senaryo uygulamaları için uygundur."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Talimat takibi, matematik, problem çözme, kodlama genelinde iyileştirme, her türlü nesneyi tanıma yeteneği artışı, çeşitli formatları doğrudan hassas bir şekilde görsel unsurları konumlandırma desteği, uzun video dosyalarını (en fazla 10 dakika) anlama ve saniye düzeyinde olay anlarını konumlandırma yeteneği, zaman sıralamasını ve hızını anlama, analiz ve konumlandırma yeteneğine dayanarak OS veya Mobil ajanları kontrol etme desteği, anahtar bilgileri çıkarma yeteneği ve Json formatında çıktı verme yeteneği güçlüdür, bu sürüm 72B versiyonudur, bu serinin en güçlü versiyonudur."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, hafif çok modlu model, kurulum maliyeti ve tanıma yeteneği arasında denge sağlar."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL, Qwen model ailesinin en yeni görsel-dil modeli sürümüdür."
   },
@@ -2984,22 +3038,48 @@
   "qwen3": {
     "description": "Qwen3, Alibaba'nın yeni nesil büyük ölçekli dil modelidir ve çeşitli uygulama ihtiyaçlarını mükemmel bir performansla destekler."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, giriş seviyesi model, basit akıl yürütme ve kaynakların son derece sınırlı olduğu ortamlar için uygundur."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, ultra hafif model, uç ve yerel cihazlara dağıtım için uygundur."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, orta ölçekli model, çok dilli soru-cevap ve metin üretimi için uygundur."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, genel amaçlı büyük model, çeşitli karmaşık görevler için uygundur."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, genel amaçlı amiral gemisi talimat modeli, çoklu üretim ve akıl yürütme görevleri için uygundur."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, ultra büyük ölçekli düşünme modeli, yüksek zorlukta akıl yürütme için uygundur."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, orta-büyük ölçekli genel model, maliyet ve performans arasında denge sağlar."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, orta-büyük ölçekli talimat modeli, yüksek kaliteli üretim ve soru-cevap için uygundur."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, orta-büyük ölçekli düşünme modeli, doğruluk ve maliyet arasında denge sağlar."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, daha güçlü anlama yeteneği gerektiren genel görev senaryoları için uygundur."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, orta-küçük ölçekli uygulamalar ve yerel akıl yürütme senaryoları için uygundur."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, hafif model, esnek dağıtım imkanı sunar ve yüksek eşzamanlı iş yükleri için uygundur."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Qwen3 tabanlı kod üretim modeli olan en yeni açık kaynaklı Tongyi Qianwen kod modeli. Güçlü Kodlama Ajanı yeteneklerine sahiptir, araç kullanımı ve çevre ile etkileşimde uzmandır. Kendi kendine programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel amaçlı beceriler de sunar."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, amiral gemisi kod modeli, çoklu programlama dili ve karmaşık kod anlama desteği sunar."
+  },
   "qwen3-coder-flash": {
     "description": "Tongyi Qianwen kod modeli. En yeni Qwen3-Coder serisi modeller, Qwen3 tabanlı kod üretim modelleridir, güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrıları ve ortam etkileşiminde uzmandır, bağımsız programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel yeteneklere de sahiptir."
   },
@@ -3015,16 +3095,36 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 tabanlı yeni nesil düşünmeden çalışan açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Instruct-2507) kıyasla Çince metin anlama yeteneği daha iyi, mantıksal çıkarım yeteneği geliştirilmiş ve metin üretimi görevlerinde daha başarılıdır."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, karmaşık görevler için amiral gemisi akıl yürütme modeli sürümüdür."
+  },
   "qwen3-omni-flash": {
     "description": "Qwen-Omni modeli, metin, görsel, ses ve video gibi çoklu modların birleşik girişlerini kabul edebilir ve metin ya da ses biçiminde yanıtlar üretebilir. Çeşitli insansı ses tonları sunar, çok dilli ve lehçeli ses çıktısını destekler. Metin üretimi, görsel tanıma ve sesli asistan gibi senaryolarda kullanılabilir."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, amiral gemisi çok modlu model, yüksek düzeyde anlama ve içerik üretimi senaryoları için uygundur."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, amiral gemisi düşünme sürümü, karmaşık çok modlu akıl yürütme ve planlama görevleri için uygundur."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, çok modlu büyük model, doğruluk ve akıl yürütme performansını dengeler."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, karmaşık çok modlu görevler için derin düşünme sürümüdür."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, çok modlu talimatla ince ayarlanmış model, yüksek kaliteli görsel-metin soru-cevap ve içerik üretimi için uygundur."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, çok modlu derin düşünme sürümü, karmaşık akıl yürütme ve uzun zincirli analizleri güçlendirir."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, hafif çok modlu model, günlük görsel soru-cevap ve uygulama entegrasyonu için uygundur."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, çok modlu düşünce zinciri modeli, görsel bilgilerin ayrıntılı akıl yürütmesi için uygundur."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: Gecikmeye duyarlı veya yüksek hacimli istek senaryoları için uygun, hafif ve yüksek hızlı akıl yürütme sürümüdür."
   },

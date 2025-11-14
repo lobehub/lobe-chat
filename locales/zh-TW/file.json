@@ -1,5 +1,7 @@
 {
-  "desc": "管理你的知識",
+  "addKnowledge": "新增知識",
+  "addPage": "建立文稿",
+  "desc": "管理你的工作、學習與生活知識。",
   "detail": {
     "basic": {
       "createdAt": "創建時間",
@@ -21,6 +23,44 @@
       "embeddingStatus": "向量化"
     }
   },
+  "documentEditor": {
+    "addIcon": "新增圖示",
+    "autoSaveMessage": "文件會自動儲存，無需手動儲存",
+    "chooseIcon": "選擇圖示",
+    "deleteConfirm": {
+      "content": "即將刪除此文件，刪除後將無法恢復，請謹慎操作。",
+      "title": "刪除文件"
+    },
+    "deleteError": "刪除文件失敗",
+    "deleteSuccess": "文件刪除成功",
+    "editedAt": "最後編輯於 {{time}}",
+    "editedBy": "最後編輯者 {{name}}",
+    "editorPlaceholder": "輸入文件內容，按 / 開啟指令選單",
+    "empty": {
+      "createNewDocument": "建立新文件",
+      "title": "選擇一個文件以開始",
+      "uploadMarkdown": "上傳 Markdown 檔案"
+    },
+    "linkCopied": "連結已複製",
+    "menu": {
+      "copyLink": "複製連結",
+      "exportDocument": "匯出文件",
+      "importDocument": "匯入文件",
+      "pin": "置頂文件"
+    },
+    "saving": "儲存中...",
+    "titlePlaceholder": "無標題",
+    "wordCount": "{{wordCount}} 字"
+  },
+  "documentList": {
+    "copyContent": "複製全文",
+    "documentCount": "共 {{count}} 筆文件",
+    "duplicate": "建立副本",
+    "empty": "尚無文件，點擊上方按鈕建立你的第一篇文件",
+    "noResults": "找不到符合的文件",
+    "selectNote": "選擇一個文件開始編輯",
+    "untitled": "無標題"
+  },
   "empty": "暫無已上傳文件/文件夾",
   "header": {
     "actions": {
@@ -28,7 +68,42 @@
       "uploadFile": "上傳檔案",
       "uploadFolder": "上傳資料夾"
     },
+    "newDocumentButton": "新增文件",
+    "newNoteDialog": {
+      "cancel": "取消",
+      "editTitle": "編輯文件",
+      "emptyContent": "文件內容不可為空",
+      "loadError": "載入文件失敗，請重試",
+      "loading": "載入中...",
+      "save": "儲存",
+      "saveError": "儲存文件失敗，請重試",
+      "saveSuccess": "文件儲存成功",
+      "title": "新增文件",
+      "updateSuccess": "文件更新成功"
+    },
     "uploadButton": "上傳"
+  },
+  "home": {
+    "getStarted": "開始使用",
+    "greeting": "開始",
+    "quickActions": "快速操作",
+    "recentDocuments": "最近文件",
+    "recentFiles": "最近檔案",
+    "subtitle": "歡迎使用知識庫，從這裡開始管理你的文件與資料",
+    "uploadEntries": {
+      "files": {
+        "title": "上傳檔案"
+      },
+      "folder": {
+        "title": "上傳資料夾"
+      },
+      "knowledgeBase": {
+        "title": "新增知識庫"
+      },
+      "newDocument": {
+        "title": "新增文件"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +112,10 @@
     },
     "new": "新建知識庫",
     "title": "知識庫"
+  },
+  "menu": {
+    "allDocuments": "全部文件",
+    "allFiles": "所有檔案"
   },
   "networkError": "獲取知識庫失敗，請檢查網路連接後重試",
   "notSupportGuide": {
@@ -61,12 +140,16 @@
     "downloadFile": "下載檔案",
     "unsupportedFileAndContact": "此檔案格式暫不支援線上預覽，如有預覽需求，歡迎<1>反饋給我們</1>"
   },
+  "searchDocumentPlaceholder": "搜尋文件",
   "searchFilePlaceholder": "搜索檔案",
   "tab": {
-    "all": "全部檔案",
+    "all": "全部",
     "audios": "語音",
     "documents": "文檔",
+    "home": "首頁",
     "images": "圖片",
+    "moreTypes": "更多類型",
+    "pages": "文稿",
     "videos": "視頻",
     "websites": "網頁"
   },
