@@ -3,7 +3,7 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
-import { useResponsive } from 'antd-style';
+import { css, cx, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +38,11 @@ import { AssistantMessageContent } from './MessageContent';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
 const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
+
+const messageContainer = cx(css`
+  border: none;
+  background: none;
+`);
 
 const isHtmlCode = (content: string, language: string) => {
   return (
@@ -248,6 +253,7 @@ const AssistantMessage = memo<AssistantMessageProps>(({ id, index, disableEditin
             <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
           ) : (
             <MessageContent
+              className={messageContainer}
               editing={editing}
               id={id}
               markdownProps={markdownProps}

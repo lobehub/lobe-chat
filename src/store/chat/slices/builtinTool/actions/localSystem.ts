@@ -252,7 +252,7 @@ export const localSystemSlice: StateCreator<
         if (result.shell_id) {
           message = `Command started in background with shell_id: ${result.shell_id}`;
         } else {
-          message = `Command completed successfully. Exit code: ${result.exit_code}`;
+          message = `Command completed successfully.`;
         }
       } else {
         message = `Command failed: ${result.error}`;
