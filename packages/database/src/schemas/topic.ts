@@ -6,7 +6,7 @@ import { createInsertSchema } from 'drizzle-zod';
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamps, timestamptz } from './_helpers';
 import { chatGroups } from './chatGroup';
-import { documents } from './document';
+import { documents } from './file';
 import { sessions } from './session';
 import { users } from './user';
 
