@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Create Pages in Knowledge Base."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.55"
+  },
+  {
+    "children": {
       "improvements": ["Refactor and support move locale file intervention."]
     },
     "date": "2025-11-14",

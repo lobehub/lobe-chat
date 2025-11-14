@@ -22,10 +22,10 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   fadeEdge: css`
     pointer-events: none;
+
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    inset-block: 0 0;
+    inset-inline-end: 0;
 
     width: 80px;
 
@@ -36,16 +36,19 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 160px;
     margin-block-end: 12px;
     border-radius: ${token.borderRadius}px;
+
     background: ${token.colorFillQuaternary};
   `,
   scrollContainer: css`
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-
     /* Hide scrollbar */
     scrollbar-width: none;
+
+    overflow-x: auto;
+    display: flex;
+    gap: 16px;
+
+    padding-block-end: 8px;
+
     -ms-overflow-style: none;
 
     &::-webkit-scrollbar {
@@ -76,4 +79,3 @@ const RecentFilesSkeleton = memo(() => {
 });
 
 export default RecentFilesSkeleton;
-
