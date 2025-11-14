@@ -30,6 +30,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-5.1 — 针对编码和 agent 任务优化的旗舰模型，支持可配置的推理强度与更长上下文。',
     displayName: 'GPT-5.1',
+    enabled: true,
     id: 'gpt-5.1',
     maxOutput: 128_000,
     pricing: {
@@ -54,6 +55,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: 'GPT-5.1 Chat：用于 ChatGPT 的 GPT-5.1 变体，适合聊天场景。',
     displayName: 'GPT-5.1 Chat',
+    enabled: true,
     id: 'gpt-5.1-chat-latest',
     maxOutput: 16_384,
     pricing: {
@@ -185,7 +187,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
     displayName: 'GPT-5',
-    enabled: true,
     id: 'gpt-5',
     maxOutput: 128_000,
     pricing: {
@@ -263,7 +264,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。',
     displayName: 'GPT-5 Chat',
-    enabled: true,
     id: 'gpt-5-chat-latest',
     maxOutput: 128_000,
     pricing: {
