@@ -21,11 +21,11 @@ const CreateForm = memo<CreateFormProps>(({ onClose, onSuccess }) => {
     try {
       const id = await createNewKnowledgeBase(values);
       setLoading(false);
-      onClose?.();
 
       // Call onSuccess callback if provided, otherwise navigate directly
       if (onSuccess) {
         onSuccess(id);
+        onClose?.();
       } else {
         window.location.href = `/knowledge/bases/${id}`;
       }

@@ -53,8 +53,9 @@ const KnowledgeRouter = memo(() => {
       <MemoryRouter initialEntries={[getInitialPath()]} initialIndex={0}>
         <UrlSynchronizer />
         <Routes>
-          {/* Knowledge home - file list page */}
+          {/* Knowledge home */}
           <Route element={<KnowledgeHomePage />} path="/" />
+          <Route element={<KnowledgeHomePage />} path="/:id" />
 
           {/* Knowledge bases routes */}
           <Route element={<KnowledgeBasesListPage />} path="/bases" />
