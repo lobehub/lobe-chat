@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.57](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.56...v2.0.0-next.57)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Revert background style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Revert background style, closes [#10218](https://github.com/lobehub/lobe-chat/issues/10218) ([97b0413](https://github.com/lobehub/lobe-chat/commit/97b0413))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.56](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.55...v2.0.0-next.56)
 
 <sup>Released on **2025-11-14**</sup>
