@@ -32,6 +32,7 @@ export interface LobeAgentChatConfig {
   reasoningBudgetToken?: number;
   reasoningEffort?: 'low' | 'medium' | 'high';
   gpt5ReasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
+  gpt5_1ReasoningEffort?: 'none' | 'low' | 'medium' | 'high';
   /**
    * 输出文本详细程度控制
    */
@@ -66,6 +67,7 @@ export interface LobeAgentChatConfig {
 
 export const AgentChatConfigSchema = z.object({
   autoCreateTopicThreshold: z.number().default(2),
+  disableContextCaching: z.boolean().optional(),
   displayMode: z.enum(['chat', 'docs']).optional(),
   enableAutoCreateTopic: z.boolean().optional(),
   enableCompressHistory: z.boolean().optional(),
@@ -74,8 +76,11 @@ export const AgentChatConfigSchema = z.object({
   enableReasoning: z.boolean().optional(),
   enableReasoningEffort: z.boolean().optional(),
   enableStreaming: z.boolean().optional(),
+  gpt5ReasoningEffort: z.enum(['minimal', 'low', 'medium', 'high']).optional(),
+  gpt5_1ReasoningEffort: z.enum(['none', 'low', 'medium', 'high']).optional(),
   historyCount: z.number().optional(),
   reasoningBudgetToken: z.number().optional(),
+  reasoningEffort: z.enum(['low', 'medium', 'high']).optional(),
   searchFCModel: z
     .object({
       model: z.string(),
@@ -84,4 +89,8 @@ export const AgentChatConfigSchema = z.object({
     .optional(),
   searchMode: z.enum(['off', 'on', 'auto']).optional(),
   textVerbosity: z.enum(['low', 'medium', 'high']).optional(),
+  thinking: z.enum(['disabled', 'auto', 'enabled']).optional(),
+  thinkingBudget: z.number().optional(),
+  urlContext: z.boolean().optional(),
+  useModelBuiltinSearch: z.boolean().optional(),
 });
