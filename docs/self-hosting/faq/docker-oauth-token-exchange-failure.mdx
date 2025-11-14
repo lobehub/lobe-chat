@@ -1,0 +1,106 @@
+---
+title: OAuth Token Exchange Fails in Docker with Reverse Proxy
+description: >-
+  Troubleshooting OAuth authentication failures when using Docker deployment with reverse proxy due to MIDDLEWARE_REWRITE_THROUGH_LOCAL setting.
+tags:
+  - Docker
+  - OAuth
+  - Authentication
+  - Reverse Proxy
+  - Troubleshooting
+  - Casdoor
+---
+
+# OAuth Token Exchange Fails in Docker with Reverse Proxy
+
+## Problem Description
+
+When deploying LobeChat using Docker behind a reverse proxy (like Nginx, Caddy, or Apache), OAuth authentication may fail during the token exchange phase. This typically manifests as:
+
+- OAuth discovery and initial redirects work correctly
+- Users can successfully authenticate with the OAuth provider (e.g., Casdoor)
+- The callback to LobeChat fails with JSON parsing errors
+- Authentication appears to work but ultimately fails silently
+
+## Root Cause
+
+Docker images for LobeChat set `MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"` by default. This setting rewrites internal URLs (including OAuth token exchange endpoints) to use:
+- Protocol: `http://` instead of your public domain's protocol (`https://`)
+- Host: `127.0.0.1:3210` instead of your public domain
+
+This breaks OAuth flows when LobeChat is accessed via a reverse proxy because:
+1. The OAuth provider expects callbacks to match your configured public domain
+2. Internal rewrites cause token exchanges to use localhost URLs
+3. The mismatch between expected and actual URLs causes authentication failures
+
+## Solution
+
+Set `MIDDLEWARE_REWRITE_THROUGH_LOCAL=0` in your environment configuration to disable URL rewriting and preserve your domain URLs for OAuth flows.
+
+### For Docker Compose Deployments
+
+1. Locate your `.env` file in your deployment directory
+2. Add or modify the following line:
+
+```bash
+MIDDLEWARE_REWRITE_THROUGH_LOCAL=0
+```
+
+3. Restart your Docker containers:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+### For Docker Run Deployments
+
+Add the environment variable to your docker run command:
+
+```bash
+docker run -e MIDDLEWARE_REWRITE_THROUGH_LOCAL=0 \
+  # ... other environment variables ...
+  lobehub/lobe-chat-database
+```
+
+## When This Setting is Required
+
+You should set `MIDDLEWARE_REWRITE_THROUGH_LOCAL=0` when:
+
+- ✅ Deploying with Docker behind a reverse proxy
+- ✅ Using custom domains with OAuth providers
+- ✅ Using HTTPS with OAuth providers
+- ✅ Experiencing OAuth token exchange failures
+
+You can keep the default setting (`MIDDLEWARE_REWRITE_THROUGH_LOCAL=1`) when:
+
+- ❌ Running Docker without reverse proxy (direct port access)
+- ❌ Using localhost-only deployments for development
+- ❌ Not using OAuth authentication
+
+## Verification
+
+After applying the fix, verify that OAuth works by:
+
+1. **Check Environment**: Ensure `MIDDLEWARE_REWRITE_THROUGH_LOCAL=0` is set
+2. **Test Authentication**: Try logging in with your OAuth provider
+3. **Monitor Logs**: Check Docker logs for any authentication errors:
+
+```bash
+docker logs -f lobe-chat
+```
+
+4. **Verify URLs**: Confirm that OAuth callbacks use your public domain, not localhost
+
+## Related Issues
+
+- This issue affects all OAuth providers behind reverse proxy setups
+- Commonly reported with Casdoor, Auth0, Google OAuth, and GitHub OAuth
+- Similar to issues [#5876](https://github.com/lobehub/lobe-chat/issues/5876), [#7170](https://github.com/lobehub/lobe-chat/issues/7170), and [#7221](https://github.com/lobehub/lobe-chat/issues/7221)
+
+## Additional Notes
+
+- This setting only affects URL rewriting behavior in middleware
+- Setting it to `0` is safe and recommended for reverse proxy deployments
+- The default `1` value is intended for containerized environments without external proxy
+- No data loss occurs when changing this setting

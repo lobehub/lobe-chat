@@ -1,0 +1,106 @@
+---
+title: Docker 反向代理下 OAuth 令牌交换失败
+description: >-
+  解决在使用 Docker 部署并配置反向代理时，由于 MIDDLEWARE_REWRITE_THROUGH_LOCAL 设置导致的 OAuth 认证失败问题。
+tags:
+  - Docker
+  - OAuth
+  - 认证
+  - 反向代理
+  - 故障排除
+  - Casdoor
+---
+
+# Docker 反向代理下 OAuth 令牌交换失败
+
+## 问题描述
+
+在反向代理（如 Nginx、Caddy 或 Apache）后面使用 Docker 部署 LobeChat 时，OAuth 认证可能在令牌交换阶段失败。这通常表现为：
+
+- OAuth 发现和初始重定向正常工作
+- 用户可以成功通过 OAuth 提供商（如 Casdoor）进行认证
+- 回调到 LobeChat 时出现 JSON 解析错误
+- 认证看似正常但最终静默失败
+
+## 根本原因
+
+LobeChat 的 Docker 镜像默认设置 `MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"`。此设置会重写内部 URL（包括 OAuth 令牌交换端点）为：
+- 协议：`http://` 而不是您公共域名的协议（`https://`）
+- 主机：`127.0.0.1:3210` 而不是您的公共域名
+
+当通过反向代理访问 LobeChat 时，这会破坏 OAuth 流程，因为：
+1. OAuth 提供商期望回调匹配您配置的公共域名
+2. 内部重写导致令牌交换使用 localhost URL
+3. 期望 URL 和实际 URL 之间的不匹配导致认证失败
+
+## 解决方案
+
+在您的环境配置中设置 `MIDDLEWARE_REWRITE_THROUGH_LOCAL=0` 以禁用 URL 重写并为 OAuth 流程保留您的域名 URL。
+
+### Docker Compose 部署
+
+1. 找到部署目录中的 `.env` 文件
+2. 添加或修改以下行：
+
+```bash
+MIDDLEWARE_REWRITE_THROUGH_LOCAL=0
+```
+
+3. 重启 Docker 容器：
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+### Docker Run 部署
+
+在 docker run 命令中添加环境变量：
+
+```bash
+docker run -e MIDDLEWARE_REWRITE_THROUGH_LOCAL=0 \
+  # ... 其他环境变量 ...
+  lobehub/lobe-chat-database
+```
+
+## 何时需要此设置
+
+在以下情况下应该设置 `MIDDLEWARE_REWRITE_THROUGH_LOCAL=0`：
+
+- ✅ 在反向代理后面使用 Docker 部署
+- ✅ 与 OAuth 提供商使用自定义域名
+- ✅ 与 OAuth 提供商使用 HTTPS
+- ✅ 遇到 OAuth 令牌交换失败
+
+在以下情况下可以保持默认设置（`MIDDLEWARE_REWRITE_THROUGH_LOCAL=1`）：
+
+- ❌ 不使用反向代理运行 Docker（直接端口访问）
+- ❌ 仅用于开发的 localhost 部署
+- ❌ 不使用 OAuth 认证
+
+## 验证
+
+应用修复后，通过以下方式验证 OAuth 是否正常工作：
+
+1. **检查环境**：确保已设置 `MIDDLEWARE_REWRITE_THROUGH_LOCAL=0`
+2. **测试认证**：尝试使用您的 OAuth 提供商登录
+3. **监控日志**：检查 Docker 日志是否有认证错误：
+
+```bash
+docker logs -f lobe-chat
+```
+
+4. **验证 URL**：确认 OAuth 回调使用您的公共域名，而不是 localhost
+
+## 相关问题
+
+- 此问题影响反向代理设置下的所有 OAuth 提供商
+- 经常在 Casdoor、Auth0、Google OAuth 和 GitHub OAuth 中报告
+- 类似于问题 [#5876](https://github.com/lobehub/lobe-chat/issues/5876)、[#7170](https://github.com/lobehub/lobe-chat/issues/7170) 和 [#7221](https://github.com/lobehub/lobe-chat/issues/7221)
+
+## 附加说明
+
+- 此设置仅影响中间件中的 URL 重写行为
+- 将其设置为 `0` 是安全的，建议用于反向代理部署
+- 默认值 `1` 适用于没有外部代理的容器化环境
+- 更改此设置不会造成数据丢失
