@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
-    "./node": "./src/node.ts"
+    "./node": "./src/node.ts",
+    "./api": "./src/api.ts",
+    "./trpc": "./src/trpc/index.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
@@ -18,8 +20,6 @@
     "@opentelemetry/sdk-node": "^0.207.0",
     "@opentelemetry/sdk-trace-node": "^2.0.1",
     "@opentelemetry/semantic-conventions": "^1.36.0",
-    "@vercel/otel": "^1.13.0",
-    "import-in-the-middle": "^1.14.2",
-    "require-in-the-middle": "^7.5.2"
+    "@vercel/otel": "^1.13.0"
   }
 }

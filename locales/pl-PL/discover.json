@@ -41,9 +41,29 @@
         "openingMessage": "Wiadomość powitalna",
         "openingQuestions": "Pytania wstępne",
         "title": "Ustawienia asystenta"
+      },
+      "version": {
+        "empty": "Brak dostępnych wersji historycznych",
+        "status": {
+          "archived": "Zarchiwizowano",
+          "deprecated": "Odrzucono",
+          "unpublished": "W trakcie przeglądu"
+        },
+        "table": {
+          "isLatest": "Najnowsza wersja",
+          "isValidated": "Zweryfikowano",
+          "publishAt": "Data publikacji",
+          "version": "Wersja"
+        },
+        "title": "Historia wersji"
       }
     },
     "list": "Lista asystentów",
+    "marketSource": {
+      "label": "Przełącz źródło rynku",
+      "legacy": "Stary rynek",
+      "new": "Nowy rynek"
+    },
     "more": "Więcej",
     "plugins": "Zintegrowane wtyczki",
     "recentSubmits": "Ostatnie aktualizacje",
@@ -51,9 +71,34 @@
       "createdAt": "Najnowsze publikacje",
       "identifier": "ID asystenta",
       "knowledgeCount": "Liczba baz wiedzy",
+      "myown": "Zobacz moje",
       "pluginCount": "Liczba wtyczek",
       "title": "Nazwa asystenta",
       "tokenUsage": "Zużycie tokenów"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "Asystent został usunięty przez administratorów z powodu problemów z bezpieczeństwem lub polityką",
+          "owner": "Właściciel asystenta samodzielnie go usunął lub zarchiwizował"
+        },
+        "subtitle": "Asystent, którego próbujesz odwiedzić, został zarchiwizowany z jednego z poniższych powodów:",
+        "title": "Asystent został zarchiwizowany"
+      },
+      "backToMarket": "Powrót do rynku asystentów",
+      "deprecated": {
+        "reasons": {
+          "official": "Asystent został usunięty przez administratorów z powodu problemów z bezpieczeństwem lub polityką",
+          "owner": "Właściciel asystenta samodzielnie go usunął lub odrzucił"
+        },
+        "subtitle": "Asystent, którego próbujesz odwiedzić, został odrzucony z jednego z poniższych powodów:",
+        "title": "Asystent został odrzucony"
+      },
+      "support": "W przypadku jakichkolwiek problemów skopiuj link i wyślij zapytanie na adres <1>support@lobehub.com</1>.",
+      "unpublished": {
+        "subtitle": "Asystent, którego próbujesz odwiedzić, jest obecnie w trakcie przeglądu wersji. W razie pytań skopiuj link i wyślij zapytanie na adres <1>support@lobehub.com</1>.",
+        "title": "Asystent w trakcie przeglądu"
+      }
     },
     "suggestions": "Podobne rekomendacje",
     "systemRole": "Ustawienia asystenta",

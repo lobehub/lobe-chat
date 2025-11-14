@@ -41,9 +41,29 @@
         "openingMessage": "開場訊息",
         "openingQuestions": "開場問題",
         "title": "助理設定"
+      },
+      "version": {
+        "empty": "暫無歷史版本",
+        "status": {
+          "archived": "已封存",
+          "deprecated": "已拒絕",
+          "unpublished": "審核中"
+        },
+        "table": {
+          "isLatest": "最新版本",
+          "isValidated": "已驗證",
+          "publishAt": "發佈日期",
+          "version": "版本號"
+        },
+        "title": "版本歷史"
       }
     },
     "list": "助手列表",
+    "marketSource": {
+      "label": "切換市集來源",
+      "legacy": "舊市集",
+      "new": "新市集"
+    },
     "more": "更多",
     "plugins": "集成插件",
     "recentSubmits": "最近更新",
@@ -51,9 +71,34 @@
       "createdAt": "最近發布",
       "identifier": "助理 ID",
       "knowledgeCount": "知識庫數量",
+      "myown": "查看我的",
       "pluginCount": "外掛數量",
       "title": "助理名稱",
       "tokenUsage": "Token 使用量"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "助手因安全／政治等問題被官方下架",
+          "owner": "開發助手的擁有者主動下架／封存該助手"
+        },
+        "subtitle": "當前訪問的助手已因以下可能原因被封存：",
+        "title": "助手已被封存"
+      },
+      "backToMarket": "返回助手市集",
+      "deprecated": {
+        "reasons": {
+          "official": "助手因安全／政治等問題被官方下架",
+          "owner": "開發助手的擁有者主動下架／拒絕該助手"
+        },
+        "subtitle": "當前訪問的助手已因以下可能原因被拒絕：",
+        "title": "助手已被拒絕"
+      },
+      "support": "如有任何問題，請複製連結並發送至 <1>support@lobehub.com</1> 進行諮詢。",
+      "unpublished": {
+        "subtitle": "當前訪問的助手正在進行版本審核中，如有疑問請複製連結並發送問題至 <1>support@lobehub.com</1> 進行諮詢。",
+        "title": "助手正在審核中"
+      }
     },
     "suggestions": "相關推薦",
     "systemRole": "助手設定",

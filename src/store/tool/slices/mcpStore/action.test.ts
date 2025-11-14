@@ -20,6 +20,44 @@ vi.mock('@/utils/sleep', () => ({
   sleep: vi.fn().mockResolvedValue(undefined),
 }));
 
+const ORIGINAL_DESKTOP_ENV = process.env.NEXT_PUBLIC_IS_DESKTOP_APP;
+
+const bootstrapToolStoreWithDesktop = async (isDesktopEnv: boolean) => {
+  vi.resetModules();
+  vi.mock('zustand/traditional');
+  process.env.NEXT_PUBLIC_IS_DESKTOP_APP = isDesktopEnv ? '1' : '0';
+
+  vi.doMock('@lobechat/const', async () => {
+    const actual = await vi.importActual<typeof import('@lobechat/const')>('@lobechat/const');
+    return {
+      ...actual,
+      isDesktop: isDesktopEnv,
+    };
+  });
+
+  const storeModule = await import('@/store/tool');
+  const discoverModule = await import('@/services/discover');
+  const helpersModule = await import('@/store/global/helpers');
+
+  const cleanup = () => {
+    vi.resetModules();
+    vi.doUnmock('@lobechat/const');
+    vi.mock('zustand/traditional');
+    if (ORIGINAL_DESKTOP_ENV === undefined) {
+      delete process.env.NEXT_PUBLIC_IS_DESKTOP_APP;
+    } else {
+      process.env.NEXT_PUBLIC_IS_DESKTOP_APP = ORIGINAL_DESKTOP_ENV;
+    }
+  };
+
+  return {
+    useToolStore: storeModule.useToolStore,
+    discoverService: discoverModule.discoverService,
+    globalHelpers: helpersModule.globalHelpers,
+    cleanup,
+  };
+};
+
 beforeEach(() => {
   vi.clearAllMocks();
 
@@ -46,6 +84,14 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+});
+
+afterAll(() => {
+  if (ORIGINAL_DESKTOP_ENV === undefined) {
+    delete process.env.NEXT_PUBLIC_IS_DESKTOP_APP;
+  } else {
+    process.env.NEXT_PUBLIC_IS_DESKTOP_APP = ORIGINAL_DESKTOP_ENV;
+  }
 });
 
 describe('mcpStore actions', () => {
@@ -487,7 +533,9 @@ describe('mcpStore actions', () => {
         expect(result.current.data).toEqual(mockData);
       });
 
-      expect(discoverService.getMCPPluginList).toHaveBeenCalledWith({ page: 1, pageSize: 20 });
+      expect(discoverService.getMCPPluginList).toHaveBeenCalledWith(
+        expect.objectContaining({ page: 1, pageSize: 20, connectionType: 'http' }),
+      );
 
       const state = useToolStore.getState();
       expect(state.mcpPluginItems).toEqual(mockData.items);
@@ -542,7 +590,9 @@ describe('mcpStore actions', () => {
       renderHook(() => useToolStore.getState().useFetchMCPPluginList(params));
 
       await waitFor(() => {
-        expect(discoverService.getMCPPluginList).toHaveBeenCalledWith(params);
+        expect(discoverService.getMCPPluginList).toHaveBeenCalledWith(
+          expect.objectContaining({ ...params, connectionType: 'http' }),
+        );
       });
     });
 
@@ -561,8 +611,50 @@ describe('mcpStore actions', () => {
       renderHook(() => useToolStore.getState().useFetchMCPPluginList(params));
 
       await waitFor(() => {
-        expect(discoverService.getMCPPluginList).toHaveBeenCalledWith(params);
+        expect(discoverService.getMCPPluginList).toHaveBeenCalledWith(
+          expect.objectContaining({ ...params, connectionType: 'http' }),
+        );
       });
+    });
+
+    it('should not append connectionType in desktop environment', async () => {
+      const {
+        useToolStore: desktopStore,
+        discoverService: desktopDiscoverService,
+        globalHelpers: desktopGlobalHelpers,
+        cleanup,
+      } = await bootstrapToolStoreWithDesktop(true);
+
+      const mockData = {
+        items: [{ identifier: 'desktop-plugin', name: 'Desktop Plugin' }] as PluginItem[],
+        categories: [],
+        totalCount: 1,
+        totalPages: 1,
+        currentPage: 1,
+        pageSize: 20,
+      };
+
+      try {
+        vi.spyOn(desktopGlobalHelpers, 'getCurrentLanguage').mockReturnValue('en-US');
+        const fetchSpy = vi
+          .spyOn(desktopDiscoverService, 'getMCPPluginList')
+          .mockResolvedValue(mockData);
+
+        const { result } = renderHook(() =>
+          desktopStore.getState().useFetchMCPPluginList({ page: 1, pageSize: 20 }),
+        );
+
+        await waitFor(() => {
+          expect(result.current.data).toEqual(mockData);
+        });
+
+        expect(fetchSpy).toHaveBeenCalledTimes(1);
+        const [firstCallArgs] = fetchSpy.mock.calls[0];
+        expect(firstCallArgs).toMatchObject({ page: 1, pageSize: 20 });
+        expect(firstCallArgs.connectionType).toBeUndefined();
+      } finally {
+        cleanup();
+      }
     });
   });
 

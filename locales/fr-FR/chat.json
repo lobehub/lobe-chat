@@ -173,6 +173,7 @@
     "title": "Mentionner un membre"
   },
   "messageAction": {
+    "continueGeneration": "Continuer la génération",
     "delAndRegenerate": "Supprimer et régénérer",
     "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
     "regenerate": "Régénérer"
@@ -239,6 +240,7 @@
   "noMatchingAgents": "Aucun membre correspondant trouvé",
   "noMembersYet": "Ce groupe n'a pas encore de membres. Cliquez sur le bouton + pour inviter des assistants.",
   "noSelectedAgents": "Aucun membre sélectionné",
+  "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
   "owner": "Propriétaire du groupe",
   "pin": "Épingler",
   "pinOff": "Désépingler",
@@ -366,6 +368,26 @@
     "overload": "Dépassement de limite",
     "remained": "Restant",
     "used": "Utilisé"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Approuver",
+      "approveAndRemember": "Approuver et mémoriser",
+      "approveOnce": "Approuver une seule fois",
+      "mode": {
+        "allowList": "Liste blanche",
+        "allowListDesc": "Exécuter automatiquement uniquement les outils approuvés",
+        "autoRun": "Exécution automatique",
+        "autoRunDesc": "Approuver automatiquement l'exécution de tous les outils",
+        "manual": "Manuel",
+        "manualDesc": "Chaque appel nécessite une approbation manuelle"
+      },
+      "reject": "Rejeter",
+      "rejectReasonPlaceholder": "Saisir une raison de rejet aidera l'agent à comprendre et à améliorer ses actions futures",
+      "rejectTitle": "Rejeter cet appel d'outil",
+      "rejectedWithReason": "Cet appel d'outil a été rejeté volontairement : {{reason}}",
+      "toolRejected": "Cet appel d'outil a été rejeté volontairement"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",

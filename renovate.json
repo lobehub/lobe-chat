@@ -17,48 +17,39 @@
   "ignoreDeps": [],
   "labels": ["dependencies"],
   "packageRules": [
-    // 1) Pinned deps: isolate (OK to use separate* here because there's no matchUpdateTypes)
     {
-      "description": "Isolate PRs for pinned deps (exact x.y.z)",
+      "description": "Un-group tilde ranges",
       "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchDepTypes": [
-        "dependencies",
-        "devDependencies",
-        "optionalDependencies",
-        "peerDependencies"
-      ],
-      "matchCurrentValue": "^\\d+\\.\\d+\\.\\d+([+-][0-9A-Za-z.-]+)?$",
+      "matchCurrentValue": "^~.*$",
       "groupName": null,
-      "separateMinorPatch": true,
-      "separateMajorMinor": true
+      "groupSlug": null,
+      "separateMajorMinor": true,
+      "separateMinorPatch": true
     },
-    // 2a) Non-pinned deps: override splitting so patch+minor can be combined
     {
-      "description": "Non-pinned deps: allow patch+minor to group; keep majors separate",
+      "description": "Un-group pinned deps (exact x.y.z)",
       "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchDepTypes": [
-        "dependencies",
-        "devDependencies",
-        "optionalDependencies",
-        "peerDependencies"
-      ],
-      "matchCurrentValue": "/(^[~^]|[<>=| -])/", // anything that looks like a range
-      "separateMinorPatch": false,
-      "separateMajorMinor": true
+      "matchCurrentValue": "/^\\d+\\.\\d+\\.\\d+([+-][0-9A-Za-z.-]+)?$/",
+      "groupName": null,
+      "groupSlug": null,
+      "separateMajorMinor": true,
+      "separateMinorPatch": true
     },
-    // 2b) Non-pinned deps: actually group patch+minor together
     {
-      "description": "Non-pinned deps: group non-major updates",
+      "description": "Un-group experimental caret ranges (^0.x)",
       "matchManagers": ["npm", "pnpm", "yarn", "bun"],
-      "matchDepTypes": [
-        "dependencies",
-        "devDependencies",
-        "optionalDependencies",
-        "peerDependencies"
-      ],
-      "matchCurrentValue": "/(^[~^]|[<>=| -])/",
-      "matchUpdateTypes": ["minor", "patch"], // only non-majors
-      "groupName": "deps (non-major)"
+      "matchCurrentValue": "^\\^0\\.\\d+(\\.\\d+)?([+-][0-9A-Za-z.-]+)?$",
+      "groupName": null,
+      "separateMajorMinor": true,
+      "separateMinorPatch": true
+    },
+    {
+      "description": "Group ^>=1 ranges for patch/minor",
+      "matchManagers": ["npm", "pnpm", "yarn", "bun"],
+      "matchCurrentValue": "/^\\^[1-9]+[0-9]*(\\.\\d+){0,2}([+-][0-9A-Za-z.-]+)?$/",
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-non-major-dependencies"
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],
@@ -67,7 +58,7 @@
   "rangeStrategy": "bump",
   "rebaseWhen": "conflicted",
   "schedule": "on sunday before 6:00am",
+  "separateMinorPatch": false,
   "separateMajorMinor": true,
-  "separateMultipleMajor": true,
   "timezone": "UTC"
 }

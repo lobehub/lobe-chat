@@ -256,6 +256,31 @@ export class SessionModel {
         if (existResult) return existResult;
       }
 
+      // Extract and properly map fields for agent creation from DiscoverAssistantDetail
+      const {
+        // MetaData fields (from discover assistant)
+        title,
+        description,
+        tags = [],
+        avatar,
+        backgroundColor,
+        // LobeAgentConfig fields
+        model,
+        params,
+        systemRole,
+        provider,
+        plugins = [],
+        openingMessage,
+        openingQuestions = [],
+        // TTS config
+        tts,
+        // Chat config
+        chatConfig,
+        // Field name mapping
+        examples, // maps to fewShots
+        identifier, // maps to marketIdentifier
+        marketIdentifier,
+      } = config as any;
       if (type === 'group') {
         const result = await trx
           .insert(sessions)
@@ -276,9 +301,24 @@ export class SessionModel {
       const newAgents = await trx
         .insert(agents)
         .values({
-          ...config,
+          avatar,
+          backgroundColor,
+          chatConfig: chatConfig || {},
           createdAt: new Date(),
+          description,
+          fewShots: examples || null, // Map examples to fewShots field
           id: idGenerator('agents'),
+          marketIdentifier: identifier || marketIdentifier,
+          model: typeof model === 'string' ? model : null,
+          openingMessage,
+          openingQuestions,
+          params: params || {},
+          plugins,
+          provider,
+          systemRole,
+          tags,
+          title,
+          tts: tts || {},
           updatedAt: new Date(),
           userId: this.userId,
         })
@@ -595,6 +635,7 @@ export class SessionModel {
         avatar: agent?.avatar ?? avatar ?? undefined,
         backgroundColor: agent?.backgroundColor ?? backgroundColor ?? undefined,
         description: agent?.description ?? description ?? undefined,
+        marketIdentifier: agent?.marketIdentifier ?? undefined,
         tags: agent?.tags ?? undefined,
         title: agent?.title ?? title ?? undefined,
       },

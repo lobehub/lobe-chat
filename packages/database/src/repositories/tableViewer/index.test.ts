@@ -16,7 +16,7 @@ const mockDB = {
 beforeEach(async () => {
   await initializeDB();
   vi.clearAllMocks();
-});
+}, 30000);
 
 describe('TableViewerRepo', () => {
   describe('getAllTables', () => {

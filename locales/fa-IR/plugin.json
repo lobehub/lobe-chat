@@ -255,10 +255,11 @@
       "moveLocalFiles": "جابجایی فایل‌ها",
       "readLocalFile": "خواندن محتوای فایل",
       "renameLocalFile": "تغییر نام",
+      "runCommand": "اجرای کد",
       "searchLocalFiles": "جستجوی فایل‌ها",
       "writeLocalFile": "نوشتن در فایل"
     },
-    "title": "فایل‌های محلی"
+    "title": "سیستم محلی"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "در حال بررسی محیط نصب...",

@@ -21,6 +21,7 @@ jobs:
           - python-interpreter
           - context-engine
           - agent-runtime
+          - conversation-flow
 
     name: Test package ${{ matrix.package }}
 

@@ -64,10 +64,10 @@ export const formatShortenNumber = (num: any) => {
   if (!num && num !== 0) return '--';
   if (!isNumber(num)) return num;
 
-  // 使用Intl.NumberFormat来添加千分号
+  // Use Intl.NumberFormat to add thousand separators
   const formattedWithComma = new Intl.NumberFormat('en-US').format(num);
 
-  // 格式化为 K 或 M
+  // Format as K or M
   if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1) + 'M';
   } else if (num >= 10_000) {

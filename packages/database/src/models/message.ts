@@ -7,15 +7,14 @@ import {
   ChatTranslate,
   ChatVideoItem,
   CreateMessageParams,
-  CreateMessageResult,
   DBMessageItem,
+  MessagePluginItem,
   ModelRankItem,
   NewMessageQueryParams,
   QueryMessageParams,
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
-  UpdateMessageResult,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
@@ -25,7 +24,6 @@ import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
 import {
-  MessagePluginItem,
   chunks,
   documents,
   embeddings,
@@ -41,7 +39,6 @@ import {
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
-import { groupAssistantMessages } from '../utils/groupMessages';
 import { idGenerator } from '../utils/idGenerator';
 
 export class MessageModel {
@@ -100,6 +97,7 @@ export class MessageModel {
           type: messagePlugins.type,
         },
         pluginError: messagePlugins.error,
+        pluginIntervention: messagePlugins.intervention,
         pluginState: messagePlugins.state,
 
         translate: {
@@ -215,7 +213,7 @@ export class MessageModel {
       .from(messageQueries)
       .where(inArray(messageQueries.messageId, messageIds));
 
-    const mappedMessages = result.map(
+    return result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
@@ -224,12 +222,12 @@ export class MessageModel {
             .filter((relation) => relation.messageId === item.id)
             .map((c) => ({
               ...c,
-              similarity: Number(c.similarity) ?? undefined,
+              similarity: c.similarity === null ? undefined : Number(c.similarity),
             })),
 
           extra: {
-            fromModel: model,
-            fromProvider: provider,
+            model: model,
+            provider: provider,
             translate,
             tts: ttsId
               ? {
@@ -269,10 +267,6 @@ export class MessageModel {
         } as unknown as UIChatMessage;
       },
     );
-
-    // Group assistant messages with their tool results
-    const { groupAssistantMessages: useGroup = false } = options;
-    return useGroup ? groupAssistantMessages(mappedMessages) : mappedMessages;
   };
 
   findById = async (id: string) => {
@@ -428,7 +422,7 @@ export class MessageModel {
     for (const item of result) {
       if (item?.date) {
         const dateStr = dayjs(item.date as string).format('YYYY-MM-DD');
-        dateCountMap.set(dateStr, Number(item.count) || 0);
+        dateCountMap.set(dateStr, item.count);
       }
     }
 
@@ -465,10 +459,11 @@ export class MessageModel {
 
   create = async (
     {
-      fromModel,
-      fromProvider,
+      model: fromModel,
+      provider: fromProvider,
       files,
       plugin,
+      pluginIntervention,
       pluginState,
       fileChunks,
       ragQueryId,
@@ -503,6 +498,7 @@ export class MessageModel {
           arguments: plugin?.arguments,
           id,
           identifier: plugin?.identifier,
+          intervention: pluginIntervention,
           state: pluginState,
           toolCallId: message.tool_call_id,
           type: plugin?.type,
@@ -532,54 +528,6 @@ export class MessageModel {
     });
   };
 
-  /**
-   * Create a new message and return the complete message list
-   *
-   * This method combines message creation and querying into a single operation,
-   * reducing the need for separate refresh calls and improving performance.
-   *
-   * @param params - Message creation parameters
-   * @param options - Query options for post-processing
-   * @returns Object containing the created message ID and full message list
-   *
-   * @example
-   * const { id, messages } = await messageModel.createNewMessage({
-   *   role: 'assistant',
-   *   content: 'Hello',
-   *   tools: [...],
-   *   sessionId: 'session-1',
-   * });
-   * // messages already contains grouped structure, no need to refresh
-   */
-  createNewMessage = async (
-    params: CreateMessageParams,
-    options: {
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-    } = {},
-  ): Promise<CreateMessageResult> => {
-    // 1. Create the message (reuse existing create method)
-    const item = await this.create(params);
-
-    // 2. Query all messages for this session/topic
-    // query() method internally applies groupAssistantMessages transformation
-    const messages = await this.query(
-      {
-        current: 0,
-        groupId: params.groupId,
-        pageSize: 9999,
-        sessionId: params.sessionId,
-        topicId: params.topicId, // Get all messages
-      },
-      { ...options, groupAssistantMessages: true },
-    );
-
-    // 3. Return the result
-    return {
-      id: item.id,
-      messages,
-    };
-  };
-
   batchCreate = async (newMessages: DBMessageItem[]) => {
     const messagesToInsert = newMessages.map((m) => {
       // TODO: need a better way to handle this
@@ -602,12 +550,7 @@ export class MessageModel {
   update = async (
     id: string,
     { imageList, ...message }: Partial<UpdateMessageParams>,
-    options?: {
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-      sessionId?: string | null;
-      topicId?: string | null;
-    },
-  ): Promise<UpdateMessageResult> => {
+  ): Promise<{ success: boolean }> => {
     try {
       await this.db.transaction(async (trx) => {
         // 1. insert message files
@@ -624,21 +567,6 @@ export class MessageModel {
           .set({ ...message })
           .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
       });
-
-      // if sessionId or topicId provided, return the updated message list
-      if (options?.sessionId !== undefined || options?.topicId !== undefined) {
-        const messageList = await this.query(
-          {
-            sessionId: options.sessionId,
-            topicId: options.topicId,
-          },
-          {
-            postProcessUrl: options.postProcessUrl,
-          },
-        );
-
-        return { messages: messageList, success: true };
-      }
 
       return { success: true };
     } catch (error) {
@@ -660,13 +588,13 @@ export class MessageModel {
       .where(and(eq(messages.userId, this.userId), eq(messages.id, id)));
   };
 
-  updatePluginState = async (id: string, state: Record<string, any>) => {
+  updatePluginState = async (id: string, state: Record<string, any>): Promise<void> => {
     const item = await this.db.query.messagePlugins.findFirst({
       where: eq(messagePlugins.id, id),
     });
     if (!item) throw new Error('Plugin not found');
 
-    return this.db
+    await this.db
       .update(messagePlugins)
       .set({ state: merge(item.state || {}, state) })
       .where(eq(messagePlugins.id, id));

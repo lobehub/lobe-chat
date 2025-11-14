@@ -8,10 +8,9 @@ import { resourceFromAttributes } from '@opentelemetry/resources';
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
+import { env } from 'node:process';
 
-
-
-export function register(options?: { debug?: true | DiagLogLevel, version?: string; }) {
+export function register(options?: { debug?: true | DiagLogLevel; version?: string }) {
   const attributes: Record<string, string> = {
     [ATTR_SERVICE_NAME]: 'lobe-chat',
   };
@@ -25,15 +24,26 @@ export function register(options?: { debug?: true | DiagLogLevel, version?: stri
     );
   }
 
+  let metricsExporterInterval = 1000;
+  if (env.OTEL_METRICS_EXPORTER_INTERVAL) {
+    const parsed = parseInt(env.OTEL_METRICS_EXPORTER_INTERVAL, 10);
+    if (!isNaN(parsed)) {
+      metricsExporterInterval = parsed;
+    }
+  }
+
   const sdk = new NodeSDK({
     instrumentations: [
       new PgInstrumentation(),
       new HttpInstrumentation(),
       getNodeAutoInstrumentations(),
     ],
-    metricReader: new PeriodicExportingMetricReader({
-      exporter: new OTLPMetricExporter(),
-    }),
+    metricReaders: [
+      new PeriodicExportingMetricReader({
+        exportIntervalMillis: metricsExporterInterval,
+        exporter: new OTLPMetricExporter(),
+      }),
+    ],
     resource: resourceFromAttributes(attributes),
     traceExporter: new OTLPTraceExporter(),
   });
@@ -41,4 +51,4 @@ export function register(options?: { debug?: true | DiagLogLevel, version?: stri
   sdk.start();
 }
 
-export {DiagLogLevel} from '@opentelemetry/api';
+export { DiagLogLevel } from '@opentelemetry/api';

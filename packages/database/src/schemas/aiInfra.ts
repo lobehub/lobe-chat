@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { boolean, integer, jsonb, pgTable, primaryKey, text, varchar } from 'drizzle-orm/pg-core';
+import { AiModelSettings } from 'model-bank';
 
 import { AiProviderConfig, AiProviderSettings } from '@/types/aiProvider';
 
@@ -64,6 +65,7 @@ export const aiModels = pgTable(
     contextWindowTokens: integer('context_window_tokens'),
     source: varchar('source', { enum: ['remote', 'custom', 'builtin'], length: 20 }),
     releasedAt: varchar('released_at', { length: 10 }),
+    settings: jsonb('settings').default({}).$type<AiModelSettings>(),
 
     ...timestamps,
   },

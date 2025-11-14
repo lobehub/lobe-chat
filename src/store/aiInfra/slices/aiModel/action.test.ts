@@ -101,7 +101,7 @@ describe('AiModelAction', () => {
         .mockResolvedValue(undefined);
       const serviceSpy = vi
         .spyOn(aiModelService, 'batchUpdateAiModels')
-        .mockResolvedValue(undefined);
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.batchUpdateAiModels(models);
@@ -119,7 +119,7 @@ describe('AiModelAction', () => {
       const { result } = renderHook(() => useStore());
       const serviceSpy = vi
         .spyOn(aiModelService, 'batchUpdateAiModels')
-        .mockResolvedValue(undefined);
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.batchUpdateAiModels([]);
@@ -137,7 +137,7 @@ describe('AiModelAction', () => {
         .mockResolvedValue(undefined);
       const serviceSpy = vi
         .spyOn(aiModelService, 'clearModelsByProvider')
-        .mockResolvedValue(undefined);
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.clearModelsByProvider('test-provider');
@@ -154,7 +154,9 @@ describe('AiModelAction', () => {
       const refreshSpy = vi
         .spyOn(result.current, 'refreshAiModelList')
         .mockResolvedValue(undefined);
-      const serviceSpy = vi.spyOn(aiModelService, 'clearRemoteModels').mockResolvedValue(undefined);
+      const serviceSpy = vi
+        .spyOn(aiModelService, 'clearRemoteModels')
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.clearRemoteModels('test-provider');
@@ -178,7 +180,9 @@ describe('AiModelAction', () => {
       const refreshSpy = vi
         .spyOn(result.current, 'refreshAiModelList')
         .mockResolvedValue(undefined);
-      const serviceSpy = vi.spyOn(aiModelService, 'createAiModel').mockResolvedValue(undefined);
+      const serviceSpy = vi
+        .spyOn(aiModelService, 'createAiModel')
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.createNewAiModel(params);
@@ -349,7 +353,9 @@ describe('AiModelAction', () => {
       const refreshSpy = vi
         .spyOn(result.current, 'refreshAiModelList')
         .mockResolvedValue(undefined);
-      const serviceSpy = vi.spyOn(aiModelService, 'deleteAiModel').mockResolvedValue(undefined);
+      const serviceSpy = vi
+        .spyOn(aiModelService, 'deleteAiModel')
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.removeAiModel('model-1', 'test-provider');
@@ -371,7 +377,7 @@ describe('AiModelAction', () => {
         .mockResolvedValue(undefined);
       const serviceSpy = vi
         .spyOn(aiModelService, 'toggleModelEnabled')
-        .mockResolvedValue(undefined);
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.toggleModelEnabled({ enabled: true, id: 'model-1' });
@@ -395,7 +401,7 @@ describe('AiModelAction', () => {
       const { result } = renderHook(() => useStore());
       const serviceSpy = vi
         .spyOn(aiModelService, 'toggleModelEnabled')
-        .mockResolvedValue(undefined);
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.toggleModelEnabled({ enabled: true, id: 'model-1' });
@@ -435,7 +441,9 @@ describe('AiModelAction', () => {
       const refreshSpy = vi
         .spyOn(result.current, 'refreshAiModelList')
         .mockResolvedValue(undefined);
-      const serviceSpy = vi.spyOn(aiModelService, 'updateAiModel').mockResolvedValue(undefined);
+      const serviceSpy = vi
+        .spyOn(aiModelService, 'updateAiModel')
+        .mockResolvedValue(undefined as any);
 
       await act(async () => {
         await result.current.updateAiModelsConfig('model-1', 'test-provider', updateData);

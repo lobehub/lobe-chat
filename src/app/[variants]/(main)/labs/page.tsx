@@ -24,13 +24,11 @@ const LabsPage = memo(() => {
   const [
     isPreferenceInit,
     enableInputMarkdown,
-    // enableAssistantMessageGroup,
     // enableGroupChat,
     updateLab,
   ] = useUserStore((s) => [
     preferenceSelectors.isPreferenceInit(s),
     labPreferSelectors.enableInputMarkdown(s),
-    // labPreferSelectors.enableAssistantMessageGroup(s),
     // labPreferSelectors.enableGroupChat(s),
     s.updateLab,
   ]);
@@ -43,12 +41,6 @@ const LabsPage = memo(() => {
       key: 'enableInputMarkdown',
       title: t('features.inputMarkdown.title'),
     },
-    // {
-    //   checked: enableAssistantMessageGroup,
-    //   desc: t('features.assistantMessageGroup.desc'),
-    //   key: 'enableAssistantMessageGroup',
-    //   title: t('features.assistantMessageGroup.title'),
-    // },
     // {
     //   checked: enableGroupChat,
     //   cover: 'https://github.com/user-attachments/assets/72894d24-a96a-4d7c-a823-ff9e6a1a8b6d',

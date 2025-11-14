@@ -1,3 +1,4 @@
+import { getMessageError } from '@lobechat/fetch-sse';
 import { ChatMessageError } from '@lobechat/types';
 import { getRecordMineType } from '@lobehub/tts';
 import { OpenAISTTOptions, useOpenAISTT } from '@lobehub/tts/react';
@@ -16,7 +17,6 @@ import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { getMessageError } from '@/utils/fetch';
 
 import CommonSTT from './common';
 
@@ -53,9 +53,9 @@ const OpenaiSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [error, setError] = useState<ChatMessageError>();
   const { t } = useTranslation('chat');
 
-  const [loading, updateInputMessage] = useChatStore((s) => [
+  const [loading, updateMessageInput] = useChatStore((s) => [
     messageStateSelectors.isAIGenerating(s),
-    s.updateInputMessage,
+    s.updateMessageInput,
   ]);
 
   const setDefaultError = useCallback(
@@ -87,7 +87,7 @@ const OpenaiSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
     },
     onTextChange: (text) => {
       if (loading) stop();
-      if (text) updateInputMessage(text);
+      if (text) updateMessageInput(text);
     },
   });
 

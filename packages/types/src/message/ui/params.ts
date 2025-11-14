@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { UploadFileItem } from '../../files';
 import { MessageSemanticSearchChunk } from '../../rag';
 import { ChatMessageError, ChatMessageErrorSchema } from '../common/base';
-import { ChatPluginPayload } from '../common/tools';
+import { ChatPluginPayload, ToolInterventionSchema } from '../common/tools';
 import { UIChatMessage } from './chat';
 import { SemanticSearchChunkSchema } from './rag';
 
@@ -16,8 +16,8 @@ export interface CreateMessageParams
   error?: ChatMessageError | null;
   fileChunks?: MessageSemanticSearchChunk[];
   files?: string[];
-  fromModel?: string;
-  fromProvider?: string;
+  model?: string;
+  provider?: string;
   groupId?: string;
   role: CreateMessageRoleType;
   sessionId: string;
@@ -120,55 +120,6 @@ const ChatPluginPayloadSchema = z.object({
   type: z.string(),
 });
 
-export const CreateMessageParamsSchema = z
-  .object({
-    content: z.string(),
-    role: UIMessageRoleTypeSchema,
-    sessionId: z.string().nullable().optional(),
-    error: ChatMessageErrorSchema.nullable().optional(),
-    fileChunks: z.array(SemanticSearchChunkSchema).optional(),
-    files: z.array(z.string()).optional(),
-    fromModel: z.string().optional(),
-    fromProvider: z.string().optional(),
-    groupId: z.string().nullable().optional(),
-    targetId: z.string().nullable().optional(),
-    threadId: z.string().nullable().optional(),
-    topicId: z.string().nullable().optional(),
-    traceId: z.string().optional(),
-    // Allow additional fields from UIChatMessage (many can be null)
-    agentId: z.string().optional(),
-    children: z.any().optional(),
-    chunksList: z.any().optional(),
-    createdAt: z.number().optional(),
-    extra: z.any().optional(),
-    favorite: z.boolean().optional(),
-    fileList: z.any().optional(),
-    id: z.string().optional(),
-    imageList: z.any().optional(),
-    meta: z.any().optional(),
-    metadata: z.any().nullable().optional(),
-    model: z.string().nullable().optional(),
-    observationId: z.string().optional(),
-    parentId: z.string().optional(),
-    performance: z.any().optional(),
-    plugin: z.any().optional(),
-    pluginError: z.any().optional(),
-    pluginState: z.any().optional(),
-    provider: z.string().nullable().optional(),
-    quotaId: z.string().optional(),
-    ragQuery: z.string().nullable().optional(),
-    ragQueryId: z.string().nullable().optional(),
-    reasoning: z.any().optional(),
-    search: z.any().optional(),
-    tool_call_id: z.string().optional(),
-    toolCalls: z.any().optional(),
-    tools: z.any().optional(),
-    translate: z.any().optional(),
-    tts: z.any().optional(),
-    updatedAt: z.number().optional(),
-  })
-  .passthrough();
-
 export const CreateNewMessageParamsSchema = z
   .object({
     // Required fields
@@ -197,3 +148,17 @@ export const CreateNewMessageParamsSchema = z
     fileChunks: z.array(SemanticSearchChunkSchema).optional(),
   })
   .passthrough();
+
+export const UpdateMessagePluginSchema = z.object({
+  id: z.string().optional(),
+  toolCallId: z.string().optional(),
+  type: z.string().optional(),
+  intervention: ToolInterventionSchema.optional(),
+  apiName: z.string().optional(),
+  arguments: z.string().optional(),
+  identifier: z.string().optional(),
+  state: z.any().optional(),
+  error: z.any().optional(),
+  clientId: z.string().optional(),
+  userId: z.string().optional(),
+});
