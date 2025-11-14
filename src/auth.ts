@@ -17,6 +17,7 @@ export const auth = betterAuth({
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
   }),
+
   emailAndPassword: {
     autoSignIn: true,
     enabled: true,
@@ -33,7 +34,6 @@ export const auth = betterAuth({
       });
     },
   },
-
   emailVerification: {
     autoSignInAfterVerification: true,
     expiresIn: VERIFICATION_LINK_EXPIRES_IN,
@@ -48,6 +48,13 @@ export const auth = betterAuth({
         to: user.email,
         ...template,
       });
+    },
+  },
+
+  socialProviders: {
+    google: {
+      clientId: authEnv.GOOGLE_CLIENT_ID as string,
+      clientSecret: authEnv.GOOGLE_CLIENT_SECRET as string,
     },
   },
 

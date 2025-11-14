@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Button } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { Form, Input, type InputRef } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { message } from '@/components/AntdStaticMethods';
+import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { signIn } from '@/libs/better-auth/auth-client';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -31,6 +32,15 @@ const useStyles = createStyles(({ css, token }) => ({
     width: 360px;
     border: 1px solid ${token.colorBorder};
     border-radius: ${token.borderRadiusLG}px;
+  `,
+  divider: css`
+    flex: 1;
+    height: 1px;
+    background: ${token.colorBorder};
+  `,
+  dividerText: css`
+    font-size: 14px;
+    color: ${token.colorTextSecondary};
   `,
   emailDisplay: css`
     font-size: 14px;
@@ -78,6 +88,7 @@ export default function SignInPage() {
   const searchParams = useSearchParams();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
   const emailInputRef = useRef<InputRef>(null);
@@ -183,6 +194,21 @@ export default function SignInPage() {
     router.push(`/signup?${params.toString()}`);
   };
 
+  const handleGoogleSignIn = async () => {
+    setSocialLoading('google');
+    try {
+      const callbackUrl = searchParams.get('callbackUrl') || '/';
+      await signIn.social({
+        callbackURL: callbackUrl,
+        provider: 'google',
+      });
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      message.error(t('betterAuth.signin.socialError'));
+      setSocialLoading(null);
+    }
+  };
+
   return (
     <Flexbox align="center" justify="center" style={{ minHeight: '100vh' }}>
       <div className={styles.container}>
@@ -197,11 +223,33 @@ export default function SignInPage() {
             <>
               <p className={styles.subtitle}>{t('betterAuth.signin.emailStep.subtitle')}</p>
 
+              {/* Social Login Section */}
+              <Flexbox gap={12} style={{ marginTop: '2rem' }}>
+                <Button
+                  block
+                  icon={AuthIcons('google', 16)}
+                  loading={socialLoading === 'google'}
+                  onClick={handleGoogleSignIn}
+                  size="large"
+                >
+                  {t('betterAuth.signin.continueWithGoogle')}
+                </Button>
+
+                {/* Divider */}
+                <Flexbox align="center" gap={12} horizontal>
+                  <div className={styles.divider} />
+                  <span className={styles.dividerText}>
+                    {t('betterAuth.signin.orContinueWith')}
+                  </span>
+                  <div className={styles.divider} />
+                </Flexbox>
+              </Flexbox>
+
               <Form
                 form={form}
                 layout="vertical"
                 onFinish={handleCheckUser}
-                style={{ marginTop: '2rem' }}
+                style={{ marginTop: '0.5rem' }}
               >
                 <Form.Item
                   name="email"

@@ -69,6 +69,7 @@ export default {
     },
     signin: {
       backToEmail: '返回修改邮箱',
+      continueWithGoogle: '使用 Google 登录',
       emailPlaceholder: '请输入邮箱地址',
       emailStep: {
         subtitle: '请输入您的邮箱地址以继续',
@@ -77,11 +78,13 @@ export default {
       error: '登录失败，请检查邮箱和密码',
       nextStep: '下一步',
       noAccount: '还没有账号？',
+      orContinueWith: '或',
       passwordPlaceholder: '请输入密码',
       passwordStep: {
         subtitle: '请输入密码以继续',
       },
       signupLink: '立即注册',
+      socialError: '社交登录失败，请重试',
       submit: '登录',
     },
     signup: {

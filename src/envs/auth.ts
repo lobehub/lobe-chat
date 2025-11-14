@@ -16,6 +16,10 @@ declare global {
       NEXT_PUBLIC_BETTER_AUTH_URL?: string;
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION?: string;
 
+      // ===== Google OAuth (Better Auth) ===== //
+      GOOGLE_CLIENT_ID?: string;
+      GOOGLE_CLIENT_SECRET?: string;
+
       // ===== Next Auth ===== //
       NEXT_AUTH_SECRET?: string;
 
@@ -65,6 +69,10 @@ export const getAuthConfig = () => {
       // Better Auth
       BETTER_AUTH_SECRET: z.string().optional(),
 
+      // Google OAuth (Better Auth)
+      GOOGLE_CLIENT_ID: z.string().optional(),
+      GOOGLE_CLIENT_SECRET: z.string().optional(),
+
       // NEXT-AUTH
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
@@ -95,6 +103,10 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION:
         process.env.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION === '1',
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+
+      // Google OAuth (Better Auth)
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 
       // Next Auth
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',
