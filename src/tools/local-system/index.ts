@@ -186,6 +186,7 @@ export const LocalSystemManifest: BuiltinToolManifest = {
     {
       description:
         'Write content to a specific file. Input should be the file path and content. Overwrites existing file or creates a new one.',
+      humanIntervention: 'required',
       name: LocalSystemApiName.writeLocalFile,
       parameters: {
         properties: {

@@ -28,10 +28,12 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     const [approveLoading, setApproveLoading] = useState(false);
 
     const { assistantGroupId } = useGroupMessage();
-    const [approveToolIntervention, rejectToolIntervention] = useChatStore((s) => [
-      s.approveToolCalling,
-      s.rejectToolCalling,
-    ]);
+    const [approveToolIntervention, rejectToolIntervention, rejectAndContinueToolIntervention] =
+      useChatStore((s) => [
+        s.approveToolCalling,
+        s.rejectToolCalling,
+        s.rejectAndContinueToolCalling,
+      ]);
     const addToolToAllowList = useUserStore((s) => s.addToolToAllowList);
 
     const handleApprove = async (remember?: boolean) => {
@@ -58,6 +60,14 @@ const ApprovalActions = memo<ApprovalActionsProps>(
       setRejectReason('');
     };
 
+    const handleRejectAndContinue = async (reason?: string) => {
+      setRejectLoading(true);
+      await rejectAndContinueToolIntervention(messageId, reason);
+      setRejectLoading(false);
+      setRejectPopoverOpen(false);
+      setRejectReason('');
+    };
+
     return (
       <Flexbox gap={8} horizontal>
         <Popover
@@ -67,14 +77,25 @@ const ApprovalActions = memo<ApprovalActionsProps>(
               <Flexbox align={'center'} horizontal justify={'space-between'}>
                 <div>{t('tool.intervention.rejectTitle')}</div>
 
-                <Button
-                  loading={rejectLoading}
-                  onClick={() => handleReject(rejectReason)}
-                  size="small"
-                  type="primary"
-                >
-                  {t('confirm', { ns: 'common' })}
-                </Button>
+                <Space>
+                  <Button
+                    color={'default'}
+                    loading={rejectLoading}
+                    onClick={() => handleReject(rejectReason)}
+                    size="small"
+                    variant={'filled'}
+                  >
+                    {t('tool.intervention.rejectOnly')}
+                  </Button>
+                  <Button
+                    loading={rejectLoading}
+                    onClick={() => handleRejectAndContinue(rejectReason)}
+                    size="small"
+                    type="primary"
+                  >
+                    {t('tool.intervention.rejectAndContinue')}
+                  </Button>
+                </Space>
               </Flexbox>
               <Input.TextArea
                 autoFocus
@@ -95,7 +116,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
           placement="bottomRight"
           trigger="click"
         >
-          <Button size="small" type="default">
+          <Button color={'default'} size="small" variant={'filled'}>
             {t('tool.intervention.reject')}
           </Button>
         </Popover>
