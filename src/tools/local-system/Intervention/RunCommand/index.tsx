@@ -3,6 +3,8 @@ import { Highlighter, Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { BuiltinInterventionProps } from '@/types/tool';
+
 const formatTimeout = (ms?: number) => {
   if (!ms) return null;
 
@@ -23,11 +25,8 @@ const formatTimeout = (ms?: number) => {
   return `${ms}ms`;
 };
 
-interface RunCommandProps extends RunCommandParams {
-  messageId: string;
-}
-
-const RunCommand = memo<RunCommandProps>(({ description, command, timeout }) => {
+const RunCommand = memo<BuiltinInterventionProps<RunCommandParams>>(({ args }) => {
+  const { description, command, timeout } = args;
   return (
     <Flexbox gap={8}>
       <Flexbox horizontal justify={'space-between'}>

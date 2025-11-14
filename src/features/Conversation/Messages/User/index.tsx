@@ -1,6 +1,6 @@
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
-import { useResponsive } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,6 +45,13 @@ const remarkPlugins = markdownElements
   .map((element) => element.remarkPlugin)
   .filter(Boolean);
 
+const useUserStyles = createStyles(({ css, token }) => ({
+  messageContainer: css`
+    border: none;
+    background: ${token.colorFillTertiary};
+  `,
+}));
+
 const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
   const item = useChatStore(
     displayMessageSelectors.getDisplayMessageById(id),
@@ -56,6 +63,8 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
   const avatar = useUserAvatar();
+  const { styles: userStyles } = useUserStyles();
+
   const title = useUserStore(userProfileSelectors.displayUserName);
 
   const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
@@ -165,6 +174,7 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
           >
             <Flexbox flex={1} style={{ maxWidth: '100%', minWidth: 0 }}>
               <MessageContent
+                className={userStyles.messageContainer}
                 editing={editing}
                 id={id}
                 markdownProps={markdownProps}
