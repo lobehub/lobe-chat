@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 2.0.0-next.53](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.52...v2.0.0-next.53)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add GPT-5.1 models.
+
+#### 💄 Styles
+
+- **misc**: Fix approving render and improve Conversation style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add GPT-5.1 models, closes [#10206](https://github.com/lobehub/lobe-chat/issues/10206) ([afd3a47](https://github.com/lobehub/lobe-chat/commit/afd3a47))
+
+#### Styles
+
+- **misc**: Fix approving render and improve Conversation style, closes [#10210](https://github.com/lobehub/lobe-chat/issues/10210) ([841b7f1](https://github.com/lobehub/lobe-chat/commit/841b7f1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.52](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.51...v2.0.0-next.52)
 
 <sup>Released on **2025-11-13**</sup>
