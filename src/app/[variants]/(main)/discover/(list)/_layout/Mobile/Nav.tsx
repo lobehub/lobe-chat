@@ -76,7 +76,6 @@ const Nav = memo(() => {
           compact
           items={items}
           onClick={({ key }) => {
-            console.log('key', key);
             if (key === DiscoverTab.Home) {
               navigate('/discover');
             } else {
