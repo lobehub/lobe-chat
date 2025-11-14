@@ -43,17 +43,17 @@ export const searchSlice: StateCreator<
   SearchAction
 > = (set, get) => ({
   crawlMultiPages: async (id, params, aiSummary = true) => {
-    const { internal_updateMessageContent } = get();
+    const { optimisticUpdateMessageContent } = get();
     get().toggleSearchLoading(id, true);
     try {
       const { content, success, error, state } = await runtime.crawlMultiPages(params);
 
-      await internal_updateMessageContent(id, content);
+      await optimisticUpdateMessageContent(id, content);
 
       if (success) {
-        await get().updatePluginState(id, state);
+        await get().optimisticUpdatePluginState(id, state);
       } else {
-        await get().internal_updatePluginError(id, error);
+        await get().optimisticUpdatePluginError(id, error);
       }
       get().toggleSearchLoading(id, false);
 
@@ -67,7 +67,7 @@ export const searchSlice: StateCreator<
       const content = [{ errorMessage: err.message, errorType: err.name }];
 
       const xmlContent = crawlResultsPrompt(content);
-      await internal_updateMessageContent(id, xmlContent);
+      await optimisticUpdateMessageContent(id, xmlContent);
     }
   },
 
@@ -81,7 +81,7 @@ export const searchSlice: StateCreator<
     const message = chatSelectors.getMessageById(id)(get());
     if (!message || !message.plugin) return;
 
-    const { internal_addToolToAssistantMessage, internal_createMessage, openToolUI } = get();
+    const { optimisticAddToolToAssistantMessage, optimisticCreateMessage, openToolUI } = get();
     // 1. 创建一个新的 tool call message
     const newToolCallId = `tool_call_${nanoid()}`;
 
@@ -100,22 +100,22 @@ export const searchSlice: StateCreator<
     const addToolItem = async () => {
       if (!message.parentId || !message.plugin) return;
 
-      await internal_addToolToAssistantMessage(message.parentId, {
+      await optimisticAddToolToAssistantMessage(message.parentId, {
         id: newToolCallId,
         ...message.plugin,
       });
     };
 
-    const [newMessageId] = await Promise.all([
+    const [result] = await Promise.all([
       // 1. 添加 tool message
-      internal_createMessage(toolMessage),
+      optimisticCreateMessage(toolMessage),
       // 2. 将这条 tool call message 插入到 ai 消息的 tools 中
       addToolItem(),
     ]);
-    if (!newMessageId) return;
+    if (!result) return;
 
     // 将新创建的 tool message 激活
-    openToolUI(newMessageId, message.plugin.identifier);
+    openToolUI(result.id, message.plugin.identifier);
   },
 
   search: async (id, params, aiSummary = true) => {
@@ -124,10 +124,10 @@ export const searchSlice: StateCreator<
     const { content, success, error, state } = await runtime.search(params);
 
     if (success) {
-      await get().updatePluginState(id, state);
+      await get().optimisticUpdatePluginState(id, state);
     } else {
       if ((error as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
-        await get().internal_updateMessagePluginError(id, {
+        await get().optimisticUpdateMessagePluginError(id, {
           body: {
             provider: 'searxng',
           },
@@ -135,7 +135,7 @@ export const searchSlice: StateCreator<
           type: 'PluginSettingsInvalid',
         });
       } else {
-        await get().internal_updateMessagePluginError(id, {
+        await get().optimisticUpdateMessagePluginError(id, {
           body: error,
           message: (error as Error).message,
           type: 'PluginServerError',
@@ -145,7 +145,7 @@ export const searchSlice: StateCreator<
 
     get().toggleSearchLoading(id, false);
 
-    await get().internal_updateMessageContent(id, content);
+    await get().optimisticUpdateMessageContent(id, content);
 
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;
@@ -164,7 +164,7 @@ export const searchSlice: StateCreator<
 
   triggerSearchAgain: async (id, data, options) => {
     get().toggleSearchLoading(id, true);
-    await get().updatePluginArguments(id, data);
+    await get().optimisticUpdatePluginArguments(id, data);
 
     await get().search(id, data, options?.aiSummary);
   },

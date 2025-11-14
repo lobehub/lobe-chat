@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
 
-// 初始化 dayjs 插件
+// Initialize dayjs plugins
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 
@@ -19,32 +19,32 @@ const getTopicGroupId = (timestamp: number): TimeGroupId => {
     return 'yesterday';
   }
 
-  // 7天内（不包括今天和昨天）
+  // Within 7 days (excluding today and yesterday)
   const weekAgo = now.subtract(7, 'day');
   if (date.isAfter(weekAgo) && !date.isToday() && !date.isYesterday()) {
     return 'week';
   }
 
-  // 当前月份（不包括前面已经分组的日期）
-  // 使用原生的月份和年份比较
+  // Current month (excluding dates already grouped above)
+  // Use native month and year comparison
   if (date.month() === now.month() && date.year() === now.year()) {
     return 'month';
   }
 
-  // 当年的其他月份
+  // Other months of the current year
   if (date.year() === now.year()) {
     return `${date.year()}-${(date.month() + 1).toString().padStart(2, '0')}`;
   }
 
-  // 更早的年份
+  // Earlier years
   return `${date.year()}`;
 };
 
-// 确保分组的排序
+// Ensure group sorting
 const sortGroups = (groups: GroupedTopic[]): GroupedTopic[] => {
   const orderMap = new Map<string, number>();
 
-  // 设置固定分组的顺序
+  // Set the order of fixed groups
   orderMap.set('today', 0);
   orderMap.set('yesterday', 1);
   orderMap.set('week', 2);
@@ -58,12 +58,12 @@ const sortGroups = (groups: GroupedTopic[]): GroupedTopic[] => {
       return orderA - orderB;
     }
 
-    // 对于年月格式和年份格式的分组，按时间倒序排序
+    // For year-month and year format groups, sort in descending chronological order
     return b.id.localeCompare(a.id);
   });
 };
 
-// 时间分组的具体实现
+// Specific implementation of time grouping
 export const groupTopicsByTime = (topics: ChatTopic[]): GroupedTopic[] => {
   if (!topics.length) return [];
 

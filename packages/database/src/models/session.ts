@@ -123,17 +123,28 @@ export class SessionModel {
   findByIdOrSlug = async (
     idOrSlug: string,
   ): Promise<(SessionItem & { agent: AgentItem }) | undefined> => {
-    const result = await this.db.query.sessions.findFirst({
-      where: and(
-        or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
-        eq(sessions.userId, this.userId),
-      ),
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
+    // Use leftJoin instead of nested 'with' for better performance
+    const result = await this.db
+      .select({
+        agent: agents,
+        group: sessionGroups,
+        session: sessions,
+      })
+      .from(sessions)
+      .where(
+        and(
+          or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
+          eq(sessions.userId, this.userId),
+        ),
+      )
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .leftJoin(sessionGroups, eq(sessions.groupId, sessionGroups.id))
+      .limit(1);
 
-    if (!result) return;
+    if (!result || !result[0]) return;
 
-    return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
+    return { ...result[0].session, agent: result[0].agent, group: result[0].group } as any;
   };
 
   count = async (params?: {
@@ -245,6 +256,31 @@ export class SessionModel {
         if (existResult) return existResult;
       }
 
+      // Extract and properly map fields for agent creation from DiscoverAssistantDetail
+      const {
+        // MetaData fields (from discover assistant)
+        title,
+        description,
+        tags = [],
+        avatar,
+        backgroundColor,
+        // LobeAgentConfig fields
+        model,
+        params,
+        systemRole,
+        provider,
+        plugins = [],
+        openingMessage,
+        openingQuestions = [],
+        // TTS config
+        tts,
+        // Chat config
+        chatConfig,
+        // Field name mapping
+        examples, // maps to fewShots
+        identifier, // maps to marketIdentifier
+        marketIdentifier,
+      } = config as any;
       if (type === 'group') {
         const result = await trx
           .insert(sessions)
@@ -265,9 +301,24 @@ export class SessionModel {
       const newAgents = await trx
         .insert(agents)
         .values({
-          ...config,
+          avatar,
+          backgroundColor,
+          chatConfig: chatConfig || {},
           createdAt: new Date(),
+          description,
+          fewShots: examples || null, // Map examples to fewShots field
           id: idGenerator('agents'),
+          marketIdentifier: identifier || marketIdentifier,
+          model: typeof model === 'string' ? model : null,
+          openingMessage,
+          openingQuestions,
+          params: params || {},
+          plugins,
+          provider,
+          systemRole,
+          tags,
+          title,
+          tts: tts || {},
           updatedAt: new Date(),
           userId: this.userId,
         })
@@ -584,6 +635,7 @@ export class SessionModel {
         avatar: agent?.avatar ?? avatar ?? undefined,
         backgroundColor: agent?.backgroundColor ?? backgroundColor ?? undefined,
         description: agent?.description ?? description ?? undefined,
+        marketIdentifier: agent?.marketIdentifier ?? undefined,
         tags: agent?.tags ?? undefined,
         title: agent?.title ?? title ?? undefined,
       },

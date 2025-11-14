@@ -6,6 +6,7 @@ table agents {
   tags jsonb [default: `[]`]
   avatar text
   background_color text
+  market_identifier text
   plugins jsonb [default: `[]`]
   client_id text
   user_id text [not null]
@@ -56,6 +57,7 @@ table agents_knowledge_bases {
 
   indexes {
     (agent_id, knowledge_base_id) [pk]
+    agent_id [name: 'agents_knowledge_bases_agent_id_idx']
   }
 }
 
@@ -76,6 +78,7 @@ table ai_models {
   context_window_tokens integer
   source varchar(20)
   released_at varchar(10)
+  settings jsonb [default: `{}`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -343,6 +346,7 @@ table message_plugins {
   id text [pk, not null]
   tool_call_id text
   type text [default: 'default']
+  intervention jsonb
   api_name text
   arguments text
   identifier text

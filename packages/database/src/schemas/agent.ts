@@ -37,6 +37,7 @@ export const agents = pgTable(
     tags: jsonb('tags').$type<string[]>().default([]),
     avatar: text('avatar'),
     backgroundColor: text('background_color'),
+    marketIdentifier: text('market_identifier'),
 
     plugins: jsonb('plugins').$type<string[]>().default([]),
 
@@ -90,7 +91,10 @@ export const agentsKnowledgeBases = pgTable(
 
     ...timestamps,
   },
-  (t) => [primaryKey({ columns: [t.agentId, t.knowledgeBaseId] })],
+  (t) => [
+    primaryKey({ columns: [t.agentId, t.knowledgeBaseId] }),
+    index('agents_knowledge_bases_agent_id_idx').on(t.agentId),
+  ],
 );
 
 export const agentsFiles = pgTable(

@@ -6,8 +6,8 @@ import type { PipelineContext, ProcessorOptions } from '../types';
 const log = debug('context-engine:processor:MessageCleanupProcessor');
 
 /**
- * 消息清理处理器
- * 负责清理消息中的多余字段，只保留 OpenAI 格式所需的必要字段
+ * Message Cleanup Processor
+ * Responsible for cleaning up redundant fields in messages, keeping only necessary fields required by OpenAI format
  */
 export class MessageCleanupProcessor extends BaseProcessor {
   readonly name = 'MessageCleanupProcessor';
@@ -21,7 +21,7 @@ export class MessageCleanupProcessor extends BaseProcessor {
 
     let cleanedCount = 0;
 
-    // 清理每条消息，只保留必要字段
+    // Clean each message, keeping only necessary fields
     for (let i = 0; i < clonedContext.messages.length; i++) {
       const message = clonedContext.messages[i];
       const cleanedMessage = this.cleanMessage(message);
@@ -32,7 +32,7 @@ export class MessageCleanupProcessor extends BaseProcessor {
       }
     }
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.messageCleanup = {
       cleanedCount,
       totalMessages: clonedContext.messages.length,
@@ -43,7 +43,7 @@ export class MessageCleanupProcessor extends BaseProcessor {
   }
 
   /**
-   * 清理单条消息，只保留必要字段
+   * Clean a single message, keeping only necessary fields
    */
   private cleanMessage(message: any): any {
     switch (message.role) {
@@ -66,6 +66,7 @@ export class MessageCleanupProcessor extends BaseProcessor {
           content: message.content,
           role: message.role,
           ...(message.tool_calls && { tool_calls: message.tool_calls }),
+          ...(message.reasoning && { reasoning: message.reasoning }),
         };
       }
 
@@ -79,7 +80,7 @@ export class MessageCleanupProcessor extends BaseProcessor {
       }
 
       default: {
-        // 对于未知角色，保持原样
+        // For unknown roles, keep as is
         return message;
       }
     }

@@ -24,7 +24,7 @@
   "peerDependencies": {
     "@electric-sql/pglite": "^0.2.17",
     "dayjs": ">=1.11.18",
-    "drizzle-orm": ">=0.44.6",
+    "drizzle-orm": ">=0.44.7",
     "nanoid": ">=5.1.5",
     "pg": ">=8.16.3"
   }

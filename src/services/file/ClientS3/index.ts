@@ -13,9 +13,9 @@ export class BrowserS3Storage {
   }
 
   /**
-   * 上传文件
-   * @param key 文件 hash
-   * @param file File 对象
+   * Upload file
+   * @param key File hash
+   * @param file File object
    */
   putObject = async (key: string, file: File): Promise<void> => {
     try {
@@ -27,9 +27,9 @@ export class BrowserS3Storage {
   };
 
   /**
-   * 获取文件
-   * @param key 文件 hash
-   * @returns File 对象
+   * Get file
+   * @param key File hash
+   * @returns File object
    */
   getObject = async (key: string): Promise<File | undefined> => {
     try {
@@ -44,8 +44,8 @@ export class BrowserS3Storage {
   };
 
   /**
-   * 删除文件
-   * @param key 文件 hash
+   * Delete file
+   * @param key File hash
    */
   deleteObject = async (key: string): Promise<void> => {
     try {

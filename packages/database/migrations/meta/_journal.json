@@ -294,6 +294,34 @@
       "when": 1761878697451,
       "tag": "0041_improve_index",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1762232313711,
+      "tag": "0042_improve_agent_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1762251112601,
+      "tag": "0043_add_ai_model_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1762870034882,
+      "tag": "0044_high_toxin",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1762911968658,
+      "tag": "0045_add_tool_intervention",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -409,6 +409,50 @@ describe('LobeOpenAI', () => {
       const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
       expect(createCall.reasoning).toEqual({ effort: 'high', summary: 'auto' });
     });
+
+    it('should convert max_tokens to max_output_tokens for responses API', async () => {
+      const payload = {
+        max_tokens: 2048,
+        messages: [{ content: 'Hello', role: 'user' as const }],
+        model: 'o1-pro',
+        temperature: 0.7,
+      };
+
+      await instance.chat(payload);
+
+      const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
+      expect(createCall.max_output_tokens).toBe(2048);
+      expect(createCall.max_tokens).toBeUndefined();
+    });
+
+    it('should not include max_output_tokens when max_tokens is undefined', async () => {
+      const payload = {
+        messages: [{ content: 'Hello', role: 'user' as const }],
+        model: 'o1-pro',
+        temperature: 0.7,
+      };
+
+      await instance.chat(payload);
+
+      const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
+      expect(createCall.max_output_tokens).toBeUndefined();
+    });
+
+    it('should convert max_tokens to max_output_tokens for search-enabled models', async () => {
+      const payload = {
+        enabledSearch: true,
+        max_tokens: 4096,
+        messages: [{ content: 'Hello', role: 'user' as const }],
+        model: 'gpt-4o',
+        temperature: 0.7,
+      };
+
+      await instance.chat(payload);
+
+      const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
+      expect(createCall.max_output_tokens).toBe(4096);
+      expect(createCall.max_tokens).toBeUndefined();
+    });
   });
 
   describe('supportsFlexTier', () => {

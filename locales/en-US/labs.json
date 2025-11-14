@@ -1,6 +1,10 @@
 {
   "desc": "Here you'll find occasional updates on new features we're exploring—feel free to try them out!",
   "features": {
+    "assistantMessageGroup": {
+      "desc": "Group assistant messages and their tool call results together for display",
+      "title": "Assistant Message Grouping"
+    },
     "groupChat": {
       "desc": "Enable multi-agent group chat coordination.",
       "title": "Group Chat (Multi-Agent)"

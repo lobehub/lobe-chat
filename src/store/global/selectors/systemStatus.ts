@@ -63,8 +63,16 @@ const getAgentSystemRoleExpanded =
     return map[agentId] !== false; // 角色设定默认为展开状态
   };
 
+const disabledModelProvidersSortType = (s: GlobalState) =>
+  s.status.disabledModelProvidersSortType || 'default';
+const disabledModelsSortType = (s: GlobalState) => s.status.disabledModelsSortType || 'default';
+const tokenDisplayFormatShort = (s: GlobalState) =>
+  s.status.tokenDisplayFormatShort !== undefined ? s.status.tokenDisplayFormatShort : true;
+
 export const systemStatusSelectors = {
   chatInputHeight,
+  disabledModelProvidersSortType,
+  disabledModelsSortType,
   expandInputActionbar,
   filePanelWidth,
   getAgentSystemRoleExpanded,
@@ -93,5 +101,6 @@ export const systemStatusSelectors = {
   showSystemRole,
   systemStatus,
   themeMode,
+  tokenDisplayFormatShort,
   wideScreen,
 };

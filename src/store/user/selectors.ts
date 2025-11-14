@@ -1,8 +1,9 @@
 export { authSelectors, userProfileSelectors } from './slices/auth/selectors';
-export { preferenceSelectors } from './slices/preference/selectors';
+export { labPreferSelectors, preferenceSelectors } from './slices/preference/selectors';
 export {
   keyVaultsConfigSelectors,
   settingsSelectors,
   systemAgentSelectors,
+  toolInterventionSelectors,
   userGeneralSettingsSelectors,
 } from './slices/settings/selectors';
