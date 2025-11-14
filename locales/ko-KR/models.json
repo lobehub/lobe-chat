@@ -2774,6 +2774,54 @@
   "pro-deepseek-v3": {
     "description": "기업 전용 서비스 모델로, 동시 처리 서비스를 포함합니다."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, 대규모 파라미터의 중국어 모델로, 고품질 콘텐츠 생성 및 복잡한 추론 작업에 적합합니다."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, 중형 범용 모델로, 비용과 성능의 균형이 필요한 텍스트 생성 및 질의응답에 적합합니다."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, 의도 인식 및 에이전트 오케스트레이션을 위한 모델로, 장문 컨텍스트를 지원합니다."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, 경량 에이전트 모델로, 저비용 다중 회화 및 비즈니스 오케스트레이션에 적합합니다."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, 고속 제어 에이전트 모델로, 대규모 다중 작업 에이전트 애플리케이션에 적합합니다."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, 중단기 회화 및 빠른 응답을 위한 고동시성 에이전트 모델입니다."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, 멀티모달 콘텐츠 검토 및 감지 모델로, 이미지-텍스트 적합성 및 인식 작업을 지원합니다."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, 멀티모달 창작 모델로, 이미지와 텍스트의 통합 이해 및 생성을 지원합니다."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, 영어 환경에 특화된 멀티모달 인식 모델입니다."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, 고성능 중국어 범용 모델로, 복잡한 질의응답 및 대규모 추론 작업에 적합합니다."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, Llama 기반 멀티모달 모델로, 범용 이미지-텍스트 이해 작업에 적합합니다."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, 다중 이미지 OCR 모델로, 여러 이미지의 텍스트 감지 및 인식을 지원합니다."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, 멀티모달 질의응답 모델로, 복잡한 이미지-텍스트 환경에서의 정밀 검색 및 응답을 지원합니다."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, 단일 이미지 OCR 모델로, 고정밀 문자 인식을 지원합니다."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, 대규모 파라미터의 비전-언어 모델로, 복잡한 이미지-텍스트 이해에 적합합니다."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, 경량 비전-언어 모델로, 일상적인 이미지-텍스트 질의응답 및 분석에 적합합니다."
+  },
   "qvq-72b-preview": {
     "description": "QVQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, 시각적 추론 능력 향상에 중점을 두고 있으며, 특히 수학적 추론 분야에서 두드러진 성과를 보입니다."
   },
@@ -2924,7 +2972,9 @@
   "qwen2.5-72b-instruct": {
     "description": "통의 천문 2.5 외부 오픈 소스 72B 규모 모델입니다."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, 성숙한 오픈소스 지시형 모델로, 다양한 대화 및 생성 시나리오에 적합합니다."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "통의천문 코드 모델 오픈 소스 버전입니다."
   },
@@ -2955,11 +3005,15 @@
   "qwen2.5-omni-7b": {
     "description": "Qwen-Omni 시리즈 모델은 비디오, 오디오, 이미지, 텍스트 등 다양한 모드의 데이터를 입력으로 지원하며, 오디오와 텍스트를 출력합니다."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, 멀티모달 오픈소스 모델로, 프라이빗 배포 및 다양한 응용에 적합합니다."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "지시 따르기, 수학, 문제 해결, 코드 전반적인 향상, 모든 사물 인식 능력 향상, 다양한 형식의 시각적 요소를 직접 정확하게 위치 지정할 수 있으며, 최대 10분 길이의 긴 비디오 파일을 이해하고 초 단위의 사건 시점을 위치 지정할 수 있습니다. 시간의 선후와 속도를 이해할 수 있으며, 분석 및 위치 지정 능력을 기반으로 OS 또는 모바일 에이전트를 조작할 수 있습니다. 주요 정보 추출 능력과 Json 형식 출력 능력이 뛰어나며, 이 버전은 72B 버전으로, 이 시리즈에서 가장 강력한 버전입니다."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, 경량 멀티모달 모델로, 배포 비용과 인식 성능의 균형을 이룹니다."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL은 Qwen 모델 패밀리의 최신 버전 시각 언어 모델입니다."
   },
@@ -2984,22 +3038,48 @@
   "qwen3": {
     "description": "Qwen3는 알리바바의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, 입문용 모델로, 단순한 추론 및 자원이 매우 제한된 환경에 적합합니다."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, 초경량 모델로, 엣지 및 단말 배포에 용이합니다."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, 중형 모델로, 다국어 질의응답 및 텍스트 생성에 적합합니다."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, 범용 대형 모델로, 다양한 복잡한 작업에 적합합니다."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, 범용 플래그십 지시형 모델로, 다양한 생성 및 추론 작업에 적합합니다."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, 초대형 사고 모델로, 고난도 추론에 적합합니다."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, 중대형 범용 모델로, 비용과 성능의 균형을 이룹니다."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, 중대형 지시형 모델로, 고품질 생성 및 질의응답에 적합합니다."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, 중대형 사고 모델로, 정밀도와 비용의 균형을 고려합니다."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, 더 강력한 이해 능력이 필요한 범용 작업에 적합합니다."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, 중소형 애플리케이션 및 로컬 추론 환경에 적합합니다."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, 경량 모델로, 유연한 배포가 가능하며 고동시성 업무에 적합합니다."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "통의천문 코드 모델 오픈소스 버전입니다. 최신 qwen3-coder-30b-a3b-instruct는 Qwen3 기반의 코드 생성 모델로, 강력한 Coding Agent 기능을 갖추고 있으며, 도구 호출 및 환경 상호작용에 능숙합니다. 자율적인 프로그래밍이 가능하며, 뛰어난 코드 처리 능력과 일반적인 언어 능력을 겸비하고 있습니다."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, 플래그십 코드 모델로, 다국어 프로그래밍 및 복잡한 코드 이해를 지원합니다."
+  },
   "qwen3-coder-flash": {
     "description": "통의천문 코드 모델입니다. 최신 Qwen3-Coder 시리즈 모델은 Qwen3 기반의 코드 생성 모델로, 강력한 코딩 에이전트 능력을 보유하고 있으며 도구 호출과 환경 상호작용에 능숙하여 자율 프로그래밍이 가능하며, 뛰어난 코드 능력과 함께 범용 능력도 겸비하고 있습니다."
   },
@@ -3015,16 +3095,36 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 기반의 차세대 비사고 모드 오픈 소스 모델로, 이전 버전(통의천문3-235B-A22B-Instruct-2507)과 비교하여 중국어 텍스트 이해 능력이 향상되었고, 논리 추론 능력이 강화되었으며, 텍스트 생성 작업에서 더 우수한 성능을 보입니다."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, 복잡한 작업을 위한 플래그십 추론 모델 버전입니다."
+  },
   "qwen3-omni-flash": {
     "description": "Qwen-Omni 모델은 텍스트, 이미지, 오디오, 비디오 등 다양한 모달의 조합 입력을 수용할 수 있으며, 텍스트 또는 음성 형태의 응답을 생성할 수 있습니다. 다양한 인간 음색을 제공하며, 다국어 및 방언 음성 출력도 지원합니다. 텍스트 창작, 시각 인식, 음성 비서 등 다양한 분야에 활용 가능합니다."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, 플래그십 멀티모달 모델로, 고수준의 이해 및 창작 시나리오에 적합합니다."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, 플래그십 사고 버전으로, 복잡한 멀티모달 추론 및 계획 작업에 적합합니다."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, 멀티모달 대형 모델로, 정밀도와 추론 성능을 겸비합니다."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, 복잡한 멀티모달 작업을 위한 심층 사고 버전입니다."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, 멀티모달 지시형 미세조정 모델로, 고품질 이미지-텍스트 질의응답 및 창작에 적합합니다."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, 멀티모달 심층 사고 버전으로, 복잡한 추론 및 장거리 연쇄 분석을 강화합니다."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, 경량 멀티모달 모델로, 일상적인 비전 질의응답 및 애플리케이션 통합에 적합합니다."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, 멀티모달 사고 체인 모델로, 시각 정보에 대한 정밀한 추론에 적합합니다."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash는 경량 고속 추론 버전으로, 지연에 민감하거나 대량 요청이 필요한 상황에 적합합니다."
   },

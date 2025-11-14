@@ -2774,6 +2774,54 @@
   "pro-deepseek-v3": {
     "description": "Mô hình chuyên dụng cho dịch vụ doanh nghiệp, hỗ trợ dịch vụ đồng thời."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, mô hình tiếng Trung với tham số lớn, phù hợp cho việc tạo nội dung chất lượng cao và các nhiệm vụ suy luận phức tạp."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, mô hình đa năng cỡ trung, cân bằng giữa chi phí và hiệu quả trong tạo văn bản và hỏi đáp."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, mô hình nhận diện ý định và điều phối tác tử, hỗ trợ ngữ cảnh dài."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, mô hình tác tử nhẹ, phù hợp cho hội thoại đa lượt chi phí thấp và điều phối nghiệp vụ."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, mô hình tác tử kiểm soát lưu lượng cao, thích hợp cho ứng dụng Agent quy mô lớn và đa nhiệm."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, mô hình tác tử hiệu suất cao cho hội thoại ngắn và phản hồi nhanh với khả năng xử lý đồng thời cao."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, mô hình kiểm duyệt và phát hiện nội dung đa phương tiện, hỗ trợ kiểm tra tuân thủ và nhận diện hình ảnh-văn bản."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, mô hình sáng tạo đa phương tiện, hỗ trợ hiểu và tạo nội dung kết hợp hình ảnh và văn bản."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, mô hình nhận diện đa phương tiện chuyên biệt cho ngữ cảnh tiếng Anh."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, mô hình tiếng Trung hiệu suất cao, phù hợp cho hỏi đáp phức tạp và suy luận quy mô lớn."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, mô hình đa phương tiện dựa trên Llama, hướng đến nhiệm vụ hiểu hình ảnh-văn bản tổng quát."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, mô hình OCR cho nhiều hình ảnh, hỗ trợ phát hiện và nhận diện văn bản từ nhiều ảnh."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, mô hình hỏi đáp đa phương tiện, hỗ trợ truy xuất và trả lời chính xác trong các ngữ cảnh hình ảnh-văn bản phức tạp."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, mô hình OCR cho một hình ảnh, hỗ trợ nhận diện ký tự với độ chính xác cao."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, mô hình ngôn ngữ thị giác với tham số lớn, phù hợp cho các tình huống hiểu hình ảnh-văn bản phức tạp."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, mô hình ngôn ngữ thị giác nhẹ, thích hợp cho hỏi đáp và phân tích hình ảnh-văn bản hàng ngày."
+  },
   "qvq-72b-preview": {
     "description": "Mô hình QVQ là mô hình nghiên cứu thử nghiệm do đội ngũ Qwen phát triển, tập trung vào việc nâng cao khả năng suy luận hình ảnh, đặc biệt trong lĩnh vực suy luận toán học."
   },
@@ -2924,7 +2972,9 @@
   "qwen2.5-72b-instruct": {
     "description": "Mô hình 72B quy mô mở nguồn của Qwen 2.5."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, mô hình chỉ dẫn mã nguồn mở trưởng thành, phù hợp cho hội thoại và tạo nội dung trong nhiều ngữ cảnh."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
   },
@@ -2955,11 +3005,15 @@
   "qwen2.5-omni-7b": {
     "description": "Mô hình Qwen-Omni hỗ trợ đầu vào từ nhiều loại dữ liệu khác nhau, bao gồm video, âm thanh, hình ảnh và văn bản, và xuất ra âm thanh và văn bản."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, mô hình đa phương tiện mã nguồn mở, thích hợp cho triển khai riêng tư và ứng dụng đa ngữ cảnh."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Nâng cao khả năng theo dõi lệnh, toán học, giải quyết vấn đề, mã hóa, nâng cao khả năng nhận diện mọi thứ, hỗ trợ định vị chính xác các yếu tố thị giác từ nhiều định dạng khác nhau, hỗ trợ hiểu và định vị thời gian sự kiện trong các tệp video dài (tối đa 10 phút), có khả năng hiểu thứ tự thời gian và tốc độ, hỗ trợ điều khiển Agent trên OS hoặc Mobile dựa trên khả năng phân tích và định vị, khả năng trích xuất thông tin quan trọng và xuất định dạng Json mạnh mẽ, phiên bản này là phiên bản 72B, phiên bản mạnh nhất trong dòng sản phẩm này."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, mô hình đa phương tiện nhẹ, cân bằng giữa chi phí triển khai và khả năng nhận diện."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL là phiên bản mới nhất của mô hình ngôn ngữ và hình ảnh trong gia đình mô hình Qwen."
   },
@@ -2984,22 +3038,48 @@
   "qwen3": {
     "description": "Qwen3 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, mô hình cấp nhập môn, phù hợp cho suy luận đơn giản và môi trường tài nguyên cực kỳ hạn chế."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, mô hình siêu nhẹ, dễ dàng triển khai tại biên và thiết bị đầu cuối."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, mô hình cỡ trung, phù hợp cho hỏi đáp đa ngôn ngữ và tạo văn bản."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, mô hình lớn đa năng, hướng đến nhiều nhiệm vụ phức tạp."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, mô hình chỉ dẫn hàng đầu đa năng, phù hợp cho nhiều nhiệm vụ tạo nội dung và suy luận."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, mô hình tư duy quy mô siêu lớn, thích hợp cho suy luận độ khó cao."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, mô hình đa năng cỡ trung-lớn, cân bằng giữa chi phí và hiệu quả."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, mô hình chỉ dẫn cỡ trung-lớn, phù hợp cho tạo nội dung chất lượng cao và hỏi đáp."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, mô hình tư duy cỡ trung-lớn, cân bằng giữa độ chính xác và chi phí."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, phù hợp cho các nhiệm vụ đa năng yêu cầu khả năng hiểu sâu hơn."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, phù hợp cho ứng dụng vừa và nhỏ và các tình huống suy luận cục bộ."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, mô hình nhẹ, triển khai linh hoạt, phù hợp cho các nghiệp vụ có tần suất cao."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã hóa Tongyi Qianwen. Mô hình qwen3-coder-30b-a3b-instruct mới nhất được phát triển dựa trên Qwen3, có khả năng hoạt động như một Tác nhân Lập trình mạnh mẽ, thành thạo trong việc gọi công cụ và tương tác môi trường, hỗ trợ lập trình tự động với năng lực mã hóa xuất sắc và khả năng tổng quát cao."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, mô hình mã hóa hàng đầu, hỗ trợ lập trình đa ngôn ngữ và hiểu mã phức tạp."
+  },
   "qwen3-coder-flash": {
     "description": "Mô hình mã nguồn của Thông Nghĩa Thiên Vấn. Bộ mô hình Qwen3-Coder mới nhất dựa trên Qwen3 là mô hình tạo mã, có khả năng Coding Agent mạnh mẽ, thành thạo gọi công cụ và tương tác môi trường, có thể tự lập trình, vừa xuất sắc về năng lực mã hóa vừa có khả năng tổng quát."
   },
@@ -3015,16 +3095,36 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "Mô hình mã nguồn mở thế hệ mới không có chế độ suy nghĩ dựa trên Qwen3, so với phiên bản trước (Thông Nghĩa Thiên Vấn 3-235B-A22B-Instruct-2507) có khả năng hiểu văn bản tiếng Trung tốt hơn, năng lực suy luận logic được cải thiện, và hiệu suất trong các nhiệm vụ tạo văn bản cũng tốt hơn."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, phiên bản mô hình tư duy hàng đầu cho các nhiệm vụ phức tạp."
+  },
   "qwen3-omni-flash": {
     "description": "Mô hình Qwen-Omni có thể tiếp nhận đầu vào kết hợp từ nhiều phương thức như văn bản, hình ảnh, âm thanh và video, và tạo phản hồi dưới dạng văn bản hoặc giọng nói. Mô hình cung cấp nhiều giọng nói nhân hóa, hỗ trợ đầu ra bằng nhiều ngôn ngữ và phương ngữ, phù hợp với các ứng dụng như sáng tác văn bản, nhận diện hình ảnh và trợ lý giọng nói."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, mô hình đa phương tiện hàng đầu, hướng đến các tình huống yêu cầu cao về hiểu và sáng tạo."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, phiên bản tư duy hàng đầu, dùng cho suy luận và lập kế hoạch đa phương tiện phức tạp."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, mô hình đa phương tiện lớn, cân bằng giữa độ chính xác và hiệu suất suy luận."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, phiên bản tư duy sâu cho các nhiệm vụ đa phương tiện phức tạp."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, mô hình chỉ dẫn đa phương tiện, phù hợp cho hỏi đáp và sáng tạo hình ảnh-văn bản chất lượng cao."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, phiên bản tư duy sâu đa phương tiện, tăng cường suy luận phức tạp và phân tích chuỗi dài."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, mô hình đa phương tiện nhẹ, phù hợp cho hỏi đáp thị giác hàng ngày và tích hợp ứng dụng."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, mô hình chuỗi tư duy đa phương tiện, thích hợp cho suy luận chi tiết về thông tin hình ảnh."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: phiên bản suy luận tốc độ cao và nhẹ, phù hợp với các tình huống yêu cầu độ trễ thấp hoặc xử lý số lượng lớn yêu cầu."
   },
