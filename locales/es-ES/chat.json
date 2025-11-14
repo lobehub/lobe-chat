@@ -173,6 +173,7 @@
     "title": "Mencionar miembros"
   },
   "messageAction": {
+    "continueGeneration": "Continuar generando",
     "delAndRegenerate": "Eliminar y Regenerar",
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
@@ -239,6 +240,7 @@
   "noMatchingAgents": "No se encontraron miembros coincidentes",
   "noMembersYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
   "noSelectedAgents": "Aún no se han seleccionado miembros",
+  "openInNewWindow": "Abrir en una nueva ventana",
   "owner": "Propietario del grupo",
   "pin": "Fijar",
   "pinOff": "Desfijar",
@@ -366,6 +368,26 @@
     "overload": "Excedido",
     "remained": "Restante",
     "used": "Usado"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Aprobar",
+      "approveAndRemember": "Aprobar y recordar",
+      "approveOnce": "Aprobar solo esta vez",
+      "mode": {
+        "allowList": "Lista blanca",
+        "allowListDesc": "Ejecutar automáticamente solo las herramientas aprobadas",
+        "autoRun": "Aprobación automática",
+        "autoRunDesc": "Aprobar automáticamente la ejecución de todas las herramientas",
+        "manual": "Manual",
+        "manualDesc": "Se requiere aprobación manual para cada ejecución"
+      },
+      "reject": "Rechazar",
+      "rejectReasonPlaceholder": "Ingresar una razón ayudará al agente a comprender y mejorar futuras acciones",
+      "rejectTitle": "Rechazar esta ejecución de herramienta",
+      "rejectedWithReason": "Esta ejecución de herramienta fue rechazada: {{reason}}",
+      "toolRejected": "Esta ejecución de herramienta fue rechazada"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "¿Abrir un nuevo tema?",

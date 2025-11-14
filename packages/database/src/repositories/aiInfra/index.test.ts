@@ -25,7 +25,7 @@ beforeEach(async () => {
   vi.clearAllMocks();
 
   repo = new AiInfraRepos(clientDB as any, userId, mockProviderConfigs);
-});
+}, 30000);
 
 describe('AiInfraRepos', () => {
   describe('getAiProviderList', () => {

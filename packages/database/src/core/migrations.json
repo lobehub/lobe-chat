@@ -762,5 +762,17 @@
     "bps": true,
     "folderMillis": 1762251112601,
     "hash": "923ccbdf46c32be9a981dabd348e6923b4a365444241e9b8cc174bf5b914cbc5"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"market_identifier\" text;\n"],
+    "bps": true,
+    "folderMillis": 1762870034882,
+    "hash": "4178aacb4b8892b7fd15d29209bbf9b1d1f9d7c406ba796f27542c0bcd919680"
+  },
+  {
+    "sql": ["ALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"intervention\" jsonb;\n"],
+    "bps": true,
+    "folderMillis": 1762911968658,
+    "hash": "552a032cc0e595277232e70b5f9338658585bafe9481ae8346a5f322b673a68b"
   }
 ]

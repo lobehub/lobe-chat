@@ -11,7 +11,7 @@ export type {
 } from './types';
 
 // Flat Message List Types - for virtual list rendering
-export type { BranchMetadata, FlatMessage, FlatMessageExtra, FlatMessageRole } from './types';
+export type { FlatMessage, FlatMessageExtra, FlatMessageRole } from './types';
 
 // Shared Types
 export type { HelperMaps, IdNode, Message, MessageGroupMetadata, ParseResult } from './types';

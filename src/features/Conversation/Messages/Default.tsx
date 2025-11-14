@@ -17,6 +17,7 @@ export const DefaultMessage = memo<
 
   if (isToolCallGenerating) return;
 
+  if (!content) return <BubblesLoading />;
   if (content === LOADING_FLAT && !editing) return <BubblesLoading />;
 
   return <div id={addIdOnDOM ? id : undefined}>{editableContent}</div>;

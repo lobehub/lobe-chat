@@ -106,6 +106,12 @@
     "keyPlaceholder": "키",
     "valuePlaceholder": "값"
   },
+  "LocalFile": {
+    "action": {
+      "open": "열기",
+      "showInFolder": "폴더에서 보기"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "제한 없음"
   },

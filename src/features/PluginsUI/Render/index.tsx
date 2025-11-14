@@ -4,6 +4,7 @@ import { memo } from 'react';
 
 import BuiltinType from './BuiltinType';
 import DefaultType from './DefaultType';
+import MCP from './MCPType';
 import Markdown from './MarkdownType';
 import Standalone from './StandaloneType';
 
@@ -39,6 +40,22 @@ const PluginRender = memo<PluginRenderProps>(
       case 'builtin': {
         return (
           <BuiltinType
+            apiName={payload?.apiName}
+            arguments={argumentsStr}
+            content={content}
+            id={id}
+            identifier={identifier}
+            loading={loading}
+            pluginError={pluginError}
+            pluginState={pluginState}
+          />
+        );
+      }
+
+      // @ts-expect-error need to update types
+      case 'mcp': {
+        return (
+          <MCP
             apiName={payload?.apiName}
             arguments={argumentsStr}
             content={content}

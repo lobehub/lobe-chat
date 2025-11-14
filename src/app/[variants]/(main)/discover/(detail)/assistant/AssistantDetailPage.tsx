@@ -5,8 +5,9 @@ import { Flexbox } from 'react-layout-kit';
 import { useParams } from 'react-router-dom';
 
 import { withSuspense } from '@/components/withSuspense';
+import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { DiscoverTab } from '@/types/discover';
+import { AssistantMarketSource, DiscoverTab } from '@/types/discover';
 
 import NotFound from '../components/NotFound';
 import Breadcrumb from '../features/Breadcrumb';
@@ -14,6 +15,7 @@ import { TocProvider } from '../features/Toc/useToc';
 import { DetailProvider } from './[...slugs]/features/DetailProvider';
 import Details from './[...slugs]/features/Details';
 import Header from './[...slugs]/features/Header';
+import StatusPage from './[...slugs]/features/StatusPage';
 import Loading from './[...slugs]/loading';
 
 interface AssistantDetailPageProps {
@@ -24,12 +26,19 @@ const AssistantDetailPage = memo<AssistantDetailPageProps>(({ mobile }) => {
   const params = useParams();
   const slugs = params['*']?.split('/') || [];
   const identifier = decodeURIComponent(slugs.join('/'));
+  const { version, source } = useQuery() as { source?: AssistantMarketSource; version?: string };
 
   const useAssistantDetail = useDiscoverStore((s) => s.useAssistantDetail);
-  const { data, isLoading } = useAssistantDetail({ identifier });
+  const { data, isLoading } = useAssistantDetail({ identifier, source, version });
 
   if (isLoading) return <Loading />;
   if (!data) return <NotFound />;
+
+  // 检查助手状态
+  const status = (data as any)?.status;
+  if (status === 'unpublished' || status === 'archived' || status === 'deprecated') {
+    return <StatusPage status={status} />;
+  }
 
   return (
     <TocProvider>

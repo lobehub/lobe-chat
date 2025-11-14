@@ -246,4 +246,66 @@ describe('aiProviderSelectors', () => {
       );
     });
   });
+
+  describe('isProviderEnableResponseApi', () => {
+    it('should return true when config explicitly sets enableResponseApi to true', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          test: {
+            config: { enableResponseApi: true },
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('test')(state)).toBe(true);
+    });
+
+    it('should return false when config explicitly sets enableResponseApi to false', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          test: {
+            config: { enableResponseApi: false },
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('test')(state)).toBe(false);
+    });
+
+    it('should return true by default for openai provider', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          openai: {
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('openai')(state)).toBe(true);
+    });
+
+    it('should return false by default for non-openai provider', () => {
+      const state = {
+        ...mockState,
+        aiProviderRuntimeConfig: {
+          anthropic: {
+            keyVaults: {},
+            settings: {},
+          },
+        },
+      };
+      expect(aiProviderSelectors.isProviderEnableResponseApi('anthropic')(state)).toBe(false);
+    });
+
+    it('should return false for provider without config', () => {
+      expect(aiProviderSelectors.isProviderEnableResponseApi('non-existing')(mockState)).toBe(
+        false,
+      );
+    });
+  });
 });

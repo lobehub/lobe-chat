@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "You are about to delete unstarred topics. This action cannot be undone, please proceed with caution.",
     "duplicate": "Create Copy",
     "export": "Export Topics",
+    "openInNewWindow": "Open in a new window",
     "removeAll": "Delete All Topics",
     "removeUnstarred": "Delete Unstarred Topics"
   },

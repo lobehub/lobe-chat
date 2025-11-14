@@ -1,5 +1,138 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`createRemarkSelfClosingTagPlugin > should handle multiple tags in unordered list with directories and files 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "position": {
+            "end": {
+              "column": 32,
+              "line": 1,
+              "offset": 31,
+            },
+            "start": {
+              "column": 1,
+              "line": 1,
+              "offset": 0,
+            },
+          },
+          "type": "text",
+          "value": "我已查看了你桌面上 test 文件夹的目录，里面包含以下项目：",
+        },
+      ],
+      "position": {
+        "end": {
+          "column": 32,
+          "line": 1,
+          "offset": 31,
+        },
+        "start": {
+          "column": 1,
+          "line": 1,
+          "offset": 0,
+        },
+      },
+      "type": "paragraph",
+    },
+    {
+      "children": [
+        {
+          "checked": null,
+          "children": [
+            {
+              "data": {
+                "hName": "localFile",
+                "hProperties": {
+                  "isDirectory": true,
+                  "name": ".config",
+                  "path": "/Users/user/Desktop/test/.config",
+                },
+              },
+              "type": "localFile",
+            },
+          ],
+          "position": {
+            "end": {
+              "column": 87,
+              "line": 3,
+              "offset": 119,
+            },
+            "start": {
+              "column": 1,
+              "line": 3,
+              "offset": 33,
+            },
+          },
+          "spread": false,
+          "type": "listItem",
+        },
+        {
+          "checked": null,
+          "children": [
+            {
+              "data": {
+                "hName": "localFile",
+                "hProperties": {
+                  "isDirectory": true,
+                  "name": ".venv",
+                  "path": "/Users/user/Desktop/test/.venv",
+                },
+              },
+              "type": "localFile",
+            },
+          ],
+          "position": {
+            "end": {
+              "column": 79,
+              "line": 4,
+              "offset": 198,
+            },
+            "start": {
+              "column": 1,
+              "line": 4,
+              "offset": 120,
+            },
+          },
+          "spread": false,
+          "type": "listItem",
+        },
+      ],
+      "ordered": false,
+      "position": {
+        "end": {
+          "column": 79,
+          "line": 4,
+          "offset": 198,
+        },
+        "start": {
+          "column": 1,
+          "line": 3,
+          "offset": 33,
+        },
+      },
+      "spread": false,
+      "start": null,
+      "type": "list",
+    },
+  ],
+  "position": {
+    "end": {
+      "column": 79,
+      "line": 4,
+      "offset": 198,
+    },
+    "start": {
+      "column": 1,
+      "line": 1,
+      "offset": 0,
+    },
+  },
+  "type": "root",
+}
+`;
+
 exports[`createRemarkSelfClosingTagPlugin > should handle tag within a list item and generate snapshot 1`] = `
 {
   "children": [

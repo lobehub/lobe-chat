@@ -106,6 +106,12 @@
     "keyPlaceholder": "キー",
     "valuePlaceholder": "値"
   },
+  "LocalFile": {
+    "action": {
+      "open": "開く",
+      "showInFolder": "フォルダーで表示"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "無制限"
   },

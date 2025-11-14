@@ -106,6 +106,12 @@
     "keyPlaceholder": "Clé",
     "valuePlaceholder": "Valeur"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Ouvrir",
+      "showInFolder": "Afficher dans le dossier"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Illimité"
   },

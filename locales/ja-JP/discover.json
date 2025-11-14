@@ -41,9 +41,29 @@
         "openingMessage": "開始メッセージ",
         "openingQuestions": "開始時の質問",
         "title": "アシスタント設定"
+      },
+      "version": {
+        "empty": "履歴バージョンはありません",
+        "status": {
+          "archived": "アーカイブ済み",
+          "deprecated": "却下されました",
+          "unpublished": "審査中"
+        },
+        "table": {
+          "isLatest": "最新バージョン",
+          "isValidated": "検証済み",
+          "publishAt": "公開日",
+          "version": "バージョン番号"
+        },
+        "title": "バージョン履歴"
       }
     },
     "list": "アシスタントリスト",
+    "marketSource": {
+      "label": "マーケットソースを切り替える",
+      "legacy": "旧マーケット",
+      "new": "新マーケット"
+    },
     "more": "もっと見る",
     "plugins": "プラグインを統合",
     "recentSubmits": "最近の更新",
@@ -51,9 +71,34 @@
       "createdAt": "最新公開",
       "identifier": "アシスタントID",
       "knowledgeCount": "ナレッジベース数",
+      "myown": "自分のアシスタントを見る",
       "pluginCount": "プラグイン数",
       "title": "アシスタント名",
       "tokenUsage": "トークン使用量"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "アシスタントに安全性や政治的な問題があり、公式により削除されました",
+          "owner": "アシスタントの開発者が自ら削除またはアーカイブしました"
+        },
+        "subtitle": "現在アクセスしているアシスタントは、以下の理由によりアーカイブされています：",
+        "title": "アシスタントはアーカイブされました"
+      },
+      "backToMarket": "アシスタントマーケットに戻る",
+      "deprecated": {
+        "reasons": {
+          "official": "アシスタントに安全性や政治的な問題があり、公式により削除されました",
+          "owner": "アシスタントの開発者が自ら削除または却下しました"
+        },
+        "subtitle": "現在アクセスしているアシスタントは、以下の理由により却下されています：",
+        "title": "アシスタントは却下されました"
+      },
+      "support": "ご不明な点がある場合は、リンクをコピーして <1>support@lobehub.com</1> までお問い合わせください。",
+      "unpublished": {
+        "subtitle": "現在アクセスしているアシスタントはバージョン審査中です。ご質問がある場合は、リンクをコピーして <1>support@lobehub.com</1> までお問い合わせください。",
+        "title": "アシスタントは審査中です"
+      }
     },
     "suggestions": "関連情報",
     "systemRole": "アシスタント設定",

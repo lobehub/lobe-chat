@@ -13,7 +13,7 @@ interface ChatInvalidAPIKeyProps {
 const ChatInvalidAPIKey = memo<ChatInvalidAPIKeyProps>(({ id, provider }) => {
   const { t } = useTranslation('modelProvider');
   const { t: modelProviderErrorT } = useTranslation(['modelProvider', 'error']);
-  const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.delAndRegenerateMessage, s.deleteMessage]);
   const providerName = useProviderName(provider as GlobalLLMProviderKey);
 
   return (

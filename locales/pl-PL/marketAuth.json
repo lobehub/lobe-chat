@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Zamknij okno"
+    },
+    "messages": {
+      "authFailed": "Autoryzacja nie powiodła się: {{error}}",
+      "missingParams": "Brakujące parametry autoryzacji",
+      "processing": "Trwa przetwarzanie autoryzacji...",
+      "successWithCountdown": "{{message}} Okno zostanie automatycznie zamknięte za {{countdown}} sekund",
+      "successWithRedirect": "Autoryzacja zakończona sukcesem! Przekierowywanie..."
+    },
+    "titles": {
+      "error": "Autoryzacja nie powiodła się",
+      "loading": "Autoryzacja LobeHub Market",
+      "success": "Autoryzacja zakończona sukcesem"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Autoryzacja nie powiodła się, spróbuj ponownie.",
+    "browserOnly": "Proces autoryzacji może być uruchomiony tylko w przeglądarce.",
+    "codeConsumed": "Kod autoryzacyjny został już użyty, spróbuj ponownie.",
+    "codeVerifierMissing": "Sesja autoryzacyjna jest nieważna, rozpocznij proces logowania od nowa.",
+    "general": "Wystąpił błąd podczas autoryzacji, spróbuj ponownie.",
+    "handoffFailed": "Nie udało się uzyskać wyniku autoryzacji, spróbuj ponownie.",
+    "handoffTimeout": "Przekroczono czas autoryzacji, spróbuj ponownie po zakończeniu operacji w przeglądarce.",
+    "oidcNotReady": "Usługa autoryzacji nie jest jeszcze gotowa, spróbuj ponownie później.",
+    "openBrowserFailed": "Nie udało się otworzyć przeglądarki systemowej, spróbuj ponownie.",
+    "openPopupFailed": "Nie udało się otworzyć okna autoryzacji, sprawdź ustawienia blokowania wyskakujących okienek w przeglądarce.",
+    "popupClosed": "Okno autoryzacji zostało zamknięte przed zakończeniem procesu.",
+    "sessionExpired": "Sesja autoryzacyjna wygasła, zaloguj się ponownie.",
+    "stateMismatch": "Stan autoryzacji nie pasuje, spróbuj ponownie.",
+    "stateMissing": "Nie znaleziono stanu autoryzacji, spróbuj ponownie."
+  },
+  "messages": {
+    "loading": "Uruchamianie procesu autoryzacji...",
+    "success": {
+      "submit": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować asystenta.",
+      "upload": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować nową wersję."
+    }
+  }
+}

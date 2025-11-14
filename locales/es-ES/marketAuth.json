@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Cerrar ventana"
+    },
+    "messages": {
+      "authFailed": "Autenticación fallida: {{error}}",
+      "missingParams": "Faltan parámetros de autenticación",
+      "processing": "Procesando autenticación...",
+      "successWithCountdown": "{{message}} La ventana se cerrará automáticamente en {{countdown}} segundos",
+      "successWithRedirect": "¡Autenticación exitosa! Redirigiendo..."
+    },
+    "titles": {
+      "error": "Error de autenticación",
+      "loading": "Autenticación de LobeHub Market",
+      "success": "Autenticación exitosa"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "La autenticación ha fallado, por favor inténtalo de nuevo.",
+    "browserOnly": "El proceso de autenticación solo puede iniciarse en un navegador.",
+    "codeConsumed": "El código de autenticación ya ha sido utilizado, por favor inténtalo de nuevo.",
+    "codeVerifierMissing": "Sesión de autenticación no válida, por favor inicia sesión nuevamente.",
+    "general": "Se produjo un error durante la autenticación, por favor inténtalo de nuevo.",
+    "handoffFailed": "No se pudo obtener el resultado de la autenticación, por favor inténtalo de nuevo.",
+    "handoffTimeout": "Tiempo de espera de autenticación agotado, por favor completa la operación en el navegador e inténtalo de nuevo.",
+    "oidcNotReady": "El servicio de autenticación aún no está listo, por favor inténtalo más tarde.",
+    "openBrowserFailed": "No se pudo abrir el navegador del sistema, por favor inténtalo de nuevo.",
+    "openPopupFailed": "No se pudo abrir la ventana emergente de autenticación, por favor revisa la configuración del bloqueador de ventanas emergentes del navegador.",
+    "popupClosed": "La ventana de autenticación se cerró antes de completarse.",
+    "sessionExpired": "La sesión de autenticación ha expirado, por favor inicia sesión nuevamente.",
+    "stateMismatch": "Estado de autenticación no coincide, por favor inténtalo de nuevo.",
+    "stateMissing": "No se encontró el estado de autenticación, por favor inténtalo de nuevo."
+  },
+  "messages": {
+    "loading": "Iniciando el proceso de autenticación...",
+    "success": {
+      "submit": "¡Autenticación exitosa! Ahora puedes publicar asistentes.",
+      "upload": "¡Autenticación exitosa! Ahora puedes publicar una nueva versión."
+    }
+  }
+}

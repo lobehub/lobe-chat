@@ -41,9 +41,29 @@
         "openingMessage": "Openingsbericht",
         "openingQuestions": "Openingsvragen",
         "title": "Assistent instellingen"
+      },
+      "version": {
+        "empty": "Geen eerdere versies beschikbaar",
+        "status": {
+          "archived": "Gearchiveerd",
+          "deprecated": "Afgewezen",
+          "unpublished": "In beoordeling"
+        },
+        "table": {
+          "isLatest": "Laatste versie",
+          "isValidated": "Geverifieerd",
+          "publishAt": "Publicatiedatum",
+          "version": "Versienummer"
+        },
+        "title": "Versiegeschiedenis"
       }
     },
     "list": "Assistentenlijst",
+    "marketSource": {
+      "label": "Wissel van marktplaats",
+      "legacy": "Oude marktplaats",
+      "new": "Nieuwe marktplaats"
+    },
     "more": "Meer",
     "plugins": "Geïntegreerde plugins",
     "recentSubmits": "Recent bijgewerkt",
@@ -51,9 +71,34 @@
       "createdAt": "Recent gepubliceerd",
       "identifier": "Assistent ID",
       "knowledgeCount": "Aantal kennisbanken",
+      "myown": "Bekijk mijn assistenten",
       "pluginCount": "Aantal plugins",
       "title": "Assistent naam",
       "tokenUsage": "Token gebruik"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "De assistent is verwijderd door officiële instanties vanwege veiligheids- of politieke redenen",
+          "owner": "De eigenaar van de assistent heeft deze vrijwillig verwijderd of gearchiveerd"
+        },
+        "subtitle": "De assistent die je probeert te openen is gearchiveerd om een van de volgende redenen:",
+        "title": "Assistent is gearchiveerd"
+      },
+      "backToMarket": "Terug naar de assistentenmarktplaats",
+      "deprecated": {
+        "reasons": {
+          "official": "De assistent is verwijderd door officiële instanties vanwege veiligheids- of politieke redenen",
+          "owner": "De eigenaar van de assistent heeft deze vrijwillig verwijderd of afgewezen"
+        },
+        "subtitle": "De assistent die je probeert te openen is afgewezen om een van de volgende redenen:",
+        "title": "Assistent is afgewezen"
+      },
+      "support": "Bij vragen of problemen, kopieer de link en stuur deze naar <1>support@lobehub.com</1> voor ondersteuning.",
+      "unpublished": {
+        "subtitle": "De assistent die je probeert te openen wordt momenteel beoordeeld. Bij vragen, kopieer de link en stuur deze naar <1>support@lobehub.com</1> voor ondersteuning.",
+        "title": "Assistent in beoordeling"
+      }
     },
     "suggestions": "Gerelateerde aanbevelingen",
     "systemRole": "Assistent instellingen",

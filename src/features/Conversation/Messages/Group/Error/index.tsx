@@ -17,7 +17,7 @@ const ErrorContent = memo<ErrorContentProps>(({ error, id }) => {
   const { t } = useTranslation('common');
   const errorProps = useErrorContent(error);
 
-  const [deleteMessage] = useChatStore((s) => [s.deleteMessage]);
+  const [deleteMessage] = useChatStore((s) => [s.deleteDBMessage]);
   const message = <ErrorMessageExtra block data={{ error, id }} />;
 
   if (!error?.message) {

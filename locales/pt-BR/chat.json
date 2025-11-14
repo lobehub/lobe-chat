@@ -173,6 +173,7 @@
     "title": "Mencionar membros"
   },
   "messageAction": {
+    "continueGeneration": "Continuar gerando",
     "delAndRegenerate": "Excluir e Regenerar",
     "deleteDisabledByThreads": "Existem subtópicos, não é possível deletar.",
     "regenerate": "Regenerar"
@@ -239,6 +240,7 @@
   "noMatchingAgents": "Nenhum membro correspondente encontrado",
   "noMembersYet": "Este grupo ainda não tem membros. Clique no botão + para convidar assistentes.",
   "noSelectedAgents": "Nenhum membro selecionado ainda",
+  "openInNewWindow": "Abrir em uma nova janela",
   "owner": "Proprietário do grupo",
   "pin": "Fixar",
   "pinOff": "Desafixar",
@@ -366,6 +368,26 @@
     "overload": "Limite Excedido",
     "remained": "Restante",
     "used": "Usado"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Aprovar",
+      "approveAndRemember": "Aprovar e lembrar",
+      "approveOnce": "Aprovar apenas desta vez",
+      "mode": {
+        "allowList": "Lista de permissões",
+        "allowListDesc": "Executar automaticamente apenas as ferramentas aprovadas",
+        "autoRun": "Aprovação automática",
+        "autoRunDesc": "Aprovar automaticamente a execução de todas as ferramentas",
+        "manual": "Manual",
+        "manualDesc": "Requer aprovação manual a cada chamada"
+      },
+      "reject": "Rejeitar",
+      "rejectReasonPlaceholder": "Inserir o motivo da rejeição ajudará o Agente a entender e melhorar ações futuras",
+      "rejectTitle": "Rejeitar esta chamada de ferramenta",
+      "rejectedWithReason": "Esta chamada de ferramenta foi rejeitada: {{reason}}",
+      "toolRejected": "Esta chamada de ferramenta foi rejeitada"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Deseja abrir um novo tópico?",

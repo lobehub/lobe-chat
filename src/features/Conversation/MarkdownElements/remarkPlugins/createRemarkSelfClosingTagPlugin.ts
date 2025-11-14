@@ -25,7 +25,8 @@ export const createRemarkSelfClosingTagPlugin =
   (tagName: string): Plugin<[], any> =>
   () => {
     // Regex for the specific tag, ensure it matches the entire string for HTML check
-    const exactTagRegex = new RegExp(`^<${tagName}(\\s+[^>]*?)?\\s*\\/>$`);
+    // Allow trailing whitespace after /> to handle cases where markdown parsers include it
+    const exactTagRegex = new RegExp(`^<${tagName}(\\s+[^>]*?)?\\s*\\/>\\s*$`);
     // Regex for finding tags within text
     const textTagRegex = new RegExp(`<${tagName}(\\s+[^>]*?)?\\s*\\/>`, 'g');
 

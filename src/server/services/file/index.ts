@@ -1,11 +1,12 @@
 import { LobeChatDatabase } from '@lobechat/database';
+import { inferContentTypeFromImageUrl, nanoid, uuid } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
+import { sha256 } from 'js-sha256';
 
 import { serverDBEnv } from '@/config/db';
 import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
 import { TempFileManager } from '@/server/utils/tempFileManager';
-import { nanoid } from '@/utils/uuid';
 
 import { FileServiceImpl, createFileServiceModule } from './impls';
 
@@ -92,6 +93,100 @@ export class FileService {
    */
   public async uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }> {
     return this.impl.uploadMedia(key, buffer);
+  }
+
+  /**
+   * Create file record (common method)
+   * Automatically handles globalFiles deduplication logic
+   *
+   * @param params - File parameters
+   * @param params.id - Optional custom file ID (defaults to auto-generated)
+   * @returns File record and proxy URL
+   */
+  public async createFileRecord(params: {
+    fileHash: string;
+    fileType: string;
+    id?: string;
+    name: string;
+    size: number;
+    url: string;
+  }): Promise<{ fileId: string; url: string }> {
+    // Check if hash already exists in globalFiles
+    const { isExist } = await this.fileModel.checkHash(params.fileHash);
+
+    // Create database record
+    // If hash doesn't exist, also create globalFiles record
+    const { id } = await this.fileModel.create(
+      {
+        fileHash: params.fileHash,
+        fileType: params.fileType,
+        id: params.id, // Use custom ID if provided
+        name: params.name,
+        size: params.size,
+        url: params.url,
+      },
+      !isExist, // insertToGlobalFiles
+    );
+
+    // Return unified proxy URL: /f/:id
+    return {
+      fileId: id,
+      url: `/f/${id}`,
+    };
+  }
+
+  /**
+   * Upload base64 data and create database record
+   * @param base64Data - Base64 data (supports data URI format or pure base64)
+   * @param pathname - File storage path (must include file extension)
+   * @returns Contains key (storage path), fileId (database record ID) and url (proxy access path)
+   */
+  public async uploadBase64(
+    base64Data: string,
+    pathname: string,
+  ): Promise<{ fileId: string; key: string; url: string }> {
+    let base64String: string;
+
+    // If data URI format (data:image/png;base64,xxx)
+    if (base64Data.startsWith('data:')) {
+      const commaIndex = base64Data.indexOf(',');
+      if (commaIndex === -1) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid base64 data format' });
+      }
+      base64String = base64Data.slice(commaIndex + 1);
+    } else {
+      // Pure base64 string
+      base64String = base64Data;
+    }
+
+    // Convert to Buffer
+    const buffer = Buffer.from(base64String, 'base64');
+
+    // Upload to storage (S3 or local)
+    const { key } = await this.uploadMedia(pathname, buffer);
+
+    // Extract filename from pathname
+    const name = pathname.split('/').pop() || 'unknown';
+
+    // Calculate file metadata
+    const size = buffer.length;
+    const fileType = inferContentTypeFromImageUrl(pathname) || 'application/octet-stream';
+    const hash = sha256(buffer);
+
+    // Generate UUID for cleaner URLs
+    const fileId = uuid();
+
+    // Use common method to create file record
+    const { fileId: createdId, url } = await this.createFileRecord({
+      fileHash: hash,
+      fileType,
+      id: fileId, // Use UUID instead of auto-generated ID
+      name,
+      size,
+      url: key, // Store original key (S3 key or desktop://)
+    });
+
+    return { fileId: createdId, key, url };
   }
 
   async downloadFileToLocal(

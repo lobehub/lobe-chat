@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "Stai per eliminare i temi non contrassegnati. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
     "duplicate": "Crea una copia",
     "export": "Esporta il tema",
+    "openInNewWindow": "Apri in una nuova finestra",
     "removeAll": "Elimina tutti i temi",
     "removeUnstarred": "Elimina i temi non contrassegnati"
   },

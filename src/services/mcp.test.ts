@@ -305,7 +305,13 @@ describe('MCPService', () => {
       mockPluginSelectors.getInstalledPluginById.mockReturnValue(() => mockPlugin);
       mockPluginSelectors.getCustomPluginById.mockReturnValue(() => null);
 
-      const mockResult = 'response data';
+      const mockResult = {
+        content: 'response data',
+        state: {
+          content: [{ text: 'response data', type: 'text' }],
+        },
+        success: true,
+      };
       vi.mocked(toolsClient.mcp.callTool.mutate).mockResolvedValue(mockResult);
 
       const payload: ChatToolPayload = {

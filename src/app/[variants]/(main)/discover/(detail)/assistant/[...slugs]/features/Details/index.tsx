@@ -13,6 +13,7 @@ import Nav from './Nav';
 import Overview from './Overview';
 import Related from './Related';
 import SystemRole from './SystemRole';
+import Versions from './Versions';
 
 const Details = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const { mobile = isMobile } = useResponsive();
@@ -38,6 +39,7 @@ const Details = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
           {activeTab === AssistantNavKey.Overview && <Overview />}
           {activeTab === AssistantNavKey.SystemRole && <SystemRole />}
           {activeTab === AssistantNavKey.Capabilities && <Capabilities />}
+          {activeTab === AssistantNavKey.Version && <Versions />}
           {activeTab === AssistantNavKey.Related && <Related />}
         </Flexbox>
         <Sidebar mobile={mobile} />

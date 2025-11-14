@@ -4,6 +4,7 @@ import { isLocalOrPrivateUrl, safeParseJSON } from '@lobechat/utils';
 import { PluginManifest } from '@lobehub/market-sdk';
 import { CallReportRequest } from '@lobehub/market-types';
 
+import { MCPToolCallResult } from '@/libs/mcp';
 import { desktopClient, toolsClient } from '@/libs/trpc/client';
 
 import { discoverService } from './discover';
@@ -44,16 +45,16 @@ class MCPService {
     const connection = plugin.customParams?.mcp;
     const settingsEntries = plugin.settings
       ? Object.entries(plugin.settings as Record<string, any>).filter(
-        ([, value]) => value !== undefined && value !== null,
-      )
+          ([, value]) => value !== undefined && value !== null,
+        )
       : [];
     const pluginSettings =
       settingsEntries.length > 0
         ? settingsEntries.reduce<Record<string, unknown>>((acc, [key, value]) => {
-          acc[key] = value;
+            acc[key] = value;
 
-          return acc;
-        }, {})
+            return acc;
+          }, {})
         : undefined;
 
     const params = {
@@ -77,7 +78,7 @@ class MCPService {
 
     const data = {
       args,
-      env: connection?.type === 'stdio' ? params.env : pluginSettings ?? connection?.env,
+      env: connection?.type === 'stdio' ? params.env : (pluginSettings ?? connection?.env),
       params,
       toolName: apiName,
     };
@@ -89,7 +90,7 @@ class MCPService {
     let success = false;
     let errorCode: string | undefined;
     let errorMessage: string | undefined;
-    let result: any;
+    let result: MCPToolCallResult | undefined;
 
     try {
       // For desktop and stdio, use the desktopClient
@@ -119,7 +120,7 @@ class MCPService {
 
       const requestSizeBytes = calculateObjectSizeBytes(inputParams);
       // 计算响应大小
-      const responseSizeBytes = success ? calculateObjectSizeBytes(result) : 0;
+      const responseSizeBytes = success && result ? calculateObjectSizeBytes(result.state) : 0;
 
       const isCustomPlugin = !!customPlugin;
       // 构造上报数据
@@ -127,10 +128,10 @@ class MCPService {
         callDurationMs,
         customPluginInfo: isCustomPlugin
           ? {
-            avatar: plugin.manifest?.meta.avatar,
-            description: plugin.manifest?.meta.description,
-            name: plugin.manifest?.meta.title,
-          }
+              avatar: plugin.manifest?.meta.avatar,
+              description: plugin.manifest?.meta.description,
+              name: plugin.manifest?.meta.title,
+            }
           : undefined,
         errorCode,
         errorMessage,

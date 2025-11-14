@@ -56,7 +56,7 @@ export const browserless: CrawlImpl = async (url, { filterOptions }) => {
     if (
       !!result.content &&
       result.title &&
-      // Just a moment... 说明被 CF 拦截了
+      // "Just a moment..." indicates being blocked by CloudFlare
       result.title.trim() !== 'Just a moment...'
     ) {
       return {

@@ -12,43 +12,16 @@ describe('InterventionChecker', () => {
 
     it('should return the policy when config is a simple string', () => {
       expect(InterventionChecker.shouldIntervene({ config: 'never', toolArgs: {} })).toBe('never');
-      expect(InterventionChecker.shouldIntervene({ config: 'always', toolArgs: {} })).toBe(
-        'always',
+      expect(InterventionChecker.shouldIntervene({ config: 'required', toolArgs: {} })).toBe(
+        'required',
       );
-      expect(InterventionChecker.shouldIntervene({ config: 'first', toolArgs: {} })).toBe('first');
-    });
-
-    it('should handle "first" policy with confirmed history', () => {
-      const toolKey = 'web-browsing/crawlSinglePage';
-      const confirmedHistory = [toolKey];
-
-      const result = InterventionChecker.shouldIntervene({
-        config: 'first',
-        toolArgs: {},
-        confirmedHistory,
-        toolKey,
-      });
-      expect(result).toBe('never');
-    });
-
-    it('should require intervention for "first" policy without confirmation', () => {
-      const toolKey = 'web-browsing/crawlSinglePage';
-      const confirmedHistory: string[] = [];
-
-      const result = InterventionChecker.shouldIntervene({
-        config: 'first',
-        toolArgs: {},
-        confirmedHistory,
-        toolKey,
-      });
-      expect(result).toBe('first');
     });
 
     it('should match rules in order and return first match', () => {
       const config: HumanInterventionConfig = [
         { match: { command: 'ls:*' }, policy: 'never' },
-        { match: { command: 'git commit:*' }, policy: 'first' },
-        { policy: 'always' }, // Default rule
+        { match: { command: 'git commit:*' }, policy: 'required' },
+        { policy: 'required' }, // Default rule
       ];
 
       expect(InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'ls:' } })).toBe(
@@ -56,20 +29,20 @@ describe('InterventionChecker', () => {
       );
       expect(
         InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'git commit:' } }),
-      ).toBe('first');
+      ).toBe('required');
       expect(
         InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'rm -rf /' } }),
-      ).toBe('always');
+      ).toBe('required');
     });
 
-    it('should return always as default when no rule matches', () => {
+    it('should return require as default when no rule matches', () => {
       const config: HumanInterventionConfig = [{ match: { command: 'ls:*' }, policy: 'never' }];
 
       const result = InterventionChecker.shouldIntervene({
         config,
         toolArgs: { command: 'rm -rf /' },
       });
-      expect(result).toBe('always');
+      expect(result).toBe('required');
     });
 
     it('should handle multiple parameter matching', () => {
@@ -81,7 +54,7 @@ describe('InterventionChecker', () => {
           },
           policy: 'never',
         },
-        { policy: 'always' },
+        { policy: 'required' },
       ];
 
       // Both match
@@ -104,20 +77,20 @@ describe('InterventionChecker', () => {
             path: '/tmp/file.ts',
           },
         }),
-      ).toBe('always');
+      ).toBe('required');
     });
 
     it('should handle default rule without match', () => {
       const config: HumanInterventionConfig = [
         { match: { command: 'ls:*' }, policy: 'never' },
-        { policy: 'first' }, // Default rule
+        { policy: 'required' }, // Default rule
       ];
 
       const result = InterventionChecker.shouldIntervene({
         config,
         toolArgs: { command: 'anything' },
       });
-      expect(result).toBe('first');
+      expect(result).toBe('required');
     });
   });
 
@@ -249,10 +222,10 @@ describe('InterventionChecker', () => {
     it('should handle Bash tool scenario', () => {
       const config: HumanInterventionConfig = [
         { match: { command: 'ls:*' }, policy: 'never' },
-        { match: { command: 'git add:*' }, policy: 'first' },
-        { match: { command: 'git commit:*' }, policy: 'first' },
-        { match: { command: 'rm:*' }, policy: 'always' },
-        { policy: 'always' },
+        { match: { command: 'git add:*' }, policy: 'required' },
+        { match: { command: 'git commit:*' }, policy: 'required' },
+        { match: { command: 'rm:*' }, policy: 'required' },
+        { policy: 'required' },
       ];
 
       // Safe commands - never
@@ -260,27 +233,27 @@ describe('InterventionChecker', () => {
         'never',
       );
 
-      // Git commands - first
+      // Git commands - require
       expect(
         InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'git add:.' } }),
-      ).toBe('first');
+      ).toBe('required');
       expect(
         InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'git commit:-m' } }),
-      ).toBe('first');
+      ).toBe('required');
 
-      // Dangerous commands - always
+      // Dangerous commands - require
       expect(InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'rm:-rf' } })).toBe(
-        'always',
+        'required',
       );
       expect(
         InterventionChecker.shouldIntervene({ config, toolArgs: { command: 'npm install' } }),
-      ).toBe('always');
+      ).toBe('required');
     });
 
     it('should handle LocalSystem tool scenario', () => {
       const config: HumanInterventionConfig = [
         { match: { path: '/Users/project/*' }, policy: 'never' },
-        { policy: 'first' },
+        { policy: 'required' },
       ];
 
       // Project directory - never
@@ -291,44 +264,18 @@ describe('InterventionChecker', () => {
         }),
       ).toBe('never');
 
-      // Outside project - first
+      // Outside project - require
       expect(
         InterventionChecker.shouldIntervene({ config, toolArgs: { path: '/tmp/file.ts' } }),
-      ).toBe('first');
+      ).toBe('required');
     });
 
     it('should handle Web Browsing tool with simple policy', () => {
-      const config: HumanInterventionConfig = 'always';
+      const config: HumanInterventionConfig = 'required';
 
       expect(
         InterventionChecker.shouldIntervene({ config, toolArgs: { url: 'https://example.com' } }),
-      ).toBe('always');
-    });
-
-    it('should handle first policy with confirmation history', () => {
-      const config: HumanInterventionConfig = [
-        { match: { command: 'git add:*' }, policy: 'first' },
-        { policy: 'always' },
-      ];
-
-      const toolKey = 'bash/bash#abc123';
-      const args = { command: 'git add:.' };
-
-      // First time - requires intervention
-      expect(
-        InterventionChecker.shouldIntervene({
-          config,
-          toolArgs: args,
-          confirmedHistory: [],
-          toolKey,
-        }),
-      ).toBe('first');
-
-      // After confirmation - never
-      const confirmedHistory = [toolKey];
-      expect(
-        InterventionChecker.shouldIntervene({ config, toolArgs: args, confirmedHistory, toolKey }),
-      ).toBe('never');
+      ).toBe('required');
     });
   });
 });

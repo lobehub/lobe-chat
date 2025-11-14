@@ -1,6 +1,7 @@
 import createClient, { ModelClient } from '@azure-rest/ai-inference';
 import { AzureKeyCredential } from '@azure/core-auth';
 import { ModelProvider } from 'model-bank';
+import type { Readable as NodeReadable } from 'node:stream';
 import OpenAI from 'openai';
 
 import { systemToUserModels } from '../../const/models';
@@ -64,9 +65,40 @@ export class LobeAzureAI implements LobeRuntimeAI {
       });
 
       if (enableStreaming) {
-        const stream = await response.asBrowserStream();
+        const unifiedStream = await (async () => {
+          if (typeof window === 'undefined') {
+            /**
+             * In Node.js the SDK exposes a Node readable stream, so we convert it to a Web ReadableStream
+             * to reuse the same streaming pipeline used by Edge/browser runtimes.
+             */
+            const streamModule = await import('node:stream');
+            const Readable = streamModule.Readable ?? streamModule.default.Readable;
 
-        const [prod, debug] = stream.body!.tee();
+            if (!Readable) throw new Error('node:stream module missing Readable export');
+            if (typeof Readable.toWeb !== 'function')
+              throw new Error('Readable.toWeb is not a function');
+
+            const nodeResponse = await response.asNodeStream();
+            const nodeStream = nodeResponse.body;
+
+            if (!nodeStream) {
+              throw new Error('Azure AI response body is empty');
+            }
+
+            return Readable.toWeb(nodeStream as unknown as NodeReadable) as ReadableStream;
+          }
+
+          const browserResponse = await response.asBrowserStream();
+          const browserStream = browserResponse.body;
+
+          if (!browserStream) {
+            throw new Error('Azure AI response body is empty');
+          }
+
+          return browserStream;
+        })();
+
+        const [prod, debug] = unifiedStream.tee();
 
         if (process.env.DEBUG_AZURE_AI_CHAT_COMPLETION === '1') {
           debugStream(debug).catch(console.error);

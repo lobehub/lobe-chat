@@ -274,28 +274,28 @@ export class ToolsEngine {
   }
 
   /**
-   * 获取可用的插件列表（用于调试和监控）
+   * Get available plugin list (for debugging and monitoring)
    */
   getAvailablePlugins(): string[] {
     return Array.from(this.manifestSchemas.keys());
   }
 
   /**
-   * 检查特定插件是否可用
+   * Check if a specific plugin is available
    */
   hasPlugin(pluginId: string): boolean {
     return this.manifestSchemas.has(pluginId);
   }
 
   /**
-   * 获取插件的 manifest
+   * Get plugin manifest
    */
   getPluginManifest(pluginId: string): LobeToolManifest | undefined {
     return this.manifestSchemas.get(pluginId);
   }
 
   /**
-   * 更新插件 manifest schemas（用于动态添加插件）
+   * Update plugin manifest schemas (for dynamically adding plugins)
    */
   updateManifestSchemas(manifestSchemas: LobeToolManifest[]): void {
     this.manifestSchemas.clear();
@@ -305,21 +305,21 @@ export class ToolsEngine {
   }
 
   /**
-   * 添加单个插件 manifest
+   * Add a single plugin manifest
    */
   addPluginManifest(manifest: LobeToolManifest): void {
     this.manifestSchemas.set(manifest.identifier, manifest);
   }
 
   /**
-   * 移除插件 manifest
+   * Remove plugin manifest
    */
   removePluginManifest(pluginId: string): boolean {
     return this.manifestSchemas.delete(pluginId);
   }
 
   /**
-   * 获取所有 enabled plugin 的 Manifest Map
+   * Get Manifest Map of all enabled plugins
    */
   getEnabledPluginManifests(toolIds: string[] = []): Map<string, LobeToolManifest> {
     // Merge user-provided tool IDs with default tool IDs
@@ -341,7 +341,7 @@ export class ToolsEngine {
   }
 
   /**
-   * 获取所有插件的 Manifest Map
+   * Get Manifest Map of all plugins
    */
   getAllPluginManifests(): Map<string, LobeToolManifest> {
     return new Map(this.manifestSchemas);

@@ -1,4 +1,4 @@
-import { type MessageMetadata } from '@lobechat/types';
+import { ModelPerformance, ModelUsage } from '@lobechat/types';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -14,22 +14,21 @@ interface AssistantMessageExtraProps {
   content: string;
   extra?: any;
   id: string;
-  metadata?: MessageMetadata | null;
+  model?: string;
+  performance?: ModelPerformance;
+  provider?: string;
   tools?: any[];
+  usage?: ModelUsage;
 }
 
 export const AssistantMessageExtra = memo<AssistantMessageExtraProps>(
-  ({ extra, id, content, metadata, tools }) => {
+  ({ extra, id, content, performance, usage, tools, provider, model }) => {
     const loading = useChatStore(messageStateSelectors.isMessageGenerating(id));
 
     return (
       <Flexbox gap={8} style={{ marginTop: !!tools?.length ? 8 : 4 }}>
-        {content !== LOADING_FLAT && extra?.fromModel && (
-          <Usage
-            metadata={metadata || {}}
-            model={extra?.fromModel}
-            provider={extra.fromProvider!}
-          />
+        {content !== LOADING_FLAT && model && (
+          <Usage model={model} performance={performance} provider={provider!} usage={usage} />
         )}
         <>
           {!!extra?.tts && (

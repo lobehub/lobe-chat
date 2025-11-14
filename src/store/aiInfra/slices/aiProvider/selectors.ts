@@ -108,7 +108,7 @@ const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) =>
 
   if (typeof enableResponseApi === 'boolean') return enableResponseApi;
 
-  return false;
+  return id === 'openai';
 };
 
 const isInitAiProviderRuntimeState = (s: AIProviderStoreState) => !!s.isInitAiProviderRuntimeState;

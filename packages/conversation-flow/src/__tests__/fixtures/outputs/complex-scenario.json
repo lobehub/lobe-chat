@@ -62,6 +62,9 @@
         {
           "content": "I'll help you debug the code. Let me first check the syntax and run some analysis.",
           "id": "msg-502",
+          "performance": {
+            "tps": 45
+          },
           "tools": [
             {
               "id": "tool-lint",
@@ -93,9 +96,24 @@
               },
               "result_msg_id": "msg-504"
             }
-          ]
+          ],
+          "usage": {
+            "totalInputTokens": 32,
+            "totalOutputTokens": 48,
+            "totalTokens": 80,
+            "cost": 0.00024
+          }
         }
-      ]
+      ],
+      "performance": {
+        "tps": 45
+      },
+      "usage": {
+        "totalInputTokens": 32,
+        "totalOutputTokens": 48,
+        "totalTokens": 80,
+        "cost": 0.00024
+      }
     },
     {
       "id": "msg-505",
@@ -104,7 +122,11 @@
       "parentId": "msg-504",
       "createdAt": 1704067210000,
       "updatedAt": 1704067210000,
-      "meta": {}
+      "meta": {},
+      "branch": {
+        "activeBranchIndex": 0,
+        "count": 2
+      }
     },
     {
       "id": "msg-506",

@@ -2,6 +2,7 @@
 
 import { UIChatMessage } from '@lobechat/types';
 import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -15,7 +16,10 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors } from '@/store/chat/slices/message/selectors';
+import {
+  displayMessageSelectors,
+  messageStateSelectors,
+} from '@/store/chat/slices/message/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -25,27 +29,20 @@ import EditState from './EditState';
 
 const MOBILE_AVATAR_SIZE = 32;
 
-interface GroupMessageProps extends UIChatMessage {
+interface GroupMessageProps {
   disableEditing?: boolean;
+  id: string;
   index: number;
-  showTitle?: boolean;
 }
 
-const GroupMessage = memo<GroupMessageProps>((props) => {
-  const {
-    showTitle,
-    id,
-    disableEditing,
-    usage,
-    index,
-    createdAt,
-    meta,
-    children,
-    performance,
-    model,
-    provider,
-  } = props;
+const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing }) => {
+  const item = useChatStore(
+    displayMessageSelectors.getDisplayMessageById(id),
+    isEqual,
+  ) as UIChatMessage;
+  const { usage, createdAt, meta, children, performance, model, provider } = item;
   const avatar = meta;
+
   const { mobile } = useResponsive();
   const placement = 'left';
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
@@ -55,7 +52,7 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
     editing: false,
     placement,
     primary: false,
-    showTitle,
+    showTitle: true,
     time: createdAt,
     title: avatar.title,
     variant,
@@ -64,7 +61,9 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
   const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
   const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
   const openChatSettings = useOpenChatSettings();
-  const lastAssistantMsg = useChatStore(chatSelectors.getGroupLatestMessageWithoutTools(id));
+  const lastAssistantMsg = useChatStore(
+    displayMessageSelectors.getGroupLatestMessageWithoutTools(id),
+  );
 
   const contentId = lastAssistantMsg?.id;
 
@@ -90,10 +89,15 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
           avatar={avatar}
           onClick={onAvatarClick}
           placement={placement}
-          size={mobile ? MOBILE_AVATAR_SIZE : undefined}
-          style={{ marginTop: 6 }}
+          size={MOBILE_AVATAR_SIZE}
         />
-        <Title avatar={avatar} placement={placement} showTitle time={createdAt} />
+        <Title
+          avatar={avatar}
+          placement={placement}
+          showTitle
+          style={{ marginBlockEnd: 0 }}
+          time={createdAt}
+        />
       </Flexbox>
       {isEditing && contentId ? (
         <EditState content={lastAssistantMsg?.content} id={contentId} />
@@ -111,19 +115,20 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
               blocks={children}
               contentId={contentId}
               disableEditing={disableEditing}
+              id={id}
               messageIndex={index}
             />
           )}
 
           {model && (
-            <Usage metadata={{ ...performance, ...usage }} model={model} provider={provider!} />
+            <Usage model={model} performance={performance} provider={provider!} usage={usage} />
           )}
           {!disableEditing && (
             <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
               <GroupActionsBar
                 contentBlock={lastAssistantMsg}
                 contentId={contentId}
-                data={props}
+                data={item}
                 id={id}
                 index={index}
               />
@@ -135,6 +140,6 @@ const GroupMessage = memo<GroupMessageProps>((props) => {
       {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
     </Flexbox>
   );
-});
+}, isEqual);
 
 export default GroupMessage;

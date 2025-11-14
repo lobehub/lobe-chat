@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
     "duplicate": "創建副本",
     "export": "匯出話題",
+    "openInNewWindow": "在新視窗中開啟頁面",
     "removeAll": "刪除全部話題",
     "removeUnstarred": "刪除未收藏話題"
   },

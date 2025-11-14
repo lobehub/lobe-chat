@@ -199,6 +199,12 @@
     "all": "Tout",
     "list": {
       "disabled": "Non activé",
+      "disabledActions": {
+        "sort": "Méthode de tri",
+        "sortAlphabetical": "Trier par ordre alphabétique",
+        "sortAlphabeticalDesc": "Trier par ordre alphabétique décroissant",
+        "sortDefault": "Tri par défaut"
+      },
       "enabled": "Activé"
     },
     "notFound": "Aucun résultat trouvé",
@@ -391,7 +397,13 @@
       "addNew": "Ajouter un modèle",
       "disabled": "Non activé",
       "disabledActions": {
-        "showMore": "Afficher tout"
+        "showMore": "Afficher tout",
+        "sort": "Méthode de tri",
+        "sortAlphabetical": "Trier par ordre alphabétique",
+        "sortAlphabeticalDesc": "Trier par ordre alphabétique décroissant",
+        "sortDefault": "Tri par défaut",
+        "sortReleasedAt": "Trier par date de sortie la plus ancienne",
+        "sortReleasedAtDesc": "Trier par date de sortie la plus récente"
       },
       "empty": {
         "desc": "Veuillez créer un modèle personnalisé ou importer un modèle pour commencer à l'utiliser.",

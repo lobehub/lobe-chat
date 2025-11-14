@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Đóng cửa sổ"
+    },
+    "messages": {
+      "authFailed": "Xác thực thất bại: {{error}}",
+      "missingParams": "Thiếu tham số xác thực",
+      "processing": "Đang xử lý xác thực...",
+      "successWithCountdown": "{{message}} Cửa sổ sẽ tự động đóng sau {{countdown}} giây",
+      "successWithRedirect": "Xác thực thành công! Đang chuyển hướng..."
+    },
+    "titles": {
+      "error": "Xác thực thất bại",
+      "loading": "Xác thực LobeHub Market",
+      "success": "Xác thực thành công"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Xác thực thất bại, vui lòng thử lại.",
+    "browserOnly": "Quy trình xác thực chỉ có thể bắt đầu trong trình duyệt.",
+    "codeConsumed": "Mã xác thực đã được sử dụng, vui lòng thử lại.",
+    "codeVerifierMissing": "Phiên xác thực không hợp lệ, vui lòng đăng nhập lại.",
+    "general": "Đã xảy ra lỗi xác thực, vui lòng thử lại.",
+    "handoffFailed": "Không thể lấy kết quả xác thực, vui lòng thử lại.",
+    "handoffTimeout": "Hết thời gian xác thực, vui lòng hoàn tất thao tác trong trình duyệt rồi thử lại.",
+    "oidcNotReady": "Dịch vụ xác thực chưa sẵn sàng, vui lòng thử lại sau.",
+    "openBrowserFailed": "Không thể mở trình duyệt hệ thống, vui lòng thử lại.",
+    "openPopupFailed": "Không thể mở cửa sổ xác thực, vui lòng kiểm tra cài đặt chặn cửa sổ bật lên của trình duyệt.",
+    "popupClosed": "Cửa sổ xác thực đã bị đóng trước khi hoàn tất.",
+    "sessionExpired": "Phiên xác thực đã hết hạn, vui lòng đăng nhập lại.",
+    "stateMismatch": "Trạng thái xác thực không khớp, vui lòng thử lại.",
+    "stateMissing": "Không tìm thấy trạng thái xác thực, vui lòng thử lại."
+  },
+  "messages": {
+    "loading": "Đang khởi động quy trình xác thực...",
+    "success": {
+      "submit": "Xác thực thành công! Bây giờ bạn có thể xuất bản trợ lý.",
+      "upload": "Xác thực thành công! Bây giờ bạn có thể xuất bản phiên bản mới."
+    }
+  }
+}

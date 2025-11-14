@@ -41,9 +41,29 @@
         "openingMessage": "Message d'ouverture",
         "openingQuestions": "Questions d'ouverture",
         "title": "Paramètres de l'assistant"
+      },
+      "version": {
+        "empty": "Aucune version historique disponible",
+        "status": {
+          "archived": "Archivé",
+          "deprecated": "Rejeté",
+          "unpublished": "En cours de révision"
+        },
+        "table": {
+          "isLatest": "Dernière version",
+          "isValidated": "Validé",
+          "publishAt": "Date de publication",
+          "version": "Numéro de version"
+        },
+        "title": "Historique des versions"
       }
     },
     "list": "Liste des assistants",
+    "marketSource": {
+      "label": "Changer de source de marché",
+      "legacy": "Ancien marché",
+      "new": "Nouveau marché"
+    },
     "more": "Plus",
     "plugins": "Intégrer des plugins",
     "recentSubmits": "Mises à jour récentes",
@@ -51,9 +71,34 @@
       "createdAt": "Publié récemment",
       "identifier": "ID de l'assistant",
       "knowledgeCount": "Nombre de bases de connaissances",
+      "myown": "Voir mes assistants",
       "pluginCount": "Nombre de plugins",
       "title": "Nom de l'assistant",
       "tokenUsage": "Utilisation des tokens"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "L’assistant a été retiré par l’équipe officielle pour des raisons de sécurité ou politiques",
+          "owner": "Le propriétaire de l’assistant a volontairement retiré/archivé cet assistant"
+        },
+        "subtitle": "L’assistant que vous essayez d’accéder a été archivé pour l’une des raisons suivantes :",
+        "title": "Assistant archivé"
+      },
+      "backToMarket": "Retour au marché des assistants",
+      "deprecated": {
+        "reasons": {
+          "official": "L’assistant a été retiré par l’équipe officielle pour des raisons de sécurité ou politiques",
+          "owner": "Le propriétaire de l’assistant a volontairement retiré/rejeté cet assistant"
+        },
+        "subtitle": "L’assistant que vous essayez d’accéder a été rejeté pour l’une des raisons suivantes :",
+        "title": "Assistant rejeté"
+      },
+      "support": "Pour toute question, veuillez copier le lien et l’envoyer à <1>support@lobehub.com</1> pour assistance.",
+      "unpublished": {
+        "subtitle": "L’assistant que vous essayez d’accéder est en cours de révision. Pour toute question, veuillez copier le lien et l’envoyer à <1>support@lobehub.com</1>.",
+        "title": "Assistant en cours de révision"
+      }
     },
     "suggestions": "Suggestions connexes",
     "systemRole": "Paramètres de l'assistant",

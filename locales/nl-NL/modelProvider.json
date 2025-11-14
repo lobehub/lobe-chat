@@ -199,6 +199,12 @@
     "all": "Alles",
     "list": {
       "disabled": "Niet ingeschakeld",
+      "disabledActions": {
+        "sort": "Sorteervolgorde",
+        "sortAlphabetical": "Alfabetisch sorteren",
+        "sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
+        "sortDefault": "Standaard sortering"
+      },
       "enabled": "Ingeschakeld"
     },
     "notFound": "Geen zoekresultaten gevonden",
@@ -391,7 +397,13 @@
       "addNew": "Model toevoegen",
       "disabled": "Niet ingeschakeld",
       "disabledActions": {
-        "showMore": "Toon alles"
+        "showMore": "Toon alles",
+        "sort": "Sorteervolgorde",
+        "sortAlphabetical": "Alfabetisch sorteren",
+        "sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
+        "sortDefault": "Standaard sortering",
+        "sortReleasedAt": "Sorteren op oudste publicatiedatum",
+        "sortReleasedAtDesc": "Sorteren op nieuwste publicatiedatum"
       },
       "empty": {
         "desc": "Maak een aangepast model of haal een model op om te beginnen met gebruiken.",

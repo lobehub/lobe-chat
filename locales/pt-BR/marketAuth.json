@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Fechar janela"
+    },
+    "messages": {
+      "authFailed": "Falha na autorização: {{error}}",
+      "missingParams": "Parâmetros de autorização ausentes",
+      "processing": "Processando autorização...",
+      "successWithCountdown": "{{message}} A janela será fechada automaticamente em {{countdown}} segundos",
+      "successWithRedirect": "Autorização bem-sucedida! Redirecionando..."
+    },
+    "titles": {
+      "error": "Falha na autorização",
+      "loading": "Autorização do LobeHub Market",
+      "success": "Autorização bem-sucedida"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Falha na autorização, tente novamente.",
+    "browserOnly": "O processo de autorização só pode ser iniciado em um navegador.",
+    "codeConsumed": "O código de autorização já foi utilizado, tente novamente.",
+    "codeVerifierMissing": "Sessão de autorização inválida, inicie o login novamente.",
+    "general": "Ocorreu um erro na autorização, tente novamente.",
+    "handoffFailed": "Não foi possível obter o resultado da autorização, tente novamente.",
+    "handoffTimeout": "Tempo de autorização esgotado, conclua a operação no navegador e tente novamente.",
+    "oidcNotReady": "O serviço de autorização ainda não está pronto, tente novamente mais tarde.",
+    "openBrowserFailed": "Não foi possível abrir o navegador do sistema, tente novamente.",
+    "openPopupFailed": "Não foi possível abrir a janela de autorização, verifique as configurações de bloqueio de pop-ups do navegador.",
+    "popupClosed": "A janela de autorização foi fechada antes da conclusão.",
+    "sessionExpired": "A sessão de autorização expirou, faça login novamente.",
+    "stateMismatch": "Estado de autorização incompatível, tente novamente.",
+    "stateMissing": "Estado de autorização não encontrado, tente novamente."
+  },
+  "messages": {
+    "loading": "Iniciando o processo de autorização...",
+    "success": {
+      "submit": "Autorização bem-sucedida! Agora você pode publicar o assistente.",
+      "upload": "Autorização bem-sucedida! Agora você pode publicar uma nova versão."
+    }
+  }
+}

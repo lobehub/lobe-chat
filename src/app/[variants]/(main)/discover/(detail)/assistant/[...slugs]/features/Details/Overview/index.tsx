@@ -31,7 +31,9 @@ const Overview = memo(() => {
     backgroundColor,
     config,
   } = useDetailContext();
+  console.log('examples', examples);
 
+  console.log('summary', summary);
   const data: any = [
     {
       content: config?.openingMessage,

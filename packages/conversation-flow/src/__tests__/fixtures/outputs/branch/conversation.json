@@ -63,7 +63,11 @@
       "parentId": null,
       "createdAt": 1704067200000,
       "updatedAt": 1704067200000,
-      "meta": {}
+      "meta": {},
+      "branch": {
+        "activeBranchIndex": 0,
+        "count": 3
+      }
     },
     {
       "id": "msg-202",

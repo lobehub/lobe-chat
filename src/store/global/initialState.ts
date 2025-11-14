@@ -50,10 +50,13 @@ export enum ProfileTabs {
   Profile = 'profile',
   Security = 'security',
   Stats = 'stats',
+  Usage = 'usage',
 }
 
 export interface SystemStatus {
   chatInputHeight?: number;
+  disabledModelProvidersSortType?: string;
+  disabledModelsSortType?: string;
   expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
@@ -96,6 +99,10 @@ export interface SystemStatus {
    * theme mode
    */
   themeMode?: ThemeMode;
+  /**
+   * 是否使用短格式显示 token
+   */
+  tokenDisplayFormatShort?: boolean;
   zenMode?: boolean;
 }
 
@@ -124,6 +131,8 @@ export interface GlobalState {
 
 export const INITIAL_STATUS = {
   chatInputHeight: 64,
+  disabledModelProvidersSortType: 'default',
+  disabledModelsSortType: 'default',
   expandInputActionbar: true,
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
   fileManagerViewMode: 'list' as const,
@@ -146,6 +155,7 @@ export const INITIAL_STATUS = {
   showSystemRole: false,
   systemRoleExpandedMap: {},
   themeMode: 'auto',
+  tokenDisplayFormatShort: true,
   zenMode: false,
 } satisfies SystemStatus;
 

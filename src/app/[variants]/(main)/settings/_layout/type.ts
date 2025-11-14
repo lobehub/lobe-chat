@@ -2,5 +2,5 @@ import { ReactNode } from 'react';
 
 export interface LayoutProps {
   children?: ReactNode;
-  showLLM?: boolean
+  showLLM?: boolean;
 }

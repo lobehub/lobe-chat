@@ -135,6 +135,7 @@
     }
   },
   "close": "Fermer",
+  "confirm": "Confirmer",
   "contact": "Nous contacter",
   "copy": "Copier",
   "copyFail": "Échec de la copie",

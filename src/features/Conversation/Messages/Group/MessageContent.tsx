@@ -25,7 +25,13 @@ const MessageContent = memo<ContentBlockProps>(({ content, hasTools, markdownPro
 
   const { styles, cx } = useStyles();
 
-  if (content === LOADING_FLAT) return <BubblesLoading />;
+  if (!content && !hasTools) return <BubblesLoading />;
+
+  if (content === LOADING_FLAT) {
+    if (hasTools) return null;
+
+    return <BubblesLoading />;
+  }
 
   return (
     content && (

@@ -108,6 +108,12 @@ export default {
     keyPlaceholder: '键',
     valuePlaceholder: '值',
   },
+  LocalFile: {
+    action: {
+      open: '打开',
+      showInFolder: '在文件夹中显示',
+    },
+  },
   MaxTokenSlider: {
     unlimited: '无限制',
   },

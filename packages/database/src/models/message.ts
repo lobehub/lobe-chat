@@ -8,13 +8,13 @@ import {
   ChatVideoItem,
   CreateMessageParams,
   DBMessageItem,
+  MessagePluginItem,
   ModelRankItem,
   NewMessageQueryParams,
   QueryMessageParams,
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
-  UpdateMessageResult,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
@@ -24,7 +24,6 @@ import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
 import {
-  MessagePluginItem,
   chunks,
   documents,
   embeddings,
@@ -40,7 +39,6 @@ import {
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
-import { groupAssistantMessages } from '../utils/groupMessages';
 import { idGenerator } from '../utils/idGenerator';
 
 export class MessageModel {
@@ -99,6 +97,7 @@ export class MessageModel {
           type: messagePlugins.type,
         },
         pluginError: messagePlugins.error,
+        pluginIntervention: messagePlugins.intervention,
         pluginState: messagePlugins.state,
 
         translate: {
@@ -214,7 +213,7 @@ export class MessageModel {
       .from(messageQueries)
       .where(inArray(messageQueries.messageId, messageIds));
 
-    const mappedMessages = result.map(
+    return result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
@@ -223,12 +222,12 @@ export class MessageModel {
             .filter((relation) => relation.messageId === item.id)
             .map((c) => ({
               ...c,
-              similarity: Number(c.similarity) ?? undefined,
+              similarity: c.similarity === null ? undefined : Number(c.similarity),
             })),
 
           extra: {
-            fromModel: model,
-            fromProvider: provider,
+            model: model,
+            provider: provider,
             translate,
             tts: ttsId
               ? {
@@ -268,10 +267,6 @@ export class MessageModel {
         } as unknown as UIChatMessage;
       },
     );
-
-    // Group assistant messages with their tool results
-    const { groupAssistantMessages: useGroup = false } = options;
-    return useGroup ? groupAssistantMessages(mappedMessages) : mappedMessages;
   };
 
   findById = async (id: string) => {
@@ -427,7 +422,7 @@ export class MessageModel {
     for (const item of result) {
       if (item?.date) {
         const dateStr = dayjs(item.date as string).format('YYYY-MM-DD');
-        dateCountMap.set(dateStr, Number(item.count) || 0);
+        dateCountMap.set(dateStr, item.count);
       }
     }
 
@@ -464,10 +459,11 @@ export class MessageModel {
 
   create = async (
     {
-      fromModel,
-      fromProvider,
+      model: fromModel,
+      provider: fromProvider,
       files,
       plugin,
+      pluginIntervention,
       pluginState,
       fileChunks,
       ragQueryId,
@@ -502,6 +498,7 @@ export class MessageModel {
           arguments: plugin?.arguments,
           id,
           identifier: plugin?.identifier,
+          intervention: pluginIntervention,
           state: pluginState,
           toolCallId: message.tool_call_id,
           type: plugin?.type,
@@ -553,13 +550,7 @@ export class MessageModel {
   update = async (
     id: string,
     { imageList, ...message }: Partial<UpdateMessageParams>,
-    options?: {
-      groupAssistantMessages?: boolean;
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-      sessionId?: string | null;
-      topicId?: string | null;
-    },
-  ): Promise<UpdateMessageResult> => {
+  ): Promise<{ success: boolean }> => {
     try {
       await this.db.transaction(async (trx) => {
         // 1. insert message files
@@ -576,22 +567,6 @@ export class MessageModel {
           .set({ ...message })
           .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
       });
-
-      // if sessionId or topicId provided, return the updated message list
-      if (options?.sessionId !== undefined || options?.topicId !== undefined) {
-        const messageList = await this.query(
-          {
-            sessionId: options.sessionId,
-            topicId: options.topicId,
-          },
-          {
-            groupAssistantMessages: options.groupAssistantMessages ?? false,
-            postProcessUrl: options.postProcessUrl,
-          },
-        );
-
-        return { messages: messageList, success: true };
-      }
 
       return { success: true };
     } catch (error) {
@@ -613,16 +588,7 @@ export class MessageModel {
       .where(and(eq(messages.userId, this.userId), eq(messages.id, id)));
   };
 
-  updatePluginState = async (
-    id: string,
-    state: Record<string, any>,
-    options?: {
-      groupAssistantMessages?: boolean;
-      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
-      sessionId?: string | null;
-      topicId?: string | null;
-    },
-  ): Promise<UpdateMessageResult> => {
+  updatePluginState = async (id: string, state: Record<string, any>): Promise<void> => {
     const item = await this.db.query.messagePlugins.findFirst({
       where: eq(messagePlugins.id, id),
     });
@@ -632,22 +598,6 @@ export class MessageModel {
       .update(messagePlugins)
       .set({ state: merge(item.state || {}, state) })
       .where(eq(messagePlugins.id, id));
-
-    // Return updated messages if sessionId or topicId is provided
-    if (options?.sessionId !== undefined || options?.topicId !== undefined) {
-      const messageList = await this.query(
-        {
-          sessionId: options.sessionId,
-          topicId: options.topicId,
-        },
-        {
-          groupAssistantMessages: options.groupAssistantMessages ?? false,
-          postProcessUrl: options.postProcessUrl,
-        },
-      );
-      return { messages: messageList, success: true };
-    }
-    return { success: true };
   };
 
   updateMessagePlugin = async (id: string, value: Partial<MessagePluginItem>) => {

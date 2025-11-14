@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Fenster schließen"
+    },
+    "messages": {
+      "authFailed": "Autorisierung fehlgeschlagen: {{error}}",
+      "missingParams": "Autorisierungsparameter fehlen",
+      "processing": "Autorisierung wird verarbeitet...",
+      "successWithCountdown": "{{message}} Das Fenster wird in {{countdown}} Sekunden automatisch geschlossen",
+      "successWithRedirect": "Autorisierung erfolgreich! Weiterleitung läuft..."
+    },
+    "titles": {
+      "error": "Autorisierung fehlgeschlagen",
+      "loading": "LobeHub Market Autorisierung",
+      "success": "Autorisierung erfolgreich"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Autorisierung fehlgeschlagen, bitte erneut versuchen.",
+    "browserOnly": "Der Autorisierungsvorgang kann nur im Browser gestartet werden.",
+    "codeConsumed": "Autorisierungscode wurde bereits verwendet, bitte erneut versuchen.",
+    "codeVerifierMissing": "Autorisierungssitzung ungültig, bitte den Anmeldevorgang erneut starten.",
+    "general": "Ein Fehler ist bei der Autorisierung aufgetreten, bitte erneut versuchen.",
+    "handoffFailed": "Autorisierungsergebnis konnte nicht abgerufen werden, bitte erneut versuchen.",
+    "handoffTimeout": "Autorisierung zeitüberschritten, bitte nach Abschluss im Browser erneut versuchen.",
+    "oidcNotReady": "Autorisierungsdienst ist noch nicht bereit, bitte später erneut versuchen.",
+    "openBrowserFailed": "Systembrowser konnte nicht geöffnet werden, bitte erneut versuchen.",
+    "openPopupFailed": "Autorisierungs-Popup konnte nicht geöffnet werden, bitte die Popup-Blocker-Einstellungen im Browser überprüfen.",
+    "popupClosed": "Autorisierungsfenster wurde geschlossen, bevor der Vorgang abgeschlossen war.",
+    "sessionExpired": "Autorisierungssitzung ist abgelaufen, bitte erneut anmelden.",
+    "stateMismatch": "Autorisierungsstatus stimmt nicht überein, bitte erneut versuchen.",
+    "stateMissing": "Autorisierungsstatus nicht gefunden, bitte erneut versuchen."
+  },
+  "messages": {
+    "loading": "Autorisierungsvorgang wird gestartet...",
+    "success": {
+      "submit": "Autorisierung erfolgreich! Du kannst jetzt einen Assistenten veröffentlichen.",
+      "upload": "Autorisierung erfolgreich! Du kannst jetzt eine neue Version veröffentlichen."
+    }
+  }
+}

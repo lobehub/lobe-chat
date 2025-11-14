@@ -31,6 +31,77 @@ export interface McpPrompt {
 }
 
 /**
+ * MCP Tool Call Result Types
+ */
+export interface TextContent {
+  _meta?: any;
+  text: string;
+  type: 'text';
+}
+
+export interface ImageContent {
+  _meta?: any;
+  data: string;
+  // base64
+  mimeType: string;
+  type: 'image';
+}
+
+export interface AudioContent {
+  _meta?: any;
+  data: string;
+  // base64
+  mimeType: string;
+  type: 'audio';
+}
+
+export interface ResourceContent {
+  _meta?: any;
+  resource: {
+    _meta?: any;
+    blob?: string;
+    mimeType?: string;
+    text?: string;
+    uri: string;
+  };
+  type: 'resource';
+}
+
+export interface ResourceLinkContent {
+  _meta?: any;
+  description?: string;
+  icons?: Array<{
+    mimeType?: string;
+    sizes?: string[];
+    src: string;
+  }>;
+  name: string;
+  title?: string;
+  type: 'resource_link';
+  uri: string;
+}
+
+export type ToolCallContent =
+  | TextContent
+  | ImageContent
+  | AudioContent
+  | ResourceContent
+  | ResourceLinkContent;
+
+export interface ToolCallResult {
+  content: ToolCallContent[];
+  isError?: boolean;
+  structuredContent?: any;
+}
+
+export interface MCPToolCallResult {
+  content: string;
+  error?: any;
+  state: ToolCallResult;
+  success: boolean;
+}
+
+/**
  * MCP 认证配置接口
  * 支持第一阶段的手动配置和未来的 OAuth 2.1 自动化流程
  */

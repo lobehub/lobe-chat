@@ -15,6 +15,7 @@ import {
   StdioMCPParams,
 } from '@/libs/mcp';
 
+import { ProcessContentBlocksFn, contentBlocksToString } from './contentProcessor';
 import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');
@@ -154,12 +155,19 @@ export class MCPService {
     }
   }
 
-  // callTool now accepts MCPClientParams, toolName, and args
-  async callTool(params: MCPClientParams, toolName: string, argsStr: any): Promise<any> {
-    const client = await this.getClient(params); // Get client using params
+  // callTool now accepts an object with clientParams, toolName, argsStr, and processContentBlocks
+  async callTool(options: {
+    argsStr: any;
+    clientParams: MCPClientParams;
+    processContentBlocks?: ProcessContentBlocksFn;
+    toolName: string;
+  }): Promise<any> {
+    const { clientParams, toolName, argsStr, processContentBlocks } = options;
+
+    const client = await this.getClient(clientParams); // Get client using params
 
     const args = safeParseJSON(argsStr);
-    const loggableParams = this.sanitizeForLogging(params);
+    const loggableParams = this.sanitizeForLogging(clientParams);
 
     log(
       `Calling tool "${toolName}" using client for params: %O with args: %O`,
@@ -170,39 +178,45 @@ export class MCPService {
     try {
       // Delegate the call to the MCPClient instance
       const result = await client.callTool(toolName, args); // Pass args directly
+
+      // Process content blocks (upload images, etc.)
+      const newContent =
+        result.isError || !processContentBlocks
+          ? result.content
+          : await processContentBlocks(result.content);
+
+      // Convert content blocks to string
+      const content = contentBlocksToString(newContent);
+
+      const state = { ...result, content: newContent };
+
       log(
         `Tool "${toolName}" called successfully for params: %O, result: %O`,
         loggableParams,
-        result,
+        state,
       );
-      const { content, isError } = result;
 
-      if (isError) return result;
+      if (result.isError) return { content, state, success: true };
 
-      const data = content as { text: string; type: 'text' }[];
-
-      if (!data || data.length === 0) return data;
-
-      if (data.length > 1) return data;
-
-      const text = data[0]?.text;
-      if (!text) return data;
-
-      // try to get json object, which will be stringify in the client
-      const json = safeParseJSON(text);
-      if (json) return json;
-
-      return text;
+      return { content, state, success: true };
     } catch (error) {
       if (error instanceof McpError) {
         const mcpError = error as McpError;
 
-        return mcpError.message;
+        return {
+          content: mcpError.message,
+          error: error,
+          state: {
+            content: [{ text: mcpError.message, type: 'text' }],
+            isError: true,
+          },
+          success: false,
+        };
       }
 
       console.error(
         `Error calling tool "${toolName}" for params %O:`,
-        this.sanitizeForLogging(params),
+        this.sanitizeForLogging(clientParams),
         error,
       );
       // Propagate a TRPCError

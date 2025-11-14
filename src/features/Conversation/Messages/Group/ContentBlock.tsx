@@ -77,9 +77,7 @@ export const ContentBlock = memo<ContentBlockProps>((props) => {
       {showReasoning && <Reasoning {...reasoning} id={id} />}
 
       {/* Content - markdown text */}
-      {content && (
-        <MessageContent content={content} hasTools={hasTools} markdownProps={markdownProps} />
-      )}
+      <MessageContent content={content} hasTools={hasTools} markdownProps={markdownProps} />
 
       {/* Image files */}
       {showImageItems && <ImageFileListViewer items={imageList} />}

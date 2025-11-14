@@ -199,6 +199,12 @@
     "all": "全部",
     "list": {
       "disabled": "未啟用",
+      "disabledActions": {
+        "sort": "排序方式",
+        "sortAlphabetical": "按字母排序",
+        "sortAlphabeticalDesc": "按字母倒序排序",
+        "sortDefault": "預設排序"
+      },
       "enabled": "已啟用"
     },
     "notFound": "未找到搜索結果",
@@ -391,7 +397,13 @@
       "addNew": "新增模型",
       "disabled": "未啟用",
       "disabledActions": {
-        "showMore": "顯示全部"
+        "showMore": "顯示全部",
+        "sort": "排序方式",
+        "sortAlphabetical": "按字母排序",
+        "sortAlphabeticalDesc": "按字母倒序排序",
+        "sortDefault": "預設排序",
+        "sortReleasedAt": "按最早發布時間排序",
+        "sortReleasedAtDesc": "按最新發布時間排序"
       },
       "empty": {
         "desc": "請創建自定義模型或拉取模型後開始使用吧",

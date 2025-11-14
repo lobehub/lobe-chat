@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { memo } from 'react';
+import { CSSProperties, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useStyles } from '../style';
@@ -10,6 +10,7 @@ export interface TitleProps {
   className?: string;
   placement?: ChatItemProps['placement'];
   showTitle?: ChatItemProps['showTitle'];
+  style?: CSSProperties;
   time?: ChatItemProps['time'];
   titleAddon?: ChatItemProps['titleAddon'];
 }
@@ -27,21 +28,24 @@ const formatTime = (time: number): string => {
   }
 };
 
-const Title = memo<TitleProps>(({ showTitle, placement, time, avatar, titleAddon, className }) => {
-  const { styles, cx } = useStyles({ placement, showTitle, time });
+const Title = memo<TitleProps>(
+  ({ showTitle, placement, time, avatar, titleAddon, className, style }) => {
+    const { styles, cx } = useStyles({ placement, showTitle, time });
 
-  return (
-    <Flexbox
-      align={'center'}
-      className={cx(styles.name, className)}
-      direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
-      gap={4}
-    >
-      {showTitle ? avatar.title || 'untitled' : undefined}
-      {showTitle ? titleAddon : undefined}
-      {time && <time>{formatTime(time)}</time>}
-    </Flexbox>
-  );
-});
+    return (
+      <Flexbox
+        align={'center'}
+        className={cx(styles.name, className)}
+        direction={placement === 'left' ? 'horizontal' : 'horizontal-reverse'}
+        gap={4}
+        style={style}
+      >
+        {showTitle ? avatar.title || 'untitled' : undefined}
+        {showTitle ? titleAddon : undefined}
+        {time && <time>{formatTime(time)}</time>}
+      </Flexbox>
+    );
+  },
+);
 
 export default Title;

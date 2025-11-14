@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Fermer la fenêtre"
+    },
+    "messages": {
+      "authFailed": "Échec de l'autorisation : {{error}}",
+      "missingParams": "Paramètres d'autorisation manquants",
+      "processing": "Traitement de l'autorisation en cours...",
+      "successWithCountdown": "{{message}} La fenêtre se fermera automatiquement dans {{countdown}} secondes",
+      "successWithRedirect": "Autorisation réussie ! Redirection en cours..."
+    },
+    "titles": {
+      "error": "Échec de l'autorisation",
+      "loading": "Autorisation LobeHub Market",
+      "success": "Autorisation réussie"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Échec de l'autorisation, veuillez réessayer.",
+    "browserOnly": "Le processus d'autorisation ne peut être lancé que dans un navigateur.",
+    "codeConsumed": "Le code d'autorisation a déjà été utilisé, veuillez réessayer.",
+    "codeVerifierMissing": "Session d'autorisation invalide, veuillez relancer le processus de connexion.",
+    "general": "Une erreur est survenue lors de l'autorisation, veuillez réessayer.",
+    "handoffFailed": "Impossible d'obtenir le résultat de l'autorisation, veuillez réessayer.",
+    "handoffTimeout": "Délai d'autorisation dépassé, veuillez réessayer après avoir terminé l'opération dans le navigateur.",
+    "oidcNotReady": "Le service d'autorisation n'est pas encore prêt, veuillez réessayer plus tard.",
+    "openBrowserFailed": "Impossible d'ouvrir le navigateur système, veuillez réessayer.",
+    "openPopupFailed": "Impossible d'ouvrir la fenêtre d'autorisation, veuillez vérifier les paramètres de blocage des pop-ups de votre navigateur.",
+    "popupClosed": "La fenêtre d'autorisation a été fermée avant la fin du processus.",
+    "sessionExpired": "La session d'autorisation a expiré, veuillez vous reconnecter.",
+    "stateMismatch": "État d'autorisation non valide, veuillez réessayer.",
+    "stateMissing": "État d'autorisation introuvable, veuillez réessayer."
+  },
+  "messages": {
+    "loading": "Lancement du processus d'autorisation...",
+    "success": {
+      "submit": "Autorisation réussie ! Vous pouvez maintenant publier un assistant.",
+      "upload": "Autorisation réussie ! Vous pouvez maintenant publier une nouvelle version."
+    }
+  }
+}

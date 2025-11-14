@@ -41,9 +41,29 @@
         "openingMessage": "Açılış Mesajı",
         "openingQuestions": "Açılış Soruları",
         "title": "Asistan Ayarları"
+      },
+      "version": {
+        "empty": "Henüz geçmiş sürüm yok",
+        "status": {
+          "archived": "Arşivlendi",
+          "deprecated": "Reddedildi",
+          "unpublished": "İnceleniyor"
+        },
+        "table": {
+          "isLatest": "En Son Sürüm",
+          "isValidated": "Doğrulandı",
+          "publishAt": "Yayın Tarihi",
+          "version": "Sürüm Numarası"
+        },
+        "title": "Sürüm Geçmişi"
       }
     },
     "list": "Asistan Listesi",
+    "marketSource": {
+      "label": "Pazar Kaynağını Değiştir",
+      "legacy": "Eski Pazar",
+      "new": "Yeni Pazar"
+    },
     "more": "Daha Fazla",
     "plugins": "Entegre Eklentiler",
     "recentSubmits": "Son Güncellemeler",
@@ -51,9 +71,34 @@
       "createdAt": "En Son Yayınlanan",
       "identifier": "Asistan ID",
       "knowledgeCount": "Bilgi Tabanı Sayısı",
+      "myown": "Benimkileri Görüntüle",
       "pluginCount": "Eklenti Sayısı",
       "title": "Asistan Adı",
       "tokenUsage": "Token Kullanımı"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "Asistan güvenlik/siyasi nedenlerle resmi olarak yayından kaldırıldı",
+          "owner": "Asistanın geliştiricisi tarafından isteğe bağlı olarak yayından kaldırıldı/arşivlendi"
+        },
+        "subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı arşivlenmiştir:",
+        "title": "Asistan Arşivlendi"
+      },
+      "backToMarket": "Asistan Pazarına Dön",
+      "deprecated": {
+        "reasons": {
+          "official": "Asistan güvenlik/siyasi nedenlerle resmi olarak yayından kaldırıldı",
+          "owner": "Asistanın geliştiricisi tarafından isteğe bağlı olarak yayından kaldırıldı/reddedildi"
+        },
+        "subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı reddedilmiştir:",
+        "title": "Asistan Reddedildi"
+      },
+      "support": "Herhangi bir sorun için lütfen bağlantıyı kopyalayıp <1>support@lobehub.com</1> adresine göndererek destek alın.",
+      "unpublished": {
+        "subtitle": "Erişmeye çalıştığınız asistan şu anda sürüm incelemesinde. Sorularınız varsa bağlantıyı kopyalayıp <1>support@lobehub.com</1> adresine gönderin.",
+        "title": "Asistan İnceleniyor"
+      }
     },
     "suggestions": "İlgili Öneriler",
     "systemRole": "Asistan Ayarları",

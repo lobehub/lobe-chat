@@ -3,8 +3,6 @@ import { createOpenaiAudioTranscriptions } from '@lobehub/tts/server';
 
 import { createBizOpenAI } from '@/app/(backend)/_deprecated/createBizOpenAI';
 
-export const runtime = 'edge';
-
 export const preferredRegion = [
   'arn1',
   'bom1',

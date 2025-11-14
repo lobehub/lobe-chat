@@ -26,6 +26,7 @@ describe('MessageService', () => {
       update: vi.fn(),
       updateMessagePlugin: vi.fn(),
       updateMessageRAG: vi.fn(),
+      updateMetadata: vi.fn(),
       updatePluginState: vi.fn(),
     } as any;
 
@@ -222,40 +223,55 @@ describe('MessageService', () => {
     });
   });
 
-  describe('useGroup option', () => {
-    it('should pass useGroup option to query', async () => {
-      const mockMessages = [{ id: 'msg-1', content: 'test' }];
-      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
+  describe('updateMetadata', () => {
+    it('should update metadata and return { success: true } when no sessionId/topicId provided', async () => {
+      const messageId = 'msg-1';
+      const metadata = { someKey: 'someValue', count: 42 };
 
-      await messageService.removeMessage('msg-1', {
-        sessionId: 'session-1',
-        useGroup: true,
-      });
+      const result = await messageService.updateMetadata(messageId, metadata);
 
-      expect(mockMessageModel.query).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          groupAssistantMessages: true,
-        }),
-      );
+      expect(mockMessageModel.updateMetadata).toHaveBeenCalledWith(messageId, metadata);
+      expect(result).toEqual({ success: true });
+      expect(mockMessageModel.query).not.toHaveBeenCalled();
     });
 
-    it('should default useGroup to false', async () => {
+    it('should update metadata and return message list when sessionId provided', async () => {
+      const messageId = 'msg-1';
+      const metadata = { someKey: 'someValue', count: 42 };
       const mockMessages = [{ id: 'msg-1', content: 'test' }];
       vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
 
-      await messageService.removeMessage('msg-1', { sessionId: 'session-1' });
+      const result = await messageService.updateMetadata(messageId, metadata, {
+        sessionId: 'session-1',
+      });
 
+      expect(mockMessageModel.updateMetadata).toHaveBeenCalledWith(messageId, metadata);
+      expect(mockMessageModel.query).toHaveBeenCalled();
+      expect(result).toEqual({ messages: mockMessages, success: true });
+    });
+
+    it('should update metadata and return message list when topicId provided', async () => {
+      const messageId = 'msg-1';
+      const metadata = { key: 'value' };
+      const mockMessages = [{ id: 'msg-1', content: 'test' }];
+      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
+
+      const result = await messageService.updateMetadata(messageId, metadata, {
+        topicId: 'topic-1',
+      });
+
+      expect(mockMessageModel.updateMetadata).toHaveBeenCalledWith(messageId, metadata);
       expect(mockMessageModel.query).toHaveBeenCalledWith(
-        expect.anything(),
+        { groupId: undefined, sessionId: undefined, topicId: 'topic-1' },
         expect.objectContaining({
           groupAssistantMessages: false,
         }),
       );
+      expect(result).toEqual({ messages: mockMessages, success: true });
     });
   });
 
-  describe('createNewMessage', () => {
+  describe('createMessage', () => {
     it('should create message and return message list', async () => {
       const params = {
         content: 'Hello',
@@ -268,7 +284,7 @@ describe('MessageService', () => {
       vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
       vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
 
-      const result = await messageService.createNewMessage(params as any);
+      const result = await messageService.createMessage(params as any);
 
       expect(mockMessageModel.create).toHaveBeenCalledWith(params);
       expect(mockMessageModel.query).toHaveBeenCalledWith(
@@ -281,32 +297,6 @@ describe('MessageService', () => {
         },
         expect.objectContaining({
           groupAssistantMessages: false,
-        }),
-      );
-      expect(result).toEqual({
-        id: 'msg-1',
-        messages: mockMessages,
-      });
-    });
-
-    it('should create message with useGroup option', async () => {
-      const params = {
-        content: 'Hello',
-        role: 'assistant' as const,
-        sessionId: 'session-1',
-      };
-      const createdMessage = { id: 'msg-1', ...params };
-      const mockMessages = [createdMessage];
-
-      vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
-      vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
-
-      const result = await messageService.createNewMessage(params as any, { useGroup: true });
-
-      expect(mockMessageModel.query).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          groupAssistantMessages: true,
         }),
       );
       expect(result).toEqual({
@@ -329,7 +319,7 @@ describe('MessageService', () => {
       vi.mocked(mockMessageModel.create).mockResolvedValue(createdMessage as any);
       vi.mocked(mockMessageModel.query).mockResolvedValue(mockMessages as any);
 
-      const result = await messageService.createNewMessage(params as any);
+      const result = await messageService.createMessage(params as any);
 
       expect(mockMessageModel.query).toHaveBeenCalledWith(
         {

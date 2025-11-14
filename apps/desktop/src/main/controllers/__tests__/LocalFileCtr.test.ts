@@ -345,7 +345,10 @@ describe('LocalFileCtr', () => {
       const result = await localFileCtr.handleLocalFilesSearch({ keywords: 'test' });
 
       expect(result).toEqual(mockResults);
-      expect(mockSearchService.search).toHaveBeenCalledWith('test', { limit: 30 });
+      expect(mockSearchService.search).toHaveBeenCalledWith('test', {
+        keywords: 'test',
+        limit: 30,
+      });
     });
 
     it('should return empty array on search error', async () => {

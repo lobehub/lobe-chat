@@ -1,7 +1,7 @@
 import { ARTIFACT_TAG_CLOSED_REGEX, ARTIFACT_TAG_REGEX } from '@/const/plugin';
 import type { ChatStoreState } from '@/store/chat';
 
-import { chatSelectors } from '../message/selectors';
+import { dbMessageSelectors } from '../message/selectors';
 
 const showPortal = (s: ChatStoreState) => s.showPortal;
 
@@ -27,7 +27,7 @@ const artifactType = (s: ChatStoreState) => s.portalArtifact?.type;
 const artifactCodeLanguage = (s: ChatStoreState) => s.portalArtifact?.language;
 
 const artifactMessageContent = (id: string) => (s: ChatStoreState) => {
-  const message = chatSelectors.getMessageById(id)(s);
+  const message = dbMessageSelectors.getDbMessageById(id)(s);
   return message?.content || '';
 };
 

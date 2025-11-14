@@ -41,9 +41,29 @@
         "openingMessage": "Messaggio di apertura",
         "openingQuestions": "Domande di apertura",
         "title": "Impostazioni dell'assistente"
+      },
+      "version": {
+        "empty": "Nessuna versione storica disponibile",
+        "status": {
+          "archived": "Archiviato",
+          "deprecated": "Rifiutato",
+          "unpublished": "In revisione"
+        },
+        "table": {
+          "isLatest": "Ultima versione",
+          "isValidated": "Verificato",
+          "publishAt": "Data di pubblicazione",
+          "version": "Numero di versione"
+        },
+        "title": "Cronologia delle versioni"
       }
     },
     "list": "Elenco assistenti",
+    "marketSource": {
+      "label": "Cambia sorgente del mercato",
+      "legacy": "Mercato precedente",
+      "new": "Nuovo mercato"
+    },
     "more": "Di più",
     "plugins": "Plugin integrati",
     "recentSubmits": "Aggiornamenti recenti",
@@ -51,9 +71,34 @@
       "createdAt": "Pubblicati di recente",
       "identifier": "ID assistente",
       "knowledgeCount": "Numero di basi di conoscenza",
+      "myown": "Visualizza i miei",
       "pluginCount": "Numero di plugin",
       "title": "Nome assistente",
       "tokenUsage": "Utilizzo token"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "L'assistente è stato rimosso ufficialmente per motivi di sicurezza o politici",
+          "owner": "Il proprietario dell'assistente ha deciso di rimuoverlo o archiviarlo"
+        },
+        "subtitle": "L'assistente che stai cercando di accedere è stato archiviato per uno dei seguenti motivi:",
+        "title": "Assistente archiviato"
+      },
+      "backToMarket": "Torna al mercato degli assistenti",
+      "deprecated": {
+        "reasons": {
+          "official": "L'assistente è stato rimosso ufficialmente per motivi di sicurezza o politici",
+          "owner": "Il proprietario dell'assistente ha deciso di rimuoverlo o rifiutarlo"
+        },
+        "subtitle": "L'assistente che stai cercando di accedere è stato rifiutato per uno dei seguenti motivi:",
+        "title": "Assistente rifiutato"
+      },
+      "support": "Per qualsiasi problema, copia il link e invialo a <1>support@lobehub.com</1> per assistenza.",
+      "unpublished": {
+        "subtitle": "L'assistente che stai cercando di accedere è attualmente in fase di revisione. Per domande, copia il link e invialo a <1>support@lobehub.com</1>.",
+        "title": "Assistente in revisione"
+      }
     },
     "suggestions": "Suggerimenti correlati",
     "systemRole": "Impostazioni assistente",

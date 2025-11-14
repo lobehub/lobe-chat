@@ -255,10 +255,11 @@
       "moveLocalFiles": "نقل الملفات",
       "readLocalFile": "قراءة محتوى الملف",
       "renameLocalFile": "إعادة تسمية",
+      "runCommand": "تشغيل الأمر",
       "searchLocalFiles": "بحث في الملفات",
       "writeLocalFile": "كتابة في الملف"
     },
-    "title": "الملفات المحلية"
+    "title": "النظام المحلي"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "جارٍ فحص بيئة التثبيت...",

@@ -1,5 +1,1 @@
-export const DEFAULT_TOOL_CONFIG = {
-  dalle: {
-    autoGenerate: false,
-  },
-};
+export const DEFAULT_TOOL_CONFIG = {};

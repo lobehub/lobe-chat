@@ -13,6 +13,7 @@ import { DiscoverTab } from '@/types/discover';
 
 import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
 import { useNav } from '../../../features/useNav';
+import MarketSourceSwitch from '../../assistant/features/MarketSourceSwitch';
 import SortButton from '../../features/SortButton';
 import { useScroll } from './useScroll';
 
@@ -88,7 +89,8 @@ const Nav = memo(() => {
           />
         </Flexbox>
         {!isHome && (
-          <Flexbox align={'center'} gap={4} horizontal>
+          <Flexbox align={'center'} gap={8} horizontal>
+            {activeKey === DiscoverTab.Assistants && <MarketSourceSwitch />}
             <SortButton />
           </Flexbox>
         )}

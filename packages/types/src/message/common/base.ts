@@ -9,13 +9,13 @@ import { ErrorType } from '../../fetch';
  */
 export interface ChatMessageError {
   body?: any;
-  message: string;
+  message?: string;
   type: ErrorType | IPluginErrorType | ILobeAgentRuntimeErrorType;
 }
 
 export const ChatMessageErrorSchema = z.object({
   body: z.any().optional(),
-  message: z.string(),
+  message: z.string().optional(),
   type: z.union([z.string(), z.number()]),
 });
 

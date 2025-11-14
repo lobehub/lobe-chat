@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "Você está prestes a remover tópicos não favoritos. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
     "duplicate": "Criar cópia",
     "export": "Exportar tópicos",
+    "openInNewWindow": "Abrir em uma nova janela",
     "removeAll": "Remover todos os tópicos",
     "removeUnstarred": "Remover tópicos não favoritos"
   },

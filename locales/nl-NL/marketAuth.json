@@ -1,0 +1,42 @@
+{
+  "callback": {
+    "buttons": {
+      "close": "Venster sluiten"
+    },
+    "messages": {
+      "authFailed": "Autorisatie mislukt: {{error}}",
+      "missingParams": "Autorisatieparameters ontbreken",
+      "processing": "Bezig met autoriseren...",
+      "successWithCountdown": "{{message}} Het venster wordt automatisch gesloten over {{countdown}} seconden",
+      "successWithRedirect": "Autorisatie geslaagd! Bezig met doorverwijzen..."
+    },
+    "titles": {
+      "error": "Autorisatie mislukt",
+      "loading": "LobeHub Market Autorisatie",
+      "success": "Autorisatie geslaagd"
+    }
+  },
+  "errors": {
+    "authorizationFailed": "Autorisatie mislukt, probeer het opnieuw.",
+    "browserOnly": "Het autorisatieproces kan alleen in een browser worden gestart.",
+    "codeConsumed": "De autorisatiecode is al gebruikt, probeer het opnieuw.",
+    "codeVerifierMissing": "Ongeldige autorisatiesessie, start het inlogproces opnieuw.",
+    "general": "Er is een fout opgetreden bij de autorisatie, probeer het opnieuw.",
+    "handoffFailed": "Kan het autorisatieresultaat niet ophalen, probeer het opnieuw.",
+    "handoffTimeout": "Autorisatie verlopen, voltooi de actie in de browser en probeer het opnieuw.",
+    "oidcNotReady": "De autorisatiedienst is nog niet klaar, probeer het later opnieuw.",
+    "openBrowserFailed": "Kan de systeembrowser niet openen, probeer het opnieuw.",
+    "openPopupFailed": "Kan het autorisatievenster niet openen, controleer de pop-upblokkering van je browser.",
+    "popupClosed": "Het autorisatievenster is gesloten voordat het proces was voltooid.",
+    "sessionExpired": "De autorisatiesessie is verlopen, log opnieuw in.",
+    "stateMismatch": "Autorisatiestatus komt niet overeen, probeer het opnieuw.",
+    "stateMissing": "Autorisatiestatus niet gevonden, probeer het opnieuw."
+  },
+  "messages": {
+    "loading": "Autorisatieproces wordt gestart...",
+    "success": {
+      "submit": "Autorisatie geslaagd! Je kunt nu een assistent publiceren.",
+      "upload": "Autorisatie geslaagd! Je kunt nu een nieuwe versie publiceren."
+    }
+  }
+}

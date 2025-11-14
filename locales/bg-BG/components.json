@@ -106,6 +106,12 @@
     "keyPlaceholder": "Ключ",
     "valuePlaceholder": "Стойност"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Отвори",
+      "showInFolder": "Показване в папката"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Неограничено"
   },

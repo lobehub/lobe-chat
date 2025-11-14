@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import BackBottom from './BackBottom';
 
@@ -12,8 +12,8 @@ interface AutoScrollProps {
 }
 const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBottom }) => {
   const trackVisibility = useChatStore(messageStateSelectors.isAIGenerating);
-  const str = useChatStore(chatSelectors.mainAIChatsMessageString);
-  const reasoningStr = useChatStore(chatSelectors.mainAILatestMessageReasoningContent);
+  const str = useChatStore(displayMessageSelectors.mainAIChatsMessageString);
+  const reasoningStr = useChatStore(displayMessageSelectors.mainAILatestMessageReasoningContent);
 
   useEffect(() => {
     if (atBottom && trackVisibility && !isScrolling) {

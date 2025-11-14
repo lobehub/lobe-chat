@@ -1,7 +1,7 @@
 import { safeParseJSON } from '@lobechat/utils';
 import { memo } from 'react';
 
-import { BuiltinToolPlaceholders } from '@/tools/placeholders';
+import { getBuiltinPlaceholder } from '@/tools/placeholders';
 
 import Arguments from '../Arguments';
 
@@ -14,9 +14,9 @@ interface LoadingPlaceholderProps {
 
 const LoadingPlaceholder = memo<LoadingPlaceholderProps>(
   ({ identifier, requestArgs, apiName, loading }) => {
-    const Render = BuiltinToolPlaceholders[identifier || ''];
+    const Render = getBuiltinPlaceholder(identifier, apiName);
 
-    if (identifier && Render) {
+    if (Render) {
       return (
         <Render apiName={apiName} args={safeParseJSON(requestArgs) || {}} identifier={identifier} />
       );

@@ -1,9 +1,9 @@
 import { memo } from 'react';
 
-import SubmitAgentButton from './SubmitAgentButton';
+import SmartAgentActionButton from './SmartAgentActionButton';
 
 export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ modal }) => {
-  return <SubmitAgentButton modal={modal} />;
+  return <SmartAgentActionButton modal={modal} />;
 });
 
 export default HeaderContent;

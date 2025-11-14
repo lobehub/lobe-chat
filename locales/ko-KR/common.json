@@ -135,6 +135,7 @@
     }
   },
   "close": "닫기",
+  "confirm": "확인",
   "contact": "문의하기",
   "copy": "복사",
   "copyFail": "복사 실패",

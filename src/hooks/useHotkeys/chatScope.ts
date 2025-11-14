@@ -2,12 +2,12 @@ import isEqual from 'fast-deep-equal';
 import { useEffect } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
-import { useSend } from '@/app/[variants]/(main)/chat/(workspace)/@conversation/features/ChatInput/useSend';
+import { useSend } from '@/app/[variants]/(main)/chat/components/conversation/features/ChatInput/useSend';
 import { useClearCurrentMessages } from '@/features/ChatInput/ActionBar/Clear';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { HotkeyEnum, HotkeyScopeEnum } from '@/types/hotkey';
@@ -32,14 +32,22 @@ export const useOpenChatSettingsHotkey = () => {
 };
 
 export const useRegenerateMessageHotkey = () => {
-  const regenerateMessage = useChatStore((s) => s.regenerateMessage);
-  const lastMessage = useChatStore(chatSelectors.latestMessage, isEqual);
+  const [regenerateUserMessage, regenerateAssistantMessage] = useChatStore((s) => [
+    s.regenerateUserMessage,
+    s.regenerateAssistantMessage,
+  ]);
+  const lastMessage = useChatStore((s) => displayMessageSelectors.mainAIChats(s).at(-1), isEqual);
 
-  const disable = !lastMessage || lastMessage.id === 'default' || lastMessage.role === 'system';
+  const disable = !lastMessage;
 
   return useHotkeyById(
     HotkeyEnum.RegenerateMessage,
-    () => !disable && regenerateMessage(lastMessage.id),
+    () => {
+      if (!lastMessage) return;
+      if (lastMessage.role === 'user') return regenerateUserMessage(lastMessage.id);
+
+      return regenerateAssistantMessage(lastMessage.id);
+    },
     {
       enableOnContentEditable: true,
       enabled: !disable,
@@ -49,7 +57,7 @@ export const useRegenerateMessageHotkey = () => {
 
 export const useDeleteAndRegenerateMessageHotkey = () => {
   const delAndRegenerateMessage = useChatStore((s) => s.delAndRegenerateMessage);
-  const lastMessage = useChatStore(chatSelectors.latestMessage, isEqual);
+  const lastMessage = useChatStore((s) => displayMessageSelectors.mainAIChats(s).at(-1), isEqual);
 
   const disable = !lastMessage || lastMessage.id === 'default' || lastMessage.role === 'system';
 
@@ -65,7 +73,7 @@ export const useDeleteAndRegenerateMessageHotkey = () => {
 
 export const useDeleteLastMessageHotkey = () => {
   const deleteMessage = useChatStore((s) => s.deleteMessage);
-  const lastMessage = useChatStore(chatSelectors.latestMessage, isEqual);
+  const lastMessage = useChatStore((s) => displayMessageSelectors.mainAIChats(s).at(-1), isEqual);
 
   const disable = !lastMessage || lastMessage.id === 'default' || lastMessage.role === 'system';
 

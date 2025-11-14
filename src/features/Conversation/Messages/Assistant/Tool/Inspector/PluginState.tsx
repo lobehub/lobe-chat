@@ -2,14 +2,14 @@ import { Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 
 export interface FunctionMessageProps {
   toolCallId: string;
 }
 
 const PluginState = memo<FunctionMessageProps>(({ toolCallId }) => {
-  const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId));
+  const toolMessage = useChatStore(dbMessageSelectors.getDbMessageByToolCallId(toolCallId));
 
   return (
     toolMessage?.pluginState && (

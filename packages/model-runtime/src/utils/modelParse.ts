@@ -98,6 +98,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', 'seed', 'ui-tars'],
     visionKeywords: ['vision', '-m', 'seed', 'ui-tars'],
   },
+  wenxin: {
+    functionCallKeywords: ['ernie-5', 'ernie-x1', 'pro', 'ernie-4.5-21b-a3b-thinking'],
+    reasoningKeywords: ['thinking', 'ernie-x', 'ernie-4.5-vl-28b-a3b'],
+    visionKeywords: ['-vl', 'ernie-5.0', 'picocr', 'qianfan-composition'],
+  },
   xai: {
     functionCallKeywords: ['grok'],
     reasoningKeywords: ['mini', 'grok-4', 'grok-code-fast', '!non-reasoning'],
@@ -129,6 +134,7 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   qwen: ['qwen', 'qwq', 'qvq'],
   v0: ['v0'],
   volcengine: ['doubao'],
+  wenxin: ['ernie', 'qianfan'],
   xai: ['grok'],
   zeroone: ['yi-'],
   zhipu: ['glm'],

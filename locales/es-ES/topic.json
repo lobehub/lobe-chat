@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "Se eliminarán los temas no favoritos. Una vez eliminados, no se podrán recuperar. Por favor, actúe con precaución.",
     "duplicate": "Crear copia",
     "export": "Exportar tema",
+    "openInNewWindow": "Abrir en una nueva ventana",
     "removeAll": "Eliminar todos los temas",
     "removeUnstarred": "Eliminar temas no favoritos"
   },

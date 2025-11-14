@@ -98,6 +98,10 @@ class LocalFileService {
       return this.openLocalFile({ path });
     }
   }
+
+  async openFileFolder(path: string) {
+    return this.openLocalFolder({ isDirectory: false, path });
+  }
 }
 
 export const localFileService = new LocalFileService();

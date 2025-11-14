@@ -5,10 +5,9 @@ import { z } from 'zod';
  */
 export type HumanInterventionPolicy =
   | 'never' // Never intervene, auto-execute
-  | 'always' // Always require intervention
-  | 'first'; // Require intervention on first call only
+  | 'required'; // Always require intervention
 
-export const HumanInterventionPolicySchema = z.enum(['never', 'always', 'first']);
+export const HumanInterventionPolicySchema = z.enum(['never', 'required']);
 
 /**
  * Argument Matcher for parameter-level filtering
@@ -115,6 +114,36 @@ export const HumanInterventionResponseSchema = z.object({
       selected: z.union([z.string(), z.array(z.string())]).optional(),
     })
     .optional(),
+});
+
+/**
+ * User's global intervention configuration
+ * Applied across all tools in the session
+ */
+export interface UserInterventionConfig {
+  /**
+   * Allow list of approved tools (used in 'allow-list' mode)
+   * Format: "identifier/apiName"
+   *
+   * Examples:
+   * - "bash/bash"
+   * - "web-browsing/crawlSinglePage"
+   * - "search/search"
+   */
+  allowList?: string[];
+
+  /**
+   * Tool approval mode
+   * - auto-run: Automatically approve all tools without user consent
+   * - allow-list: Only approve tools in the allow list
+   * - manual: Use tool's own humanIntervention config (default)
+   */
+  approvalMode: 'auto-run' | 'allow-list' | 'manual';
+}
+
+export const UserInterventionConfigSchema = z.object({
+  allowList: z.array(z.string()).optional(),
+  approvalMode: z.enum(['auto-run', 'allow-list', 'manual']),
 });
 
 /**

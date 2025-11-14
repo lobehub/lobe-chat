@@ -14,23 +14,23 @@ export interface BaseGenerationAsset {
 
 export interface ImageGenerationAsset extends BaseGenerationAsset {
   /**
-   * 图片/视频的高度
+   * Height of the image/video
    */
   height?: number;
   /**
-   * api provider 家的 cdn url，一般很快就会失效
+   * CDN URL from the API provider, typically expires quickly
    */
   originalUrl?: string;
   /**
-   * 缩略图，图片那就是尺寸裁剪过的，视频那就是封面的缩略图
+   * Thumbnail URL - for images it's a resized version, for videos it's a thumbnail of the cover
    */
   thumbnailUrl?: string;
   /**
-   * 存到自己 oss 的 url, 只存了 key， 完整的 url 需要使用 FileService.getFullFileUrl 获取
+   * URL stored in own OSS, only the key is stored. The full URL needs to be obtained using FileService.getFullFileUrl
    */
   url?: string;
   /**
-   * 图片/视频的宽度
+   * Width of the image/video
    */
   width?: number;
 }

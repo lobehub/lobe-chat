@@ -1,12 +1,13 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Check, LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, X } from 'lucide-react';
+import { Ban, Check, LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, X } from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
 import { shinyTextStylish } from '@/styles/loading';
+import { ToolIntervention } from '@/types/message';
 
 import Debug from './Debug';
 import Settings from './Settings';
@@ -66,6 +67,7 @@ interface InspectorProps {
   id: string;
   identifier: string;
   index: number;
+  intervention?: ToolIntervention;
   messageId: string;
   result?: { content: string | null; error?: any; state?: any };
   setShowPluginRender: (show: boolean) => void;
@@ -90,8 +92,8 @@ const Inspectors = memo<InspectorProps>(
     setShowRender,
     showPluginRender,
     setShowPluginRender,
-    hidePluginUI = false,
     type,
+    intervention,
   }) => {
     const { t } = useTranslation('plugin');
     const { styles, theme } = useStyles();
@@ -103,6 +105,11 @@ const Inspectors = memo<InspectorProps>(
 
     const hasResult = hasSuccessResult || hasError;
 
+    const isPending = intervention?.status === 'pending';
+    const isReject = intervention?.status === 'rejected';
+    const isTitleLoading = !hasResult && !isPending;
+
+    const showCustomPluginRender = showRender && !isPending && !isReject;
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -118,16 +125,16 @@ const Inspectors = memo<InspectorProps>(
           >
             <ToolTitle
               apiName={apiName}
-              hasResult={hasResult}
               identifier={identifier}
               index={index}
+              isLoading={isTitleLoading}
               messageId={messageId}
               toolCallId={id}
             />
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal>
             <Flexbox className={styles.actions} horizontal>
-              {showRender && !hidePluginUI && (
+              {showCustomPluginRender && (
                 <ActionIcon
                   icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                   onClick={() => {
@@ -149,10 +156,14 @@ const Inspectors = memo<InspectorProps>(
             </Flexbox>
             {hasResult && (
               <Flexbox align={'center'} gap={4} horizontal style={{ fontSize: 12 }}>
-                {hasError ? (
-                  <X color={theme.colorError} size={14} />
+                {isReject ? (
+                  <Tooltip title={t('tool.intervention.toolRejected', { ns: 'chat' })}>
+                    <Icon color={theme.colorTextTertiary} icon={Ban} />
+                  </Tooltip>
+                ) : hasError ? (
+                  <Icon color={theme.colorError} icon={X} />
                 ) : (
-                  <Check color={theme.colorSuccess} size={14} />
+                  <Icon color={theme.colorSuccess} icon={Check} />
                 )}
               </Flexbox>
             )}

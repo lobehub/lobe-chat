@@ -199,6 +199,12 @@
     "all": "Todo",
     "list": {
       "disabled": "No habilitado",
+      "disabledActions": {
+        "sort": "Ordenar por",
+        "sortAlphabetical": "Orden alfabético",
+        "sortAlphabeticalDesc": "Orden alfabético descendente",
+        "sortDefault": "Orden predeterminado"
+      },
       "enabled": "Habilitado"
     },
     "notFound": "No se encontraron resultados de búsqueda",
@@ -391,7 +397,13 @@
       "addNew": "Agregar modelo",
       "disabled": "No habilitado",
       "disabledActions": {
-        "showMore": "Mostrar todo"
+        "showMore": "Mostrar todo",
+        "sort": "Ordenar por",
+        "sortAlphabetical": "Orden alfabético",
+        "sortAlphabeticalDesc": "Orden alfabético descendente",
+        "sortDefault": "Orden predeterminado",
+        "sortReleasedAt": "Ordenar por fecha de lanzamiento más antigua",
+        "sortReleasedAtDesc": "Ordenar por fecha de lanzamiento más reciente"
       },
       "empty": {
         "desc": "Por favor, crea un modelo personalizado o importa un modelo para comenzar a usarlo.",

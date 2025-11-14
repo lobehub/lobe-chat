@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { GroundingSearch, ModelReasoning } from '@lobechat/types';
+import { GroundingSearch, ModelReasoning, ToolIntervention } from '@lobechat/types';
 import {
   boolean,
   index,
@@ -11,7 +11,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '../utils/idGenerator';
 import { timestamps, varchar255 } from './_helpers';
@@ -146,10 +146,10 @@ export const messagePlugins = pgTable(
       .primaryKey(),
 
     toolCallId: text('tool_call_id'),
-    type: text('type', {
-      enum: ['default', 'markdown', 'standalone', 'builtin'],
-    }).default('default'),
+    type: text('type').default('default'),
 
+    // Human intervention fields
+    intervention: jsonb('intervention').$type<ToolIntervention>(),
     apiName: text('api_name'),
     arguments: text('arguments'),
     identifier: text('identifier'),
@@ -167,9 +167,6 @@ export const messagePlugins = pgTable(
     ),
   }),
 );
-
-export type MessagePluginItem = typeof messagePlugins.$inferSelect;
-export const updateMessagePluginSchema = createSelectSchema(messagePlugins);
 
 export const messageTTS = pgTable(
   'message_tts',

@@ -9,10 +9,8 @@ import { useAiInfraStore } from '@/store/aiInfra';
 
 import ProviderItem from './Item';
 
-const SearchResult = memo((props:{
-  onProviderSelect?: (key: string)=>void
-}) => {
-  const {onProviderSelect =()=>{} } = props
+const SearchResult = memo((props: { onProviderSelect?: (key: string) => void }) => {
+  const { onProviderSelect = () => {} } = props;
   const { t } = useTranslation('modelProvider');
 
   const searchKeyword = useAiInfraStore((s) => s.providerSearchKeyword);
@@ -37,7 +35,9 @@ const SearchResult = memo((props:{
           {t('menu.notFound')}
         </Flexbox>
       ) : (
-        filteredProviders.map((item) => <ProviderItem {...item} key={item.id} onClick={onProviderSelect} />)
+        filteredProviders.map((item) => (
+          <ProviderItem {...item} key={item.id} onClick={onProviderSelect} />
+        ))
       )}
     </Flexbox>
   );

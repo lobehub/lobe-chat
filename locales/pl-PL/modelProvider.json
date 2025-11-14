@@ -199,6 +199,12 @@
     "all": "Wszystko",
     "list": {
       "disabled": "Nieaktywny",
+      "disabledActions": {
+        "sort": "Sposób sortowania",
+        "sortAlphabetical": "Sortuj alfabetycznie",
+        "sortAlphabeticalDesc": "Sortuj w odwrotnej kolejności alfabetycznej",
+        "sortDefault": "Sortowanie domyślne"
+      },
       "enabled": "Aktywny"
     },
     "notFound": "Nie znaleziono wyników wyszukiwania",
@@ -391,7 +397,13 @@
       "addNew": "Dodaj model",
       "disabled": "Nieaktywne",
       "disabledActions": {
-        "showMore": "Pokaż więcej"
+        "showMore": "Pokaż więcej",
+        "sort": "Sposób sortowania",
+        "sortAlphabetical": "Sortuj alfabetycznie",
+        "sortAlphabeticalDesc": "Sortuj w odwrotnej kolejności alfabetycznej",
+        "sortDefault": "Sortowanie domyślne",
+        "sortReleasedAt": "Sortuj według najwcześniejszej daty publikacji",
+        "sortReleasedAtDesc": "Sortuj według najnowszej daty publikacji"
       },
       "empty": {
         "desc": "Proszę utworzyć model niestandardowy lub pobrać model, aby rozpocząć korzystanie.",

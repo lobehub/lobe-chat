@@ -4,14 +4,12 @@ import type { PartialDeep } from 'type-fest';
 import { lambdaClient } from '@/libs/trpc/client';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
-import { BatchTaskResult } from '@/types/service';
 import {
   ChatSessionList,
   LobeAgentSession,
   LobeSessionType,
   LobeSessions,
   SessionGroupItem,
-  SessionGroups,
   SessionRankItem,
   UpdateSessionParams,
 } from '@/types/session';
@@ -112,18 +110,6 @@ export class SessionService {
 
   createSessionGroup = (name: string, sort?: number): Promise<string> => {
     return lambdaClient.sessionGroup.createSessionGroup.mutate({ name, sort });
-  };
-
-  getSessionGroups = (): Promise<SessionGroupItem[]> => {
-    return lambdaClient.sessionGroup.getSessionGroup.query();
-  };
-
-  /**
-   * 需要废弃
-   * @deprecated
-   */
-  batchCreateSessionGroups = (groups: SessionGroups): Promise<BatchTaskResult> => {
-    return Promise.resolve({ added: 0, ids: [], skips: [], success: true });
   };
 
   removeSessionGroup = (id: string, removeChildren?: boolean) => {

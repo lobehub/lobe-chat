@@ -657,7 +657,8 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576,
-    description: 'Gemini Robotics-ER，全称为“Gemini Robotics-具身推理”，是一种思考模型，旨在提升机器人在理解和与物理世界交互方面的能力。',
+    description:
+      'Gemini Robotics-ER，全称为“Gemini Robotics-具身推理”，是一种思考模型，旨在提升机器人在理解和与物理世界交互方面的能力。',
     displayName: 'Gemini Robotics-ER 1.5 Preview',
     id: 'gemini-robotics-er-1.5-preview',
     maxOutput: 65_536,
@@ -1039,7 +1040,7 @@ const googleImageModels: AIImageModelCard[] = [
     type: 'image',
     description: 'Imagen 4th generation text-to-image model series',
     organization: 'Deepmind',
-    releasedAt: '2024-06-06',
+    releasedAt: '2025-06-06',
     parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],

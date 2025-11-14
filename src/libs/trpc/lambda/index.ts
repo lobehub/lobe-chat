@@ -10,6 +10,7 @@
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
+import { openTelemetry } from '../middleware/openTelemetry';
 import { userAuth } from '../middleware/userAuth';
 import { trpc } from './init';
 import { oidcAuth } from './middleware/oidcAuth';
@@ -24,14 +25,16 @@ export const router = trpc.router;
  * Create an unprotected procedure
  * @link https://trpc.io/docs/v11/procedures
  **/
-export const publicProcedure = trpc.procedure.use(({ next, ctx }) => {
+const baseProcedure = trpc.procedure.use(openTelemetry);
+
+export const publicProcedure = baseProcedure.use(({ next, ctx }) => {
   return next({
     ctx: { ...ctx, userId: isDesktop ? DESKTOP_USER_ID : ctx.userId },
   });
 });
 
 // procedure that asserts that the user is logged in
-export const authedProcedure = trpc.procedure.use(oidcAuth).use(userAuth);
+export const authedProcedure = baseProcedure.use(oidcAuth).use(userAuth);
 
 /**
  * Create a server-side caller

@@ -255,10 +255,11 @@
       "moveLocalFiles": "파일 이동",
       "readLocalFile": "파일 내용 읽기",
       "renameLocalFile": "파일 이름 변경",
+      "runCommand": "코드 실행",
       "searchLocalFiles": "파일 검색",
       "writeLocalFile": "파일 쓰기"
     },
-    "title": "로컬 파일"
+    "title": "로컬 시스템"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "설치 환경 확인 중...",

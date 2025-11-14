@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "Sắp xóa các chủ đề chưa được đánh dấu, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
     "duplicate": "Tạo bản sao",
     "export": "Xuất chủ đề",
+    "openInNewWindow": "Mở trang trong cửa sổ mới",
     "removeAll": "Xóa tất cả các chủ đề",
     "removeUnstarred": "Xóa các chủ đề chưa được đánh dấu"
   },

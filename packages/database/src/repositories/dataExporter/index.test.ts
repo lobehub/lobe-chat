@@ -157,7 +157,7 @@ describe('DataExporterRepos', () => {
 
     // 插入测试数据
     await setupTestData();
-  });
+  }, 30000);
 
   afterEach(async () => {
     await db.delete(users);

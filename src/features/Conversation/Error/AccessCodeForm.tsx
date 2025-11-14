@@ -19,7 +19,7 @@ const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
     keyVaultsConfigSelectors.password(s),
     s.updateKeyVaults,
   ]);
-  const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.delAndRegenerateMessage, s.deleteMessage]);
 
   return (
     <>

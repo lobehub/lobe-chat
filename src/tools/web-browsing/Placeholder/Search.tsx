@@ -1,3 +1,4 @@
+import { BuiltinPlaceholderProps, SearchQuery } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
@@ -29,10 +30,9 @@ const useStyles = createStyles(({ css, token, cx }) => ({
   ),
 }));
 
-interface SearchProps {
-  query?: string;
-}
-export const Search = memo<SearchProps>(({ query }) => {
+export const Search = memo<BuiltinPlaceholderProps<SearchQuery>>(({ args }) => {
+  const { query } = args || {};
+
   const isMobile = useIsMobile();
   const { styles } = useStyles();
   return (

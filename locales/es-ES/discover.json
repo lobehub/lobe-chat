@@ -41,9 +41,29 @@
         "openingMessage": "Mensaje de apertura",
         "openingQuestions": "Preguntas iniciales",
         "title": "Configuración del Asistente"
+      },
+      "version": {
+        "empty": "No hay versiones históricas",
+        "status": {
+          "archived": "Archivado",
+          "deprecated": "Rechazado",
+          "unpublished": "En revisión"
+        },
+        "table": {
+          "isLatest": "Última versión",
+          "isValidated": "Validado",
+          "publishAt": "Fecha de publicación",
+          "version": "Número de versión"
+        },
+        "title": "Historial de versiones"
       }
     },
     "list": "Lista de asistentes",
+    "marketSource": {
+      "label": "Cambiar fuente del mercado",
+      "legacy": "Mercado antiguo",
+      "new": "Nuevo mercado"
+    },
     "more": "Más",
     "plugins": "Integrar complementos",
     "recentSubmits": "Actualizaciones recientes",
@@ -51,9 +71,34 @@
       "createdAt": "Publicado recientemente",
       "identifier": "ID del Asistente",
       "knowledgeCount": "Cantidad de bases de conocimiento",
+      "myown": "Ver mis asistentes",
       "pluginCount": "Cantidad de complementos",
       "title": "Nombre del Asistente",
       "tokenUsage": "Uso de Tokens"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "El asistente fue retirado por problemas de seguridad/política por parte del equipo oficial",
+          "owner": "El propietario del asistente lo retiró o archivó voluntariamente"
+        },
+        "subtitle": "El asistente al que estás accediendo ha sido archivado por una de las siguientes razones:",
+        "title": "Asistente archivado"
+      },
+      "backToMarket": "Volver al mercado de asistentes",
+      "deprecated": {
+        "reasons": {
+          "official": "El asistente fue retirado por problemas de seguridad/política por parte del equipo oficial",
+          "owner": "El propietario del asistente lo retiró o rechazó voluntariamente"
+        },
+        "subtitle": "El asistente al que estás accediendo ha sido rechazado por una de las siguientes razones:",
+        "title": "Asistente rechazado"
+      },
+      "support": "Si tienes algún problema, copia el enlace y envíalo a <1>support@lobehub.com</1> para recibir asistencia.",
+      "unpublished": {
+        "subtitle": "El asistente al que estás accediendo está en proceso de revisión. Si tienes dudas, copia el enlace y envía tu consulta a <1>support@lobehub.com</1>.",
+        "title": "Asistente en revisión"
+      }
     },
     "suggestions": "Recomendaciones relacionadas",
     "systemRole": "Configuración del asistente",

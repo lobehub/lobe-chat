@@ -42,21 +42,9 @@ export type FlatMessageRole =
 export type FlatMessage = UIChatMessage;
 
 /**
- * Branch metadata attached to user messages
- */
-export interface BranchMetadata {
-  /** Active branch message ID */
-  activeId: string;
-  /** All branch message IDs */
-  branchIds: string[];
-}
-
-/**
  * Virtual message extra fields for flat list
  */
 export interface FlatMessageExtra {
-  /** Branch information for user messages with multiple children */
-  branches?: BranchMetadata;
   /** Optional description for groups */
   description?: string;
   /** Group mode for messageGroup and compare virtual messages */

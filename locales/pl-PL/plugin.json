@@ -255,10 +255,11 @@
       "moveLocalFiles": "Przenieś pliki",
       "readLocalFile": "Odczytaj zawartość pliku",
       "renameLocalFile": "Zmień nazwę",
+      "runCommand": "Wykonaj kod",
       "searchLocalFiles": "Wyszukaj pliki",
       "writeLocalFile": "Zapisz do pliku"
     },
-    "title": "Pliki lokalne"
+    "title": "System lokalny"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",

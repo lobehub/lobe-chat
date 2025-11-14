@@ -6,6 +6,7 @@ table agents {
   tags jsonb [default: `[]`]
   avatar text
   background_color text
+  market_identifier text
   plugins jsonb [default: `[]`]
   client_id text
   user_id text [not null]
@@ -345,6 +346,7 @@ table message_plugins {
   id text [pk, not null]
   tool_call_id text
   type text [default: 'default']
+  intervention jsonb
   api_name text
   arguments text
   identifier text

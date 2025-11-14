@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "Favori olmayan konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
     "duplicate": "Kopya Oluştur",
     "export": "Konuları Dışa Aktar",
+    "openInNewWindow": "Sayfayı yeni pencerede aç",
     "removeAll": "Tüm Konuları Sil",
     "removeUnstarred": "Favori Olmayan Konuları Sil"
   },
