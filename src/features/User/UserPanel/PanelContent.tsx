@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -42,7 +42,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
         <>
           <UserInfo avatarProps={{ clickable: false }} />
           {!isDeprecatedEdition && (
-            <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
+            <Link to={'/profile/stats'} style={{ color: 'inherit' }}>
               <DataStatistics />
             </Link>
           )}
