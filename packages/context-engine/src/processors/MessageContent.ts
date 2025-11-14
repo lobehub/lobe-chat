@@ -64,7 +64,7 @@ export class MessageContentProcessor extends BaseProcessor {
     let userMessagesProcessed = 0;
     let assistantMessagesProcessed = 0;
 
-    // 处理每条消息的内容
+    // Process the content of each message
     for (let i = 0; i < clonedContext.messages.length; i++) {
       const message = clonedContext.messages[i];
 
@@ -91,11 +91,11 @@ export class MessageContentProcessor extends BaseProcessor {
         }
       } catch (error) {
         log.extend('error')(`Error processing message ${message.id} content: ${error}`);
-        // 继续处理其他消息
+        // Continue processing other messages
       }
     }
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.messageContentProcessed = processedCount;
     clonedContext.metadata.userMessagesProcessed = userMessagesProcessed;
     clonedContext.metadata.assistantMessagesProcessed = assistantMessagesProcessed;
@@ -163,14 +163,14 @@ export class MessageContentProcessor extends BaseProcessor {
       contentParts.push(...videoContentParts);
     }
 
-    // 明确返回的字段，只保留必要的消息字段
+    // Explicitly return fields, keeping only necessary message fields
     const hasFileContext = (hasFiles || hasImages || hasVideos) && this.config.fileContext?.enabled;
     const hasVisionContent =
       hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider);
     const hasVideoContent =
       hasVideos && this.config.isCanUseVideo?.(this.config.model, this.config.provider);
 
-    // 如果只有文本内容且没有添加文件上下文也没有视觉/视频内容，返回纯文本
+    // If only text content and no file context added and no vision/video content, return plain text
     if (
       contentParts.length === 1 &&
       contentParts[0].type === 'text' &&
@@ -185,7 +185,7 @@ export class MessageContentProcessor extends BaseProcessor {
         meta: message.meta,
         role: message.role,
         updatedAt: message.updatedAt,
-        // 保留其他可能需要的字段，但移除已处理的文件相关字段
+        // Keep other potentially needed fields, but remove processed file-related fields
         ...(message.tools && { tools: message.tools }),
         ...(message.tool_calls && { tool_calls: message.tool_calls }),
         ...(message.tool_call_id && { tool_call_id: message.tool_call_id }),
@@ -193,7 +193,7 @@ export class MessageContentProcessor extends BaseProcessor {
       };
     }
 
-    // 返回结构化内容
+    // Return structured content
     return {
       content: contentParts,
       createdAt: message.createdAt,
@@ -201,7 +201,7 @@ export class MessageContentProcessor extends BaseProcessor {
       meta: message.meta,
       role: message.role,
       updatedAt: message.updatedAt,
-      // 保留其他可能需要的字段，但移除已处理的文件相关字段
+      // Keep other potentially needed fields, but remove processed file-related fields
       ...(message.tools && { tools: message.tools }),
       ...(message.tool_calls && { tool_calls: message.tool_calls }),
       ...(message.tool_call_id && { tool_call_id: message.tool_call_id }),
@@ -210,10 +210,10 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理助手消息内容
+   * Process assistant message content
    */
   private async processAssistantMessage(message: any): Promise<any> {
-    // 检查是否有推理内容（thinking mode）
+    // Check if there is reasoning content (thinking mode)
     const shouldIncludeThinking = message.reasoning && !!message.reasoning?.signature;
 
     if (shouldIncludeThinking) {
@@ -235,11 +235,11 @@ export class MessageContentProcessor extends BaseProcessor {
       };
     }
 
-    // 检查是否有图片（助手消息也可能包含图片）
+    // Check if there are images (assistant messages may also contain images)
     const hasImages = message.imageList && message.imageList.length > 0;
 
     if (hasImages && this.config.isCanUseVision?.(this.config.model, this.config.provider)) {
-      // 创建结构化内容
+      // Create structured content
       const contentParts: UserMessageContentPart[] = [];
 
       if (message.content) {
@@ -249,7 +249,7 @@ export class MessageContentProcessor extends BaseProcessor {
         });
       }
 
-      // 处理图片内容
+      // Process image content
       const imageContentParts = await this.processImageList(message.imageList || []);
       contentParts.push(...imageContentParts);
 
@@ -259,7 +259,7 @@ export class MessageContentProcessor extends BaseProcessor {
       };
     }
 
-    // 普通助手消息，返回纯文本内容
+    // Regular assistant message, return plain text content
     return {
       ...message,
       content: message.content,
@@ -267,7 +267,7 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理图片列表
+   * Process image list
    */
   private async processImageList(imageList: any[]): Promise<UserMessageContentPart[]> {
     if (!imageList || imageList.length === 0) {
@@ -293,7 +293,7 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理视频列表
+   * Process video list
    */
   private async processVideoList(videoList: any[]): Promise<UserMessageContentPart[]> {
     if (!videoList || videoList.length === 0) {
@@ -309,7 +309,7 @@ export class MessageContentProcessor extends BaseProcessor {
   }
 
   /**
-   * 验证内容部分格式
+   * Validate content part format
    */
   private validateContentPart(part: UserMessageContentPart): boolean {
     if (!part || !part.type) return false;

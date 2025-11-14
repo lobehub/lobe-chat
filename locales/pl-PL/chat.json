@@ -240,6 +240,7 @@
   "noMatchingAgents": "Brak pasujących członków",
   "noMembersYet": "W tej grupie nie ma jeszcze żadnych członków. Kliknij przycisk +, aby zaprosić asystentów.",
   "noSelectedAgents": "Nie wybrano jeszcze członków",
+  "openInNewWindow": "Otwórz na osobnej stronie",
   "owner": "Właściciel grupy",
   "pin": "Przypnij",
   "pinOff": "Odepnij",
@@ -367,6 +368,26 @@
     "overload": "Przekroczenie limitu",
     "remained": "Pozostało",
     "used": "Użyte"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Zatwierdź",
+      "approveAndRemember": "Zatwierdź i zapamiętaj",
+      "approveOnce": "Zatwierdź tylko tym razem",
+      "mode": {
+        "allowList": "Lista dozwolonych",
+        "allowListDesc": "Automatycznie wykonuj tylko zatwierdzone narzędzia",
+        "autoRun": "Automatyczne zatwierdzanie",
+        "autoRunDesc": "Automatycznie zatwierdzaj wszystkie wykonania narzędzi",
+        "manual": "Ręcznie",
+        "manualDesc": "Każde wywołanie wymaga ręcznego zatwierdzenia"
+      },
+      "reject": "Odrzuć",
+      "rejectReasonPlaceholder": "Wprowadzenie powodu odrzucenia pomoże Agentowi zrozumieć i zoptymalizować przyszłe działania",
+      "rejectTitle": "Odrzuć to wywołanie narzędzia",
+      "rejectedWithReason": "To wywołanie narzędzia zostało odrzucone: {{reason}}",
+      "toolRejected": "To wywołanie narzędzia zostało odrzucone"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Czy otworzyć nowy temat?",

@@ -40,19 +40,19 @@ export class HistorySummaryProvider extends BaseProvider {
   protected async doProcess(context: PipelineContext): Promise<PipelineContext> {
     const clonedContext = this.cloneContext(context);
 
-    // 检查是否有历史摘要
+    // Check if history summary exists
     if (!this.config.historySummary) {
       log('No history summary content, skipping processing');
       return this.markAsExecuted(clonedContext);
     }
 
-    // 格式化历史摘要
+    // Format history summary
     const formattedSummary = this.formatHistorySummary(this.config.historySummary);
 
-    // 注入历史摘要
+    // Inject history summary
     this.injectHistorySummary(clonedContext, formattedSummary);
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.historySummary = {
       formattedLength: formattedSummary.length,
       injected: true,
@@ -80,7 +80,7 @@ export class HistorySummaryProvider extends BaseProvider {
     const existingSystemMessage = context.messages.find((msg) => msg.role === 'system');
 
     if (existingSystemMessage) {
-      // 合并到现有系统消息
+      // Merge to existing system message
       existingSystemMessage.content = [existingSystemMessage.content, formattedSummary]
         .filter(Boolean)
         .join('\n\n');
@@ -89,7 +89,7 @@ export class HistorySummaryProvider extends BaseProvider {
         `History summary merged to existing system message, final length: ${existingSystemMessage.content.length}`,
       );
     } else {
-      // 创建新的系统消息
+      // Create new system message
       const systemMessage = {
         content: formattedSummary,
         role: 'system' as const,

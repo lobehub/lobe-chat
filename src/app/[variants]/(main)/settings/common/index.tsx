@@ -5,7 +5,7 @@ import Common from './features/Common/Common';
 const Page = () => {
   return (
     <>
-      <Common/>
+      <Common />
       <Appearance />
       <ChatAppearance />
     </>

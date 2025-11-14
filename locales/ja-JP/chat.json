@@ -240,6 +240,7 @@
   "noMatchingAgents": "一致するメンバーが見つかりません",
   "noMembersYet": "このグループにはまだメンバーがいません。「＋」ボタンをクリックしてアシスタントを招待してください。",
   "noSelectedAgents": "メンバーがまだ選択されていません",
+  "openInNewWindow": "新しいウィンドウで開く",
   "owner": "グループ管理者",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
@@ -367,6 +368,26 @@
     "overload": "制限を超えています",
     "remained": "残り",
     "used": "使用済み"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "承認",
+      "approveAndRemember": "承認して記憶する",
+      "approveOnce": "今回のみ承認",
+      "mode": {
+        "allowList": "ホワイトリスト",
+        "allowListDesc": "承認されたツールのみ自動実行されます",
+        "autoRun": "自動承認",
+        "autoRunDesc": "すべてのツール実行を自動的に承認します",
+        "manual": "手動",
+        "manualDesc": "毎回の呼び出しに手動承認が必要です"
+      },
+      "reject": "拒否",
+      "rejectReasonPlaceholder": "拒否理由を入力すると、エージェントが理解し今後の行動を最適化するのに役立ちます",
+      "rejectTitle": "今回のツール呼び出しを拒否",
+      "rejectedWithReason": "今回のツール呼び出しは次の理由で拒否されました:{{reason}}",
+      "toolRejected": "今回のツール呼び出しは拒否されました"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "新しいトピックを開始しますか？",

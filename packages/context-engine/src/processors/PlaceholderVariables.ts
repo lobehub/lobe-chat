@@ -133,7 +133,7 @@ export class PlaceholderVariablesProcessor extends BaseProcessor {
       `Starting placeholder variables processing with ${Object.keys(this.config.variableGenerators).length} generators`,
     );
 
-    // 处理每条消息的占位符变量
+    // Process placeholder variables for each message
     for (let i = 0; i < clonedContext.messages.length; i++) {
       const message = clonedContext.messages[i];
 
@@ -148,11 +148,11 @@ export class PlaceholderVariablesProcessor extends BaseProcessor {
         }
       } catch (error) {
         log.extend('error')(`Error processing placeholders in message ${message.id}: ${error}`);
-        // 继续处理其他消息
+        // Continue processing other messages
       }
     }
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.placeholderVariablesProcessed = processedCount;
 
     log(`Placeholder variables processing completed, processed ${processedCount} messages`);
@@ -161,7 +161,7 @@ export class PlaceholderVariablesProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理单个消息的占位符变量
+   * Process placeholder variables for a single message
    */
   private processMessagePlaceholders(message: any, depth: number): any {
     if (!message?.content) return message;

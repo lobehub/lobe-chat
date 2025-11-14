@@ -1,6 +1,61 @@
 [
   {
     "children": {
+      "fixes": ["Filter out reasoning fields from messages in ChatCompletion API."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.52"
+  },
+  {
+    "children": {
+      "improvements": ["Update ERNIE-5.0-Thinking-Preview model."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.51"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc accountId mismatch."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.50"
+  },
+  {
+    "children": {
+      "features": ["Support tool invention."],
+      "fixes": ["Update lost i18n files."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.49"
+  },
+  {
+    "children": {},
+    "date": "2025-11-12",
+    "version": "2.0.0-next.48"
+  },
+  {
+    "children": {
+      "fixes": ["Fix mcp server return image error."]
+    },
+    "date": "2025-11-11",
+    "version": "2.0.0-next.47"
+  },
+  {
+    "children": {
+      "improvements": ["Fix thread display."]
+    },
+    "date": "2025-11-11",
+    "version": "2.0.0-next.46"
+  },
+  {
+    "children": {
+      "improvements": ["Edge to node runtime."]
+    },
+    "date": "2025-11-10",
+    "version": "2.0.0-next.45"
+  },
+  {
+    "children": {
       "fixes": ["Fix reasoning issue with claude and Response API thinking."]
     },
     "date": "2025-11-10",

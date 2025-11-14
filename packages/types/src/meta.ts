@@ -10,6 +10,10 @@ export const LobeMetaDataSchema = z.object({
    */
   backgroundColor: z.string().optional(),
   description: z.string().optional(),
+  /**
+   * Market agent identifier for published agents
+   */
+  marketIdentifier: z.string().optional(),
 
   tags: z.array(z.string()).optional(),
   /**

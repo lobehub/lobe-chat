@@ -8,6 +8,7 @@ import {
   ChatVideoItem,
   CreateMessageParams,
   DBMessageItem,
+  MessagePluginItem,
   ModelRankItem,
   NewMessageQueryParams,
   QueryMessageParams,
@@ -23,7 +24,6 @@ import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
 import {
-  MessagePluginItem,
   chunks,
   documents,
   embeddings,
@@ -97,6 +97,7 @@ export class MessageModel {
           type: messagePlugins.type,
         },
         pluginError: messagePlugins.error,
+        pluginIntervention: messagePlugins.intervention,
         pluginState: messagePlugins.state,
 
         translate: {
@@ -462,6 +463,7 @@ export class MessageModel {
       provider: fromProvider,
       files,
       plugin,
+      pluginIntervention,
       pluginState,
       fileChunks,
       ragQueryId,
@@ -496,6 +498,7 @@ export class MessageModel {
           arguments: plugin?.arguments,
           id,
           identifier: plugin?.identifier,
+          intervention: pluginIntervention,
           state: pluginState,
           toolCallId: message.tool_call_id,
           type: plugin?.type,

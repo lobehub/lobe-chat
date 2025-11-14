@@ -34,16 +34,16 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
           {category}
         </Header>
       )}
-      <SettingContainer
-        addonAfter={<Footer />}
-        style={{
-          paddingBlock: 24,
-          paddingInline: 32,
-        }}
-      >
-        {children}
-      </SettingContainer>
-    </Flexbox>
+        <SettingContainer
+          addonAfter={<Footer />}
+          style={{
+            paddingBlock: 24,
+            paddingInline: 32,
+          }}
+        >
+          {children}
+        </SettingContainer>
+      </Flexbox>
   );
 });
 

@@ -4,5 +4,6 @@ export {
   keyVaultsConfigSelectors,
   settingsSelectors,
   systemAgentSelectors,
+  toolInterventionSelectors,
   userGeneralSettingsSelectors,
 } from './slices/settings/selectors';

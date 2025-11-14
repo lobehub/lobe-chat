@@ -10,7 +10,7 @@ import {
   removeVirtuosoVisibleItem,
   upsertVirtuosoVisibleItem,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
-import { useChatStore } from '@/store/chat';
+import { getChatStoreState, useChatStore } from '@/store/chat';
 import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import History from '../components/History';
@@ -56,9 +56,10 @@ const Item = memo<ChatListItemProps>(
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const item = useChatStore(displayMessageSelectors.getDisplayMessageById(id), isEqual);
-
-    const [isMessageLoading] = useChatStore((s) => [messageStateSelectors.isMessageLoading(id)(s)]);
+    const [isMessageLoading, role] = useChatStore((s) => [
+      messageStateSelectors.isMessageLoading(id)(s),
+      displayMessageSelectors.getDisplayMessageById(id)(s)?.role,
+    ]);
 
     // ======================= Performance Optimization ======================= //
     // these useMemo/useCallback are all for the performance optimization
@@ -104,6 +105,8 @@ const Item = memo<ChatListItemProps>(
     }, [index]);
 
     const onContextMenu = useCallback(async () => {
+      const item = displayMessageSelectors.getDisplayMessageById(id)(getChatStoreState());
+
       if (isDesktop && item) {
         const { electronSystemService } = await import('@/services/electron/system');
 
@@ -114,45 +117,31 @@ const Item = memo<ChatListItemProps>(
           role: item.role,
         });
       }
-    }, [id, item]);
+    }, [id]);
 
     const renderContent = useMemo(() => {
-      switch (item?.role) {
+      switch (role) {
         case 'user': {
-          return <UserMessage {...item} disableEditing={disableEditing} index={index} />;
+          return <UserMessage disableEditing={disableEditing} id={id} index={index} />;
         }
 
         case 'assistant': {
-          return (
-            <AssistantMessage
-              {...item}
-              disableEditing={disableEditing}
-              index={index}
-              showTitle={item.groupId ? true : false}
-            />
-          );
+          return <AssistantMessage disableEditing={disableEditing} id={id} index={index} />;
         }
 
         case 'assistantGroup': {
-          return (
-            <GroupMessage
-              {...item}
-              disableEditing={disableEditing}
-              index={index}
-              showTitle={item.groupId ? true : false}
-            />
-          );
+          return <GroupMessage disableEditing={disableEditing} id={id} index={index} />;
         }
 
         case 'supervisor': {
-          return <SupervisorMessage {...item} disableEditing={disableEditing} index={index} />;
+          return <SupervisorMessage disableEditing={disableEditing} id={id} index={index} />;
         }
       }
 
       return null;
-    }, [item]);
+    }, [role, disableEditing, id, index]);
 
-    if (!item) return;
+    if (!role) return;
 
     return (
       <InPortalThreadContext.Provider value={inPortalThread}>
@@ -169,6 +158,7 @@ const Item = memo<ChatListItemProps>(
       </InPortalThreadContext.Provider>
     );
   },
+  isEqual,
 );
 
 Item.displayName = 'ChatItem';
