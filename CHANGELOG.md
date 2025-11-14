@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.56](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.55...v2.0.0-next.56)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add folder creation UI and clean up debug code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add folder creation UI and clean up debug code ([d5ecd0a](https://github.com/lobehub/lobe-chat/commit/d5ecd0a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.55](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.54...v2.0.0-next.55)
 
 <sup>Released on **2025-11-14**</sup>
