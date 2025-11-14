@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support DeepSeek Interleaved thinking."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.58"
+  },
+  {
+    "children": {
       "improvements": ["Revert background style."]
     },
     "date": "2025-11-14",
