@@ -6,20 +6,20 @@ import {
   FolderOpenOutlined,
 } from '@ant-design/icons';
 import { Button, Result } from 'antd';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface StatusPageProps {
   status: 'unpublished' | 'archived' | 'deprecated';
 }
 
 const StatusPage = memo<StatusPageProps>(({ status }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { t } = useTranslation('discover');
 
   const handleBackToMarket = () => {
-    router.push('/discover/assistant');
+    navigate('/discover/assistant');
   };
 
   // 审核中状态

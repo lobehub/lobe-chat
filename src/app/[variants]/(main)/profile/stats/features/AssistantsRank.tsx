@@ -2,11 +2,11 @@ import { BarList } from '@lobehub/charts';
 import { ActionIcon, Avatar, FormGroup, Modal } from '@lobehub/ui';
 import { MaximizeIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import qs from 'query-string';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_AVATAR } from '@/const/meta';
@@ -18,7 +18,7 @@ import { SessionRankItem } from '@/types/session';
 export const AssistantsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['auth', 'chat']);
-  const router = useRouter();
+  const navigate = useNavigate();
   const { data, isLoading } = useClientDataSWR('rank-sessions', async () =>
     sessionService.rankSessions(),
   );
@@ -86,7 +86,7 @@ export const AssistantsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
               desc: t('stats.empty.desc'),
               title: t('stats.empty.title'),
             }}
-            onValueChange={(item) => router.push(item.link)}
+            onValueChange={(item) => navigate(item.link)}
             rightLabel={t('stats.assistantsRank.right')}
           />
         </Flexbox>
@@ -104,7 +104,7 @@ export const AssistantsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
             height={340}
             leftLabel={t('stats.assistantsRank.left')}
             loading={isLoading || !data}
-            onValueChange={(item) => router.push(item.link)}
+            onValueChange={(item) => navigate(item.link)}
             rightLabel={t('stats.assistantsRank.right')}
           />
         </Modal>

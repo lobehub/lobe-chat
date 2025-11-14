@@ -6,9 +6,9 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'nextjs-toploader/app';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { useDetailContext } from '../../DetailProvider';
@@ -26,7 +26,7 @@ const ChatWithModel = memo(() => {
   const { t } = useTranslation('discover');
   const { providers = [] } = useDetailContext();
   const includeLobeHub = providers.some((item) => item.id === 'lobehub');
-  const route = useRouter();
+  const navigate = useNavigate();
   const list = providers.filter((provider) => provider.id !== 'lobehub');
 
   const items = list.map((item) => ({
@@ -40,7 +40,7 @@ const ChatWithModel = memo(() => {
   }));
 
   const handleLobeHubChat = () => {
-    route.push('/chat');
+    navigate('/chat');
   };
 
   if (includeLobeHub)

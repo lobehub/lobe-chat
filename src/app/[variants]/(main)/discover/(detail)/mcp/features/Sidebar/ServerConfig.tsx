@@ -1,8 +1,8 @@
-import { usePathname } from 'next/navigation';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useLocation } from 'react-router-dom';
 
 import { getRecommendedDeployment } from '@/features/MCP/utils';
 import Platform from '@/features/MCPPluginDetail/Deployment/Platform';
@@ -13,12 +13,12 @@ import Title from '../../../../features/Title';
 
 const ServerConfig = memo(() => {
   const { t } = useTranslation('discover');
-  const pathName = usePathname();
+  const { pathname } = useLocation();
   const installLink = qs.stringifyUrl({
     query: {
       activeTab: McpNavKey.Deployment,
     },
-    url: pathName,
+    url: pathname,
   });
   const { deploymentOptions = [], identifier } = useDetailContext();
   const recommendedDeployment = getRecommendedDeployment(deploymentOptions);

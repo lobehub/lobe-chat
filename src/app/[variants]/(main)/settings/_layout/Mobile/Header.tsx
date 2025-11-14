@@ -7,17 +7,16 @@ import { Flexbox } from 'react-layout-kit';
 
 import { enableAuth } from '@/const/auth';
 import { useQueryState } from '@/hooks/useQueryParam';
-import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { SettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
+import { useNavigate } from 'react-router-dom';
 
 const Header = memo(() => {
   const { t } = useTranslation('setting');
-  const router = useQueryRoute();
   const showMobileWorkspace = useShowMobileWorkspace();
-
+  const navigate = useNavigate();
   const [activeSettingsKey, setActiveSettingsKey] = useQueryState('active');
   const [providerName, setProviderName] = useQueryState('provider');
 
@@ -25,13 +24,15 @@ const Header = memo(() => {
   const isProvider = providerName ? true : false;
 
   const handleBackClick = () => {
+    console.log('gobackclick', isSessionActive, showMobileWorkspace, activeSettingsKey, providerName);
     if (isSessionActive && showMobileWorkspace) {
-      router.push('/chat');
-    } else if (activeSettingsKey === 'provider' && providerName !== null) {
+      navigate('/chat');
+    } else if (activeSettingsKey === 'provider' && providerName) {
       setProviderName(null);
       setActiveSettingsKey('provider');
+      navigate(-1);
     } else {
-      router.push(enableAuth ? '/me/settings' : '/me');
+      navigate(enableAuth ? '/me/settings' : '/me');
     }
   };
 

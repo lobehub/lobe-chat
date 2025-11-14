@@ -28,7 +28,7 @@ const Related = memo(() => {
       </Title>
       <Flexbox gap={8}>
         {related?.map((item, index) => {
-          const link = urlJoin('/model', item.identifier);
+          const link = urlJoin('/discover/model', item.identifier);
           return (
             <Link key={index} style={{ color: 'inherit', overflow: 'hidden' }} to={link}>
               <Item {...item} />

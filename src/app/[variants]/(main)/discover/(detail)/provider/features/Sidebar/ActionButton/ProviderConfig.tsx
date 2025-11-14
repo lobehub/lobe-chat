@@ -5,9 +5,9 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon, SquareArrowOutUpRight } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'nextjs-toploader/app';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { isDeprecatedEdition, isDesktop } from '@/const/version';
 
@@ -25,7 +25,7 @@ const ProviderConfig = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('discover');
   const { url, modelsUrl, identifier } = useDetailContext();
-  const router = useRouter();
+  const navigate = useNavigate();
   const openSettings = async () => {
     const searchParams = isDeprecatedEdition
       ? { active: 'llm' }
@@ -40,8 +40,7 @@ const ProviderConfig = memo(() => {
       });
       return;
     }
-
-    router.push(
+    navigate(
       isDeprecatedEdition
         ? '/settings?active=llm'
         : `/settings?active=provider&provider=${identifier}`,
