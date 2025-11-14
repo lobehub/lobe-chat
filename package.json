@@ -174,7 +174,7 @@
     "@lobehub/market-sdk": "^0.23.0",
     "@lobehub/tts": "^2.0.1",
     "@lobehub/ui": "^2.13.8",
-    "@modelcontextprotocol/sdk": "^1.21.1",
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "@neondatabase/serverless": "^1.0.2",
     "@next/third-parties": "^16.0.1",
     "@opentelemetry/exporter-jaeger": "^2.2.0",
