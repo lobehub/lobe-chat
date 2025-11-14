@@ -324,6 +324,13 @@ export const createDesktopRouter = (locale: Locales) =>
                 })),
               path: 'stats',
             },
+            {
+              lazy: () =>
+                import('./(main)/profile/usage/index').then((m) => ({
+                  Component: m.DesktopProfileUsagePage,
+                })),
+              path: 'usage',
+            },
           ],
           lazy: () =>
             import('./(main)/profile/_layout/DesktopWrapper').then((m) => ({

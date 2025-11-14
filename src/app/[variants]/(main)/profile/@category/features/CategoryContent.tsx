@@ -21,7 +21,6 @@ const CategoryContent = memo(() => {
       items={cateItems}
       onClick={({ key }) => {
         const activeKey = key === ProfileTabs.Profile ? '/' : key;
-
         navigate(urlJoin('/profile', activeKey));
       }}
       selectable
