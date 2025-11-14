@@ -174,6 +174,13 @@ class ChatService {
         extendParams.reasoning_effort = chatConfig.gpt5ReasoningEffort;
       }
 
+      if (
+        modelExtendParams!.includes('gpt5_1ReasoningEffort') &&
+        chatConfig.gpt5_1ReasoningEffort
+      ) {
+        extendParams.reasoning_effort = chatConfig.gpt5_1ReasoningEffort;
+      }
+
       if (modelExtendParams!.includes('textVerbosity') && chatConfig.textVerbosity) {
         extendParams.verbosity = chatConfig.textVerbosity;
       }
