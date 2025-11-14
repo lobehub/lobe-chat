@@ -216,6 +216,14 @@ export const createDesktopRouter = (locale: Locales) =>
               loader: idLoader,
               path: 'bases/:id',
             },
+            {
+              lazy: () =>
+                import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
+                  Component: m.default,
+                })),
+              loader: idLoader,
+              path: '*',
+            },
           ],
           lazy: () =>
             import('./(main)/knowledge/_layout/Desktop').then((m) => ({
