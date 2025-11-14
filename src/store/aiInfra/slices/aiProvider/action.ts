@@ -30,10 +30,25 @@ import {
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
 
+type ProviderModelListItem = {
+  abilities: ModelAbilities;
+  approximatePricePerImage?: number;
+  contextWindowTokens?: number;
+  description?: string;
+  displayName: string;
+  id: string;
+  parameters?: ModelParamsSchema;
+  pricePerImage?: number;
+  pricing?: Pricing;
+};
+
 /**
  * Get image models by provider ID with pricing and description fallback
  */
-const getImageModelList = async (enabledAiModels: EnabledAiModel[], providerId: string) => {
+const getImageModelList = async (
+  enabledAiModels: EnabledAiModel[],
+  providerId: string,
+): Promise<ProviderModelListItem[]> => {
   const filteredModels = enabledAiModels.filter(
     (model) => model.providerId === providerId && model.type === 'image',
   );
@@ -90,7 +105,10 @@ const getImageModelList = async (enabledAiModels: EnabledAiModel[], providerId: 
 /**
  * Get chat models by provider ID
  */
-const getChatModelList = async (enabledAiModels: EnabledAiModel[], providerId: string) => {
+const getChatModelList = async (
+  enabledAiModels: EnabledAiModel[],
+  providerId: string,
+): Promise<ProviderModelListItem[]> => {
   const filteredModels = enabledAiModels.filter(
     (model) => model.providerId === providerId && model.type === 'chat',
   );
@@ -135,6 +153,21 @@ const buildChatProviderModelLists = async (
       name: provider.name || provider.id,
     })),
   );
+};
+
+/**
+ * Public helper to fetch models by provider and type.
+ * Used by tests to verify the formatting logic stays consistent.
+ */
+export const getModelListByType = async (
+  enabledAiModels: EnabledAiModel[],
+  providerId: string,
+  type: EnabledAiModel['type'] | string,
+): Promise<ProviderModelListItem[]> => {
+  if (type === 'image') return getImageModelList(enabledAiModels, providerId);
+  if (type === 'chat') return getChatModelList(enabledAiModels, providerId);
+
+  return [];
 };
 
 enum AiProviderSwrKey {
