@@ -255,10 +255,11 @@
       "moveLocalFiles": "Bestanden verplaatsen",
       "readLocalFile": "Bestandsinhoud lezen",
       "renameLocalFile": "Naam wijzigen",
+      "runCommand": "Code uitvoeren",
       "searchLocalFiles": "Bestanden zoeken",
       "writeLocalFile": "Bestand schrijven"
     },
-    "title": "Lokale bestanden"
+    "title": "Lokaal systeem"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installatieomgeving controleren...",

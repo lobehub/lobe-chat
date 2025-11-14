@@ -96,7 +96,7 @@ describe('BaseProcessor', () => {
       const invalidContext = { messages: 'not an array' } as any;
 
       await expect(processor.process(invalidContext)).rejects.toThrow(ProcessorError);
-      await expect(processor.process(invalidContext)).rejects.toThrow('无效的上下文');
+      await expect(processor.process(invalidContext)).rejects.toThrow('Invalid context');
     });
 
     it('should validate output context', async () => {
@@ -104,7 +104,7 @@ describe('BaseProcessor', () => {
       const context = createContext([{ content: 'test', role: 'user' }]);
 
       await expect(processor.process(context)).rejects.toThrow(ProcessorError);
-      await expect(processor.process(context)).rejects.toThrow('无效的输出上下文');
+      await expect(processor.process(context)).rejects.toThrow('Invalid output context');
     });
 
     it('should wrap errors in ProcessorError', async () => {
@@ -145,13 +145,13 @@ describe('BaseProcessor', () => {
     it('should reject null context', async () => {
       const processor = new TestProcessor();
 
-      await expect(processor.process(null as any)).rejects.toThrow('无效的上下文');
+      await expect(processor.process(null as any)).rejects.toThrow('Invalid context');
     });
 
     it('should reject undefined context', async () => {
       const processor = new TestProcessor();
 
-      await expect(processor.process(undefined as any)).rejects.toThrow('无效的上下文');
+      await expect(processor.process(undefined as any)).rejects.toThrow('Invalid context');
     });
 
     it('should reject context without messages array', async () => {
@@ -162,7 +162,7 @@ describe('BaseProcessor', () => {
         metadata: {},
       } as any;
 
-      await expect(processor.process(invalidContext)).rejects.toThrow('无效的上下文');
+      await expect(processor.process(invalidContext)).rejects.toThrow('Invalid context');
     });
   });
 

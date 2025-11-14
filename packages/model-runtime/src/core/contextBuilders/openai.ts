@@ -26,17 +26,31 @@ export const convertMessageContent = async (
 
 export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessageParam[]) => {
   return (await Promise.all(
-    messages.map(async (message) => ({
-      ...message,
-      content:
-        typeof message.content === 'string'
-          ? message.content
-          : await Promise.all(
-              (message.content || []).map((c) =>
-                convertMessageContent(c as OpenAI.ChatCompletionContentPart),
+    messages.map(async (message) => {
+      const msg = message as any;
+
+      // Explicitly map only valid ChatCompletionMessageParam fields
+      // Exclude reasoning and reasoning_content fields as they should not be sent in requests
+      const result: any = {
+        content:
+          typeof message.content === 'string'
+            ? message.content
+            : await Promise.all(
+                (message.content || []).map((c) =>
+                  convertMessageContent(c as OpenAI.ChatCompletionContentPart),
+                ),
               ),
-            ),
-    })),
+        role: msg.role,
+      };
+
+      // Add optional fields if they exist
+      if (msg.name !== undefined) result.name = msg.name;
+      if (msg.tool_calls !== undefined) result.tool_calls = msg.tool_calls;
+      if (msg.tool_call_id !== undefined) result.tool_call_id = msg.tool_call_id;
+      if (msg.function_call !== undefined) result.function_call = msg.function_call;
+
+      return result;
+    }),
   )) as OpenAI.ChatCompletionMessageParam[];
 };
 

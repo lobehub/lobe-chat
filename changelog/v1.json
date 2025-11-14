@@ -1,5 +1,49 @@
 [
   {
+    "children": {
+      "improvements": ["Refactor and support move locale file intervention."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.54"
+  },
+  {
+    "children": {
+      "features": ["Add GPT-5.1 models."],
+      "improvements": ["Fix approving render and improve Conversation style."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.53"
+  },
+  {
+    "children": {
+      "fixes": ["Filter out reasoning fields from messages in ChatCompletion API."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.52"
+  },
+  {
+    "children": {
+      "improvements": ["Update ERNIE-5.0-Thinking-Preview model."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.51"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc accountId mismatch."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.50"
+  },
+  {
+    "children": {
+      "features": ["Support tool invention."],
+      "fixes": ["Update lost i18n files."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.49"
+  },
+  {
     "children": {},
     "date": "2025-11-12",
     "version": "2.0.0-next.48"

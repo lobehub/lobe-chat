@@ -266,6 +266,8 @@ export default {
 
   noSelectedAgents: '还未选择成员',
 
+  openInNewWindow: '单独打开页面',
+
   owner: '群主',
 
   pin: '置顶',
@@ -397,6 +399,28 @@ export default {
     overload: '超过限制',
     remained: '剩余',
     used: '使用',
+  },
+  tool: {
+    intervention: {
+      approve: '批准',
+      approveAndRemember: '批准并记住',
+      approveOnce: '仅本次批准',
+      mode: {
+        allowList: '白名单',
+        allowListDesc: '仅自动执行已批准的工具',
+        autoRun: '自动批准',
+        autoRunDesc: '自动批准所有工具执行',
+        manual: '手动',
+        manualDesc: '每次调用都需要手动批准',
+      },
+      reject: '拒绝',
+      rejectAndContinue: '拒绝后重试执行',
+      rejectOnly: '拒绝',
+      rejectReasonPlaceholder: '输入拒绝原因将帮助 Agent 理解并优化后续行动',
+      rejectTitle: '拒绝本次工具调用',
+      rejectedWithReason: '本次工具调用被主动拒绝:{{reason}}',
+      toolRejected: '本次工具调用被主动拒绝',
+    },
   },
   topic: {
     checkOpenNewTopic: '是否开启新话题?',
