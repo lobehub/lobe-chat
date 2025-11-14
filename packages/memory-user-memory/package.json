@@ -1,5 +1,5 @@
 {
-  "name": "@lobechat/memory-extract",
+  "name": "@lobechat/memory-user-memory",
   "version": "1.0.0",
   "private": true,
   "main": "src/index.ts",
@@ -7,10 +7,12 @@
     "gatekeeper": "tsx scripts/run-gatekeeper.ts"
   },
   "dependencies": {
+    "@lobechat/context-engine": "workspace:*",
     "@lobechat/model-runtime": "workspace:*",
     "@lobechat/prompts": "workspace:*",
     "dotenv": "^17.2.3",
-    "ora": "^9.0.0"
+    "ora": "^9.0.0",
+    "zod-to-json-schema": "^3.24.6"
   },
   "devDependencies": {
     "tsx": "^4.20.6"
