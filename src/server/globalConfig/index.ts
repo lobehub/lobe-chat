@@ -12,6 +12,7 @@ import { cleanObject } from '@/utils/object';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
+import { getPublicMemoryExtractionConfig } from './parseMemoryExtractionConfig';
 
 export const getServerGlobalConfig = async () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
@@ -63,6 +64,9 @@ export const getServerGlobalConfig = async () => {
     image: cleanObject({
       defaultImageNum: imageEnv.AI_IMAGE_DEFAULT_IMAGE_NUM,
     }),
+    memory: {
+      userMemory: cleanObject(getPublicMemoryExtractionConfig()),
+    },
     oAuthSSOProviders: authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {

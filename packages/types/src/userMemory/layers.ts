@@ -35,7 +35,6 @@ export interface UserMemoryExperience extends UserMemoryTimestamps {
   situation: string | null;
   situationVector: number[] | null;
   tags: string[] | null;
-  type: string | null;
   userId: string | null;
   userMemoryId: string | null;
 }
