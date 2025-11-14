@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor and support move locale file intervention."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.54"
+  },
+  {
+    "children": {
       "features": ["Add GPT-5.1 models."],
       "improvements": ["Fix approving render and improve Conversation style."]
     },
