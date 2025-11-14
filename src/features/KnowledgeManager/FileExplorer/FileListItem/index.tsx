@@ -1,12 +1,12 @@
-import { Button, Tooltip } from '@lobehub/ui';
+import { Button, Icon, Tooltip } from '@lobehub/ui';
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'lodash-es';
-import { FileBoxIcon } from 'lucide-react';
+import { FileBoxIcon, FileText } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useSearchParams } from 'react-router-dom';
@@ -22,6 +22,15 @@ import DropdownMenu from './DropdownMenu';
 
 dayjs.extend(relativeTime);
 
+// Helper to extract title from markdown content
+const extractTitle = (content: string): string | null => {
+  if (!content) return null;
+
+  // Find first markdown header (# title)
+  const match = content.match(/^#\s+(.+)$/m);
+  return match ? match[1].trim() : null;
+};
+
 export const FILE_DATE_WIDTH = 160;
 export const FILE_SIZE_WIDTH = 140;
 
@@ -33,9 +42,8 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     checkbox: hover,
     container: css`
       cursor: pointer;
-      margin-inline: 24px;
+      margin-inline: 16px;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
-      border-radius: ${token.borderRadius}px;
 
       &:hover {
         background: ${token.colorFillTertiary};
@@ -101,8 +109,11 @@ const FileRenderItem = memo<FileRenderItemProps>(
     onSelectedChange,
     knowledgeBaseId,
     index,
+    content,
+    metadata,
+    sourceType,
   }) => {
-    const { t } = useTranslation('components');
+    const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
     const [, setSearchParams] = useSearchParams();
     const [isCreatingFileParseTask, parseFiles] = useFileStore((s) => [
@@ -111,6 +122,18 @@ const FileRenderItem = memo<FileRenderItemProps>(
     ]);
 
     const isSupportedForChunking = !isChunkingUnsupported(fileType);
+    const isNote = sourceType === 'document' || fileType === 'custom/document';
+
+    // Extract title and emoji for notes
+    const displayTitle = useMemo(() => {
+      if (isNote && content) {
+        const extractedTitle = extractTitle(content);
+        return extractedTitle || name || t('file:documentList.untitled');
+      }
+      return name;
+    }, [isNote, content, name, t]);
+
+    const emoji = isNote ? metadata?.emoji : null;
 
     const displayTime =
       dayjs().diff(dayjs(createdAt), 'd') < 7
@@ -121,7 +144,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
       <Flexbox
         align={'center'}
         className={cx(styles.container, selected && styles.selected)}
-        height={64}
+        height={48}
         horizontal
         paddingInline={8}
       >
@@ -158,8 +181,24 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 style={{ borderRadius: '50%' }}
               />
             </Center>
-            <FileIcon fileName={name} fileType={fileType} />
-            <span className={styles.name}>{name}</span>
+            <Flexbox
+              align={'center'}
+              justify={'center'}
+              style={{ fontSize: 24, marginInline: 8, width: 24 }}
+            >
+              {isNote ? (
+                emoji ? (
+                  <span style={{ fontSize: 24 }}>{emoji}</span>
+                ) : (
+                  <Center height={24} width={24}>
+                    <Icon icon={FileText} size={24} />
+                  </Center>
+                )
+              ) : (
+                <FileIcon fileName={name} fileType={fileType} size={24} />
+              )}
+            </Flexbox>
+            <span className={styles.name}>{displayTitle}</span>
           </Flexbox>
           <Flexbox
             align={'center'}
