@@ -791,5 +791,18 @@
     "bps": true,
     "folderMillis": 1762911968658,
     "hash": "552a032cc0e595277232e70b5f9338658585bafe9481ae8346a5f322b673a68b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"documents\" ADD COLUMN \"parent_id\" varchar(30);",
+      "\nALTER TABLE \"files\" ADD COLUMN \"parent_id\" varchar(30);",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
+      "\nALTER TABLE \"files\" ADD CONSTRAINT \"files_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
+      "\nCREATE INDEX \"documents_parent_id_idx\" ON \"documents\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX \"files_parent_id_idx\" ON \"files\" USING btree (\"parent_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1763112560155,
+    "hash": "4db9c3a896cd7a2e398d4ba7793e3db4292bd3a622fb93583f08847aa31be2b4"
   }
 ]
