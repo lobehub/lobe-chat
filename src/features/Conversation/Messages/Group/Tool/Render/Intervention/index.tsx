@@ -1,15 +1,15 @@
 import { safeParseJSON } from '@lobechat/utils';
-import { ActionIcon } from '@lobehub/ui';
-import { Edit3Icon } from 'lucide-react';
 import { Suspense, memo, useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
+import { toolInterventionSelectors } from '@/store/user/selectors';
+import { getBuiltinIntervention } from '@/tools/interventions';
 
 import Arguments from '../Arguments';
 import ApprovalActions from './ApprovalActions';
+import Fallback from './Fallback';
 import KeyValueEditor from './KeyValueEditor';
 import ModeSelector from './ModeSelector';
 
@@ -25,8 +25,7 @@ interface InterventionProps {
 
 const Intervention = memo<InterventionProps>(
   ({ requestArgs, id, identifier, apiName, toolCallId }) => {
-    const { t } = useTranslation('chat');
-    const approvalMode = useUserStore((s) => s.settings.tool?.approvalMode || 'manual');
+    const approvalMode = useUserStore(toolInterventionSelectors.approvalMode);
     const [isEditing, setIsEditing] = useState(false);
     const [optimisticUpdatePluginArguments] = useChatStore((s) => [
       s.optimisticUpdatePluginArguments,
@@ -53,45 +52,50 @@ const Intervention = memo<InterventionProps>(
       },
       [requestArgs, id],
     );
+    const BuiltinToolInterventionRender = getBuiltinIntervention(identifier, apiName);
 
-    if (isEditing)
-      return (
-        <Suspense fallback={<Arguments arguments={requestArgs} />}>
-          <KeyValueEditor
-            initialValue={safeParseJSON(requestArgs || '')}
-            onCancel={handleCancel}
-            onFinish={handleFinish}
-          />
-        </Suspense>
-      );
-
-    return (
-      <Flexbox gap={12}>
-        <Arguments
-          actions={
-            <ActionIcon
-              icon={Edit3Icon}
-              onClick={() => {
-                setIsEditing(true);
-              }}
-              size={'small'}
-              title={t('edit', { ns: 'common' })}
+    if (BuiltinToolInterventionRender) {
+      if (isEditing)
+        return (
+          <Suspense fallback={<Arguments arguments={requestArgs} />}>
+            <KeyValueEditor
+              initialValue={safeParseJSON(requestArgs || '')}
+              onCancel={handleCancel}
+              onFinish={handleFinish}
             />
-          }
-          arguments={requestArgs}
-        />
+          </Suspense>
+        );
 
-        <Flexbox horizontal justify={'space-between'}>
-          <ModeSelector />
-          <ApprovalActions
+      return (
+        <Flexbox gap={12}>
+          <BuiltinToolInterventionRender
             apiName={apiName}
-            approvalMode={approvalMode}
+            args={safeParseJSON(requestArgs || '')}
             identifier={identifier}
             messageId={id}
-            toolCallId={toolCallId}
           />
+          <Flexbox horizontal justify={'space-between'}>
+            <ModeSelector />
+            <ApprovalActions
+              apiName={apiName}
+              approvalMode={approvalMode}
+              identifier={identifier}
+              messageId={id}
+              toolCallId={toolCallId}
+            />
+          </Flexbox>
         </Flexbox>
-      </Flexbox>
+      );
+    }
+
+    return (
+      <Fallback
+        apiName={apiName}
+        id={id}
+        identifier={identifier}
+        requestArgs={requestArgs}
+        toolCallId={toolCallId}
+      />
     );
   },
 );

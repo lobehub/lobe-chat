@@ -369,6 +369,26 @@
     "remained": "باقی‌مانده",
     "used": "استفاده شده"
   },
+  "tool": {
+    "intervention": {
+      "approve": "تأیید",
+      "approveAndRemember": "تأیید و به خاطر سپردن",
+      "approveOnce": "تأیید فقط برای این بار",
+      "mode": {
+        "allowList": "فهرست مجاز",
+        "allowListDesc": "فقط ابزارهای تأییدشده به‌صورت خودکار اجرا می‌شوند",
+        "autoRun": "تأیید خودکار",
+        "autoRunDesc": "تأیید خودکار اجرای همه ابزارها",
+        "manual": "دستی",
+        "manualDesc": "نیاز به تأیید دستی برای هر بار فراخوانی"
+      },
+      "reject": "رد کردن",
+      "rejectReasonPlaceholder": "وارد کردن دلیل رد به Agent کمک می‌کند تا اقدامات بعدی را بهینه کند",
+      "rejectTitle": "رد این فراخوانی ابزار",
+      "rejectedWithReason": "این فراخوانی ابزار با دلیل زیر رد شد:{{reason}}",
+      "toolRejected": "این فراخوانی ابزار به‌صورت دستی رد شد"
+    }
+  },
   "topic": {
     "checkOpenNewTopic": "آیا مایل به باز کردن موضوع جدید هستید؟",
     "checkSaveCurrentMessages": "آیا مایل به ذخیره مکالمه فعلی به عنوان موضوع هستید؟",

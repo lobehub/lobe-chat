@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { ChatToolPayload } from '@/types/message';
+import { ChatToolPayload, UserInterventionConfig } from '@lobechat/types';
 
 import type { Cost, CostLimit, Usage } from './usage';
 
@@ -17,6 +17,12 @@ export interface AgentState {
   tools?: any[];
   systemRole?: string;
   toolManifestMap: Record<string, any>;
+
+  /**
+   * User's global intervention configuration
+   * Controls how tools requiring approval are handled
+   */
+  userInterventionConfig?: UserInterventionConfig;
   // --- Execution Tracking ---
   /**
    * Number of execution steps in this session.

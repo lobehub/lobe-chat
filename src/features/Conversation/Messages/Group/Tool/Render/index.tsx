@@ -1,10 +1,12 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import { ChatToolResult, ToolIntervention } from '@lobechat/types';
 import { Suspense, memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
 import Intervention from './Intervention';
+import ModeSelector from './Intervention/ModeSelector';
 import LoadingPlaceholder from './LoadingPlaceholder';
 import RejectedResponse from './RejectedResponse';
 
@@ -99,24 +101,29 @@ const Render = memo<RenderProps>(
 
     return (
       <Suspense fallback={placeholder}>
-        <CustomRender
-          content={result.content || ''}
-          id={toolCallId}
-          plugin={
-            type
-              ? ({
-                  apiName,
-                  arguments: requestArgs || '',
-                  identifier,
-                  type,
-                } as any)
-              : undefined
-          }
-          pluginState={result.state}
-          requestArgs={requestArgs}
-          setShowPluginRender={setShowPluginRender}
-          showPluginRender={showPluginRender}
-        />
+        <Flexbox gap={8}>
+          <CustomRender
+            content={result.content || ''}
+            id={toolCallId}
+            plugin={
+              type
+                ? ({
+                    apiName,
+                    arguments: requestArgs || '',
+                    identifier,
+                    type,
+                  } as any)
+                : undefined
+            }
+            pluginState={result.state}
+            requestArgs={requestArgs}
+            setShowPluginRender={setShowPluginRender}
+            showPluginRender={showPluginRender}
+          />
+          <div>
+            <ModeSelector />
+          </div>
+        </Flexbox>
       </Suspense>
     );
   },
