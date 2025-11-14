@@ -22,6 +22,7 @@ import { users } from './user';
 /**
  * 文档表 - 存储文件内容或网页搜索结果
  */
+// @ts-ignore
 export const documents = pgTable(
   'documents',
   {
@@ -32,6 +33,8 @@ export const documents = pgTable(
     // 基本信息
     title: text('title'),
     content: text('content'),
+
+    // Special type: custom/folder
     fileType: varchar('file_type', { length: 255 }).notNull(),
     filename: text('filename'),
 
@@ -50,7 +53,14 @@ export const documents = pgTable(
     source: text('source').notNull(), // 文件路径或网页URL
 
     // 关联文件（可选）
+    // @ts-ignore
     fileId: text('file_id').references(() => files.id, { onDelete: 'set null' }),
+
+    // 父文档（用于文件夹层级结构）
+    // @ts-ignore
+    parentId: varchar('parent_id', { length: 30 }).references(() => documents.id, {
+      onDelete: 'set null',
+    }),
 
     // 用户关联
     userId: text('user_id')
@@ -67,6 +77,7 @@ export const documents = pgTable(
     index('documents_source_idx').on(table.source),
     index('documents_file_type_idx').on(table.fileType),
     index('documents_file_id_idx').on(table.fileId),
+    index('documents_parent_id_idx').on(table.parentId),
     uniqueIndex('documents_client_id_user_id_unique').on(table.clientId, table.userId),
   ],
 );
