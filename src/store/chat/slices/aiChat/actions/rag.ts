@@ -6,7 +6,7 @@ import { ragService } from '@/services/rag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors, displayMessageSelectors } from '@/store/chat/selectors';
 import { toggleBooleanList } from '@/store/chat/utils';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
@@ -43,7 +43,7 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
   get,
 ) => ({
   deleteUserMessageRagQuery: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     if (!message || !message.ragQueryId) return;
 
@@ -61,7 +61,7 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
   internal_retrieveChunks: async (id, userQuery, messages) => {
     get().internal_toggleMessageRAGLoading(true, id);
 
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // 1. get the rewrite query
     let rewriteQuery = message?.ragQuery as string | undefined;
@@ -73,7 +73,10 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     }
 
     // 2. retrieve chunks from semantic search
-    const files = chatSelectors.currentUserFiles(get()).map((f) => f.id);
+    const files = dbMessageSelectors
+      .dbUserFiles(get())
+      .map((f) => f?.id)
+      .filter(Boolean) as string[];
     try {
       const { chunks, queryId } = await ragService.semanticSearchForChat({
         fileIds: knowledgeIds().fileIds.concat(files),
@@ -145,13 +148,13 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
   },
 
   rewriteQuery: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
     // delete the current ragQuery
     await get().deleteUserMessageRagQuery(id);
 
-    const chats = chatSelectors.mainAIChatsWithHistoryConfig(get());
+    const chats = displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
     await get().internal_rewriteQuery(
       id,

@@ -41,9 +41,29 @@
         "openingMessage": "Eröffnungsnachricht",
         "openingQuestions": "Eröffnungsfragen",
         "title": "Assistenteneinstellungen"
+      },
+      "version": {
+        "empty": "Keine früheren Versionen verfügbar",
+        "status": {
+          "archived": "Archiviert",
+          "deprecated": "Abgelehnt",
+          "unpublished": "In Überprüfung"
+        },
+        "table": {
+          "isLatest": "Neueste Version",
+          "isValidated": "Verifiziert",
+          "publishAt": "Veröffentlichungsdatum",
+          "version": "Versionsnummer"
+        },
+        "title": "Versionsverlauf"
       }
     },
     "list": "Assistentenliste",
+    "marketSource": {
+      "label": "Marktquelle wechseln",
+      "legacy": "Alter Markt",
+      "new": "Neuer Markt"
+    },
     "more": "Mehr",
     "plugins": "Integrations-Plugins",
     "recentSubmits": "Neueste Aktualisierungen",
@@ -51,9 +71,34 @@
       "createdAt": "Zuletzt veröffentlicht",
       "identifier": "Assistenten-ID",
       "knowledgeCount": "Anzahl der Wissensdatenbanken",
+      "myown": "Meine anzeigen",
       "pluginCount": "Anzahl der Plugins",
       "title": "Assistentenname",
       "tokenUsage": "Token-Verbrauch"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "Der Assistent wurde aufgrund von Sicherheits- oder politischen Problemen offiziell entfernt.",
+          "owner": "Der Entwickler des Assistenten hat ihn freiwillig entfernt oder archiviert."
+        },
+        "subtitle": "Der aktuell aufgerufene Assistent wurde aus einem der folgenden Gründe archiviert:",
+        "title": "Assistent archiviert"
+      },
+      "backToMarket": "Zurück zum Assistenten-Markt",
+      "deprecated": {
+        "reasons": {
+          "official": "Der Assistent wurde aufgrund von Sicherheits- oder politischen Problemen offiziell entfernt.",
+          "owner": "Der Entwickler des Assistenten hat ihn freiwillig entfernt oder abgelehnt."
+        },
+        "subtitle": "Der aktuell aufgerufene Assistent wurde aus einem der folgenden Gründe abgelehnt:",
+        "title": "Assistent abgelehnt"
+      },
+      "support": "Bei Fragen senden Sie bitte den Link an <1>support@lobehub.com</1>.",
+      "unpublished": {
+        "subtitle": "Der aktuell aufgerufene Assistent befindet sich in der Versionsprüfung. Bei Fragen senden Sie bitte den Link an <1>support@lobehub.com</1>.",
+        "title": "Assistent in Überprüfung"
+      }
     },
     "suggestions": "Ähnliche Empfehlungen",
     "systemRole": "Assistenteneinstellungen",

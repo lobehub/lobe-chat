@@ -3,12 +3,12 @@
  * @param str
  */
 export const sanitizeUTF8 = (str: string) => {
-  // 移除替换字符 (0xFFFD) 和其他非法字符
+  // Remove replacement character (0xFFFD) and other illegal characters
   return (
     str
-      .replaceAll('�', '') // 移除 Unicode 替换字符
+      .replaceAll('�', '') // Remove Unicode replacement character
       // eslint-disable-next-line no-control-regex
-      .replaceAll(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '') // 移除控制字符
+      .replaceAll(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, '') // Remove control characters
       .replaceAll(/[\uD800-\uDFFF]/g, '')
-  ); // 移除未配对的代理项码点
+  ); // Remove unpaired surrogate code points
 };

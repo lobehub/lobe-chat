@@ -33,38 +33,54 @@ describe('MCPService', () => {
       args: ['--test'],
     };
 
-    it('should return original data when content array is empty', async () => {
+    it('should return MCPToolCallResult when content array is empty', async () => {
       mockClient.callTool.mockResolvedValue({
         content: [],
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      expect(result).toEqual([]);
+      expect(result.content).toBe('');
+      expect(result.success).toBe(true);
+      expect(result.state).toEqual({ content: [], isError: false });
     });
 
-    it('should return original data when content is null or undefined', async () => {
+    it('should handle null content', async () => {
       mockClient.callTool.mockResolvedValue({
         content: null,
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      expect(result).toBeNull();
+      expect(result.content).toBe('');
+      expect(result.success).toBe(true);
     });
 
-    it('should return parsed JSON when single element contains valid JSON', async () => {
+    it('should return JSON string when single element contains valid JSON', async () => {
       const jsonData = { message: 'Hello World', status: 'success' };
       mockClient.callTool.mockResolvedValue({
         content: [{ type: 'text', text: JSON.stringify(jsonData) }],
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      expect(result).toEqual(jsonData);
+      expect(result.content).toBe(JSON.stringify(jsonData));
+      expect(result.success).toBe(true);
     });
 
     it('should return plain text when single element contains non-JSON text', async () => {
@@ -74,24 +90,36 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      expect(result).toBe(textData);
+      expect(result.content).toBe(textData);
+      expect(result.success).toBe(true);
+      expect(result.state.content).toEqual([{ type: 'text', text: textData }]);
     });
 
-    it('should return original data when single element has no text', async () => {
+    it('should return empty content when single element has no text', async () => {
       const contentData = [{ type: 'text', text: '' }];
       mockClient.callTool.mockResolvedValue({
         content: contentData,
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      expect(result).toEqual(contentData);
+      expect(result.content).toBe('');
+      expect(result.success).toBe(true);
+      expect(result.state.content).toEqual(contentData);
     });
 
-    it('should return complete array when content has multiple elements', async () => {
+    it('should join multiple text elements with double newlines', async () => {
       const multipleContent = [
         { type: 'text', text: 'First message' },
         { type: 'text', text: 'Second message' },
@@ -103,13 +131,18 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      // 应该直接返回完整的数组，不进行任何处理
-      expect(result).toEqual(multipleContent);
+      expect(result.content).toBe('First message\n\nSecond message\n\n{"json": "data"}');
+      expect(result.success).toBe(true);
+      expect(result.state.content).toEqual(multipleContent);
     });
 
-    it('should return complete array when content has two elements', async () => {
+    it('should join two text elements with double newline', async () => {
       const twoContent = [
         { type: 'text', text: 'First message' },
         { type: 'text', text: 'Second message' },
@@ -120,9 +153,15 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      expect(result).toEqual(twoContent);
+      expect(result.content).toBe('First message\n\nSecond message');
+      expect(result.success).toBe(true);
+      expect(result.state.content).toEqual(twoContent);
     });
 
     it('should return error result when isError is true', async () => {
@@ -133,16 +172,28 @@ describe('MCPService', () => {
 
       mockClient.callTool.mockResolvedValue(errorResult);
 
-      const result = await mcpService.callTool(mockParams, 'testTool', '{}');
+      const result = await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: '{}',
+      });
 
-      expect(result).toEqual(errorResult);
+      expect(result.content).toBe('Error occurred');
+      expect(result.success).toBe(true);
+      expect(result.state).toEqual(errorResult);
     });
 
     it('should throw TRPCError when client throws error', async () => {
       const error = new Error('MCP client error');
       mockClient.callTool.mockRejectedValue(error);
 
-      await expect(mcpService.callTool(mockParams, 'testTool', '{}')).rejects.toThrow(TRPCError);
+      await expect(
+        mcpService.callTool({
+          clientParams: mockParams,
+          toolName: 'testTool',
+          argsStr: '{}',
+        }),
+      ).rejects.toThrow(TRPCError);
     });
 
     it('should parse args string correctly', async () => {
@@ -154,7 +205,11 @@ describe('MCPService', () => {
         isError: false,
       });
 
-      await mcpService.callTool(mockParams, 'testTool', argsString);
+      await mcpService.callTool({
+        clientParams: mockParams,
+        toolName: 'testTool',
+        argsStr: argsString,
+      });
 
       expect(mockClient.callTool).toHaveBeenCalledWith('testTool', argsObject);
     });

@@ -9,14 +9,14 @@ export const applyUrlRules = (
   transformedUrl: string;
 } => {
   for (const rule of urlRules) {
-    // 转换为正则表达式
+    // Convert to regular expression
     const regex = new RegExp(rule.urlPattern);
     const match = url.match(regex);
 
     if (match) {
       if (rule.urlTransform) {
-        // 如果有转换规则，进行 URL 转换
-        // 替换 $1, $2 等占位符为捕获组内容
+        // If there is a transformation rule, perform URL transformation
+        // Replace placeholders like $1, $2 with capture group content
         const transformedUrl = rule.urlTransform.replaceAll(
           /\$(\d+)/g,
           (_, index) => match[parseInt(index)] || '',
@@ -28,7 +28,7 @@ export const applyUrlRules = (
           transformedUrl,
         };
       } else {
-        // 没有转换规则但匹配了模式，只返回过滤选项
+        // No transformation rule but pattern matched, only return filter options
         return {
           filterOptions: rule.filterOptions,
           impls: rule.impls,
@@ -38,6 +38,6 @@ export const applyUrlRules = (
     }
   }
 
-  // 没有匹配任何规则，返回原始 URL
+  // No rule matched, return original URL
   return { transformedUrl: url };
 };

@@ -255,10 +255,11 @@
       "moveLocalFiles": "Dateien verschieben",
       "readLocalFile": "Dateiinhalt lesen",
       "renameLocalFile": "Datei umbenennen",
+      "runCommand": "Befehl ausführen",
       "searchLocalFiles": "Dateien suchen",
       "writeLocalFile": "Datei schreiben"
     },
-    "title": "Lokale Dateien"
+    "title": "Lokales System"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installationsumgebung wird geprüft...",

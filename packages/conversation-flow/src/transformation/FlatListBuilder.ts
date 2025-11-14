@@ -165,18 +165,74 @@ export class FlatListBuilder {
           childMessages,
           this.childrenMap,
         );
-        const userWithBranches = this.createUserMessageWithBranches(message);
+        const activeBranchIndex = childMessages.indexOf(activeBranchId);
+        const userWithBranches = this.createUserMessageWithBranches(
+          message,
+          childMessages.length,
+          activeBranchIndex,
+        );
         flatList.push(userWithBranches);
         processedIds.add(message.id);
 
-        // Continue with active branch and process its message
+        // Continue with active branch - check if it's an assistantGroup
         const activeBranchMsg = this.messageMap.get(activeBranchId);
         if (activeBranchMsg) {
-          flatList.push(activeBranchMsg);
-          processedIds.add(activeBranchId);
+          // Check if active branch is assistant with tools (should be assistantGroup)
+          if (
+            activeBranchMsg.role === 'assistant' &&
+            activeBranchMsg.tools &&
+            activeBranchMsg.tools.length > 0
+          ) {
+            // Collect the entire assistant group chain
+            const assistantChain: Message[] = [];
+            const allToolMessages: Message[] = [];
+            this.messageCollector.collectAssistantChain(
+              activeBranchMsg,
+              allMessages,
+              assistantChain,
+              allToolMessages,
+              processedIds,
+            );
 
-          // Continue with active branch's children
-          this.buildFlatListRecursive(activeBranchId, flatList, processedIds, allMessages);
+            // Create assistantGroup virtual message
+            const groupMessage = this.createAssistantGroupMessage(
+              assistantChain[0],
+              assistantChain,
+              allToolMessages,
+            );
+            flatList.push(groupMessage);
+
+            // Mark all as processed
+            assistantChain.forEach((m) => processedIds.add(m.id));
+            allToolMessages.forEach((m) => processedIds.add(m.id));
+
+            // Continue after the assistant chain
+            const lastAssistant = assistantChain.at(-1);
+            const toolIds = new Set(allToolMessages.map((t) => t.id));
+
+            const lastAssistantNonToolChildren = lastAssistant
+              ? this.childrenMap.get(lastAssistant.id)?.filter((childId) => !toolIds.has(childId))
+              : undefined;
+
+            if (
+              lastAssistantNonToolChildren &&
+              lastAssistantNonToolChildren.length > 0 &&
+              lastAssistant
+            ) {
+              this.buildFlatListRecursive(lastAssistant.id, flatList, processedIds, allMessages);
+            } else {
+              for (const toolMsg of allToolMessages) {
+                this.buildFlatListRecursive(toolMsg.id, flatList, processedIds, allMessages);
+              }
+            }
+          } else {
+            // Regular message (not assistantGroup)
+            flatList.push(activeBranchMsg);
+            processedIds.add(activeBranchId);
+
+            // Continue with active branch's children
+            this.buildFlatListRecursive(activeBranchId, flatList, processedIds, allMessages);
+          }
         }
         continue;
       }
@@ -364,58 +420,83 @@ export class FlatListBuilder {
         assistant.tools?.map((tool) => {
           const toolMsg = toolMap.get(tool.id);
           if (toolMsg) {
-            return {
+            const result: any = {
+              content: toolMsg.content || '',
+              id: toolMsg.id,
+            };
+            if (toolMsg.error) result.error = toolMsg.error;
+            if (toolMsg.pluginState) result.state = toolMsg.pluginState;
+
+            const toolWithResult: ChatToolPayloadWithResult = {
               ...tool,
-              result: {
-                content: toolMsg.content || '',
-                error: toolMsg.error,
-                id: toolMsg.id,
-                state: toolMsg.pluginState,
-              },
+              intervention: toolMsg.pluginIntervention,
+              result,
               result_msg_id: toolMsg.id,
             };
+
+            return toolWithResult;
           }
           return tool;
         }) || [];
 
-      const { usage: msgUsage, performance: msgPerformance } =
+      // Prefer top-level usage/performance fields, fall back to metadata
+      const { usage: metaUsage, performance: metaPerformance } =
         this.messageTransformer.splitMetadata(assistant.metadata);
+      const msgUsage = assistant.usage || metaUsage;
+      const msgPerformance = assistant.performance || metaPerformance;
 
-      children.push({
+      const childBlock: AssistantContentBlock = {
         content: assistant.content || '',
-        error: assistant.error,
         id: assistant.id,
-        imageList:
-          assistant.imageList && assistant.imageList.length > 0 ? assistant.imageList : undefined,
-        performance: msgPerformance,
-        reasoning: assistant.reasoning || undefined,
-        tools: toolsWithResults.length > 0 ? toolsWithResults : undefined,
-        usage: msgUsage,
-      });
+      } as AssistantContentBlock;
+
+      if (assistant.error) childBlock.error = assistant.error;
+      if (assistant.imageList && assistant.imageList.length > 0)
+        childBlock.imageList = assistant.imageList;
+      if (msgPerformance) childBlock.performance = msgPerformance;
+      if (assistant.reasoning) childBlock.reasoning = assistant.reasoning;
+      if (toolsWithResults.length > 0) childBlock.tools = toolsWithResults;
+      if (msgUsage) childBlock.usage = msgUsage;
+
+      children.push(childBlock);
     }
 
     const aggregated = this.messageTransformer.aggregateMetadata(children);
 
-    return {
+    const result: Message = {
       ...firstAssistant,
       children,
       content: '',
-      imageList: undefined,
-      metadata: undefined,
-      performance: aggregated.performance,
-      reasoning: undefined,
       role: 'assistantGroup' as any,
-      tools: undefined,
-      usage: aggregated.usage,
     };
+
+    // Remove fields that should not be in assistantGroup
+    delete result.imageList;
+    delete result.metadata;
+    delete result.reasoning;
+    delete result.tools;
+
+    // Add aggregated fields if they exist
+    if (aggregated.performance) result.performance = aggregated.performance;
+    if (aggregated.usage) result.usage = aggregated.usage;
+
+    return result;
   }
 
   /**
    * Create user message with branch metadata
    */
-  private createUserMessageWithBranches(user: Message): Message {
-    // Just return the original user message with its metadata.activeBranchId
-    // No need to add extra.branches
-    return { ...user };
+  private createUserMessageWithBranches(
+    user: Message,
+    count: number,
+    activeBranchIndex: number,
+  ): Message {
+    return {
+      ...user,
+      branch: {
+        activeBranchIndex,
+        count,
+      },
+    } as Message;
   }
 }

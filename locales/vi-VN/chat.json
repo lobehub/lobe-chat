@@ -173,6 +173,7 @@
     "title": "Nhắc đến thành viên"
   },
   "messageAction": {
+    "continueGeneration": "Tiếp tục tạo",
     "delAndRegenerate": "Xóa và tạo lại",
     "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
     "regenerate": "Tạo lại"
@@ -239,6 +240,7 @@
   "noMatchingAgents": "Không tìm thấy thành viên phù hợp",
   "noMembersYet": "Nhóm này chưa có thành viên nào. Nhấp vào nút + để mời trợ lý.",
   "noSelectedAgents": "Chưa chọn thành viên nào",
+  "openInNewWindow": "Mở trong cửa sổ mới",
   "owner": "Chủ nhóm",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
@@ -366,6 +368,26 @@
     "overload": "Vượt quá giới hạn",
     "remained": "Còn lại",
     "used": "Đã sử dụng"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Phê duyệt",
+      "approveAndRemember": "Phê duyệt và ghi nhớ",
+      "approveOnce": "Chỉ phê duyệt lần này",
+      "mode": {
+        "allowList": "Danh sách cho phép",
+        "allowListDesc": "Chỉ tự động thực thi các công cụ đã được phê duyệt",
+        "autoRun": "Tự động phê duyệt",
+        "autoRunDesc": "Tự động phê duyệt tất cả các công cụ thực thi",
+        "manual": "Thủ công",
+        "manualDesc": "Mỗi lần gọi đều cần phê duyệt thủ công"
+      },
+      "reject": "Từ chối",
+      "rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
+      "rejectTitle": "Từ chối lần gọi công cụ này",
+      "rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",
+      "toolRejected": "Lần gọi công cụ này đã bị từ chối"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",
