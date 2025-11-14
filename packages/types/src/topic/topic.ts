@@ -24,7 +24,24 @@ export interface GroupedTopic {
   title?: string;
 }
 
+export interface TopicMemoryExtractionProviderState {
+  error?: string;
+  lastConversationDigest?: string;
+  lastMessageAt?: string;
+  lastRunAt?: string;
+  messageCount?: number;
+  processedMemoryCount?: number;
+  status?: 'pending' | 'completed' | 'failed';
+  version?: string;
+}
+
+export interface TopicMemoryExtractionMetadata {
+  lastRunAt?: string;
+  sources?: Record<string, TopicMemoryExtractionProviderState>;
+}
+
 export interface ChatTopicMetadata {
+  memoryExtraction?: TopicMemoryExtractionMetadata;
   model?: string;
   provider?: string;
 }
