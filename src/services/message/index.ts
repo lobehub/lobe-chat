@@ -6,6 +6,7 @@ import {
   CreateMessageParams,
   CreateMessageResult,
   MessageMetadata,
+  MessagePluginItem,
   ModelRankItem,
   UIChatMessage,
   UpdateMessageParams,
@@ -76,7 +77,11 @@ export class MessageService {
     return lambdaClient.message.getHeatmaps.query();
   };
 
-  updateMessageError = async (id: string, error: ChatMessageError) => {
+  updateMessageError = async (id: string, value: ChatMessageError) => {
+    const error = value.type
+      ? value
+      : { body: value, message: value.message, type: 'ApplicationRuntimeError' };
+
     return lambdaClient.message.update.mutate({ id, value: { error } });
   };
 
@@ -147,6 +152,19 @@ export class MessageService {
       sessionId: options?.sessionId,
       topicId: options?.topicId,
       value: error as any,
+    });
+  };
+
+  updateMessagePlugin = async (
+    id: string,
+    value: Partial<Omit<MessagePluginItem, 'id'>>,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.updateMessagePlugin.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      value,
     });
   };
 

@@ -1,4 +1,5 @@
 import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
+import { BuiltinPlaceholderProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
@@ -21,11 +22,7 @@ const useStyles = createStyles(({ css, token, cx }) => ({
   `),
 }));
 
-interface SearchFilesProps {
-  args: LocalSearchFilesParams;
-}
-
-const SearchFiles = memo<SearchFilesProps>(({ args }) => {
+const SearchFiles = memo<BuiltinPlaceholderProps<LocalSearchFilesParams>>(({ args = {} }) => {
   const { styles } = useStyles();
 
   return (

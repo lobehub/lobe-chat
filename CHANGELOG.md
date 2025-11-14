@@ -2,6 +2,348 @@
 
 # Changelog
 
+## [Version 2.0.0-next.52](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.51...v2.0.0-next.52)
+
+<sup>Released on **2025-11-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Filter out reasoning fields from messages in ChatCompletion API.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Filter out reasoning fields from messages in ChatCompletion API, closes [#10203](https://github.com/lobehub/lobe-chat/issues/10203) [#10193](https://github.com/lobehub/lobe-chat/issues/10193) ([5f28b2c](https://github.com/lobehub/lobe-chat/commit/5f28b2c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.51](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.50...v2.0.0-next.51)
+
+<sup>Released on **2025-11-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update ERNIE-5.0-Thinking-Preview model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update ERNIE-5.0-Thinking-Preview model, closes [#10196](https://github.com/lobehub/lobe-chat/issues/10196) ([89f3eed](https://github.com/lobehub/lobe-chat/commit/89f3eed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.50](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.49...v2.0.0-next.50)
+
+<sup>Released on **2025-11-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix oidc accountId mismatch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix oidc accountId mismatch, closes [#10058](https://github.com/lobehub/lobe-chat/issues/10058) ([0692ba7](https://github.com/lobehub/lobe-chat/commit/0692ba7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.49](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.48...v2.0.0-next.49)
+
+<sup>Released on **2025-11-13**</sup>
+
+#### ✨ Features
+
+- **misc**: Support tool invention.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update lost i18n files.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support tool invention, closes [#10182](https://github.com/lobehub/lobe-chat/issues/10182) ([4dca708](https://github.com/lobehub/lobe-chat/commit/4dca708))
+
+#### What's fixed
+
+- **misc**: Update lost i18n files, closes [#10179](https://github.com/lobehub/lobe-chat/issues/10179) ([b69c7ff](https://github.com/lobehub/lobe-chat/commit/b69c7ff))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.48](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.47...v2.0.0-next.48)
+
+<sup>Released on **2025-11-12**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.47](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.46...v2.0.0-next.47)
+
+<sup>Released on **2025-11-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mcp server return image error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mcp server return image error, closes [#10113](https://github.com/lobehub/lobe-chat/issues/10113) ([e5640d4](https://github.com/lobehub/lobe-chat/commit/e5640d4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.46](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.45...v2.0.0-next.46)
+
+<sup>Released on **2025-11-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Fix thread display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Fix thread display, closes [#10153](https://github.com/lobehub/lobe-chat/issues/10153) ([8fda83e](https://github.com/lobehub/lobe-chat/commit/8fda83e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.45](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.44...v2.0.0-next.45)
+
+<sup>Released on **2025-11-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Edge to node runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Edge to node runtime, closes [#10149](https://github.com/lobehub/lobe-chat/issues/10149) ([2f4c25d](https://github.com/lobehub/lobe-chat/commit/2f4c25d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.44](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.43...v2.0.0-next.44)
+
+<sup>Released on **2025-11-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix reasoning issue with claude and Response API thinking.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix reasoning issue with claude and Response API thinking, closes [#10147](https://github.com/lobehub/lobe-chat/issues/10147) ([cf6bd53](https://github.com/lobehub/lobe-chat/commit/cf6bd53))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.43](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.42...v2.0.0-next.43)
+
+<sup>Released on **2025-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Abnormal animation of tokens.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Abnormal animation of tokens, closes [#10106](https://github.com/lobehub/lobe-chat/issues/10106) ([129df7b](https://github.com/lobehub/lobe-chat/commit/129df7b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.42](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.41...v2.0.0-next.42)
+
+<sup>Released on **2025-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix missing messages when finish runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix missing messages when finish runtime, closes [#10138](https://github.com/lobehub/lobe-chat/issues/10138) ([b94d477](https://github.com/lobehub/lobe-chat/commit/b94d477))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.41](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.40...v2.0.0-next.41)
+
+<sup>Released on **2025-11-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10116](https://github.com/lobehub/lobe-chat/issues/10116) ([766772e](https://github.com/lobehub/lobe-chat/commit/766772e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.40](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.39...v2.0.0-next.40)
+
+<sup>Released on **2025-11-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **database**: Fix deleteMessagesBySession incorrectly deleting all messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **database**: Fix deleteMessagesBySession incorrectly deleting all messages, closes [#10110](https://github.com/lobehub/lobe-chat/issues/10110) ([1d7f67d](https://github.com/lobehub/lobe-chat/commit/1d7f67d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.39](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.38...v2.0.0-next.39)
+
+<sup>Released on **2025-11-08**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.38](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.37...v2.0.0-next.38)
 
 <sup>Released on **2025-11-08**</sup>

@@ -1,7 +1,8 @@
+import { getMessageError } from '@lobechat/fetch-sse';
+
 import { createHeaderWithAuth } from '@/services/_auth';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { ChatModelCard } from '@/types/llm';
-import { getMessageError } from '@/utils/fetch';
 
 import { API_ENDPOINTS } from './_url';
 import { initializeWithClientStore } from './chat/clientModelRuntime';

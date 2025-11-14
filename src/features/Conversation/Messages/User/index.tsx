@@ -1,6 +1,7 @@
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -15,7 +16,7 @@ import { useUserAvatar } from '@/hooks/useUserAvatar';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { messageStateSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -28,8 +29,9 @@ import { UserMessageExtra } from './Extra';
 import { MarkdownRender as UserMarkdownRender } from './MarkdownRender';
 import { UserMessageContent } from './MessageContent';
 
-interface UserMessageProps extends UIChatMessage {
+interface UserMessageProps {
   disableEditing?: boolean;
+  id: string;
   index: number;
 }
 
@@ -43,9 +45,13 @@ const remarkPlugins = markdownElements
   .map((element) => element.remarkPlugin)
   .filter(Boolean);
 
-const UserMessage = memo<UserMessageProps>((props) => {
-  const { id, ragQuery, content, createdAt, error, role, index, extra, disableEditing, targetId } =
-    props;
+const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
+  const item = useChatStore(
+    displayMessageSelectors.getDisplayMessageById(id),
+    isEqual,
+  ) as UIChatMessage;
+
+  const { ragQuery, content, createdAt, error, role, extra, targetId } = item;
 
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -97,9 +103,9 @@ const UserMessage = memo<UserMessageProps>((props) => {
 
   const renderMessage = useCallback(
     (editableContent: ReactNode) => (
-      <UserMessageContent {...props} editableContent={editableContent} />
+      <UserMessageContent {...item} editableContent={editableContent} />
     ),
-    [props],
+    [item],
   );
 
   const components = useMemo(
@@ -178,7 +184,7 @@ const UserMessage = memo<UserMessageProps>((props) => {
       </Flexbox>
 
       <Flexbox direction={'horizontal-reverse'}>
-        <Actions data={props} disableEditing={disableEditing} id={id} index={index} />
+        <Actions data={item} disableEditing={disableEditing} id={id} index={index} />
       </Flexbox>
     </Flexbox>
   );

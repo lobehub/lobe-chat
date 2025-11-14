@@ -23,12 +23,11 @@ export class MacOSSearchServiceImpl extends FileSearchImpl {
    */
   async search(options: SearchOptions): Promise<FileResult[]> {
     // Build the command first, regardless of execution method
-    const command = this.buildSearchCommand(options);
-    logger.debug(`Executing command: ${command}`);
+    const { cmd, args, commandString } = this.buildSearchCommand(options);
+    logger.debug(`Executing command: ${commandString}`);
 
     // Use spawn for both live and non-live updates to handle large outputs
     return new Promise((resolve, reject) => {
-      const [cmd, ...args] = command.split(' ');
       const childProcess = spawn(cmd, args);
 
       let results: string[] = []; // Store raw file paths
@@ -137,31 +136,39 @@ export class MacOSSearchServiceImpl extends FileSearchImpl {
   /**
    * Build mdfind command string
    * @param options Search options
-   * @returns Complete command string
+   * @returns Command components (cmd, args array, and command string for logging)
    */
-  private buildSearchCommand(options: SearchOptions): string {
-    // Basic command
-    let command = 'mdfind';
-
-    // Add options
-    const mdFindOptions: string[] = [];
+  private buildSearchCommand(options: SearchOptions): {
+    args: string[];
+    cmd: string;
+    commandString: string;
+  } {
+    // Command and arguments array
+    const cmd = 'mdfind';
+    const args: string[] = [];
 
     // macOS mdfind doesn't support -limit parameter, we'll limit results in post-processing
 
     // Search in specific directory
     if (options.onlyIn) {
-      mdFindOptions.push(`-onlyin "${options.onlyIn}"`);
+      args.push('-onlyin', options.onlyIn);
     }
 
     // Live update
     if (options.liveUpdate) {
-      mdFindOptions.push('-live');
+      args.push('-live');
     }
 
     // Detailed metadata
     if (options.detailed) {
-      mdFindOptions.push(
-        '-attr kMDItemDisplayName kMDItemContentType kMDItemKind kMDItemFSSize kMDItemFSCreationDate kMDItemFSContentChangeDate',
+      args.push(
+        '-attr',
+        'kMDItemDisplayName',
+        'kMDItemContentType',
+        'kMDItemKind',
+        'kMDItemFSSize',
+        'kMDItemFSCreationDate',
+        'kMDItemFSContentChangeDate',
       );
     }
 
@@ -171,9 +178,10 @@ export class MacOSSearchServiceImpl extends FileSearchImpl {
     // Basic query
     if (options.keywords) {
       // If the query string doesn't use Spotlight query syntax (doesn't contain kMDItem properties),
-      // treat it as plain text search
+      // treat it as a flexible name search rather than exact phrase match
       if (!options.keywords.includes('kMDItem')) {
-        queryExpression = `"${options.keywords.replaceAll('"', '\\"')}"`;
+        // Use kMDItemFSName for filename matching with wildcards for better flexibility
+        queryExpression = `kMDItemFSName == "*${options.keywords.replaceAll('"', '\\"')}*"cd`;
       } else {
         queryExpression = options.keywords;
       }
@@ -244,15 +252,15 @@ export class MacOSSearchServiceImpl extends FileSearchImpl {
       }
     }
 
-    // Combine complete command
-    if (mdFindOptions.length > 0) {
-      command += ' ' + mdFindOptions.join(' ');
+    // Add query expression to args
+    if (queryExpression) {
+      args.push(queryExpression);
     }
 
-    // Finally add query expression
-    command += ` ${queryExpression}`;
+    // Build command string for logging
+    const commandString = `${cmd} ${args.map((arg) => (arg.includes(' ') || arg.includes('*') ? `"${arg}"` : arg)).join(' ')}`;
 
-    return command;
+    return { args, cmd, commandString };
   }
 
   /**

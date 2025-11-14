@@ -173,6 +173,7 @@
     "title": "Mention Members"
   },
   "messageAction": {
+    "continueGeneration": "Continue Generating",
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
     "regenerate": "Regenerate"
@@ -239,6 +240,7 @@
   "noMatchingAgents": "No matching members found",
   "noMembersYet": "This group doesn't have any members yet. Click the + button to invite assistants.",
   "noSelectedAgents": "No members selected yet",
+  "openInNewWindow": "Open in a new window",
   "owner": "Group Owner",
   "pin": "Pin",
   "pinOff": "Unpin",
@@ -366,6 +368,26 @@
     "overload": "Exceeded Limit",
     "remained": "Remaining",
     "used": "Used"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Approve",
+      "approveAndRemember": "Approve and Remember",
+      "approveOnce": "Approve This Time Only",
+      "mode": {
+        "allowList": "Allow List",
+        "allowListDesc": "Only automatically execute approved tools",
+        "autoRun": "Auto Approve",
+        "autoRunDesc": "Automatically approve all tool executions",
+        "manual": "Manual",
+        "manualDesc": "Manual approval required for each invocation"
+      },
+      "reject": "Reject",
+      "rejectReasonPlaceholder": "Providing a reason will help the Agent understand and improve future actions",
+      "rejectTitle": "Reject This Tool Invocation",
+      "rejectedWithReason": "This tool invocation was actively rejected: {{reason}}",
+      "toolRejected": "This tool invocation was actively rejected"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Enable new topic?",

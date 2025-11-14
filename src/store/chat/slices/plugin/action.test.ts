@@ -544,7 +544,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.updatePluginState(messageId, pluginStateValue);
+        await result.current.optimisticUpdatePluginState(messageId, pluginStateValue);
       });
 
       expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
@@ -887,7 +887,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.updatePluginArguments(messageId, newArguments);
+        await result.current.optimisticUpdatePluginArguments(messageId, newArguments);
       });
 
       expect(messageService.updateMessagePluginArguments).toHaveBeenCalledWith(
@@ -1103,7 +1103,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.internal_updatePluginError(messageId, error);
+        await result.current.optimisticUpdatePluginError(messageId, error);
       });
 
       expect(messageService.updateMessage).toHaveBeenCalledWith(
@@ -1144,7 +1144,7 @@ describe('ChatPluginAction', () => {
       });
 
       await act(async () => {
-        await result.current.internal_addToolToAssistantMessage(messageId, {
+        await result.current.optimisticAddToolToAssistantMessage(messageId, {
           identifier,
           arguments: '{"oldKey":"oldValue"}',
           id: 'newId',

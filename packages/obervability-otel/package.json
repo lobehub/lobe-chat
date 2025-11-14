@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
-    "./node": "./src/node.ts"
+    "./node": "./src/node.ts",
+    "./api": "./src/api.ts",
+    "./trpc": "./src/trpc/index.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",

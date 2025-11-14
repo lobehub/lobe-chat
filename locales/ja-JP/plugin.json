@@ -255,10 +255,11 @@
       "moveLocalFiles": "ファイルを移動",
       "readLocalFile": "ファイル内容を読み込み",
       "renameLocalFile": "ファイル名を変更",
+      "runCommand": "コードを実行",
       "searchLocalFiles": "ファイルを検索",
       "writeLocalFile": "ファイルに書き込み"
     },
-    "title": "ローカルファイル"
+    "title": "ローカルシステム"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "インストール環境を確認中...",

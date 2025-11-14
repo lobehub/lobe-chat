@@ -4,6 +4,7 @@ import { LOADING_FLAT } from '@lobechat/const';
 import { UIChatMessage } from '@lobechat/types';
 import { Tag } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -19,7 +20,7 @@ import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { messageStateSelectors } from '@/store/chat/slices/message/selectors';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { chatGroupSelectors, useChatGroupStore } from '@/store/chatGroup';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -47,28 +48,38 @@ const isHtmlCode = (content: string, language: string) => {
 };
 const MOBILE_AVATAR_SIZE = 32;
 
-interface AssistantMessageProps extends UIChatMessage {
+interface AssistantMessageProps {
   disableEditing?: boolean;
+  id: string;
   index: number;
-  showTitle?: boolean;
 }
-const AssistantMessage = memo<AssistantMessageProps>((props) => {
+
+const AssistantMessage = memo<AssistantMessageProps>(({ id, index, disableEditing }) => {
+  const item = useChatStore(
+    displayMessageSelectors.getDisplayMessageById(id),
+    isEqual,
+  ) as UIChatMessage;
+
   const {
     error,
-    showTitle,
-    id,
     role,
     search,
-    disableEditing,
-    index,
     content,
     createdAt,
     tools,
     extra,
-    metadata,
+    model,
+    provider,
     meta,
     targetId,
-  } = props;
+    groupId,
+    performance,
+    usage,
+    metadata,
+  } = item;
+
+  const showTitle = !!groupId;
+
   const avatar = meta;
   const { t } = useTranslation('chat');
   const { mobile } = useResponsive();
@@ -198,11 +209,12 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
 
   const renderMessage = useCallback(
     (editableContent: ReactNode) => (
-      <AssistantMessageContent {...props} editableContent={editableContent} />
+      <AssistantMessageContent {...item} editableContent={editableContent} />
     ),
-    [props],
+    [item],
   );
-  const errorMessage = <ErrorMessageExtra data={props} />;
+  const errorMessage = <ErrorMessageExtra data={item} />;
+
   return (
     <Flexbox className={styles.container} gap={mobile ? 6 : 12}>
       <Flexbox gap={4} horizontal>
@@ -213,12 +225,12 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
           onClick={onAvatarClick}
           placement={placement}
           size={MOBILE_AVATAR_SIZE}
-          style={{ marginTop: 6 }}
         />
         <Title
           avatar={avatar}
           placement={placement}
           showTitle
+          style={{ marginBlockEnd: 0 }}
           time={createdAt}
           titleAddon={dmIndicator}
         />
@@ -253,8 +265,11 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
                     content={content}
                     extra={extra}
                     id={id}
-                    metadata={metadata}
+                    model={model!}
+                    performance={performance! || metadata}
+                    provider={provider!}
                     tools={tools}
+                    usage={usage! || metadata}
                   />
                 </>
               }
@@ -267,13 +282,13 @@ const AssistantMessage = memo<AssistantMessageProps>((props) => {
         </Flexbox>
         {!disableEditing && !editing && (
           <Flexbox align={'flex-start'} className={styles.actions} role="menubar">
-            <AssistantActionsBar data={props} id={id} index={index} />
+            <AssistantActionsBar data={item} id={id} index={index} />
           </Flexbox>
         )}
       </Flexbox>
       {mobile && <BorderSpacing borderSpacing={MOBILE_AVATAR_SIZE} />}
     </Flexbox>
   );
-});
+}, isEqual);
 
 export default AssistantMessage;

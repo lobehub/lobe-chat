@@ -1,9 +1,15 @@
 import { EdgeSpeechPayload, EdgeSpeechTTS } from '@lobehub/tts';
 
-export const runtime = 'edge';
+import { createSpeechResponse } from '@/server/utils/createSpeechResponse';
 
 export const POST = async (req: Request) => {
   const payload = (await req.json()) as EdgeSpeechPayload;
 
-  return await EdgeSpeechTTS.createRequest({ payload });
+  return createSpeechResponse(() => EdgeSpeechTTS.createRequest({ payload }), {
+    logTag: 'webapi/tts/edge',
+    messages: {
+      failure: 'Failed to synthesize speech',
+      invalid: 'Unexpected payload from Edge speech API',
+    },
+  });
 };

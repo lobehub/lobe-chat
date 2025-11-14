@@ -808,12 +808,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const inputStartAt = Date.now();
 
-      const { messages, reasoning_effort, tools, reasoning, responseMode, ...res } =
+      const { messages, reasoning_effort, tools, reasoning, responseMode, max_tokens, ...res } =
         responses?.handlePayload
           ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
           : payload;
 
-      // remove penalty params
+      // remove penalty params and chat completion specific params
       delete res.apiMode;
       delete res.frequency_penalty;
       delete res.presence_penalty;
@@ -839,6 +839,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             }
           : {}),
         input,
+        ...(max_tokens && { max_output_tokens: max_tokens }),
         store: false,
         stream: !isStreaming ? undefined : isStreaming,
         tools: tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),

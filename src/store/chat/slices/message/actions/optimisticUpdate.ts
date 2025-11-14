@@ -195,7 +195,7 @@ export const messageOptimisticUpdate: StateCreator<
     );
 
     if (result && result.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { action: 'optimisticUpdateMessageContent' });
     } else {
       await refreshMessages();
     }

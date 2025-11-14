@@ -1,12 +1,11 @@
 import { AssistantContentBlock } from '@lobechat/types';
 import { createStyles } from 'antd-style';
-import { memo, use } from 'react';
+import isEqual from 'fast-deep-equal';
+import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
-import { useChatStore } from '@/store/chat';
-
-import { ContentBlock } from './ContentBlock';
+import { GroupMessageContext } from './GroupContext';
+import GroupItem from './GroupItem';
 
 const useStyles = createStyles(({ css }) => {
   return {
@@ -30,44 +29,28 @@ const GroupChildren = memo<GroupChildrenProps>(
   ({ blocks, contentId, disableEditing, messageIndex, id }) => {
     const { styles } = useStyles();
 
-    const [toggleMessageEditing] = useChatStore((s) => [s.toggleMessageEditing]);
-    const virtuosoRef = use(VirtuosoContext);
+    const contextValue = useMemo(() => ({ assistantGroupId: id }), [id]);
 
     return (
-      <Flexbox className={styles.container} gap={8}>
-        {blocks.map((item, index) => {
-          return item.id === contentId ? (
-            <Flexbox
-              key={index}
-              onDoubleClick={(e) => {
-                if (disableEditing || item.error || !e.altKey) return;
-
-                toggleMessageEditing(item.id, true);
-                virtuosoRef?.current?.scrollIntoView({
-                  align: 'start',
-                  behavior: 'auto',
-                  index: messageIndex,
-                });
-              }}
-            >
-              <ContentBlock index={index} {...item} />
-            </Flexbox>
-          ) : (
-            // <motion.div
-            //   animate={{ height: 'auto', opacity: 1 }}
-            //   exit={{ height: 0, opacity: 0 }}
-            //   initial={{ height: 0, opacity: 0 }}
-            //   key={`${id}_${index}`}
-            //   style={{ overflow: 'hidden' }}
-            //   transition={{ duration: 0.3, ease: 'easeInOut' }}
-            // >
-            <ContentBlock index={index} key={`${id}_${index}`} {...item} />
-            // </motion.div>
-          );
-        })}
-      </Flexbox>
+      <GroupMessageContext value={contextValue}>
+        <Flexbox className={styles.container} gap={8}>
+          {blocks.map((item, index) => {
+            return (
+              <GroupItem
+                {...item}
+                contentId={contentId}
+                disableEditing={disableEditing}
+                index={index}
+                key={`${id}_${index}`}
+                messageIndex={messageIndex}
+              />
+            );
+          })}
+        </Flexbox>
+      </GroupMessageContext>
     );
   },
+  isEqual,
 );
 
 export default GroupChildren;

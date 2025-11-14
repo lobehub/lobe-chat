@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import type { AgentState, ToolsCalling } from './state';
+import { ChatToolPayload } from '@/types/message';
 
 export interface AgentEventInit {
   type: 'init';
@@ -33,7 +34,7 @@ export interface AgentEventToolResult {
 
 export interface AgentEventHumanApproveRequired {
   type: 'human_approve_required';
-  pendingToolsCalling: ToolsCalling[];
+  pendingToolsCalling: ChatToolPayload[];
   sessionId: string;
 }
 

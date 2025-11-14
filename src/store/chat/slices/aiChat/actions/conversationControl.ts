@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { type AgentRuntimeContext } from '@lobechat/agent-runtime';
 import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
@@ -7,7 +8,9 @@ import { StateCreator } from 'zustand/vanilla';
 import { ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { displayMessageSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
+import { dbMessageSelectors } from '../../message/selectors';
 import { MainSendMessageOperation } from '../initialState';
 
 const n = setNamespace('ai');
@@ -32,6 +35,14 @@ export interface ConversationControlAction {
    * Switches to a different branch of a message
    */
   switchMessageBranch: (messageId: string, branchIndex: number) => Promise<void>;
+  /**
+   * Approve tool intervention
+   */
+  approveToolCalling: (toolMessageId: string, assistantGroupId: string) => Promise<void>;
+  /**
+   * Reject tool intervention
+   */
+  rejectToolCalling: (messageId: string, reason?: string) => Promise<void>;
   /**
    * Toggle sendMessage operation state
    */
@@ -130,6 +141,69 @@ export const conversationControl: StateCreator<
 
       return undefined;
     }
+  },
+  approveToolCalling: async (toolMessageId) => {
+    const { activeThreadId, internal_execAgentRuntime } = get();
+
+    // 1. Get tool message and verify it exists
+    const toolMessage = dbMessageSelectors.getDbMessageById(toolMessageId)(get());
+    if (!toolMessage) return;
+
+    // 2. Update intervention status to approved
+    await get().optimisticUpdatePlugin(toolMessageId, { intervention: { status: 'approved' } });
+
+    // 3. Get current messages for state construction
+    const currentMessages = displayMessageSelectors.mainAIChats(get());
+
+    // 4. Create agent state and context with user intervention config
+    const { state, context: initialContext } = get().internal_createAgentState({
+      messages: currentMessages,
+      parentMessageId: toolMessageId,
+      threadId: activeThreadId,
+    });
+
+    // 5. Override context with 'human_approved_tool' phase
+    const context: AgentRuntimeContext = {
+      ...initialContext,
+      phase: 'human_approved_tool',
+      payload: {
+        approvedToolCall: toolMessage.plugin,
+        parentMessageId: toolMessageId,
+        skipCreateToolMessage: true,
+      },
+    };
+
+    // 7. Execute agent runtime from tool message position
+    try {
+      await internal_execAgentRuntime({
+        messages: currentMessages,
+        parentMessageId: toolMessageId, // Start from tool message
+        parentMessageType: 'tool', // Type is 'tool'
+        threadId: activeThreadId,
+        initialState: state,
+        initialContext: context,
+      });
+    } catch (error) {
+      console.error('[approveToolCalling] Error executing agent runtime:', error);
+    }
+  },
+
+  rejectToolCalling: async (messageId, reason) => {
+    const toolMessage = dbMessageSelectors.getDbMessageById(messageId)(get());
+    if (!toolMessage) return;
+
+    // Optimistic update - update status to rejected and save reason
+    const intervention = {
+      rejectedReason: reason,
+      status: 'rejected',
+    } as const;
+    await get().optimisticUpdatePlugin(toolMessage.id, { intervention });
+
+    const toolContent = !!reason
+      ? `User reject this tool calling with reason: ${reason}`
+      : 'User reject this tool calling without reason';
+
+    await get().optimisticUpdateMessageContent(messageId, toolContent);
   },
 
   internal_updateSendMessageOperation: (key, value, actionName) => {

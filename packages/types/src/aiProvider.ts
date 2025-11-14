@@ -247,7 +247,7 @@ export const UpdateAiProviderConfigSchema = z.object({
       z.string(),
       z.union([
         z.string().optional(),
-        z.record(z.string(), z.string()).optional(), // 支持嵌套对象，如 customHeaders
+        z.record(z.string(), z.string()).optional(), // Support nested objects, e.g. customHeaders
       ]),
     )
     .optional(),
