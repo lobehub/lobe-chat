@@ -489,52 +489,58 @@ export const streamingExecutor: StateCreator<
     // Step 1: RAG Preprocessing (if enabled)
     // ===========================================
     // Skip RAG preprocessing if initialState is provided (messages already preprocessed)
-    if (params.ragQuery && parentMessageType === 'user') {
-      const userMessageId = parentMessageId;
-      log('[internal_execAgentRuntime] RAG preprocessing start');
+    if (parentMessageType !== 'tool' && params.ragQuery) {
+      const lastUserIndex = messages.findLastIndex((msg) => msg.role === 'user');
 
-      // Get relevant chunks from semantic search
-      const {
-        chunks,
-        queryId: ragQueryId,
-        rewriteQuery,
-      } = await get().internal_retrieveChunks(
-        userMessageId,
-        params.ragQuery,
-        // Skip the last message content when building context
-        messages.map((m) => m.content).slice(0, messages.length - 1),
-      );
+      if (lastUserIndex === -1) {
+        log('[internal_execAgentRuntime] Skip RAG: no user message found in context');
+      } else {
+        const targetMessage = messages[lastUserIndex] as UIChatMessage;
+        const userMessageId = targetMessage.id;
 
-      log('[internal_execAgentRuntime] RAG chunks retrieved: %d chunks', chunks.length);
+        log('[internal_execAgentRuntime] RAG preprocessing start');
 
-      const lastMsg = messages.pop() as UIChatMessage;
+        // Get relevant chunks from semantic search
+        const {
+          chunks,
+          queryId: ragQueryId,
+          rewriteQuery,
+        } = await get().internal_retrieveChunks(
+          userMessageId,
+          params.ragQuery,
+          // Skip the last message content when building context
+          messages.slice(0, lastUserIndex).map((m) => m.content),
+        );
 
-      // Build RAG context and append to user query
-      const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
-        chunks,
-        userQuery: lastMsg.content,
-        rewriteQuery,
-        knowledge: agentSelectors.currentEnabledKnowledge(agentStoreState),
-      });
+        log('[internal_execAgentRuntime] RAG chunks retrieved: %d chunks', chunks.length);
 
-      messages.push({
-        ...lastMsg,
-        content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
-      });
+        // Build RAG context and append to user query
+        const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
+          chunks,
+          userQuery: targetMessage.content,
+          rewriteQuery,
+          knowledge: agentSelectors.currentEnabledKnowledge(agentStoreState),
+        });
 
-      // Update assistant message with RAG metadata
-      const fileChunks: MessageSemanticSearchChunk[] = chunks.map((c) => ({
-        id: c.id,
-        similarity: c.similarity,
-      }));
+        messages[lastUserIndex] = {
+          ...targetMessage,
+          content: (targetMessage.content + '\n\n' + knowledgeBaseQAContext).trim(),
+        };
 
-      if (fileChunks.length > 0) {
-        // Note: RAG metadata will be updated after assistant message is created by call_llm executor
-        // Store RAG data temporarily in params for later use
-        params.ragMetadata = { ragQueryId: ragQueryId!, fileChunks };
+        // Update assistant message with RAG metadata
+        const fileChunks: MessageSemanticSearchChunk[] = chunks.map((c) => ({
+          id: c.id,
+          similarity: c.similarity,
+        }));
+
+        if (fileChunks.length > 0) {
+          // Note: RAG metadata will be updated after assistant message is created by call_llm executor
+          // Store RAG data temporarily in params for later use
+          params.ragMetadata = { ragQueryId: ragQueryId!, fileChunks };
+        }
+
+        log('[internal_execAgentRuntime] RAG preprocessing completed');
       }
-
-      log('[internal_execAgentRuntime] RAG preprocessing completed');
     }
 
     // ===========================================
