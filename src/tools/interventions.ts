@@ -1,7 +1,7 @@
 import { BuiltinIntervention } from '@lobechat/types';
 
-import { LocalSystemApiName, LocalSystemManifest } from './local-system';
-import RunCommand from './local-system/Intervention/RunCommand';
+import { LocalSystemManifest } from './local-system';
+import { LocalSystemInterventions } from './local-system/Intervention';
 
 /**
  * Builtin tools interventions registry
@@ -9,9 +9,7 @@ import RunCommand from './local-system/Intervention/RunCommand';
  * Only register APIs that have custom intervention UI
  */
 export const BuiltinToolInterventions: Record<string, Record<string, any>> = {
-  [LocalSystemManifest.identifier]: {
-    [LocalSystemApiName.runCommand]: RunCommand,
-  },
+  [LocalSystemManifest.identifier]: LocalSystemInterventions,
 };
 
 /**
