@@ -92,6 +92,90 @@ describe('GoogleGenerativeAIStream', () => {
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
+  it('should handle multiple function calls across different chunks with unique indices', async () => {
+    vi.spyOn(uuidModule, 'nanoid')
+      .mockReturnValueOnce('1')
+      .mockReturnValueOnce('abcd1234')
+      .mockReturnValueOnce('efgh5678');
+
+    const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
+      ({
+        text: text,
+        functionCalls: functionCalls,
+      }) as unknown as GenerateContentResponse;
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        // First chunk with first function call
+        controller.enqueue(
+          mockGenerateContentResponse('', [
+            { name: 'multi-search____multiSearch', args: { searches: [{ query: '百度' }] } },
+          ]),
+        );
+
+        // Second chunk with second function call (Gemini sends this with index 0 again)
+        controller.enqueue(
+          mockGenerateContentResponse('', [
+            { name: 'web-crawler-v2____crawl', args: { urls: ['https://www.baidu.com'] } },
+          ]),
+        );
+
+        // final chunk
+        controller.enqueue({
+          text: '',
+          candidates: [{ content: { role: 'model' }, finishReason: 'STOP', index: 0 }],
+          usageMetadata: {
+            promptTokenCount: 1,
+            totalTokenCount: 1,
+            promptTokensDetails: [{ modality: 'TEXT', tokenCount: 1 }],
+          },
+          modelVersion: 'gemini-test',
+        } as unknown as GenerateContentResponse);
+
+        controller.close();
+      },
+    });
+
+    const onToolCallMock = vi.fn();
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream, {
+      callbacks: {
+        onToolsCalling: onToolCallMock,
+      },
+    });
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      // first tool call with index 0
+      'id: chat_1\n',
+      'event: tool_calls\n',
+      `data: [{"function":{"arguments":"{\\"searches\\":[{\\"query\\":\\"百度\\"}]}","name":"multi-search____multiSearch"},"id":"multi-search____multiSearch_0_abcd1234","index":0,"type":"function"}]\n\n`,
+
+      // second tool call with index 1 (not 0!)
+      'id: chat_1\n',
+      'event: tool_calls\n',
+      `data: [{"function":{"arguments":"{\\"urls\\":[\\"https://www.baidu.com\\"]}","name":"web-crawler-v2____crawl"},"id":"web-crawler-v2____crawl_1_efgh5678","index":1,"type":"function"}]\n\n`,
+
+      // stop
+      'id: chat_1\n',
+      'event: stop\n',
+      `data: "STOP"\n\n`,
+      // usage
+      'id: chat_1\n',
+      'event: usage\n',
+      `data: {"inputTextTokens":1,"outputImageTokens":0,"outputTextTokens":0,"totalInputTokens":1,"totalOutputTokens":0,"totalTokens":1}\n\n`,
+    ]);
+
+    expect(onToolCallMock).toHaveBeenCalledTimes(2);
+  });
+
   it('should handle empty stream', async () => {
     vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('E5M9dFKw');
     const mockGoogleStream = new ReadableStream({
