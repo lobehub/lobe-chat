@@ -2,6 +2,7 @@ import type { ThemeMode } from 'antd-style';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { DatabaseLoadingState, MigrationSQL, MigrationTableItem } from '@/types/clientDB';
+import { SortType } from '@/types/files';
 import { LocaleMode } from '@/types/locale';
 import { SessionDefaultGroup } from '@/types/session';
 import { AsyncLocalStorage } from '@/utils/localStorage';
@@ -60,6 +61,8 @@ export interface SystemStatus {
   expandInputActionbar?: boolean;
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  fileListSortType?: SortType;
+  fileListSorter?: 'name' | 'createdAt' | 'size';
   fileManagerViewMode?: 'list' | 'masonry';
   filePanelWidth: number;
   hideGemini2_5FlashImagePreviewChineseWarning?: boolean;
@@ -135,6 +138,8 @@ export const INITIAL_STATUS = {
   disabledModelsSortType: 'default',
   expandInputActionbar: true,
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
+  fileListSortType: SortType.Desc,
+  fileListSorter: 'createdAt',
   fileManagerViewMode: 'list' as const,
   filePanelWidth: 320,
   hideGemini2_5FlashImagePreviewChineseWarning: false,

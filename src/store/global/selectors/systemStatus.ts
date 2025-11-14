@@ -66,6 +66,10 @@ const getAgentSystemRoleExpanded =
 const disabledModelProvidersSortType = (s: GlobalState) =>
   s.status.disabledModelProvidersSortType || 'default';
 const disabledModelsSortType = (s: GlobalState) => s.status.disabledModelsSortType || 'default';
+
+const fileListSortType = (s: GlobalState) => s.status.fileListSortType;
+const fileListSorter = (s: GlobalState) => s.status.fileListSorter;
+
 const tokenDisplayFormatShort = (s: GlobalState) =>
   s.status.tokenDisplayFormatShort !== undefined ? s.status.tokenDisplayFormatShort : true;
 
@@ -74,6 +78,8 @@ export const systemStatusSelectors = {
   disabledModelProvidersSortType,
   disabledModelsSortType,
   expandInputActionbar,
+  fileListSortType,
+  fileListSorter,
   filePanelWidth,
   getAgentSystemRoleExpanded,
   hidePWAInstaller,

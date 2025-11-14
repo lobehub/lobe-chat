@@ -3,6 +3,7 @@
 import { Text } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { createStyles } from 'antd-style';
+import { ArrowDown, ArrowDownUp, ArrowUp } from 'lucide-react';
 import { useQueryState } from 'nuqs';
 import { rgba } from 'polished';
 import React, { memo, useMemo, useState } from 'react';
@@ -12,7 +13,8 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
-import { SortType } from '@/types/files';
+import { systemStatusSelectors } from '@/store/global/selectors';
+import { FileListItem as FileListItemType, SortType } from '@/types/files';
 
 import EmptyStatus from './EmptyStatus';
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './FileListItem';
@@ -34,6 +36,19 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     padding-block: 0;
     padding-inline: 0 24px;
   `,
+
+  sortButton: css`
+    cursor: pointer;
+
+    display: inline-flex;
+
+    border: none;
+
+    vertical-align: middle;
+
+    background: transparent;
+  `,
+
   total: css`
     padding-block-end: 12px;
     border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
@@ -61,6 +76,11 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
     setIsTransitioning(true);
     updateSystemStatus({ fileManagerViewMode: mode });
   };
+
+  const [sortType, sorter] = useGlobalStore((s) => [
+    systemStatusSelectors.fileListSortType(s),
+    systemStatusSelectors.fileListSorter(s),
+  ]);
 
   const [columnCount, setColumnCount] = useState(4);
 
@@ -91,25 +111,56 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
     clearOnDefault: true,
   });
 
-  const [sorter] = useQueryState('sorter', {
-    clearOnDefault: true,
-    defaultValue: 'createdAt',
-  });
-  const [sortType] = useQueryState('sortType', {
-    clearOnDefault: true,
-    defaultValue: SortType.Desc,
-  });
-
   const useFetchFileManage = useFileStore((s) => s.useFetchFileManage);
 
   const { data, isLoading } = useFetchFileManage({
     category,
     knowledgeBaseId,
     q: query,
-    sortType,
-    sorter,
     ...viewConfig,
   });
+
+  const sortedData = useMemo(() => {
+    if (!data || data.length === 0) return data; // 防止data第一次加载中提前渲染
+    if (!sorter) return data;
+
+    const key = sorter as keyof FileListItemType;
+
+    return [...data].sort((a, b) => {
+      let compare = 0;
+      switch (key) {
+        case 'name': {
+          compare = a.name.localeCompare(b.name);
+          break;
+        }
+        case 'createdAt': {
+          compare = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          break;
+        }
+        case 'size': {
+          compare = a.size - b.size;
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+      return sortType === SortType.Asc ? compare : -compare;
+    });
+  }, [data, sorter, sortType]);
+
+  const handleSort = (key: 'name' | 'createdAt' | 'size') => {
+    if (sorter === key) {
+      updateSystemStatus({
+        fileListSortType: sortType === SortType.Asc ? SortType.Desc : SortType.Asc,
+      });
+    } else {
+      updateSystemStatus({
+        fileListSortType: key === 'name' ? SortType.Asc : SortType.Desc,
+        fileListSorter: key,
+      });
+    }
+  };
 
   // Handle view transition with a brief delay to show skeleton
   React.useEffect(() => {
@@ -155,7 +206,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
     [onOpenFile, knowledgeBaseId, selectFileIds],
   );
 
-  return !isLoading && data?.length === 0 ? (
+  return !isLoading && sortedData?.length === 0 ? (
     <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
   ) : (
     <Flexbox height={'100%'}>
@@ -170,20 +221,74 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
           selectFileIds={selectFileIds}
           setSelectedFileIds={setSelectedFileIds}
           showConfig={!knowledgeBaseId}
-          total={data?.length}
-          totalFileIds={data?.map((item) => item.id) || []}
+          total={sortedData?.length}
+          totalFileIds={sortedData?.map((item) => item.id) || []}
           viewMode={viewMode}
         />
         {viewMode === 'list' && (
           <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
             <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 32 }}>
-              {t('FileManager.title.title')}
+              <span>
+                {t('FileManager.title.title')}
+                <button
+                  aria-label="sort-title"
+                  className={styles.sortButton}
+                  onClick={() => handleSort('name')}
+                  type="button"
+                >
+                  {sorter === 'name' ? (
+                    sortType === SortType.Desc ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUp size={14} />
+                    )
+                  ) : (
+                    <ArrowDownUp size={14} />
+                  )}
+                </button>
+              </span>
             </Flexbox>
             <Flexbox className={styles.headerItem} width={FILE_DATE_WIDTH}>
-              {t('FileManager.title.createdAt')}
+              <span>
+                {t('FileManager.title.createdAt')}
+                <button
+                  aria-label="sort-createdAt"
+                  className={styles.sortButton}
+                  onClick={() => handleSort('createdAt')}
+                  type="button"
+                >
+                  {sorter === 'createdAt' ? (
+                    sortType === SortType.Desc ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUp size={14} />
+                    )
+                  ) : (
+                    <ArrowDownUp size={14} />
+                  )}
+                </button>
+              </span>
             </Flexbox>
             <Flexbox className={styles.headerItem} width={FILE_SIZE_WIDTH}>
-              {t('FileManager.title.size')}
+              <span>
+                {t('FileManager.title.size')}
+                <button
+                  aria-label="sort-size"
+                  className={styles.sortButton}
+                  onClick={() => handleSort('size')}
+                  type="button"
+                >
+                  {sorter === 'size' ? (
+                    sortType === SortType.Desc ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUp size={14} />
+                    )
+                  ) : (
+                    <ArrowDownUp size={14} />
+                  )}
+                </button>
+              </span>
             </Flexbox>
           </Flexbox>
         )}
@@ -205,18 +310,23 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
               </Center>
             ),
           }}
-          data={data}
+          data={sortedData}
           itemContent={(index, item) => (
             <FileListItem
               index={index}
               key={item.id}
               knowledgeBaseId={knowledgeBaseId}
               onSelectedChange={(id, checked, shiftKey, clickedIndex) => {
-                if (shiftKey && lastSelectedIndex !== null && selectFileIds.length > 0 && data) {
+                if (
+                  shiftKey &&
+                  lastSelectedIndex !== null &&
+                  selectFileIds.length > 0 &&
+                  sortedData
+                ) {
                   // Range selection with shift key
                   const start = Math.min(lastSelectedIndex, clickedIndex);
                   const end = Math.max(lastSelectedIndex, clickedIndex);
-                  const rangeIds = data.slice(start, end + 1).map((item) => item.id);
+                  const rangeIds = sortedData.slice(start, end + 1).map((item) => item.id);
 
                   setSelectedFileIds((prev) => {
                     // Create a Set for efficient lookup
@@ -250,7 +360,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category, onOpenFile })
                 ItemContent={MasonryItemWrapper}
                 columnCount={columnCount}
                 context={masonryContext}
-                data={data || []}
+                data={sortedData || []}
                 style={{
                   gap: '16px',
                 }}
