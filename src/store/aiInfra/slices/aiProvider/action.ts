@@ -30,7 +30,7 @@ import {
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
 
-type ProviderModelListItem = {
+export type ProviderModelListItem = {
   abilities: ModelAbilities;
   approximatePricePerImage?: number;
   contextWindowTokens?: number;
@@ -42,85 +42,100 @@ type ProviderModelListItem = {
   pricing?: Pricing;
 };
 
-/**
- * Get image models by provider ID with pricing and description fallback
- */
-const getImageModelList = async (
-  enabledAiModels: EnabledAiModel[],
-  providerId: string,
-): Promise<ProviderModelListItem[]> => {
-  const filteredModels = enabledAiModels.filter(
-    (model) => model.providerId === providerId && model.type === 'image',
-  );
+type ModelNormalizer = (model: EnabledAiModel) => Promise<ProviderModelListItem>;
 
-  const models = await Promise.all(
-    filteredModels.map(async (model) => {
-      const fallbackParametersPromise = model.parameters
-        ? Promise.resolve<ModelParamsSchema | undefined>(undefined)
-        : getModelPropertyWithFallback<ModelParamsSchema | undefined>(
-            model.id,
-            'parameters',
-            model.providerId,
-          );
+const dedupeById = (models: ProviderModelListItem[]) => uniqBy(models, 'id');
 
-      const modelWithPricing = model as AIImageModelCard;
-      const fallbackPricingPromise = modelWithPricing.pricing
-        ? Promise.resolve<Pricing | undefined>(modelWithPricing.pricing)
-        : getModelPropertyWithFallback<Pricing | undefined>(model.id, 'pricing', model.providerId);
+const createProviderModelCollector = (
+  type: EnabledAiModel['type'],
+  normalizer: ModelNormalizer,
+) => {
+  return async (enabledAiModels: EnabledAiModel[], providerId: string) => {
+    const filteredModels = enabledAiModels.filter(
+      (model) => model.providerId === providerId && model.type === type,
+    );
 
-      const fallbackDescriptionPromise = getModelPropertyWithFallback<string | undefined>(
+    if (!filteredModels.length) return [];
+
+    const normalized = await Promise.all(filteredModels.map((model) => normalizer(model)));
+    return dedupeById(normalized);
+  };
+};
+
+export const normalizeChatModel = (model: EnabledAiModel): ProviderModelListItem => ({
+  abilities: (model.abilities || {}) as ModelAbilities,
+  contextWindowTokens: model.contextWindowTokens,
+  displayName: model.displayName ?? '',
+  id: model.id,
+});
+
+export const normalizeImageModel = async (
+  model: EnabledAiModel,
+): Promise<ProviderModelListItem> => {
+  const fallbackParametersPromise = model.parameters
+    ? Promise.resolve<ModelParamsSchema | undefined>(model.parameters)
+    : getModelPropertyWithFallback<ModelParamsSchema | undefined>(
         model.id,
-        'description',
+        'parameters',
         model.providerId,
       );
 
-      const [fallbackParameters, fallbackPricing, fallbackDescription] = await Promise.all([
-        fallbackParametersPromise,
-        fallbackPricingPromise,
-        fallbackDescriptionPromise,
-      ]);
+  const modelWithPricing = model as AIImageModelCard;
+  const fallbackPricingPromise = modelWithPricing.pricing
+    ? Promise.resolve<Pricing | undefined>(modelWithPricing.pricing)
+    : getModelPropertyWithFallback<Pricing | undefined>(model.id, 'pricing', model.providerId);
 
-      const parameters = model.parameters ?? fallbackParameters;
-      const pricing = fallbackPricing;
-      const description = fallbackDescription;
-      const { price, approximatePrice } = resolveImageSinglePrice(pricing);
-
-      return {
-        abilities: (model.abilities || {}) as ModelAbilities,
-        contextWindowTokens: model.contextWindowTokens,
-        displayName: model.displayName ?? '',
-        id: model.id,
-        ...(parameters && { parameters }),
-        ...(description && { description }),
-        ...(pricing && { pricing }),
-        ...(typeof approximatePrice === 'number' && { approximatePricePerImage: approximatePrice }),
-        ...(typeof price === 'number' && { pricePerImage: price }),
-      };
-    }),
+  const fallbackDescriptionPromise = getModelPropertyWithFallback<string | undefined>(
+    model.id,
+    'description',
+    model.providerId,
   );
 
-  return uniqBy(models, 'id');
-};
+  const [fallbackParameters, fallbackPricing, fallbackDescription] = await Promise.all([
+    fallbackParametersPromise,
+    fallbackPricingPromise,
+    fallbackDescriptionPromise,
+  ]);
 
-/**
- * Get chat models by provider ID
- */
-const getChatModelList = async (
-  enabledAiModels: EnabledAiModel[],
-  providerId: string,
-): Promise<ProviderModelListItem[]> => {
-  const filteredModels = enabledAiModels.filter(
-    (model) => model.providerId === providerId && model.type === 'chat',
-  );
+  const parameters = model.parameters ?? fallbackParameters;
+  const pricing = fallbackPricing;
+  const description = fallbackDescription;
+  const { price, approximatePrice } = resolveImageSinglePrice(pricing);
 
-  const models = filteredModels.map((model) => ({
+  return {
     abilities: (model.abilities || {}) as ModelAbilities,
     contextWindowTokens: model.contextWindowTokens,
     displayName: model.displayName ?? '',
     id: model.id,
-  }));
+    ...(parameters && { parameters }),
+    ...(description && { description }),
+    ...(pricing && { pricing }),
+    ...(typeof approximatePrice === 'number' && { approximatePricePerImage: approximatePrice }),
+    ...(typeof price === 'number' && { pricePerImage: price }),
+  };
+};
 
-  return uniqBy(models, 'id');
+export const getChatModelList = createProviderModelCollector('chat', async (model) =>
+  normalizeChatModel(model),
+);
+
+export const getImageModelList = createProviderModelCollector('image', normalizeImageModel);
+
+const buildProviderModelLists = async (
+  providers: EnabledProvider[],
+  enabledAiModels: EnabledAiModel[],
+  collector: (
+    enabledAiModels: EnabledAiModel[],
+    providerId: string,
+  ) => Promise<ProviderModelListItem[]>,
+) => {
+  return Promise.all(
+    providers.map(async (provider) => ({
+      ...provider,
+      children: await collector(enabledAiModels, provider.id),
+      name: provider.name || provider.id,
+    })),
+  );
 };
 
 /**
@@ -129,15 +144,7 @@ const getChatModelList = async (
 const buildImageProviderModelLists = async (
   providers: EnabledProvider[],
   enabledAiModels: EnabledAiModel[],
-) => {
-  return Promise.all(
-    providers.map(async (provider) => ({
-      ...provider,
-      children: await getImageModelList(enabledAiModels, provider.id),
-      name: provider.name || provider.id,
-    })),
-  );
-};
+) => buildProviderModelLists(providers, enabledAiModels, getImageModelList);
 
 /**
  * Build chat provider model lists with proper async handling
@@ -145,30 +152,7 @@ const buildImageProviderModelLists = async (
 const buildChatProviderModelLists = async (
   providers: EnabledProvider[],
   enabledAiModels: EnabledAiModel[],
-) => {
-  return Promise.all(
-    providers.map(async (provider) => ({
-      ...provider,
-      children: await getChatModelList(enabledAiModels, provider.id),
-      name: provider.name || provider.id,
-    })),
-  );
-};
-
-/**
- * Public helper to fetch models by provider and type.
- * Used by tests to verify the formatting logic stays consistent.
- */
-export const getModelListByType = async (
-  enabledAiModels: EnabledAiModel[],
-  providerId: string,
-  type: EnabledAiModel['type'] | string,
-): Promise<ProviderModelListItem[]> => {
-  if (type === 'image') return getImageModelList(enabledAiModels, providerId);
-  if (type === 'chat') return getChatModelList(enabledAiModels, providerId);
-
-  return [];
-};
+) => buildProviderModelLists(providers, enabledAiModels, getChatModelList);
 
 enum AiProviderSwrKey {
   fetchAiProviderItem = 'FETCH_AI_PROVIDER_ITEM',
