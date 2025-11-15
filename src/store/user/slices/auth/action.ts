@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
+import { enableAuth, enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
 
 import type { UserStore } from '../../store';
 
@@ -21,13 +21,28 @@ export const createAuthSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   UserAuthAction
-> = (set, get) => ({
+> = (_set, get) => ({
   enableAuth: () => {
     return enableAuth;
   },
   logout: async () => {
     if (enableClerk) {
       get().clerkSignOut?.({ redirectUrl: location.toString() });
+
+      return;
+    }
+
+    if (enableBetterAuth) {
+      const { signOut } = await import('@/libs/better-auth/auth-client');
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            // Use window.location.href to trigger a full page reload
+            // This ensures all client-side state (React, Zustand, cache) is cleared
+            window.location.href = '/signin';
+          },
+        },
+      });
 
       return;
     }
@@ -45,6 +60,13 @@ export const createAuthSlice: StateCreator<
         signUpForceRedirectUrl: redirectUrl,
         signUpUrl: '/signup',
       });
+
+      return;
+    }
+
+    if (enableBetterAuth) {
+      const currentUrl = location.toString();
+      window.location.href = `/signin?callbackUrl=${encodeURIComponent(currentUrl)}`;
 
       return;
     }

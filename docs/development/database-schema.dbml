@@ -974,6 +974,7 @@ table users {
   full_name text
   is_onboarded boolean [default: false]
   clerk_created_at "timestamp with time zone"
+  email_verified boolean [not null, default: false]
   email_verified_at "timestamp with time zone"
   preference jsonb
   accessed_at "timestamp with time zone" [not null, default: `now()`]

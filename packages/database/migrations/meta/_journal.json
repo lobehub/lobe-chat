@@ -322,6 +322,13 @@
       "when": 1762911968658,
       "tag": "0045_add_tool_intervention",
       "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1762916406092,
+      "tag": "0046_better_auth",
+      "breakpoints": true
     }
   ],
   "version": "6"
