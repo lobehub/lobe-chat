@@ -78,7 +78,7 @@ const McpItem = memo<DiscoverMcpItem>(
     const { t } = useTranslation('discover');
     const { styles, theme } = useStyles();
     const navigate = useNavigate();
-    const link = urlJoin('/mcp', identifier);
+    const link = urlJoin('/discover/mcp', identifier);
     return (
       <Block
         clickable

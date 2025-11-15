@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -24,15 +24,12 @@ const Inbox = memo(() => {
   return (
     <Link
       aria-label={t('inbox.title')}
-      href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={async (e) => {
         e.preventDefault();
-
         if (activeId === INBOX_SESSION_ID && !mobile) {
           // If user tap the inbox again, open a new topic.
           // Only for desktop.
           const inboxMessages = chatSelectors.inboxActiveTopicMessages(getChatStoreState());
-
           if (inboxMessages.length > 0) {
             await openNewTopicOrSaveTopic();
           }
@@ -40,6 +37,7 @@ const Inbox = memo(() => {
           switchSession(INBOX_SESSION_ID);
         }
       }}
+      to={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
     >
       <ListItem
         active={activeId === INBOX_SESSION_ID}

@@ -2,13 +2,13 @@
 
 import { SearchBar, SearchBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { usePathname } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import { usePathname } from '@/app/[variants]/(main)/hooks/usePathname';
+import { useQuery } from '@/app/[variants]/(main)/hooks/useQuery';
 import { withSuspense } from '@/components/withSuspense';
-import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 export const useStyles = createStyles(({ css, prefixCls, token }) => ({

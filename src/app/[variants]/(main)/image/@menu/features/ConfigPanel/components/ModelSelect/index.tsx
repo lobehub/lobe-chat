@@ -2,10 +2,10 @@ import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
@@ -37,7 +37,7 @@ const ModelSelect = memo(() => {
   const { t } = useTranslation('components');
   const theme = useTheme();
   const { showLLM } = useServerConfigStore(featureFlagsSelectors);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const [currentModel, currentProvider] = useImageStore((s) => [
     imageGenerationConfigSelectors.model(s),
@@ -67,7 +67,7 @@ const ModelSelect = memo(() => {
               </Flexbox>
             ),
             onClick: () => {
-              router.push(
+              navigate(
                 isDeprecatedEdition
                   ? '/settings?active=llm'
                   : `/settings?active=provider&provider=${provider.id}`,
@@ -93,7 +93,7 @@ const ModelSelect = memo(() => {
             </Flexbox>
           ),
           onClick: () => {
-            router.push(isDeprecatedEdition ? '/settings?active=llm' : '/settings?active=provider');
+            navigate(isDeprecatedEdition ? '/settings?active=llm' : '/settings?active=provider');
           },
           value: 'no-provider',
         },
@@ -133,7 +133,7 @@ const ModelSelect = memo(() => {
       ),
       options: getImageModels(provider),
     }));
-  }, [enabledImageModelList, showLLM, t, theme.colorTextTertiary, router]);
+  }, [enabledImageModelList, showLLM, t, theme.colorTextTertiary, navigate]);
 
   const labelRender: SelectProps['labelRender'] = (props) => {
     const modelInfo = enabledImageModelList

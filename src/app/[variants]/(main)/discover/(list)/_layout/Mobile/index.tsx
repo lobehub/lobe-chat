@@ -1,12 +1,13 @@
-import { PropsWithChildren } from 'react';
 
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import Footer from '@/features/Setting/Footer';
 
 import { SCROLL_PARENT_ID } from '../../../features/const';
 import Header from './Header';
+import { Outlet } from 'react-router-dom';
 
-const Layout = ({ children }: PropsWithChildren) => {
+
+const Layout = () => {
   return (
     <MobileContentLayout
       gap={16}
@@ -15,7 +16,7 @@ const Layout = ({ children }: PropsWithChildren) => {
       style={{ paddingInline: 16, paddingTop: 8 }}
       withNav
     >
-      {children}
+      <Outlet />
       <div />
       <Footer />
     </MobileContentLayout>

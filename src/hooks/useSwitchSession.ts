@@ -1,5 +1,5 @@
-import { usePathname } from 'next/navigation';
 import { useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useChatStore } from '@/store/chat';
@@ -11,7 +11,8 @@ export const useSwitchSession = () => {
   const togglePortal = useChatStore((s) => s.togglePortal);
   const mobile = useServerConfigStore((s) => s.isMobile);
   const router = useQueryRoute();
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
 
   return useCallback(
     (id: string) => {
@@ -27,6 +28,6 @@ export const useSwitchSession = () => {
         }, 50);
       }
     },
-    [mobile, pathname],
+    [mobile, pathname, switchSession, togglePortal, router],
   );
 };

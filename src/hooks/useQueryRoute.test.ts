@@ -4,18 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useQueryRoute } from './useQueryRoute';
 
 // Mocks
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn((href) => href),
-    replace: vi.fn((href) => href),
-  })),
-}));
-
-vi.mock('nextjs-toploader/app', () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn((href) => href),
-    replace: vi.fn((href) => href),
-  })),
+vi.mock('react-router-dom', () => ({
+  useNavigate: vi.fn(() => vi.fn((href) => href)),
 }));
 
 vi.mock('@/utils/env', () => ({

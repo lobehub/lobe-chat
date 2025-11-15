@@ -28,7 +28,8 @@ export const globalWorkspaceSlice: StateCreator<
   GlobalWorkspacePaneAction
 > = (set, get) => ({
   switchBackToChat: (sessionId) => {
-    get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
+    const target = SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile);
+    get().navigate?.(target);
   },
 
   toggleAgentSystemRoleExpand: (agentId, expanded) => {

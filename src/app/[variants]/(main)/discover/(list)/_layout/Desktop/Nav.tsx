@@ -7,7 +7,6 @@ import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { DiscoverTab } from '@/types/discover';
 
@@ -76,7 +75,7 @@ const Nav = memo(() => {
             compact
             items={items as any}
             onChange={(key) => {
-              const path = key === DiscoverTab.Home ? '/' : `/${key}`;
+              const path = key === DiscoverTab.Home ? '/discover' : `/discover/${key}`;
               const search = q ? `?q=${encodeURIComponent(q)}` : '';
               navigate(path + search, { replace: true });
               const scrollableElement = document?.querySelector(`#${SCROLL_PARENT_ID}`);
@@ -99,4 +98,4 @@ const Nav = memo(() => {
   );
 });
 
-export default withSuspense(Nav);
+export default Nav;

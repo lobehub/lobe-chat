@@ -1,10 +1,11 @@
 import { Typography } from '@lobehub/ui';
+import { Image } from '@lobehub/ui/mdx';
 import { Divider } from 'antd';
 import Link from 'next/link';
+import useSWR from 'swr';
 import urlJoin from 'url-join';
 
 import { CustomMDX } from '@/components/mdx';
-import Image from '@/components/mdx/Image';
 import { OFFICIAL_SITE } from '@/const/url';
 import { Locales } from '@/locales/resources';
 import { ChangelogService } from '@/server/services/changelog';
@@ -14,14 +15,16 @@ import GridLayout from './GridLayout';
 import PublishedTime from './PublishedTime';
 import VersionTag from './VersionTag';
 
-const Post = async ({
+const Post = ({
   id,
   mobile,
   versionRange,
   locale,
 }: ChangelogIndexItem & { branch?: string; locale: Locales; mobile?: boolean }) => {
-  const changelogService = new ChangelogService();
-  const data = await changelogService.getPostById(id, { locale });
+  const { data } = useSWR([`changelog-post-${id}`, locale], async () => {
+    const changelogService = new ChangelogService();
+    return await changelogService.getPostById(id, { locale });
+  });
 
   if (!data || !data.title) return null;
 

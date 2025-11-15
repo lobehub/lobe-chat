@@ -45,7 +45,7 @@ const KnowledgeBaseItem = memo<KnowledgeBaseItemProps>(({ name, active, id }) =>
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/bases/${id}`);
+    navigate(`/knowledge/bases/${id}`);
   };
 
   return (

@@ -48,7 +48,7 @@ const ProviderItem = memo<DiscoverProviderItem>(
   ({ url, name, description, identifier, models }) => {
     const { styles, theme } = useStyles();
     const navigate = useNavigate();
-    const link = urlJoin('/provider', identifier);
+    const link = urlJoin('/discover/provider', identifier);
     const { t } = useTranslation(['discover', 'providers']);
 
     return (

@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
 
 import ImagePanel from '@/features/ImageSidePanel';
@@ -7,7 +8,7 @@ import { LayoutProps } from '../type';
 import Container from './Container';
 import RegisterHotkeys from './RegisterHotkeys';
 
-const Layout = ({ children, menu, topic }: LayoutProps) => {
+const Layout = ({ menu, topic }: Omit<LayoutProps, 'children'>) => {
   return (
     <>
       <Flexbox
@@ -17,7 +18,9 @@ const Layout = ({ children, menu, topic }: LayoutProps) => {
         width={'100%'}
       >
         <ImagePanel>{menu}</ImagePanel>
-        <Container>{children}</Container>
+        <Container>
+          <Outlet />
+        </Container>
         <ImageTopicPanel>{topic}</ImageTopicPanel>
       </Flexbox>
       <RegisterHotkeys />

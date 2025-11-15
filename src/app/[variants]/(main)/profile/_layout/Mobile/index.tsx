@@ -1,13 +1,14 @@
+import { Outlet } from 'react-router-dom';
+
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import Footer from '@/features/Setting/Footer';
 
-import { LayoutProps } from '../type';
 import Header from './Header';
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = () => {
   return (
     <MobileContentLayout header={<Header />}>
-      {children}
+      <Outlet />
       <div style={{ flex: 1 }} />
       <Footer />
     </MobileContentLayout>

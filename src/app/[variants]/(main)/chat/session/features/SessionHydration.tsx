@@ -1,13 +1,14 @@
 'use client';
 
-import { useQueryState } from 'nuqs';
-import { parseAsString } from 'nuqs/server';
 import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { parseAsString, useQueryParam } from '@/hooks/useQueryParam';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
+
+const THROTTLE_DELAY = 50;
 
 // sync outside state to useSessionStore
 const SessionHydration = memo(() => {
@@ -17,10 +18,11 @@ const SessionHydration = memo(() => {
   const [switchTopic] = useChatStore((s) => [s.switchTopic]);
 
   // two-way bindings the url and session store
-  const [session, setSession] = useQueryState(
-    'session',
-    parseAsString.withDefault('inbox').withOptions({ history: 'replace', throttleMs: 50 }),
-  );
+  const [session, setSession] = useQueryParam('session', parseAsString.withDefault('inbox'), {
+    history: 'replace',
+    throttleMs: THROTTLE_DELAY,
+  });
+
   useStoreUpdater('activeId', session);
   useAgentStoreUpdater('activeId', session);
   useChatStoreUpdater('activeId', session);

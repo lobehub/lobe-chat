@@ -13,7 +13,7 @@ const partialBuildPages = [
   {
     name: 'changelog',
     disabled: isDesktop,
-    paths: ['src/app/[variants]/@modal/(.)changelog', 'src/app/[variants]/(main)/changelog'],
+    paths: ['src/app/[variants]/(main)/changelog'],
   },
   {
     name: 'auth',

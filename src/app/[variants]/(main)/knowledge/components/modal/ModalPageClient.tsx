@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import FileDetail from './FileDetail';
 import FilePreview from './FilePreview';
@@ -12,15 +12,15 @@ interface ModalPageClientProps {
 }
 
 const ModalPageClient = ({ id }: ModalPageClientProps) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const handleClose = useCallback(() => {
     if (typeof window === 'undefined') return;
 
     const { pathname, search } = window.location;
     const basePath = pathname.replace(/\/modal\/?$/, '');
 
-    router.replace(`${basePath || '/'}${search}`);
-  }, [router]);
+    navigate(`${basePath || '/'}${search}`, { replace: true });
+  }, [navigate]);
 
   return (
     <FullscreenModal detail={<FileDetail id={id} />} onClose={handleClose}>

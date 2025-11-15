@@ -1,15 +1,16 @@
-import { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
+
+import { Locales } from '@/locales/resources';
 
 import Hero from '../../features/Hero';
 import Container from './Container';
 
-type Props = { children: ReactNode };
-
-const Layout = ({ children }: Props) => {
+const Layout = (props: { locale: Locales }) => {
+  const { locale } = props;
   return (
     <Container>
       <Hero />
-      {children}
+      <Outlet context={{ locale }} />
     </Container>
   );
 };

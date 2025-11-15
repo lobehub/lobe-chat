@@ -1,10 +1,10 @@
 'use client';
 
-import { useQueryState } from 'nuqs';
 import { memo, useEffect, useLayoutEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { useFetchThreads } from '@/hooks/useFetchThreads';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useChatStore } from '@/store/chat';
 
 // sync outside state to useChatStore
@@ -26,7 +26,7 @@ const ThreadHydration = memo(() => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [setThread]); // ✅ 现在 setValue 是稳定的，可以安全地添加到依赖数组
 
   // should open portal automatically when portalThread is set
   useEffect(() => {

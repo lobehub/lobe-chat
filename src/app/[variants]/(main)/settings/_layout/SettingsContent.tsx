@@ -1,10 +1,10 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { notFound } from 'next/navigation';
 import React, { CSSProperties } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import NotFound from '@/components/404';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { SettingsTabs } from '@/store/global/initialState';
 
@@ -54,7 +54,7 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
     return showLLM || !isLLMTab;
   };
   if (activeTab && !shouldRenderLLMTabs(activeTab)) {
-    notFound();
+    return <NotFound />;
   }
   const renderComponent = (tab: string) => {
     const Component = componentMap[tab as keyof typeof componentMap] || componentMap.common;

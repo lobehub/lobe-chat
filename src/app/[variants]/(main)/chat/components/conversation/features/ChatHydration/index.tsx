@@ -1,9 +1,9 @@
 'use client';
 
-import { useQueryState } from 'nuqs';
 import { memo, useLayoutEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useChatStore } from '@/store/chat';
 
 // sync outside state to useChatStore
@@ -34,7 +34,7 @@ const ChatHydration = memo(() => {
       unsubscribeTopic();
       unsubscribeThread();
     };
-  }, []);
+  }, [setTopic, setThread]); // ✅ 现在 setValue 是稳定的，可以安全地添加到依赖数组
 
   return null;
 });

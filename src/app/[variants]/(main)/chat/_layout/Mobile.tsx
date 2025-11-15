@@ -8,7 +8,7 @@ import { withSuspense } from '@/components/withSuspense';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 
 import SessionPanelContent from '../components/SessionPanel';
-import { LayoutProps } from './type';
+import { Outlet } from 'react-router-dom';
 
 const useStyles = createStyles(({ css, token }) => ({
   main: css`
@@ -18,7 +18,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Layout = memo<LayoutProps>(({ children }) => {
+const Layout = memo(( ) => {
   const showMobileWorkspace = useShowMobileWorkspace();
   const { styles } = useStyles();
 
@@ -38,7 +38,7 @@ const Layout = memo<LayoutProps>(({ children }) => {
         style={showMobileWorkspace ? undefined : { display: 'none' }}
         width="100%"
       >
-        {children}
+        <Outlet />
       </Flexbox>
     </>
   );
