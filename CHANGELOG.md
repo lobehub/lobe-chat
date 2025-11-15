@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.64](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.63...v2.0.0-next.64)
+
+<sup>Released on **2025-11-15**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor package types.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor package types, closes [#10233](https://github.com/lobehub/lobe-chat/issues/10233) ([9872409](https://github.com/lobehub/lobe-chat/commit/9872409))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.63](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.62...v2.0.0-next.63)
 
 <sup>Released on **2025-11-15**</sup>
