@@ -129,7 +129,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.10",
-    "@anthropic-ai/sdk": "^0.67.1",
+    "@anthropic-ai/sdk": "^0.69.0",
     "@auth/core": "^0.40.0",
     "@aws-sdk/client-s3": "~3.893.0",
     "@aws-sdk/s3-request-presigner": "~3.893.0",
