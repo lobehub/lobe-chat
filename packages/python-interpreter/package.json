@@ -11,5 +11,8 @@
     "comlink": "^4.4.2",
     "pyodide": "^0.28.2",
     "url-join": "^5.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }

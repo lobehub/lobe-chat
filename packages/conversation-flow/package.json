@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "@lobechat/types": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }
