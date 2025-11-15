@@ -12,7 +12,6 @@ import FileChunks from './FileChunks';
 import IntentUnderstanding from './IntentUnderstanding';
 import Reasoning from './Reasoning';
 import SearchGrounding from './SearchGrounding';
-import Tool from './Tool';
 
 export const AssistantMessageContent = memo<
   UIChatMessage & {
@@ -67,23 +66,6 @@ export const AssistantMessageContent = memo<
         />
       )}
       {showImageItems && <ImageFileListViewer items={imageList} />}
-      {tools && (
-        <Flexbox gap={8}>
-          {tools.map((toolCall, index) => (
-            <Tool
-              apiName={toolCall.apiName}
-              arguments={toolCall.arguments}
-              id={toolCall.id}
-              identifier={toolCall.identifier}
-              index={index}
-              key={toolCall.id}
-              messageId={id}
-              payload={toolCall}
-              type={toolCall.type}
-            />
-          ))}
-        </Flexbox>
-      )}
     </Flexbox>
   );
 });

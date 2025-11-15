@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Xem danh sách tham số",
+    "delete": "Xoá lệnh gọi công cụ",
+    "orphanedToolCall": "Lệnh gọi công cụ này có thể đã trở thành một tin nhắn bị cô lập do sự cố bất thường, điều này có thể ảnh hưởng đến quá trình thực thi bình thường của Tác nhân. Vui lòng xoá nó.",
     "pluginRender": "Xem giao diện plugin"
   },
   "list": {

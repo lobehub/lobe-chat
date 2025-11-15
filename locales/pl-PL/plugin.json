@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Zobacz listę argumentów",
+    "delete": "Usuń wywołanie narzędzia",
+    "orphanedToolCall": "To wywołanie narzędzia mogło zostać osierocone z powodu nieoczekiwanych okoliczności, co może zakłócić prawidłowe działanie Agenta. Proszę je usunąć.",
     "pluginRender": "Zobacz interfejs wtyczki"
   },
   "list": {

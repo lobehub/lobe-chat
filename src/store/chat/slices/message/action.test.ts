@@ -227,13 +227,16 @@ describe('chatMessage actions', () => {
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages);
     });
 
-    it('deleteMessage should remove messages with tools', async () => {
+    it('deleteMessage should remove the message only', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
-      const mockMessages = [{ id: 'remaining-message' }] as any;
+      const mockMessages = [
+        { id: '2', tool_call_id: 'tool1', role: 'tool' },
+        { id: '3', tool_call_id: 'tool2', role: 'tool' },
+      ] as any;
 
-      // Mock the service to return messages
+      // Mock the service to return remaining messages (orphaned tool messages)
       (messageService.removeMessages as Mock).mockResolvedValue({
         success: true,
         messages: mockMessages,
@@ -258,7 +261,8 @@ describe('chatMessage actions', () => {
         await result.current.deleteMessage(messageId);
       });
 
-      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3'], {
+      // Only the message itself should be deleted, tool messages remain as orphaned
+      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId], {
         sessionId: 'session-id',
         topicId: undefined,
       });
