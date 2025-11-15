@@ -5,7 +5,7 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { responsesAPIModels } from '../../const/models';
 import { ChatStreamPayload } from '../../types/chat';
 import * as modelParseModule from '../../utils/modelParse';
-import { LobeNewAPIAI, NewAPIModelCard, NewAPIPricing, handlePayload, params } from './index';
+import { LobeNewAPIAI, NewAPIModelCard, NewAPIPricing, params } from './index';
 
 // Mock external dependencies
 vi.mock('../../utils/modelParse');
@@ -701,78 +701,6 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
     });
   });
 
-  describe('HandlePayload Function - Direct Testing', () => {
-    beforeEach(() => {
-      // Mock responsesAPIModels as a Set for testing
-      (responsesAPIModels as any).has = vi.fn((model: string) => model === 'o1-pro');
-    });
-
-    it('should add apiMode for models in responsesAPIModels set', () => {
-      (responsesAPIModels as any).has = vi.fn((model: string) => model === 'o1-pro');
-
-      const payload: ChatStreamPayload = {
-        model: 'o1-pro',
-        messages: [{ role: 'user', content: 'test' }],
-        temperature: 0.5,
-      };
-
-      const result = handlePayload(payload);
-      expect(result).toEqual({ ...payload, apiMode: 'responses' });
-    });
-
-    it('should add apiMode for gpt- models', () => {
-      (responsesAPIModels as any).has = vi.fn(() => false);
-
-      const payload: ChatStreamPayload = {
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: 'test' }],
-        temperature: 0.5,
-      };
-
-      const result = handlePayload(payload);
-      expect(result).toEqual({ ...payload, apiMode: 'responses' });
-    });
-
-    it('should add apiMode for o1 models', () => {
-      (responsesAPIModels as any).has = vi.fn(() => false);
-
-      const payload: ChatStreamPayload = {
-        model: 'o1-mini',
-        messages: [{ role: 'user', content: 'test' }],
-        temperature: 0.5,
-      };
-
-      const result = handlePayload(payload);
-      expect(result).toEqual({ ...payload, apiMode: 'responses' });
-    });
-
-    it('should add apiMode for o3 models', () => {
-      (responsesAPIModels as any).has = vi.fn(() => false);
-
-      const payload: ChatStreamPayload = {
-        model: 'o3-turbo',
-        messages: [{ role: 'user', content: 'test' }],
-        temperature: 0.5,
-      };
-
-      const result = handlePayload(payload);
-      expect(result).toEqual({ ...payload, apiMode: 'responses' });
-    });
-
-    it('should not modify payload for regular models', () => {
-      (responsesAPIModels as any).has = vi.fn(() => false);
-
-      const payload: ChatStreamPayload = {
-        model: 'claude-3-sonnet',
-        messages: [{ role: 'user', content: 'test' }],
-        temperature: 0.5,
-      };
-
-      const result = handlePayload(payload);
-      expect(result).toEqual(payload);
-    });
-  });
-
   describe('Routers Function - Direct Testing', () => {
     it('should generate routers with correct apiTypes', () => {
       const options = { apiKey: 'test', baseURL: 'https://api.newapi.com/v1' };
@@ -823,11 +751,11 @@ describe('NewAPI Runtime - 100% Branch Coverage', () => {
       expect(routers[3].options.baseURL).toBe('https://custom.com/v1');
     });
 
-    it('should configure openai router with handlePayload', () => {
+    it('should configure openai router with useResponseModels', () => {
       const options = { apiKey: 'test', baseURL: 'https://custom.com/v1' };
       const routers = params.routers(options);
 
-      expect((routers[3].options as any).chatCompletion?.handlePayload).toBe(handlePayload);
+      expect((routers[3].options as any).chatCompletion?.useResponseModels).toBeDefined();
     });
 
     it('should filter anthropic models for anthropic router', () => {

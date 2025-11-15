@@ -11,6 +11,7 @@ const AiHubMix: ModelProviderCard = {
   settings: {
     sdkType: 'router',
     showModelFetcher: true,
+    supportResponsesApi: true,
   },
   url: 'https://aihubmix.com?utm_source=lobehub',
 };

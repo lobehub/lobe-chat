@@ -6,6 +6,20 @@ const nvidiaChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 128_000,
+    description:
+      'MiniMax-M2 是一款紧凑、快速且经济高效的混合专家（MoE）模型，拥有 2300 亿总参数和 100 亿激活参数，专为编码和智能体任务的顶级性能而打造，同时保持强大的通用智能。该模型在多文件编辑、编码-运行-修复闭环、测试校验修复以及复杂的长链接工具链方面表现优异，是开发者工作流的理想选择。',
+    displayName: 'MiniMax-M2',
+    enabled: true,
+    id: 'minimaxai/minimax-m2',
+    maxOutput: 16_384,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 131_072,
     description:
       'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',

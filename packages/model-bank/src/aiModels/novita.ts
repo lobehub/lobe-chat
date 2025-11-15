@@ -174,10 +174,11 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'OpenAI GPT OSS 120B',
     id: 'openai/gpt-oss-120b',
+    maxOutput: 32_768,
     pricing: {
       units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 0.05, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.25, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     type: 'chat',

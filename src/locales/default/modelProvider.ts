@@ -298,7 +298,7 @@ export default {
       },
       helpDoc: '配置教程',
       responsesApi: {
-        desc: '采用 OpenAI 新一代请求格式规范，解锁思维链等进阶特性',
+        desc: '采用 OpenAI 新一代请求格式规范，解锁思维链等进阶特性 (仅 OpenAI 模型支持)',
         title: '使用 Responses API 规范',
       },
       waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',

@@ -99,7 +99,7 @@ export const params = {
       const cachedInputPrice = formatPrice(pricing.input_cache_read);
       const writeCacheInputPrice = formatPrice(pricing.input_cache_write);
 
-      const isFree = (inputPrice === 0 || outputPrice === 0) && !displayName.endsWith('(free)');
+      const isFree = inputPrice === 0 && outputPrice === 0 && !displayName.endsWith('(free)');
       if (isFree) {
         displayName += ' (free)';
       }
