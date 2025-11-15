@@ -76,21 +76,6 @@ const cerebrasModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen 3 235B Thinking',
-    id: 'qwen-3-235b-a22b-thinking-2507',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.6, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 2.9, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
     },
     contextWindowTokens: 131_072,

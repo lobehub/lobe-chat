@@ -546,26 +546,6 @@ const googleChatModels: AIChatModelCard[] = [
       imageOutput: true,
       vision: true,
     },
-    contextWindowTokens: 32_768 + 8192,
-    description: 'Gemini 2.0 Flash 预览模型，支持图像生成',
-    displayName: 'Gemini 2.0 Flash Preview Image Generation',
-    id: 'gemini-2.0-flash-preview-image-generation',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'imageGeneration', rate: 0.039, strategy: 'fixed', unit: 'image' },
-      ],
-    },
-    releasedAt: '2025-05-07',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      imageOutput: true,
-      vision: true,
-    },
     contextWindowTokens: 1_048_576 + 8192,
     description: 'Gemini 2.0 Flash 实验模型，支持图像生成',
     displayName: 'Gemini 2.0 Flash (Image Generation) Experimental',
