@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "Tệp",
     "folder": "Thư mục",
+    "moveFiles": {
+      "itemsMoved": "Đã di chuyển {{count}} mục:",
+      "itemsMoved_one": "Đã di chuyển {{count}} mục:",
+      "itemsMoved_other": "Đã di chuyển {{count}} mục:",
+      "itemsToMove": "{{count}} mục cần di chuyển:",
+      "itemsToMove_one": "{{count}} mục cần di chuyển:",
+      "itemsToMove_other": "{{count}} mục cần di chuyển:"
+    },
     "open": "Mở",
     "openFile": "Mở tệp",
     "openFolder": "Mở thư mục",

@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "파일",
     "folder": "폴더",
+    "moveFiles": {
+      "itemsMoved": "{{count}}개 항목이 이동되었습니다:",
+      "itemsMoved_one": "{{count}}개 항목이 이동되었습니다:",
+      "itemsMoved_other": "{{count}}개 항목이 이동되었습니다:",
+      "itemsToMove": "{{count}}개 항목을 이동할 예정입니다:",
+      "itemsToMove_one": "{{count}}개 항목을 이동할 예정입니다:",
+      "itemsToMove_other": "{{count}}개 항목을 이동할 예정입니다:"
+    },
     "open": "열기",
     "openFile": "파일 열기",
     "openFolder": "폴더 열기",

@@ -383,6 +383,8 @@
         "manualDesc": "Richiede approvazione manuale per ogni utilizzo"
       },
       "reject": "Rifiuta",
+      "rejectAndContinue": "Rifiuta e riprova",
+      "rejectOnly": "Rifiuta",
       "rejectReasonPlaceholder": "Inserire il motivo del rifiuto aiuterà l'agente a comprendere e ottimizzare le azioni future",
       "rejectTitle": "Rifiuta questa esecuzione dello strumento",
       "rejectedWithReason": "Questa esecuzione dello strumento è stata rifiutata: {{reason}}",

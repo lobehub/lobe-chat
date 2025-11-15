@@ -1,4 +1,3 @@
-import { useTheme } from 'antd-style';
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -16,38 +15,30 @@ import PortalPanel from './PortalPanel';
 import TopicSidebar from './TopicSidebar';
 
 
-const DesktopWorkspace = memo(() => {
-  const theme = useTheme();
-
-  return (
-    <>
-      <ChatHeaderDesktop />
-      <Flexbox
-        height={'100%'}
-        horizontal
-        style={{ overflow: 'hidden', position: 'relative' }}
-        width={'100%'}
-      >
-        <Flexbox
-          height={'100%'}
-          style={{ background: theme.colorBgContainer, overflow: 'hidden', position: 'relative' }}
-          width={'100%'}
-        >
-          <ConversationArea mobile={false} />
-        </Flexbox>
-        <Portal>
-          <Suspense fallback={<BrandTextLoading />}>
-            <PortalPanel mobile={false} />
-          </Suspense>
-        </Portal>
-        <TopicPanel>
-          <TopicSidebar mobile={false} />
-        </TopicPanel>
+const DesktopWorkspace = memo(() => (
+  <>
+    <ChatHeaderDesktop />
+    <Flexbox
+      height={'100%'}
+      horizontal
+      style={{ overflow: 'hidden', position: 'relative' }}
+      width={'100%'}
+    >
+      <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }} width={'100%'}>
+        <ConversationArea mobile={false} />
       </Flexbox>
-      <MainInterfaceTracker />
-    </>
-  );
-});
+      <Portal>
+        <Suspense fallback={<BrandTextLoading />}>
+          <PortalPanel mobile={false} />
+        </Suspense>
+      </Portal>
+      <TopicPanel>
+        <TopicSidebar mobile={false} />
+      </TopicPanel>
+    </Flexbox>
+    <MainInterfaceTracker />
+  </>
+));
 
 DesktopWorkspace.displayName = 'DesktopWorkspace';
 

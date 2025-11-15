@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "Datei",
     "folder": "Ordner",
+    "moveFiles": {
+      "itemsMoved": "{{count}} Elemente wurden verschoben:",
+      "itemsMoved_one": "{{count}} Element wurde verschoben:",
+      "itemsMoved_other": "{{count}} Elemente wurden verschoben:",
+      "itemsToMove": "{{count}} Elemente zum Verschieben:",
+      "itemsToMove_one": "{{count}} Element zum Verschieben:",
+      "itemsToMove_other": "{{count}} Elemente zum Verschieben:"
+    },
     "open": "Öffnen",
     "openFile": "Datei öffnen",
     "openFolder": "Ordner öffnen",

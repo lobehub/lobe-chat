@@ -383,6 +383,8 @@
         "manualDesc": "Manual approval required for each invocation"
       },
       "reject": "Reject",
+      "rejectAndContinue": "Reject and Retry",
+      "rejectOnly": "Reject",
       "rejectReasonPlaceholder": "Providing a reason will help the Agent understand and improve future actions",
       "rejectTitle": "Reject This Tool Invocation",
       "rejectedWithReason": "This tool invocation was actively rejected: {{reason}}",

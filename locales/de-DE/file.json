@@ -1,4 +1,5 @@
 {
+  "addFolder": "Ordner erstellen",
   "addKnowledge": "Wissen hinzufügen",
   "addPage": "Dokument erstellen",
   "desc": "Verwalte dein Wissen für Arbeit, Studium und Alltag.",
@@ -65,6 +66,7 @@
   "header": {
     "actions": {
       "newFolder": "Neuen Ordner erstellen",
+      "newPage": "Neues Dokument",
       "uploadFile": "Datei hochladen",
       "uploadFolder": "Ordner hochladen"
     },
