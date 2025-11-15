@@ -116,7 +116,7 @@ export enum ImportStage {
   Finished,
 }
 
-export interface FileUploadState {
+export interface ImportFileUploadState {
   progress: number;
   /**
    * rest time in ms
@@ -137,7 +137,7 @@ export interface ErrorShape {
 
 export interface OnImportCallbacks {
   onError?: (error: ErrorShape) => void;
-  onFileUploading?: (state: FileUploadState) => void;
+  onFileUploading?: (state: ImportFileUploadState) => void;
   onStageChange?: (stage: ImportStage) => void;
   /**
    *
