@@ -44,6 +44,23 @@ const messageContainer = cx(css`
   background: none;
 `);
 
+const collapsedMessageStyle = css`
+  position: relative;
+  overflow: hidden;
+  max-height: 200px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--lobe-chat-bg-container));
+    pointer-events: none;
+  }
+`;
+
 const isHtmlCode = (content: string, language: string) => {
   return (
     language === 'html' ||
@@ -96,10 +113,11 @@ const AssistantMessage = memo<AssistantMessageProps>(({ id, index, disableEditin
     userGeneralSettingsSelectors.config,
   );
 
-  const [generating, isInRAGFlow, editing] = useChatStore((s) => [
+  const [generating, isInRAGFlow, editing, isCollapsed] = useChatStore((s) => [
     messageStateSelectors.isMessageGenerating(id)(s),
     messageStateSelectors.isMessageInRAGFlow(id)(s),
     messageStateSelectors.isMessageEditing(id)(s),
+    messageStateSelectors.isMessageCollapsed(id)(s),
   ]);
 
   const { styles } = useStyles({
@@ -248,7 +266,7 @@ const AssistantMessage = memo<AssistantMessageProps>(({ id, index, disableEditin
         gap={8}
         width={'fit-content'}
       >
-        <Flexbox style={{ flex: 1, maxWidth: '100%' }}>
+        <Flexbox style={{ flex: 1, maxWidth: '100%' }} className={cx(isCollapsed && collapsedMessageStyle)}>
           {error && (message === LOADING_FLAT || !message) ? (
             <ErrorContent error={errorContent} message={errorMessage} placement={placement} />
           ) : (

@@ -2,6 +2,8 @@ import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import {
   ArrowDownFromLine,
+  ChevronDown,
+  ChevronUp,
   Copy,
   DownloadIcon,
   Edit,
@@ -27,12 +29,14 @@ const translateStyle = css`
 
 interface ChatListActionsBar {
   branching: ActionIconGroupItemType;
+  collapse: ActionIconGroupItemType;
   continueGeneration: ActionIconGroupItemType;
   copy: ActionIconGroupItemType;
   del: ActionIconGroupItemType;
   delAndRegenerate: ActionIconGroupItemType;
   divider: { type: 'divider' };
   edit: ActionIconGroupItemType;
+  expand: ActionIconGroupItemType;
   export: ActionIconGroupItemType;
   regenerate: ActionIconGroupItemType;
   share: ActionIconGroupItemType;
@@ -44,10 +48,12 @@ export const useChatListActionsBar = ({
   hasThread,
   isContinuing,
   isRegenerating,
+  isCollapsed,
 }: {
   hasThread?: boolean;
   isContinuing?: boolean;
   isRegenerating?: boolean;
+  isCollapsed?: boolean;
 } = {}): ChatListActionsBar => {
   const { t } = useTranslation(['common', 'chat']);
 
@@ -57,6 +63,11 @@ export const useChatListActionsBar = ({
         icon: Split,
         key: 'branching',
         label: t('branching'),
+      },
+      collapse: {
+        icon: ChevronUp,
+        key: 'collapse',
+        label: t('messageAction.collapse', { ns: 'chat' }),
       },
       continueGeneration: {
         disabled: isContinuing,
@@ -93,6 +104,11 @@ export const useChatListActionsBar = ({
         key: 'edit',
         label: t('edit'),
       },
+      expand: {
+        icon: ChevronDown,
+        key: 'expand',
+        label: t('messageAction.expand', { ns: 'chat' }),
+      },
       export: {
         icon: DownloadIcon,
         key: 'export',
@@ -126,6 +142,6 @@ export const useChatListActionsBar = ({
         label: t('tts.action', { ns: 'chat' }),
       },
     }),
-    [hasThread, isContinuing, isRegenerating],
+    [hasThread, isContinuing, isRegenerating, isCollapsed],
   );
 };

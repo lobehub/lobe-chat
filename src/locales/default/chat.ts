@@ -188,9 +188,11 @@ export default {
   },
 
   messageAction: {
+    collapse: '收起',
     continueGeneration: '继续生成',
     delAndRegenerate: '删除并重新生成',
     deleteDisabledByThreads: '存在子话题，不能删除',
+    expand: '展开',
     regenerate: '重新生成',
   },
 

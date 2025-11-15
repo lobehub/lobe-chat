@@ -23,10 +23,11 @@ interface AssistantActionsProps {
 }
 export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
   const { error, tools } = data;
-  const [isThreadMode, hasThread, isRegenerating] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating, isCollapsed] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     messageStateSelectors.isMessageRegenerating(id)(s),
+    messageStateSelectors.isMessageCollapsed(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
@@ -43,7 +44,9 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     share,
     tts,
     translate,
-  } = useChatListActionsBar({ hasThread, isRegenerating });
+    collapse,
+    expand,
+  } = useChatListActionsBar({ hasThread, isRegenerating, isCollapsed });
 
   const hasTools = !!tools;
 
@@ -53,10 +56,11 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
   const items = useMemo(() => {
     if (hasTools) return [delAndRegenerate, copy];
 
-    return [edit, copy, inThread || isGroupSession ? null : branching].filter(
+    const collapseAction = isCollapsed ? expand : collapse;
+    return [edit, copy, collapseAction, inThread || isGroupSession ? null : branching].filter(
       Boolean,
     ) as ActionIconGroupItemType[];
-  }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching]);
+  }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching, isCollapsed, collapse, expand]);
 
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
@@ -72,6 +76,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     resendThreadMessage,
     delAndResendThreadMessage,
     toggleMessageEditing,
+    toggleMessageCollapsed,
   ] = useChatStore((s) => [
     s.deleteMessage,
     s.regenerateAssistantMessage,
@@ -83,6 +88,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
+    s.toggleMessageCollapsed,
   ]);
   const { message } = App.useApp();
   const virtuosoRef = use(VirtuosoContext);
@@ -139,6 +145,12 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
 
         case 'tts': {
           ttsMessage(id);
+          break;
+        }
+
+        case 'collapse':
+        case 'expand': {
+          toggleMessageCollapsed(id);
           break;
         }
 
