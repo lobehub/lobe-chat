@@ -383,6 +383,8 @@
         "manualDesc": "Her çağrı için manuel onay gerekir"
       },
       "reject": "Reddet",
+      "rejectAndContinue": "Reddet ve yeniden dene",
+      "rejectOnly": "Reddet",
       "rejectReasonPlaceholder": "Reddetme nedenini girmek, Agent'ın anlamasına ve sonraki eylemleri iyileştirmesine yardımcı olur",
       "rejectTitle": "Bu Araç Çağrısını Reddet",
       "rejectedWithReason": "Bu araç çağrısı şu nedenle reddedildi: {{reason}}",

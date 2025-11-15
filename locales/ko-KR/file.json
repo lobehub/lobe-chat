@@ -1,4 +1,5 @@
 {
+  "addFolder": "폴더 만들기",
   "addKnowledge": "지식 추가",
   "addPage": "문서 생성",
   "desc": "작업, 학습 및 생활 지식을 관리하세요.",
@@ -65,6 +66,7 @@
   "header": {
     "actions": {
       "newFolder": "새 폴더 만들기",
+      "newPage": "새 문서 만들기",
       "uploadFile": "파일 업로드",
       "uploadFolder": "폴더 업로드"
     },

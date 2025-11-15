@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "檔案",
     "folder": "資料夾",
+    "moveFiles": {
+      "itemsMoved": "已移動 {{count}} 個項目：",
+      "itemsMoved_one": "已移動 {{count}} 個項目：",
+      "itemsMoved_other": "已移動 {{count}} 個項目：",
+      "itemsToMove": "{{count}} 個項目待移動：",
+      "itemsToMove_one": "{{count}} 個項目待移動：",
+      "itemsToMove_other": "{{count}} 個項目待移動："
+    },
     "open": "打開",
     "openFile": "打開檔案",
     "openFolder": "打開資料夾",

@@ -383,6 +383,8 @@
         "manualDesc": "Chaque appel nécessite une approbation manuelle"
       },
       "reject": "Rejeter",
+      "rejectAndContinue": "Rejeter et réessayer",
+      "rejectOnly": "Rejeter",
       "rejectReasonPlaceholder": "Saisir une raison de rejet aidera l'agent à comprendre et à améliorer ses actions futures",
       "rejectTitle": "Rejeter cet appel d'outil",
       "rejectedWithReason": "Cet appel d'outil a été rejeté volontairement : {{reason}}",

@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "File",
     "folder": "Cartella",
+    "moveFiles": {
+      "itemsMoved": "{{count}} elementi spostati:",
+      "itemsMoved_one": "{{count}} elemento spostato:",
+      "itemsMoved_other": "{{count}} elementi spostati:",
+      "itemsToMove": "{{count}} elementi da spostare:",
+      "itemsToMove_one": "{{count}} elemento da spostare:",
+      "itemsToMove_other": "{{count}} elementi da spostare:"
+    },
     "open": "Apri",
     "openFile": "Apri file",
     "openFolder": "Apri cartella",

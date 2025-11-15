@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro gebruikt meer rekenkracht om dieper na te denken en levert consequent betere antwoorden."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — Een vlaggenschipmodel geoptimaliseerd voor codering en agent-taken, met configureerbare redeneerkracht en langere contextondersteuning."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: Een variant van GPT-5.1 voor ChatGPT, geoptimaliseerd voor conversaties."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: Een versie van GPT-5.1 geoptimaliseerd voor agentgerichte coderingstaken, inzetbaar via de Responses API voor complexere code- en agentworkflows."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: Een compactere en kostenefficiëntere variant van Codex, geoptimaliseerd voor agentgerichte coderingstaken."
+  },
   "gpt-audio": {
     "description": "GPT Audio is een universeel chatmodel gericht op audio-invoer en -uitvoer, ondersteund in de Chat Completions API met audio I/O."
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen 4e generatie tekst-naar-beeldmodelserie"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4e generatie tekst-naar-beeld modelserie"
+    "description": "Imagen vierde generatie tekst-naar-beeld modelserie"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 4e generatie tekst-naar-beeldmodelserie, Ultra-versie"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4e generatie tekst-naar-beeld modelserie Ultra versie"
+    "description": "Ultra-versie van de vierde generatie Imagen tekst-naar-beeld modelserie"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small is ideaal voor codegeneratie, debugging en refactoring taken met minimale latentie."
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "De Tongyi Qianwen 3-serie Max modellen bieden een aanzienlijke verbetering ten opzichte van de 2.5-serie in algemene capaciteiten, waaronder meertalige tekstbegrip in het Chinees en Engels, complexe instructienaleving, open subjectieve taken, meertalige ondersteuning en tool-integratie; het model vertoont minder kennishallucinaties. De nieuwste qwen3-max modellen zijn, vergeleken met de qwen3-max-preview versie, speciaal geüpgraded op het gebied van agent programmering en tool-integratie. De officiële release van dit model bereikt SOTA-niveau in het domein en is geschikt voor complexere agentbehoeften."
+  },
+  "qwen3-max-preview": {
+    "description": "Het krachtigste model uit de Tongyi Qianwen-serie, geschikt voor complexe en meerstaps taken. Voorbeeldversie ondersteunt al redeneren."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Een nieuwe generatie open-source model zonder denkmodus gebaseerd op Qwen3, met verbeterde Chinese tekstbegrip, versterkte logische redeneervaardigheden en betere prestaties bij tekstgeneratietaken vergeleken met de vorige versie (Tongyi Qianwen 3-235B-A22B-Instruct-2507)."

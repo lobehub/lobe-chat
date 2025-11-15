@@ -383,6 +383,8 @@
         "manualDesc": "매번 호출 시 수동 승인 필요"
       },
       "reject": "거부",
+      "rejectAndContinue": "거부 후 다시 실행",
+      "rejectOnly": "거부",
       "rejectReasonPlaceholder": "거부 사유를 입력하면 에이전트가 이해하고 이후 행동을 최적화하는 데 도움이 됩니다",
       "rejectTitle": "이번 도구 호출 거부",
       "rejectedWithReason": "이번 도구 호출이 다음 사유로 거부됨: {{reason}}",

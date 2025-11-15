@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro 運用更多運算資源進行更深入的思考，持續提供更優質的答案。"
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — 為編碼與代理任務優化的旗艦模型，支援可調整的推理強度與更長的上下文。"
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat：用於 ChatGPT 的 GPT-5.1 變體，適合對話場景。"
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex：針對代理型編碼任務優化的 GPT-5.1 版本，可於 Responses API 中用於更複雜的程式碼／代理工作流程。"
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini：體積更小、成本更低的 Codex 變體，針對代理型編碼任務進行了優化。"
+  },
   "gpt-audio": {
     "description": "GPT Audio 是面向音訊輸入輸出的通用聊天模型，支援在 Chat Completions API 中使用音訊 I/O。"
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen 第四代文字生成影像模型系列"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 第四代文字轉圖像模型系列"
+    "description": "Imagen 第四代文字生成圖像模型系列"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 第四代文字生成影像模型系列 Ultra 版"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 第四代文字轉圖像模型系列 超級版"
+    "description": "Imagen 第四代文字生成圖像模型系列的 Ultra 版本"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small 是程式碼生成、除錯和重構任務的理想選擇，具有最小延遲。"
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "通義千問3系列Max模型，相較2.5系列整體通用能力有大幅度提升，中英文通用文本理解能力、複雜指令遵循能力、主觀開放任務能力、多語言能力、工具調用能力均顯著增強；模型知識幻覺更少。最新的qwen3-max模型：相較qwen3-max-preview版本，在智能體編程與工具調用方向進行了專項升級。本次發布的正式版模型達到領域SOTA水平，適配場景更加複雜的智能體需求。"
+  },
+  "qwen3-max-preview": {
+    "description": "通義千問系列中效果最佳的模型，適合處理複雜、多步驟的任務。預覽版已支援推理能力。"
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "基於 Qwen3 的新一代非思考模式開源模型，相較上一版本（通義千問3-235B-A22B-Instruct-2507）中文文本理解能力更佳、邏輯推理能力有增強、文本生成類任務表現更好。"

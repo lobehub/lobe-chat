@@ -383,6 +383,8 @@
         "manualDesc": "Jede Ausführung muss manuell genehmigt werden"
       },
       "reject": "Ablehnen",
+      "rejectAndContinue": "Ablehnen und erneut ausführen",
+      "rejectOnly": "Ablehnen",
       "rejectReasonPlaceholder": "Die Angabe eines Ablehnungsgrundes hilft dem Agenten, zukünftige Aktionen zu verbessern",
       "rejectTitle": "Tool-Ausführung ablehnen",
       "rejectedWithReason": "Die Tool-Ausführung wurde abgelehnt: {{reason}}",

@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro는 더 많은 연산을 활용하여 더 깊이 있는 사고를 수행하고 지속적으로 더 나은 답변을 제공합니다."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — 코드 작성 및 에이전트 작업에 최적화된 플래그십 모델로, 구성 가능한 추론 강도와 더 긴 컨텍스트를 지원합니다."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: 채팅 환경에 적합하도록 설계된 ChatGPT용 GPT-5.1 변형 모델입니다."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: 에이전트 기반의 코드 작업에 최적화된 GPT-5.1 버전으로, Responses API에서 복잡한 코드 및 에이전트 워크플로우에 사용할 수 있습니다."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: 더 작고 비용 효율적인 Codex 변형으로, 에이전트 기반 코드 작업에 최적화되어 있습니다."
+  },
   "gpt-audio": {
     "description": "GPT Audio는 오디오 입출력을 위한 범용 대화 모델로, Chat Completions API에서 오디오 I/O 사용을 지원합니다."
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen 4세대 텍스트-이미지 모델 시리즈"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4세대 텍스트-이미지 모델 시리즈"
+    "description": "Imagen 4세대 텍스트-투-이미지 생성 모델 시리즈"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 4세대 텍스트 기반 이미지 생성 모델 시리즈 Ultra 버전"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4세대 텍스트-이미지 모델 시리즈 울트라 버전"
+    "description": "Imagen 4세대 텍스트-투-이미지 생성 모델 시리즈의 Ultra 버전"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small은 코드 생성, 디버깅 및 리팩토링 작업에 이상적이며, 최소 지연 시간을 자랑합니다."
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "통의천문3 시리즈 Max 모델로, 2.5 시리즈에 비해 전반적인 범용 능력이 크게 향상되었습니다. 중영문 범용 텍스트 이해 능력, 복잡한 지시 준수 능력, 주관적 개방형 작업 능력, 다국어 능력, 도구 호출 능력이 모두 크게 강화되었으며, 모델의 지식 환각 현상이 줄어들었습니다. 최신 qwen3-max 모델은 qwen3-max-preview 버전에 비해 에이전트 프로그래밍 및 도구 호출 방향에서 특별 업그레이드를 거쳤습니다. 이번 정식 버전 모델은 분야별 SOTA 수준에 도달했으며, 더욱 복잡한 에이전트 요구에 적합한 환경에 맞춰졌습니다."
+  },
+  "qwen3-max-preview": {
+    "description": "Tongyi Qianwen 시리즈 중 가장 뛰어난 성능을 가진 모델로, 복잡하고 다단계 작업에 적합합니다. 프리뷰 버전은 사고 기능을 지원합니다."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 기반의 차세대 비사고 모드 오픈 소스 모델로, 이전 버전(통의천문3-235B-A22B-Instruct-2507)과 비교하여 중국어 텍스트 이해 능력이 향상되었고, 논리 추론 능력이 강화되었으며, 텍스트 생성 작업에서 더 우수한 성능을 보입니다."

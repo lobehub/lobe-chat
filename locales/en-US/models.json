@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 Pro leverages greater computational power for deeper reasoning and consistently delivers improved answers."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — A flagship model optimized for coding and agent tasks, featuring configurable reasoning strength and extended context support."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: A variant of GPT-5.1 tailored for ChatGPT, ideal for conversational scenarios."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: A GPT-5.1 variant optimized for agentic coding tasks, designed for more complex code/agent workflows via the Responses API."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: A smaller, more cost-effective Codex variant optimized for agentic coding tasks."
+  },
   "gpt-audio": {
     "description": "GPT Audio is a general-purpose chat model designed for audio input and output, supporting audio I/O in the Chat Completions API."
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen 4th-generation text-to-image model series"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4th generation text-to-image model series"
+    "description": "Imagen 4th-generation text-to-image model series."
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 4th-generation text-to-image model, Ultra version"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4th generation text-to-image model series Ultra version"
+    "description": "Ultra version of the 4th-generation Imagen text-to-image model series."
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small is ideal for code generation, debugging, and refactoring tasks, offering minimal latency."
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "Tongyi Qianwen 3 series Max model, which shows significant overall improvements compared to the 2.5 series, including enhanced bilingual (Chinese and English) text understanding, complex instruction following, subjective open-domain task capabilities, multilingual support, and tool invocation abilities; the model also exhibits fewer hallucinations. The latest qwen3-max model features specialized upgrades in agent programming and tool invocation compared to the qwen3-max-preview version. The officially released model achieves state-of-the-art performance in its domain and is adapted to more complex agent scenarios."
+  },
+  "qwen3-max-preview": {
+    "description": "The most advanced model in the Qwen series, ideal for complex, multi-step tasks. Preview version now supports reasoning."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "A new generation of non-thinking mode open-source model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Instruct-2507), it offers better Chinese text comprehension, enhanced logical reasoning abilities, and improved performance in text generation tasks."

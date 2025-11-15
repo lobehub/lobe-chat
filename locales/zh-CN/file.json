@@ -1,4 +1,5 @@
 {
+  "addFolder": "创建文件夹",
   "addKnowledge": "添加知识",
   "addPage": "创建文稿",
   "desc": "管理你的工作、学习与生活知识。",
@@ -65,6 +66,7 @@
   "header": {
     "actions": {
       "newFolder": "新建文件夹",
+      "newPage": "新建文稿",
       "uploadFile": "上传文件",
       "uploadFolder": "上传文件夹"
     },
