@@ -1,4 +1,5 @@
 {
+  "addFolder": "Klasör Oluştur",
   "addKnowledge": "Bilgi Ekle",
   "addPage": "Belge Oluştur",
   "desc": "Çalışma, öğrenme ve yaşam bilginizi yönetin.",
@@ -65,6 +66,7 @@
   "header": {
     "actions": {
       "newFolder": "Yeni Klasör",
+      "newPage": "Yeni Belge",
       "uploadFile": "Dosya Yükle",
       "uploadFolder": "Klasör Yükle"
     },

@@ -51,12 +51,12 @@ export class ApiKeyModel {
       where: eq(apiKeys.userId, this.userId),
     });
 
-    // 如果没有提供解密器，直接返回原始结果
+    // If no decryptor is provided, return the original results directly
     if (!decryptor) {
       return results;
     }
 
-    // 对每个 API Key 的 key 字段进行解密
+    // Decrypt the key field for each API Key
     const decryptedResults = await Promise.all(
       results.map(async (apiKey) => {
         const decryptedKey = await decryptor(apiKey.key);

@@ -24,9 +24,9 @@ const useStyles = createStyles(({ css, token }) => ({
     cursor: pointer;
 
     position: relative;
-    flex-shrink: 0;
 
     overflow: hidden;
+    flex-shrink: 0;
 
     width: 280px;
     padding: 12px;
@@ -46,9 +46,11 @@ const useStyles = createStyles(({ css, token }) => ({
     display: flex;
     align-items: center;
     justify-content: center;
+
     height: 160px;
     margin-block-end: 12px;
     border-radius: ${token.borderRadius}px;
+
     background: ${token.colorBgLayout};
   `,
   imagePreview: css`
@@ -56,8 +58,9 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 160px;
     margin-block-end: 12px;
     border-radius: ${token.borderRadius}px;
-    background: ${token.colorBgLayout};
+
     object-fit: cover;
+    background: ${token.colorBgLayout};
   `,
   info: css`
     font-size: 12px;

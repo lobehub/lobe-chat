@@ -383,6 +383,8 @@
         "manualDesc": "نیاز به تأیید دستی برای هر بار فراخوانی"
       },
       "reject": "رد کردن",
+      "rejectAndContinue": "رد کردن و تلاش مجدد برای اجرا",
+      "rejectOnly": "رد کردن",
       "rejectReasonPlaceholder": "وارد کردن دلیل رد به Agent کمک می‌کند تا اقدامات بعدی را بهینه کند",
       "rejectTitle": "رد این فراخوانی ابزار",
       "rejectedWithReason": "این فراخوانی ابزار با دلیل زیر رد شد:{{reason}}",

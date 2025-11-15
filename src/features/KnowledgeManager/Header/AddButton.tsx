@@ -3,7 +3,7 @@
 import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
-import { FilePenLine, FileUp, FolderUp, Plus } from 'lucide-react';
+import { FilePenLine, FileUp, FolderIcon, FolderUp, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,13 +34,24 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
     setIsModalOpen(false);
   };
 
+  const handleCreateFolder = () => {
+    setIsModalOpen(false);
+    console.log('create folder');
+  };
+
   const items = useMemo<MenuProps['items']>(
     () => [
       {
         icon: <Icon icon={FilePenLine} />,
         key: 'create-note',
-        label: t('addPage'),
+        label: t('header.actions.newPage'),
         onClick: handleOpenNoteEditor,
+      },
+      {
+        icon: <Icon icon={FolderIcon} />,
+        key: 'create-folder',
+        label: t('header.actions.newFolder'),
+        onClick: handleCreateFolder,
       },
       {
         type: 'divider',
@@ -58,7 +69,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
             multiple={true}
             showUploadList={false}
           >
-            <div className={cx(hotArea)}>Upload File</div>
+            <div className={cx(hotArea)}>{t('header.actions.uploadFile')}</div>
           </Upload>
         ),
       },
@@ -76,7 +87,7 @@ const AddButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => {
             multiple={true}
             showUploadList={false}
           >
-            <div className={cx(hotArea)}>Upload Folder</div>
+            <div className={cx(hotArea)}>{t('header.actions.uploadFolder')}</div>
           </Upload>
         ),
       },

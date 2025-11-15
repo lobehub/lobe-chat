@@ -38,9 +38,9 @@ const useStyles = createStyles(({ css, token }) => ({
     user-select: none;
 
     position: relative;
-    flex-shrink: 0;
 
     overflow: hidden;
+    flex-shrink: 0;
 
     width: 280px;
     height: 180px;
@@ -57,23 +57,24 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   noteContent: css`
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 12px;
+
     height: 100%;
-    overflow: hidden;
+    padding: 12px;
   `,
   notePreview: css`
     overflow: hidden;
     display: -webkit-box;
+    flex: 1;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
 
     font-size: 13px;
     line-height: 1.6;
     color: ${token.colorTextSecondary};
-    flex: 1;
   `,
   noteTitle: css`
     overflow: hidden;

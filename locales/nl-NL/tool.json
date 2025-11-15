@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "Bestand",
     "folder": "Map",
+    "moveFiles": {
+      "itemsMoved": "{{count}} items verplaatst:",
+      "itemsMoved_one": "{{count}} item verplaatst:",
+      "itemsMoved_other": "{{count}} items verplaatst:",
+      "itemsToMove": "{{count}} items te verplaatsen:",
+      "itemsToMove_one": "{{count}} item te verplaatsen:",
+      "itemsToMove_other": "{{count}} items te verplaatsen:"
+    },
     "open": "Openen",
     "openFile": "Bestand openen",
     "openFolder": "Map openen",

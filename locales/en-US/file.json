@@ -1,4 +1,5 @@
 {
+  "addFolder": "Create Folder",
   "addKnowledge": "Add Knowledge",
   "addPage": "Create Document",
   "desc": "Manage your knowledge for work, study, and life.",
@@ -65,6 +66,7 @@
   "header": {
     "actions": {
       "newFolder": "New Folder",
+      "newPage": "New Document",
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },

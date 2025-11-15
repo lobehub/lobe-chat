@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro wykorzystuje większą moc obliczeniową do głębszego rozumowania i konsekwentnie dostarcza lepsze odpowiedzi."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — flagowy model zoptymalizowany pod kątem zadań związanych z kodowaniem i agentami, oferujący konfigurowalną intensywność wnioskowania oraz dłuższy kontekst."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: wariant GPT-5.1 przeznaczony do ChatGPT, idealny do zastosowań konwersacyjnych."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: wersja GPT-5.1 zoptymalizowana pod kątem zadań kodowania z udziałem agentów, dostępna w API odpowiedzi do bardziej złożonych przepływów pracy z kodem i agentami."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: mniejszy i tańszy wariant Codex, zoptymalizowany do zadań kodowania z udziałem agentów."
+  },
   "gpt-audio": {
     "description": "GPT Audio to uniwersalny model konwersacyjny obsługujący wejście i wyjście audio, dostępny w API Chat Completions z obsługą audio I/O."
   },
@@ -2028,13 +2040,13 @@
     "description": "Seria modeli Imagen czwartej generacji do tworzenia obrazów na podstawie tekstu"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Seria modeli tekst-na-obraz Imagen czwartej generacji"
+    "description": "Czwarta generacja modeli Imagen do generowania obrazów z tekstu."
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen — seria modeli przekształcających tekst w obraz czwartej generacji, wersja Ultra"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Seria modeli tekst-na-obraz Imagen czwartej generacji, wersja Ultra"
+    "description": "Wersja Ultra czwartej generacji modeli Imagen do generowania obrazów z tekstu."
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small to idealny wybór do generowania, debugowania i refaktoryzacji kodu, oferujący minimalne opóźnienia."
@@ -2774,6 +2786,54 @@
   "pro-deepseek-v3": {
     "description": "Model przeznaczony do usług dedykowanych dla przedsiębiorstw, obsługujący usługi równoległe."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, duży chiński model językowy, odpowiedni do generowania treści wysokiej jakości i złożonych zadań wnioskowania."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, średniej wielkości uniwersalny model, idealny do generowania tekstu i scenariuszy pytań i odpowiedzi z równowagą między kosztem a wydajnością."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, model do rozpoznawania intencji i orkiestracji agentów, obsługujący scenariusze z długim kontekstem."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, lekki model agenta, odpowiedni do niskokosztowych, wieloetapowych dialogów i orkiestracji procesów biznesowych."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, model agenta o wysokiej przepustowości, idealny do dużych, wielozadaniowych aplikacji agentowych."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, model agenta o wysokiej równoległości, przeznaczony do krótkich dialogów i szybkich odpowiedzi."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, multimodalny model do moderacji i wykrywania treści, wspierający zgodność i rozpoznawanie obrazów i tekstu."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, multimodalny model twórczy, obsługujący zintegrowane rozumienie i generowanie obrazów i tekstu."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, multimodalny model rozpoznawania skoncentrowany na scenariuszach w języku angielskim."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, wydajny chiński model ogólnego przeznaczenia, odpowiedni do złożonych pytań i dużych zadań wnioskowania."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, multimodalny model oparty na Llama, przeznaczony do ogólnych zadań rozumienia obrazów i tekstu."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, model OCR dla wielu obrazów, obsługujący wykrywanie i rozpoznawanie tekstu na wielu zdjęciach."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, multimodalny model pytań i odpowiedzi, wspierający precyzyjne wyszukiwanie i odpowiedzi w złożonych scenariuszach obrazowo-tekstowych."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, model OCR dla pojedynczego obrazu, zapewniający wysoką precyzję rozpoznawania znaków."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, duży model językowo-wizualny, odpowiedni do złożonych zadań rozumienia obrazów i tekstu."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, lekki model językowo-wizualny, idealny do codziennych pytań i analiz obrazowo-tekstowych."
+  },
   "qvq-72b-preview": {
     "description": "Model QVQ jest eksperymentalnym modelem badawczym opracowanym przez zespół Qwen, skoncentrowanym na zwiększeniu zdolności w zakresie rozumowania wizualnego, szczególnie w dziedzinie rozumowania matematycznego."
   },
@@ -2924,7 +2984,9 @@
   "qwen2.5-72b-instruct": {
     "description": "Model Qwen 2.5 o skali 72B, udostępniony na zasadzie open source."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, dojrzały model open-source do instrukcji, odpowiedni do dialogów i generowania w różnych scenariuszach."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Otwarta wersja modelu kodowania Qwen."
   },
@@ -2955,11 +3017,15 @@
   "qwen2.5-omni-7b": {
     "description": "Model serii Qwen-Omni obsługuje wprowadzanie danych w różnych modalnościach, w tym wideo, audio, obrazy i tekst, oraz generuje audio i tekst."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, multimodalny model open-source, odpowiedni do wdrożeń prywatnych i zastosowań w wielu scenariuszach."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Zwiększona zdolność do podążania za instrukcjami, matematyki, rozwiązywania problemów i kodowania, poprawiona zdolność do rozpoznawania obiektów, wsparcie dla różnych formatów do precyzyjnego lokalizowania elementów wizualnych, zdolność do rozumienia długich plików wideo (do 10 minut) oraz lokalizowania momentów zdarzeń w czasie rzeczywistym, zdolność do rozumienia kolejności czasowej i szybkości, wsparcie dla operacji na systemach OS lub Mobile, silna zdolność do ekstrakcji kluczowych informacji i generowania wyjścia w formacie JSON. Ta wersja to wersja 72B, najsilniejsza w tej serii."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, lekki multimodalny model, łączący niskie koszty wdrożenia z dobrą zdolnością rozpoznawania."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL to najnowsza wersja modelu wizualno-lingwistycznego rodziny Qwen."
   },
@@ -2984,22 +3050,48 @@
   "qwen3": {
     "description": "Qwen3 to nowa generacja dużego modelu językowego od Alibaba, który wspiera różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, model podstawowy, odpowiedni do prostych zadań wnioskowania i środowisk o bardzo ograniczonych zasobach."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, ultralekki model, łatwy do wdrożenia na urządzeniach brzegowych i końcowych."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, model średniej wielkości, odpowiedni do wielojęzycznych pytań i generowania tekstu."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, uniwersalny duży model, przeznaczony do różnorodnych złożonych zadań."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, flagowy model instrukcji ogólnego przeznaczenia, odpowiedni do generowania i wnioskowania."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, model do głębokiego wnioskowania na dużą skalę, przeznaczony do trudnych zadań logicznych."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, średnio-duży model ogólnego przeznaczenia, zapewniający równowagę między kosztem a wydajnością."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, średnio-duży model instrukcji, odpowiedni do generowania wysokiej jakości treści i pytań."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, średnio-duży model do wnioskowania, łączący precyzję z efektywnością kosztową."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, odpowiedni do ogólnych zadań wymagających większych zdolności rozumienia."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, odpowiedni do małych i średnich aplikacji oraz lokalnych scenariuszy wnioskowania."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, lekki model, elastyczny w wdrożeniu, odpowiedni do zastosowań o wysokiej równoległości."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Otwartoźródłowa wersja modelu kodowania Tongyi Qianwen. Najnowszy qwen3-coder-30b-a3b-instruct to model generowania kodu oparty na Qwen3, wyposażony w zaawansowane możliwości agenta kodującego, doskonale radzący sobie z wywoływaniem narzędzi i interakcją ze środowiskiem, umożliwiający autonomiczne programowanie i łączący doskonałe umiejętności kodowania z ogólnymi zdolnościami."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, flagowy model kodowania, obsługujący programowanie w wielu językach i złożone rozumienie kodu."
+  },
   "qwen3-coder-flash": {
     "description": "Model kodowania Tongyi Qianwen. Najnowsza seria modeli Qwen3-Coder oparta na Qwen3 to modele generujące kod, posiadające potężne zdolności agenta kodującego, biegłe w wywoływaniu narzędzi i interakcji ze środowiskiem, umożliwiające autonomiczne programowanie, łącząc doskonałe umiejętności kodowania z uniwersalnymi zdolnościami."
   },
@@ -3012,19 +3104,42 @@
   "qwen3-max": {
     "description": "Model serii Tongyi Qianwen 3 Max, który w porównaniu do serii 2.5 oferuje znacznie ulepszone zdolności ogólne, w tym rozumienie tekstu w języku chińskim i angielskim, zdolność do wykonywania złożonych instrukcji, zadania otwarte o charakterze subiektywnym, wielojęzyczność oraz wywoływanie narzędzi; model cechuje się mniejszą halucynacją wiedzy. Najnowsza wersja qwen3-max, w porównaniu do wersji podglądowej qwen3-max-preview, została specjalnie ulepszona w zakresie programowania agentów i wywoływania narzędzi. Wydany oficjalny model osiąga poziom SOTA w swojej dziedzinie i jest dostosowany do bardziej złożonych scenariuszy zastosowań agentów."
   },
+  "qwen3-max-preview": {
+    "description": "Najbardziej zaawansowany model z serii Tongyi Qianwen, odpowiedni do złożonych, wieloetapowych zadań. Wersja podglądowa obsługuje już rozumowanie."
+  },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Nowa generacja otwartego modelu bez trybu myślenia oparta na Qwen3, która w porównaniu z poprzednią wersją (Tongyi Qianwen 3-235B-A22B-Instruct-2507) cechuje się lepszym rozumieniem tekstu w języku chińskim, wzmocnionymi zdolnościami wnioskowania logicznego oraz lepszą wydajnością w zadaniach generowania tekstu."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, flagowa wersja modelu do wnioskowania, przeznaczona do złożonych zadań."
+  },
   "qwen3-omni-flash": {
     "description": "Model Qwen-Omni obsługuje wejścia w różnych modalnościach, takich jak tekst, obraz, dźwięk i wideo, generując odpowiedzi w formie tekstu lub mowy. Oferuje różnorodne, naturalnie brzmiące głosy, wspiera wiele języków i dialektów, i znajduje zastosowanie w takich obszarach jak tworzenie tekstów, rozpoznawanie obrazów czy asystenci głosowi."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, flagowy model multimodalny, przeznaczony do zaawansowanego rozumienia i twórczości."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, flagowa wersja do głębokiego wnioskowania, przeznaczona do złożonych zadań multimodalnych i planowania."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, duży model multimodalny, łączący precyzję z wydajnością wnioskowania."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, wersja do głębokiego wnioskowania dla złożonych zadań multimodalnych."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, multimodalny model dostrojony do instrukcji, odpowiedni do wysokiej jakości pytań obrazowo-tekstowych i twórczości."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, wersja do głębokiego multimodalnego wnioskowania, wzmacniająca złożone analizy i długie łańcuchy logiczne."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, lekki model multimodalny, odpowiedni do codziennych pytań wizualnych i integracji aplikacji."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, multimodalny model łańcucha myślenia, odpowiedni do szczegółowego wnioskowania na podstawie informacji wizualnych."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: lekka, szybka wersja do wnioskowania, idealna do zastosowań wrażliwych na opóźnienia lub wymagających obsługi dużej liczby żądań."
   },
