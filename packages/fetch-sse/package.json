@@ -24,6 +24,6 @@
     "@lobechat/model-runtime": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "i18next": "^24.2.1"
+    "i18next": "^24.2.3"
   }
 }
