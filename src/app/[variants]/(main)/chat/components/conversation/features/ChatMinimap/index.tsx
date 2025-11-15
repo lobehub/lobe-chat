@@ -5,6 +5,7 @@ import { Popover, Tooltip } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import debug from 'debug';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { markdownToTxt } from 'markdown-to-txt';
 import { memo, useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -23,7 +24,7 @@ const log = debug('lobe-react:chat-minimap');
 const MIN_WIDTH = 16;
 const MAX_WIDTH = 30;
 const MAX_CONTENT_LENGTH = 320;
-const MIN_MESSAGES = 4;
+const MIN_MESSAGES = 3;
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`
@@ -178,7 +179,8 @@ const getIndicatorWidth = (content: string | undefined) => {
 const getPreviewText = (content: string | undefined) => {
   if (!content) return '';
 
-  const normalized = content.replaceAll(/\s+/g, ' ').trim();
+  const plainText = markdownToTxt(content);
+  const normalized = plainText.replaceAll(/\s+/g, ' ').trim();
   if (!normalized) return '';
 
   return normalized.slice(0, 100) + (normalized.length > 100 ? '…' : '');

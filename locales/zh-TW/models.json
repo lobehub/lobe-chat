@@ -2774,6 +2774,54 @@
   "pro-deepseek-v3": {
     "description": "企業專屬服務專用模型，包含並發服務。"
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B，大參數中文模型，適合高品質內容生成與複雜推理任務。"
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B，中型通用模型，適合成本與效果平衡的文字生成與問答場景。"
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K，面向意圖識別與智能體編排的模型，支援長上下文場景。"
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K，輕量智能體模型，適合低成本多輪對話與業務編排。"
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K，高流控智能體模型，適合大規模、多任務 Agent 應用。"
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K，面向中短對話與快速回應的高併發智能體模型。"
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL，多模態內容審核與檢測模型，支援圖文合規與識別任務。"
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition，多模態創作模型，支援圖文混合理解與生成。"
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL，專注英文場景的多模態識別模型。"
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B，高效能中文通用模型，適用於複雜問答與大規模推理任務。"
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B，基於 Llama 的多模態模型，面向通用圖文理解任務。"
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR，多圖 OCR 模型，支援多張圖片文字檢測與識別。"
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL，多模態問答模型，支援複雜圖文場景下的精準檢索與問答。"
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR，單圖 OCR 模型，支援高精度字元識別。"
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B，大參數視覺語言模型，適用於複雜圖文理解場景。"
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B，輕量視覺語言模型，適合日常圖文問答與分析。"
+  },
   "qvq-72b-preview": {
     "description": "QVQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於提升視覺推理能力，尤其在數學推理領域。"
   },
@@ -2924,7 +2972,9 @@
   "qwen2.5-72b-instruct": {
     "description": "通義千問2.5對外開源的72B規模的模型。"
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct，成熟的開源指令模型，適用於多場景對話與生成。"
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "通義千問代碼模型開源版。"
   },
@@ -2955,11 +3005,15 @@
   "qwen2.5-omni-7b": {
     "description": "Qwen-Omni 系列模型支援輸入多種模態的數據，包括視頻、音頻、圖片、文本，並輸出音頻與文本。"
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct，多模態開源模型，適合私有化部署與多場景應用。"
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "指令跟隨、數學、解題、代碼整體提升，萬物識別能力提升，支持多樣格式直接精準定位視覺元素，支持對長視頻文件（最長10分鐘）進行理解和秒級別的事件時刻定位，能理解時間先後和快慢，基於解析和定位能力支持操控OS或Mobile的Agent，關鍵信息抽取能力和Json格式輸出能力強，此版本為72B版本，本系列能力最強的版本。"
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct，輕量多模態模型，兼顧部署成本與識別能力。"
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL 是 Qwen 模型系列中最新版本的視覺語言模型。"
   },
@@ -2984,22 +3038,48 @@
   "qwen3": {
     "description": "Qwen3 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B，入門級模型，適用於簡單推理與資源極度受限環境。"
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B，超輕量模型，便於邊緣與終端部署。"
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B，中型模型，適合多語言問答與文字生成。"
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B，通用大型模型，面向多種複雜任務。"
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507，通用旗艦 Instruct 模型，適合多種生成與推理任務。"
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507，超大規模思考模型，適用於高難度推理。"
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B，中大型通用模型，在成本與效果間取得平衡。"
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507，中大型 Instruct 模型，適合高品質生成與問答。"
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507，中大型思考模型，兼顧精度與成本。"
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B，適合需要更強理解能力的通用任務場景。"
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B，適合中小型應用與本地推理場景。"
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B，輕量模型，部署靈活，適用於高併發業務。"
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "通義千問程式碼模型開源版。最新的 qwen3-coder-30b-a3b-instruct 是基於 Qwen3 的程式碼生成模型，具備強大的 Coding Agent 能力，擅長工具調用與環境互動，能夠實現自主編程，程式能力卓越，同時兼具通用能力。"
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct，旗艦級程式碼模型，支援多語言編程與複雜程式碼理解。"
+  },
   "qwen3-coder-flash": {
     "description": "通義千問程式碼模型。最新的 Qwen3-Coder 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的Coding Agent能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
   },
@@ -3015,16 +3095,36 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "基於 Qwen3 的新一代非思考模式開源模型，相較上一版本（通義千問3-235B-A22B-Instruct-2507）中文文本理解能力更佳、邏輯推理能力有增強、文本生成類任務表現更好。"
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking，面向複雜任務的旗艦推理模型版本。"
+  },
   "qwen3-omni-flash": {
     "description": "Qwen-Omni 模型能夠接收文字、圖片、音訊、影片等多種模態的組合輸入，並生成文字或語音形式的回應，提供多種擬人化音色，支援多語言與方言語音輸出，適用於文字創作、視覺辨識、語音助理等場景。"
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct，旗艦多模態模型，面向高要求理解與創作場景。"
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking，旗艦思考版，用於複雜多模態推理與規劃任務。"
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct，多模態大型模型，兼顧精度與推理效能。"
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking，面向複雜多模態任務的深度思考版本。"
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct，多模態指令微調模型，適用於高品質圖文問答與創作。"
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking，多模態深度思考版本，強化複雜推理與長鏈路分析。"
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct，輕量多模態模型，適合日常視覺問答與應用整合。"
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking，多模態思維鏈模型，適合對視覺資訊進行細緻推理。"
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash：輕量化高速推理版本，適用於對延遲敏感或大量請求的場景。"
   },

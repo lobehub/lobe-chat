@@ -1,4 +1,5 @@
 import { RunCommandParams } from '@lobechat/electron-client-ipc';
+import { BuiltinInterventionProps } from '@lobechat/types';
 import { Highlighter, Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -23,11 +24,8 @@ const formatTimeout = (ms?: number) => {
   return `${ms}ms`;
 };
 
-interface RunCommandProps extends RunCommandParams {
-  messageId: string;
-}
-
-const RunCommand = memo<RunCommandProps>(({ description, command, timeout }) => {
+const RunCommand = memo<BuiltinInterventionProps<RunCommandParams>>(({ args }) => {
+  const { description, command, timeout } = args;
   return (
     <Flexbox gap={8}>
       <Flexbox horizontal justify={'space-between'}>

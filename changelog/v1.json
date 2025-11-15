@@ -1,6 +1,63 @@
 [
   {
     "children": {
+      "fixes": ["Reduce threshold."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.60"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.59"
+  },
+  {
+    "children": {
+      "features": ["Support DeepSeek Interleaved thinking."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.58"
+  },
+  {
+    "children": {
+      "improvements": ["Revert background style."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.57"
+  },
+  {
+    "children": {
+      "features": ["Add folder creation UI and clean up debug code."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.56"
+  },
+  {
+    "children": {
+      "features": ["Create Pages in Knowledge Base."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.55"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor and support move locale file intervention."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.54"
+  },
+  {
+    "children": {
+      "features": ["Add GPT-5.1 models."],
+      "improvements": ["Fix approving render and improve Conversation style."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.53"
+  },
+  {
+    "children": {
       "fixes": ["Filter out reasoning fields from messages in ChatCompletion API."]
     },
     "date": "2025-11-13",

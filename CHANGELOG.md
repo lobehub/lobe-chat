@@ -2,6 +2,216 @@
 
 # Changelog
 
+## [Version 2.0.0-next.60](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.59...v2.0.0-next.60)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Reduce threshold.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Reduce threshold, closes [#10222](https://github.com/lobehub/lobe-chat/issues/10222) ([abdfd06](https://github.com/lobehub/lobe-chat/commit/abdfd06))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.59](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.58...v2.0.0-next.59)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10205](https://github.com/lobehub/lobe-chat/issues/10205) ([fc57d2a](https://github.com/lobehub/lobe-chat/commit/fc57d2a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.58](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.57...v2.0.0-next.58)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Support DeepSeek Interleaved thinking.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support DeepSeek Interleaved thinking, closes [#10219](https://github.com/lobehub/lobe-chat/issues/10219) ([3736a85](https://github.com/lobehub/lobe-chat/commit/3736a85))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.57](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.56...v2.0.0-next.57)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Revert background style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Revert background style, closes [#10218](https://github.com/lobehub/lobe-chat/issues/10218) ([97b0413](https://github.com/lobehub/lobe-chat/commit/97b0413))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.56](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.55...v2.0.0-next.56)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add folder creation UI and clean up debug code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add folder creation UI and clean up debug code ([d5ecd0a](https://github.com/lobehub/lobe-chat/commit/d5ecd0a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.55](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.54...v2.0.0-next.55)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### ✨ Features
+
+- **image**: Image model show price.
+- **misc**: Create Pages in Knowledge Base.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **image**: Image model show price, closes [#10198](https://github.com/lobehub/lobe-chat/issues/10198) ([b87e0e4](https://github.com/lobehub/lobe-chat/commit/b87e0e4))
+- **misc**: Create Pages in Knowledge Base, closes [#9895](https://github.com/lobehub/lobe-chat/issues/9895) ([f46edeb](https://github.com/lobehub/lobe-chat/commit/f46edeb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.54](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.53...v2.0.0-next.54)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Refactor and support move locale file intervention.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Refactor and support move locale file intervention, closes [#10213](https://github.com/lobehub/lobe-chat/issues/10213) ([63cac81](https://github.com/lobehub/lobe-chat/commit/63cac81))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.53](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.52...v2.0.0-next.53)
+
+<sup>Released on **2025-11-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add GPT-5.1 models.
+
+#### 💄 Styles
+
+- **misc**: Fix approving render and improve Conversation style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add GPT-5.1 models, closes [#10206](https://github.com/lobehub/lobe-chat/issues/10206) ([afd3a47](https://github.com/lobehub/lobe-chat/commit/afd3a47))
+
+#### Styles
+
+- **misc**: Fix approving render and improve Conversation style, closes [#10210](https://github.com/lobehub/lobe-chat/issues/10210) ([841b7f1](https://github.com/lobehub/lobe-chat/commit/841b7f1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.52](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.51...v2.0.0-next.52)
 
 <sup>Released on **2025-11-13**</sup>

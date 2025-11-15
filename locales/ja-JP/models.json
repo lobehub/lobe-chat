@@ -2774,6 +2774,54 @@
   "pro-deepseek-v3": {
     "description": "企業向け専用サービスモデルで、同時接続サービスを含みます。"
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B、大規模パラメータの中国語モデルで、高品質なコンテンツ生成や複雑な推論タスクに適しています。"
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B、中規模の汎用モデルで、コストと効果のバランスが取れたテキスト生成やQAシナリオに適しています。"
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K、意図認識とエージェントのオーケストレーション向けモデルで、長文脈シナリオをサポートします。"
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K、軽量なエージェントモデルで、低コストのマルチターン対話や業務オーケストレーションに適しています。"
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K、高スループットのエージェントモデルで、大規模かつ多タスクなエージェントアプリケーションに適しています。"
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K、中短距離の対話や高速応答に対応した高並列エージェントモデルです。"
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL、マルチモーダルなコンテンツ審査・検出モデルで、画像とテキストの適合性チェックや認識タスクをサポートします。"
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition、マルチモーダル創作モデルで、画像とテキストの統合的な理解と生成を可能にします。"
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL、英語シナリオに特化したマルチモーダル認識モデルです。"
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B、高性能な中国語汎用モデルで、複雑なQAや大規模推論タスクに適しています。"
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B、Llamaベースのマルチモーダルモデルで、汎用的な画像と言語の理解タスクに対応します。"
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR、複数画像対応のOCRモデルで、複数の画像からの文字検出と認識をサポートします。"
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL、マルチモーダルQAモデルで、複雑な画像と言語のシナリオにおける高精度な検索と応答を実現します。"
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR、単一画像用のOCRモデルで、高精度な文字認識をサポートします。"
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B、大規模パラメータのビジュアル・ランゲージモデルで、複雑な画像と言語の理解に適しています。"
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B、軽量なビジュアル・ランゲージモデルで、日常的な画像と言語のQAや分析に適しています。"
+  },
   "qvq-72b-preview": {
     "description": "QVQモデルはQwenチームによって開発された実験的研究モデルで、視覚推論能力の向上に特化しており、特に数学推論の分野で優れた性能を発揮。"
   },
@@ -2924,7 +2972,9 @@
   "qwen2.5-72b-instruct": {
     "description": "通義千問2.5の対外オープンソースの72B規模のモデルです。"
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct、成熟したオープンソースの指示モデルで、様々な対話や生成シナリオに対応します。"
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "通義千問コードモデルのオープンソース版です。"
   },
@@ -2955,11 +3005,15 @@
   "qwen2.5-omni-7b": {
     "description": "Qwen-Omniシリーズモデルは、動画、音声、画像、テキストなどの多様なモダリティのデータを入力としてサポートし、音声とテキストを出力します。"
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct、マルチモーダルなオープンソースモデルで、オンプレミス導入や多様なシナリオに適しています。"
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "指示に従い、数学、問題解決、コード全体の向上、万物認識能力の向上を実現し、多様な形式で視覚要素を直接的に正確に特定し、長い動画ファイル（最大10分）を理解し、秒単位のイベント時刻を特定でき、時間の前後や速さを理解し、解析と特定能力に基づいてOSやモバイルのエージェントを操作し、重要な情報抽出能力とJson形式出力能力が強化されています。このバージョンは72Bバージョンで、本シリーズの中で最も強力なバージョンです。"
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct、軽量なマルチモーダルモデルで、導入コストと認識能力のバランスが取れています。"
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VLは、Qwenモデルファミリーにおける最新の視覚言語モデルです。"
   },
@@ -2984,22 +3038,48 @@
   "qwen3": {
     "description": "Qwen3は、Alibabaの次世代大規模言語モデルであり、優れた性能で多様なアプリケーションニーズをサポートします。"
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B、入門レベルのモデルで、簡単な推論やリソースが極めて限られた環境に適しています。"
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B、超軽量モデルで、エッジやエンドデバイスへの導入に適しています。"
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B、中規模モデルで、多言語のQAやテキスト生成に適しています。"
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B、汎用の大規模モデルで、様々な複雑なタスクに対応します。"
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507、汎用フラッグシップのInstructモデルで、多様な生成や推論タスクに適しています。"
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507、超大規模な思考モデルで、高難度の推論に対応します。"
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B、中〜大規模の汎用モデルで、コストと性能のバランスが取れています。"
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507、中〜大規模のInstructモデルで、高品質な生成やQAに適しています。"
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507、中〜大規模の思考モデルで、精度とコストのバランスを実現します。"
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B、より高度な理解能力が求められる汎用タスクに適しています。"
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B、中小規模のアプリケーションやローカル推論シナリオに適しています。"
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B、軽量モデルで、柔軟な導入が可能で高並列な業務に適しています。"
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "通義千問のコード生成モデルのオープンソース版。最新の qwen3-coder-30b-a3b-instruct は Qwen3 に基づくコード生成モデルで、強力な Coding Agent 機能を備え、ツールの呼び出しや環境との対話に長けており、自律的なプログラミングと卓越したコード生成能力、さらに汎用的な能力も兼ね備えています。"
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct、フラッグシップ級のコードモデルで、多言語プログラミングや複雑なコード理解に対応します。"
+  },
   "qwen3-coder-flash": {
     "description": "通義千問コードモデル。最新のQwen3-CoderシリーズモデルはQwen3をベースにしたコード生成モデルで、強力なコーディングエージェント能力を持ち、ツール呼び出しや環境とのインタラクションに長けています。自主的なプログラミングが可能で、コード能力に優れると同時に汎用能力も兼ね備えています。"
   },
@@ -3015,16 +3095,36 @@
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3に基づく次世代の非思考モードのオープンソースモデルで、前バージョン（通義千問3-235B-A22B-Instruct-2507）と比べて中国語テキストの理解能力が向上し、論理推論能力が強化され、テキスト生成タスクのパフォーマンスがより優れています。"
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking、複雑なタスクに対応するフラッグシップ推論モデルです。"
+  },
   "qwen3-omni-flash": {
     "description": "Qwen-Omni モデルは、テキスト、画像、音声、動画など複数のモダリティを組み合わせた入力に対応し、テキストまたは音声での応答を生成可能。多様な人間らしい音声スタイルを提供し、多言語・方言での音声出力をサポート。文章生成、視覚認識、音声アシスタントなどのシーンに応用可能です。"
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct、フラッグシップのマルチモーダルモデルで、高度な理解と創作シナリオに対応します。"
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking、フラッグシップの思考版で、複雑なマルチモーダル推論や計画タスクに適しています。"
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct、マルチモーダルの大規模モデルで、精度と推論性能の両立を実現します。"
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking、複雑なマルチモーダルタスクに対応する深層思考バージョンです。"
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct、マルチモーダルの指示調整モデルで、高品質な画像と言語のQAや創作に適しています。"
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking、マルチモーダルの深層思考バージョンで、複雑な推論や長距離の因果分析を強化します。"
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct、軽量なマルチモーダルモデルで、日常的なビジュアルQAやアプリ統合に適しています。"
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking、マルチモーダルの思考チェーンモデルで、視覚情報に対する精緻な推論に適しています。"
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash：軽量かつ高速な推論バージョンで、低遅延が求められるシナリオや大量リクエストに最適です。"
   },
