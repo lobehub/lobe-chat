@@ -383,6 +383,8 @@
         "manualDesc": "Mỗi lần gọi đều cần phê duyệt thủ công"
       },
       "reject": "Từ chối",
+      "rejectAndContinue": "Từ chối và thử lại",
+      "rejectOnly": "Từ chối",
       "rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
       "rejectTitle": "Từ chối lần gọi công cụ này",
       "rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",

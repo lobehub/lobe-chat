@@ -383,6 +383,8 @@
         "manualDesc": "每次調用都需要手動批准"
       },
       "reject": "拒絕",
+      "rejectAndContinue": "拒絕後重新執行",
+      "rejectOnly": "拒絕",
       "rejectReasonPlaceholder": "輸入拒絕原因將幫助 Agent 理解並優化後續行動",
       "rejectTitle": "拒絕本次工具調用",
       "rejectedWithReason": "本次工具調用被主動拒絕:{{reason}}",

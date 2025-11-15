@@ -383,6 +383,8 @@
         "manualDesc": "Se requiere aprobación manual para cada ejecución"
       },
       "reject": "Rechazar",
+      "rejectAndContinue": "Rechazar y volver a intentar",
+      "rejectOnly": "Rechazar",
       "rejectReasonPlaceholder": "Ingresar una razón ayudará al agente a comprender y mejorar futuras acciones",
       "rejectTitle": "Rechazar esta ejecución de herramienta",
       "rejectedWithReason": "Esta ejecución de herramienta fue rechazada: {{reason}}",

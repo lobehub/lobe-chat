@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro は、より多くの計算資源を活用して深く思考し、常により優れた回答を提供します。"
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — コーディングおよびエージェントタスク向けに最適化されたフラッグシップモデルで、推論強度の調整やより長いコンテキストに対応。"
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat：ChatGPT 用に調整された GPT-5.1 のバリアントで、会話シナリオに最適。"
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex：エージェント型のコーディングタスクに特化した GPT-5.1 バージョンで、Responses API においてより複雑なコードやエージェントのワークフローに対応。"
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini：より小型でコスト効率の高い Codex バリアントで、エージェント型のコーディングタスクに最適化。"
+  },
   "gpt-audio": {
     "description": "GPT Audioは音声の入出力に対応した汎用チャットモデルで、Chat Completions APIでの音声I/O利用をサポートしています。"
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen 第4世代のテキストから画像への生成モデルシリーズ"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 第4世代テキストから画像へのモデルシリーズ"
+    "description": "Imagen 第4世代のテキストから画像を生成するモデルシリーズ"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 第4世代 テキスト→画像生成モデルシリーズ（Ultra版）"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 第4世代テキストから画像へのモデルシリーズ ウルトラバージョン"
+    "description": "Imagen 第4世代テキスト画像生成モデルシリーズの Ultra バージョン"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small はコード生成、デバッグ、リファクタリングタスクに最適で、最小遅延を実現します。"
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "Tongyi Qianwen 3シリーズのMaxモデルは、2.5シリーズに比べて全体的な汎用能力が大幅に向上しており、中国語・英語のテキスト理解能力、複雑な指示遵守能力、主観的なオープンタスク能力、多言語能力、ツール呼び出し能力が著しく強化されています。モデルの知識幻覚も減少しています。最新のqwen3-maxモデルは、qwen3-max-previewバージョンに比べて、エージェントプログラミングとツール呼び出しの方向で特別なアップグレードが施されています。今回リリースされた正式版モデルは、ドメインのSOTAレベルに達しており、より複雑なエージェントニーズに対応可能です。"
+  },
+  "qwen3-max-preview": {
+    "description": "通義千問シリーズで最も高性能なモデル。複雑かつ多段階のタスクに適しており、プレビュー版では思考機能もサポート。"
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3に基づく次世代の非思考モードのオープンソースモデルで、前バージョン（通義千問3-235B-A22B-Instruct-2507）と比べて中国語テキストの理解能力が向上し、論理推論能力が強化され、テキスト生成タスクのパフォーマンスがより優れています。"
