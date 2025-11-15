@@ -43,6 +43,10 @@ export interface MessagePublicApiAction {
   updateMessageInput: (message: string) => void;
   modifyMessageContent: (id: string, content: string) => Promise<void>;
   toggleMessageEditing: (id: string, editing: boolean) => void;
+  /**
+   * Toggle message collapsed state
+   */
+  toggleMessageCollapsed: (id: string, collapsed?: boolean) => Promise<void>;
 
   // ===== Others ===== //
   copyMessage: (id: string, content: string) => Promise<void>;
@@ -240,5 +244,18 @@ export const messagePublicApi: StateCreator<
     });
 
     await get().optimisticUpdateMessageContent(id, content);
+  },
+
+  toggleMessageCollapsed: async (id, collapsed) => {
+    const message = displayMessageSelectors.getDisplayMessageById(id)(get());
+    if (!message) return;
+
+    // 如果没有传入 collapsed，则取反当前状态
+    const nextCollapsed = collapsed ?? !message.metadata?.collapsed;
+
+    // 直接调用现有的 optimisticUpdateMessageMetadata
+    await get().optimisticUpdateMessageMetadata(id, {
+      collapsed: nextCollapsed,
+    });
   },
 });
