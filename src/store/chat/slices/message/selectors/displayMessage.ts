@@ -85,7 +85,7 @@ const activeDisplayMessages = (s: ChatStoreState): UIChatMessage[] => {
 /**
  * Get display message by ID (searches in messagesMap including assistantGroup children)
  */
-const getDisplayMessageById = (id: string) => (s: ChatStoreState) =>
+export const getDisplayMessageById = (id: string) => (s: ChatStoreState) =>
   chatHelpers.getMessageById(activeDisplayMessages(s), id);
 
 const lastDisplayMessageId = (s: ChatStoreState) => {
