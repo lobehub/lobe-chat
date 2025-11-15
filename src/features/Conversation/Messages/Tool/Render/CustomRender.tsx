@@ -1,3 +1,4 @@
+import { UIChatMessage } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import { App } from 'antd';
 import { Edit3Icon, PlayCircleIcon } from 'lucide-react';
@@ -9,7 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors } from '@/store/chat/selectors';
-import { UIChatMessage } from '@/types/index';
 
 import PluginResult from '../Inspector/PluginResult';
 import Arguments from './Arguments';

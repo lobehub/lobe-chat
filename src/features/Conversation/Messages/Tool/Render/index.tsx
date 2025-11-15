@@ -1,16 +1,12 @@
 import { Suspense, memo } from 'react';
 
-import { LOADING_FLAT } from '@/const/index';
 import { useChatStore } from '@/store/chat';
 import { dbMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
-import LoadingPlaceholder from './LoadingPlaceholder';
 
 interface RenderProps {
-  apiName: string;
-  identifier: string;
   messageId: string;
   requestArgs?: string;
   setShowPluginRender: (show: boolean) => void;
@@ -20,20 +16,10 @@ interface RenderProps {
 }
 
 const Render = memo<RenderProps>(
-  ({
-    toolCallId,
-    toolIndex,
-    messageId,
-    requestArgs,
-    showPluginRender,
-    setShowPluginRender,
-    identifier,
-    apiName,
-  }) => {
+  ({ toolCallId, toolIndex, messageId, requestArgs, showPluginRender, setShowPluginRender }) => {
     const loading = useChatStore(messageStateSelectors.isToolCallStreaming(messageId, toolIndex));
     const toolMessage = useChatStore(dbMessageSelectors.getDbMessageByToolCallId(toolCallId));
 
-    console.log(toolMessage);
     if (loading || !toolMessage) return null;
 
     if (!!toolMessage) {
@@ -41,24 +27,8 @@ const Render = memo<RenderProps>(
         return <ErrorResponse {...toolMessage.error} id={messageId} plugin={toolMessage.plugin} />;
       }
 
-      const placeholder = (
-        <LoadingPlaceholder
-          apiName={apiName}
-          identifier={identifier}
-          loading
-          requestArgs={requestArgs}
-        />
-      );
-
-      // 如果是 LOADING_FLAT 则说明还在加载中
-      // 而 standalone 模式的插件 content 应该始终是 LOADING_FLAT
-      const inPlaceholder =
-        toolMessage.content === LOADING_FLAT && toolMessage.plugin?.type !== 'standalone';
-
-      if (inPlaceholder) return placeholder;
-
       return (
-        <Suspense fallback={placeholder}>
+        <Suspense>
           <CustomRender
             {...toolMessage}
             requestArgs={requestArgs}

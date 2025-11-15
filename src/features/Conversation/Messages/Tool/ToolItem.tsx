@@ -34,8 +34,6 @@ const Tool = memo<InspectorProps>(
           showPluginRender={showPluginRender}
         />
         <Render
-          apiName={apiName}
-          identifier={identifier}
           messageId={messageId}
           requestArgs={requestArgs}
           setShowPluginRender={setShowPluginRender}
