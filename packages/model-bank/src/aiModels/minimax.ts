@@ -5,7 +5,6 @@ const minimaxChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
     },
     contextWindowTokens: 204_800,
     description: '专为高效编码与Agent工作流而生',
@@ -16,21 +15,41 @@ const minimaxChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
+        { name: 'textInput_cacheRead', rate: 0.21, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 2.625, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textInput', rate: 2.1, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 8.4, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     releasedAt: '2025-10-27',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
+    },
+    contextWindowTokens: 204_800,
+    description: '专为高效编码与Agent工作流而生，更高并发，商业使用。',
+    displayName: 'MiniMax M2 Stable',
+    id: 'MiniMax-M2-Stable',
+    maxOutput: 131_072,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput_cacheRead', rate: 0.21, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput_cacheWrite', rate: 2.625, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 2.1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 8.4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-10-27',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 1_000_192,
     description: '全新自研推理模型。全球领先：80K 思维链 x 1M 输入，效果比肩海外顶尖模型',
@@ -45,15 +64,11 @@ const minimaxChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-06-16',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 1_000_192,
@@ -70,9 +85,6 @@ const minimaxChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-01-15',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
 ];
