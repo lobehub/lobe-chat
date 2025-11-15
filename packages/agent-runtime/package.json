@@ -10,6 +10,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "openai": "^4.0.0"
+    "openai": "^4.104.0"
   }
 }
