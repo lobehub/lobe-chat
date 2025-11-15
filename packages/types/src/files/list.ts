@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AsyncTaskStatus } from '@/types/asyncTask';
+import type { AsyncTaskStatus } from '../asyncTask';
 
 export interface FileListItem {
   chunkCount: number | null;
