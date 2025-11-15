@@ -45,6 +45,7 @@ export function useQueryParam<T>(
 
   // eslint-disable-next-line no-undef
   const throttleTimer = useRef<NodeJS.Timeout | null>(null);
+  const lastExecuteTime = useRef<number>(0);
 
   // 使用 ref 存储最新的值，让 setValue 保持稳定
   const searchParamsRef = useRef(searchParams);
@@ -83,31 +84,57 @@ export function useQueryParam<T>(
         typeof newValue === 'function' ? (newValue as (prev: T) => T)(currentVal) : newValue;
 
       const updateParams = () => {
-        const newSearchParams = new URLSearchParams(currentSearchParams);
-        const serialized = currentParser.serialize(actualValue);
+        // 使用函数式更新，确保基于最新的 searchParams
+        setSearchParams((prevParams) => {
+          const newSearchParams = new URLSearchParams(prevParams);
+          console.log('updateParams', newSearchParams.toString());
+          const serialized = currentParser.serialize(actualValue);
 
-        // 处理 clearOnDefault 选项
-        if (
-          currentClearOnDefault &&
-          currentDefaultValue !== undefined &&
-          serialized === currentParser.serialize(currentDefaultValue as T)
-        ) {
-          newSearchParams.delete(key);
-        } else if (serialized === null || serialized === undefined) {
-          newSearchParams.delete(key);
-        } else {
-          newSearchParams.set(key, serialized);
-        }
+          // 处理 clearOnDefault 选项
+          if (
+            currentClearOnDefault &&
+            currentDefaultValue !== undefined &&
+            serialized === currentParser.serialize(currentDefaultValue as T)
+          ) {
+            newSearchParams.delete(key);
+          } else if (serialized === null || serialized === undefined) {
+            newSearchParams.delete(key);
+          } else {
+            newSearchParams.set(key, serialized);
+          }
 
-        setSearchParams(newSearchParams, { replace: currentHistory === 'replace' });
+          console.log('updateParams', newSearchParams.toString());
+
+          return newSearchParams;
+        }, { replace: currentHistory === 'replace' });
       };
 
       // 处理节流
       if (throttleMs > 0) {
-        if (throttleTimer.current) {
-          clearTimeout(throttleTimer.current);
+        const now = Date.now();
+        const timeSinceLastExecute = now - lastExecuteTime.current;
+
+        if (timeSinceLastExecute >= throttleMs) {
+          // 距离上次执行已超过节流时间，立即执行
+          lastExecuteTime.current = now;
+          updateParams();
+          // 清理可能存在的定时器
+          if (throttleTimer.current) {
+            clearTimeout(throttleTimer.current);
+            throttleTimer.current = null;
+          }
+        } else {
+          // 还在节流期内，设置定时器在剩余时间后执行最后一次
+          if (throttleTimer.current) {
+            clearTimeout(throttleTimer.current);
+          }
+          const remainingTime = throttleMs - timeSinceLastExecute;
+          throttleTimer.current = setTimeout(() => {
+            lastExecuteTime.current = Date.now();
+            updateParams();
+            throttleTimer.current = null;
+          }, remainingTime);
         }
-        throttleTimer.current = setTimeout(updateParams, throttleMs);
       } else {
         updateParams();
       }
