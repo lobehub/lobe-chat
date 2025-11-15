@@ -43,8 +43,8 @@ export class FileModel {
     params: Omit<NewFile, 'id' | 'userId'> & { id?: string; knowledgeBaseId?: string },
     insertToGlobalFiles?: boolean,
     trx?: Transaction,
-  ) => {
-    const executeInTransaction = async (tx: Transaction) => {
+  ): Promise<{ id: string }> => {
+    const executeInTransaction = async (tx: Transaction): Promise<FileItem> => {
       if (insertToGlobalFiles) {
         await tx.insert(globalFiles).values({
           creator: this.userId,
@@ -56,12 +56,12 @@ export class FileModel {
         });
       }
 
-      const result = await tx
+      const result = (await tx
         .insert(files)
         .values({ ...params, userId: this.userId })
-        .returning();
+        .returning()) as FileItem[];
 
-      const item = result[0];
+      const item = result[0]!;
 
       if (params.knowledgeBaseId) {
         await tx.insert(knowledgeBaseFiles).values({

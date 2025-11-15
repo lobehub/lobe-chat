@@ -27,7 +27,16 @@ export class FileService {
       throw new Error('file not found');
     }
 
-    return { ...item, type: item.fileType };
+    return {
+      createdAt: item.createdAt,
+      id: item.id,
+      name: item.name,
+      size: item.size,
+      source: item.source,
+      type: item.fileType,
+      updatedAt: item.updatedAt,
+      url: item.url,
+    };
   };
 
   removeFile = async (id: string): Promise<void> => {

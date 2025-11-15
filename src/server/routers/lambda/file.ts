@@ -66,7 +66,23 @@ export const fileRouter = router({
       const item = await ctx.fileModel.findById(input.id);
       if (!item) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
 
-      return { ...item, url: await ctx.fileService.getFullFileUrl(item?.url) };
+      return {
+        chunkTaskId: item.chunkTaskId,
+        clientId: item.clientId,
+        createdAt: item.createdAt,
+        embeddingTaskId: item.embeddingTaskId,
+        fileHash: item.fileHash,
+        fileType: item.fileType,
+        id: item.id,
+        metadata: item.metadata,
+        name: item.name,
+        parentId: item.parentId,
+        size: item.size,
+        source: item.source,
+        updatedAt: item.updatedAt,
+        url: await ctx.fileService.getFullFileUrl(item.url),
+        userId: item.userId,
+      };
     }),
 
   getFileItemById: fileProcedure
@@ -92,15 +108,20 @@ export const fileRouter = router({
       const chunkCount = await ctx.chunkModel.countByFileId(input.id);
 
       return {
-        ...item,
         chunkCount,
         chunkingError: chunkingTask?.error,
         chunkingStatus: chunkingTask?.status as AsyncTaskStatus,
+        createdAt: item.createdAt,
         embeddingError: embeddingTask?.error,
         embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
+        fileType: item.fileType,
         finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
+        id: item.id,
         metadata: item.metadata as Record<string, any> | null | undefined,
+        name: item.name,
+        size: item.size,
         sourceType: 'file' as const,
+        updatedAt: item.updatedAt,
         url: await ctx.fileService.getFullFileUrl(item.url!),
       };
     }),
