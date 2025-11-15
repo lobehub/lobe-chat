@@ -654,7 +654,7 @@ docker compose up -d # 重新启动
 #### 使用 `INTERNAL_APP_URL` 配置内部服务器通信
 
 <Callout type="info">
-  如果你在 CDN（如 Cloudflare）或反向代理后部署 LobeChat，你可以配置内部服务器到服务器通信以绕过 CDN/代理层，以获得更好的性能。
+  如果你在 CDN（如 Cloudflare）或反向代理后部署 LobeChat，你可以配置内部服务器到服务器通信以绕过 CDN / 代理层，以获得更好的性能。
 </Callout>
 
 你可以配置 `INTERNAL_APP_URL` 环境变量：
@@ -666,12 +666,14 @@ environment:
 ```
 
 **工作原理：**
-- `APP_URL`：用于浏览器/客户端访问、OAuth 回调、webhook 等（通过 CDN/代理）
-- `INTERNAL_APP_URL`：用于内部服务器到服务器通信（绕过 CDN/代理）
+
+- `APP_URL`：用于浏览器 / 客户端访问、OAuth 回调、webhook 等（通过 CDN / 代理）
+- `INTERNAL_APP_URL`：用于内部服务器到服务器通信（绕过 CDN / 代理）
 
 如果未设置 `INTERNAL_APP_URL`，它将默认为 `APP_URL`。
 
 **配置选项：**
+
 - `http://localhost:3210` - 如果使用 Docker 主机网络模式
 - `http://lobe:3210` - 如果使用 Docker 网络与服务名称
 - `http://127.0.0.1:3210` - 备用本地主机地址

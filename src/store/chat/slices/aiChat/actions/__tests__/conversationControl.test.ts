@@ -292,7 +292,9 @@ describe('ConversationControl actions', () => {
         await result.current.switchMessageBranch(messageId, branchIndex);
       });
 
-      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: branchIndex });
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, {
+        activeBranchIndex: branchIndex,
+      });
     });
 
     it('should handle switching to branch 0', async () => {
@@ -326,7 +328,9 @@ describe('ConversationControl actions', () => {
         }),
       ).rejects.toThrow('Update failed');
 
-      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: branchIndex });
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, {
+        activeBranchIndex: branchIndex,
+      });
     });
   });
 });

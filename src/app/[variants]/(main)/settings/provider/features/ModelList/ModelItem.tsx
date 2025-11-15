@@ -4,7 +4,7 @@ import { App, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
 import { AiModelSourceEnum, AiProviderModelListItem } from 'model-bank';
-import { memo, use, useState } from 'react';
+import { memo, use, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -91,6 +91,9 @@ const ModelItem = memo<ModelItemProps>(
     );
 
     const [checked, setChecked] = useState(enabled);
+    useEffect(() => {
+      setChecked(enabled);
+    }, [enabled]);
     const [showConfig, setShowConfig] = useState(false);
 
     const formatPricing = (): string[] => {

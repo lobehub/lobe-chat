@@ -60,7 +60,8 @@ export const createAssistantSlice: StateCreator<
 
   useAssistantIdentifiers: (params) => {
     return useSWR(
-      ['assistant-identifiers', params?.source].filter(Boolean).join('-') || 'assistant-identifiers',
+      ['assistant-identifiers', params?.source].filter(Boolean).join('-') ||
+        'assistant-identifiers',
       async () => discoverService.getAssistantIdentifiers(params),
       {
         revalidateOnFocus: false,

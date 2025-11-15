@@ -5,6 +5,7 @@ import { ArrowDownUpIcon, ChevronDown, LucideCheck } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Virtuoso } from 'react-virtuoso';
 
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiModelSelectors } from '@/store/aiInfra/selectors';
@@ -12,6 +13,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import ModelItem from './ModelItem';
+import { useModelListVirtualConfig } from './useModelListVirtualConfig';
 
 interface DisabledModelsProps {
   activeTab: string;
@@ -42,7 +44,6 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
     },
     [updateSystemStatus],
   );
-
   const disabledModels = useAiInfraStore(aiModelSelectors.disabledAiProviderModelList, isEqual);
 
   // Filter models based on active tab
@@ -102,16 +103,33 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
     }
   }, [filteredDisabledModels, sortType]);
 
-  const displayModels = showMore ? sortedDisabledModels : sortedDisabledModels.slice(0, 10);
+  const displayModels = useMemo(() => {
+    if (showMore || sortedDisabledModels.length <= 10) return sortedDisabledModels;
+
+    return sortedDisabledModels.slice(0, 10);
+  }, [showMore, sortedDisabledModels]);
+
+  const displayLength = displayModels.length;
+  const { increaseViewportBy, itemGap, itemSize, overscan, virtualListHeight } =
+    useModelListVirtualConfig(displayLength);
+
+  const renderVirtualItem = useCallback(
+    (_index: number, item: (typeof displayModels)[number]) => (
+      <div style={{ paddingBottom: itemGap }}>
+        <ModelItem {...item} />
+      </div>
+    ),
+    [itemGap],
+  );
 
   return (
-    filteredDisabledModels.length > 0 && (
+    sortedDisabledModels.length > 0 && (
       <Flexbox>
         <Flexbox align="center" horizontal justify="space-between">
           <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
             {t('providerModels.list.disabled')}
           </Text>
-          {filteredDisabledModels.length > 1 && (
+          {sortedDisabledModels.length > 1 && (
             <Dropdown
               menu={{
                 items: [
@@ -170,9 +188,17 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
             </Dropdown>
           )}
         </Flexbox>
-        {displayModels.map((item) => (
-          <ModelItem {...item} key={item.id} />
-        ))}
+        <div style={{ height: virtualListHeight }}>
+          <Virtuoso
+            computeItemKey={(_, item) => item.id}
+            data={displayModels}
+            defaultItemHeight={itemSize}
+            fixedItemHeight={itemSize}
+            increaseViewportBy={increaseViewportBy}
+            itemContent={renderVirtualItem}
+            overscan={overscan}
+          />
+        </div>
         {!showMore && sortedDisabledModels.length > 10 && (
           <Button
             block

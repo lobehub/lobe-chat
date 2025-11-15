@@ -539,9 +539,9 @@ export class DiscoverService {
         description: (data as any).description || data.summary,
         examples: Array.isArray((data as any).examples)
           ? (data as any).examples.map((example: any) => ({
-            content: typeof example === 'string' ? example : example.content || '',
-            role: example.role || 'user',
-          }))
+              content: typeof example === 'string' ? example : example.content || '',
+              role: example.role || 'user',
+            }))
           : [],
         homepage:
           (data as any).homepage ||

@@ -2,11 +2,7 @@ import { LocalSystemDispatchEvents } from './localSystem';
 import { MenuDispatchEvents } from './menu';
 import { NotificationDispatchEvents } from './notification';
 import { ProtocolBroadcastEvents, ProtocolDispatchEvents } from './protocol';
-import {
-  
-  RemoteServerBroadcastEvents,
-  RemoteServerDispatchEvents,
-} from './remoteServer';
+import { RemoteServerBroadcastEvents, RemoteServerDispatchEvents } from './remoteServer';
 import { DesktopSettingsDispatchEvents } from './settings';
 import { ShortcutDispatchEvents } from './shortcut';
 import { SystemBroadcastEvents, SystemDispatchEvents } from './system';

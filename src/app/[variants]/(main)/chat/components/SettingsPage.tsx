@@ -6,9 +6,9 @@ import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import MobileContentLayout from '@/components/server/MobileNavLayout';
 import PageTitle from '@/components/PageTitle';
 import SafeSpacing from '@/components/SafeSpacing';
+import MobileContentLayout from '@/components/server/MobileNavLayout';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
 import AgentSettings from '@/features/AgentSetting/AgentSettings';
@@ -82,7 +82,10 @@ const SettingsPage = memo<SettingsPageProps>(({ mobile = false }) => {
   return (
     <>
       <DesktopHeader />
-      <SettingContainer addonAfter={<Footer />} addonBefore={<SafeSpacing height={HEADER_HEIGHT} />}>
+      <SettingContainer
+        addonAfter={<Footer />}
+        addonBefore={<SafeSpacing height={HEADER_HEIGHT} />}
+      >
         {content}
       </SettingContainer>
     </>

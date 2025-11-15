@@ -13,8 +13,7 @@ import List from './features/List';
 import Loading from './loading';
 
 const Client = memo<{ mobile?: boolean }>(() => {
-  const { q, page, category, sort, order, ownerId, source } =
-    useQuery() as AssistantQueryParams;
+  const { q, page, category, sort, order, ownerId, source } = useQuery() as AssistantQueryParams;
   const marketSource = (source as AssistantMarketSource | undefined) ?? 'new';
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
   const { data, isLoading } = useAssistantList({

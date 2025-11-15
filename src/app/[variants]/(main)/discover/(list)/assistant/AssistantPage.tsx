@@ -25,7 +25,7 @@ const AssistantPage = memo<{ mobile?: boolean }>(() => {
     source,
   });
 
-  console.log("data",data)
+  console.log('data', data);
 
   if (isLoading || !data) return <Loading />;
 

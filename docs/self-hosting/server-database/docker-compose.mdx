@@ -690,12 +690,14 @@ environment:
 ```
 
 **How it works:**
+
 - `APP_URL`: Used for browser/client access, OAuth callbacks, webhooks, etc. (goes through CDN/proxy)
 - `INTERNAL_APP_URL`: Used for internal server-to-server communication (bypasses CDN/proxy)
 
 If `INTERNAL_APP_URL` is not set, it defaults to `APP_URL`.
 
 **Configuration options:**
+
 - `http://localhost:3210` - If using Docker with host network mode
 - `http://lobe:3210` - If using Docker network with service name
 - `http://127.0.0.1:3210` - Alternative localhost address
