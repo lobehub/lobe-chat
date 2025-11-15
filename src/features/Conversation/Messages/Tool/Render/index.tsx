@@ -1,6 +1,6 @@
-import { LOADING_FLAT } from '@lobechat/const';
 import { Suspense, memo } from 'react';
 
+import { LOADING_FLAT } from '@/const/index';
 import { useChatStore } from '@/store/chat';
 import { dbMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
@@ -33,6 +33,7 @@ const Render = memo<RenderProps>(
     const loading = useChatStore(messageStateSelectors.isToolCallStreaming(messageId, toolIndex));
     const toolMessage = useChatStore(dbMessageSelectors.getDbMessageByToolCallId(toolCallId));
 
+    console.log(toolMessage);
     if (loading || !toolMessage) return null;
 
     if (!!toolMessage) {
