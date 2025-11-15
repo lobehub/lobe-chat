@@ -77,18 +77,27 @@ const transformGoogleGenerativeAIStream = (
   const functionCalls = chunk.functionCalls;
 
   if (functionCalls) {
+    // Initialize toolIndex if it doesn't exist
+    if (context.toolIndex === undefined) {
+      context.toolIndex = 0;
+    }
+
     return [
       {
         data: functionCalls.map(
-          (value, index): StreamToolCallChunkData => ({
-            function: {
-              arguments: JSON.stringify(value.args),
-              name: value.name,
-            },
-            id: generateToolCallId(index, value.name),
-            index: index,
-            type: 'function',
-          }),
+          (value): StreamToolCallChunkData => {
+            const currentIndex = context.toolIndex!;
+            context.toolIndex = currentIndex + 1;
+            return {
+              function: {
+                arguments: JSON.stringify(value.args),
+                name: value.name,
+              },
+              id: generateToolCallId(currentIndex, value.name),
+              index: currentIndex,
+              type: 'function',
+            };
+          },
         ),
         id: context.id,
         type: 'tool_calls',
