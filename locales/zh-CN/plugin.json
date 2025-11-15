@@ -253,13 +253,18 @@
   },
   "localSystem": {
     "apiName": {
+      "getCommandOutput": "获取代码输出",
+      "globLocalFiles": "匹配搜索文件",
+      "grepContent": "搜索内容",
+      "killCommand": "终止代码执行",
       "listLocalFiles": "查看文件列表",
       "moveLocalFiles": "移动文件",
       "readLocalFile": "读取文件内容",
       "renameLocalFile": "重命名",
       "runCommand": "执行代码",
       "searchLocalFiles": "搜索文件",
-      "writeLocalFile": "写入文件"
+      "writeLocalFile": "写入文件",
+      "editLocalFile": "编辑文件"
     },
     "title": "本地系统"
   },

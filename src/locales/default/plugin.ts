@@ -255,6 +255,11 @@ export default {
   },
   localSystem: {
     apiName: {
+      editLocalFile: '编辑文件',
+      getCommandOutput: '获取代码输出',
+      globLocalFiles: '匹配搜索文件',
+      grepContent: '搜索内容',
+      killCommand: '终止代码执行',
       listLocalFiles: '查看文件列表',
       moveLocalFiles: '移动文件',
       readLocalFile: '读取文件内容',

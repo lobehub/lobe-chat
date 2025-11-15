@@ -253,13 +253,18 @@
   },
   "localSystem": {
     "apiName": {
+      "getCommandOutput": "Get Code Output",
+      "globLocalFiles": "Match Files",
+      "grepContent": "Search Content",
+      "killCommand": "Kill Code Execution",
       "listLocalFiles": "View File List",
       "moveLocalFiles": "Move Files",
       "readLocalFile": "Read File Content",
       "renameLocalFile": "Rename",
       "runCommand": "Run Code",
       "searchLocalFiles": "Search Files",
-      "writeLocalFile": "Write File"
+      "writeLocalFile": "Write File",
+      "editLocalFile": "Edit File"
     },
     "title": "Local System"
   },
