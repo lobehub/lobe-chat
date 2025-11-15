@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 Pro nutzt mehr Rechenleistung für tiefgreifendere Überlegungen und liefert kontinuierlich bessere Antworten."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 – Flaggschiffmodell, optimiert für Programmier- und Agentenaufgaben, unterstützt konfigurierbare Rechenintensität und längere Kontexte."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: Eine Variante von GPT-5.1 für ChatGPT, ideal für Konversationsszenarien."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: Eine für agentenbasierte Programmieraufgaben optimierte Version von GPT-5.1, geeignet für komplexe Code- und Agenten-Workflows über die Responses API."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: Eine kompaktere und kostengünstigere Codex-Variante, optimiert für agentenbasierte Programmieraufgaben."
+  },
   "gpt-audio": {
     "description": "GPT Audio ist ein universelles Chatmodell für Audioeingabe und -ausgabe, das Audio-I/O in der Chat Completions API unterstützt."
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen, Text-zu-Bild-Modellreihe der 4. Generation"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4. Generation Text-zu-Bild Modellserie"
+    "description": "Vierte Generation der Imagen-Modelle zur Text-zu-Bild-Generierung."
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen, Text-zu-Bild-Modell der 4. Generation (Ultra-Version)"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4. Generation Text-zu-Bild Modellserie Ultra-Version"
+    "description": "Ultra-Version der vierten Generation der Imagen-Modelle zur Text-zu-Bild-Generierung."
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small ist ideal für Codegenerierung, Debugging und Refactoring-Aufgaben mit minimaler Latenz."
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "Tongyi Qianwen 3 Max Modellserie, die im Vergleich zur 2.5 Serie eine deutliche Verbesserung der allgemeinen Fähigkeiten bietet, einschließlich verbesserter Textverständnisfähigkeiten in Chinesisch und Englisch, komplexer Befolgung von Anweisungen, subjektiver offener Aufgaben, Mehrsprachigkeit und Tool-Integration; das Modell zeigt weniger Wissenshalluzinationen. Die neueste qwen3-max Version wurde speziell im Bereich Agentenprogrammierung und Tool-Integration weiterentwickelt. Die offizielle Veröffentlichung erreicht SOTA-Niveau in Fachgebieten und ist für komplexere Agentenanforderungen optimiert."
+  },
+  "qwen3-max-preview": {
+    "description": "Das leistungsstärkste Modell der Tongyi Qianwen-Serie, geeignet für komplexe, mehrstufige Aufgaben. Vorschauversion mit Denkfähigkeit."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Ein neues Open-Source-Modell der nächsten Generation im Nicht-Denk-Modus basierend auf Qwen3. Im Vergleich zur vorherigen Version (Tongyi Qianwen 3-235B-A22B-Instruct-2507) bietet es eine verbesserte chinesische Textverständnisfähigkeit, verstärkte logische Schlussfolgerungen und bessere Leistung bei textgenerierenden Aufgaben."

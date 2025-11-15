@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro, daha derin düşünme için daha fazla hesaplama gücü kullanır ve sürekli olarak daha iyi yanıtlar sunar."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — Kodlama ve ajan görevleri için optimize edilmiş amiral gemisi modelidir; yapılandırılabilir akıl yürütme gücü ve daha uzun bağlam desteği sunar."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: Sohbet senaryoları için uygun, ChatGPT’ye özel GPT-5.1 varyantı."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: Ajan tabanlı kodlama görevleri için optimize edilmiş GPT-5.1 sürümüdür; daha karmaşık kod/ajan iş akışları için Responses API ile kullanılabilir."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: Daha küçük boyutlu ve daha düşük maliyetli Codex varyantı; ajan tabanlı kodlama görevleri için optimize edilmiştir."
+  },
   "gpt-audio": {
     "description": "GPT Audio, ses giriş ve çıkışına yönelik genel sohbet modelidir ve Chat Completions API’de ses I/O kullanımını destekler."
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen 4. nesil metinden görüntüye model serisi"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4. nesil metinden görüntüye model serisi"
+    "description": "Imagen dördüncü nesil metinden görsele model serisi"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 4. nesil metinden-görüntüye model serisi, Ultra sürümü"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4. nesil metinden görüntüye model serisi Ultra versiyonu"
+    "description": "Imagen dördüncü nesil metinden görsele model serisinin Ultra versiyonu"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small, kod üretimi, hata ayıklama ve yeniden yapılandırma görevleri için ideal olup, minimum gecikme sunar."
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "Tongyi Qianwen 3 serisi Max modeli, 2.5 serisine kıyasla genel yeteneklerde büyük gelişme göstermiştir; hem Çince hem İngilizce metin anlama, karmaşık talimat takibi, öznel açık görevler, çoklu dil yetenekleri ve araç çağrısı yetenekleri belirgin şekilde artmıştır; model bilgi halüsinasyonları azalmıştır. En yeni qwen3-max modeli, qwen3-max-preview versiyonuna göre akıllı ajan programlama ve araç çağrısı alanlarında özel yükseltmeler içermektedir. Bu resmi sürüm modeli, alanında SOTA seviyesine ulaşmış olup, daha karmaşık ajan ihtiyaçlarına uyarlanmıştır."
+  },
+  "qwen3-max-preview": {
+    "description": "Tongyi Qianwen serisinin en yetenekli modeli; karmaşık ve çok adımlı görevler için uygundur. Önizleme sürümü düşünme yeteneğini desteklemektedir."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 tabanlı yeni nesil düşünmeden çalışan açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Instruct-2507) kıyasla Çince metin anlama yeteneği daha iyi, mantıksal çıkarım yeteneği geliştirilmiş ve metin üretimi görevlerinde daha başarılıdır."

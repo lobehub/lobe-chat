@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "File",
     "folder": "Folder",
+    "moveFiles": {
+      "itemsMoved": "{{count}} item(s) moved:",
+      "itemsMoved_one": "{{count}} item moved:",
+      "itemsMoved_other": "{{count}} items moved:",
+      "itemsToMove": "{{count}} item(s) to move:",
+      "itemsToMove_one": "{{count}} item to move:",
+      "itemsToMove_other": "{{count}} items to move:"
+    },
     "open": "Open",
     "openFile": "Open File",
     "openFolder": "Open Folder",

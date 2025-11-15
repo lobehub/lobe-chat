@@ -383,6 +383,8 @@
         "manualDesc": "Requer aprovação manual a cada chamada"
       },
       "reject": "Rejeitar",
+      "rejectAndContinue": "Rejeitar e tentar novamente",
+      "rejectOnly": "Rejeitar",
       "rejectReasonPlaceholder": "Inserir o motivo da rejeição ajudará o Agente a entender e melhorar ações futuras",
       "rejectTitle": "Rejeitar esta chamada de ferramenta",
       "rejectedWithReason": "Esta chamada de ferramenta foi rejeitada: {{reason}}",

@@ -383,6 +383,8 @@
         "manualDesc": "Każde wywołanie wymaga ręcznego zatwierdzenia"
       },
       "reject": "Odrzuć",
+      "rejectAndContinue": "Odrzuć i spróbuj ponownie",
+      "rejectOnly": "Odrzuć",
       "rejectReasonPlaceholder": "Wprowadzenie powodu odrzucenia pomoże Agentowi zrozumieć i zoptymalizować przyszłe działania",
       "rejectTitle": "Odrzuć to wywołanie narzędzia",
       "rejectedWithReason": "To wywołanie narzędzia zostało odrzucone: {{reason}}",

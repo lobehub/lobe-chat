@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu sắc hơn và liên tục cung cấp các câu trả lời tốt hơn."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — Mô hình hàng đầu được tối ưu hóa cho các tác vụ lập trình và agent, hỗ trợ cường độ suy luận có thể cấu hình và ngữ cảnh dài hơn."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: Biến thể GPT-5.1 dành cho ChatGPT, phù hợp với các tình huống trò chuyện."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: Phiên bản GPT-5.1 được tối ưu hóa cho các tác vụ lập trình mang tính agent, có thể sử dụng trong Responses API cho các quy trình làm việc mã hóa/đại lý phức tạp hơn."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: Biến thể Codex nhỏ gọn hơn và tiết kiệm chi phí hơn, được tối ưu hóa cho các tác vụ lập trình mang tính agent."
+  },
   "gpt-audio": {
     "description": "GPT Audio là mô hình trò chuyện chung hỗ trợ đầu vào và đầu ra âm thanh, có thể sử dụng âm thanh I/O trong API Chat Completions."
   },
@@ -2028,13 +2040,13 @@
     "description": "Dòng mô hình Imagen thế hệ thứ tư chuyển văn bản thành hình ảnh"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
+    "description": "Dòng mô hình tạo hình ảnh từ văn bản thế hệ thứ tư của Imagen"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen thế hệ thứ 4, dòng mô hình chuyển văn bản sang hình ảnh — phiên bản Ultra"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
+    "description": "Phiên bản Ultra của dòng mô hình tạo hình ảnh từ văn bản thế hệ thứ tư của Imagen"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small là lựa chọn lý tưởng cho các nhiệm vụ tạo mã, gỡ lỗi và tái cấu trúc với độ trễ tối thiểu."
@@ -3091,6 +3103,9 @@
   },
   "qwen3-max": {
     "description": "Dòng mô hình Max của Tongyi Qianwen 3, so với dòng 2.5 có sự cải thiện lớn về khả năng chung, bao gồm hiểu văn bản song ngữ Trung-Anh, tuân thủ chỉ dẫn phức tạp, khả năng thực hiện các tác vụ mở chủ quan, đa ngôn ngữ và gọi công cụ; giảm thiểu ảo tưởng kiến thức của mô hình. Phiên bản qwen3-max mới nhất đã nâng cấp chuyên biệt về lập trình tác nhân và gọi công cụ so với phiên bản qwen3-max-preview. Mô hình chính thức phát hành đạt mức SOTA trong lĩnh vực, phù hợp với các nhu cầu tác nhân phức tạp hơn."
+  },
+  "qwen3-max-preview": {
+    "description": "Mô hình mạnh nhất trong dòng Tongyi Qianwen, phù hợp với các tác vụ phức tạp và nhiều bước. Phiên bản xem trước đã hỗ trợ khả năng suy luận."
   },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Mô hình mã nguồn mở thế hệ mới không có chế độ suy nghĩ dựa trên Qwen3, so với phiên bản trước (Thông Nghĩa Thiên Vấn 3-235B-A22B-Instruct-2507) có khả năng hiểu văn bản tiếng Trung tốt hơn, năng lực suy luận logic được cải thiện, và hiệu suất trong các nhiệm vụ tạo văn bản cũng tốt hơn."

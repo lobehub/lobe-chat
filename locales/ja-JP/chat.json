@@ -383,6 +383,8 @@
         "manualDesc": "毎回の呼び出しに手動承認が必要です"
       },
       "reject": "拒否",
+      "rejectAndContinue": "拒否して再実行",
+      "rejectOnly": "拒否",
       "rejectReasonPlaceholder": "拒否理由を入力すると、エージェントが理解し今後の行動を最適化するのに役立ちます",
       "rejectTitle": "今回のツール呼び出しを拒否",
       "rejectedWithReason": "今回のツール呼び出しは次の理由で拒否されました:{{reason}}",
