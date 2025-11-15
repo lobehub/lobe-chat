@@ -9,36 +9,40 @@ import BrowserWindowsCtr from '../BrowserWindowsCtr';
 
 // 模拟 App 及其依赖项
 const mockToggleVisible = vi.fn();
-const mockShowSettingsWindowWithTab = vi.fn();
+const mockLoadUrl = vi.fn();
+const mockShow = vi.fn();
+const mockRedirectToPage = vi.fn();
 const mockCloseWindow = vi.fn();
 const mockMinimizeWindow = vi.fn();
 const mockMaximizeWindow = vi.fn();
 const mockRetrieveByIdentifier = vi.fn();
 const mockGetMainWindow = vi.fn(() => ({
   toggleVisible: mockToggleVisible,
+  loadUrl: mockLoadUrl,
+  show: mockShow,
 }));
-const mockShow = vi.fn();
+const mockShowOther = vi.fn();
 
 // mock findMatchingRoute and extractSubPath
 vi.mock('~common/routes', async () => ({
   findMatchingRoute: vi.fn(),
   extractSubPath: vi.fn(),
 }));
-const { findMatchingRoute, extractSubPath } = await import('~common/routes');
+const { findMatchingRoute } = await import('~common/routes');
 
 const mockApp = {
   browserManager: {
     getMainWindow: mockGetMainWindow,
-    showSettingsWindowWithTab: mockShowSettingsWindowWithTab,
+    redirectToPage: mockRedirectToPage,
     closeWindow: mockCloseWindow,
     minimizeWindow: mockMinimizeWindow,
     maximizeWindow: mockMaximizeWindow,
     retrieveByIdentifier: mockRetrieveByIdentifier.mockImplementation(
       (identifier: AppBrowsersIdentifiers | string) => {
-        if (identifier === BrowsersIdentifiers.settings || identifier === 'some-other-window') {
-          return { show: mockShow };
+        if (identifier === 'some-other-window') {
+          return { show: mockShowOther };
         }
-        return { show: mockShow }; // Default mock for other identifiers
+        return { show: mockShowOther }; // Default mock for other identifiers
       },
     ),
   },
@@ -61,16 +65,18 @@ describe('BrowserWindowsCtr', () => {
   });
 
   describe('openSettingsWindow', () => {
-    it('should show the settings window with the specified tab', async () => {
+    it('should navigate to settings in main window with the specified tab', async () => {
       const tab = 'appearance';
       const result = await browserWindowsCtr.openSettingsWindow(tab);
-      expect(mockShowSettingsWindowWithTab).toHaveBeenCalledWith({ tab });
+      expect(mockGetMainWindow).toHaveBeenCalled();
+      expect(mockLoadUrl).toHaveBeenCalledWith('/settings?active=appearance');
+      expect(mockShow).toHaveBeenCalled();
       expect(result).toEqual({ success: true });
     });
 
-    it('should return error if showing settings window fails', async () => {
-      const errorMessage = 'Failed to show';
-      mockShowSettingsWindowWithTab.mockRejectedValueOnce(new Error(errorMessage));
+    it('should return error if navigation fails', async () => {
+      const errorMessage = 'Failed to navigate';
+      mockLoadUrl.mockRejectedValueOnce(new Error(errorMessage));
       const result = await browserWindowsCtr.openSettingsWindow('display');
       expect(result).toEqual({ error: errorMessage, success: false });
     });
@@ -117,36 +123,7 @@ describe('BrowserWindowsCtr', () => {
       expect(result).toEqual({ intercepted: false, path: params.path, source: params.source });
     });
 
-    it('should show settings window if matched route target is settings', async () => {
-      const params: InterceptRouteParams = {
-        ...baseParams,
-        path: '/settings/provider',
-        url: 'app://host/settings/provider?active=provider&provider=ollama',
-      };
-      const matchedRoute = { targetWindow: BrowsersIdentifiers.settings, pathPrefix: '/settings' };
-      const subPath = 'provider';
-      (findMatchingRoute as Mock).mockReturnValue(matchedRoute);
-      (extractSubPath as Mock).mockReturnValue(subPath);
-
-      const result = await browserWindowsCtr.interceptRoute(params);
-
-      expect(findMatchingRoute).toHaveBeenCalledWith(params.path);
-      expect(extractSubPath).toHaveBeenCalledWith(params.path, matchedRoute.pathPrefix);
-      expect(mockShowSettingsWindowWithTab).toHaveBeenCalledWith({
-        searchParams: { active: 'provider', provider: 'ollama' },
-        tab: subPath,
-      });
-      expect(result).toEqual({
-        intercepted: true,
-        path: params.path,
-        source: params.source,
-        subPath,
-        targetWindow: matchedRoute.targetWindow,
-      });
-      expect(mockShow).not.toHaveBeenCalled();
-    });
-
-    it('should open target window if matched route target is not settings', async () => {
+    it('should open target window if matched route is found', async () => {
       const params: InterceptRouteParams = {
         ...baseParams,
         path: '/other/page',
@@ -160,44 +137,16 @@ describe('BrowserWindowsCtr', () => {
 
       expect(findMatchingRoute).toHaveBeenCalledWith(params.path);
       expect(mockRetrieveByIdentifier).toHaveBeenCalledWith(targetWindowIdentifier);
-      expect(mockShow).toHaveBeenCalled();
+      expect(mockShowOther).toHaveBeenCalled();
       expect(result).toEqual({
         intercepted: true,
         path: params.path,
         source: params.source,
         targetWindow: matchedRoute.targetWindow,
       });
-      expect(mockShowSettingsWindowWithTab).not.toHaveBeenCalled();
     });
 
-    it('should return error if processing route interception fails for settings', async () => {
-      const params: InterceptRouteParams = {
-        ...baseParams,
-        path: '/settings',
-        url: 'app://host/settings?active=general',
-      };
-      const matchedRoute = { targetWindow: BrowsersIdentifiers.settings, pathPrefix: '/settings' };
-      const subPath = undefined;
-      const errorMessage = 'Processing error for settings';
-      (findMatchingRoute as Mock).mockReturnValue(matchedRoute);
-      (extractSubPath as Mock).mockReturnValue(subPath);
-      mockShowSettingsWindowWithTab.mockRejectedValueOnce(new Error(errorMessage));
-
-      const result = await browserWindowsCtr.interceptRoute(params);
-
-      expect(mockShowSettingsWindowWithTab).toHaveBeenCalledWith({
-        searchParams: { active: 'general' },
-        tab: subPath,
-      });
-      expect(result).toEqual({
-        error: errorMessage,
-        intercepted: false,
-        path: params.path,
-        source: params.source,
-      });
-    });
-
-    it('should return error if processing route interception fails for other window', async () => {
+    it('should return error if processing route interception fails', async () => {
       const params: InterceptRouteParams = {
         ...baseParams,
         path: '/another/custom',

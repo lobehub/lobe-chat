@@ -34,12 +34,6 @@ export interface RouteInterceptConfig {
  */
 export const interceptRoutes: RouteInterceptConfig[] = [
   {
-    description: '设置页面',
-    enabled: true,
-    pathPrefix: '/settings',
-    targetWindow: 'settings',
-  },
-  {
     description: '开发者工具',
     enabled: true,
     pathPrefix: '/desktop/devtools',
