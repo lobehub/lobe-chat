@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.63](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.62...v2.0.0-next.63)
+
+<sup>Released on **2025-11-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Show orphaned tool message and support delete tool message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Show orphaned tool message and support delete tool message, closes [#10232](https://github.com/lobehub/lobe-chat/issues/10232) ([38cfd26](https://github.com/lobehub/lobe-chat/commit/38cfd26))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.62](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.61...v2.0.0-next.62)
 
 <sup>Released on **2025-11-15**</sup>
