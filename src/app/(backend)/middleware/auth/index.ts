@@ -33,10 +33,15 @@ export type RequestHandler = (
 
 export const checkAuth =
   (handler: RequestHandler) => async (req: Request, options: RequestOptions) => {
+    // Clone the request to avoid "Response body object should not be disturbed or locked" error
+    // in Next.js 16 when the body stream has been consumed by Next.js internal mechanisms
+    // This ensures the handler can safely read the request body
+    const clonedReq = req.clone();
+
     // we have a special header to debug the api endpoint in development mode
     const isDebugApi = req.headers.get('lobe-auth-dev-backend-api') === '1';
     if (process.env.NODE_ENV === 'development' && isDebugApi) {
-      return handler(req, { ...options, jwtPayload: { userId: 'DEV_USER' } });
+      return handler(clonedReq, { ...options, jwtPayload: { userId: 'DEV_USER' } });
     }
 
     let jwtPayload: ClientSecretPayload;
@@ -107,5 +112,5 @@ export const checkAuth =
       return createErrorResponse(errorType, { error, ...res, provider: params?.provider });
     }
 
-    return handler(req, { ...options, jwtPayload });
+    return handler(clonedReq, { ...options, jwtPayload });
   };
