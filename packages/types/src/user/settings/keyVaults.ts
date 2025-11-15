@@ -105,6 +105,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   siliconcloud?: OpenAICompatibleKeyVault;
   spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
+  straico?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;
   tencentcloud?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
