@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "features": ["Show orphaned tool message and support delete tool message."]
+    },
+    "date": "2025-11-15",
+    "version": "2.0.0-next.63"
+  },
+  {
     "children": {},
     "date": "2025-11-15",
     "version": "2.0.0-next.62"
