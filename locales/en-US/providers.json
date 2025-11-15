@@ -32,6 +32,9 @@
   "bfl": {
     "description": "A leading, cutting-edge AI research lab building the visual infrastructure of tomorrow."
   },
+  "burncloud": {
+    "description": "BurnCloud LLMs Gateway offers an OpenAI-compatible, multi-tenant API platform with token-based governance, centralized routing, and observability so teams can onboard GPT-4.1, GPT-4o, o3 and more through a single endpoint."
+  },
   "cerebras": {
     "description": "Cerebras is an AI inference platform built on its dedicated CS-3 system, designed to deliver the world's fastest, real-time, high-throughput LLM services. It is specifically engineered to eliminate latency and accelerate complex AI workflows such as real-time code generation and agent-based tasks."
   },
