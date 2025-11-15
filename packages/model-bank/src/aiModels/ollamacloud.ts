@@ -6,6 +6,19 @@ const ollamaCloudModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
+    contextWindowTokens: 262_144,
+    description:
+      'K2 长思考模型，支持 256k 上下文，支持多步工具调用与思考，擅长解决更复杂的问题。',
+    displayName: 'Kimi K2 Thinking',
+    enabled: true,
+    id: 'kimi-k2-thinking',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 200_000,
     description:
       'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
