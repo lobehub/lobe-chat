@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Visualizza lista parametri",
+    "delete": "Elimina chiamata allo strumento",
+    "orphanedToolCall": "Questo messaggio di chiamata allo strumento potrebbe essere diventato orfano a causa di un'anomalia, il che potrebbe compromettere il corretto funzionamento dell'agente. Si consiglia di rimuoverlo.",
     "pluginRender": "Visualizza interfaccia plugin"
   },
   "list": {

@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "View Argument List",
+    "delete": "Delete Tool Call",
+    "orphanedToolCall": "This tool call message may have become orphaned due to an unexpected issue, which could affect the Agent's normal operation. Please remove it.",
     "pluginRender": "View Plugin Interface"
   },
   "list": {

@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Parameterliste anzeigen",
+    "delete": "Werkzeugaufruf löschen",
+    "orphanedToolCall": "Dieser Werkzeugaufruf könnte aufgrund eines Fehlers verwaist sein, was den normalen Ablauf des Agenten beeinträchtigen kann. Bitte entfernen Sie ihn.",
     "pluginRender": "Plugin-Oberfläche anzeigen"
   },
   "list": {

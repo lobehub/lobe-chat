@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Bekijk parameterlijst",
+    "delete": "Hulpoproep verwijderen",
+    "orphanedToolCall": "Dit hulpoproepbericht is mogelijk geïsoleerd geraakt door een onverwachte fout, wat de normale werking van de agent kan beïnvloeden. Verwijder het alstublieft.",
     "pluginRender": "Bekijk plugin-interface"
   },
   "list": {

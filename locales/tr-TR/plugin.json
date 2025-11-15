@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Parametre listesini görüntüle",
+    "delete": "Araç çağrısını sil",
+    "orphanedToolCall": "Bu araç çağrısı mesajı, beklenmeyen bir nedenle yetim kalmış olabilir ve bu durum Ajansın düzgün çalışmasını etkileyebilir. Lütfen bunu kaldırın.",
     "pluginRender": "Eklenti arayüzünü görüntüle"
   },
   "list": {

@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "查看參數列表",
+    "delete": "刪除工具調用",
+    "orphanedToolCall": "該工具調用訊息可能因異常原因成為孤立訊息，這可能會影響 Agent 的正常執行，請將其移除",
     "pluginRender": "查看插件介面"
   },
   "list": {
