@@ -66,6 +66,7 @@ export const getImageUrl = async ({
     const blobType = (imageType === ImageType.JPG ? 'jpg' : imageType) as 'png' | 'jpg' | 'webp';
     const blobResult = await snapdom.toBlob(width ? copy : dom, {
       type: blobType,
+      useProxy: 'https://proxy.corsfix.com/?',
     });
 
     if (!blobResult) {
