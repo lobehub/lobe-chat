@@ -109,11 +109,11 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
   }, []);
 
   // Scroll to bottom on initial render
-  // useEffect(() => {
-  //   if (virtuaRef.current && dataSource.length > 0) {
-  //     virtuaRef.current.scrollToIndex(dataSource.length - 1, { align: 'end' });
-  //   }
-  // }, [isCurrentChatLoaded]);
+  useEffect(() => {
+    if (virtuaRef.current && dataSource.length > 0) {
+      virtuaRef.current.scrollToIndex(dataSource.length - 1, { align: 'end' });
+    }
+  }, [isCurrentChatLoaded]);
 
   // bufferSize should be 2 times the height of the window
   const bufferSize = typeof window !== 'undefined' ? window.innerHeight * 2 : 400;
