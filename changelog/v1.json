@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["The tool to fail execution on ollama when a message contains b…."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.68"
+  },
+  {
+    "children": {
       "improvements": ["Refactor to virtua."]
     },
     "date": "2025-11-16",
