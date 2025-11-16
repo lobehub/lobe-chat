@@ -415,7 +415,7 @@ describe('ChatGroupModel', () => {
       expect(connectedAgents.map((a) => a.agentId)).toEqual(['agent-1', 'agent-2', 'agent-3']);
     });
 
-    it('should throw when adding duplicate agents', async () => {
+    it('should only add new agents when some already exist', async () => {
       // Create test data
       await serverDB.transaction(async (trx) => {
         await trx.insert(chatGroups).values({
@@ -437,19 +437,25 @@ describe('ChatGroupModel', () => {
         });
       });
 
-      await expect(
-        chatGroupModel.addAgentsToGroup('existing-agent-group', ['existing-agent', 'new-agent']),
-      ).rejects.toThrow();
+      const result = await chatGroupModel.addAgentsToGroup('existing-agent-group', [
+        'existing-agent',
+        'new-agent',
+      ]);
 
+      // Should only add the new agent (filter out existing one)
+      const addedAgents = toRelationAgents(result);
+      expect(addedAgents).toHaveLength(1);
+      expect(addedAgents[0]?.agentId).toBe('new-agent');
+
+      // Verify total agents in group
       const groupAgents = toRelationAgents(
         await chatGroupModel.getGroupAgents('existing-agent-group'),
       );
-
-      expect(groupAgents).toHaveLength(1);
-      expect(groupAgents[0]?.agentId).toBe('existing-agent');
+      expect(groupAgents).toHaveLength(2);
+      expect(groupAgents.map((a) => a.agentId).sort()).toEqual(['existing-agent', 'new-agent']);
     });
 
-    it('should throw when all agents already exist', async () => {
+    it('should return empty array when all agents already exist', async () => {
       // Create test data
       await serverDB.transaction(async (trx) => {
         await trx.insert(chatGroups).values({
@@ -471,9 +477,17 @@ describe('ChatGroupModel', () => {
         });
       });
 
-      await expect(
-        chatGroupModel.addAgentsToGroup('all-existing-group', ['existing-only']),
-      ).rejects.toThrow();
+      const result = await chatGroupModel.addAgentsToGroup('all-existing-group', ['existing-only']);
+
+      // When all agents already exist, should return empty array
+      expect(result).toEqual([]);
+
+      // Verify no duplicates were added
+      const groupAgents = toRelationAgents(
+        await chatGroupModel.getGroupAgents('all-existing-group'),
+      );
+      expect(groupAgents).toHaveLength(1);
+      expect(groupAgents[0]?.agentId).toBe('existing-only');
     });
 
     it('should throw error for non-existent group', async () => {

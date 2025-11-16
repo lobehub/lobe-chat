@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
-import { enableAuth } from '@/const/auth';
-import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
@@ -26,17 +24,16 @@ export const useCategory = () => {
         </Link>
       ),
     },
-    enableAuth &&
-      isLoginWithClerk && {
-        icon: <Icon icon={ShieldCheck} />,
-        key: ProfileTabs.Security,
-        label: (
-          <Link href={'/profile/security'} onClick={(e) => e.preventDefault()}>
-            {t('tab.security')}
-          </Link>
-        ),
-      },
-    !isDeprecatedEdition && {
+    isLoginWithClerk && {
+      icon: <Icon icon={ShieldCheck} />,
+      key: ProfileTabs.Security,
+      label: (
+        <Link href={'/profile/security'} onClick={(e) => e.preventDefault()}>
+          {t('tab.security')}
+        </Link>
+      ),
+    },
+    {
       icon: <Icon icon={ChartColumnBigIcon} />,
       key: ProfileTabs.Stats,
       label: (

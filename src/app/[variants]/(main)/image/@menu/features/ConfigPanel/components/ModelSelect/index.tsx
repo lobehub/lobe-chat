@@ -1,3 +1,4 @@
+import { EnabledProviderWithModels } from '@lobechat/types';
 import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
@@ -8,13 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
-import { isDeprecatedEdition } from '@/const/version';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/slices/aiProvider/selectors';
 import { useImageStore } from '@/store/image';
-import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { EnabledProviderWithModels } from '@/types/aiProvider';
+import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 
 import ImageModelItem from './ImageModelItem';
 
@@ -36,7 +34,6 @@ const ModelSelect = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('components');
   const theme = useTheme();
-  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
   const router = useRouter();
 
   const [currentModel, currentProvider] = useImageStore((s) => [
@@ -67,11 +64,7 @@ const ModelSelect = memo(() => {
               </Flexbox>
             ),
             onClick: () => {
-              router.push(
-                isDeprecatedEdition
-                  ? '/settings?active=llm'
-                  : `/settings?active=provider&provider=${provider.id}`,
-              );
+              router.push(`/settings?active=provider&provider=${provider.id}`);
             },
             value: `${provider.id}/empty`,
           },
@@ -93,7 +86,7 @@ const ModelSelect = memo(() => {
             </Flexbox>
           ),
           onClick: () => {
-            router.push(isDeprecatedEdition ? '/settings?active=llm' : '/settings?active=provider');
+            router.push('/settings?active=provider');
           },
           value: 'no-provider',
         },
@@ -114,26 +107,18 @@ const ModelSelect = memo(() => {
             provider={provider.id}
             source={provider.source}
           />
-          {showLLM && (
-            <Link
-              href={
-                isDeprecatedEdition
-                  ? '/settings?active=llm'
-                  : `/settings?active=provider&provider=${provider.id}`
-              }
-            >
-              <ActionIcon
-                icon={LucideBolt}
-                size={'small'}
-                title={t('ModelSwitchPanel.goToSettings')}
-              />
-            </Link>
-          )}
+          <Link href={`/settings?active=provider&provider=${provider.id}`}>
+            <ActionIcon
+              icon={LucideBolt}
+              size={'small'}
+              title={t('ModelSwitchPanel.goToSettings')}
+            />
+          </Link>
         </Flexbox>
       ),
       options: getImageModels(provider),
     }));
-  }, [enabledImageModelList, showLLM, t, theme.colorTextTertiary, router]);
+  }, [enabledImageModelList, t, theme.colorTextTertiary, router]);
 
   const labelRender: SelectProps['labelRender'] = (props) => {
     const modelInfo = enabledImageModelList
