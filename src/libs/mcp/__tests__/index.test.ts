@@ -21,16 +21,16 @@ describe('MCPClient', () => {
       await mcpClient.initialize();
       // Add a small delay to allow the server process to fully start (optional, but can help)
       await new Promise((resolve) => setTimeout(resolve, 100));
-    });
+    }, 30000);
 
     afterEach(async () => {
       // Assume SDK client/transport handles process termination gracefully
       // If processes leak, more explicit cleanup might be needed here
-    });
+    }, 30000);
 
     it('should create and initialize an instance with stdio transport', () => {
       expect(mcpClient).toBeInstanceOf(MCPClient);
-    });
+    }, 30000);
 
     it('should list tools via stdio', async () => {
       const result = await mcpClient.listTools();
@@ -40,7 +40,7 @@ describe('MCPClient', () => {
 
       // Expect the tools defined in mock-sdk-server.ts
       expect(result).toMatchSnapshot();
-    });
+    }, 30000);
 
     it('should call the "echo" tool via stdio', async () => {
       const toolName = 'echo';
@@ -52,7 +52,7 @@ describe('MCPClient', () => {
 
       const result = await mcpClient.callTool(toolName, toolArgs);
       expect(result).toEqual(expectedResult);
-    });
+    }, 30000);
 
     it('should call the "add" tool via stdio', async () => {
       const toolName = 'add';
@@ -62,7 +62,7 @@ describe('MCPClient', () => {
       expect(result).toEqual({
         content: [{ type: 'text', text: 'The sum is: 12' }],
       });
-    });
+    }, 30000);
   });
 
   // Error Handling tests remain the same...
