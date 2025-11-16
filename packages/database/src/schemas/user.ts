@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import type { CustomPluginParams } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { boolean, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
+import { boolean, integer, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
 
@@ -26,6 +26,24 @@ export const users = pgTable('users', {
   emailVerifiedAt: timestamptz('email_verified_at'),
 
   preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
+
+  // Admin-controlled fields
+  status: text('status', { enum: ['pending', 'active', 'suspended', 'banned'] })
+    .default('pending')
+    .notNull(),
+  subscriptionTier: text('subscription_tier', { enum: ['free', 'basic', 'pro'] })
+    .default('free')
+    .notNull(),
+
+  // Token usage tracking
+  monthlyTokenUsage: integer('monthly_token_usage').default(0).notNull(),
+  tokenLimit: integer('token_limit').default(100000).notNull(), // Default 100k tokens/month
+  lastTokenReset: timestamptz('last_token_reset').defaultNow().notNull(),
+
+  // Admin metadata
+  invitedBy: text('invited_by'), // Admin user ID who invited this user
+  inviteCode: text('invite_code').unique(), // Optional invite code
+  adminNotes: text('admin_notes'), // Notes from admins about this user
 
   ...timestamps,
 });

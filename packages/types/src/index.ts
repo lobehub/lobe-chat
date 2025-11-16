@@ -1,3 +1,4 @@
+export * from './admin';
 export * from './agent';
 export * from './aiChat';
 export * from './aiProvider';

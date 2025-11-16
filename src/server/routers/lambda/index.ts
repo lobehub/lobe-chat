@@ -3,6 +3,7 @@
  */
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 
+import { adminRouter } from './admin';
 import { agentRouter } from './agent';
 import { aiChatRouter } from './aiChat';
 import { aiModelRouter } from './aiModel';
@@ -34,6 +35,7 @@ import { usageRouter } from './usage';
 import { userRouter } from './user';
 
 export const lambdaRouter = router({
+  admin: adminRouter,
   agent: agentRouter,
   aiChat: aiChatRouter,
   aiModel: aiModelRouter,
