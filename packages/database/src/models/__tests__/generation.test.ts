@@ -1,9 +1,8 @@
 // @vitest-environment node
 import { AsyncTaskStatus, ImageGenerationAsset } from '@lobechat/types';
+import { FileSource } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { FileSource } from '@/types/files';
 
 import {
   NewGeneration,

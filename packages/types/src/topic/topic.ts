@@ -1,4 +1,4 @@
-import { BaseDataModel } from '@/types/meta';
+import type { BaseDataModel } from '../meta';
 
 // 类型定义
 export type TimeGroupId =

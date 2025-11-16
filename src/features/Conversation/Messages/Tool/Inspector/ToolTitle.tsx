@@ -6,8 +6,6 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useChatStore } from '@/store/chat';
-import { messageStateSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
@@ -42,10 +40,6 @@ interface ToolTitleProps {
 const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName, toolCallId }) => {
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
-
-  const isLoading = useChatStore(
-    messageStateSelectors.isToolApiNameShining(messageId, index, toolCallId),
-  );
 
   const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
@@ -84,7 +78,7 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
   const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
   return (
-    <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={6} horizontal>
+    <Flexbox align={'center'} gap={6} horizontal>
       <div>{pluginTitle}</div> <Icon icon={ChevronRight} />
       <span className={styles.apiName}>{apiName}</span>
     </Flexbox>

@@ -1,14 +1,14 @@
+import type {
+  AiProviderDetailItem,
+  AiProviderListItem,
+  AiProviderRuntimeConfig,
+  EnabledProvider,
+} from '@lobechat/types';
 import { AiProviderModelListItem, EnabledAiModel } from 'model-bank';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { clientDB, initializeDB } from '@/database/client/db';
-import {
-  AiProviderDetailItem,
-  AiProviderListItem,
-  AiProviderRuntimeConfig,
-  EnabledProvider,
-} from '@/types/aiProvider';
 
 import { AiInfraRepos } from './index';
 
