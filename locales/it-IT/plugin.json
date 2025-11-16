@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Modifica file",
+      "getCommandOutput": "Ottieni output del codice",
+      "globLocalFiles": "Cerca file corrispondenti",
+      "grepContent": "Cerca contenuto",
+      "killCommand": "Termina esecuzione del codice",
       "listLocalFiles": "Visualizza lista file",
       "moveLocalFiles": "Sposta file",
       "readLocalFile": "Leggi contenuto file",

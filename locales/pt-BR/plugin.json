@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Editar arquivo",
+      "getCommandOutput": "Obter saída do código",
+      "globLocalFiles": "Buscar arquivos correspondentes",
+      "grepContent": "Procurar conteúdo",
+      "killCommand": "Encerrar execução do código",
       "listLocalFiles": "Ver lista de arquivos",
       "moveLocalFiles": "Mover arquivos",
       "readLocalFile": "Ler conteúdo do arquivo",

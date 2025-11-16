@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Bestand bewerken",
+      "getCommandOutput": "Code-uitvoer ophalen",
+      "globLocalFiles": "Bestanden zoeken",
+      "grepContent": "Inhoud doorzoeken",
+      "killCommand": "Code-uitvoering beëindigen",
       "listLocalFiles": "Bestandslijst bekijken",
       "moveLocalFiles": "Bestanden verplaatsen",
       "readLocalFile": "Bestandsinhoud lezen",

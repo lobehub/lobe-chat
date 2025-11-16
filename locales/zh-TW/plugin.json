@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "編輯檔案",
+      "getCommandOutput": "取得程式輸出",
+      "globLocalFiles": "匹配搜尋檔案",
+      "grepContent": "搜尋內容",
+      "killCommand": "終止程式執行",
       "listLocalFiles": "查看檔案列表",
       "moveLocalFiles": "移動檔案",
       "readLocalFile": "讀取檔案內容",

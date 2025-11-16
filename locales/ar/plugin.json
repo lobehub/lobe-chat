@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "تحرير الملف",
+      "getCommandOutput": "الحصول على مخرجات الأوامر",
+      "globLocalFiles": "البحث عن الملفات المطابقة",
+      "grepContent": "البحث في المحتوى",
+      "killCommand": "إيقاف تنفيذ الأمر",
       "listLocalFiles": "عرض قائمة الملفات",
       "moveLocalFiles": "نقل الملفات",
       "readLocalFile": "قراءة محتوى الملف",

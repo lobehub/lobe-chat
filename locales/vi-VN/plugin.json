@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Chỉnh sửa tệp",
+      "getCommandOutput": "Lấy đầu ra mã lệnh",
+      "globLocalFiles": "Tìm kiếm tệp",
+      "grepContent": "Tìm kiếm nội dung",
+      "killCommand": "Dừng thực thi mã",
       "listLocalFiles": "Xem danh sách tệp",
       "moveLocalFiles": "Di chuyển tệp",
       "readLocalFile": "Đọc nội dung tệp",
