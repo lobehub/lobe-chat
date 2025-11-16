@@ -122,9 +122,6 @@
       "eslint --fix"
     ]
   },
-  "overrides": {
-    "eta": "4.0.1"
-  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.10",
@@ -398,9 +395,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vercel/speed-insights"
-    ],
-    "overrides": {
-      "eta": "4.0.1"
-    }
+    ]
   }
 }
