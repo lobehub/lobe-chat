@@ -1,8 +1,3 @@
-import {
-  AdminAction,
-  SubscriptionTier,
-  UserStatus,
-} from '@lobechat/types';
 import { z } from 'zod';
 
 import { authedProcedure, router } from '@/libs/trpc/lambda';
@@ -44,7 +39,19 @@ const UpdateUserRequestSchema = z.object({
 });
 
 const AuditLogQuerySchema = z.object({
-  action: z.string().optional(),
+  action: z
+    .enum([
+      'user_created',
+      'user_approved',
+      'user_suspended',
+      'user_banned',
+      'user_reactivated',
+      'tier_changed',
+      'token_limit_changed',
+      'admin_notes_updated',
+      'user_deleted',
+    ])
+    .optional(),
   adminId: z.string().optional(),
   endDate: z.date().optional(),
   limit: z.number().min(1).max(100).optional().default(50),
@@ -73,9 +80,11 @@ export const adminRouter = router({
   /**
    * Bulk approve multiple pending users
    */
-  bulkApproveUsers: adminProcedure.input(BulkApproveUsersSchema).mutation(async ({ ctx, input }) => {
-    return ctx.adminService.bulkApproveUsers(input.userIds);
-  }),
+  bulkApproveUsers: adminProcedure
+    .input(BulkApproveUsersSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.adminService.bulkApproveUsers(input.userIds);
+    }),
 
   /**
    * Get audit logs with optional filters
@@ -112,9 +121,11 @@ export const adminRouter = router({
   /**
    * Get user by ID with admin details
    */
-  getUserById: adminProcedure.input(z.object({ userId: z.string() })).query(async ({ ctx, input }) => {
-    return ctx.adminService.getUserById(input.userId);
-  }),
+  getUserById: adminProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.adminService.getUserById(input.userId);
+    }),
 
   /**
    * Get paginated list of users
