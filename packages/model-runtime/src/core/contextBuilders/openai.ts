@@ -49,7 +49,7 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
       if (msg.tool_call_id !== undefined) result.tool_call_id = msg.tool_call_id;
       if (msg.function_call !== undefined) result.function_call = msg.function_call;
 
-      // it's compatible for DeepSeek
+      // it's compatible for DeepSeek & Moonshot
       if (msg.reasoning_content !== undefined) result.reasoning_content = msg.reasoning_content;
 
       return result;
