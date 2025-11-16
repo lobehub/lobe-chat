@@ -32,6 +32,7 @@ const SettingsPage = async (props: DynamicLayoutProps) => {
         showOpenAIProxyUrl: showOpenAIProxyUrl,
       }}
     >
+      {/* @ts-ignore */}
       <SettingsLayout {...props} />
     </SettingsContextProvider>
   );
