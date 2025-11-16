@@ -1,4 +1,4 @@
-import { isDesktop, isUsePgliteDB } from '@lobechat/const';
+import { isDesktop } from '@lobechat/const';
 import { getModelPropertyWithFallback, resolveImageSinglePrice } from '@lobechat/model-runtime';
 import { uniqBy } from 'lodash-es';
 import {
@@ -380,7 +380,7 @@ export const createAiProviderSlice: StateCreator<
         };
       },
       {
-        focusThrottleInterval: isDesktop || isUsePgliteDB ? 100 : undefined,
+        focusThrottleInterval: isDesktop ? 100 : undefined,
         onSuccess: (data) => {
           if (!data) return;
 
