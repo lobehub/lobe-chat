@@ -22,9 +22,9 @@ describe('parse', () => {
 
   describe('Tool Usage', () => {
     it('should parse assistant with tools correctly', () => {
-      const result = parse(inputs.assistantWithTools);
+      const result = parse(inputs.assistantGroup.assistantWithTools);
 
-      expect(serializeParseResult(result)).toEqual(outputs.assistantWithTools);
+      expect(serializeParseResult(result)).toEqual(outputs.assistantGroup.assistantWithTools);
     });
 
     it('should include follow-up messages after assistant chain', () => {
@@ -99,11 +99,11 @@ describe('parse', () => {
     });
   });
 
-  describe('Complex Scenarios', () => {
-    it('should handle complex mixed scenarios correctly', () => {
-      const result = parse(inputs.complexScenario);
+  describe('Assistant Group Scenarios', () => {
+    it('should handle tools with assistant branches correctly', () => {
+      const result = parse(inputs.assistantGroup.toolsWithBranches);
 
-      expect(serializeParseResult(result)).toEqual(outputs.complexScenario);
+      expect(serializeParseResult(result)).toEqual(outputs.assistantGroup.toolsWithBranches);
     });
   });
 
