@@ -2,12 +2,12 @@ import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import {
   ArrowDownFromLine,
-  ChevronDown,
-  ChevronUp,
   Copy,
   DownloadIcon,
   Edit,
   LanguagesIcon,
+  ListChevronsDownUp,
+  ListChevronsUpDown,
   ListRestart,
   Play,
   RotateCcw,
@@ -48,12 +48,10 @@ export const useChatListActionsBar = ({
   hasThread,
   isContinuing,
   isRegenerating,
-  isCollapsed,
 }: {
   hasThread?: boolean;
   isContinuing?: boolean;
   isRegenerating?: boolean;
-  isCollapsed?: boolean;
 } = {}): ChatListActionsBar => {
   const { t } = useTranslation(['common', 'chat']);
 
@@ -65,7 +63,7 @@ export const useChatListActionsBar = ({
         label: t('branching'),
       },
       collapse: {
-        icon: ChevronUp,
+        icon: ListChevronsDownUp,
         key: 'collapse',
         label: t('messageAction.collapse', { ns: 'chat' }),
       },
@@ -105,7 +103,7 @@ export const useChatListActionsBar = ({
         label: t('edit'),
       },
       expand: {
-        icon: ChevronDown,
+        icon: ListChevronsUpDown,
         key: 'expand',
         label: t('messageAction.expand', { ns: 'chat' }),
       },
@@ -142,6 +140,6 @@ export const useChatListActionsBar = ({
         label: t('tts.action', { ns: 'chat' }),
       },
     }),
-    [hasThread, isContinuing, isRegenerating, isCollapsed],
+    [hasThread, isContinuing, isRegenerating],
   );
 };

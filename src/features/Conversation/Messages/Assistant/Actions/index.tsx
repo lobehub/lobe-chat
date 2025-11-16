@@ -46,7 +46,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     translate,
     collapse,
     expand,
-  } = useChatListActionsBar({ hasThread, isRegenerating, isCollapsed });
+  } = useChatListActionsBar({ hasThread, isRegenerating });
 
   const hasTools = !!tools;
 
@@ -56,11 +56,10 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
   const items = useMemo(() => {
     if (hasTools) return [delAndRegenerate, copy];
 
-    const collapseAction = isCollapsed ? expand : collapse;
-    return [edit, copy, collapseAction, inThread || isGroupSession ? null : branching].filter(
+    return [edit, copy, inThread || isGroupSession ? null : branching].filter(
       Boolean,
     ) as ActionIconGroupItemType[];
-  }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching, isCollapsed, collapse, expand]);
+  }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching]);
 
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
@@ -178,6 +177,8 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 
+  const collapseAction = isCollapsed ? expand : collapse;
+
   return (
     <>
       <ActionIconGroup
@@ -186,6 +187,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
           items: [
             edit,
             copy,
+            collapseAction,
             divider,
             tts,
             translate,
