@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support to collapse message."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.66"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-16",
