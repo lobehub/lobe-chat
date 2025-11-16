@@ -1,8 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import type { ChatTopicMetadata } from '@lobechat/types';
 import { boolean, index, jsonb, pgTable, primaryKey, text, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-
-import { ChatTopicMetadata } from '@/types/topic';
 
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamps, timestamptz } from './_helpers';

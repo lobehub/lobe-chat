@@ -7,11 +7,11 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import PluginResult from '@/features/Conversation/Messages/Assistant/Tool/Inspector/PluginResult';
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors } from '@/store/chat/selectors';
 
+import PluginResult from '../Inspector/PluginResult';
 import Arguments from './Arguments';
 import KeyValueEditor from './KeyValueEditor';
 

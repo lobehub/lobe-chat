@@ -31,6 +31,7 @@ export interface MessagePublicApiAction {
    */
   clearMessage: () => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  deleteAssistantMessage: (id: string) => Promise<void>;
   deleteDBMessage: (id: string) => Promise<void>;
   deleteToolMessage: (id: string) => Promise<void>;
   clearAllMessages: () => Promise<void>;
@@ -97,12 +98,28 @@ export const messagePublicApi: StateCreator<
     }
   },
 
+  deleteAssistantMessage: async (id) => {
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+    if (!message) return;
+
+    let ids = [message.id];
+    if (message.tools) {
+      const allMessages = dbMessageSelectors.activeDbMessages(get());
+
+      const toolMessageIds = message.tools.flatMap((tool) => {
+        const messages = allMessages.filter((m) => m.tool_call_id === tool.id);
+        return messages.map((m) => m.id);
+      });
+      ids = ids.concat(toolMessageIds);
+    }
+
+    await get().optimisticDeleteMessages(ids);
+  },
   deleteMessage: async (id) => {
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message) return;
 
     let ids = [message.id];
-    const allMessages = displayMessageSelectors.activeDisplayMessages(get());
 
     // Handle assistantGroup messages: delete all child blocks and tool results
     if (message.role === 'assistantGroup' && message.children) {
@@ -117,23 +134,8 @@ export const messagePublicApi: StateCreator<
       });
       ids = ids.concat(toolResultIds);
     }
-    // Handle regular messages with tools: find and delete related tool messages
-    else if (message.tools) {
-      const toolMessageIds = message.tools.flatMap((tool) => {
-        const messages = allMessages.filter((m) => m.tool_call_id === tool.id);
-        return messages.map((m) => m.id);
-      });
-      ids = ids.concat(toolMessageIds);
-    }
 
-    get().internal_dispatchMessage({ type: 'deleteMessages', ids });
-    const result = await messageService.removeMessages(ids, {
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
-    });
-    if (result?.success && result.messages) {
-      get().replaceMessages(result.messages);
-    }
+    await get().optimisticDeleteMessages(ids);
   },
 
   deleteDBMessage: async (id) => {

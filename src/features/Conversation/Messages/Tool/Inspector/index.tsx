@@ -68,10 +68,8 @@ interface InspectorProps {
   messageId: string;
   payload: object;
   setShowPluginRender: (show: boolean) => void;
-  setShowRender: (show: boolean) => void;
   showPluginRender: boolean;
   showPortal?: boolean;
-  showRender: boolean;
   style?: CSSProperties;
 }
 
@@ -83,9 +81,7 @@ const Inspectors = memo<InspectorProps>(
     apiName,
     id,
     arguments: requestArgs,
-    showRender,
     payload,
-    setShowRender,
     showPluginRender,
     setShowPluginRender,
     hidePluginUI = false,
@@ -98,16 +94,7 @@ const Inspectors = memo<InspectorProps>(
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
-          <Flexbox
-            align={'center'}
-            className={styles.tool}
-            gap={8}
-            horizontal
-            onClick={() => {
-              setShowRender(!showRender);
-            }}
-            paddingInline={4}
-          >
+          <Flexbox align={'center'} className={styles.tool} gap={8} horizontal paddingInline={4}>
             <ToolTitle
               apiName={apiName}
               identifier={identifier}
@@ -117,7 +104,7 @@ const Inspectors = memo<InspectorProps>(
             />
           </Flexbox>
           <Flexbox className={styles.actions} horizontal>
-            {showRender && !hidePluginUI && (
+            {!hidePluginUI && (
               <ActionIcon
                 icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                 onClick={() => {

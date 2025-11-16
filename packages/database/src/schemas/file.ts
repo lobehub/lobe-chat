@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import { FileSource } from '@lobechat/types';
 import {
   boolean,
   index,
@@ -12,8 +13,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-
-import { FileSource } from '@/types/files';
 
 import { idGenerator } from '../utils/idGenerator';
 import { accessedAt, createdAt, timestamps } from './_helpers';
