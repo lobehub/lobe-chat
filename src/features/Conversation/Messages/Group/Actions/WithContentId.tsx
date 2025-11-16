@@ -24,19 +24,30 @@ interface GroupActionsProps {
 
 const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }) => {
   const { tools } = data;
-  const [isThreadMode, hasThread, isRegenerating] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating, isCollapsed] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     messageStateSelectors.isMessageRegenerating(id)(s),
+    messageStateSelectors.isMessageCollapsed(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
 
-  const { edit, delAndRegenerate, regenerate, copy, divider, del, branching, share } =
-    useChatListActionsBar({
-      hasThread,
-      isRegenerating,
-    });
+  const {
+    edit,
+    delAndRegenerate,
+    regenerate,
+    copy,
+    divider,
+    del,
+    branching,
+    share,
+    expand,
+    collapse,
+  } = useChatListActionsBar({
+    hasThread,
+    isRegenerating,
+  });
 
   const hasTools = !!tools;
 
@@ -64,6 +75,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     resendThreadMessage,
     delAndResendThreadMessage,
     toggleMessageEditing,
+    toggleMessageCollapsed,
   ] = useChatStore((s) => [
     s.deleteMessage,
     s.regenerateAssistantMessage,
@@ -74,6 +86,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
+    s.toggleMessageCollapsed,
   ]);
   const { message } = App.useApp();
   const virtuosoRef = use(VirtuosoContext);
@@ -133,6 +146,12 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
           setShareModal(true);
           break;
         }
+
+        case 'collapse':
+        case 'expand': {
+          toggleMessageCollapsed(id);
+          break;
+        }
       }
 
       if (action.keyPath.at(-1) === 'translate') {
@@ -146,6 +165,8 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     [data, topic],
   );
 
+  const collapseAction = isCollapsed ? expand : collapse;
+
   return (
     <>
       <ActionIconGroup
@@ -154,6 +175,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
           items: [
             edit,
             copy,
+            collapseAction,
             divider,
             share,
             divider,

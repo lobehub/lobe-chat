@@ -17,6 +17,7 @@
   "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
   "chatList": {
+    "expandMessage": "Bericht uitvouwen",
     "longMessageDetail": "Bekijk details"
   },
   "clearCurrentMessages": "Huidige berichten wissen",
@@ -173,9 +174,11 @@
     "title": "Leden vermelden"
   },
   "messageAction": {
+    "collapse": "Bericht samenvouwen",
     "continueGeneration": "Doorgaan met genereren",
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
+    "expand": "Bericht uitvouwen",
     "regenerate": "Opnieuw genereren"
   },
   "messages": {

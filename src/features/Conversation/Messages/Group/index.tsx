@@ -10,22 +10,19 @@ import Avatar from '@/features/ChatItem/components/Avatar';
 import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import Title from '@/features/ChatItem/components/Title';
 import { useStyles } from '@/features/ChatItem/style';
-import GroupChildren from '@/features/Conversation/Messages/Group/GroupChildren';
 import Usage from '@/features/Conversation/components/Extras/Usage';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import {
-  displayMessageSelectors,
-  messageStateSelectors,
-} from '@/store/chat/slices/message/selectors';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
 import { GroupActionsBar } from './Actions';
 import EditState from './EditState';
+import Group from './Group';
 
 const MOBILE_AVATAR_SIZE = 32;
 
@@ -111,8 +108,9 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing }) => 
           width={'100%'}
         >
           {children && children.length > 0 && (
-            <GroupChildren
+            <Group
               blocks={children}
+              content={lastAssistantMsg?.content}
               contentId={contentId}
               disableEditing={disableEditing}
               id={id}

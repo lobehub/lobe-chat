@@ -23,10 +23,11 @@ interface AssistantActionsProps {
 }
 export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
   const { error, tools } = data;
-  const [isThreadMode, hasThread, isRegenerating] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating, isCollapsed] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     messageStateSelectors.isMessageRegenerating(id)(s),
+    messageStateSelectors.isMessageCollapsed(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
@@ -43,6 +44,8 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     share,
     tts,
     translate,
+    collapse,
+    expand,
   } = useChatListActionsBar({ hasThread, isRegenerating });
 
   const hasTools = !!tools;
@@ -72,6 +75,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     resendThreadMessage,
     delAndResendThreadMessage,
     toggleMessageEditing,
+    toggleMessageCollapsed,
   ] = useChatStore((s) => [
     s.deleteMessage,
     s.regenerateAssistantMessage,
@@ -83,6 +87,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
+    s.toggleMessageCollapsed,
   ]);
   const { message } = App.useApp();
   const virtuosoRef = use(VirtuosoContext);
@@ -142,6 +147,12 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
           break;
         }
 
+        case 'collapse':
+        case 'expand': {
+          toggleMessageCollapsed(id);
+          break;
+        }
+
         // case 'export': {
         //   setModal(true);
         //   break;
@@ -166,6 +177,8 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 
+  const collapseAction = isCollapsed ? expand : collapse;
+
   return (
     <>
       <ActionIconGroup
@@ -174,6 +187,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
           items: [
             edit,
             copy,
+            collapseAction,
             divider,
             tts,
             translate,

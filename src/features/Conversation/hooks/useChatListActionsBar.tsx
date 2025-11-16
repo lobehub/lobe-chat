@@ -6,6 +6,8 @@ import {
   DownloadIcon,
   Edit,
   LanguagesIcon,
+  ListChevronsDownUp,
+  ListChevronsUpDown,
   ListRestart,
   Play,
   RotateCcw,
@@ -27,12 +29,14 @@ const translateStyle = css`
 
 interface ChatListActionsBar {
   branching: ActionIconGroupItemType;
+  collapse: ActionIconGroupItemType;
   continueGeneration: ActionIconGroupItemType;
   copy: ActionIconGroupItemType;
   del: ActionIconGroupItemType;
   delAndRegenerate: ActionIconGroupItemType;
   divider: { type: 'divider' };
   edit: ActionIconGroupItemType;
+  expand: ActionIconGroupItemType;
   export: ActionIconGroupItemType;
   regenerate: ActionIconGroupItemType;
   share: ActionIconGroupItemType;
@@ -57,6 +61,11 @@ export const useChatListActionsBar = ({
         icon: Split,
         key: 'branching',
         label: t('branching'),
+      },
+      collapse: {
+        icon: ListChevronsDownUp,
+        key: 'collapse',
+        label: t('messageAction.collapse', { ns: 'chat' }),
       },
       continueGeneration: {
         disabled: isContinuing,
@@ -92,6 +101,11 @@ export const useChatListActionsBar = ({
         icon: Edit,
         key: 'edit',
         label: t('edit'),
+      },
+      expand: {
+        icon: ListChevronsUpDown,
+        key: 'expand',
+        label: t('messageAction.expand', { ns: 'chat' }),
       },
       export: {
         icon: DownloadIcon,

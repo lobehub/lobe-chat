@@ -9,18 +9,12 @@
         {
           "id": "msg-102",
           "type": "message",
-          "tools": [
-            "msg-103",
-            "msg-104"
-          ]
+          "tools": ["msg-103", "msg-104"]
         },
         {
           "id": "msg-105",
           "type": "message",
-          "tools": [
-            "msg-106",
-            "msg-107"
-          ]
+          "tools": ["msg-106", "msg-107"]
         },
         {
           "id": "msg-108",
@@ -98,6 +92,9 @@
             "totalInputTokens": 28,
             "totalOutputTokens": 45,
             "totalTokens": 73
+          },
+          "metadata": {
+            "collapsed": true
           }
         },
         {
@@ -178,6 +175,9 @@
         "totalOutputTokens": 199,
         "totalTokens": 628,
         "cost": 0.0018839999999999998
+      },
+      "metadata": {
+        "collapsed": true
       }
     }
   ],

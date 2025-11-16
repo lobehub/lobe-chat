@@ -17,6 +17,7 @@
   "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
   "chatList": {
+    "expandMessage": "Expand Message",
     "longMessageDetail": "View Details"
   },
   "clearCurrentMessages": "Clear current session messages",
@@ -173,9 +174,11 @@
     "title": "Mention Members"
   },
   "messageAction": {
+    "collapse": "Collapse Message",
     "continueGeneration": "Continue Generating",
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
+    "expand": "Expand Message",
     "regenerate": "Regenerate"
   },
   "messages": {

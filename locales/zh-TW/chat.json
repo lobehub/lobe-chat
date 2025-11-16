@@ -17,6 +17,7 @@
   "availableAgents": "可用助理",
   "backToBottom": "返回底部",
   "chatList": {
+    "expandMessage": "展開訊息",
     "longMessageDetail": "查看詳情"
   },
   "clearCurrentMessages": "清空當前對話",
@@ -173,9 +174,11 @@
     "title": "提及成員"
   },
   "messageAction": {
+    "collapse": "收起訊息",
     "continueGeneration": "繼續生成",
     "delAndRegenerate": "刪除並重新生成",
     "deleteDisabledByThreads": "存在子話題，無法刪除",
+    "expand": "展開訊息",
     "regenerate": "重新生成"
   },
   "messages": {
