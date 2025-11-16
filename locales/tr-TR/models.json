@@ -1049,6 +1049,9 @@
   "deepseek-r1-0528": {
     "description": "685 milyar parametreli tam sürüm model, 28 Mayıs 2025'te yayınlandı. DeepSeek-R1, son eğitim aşamasında pek az etiketli veriyle güçlendirilmiş öğrenme tekniklerini geniş çapta kullanarak modelin çıkarım yeteneğini büyük ölçüde artırdı. Matematik, kodlama, doğal dil çıkarımı gibi görevlerde yüksek performans ve güçlü yetenekler sergiler."
   },
+  "deepseek-r1-250528": {
+    "description": "DeepSeek R1 250528, tam özellikli DeepSeek-R1 çıkarım modeli, zorlu matematik ve mantık görevleri için uygundur."
+  },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B hızlı versiyonu, gerçek zamanlı çevrimiçi arama desteği ile, model performansını korurken daha hızlı yanıt süreleri sunar."
   },
@@ -1059,31 +1062,34 @@
     "description": "deepseek-r1-distill-llama, DeepSeek-R1'den Llama tabanlı damıtılarak elde edilmiş bir modeldir."
   },
   "deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek R1 - DeepSeek paketindeki daha büyük ve daha akıllı model - Llama 70B mimarisine damıtılmıştır. Referans testleri ve insan değerlendirmelerine dayanarak, bu model orijinal Llama 70B'den daha akıllıdır, özellikle matematik ve gerçeklik doğruluğu gerektiren görevlerde mükemmel performans sergilemektedir."
+    "description": "DeepSeek R1 Distill Llama 70B, genel amaçlı R1 çıkarım yeteneğini Llama ekosistemiyle birleştiren distilasyon modeli."
   },
   "deepseek-r1-distill-llama-8b": {
-    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+    "description": "DeepSeek-R1-Distill-Llama-8B, Llama-3.1-8B tabanlı bir distilasyon büyük dil modelidir ve DeepSeek R1 çıktılarıyla eğitilmiştir."
+  },
+  "deepseek-r1-distill-qianfan-70b": {
+    "description": "DeepSeek R1 Distill Qianfan 70B, Qianfan-70B tabanlı R1 distilasyon modeli, yüksek maliyet-performans oranına sahiptir."
+  },
+  "deepseek-r1-distill-qianfan-8b": {
+    "description": "DeepSeek R1 Distill Qianfan 8B, Qianfan-8B tabanlı R1 distilasyon modeli, orta ve küçük ölçekli uygulamalar için uygundur."
   },
   "deepseek-r1-distill-qianfan-llama-70b": {
-    "description": "14 Şubat 2025'te ilk kez piyasaya sürülen bu model, Qianfan büyük model geliştirme ekibi tarafından Llama3_70B temel modeli (Meta Llama ile oluşturulmuştur) kullanılarak damıtılmıştır ve damıtma verilerine Qianfan'ın metinleri de eklenmiştir."
-  },
-  "deepseek-r1-distill-qianfan-llama-8b": {
-    "description": "14 Şubat 2025'te ilk kez piyasaya sürülen bu model, Qianfan büyük model geliştirme ekibi tarafından Llama3_8B temel modeli (Meta Llama ile oluşturulmuştur) kullanılarak damıtılmıştır ve damıtma verilerine Qianfan'ın metinleri de eklenmiştir."
+    "description": "DeepSeek R1 Distill Qianfan Llama 70B, Llama-70B tabanlı R1 distilasyon modelidir."
   },
   "deepseek-r1-distill-qwen": {
     "description": "deepseek-r1-distill-qwen, Qwen temel alınarak DeepSeek-R1'den damıtılmış bir modeldir."
   },
   "deepseek-r1-distill-qwen-1.5b": {
-    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+    "description": "DeepSeek R1 Distill Qwen 1.5B, son derece hafif R1 distilasyon modeli, düşük kaynaklı ortamlar için uygundur."
   },
   "deepseek-r1-distill-qwen-14b": {
-    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+    "description": "DeepSeek R1 Distill Qwen 14B, orta ölçekli R1 distilasyon modeli, çoklu senaryo dağıtımı için uygundur."
   },
   "deepseek-r1-distill-qwen-32b": {
-    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+    "description": "DeepSeek R1 Distill Qwen 32B, Qwen-32B tabanlı R1 distilasyon modeli, performans ve maliyet arasında denge sağlar."
   },
   "deepseek-r1-distill-qwen-7b": {
-    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+    "description": "DeepSeek R1 Distill Qwen 7B, hafif R1 distilasyon modeli, uç nokta ve kurumsal özel ortamlar için uygundur."
   },
   "deepseek-r1-fast-online": {
     "description": "DeepSeek R1 tam hızlı versiyonu, gerçek zamanlı çevrimiçi arama desteği ile, 671B parametrenin güçlü yetenekleri ile daha hızlı yanıt sürelerini birleştirir."
@@ -1112,11 +1118,23 @@
   "deepseek-v3.1-terminus": {
     "description": "DeepSeek-V3.1-Terminus, DeepSeek tarafından geliştirilen ve uç cihazlar için optimize edilmiş büyük dil modeli sürümüdür."
   },
+  "deepseek-v3.1-think-250821": {
+    "description": "DeepSeek V3.1 Think 250821, Terminus sürümüne karşılık gelen derin düşünme modeli, yüksek performanslı çıkarım senaryoları için uygundur."
+  },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: Karmaşık çıkarım ve bağlantılı düşünme yeteneklerini geliştiren yeni nesil çıkarım modeli, derinlemesine analiz gerektiren görevler için uygundur."
   },
   "deepseek-v3.2-exp": {
     "description": "deepseek-v3.2-exp seyrek dikkat mekanizması getirir, uzun metinlerin işlenmesinde eğitim ve çıkarım verimliliğini artırmayı amaçlar, fiyatı deepseek-v3.1'den daha düşüktür."
+  },
+  "deepseek-v3.2-think": {
+    "description": "DeepSeek V3.2 Think, tam özellikli derin düşünme modeli, uzun zincirli çıkarım yeteneklerini güçlendirir."
+  },
+  "deepseek-vl2": {
+    "description": "DeepSeek VL2, çok modlu model, görsel ve metin anlayışı ile ayrıntılı görsel soru-cevap desteği sunar."
+  },
+  "deepseek-vl2-small": {
+    "description": "DeepSeek VL2 Small, hafif çok modlu sürüm, kaynak kısıtlı ve yüksek eşzamanlılık gerektiren senaryolar için uygundur."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3, 685B parametreye sahip bir uzman karışık modeldir ve DeepSeek ekibinin amiral gemisi sohbet modeli serisinin en son iterasyonudur.\n\nÇeşitli görevlerde mükemmel performans sergileyen [DeepSeek V3](/deepseek/deepseek-chat-v3) modelini devralmıştır."
@@ -1253,83 +1271,89 @@
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
   },
-  "ernie-3.5-128k": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi büyük ölçekli dil modeli, geniş bir Çince ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog soru-cevap, yaratım, eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
-  },
-  "ernie-3.5-8k": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi büyük ölçekli dil modeli, geniş bir Çince ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog soru-cevap, yaratım, eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
-  },
-  "ernie-3.5-8k-preview": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi büyük ölçekli dil modeli, geniş bir Çince ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog soru-cevap, yaratım, eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
-  },
-  "ernie-4.0-8k-latest": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e göre model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
-  },
-  "ernie-4.0-8k-preview": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e göre model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
-  },
-  "ernie-4.0-turbo-128k": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
-  },
-  "ernie-4.0-turbo-8k-latest": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
-  },
-  "ernie-4.0-turbo-8k-preview": {
-    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
+  "ernie-4.5-0.3b": {
+    "description": "ERNIE 4.5 0.3B, açık kaynaklı hafif model, yerel ve özelleştirilmiş dağıtım çözümleri için uygundur."
   },
   "ernie-4.5-21b-a3b": {
-    "description": "ERNIE 4.5 21B A3B, Baidu Wenxin tarafından geliştirilen karma uzman modelidir ve güçlü akıl yürütme ile çok dilli yeteneklere sahiptir."
+    "description": "ERNIE 4.5 21B A3B, büyük parametreli açık kaynak modeli, anlama ve üretim görevlerinde üstün performans sunar."
   },
   "ernie-4.5-300b-a47b": {
     "description": "ERNIE 4.5 300B A47B, Baidu Wenxin tarafından geliştirilen son derece büyük ölçekli karma uzman modelidir ve üstün akıl yürütme yeteneklerine sahiptir."
   },
   "ernie-4.5-8k-preview": {
-    "description": "Wenxin büyük modeli 4.5, Baidu tarafından geliştirilen yeni nesil yerel çok modlu temel büyük modeldir. Birden fazla modun birleşik modellemesi ile işbirlikçi optimizasyon sağlar, çok modlu anlama yeteneği mükemmeldir; dil yetenekleri, anlama, üretim, mantık ve hafıza yetenekleri önemli ölçüde geliştirilmiştir, yanılsamaları ortadan kaldırma, mantıksal akıl yürütme ve kod yetenekleri belirgin şekilde artmıştır."
+    "description": "ERNIE 4.5 8K Preview, 8K bağlam önizleme modeli, Wenxin 4.5 yeteneklerini deneyimlemek ve test etmek için kullanılır."
   },
   "ernie-4.5-turbo-128k": {
-    "description": "Wenxin 4.5 Turbo, yanılsamaları giderme, mantıksal akıl yürütme ve kodlama yetenekleri gibi alanlarda belirgin bir artış göstermektedir. Wenxin 4.5 ile karşılaştırıldığında, daha hızlı ve daha düşük maliyetlidir. Modelin yetenekleri genel olarak artırılmıştır, çoklu uzun geçmiş diyalog işleme ve uzun belgeleri anlama görevlerini daha iyi karşılamaktadır."
+    "description": "ERNIE 4.5 Turbo 128K, yüksek performanslı genel model, arama destekli ve araç çağrılı görevleri destekler, soru-cevap, kodlama ve akıllı ajanlar gibi çeşitli iş senaryolarına uygundur."
+  },
+  "ernie-4.5-turbo-128k-preview": {
+    "description": "ERNIE 4.5 Turbo 128K Preview, resmi sürümle aynı yetenek deneyimini sunar, entegrasyon ve kademeli testler için uygundur."
   },
   "ernie-4.5-turbo-32k": {
-    "description": "Wenxin 4.5 Turbo, yanılsamaları giderme, mantıksal akıl yürütme ve kodlama yetenekleri gibi alanlarda belirgin bir artış göstermektedir. Wenxin 4.5 ile karşılaştırıldığında, daha hızlı ve daha düşük maliyetlidir. Metin yaratma, bilgi sorgulama gibi yeteneklerde belirgin bir artış sağlanmıştır. Çıktı uzunluğu ve tam cümle gecikmesi, ERNIE 4.5'e kıyasla artmıştır."
+    "description": "ERNIE 4.5 Turbo 32K, orta-uzun bağlam sürümü, soru-cevap, bilgi tabanı arama ve çok turlu diyalog gibi senaryolar için uygundur."
+  },
+  "ernie-4.5-turbo-latest": {
+    "description": "ERNIE 4.5 Turbo En Son Sürüm, kapsamlı performans optimizasyonu ile üretim ortamında genel amaçlı ana model olarak uygundur."
+  },
+  "ernie-4.5-turbo-vl": {
+    "description": "ERNIE 4.5 Turbo VL, olgun çok modlu model, üretim ortamında görsel-metin anlama ve tanıma görevleri için uygundur."
   },
   "ernie-4.5-turbo-vl-32k": {
-    "description": "Wenxin Yiyan büyük modelinin yeni versiyonu, görüntü anlama, yaratma, çeviri, kodlama gibi yeteneklerde belirgin bir artış göstermektedir, ilk kez 32K bağlam uzunluğunu desteklemekte ve ilk token gecikmesi belirgin şekilde azaltılmıştır."
+    "description": "ERNIE 4.5 Turbo VL 32K, orta-uzun metin çok modlu sürüm, uzun belgeler ve görsellerin birlikte anlaşılması için uygundur."
+  },
+  "ernie-4.5-turbo-vl-32k-preview": {
+    "description": "ERNIE 4.5 Turbo VL 32K Preview, çok modlu 32K önizleme sürümü, uzun bağlamlı görsel yeteneklerin değerlendirilmesini kolaylaştırır."
+  },
+  "ernie-4.5-turbo-vl-latest": {
+    "description": "ERNIE 4.5 Turbo VL En Son Sürüm, en yeni çok modlu sürüm, daha iyi görsel-metin anlama ve çıkarım performansı sunar."
+  },
+  "ernie-4.5-turbo-vl-preview": {
+    "description": "ERNIE 4.5 Turbo VL Preview, çok modlu önizleme modeli, görsel-metin anlama ve üretimi destekler, görsel soru-cevap ve içerik anlama deneyimi için uygundur."
+  },
+  "ernie-4.5-vl-28b-a3b": {
+    "description": "ERNIE 4.5 VL 28B A3B, çok modlu açık kaynak modeli, görsel-metin anlama ve çıkarım görevlerini destekler."
+  },
+  "ernie-5.0-thinking-preview": {
+    "description": "Wenxin 5.0 Thinking Önizleme Sürümü, yerel tam modlu amiral gemisi modeli, metin, görsel, ses ve video için birleşik modelleme desteği sunar, karmaşık soru-cevap, yaratım ve akıllı ajan senaryoları için uygundur."
   },
   "ernie-char-8k": {
-    "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
+    "description": "ERNIE Character 8K, karakter kişiliği diyalog modeli, IP karakter oluşturma ve uzun vadeli sohbet için uygundur."
   },
   "ernie-char-fiction-8k": {
-    "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
+    "description": "ERNIE Character Fiction 8K, roman ve hikaye yaratımı için kişilik modeli, uzun metinli hikaye üretimi için uygundur."
+  },
+  "ernie-char-fiction-8k-preview": {
+    "description": "ERNIE Character Fiction 8K Preview, karakter ve hikaye yaratımı modeli önizleme sürümü, işlev deneyimi ve test için kullanılır."
   },
   "ernie-irag-edit": {
-    "description": "Baidu tarafından geliştirilen ERNIE iRAG Edit görüntü düzenleme modeli, görüntü tabanlı silme (erase), yeniden boyama (repaint) ve varyasyon (variation) gibi işlemleri destekler."
+    "description": "ERNIE iRAG Edit, görsel silme, yeniden çizim ve varyant üretimini destekleyen görsel düzenleme modeli."
   },
   "ernie-lite-8k": {
-    "description": "ERNIE Lite, Baidu tarafından geliştirilen hafif büyük dil modelidir, mükemmel model performansı ve çıkarım yeteneği ile düşük hesaplama gücüne sahip AI hızlandırıcı kartları için uygundur."
+    "description": "ERNIE Lite 8K, hafif genel model, maliyet duyarlı günlük soru-cevap ve içerik üretimi senaryoları için uygundur."
   },
   "ernie-lite-pro-128k": {
-    "description": "Baidu tarafından geliştirilen hafif büyük dil modeli, mükemmel model performansı ve çıkarım yeteneği ile ERNIE Lite'dan daha iyi sonuçlar verir, düşük hesaplama gücüne sahip AI hızlandırıcı kartları için uygundur."
+    "description": "ERNIE Lite Pro 128K, hafif ve yüksek performanslı model, gecikme ve maliyet hassas iş senaryoları için uygundur."
   },
   "ernie-novel-8k": {
-    "description": "Baidu tarafından geliştirilen genel büyük dil modeli, roman devam ettirme yeteneğinde belirgin bir avantaja sahiptir, aynı zamanda kısa oyun, film gibi senaryolarda da kullanılabilir."
+    "description": "ERNIE Novel 8K, uzun roman ve IP hikaye yaratımı modeli, çok karakterli ve çok katmanlı anlatımda uzmandır."
   },
   "ernie-speed-128k": {
-    "description": "Baidu'nun 2024 yılında yayımladığı en son yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel, belirli senaryo sorunlarını daha iyi ele almak için temel model olarak ince ayar yapılabilir, aynı zamanda mükemmel çıkarım performansına sahiptir."
+    "description": "ERNIE Speed 128K, giriş-çıkış ücreti olmayan büyük model, uzun metin anlama ve büyük ölçekli deneme senaryoları için uygundur."
+  },
+  "ernie-speed-8k": {
+    "description": "ERNIE Speed 8K, ücretsiz ve hızlı model, günlük diyalog ve hafif metin görevleri için uygundur."
   },
   "ernie-speed-pro-128k": {
-    "description": "Baidu'nun 2024 yılında yayımladığı en son yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel, ERNIE Speed'den daha iyi sonuçlar verir, belirli senaryo sorunlarını daha iyi ele almak için temel model olarak ince ayar yapılabilir, aynı zamanda mükemmel çıkarım performansına sahiptir."
+    "description": "ERNIE Speed Pro 128K, yüksek eşzamanlılık ve yüksek maliyet-performans oranına sahip model, büyük ölçekli çevrimiçi hizmetler ve kurumsal uygulamalar için uygundur."
   },
   "ernie-tiny-8k": {
-    "description": "ERNIE Tiny, Baidu tarafından geliştirilen ultra yüksek performanslı büyük dil modelidir, dağıtım ve ince ayar maliyetleri Wenxin serisi modelleri arasında en düşüktür."
-  },
-  "ernie-x1-32k": {
-    "description": "Daha güçlü anlama, planlama, düşünme ve evrim yeteneklerine sahiptir. Daha kapsamlı bir derin düşünme modeli olarak, Wenxin X1, doğru, yaratıcı ve edebi bir şekilde, Çince bilgi sorgulama, edebi yaratım, metin yazımı, günlük diyalog, mantıksal akıl yürütme, karmaşık hesaplamalar ve araç çağırma gibi alanlarda özellikle başarılıdır."
-  },
-  "ernie-x1-32k-preview": {
-    "description": "Wenxin Büyük Model X1, daha güçlü anlama, planlama, düşünme ve evrim yeteneklerine sahiptir. Daha kapsamlı bir derin düşünme modeli olarak, Wenxin X1, doğru, yaratıcı ve edebi bir üslup sunarak, Çince bilgi sorgulama, edebi yaratım, metin yazımı, günlük diyalog, mantıksal akıl yürütme, karmaşık hesaplamalar ve araç çağırma gibi alanlarda özellikle başarılıdır."
+    "description": "ERNIE Tiny 8K, son derece hafif model, basit soru-cevap, sınıflandırma gibi düşük maliyetli çıkarım senaryoları için uygundur."
   },
   "ernie-x1-turbo-32k": {
-    "description": "ERNIE-X1-32K ile karşılaştırıldığında, modelin etkisi ve performansı daha iyidir."
+    "description": "ERNIE X1 Turbo 32K, yüksek hızlı düşünme modeli, 32K uzun bağlam desteği ile karmaşık çıkarım ve çok turlu diyaloglar için uygundur."
+  },
+  "ernie-x1.1-preview": {
+    "description": "ERNIE X1.1 Preview, ERNIE X1.1 düşünme modeli önizleme sürümü, yetenek doğrulama ve test için uygundur."
   },
   "fal-ai/bytedance/seedream/v4": {
     "description": "Seedream 4.0 resim oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve resim girişini destekler, yüksek kontrol ve kaliteli resim oluşturma deneyimi sunar. Metin istemlerine dayalı olarak resim oluşturur."
@@ -1389,7 +1413,7 @@
     "description": "FLUX.1 [schnell], şu anda açık kaynaklı en gelişmiş az adımlı modeldir; benzer rakiplerini aşmakla kalmaz, Midjourney v6.0 ve DALL·E 3 (HD) gibi güçlü damıtılmamış modellerden bile üstündür. Model, ön eğitim aşamasındaki tüm çıktı çeşitliliğini koruyacak şekilde özel olarak ince ayar yapılmıştır. Piyasadaki en gelişmiş modellere kıyasla görsel kalite, talimat uyumu, boyut/oran değişiklikleri, yazı tipi işleme ve çıktı çeşitliliği gibi alanlarda belirgin iyileştirmeler sunar ve kullanıcılara daha zengin ve çeşitli yaratıcı görüntü üretim deneyimi sağlar."
   },
   "flux.1-schnell": {
-    "description": "120 milyar parametreli düzeltilmiş akış dönüştürücüsüdür ve metin açıklamalarına göre görüntü oluşturabilir."
+    "description": "FLUX.1-schnell, yüksek performanslı görsel üretim modeli, çok çeşitli tarzlarda hızlı görsel üretimi destekler."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
@@ -1537,6 +1561,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520, son derece karmaşık ve çeşitli görevler için tasarlanmış en yeni model versiyonudur, olağanüstü performans sergiler."
+  },
+  "glm-4-32b-0414": {
+    "description": "GLM-4 32B 0414, GLM serisi genel büyük model sürümü, çok görevli metin üretimi ve anlama desteği sunar."
   },
   "glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat, anlamsal anlama, matematik, akıl yürütme, kodlama ve bilgi alanlarında yüksek performans sergiler. Web tarama, kod yürütme, özel araç çağırma ve uzun metin akıl yürütme gibi özellikleri destekler. Japonca, Korece ve Almanca dahil olmak üzere 26 dili destekler."
@@ -1826,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro, daha derin düşünme için daha fazla hesaplama gücü kullanır ve sürekli olarak daha iyi yanıtlar sunar."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — Kodlama ve ajan görevleri için optimize edilmiş amiral gemisi modelidir; yapılandırılabilir akıl yürütme gücü ve daha uzun bağlam desteği sunar."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: Sohbet senaryoları için uygun, ChatGPT’ye özel GPT-5.1 varyantı."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: Ajan tabanlı kodlama görevleri için optimize edilmiş GPT-5.1 sürümüdür; daha karmaşık kod/ajan iş akışları için Responses API ile kullanılabilir."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: Daha küçük boyutlu ve daha düşük maliyetli Codex varyantı; ajan tabanlı kodlama görevleri için optimize edilmiştir."
+  },
   "gpt-audio": {
     "description": "GPT Audio, ses giriş ve çıkışına yönelik genel sohbet modelidir ve Chat Completions API’de ses I/O kullanımını destekler."
   },
@@ -2001,13 +2040,13 @@
     "description": "Imagen 4. nesil metinden görüntüye model serisi"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4. nesil metinden görüntüye model serisi"
+    "description": "Imagen dördüncü nesil metinden görsele model serisi"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen 4. nesil metinden-görüntüye model serisi, Ultra sürümü"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4. nesil metinden görüntüye model serisi Ultra versiyonu"
+    "description": "Imagen dördüncü nesil metinden görsele model serisinin Ultra versiyonu"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small, kod üretimi, hata ayıklama ve yeniden yapılandırma görevleri için ideal olup, minimum gecikme sunar."
@@ -2036,14 +2075,26 @@
   "internlm3-latest": {
     "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir ve aynı ölçekli açık kaynak modeller arasında liderdir. Varsayılan olarak en son yayımlanan InternLM3 serisi modellerine işaret eder."
   },
+  "internvl2.5-38b-mpo": {
+    "description": "InternVL2.5 38B MPO, çok modlu ön eğitimli model, karmaşık görsel-metin çıkarım görevlerini destekler."
+  },
   "internvl2.5-latest": {
     "description": "Hala bakımını yaptığımız InternVL2.5 sürümü, mükemmel ve istikrarlı bir performansa sahiptir. Varsayılan olarak en son yayımladığımız InternVL2.5 serisi modele işaret eder, şu anda internvl2.5-78b'ye işaret ediyor."
+  },
+  "internvl3-14b": {
+    "description": "InternVL3 14B, orta ölçekli çok modlu model, performans ve maliyet arasında denge sağlar."
+  },
+  "internvl3-1b": {
+    "description": "InternVL3 1B, hafif çok modlu model, kaynak kısıtlı ortamlar için uygundur."
+  },
+  "internvl3-38b": {
+    "description": "InternVL3 38B, büyük ölçekli çok modlu açık kaynak modeli, yüksek hassasiyetli görsel-metin anlama görevleri için uygundur."
   },
   "internvl3-latest": {
     "description": "En son yayımladığımız çok modlu büyük model, daha güçlü metin-görüntü anlama yeteneği ve uzun süreli görüntü anlama yeteneğine sahiptir; performansı en iyi kapalı kaynak modellerle karşılaştırılabilir. Varsayılan olarak en son yayımladığımız InternVL serisi modele işaret eder, şu anda internvl3-78b'ye işaret ediyor."
   },
   "irag-1.0": {
-    "description": "Baidu tarafından geliştirilen iRAG (image based RAG), arama destekli metinden görüntü oluşturma teknolojisidir. Baidu'nun milyarlarca görsel kaynağı ile güçlü temel model yeteneklerini birleştirerek çok gerçekçi görüntüler oluşturur. Genel performansı metinden görüntü oluşturma sistemlerinin çok ötesindedir, yapay zeka izini ortadan kaldırır ve maliyeti düşürür. iRAG, halüsinasyon yapmama, ultra gerçekçilik ve anında erişim özelliklerine sahiptir."
+    "description": "ERNIE iRAG, görsel arama destekli üretim modeli, görselle arama, görsel-metin arama ve içerik üretimini destekler."
   },
   "jamba-large": {
     "description": "En güçlü ve en gelişmiş modelimiz, kurumsal düzeyde karmaşık görevleri işlemek için tasarlanmıştır ve olağanüstü performans sunar."
@@ -2064,7 +2115,7 @@
     "description": "kimi-k2-0905-preview modelinin bağlam uzunluğu 256k’dır, daha güçlü Agentic Kodlama yeteneklerine, ön uç kodlarının estetik ve işlevselliğinde belirgin gelişmelere ve daha iyi bağlam anlama yeteneğine sahiptir."
   },
   "kimi-k2-instruct": {
-    "description": "Kimi K2 Instruct, Moonshot AI tarafından geliştirilen büyük bir dil modelidir ve son derece uzun bağlamları işleyebilme yeteneğine sahiptir."
+    "description": "Kimi K2 Instruct, Kimi'nin resmi çıkarım modeli, uzun bağlam, kodlama, soru-cevap gibi çoklu senaryoları destekler."
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2, son derece güçlü kod yazma ve Agent yeteneklerine sahip MoE mimarisine dayanan bir temel modeldir; toplam parametre sayısı 1T, aktif (etkin) parametre sayısı 32B. Genel bilgi çıkarımı, programlama, matematik ve Agent gibi ana kategorilerde yapılan karşılaştırmalı performans testlerinde K2 modelinin performansı diğer önde gelen açık kaynak modellerinin üzerindedir."
@@ -2735,6 +2786,54 @@
   "pro-deepseek-v3": {
     "description": "Kurumsal özel hizmetler için tasarlanmış modeldir ve eşzamanlı hizmetleri içerir."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, yüksek parametreli Çince model, yüksek kaliteli içerik üretimi ve karmaşık akıl yürütme görevleri için uygundur."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, orta ölçekli genel amaçlı model, maliyet ve performans dengesi gerektiren metin üretimi ve soru-cevap senaryoları için uygundur."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, niyet tanıma ve akıllı ajan düzenlemesi için tasarlanmış model, uzun bağlam senaryolarını destekler."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, hafif akıllı ajan modeli, düşük maliyetli çok turlu diyaloglar ve iş akışı düzenlemeleri için uygundur."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, yüksek akış kontrolüne sahip akıllı ajan modeli, büyük ölçekli ve çok görevli ajan uygulamaları için uygundur."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, orta ve kısa diyaloglar ile hızlı yanıt gerektiren yüksek eşzamanlı akıllı ajan modeli."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, çok modlu içerik denetimi ve tespit modeli, görsel ve metin uyumluluğu ile tanıma görevlerini destekler."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, çok modlu içerik üretim modeli, görsel ve metinlerin birleşik anlaşılması ve üretimini destekler."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, İngilizce odaklı çok modlu tanıma modeli."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, yüksek performanslı Çince genel model, karmaşık soru-cevap ve büyük ölçekli akıl yürütme görevleri için uygundur."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, Llama tabanlı çok modlu model, genel görsel-metin anlama görevlerine yöneliktir."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, çoklu görsel OCR modeli, birden fazla görseldeki metinleri tespit ve tanıma yeteneğine sahiptir."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, çok modlu soru-cevap modeli, karmaşık görsel-metin senaryolarında hassas arama ve cevaplama desteği sunar."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, tek görsel OCR modeli, yüksek doğrulukta karakter tanıma sağlar."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, yüksek parametreli görsel-dil modeli, karmaşık görsel-metin anlama senaryoları için uygundur."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, hafif görsel-dil modeli, günlük görsel-metin soru-cevap ve analiz için uygundur."
+  },
   "qvq-72b-preview": {
     "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
   },
@@ -2886,7 +2985,7 @@
     "description": "Tongyi Qianwen 2.5, halka açık 72B ölçeğinde bir modeldir."
   },
   "qwen2.5-7b-instruct": {
-    "description": "Tongyi Qianwen 2.5, halka açık 7B ölçeğinde bir modeldir."
+    "description": "Qwen2.5 7B Instruct, olgun açık kaynaklı talimat modeli, çoklu senaryolarda diyalog ve üretim için uygundur."
   },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Tongyi Qianwen kodlama modelinin açık kaynak sürümüdür."
@@ -2919,13 +3018,13 @@
     "description": "Qwen-Omni serisi modeller, video, ses, resim ve metin gibi çeşitli modlarda veri girişi destekler ve ses ile metin çıktısı verir."
   },
   "qwen2.5-vl-32b-instruct": {
-    "description": "Qwen2.5-VL serisi modeller, doğal konuşma, içerik oluşturma, uzmanlık hizmetleri ve kod geliştirme gibi senaryolarda daha iyi performans göstermek için modelin zekâ seviyesini, pratikliğini ve uygunluğunu artırmaktadır. 32B sürümü, pekiştirmeli öğrenme teknolojisi kullanılarak optimize edilmiş olup, Qwen2.5 VL serisinin diğer modellerine kıyasla insan tercihlerine daha uygun çıktı tarzı, karmaşık matematik problemlerini çözme yeteneği ve görüntülerin ince detaylarını anlama ve akıl yürütme becerisi sunmaktadır."
+    "description": "Qwen2.5 VL 32B Instruct, çok modlu açık kaynak modeli, özelleştirilmiş kurulum ve çoklu senaryo uygulamaları için uygundur."
   },
   "qwen2.5-vl-72b-instruct": {
     "description": "Talimat takibi, matematik, problem çözme, kodlama genelinde iyileştirme, her türlü nesneyi tanıma yeteneği artışı, çeşitli formatları doğrudan hassas bir şekilde görsel unsurları konumlandırma desteği, uzun video dosyalarını (en fazla 10 dakika) anlama ve saniye düzeyinde olay anlarını konumlandırma yeteneği, zaman sıralamasını ve hızını anlama, analiz ve konumlandırma yeteneğine dayanarak OS veya Mobil ajanları kontrol etme desteği, anahtar bilgileri çıkarma yeteneği ve Json formatında çıktı verme yeteneği güçlüdür, bu sürüm 72B versiyonudur, bu serinin en güçlü versiyonudur."
   },
   "qwen2.5-vl-7b-instruct": {
-    "description": "Talimat takibi, matematik, problem çözme, kodlama genelinde iyileştirme, her türlü nesneyi tanıma yeteneği artışı, çeşitli formatları doğrudan hassas bir şekilde görsel unsurları konumlandırma desteği, uzun video dosyalarını (en fazla 10 dakika) anlama ve saniye düzeyinde olay anlarını konumlandırma yeteneği, zaman sıralamasını ve hızını anlama, analiz ve konumlandırma yeteneğine dayanarak OS veya Mobil ajanları kontrol etme desteği, anahtar bilgileri çıkarma yeteneği ve Json formatında çıktı verme yeteneği güçlüdür, bu sürüm 72B versiyonudur, bu serinin en güçlü versiyonudur."
+    "description": "Qwen2.5 VL 7B Instruct, hafif çok modlu model, kurulum maliyeti ve tanıma yeteneği arasında denge sağlar."
   },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL, Qwen model ailesinin en yeni görsel-dil modeli sürümüdür."
@@ -2952,46 +3051,46 @@
     "description": "Qwen3, Alibaba'nın yeni nesil büyük ölçekli dil modelidir ve çeşitli uygulama ihtiyaçlarını mükemmel bir performansla destekler."
   },
   "qwen3-0.6b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 0.6B, giriş seviyesi model, basit akıl yürütme ve kaynakların son derece sınırlı olduğu ortamlar için uygundur."
   },
   "qwen3-1.7b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 1.7B, ultra hafif model, uç ve yerel cihazlara dağıtım için uygundur."
   },
   "qwen3-14b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 14B, orta ölçekli model, çok dilli soru-cevap ve metin üretimi için uygundur."
   },
   "qwen3-235b-a22b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 235B A22B, genel amaçlı büyük model, çeşitli karmaşık görevler için uygundur."
   },
   "qwen3-235b-a22b-instruct-2507": {
-    "description": "Qwen3 tabanlı düşünme modu olmayan açık kaynak modelidir; önceki sürüme (Tongyi Qianwen 3-235B-A22B) kıyasla öznel yaratıcı yetenekler ve model güvenliği açısından hafif iyileştirmeler içerir."
+    "description": "Qwen3 235B A22B Instruct 2507, genel amaçlı amiral gemisi talimat modeli, çoklu üretim ve akıl yürütme görevleri için uygundur."
   },
   "qwen3-235b-a22b-thinking-2507": {
-    "description": "Qwen3 tabanlı düşünme modu açık kaynak modelidir; önceki sürüme (Tongyi Qianwen 3-235B-A22B) kıyasla mantıksal yetenekler, genel yetenekler, bilgi artırımı ve yaratıcı yeteneklerde büyük gelişmeler sağlar ve yüksek zorlukta güçlü çıkarım senaryoları için uygundur."
+    "description": "Qwen3 235B A22B Thinking 2507, ultra büyük ölçekli düşünme modeli, yüksek zorlukta akıl yürütme için uygundur."
   },
   "qwen3-30b-a3b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 30B A3B, orta-büyük ölçekli genel model, maliyet ve performans arasında denge sağlar."
   },
   "qwen3-30b-a3b-instruct-2507": {
-    "description": "Önceki sürüme (Qwen3-30B-A3B) kıyasla, hem İngilizce hem de çok dilli genel yeteneklerde büyük gelişmeler sağlanmıştır. Öznel ve açık uçlu görevler için özel optimizasyon yapılmış olup, kullanıcı tercihleriyle belirgin şekilde daha uyumludur ve daha faydalı yanıtlar sunabilir."
+    "description": "Qwen3 30B A3B Instruct 2507, orta-büyük ölçekli talimat modeli, yüksek kaliteli üretim ve soru-cevap için uygundur."
   },
   "qwen3-30b-a3b-thinking-2507": {
-    "description": "Qwen3 tabanlı düşünme modu açık kaynak modeli olup, önceki sürüme (Tongyi Qianwen 3-30B-A3B) kıyasla mantık yeteneği, genel yetenekler, bilgi artırımı ve yaratıcı yeteneklerde önemli gelişmeler göstermektedir. Zorlu ve güçlü akıl yürütme gerektiren senaryolar için uygundur."
+    "description": "Qwen3 30B A3B Thinking 2507, orta-büyük ölçekli düşünme modeli, doğruluk ve maliyet arasında denge sağlar."
   },
   "qwen3-32b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 32B, daha güçlü anlama yeteneği gerektiren genel görev senaryoları için uygundur."
   },
   "qwen3-4b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 4B, orta-küçük ölçekli uygulamalar ve yerel akıl yürütme senaryoları için uygundur."
   },
   "qwen3-8b": {
-    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+    "description": "Qwen3 8B, hafif model, esnek dağıtım imkanı sunar ve yüksek eşzamanlı iş yükleri için uygundur."
   },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Qwen3 tabanlı kod üretim modeli olan en yeni açık kaynaklı Tongyi Qianwen kod modeli. Güçlü Kodlama Ajanı yeteneklerine sahiptir, araç kullanımı ve çevre ile etkileşimde uzmandır. Kendi kendine programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel amaçlı beceriler de sunar."
   },
   "qwen3-coder-480b-a35b-instruct": {
-    "description": "Tongyi Qianwen kod modeli açık kaynak versiyonudur. En yeni qwen3-coder-480b-a35b-instruct, Qwen3 tabanlı kod oluşturma modelidir; güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrısı ve ortam etkileşiminde uzmandır, otonom programlama yapabilir ve üstün kodlama yetenekleri ile genel yetenekleri bir arada sunar."
+    "description": "Qwen3 Coder 480B A35B Instruct, amiral gemisi kod modeli, çoklu programlama dili ve karmaşık kod anlama desteği sunar."
   },
   "qwen3-coder-flash": {
     "description": "Tongyi Qianwen kod modeli. En yeni Qwen3-Coder serisi modeller, Qwen3 tabanlı kod üretim modelleridir, güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrıları ve ortam etkileşiminde uzmandır, bağımsız programlama yapabilir, üstün kodlama yeteneklerinin yanı sıra genel yeteneklere de sahiptir."
@@ -3005,32 +3104,41 @@
   "qwen3-max": {
     "description": "Tongyi Qianwen 3 serisi Max modeli, 2.5 serisine kıyasla genel yeteneklerde büyük gelişme göstermiştir; hem Çince hem İngilizce metin anlama, karmaşık talimat takibi, öznel açık görevler, çoklu dil yetenekleri ve araç çağrısı yetenekleri belirgin şekilde artmıştır; model bilgi halüsinasyonları azalmıştır. En yeni qwen3-max modeli, qwen3-max-preview versiyonuna göre akıllı ajan programlama ve araç çağrısı alanlarında özel yükseltmeler içermektedir. Bu resmi sürüm modeli, alanında SOTA seviyesine ulaşmış olup, daha karmaşık ajan ihtiyaçlarına uyarlanmıştır."
   },
+  "qwen3-max-preview": {
+    "description": "Tongyi Qianwen serisinin en yetenekli modeli; karmaşık ve çok adımlı görevler için uygundur. Önizleme sürümü düşünme yeteneğini desteklemektedir."
+  },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Qwen3 tabanlı yeni nesil düşünmeden çalışan açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Instruct-2507) kıyasla Çince metin anlama yeteneği daha iyi, mantıksal çıkarım yeteneği geliştirilmiş ve metin üretimi görevlerinde daha başarılıdır."
   },
   "qwen3-next-80b-a3b-thinking": {
-    "description": "Qwen3 tabanlı yeni nesil düşünme modlu açık kaynak modeli, önceki sürüme (Tongyi Qianwen 3-235B-A22B-Thinking-2507) kıyasla komutlara uyum yeteneği artırılmış ve modelin özetleyici yanıtları daha özlü hale getirilmiştir."
+    "description": "Qwen3 Next 80B A3B Thinking, karmaşık görevler için amiral gemisi akıl yürütme modeli sürümüdür."
   },
   "qwen3-omni-flash": {
     "description": "Qwen-Omni modeli, metin, görsel, ses ve video gibi çoklu modların birleşik girişlerini kabul edebilir ve metin ya da ses biçiminde yanıtlar üretebilir. Çeşitli insansı ses tonları sunar, çok dilli ve lehçeli ses çıktısını destekler. Metin üretimi, görsel tanıma ve sesli asistan gibi senaryolarda kullanılabilir."
   },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B Non-thinking modu (Instruct), düşünme gerektirmeyen komut senaryoları için uygundur ve güçlü görsel anlama yeteneğini korur."
+    "description": "Qwen3 VL 235B A22B Instruct, amiral gemisi çok modlu model, yüksek düzeyde anlama ve içerik üretimi senaryoları için uygundur."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B Düşünme modu (açık kaynaklı sürüm), zorlu akıl yürütme ve uzun video anlama senaryoları için geliştirilmiş, üst düzey görsel + metin akıl yürütme yetenekleri sunar."
+    "description": "Qwen3 VL 235B A22B Thinking, amiral gemisi düşünme sürümü, karmaşık çok modlu akıl yürütme ve planlama görevleri için uygundur."
   },
   "qwen3-vl-30b-a3b-instruct": {
-    "description": "Qwen3 VL 30B Non-thinking modu (Instruct), genel komut takip senaryolarına yöneliktir ve yüksek düzeyde çok modlu anlama ve üretim yeteneğini korur."
+    "description": "Qwen3 VL 30B A3B Instruct, çok modlu büyük model, doğruluk ve akıl yürütme performansını dengeler."
   },
   "qwen3-vl-30b-a3b-thinking": {
-    "description": "Qwen-VL (açık kaynaklı sürüm), görsel anlama ve metin üretme yetenekleri sunar. Akıllı ajan etkileşimi, görsel kodlama, mekânsal algı, uzun video anlama ve derin düşünme gibi alanları destekler. Karmaşık senaryolarda daha güçlü metin tanıma ve çok dilli destek sağlar."
+    "description": "Qwen3 VL 30B A3B Thinking, karmaşık çok modlu görevler için derin düşünme sürümüdür."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, çok modlu talimatla ince ayarlanmış model, yüksek kaliteli görsel-metin soru-cevap ve içerik üretimi için uygundur."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, çok modlu derin düşünme sürümü, karmaşık akıl yürütme ve uzun zincirli analizleri güçlendirir."
   },
   "qwen3-vl-8b-instruct": {
-    "description": "Qwen3 VL 8B Non-thinking modu (Instruct), standart çok modlu üretim ve tanıma görevleri için uygundur."
+    "description": "Qwen3 VL 8B Instruct, hafif çok modlu model, günlük görsel soru-cevap ve uygulama entegrasyonu için uygundur."
   },
   "qwen3-vl-8b-thinking": {
-    "description": "Qwen3 VL 8B Düşünme modu, hafif çok modlu akıl yürütme ve etkileşim senaryolarına yöneliktir. Uzun bağlam anlama yeteneğini korur."
+    "description": "Qwen3 VL 8B Thinking, çok modlu düşünce zinciri modeli, görsel bilgilerin ayrıntılı akıl yürütmesi için uygundur."
   },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: Gecikmeye duyarlı veya yüksek hacimli istek senaryoları için uygun, hafif ve yüksek hızlı akıl yürütme sürümüdür."

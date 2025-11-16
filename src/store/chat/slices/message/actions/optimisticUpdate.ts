@@ -41,6 +41,7 @@ export interface MessageOptimisticUpdateAction {
    * delete the message content with optimistic update
    */
   optimisticDeleteMessage: (id: string) => Promise<void>;
+  optimisticDeleteMessages: (ids: string[]) => Promise<void>;
 
   /**
    * update the message content with optimistic update
@@ -146,6 +147,17 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticDeleteMessage: async (id: string) => {
     get().internal_dispatchMessage({ id, type: 'deleteMessage' });
     const result = await messageService.removeMessage(id, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+    if (result?.success && result.messages) {
+      get().replaceMessages(result.messages);
+    }
+  },
+
+  optimisticDeleteMessages: async (ids) => {
+    get().internal_dispatchMessage({ ids, type: 'deleteMessages' });
+    const result = await messageService.removeMessages(ids, {
       sessionId: get().activeId,
       topicId: get().activeTopicId,
     });

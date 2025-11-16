@@ -240,6 +240,7 @@
   "noMatchingAgents": "Nessun membro corrispondente trovato",
   "noMembersYet": "Questo gruppo non ha ancora membri. Clicca sul pulsante + per invitare assistenti.",
   "noSelectedAgents": "Nessun membro selezionato",
+  "openInNewWindow": "Apri in una nuova finestra",
   "owner": "Proprietario del gruppo",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
@@ -367,6 +368,28 @@
     "overload": "Superamento limite",
     "remained": "Rimasti",
     "used": "Utilizzati"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Approva",
+      "approveAndRemember": "Approva e ricorda",
+      "approveOnce": "Approva solo questa volta",
+      "mode": {
+        "allowList": "Lista consentiti",
+        "allowListDesc": "Esegui automaticamente solo gli strumenti approvati",
+        "autoRun": "Approvazione automatica",
+        "autoRunDesc": "Approva automaticamente l'esecuzione di tutti gli strumenti",
+        "manual": "Manuale",
+        "manualDesc": "Richiede approvazione manuale per ogni utilizzo"
+      },
+      "reject": "Rifiuta",
+      "rejectAndContinue": "Rifiuta e riprova",
+      "rejectOnly": "Rifiuta",
+      "rejectReasonPlaceholder": "Inserire il motivo del rifiuto aiuterà l'agente a comprendere e ottimizzare le azioni future",
+      "rejectTitle": "Rifiuta questa esecuzione dello strumento",
+      "rejectedWithReason": "Questa esecuzione dello strumento è stata rifiutata: {{reason}}",
+      "toolRejected": "Questa esecuzione dello strumento è stata rifiutata"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Abilitare un nuovo argomento?",

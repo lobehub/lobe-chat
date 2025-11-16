@@ -1,5 +1,8 @@
 {
-  "desc": "Manage your knowledge",
+  "addFolder": "Create Folder",
+  "addKnowledge": "Add Knowledge",
+  "addPage": "Create Document",
+  "desc": "Manage your knowledge for work, study, and life.",
   "detail": {
     "basic": {
       "createdAt": "Creation Time",
@@ -21,14 +24,88 @@
       "embeddingStatus": "embedding"
     }
   },
+  "documentEditor": {
+    "addIcon": "Add Icon",
+    "autoSaveMessage": "Document auto-saves, no manual save needed",
+    "chooseIcon": "Choose Icon",
+    "deleteConfirm": {
+      "content": "This document will be deleted permanently and cannot be recovered. Please proceed with caution.",
+      "title": "Delete Document"
+    },
+    "deleteError": "Failed to delete document",
+    "deleteSuccess": "Document deleted successfully",
+    "editedAt": "Edited {{time}}",
+    "editedBy": "Edited by {{name}}",
+    "editorPlaceholder": "Type document content, press / to open command menu",
+    "empty": {
+      "createNewDocument": "Create New Document",
+      "title": "Select a document to start",
+      "uploadMarkdown": "Upload Markdown File"
+    },
+    "linkCopied": "Link copied",
+    "menu": {
+      "copyLink": "Copy Link",
+      "exportDocument": "Export Document",
+      "importDocument": "Import Document",
+      "pin": "Pin Document"
+    },
+    "saving": "Saving...",
+    "titlePlaceholder": "Untitled",
+    "wordCount": "{{wordCount}} words"
+  },
+  "documentList": {
+    "copyContent": "Copy All",
+    "documentCount": "Total {{count}} documents",
+    "duplicate": "Duplicate",
+    "empty": "No documents yet. Click the button above to create your first one.",
+    "noResults": "No matching documents found.",
+    "selectNote": "Select a document to start editing.",
+    "untitled": "Untitled"
+  },
   "empty": "No files or folders have been uploaded yet.",
   "header": {
     "actions": {
       "newFolder": "New Folder",
+      "newPage": "New Document",
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },
+    "newDocumentButton": "New Document",
+    "newNoteDialog": {
+      "cancel": "Cancel",
+      "editTitle": "Edit Document",
+      "emptyContent": "Document content cannot be empty.",
+      "loadError": "Failed to load the document. Please try again.",
+      "loading": "Loading...",
+      "save": "Save",
+      "saveError": "Failed to save the document. Please try again.",
+      "saveSuccess": "Document saved successfully.",
+      "title": "New Document",
+      "updateSuccess": "Document updated successfully."
+    },
     "uploadButton": "Upload"
+  },
+  "home": {
+    "getStarted": "Get Started",
+    "greeting": "Get Started",
+    "quickActions": "Quick Actions",
+    "recentDocuments": "Recent Documents",
+    "recentFiles": "Recent Files",
+    "subtitle": "Welcome to your knowledge base. Start managing your documents here.",
+    "uploadEntries": {
+      "files": {
+        "title": "Upload Files"
+      },
+      "folder": {
+        "title": "Upload Folder"
+      },
+      "knowledgeBase": {
+        "title": "Create Knowledge Base"
+      },
+      "newDocument": {
+        "title": "Create Document"
+      }
+    }
   },
   "knowledgeBase": {
     "list": {
@@ -37,6 +114,10 @@
     },
     "new": "New Knowledge Base",
     "title": "Knowledge Base"
+  },
+  "menu": {
+    "allDocuments": "All Documents",
+    "allFiles": "All Files"
   },
   "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
   "notSupportGuide": {
@@ -61,12 +142,16 @@
     "downloadFile": "Download File",
     "unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>."
   },
+  "searchDocumentPlaceholder": "Search documents",
   "searchFilePlaceholder": "Search Files",
   "tab": {
-    "all": "All Files",
+    "all": "All",
     "audios": "Audio",
     "documents": "Documents",
+    "home": "Home",
     "images": "Images",
+    "moreTypes": "More Types",
+    "pages": "Pages",
     "videos": "Videos",
     "websites": "Websites"
   },

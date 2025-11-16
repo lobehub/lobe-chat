@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Parameterliste anzeigen",
+    "delete": "Werkzeugaufruf löschen",
+    "orphanedToolCall": "Dieser Werkzeugaufruf könnte aufgrund eines Fehlers verwaist sein, was den normalen Ablauf des Agenten beeinträchtigen kann. Bitte entfernen Sie ihn.",
     "pluginRender": "Plugin-Oberfläche anzeigen"
   },
   "list": {
@@ -251,14 +253,20 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Datei bearbeiten",
+      "getCommandOutput": "Codeausgabe abrufen",
+      "globLocalFiles": "Dateien durchsuchen",
+      "grepContent": "Inhalt durchsuchen",
+      "killCommand": "Codeausführung beenden",
       "listLocalFiles": "Dateiliste anzeigen",
       "moveLocalFiles": "Dateien verschieben",
       "readLocalFile": "Dateiinhalt lesen",
       "renameLocalFile": "Datei umbenennen",
+      "runCommand": "Befehl ausführen",
       "searchLocalFiles": "Dateien suchen",
       "writeLocalFile": "Datei schreiben"
     },
-    "title": "Lokale Dateien"
+    "title": "Lokales System"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installationsumgebung wird geprüft...",

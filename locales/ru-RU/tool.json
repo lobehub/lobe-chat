@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "Файл",
     "folder": "Папка",
+    "moveFiles": {
+      "itemsMoved": "Перемещено {{count}} элементов:",
+      "itemsMoved_one": "Перемещён {{count}} элемент:",
+      "itemsMoved_other": "Перемещено {{count}} элементов:",
+      "itemsToMove": "{{count}} элементов для перемещения:",
+      "itemsToMove_one": "{{count}} элемент для перемещения:",
+      "itemsToMove_other": "{{count}} элементов для перемещения:"
+    },
     "open": "Открыть",
     "openFile": "Открыть файл",
     "openFolder": "Открыть папку",

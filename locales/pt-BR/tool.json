@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "Arquivo",
     "folder": "Pasta",
+    "moveFiles": {
+      "itemsMoved": "{{count}} item(ns) movido(s):",
+      "itemsMoved_one": "{{count}} item movido:",
+      "itemsMoved_other": "{{count}} itens movidos:",
+      "itemsToMove": "{{count}} item(ns) a mover:",
+      "itemsToMove_one": "{{count}} item a mover:",
+      "itemsToMove_other": "{{count}} itens a mover:"
+    },
     "open": "Abrir",
     "openFile": "Abrir arquivo",
     "openFolder": "Abrir pasta",

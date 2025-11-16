@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "ملف",
     "folder": "مجلد",
+    "moveFiles": {
+      "itemsMoved": "تم نقل {{count}} عنصر:",
+      "itemsMoved_one": "تم نقل {{count}} عنصر:",
+      "itemsMoved_other": "تم نقل {{count}} عنصر:",
+      "itemsToMove": "{{count}} عنصر في انتظار النقل:",
+      "itemsToMove_one": "{{count}} عنصر في انتظار النقل:",
+      "itemsToMove_other": "{{count}} عنصر في انتظار النقل:"
+    },
     "open": "فتح",
     "openFile": "فتح ملف",
     "openFolder": "فتح مجلد",

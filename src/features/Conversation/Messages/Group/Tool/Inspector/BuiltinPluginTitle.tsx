@@ -23,19 +23,17 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 interface BuiltinPluginTitleProps {
   apiName: string;
-  hasResult?: boolean;
   icon?: ReactNode;
   identifier: string;
   index: number;
+  isLoading?: boolean;
   messageId: string;
   title: string;
   toolCallId: string;
 }
 
-const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(({ apiName, title, hasResult }) => {
+const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(({ apiName, title, isLoading }) => {
   const { styles } = useStyles();
-
-  const isLoading = !hasResult;
 
   return (
     <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>

@@ -18,6 +18,7 @@ import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import AssistantMessage from './Assistant';
 import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
+import ToolMessage from './Tool';
 import UserMessage from './User';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -131,6 +132,10 @@ const Item = memo<ChatListItemProps>(
 
         case 'assistantGroup': {
           return <GroupMessage disableEditing={disableEditing} id={id} index={index} />;
+        }
+
+        case 'tool': {
+          return <ToolMessage id={id} index={index} />;
         }
 
         case 'supervisor': {

@@ -1,10 +1,18 @@
 // @vitest-environment node
+import { FilesTabs, SortType } from '@lobechat/types';
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FilesTabs, SortType } from '@/types/files';
-
-import { chunks, embeddings, fileChunks, files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../schemas';
+import {
+  chunks,
+  embeddings,
+  fileChunks,
+  files,
+  globalFiles,
+  knowledgeBaseFiles,
+  knowledgeBases,
+  users,
+} from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 import { FileModel } from '../file';
 import { getTestDB } from './_util';
@@ -340,13 +348,15 @@ describe('FileModel', () => {
     ];
 
     it('should query files for the user', async () => {
-      await fileModel.create({
+      const file1 = await fileModel.create({
         name: 'test-file-1.txt',
         url: 'https://example.com/test-file-1.txt',
         size: 100,
         fileType: 'text/plain',
       });
-      await fileModel.create({
+      // Add a small delay to ensure different timestamps
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      const file2 = await fileModel.create({
         name: 'test-file-2.txt',
         url: 'https://example.com/test-file-2.txt',
         size: 200,
@@ -362,8 +372,9 @@ describe('FileModel', () => {
 
       const userFiles = await fileModel.query();
       expect(userFiles).toHaveLength(2);
-      expect(userFiles[0].name).toBe('test-file-2.txt');
-      expect(userFiles[1].name).toBe('test-file-1.txt');
+      // file2 should be first since it was created more recently
+      expect(userFiles[0].id).toBe(file2.id);
+      expect(userFiles[1].id).toBe(file1.id);
     });
 
     it('should filter files by name', async () => {
@@ -379,6 +390,14 @@ describe('FileModel', () => {
       const imageFiles = await fileModel.query({ category: FilesTabs.Images });
       expect(imageFiles).toHaveLength(1);
       expect(imageFiles[0].name).toBe('image.jpg');
+    });
+
+    it('should filter audio files by category', async () => {
+      await serverDB.insert(files).values(sharedFileList);
+
+      const audioFiles = await fileModel.query({ category: FilesTabs.Audios });
+      expect(audioFiles).toHaveLength(1);
+      expect(audioFiles[0].name).toBe('audio.mp3');
     });
 
     it('should sort files by name in ascending order', async () => {
@@ -1022,8 +1041,58 @@ describe('FileModel', () => {
   });
 
   describe('private getFileTypePrefix method', () => {
+    beforeEach(async () => {
+      // Create test files for all categories
+      await serverDB.insert(files).values([
+        {
+          id: 'video-file',
+          name: 'video.mp4',
+          url: 'https://example.com/video.mp4',
+          size: 1000,
+          fileType: 'video/mp4',
+          userId,
+        },
+        {
+          id: 'page-file',
+          name: 'page.html',
+          url: 'https://example.com/page.html',
+          size: 500,
+          fileType: 'text/html',
+          userId,
+        },
+        {
+          id: 'unknown-file',
+          name: 'unknown.xyz',
+          url: 'https://example.com/unknown.xyz',
+          size: 200,
+          fileType: 'application/xyz',
+          userId,
+        },
+      ]);
+    });
+
+    it('should filter video files correctly', async () => {
+      const result = await fileModel.query({ category: FilesTabs.Videos });
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('video-file');
+    });
+
+    it('should filter website/page files correctly', async () => {
+      const result = await fileModel.query({ category: FilesTabs.Websites });
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('page-file');
+    });
+
+    it('should handle Pages category (should use text/html like Websites)', async () => {
+      // FilesTabs.Pages is not explicitly handled in switch, falls to default
+      // which returns empty string, so it won't filter by file type
+      const result = await fileModel.query({ category: FilesTabs.Pages });
+      // Should return all files since default case returns empty string
+      expect(result.length).toBeGreaterThan(0);
+    });
+
     it('should handle unknown file category', async () => {
-      // This tests the default case in switch statement (line 312-313)
+      // This tests the default case in switch statement
       const unknownCategory = 'unknown' as FilesTabs;
 
       // We need to access the private method indirectly by testing the query method
@@ -1059,7 +1128,7 @@ describe('FileModel', () => {
       // Note: This is a simplified test since we can't easily create 3000+ chunks
       // But it will still exercise the batch deletion code path
 
-      // Insert chunks (this might need to be done through proper API)  
+      // Insert chunks (this might need to be done through proper API)
       // For testing purposes, we'll delete the file which should trigger the batch deletion
       await fileModel.delete(fileId, true);
 
@@ -1112,9 +1181,9 @@ describe('FileModel', () => {
 
       // 插入embeddings (1024维向量)
       const testEmbedding = new Array(1024).fill(0.1);
-      await serverDB.insert(embeddings).values([
-        { chunkId: chunkId1, embeddings: testEmbedding, model: 'test-model', userId },
-      ]);
+      await serverDB
+        .insert(embeddings)
+        .values([{ chunkId: chunkId1, embeddings: testEmbedding, model: 'test-model', userId }]);
 
       // 跳过 documentChunks 测试，因为需要先创建 documents 记录
 
@@ -1163,20 +1232,18 @@ describe('FileModel', () => {
       const chunkId = '550e8400-e29b-41d4-a716-446655440003';
 
       // 插入chunk
-      await serverDB.insert(chunks).values([
-        { id: chunkId, text: 'complete test chunk', userId, type: 'text' },
-      ]);
+      await serverDB
+        .insert(chunks)
+        .values([{ id: chunkId, text: 'complete test chunk', userId, type: 'text' }]);
 
       // 插入fileChunks关联
-      await serverDB.insert(fileChunks).values([
-        { fileId, chunkId, userId },
-      ]);
+      await serverDB.insert(fileChunks).values([{ fileId, chunkId, userId }]);
 
       // 插入embeddings
       const testEmbedding = new Array(1024).fill(0.1);
-      await serverDB.insert(embeddings).values([
-        { chunkId, embeddings: testEmbedding, model: 'test-model', userId },
-      ]);
+      await serverDB
+        .insert(embeddings)
+        .values([{ chunkId, embeddings: testEmbedding, model: 'test-model', userId }]);
 
       // 删除文件
       await fileModel.delete(fileId, true);
@@ -1206,7 +1273,6 @@ describe('FileModel', () => {
       expect(remainingFileChunks).toHaveLength(0);
     });
 
-
     it('should delete files that are in knowledge bases (removed protection)', async () => {
       // 测试修复后的逻辑：知识库中的文件也应该被删除
       const testFile = {
@@ -1223,19 +1289,17 @@ describe('FileModel', () => {
       const chunkId = '550e8400-e29b-41d4-a716-446655440007';
 
       // 插入chunk和关联数据
-      await serverDB.insert(chunks).values([
-        { id: chunkId, text: 'knowledge base chunk', userId, type: 'text' },
-      ]);
+      await serverDB
+        .insert(chunks)
+        .values([{ id: chunkId, text: 'knowledge base chunk', userId, type: 'text' }]);
 
-      await serverDB.insert(fileChunks).values([
-        { fileId, chunkId, userId },
-      ]);
+      await serverDB.insert(fileChunks).values([{ fileId, chunkId, userId }]);
 
       // 插入embeddings (1024维向量)
       const testEmbedding = new Array(1024).fill(0.1);
-      await serverDB.insert(embeddings).values([
-        { chunkId, embeddings: testEmbedding, model: 'test-model', userId },
-      ]);
+      await serverDB
+        .insert(embeddings)
+        .values([{ chunkId, embeddings: testEmbedding, model: 'test-model', userId }]);
 
       // 验证文件确实在知识库中
       const kbFile = await serverDB.query.knowledgeBaseFiles.findFirst({

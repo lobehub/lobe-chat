@@ -106,6 +106,12 @@
     "keyPlaceholder": "کلید",
     "valuePlaceholder": "مقدار"
   },
+  "LocalFile": {
+    "action": {
+      "open": "باز کردن",
+      "showInFolder": "نمایش در پوشه"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "نامحدود"
   },

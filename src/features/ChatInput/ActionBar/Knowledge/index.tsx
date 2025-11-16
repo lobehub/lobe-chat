@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import TipGuide from '@/components/TipGuide';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { isServerMode } from '@/const/version';
-import { AssignKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
+import { AttachKnowledgeModal } from '@/features/KnowledgeBaseModal';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
@@ -69,7 +69,7 @@ const Knowledge = memo(() => {
       ) : (
         content
       )}
-      <AssignKnowledgeBaseModal open={modalOpen} setOpen={setModalOpen} />
+      <AttachKnowledgeModal open={modalOpen} setOpen={setModalOpen} />
     </Suspense>
   );
 });

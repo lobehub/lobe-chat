@@ -240,6 +240,7 @@
   "noMatchingAgents": "Keine passenden Mitglieder gefunden",
   "noMembersYet": "Diese Gruppe hat noch keine Mitglieder. Klicken Sie auf die +-Schaltfläche, um Assistenten einzuladen.",
   "noSelectedAgents": "Noch keine Mitglieder ausgewählt",
+  "openInNewWindow": "In neuem Fenster öffnen",
   "owner": "Gruppeninhaber",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
@@ -367,6 +368,28 @@
     "overload": "Überlastung",
     "remained": "Verbleibend",
     "used": "Verwendet"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Genehmigen",
+      "approveAndRemember": "Genehmigen und merken",
+      "approveOnce": "Nur dieses Mal genehmigen",
+      "mode": {
+        "allowList": "Positivliste",
+        "allowListDesc": "Nur automatisch genehmigte Tools ausführen",
+        "autoRun": "Automatisch genehmigen",
+        "autoRunDesc": "Alle Tool-Ausführungen automatisch genehmigen",
+        "manual": "Manuell",
+        "manualDesc": "Jede Ausführung muss manuell genehmigt werden"
+      },
+      "reject": "Ablehnen",
+      "rejectAndContinue": "Ablehnen und erneut ausführen",
+      "rejectOnly": "Ablehnen",
+      "rejectReasonPlaceholder": "Die Angabe eines Ablehnungsgrundes hilft dem Agenten, zukünftige Aktionen zu verbessern",
+      "rejectTitle": "Tool-Ausführung ablehnen",
+      "rejectedWithReason": "Die Tool-Ausführung wurde abgelehnt: {{reason}}",
+      "toolRejected": "Die Tool-Ausführung wurde abgelehnt"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Soll ein neues Thema eröffnet werden?",

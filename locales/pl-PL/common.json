@@ -135,6 +135,7 @@
     }
   },
   "close": "Zamknij",
+  "confirm": "Potwierdź",
   "contact": "Skontaktuj się z nami",
   "copy": "Kopiuj",
   "copyFail": "Nie udało się skopiować",
@@ -285,6 +286,7 @@
   "oauth": "Logowanie SSO",
   "officialSite": "Oficjalna strona internetowa",
   "ok": "OK",
+  "or": "lub",
   "password": "Hasło",
   "pin": "Przypnij",
   "pinOff": "Odepnij",

@@ -1,3 +1,10 @@
+import type {
+  AiProviderDetailItem,
+  AiProviderListItem,
+  AiProviderRuntimeState,
+  EnabledProvider,
+  ProviderConfig,
+} from '@lobechat/types';
 import { isEmpty } from 'lodash-es';
 import {
   AIChatModelCard,
@@ -8,13 +15,6 @@ import {
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import {
-  AiProviderDetailItem,
-  AiProviderListItem,
-  AiProviderRuntimeState,
-  EnabledProvider,
-} from '@/types/aiProvider';
-import { ProviderConfig } from '@/types/user/settings';
 import { merge, mergeArrayById } from '@/utils/merge';
 
 import { AiModelModel } from '../../models/aiModel';

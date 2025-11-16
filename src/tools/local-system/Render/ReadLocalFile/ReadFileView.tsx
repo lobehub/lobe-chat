@@ -26,8 +26,9 @@ const useStyles = createStyles(({ css, token, cx }) => ({
 
     height: 64px;
     padding: 8px;
-    border: 1px solid ${token.colorBorderSecondary};
     border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorFillQuaternary};
 
     transition: all 0.2s ${token.motionEaseInOut};
 

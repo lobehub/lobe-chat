@@ -13,6 +13,7 @@ import {
 } from '@lobechat/agent-runtime';
 import type { ChatToolPayload, CreateMessageParams } from '@lobechat/types';
 import debug from 'debug';
+import pMap from 'p-map';
 
 import type { ChatStore } from '@/store/chat/store';
 
@@ -43,6 +44,7 @@ export const createAgentExecutors = (context: {
 }) => {
   let shouldSkipCreateMessage = context.skipCreateFirstMessage;
 
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
     /**
      * Custom call_llm executor
@@ -239,39 +241,56 @@ export const createAgentExecutors = (context: {
         // Find the last assistant message (should be created by call_llm)
         const assistantMessage = latestMessages.findLast((m) => m.role === 'assistant');
 
-        // Always create new tool message (following server-side pattern)
-        // This ensures consistency and avoids duplicate execution
-        log(
-          '[%s][call_tool] Creating tool message for tool_call_id: %s',
-          sessionLogId,
-          chatToolPayload.id,
-        );
+        let toolMessageId: string;
 
-        const toolMessageParams: CreateMessageParams = {
-          content: '',
-          groupId: assistantMessage?.groupId,
-          parentId: payload.parentMessageId,
-          plugin: chatToolPayload,
-          role: 'tool',
-          sessionId: context.get().activeId,
-          threadId: context.params.threadId,
-          tool_call_id: chatToolPayload.id,
-          topicId: context.get().activeTopicId,
-        };
+        if (payload.skipCreateToolMessage) {
+          // Reuse existing tool message (resumption mode)
+          toolMessageId = payload.parentMessageId;
+          // Check if tool message already exists (e.g., from human approval flow)
+          const existingToolMessage = latestMessages.find((m) => m.id === toolMessageId)!;
 
-        const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
-
-        if (!createResult) {
           log(
-            '[%s][call_tool] ERROR: Failed to create tool message for tool_call_id: %s',
+            '[%s][call_tool] Resuming with existing tool message: %s (status: %s)',
+            sessionLogId,
+            toolMessageId,
+            existingToolMessage.pluginIntervention?.status,
+          );
+        } else {
+          // Create new tool message (normal mode)
+          log(
+            '[%s][call_tool] Creating tool message for tool_call_id: %s',
             sessionLogId,
             chatToolPayload.id,
           );
-          throw new Error(`Failed to create tool message for tool_call_id: ${chatToolPayload.id}`);
-        }
 
-        const toolMessageId = createResult.id;
-        log('[%s][call_tool] Created tool message, id: %s', sessionLogId, toolMessageId);
+          const toolMessageParams: CreateMessageParams = {
+            content: '',
+            groupId: assistantMessage?.groupId,
+            parentId: payload.parentMessageId,
+            plugin: chatToolPayload,
+            role: 'tool',
+            sessionId: context.get().activeId,
+            threadId: context.params.threadId,
+            tool_call_id: chatToolPayload.id,
+            topicId: context.get().activeTopicId,
+          };
+
+          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+
+          if (!createResult) {
+            log(
+              '[%s][call_tool] ERROR: Failed to create tool message for tool_call_id: %s',
+              sessionLogId,
+              chatToolPayload.id,
+            );
+            throw new Error(
+              `Failed to create tool message for tool_call_id: ${chatToolPayload.id}`,
+            );
+          }
+
+          toolMessageId = createResult.id;
+          log('[%s][call_tool] Created tool message, id: %s', sessionLogId, toolMessageId);
+        }
 
         // Execute tool
         log('[%s][call_tool] Executing tool %s ...', sessionLogId, toolName);
@@ -371,6 +390,105 @@ export const createAgentExecutors = (context: {
       }
     },
 
+    /** Create human approve executor */
+    request_human_approve: async (instruction, state) => {
+      const { pendingToolsCalling, reason, skipCreateToolMessage } = instruction as Extract<
+        AgentInstruction,
+        { type: 'request_human_approve' }
+      >;
+      const newState = structuredClone(state);
+      const events: AgentEvent[] = [];
+      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+
+      log(
+        '[%s][request_human_approve] Executor start, pending tools count: %d, reason: %s',
+        sessionLogId,
+        pendingToolsCalling.length,
+        reason || 'human_intervention_required',
+      );
+
+      // Update state to waiting_for_human
+      newState.lastModified = new Date().toISOString();
+      newState.status = 'waiting_for_human';
+      newState.pendingToolsCalling = pendingToolsCalling;
+
+      // Get assistant message to extract groupId and parentId
+      const latestMessages = context.get().dbMessagesMap[context.messageKey] || [];
+      const assistantMessage = latestMessages.findLast((m) => m.role === 'assistant');
+
+      if (!assistantMessage) {
+        log('[%s][request_human_approve] ERROR: No assistant message found', sessionLogId);
+        throw new Error('No assistant message found for intervention');
+      }
+
+      log(
+        '[%s][request_human_approve] Found assistant message: %s',
+        sessionLogId,
+        assistantMessage.id,
+      );
+
+      if (skipCreateToolMessage) {
+        // Resumption mode: Tool messages already exist, just verify them
+        log('[%s][request_human_approve] Resuming with existing tool messages', sessionLogId);
+      } else {
+        // Create tool messages for each pending tool call with intervention status
+        await pMap(pendingToolsCalling, async (toolPayload) => {
+          const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
+          log(
+            '[%s][request_human_approve] Creating tool message for %s with tool_call_id: %s',
+            sessionLogId,
+            toolName,
+            toolPayload.id,
+          );
+
+          const toolMessageParams: CreateMessageParams = {
+            content: '',
+            groupId: assistantMessage.groupId,
+            parentId: assistantMessage.id,
+            plugin: {
+              ...toolPayload,
+            },
+            pluginIntervention: { status: 'pending' },
+            role: 'tool',
+            sessionId: context.get().activeId,
+            threadId: context.params.threadId,
+            tool_call_id: toolPayload.id,
+            topicId: context.get().activeTopicId,
+          };
+
+          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+
+          if (!createResult) {
+            log(
+              '[%s][request_human_approve] ERROR: Failed to create tool message for %s',
+              sessionLogId,
+              toolName,
+            );
+            throw new Error(`Failed to create tool message for ${toolName}`);
+          }
+
+          log(
+            '[%s][request_human_approve] Created tool message: %s for %s',
+            sessionLogId,
+            createResult.id,
+            toolName,
+          );
+        });
+      }
+
+      log(
+        '[%s][request_human_approve] All tool messages created, emitting human_approve_required event',
+        sessionLogId,
+      );
+
+      events.push({
+        pendingToolsCalling,
+        sessionId: newState.sessionId,
+        type: 'human_approve_required',
+      });
+
+      return { events, newState };
+    },
     /**
      * Finish executor
      * Completes the runtime execution

@@ -55,7 +55,7 @@ const FileSidePanel = memo<PropsWithChildren>(({ children }) => {
       className={styles.panel}
       defaultSize={{ width: tmpWidth }}
       expand={showFilePanel}
-      maxWidth={320}
+      maxWidth={280}
       minWidth={FOLDER_WIDTH}
       mode={md ? 'fixed' : 'float'}
       onExpandChange={handleExpand}

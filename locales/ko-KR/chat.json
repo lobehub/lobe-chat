@@ -240,6 +240,7 @@
   "noMatchingAgents": "일치하는 멤버가 없습니다",
   "noMembersYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
   "noSelectedAgents": "아직 멤버를 선택하지 않았습니다",
+  "openInNewWindow": "새 창에서 열기",
   "owner": "그룹 소유자",
   "pin": "고정",
   "pinOff": "고정 해제",
@@ -367,6 +368,28 @@
     "overload": "한도 초과",
     "remained": "남음",
     "used": "사용됨"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "승인",
+      "approveAndRemember": "승인 및 기억하기",
+      "approveOnce": "이번만 승인",
+      "mode": {
+        "allowList": "허용 목록",
+        "allowListDesc": "승인된 도구만 자동 실행",
+        "autoRun": "자동 승인",
+        "autoRunDesc": "모든 도구 실행 자동 승인",
+        "manual": "수동",
+        "manualDesc": "매번 호출 시 수동 승인 필요"
+      },
+      "reject": "거부",
+      "rejectAndContinue": "거부 후 다시 실행",
+      "rejectOnly": "거부",
+      "rejectReasonPlaceholder": "거부 사유를 입력하면 에이전트가 이해하고 이후 행동을 최적화하는 데 도움이 됩니다",
+      "rejectTitle": "이번 도구 호출 거부",
+      "rejectedWithReason": "이번 도구 호출이 다음 사유로 거부됨: {{reason}}",
+      "toolRejected": "이번 도구 호출이 거부되었습니다"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "새 주제를 열까요?",

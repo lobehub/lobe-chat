@@ -106,6 +106,12 @@
     "keyPlaceholder": "Ключ",
     "valuePlaceholder": "Значение"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Открыть",
+      "showInFolder": "Показать в папке"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Без ограничений"
   },

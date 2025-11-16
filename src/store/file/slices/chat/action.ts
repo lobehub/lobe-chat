@@ -23,14 +23,12 @@ const n = setNamespace('chat');
 export interface FileAction {
   clearChatUploadFileList: () => void;
   dispatchChatUploadFileList: (payload: UploadFileListDispatch) => void;
-
   removeChatUploadFile: (id: string) => Promise<void>;
   startAsyncTask: (
     fileId: string,
     runner: (id: string) => Promise<string>,
     onFileItemChange: (fileItem: FileListItem) => void,
   ) => Promise<void>;
-
   uploadChatFiles: (files: File[]) => Promise<void>;
 }
 
@@ -43,12 +41,14 @@ export const createFileSlice: StateCreator<
   clearChatUploadFileList: () => {
     set({ chatUploadFileList: [] }, false, n('clearChatUploadFileList'));
   },
+
   dispatchChatUploadFileList: (payload) => {
     const nextValue = uploadFileListReducer(get().chatUploadFileList, payload);
     if (nextValue === get().chatUploadFileList) return;
 
     set({ chatUploadFileList: nextValue }, false, `dispatchChatFileList/${payload.type}`);
   },
+
   removeChatUploadFile: async (id) => {
     const { dispatchChatUploadFileList } = get();
 
@@ -68,7 +68,7 @@ export const createFileSlice: StateCreator<
       let fileItem: FileListItem | undefined = undefined;
 
       try {
-        fileItem = await fileService.getFileItem(id);
+        fileItem = await fileService.getKnowledgeItem(id);
       } catch (e) {
         console.error('getFileItem Error:', e);
         continue;

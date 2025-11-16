@@ -36,9 +36,6 @@ const defaultAgentMeta = (s: UserStore) => merge(DEFAULT_AGENT_META, defaultAgen
 
 const exportSettings = currentSettings;
 
-const dalleConfig = (s: UserStore) => currentSettings(s).tool?.dalle || {};
-const isDalleAutoGenerating = (s: UserStore) => currentSettings(s).tool?.dalle?.autoGenerate;
-
 const currentSystemAgent = (s: UserStore) =>
   merge(DEFAULT_SYSTEM_AGENT_CONFIG, currentSettings(s).systemAgent);
 
@@ -50,12 +47,10 @@ export const settingsSelectors = {
   currentSettings,
   currentSystemAgent,
   currentTTS,
-  dalleConfig,
   defaultAgent,
   defaultAgentConfig,
   defaultAgentMeta,
   exportSettings,
   getHotkeyById,
-  isDalleAutoGenerating,
   providerConfig: getProviderConfigById,
 };

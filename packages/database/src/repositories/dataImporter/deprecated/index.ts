@@ -1,6 +1,6 @@
+import type { ImporterEntryData } from '@lobechat/types';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
-import { ImporterEntryData } from '@/types/importer';
 import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
 
 import {
