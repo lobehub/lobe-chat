@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Dosyayı Düzenle",
+      "getCommandOutput": "Komut Çıktısını Al",
+      "globLocalFiles": "Dosyaları Ara",
+      "grepContent": "İçeriği Ara",
+      "killCommand": "Komut Yürütmesini Durdur",
       "listLocalFiles": "Dosya listesini görüntüle",
       "moveLocalFiles": "Dosya taşı",
       "readLocalFile": "Dosya içeriğini oku",

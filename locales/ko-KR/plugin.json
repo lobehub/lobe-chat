@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "파일 편집",
+      "getCommandOutput": "코드 출력 가져오기",
+      "globLocalFiles": "파일 검색",
+      "grepContent": "내용 검색",
+      "killCommand": "코드 실행 중지",
       "listLocalFiles": "파일 목록 보기",
       "moveLocalFiles": "파일 이동",
       "readLocalFile": "파일 내용 읽기",

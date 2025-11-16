@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "ファイルを編集",
+      "getCommandOutput": "コード出力を取得",
+      "globLocalFiles": "ファイルを検索",
+      "grepContent": "内容を検索",
+      "killCommand": "コードの実行を停止",
       "listLocalFiles": "ファイル一覧を表示",
       "moveLocalFiles": "ファイルを移動",
       "readLocalFile": "ファイル内容を読み込み",

@@ -253,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "ویرایش فایل",
+      "getCommandOutput": "دریافت خروجی کد",
+      "globLocalFiles": "جستجوی فایل‌ها با الگو",
+      "grepContent": "جستجوی محتوا",
+      "killCommand": "متوقف کردن اجرای کد",
       "listLocalFiles": "مشاهده لیست فایل‌ها",
       "moveLocalFiles": "جابجایی فایل‌ها",
       "readLocalFile": "خواندن محتوای فایل",
