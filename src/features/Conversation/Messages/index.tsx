@@ -42,6 +42,7 @@ export interface ChatListItemProps {
   id: string;
   inPortalThread?: boolean;
   index: number;
+  isLatestItem?: boolean;
 }
 
 const Item = memo<ChatListItemProps>(
@@ -53,6 +54,7 @@ const Item = memo<ChatListItemProps>(
     disableEditing,
     inPortalThread = false,
     index,
+    isLatestItem,
   }) => {
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -127,11 +129,25 @@ const Item = memo<ChatListItemProps>(
         }
 
         case 'assistant': {
-          return <AssistantMessage disableEditing={disableEditing} id={id} index={index} />;
+          return (
+            <AssistantMessage
+              disableEditing={disableEditing}
+              id={id}
+              index={index}
+              isLatestItem={isLatestItem}
+            />
+          );
         }
 
         case 'assistantGroup': {
-          return <GroupMessage disableEditing={disableEditing} id={id} index={index} />;
+          return (
+            <GroupMessage
+              disableEditing={disableEditing}
+              id={id}
+              index={index}
+              isLatestItem={isLatestItem}
+            />
+          );
         }
 
         case 'tool': {
@@ -144,7 +160,7 @@ const Item = memo<ChatListItemProps>(
       }
 
       return null;
-    }, [role, disableEditing, id, index]);
+    }, [role, disableEditing, id, index, isLatestItem]);
 
     if (!role) return;
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { UIChatMessage } from '@lobechat/types';
-import { useResponsive } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -9,7 +9,6 @@ import { Flexbox } from 'react-layout-kit';
 import Avatar from '@/features/ChatItem/components/Avatar';
 import BorderSpacing from '@/features/ChatItem/components/BorderSpacing';
 import Title from '@/features/ChatItem/components/Title';
-import { useStyles } from '@/features/ChatItem/style';
 import Usage from '@/features/Conversation/components/Extras/Usage';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentStore } from '@/store/agent';
@@ -26,13 +25,85 @@ import Group from './Group';
 
 const MOBILE_AVATAR_SIZE = 32;
 
+const useStyles = createStyles(
+  ({ cx, css, token, responsive }, { variant }: { variant?: 'bubble' | 'docs' }) => {
+    const rawContainerStylish = css`
+      margin-block-end: -16px;
+      transition: background-color 100ms ${token.motionEaseOut};
+    `;
+
+    return {
+      actions: css`
+        flex: none;
+        align-self: flex-end;
+        justify-content: flex-end;
+      `,
+      container: cx(
+        variant === 'docs' && rawContainerStylish,
+        css`
+          position: relative;
+
+          width: 100%;
+          max-width: 100vw;
+          padding-block: 24px 12px;
+          padding-inline: 12px;
+
+          @supports (content-visibility: auto) {
+            contain-intrinsic-size: auto 100lvh;
+          }
+
+          time {
+            display: inline-block;
+            white-space: nowrap;
+          }
+
+          div[role='menubar'] {
+            display: flex;
+          }
+
+          time,
+          div[role='menubar'] {
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 200ms ${token.motionEaseOut};
+          }
+
+          &:hover {
+            time,
+            div[role='menubar'] {
+              pointer-events: unset;
+              opacity: 1;
+            }
+          }
+
+          ${responsive.mobile} {
+            padding-block-start: ${variant === 'docs' ? '16px' : '12px'};
+            padding-inline: 8px;
+          }
+        `,
+      ),
+      messageContent: css`
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+
+        ${responsive.mobile} {
+          flex-direction: column !important;
+        }
+      `,
+    };
+  },
+);
+
 interface GroupMessageProps {
   disableEditing?: boolean;
   id: string;
   index: number;
+  isLatestItem?: boolean;
 }
 
-const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing }) => {
+const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLatestItem }) => {
   const item = useChatStore(
     displayMessageSelectors.getDisplayMessageById(id),
     isEqual,
@@ -45,15 +116,7 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing }) => 
   const type = useAgentStore(agentChatConfigSelectors.displayMode);
   const variant = type === 'chat' ? 'bubble' : 'docs';
 
-  const { styles } = useStyles({
-    editing: false,
-    placement,
-    primary: false,
-    showTitle: true,
-    time: createdAt,
-    title: avatar.title,
-    variant,
-  });
+  const { styles } = useStyles({ variant });
 
   const [isInbox] = useSessionStore((s) => [sessionSelectors.isInboxSession(s)]);
   const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
@@ -79,7 +142,11 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing }) => 
   }, [isInbox]);
 
   return (
-    <Flexbox className={styles.container} gap={mobile ? 6 : 12}>
+    <Flexbox
+      className={styles.container}
+      gap={mobile ? 6 : 12}
+      style={isLatestItem ? { minHeight: 'calc(-300px + 100dvh)' } : undefined}
+    >
       <Flexbox gap={4} horizontal>
         <Avatar
           alt={avatar.title || 'avatar'}

@@ -1,18 +1,7 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
-import {
-  ReactNode,
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { Flexbox } from 'react-layout-kit';
-import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import { ReactNode, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { VList, VListHandle } from 'virtua';
 
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
@@ -81,13 +70,14 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
 
   // Auto scroll to bottom when new messages arrive
   useEffect(() => {
-    const shouldScroll = dataSource.length > prevDataLengthRef.current && atBottom;
+    const shouldScroll = dataSource.length > prevDataLengthRef.current;
     prevDataLengthRef.current = dataSource.length;
 
+    console.log('scroll');
     if (shouldScroll && virtuaRef.current) {
-      virtuaRef.current.scrollToIndex(dataSource.length - 1, { align: 'end' });
+      virtuaRef.current.scrollToIndex(dataSource.length - 2, { align: 'start', smooth: true });
     }
-  }, [dataSource.length, atBottom]);
+  }, [dataSource.length]);
 
   const scrollToBottom = useCallback(
     (behavior: 'auto' | 'smooth' = 'smooth') => {
@@ -119,11 +109,11 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
   }, []);
 
   // Scroll to bottom on initial render
-  useEffect(() => {
-    if (virtuaRef.current && dataSource.length > 0) {
-      virtuaRef.current.scrollToIndex(dataSource.length - 1, { align: 'end' });
-    }
-  }, [isCurrentChatLoaded]);
+  // useEffect(() => {
+  //   if (virtuaRef.current && dataSource.length > 0) {
+  //     virtuaRef.current.scrollToIndex(dataSource.length - 1, { align: 'end' });
+  //   }
+  // }, [isCurrentChatLoaded]);
 
   // bufferSize should be 2 times the height of the window
   const bufferSize = typeof window !== 'undefined' ? window.innerHeight * 2 : 400;
