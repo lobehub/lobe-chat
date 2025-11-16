@@ -30,7 +30,7 @@
     "concat-stream": "^2.0.0",
     "debug": "^4.3.4",
     "mammoth": "^1.8.0",
-    "officeparser": "5.1.1",
+    "officeparser": "5.2.2",
     "pdfjs-dist": "4.10.38",
     "word-extractor": "^1.0.4",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
