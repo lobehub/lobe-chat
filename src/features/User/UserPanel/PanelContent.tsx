@@ -1,3 +1,4 @@
+import { enableNextAuth } from '@lobechat/const';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
@@ -5,7 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
-import { enableNextAuth } from '@/const/auth';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
