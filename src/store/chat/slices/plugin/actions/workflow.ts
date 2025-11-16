@@ -69,6 +69,8 @@ export const pluginWorkflow: StateCreator<
       messages: chats,
       parentMessageId: parentId ?? chats.at(-1)!.id,
       parentMessageType: 'user',
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
       traceId,
       threadId,
       inPortalThread,

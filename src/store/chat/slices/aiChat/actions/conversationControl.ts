@@ -183,6 +183,8 @@ export const conversationControl: StateCreator<
         messages: currentMessages,
         parentMessageId: toolMessageId, // Start from tool message
         parentMessageType: 'tool', // Type is 'tool'
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
         threadId: activeThreadId,
         initialState: state,
         initialContext: context,
@@ -239,6 +241,8 @@ export const conversationControl: StateCreator<
         messages: currentMessages,
         parentMessageId: messageId,
         parentMessageType: 'tool',
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
         threadId: activeThreadId,
         initialState: state,
         initialContext: context,

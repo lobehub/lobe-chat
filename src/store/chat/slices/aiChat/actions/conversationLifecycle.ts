@@ -249,6 +249,8 @@ export const conversationLifecycle: StateCreator<
         messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
+        sessionId: activeId,
+        topicId: data.topicId ?? activeTopicId,
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
         skipCreateFirstMessage: true,
@@ -305,6 +307,8 @@ export const conversationLifecycle: StateCreator<
         messages: contextMessages,
         parentMessageId: id,
         parentMessageType: 'user',
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
         traceId,
         ragQuery: get().internal_shouldUseRAG() ? item.content : undefined,
         threadId: activeThreadId,
@@ -360,6 +364,8 @@ export const conversationLifecycle: StateCreator<
         messages: chats,
         parentMessageId: id,
         parentMessageType: message.role as 'assistant' | 'tool' | 'user',
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
       });
     } finally {
       // Remove message from continuing state

@@ -50,6 +50,15 @@ interface ProcessMessageParams {
   groupId?: string;
   agentId?: string;
   agentConfig?: any; // Agent configuration for group chat agents
+
+  /**
+   * Explicit sessionId for this execution (avoids using global activeId)
+   */
+  sessionId?: string;
+  /**
+   * Explicit topicId for this execution (avoids using global activeTopicId)
+   */
+  topicId?: string | null;
 }
 
 /**
@@ -62,6 +71,14 @@ export interface StreamingExecutorAction {
   internal_createAgentState: (params: {
     messages: UIChatMessage[];
     parentMessageId: string;
+    /**
+     * Explicit sessionId for this execution (avoids using global activeId)
+     */
+    sessionId?: string;
+    /**
+     * Explicit topicId for this execution (avoids using global activeTopicId)
+     */
+    topicId?: string | null;
     threadId?: string;
     initialState?: AgentState;
     initialContext?: AgentRuntimeContext;
@@ -94,6 +111,14 @@ export interface StreamingExecutorAction {
     messages: UIChatMessage[];
     parentMessageId: string;
     parentMessageType: 'user' | 'assistant' | 'tool';
+    /**
+     * Explicit sessionId for this execution (avoids using global activeId)
+     */
+    sessionId?: string;
+    /**
+     * Explicit topicId for this execution (avoids using global activeTopicId)
+     */
+    topicId?: string | null;
     inSearchWorkflow?: boolean;
     /**
      * the RAG query content, should be embedding and used in the semantic search
@@ -124,11 +149,17 @@ export const streamingExecutor: StateCreator<
   internal_createAgentState: ({
     messages,
     parentMessageId,
+    sessionId: paramSessionId,
+    topicId: paramTopicId,
     threadId,
     initialState,
     initialContext,
   }) => {
+    // Use provided sessionId/topicId or fallback to global state
     const { activeId, activeTopicId } = get();
+    const sessionId = paramSessionId ?? activeId;
+    const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
+
     const agentStoreState = getAgentStoreState();
     const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
 
@@ -157,12 +188,12 @@ export const streamingExecutor: StateCreator<
     const state =
       initialState ||
       AgentRuntime.createInitialState({
-        sessionId: activeId,
+        sessionId,
         messages,
         maxSteps: 400,
         metadata: {
-          sessionId: activeId,
-          topicId: activeTopicId,
+          sessionId,
+          topicId,
           threadId,
         },
         toolManifestMap,
@@ -178,7 +209,7 @@ export const streamingExecutor: StateCreator<
         parentMessageId,
       },
       session: {
-        sessionId: activeId,
+        sessionId,
         messageCount: messages.length,
         status: state.status,
         stepCount: 0,
@@ -462,17 +493,29 @@ export const streamingExecutor: StateCreator<
   },
 
   internal_execAgentRuntime: async (params) => {
-    const { messages: originalMessages, parentMessageId, parentMessageType } = params;
+    const {
+      messages: originalMessages,
+      parentMessageId,
+      parentMessageType,
+      sessionId: paramSessionId,
+      topicId: paramTopicId,
+    } = params;
+
+    // Use provided sessionId/topicId or fallback to global state
+    const { activeId, activeTopicId } = get();
+    const sessionId = paramSessionId ?? activeId;
+    const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
+    const messageKey = messageMapKey(sessionId, topicId);
 
     log(
-      '[internal_execAgentRuntime] start, parentMessageId: %s,parentMessageType: %s, messages count: %d',
+      '[internal_execAgentRuntime] start, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      sessionId,
+      topicId,
+      messageKey,
       parentMessageId,
       parentMessageType,
       originalMessages.length,
     );
-
-    const { activeId, activeTopicId } = get();
-    const messageKey = messageMapKey(activeId, activeTopicId);
 
     // Create a new array to avoid modifying the original messages
     let messages = [...originalMessages];
@@ -566,6 +609,8 @@ export const streamingExecutor: StateCreator<
       get().internal_createAgentState({
         messages,
         parentMessageId: params.parentMessageId,
+        sessionId,
+        topicId,
         threadId: params.threadId,
         initialState: params.initialState,
         initialContext: params.initialContext,
