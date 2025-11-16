@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.68](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.67...v2.0.0-next.68)
+
+<sup>Released on **2025-11-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: The tool to fail execution on ollama when a message contains b….
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: The tool to fail execution on ollama when a message contains b…, closes [#10259](https://github.com/lobehub/lobe-chat/issues/10259) ([1ad8080](https://github.com/lobehub/lobe-chat/commit/1ad8080))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.67](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.66...v2.0.0-next.67)
 
 <sup>Released on **2025-11-16**</sup>
