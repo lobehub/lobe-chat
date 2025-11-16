@@ -73,7 +73,6 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     const shouldScroll = dataSource.length > prevDataLengthRef.current;
     prevDataLengthRef.current = dataSource.length;
 
-    console.log('scroll');
     if (shouldScroll && virtuaRef.current) {
       virtuaRef.current.scrollToIndex(dataSource.length - 2, { align: 'start', smooth: true });
     }
@@ -115,16 +114,14 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     }
   }, [isCurrentChatLoaded]);
 
-  // bufferSize should be 2 times the height of the window
-  const bufferSize = typeof window !== 'undefined' ? window.innerHeight * 2 : 400;
-
   // first time loading or not loaded
   if (isFirstLoading || !isCurrentChatLoaded) return <SkeletonList mobile={mobile} />;
 
   return (
     <VirtuaContext value={virtuaRef}>
       <VList
-        bufferSize={bufferSize}
+        // bufferSize should be 2 times the height of the window
+        bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
         data={dataSource}
         onScroll={handleScroll}
         onScrollEnd={handleScrollEnd}
