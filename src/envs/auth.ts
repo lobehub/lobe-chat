@@ -79,6 +79,17 @@ export const getAuthConfig = () => {
       GITHUB_CLIENT_ID: z.string().optional(),
       GITHUB_CLIENT_SECRET: z.string().optional(),
 
+      // AWS Cognito OAuth
+      COGNITO_CLIENT_ID: z.string().optional(),
+      COGNITO_CLIENT_SECRET: z.string().optional(),
+      COGNITO_DOMAIN: z.string().optional(),
+      COGNITO_REGION: z.string().optional(),
+      COGNITO_USERPOOL_ID: z.string().optional(),
+
+      // Microsoft OAuth
+      MICROSOFT_CLIENT_ID: z.string().optional(),
+      MICROSOFT_CLIENT_SECRET: z.string().optional(),
+
       // ---------------------------------- next auth ----------------------------------
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
@@ -118,6 +129,17 @@ export const getAuthConfig = () => {
       // GitHub OAuth (Better Auth)
       GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
       GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+
+      // AWS Cognito OAuth (Better Auth)
+      COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
+      COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
+      COGNITO_DOMAIN: process.env.COGNITO_DOMAIN,
+      COGNITO_REGION: process.env.COGNITO_REGION,
+      COGNITO_USERPOOL_ID: process.env.COGNITO_USERPOOL_ID,
+
+      // Microsoft OAuth (Better Auth)
+      MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
+      MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
 
       // ---------------------------------- next auth ----------------------------------
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',

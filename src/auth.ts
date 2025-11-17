@@ -55,6 +55,39 @@ const initBetterAuthSSOProviders = () => {
         break;
       }
 
+      case 'cognito': {
+        if (
+          authEnv.COGNITO_CLIENT_ID &&
+          authEnv.COGNITO_CLIENT_SECRET &&
+          authEnv.COGNITO_DOMAIN &&
+          authEnv.COGNITO_REGION &&
+          authEnv.COGNITO_USERPOOL_ID
+        ) {
+          socialProviders.cognito = {
+            clientId: authEnv.COGNITO_CLIENT_ID,
+            clientSecret: authEnv.COGNITO_CLIENT_SECRET,
+            domain: authEnv.COGNITO_DOMAIN,
+            region: authEnv.COGNITO_REGION,
+            userPoolId: authEnv.COGNITO_USERPOOL_ID,
+          };
+        } else {
+          pino.warn(`[Better-Auth] AWS Cognito OAuth enabled but missing credentials`);
+        }
+        break;
+      }
+
+      case 'microsoft': {
+        if (authEnv.MICROSOFT_CLIENT_ID && authEnv.MICROSOFT_CLIENT_SECRET) {
+          socialProviders.microsoft = {
+            clientId: authEnv.MICROSOFT_CLIENT_ID,
+            clientSecret: authEnv.MICROSOFT_CLIENT_SECRET,
+          };
+        } else {
+          pino.warn(`[Better-Auth] Microsoft OAuth enabled but missing credentials`);
+        }
+        break;
+      }
+
       default: {
         pino.warn(`[Better-Auth] Unknown SSO provider: ${provider}`);
       }
