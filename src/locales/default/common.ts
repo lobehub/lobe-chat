@@ -138,6 +138,12 @@ export default {
     },
   },
   close: '关闭',
+  cmdk: {
+    noResults: '未找到相关结果',
+    openSettings: '打开设置',
+    openSettingsDescription: '访问应用设置与配置',
+    searchPlaceholder: '搜索功能...',
+  },
   confirm: '确认',
   contact: '联系我们',
   copy: '复制',

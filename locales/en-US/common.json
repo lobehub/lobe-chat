@@ -135,6 +135,12 @@
     }
   },
   "close": "Close",
+  "cmdk": {
+    "noResults": "No results found",
+    "openSettings": "Open Settings",
+    "openSettingsDescription": "Access application settings and configuration",
+    "searchPlaceholder": "Search for features..."
+  },
   "confirm": "Confirm",
   "contact": "Contact Us",
   "copy": "Copy",
