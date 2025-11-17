@@ -1,17 +1,58 @@
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Highlighter, Icon, Text } from '@lobehub/ui';
+import { Icon, Text } from '@lobehub/ui';
+import { Skeleton } from 'antd';
+import { createPatch } from 'diff';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
+import { Diff, Hunk, parseDiff } from 'react-diff-view';
+import 'react-diff-view/style/index.css';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import useSWR from 'swr';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';
+import { localFileService } from '@/services/electron/localFileService';
 
 const EditLocalFile = memo<BuiltinInterventionProps<EditLocalFileParams>>(({ args }) => {
   const { t } = useTranslation('tool');
   const { base, dir } = path.parse(args.file_path);
+
+  // Fetch full file content
+  const { data: fileData, isLoading } = useSWR(
+    ['readLocalFile', args.file_path],
+    () => localFileService.readLocalFile({ fullContent: true, path: args.file_path }),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
+  );
+
+  // Generate diff from full file content
+  const files = useMemo(() => {
+    if (!fileData?.content) return [];
+
+    try {
+      const oldContent = fileData.content;
+
+      // Generate new content by applying the replacement
+      const newContent = args.replace_all
+        ? oldContent.replaceAll(args.old_string, args.new_string)
+        : oldContent.replace(args.old_string, args.new_string);
+
+      // Use createPatch to generate unified diff with full file content
+      const patch = createPatch(args.file_path, oldContent, newContent, '', '');
+
+      // Add git diff header for parseDiff compatibility
+      const diffText = `diff --git a${args.file_path} b${args.file_path}\n${patch}`;
+
+      return parseDiff(diffText);
+    } catch (error) {
+      console.error('Failed to generate diff:', error);
+      return [];
+    }
+  }, [fileData?.content, args.file_path, args.old_string, args.new_string, args.replace_all]);
 
   return (
     <Flexbox gap={12}>
@@ -21,41 +62,24 @@ const EditLocalFile = memo<BuiltinInterventionProps<EditLocalFileParams>>(({ arg
         <LocalFile name={base} path={args.file_path} />
       </Flexbox>
 
-      <Flexbox gap={8}>
-        <Text type="secondary">
-          {args.replace_all
-            ? t('localFiles.editFile.replaceAll')
-            : t('localFiles.editFile.replaceFirst')}
-        </Text>
-
-        <Flexbox gap={4}>
-          <Text style={{ fontSize: 12 }} type={'secondary'}>
-            {t('localFiles.editFile.oldString')}
+      {isLoading ? (
+        <Skeleton active paragraph={{ rows: 3 }} />
+      ) : (
+        <Flexbox gap={8}>
+          <Text type="secondary">
+            {args.replace_all
+              ? t('localFiles.editFile.replaceAll')
+              : t('localFiles.editFile.replaceFirst')}
           </Text>
-          <Highlighter
-            language="text"
-            showLanguage={false}
-            style={{ maxHeight: 200, overflow: 'auto', padding: '4px 8px' }}
-            variant={'outlined'}
-          >
-            {args.old_string}
-          </Highlighter>
+          {files.map((file, index) => (
+            <div key={`${file.oldPath}-${index}`} style={{ fontSize: '12px' }}>
+              <Diff diffType={file.type} hunks={file.hunks} viewType="split">
+                {(hunks) => hunks.map((hunk) => <Hunk hunk={hunk} key={hunk.content} />)}
+              </Diff>
+            </div>
+          ))}
         </Flexbox>
-
-        <Flexbox gap={4}>
-          <Text style={{ fontSize: 12 }} type={'secondary'}>
-            {t('localFiles.editFile.newString')}
-          </Text>
-          <Highlighter
-            language="text"
-            showLanguage={false}
-            style={{ maxHeight: 200, overflow: 'auto', padding: '4px 8px' }}
-            variant={'outlined'}
-          >
-            {args.new_string}
-          </Highlighter>
-        </Flexbox>
-      </Flexbox>
+      )}
     </Flexbox>
   );
 });

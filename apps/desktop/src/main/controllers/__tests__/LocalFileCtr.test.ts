@@ -183,6 +183,26 @@ describe('LocalFileCtr', () => {
       expect(result.totalLineCount).toBe(5);
     });
 
+    it('should read full file content when fullContent is true', async () => {
+      const mockFileContent = 'line1\nline2\nline3\nline4\nline5';
+      vi.mocked(mockLoadFile).mockResolvedValue({
+        content: mockFileContent,
+        filename: 'test.txt',
+        fileType: 'txt',
+        createdTime: new Date('2024-01-01'),
+        modifiedTime: new Date('2024-01-02'),
+      });
+
+      const result = await localFileCtr.readFile({ path: '/test/file.txt', fullContent: true });
+
+      expect(result.content).toBe(mockFileContent);
+      expect(result.lineCount).toBe(5);
+      expect(result.charCount).toBe(mockFileContent.length);
+      expect(result.totalLineCount).toBe(5);
+      expect(result.totalCharCount).toBe(mockFileContent.length);
+      expect(result.loc).toEqual([0, 5]);
+    });
+
     it('should handle file read error', async () => {
       vi.mocked(mockLoadFile).mockRejectedValue(new Error('File not found'));
 

@@ -48,6 +48,7 @@ export interface RenameLocalFileResult {
 }
 
 export interface LocalReadFileParams {
+  fullContent?: boolean;
   loc?: [number, number];
   path: string;
 }

@@ -95,26 +95,45 @@ export default class LocalFileCtr extends ControllerModule {
   }
 
   @ipcClientEvent('readLocalFile')
-  async readFile({ path: filePath, loc }: LocalReadFileParams): Promise<LocalReadFileResult> {
-    const effectiveLoc = loc ?? [0, 200];
-    logger.debug('Starting to read file:', { filePath, loc: effectiveLoc });
+  async readFile({
+    path: filePath,
+    loc,
+    fullContent,
+  }: LocalReadFileParams): Promise<LocalReadFileResult> {
+    const effectiveLoc = fullContent ? undefined : (loc ?? [0, 200]);
+    logger.debug('Starting to read file:', { filePath, fullContent, loc: effectiveLoc });
 
     try {
       const fileDocument = await loadFile(filePath);
 
-      const [startLine, endLine] = effectiveLoc;
       const lines = fileDocument.content.split('\n');
       const totalLineCount = lines.length;
       const totalCharCount = fileDocument.content.length;
 
-      // Adjust slice indices to be 0-based and inclusive/exclusive
-      const selectedLines = lines.slice(startLine, endLine);
-      const content = selectedLines.join('\n');
-      const charCount = content.length;
-      const lineCount = selectedLines.length;
+      let content: string;
+      let charCount: number;
+      let lineCount: number;
+      let actualLoc: [number, number];
+
+      if (effectiveLoc === undefined) {
+        // Return full content
+        content = fileDocument.content;
+        charCount = totalCharCount;
+        lineCount = totalLineCount;
+        actualLoc = [0, totalLineCount];
+      } else {
+        // Return specified range
+        const [startLine, endLine] = effectiveLoc;
+        const selectedLines = lines.slice(startLine, endLine);
+        content = selectedLines.join('\n');
+        charCount = content.length;
+        lineCount = selectedLines.length;
+        actualLoc = effectiveLoc;
+      }
 
       logger.debug('File read successfully:', {
         filePath,
+        fullContent,
         selectedLineCount: lineCount,
         totalCharCount,
         totalLineCount,
@@ -129,7 +148,7 @@ export default class LocalFileCtr extends ControllerModule {
         fileType: fileDocument.fileType,
         filename: fileDocument.filename,
         lineCount,
-        loc: effectiveLoc,
+        loc: actualLoc,
         // Line count for the selected range
         modifiedTime: fileDocument.modifiedTime,
 
