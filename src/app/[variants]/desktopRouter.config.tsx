@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
 
-import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
@@ -41,7 +40,7 @@ const RootLayout = (props: { locale: Locales }) => {
 export const createDesktopRouter = (locale: Locales) =>
   createBrowserRouter([
     {
-      HydrateFallback: () => <Loading />,
+      HydrateFallback: () => <>HydrateFallback Loading</>,
       children: [
         // Chat routes
         {
