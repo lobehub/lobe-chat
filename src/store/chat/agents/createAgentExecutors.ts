@@ -15,6 +15,7 @@ import type { ChatToolPayload, CreateMessageParams } from '@lobechat/types';
 import debug from 'debug';
 import pMap from 'p-map';
 
+import { LOADING_FLAT } from '@/const/message';
 import type { ChatStore } from '@/store/chat/store';
 
 const log = debug('lobe-store:agent-executors');
@@ -36,7 +37,9 @@ export const createAgentExecutors = (context: {
     inPortalThread?: boolean;
     inSearchWorkflow?: boolean;
     ragQuery?: string;
+    sessionId?: string;
     threadId?: string;
+    topicId?: string | null;
     traceId?: string;
   };
   parentId: string;
@@ -75,16 +78,22 @@ export const createAgentExecutors = (context: {
           llmPayload.parentMessageId = context.parentId;
         }
         // Create assistant message (following server-side pattern)
-        const assistantMessageItem = await context.get().optimisticCreateMessage({
-          content: '',
-          model: llmPayload.model,
-          parentId: llmPayload.parentMessageId,
-          provider: llmPayload.provider,
-          role: 'assistant',
-          sessionId: state.metadata!.sessionId!,
-          threadId: state.metadata?.threadId,
-          topicId: state.metadata?.topicId,
-        });
+        const assistantMessageItem = await context.get().optimisticCreateMessage(
+          {
+            content: LOADING_FLAT,
+            model: llmPayload.model,
+            parentId: llmPayload.parentMessageId,
+            provider: llmPayload.provider,
+            role: 'assistant',
+            sessionId: state.metadata!.sessionId!,
+            threadId: state.metadata?.threadId,
+            topicId: state.metadata?.topicId,
+          },
+          {
+            sessionId: state.metadata!.sessionId!,
+            topicId: state.metadata?.topicId,
+          },
+        );
 
         if (!assistantMessageItem) {
           throw new Error('Failed to create assistant message');
@@ -269,13 +278,16 @@ export const createAgentExecutors = (context: {
             parentId: payload.parentMessageId,
             plugin: chatToolPayload,
             role: 'tool',
-            sessionId: context.get().activeId,
+            sessionId: state.metadata!.sessionId!,
             threadId: context.params.threadId,
             tool_call_id: chatToolPayload.id,
-            topicId: context.get().activeTopicId,
+            topicId: state.metadata?.topicId,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+          const createResult = await context.get().optimisticCreateMessage(toolMessageParams, {
+            sessionId: state.metadata!.sessionId!,
+            topicId: state.metadata?.topicId,
+          });
 
           if (!createResult) {
             log(
@@ -450,13 +462,16 @@ export const createAgentExecutors = (context: {
             },
             pluginIntervention: { status: 'pending' },
             role: 'tool',
-            sessionId: context.get().activeId,
+            sessionId: state.metadata!.sessionId!,
             threadId: context.params.threadId,
             tool_call_id: toolPayload.id,
-            topicId: context.get().activeTopicId,
+            topicId: state.metadata?.topicId,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+          const createResult = await context.get().optimisticCreateMessage(toolMessageParams, {
+            sessionId: state.metadata!.sessionId!,
+            topicId: state.metadata?.topicId,
+          });
 
           if (!createResult) {
             log(
