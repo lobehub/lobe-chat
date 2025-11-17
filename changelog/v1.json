@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support parallel topic agent runtime."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.73"
+  },
+  {
+    "children": {
       "improvements": ["Add model information for the Qiniu provider."]
     },
     "date": "2025-11-17",
