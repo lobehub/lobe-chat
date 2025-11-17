@@ -139,9 +139,10 @@ export default {
   },
   close: '关闭',
   cmdk: {
+    knowledgeBase: '知识库',
     noResults: '未找到相关结果',
     openSettings: '打开设置',
-    openSettingsDescription: '访问应用设置与配置',
+    painting: 'AI 绘画',
     searchPlaceholder: '搜索功能...',
   },
   confirm: '确认',

@@ -2,7 +2,7 @@
 
 import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
-import { Settings } from 'lucide-react';
+import { BookOpen, Palette, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -156,7 +156,7 @@ const Cmdk = memo(() => {
   }, []);
 
   // Register Cmd+K / Ctrl+K hotkey
-  useHotkeyById(HotkeyEnum.Search, () => {
+  useHotkeyById(HotkeyEnum.CommandPalette, () => {
     setOpen((prev) => !prev);
   });
 
@@ -182,8 +182,8 @@ const Cmdk = memo(() => {
     }
   }, [open]);
 
-  const handleOpenSettings = () => {
-    router.push('/settings');
+  const handleNavigate = (path: string) => {
+    router.push(path);
     setOpen(false);
   };
 
@@ -196,11 +196,22 @@ const Cmdk = memo(() => {
           <Command.Input autoFocus placeholder={t('cmdk.searchPlaceholder')} />
           <Command.List>
             <Command.Empty>{t('cmdk.noResults')}</Command.Empty>
-            <Command.Item onSelect={handleOpenSettings} value="settings">
+            <Command.Item onSelect={() => handleNavigate('/settings')} value="settings">
               <Settings className={styles.icon} />
               <div className={styles.itemContent}>
                 <div className={styles.itemLabel}>{t('cmdk.openSettings')}</div>
-                <div className={styles.itemDescription}>{t('cmdk.openSettingsDescription')}</div>
+              </div>
+            </Command.Item>
+            <Command.Item onSelect={() => handleNavigate('/image')} value="painting">
+              <Palette className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
+              </div>
+            </Command.Item>
+            <Command.Item onSelect={() => handleNavigate('/knowledge')} value="knowledge">
+              <BookOpen className={styles.icon} />
+              <div className={styles.itemContent}>
+                <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
               </div>
             </Command.Item>
           </Command.List>

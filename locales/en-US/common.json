@@ -136,9 +136,10 @@
   },
   "close": "Close",
   "cmdk": {
+    "knowledgeBase": "Knowledge Base",
     "noResults": "No results found",
     "openSettings": "Open Settings",
-    "openSettingsDescription": "Access application settings and configuration",
+    "painting": "AI Painting",
     "searchPlaceholder": "Search for features..."
   },
   "confirm": "Confirm",
