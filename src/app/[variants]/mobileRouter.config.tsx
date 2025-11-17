@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { redirect, createBrowserRouter, useNavigate } from 'react-router-dom';
+import { redirect, createBrowserRouter, type LoaderFunction, useNavigate } from 'react-router-dom';
 
-import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
@@ -35,11 +34,35 @@ const RootLayout = (props: { locale: Locales }) => (
   </>
 );
 
+// Hydration gate loader - waits for client state to be ready before rendering
+const hydrationGateLoader: LoaderFunction = () => {
+  const { isAppHydrated } = useGlobalStore.getState();
+
+  // 如果状态已经就绪，直接放行
+  if (isAppHydrated) {
+    return null;
+  }
+
+  // 否则，返回一个 Promise，"暂停" 渲染
+  return new Promise((resolve) => {
+    console.log('[HydrationGate] Waiting for client state...');
+    // 订阅 useGlobalStore 的变化
+    const unsubscribe = useGlobalStore.subscribe((state) => {
+      if (state.isAppHydrated) {
+        console.log('[HydrationGate] Client state ready. Gate opened!');
+        unsubscribe(); // 清理订阅
+        resolve(null); // Promise 完成，门卫放行
+      }
+    });
+  });
+};
+
 // Create mobile router configuration
 export const createMobileRouter = (locale: Locales) =>
   createBrowserRouter([
     {
-      HydrateFallback: () => <Loading />,
+      HydrateFallback: () => <>HydrateFallback Loading</>,
+      loader: hydrationGateLoader,
       children: [
         // Chat routes
         {
