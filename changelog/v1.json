@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add model information for the Qiniu provider."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.72"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop user panel."]
     },
     "date": "2025-11-17",
