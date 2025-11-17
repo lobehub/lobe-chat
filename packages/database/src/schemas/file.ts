@@ -1,5 +1,4 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { FileSource } from '@lobechat/types';
 import {
   boolean,
   index,
@@ -76,6 +75,7 @@ export const documents = pgTable(
     // Forward reference to files table defined below
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     // @ts-expect-error - files is defined later in this file, forward reference is valid at runtime
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     fileId: text('file_id').references(() => files.id, { onDelete: 'set null' }),
 
     // 父文档（用于文件夹层级结构）
