@@ -264,14 +264,21 @@ export const streamingExecutor: StateCreator<
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
+    const context: { sessionId: string; topicId?: string | null } = {
+      sessionId: params?.sessionId || get().activeId,
+      topicId: params?.topicId,
+    };
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
       (toolCalls: any[]) => {
-        internal_dispatchMessage({
-          id: messageId,
-          type: 'updateMessage',
-          value: { tools: get().internal_transformToolCalls(toolCalls) },
-        });
+        internal_dispatchMessage(
+          {
+            id: messageId,
+            type: 'updateMessage',
+            value: { tools: get().internal_transformToolCalls(toolCalls) },
+          },
+          context,
+        );
       },
       300,
       { leading: true, trailing: true },
@@ -298,8 +305,8 @@ export const streamingExecutor: StateCreator<
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
-        await messageService.updateMessageError(messageId, error);
-        await refreshMessages();
+        await messageService.updateMessageError(messageId, error, context);
+        await refreshMessages(params?.sessionId, params?.topicId);
       },
       onFinish: async (
         content,
@@ -308,10 +315,11 @@ export const streamingExecutor: StateCreator<
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
-          messageService.updateMessage(messageId, {
-            traceId,
-            observationId: observationId ?? undefined,
-          });
+          messageService.updateMessage(
+            messageId,
+            { traceId, observationId: observationId ?? undefined },
+            context,
+          );
         }
 
         // 等待所有图片上传完成
@@ -365,10 +373,7 @@ export const streamingExecutor: StateCreator<
             imageList: finalImages.length > 0 ? finalImages : undefined,
             metadata: speed ? { ...usage, ...speed } : usage,
           },
-          {
-            sessionId: params?.sessionId,
-            topicId: params?.topicId,
-          },
+          context,
         );
       },
       onMessageHandle: async (chunk) => {
@@ -382,27 +387,33 @@ export const streamingExecutor: StateCreator<
             )
               return;
 
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: {
-                search: {
-                  citations: chunk.grounding.citations,
-                  searchQueries: chunk.grounding.searchQueries,
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  search: {
+                    citations: chunk.grounding.citations,
+                    searchQueries: chunk.grounding.searchQueries,
+                  },
                 },
               },
-            });
+              context,
+            );
             break;
           }
 
           case 'base64_image': {
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: {
-                imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
+                },
               },
-            });
+              context,
+            );
             const image = chunk.image;
 
             const task = getFileStoreState()
@@ -435,14 +446,17 @@ export const streamingExecutor: StateCreator<
               }
             }
 
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: {
-                content: output,
-                reasoning: !!thinking ? { content: thinking, duration } : undefined,
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  content: output,
+                  reasoning: !!thinking ? { content: thinking, duration } : undefined,
+                },
               },
-            });
+              context,
+            );
             break;
           }
 
@@ -459,11 +473,14 @@ export const streamingExecutor: StateCreator<
 
             thinking += chunk.text;
 
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: { reasoning: { content: thinking } },
-            });
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: { reasoning: { content: thinking } },
+              },
+              context,
+            );
             break;
           }
 
@@ -671,7 +688,10 @@ export const streamingExecutor: StateCreator<
             const currentMessages = get().messagesMap[messageKey] || [];
             const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
             if (assistantMessage) {
-              await messageService.updateMessageError(assistantMessage.id, event.error);
+              await messageService.updateMessageError(assistantMessage.id, event.error, {
+                sessionId,
+                topicId,
+              });
             }
             const finalMessages = get().messagesMap[messageKey] || [];
             get().replaceMessages(finalMessages, { sessionId, topicId });

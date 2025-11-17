@@ -96,14 +96,21 @@ export const pluginTypes: StateCreator<
     if (!result.valid) {
       // Get message to extract sessionId/topicId
       const message = dbMessageSelectors.getDbMessageById(id)(get());
-      const updateResult = await messageService.updateMessageError(id, {
-        body: {
-          error: result.errors,
-          message: '[plugin] your settings is invalid with plugin manifest setting schema',
+      const updateResult = await messageService.updateMessageError(
+        id,
+        {
+          body: {
+            error: result.errors,
+            message: '[plugin] your settings is invalid with plugin manifest setting schema',
+          },
+          message: t('response.PluginSettingsInvalid', { ns: 'error' }),
+          type: PluginErrorType.PluginSettingsInvalid as any,
         },
-        message: t('response.PluginSettingsInvalid', { ns: 'error' }),
-        type: PluginErrorType.PluginSettingsInvalid as any,
-      });
+        {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        },
+      );
 
       if (updateResult?.success && updateResult.messages) {
         get().replaceMessages(updateResult.messages, {
@@ -148,7 +155,10 @@ export const pluginTypes: StateCreator<
 
       // ignore the aborted request error
       if (!err.message.includes('The user aborted a request.')) {
-        const result = await messageService.updateMessageError(id, error as any);
+        const result = await messageService.updateMessageError(id, error as any, {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
             sessionId: message?.sessionId,
@@ -207,7 +217,10 @@ export const pluginTypes: StateCreator<
 
       // ignore the aborted request error
       if (!err.message.includes('The user aborted a request.')) {
-        const result = await messageService.updateMessageError(id, error as any);
+        const result = await messageService.updateMessageError(id, error as any, {
+          sessionId: message?.sessionId,
+          topicId: message?.topicId,
+        });
         if (result?.success && result.messages) {
           get().replaceMessages(result.messages, {
             sessionId: message?.sessionId,

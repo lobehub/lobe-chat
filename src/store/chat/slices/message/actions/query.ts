@@ -23,7 +23,7 @@ export interface MessageQueryAction {
   /**
    * Manually refresh messages from server
    */
-  refreshMessages: () => Promise<void>;
+  refreshMessages: (sessionId?: string, topicId?: string | null) => Promise<void>;
 
   /**
    * Replace current messages with new data
@@ -58,9 +58,11 @@ export const messageQuery: StateCreator<
 > = (set, get) => ({
   // TODO: The mutate should only be called once, but since we haven't merge session and group,
   // we need to call it twice
-  refreshMessages: async () => {
-    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'session']);
-    await mutate([SWR_USE_FETCH_MESSAGES, get().activeId, get().activeTopicId, 'group']);
+  refreshMessages: async (sessionId?: string, topicId?: string | null) => {
+    const sid = sessionId ?? get().activeId;
+    const tid = topicId !== undefined ? topicId : get().activeTopicId;
+    await mutate([SWR_USE_FETCH_MESSAGES, sid, tid, 'session']);
+    await mutate([SWR_USE_FETCH_MESSAGES, sid, tid, 'group']);
   },
 
   replaceMessages: (messages, params) => {

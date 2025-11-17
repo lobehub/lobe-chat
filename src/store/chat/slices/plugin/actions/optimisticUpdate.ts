@@ -46,12 +46,20 @@ export interface PluginOptimisticUpdateAction {
   /**
    * Add tool to assistant message with optimistic update
    */
-  optimisticAddToolToAssistantMessage: (id: string, tool: ChatToolPayload) => Promise<void>;
+  optimisticAddToolToAssistantMessage: (
+    id: string,
+    tool: ChatToolPayload,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
 
   /**
    * Remove tool from assistant message with optimistic update
    */
-  optimisticRemoveToolFromAssistantMessage: (id: string, tool_call_id?: string) => Promise<void>;
+  optimisticRemoveToolFromAssistantMessage: (
+    id: string,
+    tool_call_id?: string,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
 
   /**
    * Update plugin error with optimistic update
@@ -166,7 +174,7 @@ export const pluginOptimisticUpdate: StateCreator<
     }
   },
 
-  optimisticAddToolToAssistantMessage: async (id, tool) => {
+  optimisticAddToolToAssistantMessage: async (id, tool, context) => {
     const assistantMessage = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!assistantMessage) return;
 
@@ -177,10 +185,10 @@ export const pluginOptimisticUpdate: StateCreator<
       id: assistantMessage.id,
     });
 
-    await internal_refreshToUpdateMessageTools(id);
+    await internal_refreshToUpdateMessageTools(id, context);
   },
 
-  optimisticRemoveToolFromAssistantMessage: async (id, tool_call_id) => {
+  optimisticRemoveToolFromAssistantMessage: async (id, tool_call_id, context) => {
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || !tool_call_id) return;
 
@@ -190,7 +198,7 @@ export const pluginOptimisticUpdate: StateCreator<
     internal_dispatchMessage({ type: 'deleteMessageTool', tool_call_id, id: message.id });
 
     // update the message tools
-    await internal_refreshToUpdateMessageTools(id);
+    await internal_refreshToUpdateMessageTools(id, context);
   },
 
   optimisticUpdatePluginError: async (id, error, context) => {
