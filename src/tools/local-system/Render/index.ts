@@ -1,4 +1,5 @@
 import { LocalSystemApiName } from '../index';
+import EditLocalFile from './EditLocalFile';
 import ListFiles from './ListFiles';
 import MoveLocalFiles from './MoveLocalFiles';
 import ReadLocalFile from './ReadLocalFile';
@@ -11,6 +12,7 @@ import WriteFile from './WriteFile';
  * Local System Render Components Registry
  */
 export const LocalSystemRenders = {
+  [LocalSystemApiName.editLocalFile]: EditLocalFile,
   [LocalSystemApiName.listLocalFiles]: ListFiles,
   [LocalSystemApiName.moveLocalFiles]: MoveLocalFiles,
   [LocalSystemApiName.readLocalFile]: ReadLocalFile,

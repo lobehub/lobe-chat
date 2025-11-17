@@ -7,7 +7,6 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
-import MobileChangelogLayout from './(main)/changelog/_layout/Mobile';
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
@@ -285,21 +284,6 @@ export const createMobileRouter = (locale: Locales) =>
               Component: m.default,
             })),
           path: 'labs',
-        },
-
-        // Changelog routes
-        {
-          children: [
-            {
-              index: true,
-              lazy: () =>
-                import('./(main)/changelog').then((m) => ({
-                  Component: m.MobilePage,
-                })),
-            },
-          ],
-          element: <MobileChangelogLayout locale={locale} />,
-          path: 'changelog',
         },
 
         // Profile routes

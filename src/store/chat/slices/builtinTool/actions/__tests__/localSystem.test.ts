@@ -50,18 +50,17 @@ describe('localFileSlice', () => {
 
   describe('internal_triggerLocalFileToolCalling', () => {
     it('should handle successful calling', async () => {
-      const mockContent = { foo: 'bar' };
+      const mockContent = 'result content';
       const mockState = { state: 'test' };
-      const mockService = vi.fn().mockResolvedValue({ content: mockContent, state: mockState });
+      const mockService = vi
+        .fn()
+        .mockResolvedValue({ content: mockContent, state: mockState, success: true });
 
       await store.internal_triggerLocalFileToolCalling('test-id', mockService);
 
       expect(mockStore.toggleLocalFileLoading).toBeCalledWith('test-id', true);
       expect(mockStore.optimisticUpdatePluginState).toBeCalledWith('test-id', mockState);
-      expect(mockStore.optimisticUpdateMessageContent).toBeCalledWith(
-        'test-id',
-        JSON.stringify(mockContent),
-      );
+      expect(mockStore.optimisticUpdateMessageContent).toBeCalledWith('test-id', mockContent);
       expect(mockStore.toggleLocalFileLoading).toBeCalledWith('test-id', false);
     });
 
