@@ -93,7 +93,7 @@ export default {
       firstNamePlaceholder: '名字',
       hasAccount: '已有账号？',
       lastNamePlaceholder: '姓氏',
-      passwordPlaceholder: '请输入密码（8-64位，需包含字母和数字）',
+      passwordPlaceholder: '请输入密码',
       signinLink: '立即登录',
       submit: '注册',
       subtitle: '加入 LobeChat 社区',
