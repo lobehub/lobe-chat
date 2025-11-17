@@ -165,7 +165,6 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     ],
   );
 
-  console.log(title, title === LOADING_FLAT);
   return (
     <Flexbox
       align={'center'}
