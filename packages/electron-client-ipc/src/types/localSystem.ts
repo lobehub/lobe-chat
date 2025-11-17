@@ -217,7 +217,10 @@ export interface EditLocalFileParams {
 }
 
 export interface EditLocalFileResult {
+  diffText?: string;
   error?: string;
+  linesAdded?: number;
+  linesDeleted?: number;
   replacements: number;
   success: boolean;
 }

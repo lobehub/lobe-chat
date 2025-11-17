@@ -25,6 +25,7 @@ const ReadFileQuery = memo<ReadFileQueryProps>(({ args, pluginState, messageId }
 
   if (!args?.path || !pluginState) return null;
 
+  console.log(pluginState);
   return <ReadFileView {...pluginState.fileContent} path={args.path} />;
 });
 

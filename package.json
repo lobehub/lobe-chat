@@ -258,6 +258,7 @@
     "random-words": "^2.0.1",
     "react": "19.2.0",
     "react-confetti": "^6.4.0",
+    "react-diff-view": "^3.3.2",
     "react-dom": "19.2.0",
     "react-fast-marquee": "^1.6.5",
     "react-hotkeys-hook": "^5.2.1",

@@ -18,6 +18,7 @@ import {
   WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 import { SYSTEM_FILES_TO_IGNORE, loadFile } from '@lobechat/file-loaders';
+import { createPatch } from 'diff';
 import { shell } from 'electron';
 import fg from 'fast-glob';
 import { Stats, constants } from 'node:fs';
@@ -711,8 +712,32 @@ export default class LocalFileCtr extends ControllerModule {
       // Write back to file
       await writeFile(filePath, newContent, 'utf8');
 
-      logger.info(`${logPrefix} File edited successfully`, { replacements });
+      // Generate diff for UI display
+      const patch = createPatch(filePath, content, newContent, '', '');
+      const diffText = `diff --git a${filePath} b${filePath}\n${patch}`;
+
+      // Calculate lines added and deleted from patch
+      const patchLines = patch.split('\n');
+      let linesAdded = 0;
+      let linesDeleted = 0;
+
+      for (const line of patchLines) {
+        if (line.startsWith('+') && !line.startsWith('+++')) {
+          linesAdded++;
+        } else if (line.startsWith('-') && !line.startsWith('---')) {
+          linesDeleted++;
+        }
+      }
+
+      logger.info(`${logPrefix} File edited successfully`, {
+        linesAdded,
+        linesDeleted,
+        replacements,
+      });
       return {
+        diffText,
+        linesAdded,
+        linesDeleted,
         replacements,
         success: true,
       };
