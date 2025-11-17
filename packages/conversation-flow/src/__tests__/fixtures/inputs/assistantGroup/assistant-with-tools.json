@@ -97,7 +97,8 @@
       "tps": 48,
       "ttft": 178,
       "duration": 875,
-      "latency": 1053
+      "latency": 1053,
+      "collapsed": true
     }
   },
   {

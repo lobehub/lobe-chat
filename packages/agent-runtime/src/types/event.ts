@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { ChatToolPayload } from '@lobechat/types';
+
 import type { AgentState, ToolsCalling } from './state';
-import { ChatToolPayload } from '@/types/message';
 
 export interface AgentEventInit {
   type: 'init';

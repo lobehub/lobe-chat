@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "عرض قائمة المعلمات",
+    "delete": "حذف استدعاء الأداة",
+    "orphanedToolCall": "قد تكون رسالة استدعاء الأداة هذه معزولة بسبب ظروف غير طبيعية، مما قد يؤثر على تنفيذ الوكيل بشكل صحيح. يُرجى إزالتها.",
     "pluginRender": "عرض واجهة الإضافة"
   },
   "list": {
@@ -251,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "تحرير الملف",
+      "getCommandOutput": "الحصول على مخرجات الأوامر",
+      "globLocalFiles": "البحث عن الملفات المطابقة",
+      "grepContent": "البحث في المحتوى",
+      "killCommand": "إيقاف تنفيذ الأمر",
       "listLocalFiles": "عرض قائمة الملفات",
       "moveLocalFiles": "نقل الملفات",
       "readLocalFile": "قراءة محتوى الملف",

@@ -28,8 +28,6 @@ const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'raw', isDirec
     );
   }
 
-  console.log('FileIcon', fileName);
-
   return <MaterialFileTypeIcon filename={fileName} size={size} type={'file'} variant={variant} />;
 });
 

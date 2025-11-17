@@ -18,6 +18,7 @@ export default {
   availableAgents: '可用助手',
   backToBottom: '跳转至当前',
   chatList: {
+    expandMessage: '展开消息',
     longMessageDetail: '查看详情',
   },
   clearCurrentMessages: '清空当前会话消息',
@@ -188,9 +189,11 @@ export default {
   },
 
   messageAction: {
+    collapse: '收起消息',
     continueGeneration: '继续生成',
     delAndRegenerate: '删除并重新生成',
     deleteDisabledByThreads: '存在子话题，不能删除',
+    expand: '展开消息',
     regenerate: '重新生成',
   },
 

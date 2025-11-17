@@ -44,18 +44,9 @@ const componentMap = {
 interface SettingsContentProps {
   activeTab?: string;
   mobile?: boolean;
-  showLLM?: boolean;
 }
 
-const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentProps) => {
-  const shouldRenderLLMTabs = (tab: string) => {
-    const isLLMTab =
-      tab === SettingsTabs.LLM || tab === SettingsTabs.Provider || tab === SettingsTabs.Agent;
-    return showLLM || !isLLMTab;
-  };
-  if (activeTab && !shouldRenderLLMTabs(activeTab)) {
-    return <NotFound />;
-  }
+const SettingsContent = ({ mobile, activeTab }: SettingsContentProps) => {
   const renderComponent = (tab: string) => {
     const Component = componentMap[tab as keyof typeof componentMap] || componentMap.common;
     if (!Component) return null;
@@ -88,7 +79,6 @@ const SettingsContent = ({ mobile, activeTab, showLLM = true }: SettingsContentP
   return (
     <Flexbox height={'100%'} width={'100%'}>
       {Object.keys(componentMap).map((tabKey) => {
-        if (!shouldRenderLLMTabs(tabKey)) return null;
         return (
           <div key={tabKey} style={getDisplayStyle(tabKey)}>
             {activeTab === tabKey && renderComponent(tabKey)}

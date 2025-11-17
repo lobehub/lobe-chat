@@ -6,8 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Cell, { CellProps } from '@/components/Cell';
-import { enableAuth } from '@/const/auth';
-import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
@@ -27,33 +25,30 @@ const Category = memo(() => {
       label: t('tab.profile'),
       onClick: () => navigate('/profile'),
     },
-    enableAuth &&
-      isLoginWithClerk && {
-        icon: ShieldCheck,
-        key: ProfileTabs.Security,
-        label: t('tab.security'),
-        onClick: () => navigate('/profile/security'),
-      },
-    !isDeprecatedEdition && {
+    isLoginWithClerk && {
+      icon: ShieldCheck,
+      key: ProfileTabs.Security,
+      label: t('tab.security'),
+      onClick: () => navigate('/profile/security'),
+    },
+    {
       icon: ChartColumnBigIcon,
       key: ProfileTabs.Stats,
       label: t('tab.stats'),
       onClick: () => navigate('/profile/stats'),
     },
-    enableAuth &&
-      isLogin && {
-        type: 'divider',
+    isLogin && {
+      type: 'divider',
+    },
+    isLogin && {
+      icon: LogOut,
+      key: 'logout',
+      label: t('signout', { ns: 'auth' }),
+      onClick: () => {
+        signOut();
+        navigate('/login');
       },
-    enableAuth &&
-      isLogin && {
-        icon: LogOut,
-        key: 'logout',
-        label: t('signout', { ns: 'auth' }),
-        onClick: () => {
-          signOut();
-          navigate('/login');
-        },
-      },
+    },
   ].filter(Boolean) as CellProps[];
 
   return items?.map(({ key, ...item }, index) => <Cell key={key || index} {...item} />);

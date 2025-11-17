@@ -1,4 +1,4 @@
-import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@lobechat/const';
+import { isDesktop } from '@lobechat/const';
 import { getModelPropertyWithFallback, resolveImageSinglePrice } from '@lobechat/model-runtime';
 import { uniqBy } from 'lodash-es';
 import {
@@ -319,8 +319,7 @@ export const createAiProviderSlice: StateCreator<
     const isAuthLoaded = authSelectors.isLoaded(useUserStore.getState());
     // Only fetch when auth is loaded and login status is explicitly defined (true or false)
     // Prevents unnecessary requests when login state is null/undefined
-    const shouldFetch =
-      isAuthLoaded && !isDeprecatedEdition && isLogin !== null && isLogin !== undefined;
+    const shouldFetch = isAuthLoaded && isLogin !== null && isLogin !== undefined;
     return useClientDataSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
       shouldFetch ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
       async ([, isLogin]) => {
@@ -381,7 +380,7 @@ export const createAiProviderSlice: StateCreator<
         };
       },
       {
-        focusThrottleInterval: isDesktop || isUsePgliteDB ? 100 : undefined,
+        focusThrottleInterval: isDesktop ? 100 : undefined,
         onSuccess: (data) => {
           if (!data) return;
 

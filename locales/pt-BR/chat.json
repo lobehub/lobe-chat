@@ -17,6 +17,7 @@
   "availableAgents": "Assistentes disponíveis",
   "backToBottom": "Voltar para o início",
   "chatList": {
+    "expandMessage": "Expandir mensagem",
     "longMessageDetail": "Ver detalhes"
   },
   "clearCurrentMessages": "Limpar mensagens atuais",
@@ -173,9 +174,11 @@
     "title": "Mencionar membros"
   },
   "messageAction": {
+    "collapse": "Recolher mensagem",
     "continueGeneration": "Continuar gerando",
     "delAndRegenerate": "Excluir e Regenerar",
     "deleteDisabledByThreads": "Existem subtópicos, não é possível deletar.",
+    "expand": "Expandir mensagem",
     "regenerate": "Regenerar"
   },
   "messages": {

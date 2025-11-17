@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { DatabaseLoadingState } from '@/types/clientDB';
 import { merge } from '@/utils/merge';
 
 import { GlobalState, INITIAL_STATUS, initialState } from '../initialState';
@@ -106,103 +105,6 @@ describe('systemStatusSelectors', () => {
         },
       });
       expect(systemStatusSelectors.themeMode(s)).toBe('auto');
-    });
-  });
-
-  describe('pglite status selectors', () => {
-    describe('isPgliteNotEnabled', () => {
-      it('should return true when conditions are met', () => {
-        const s: GlobalState = {
-          ...initialState,
-          isStatusInit: true,
-          status: {
-            ...initialState.status,
-            isEnablePglite: false,
-          },
-        };
-        expect(systemStatusSelectors.isPgliteNotEnabled(s)).toBe(true);
-      });
-
-      it('should return false when isStatusInit is false', () => {
-        const s: GlobalState = {
-          ...initialState,
-          isStatusInit: false,
-          status: {
-            ...initialState.status,
-            isEnablePglite: false,
-          },
-        };
-        expect(systemStatusSelectors.isPgliteNotEnabled(s)).toBe(false);
-      });
-    });
-
-    describe('isPgliteNotInited', () => {
-      it('should return true when pglite is enabled but not ready', () => {
-        const s: GlobalState = {
-          ...initialState,
-          isStatusInit: true,
-          status: {
-            ...initialState.status,
-            isEnablePglite: true,
-          },
-          initClientDBStage: DatabaseLoadingState.Initializing,
-        };
-        expect(systemStatusSelectors.isPgliteNotInited(s)).toBe(true);
-      });
-
-      it('should return false when pglite is ready', () => {
-        const s: GlobalState = {
-          ...initialState,
-          isStatusInit: true,
-          status: {
-            ...initialState.status,
-            isEnablePglite: true,
-          },
-          initClientDBStage: DatabaseLoadingState.Ready,
-        };
-        expect(systemStatusSelectors.isPgliteNotInited(s)).toBe(false);
-      });
-
-      it('should return false when pglite is not enabled', () => {
-        const s: GlobalState = {
-          ...initialState,
-          isStatusInit: true,
-          status: {
-            ...initialState.status,
-            isEnablePglite: false,
-          },
-          initClientDBStage: DatabaseLoadingState.Initializing,
-        };
-        expect(systemStatusSelectors.isPgliteNotInited(s)).toBe(false);
-      });
-    });
-
-    describe('isPgliteInited', () => {
-      it('should return true when pglite is enabled and ready', () => {
-        const s: GlobalState = {
-          ...initialState,
-          isStatusInit: true,
-          status: {
-            ...initialState.status,
-            isEnablePglite: true,
-          },
-          initClientDBStage: DatabaseLoadingState.Ready,
-        };
-        expect(systemStatusSelectors.isPgliteInited(s)).toBe(true);
-      });
-
-      it('should return false when not ready', () => {
-        const s: GlobalState = {
-          ...initialState,
-          isStatusInit: true,
-          status: {
-            ...initialState.status,
-            isEnablePglite: true,
-          },
-          initClientDBStage: DatabaseLoadingState.Initializing,
-        };
-        expect(systemStatusSelectors.isPgliteInited(s)).toBe(false);
-      });
     });
   });
 });

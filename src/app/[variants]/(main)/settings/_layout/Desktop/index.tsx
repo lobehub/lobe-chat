@@ -14,8 +14,7 @@ import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
-const Layout = memo<LayoutProps>((props) => {
-  const { showLLM = true } = props;
+const Layout = memo<LayoutProps>(() => {
   const ref = useRef<HTMLDivElement | null>(null);
   const { md = true } = useResponsive();
   const theme = useTheme();
@@ -40,7 +39,7 @@ const Layout = memo<LayoutProps>((props) => {
         <Header getContainer={() => ref.current!}>{category}</Header>
       )}
       <SettingContainer maxWidth={'none'}>
-        <SettingsContent activeTab={activeTab} mobile={false} showLLM={showLLM} />
+        <SettingsContent activeTab={activeTab} mobile={false} />
       </SettingContainer>
     </Flexbox>
   );

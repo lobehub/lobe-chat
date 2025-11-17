@@ -1,4 +1,5 @@
-import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
+import { EnabledProviderWithModels } from '@lobechat/types';
+import { ActionIcon, Icon, Select, SelectProps, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
@@ -8,13 +9,10 @@ import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
-import { isDeprecatedEdition } from '@/const/version';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/slices/aiProvider/selectors';
 import { useImageStore } from '@/store/image';
-import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { EnabledProviderWithModels } from '@/types/aiProvider';
+import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 
 import ImageModelItem from './ImageModelItem';
 
@@ -36,7 +34,6 @@ const ModelSelect = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('components');
   const theme = useTheme();
-  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
   const navigate = useNavigate();
 
   const [currentModel, currentProvider] = useImageStore((s) => [
@@ -67,11 +64,7 @@ const ModelSelect = memo(() => {
               </Flexbox>
             ),
             onClick: () => {
-              navigate(
-                isDeprecatedEdition
-                  ? '/settings?active=llm'
-                  : `/settings?active=provider&provider=${provider.id}`,
-              );
+              navigate(`/settings?active=provider&provider=${provider.id}`);
             },
             value: `${provider.id}/empty`,
           },
@@ -93,7 +86,7 @@ const ModelSelect = memo(() => {
             </Flexbox>
           ),
           onClick: () => {
-            navigate(isDeprecatedEdition ? '/settings?active=llm' : '/settings?active=provider');
+            navigate('/settings?active=provider');
           },
           value: 'no-provider',
         },
@@ -114,26 +107,18 @@ const ModelSelect = memo(() => {
             provider={provider.id}
             source={provider.source}
           />
-          {showLLM && (
-            <Link
-              href={
-                isDeprecatedEdition
-                  ? '/settings?active=llm'
-                  : `/settings?active=provider&provider=${provider.id}`
-              }
-            >
-              <ActionIcon
-                icon={LucideBolt}
-                size={'small'}
-                title={t('ModelSwitchPanel.goToSettings')}
-              />
-            </Link>
-          )}
+          <Link href={`/settings?active=provider&provider=${provider.id}`}>
+            <ActionIcon
+              icon={LucideBolt}
+              size={'small'}
+              title={t('ModelSwitchPanel.goToSettings')}
+            />
+          </Link>
         </Flexbox>
       ),
       options: getImageModels(provider),
     }));
-  }, [enabledImageModelList, showLLM, t, theme.colorTextTertiary, navigate]);
+  }, [enabledImageModelList, t, theme.colorTextTertiary, navigate]);
 
   const labelRender: SelectProps['labelRender'] = (props) => {
     const modelInfo = enabledImageModelList

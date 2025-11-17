@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import type { LobeDocumentPage } from '@lobechat/types';
 import {
   index,
   integer,
@@ -11,8 +12,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-
-import { LobeDocumentPage } from '@/types/document';
 
 import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamps } from './_helpers';

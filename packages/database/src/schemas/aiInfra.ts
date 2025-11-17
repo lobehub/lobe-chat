@@ -1,8 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import type { AiProviderConfig, AiProviderSettings } from '@lobechat/types';
 import { boolean, integer, jsonb, pgTable, primaryKey, text, varchar } from 'drizzle-orm/pg-core';
 import { AiModelSettings } from 'model-bank';
-
-import { AiProviderConfig, AiProviderSettings } from '@/types/aiProvider';
 
 import { timestamps } from './_helpers';
 import { users } from './user';

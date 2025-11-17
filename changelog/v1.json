@@ -1,5 +1,54 @@
 [
   {
+    "children": {
+      "improvements": ["Remove language_model_settings and remove isDeprecatedEdition."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.69"
+  },
+  {
+    "children": {
+      "fixes": ["The tool to fail execution on ollama when a message contains b…."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.68"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to virtua."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.67"
+  },
+  {
+    "children": {
+      "features": ["Support to collapse message."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.66"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.65"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor package types."]
+    },
+    "date": "2025-11-15",
+    "version": "2.0.0-next.64"
+  },
+  {
+    "children": {
+      "features": ["Show orphaned tool message and support delete tool message."]
+    },
+    "date": "2025-11-15",
+    "version": "2.0.0-next.63"
+  },
+  {
     "children": {},
     "date": "2025-11-15",
     "version": "2.0.0-next.62"

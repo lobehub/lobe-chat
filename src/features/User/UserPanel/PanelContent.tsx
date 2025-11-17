@@ -5,8 +5,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
-import { enableAuth, enableNextAuth } from '@/const/auth';
-import { isDeprecatedEdition } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -16,6 +14,7 @@ import UserLoginOrSignup from '../UserLoginOrSignup';
 import LangButton from './LangButton';
 import ThemeButton from './ThemeButton';
 import { useMenu } from './useMenu';
+import { enableNextAuth } from '@/const/auth';
 
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const router = useRouter();
@@ -38,14 +37,13 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
 
   return (
     <Flexbox gap={2} style={{ minWidth: 300 }}>
-      {!enableAuth || (enableAuth && isLoginWithAuth) ? (
+      {isLoginWithAuth ? (
         <>
           <UserInfo avatarProps={{ clickable: false }} />
-          {!isDeprecatedEdition && (
-            <Link to={'/profile/stats'} style={{ color: 'inherit' }}>
-              <DataStatistics />
-            </Link>
-          )}
+
+          <Link style={{ color: 'inherit' }} to={'/profile/stats'}>
+            <DataStatistics />
+          </Link>
         </>
       ) : (
         <UserLoginOrSignup onClick={handleSignIn} />

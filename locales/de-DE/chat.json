@@ -17,6 +17,7 @@
   "availableAgents": "Verfügbare Assistenten",
   "backToBottom": "Zurück zum Ende",
   "chatList": {
+    "expandMessage": "Nachricht anzeigen",
     "longMessageDetail": "Details anzeigen"
   },
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
@@ -173,9 +174,11 @@
     "title": "Mitglieder erwähnen"
   },
   "messageAction": {
+    "collapse": "Nachricht ausblenden",
     "continueGeneration": "Generierung fortsetzen",
     "delAndRegenerate": "Löschen und neu generieren",
     "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
+    "expand": "Nachricht anzeigen",
     "regenerate": "Neu generieren"
   },
   "messages": {

@@ -22,40 +22,12 @@ vi.mock('@/hooks/useIsMobile', () => ({
 vi.mock('@/store/session', () => ({
   useSessionStore: vi.fn(),
 }));
-let isDeprecatedEdition = false;
-vi.mock('@/const/version', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/const/version')>();
-  return {
-    ...actual,
-    get isDeprecatedEdition() {
-      return isDeprecatedEdition;
-    },
-  };
-});
-
-beforeEach(() => {
-  mockNavigate.mockClear();
-  mockUseNavigate.mockClear();
-  mockUseLocation.mockReset();
-  mockUseLocation.mockReturnValue({ pathname: '/' });
-  vi.mocked(useSessionStore).mockReset();
-  vi.mocked(useIsMobile).mockReset();
-  useAgentStore.setState({ showAgentSetting: false });
-  isDeprecatedEdition = false;
-});
-
+vi.mock('@/store/global', () => ({
+  useGlobalStore: {
+    setState: vi.fn(),
+  },
+}));
 describe('useOpenChatSettings', () => {
-  it('navigates to deprecated agent setting when inbox session is active', () => {
-    isDeprecatedEdition = true;
-    vi.mocked(useSessionStore).mockReturnValue(INBOX_SESSION_ID);
-    const { result } = renderHook(() => useOpenChatSettings());
-
-    act(() => {
-      result.current();
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith(`/chat/settings?active=${SettingsTabs.Agent}`);
-  });
 
   it('navigates to mobile chat settings with session info', () => {
     vi.mocked(useSessionStore).mockReturnValue('123');
