@@ -109,8 +109,8 @@ export interface MessageMetadata extends ModelUsage, ModelPerformance {
   activeBranchIndex?: number;
   activeColumn?: boolean;
   /**
-   * 消息折叠状态
-   * true: 折叠, false/undefined: 展开
+   * Message collapse state
+   * true: collapsed, false/undefined: expanded
    */
   collapsed?: boolean;
   compare?: boolean;
