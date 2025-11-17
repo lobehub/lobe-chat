@@ -17,6 +17,7 @@
   "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
   "chatList": {
+    "expandMessage": "عرض الرسائل",
     "longMessageDetail": "عرض التفاصيل"
   },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
@@ -173,9 +174,11 @@
     "title": "الإشارة إلى الأعضاء"
   },
   "messageAction": {
+    "collapse": "إخفاء الرسائل",
     "continueGeneration": "متابعة التوليد",
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
+    "expand": "عرض الرسائل",
     "regenerate": "إعادة الإنشاء"
   },
   "messages": {

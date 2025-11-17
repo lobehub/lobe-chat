@@ -17,16 +17,16 @@ export interface LobeAgentChatConfig {
   enableMaxTokens?: boolean;
 
   /**
-   * 是否开启流式输出
+   * Whether to enable streaming output
    */
   enableStreaming?: boolean;
 
   /**
-   * 是否开启推理
+   * Whether to enable reasoning
    */
   enableReasoning?: boolean;
   /**
-   * 自定义推理强度
+   * Custom reasoning effort level
    */
   enableReasoningEffort?: boolean;
   reasoningBudgetToken?: number;
@@ -34,25 +34,25 @@ export interface LobeAgentChatConfig {
   gpt5ReasoningEffort?: 'minimal' | 'low' | 'medium' | 'high';
   gpt5_1ReasoningEffort?: 'none' | 'low' | 'medium' | 'high';
   /**
-   * 输出文本详细程度控制
+   * Output text verbosity control
    */
   textVerbosity?: 'low' | 'medium' | 'high';
   thinking?: 'disabled' | 'auto' | 'enabled';
   thinkingBudget?: number;
   /**
-   * 禁用上下文缓存
+   * Disable context caching
    */
   disableContextCaching?: boolean;
   /**
-   * 历史消息条数
+   * Number of historical messages
    */
   historyCount?: number;
   /**
-   * 开启历史记录条数
+   * Enable historical message count
    */
   enableHistoryCount?: boolean;
   /**
-   * 历史消息长度压缩阈值
+   * Enable history message compression threshold
    */
   enableCompressHistory?: boolean;
 

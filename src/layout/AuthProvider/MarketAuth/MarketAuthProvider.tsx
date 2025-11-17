@@ -106,7 +106,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const baseUrl = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'http://127.0.0.1:8787';
+      const baseUrl = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'https://market.lobehub.com';
       const desktopRedirectUri = new URL(MARKET_OIDC_ENDPOINTS.desktopCallback, baseUrl).toString();
 
       // 桌面端使用 Market 手动维护的 Web 回调，Web 端使用当前域名

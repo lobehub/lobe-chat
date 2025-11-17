@@ -17,6 +17,7 @@
   "availableAgents": "Налични асистенти",
   "backToBottom": "Върни се в началото",
   "chatList": {
+    "expandMessage": "Разгъни съобщението",
     "longMessageDetail": "Вижте детайлите"
   },
   "clearCurrentMessages": "Изчисти съобщенията от текущата сесия",
@@ -173,9 +174,11 @@
     "title": "Споменаване на членове"
   },
   "messageAction": {
+    "collapse": "Скрий съобщението",
     "continueGeneration": "Продължи генерирането",
     "delAndRegenerate": "Изтрий и прегенерирай",
     "deleteDisabledByThreads": "Съществуват подтеми, не можете да изтриете.",
+    "expand": "Разгъни съобщението",
     "regenerate": "Прегенерирай"
   },
   "messages": {

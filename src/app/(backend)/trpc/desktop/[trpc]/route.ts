@@ -17,12 +17,12 @@ const handler = (req: NextRequest) => {
      */
     createContext: () => createLambdaContext(req),
 
-    endpoint: '/trpc/desktop',
+        endpoint: '/trpc/desktop',
 
-    onError: ({ error, path, type }) => {
-      pino.info(`Error in tRPC handler (desktop) on path: ${path}, type: ${type}`);
-      console.error(error);
-    },
+        onError: ({ error, path, type }) => {
+            pino.info(`Error in tRPC handler (desktop) on path: ${path}, type: ${type}`);
+            console.error(error);
+        },
 
     req: preparedReq,
     responseMeta({ ctx }) {

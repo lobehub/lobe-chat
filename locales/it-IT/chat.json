@@ -17,6 +17,7 @@
   "availableAgents": "Assistenti disponibili",
   "backToBottom": "Torna in fondo",
   "chatList": {
+    "expandMessage": "Espandi messaggio",
     "longMessageDetail": "Visualizza dettagli"
   },
   "clearCurrentMessages": "Cancella messaggi attuali",
@@ -173,9 +174,11 @@
     "title": "Menziona membri"
   },
   "messageAction": {
+    "collapse": "Comprimi messaggio",
     "continueGeneration": "Continua a generare",
     "delAndRegenerate": "Elimina e rigenera",
     "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
+    "expand": "Espandi messaggio",
     "regenerate": "Rigenera"
   },
   "messages": {

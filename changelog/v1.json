@@ -1,6 +1,53 @@
 [
   {
     "children": {
+      "improvements": ["Add model information for the Qiniu provider."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.72"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop user panel."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.71"
+  },
+  {
+    "children": {},
+    "date": "2025-11-17",
+    "version": "2.0.0-next.70"
+  },
+  {
+    "children": {
+      "improvements": ["Remove language_model_settings and remove isDeprecatedEdition."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.69"
+  },
+  {
+    "children": {
+      "fixes": ["The tool to fail execution on ollama when a message contains b…."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.68"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to virtua."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.67"
+  },
+  {
+    "children": {
+      "features": ["Support to collapse message."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.66"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-16",

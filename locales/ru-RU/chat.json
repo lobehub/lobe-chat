@@ -17,6 +17,7 @@
   "availableAgents": "Доступные помощники",
   "backToBottom": "Вернуться вниз",
   "chatList": {
+    "expandMessage": "Развернуть сообщение",
     "longMessageDetail": "Посмотреть детали"
   },
   "clearCurrentMessages": "Очистить текущий разговор",
@@ -173,9 +174,11 @@
     "title": "Упомянуть участника"
   },
   "messageAction": {
+    "collapse": "Свернуть сообщение",
     "continueGeneration": "Продолжить генерацию",
     "delAndRegenerate": "Удалить и пересоздать",
     "deleteDisabledByThreads": "Существуют подтемы, удаление невозможно",
+    "expand": "Развернуть сообщение",
     "regenerate": "Пересоздать"
   },
   "messages": {

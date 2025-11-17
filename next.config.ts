@@ -249,11 +249,11 @@ const nextConfig: NextConfig = {
     //   permanent: true,
     //   source: '/settings',
     // },
-    {
-      destination: '/chat',
-      permanent: false,
-      source: '/',
-    },
+    // {
+    //   destination: '/chat',
+    //   permanent: false,
+    //   source: '/',
+    // },
     {
       destination: '/chat',
       permanent: true,
