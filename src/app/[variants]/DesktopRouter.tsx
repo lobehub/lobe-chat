@@ -5,6 +5,7 @@ import { memo, useMemo } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
 import BootErrorBoundary from '@/components/BootErrorBoundary';
+import Loading from '@/components/Loading/BrandTextLoading';
 import type { Locales } from '@/types/locale';
 
 import { createDesktopRouter } from './desktopRouter.config';
@@ -16,7 +17,7 @@ interface ClientRouterProps {
 const ClientRouter = memo<ClientRouterProps>(({ locale }) => {
   const router = useMemo(() => createDesktopRouter(locale), [locale]);
   return (
-    <BootErrorBoundary fallback={<>BootErrorBoundary Loading</>}>
+    <BootErrorBoundary fallback={<Loading />}>
       <RouterProvider router={router} />
     </BootErrorBoundary>
   );
@@ -25,7 +26,7 @@ const ClientRouter = memo<ClientRouterProps>(({ locale }) => {
 ClientRouter.displayName = 'ClientRouter';
 
 const DesktopRouterClient = dynamic(() => Promise.resolve(ClientRouter), {
-  loading: () => <>123DesktopRouterClient</>,
+  loading: () => <Loading />,
   ssr: false,
 });
 interface DesktopRouterProps {
