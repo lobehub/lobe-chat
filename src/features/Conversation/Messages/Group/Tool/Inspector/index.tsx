@@ -11,7 +11,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { CSSProperties, memo, useState } from 'react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -97,7 +97,6 @@ const Inspectors = memo<InspectorProps>(
     apiName,
     id,
     arguments: requestArgs,
-    showRender,
     result,
     setShowRender,
     showPluginRender,
@@ -109,6 +108,8 @@ const Inspectors = memo<InspectorProps>(
     const { styles, theme } = useStyles();
 
     const [showDebug, setShowDebug] = useState(false);
+    const [isPinned, setIsPinned] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     const [deleteAssistantMessage] = useChatStore((s) => [s.deleteAssistantMessage]);
 
@@ -121,7 +122,15 @@ const Inspectors = memo<InspectorProps>(
     const isReject = intervention?.status === 'rejected';
     const isTitleLoading = !hasResult && !isPending;
 
-    const showCustomPluginRender = showRender && !isPending && !isReject;
+    // Compute actual render state based on pinned or hovered
+    const shouldShowRender = isPinned || isHovered;
+
+    // Sync with parent state
+    useEffect(() => {
+      setShowRender(shouldShowRender);
+    }, [shouldShowRender, setShowRender]);
+
+    const showCustomPluginRender = shouldShowRender && !isPending && !isReject;
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -131,7 +140,17 @@ const Inspectors = memo<InspectorProps>(
             gap={8}
             horizontal
             onClick={() => {
-              setShowRender(!showRender);
+              setIsPinned(!isPinned);
+            }}
+            onMouseEnter={() => {
+              if (!isPinned) {
+                setIsHovered(true);
+              }
+            }}
+            onMouseLeave={() => {
+              if (!isPinned) {
+                setIsHovered(false);
+              }
             }}
             paddingInline={4}
           >
