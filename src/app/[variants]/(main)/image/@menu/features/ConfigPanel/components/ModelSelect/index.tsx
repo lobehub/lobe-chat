@@ -3,10 +3,10 @@ import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { ProviderItemRender } from '@/components/ModelSelect';
 import { useAiInfraStore } from '@/store/aiInfra';
@@ -34,7 +34,7 @@ const ModelSelect = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('components');
   const theme = useTheme();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const [currentModel, currentProvider] = useImageStore((s) => [
     imageGenerationConfigSelectors.model(s),
@@ -64,7 +64,7 @@ const ModelSelect = memo(() => {
               </Flexbox>
             ),
             onClick: () => {
-              router.push(`/settings?active=provider&provider=${provider.id}`);
+              navigate(`/settings?active=provider&provider=${provider.id}`);
             },
             value: `${provider.id}/empty`,
           },
@@ -86,7 +86,7 @@ const ModelSelect = memo(() => {
             </Flexbox>
           ),
           onClick: () => {
-            router.push('/settings?active=provider');
+            navigate('/settings?active=provider');
           },
           value: 'no-provider',
         },
@@ -118,7 +118,7 @@ const ModelSelect = memo(() => {
       ),
       options: getImageModels(provider),
     }));
-  }, [enabledImageModelList, t, theme.colorTextTertiary, router]);
+  }, [enabledImageModelList, t, theme.colorTextTertiary, navigate]);
 
   const labelRender: SelectProps['labelRender'] = (props) => {
     const modelInfo = enabledImageModelList

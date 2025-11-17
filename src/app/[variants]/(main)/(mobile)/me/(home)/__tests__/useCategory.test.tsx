@@ -11,10 +11,9 @@ const wrapper: React.JSXElementConstructor<{ children: React.ReactNode }> = ({ c
 );
 
 // Mock dependencies
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -48,6 +47,7 @@ vi.mock('@/const/version', async (importOriginal) => {
 afterEach(() => {
   enableAuth = true;
   enableClerk = true;
+  mockNavigate.mockReset();
 });
 
 describe('useCategory', () => {

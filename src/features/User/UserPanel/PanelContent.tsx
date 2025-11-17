@@ -1,5 +1,4 @@
-import { enableNextAuth, isDesktop } from '@lobechat/const';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -15,6 +14,8 @@ import UserLoginOrSignup from '../UserLoginOrSignup';
 import LangButton from './LangButton';
 import ThemeButton from './ThemeButton';
 import { useMenu } from './useMenu';
+import { enableNextAuth } from '@/const/auth';
+import { isDesktop } from '@/const/version';
 
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const router = useRouter();
@@ -41,7 +42,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
         <>
           <UserInfo avatarProps={{ clickable: false }} />
 
-          <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
+          <Link style={{ color: 'inherit' }} to={'/profile/stats'}>
             <DataStatistics />
           </Link>
         </>

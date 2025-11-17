@@ -1,7 +1,6 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
@@ -14,6 +13,7 @@ import GlobalProvider from '@/layout/GlobalProvider';
 import { Locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 const inVercel = process.env.VERCEL === '1';
 

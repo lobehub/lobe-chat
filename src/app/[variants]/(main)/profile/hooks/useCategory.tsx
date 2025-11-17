@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { BadgeCentIcon, ChartColumnBigIcon, KeyIcon, ShieldCheck, UserCircle } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
@@ -19,7 +19,7 @@ export const useCategory = () => {
       icon: <Icon icon={UserCircle} />,
       key: ProfileTabs.Profile,
       label: (
-        <Link href={'/profile'} onClick={(e) => e.preventDefault()}>
+        <Link onClick={(e) => e.preventDefault()} to={'/profile'}>
           {t('tab.profile')}
         </Link>
       ),
@@ -28,7 +28,7 @@ export const useCategory = () => {
       icon: <Icon icon={ShieldCheck} />,
       key: ProfileTabs.Security,
       label: (
-        <Link href={'/profile/security'} onClick={(e) => e.preventDefault()}>
+        <Link onClick={(e) => e.preventDefault()} to={'/profile/security'}>
           {t('tab.security')}
         </Link>
       ),
@@ -37,7 +37,7 @@ export const useCategory = () => {
       icon: <Icon icon={ChartColumnBigIcon} />,
       key: ProfileTabs.Stats,
       label: (
-        <Link href={'/profile/stats'} onClick={(e) => e.preventDefault()}>
+        <Link onClick={(e) => e.preventDefault()} to={'/profile/stats'}>
           {t('tab.stats')}
         </Link>
       ),
@@ -46,7 +46,7 @@ export const useCategory = () => {
       icon: <Icon icon={KeyIcon} />,
       key: ProfileTabs.APIKey,
       label: (
-        <Link href={'/profile/apikey'} onClick={(e) => e.preventDefault()}>
+        <Link onClick={(e) => e.preventDefault()} to={'/profile/apikey'}>
           {t('tab.apikey')}
         </Link>
       ),
@@ -55,7 +55,7 @@ export const useCategory = () => {
       icon: <Icon icon={BadgeCentIcon} />,
       key: ProfileTabs.Usage,
       label: (
-        <Link href={'/profile/usage'} onClick={(e) => e.preventDefault()}>
+        <Link onClick={(e) => e.preventDefault()} to={'/profile/usage'}>
           {t('tab.usage')}
         </Link>
       ),

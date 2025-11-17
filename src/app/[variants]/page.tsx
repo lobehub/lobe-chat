@@ -1,9 +1,19 @@
-import { Metadata } from 'next';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
-import { getCanonicalUrl } from '@/server/utils/url';
+export default async function Page(props: DynamicLayoutProps) {
+  // Get isMobile from variants parameter on server side
+  const isMobile = await RouteVariants.getIsMobile(props);
+  const { locale } = await RouteVariants.getVariantsFromProps(props);
 
-export const metadata: Metadata = {
-  alternates: { canonical: getCanonicalUrl('/') },
-};
+  // Conditionally load and render based on device type
+  // Using native dynamic import ensures complete code splitting
+  // Mobile and Desktop bundles will be completely separate
+  if (isMobile) {
+    const { default: MobileRouter } = await import('./MobileRouter');
+    return <MobileRouter locale={locale} />;
+  }
 
-export { default } from './loading';
+  const { default: DesktopRouter } = await import('./DesktopRouter');
+  return <DesktopRouter locale={locale} />;
+}

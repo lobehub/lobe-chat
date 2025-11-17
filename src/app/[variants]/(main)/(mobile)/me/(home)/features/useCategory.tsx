@@ -8,8 +8,8 @@ import {
   FileClockIcon,
   Settings2,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { CellProps } from '@/components/Cell';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
@@ -18,7 +18,7 @@ import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 export const useCategory = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
@@ -29,7 +29,7 @@ export const useCategory = () => {
       icon: CircleUserRound,
       key: 'profile',
       label: t('userPanel.profile'),
-      onClick: () => router.push('/me/profile'),
+      onClick: () => navigate('/me/profile'),
     },
   ];
 
@@ -38,7 +38,7 @@ export const useCategory = () => {
       icon: Settings2,
       key: 'setting',
       label: t('userPanel.setting'),
-      onClick: () => router.push('/me/settings'),
+      onClick: () => navigate('/me/settings'),
     },
     {
       type: 'divider',
@@ -58,9 +58,6 @@ export const useCategory = () => {
   ];
 
   /* ↓ cloud slot ↓ */
-
-  /* ↑ cloud slot ↑ */
-
   const helps: CellProps[] = [
     showCloudPromotion && {
       icon: Cloudy,
@@ -84,7 +81,7 @@ export const useCategory = () => {
       icon: FileClockIcon,
       key: 'changelog',
       label: t('changelog'),
-      onClick: () => router.push('/changelog'),
+      onClick: () => navigate('/changelog'),
     },
   ].filter(Boolean) as CellProps[];
 
