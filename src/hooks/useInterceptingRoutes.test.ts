@@ -28,6 +28,10 @@ vi.mock('@/store/global', () => ({
   },
 }));
 describe('useOpenChatSettings', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    useAgentStore.setState({ showAgentSetting: false });
+  });
 
   it('navigates to mobile chat settings with session info', () => {
     vi.mocked(useSessionStore).mockReturnValue('123');
