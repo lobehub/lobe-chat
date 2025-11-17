@@ -122,6 +122,12 @@ export interface GlobalState {
    * 启动时为 Idle，完成为 Ready，报错为 Error
    */
   initClientDBStage: DatabaseLoadingState;
+  /**
+   * 应用水合状态标志
+   * 用于指示客户端状态是否已从 StoreInitialization 完成加载
+   * 默认为 false，StoreInitialization 完成后设置为 true
+   */
+  isAppHydrated: boolean;
   isMobile?: boolean;
   isStatusInit?: boolean;
   latestVersion?: string;
@@ -164,6 +170,7 @@ export const INITIAL_STATUS = {
 
 export const initialState: GlobalState = {
   initClientDBStage: DatabaseLoadingState.Idle,
+  isAppHydrated: false,
   isMobile: false,
   isStatusInit: false,
   sidebarKey: SidebarTabKey.Chat,
