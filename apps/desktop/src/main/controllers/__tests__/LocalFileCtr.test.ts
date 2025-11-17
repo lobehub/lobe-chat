@@ -392,4 +392,137 @@ describe('LocalFileCtr', () => {
       });
     });
   });
+
+  describe('handleEditFile', () => {
+    it('should replace first occurrence successfully', async () => {
+      const originalContent = 'Hello world\nHello again\nGoodbye world';
+      vi.mocked(mockFsPromises.readFile).mockResolvedValue(originalContent);
+      vi.mocked(mockFsPromises.writeFile).mockResolvedValue(undefined);
+
+      const result = await localFileCtr.handleEditFile({
+        file_path: '/test/file.txt',
+        old_string: 'Hello',
+        new_string: 'Hi',
+        replace_all: false,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.replacements).toBe(1);
+      expect(result.linesAdded).toBe(1);
+      expect(result.linesDeleted).toBe(1);
+      expect(result.diffText).toContain('diff --git a/test/file.txt b/test/file.txt');
+      expect(mockFsPromises.writeFile).toHaveBeenCalledWith(
+        '/test/file.txt',
+        'Hi world\nHello again\nGoodbye world',
+        'utf8',
+      );
+    });
+
+    it('should replace all occurrences when replace_all is true', async () => {
+      const originalContent = 'Hello world\nHello again\nHello there';
+      vi.mocked(mockFsPromises.readFile).mockResolvedValue(originalContent);
+      vi.mocked(mockFsPromises.writeFile).mockResolvedValue(undefined);
+
+      const result = await localFileCtr.handleEditFile({
+        file_path: '/test/file.txt',
+        old_string: 'Hello',
+        new_string: 'Hi',
+        replace_all: true,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.replacements).toBe(3);
+      expect(result.linesAdded).toBe(3);
+      expect(result.linesDeleted).toBe(3);
+      expect(mockFsPromises.writeFile).toHaveBeenCalledWith(
+        '/test/file.txt',
+        'Hi world\nHi again\nHi there',
+        'utf8',
+      );
+    });
+
+    it('should handle multiline replacement correctly', async () => {
+      const originalContent = 'function test() {\n  console.log("old");\n}';
+      vi.mocked(mockFsPromises.readFile).mockResolvedValue(originalContent);
+      vi.mocked(mockFsPromises.writeFile).mockResolvedValue(undefined);
+
+      const result = await localFileCtr.handleEditFile({
+        file_path: '/test/file.js',
+        old_string: 'console.log("old");',
+        new_string: 'console.log("new");\n  console.log("added");',
+        replace_all: false,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.replacements).toBe(1);
+      expect(result.linesAdded).toBe(2);
+      expect(result.linesDeleted).toBe(1);
+    });
+
+    it('should return error when old_string is not found', async () => {
+      const originalContent = 'Hello world';
+      vi.mocked(mockFsPromises.readFile).mockResolvedValue(originalContent);
+
+      const result = await localFileCtr.handleEditFile({
+        file_path: '/test/file.txt',
+        old_string: 'NonExistent',
+        new_string: 'New',
+        replace_all: false,
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('The specified old_string was not found in the file');
+      expect(result.replacements).toBe(0);
+      expect(mockFsPromises.writeFile).not.toHaveBeenCalled();
+    });
+
+    it('should handle file read error', async () => {
+      vi.mocked(mockFsPromises.readFile).mockRejectedValue(new Error('Permission denied'));
+
+      const result = await localFileCtr.handleEditFile({
+        file_path: '/test/file.txt',
+        old_string: 'Hello',
+        new_string: 'Hi',
+        replace_all: false,
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Permission denied');
+      expect(result.replacements).toBe(0);
+    });
+
+    it('should handle file write error', async () => {
+      const originalContent = 'Hello world';
+      vi.mocked(mockFsPromises.readFile).mockResolvedValue(originalContent);
+      vi.mocked(mockFsPromises.writeFile).mockRejectedValue(new Error('Disk full'));
+
+      const result = await localFileCtr.handleEditFile({
+        file_path: '/test/file.txt',
+        old_string: 'Hello',
+        new_string: 'Hi',
+        replace_all: false,
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Disk full');
+    });
+
+    it('should generate correct diff format', async () => {
+      const originalContent = 'line 1\nline 2\nline 3';
+      vi.mocked(mockFsPromises.readFile).mockResolvedValue(originalContent);
+      vi.mocked(mockFsPromises.writeFile).mockResolvedValue(undefined);
+
+      const result = await localFileCtr.handleEditFile({
+        file_path: '/test/file.txt',
+        old_string: 'line 2',
+        new_string: 'modified line 2',
+        replace_all: false,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.diffText).toContain('diff --git a/test/file.txt b/test/file.txt');
+      expect(result.diffText).toContain('-line 2');
+      expect(result.diffText).toContain('+modified line 2');
+    });
+  });
 });
