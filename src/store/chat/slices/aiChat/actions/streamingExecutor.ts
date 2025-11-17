@@ -292,8 +292,9 @@ export const streamingExecutor: StateCreator<
       historySummary: historySummary?.content,
       trace: {
         traceId: params?.traceId,
-        sessionId: get().activeId,
-        topicId: get().activeTopicId,
+        sessionId: params?.sessionId ?? get().activeId,
+        topicId:
+          (params?.topicId !== undefined ? params.topicId : get().activeTopicId) ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
@@ -352,15 +353,23 @@ export const streamingExecutor: StateCreator<
         internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
 
         // update the content after fetch result
-        await optimisticUpdateMessageContent(messageId, content, {
-          toolCalls: parsedToolCalls,
-          reasoning: !!reasoning
-            ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
-            : undefined,
-          search: !!grounding?.citations ? grounding : undefined,
-          imageList: finalImages.length > 0 ? finalImages : undefined,
-          metadata: speed ? { ...usage, ...speed } : usage,
-        });
+        await optimisticUpdateMessageContent(
+          messageId,
+          content,
+          {
+            toolCalls: parsedToolCalls,
+            reasoning: !!reasoning
+              ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
+              : undefined,
+            search: !!grounding?.citations ? grounding : undefined,
+            imageList: finalImages.length > 0 ? finalImages : undefined,
+            metadata: speed ? { ...usage, ...speed } : usage,
+          },
+          {
+            sessionId: params?.sessionId,
+            topicId: params?.topicId,
+          },
+        );
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
@@ -599,7 +608,11 @@ export const streamingExecutor: StateCreator<
         get,
         messageKey,
         parentId: params.parentMessageId,
-        params,
+        params: {
+          ...params,
+          sessionId,
+          topicId,
+        },
         skipCreateFirstMessage: params.skipCreateFirstMessage,
       }),
     });
@@ -661,7 +674,7 @@ export const streamingExecutor: StateCreator<
               await messageService.updateMessageError(assistantMessage.id, event.error);
             }
             const finalMessages = get().messagesMap[messageKey] || [];
-            get().replaceMessages(finalMessages);
+            get().replaceMessages(finalMessages, { sessionId, topicId });
             break;
           }
         }
@@ -689,7 +702,10 @@ export const streamingExecutor: StateCreator<
       const finalMessages = get().messagesMap[messageKey] || [];
       const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
       if (assistantMessage) {
-        await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata);
+        await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata, {
+          sessionId,
+          topicId,
+        });
         log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
       }
     }

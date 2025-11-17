@@ -1156,4 +1156,142 @@ describe('ChatPluginAction', () => {
       expect(refreshToUpdateMessageToolsSpy).toHaveBeenCalledWith(messageId);
     });
   });
+
+  describe('Plugin OptimisticUpdateContext isolation', () => {
+    describe('optimisticUpdatePluginState', () => {
+      it('should use context sessionId/topicId when provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const pluginState = { key: 'value' };
+        const contextSessionId = 'context-session';
+        const contextTopicId = 'context-topic';
+
+        (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
+
+        await act(async () => {
+          await result.current.optimisticUpdatePluginState(messageId, pluginState, {
+            sessionId: contextSessionId,
+            topicId: contextTopicId,
+          });
+        });
+
+        expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
+          messageId,
+          pluginState,
+          { sessionId: contextSessionId, topicId: contextTopicId },
+        );
+        expect(replaceMessagesSpy).toHaveBeenCalledWith([], {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      it('should fallback to activeId/activeTopicId when context not provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const pluginState = { key: 'value' };
+
+        act(() => {
+          useChatStore.setState({
+            activeId: 'active-session',
+            activeTopicId: 'active-topic',
+          });
+        });
+
+        (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        await act(async () => {
+          await result.current.optimisticUpdatePluginState(messageId, pluginState);
+        });
+
+        expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
+          messageId,
+          pluginState,
+          { sessionId: 'active-session', topicId: 'active-topic' },
+        );
+      });
+    });
+
+    describe('optimisticUpdatePluginError', () => {
+      it('should use context sessionId/topicId when provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const error = { message: 'Plugin error', type: 'error' as any };
+        const contextSessionId = 'context-session';
+        const contextTopicId = 'context-topic';
+
+        (messageService.updateMessage as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        await act(async () => {
+          await result.current.optimisticUpdatePluginError(messageId, error, {
+            sessionId: contextSessionId,
+            topicId: contextTopicId,
+          });
+        });
+
+        expect(messageService.updateMessage).toHaveBeenCalledWith(
+          messageId,
+          { error },
+          { sessionId: contextSessionId, topicId: contextTopicId },
+        );
+      });
+    });
+
+    describe('internal_refreshToUpdateMessageTools', () => {
+      it('should use context sessionId/topicId when provided', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const contextSessionId = 'context-session';
+        const contextTopicId = 'context-topic';
+
+        const message = {
+          id: messageId,
+          role: 'assistant',
+          content: 'test',
+          tools: [{ id: 'tool-1', identifier: 'test', apiName: 'test', arguments: '{}' }],
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        } as any;
+
+        // Set up both dbMessagesMap and messagesMap
+        const key = messageMapKey(contextSessionId, contextTopicId);
+        act(() => {
+          useChatStore.setState({
+            dbMessagesMap: {
+              [key]: [message],
+            },
+            messagesMap: {
+              [key]: [message],
+            },
+            activeId: contextSessionId,
+            activeTopicId: contextTopicId,
+          });
+        });
+
+        await act(async () => {
+          await result.current.internal_refreshToUpdateMessageTools(messageId, {
+            sessionId: contextSessionId,
+            topicId: contextTopicId,
+          });
+        });
+
+        expect(messageService.updateMessage).toHaveBeenCalledWith(
+          messageId,
+          { tools: message.tools },
+          { sessionId: contextSessionId, topicId: contextTopicId },
+        );
+      });
+    });
+  });
 });

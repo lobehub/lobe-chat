@@ -33,7 +33,7 @@ export interface MessageQueryAction {
     params?: {
       action?: any;
       sessionId?: string;
-      topicId?: string;
+      topicId?: string | null;
     },
   ) => void;
 

@@ -22,11 +22,14 @@ vi.mock('@/services/message', () => ({
   messageService: {
     getMessages: vi.fn(),
     updateMessageError: vi.fn(),
-    removeMessage: vi.fn(),
+    removeMessage: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
     removeMessagesByAssistant: vi.fn(),
-    removeMessages: vi.fn(() => Promise.resolve()),
+    removeMessages: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
     createMessage: vi.fn(() => Promise.resolve({ id: 'new-message-id', messages: [] })),
-    updateMessage: vi.fn(),
+    updateMessage: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+    updateMessageMetadata: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+    updateMessagePluginError: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
+    updateMessageRAG: vi.fn(() => Promise.resolve({ success: true, messages: [] })),
     removeAllMessages: vi.fn(() => Promise.resolve()),
   },
 }));
@@ -799,6 +802,92 @@ describe('chatMessage actions', () => {
       expect(spy).toHaveBeenCalledWith(messageId, {
         eventType: 'Modify Message',
         nextContent: 'Updated content',
+      });
+    });
+  });
+
+  describe('OptimisticUpdateContext isolation', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('optimisticUpdateMessageContent should use context sessionId/topicId', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const content = 'Updated content';
+      const contextSessionId = 'context-session-id';
+      const contextTopicId = 'context-topic-id';
+
+      await act(async () => {
+        await result.current.optimisticUpdateMessageContent(messageId, content, undefined, {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      expect(messageService.updateMessage).toHaveBeenCalledWith(
+        messageId,
+        { content, tools: undefined },
+        { sessionId: contextSessionId, topicId: contextTopicId },
+      );
+    });
+
+    it('optimisticUpdateMessageError should use context sessionId/topicId', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const error = { message: 'Error occurred', type: 'error' as any };
+      const contextSessionId = 'context-session';
+      const contextTopicId = 'context-topic';
+
+      await act(async () => {
+        await result.current.optimisticUpdateMessageError(messageId, error, {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      expect(messageService.updateMessage).toHaveBeenCalledWith(
+        messageId,
+        { error },
+        { sessionId: contextSessionId, topicId: contextTopicId },
+      );
+    });
+
+    it('optimisticDeleteMessage should use context sessionId/topicId', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const contextSessionId = 'context-session';
+      const contextTopicId = 'context-topic';
+
+      await act(async () => {
+        await result.current.optimisticDeleteMessage(messageId, {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      expect(messageService.removeMessage).toHaveBeenCalledWith(messageId, {
+        sessionId: contextSessionId,
+        topicId: contextTopicId,
+      });
+    });
+
+    it('optimisticDeleteMessages should use context sessionId/topicId', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const ids = ['id-1', 'id-2'];
+      const contextSessionId = 'context-session';
+      const contextTopicId = 'context-topic';
+
+      await act(async () => {
+        await result.current.optimisticDeleteMessages(ids, {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      expect(messageService.removeMessages).toHaveBeenCalledWith(ids, {
+        sessionId: contextSessionId,
+        topicId: contextTopicId,
       });
     });
   });

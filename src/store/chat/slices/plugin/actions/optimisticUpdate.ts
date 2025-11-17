@@ -4,6 +4,7 @@ import isEqual from 'fast-deep-equal';
 import { StateCreator } from 'zustand/vanilla';
 
 import { messageService } from '@/services/message';
+import { OptimisticUpdateContext } from '@/store/chat/slices/message/actions/optimisticUpdate';
 import { ChatStore } from '@/store/chat/store';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -18,7 +19,11 @@ export interface PluginOptimisticUpdateAction {
   /**
    * Update plugin state with optimistic update
    */
-  optimisticUpdatePluginState: (id: string, value: any) => Promise<void>;
+  optimisticUpdatePluginState: (
+    id: string,
+    value: any,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
 
   /**
    * Update plugin arguments with optimistic update
@@ -32,7 +37,11 @@ export interface PluginOptimisticUpdateAction {
   /**
    * Update plugin with optimistic update (generic method for any plugin field)
    */
-  optimisticUpdatePlugin: (id: string, value: Partial<MessagePluginItem>) => Promise<void>;
+  optimisticUpdatePlugin: (
+    id: string,
+    value: Partial<MessagePluginItem>,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
 
   /**
    * Add tool to assistant message with optimistic update
@@ -47,12 +56,19 @@ export interface PluginOptimisticUpdateAction {
   /**
    * Update plugin error with optimistic update
    */
-  optimisticUpdatePluginError: (id: string, error: ChatMessageError) => Promise<void>;
+  optimisticUpdatePluginError: (
+    id: string,
+    error: ChatMessageError,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
 
   /**
    * Use the optimistic update value to update the message tools to database
    */
-  internal_refreshToUpdateMessageTools: (id: string) => Promise<void>;
+  internal_refreshToUpdateMessageTools: (
+    id: string,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
 }
 
 export const pluginOptimisticUpdate: StateCreator<
@@ -61,19 +77,22 @@ export const pluginOptimisticUpdate: StateCreator<
   [],
   PluginOptimisticUpdateAction
 > = (set, get) => ({
-  optimisticUpdatePluginState: async (id, value) => {
+  optimisticUpdatePluginState: async (id, value, context) => {
     const { replaceMessages } = get();
 
     // optimistic update
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState: value } });
 
+    const sessionId = context?.sessionId ?? get().activeId;
+    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+
     const result = await messageService.updateMessagePluginState(id, value, {
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
+      sessionId,
+      topicId,
     });
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { sessionId, topicId });
     }
   },
 
@@ -124,7 +143,7 @@ export const pluginOptimisticUpdate: StateCreator<
     await refreshMessages();
   },
 
-  optimisticUpdatePlugin: async (id, value) => {
+  optimisticUpdatePlugin: async (id, value, context) => {
     const { replaceMessages } = get();
 
     // optimistic update
@@ -134,13 +153,16 @@ export const pluginOptimisticUpdate: StateCreator<
       value,
     });
 
+    const sessionId = context?.sessionId ?? get().activeId;
+    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+
     const result = await messageService.updateMessagePlugin(id, value, {
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
+      sessionId,
+      topicId,
     });
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { sessionId, topicId });
     }
   },
 
@@ -171,43 +193,50 @@ export const pluginOptimisticUpdate: StateCreator<
     await internal_refreshToUpdateMessageTools(id);
   },
 
-  optimisticUpdatePluginError: async (id, error) => {
+  optimisticUpdatePluginError: async (id, error, context) => {
     const { replaceMessages } = get();
 
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
+
+    const sessionId = context?.sessionId ?? get().activeId;
+    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+
     const result = await messageService.updateMessage(
       id,
       { error },
       {
-        sessionId: get().activeId,
-        topicId: get().activeTopicId,
+        sessionId,
+        topicId,
       },
     );
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { sessionId, topicId });
     }
   },
 
-  internal_refreshToUpdateMessageTools: async (id) => {
+  internal_refreshToUpdateMessageTools: async (id, context) => {
     const { dbMessageSelectors } = await import('../../message/selectors');
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || !message.tools) return;
 
     const { internal_toggleMessageLoading, replaceMessages } = get();
 
+    const sessionId = context?.sessionId ?? get().activeId;
+    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+
     internal_toggleMessageLoading(true, id);
     const result = await messageService.updateMessage(
       id,
       { tools: message.tools },
       {
-        sessionId: get().activeId,
-        topicId: get().activeTopicId,
+        sessionId,
+        topicId,
       },
     );
     internal_toggleMessageLoading(false, id);
 
     if (result?.success && result.messages) {
-      replaceMessages(result.messages);
+      replaceMessages(result.messages, { sessionId, topicId });
     }
   },
 });

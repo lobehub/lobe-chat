@@ -36,7 +36,9 @@ export const createAgentExecutors = (context: {
     inPortalThread?: boolean;
     inSearchWorkflow?: boolean;
     ragQuery?: string;
+    sessionId?: string;
     threadId?: string;
+    topicId?: string | null;
     traceId?: string;
   };
   parentId: string;
@@ -269,10 +271,10 @@ export const createAgentExecutors = (context: {
             parentId: payload.parentMessageId,
             plugin: chatToolPayload,
             role: 'tool',
-            sessionId: context.get().activeId,
+            sessionId: state.metadata!.sessionId!,
             threadId: context.params.threadId,
             tool_call_id: chatToolPayload.id,
-            topicId: context.get().activeTopicId,
+            topicId: state.metadata?.topicId,
           };
 
           const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
@@ -450,10 +452,10 @@ export const createAgentExecutors = (context: {
             },
             pluginIntervention: { status: 'pending' },
             role: 'tool',
-            sessionId: context.get().activeId,
+            sessionId: state.metadata!.sessionId!,
             threadId: context.params.threadId,
             tool_call_id: toolPayload.id,
-            topicId: context.get().activeTopicId,
+            topicId: state.metadata?.topicId,
           };
 
           const createResult = await context.get().optimisticCreateMessage(toolMessageParams);

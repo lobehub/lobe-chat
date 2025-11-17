@@ -387,5 +387,183 @@ describe('StreamingExecutor actions', () => {
       expect(streamSpy).toHaveBeenCalled();
       expect(result.current.refreshMessages).toHaveBeenCalled();
     });
+
+    it('should use provided sessionId/topicId for trace parameters', async () => {
+      act(() => {
+        useChatStore.setState({
+          internal_execAgentRuntime: realExecAgentRuntime,
+          activeId: 'active-session',
+          activeTopicId: 'active-topic',
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const contextSessionId = 'context-session';
+      const contextTopicId = 'context-topic';
+      const userMessage = {
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        content: TEST_CONTENT.USER_MESSAGE,
+        sessionId: contextSessionId,
+        topicId: contextTopicId,
+      } as UIChatMessage;
+
+      const streamSpy = vi.spyOn(chatService, 'createAssistantMessageStream');
+
+      await act(async () => {
+        await result.current.internal_execAgentRuntime({
+          messages: [userMessage],
+          parentMessageId: userMessage.id,
+          parentMessageType: 'user',
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      // Verify trace was called with context sessionId/topicId, not active ones
+      expect(streamSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          trace: expect.objectContaining({
+            sessionId: contextSessionId,
+            topicId: contextTopicId,
+          }),
+        }),
+      );
+    });
+
+    it('should pass context to optimisticUpdateMessageRAG', async () => {
+      act(() => {
+        useChatStore.setState({
+          internal_execAgentRuntime: realExecAgentRuntime,
+          activeId: 'active-session',
+          activeTopicId: 'active-topic',
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const contextSessionId = 'context-session';
+      const contextTopicId = 'context-topic';
+      const userMessage = {
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        content: TEST_CONTENT.USER_MESSAGE,
+        sessionId: contextSessionId,
+        topicId: contextTopicId,
+      } as UIChatMessage;
+
+      const ragMetadata = {
+        ragQueryId: 'query-id',
+        fileChunks: [{ id: 'chunk-1', similarity: 0.9 }],
+      };
+
+      const updateRAGSpy = vi.spyOn(result.current, 'optimisticUpdateMessageRAG');
+      const streamSpy = vi.spyOn(chatService, 'createAssistantMessageStream');
+
+      await act(async () => {
+        await result.current.internal_execAgentRuntime({
+          messages: [userMessage],
+          parentMessageId: userMessage.id,
+          parentMessageType: 'user',
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+          ragMetadata,
+        });
+      });
+
+      // Verify optimisticUpdateMessageRAG was called with context
+      await vi.waitFor(() => {
+        expect(updateRAGSpy).toHaveBeenCalledWith(expect.any(String), ragMetadata, {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        });
+      });
+
+      streamSpy.mockRestore();
+    });
+  });
+
+  describe('StreamingExecutor OptimisticUpdateContext isolation', () => {
+    it('should pass context to optimisticUpdateMessageContent in internal_fetchAIChatMessage', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+      const contextSessionId = 'context-session';
+      const contextTopicId = 'context-topic';
+
+      const updateContentSpy = vi.spyOn(result.current, 'optimisticUpdateMessageContent');
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({ type: 'text', text: TEST_CONTENT.AI_RESPONSE } as any);
+          await onFinish?.(TEST_CONTENT.AI_RESPONSE, {});
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+          params: {
+            sessionId: contextSessionId,
+            topicId: contextTopicId,
+          },
+        });
+      });
+
+      expect(updateContentSpy).toHaveBeenCalledWith(
+        TEST_IDS.ASSISTANT_MESSAGE_ID,
+        TEST_CONTENT.AI_RESPONSE,
+        expect.any(Object),
+        {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+        },
+      );
+
+      streamSpy.mockRestore();
+    });
+
+    it('should use activeId/activeTopicId when context not provided', async () => {
+      act(() => {
+        useChatStore.setState({
+          activeId: 'active-session',
+          activeTopicId: 'active-topic',
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const messages = [createMockMessage({ role: 'user' })];
+
+      const updateContentSpy = vi.spyOn(result.current, 'optimisticUpdateMessageContent');
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onMessageHandle, onFinish }) => {
+          await onMessageHandle?.({ type: 'text', text: TEST_CONTENT.AI_RESPONSE } as any);
+          await onFinish?.(TEST_CONTENT.AI_RESPONSE, {});
+        });
+
+      await act(async () => {
+        await result.current.internal_fetchAIChatMessage({
+          messages,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
+      });
+
+      expect(updateContentSpy).toHaveBeenCalledWith(
+        TEST_IDS.ASSISTANT_MESSAGE_ID,
+        TEST_CONTENT.AI_RESPONSE,
+        expect.any(Object),
+        {
+          sessionId: undefined,
+          topicId: undefined,
+        },
+      );
+
+      streamSpy.mockRestore();
+    });
   });
 });

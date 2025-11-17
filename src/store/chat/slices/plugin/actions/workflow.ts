@@ -46,16 +46,22 @@ export const pluginWorkflow: StateCreator<
   PluginWorkflowAction
 > = (set, get) => ({
   createAssistantMessageByPlugin: async (content, parentId) => {
+    // Get parent message to extract sessionId/topicId
+    const parentMessage = dbMessageSelectors.getDbMessageById(parentId)(get());
+
     const newMessage: CreateMessageParams = {
       content,
       parentId,
       role: 'assistant',
-      sessionId: get().activeId,
-      topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
+      sessionId: parentMessage?.sessionId ?? get().activeId,
+      topicId: parentMessage?.topicId !== undefined ? parentMessage.topicId : get().activeTopicId,
     };
 
     const result = await messageService.createMessage(newMessage);
-    get().replaceMessages(result.messages);
+    get().replaceMessages(result.messages, {
+      sessionId: newMessage.sessionId,
+      topicId: newMessage.topicId,
+    });
   },
 
   triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread, inSearchWorkflow }) => {
@@ -90,14 +96,17 @@ export const pluginWorkflow: StateCreator<
         parentId: assistantId,
         plugin: payload,
         role: 'tool',
-        sessionId: get().activeId,
+        sessionId: message.sessionId ?? get().activeId,
         tool_call_id: payload.id,
         threadId,
-        topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
+        topicId: message.topicId !== undefined ? message.topicId : get().activeTopicId,
         groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
-      const result = await get().optimisticCreateMessage(toolMessage);
+      const result = await get().optimisticCreateMessage(toolMessage, {
+        sessionId: toolMessage.sessionId,
+        topicId: toolMessage.topicId,
+      });
       if (!result) return;
 
       // trigger the plugin call
