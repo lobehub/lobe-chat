@@ -1,5 +1,5 @@
 import { EnabledProviderWithModels } from '@lobechat/types';
-import { ActionIcon, Icon, Select, SelectProps, type SelectProps } from '@lobehub/ui';
+import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';

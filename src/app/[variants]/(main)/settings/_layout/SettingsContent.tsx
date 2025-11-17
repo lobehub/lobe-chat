@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import React, { CSSProperties } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import NotFound from '@/components/404';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { SettingsTabs } from '@/store/global/initialState';
 
