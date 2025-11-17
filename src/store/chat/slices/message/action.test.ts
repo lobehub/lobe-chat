@@ -431,56 +431,85 @@ describe('chatMessage actions', () => {
   });
 
   describe('deleteToolMessage', () => {
-    it.skip('deleteMessage should remove a message by id', async () => {
-      const { result } = renderHook(() => useChatStore());
+    it('deleteMessage should remove a message by id', async () => {
       const messageId = 'message-id';
-      const updateMessageSpy = vi
-        .spyOn(messageService, 'updateMessage')
-        .mockResolvedValue({ success: true, messages: [] });
-      const removeMessageSpy = vi
-        .spyOn(messageService, 'removeMessage')
-        .mockResolvedValue({ success: true, messages: [] });
+      const sessionId = 'session-id';
+      const topicId = null;
 
+      const rawMessages = [
+        {
+          id: messageId,
+          role: 'assistant',
+          tools: [{ id: 'tool1' }, { id: 'tool2' }],
+        } as UIChatMessage,
+        {
+          id: '2',
+          parentId: messageId,
+          tool_call_id: 'tool1',
+          role: 'tool',
+        } as UIChatMessage,
+        { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
+      ];
+
+      const key = messageMapKey(sessionId, topicId);
       act(() => {
-        const rawMessages = [
-          {
-            id: messageId,
-            role: 'assistant',
-            tools: [{ id: 'tool1' }, { id: 'tool2' }],
-          } as UIChatMessage,
-          {
-            id: '2',
-            parentId: messageId,
-            tool_call_id: 'tool1',
-            role: 'tool',
-          } as UIChatMessage,
-          { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
-        ];
-
         useChatStore.setState({
-          activeId: 'session-id',
-          activeTopicId: undefined,
+          activeId: sessionId,
+          activeTopicId: topicId as unknown as string,
           dbMessagesMap: {
-            [messageMapKey('session-id')]: rawMessages,
+            [key]: rawMessages,
           },
           messagesMap: {
-            [messageMapKey('session-id')]: rawMessages,
+            [key]: rawMessages,
           },
         });
       });
+
+      const { result } = renderHook(() => useChatStore());
+
+      // Mock removeMessage to return the remaining messages after deletion
+      // Note: tool1 is also removed from the assistant message's tools to reflect the concurrent update
+      const remainingAfterDelete = [
+        {
+          id: messageId,
+          role: 'assistant',
+          tools: [{ id: 'tool2' }],
+        } as UIChatMessage,
+        { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
+      ];
+
+      // Mock updateMessage to return updated messages after tool removal
+      const updatedMessages = [
+        {
+          id: messageId,
+          role: 'assistant',
+          tools: [{ id: 'tool2' }],
+        } as UIChatMessage,
+        { id: '3', tool_call_id: 'tool2', role: 'tool' } as UIChatMessage,
+      ];
+
+      const refreshToolsSpy = vi.spyOn(result.current, 'internal_refreshToUpdateMessageTools');
+      const updateMessageSpy = vi
+        .spyOn(messageService, 'updateMessage')
+        .mockResolvedValue({ success: true, messages: updatedMessages });
+      const removeMessageSpy = vi
+        .spyOn(messageService, 'removeMessage')
+        .mockResolvedValue({ success: true, messages: remainingAfterDelete });
+
       await act(async () => {
         await result.current.deleteToolMessage('2');
       });
 
       expect(removeMessageSpy).toHaveBeenCalled();
+      expect(refreshToolsSpy).toHaveBeenCalledWith('message-id', undefined);
       expect(updateMessageSpy).toHaveBeenCalledWith(
         'message-id',
         {
           tools: [{ id: 'tool2' }],
         },
         {
-          sessionId: 'session-id',
-          topicId: undefined,
+          sessionId,
+          topicId,
         },
       );
     });
