@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Navigate, createBrowserRouter, useNavigate } from 'react-router-dom';
+import { redirect, createBrowserRouter, useNavigate } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
@@ -370,13 +370,13 @@ export const createMobileRouter = (locale: Locales) =>
 
         // Default route - redirect to chat
         {
-          element: <Navigate replace to="/chat" />,
           index: true,
+          loader: () => redirect('/chat', { status: 302 }),
         },
 
         // Catch-all route
         {
-          element: <Navigate replace to="/chat" />,
+          loader: () => redirect('/chat', { status: 302 }),
           path: '*',
         },
       ],
