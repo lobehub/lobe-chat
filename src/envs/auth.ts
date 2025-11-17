@@ -15,6 +15,7 @@ declare global {
       BETTER_AUTH_SECRET?: string;
       NEXT_PUBLIC_BETTER_AUTH_URL?: string;
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION?: string;
+      BETTER_AUTH_SSO_PROVIDERS?: string;
 
       // ===== Google OAuth (Better Auth) ===== //
       GOOGLE_CLIENT_ID?: string;
@@ -68,10 +69,15 @@ export const getAuthConfig = () => {
 
       // Better Auth
       BETTER_AUTH_SECRET: z.string().optional(),
+      BETTER_AUTH_SSO_PROVIDERS: z.string().optional().default(''),
 
       // Google OAuth (Better Auth)
       GOOGLE_CLIENT_ID: z.string().optional(),
       GOOGLE_CLIENT_SECRET: z.string().optional(),
+
+      // GitHub OAuth (Better Auth)
+      GITHUB_CLIENT_ID: z.string().optional(),
+      GITHUB_CLIENT_SECRET: z.string().optional(),
 
       // NEXT-AUTH
       NEXT_AUTH_SECRET: z.string().optional(),
@@ -103,10 +109,15 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION:
         process.env.NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION === '1',
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+      BETTER_AUTH_SSO_PROVIDERS: process.env.BETTER_AUTH_SSO_PROVIDERS,
 
       // Google OAuth (Better Auth)
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+
+      // GitHub OAuth (Better Auth)
+      GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+      GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
 
       // Next Auth
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',

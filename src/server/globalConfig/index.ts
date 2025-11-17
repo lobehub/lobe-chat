@@ -5,6 +5,7 @@ import { fileEnv } from '@/envs/file';
 import { imageEnv } from '@/envs/image';
 import { knowledgeEnv } from '@/envs/knowledge';
 import { langfuseEnv } from '@/envs/langfuse';
+import { parseSSOProviders } from '@/libs/better-auth/utils';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { cleanObject } from '@/utils/object';
@@ -12,6 +13,14 @@ import { cleanObject } from '@/utils/object';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
+
+/**
+ * Get Better-Auth SSO providers list
+ * Parses BETTER_AUTH_SSO_PROVIDERS and returns enabled providers
+ */
+const getBetterAuthSSOProviders = () => {
+  return parseSSOProviders(authEnv.BETTER_AUTH_SSO_PROVIDERS);
+};
 
 export const getServerGlobalConfig = async () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
@@ -63,7 +72,9 @@ export const getServerGlobalConfig = async () => {
     image: cleanObject({
       defaultImageNum: imageEnv.AI_IMAGE_DEFAULT_IMAGE_NUM,
     }),
-    oAuthSSOProviders: authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),
+    oAuthSSOProviders: authEnv.NEXT_PUBLIC_ENABLE_BETTER_AUTH
+      ? getBetterAuthSSOProviders()
+      : authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {
       langfuse: langfuseEnv.ENABLE_LANGFUSE,

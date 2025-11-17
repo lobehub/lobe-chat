@@ -13,6 +13,7 @@ import { Flexbox } from 'react-layout-kit';
 import { message } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { signIn } from '@/libs/better-auth/auth-client';
+import { useUserStore } from '@/store/user';
 
 const useStyles = createStyles(({ css, token }) => ({
   backButton: css`
@@ -93,6 +94,7 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const emailInputRef = useRef<InputRef>(null);
   const passwordInputRef = useRef<InputRef>(null);
+  const oAuthSSOProviders = useUserStore((s) => s.oAuthSSOProviders || []);
 
   // Auto-focus input when step changes
   useEffect(() => {
@@ -194,16 +196,22 @@ export default function SignInPage() {
     router.push(`/signup?${params.toString()}`);
   };
 
-  const handleGoogleSignIn = async () => {
-    setSocialLoading('google');
+  // Map provider names to i18n keys
+  const providerI18nKeys: Record<string, string> = {
+    github: t('betterAuth.signin.continueWithGithub'),
+    google: t('betterAuth.signin.continueWithGoogle'),
+  };
+
+  const handleSocialSignIn = async (provider: string) => {
+    setSocialLoading(provider);
     try {
       const callbackUrl = searchParams.get('callbackUrl') || '/';
       await signIn.social({
         callbackURL: callbackUrl,
-        provider: 'google',
+        provider,
       });
     } catch (error) {
-      console.error('Google sign in error:', error);
+      console.error(`${provider} sign in error:`, error);
       message.error(t('betterAuth.signin.socialError'));
       setSocialLoading(null);
     }
@@ -224,26 +232,31 @@ export default function SignInPage() {
               <p className={styles.subtitle}>{t('betterAuth.signin.emailStep.subtitle')}</p>
 
               {/* Social Login Section */}
-              <Flexbox gap={12} style={{ marginTop: '2rem' }}>
-                <Button
-                  block
-                  icon={AuthIcons('google', 16)}
-                  loading={socialLoading === 'google'}
-                  onClick={handleGoogleSignIn}
-                  size="large"
-                >
-                  {t('betterAuth.signin.continueWithGoogle')}
-                </Button>
+              {oAuthSSOProviders.length > 0 && (
+                <Flexbox gap={12} style={{ marginTop: '2rem' }}>
+                  {oAuthSSOProviders.map((provider) => (
+                    <Button
+                      block
+                      icon={AuthIcons(provider, 16)}
+                      key={provider}
+                      loading={socialLoading === provider}
+                      onClick={() => handleSocialSignIn(provider)}
+                      size="large"
+                    >
+                      {providerI18nKeys[provider] || `Continue with ${provider}`}
+                    </Button>
+                  ))}
 
-                {/* Divider */}
-                <Flexbox align="center" gap={12} horizontal>
-                  <div className={styles.divider} />
-                  <span className={styles.dividerText}>
-                    {t('betterAuth.signin.orContinueWith')}
-                  </span>
-                  <div className={styles.divider} />
+                  {/* Divider */}
+                  <Flexbox align="center" gap={12} horizontal>
+                    <div className={styles.divider} />
+                    <span className={styles.dividerText}>
+                      {t('betterAuth.signin.orContinueWith')}
+                    </span>
+                    <div className={styles.divider} />
+                  </Flexbox>
                 </Flexbox>
-              </Flexbox>
+              )}
 
               <Form
                 form={form}
