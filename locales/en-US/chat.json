@@ -330,6 +330,11 @@
     "screenshot": "Screenshot",
     "settings": "Export Settings",
     "text": "Text",
+    "widthMode": {
+      "label": "Width Mode",
+      "narrow": "Narrow",
+      "wide": "Wide"
+    },
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",

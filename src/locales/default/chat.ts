@@ -361,6 +361,11 @@ export default {
     screenshot: '截图',
     settings: '导出设置',
     text: '文本',
+    widthMode: {
+      label: '宽度模式',
+      narrow: '窄屏模式',
+      wide: '宽屏模式',
+    },
     withBackground: '包含背景图片',
     withFooter: '包含页脚',
     withPluginInfo: '包含插件信息',

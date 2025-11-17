@@ -26,11 +26,11 @@ export interface ImportMessage {
   createdAt: number;
   error?: ChatMessageError;
 
-  // 扩展字段
+  // Extended fields
   extra?: {
     model?: string;
     provider?: string;
-    // 翻译
+    // Translation
     translate?: ChatTranslate | false | null;
     // TTS
     tts?: ChatTTS;

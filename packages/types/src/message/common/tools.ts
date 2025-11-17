@@ -112,7 +112,7 @@ export const ChatToolPayloadSchema = z.object({
 });
 
 /**
- * 聊天消息错误对象
+ * Chat message error object
  */
 export interface ChatMessagePluginError {
   body?: any;

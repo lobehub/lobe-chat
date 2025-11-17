@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop user panel."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.71"
+  },
+  {
+    "children": {},
+    "date": "2025-11-17",
+    "version": "2.0.0-next.70"
+  },
+  {
+    "children": {
       "improvements": ["Remove language_model_settings and remove isDeprecatedEdition."]
     },
     "date": "2025-11-17",

@@ -15,6 +15,7 @@ import LangButton from './LangButton';
 import ThemeButton from './ThemeButton';
 import { useMenu } from './useMenu';
 import { enableNextAuth } from '@/const/auth';
+import { isDesktop } from '@/const/version';
 
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
 
   return (
     <Flexbox gap={2} style={{ minWidth: 300 }}>
-      {isLoginWithAuth ? (
+      {isDesktop || isLoginWithAuth ? (
         <>
           <UserInfo avatarProps={{ clickable: false }} />
 
