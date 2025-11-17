@@ -97,15 +97,15 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       },
       ...(isDesktop
         ? [
-          {
-            icon: <Icon icon={ExternalLink} />,
-            key: 'openInNewWindow',
-            label: t('actions.openInNewWindow'),
-            onClick: () => {
-              openTopicInNewWindow(activeId, id);
+            {
+              icon: <Icon icon={ExternalLink} />,
+              key: 'openInNewWindow',
+              label: t('actions.openInNewWindow'),
+              onClick: () => {
+                openTopicInNewWindow(activeId, id);
+              },
             },
-          },
-        ]
+          ]
         : []),
       {
         type: 'divider',
@@ -153,9 +153,19 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         },
       },
     ],
-    [id, activeId, autoRenameTopicTitle, duplicateTopic, removeTopic, t, toggleEditing, openTopicInNewWindow],
+    [
+      id,
+      activeId,
+      autoRenameTopicTitle,
+      duplicateTopic,
+      removeTopic,
+      t,
+      toggleEditing,
+      openTopicInNewWindow,
+    ],
   );
 
+  console.log(title, title === LOADING_FLAT);
   return (
     <Flexbox
       align={'center'}
@@ -180,7 +190,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         spin={isLoading}
       />
       {!editing ? (
-        title === LOADING_FLAT ? (
+        title === LOADING_FLAT || (isLoading && !title) ? (
           <Flexbox flex={1} height={28} justify={'center'}>
             <BubblesLoading />
           </Flexbox>
@@ -190,7 +200,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
             ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
             onDoubleClick={() => {
               if (isDesktop) {
-                openTopicInNewWindow(activeId, id)
+                openTopicInNewWindow(activeId, id);
               }
             }}
             style={{ margin: 0 }}
