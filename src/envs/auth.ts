@@ -50,36 +50,36 @@ declare global {
 export const getAuthConfig = () => {
   return createEnv({
     client: {
+      // ---------------------------------- clerk ----------------------------------
+      NEXT_PUBLIC_ENABLE_CLERK_AUTH: z.boolean().optional().default(false),
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
-      /**
-       * whether to enabled clerk
-       */
-      NEXT_PUBLIC_ENABLE_CLERK_AUTH: z.boolean().optional(),
 
+      // ---------------------------------- better auth ----------------------------------
       NEXT_PUBLIC_ENABLE_BETTER_AUTH: z.boolean().optional(),
       NEXT_PUBLIC_BETTER_AUTH_URL: z.string().optional(),
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION: z.boolean().optional().default(false),
 
+      // ---------------------------------- next auth ----------------------------------
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: z.boolean().optional(),
     },
     server: {
-      // Clerk
+      // ---------------------------------- clerk ----------------------------------
       CLERK_SECRET_KEY: z.string().optional(),
       CLERK_WEBHOOK_SECRET: z.string().optional(),
 
-      // Better Auth
+      // ---------------------------------- better auth ----------------------------------
       BETTER_AUTH_SECRET: z.string().optional(),
       BETTER_AUTH_SSO_PROVIDERS: z.string().optional().default(''),
 
-      // Google OAuth (Better Auth)
+      // Google OAuth
       GOOGLE_CLIENT_ID: z.string().optional(),
       GOOGLE_CLIENT_SECRET: z.string().optional(),
 
-      // GitHub OAuth (Better Auth)
+      // GitHub OAuth
       GITHUB_CLIENT_ID: z.string().optional(),
       GITHUB_CLIENT_SECRET: z.string().optional(),
 
-      // NEXT-AUTH
+      // ---------------------------------- next auth ----------------------------------
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
       NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
@@ -103,7 +103,7 @@ export const getAuthConfig = () => {
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
-      // Better Auth
+      // ---------------------------------- better auth ----------------------------------
       NEXT_PUBLIC_ENABLE_BETTER_AUTH: process.env.NEXT_PUBLIC_ENABLE_BETTER_AUTH === '1',
       NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
       NEXT_PUBLIC_BETTER_AUTH_REQUIRE_EMAIL_VERIFICATION:
@@ -119,7 +119,7 @@ export const getAuthConfig = () => {
       GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
       GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
 
-      // Next Auth
+      // ---------------------------------- next auth ----------------------------------
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH === '1',
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
