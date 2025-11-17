@@ -115,7 +115,7 @@ const InputEditor = memo<{ defaultRows?: number }>(({ defaultRows = 2 }) => {
                     ),
               }),
               Editor.withProps(ReactAutoCompletePlugin, {
-                delay: 1000,
+                delay: 500,
                 onAutoComplete: autoCompleteInput,
               }),
             ],
