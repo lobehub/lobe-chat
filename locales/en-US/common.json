@@ -140,7 +140,11 @@
     "noResults": "No results found",
     "openSettings": "Open Settings",
     "painting": "AI Painting",
-    "searchPlaceholder": "Search for features..."
+    "searchPlaceholder": "Search for features...",
+    "theme": "Theme",
+    "themeAuto": "Auto",
+    "themeDark": "Dark",
+    "themeLight": "Light"
   },
   "confirm": "Confirm",
   "contact": "Contact Us",

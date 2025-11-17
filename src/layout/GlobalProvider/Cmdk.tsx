@@ -2,13 +2,14 @@
 
 import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
-import { BookOpen, Palette, Settings } from 'lucide-react';
+import { BookOpen, Monitor, Moon, Palette, Settings, Sun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useHotkeyById } from '@/hooks/useHotkeys/useHotkeyById';
+import { useGlobalStore } from '@/store/global';
 import { HotkeyEnum } from '@/types/hotkey';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -96,6 +97,23 @@ const useStyles = createStyles(({ css, token }) => ({
         background: ${token.colorBgTextHover};
       }
     }
+
+    [cmdk-group-heading] {
+      user-select: none;
+
+      padding-block: 8px;
+      padding-inline: 16px;
+
+      font-size: 12px;
+      font-weight: 500;
+      color: ${token.colorTextSecondary};
+    }
+
+    [cmdk-separator] {
+      height: 1px;
+      margin-block: 4px;
+      background: ${token.colorBorderSecondary};
+    }
   `,
   icon: css`
     flex-shrink: 0;
@@ -146,9 +164,14 @@ const useStyles = createStyles(({ css, token }) => ({
 const Cmdk = memo(() => {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [search, setSearch] = useState('');
+  const [pages, setPages] = useState<string[]>([]);
   const router = useRouter();
   const { t } = useTranslation('common');
   const { styles } = useStyles();
+  const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
+
+  const page = pages.at(-1);
 
   // Ensure we're mounted on the client
   useEffect(() => {
@@ -166,19 +189,17 @@ const Cmdk = memo(() => {
       const originalStyle = window.getComputedStyle(document.body).overflow;
       document.body.style.overflow = 'hidden';
 
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          setOpen(false);
-        }
-      };
-
-      document.addEventListener('keydown', handleKeyDown);
-
       return () => {
         document.body.style.overflow = originalStyle;
-        document.removeEventListener('keydown', handleKeyDown);
       };
+    }
+  }, [open]);
+
+  // Reset pages and search when opening/closing
+  useEffect(() => {
+    if (open) {
+      setPages([]);
+      setSearch('');
     }
   }, [open]);
 
@@ -187,33 +208,96 @@ const Cmdk = memo(() => {
     setOpen(false);
   };
 
+  const handleThemeChange = (theme: 'light' | 'dark' | 'auto') => {
+    switchThemeMode(theme);
+    setOpen(false);
+  };
+
   if (!mounted || !open) return null;
 
   return createPortal(
     <div className={styles.overlay} onClick={() => setOpen(false)}>
       <div onClick={(e) => e.stopPropagation()}>
-        <Command className={styles.commandRoot} shouldFilter={true}>
-          <Command.Input autoFocus placeholder={t('cmdk.searchPlaceholder')} />
+        <Command
+          className={styles.commandRoot}
+          onKeyDown={(e) => {
+            // Escape goes to previous page or closes
+            if (e.key === 'Escape') {
+              e.preventDefault();
+              if (pages.length > 0) {
+                setPages((prev) => prev.slice(0, -1));
+              } else {
+                setOpen(false);
+              }
+            }
+            // Backspace goes to previous page when search is empty
+            if (e.key === 'Backspace' && !search && pages.length > 0) {
+              e.preventDefault();
+              setPages((prev) => prev.slice(0, -1));
+            }
+          }}
+          shouldFilter={true}
+        >
+          <Command.Input
+            autoFocus
+            onValueChange={setSearch}
+            placeholder={t('cmdk.searchPlaceholder')}
+            value={search}
+          />
           <Command.List>
             <Command.Empty>{t('cmdk.noResults')}</Command.Empty>
-            <Command.Item onSelect={() => handleNavigate('/settings')} value="settings">
-              <Settings className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.openSettings')}</div>
-              </div>
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigate('/image')} value="painting">
-              <Palette className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
-              </div>
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigate('/knowledge')} value="knowledge">
-              <BookOpen className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
-              </div>
-            </Command.Item>
+
+            {!page && (
+              <>
+                <Command.Item onSelect={() => handleNavigate('/settings')} value="settings">
+                  <Settings className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.openSettings')}</div>
+                  </div>
+                </Command.Item>
+                <Command.Item onSelect={() => handleNavigate('/image')} value="painting">
+                  <Palette className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
+                  </div>
+                </Command.Item>
+                <Command.Item onSelect={() => handleNavigate('/knowledge')} value="knowledge">
+                  <BookOpen className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
+                  </div>
+                </Command.Item>
+                <Command.Item onSelect={() => setPages([...pages, 'theme'])} value="theme">
+                  <Monitor className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.theme')}</div>
+                  </div>
+                </Command.Item>
+              </>
+            )}
+
+            {page === 'theme' && (
+              <>
+                <Command.Item onSelect={() => handleThemeChange('light')} value="theme-light">
+                  <Sun className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.themeLight')}</div>
+                  </div>
+                </Command.Item>
+                <Command.Item onSelect={() => handleThemeChange('dark')} value="theme-dark">
+                  <Moon className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.themeDark')}</div>
+                  </div>
+                </Command.Item>
+                <Command.Item onSelect={() => handleThemeChange('auto')} value="theme-auto">
+                  <Monitor className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.themeAuto')}</div>
+                  </div>
+                </Command.Item>
+              </>
+            )}
           </Command.List>
         </Command>
       </div>
