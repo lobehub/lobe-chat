@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { createBrowserRouter, redirect, type LoaderFunction, useNavigate } from 'react-router-dom';
+import { type LoaderFunction, createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
@@ -65,7 +65,6 @@ export const createDesktopRouter = (locale: Locales) =>
   createBrowserRouter([
     {
       HydrateFallback: () => <Loading />,
-      loader: hydrationGateLoader,
       children: [
         // Chat routes
         {
@@ -376,6 +375,7 @@ export const createDesktopRouter = (locale: Locales) =>
         },
       ],
       element: <RootLayout locale={locale} />,
+      loader: hydrationGateLoader,
       path: '/',
     },
   ]);

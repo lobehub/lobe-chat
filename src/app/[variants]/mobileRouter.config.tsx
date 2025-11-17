@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { redirect, createBrowserRouter, type LoaderFunction, useNavigate } from 'react-router-dom';
+import { type LoaderFunction, createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
@@ -63,7 +63,6 @@ export const createMobileRouter = (locale: Locales) =>
   createBrowserRouter([
     {
       HydrateFallback: () => <Loading />,
-      loader: hydrationGateLoader,
       children: [
         // Chat routes
         {
@@ -361,13 +360,15 @@ export const createMobileRouter = (locale: Locales) =>
                 })),
             },
             {
-              children: [{
-                lazy: () =>
-                  import('./(main)/(mobile)/me/profile').then((m) => ({
-                    Component: m.default,
-                  })),
-                path: 'profile',
-              }],
+              children: [
+                {
+                  lazy: () =>
+                    import('./(main)/(mobile)/me/profile').then((m) => ({
+                      Component: m.default,
+                    })),
+                  path: 'profile',
+                },
+              ],
               lazy: () =>
                 import('./(main)/(mobile)/me/profile/layout').then((m) => ({
                   Component: m.default,
@@ -387,7 +388,7 @@ export const createMobileRouter = (locale: Locales) =>
                 import('./(main)/(mobile)/me/settings/layout').then((m) => ({
                   Component: m.default,
                 })),
-            }
+            },
           ],
           path: 'me',
         },
@@ -405,6 +406,7 @@ export const createMobileRouter = (locale: Locales) =>
         },
       ],
       element: <RootLayout locale={locale} />,
+      loader: hydrationGateLoader,
       path: '/',
     },
   ]);

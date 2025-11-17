@@ -80,12 +80,16 @@ class BootErrorBoundary extends Component<BootErrorBoundaryProps, BootErrorBound
 
       if (attempts >= maxReloads) {
         // eslint-disable-next-line no-console
-        console.warn('BootErrorBoundary reached max reload attempts', { attempts, maxReloads, href });
+        console.warn('BootErrorBoundary reached max reload attempts', {
+          attempts,
+          href,
+          maxReloads,
+        });
         return false;
       }
 
       // eslint-disable-next-line no-console
-      console.info('BootErrorBoundary forcing hard reload', { attempts, maxReloads, href });
+      console.info('BootErrorBoundary forcing hard reload', { attempts, href, maxReloads });
       window.sessionStorage.setItem(RELOAD_SESSION_KEY, String(attempts + 1));
     } catch (error) {
       // If sessionStorage is unavailable, we still attempt a reload once.
