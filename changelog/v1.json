@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Remove language_model_settings and remove isDeprecatedEdition."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.69"
+  },
+  {
+    "children": {
       "fixes": ["The tool to fail execution on ollama when a message contains b…."]
     },
     "date": "2025-11-16",
