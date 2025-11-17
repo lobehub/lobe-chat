@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.69](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.68...v2.0.0-next.69)
+
+<sup>Released on **2025-11-17**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove `language_model_settings` and remove isDeprecatedEdition.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove `language_model_settings` and remove isDeprecatedEdition, closes [#10264](https://github.com/lobehub/lobe-chat/issues/10264) ([ae613c7](https://github.com/lobehub/lobe-chat/commit/ae613c7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.68](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.67...v2.0.0-next.68)
 
 <sup>Released on **2025-11-16**</sup>
