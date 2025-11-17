@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
+import BootErrorBoundary from '@/components/BootErrorBoundary';
 import Loading from '@/components/Loading/BrandTextLoading';
 import type { Locales } from '@/types/locale';
 
@@ -15,7 +16,11 @@ interface ClientRouterProps {
 
 const ClientRouter = memo<ClientRouterProps>(({ locale }) => {
   const router = useMemo(() => createDesktopRouter(locale), [locale]);
-  return <RouterProvider router={router} />;
+  return (
+    <BootErrorBoundary fallback={<Loading />}>
+      <RouterProvider router={router} />
+    </BootErrorBoundary>
+  );
 });
 
 ClientRouter.displayName = 'ClientRouter';
