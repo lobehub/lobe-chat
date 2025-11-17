@@ -1,4 +1,4 @@
-import { enableNextAuth } from '@lobechat/const';
+import { enableNextAuth, isDesktop } from '@lobechat/const';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
@@ -37,7 +37,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
 
   return (
     <Flexbox gap={2} style={{ minWidth: 300 }}>
-      {isLoginWithAuth ? (
+      {isDesktop || isLoginWithAuth ? (
         <>
           <UserInfo avatarProps={{ clickable: false }} />
 
