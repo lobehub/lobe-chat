@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.71](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.70...v2.0.0-next.71)
+
+<sup>Released on **2025-11-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop user panel.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop user panel, closes [#10272](https://github.com/lobehub/lobe-chat/issues/10272) ([6a374d2](https://github.com/lobehub/lobe-chat/commit/6a374d2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.70](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.69...v2.0.0-next.70)
 
 <sup>Released on **2025-11-17**</sup>
