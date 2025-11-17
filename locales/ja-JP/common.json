@@ -135,6 +135,7 @@
     }
   },
   "close": "閉じる",
+  "confirm": "確認",
   "contact": "お問い合わせ",
   "copy": "コピー",
   "copyFail": "コピーに失敗しました",
@@ -285,6 +286,7 @@
   "oauth": "SSO ログイン",
   "officialSite": "公式サイト",
   "ok": "OK",
+  "or": "または",
   "password": "パスワード",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",

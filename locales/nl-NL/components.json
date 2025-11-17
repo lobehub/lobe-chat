@@ -106,6 +106,12 @@
     "keyPlaceholder": "Sleutel",
     "valuePlaceholder": "Waarde"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Openen",
+      "showInFolder": "In map weergeven"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Onbeperkt"
   },

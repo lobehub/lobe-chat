@@ -150,6 +150,66 @@ describe('convertOpenAIMessages', () => {
 
     expect(Promise.all).toHaveBeenCalledTimes(2); // 一次用于消息数组，一次用于内容数组
   });
+
+  it('should filter out reasoning field from messages', async () => {
+    const messages = [
+      {
+        role: 'assistant',
+        content: 'Hello',
+        reasoning: { content: 'some reasoning', duration: 100 },
+      },
+      { role: 'user', content: 'Hi' },
+    ] as any;
+
+    const result = await convertOpenAIMessages(messages);
+
+    expect(result).toEqual([
+      { role: 'assistant', content: 'Hello' },
+      { role: 'user', content: 'Hi' },
+    ]);
+    // Ensure reasoning field is removed
+    expect((result[0] as any).reasoning).toBeUndefined();
+  });
+
+  it('should preserve reasoning_content field from messages (for DeepSeek compatibility)', async () => {
+    const messages = [
+      {
+        role: 'assistant',
+        content: 'Hello',
+        reasoning_content: 'some reasoning content',
+      },
+      { role: 'user', content: 'Hi' },
+    ] as any;
+
+    const result = await convertOpenAIMessages(messages);
+
+    expect(result).toEqual([
+      { role: 'assistant', content: 'Hello', reasoning_content: 'some reasoning content' },
+      { role: 'user', content: 'Hi' },
+    ]);
+    // Ensure reasoning_content field is preserved
+    expect((result[0] as any).reasoning_content).toBe('some reasoning content');
+  });
+
+  it('should filter out reasoning but preserve reasoning_content field', async () => {
+    const messages = [
+      {
+        role: 'assistant',
+        content: 'Hello',
+        reasoning: { content: 'some reasoning', duration: 100 },
+        reasoning_content: 'some reasoning content',
+      },
+    ] as any;
+
+    const result = await convertOpenAIMessages(messages);
+
+    expect(result).toEqual([
+      { role: 'assistant', content: 'Hello', reasoning_content: 'some reasoning content' },
+    ]);
+    // Ensure reasoning object is removed but reasoning_content is preserved
+    expect((result[0] as any).reasoning).toBeUndefined();
+    expect((result[0] as any).reasoning_content).toBe('some reasoning content');
+  });
 });
 
 describe('convertOpenAIResponseInputs', () => {

@@ -3,14 +3,11 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { isDeprecatedEdition } from '@/const/version';
 import { SettingsTabs } from '@/store/global/initialState';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 export const useCategory = () => {
   const router = useRouter();
   const { t } = useTranslation('setting');
-  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
 
   const items: CellProps[] = [
     {
@@ -23,18 +20,11 @@ export const useCategory = () => {
       key: SettingsTabs.SystemAgent,
       label: t('tab.system-agent'),
     },
-    showLLM &&
-      (isDeprecatedEdition
-        ? {
-            icon: Brain,
-            key: SettingsTabs.LLM,
-            label: t('tab.llm'),
-          }
-        : {
-            icon: Brain,
-            key: SettingsTabs.Provider,
-            label: t('tab.provider'),
-          }),
+    {
+      icon: Brain,
+      key: SettingsTabs.Provider,
+      label: t('tab.provider'),
+    },
     { icon: Mic2, key: SettingsTabs.TTS, label: t('tab.tts') },
     {
       icon: Bot,

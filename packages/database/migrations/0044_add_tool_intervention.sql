@@ -1,1 +1,0 @@
-ALTER TABLE "message_plugins" ADD COLUMN "intervention" jsonb;

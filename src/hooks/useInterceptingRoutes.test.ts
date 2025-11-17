@@ -42,26 +42,7 @@ vi.mock('@/store/global', () => ({
     setState: vi.fn(),
   },
 }));
-let isDeprecatedEdition = false;
-vi.mock('@/const/version', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/const/version')>();
-  return {
-    ...actual,
-    get isDeprecatedEdition() {
-      return isDeprecatedEdition;
-    },
-  };
-});
-
 describe('useOpenChatSettings', () => {
-  it('should handle inbox session id correctly', () => {
-    isDeprecatedEdition = true;
-    vi.mocked(useSessionStore).mockReturnValue(INBOX_SESSION_ID);
-    const { result } = renderHook(() => useOpenChatSettings());
-
-    expect(result.current()).toBe('/settings?active=agent'); // Assuming openSettings returns a function
-    isDeprecatedEdition = false;
-  });
 
   it('should handle mobile route for chat settings', () => {
     vi.mocked(useSessionStore).mockReturnValue('123');

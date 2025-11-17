@@ -1,3 +1,4 @@
+import { enableNextAuth } from '@lobechat/const';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
@@ -5,8 +6,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
-import { enableAuth, enableNextAuth } from '@/const/auth';
-import { isDeprecatedEdition } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -38,14 +37,13 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
 
   return (
     <Flexbox gap={2} style={{ minWidth: 300 }}>
-      {!enableAuth || (enableAuth && isLoginWithAuth) ? (
+      {isLoginWithAuth ? (
         <>
           <UserInfo avatarProps={{ clickable: false }} />
-          {!isDeprecatedEdition && (
-            <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
-              <DataStatistics />
-            </Link>
-          )}
+
+          <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
+            <DataStatistics />
+          </Link>
         </>
       ) : (
         <UserLoginOrSignup onClick={handleSignIn} />

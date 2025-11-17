@@ -17,6 +17,14 @@
   "localFiles": {
     "file": "فایل",
     "folder": "پوشه",
+    "moveFiles": {
+      "itemsMoved": "{{count}} مورد منتقل شد:",
+      "itemsMoved_one": "{{count}} مورد منتقل شد:",
+      "itemsMoved_other": "{{count}} مورد منتقل شد:",
+      "itemsToMove": "{{count}} مورد برای انتقال:",
+      "itemsToMove_one": "{{count}} مورد برای انتقال:",
+      "itemsToMove_other": "{{count}} مورد برای انتقال:"
+    },
     "open": "باز کردن",
     "openFile": "باز کردن فایل",
     "openFolder": "باز کردن پوشه",

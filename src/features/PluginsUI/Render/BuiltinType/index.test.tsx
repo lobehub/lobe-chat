@@ -4,11 +4,17 @@ import { describe, expect, it, vi } from 'vitest';
 import BuiltinType from './index';
 
 // Mock renders module
+const mockWebBrowsingRender = vi.fn(({ content }) => <div>WebBrowsingRender: {content}</div>);
+const mockCodeInterpreterRender = vi.fn(({ content }) => (
+  <div>CodeInterpreterRender: {content}</div>
+));
+
 vi.mock('@/tools/renders', () => ({
-  BuiltinToolsRenders: {
-    'lobe-web-browsing': vi.fn(({ content }) => <div>WebBrowsingRender: {content}</div>),
-    'lobe-code-interpreter': vi.fn(({ content }) => <div>CodeInterpreterRender: {content}</div>),
-  },
+  getBuiltinRender: vi.fn((identifier, apiName) => {
+    if (identifier === 'lobe-web-browsing') return mockWebBrowsingRender;
+    if (identifier === 'lobe-code-interpreter') return mockCodeInterpreterRender;
+    return undefined;
+  }),
 }));
 
 // Mock useParseContent hook

@@ -135,6 +135,7 @@
     }
   },
   "close": "닫기",
+  "confirm": "확인",
   "contact": "문의하기",
   "copy": "복사",
   "copyFail": "복사 실패",
@@ -285,6 +286,7 @@
   "oauth": "SSO 로그인",
   "officialSite": "공식 웹사이트",
   "ok": "확인",
+  "or": "또는",
   "password": "비밀번호",
   "pin": "상단 고정",
   "pinOff": "고정 해제",

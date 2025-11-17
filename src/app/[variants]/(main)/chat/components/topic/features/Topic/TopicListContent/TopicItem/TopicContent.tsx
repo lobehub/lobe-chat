@@ -100,7 +100,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           {
             icon: <Icon icon={ExternalLink} />,
             key: 'openInNewWindow',
-            label: '单独打开页面',
+            label: t('actions.openInNewWindow'),
             onClick: () => {
               openTopicInNewWindow(activeId, id);
             },

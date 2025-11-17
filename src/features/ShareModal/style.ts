@@ -1,36 +1,46 @@
 import { createStyles } from 'antd-style';
 
-export const useContainerStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
-  preview: cx(
-    stylish.noScrollbar,
-    css`
-      overflow: hidden scroll;
+import { WidthMode } from './ShareImage/type';
 
-      width: 100%;
-      max-height: 70dvh;
-      border: 1px solid ${token.colorBorder};
-      border-radius: ${token.borderRadiusLG}px;
+export const useContainerStyles = createStyles(
+  ({ css, token, stylish, cx, responsive }, widthMode?: WidthMode) => {
+    const isNarrow = widthMode === WidthMode.Narrow;
 
-      background: ${token.colorBgLayout};
+    return {
+      preview: cx(
+        stylish.noScrollbar,
+        css`
+          overflow: hidden scroll;
 
-      /* stylelint-disable selector-class-pattern */
-      .react-pdf__Document *,
-      .react-pdf__Page * {
-        pointer-events: none;
-      }
-      /* stylelint-enable selector-class-pattern */
+          width: 100%;
+          max-width: ${isNarrow ? '480px' : 'none'};
+          max-height: 70dvh;
+          margin: ${isNarrow ? '0 auto' : '0'};
+          border: 1px solid ${token.colorBorder};
+          border-radius: ${token.borderRadiusLG}px;
 
-      ::-webkit-scrollbar {
-        width: 0 !important;
-        height: 0 !important;
-      }
+          background: ${token.colorBgLayout};
 
-      ${responsive.mobile} {
-        max-height: 40dvh;
-      }
-    `,
-  ),
-}));
+          /* stylelint-disable selector-class-pattern */
+          .react-pdf__Document *,
+          .react-pdf__Page * {
+            pointer-events: none;
+          }
+          /* stylelint-enable selector-class-pattern */
+
+          ::-webkit-scrollbar {
+            width: 0 !important;
+            height: 0 !important;
+          }
+
+          ${responsive.mobile} {
+            max-height: 40dvh;
+          }
+        `,
+      ),
+    };
+  },
+);
 
 export const useStyles = createStyles(({ responsive, token, css }) => ({
   body: css`

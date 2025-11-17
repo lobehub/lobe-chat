@@ -75,6 +75,7 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
         endRender={showThread && <Thread id={id} placement={placement} />}
         id={id}
         index={index}
+        isLatestItem={isLatestItem}
       />
       {isLatestItem && <SupervisorThinkingTag />}
     </>

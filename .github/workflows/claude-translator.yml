@@ -21,6 +21,7 @@ jobs:
       (github.event_name == 'pull_request_review' && github.event.sender.type != 'Bot') ||
       (github.event_name == 'pull_request_review_comment' && github.event.sender.type != 'Bot')
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       contents: read
       # update issues/comments

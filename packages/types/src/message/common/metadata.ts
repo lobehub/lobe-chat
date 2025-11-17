@@ -75,7 +75,9 @@ export const ModelPerformanceSchema = z.object({
   latency: z.number().optional(),
 });
 
-export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema);
+export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema).extend({
+  collapsed: z.boolean().optional(),
+});
 
 export interface ModelUsage extends ModelTokensUsage {
   /**
@@ -106,5 +108,10 @@ export interface ModelPerformance {
 export interface MessageMetadata extends ModelUsage, ModelPerformance {
   activeBranchIndex?: number;
   activeColumn?: boolean;
+  /**
+   * Message collapse state
+   * true: collapsed, false/undefined: expanded
+   */
+  collapsed?: boolean;
   compare?: boolean;
 }

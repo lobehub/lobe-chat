@@ -12,7 +12,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors, topicSelectors } from '@/store/chat/selectors';
 
 import { useStyles } from '../style';
 import Preview from './Preview';
@@ -50,7 +50,7 @@ const ShareImage = memo(() => {
   ];
 
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
-  const messages = useChatStore(chatSelectors.activeBaseChats, isEqual);
+  const messages = useChatStore(dbMessageSelectors.activeDbMessages, isEqual);
   const data = generateMessages({ ...fieldValue, messages, systemRole });
   const content = JSON.stringify(data, null, 2);
 

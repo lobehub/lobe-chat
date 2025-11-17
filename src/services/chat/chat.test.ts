@@ -278,14 +278,15 @@ describe('ChatService', () => {
 
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
+        // Mock helpers to return true for vision support (must be first)
+        const helpers = await import('./helper');
+        vi.spyOn(helpers, 'isCanUseVision').mockReturnValue(true);
+
         // Mock utility functions used in processImageList
         const { parseDataUri } = await import('@lobechat/utils/uriParser');
         const { isDesktopLocalStaticServerUrl } = await import('@lobechat/utils/url');
         vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
         vi.mocked(isDesktopLocalStaticServerUrl).mockReturnValue(false); // Not a local URL
-
-        // Mock aiModelSelectors to return true for vision support
-        vi.spyOn(aiModelSelectors, 'isModelSupportVision').mockReturnValue(() => true);
 
         const messages = [
           {
@@ -315,12 +316,22 @@ describe('ChatService', () => {
               {
                 content: [
                   {
-                    text: 'Hello',
+                    text: `Hello
+
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="abc.png" url="http://example.com/image.jpg"></image>
+</images>
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
                     type: 'text',
-                  },
-                  {
-                    image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
-                    type: 'image_url',
                   },
                 ],
                 role: 'user',
@@ -417,7 +428,21 @@ describe('ChatService', () => {
               {
                 content: [
                   {
-                    text: 'Hello',
+                    text: `Hello
+
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="local-image.png" url="http://127.0.0.1:3000/uploads/image.png"></image>
+</images>
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
                     type: 'text',
                   },
                   {
@@ -432,6 +457,8 @@ describe('ChatService', () => {
               },
             ],
             model: 'gpt-4-vision-preview',
+            enabledSearch: undefined,
+            tools: undefined,
           },
           undefined,
         );
@@ -491,7 +518,21 @@ describe('ChatService', () => {
               {
                 content: [
                   {
-                    text: 'Hello',
+                    text: `Hello
+
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="remote-image.jpg" url="https://example.com/remote-image.jpg"></image>
+</images>
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
                     type: 'text',
                   },
                   {
@@ -503,6 +544,8 @@ describe('ChatService', () => {
               },
             ],
             model: 'gpt-4-vision-preview',
+            enabledSearch: undefined,
+            tools: undefined,
           },
           undefined,
         );
@@ -1004,6 +1047,7 @@ describe('ChatService', () => {
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
         ...params,
+        apiMode: 'responses',
       };
 
       await chatService.getChatCompletion(params, options);

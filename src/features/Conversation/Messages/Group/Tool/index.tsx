@@ -1,5 +1,5 @@
-import { ChatToolResult } from '@lobechat/types';
-import { CSSProperties, memo, useState } from 'react';
+import { ChatToolResult, ToolIntervention } from '@lobechat/types';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import AnimatedCollapsed from '@/components/AnimatedCollapsed';
@@ -10,15 +10,17 @@ import Render from './Render';
 export interface GroupToolProps {
   apiName: string;
   arguments?: string;
-  id: string;
-  identifier: string;
-  index: number;
   /**
    * ContentBlock ID (not the group message ID)
    */
-  messageId: string;
+  assistantMessageId: string;
+  id: string;
+  identifier: string;
+  index: number;
+  intervention?: ToolIntervention;
   result?: ChatToolResult;
   style?: CSSProperties;
+  toolMessageId?: string;
   type?: string;
 }
 
@@ -29,37 +31,59 @@ export interface GroupToolProps {
  * so we always show the results directly.
  */
 const Tool = memo<GroupToolProps>(
-  ({ arguments: requestArgs, apiName, messageId, id, index, identifier, style, result, type }) => {
+  ({
+    arguments: requestArgs,
+    apiName,
+    assistantMessageId,
+    id,
+    intervention,
+    index,
+    identifier,
+    style,
+    result,
+    type,
+    toolMessageId,
+  }) => {
     // Default to false since group messages are all completed
-    const [showDetail, setShowDetail] = useState(false);
-    const [showPluginRender, setShowPluginRender] = useState(false);
+
+    const [showToolContent, setShowToolDetail] = useState(false);
+    const [showCustomPluginUI, setShowCustomPluginUI] = useState(false);
+
+    useEffect(() => {
+      if (intervention?.status === 'pending') {
+        setShowToolDetail(true);
+      }
+    }, [intervention?.status]);
 
     return (
       <Flexbox gap={8} style={style}>
         <Inspectors
           apiName={apiName}
           arguments={requestArgs}
+          assistantMessageId={assistantMessageId}
           id={id}
           identifier={identifier}
           index={index}
-          messageId={messageId}
+          intervention={intervention}
           result={result}
-          setShowPluginRender={setShowPluginRender}
-          setShowRender={setShowDetail}
-          showPluginRender={showPluginRender}
-          showRender={showDetail}
+          setShowPluginRender={setShowCustomPluginUI}
+          setShowRender={setShowToolDetail}
+          showPluginRender={showCustomPluginUI}
+          showRender={showToolContent}
           type={type}
         />
-        <AnimatedCollapsed open={showDetail} width={{ collapsed: 'auto' }}>
+        <AnimatedCollapsed open={showToolContent} width={{ collapsed: 'auto' }}>
           <Render
             apiName={apiName}
             arguments={requestArgs}
             identifier={identifier}
-            messageId={messageId}
+            intervention={intervention}
+            messageId={assistantMessageId}
             result={result}
-            setShowPluginRender={setShowPluginRender}
-            showPluginRender={showPluginRender}
+            setShowPluginRender={setShowCustomPluginUI}
+            showPluginRender={showCustomPluginUI}
             toolCallId={id}
+            toolMessageId={toolMessageId}
             type={type}
           />
         </AnimatedCollapsed>

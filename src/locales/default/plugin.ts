@@ -237,6 +237,9 @@ export default {
   },
   inspector: {
     args: '查看参数列表',
+    delete: '删除工具调用',
+    orphanedToolCall:
+      '该工具调用消息可能因异常原因成为孤立消息，这会影响 Agent 的正常执行，请将其移除',
     pluginRender: '查看插件界面',
   },
   list: {
@@ -252,14 +255,20 @@ export default {
   },
   localSystem: {
     apiName: {
+      editLocalFile: '编辑文件',
+      getCommandOutput: '获取代码输出',
+      globLocalFiles: '匹配搜索文件',
+      grepContent: '搜索内容',
+      killCommand: '终止代码执行',
       listLocalFiles: '查看文件列表',
       moveLocalFiles: '移动文件',
       readLocalFile: '读取文件内容',
       renameLocalFile: '重命名',
+      runCommand: '执行代码',
       searchLocalFiles: '搜索文件',
       writeLocalFile: '写入文件',
     },
-    title: '本地文件',
+    title: '本地系统',
   },
   mcpInstall: {
     CHECKING_INSTALLATION: '检查安装环境...',

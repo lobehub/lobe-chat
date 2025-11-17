@@ -135,6 +135,7 @@
     }
   },
   "close": "關閉",
+  "confirm": "確認",
   "contact": "聯繫我們",
   "copy": "複製",
   "copyFail": "複製失敗",
@@ -285,6 +286,7 @@
   "oauth": "單一登錄（SSO）",
   "officialSite": "官方網站",
   "ok": "確定",
+  "or": "或",
   "password": "密碼",
   "pin": "置頂",
   "pinOff": "取消置頂",

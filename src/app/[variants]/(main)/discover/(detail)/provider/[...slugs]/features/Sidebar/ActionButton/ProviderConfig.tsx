@@ -1,5 +1,6 @@
 'use client';
 
+import { isDesktop } from '@lobechat/const';
 import { Button, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
@@ -8,8 +9,6 @@ import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { isDeprecatedEdition, isDesktop } from '@/const/version';
 
 import { useDetailContext } from '../../DetailProvider';
 
@@ -27,10 +26,8 @@ const ProviderConfig = memo(() => {
   const { url, modelsUrl, identifier } = useDetailContext();
   const router = useRouter();
   const openSettings = async () => {
-    const searchParams = isDeprecatedEdition
-      ? { active: 'llm' }
-      : { active: 'provider', provider: identifier };
-    const tab = isDeprecatedEdition ? 'llm' : 'provider';
+    const searchParams = { active: 'provider', provider: identifier };
+    const tab = 'provider';
 
     if (isDesktop) {
       const { dispatch } = await import('@lobechat/electron-client-ipc');
@@ -41,11 +38,7 @@ const ProviderConfig = memo(() => {
       return;
     }
 
-    router.push(
-      isDeprecatedEdition
-        ? '/settings?active=llm'
-        : `/settings?active=provider&provider=${identifier}`,
-    );
+    router.push(`/settings?active=provider&provider=${identifier}`);
   };
 
   const icon = <Icon icon={SquareArrowOutUpRight} size={16} />;

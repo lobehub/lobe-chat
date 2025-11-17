@@ -17,6 +17,7 @@
   "availableAgents": "可用助理",
   "backToBottom": "返回底部",
   "chatList": {
+    "expandMessage": "展開訊息",
     "longMessageDetail": "查看詳情"
   },
   "clearCurrentMessages": "清空當前對話",
@@ -173,9 +174,11 @@
     "title": "提及成員"
   },
   "messageAction": {
+    "collapse": "收起訊息",
     "continueGeneration": "繼續生成",
     "delAndRegenerate": "刪除並重新生成",
     "deleteDisabledByThreads": "存在子話題，無法刪除",
+    "expand": "展開訊息",
     "regenerate": "重新生成"
   },
   "messages": {
@@ -240,6 +243,7 @@
   "noMatchingAgents": "沒有符合的成員",
   "noMembersYet": "此群組尚未有成員。請點選 + 按鈕邀請助理。",
   "noSelectedAgents": "尚未選擇成員",
+  "openInNewWindow": "在新視窗中開啟",
   "owner": "群組擁有者",
   "pin": "置頂",
   "pinOff": "取消置頂",
@@ -367,6 +371,28 @@
     "overload": "超過限制",
     "remained": "剩餘",
     "used": "使用"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "批准",
+      "approveAndRemember": "批准並記住",
+      "approveOnce": "僅本次批准",
+      "mode": {
+        "allowList": "白名單",
+        "allowListDesc": "僅自動執行已批准的工具",
+        "autoRun": "自動批准",
+        "autoRunDesc": "自動批准所有工具執行",
+        "manual": "手動",
+        "manualDesc": "每次調用都需要手動批准"
+      },
+      "reject": "拒絕",
+      "rejectAndContinue": "拒絕後重新執行",
+      "rejectOnly": "拒絕",
+      "rejectReasonPlaceholder": "輸入拒絕原因將幫助 Agent 理解並優化後續行動",
+      "rejectTitle": "拒絕本次工具調用",
+      "rejectedWithReason": "本次工具調用被主動拒絕:{{reason}}",
+      "toolRejected": "本次工具調用被主動拒絕"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "是否開啟新主題?",

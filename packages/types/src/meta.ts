@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 export const LobeMetaDataSchema = z.object({
   /**
-   * 角色头像
+   * Character avatar
    */
   avatar: z.string().optional(),
   /**
-   *  背景色
+   *  Background color
    */
   backgroundColor: z.string().optional(),
   description: z.string().optional(),
@@ -17,7 +17,7 @@ export const LobeMetaDataSchema = z.object({
 
   tags: z.array(z.string()).optional(),
   /**
-   * 名称
+   * Name
    */
   title: z.string().optional(),
 });

@@ -135,6 +135,7 @@
     }
   },
   "close": "Chiudi",
+  "confirm": "Conferma",
   "contact": "Contattaci",
   "copy": "Copia",
   "copyFail": "Copia non riuscita",
@@ -285,6 +286,7 @@
   "oauth": "Accesso SSO",
   "officialSite": "Sito ufficiale",
   "ok": "OK",
+  "or": "o",
   "password": "Password",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio",

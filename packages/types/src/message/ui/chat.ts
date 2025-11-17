@@ -8,7 +8,12 @@ import {
   ModelReasoning,
   ModelUsage,
 } from '../common';
-import { ChatPluginPayload, ChatToolPayload, ChatToolPayloadWithResult } from '../common/tools';
+import {
+  ChatPluginPayload,
+  ChatToolPayload,
+  ChatToolPayloadWithResult,
+  ToolIntervention,
+} from '../common/tools';
 import { ChatMessageExtra } from './extra';
 import { ChatFileChunk } from './rag';
 import { ChatVideoItem } from './video';
@@ -35,6 +40,7 @@ export interface AssistantContentBlock {
   error?: ChatMessageError | null;
   id: string;
   imageList?: ChatImageItem[];
+  metadata?: Record<string, any>;
   performance?: ModelPerformance;
   reasoning?: ModelReasoning;
   tools?: ChatToolPayloadWithResult[];
@@ -95,6 +101,7 @@ export interface UIChatMessage {
   performance?: ModelPerformance;
   plugin?: ChatPluginPayload;
   pluginError?: any;
+  pluginIntervention?: ToolIntervention;
   pluginState?: any;
   provider?: string | null;
   /**

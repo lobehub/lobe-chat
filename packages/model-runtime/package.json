@@ -12,12 +12,12 @@
     "test:update": "vitest -u"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.862.0",
-    "@huggingface/inference": "^4.11.3",
+    "@aws-sdk/client-bedrock-runtime": "^3.932.0",
+    "@huggingface/inference": "^4.13.3",
     "@lobechat/const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "debug": "^4.4.1",
+    "debug": "^4.4.3",
     "model-bank": "workspace:*",
     "openai": "^4.104.0"
   }

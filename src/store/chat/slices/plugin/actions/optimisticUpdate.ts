@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { ChatMessageError, ChatToolPayload } from '@lobechat/types';
+import { ChatMessageError, ChatToolPayload, MessagePluginItem } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -28,6 +28,11 @@ export interface PluginOptimisticUpdateAction {
     value: T,
     replace?: boolean,
   ) => Promise<void>;
+
+  /**
+   * Update plugin with optimistic update (generic method for any plugin field)
+   */
+  optimisticUpdatePlugin: (id: string, value: Partial<MessagePluginItem>) => Promise<void>;
 
   /**
    * Add tool to assistant message with optimistic update
@@ -117,6 +122,26 @@ export const pluginOptimisticUpdate: StateCreator<
     ]);
 
     await refreshMessages();
+  },
+
+  optimisticUpdatePlugin: async (id, value) => {
+    const { replaceMessages } = get();
+
+    // optimistic update
+    get().internal_dispatchMessage({
+      id,
+      type: 'updateMessagePlugin',
+      value,
+    });
+
+    const result = await messageService.updateMessagePlugin(id, value, {
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+    });
+
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages);
+    }
   },
 
   optimisticAddToolToAssistantMessage: async (id, tool) => {
