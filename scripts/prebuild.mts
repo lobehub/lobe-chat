@@ -20,11 +20,11 @@ const partialBuildPages = [
     disabled: isDesktop,
     paths: ['src/app/[variants]/(auth)'],
   },
-  {
-    name: 'mobile',
-    disabled: isDesktop,
-    paths: ['src/app/[variants]/(main)/(mobile)'],
-  },
+  // {
+  //   name: 'mobile',
+  //   disabled: isDesktop,
+  //   paths: ['src/app/[variants]/(main)/(mobile)'],
+  // },
   {
     name: 'oauth',
     disabled: isDesktop,
@@ -34,6 +34,16 @@ const partialBuildPages = [
     name: 'api-webhooks',
     disabled: isDesktop,
     paths: ['src/app/(backend)/api/webhooks'],
+  },
+  {
+    name: 'market-auth',
+    disabled: isDesktop,
+    paths: ['src/app/market-auth-callback'],
+  },
+  {
+    name: 'pwa',
+    disabled: isDesktop,
+    paths: ['src/manifest.ts', 'src/sitemap.tsx', 'src/robots.tsx', 'src/sw'],
   },
   // no need for web
   {
