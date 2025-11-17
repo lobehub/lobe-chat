@@ -9,12 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
-import { isDeprecatedEdition } from '@/const/version';
 import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -55,7 +53,6 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
     agentSelectors.currentAgentModelProvider(s),
     s.updateAgentConfig,
   ]);
-  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
   const router = useRouter();
   const enabledList = useEnabledChatModels();
 
@@ -81,11 +78,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
               </Flexbox>
             ),
             onClick: () => {
-              router.push(
-                isDeprecatedEdition
-                  ? '/settings?active=llm'
-                  : `/settings?active=provider&provider=${provider.id}`,
-              );
+              router.push(`/settings?active=provider&provider=${provider.id}`);
             },
           },
         ];
@@ -104,7 +97,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
             </Flexbox>
           ),
           onClick: () => {
-            router.push(isDeprecatedEdition ? '/settings?active=llm' : `/settings?active=provider`);
+            router.push('/settings?active=provider');
           },
         },
       ];
@@ -121,21 +114,13 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
             provider={provider.id}
             source={provider.source}
           />
-          {showLLM && (
-            <Link
-              href={
-                isDeprecatedEdition
-                  ? '/settings?active=llm'
-                  : `/settings?active=provider&provider=${provider.id}`
-              }
-            >
-              <ActionIcon
-                icon={LucideBolt}
-                size={'small'}
-                title={t('ModelSwitchPanel.goToSettings')}
-              />
-            </Link>
-          )}
+          <Link href={`/settings?active=provider&provider=${provider.id}`}>
+            <ActionIcon
+              icon={LucideBolt}
+              size={'small'}
+              title={t('ModelSwitchPanel.goToSettings')}
+            />
+          </Link>
         </Flexbox>
       ),
       type: 'group',
