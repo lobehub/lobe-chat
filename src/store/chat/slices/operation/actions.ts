@@ -46,9 +46,10 @@ export interface OperationActions {
   cancelOperations: (filter: OperationFilter, reason?: string) => string[];
 
   /**
-   * Cleanup completed operations (prevent memory leak)
+   * Clean up completed or cancelled operations
+   * Removes operations that are older than the specified age (default: 30 seconds)
    */
-  cleanupCompletedOperations: (olderThan?: number) => void;
+  cleanupCompletedOperations: (maxAgeMs?: number) => number;
 
   /**
    * Complete operation
@@ -244,6 +245,13 @@ export const operationActions: StateCreator<
       false,
       n(`startOperation/${type}/${operationId}`),
     );
+
+    // Periodically cleanup old completed operations
+    // Only cleanup for top-level operations (no parent) to avoid excessive cleanup calls
+    if (!parentOperationId) {
+      // Clean up operations completed more than 30 seconds ago
+      get().cleanupCompletedOperations(30_000);
+    }
 
     return { operationId, abortController };
   },
@@ -560,7 +568,7 @@ export const operationActions: StateCreator<
       }
     });
 
-    if (operationsToDelete.length === 0) return;
+    if (operationsToDelete.length === 0) return 0;
 
     set(
       produce((state: ChatStore) => {
@@ -624,6 +632,9 @@ export const operationActions: StateCreator<
       false,
       n(`cleanupCompletedOperations/count=${operationsToDelete.length}`),
     );
+
+    log('[cleanupCompletedOperations] cleaned up %d operations', operationsToDelete.length);
+    return operationsToDelete.length;
   },
 
   associateMessageWithOperation: (messageId, operationId) => {

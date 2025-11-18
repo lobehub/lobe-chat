@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
+import { produce } from 'immer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useChatStore } from '@/store/chat/store';
@@ -394,6 +395,192 @@ describe('Operation Actions', () => {
       expect(result.current.operations[op1!].status).toBe('cancelled');
       expect(result.current.operations[op2!].status).toBe('cancelled');
       expect(result.current.operations[op3!].status).toBe('running'); // Not cancelled
+    });
+  });
+
+  describe('cleanupCompletedOperations', () => {
+    it('should remove operations completed longer than specified time', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let op1: string;
+      let op2: string;
+      let op3: string;
+
+      act(() => {
+        // Create and complete operations at different times
+        op1 = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        op2 = result.current.startOperation({
+          type: 'reasoning',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        op3 = result.current.startOperation({
+          type: 'toolCalling',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        // Complete op1 and op2, leave op3 running
+        result.current.completeOperation(op1!);
+        result.current.completeOperation(op2!);
+      });
+
+      // Manually set endTime to simulate operations completed long ago
+      act(() => {
+        useChatStore.setState(
+          produce((state) => {
+            const now = Date.now();
+            if (state.operations[op1!]) {
+              state.operations[op1!].metadata.endTime = now - 70_000; // 70 seconds ago
+            }
+            if (state.operations[op2!]) {
+              state.operations[op2!].metadata.endTime = now - 20_000; // 20 seconds ago
+            }
+          }),
+        );
+      });
+
+      // Cleanup operations older than 60 seconds
+      let cleanedCount = 0;
+      act(() => {
+        cleanedCount = result.current.cleanupCompletedOperations(60_000);
+      });
+
+      expect(cleanedCount).toBe(1);
+      expect(result.current.operations[op1!]).toBeUndefined(); // Removed (70s old)
+      expect(result.current.operations[op2!]).toBeDefined(); // Kept (20s old)
+      expect(result.current.operations[op3!]).toBeDefined(); // Kept (running)
+    });
+
+    it('should clean up operations on startOperation for top-level operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let completedOp: string;
+
+      act(() => {
+        // Create and complete an operation
+        completedOp = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        result.current.completeOperation(completedOp!);
+
+        // Set endTime to 40 seconds ago
+        useChatStore.setState(
+          produce((state) => {
+            if (state.operations[completedOp!]) {
+              state.operations[completedOp!].metadata.endTime = Date.now() - 40_000;
+            }
+          }),
+        );
+      });
+
+      expect(result.current.operations[completedOp!]).toBeDefined();
+
+      // Start a new top-level operation (should trigger cleanup)
+      act(() => {
+        result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        });
+      });
+
+      // Old operation should be cleaned up (older than 30s)
+      expect(result.current.operations[completedOp!]).toBeUndefined();
+    });
+
+    it('should not clean up operations when starting child operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let parentOp: string;
+      let oldCompletedOp: string;
+
+      act(() => {
+        // Create parent operation
+        parentOp = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        // Create and complete an old operation
+        oldCompletedOp = result.current.startOperation({
+          type: 'reasoning',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        result.current.completeOperation(oldCompletedOp!);
+
+        // Set endTime to 40 seconds ago
+        useChatStore.setState(
+          produce((state) => {
+            if (state.operations[oldCompletedOp!]) {
+              state.operations[oldCompletedOp!].metadata.endTime = Date.now() - 40_000;
+            }
+          }),
+        );
+      });
+
+      // Start a child operation (should NOT trigger cleanup)
+      act(() => {
+        result.current.startOperation({
+          type: 'callLLM',
+          parentOperationId: parentOp!,
+        });
+      });
+
+      // Old operation should still exist (cleanup not triggered for child operations)
+      expect(result.current.operations[oldCompletedOp!]).toBeDefined();
+    });
+
+    it('should clean up cancelled and failed operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let cancelledOp: string;
+      let failedOp: string;
+
+      act(() => {
+        cancelledOp = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        failedOp = result.current.startOperation({
+          type: 'reasoning',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        result.current.cancelOperation(cancelledOp!, 'User cancelled');
+        result.current.failOperation(failedOp!, {
+          type: 'Error',
+          message: 'Failed',
+        });
+
+        // Set endTime to 70 seconds ago
+        useChatStore.setState(
+          produce((state) => {
+            const now = Date.now();
+            if (state.operations[cancelledOp!]) {
+              state.operations[cancelledOp!].metadata.endTime = now - 70_000;
+            }
+            if (state.operations[failedOp!]) {
+              state.operations[failedOp!].metadata.endTime = now - 70_000;
+            }
+          }),
+        );
+      });
+
+      let cleanedCount = 0;
+      act(() => {
+        cleanedCount = result.current.cleanupCompletedOperations(60_000);
+      });
+
+      expect(cleanedCount).toBe(2);
+      expect(result.current.operations[cancelledOp!]).toBeUndefined();
+      expect(result.current.operations[failedOp!]).toBeUndefined();
     });
   });
 
