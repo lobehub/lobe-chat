@@ -661,29 +661,24 @@ export const streamingExecutor: StateCreator<
       },
     });
 
-    const runtime = new AgentRuntime(
-      agent,
-      {
-        executors: createAgentExecutors({
-          get,
-          messageKey,
-          operationId,
-          parentId: params.parentMessageId,
-          skipCreateFirstMessage: params.skipCreateFirstMessage,
-        }),
-      },
-      {
+    const runtime = new AgentRuntime(agent, {
+      executors: createAgentExecutors({
+        get,
+        messageKey,
         operationId,
-        getOperation: (opId: string) => {
-          const op = get().operations[opId];
-          if (!op) throw new Error(`Operation not found: ${opId}`);
-          return {
-            context: op.context,
-            abortController: op.abortController,
-          };
-        },
+        parentId: params.parentMessageId,
+        skipCreateFirstMessage: params.skipCreateFirstMessage,
+      }),
+      getOperation: (opId: string) => {
+        const op = get().operations[opId];
+        if (!op) throw new Error(`Operation not found: ${opId}`);
+        return {
+          abortController: op.abortController,
+          context: op.context,
+        };
       },
-    );
+      operationId,
+    });
 
     // Create agent state and context with user intervention config
     const { state: initialAgentState, context: initialAgentContext } =
@@ -708,13 +703,6 @@ export const streamingExecutor: StateCreator<
     // Execute the agent runtime loop
     let stepCount = 0;
     while (state.status !== 'done' && state.status !== 'error') {
-      // Check if operation was cancelled
-      // const operation = get().operations[operationId];
-      // if (operation?.status === 'cancelled') {
-      //   log('[internal_execAgentRuntime] Operation cancelled, exiting agent runtime loop');
-      //   break;
-      // }
-
       stepCount++;
       log(
         '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',

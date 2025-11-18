@@ -25,38 +25,14 @@ import {
 export class AgentRuntime {
   private executors: Record<AgentInstruction['type'], InstructionExecutor>;
   private operationId?: string;
-  private getOperation?: (operationId: string) => {
-    abortController: AbortController;
-    context: {
-      agentId?: string;
-      groupId?: string;
-      messageId?: string;
-      sessionId?: string;
-      threadId?: string;
-      topicId?: string | null;
-    };
-  };
+  private getOperation?: RuntimeConfig['getOperation'];
 
   constructor(
     private agent: Agent,
     private config: RuntimeConfig = {},
-    options?: {
-      getOperation?: (operationId: string) => {
-        abortController: AbortController;
-        context: {
-          agentId?: string;
-          groupId?: string;
-          messageId?: string;
-          sessionId?: string;
-          threadId?: string;
-          topicId?: string | null;
-        };
-      };
-      operationId?: string;
-    },
   ) {
-    this.operationId = options?.operationId;
-    this.getOperation = options?.getOperation;
+    this.operationId = config.operationId;
+    this.getOperation = config.getOperation;
 
     // Build executors with priority: agent.executors > config.executors > built-in
     this.executors = {
