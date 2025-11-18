@@ -9,6 +9,7 @@ import {
   aiChatSelectors,
   chatSelectors,
   messageStateSelectors,
+  operationSelectors,
   topicSelectors,
 } from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
@@ -34,7 +35,7 @@ export const useSend = () => {
     addAIMessage,
     stopGenerateMessage,
     cancelSendMessageInServer,
-    generating,
+    isAgentRuntimeRunning,
     isSendButtonDisabledByMessage,
     isSendingMessage,
   ] = useChatStore((s) => [
@@ -43,7 +44,7 @@ export const useSend = () => {
     s.addAIMessage,
     s.stopGenerateMessage,
     s.cancelSendMessageInServer,
-    messageStateSelectors.isAIGenerating(s),
+    operationSelectors.isAgentRuntimeRunning(s),
     messageStateSelectors.isSendButtonDisabledByMessage(s),
     aiChatSelectors.isCurrentSendMessageLoading(s),
   ]);
@@ -73,7 +74,7 @@ export const useSend = () => {
       return;
     }
 
-    if (messageStateSelectors.isAIGenerating(store)) return;
+    if (operationSelectors.isAgentRuntimeRunning(store)) return;
 
     const inputMessage = store.inputMessage;
     // 发送时再取一次最新的文件列表，防止闭包拿到旧值
@@ -132,9 +133,9 @@ export const useSend = () => {
 
   const stop = () => {
     const store = getChatStoreState();
-    const generating = messageStateSelectors.isAIGenerating(store);
+    const isRunning = operationSelectors.isAgentRuntimeRunning(store);
 
-    if (generating) {
+    if (isRunning) {
       stopGenerateMessage();
       return;
     }
@@ -149,11 +150,11 @@ export const useSend = () => {
   return useMemo(
     () => ({
       disabled: canNotSend,
-      generating: generating || isSendingMessage,
+      generating: isAgentRuntimeRunning || isSendingMessage,
       send: handleSend,
       stop,
     }),
-    [canNotSend, generating, isSendingMessage, stop, handleSend],
+    [canNotSend, isAgentRuntimeRunning, isSendingMessage, stop, handleSend],
   );
 };
 
@@ -292,10 +293,10 @@ export const useSendGroupMessage = () => {
 
   const stop = useCallback(() => {
     const store = getChatStoreState();
-    const isAgentGenerating = messageStateSelectors.isAIGenerating(store);
+    const isAgentRunning = operationSelectors.isAgentRuntimeRunning(store);
     const isCreating = messageStateSelectors.isCreatingMessage(store);
 
-    if (isAgentGenerating) {
+    if (isAgentRunning) {
       stopGenerateMessage();
       return;
     }

@@ -63,7 +63,7 @@ describe('Operation Management Integration Tests', () => {
       // 3. Check status during execution
       expect(operationSelectors.hasAnyRunningOperation(result.current)).toBe(true);
       expect(operationSelectors.canSendMessage(result.current)).toBe(false);
-      expect(operationSelectors.isAIGenerating(result.current)).toBe(true);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
 
       // 4. Complete operation
       act(() => {

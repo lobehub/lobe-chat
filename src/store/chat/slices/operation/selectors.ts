@@ -165,11 +165,16 @@ const getCurrentOperationProgress = (s: ChatStoreState): number | undefined => {
 
 // === Backward Compatibility ===
 /**
- * Check if AI is generating (for backward compatibility)
- * Equivalent to: hasRunningOperationType('execAgentRuntime')
+ * Check if agent runtime is running
+ * Excludes operations that are aborting (cleaning up after cancellation)
  */
-const isAIGenerating = (s: ChatStoreState): boolean => {
-  return hasRunningOperationType('execAgentRuntime')(s);
+const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
+  const operationIds = s.operationsByType['execAgentRuntime'] || [];
+  return operationIds.some((id) => {
+    const op = s.operations[id];
+    // Exclude operations that are aborting (user already cancelled, just cleaning up)
+    return op && op.status === 'running' && !op.metadata.isAborting;
+  });
 };
 
 /**
@@ -264,6 +269,25 @@ const isMessageInToolCalling =
   };
 
 /**
+ * Check if currently aborting (cleaning up after user cancellation)
+ * Used to show "Cleaning up tool calls..." message
+ */
+const isAborting = (s: ChatStoreState): boolean => {
+  const currentOps = getCurrentContextOperations(s);
+  return currentOps.some((op) => op.status === 'running' && op.metadata.isAborting);
+};
+
+/**
+ * Check if a specific message is aborting
+ */
+const isMessageAborting =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.status === 'running' && op.metadata.isAborting);
+  };
+
+/**
  * Check if regenerating (for backward compatibility)
  */
 const isRegenerating = (s: ChatStoreState): boolean => {
@@ -296,11 +320,17 @@ export const operationSelectors = {
   getRunningOperations,
   hasAnyRunningOperation,
   hasRunningOperationType,
-  isAIGenerating,
+  /** @deprecated Use isAgentRuntimeRunning instead */
+isAIGenerating: isAgentRuntimeRunning,
+  
+isAborting,
+  
+  isAgentRuntimeRunning,
   isAnyMessageLoading,
   isContinuing,
   isInRAGFlow,
   isInSearchWorkflow,
+  isMessageAborting,
   isMessageContinuing,
   isMessageGenerating,
   isMessageInReasoning,

@@ -68,9 +68,6 @@ const isToolApiNameShining =
     return isStreaming || isPluginInvoking;
   };
 
-const isAIGenerating = (s: ChatStoreState) =>
-  operationSelectors.isAnyMessageLoading(mainDisplayChatIDs(s))(s);
-
 const isInRAGFlow = (s: ChatStoreState) =>
   s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
@@ -93,7 +90,6 @@ const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
   isInRAGFlow(s);
 
 export const messageStateSelectors = {
-  isAIGenerating,
   isCreatingMessage,
   isHasMessageLoading,
   isInRAGFlow,

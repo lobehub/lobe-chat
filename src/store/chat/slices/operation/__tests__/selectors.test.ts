@@ -229,10 +229,10 @@ describe('Operation Selectors', () => {
   });
 
   describe('backward compatibility selectors', () => {
-    it('isAIGenerating should work', () => {
+    it('isAgentRuntimeRunning should work', () => {
       const { result } = renderHook(() => useChatStore());
 
-      expect(operationSelectors.isAIGenerating(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
 
       act(() => {
         result.current.startOperation({
@@ -241,7 +241,7 @@ describe('Operation Selectors', () => {
         });
       });
 
-      expect(operationSelectors.isAIGenerating(result.current)).toBe(true);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
     });
 
     it('isSendingMessage should work', () => {

@@ -249,6 +249,15 @@ export const operationActions: StateCreator<
   },
 
   updateOperationMetadata: (operationId, metadata) => {
+    const operation = get().operations[operationId];
+    if (metadata.isAborting) {
+      log(
+        '[updateOperationMetadata] Setting isAborting=true for operation %s (type=%s)',
+        operationId,
+        operation?.type,
+      );
+    }
+
     set(
       produce((state: ChatStore) => {
         const operation = state.operations[operationId];
@@ -390,7 +399,13 @@ export const operationActions: StateCreator<
       // Ignore abort errors
     }
 
-    // 2. Call cancel handler if registered
+    // 2. Set isAborting flag immediately for execAgentRuntime operations
+    // This ensures UI (loading button) responds instantly to user cancellation
+    if (operation.type === 'execAgentRuntime') {
+      get().updateOperationMetadata(operationId, { isAborting: true });
+    }
+
+    // 3. Call cancel handler if registered
     if (operation.onCancelHandler) {
       log('[cancelOperation] calling cancel handler for %s (type=%s)', operationId, operation.type);
 
@@ -413,7 +428,7 @@ export const operationActions: StateCreator<
       }
     }
 
-    // 3. Update status
+    // 4. Update status
     set(
       produce((state: ChatStore) => {
         const op = state.operations[operationId];

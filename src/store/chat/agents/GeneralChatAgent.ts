@@ -134,6 +134,15 @@ export class GeneralChatAgent implements Agent {
         parentMessageId = payload.parentMessageId;
         break;
       }
+      case 'human_abort': {
+        // When user cancels during LLM streaming, we enter human_abort phase
+        // The payload contains tool calls info if LLM had started returning them
+        const payload = context.payload as any;
+        hasToolsCalling = payload.hasToolsCalling || false;
+        toolsCalling = payload.toolsCalling || [];
+        parentMessageId = payload.parentMessageId;
+        break;
+      }
       case 'tool_result':
       case 'tools_batch_result': {
         const payload = context.payload as GeneralAgentCallToolResultPayload;
