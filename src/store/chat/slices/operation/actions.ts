@@ -379,9 +379,9 @@ export const operationActions: StateCreator<
       return;
     }
 
-    // Skip if already cancelled
-    if (operation.status === 'cancelled') {
-      log('[cancelOperation] operation %s already cancelled, skipping', operationId);
+    // Skip if already cancelled or completed
+    if (operation.status === 'cancelled' || operation.status === 'completed') {
+      log('[cancelOperation] operation %s already %s, skipping', operationId, operation.status);
       return;
     }
 

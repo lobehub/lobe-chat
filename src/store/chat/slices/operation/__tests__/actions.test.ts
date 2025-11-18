@@ -214,6 +214,119 @@ describe('Operation Actions', () => {
       expect(result.current.operations[child1OpId!].status).toBe('cancelled');
       expect(result.current.operations[child2OpId!].status).toBe('cancelled');
     });
+
+    it('should not cancel already completed child operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let parentOpId: string;
+      let completedChildOpId: string;
+      let runningChildOpId: string;
+
+      act(() => {
+        parentOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        completedChildOpId = result.current.startOperation({
+          type: 'toolCalling',
+          parentOperationId: parentOpId,
+        }).operationId;
+
+        runningChildOpId = result.current.startOperation({
+          type: 'reasoning',
+          parentOperationId: parentOpId,
+        }).operationId;
+
+        // Complete the first child
+        result.current.completeOperation(completedChildOpId!);
+      });
+
+      // Verify initial states
+      expect(result.current.operations[completedChildOpId!].status).toBe('completed');
+      expect(result.current.operations[runningChildOpId!].status).toBe('running');
+
+      act(() => {
+        result.current.cancelOperation(parentOpId!);
+      });
+
+      // Parent and running child should be cancelled
+      expect(result.current.operations[parentOpId!].status).toBe('cancelled');
+      expect(result.current.operations[runningChildOpId!].status).toBe('cancelled');
+
+      // Completed child should remain completed (not cancelled)
+      expect(result.current.operations[completedChildOpId!].status).toBe('completed');
+    });
+
+    it('should not invoke cancel handler for already completed operations', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let parentOpId: string;
+      let completedChildOpId: string;
+      const completedChildHandler = vi.fn();
+
+      act(() => {
+        parentOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        completedChildOpId = result.current.startOperation({
+          type: 'toolCalling',
+          parentOperationId: parentOpId,
+        }).operationId;
+
+        // Register cancel handler
+        result.current.onOperationCancel(completedChildOpId!, completedChildHandler);
+
+        // Complete the child operation
+        result.current.completeOperation(completedChildOpId!);
+      });
+
+      act(() => {
+        result.current.cancelOperation(parentOpId!);
+      });
+
+      // Wait a bit to ensure no async handler calls
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      // Handler should NOT be called for completed operation
+      expect(completedChildHandler).not.toHaveBeenCalled();
+    });
+
+    it('should skip cancellation of already cancelled operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let operationId: string;
+
+      act(() => {
+        operationId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+        }).operationId;
+      });
+
+      // Cancel the operation
+      act(() => {
+        result.current.cancelOperation(operationId!, 'First cancellation');
+      });
+
+      expect(result.current.operations[operationId!].status).toBe('cancelled');
+      expect(result.current.operations[operationId!].metadata.cancelReason).toBe(
+        'First cancellation',
+      );
+
+      // Try to cancel again
+      act(() => {
+        result.current.cancelOperation(operationId!, 'Second cancellation');
+      });
+
+      // Should still have the first cancellation reason (not updated)
+      expect(result.current.operations[operationId!].status).toBe('cancelled');
+      expect(result.current.operations[operationId!].metadata.cancelReason).toBe(
+        'First cancellation',
+      );
+    });
   });
 
   describe('failOperation', () => {
