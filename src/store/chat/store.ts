@@ -9,14 +9,14 @@ import { ChatStoreState, initialState } from './initialState';
 import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/actions';
 import { ChatPortalAction, chatPortalSlice } from './slices/portal/action';
 import { ChatTranslateAction, chatTranslate } from './slices/translate/action';
-import { ChatMessageAction, chatMessage } from './slices/message/action';
-import { ChatPluginAction, chatPlugin } from './slices/plugin/action';
-import { ShareAction, chatShare } from './slices/share/action';
+import { ChatMessageAction, chatMessage } from './slices/message/actions';
+import { ChatPluginAction, chatPlugin } from './slices/plugin/actions';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
 import { ChatAIChatAction, chatAiChat } from './slices/aiChat/actions';
 import { ChatTTSAction, chatTTS } from './slices/tts/action';
 import { ChatThreadAction, chatThreadMessage } from './slices/thread/action';
 import { chatAiGroupChat, ChatGroupChatAction } from './slices/aiChat/actions/generateAIGroupChat';
+import { OperationActions, operationActions } from './slices/operation/actions';
 
 export interface ChatStoreAction
   extends ChatMessageAction,
@@ -24,12 +24,12 @@ export interface ChatStoreAction
     ChatAIChatAction,
     ChatGroupChatAction,
     ChatTopicAction,
-    ShareAction,
     ChatTranslateAction,
     ChatTTSAction,
     ChatPluginAction,
     ChatBuiltinToolAction,
-    ChatPortalAction {}
+    ChatPortalAction,
+    OperationActions {}
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
 
@@ -43,12 +43,12 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatAiChat(...params),
   ...chatAiGroupChat(...params),
   ...chatTopic(...params),
-  ...chatShare(...params),
   ...chatTranslate(...params),
   ...chatTTS(...params),
   ...chatToolSlice(...params),
   ...chatPlugin(...params),
   ...chatPortalSlice(...params),
+  ...operationActions(...params),
 
   // cloud
 });

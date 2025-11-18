@@ -131,6 +131,34 @@ describe('MessageCleanupProcessor', () => {
       });
     });
 
+    it('should preserve reasoning in assistant messages', async () => {
+      const processor = new MessageCleanupProcessor();
+      const reasoning = {
+        content: 'Let me think about this...',
+        signature: 'sha256:abc123',
+      };
+
+      const context = createContext([
+        {
+          content: 'Here is the answer',
+          extraField: 'remove',
+          id: 'msg5',
+          reasoning: reasoning,
+          role: 'assistant',
+          timestamp: Date.now(),
+        },
+      ]);
+
+      const result = await processor.process(context);
+
+      expect(result.messages).toHaveLength(1);
+      expect(result.messages[0]).toEqual({
+        content: 'Here is the answer',
+        reasoning: reasoning,
+        role: 'assistant',
+      });
+    });
+
     it('should clean tool messages with name', async () => {
       const processor = new MessageCleanupProcessor();
       const context = createContext([

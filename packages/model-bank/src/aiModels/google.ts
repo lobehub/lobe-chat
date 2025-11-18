@@ -370,6 +370,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-image',
     maxOutput: 8192,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -392,6 +393,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'imageInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
@@ -864,6 +866,7 @@ const googleImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-26',
     parameters: nanoBananaParameters,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -880,6 +883,7 @@ const googleImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-26',
     parameters: CHAT_MODEL_IMAGE_GENERATION_PARAMS,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -892,7 +896,7 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-generate-001',
     enabled: true,
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series',
+    description: 'Imagen 第四代文生图模型系列',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
     parameters: imagenGenParameters,
@@ -905,7 +909,7 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-ultra-generate-001',
     enabled: true,
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series Ultra version',
+    description: 'Imagen 第四代文生图模型系列的 Ultra 版本',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
     parameters: imagenGenParameters,
@@ -918,7 +922,7 @@ const googleImageModels: AIImageModelCard[] = [
     id: 'imagen-4.0-fast-generate-001',
     enabled: true,
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series Fast version',
+    description: 'Imagen 第四代文生图模型系列的快速版本',
     organization: 'Deepmind',
     releasedAt: '2025-08-15',
     parameters: imagenGenParameters,
@@ -930,9 +934,9 @@ const googleImageModels: AIImageModelCard[] = [
     displayName: 'Imagen 4 Preview 06-06',
     id: 'imagen-4.0-generate-preview-06-06',
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series',
+    description: 'Imagen 第四代文生图模型系列',
     organization: 'Deepmind',
-    releasedAt: '2024-06-06',
+    releasedAt: '2025-06-06',
     parameters: imagenGenParameters,
     pricing: {
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
@@ -942,7 +946,7 @@ const googleImageModels: AIImageModelCard[] = [
     displayName: 'Imagen 4 Ultra Preview 06-06',
     id: 'imagen-4.0-ultra-generate-preview-06-06',
     type: 'image',
-    description: 'Imagen 4th generation text-to-image model series Ultra version',
+    description: 'Imagen 第四代文生图模型系列的 Ultra 版本',
     organization: 'Deepmind',
     releasedAt: '2025-06-11',
     parameters: imagenGenParameters,

@@ -4,13 +4,15 @@ on:
   pull_request:
     types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 
-# 确保同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
+# 确保同一 PR 同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
 concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
+  group: pr-${{ github.event.pull_request.number }}-${{ github.workflow }}
   cancel-in-progress: true
 
 # Add default permissions
-permissions: read-all
+permissions:
+  contents: write
+  pull-requests: write
 
 env:
   PR_TAG_PREFIX: pr- # PR 构建版本的前缀标识
@@ -28,9 +30,9 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -62,9 +64,9 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       # 主要逻辑：确定构建版本号
@@ -107,9 +109,9 @@ jobs:
           run_install: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
@@ -124,6 +126,7 @@ jobs:
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} nightly
 
       # macOS 构建处理
+      # 注意：fork 的 PR 无法访问 secrets，会构建未签名版本
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
         run: npm run desktop:build
@@ -134,7 +137,7 @@ jobs:
           DATABASE_URL: "postgresql://postgres@localhost:5432/postgres"
           # 默认添加一个加密 SECRET
           KEY_VAULTS_SECRET: "oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE="
-          # macOS 签名和公证配置
+          # macOS 签名和公证配置（fork 的 PR 访问不到 secrets，会跳过签名）
           CSC_LINK: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
           CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
@@ -146,7 +149,8 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
-      #  Windows 平台构建处理
+      # Windows 平台构建处理
+      # 注意：fork 的 PR 无法访问 secrets，会构建未签名版本
       - name: Build artifact on Windows
         if: runner.os == 'Windows'
         run: npm run desktop:build
@@ -199,7 +203,7 @@ jobs:
 
       # 上传构建产物
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-${{ matrix.os }}
           path: |
@@ -226,9 +230,9 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -238,7 +242,7 @@ jobs:
 
       # 下载所有平台的构建产物
       - name: Download artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: release
           pattern: release-*
@@ -264,7 +268,7 @@ jobs:
 
       # 上传合并后的构建产物
       - name: Upload artifacts with merged macOS files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: merged-release-pr
           path: release/
@@ -273,6 +277,8 @@ jobs:
   publish-pr:
     needs: [merge-mac-files, version]
     name: Publish PR Build
+    # 只为非 fork 的 PR 发布（fork 的 PR 没有写权限）
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     # Grant write permissions for creating release and commenting on PR
     permissions:
@@ -287,7 +293,7 @@ jobs:
 
       # 下载合并后的构建产物
       - name: Download merged artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: merged-release-pr
           path: release

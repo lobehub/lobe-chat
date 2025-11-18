@@ -199,6 +199,12 @@
     "all": "الكل",
     "list": {
       "disabled": "غير مفعل",
+      "disabledActions": {
+        "sort": "طريقة الترتيب",
+        "sortAlphabetical": "ترتيب أبجديًا",
+        "sortAlphabeticalDesc": "ترتيب أبجدي عكسي",
+        "sortDefault": "الترتيب الافتراضي"
+      },
       "enabled": "مفعل"
     },
     "notFound": "لم يتم العثور على نتائج البحث",
@@ -391,7 +397,13 @@
       "addNew": "إضافة نموذج",
       "disabled": "غير مفعل",
       "disabledActions": {
-        "showMore": "عرض الكل"
+        "showMore": "عرض الكل",
+        "sort": "طريقة الترتيب",
+        "sortAlphabetical": "ترتيب أبجديًا",
+        "sortAlphabeticalDesc": "ترتيب أبجدي عكسي",
+        "sortDefault": "الترتيب الافتراضي",
+        "sortReleasedAt": "ترتيب حسب أقدم تاريخ إصدار",
+        "sortReleasedAtDesc": "ترتيب حسب أحدث تاريخ إصدار"
       },
       "empty": {
         "desc": "يرجى إنشاء نموذج مخصص أو سحب نموذج للبدء في الاستخدام",

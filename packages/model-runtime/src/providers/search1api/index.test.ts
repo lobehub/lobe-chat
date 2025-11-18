@@ -1,7 +1,7 @@
 // @vitest-environment node
-import { LobeOpenAICompatibleRuntime } from '@lobechat/model-runtime';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { LobeOpenAICompatibleRuntime } from '../../core/BaseAI';
 import { testProvider } from '../../providerTestUtils';
 import { LobeSearch1API, params } from './index';
 
@@ -830,9 +830,9 @@ describe('LobeSearch1API - custom features', () => {
     it('should handle mix of known and unknown models', async () => {
       mockClient.models.list.mockResolvedValue({
         data: [
-          { id: 'gpt-4o-mini' },
+          { id: 'gpt-4o' },
           { id: 'unknown-model-1' },
-          { id: 'claude-3-5-sonnet-20241022' },
+          { id: 'gpt-4o-mini' },
           { id: 'unknown-model-2' },
         ],
       });

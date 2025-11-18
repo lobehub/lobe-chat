@@ -6,7 +6,7 @@ const logger = createLogger('controllers:UpdaterCtr');
 
 export default class UpdaterCtr extends ControllerModule {
   /**
-   * 检查更新
+   * Check for updates
    */
   @ipcClientEvent('checkUpdate')
   async checkForUpdates() {
@@ -15,7 +15,7 @@ export default class UpdaterCtr extends ControllerModule {
   }
 
   /**
-   * 下载更新
+   * Download update
    */
   @ipcClientEvent('downloadUpdate')
   async downloadUpdate() {
@@ -24,7 +24,7 @@ export default class UpdaterCtr extends ControllerModule {
   }
 
   /**
-   * 关闭应用并安装更新
+   * Quit application and install update
    */
   @ipcClientEvent('installNow')
   quitAndInstallUpdate() {
@@ -33,7 +33,7 @@ export default class UpdaterCtr extends ControllerModule {
   }
 
   /**
-   * 下次启动时安装更新
+   * Install update on next startup
    */
   @ipcClientEvent('installLater')
   installLater() {

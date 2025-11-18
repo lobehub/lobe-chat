@@ -1,9 +1,9 @@
 'use client';
 
 import { Icon, Tag } from '@lobehub/ui';
-import { Link, useNavigate } from 'react-router-dom';
 import qs from 'query-string';
 import { memo, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/discover/features/const';
 import { withSuspense } from '@/components/withSuspense';
@@ -25,7 +25,7 @@ const Category = memo(() => {
     qs.stringifyUrl(
       {
         query: { category: key === McpCategory.All ? null : key, q },
-        url: '/mcp',
+        url: '/discover/mcp',
       },
       { skipNull: true },
     );

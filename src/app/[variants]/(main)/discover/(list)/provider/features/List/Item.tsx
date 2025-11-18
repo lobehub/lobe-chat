@@ -48,12 +48,13 @@ const ProviderItem = memo<DiscoverProviderItem>(
   ({ url, name, description, identifier, models }) => {
     const { styles, theme } = useStyles();
     const navigate = useNavigate();
-    const link = urlJoin('/provider', identifier);
+    const link = urlJoin('/discover/provider', identifier);
     const { t } = useTranslation(['discover', 'providers']);
 
     return (
       <Block
         clickable
+        data-testid="provider-item"
         height={'100%'}
         onClick={() => {
           navigate(link);

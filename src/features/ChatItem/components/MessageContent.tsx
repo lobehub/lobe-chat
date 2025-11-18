@@ -14,6 +14,7 @@ import { useStyles } from '../style';
 import { ChatItemProps } from '../type';
 
 export interface MessageContentProps {
+  className?: string;
   disabled?: ChatItemProps['disabled'];
   editing?: ChatItemProps['editing'];
   id: string;
@@ -40,6 +41,7 @@ const MessageContent = memo<MessageContentProps>(
     onDoubleClick,
     markdownProps,
     disabled,
+    className,
   }) => {
     const { t } = useTranslation('common');
     const { cx, styles } = useStyles({ disabled, editing, placement, primary, variant });

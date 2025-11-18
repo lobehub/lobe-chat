@@ -5,7 +5,7 @@ import {
   ChatTTS,
   ChatToolPayload,
   ChatTranslate,
-  MessageRoleType,
+  UIMessageRoleType,
 } from './message';
 import { MetaData } from './meta';
 import { SessionGroupId } from './session';
@@ -26,11 +26,11 @@ export interface ImportMessage {
   createdAt: number;
   error?: ChatMessageError;
 
-  // 扩展字段
+  // Extended fields
   extra?: {
-    fromModel?: string;
-    fromProvider?: string;
-    // 翻译
+    model?: string;
+    provider?: string;
+    // Translation
     translate?: ChatTranslate | false | null;
     // TTS
     tts?: ChatTTS;
@@ -51,7 +51,7 @@ export interface ImportMessage {
   pluginState?: any;
 
   quotaId?: string;
-  role: MessageRoleType;
+  role: UIMessageRoleType;
 
   sessionId?: string;
   tool_call_id?: string;
@@ -116,7 +116,7 @@ export enum ImportStage {
   Finished,
 }
 
-export interface FileUploadState {
+export interface ImportFileUploadState {
   progress: number;
   /**
    * rest time in ms
@@ -137,7 +137,7 @@ export interface ErrorShape {
 
 export interface OnImportCallbacks {
   onError?: (error: ErrorShape) => void;
-  onFileUploading?: (state: FileUploadState) => void;
+  onFileUploading?: (state: ImportFileUploadState) => void;
   onStageChange?: (stage: ImportStage) => void;
   /**
    *

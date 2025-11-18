@@ -2,9 +2,9 @@ import { ProviderIcon } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
-import { useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
+import { useSearchParams } from 'react-router-dom';
 
 import { AiProviderListItem, AiProviderSourceEnum } from '@/types/aiProvider';
 
@@ -42,7 +42,7 @@ interface ProviderItemProps extends AiProviderListItem {
 const ProviderItem = memo<ProviderItemProps>(
   ({ id, name, source, enabled, logo, onClick = () => {} }) => {
     const { styles, cx } = useStyles();
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     const activeKey = searchParams.get('provider');
 

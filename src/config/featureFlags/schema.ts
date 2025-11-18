@@ -9,7 +9,6 @@ export const FeatureFlagsSchema = z.object({
   pin_list: FeatureFlagValue.optional(),
 
   // settings
-  language_model_settings: FeatureFlagValue.optional(),
   provider_settings: FeatureFlagValue.optional(),
 
   openai_api_key: FeatureFlagValue.optional(),
@@ -29,8 +28,6 @@ export const FeatureFlagsSchema = z.object({
 
   welcome_suggest: FeatureFlagValue.optional(),
   changelog: FeatureFlagValue.optional(),
-
-  clerk_sign_up: FeatureFlagValue.optional(),
 
   market: FeatureFlagValue.optional(),
   knowledge_base: FeatureFlagValue.optional(),
@@ -71,7 +68,6 @@ export const evaluateFeatureFlag = (
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   pin_list: false,
 
-  language_model_settings: true,
   provider_settings: true,
 
   openai_api_key: true,
@@ -92,8 +88,6 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   knowledge_base: true,
   rag_eval: false,
-
-  clerk_sign_up: true,
 
   cloud_promotion: false,
 
@@ -116,7 +110,6 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
 
     showCreateSession: evaluateFeatureFlag(config.create_session, userId),
     enableGroupChat: evaluateFeatureFlag(config.group_chat, userId),
-    showLLM: evaluateFeatureFlag(config.language_model_settings, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
     showPinList: evaluateFeatureFlag(config.pin_list, userId),
 
@@ -132,8 +125,6 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
 
     enableCheckUpdates: evaluateFeatureFlag(config.check_updates, userId),
     showWelcomeSuggest: evaluateFeatureFlag(config.welcome_suggest, userId),
-
-    enableClerkSignUp: evaluateFeatureFlag(config.clerk_sign_up, userId),
 
     enableKnowledgeBase: evaluateFeatureFlag(config.knowledge_base, userId),
     enableRAGEval: evaluateFeatureFlag(config.rag_eval, userId),

@@ -17,17 +17,18 @@
   "availableAgents": "利用可能なアシスタント",
   "backToBottom": "現在に戻る",
   "chatList": {
+    "expandMessage": "メッセージを展開",
     "longMessageDetail": "詳細を見る"
   },
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
-  "confirmRemoveChatGroupItemAlert": "このグループチャットを削除しますが、グループメンバーには影響しません。操作を確認してください。",
+  "confirmRemoveChatGroupItemAlert": "このエージェントチームを削除しようとしています。チームメンバーには影響しません。操作を確認してください。",
   "confirmRemoveGroupItemAlert": "このグループを削除すると、グループ内のアシスタントはデフォルトの一覧に移動します。操作を続行してもよろしいですか？",
-  "confirmRemoveGroupSuccess": "グループチャットが正常に削除されました",
+  "confirmRemoveGroupSuccess": "エージェントチームの削除に成功しました",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionSuccess": "セッションが正常に削除されました",
   "defaultAgent": "デフォルトエージェント",
-  "defaultGroupChat": "グループチャット",
+  "defaultGroupChat": "エージェントチーム",
   "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
   "dm": {
@@ -77,7 +78,7 @@
     "removeMember": "メンバーを削除",
     "title": "グループ"
   },
-  "groupDescription": "グループの説明",
+  "groupDescription": "チームの説明",
   "groupSidebar": {
     "members": {
       "addMember": "メンバーを追加",
@@ -96,13 +97,13 @@
   },
   "groupWizard": {
     "chooseMembers": "既存のアシスタントを選択...",
-    "createGroup": "グループチャットを作成",
-    "existingMembers": "既存のメンバー",
+    "createGroup": "チームを作成",
+    "existingMembers": "既存のエージェント",
     "groupMembers": "これらのアシスタントもあなたのリストに追加されます",
     "host": {
-      "description": "グループチャットの自動運用を実現する",
-      "title": "ホスト",
-      "tooltip": "グループチャットのホストを無効にすると、メンバーに返信してもらうには手動で@メンションする必要があります"
+      "description": "チームの自律的な運営を可能にします",
+      "title": "ホストを有効にする",
+      "tooltip": "チームホストを無効にすると、メンバーに返信してもらうには手動で@メンションする必要があります"
     },
     "memberCount": "{{count}} 人のメンバー",
     "noMatchingTemplates": "一致するテンプレートがありません",
@@ -110,7 +111,7 @@
     "noTemplateMembers": "テンプレートにメンバーがいません",
     "noTemplates": "利用可能なテンプレートがありません",
     "searchTemplates": "テンプレートを検索...",
-    "title": "グループチャットの作成",
+    "title": "エージェントチームを作成",
     "useTemplate": "テンプレートを使用する"
   },
   "hideForYou": "プライベートメッセージの内容は非表示です。設定で【プライベートメッセージの内容を表示】を有効にしてご覧ください。",
@@ -162,19 +163,22 @@
   "memberSelection": {
     "addMember": "メンバーを追加",
     "allMembers": "全メンバー",
-    "createGroup": "グループチャットを作成",
-    "noAvailableAgents": "招待可能なアシスタントがいません",
-    "noSelectedAgents": "アシスタントが選択されていません",
-    "searchAgents": "アシスタントを検索...",
-    "setInitialMembers": "グループメンバーを選択"
+    "createGroup": "エージェントチームを作成",
+    "noAvailableAgents": "招待可能なエージェントがいません",
+    "noSelectedAgents": "エージェントがまだ選択されていません",
+    "searchAgents": "エージェントを検索...",
+    "setInitialMembers": "チームメンバーを選択"
   },
   "members": "メンバー",
   "mention": {
     "title": "メンバーをメンション"
   },
   "messageAction": {
+    "collapse": "メッセージを折りたたむ",
+    "continueGeneration": "生成を続ける",
     "delAndRegenerate": "削除して再生成",
     "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
+    "expand": "メッセージを展開",
     "regenerate": "再生成"
   },
   "messages": {
@@ -229,16 +233,17 @@
     "jumpToMessage": "メッセージ {{index}} へジャンプ",
     "nextMessage": "次のメッセージ",
     "previousMessage": "前のメッセージ",
-    "senderAssistant": "アシスタント",
+    "senderAssistant": "エージェント",
     "senderUser": "あなた"
   },
   "newAgent": "新しいエージェント",
-  "newGroupChat": "新しいグループチャットを作成",
-  "noAgentsYet": "このグループにはまだアシスタントがいません。「+」ボタンをクリックしてアシスタントを招待してください。",
-  "noAvailableAgents": "招待できるアシスタントがいません",
-  "noMatchingAgents": "一致するアシスタントが見つかりません",
+  "newGroupChat": "新しいエージェントチーム",
+  "noAgentsYet": "このエージェントチームにはまだメンバーがいません。+ ボタンをクリックしてアシスタントを招待してください。",
+  "noAvailableAgents": "招待可能なメンバーがいません",
+  "noMatchingAgents": "一致するメンバーが見つかりません",
   "noMembersYet": "このグループにはまだメンバーがいません。「＋」ボタンをクリックしてアシスタントを招待してください。",
-  "noSelectedAgents": "まだアシスタントが選択されていません",
+  "noSelectedAgents": "メンバーがまだ選択されていません",
+  "openInNewWindow": "新しいウィンドウで開く",
   "owner": "グループ管理者",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
@@ -325,6 +330,11 @@
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
     "text": "テキスト",
+    "widthMode": {
+      "label": "幅のモード",
+      "narrow": "ナローモード",
+      "wide": "ワイドモード"
+    },
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",
@@ -366,6 +376,28 @@
     "overload": "制限を超えています",
     "remained": "残り",
     "used": "使用済み"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "承認",
+      "approveAndRemember": "承認して記憶する",
+      "approveOnce": "今回のみ承認",
+      "mode": {
+        "allowList": "ホワイトリスト",
+        "allowListDesc": "承認されたツールのみ自動実行されます",
+        "autoRun": "自動承認",
+        "autoRunDesc": "すべてのツール実行を自動的に承認します",
+        "manual": "手動",
+        "manualDesc": "毎回の呼び出しに手動承認が必要です"
+      },
+      "reject": "拒否",
+      "rejectAndContinue": "拒否して再実行",
+      "rejectOnly": "拒否",
+      "rejectReasonPlaceholder": "拒否理由を入力すると、エージェントが理解し今後の行動を最適化するのに役立ちます",
+      "rejectTitle": "今回のツール呼び出しを拒否",
+      "rejectedWithReason": "今回のツール呼び出しは次の理由で拒否されました:{{reason}}",
+      "toolRejected": "今回のツール呼び出しは拒否されました"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "新しいトピックを開始しますか？",

@@ -1,6 +1,6 @@
-import { BaseDataModel } from '@/types/meta';
+import type { BaseDataModel } from '../meta';
 
-// 类型定义
+// Type definitions
 export type TimeGroupId =
   | 'today'
   | 'yesterday'
@@ -50,4 +50,18 @@ export interface TopicRankItem {
   id: string;
   sessionId: string | null;
   title: string | null;
+}
+
+export interface CreateTopicParams {
+  favorite?: boolean;
+  groupId?: string | null;
+  messages?: string[];
+  sessionId?: string | null;
+  title: string;
+}
+
+export interface QueryTopicParams {
+  containerId?: string | null; // sessionId or groupId
+  current?: number;
+  pageSize?: number;
 }

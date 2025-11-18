@@ -1,5 +1,11 @@
+import {
+  FetchSSEOptions,
+  fetchSSE,
+  getMessageError,
+  standardizeAnimationStyle,
+} from '@lobechat/fetch-sse';
 import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
-import { ChatErrorType, TracePayload, TraceTagMap } from '@lobechat/types';
+import { ChatErrorType, TracePayload, TraceTagMap, UIChatMessage } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { merge } from 'lodash-es';
 import { ModelProvider } from 'model-bank';
@@ -22,18 +28,9 @@ import {
   userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
-import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
-import {
-  fetchWithInvokeStream,
-} from '@/utils/electron/desktopRemoteRPCFetch';
+import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
-import {
-  FetchSSEOptions,
-  fetchSSE,
-  getMessageError,
-  standardizeAnimationStyle,
-} from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth } from '../_auth';
@@ -44,23 +41,23 @@ import { findDeploymentName, isEnableFetchOnClient, resolveRuntimeProvider } fro
 import { FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
 }
 
 type ChatStreamInputParams = Partial<Omit<ChatStreamPayload, 'messages'>> & {
-  messages?: (ChatMessage | OpenAIChatMessage)[];
+  messages?: (UIChatMessage | OpenAIChatMessage)[];
 };
 
 interface FetchAITaskResultParams extends FetchSSEOptions {
   abortController?: AbortController;
   onError?: (e: Error, rawError?: any) => void;
   /**
-   * 加载状态变化处理函数
-   * @param loading - 是否处于加载状态
+   * Loading state change handler function
+   * @param loading - Whether in loading state
    */
   onLoadingChange?: (loading: boolean) => void;
   /**
-   * 请求对象
+   * Request object
    */
   params: ChatStreamInputParams;
   trace?: TracePayload;
@@ -69,7 +66,6 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   historySummary?: string;
-  isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
 }
@@ -116,9 +112,7 @@ class ChatService {
       enableHistoryCount: agentChatConfigSelectors.enableHistoryCount(agentStoreState),
       // include user messages
       historyCount: agentChatConfigSelectors.historyCount(agentStoreState) + 2,
-      historySummary: options?.historySummary,
       inputTemplate: chatConfig.inputTemplate,
-      isWelcomeQuestion: options?.isWelcomeQuestion,
       messages,
       model: payload.model,
       provider: payload.provider!,
@@ -180,6 +174,13 @@ class ChatService {
         extendParams.reasoning_effort = chatConfig.gpt5ReasoningEffort;
       }
 
+      if (
+        modelExtendParams!.includes('gpt5_1ReasoningEffort') &&
+        chatConfig.gpt5_1ReasoningEffort
+      ) {
+        extendParams.reasoning_effort = chatConfig.gpt5_1ReasoningEffort;
+      }
+
       if (modelExtendParams!.includes('textVerbosity') && chatConfig.textVerbosity) {
         extendParams.verbosity = chatConfig.textVerbosity;
       }
@@ -220,12 +221,10 @@ class ChatService {
     onErrorHandle,
     onFinish,
     trace,
-    isWelcomeQuestion,
     historySummary,
   }: CreateAssistantMessageStream) => {
     await this.createAssistantMessage(params, {
       historySummary,
-      isWelcomeQuestion,
       onAbort,
       onErrorHandle,
       onFinish,
@@ -273,6 +272,12 @@ class ChatService {
       },
       { ...res, apiMode, model },
     );
+
+    // Convert null to undefined for model params to prevent sending null values to API
+    if (payload.temperature === null) payload.temperature = undefined;
+    if (payload.top_p === null) payload.top_p = undefined;
+    if (payload.presence_penalty === null) payload.presence_penalty = undefined;
+    if (payload.frequency_penalty === null) payload.frequency_penalty = undefined;
 
     const sdkType = resolveRuntimeProvider(provider);
 
@@ -401,7 +406,7 @@ class ChatService {
     onLoadingChange?.(true);
 
     try {
-      const oaiMessages = await contextEngineering({
+      const llmMessages = await contextEngineering({
         messages: params.messages as any,
         model: params.model!,
         provider: params.provider!,
@@ -418,7 +423,7 @@ class ChatService {
       // remove plugins
       delete params.plugins;
       await this.getChatCompletion(
-        { ...params, messages: oaiMessages, tools },
+        { ...params, messages: llmMessages, tools },
         {
           onErrorHandle: (error) => {
             errorHandle(new Error(error.message), error);

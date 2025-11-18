@@ -10,16 +10,16 @@ import {
 } from '@lobehub/ui';
 import { App } from 'antd';
 import { BrainIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useAiInfraStore } from '@/store/aiInfra/store';
 import { CreateAiProviderParams } from '@/types/aiProvider';
 
-import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../customProviderSdkOptions';
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
+import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../customProviderSdkOptions';
 
 interface CreateNewProviderProps {
   onClose?: () => void;
@@ -31,7 +31,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
   const [loading, setLoading] = useState(false);
   const createNewAiProvider = useAiInfraStore((s) => s.createNewAiProvider);
   const { message } = App.useApp();
-  const router = useRouter();
+  const navigate = useNavigate();
   const onFinish = async (values: CreateAiProviderParams) => {
     setLoading(true);
 
@@ -44,7 +44,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
 
       await createNewAiProvider(finalValues);
       setLoading(false);
-      router.push(`/settings?active=provider&provider=${values.id}`);
+      navigate(`/settings?active=provider&provider=${values.id}`);
       message.success(t('createNewAiProvider.createSuccess'));
       onClose?.();
     } catch (e) {
@@ -142,7 +142,6 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
   return (
     <FormModal
       destroyOnHidden
-      height={'90%'}
       items={[
         {
           children: basicItems,

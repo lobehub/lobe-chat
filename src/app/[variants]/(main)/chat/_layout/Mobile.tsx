@@ -1,14 +1,14 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { Suspense, memo } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { withSuspense } from '@/components/withSuspense';
-import InitClientDB from '@/features/InitClientDB';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 
-import { LayoutProps } from './type';
+import SessionPanelContent from '../components/SessionPanel';
+import { Outlet } from 'react-router-dom';
 
 const useStyles = createStyles(({ css, token }) => ({
   main: css`
@@ -18,7 +18,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Layout = memo<LayoutProps>(({ children, session }) => {
+const Layout = memo(( ) => {
   const showMobileWorkspace = useShowMobileWorkspace();
   const { styles } = useStyles();
 
@@ -30,7 +30,7 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
         style={showMobileWorkspace ? { display: 'none' } : undefined}
         width="100%"
       >
-        {session}
+        <SessionPanelContent mobile />
       </Flexbox>
       <Flexbox
         className={styles.main}
@@ -38,11 +38,8 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
         style={showMobileWorkspace ? undefined : { display: 'none' }}
         width="100%"
       >
-        {children}
+        <Outlet />
       </Flexbox>
-      <Suspense>
-        <InitClientDB bottom={100} />
-      </Suspense>
     </>
   );
 });

@@ -41,9 +41,29 @@
         "openingMessage": "시작 메시지",
         "openingQuestions": "시작 질문",
         "title": "도우미 설정"
+      },
+      "version": {
+        "empty": "이전 버전이 없습니다",
+        "status": {
+          "archived": "보관됨",
+          "deprecated": "거부됨",
+          "unpublished": "검토 중"
+        },
+        "table": {
+          "isLatest": "최신 버전",
+          "isValidated": "검증됨",
+          "publishAt": "출시일",
+          "version": "버전 번호"
+        },
+        "title": "버전 기록"
       }
     },
     "list": "도우미 목록",
+    "marketSource": {
+      "label": "마켓 소스 전환",
+      "legacy": "이전 마켓",
+      "new": "신규 마켓"
+    },
     "more": "더 보기",
     "plugins": "통합 플러그인",
     "recentSubmits": "최근 업데이트",
@@ -51,9 +71,34 @@
       "createdAt": "최신 등록",
       "identifier": "도우미 ID",
       "knowledgeCount": "지식 기반 수",
+      "myown": "내가 만든 것 보기",
       "pluginCount": "플러그인 수",
       "title": "도우미 이름",
       "tokenUsage": "토큰 사용량"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "보안 또는 정치적 문제로 인해 공식적으로 마켓에서 제거됨",
+          "owner": "개발자가 자발적으로 보관 또는 제거함"
+        },
+        "subtitle": "현재 접근 중인 어시스턴트는 다음과 같은 이유로 보관되었습니다:",
+        "title": "어시스턴트가 보관되었습니다"
+      },
+      "backToMarket": "어시스턴트 마켓으로 돌아가기",
+      "deprecated": {
+        "reasons": {
+          "official": "보안 또는 정치적 문제로 인해 공식적으로 마켓에서 제거됨",
+          "owner": "개발자가 자발적으로 거부 또는 제거함"
+        },
+        "subtitle": "현재 접근 중인 어시스턴트는 다음과 같은 이유로 거부되었습니다:",
+        "title": "어시스턴트가 거부되었습니다"
+      },
+      "support": "문제가 있으시면 링크를 복사하여 <1>support@lobehub.com</1> 으로 문의해 주세요.",
+      "unpublished": {
+        "subtitle": "현재 접근 중인 어시스턴트는 버전 검토 중입니다. 문의 사항이 있으시면 링크를 복사하여 <1>support@lobehub.com</1> 으로 문의해 주세요.",
+        "title": "어시스턴트 검토 중"
+      }
     },
     "suggestions": "추천 도우미",
     "systemRole": "도우미 설정",

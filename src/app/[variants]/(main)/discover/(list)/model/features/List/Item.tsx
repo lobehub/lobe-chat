@@ -57,10 +57,11 @@ const ModelItem = memo<DiscoverModelItem>(
     const { t } = useTranslation(['models', 'discover']);
     const { styles } = useStyles();
     const navigate = useNavigate();
-    const link = urlJoin('/model', identifier);
+    const link = urlJoin('/discover/model', identifier);
     return (
       <Block
         clickable
+        data-testid="model-item"
         height={'100%'}
         onClick={() => {
           navigate(link);

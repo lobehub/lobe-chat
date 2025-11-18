@@ -21,6 +21,7 @@ jobs:
           - python-interpreter
           - context-engine
           - agent-runtime
+          - conversation-flow
 
     name: Test package ${{ matrix.package }}
 
@@ -28,9 +29,9 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -63,9 +64,9 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -96,9 +97,9 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install bun
@@ -119,6 +120,43 @@ jobs:
           files: ./coverage/app/lcov.info
           flags: app
 
+  test-desktop:
+    name: Test Desktop App
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Install deps
+        run: pnpm install
+        working-directory: apps/desktop
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+
+      - name: Test Desktop Client
+        run: pnpm test
+        working-directory: apps/desktop
+
+      - name: Upload Desktop App Coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./apps/desktop/coverage/lcov.info
+          flags: desktop
+
   test-databsae:
     name: Test Database
 
@@ -132,7 +170,6 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
 
-
         ports:
           - 5432:5432
 
@@ -140,9 +177,9 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           package-manager-cache: false
 
       - name: Install pnpm
@@ -157,7 +194,7 @@ jobs:
       - name: Test Client DB
         run: pnpm --filter @lobechat/database test:client-db
         env:
-          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
+          KEY_VAULTS_SECRET: Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 
@@ -166,8 +203,7 @@ jobs:
         env:
           DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
           DATABASE_DRIVER: node
-          NEXT_PUBLIC_SERVICE_MODE: server
-          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
+          KEY_VAULTS_SECRET: Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
           S3_PUBLIC_DOMAIN: https://example.com
           APP_URL: https://home.com
 

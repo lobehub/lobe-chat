@@ -1,3 +1,4 @@
+import { SendMessageParams } from '@lobechat/types';
 import { useMemo, useState } from 'react';
 
 import { useGeminiChineseWarning } from '@/hooks/useGeminiChineseWarning';
@@ -5,7 +6,6 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
-import { SendMessageParams } from '@/types/message';
 
 export type UseSendMessageParams = Pick<
   SendMessageParams,
@@ -17,7 +17,7 @@ export const useSendThreadMessage = () => {
   const canNotSend = useChatStore(threadSelectors.isSendButtonDisabledByMessage);
   const generating = useChatStore((s) => threadSelectors.isThreadAIGenerating(s));
   const stop = useChatStore((s) => s.stopGenerateMessage);
-  const [sendMessage, updateInputMessage] = useChatStore((s) => [
+  const [sendMessage, updateMessageInput] = useChatStore((s) => [
     s.sendThreadMessage,
     s.updateThreadInputMessage,
   ]);
@@ -54,11 +54,11 @@ export const useSendThreadMessage = () => {
 
     if (!shouldContinue) return;
 
-    updateInputMessage(inputMessage);
+    updateMessageInput(inputMessage);
 
     sendMessage({ message: inputMessage, ...params });
 
-    updateInputMessage('');
+    updateMessageInput('');
     threadInputEditor.clearContent();
     threadInputEditor.focus();
   };

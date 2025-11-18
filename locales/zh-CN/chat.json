@@ -17,17 +17,18 @@
   "availableAgents": "可用助手",
   "backToBottom": "跳转至当前",
   "chatList": {
+    "expandMessage": "展开消息",
     "longMessageDetail": "查看详情"
   },
   "clearCurrentMessages": "清空当前会话消息",
   "confirmClearCurrentMessages": "即将清空当前会话消息，清空后将无法找回，请确认你的操作",
-  "confirmRemoveChatGroupItemAlert": "即将删除该群聊，群聊成员不受影响，请确认你的操作",
+  "confirmRemoveChatGroupItemAlert": "即将删除该 Agent 团队，团队成员不受影响，请确认你的操作",
   "confirmRemoveGroupItemAlert": "即将删除该分组，删除后该分组的助手将移动到默认列表，请确认你的操作",
-  "confirmRemoveGroupSuccess": "群聊删除成功",
+  "confirmRemoveGroupSuccess": "Agent 团队删除成功",
   "confirmRemoveSessionItemAlert": "即将删除该助手，删除后该将无法找回，请确认你的操作",
   "confirmRemoveSessionSuccess": "助手删除成功",
   "defaultAgent": "自定义助手",
-  "defaultGroupChat": "群聊",
+  "defaultGroupChat": "Agent 团队",
   "defaultList": "默认列表",
   "defaultSession": "自定义助手",
   "dm": {
@@ -77,7 +78,7 @@
     "removeMember": "移除成员",
     "title": "群组"
   },
-  "groupDescription": "群组描述",
+  "groupDescription": "团队描述",
   "groupSidebar": {
     "members": {
       "addMember": "添加成员",
@@ -96,13 +97,13 @@
   },
   "groupWizard": {
     "chooseMembers": "选择现有助手...",
-    "createGroup": "创建群聊",
-    "existingMembers": "已有助手",
+    "createGroup": "创建团队",
+    "existingMembers": "已有 Agent",
     "groupMembers": "这些助手也将被添加到您的列表中",
     "host": {
-      "description": "使群聊自动化运行",
-      "title": "主持人",
-      "tooltip": "如果禁用群聊主持人，您需要手动@提及成员才能让他们回复"
+      "description": "使团队自主运行",
+      "title": "启用主持人",
+      "tooltip": "如果禁用团队主持人，您需要手动@提及成员才能让他们回复"
     },
     "memberCount": "{{count}} 个成员",
     "noMatchingTemplates": "没有匹配的模板",
@@ -110,7 +111,7 @@
     "noTemplateMembers": "模板中没有成员",
     "noTemplates": "没有可用的模板",
     "searchTemplates": "搜索模板...",
-    "title": "创建群聊",
+    "title": "创建 Agent 团队",
     "useTemplate": "使用模板"
   },
   "hideForYou": "私信内容已经隐藏，请在设置中开启【显示私信内容】以查看",
@@ -162,19 +163,22 @@
   "memberSelection": {
     "addMember": "添加成员",
     "allMembers": "全体成员",
-    "createGroup": "创建群聊",
-    "noAvailableAgents": "没有可邀请的助手",
-    "noSelectedAgents": "还未选择助手",
-    "searchAgents": "搜索助手...",
-    "setInitialMembers": "选择群成员"
+    "createGroup": "创建 Agent 团队",
+    "noAvailableAgents": "没有可邀请的 Agent",
+    "noSelectedAgents": "还未选择 Agent",
+    "searchAgents": "搜索 Agent...",
+    "setInitialMembers": "选择团队成员"
   },
   "members": "Members",
   "mention": {
     "title": "提及成员"
   },
   "messageAction": {
+    "collapse": "收起消息",
+    "continueGeneration": "继续生成",
     "delAndRegenerate": "删除并重新生成",
     "deleteDisabledByThreads": "存在子话题，不能删除",
+    "expand": "展开消息",
     "regenerate": "重新生成"
   },
   "messages": {
@@ -229,16 +233,17 @@
     "jumpToMessage": "跳转至第 {{index}} 条消息",
     "nextMessage": "下一条消息",
     "previousMessage": "上一条消息",
-    "senderAssistant": "助手",
+    "senderAssistant": "Agent",
     "senderUser": "你"
   },
   "newAgent": "新建助手",
-  "newGroupChat": "新建群聊",
-  "noAgentsYet": "此群组还没有助手。点击 + 按钮邀请助手。",
-  "noAvailableAgents": "没有可邀请的助手",
-  "noMatchingAgents": "没有匹配的助手",
+  "newGroupChat": "新建 Agent 团队",
+  "noAgentsYet": "此 Agent 团队还没有成员。点击 + 按钮邀请助手。",
+  "noAvailableAgents": "没有可邀请的成员",
+  "noMatchingAgents": "没有匹配的成员",
   "noMembersYet": "此群组还没有成员。点击 + 按钮邀请助手。",
-  "noSelectedAgents": "还未选择助手",
+  "noSelectedAgents": "还未选择成员",
+  "openInNewWindow": "单独打开页面",
   "owner": "群主",
   "pin": "置顶",
   "pinOff": "取消置顶",
@@ -325,6 +330,11 @@
     "screenshot": "截图",
     "settings": "导出设置",
     "text": "文本",
+    "widthMode": {
+      "label": "宽度模式",
+      "narrow": "窄屏模式",
+      "wide": "宽屏模式"
+    },
     "withBackground": "包含背景图片",
     "withFooter": "包含页脚",
     "withPluginInfo": "包含插件信息",
@@ -366,6 +376,28 @@
     "overload": "超过限制",
     "remained": "剩余",
     "used": "使用"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "批准",
+      "approveAndRemember": "批准并记住",
+      "approveOnce": "仅本次批准",
+      "mode": {
+        "allowList": "白名单",
+        "allowListDesc": "仅自动执行已批准的工具",
+        "autoRun": "自动批准",
+        "autoRunDesc": "自动批准所有工具执行",
+        "manual": "手动",
+        "manualDesc": "每次调用都需要手动批准"
+      },
+      "reject": "拒绝",
+      "rejectAndContinue": "拒绝后重试执行",
+      "rejectOnly": "拒绝",
+      "rejectReasonPlaceholder": "输入拒绝原因将帮助 Agent 理解并优化后续行动",
+      "rejectTitle": "拒绝本次工具调用",
+      "rejectedWithReason": "本次工具调用被主动拒绝:{{reason}}",
+      "toolRejected": "本次工具调用被主动拒绝"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "是否开启新话题?",

@@ -1,8 +1,8 @@
+import { UIChatMessage } from '@lobechat/types';
 import { render, screen } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useChatStore } from '@/store/chat';
-import { ChatMessage } from '@/types/message';
 
 import { AssistantMessageExtra } from './index';
 
@@ -24,7 +24,7 @@ vi.mock('@/store/chat', () => ({
   useChatStore: vi.fn(),
 }));
 
-const mockData: ChatMessage = {
+const mockData = {
   content: 'test-content',
   createdAt: 0,
   id: 'abc',
@@ -46,20 +46,15 @@ describe('AssistantMessageExtra', () => {
     expect(screen.queryByText('Translate Component')).toBeNull();
   });
 
-  it('should not render content if extra is defined but does not contain fromModel, tts, or translate', async () => {
+  it('should not render content if extra is defined but does not contain model, tts, or translate', async () => {
     render(<AssistantMessageExtra {...mockData} extra={{}} />);
     expect(screen.queryByText('Usage Component')).toBeNull();
     expect(screen.queryByText('TTS Component')).toBeNull();
     expect(screen.queryByText('Translate Component')).toBeNull();
   });
 
-  it('should render Usage component if extra.fromModel exists', async () => {
-    render(
-      <AssistantMessageExtra
-        {...mockData}
-        extra={{ fromModel: 'gpt-4', fromProvider: 'openai' }}
-      />,
-    );
+  it('should render Usage component if model prop exists', async () => {
+    render(<AssistantMessageExtra {...mockData} model="gpt-4" provider="openai" />);
 
     expect(screen.getByText('Usage Component')).toBeInTheDocument();
   });

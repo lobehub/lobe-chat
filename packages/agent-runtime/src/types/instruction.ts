@@ -1,7 +1,7 @@
-import type { ModelUsage } from '@lobechat/types';
+import { ChatToolPayload, ModelUsage } from '@lobechat/types';
 
 import type { FinishReason } from './event';
-import { AgentState, ToolRegistry, ToolsCalling } from './state';
+import { AgentState, ToolRegistry } from './state';
 import type { Cost, CostCalculationContext, Usage } from './usage';
 
 /**
@@ -9,6 +9,10 @@ import type { Cost, CostCalculationContext, Usage } from './usage';
  */
 export interface AgentRuntimeContext {
   metadata?: Record<string, unknown>;
+
+  /** Operation ID (links to Operation for business context) */
+  operationId?: string;
+
   /** Phase-specific payload/context */
   payload?: unknown;
   /** Current execution phase */
@@ -21,15 +25,16 @@ export interface AgentRuntimeContext {
     | 'human_response'
     | 'human_approved_tool'
     | 'error';
-  /** Session */
-  session: {
+
+  /** Session info (kept for backward compatibility, will be optional in the future) */
+  session?: {
     messageCount: number;
     sessionId: string;
     status: AgentState['status'];
     stepCount: number;
   };
   /** Usage statistics from the current step (if applicable) */
-  stepUsage?: ModelUsage;
+  stepUsage?: ModelUsage | unknown;
 }
 
 /**
@@ -86,6 +91,7 @@ export interface CallLLMPayload {
   isFirstMessage?: boolean;
   messages: any[];
   model: string;
+  parentId?: string;
   provider: string;
   tools: any[];
 }
@@ -104,12 +110,18 @@ export interface AgentInstructionCallLlm {
 }
 
 export interface AgentInstructionCallTool {
-  payload: any;
+  payload: {
+    parentMessageId: string;
+    toolCalling: ChatToolPayload;
+  };
   type: 'call_tool';
 }
 
 export interface AgentInstructionCallToolsBatch {
-  payload: any[];
+  payload: {
+    parentMessageId: string;
+    toolsCalling: ChatToolPayload[];
+  } & any;
   type: 'call_tools_batch';
 }
 
@@ -130,8 +142,9 @@ export interface AgentInstructionRequestHumanSelect {
 }
 
 export interface AgentInstructionRequestHumanApprove {
-  pendingToolsCalling: ToolsCalling[];
+  pendingToolsCalling: ChatToolPayload[];
   reason?: string;
+  skipCreateToolMessage?: boolean;
   type: 'request_human_approve';
 }
 

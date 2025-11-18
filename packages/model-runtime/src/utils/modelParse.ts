@@ -32,6 +32,7 @@ export const MODEL_LIST_CONFIGS = {
   deepseek: {
     functionCallKeywords: ['v3', 'r1', 'deepseek-chat'],
     reasoningKeywords: ['r1', 'deepseek-reasoner', 'v3.1', 'v3.2'],
+    visionKeywords: ['ocr'],
   },
   google: {
     excludeKeywords: ['tts'],
@@ -57,6 +58,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking'],
     visionKeywords: [],
   },
+  minimax: {
+    functionCallKeywords: ['minimax'],
+    reasoningKeywords: ['-m'],
+    visionKeywords: ['-vl', 'Text-01'],
+  },
   moonshot: {
     functionCallKeywords: ['moonshot', 'kimi'],
     reasoningKeywords: ['thinking'],
@@ -80,7 +86,7 @@ export const MODEL_LIST_CONFIGS = {
       'qwen3',
     ],
     reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-', '!-max-'],
-    visionKeywords: ['qvq', 'vl'],
+    visionKeywords: ['qvq', '-vl', '-omni'],
   },
   v0: {
     functionCallKeywords: ['v0'],
@@ -91,6 +97,11 @@ export const MODEL_LIST_CONFIGS = {
     functionCallKeywords: ['1.5', '1-5', '1.6', '1-6'],
     reasoningKeywords: ['thinking', 'seed', 'ui-tars'],
     visionKeywords: ['vision', '-m', 'seed', 'ui-tars'],
+  },
+  wenxin: {
+    functionCallKeywords: ['ernie-5', 'ernie-x1', 'pro', 'ernie-4.5-21b-a3b-thinking'],
+    reasoningKeywords: ['thinking', 'ernie-x', 'ernie-4.5-vl-28b-a3b'],
+    visionKeywords: ['-vl', 'ernie-5.0', 'picocr', 'qianfan-composition'],
   },
   xai: {
     functionCallKeywords: ['grok'],
@@ -117,11 +128,13 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   inclusionai: ['ling-', 'ming-', 'ring-'],
   llama: ['llama', 'llava'],
   longcat: ['longcat'],
+  minimax: ['minimax'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
   v0: ['v0'],
   volcengine: ['doubao'],
+  wenxin: ['ernie', 'qianfan'],
   xai: ['grok'],
   zeroone: ['yi-'],
   zhipu: ['glm'],

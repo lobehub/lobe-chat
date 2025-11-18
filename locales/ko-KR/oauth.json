@@ -18,6 +18,7 @@
     },
     "permissionsTitle": "다음 권한을 요청합니다:",
     "redirectUri": "인증이 완료되면 다음으로 리디렉션됩니다:",
+    "redirecting": "인증이 완료되었습니다. 이동 중...",
     "scope": {
       "email": "귀하의 이메일 주소에 접근",
       "offline_access": "클라이언트가 귀하의 데이터에 접근할 수 있도록 허용",

@@ -106,6 +106,12 @@
     "keyPlaceholder": "Key",
     "valuePlaceholder": "Value"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Open",
+      "showInFolder": "Show in Folder"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Unlimited"
   },

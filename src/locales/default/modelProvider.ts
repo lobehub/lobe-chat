@@ -202,6 +202,12 @@ export default {
     all: '全部',
     list: {
       disabled: '未启用',
+      disabledActions: {
+        sort: '排序方式',
+        sortAlphabetical: '按字母排序',
+        sortAlphabeticalDesc: '按字母倒序排序',
+        sortDefault: '默认排序',
+      },
       enabled: '已启用',
     },
     notFound: '未找到搜索结果',
@@ -399,7 +405,15 @@ export default {
     list: {
       addNew: '添加模型',
       disabled: '未启用',
-      disabledActions: { showMore: '显示全部' },
+      disabledActions: {
+        showMore: '显示全部',
+        sort: '排序方式',
+        sortAlphabetical: '按字母排序',
+        sortAlphabeticalDesc: '按字母倒序排序',
+        sortDefault: '默认排序',
+        sortReleasedAt: '按最早发布时间排序',
+        sortReleasedAtDesc: '按最新发布时间排序',
+      },
       empty: {
         desc: '请创建自定义模型或拉取模型后开始使用吧',
         title: '暂无可用模型',

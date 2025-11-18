@@ -120,43 +120,6 @@ describe('settingsSelectors', () => {
     });
   });
 
-  describe('dalleConfig', () => {
-    it('should return the dalle configuration', () => {
-      const s = {
-        settings: {
-          tool: {
-            dalle: {
-              apiKey: 'dalle-api-key',
-              autoGenerate: true,
-            },
-          },
-        },
-      } as unknown as UserStore;
-
-      const result = settingsSelectors.dalleConfig(s);
-
-      expect(result).toMatchSnapshot();
-    });
-  });
-
-  describe('isDalleAutoGenerating', () => {
-    it('should return the autoGenerate flag from dalle configuration', () => {
-      const s = {
-        settings: {
-          tool: {
-            dalle: {
-              autoGenerate: true,
-            },
-          },
-        },
-      } as unknown as UserStore;
-
-      const result = settingsSelectors.isDalleAutoGenerating(s);
-
-      expect(result).toBe(true);
-    });
-  });
-
   describe('getProviderConfigById', () => {
     it('should return the provider config for a given provider id', () => {
       const providerConfig = {

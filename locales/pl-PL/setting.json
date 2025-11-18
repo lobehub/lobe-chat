@@ -2,6 +2,45 @@
   "about": {
     "title": "O nas"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Awatar",
+      "description": "Opis",
+      "name": "Nazwa",
+      "tags": "Tagi",
+      "title": "Informacje o Asystencie"
+    },
+    "chat": {
+      "displayMode": "Tryb wyświetlania",
+      "enableHistoryCount": "Włącz licznik historii wiadomości",
+      "historyCount": "Liczba wiadomości w historii",
+      "no": "Nie",
+      "searchMode": "Tryb wyszukiwania",
+      "title": "Preferencje czatu",
+      "yes": "Tak"
+    },
+    "model": {
+      "maxTokens": "Maksymalna liczba tokenów",
+      "model": "Model",
+      "provider": "Dostawca",
+      "temperature": "Temperatura",
+      "title": "Ustawienia modelu",
+      "topP": "Wartość Top P"
+    },
+    "plugins": {
+      "count": "Ustawienia wtyczek ({{count}})",
+      "empty": "Brak zainstalowanych wtyczek",
+      "title": "Zainstalowane wtyczki"
+    },
+    "role": {
+      "systemRole": "Systemowy prompt",
+      "title": "Ustawienia roli"
+    },
+    "value": {
+      "unset": "Nieustawione",
+      "untitled": "Asystent bez nazwy"
+    }
+  },
   "agentTab": {
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
@@ -18,6 +57,8 @@
     },
     "title": "Analiza danych"
   },
+  "checking": "Sprawdzanie...",
+  "checkingPermissions": "Sprawdzanie uprawnień...",
   "danger": {
     "clear": {
       "action": "Wyczyść teraz",
@@ -43,8 +84,8 @@
   "header": {
     "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
-    "group": "Ustawienia czatu grupowego",
-    "groupDesc": "Zarządzaj bieżącym czatem grupowym",
+    "group": "Ustawienia zespołu",
+    "groupDesc": "Zarządzaj zespołem Agentów i preferencjami czatu",
     "session": "Ustawienia sesji",
     "sessionDesc": "Ustawienia postaci i preferencje sesji.",
     "sessionWithName": "Ustawienia sesji · {{name}}",
@@ -145,6 +186,58 @@
       "title": "Adres proxy API"
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
+  },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Opisz główne zmiany i ulepszenia w tej wersji",
+        "label": "Dziennik zmian",
+        "maxLengthError": "Dziennik zmian nie może przekraczać 500 znaków",
+        "placeholder": "Wprowadź dziennik zmian",
+        "required": "Wprowadź dziennik zmian"
+      },
+      "comparison": {
+        "local": "Lokalna wersja",
+        "remote": "Opublikowana wersja"
+      },
+      "identifier": {
+        "extra": "Identyfikator będzie unikalnym identyfikatorem asystenta. Zalecane są małe litery, cyfry i myślniki",
+        "label": "Identyfikator asystenta",
+        "lengthError": "Identyfikator powinien mieć od 3 do 50 znaków",
+        "patternError": "Identyfikator może zawierać tylko małe litery, cyfry i myślniki",
+        "placeholder": "Wprowadź unikalny identyfikator asystenta, np.: web-development",
+        "required": "Wprowadź identyfikator asystenta"
+      },
+      "loading": {
+        "fetchingRemote": "Ładowanie danych zdalnych...",
+        "submit": "Publikowanie asystenta...",
+        "upload": "Publikowanie nowej wersji..."
+      },
+      "messages": {
+        "createVersionFailed": "Nie udało się utworzyć wersji: {{message}}",
+        "fetchRemoteFailed": "Nie udało się pobrać danych zdalnego asystenta",
+        "missingIdentifier": "Obecny asystent nie ma identyfikatora rynkowego",
+        "notAuthenticated": "Zaloguj się na konto rynkowe",
+        "publishFailed": "Publikacja nie powiodła się: {{message}}"
+      },
+      "submitButton": "Opublikuj",
+      "title": {
+        "submit": "Udostępnij w Rynku Asystentów",
+        "upload": "Opublikuj nową wersję"
+      }
+    },
+    "resultModal": {
+      "message": "Asystent został przesłany do weryfikacji. Po zatwierdzeniu zostanie automatycznie opublikowany. Kliknij „Zobacz w Rynku”, aby zobaczyć opublikowanego asystenta.",
+      "view": "Zobacz w Rynku"
+    },
+    "submit": {
+      "button": "Udostępnij w Rynku",
+      "tooltip": "Udostępnij asystenta w Rynku"
+    },
+    "upload": {
+      "button": "Opublikuj nową wersję",
+      "tooltip": "Opublikuj nową wersję w Rynku Asystentów"
+    }
   },
   "message": {
     "success": "Pomyślnie zaktualizowano"
@@ -312,27 +405,27 @@
   },
   "settingGroup": {
     "description": {
-      "placeholder": "Wprowadź opis czatu grupowego",
-      "title": "Opis czatu grupowego"
+      "placeholder": "Wprowadź opis zespołu",
+      "title": "Opis zespołu"
     },
     "name": {
-      "placeholder": "Wprowadź nazwę czatu grupowego",
-      "title": "Nazwa czatu grupowego"
+      "placeholder": "Wprowadź nazwę zespołu",
+      "title": "Nazwa zespołu"
     },
     "scene": {
-      "desc": "Wybierz scenariusz czatu grupowego",
+      "desc": "Wybierz scenariusz zespołu",
       "options": {
         "casual": "Nieformalny",
         "productive": "Produktywność"
       },
-      "title": "Scenariusz czatu grupowego"
+      "title": "Scenariusz zespołu"
     },
-    "submit": "Aktualizuj czat grupowy",
+    "submit": "Zaktualizuj zespół",
     "systemPrompt": {
       "placeholder": "Wprowadź systemową wskazówkę prowadzącego",
       "title": "Systemowa wskazówka prowadzącego"
     },
-    "title": "Informacje o czacie grupowym"
+    "title": "Informacje o zespole Agentów"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -340,7 +433,7 @@
       "title": "Zezwól asystentowi na wysyłanie wiadomości prywatnych"
     },
     "enableSupervisor": {
-      "desc": "Włącz funkcję moderatora czatu grupowego — moderator będzie zarządzać przebiegiem rozmowy",
+      "desc": "Włącz funkcję moderatora zespołu Agentów — moderator będzie zarządzać przebiegiem rozmowy",
       "title": "Włącz moderatora"
     },
     "maxResponseInRow": {
@@ -353,7 +446,7 @@
     },
     "orchestratorTitle": "Ustawienia prowadzącego",
     "responseOrder": {
-      "desc": "Agent będzie odpowiadał zgodnie z kolejnością ustaloną w czacie grupowym",
+      "desc": "Agenci będą odpowiadać w ustalonej kolejności w czacie",
       "options": {
         "natural": "Naturalna",
         "sequential": "Sekwencyjna"
@@ -362,7 +455,7 @@
       "title": "Kolejność odpowiedzi"
     },
     "responseSpeed": {
-      "desc": "Kontroluj ogólne tempo czatu grupowego",
+      "desc": "Kontroluj ogólne tempo rozmowy",
       "options": {
         "fast": "Szybkie",
         "medium": "Średnie",
@@ -386,10 +479,11 @@
   "settingGroupMembers": {
     "addToGroup": "Dołącz do grupy",
     "availableAgents": "Dostępni asystenci",
+    "createMember": "Utwórz członka",
     "defaultAgent": "Niestandardowy asystent",
     "disableHost": "Wyłącz asystenta gospodarza",
     "edit": "Edytuj członka",
-    "empty": "Brak agentów w tym czacie grupowym. Kliknij przycisk +, aby dodać członków.",
+    "empty": "Ten zespół nie ma jeszcze członków. Kliknij przycisk +, aby dodać członków.",
     "enableHost": "Włącz asystenta gospodarza",
     "groupHost": "Gospodarz grupy",
     "groupMembers": "Członkowie grupy",
@@ -566,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Prześlij asystenta",
-    "identifier": "Identyfikator asystenta",
+    "identifier": "Identyfikator asystenta (identifier)",
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"
@@ -632,11 +726,6 @@
       "label": "Model nazewnictwa tematów do AI w malarstwie",
       "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
       "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
-    },
-    "groupChatSupervisor": {
-      "label": "Model nadzoru czatu grupowego",
-      "modelDesc": "Model przeznaczony do nadzorowania i zarządzania rozmowami w czatach grupowych",
-      "title": "Nadzór i zarządzanie czatem grupowym"
     },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {

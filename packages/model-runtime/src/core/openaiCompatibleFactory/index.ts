@@ -702,6 +702,18 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       log('error code: %s, message: %s', errorResult.code, errorResult.message);
 
+      // Check for "Insufficient Balance" in error message
+      const errorMessage = errorResult.error?.message || errorResult.message;
+      if (errorMessage?.includes('Insufficient Balance')) {
+        log('insufficient balance error detected in message');
+        return AgentRuntimeError.chat({
+          endpoint: desensitizedEndpoint,
+          error: errorResult,
+          errorType: AgentRuntimeErrorType.InsufficientQuota,
+          provider: this.id,
+        });
+      }
+
       switch (errorResult.code) {
         case 'insufficient_quota': {
           log('insufficient quota error');
@@ -754,12 +766,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const inputStartAt = Date.now();
 
-      const { messages, reasoning_effort, tools, reasoning, responseMode, ...res } =
+      const { messages, reasoning_effort, tools, reasoning, responseMode, max_tokens, ...res } =
         responses?.handlePayload
           ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
           : payload;
 
-      // remove penalty params
+      // remove penalty params and chat completion specific params
       delete res.apiMode;
       delete res.frequency_penalty;
       delete res.presence_penalty;
@@ -785,6 +797,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             }
           : {}),
         input,
+        ...(max_tokens && { max_output_tokens: max_tokens }),
         store: false,
         stream: !isStreaming ? undefined : isStreaming,
         tools: tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),

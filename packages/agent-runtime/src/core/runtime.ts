@@ -1,10 +1,16 @@
-import type {
+import { ChatToolPayload } from '@lobechat/types';
+import pMap from 'p-map';
+
+import {
   Agent,
   AgentEvent,
   AgentInstruction,
+  AgentInstructionCallTool,
+  AgentInstructionCallToolsBatch,
   AgentRuntimeContext,
   AgentState,
   Cost,
+  GeneralAgentCallToolsBatchResultPayload,
   InstructionExecutor,
   RuntimeConfig,
   ToolRegistry,
@@ -79,8 +85,21 @@ export class AgentRuntime {
 
       // Handle human approved tool calls
       if (runtimeContext.phase === 'human_approved_tool') {
-        const approvedPayload = runtimeContext.payload as { approvedToolCall: ToolsCalling };
-        rawInstructions = { payload: approvedPayload.approvedToolCall, type: 'call_tool' };
+        const approvedPayload = runtimeContext.payload as {
+          approvedToolCall: ChatToolPayload;
+          parentMessageId: string;
+          skipCreateToolMessage: boolean;
+        };
+        const toolCalling = approvedPayload.approvedToolCall;
+
+        rawInstructions = {
+          payload: {
+            parentMessageId: approvedPayload.parentMessageId,
+            skipCreateToolMessage: approvedPayload.skipCreateToolMessage,
+            toolCalling,
+          },
+          type: 'call_tool',
+        };
       } else {
         // Standard flow: Plan -> Execute
         rawInstructions = await this.agent.runner(runtimeContext, newState);
@@ -89,12 +108,37 @@ export class AgentRuntime {
       // Normalize to array
       const instructions = Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions];
 
+      // Convert old format to new format
+      const normalizedInstructions = instructions.map((instruction) => {
+        if (
+          instruction.type === 'call_tools_batch' && // Check if payload is array of ToolsCalling (old format)
+          Array.isArray(instruction.payload)
+        ) {
+          const toolsCalling = instruction.payload.map((tc: ToolsCalling) => ({
+            apiName: tc.function.name,
+            arguments: tc.function.arguments,
+            id: tc.id,
+            identifier: tc.function.name,
+            type: 'default' as any,
+          }));
+
+          return {
+            payload: {
+              parentMessageId: '',
+              toolsCalling,
+            },
+            type: 'call_tools_batch',
+          };
+        }
+        return instruction;
+      });
+
       // Execute all instructions sequentially
       let currentState = newState;
       const allEvents: AgentEvent[] = [];
       let finalNextContext: AgentRuntimeContext | undefined = undefined;
 
-      for (const instruction of instructions) {
+      for (const instruction of normalizedInstructions) {
         let result;
 
         // Special handling for batch tool execution
@@ -120,10 +164,7 @@ export class AgentRuntime {
         }
 
         // Stop execution if blocked
-        if (
-          currentState.status === 'waiting_for_human_input' ||
-          currentState.status === 'interrupted'
-        ) {
+        if (currentState.status === 'waiting_for_human' || currentState.status === 'interrupted') {
           break;
         }
       }
@@ -150,7 +191,7 @@ export class AgentRuntime {
    */
   async approveToolCall(
     state: AgentState,
-    approvedToolCall: any,
+    approvedToolCall: ChatToolPayload,
   ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
     const context: AgentRuntimeContext = {
       payload: { approvedToolCall },
@@ -273,7 +314,7 @@ export class AgentRuntime {
         tokens: { input: 0, output: 0, total: 0 },
       },
       tools: {
-        byTool: {},
+        byTool: [],
         totalCalls: 0,
         totalTimeMs: 0,
       },
@@ -290,12 +331,12 @@ export class AgentRuntime {
       calculatedAt: now,
       currency: 'USD',
       llm: {
-        byModel: {},
+        byModel: [],
         currency: 'USD',
         total: 0,
       },
       tools: {
-        byTool: {},
+        byTool: [],
         currency: 'USD',
         total: 0,
       },
@@ -308,7 +349,9 @@ export class AgentRuntime {
    * @param partialState - Partial state to override defaults
    * @returns Complete AgentState with defaults filled in
    */
-  static createInitialState(partialState: Partial<AgentState> & { sessionId: string }): AgentState {
+  static createInitialState(
+    partialState?: Partial<AgentState> & { sessionId: string },
+  ): AgentState {
     const now = new Date().toISOString();
 
     return {
@@ -319,9 +362,10 @@ export class AgentRuntime {
       messages: [],
       status: 'idle',
       stepCount: 0,
+      toolManifestMap: {},
       usage: AgentRuntime.createDefaultUsage(),
       // User provided values override defaults
-      ...partialState,
+      ...(partialState || { sessionId: '' }),
     };
   }
 
@@ -414,7 +458,7 @@ export class AgentRuntime {
   /** Create call_tool executor */
   private createCallToolExecutor(): InstructionExecutor {
     return async (instruction, state) => {
-      const { payload: toolCall } = instruction as Extract<AgentInstruction, { type: 'call_tool' }>;
+      const { payload } = instruction as AgentInstructionCallTool;
       const newState = structuredClone(state);
       const events: AgentEvent[] = [];
 
@@ -423,9 +467,10 @@ export class AgentRuntime {
 
       const tools = this.agent.tools || ({} as ToolRegistry);
 
+      const toolCall = payload.toolCalling;
       // Support both ToolsCalling (OpenAI format) and CallingToolPayload formats
-      const toolName = toolCall.apiName || toolCall.function?.name;
-      const toolArgs = toolCall.arguments || toolCall.function?.arguments;
+      const toolName = toolCall.apiName;
+      const toolArgs = toolCall.arguments;
       const toolId = toolCall.id;
 
       const handler = tools[toolName];
@@ -489,7 +534,7 @@ export class AgentRuntime {
       const newState = structuredClone(state);
 
       newState.lastModified = new Date().toISOString();
-      newState.status = 'waiting_for_human_input';
+      newState.status = 'waiting_for_human';
       newState.pendingToolsCalling = pendingToolsCalling;
 
       const events: AgentEvent[] = [
@@ -498,7 +543,6 @@ export class AgentRuntime {
           sessionId: newState.sessionId,
           type: 'human_approve_required',
         },
-        { toolCalls: pendingToolsCalling, type: 'tool_pending' },
       ];
 
       return { events, newState };
@@ -515,7 +559,7 @@ export class AgentRuntime {
       const newState = structuredClone(state);
 
       newState.lastModified = new Date().toISOString();
-      newState.status = 'waiting_for_human_input';
+      newState.status = 'waiting_for_human';
       newState.pendingHumanPrompt = { metadata, prompt };
 
       const events: AgentEvent[] = [
@@ -541,7 +585,7 @@ export class AgentRuntime {
       const newState = structuredClone(state);
 
       newState.lastModified = new Date().toISOString();
-      newState.status = 'waiting_for_human_input';
+      newState.status = 'waiting_for_human';
       newState.pendingHumanSelect = { metadata, multi, options, prompt };
 
       const events: AgentEvent[] = [
@@ -586,27 +630,30 @@ export class AgentRuntime {
    * Execute multiple tool calls concurrently
    */
   private async executeToolsBatch(
-    instruction: { payload: any[]; type: 'call_tools_batch' },
+    instruction: AgentInstructionCallToolsBatch,
     baseState: AgentState,
   ): Promise<{
     events: AgentEvent[];
     newState: AgentState;
     nextContext?: AgentRuntimeContext;
   }> {
-    const { payload: toolsCalling } = instruction;
+    const { payload } = instruction;
 
     // Execute all tools concurrently based on the same state
-    const results = await Promise.all(
-      toolsCalling.map((toolCall) =>
-        this.executors.call_tool(
-          { payload: toolCall, type: 'call_tool' } as any,
-          structuredClone(baseState), // Each tool starts from the same base state
-        ),
+    const results = await pMap(instruction.payload.toolsCalling, (toolCalling: ChatToolPayload) =>
+      this.executors.call_tool(
+        {
+          payload: { parentMessageId: payload.parentMessageId, toolCalling },
+          type: 'call_tool',
+        } as AgentInstructionCallTool,
+        structuredClone(baseState), // Each tool starts from the same base state
       ),
     );
 
+    const lastParentMessageId = (results.at(-1)!.nextContext?.payload as any)
+      ?.parentMessageId as string;
     // Merge results
-    return this.mergeToolResults(results, baseState);
+    return this.mergeToolResults(results, baseState, lastParentMessageId);
   }
 
   /**
@@ -619,6 +666,7 @@ export class AgentRuntime {
       nextContext?: AgentRuntimeContext;
     }>,
     baseState: AgentState,
+    lastParentMessageId: string,
   ): {
     events: AgentEvent[];
     newState: AgentState;
@@ -641,13 +689,15 @@ export class AgentRuntime {
         newState.usage.tools.totalCalls += result.newState.usage.tools.totalCalls;
         newState.usage.tools.totalTimeMs += result.newState.usage.tools.totalTimeMs;
 
-        // Merge per-tool statistics
-        Object.entries(result.newState.usage.tools.byTool).forEach(([tool, stats]) => {
-          if (newState.usage.tools.byTool[tool]) {
-            newState.usage.tools.byTool[tool].calls += stats.calls;
-            newState.usage.tools.byTool[tool].totalTimeMs += stats.totalTimeMs;
+        // Merge per-tool statistics (now using array)
+        result.newState.usage.tools.byTool.forEach((toolStats) => {
+          const existingTool = newState.usage.tools.byTool.find((t) => t.name === toolStats.name);
+          if (existingTool) {
+            existingTool.calls += toolStats.calls;
+            existingTool.totalTimeMs += toolStats.totalTimeMs;
+            existingTool.errors += toolStats.errors || 0;
           } else {
-            newState.usage.tools.byTool[tool] = { ...stats };
+            newState.usage.tools.byTool.push({ ...toolStats });
           }
         });
       }
@@ -656,6 +706,17 @@ export class AgentRuntime {
       if (result.newState.cost && newState.cost) {
         newState.cost.tools.total += result.newState.cost.tools.total;
         newState.cost.total += result.newState.cost.tools.total;
+
+        // Merge per-tool cost statistics (now using array)
+        result.newState.cost.tools.byTool.forEach((toolCost) => {
+          const existingToolCost = newState.cost.tools.byTool.find((t) => t.name === toolCost.name);
+          if (existingToolCost) {
+            existingToolCost.calls += toolCost.calls;
+            existingToolCost.totalCost += toolCost.totalCost;
+          } else {
+            newState.cost.tools.byTool.push({ ...toolCost });
+          }
+        });
       }
     }
 
@@ -666,9 +727,10 @@ export class AgentRuntime {
       newState,
       nextContext: {
         payload: {
+          parentMessageId: lastParentMessageId,
           toolCount: results.length,
           toolResults: results.map((r) => r.nextContext?.payload),
-        },
+        } as GeneralAgentCallToolsBatchResultPayload,
         phase: 'tools_batch_result',
         session: this.createSessionContext(newState),
       },

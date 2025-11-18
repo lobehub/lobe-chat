@@ -1,17 +1,16 @@
-import { chainLangDetect , chainTranslate } from '@lobechat/prompts';
-import { TraceNameMap, TracePayload } from '@lobechat/types';
+import { chainLangDetect, chainTranslate } from '@lobechat/prompts';
+import { ChatTranslate, TraceNameMap, TracePayload } from '@lobechat/types';
+import { merge } from '@lobechat/utils';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { supportLocales } from '@/locales/resources';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ChatTranslate } from '@/types/message';
-import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('enhance');
@@ -44,7 +43,7 @@ export const chatTranslate: StateCreator<
   translateMessage: async (id, targetLang) => {
     const { internal_toggleChatLoading, updateMessageTranslate, internal_dispatchMessage } = get();
 
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
     // Get current agent for translation

@@ -1,4 +1,5 @@
 import { RenameLocalFileParams } from '@lobechat/electron-client-ipc';
+import { BuiltinRenderProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRightIcon } from 'lucide-react';
@@ -8,7 +9,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile } from '@/features/LocalFile';
 import { LocalReadFileState } from '@/tools/local-system/type';
-import { ChatMessagePluginError } from '@/types/message';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -19,27 +19,22 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface RenameLocalFileProps {
-  args: RenameLocalFileParams;
-  messageId: string;
-  pluginError: ChatMessagePluginError;
-  pluginState: LocalReadFileState;
-}
+const RenameLocalFile = memo<BuiltinRenderProps<RenameLocalFileParams, LocalReadFileState>>(
+  ({ args }) => {
+    const { styles } = useStyles();
 
-const RenameLocalFile = memo<RenameLocalFileProps>(({ args }) => {
-  const { styles } = useStyles();
+    const { base: oldFileName, dir } = path.parse(args.path);
 
-  const { base: oldFileName, dir } = path.parse(args.path);
-
-  return (
-    <Flexbox align={'center'} className={styles.container} gap={8} horizontal paddingInline={12}>
-      <Flexbox>{oldFileName}</Flexbox>
-      <Flexbox>
-        <Icon icon={ArrowRightIcon} />
+    return (
+      <Flexbox align={'center'} className={styles.container} gap={8} horizontal paddingInline={12}>
+        <Flexbox>{oldFileName}</Flexbox>
+        <Flexbox>
+          <Icon icon={ArrowRightIcon} />
+        </Flexbox>
+        <LocalFile name={args.newName} path={path.join(dir, args.newName)} />
       </Flexbox>
-      <LocalFile name={args.newName} path={path.join(dir, args.newName)} />
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default RenameLocalFile;

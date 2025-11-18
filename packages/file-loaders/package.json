@@ -28,7 +28,8 @@
     "@napi-rs/canvas": "^0.1.70",
     "@xmldom/xmldom": "^0.9.8",
     "concat-stream": "^2.0.0",
-    "mammoth": "^1.8.0",
+    "debug": "^4.4.3",
+    "mammoth": "^1.11.0",
     "officeparser": "5.1.1",
     "pdfjs-dist": "4.10.38",
     "word-extractor": "^1.0.4",
@@ -38,7 +39,7 @@
   "devDependencies": {
     "@types/concat-stream": "^2.0.3",
     "@types/yauzl": "^2.10.3",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "typescript": ">=5"

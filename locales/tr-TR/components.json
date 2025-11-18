@@ -106,6 +106,12 @@
     "keyPlaceholder": "Anahtar",
     "valuePlaceholder": "Değer"
   },
+  "LocalFile": {
+    "action": {
+      "open": "Aç",
+      "showInFolder": "Klasörde Göster"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Sınırsız"
   },

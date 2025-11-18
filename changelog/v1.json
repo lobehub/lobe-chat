@@ -1,5 +1,664 @@
 [
   {
+    "children": {
+      "fixes": ["Slove when logout always show loading."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.81"
+  },
+  {
+    "children": {},
+    "date": "2025-11-18",
+    "version": "2.0.0-next.80"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the discover page categray sider link error."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.79"
+  },
+  {
+    "children": {},
+    "date": "2025-11-18",
+    "version": "2.0.0-next.78"
+  },
+  {
+    "children": {
+      "improvements": ["Delete /settings/newapi pages in nextjs build."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.77"
+  },
+  {
+    "children": {
+      "features": ["Support Interleaved thinking in MiniMax."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.76"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.75"
+  },
+  {
+    "children": {
+      "features": ["Edit local file render & intervention."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.74"
+  },
+  {
+    "children": {
+      "features": ["Support parallel topic agent runtime."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.73"
+  },
+  {
+    "children": {
+      "improvements": ["Add model information for the Qiniu provider."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.72"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop user panel."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.71"
+  },
+  {
+    "children": {},
+    "date": "2025-11-17",
+    "version": "2.0.0-next.70"
+  },
+  {
+    "children": {
+      "improvements": ["Remove language_model_settings and remove isDeprecatedEdition."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.69"
+  },
+  {
+    "children": {
+      "fixes": ["The tool to fail execution on ollama when a message contains b…."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.68"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to virtua."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.67"
+  },
+  {
+    "children": {
+      "features": ["Support to collapse message."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.66"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.65"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor package types."]
+    },
+    "date": "2025-11-15",
+    "version": "2.0.0-next.64"
+  },
+  {
+    "children": {
+      "features": ["Show orphaned tool message and support delete tool message."]
+    },
+    "date": "2025-11-15",
+    "version": "2.0.0-next.63"
+  },
+  {
+    "children": {},
+    "date": "2025-11-15",
+    "version": "2.0.0-next.62"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-15",
+    "version": "2.0.0-next.61"
+  },
+  {
+    "children": {
+      "fixes": ["Reduce threshold."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.60"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.59"
+  },
+  {
+    "children": {
+      "features": ["Support DeepSeek Interleaved thinking."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.58"
+  },
+  {
+    "children": {
+      "improvements": ["Revert background style."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.57"
+  },
+  {
+    "children": {
+      "features": ["Add folder creation UI and clean up debug code."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.56"
+  },
+  {
+    "children": {
+      "features": ["Create Pages in Knowledge Base."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.55"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor and support move locale file intervention."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.54"
+  },
+  {
+    "children": {
+      "features": ["Add GPT-5.1 models."],
+      "improvements": ["Fix approving render and improve Conversation style."]
+    },
+    "date": "2025-11-14",
+    "version": "2.0.0-next.53"
+  },
+  {
+    "children": {
+      "fixes": ["Filter out reasoning fields from messages in ChatCompletion API."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.52"
+  },
+  {
+    "children": {
+      "improvements": ["Update ERNIE-5.0-Thinking-Preview model."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.51"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc accountId mismatch."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.50"
+  },
+  {
+    "children": {
+      "features": ["Support tool invention."],
+      "fixes": ["Update lost i18n files."]
+    },
+    "date": "2025-11-13",
+    "version": "2.0.0-next.49"
+  },
+  {
+    "children": {},
+    "date": "2025-11-12",
+    "version": "2.0.0-next.48"
+  },
+  {
+    "children": {
+      "fixes": ["Fix mcp server return image error."]
+    },
+    "date": "2025-11-11",
+    "version": "2.0.0-next.47"
+  },
+  {
+    "children": {
+      "improvements": ["Fix thread display."]
+    },
+    "date": "2025-11-11",
+    "version": "2.0.0-next.46"
+  },
+  {
+    "children": {
+      "improvements": ["Edge to node runtime."]
+    },
+    "date": "2025-11-10",
+    "version": "2.0.0-next.45"
+  },
+  {
+    "children": {
+      "fixes": ["Fix reasoning issue with claude and Response API thinking."]
+    },
+    "date": "2025-11-10",
+    "version": "2.0.0-next.44"
+  },
+  {
+    "children": {
+      "fixes": ["Abnormal animation of tokens."]
+    },
+    "date": "2025-11-09",
+    "version": "2.0.0-next.43"
+  },
+  {
+    "children": {
+      "fixes": ["Fix missing messages when finish runtime."]
+    },
+    "date": "2025-11-09",
+    "version": "2.0.0-next.42"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-09",
+    "version": "2.0.0-next.41"
+  },
+  {
+    "children": {},
+    "date": "2025-11-08",
+    "version": "2.0.0-next.40"
+  },
+  {
+    "children": {},
+    "date": "2025-11-08",
+    "version": "2.0.0-next.39"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-08",
+    "version": "2.0.0-next.38"
+  },
+  {
+    "children": {
+      "fixes": ["Don't include runtimeProvider in JWT for non-image operations."]
+    },
+    "date": "2025-11-07",
+    "version": "2.0.0-next.37"
+  },
+  {
+    "children": {
+      "features": ["Refactor to use agent runtime as the generation core and support branch mode."]
+    },
+    "date": "2025-11-07",
+    "version": "2.0.0-next.36"
+  },
+  {
+    "children": {
+      "improvements": ["Use react-router-dom change /chat page to spa mode."]
+    },
+    "date": "2025-11-07",
+    "version": "2.0.0-next.35"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add sorting functionality for disabled models and model providers with tooltip support."
+      ]
+    },
+    "date": "2025-11-07",
+    "version": "2.0.0-next.34"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor message create name."],
+      "fixes": ["Model name display in the assistant panel disappears."]
+    },
+    "date": "2025-11-06",
+    "version": "2.0.0-next.33"
+  },
+  {
+    "children": {
+      "fixes": ["Should install new version after quit this instance."]
+    },
+    "date": "2025-11-05",
+    "version": "2.0.0-next.32"
+  },
+  {
+    "children": {},
+    "date": "2025-11-05",
+    "version": "2.0.0-next.31"
+  },
+  {
+    "children": {
+      "improvements": ["Enhance message router with service layer and comprehensive tests."]
+    },
+    "date": "2025-11-05",
+    "version": "2.0.0-next.30"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor chat message model to speed up."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.29"
+  },
+  {
+    "children": {
+      "features": ["Support install sreamable http mcp server on web."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.28"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor services to a more clean structure."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.27"
+  },
+  {
+    "children": {
+      "improvements": ["Add settings (jsonb) column to ai_models table."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.26"
+  },
+  {
+    "children": {
+      "features": ["Display assistant message in group."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.25"
+  },
+  {
+    "children": {
+      "improvements": ["Improve lab style."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.24"
+  },
+  {
+    "children": {
+      "fixes": ["Fix send message."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.23"
+  },
+  {
+    "children": {},
+    "date": "2025-11-04",
+    "version": "2.0.0-next.22"
+  },
+  {
+    "children": {
+      "fixes": ["Fix oidc auth timeout issue on the desktop."]
+    },
+    "date": "2025-11-04",
+    "version": "2.0.0-next.21"
+  },
+  {
+    "children": {
+      "improvements": ["Improve oidc layout style."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.20"
+  },
+  {
+    "children": {
+      "improvements": ["Remove NEXT_PUBLIC_SERVICE_MODE env and use server by default."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.19"
+  },
+  {
+    "children": {
+      "improvements": ["Improve built-in client OIDC user flow."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.18"
+  },
+  {
+    "children": {
+      "fixes": ["Fix regex ReDoS."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.17"
+  },
+  {
+    "children": {
+      "improvements": ["Remove deperated code."]
+    },
+    "date": "2025-11-03",
+    "version": "2.0.0-next.16"
+  },
+  {
+    "children": {},
+    "date": "2025-11-03",
+    "version": "2.0.0-next.15"
+  },
+  {
+    "children": {
+      "improvements": ["Remove client service."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix image prompt form."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add padding to TopicList component."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.12"
+  },
+  {
+    "children": {
+      "improvements": ["Smoothed model descriptions in ko-KR locales."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.11"
+  },
+  {
+    "children": {},
+    "date": "2025-11-02",
+    "version": "2.0.0-next.10"
+  },
+  {
+    "children": {
+      "improvements": ["Remove dalle builtin plugin."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.9"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-02",
+    "version": "2.0.0-next.8"
+  },
+  {
+    "children": {
+      "features": ["Upgrade to Next 16."]
+    },
+    "date": "2025-11-01",
+    "version": "2.0.0-next.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-31",
+    "version": "2.0.0-next.6"
+  },
+  {
+    "children": {
+      "improvements": ["Migrating Firecrawl to v2."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-31",
+    "version": "2.0.0-next.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add new bedrock model support, add pricing info for Azure GPT-5 series models."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.3"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Hide marketplace link from Plugin List when market disabled, OIDC error when connecting to self-host instance, only include input_fidelity parameter for gpt-image-1.."
+      ]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.2"
+  },
+  {
+    "children": {
+      "features": ["2.0 next baseline."],
+      "improvements": ["starting V2"]
+    },
+    "date": "2025-10-30",
+    "version": "2.0.0-next.1"
+  },
+  {
+    "children": {
+      "features": ["2.0 next init."]
+    },
+    "date": "2025-10-30",
+    "version": "1.143.0-next.2"
+  },
+  {
+    "children": {
+      "features": ["Try 2.0 next."],
+      "improvements": ["starting V2"]
+    },
+    "date": "2025-10-30",
+    "version": "1.143.0-next.1"
+  },
+  {
+    "children": {},
+    "date": "2025-10-30",
+    "version": "1.142.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-28",
+    "version": "1.142.7"
+  },
+  {
+    "children": {},
+    "date": "2025-10-28",
+    "version": "1.142.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add MiniMax-M2 model."]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Pre render ModelSwitchPanel, The error details of the connectivity check lead to a layout problem."
+      ]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Adjust modal setting form styles for improved layout and responsiveness, Unzip file when uploading in knowledge base [LOB-500]."
+      ]
+    },
+    "date": "2025-10-27",
+    "version": "1.142.3"
+  },
+  {
+    "children": {
+      "improvements": ["Improve provider modal height when creating custom provider."]
+    },
+    "date": "2025-10-26",
+    "version": "1.142.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-10-26",
+    "version": "1.142.1"
+  },
+  {
+    "children": {
+      "features": ["Use env to control clerk allow origin feature."]
+    },
+    "date": "2025-10-24",
+    "version": "1.142.0"
+  },
+  {
+    "children": {
+      "fixes": ["Loadmore not work & navbar not show in pwa."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve local system tools render."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.9"
+  },
+  {
+    "children": {
+      "improvements": ["Improvement for Agent Team After Alpha Launch [LOB-517]."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.8"
+  },
+  {
+    "children": {
+      "improvements": ["Allow removal of top_p and similar request parameters."]
+    },
+    "date": "2025-10-23",
+    "version": "1.141.7"
+  },
+  {
     "children": {},
     "date": "2025-10-22",
     "version": "1.141.6"

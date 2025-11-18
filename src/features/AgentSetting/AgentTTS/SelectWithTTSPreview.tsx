@@ -1,3 +1,5 @@
+import { getMessageError } from '@lobechat/fetch-sse';
+import { ChatMessageError } from '@lobechat/types';
 import { AudioPlayer } from '@lobehub/tts/react';
 import { Alert, Button, Highlighter, Select, SelectProps } from '@lobehub/ui';
 import { RefSelectProps } from 'antd';
@@ -8,8 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useTTS } from '@/hooks/useTTS';
 import { TTSServer } from '@/types/agent';
-import { ChatMessageError } from '@/types/message';
-import { getMessageError } from '@/utils/fetch';
 
 interface SelectWithTTSPreviewProps extends SelectProps {
   server: TTSServer;

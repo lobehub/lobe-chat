@@ -4,7 +4,7 @@ import { nanoid } from '@lobechat/utils';
 import { StateCreator } from 'zustand/vanilla';
 
 import { searchService } from '@/services/search';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { WebBrowsingExecutionRuntime } from '@/tools/web-browsing/ExecutionRuntime';
 
@@ -43,17 +43,22 @@ export const searchSlice: StateCreator<
   SearchAction
 > = (set, get) => ({
   crawlMultiPages: async (id, params, aiSummary = true) => {
-    const { internal_updateMessageContent } = get();
+    const { optimisticUpdateMessageContent } = get();
     get().toggleSearchLoading(id, true);
+
+    // Get message to extract sessionId/topicId
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+    const context = { sessionId: message?.sessionId, topicId: message?.topicId };
+
     try {
       const { content, success, error, state } = await runtime.crawlMultiPages(params);
 
-      await internal_updateMessageContent(id, content);
+      await optimisticUpdateMessageContent(id, content, undefined, context);
 
       if (success) {
-        await get().updatePluginState(id, state);
+        await get().optimisticUpdatePluginState(id, state, context);
       } else {
-        await get().internal_updatePluginError(id, error);
+        await get().optimisticUpdatePluginError(id, error, context);
       }
       get().toggleSearchLoading(id, false);
 
@@ -67,7 +72,7 @@ export const searchSlice: StateCreator<
       const content = [{ errorMessage: err.message, errorType: err.name }];
 
       const xmlContent = crawlResultsPrompt(content);
-      await internal_updateMessageContent(id, xmlContent);
+      await optimisticUpdateMessageContent(id, xmlContent, undefined, context);
     }
   },
 
@@ -78,10 +83,13 @@ export const searchSlice: StateCreator<
   },
 
   saveSearchResult: async (id) => {
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || !message.plugin) return;
 
-    const { internal_addToolToAssistantMessage, internal_createMessage, openToolUI } = get();
+    const { optimisticAddToolToAssistantMessage, optimisticCreateMessage, openToolUI } = get();
+
+    const context = { sessionId: message.sessionId, topicId: message.topicId };
+
     // 1. 创建一个新的 tool call message
     const newToolCallId = `tool_call_${nanoid()}`;
 
@@ -92,60 +100,77 @@ export const searchSlice: StateCreator<
       plugin: message.plugin,
       pluginState: message.pluginState,
       role: 'tool',
-      sessionId: get().activeId,
+      sessionId: message.sessionId ?? get().activeId,
       tool_call_id: newToolCallId,
-      topicId: get().activeTopicId,
+      topicId: message.topicId !== undefined ? message.topicId : get().activeTopicId,
     };
 
     const addToolItem = async () => {
       if (!message.parentId || !message.plugin) return;
 
-      await internal_addToolToAssistantMessage(message.parentId, {
-        id: newToolCallId,
-        ...message.plugin,
-      });
+      await optimisticAddToolToAssistantMessage(
+        message.parentId,
+        {
+          id: newToolCallId,
+          ...message.plugin,
+        },
+        context,
+      );
     };
 
-    const [newMessageId] = await Promise.all([
+    const [result] = await Promise.all([
       // 1. 添加 tool message
-      internal_createMessage(toolMessage),
+      optimisticCreateMessage(toolMessage, {
+        sessionId: toolMessage.sessionId,
+        topicId: toolMessage.topicId,
+      }),
       // 2. 将这条 tool call message 插入到 ai 消息的 tools 中
       addToolItem(),
     ]);
-    if (!newMessageId) return;
+    if (!result) return;
 
     // 将新创建的 tool message 激活
-    openToolUI(newMessageId, message.plugin.identifier);
+    openToolUI(result.id, message.plugin.identifier);
   },
 
   search: async (id, params, aiSummary = true) => {
     get().toggleSearchLoading(id, true);
 
+    // Get message to extract sessionId/topicId
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+    const context = { sessionId: message?.sessionId, topicId: message?.topicId };
+
     const { content, success, error, state } = await runtime.search(params);
 
     if (success) {
-      await get().updatePluginState(id, state);
+      await get().optimisticUpdatePluginState(id, state, context);
     } else {
       if ((error as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
-        await get().internal_updateMessagePluginError(id, {
-          body: {
-            provider: 'searxng',
+        await get().optimisticUpdateMessagePluginError(
+          id,
+          {
+            body: { provider: 'searxng' },
+            message: 'SearXNG is not configured',
+            type: 'PluginSettingsInvalid',
           },
-          message: 'SearXNG is not configured',
-          type: 'PluginSettingsInvalid',
-        });
+          context,
+        );
       } else {
-        await get().internal_updateMessagePluginError(id, {
-          body: error,
-          message: (error as Error).message,
-          type: 'PluginServerError',
-        });
+        await get().optimisticUpdateMessagePluginError(
+          id,
+          {
+            body: error,
+            message: (error as Error).message,
+            type: 'PluginServerError',
+          },
+          context,
+        );
       }
     }
 
     get().toggleSearchLoading(id, false);
 
-    await get().internal_updateMessageContent(id, content);
+    await get().optimisticUpdateMessageContent(id, content, undefined, context);
 
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;
@@ -164,7 +189,7 @@ export const searchSlice: StateCreator<
 
   triggerSearchAgain: async (id, data, options) => {
     get().toggleSearchLoading(id, true);
-    await get().updatePluginArguments(id, data);
+    await get().optimisticUpdatePluginArguments(id, data);
 
     await get().search(id, data, options?.aiSummary);
   },

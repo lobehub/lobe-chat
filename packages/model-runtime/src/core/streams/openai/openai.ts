@@ -71,6 +71,55 @@ const transformOpenAIStream = (
     return { data: errorData, id: 'first_chunk_error', type: 'error' };
   }
 
+  // MiniMax 会在 base_resp 中返回业务错误（如余额不足），但不走 FIRST_CHUNK_ERROR_KEY
+  // 典型返回：{ id: '...', choices: null, base_resp: { status_code: 1008, status_msg: 'insufficient balance' }, usage: {...} }
+  if ((chunk as any).base_resp && typeof (chunk as any).base_resp.status_code === 'number') {
+    const baseResp = (chunk as any).base_resp as {
+      message?: string;
+      status_code: number;
+      status_msg?: string;
+    };
+
+    if (baseResp.status_code !== 0) {
+      // 根据 MiniMax 错误码映射到对应的错误类型
+      let errorType: ILobeAgentRuntimeErrorType = AgentRuntimeErrorType.ProviderBizError;
+
+      switch (baseResp.status_code) {
+        // 1004 - 未授权 / Token 不匹配 / 2049 - 无效的 API Key
+        case 1004:
+        case 2049: {
+          errorType = AgentRuntimeErrorType.InvalidProviderAPIKey;
+          break;
+        }
+        // 1008 - 余额不足
+        case 1008: {
+          errorType = AgentRuntimeErrorType.InsufficientQuota;
+          break;
+        }
+        // 1002 - 请求频率超限 / 1041 - 连接数限制 / 2045 - 请求频率增长超限
+        case 1002:
+        case 1041:
+        case 2045: {
+          errorType = AgentRuntimeErrorType.QuotaLimitReached;
+          break;
+        }
+        // 1039 - Token 限制
+        case 1039: {
+          errorType = AgentRuntimeErrorType.ExceededContextWindow;
+          break;
+        }
+      }
+
+      const errorData: ChatMessageError = {
+        body: { ...baseResp, provider: 'minimax' },
+        message: baseResp.status_msg || baseResp.message || 'MiniMax provider error',
+        type: errorType,
+      };
+
+      return { data: errorData, id: chunk.id, type: 'error' };
+    }
+  }
+
   try {
     // maybe need another structure to add support for multiple choices
     if (!Array.isArray(chunk.choices) || chunk.choices.length === 0) {
@@ -265,6 +314,24 @@ const transformOpenAIStream = (
       let reasoning_content = (() => {
         if ('reasoning_content' in item.delta) return item.delta.reasoning_content;
         if ('reasoning' in item.delta) return item.delta.reasoning;
+        // Handle MiniMax M2 reasoning_details format (array of objects with text field)
+        if ('reasoning_details' in item.delta) {
+          const details = item.delta.reasoning_details;
+          if (Array.isArray(details)) {
+            return details
+              .filter((detail: any) => detail.text)
+              .map((detail: any) => detail.text)
+              .join('');
+          }
+          if (typeof details === 'string') {
+            return details;
+          }
+          if (typeof details === 'object' && details !== null && 'text' in details) {
+            return details.text;
+          }
+          // Fallback for unexpected types
+          return '';
+        }
         // Handle content array format with thinking blocks (e.g. mistral AI Magistral model)
         if ('content' in item.delta && Array.isArray(item.delta.content)) {
           return item.delta.content
@@ -300,20 +367,50 @@ const transformOpenAIStream = (
       }
 
       if (typeof content === 'string') {
-        // 清除 <think> 及 </think> 标签
-        const thinkingContent = content.replaceAll(/<\/?think>/g, '');
-
-        // 判断是否有 <think> 或 </think> 标签，更新 thinkingInContent 状态
-        if (content.includes('<think>')) {
-          streamContext.thinkingInContent = true;
-        } else if (content.includes('</think>')) {
-          streamContext.thinkingInContent = false;
-        }
-
         // 如果 content 是空字符串但 chunk 带有 usage，则优先返回 usage（例如 Gemini image-preview 最终会在单独的 chunk 中返回 usage）
         if (content === '' && chunk.usage) {
           const usage = chunk.usage;
           return { data: convertOpenAIUsage(usage, payload), id: chunk.id, type: 'usage' };
+        }
+
+        // 处理包含 </think> 标签的特殊情况：需要分割内容
+        if (content.includes('</think>')) {
+          const parts = content.split('</think>');
+          const beforeThink = parts[0].replaceAll('<think>', ''); // 移除可能的 <think> 标签
+          const afterThink = parts.slice(1).join('</think>'); // 处理可能有多个 </think> 的情况
+
+          const results: StreamProtocolChunk[] = [];
+
+          // </think> 之前的内容（如果有）作为 reasoning
+          if (beforeThink) {
+            results.push({
+              data: beforeThink,
+              id: chunk.id,
+              type: 'reasoning',
+            });
+          }
+
+          // 更新状态：已经结束思考模式
+          streamContext.thinkingInContent = false;
+
+          // </think> 之后的内容（如果有）作为 text
+          if (afterThink) {
+            results.push({
+              data: afterThink,
+              id: chunk.id,
+              type: 'text',
+            });
+          }
+
+          return results.length > 0 ? results : { data: '', id: chunk.id, type: 'text' };
+        }
+
+        // 清除 <think> 标签（不需要分割，因为 <think> 标签后续内容都是 reasoning）
+        const thinkingContent = content.replaceAll(/<\/?think>/g, '');
+
+        // 判断是否有 <think> 标签，更新 thinkingInContent 状态
+        if (content.includes('<think>')) {
+          streamContext.thinkingInContent = true;
         }
 
         // 判断是否有 citations 内容，更新 returnedCitation 状态

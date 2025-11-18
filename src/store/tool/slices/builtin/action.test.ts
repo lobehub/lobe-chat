@@ -6,19 +6,20 @@ import { useToolStore } from '../../store';
 vi.mock('zustand/traditional');
 
 describe('createBuiltinToolSlice', () => {
-  describe('invokeBuiltinTool', () => {
-    it('should return if the tool is already loading', async () => {
+  describe('transformApiArgumentsToAiState', () => {
+    it('should return early if the tool is already loading', async () => {
       // Given
-      const key = 'text2image';
-      const params = {};
+      const key = 'mockTool';
+      const params = { test: 'data' };
 
       const mockFn = vi.fn();
       const { result } = renderHook(() => useToolStore());
 
       act(() => {
         useToolStore.setState({
-          text2image: mockFn,
-        });
+          builtinToolLoading: { [key]: true },
+          mockTool: mockFn,
+        } as any);
       });
 
       await act(async () => {
@@ -27,61 +28,108 @@ describe('createBuiltinToolSlice', () => {
         expect(data).toBeUndefined();
       });
 
-      // Then
-      expect(mockFn).toHaveBeenCalled();
+      // Then - should not call the action if already loading
+      expect(mockFn).not.toHaveBeenCalled();
     });
 
     it('should invoke the specified tool action and return the stringified result', async () => {
       // Given
-      const key = 'text2image';
-
-      const mockFn = vi.fn();
+      const key = 'mockTool';
+      const mockResult = { success: true, data: 'test result' };
+      const mockFn = vi.fn().mockResolvedValue(mockResult);
       const { result } = renderHook(() => useToolStore());
 
       const params = {
-        prompts: ['test prompt'],
-        size: '512x512',
-        quality: 'standard',
-        style: 'vivid',
+        input: 'test input',
+        option: 'value',
       };
 
       act(() => {
         useToolStore.setState({
           builtinToolLoading: { [key]: false },
-          text2image: mockFn,
-        });
+          mockTool: mockFn,
+        } as any);
       });
+
       // When
+      let resultData: string | undefined;
       await act(async () => {
-        await result.current.transformApiArgumentsToAiState(key, params);
-      });
-
-      expect(mockFn).toBeCalledWith({
-        prompts: ['test prompt'],
-        quality: 'standard',
-        size: '512x512',
-        style: 'vivid',
-      });
-    });
-  });
-
-  describe('text2image', () => {
-    it('should map the prompts to DallEImageItem objects', () => {
-      // When
-      const { result } = renderHook(() => useToolStore());
-
-      const data = result.current.text2image({
-        prompts: ['prompt1', 'prompt2'],
-        size: '1024x1024',
-        quality: 'standard',
-        style: 'vivid',
+        resultData = await result.current.transformApiArgumentsToAiState(key, params);
       });
 
       // Then
-      expect(data).toEqual([
-        { prompt: 'prompt1', quality: 'standard', size: '1024x1024', style: 'vivid' },
-        { prompt: 'prompt2', quality: 'standard', size: '1024x1024', style: 'vivid' },
-      ]);
+      expect(mockFn).toHaveBeenCalledWith({
+        input: 'test input',
+        option: 'value',
+      });
+      expect(resultData).toBe(JSON.stringify(mockResult));
+    });
+
+    it('should return stringified params if action does not exist', async () => {
+      // Given
+      const key = 'nonExistentTool';
+      const params = { test: 'data' };
+      const { result } = renderHook(() => useToolStore());
+
+      act(() => {
+        useToolStore.setState({
+          builtinToolLoading: {},
+        });
+      });
+
+      // When
+      let resultData: string | undefined;
+      await act(async () => {
+        resultData = await result.current.transformApiArgumentsToAiState(key, params);
+      });
+
+      // Then
+      expect(resultData).toBe(JSON.stringify(params));
+    });
+
+    it('should handle errors and toggle loading state', async () => {
+      // Given
+      const key = 'mockTool';
+      const params = { test: 'data' };
+      const error = new Error('Tool execution failed');
+      const mockFn = vi.fn().mockRejectedValue(error);
+      const { result } = renderHook(() => useToolStore());
+
+      act(() => {
+        useToolStore.setState({
+          builtinToolLoading: { [key]: false },
+          mockTool: mockFn,
+        } as any);
+      });
+
+      // When/Then
+      await act(async () => {
+        await expect(result.current.transformApiArgumentsToAiState(key, params)).rejects.toThrow(
+          'Tool execution failed',
+        );
+      });
+
+      // Should have toggled loading state back to false
+      expect(result.current.builtinToolLoading[key]).toBe(false);
+    });
+  });
+
+  describe('toggleBuiltinToolLoading', () => {
+    it('should toggle the loading state for a tool', () => {
+      const { result } = renderHook(() => useToolStore());
+      const key = 'testTool';
+
+      act(() => {
+        result.current.toggleBuiltinToolLoading(key, true);
+      });
+
+      expect(result.current.builtinToolLoading[key]).toBe(true);
+
+      act(() => {
+        result.current.toggleBuiltinToolLoading(key, false);
+      });
+
+      expect(result.current.builtinToolLoading[key]).toBe(false);
     });
   });
 });

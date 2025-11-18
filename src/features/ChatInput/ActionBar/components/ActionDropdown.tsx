@@ -23,6 +23,10 @@ export interface ActionDropdownProps extends DropdownProps {
   maxHeight?: number | string;
   maxWidth?: number | string;
   minWidth?: number | string;
+  /**
+   * 是否在挂载时预渲染弹层，避免首次触发展开时的渲染卡顿
+   */
+  prefetch?: boolean;
 }
 
 const ActionDropdown = memo<ActionDropdownProps>(
@@ -33,6 +37,7 @@ const ActionDropdown = memo<ActionDropdownProps>(
     return (
       <Dropdown
         arrow={false}
+        destroyOnHidden={false}
         menu={{
           ...menu,
           className: cx(styles.dropdownMenu, menu.className),

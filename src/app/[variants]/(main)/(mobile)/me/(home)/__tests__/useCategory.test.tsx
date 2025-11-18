@@ -11,20 +11,15 @@ const wrapper: React.JSXElementConstructor<{ children: React.ReactNode }> = ({ c
 );
 
 // Mock dependencies
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
 }));
 
 vi.mock('react-i18next', () => ({
   useTranslation: vi.fn(() => ({
     t: vi.fn((key) => key),
   })),
-}));
-
-vi.mock('../../settings/features/useCategory', () => ({
-  useCategory: vi.fn(() => [{ key: 'extraSetting', label: 'Extra Setting' }]),
 }));
 
 // 定义一个变量来存储 enableAuth 的值
@@ -40,9 +35,19 @@ vi.mock('@/const/auth', () => ({
   },
 }));
 
+// Mock version constants
+vi.mock('@/const/version', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/const/version')>();
+  return {
+    ...actual,
+    isServerMode: false,
+  };
+});
+
 afterEach(() => {
   enableAuth = true;
   enableClerk = true;
+  mockNavigate.mockReset();
 });
 
 describe('useCategory', () => {
@@ -59,7 +64,6 @@ describe('useCategory', () => {
       const items = result.current;
       expect(items.some((item) => item.key === 'profile')).toBe(true);
       expect(items.some((item) => item.key === 'setting')).toBe(true);
-      expect(items.some((item) => item.key === 'data')).toBe(true);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
       expect(items.some((item) => item.key === 'changelog')).toBe(true);
@@ -82,21 +86,6 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
       expect(items.some((item) => item.key === 'changelog')).toBe(true);
-    });
-  });
-
-  it('should handle settings for non-authenticated users', () => {
-    act(() => {
-      useUserStore.setState({ isSignedIn: false });
-    });
-    enableClerk = false;
-    enableAuth = false;
-
-    const { result } = renderHook(() => useCategory(), { wrapper });
-
-    act(() => {
-      const items = result.current;
-      expect(items.some((item) => item.key === 'extraSetting')).toBe(true);
     });
   });
 });

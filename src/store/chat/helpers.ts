@@ -1,21 +1,29 @@
-import { ChatMessage } from '@/types/message';
-import { OpenAIChatMessage } from '@/types/openai/chat';
+import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
+
 import { encodeAsync } from '@/utils/tokenizer';
 
 export const getMessagesTokenCount = async (messages: OpenAIChatMessage[]) =>
   encodeAsync(messages.map((m) => m.content).join(''));
 
-export const getMessageById = (messages: ChatMessage[], id: string) =>
-  messages.find((m) => m.id === id);
+export const getMessageById = (
+  messages: UIChatMessage[],
+  id: string,
+): UIChatMessage | undefined => {
+  // First try to find in top-level messages
+  const directMatch = messages.find((m) => m.id === id);
+  if (directMatch) return directMatch;
+
+  return undefined;
+};
 
 const getSlicedMessages = (
-  messages: ChatMessage[],
+  messages: UIChatMessage[],
   options: {
     enableHistoryCount?: boolean;
     historyCount?: number;
     includeNewUserMessage?: boolean;
   },
-): ChatMessage[] => {
+): UIChatMessage[] => {
   // if historyCount is not enabled, return all messages
   if (!options.enableHistoryCount || options.historyCount === undefined) return messages;
 

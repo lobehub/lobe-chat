@@ -135,6 +135,7 @@
     }
   },
   "close": "Close",
+  "confirm": "Confirm",
   "contact": "Contact Us",
   "copy": "Copy",
   "copyFail": "Copy failed",
@@ -285,6 +286,7 @@
   "oauth": "SSO Login",
   "officialSite": "Official Website",
   "ok": "OK",
+  "or": "or",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",

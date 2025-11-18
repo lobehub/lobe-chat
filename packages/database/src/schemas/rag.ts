@@ -4,6 +4,7 @@ import {
   integer,
   jsonb,
   pgTable,
+  primaryKey,
   text,
   uniqueIndex,
   uuid,
@@ -11,8 +12,8 @@ import {
   vector,
 } from 'drizzle-orm/pg-core';
 
-import { timestamps } from './_helpers';
-import { files } from './file';
+import { createdAt, timestamps } from './_helpers';
+import { documents, files } from './file';
 import { users } from './user';
 
 export const chunks = pgTable(
@@ -86,3 +87,32 @@ export const embeddings = pgTable(
 
 export type NewEmbeddingsItem = typeof embeddings.$inferInsert;
 export type EmbeddingsSelectItem = typeof embeddings.$inferSelect;
+
+/**
+ * 文档块表 - 将文档内容分割成块并关联到 chunks 表，用于向量检索
+ * 注意：此表可选，如果已经使用 pages 字段存储了文档块，可以不需要此表
+ */
+export const documentChunks = pgTable(
+  'document_chunks',
+  {
+    documentId: varchar('document_id', { length: 30 })
+      .references(() => documents.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    chunkId: uuid('chunk_id')
+      .references(() => chunks.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    pageIndex: integer('page_index'),
+
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    createdAt: createdAt(),
+  },
+  (t) => [primaryKey({ columns: [t.documentId, t.chunkId] })],
+);
+
+export type NewDocumentChunk = typeof documentChunks.$inferInsert;
+export type DocumentChunkItem = typeof documentChunks.$inferSelect;

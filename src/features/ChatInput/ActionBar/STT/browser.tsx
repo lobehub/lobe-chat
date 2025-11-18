@@ -1,3 +1,5 @@
+import { getMessageError } from '@lobechat/fetch-sse';
+import { ChatMessageError } from '@lobechat/types';
 import { SpeechRecognitionOptions, useSpeechRecognition } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useState } from 'react';
@@ -7,13 +9,11 @@ import { SWRConfiguration } from 'swr';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { ChatMessageError } from '@/types/message';
-import { getMessageError } from '@/utils/fetch';
 
 import CommonSTT from './common';
 
@@ -42,9 +42,9 @@ const BrowserSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [error, setError] = useState<ChatMessageError>();
   const { t } = useTranslation('chat');
 
-  const [loading, updateInputMessage] = useChatStore((s) => [
-    chatSelectors.isAIGenerating(s),
-    s.updateInputMessage,
+  const [loading, updateMessageInput] = useChatStore((s) => [
+    messageStateSelectors.isAIGenerating(s),
+    s.updateMessageInput,
   ]);
 
   const setDefaultError = useCallback(
@@ -76,7 +76,7 @@ const BrowserSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
     },
     onTextChange: (text) => {
       if (loading) stop();
-      if (text) updateInputMessage(text);
+      if (text) updateMessageInput(text);
     },
   });
 

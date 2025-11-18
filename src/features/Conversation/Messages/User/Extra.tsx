@@ -5,7 +5,7 @@ import ExtraContainer from '@/features/Conversation/components/Extras/ExtraConta
 import TTS from '@/features/Conversation/components/Extras/TTS';
 import Translate from '@/features/Conversation/components/Extras/Translate';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors } from '@/store/chat/selectors';
 
 interface UserMessageExtraProps {
   content: string;
@@ -13,7 +13,7 @@ interface UserMessageExtraProps {
   id: string;
 }
 export const UserMessageExtra = memo<UserMessageExtraProps>(({ extra, id, content }) => {
-  const loading = useChatStore(chatSelectors.isMessageGenerating(id));
+  const loading = useChatStore(messageStateSelectors.isMessageGenerating(id));
 
   const showTranslate = !!extra?.translate;
   const showTTS = !!extra?.tts;

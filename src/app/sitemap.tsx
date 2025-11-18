@@ -47,7 +47,13 @@ export function parsePaginatedId(id: string): { page?: number; type: SitemapType
   return { type: id as SitemapType };
 }
 
-export default async function sitemap({ id }: { id: string }): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap({
+  id: idPromise,
+}: {
+  id: string;
+}): Promise<MetadataRoute.Sitemap> {
+  const id = await idPromise;
+
   const { type, page } = parsePaginatedId(id);
   const sitemapModule = new Sitemap();
 

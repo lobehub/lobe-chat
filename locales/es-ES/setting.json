@@ -2,6 +2,45 @@
   "about": {
     "title": "Acerca de"
   },
+  "agentInfoDescription": {
+    "basic": {
+      "avatar": "Avatar",
+      "description": "Descripción",
+      "name": "Nombre",
+      "tags": "Etiquetas",
+      "title": "Información del Asistente"
+    },
+    "chat": {
+      "displayMode": "Modo de visualización",
+      "enableHistoryCount": "Habilitar conteo de mensajes históricos",
+      "historyCount": "Cantidad de mensajes históricos",
+      "no": "No",
+      "searchMode": "Modo de búsqueda",
+      "title": "Preferencias de chat",
+      "yes": "Sí"
+    },
+    "model": {
+      "maxTokens": "Máximo de tokens",
+      "model": "Modelo",
+      "provider": "Proveedor",
+      "temperature": "Temperatura",
+      "title": "Configuración del modelo",
+      "topP": "Valor Top P"
+    },
+    "plugins": {
+      "count": "Configuración de plugins ({{count}})",
+      "empty": "Aún no se han instalado plugins",
+      "title": "Plugins instalados"
+    },
+    "role": {
+      "systemRole": "Mensaje del sistema",
+      "title": "Configuración de rol"
+    },
+    "value": {
+      "unset": "No configurado",
+      "untitled": "Asistente sin título"
+    }
+  },
   "agentTab": {
     "chat": "Preferencias de chat",
     "meta": "Información del asistente",
@@ -18,6 +57,8 @@
     },
     "title": "Análisis de datos"
   },
+  "checking": "Comprobando...",
+  "checkingPermissions": "Verificando permisos...",
   "danger": {
     "clear": {
       "action": "Limpiar ahora",
@@ -43,8 +84,8 @@
   "header": {
     "desc": "Preferencias y configuración del modelo.",
     "global": "Configuración global",
-    "group": "Configuración del grupo",
-    "groupDesc": "Gestionar el grupo actual",
+    "group": "Configuración del equipo",
+    "groupDesc": "Gestiona el equipo de agentes y las preferencias de chat",
     "session": "Configuración de la sesión",
     "sessionDesc": "Configuración de roles y preferencias de sesión.",
     "sessionWithName": "Configuración de la sesión · {{name}}",
@@ -145,6 +186,58 @@
       "title": "Dirección del proxy de la API"
     },
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!"
+  },
+  "marketPublish": {
+    "modal": {
+      "changelog": {
+        "extra": "Describe los principales cambios y mejoras de esta versión",
+        "label": "Registro de cambios",
+        "maxLengthError": "El registro de cambios no puede superar los 500 caracteres",
+        "placeholder": "Introduce el registro de cambios",
+        "required": "Por favor, introduce el registro de cambios"
+      },
+      "comparison": {
+        "local": "Versión local actual",
+        "remote": "Versión publicada actual"
+      },
+      "identifier": {
+        "extra": "El identificador será único para el asistente. Se recomienda usar letras minúsculas, números y guiones",
+        "label": "Identificador del asistente",
+        "lengthError": "La longitud del identificador debe estar entre 3 y 50 caracteres",
+        "patternError": "El identificador solo puede contener letras minúsculas, números y guiones",
+        "placeholder": "Introduce un identificador único para el asistente, por ejemplo: desarrollo-web",
+        "required": "Por favor, introduce el identificador del asistente"
+      },
+      "loading": {
+        "fetchingRemote": "Cargando datos remotos...",
+        "submit": "Publicando asistente...",
+        "upload": "Publicando nueva versión..."
+      },
+      "messages": {
+        "createVersionFailed": "Error al crear la versión: {{message}}",
+        "fetchRemoteFailed": "Error al obtener los datos del asistente remoto",
+        "missingIdentifier": "El asistente actual no tiene un identificador de mercado",
+        "notAuthenticated": "Por favor, inicia sesión en tu cuenta del mercado",
+        "publishFailed": "Error al publicar: {{message}}"
+      },
+      "submitButton": "Publicar",
+      "title": {
+        "submit": "Compartir en el mercado de asistentes",
+        "upload": "Publicar nueva versión"
+      }
+    },
+    "resultModal": {
+      "message": "El asistente ha sido enviado para revisión. Una vez aprobado, se publicará automáticamente. Haz clic en «Ver en el mercado» para ver el asistente publicado.",
+      "view": "Ver en el mercado"
+    },
+    "submit": {
+      "button": "Compartir en el mercado",
+      "tooltip": "Comparte el asistente en el mercado"
+    },
+    "upload": {
+      "button": "Publicar nueva versión",
+      "tooltip": "Publica una nueva versión en el mercado de asistentes"
+    }
   },
   "message": {
     "success": "Actualización exitosa"
@@ -312,27 +405,27 @@
   },
   "settingGroup": {
     "description": {
-      "placeholder": "Por favor, ingrese la descripción del grupo",
-      "title": "Descripción del grupo"
+      "placeholder": "Introduce la descripción del equipo",
+      "title": "Descripción del equipo"
     },
     "name": {
-      "placeholder": "Por favor, ingrese el nombre del grupo",
-      "title": "Nombre del grupo"
+      "placeholder": "Introduce el nombre del equipo",
+      "title": "Nombre del equipo"
     },
     "scene": {
-      "desc": "Selecciona el escenario del chat grupal",
+      "desc": "Selecciona el escenario del equipo",
       "options": {
         "casual": "Informal",
         "productive": "Productivo"
       },
-      "title": "Escenario del chat grupal"
+      "title": "Escenario del equipo"
     },
-    "submit": "Actualizar grupo",
+    "submit": "Actualizar equipo",
     "systemPrompt": {
       "placeholder": "Por favor, ingrese la indicación del sistema para el anfitrión",
       "title": "Indicación del sistema para el anfitrión"
     },
-    "title": "Información del grupo"
+    "title": "Información del equipo de agentes"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -340,7 +433,7 @@
       "title": "Permitir mensajes directos del asistente"
     },
     "enableSupervisor": {
-      "desc": "Activa la función de moderador del grupo; el moderador gestionará el flujo de la conversación",
+      "desc": "Habilita la función de moderador del equipo de agentes. El moderador gestionará el flujo de conversación del equipo",
       "title": "Activar moderador"
     },
     "maxResponseInRow": {
@@ -353,7 +446,7 @@
     },
     "orchestratorTitle": "Configuración del anfitrión",
     "responseOrder": {
-      "desc": "Los agentes responderán en el orden establecido en el grupo.",
+      "desc": "Los agentes responderán en el orden establecido en el chat",
       "options": {
         "natural": "Natural",
         "sequential": "Secuencial"
@@ -362,7 +455,7 @@
       "title": "Orden de respuesta"
     },
     "responseSpeed": {
-      "desc": "Controla la velocidad general del chat grupal.",
+      "desc": "Controla la velocidad general del chat",
       "options": {
         "fast": "Rápido",
         "medium": "Medio",
@@ -386,10 +479,11 @@
   "settingGroupMembers": {
     "addToGroup": "Unirse al grupo",
     "availableAgents": "Asistentes disponibles",
+    "createMember": "Crear miembro",
     "defaultAgent": "Asistente personalizado",
     "disableHost": "Desactivar asistente del anfitrión",
     "edit": "Editar miembro",
-    "empty": "No hay agentes en este grupo. Haga clic en el botón + para agregar miembros.",
+    "empty": "Este equipo no tiene miembros por el momento. Haz clic en el botón + para añadir miembros.",
     "enableHost": "Activar asistente del anfitrión",
     "groupHost": "Anfitrión del grupo",
     "groupMembers": "Miembros del grupo",
@@ -566,7 +660,7 @@
   },
   "submitAgentModal": {
     "button": "Enviar asistente",
-    "identifier": "Identificador del asistente",
+    "identifier": "Identificador del asistente (identifier)",
     "metaMiss": "Por favor complete la información del asistente antes de enviar, debe incluir nombre, descripción y etiquetas",
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
     "tooltips": "Compartir en el mercado de asistentes"
@@ -632,11 +726,6 @@
       "label": "Modelo de denominación de temas para pintura AI",
       "modelDesc": "Modelo designado para la denominación automática de temas en pintura AI",
       "title": "Denominación automática de temas para pintura AI"
-    },
-    "groupChatSupervisor": {
-      "label": "Modelo de supervisión de chats grupales",
-      "modelDesc": "Modelo designado para supervisar y gestionar las conversaciones en chats grupales",
-      "title": "Supervisión y gestión de chats grupales"
     },
     "helpInfo": "Al crear un nuevo asistente, se utilizarán los ajustes predeterminados del asistente como valores predeterminados.",
     "historyCompress": {

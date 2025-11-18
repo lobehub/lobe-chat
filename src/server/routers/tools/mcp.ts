@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import {
   GetStreamableMcpServerManifestInputSchema,
   StreamableHTTPAuthSchema,
@@ -5,10 +6,12 @@ import {
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { isDesktop, isServerMode } from '@/const/version';
-import { passwordProcedure } from '@/libs/trpc/edge';
+import { ToolCallContent } from '@/libs/mcp';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { FileService } from '@/server/services/file';
 import { mcpService } from '@/server/services/mcp';
+import { processContentBlocks } from '@/server/services/mcp/contentProcessor';
 
 // Define Zod schemas for MCP Client parameters
 const httpParamsSchema = z.object({
@@ -38,7 +41,13 @@ const checkStdioEnvironment = (params: z.infer<typeof mcpClientParamsSchema>) =>
   }
 };
 
-const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
+const mcpProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
+  return next({
+    ctx: {
+      fileService: new FileService(ctx.serverDB, ctx.userId),
+    },
+  });
+});
 
 export const mcpRouter = router({
   getStreamableMcpServerManifest: mcpProcedure
@@ -96,13 +105,21 @@ export const mcpRouter = router({
         toolName: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       // Stdio check can be done here or rely on the service/client layer
       checkStdioEnvironment(input.params);
 
-      // Pass the validated params, toolName, and args to the service
-      const data = await mcpService.callTool(input.params, input.toolName, input.args);
+      // Create a closure that binds fileService and userId to processContentBlocks
+      const boundProcessContentBlocks = async (blocks: ToolCallContent[]) => {
+        return processContentBlocks(blocks, ctx.fileService);
+      };
 
-      return JSON.stringify(data);
+      // Pass the validated params, toolName, args, and bound processContentBlocks to the service
+      return await mcpService.callTool({
+        clientParams: input.params,
+        toolName: input.toolName,
+        argsStr: input.args,
+        processContentBlocks: boundProcessContentBlocks,
+      });
     }),
 });

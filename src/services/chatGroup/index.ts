@@ -1,12 +1,67 @@
-import { isDesktop } from '@/const/version';
+import {
+  ChatGroupAgentItem,
+  ChatGroupItem,
+  NewChatGroup,
+  NewChatGroupAgent,
+} from '@/database/schemas';
+import { lambdaClient } from '@/libs/trpc/client';
 
-import { ClientService } from './client';
-import { ServerService } from './server';
+class ChatGroupService {
+  createGroup = (params: Omit<NewChatGroup, 'userId'>): Promise<ChatGroupItem> => {
+    return lambdaClient.group.createGroup.mutate({
+      ...params,
+      config: params.config as any,
+    });
+  };
 
-const clientService =
-  process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite' ? new ClientService() : new ServerService();
+  updateGroup = (id: string, value: Partial<ChatGroupItem>): Promise<ChatGroupItem> => {
+    return lambdaClient.group.updateGroup.mutate({
+      id,
+      value: {
+        ...value,
+        config: value.config as any,
+      },
+    });
+  };
 
-export const chatGroupService =
-  process.env.NEXT_PUBLIC_SERVICE_MODE === 'server' || isDesktop
-    ? new ServerService()
-    : clientService;
+  deleteGroup = (id: string) => {
+    return lambdaClient.group.deleteGroup.mutate({ id });
+  };
+
+  getGroup = (id: string): Promise<ChatGroupItem | undefined> => {
+    return lambdaClient.group.getGroup.query({ id });
+  };
+
+  getGroups = (): Promise<ChatGroupItem[]> => {
+    return lambdaClient.group.getGroups.query();
+  };
+
+  addAgentsToGroup = (groupId: string, agentIds: string[]): Promise<ChatGroupAgentItem[]> => {
+    return lambdaClient.group.addAgentsToGroup.mutate({ agentIds, groupId });
+  };
+
+  removeAgentsFromGroup = (groupId: string, agentIds: string[]) => {
+    return lambdaClient.group.removeAgentsFromGroup.mutate({ agentIds, groupId });
+  };
+
+  updateAgentInGroup = (
+    groupId: string,
+    agentId: string,
+    updates: Partial<Pick<NewChatGroupAgent, 'order' | 'role'>>,
+  ): Promise<ChatGroupAgentItem> => {
+    return lambdaClient.group.updateAgentInGroup.mutate({
+      agentId,
+      groupId,
+      updates: {
+        order: updates.order === null ? undefined : updates.order,
+        role: updates.role === null ? undefined : updates.role,
+      },
+    });
+  };
+
+  getGroupAgents = (groupId: string): Promise<ChatGroupAgentItem[]> => {
+    return lambdaClient.group.getGroupAgents.query({ groupId });
+  };
+}
+
+export const chatGroupService = new ChatGroupService();

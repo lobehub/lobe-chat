@@ -135,6 +135,7 @@
     }
   },
   "close": "Kapat",
+  "confirm": "Onayla",
   "contact": "Bize Ulaşın",
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
@@ -285,6 +286,7 @@
   "oauth": "SSO Girişi",
   "officialSite": "Resmi Site",
   "ok": "Tamam",
+  "or": "veya",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
