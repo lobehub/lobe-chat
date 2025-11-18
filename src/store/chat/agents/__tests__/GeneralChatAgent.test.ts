@@ -220,6 +220,50 @@ describe('GeneralChatAgent', () => {
       ]);
     });
 
+    it('should handle invalid JSON in tool arguments gracefully', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCall: ChatToolPayload = {
+        id: 'call-1',
+        identifier: 'test-plugin',
+        apiName: 'test-api',
+        arguments: '{invalid json}', // Invalid JSON
+        type: 'default',
+      };
+
+      const state = createMockState({
+        toolManifestMap: {
+          'test-plugin': {
+            identifier: 'test-plugin',
+            // No humanIntervention config
+          },
+        },
+      });
+
+      const context = createMockContext('llm_result', {
+        hasToolsCalling: true,
+        toolsCalling: [toolCall],
+        parentMessageId: 'msg-1',
+      });
+
+      // Should not throw, should proceed with call_tool (treats invalid JSON as empty args)
+      const result = await agent.runner(context, state);
+
+      expect(result).toEqual([
+        {
+          type: 'call_tool',
+          payload: {
+            parentMessageId: 'msg-1',
+            toolCalling: toolCall,
+          },
+        },
+      ]);
+    });
+
     it('should return request_human_approve for tools requiring intervention', async () => {
       const agent = new GeneralChatAgent({
         agentConfig: { maxSteps: 100 },

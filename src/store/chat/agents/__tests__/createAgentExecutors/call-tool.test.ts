@@ -3,6 +3,8 @@ import type { ChatToolPayload } from '@lobechat/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Mock } from 'vitest';
 
+import type { OperationCancelContext } from '@/store/chat/slices/operation/types';
+
 import { createAssistantMessage, createCallToolInstruction, createMockStore } from './fixtures';
 import {
   createInitialState,
@@ -1767,6 +1769,141 @@ describe('call_tool executor', () => {
           groupId: 'group_latest',
         }),
       );
+    });
+  });
+
+  describe('High Priority Coverage - Cancellation Scenarios', () => {
+    it('should skip tool execution when parent operation is cancelled after message creation', async () => {
+      // Given
+      const mockStore = createMockStore();
+      const context = createTestContext({ sessionId: 'cancel-test', topicId: 'topic-test' });
+
+      const assistantMessage = createAssistantMessage();
+      mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
+
+      const toolCall: ChatToolPayload = {
+        id: 'tool_cancel_after_msg',
+        identifier: 'test-plugin',
+        apiName: 'test-api',
+        arguments: JSON.stringify({ param: 'value' }),
+        type: 'default',
+      };
+
+      const instruction = createCallToolInstruction(toolCall);
+      const state = createInitialState();
+
+      // Mock: Simulate parent operation being cancelled after createToolMessage completes
+      let toolCallingOpId: string;
+      const originalCompleteOperation = mockStore.completeOperation;
+      mockStore.completeOperation = vi.fn((opId: string) => {
+        originalCompleteOperation(opId);
+        // Check if this is the createToolMessage operation completing
+        const op = mockStore.operations[opId];
+        if (op?.type === 'createToolMessage') {
+          // Abort parent toolCalling operation right after message creation completes
+          if (toolCallingOpId) {
+            const parentOp = mockStore.operations[toolCallingOpId];
+            if (parentOp) {
+              parentOp.abortController.abort();
+            }
+          }
+        }
+      });
+
+      const originalStartOperation = mockStore.startOperation;
+      mockStore.startOperation = vi.fn((config: any) => {
+        const result = originalStartOperation(config);
+        if (config.type === 'toolCalling') {
+          toolCallingOpId = result.operationId;
+        }
+        return result;
+      });
+
+      // When
+      const result = await executeWithMockContext({
+        executor: 'call_tool',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then
+      // Should return early without executing the tool
+      expect(result.events).toHaveLength(0);
+      // Should have created tool message but not executed it
+      expect(mockStore.optimisticCreateMessage).toHaveBeenCalled();
+    });
+
+    it('should handle executeToolCall cancellation and update message to aborted state', async () => {
+      // Given
+      const mockStore = createMockStore();
+      const context = createTestContext();
+
+      const assistantMessage = createAssistantMessage();
+      mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
+
+      const toolCall: ChatToolPayload = {
+        id: 'tool_exec_cancel',
+        identifier: 'slow-tool',
+        apiName: 'slow-operation',
+        arguments: JSON.stringify({ delay: 5000 }),
+        type: 'default',
+      };
+
+      const instruction = createCallToolInstruction(toolCall);
+      const state = createInitialState();
+
+      // Track cancel handler registration
+      let executeToolCancelHandler:
+        | ((context: OperationCancelContext) => void | Promise<void>)
+        | undefined;
+      const originalOnOperationCancel = mockStore.onOperationCancel;
+      mockStore.onOperationCancel = vi.fn(
+        (opId: string, handler: (context: OperationCancelContext) => void | Promise<void>) => {
+          const op = mockStore.operations[opId];
+          if (op?.type === 'executeToolCall') {
+            executeToolCancelHandler = handler;
+          }
+          return originalOnOperationCancel(opId, handler);
+        },
+      );
+
+      // When
+      await executeWithMockContext({
+        executor: 'call_tool',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then
+      expect(executeToolCancelHandler).toBeDefined();
+
+      // Verify cancel handler updates message correctly
+      if (executeToolCancelHandler) {
+        await executeToolCancelHandler({
+          operationId: 'exec-op-id',
+          type: 'executeToolCall',
+          reason: 'user_cancelled',
+        });
+
+        // Should update message content
+        expect(mockStore.optimisticUpdateMessageContent).toHaveBeenCalledWith(
+          expect.any(String),
+          'Tool execution was cancelled by user.',
+          undefined,
+          expect.objectContaining({ operationId: expect.any(String) }),
+        );
+
+        // Should update plugin intervention status
+        expect(mockStore.optimisticUpdateMessagePlugin).toHaveBeenCalledWith(
+          expect.any(String),
+          { intervention: { status: 'aborted' } },
+          expect.objectContaining({ operationId: expect.any(String) }),
+        );
+      }
     });
   });
 });
