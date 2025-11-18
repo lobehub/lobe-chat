@@ -3,7 +3,19 @@
 import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
-import { ArrowLeft, BookOpen, Compass, Monitor, Moon, Palette, Settings, Sun } from 'lucide-react';
+import {
+  ArrowLeft,
+  BookOpen,
+  Compass,
+  Github,
+  MessageCircle,
+  Monitor,
+  Moon,
+  Palette,
+  Settings,
+  Star,
+  Sun,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -33,7 +45,7 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorBgElevated};
     box-shadow: ${token.boxShadowSecondary};
 
-    animation: slide-down 0.2s ease-out;
+    animation: slide-down 0.12s ease-out;
 
     @keyframes slide-down {
       from {
@@ -164,7 +176,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: ${token.colorBgMask};
 
-    animation: fade-in 0.15s ease-in-out;
+    animation: fade-in 0.1s ease-in-out;
 
     @keyframes fade-in {
       from {
@@ -226,6 +238,11 @@ const Cmdk = memo(() => {
     setOpen(false);
   };
 
+  const handleExternalLink = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+    setOpen(false);
+  };
+
   const handleThemeChange = (theme: 'light' | 'dark' | 'auto') => {
     switchThemeMode(theme);
     setOpen(false);
@@ -281,10 +298,17 @@ const Cmdk = memo(() => {
                   <Command.Item onSelect={() => handleNavigate('/settings')} value="settings">
                     <Settings className={styles.icon} />
                     <div className={styles.itemContent}>
-                      <div className={styles.itemLabel}>{t('cmdk.openSettings')}</div>
+                      <div className={styles.itemLabel}>{t('cmdk.settings')}</div>
                     </div>
                   </Command.Item>
                 )}
+
+                <Command.Item onSelect={() => setPages([...pages, 'theme'])} value="theme">
+                  <Monitor className={styles.icon} />
+                  <div className={styles.itemContent}>
+                    <div className={styles.itemLabel}>{t('cmdk.theme')}</div>
+                  </div>
+                </Command.Item>
 
                 <Command.Group heading={t('cmdk.navigate')}>
                   {!pathname?.startsWith('/discover') && (
@@ -313,12 +337,37 @@ const Cmdk = memo(() => {
                   )}
                 </Command.Group>
 
-                <Command.Item onSelect={() => setPages([...pages, 'theme'])} value="theme">
-                  <Monitor className={styles.icon} />
-                  <div className={styles.itemContent}>
-                    <div className={styles.itemLabel}>{t('cmdk.theme')}</div>
-                  </div>
-                </Command.Item>
+                <Command.Group heading={t('cmdk.about')}>
+                  <Command.Item
+                    onSelect={() =>
+                      handleExternalLink('https://github.com/lobehub/lobe-chat/issues/new/choose')
+                    }
+                    value="submit-issue"
+                  >
+                    <Github className={styles.icon} />
+                    <div className={styles.itemContent}>
+                      <div className={styles.itemLabel}>{t('cmdk.submitIssue')}</div>
+                    </div>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => handleExternalLink('https://github.com/lobehub/lobe-chat')}
+                    value="star-github"
+                  >
+                    <Star className={styles.icon} />
+                    <div className={styles.itemContent}>
+                      <div className={styles.itemLabel}>{t('cmdk.starOnGitHub')}</div>
+                    </div>
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => handleExternalLink('https://discord.gg/AYFPHvv2jT')}
+                    value="discord"
+                  >
+                    <MessageCircle className={styles.icon} />
+                    <div className={styles.itemContent}>
+                      <div className={styles.itemLabel}>{t('cmdk.communitySupport')}</div>
+                    </div>
+                  </Command.Item>
+                </Command.Group>
               </>
             )}
 

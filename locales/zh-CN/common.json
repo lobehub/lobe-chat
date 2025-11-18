@@ -136,6 +136,8 @@
   },
   "close": "关闭",
   "cmdk": {
+    "about": "关于",
+    "communitySupport": "社区支持",
     "discover": "发现",
     "knowledgeBase": "知识库",
     "navigate": "导航",
@@ -143,6 +145,9 @@
     "openSettings": "打开设置",
     "painting": "AI 绘画",
     "searchPlaceholder": "搜索功能...",
+    "settings": "设置",
+    "starOnGitHub": "在 GitHub 上给我们 Star",
+    "submitIssue": "提交问题",
     "theme": "主题",
     "themeAuto": "跟随系统",
     "themeDark": "深色模式",

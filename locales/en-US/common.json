@@ -136,6 +136,8 @@
   },
   "close": "Close",
   "cmdk": {
+    "about": "About",
+    "communitySupport": "Community Support",
     "discover": "Discover",
     "knowledgeBase": "Knowledge Base",
     "navigate": "Navigate",
@@ -143,6 +145,9 @@
     "openSettings": "Open Settings",
     "painting": "AI Painting",
     "searchPlaceholder": "Search for features...",
+    "settings": "Settings",
+    "starOnGitHub": "Star us on GitHub",
+    "submitIssue": "Submit Issue",
     "theme": "Theme",
     "themeAuto": "Auto",
     "themeDark": "Dark",
