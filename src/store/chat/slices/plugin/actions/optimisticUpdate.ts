@@ -86,13 +86,15 @@ export const pluginOptimisticUpdate: StateCreator<
   PluginOptimisticUpdateAction
 > = (set, get) => ({
   optimisticUpdatePluginState: async (id, value, context) => {
-    const { replaceMessages } = get();
+    const { replaceMessages, internal_getSessionContext } = get();
 
     // optimistic update
-    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState: value } });
+    get().internal_dispatchMessage(
+      { id, type: 'updateMessage', value: { pluginState: value } },
+      context,
+    );
 
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = internal_getSessionContext(context);
 
     const result = await messageService.updateMessagePluginState(id, value, {
       sessionId,
@@ -152,17 +154,19 @@ export const pluginOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdatePlugin: async (id, value, context) => {
-    const { replaceMessages } = get();
+    const { replaceMessages, internal_getSessionContext } = get();
 
     // optimistic update
-    get().internal_dispatchMessage({
-      id,
-      type: 'updateMessagePlugin',
-      value,
-    });
+    get().internal_dispatchMessage(
+      {
+        id,
+        type: 'updateMessagePlugin',
+        value,
+      },
+      context,
+    );
 
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = internal_getSessionContext(context);
 
     const result = await messageService.updateMessagePlugin(id, value, {
       sessionId,
@@ -202,12 +206,11 @@ export const pluginOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdatePluginError: async (id, error, context) => {
-    const { replaceMessages } = get();
+    const { replaceMessages, internal_getSessionContext } = get();
 
-    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
 
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = internal_getSessionContext(context);
 
     const result = await messageService.updateMessage(
       id,
@@ -227,10 +230,9 @@ export const pluginOptimisticUpdate: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message || !message.tools) return;
 
-    const { internal_toggleMessageLoading, replaceMessages } = get();
+    const { internal_toggleMessageLoading, replaceMessages, internal_getSessionContext } = get();
 
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = internal_getSessionContext(context);
 
     internal_toggleMessageLoading(true, id);
     const result = await messageService.updateMessage(

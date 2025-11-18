@@ -21,8 +21,7 @@ import { ChatStore } from '@/store/chat/store';
  * Context for optimistic updates to specify session/topic isolation
  */
 export interface OptimisticUpdateContext {
-  sessionId?: string;
-  topicId?: string | null;
+  operationId?: string;
 }
 
 /**
@@ -38,10 +37,8 @@ export interface MessageOptimisticUpdateAction {
     params: CreateMessageParams,
     context?: {
       groupMessageId?: string;
-      sessionId?: string;
-      skipRefresh?: boolean;
+      operationId?: string;
       tempMessageId?: string;
-      topicId?: string | null;
     },
   ) => Promise<{ id: string; messages: UIChatMessage[] } | undefined>;
 
@@ -136,28 +133,28 @@ export const messageOptimisticUpdate: StateCreator<
     try {
       const result = await messageService.createMessage(message);
 
-      if (!context?.skipRefresh) {
-        // Use the messages returned from createMessage (already grouped)
-        const sessionId = context?.sessionId ?? get().activeId;
-        const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
-        replaceMessages(result.messages, { sessionId, topicId });
-      }
+      // Use the messages returned from createMessage (already grouped)
+      const { sessionId, topicId } = get().internal_getSessionContext(context);
+      replaceMessages(result.messages, { sessionId, topicId });
 
       internal_toggleMessageLoading(false, tempId);
       return result;
     } catch (e) {
       internal_toggleMessageLoading(false, tempId);
-      internal_dispatchMessage({
-        id: tempId,
-        type: 'updateMessage',
-        value: {
-          error: {
-            body: e,
-            message: (e as Error).message,
-            type: ChatErrorType.CreateMessageError,
+      internal_dispatchMessage(
+        {
+          id: tempId,
+          type: 'updateMessage',
+          value: {
+            error: {
+              body: e,
+              message: (e as Error).message,
+              type: ChatErrorType.CreateMessageError,
+            },
           },
         },
-      });
+        context,
+      );
     }
   },
 
@@ -172,9 +169,8 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticDeleteMessage: async (id: string, context) => {
-    get().internal_dispatchMessage({ id, type: 'deleteMessage' });
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    get().internal_dispatchMessage({ id, type: 'deleteMessage' }, context);
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
     const result = await messageService.removeMessage(id, {
       sessionId,
       topicId,
@@ -185,9 +181,8 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticDeleteMessages: async (ids, context) => {
-    get().internal_dispatchMessage({ ids, type: 'deleteMessages' });
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    get().internal_dispatchMessage({ ids, type: 'deleteMessages' }, context);
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
     const result = await messageService.removeMessages(ids, {
       sessionId,
       topicId,
@@ -209,21 +204,26 @@ export const messageOptimisticUpdate: StateCreator<
     // we need to update the message content at the frontend to avoid the update flick
     // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
     if (extra?.toolCalls) {
-      internal_dispatchMessage({
-        id,
-        type: 'updateMessage',
-        value: { tools: internal_transformToolCalls(extra?.toolCalls) },
-      });
+      internal_dispatchMessage(
+        {
+          id,
+          type: 'updateMessage',
+          value: { tools: internal_transformToolCalls(extra?.toolCalls) },
+        },
+        context,
+      );
     } else {
-      internal_dispatchMessage({
-        id,
-        type: 'updateMessage',
-        value: { content },
-      });
+      internal_dispatchMessage(
+        {
+          id,
+          type: 'updateMessage',
+          value: { content },
+        },
+        context,
+      );
     }
 
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
 
     const result = await messageService.updateMessage(
       id,
@@ -252,9 +252,8 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessageError: async (id, error, context) => {
-    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
     const result = await messageService.updateMessage(id, { error }, { sessionId, topicId });
     if (result?.success && result.messages) {
       get().replaceMessages(result.messages, { sessionId, topicId });
@@ -267,14 +266,16 @@ export const messageOptimisticUpdate: StateCreator<
     const { internal_dispatchMessage, refreshMessages, replaceMessages } = get();
 
     // Optimistic update: update the frontend immediately
-    internal_dispatchMessage({
-      id,
-      type: 'updateMessageMetadata',
-      value: metadata,
-    });
+    internal_dispatchMessage(
+      {
+        id,
+        type: 'updateMessageMetadata',
+        value: metadata,
+      },
+      context,
+    );
 
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
 
     // Persist to database
     const result = await messageService.updateMessageMetadata(id, metadata, {
@@ -290,8 +291,7 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessagePluginError: async (id, error, context) => {
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
     const result = await messageService.updateMessagePluginError(id, error, {
       sessionId,
       topicId,
@@ -302,8 +302,7 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessageRAG: async (id, data, context) => {
-    const sessionId = context?.sessionId ?? get().activeId;
-    const topicId = context?.topicId !== undefined ? context.topicId : get().activeTopicId;
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
     const result = await messageService.updateMessageRAG(id, data, {
       sessionId,
       topicId,

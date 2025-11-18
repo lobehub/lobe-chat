@@ -103,10 +103,7 @@ export const pluginWorkflow: StateCreator<
         groupId: message.groupId, // Propagate groupId from parent message for group chat
       };
 
-      const result = await get().optimisticCreateMessage(toolMessage, {
-        sessionId: toolMessage.sessionId,
-        topicId: toolMessage.topicId,
-      });
+      const result = await get().optimisticCreateMessage(toolMessage);
       if (!result) return;
 
       // trigger the plugin call

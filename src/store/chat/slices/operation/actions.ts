@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { nanoid } from '@lobechat/utils';
+import debug from 'debug';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -17,6 +18,7 @@ import type {
 } from './types';
 
 const n = setNamespace('operation');
+const log = debug('lobe-store:operation');
 
 /**
  * Operation Actions
@@ -61,6 +63,15 @@ export interface OperationActions {
   ) => void;
 
   /**
+   * Get sessionId and topicId from operation or fallback to global state
+   * This is a helper method that can be used by other slices
+   */
+  internal_getSessionContext: (context?: { operationId?: string }) => {
+    sessionId: string;
+    topicId: string | null | undefined;
+  };
+
+  /**
    * Start an operation (supports auto-inheriting context from parent operation)
    */
   startOperation: (params: {
@@ -98,6 +109,35 @@ export const operationActions: StateCreator<
   [],
   OperationActions
 > = (set, get) => ({
+  internal_getSessionContext: (context) => {
+    if (context?.operationId) {
+      const operation = get().operations[context.operationId];
+      if (!operation) {
+        log('[internal_getSessionContext] ERROR: Operation not found: %s', context.operationId);
+        throw new Error(`Operation not found: ${context.operationId}`);
+      }
+      const sessionId = operation.context.sessionId!;
+      const topicId = operation.context.topicId;
+      log(
+        '[internal_getSessionContext] get from operation %s: sessionId=%s, topicId=%s',
+        context.operationId,
+        sessionId,
+        topicId,
+      );
+      return { sessionId, topicId };
+    }
+
+    // Fallback to global state
+    const sessionId = get().activeId;
+    const topicId = get().activeTopicId;
+    log(
+      '[internal_getSessionContext] use global state: sessionId=%s, topicId=%s',
+      sessionId,
+      topicId,
+    );
+    return { sessionId, topicId };
+  },
+
   startOperation: (params) => {
     const {
       type,
@@ -118,8 +158,11 @@ export const operationActions: StateCreator<
       if (parentOp) {
         // Inherit parent's context, allow partial override
         context = { ...parentOp.context, ...partialContext };
+        log('[startOperation] inherit context from parent %s: %o', parentOperationId, context);
       }
     }
+
+    log('[startOperation] create operation %s (type=%s, context=%o)', operationId, type, context);
 
     const abortController = new AbortController();
     const now = Date.now();
@@ -240,6 +283,16 @@ export const operationActions: StateCreator<
   },
 
   completeOperation: (operationId, metadata) => {
+    const operation = get().operations[operationId];
+    if (operation) {
+      log(
+        '[completeOperation] operation %s (type=%s) completed, duration=%dms',
+        operationId,
+        operation.type,
+        Date.now() - operation.metadata.startTime,
+      );
+    }
+
     set(
       produce((state: ChatStore) => {
         const operation = state.operations[operationId];
@@ -264,10 +317,21 @@ export const operationActions: StateCreator<
 
   cancelOperation: (operationId, reason = 'User cancelled') => {
     const operation = get().operations[operationId];
-    if (!operation) return;
+    if (!operation) {
+      log('[cancelOperation] operation not found: %s', operationId);
+      return;
+    }
+
+    log(
+      '[cancelOperation] cancelling operation %s (type=%s), reason: %s',
+      operationId,
+      operation.type,
+      reason,
+    );
 
     // Cancel all child operations recursively
     if (operation.childOperationIds && operation.childOperationIds.length > 0) {
+      log('[cancelOperation] cancelling %d child operations', operation.childOperationIds.length);
       operation.childOperationIds.forEach((childId) => {
         get().cancelOperation(childId, 'Parent operation cancelled');
       });
@@ -298,6 +362,16 @@ export const operationActions: StateCreator<
   },
 
   failOperation: (operationId, error) => {
+    const operation = get().operations[operationId];
+    if (operation) {
+      log(
+        '[failOperation] operation %s (type=%s) failed: %s',
+        operationId,
+        operation.type,
+        error.message,
+      );
+    }
+
     set(
       produce((state: ChatStore) => {
         const operation = state.operations[operationId];

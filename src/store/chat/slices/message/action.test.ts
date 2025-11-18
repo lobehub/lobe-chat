@@ -688,11 +688,14 @@ describe('chatMessage actions', () => {
         await result.current.optimisticUpdateMessageContent(messageId, newContent);
       });
 
-      expect(internal_dispatchMessageSpy).toHaveBeenCalledWith({
-        id: messageId,
-        type: 'updateMessage',
-        value: { content: newContent },
-      });
+      expect(internal_dispatchMessageSpy).toHaveBeenCalledWith(
+        {
+          id: messageId,
+          type: 'updateMessage',
+          value: { content: newContent },
+        },
+        undefined,
+      );
     });
 
     it('should replace messages after updating content', async () => {
@@ -872,10 +875,17 @@ describe('chatMessage actions', () => {
 
       const updateMessageSpy = vi.spyOn(messageService, 'updateMessage');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticUpdateMessageContent(messageId, content, undefined, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 
@@ -886,7 +896,7 @@ describe('chatMessage actions', () => {
       );
     });
 
-    it('optimisticUpdateMessageError should use context sessionId/topicId', async () => {
+    it('optimisticUpdateMessageError should use context operationId', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const error = { message: 'Error occurred', type: 'error' as any };
@@ -895,10 +905,17 @@ describe('chatMessage actions', () => {
 
       const updateMessageSpy = vi.spyOn(messageService, 'updateMessage');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticUpdateMessageError(messageId, error, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 
@@ -909,7 +926,7 @@ describe('chatMessage actions', () => {
       );
     });
 
-    it('optimisticDeleteMessage should use context sessionId/topicId', async () => {
+    it('optimisticDeleteMessage should use context operationId', async () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
       const contextSessionId = 'context-session';
@@ -917,10 +934,17 @@ describe('chatMessage actions', () => {
 
       const removeMessageSpy = vi.spyOn(messageService, 'removeMessage');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticDeleteMessage(messageId, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 
@@ -930,7 +954,7 @@ describe('chatMessage actions', () => {
       });
     });
 
-    it('optimisticDeleteMessages should use context sessionId/topicId', async () => {
+    it('optimisticDeleteMessages should use context operationId', async () => {
       const { result } = renderHook(() => useChatStore());
       const ids = ['id-1', 'id-2'];
       const contextSessionId = 'context-session';
@@ -938,10 +962,17 @@ describe('chatMessage actions', () => {
 
       const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
 
+      let operationId: string;
       await act(async () => {
+        // Create operation with desired context
+        const op = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: contextSessionId, topicId: contextTopicId },
+        });
+        operationId = op.operationId;
+
         await result.current.optimisticDeleteMessages(ids, {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId,
         });
       });
 

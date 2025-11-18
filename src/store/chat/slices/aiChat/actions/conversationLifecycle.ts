@@ -213,7 +213,7 @@ export const conversationLifecycle: StateCreator<
       if (data?.isCreateNewTopic || !data) {
         get().internal_dispatchMessage(
           { type: 'deleteMessages', ids: [tempId, tempAssistantId] },
-          { topicId: activeTopicId, sessionId: activeId },
+          { operationId },
         );
       }
     }

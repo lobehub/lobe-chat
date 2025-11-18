@@ -258,10 +258,7 @@ describe('ChatPluginAction', () => {
         messageId,
         pluginApiResponse,
         undefined,
-        {
-          sessionId: undefined,
-          topicId: undefined,
-        },
+        undefined,
       );
       expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         false,
@@ -390,78 +387,50 @@ describe('ChatPluginAction', () => {
 
       // Verify that tool messages were created for each tool call
       expect(optimisticCreateMessageMock).toHaveBeenCalledTimes(4);
-      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(
-        1,
-        {
-          content: '',
-          parentId: assistantId,
-          plugin: message.tools![0],
-          role: 'tool',
-          sessionId: 'session-id',
-          tool_call_id: 'tool1',
-          topicId: 'topic-id',
-          threadId: undefined,
-          groupId: undefined,
-        },
-        {
-          sessionId: 'session-id',
-          topicId: 'topic-id',
-        },
-      );
-      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(
-        2,
-        {
-          content: '',
-          parentId: assistantId,
-          plugin: message.tools![1],
-          role: 'tool',
-          sessionId: 'session-id',
-          tool_call_id: 'tool2',
-          topicId: 'topic-id',
-          threadId: undefined,
-          groupId: undefined,
-        },
-        {
-          sessionId: 'session-id',
-          topicId: 'topic-id',
-        },
-      );
-      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(
-        3,
-        {
-          content: '',
-          parentId: assistantId,
-          plugin: message.tools![2],
-          role: 'tool',
-          sessionId: 'session-id',
-          tool_call_id: 'tool3',
-          topicId: 'topic-id',
-          threadId: undefined,
-          groupId: undefined,
-        },
-        {
-          sessionId: 'session-id',
-          topicId: 'topic-id',
-        },
-      );
-      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(
-        4,
-        {
-          content: '',
-          parentId: assistantId,
-          plugin: message.tools![3],
-          role: 'tool',
-          sessionId: 'session-id',
-          tool_call_id: 'tool4',
-          topicId: 'topic-id',
-          threadId: undefined,
-          groupId: undefined,
-        },
-        {
-          sessionId: 'session-id',
-          topicId: 'topic-id',
-        },
-      );
+      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(1, {
+        content: '',
+        parentId: assistantId,
+        plugin: message.tools![0],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool1',
+        topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
+      });
+      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(2, {
+        content: '',
+        parentId: assistantId,
+        plugin: message.tools![1],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool2',
+        topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
+      });
+      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(3, {
+        content: '',
+        parentId: assistantId,
+        plugin: message.tools![2],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool3',
+        topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
+      });
+      expect(optimisticCreateMessageMock).toHaveBeenNthCalledWith(4, {
+        content: '',
+        parentId: assistantId,
+        plugin: message.tools![3],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool4',
+        topicId: 'topic-id',
+        threadId: undefined,
+        groupId: undefined,
+      });
 
       // Verify that the appropriate plugin types were invoked
       expect(invokeStandaloneTypePluginMock).toHaveBeenCalledWith(
@@ -896,10 +865,7 @@ describe('ChatPluginAction', () => {
         await result.current.reInvokeToolMessage(messageId);
       });
 
-      expect(internal_updateMessageErrorMock).toHaveBeenCalledWith(messageId, null, {
-        sessionId: undefined,
-        topicId: undefined,
-      });
+      expect(internal_updateMessageErrorMock).toHaveBeenCalledWith(messageId, null, undefined);
     });
   });
 
@@ -990,10 +956,7 @@ describe('ChatPluginAction', () => {
         messageId,
         apiResponse,
         undefined,
-        {
-          sessionId: undefined,
-          topicId: undefined,
-        },
+        undefined,
       );
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { traceId: 'trace-id' });
     });
@@ -1238,10 +1201,17 @@ describe('ChatPluginAction', () => {
 
         const replaceMessagesSpy = vi.spyOn(result.current, 'replaceMessages');
 
+        let operationId: string;
         await act(async () => {
+          // Create operation with desired context
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: { sessionId: contextSessionId, topicId: contextTopicId },
+          });
+          operationId = op.operationId;
+
           await result.current.optimisticUpdatePluginState(messageId, pluginState, {
-            sessionId: contextSessionId,
-            topicId: contextTopicId,
+            operationId,
           });
         });
 
@@ -1298,10 +1268,17 @@ describe('ChatPluginAction', () => {
           messages: [],
         });
 
+        let operationId: string;
         await act(async () => {
+          // Create operation with desired context
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: { sessionId: contextSessionId, topicId: contextTopicId },
+          });
+          operationId = op.operationId;
+
           await result.current.optimisticUpdatePluginError(messageId, error, {
-            sessionId: contextSessionId,
-            topicId: contextTopicId,
+            operationId,
           });
         });
 
@@ -1331,7 +1308,15 @@ describe('ChatPluginAction', () => {
 
         // Set up both dbMessagesMap and messagesMap
         const key = messageMapKey(contextSessionId, contextTopicId);
+        let operationId: string;
         act(() => {
+          // Create operation with desired context
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: { sessionId: contextSessionId, topicId: contextTopicId },
+          });
+          operationId = op.operationId;
+
           useChatStore.setState({
             dbMessagesMap: {
               [key]: [message],
@@ -1346,8 +1331,7 @@ describe('ChatPluginAction', () => {
 
         await act(async () => {
           await result.current.internal_refreshToUpdateMessageTools(messageId, {
-            sessionId: contextSessionId,
-            topicId: contextTopicId,
+            operationId,
           });
         });
 

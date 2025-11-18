@@ -46,9 +46,9 @@ export const searchSlice: StateCreator<
     const { optimisticUpdateMessageContent } = get();
     get().toggleSearchLoading(id, true);
 
-    // Get message to extract sessionId/topicId
-    const message = dbMessageSelectors.getDbMessageById(id)(get());
-    const context = { sessionId: message?.sessionId, topicId: message?.topicId };
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
 
     try {
       const { content, success, error, state } = await runtime.crawlMultiPages(params);
@@ -88,7 +88,9 @@ export const searchSlice: StateCreator<
 
     const { optimisticAddToolToAssistantMessage, optimisticCreateMessage, openToolUI } = get();
 
-    const context = { sessionId: message.sessionId, topicId: message.topicId };
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
 
     // 1. 创建一个新的 tool call message
     const newToolCallId = `tool_call_${nanoid()}`;
@@ -120,10 +122,7 @@ export const searchSlice: StateCreator<
 
     const [result] = await Promise.all([
       // 1. 添加 tool message
-      optimisticCreateMessage(toolMessage, {
-        sessionId: toolMessage.sessionId,
-        topicId: toolMessage.topicId,
-      }),
+      optimisticCreateMessage(toolMessage, context),
       // 2. 将这条 tool call message 插入到 ai 消息的 tools 中
       addToolItem(),
     ]);
@@ -136,9 +135,9 @@ export const searchSlice: StateCreator<
   search: async (id, params, aiSummary = true) => {
     get().toggleSearchLoading(id, true);
 
-    // Get message to extract sessionId/topicId
-    const message = dbMessageSelectors.getDbMessageById(id)(get());
-    const context = { sessionId: message?.sessionId, topicId: message?.topicId };
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
 
     const { content, success, error, state } = await runtime.search(params);
 

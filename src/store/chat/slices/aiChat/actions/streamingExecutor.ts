@@ -228,29 +228,38 @@ export const streamingExecutor: StateCreator<
     const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
-    // Get context from operation if operationId is provided
-    let context: { sessionId: string; topicId?: string | null };
+    // Get sessionId and topicId for trace
+    let sessionId: string;
+    let topicId: string | null | undefined;
     let traceId: string | undefined = traceIdParam;
 
     if (operationId) {
       const operation = get().operations[operationId];
       if (!operation) {
+        log('[internal_fetchAIChatMessage] ERROR: Operation not found: %s', operationId);
         throw new Error(`Operation not found: ${operationId}`);
       }
-      context = {
-        sessionId: operation.context.sessionId!,
-        topicId: operation.context.topicId,
-      };
+      sessionId = operation.context.sessionId!;
+      topicId = operation.context.topicId;
+      log(
+        '[internal_fetchAIChatMessage] get context from operation %s: sessionId=%s, topicId=%s',
+        operationId,
+        sessionId,
+        topicId,
+      );
       // Get traceId from operation metadata if not explicitly provided
       if (!traceId) {
         traceId = operation.metadata?.traceId;
       }
     } else {
       // Fallback to global state
-      context = {
-        sessionId: get().activeId,
-        topicId: get().activeTopicId,
-      };
+      sessionId = get().activeId;
+      topicId = get().activeTopicId;
+      log(
+        '[internal_fetchAIChatMessage] use global context: sessionId=%s, topicId=%s',
+        sessionId,
+        topicId,
+      );
     }
 
     // ================================== //
@@ -287,7 +296,7 @@ export const streamingExecutor: StateCreator<
             type: 'updateMessage',
             value: { tools: get().internal_transformToolCalls(toolCalls) },
           },
-          context,
+          { operationId },
         );
       },
       300,
@@ -309,13 +318,13 @@ export const streamingExecutor: StateCreator<
       historySummary: historySummary?.content,
       trace: {
         traceId,
-        sessionId: context.sessionId,
-        topicId: context.topicId ?? undefined,
+        sessionId,
+        topicId: topicId ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
-        await messageService.updateMessageError(messageId, error, context);
-        await refreshMessages(context.sessionId, context.topicId);
+        await messageService.updateMessageError(messageId, error, { sessionId, topicId });
+        await refreshMessages(sessionId, topicId);
       },
       onFinish: async (
         content,
@@ -327,7 +336,7 @@ export const streamingExecutor: StateCreator<
           messageService.updateMessage(
             messageId,
             { traceId, observationId: observationId ?? undefined },
-            context,
+            { sessionId, topicId },
           );
         }
 
@@ -382,7 +391,7 @@ export const streamingExecutor: StateCreator<
             imageList: finalImages.length > 0 ? finalImages : undefined,
             metadata: speed ? { ...usage, ...speed } : usage,
           },
-          context,
+          { operationId },
         );
       },
       onMessageHandle: async (chunk) => {
@@ -407,7 +416,7 @@ export const streamingExecutor: StateCreator<
                   },
                 },
               },
-              context,
+              { operationId },
             );
             break;
           }
@@ -421,7 +430,7 @@ export const streamingExecutor: StateCreator<
                   imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
                 },
               },
-              context,
+              { operationId },
             );
             const image = chunk.image;
 
@@ -455,6 +464,13 @@ export const streamingExecutor: StateCreator<
               }
             }
 
+            log(
+              '[text stream] messageId=%s, output length=%d, operationId=%s',
+              messageId,
+              output.length,
+              operationId,
+            );
+
             internal_dispatchMessage(
               {
                 id: messageId,
@@ -464,7 +480,7 @@ export const streamingExecutor: StateCreator<
                   reasoning: !!thinking ? { content: thinking, duration } : undefined,
                 },
               },
-              context,
+              { operationId },
             );
             break;
           }
@@ -488,7 +504,7 @@ export const streamingExecutor: StateCreator<
                 type: 'updateMessage',
                 value: { reasoning: { content: thinking } },
               },
-              context,
+              { operationId },
             );
             break;
           }
@@ -762,8 +778,7 @@ export const streamingExecutor: StateCreator<
       const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
       if (assistantMessage) {
         await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata, {
-          sessionId,
-          topicId,
+          operationId,
         });
         log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
       }

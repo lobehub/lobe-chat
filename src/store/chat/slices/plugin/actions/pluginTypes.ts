@@ -174,7 +174,9 @@ export const pluginTypes: StateCreator<
 
     if (!data) return;
 
-    const context = { sessionId: message?.sessionId, topicId: message?.topicId };
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
 
     await Promise.all([
       optimisticUpdateMessageContent(id, data.content, undefined, context),
@@ -236,10 +238,11 @@ export const pluginTypes: StateCreator<
     // 如果报错则结束了
     if (!data) return;
 
-    await optimisticUpdateMessageContent(id, data, undefined, {
-      sessionId: message?.sessionId,
-      topicId: message?.topicId,
-    });
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
+
+    await optimisticUpdateMessageContent(id, data, undefined, context);
 
     return data;
   },
