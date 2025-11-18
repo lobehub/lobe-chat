@@ -8,6 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
+import DesktopChangelogLayout from './(main)/changelog/_layout/Desktop';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
 // Component to register navigate function in global store
@@ -327,6 +328,20 @@ export const createDesktopRouter = (locale: Locales) =>
           path: 'profile',
         },
 
+        // changelog routes
+        {
+          children: [
+            {
+              index: true,
+              lazy: () =>
+                import('./(main)/changelog/index').then((m) => ({
+                  Component: m.DesktopPage,
+                })),
+            },
+          ],
+          element: <DesktopChangelogLayout locale={locale} />,
+          path: 'changelog',
+        },
         // Default route - redirect to chat
         {
           index: true,

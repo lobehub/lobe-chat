@@ -8,6 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import { MobileMainLayout } from './(main)/layouts/mobile';
+import MobileChangelogLayout from './(main)/changelog/_layout/Mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
 // Component to register navigate function in global store
@@ -357,6 +358,21 @@ export const createMobileRouter = (locale: Locales) =>
             },
           ],
           path: 'me',
+        },
+
+        // changelog routes
+        {
+          children: [
+            {
+              index: true,
+              lazy: () =>
+                import('./(main)/changelog/index').then((m) => ({
+                  Component: m.MobilePage,
+                })),
+            },
+          ],
+          element: <MobileChangelogLayout locale={locale} />,
+          path: 'changelog',
         },
 
         // Default route - redirect to chat

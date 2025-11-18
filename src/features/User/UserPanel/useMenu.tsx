@@ -25,7 +25,6 @@ import { enableAuth } from '@/const/auth';
 import { BRANDING_EMAIL, LOBE_CHAT_CLOUD, SOCIAL_URL } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
 import {
-  CHANGELOG,
   DOCUMENTS_REFER_URL,
   GITHUB_ISSUES,
   OFFICIAL_URL,
@@ -120,15 +119,15 @@ export const useMenu = () => {
   const data = !isLogin
     ? []
     : ([
-        {
-          icon: <Icon icon={HardDriveDownload} />,
-          key: 'import',
-          label: <DataImporter>{t('importData')}</DataImporter>,
-        },
-        {
-          type: 'divider',
-        },
-      ].filter(Boolean) as ItemType[]);
+      {
+        icon: <Icon icon={HardDriveDownload} />,
+        key: 'import',
+        label: <DataImporter>{t('importData')}</DataImporter>,
+      },
+      {
+        type: 'divider',
+      },
+    ].filter(Boolean) as ItemType[]);
 
   const helps: MenuProps['items'] = [
     showCloudPromotion && {
@@ -143,13 +142,7 @@ export const useMenu = () => {
     {
       icon: <Icon icon={FileClockIcon} />,
       key: 'changelog',
-      label: isDesktop ? (
-        <a href={CHANGELOG} rel="noopener noreferrer" target="_blank">
-          {t('changelog')}
-        </a>
-      ) : (
-        <Link to="/changelog/modal">{t('changelog')}</Link>
-      ),
+      label: <Link to="/changelog">{t('changelog')}</Link>
     },
     {
       children: [
@@ -215,12 +208,12 @@ export const useMenu = () => {
 
   const logoutItems: MenuProps['items'] = isLoginWithAuth
     ? [
-        {
-          icon: <Icon icon={LogOut} />,
-          key: 'logout',
-          label: <span>{t('signout', { ns: 'auth' })}</span>,
-        },
-      ]
+      {
+        icon: <Icon icon={LogOut} />,
+        key: 'logout',
+        label: <span>{t('signout', { ns: 'auth' })}</span>,
+      },
+    ]
     : [];
 
   return { logoutItems, mainItems };
