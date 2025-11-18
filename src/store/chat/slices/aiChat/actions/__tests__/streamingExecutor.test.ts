@@ -68,7 +68,7 @@ describe('StreamingExecutor actions', () => {
           await onErrorHandle?.({ type: 'InvalidProviderAPIKey', message: 'Network error' } as any);
         });
 
-      const updateMessageErrorSpy = vi.spyOn(messageService, 'updateMessageError');
+      const updateMessageSpy = vi.spyOn(messageService, 'updateMessage');
 
       await act(async () => {
         await result.current.internal_fetchAIChatMessage({
@@ -79,9 +79,11 @@ describe('StreamingExecutor actions', () => {
         });
       });
 
-      expect(updateMessageErrorSpy).toHaveBeenCalledWith(
+      expect(updateMessageSpy).toHaveBeenCalledWith(
         TEST_IDS.ASSISTANT_MESSAGE_ID,
-        expect.objectContaining({ type: 'InvalidProviderAPIKey' }),
+        expect.objectContaining({
+          error: expect.objectContaining({ type: 'InvalidProviderAPIKey' }),
+        }),
         expect.objectContaining({
           sessionId: TEST_IDS.SESSION_ID,
           topicId: TEST_IDS.TOPIC_ID,
