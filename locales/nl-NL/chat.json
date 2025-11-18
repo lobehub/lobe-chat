@@ -330,6 +330,11 @@
     "screenshot": "Screenshot",
     "settings": "Exportinstellingen",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Breedtemodus",
+      "narrow": "Smalle schermmodus",
+      "wide": "Brede schermmodus"
+    },
     "withBackground": "Met achtergrondafbeelding",
     "withFooter": "Met voettekst",
     "withPluginInfo": "Met plug-in informatie",

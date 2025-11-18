@@ -15,6 +15,12 @@
     "prompt": "İpucu"
   },
   "localFiles": {
+    "editFile": {
+      "newString": "Şununla değiştir",
+      "oldString": "Aranacak içerik",
+      "replaceAll": "Tüm eşleşmeleri değiştir",
+      "replaceFirst": "Yalnızca ilk eşleşmeyi değiştir"
+    },
     "file": "Dosya",
     "folder": "Klasör",
     "moveFiles": {
@@ -34,7 +40,12 @@
     "readFile": "Dosyayı Oku",
     "readFileError": "Dosya okunamadı, lütfen dosya yolunu kontrol edin",
     "readFiles": "Dosyaları Oku",
-    "readFilesError": "Dosyalar okunamadı, lütfen dosya yolunu kontrol edin"
+    "readFilesError": "Dosyalar okunamadı, lütfen dosya yolunu kontrol edin",
+    "writeFile": {
+      "characters": "Karakter",
+      "preview": "İçerik Önizlemesi",
+      "truncated": "Kısaltıldı"
+    }
   },
   "search": {
     "createNewSearch": "Yeni bir arama kaydı oluştur",

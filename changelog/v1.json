@@ -1,6 +1,65 @@
 [
   {
     "children": {
+      "fixes": ["Slove when logout always show loading."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.81"
+  },
+  {
+    "children": {},
+    "date": "2025-11-18",
+    "version": "2.0.0-next.80"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the discover page categray sider link error."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.79"
+  },
+  {
+    "children": {},
+    "date": "2025-11-18",
+    "version": "2.0.0-next.78"
+  },
+  {
+    "children": {
+      "improvements": ["Delete /settings/newapi pages in nextjs build."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.77"
+  },
+  {
+    "children": {
+      "features": ["Support Interleaved thinking in MiniMax."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.76"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.75"
+  },
+  {
+    "children": {
+      "features": ["Edit local file render & intervention."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.74"
+  },
+  {
+    "children": {
+      "features": ["Support parallel topic agent runtime."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.73"
+  },
+  {
+    "children": {
       "improvements": ["Add model information for the Qiniu provider."]
     },
     "date": "2025-11-17",

@@ -15,6 +15,12 @@
     "prompt": "Từ khóa"
   },
   "localFiles": {
+    "editFile": {
+      "newString": "Thay thế bằng",
+      "oldString": "Nội dung tìm kiếm",
+      "replaceAll": "Thay thế tất cả các mục khớp",
+      "replaceFirst": "Chỉ thay thế mục khớp đầu tiên"
+    },
     "file": "Tệp",
     "folder": "Thư mục",
     "moveFiles": {
@@ -34,7 +40,12 @@
     "readFile": "Đọc tệp",
     "readFileError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không",
     "readFiles": "Đọc tệp",
-    "readFilesError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không"
+    "readFilesError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không",
+    "writeFile": {
+      "characters": "Ký tự",
+      "preview": "Xem trước nội dung",
+      "truncated": "Đã bị cắt bớt"
+    }
   },
   "search": {
     "createNewSearch": "Tạo mới tìm kiếm",

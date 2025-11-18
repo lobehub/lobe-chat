@@ -330,6 +330,11 @@
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
     "text": "Metin",
+    "widthMode": {
+      "label": "Genişlik Modu",
+      "narrow": "Dar Ekran Modu",
+      "wide": "Geniş Ekran Modu"
+    },
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",

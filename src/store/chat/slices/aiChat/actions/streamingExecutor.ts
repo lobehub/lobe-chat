@@ -50,6 +50,15 @@ interface ProcessMessageParams {
   groupId?: string;
   agentId?: string;
   agentConfig?: any; // Agent configuration for group chat agents
+
+  /**
+   * Explicit sessionId for this execution (avoids using global activeId)
+   */
+  sessionId?: string;
+  /**
+   * Explicit topicId for this execution (avoids using global activeTopicId)
+   */
+  topicId?: string | null;
 }
 
 /**
@@ -62,6 +71,14 @@ export interface StreamingExecutorAction {
   internal_createAgentState: (params: {
     messages: UIChatMessage[];
     parentMessageId: string;
+    /**
+     * Explicit sessionId for this execution (avoids using global activeId)
+     */
+    sessionId?: string;
+    /**
+     * Explicit topicId for this execution (avoids using global activeTopicId)
+     */
+    topicId?: string | null;
     threadId?: string;
     initialState?: AgentState;
     initialContext?: AgentRuntimeContext;
@@ -94,6 +111,14 @@ export interface StreamingExecutorAction {
     messages: UIChatMessage[];
     parentMessageId: string;
     parentMessageType: 'user' | 'assistant' | 'tool';
+    /**
+     * Explicit sessionId for this execution (avoids using global activeId)
+     */
+    sessionId?: string;
+    /**
+     * Explicit topicId for this execution (avoids using global activeTopicId)
+     */
+    topicId?: string | null;
     inSearchWorkflow?: boolean;
     /**
      * the RAG query content, should be embedding and used in the semantic search
@@ -124,11 +149,17 @@ export const streamingExecutor: StateCreator<
   internal_createAgentState: ({
     messages,
     parentMessageId,
+    sessionId: paramSessionId,
+    topicId: paramTopicId,
     threadId,
     initialState,
     initialContext,
   }) => {
+    // Use provided sessionId/topicId or fallback to global state
     const { activeId, activeTopicId } = get();
+    const sessionId = paramSessionId ?? activeId;
+    const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
+
     const agentStoreState = getAgentStoreState();
     const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
 
@@ -157,12 +188,12 @@ export const streamingExecutor: StateCreator<
     const state =
       initialState ||
       AgentRuntime.createInitialState({
-        sessionId: activeId,
+        sessionId,
         messages,
         maxSteps: 400,
         metadata: {
-          sessionId: activeId,
-          topicId: activeTopicId,
+          sessionId,
+          topicId,
           threadId,
         },
         toolManifestMap,
@@ -178,7 +209,7 @@ export const streamingExecutor: StateCreator<
         parentMessageId,
       },
       session: {
-        sessionId: activeId,
+        sessionId,
         messageCount: messages.length,
         status: state.status,
         stepCount: 0,
@@ -233,14 +264,21 @@ export const streamingExecutor: StateCreator<
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
+    const context: { sessionId: string; topicId?: string | null } = {
+      sessionId: params?.sessionId || get().activeId,
+      topicId: params?.topicId,
+    };
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
       (toolCalls: any[]) => {
-        internal_dispatchMessage({
-          id: messageId,
-          type: 'updateMessage',
-          value: { tools: get().internal_transformToolCalls(toolCalls) },
-        });
+        internal_dispatchMessage(
+          {
+            id: messageId,
+            type: 'updateMessage',
+            value: { tools: get().internal_transformToolCalls(toolCalls) },
+          },
+          context,
+        );
       },
       300,
       { leading: true, trailing: true },
@@ -261,13 +299,14 @@ export const streamingExecutor: StateCreator<
       historySummary: historySummary?.content,
       trace: {
         traceId: params?.traceId,
-        sessionId: get().activeId,
-        topicId: get().activeTopicId,
+        sessionId: params?.sessionId ?? get().activeId,
+        topicId:
+          (params?.topicId !== undefined ? params.topicId : get().activeTopicId) ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
-        await messageService.updateMessageError(messageId, error);
-        await refreshMessages();
+        await messageService.updateMessageError(messageId, error, context);
+        await refreshMessages(params?.sessionId, params?.topicId);
       },
       onFinish: async (
         content,
@@ -276,10 +315,11 @@ export const streamingExecutor: StateCreator<
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
-          messageService.updateMessage(messageId, {
-            traceId,
-            observationId: observationId ?? undefined,
-          });
+          messageService.updateMessage(
+            messageId,
+            { traceId, observationId: observationId ?? undefined },
+            context,
+          );
         }
 
         // 等待所有图片上传完成
@@ -321,15 +361,20 @@ export const streamingExecutor: StateCreator<
         internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
 
         // update the content after fetch result
-        await optimisticUpdateMessageContent(messageId, content, {
-          toolCalls: parsedToolCalls,
-          reasoning: !!reasoning
-            ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
-            : undefined,
-          search: !!grounding?.citations ? grounding : undefined,
-          imageList: finalImages.length > 0 ? finalImages : undefined,
-          metadata: speed ? { ...usage, ...speed } : usage,
-        });
+        await optimisticUpdateMessageContent(
+          messageId,
+          content,
+          {
+            toolCalls: parsedToolCalls,
+            reasoning: !!reasoning
+              ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
+              : undefined,
+            search: !!grounding?.citations ? grounding : undefined,
+            imageList: finalImages.length > 0 ? finalImages : undefined,
+            metadata: speed ? { ...usage, ...speed } : usage,
+          },
+          context,
+        );
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
@@ -342,27 +387,33 @@ export const streamingExecutor: StateCreator<
             )
               return;
 
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: {
-                search: {
-                  citations: chunk.grounding.citations,
-                  searchQueries: chunk.grounding.searchQueries,
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  search: {
+                    citations: chunk.grounding.citations,
+                    searchQueries: chunk.grounding.searchQueries,
+                  },
                 },
               },
-            });
+              context,
+            );
             break;
           }
 
           case 'base64_image': {
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: {
-                imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  imageList: chunk.images.map((i) => ({ id: i.id, url: i.data, alt: i.id })),
+                },
               },
-            });
+              context,
+            );
             const image = chunk.image;
 
             const task = getFileStoreState()
@@ -395,14 +446,17 @@ export const streamingExecutor: StateCreator<
               }
             }
 
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: {
-                content: output,
-                reasoning: !!thinking ? { content: thinking, duration } : undefined,
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: {
+                  content: output,
+                  reasoning: !!thinking ? { content: thinking, duration } : undefined,
+                },
               },
-            });
+              context,
+            );
             break;
           }
 
@@ -419,11 +473,14 @@ export const streamingExecutor: StateCreator<
 
             thinking += chunk.text;
 
-            internal_dispatchMessage({
-              id: messageId,
-              type: 'updateMessage',
-              value: { reasoning: { content: thinking } },
-            });
+            internal_dispatchMessage(
+              {
+                id: messageId,
+                type: 'updateMessage',
+                value: { reasoning: { content: thinking } },
+              },
+              context,
+            );
             break;
           }
 
@@ -462,17 +519,29 @@ export const streamingExecutor: StateCreator<
   },
 
   internal_execAgentRuntime: async (params) => {
-    const { messages: originalMessages, parentMessageId, parentMessageType } = params;
+    const {
+      messages: originalMessages,
+      parentMessageId,
+      parentMessageType,
+      sessionId: paramSessionId,
+      topicId: paramTopicId,
+    } = params;
+
+    // Use provided sessionId/topicId or fallback to global state
+    const { activeId, activeTopicId } = get();
+    const sessionId = paramSessionId ?? activeId;
+    const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
+    const messageKey = messageMapKey(sessionId, topicId);
 
     log(
-      '[internal_execAgentRuntime] start, parentMessageId: %s,parentMessageType: %s, messages count: %d',
+      '[internal_execAgentRuntime] start, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      sessionId,
+      topicId,
+      messageKey,
       parentMessageId,
       parentMessageType,
       originalMessages.length,
     );
-
-    const { activeId, activeTopicId } = get();
-    const messageKey = messageMapKey(activeId, activeTopicId);
 
     // Create a new array to avoid modifying the original messages
     let messages = [...originalMessages];
@@ -556,7 +625,11 @@ export const streamingExecutor: StateCreator<
         get,
         messageKey,
         parentId: params.parentMessageId,
-        params,
+        params: {
+          ...params,
+          sessionId,
+          topicId,
+        },
         skipCreateFirstMessage: params.skipCreateFirstMessage,
       }),
     });
@@ -566,6 +639,8 @@ export const streamingExecutor: StateCreator<
       get().internal_createAgentState({
         messages,
         parentMessageId: params.parentMessageId,
+        sessionId,
+        topicId,
         threadId: params.threadId,
         initialState: params.initialState,
         initialContext: params.initialContext,
@@ -613,10 +688,13 @@ export const streamingExecutor: StateCreator<
             const currentMessages = get().messagesMap[messageKey] || [];
             const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
             if (assistantMessage) {
-              await messageService.updateMessageError(assistantMessage.id, event.error);
+              await messageService.updateMessageError(assistantMessage.id, event.error, {
+                sessionId,
+                topicId,
+              });
             }
             const finalMessages = get().messagesMap[messageKey] || [];
-            get().replaceMessages(finalMessages);
+            get().replaceMessages(finalMessages, { sessionId, topicId });
             break;
           }
         }
@@ -644,7 +722,10 @@ export const streamingExecutor: StateCreator<
       const finalMessages = get().messagesMap[messageKey] || [];
       const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
       if (assistantMessage) {
-        await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata);
+        await get().optimisticUpdateMessageRAG(assistantMessage.id, params.ragMetadata, {
+          sessionId,
+          topicId,
+        });
         log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
       }
     }

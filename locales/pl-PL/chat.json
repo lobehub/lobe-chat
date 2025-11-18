@@ -330,6 +330,11 @@
     "screenshot": "Zrzut ekranu",
     "settings": "Ustawienia eksportu",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Tryb szerokości",
+      "narrow": "Tryb wąskiego ekranu",
+      "wide": "Tryb szerokiego ekranu"
+    },
     "withBackground": "Z tłem",
     "withFooter": "Z stopką",
     "withPluginInfo": "Z informacjami o wtyczce",

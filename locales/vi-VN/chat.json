@@ -330,6 +330,11 @@
     "screenshot": "Ảnh chụp màn hình",
     "settings": "Cài đặt xuất",
     "text": "Văn bản",
+    "widthMode": {
+      "label": "Chế độ chiều rộng",
+      "narrow": "Chế độ màn hình hẹp",
+      "wide": "Chế độ màn hình rộng"
+    },
     "withBackground": "Bao gồm hình nền",
     "withFooter": "Bao gồm chân trang",
     "withPluginInfo": "Bao gồm thông tin plugin",

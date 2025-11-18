@@ -1,3 +1,4 @@
+import NewAPI from './newapi';
 import ProviderGrid from '../(list)/ProviderGrid';
 import Azure from './azure';
 import AzureAI from './azureai';
@@ -37,6 +38,9 @@ const ProviderDetailPage = (props: { id?: string | null }) => {
     }
     case 'ollama': {
       return <Ollama />;
+    }
+    case 'newapi': {
+      return <NewAPI />;
     }
     case 'openai': {
       return <OpenAI />;

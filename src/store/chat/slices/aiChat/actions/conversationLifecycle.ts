@@ -124,7 +124,7 @@ export const conversationLifecycle: StateCreator<
       imageList: tempImages.length > 0 ? tempImages : undefined,
       videoList: tempVideos.length > 0 ? tempVideos : undefined,
     });
-    get().optimisticCreateTmpMessage({
+    const tempAssistantId = get().optimisticCreateTmpMessage({
       content: LOADING_FLAT,
       role: 'assistant',
       sessionId: activeId,
@@ -159,7 +159,7 @@ export const conversationLifecycle: StateCreator<
           newTopic: shouldCreateNewTopic
             ? {
                 topicMessageIds: messages.map((m) => m.id),
-                title: t('defaultTitle', { ns: 'topic' }),
+                title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
               }
             : undefined,
           sessionId: activeId === INBOX_SESSION_ID ? undefined : activeId,
@@ -200,7 +200,7 @@ export const conversationLifecycle: StateCreator<
     // remove temporally message
     if (data?.isCreateNewTopic) {
       get().internal_dispatchMessage(
-        { type: 'deleteMessage', id: tempId },
+        { type: 'deleteMessages', ids: [tempId, tempAssistantId] },
         { topicId: activeTopicId, sessionId: activeId },
       );
     }
@@ -249,6 +249,8 @@ export const conversationLifecycle: StateCreator<
         messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
+        sessionId: activeId,
+        topicId: data.topicId ?? activeTopicId,
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
         skipCreateFirstMessage: true,
@@ -305,6 +307,8 @@ export const conversationLifecycle: StateCreator<
         messages: contextMessages,
         parentMessageId: id,
         parentMessageType: 'user',
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
         traceId,
         ragQuery: get().internal_shouldUseRAG() ? item.content : undefined,
         threadId: activeThreadId,
@@ -360,6 +364,8 @@ export const conversationLifecycle: StateCreator<
         messages: chats,
         parentMessageId: id,
         parentMessageType: message.role as 'assistant' | 'tool' | 'user',
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
       });
     } finally {
       // Remove message from continuing state

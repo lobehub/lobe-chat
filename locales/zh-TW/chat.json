@@ -330,6 +330,11 @@
     "screenshot": "截圖",
     "settings": "導出設置",
     "text": "文本",
+    "widthMode": {
+      "label": "寬度模式",
+      "narrow": "窄螢幕模式",
+      "wide": "寬螢幕模式"
+    },
     "withBackground": "包含背景圖片",
     "withFooter": "包含頁腳",
     "withPluginInfo": "包含插件信息",

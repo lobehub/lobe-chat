@@ -2225,6 +2225,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct is een efficiënt model met een klein aantal parameters, ontwikkeld door Wuwen Xinqiong."
   },
+  "meituan/longcat-flash-chat": {
+    "description": "Longcat Flash Chat is een open-source basismodel van Meituan, geoptimaliseerd voor dialooginteractie en agent-taken. Het blinkt uit in gereedschapsgebruik en complexe meerstapsgesprekken."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "Een krachtig model met 70 miljard parameters dat uitblinkt in redeneren, coderen en brede taaltoepassingen."
   },
@@ -2455,6 +2458,9 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 is een efficiënt groot taalmodel dat speciaal is ontwikkeld voor programmeer- en agentworkflows."
+  },
+  "minimax/minimax-m2": {
+    "description": "Speciaal ontworpen voor efficiënte codering en agent-workflows."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B is het toonaangevende edge-model van Mistral."
@@ -3371,6 +3377,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, inferentie en intelligente assistentie."
   },
+  "x-ai/grok-4-fast": {
+    "description": "We zijn verheugd om Grok 4 Fast te introduceren, onze nieuwste vooruitgang op het gebied van kostenefficiënte redeneermodellen."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "We zijn trots om grok-code-fast-1 te lanceren, een snel en kostenefficiënt redeneermodel dat uitblinkt in agentgebaseerde codering."
+  },
   "x1": {
     "description": "Het Spark X1-model zal verder worden geüpgraded, met verbeterde prestaties in redenering, tekstgeneratie en taalbegrip, ter vergelijking met OpenAI o1 en DeepSeek R1."
   },
@@ -3430,6 +3442,9 @@
   },
   "yi-vision-v2": {
     "description": "Complex visietakenmodel dat hoge prestaties biedt in begrip en analyse op basis van meerdere afbeeldingen."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM-4.6 is het nieuwste vlaggenschipmodel van Zhipu AI en overtreft zijn voorgangers op het gebied van geavanceerde codering, lange tekstverwerking, redeneren en agentcapaciteiten."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 is een basis model speciaal ontworpen voor agenttoepassingen, gebruikmakend van een Mixture-of-Experts (MoE) architectuur. Het is diep geoptimaliseerd voor toolaanroepen, web browsing, software engineering en frontend programmeren, en ondersteunt naadloze integratie met code-agents zoals Claude Code en Roo Code. GLM-4.5 gebruikt een hybride redeneermodus en is geschikt voor complexe redenering en dagelijks gebruik."
