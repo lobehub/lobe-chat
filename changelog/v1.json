@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fixed the discover page categray sider link error."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.79"
+  },
+  {
     "children": {},
     "date": "2025-11-18",
     "version": "2.0.0-next.78"
