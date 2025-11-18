@@ -511,7 +511,7 @@ section_configurate_host() {
         return 0
     fi
 
-    # Configurate protocol for domain
+    # Configure protocol for domain
     if [[ "$DEPLOY_MODE" == "0" ]]; then
         # Ask if enable https
         echo $(show_message "ask_protocol")
@@ -734,7 +734,7 @@ section_display_configurated_report() {
     echo -e "Casdoor: \n  - URL: $PROTOCOL://$CASDOOR_HOST \n  - Username: admin \n  - Password: ${CASDOOR_PASSWORD}\n"
     echo -e "Minio: \n  - URL: $PROTOCOL://$MINIO_HOST \n  - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
     
-    # if user run in domain mode, diplay reverse proxy configuration
+    # if user run in domain mode, display reverse proxy configuration
     if [[ "$DEPLOY_MODE" == "domain" ]]; then
         echo $(show_message "tips_add_reverse_proxy")
         printf "\n%s\t->\t%s\n" "$LOBE_HOST" "127.0.0.1:3210"
