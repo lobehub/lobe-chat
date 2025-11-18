@@ -2225,6 +2225,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct는 Wuwen Xinqiong에서 출시한 소형 파라미터 고효율 모델입니다."
   },
+  "meituan/longcat-flash-chat": {
+    "description": "메이투안이 오픈소스로 공개한 비사고형 기반 모델로, 대화 상호작용과 에이전트 작업에 최적화되어 있으며, 도구 호출 및 복잡한 다중 회화 시나리오에서 뛰어난 성능을 발휘합니다."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "추론, 코딩 및 광범위한 언어 응용 프로그램에서 뛰어난 성능을 발휘하는 강력한 70억 매개변수 모델입니다."
   },
@@ -2455,6 +2458,9 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2는 코딩 및 에이전트 워크플로우를 위해 설계된 효율적인 대형 언어 모델입니다."
+  },
+  "minimax/minimax-m2": {
+    "description": "효율적인 코딩과 에이전트 워크플로우를 위해 설계되었습니다."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B는 Mistral의 세계적 수준의 엣지 모델입니다."
@@ -3371,6 +3377,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2는 Microsoft AI에서 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 발휘합니다."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Grok 4 Fast를 출시하게 되어 매우 기쁩니다. 이는 비용 효율적인 추론 모델 분야에서 우리의 최신 성과입니다."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "grok-code-fast-1을 출시하게 되어 기쁩니다. 이 모델은 빠르고 경제적인 추론 성능을 제공하며, 에이전트 기반 코딩 작업에서 탁월한 성능을 보입니다."
+  },
   "x1": {
     "description": "Spark X1 모델은 추가 업그레이드를 통해 기존의 수학 과제에서 국내 선두를 유지하며, 추론, 텍스트 생성, 언어 이해 등 일반 과제에서 OpenAI o1 및 DeepSeek R1과 동등한 성과를 달성합니다."
   },
@@ -3430,6 +3442,9 @@
   },
   "yi-vision-v2": {
     "description": "복잡한 시각적 작업 모델로, 여러 이미지를 기반으로 한 고성능 이해 및 분석 능력을 제공합니다."
+  },
+  "z-ai/glm-4.6": {
+    "description": "Zhipu의 최신 플래그십 모델 GLM-4.6은 고급 코딩, 장문 처리, 추론 및 에이전트 능력에서 전 세대를 뛰어넘는 성능을 자랑합니다."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5는 에이전트 애플리케이션을 위해 설계된 기본 모델로, 혼합 전문가(Mixture-of-Experts) 아키텍처를 사용합니다. 도구 호출, 웹 브라우징, 소프트웨어 엔지니어링, 프론트엔드 프로그래밍 분야에서 깊이 최적화되었으며, Claude Code, Roo Code 등 코드 에이전트에 원활히 통합될 수 있습니다. GLM-4.5는 혼합 추론 모드를 채택하여 복잡한 추론과 일상 사용 등 다양한 응용 시나리오에 적응할 수 있습니다."

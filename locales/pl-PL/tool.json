@@ -15,6 +15,12 @@
     "prompt": "słowo kluczowe"
   },
   "localFiles": {
+    "editFile": {
+      "newString": "Zamień na",
+      "oldString": "Szukany tekst",
+      "replaceAll": "Zamień wszystkie wystąpienia",
+      "replaceFirst": "Zamień tylko pierwsze wystąpienie"
+    },
     "file": "Plik",
     "folder": "Folder",
     "moveFiles": {
@@ -34,7 +40,12 @@
     "readFile": "Odczytaj plik",
     "readFileError": "Błąd odczytu pliku, sprawdź, czy ścieżka do pliku jest poprawna",
     "readFiles": "Odczytaj pliki",
-    "readFilesError": "Błąd odczytu plików, sprawdź, czy ścieżka do plików jest poprawna"
+    "readFilesError": "Błąd odczytu plików, sprawdź, czy ścieżka do plików jest poprawna",
+    "writeFile": {
+      "characters": "Znaki",
+      "preview": "Podgląd treści",
+      "truncated": "Obcięto"
+    }
   },
   "search": {
     "createNewSearch": "Utwórz nową historię wyszukiwania",

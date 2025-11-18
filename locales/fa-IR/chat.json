@@ -330,6 +330,11 @@
     "screenshot": "اسکرین‌شات",
     "settings": "تنظیمات خروجی",
     "text": "متن",
+    "widthMode": {
+      "label": "حالت عرض",
+      "narrow": "حالت صفحه باریک",
+      "wide": "حالت صفحه عریض"
+    },
     "withBackground": "شامل تصویر پس‌زمینه",
     "withFooter": "شامل پاورقی",
     "withPluginInfo": "شامل اطلاعات افزونه",

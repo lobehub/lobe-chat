@@ -15,6 +15,12 @@
     "prompt": "parola chiave"
   },
   "localFiles": {
+    "editFile": {
+      "newString": "Sostituisci con",
+      "oldString": "Trova",
+      "replaceAll": "Sostituisci tutte le occorrenze",
+      "replaceFirst": "Sostituisci solo la prima occorrenza"
+    },
     "file": "File",
     "folder": "Cartella",
     "moveFiles": {
@@ -34,7 +40,12 @@
     "readFile": "Leggi file",
     "readFileError": "Impossibile leggere il file, controlla se il percorso del file è corretto",
     "readFiles": "Leggi file",
-    "readFilesError": "Impossibile leggere i file, controlla se il percorso del file è corretto"
+    "readFilesError": "Impossibile leggere i file, controlla se il percorso del file è corretto",
+    "writeFile": {
+      "characters": "Caratteri",
+      "preview": "Anteprima contenuto",
+      "truncated": "Troncato"
+    }
   },
   "search": {
     "createNewSearch": "Crea una nuova registrazione di ricerca",

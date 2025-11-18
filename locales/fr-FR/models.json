@@ -2225,6 +2225,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct est un modèle efficace à faible nombre de paramètres lancé par Wuwen Xinqiong."
   },
+  "meituan/longcat-flash-chat": {
+    "description": "Modèle de base non réflexif open source de Meituan, optimisé pour les interactions conversationnelles et les tâches d'agents intelligents, offrant d'excellentes performances dans les appels d'outils et les scénarios d'interactions complexes à plusieurs tours."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "Un puissant modèle de 70 milliards de paramètres excelling dans le raisonnement, le codage et les applications linguistiques larges."
   },
@@ -2455,6 +2458,9 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 est un modèle de langage de grande taille, efficace et conçu pour les flux de travail en codage et en automatisation."
+  },
+  "minimax/minimax-m2": {
+    "description": "Conçu pour un codage efficace et des flux de travail d'agents performants."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B est le modèle de pointe de Mistral sur le marché."
@@ -3371,6 +3377,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 est un modèle de langage proposé par Microsoft AI, particulièrement performant dans les domaines des dialogues complexes, du multilinguisme, du raisonnement et des assistants intelligents."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Nous sommes ravis de présenter Grok 4 Fast, notre dernière avancée en matière de modèles de raisonnement rentables."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Nous sommes heureux de lancer grok-code-fast-1, un modèle de raisonnement rapide et économique, particulièrement performant pour le codage assisté par agent."
+  },
   "x1": {
     "description": "Le modèle Spark X1 sera mis à niveau, et sur la base de ses performances déjà leaders dans les tâches mathématiques, il atteindra des résultats comparables dans des tâches générales telles que le raisonnement, la génération de texte et la compréhension du langage, en se mesurant à OpenAI o1 et DeepSeek R1."
   },
@@ -3430,6 +3442,9 @@
   },
   "yi-vision-v2": {
     "description": "Modèle pour des tâches visuelles complexes, offrant des capacités de compréhension et d'analyse de haute performance basées sur plusieurs images."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM-4.6, le tout dernier modèle phare de Zhipu, surpasse son prédécesseur dans les domaines du codage avancé, du traitement de longs textes, du raisonnement et des capacités d'agents intelligents."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 est un modèle de base conçu pour les applications d'agents intelligents, utilisant une architecture Mixture-of-Experts (MoE). Il est profondément optimisé pour l'appel d'outils, la navigation web, l'ingénierie logicielle et la programmation front-end, supportant une intégration transparente avec des agents de code tels que Claude Code et Roo Code. GLM-4.5 utilise un mode d'inférence hybride, adapté à des scénarios variés allant du raisonnement complexe à l'usage quotidien."
