@@ -725,6 +725,22 @@ export const streamingExecutor: StateCreator<
     // Execute the agent runtime loop
     let stepCount = 0;
     while (state.status !== 'done' && state.status !== 'error') {
+      // Check if operation has been cancelled
+      const currentOperation = get().operations[operationId];
+      if (currentOperation?.status === 'cancelled') {
+        log('[internal_execAgentRuntime] Operation cancelled, marking state as interrupted');
+
+        // Update state status to 'interrupted' so agent can handle abort
+        state = { ...state, status: 'interrupted' };
+
+        // Let agent handle the abort (will clean up pending tools if needed)
+        const result = await runtime.step(state, nextContext);
+        state = result.newState;
+
+        log('[internal_execAgentRuntime] Operation cancelled, stopping loop');
+        break;
+      }
+
       stepCount++;
       log(
         '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',
@@ -769,6 +785,25 @@ export const streamingExecutor: StateCreator<
       }
 
       state = result.newState;
+
+      // Check if operation was cancelled after step completion
+      const operationAfterStep = get().operations[operationId];
+      if (operationAfterStep?.status === 'cancelled') {
+        log(
+          '[internal_execAgentRuntime] Operation cancelled after step %d, marking state as interrupted',
+          stepCount,
+        );
+
+        // Set state.status to 'interrupted' to trigger agent abort handling
+        state = { ...state, status: 'interrupted' };
+
+        // Let agent handle the abort (will clean up pending tools if needed)
+        const abortResult = await runtime.step(state, nextContext || result.nextContext);
+        state = abortResult.newState;
+
+        log('[internal_execAgentRuntime] Operation cancelled, stopping loop');
+        break;
+      }
 
       // If no nextContext, stop execution
       if (!result.nextContext) {

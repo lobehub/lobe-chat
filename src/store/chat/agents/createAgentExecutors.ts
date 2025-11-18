@@ -392,6 +392,16 @@ export const createAgentExecutors = (context: {
           context.get().completeOperation(createToolMsgOpId);
         }
 
+        // Check if parent operation was cancelled while creating message
+        const toolOperation = toolOperationId
+          ? context.get().operations[toolOperationId]
+          : undefined;
+        if (toolOperation?.abortController.signal.aborted) {
+          log('[%s][call_tool] Parent operation cancelled, skipping tool execution', sessionLogId);
+          // Message already created with aborted status by cancel handler
+          return { events, newState: state };
+        }
+
         // ============ Sub-operation 2: Execute tool call ============
         // Auto-associates message with this operation via messageId in context
         const { operationId: executeToolOpId } = context.get().startOperation({
