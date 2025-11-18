@@ -7,11 +7,11 @@ import { chatService } from '@/services/chat';
 import { PublicState, State, initialState } from './initialState';
 
 export interface Action {
-  autoCompleteInput: (
-    input: string,
-    afterText: string,
-    selectionType: string,
-  ) => Promise<string | null>;
+  autoCompleteInput: (opts: {
+    afterText: string;
+    input: string;
+    selectionType: string;
+  }) => Promise<string | null>;
   getJSONState: () => any;
   getMarkdownContent: () => string;
   handleSendButton: () => void;
@@ -33,7 +33,7 @@ type CreateStore = (
 export const store: CreateStore = (publicState) => (set, get) => ({
   ...initialState,
   ...publicState,
-  autoCompleteInput: async (input) => {
+  autoCompleteInput: async ({ input }) => {
     if (!input) return null;
 
     // Clear previous timer
