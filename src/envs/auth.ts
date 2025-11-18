@@ -30,6 +30,62 @@ declare global {
 
       NEXT_AUTH_SSO_SESSION_STRATEGY?: string;
 
+      // ===== Next Auth Provider Credentials ===== //
+      AUTH_AUTH0_ID?: string;
+      AUTH_AUTH0_SECRET?: string;
+      AUTH_AUTH0_ISSUER?: string;
+
+      AUTH_AUTHELIA_ID?: string;
+      AUTH_AUTHELIA_SECRET?: string;
+      AUTH_AUTHELIA_ISSUER?: string;
+
+      AUTH_AUTHENTIK_ID?: string;
+      AUTH_AUTHENTIK_SECRET?: string;
+      AUTH_AUTHENTIK_ISSUER?: string;
+
+      AUTH_CASDOOR_ID?: string;
+      AUTH_CASDOOR_SECRET?: string;
+      AUTH_CASDOOR_ISSUER?: string;
+
+      AUTH_CLOUDFLARE_ZERO_TRUST_ID?: string;
+      AUTH_CLOUDFLARE_ZERO_TRUST_SECRET?: string;
+      AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER?: string;
+
+      AUTH_FEISHU_APP_ID?: string;
+      AUTH_FEISHU_APP_SECRET?: string;
+
+      AUTH_GENERIC_OIDC_ID?: string;
+      AUTH_GENERIC_OIDC_SECRET?: string;
+      AUTH_GENERIC_OIDC_ISSUER?: string;
+
+      AUTH_KEYCLOAK_ID?: string;
+      AUTH_KEYCLOAK_SECRET?: string;
+      AUTH_KEYCLOAK_ISSUER?: string;
+
+      AUTH_LOGTO_ID?: string;
+      AUTH_LOGTO_SECRET?: string;
+      AUTH_LOGTO_ISSUER?: string;
+
+      AUTH_MICROSOFT_ENTRA_ID_ID?: string;
+      AUTH_MICROSOFT_ENTRA_ID_SECRET?: string;
+      AUTH_MICROSOFT_ENTRA_ID_TENANT_ID?: string;
+      AUTH_MICROSOFT_ENTRA_ID_BASE_URL?: string;
+
+      AUTH_OKTA_ID?: string;
+      AUTH_OKTA_SECRET?: string;
+      AUTH_OKTA_ISSUER?: string;
+
+      AUTH_WECHAT_ID?: string;
+      AUTH_WECHAT_SECRET?: string;
+
+      AUTH_ZITADEL_ID?: string;
+      AUTH_ZITADEL_SECRET?: string;
+      AUTH_ZITADEL_ISSUER?: string;
+
+      AUTH_AZURE_AD_ID?: string;
+      AUTH_AZURE_AD_SECRET?: string;
+      AUTH_AZURE_AD_TENANT_ID?: string;
+
       // Github
       GITHUB_CLIENT_ID?: string;
       GITHUB_CLIENT_SECRET?: string;
@@ -96,6 +152,65 @@ export const getAuthConfig = () => {
       NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
       NEXT_AUTH_SSO_SESSION_STRATEGY: z.enum(['jwt', 'database']).optional().default('jwt'),
 
+      AUTH_AUTH0_ID: z.string().optional(),
+      AUTH_AUTH0_SECRET: z.string().optional(),
+      AUTH_AUTH0_ISSUER: z.string().optional(),
+
+      AUTH_AUTHELIA_ID: z.string().optional(),
+      AUTH_AUTHELIA_SECRET: z.string().optional(),
+      AUTH_AUTHELIA_ISSUER: z.string().optional(),
+
+      AUTH_AUTHENTIK_ID: z.string().optional(),
+      AUTH_AUTHENTIK_SECRET: z.string().optional(),
+      AUTH_AUTHENTIK_ISSUER: z.string().optional(),
+
+      AUTH_CASDOOR_ID: z.string().optional(),
+      AUTH_CASDOOR_SECRET: z.string().optional(),
+      AUTH_CASDOOR_ISSUER: z.string().optional(),
+
+      AUTH_CLOUDFLARE_ZERO_TRUST_ID: z.string().optional(),
+      AUTH_CLOUDFLARE_ZERO_TRUST_SECRET: z.string().optional(),
+      AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER: z.string().optional(),
+
+      AUTH_FEISHU_APP_ID: z.string().optional(),
+      AUTH_FEISHU_APP_SECRET: z.string().optional(),
+
+      AUTH_GENERIC_OIDC_ID: z.string().optional(),
+      AUTH_GENERIC_OIDC_SECRET: z.string().optional(),
+      AUTH_GENERIC_OIDC_ISSUER: z.string().optional(),
+
+      AUTH_KEYCLOAK_ID: z.string().optional(),
+      AUTH_KEYCLOAK_SECRET: z.string().optional(),
+      AUTH_KEYCLOAK_ISSUER: z.string().optional(),
+
+      AUTH_LOGTO_ID: z.string().optional(),
+      AUTH_LOGTO_SECRET: z.string().optional(),
+      AUTH_LOGTO_ISSUER: z.string().optional(),
+
+      AUTH_MICROSOFT_ENTRA_ID_ID: z.string().optional(),
+      AUTH_MICROSOFT_ENTRA_ID_SECRET: z.string().optional(),
+      AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: z.string().optional(),
+      AUTH_MICROSOFT_ENTRA_ID_BASE_URL: z.string().optional(),
+
+      AUTH_OKTA_ID: z.string().optional(),
+      AUTH_OKTA_SECRET: z.string().optional(),
+      AUTH_OKTA_ISSUER: z.string().optional(),
+
+      AUTH_WECHAT_ID: z.string().optional(),
+      AUTH_WECHAT_SECRET: z.string().optional(),
+
+      AUTH_ZITADEL_ID: z.string().optional(),
+      AUTH_ZITADEL_SECRET: z.string().optional(),
+      AUTH_ZITADEL_ISSUER: z.string().optional(),
+
+      AUTH_AZURE_AD_ID: z.string().optional(),
+      AUTH_AZURE_AD_SECRET: z.string().optional(),
+      AUTH_AZURE_AD_TENANT_ID: z.string().optional(),
+
+      ZITADEL_CLIENT_ID: z.string().optional(),
+      ZITADEL_CLIENT_SECRET: z.string().optional(),
+      ZITADEL_ISSUER: z.string().optional(),
+
       // Azure AD
       AZURE_AD_CLIENT_ID: z.string().optional(),
       AZURE_AD_CLIENT_SECRET: z.string().optional(),
@@ -147,6 +262,66 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
       NEXT_AUTH_DEBUG: !!process.env.NEXT_AUTH_DEBUG,
       NEXT_AUTH_SSO_SESSION_STRATEGY: process.env.NEXT_AUTH_SSO_SESSION_STRATEGY || 'jwt',
+
+      // Next Auth Provider Credentials
+      AUTH_AUTH0_ID: process.env.AUTH_AUTH0_ID,
+      AUTH_AUTH0_SECRET: process.env.AUTH_AUTH0_SECRET,
+      AUTH_AUTH0_ISSUER: process.env.AUTH_AUTH0_ISSUER,
+
+      AUTH_AUTHELIA_ID: process.env.AUTH_AUTHELIA_ID,
+      AUTH_AUTHELIA_SECRET: process.env.AUTH_AUTHELIA_SECRET,
+      AUTH_AUTHELIA_ISSUER: process.env.AUTH_AUTHELIA_ISSUER,
+
+      AUTH_AUTHENTIK_ID: process.env.AUTH_AUTHENTIK_ID,
+      AUTH_AUTHENTIK_SECRET: process.env.AUTH_AUTHENTIK_SECRET,
+      AUTH_AUTHENTIK_ISSUER: process.env.AUTH_AUTHENTIK_ISSUER,
+
+      AUTH_CASDOOR_ID: process.env.AUTH_CASDOOR_ID,
+      AUTH_CASDOOR_SECRET: process.env.AUTH_CASDOOR_SECRET,
+      AUTH_CASDOOR_ISSUER: process.env.AUTH_CASDOOR_ISSUER,
+
+      AUTH_CLOUDFLARE_ZERO_TRUST_ID: process.env.AUTH_CLOUDFLARE_ZERO_TRUST_ID,
+      AUTH_CLOUDFLARE_ZERO_TRUST_SECRET: process.env.AUTH_CLOUDFLARE_ZERO_TRUST_SECRET,
+      AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER: process.env.AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER,
+
+      AUTH_FEISHU_APP_ID: process.env.AUTH_FEISHU_APP_ID,
+      AUTH_FEISHU_APP_SECRET: process.env.AUTH_FEISHU_APP_SECRET,
+
+      AUTH_GENERIC_OIDC_ID: process.env.AUTH_GENERIC_OIDC_ID,
+      AUTH_GENERIC_OIDC_SECRET: process.env.AUTH_GENERIC_OIDC_SECRET,
+      AUTH_GENERIC_OIDC_ISSUER: process.env.AUTH_GENERIC_OIDC_ISSUER,
+
+      AUTH_KEYCLOAK_ID: process.env.AUTH_KEYCLOAK_ID,
+      AUTH_KEYCLOAK_SECRET: process.env.AUTH_KEYCLOAK_SECRET,
+      AUTH_KEYCLOAK_ISSUER: process.env.AUTH_KEYCLOAK_ISSUER,
+
+      AUTH_LOGTO_ID: process.env.AUTH_LOGTO_ID,
+      AUTH_LOGTO_SECRET: process.env.AUTH_LOGTO_SECRET,
+      AUTH_LOGTO_ISSUER: process.env.AUTH_LOGTO_ISSUER,
+
+      AUTH_MICROSOFT_ENTRA_ID_ID: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+      AUTH_MICROSOFT_ENTRA_ID_SECRET: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      AUTH_MICROSOFT_ENTRA_ID_TENANT_ID: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+      AUTH_MICROSOFT_ENTRA_ID_BASE_URL: process.env.AUTH_MICROSOFT_ENTRA_ID_BASE_URL,
+
+      AUTH_OKTA_ID: process.env.AUTH_OKTA_ID,
+      AUTH_OKTA_SECRET: process.env.AUTH_OKTA_SECRET,
+      AUTH_OKTA_ISSUER: process.env.AUTH_OKTA_ISSUER,
+
+      AUTH_WECHAT_ID: process.env.AUTH_WECHAT_ID,
+      AUTH_WECHAT_SECRET: process.env.AUTH_WECHAT_SECRET,
+
+      AUTH_ZITADEL_ID: process.env.AUTH_ZITADEL_ID,
+      AUTH_ZITADEL_SECRET: process.env.AUTH_ZITADEL_SECRET,
+      AUTH_ZITADEL_ISSUER: process.env.AUTH_ZITADEL_ISSUER,
+
+      AUTH_AZURE_AD_ID: process.env.AUTH_AZURE_AD_ID,
+      AUTH_AZURE_AD_SECRET: process.env.AUTH_AZURE_AD_SECRET,
+      AUTH_AZURE_AD_TENANT_ID: process.env.AUTH_AZURE_AD_TENANT_ID,
+
+      ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
+      ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
+      ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
 
       // Azure AD
       AZURE_AD_CLIENT_ID: process.env.AZURE_AD_CLIENT_ID,
