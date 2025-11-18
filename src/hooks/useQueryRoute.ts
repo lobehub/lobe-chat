@@ -1,6 +1,6 @@
-import { useRouter } from 'nextjs-toploader/app';
 import qs, { type ParsedQuery } from 'query-string';
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { isOnServerSide } from '@/utils/env';
 
@@ -31,19 +31,19 @@ const genHref = ({ hash, replace, url, prevQuery = {}, query = {} }: GenHrefOpti
 };
 
 export const useQueryRoute = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return useMemo(
     () => ({
       push: (url: string, options: QueryRouteOptions = {}) => {
         const prevQuery = qs.parse(window.location.search);
-        return router.push(genHref({ prevQuery, url, ...options }));
+        return navigate(genHref({ prevQuery, url, ...options }));
       },
       replace: (url: string, options: QueryRouteOptions = {}) => {
         const prevQuery = qs.parse(window.location.search);
-        return router.replace(genHref({ prevQuery, url, ...options }));
+        return navigate(genHref({ prevQuery, url, ...options }), { replace: true });
       },
     }),
-    [],
+    [navigate],
   );
 };

@@ -1,6 +1,112 @@
 [
   {
     "children": {
+      "fixes": ["Slove when logout always show loading."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.81"
+  },
+  {
+    "children": {},
+    "date": "2025-11-18",
+    "version": "2.0.0-next.80"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the discover page categray sider link error."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.79"
+  },
+  {
+    "children": {},
+    "date": "2025-11-18",
+    "version": "2.0.0-next.78"
+  },
+  {
+    "children": {
+      "improvements": ["Delete /settings/newapi pages in nextjs build."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.77"
+  },
+  {
+    "children": {
+      "features": ["Support Interleaved thinking in MiniMax."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.76"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.75"
+  },
+  {
+    "children": {
+      "features": ["Edit local file render & intervention."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.74"
+  },
+  {
+    "children": {
+      "features": ["Support parallel topic agent runtime."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.73"
+  },
+  {
+    "children": {
+      "improvements": ["Add model information for the Qiniu provider."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.72"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop user panel."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.71"
+  },
+  {
+    "children": {},
+    "date": "2025-11-17",
+    "version": "2.0.0-next.70"
+  },
+  {
+    "children": {
+      "improvements": ["Remove language_model_settings and remove isDeprecatedEdition."]
+    },
+    "date": "2025-11-17",
+    "version": "2.0.0-next.69"
+  },
+  {
+    "children": {
+      "fixes": ["The tool to fail execution on ollama when a message contains b…."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.68"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to virtua."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.67"
+  },
+  {
+    "children": {
+      "features": ["Support to collapse message."]
+    },
+    "date": "2025-11-16",
+    "version": "2.0.0-next.66"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-16",

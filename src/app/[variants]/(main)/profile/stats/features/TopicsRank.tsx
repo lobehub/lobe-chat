@@ -3,11 +3,11 @@ import { ActionIcon, FormGroup, Icon, Modal } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { MaximizeIcon, MessageSquareIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import qs from 'query-string';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -19,7 +19,7 @@ export const TopicsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation('auth');
   const theme = useTheme();
-  const router = useRouter();
+  const navigate = useNavigate();
   const { data, isLoading } = useClientDataSWR('rank-topics', async () =>
     topicService.rankTopics(),
   );
@@ -73,7 +73,7 @@ export const TopicsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
               desc: t('stats.empty.desc'),
               title: t('stats.empty.title'),
             }}
-            onValueChange={(item) => router.push(item.link)}
+            onValueChange={(item) => navigate(item.link)}
             rightLabel={t('stats.topicsRank.right')}
           />
         </Flexbox>
@@ -91,7 +91,7 @@ export const TopicsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
             height={340}
             leftLabel={t('stats.topicsRank.left')}
             loading={isLoading || !data}
-            onValueChange={(item) => router.push(item.link)}
+            onValueChange={(item) => navigate(item.link)}
             rightLabel={t('stats.topicsRank.right')}
           />
         </Modal>

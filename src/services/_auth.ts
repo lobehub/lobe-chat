@@ -1,4 +1,4 @@
-import { LOBE_CHAT_AUTH_HEADER, isDeprecatedEdition } from '@lobechat/const';
+import { LOBE_CHAT_AUTH_HEADER } from '@lobechat/const';
 import {
   AWSBedrockKeyVault,
   AzureOpenAIKeyVault,
@@ -119,16 +119,7 @@ interface AuthParams {
 }
 
 export const createPayloadWithKeyVaults = (provider: string) => {
-  let keyVaults = {};
-
-  // TODO: remove this condition in V2.0
-  if (isDeprecatedEdition) {
-    keyVaults = keyVaultsConfigSelectors.getVaultByProvider(provider as any)(
-      useUserStore.getState(),
-    );
-  } else {
-    keyVaults = aiProviderSelectors.providerKeyVaults(provider)(useAiInfraStore.getState()) || {};
-  }
+  let keyVaults = aiProviderSelectors.providerKeyVaults(provider)(useAiInfraStore.getState()) || {};
 
   const runtimeProvider = resolveRuntimeProvider(provider);
 

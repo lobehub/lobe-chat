@@ -6,7 +6,7 @@ import { memo, use, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
-import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
+import { VirtuaContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
@@ -24,19 +24,30 @@ interface GroupActionsProps {
 
 const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }) => {
   const { tools } = data;
-  const [isThreadMode, hasThread, isRegenerating] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating, isCollapsed] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     messageStateSelectors.isMessageRegenerating(id)(s),
+    messageStateSelectors.isMessageCollapsed(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
 
-  const { edit, delAndRegenerate, regenerate, copy, divider, del, branching, share } =
-    useChatListActionsBar({
-      hasThread,
-      isRegenerating,
-    });
+  const {
+    edit,
+    delAndRegenerate,
+    regenerate,
+    copy,
+    divider,
+    del,
+    branching,
+    share,
+    expand,
+    collapse,
+  } = useChatListActionsBar({
+    hasThread,
+    isRegenerating,
+  });
 
   const hasTools = !!tools;
 
@@ -64,6 +75,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     resendThreadMessage,
     delAndResendThreadMessage,
     toggleMessageEditing,
+    toggleMessageCollapsed,
   ] = useChatStore((s) => [
     s.deleteMessage,
     s.regenerateAssistantMessage,
@@ -74,9 +86,10 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
+    s.toggleMessageCollapsed,
   ]);
   const { message } = App.useApp();
-  const virtuosoRef = use(VirtuosoContext);
+  const virtuaRef = use(VirtuaContext);
 
   const onActionClick = useCallback(
     async (action: ActionIconGroupEvent) => {
@@ -84,7 +97,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
         case 'edit': {
           toggleMessageEditing(id, true);
 
-          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+          virtuaRef?.current?.scrollToIndex(index, { align: 'start' });
         }
       }
       if (!data) return;
@@ -133,6 +146,12 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
           setShareModal(true);
           break;
         }
+
+        case 'collapse':
+        case 'expand': {
+          toggleMessageCollapsed(id);
+          break;
+        }
       }
 
       if (action.keyPath.at(-1) === 'translate') {
@@ -146,6 +165,8 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
     [data, topic],
   );
 
+  const collapseAction = isCollapsed ? expand : collapse;
+
   return (
     <>
       <ActionIconGroup
@@ -154,6 +175,7 @@ const WithContentId = memo<GroupActionsProps>(({ id, data, index, contentBlock }
           items: [
             edit,
             copy,
+            collapseAction,
             divider,
             share,
             divider,

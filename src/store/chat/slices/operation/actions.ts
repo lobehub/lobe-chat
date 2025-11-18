@@ -1,0 +1,451 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+import { nanoid } from '@lobechat/utils';
+import { produce } from 'immer';
+import { StateCreator } from 'zustand/vanilla';
+
+import { ChatStore } from '@/store/chat/store';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { setNamespace } from '@/utils/storeDebug';
+
+import type {
+  Operation,
+  OperationContext,
+  OperationFilter,
+  OperationMetadata,
+  OperationStatus,
+  OperationType,
+} from './types';
+
+const n = setNamespace('operation');
+
+/**
+ * Operation Actions
+ */
+export interface OperationActions {
+  /**
+   * Associate message with operation (for automatic context retrieval)
+   */
+  associateMessageWithOperation: (messageId: string, operationId: string) => void;
+
+  /**
+   * Cancel all operations
+   */
+  cancelAllOperations: (reason?: string) => void;
+
+  /**
+   * Cancel operation (recursively cancel all child operations)
+   */
+  cancelOperation: (operationId: string, reason?: string) => void;
+
+  /**
+   * Cancel operations by filter
+   */
+  cancelOperations: (filter: OperationFilter, reason?: string) => string[];
+
+  /**
+   * Cleanup completed operations (prevent memory leak)
+   */
+  cleanupCompletedOperations: (olderThan?: number) => void;
+
+  /**
+   * Complete operation
+   */
+  completeOperation: (operationId: string, metadata?: Partial<OperationMetadata>) => void;
+
+  /**
+   * Mark operation as failed
+   */
+  failOperation: (
+    operationId: string,
+    error: { code?: string; details?: any; message: string; type: string },
+  ) => void;
+
+  /**
+   * Start an operation (supports auto-inheriting context from parent operation)
+   */
+  startOperation: (params: {
+    context?: Partial<OperationContext>;
+    description?: string;
+    label?: string;
+    metadata?: Partial<OperationMetadata>;
+    parentOperationId?: string;
+    type: OperationType;
+  }) => { abortController: AbortController; operationId: string };
+
+  /**
+   * Update operation progress
+   */
+  updateOperationProgress: (operationId: string, current: number, total?: number) => void;
+
+  /**
+   * Update operation status
+   */
+  updateOperationStatus: (
+    operationId: string,
+    status: OperationStatus,
+    metadata?: Partial<OperationMetadata>,
+  ) => void;
+}
+
+export const operationActions: StateCreator<
+  ChatStore,
+  [['zustand/devtools', never]],
+  [],
+  OperationActions
+> = (set, get) => ({
+  startOperation: (params) => {
+    const {
+      type,
+      context: partialContext,
+      parentOperationId,
+      label,
+      description,
+      metadata,
+    } = params;
+
+    const operationId = `op_${nanoid()}`;
+
+    // If parent operation exists and context is not fully provided, inherit from parent
+    let context: OperationContext = partialContext || {};
+
+    if (parentOperationId) {
+      const parentOp = get().operations[parentOperationId];
+      if (parentOp) {
+        // Inherit parent's context, allow partial override
+        context = { ...parentOp.context, ...partialContext };
+      }
+    }
+
+    const abortController = new AbortController();
+    const now = Date.now();
+
+    const operation: Operation = {
+      id: operationId,
+      type,
+      status: 'running',
+      context,
+      abortController,
+      metadata: {
+        startTime: now,
+        ...metadata,
+      },
+      parentOperationId,
+      childOperationIds: [],
+      label,
+      description,
+    };
+
+    set(
+      produce((state: ChatStore) => {
+        // Add to operations map
+        state.operations[operationId] = operation;
+
+        // Update type index
+        if (!state.operationsByType[type]) {
+          state.operationsByType[type] = [];
+        }
+        state.operationsByType[type].push(operationId);
+
+        // Update message index (if messageId exists)
+        if (context.messageId) {
+          if (!state.operationsByMessage[context.messageId]) {
+            state.operationsByMessage[context.messageId] = [];
+          }
+          state.operationsByMessage[context.messageId].push(operationId);
+        }
+
+        // Update context index (if sessionId exists)
+        if (context.sessionId) {
+          const contextKey = messageMapKey(
+            context.sessionId,
+            context.topicId !== undefined ? context.topicId : null,
+          );
+          if (!state.operationsByContext[contextKey]) {
+            state.operationsByContext[contextKey] = [];
+          }
+          state.operationsByContext[contextKey].push(operationId);
+        }
+
+        // Update parent's childOperationIds
+        if (parentOperationId && state.operations[parentOperationId]) {
+          if (!state.operations[parentOperationId].childOperationIds) {
+            state.operations[parentOperationId].childOperationIds = [];
+          }
+          state.operations[parentOperationId].childOperationIds!.push(operationId);
+        }
+      }),
+      false,
+      n(`startOperation/${type}/${operationId}`),
+    );
+
+    return { operationId, abortController };
+  },
+
+  updateOperationStatus: (operationId, status, metadata) => {
+    set(
+      produce((state: ChatStore) => {
+        const operation = state.operations[operationId];
+        if (!operation) return;
+
+        operation.status = status;
+
+        if (metadata) {
+          operation.metadata = {
+            ...operation.metadata,
+            ...metadata,
+          };
+        }
+      }),
+      false,
+      n(`updateOperationStatus/${operationId}/${status}`),
+    );
+  },
+
+  updateOperationProgress: (operationId, current, total) => {
+    set(
+      produce((state: ChatStore) => {
+        const operation = state.operations[operationId];
+        if (!operation) return;
+
+        operation.metadata.progress = {
+          current,
+          total: total ?? operation.metadata.progress?.total ?? current,
+          percentage: total ? Math.round((current / total) * 100) : undefined,
+        };
+      }),
+      false,
+      n(`updateOperationProgress/${operationId}`),
+    );
+  },
+
+  completeOperation: (operationId, metadata) => {
+    set(
+      produce((state: ChatStore) => {
+        const operation = state.operations[operationId];
+        if (!operation) return;
+
+        const now = Date.now();
+        operation.status = 'completed';
+        operation.metadata.endTime = now;
+        operation.metadata.duration = now - operation.metadata.startTime;
+
+        if (metadata) {
+          operation.metadata = {
+            ...operation.metadata,
+            ...metadata,
+          };
+        }
+      }),
+      false,
+      n(`completeOperation/${operationId}`),
+    );
+  },
+
+  cancelOperation: (operationId, reason = 'User cancelled') => {
+    const operation = get().operations[operationId];
+    if (!operation) return;
+
+    // Cancel all child operations recursively
+    if (operation.childOperationIds && operation.childOperationIds.length > 0) {
+      operation.childOperationIds.forEach((childId) => {
+        get().cancelOperation(childId, 'Parent operation cancelled');
+      });
+    }
+
+    // Abort the operation
+    try {
+      operation.abortController.abort(reason);
+    } catch {
+      // Ignore abort errors
+    }
+
+    // Update status
+    set(
+      produce((state: ChatStore) => {
+        const op = state.operations[operationId];
+        if (!op) return;
+
+        const now = Date.now();
+        op.status = 'cancelled';
+        op.metadata.endTime = now;
+        op.metadata.duration = now - op.metadata.startTime;
+        op.metadata.cancelReason = reason;
+      }),
+      false,
+      n(`cancelOperation/${operationId}`),
+    );
+  },
+
+  failOperation: (operationId, error) => {
+    set(
+      produce((state: ChatStore) => {
+        const operation = state.operations[operationId];
+        if (!operation) return;
+
+        const now = Date.now();
+        operation.status = 'failed';
+        operation.metadata.endTime = now;
+        operation.metadata.duration = now - operation.metadata.startTime;
+        operation.metadata.error = error;
+      }),
+      false,
+      n(`failOperation/${operationId}`),
+    );
+  },
+
+  cancelOperations: (filter, reason = 'Batch cancelled') => {
+    const operations = Object.values(get().operations);
+    const matchedIds: string[] = [];
+
+    operations.forEach((op) => {
+      if (op.status !== 'running') return;
+
+      let matches = true;
+
+      // Type filter
+      if (filter.type) {
+        const types = Array.isArray(filter.type) ? filter.type : [filter.type];
+        matches = matches && types.includes(op.type);
+      }
+
+      // Status filter
+      if (filter.status) {
+        const statuses = Array.isArray(filter.status) ? filter.status : [filter.status];
+        matches = matches && statuses.includes(op.status);
+      }
+
+      // Context filters
+      if (filter.sessionId !== undefined) {
+        matches = matches && op.context.sessionId === filter.sessionId;
+      }
+      if (filter.topicId !== undefined) {
+        matches = matches && op.context.topicId === filter.topicId;
+      }
+      if (filter.messageId !== undefined) {
+        matches = matches && op.context.messageId === filter.messageId;
+      }
+      if (filter.threadId !== undefined) {
+        matches = matches && op.context.threadId === filter.threadId;
+      }
+      if (filter.groupId !== undefined) {
+        matches = matches && op.context.groupId === filter.groupId;
+      }
+      if (filter.agentId !== undefined) {
+        matches = matches && op.context.agentId === filter.agentId;
+      }
+
+      if (matches) {
+        matchedIds.push(op.id);
+      }
+    });
+
+    // Cancel all matched operations
+    matchedIds.forEach((id) => {
+      get().cancelOperation(id, reason);
+    });
+
+    return matchedIds;
+  },
+
+  cancelAllOperations: (reason = 'Cancel all operations') => {
+    const operations = Object.values(get().operations);
+
+    operations.forEach((op) => {
+      if (op.status === 'running') {
+        get().cancelOperation(op.id, reason);
+      }
+    });
+  },
+
+  cleanupCompletedOperations: (olderThan = 60_000) => {
+    // Default: cleanup operations completed more than 1 minute ago
+    const now = Date.now();
+
+    // Collect operations to delete first
+    const operationsToDelete: string[] = [];
+    Object.values(get().operations).forEach((op) => {
+      const isCompleted =
+        op.status === 'completed' || op.status === 'cancelled' || op.status === 'failed';
+      const isOld = op.metadata.endTime && now - op.metadata.endTime > olderThan;
+
+      if (isCompleted && isOld) {
+        operationsToDelete.push(op.id);
+      }
+    });
+
+    if (operationsToDelete.length === 0) return;
+
+    set(
+      produce((state: ChatStore) => {
+        // Delete operations and update indexes
+        operationsToDelete.forEach((operationId) => {
+          const op = state.operations[operationId];
+          if (!op) return;
+
+          // Remove from operations map
+          delete state.operations[operationId];
+
+          // Remove from type index
+          const typeIndex = state.operationsByType[op.type];
+          if (typeIndex) {
+            state.operationsByType[op.type] = typeIndex.filter((id) => id !== operationId);
+          }
+
+          // Remove from message index
+          if (op.context.messageId) {
+            const msgIndex = state.operationsByMessage[op.context.messageId];
+            if (msgIndex) {
+              state.operationsByMessage[op.context.messageId] = msgIndex.filter(
+                (id) => id !== operationId,
+              );
+            }
+          }
+
+          // Remove from context index
+          if (op.context.sessionId) {
+            const contextKey = messageMapKey(
+              op.context.sessionId,
+              op.context.topicId !== undefined ? op.context.topicId : null,
+            );
+            const contextIndex = state.operationsByContext[contextKey];
+            if (contextIndex) {
+              state.operationsByContext[contextKey] = contextIndex.filter(
+                (id) => id !== operationId,
+              );
+            }
+          }
+
+          // Remove from parent's childOperationIds
+          if (op.parentOperationId && state.operations[op.parentOperationId]) {
+            const parent = state.operations[op.parentOperationId];
+            if (parent.childOperationIds) {
+              parent.childOperationIds = parent.childOperationIds.filter(
+                (id) => id !== operationId,
+              );
+            }
+          }
+
+          // Remove from messageOperationMap
+          const messageEntry = Object.entries(state.messageOperationMap).find(
+            ([, opId]) => opId === operationId,
+          );
+          if (messageEntry) {
+            delete state.messageOperationMap[messageEntry[0]];
+          }
+        });
+      }),
+      false,
+      n(`cleanupCompletedOperations/count=${operationsToDelete.length}`),
+    );
+  },
+
+  associateMessageWithOperation: (messageId, operationId) => {
+    set(
+      produce((state: ChatStore) => {
+        state.messageOperationMap[messageId] = operationId;
+      }),
+      false,
+      n(`associateMessageWithOperation/${messageId}/${operationId}`),
+    );
+  },
+});

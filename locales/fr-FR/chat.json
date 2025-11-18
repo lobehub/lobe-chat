@@ -17,6 +17,7 @@
   "availableAgents": "Assistants disponibles",
   "backToBottom": "Retour en bas",
   "chatList": {
+    "expandMessage": "Développer le message",
     "longMessageDetail": "Voir les détails"
   },
   "clearCurrentMessages": "Effacer les messages actuels",
@@ -173,9 +174,11 @@
     "title": "Mentionner un membre"
   },
   "messageAction": {
+    "collapse": "Réduire le message",
     "continueGeneration": "Continuer la génération",
     "delAndRegenerate": "Supprimer et régénérer",
     "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
+    "expand": "Développer le message",
     "regenerate": "Régénérer"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "Capture d'écran",
     "settings": "Paramètres d'exportation",
     "text": "Texte",
+    "widthMode": {
+      "label": "Mode de largeur",
+      "narrow": "Mode écran étroit",
+      "wide": "Mode écran large"
+    },
     "withBackground": "Avec image de fond",
     "withFooter": "Avec pied de page",
     "withPluginInfo": "Avec informations sur le plugin",

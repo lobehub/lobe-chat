@@ -17,6 +17,7 @@
   "availableAgents": "利用可能なアシスタント",
   "backToBottom": "現在に戻る",
   "chatList": {
+    "expandMessage": "メッセージを展開",
     "longMessageDetail": "詳細を見る"
   },
   "clearCurrentMessages": "現在の会話をクリア",
@@ -173,9 +174,11 @@
     "title": "メンバーをメンション"
   },
   "messageAction": {
+    "collapse": "メッセージを折りたたむ",
     "continueGeneration": "生成を続ける",
     "delAndRegenerate": "削除して再生成",
     "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
+    "expand": "メッセージを展開",
     "regenerate": "再生成"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
     "text": "テキスト",
+    "widthMode": {
+      "label": "幅のモード",
+      "narrow": "ナローモード",
+      "wide": "ワイドモード"
+    },
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",

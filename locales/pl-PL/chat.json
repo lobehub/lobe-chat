@@ -17,6 +17,7 @@
   "availableAgents": "Dostępni asystenci",
   "backToBottom": "Przewiń na dół",
   "chatList": {
+    "expandMessage": "Rozwiń wiadomość",
     "longMessageDetail": "Zobacz szczegóły"
   },
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
@@ -173,9 +174,11 @@
     "title": "Wzmianka o członkach"
   },
   "messageAction": {
+    "collapse": "Zwiń wiadomość",
     "continueGeneration": "Kontynuuj generowanie",
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
     "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
+    "expand": "Rozwiń wiadomość",
     "regenerate": "Wygeneruj ponownie"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "Zrzut ekranu",
     "settings": "Ustawienia eksportu",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Tryb szerokości",
+      "narrow": "Tryb wąskiego ekranu",
+      "wide": "Tryb szerokiego ekranu"
+    },
     "withBackground": "Z tłem",
     "withFooter": "Z stopką",
     "withPluginInfo": "Z informacjami o wtyczce",

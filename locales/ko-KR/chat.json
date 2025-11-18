@@ -17,6 +17,7 @@
   "availableAgents": "사용 가능한 도우미",
   "backToBottom": "하단으로 이동",
   "chatList": {
+    "expandMessage": "메시지 펼치기",
     "longMessageDetail": "자세히 보기"
   },
   "clearCurrentMessages": "현재 대화 지우기",
@@ -173,9 +174,11 @@
     "title": "멤버 언급"
   },
   "messageAction": {
+    "collapse": "메시지 접기",
     "continueGeneration": "계속 생성하기",
     "delAndRegenerate": "삭제하고 다시 생성",
     "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
+    "expand": "메시지 펼치기",
     "regenerate": "다시 생성"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
     "text": "텍스트",
+    "widthMode": {
+      "label": "너비 모드",
+      "narrow": "좁은 화면 모드",
+      "wide": "넓은 화면 모드"
+    },
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",

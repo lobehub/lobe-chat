@@ -1,11 +1,11 @@
 import { RefObject, createContext } from 'react';
-import { VirtuosoHandle } from 'react-virtuoso';
+import { VListHandle } from 'virtua';
 
-export const VirtuosoContext = createContext<RefObject<VirtuosoHandle | null> | null>(null);
+export const VirtuaContext = createContext<RefObject<VListHandle | null> | null>(null);
 
-type VirtuosoRef = RefObject<VirtuosoHandle | null> | null;
+type VirtuaRef = RefObject<VListHandle | null> | null;
 
-let currentVirtuosoRef: VirtuosoRef = null;
+let currentVirtuaRef: VirtuaRef = null;
 const refListeners = new Set<() => void>();
 
 const visibleItems = new Map<number, { bottom: number; ratio: number; top: number }>();
@@ -45,14 +45,14 @@ const recalculateActiveIndex = () => {
   notifyActiveIndex(candidate ?? null);
 };
 
-export const setVirtuosoGlobalRef = (ref: VirtuosoRef) => {
-  currentVirtuosoRef = ref;
+export const setVirtuaGlobalRef = (ref: VirtuaRef) => {
+  currentVirtuaRef = ref;
   refListeners.forEach((listener) => listener());
 };
 
-export const getVirtuosoGlobalRef = () => currentVirtuosoRef;
+export const getVirtuaGlobalRef = () => currentVirtuaRef;
 
-export const subscribeVirtuosoGlobalRef = (listener: () => void) => {
+export const subscribeVirtuaGlobalRef = (listener: () => void) => {
   refListeners.add(listener);
 
   return () => {
@@ -60,7 +60,7 @@ export const subscribeVirtuosoGlobalRef = (listener: () => void) => {
   };
 };
 
-export const upsertVirtuosoVisibleItem = (
+export const upsertVirtuaVisibleItem = (
   index: number,
   metrics: { bottom: number; ratio: number; top: number },
 ) => {
@@ -68,22 +68,22 @@ export const upsertVirtuosoVisibleItem = (
   recalculateActiveIndex();
 };
 
-export const removeVirtuosoVisibleItem = (index: number) => {
+export const removeVirtuaVisibleItem = (index: number) => {
   if (!visibleItems.delete(index)) return;
 
   recalculateActiveIndex();
 };
 
-export const resetVirtuosoVisibleItems = () => {
+export const resetVirtuaVisibleItems = () => {
   if (visibleItems.size === 0 && currentActiveIndex === null) return;
 
   visibleItems.clear();
   notifyActiveIndex(null);
 };
 
-export const getVirtuosoActiveIndex = () => currentActiveIndex;
+export const getVirtuaActiveIndex = () => currentActiveIndex;
 
-export const subscribeVirtuosoActiveIndex = (listener: () => void) => {
+export const subscribeVirtuaActiveIndex = (listener: () => void) => {
   activeIndexListeners.add(listener);
 
   return () => {

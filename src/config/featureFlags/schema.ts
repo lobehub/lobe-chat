@@ -9,7 +9,6 @@ export const FeatureFlagsSchema = z.object({
   pin_list: FeatureFlagValue.optional(),
 
   // settings
-  language_model_settings: FeatureFlagValue.optional(),
   provider_settings: FeatureFlagValue.optional(),
 
   openai_api_key: FeatureFlagValue.optional(),
@@ -69,7 +68,6 @@ export const evaluateFeatureFlag = (
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   pin_list: false,
 
-  language_model_settings: true,
   provider_settings: true,
 
   openai_api_key: true,
@@ -112,7 +110,6 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags, userId?: string
 
     showCreateSession: evaluateFeatureFlag(config.create_session, userId),
     enableGroupChat: evaluateFeatureFlag(config.group_chat, userId),
-    showLLM: evaluateFeatureFlag(config.language_model_settings, userId),
     showProvider: evaluateFeatureFlag(config.provider_settings, userId),
     showPinList: evaluateFeatureFlag(config.pin_list, userId),
 

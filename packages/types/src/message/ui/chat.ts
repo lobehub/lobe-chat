@@ -40,6 +40,7 @@ export interface AssistantContentBlock {
   error?: ChatMessageError | null;
   id: string;
   imageList?: ChatImageItem[];
+  metadata?: Record<string, any>;
   performance?: ModelPerformance;
   reasoning?: ModelReasoning;
   tools?: ChatToolPayloadWithResult[];

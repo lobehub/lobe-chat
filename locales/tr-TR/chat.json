@@ -17,6 +17,7 @@
   "availableAgents": "Kullanılabilir asistanlar",
   "backToBottom": "En alta git",
   "chatList": {
+    "expandMessage": "Mesajı Genişlet",
     "longMessageDetail": "Detayları görüntüle"
   },
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",
@@ -173,9 +174,11 @@
     "title": "Üyeleri Etiketle"
   },
   "messageAction": {
+    "collapse": "Mesajı Daralt",
     "continueGeneration": "Oluşturmaya devam et",
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
     "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
+    "expand": "Mesajı Genişlet",
     "regenerate": "Yeniden Oluştur"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
     "text": "Metin",
+    "widthMode": {
+      "label": "Genişlik Modu",
+      "narrow": "Dar Ekran Modu",
+      "wide": "Geniş Ekran Modu"
+    },
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",

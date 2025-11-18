@@ -2,8 +2,9 @@
 
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { useParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 
+import type { IdParams } from '@/app/[variants]/loaders/routeParams';
 import FileModalQueryRoute from '@/app/[variants]/(main)/knowledge/shared/FileModalQueryRoute';
 import { useSetFileModalId } from '@/app/[variants]/(main)/knowledge/shared/useFileQueryParam';
 import FilePanel from '@/features/FileSidePanel';
@@ -19,15 +20,11 @@ import Menu from './menu/Menu';
  * Supports ?file=[fileId] query param for file preview modal
  */
 const KnowledgeBaseDetailPage = memo(() => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useLoaderData() as IdParams;
   const setFileModalId = useSetFileModalId();
 
-  useKnowledgeBaseItem(id!);
-  const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id!));
-
-  if (!id) {
-    return <div>Knowledge base ID is required</div>;
-  }
+  useKnowledgeBaseItem(id);
+  const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id));
 
   return (
     <>

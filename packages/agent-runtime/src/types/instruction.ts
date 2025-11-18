@@ -9,6 +9,10 @@ import type { Cost, CostCalculationContext, Usage } from './usage';
  */
 export interface AgentRuntimeContext {
   metadata?: Record<string, unknown>;
+
+  /** Operation ID (links to Operation for business context) */
+  operationId?: string;
+
   /** Phase-specific payload/context */
   payload?: unknown;
   /** Current execution phase */
@@ -21,8 +25,9 @@ export interface AgentRuntimeContext {
     | 'human_response'
     | 'human_approved_tool'
     | 'error';
-  /** Session */
-  session: {
+
+  /** Session info (kept for backward compatibility, will be optional in the future) */
+  session?: {
     messageCount: number;
     sessionId: string;
     status: AgentState['status'];
