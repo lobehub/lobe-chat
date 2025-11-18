@@ -3,10 +3,12 @@ import { ChatMessagePluginError } from '@lobechat/types';
 import { Skeleton } from 'antd';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { VList } from 'virtua';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
-import FileItem from '@/tools/local-system/components/FileItem';
+
+import FileItem from '../../components/FileItem';
 
 interface SearchFilesProps {
   listResults?: LocalFileItem[];
@@ -29,10 +31,10 @@ const SearchFiles = memo<SearchFilesProps>(({ listResults = [], messageId }) => 
   }
 
   return (
-    <Flexbox gap={2} style={{ maxHeight: 140, overflow: 'scroll' }}>
-      {listResults.map((item) => (
-        <FileItem key={item.path} {...item} showTime />
-      ))}
+    <Flexbox gap={2} style={{ height: 140 }}>
+      <VList data={listResults} itemSize={23}>
+        {(item) => <FileItem {...item} showTime />}
+      </VList>
     </Flexbox>
   );
 });

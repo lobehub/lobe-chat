@@ -4,6 +4,7 @@ import { Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { VList } from 'virtua';
 
 import MoveFileItem from './MoveFileItem';
 
@@ -14,10 +15,10 @@ const MoveLocalFiles = memo<BuiltinRenderProps<MoveLocalFilesParams>>(({ args })
   return (
     <Flexbox gap={8}>
       <Text type="secondary">{t('localFiles.moveFiles.itemsMoved', { count: items.length })}</Text>
-      <Flexbox gap={6}>
-        {items.map((item, index) => (
-          <MoveFileItem key={index} newPath={item.newPath} oldPath={item.oldPath} />
-        ))}
+      <Flexbox style={{ height: 200 }}>
+        <VList data={items}>
+          {(item) => <MoveFileItem newPath={item.newPath} oldPath={item.oldPath} />}
+        </VList>
       </Flexbox>
     </Flexbox>
   );
