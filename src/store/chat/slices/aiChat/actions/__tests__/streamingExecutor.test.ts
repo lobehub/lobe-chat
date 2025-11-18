@@ -130,6 +130,17 @@ describe('StreamingExecutor actions', () => {
       const messages = [createMockMessage({ role: 'user' })];
       const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
 
+      // Create operation for this test
+      const { operationId } = result.current.startOperation({
+        type: 'generateAI',
+        context: {
+          sessionId: TEST_IDS.SESSION_ID,
+          topicId: null,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        },
+        label: 'Test AI Generation',
+      });
+
       const streamSpy = vi
         .spyOn(chatService, 'createAssistantMessageStream')
         .mockImplementation(async ({ onMessageHandle, onFinish }) => {
@@ -144,6 +155,7 @@ describe('StreamingExecutor actions', () => {
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
           model: 'gpt-4o-mini',
           provider: 'openai',
+          operationId,
         });
       });
 
@@ -154,7 +166,7 @@ describe('StreamingExecutor actions', () => {
           value: expect.objectContaining({ content: 'Hello' }),
         }),
         expect.objectContaining({
-          sessionId: expect.any(String),
+          operationId: expect.any(String),
         }),
       );
 
@@ -165,6 +177,17 @@ describe('StreamingExecutor actions', () => {
       const { result } = renderHook(() => useChatStore());
       const messages = [createMockMessage({ role: 'user' })];
       const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      // Create operation for this test
+      const { operationId } = result.current.startOperation({
+        type: 'generateAI',
+        context: {
+          sessionId: TEST_IDS.SESSION_ID,
+          topicId: null,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        },
+        label: 'Test AI Generation',
+      });
 
       const streamSpy = vi
         .spyOn(chatService, 'createAssistantMessageStream')
@@ -180,6 +203,7 @@ describe('StreamingExecutor actions', () => {
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
           model: 'gpt-4o-mini',
           provider: 'openai',
+          operationId,
         });
       });
 
@@ -190,7 +214,7 @@ describe('StreamingExecutor actions', () => {
           value: expect.objectContaining({ reasoning: { content: 'Thinking...' } }),
         }),
         expect.objectContaining({
-          sessionId: expect.any(String),
+          operationId: expect.any(String),
         }),
       );
 
@@ -236,6 +260,17 @@ describe('StreamingExecutor actions', () => {
       const messages = [createMockMessage({ role: 'user' })];
       const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
 
+      // Create operation for this test
+      const { operationId } = result.current.startOperation({
+        type: 'generateAI',
+        context: {
+          sessionId: TEST_IDS.SESSION_ID,
+          topicId: null,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        },
+        label: 'Test AI Generation',
+      });
+
       const streamSpy = vi
         .spyOn(chatService, 'createAssistantMessageStream')
         .mockImplementation(async ({ onMessageHandle, onFinish }) => {
@@ -255,6 +290,7 @@ describe('StreamingExecutor actions', () => {
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
           model: 'gpt-4o-mini',
           provider: 'openai',
+          operationId,
         });
       });
 
@@ -269,7 +305,7 @@ describe('StreamingExecutor actions', () => {
           }),
         }),
         expect.objectContaining({
-          sessionId: expect.any(String),
+          operationId: expect.any(String),
         }),
       );
 
@@ -280,6 +316,17 @@ describe('StreamingExecutor actions', () => {
       const { result } = renderHook(() => useChatStore());
       const messages = [createMockMessage({ role: 'user' })];
       const dispatchSpy = vi.spyOn(result.current, 'internal_dispatchMessage');
+
+      // Create operation for this test
+      const { operationId } = result.current.startOperation({
+        type: 'generateAI',
+        context: {
+          sessionId: TEST_IDS.SESSION_ID,
+          topicId: null,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        },
+        label: 'Test AI Generation',
+      });
 
       const streamSpy = vi
         .spyOn(chatService, 'createAssistantMessageStream')
@@ -298,6 +345,7 @@ describe('StreamingExecutor actions', () => {
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
           model: 'gpt-4o-mini',
           provider: 'openai',
+          operationId,
         });
       });
 
@@ -310,7 +358,7 @@ describe('StreamingExecutor actions', () => {
           }),
         }),
         expect.objectContaining({
-          sessionId: expect.any(String),
+          operationId: expect.any(String),
         }),
       );
 
@@ -564,8 +612,7 @@ describe('StreamingExecutor actions', () => {
         TEST_CONTENT.AI_RESPONSE,
         expect.any(Object),
         {
-          sessionId: contextSessionId,
-          topicId: contextTopicId,
+          operationId: expect.any(String),
         },
       );
 
@@ -606,8 +653,7 @@ describe('StreamingExecutor actions', () => {
         TEST_CONTENT.AI_RESPONSE,
         expect.any(Object),
         {
-          sessionId: 'active-session',
-          topicId: 'active-topic',
+          operationId: undefined,
         },
       );
 

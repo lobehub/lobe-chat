@@ -38,8 +38,9 @@ const isMessageCollapsed = (id: string) => (s: ChatStoreState) => {
   return message?.metadata?.collapsed ?? false;
 };
 
+// Use operation system for plugin API invocation
 const isPluginApiInvoking = (id: string) => (s: ChatStoreState) =>
-  s.pluginApiLoadingIds.includes(id);
+  operationSelectors.isMessageInToolCalling(id)(s);
 
 const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) => {
   const isLoading = s.toolCallingStreamIds[id];
@@ -52,7 +53,8 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) =
 const isInToolsCalling = (id: string, index: number) => (s: ChatStoreState) => {
   const isStreamingToolsCalling = isToolCallStreaming(id, index)(s);
 
-  const isInvokingPluginApi = s.messageInToolsCallingIds.includes(id);
+  // Check if assistant message has any tool calling operations
+  const isInvokingPluginApi = operationSelectors.isMessageInToolCalling(id)(s);
 
   return isStreamingToolsCalling || isInvokingPluginApi;
 };

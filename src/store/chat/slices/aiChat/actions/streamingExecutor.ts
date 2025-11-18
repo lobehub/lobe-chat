@@ -212,7 +212,6 @@ export const streamingExecutor: StateCreator<
     traceId: traceIdParam,
   }) => {
     const {
-      refreshMessages,
       optimisticUpdateMessageContent,
       internal_dispatchMessage,
       internal_toggleToolCallingStreaming,
@@ -321,8 +320,7 @@ export const streamingExecutor: StateCreator<
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
-        await messageService.updateMessageError(messageId, error, { sessionId, topicId });
-        await refreshMessages(sessionId, topicId);
+        await get().optimisticUpdateMessageError(messageId, error, { operationId });
       },
       onFinish: async (
         content,
@@ -706,6 +704,13 @@ export const streamingExecutor: StateCreator<
     // Execute the agent runtime loop
     let stepCount = 0;
     while (state.status !== 'done' && state.status !== 'error') {
+      // Check if operation was cancelled
+      const operation = get().operations[operationId];
+      if (operation?.status === 'cancelled') {
+        log('[internal_execAgentRuntime] Operation cancelled, exiting agent runtime loop');
+        break;
+      }
+
       stepCount++;
       log(
         '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',
@@ -766,8 +771,12 @@ export const streamingExecutor: StateCreator<
       stepCount,
     );
 
-    // Update RAG metadata if available
-    if (params.ragMetadata) {
+    // Check if operation was cancelled
+    const finalOperation = get().operations[operationId];
+    const wasCancelled = finalOperation?.status === 'cancelled';
+
+    // Update RAG metadata if available (skip if cancelled)
+    if (params.ragMetadata && !wasCancelled) {
       const finalMessages = get().messagesMap[messageKey] || [];
       const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
       if (assistantMessage) {
@@ -778,8 +787,11 @@ export const streamingExecutor: StateCreator<
       }
     }
 
-    // Complete operation
-    if (state.status === 'done') {
+    // Complete operation based on final state
+    if (wasCancelled) {
+      log('[internal_execAgentRuntime] Operation was cancelled');
+      // Operation already marked as cancelled by cancelOperation, no need to update
+    } else if (state.status === 'done') {
       get().completeOperation(operationId);
       log('[internal_execAgentRuntime] Operation completed successfully');
     } else if (state.status === 'error') {
@@ -788,6 +800,10 @@ export const streamingExecutor: StateCreator<
         message: 'Agent runtime execution failed',
       });
       log('[internal_execAgentRuntime] Operation failed');
+    } else {
+      // If status is still 'running' but loop exited (e.g., no nextContext), mark as completed
+      get().completeOperation(operationId);
+      log('[internal_execAgentRuntime] Operation completed (no next context)');
     }
 
     log('[internal_execAgentRuntime] completed');

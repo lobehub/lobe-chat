@@ -11,11 +11,8 @@ import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { safeParseJSON } from '@/utils/safeParseJSON';
-import { setNamespace } from '@/utils/storeDebug';
 
 import { dbMessageSelectors } from '../../message/selectors';
-
-const n = setNamespace('plugin');
 
 /**
  * Plugin type-specific implementations
@@ -125,7 +122,6 @@ export const pluginTypes: StateCreator<
   invokeMCPTypePlugin: async (id, payload) => {
     const {
       optimisticUpdateMessageContent,
-      internal_togglePluginApiCalling,
       internal_constructToolsCallingContext,
       optimisticUpdatePluginState,
       optimisticUpdateMessagePluginError,
@@ -135,13 +131,12 @@ export const pluginTypes: StateCreator<
     // Get message to extract sessionId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
-    try {
-      const abortController = internal_togglePluginApiCalling(
-        true,
-        id,
-        n('fetchPlugin/start') as string,
-      );
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
 
+    try {
       const context = internal_constructToolsCallingContext(id);
       const result = await mcpService.invokeMcpToolCall(payload, {
         signal: abortController?.signal,
@@ -168,14 +163,11 @@ export const pluginTypes: StateCreator<
       }
     }
 
-    internal_togglePluginApiCalling(false, id, n('fetchPlugin/end') as string);
-
     // 如果报错则结束了
 
     if (!data) return;
 
-    // Get operationId from messageOperationMap
-    const operationId = get().messageOperationMap[id];
+    // operationId already declared above, reuse it
     const context = operationId ? { operationId } : undefined;
 
     await Promise.all([
@@ -190,19 +182,18 @@ export const pluginTypes: StateCreator<
   },
 
   internal_callPluginApi: async (id, payload) => {
-    const { optimisticUpdateMessageContent, internal_togglePluginApiCalling } = get();
+    const { optimisticUpdateMessageContent } = get();
     let data: string;
 
     // Get message to extract sessionId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
-    try {
-      const abortController = internal_togglePluginApiCalling(
-        true,
-        id,
-        n('fetchPlugin/start') as string,
-      );
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
 
+    try {
       const res = await chatService.runPluginApi(payload, {
         signal: abortController?.signal,
         trace: { observationId: message?.observationId, traceId: message?.traceId },
@@ -233,13 +224,10 @@ export const pluginTypes: StateCreator<
 
       data = '';
     }
-
-    internal_togglePluginApiCalling(false, id, n('fetchPlugin/end') as string);
     // 如果报错则结束了
     if (!data) return;
 
-    // Get operationId from messageOperationMap
-    const operationId = get().messageOperationMap[id];
+    // operationId already declared above, reuse it
     const context = operationId ? { operationId } : undefined;
 
     await optimisticUpdateMessageContent(id, data, undefined, context);

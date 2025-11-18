@@ -254,6 +254,16 @@ const isMessageInReasoning =
   };
 
 /**
+ * Check if a specific message is in tool calling (plugin API invocation)
+ */
+const isMessageInToolCalling =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'toolCalling' && op.status === 'running');
+  };
+
+/**
  * Check if regenerating (for backward compatibility)
  */
 const isRegenerating = (s: ChatStoreState): boolean => {
@@ -294,6 +304,7 @@ export const operationSelectors = {
   isMessageContinuing,
   isMessageGenerating,
   isMessageInReasoning,
+  isMessageInToolCalling,
   isMessageProcessing,
   isMessageRegenerating,
   isRegenerating,

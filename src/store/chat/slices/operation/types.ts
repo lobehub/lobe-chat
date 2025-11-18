@@ -34,6 +34,7 @@ export type OperationType =
   | 'groupAgentGenerate' // Group agent generate
 
   // === Others ===
+  | 'translate' // Translate message
   | 'topicSummary' // Topic summary
   | 'historySummary'; // History summary
 

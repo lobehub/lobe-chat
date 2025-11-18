@@ -17,30 +17,6 @@ afterEach(() => {
 });
 
 describe('StreamingStates actions', () => {
-  describe('internal_toggleChatLoading', () => {
-    it('should return new AbortController when loading is true', () => {
-      const { result } = renderHook(() => useChatStore());
-
-      let controller: AbortController | undefined;
-      act(() => {
-        controller = result.current.internal_toggleChatLoading(true);
-      });
-
-      expect(controller).toBeInstanceOf(AbortController);
-    });
-
-    it('should return undefined when loading is false', () => {
-      const { result } = renderHook(() => useChatStore());
-
-      let controller: AbortController | undefined;
-      act(() => {
-        controller = result.current.internal_toggleChatLoading(false);
-      });
-
-      expect(controller).toBeUndefined();
-    });
-  });
-
   describe('internal_toggleToolCallingStreaming', () => {
     it('should track tool calling stream status', () => {
       const { result } = renderHook(() => useChatStore());
@@ -86,31 +62,6 @@ describe('StreamingStates actions', () => {
 
       const state = useChatStore.getState();
       expect(state.searchWorkflowLoadingIds).toEqual([]);
-    });
-  });
-
-  describe('internal_toggleMessageInToolsCalling', () => {
-    it('should enable tools calling state', () => {
-      const { result } = renderHook(() => useChatStore());
-
-      act(() => {
-        result.current.internal_toggleMessageInToolsCalling(true, TEST_IDS.MESSAGE_ID);
-      });
-
-      const state = useChatStore.getState();
-      expect(state.messageInToolsCallingIds).toEqual([TEST_IDS.MESSAGE_ID]);
-    });
-
-    it('should disable tools calling state', () => {
-      const { result } = renderHook(() => useChatStore());
-
-      act(() => {
-        result.current.internal_toggleMessageInToolsCalling(true, TEST_IDS.MESSAGE_ID);
-        result.current.internal_toggleMessageInToolsCalling(false, TEST_IDS.MESSAGE_ID);
-      });
-
-      const state = useChatStore.getState();
-      expect(state.messageInToolsCallingIds).toEqual([]);
     });
   });
 });

@@ -28,15 +28,6 @@ export interface PluginWorkflowAction {
     inPortalThread?: boolean;
     inSearchWorkflow?: boolean;
   }) => Promise<void>;
-
-  /**
-   * Trigger tool calls (V1 deprecated method)
-   * @deprecated
-   */
-  triggerToolCalls: (
-    id: string,
-    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
-  ) => Promise<void>;
 }
 
 export const pluginWorkflow: StateCreator<
@@ -82,48 +73,5 @@ export const pluginWorkflow: StateCreator<
       inPortalThread,
       inSearchWorkflow,
     });
-  },
-
-  triggerToolCalls: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
-    const message = displayMessageSelectors.getDisplayMessageById(assistantId)(get());
-    if (!message || !message.tools) return;
-
-    let shouldCreateMessage = false;
-    let latestToolId = '';
-    const messagePools = message.tools.map(async (payload) => {
-      const toolMessage: CreateMessageParams = {
-        content: '',
-        parentId: assistantId,
-        plugin: payload,
-        role: 'tool',
-        sessionId: message.sessionId ?? get().activeId,
-        tool_call_id: payload.id,
-        threadId,
-        topicId: message.topicId !== undefined ? message.topicId : get().activeTopicId,
-        groupId: message.groupId, // Propagate groupId from parent message for group chat
-      };
-
-      const result = await get().optimisticCreateMessage(toolMessage);
-      if (!result) return;
-
-      // trigger the plugin call
-      const data = await get().internal_invokeDifferentTypePlugin(result.id, payload);
-
-      if (data && !['markdown', 'standalone'].includes(payload.type)) {
-        shouldCreateMessage = true;
-        latestToolId = result.id;
-      }
-    });
-
-    await Promise.all(messagePools);
-
-    await get().internal_toggleMessageInToolsCalling(false, assistantId);
-
-    // only default type tool calls should trigger AI message
-    if (!shouldCreateMessage) return;
-
-    const traceId = dbMessageSelectors.getTraceIdByDbMessageId(latestToolId)(get());
-
-    await get().triggerAIMessage({ traceId, threadId, inPortalThread, inSearchWorkflow });
   },
 });

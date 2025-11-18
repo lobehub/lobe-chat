@@ -261,6 +261,7 @@ export const createAgentExecutors = (context: {
         const assistantMessage = latestMessages.findLast((m) => m.role === 'assistant');
 
         let toolMessageId: string;
+        let toolOperationId: string | undefined;
 
         if (payload.skipCreateToolMessage) {
           // Reuse existing tool message (resumption mode)
@@ -312,6 +313,49 @@ export const createAgentExecutors = (context: {
 
           toolMessageId = createResult.id;
           log('[%s][call_tool] Created tool message, id: %s', sessionLogId, toolMessageId);
+
+          // Create toolCalling operation
+          const { operationId } = context.get().startOperation({
+            type: 'toolCalling',
+            context: {
+              sessionId: opContext.sessionId!,
+              topicId: opContext.topicId,
+              messageId: toolMessageId,
+            },
+            parentOperationId: context.operationId,
+            metadata: {
+              identifier: chatToolPayload.identifier,
+              apiName: chatToolPayload.apiName,
+              tool_call_id: chatToolPayload.id,
+            },
+          });
+          toolOperationId = operationId;
+
+          // Associate tool message with operation
+          context.get().associateMessageWithOperation(toolMessageId, toolOperationId);
+
+          // Check if parent operation was cancelled after creating tool message
+          const parentOp = context.get().operations[context.operationId];
+          if (parentOp?.status === 'cancelled') {
+            log(
+              '[%s][call_tool] Parent operation cancelled, skipping tool execution',
+              sessionLogId,
+            );
+
+            // Update tool message to indicate it was cancelled by user
+            await context
+              .get()
+              .optimisticUpdateMessageContent(
+                toolMessageId,
+                'Tool execution was cancelled by user.',
+                undefined,
+                { operationId: toolOperationId },
+              );
+
+            // Cancel the tool operation we just created
+            context.get().cancelOperation(toolOperationId, 'Parent operation cancelled');
+            return { events, newState: state };
+          }
         }
 
         // Execute tool
@@ -320,9 +364,40 @@ export const createAgentExecutors = (context: {
         // - Tool execution (builtin, plugin, MCP)
         // - Content updates via optimisticUpdateMessageContent
         // - Error handling via internal_updateMessageError
-        const result = await context
-          .get()
-          .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
+        let result: any;
+        let wasCancelled = false;
+
+        try {
+          result = await context
+            .get()
+            .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
+        } catch (error: any) {
+          // Check if this is an abort error
+          if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
+            log('[%s][call_tool] Tool execution was cancelled by user', sessionLogId);
+            wasCancelled = true;
+
+            // Update tool message to indicate cancellation
+            await context
+              .get()
+              .optimisticUpdateMessageContent(
+                toolMessageId,
+                'Tool execution was cancelled by user.',
+                undefined,
+                { operationId: toolOperationId },
+              );
+
+            // Cancel the operation
+            if (toolOperationId) {
+              context.get().cancelOperation(toolOperationId, 'User cancelled during execution');
+            }
+
+            return { events, newState: state };
+          }
+
+          // Re-throw non-abort errors
+          throw error;
+        }
 
         const executionTime = Math.round(performance.now() - startTime);
         const isSuccess = !result.error;
@@ -334,6 +409,18 @@ export const createAgentExecutors = (context: {
           executionTime,
           result,
         );
+
+        // Complete or fail the operation
+        if (toolOperationId && !wasCancelled) {
+          if (isSuccess) {
+            context.get().completeOperation(toolOperationId);
+          } else {
+            context.get().failOperation(toolOperationId, {
+              type: 'ToolExecutionError',
+              message: result.error || 'Tool execution failed',
+            });
+          }
+        }
 
         events.push({ id: chatToolPayload.id, result, type: 'tool_result' });
 
