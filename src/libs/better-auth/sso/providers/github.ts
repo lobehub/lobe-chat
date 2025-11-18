@@ -4,15 +4,10 @@ import type { BuiltinProviderDefinition } from '../types';
 
 const provider: BuiltinProviderDefinition<'github'> = {
   build: () => {
-    if (authEnv.GITHUB_CLIENT_ID && authEnv.GITHUB_CLIENT_SECRET) {
-      return {
-        clientId: authEnv.GITHUB_CLIENT_ID,
-        clientSecret: authEnv.GITHUB_CLIENT_SECRET,
-      };
-    }
-
-    console.warn(`[Better-Auth] GitHub OAuth enabled but missing credentials`);
-    return undefined;
+    return {
+      clientId: authEnv.GITHUB_CLIENT_ID!,
+      clientSecret: authEnv.GITHUB_CLIENT_SECRET!,
+    };
   },
   checkEnvs: () => {
     return !!(authEnv.GITHUB_CLIENT_ID && authEnv.GITHUB_CLIENT_SECRET);
