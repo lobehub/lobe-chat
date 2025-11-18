@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support Interleaved thinking in MiniMax."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.76"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-18",
