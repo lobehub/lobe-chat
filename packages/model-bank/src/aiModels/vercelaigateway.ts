@@ -1569,23 +1569,6 @@ const vercelAIGatewayChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 131_072,
-    description:
-      'DeepSeek-R1-Distill-Llama-70B 是 70B Llama 模型的蒸馏、更高效变体。它在文本生成任务中保持强大性能，减少计算开销以便于部署和研究。由 Groq 使用其自定义语言处理单元 (LPU) 硬件提供服务，以提供快速高效的推理。',
-    displayName: 'DeepSeek R1 Distill Llama 70B',
-    id: 'deepseek/deepseek-r1-distill-llama-70b',
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.75, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.99, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 300_000,
     description: '一个高度能干的多模态模型，具有准确性、速度和成本的最佳组合，适用于广泛的任务。',
     displayName: 'Nova Pro',
