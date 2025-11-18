@@ -20,7 +20,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     width: min(640px, 90vw);
     max-height: min(500px, 70vh);
-    margin-block-start: -10vh;
     border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorBgElevated};
@@ -142,8 +141,9 @@ const useStyles = createStyles(({ css, token }) => ({
     inset: 0;
 
     display: flex;
-    align-items: center;
     justify-content: center;
+
+    padding-block-start: 15vh;
 
     background: ${token.colorBgMask};
 
