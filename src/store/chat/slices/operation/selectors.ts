@@ -220,6 +220,23 @@ const isMessageGenerating =
   };
 
 /**
+ * Check if a specific message is being created (CRUD operation only)
+ * Checks message creation operations:
+ * - User messages: sendMessage
+ * - Assistant messages: createAssistantMessage
+ */
+const isMessageCreating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some(
+      (op) =>
+        (op.type === 'sendMessage' || op.type === 'createAssistantMessage') &&
+        op.status === 'running',
+    );
+  };
+
+/**
  * Check if any message in a list is being processed
  */
 const isAnyMessageLoading =
@@ -321,10 +338,10 @@ export const operationSelectors = {
   hasAnyRunningOperation,
   hasRunningOperationType,
   /** @deprecated Use isAgentRuntimeRunning instead */
-isAIGenerating: isAgentRuntimeRunning,
-  
-isAborting,
-  
+  isAIGenerating: isAgentRuntimeRunning,
+
+  isAborting,
+
   isAgentRuntimeRunning,
   isAnyMessageLoading,
   isContinuing,
@@ -332,6 +349,7 @@ isAborting,
   isInSearchWorkflow,
   isMessageAborting,
   isMessageContinuing,
+  isMessageCreating,
   isMessageGenerating,
   isMessageInReasoning,
   isMessageInToolCalling,

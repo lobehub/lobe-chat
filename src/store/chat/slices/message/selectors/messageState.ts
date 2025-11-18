@@ -29,6 +29,10 @@ const isMessageGenerating = (id: string) => (s: ChatStoreState) =>
 const isMessageInChatReasoning = (id: string) => (s: ChatStoreState) =>
   operationSelectors.isMessageInReasoning(id)(s);
 
+// Use operation system for message CRUD operations
+const isMessageCreating = (id: string) => (s: ChatStoreState) =>
+  operationSelectors.isMessageCreating(id)(s); // Only check sendMessage operations
+
 // RAG flow still uses dedicated state
 const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
   s.messageRAGLoadingIds.includes(id);
@@ -96,6 +100,7 @@ export const messageStateSelectors = {
   isInToolsCalling,
   isMessageCollapsed,
   isMessageContinuing,
+  isMessageCreating,
   isMessageEditing,
   isMessageGenerating,
   isMessageInChatReasoning,

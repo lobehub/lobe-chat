@@ -204,6 +204,122 @@ describe('Operation Selectors', () => {
     });
   });
 
+  describe('isMessageCreating', () => {
+    it('should return true for user message during sendMessage operation', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session1', messageId: 'user_msg_1' },
+        }).operationId;
+
+        // Associate message with operation
+        result.current.associateMessageWithOperation('user_msg_1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('user_msg_1')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('other_msg')(result.current)).toBe(false);
+    });
+
+    it('should return true for assistant message during createAssistantMessage operation', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'createAssistantMessage',
+          context: { sessionId: 'session1', messageId: 'assistant_msg_1' },
+        }).operationId;
+
+        // Associate message with operation
+        result.current.associateMessageWithOperation('assistant_msg_1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('assistant_msg_1')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('other_msg')(result.current)).toBe(false);
+    });
+
+    it('should return false when operation completes', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session1', messageId: 'msg1' },
+        }).operationId;
+
+        result.current.associateMessageWithOperation('msg1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('msg1')(result.current)).toBe(true);
+
+      act(() => {
+        result.current.completeOperation(opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('msg1')(result.current)).toBe(false);
+    });
+
+    it('should return false for other operation types', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        // execAgentRuntime should not be considered as "creating"
+        opId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', messageId: 'msg1' },
+        }).operationId;
+
+        result.current.associateMessageWithOperation('msg1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('msg1')(result.current)).toBe(false);
+    });
+
+    it('should only check sendMessage and createAssistantMessage operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let sendMsgOpId: string;
+      let createAssistantOpId: string;
+      let toolCallOpId: string;
+
+      act(() => {
+        // sendMessage - should be creating
+        sendMsgOpId = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session1', messageId: 'user_msg' },
+        }).operationId;
+        result.current.associateMessageWithOperation('user_msg', sendMsgOpId!);
+
+        // createAssistantMessage - should be creating
+        createAssistantOpId = result.current.startOperation({
+          type: 'createAssistantMessage',
+          context: { sessionId: 'session1', messageId: 'assistant_msg' },
+        }).operationId;
+        result.current.associateMessageWithOperation('assistant_msg', createAssistantOpId!);
+
+        // toolCalling - should NOT be creating
+        toolCallOpId = result.current.startOperation({
+          type: 'toolCalling',
+          context: { sessionId: 'session1', messageId: 'tool_msg' },
+        }).operationId;
+        result.current.associateMessageWithOperation('tool_msg', toolCallOpId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('user_msg')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('assistant_msg')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('tool_msg')(result.current)).toBe(false);
+    });
+  });
+
   describe('getOperationContextFromMessage', () => {
     it('should return operation context from message ID', () => {
       const { result } = renderHook(() => useChatStore());
