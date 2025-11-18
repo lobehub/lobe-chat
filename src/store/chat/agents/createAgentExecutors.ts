@@ -134,6 +134,7 @@ export const createAgentExecutors = (context: {
         tools,
         usage: currentStepUsage,
         tool_calls,
+        finishType,
       } = await context.get().internal_fetchAIChatMessage({
         messageId: assistantMessageId,
         messages,
@@ -192,7 +193,12 @@ export const createAgentExecutors = (context: {
         type: 'llm_result',
       });
 
-      log('[%s:%d] call_llm completed', state.sessionId, state.stepCount);
+      log(
+        '[%s:%d] call_llm completed, finishType: %s',
+        state.sessionId,
+        state.stepCount,
+        finishType,
+      );
 
       // Accumulate usage and cost to state
       const newState = { ...state, messages: latestMessages };
@@ -209,6 +215,37 @@ export const createAgentExecutors = (context: {
 
         newState.usage = usage;
         if (cost) newState.cost = cost;
+      }
+
+      // If operation was aborted, enter human_abort phase to let agent decide how to handle
+      if (finishType === 'abort') {
+        log(
+          '[%s:%d] call_llm aborted by user, entering human_abort phase',
+          state.sessionId,
+          state.stepCount,
+        );
+
+        return {
+          events,
+          newState,
+          nextContext: {
+            payload: {
+              reason: 'user_cancelled',
+              parentMessageId: assistantMessageId,
+              hasToolsCalling: isFunctionCall,
+              toolsCalling: toolCalls,
+              result: { content, tool_calls },
+            },
+            phase: 'human_abort',
+            session: {
+              eventCount: events.length,
+              messageCount: newState.messages.length,
+              sessionId: state.sessionId,
+              status: 'running',
+              stepCount: state.stepCount + 1,
+            },
+          } as AgentRuntimeContext,
+        };
       }
 
       return {
@@ -254,6 +291,27 @@ export const createAgentExecutors = (context: {
       const toolName = `${chatToolPayload.identifier}/${chatToolPayload.apiName}`;
       const startTime = performance.now();
 
+      // Get context from operation
+      const opContext = getOperationContext();
+
+      let toolOperationId: string | undefined;
+      // ============ Create toolCalling operation (top-level) ============
+      const { operationId } = context.get().startOperation({
+        type: 'toolCalling',
+        context: {
+          sessionId: opContext.sessionId!,
+          topicId: opContext.topicId,
+        },
+        parentOperationId: context.operationId,
+        metadata: {
+          startTime: Date.now(),
+          identifier: chatToolPayload.identifier,
+          apiName: chatToolPayload.apiName,
+          tool_call_id: chatToolPayload.id,
+        },
+      });
+      toolOperationId = operationId;
+
       try {
         // Get assistant message to extract groupId
         const latestMessages = context.get().dbMessagesMap[context.messageKey] || [];
@@ -261,7 +319,6 @@ export const createAgentExecutors = (context: {
         const assistantMessage = latestMessages.findLast((m) => m.role === 'assistant');
 
         let toolMessageId: string;
-        let toolOperationId: string | undefined;
 
         if (payload.skipCreateToolMessage) {
           // Reuse existing tool message (resumption mode)
@@ -283,9 +340,53 @@ export const createAgentExecutors = (context: {
             chatToolPayload.id,
           );
 
-          // Get context from operation
-          const opContext = getOperationContext();
+          // ============ Sub-operation 1: Create tool message ============
+          const createToolMsgOpId = context.get().startOperation({
+            type: 'createToolMessage',
+            context: {
+              sessionId: opContext.sessionId!,
+              topicId: opContext.topicId,
+            },
+            parentOperationId: toolOperationId,
+            metadata: {
+              startTime: Date.now(),
+              tool_call_id: chatToolPayload.id,
+            },
+          }).operationId;
 
+          // Register cancel handler: Ensure message creation completes, then mark as aborted
+          context.get().onOperationCancel(createToolMsgOpId, async ({ metadata }) => {
+            log(
+              '[%s][call_tool] createToolMessage cancelled, ensuring creation completes',
+              sessionLogId,
+            );
+
+            // Wait for message creation to complete (ensure-complete strategy)
+            const createResult = await metadata?.createMessagePromise;
+            if (createResult) {
+              const msgId = createResult.id;
+              // Update message to aborted state
+              await Promise.all([
+                context
+                  .get()
+                  .optimisticUpdateMessageContent(
+                    msgId,
+                    'Tool execution was cancelled by user.',
+                    undefined,
+                    { operationId: createToolMsgOpId },
+                  ),
+                context
+                  .get()
+                  .optimisticUpdateMessagePlugin(
+                    msgId,
+                    { intervention: { status: 'aborted' } },
+                    { operationId: createToolMsgOpId },
+                  ),
+              ]);
+            }
+          });
+
+          // Execute creation and save Promise to metadata
           const toolMessageParams: CreateMessageParams = {
             content: '',
             groupId: assistantMessage?.groupId,
@@ -298,14 +399,17 @@ export const createAgentExecutors = (context: {
             topicId: opContext.topicId ?? undefined,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+          const createPromise = context.get().optimisticCreateMessage(toolMessageParams);
+          context.get().updateOperationMetadata(createToolMsgOpId, {
+            createMessagePromise: createPromise,
+          });
+          const createResult = await createPromise;
 
           if (!createResult) {
-            log(
-              '[%s][call_tool] ERROR: Failed to create tool message for tool_call_id: %s',
-              sessionLogId,
-              chatToolPayload.id,
-            );
+            context.get().failOperation(createToolMsgOpId, {
+              type: 'CreateMessageError',
+              message: `Failed to create tool message for tool_call_id: ${chatToolPayload.id}`,
+            });
             throw new Error(
               `Failed to create tool message for tool_call_id: ${chatToolPayload.id}`,
             );
@@ -313,91 +417,58 @@ export const createAgentExecutors = (context: {
 
           toolMessageId = createResult.id;
           log('[%s][call_tool] Created tool message, id: %s', sessionLogId, toolMessageId);
+          context.get().completeOperation(createToolMsgOpId);
 
-          // Create toolCalling operation
-          const { operationId } = context.get().startOperation({
-            type: 'toolCalling',
-            context: {
-              sessionId: opContext.sessionId!,
-              topicId: opContext.topicId,
-              messageId: toolMessageId,
-            },
-            parentOperationId: context.operationId,
-            metadata: {
-              identifier: chatToolPayload.identifier,
-              apiName: chatToolPayload.apiName,
-              tool_call_id: chatToolPayload.id,
-            },
-          });
-          toolOperationId = operationId;
-
-          // Associate tool message with operation
+          // Associate tool message with toolCalling operation
           context.get().associateMessageWithOperation(toolMessageId, toolOperationId);
+        }
 
-          // Check if parent operation was cancelled after creating tool message
-          const parentOp = context.get().operations[context.operationId];
-          if (parentOp?.status === 'cancelled') {
-            log(
-              '[%s][call_tool] Parent operation cancelled, skipping tool execution',
-              sessionLogId,
-            );
+        // ============ Sub-operation 2: Execute tool call ============
+        const executeToolOpId = context.get().startOperation({
+          type: 'executeToolCall',
+          context: {
+            sessionId: getOperationContext().sessionId!,
+            topicId: getOperationContext().topicId,
+            messageId: toolMessageId,
+          },
+          parentOperationId: toolOperationId,
+          metadata: {
+            startTime: Date.now(),
+            tool_call_id: chatToolPayload.id,
+          },
+        }).operationId;
 
-            // Update tool message to indicate it was cancelled by user
-            await context
+        // Register cancel handler: Just update message (message already exists)
+        context.get().onOperationCancel(executeToolOpId, async () => {
+          log('[%s][call_tool] executeToolCall cancelled, updating message', sessionLogId);
+
+          // Update message to aborted state (cleanup strategy)
+          await Promise.all([
+            context
               .get()
               .optimisticUpdateMessageContent(
                 toolMessageId,
                 'Tool execution was cancelled by user.',
                 undefined,
-                { operationId: toolOperationId },
-              );
+                { operationId: executeToolOpId },
+              ),
+            context
+              .get()
+              .optimisticUpdateMessagePlugin(
+                toolMessageId,
+                { intervention: { status: 'aborted' } },
+                { operationId: executeToolOpId },
+              ),
+          ]);
+        });
 
-            // Cancel the tool operation we just created
-            context.get().cancelOperation(toolOperationId, 'Parent operation cancelled');
-            return { events, newState: state };
-          }
-        }
-
-        // Execute tool
+        // Execute tool - abort handling is done by cancel handler
         log('[%s][call_tool] Executing tool %s ...', sessionLogId, toolName);
-        // This method handles:
-        // - Tool execution (builtin, plugin, MCP)
-        // - Content updates via optimisticUpdateMessageContent
-        // - Error handling via internal_updateMessageError
-        let result: any;
-        let wasCancelled = false;
+        const result = await context
+          .get()
+          .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
 
-        try {
-          result = await context
-            .get()
-            .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
-        } catch (error: any) {
-          // Check if this is an abort error
-          if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
-            log('[%s][call_tool] Tool execution was cancelled by user', sessionLogId);
-            wasCancelled = true;
-
-            // Update tool message to indicate cancellation
-            await context
-              .get()
-              .optimisticUpdateMessageContent(
-                toolMessageId,
-                'Tool execution was cancelled by user.',
-                undefined,
-                { operationId: toolOperationId },
-              );
-
-            // Cancel the operation
-            if (toolOperationId) {
-              context.get().cancelOperation(toolOperationId, 'User cancelled during execution');
-            }
-
-            return { events, newState: state };
-          }
-
-          // Re-throw non-abort errors
-          throw error;
-        }
+        context.get().completeOperation(executeToolOpId);
 
         const executionTime = Math.round(performance.now() - startTime);
         const isSuccess = !result.error;
@@ -410,8 +481,8 @@ export const createAgentExecutors = (context: {
           result,
         );
 
-        // Complete or fail the operation
-        if (toolOperationId && !wasCancelled) {
+        // Complete or fail the toolCalling operation
+        if (toolOperationId) {
           if (isSuccess) {
             context.get().completeOperation(toolOperationId);
           } else {
@@ -601,6 +672,78 @@ export const createAgentExecutors = (context: {
 
       return { events, newState };
     },
+
+    /**
+     * Resolve aborted tools executor
+     * Creates tool messages with 'aborted' intervention status for cancelled tools
+     */
+    resolve_aborted_tools: async (instruction, state) => {
+      const { parentMessageId, toolsCalling } = (
+        instruction as Extract<AgentInstruction, { type: 'resolve_aborted_tools' }>
+      ).payload;
+
+      const events: AgentEvent[] = [];
+      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const newState = structuredClone(state);
+
+      log(
+        '[%s][resolve_aborted_tools] Resolving %d aborted tools',
+        sessionLogId,
+        toolsCalling.length,
+      );
+
+      // Get context from operation
+      const opContext = getOperationContext();
+
+      // Create tool messages for each aborted tool
+      await pMap(toolsCalling, async (toolPayload) => {
+        const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
+        log(
+          '[%s][resolve_aborted_tools] Creating aborted tool message for %s',
+          sessionLogId,
+          toolName,
+        );
+
+        const toolMessageParams: CreateMessageParams = {
+          content: 'Tool execution was aborted by user.',
+          parentId: parentMessageId,
+          plugin: toolPayload,
+          pluginIntervention: { status: 'aborted' },
+          role: 'tool',
+          sessionId: opContext.sessionId!,
+          threadId: opContext.threadId,
+          tool_call_id: toolPayload.id,
+          topicId: opContext.topicId ?? undefined,
+        };
+
+        const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+
+        if (createResult) {
+          log(
+            '[%s][resolve_aborted_tools] Created aborted tool message: %s for %s',
+            sessionLogId,
+            createResult.id,
+            toolName,
+          );
+        }
+      });
+
+      log('[%s][resolve_aborted_tools] All aborted tool messages created', sessionLogId);
+
+      // Mark state as done since we're finishing after abort
+      newState.lastModified = new Date().toISOString();
+      newState.status = 'done';
+
+      events.push({
+        finalState: newState,
+        reason: 'user_aborted',
+        reasonDetail: 'User aborted operation with pending tool calls',
+        type: 'done',
+      });
+
+      return { events, newState };
+    },
+
     /**
      * Finish executor
      * Completes the runtime execution

@@ -16,12 +16,12 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
 
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
 
@@ -31,7 +31,9 @@ describe('Operation Selectors', () => {
         });
       });
 
-      const generateOps = operationSelectors.getOperationsByType('generateAI')(result.current);
+      const generateOps = operationSelectors.getOperationsByType('execAgentRuntime')(
+        result.current,
+      );
       const reasoningOps = operationSelectors.getOperationsByType('reasoning')(result.current);
 
       expect(generateOps).toHaveLength(2);
@@ -48,7 +50,7 @@ describe('Operation Selectors', () => {
         useChatStore.setState({ activeId: 'session1', activeTopicId: 'topic1' });
 
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
         });
 
@@ -59,7 +61,7 @@ describe('Operation Selectors', () => {
 
         // Operation in different context
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session2', topicId: 'topic2' },
         });
       });
@@ -82,7 +84,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         opId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         }).operationId;
       });
@@ -103,12 +105,14 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
       });
 
-      expect(operationSelectors.hasRunningOperationType('generateAI')(result.current)).toBe(true);
+      expect(operationSelectors.hasRunningOperationType('execAgentRuntime')(result.current)).toBe(
+        true,
+      );
       expect(operationSelectors.hasRunningOperationType('reasoning')(result.current)).toBe(false);
     });
   });
@@ -125,7 +129,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
         });
       });
@@ -146,7 +150,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
         });
       });
@@ -163,7 +167,7 @@ describe('Operation Selectors', () => {
         useChatStore.setState({ activeId: 'session1', activeTopicId: 'topic1' });
 
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
           label: 'Generating response...',
         });
@@ -190,7 +194,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', messageId: 'msg1' },
         });
       });
@@ -208,7 +212,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         opId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1', messageId: 'msg1' },
         }).operationId;
 
@@ -232,7 +236,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
       });

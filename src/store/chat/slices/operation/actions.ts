@@ -10,6 +10,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import type {
   Operation,
+  OperationCancelContext,
   OperationContext,
   OperationFilter,
   OperationMetadata,
@@ -63,6 +64,11 @@ export interface OperationActions {
   ) => void;
 
   /**
+   * Get operation's AbortSignal (for passing to async operations like fetch)
+   */
+  getOperationAbortSignal: (operationId: string) => AbortSignal;
+
+  /**
    * Get sessionId and topicId from operation or fallback to global state
    * This is a helper method that can be used by other slices
    */
@@ -70,6 +76,15 @@ export interface OperationActions {
     sessionId: string;
     topicId: string | null | undefined;
   };
+
+  /**
+   * Register cancel handler for an operation
+   * The handler will be called when the operation is cancelled
+   */
+  onOperationCancel: (
+    operationId: string,
+    handler: (context: OperationCancelContext) => void | Promise<void>,
+  ) => void;
 
   /**
    * Start an operation (supports auto-inheriting context from parent operation)
@@ -315,10 +330,45 @@ export const operationActions: StateCreator<
     );
   },
 
+  getOperationAbortSignal: (operationId) => {
+    const operation = get().operations[operationId];
+    if (!operation) {
+      throw new Error(`[getOperationAbortSignal] Operation not found: ${operationId}`);
+    }
+    return operation.abortController.signal;
+  },
+
+  onOperationCancel: (operationId, handler) => {
+    set(
+      produce((state: ChatStore) => {
+        const operation = state.operations[operationId];
+        if (!operation) {
+          log('[onOperationCancel] WARNING: Operation not found: %s', operationId);
+          return;
+        }
+
+        operation.onCancelHandler = handler;
+        log(
+          '[onOperationCancel] registered cancel handler for %s (type=%s)',
+          operationId,
+          operation.type,
+        );
+      }),
+      false,
+      n(`onOperationCancel/${operationId}`),
+    );
+  },
+
   cancelOperation: (operationId, reason = 'User cancelled') => {
     const operation = get().operations[operationId];
     if (!operation) {
       log('[cancelOperation] operation not found: %s', operationId);
+      return;
+    }
+
+    // Skip if already cancelled
+    if (operation.status === 'cancelled') {
+      log('[cancelOperation] operation %s already cancelled, skipping', operationId);
       return;
     }
 
@@ -329,22 +379,37 @@ export const operationActions: StateCreator<
       reason,
     );
 
-    // Cancel all child operations recursively
-    if (operation.childOperationIds && operation.childOperationIds.length > 0) {
-      log('[cancelOperation] cancelling %d child operations', operation.childOperationIds.length);
-      operation.childOperationIds.forEach((childId) => {
-        get().cancelOperation(childId, 'Parent operation cancelled');
-      });
-    }
-
-    // Abort the operation
+    // 1. Abort the operation (triggers AbortSignal for all async operations)
     try {
       operation.abortController.abort(reason);
     } catch {
       // Ignore abort errors
     }
 
-    // Update status
+    // 2. Call cancel handler if registered
+    if (operation.onCancelHandler) {
+      log('[cancelOperation] calling cancel handler for %s (type=%s)', operationId, operation.type);
+
+      const cancelContext: OperationCancelContext = {
+        operationId,
+        type: operation.type,
+        reason,
+        metadata: operation.metadata,
+      };
+
+      // Execute handler asynchronously (don't block cancellation flow)
+      // Use try-catch to handle synchronous errors, then wrap in Promise for async errors
+      try {
+        Promise.resolve(operation.onCancelHandler(cancelContext)).catch((err) => {
+          log('[cancelOperation] cancel handler error for %s: %O', operationId, err);
+        });
+      } catch (err) {
+        // Handle synchronous errors from handler
+        log('[cancelOperation] cancel handler synchronous error for %s: %O', operationId, err);
+      }
+    }
+
+    // 3. Update status
     set(
       produce((state: ChatStore) => {
         const op = state.operations[operationId];
@@ -359,6 +424,14 @@ export const operationActions: StateCreator<
       false,
       n(`cancelOperation/${operationId}`),
     );
+
+    // 4. Cancel all child operations recursively
+    if (operation.childOperationIds && operation.childOperationIds.length > 0) {
+      log('[cancelOperation] cancelling %d child operations', operation.childOperationIds.length);
+      operation.childOperationIds.forEach((childId) => {
+        get().cancelOperation(childId, 'Parent operation cancelled');
+      });
+    }
   },
 
   failOperation: (operationId, error) => {

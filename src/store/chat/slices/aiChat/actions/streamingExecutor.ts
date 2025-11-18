@@ -76,7 +76,7 @@ export interface StreamingExecutorAction {
     tool_calls?: MessageToolCall[];
     content: string;
     traceId?: string;
-    finishType?: string;
+    finishType?: 'done' | 'error' | 'abort';
     usage?: ModelUsage;
   }>;
   /**
@@ -282,7 +282,7 @@ export const streamingExecutor: StateCreator<
     let thinkingStartAt: number;
     let duration: number | undefined;
     let reasoningOperationId: string | undefined;
-    let finishType: string | undefined;
+    let finishType: 'done' | 'error' | 'abort' | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
@@ -557,7 +557,7 @@ export const streamingExecutor: StateCreator<
     let operationId = params.operationId;
     if (!operationId) {
       const { operationId: newOperationId } = get().startOperation({
-        type: 'generateAI',
+        type: 'execAgentRuntime',
         context: {
           sessionId,
           topicId,
@@ -709,11 +709,11 @@ export const streamingExecutor: StateCreator<
     let stepCount = 0;
     while (state.status !== 'done' && state.status !== 'error') {
       // Check if operation was cancelled
-      const operation = get().operations[operationId];
-      if (operation?.status === 'cancelled') {
-        log('[internal_execAgentRuntime] Operation cancelled, exiting agent runtime loop');
-        break;
-      }
+      // const operation = get().operations[operationId];
+      // if (operation?.status === 'cancelled') {
+      //   log('[internal_execAgentRuntime] Operation cancelled, exiting agent runtime loop');
+      //   break;
+      // }
 
       stepCount++;
       log(
@@ -775,12 +775,8 @@ export const streamingExecutor: StateCreator<
       stepCount,
     );
 
-    // Check if operation was cancelled
-    const finalOperation = get().operations[operationId];
-    const wasCancelled = finalOperation?.status === 'cancelled';
-
-    // Update RAG metadata if available (skip if cancelled)
-    if (params.ragMetadata && !wasCancelled) {
+    // Update RAG metadata if available
+    if (params.ragMetadata) {
       const finalMessages = get().messagesMap[messageKey] || [];
       const assistantMessage = finalMessages.findLast((m) => m.role === 'assistant');
       if (assistantMessage) {
@@ -791,11 +787,8 @@ export const streamingExecutor: StateCreator<
       }
     }
 
-    // Complete operation based on final state
-    if (wasCancelled) {
-      log('[internal_execAgentRuntime] Operation was cancelled');
-      // Operation already marked as cancelled by cancelOperation, no need to update
-    } else if (state.status === 'done') {
+    // Complete operation
+    if (state.status === 'done') {
       get().completeOperation(operationId);
       log('[internal_execAgentRuntime] Operation completed successfully');
     } else if (state.status === 'error') {
@@ -804,10 +797,6 @@ export const streamingExecutor: StateCreator<
         message: 'Agent runtime execution failed',
       });
       log('[internal_execAgentRuntime] Operation failed');
-    } else {
-      // If status is still 'running' but loop exited (e.g., no nextContext), mark as completed
-      get().completeOperation(operationId);
-      log('[internal_execAgentRuntime] Operation completed (no next context)');
     }
 
     log('[internal_execAgentRuntime] completed');

@@ -61,6 +61,7 @@ export interface AgentEventHumanSelectRequired {
 export type FinishReason =
   | 'completed' // Normal completion
   | 'user_requested' // User requested to end
+  | 'user_aborted' // User abort
   | 'max_steps_exceeded' // Reached maximum steps limit
   | 'cost_limit_exceeded' // Reached cost limit
   | 'timeout' // Execution timeout

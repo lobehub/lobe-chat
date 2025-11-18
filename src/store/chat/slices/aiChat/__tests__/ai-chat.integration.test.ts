@@ -164,7 +164,7 @@ describe('AI Chat Operation Integration Tests', () => {
       let operationId = '';
       act(() => {
         const { operationId: id } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId, topicId, messageId },
           label: 'AI Generation',
         });
@@ -189,7 +189,7 @@ describe('AI Chat Operation Integration Tests', () => {
       let parentOpId = '';
       act(() => {
         const { operationId } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1', topicId: 'topic-1', messageId: 'msg-1' },
         });
         parentOpId = operationId;
@@ -244,7 +244,7 @@ describe('AI Chat Operation Integration Tests', () => {
 
       act(() => {
         parentOpId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1', messageId: 'msg-1' },
         }).operationId;
 
@@ -289,7 +289,7 @@ describe('AI Chat Operation Integration Tests', () => {
 
       act(() => {
         parentOpId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1' },
         }).operationId;
 
@@ -370,12 +370,12 @@ describe('AI Chat Operation Integration Tests', () => {
 
       act(() => {
         topicAOpId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1', topicId: 'topic-a' },
         }).operationId;
 
         topicBOpId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1', topicId: 'topic-b' },
         }).operationId;
       });
@@ -404,12 +404,12 @@ describe('AI Chat Operation Integration Tests', () => {
 
       act(() => {
         session1OpId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1', topicId: 'topic-1' },
         }).operationId;
 
         session2OpId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-2', topicId: 'topic-1' },
         }).operationId;
       });
@@ -437,7 +437,7 @@ describe('AI Chat Operation Integration Tests', () => {
       let operationId = '';
       act(() => {
         const { operationId: id } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1' },
         });
         operationId = id;
@@ -510,7 +510,7 @@ describe('AI Chat Operation Integration Tests', () => {
       let operationId = '';
       act(() => {
         const { operationId: id } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: {
             sessionId: result.current.activeId,
             topicId: result.current.activeTopicId,
@@ -545,20 +545,20 @@ describe('AI Chat Operation Integration Tests', () => {
         }).operationId;
 
         genOpId1 = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1' },
         }).operationId;
 
         genOpId2 = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-2' },
         }).operationId;
       });
 
       // Verify type index
       expect(result.current.operationsByType.sendMessage).toContain(sendOpId);
-      expect(result.current.operationsByType.generateAI).toContain(genOpId1);
-      expect(result.current.operationsByType.generateAI).toContain(genOpId2);
+      expect(result.current.operationsByType.execAgentRuntime).toContain(genOpId1);
+      expect(result.current.operationsByType.execAgentRuntime).toContain(genOpId2);
 
       // Complete one generateAI
       act(() => {

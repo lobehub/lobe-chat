@@ -37,7 +37,7 @@ describe('Operation Management Integration Tests', () => {
       let operationId: string = '';
       act(() => {
         const { operationId: id } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId, topicId, messageId },
           label: 'AI Generation',
         });
@@ -83,7 +83,7 @@ describe('Operation Management Integration Tests', () => {
 
       act(() => {
         const res = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'test-session' },
         });
         operationId = res.operationId;
@@ -110,7 +110,7 @@ describe('Operation Management Integration Tests', () => {
       let parentOpId: string = '';
       act(() => {
         const { operationId } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'test-session', topicId: 'test-topic' },
         });
         parentOpId = operationId;
@@ -146,7 +146,7 @@ describe('Operation Management Integration Tests', () => {
 
       act(() => {
         const { operationId } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'test-session' },
         });
         parentOpId = operationId;
@@ -188,7 +188,7 @@ describe('Operation Management Integration Tests', () => {
       let opIdTopicA: string = '';
       act(() => {
         const { operationId } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1', topicId: 'topic-a' },
         });
         opIdTopicA = operationId;
@@ -203,7 +203,7 @@ describe('Operation Management Integration Tests', () => {
       let opIdTopicB: string = '';
       act(() => {
         const { operationId } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1', topicId: 'topic-b' },
         });
         opIdTopicB = operationId;
@@ -240,7 +240,7 @@ describe('Operation Management Integration Tests', () => {
       act(() => {
         for (let i = 0; i < 5; i++) {
           const { operationId } = result.current.startOperation({
-            type: i % 2 === 0 ? 'generateAI' : 'toolCalling',
+            type: i % 2 === 0 ? 'execAgentRuntime' : 'toolCalling',
             context: { sessionId: 'session-1', messageId: `msg-${i}` },
           });
           opIds.push(operationId);
@@ -254,7 +254,7 @@ describe('Operation Management Integration Tests', () => {
       let cancelledIds: string[];
       act(() => {
         cancelledIds = result.current.cancelOperations({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           status: 'running',
         });
       });
@@ -276,7 +276,7 @@ describe('Operation Management Integration Tests', () => {
       let oldOpId: string;
       act(() => {
         const { operationId } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1' },
         });
         oldOpId = operationId;
@@ -305,7 +305,7 @@ describe('Operation Management Integration Tests', () => {
       let recentOpId: string;
       act(() => {
         const { operationId } = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session-1' },
         });
         recentOpId = operationId;

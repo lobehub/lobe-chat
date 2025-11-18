@@ -33,7 +33,7 @@ describe('ConversationControl actions', () => {
       let operationId: string;
       act(() => {
         const res = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: {
             sessionId: TEST_IDS.SESSION_ID,
             topicId: TEST_IDS.TOPIC_ID,
@@ -66,7 +66,7 @@ describe('ConversationControl actions', () => {
       let operationId: string;
       act(() => {
         const res = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: {
             sessionId: 'different-session',
             topicId: 'different-topic',

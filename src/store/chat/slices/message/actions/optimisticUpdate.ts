@@ -6,6 +6,7 @@ import {
   CreateMessageParams,
   GroundingSearch,
   MessageMetadata,
+  MessagePluginItem,
   MessageToolCall,
   ModelReasoning,
   UIChatMessage,
@@ -88,6 +89,16 @@ export interface MessageOptimisticUpdateAction {
   optimisticUpdateMessageMetadata: (
     id: string,
     metadata: Partial<MessageMetadata>,
+    context?: OptimisticUpdateContext,
+  ) => Promise<void>;
+
+  /**
+   * Optimistic update for message pluginIntervention field (frontend only, no database persistence)
+   * Use this when you need to update plugin intervention status
+   */
+  optimisticUpdateMessagePlugin: (
+    id: string,
+    value: Partial<MessagePluginItem>,
     context?: OptimisticUpdateContext,
   ) => Promise<void>;
 
@@ -287,6 +298,29 @@ export const messageOptimisticUpdate: StateCreator<
       replaceMessages(result.messages, { sessionId, topicId });
     } else {
       await refreshMessages();
+    }
+  },
+
+  optimisticUpdateMessagePlugin: async (id, value, context) => {
+    const { internal_dispatchMessage, replaceMessages } = get();
+
+    // Optimistic update: update the frontend immediately
+    internal_dispatchMessage(
+      {
+        id,
+        type: 'updateMessagePlugin',
+        value,
+      },
+      context,
+    );
+
+    const { sessionId, topicId } = get().internal_getSessionContext(context);
+
+    // Persist to database
+    const result = await messageService.updateMessagePlugin(id, value, { sessionId, topicId });
+
+    if (result?.success && result.messages) {
+      replaceMessages(result.messages, { sessionId, topicId });
     }
   },
 

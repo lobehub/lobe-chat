@@ -53,10 +53,10 @@ export const conversationControl: StateCreator<
   stopGenerateMessage: () => {
     const { activeId, activeTopicId, cancelOperations } = get();
 
-    // Cancel all running generateAI operations in the current context
+    // Cancel all running execAgentRuntime operations in the current context
     cancelOperations(
       {
-        type: 'generateAI',
+        type: 'execAgentRuntime',
         status: 'running',
         sessionId: activeId,
         topicId: activeTopicId,

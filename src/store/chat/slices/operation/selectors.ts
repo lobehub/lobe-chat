@@ -166,10 +166,10 @@ const getCurrentOperationProgress = (s: ChatStoreState): number | undefined => {
 // === Backward Compatibility ===
 /**
  * Check if AI is generating (for backward compatibility)
- * Equivalent to: hasRunningOperationType('generateAI')
+ * Equivalent to: hasRunningOperationType('execAgentRuntime')
  */
 const isAIGenerating = (s: ChatStoreState): boolean => {
-  return hasRunningOperationType('generateAI')(s);
+  return hasRunningOperationType('execAgentRuntime')(s);
 };
 
 /**
@@ -205,13 +205,13 @@ const isMessageProcessing =
 
 /**
  * Check if a specific message is being generated (AI generation only)
- * This is more specific than isMessageProcessing - only checks generateAI operations
+ * This is more specific than isMessageProcessing - only checks execAgentRuntime operations
  */
 const isMessageGenerating =
   (messageId: string) =>
   (s: ChatStoreState): boolean => {
     const operations = getOperationsByMessage(messageId)(s);
-    return operations.some((op) => op.type === 'generateAI' && op.status === 'running');
+    return operations.some((op) => op.type === 'execAgentRuntime' && op.status === 'running');
   };
 
 /**

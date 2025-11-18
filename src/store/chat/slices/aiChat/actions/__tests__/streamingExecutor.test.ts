@@ -132,7 +132,7 @@ describe('StreamingExecutor actions', () => {
 
       // Create operation for this test
       const { operationId } = result.current.startOperation({
-        type: 'generateAI',
+        type: 'execAgentRuntime',
         context: {
           sessionId: TEST_IDS.SESSION_ID,
           topicId: null,
@@ -180,7 +180,7 @@ describe('StreamingExecutor actions', () => {
 
       // Create operation for this test
       const { operationId } = result.current.startOperation({
-        type: 'generateAI',
+        type: 'execAgentRuntime',
         context: {
           sessionId: TEST_IDS.SESSION_ID,
           topicId: null,
@@ -262,7 +262,7 @@ describe('StreamingExecutor actions', () => {
 
       // Create operation for this test
       const { operationId } = result.current.startOperation({
-        type: 'generateAI',
+        type: 'execAgentRuntime',
         context: {
           sessionId: TEST_IDS.SESSION_ID,
           topicId: null,
@@ -319,7 +319,7 @@ describe('StreamingExecutor actions', () => {
 
       // Create operation for this test
       const { operationId } = result.current.startOperation({
-        type: 'generateAI',
+        type: 'execAgentRuntime',
         context: {
           sessionId: TEST_IDS.SESSION_ID,
           topicId: null,
@@ -588,7 +588,7 @@ describe('StreamingExecutor actions', () => {
 
       // Create operation with specific context
       const { operationId } = result.current.startOperation({
-        type: 'generateAI',
+        type: 'execAgentRuntime',
         context: {
           sessionId: contextSessionId,
           topicId: contextTopicId,

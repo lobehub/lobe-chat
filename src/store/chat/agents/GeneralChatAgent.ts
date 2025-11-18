@@ -9,6 +9,7 @@ import {
   GeneralAgentCallToolsBatchInstructionPayload,
   GeneralAgentCallingToolInstructionPayload,
   GeneralAgentConfig,
+  HumanAbortPayload,
   InterventionChecker,
 } from '@lobechat/agent-runtime';
 import type { ChatToolPayload, HumanInterventionConfig } from '@lobechat/types';
@@ -115,10 +116,81 @@ export class GeneralChatAgent implements Agent {
     return [toolsNeedingIntervention, toolsToExecute];
   }
 
+  /**
+   * Extract abort information from current context and state
+   * Returns the necessary data to handle abort scenario
+   */
+  private extractAbortInfo(context: AgentRuntimeContext, state: AgentState) {
+    let hasToolsCalling = false;
+    let toolsCalling: ChatToolPayload[] = [];
+    let parentMessageId = '';
+
+    // Extract abort info based on current phase
+    switch (context.phase) {
+      case 'llm_result': {
+        const payload = context.payload as GeneralAgentCallLLMResultPayload;
+        hasToolsCalling = payload.hasToolsCalling || false;
+        toolsCalling = payload.toolsCalling || [];
+        parentMessageId = payload.parentMessageId;
+        break;
+      }
+      case 'tool_result':
+      case 'tools_batch_result': {
+        const payload = context.payload as GeneralAgentCallToolResultPayload;
+        parentMessageId = payload.parentMessageId;
+        // Check if there are pending tool messages
+        const pendingToolMessages = state.messages.filter(
+          (m: any) => m.role === 'tool' && m.pluginIntervention?.status === 'pending',
+        );
+        if (pendingToolMessages.length > 0) {
+          hasToolsCalling = true;
+          toolsCalling = pendingToolMessages.map((m: any) => m.plugin).filter(Boolean);
+        }
+        break;
+      }
+    }
+
+    return { hasToolsCalling, parentMessageId, toolsCalling };
+  }
+
+  /**
+   * Handle abort scenario - unified abort handling logic
+   */
+  private handleAbort(
+    context: AgentRuntimeContext,
+    state: AgentState,
+  ): AgentInstruction | AgentInstruction[] {
+    const { hasToolsCalling, parentMessageId, toolsCalling } = this.extractAbortInfo(
+      context,
+      state,
+    );
+
+    // If there are pending tool calls, resolve them
+    if (hasToolsCalling && toolsCalling.length > 0) {
+      return {
+        payload: { parentMessageId, toolsCalling },
+        type: 'resolve_aborted_tools',
+      };
+    }
+
+    // No tools to resolve, directly finish
+    return {
+      reason: 'user_requested',
+      reasonDetail: 'Operation cancelled by user',
+      type: 'finish',
+    };
+  }
+
   async runner(
     context: AgentRuntimeContext,
     state: AgentState,
   ): Promise<AgentInstruction | AgentInstruction[]> {
+    // Unified abort check: if operation is interrupted, handle abort scenario
+    // This check is placed before phase handling to ensure consistent abort behavior
+    if (state.status === 'interrupted') {
+      return this.handleAbort(context, state);
+    }
+
     switch (context.phase) {
       case 'init':
       case 'user_input': {
@@ -254,6 +326,23 @@ export class GeneralChatAgent implements Agent {
           } as GeneralAgentCallLLMInstructionPayload,
           type: 'call_llm',
         };
+      }
+
+      case 'human_abort': {
+        // User aborted the operation
+        const { hasToolsCalling, parentMessageId, toolsCalling, reason } =
+          context.payload as HumanAbortPayload;
+
+        // If there are pending tool calls, resolve them
+        if (hasToolsCalling && toolsCalling && toolsCalling.length > 0) {
+          return {
+            payload: { parentMessageId, toolsCalling },
+            type: 'resolve_aborted_tools',
+          };
+        }
+
+        // No tools to resolve, directly finish
+        return { reason: 'user_requested', reasonDetail: reason, type: 'finish' };
       }
 
       case 'error': {
