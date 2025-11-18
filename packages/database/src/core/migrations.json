@@ -778,10 +778,15 @@
   {
     "sql": [
       "ALTER TABLE \"documents\" ALTER COLUMN \"id\" SET DATA TYPE varchar(255);",
-      "\nALTER TABLE \"documents\" ALTER COLUMN \"parent_id\" SET DATA TYPE varchar(255);"
+      "\nALTER TABLE \"documents\" ADD COLUMN \"parent_id\" varchar(255);",
+      "\nALTER TABLE \"files\" ADD COLUMN \"parent_id\" varchar(30);",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
+      "\nALTER TABLE \"files\" ADD CONSTRAINT \"files_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
+      "\nCREATE INDEX \"documents_parent_id_idx\" ON \"documents\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX \"files_parent_id_idx\" ON \"files\" USING btree (\"parent_id\");"
     ],
     "bps": true,
-    "folderMillis": 1763435494220,
-    "hash": "548114f0dff6e6139e2b0d6ed46060142b011c67b7597be09925483705e2a38a"
+    "folderMillis": 1763452754948,
+    "hash": "7ad4cb55be0e41f2b018a1dacd9fdbfcea9ee3530926370ce8e209eb6905ad54"
   }
 ]
