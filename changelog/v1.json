@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Delete /settings/newapi pages in nextjs build."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.77"
+  },
+  {
+    "children": {
       "features": ["Support Interleaved thinking in MiniMax."]
     },
     "date": "2025-11-18",
