@@ -19,37 +19,70 @@ afterEach(() => {
 
 describe('ConversationControl actions', () => {
   describe('stopGenerateMessage', () => {
-    it('should abort generation and clear loading state when controller exists', () => {
-      const abortController = new AbortController();
+    it('should cancel running generateAI operations in current context', () => {
+      const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        useChatStore.setState({ chatLoadingIdsAbortController: abortController });
+        useChatStore.setState({
+          activeId: TEST_IDS.SESSION_ID,
+          activeTopicId: TEST_IDS.TOPIC_ID,
+        });
       });
 
-      const { result } = renderHook(() => useChatStore());
-      const toggleLoadingSpy = vi.spyOn(result.current, 'internal_toggleChatLoading');
+      // Create a generateAI operation
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'generateAI',
+          context: {
+            sessionId: TEST_IDS.SESSION_ID,
+            topicId: TEST_IDS.TOPIC_ID,
+          },
+        });
+        operationId = res.operationId;
+      });
 
+      expect(result.current.operations[operationId!].status).toBe('running');
+
+      // Stop generation
       act(() => {
         result.current.stopGenerateMessage();
       });
 
-      expect(abortController.signal.aborted).toBe(true);
-      expect(toggleLoadingSpy).toHaveBeenCalledWith(false, undefined, expect.any(String));
+      expect(result.current.operations[operationId!].status).toBe('cancelled');
     });
 
-    it('should do nothing when abort controller is not set', () => {
+    it('should not cancel operations from different context', () => {
+      const { result } = renderHook(() => useChatStore());
+
       act(() => {
-        useChatStore.setState({ chatLoadingIdsAbortController: undefined });
+        useChatStore.setState({
+          activeId: TEST_IDS.SESSION_ID,
+          activeTopicId: TEST_IDS.TOPIC_ID,
+        });
       });
 
-      const { result } = renderHook(() => useChatStore());
-      const toggleLoadingSpy = vi.spyOn(result.current, 'internal_toggleChatLoading');
+      // Create a generateAI operation in a different context
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'generateAI',
+          context: {
+            sessionId: 'different-session',
+            topicId: 'different-topic',
+          },
+        });
+        operationId = res.operationId;
+      });
 
+      expect(result.current.operations[operationId!].status).toBe('running');
+
+      // Stop generation - should not affect different context
       act(() => {
         result.current.stopGenerateMessage();
       });
 
-      expect(toggleLoadingSpy).not.toHaveBeenCalled();
+      expect(result.current.operations[operationId!].status).toBe('running');
     });
   });
 

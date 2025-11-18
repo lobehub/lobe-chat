@@ -5,13 +5,10 @@ import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
-import { setNamespace } from '@/utils/storeDebug';
 
 import { displayMessageSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 import { dbMessageSelectors } from '../../message/selectors';
-
-const n = setNamespace('ai');
 
 /**
  * Actions for controlling conversation operations like cancellation and error handling
@@ -54,13 +51,18 @@ export const conversationControl: StateCreator<
   ConversationControlAction
 > = (set, get) => ({
   stopGenerateMessage: () => {
-    const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
+    const { activeId, activeTopicId, cancelOperations } = get();
 
-    if (!chatLoadingIdsAbortController) return;
-
-    chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
-
-    internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
+    // Cancel all running generateAI operations in the current context
+    cancelOperations(
+      {
+        type: 'generateAI',
+        status: 'running',
+        sessionId: activeId,
+        topicId: activeTopicId,
+      },
+      MESSAGE_CANCEL_FLAT,
+    );
   },
 
   cancelSendMessageInServer: (topicId?: string) => {

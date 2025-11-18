@@ -537,7 +537,16 @@ export const operationActions: StateCreator<
   associateMessageWithOperation: (messageId, operationId) => {
     set(
       produce((state: ChatStore) => {
+        // Update messageOperationMap (for single operation lookup)
         state.messageOperationMap[messageId] = operationId;
+
+        // Update operationsByMessage index (for multiple operations lookup)
+        if (!state.operationsByMessage[messageId]) {
+          state.operationsByMessage[messageId] = [];
+        }
+        if (!state.operationsByMessage[messageId].includes(operationId)) {
+          state.operationsByMessage[messageId].push(operationId);
+        }
       }),
       false,
       n(`associateMessageWithOperation/${messageId}/${operationId}`),

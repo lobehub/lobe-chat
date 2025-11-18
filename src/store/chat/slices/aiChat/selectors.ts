@@ -1,9 +1,10 @@
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import type { ChatStoreState } from '../../initialState';
+import { operationSelectors } from '../operation/selectors';
 
 const isMessageInReasoning = (id: string) => (s: ChatStoreState) =>
-  s.reasoningLoadingIds.includes(id);
+  operationSelectors.isMessageInReasoning(id)(s);
 
 const isMessageInSearchWorkflow = (id: string) => (s: ChatStoreState) =>
   s.searchWorkflowLoadingIds.includes(id);

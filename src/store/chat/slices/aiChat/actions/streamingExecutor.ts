@@ -28,12 +28,10 @@ import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { toolInterventionSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
-import { setNamespace } from '@/utils/storeDebug';
 
 import { topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
-const n = setNamespace('ai');
 const log = debug('lobe-store:streaming-executor');
 
 /**
@@ -100,6 +98,10 @@ export interface StreamingExecutorAction {
      * Operation ID for this execution (automatically created if not provided)
      */
     operationId?: string;
+    /**
+     * Parent operation ID (creates a child operation if provided)
+     */
+    parentOperationId?: string;
     inSearchWorkflow?: boolean;
     /**
      * the RAG query content, should be embedding and used in the semantic search
@@ -210,28 +212,17 @@ export const streamingExecutor: StateCreator<
     traceId: traceIdParam,
   }) => {
     const {
-      internal_toggleChatLoading,
       refreshMessages,
       optimisticUpdateMessageContent,
       internal_dispatchMessage,
       internal_toggleToolCallingStreaming,
-      internal_toggleChatReasoning,
     } = get();
 
-    const abortController = internal_toggleChatLoading(
-      true,
-      messageId,
-      n('generateMessage(start)', { messageId, messages }),
-    );
-
-    // Get agent config from params or use current
-    const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-
-    // Get sessionId and topicId for trace
+    // Get sessionId, topicId, and abortController from operation
     let sessionId: string;
     let topicId: string | null | undefined;
     let traceId: string | undefined = traceIdParam;
+    let abortController: AbortController;
 
     if (operationId) {
       const operation = get().operations[operationId];
@@ -241,6 +232,7 @@ export const streamingExecutor: StateCreator<
       }
       sessionId = operation.context.sessionId!;
       topicId = operation.context.topicId;
+      abortController = operation.abortController; // 👈 Use operation's abortController
       log(
         '[internal_fetchAIChatMessage] get context from operation %s: sessionId=%s, topicId=%s',
         operationId,
@@ -252,15 +244,20 @@ export const streamingExecutor: StateCreator<
         traceId = operation.metadata?.traceId;
       }
     } else {
-      // Fallback to global state
+      // Fallback to global state (for legacy code paths without operation)
       sessionId = get().activeId;
       topicId = get().activeTopicId;
+      abortController = new AbortController();
       log(
         '[internal_fetchAIChatMessage] use global context: sessionId=%s, topicId=%s',
         sessionId,
         topicId,
       );
     }
+
+    // Get agent config from params or use current
+    const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     // ================================== //
     //   messages uniformly preprocess    //
@@ -284,6 +281,7 @@ export const streamingExecutor: StateCreator<
     let thinking = '';
     let thinkingStartAt: number;
     let duration: number | undefined;
+    let reasoningOperationId: string | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
@@ -376,7 +374,6 @@ export const streamingExecutor: StateCreator<
         }
 
         finalUsage = usage;
-        internal_toggleChatReasoning(false, messageId, n('toggleChatReasoning/false') as string);
 
         // update the content after fetch result
         await optimisticUpdateMessageContent(
@@ -389,7 +386,7 @@ export const streamingExecutor: StateCreator<
               : undefined,
             search: !!grounding?.citations ? grounding : undefined,
             imageList: finalImages.length > 0 ? finalImages : undefined,
-            metadata: speed ? { ...usage, ...speed } : usage,
+            metadata: { ...usage, ...speed, performance: speed, usage },
           },
           { operationId },
         );
@@ -454,13 +451,10 @@ export const streamingExecutor: StateCreator<
             if (!duration) {
               duration = Date.now() - thinkingStartAt;
 
-              const isInChatReasoning = get().reasoningLoadingIds.includes(messageId);
-              if (isInChatReasoning) {
-                internal_toggleChatReasoning(
-                  false,
-                  messageId,
-                  n('toggleChatReasoning/false') as string,
-                );
+              // Complete reasoning operation if it exists
+              if (reasoningOperationId) {
+                get().completeOperation(reasoningOperationId);
+                reasoningOperationId = undefined;
               }
             }
 
@@ -489,11 +483,17 @@ export const streamingExecutor: StateCreator<
             // if there is no thinkingStartAt, it means the start of reasoning
             if (!thinkingStartAt) {
               thinkingStartAt = Date.now();
-              internal_toggleChatReasoning(
-                true,
-                messageId,
-                n('toggleChatReasoning/true') as string,
-              );
+
+              // Create reasoning operation
+              const { operationId: reasoningOpId } = get().startOperation({
+                type: 'reasoning',
+                context: { sessionId, topicId, messageId },
+                parentOperationId: operationId,
+              });
+              reasoningOperationId = reasoningOpId;
+
+              // Associate message with reasoning operation
+              get().associateMessageWithOperation(messageId, reasoningOperationId);
             }
 
             thinking += chunk.text;
@@ -514,24 +514,17 @@ export const streamingExecutor: StateCreator<
             internal_toggleToolCallingStreaming(messageId, chunk.isAnimationActives);
             throttledUpdateToolCalls(chunk.tool_calls);
             isFunctionCall = true;
-            const isInChatReasoning = get().reasoningLoadingIds.includes(messageId);
-            if (isInChatReasoning) {
-              if (!duration) {
-                duration = Date.now() - thinkingStartAt;
-              }
 
-              internal_toggleChatReasoning(
-                false,
-                messageId,
-                n('toggleChatReasoning/false') as string,
-              );
+            // Complete reasoning operation if it exists
+            if (!duration && reasoningOperationId) {
+              duration = Date.now() - thinkingStartAt;
+              get().completeOperation(reasoningOperationId);
+              reasoningOperationId = undefined;
             }
           }
         }
       },
     });
-
-    internal_toggleChatLoading(false, messageId, n('generateMessage(end)') as string);
 
     return {
       isFunctionCall,
@@ -569,6 +562,7 @@ export const streamingExecutor: StateCreator<
           messageId: parentMessageId,
           threadId: params.threadId,
         },
+        parentOperationId: params.parentOperationId, // Pass parent operation ID
         label: 'AI Generation',
       });
       operationId = newOperationId;

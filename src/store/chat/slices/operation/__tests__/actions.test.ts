@@ -300,6 +300,56 @@ describe('Operation Actions', () => {
       });
 
       expect(result.current.messageOperationMap.msg1).toBe(operationId!);
+      expect(result.current.operationsByMessage.msg1).toContain(operationId!);
+    });
+
+    it('should update operationsByMessage index', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let op1: string;
+      let op2: string;
+
+      act(() => {
+        op1 = result.current.startOperation({
+          type: 'generateAI',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        op2 = result.current.startOperation({
+          type: 'regenerate',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        // Associate same message with multiple operations
+        result.current.associateMessageWithOperation('msg1', op1!);
+        result.current.associateMessageWithOperation('msg1', op2!);
+      });
+
+      // Both operations should be in the index
+      expect(result.current.operationsByMessage.msg1).toContain(op1!);
+      expect(result.current.operationsByMessage.msg1).toContain(op2!);
+      expect(result.current.operationsByMessage.msg1).toHaveLength(2);
+    });
+
+    it('should not duplicate operation IDs in operationsByMessage', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let operationId: string;
+
+      act(() => {
+        operationId = result.current.startOperation({
+          type: 'generateAI',
+          context: { sessionId: 'session1' },
+        }).operationId;
+
+        // Associate same operation twice
+        result.current.associateMessageWithOperation('msg1', operationId!);
+        result.current.associateMessageWithOperation('msg1', operationId!);
+      });
+
+      // Should only appear once
+      expect(result.current.operationsByMessage.msg1).toHaveLength(1);
+      expect(result.current.operationsByMessage.msg1[0]).toBe(operationId!);
     });
   });
 

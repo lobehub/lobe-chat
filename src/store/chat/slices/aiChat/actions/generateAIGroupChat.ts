@@ -602,7 +602,6 @@ export const chatAiGroupChat: StateCreator<
         refreshMessages,
         activeTopicId,
         internal_dispatchMessage,
-        internal_toggleChatLoading,
         triggerToolCalls,
       } = get();
 
@@ -768,8 +767,6 @@ export const chatAiGroupChat: StateCreator<
             },
           });
         }
-      } finally {
-        internal_toggleChatLoading(false, undefined, n('processAgentMessage(end)'));
       }
     },
 

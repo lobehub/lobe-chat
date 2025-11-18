@@ -106,6 +106,9 @@ export const createAgentExecutors = (context: {
           throw new Error('Failed to create assistant message');
         }
         assistantMessageId = assistantMessageItem.id;
+
+        // Associate the assistant message with the operation for UI loading states
+        context.get().associateMessageWithOperation(assistantMessageId, context.operationId);
       }
 
       log(`${stagePrefix} Created assistant message, id: %s`, assistantMessageId);

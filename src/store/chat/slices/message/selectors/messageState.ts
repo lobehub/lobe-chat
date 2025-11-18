@@ -1,18 +1,37 @@
 import type { ChatStoreState } from '../../../initialState';
+import { operationSelectors } from '../../operation/selectors';
 import { mainDisplayChatIDs } from './chat';
 import { getDbMessageByToolCallId } from './dbMessage';
 import { getDisplayMessageById } from './displayMessage';
 
 const isMessageEditing = (id: string) => (s: ChatStoreState) => s.messageEditingIds.includes(id);
-const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoadingIds.includes(id);
-const isMessageRegenerating = (id: string) => (s: ChatStoreState) => s.regeneratingIds.includes(id);
-const isMessageContinuing = (id: string) => (s: ChatStoreState) => s.continuingIds.includes(id);
 
-const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
+/**
+ * Check if a message is in loading state
+ * Priority: operation system (for AI flows) > legacy messageLoadingIds (for CRUD operations)
+ */
+const isMessageLoading = (id: string) => (s: ChatStoreState) => {
+  // First check operation system (sendMessage, etc.)
+  const hasOperation = operationSelectors.isMessageProcessing(id)(s);
+  if (hasOperation) return true;
+
+  // Fallback to legacy loading state (for non-operation CRUD)
+  return s.messageLoadingIds.includes(id);
+};
+
+// Use operation system for AI-related loading states
+const isMessageRegenerating = (id: string) => (s: ChatStoreState) =>
+  operationSelectors.isMessageRegenerating(id)(s);
+const isMessageContinuing = (id: string) => (s: ChatStoreState) =>
+  operationSelectors.isMessageContinuing(id)(s);
+const isMessageGenerating = (id: string) => (s: ChatStoreState) =>
+  operationSelectors.isMessageGenerating(id)(s); // Only check generateAI operations
+const isMessageInChatReasoning = (id: string) => (s: ChatStoreState) =>
+  operationSelectors.isMessageInReasoning(id)(s);
+
+// RAG flow still uses dedicated state
 const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
   s.messageRAGLoadingIds.includes(id);
-const isMessageInChatReasoning = (id: string) => (s: ChatStoreState) =>
-  s.reasoningLoadingIds.includes(id);
 
 const isMessageCollapsed = (id: string) => (s: ChatStoreState) => {
   const message = getDisplayMessageById(id)(s);
@@ -48,7 +67,7 @@ const isToolApiNameShining =
   };
 
 const isAIGenerating = (s: ChatStoreState) =>
-  s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
+  operationSelectors.isAnyMessageLoading(mainDisplayChatIDs(s))(s);
 
 const isInRAGFlow = (s: ChatStoreState) =>
   s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));

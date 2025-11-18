@@ -114,4 +114,6 @@ export interface MessageMetadata extends ModelUsage, ModelPerformance {
    */
   collapsed?: boolean;
   compare?: boolean;
+  usage?: ModelUsage;
+  performance?: ModelPerformance;
 }

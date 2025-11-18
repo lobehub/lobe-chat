@@ -18,64 +18,26 @@ afterEach(() => {
 
 describe('StreamingStates actions', () => {
   describe('internal_toggleChatLoading', () => {
-    it('should enable loading state with new abort controller', () => {
+    it('should return new AbortController when loading is true', () => {
       const { result } = renderHook(() => useChatStore());
 
+      let controller: AbortController | undefined;
       act(() => {
-        result.current.internal_toggleChatLoading(true, TEST_IDS.MESSAGE_ID, 'test-action');
+        controller = result.current.internal_toggleChatLoading(true);
       });
 
-      const state = useChatStore.getState();
-      expect(state.chatLoadingIdsAbortController).toBeInstanceOf(AbortController);
-      expect(state.chatLoadingIds).toEqual([TEST_IDS.MESSAGE_ID]);
+      expect(controller).toBeInstanceOf(AbortController);
     });
 
-    it('should disable loading state and clear abort controller', () => {
+    it('should return undefined when loading is false', () => {
       const { result } = renderHook(() => useChatStore());
 
+      let controller: AbortController | undefined;
       act(() => {
-        result.current.internal_toggleChatLoading(true, TEST_IDS.MESSAGE_ID, 'start');
-        result.current.internal_toggleChatLoading(false, undefined, 'stop');
+        controller = result.current.internal_toggleChatLoading(false);
       });
 
-      const state = useChatStore.getState();
-      expect(state.chatLoadingIdsAbortController).toBeUndefined();
-      expect(state.chatLoadingIds).toEqual([]);
-    });
-
-    it('should manage beforeunload event listener', () => {
-      const { result } = renderHook(() => useChatStore());
-      const addListenerSpy = vi.spyOn(window, 'addEventListener');
-      const removeListenerSpy = vi.spyOn(window, 'removeEventListener');
-
-      act(() => {
-        result.current.internal_toggleChatLoading(true, TEST_IDS.MESSAGE_ID, 'start');
-      });
-
-      expect(addListenerSpy).toHaveBeenCalledWith('beforeunload', expect.any(Function));
-
-      act(() => {
-        result.current.internal_toggleChatLoading(false, undefined, 'stop');
-      });
-
-      expect(removeListenerSpy).toHaveBeenCalledWith('beforeunload', expect.any(Function));
-    });
-
-    it('should reuse existing abort controller', () => {
-      const existingController = new AbortController();
-
-      act(() => {
-        useChatStore.setState({ chatLoadingIdsAbortController: existingController });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      act(() => {
-        result.current.internal_toggleChatLoading(true, TEST_IDS.MESSAGE_ID, 'test');
-      });
-
-      const state = useChatStore.getState();
-      expect(state.chatLoadingIdsAbortController).toStrictEqual(existingController);
+      expect(controller).toBeUndefined();
     });
   });
 
@@ -124,31 +86,6 @@ describe('StreamingStates actions', () => {
 
       const state = useChatStore.getState();
       expect(state.searchWorkflowLoadingIds).toEqual([]);
-    });
-  });
-
-  describe('internal_toggleChatReasoning', () => {
-    it('should enable reasoning loading state', () => {
-      const { result } = renderHook(() => useChatStore());
-
-      act(() => {
-        result.current.internal_toggleChatReasoning(true, TEST_IDS.MESSAGE_ID, 'test-action');
-      });
-
-      const state = useChatStore.getState();
-      expect(state.reasoningLoadingIds).toEqual([TEST_IDS.MESSAGE_ID]);
-    });
-
-    it('should disable reasoning loading state', () => {
-      const { result } = renderHook(() => useChatStore());
-
-      act(() => {
-        result.current.internal_toggleChatReasoning(true, TEST_IDS.MESSAGE_ID, 'start');
-        result.current.internal_toggleChatReasoning(false, TEST_IDS.MESSAGE_ID, 'stop');
-      });
-
-      const state = useChatStore.getState();
-      expect(state.reasoningLoadingIds).toEqual([]);
     });
   });
 

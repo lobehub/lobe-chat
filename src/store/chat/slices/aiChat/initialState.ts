@@ -1,11 +1,6 @@
 import type { ChatInputEditor } from '@/features/ChatInput';
 
 export interface ChatAIChatState {
-  /**
-   * is the AI message is generating
-   */
-  chatLoadingIds: string[];
-  chatLoadingIdsAbortController?: AbortController;
   inputFiles: File[];
   inputMessage: string;
   mainInputEditor: ChatInputEditor | null;
@@ -15,10 +10,6 @@ export interface ChatAIChatState {
    */
   messageRAGLoadingIds: string[];
   pluginApiLoadingIds: string[];
-  /**
-   * is the AI message is reasoning
-   */
-  reasoningLoadingIds: string[];
   searchWorkflowLoadingIds: string[];
   threadInputEditor: ChatInputEditor | null;
   /**
@@ -28,14 +19,12 @@ export interface ChatAIChatState {
 }
 
 export const initialAiChatState: ChatAIChatState = {
-  chatLoadingIds: [],
   inputFiles: [],
   inputMessage: '',
   mainInputEditor: null,
   messageInToolsCallingIds: [],
   messageRAGLoadingIds: [],
   pluginApiLoadingIds: [],
-  reasoningLoadingIds: [],
   searchWorkflowLoadingIds: [],
   threadInputEditor: null,
   toolCallingStreamIds: {},

@@ -194,13 +194,63 @@ const isInSearchWorkflow = (s: ChatStoreState): boolean => {
 };
 
 /**
- * Check if a specific message is being processed
+ * Check if a specific message is being processed (any operation type)
  */
 const isMessageProcessing =
   (messageId: string) =>
   (s: ChatStoreState): boolean => {
     const operations = getOperationsByMessage(messageId)(s);
     return operations.some((op) => op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is being generated (AI generation only)
+ * This is more specific than isMessageProcessing - only checks generateAI operations
+ */
+const isMessageGenerating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'generateAI' && op.status === 'running');
+  };
+
+/**
+ * Check if any message in a list is being processed
+ */
+const isAnyMessageLoading =
+  (messageIds: string[]) =>
+  (s: ChatStoreState): boolean => {
+    return messageIds.some((id) => isMessageProcessing(id)(s));
+  };
+
+/**
+ * Check if a specific message is being regenerated
+ */
+const isMessageRegenerating =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'regenerate' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is continuing generation
+ */
+const isMessageContinuing =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'continue' && op.status === 'running');
+  };
+
+/**
+ * Check if a specific message is in reasoning state
+ */
+const isMessageInReasoning =
+  (messageId: string) =>
+  (s: ChatStoreState): boolean => {
+    const operations = getOperationsByMessage(messageId)(s);
+    return operations.some((op) => op.type === 'reasoning' && op.status === 'running');
   };
 
 /**
@@ -237,10 +287,15 @@ export const operationSelectors = {
   hasAnyRunningOperation,
   hasRunningOperationType,
   isAIGenerating,
+  isAnyMessageLoading,
   isContinuing,
   isInRAGFlow,
   isInSearchWorkflow,
+  isMessageContinuing,
+  isMessageGenerating,
+  isMessageInReasoning,
   isMessageProcessing,
+  isMessageRegenerating,
   isRegenerating,
   isSendingMessage,
 };
