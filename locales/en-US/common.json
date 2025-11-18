@@ -151,7 +151,9 @@
     "theme": "Theme",
     "themeAuto": "Auto",
     "themeDark": "Dark",
-    "themeLight": "Light"
+    "themeLight": "Light",
+    "toOpen": "to Open",
+    "toSelect": "to Select"
   },
   "confirm": "Confirm",
   "contact": "Contact Us",

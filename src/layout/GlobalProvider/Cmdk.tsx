@@ -5,8 +5,10 @@ import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
 import {
   ArrowLeft,
+  ArrowUpDown,
   BookOpen,
   Compass,
+  CornerDownLeft,
   Github,
   MessageCircle,
   Monitor,
@@ -32,6 +34,18 @@ const useStyles = createStyles(({ css, token }) => ({
     &:hover {
       opacity: 0.8;
     }
+  `,
+  commandFooter: css`
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: flex-end;
+
+    padding-block: 8px;
+    padding-inline: 16px;
+    border-block-start: 1px solid ${token.colorBorderSecondary};
+
+    background: ${token.colorBgContainer};
   `,
   commandRoot: css`
     overflow: hidden;
@@ -163,6 +177,26 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: 14px;
     font-weight: 500;
     line-height: 1.4;
+  `,
+  kbd: css`
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+
+    padding-block: 2px;
+    padding-inline: 6px;
+    border-radius: ${token.borderRadiusSM}px;
+
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: ${token.colorTextSecondary};
+
+    background: ${token.colorFillQuaternary};
+  `,
+  kbdIcon: css`
+    width: 12px;
+    height: 12px;
   `,
   overlay: css`
     position: fixed;
@@ -394,6 +428,16 @@ const Cmdk = memo(() => {
               </>
             )}
           </Command.List>
+          <div className={styles.commandFooter}>
+            <div className={styles.kbd}>
+              <CornerDownLeft className={styles.kbdIcon} />
+              <span>{t('cmdk.toOpen')}</span>
+            </div>
+            <div className={styles.kbd}>
+              <ArrowUpDown className={styles.kbdIcon} />
+              <span>{t('cmdk.toSelect')}</span>
+            </div>
+          </div>
         </Command>
       </div>
     </div>,
