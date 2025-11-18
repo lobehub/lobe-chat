@@ -1,8 +1,9 @@
 'use client';
 
+import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
-import { BookOpen, Monitor, Moon, Palette, Settings, Sun } from 'lucide-react';
+import { ArrowLeft, BookOpen, Monitor, Moon, Palette, Settings, Sun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -13,6 +14,13 @@ import { useGlobalStore } from '@/store/global';
 import { HotkeyEnum } from '@/types/hotkey';
 
 const useStyles = createStyles(({ css, token }) => ({
+  backTag: css`
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  `,
   commandRoot: css`
     overflow: hidden;
     display: flex;
@@ -40,10 +48,11 @@ const useStyles = createStyles(({ css, token }) => ({
     }
 
     [cmdk-input] {
-      width: 100%;
-      padding: 16px;
+      flex: 1;
+
+      min-width: 0;
+      padding: 0;
       border: none;
-      border-block-end: 1px solid ${token.colorBorderSecondary};
 
       font-family: inherit;
       font-size: 16px;
@@ -119,6 +128,14 @@ const useStyles = createStyles(({ css, token }) => ({
     width: 20px;
     height: 20px;
     color: ${token.colorTextSecondary};
+  `,
+  inputWrapper: css`
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    padding: 16px;
+    border-block-end: 1px solid ${token.colorBorderSecondary};
   `,
   itemContent: css`
     flex: 1;
@@ -238,12 +255,22 @@ const Cmdk = memo(() => {
           }}
           shouldFilter={true}
         >
-          <Command.Input
-            autoFocus
-            onValueChange={setSearch}
-            placeholder={t('cmdk.searchPlaceholder')}
-            value={search}
-          />
+          <div className={styles.inputWrapper}>
+            {pages.length > 0 && (
+              <Tag
+                className={styles.backTag}
+                icon={<ArrowLeft size={12} />}
+                onClick={() => setPages((prev) => prev.slice(0, -1))}
+              />
+            )}
+            <Command.Input
+              autoFocus
+              onValueChange={setSearch}
+              placeholder={t('cmdk.searchPlaceholder')}
+              value={search}
+            />
+            <Tag>ESC</Tag>
+          </div>
           <Command.List>
             <Command.Empty>{t('cmdk.noResults')}</Command.Empty>
 
