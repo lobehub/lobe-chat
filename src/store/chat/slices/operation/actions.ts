@@ -112,7 +112,7 @@ export const operationActions: StateCreator<
       const parentOp = get().operations[parentOperationId];
       if (parentOp) {
         // Inherit parent's context, allow partial override
-        context = { ...parentOp.context, ...partialContext };
+        context = { ...parentOp.context, ...(partialContext ?? {}) };
       }
     }
 

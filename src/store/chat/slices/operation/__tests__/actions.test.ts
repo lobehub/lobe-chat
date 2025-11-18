@@ -72,6 +72,37 @@ describe('Operation Actions', () => {
       expect(childOp.parentOperationId).toBe(parentOpId!);
     });
 
+    it('should fully inherit parent context when child context is undefined', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let parentOpId: string;
+      let childOpId: string;
+
+      act(() => {
+        // Create parent operation with full context
+        const parent = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session1', topicId: 'topic1', messageId: 'msg1' },
+        });
+        parentOpId = parent.operationId;
+
+        // Create child operation without context (undefined)
+        const child = result.current.startOperation({
+          type: 'generateAI',
+          parentOperationId: parentOpId,
+        });
+        childOpId = child.operationId;
+      });
+
+      const childOp = result.current.operations[childOpId!];
+
+      // Should fully inherit parent's context
+      expect(childOp.context.sessionId).toBe('session1');
+      expect(childOp.context.topicId).toBe('topic1');
+      expect(childOp.context.messageId).toBe('msg1');
+      expect(childOp.parentOperationId).toBe(parentOpId!);
+    });
+
     it('should update indexes correctly', () => {
       const { result } = renderHook(() => useChatStore());
 
