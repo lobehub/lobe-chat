@@ -330,6 +330,11 @@
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
     "text": "텍스트",
+    "widthMode": {
+      "label": "너비 모드",
+      "narrow": "좁은 화면 모드",
+      "wide": "넓은 화면 모드"
+    },
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",

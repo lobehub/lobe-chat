@@ -2225,6 +2225,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct, Wuwen Xinqiong tarafından geliştirilen düşük parametreli, yüksek verimli bir modeldir."
   },
+  "meituan/longcat-flash-chat": {
+    "description": "Meituan tarafından açık kaynak olarak sunulan, diyalog etkileşimi ve yapay zeka görevleri için optimize edilmiş düşünce içermeyen temel model; araç kullanımı ve karmaşık çok turlu etkileşim senaryolarında üstün performans gösterir."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "Akıl yürütme, kodlama ve geniş dil uygulamalarında mükemmel bir 70 milyar parametreli model."
   },
@@ -2455,6 +2458,9 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2, kodlama ve yardımcı iş akışları için özel olarak geliştirilmiş, verimli bir büyük dil modelidir."
+  },
+  "minimax/minimax-m2": {
+    "description": "Verimli kodlama ve Agent iş akışları için özel olarak tasarlanmıştır."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B, Mistral'ın dünya çapında en üst düzey kenar modelidir."
@@ -3371,6 +3377,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2, Microsoft AI tarafından sunulan bir dil modelidir, karmaşık diyaloglar, çok dilli, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Grok 4 Fast'i sunmaktan mutluluk duyuyoruz; bu, maliyet etkin çıkarım modelleri konusundaki en son ilerlememizdir."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Hızlı ve ekonomik bir çıkarım modeli olan grok-code-fast-1'i tanıtmaktan memnuniyet duyuyoruz; özellikle temsilci tabanlı kodlamada üstün performans sergiler."
+  },
   "x1": {
     "description": "Spark X1 modeli daha da geliştirilecek; önceki matematik görevlerinde ulusal liderlik temelinde, akıl yürütme, metin üretimi, dil anlama gibi genel görevlerde OpenAI o1 ve DeepSeek R1 ile karşılaştırılabilir sonuçlar elde edilecektir."
   },
@@ -3430,6 +3442,9 @@
   },
   "yi-vision-v2": {
     "description": "Karmaşık görsel görevler için model, birden fazla resme dayalı yüksek performanslı anlama ve analiz yetenekleri sunar."
+  },
+  "z-ai/glm-4.6": {
+    "description": "Zhipu'nun en yeni amiral gemisi modeli GLM-4.6; ileri düzey kodlama, uzun metin işleme, çıkarım ve yapay zeka yeteneklerinde seleflerini tamamen geride bırakıyor."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5, akıllı ajan uygulamaları için tasarlanmış temel modeldir ve Mixture-of-Experts (MoE) mimarisi kullanır. Araç çağrısı, web tarama, yazılım mühendisliği ve ön uç programlama alanlarında derin optimizasyonlar içerir. Claude Code, Roo Code gibi kod ajanlarına sorunsuz entegrasyon destekler. GLM-4.5, karmaşık çıkarım ve günlük kullanım gibi çeşitli senaryolara uyum sağlayan hibrit çıkarım moduna sahiptir."

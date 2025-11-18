@@ -2225,6 +2225,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct 是無問芯穹推出的小參數量高效模型。"
   },
+  "meituan/longcat-flash-chat": {
+    "description": "美團開源的專為對話互動與智慧體任務優化的非思維型基礎模型，在工具調用與複雜多輪互動場景中表現出色"
+  },
   "meta-llama-3-70b-instruct": {
     "description": "一個強大的70億參數模型，在推理、編碼和廣泛的語言應用中表現出色。"
   },
@@ -2455,6 +2458,9 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 是專為編碼與代理工作流程打造的高效大型語言模型。"
+  },
+  "minimax/minimax-m2": {
+    "description": "專為高效編碼與 Agent 工作流程而設計"
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B 是 Mistral 的全球頂尖邊緣模型。"
@@ -3371,6 +3377,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 是微軟 AI 提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
   },
+  "x-ai/grok-4-fast": {
+    "description": "我們很高興推出 Grok 4 Fast，這是我們在成本效益推理模型方面的最新進展。"
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "我們很高興推出 grok-code-fast-1，這是一款快速且具成本效益的推理模型，在代理編碼方面表現優異。"
+  },
   "x1": {
     "description": "Spark X1 模型將進一步升級，在原來數學任務國內領先的基礎上，推理、文本生成、語言理解等通用任務實現效果對標 OpenAI o1 和 DeepSeek R1。"
   },
@@ -3430,6 +3442,9 @@
   },
   "yi-vision-v2": {
     "description": "複雜視覺任務模型，提供基於多張圖片的高性能理解、分析能力。"
+  },
+  "z-ai/glm-4.6": {
+    "description": "智譜最新旗艦模型 GLM-4.6，在高階編碼、長文本處理、推理與智慧體能力上全面超越前代。"
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 是一款專為智能體應用打造的基礎模型，使用了混合專家（Mixture-of-Experts）架構。在工具調用、網頁瀏覽、軟體工程、前端程式設計領域進行了深度優化，支持無縫接入 Claude Code、Roo Code 等程式碼智能體中使用。GLM-4.5 採用混合推理模式，可以適應複雜推理和日常使用等多種應用場景。"

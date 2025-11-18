@@ -330,6 +330,11 @@
     "screenshot": "Screenshot",
     "settings": "Exporteinstellungen",
     "text": "Text",
+    "widthMode": {
+      "label": "Breitenmodus",
+      "narrow": "Schmalbildmodus",
+      "wide": "Breitbildmodus"
+    },
     "withBackground": "Mit Hintergrundbild",
     "withFooter": "Mit Fußzeile",
     "withPluginInfo": "Mit Plugin-Informationen",

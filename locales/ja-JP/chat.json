@@ -330,6 +330,11 @@
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
     "text": "テキスト",
+    "widthMode": {
+      "label": "幅のモード",
+      "narrow": "ナローモード",
+      "wide": "ワイドモード"
+    },
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",

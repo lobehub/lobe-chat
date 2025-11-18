@@ -330,6 +330,11 @@
     "screenshot": "Capture d'écran",
     "settings": "Paramètres d'exportation",
     "text": "Texte",
+    "widthMode": {
+      "label": "Mode de largeur",
+      "narrow": "Mode écran étroit",
+      "wide": "Mode écran large"
+    },
     "withBackground": "Avec image de fond",
     "withFooter": "Avec pied de page",
     "withPluginInfo": "Avec informations sur le plugin",
