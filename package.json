@@ -281,7 +281,7 @@
     "sharp": "^0.34.5",
     "shiki": "^3.15.0",
     "ssrf-safe-fetch": "workspace:*",
-    "stripe": "^17.7.0",
+    "stripe": "^19.3.1",
     "superjson": "^2.2.5",
     "svix": "^1.81.0",
     "swr": "^2.3.6",
