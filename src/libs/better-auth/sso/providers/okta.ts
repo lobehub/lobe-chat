@@ -9,6 +9,12 @@ const provider: GenericProviderDefinition = {
       clientId: authEnv.AUTH_OKTA_ID,
       clientSecret: authEnv.AUTH_OKTA_SECRET,
       issuer: authEnv.AUTH_OKTA_ISSUER,
+      overrides: {
+        mapProfileToUser: (profile) => ({
+          email: profile.email,
+          name: profile.name ?? profile.preferred_username ?? profile.email ?? profile.sub,
+        }),
+      },
       providerId: 'okta',
     }),
   checkEnvs: () => {
