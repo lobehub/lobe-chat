@@ -134,17 +134,27 @@ export const conversationLifecycle: StateCreator<
     });
     get().internal_toggleMessageLoading(true, tempId);
 
-    const operationKey = messageMapKey(activeId, activeTopicId);
+    // Create operation for send message
+    const { operationId, abortController } = get().startOperation({
+      type: 'sendMessage',
+      context: {
+        sessionId: activeId,
+        topicId: activeTopicId,
+        threadId: activeThreadId,
+        messageId: tempId,
+      },
+      label: 'Send Message',
+    });
 
-    // Start tracking sendMessage operation with AbortController
-    const abortController = get().internal_toggleSendMessageOperation(operationKey, true)!;
+    // Associate temp message with operation
+    get().associateMessageWithOperation(tempId, operationId);
 
+    // Store editor state in operation metadata for cancel restoration
     const jsonState = mainInputEditor?.getJSONState();
-    get().internal_updateSendMessageOperation(
-      operationKey,
-      { inputSendErrorMsg: undefined, inputEditorTempState: jsonState },
-      'creatingMessage/start',
-    );
+    get().updateOperationMetadata(operationId, {
+      inputEditorTempState: jsonState,
+      inputSendErrorMsg: undefined,
+    });
 
     let data: SendMessageServerResponse | undefined;
     try {
@@ -184,33 +194,36 @@ export const conversationLifecycle: StateCreator<
         await get().switchTopic(data.topicId, true);
       }
     } catch (e) {
+      // Fail operation on error
+      get().failOperation(operationId, {
+        type: e instanceof Error ? e.name : 'unknown_error',
+        message: e instanceof Error ? e.message : 'Unknown error',
+      });
+
       if (e instanceof TRPCClientError) {
         const isAbort = e.message.includes('aborted') || e.name === 'AbortError';
         // Check if error is due to cancellation
         if (!isAbort) {
-          get().internal_updateSendMessageOperation(operationKey, { inputSendErrorMsg: e.message });
+          get().updateOperationMetadata(operationId, { inputSendErrorMsg: e.message });
           get().mainInputEditor?.setJSONState(jsonState);
         }
       }
     } finally {
-      // Stop tracking sendMessage operation
-      get().internal_toggleSendMessageOperation(operationKey, false);
-    }
-
-    // remove temporally message
-    if (data?.isCreateNewTopic) {
-      get().internal_dispatchMessage(
-        { type: 'deleteMessages', ids: [tempId, tempAssistantId] },
-        { topicId: activeTopicId, sessionId: activeId },
-      );
+      // 创建了新topic 或者 用户 cancel 了消息（或者失败了），此时无 data
+      if (data?.isCreateNewTopic || !data) {
+        get().internal_dispatchMessage(
+          { type: 'deleteMessages', ids: [tempId, tempAssistantId] },
+          { topicId: activeTopicId, sessionId: activeId },
+        );
+      }
     }
 
     get().internal_toggleMessageLoading(false, tempId);
-    get().internal_updateSendMessageOperation(
-      operationKey,
-      { inputEditorTempState: null },
-      'creatingMessage/finished',
-    );
+
+    // Clear editor temp state after message created
+    if (data) {
+      get().updateOperationMetadata(operationId, { inputEditorTempState: null });
+    }
 
     if (!data) return;
 
@@ -251,6 +264,7 @@ export const conversationLifecycle: StateCreator<
         parentMessageType: 'assistant',
         sessionId: activeId,
         topicId: data.topicId ?? activeTopicId,
+        operationId, // Pass operation ID to agent runtime
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
         skipCreateFirstMessage: true,
@@ -267,8 +281,16 @@ export const conversationLifecycle: StateCreator<
       if (userFiles.length > 0) {
         await getAgentStoreState().addFilesToAgent(userFiles, false);
       }
+
+      // Complete operation on success
+      get().completeOperation(operationId);
     } catch (e) {
       console.error(e);
+      // Fail operation on error
+      get().failOperation(operationId, {
+        type: e instanceof Error ? e.name : 'unknown_error',
+        message: e instanceof Error ? e.message : 'AI generation failed',
+      });
     } finally {
       if (data.topicId) get().internal_updateTopicLoading(data.topicId, false);
     }

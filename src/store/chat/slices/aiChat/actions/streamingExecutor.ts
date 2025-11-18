@@ -36,31 +36,6 @@ import { messageMapKey } from '../../../utils/messageMapKey';
 const n = setNamespace('ai');
 const log = debug('lobe-store:streaming-executor');
 
-interface ProcessMessageParams {
-  traceId?: string;
-  isWelcomeQuestion?: boolean;
-  inSearchWorkflow?: boolean;
-  /**
-   * the RAG query content, should be embedding and used in the semantic search
-   */
-  ragQuery?: string;
-  threadId?: string;
-  inPortalThread?: boolean;
-
-  groupId?: string;
-  agentId?: string;
-  agentConfig?: any; // Agent configuration for group chat agents
-
-  /**
-   * Explicit sessionId for this execution (avoids using global activeId)
-   */
-  sessionId?: string;
-  /**
-   * Explicit topicId for this execution (avoids using global activeTopicId)
-   */
-  topicId?: string | null;
-}
-
 /**
  * Core streaming execution actions for AI chat
  */
@@ -89,12 +64,14 @@ export interface StreamingExecutorAction {
   /**
    * Retrieves an AI-generated chat message from the backend service with streaming
    */
-  internal_fetchAIChatMessage: (input: {
-    messages: UIChatMessage[];
+  internal_fetchAIChatMessage: (params: {
     messageId: string;
-    params?: ProcessMessageParams;
+    messages: UIChatMessage[];
     model: string;
     provider: string;
+    operationId?: string;
+    agentConfig?: any;
+    traceId?: string;
   }) => Promise<{
     isFunctionCall: boolean;
     tools?: ChatToolPayload[];
@@ -119,6 +96,10 @@ export interface StreamingExecutorAction {
      * Explicit topicId for this execution (avoids using global activeTopicId)
      */
     topicId?: string | null;
+    /**
+     * Operation ID for this execution (automatically created if not provided)
+     */
+    operationId?: string;
     inSearchWorkflow?: boolean;
     /**
      * the RAG query content, should be embedding and used in the semantic search
@@ -219,7 +200,15 @@ export const streamingExecutor: StateCreator<
     return { state, context };
   },
 
-  internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
+  internal_fetchAIChatMessage: async ({
+    messageId,
+    messages,
+    model,
+    provider,
+    operationId,
+    agentConfig,
+    traceId: traceIdParam,
+  }) => {
     const {
       internal_toggleChatLoading,
       refreshMessages,
@@ -235,21 +224,46 @@ export const streamingExecutor: StateCreator<
       n('generateMessage(start)', { messageId, messages }),
     );
 
-    const agentConfig =
-      params?.agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
+    // Get agent config from params or use current
+    const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+
+    // Get context from operation if operationId is provided
+    let context: { sessionId: string; topicId?: string | null };
+    let traceId: string | undefined = traceIdParam;
+
+    if (operationId) {
+      const operation = get().operations[operationId];
+      if (!operation) {
+        throw new Error(`Operation not found: ${operationId}`);
+      }
+      context = {
+        sessionId: operation.context.sessionId!,
+        topicId: operation.context.topicId,
+      };
+      // Get traceId from operation metadata if not explicitly provided
+      if (!traceId) {
+        traceId = operation.metadata?.traceId;
+      }
+    } else {
+      // Fallback to global state
+      context = {
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
+      };
+    }
 
     // ================================== //
     //   messages uniformly preprocess    //
     // ================================== //
     // 4. handle max_tokens
-    agentConfig.params.max_tokens = chatConfig.enableMaxTokens
-      ? agentConfig.params.max_tokens
+    finalAgentConfig.params.max_tokens = chatConfig.enableMaxTokens
+      ? finalAgentConfig.params.max_tokens
       : undefined;
 
     // 5. handle reasoning_effort
-    agentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
-      ? agentConfig.params.reasoning_effort
+    finalAgentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
+      ? finalAgentConfig.params.reasoning_effort
       : undefined;
 
     let isFunctionCall = false;
@@ -264,10 +278,6 @@ export const streamingExecutor: StateCreator<
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
-    const context: { sessionId: string; topicId?: string | null } = {
-      sessionId: params?.sessionId || get().activeId,
-      topicId: params?.topicId,
-    };
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
       (toolCalls: any[]) => {
@@ -293,20 +303,19 @@ export const streamingExecutor: StateCreator<
         messages,
         model,
         provider,
-        ...agentConfig.params,
-        plugins: agentConfig.plugins,
+        ...finalAgentConfig.params,
+        plugins: finalAgentConfig.plugins,
       },
       historySummary: historySummary?.content,
       trace: {
-        traceId: params?.traceId,
-        sessionId: params?.sessionId ?? get().activeId,
-        topicId:
-          (params?.topicId !== undefined ? params.topicId : get().activeTopicId) ?? undefined,
+        traceId,
+        sessionId: context.sessionId,
+        topicId: context.topicId ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
         await messageService.updateMessageError(messageId, error, context);
-        await refreshMessages(params?.sessionId, params?.topicId);
+        await refreshMessages(context.sessionId, context.topicId);
       },
       onFinish: async (
         content,
@@ -533,8 +542,28 @@ export const streamingExecutor: StateCreator<
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
     const messageKey = messageMapKey(sessionId, topicId);
 
+    // Create or use provided operation
+    let operationId = params.operationId;
+    if (!operationId) {
+      const { operationId: newOperationId } = get().startOperation({
+        type: 'generateAI',
+        context: {
+          sessionId,
+          topicId,
+          messageId: parentMessageId,
+          threadId: params.threadId,
+        },
+        label: 'AI Generation',
+      });
+      operationId = newOperationId;
+
+      // Associate message with operation
+      get().associateMessageWithOperation(parentMessageId, operationId);
+    }
+
     log(
-      '[internal_execAgentRuntime] start, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      '[internal_execAgentRuntime] start, operationId: %s, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      operationId,
       sessionId,
       topicId,
       messageKey,
@@ -620,19 +649,29 @@ export const streamingExecutor: StateCreator<
       },
     });
 
-    const runtime = new AgentRuntime(agent, {
-      executors: createAgentExecutors({
-        get,
-        messageKey,
-        parentId: params.parentMessageId,
-        params: {
-          ...params,
-          sessionId,
-          topicId,
+    const runtime = new AgentRuntime(
+      agent,
+      {
+        executors: createAgentExecutors({
+          get,
+          messageKey,
+          operationId,
+          parentId: params.parentMessageId,
+          skipCreateFirstMessage: params.skipCreateFirstMessage,
+        }),
+      },
+      {
+        operationId,
+        getOperation: (opId: string) => {
+          const op = get().operations[opId];
+          if (!op) throw new Error(`Operation not found: ${opId}`);
+          return {
+            context: op.context,
+            abortController: op.abortController,
+          };
         },
-        skipCreateFirstMessage: params.skipCreateFirstMessage,
-      }),
-    });
+      },
+    );
 
     // Create agent state and context with user intervention config
     const { state: initialAgentState, context: initialAgentContext } =
@@ -728,6 +767,18 @@ export const streamingExecutor: StateCreator<
         });
         log('[internal_execAgentRuntime] RAG metadata updated for assistant message');
       }
+    }
+
+    // Complete operation
+    if (state.status === 'done') {
+      get().completeOperation(operationId);
+      log('[internal_execAgentRuntime] Operation completed successfully');
+    } else if (state.status === 'error') {
+      get().failOperation(operationId, {
+        type: 'runtime_error',
+        message: 'Agent runtime execution failed',
+      });
+      log('[internal_execAgentRuntime] Operation failed');
     }
 
     log('[internal_execAgentRuntime] completed');

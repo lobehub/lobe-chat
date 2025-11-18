@@ -54,68 +54,88 @@ describe('ConversationControl actions', () => {
   });
 
   describe('cancelSendMessageInServer', () => {
-    it('should abort operation and restore editor state when cancelling', () => {
+    it('should cancel operation and restore editor state', () => {
       const { result } = renderHook(() => useChatStore());
-      const mockAbort = vi.fn();
       const mockSetJSONState = vi.fn();
+      const editorState = { content: 'saved content' };
 
       act(() => {
         useChatStore.setState({
           activeId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
-          mainSendMessageOperations: {
-            [messageMapKey(TEST_IDS.SESSION_ID, TEST_IDS.TOPIC_ID)]: {
-              isLoading: true,
-              abortController: { abort: mockAbort, signal: {} as any },
-              inputEditorTempState: { content: 'saved content' },
-            },
-          },
           mainInputEditor: { setJSONState: mockSetJSONState } as any,
         });
       });
 
+      // Create operation
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: {
+            sessionId: TEST_IDS.SESSION_ID,
+            topicId: TEST_IDS.TOPIC_ID,
+          },
+        });
+        operationId = res.operationId;
+
+        result.current.updateOperationMetadata(res.operationId, {
+          inputEditorTempState: editorState,
+        });
+      });
+
+      expect(result.current.operations[operationId!].status).toBe('running');
+
+      // Cancel
       act(() => {
         result.current.cancelSendMessageInServer();
       });
 
-      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessage operation');
-      expect(
-        result.current.mainSendMessageOperations[
-          messageMapKey(TEST_IDS.SESSION_ID, TEST_IDS.TOPIC_ID)
-        ]?.isLoading,
-      ).toBe(false);
-      expect(mockSetJSONState).toHaveBeenCalledWith({ content: 'saved content' });
+      expect(result.current.operations[operationId!].status).toBe('cancelled');
+      expect(mockSetJSONState).toHaveBeenCalledWith(editorState);
     });
 
     it('should cancel operation for specified topic ID', () => {
       const { result } = renderHook(() => useChatStore());
-      const mockAbort = vi.fn();
       const customTopicId = 'custom-topic-id';
 
       act(() => {
         useChatStore.setState({
           activeId: TEST_IDS.SESSION_ID,
-          mainSendMessageOperations: {
-            [messageMapKey(TEST_IDS.SESSION_ID, customTopicId)]: {
-              isLoading: true,
-              abortController: { abort: mockAbort, signal: {} as any },
-            },
-          },
         });
       });
 
+      // Create operation
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: {
+            sessionId: TEST_IDS.SESSION_ID,
+            topicId: customTopicId,
+          },
+        });
+        operationId = res.operationId;
+      });
+
+      expect(result.current.operations[operationId!].status).toBe('running');
+
+      // Cancel
       act(() => {
         result.current.cancelSendMessageInServer(customTopicId);
       });
 
-      expect(mockAbort).toHaveBeenCalledWith('User cancelled sendMessage operation');
+      expect(result.current.operations[operationId!].status).toBe('cancelled');
     });
 
     it('should handle gracefully when operation does not exist', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        useChatStore.setState({ mainSendMessageOperations: {} });
+        useChatStore.setState({
+          operations: {},
+          operationsByContext: {},
+        });
       });
 
       expect(() => {
@@ -134,31 +154,44 @@ describe('ConversationControl actions', () => {
         useChatStore.setState({
           activeId: TEST_IDS.SESSION_ID,
           activeTopicId: TEST_IDS.TOPIC_ID,
-          mainSendMessageOperations: {
-            [messageMapKey(TEST_IDS.SESSION_ID, TEST_IDS.TOPIC_ID)]: {
-              isLoading: false,
-              inputSendErrorMsg: 'Some error',
-            },
-          },
         });
       });
 
+      // Create operation with error
+      let operationId: string;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: {
+            sessionId: TEST_IDS.SESSION_ID,
+            topicId: TEST_IDS.TOPIC_ID,
+          },
+        });
+        operationId = res.operationId;
+
+        result.current.updateOperationMetadata(res.operationId, {
+          inputSendErrorMsg: 'Some error',
+        });
+      });
+
+      expect(result.current.operations[operationId!].metadata.inputSendErrorMsg).toBe('Some error');
+
+      // Clear error
       act(() => {
         result.current.clearSendMessageError();
       });
 
-      expect(
-        result.current.mainSendMessageOperations[
-          messageMapKey(TEST_IDS.SESSION_ID, TEST_IDS.TOPIC_ID)
-        ],
-      ).toBeUndefined();
+      expect(result.current.operations[operationId!].metadata.inputSendErrorMsg).toBeUndefined();
     });
 
     it('should handle gracefully when no error operation exists', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        useChatStore.setState({ mainSendMessageOperations: {} });
+        useChatStore.setState({
+          operations: {},
+          operationsByContext: {},
+        });
       });
 
       expect(() => {
@@ -169,112 +202,80 @@ describe('ConversationControl actions', () => {
     });
   });
 
-  describe('internal_toggleSendMessageOperation', () => {
-    it('should create new send operation with abort controller', () => {
+  describe('Operation system integration', () => {
+    it('should create operation with abort controller', () => {
       const { result } = renderHook(() => useChatStore());
+
+      let operationId: string = '';
       let abortController: AbortController | undefined;
 
       act(() => {
-        abortController = result.current.internal_toggleSendMessageOperation('test-key', true);
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'test-session' },
+        });
+        operationId = res.operationId;
+        abortController = res.abortController;
       });
 
       expect(abortController!).toBeInstanceOf(AbortController);
-      expect(result.current.mainSendMessageOperations['test-key']?.isLoading).toBe(true);
-      expect(result.current.mainSendMessageOperations['test-key']?.abortController).toBe(
-        abortController,
-      );
+      expect(result.current.operations[operationId!].abortController).toBe(abortController);
+      expect(result.current.operations[operationId!].status).toBe('running');
     });
 
-    it('should stop send operation and clear abort controller', () => {
+    it('should update operation metadata', () => {
       const { result } = renderHook(() => useChatStore());
-      const mockAbortController = { abort: vi.fn() } as any;
 
-      let abortController: AbortController | undefined;
-      act(() => {
-        result.current.internal_updateSendMessageOperation('test-key', {
-          isLoading: true,
-          abortController: mockAbortController,
-        });
-
-        abortController = result.current.internal_toggleSendMessageOperation('test-key', false);
-      });
-
-      expect(abortController).toBeUndefined();
-      expect(result.current.mainSendMessageOperations['test-key']?.isLoading).toBe(false);
-      expect(result.current.mainSendMessageOperations['test-key']?.abortController).toBeNull();
-    });
-
-    it('should call abort with cancel reason when stopping', () => {
-      const { result } = renderHook(() => useChatStore());
-      const mockAbortController = { abort: vi.fn() } as any;
+      let operationId: string;
 
       act(() => {
-        result.current.internal_updateSendMessageOperation('test-key', {
-          isLoading: true,
-          abortController: mockAbortController,
+        const res = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'test-session' },
         });
+        operationId = res.operationId;
 
-        result.current.internal_toggleSendMessageOperation('test-key', false, 'Test cancel reason');
+        result.current.updateOperationMetadata(res.operationId, {
+          inputSendErrorMsg: 'test error',
+          inputEditorTempState: { content: 'test' },
+        });
       });
 
-      expect(mockAbortController.abort).toHaveBeenCalledWith('Test cancel reason');
+      expect(result.current.operations[operationId!].metadata.inputSendErrorMsg).toBe('test error');
+      expect(result.current.operations[operationId!].metadata.inputEditorTempState).toEqual({
+        content: 'test',
+      });
     });
 
     it('should support multiple parallel operations', () => {
       const { result } = renderHook(() => useChatStore());
 
-      let abortController1, abortController2;
-      act(() => {
-        abortController1 = result.current.internal_toggleSendMessageOperation('key1', true);
-        abortController2 = result.current.internal_toggleSendMessageOperation('key2', true);
-      });
-
-      expect(result.current.mainSendMessageOperations['key1']?.isLoading).toBe(true);
-      expect(result.current.mainSendMessageOperations['key2']?.isLoading).toBe(true);
-      expect(abortController1).not.toBe(abortController2);
-    });
-  });
-
-  describe('internal_updateSendMessageOperation', () => {
-    it('should update operation state', () => {
-      const { result } = renderHook(() => useChatStore());
-      const mockAbortController = new AbortController();
+      let opId1: string = '';
+      let opId2: string = '';
 
       act(() => {
-        result.current.internal_updateSendMessageOperation('test-key', {
-          isLoading: true,
-          abortController: mockAbortController,
-          inputSendErrorMsg: 'test error',
+        const res1 = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session-1', topicId: 'topic-1' },
         });
-      });
-
-      expect(result.current.mainSendMessageOperations['test-key']).toEqual({
-        isLoading: true,
-        abortController: mockAbortController,
-        inputSendErrorMsg: 'test error',
-      });
-    });
-
-    it('should support partial update of operation state', () => {
-      const { result } = renderHook(() => useChatStore());
-      const initialController = new AbortController();
-
-      act(() => {
-        result.current.internal_updateSendMessageOperation('test-key', {
-          isLoading: true,
-          abortController: initialController,
+        const res2 = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session-1', topicId: 'topic-2' },
         });
 
-        result.current.internal_updateSendMessageOperation('test-key', {
-          inputSendErrorMsg: 'new error',
-        });
+        opId1 = res1.operationId;
+        opId2 = res2.operationId;
       });
 
-      expect(result.current.mainSendMessageOperations['test-key']).toEqual({
-        isLoading: true,
-        abortController: initialController,
-        inputSendErrorMsg: 'new error',
-      });
+      expect(result.current.operations[opId1!].status).toBe('running');
+      expect(result.current.operations[opId2!].status).toBe('running');
+      expect(opId1).not.toBe(opId2);
+
+      const contextKey1 = messageMapKey('session-1', 'topic-1');
+      const contextKey2 = messageMapKey('session-1', 'topic-2');
+
+      expect(result.current.operationsByContext[contextKey1]).toContain(opId1!);
+      expect(result.current.operationsByContext[contextKey2]).toContain(opId2!);
     });
   });
 
@@ -292,7 +293,9 @@ describe('ConversationControl actions', () => {
         await result.current.switchMessageBranch(messageId, branchIndex);
       });
 
-      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: branchIndex });
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, {
+        activeBranchIndex: branchIndex,
+      });
     });
 
     it('should handle switching to branch 0', async () => {
@@ -326,7 +329,9 @@ describe('ConversationControl actions', () => {
         }),
       ).rejects.toThrow('Update failed');
 
-      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: branchIndex });
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, {
+        activeBranchIndex: branchIndex,
+      });
     });
   });
 });

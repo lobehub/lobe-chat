@@ -84,7 +84,7 @@ describe('StreamingExecutor actions', () => {
         expect.objectContaining({ type: 'InvalidProviderAPIKey' }),
         expect.objectContaining({
           sessionId: TEST_IDS.SESSION_ID,
-          topicId: undefined,
+          topicId: TEST_IDS.TOPIC_ID,
         }),
       );
 
@@ -370,7 +370,7 @@ describe('StreamingExecutor actions', () => {
         expect.objectContaining({ traceId }),
         expect.objectContaining({
           sessionId: expect.any(String),
-          topicId: undefined,
+          topicId: expect.any(String),
         }),
       );
 
@@ -538,16 +538,24 @@ describe('StreamingExecutor actions', () => {
           await onFinish?.(TEST_CONTENT.AI_RESPONSE, {});
         });
 
+      // Create operation with specific context
+      const { operationId } = result.current.startOperation({
+        type: 'generateAI',
+        context: {
+          sessionId: contextSessionId,
+          topicId: contextTopicId,
+          messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+        },
+        label: 'Test AI Generation',
+      });
+
       await act(async () => {
         await result.current.internal_fetchAIChatMessage({
           messages,
           messageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
           model: 'gpt-4o-mini',
           provider: 'openai',
-          params: {
-            sessionId: contextSessionId,
-            topicId: contextTopicId,
-          },
+          operationId,
         });
       });
 
@@ -599,7 +607,7 @@ describe('StreamingExecutor actions', () => {
         expect.any(Object),
         {
           sessionId: 'active-session',
-          topicId: undefined,
+          topicId: 'active-topic',
         },
       );
 

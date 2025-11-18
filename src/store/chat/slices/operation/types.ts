@@ -88,6 +88,10 @@ export interface OperationMetadata {
   // Cancel information
   cancelReason?: string;
 
+  // UI state (for sendMessage operation)
+  inputEditorTempState?: any | null; // Editor state snapshot for cancel restoration
+  inputSendErrorMsg?: string; // Error message to display in UI
+
   // Other metadata (extensible)
   [key: string]: any;
 }

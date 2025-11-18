@@ -29,23 +29,33 @@ const TOOL_PRICING: Record<string, number> = {
 /**
  * Creates custom executors for the Chat Agent Runtime
  * These executors wrap existing chat store methods to integrate with agent-runtime
+ *
+ * @param context.operationId - Operation ID to get business context (sessionId, topicId, etc.)
+ * @param context.get - Store getter function
+ * @param context.messageKey - Message map key
+ * @param context.parentId - Parent message ID
+ * @param context.skipCreateFirstMessage - Skip first message creation
  */
 export const createAgentExecutors = (context: {
   get: () => ChatStore;
   messageKey: string;
-  params: {
-    inPortalThread?: boolean;
-    inSearchWorkflow?: boolean;
-    ragQuery?: string;
-    sessionId?: string;
-    threadId?: string;
-    topicId?: string | null;
-    traceId?: string;
-  };
+  operationId: string;
   parentId: string;
   skipCreateFirstMessage?: boolean;
 }) => {
   let shouldSkipCreateMessage = context.skipCreateFirstMessage;
+
+  /**
+   * Get operation context via closure
+   * Returns the business context (sessionId, topicId, etc.) captured by the operation
+   */
+  const getOperationContext = () => {
+    const operation = context.get().operations[context.operationId];
+    if (!operation) {
+      throw new Error(`Operation not found: ${context.operationId}`);
+    }
+    return operation.context;
+  };
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
@@ -71,6 +81,9 @@ export const createAgentExecutors = (context: {
         assistantMessageId = context.parentId;
         shouldSkipCreateMessage = false;
       } else {
+        // Get context from operation
+        const opContext = getOperationContext();
+
         // 如果是 userMessage 的第一次 regenerated 创建， llmPayload 不存在 parentMessageId
         // 因此用这种方式做个赋值
         // TODO: 也许未来这个应该用 init 方法实现
@@ -78,22 +91,16 @@ export const createAgentExecutors = (context: {
           llmPayload.parentMessageId = context.parentId;
         }
         // Create assistant message (following server-side pattern)
-        const assistantMessageItem = await context.get().optimisticCreateMessage(
-          {
-            content: LOADING_FLAT,
-            model: llmPayload.model,
-            parentId: llmPayload.parentMessageId,
-            provider: llmPayload.provider,
-            role: 'assistant',
-            sessionId: state.metadata!.sessionId!,
-            threadId: state.metadata?.threadId,
-            topicId: state.metadata?.topicId,
-          },
-          {
-            sessionId: state.metadata!.sessionId!,
-            topicId: state.metadata?.topicId,
-          },
-        );
+        const assistantMessageItem = await context.get().optimisticCreateMessage({
+          content: LOADING_FLAT,
+          model: llmPayload.model,
+          parentId: llmPayload.parentMessageId,
+          provider: llmPayload.provider,
+          role: 'assistant',
+          sessionId: opContext.sessionId!,
+          threadId: opContext.threadId,
+          topicId: opContext.topicId ?? undefined,
+        });
 
         if (!assistantMessageItem) {
           throw new Error('Failed to create assistant message');
@@ -126,10 +133,10 @@ export const createAgentExecutors = (context: {
         tool_calls,
       } = await context.get().internal_fetchAIChatMessage({
         messageId: assistantMessageId,
-        messages: messages,
+        messages,
         model: llmPayload.model,
-        params: context.params,
         provider: llmPayload.provider,
+        operationId: context.operationId,
       });
 
       log(`[${sessionLogId}] finish model-runtime calling`);
@@ -272,22 +279,22 @@ export const createAgentExecutors = (context: {
             chatToolPayload.id,
           );
 
+          // Get context from operation
+          const opContext = getOperationContext();
+
           const toolMessageParams: CreateMessageParams = {
             content: '',
             groupId: assistantMessage?.groupId,
             parentId: payload.parentMessageId,
             plugin: chatToolPayload,
             role: 'tool',
-            sessionId: state.metadata!.sessionId!,
-            threadId: context.params.threadId,
+            sessionId: opContext.sessionId!,
+            threadId: opContext.threadId,
             tool_call_id: chatToolPayload.id,
-            topicId: state.metadata?.topicId,
+            topicId: opContext.topicId ?? undefined,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams, {
-            sessionId: state.metadata!.sessionId!,
-            topicId: state.metadata?.topicId,
-          });
+          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
 
           if (!createResult) {
             log(
@@ -443,6 +450,9 @@ export const createAgentExecutors = (context: {
         // Resumption mode: Tool messages already exist, just verify them
         log('[%s][request_human_approve] Resuming with existing tool messages', sessionLogId);
       } else {
+        // Get context from operation
+        const opContext = getOperationContext();
+
         // Create tool messages for each pending tool call with intervention status
         await pMap(pendingToolsCalling, async (toolPayload) => {
           const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
@@ -462,16 +472,13 @@ export const createAgentExecutors = (context: {
             },
             pluginIntervention: { status: 'pending' },
             role: 'tool',
-            sessionId: state.metadata!.sessionId!,
-            threadId: context.params.threadId,
+            sessionId: opContext.sessionId!,
+            threadId: opContext.threadId,
             tool_call_id: toolPayload.id,
-            topicId: state.metadata?.topicId,
+            topicId: opContext.topicId ?? undefined,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams, {
-            sessionId: state.metadata!.sessionId!,
-            topicId: state.metadata?.topicId,
-          });
+          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
 
           if (!createResult) {
             log(

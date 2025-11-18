@@ -73,6 +73,11 @@ export interface OperationActions {
   }) => { abortController: AbortController; operationId: string };
 
   /**
+   * Update operation metadata
+   */
+  updateOperationMetadata: (operationId: string, metadata: Partial<OperationMetadata>) => void;
+
+  /**
    * Update operation progress
    */
   updateOperationProgress: (operationId: string, current: number, total?: number) => void;
@@ -179,6 +184,22 @@ export const operationActions: StateCreator<
     );
 
     return { operationId, abortController };
+  },
+
+  updateOperationMetadata: (operationId, metadata) => {
+    set(
+      produce((state: ChatStore) => {
+        const operation = state.operations[operationId];
+        if (!operation) return;
+
+        operation.metadata = {
+          ...operation.metadata,
+          ...metadata,
+        };
+      }),
+      false,
+      n(`updateOperationMetadata/${operationId}`),
+    );
   },
 
   updateOperationStatus: (operationId, status, metadata) => {

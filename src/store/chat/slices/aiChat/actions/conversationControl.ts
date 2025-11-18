@@ -2,7 +2,6 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { type AgentRuntimeContext } from '@lobechat/agent-runtime';
 import { MESSAGE_CANCEL_FLAT } from '@lobechat/const';
-import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
@@ -11,7 +10,6 @@ import { setNamespace } from '@/utils/storeDebug';
 import { displayMessageSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 import { dbMessageSelectors } from '../../message/selectors';
-import { MainSendMessageOperation } from '../initialState';
 
 const n = setNamespace('ai');
 
@@ -47,22 +45,6 @@ export interface ConversationControlAction {
    * Reject tool intervention and continue
    */
   rejectAndContinueToolCalling: (messageId: string, reason?: string) => Promise<void>;
-  /**
-   * Toggle sendMessage operation state
-   */
-  internal_toggleSendMessageOperation: (
-    key: string | { sessionId: string; topicId?: string | null },
-    loading: boolean,
-    cancelReason?: string,
-  ) => AbortController | undefined;
-  /**
-   * Update sendMessage operation metadata
-   */
-  internal_updateSendMessageOperation: (
-    key: string | { sessionId: string; topicId?: string | null },
-    value: Partial<MainSendMessageOperation> | null,
-    actionName?: any,
-  ) => void;
 }
 
 export const conversationControl: StateCreator<
@@ -86,65 +68,47 @@ export const conversationControl: StateCreator<
 
     // Determine which operation to cancel
     const targetTopicId = topicId ?? activeTopicId;
-    const operationKey = messageMapKey(activeId, targetTopicId);
+    const contextKey = messageMapKey(activeId, targetTopicId);
 
-    // Cancel the specific operation
-    get().internal_toggleSendMessageOperation(
-      operationKey,
-      false,
-      'User cancelled sendMessage operation',
-    );
+    // Cancel operations in the operation system
+    const operationIds = get().operationsByContext[contextKey] || [];
 
-    // Only clear creating message state if it's the active session
-    if (operationKey === messageMapKey(activeId, activeTopicId)) {
-      const editorTempState = get().mainSendMessageOperations[operationKey]?.inputEditorTempState;
+    operationIds.forEach((opId) => {
+      const operation = get().operations[opId];
+      if (operation && operation.type === 'sendMessage' && operation.status === 'running') {
+        get().cancelOperation(opId, 'User cancelled');
+      }
+    });
 
-      if (editorTempState) get().mainInputEditor?.setJSONState(editorTempState);
+    // Restore editor state if it's the active session
+    if (contextKey === messageMapKey(activeId, activeTopicId)) {
+      // Find the latest sendMessage operation with editor state
+      for (const opId of [...operationIds].reverse()) {
+        const op = get().operations[opId];
+        if (op && op.type === 'sendMessage' && op.metadata.inputEditorTempState) {
+          get().mainInputEditor?.setJSONState(op.metadata.inputEditorTempState);
+          break;
+        }
+      }
     }
   },
 
   clearSendMessageError: () => {
-    get().internal_updateSendMessageOperation(
-      { sessionId: get().activeId, topicId: get().activeTopicId },
-      null,
-      'clearSendMessageError',
-    );
+    const { activeId, activeTopicId } = get();
+    const contextKey = messageMapKey(activeId, activeTopicId);
+    const operationIds = get().operationsByContext[contextKey] || [];
+
+    // Clear error message from all sendMessage operations in current context
+    operationIds.forEach((opId) => {
+      const op = get().operations[opId];
+      if (op && op.type === 'sendMessage' && op.metadata.inputSendErrorMsg) {
+        get().updateOperationMetadata(opId, { inputSendErrorMsg: undefined });
+      }
+    });
   },
 
   switchMessageBranch: async (messageId, branchIndex) => {
     await get().optimisticUpdateMessageMetadata(messageId, { activeBranchIndex: branchIndex });
-  },
-
-  internal_toggleSendMessageOperation: (key, loading: boolean, cancelReason?: string) => {
-    if (loading) {
-      const abortController = new AbortController();
-
-      get().internal_updateSendMessageOperation(
-        key,
-        { isLoading: true, abortController },
-        n('toggleSendMessageOperation(start)', { key }),
-      );
-
-      return abortController;
-    } else {
-      const operationKey =
-        typeof key === 'string' ? key : messageMapKey(key.sessionId, key.topicId);
-
-      const operation = get().mainSendMessageOperations[operationKey];
-
-      // If cancelReason is provided, abort the operation first
-      if (cancelReason && operation?.isLoading) {
-        operation.abortController?.abort(cancelReason);
-      }
-
-      get().internal_updateSendMessageOperation(
-        key,
-        { isLoading: false, abortController: null },
-        n('toggleSendMessageOperation(stop)', { key, cancelReason }),
-      );
-
-      return undefined;
-    }
   },
   approveToolCalling: async (toolMessageId) => {
     const { activeThreadId, internal_execAgentRuntime } = get();
@@ -250,28 +214,5 @@ export const conversationControl: StateCreator<
     } catch (error) {
       console.error('[rejectAndContinueToolCalling] Error executing agent runtime:', error);
     }
-  },
-
-  internal_updateSendMessageOperation: (key, value, actionName) => {
-    const operationKey = typeof key === 'string' ? key : messageMapKey(key.sessionId, key.topicId);
-
-    set(
-      produce((draft) => {
-        if (!draft.mainSendMessageOperations[operationKey])
-          draft.mainSendMessageOperations[operationKey] = value;
-        else {
-          if (value === null) {
-            delete draft.mainSendMessageOperations[operationKey];
-          } else {
-            draft.mainSendMessageOperations[operationKey] = {
-              ...draft.mainSendMessageOperations[operationKey],
-              ...value,
-            };
-          }
-        }
-      }),
-      false,
-      actionName ?? n('updateSendMessageOperation', { operationKey, value }),
-    );
   },
 });

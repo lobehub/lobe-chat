@@ -711,14 +711,12 @@ export const chatAiGroupChat: StateCreator<
 
         if (assistantId) {
           const { isFunctionCall } = await internal_fetchAIChatMessage({
-            messages: messagesForAPI,
             messageId: assistantId,
+            messages: messagesForAPI,
             model: agentModel,
             provider: agentProvider,
-            params: {
-              traceId: `group-${groupId}-agent-${agentId}`,
-              agentConfig: agentData,
-            },
+            agentConfig: agentData,
+            traceId: `group-${groupId}-agent-${agentId}`,
           });
 
           // Handle tool calling in group chat like single chat
