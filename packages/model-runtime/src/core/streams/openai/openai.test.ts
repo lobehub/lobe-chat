@@ -2317,6 +2317,155 @@ describe('OpenAIStream', () => {
       );
     });
 
+    it('should handle reasoning_details array format from MiniMax M2', async () => {
+      const data = [
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '',
+                role: 'assistant',
+                name: 'MiniMax AI',
+                audio_content: '',
+                reasoning_details: [
+                  {
+                    type: 'reasoning.text',
+                    id: 'reasoning-text-1',
+                    format: 'MiniMax-response-v1',
+                    index: 0,
+                    text: '中文打招呼说"你好"，',
+                  },
+                ],
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                reasoning_details: [
+                  {
+                    type: 'reasoning.text',
+                    id: 'reasoning-text-2',
+                    format: 'MiniMax-response-v1',
+                    index: 0,
+                    text: '我需要用中文回复。',
+                  },
+                ],
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '你好',
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '！',
+              },
+              finish_reason: null,
+            },
+          ],
+          usage: null,
+        },
+        {
+          id: '055ccc4cbe1ca0dc18037256237d0823',
+          object: 'chat.completion.chunk',
+          created: 1762498892,
+          model: 'MiniMax-M2',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '',
+              },
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 10,
+            completion_tokens: 20,
+            total_tokens: 30,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: reasoning',
+          `data: "中文打招呼说\\"你好\\"，"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: reasoning',
+          `data: "我需要用中文回复。"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: text',
+          `data: "你好"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: text',
+          `data: "！"\n`,
+          'id: 055ccc4cbe1ca0dc18037256237d0823',
+          'event: usage',
+          `data: {"inputTextTokens":10,"outputTextTokens":20,"totalInputTokens":10,"totalOutputTokens":20,"totalTokens":30}\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
     it('should handle claude reasoning in litellm openai mode', async () => {
       const data = [
         {
@@ -3345,6 +3494,167 @@ describe('OpenAIStream', () => {
       expect(chunks[2]).toContain(
         'chat response streaming chunk parse error, please contact your API Provider to fix it.',
       );
+    });
+
+    it('should handle MiniMax base_resp error with insufficient quota (1008)', async () => {
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            id: 'minimax-error-1008',
+            choices: null,
+            base_resp: {
+              status_code: 1008,
+              status_msg: 'insufficient balance',
+            },
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks[0]).toBe('id: minimax-error-1008\n');
+      expect(chunks[1]).toBe('event: error\n');
+      expect(chunks[2]).toContain('InsufficientQuota');
+      expect(chunks[2]).toContain('insufficient balance');
+      expect(chunks[2]).toContain('minimax');
+    });
+
+    it('should handle MiniMax base_resp error with invalid API key (2049)', async () => {
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            id: 'minimax-error-2049',
+            choices: null,
+            base_resp: {
+              status_code: 2049,
+              status_msg: 'invalid API Key',
+            },
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks[0]).toBe('id: minimax-error-2049\n');
+      expect(chunks[1]).toBe('event: error\n');
+      expect(chunks[2]).toContain('InvalidProviderAPIKey');
+      expect(chunks[2]).toContain('invalid API Key');
+    });
+
+    it('should handle MiniMax base_resp error with rate limit (1002)', async () => {
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            id: 'minimax-error-1002',
+            choices: null,
+            base_resp: {
+              status_code: 1002,
+              status_msg: 'request frequency exceeds limit',
+            },
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks[0]).toBe('id: minimax-error-1002\n');
+      expect(chunks[1]).toBe('event: error\n');
+      expect(chunks[2]).toContain('QuotaLimitReached');
+      expect(chunks[2]).toContain('request frequency exceeds limit');
+    });
+
+    it('should handle MiniMax base_resp error with context window exceeded (1039)', async () => {
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            id: 'minimax-error-1039',
+            choices: null,
+            base_resp: {
+              status_code: 1039,
+              status_msg: 'token limit exceeded',
+            },
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks[0]).toBe('id: minimax-error-1039\n');
+      expect(chunks[1]).toBe('event: error\n');
+      expect(chunks[2]).toContain('ExceededContextWindow');
+      expect(chunks[2]).toContain('token limit exceeded');
+    });
+
+    it('should handle MiniMax base_resp error with fallback to ProviderBizError', async () => {
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            id: 'minimax-error-unknown',
+            choices: null,
+            base_resp: {
+              status_code: 9999,
+              status_msg: 'unknown error',
+            },
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks[0]).toBe('id: minimax-error-unknown\n');
+      expect(chunks[1]).toBe('event: error\n');
+      expect(chunks[2]).toContain('ProviderBizError');
+      expect(chunks[2]).toContain('unknown error');
     });
   });
 });
