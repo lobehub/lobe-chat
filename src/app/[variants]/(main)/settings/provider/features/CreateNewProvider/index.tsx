@@ -42,6 +42,15 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
         name: values.name || values.id,
       };
 
+      // 只为 openai 和 router (newapi) 类型的自定义 provider 添加 supportResponsesApi: true
+      const sdkType = values.settings?.sdkType;
+      if (sdkType === 'openai' || sdkType === 'router') {
+        finalValues.settings = {
+          ...finalValues.settings,
+          supportResponsesApi: true,
+        };
+      }
+
       await createNewAiProvider(finalValues);
       setLoading(false);
       navigate(`/settings?active=provider&provider=${values.id}`);
@@ -102,12 +111,16 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
     {
       children: (
         <Select
-          optionRender={({ label, value }) => (
-            <Flexbox align={'center'} gap={8} horizontal>
-              <ProviderIcon provider={value as string} size={18} />
-              {label}
-            </Flexbox>
-          )}
+          optionRender={({ label, value }) => {
+            // Map 'router' to 'newapi' for displaying the correct icon
+            const iconProvider = value === 'router' ? 'newapi' : (value as string);
+            return (
+              <Flexbox align={'center'} gap={8} horizontal>
+                <ProviderIcon provider={iconProvider} size={18} />
+                {label}
+              </Flexbox>
+            );
+          }}
           options={CUSTOM_PROVIDER_SDK_OPTIONS}
           placeholder={t('createNewAiProvider.sdkType.placeholder')}
           variant={'filled'}

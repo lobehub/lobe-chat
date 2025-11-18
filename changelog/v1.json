@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix noisy error notification."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.82"
+  },
+  {
+    "children": {
       "fixes": ["Slove when logout always show loading."]
     },
     "date": "2025-11-18",
