@@ -390,12 +390,10 @@ export const createAgentExecutors = (context: {
           toolMessageId = createResult.id;
           log('[%s][call_tool] Created tool message, id: %s', sessionLogId, toolMessageId);
           context.get().completeOperation(createToolMsgOpId);
-
-          // Associate tool message with toolCalling operation
-          context.get().associateMessageWithOperation(toolMessageId, toolOperationId);
         }
 
         // ============ Sub-operation 2: Execute tool call ============
+        // Auto-associates message with this operation via messageId in context
         const { operationId: executeToolOpId } = context.get().startOperation({
           type: 'executeToolCall',
           context: {
@@ -407,6 +405,13 @@ export const createAgentExecutors = (context: {
             tool_call_id: chatToolPayload.id,
           },
         });
+
+        log(
+          '[%s][call_tool] Created executeToolCall operation %s for message %s',
+          sessionLogId,
+          executeToolOpId,
+          toolMessageId,
+        );
 
         // Register cancel handler: Just update message (message already exists)
         context.get().onOperationCancel(executeToolOpId, async () => {

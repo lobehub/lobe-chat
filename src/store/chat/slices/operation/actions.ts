@@ -215,6 +215,10 @@ export const operationActions: StateCreator<
             state.operationsByMessage[context.messageId] = [];
           }
           state.operationsByMessage[context.messageId].push(operationId);
+
+          // Auto-associate message with this operation (most granular)
+          // This allows tools to access the correct AbortController via messageOperationMap
+          state.messageOperationMap[context.messageId] = operationId;
         }
 
         // Update context index (if sessionId exists)

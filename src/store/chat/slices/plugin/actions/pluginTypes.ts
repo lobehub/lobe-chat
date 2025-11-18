@@ -60,29 +60,6 @@ export const pluginTypes: StateCreator<
   PluginTypesAction
 > = (set, get) => ({
   invokeBuiltinTool: async (id, payload) => {
-    // Get abort controller from operation
-    const operationId = get().messageOperationMap[id];
-    const operation = operationId ? get().operations[operationId] : undefined;
-    const abortController = operation?.abortController;
-
-    log(
-      '[invokeBuiltinTool] messageId=%s, tool=%s, operationId=%s, aborted=%s',
-      id,
-      payload.apiName,
-      operationId,
-      abortController?.signal.aborted,
-    );
-
-    // Check if already aborted before execution
-    if (abortController?.signal.aborted) {
-      log(
-        '[invokeBuiltinTool] Aborted before execution: messageId=%s, tool=%s',
-        id,
-        payload.apiName,
-      );
-      throw new Error('The user aborted a request.');
-    }
-
     // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
