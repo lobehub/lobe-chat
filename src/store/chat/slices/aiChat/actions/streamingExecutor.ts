@@ -798,7 +798,10 @@ export const streamingExecutor: StateCreator<
         state = { ...state, status: 'interrupted' };
 
         // Let agent handle the abort (will clean up pending tools if needed)
-        const abortResult = await runtime.step(state, nextContext || result.nextContext);
+        // Use result.nextContext if available (e.g., llm_result with tool calls)
+        // otherwise fallback to current nextContext
+        const contextForAbort = result.nextContext || nextContext;
+        const abortResult = await runtime.step(state, contextForAbort);
         state = abortResult.newState;
 
         log('[internal_execAgentRuntime] Operation cancelled, stopping loop');

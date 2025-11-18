@@ -595,6 +595,80 @@ describe('StreamingExecutor actions', () => {
       streamSpy.mockRestore();
     });
 
+    it('should resolve aborted tools when cancelled after LLM returns tool calls', async () => {
+      act(() => {
+        useChatStore.setState({ internal_execAgentRuntime: realExecAgentRuntime });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const userMessage = {
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        content: TEST_CONTENT.USER_MESSAGE,
+        sessionId: TEST_IDS.SESSION_ID,
+        topicId: TEST_IDS.TOPIC_ID,
+      } as UIChatMessage;
+
+      let cancelledAfterLLM = false;
+      let streamCallCount = 0;
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onFinish }) => {
+          streamCallCount++;
+
+          // First call - LLM returns with tool calls
+          if (streamCallCount === 1) {
+            await onFinish?.(TEST_CONTENT.AI_RESPONSE, {
+              toolCalls: [
+                {
+                  id: 'tool-1',
+                  type: 'function',
+                  function: { name: 'weatherQuery', arguments: '{"city":"Beijing"}' },
+                },
+                {
+                  id: 'tool-2',
+                  type: 'function',
+                  function: { name: 'calculator', arguments: '{"expression":"1+1"}' },
+                },
+              ],
+            } as any);
+
+            // User cancels after LLM completes but before tool execution
+            await new Promise((resolve) => setTimeout(resolve, 20));
+            const operations = Object.values(result.current.operations);
+            const execOperation = operations.find((op) => op.type === 'execAgentRuntime');
+            if (execOperation && execOperation.status === 'running') {
+              act(() => {
+                result.current.cancelOperation(execOperation.id, 'user_cancelled');
+              });
+              cancelledAfterLLM = true;
+            }
+          }
+        });
+
+      await act(async () => {
+        await result.current.internal_execAgentRuntime({
+          messages: [userMessage],
+          parentMessageId: userMessage.id,
+          parentMessageType: 'user',
+        });
+      });
+
+      // Verify cancellation happened after LLM call
+      expect(cancelledAfterLLM).toBe(true);
+
+      // Verify only one LLM call was made (no tool execution happened)
+      expect(streamCallCount).toBe(1);
+
+      // Verify the agent runtime completed (not just cancelled mid-flight)
+      const operations = Object.values(result.current.operations);
+      const execOperation = operations.find((op) => op.type === 'execAgentRuntime');
+      expect(execOperation?.status).toBe('completed');
+
+      streamSpy.mockRestore();
+    });
+
     it('should use provided sessionId/topicId for trace parameters', async () => {
       act(() => {
         useChatStore.setState({
