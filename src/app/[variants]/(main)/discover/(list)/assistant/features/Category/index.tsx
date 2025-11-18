@@ -29,7 +29,7 @@ const Category = memo(() => {
     qs.stringifyUrl(
       {
         query: { category: key === AssistantCategory.All ? null : key, q, source },
-        url: '/assistant',
+        url: '/discover/assistant',
       },
       { skipNull: true },
     );
