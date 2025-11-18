@@ -3,8 +3,8 @@
 import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
-import { ArrowLeft, BookOpen, Monitor, Moon, Palette, Settings, Sun } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { ArrowLeft, BookOpen, Compass, Monitor, Moon, Palette, Settings, Sun } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -184,6 +184,7 @@ const Cmdk = memo(() => {
   const [search, setSearch] = useState('');
   const [pages, setPages] = useState<string[]>([]);
   const router = useRouter();
+  const pathname = usePathname();
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
@@ -276,24 +277,42 @@ const Cmdk = memo(() => {
 
             {!page && (
               <>
-                <Command.Item onSelect={() => handleNavigate('/settings')} value="settings">
-                  <Settings className={styles.icon} />
-                  <div className={styles.itemContent}>
-                    <div className={styles.itemLabel}>{t('cmdk.openSettings')}</div>
-                  </div>
-                </Command.Item>
-                <Command.Item onSelect={() => handleNavigate('/image')} value="painting">
-                  <Palette className={styles.icon} />
-                  <div className={styles.itemContent}>
-                    <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
-                  </div>
-                </Command.Item>
-                <Command.Item onSelect={() => handleNavigate('/knowledge')} value="knowledge">
-                  <BookOpen className={styles.icon} />
-                  <div className={styles.itemContent}>
-                    <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
-                  </div>
-                </Command.Item>
+                {!pathname?.startsWith('/settings') && (
+                  <Command.Item onSelect={() => handleNavigate('/settings')} value="settings">
+                    <Settings className={styles.icon} />
+                    <div className={styles.itemContent}>
+                      <div className={styles.itemLabel}>{t('cmdk.openSettings')}</div>
+                    </div>
+                  </Command.Item>
+                )}
+
+                <Command.Group heading={t('cmdk.navigate')}>
+                  {!pathname?.startsWith('/discover') && (
+                    <Command.Item onSelect={() => handleNavigate('/discover')} value="discover">
+                      <Compass className={styles.icon} />
+                      <div className={styles.itemContent}>
+                        <div className={styles.itemLabel}>{t('cmdk.discover')}</div>
+                      </div>
+                    </Command.Item>
+                  )}
+                  {!pathname?.startsWith('/image') && (
+                    <Command.Item onSelect={() => handleNavigate('/image')} value="painting">
+                      <Palette className={styles.icon} />
+                      <div className={styles.itemContent}>
+                        <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
+                      </div>
+                    </Command.Item>
+                  )}
+                  {!pathname?.startsWith('/knowledge') && (
+                    <Command.Item onSelect={() => handleNavigate('/knowledge')} value="knowledge">
+                      <BookOpen className={styles.icon} />
+                      <div className={styles.itemContent}>
+                        <div className={styles.itemLabel}>{t('cmdk.knowledgeBase')}</div>
+                      </div>
+                    </Command.Item>
+                  )}
+                </Command.Group>
+
                 <Command.Item onSelect={() => setPages([...pages, 'theme'])} value="theme">
                   <Monitor className={styles.icon} />
                   <div className={styles.itemContent}>

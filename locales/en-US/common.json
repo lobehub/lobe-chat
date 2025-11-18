@@ -136,7 +136,9 @@
   },
   "close": "Close",
   "cmdk": {
+    "discover": "Discover",
     "knowledgeBase": "Knowledge Base",
+    "navigate": "Navigate",
     "noResults": "No results found",
     "openSettings": "Open Settings",
     "painting": "AI Painting",

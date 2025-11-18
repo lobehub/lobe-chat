@@ -139,7 +139,9 @@ export default {
   },
   close: '关闭',
   cmdk: {
+    discover: '发现',
     knowledgeBase: '知识库',
+    navigate: '导航',
     noResults: '未找到相关结果',
     openSettings: '打开设置',
     painting: 'AI 绘画',
