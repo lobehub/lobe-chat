@@ -52,12 +52,11 @@ export const buildOidcConfig = ({
   scopes = DEFAULT_OIDC_SCOPES,
   pkce = true,
   overrides,
-}: OIDCProviderInput): GenericOAuthConfig | undefined => {
+}: OIDCProviderInput): GenericOAuthConfig => {
   const sanitizedIssuer = issuer?.trim();
 
   if (!clientId || !clientSecret || !sanitizedIssuer) {
-    console.warn(`[Better-Auth] ${providerId} OAuth enabled but missing credentials`);
-    return undefined;
+    throw new Error(`[Better-Auth] ${providerId} OAuth enabled but missing credentials`);
   }
 
   const normalizedIssuer = sanitizedIssuer.replace(/\/$/, '');

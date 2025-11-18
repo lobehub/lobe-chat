@@ -51,27 +51,35 @@ for (const definition of providerDefinitions) {
 export const initBetterAuthSSOProviders = () => {
   const enabledProviders = parseSSOProviders(authEnv.BETTER_AUTH_SSO_PROVIDERS);
 
-  const socialProviders: Partial<
-    Record<keyof SocialProviders, SocialProviders[keyof SocialProviders]>
-  > = {};
+  const socialProviders: SocialProviders = {};
   const genericOAuthProviders: GenericOAuthConfig[] = [];
 
   for (const rawProvider of enabledProviders) {
     const definition = providerRegistry.get(rawProvider);
 
     if (!definition) {
-      console.warn(`[Better-Auth] Unknown SSO provider: ${rawProvider}`);
-      continue;
+      throw new Error(`[Better-Auth] Unknown SSO provider: ${rawProvider}`);
     }
 
-    if (definition.type === 'social') {
-      const providerId = definition.id;
+    /**
+     * Providers expose checkEnvs predicates so we can fail fast when credentials are missing instead
+     * of encountering harder-to-trace errors later in the Better-Auth pipeline.
+     */
+    if (!definition.checkEnvs()) {
+      throw new Error(
+        `[Better-Auth] ${rawProvider} SSO provider environment variables are not set correctly!`,
+      );
+    }
 
-      if (socialProviders[providerId]) continue;
+    if (definition.type === 'builtin') {
+      const providerId = definition.id;
+      if (socialProviders[providerId]) {
+        throw new Error(`[Better-Auth] Duplicate SSO provider: ${providerId}`);
+      }
 
       const config = definition.build();
-
       if (config) {
+        // @ts-expect-error hard to type
         socialProviders[providerId] = config;
       }
 
@@ -87,6 +95,6 @@ export const initBetterAuthSSOProviders = () => {
 
   return {
     genericOAuthProviders,
-    socialProviders: socialProviders as SocialProviders,
+    socialProviders: socialProviders,
   };
 };

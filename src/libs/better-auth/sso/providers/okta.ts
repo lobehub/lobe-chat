@@ -1,9 +1,9 @@
 import { authEnv } from '@/envs/auth';
 
 import { buildOidcConfig } from '../helpers';
-import type { BetterAuthProviderDefinition } from '../types';
+import type { GenericProviderDefinition } from '../types';
 
-const provider: BetterAuthProviderDefinition = {
+const provider: GenericProviderDefinition = {
   build: () =>
     buildOidcConfig({
       clientId: authEnv.AUTH_OKTA_ID,
@@ -11,6 +11,9 @@ const provider: BetterAuthProviderDefinition = {
       issuer: authEnv.AUTH_OKTA_ISSUER,
       providerId: 'okta',
     }),
+  checkEnvs: () => {
+    return !!(authEnv.AUTH_OKTA_ID && authEnv.AUTH_OKTA_SECRET && authEnv.AUTH_OKTA_ISSUER);
+  },
   id: 'okta',
   type: 'generic',
 };

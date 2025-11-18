@@ -1,9 +1,9 @@
 import { authEnv } from '@/envs/auth';
 
 import { pickEnv } from '../helpers';
-import type { BetterAuthProviderDefinition } from '../types';
+import type { BuiltinProviderDefinition } from '../types';
 
-const provider: BetterAuthProviderDefinition = {
+const provider: BuiltinProviderDefinition<'microsoft'> = {
   aliases: ['microsoft-entra-id'],
   build: () => {
     const clientId = pickEnv(
@@ -29,8 +29,11 @@ const provider: BetterAuthProviderDefinition = {
     console.warn(`[Better-Auth] Microsoft OAuth enabled but missing credentials`);
     return undefined;
   },
+  checkEnvs: () => {
+    return !!(authEnv.MICROSOFT_CLIENT_ID && authEnv.MICROSOFT_CLIENT_SECRET);
+  },
   id: 'microsoft',
-  type: 'social',
+  type: 'builtin',
 };
 
 export default provider;

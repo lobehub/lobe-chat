@@ -1,8 +1,8 @@
 import { authEnv } from '@/envs/auth';
 
-import type { BetterAuthProviderDefinition } from '../types';
+import type { BuiltinProviderDefinition } from '../types';
 
-const provider: BetterAuthProviderDefinition = {
+const provider: BuiltinProviderDefinition<'google'> = {
   build: () => {
     if (authEnv.GOOGLE_CLIENT_ID && authEnv.GOOGLE_CLIENT_SECRET) {
       return {
@@ -14,8 +14,11 @@ const provider: BetterAuthProviderDefinition = {
     console.warn(`[Better-Auth] Google OAuth enabled but missing credentials`);
     return undefined;
   },
+  checkEnvs: () => {
+    return !!(authEnv.GOOGLE_CLIENT_ID && authEnv.GOOGLE_CLIENT_SECRET);
+  },
   id: 'google',
-  type: 'social',
+  type: 'builtin',
 };
 
 export default provider;

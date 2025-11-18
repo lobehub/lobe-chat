@@ -1,9 +1,9 @@
 import { authEnv } from '@/envs/auth';
 
 import { buildOidcConfig } from '../helpers';
-import type { BetterAuthProviderDefinition } from '../types';
+import type { GenericProviderDefinition } from '../types';
 
-const provider: BetterAuthProviderDefinition = {
+const provider: GenericProviderDefinition = {
   build: () =>
     buildOidcConfig({
       clientId: authEnv.AUTH_AUTHENTIK_ID,
@@ -11,6 +11,13 @@ const provider: BetterAuthProviderDefinition = {
       issuer: authEnv.AUTH_AUTHENTIK_ISSUER,
       providerId: 'authentik',
     }),
+  checkEnvs: () => {
+    return !!(
+      authEnv.AUTH_AUTHENTIK_ID &&
+      authEnv.AUTH_AUTHENTIK_SECRET &&
+      authEnv.AUTH_AUTHENTIK_ISSUER
+    );
+  },
   id: 'authentik',
   type: 'generic',
 };

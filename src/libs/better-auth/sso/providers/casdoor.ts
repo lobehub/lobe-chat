@@ -1,9 +1,9 @@
 import { authEnv } from '@/envs/auth';
 
 import { buildOidcConfig } from '../helpers';
-import type { BetterAuthProviderDefinition } from '../types';
+import type { GenericProviderDefinition } from '../types';
 
-const provider: BetterAuthProviderDefinition = {
+const provider: GenericProviderDefinition = {
   build: () =>
     buildOidcConfig({
       clientId: authEnv.AUTH_CASDOOR_ID,
@@ -11,6 +11,13 @@ const provider: BetterAuthProviderDefinition = {
       issuer: authEnv.AUTH_CASDOOR_ISSUER,
       providerId: 'casdoor',
     }),
+  checkEnvs: () => {
+    return !!(
+      authEnv.AUTH_CASDOOR_ID &&
+      authEnv.AUTH_CASDOOR_SECRET &&
+      authEnv.AUTH_CASDOOR_ISSUER
+    );
+  },
   id: 'casdoor',
   type: 'generic',
 };

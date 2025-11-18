@@ -1,8 +1,8 @@
 import { authEnv } from '@/envs/auth';
 
-import type { BetterAuthProviderDefinition } from '../types';
+import type { BuiltinProviderDefinition } from '../types';
 
-const provider: BetterAuthProviderDefinition = {
+const provider: BuiltinProviderDefinition<'cognito'> = {
   build: () => {
     if (
       authEnv.COGNITO_CLIENT_ID &&
@@ -23,8 +23,17 @@ const provider: BetterAuthProviderDefinition = {
     console.warn(`[Better-Auth] AWS Cognito OAuth enabled but missing credentials`);
     return undefined;
   },
+  checkEnvs: () => {
+    return !!(
+      authEnv.COGNITO_CLIENT_ID &&
+      authEnv.COGNITO_CLIENT_SECRET &&
+      authEnv.COGNITO_DOMAIN &&
+      authEnv.COGNITO_REGION &&
+      authEnv.COGNITO_USERPOOL_ID
+    );
+  },
   id: 'cognito',
-  type: 'social',
+  type: 'builtin',
 };
 
 export default provider;

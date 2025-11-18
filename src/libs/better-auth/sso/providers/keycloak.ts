@@ -1,9 +1,9 @@
 import { authEnv } from '@/envs/auth';
 
 import { buildOidcConfig } from '../helpers';
-import type { BetterAuthProviderDefinition } from '../types';
+import type { GenericProviderDefinition } from '../types';
 
-const provider: BetterAuthProviderDefinition = {
+const provider: GenericProviderDefinition = {
   build: () =>
     buildOidcConfig({
       clientId: authEnv.AUTH_KEYCLOAK_ID,
@@ -11,6 +11,13 @@ const provider: BetterAuthProviderDefinition = {
       issuer: authEnv.AUTH_KEYCLOAK_ISSUER,
       providerId: 'keycloak',
     }),
+  checkEnvs: () => {
+    return !!(
+      authEnv.AUTH_KEYCLOAK_ID &&
+      authEnv.AUTH_KEYCLOAK_SECRET &&
+      authEnv.AUTH_KEYCLOAK_ISSUER
+    );
+  },
   id: 'keycloak',
   type: 'generic',
 };
