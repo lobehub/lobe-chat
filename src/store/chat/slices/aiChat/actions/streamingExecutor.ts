@@ -76,6 +76,7 @@ export interface StreamingExecutorAction {
     tool_calls?: MessageToolCall[];
     content: string;
     traceId?: string;
+    finishType?: string;
     usage?: ModelUsage;
   }>;
   /**
@@ -281,6 +282,7 @@ export const streamingExecutor: StateCreator<
     let thinkingStartAt: number;
     let duration: number | undefined;
     let reasoningOperationId: string | undefined;
+    let finishType: string | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
@@ -324,7 +326,7 @@ export const streamingExecutor: StateCreator<
       },
       onFinish: async (
         content,
-        { traceId, observationId, toolCalls, reasoning, grounding, usage, speed },
+        { traceId, observationId, toolCalls, reasoning, grounding, usage, speed, type },
       ) => {
         // if there is traceId, update it
         if (traceId) {
@@ -372,6 +374,7 @@ export const streamingExecutor: StateCreator<
         }
 
         finalUsage = usage;
+        finishType = type;
 
         // update the content after fetch result
         await optimisticUpdateMessageContent(
@@ -384,7 +387,7 @@ export const streamingExecutor: StateCreator<
               : undefined,
             search: !!grounding?.citations ? grounding : undefined,
             imageList: finalImages.length > 0 ? finalImages : undefined,
-            metadata: { ...usage, ...speed, performance: speed, usage },
+            metadata: { ...usage, ...speed, performance: speed, usage, finishType: type },
           },
           { operationId },
         );
@@ -531,6 +534,7 @@ export const streamingExecutor: StateCreator<
       tools,
       usage: finalUsage,
       tool_calls,
+      finishType,
     };
   },
 
