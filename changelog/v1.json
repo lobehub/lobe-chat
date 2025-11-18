@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-18",
+    "version": "2.0.0-next.75"
+  },
+  {
+    "children": {
       "features": ["Edit local file render & intervention."]
     },
     "date": "2025-11-17",
