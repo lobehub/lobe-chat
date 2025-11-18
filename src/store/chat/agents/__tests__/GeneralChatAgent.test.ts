@@ -729,6 +729,49 @@ describe('GeneralChatAgent', () => {
     });
   });
 
+  describe('unified abort check', () => {
+    it('should handle abort at human_abort phase when state is interrupted', async () => {
+      const agent = new GeneralChatAgent({
+        agentConfig: { maxSteps: 100 },
+        sessionId: 'test-session',
+        modelRuntimeConfig: mockModelRuntimeConfig,
+      });
+
+      const toolCalls: ChatToolPayload[] = [
+        {
+          apiName: 'search',
+          arguments: '{"query":"test"}',
+          id: 'call-1',
+          identifier: 'lobe-web-browsing',
+          type: 'default',
+        },
+      ];
+
+      const state = createMockState({
+        status: 'interrupted', // Trigger unified abort check
+      });
+
+      const context = createMockContext('human_abort', {
+        reason: 'user_cancelled',
+        parentMessageId: 'msg-123',
+        hasToolsCalling: true,
+        toolsCalling: toolCalls,
+        result: { content: '', tool_calls: [] },
+      });
+
+      const result = await agent.runner(context, state);
+
+      // Should handle abort via extractAbortInfo and return resolve_aborted_tools
+      expect(result).toEqual({
+        type: 'resolve_aborted_tools',
+        payload: {
+          parentMessageId: 'msg-123',
+          toolsCalling: toolCalls,
+        },
+      });
+    });
+  });
+
   describe('human_abort phase', () => {
     it('should return resolve_aborted_tools when there are pending tool calls', async () => {
       const agent = new GeneralChatAgent({
