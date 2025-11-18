@@ -2,10 +2,10 @@ import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import { isDesktop } from '@/const/version';
+import NavPanel from '@/features/NavPanel';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
 
 import RegisterHotkeys from './RegisterHotkeys';
-import SessionPanel from './SessionPanel';
 import Workspace from './Workspace';
 
 const Layout = () => {
@@ -17,7 +17,7 @@ const Layout = () => {
         style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
         width={'100%'}
       >
-        <SessionPanel />
+        <NavPanel />
         <Workspace>
           <Outlet />
         </Workspace>

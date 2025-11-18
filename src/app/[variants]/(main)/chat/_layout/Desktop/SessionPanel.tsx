@@ -7,13 +7,13 @@ import { memo, useEffect, useMemo, useState } from 'react';
 
 import { withSuspense } from '@/components/withSuspense';
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
+import { TOOGLE_PANEL_BUTTON_ID } from '@/features/NavPanel/Header/components/TogglePanelButton';
 import { useIsSingleMode } from '@/hooks/useIsSingleMode';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import SessionPanelContent from '../../components/SessionPanel';
-import { TOOGLE_PANEL_BUTTON_ID } from '../../features/TogglePanelButton';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`

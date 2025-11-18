@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
+import TogglePanelButton from '@/features/NavPanel/Header/components/TogglePanelButton';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
@@ -19,7 +20,6 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { GroupMemberWithAgent } from '@/types/session';
 
-import TogglePanelButton from '../../../../features/TogglePanelButton';
 import Tags from './Tags';
 
 const useStyles = createStyles(({ css }) => ({

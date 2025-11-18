@@ -2,7 +2,7 @@
 
 import { ActionIcon, Tooltip } from '@lobehub/ui';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
@@ -24,8 +24,15 @@ const TogglePanelButton = memo(() => {
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
+  const handleTogglePanel = useCallback(() => {
+    updateSystemStatus({
+      sessionsWidth: showSessionPanel ? 0 : 320,
+      showSessionPanel: !showSessionPanel,
+    });
+  }, [showSessionPanel, updateSystemStatus]);
+
   if (isSingleMode) {
-    return null
+    return null;
   }
 
   return (
@@ -33,12 +40,7 @@ const TogglePanelButton = memo(() => {
       <ActionIcon
         icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
         id={TOOGLE_PANEL_BUTTON_ID}
-        onClick={() => {
-          updateSystemStatus({
-            sessionsWidth: showSessionPanel ? 0 : 320,
-            showSessionPanel: !showSessionPanel,
-          });
-        }}
+        onClick={handleTogglePanel}
         size={DESKTOP_HEADER_ICON_SIZE}
       />
     </Tooltip>

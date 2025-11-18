@@ -12,6 +12,7 @@ import { ChatGroupWizard } from '@/components/ChatGroupWizard';
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
+import TogglePanelButton from '@/features/NavPanel/Header/components/TogglePanelButton';
 import { useActionSWR } from '@/libs/swr';
 import { useChatGroupStore } from '@/store/chatGroup';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -19,7 +20,6 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/slices/session/selectors';
 import { LobeAgentSession } from '@/types/session';
 
-import TogglePanelButton from '../../../features/TogglePanelButton';
 import SessionSearchBar from '../../features/SessionSearchBar';
 
 export const useStyles = createStyles(({ css, token }) => ({

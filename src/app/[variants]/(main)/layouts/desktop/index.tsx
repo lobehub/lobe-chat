@@ -2,7 +2,7 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { Suspense, memo } from 'react';
+import { memo } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
@@ -53,17 +53,13 @@ const Layout = memo((props: { locale: Locales }) => {
           </DesktopLayoutContainer>
         ) : (
           <>
-            <Suspense>
-              <SideBar />
-            </Suspense>
+            <SideBar />
             <Outlet context={{ locale: locale }} />
           </>
         )}
       </Flexbox>
       <HotkeyHelperPanel />
-      <Suspense>
-        <RegisterHotkeys />
-      </Suspense>
+      <RegisterHotkeys />
     </HotkeysProvider>
   );
 });
