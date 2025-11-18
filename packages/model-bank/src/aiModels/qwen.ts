@@ -5,6 +5,31 @@ import { AIChatModelCard, AIImageModelCard } from '../types/aiModel';
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'kimi-k2-thinking模型是月之暗面提供的具有通用 Agentic能力和推理能力的思考模型，它擅长深度推理，并可通过多步工具调用，帮助解决各类难题。',
+    displayName: 'Kimi K2 Thinking',
+    id: 'kimi-k2-thinking',
+    maxOutput: 16_384,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-10',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
       vision: true,
     },
@@ -109,6 +134,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -131,6 +157,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description: 'DeepSeek V3.1 模型为混合推理架构模型，同时支持思考模式与非思考模式。',
@@ -151,6 +178,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       search: true,
     },
     contextWindowTokens: 131_072,
@@ -1974,7 +2002,9 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -1994,6 +2024,10 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
     contextWindowTokens: 65_536,
     description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
