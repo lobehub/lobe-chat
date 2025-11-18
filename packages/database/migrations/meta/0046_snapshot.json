@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "9580e04c-4b1c-4b42-9815-8c2842ea8963",
+  "id": "abe0cb47-a970-4ec0-a29f-1afa9bd2fe02",
   "policies": {},
   "prevId": "c42351cc-4132-4ef6-ae89-5396ac8d8095",
   "roles": {},
@@ -1453,7 +1453,7 @@
         },
         "parent_id": {
           "name": "parent_id",
-          "type": "varchar(30)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },

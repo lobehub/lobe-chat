@@ -135,7 +135,7 @@ export const files = pgTable(
 
     // 父文档（用于文件夹层级结构）
     // @ts-ignore
-    parentId: varchar('parent_id', { length: 30 }).references(() => documents.id, {
+    parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
       onDelete: 'set null',
     }),
 

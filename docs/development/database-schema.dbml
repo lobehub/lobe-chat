@@ -209,7 +209,7 @@ table files {
   size integer [not null]
   url text [not null]
   source text
-  parent_id varchar(30)
+  parent_id varchar(255)
   client_id text
   metadata jsonb
   chunk_task_id uuid
