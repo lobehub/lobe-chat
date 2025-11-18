@@ -7,7 +7,7 @@ BEGIN
     AND table_name = 'documents'
     AND column_name = 'parent_id'
   ) THEN
-    ALTER TABLE "documents" ADD COLUMN "parent_id" varchar(30);
+    ALTER TABLE "documents" ADD COLUMN "parent_id" varchar(255);
   END IF;
 END $$;
 --> statement-breakpoint
@@ -21,7 +21,7 @@ BEGIN
     AND table_name = 'files'
     AND column_name = 'parent_id'
   ) THEN
-    ALTER TABLE "files" ADD COLUMN "parent_id" varchar(30);
+    ALTER TABLE "files" ADD COLUMN "parent_id" varchar(255);
   END IF;
 END $$;
 --> statement-breakpoint
