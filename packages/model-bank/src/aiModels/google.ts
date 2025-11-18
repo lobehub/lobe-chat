@@ -123,6 +123,60 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
+      'Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。',
+    displayName: 'Gemini 3 Pro Preview',
+    enabled: true,
+    id: 'gemini-3-pro-preview',
+    maxOutput: 65_536,
+    pricing: {
+      units: [
+        {
+          name: 'textInput_cacheRead',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 0.31, upTo: 200_000 },
+            { rate: 0.625, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textInput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 2, upTo: 200_000 },
+            { rate: 4, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+        {
+          name: 'textOutput',
+          strategy: 'tiered',
+          tiers: [
+            { rate: 12, upTo: 200_000 },
+            { rate: 18, upTo: 'infinity' },
+          ],
+          unit: 'millionTokens',
+        },
+      ],
+    },
+    releasedAt: '2025-11-18',
+    settings: {
+      extendParams: ['thinkingBudget', 'urlContext'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      video: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description:
       'Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro',
     enabled: true,
@@ -541,26 +595,6 @@ const googleChatModels: AIChatModelCard[] = [
       searchImpl: 'params',
       searchProvider: 'google',
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      imageOutput: true,
-      vision: true,
-    },
-    contextWindowTokens: 32_768 + 8192,
-    description: 'Gemini 2.0 Flash 预览模型，支持图像生成',
-    displayName: 'Gemini 2.0 Flash Preview Image Generation',
-    id: 'gemini-2.0-flash-preview-image-generation',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'imageGeneration', rate: 0.039, strategy: 'fixed', unit: 'image' },
-      ],
-    },
-    releasedAt: '2025-05-07',
     type: 'chat',
   },
   {
