@@ -498,6 +498,101 @@ describe('AI Chat Operation Integration Tests', () => {
     });
   });
 
+  describe('Tool Execution Cancellation', () => {
+    it('should abort tool execution when executeToolCall operation is cancelled', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'tool-msg-1';
+
+      // Create toolCalling parent operation
+      let toolCallingOpId = '';
+      act(() => {
+        toolCallingOpId = result.current.startOperation({
+          type: 'toolCalling',
+          context: { sessionId: 'session-1', messageId },
+        }).operationId;
+      });
+
+      // Create executeToolCall child operation
+      let executeToolOpId = '';
+      let executeToolAbortController: AbortController | undefined;
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'executeToolCall',
+          context: { sessionId: 'session-1', messageId },
+          parentOperationId: toolCallingOpId,
+        });
+        executeToolOpId = res.operationId;
+        executeToolAbortController = res.abortController;
+      });
+
+      // Associate message with executeToolCall operation (not parent)
+      act(() => {
+        result.current.associateMessageWithOperation(messageId, executeToolOpId);
+      });
+
+      // Verify message is associated with executeToolCall operation
+      expect(result.current.messageOperationMap[messageId]).toBe(executeToolOpId);
+
+      // Verify abort signal is not aborted yet
+      expect(executeToolAbortController!.signal.aborted).toBe(false);
+
+      // Cancel parent toolCalling operation (should cascade to child)
+      act(() => {
+        result.current.cancelOperation(toolCallingOpId, 'User stopped');
+      });
+
+      // Verify both operations are cancelled
+      expect(result.current.operations[toolCallingOpId].status).toBe('cancelled');
+      expect(result.current.operations[executeToolOpId].status).toBe('cancelled');
+
+      // Verify abort signal is triggered
+      expect(executeToolAbortController!.signal.aborted).toBe(true);
+
+      // Verify tool can check abort status via messageOperationMap
+      const toolOperation =
+        result.current.operations[result.current.messageOperationMap[messageId]];
+      expect(toolOperation.status).toBe('cancelled');
+      expect(toolOperation.abortController.signal.aborted).toBe(true);
+    });
+
+    it('should allow tool execution to check abort signal before starting', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'tool-msg-2';
+
+      // Create and immediately cancel executeToolCall operation
+      let executeToolOpId = '';
+      let abortController: AbortController | undefined;
+
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'executeToolCall',
+          context: { sessionId: 'session-1', messageId },
+        });
+        executeToolOpId = res.operationId;
+        abortController = res.abortController;
+      });
+
+      // Associate message
+      act(() => {
+        result.current.associateMessageWithOperation(messageId, executeToolOpId);
+      });
+
+      // Cancel immediately
+      act(() => {
+        result.current.cancelOperation(executeToolOpId, 'Cancelled before execution');
+      });
+
+      // Simulate tool checking abort signal before execution
+      const operationId = result.current.messageOperationMap[messageId];
+      const operation = operationId ? result.current.operations[operationId] : undefined;
+      const toolAbortController = operation?.abortController;
+
+      // Tool should detect cancellation
+      expect(toolAbortController?.signal.aborted).toBe(true);
+      expect(operation?.status).toBe('cancelled');
+    });
+  });
+
   describe('Operation State Queries', () => {
     it('should correctly report AI generation state', () => {
       const { result } = renderHook(() => useChatStore());

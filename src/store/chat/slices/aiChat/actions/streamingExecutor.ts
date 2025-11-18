@@ -234,10 +234,11 @@ export const streamingExecutor: StateCreator<
       topicId = operation.context.topicId;
       abortController = operation.abortController; // 👈 Use operation's abortController
       log(
-        '[internal_fetchAIChatMessage] get context from operation %s: sessionId=%s, topicId=%s',
+        '[internal_fetchAIChatMessage] get context from operation %s: sessionId=%s, topicId=%s, aborted=%s',
         operationId,
         sessionId,
         topicId,
+        abortController.signal.aborted,
       );
       // Get traceId from operation metadata if not explicitly provided
       if (!traceId) {
@@ -322,6 +323,12 @@ export const streamingExecutor: StateCreator<
         traceName: TraceNameMap.Conversation,
       },
       onErrorHandle: async (error) => {
+        log(
+          '[internal_fetchAIChatMessage] onError: messageId=%s, error=%s, operationId=%s',
+          messageId,
+          error.message,
+          operationId,
+        );
         await get().optimisticUpdateMessageError(messageId, error, { operationId });
       },
       onFinish: async (
@@ -375,6 +382,13 @@ export const streamingExecutor: StateCreator<
 
         finalUsage = usage;
         finishType = type;
+
+        log(
+          '[internal_fetchAIChatMessage] onFinish: messageId=%s, finishType=%s, operationId=%s',
+          messageId,
+          type,
+          operationId,
+        );
 
         // update the content after fetch result
         await optimisticUpdateMessageContent(
@@ -526,6 +540,14 @@ export const streamingExecutor: StateCreator<
         }
       },
     });
+
+    log(
+      '[internal_fetchAIChatMessage] completed: messageId=%s, finishType=%s, isFunctionCall=%s, operationId=%s',
+      messageId,
+      finishType,
+      isFunctionCall,
+      operationId,
+    );
 
     return {
       isFunctionCall,

@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { ChatToolPayload } from '@lobechat/types';
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import debug from 'debug';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -13,6 +14,8 @@ import { useToolStore } from '@/store/tool';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { dbMessageSelectors } from '../../message/selectors';
+
+const log = debug('lobe-store:plugin-types');
 
 /**
  * Plugin type-specific implementations
@@ -57,6 +60,29 @@ export const pluginTypes: StateCreator<
   PluginTypesAction
 > = (set, get) => ({
   invokeBuiltinTool: async (id, payload) => {
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
+
+    log(
+      '[invokeBuiltinTool] messageId=%s, tool=%s, operationId=%s, aborted=%s',
+      id,
+      payload.apiName,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
+    // Check if already aborted before execution
+    if (abortController?.signal.aborted) {
+      log(
+        '[invokeBuiltinTool] Aborted before execution: messageId=%s, tool=%s',
+        id,
+        payload.apiName,
+      );
+      throw new Error('The user aborted a request.');
+    }
+
     // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
@@ -136,6 +162,14 @@ export const pluginTypes: StateCreator<
     const operation = operationId ? get().operations[operationId] : undefined;
     const abortController = operation?.abortController;
 
+    log(
+      '[invokeMCPTypePlugin] messageId=%s, tool=%s, operationId=%s, aborted=%s',
+      id,
+      payload.apiName,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
     try {
       const context = internal_constructToolsCallingContext(id);
       const result = await mcpService.invokeMcpToolCall(payload, {
@@ -149,7 +183,9 @@ export const pluginTypes: StateCreator<
       const err = error as Error;
 
       // ignore the aborted request error
-      if (!err.message.includes('The user aborted a request.')) {
+      if (err.message.includes('The user aborted a request.')) {
+        log('[invokeMCPTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
+      } else {
         const result = await messageService.updateMessageError(id, error as any, {
           sessionId: message?.sessionId,
           topicId: message?.topicId,
@@ -193,6 +229,14 @@ export const pluginTypes: StateCreator<
     const operation = operationId ? get().operations[operationId] : undefined;
     const abortController = operation?.abortController;
 
+    log(
+      '[internal_callPluginApi] messageId=%s, plugin=%s, operationId=%s, aborted=%s',
+      id,
+      payload.identifier,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
     try {
       const res = await chatService.runPluginApi(payload, {
         signal: abortController?.signal,
@@ -209,7 +253,13 @@ export const pluginTypes: StateCreator<
       const err = error as Error;
 
       // ignore the aborted request error
-      if (!err.message.includes('The user aborted a request.')) {
+      if (err.message.includes('The user aborted a request.')) {
+        log(
+          '[internal_callPluginApi] Request aborted: messageId=%s, plugin=%s',
+          id,
+          payload.identifier,
+        );
+      } else {
         const result = await messageService.updateMessageError(id, error as any, {
           sessionId: message?.sessionId,
           topicId: message?.topicId,

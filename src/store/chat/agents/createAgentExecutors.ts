@@ -70,8 +70,6 @@ export const createAgentExecutors = (context: {
       const llmPayload = (instruction as AgentInstructionCallLlm)
         .payload as GeneralAgentCallLLMInstructionPayload;
 
-      const events: AgentEvent[] = [];
-
       log(`${stagePrefix} Starting session`);
 
       let assistantMessageId: string;
@@ -153,6 +151,7 @@ export const createAgentExecutors = (context: {
 
       const toolCalls = tools || [];
 
+      // Log llm result
       if (content) {
         log(`[${sessionLogId}][content]`, content);
       }
@@ -167,31 +166,6 @@ export const createAgentExecutors = (context: {
       if (currentStepUsage) {
         log(`[${sessionLogId}][usage] %O`, currentStepUsage);
       }
-
-      // Add llm_stream events (similar to backend)
-      if (content) {
-        events.push({
-          chunk: { text: content, type: 'text' },
-          type: 'llm_stream',
-        });
-      }
-
-      if (assistantMessage?.reasoning?.content) {
-        events.push({
-          chunk: { text: assistantMessage.reasoning.content, type: 'reasoning' },
-          type: 'llm_stream',
-        });
-      }
-
-      events.push({
-        result: {
-          content,
-          reasoning: assistantMessage?.reasoning?.content,
-          tool_calls: toolCalls,
-          usage: currentStepUsage,
-        },
-        type: 'llm_result',
-      });
 
       log(
         '[%s:%d] call_llm completed, finishType: %s',
@@ -226,7 +200,7 @@ export const createAgentExecutors = (context: {
         );
 
         return {
-          events,
+          events: [],
           newState,
           nextContext: {
             payload: {
@@ -238,7 +212,6 @@ export const createAgentExecutors = (context: {
             },
             phase: 'human_abort',
             session: {
-              eventCount: events.length,
               messageCount: newState.messages.length,
               sessionId: state.sessionId,
               status: 'running',
@@ -249,7 +222,7 @@ export const createAgentExecutors = (context: {
       }
 
       return {
-        events,
+        events: [],
         newState,
         nextContext: {
           payload: {
@@ -260,7 +233,6 @@ export const createAgentExecutors = (context: {
           } as GeneralAgentCallLLMResultPayload,
           phase: 'llm_result',
           session: {
-            eventCount: events.length,
             messageCount: newState.messages.length,
             sessionId: state.sessionId,
             status: 'running',
@@ -424,11 +396,9 @@ export const createAgentExecutors = (context: {
         }
 
         // ============ Sub-operation 2: Execute tool call ============
-        const executeToolOpId = context.get().startOperation({
+        const { operationId: executeToolOpId } = context.get().startOperation({
           type: 'executeToolCall',
           context: {
-            sessionId: getOperationContext().sessionId!,
-            topicId: getOperationContext().topicId,
             messageId: toolMessageId,
           },
           parentOperationId: toolOperationId,
@@ -436,7 +406,7 @@ export const createAgentExecutors = (context: {
             startTime: Date.now(),
             tool_call_id: chatToolPayload.id,
           },
-        }).operationId;
+        });
 
         // Register cancel handler: Just update message (message already exists)
         context.get().onOperationCancel(executeToolOpId, async () => {
