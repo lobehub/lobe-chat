@@ -453,6 +453,14 @@ export const createAgentExecutors = (context: {
           .get()
           .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
 
+        // Check if operation was cancelled during tool execution
+        const executeToolOperation = context.get().operations[executeToolOpId];
+        if (executeToolOperation?.abortController.signal.aborted) {
+          log('[%s][call_tool] Tool execution completed but operation was cancelled', sessionLogId);
+          // Don't complete - cancel handler already updated message to aborted
+          return { events, newState: state };
+        }
+
         context.get().completeOperation(executeToolOpId);
 
         const executionTime = Math.round(performance.now() - startTime);

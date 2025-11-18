@@ -1905,5 +1905,72 @@ describe('call_tool executor', () => {
         );
       }
     });
+
+    it('should skip completion when tool execution finishes after operation was cancelled', async () => {
+      // Given
+      const mockStore = createMockStore();
+      const context = createTestContext();
+
+      const assistantMessage = createAssistantMessage();
+      mockStore.dbMessagesMap[context.messageKey] = [assistantMessage];
+
+      const toolCall: ChatToolPayload = {
+        id: 'tool_cancelled_during_exec',
+        identifier: 'test-plugin',
+        apiName: 'test-api',
+        arguments: JSON.stringify({ param: 'value' }),
+        type: 'default',
+      };
+
+      const instruction = createCallToolInstruction(toolCall);
+      const state = createInitialState();
+
+      // Mock: Simulate operation being cancelled during tool execution
+      let executeToolOpId: string | undefined;
+      const originalStartOperation = mockStore.startOperation;
+      mockStore.startOperation = vi.fn((config: any) => {
+        const result = originalStartOperation(config);
+        if (config.type === 'executeToolCall') {
+          executeToolOpId = result.operationId;
+        }
+        return result;
+      });
+
+      // Mock internal_invokeDifferentTypePlugin to abort operation before returning
+      const originalInvoke = mockStore.internal_invokeDifferentTypePlugin;
+      mockStore.internal_invokeDifferentTypePlugin = vi.fn(
+        async (messageId: string, payload: ChatToolPayload) => {
+          const result = await originalInvoke(messageId, payload);
+          // Simulate cancellation happening during tool execution
+          if (executeToolOpId) {
+            const op = mockStore.operations[executeToolOpId];
+            if (op) {
+              op.abortController.abort();
+            }
+          }
+          return result;
+        },
+      );
+
+      // When
+      const result = await executeWithMockContext({
+        executor: 'call_tool',
+        instruction,
+        state,
+        mockStore,
+        context,
+      });
+
+      // Then
+      // Should return early without completing operation or logging success
+      expect(result.events).toHaveLength(0);
+      // Should have executed the tool
+      expect(mockStore.internal_invokeDifferentTypePlugin).toHaveBeenCalled();
+      // Should not have completed the executeToolCall operation (because it was aborted)
+      if (executeToolOpId) {
+        const executeToolOp = mockStore.operations[executeToolOpId];
+        expect(executeToolOp?.status).not.toBe('completed');
+      }
+    });
   });
 });
