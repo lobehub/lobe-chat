@@ -84,7 +84,7 @@ const MessageContent = memo<MessageContentProps>(
 
     return (
       <Flexbox
-        className={cx(styles.message, editing && styles.editingContainer, MessageContentClassName)}
+        className={cx(styles.message, className, editing && styles.editingContainer, MessageContentClassName)}
         onDoubleClick={onDoubleClick}
       >
         {messageContent}
