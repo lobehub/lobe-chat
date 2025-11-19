@@ -71,6 +71,8 @@ export default {
     },
     thinkingBudget: {
       title: '思考预算',
+    thinkingLevel: {
+      title: '思考水平',
     },
     title: '模型扩展功能',
     urlContext: {

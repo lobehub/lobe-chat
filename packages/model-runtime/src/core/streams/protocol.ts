@@ -98,6 +98,7 @@ export interface StreamToolCallChunkData {
   };
   id?: string;
   index: number;
+  thoughtSignature?: string;
   type: 'function' | string;
 }
 

@@ -2,6 +2,81 @@
 
 # Changelog
 
+## [Version 2.0.0-next.89](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.88...v2.0.0-next.89)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### ✨ Features
+
+- **misc**: Support gemini 3.0 tools calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support gemini 3.0 tools calling, closes [#10301](https://github.com/lobehub/lobe-chat/issues/10301) ([7114fc1](https://github.com/lobehub/lobe-chat/commit/7114fc1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.88](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.87...v2.0.0-next.88)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fully support Gemini 3.0 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fully support Gemini 3.0 model, closes [#10292](https://github.com/lobehub/lobe-chat/issues/10292) ([6545ef8](https://github.com/lobehub/lobe-chat/commit/6545ef8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.87](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.86...v2.0.0-next.87)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor chat selectors.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor chat selectors, closes [#10274](https://github.com/lobehub/lobe-chat/issues/10274) ([0a056f3](https://github.com/lobehub/lobe-chat/commit/0a056f3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.86](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.85...v2.0.0-next.86)
 
 <sup>Released on **2025-11-19**</sup>

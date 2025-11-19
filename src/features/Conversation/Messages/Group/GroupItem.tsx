@@ -30,10 +30,10 @@ const GroupItem = memo<GroupItemProps>(
           });
         }}
       >
-        <ContentBlock index={index} {...item} />
+        <ContentBlock index={index} {...item} error={error} />
       </Flexbox>
     ) : (
-      <ContentBlock index={index} {...item} />
+      <ContentBlock index={index} {...item} error={error} />
     );
   },
   isEqual,
