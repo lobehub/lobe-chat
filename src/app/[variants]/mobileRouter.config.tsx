@@ -2,14 +2,15 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
-import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
+import { createBrowserRouter, redirect, useNavigate, useRouteError } from 'react-router-dom';
 
+import ErrorCapture from '@/components/Error';
+import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
-import Loading from '@/components/Loading/BrandTextLoading';
 
 /**
  * Mobile Router Configuration - Pure CSR Mode
@@ -27,86 +28,74 @@ import Loading from '@/components/Loading/BrandTextLoading';
  */
 
 // Chat components
-const MobileChatPage = dynamic(
-  () => import('./(main)/chat/index').then((m) => m.MobileChatPage),
-  {
+const MobileChatPage = dynamic(() => import('./(main)/chat/index').then((m) => m.MobileChatPage), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 const ChatSettings = dynamic(() => import('./(main)/chat/settings'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Mobile'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Discover List components
 const MobileHomePage = dynamic(
   () => import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const MobileAssistantPage = dynamic(
   () => import('./(main)/discover/(list)/assistant/index').then((m) => m.MobileAssistantPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverAssistantLayout = dynamic(
   () => import('./(main)/discover/(list)/assistant/_layout/Mobile'),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverListMobileModelPage = dynamic(
   () => import('./(main)/discover/(list)/model/index').then((m) => m.MobileModelPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
-const DiscoverModelLayout = dynamic(
-  () => import('./(main)/discover/(list)/model/_layout/Mobile'),
-  {
+const DiscoverModelLayout = dynamic(() => import('./(main)/discover/(list)/model/_layout/Mobile'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 const DiscoverListMobileProviderPage = dynamic(
   () => import('./(main)/discover/(list)/provider/index').then((m) => m.MobileProviderPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverListMobileMcpPage = dynamic(
   () => import('./(main)/discover/(list)/mcp/index').then((m) => m.MobileMcpPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
-const DiscoverMcpLayout = dynamic(
-  () => import('./(main)/discover/(list)/mcp/_layout/Mobile'),
-  {
+const DiscoverMcpLayout = dynamic(() => import('./(main)/discover/(list)/mcp/_layout/Mobile'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
-const DiscoverListLayout = dynamic(
-  () => import('./(main)/discover/(list)/_layout/Mobile/index'),
-  {
+  ssr: false,
+});
+const DiscoverListLayout = dynamic(() => import('./(main)/discover/(list)/_layout/Mobile/index'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 
 // Discover Detail components
 const MobileDiscoverAssistantDetailPage = dynamic(
@@ -115,145 +104,139 @@ const MobileDiscoverAssistantDetailPage = dynamic(
       (m) => m.MobileDiscoverAssistantDetailPage,
     ),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverDetailMobileModelPage = dynamic(
   () => import('./(main)/discover/(detail)/model/index').then((m) => m.MobileModelPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverDetailMobileProviderPage = dynamic(
   () => import('./(main)/discover/(detail)/provider/index').then((m) => m.MobileProviderPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverDetailMobileMcpPage = dynamic(
   () => import('./(main)/discover/(detail)/mcp/index').then((m) => m.MobileMcpPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverDetailLayout = dynamic(
   () => import('./(main)/discover/(detail)/_layout/Mobile/index'),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
-const DiscoverLayout = dynamic(
-  () => import('./(main)/discover/_layout/Mobile/index'),
-  {
+const DiscoverLayout = dynamic(() => import('./(main)/discover/_layout/Mobile/index'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 
 // Knowledge components
 const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
-const KnowledgeBaseDetail = dynamic(
-  () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-  {
+const KnowledgeBaseDetail = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBaseDetail'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Mobile'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Settings components
 const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Mobile'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/MobileWrapper'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Image components
 const ImageComingSoon = dynamic(() => import('./(main)/image/ComingSoon'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const ImageLayoutMobile = dynamic(() => import('./(main)/image/_layout/Mobile'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Labs components
 const LabsPage = dynamic(() => import('./(main)/labs'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Profile components
 const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const MobileProfileSecurityPage = dynamic(
   () => import('./(main)/profile/security').then((m) => m.MobileProfileSecurityPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const MobileProfileStatsPage = dynamic(
   () => import('./(main)/profile/stats').then((m) => m.MobileProfileStatsPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const ProfileLayoutMobile = dynamic(() => import('./(main)/profile/_layout/Mobile'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Me (mobile personal center) components
 const MeHomePage = dynamic(() => import('./(main)/(mobile)/me/(home)'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const MeHomeLayout = dynamic(() => import('./(main)/(mobile)/me/(home)/layout'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const MeProfilePage = dynamic(() => import('./(main)/(mobile)/me/profile'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const MeProfileLayout = dynamic(() => import('./(main)/(mobile)/me/profile/layout'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const MeSettingsPage = dynamic(() => import('./(main)/(mobile)/me/settings'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const MeSettingsLayout = dynamic(() => import('./(main)/(mobile)/me/settings/layout'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Component to register navigate function in global store
@@ -270,6 +253,31 @@ const NavigatorRegistrar = () => {
 
   return null;
 };
+
+// Error boundary factory for React Router errorElement
+const createErrorBoundary = (resetPath: string) => {
+  const ErrorBoundary = () => {
+    const error = useRouteError() as Error;
+    const navigate = useNavigate();
+
+    const reset = () => {
+      navigate(resetPath);
+    };
+
+    return <ErrorCapture error={error} reset={reset} />;
+  };
+  return ErrorBoundary;
+};
+
+// Create error boundaries for each route
+const ChatErrorBoundary = createErrorBoundary('/chat');
+const DiscoverErrorBoundary = createErrorBoundary('/discover');
+const KnowledgeErrorBoundary = createErrorBoundary('/knowledge');
+const SettingsErrorBoundary = createErrorBoundary('/settings');
+const ImageErrorBoundary = createErrorBoundary('/image');
+const ProfileErrorBoundary = createErrorBoundary('/profile');
+const MeErrorBoundary = createErrorBoundary('/me'); // Mobile only
+const RootErrorBoundary = createErrorBoundary('/chat'); // Root level falls back to chat
 
 // Root layout wrapper component
 const RootLayout = (props: { locale: Locales }) => (
@@ -297,6 +305,7 @@ export const createMobileRouter = (locale: Locales) =>
             },
           ],
           element: <ChatLayout />,
+          errorElement: <ChatErrorBoundary />,
           path: 'chat',
         },
 
@@ -372,6 +381,7 @@ export const createMobileRouter = (locale: Locales) =>
             },
           ],
           element: <DiscoverLayout />,
+          errorElement: <DiscoverErrorBoundary />,
           path: 'discover',
         },
 
@@ -393,6 +403,7 @@ export const createMobileRouter = (locale: Locales) =>
             },
           ],
           element: <KnowledgeLayout />,
+          errorElement: <KnowledgeErrorBoundary />,
           path: 'knowledge',
         },
 
@@ -405,6 +416,7 @@ export const createMobileRouter = (locale: Locales) =>
             },
           ],
           element: <SettingsLayoutWrapper />,
+          errorElement: <SettingsErrorBoundary />,
           path: 'settings',
         },
 
@@ -417,6 +429,7 @@ export const createMobileRouter = (locale: Locales) =>
             },
           ],
           element: <ImageLayoutMobile />,
+          errorElement: <ImageErrorBoundary />,
           path: 'image',
         },
 
@@ -447,6 +460,7 @@ export const createMobileRouter = (locale: Locales) =>
             },
           ],
           element: <ProfileLayoutMobile />,
+          errorElement: <ProfileErrorBoundary />,
           path: 'profile',
         },
 
@@ -481,6 +495,7 @@ export const createMobileRouter = (locale: Locales) =>
               element: <MeSettingsLayout />,
             },
           ],
+          errorElement: <MeErrorBoundary />,
           path: 'me',
         },
 
@@ -497,6 +512,7 @@ export const createMobileRouter = (locale: Locales) =>
         },
       ],
       element: <RootLayout locale={locale} />,
+      errorElement: <RootErrorBoundary />,
       path: '/',
     },
   ]);

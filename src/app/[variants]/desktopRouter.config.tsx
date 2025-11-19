@@ -2,8 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
-import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
+import { createBrowserRouter, redirect, useNavigate, useRouteError } from 'react-router-dom';
 
+import ErrorCapture from '@/components/Error';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
@@ -233,6 +234,30 @@ const NavigatorRegistrar = () => {
   return null;
 };
 
+// Error boundary factory for React Router errorElement
+const createErrorBoundary = (resetPath: string) => {
+  const ErrorBoundary = () => {
+    const error = useRouteError() as Error;
+    const navigate = useNavigate();
+
+    const reset = () => {
+      navigate(resetPath);
+    };
+
+    return <ErrorCapture error={error} reset={reset} />;
+  };
+  return ErrorBoundary;
+};
+
+// Create error boundaries for each route
+const ChatErrorBoundary = createErrorBoundary('/chat');
+const DiscoverErrorBoundary = createErrorBoundary('/discover');
+const KnowledgeErrorBoundary = createErrorBoundary('/knowledge');
+const SettingsErrorBoundary = createErrorBoundary('/settings');
+const ImageErrorBoundary = createErrorBoundary('/image');
+const ProfileErrorBoundary = createErrorBoundary('/profile');
+const RootErrorBoundary = createErrorBoundary('/chat'); // Root level falls back to chat
+
 // Root layout wrapper component
 const RootLayout = (props: { locale: Locales }) => (
   <>
@@ -259,6 +284,7 @@ export const createDesktopRouter = (locale: Locales) =>
             },
           ],
           element: <ChatLayout />,
+          errorElement: <ChatErrorBoundary />,
           path: 'chat',
         },
 
@@ -337,6 +363,7 @@ export const createDesktopRouter = (locale: Locales) =>
             },
           ],
           element: <DiscoverLayout />,
+          errorElement: <DiscoverErrorBoundary />,
           path: 'discover',
         },
 
@@ -363,6 +390,7 @@ export const createDesktopRouter = (locale: Locales) =>
             },
           ],
           element: <KnowledgeLayout />,
+          errorElement: <KnowledgeErrorBoundary />,
           path: 'knowledge',
         },
 
@@ -375,6 +403,7 @@ export const createDesktopRouter = (locale: Locales) =>
             },
           ],
           element: <SettingsLayoutWrapper />,
+          errorElement: <SettingsErrorBoundary />,
           path: 'settings',
         },
 
@@ -387,6 +416,7 @@ export const createDesktopRouter = (locale: Locales) =>
             },
           ],
           element: <ImageLayoutWrapper />,
+          errorElement: <ImageErrorBoundary />,
           path: 'image',
         },
 
@@ -421,6 +451,7 @@ export const createDesktopRouter = (locale: Locales) =>
             },
           ],
           element: <ProfileLayoutWrapper />,
+          errorElement: <ProfileErrorBoundary />,
           path: 'profile',
         },
 
@@ -437,6 +468,7 @@ export const createDesktopRouter = (locale: Locales) =>
         },
       ],
       element: <RootLayout locale={locale} />,
+      errorElement: <RootErrorBoundary />,
       path: '/',
     },
   ]);
