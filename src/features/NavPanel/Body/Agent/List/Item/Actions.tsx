@@ -174,7 +174,27 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
           },
         ] as ItemType[]
       ).filter(Boolean),
-    [id, pin, openSessionInNewWindow],
+    [
+      id,
+      pin,
+      parentType,
+      group,
+      isDefault,
+      sessionCustomGroups,
+      sessionType,
+      t,
+      pinGroup,
+      pinSession,
+      duplicateSession,
+      openSessionInNewWindow,
+      updateSessionGroup,
+      openCreateGroupModal,
+      deleteGroup,
+      removeSession,
+      message,
+      modal,
+      styles.modalRoot,
+    ],
   );
 
   return (

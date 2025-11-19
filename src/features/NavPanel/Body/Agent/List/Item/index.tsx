@@ -1,7 +1,6 @@
 import { ActionIcon } from '@lobehub/ui';
 import { PinIcon } from 'lucide-react';
-import React, { CSSProperties, memo } from 'react';
-import { shallow } from 'zustand/shallow';
+import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { isDesktop } from '@/const/version';
@@ -27,97 +26,130 @@ interface SessionItemProps {
 
 const SessionItem = memo<SessionItemProps>(({ id, style }) => {
   const { openCreateGroupModal } = useAgentModal();
-
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
 
-  const [active] = useSessionStore((s) => [s.activeId === id]);
-  const [loading] = useChatStore((s) => [
-    operationSelectors.isAgentRuntimeRunning(s) && id === s.activeId,
-  ]);
+  // Combine related selectors to reduce store subscriptions
+  const { active, sessionData } = useSessionStore(
+    useCallback(
+      (s) => {
+        const session = sessionSelectors.getSessionById(id)(s);
+        const meta = session.meta;
+        const isActive = s.activeId === id;
 
-  const [pin, title, avatar, avatarBackground, members, group, sessionType] = useSessionStore(
-    (s) => {
-      const session = sessionSelectors.getSessionById(id)(s);
-      const meta = session.meta;
-
-      return [
-        sessionHelpers.getSessionPinned(session),
-        sessionMetaSelectors.getTitle(meta),
-        sessionMetaSelectors.getAvatar(meta),
-        meta.backgroundColor,
-        (session as LobeGroupSession).members,
-        session?.group,
-        session.type,
-      ];
-    },
+        return {
+          active: isActive,
+          sessionData: {
+            avatar: sessionMetaSelectors.getAvatar(meta),
+            avatarBackground: meta.backgroundColor,
+            group: session?.group,
+            members: (session as LobeGroupSession).members,
+            pin: sessionHelpers.getSessionPinned(session),
+            title: sessionMetaSelectors.getTitle(meta),
+            type: session.type,
+          },
+        };
+      },
+      [id],
+    ),
   );
 
-  const handleDoubleClick = () => {
+  // Separate loading state from chat store - only subscribe if this session is active
+  const isLoading = useChatStore(
+    useCallback((s) => (active ? operationSelectors.isAgentRuntimeRunning(s) : false), [active]),
+  );
+
+  // Memoize current user to avoid repeated selectors - only needed for group sessions
+  const currentUserAvatar = useUserStore(
+    useCallback(
+      (s) =>
+        sessionData.type === 'group' ? userProfileSelectors.userAvatar(s) || DEFAULT_AVATAR : '',
+      [sessionData.type],
+    ),
+  );
+
+  // Memoize session avatar computation
+  const sessionAvatar = useMemo<string | { avatar: string; background?: string }[]>(() => {
+    if (sessionData.type !== 'group') {
+      return sessionData.avatar;
+    }
+
+    return [
+      {
+        avatar: currentUserAvatar,
+        background: undefined,
+      },
+      ...(sessionData.members?.map((member) => ({
+        avatar: member.avatar || DEFAULT_AVATAR,
+        background: member.backgroundColor || undefined,
+      })) || []),
+    ];
+  }, [sessionData.type, sessionData.avatar, sessionData.members, currentUserAvatar]);
+
+  // Memoize event handlers
+  const handleDoubleClick = useCallback(() => {
     if (isDesktop) {
       openSessionInNewWindow(id);
     }
-  };
+  }, [id, openSessionInNewWindow]);
 
-  const handleDragStart = (e: React.DragEvent) => {
-    // Set drag data to identify the session being dragged
-    e.dataTransfer.setData('text/plain', id);
-  };
+  const handleDragStart = useCallback(
+    (e: DragEvent) => {
+      e.dataTransfer.setData('text/plain', id);
+    },
+    [id],
+  );
 
-  const handleDragEnd = (e: React.DragEvent) => {
-    // If drag ends without being dropped in a valid target, open in new window
-    if (isDesktop && e.dataTransfer.dropEffect === 'none') {
-      openSessionInNewWindow(id);
-    }
-  };
+  const handleDragEnd = useCallback(
+    (e: DragEvent) => {
+      if (isDesktop && e.dataTransfer.dropEffect === 'none') {
+        openSessionInNewWindow(id);
+      }
+    },
+    [id, openSessionInNewWindow],
+  );
 
-  const currentUser = useUserStore((s) => ({
-    avatar: userProfileSelectors.userAvatar(s),
-    name: userProfileSelectors.displayUserName(s) || userProfileSelectors.nickName(s) || 'You',
-  }));
+  const handleOpenCreateGroupModal = useCallback(() => {
+    openCreateGroupModal(id);
+  }, [id, openCreateGroupModal]);
 
-  const sessionAvatar: string | { avatar: string; background?: string }[] =
-    sessionType === 'group'
-      ? [
-          {
-            avatar: currentUser.avatar || DEFAULT_AVATAR,
-            background: undefined,
-          },
-          ...(members?.map((member) => ({
-            avatar: member.avatar || DEFAULT_AVATAR,
-            background: member.backgroundColor || undefined,
-          })) || []),
-        ]
-      : avatar;
+  // Memoize pin icon
+  const pinIcon = useMemo(
+    () =>
+      sessionData.pin ? (
+        <ActionIcon icon={PinIcon} size={12} style={{ opacity: 0.5, pointerEvents: 'none' }} />
+      ) : undefined,
+    [sessionData.pin],
+  );
 
   return (
     <NavItem
       actions={
         <Actions
-          group={group}
+          group={sessionData.group}
           id={id}
-          openCreateGroupModal={() => openCreateGroupModal(id)}
-          parentType={sessionType}
+          openCreateGroupModal={handleOpenCreateGroupModal}
+          parentType={sessionData.type}
         />
       }
       active={active}
       draggable={isDesktop}
-      extra={
-        pin ? (
-          <ActionIcon icon={PinIcon} size={'small'} style={{ pointerEvents: 'none' }} />
-        ) : undefined
-      }
+      extra={pinIcon}
       icon={
-        <Avatar avatar={sessionAvatar} avatarBackground={avatarBackground} type={sessionType} />
+        <Avatar
+          avatar={sessionAvatar}
+          avatarBackground={sessionData.avatarBackground}
+          type={sessionData.type}
+        />
       }
       key={id}
-      loading={loading}
+      loading={isLoading}
       onDoubleClick={handleDoubleClick}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
       style={style}
-      title={title}
+      title={sessionData.title}
     />
   );
-}, shallow);
+});
 
 export default SessionItem;

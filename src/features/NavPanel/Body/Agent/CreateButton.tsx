@@ -66,8 +66,9 @@ const CreateButton = memo(() => {
   });
 
   const dropdownItems: MenuProps['items'] = useMemo(() => {
-    if (!createMenuItems) return [createConfigMenuItem()];
-    return [...createMenuItems, { type: 'divider' as const }, createConfigMenuItem()];
+    const configItem = createConfigMenuItem();
+    if (!createMenuItems) return [configItem];
+    return [...createMenuItems, { type: 'divider' as const }, configItem];
   }, [createMenuItems, createConfigMenuItem]);
 
   const isLoading = isCreatingAgent || isCreatingGroup;

@@ -2,7 +2,6 @@
 
 import isEqual from 'fast-deep-equal';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { useFetchSessions } from '@/hooks/useFetchSessions';
 import { useSessionStore } from '@/store/session';
@@ -17,27 +16,24 @@ const filterSessionsForView = (sessions: LobeSessions): LobeSessions => {
 };
 
 export const useAgentList = () => {
-  const { t } = useTranslation('chat');
-
   useFetchSessions();
 
   const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
   const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
   const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
 
-  const filteredDefaultSessions = filterSessionsForView(defaultSessions);
-  const filteredPinnedSessions = filterSessionsForView(pinnedSessions);
-  const filteredCustomSessionGroups = customSessionGroups?.map((group) => ({
-    ...group,
-    children: filterSessionsForView(group.children),
-  }));
+  return useMemo(() => {
+    const filteredDefaultSessions = filterSessionsForView(defaultSessions);
+    const filteredPinnedSessions = filterSessionsForView(pinnedSessions);
+    const filteredCustomSessionGroups = customSessionGroups?.map((group) => ({
+      ...group,
+      children: filterSessionsForView(group.children),
+    }));
 
-  return useMemo(
-    () => ({
+    return {
       customList: filteredCustomSessionGroups,
       defaultList: filteredDefaultSessions,
       pinnedList: filteredPinnedSessions,
-    }),
-    [t, filteredCustomSessionGroups, filteredPinnedSessions, filteredDefaultSessions],
-  );
+    };
+  }, [customSessionGroups, pinnedSessions, defaultSessions]);
 };

@@ -1,46 +1,42 @@
 'use client';
 
-import React, { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import { useFetchSessions } from '@/hooks/useFetchSessions';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import { useAgentModal } from '../ModalProvider';
 import SkeletonList from '../SkeletonList';
 import Group from './Group';
 import SessionList from './List';
 import { useAgentList } from './useAgentList';
 
 const AgentList = memo(() => {
-  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const isInit = useSessionStore(sessionSelectors.isSessionListInit);
   const { customList, pinnedList, defaultList } = useAgentList();
-  const { openRenameGroupModal, openConfigGroupModal } = useAgentModal();
 
   useFetchSessions();
 
+  // Memoize computed visibility flags to prevent unnecessary recalculations
+  const { showPinned, showCustom, showDefault } = useMemo(() => {
+    const hasPinned = Boolean(pinnedList?.length);
+    const hasCustom = Boolean(customList?.length);
+    const hasDefault = Boolean(defaultList?.length);
+
+    return {
+      showCustom: hasCustom,
+      showDefault: hasDefault,
+      showPinned: hasPinned,
+    };
+  }, [pinnedList?.length, customList?.length, defaultList?.length]);
+
   if (!isInit) return <SkeletonList />;
-
-  const showPinned = pinnedList && pinnedList.length > 0;
-  const showCustom = customList && customList.length > 0;
-  const showDefault = defaultList && defaultList.length > 0;
-
-  const hideGroup = !expand && showPinned;
 
   return (
     <>
-      {showPinned && <SessionList dataSource={pinnedList} />}
-      {!hideGroup && showCustom && (
-        <Group
-          dataSource={customList}
-          openConfigGroupModal={openConfigGroupModal}
-          openRenameGroupModal={openRenameGroupModal}
-        />
-      )}
-      {!hideGroup && showDefault && <SessionList dataSource={defaultList || []} />}
+      {showPinned && <SessionList dataSource={pinnedList!} />}
+      {showCustom && <Group dataSource={customList!} />}
+      {showDefault && <SessionList dataSource={defaultList!} />}
     </>
   );
 });

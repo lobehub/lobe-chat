@@ -1,6 +1,6 @@
 import { AccordionItem, Icon, Text } from '@lobehub/ui';
 import { ListMinusIcon } from 'lucide-react';
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SessionList from '@/features/NavPanel/Body/Agent/List/List';
@@ -10,16 +10,11 @@ import { CustomSessionGroup } from '@/types/session';
 
 import Actions from './Actions';
 
-interface GroupItemProps extends CustomSessionGroup {
-  openConfigGroupModal: () => void;
-  openRenameGroupModal: (groupId: string) => void;
-}
+const GroupItem = memo<CustomSessionGroup>(({ children, id, name }) => {
+  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
 
-const GroupItem = memo<GroupItemProps>(
-  ({ children, id, name, openRenameGroupModal, openConfigGroupModal }) => {
-    const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
-
-    const content = (
+  const content = useMemo(
+    () => (
       <SessionList
         dataSource={children}
         itemStyle={
@@ -30,37 +25,31 @@ const GroupItem = memo<GroupItemProps>(
             : {}
         }
       />
-    );
+    ),
+    [children, expand],
+  );
 
-    if (!expand) return content;
+  if (!expand) return content;
 
-    return (
-      <AccordionItem
-        action={
-          <Actions
-            id={id}
-            isCustomGroup
-            openConfigModal={openConfigGroupModal}
-            openRenameModal={() => openRenameGroupModal(id)}
-          />
-        }
-        itemKey={id}
-        key={id}
-        paddingBlock={4}
-        paddingInline={'8px 4px'}
-        title={
-          <Flexbox align="center" gap={4} horizontal style={{ overflow: 'hidden' }}>
-            <Icon icon={ListMinusIcon} style={{ opacity: 0.5 }} />
-            <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'} weight={500}>
-              {name}
-            </Text>
-          </Flexbox>
-        }
-      >
-        {content}
-      </AccordionItem>
-    );
-  },
-);
+  return (
+    <AccordionItem
+      action={<Actions id={id} isCustomGroup />}
+      itemKey={id}
+      key={id}
+      paddingBlock={4}
+      paddingInline={'8px 4px'}
+      title={
+        <Flexbox align="center" gap={4} horizontal style={{ overflow: 'hidden' }}>
+          <Icon icon={ListMinusIcon} style={{ opacity: 0.5 }} />
+          <Text ellipsis fontSize={12} style={{ flex: 1 }} type={'secondary'} weight={500}>
+            {name}
+          </Text>
+        </Flexbox>
+      }
+    >
+      {content}
+    </AccordionItem>
+  );
+});
 
 export default GroupItem;

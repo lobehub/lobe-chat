@@ -36,11 +36,17 @@ const RepoItem = memo<RepoItemProps>(({ id, name }) => {
     [id],
   );
 
+  // Fix useEffect dependency array
   useEffect(() => {
     if (!expand && editing) {
       toggleEditing(false);
     }
-  }, [expand]);
+  }, [expand, editing, toggleEditing]);
+
+  // Memoize click handler
+  const handleClick = useCallback(() => {
+    navigate(`/knowledge/bases/${id}`);
+  }, [id, navigate]);
 
   return (
     <>
@@ -49,9 +55,7 @@ const RepoItem = memo<RepoItemProps>(({ id, name }) => {
         disabled={editing}
         icon={BoxIcon}
         loading={isLoading}
-        onClick={() => {
-          navigate(`/knowledge/bases/${id}`);
-        }}
+        onClick={handleClick}
         title={name}
       />
       <Editing id={id} name={name} toggleEditing={toggleEditing} />

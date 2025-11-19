@@ -307,6 +307,10 @@ export default {
     business: '商务合作',
     support: '邮件支持',
   },
+  navPanel: {
+    agent: '助手',
+    repo: '仓库',
+  },
   new: '新',
   oauth: 'SSO 登录',
   officialSite: '官方网站',

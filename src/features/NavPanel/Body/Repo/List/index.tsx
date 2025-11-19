@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -15,11 +15,19 @@ const RepoList = memo(() => {
   const useFetchKnowledgeBaseList = useKnowledgeBaseStore((s) => s.useFetchKnowledgeBaseList);
   const { data, isLoading } = useFetchKnowledgeBaseList();
 
-  if (!data || isLoading) return <SkeletonList />;
+  // Memoize items to prevent unnecessary re-renders
+  const items = useMemo(() => {
+    if (!data || isLoading) return null;
+    if (data.length === 0) return null;
 
+    return data.map((item) => <Item {...item} key={item.id} />);
+  }, [data, isLoading]);
+
+  // Early returns for loading and empty states
+  if (!data || isLoading) return <SkeletonList />;
   if (data.length === 0) return expand ? <EmptyStatus /> : null;
 
-  return data.map((item) => <Item {...item} key={item.id} />);
+  return items;
 });
 
 export default RepoList;

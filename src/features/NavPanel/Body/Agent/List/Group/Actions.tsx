@@ -20,155 +20,157 @@ interface ActionsProps {
   id?: string;
   isCustomGroup?: boolean;
   isPinned?: boolean;
-  openConfigModal: () => void;
-  openRenameModal?: () => void;
 }
 
-const Actions = memo<ActionsProps>(
-  ({ id, openRenameModal, openConfigModal, isCustomGroup, isPinned }) => {
-    const { t } = useTranslation('chat');
-    const { styles } = useStyles();
-    const { modal } = App.useApp();
+const Actions = memo<ActionsProps>(({ id, isCustomGroup, isPinned }) => {
+  const { t } = useTranslation('chat');
+  const { styles } = useStyles();
+  const { modal } = App.useApp();
 
-    const [removeSessionGroup] = useSessionStore((s) => [s.removeSessionGroup]);
+  const [removeSessionGroup] = useSessionStore((s) => [s.removeSessionGroup]);
 
-    const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
+  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
-    // Modal management
-    const { openMemberSelectionModal, closeMemberSelectionModal } = useAgentModal();
+  // Modal management
+  const {
+    openMemberSelectionModal,
+    closeMemberSelectionModal,
+    openRenameGroupModal,
+    openConfigGroupModal,
+  } = useAgentModal();
 
-    // Session/Agent creation
-    const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
+  // Session/Agent creation
+  const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
 
-    // Group creation
-    const { createGroupWithMembers, isCreating: isCreatingGroup } = useGroupActions();
+  // Group creation
+  const { createGroupWithMembers, isCreating: isCreatingGroup } = useGroupActions();
 
-    // Handler to open member selection modal with callbacks
-    const handleOpenMemberSelection = useCallback(() => {
-      openMemberSelectionModal({
-        onCancel: closeMemberSelectionModal,
-        onConfirm: async (selectedAgents, hostConfig, enableSupervisor) => {
-          await createGroupWithMembers(
-            selectedAgents,
-            'New Group Chat',
-            hostConfig,
-            enableSupervisor,
-          );
-          closeMemberSelectionModal();
+  // Handler to open member selection modal with callbacks
+  const handleOpenMemberSelection = useCallback(() => {
+    openMemberSelectionModal({
+      onCancel: closeMemberSelectionModal,
+      onConfirm: async (selectedAgents, hostConfig, enableSupervisor) => {
+        await createGroupWithMembers(
+          selectedAgents,
+          'New Group Chat',
+          hostConfig,
+          enableSupervisor,
+        );
+        closeMemberSelectionModal();
+      },
+    });
+  }, [openMemberSelectionModal, closeMemberSelectionModal, createGroupWithMembers]);
+
+  // Menu items
+  const { createConfigMenuItem, createNewAgentMenuItem, createNewGroupChatMenuItem } = useMenuItems(
+    {
+      onCreateAgent: () => createAgent({ groupId: id, isPinned }),
+      onCreateGroup: handleOpenMemberSelection,
+      onOpenConfig: () => openConfigGroupModal(),
+    },
+  );
+
+  const sessionGroupConfigPublicItem = createConfigMenuItem();
+  const newAgentPublicItem = createNewAgentMenuItem();
+  const newGroupChatItem = createNewGroupChatMenuItem();
+
+  const isLoading = isCreatingAgent || isCreatingGroup;
+
+  const customGroupItems: MenuProps['items'] = useMemo(
+    () => [
+      {
+        icon: <Icon icon={PencilLine} />,
+        key: 'rename',
+        label: t('sessionGroup.rename'),
+        onClick: (info) => {
+          info.domEvent?.stopPropagation();
+          openRenameGroupModal(id!);
         },
-      });
-    }, [openMemberSelectionModal, closeMemberSelectionModal, createGroupWithMembers]);
-
-    // Menu items
-    const { createConfigMenuItem, createNewAgentMenuItem, createNewGroupChatMenuItem } =
-      useMenuItems({
-        onCreateAgent: () => createAgent({ groupId: id, isPinned }),
-        onCreateGroup: handleOpenMemberSelection,
-        onOpenConfig: openConfigModal,
-      });
-
-    const sessionGroupConfigPublicItem = createConfigMenuItem();
-    const newAgentPublicItem = createNewAgentMenuItem();
-    const newGroupChatItem = createNewGroupChatMenuItem();
-
-    const isLoading = isCreatingAgent || isCreatingGroup;
-
-    const customGroupItems: MenuProps['items'] = useMemo(
-      () => [
-        {
-          icon: <Icon icon={PencilLine} />,
-          key: 'rename',
-          label: t('sessionGroup.rename'),
-          onClick: (info) => {
-            info.domEvent?.stopPropagation();
-            openRenameModal?.();
-          },
+      },
+      sessionGroupConfigPublicItem,
+      {
+        type: 'divider',
+      },
+      {
+        danger: true,
+        icon: <Icon icon={Trash} />,
+        key: 'delete',
+        label: t('delete', { ns: 'common' }),
+        onClick: (info) => {
+          info.domEvent?.stopPropagation();
+          modal.confirm({
+            centered: true,
+            okButtonProps: { danger: true },
+            onOk: async () => {
+              if (!id) return;
+              await removeSessionGroup(id);
+            },
+            rootClassName: styles.modalRoot,
+            title: t('sessionGroup.confirmRemoveGroupAlert'),
+          });
         },
-        sessionGroupConfigPublicItem,
-        {
-          type: 'divider',
-        },
-        {
-          danger: true,
-          icon: <Icon icon={Trash} />,
-          key: 'delete',
-          label: t('delete', { ns: 'common' }),
-          onClick: (info) => {
-            info.domEvent?.stopPropagation();
-            modal.confirm({
-              centered: true,
-              okButtonProps: { danger: true },
-              onOk: async () => {
-                if (!id) return;
-                await removeSessionGroup(id);
-              },
-              rootClassName: styles.modalRoot,
-              title: t('sessionGroup.confirmRemoveGroupAlert'),
-            });
-          },
-        },
-      ],
-      [
-        t,
-        sessionGroupConfigPublicItem,
-        openRenameModal,
-        modal,
-        id,
-        removeSessionGroup,
-        styles.modalRoot,
-      ],
-    );
+      },
+    ],
+    [
+      t,
+      sessionGroupConfigPublicItem,
+      openRenameGroupModal,
+      modal,
+      id,
+      removeSessionGroup,
+      styles.modalRoot,
+    ],
+  );
 
-    const defaultItems: MenuProps['items'] = useMemo(
-      () => [sessionGroupConfigPublicItem],
-      [sessionGroupConfigPublicItem],
-    );
+  const defaultItems: MenuProps['items'] = useMemo(
+    () => [sessionGroupConfigPublicItem],
+    [sessionGroupConfigPublicItem],
+  );
 
-    const tailItems = useMemo(
-      () => (isCustomGroup ? customGroupItems : defaultItems),
-      [isCustomGroup, customGroupItems, defaultItems],
-    );
+  const tailItems = useMemo(
+    () => (isCustomGroup ? customGroupItems : defaultItems),
+    [isCustomGroup, customGroupItems, defaultItems],
+  );
 
-    const menuItems = useMemo(() => {
-      const items: MenuProps['items'] = [];
+  const menuItems = useMemo(() => {
+    const items: MenuProps['items'] = [];
 
-      if (showCreateSession) {
-        items.push(newAgentPublicItem);
+    if (showCreateSession) {
+      items.push(newAgentPublicItem);
 
-        if (enableGroupChat) {
-          items.push(newGroupChatItem);
-        }
-
-        items.push({ type: 'divider' });
+      if (enableGroupChat) {
+        items.push(newGroupChatItem);
       }
 
-      items.push(...tailItems);
+      items.push({ type: 'divider' });
+    }
 
-      return items;
-    }, [showCreateSession, enableGroupChat, newAgentPublicItem, newGroupChatItem, tailItems]);
+    items.push(...tailItems);
 
-    return (
-      <Dropdown
-        arrow={false}
-        menu={{
-          items: menuItems,
-          onClick: ({ domEvent }) => {
-            domEvent.stopPropagation();
-          },
+    return items;
+  }, [showCreateSession, enableGroupChat, newAgentPublicItem, newGroupChatItem, tailItems]);
+
+  return (
+    <Dropdown
+      arrow={false}
+      menu={{
+        items: menuItems,
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+        },
+      }}
+      trigger={['click']}
+    >
+      <ActionIcon
+        icon={MoreHorizontalIcon}
+        loading={isLoading}
+        onClick={(e) => {
+          e.stopPropagation();
         }}
-        trigger={['click']}
-      >
-        <ActionIcon
-          icon={MoreHorizontalIcon}
-          loading={isLoading}
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-          size={'small'}
-        />
-      </Dropdown>
-    );
-  },
-);
+        size={'small'}
+      />
+    </Dropdown>
+  );
+});
 
 export default Actions;

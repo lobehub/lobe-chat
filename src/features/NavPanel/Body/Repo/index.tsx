@@ -1,7 +1,8 @@
 'use client';
 
 import { AccordionItem, Text } from '@lobehub/ui';
-import React, { memo } from 'react';
+import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
@@ -15,14 +16,19 @@ interface RepoProps {
 }
 
 const Repo = memo<RepoProps>(({ itemKey }) => {
+  const { t } = useTranslation('common');
   const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
-  const content = (
-    <Flexbox gap={1} paddingBlock={1}>
-      <List />
-    </Flexbox>
+
+  const listContent = useMemo(
+    () => (
+      <Flexbox gap={1} paddingBlock={1}>
+        <List />
+      </Flexbox>
+    ),
+    [],
   );
 
-  if (!expand) return content;
+  if (!expand) return listContent;
 
   return (
     <AccordionItem
@@ -32,11 +38,11 @@ const Repo = memo<RepoProps>(({ itemKey }) => {
       paddingInline={'8px 4px'}
       title={
         <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {'仓库'}
+          {t('navPanel.repo', { defaultValue: '仓库' })}
         </Text>
       }
     >
-      {content}
+      {listContent}
     </AccordionItem>
   );
 });

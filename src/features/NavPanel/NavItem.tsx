@@ -31,6 +31,7 @@ const useStyles = createStyles(({ css, token }) => ({
       }
     }
   `,
+  hideGroupHeader: css``,
 }));
 
 interface NavItemProps extends Omit<BlockProps, 'children' | 'title'> {
@@ -60,7 +61,13 @@ const NavItem = memo<NavItemProps>(
   }) => {
     const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
     const { cx, styles, theme } = useStyles();
-    if (hidden) return;
+    if (hidden) return null;
+
+    const iconColor = active ? theme.colorText : theme.colorTextDescription;
+    const textColor = active ? theme.colorText : theme.colorTextSecondary;
+    const variant = active ? 'filled' : 'borderless';
+    const iconComponent = loading ? Loader2Icon : icon;
+
     const content = (
       <Block
         align={'center'}
@@ -74,59 +81,47 @@ const NavItem = memo<NavItemProps>(
           onClick?.(e);
         }}
         paddingInline={2}
-        variant={active ? 'filled' : 'borderless'}
+        variant={variant}
         {...rest}
       >
         {icon && (
           <Center flex={'none'} height={28} width={28}>
-            <Icon
-              color={active ? theme.colorText : theme.colorTextDescription}
-              icon={loading ? Loader2Icon : icon}
-              size={18}
-              spin={loading}
-            />
+            <Icon color={iconColor} icon={iconComponent} size={18} spin={loading} />
           </Center>
         )}
         {expand && (
-          <Text
-            color={active ? theme.colorText : theme.colorTextSecondary}
-            ellipsis
-            style={{
-              flex: 1,
-            }}
-          >
-            {title}
-          </Text>
-        )}
-        {expand && (
-          <Flexbox
-            align={'center'}
-            gap={2}
-            horizontal
-            justify={'flex-end'}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            {extra}
-
-            {expand && actions && (
-              <Flexbox
-                align={'center'}
-                className={ACTION_CLASS_NAME}
-                gap={2}
-                horizontal
-                justify={'flex-end'}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                {actions}
-              </Flexbox>
-            )}
-          </Flexbox>
+          <>
+            <Text color={textColor} ellipsis style={{ flex: 1 }}>
+              {title}
+            </Text>
+            <Flexbox
+              align={'center'}
+              gap={2}
+              horizontal
+              justify={'flex-end'}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              {extra}
+              {actions && (
+                <Flexbox
+                  align={'center'}
+                  className={ACTION_CLASS_NAME}
+                  gap={2}
+                  horizontal
+                  justify={'flex-end'}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  {actions}
+                </Flexbox>
+              )}
+            </Flexbox>
+          </>
         )}
       </Block>
     );

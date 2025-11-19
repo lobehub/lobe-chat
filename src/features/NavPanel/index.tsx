@@ -9,6 +9,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import Body from './Body';
+import { AgentModalProvider } from './Body/Agent/ModalProvider';
 import Footer from './Footer';
 import Header from './Header';
 import { TOOGLE_PANEL_BUTTON_ID } from './Header/components/TogglePanelButton';
@@ -77,7 +78,7 @@ const NavPanel = memo(() => {
   };
 
   return (
-    <>
+    <AgentModalProvider>
       <DraggableSideNav
         className={styles.panel}
         defaultWidth={tmpWidth}
@@ -97,7 +98,7 @@ const NavPanel = memo(() => {
         </ScrollShadow>
       </DraggableSideNav>
       <SessionHydration />
-    </>
+    </AgentModalProvider>
   );
 });
 
