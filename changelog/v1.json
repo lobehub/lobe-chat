@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fully support Gemini 3.0 model."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.88"
+  },
+  {
+    "children": {
       "improvements": ["Refactor chat selectors."]
     },
     "date": "2025-11-19",
