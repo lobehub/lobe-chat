@@ -1,13 +1,12 @@
 'use client';
 
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 
 import { useFetchSessions } from '@/hooks/useFetchSessions';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import ConfigGroupModal from '../Modals/ConfigGroupModal';
-import RenameGroupModal from '../Modals/RenameGroupModal';
+import { useAgentModal } from '../ModalProvider';
 import SkeletonList from '../SkeletonList';
 import Group from './Group';
 import SessionList from './List';
@@ -16,9 +15,7 @@ import { useAgentList } from './useAgentList';
 const AgentList = memo(() => {
   const isInit = useSessionStore(sessionSelectors.isSessionListInit);
   const { customList, pinnedList, defaultList } = useAgentList();
-  const [activeGroupId, setActiveGroupId] = useState<string>();
-  const [renameGroupModalOpen, setRenameGroupModalOpen] = useState(false);
-  const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
+  const { openRenameGroupModal, openConfigGroupModal } = useAgentModal();
 
   useFetchSessions();
 
@@ -34,23 +31,11 @@ const AgentList = memo(() => {
       {showCustom && (
         <Group
           dataSource={customList}
-          setActiveGroupId={setActiveGroupId}
-          setConfigGroupModalOpen={setConfigGroupModalOpen}
-          setRenameGroupModalOpen={setRenameGroupModalOpen}
+          openConfigGroupModal={openConfigGroupModal}
+          openRenameGroupModal={openRenameGroupModal}
         />
       )}
       {showDefault && <SessionList dataSource={defaultList || []} />}
-      {activeGroupId && (
-        <RenameGroupModal
-          id={activeGroupId}
-          onCancel={() => setRenameGroupModalOpen(false)}
-          open={renameGroupModalOpen}
-        />
-      )}
-      <ConfigGroupModal
-        onCancel={() => setConfigGroupModalOpen(false)}
-        open={configGroupModalOpen}
-      />
     </>
   );
 });

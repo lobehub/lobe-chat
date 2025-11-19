@@ -11,13 +11,12 @@ import { CustomSessionGroup } from '@/types/session';
 import Actions from './Actions';
 
 interface GroupItemProps extends CustomSessionGroup {
-  setActiveGroupId: (id: string) => void;
-  setConfigGroupModalOpen: (open: boolean) => void;
-  setRenameGroupModalOpen: (open: boolean) => void;
+  openConfigGroupModal: () => void;
+  openRenameGroupModal: (groupId: string) => void;
 }
 
 const GroupItem = memo<GroupItemProps>(
-  ({ children, id, name, setActiveGroupId, setRenameGroupModalOpen, setConfigGroupModalOpen }) => {
+  ({ children, id, name, openRenameGroupModal, openConfigGroupModal }) => {
     const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
 
     const content = (
@@ -41,11 +40,8 @@ const GroupItem = memo<GroupItemProps>(
           <Actions
             id={id}
             isCustomGroup
-            onOpenChange={(isOpen) => {
-              if (isOpen) setActiveGroupId(id);
-            }}
-            openConfigModal={() => setConfigGroupModalOpen(true)}
-            openRenameModal={() => setRenameGroupModalOpen(true)}
+            openConfigModal={openConfigGroupModal}
+            openRenameModal={() => openRenameGroupModal(id)}
           />
         }
         itemKey={id}

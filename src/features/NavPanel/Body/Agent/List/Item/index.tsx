@@ -1,6 +1,6 @@
 import { ActionIcon } from '@lobehub/ui';
 import { PinIcon } from 'lucide-react';
-import React, { CSSProperties, memo, useState } from 'react';
+import React, { CSSProperties, memo } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
@@ -16,7 +16,7 @@ import { userProfileSelectors } from '@/store/user/selectors';
 import { LobeGroupSession } from '@/types/session';
 
 import NavItem from '../../../../NavItem';
-import CreateGroupModal from '../../Modals/CreateGroupModal';
+import { useAgentModal } from '../../ModalProvider';
 import Actions from './Actions';
 import Avatar from './Avatar';
 
@@ -26,7 +26,7 @@ interface SessionItemProps {
 }
 
 const SessionItem = memo<SessionItemProps>(({ id, style }) => {
-  const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
+  const { openCreateGroupModal } = useAgentModal();
 
   const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
 
@@ -90,40 +90,33 @@ const SessionItem = memo<SessionItemProps>(({ id, style }) => {
       : avatar;
 
   return (
-    <>
-      <NavItem
-        actions={
-          <Actions
-            group={group}
-            id={id}
-            openCreateGroupModal={() => setCreateGroupModalOpen(true)}
-            parentType={sessionType}
-          />
-        }
-        active={active}
-        draggable={isDesktop}
-        extra={
-          pin ? (
-            <ActionIcon icon={PinIcon} size={'small'} style={{ pointerEvents: 'none' }} />
-          ) : undefined
-        }
-        icon={
-          <Avatar avatar={sessionAvatar} avatarBackground={avatarBackground} type={sessionType} />
-        }
-        key={id}
-        loading={loading}
-        onDoubleClick={handleDoubleClick}
-        onDragEnd={handleDragEnd}
-        onDragStart={handleDragStart}
-        style={style}
-        title={title}
-      />
-      <CreateGroupModal
-        id={id}
-        onCancel={() => setCreateGroupModalOpen(false)}
-        open={createGroupModalOpen}
-      />
-    </>
+    <NavItem
+      actions={
+        <Actions
+          group={group}
+          id={id}
+          openCreateGroupModal={() => openCreateGroupModal(id)}
+          parentType={sessionType}
+        />
+      }
+      active={active}
+      draggable={isDesktop}
+      extra={
+        pin ? (
+          <ActionIcon icon={PinIcon} size={'small'} style={{ pointerEvents: 'none' }} />
+        ) : undefined
+      }
+      icon={
+        <Avatar avatar={sessionAvatar} avatarBackground={avatarBackground} type={sessionType} />
+      }
+      key={id}
+      loading={loading}
+      onDoubleClick={handleDoubleClick}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      style={style}
+      title={title}
+    />
   );
 }, shallow);
 

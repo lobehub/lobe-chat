@@ -1,21 +1,22 @@
-import { ActionIcon, Dropdown, type DropdownProps, Icon, type MenuProps } from '@lobehub/ui';
+import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
-import { MoreHorizontalIcon, PencilLine, Plus, Settings2, Trash, UsersRound } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { MoreHorizontalIcon, PencilLine, Trash } from 'lucide-react';
+import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { MemberSelectionModal } from '@/components/MemberSelectionModal';
-import { useChatGroupStore } from '@/store/chatGroup';
+import { useGroupActions, useMenuItems, useSessionActions } from '@/features/NavPanel/hooks';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
+
+import { useAgentModal } from '../../ModalProvider';
 
 const useStyles = createStyles(({ css }) => ({
   modalRoot: css`
     z-index: 2000;
   `,
 }));
-interface ActionsProps extends Pick<DropdownProps, 'onOpenChange'> {
+interface ActionsProps {
   id?: string;
   isCustomGroup?: boolean;
   isPinned?: boolean;
@@ -23,102 +24,54 @@ interface ActionsProps extends Pick<DropdownProps, 'onOpenChange'> {
   openRenameModal?: () => void;
 }
 
-type ItemOfType<T> = T extends (infer Item)[] ? Item : never;
-type MenuItemType = ItemOfType<MenuProps['items']>;
-
 const Actions = memo<ActionsProps>(
-  ({ id, openRenameModal, openConfigModal, onOpenChange, isCustomGroup, isPinned }) => {
+  ({ id, openRenameModal, openConfigModal, isCustomGroup, isPinned }) => {
     const { t } = useTranslation('chat');
     const { styles } = useStyles();
-    const { modal, message } = App.useApp();
+    const { modal } = App.useApp();
 
-    const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
-    const [isCreatingGroup, setIsCreatingGroup] = useState(false);
-
-    const [createSession, removeSessionGroup] = useSessionStore((s) => [
-      s.createSession,
-      s.removeSessionGroup,
-    ]);
-
-    const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
+    const [removeSessionGroup] = useSessionStore((s) => [s.removeSessionGroup]);
 
     const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
-    const sessionGroupConfigPublicItem: MenuItemType = {
-      icon: <Icon icon={Settings2} />,
-      key: 'config',
-      label: t('sessionGroup.config'),
-      onClick: ({ domEvent }) => {
-        domEvent.stopPropagation();
-        openConfigModal();
-      },
-    };
+    // Modal management
+    const { openMemberSelectionModal, closeMemberSelectionModal } = useAgentModal();
 
-    const newAgentPublicItem: MenuItemType = {
-      icon: <Icon icon={Plus} />,
-      key: 'newAgent',
-      label: t('newAgent'),
-      onClick: async ({ domEvent }) => {
-        domEvent.stopPropagation();
-        const key = 'createNewAgentInGroup';
-        message.loading({ content: t('sessionGroup.creatingAgent'), duration: 0, key });
+    // Session/Agent creation
+    const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
 
-        await createSession({ group: id, pinned: isPinned });
+    // Group creation
+    const { createGroupWithMembers, isCreating: isCreatingGroup } = useGroupActions();
 
-        message.destroy(key);
-        message.success({ content: t('sessionGroup.createAgentSuccess') });
-      },
-    };
+    // Handler to open member selection modal with callbacks
+    const handleOpenMemberSelection = useCallback(() => {
+      openMemberSelectionModal({
+        onCancel: closeMemberSelectionModal,
+        onConfirm: async (selectedAgents, hostConfig, enableSupervisor) => {
+          await createGroupWithMembers(
+            selectedAgents,
+            'New Group Chat',
+            hostConfig,
+            enableSupervisor,
+          );
+          closeMemberSelectionModal();
+        },
+      });
+    }, [openMemberSelectionModal, closeMemberSelectionModal, createGroupWithMembers]);
 
-    const newGroupChatItem: MenuItemType = {
-      icon: <Icon icon={UsersRound} />,
-      key: 'newGroupChat',
-      label: t('newGroupChat'),
-      onClick: ({ domEvent }) => {
-        domEvent.stopPropagation();
-        setIsGroupModalOpen(true);
-      },
-    };
+    // Menu items
+    const { createConfigMenuItem, createNewAgentMenuItem, createNewGroupChatMenuItem } =
+      useMenuItems({
+        onCreateAgent: () => createAgent({ groupId: id, isPinned }),
+        onCreateGroup: handleOpenMemberSelection,
+        onOpenConfig: openConfigModal,
+      });
 
-    const handleCreateGroupWithMembers = async (
-      selectedAgents: string[],
-      hostConfig?: { model?: string; provider?: string },
-      enableSupervisor?: boolean,
-    ) => {
-      try {
-        setIsCreatingGroup(true);
+    const sessionGroupConfigPublicItem = createConfigMenuItem();
+    const newAgentPublicItem = createNewAgentMenuItem();
+    const newGroupChatItem = createNewGroupChatMenuItem();
 
-        const config: any = {};
-
-        if (enableSupervisor !== undefined) {
-          config.enableSupervisor = enableSupervisor;
-        }
-
-        if (hostConfig) {
-          config.orchestratorModel = hostConfig.model;
-          config.orchestratorProvider = hostConfig.provider;
-        }
-
-        await createGroup(
-          {
-            config: Object.keys(config).length > 0 ? config : undefined,
-            title: 'New Group Chat',
-          },
-          selectedAgents,
-        );
-        setIsGroupModalOpen(false);
-        message.success({ content: t('sessionGroup.createGroupSuccess') });
-      } catch (error) {
-        console.error('Failed to create group:', error);
-        message.error({ content: t('sessionGroup.createGroupFailed') });
-      } finally {
-        setIsCreatingGroup(false);
-      }
-    };
-
-    const handleGroupModalCancel = () => {
-      setIsGroupModalOpen(false);
-    };
+    const isLoading = isCreatingAgent || isCreatingGroup;
 
     const customGroupItems: MenuProps['items'] = useMemo(
       () => [
@@ -126,8 +79,8 @@ const Actions = memo<ActionsProps>(
           icon: <Icon icon={PencilLine} />,
           key: 'rename',
           label: t('sessionGroup.rename'),
-          onClick: ({ domEvent }) => {
-            domEvent.stopPropagation();
+          onClick: (info) => {
+            info.domEvent?.stopPropagation();
             openRenameModal?.();
           },
         },
@@ -140,8 +93,8 @@ const Actions = memo<ActionsProps>(
           icon: <Icon icon={Trash} />,
           key: 'delete',
           label: t('delete', { ns: 'common' }),
-          onClick: ({ domEvent }) => {
-            domEvent.stopPropagation();
+          onClick: (info) => {
+            info.domEvent?.stopPropagation();
             modal.confirm({
               centered: true,
               okButtonProps: { danger: true },
@@ -155,10 +108,21 @@ const Actions = memo<ActionsProps>(
           },
         },
       ],
-      [],
+      [
+        t,
+        sessionGroupConfigPublicItem,
+        openRenameModal,
+        modal,
+        id,
+        removeSessionGroup,
+        styles.modalRoot,
+      ],
     );
 
-    const defaultItems: MenuProps['items'] = useMemo(() => [sessionGroupConfigPublicItem], []);
+    const defaultItems: MenuProps['items'] = useMemo(
+      () => [sessionGroupConfigPublicItem],
+      [sessionGroupConfigPublicItem],
+    );
 
     const tailItems = useMemo(
       () => (isCustomGroup ? customGroupItems : defaultItems),
@@ -184,36 +148,25 @@ const Actions = memo<ActionsProps>(
     }, [showCreateSession, enableGroupChat, newAgentPublicItem, newGroupChatItem, tailItems]);
 
     return (
-      <>
-        <Dropdown
-          arrow={false}
-          menu={{
-            items: menuItems,
-            onClick: ({ domEvent }) => {
-              domEvent.stopPropagation();
-            },
+      <Dropdown
+        arrow={false}
+        menu={{
+          items: menuItems,
+          onClick: ({ domEvent }) => {
+            domEvent.stopPropagation();
+          },
+        }}
+        trigger={['click']}
+      >
+        <ActionIcon
+          icon={MoreHorizontalIcon}
+          loading={isLoading}
+          onClick={(e) => {
+            e.stopPropagation();
           }}
-          onOpenChange={onOpenChange}
-          trigger={['click']}
-        >
-          <ActionIcon
-            icon={MoreHorizontalIcon}
-            loading={isCreatingGroup}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            size={'small'}
-          />
-        </Dropdown>
-        {enableGroupChat && (
-          <MemberSelectionModal
-            mode="create"
-            onCancel={handleGroupModalCancel}
-            onConfirm={handleCreateGroupWithMembers}
-            open={isGroupModalOpen}
-          />
-        )}
-      </>
+          size={'small'}
+        />
+      </Dropdown>
     );
   },
 );

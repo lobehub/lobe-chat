@@ -1,122 +1,91 @@
-import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
-import { Bot, PlusIcon, Users } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ActionIcon, Dropdown, type MenuProps } from '@lobehub/ui';
+import { PlusIcon } from 'lucide-react';
+import { memo, useCallback, useMemo } from 'react';
 
-import { ChatGroupWizard } from '@/components/ChatGroupWizard';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import { useGroupCreation, useSessionCreation } from '../../Header/hooks';
-
-type ItemOfType<T> = T extends (infer Item)[] ? Item : never;
-type MenuItemType = ItemOfType<MenuProps['items']>;
+import { useGroupActions, useMenuItems, useSessionActions } from '../../hooks';
+import { useAgentModal } from './ModalProvider';
 
 const CreateButton = memo(() => {
-  const { t } = useTranslation('chat');
-  const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
-  const [isGroupWizardOpen, setIsGroupWizardOpen] = useState(false);
+  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { openGroupWizardModal, closeGroupWizardModal, openConfigGroupModal } = useAgentModal();
 
-  const { mutateAgent, isValidatingAgent } = useSessionCreation();
-  const { createGroupFromTemplate, createGroupWithMembers, isCreatingGroup } = useGroupCreation();
+  // Session/Agent creation
+  const { createAgent, isLoading: isCreatingAgent } = useSessionActions();
 
-  const handleCreateGroupFromTemplate = useCallback(
+  // Group creation
+  const {
+    createGroupFromTemplate,
+    createGroupWithMembers,
+    isCreating: isCreatingGroup,
+  } = useGroupActions();
+
+  // Adapter functions to match GroupWizard interface
+  const handleGroupWizardCreateCustom = useCallback(
+    async (
+      selectedAgents: string[],
+      hostConfig?: { model?: string; provider?: string },
+      enableSupervisor?: boolean,
+    ) => {
+      await createGroupWithMembers(selectedAgents, undefined, hostConfig, enableSupervisor);
+    },
+    [createGroupWithMembers],
+  );
+
+  const handleGroupWizardCreateFromTemplate = useCallback(
     async (
       templateId: string,
       hostConfig?: { model?: string; provider?: string },
       enableSupervisor?: boolean,
       selectedMemberTitles?: string[],
     ) => {
-      const success = await createGroupFromTemplate(
-        templateId,
-        hostConfig,
-        enableSupervisor,
-        selectedMemberTitles,
-      );
-      if (success) {
-        setIsGroupWizardOpen(false);
-      }
+      await createGroupFromTemplate(templateId, hostConfig, enableSupervisor, selectedMemberTitles);
     },
     [createGroupFromTemplate],
   );
 
-  const handleCreateGroupWithMembers = useCallback(
-    async (
-      selectedAgents: string[],
-      hostConfig?: { model?: string; provider?: string },
-      enableSupervisor?: boolean,
-    ) => {
-      const success = await createGroupWithMembers(
-        selectedAgents,
-        t('defaultGroupChat'),
-        hostConfig,
-        enableSupervisor,
-      );
-      if (success) {
-        setIsGroupWizardOpen(false);
-      }
-    },
-    [createGroupWithMembers, t],
-  );
-
-  const handleGroupWizardCancel = useCallback(() => {
-    setIsGroupWizardOpen(false);
-  }, []);
-
   const handleOpenGroupWizard = useCallback(() => {
-    setIsGroupWizardOpen(true);
-  }, []);
+    openGroupWizardModal({
+      onCancel: closeGroupWizardModal,
+      onCreateCustom: handleGroupWizardCreateCustom,
+      onCreateFromTemplate: handleGroupWizardCreateFromTemplate,
+    });
+  }, [
+    openGroupWizardModal,
+    closeGroupWizardModal,
+    handleGroupWizardCreateFromTemplate,
+    handleGroupWizardCreateCustom,
+  ]);
 
-  const handleClickMutateAgent = useCallback(() => {
-    mutateAgent();
-  }, [mutateAgent]);
+  // Menu items
+  const { createConfigMenuItem, createMenuItems } = useMenuItems({
+    onCreateAgent: () => createAgent(),
+    onCreateGroup: handleOpenGroupWizard,
+    onOpenConfig: openConfigGroupModal,
+  });
 
-  const dropdownItems = useMemo(
-    () =>
-      [
-        {
-          icon: <Icon icon={Bot} />,
-          key: 'newAgent',
-          label: t('newAgent'),
-          onClick: handleClickMutateAgent,
-        },
-        enableGroupChat && {
-          icon: <Icon icon={Users} />,
-          key: 'newGroup',
-          label: t('newGroupChat'),
-          onClick: handleOpenGroupWizard,
-        },
-      ].filter(Boolean) as MenuItemType[],
-    [t, handleClickMutateAgent, handleOpenGroupWizard],
-  );
+  const dropdownItems: MenuProps['items'] = useMemo(() => {
+    if (!createMenuItems) return [createConfigMenuItem()];
+    return [...createMenuItems, { type: 'divider' as const }, createConfigMenuItem()];
+  }, [createMenuItems, createConfigMenuItem]);
+
+  const isLoading = isCreatingAgent || isCreatingGroup;
 
   if (!showCreateSession) return;
 
   return (
-    <>
-      <Dropdown
-        menu={{
-          items: dropdownItems,
-          onClick: ({ domEvent }) => {
-            domEvent.stopPropagation();
-          },
-        }}
-        trigger={['click']}
-      >
-        <ActionIcon
-          icon={PlusIcon}
-          loading={isValidatingAgent || isCreatingGroup}
-          size={'small'}
-          style={{ flex: 'none' }}
-        />
-      </Dropdown>
-      <ChatGroupWizard
-        isCreatingFromTemplate={isCreatingGroup}
-        onCancel={handleGroupWizardCancel}
-        onCreateCustom={handleCreateGroupWithMembers}
-        onCreateFromTemplate={handleCreateGroupFromTemplate}
-        open={isGroupWizardOpen}
-      />
-    </>
+    <Dropdown
+      menu={{
+        items: dropdownItems,
+        onClick: ({ domEvent }) => {
+          domEvent.stopPropagation();
+        },
+      }}
+      trigger={['click']}
+    >
+      <ActionIcon icon={PlusIcon} loading={isLoading} size={'small'} style={{ flex: 'none' }} />
+    </Dropdown>
   );
 });
 

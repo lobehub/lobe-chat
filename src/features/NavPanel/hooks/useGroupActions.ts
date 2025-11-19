@@ -1,4 +1,6 @@
+import { App } from 'antd';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
@@ -12,15 +14,31 @@ interface HostConfig {
   provider?: string;
 }
 
-export const useGroupCreation = () => {
+interface CreateGroupOptions {
+  onSuccess?: () => void;
+}
+
+/**
+ * Unified hook for all group creation operations
+ * Handles both template-based and custom group creation with proper feedback
+ */
+export const useGroupActions = (options?: CreateGroupOptions) => {
+  const { t } = useTranslation('chat');
+  const { message } = App.useApp();
   const groupTemplates = useGroupTemplates();
+
   const [createSession, refreshSessions] = useSessionStore((s) => [
     s.createSession,
     s.refreshSessions,
   ]);
   const [createGroup] = useChatGroupStore((s) => [s.createGroup]);
-  const [isCreatingGroup, setIsCreatingGroup] = useState(false);
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  /**
+   * Create a group from a predefined template
+   */
   const createGroupFromTemplate = useCallback(
     async (
       templateId: string,
@@ -28,7 +46,7 @@ export const useGroupCreation = () => {
       enableSupervisor?: boolean,
       selectedMemberTitles?: string[],
     ) => {
-      setIsCreatingGroup(true);
+      setIsCreating(true);
       try {
         const template = groupTemplates.find((t) => t.id === templateId);
         if (!template) {
@@ -80,17 +98,6 @@ export const useGroupCreation = () => {
         });
 
         // Create the group with the agent IDs and host configuration
-        console.log('Creating group with hostConfig:', hostConfig);
-        console.log(
-          'Mapped config:',
-          hostConfig
-            ? {
-                orchestratorModel: hostConfig.model,
-                orchestratorProvider: hostConfig.provider,
-              }
-            : undefined,
-        );
-
         await createGroup(
           {
             config: {
@@ -108,36 +115,34 @@ export const useGroupCreation = () => {
           memberAgentIds,
         );
 
+        setIsModalOpen(false);
+        message.success({ content: t('sessionGroup.createGroupSuccess') });
+        options?.onSuccess?.();
         return true;
       } catch (error) {
         console.error('Failed to create group from template:', error);
+        message.error({ content: t('sessionGroup.createGroupFailed') });
         return false;
       } finally {
-        setIsCreatingGroup(false);
+        setIsCreating(false);
       }
     },
-    [groupTemplates, createSession, refreshSessions, createGroup],
+    [groupTemplates, createSession, refreshSessions, createGroup, message, t, options],
   );
 
+  /**
+   * Create a custom group with selected members
+   */
   const createGroupWithMembers = useCallback(
     async (
       selectedAgents: string[],
-      groupTitle: string,
+      groupTitle?: string,
       hostConfig?: HostConfig,
       enableSupervisor?: boolean,
     ) => {
-      setIsCreatingGroup(true);
+      setIsCreating(true);
       try {
-        console.log('Creating custom group with hostConfig:', hostConfig);
-        console.log(
-          'Mapped config:',
-          hostConfig
-            ? {
-                orchestratorModel: hostConfig.model,
-                orchestratorProvider: hostConfig.provider,
-              }
-            : undefined,
-        );
+        const title = groupTitle || t('defaultGroupChat');
 
         await createGroup(
           {
@@ -151,25 +156,47 @@ export const useGroupCreation = () => {
               enableSupervisor: enableSupervisor ?? true,
               scene: DEFAULT_CHAT_GROUP_CHAT_CONFIG.scene,
             },
-            title: groupTitle,
+            title,
           },
           selectedAgents,
         );
 
+        setIsModalOpen(false);
+        message.success({ content: t('sessionGroup.createGroupSuccess') });
+        options?.onSuccess?.();
         return true;
       } catch (error) {
         console.error('Failed to create group:', error);
+        message.error({ content: t('sessionGroup.createGroupFailed') });
         return false;
       } finally {
-        setIsCreatingGroup(false);
+        setIsCreating(false);
       }
     },
-    [createGroup],
+    [createGroup, message, t, options],
   );
 
+  const openModal = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
   return {
+    closeModal,
+    // Creation methods
     createGroupFromTemplate,
+
     createGroupWithMembers,
-    isCreatingGroup,
+
+    // Loading state
+    isCreating,
+
+    // Modal state
+    isModalOpen,
+
+    openModal,
   };
 };

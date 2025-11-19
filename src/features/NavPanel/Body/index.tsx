@@ -8,6 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import Agent from './Agent';
+import { AgentModalProvider } from './Agent/ModalProvider';
 import Repo from './Repo';
 
 export enum GroupKey {
@@ -20,7 +21,9 @@ const Body = memo(() => {
   const content = (
     <>
       <Repo itemKey={GroupKey.Repo} />
-      <Agent itemKey={GroupKey.Agent} />
+      <AgentModalProvider>
+        <Agent itemKey={GroupKey.Agent} />
+      </AgentModalProvider>
     </>
   );
 

@@ -1,21 +1,46 @@
-import { ActionIcon, Dropdown, Icon } from '@lobehub/ui';
-import { Bot, MessageSquarePlus, SquarePlus, Users } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { ActionIcon, Dropdown } from '@lobehub/ui';
+import { MessageSquarePlus, SquarePlus } from 'lucide-react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ChatGroupWizard } from '@/components/ChatGroupWizard';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import { useGroupCreation, useSessionCreation } from '../hooks';
+import { useGroupActions, useMenuItems, useSessionActions } from '../../hooks';
 
 const AddButton = memo(() => {
   const { t } = useTranslation('chat');
   const { showCreateSession, enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
-  const [isGroupWizardOpen, setIsGroupWizardOpen] = useState(false);
 
-  const { mutateAgent, isValidatingAgent } = useSessionCreation();
-  const { createGroupFromTemplate, createGroupWithMembers, isCreatingGroup } = useGroupCreation();
+  // Session/Agent creation
+  const { createAgent, isValidatingAgent } = useSessionActions();
+
+  // Group creation
+  const {
+    createGroupFromTemplate,
+    createGroupWithMembers,
+    isCreating: isCreatingGroup,
+    isModalOpen,
+    openModal,
+    closeModal,
+  } = useGroupActions();
+
+  const handleCreateGroupWithMembers = useCallback(
+    async (
+      selectedAgents: string[],
+      hostConfig?: { model?: string; provider?: string },
+      enableSupervisor?: boolean,
+    ) => {
+      await createGroupWithMembers(
+        selectedAgents,
+        t('defaultGroupChat'),
+        hostConfig,
+        enableSupervisor,
+      );
+    },
+    [createGroupWithMembers, t],
+  );
 
   const handleCreateGroupFromTemplate = useCallback(
     async (
@@ -24,74 +49,23 @@ const AddButton = memo(() => {
       enableSupervisor?: boolean,
       selectedMemberTitles?: string[],
     ) => {
-      const success = await createGroupFromTemplate(
-        templateId,
-        hostConfig,
-        enableSupervisor,
-        selectedMemberTitles,
-      );
-      if (success) {
-        setIsGroupWizardOpen(false);
-      }
+      await createGroupFromTemplate(templateId, hostConfig, enableSupervisor, selectedMemberTitles);
     },
     [createGroupFromTemplate],
   );
 
-  const handleCreateGroupWithMembers = useCallback(
-    async (
-      selectedAgents: string[],
-      hostConfig?: { model?: string; provider?: string },
-      enableSupervisor?: boolean,
-    ) => {
-      const success = await createGroupWithMembers(
-        selectedAgents,
-        t('defaultGroupChat'),
-        hostConfig,
-        enableSupervisor,
-      );
-      if (success) {
-        setIsGroupWizardOpen(false);
-      }
-    },
-    [createGroupWithMembers, t],
-  );
-
-  const handleGroupWizardCancel = useCallback(() => {
-    setIsGroupWizardOpen(false);
-  }, []);
-
-  const handleOpenGroupWizard = useCallback(() => {
-    setIsGroupWizardOpen(true);
-  }, []);
-
-  const handleClickMutateAgent = useCallback(() => {
-    mutateAgent();
-  }, [mutateAgent]);
-
-  const dropdownItems = useMemo(
-    () => [
-      {
-        icon: <Icon icon={Bot} />,
-        key: 'newAgent',
-        label: t('newAgent'),
-        onClick: handleClickMutateAgent,
-      },
-      {
-        icon: <Icon icon={Users} />,
-        key: 'newGroup',
-        label: t('newGroupChat'),
-        onClick: handleOpenGroupWizard,
-      },
-    ],
-    [t, handleClickMutateAgent, handleOpenGroupWizard],
-  );
+  // Menu items
+  const { createMenuItems: dropdownItems } = useMenuItems({
+    onCreateAgent: () => createAgent(),
+    onCreateGroup: openModal,
+  });
 
   if (!showCreateSession) return;
 
   if (enableGroupChat)
     return (
       <>
-        <Dropdown menu={{ items: dropdownItems }} trigger={['hover']}>
+        <Dropdown menu={{ items: dropdownItems || [] }} trigger={['hover']}>
           <ActionIcon
             icon={SquarePlus}
             loading={isValidatingAgent || isCreatingGroup}
@@ -101,10 +75,10 @@ const AddButton = memo(() => {
         </Dropdown>
         <ChatGroupWizard
           isCreatingFromTemplate={isCreatingGroup}
-          onCancel={handleGroupWizardCancel}
+          onCancel={closeModal}
           onCreateCustom={handleCreateGroupWithMembers}
           onCreateFromTemplate={handleCreateGroupFromTemplate}
-          open={isGroupWizardOpen}
+          open={isModalOpen}
         />
       </>
     );
@@ -113,7 +87,7 @@ const AddButton = memo(() => {
     <ActionIcon
       icon={MessageSquarePlus}
       loading={isValidatingAgent}
-      onClick={handleClickMutateAgent}
+      onClick={() => createAgent()}
       size={DESKTOP_HEADER_ICON_SIZE}
       style={{ flex: 'none' }}
       title={t('newAgent')}

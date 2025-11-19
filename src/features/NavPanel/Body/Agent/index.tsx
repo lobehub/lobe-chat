@@ -9,6 +9,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 
 import CreateButton from './CreateButton';
 import List from './List';
+import { AgentModalProvider } from './ModalProvider';
 
 interface AgentProps {
   itemKey: string;
@@ -22,22 +23,24 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
     </Flexbox>
   );
 
-  if (!expand) return content;
+  if (!expand) return <AgentModalProvider>{content}</AgentModalProvider>;
 
   return (
-    <AccordionItem
-      action={<CreateButton />}
-      itemKey={itemKey}
-      paddingBlock={4}
-      paddingInline={'8px 4px'}
-      title={
-        <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {'助手'}
-        </Text>
-      }
-    >
-      {content}
-    </AccordionItem>
+    <AgentModalProvider>
+      <AccordionItem
+        action={<CreateButton />}
+        itemKey={itemKey}
+        paddingBlock={4}
+        paddingInline={'8px 4px'}
+        title={
+          <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
+            {'助手'}
+          </Text>
+        }
+      >
+        {content}
+      </AccordionItem>
+    </AgentModalProvider>
   );
 });
 
