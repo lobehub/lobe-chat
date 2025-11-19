@@ -1,4 +1,4 @@
-import { GenerateContentResponse } from '@google/genai';
+import { GenerateContentResponse, Part } from '@google/genai';
 import { GroundingSearch } from '@lobechat/types';
 
 import { ChatStreamCallbacks } from '../../../types';
@@ -74,19 +74,27 @@ const transformGoogleGenerativeAIStream = (
     }
   }
 
-  const functionCalls = chunk.functionCalls;
+  // Parse function calls from candidate.content.parts
+  const functionCalls =
+    candidate?.content?.parts
+      ?.filter((part: any) => part.functionCall)
+      .map((part: Part) => ({
+        ...part.functionCall,
+        thoughtSignature: part.thoughtSignature,
+      })) || [];
 
-  if (functionCalls) {
+  if (functionCalls.length > 0) {
     return [
       {
         data: functionCalls.map(
-          (value, index): StreamToolCallChunkData => ({
+          (value, index: number): StreamToolCallChunkData => ({
             function: {
               arguments: JSON.stringify(value.args),
               name: value.name,
             },
             id: generateToolCallId(index, value.name),
             index: index,
+            thoughtSignature: value.thoughtSignature,
             type: 'function',
           }),
         ),
@@ -97,7 +105,13 @@ const transformGoogleGenerativeAIStream = (
     ];
   }
 
-  const text = chunk.text;
+  // Parse text from candidate.content.parts
+  // Filter out thought content (thought: true) and thoughtSignature
+  const text =
+    candidate?.content?.parts
+      ?.filter((part: any) => part.text && !part.thought && !part.thoughtSignature)
+      .map((part: any) => part.text)
+      .join('') || '';
 
   if (candidate) {
     // 首先检查是否为 reasoning 内容 (thought: true)
