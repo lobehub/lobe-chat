@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 是開源權重的大規模混合注意力推理模型，擁有 4560 億參數，每個 Token 可激活約 459 億參數。模型原生支援 100 萬 Token 的超長上下文，並透過閃電注意力機制，在 10 萬 Token 的生成任務中相比 DeepSeek R1 節省 75% 的浮點運算量。同時，MiniMax-M1 採用 MoE（混合專家）架構，結合 CISPO 演算法與混合注意力設計的高效強化學習訓練，在長輸入推理與真實軟體工程場景中實現了業界領先的性能。"
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 為智慧體重新定義了效率。它是一款緊湊、快速且具高性價比的 MoE 模型，擁有 2300 億總參數與 100 億啟用參數，專為編碼與智慧體任務的頂級效能而打造，同時保有強大的通用智慧。僅需 100 億啟用參數，MiniMax-M2 即可提供媲美大型模型的效能，是高效率應用的理想選擇。"
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "總參數 1T，激活參數 32B。非思維模型中，在前沿知識、數學和編碼方面達到頂尖水平，更擅長通用 Agent 任務。針對代理任務進行了精心優化，不僅能回答問題，還能採取行動。最適用於即興、通用聊天和代理體驗，是一款無需長時間思考的反射級模型。"
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 在僅有極少標註資料的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B 是 70B Llama 模型的蒸餾、更高效變體。它在文字生成任務中保持強大性能，減少計算開銷以便於部署和研究。由 Groq 使用其自訂語言處理單元 (LPU) 硬體提供服務，以提供快速高效的推理。"
+    "description": "DeepSeek R1 Distill Llama 70B 是一款基於 Llama3.3 70B 的大型語言模型，透過 DeepSeek R1 的微調輸出，實現了與最先進大型模型相當的競爭效能。"
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B是一種基於Llama-3.1-8B-Instruct的蒸餾大語言模型，通過使用DeepSeek R1的輸出進行訓練而得。"
@@ -2461,6 +2464,9 @@
   },
   "minimax/minimax-m2": {
     "description": "專為高效編碼與 Agent 工作流程而設計"
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 是一款緊湊、快速且具高性價比的混合專家（MoE）模型，擁有 2300 億總參數與 100 億啟用參數，專為編碼與智慧體任務的頂級效能而打造，同時保有強大的通用智慧。此模型在多檔案編輯、編碼-執行-修復閉環、測試驗證修復以及複雜的長鏈工具鏈方面表現優異，是開發者工作流程的理想選擇。"
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B 是 Mistral 的全球頂尖邊緣模型。"

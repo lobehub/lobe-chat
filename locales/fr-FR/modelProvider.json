@@ -295,7 +295,7 @@
       },
       "helpDoc": "Guide de configuration",
       "responsesApi": {
-        "desc": "Utilise la nouvelle norme de format de requête d'OpenAI, débloquant des fonctionnalités avancées telles que les chaînes de pensée",
+        "desc": "Adopte le nouveau format de requête de dernière génération d'OpenAI, permettant de débloquer des fonctionnalités avancées telles que la chaîne de pensée (pris en charge uniquement par les modèles OpenAI)",
         "title": "Utiliser la norme Responses API"
       },
       "waitingForMore": "D'autres modèles sont en <1>planification d'intégration</1>, restez à l'écoute"
