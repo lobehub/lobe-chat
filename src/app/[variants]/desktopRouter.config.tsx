@@ -1,8 +1,10 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { createBrowserRouter, redirect } from 'react-router-dom';
+import { useEffect } from 'react';
+import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
 
+import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
@@ -22,6 +24,9 @@ import { idLoader, slugLoader } from './loaders/routeParams';
  * The entire router tree is wrapped with Next.js dynamic import (ssr: false),
  * ensuring this code never executes on the server.
  */
+
+
+
 
 // Chat components
 const DesktopChatPage = dynamic(
@@ -146,8 +151,28 @@ const ProfileLayoutWrapper = dynamic(() => import('./(main)/profile/_layout/Desk
   ssr: false,
 });
 
+// Component to register navigate function in global store
+const NavigatorRegistrar = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    useGlobalStore.setState({ navigate });
+
+    return () => {
+      useGlobalStore.setState({ navigate: undefined });
+    };
+  }, [navigate]);
+
+  return null;
+};
+
 // Root layout wrapper component
-const RootLayout = (props: { locale: Locales }) => <DesktopMainLayout locale={props.locale} />;
+const RootLayout = (props: { locale: Locales }) => (
+  <>
+    <NavigatorRegistrar />
+    <DesktopMainLayout locale={props.locale} />
+  </>
+);
 
 // Create desktop router configuration
 export const createDesktopRouter = (locale: Locales) =>
