@@ -128,6 +128,17 @@ export const chatThreadMessage: StateCreator<
     let parentMessageId: string | undefined = undefined;
     let tempMessageId: string | undefined = undefined;
 
+    // Create operation for send thread message
+    const { operationId } = get().startOperation({
+      type: 'sendThreadMessage',
+      context: {
+        sessionId: activeId,
+        topicId: activeTopicId,
+        threadId: portalThreadId,
+      },
+      label: 'Send Thread Message',
+    });
+
     // if there is no portalThreadId, then create a thread and then append message
     if (!portalThreadId) {
       if (!threadStartMessageId) return;
@@ -158,41 +169,63 @@ export const chatThreadMessage: StateCreator<
       tempMessageId = get().optimisticCreateTmpMessage(newMessage);
       get().internal_toggleMessageLoading(true, tempMessageId);
 
-      const result = await get().optimisticCreateMessage(newMessage, { tempMessageId });
+      const result = await get().optimisticCreateMessage(newMessage, {
+        operationId,
+        tempMessageId,
+      });
       if (!result) return;
       parentMessageId = result.id;
     }
 
     get().internal_toggleMessageLoading(false, tempMessageId);
 
-    if (!parentMessageId) return;
+    if (!parentMessageId) {
+      get().failOperation(operationId, {
+        type: 'CreateMessageError',
+        message: 'Failed to create message',
+      });
+      return;
+    }
     //  update assistant update to make it rerank
     useSessionStore.getState().triggerSessionUpdate(get().activeId);
 
     // Get the current messages to generate AI response
     const messages = threadSelectors.portalAIChats(get());
 
-    await internal_execAgentRuntime({
-      messages,
-      parentMessageId,
-      parentMessageType: 'user',
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
-      ragQuery: get().internal_shouldUseRAG() ? message : undefined,
-      threadId: get().portalThreadId,
-      inPortalThread: true,
-    });
+    try {
+      await internal_execAgentRuntime({
+        messages,
+        parentMessageId,
+        parentMessageType: 'user',
+        sessionId: get().activeId,
+        topicId: get().activeTopicId,
+        ragQuery: get().internal_shouldUseRAG() ? message : undefined,
+        threadId: get().portalThreadId,
+        inPortalThread: true,
+        parentOperationId: operationId, // Pass as parent operation
+      });
 
-    set({ isCreatingThreadMessage: false }, false, n('creatingThreadMessage/stop'));
+      // 说明是在新建 thread，需要自动总结标题
+      if (!portalThreadId) {
+        const portalThread = threadSelectors.currentPortalThread(get());
 
-    // 说明是在新建 thread，需要自动总结标题
-    if (!portalThreadId) {
-      const portalThread = threadSelectors.currentPortalThread(get());
+        if (!portalThread) return;
 
-      if (!portalThread) return;
+        const chats = threadSelectors.portalAIChats(get());
+        await get().summaryThreadTitle(portalThread.id, chats);
+      }
 
-      const chats = threadSelectors.portalAIChats(get());
-      await get().summaryThreadTitle(portalThread.id, chats);
+      // Complete operation on success
+      get().completeOperation(operationId);
+    } catch (e) {
+      console.error(e);
+      // Fail operation on error
+      get().failOperation(operationId, {
+        type: e instanceof Error ? e.name : 'unknown_error',
+        message: e instanceof Error ? e.message : 'Thread message generation failed',
+      });
+    } finally {
+      set({ isCreatingThreadMessage: false }, false, n('creatingThreadMessage/stop'));
     }
   },
   resendThreadMessage: async (messageId) => {
