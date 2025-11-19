@@ -397,34 +397,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      video: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
-    displayName: 'Gemini 2.5 Flash Preview 05-20',
-    id: 'gemini-2.5-flash-preview-05-20',
-    maxOutput: 65_536,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.0375, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.15, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 3.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-05-20',
-    settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       imageOutput: true,
       vision: true,
     },
@@ -519,35 +491,6 @@ const googleChatModels: AIChatModelCard[] = [
       ],
     },
     releasedAt: '2025-09-25',
-    settings: {
-      extendParams: ['thinkingBudget', 'urlContext'],
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      video: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description:
-      'Gemini 2.5 Flash-Lite Preview 是 Google 最小、性价比最高的模型，专为大规模使用而设计。',
-    displayName: 'Gemini 2.5 Flash-Lite Preview 06-17',
-    id: 'gemini-2.5-flash-lite-preview-06-17',
-    maxOutput: 65_536,
-    pricing: {
-      units: [
-        { name: 'textInput_cacheRead', rate: 0.025, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.4, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2025-06-11',
     settings: {
       extendParams: ['thinkingBudget', 'urlContext'],
       searchImpl: 'params',
