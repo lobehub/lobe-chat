@@ -76,7 +76,7 @@ export interface StreamingExecutorAction {
     tool_calls?: MessageToolCall[];
     content: string;
     traceId?: string;
-    finishType?: 'done' | 'error' | 'abort';
+    finishType?: string;
     usage?: ModelUsage;
   }>;
   /**
@@ -283,7 +283,7 @@ export const streamingExecutor: StateCreator<
     let thinkingStartAt: number;
     let duration: number | undefined;
     let reasoningOperationId: string | undefined;
-    let finishType: 'done' | 'error' | 'abort' | undefined;
+    let finishType: string | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
@@ -375,7 +375,6 @@ export const streamingExecutor: StateCreator<
               arguments: !!item.function.arguments ? item.function.arguments : '{}',
             },
           }));
-          console.log('parsedToolCalls:', parsedToolCalls);
 
           tools = get().internal_transformToolCalls(parsedToolCalls);
 
