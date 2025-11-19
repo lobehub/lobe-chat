@@ -59,9 +59,9 @@ const Item = memo<ChatListItemProps>(
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const [isMessageLoading, role] = useChatStore((s) => [
-      messageStateSelectors.isMessageLoading(id)(s),
+    const [role, isMessageCreating] = useChatStore((s) => [
       displayMessageSelectors.getDisplayMessageById(id)(s)?.role,
+      messageStateSelectors.isMessageCreating(id)(s),
     ]);
 
     // ======================= Performance Optimization ======================= //
@@ -168,7 +168,7 @@ const Item = memo<ChatListItemProps>(
       <InPortalThreadContext.Provider value={inPortalThread}>
         {enableHistoryDivider && <History />}
         <Flexbox
-          className={cx(styles.message, className, isMessageLoading && styles.loading)}
+          className={cx(styles.message, className, isMessageCreating && styles.loading)}
           data-index={index}
           onContextMenu={onContextMenu}
           ref={containerRef}

@@ -8,7 +8,6 @@ import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { builtinTools } from '@/tools';
-import { Action } from '@/utils/storeDebug';
 
 import { displayMessageSelectors } from '../../message/selectors';
 
@@ -17,15 +16,6 @@ import { displayMessageSelectors } from '../../message/selectors';
  * These are building blocks used by other actions
  */
 export interface PluginInternalsAction {
-  /**
-   * Toggle plugin API calling state
-   */
-  internal_togglePluginApiCalling: (
-    loading: boolean,
-    id?: string,
-    action?: Action,
-  ) => AbortController | undefined;
-
   /**
    * Transform tool calls from runtime format to storage format
    */
@@ -43,10 +33,6 @@ export const pluginInternals: StateCreator<
   [],
   PluginInternalsAction
 > = (set, get) => ({
-  internal_togglePluginApiCalling: (loading, id, action) => {
-    return get().internal_toggleLoadingArrays('pluginApiLoadingIds', loading, id, action);
-  },
-
   internal_transformToolCalls: (toolCalls) => {
     const toolNameResolver = new ToolNameResolver();
 

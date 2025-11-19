@@ -119,7 +119,7 @@ const Inspectors = memo<InspectorProps>(
     const hasResult = hasSuccessResult || hasError;
 
     const isPending = intervention?.status === 'pending';
-    const isReject = intervention?.status === 'rejected';
+    const isReject = intervention?.status === 'rejected' || intervention?.status === 'aborted';
     const isTitleLoading = !hasResult && !isPending;
 
     // Compute actual render state based on pinned or hovered
