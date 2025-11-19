@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.88](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.87...v2.0.0-next.88)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fully support Gemini 3.0 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fully support Gemini 3.0 model, closes [#10292](https://github.com/lobehub/lobe-chat/issues/10292) ([6545ef8](https://github.com/lobehub/lobe-chat/commit/6545ef8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.87](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.86...v2.0.0-next.87)
 
 <sup>Released on **2025-11-19**</sup>
