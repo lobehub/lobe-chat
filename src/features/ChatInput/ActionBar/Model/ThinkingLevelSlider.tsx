@@ -36,7 +36,7 @@ const ThinkingLevelSlider = memo(() => {
       gap={12}
       horizontal
       paddingInline={'0 20px'}
-      style={{ minWidth: 200, width: '100%' }}
+      style={{ minWidth: 130, width: '100%' }} // 三项时宽度需改回 200
     >
       <Flexbox flex={1}>
         <Slider
