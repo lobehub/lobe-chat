@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support gemini 3.0 tools calling."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.89"
+  },
+  {
+    "children": {
       "improvements": ["Fully support Gemini 3.0 model."]
     },
     "date": "2025-11-19",
