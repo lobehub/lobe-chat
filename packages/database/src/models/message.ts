@@ -52,7 +52,14 @@ export class MessageModel {
 
   // **************** Query *************** //
   query = async (
-    { current = 0, pageSize = 1000, sessionId, topicId, groupId }: QueryMessageParams = {},
+    {
+      current = 0,
+      pageSize = 1000,
+      sessionId,
+      topicId,
+      groupId,
+      threadId,
+    }: QueryMessageParams & { threadId?: string | null } = {},
     options: {
       groupAssistantMessages?: boolean;
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
@@ -119,6 +126,7 @@ export class MessageModel {
           this.matchSession(sessionId),
           this.matchTopic(topicId),
           this.matchGroup(groupId),
+          this.matchThread(threadId),
         ),
       )
       .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
@@ -752,4 +760,9 @@ export class MessageModel {
 
   private matchGroup = (groupId?: string | null) =>
     groupId ? eq(messages.groupId, groupId) : isNull(messages.groupId);
+
+  private matchThread = (threadId?: string | null) => {
+    if (!!threadId) return eq(messages.threadId, threadId);
+    return isNull(messages.threadId);
+  };
 }
