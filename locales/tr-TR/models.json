@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1, açık kaynak ağırlıklı büyük ölçekli karma dikkat çıkarım modeli olup, 456 milyar parametreye sahiptir ve her Token yaklaşık 45.9 milyar parametreyi aktive eder. Model, doğal olarak 1 milyon Token uzunluğunda bağlamı destekler ve şimşek dikkat mekanizması sayesinde 100 bin Token üretim görevlerinde DeepSeek R1'e kıyasla %75 daha az kayan nokta işlemi kullanır. Ayrıca, MiniMax-M1 MoE (karışık uzman) mimarisini, CISPO algoritması ve karma dikkat tasarımı ile verimli pekiştirmeli öğrenme eğitimiyle birleştirerek uzun giriş çıkarımı ve gerçek yazılım mühendisliği senaryolarında sektör lideri performans sunar."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2, yapay zekâ ajanları için verimliliği yeniden tanımlıyor. 230 milyar toplam parametreye ve 10 milyar etkin parametreye sahip olan bu kompakt, hızlı ve ekonomik MoE (Uzman Karışımı) modeli, kodlama ve yapay zekâ görevlerinde üstün performans sunmak üzere tasarlanmıştır ve aynı zamanda güçlü bir genel zekâ kapasitesini korur. Sadece 10 milyar etkin parametreyle, MiniMax-M2 büyük ölçekli modellerle karşılaştırılabilir bir performans sunarak yüksek verimlilik gerektiren uygulamalar için ideal bir tercih haline gelir."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Toplam 1 trilyon parametre, 32 milyar aktif parametreye sahip. Düşünme modeli olmayanlar arasında, güncel bilgi, matematik ve kodlama alanlarında en üst düzeyde performans gösterir ve genel ajan görevlerinde daha yetkindir. Ajan görevleri için optimize edilmiştir; sadece soruları yanıtlamakla kalmaz, aynı zamanda eylem de gerçekleştirebilir. Doğaçlama, genel sohbet ve ajan deneyimleri için en uygunudur; uzun düşünme gerektirmeyen refleks seviyesinde bir modeldir."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1, çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Nihai yanıtı vermeden önce, model doğruluğu artırmak için bir düşünce zinciri çıktısı üretir."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B, 70B Llama modelinin damıtılmış ve daha verimli bir varyantıdır. Metin üretimi görevlerinde güçlü performansını korur, hesaplama maliyetini azaltarak dağıtım ve araştırmayı kolaylaştırır. Groq tarafından özel Dil İşleme Birimi (LPU) donanımı ile hizmet verilir ve hızlı, verimli çıkarım sağlar."
+    "description": "DeepSeek R1 Distill Llama 70B, Llama3.3 70B tabanlı büyük bir dil modelidir. Bu model, DeepSeek R1 tarafından sağlanan ince ayarlarla, öncü büyük modellerle kıyaslanabilir rekabetçi bir performans elde etmiştir."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B, Llama-3.1-8B-Instruct tabanlı bir damıtılmış büyük dil modelidir ve DeepSeek R1'in çıktısını kullanarak eğitilmiştir."
@@ -2461,6 +2464,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Verimli kodlama ve Agent iş akışları için özel olarak tasarlanmıştır."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2, 230 milyar toplam parametreye ve 10 milyar etkin parametreye sahip kompakt, hızlı ve ekonomik bir Uzman Karışımı (MoE) modelidir. Kodlama ve yapay zekâ görevlerinde üstün performans sunmak üzere tasarlanmış olup, güçlü bir genel zekâ kapasitesini de korur. Çoklu dosya düzenleme, kodla-çalıştır-düzelt döngüsü, test doğrulama ve düzeltme ile karmaşık uzun zincirli araç zincirlerinde üstün performans göstererek geliştirici iş akışları için ideal bir seçimdir."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B, Mistral'ın dünya çapında en üst düzey kenar modelidir."
