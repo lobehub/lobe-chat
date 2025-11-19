@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 is a large-scale hybrid attention inference model with open-source weights, featuring 456 billion parameters, with approximately 45.9 billion parameters activated per token. The model natively supports ultra-long contexts of up to 1 million tokens and, through lightning attention mechanisms, reduces floating-point operations by 75% compared to DeepSeek R1 in tasks generating 100,000 tokens. Additionally, MiniMax-M1 employs a Mixture of Experts (MoE) architecture, combining the CISPO algorithm with an efficient reinforcement learning training design based on hybrid attention, achieving industry-leading performance in long-input inference and real-world software engineering scenarios."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 redefines efficiency for intelligent agents. It is a compact, fast, and cost-effective Mixture of Experts (MoE) model with 230 billion total parameters and 10 billion active parameters. Designed for top-tier performance in coding and agent tasks, it also maintains strong general intelligence. With only 10 billion active parameters, MiniMax-M2 delivers performance comparable to large-scale models, making it an ideal choice for high-efficiency applications."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "With a total of 1 trillion parameters and 32 billion activated parameters, this non-thinking model achieves top-tier performance in cutting-edge knowledge, mathematics, and coding, excelling in general agent tasks. It is carefully optimized for agent tasks, capable not only of answering questions but also taking actions. Ideal for improvisational, general chat, and agent experiences, it is a reflex-level model requiring no prolonged thinking."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 greatly improves model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first generates a chain of thought to enhance answer accuracy."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B is a distilled, more efficient variant of the 70B Llama model. It maintains strong performance on text generation tasks while reducing computational overhead for easier deployment and research. Served by Groq using its custom Language Processing Unit (LPU) hardware for fast, efficient inference."
+    "description": "DeepSeek R1 Distill Llama 70B is a large language model based on Llama3.3 70B. Fine-tuned using outputs from DeepSeek R1, it achieves competitive performance on par with leading-edge large models."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B is a distilled large language model based on Llama-3.1-8B-Instruct, trained using outputs from DeepSeek R1."
@@ -2461,6 +2464,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Purpose-built for efficient coding and agent workflows."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 is a compact, fast, and cost-efficient Mixture of Experts (MoE) model with 230 billion total parameters and 10 billion active parameters. It is engineered for top performance in coding and agent tasks while maintaining robust general intelligence. Excelling in multi-file editing, code-run-debug loops, test validation and repair, and complex long-chain tool integrations, it is an ideal choice for developer workflows."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B is Mistral's top-tier edge model."

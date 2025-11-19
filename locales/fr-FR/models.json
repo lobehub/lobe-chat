@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 est un modèle d'inférence à attention mixte à grande échelle avec poids open source, comptant 456 milliards de paramètres, activant environ 45,9 milliards de paramètres par token. Le modèle supporte nativement un contexte ultra-long de 1 million de tokens et, grâce au mécanisme d'attention éclair, réduit de 75 % les opérations en virgule flottante lors de tâches de génération de 100 000 tokens par rapport à DeepSeek R1. Par ailleurs, MiniMax-M1 utilise une architecture MoE (Experts Mixtes), combinant l'algorithme CISPO et une conception d'attention mixte pour un entraînement efficace par apprentissage par renforcement, offrant des performances de pointe dans l'inférence sur longues entrées et les scénarios réels d'ingénierie logicielle."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 redéfinit l'efficacité pour les agents intelligents. Il s'agit d'un modèle MoE compact, rapide et économique, doté de 230 milliards de paramètres totaux et de 10 milliards de paramètres actifs, conçu pour offrir des performances de pointe dans les tâches de codage et d'agents, tout en conservant une intelligence générale puissante. Avec seulement 10 milliards de paramètres actifs, MiniMax-M2 offre des performances comparables à celles des modèles de grande taille, ce qui en fait un choix idéal pour les applications à haute efficacité."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Avec un total de 1 000 milliards de paramètres et 32 milliards de paramètres activés, ce modèle non cognitif atteint un niveau de pointe en connaissances avancées, mathématiques et codage, excelling dans les tâches d'agents généraux. Optimisé pour les tâches d'agents, il peut non seulement répondre aux questions mais aussi agir. Idéal pour les conversations improvisées, générales et les expériences d'agents, c'est un modèle réflexe ne nécessitant pas de longues réflexions."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 améliore considérablement les capacités de raisonnement du modèle avec très peu de données annotées. Avant de fournir la réponse finale, le modèle génère une chaîne de pensée pour améliorer la précision de la réponse."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B est une variante distillée et plus efficace du modèle Llama 70B. Il conserve de solides performances en génération de texte tout en réduisant les coûts de calcul pour faciliter le déploiement et la recherche. Il est servi par Groq avec son matériel personnalisé LPU pour un raisonnement rapide et efficace."
+    "description": "DeepSeek R1 Distill Llama 70B est un grand modèle de langage basé sur Llama3.3 70B. Grâce au fine-tuning réalisé à partir des sorties de DeepSeek R1, il atteint des performances compétitives comparables à celles des modèles de pointe de grande envergure."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B est un modèle de langage distillé basé sur Llama-3.1-8B-Instruct, entraîné en utilisant les sorties de DeepSeek R1."
@@ -2461,6 +2464,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Conçu pour un codage efficace et des flux de travail d'agents performants."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 est un modèle MoE (Mixture of Experts) compact, rapide et économique, doté de 230 milliards de paramètres totaux et de 10 milliards de paramètres actifs. Il est conçu pour offrir des performances optimales dans les tâches de codage et d'agents, tout en maintenant une intelligence générale robuste. Ce modèle excelle dans l'édition multi-fichiers, les boucles de codage-exécution-correction, la vérification et la correction de tests, ainsi que dans les chaînes d'outils complexes à long terme, ce qui en fait un choix idéal pour les flux de travail des développeurs."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B est le modèle de pointe de Mistral sur le marché."

@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 là mô hình suy luận chú ý hỗn hợp quy mô lớn với trọng số mã nguồn mở, sở hữu 456 tỷ 600 triệu tham số, mỗi Token có thể kích hoạt khoảng 45,9 tỷ tham số. Mô hình hỗ trợ ngữ cảnh siêu dài lên đến 1 triệu Token một cách nguyên bản, và thông qua cơ chế chú ý chớp nhoáng, trong các tác vụ sinh 100.000 Token tiết kiệm 75% lượng phép tính dấu chấm động so với DeepSeek R1. Đồng thời, MiniMax-M1 áp dụng kiến trúc MoE (chuyên gia hỗn hợp), kết hợp thuật toán CISPO và thiết kế chú ý hỗn hợp trong huấn luyện tăng cường hiệu quả, đạt hiệu suất hàng đầu trong ngành khi suy luận đầu vào dài và các kịch bản kỹ thuật phần mềm thực tế."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 tái định nghĩa hiệu suất cho các tác nhân AI. Đây là một mô hình MoE nhỏ gọn, nhanh chóng và tiết kiệm chi phí, với tổng số 230 tỷ tham số và 10 tỷ tham số kích hoạt, được thiết kế để đạt hiệu năng hàng đầu trong các tác vụ mã hóa và tác nhân, đồng thời duy trì trí tuệ nhân tạo tổng quát mạnh mẽ. Chỉ với 10 tỷ tham số kích hoạt, MiniMax-M2 có thể mang lại hiệu suất tương đương với các mô hình quy mô lớn, khiến nó trở thành lựa chọn lý tưởng cho các ứng dụng hiệu suất cao."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Tổng tham số 1T, tham số kích hoạt 32B. Trong các mô hình không suy nghĩ, đạt trình độ hàng đầu về kiến thức tiên tiến, toán học và lập trình, đặc biệt phù hợp với các tác vụ đại lý chung. Được tối ưu kỹ lưỡng cho tác vụ đại lý, không chỉ trả lời câu hỏi mà còn có thể thực hiện hành động. Phù hợp nhất cho trò chuyện ứng biến, trải nghiệm đại lý chung, là mô hình phản xạ không cần suy nghĩ lâu."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 đã cải thiện đáng kể khả năng suy luận của mô hình ngay cả khi có rất ít dữ liệu gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời cuối."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B là biến thể chưng cất và hiệu quả hơn của mô hình Llama 70B. Nó duy trì hiệu suất mạnh mẽ trong các nhiệm vụ tạo văn bản, giảm chi phí tính toán để dễ dàng triển khai và nghiên cứu. Được Groq phục vụ bằng phần cứng đơn vị xử lý ngôn ngữ (LPU) tùy chỉnh để cung cấp suy luận nhanh và hiệu quả."
+    "description": "DeepSeek R1 Distill Llama 70B là một mô hình ngôn ngữ lớn dựa trên Llama3.3 70B, được tinh chỉnh bằng đầu ra từ DeepSeek R1, mang lại hiệu suất cạnh tranh tương đương với các mô hình tiên tiến quy mô lớn."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B là một mô hình ngôn ngữ lớn đã được tinh chế dựa trên Llama-3.1-8B-Instruct, được đào tạo bằng cách sử dụng đầu ra từ DeepSeek R1."
@@ -2461,6 +2464,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Được sinh ra để phục vụ mã hóa hiệu quả và quy trình làm việc của Agent."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 là một mô hình chuyên gia hỗn hợp (MoE) nhỏ gọn, nhanh chóng và tiết kiệm chi phí, với tổng số 230 tỷ tham số và 10 tỷ tham số kích hoạt, được thiết kế để đạt hiệu suất hàng đầu trong các tác vụ mã hóa và tác nhân, đồng thời duy trì trí tuệ nhân tạo tổng quát mạnh mẽ. Mô hình này thể hiện xuất sắc trong chỉnh sửa nhiều tệp, vòng lặp mã hóa-chạy-sửa lỗi, kiểm thử và sửa lỗi, cũng như các chuỗi công cụ liên kết dài phức tạp, là lựa chọn lý tưởng cho quy trình làm việc của nhà phát triển."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B là mô hình hàng đầu thế giới của Mistral về hiệu suất cạnh biên."

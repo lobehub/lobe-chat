@@ -123,7 +123,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
-      'Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。',
+      'Gemini 3 Pro 是 全球最佳的多模态理解模型，也是 Google 迄今为止最强大的智能体和氛围编程模型，提供更丰富的视觉效果和更深层次的交互性，所有这些都建立在最先进的推理能力基础之上。',
     displayName: 'Gemini 3 Pro Preview',
     enabled: true,
     id: 'gemini-3-pro-preview',
