@@ -3,7 +3,6 @@
 import { memo, useEffect, useState } from 'react';
 import { RouterProvider } from 'react-router-dom';
 
-import BootErrorBoundary from '@/components/BootErrorBoundary';
 import Loading from '@/components/Loading/BrandTextLoading';
 import type { Locales } from '@/types/locale';
 
@@ -40,9 +39,7 @@ const DesktopClientRouter = memo<ClientRouterProps>(({ locale }) => {
 
   // Once router is created, render RouterProvider
   return (
-    <BootErrorBoundary fallback={<Loading />}>
-      <RouterProvider router={router} />
-    </BootErrorBoundary>
+    <RouterProvider router={router} />
   );
 });
 
