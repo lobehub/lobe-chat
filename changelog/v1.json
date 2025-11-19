@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Gemini 3.0 Pro Preview to Google Provider."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.84"
+  },
+  {
+    "children": {
       "features": ["New API support switch Responses API mode."],
       "improvements": ["Update i18n."]
     },
