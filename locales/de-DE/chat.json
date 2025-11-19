@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Tiefdenk-Schalter"
     },
+    "thinkingLevel": {
+      "title": "Denkebene"
+    },
     "title": "Modell Erweiterungsfunktionen",
     "urlContext": {
       "desc": "Wenn aktiviert, werden Webseiten-Links automatisch analysiert, um den tatsächlichen Webseiteninhalt zu erfassen",
@@ -396,6 +399,7 @@
       "rejectReasonPlaceholder": "Die Angabe eines Ablehnungsgrundes hilft dem Agenten, zukünftige Aktionen zu verbessern",
       "rejectTitle": "Tool-Ausführung ablehnen",
       "rejectedWithReason": "Die Tool-Ausführung wurde abgelehnt: {{reason}}",
+      "toolAbort": "Dieser Werkzeugaufruf wurde vom Benutzer abgebrochen",
       "toolRejected": "Die Tool-Ausführung wurde abgelehnt"
     }
   },

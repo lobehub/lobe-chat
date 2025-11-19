@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "مدل متغیر Gemini 2.0 Flash برای بهینه‌سازی هزینه و تأخیر کم طراحی شده است."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "مدل پیش‌نمایش Gemini 2.0 Flash، از تولید تصویر پشتیبانی می‌کند"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash مدل با بهترین نسبت قیمت به کارایی گوگل است که امکانات جامع را ارائه می‌دهد."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "پیش‌نمایش فلش Gemini 2.5 مدل با بهترین قیمت و کیفیت گوگل است که امکانات جامع و کاملی را ارائه می‌دهد."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview مقرون‌به‌صرفه‌ترین مدل گوگل است که امکانات جامع ارائه می‌دهد."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "نسخه پیش‌نمایش (25 سپتامبر 2025) از Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview پیشرفته‌ترین مدل تفکر گوگل است که قادر به استدلال درباره مسائل پیچیده در حوزه کد، ریاضیات و STEM است و می‌تواند با استفاده از زمینه طولانی، داده‌های بزرگ، مخازن کد و مستندات را تحلیل کند."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro هوشمندترین مدل Google است که دارای استدلال پیشرفته (SOTA)، درک چندوجهی، و همچنین قابلیت‌های قدرتمند نمایندگی و رمزگذاری زمینه‌ای می‌باشد."
   },
   "gemini-flash-latest": {
     "description": "جدیدترین نسخه Gemini Flash"
