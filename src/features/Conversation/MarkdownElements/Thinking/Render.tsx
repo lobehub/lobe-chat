@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import Thinking from '@/components/Thinking';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
@@ -17,11 +17,11 @@ const isThinkingClosed = (input: string = '') => {
 
 const Render = memo<MarkdownElementProps>(({ children, id }) => {
   const [isGenerating] = useChatStore((s) => {
-    const message = chatSelectors.getMessageById(id)(s);
+    const message = dbMessageSelectors.getDbMessageById(id)(s);
     return [!isThinkingClosed(message?.content)];
   });
   const citations = useChatStore((s) => {
-    const message = chatSelectors.getMessageById(id)(s);
+    const message = dbMessageSelectors.getDbMessageById(id)(s);
     return message?.search?.citations;
   });
 
