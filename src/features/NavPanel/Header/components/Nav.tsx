@@ -12,13 +12,9 @@ import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
-import NavItem from './NavItem';
+import NavItem from '../../NavItem';
 
-interface NavProps {
-  expand: boolean;
-}
-
-const Nav = memo<NavProps>(({ expand }) => {
+const Nav = memo(() => {
   const [isPending, startTransition] = useTransition();
   const tab = useActiveTabKey();
   const navigate = useNavigate();
@@ -41,11 +37,10 @@ const Nav = memo<NavProps>(({ expand }) => {
   );
 
   return (
-    <Flexbox gap={2}>
+    <Flexbox gap={1}>
       <NavItem
         active={tab === SidebarTabKey.Chat}
         disabled={isPending}
-        expand={expand}
         icon={HomeIcon}
         onClick={() => handleSwitchToChat(activeSessionId)}
         title={t('tab.chat')}
@@ -53,7 +48,6 @@ const Nav = memo<NavProps>(({ expand }) => {
       <NavItem
         active={tab === SidebarTabKey.Knowledge}
         disabled={isPending}
-        expand={expand}
         hidden={!enableKnowledgeBase}
         icon={FolderClosed}
         onClick={() => handleNavigate('/knowledge')}
@@ -62,7 +56,6 @@ const Nav = memo<NavProps>(({ expand }) => {
       <NavItem
         active={tab === SidebarTabKey.Knowledge}
         disabled={isPending}
-        expand={expand}
         hidden={!showAiImage}
         icon={Palette}
         onClick={() => handleNavigate('/image')}
@@ -71,7 +64,6 @@ const Nav = memo<NavProps>(({ expand }) => {
       <NavItem
         active={tab === SidebarTabKey.Discover}
         disabled={isPending}
-        expand={expand}
         hidden={!showMarket}
         icon={Compass}
         onClick={() => handleNavigate('/discover')}

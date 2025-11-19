@@ -1,23 +1,29 @@
 'use client';
 
-import { Block, Text } from '@lobehub/ui';
+import { Block, Icon, Text } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
+import { ChevronDownIcon } from 'lucide-react';
 import { memo } from 'react';
 
+import { ProductLogo } from '@/components/Branding';
 import { BRANDING_NAME } from '@/const/branding';
 import UserAvatar from '@/features/User/UserAvatar';
 import UserPanel from '@/features/User/UserPanel';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
+import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
-interface UserProps {
-  expand: boolean;
-}
+export const USER_DROPDOWN_ICON_ID = 'user-dropdown-icon';
 
-const User = memo<UserProps>(({ expand }) => {
-  const [nickname, username] = useUserStore((s) => [
+const User = memo(() => {
+  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
+  const [nickname, username, isSignedIn] = useUserStore((s) => [
     userProfileSelectors.nickName(s),
     userProfileSelectors.username(s),
+    authSelectors.isLogin(s),
   ]);
+  const theme = useTheme();
   return (
     <UserPanel>
       <Block
@@ -34,7 +40,9 @@ const User = memo<UserProps>(({ expand }) => {
         variant={'borderless'}
       >
         <UserAvatar shape={'square'} size={28} />
-        {expand && (
+        {expand && !isSignedIn ? (
+          <ProductLogo color={theme.colorText} size={28} type={'text'} />
+        ) : (
           <Text
             ellipsis
             style={{
@@ -45,6 +53,11 @@ const User = memo<UserProps>(({ expand }) => {
             {nickname || username || BRANDING_NAME}
           </Text>
         )}
+        <Icon
+          color={theme.colorTextDescription}
+          icon={ChevronDownIcon}
+          id={USER_DROPDOWN_ICON_ID}
+        />
       </Block>
     </UserPanel>
   );
