@@ -308,6 +308,26 @@ describe('google contextBuilders', () => {
             role: 'tool',
             tool_call_id: 'call_001',
           },
+          {
+            content: '',
+            role: 'assistant',
+            tool_calls: [
+              {
+                function: {
+                  arguments: '{"query":"杭州 天气","searchEngines":["bing"]}',
+                  name: 'lobe-web-browsing____search____builtin',
+                },
+                id: 'call_002',
+                type: 'function',
+              },
+            ],
+          },
+          {
+            content: 'no result',
+            name: 'lobe-web-browsing____search____builtin',
+            role: 'tool',
+            tool_call_id: 'call_002',
+          },
         ];
 
         const contents = await buildGoogleMessages(messages);
@@ -336,6 +356,29 @@ describe('google contextBuilders', () => {
                 functionResponse: {
                   name: 'lobe-web-browsing____search____builtin',
                   response: { result: 'Tool execution was aborted by user.' },
+                },
+              },
+            ],
+            role: 'user',
+          },
+          {
+            parts: [
+              {
+                functionCall: {
+                  args: { query: '杭州 天气', searchEngines: ['bing'] },
+                  name: 'lobe-web-browsing____search____builtin',
+                },
+                thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+              },
+            ],
+            role: 'model',
+          },
+          {
+            parts: [
+              {
+                functionResponse: {
+                  name: 'lobe-web-browsing____search____builtin',
+                  response: { result: 'no result' },
                 },
               },
             ],
@@ -400,6 +443,119 @@ describe('google contextBuilders', () => {
                 functionResponse: {
                   name: 'lobe-web-browsing____search____builtin',
                   response: { result: 'Tool result' },
+                },
+              },
+            ],
+            role: 'user',
+          },
+        ]);
+      });
+
+      it('should add magic signature only after last user message in multi-turn scenario', async () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content: 'First question',
+            role: 'user',
+          },
+          {
+            content: '',
+            role: 'assistant',
+            tool_calls: [
+              {
+                function: {
+                  arguments: '{"query":"first"}',
+                  name: 'search',
+                },
+                id: 'call_001',
+                type: 'function',
+              },
+            ],
+          },
+          {
+            content: 'First result',
+            name: 'search',
+            role: 'tool',
+            tool_call_id: 'call_001',
+          },
+          {
+            content: 'Second question',
+            role: 'user',
+          },
+          {
+            content: '',
+            role: 'assistant',
+            tool_calls: [
+              {
+                function: {
+                  arguments: '{"query":"second"}',
+                  name: 'search',
+                },
+                id: 'call_002',
+                type: 'function',
+              },
+            ],
+          },
+          {
+            content: 'Second result',
+            name: 'search',
+            role: 'tool',
+            tool_call_id: 'call_002',
+          },
+        ];
+
+        const contents = await buildGoogleMessages(messages);
+
+        expect(contents).toEqual([
+          {
+            parts: [{ text: 'First question' }],
+            role: 'user',
+          },
+          {
+            parts: [
+              {
+                functionCall: {
+                  args: { query: 'first' },
+                  name: 'search',
+                },
+                // No magic signature for this one (before last user message)
+              },
+            ],
+            role: 'model',
+          },
+          {
+            parts: [
+              {
+                functionResponse: {
+                  name: 'search',
+                  response: { result: 'First result' },
+                },
+              },
+            ],
+            role: 'user',
+          },
+          {
+            parts: [{ text: 'Second question' }],
+            role: 'user',
+          },
+          {
+            parts: [
+              {
+                functionCall: {
+                  args: { query: 'second' },
+                  name: 'search',
+                },
+                // Magic signature added (after last user message)
+                thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+              },
+            ],
+            role: 'model',
+          },
+          {
+            parts: [
+              {
+                functionResponse: {
+                  name: 'search',
+                  response: { result: 'Second result' },
                 },
               },
             ],

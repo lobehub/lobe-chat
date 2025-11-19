@@ -171,8 +171,21 @@ export const buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promis
   const shouldAddMagicSignature = lastMessage?.role === 'tool';
 
   if (shouldAddMagicSignature) {
-    // Find the last assistant message with tool_calls and add magic signature if not already present
+    // Find the last user message index in filtered contents
+    let lastUserIndex = -1;
     for (let i = filteredContents.length - 1; i >= 0; i--) {
+      if (filteredContents[i].role === 'user') {
+        // Skip if it's a functionResponse (tool result)
+        const hasFunctionResponse = filteredContents[i].parts?.some((p) => p.functionResponse);
+        if (!hasFunctionResponse) {
+          lastUserIndex = i;
+          break;
+        }
+      }
+    }
+
+    // Add magic signature to all function calls after last user message that don't have thoughtSignature
+    for (let i = lastUserIndex + 1; i < filteredContents.length; i++) {
       const content = filteredContents[i];
       if (content.role === 'model' && content.parts) {
         for (const part of content.parts) {
@@ -181,7 +194,6 @@ export const buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promis
             part.thoughtSignature = GEMINI_MAGIC_THOUGHT_SIGNATURE;
           }
         }
-        break; // Only modify the last assistant message with function calls
       }
     }
   }
