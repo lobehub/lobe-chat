@@ -29,6 +29,7 @@ import ChatLayout from './(main)/chat/_layout/Desktop';
 // import KnowledgeLayout from './(main)/knowledge/_layout/Desktop';
 // import LabsPage from './(main)/labs';
 import DesktopMainLayout from './(main)/layouts/desktop';
+import dynamic from 'next/dynamic';
 // import ProfileHomePage from './(main)/profile/(home)/desktop';
 // import ProfileApikeyPage from './(main)/profile/apikey/index';
 // import { DesktopProfileSecurityPage } from './(main)/profile/security/index';
@@ -69,6 +70,8 @@ import DesktopMainLayout from './(main)/layouts/desktop';
 //   return null;
 // };
 
+const DesktopChatPage = dynamic(() => import('./(main)/chat/index').then((m) => m.DesktopChatPage), { ssr: false });
+
 // Root layout wrapper component - just registers navigator and renders outlet
 // Note: Desktop layout is provided by individual route components
 const RootLayout = (props: { locale: Locales }) => (
@@ -87,17 +90,11 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <DesktopChatPage />,
               index: true,
-              lazy: () =>
-                import('./(main)/chat/index').then((m) => ({
-                  Component: m.DesktopChatPage,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/chat/index').then((m) => ({
-                  Component: m.DesktopChatPage,
-                })),
+              element: <DesktopChatPage />,
               path: '*',
             },
           ],
