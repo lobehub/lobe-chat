@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { type LoaderFunction, createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
+import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
 
-import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
@@ -36,16 +35,10 @@ const RootLayout = (props: { locale: Locales }) => {
   );
 };
 
-// Hydration gate loader -always return true to bypass hydration gate
-const hydrationGateLoader: LoaderFunction = () => {
-  return true
-};
-
 // Create desktop router configuration
 export const createDesktopRouter = (locale: Locales) =>
   createBrowserRouter([
     {
-      HydrateFallback: () => <Loading />,
       children: [
         // Chat routes
         {
@@ -340,7 +333,6 @@ export const createDesktopRouter = (locale: Locales) =>
         },
       ],
       element: <RootLayout locale={locale} />,
-      loader: hydrationGateLoader,
       path: '/',
     },
   ]);
