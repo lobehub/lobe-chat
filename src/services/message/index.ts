@@ -31,14 +31,18 @@ export class MessageService {
     });
   };
 
-  getMessages = async (
-    sessionId: string,
-    topicId?: string,
-    groupId?: string,
-  ): Promise<UIChatMessage[]> => {
+  getMessages = async (params: {
+    groupId?: string;
+    sessionId: string;
+    threadId?: string;
+    topicId?: string;
+  }): Promise<UIChatMessage[]> => {
+    const { sessionId, topicId, groupId, threadId } = params;
+
     const data = await lambdaClient.message.getMessages.query({
       groupId,
-      sessionId: this.toDbSessionId(sessionId),
+      sessionId,
+      threadId,
       topicId,
     });
 
