@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor chat selectors."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.87"
+  },
+  {
+    "children": {
       "features": ["Support user abort in the agent runtime."]
     },
     "date": "2025-11-19",
