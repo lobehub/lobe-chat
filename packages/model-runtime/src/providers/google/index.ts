@@ -194,7 +194,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   async chat(rawPayload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const payload = this.buildPayload(rawPayload);
-      const { model, thinkingBudget } = payload;
+      const { model, thinkingBudget, thinkingLevel } = payload;
 
       // https://ai.google.dev/gemini-api/docs/thinking#set-budget
       const resolvedThinkingBudget = resolveModelThinkingBudget(model, thinkingBudget);
@@ -208,6 +208,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             : undefined,
         thinkingBudget: resolvedThinkingBudget,
       };
+
+      // Add thinkingLevel for 3.0 models
+      if (model?.toLowerCase().includes('-3.0-') && thinkingLevel) {
+        (thinkingConfig as any).thinkingLevel = thinkingLevel;
+      }
 
       const contents = await buildGoogleMessages(payload.messages);
 

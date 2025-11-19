@@ -196,6 +196,10 @@ class ChatService {
         extendParams.thinkingBudget = chatConfig.thinkingBudget;
       }
 
+      if (modelExtendParams!.includes('thinkingLevel') && chatConfig.thinkingLevel) {
+        extendParams.thinkingLevel = chatConfig.thinkingLevel;
+      }
+
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {
         extendParams.urlContext = chatConfig.urlContext;
       }
