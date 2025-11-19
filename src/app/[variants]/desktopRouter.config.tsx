@@ -1,39 +1,50 @@
 'use client';
 
-import { useEffect } from 'react';
-import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 
-import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
+/**
+ * Desktop Router Configuration - Pure CSR Mode
+ *
+ * IMPORTANT: This router runs ONLY in the browser (client-side).
+ *
+ * Key characteristics:
+ * - createBrowserRouter uses window.history API (client-only)
+ * - All loaders execute in the browser during navigation
+ * - No server-side rendering or hydration involved
+ * - Route data fetching happens on-demand during client navigation
+ *
+ * The entire router tree is wrapped with Next.js dynamic import (ssr: false),
+ * ensuring this code never executes on the server.
+ */
+
 // Component to register navigate function in global store
-const NavigatorRegistrar = () => {
-  const navigate = useNavigate();
+// const NavigatorRegistrar = () => {
+//   const navigate = useNavigate();
 
-  useEffect(() => {
-    useGlobalStore.setState({ navigate });
+//   useEffect(() => {
+//     useGlobalStore.setState({ navigate });
 
-    return () => {
-      useGlobalStore.setState({ navigate: undefined });
-    };
-  }, [navigate]);
+//     return () => {
+//       useGlobalStore.setState({ navigate: undefined });
+//     };
+//   }, [navigate]);
 
-  return null;
-};
+//   return null;
+// };
 
 // Root layout wrapper component - just registers navigator and renders outlet
 // Note: Desktop layout is provided by individual route components
-const RootLayout = (props: { locale: Locales }) => {
-  return (
-    <>
-      <NavigatorRegistrar />
-      <DesktopMainLayout locale={props.locale} />
-    </>
-  );
-};
+const RootLayout = (props: { locale: Locales }) => (
+  <>
+    {/* <NavigatorRegistrar /> */}
+    <DesktopMainLayout locale={props.locale} />
+  </>
+);
 
 // Create desktop router configuration
 export const createDesktopRouter = (locale: Locales) =>

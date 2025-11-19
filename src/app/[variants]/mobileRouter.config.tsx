@@ -9,6 +9,21 @@ import type { Locales } from '@/types/locale';
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
+/**
+ * Mobile Router Configuration - Pure CSR Mode
+ *
+ * IMPORTANT: This router runs ONLY in the browser (client-side).
+ *
+ * Key characteristics:
+ * - createBrowserRouter uses window.history API (client-only)
+ * - All loaders execute in the browser during navigation
+ * - No server-side rendering or hydration involved
+ * - Route data fetching happens on-demand during client navigation
+ *
+ * The entire router tree is wrapped with Next.js dynamic import (ssr: false),
+ * ensuring this code never executes on the server.
+ */
+
 // Component to register navigate function in global store
 const NavigatorRegistrar = () => {
   const navigate = useNavigate();
