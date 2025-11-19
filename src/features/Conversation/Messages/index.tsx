@@ -194,6 +194,7 @@ const Item = memo<ChatListItemProps>(
       openThreadCreator,
       resendThreadMessage,
       delAndResendThreadMessage,
+      toggleMessageCollapsed,
     ] = useChatStore((s) => [
       s.toggleMessageEditing,
       s.deleteMessage,
@@ -206,6 +207,7 @@ const Item = memo<ChatListItemProps>(
       s.openThreadCreator,
       s.resendThreadMessage,
       s.delAndResendThreadMessage,
+      s.toggleMessageCollapsed,
     ]);
 
     const getMessage = useCallback(
@@ -227,6 +229,7 @@ const Item = memo<ChatListItemProps>(
 
     const handleUserAction = useCallback(
       async (action: MenuActionEvent) => {
+        console.log('action', action);
         const item = getMessage();
         if (!item) return;
 
@@ -239,6 +242,11 @@ const Item = memo<ChatListItemProps>(
           case 'copy': {
             await copyMessage(id, item.content);
             message.success(t('copySuccess'));
+            break;
+          }
+          case 'expand':
+          case 'collapse': {
+            toggleMessageCollapsed(id);
             break;
           }
           case 'branching': {
@@ -284,6 +292,7 @@ const Item = memo<ChatListItemProps>(
       },
       [
         copyMessage,
+        toggleMessageCollapsed,
         deleteMessage,
         delAndRegenerateMessage,
         delAndResendThreadMessage,
@@ -326,6 +335,11 @@ const Item = memo<ChatListItemProps>(
               break;
             }
             openThreadCreator(id);
+            break;
+          }
+          case 'expand':
+          case 'collapse': {
+            toggleMessageCollapsed(id);
             break;
           }
           case 'del': {
