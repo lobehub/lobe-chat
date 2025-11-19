@@ -126,7 +126,7 @@ const googleChatModels: AIChatModelCard[] = [
       'Gemini 3.0 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 3.0 Pro Preview',
     enabled: true,
-    id: 'gemini-3.0-pro-preview',
+    id: 'gemini-3-pro-preview',
     maxOutput: 65_536,
     pricing: {
       units: [
