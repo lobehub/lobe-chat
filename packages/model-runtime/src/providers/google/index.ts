@@ -51,6 +51,9 @@ const modelsDisableInstuction = new Set([
   'gemma-3-12b-it',
   'gemma-3-27b-it',
   'gemma-3n-e4b-it',
+  // ZenMux
+  'google/gemini-2.5-flash-image-free',
+  'google/gemini-2.5-flash-image',
 ]);
 
 const PRO_THINKING_MIN = 128;
