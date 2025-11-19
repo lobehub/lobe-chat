@@ -778,15 +778,24 @@
   {
     "sql": [
       "ALTER TABLE \"documents\" ALTER COLUMN \"id\" SET DATA TYPE varchar(255);",
-      "\nALTER TABLE \"documents\" ADD COLUMN \"parent_id\" varchar(255);",
-      "\nALTER TABLE \"files\" ADD COLUMN \"parent_id\" varchar(255);",
-      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
-      "\nALTER TABLE \"files\" ADD CONSTRAINT \"files_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;",
-      "\nCREATE INDEX \"documents_parent_id_idx\" ON \"documents\" USING btree (\"parent_id\");",
-      "\nCREATE INDEX \"files_parent_id_idx\" ON \"files\" USING btree (\"parent_id\");"
+      "\nALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"parent_id\" varchar(255);",
+      "\nALTER TABLE \"files\" ADD COLUMN IF NOT EXISTS \"parent_id\" varchar(255);",
+      "\nDO $$ BEGIN\n ALTER TABLE \"documents\" ADD CONSTRAINT \"documents_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;",
+      "\nDO $$ BEGIN\n ALTER TABLE \"files\" ADD CONSTRAINT \"files_parent_id_documents_id_fk\" FOREIGN KEY (\"parent_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE set null ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;",
+      "\nCREATE INDEX IF NOT EXISTS \"documents_parent_id_idx\" ON \"documents\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"files_parent_id_idx\" ON \"files\" USING btree (\"parent_id\");"
     ],
     "bps": true,
     "folderMillis": 1763453175961,
-    "hash": "6cfc00744de6a8f4d60b793673911bb740f9a50661663e28b843e5adae08f94a"
+    "hash": "6c2081c8ac22772a8276052c9ae0852a4c03463cbe998df26f85683ab356b914"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"files\" ADD COLUMN \"slug\" text;",
+      "\nALTER TABLE \"files\" ADD CONSTRAINT \"files_slug_unique\" UNIQUE(\"slug\");"
+    ],
+    "bps": true,
+    "folderMillis": 1763535087148,
+    "hash": "842d5d380cd518d2e944eae513126c16f6fbdf8ba6b34a96fe8ce9ac42d403a4"
   }
 ]

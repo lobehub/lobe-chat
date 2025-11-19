@@ -133,7 +133,7 @@ export const files = pgTable(
     url: text('url').notNull(),
     source: text('source').$type<FileSource>(),
 
-    // Parent document (for folder hierarchy structure)
+    // Parent Folder or Document
     // @ts-ignore
     parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
       onDelete: 'set null',
@@ -145,6 +145,8 @@ export const files = pgTable(
     embeddingTaskId: uuid('embedding_task_id').references(() => asyncTasks.id, {
       onDelete: 'set null',
     }),
+
+    slug: text('slug').unique(),
 
     ...timestamps,
   },

@@ -329,6 +329,13 @@
       "when": 1763453175961,
       "tag": "0046_add_parent_id",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1763535087148,
+      "tag": "0047_add_slug_document.sql",
+      "breakpoints": true
     }
   ],
   "version": "6"
