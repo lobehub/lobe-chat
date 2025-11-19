@@ -53,11 +53,13 @@ export class KnowledgeRepo {
     sorter,
     knowledgeBaseId,
     showFilesInKnowledgeBase,
+    parentId,
   }: QueryFileListParams = {}): Promise<KnowledgeItem[]> {
     // Build file query
     const fileQuery = this.buildFileQuery({
       category,
       knowledgeBaseId,
+      parentId,
       q,
       showFilesInKnowledgeBase,
       sortType,
@@ -68,6 +70,7 @@ export class KnowledgeRepo {
     const documentQuery = this.buildDocumentQuery({
       category,
       knowledgeBaseId,
+      parentId,
       q,
       sortType,
       sorter,
@@ -176,8 +179,18 @@ export class KnowledgeRepo {
     q,
     knowledgeBaseId,
     showFilesInKnowledgeBase,
+    parentId,
   }: QueryFileListParams = {}): ReturnType<typeof sql> {
     let whereConditions: any[] = [sql`${files.userId} = ${this.userId}`];
+
+    // Parent ID filter
+    if (parentId !== undefined) {
+      if (parentId === null) {
+        whereConditions.push(sql`${files.parentId} IS NULL`);
+      } else {
+        whereConditions.push(sql`${files.parentId} = ${parentId}`);
+      }
+    }
 
     // Search filter
     if (q) {
@@ -202,6 +215,15 @@ export class KnowledgeRepo {
     if (knowledgeBaseId) {
       // Build where conditions using proper table references (f.column instead of files.column)
       const kbWhereConditions: any[] = [sql`f.user_id = ${this.userId}`];
+
+      // Parent ID filter
+      if (parentId !== undefined) {
+        if (parentId === null) {
+          kbWhereConditions.push(sql`f.parent_id IS NULL`);
+        } else {
+          kbWhereConditions.push(sql`f.parent_id = ${parentId}`);
+        }
+      }
 
       // Search filter
       if (q) {
@@ -280,8 +302,18 @@ export class KnowledgeRepo {
     category,
     q,
     knowledgeBaseId,
+    parentId,
   }: QueryFileListParams = {}): ReturnType<typeof sql> {
     let whereConditions: any[] = [sql`${documents.userId} = ${this.userId}`];
+
+    // Parent ID filter
+    if (parentId !== undefined) {
+      if (parentId === null) {
+        whereConditions.push(sql`${documents.parentId} IS NULL`);
+      } else {
+        whereConditions.push(sql`${documents.parentId} = ${parentId}`);
+      }
+    }
 
     // Search filter
     if (q) {
@@ -332,24 +364,87 @@ export class KnowledgeRepo {
     }
 
     // Knowledge base filter for documents
-    // Documents don't have knowledge base association currently, so skip if knowledgeBaseId is set
+    // Documents are linked to knowledge bases through files table via fileId
     if (knowledgeBaseId) {
+      // Build where conditions using proper table references (d.column instead of documents.column)
+      const kbWhereConditions: any[] = [sql`d.user_id = ${this.userId}`];
+
+      // Parent ID filter
+      if (parentId !== undefined) {
+        if (parentId === null) {
+          kbWhereConditions.push(sql`d.parent_id IS NULL`);
+        } else {
+          kbWhereConditions.push(sql`d.parent_id = ${parentId}`);
+        }
+      }
+
+      // Search filter
+      if (q) {
+        kbWhereConditions.push(sql`(d.title ILIKE ${`%${q}%`} OR d.filename ILIKE ${`%${q}%`})`);
+      }
+
+      // Category filter
+      if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
+        const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
+        if (Array.isArray(fileTypePrefix)) {
+          const orConditions = fileTypePrefix.map(
+            (prefix) => sql`d.file_type ILIKE ${`${prefix}%`}`,
+          );
+          kbWhereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
+
+          // Exclude custom/document and source_type='file' from Documents category
+          if (category === FilesTabs.Documents) {
+            kbWhereConditions.push(
+              sql`d.file_type != ${'custom/document'}`,
+              sql`d.source_type != ${'file'}`,
+            );
+          }
+        } else if (fileTypePrefix) {
+          kbWhereConditions.push(sql`d.file_type ILIKE ${`${fileTypePrefix}%`}`);
+        } else {
+          // Exclude documents from other categories (Images, Videos, Audios, Websites)
+          return sql`
+            SELECT
+              NULL::varchar(30) as id,
+              NULL::text as name,
+              NULL::varchar(255) as file_type,
+              NULL::integer as size,
+              NULL::text as url,
+              NULL::timestamp with time zone as created_at,
+              NULL::timestamp with time zone as updated_at,
+              NULL::uuid as chunk_task_id,
+              NULL::uuid as embedding_task_id,
+              NULL::jsonb as editor_data,
+              NULL::text as content,
+              NULL::jsonb as metadata,
+              NULL::text as source_type
+            WHERE false
+          `;
+        }
+      }
+
       return sql`
         SELECT
-          NULL::varchar(30) as id,
-          NULL::text as name,
-          NULL::varchar(255) as file_type,
-          NULL::integer as size,
-          NULL::text as url,
-          NULL::timestamp with time zone as created_at,
-          NULL::timestamp with time zone as updated_at,
-          NULL::uuid as chunk_task_id,
-          NULL::uuid as embedding_task_id,
-          NULL::jsonb as editor_data,
-          NULL::text as content,
-          NULL::jsonb as metadata,
-          NULL::text as source_type
-        WHERE false
+          d.id,
+          COALESCE(d.title, d.filename, 'Untitled') as name,
+          d.file_type,
+          d.total_char_count as size,
+          d.source as url,
+          d.created_at,
+          d.updated_at,
+          NULL as chunk_task_id,
+          NULL as embedding_task_id,
+          d.editor_data,
+          d.content,
+          d.metadata,
+          'document' as source_type
+        FROM ${documents} d
+        INNER JOIN ${files} f
+          ON d.file_id = f.id
+        INNER JOIN ${knowledgeBaseFiles} kbf
+          ON f.id = kbf.file_id
+          AND kbf.knowledge_base_id = ${knowledgeBaseId}
+        WHERE ${sql.join(kbWhereConditions, sql` AND `)}
       `;
     }
 

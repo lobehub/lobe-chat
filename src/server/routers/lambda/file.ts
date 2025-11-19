@@ -36,7 +36,7 @@ export const fileRouter = router({
     }),
 
   createFile: fileProcedure
-    .input(UploadFileSchema.omit({ url: true }).extend({ url: z.string() }))
+    .input(UploadFileSchema.omit({ url: true }).extend({ parentId: z.string().optional(), url: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { isExist } = await ctx.fileModel.checkHash(input.hash!);
 
@@ -47,6 +47,7 @@ export const fileRouter = router({
           knowledgeBaseId: input.knowledgeBaseId,
           metadata: input.metadata,
           name: input.name,
+          parentId: input.parentId,
           size: input.size,
           url: input.url,
         },

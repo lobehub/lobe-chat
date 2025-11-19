@@ -29,6 +29,7 @@ export const documentRouter = router({
         fileType: z.string().optional(),
         knowledgeBaseId: z.string().optional(),
         metadata: z.record(z.any()).optional(),
+        parentId: z.string().optional(),
         title: z.string(),
       }),
     )

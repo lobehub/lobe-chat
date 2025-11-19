@@ -30,8 +30,13 @@ export interface DocumentAction {
   createDocument: (params: {
     content: string;
     knowledgeBaseId?: string;
+    parentId?: string;
     title: string;
   }) => Promise<{ [key: string]: any; id: string }>;
+  /**
+   * Create a new folder
+   */
+  createFolder: (name: string, parentId?: string, knowledgeBaseId?: string) => Promise<void>;
   /**
    * Create a new optimistic document immediately in local map
    * Returns the temporary ID for the new document
@@ -77,7 +82,7 @@ export const createDocumentSlice: StateCreator<
   [],
   DocumentAction
 > = (set, get) => ({
-  createDocument: async ({ title, content, knowledgeBaseId }) => {
+  createDocument: async ({ title, content, knowledgeBaseId, parentId }) => {
     const now = Date.now();
 
     // Create document with markdown content, leave editorData as empty JSON object
@@ -89,6 +94,7 @@ export const createDocumentSlice: StateCreator<
       metadata: {
         createdAt: now,
       },
+      parentId,
       title,
     });
 
@@ -97,6 +103,23 @@ export const createDocumentSlice: StateCreator<
     // without triggering the loading skeleton
 
     return newDoc;
+  },
+
+  createFolder: async (name, parentId, knowledgeBaseId) => {
+    const now = Date.now();
+    await documentService.createDocument({
+      content: '',
+      editorData: '{}',
+      fileType: 'custom/folder',
+      knowledgeBaseId,
+      metadata: {
+        createdAt: now,
+      },
+      parentId,
+      title: name,
+    });
+
+    await get().refreshFileList();
   },
 
   createOptimisticDocument: (title = 'Untitled') => {

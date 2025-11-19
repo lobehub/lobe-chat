@@ -56,10 +56,19 @@ interface NoteEditorModalProps {
   knowledgeBaseId?: string;
   onClose: () => void;
   open: boolean;
+  parentId?: string;
 }
 
 const NoteEditorModal = memo<NoteEditorModalProps>(
-  ({ open, onClose, documentId, documentTitle, editorData: cachedEditorData, knowledgeBaseId }) => {
+  ({
+    open,
+    onClose,
+    documentId,
+    documentTitle,
+    editorData: cachedEditorData,
+    knowledgeBaseId,
+    parentId,
+  }) => {
     const { t } = useTranslation(['file', 'editor']);
     const theme = useTheme();
 
@@ -123,6 +132,7 @@ const NoteEditorModal = memo<NoteEditorModalProps>(
             metadata: {
               createdAt: now,
             },
+            parentId,
             title,
           });
 

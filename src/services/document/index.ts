@@ -8,6 +8,7 @@ export interface CreateDocumentParams {
   fileType?: string;
   knowledgeBaseId?: string;
   metadata?: Record<string, any>;
+  parentId?: string;
   title: string;
 }
 
