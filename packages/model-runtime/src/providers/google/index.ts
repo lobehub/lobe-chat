@@ -210,7 +210,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       };
 
       // Add thinkingLevel for 3.0 models
-      if (model?.toLowerCase().includes('-3.0-') && thinkingLevel) {
+      if (model?.toLowerCase().includes('-3-') && thinkingLevel) {
         (thinkingConfig as any).thinkingLevel = thinkingLevel;
       }
 
