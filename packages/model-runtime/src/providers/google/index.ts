@@ -262,18 +262,20 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const inputStartAt = Date.now();
 
-      const geminiStreamResponse = await this.client.models.generateContentStream({
-        config,
-        contents,
-        model,
-      });
-
-      const googleStream = this.createEnhancedStream(geminiStreamResponse, controller.signal);
-      const [prod, useForDebug] = googleStream.tee();
-
+      const finalPayload = { config, contents, model };
       const key = this.isVertexAi
         ? 'DEBUG_VERTEX_AI_CHAT_COMPLETION'
         : 'DEBUG_GOOGLE_CHAT_COMPLETION';
+
+      if (process.env[key] === '1') {
+        console.log('[requestPayload]');
+        console.log(JSON.stringify(finalPayload), '\n');
+      }
+
+      const geminiStreamResponse = await this.client.models.generateContentStream(finalPayload);
+
+      const googleStream = this.createEnhancedStream(geminiStreamResponse, controller.signal);
+      const [prod, useForDebug] = googleStream.tee();
 
       if (process.env[key] === '1') {
         debugStream(useForDebug).catch();

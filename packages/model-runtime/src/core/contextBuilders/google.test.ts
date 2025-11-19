@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ChatCompletionTool, OpenAIChatMessage, UserMessageContentPart } from '../../types';
 import { parseDataUri } from '../../utils/uriParser';
 import {
+  GEMINI_MAGIC_THOUGHT_SIGNATURE,
   buildGoogleMessage,
   buildGoogleMessages,
   buildGooglePart,
@@ -276,6 +277,213 @@ describe('google contextBuilders', () => {
       });
     });
 
+    it('should add magic signature when last message is tool message', async () => {
+      const messages: OpenAIChatMessage[] = [
+        {
+          content: '<plugins>Web Browsing plugin available</plugins>',
+          role: 'system',
+        },
+        {
+          content: '杭州天气如何',
+          role: 'user',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments: '{"query":"杭州天气","searchEngines":["google"]}',
+                name: 'lobe-web-browsing____search____builtin',
+              },
+              id: 'call_001',
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: 'Tool execution was aborted by user.',
+          name: 'lobe-web-browsing____search____builtin',
+          role: 'tool',
+          tool_call_id: 'call_001',
+        },
+      ];
+
+      const contents = await buildGoogleMessages(messages);
+
+      expect(contents).toEqual([
+        {
+          parts: [{ text: '<plugins>Web Browsing plugin available</plugins>' }],
+          role: 'user',
+        },
+        { parts: [{ text: '杭州天气如何' }], role: 'user' },
+        {
+          parts: [
+            {
+              functionCall: {
+                args: { query: '杭州天气', searchEngines: ['google'] },
+                name: 'lobe-web-browsing____search____builtin',
+              },
+              thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+            },
+          ],
+          role: 'model',
+        },
+        {
+          parts: [
+            {
+              functionResponse: {
+                name: 'lobe-web-browsing____search____builtin',
+                response: { result: 'Tool execution was aborted by user.' },
+              },
+            },
+          ],
+          role: 'user',
+        },
+      ]);
+    });
+
+    it('should NOT add magic signature when thoughtSignature already exists', async () => {
+      const existingSignature = 'existing_signature_from_model';
+      const messages: OpenAIChatMessage[] = [
+        {
+          content: '杭州天气如何',
+          role: 'user',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments: '{"query":"杭州天气","searchEngines":["google"]}',
+                name: 'lobe-web-browsing____search____builtin',
+              },
+              id: 'call_001',
+              thoughtSignature: existingSignature,
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: 'Tool result',
+          name: 'lobe-web-browsing____search____builtin',
+          role: 'tool',
+          tool_call_id: 'call_001',
+        },
+      ];
+
+      const contents = await buildGoogleMessages(messages);
+
+      expect(contents).toEqual([
+        {
+          parts: [{ text: '杭州天气如何' }],
+          role: 'user',
+        },
+        {
+          parts: [
+            {
+              functionCall: {
+                args: { query: '杭州天气', searchEngines: ['google'] },
+                name: 'lobe-web-browsing____search____builtin',
+              },
+              // Should keep existing thoughtSignature, not add magic signature
+              thoughtSignature: existingSignature,
+            },
+          ],
+          role: 'model',
+        },
+        {
+          parts: [
+            {
+              functionResponse: {
+                name: 'lobe-web-browsing____search____builtin',
+                response: { result: 'Tool result' },
+              },
+            },
+          ],
+          role: 'user',
+        },
+      ]);
+    });
+
+    it('should NOT add magic signature when last message is user text message', async () => {
+      const messages: OpenAIChatMessage[] = [
+        {
+          content: '<plugins>Web Browsing plugin available</plugins>',
+          role: 'system',
+        },
+        {
+          content: '杭州天气如何',
+          role: 'user',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments: '{"query":"杭州天气","searchEngines":["google"]}',
+                name: 'lobe-web-browsing____search____builtin',
+              },
+              id: 'call_001',
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: 'Tool execution was aborted by user.',
+          name: 'lobe-web-browsing____search____builtin',
+          role: 'tool',
+          tool_call_id: 'call_001',
+        },
+        {
+          content: 'Please try again',
+          role: 'user',
+        },
+      ];
+
+      const contents = await buildGoogleMessages(messages);
+
+      expect(contents).toEqual([
+        {
+          parts: [{ text: '<plugins>Web Browsing plugin available</plugins>' }],
+          role: 'user',
+        },
+        {
+          parts: [{ text: '杭州天气如何' }],
+          role: 'user',
+        },
+        {
+          parts: [
+            {
+              functionCall: {
+                args: { query: '杭州天气', searchEngines: ['google'] },
+                name: 'lobe-web-browsing____search____builtin',
+              },
+              // No thoughtSignature should be added when last message is user text
+            },
+          ],
+          role: 'model',
+        },
+        {
+          parts: [
+            {
+              functionResponse: {
+                name: 'lobe-web-browsing____search____builtin',
+                response: { result: 'Tool execution was aborted by user.' },
+              },
+            },
+          ],
+          role: 'user',
+        },
+        {
+          parts: [{ text: 'Please try again' }],
+          role: 'user',
+        },
+      ]);
+    });
+
     it('should correctly handle empty content', async () => {
       const message: OpenAIChatMessage = {
         content: '' as any, // explicitly set as empty string
@@ -405,6 +613,7 @@ describe('google contextBuilders', () => {
                 args: { location: 'London', unit: 'celsius' },
                 name: 'get_current_weather',
               },
+              thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
             },
           ],
           role: 'model',

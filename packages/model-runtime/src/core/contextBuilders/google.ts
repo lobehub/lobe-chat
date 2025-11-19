@@ -12,6 +12,12 @@ import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 
 /**
+ * Magic thoughtSignature
+ * @see https://ai.google.dev/gemini-api/docs/thought-signatures#model-behavior:~:text=context_engineering_is_the_way_to_go
+ */
+export const GEMINI_MAGIC_THOUGHT_SIGNATURE = 'context_engineering_is_the_way_to_go';
+
+/**
  * Convert OpenAI content part to Google Part format
  */
 export const buildGooglePart = async (
@@ -156,7 +162,31 @@ export const buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promis
   const contents = await Promise.all(pools);
 
   // Filter out empty messages: contents.parts must not be empty.
-  return contents.filter((content: Content) => content.parts && content.parts.length > 0);
+  const filteredContents = contents.filter(
+    (content: Content) => content.parts && content.parts.length > 0,
+  );
+
+  // Check if the last message is a tool message
+  const lastMessage = messages.at(-1);
+  const shouldAddMagicSignature = lastMessage?.role === 'tool';
+
+  if (shouldAddMagicSignature) {
+    // Find the last assistant message with tool_calls and add magic signature if not already present
+    for (let i = filteredContents.length - 1; i >= 0; i--) {
+      const content = filteredContents[i];
+      if (content.role === 'model' && content.parts) {
+        for (const part of content.parts) {
+          if (part.functionCall && !part.thoughtSignature) {
+            // Only add magic signature if thoughtSignature doesn't exist
+            part.thoughtSignature = GEMINI_MAGIC_THOUGHT_SIGNATURE;
+          }
+        }
+        break; // Only modify the last assistant message with function calls
+      }
+    }
+  }
+
+  return filteredContents;
 };
 
 /**
