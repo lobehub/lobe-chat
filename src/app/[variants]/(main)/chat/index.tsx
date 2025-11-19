@@ -2,7 +2,8 @@
 
 import { memo } from 'react';
 
-import { DesktopWorkspace, MobileWorkspace } from './components/WorkspaceLayout';
+// import { DesktopWorkspace, MobileWorkspace } from './components/WorkspaceLayout';
+import { MobileWorkspace } from './components/WorkspaceLayout';
 import TelemetryNotification from './components/features/TelemetryNotification';
 import PageTitle from './features/PageTitle';
 
@@ -17,13 +18,15 @@ const MobileChatPage = memo(() => {
 });
 
 const DesktopChatPage = memo(() => {
-  return (
-    <>
-      <PageTitle />
-      <DesktopWorkspace />
-      <TelemetryNotification mobile={false} />
-    </>
-  );
+
+  return <>test 123</>
+  // return (
+  //   <>
+  //     <PageTitle />
+  //     <DesktopWorkspace />
+  //     <TelemetryNotification mobile={false} />
+  //   </>
+  // );
 });
 
 export { DesktopChatPage, MobileChatPage };
