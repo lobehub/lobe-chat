@@ -2,7 +2,7 @@
 
 import { enableNextAuth } from '@lobechat/const';
 import { useRouter } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
@@ -54,6 +54,14 @@ const StoreInitialization = memo(() => {
    * which would cause unnecessary API requests with invalid login state.
    */
   const isLoginOnInit = Boolean(enableNextAuth ? isSignedIn : isLogin);
+
+  // 如果用户未登录，直接设置水合完成，避免应用卡住
+  useEffect(() => {
+    if (!isLoginOnInit) {
+      useGlobalStore.setState({ isAppHydrated: true });
+      console.log('[Hydration] Client state hydration completed (not logged in).');
+    }
+  }, [isLoginOnInit]);
 
   // init inbox agent and default agent config
   useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);
