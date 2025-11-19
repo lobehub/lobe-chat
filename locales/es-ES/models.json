@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 es un modelo de inferencia de atención mixta a gran escala con pesos de código abierto, que cuenta con 456 mil millones de parámetros, activando aproximadamente 45.9 mil millones de parámetros por token. El modelo soporta de forma nativa contextos ultra largos de hasta 1 millón de tokens y, gracias a su mecanismo de atención relámpago, reduce en un 75 % las operaciones de punto flotante en tareas de generación de 100 mil tokens en comparación con DeepSeek R1. Además, MiniMax-M1 utiliza una arquitectura MoE (Mezcla de Expertos), combinando el algoritmo CISPO y un diseño de atención mixta para un entrenamiento eficiente mediante aprendizaje reforzado, logrando un rendimiento líder en la industria en inferencia con entradas largas y escenarios reales de ingeniería de software."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 redefine la eficiencia para los agentes inteligentes. Es un modelo MoE compacto, rápido y rentable, con un total de 230 mil millones de parámetros y 10 mil millones de parámetros activos. Está diseñado para ofrecer un rendimiento de primer nivel en tareas de codificación y agentes, manteniendo al mismo tiempo una inteligencia general sólida. Con solo 10 mil millones de parámetros activos, MiniMax-M2 ofrece un rendimiento comparable al de modelos a gran escala, lo que lo convierte en una opción ideal para aplicaciones de alta eficiencia."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Con un total de 1 billón de parámetros y 32 mil millones de parámetros activados, este modelo no reflexivo alcanza niveles de vanguardia en conocimiento avanzado, matemáticas y codificación, destacando en tareas generales de agentes. Optimizado para tareas de agentes, no solo responde preguntas sino que también puede actuar. Ideal para conversaciones improvisadas, chat general y experiencias de agentes, es un modelo de nivel reflexivo que no requiere largos tiempos de pensamiento."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 mejora enormemente la capacidad de razonamiento del modelo con muy pocos datos etiquetados. Antes de generar la respuesta final, el modelo produce una cadena de pensamiento para aumentar la precisión de la respuesta."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B es una variante destilada y más eficiente del modelo Llama de 70B. Mantiene un rendimiento sólido en tareas de generación de texto, reduciendo el costo computacional para facilitar su despliegue e investigación. Operado por Groq con su hardware personalizado de unidad de procesamiento de lenguaje (LPU) para ofrecer inferencia rápida y eficiente."
+    "description": "DeepSeek R1 Distill Llama 70B es un modelo de lenguaje de gran escala basado en Llama3.3 70B. Este modelo ha sido ajustado finamente utilizando las salidas de DeepSeek R1, logrando un rendimiento competitivo comparable al de los modelos más avanzados del mercado."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B es un modelo de lenguaje grande destilado basado en Llama-3.1-8B-Instruct, entrenado utilizando la salida de DeepSeek R1."
@@ -2461,6 +2464,9 @@
   },
   "minimax/minimax-m2": {
     "description": "Diseñado para una codificación eficiente y flujos de trabajo de agentes."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 es un modelo de expertos mixtos (MoE) compacto, rápido y rentable, con un total de 230 mil millones de parámetros y 10 mil millones de parámetros activos. Está diseñado para ofrecer un rendimiento de primer nivel en tareas de codificación y agentes, manteniendo una inteligencia general robusta. El modelo destaca en edición de múltiples archivos, ciclos cerrados de codificación-ejecución-corrección, verificación y corrección de pruebas, así como en complejas cadenas de herramientas de enlaces largos, lo que lo convierte en una opción ideal para los flujos de trabajo de los desarrolladores."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B es el modelo de borde de primer nivel mundial de Mistral."
