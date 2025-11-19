@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.90](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.89...v2.0.0-next.90)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Extract StatusIndicator component and improve tools display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Extract StatusIndicator component and improve tools display, closes [#10311](https://github.com/lobehub/lobe-chat/issues/10311) ([b5ae53a](https://github.com/lobehub/lobe-chat/commit/b5ae53a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.89](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.88...v2.0.0-next.89)
 
 <sup>Released on **2025-11-19**</sup>
