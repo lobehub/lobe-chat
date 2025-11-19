@@ -4,12 +4,12 @@ import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
 
+import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
 import { idLoader, slugLoader } from './loaders/routeParams';
-import Loading from '@/components/Loading/BrandTextLoading';
 
 /**
  * Desktop Router Configuration - Pure CSR Mode
@@ -30,79 +30,73 @@ import Loading from '@/components/Loading/BrandTextLoading';
 const DesktopChatPage = dynamic(
   () => import('./(main)/chat/index').then((m) => m.DesktopChatPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Discover List components
 const DesktopHomePage = dynamic(
   () => import('./(main)/discover/(list)/(home)/index').then((m) => m.DesktopHomePage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DesktopAssistantPage = dynamic(
   () => import('./(main)/discover/(list)/assistant/index').then((m) => m.DesktopAssistantPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverAssistantLayout = dynamic(
   () => import('./(main)/discover/(list)/assistant/_layout/Desktop'),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverListMcpPage = dynamic(
   () => import('./(main)/discover/(list)/mcp/index').then((m) => m.DesktopMcpPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
-const DiscoverMcpLayout = dynamic(
-  () => import('./(main)/discover/(list)/mcp/_layout/Desktop'),
-  {
+const DiscoverMcpLayout = dynamic(() => import('./(main)/discover/(list)/mcp/_layout/Desktop'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 const DiscoverListModelPage = dynamic(
   () => import('./(main)/discover/(list)/model/index').then((m) => m.DesktopModelPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverModelLayout = dynamic(
   () => import('./(main)/discover/(list)/model/_layout/Desktop'),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverListProviderPage = dynamic(
   () => import('./(main)/discover/(list)/provider/index').then((m) => m.DesktopProviderPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
-const DiscoverListLayout = dynamic(
-  () => import('./(main)/discover/(list)/_layout/Desktop/index'),
-  {
+const DiscoverListLayout = dynamic(() => import('./(main)/discover/(list)/_layout/Desktop/index'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 
 // Discover Detail components
 const DesktopDiscoverAssistantDetailPage = dynamic(
@@ -111,119 +105,116 @@ const DesktopDiscoverAssistantDetailPage = dynamic(
       (m) => m.DesktopDiscoverAssistantDetailPage,
     ),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverDetailMcpPage = dynamic(
   () => import('./(main)/discover/(detail)/mcp/index').then((m) => m.DesktopMcpPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverDetailModelPage = dynamic(
   () => import('./(main)/discover/(detail)/model/index').then((m) => m.DesktopModelPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DiscoverDetailProviderPage = dynamic(
   () => import('./(main)/discover/(detail)/provider/index').then((m) => m.DesktopProviderPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
-const DiscoverDetailLayout = dynamic(
-  () => import('./(main)/discover/(detail)/_layout/Desktop'),
-  {
+const DiscoverDetailLayout = dynamic(() => import('./(main)/discover/(detail)/_layout/Desktop'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
-const DiscoverLayout = dynamic(
-  () => import('./(main)/discover/_layout/Desktop/index'),
-  {
+  ssr: false,
+});
+const DiscoverLayout = dynamic(() => import('./(main)/discover/_layout/Desktop/index'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 
 // Knowledge components
 const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
+  loading: () => <Loading />,
   ssr: false,
 });
 const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), {
+  loading: () => <Loading />,
   ssr: false,
 });
-const KnowledgeBaseDetail = dynamic(
-  () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-  {
+const KnowledgeBaseDetail = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBaseDetail'), {
   loading: () => <Loading />,
-  ssr: false
-},
-);
+  ssr: false,
+});
 const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Desktop'), {
+  loading: () => <Loading />,
   ssr: false,
 });
 
 // Settings components
 const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Desktop'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/DesktopWrapper'), {
+  loading: () => <Loading />,
   ssr: false,
 });
 
 // Image components
 const ImagePage = dynamic(() => import('./(main)/image'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const ImageLayoutWrapper = dynamic(() => import('./(main)/image/_layout/DesktopWrapper'), {
+  loading: () => <Loading />,
   ssr: false,
 });
 
 // Labs components
 const LabsPage = dynamic(() => import('./(main)/labs'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 
 // Profile components
 const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)/desktop'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), {
   loading: () => <Loading />,
-  ssr: false
+  ssr: false,
 });
 const DesktopProfileSecurityPage = dynamic(
   () => import('./(main)/profile/security/index').then((m) => m.DesktopProfileSecurityPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DesktopProfileStatsPage = dynamic(
   () => import('./(main)/profile/stats/index').then((m) => m.DesktopProfileStatsPage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const DesktopProfileUsagePage = dynamic(
   () => import('./(main)/profile/usage/index').then((m) => m.DesktopProfileUsagePage),
   {
-  loading: () => <Loading />,
-  ssr: false
-},
+    loading: () => <Loading />,
+    ssr: false,
+  },
 );
 const ProfileLayoutWrapper = dynamic(() => import('./(main)/profile/_layout/DesktopWrapper'), {
+  loading: () => <Loading />,
   ssr: false,
 });
 
