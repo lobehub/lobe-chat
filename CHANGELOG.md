@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.84](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.83...v2.0.0-next.84)
+
+<sup>Released on **2025-11-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Gemini 3.0 Pro Preview to Google Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Gemini 3.0 Pro Preview to Google Provider, closes [#10290](https://github.com/lobehub/lobe-chat/issues/10290) ([25c4358](https://github.com/lobehub/lobe-chat/commit/25c4358))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.83](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.82...v2.0.0-next.83)
 
 <sup>Released on **2025-11-19**</sup>
