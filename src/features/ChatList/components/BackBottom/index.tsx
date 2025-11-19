@@ -18,7 +18,7 @@ const BackBottom = memo<BackBottomProps>(({ visible, onScrollToBottom }) => {
 
   const { t } = useTranslation(['chat', 'common']);
 
-  const [isMessageSelectionMode, toggleMessageSelectionMode] = useChatStore((s) => [
+  const [isMessageSelectionMode] = useChatStore((s) => [
     s.isMessageSelectionMode,
     s.toggleMessageSelectionMode,
   ]);
@@ -32,10 +32,12 @@ const BackBottom = memo<BackBottomProps>(({ visible, onScrollToBottom }) => {
         <Button
           className={styles.button}
           icon={<Icon icon={X} />}
-          onClick={() => toggleMessageSelectionMode(false)}
+          onClick={() => {
+            useChatStore.getState().clearMessageSelection();
+          }}
           size={'small'}
         >
-          {t('exitSelection', { defaultValue: 'Quit Selection', ns: 'common' })}
+          {t('exitSelection')}
         </Button>
       )}
       <Button

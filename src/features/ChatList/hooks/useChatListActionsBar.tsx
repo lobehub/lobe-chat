@@ -2,6 +2,7 @@ import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import {
   ArrowDownFromLine,
+  CheckSquare,
   Copy,
   DownloadIcon,
   Edit,
@@ -14,7 +15,6 @@ import {
   Share2,
   Split,
   Trash,
-  CheckSquare,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -124,7 +124,7 @@ export const useChatListActionsBar = ({
       select: {
         icon: CheckSquare,
         key: 'select',
-        label: t('select', { ns: 'common' }),
+        label: t('selectMessage', { ns: 'chat' }),
       },
       share: {
         icon: Share2,
