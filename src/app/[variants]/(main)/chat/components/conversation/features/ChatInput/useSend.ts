@@ -7,7 +7,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { getChatStoreState, useChatStore } from '@/store/chat';
 import {
   aiChatSelectors,
-  chatSelectors,
+  displayMessageSelectors,
   messageStateSelectors,
   operationSelectors,
   topicSelectors,
@@ -44,7 +44,7 @@ export const useSend = () => {
     s.addAIMessage,
     s.stopGenerateMessage,
     s.cancelSendMessageInServer,
-    operationSelectors.isAgentRuntimeRunning(s),
+    operationSelectors.isMainWindowAgentRuntimeRunning(s),
     messageStateSelectors.isSendButtonDisabledByMessage(s),
     aiChatSelectors.isCurrentSendMessageLoading(s),
   ]);
@@ -74,7 +74,7 @@ export const useSend = () => {
       return;
     }
 
-    if (operationSelectors.isAgentRuntimeRunning(store)) return;
+    if (operationSelectors.isMainWindowAgentRuntimeRunning(store)) return;
 
     const inputMessage = store.inputMessage;
     // 发送时再取一次最新的文件列表，防止闭包拿到旧值
@@ -120,7 +120,7 @@ export const useSend = () => {
         chat_id: store.activeId || 'unknown',
         current_topic: topicSelectors.currentActiveTopic(store)?.title || null,
         has_attachments: fileList.length > 0,
-        history_message_count: chatSelectors.activeBaseChats(store).length,
+        history_message_count: displayMessageSelectors.activeDisplayMessages(store).length,
         message: inputMessage,
         message_length: inputMessage.length,
         message_type: messageType,
@@ -133,7 +133,7 @@ export const useSend = () => {
 
   const stop = () => {
     const store = getChatStoreState();
-    const isRunning = operationSelectors.isAgentRuntimeRunning(store);
+    const isRunning = operationSelectors.isMainWindowAgentRuntimeRunning(store);
 
     if (isRunning) {
       stopGenerateMessage();
@@ -176,7 +176,7 @@ export const useSendGroupMessage = () => {
   ]);
 
   const isSupervisorThinking = useChatStore((s) =>
-    chatSelectors.isSupervisorLoading(s.activeId)(s),
+    displayMessageSelectors.isSupervisorLoading(s.activeId)(s),
   );
   const { analytics } = useAnalytics();
   const checkGeminiChineseWarning = useGeminiChineseWarning();
@@ -210,7 +210,7 @@ export const useSendGroupMessage = () => {
       }
 
       if (
-        chatSelectors.isSupervisorLoading(store.activeId)(store) ||
+        displayMessageSelectors.isSupervisorLoading(store.activeId)(store) ||
         messageStateSelectors.isCreatingMessage(store)
       )
         return;
@@ -271,7 +271,7 @@ export const useSendGroupMessage = () => {
           chat_id: store.activeId || 'unknown',
           current_topic: topicSelectors.currentActiveTopic(store)?.title || null,
           has_attachments: fileList.length > 0,
-          history_message_count: chatSelectors.activeBaseChats(store).length,
+          history_message_count: displayMessageSelectors.activeDisplayMessages(store).length,
           message: inputMessage,
           message_length: inputMessage.length,
           message_type: messageType,
@@ -293,7 +293,7 @@ export const useSendGroupMessage = () => {
 
   const stop = useCallback(() => {
     const store = getChatStoreState();
-    const isAgentRunning = operationSelectors.isAgentRuntimeRunning(store);
+    const isAgentRunning = operationSelectors.isMainWindowAgentRuntimeRunning(store);
     const isCreating = messageStateSelectors.isCreatingMessage(store);
 
     if (isAgentRunning) {

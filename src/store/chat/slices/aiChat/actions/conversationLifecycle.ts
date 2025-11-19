@@ -144,6 +144,10 @@ export const conversationLifecycle: StateCreator<
         messageId: tempId,
       },
       label: 'Send Message',
+      metadata: {
+        // Mark this as main window operation (not thread)
+        inThread: false,
+      },
     });
 
     // Associate temp message with operation

@@ -165,7 +165,7 @@ const getCurrentOperationProgress = (s: ChatStoreState): number | undefined => {
 
 // === Backward Compatibility ===
 /**
- * Check if agent runtime is running
+ * Check if agent runtime is running (including both main window and thread)
  * Excludes operations that are aborting (cleaning up after cancellation)
  */
 const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
@@ -174,6 +174,20 @@ const isAgentRuntimeRunning = (s: ChatStoreState): boolean => {
     const op = s.operations[id];
     // Exclude operations that are aborting (user already cancelled, just cleaning up)
     return op && op.status === 'running' && !op.metadata.isAborting;
+  });
+};
+
+/**
+ * Check if agent runtime is running in main window only
+ * Used for main window UI state (e.g., send button loading)
+ * Excludes thread operations to prevent cross-contamination
+ */
+const isMainWindowAgentRuntimeRunning = (s: ChatStoreState): boolean => {
+  const operationIds = s.operationsByType['execAgentRuntime'] || [];
+  return operationIds.some((id) => {
+    const op = s.operations[id];
+    // Only include main window operations (not thread)
+    return op && op.status === 'running' && !op.metadata.isAborting && !op.metadata.inThread;
   });
 };
 
@@ -347,6 +361,7 @@ export const operationSelectors = {
   isContinuing,
   isInRAGFlow,
   isInSearchWorkflow,
+  isMainWindowAgentRuntimeRunning,
   isMessageAborting,
   isMessageContinuing,
   isMessageCreating,

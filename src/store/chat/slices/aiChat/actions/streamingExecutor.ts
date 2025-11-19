@@ -588,6 +588,11 @@ export const streamingExecutor: StateCreator<
         },
         parentOperationId: params.parentOperationId, // Pass parent operation ID
         label: 'AI Generation',
+        metadata: {
+          // Mark if this operation is in thread context
+          // Thread operations should not affect main window UI state
+          inThread: params.inPortalThread || false,
+        },
       });
       operationId = newOperationId;
 

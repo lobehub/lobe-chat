@@ -389,5 +389,125 @@ describe('Operation Selectors', () => {
 
       expect(operationSelectors.isInRAGFlow(result.current)).toBe(true);
     });
+
+    it('isMainWindowAgentRuntimeRunning should only detect main window operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+
+      // Start a main window operation (inThread: false)
+      let mainOpId: string;
+      act(() => {
+        mainOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+          metadata: { inThread: false },
+        }).operationId;
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete main window operation
+      act(() => {
+        result.current.completeOperation(mainOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
+    });
+
+    it('isMainWindowAgentRuntimeRunning should exclude thread operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      // Start a thread operation (inThread: true)
+      let threadOpId: string;
+      act(() => {
+        threadOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', threadId: 'thread1' },
+          metadata: { inThread: true },
+        }).operationId;
+      });
+
+      // Thread operation should not affect main window state
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      // But should be detected by general isAgentRuntimeRunning
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete thread operation
+      act(() => {
+        result.current.completeOperation(threadOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
+    });
+
+    it('isMainWindowAgentRuntimeRunning should distinguish between main and thread operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let mainOpId: string;
+      let threadOpId: string;
+
+      // Start both main window and thread operations
+      act(() => {
+        mainOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+          metadata: { inThread: false },
+        }).operationId;
+
+        threadOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', threadId: 'thread1' },
+          metadata: { inThread: true },
+        }).operationId;
+      });
+
+      // Both selectors should detect their respective operations
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete main window operation, thread operation still running
+      act(() => {
+        result.current.completeOperation(mainOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete thread operation
+      act(() => {
+        result.current.completeOperation(threadOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
+    });
+
+    it('isMainWindowAgentRuntimeRunning should exclude aborting operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+          metadata: { inThread: false },
+        }).operationId;
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Mark as aborting
+      act(() => {
+        result.current.updateOperationMetadata(opId!, { isAborting: true });
+      });
+
+      // Should exclude aborting operations
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
+    });
   });
 });
