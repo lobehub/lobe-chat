@@ -3,11 +3,11 @@ import {
   ChatImageItem,
   ChatMessageError,
   ChatMessagePluginError,
+  ChatToolPayload,
   CreateMessageParams,
   GroundingSearch,
   MessageMetadata,
   MessagePluginItem,
-  MessageToolCall,
   ModelReasoning,
   UIChatMessage,
   UpdateMessageRAGParams,
@@ -69,7 +69,7 @@ export interface MessageOptimisticUpdateAction {
       provider?: string;
       reasoning?: ModelReasoning;
       search?: GroundingSearch;
-      toolCalls?: MessageToolCall[];
+      tools?: ChatToolPayload[];
     },
     context?: OptimisticUpdateContext,
   ) => Promise<void>;
@@ -204,22 +204,17 @@ export const messageOptimisticUpdate: StateCreator<
   },
 
   optimisticUpdateMessageContent: async (id, content, extra, context) => {
-    const {
-      internal_dispatchMessage,
-      refreshMessages,
-      internal_transformToolCalls,
-      replaceMessages,
-    } = get();
+    const { internal_dispatchMessage, refreshMessages, replaceMessages } = get();
 
     // Due to the async update method and refresh need about 100ms
     // we need to update the message content at the frontend to avoid the update flick
     // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
-    if (extra?.toolCalls) {
+    if (extra?.tools) {
       internal_dispatchMessage(
         {
           id,
           type: 'updateMessage',
-          value: { tools: internal_transformToolCalls(extra?.toolCalls) },
+          value: { tools: extra?.tools },
         },
         context,
       );
@@ -246,7 +241,7 @@ export const messageOptimisticUpdate: StateCreator<
         provider: extra?.provider,
         reasoning: extra?.reasoning,
         search: extra?.search,
-        tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+        tools: extra?.tools,
       },
       { sessionId, topicId },
     );
