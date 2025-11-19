@@ -4,7 +4,40 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 
 import type { Locales } from '@/types/locale';
 
+// Import all components directly
+import { DesktopChatPage } from './(main)/chat/index';
+import ChatLayout from './(main)/chat/_layout/Desktop';
+// import { DesktopHomePage } from './(main)/discover/(list)/(home)/index';
+// import { DesktopAssistantPage } from './(main)/discover/(list)/assistant/index';
+// import DiscoverAssistantLayout from './(main)/discover/(list)/assistant/_layout/Desktop';
+// import { DesktopMcpPage as DiscoverListMcpPage } from './(main)/discover/(list)/mcp/index';
+// import DiscoverMcpLayout from './(main)/discover/(list)/mcp/_layout/Desktop';
+// import { DesktopModelPage as DiscoverListModelPage } from './(main)/discover/(list)/model/index';
+// import DiscoverModelLayout from './(main)/discover/(list)/model/_layout/Desktop';
+// import { DesktopProviderPage as DiscoverListProviderPage } from './(main)/discover/(list)/provider/index';
+// import DiscoverListLayout from './(main)/discover/(list)/_layout/Desktop/index';
+// import { DesktopDiscoverAssistantDetailPage } from './(main)/discover/(detail)/assistant/index';
+// import { DesktopMcpPage as DiscoverDetailMcpPage } from './(main)/discover/(detail)/mcp/index';
+// import { DesktopModelPage as DiscoverDetailModelPage } from './(main)/discover/(detail)/model/index';
+// import { DesktopProviderPage as DiscoverDetailProviderPage } from './(main)/discover/(detail)/provider/index';
+// import DiscoverDetailLayout from './(main)/discover/(detail)/_layout/Desktop';
+// import DiscoverLayout from './(main)/discover/_layout/Desktop/index';
+// import ImagePage from './(main)/image';
+// import ImageLayoutWrapper from './(main)/image/_layout/DesktopWrapper';
+// import KnowledgeBaseDetail from './(main)/knowledge/routes/KnowledgeBaseDetail';
+// import KnowledgeBasesList from './(main)/knowledge/routes/KnowledgeBasesList';
+// import KnowledgeHome from './(main)/knowledge/routes/KnowledgeHome';
+// import KnowledgeLayout from './(main)/knowledge/_layout/Desktop';
+// import LabsPage from './(main)/labs';
 import DesktopMainLayout from './(main)/layouts/desktop';
+// import ProfileHomePage from './(main)/profile/(home)/desktop';
+// import ProfileApikeyPage from './(main)/profile/apikey/index';
+// import { DesktopProfileSecurityPage } from './(main)/profile/security/index';
+// import { DesktopProfileStatsPage } from './(main)/profile/stats/index';
+// import { DesktopProfileUsagePage } from './(main)/profile/usage/index';
+// import ProfileLayoutWrapper from './(main)/profile/_layout/DesktopWrapper';
+// import SettingsLayout from './(main)/settings/_layout/Desktop';
+// import SettingsLayoutWrapper from './(main)/settings/_layout/DesktopWrapper';
 // import { idLoader, slugLoader } from './loaders/routeParams';
 
 /**
@@ -55,28 +88,19 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <DesktopChatPage />,
               index: true,
-              lazy: () =>
-                import('./(main)/chat/index').then((m) => ({
-                  Component: m.DesktopChatPage,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/chat/index').then((m) => ({
-                  Component: m.DesktopChatPage,
-                })),
+              element: <DesktopChatPage />,
               path: '*',
             },
           ],
-          lazy: () =>
-            import('./(main)/chat/_layout/Desktop').then((m) => ({
-              Component: m.default,
-            })),
+          element: <ChatLayout />,
           path: 'chat',
         },
 
-        // // Discover routes with nested structure
+        // Discover routes with nested structure
         // {
         //   children: [
         //     // List routes (with ListLayout)
@@ -85,117 +109,72 @@ export const createDesktopRouter = (locale: Locales) =>
         //         {
         //           children: [
         //             {
+        //               element: <DesktopAssistantPage />,
         //               index: true,
-        //               lazy: () =>
-        //                 import('./(main)/discover/(list)/assistant/index').then((m) => ({
-        //                   Component: m.DesktopAssistantPage,
-        //                 })),
         //             },
         //           ],
-        //           lazy: () =>
-        //             import('./(main)/discover/(list)/assistant/_layout/Desktop').then((m) => ({
-        //               Component: m.default,
-        //             })),
+        //           element: <DiscoverAssistantLayout />,
         //           path: 'assistant',
         //         },
         //         {
         //           children: [
         //             {
+        //               element: <DiscoverListModelPage />,
         //               index: true,
-        //               lazy: () =>
-        //                 import('./(main)/discover/(list)/model/index').then((m) => ({
-        //                   Component: m.DesktopModelPage,
-        //                 })),
         //             },
         //           ],
-        //           lazy: () =>
-        //             import('./(main)/discover/(list)/model/_layout/Desktop').then((m) => ({
-        //               Component: m.default,
-        //             })),
+        //           element: <DiscoverModelLayout />,
         //           path: 'model',
         //         },
         //         {
-        //           lazy: () =>
-        //             import('./(main)/discover/(list)/provider/index').then((m) => ({
-        //               Component: m.DesktopProviderPage,
-        //             })),
+        //           element: <DiscoverListProviderPage />,
         //           path: 'provider',
         //         },
         //         {
         //           children: [
         //             {
+        //               element: <DiscoverListMcpPage />,
         //               index: true,
-        //               lazy: () =>
-        //                 import('./(main)/discover/(list)/mcp/index').then((m) => ({
-        //                   Component: m.DesktopMcpPage,
-        //                 })),
         //             },
         //           ],
-        //           lazy: () =>
-        //             import('./(main)/discover/(list)/mcp/_layout/Desktop').then((m) => ({
-        //               Component: m.default,
-        //             })),
+        //           element: <DiscoverMcpLayout />,
         //           path: 'mcp',
         //         },
         //         {
+        //           element: <DesktopHomePage />,
         //           index: true,
-        //           lazy: () =>
-        //             import('./(main)/discover/(list)/(home)/index').then((m) => ({
-        //               Component: m.DesktopHomePage,
-        //             })),
         //         },
         //       ],
-        //       lazy: () =>
-        //         import('./(main)/discover/(list)/_layout/Desktop/index').then((m) => ({
-        //           Component: m.default,
-        //         })),
+        //       element: <DiscoverListLayout />,
         //     },
         //     // Detail routes (with DetailLayout)
         //     {
         //       children: [
         //         {
-        //           lazy: () =>
-        //             import('./(main)/discover/(detail)/assistant/index').then((m) => ({
-        //               Component: m.DesktopDiscoverAssistantDetailPage,
-        //             })),
+        //           element: <DesktopDiscoverAssistantDetailPage />,
         //           loader: slugLoader,
         //           path: 'assistant/:slug',
         //         },
         //         {
-        //           lazy: () =>
-        //             import('./(main)/discover/(detail)/model/index').then((m) => ({
-        //               Component: m.DesktopModelPage,
-        //             })),
+        //           element: <DiscoverDetailModelPage />,
         //           loader: slugLoader,
         //           path: 'model/:slug',
         //         },
         //         {
-        //           lazy: () =>
-        //             import('./(main)/discover/(detail)/provider/index').then((m) => ({
-        //               Component: m.DesktopProviderPage,
-        //             })),
+        //           element: <DiscoverDetailProviderPage />,
         //           loader: slugLoader,
         //           path: 'provider/:slug',
         //         },
         //         {
-        //           lazy: () =>
-        //             import('./(main)/discover/(detail)/mcp/index').then((m) => ({
-        //               Component: m.DesktopMcpPage,
-        //             })),
+        //           element: <DiscoverDetailMcpPage />,
         //           loader: slugLoader,
         //           path: 'mcp/:slug',
         //         },
         //       ],
-        //       lazy: () =>
-        //         import('./(main)/discover/(detail)/_layout/Desktop').then((m) => ({
-        //           Component: m.default,
-        //         })),
+        //       element: <DiscoverDetailLayout />,
         //     },
         //   ],
-        //   lazy: () =>
-        //     import('./(main)/discover/_layout/Desktop/index').then((m) => ({
-        //       Component: m.default,
-        //     })),
+        //   element: <DiscoverLayout />,
         //   path: 'discover',
         // },
 
