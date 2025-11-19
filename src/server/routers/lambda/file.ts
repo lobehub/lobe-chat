@@ -220,12 +220,6 @@ export const fileRouter = router({
           embeddingStatus: null,
           finishEmbedding: false,
         } as FileListItem;
-        console.log('[API getKnowledgeItems] Processing document:', {
-          editorDataPreview: item.editorData ? JSON.stringify(item.editorData).slice(0, 100) : null,
-          hasEditorData: !!item.editorData,
-          id: item.id,
-          name: item.name,
-        });
         resultItems.push(documentItem);
       }
     }

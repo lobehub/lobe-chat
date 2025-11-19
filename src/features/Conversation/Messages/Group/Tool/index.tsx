@@ -70,6 +70,7 @@ const Tool = memo<GroupToolProps>(
           setShowRender={setShowToolDetail}
           showPluginRender={showCustomPluginUI}
           showRender={showToolContent}
+          toolMessageId={toolMessageId}
           type={type}
         />
         <AnimatedCollapsed open={showToolContent} width={{ collapsed: 'auto' }}>

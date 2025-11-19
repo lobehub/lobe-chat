@@ -3,6 +3,8 @@ import { ChatToolResult, ToolIntervention } from '@lobechat/types';
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import AbortResponse from '@/features/Conversation/Messages/Group/Tool/Render/AbortResponse';
+
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
 import Intervention from './Intervention';
@@ -61,6 +63,10 @@ const Render = memo<RenderProps>(
 
     if (intervention?.status === 'rejected') {
       return <RejectedResponse reason={intervention.rejectedReason} />;
+    }
+
+    if (intervention?.status === 'aborted') {
+      return <AbortResponse />;
     }
 
     if (!result) return null;
