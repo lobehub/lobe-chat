@@ -5,7 +5,6 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 import type { Locales } from '@/types/locale';
 
 // Import all components directly
-import { DesktopChatPage } from './(main)/chat/index';
 import ChatLayout from './(main)/chat/_layout/Desktop';
 // import { DesktopHomePage } from './(main)/discover/(list)/(home)/index';
 // import { DesktopAssistantPage } from './(main)/discover/(list)/assistant/index';
@@ -88,11 +87,17 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
-              element: <DesktopChatPage />,
               index: true,
+              lazy: () =>
+                import('./(main)/chat/index').then((m) => ({
+                  Component: m.DesktopChatPage,
+                })),
             },
             {
-              element: <DesktopChatPage />,
+              lazy: () =>
+                import('./(main)/chat/index').then((m) => ({
+                  Component: m.DesktopChatPage,
+                })),
               path: '*',
             },
           ],
