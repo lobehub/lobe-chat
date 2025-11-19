@@ -137,6 +137,42 @@ table async_tasks {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 }
 
+table accounts {
+  access_token text
+  access_token_expires_at timestamp
+  account_id text [not null]
+  created_at timestamp [not null, default: `now()`]
+  id text [pk, not null]
+  id_token text
+  password text
+  provider_id text [not null]
+  refresh_token text
+  refresh_token_expires_at timestamp
+  scope text
+  updated_at timestamp [not null]
+  user_id text [not null]
+}
+
+table auth_sessions {
+  created_at timestamp [not null, default: `now()`]
+  expires_at timestamp [not null]
+  id text [pk, not null]
+  ip_address text
+  token text [not null, unique]
+  updated_at timestamp [not null]
+  user_agent text
+  user_id text [not null]
+}
+
+table verifications {
+  created_at timestamp [not null, default: `now()`]
+  expires_at timestamp [not null]
+  id text [pk, not null]
+  identifier text [not null]
+  updated_at timestamp [not null, default: `now()`]
+  value text [not null]
+}
+
 table chat_groups {
   id text [pk, not null]
   title text
