@@ -57,6 +57,9 @@ export default {
     gpt5ReasoningEffort: {
       title: '推理强度 (GPT-5)',
     },
+    gpt5_1ReasoningEffort: {
+      title: '推理强度 (GPT-5.1)',
+    },
     reasoningBudgetToken: {
       title: '思考消耗 Token',
     },
@@ -71,6 +74,7 @@ export default {
     },
     thinkingBudget: {
       title: '思考预算',
+    },
     thinkingLevel: {
       title: '思考水平',
     },

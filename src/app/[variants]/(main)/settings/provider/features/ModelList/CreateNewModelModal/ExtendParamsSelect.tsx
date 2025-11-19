@@ -6,10 +6,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import GPT5ReasoningEffortSlider from '@/features/ChatInput/ActionBar/Model/GPT5ReasoningEffortSlider';
+import GPT51ReasoningEffortSlider from '@/features/ChatInput/ActionBar/Model/GPT51ReasoningEffortSlider';
 import ReasoningEffortSlider from '@/features/ChatInput/ActionBar/Model/ReasoningEffortSlider';
 import ReasoningTokenSlider from '@/features/ChatInput/ActionBar/Model/ReasoningTokenSlider';
 import TextVerbositySlider from '@/features/ChatInput/ActionBar/Model/TextVerbositySlider';
 import ThinkingBudgetSlider from '@/features/ChatInput/ActionBar/Model/ThinkingBudgetSlider';
+import ThinkingLevelSlider from '@/features/ChatInput/ActionBar/Model/ThinkingLevelSlider';
 import ThinkingSlider from '@/features/ChatInput/ActionBar/Model/ThinkingSlider';
 
 type ExtendParamsOption = {
@@ -39,6 +41,10 @@ const EXTEND_PARAMS_OPTIONS: ExtendParamsOption[] = [
     key: 'gpt5ReasoningEffort',
   },
   {
+    hintKey: 'providerModels.item.modelConfig.extendParams.options.gpt5_1ReasoningEffort.hint',
+    key: 'gpt5_1ReasoningEffort',
+  },
+  {
     hintKey: 'providerModels.item.modelConfig.extendParams.options.textVerbosity.hint',
     key: 'textVerbosity',
   },
@@ -49,6 +55,10 @@ const EXTEND_PARAMS_OPTIONS: ExtendParamsOption[] = [
   {
     hintKey: 'providerModels.item.modelConfig.extendParams.options.thinkingBudget.hint',
     key: 'thinkingBudget',
+  },
+  {
+    hintKey: 'providerModels.item.modelConfig.extendParams.options.thinkingLevel.hint',
+    key: 'thinkingLevel',
   },
   {
     hintKey: 'providerModels.item.modelConfig.extendParams.options.urlContext.hint',
@@ -67,11 +77,13 @@ const PREVIEW_META: Partial<Record<ExtendParamsType, PreviewMeta>> = {
   disableContextCaching: { labelSuffix: ' (Claude)', previewWidth: 400 },
   enableReasoning: { previewWidth: 300, tag: 'thinking.type' },
   gpt5ReasoningEffort: { previewWidth: 300, tag: 'reasoning_effort' },
+  gpt5_1ReasoningEffort: { previewWidth: 300, tag: 'reasoning_effort' },
   reasoningBudgetToken: { previewWidth: 350, tag: 'thinking.budget_tokens' },
   reasoningEffort: { previewWidth: 250, tag: 'reasoning_effort' },
   textVerbosity: { labelSuffix: ' (GPT-5)', previewWidth: 250, tag: 'text_verbosity' },
   thinking: { labelSuffix: ' (Doubao)', previewWidth: 300, tag: 'thinking.type' },
   thinkingBudget: { labelSuffix: ' (Gemini)', previewWidth: 500, tag: 'thinkingBudget' },
+  thinkingLevel: { labelSuffix: ' (Gemini)', previewWidth: 280, tag: 'thinkingLevel' },
   urlContext: { labelSuffix: ' (Gemini)', previewWidth: 400, tag: 'urlContext' },
 };
 
@@ -157,11 +169,13 @@ const ExtendParamsSelect = memo<ExtendParamsSelectProps>(({ value, onChange }) =
       disableContextCaching: <Switch checked disabled />,
       enableReasoning: <Switch checked disabled />,
       gpt5ReasoningEffort: <GPT5ReasoningEffortSlider />,
+      gpt5_1ReasoningEffort: <GPT51ReasoningEffortSlider />,
       reasoningBudgetToken: <ReasoningTokenSlider defaultValue={1 * 1024} />,
       reasoningEffort: <ReasoningEffortSlider />,
       textVerbosity: <TextVerbositySlider />,
       thinking: <ThinkingSlider />,
       thinkingBudget: <ThinkingBudgetSlider defaultValue={2 * 1024} />,
+      thinkingLevel: <ThinkingLevelSlider />,
       urlContext: <Switch checked disabled />,
     }),
     [],

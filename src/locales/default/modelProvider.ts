@@ -345,6 +345,9 @@ export default {
             gpt5ReasoningEffort: {
               hint: '适用于 GPT-5 系列模型，控制推理强度',
             },
+            gpt5_1ReasoningEffort: {
+              hint: '适用于 GPT-5.1 系列模型，控制推理强度',
+            },
             reasoningBudgetToken: {
               hint: '适用于 Claude, Qwen3 等推理模型，控制思考消耗的 Token 数',
             },
@@ -359,6 +362,9 @@ export default {
             },
             thinkingBudget: {
               hint: '适用于 Gemini 系列模型，控制思考预算',
+            },
+            thinkingLevel: {
+              hint: '适用于 Gemini 3 系列模型，控制思考深度',
             },
             urlContext: {
               hint: '适用于 Gemini 系列模型，支持 URL 解析上下文链接',
