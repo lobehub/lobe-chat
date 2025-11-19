@@ -28,8 +28,8 @@ class HydrationDebugger {
       const nodes = el.innerHTML.split(/>\s*</);
 
       nodes.forEach((node, index, arr) => {
-        if (node.match(/^\/\w/)) {
-          indent = indent.substring(2);
+        if (/^\/\w/.test(node)) {
+          indent = indent.slice(2);
         }
 
         let closing = '>';
@@ -40,7 +40,7 @@ class HydrationDebugger {
 
         formatted += indent + '<' + node + closing;
 
-        if (node.match(/^<?\w[^>]*[^/]$/)) {
+        if (/^<?\w[^>]*[^/]$/.test(node)) {
           indent += '  ';
         }
       });
@@ -54,7 +54,7 @@ class HydrationDebugger {
     const clientBodyHtml = document.body.innerHTML;
 
     // 2. 为了简化对比，我们只关注 body 内部
-    const serverBodyMatch = serverHtml.match(/<body[^>]*>([\s\S]*)<\/body>/);
+    const serverBodyMatch = serverHtml.match(/<body[^>]*>([\S\s]*)<\/body>/);
 
     if (serverBodyMatch?.[1]) {
       const serverBodyHtml = serverBodyMatch[1];
@@ -127,20 +127,17 @@ class HydrationDebugger {
  */
 const HydrationDebugHelper = () => {
   useEffect(() => {
-    // 在开发模式下，获取服务端的 HTML 并进行比较
-    if (process.env.NODE_ENV === 'development') {
-      fetch(window.location.href)
-        .then((res) => res.text())
-        .then((serverHtml) => {
-          // 使用 setTimeout 确保在 React 完成水合后再执行比较
-          setTimeout(() => {
-            HydrationDebugger.debugHydration(serverHtml);
-          }, 1000); // 增加延迟以确保水合完成
-        })
-        .catch((error) => {
-          console.error('[HydrationDebugger] 获取服务端 HTML 失败:', error);
-        });
-    }
+    fetch(window.location.href)
+      .then((res) => res.text())
+      .then((serverHtml) => {
+        // 使用 setTimeout 确保在 React 完成水合后再执行比较
+        setTimeout(() => {
+          HydrationDebugger.debugHydration(serverHtml);
+        }, 1000); // 增加延迟以确保水合完成
+      })
+      .catch((error) => {
+        console.error('[HydrationDebugger] 获取服务端 HTML 失败:', error);
+      });
   }, []);
 
   return null; // 这个组件不渲染任何 UI
