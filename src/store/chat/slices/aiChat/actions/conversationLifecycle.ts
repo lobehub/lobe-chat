@@ -124,7 +124,7 @@ export const conversationLifecycle: StateCreator<
       imageList: tempImages.length > 0 ? tempImages : undefined,
       videoList: tempVideos.length > 0 ? tempVideos : undefined,
     });
-    get().optimisticCreateTmpMessage({
+    const tempAssistantId = get().optimisticCreateTmpMessage({
       content: LOADING_FLAT,
       role: 'assistant',
       sessionId: activeId,
@@ -134,17 +134,31 @@ export const conversationLifecycle: StateCreator<
     });
     get().internal_toggleMessageLoading(true, tempId);
 
-    const operationKey = messageMapKey(activeId, activeTopicId);
+    // Create operation for send message
+    const { operationId, abortController } = get().startOperation({
+      type: 'sendMessage',
+      context: {
+        sessionId: activeId,
+        topicId: activeTopicId,
+        threadId: activeThreadId,
+        messageId: tempId,
+      },
+      label: 'Send Message',
+      metadata: {
+        // Mark this as main window operation (not thread)
+        inThread: false,
+      },
+    });
 
-    // Start tracking sendMessage operation with AbortController
-    const abortController = get().internal_toggleSendMessageOperation(operationKey, true)!;
+    // Associate temp message with operation
+    get().associateMessageWithOperation(tempId, operationId);
 
+    // Store editor state in operation metadata for cancel restoration
     const jsonState = mainInputEditor?.getJSONState();
-    get().internal_updateSendMessageOperation(
-      operationKey,
-      { inputSendErrorMsg: undefined, inputEditorTempState: jsonState },
-      'creatingMessage/start',
-    );
+    get().updateOperationMetadata(operationId, {
+      inputEditorTempState: jsonState,
+      inputSendErrorMsg: undefined,
+    });
 
     let data: SendMessageServerResponse | undefined;
     try {
@@ -159,7 +173,7 @@ export const conversationLifecycle: StateCreator<
           newTopic: shouldCreateNewTopic
             ? {
                 topicMessageIds: messages.map((m) => m.id),
-                title: t('defaultTitle', { ns: 'topic' }),
+                title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
               }
             : undefined,
           sessionId: activeId === INBOX_SESSION_ID ? undefined : activeId,
@@ -172,6 +186,9 @@ export const conversationLifecycle: StateCreator<
       if (data?.topics) {
         get().internal_dispatchTopic({ type: 'updateTopics', value: data.topics });
         topicId = data.topicId;
+
+        // Record the created topicId in metadata (not context)
+        get().updateOperationMetadata(operationId, { createdTopicId: data.topicId });
       }
 
       get().replaceMessages(data.messages, {
@@ -184,33 +201,36 @@ export const conversationLifecycle: StateCreator<
         await get().switchTopic(data.topicId, true);
       }
     } catch (e) {
+      // Fail operation on error
+      get().failOperation(operationId, {
+        type: e instanceof Error ? e.name : 'unknown_error',
+        message: e instanceof Error ? e.message : 'Unknown error',
+      });
+
       if (e instanceof TRPCClientError) {
         const isAbort = e.message.includes('aborted') || e.name === 'AbortError';
         // Check if error is due to cancellation
         if (!isAbort) {
-          get().internal_updateSendMessageOperation(operationKey, { inputSendErrorMsg: e.message });
+          get().updateOperationMetadata(operationId, { inputSendErrorMsg: e.message });
           get().mainInputEditor?.setJSONState(jsonState);
         }
       }
     } finally {
-      // Stop tracking sendMessage operation
-      get().internal_toggleSendMessageOperation(operationKey, false);
-    }
-
-    // remove temporally message
-    if (data?.isCreateNewTopic) {
-      get().internal_dispatchMessage(
-        { type: 'deleteMessage', id: tempId },
-        { topicId: activeTopicId, sessionId: activeId },
-      );
+      // 创建了新topic 或者 用户 cancel 了消息（或者失败了），此时无 data
+      if (data?.isCreateNewTopic || !data) {
+        get().internal_dispatchMessage(
+          { type: 'deleteMessages', ids: [tempId, tempAssistantId] },
+          { operationId },
+        );
+      }
     }
 
     get().internal_toggleMessageLoading(false, tempId);
-    get().internal_updateSendMessageOperation(
-      operationKey,
-      { inputEditorTempState: null },
-      'creatingMessage/finished',
-    );
+
+    // Clear editor temp state after message created
+    if (data) {
+      get().updateOperationMetadata(operationId, { inputEditorTempState: null });
+    }
 
     if (!data) return;
 
@@ -249,6 +269,9 @@ export const conversationLifecycle: StateCreator<
         messages: displayMessages,
         parentMessageId: data.assistantMessageId,
         parentMessageType: 'assistant',
+        sessionId: activeId,
+        topicId: data.topicId ?? activeTopicId,
+        parentOperationId: operationId, // Pass as parent operation
         ragQuery: get().internal_shouldUseRAG() ? message : undefined,
         threadId: activeThreadId,
         skipCreateFirstMessage: true,
@@ -265,8 +288,16 @@ export const conversationLifecycle: StateCreator<
       if (userFiles.length > 0) {
         await getAgentStoreState().addFilesToAgent(userFiles, false);
       }
+
+      // Complete operation on success
+      get().completeOperation(operationId);
     } catch (e) {
       console.error(e);
+      // Fail operation on error
+      get().failOperation(operationId, {
+        type: e instanceof Error ? e.name : 'unknown_error',
+        message: e instanceof Error ? e.message : 'AI generation failed',
+      });
     } finally {
       if (data.topicId) get().internal_updateTopicLoading(data.topicId, false);
     }
@@ -286,16 +317,15 @@ export const conversationLifecycle: StateCreator<
 
     if (contextMessages.length <= 0) return;
 
+    const { internal_execAgentRuntime, activeThreadId, activeId, activeTopicId } = get();
+
+    // Create regenerate operation
+    const { operationId } = get().startOperation({
+      type: 'regenerate',
+      context: { sessionId: activeId, topicId: activeTopicId, messageId: id },
+    });
+
     try {
-      const { internal_execAgentRuntime, activeThreadId } = get();
-
-      // Mark message as regenerating
-      set(
-        { regeneratingIds: [...get().regeneratingIds, id] },
-        false,
-        'regenerateUserMessage/start',
-      );
-
       const traceId = params?.traceId ?? dbMessageSelectors.getTraceIdByDbMessageId(id)(get());
 
       // 切一个新的激活分支
@@ -305,21 +335,25 @@ export const conversationLifecycle: StateCreator<
         messages: contextMessages,
         parentMessageId: id,
         parentMessageType: 'user',
+        sessionId: activeId,
+        topicId: activeTopicId,
         traceId,
         ragQuery: get().internal_shouldUseRAG() ? item.content : undefined,
         threadId: activeThreadId,
+        parentOperationId: operationId,
       });
 
       // trace the regenerate message
       if (!params?.skipTrace)
         get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
-    } finally {
-      // Remove message from regenerating state
-      set(
-        { regeneratingIds: get().regeneratingIds.filter((msgId) => msgId !== id) },
-        false,
-        'regenerateUserMessage/end',
-      );
+
+      get().completeOperation(operationId);
+    } catch (error) {
+      get().failOperation(operationId, {
+        type: 'RegenerateError',
+        message: error instanceof Error ? error.message : String(error),
+      });
+      throw error;
     }
   },
 
@@ -346,28 +380,33 @@ export const conversationLifecycle: StateCreator<
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
-    try {
-      // Mark message as continuing
-      set(
-        { continuingIds: [...get().continuingIds, messageId] },
-        false,
-        'continueGenerationMessage/start',
-      );
+    const { activeId, activeTopicId } = get();
 
+    // Create continue operation
+    const { operationId } = get().startOperation({
+      type: 'continue',
+      context: { sessionId: activeId, topicId: activeTopicId, messageId },
+    });
+
+    try {
       const chats = displayMessageSelectors.mainAIChatsWithHistoryConfig(get());
 
       await get().internal_execAgentRuntime({
         messages: chats,
         parentMessageId: id,
         parentMessageType: message.role as 'assistant' | 'tool' | 'user',
+        sessionId: activeId,
+        topicId: activeTopicId,
+        parentOperationId: operationId,
       });
-    } finally {
-      // Remove message from continuing state
-      set(
-        { continuingIds: get().continuingIds.filter((msgId) => msgId !== messageId) },
-        false,
-        'continueGenerationMessage/end',
-      );
+
+      get().completeOperation(operationId);
+    } catch (error) {
+      get().failOperation(operationId, {
+        type: 'ContinueError',
+        message: error instanceof Error ? error.message : String(error),
+      });
+      throw error;
     }
   },
 

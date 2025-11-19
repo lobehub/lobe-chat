@@ -48,6 +48,7 @@ export interface RenameLocalFileResult {
 }
 
 export interface LocalReadFileParams {
+  fullContent?: boolean;
   loc?: [number, number];
   path: string;
 }
@@ -217,7 +218,10 @@ export interface EditLocalFileParams {
 }
 
 export interface EditLocalFileResult {
+  diffText?: string;
   error?: string;
+  linesAdded?: number;
+  linesDeleted?: number;
   replacements: number;
   success: boolean;
 }

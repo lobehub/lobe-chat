@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 là mô hình suy luận chú ý hỗn hợp quy mô lớn với trọng số mã nguồn mở, sở hữu 456 tỷ 600 triệu tham số, mỗi Token có thể kích hoạt khoảng 45,9 tỷ tham số. Mô hình hỗ trợ ngữ cảnh siêu dài lên đến 1 triệu Token một cách nguyên bản, và thông qua cơ chế chú ý chớp nhoáng, trong các tác vụ sinh 100.000 Token tiết kiệm 75% lượng phép tính dấu chấm động so với DeepSeek R1. Đồng thời, MiniMax-M1 áp dụng kiến trúc MoE (chuyên gia hỗn hợp), kết hợp thuật toán CISPO và thiết kế chú ý hỗn hợp trong huấn luyện tăng cường hiệu quả, đạt hiệu suất hàng đầu trong ngành khi suy luận đầu vào dài và các kịch bản kỹ thuật phần mềm thực tế."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 tái định nghĩa hiệu suất cho các tác nhân AI. Đây là một mô hình MoE nhỏ gọn, nhanh chóng và tiết kiệm chi phí, với tổng số 230 tỷ tham số và 10 tỷ tham số kích hoạt, được thiết kế để đạt hiệu năng hàng đầu trong các tác vụ mã hóa và tác nhân, đồng thời duy trì trí tuệ nhân tạo tổng quát mạnh mẽ. Chỉ với 10 tỷ tham số kích hoạt, MiniMax-M2 có thể mang lại hiệu suất tương đương với các mô hình quy mô lớn, khiến nó trở thành lựa chọn lý tưởng cho các ứng dụng hiệu suất cao."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Tổng tham số 1T, tham số kích hoạt 32B. Trong các mô hình không suy nghĩ, đạt trình độ hàng đầu về kiến thức tiên tiến, toán học và lập trình, đặc biệt phù hợp với các tác vụ đại lý chung. Được tối ưu kỹ lưỡng cho tác vụ đại lý, không chỉ trả lời câu hỏi mà còn có thể thực hiện hành động. Phù hợp nhất cho trò chuyện ứng biến, trải nghiệm đại lý chung, là mô hình phản xạ không cần suy nghĩ lâu."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 đã cải thiện đáng kể khả năng suy luận của mô hình ngay cả khi có rất ít dữ liệu gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời cuối."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B là biến thể chưng cất và hiệu quả hơn của mô hình Llama 70B. Nó duy trì hiệu suất mạnh mẽ trong các nhiệm vụ tạo văn bản, giảm chi phí tính toán để dễ dàng triển khai và nghiên cứu. Được Groq phục vụ bằng phần cứng đơn vị xử lý ngôn ngữ (LPU) tùy chỉnh để cung cấp suy luận nhanh và hiệu quả."
+    "description": "DeepSeek R1 Distill Llama 70B là một mô hình ngôn ngữ lớn dựa trên Llama3.3 70B, được tinh chỉnh bằng đầu ra từ DeepSeek R1, mang lại hiệu suất cạnh tranh tương đương với các mô hình tiên tiến quy mô lớn."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B là một mô hình ngôn ngữ lớn đã được tinh chế dựa trên Llama-3.1-8B-Instruct, được đào tạo bằng cách sử dụng đầu ra từ DeepSeek R1."
@@ -2225,6 +2228,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct là mô hình hiệu quả với số lượng tham số nhỏ do Wuwen Xinqiong phát triển."
   },
+  "meituan/longcat-flash-chat": {
+    "description": "Longcat Flash Chat là mô hình nền không tư duy do Meituan mã nguồn mở, được tối ưu hóa cho tương tác hội thoại và nhiệm vụ của tác nhân, nổi bật trong việc gọi công cụ và các tình huống tương tác nhiều vòng phức tạp."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "Mô hình 70 tỷ tham số mạnh mẽ, xuất sắc trong lý luận, lập trình và các ứng dụng ngôn ngữ rộng lớn."
   },
@@ -2455,6 +2461,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 là một mô hình ngôn ngữ lớn hiệu quả, được xây dựng dành riêng cho quy trình làm việc liên quan đến lập trình và tác vụ đại lý."
+  },
+  "minimax/minimax-m2": {
+    "description": "Được sinh ra để phục vụ mã hóa hiệu quả và quy trình làm việc của Agent."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 là một mô hình chuyên gia hỗn hợp (MoE) nhỏ gọn, nhanh chóng và tiết kiệm chi phí, với tổng số 230 tỷ tham số và 10 tỷ tham số kích hoạt, được thiết kế để đạt hiệu suất hàng đầu trong các tác vụ mã hóa và tác nhân, đồng thời duy trì trí tuệ nhân tạo tổng quát mạnh mẽ. Mô hình này thể hiện xuất sắc trong chỉnh sửa nhiều tệp, vòng lặp mã hóa-chạy-sửa lỗi, kiểm thử và sửa lỗi, cũng như các chuỗi công cụ liên kết dài phức tạp, là lựa chọn lý tưởng cho quy trình làm việc của nhà phát triển."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B là mô hình hàng đầu thế giới của Mistral về hiệu suất cạnh biên."
@@ -3371,6 +3383,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do Microsoft AI cung cấp, đặc biệt xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Chúng tôi rất vui mừng ra mắt Grok 4 Fast, bước tiến mới nhất của chúng tôi trong các mô hình suy luận hiệu quả về chi phí."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Chúng tôi rất vui mừng giới thiệu grok-code-fast-1, một mô hình suy luận nhanh và tiết kiệm chi phí, nổi bật trong mã hóa cho tác nhân."
+  },
   "x1": {
     "description": "Mô hình Spark X1 sẽ được nâng cấp thêm, trên nền tảng dẫn đầu trong các nhiệm vụ toán học trong nước, đạt được hiệu quả trong các nhiệm vụ chung như suy luận, tạo văn bản, hiểu ngôn ngữ tương đương với OpenAI o1 và DeepSeek R1."
   },
@@ -3430,6 +3448,9 @@
   },
   "yi-vision-v2": {
     "description": "Mô hình nhiệm vụ thị giác phức tạp, cung cấp khả năng hiểu và phân tích hiệu suất cao dựa trên nhiều hình ảnh."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM-4.6, mô hình hàng đầu mới nhất của Zhipu AI, vượt trội hoàn toàn so với thế hệ trước về mã hóa nâng cao, xử lý văn bản dài, suy luận và năng lực tác nhân."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 là mô hình nền tảng dành cho ứng dụng tác nhân thông minh, sử dụng kiến trúc chuyên gia hỗn hợp (Mixture-of-Experts). Được tối ưu sâu trong các lĩnh vực gọi công cụ, duyệt web, kỹ thuật phần mềm và lập trình front-end, hỗ trợ tích hợp liền mạch vào các tác nhân mã như Claude Code, Roo Code. GLM-4.5 sử dụng chế độ suy luận hỗn hợp, thích ứng với nhiều kịch bản ứng dụng như suy luận phức tạp và sử dụng hàng ngày."

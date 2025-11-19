@@ -20,14 +20,9 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
   });
 };
 
-const SettingsLayout = ServerLayout<
-  LayoutProps & {
-    showLLM?: boolean;
-  }
->({ Desktop, Mobile });
+const SettingsLayout = ServerLayout<LayoutProps>({ Desktop, Mobile });
 
 const SettingsPage = async (props: DynamicLayoutProps) => {
-  const showLLM = serverFeatureFlags().showProvider;
   const { showOpenAIProxyUrl, showOpenAIApiKey } = serverFeatureFlags();
 
   return (
@@ -37,7 +32,8 @@ const SettingsPage = async (props: DynamicLayoutProps) => {
         showOpenAIProxyUrl: showOpenAIProxyUrl,
       }}
     >
-      <SettingsLayout {...props} showLLM={showLLM} />
+      {/* @ts-ignore */}
+      <SettingsLayout {...props} />
     </SettingsContextProvider>
   );
 };

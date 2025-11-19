@@ -2,9 +2,9 @@
 
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Button, Modal, Space } from 'antd';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface PublishResultModalProps {
   identifier?: string;
@@ -13,13 +13,13 @@ interface PublishResultModalProps {
 }
 
 const PublishResultModal = memo<PublishResultModalProps>(({ identifier, onCancel, open }) => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { t } = useTranslation('setting');
   const { t: tCommon } = useTranslation('common');
 
   const handleGoToMarket = () => {
     if (identifier) {
-      router.push(`/discover/assistant/${identifier}`);
+      navigate(`/discover/assistant/${identifier}`);
     }
     onCancel();
   };

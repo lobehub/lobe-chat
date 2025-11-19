@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 est un modèle d'inférence à attention mixte à grande échelle avec poids open source, comptant 456 milliards de paramètres, activant environ 45,9 milliards de paramètres par token. Le modèle supporte nativement un contexte ultra-long de 1 million de tokens et, grâce au mécanisme d'attention éclair, réduit de 75 % les opérations en virgule flottante lors de tâches de génération de 100 000 tokens par rapport à DeepSeek R1. Par ailleurs, MiniMax-M1 utilise une architecture MoE (Experts Mixtes), combinant l'algorithme CISPO et une conception d'attention mixte pour un entraînement efficace par apprentissage par renforcement, offrant des performances de pointe dans l'inférence sur longues entrées et les scénarios réels d'ingénierie logicielle."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 redéfinit l'efficacité pour les agents intelligents. Il s'agit d'un modèle MoE compact, rapide et économique, doté de 230 milliards de paramètres totaux et de 10 milliards de paramètres actifs, conçu pour offrir des performances de pointe dans les tâches de codage et d'agents, tout en conservant une intelligence générale puissante. Avec seulement 10 milliards de paramètres actifs, MiniMax-M2 offre des performances comparables à celles des modèles de grande taille, ce qui en fait un choix idéal pour les applications à haute efficacité."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Avec un total de 1 000 milliards de paramètres et 32 milliards de paramètres activés, ce modèle non cognitif atteint un niveau de pointe en connaissances avancées, mathématiques et codage, excelling dans les tâches d'agents généraux. Optimisé pour les tâches d'agents, il peut non seulement répondre aux questions mais aussi agir. Idéal pour les conversations improvisées, générales et les expériences d'agents, c'est un modèle réflexe ne nécessitant pas de longues réflexions."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 améliore considérablement les capacités de raisonnement du modèle avec très peu de données annotées. Avant de fournir la réponse finale, le modèle génère une chaîne de pensée pour améliorer la précision de la réponse."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B est une variante distillée et plus efficace du modèle Llama 70B. Il conserve de solides performances en génération de texte tout en réduisant les coûts de calcul pour faciliter le déploiement et la recherche. Il est servi par Groq avec son matériel personnalisé LPU pour un raisonnement rapide et efficace."
+    "description": "DeepSeek R1 Distill Llama 70B est un grand modèle de langage basé sur Llama3.3 70B. Grâce au fine-tuning réalisé à partir des sorties de DeepSeek R1, il atteint des performances compétitives comparables à celles des modèles de pointe de grande envergure."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B est un modèle de langage distillé basé sur Llama-3.1-8B-Instruct, entraîné en utilisant les sorties de DeepSeek R1."
@@ -2225,6 +2228,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct est un modèle efficace à faible nombre de paramètres lancé par Wuwen Xinqiong."
   },
+  "meituan/longcat-flash-chat": {
+    "description": "Modèle de base non réflexif open source de Meituan, optimisé pour les interactions conversationnelles et les tâches d'agents intelligents, offrant d'excellentes performances dans les appels d'outils et les scénarios d'interactions complexes à plusieurs tours."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "Un puissant modèle de 70 milliards de paramètres excelling dans le raisonnement, le codage et les applications linguistiques larges."
   },
@@ -2455,6 +2461,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 est un modèle de langage de grande taille, efficace et conçu pour les flux de travail en codage et en automatisation."
+  },
+  "minimax/minimax-m2": {
+    "description": "Conçu pour un codage efficace et des flux de travail d'agents performants."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 est un modèle MoE (Mixture of Experts) compact, rapide et économique, doté de 230 milliards de paramètres totaux et de 10 milliards de paramètres actifs. Il est conçu pour offrir des performances optimales dans les tâches de codage et d'agents, tout en maintenant une intelligence générale robuste. Ce modèle excelle dans l'édition multi-fichiers, les boucles de codage-exécution-correction, la vérification et la correction de tests, ainsi que dans les chaînes d'outils complexes à long terme, ce qui en fait un choix idéal pour les flux de travail des développeurs."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B est le modèle de pointe de Mistral sur le marché."
@@ -3371,6 +3383,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 est un modèle de langage proposé par Microsoft AI, particulièrement performant dans les domaines des dialogues complexes, du multilinguisme, du raisonnement et des assistants intelligents."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Nous sommes ravis de présenter Grok 4 Fast, notre dernière avancée en matière de modèles de raisonnement rentables."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Nous sommes heureux de lancer grok-code-fast-1, un modèle de raisonnement rapide et économique, particulièrement performant pour le codage assisté par agent."
+  },
   "x1": {
     "description": "Le modèle Spark X1 sera mis à niveau, et sur la base de ses performances déjà leaders dans les tâches mathématiques, il atteindra des résultats comparables dans des tâches générales telles que le raisonnement, la génération de texte et la compréhension du langage, en se mesurant à OpenAI o1 et DeepSeek R1."
   },
@@ -3430,6 +3448,9 @@
   },
   "yi-vision-v2": {
     "description": "Modèle pour des tâches visuelles complexes, offrant des capacités de compréhension et d'analyse de haute performance basées sur plusieurs images."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM-4.6, le tout dernier modèle phare de Zhipu, surpasse son prédécesseur dans les domaines du codage avancé, du traitement de longs textes, du raisonnement et des capacités d'agents intelligents."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 est un modèle de base conçu pour les applications d'agents intelligents, utilisant une architecture Mixture-of-Experts (MoE). Il est profondément optimisé pour l'appel d'outils, la navigation web, l'ingénierie logicielle et la programmation front-end, supportant une intégration transparente avec des agents de code tels que Claude Code et Roo Code. GLM-4.5 utilise un mode d'inférence hybride, adapté à des scénarios variés allant du raisonnement complexe à l'usage quotidien."

@@ -330,6 +330,11 @@
     "screenshot": "Screenshot",
     "settings": "Impostazioni di esportazione",
     "text": "Testo",
+    "widthMode": {
+      "label": "Modalità larghezza",
+      "narrow": "Modalità schermo stretto",
+      "wide": "Modalità schermo ampio"
+    },
     "withBackground": "Con immagine di sfondo",
     "withFooter": "Con piè di pagina",
     "withPluginInfo": "Con informazioni sul plugin",

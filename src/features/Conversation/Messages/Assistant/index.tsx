@@ -315,7 +315,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
       <Flexbox
         className={styles.container}
         gap={mobile ? 6 : 12}
-        style={isLatestItem ? { minHeight: 'calc(-284px + 100dvh)' } : undefined}
+        style={isLatestItem ? { minHeight: 'calc(-300px + 100dvh)' } : undefined}
       >
         <Flexbox gap={4} horizontal>
           <Avatar

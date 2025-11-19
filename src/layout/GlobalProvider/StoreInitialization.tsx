@@ -1,16 +1,15 @@
 'use client';
 
+import { enableNextAuth } from '@lobechat/const';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
-import { enableNextAuth } from '@/const/auth';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
@@ -54,8 +53,7 @@ const StoreInitialization = memo(() => {
    * IMPORTANT: Explicitly convert to boolean to avoid passing null/undefined downstream,
    * which would cause unnecessary API requests with invalid login state.
    */
-  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
-  const isLoginOnInit = isDBInited ? Boolean(enableNextAuth ? isSignedIn : isLogin) : false;
+  const isLoginOnInit = Boolean(enableNextAuth ? isSignedIn : isLogin);
 
   // init inbox agent and default agent config
   useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);
@@ -65,7 +63,16 @@ const StoreInitialization = memo(() => {
 
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {
+    onError: () => {
+      // 即使失败也要设置标志，避免应用卡住
+      useGlobalStore.setState({ isAppHydrated: true });
+      console.warn('[Hydration] Client state initialization failed.');
+    },
     onSuccess: (state) => {
+      // 设置水合完成标志
+      useGlobalStore.setState({ isAppHydrated: true });
+      console.log('[Hydration] Client state initialized successfully.');
+
       if (state.isOnboard === false) {
         router.push('/onboard');
       }
@@ -77,7 +84,6 @@ const StoreInitialization = memo(() => {
   const mobile = useIsMobile();
 
   useStoreUpdater('isMobile', mobile);
-  useStoreUpdater('router', router);
 
   return null;
 });

@@ -15,6 +15,12 @@
     "prompt": "Prompt"
   },
   "localFiles": {
+    "editFile": {
+      "newString": "Replace with",
+      "oldString": "Find",
+      "replaceAll": "Replace all occurrences",
+      "replaceFirst": "Replace first occurrence only"
+    },
     "file": "File",
     "folder": "Folder",
     "moveFiles": {
@@ -34,7 +40,12 @@
     "readFile": "Read File",
     "readFileError": "Failed to read file, please check if the file path is correct",
     "readFiles": "Read Files",
-    "readFilesError": "Failed to read files, please check if the file path is correct"
+    "readFilesError": "Failed to read files, please check if the file path is correct",
+    "writeFile": {
+      "characters": "characters",
+      "preview": "Content Preview",
+      "truncated": "truncated"
+    }
   },
   "search": {
     "createNewSearch": "Create a new search record",

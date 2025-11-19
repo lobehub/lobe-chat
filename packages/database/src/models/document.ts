@@ -1,8 +1,7 @@
 import { and, desc, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '../type';
-
 import { DocumentItem, NewDocument, documents } from '../schemas';
+import { LobeChatDatabase } from '../type';
 
 export class DocumentModel {
   private userId: string;
@@ -13,13 +12,13 @@ export class DocumentModel {
     this.db = db;
   }
 
-  create = async (params: Omit<NewDocument, 'userId'>) => {
-    const [result] = await this.db
+  create = async (params: Omit<NewDocument, 'userId'>): Promise<DocumentItem> => {
+    const result = (await this.db
       .insert(documents)
       .values({ ...params, userId: this.userId })
-      .returning();
+      .returning()) as DocumentItem[];
 
-    return result;
+    return result[0]!;
   };
 
   delete = async (id: string) => {

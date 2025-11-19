@@ -1,44 +1,35 @@
+import { DOCUMENTS, FEEDBACK, LOBE_CHAT_CLOUD, OFFICIAL_URL, UTM_SOURCE } from '@lobechat/const';
 import {
   Book,
   CircleUserRound,
   Cloudy,
-  Database,
   Download,
   Feather,
   FileClockIcon,
   Settings2,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { CellProps } from '@/components/Cell';
-import { enableAuth } from '@/const/auth';
-import { LOBE_CHAT_CLOUD } from '@/const/branding';
-import { DOCUMENTS, FEEDBACK, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
-import { isServerMode } from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-import { useCategory as useSettingsCategory } from '../../settings/features/useCategory';
-
 export const useCategory = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
-  const [isLogin, isLoginWithAuth] = useUserStore((s) => [
-    authSelectors.isLogin(s),
-    authSelectors.isLoginWithAuth(s),
-  ]);
+  const [isLoginWithAuth] = useUserStore((s) => [authSelectors.isLoginWithAuth(s)]);
 
   const profile: CellProps[] = [
     {
       icon: CircleUserRound,
       key: 'profile',
       label: t('userPanel.profile'),
-      onClick: () => router.push('/me/profile'),
+      onClick: () => navigate('/me/profile'),
     },
   ];
 
@@ -47,7 +38,7 @@ export const useCategory = () => {
       icon: Settings2,
       key: 'setting',
       label: t('userPanel.setting'),
-      onClick: () => router.push('/me/settings'),
+      onClick: () => navigate('/me/settings'),
     },
     {
       type: 'divider',
@@ -66,29 +57,7 @@ export const useCategory = () => {
     },
   ];
 
-  const settingsWithoutAuth = [
-    ...useSettingsCategory(),
-    {
-      type: 'divider',
-    },
-  ];
-
   /* ↓ cloud slot ↓ */
-
-  /* ↑ cloud slot ↑ */
-
-  const data: CellProps[] = [
-    {
-      icon: Database,
-      key: 'data',
-      label: t('userPanel.data'),
-      onClick: () => router.push('/me/data'),
-    },
-    {
-      type: 'divider',
-    },
-  ];
-
   const helps: CellProps[] = [
     showCloudPromotion && {
       icon: Cloudy,
@@ -112,7 +81,7 @@ export const useCategory = () => {
       icon: FileClockIcon,
       key: 'changelog',
       label: t('changelog'),
-      onClick: () => router.push('/changelog'),
+      onClick: () => navigate('/changelog'),
     },
   ].filter(Boolean) as CellProps[];
 
@@ -120,13 +89,12 @@ export const useCategory = () => {
     {
       type: 'divider',
     },
-    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
-    ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
+    ...(isLoginWithAuth ? profile : []),
+    ...(isLoginWithAuth ? settings : []),
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
-    ...(isLogin && !isServerMode ? data : []),
     ...(!hideDocs ? helps : []),
   ].filter(Boolean) as CellProps[];
 

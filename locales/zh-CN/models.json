@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 是开源权重的大规模混合注意力推理模型，拥有 4560 亿参数，每个 Token 可激活约 459 亿参数。模型原生支持 100 万 Token 的超长上下文，并通过闪电注意力机制，在 10 万 Token 的生成任务中相比 DeepSeek R1 节省 75% 的浮点运算量。同时，MiniMax-M1 采用 MoE（混合专家）架构，结合 CISPO 算法与混合注意力设计的高效强化学习训练，在长输入推理与真实软件工程场景中实现了业界领先的性能。"
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 为智能体重新定义了效率。它是一款紧凑、快速且经济高效的 MoE 模型，拥有 2300 亿总参数和 100 亿激活参数，专为编码和智能体任务的顶级性能而打造，同时保持强大的通用智能。仅需 100 亿激活参数，MiniMax-M2 就能提供与大规模模型相媲美的性能，使其成为高效率应用的理想选择。"
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "总参数 1T，激活参数 32B。 非思维模型中，在前沿知识、数学和编码方面达到了顶尖水平，更擅长通用 Agent 任务。 针对代理任务进行了精心优化，不仅能回答问题，还能采取行动。 最适用于即兴、通用聊天和代理体验，是一款无需长时间思考的反射级模型。"
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B 是 70B Llama 模型的蒸馏、更高效变体。它在文本生成任务中保持强大性能，减少计算开销以便于部署和研究。由 Groq 使用其自定义语言处理单元 (LPU) 硬件提供服务，以提供快速高效的推理。"
+    "description": "DeepSeek R1 Distill Llama 70B是基于Llama3.3  70B的大型语言模型，该模型利用DeepSeek R1输出的微调，实现了与大型前沿模型相当的竞争性能。"
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B 是一种基于 Llama-3.1-8B-Instruct 的蒸馏大语言模型，通过使用 DeepSeek R1 的输出进行训练而得。"
@@ -2225,6 +2228,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct 是无问芯穹推出的小参数量高效模型。"
   },
+  "meituan/longcat-flash-chat": {
+    "description": "美团开源的专为对话交互和智能体任务优化的非思维型基础模型，在工具调用和复杂多轮交互场景中表现突出"
+  },
   "meta-llama-3-70b-instruct": {
     "description": "一个强大的700亿参数模型，在推理、编码和广泛的语言应用方面表现出色。"
   },
@@ -2455,6 +2461,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。"
+  },
+  "minimax/minimax-m2": {
+    "description": "专为高效编码与 Agent 工作流而生"
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 是一款紧凑、快速且经济高效的混合专家（MoE）模型，拥有 2300 亿总参数和 100 亿激活参数，专为编码和智能体任务的顶级性能而打造，同时保持强大的通用智能。该模型在多文件编辑、编码-运行-修复闭环、测试校验修复以及复杂的长链接工具链方面表现优异，是开发者工作流的理想选择。"
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B 是Mistral的世界顶级边缘模型。"
@@ -3371,6 +3383,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。"
   },
+  "x-ai/grok-4-fast": {
+    "description": "我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。"
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "我们很高兴推出 grok-code-fast-1，这是一款快速且经济高效的推理模型，在代理编码方面表现出色。"
+  },
   "x1": {
     "description": "Spark X1 模型将进一步升级，在原来数学任务国内领先基础上，推理、文本生成、语言理解等通用任务实现效果对标 OpenAI o1 和 DeepSeek R1。"
   },
@@ -3430,6 +3448,9 @@
   },
   "yi-vision-v2": {
     "description": "复杂视觉任务模型，提供基于多张图片的高性能理解、分析能力。"
+  },
+  "z-ai/glm-4.6": {
+    "description": "智谱最新旗舰模型 GLM-4.6，在高级编码、长文本处理、推理与智能体能力上全面超越前代。"
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。"

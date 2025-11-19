@@ -128,10 +128,22 @@ const defaultMiddleware = (request: NextRequest) => {
   // new handle segment rewrite: /${route}${originalPathname}
   // / -> /zh-CN__0__dark
   // /discover -> /zh-CN__0__dark/discover
-  const nextPathname = `/${route}` + (url.pathname === '/' ? '' : url.pathname);
+  // All SPA routes that use react-router-dom should be rewritten to just /${route}
+  const spaRoutes = ['/chat', '/discover', '/knowledge', '/settings', '/image', '/labs', '/changelog', '/profile', '/me'];
+  const isSpaRoute = spaRoutes.some(route => url.pathname.startsWith(route));
+
+  let nextPathname: string;
+  if (isSpaRoute) {
+    nextPathname = `/${route}`;
+  } else {
+    nextPathname = `/${route}` + (url.pathname === '/' ? '' : url.pathname);
+  }
   const nextURL = appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL
     ? urlJoin(url.origin, nextPathname)
     : nextPathname;
+
+
+  console.log('nextURL', nextURL);
 
   logDefault('URL rewrite: %O', {
     isLocalRewrite: appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL,

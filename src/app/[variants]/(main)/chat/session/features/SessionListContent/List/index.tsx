@@ -9,8 +9,8 @@ import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
+import { useSessionStore, getSessionStoreState } from '@/store/session';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { getSessionStoreState, useSessionStore } from '@/store/session';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
