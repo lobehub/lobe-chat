@@ -45,6 +45,14 @@ export interface ChatMessageState {
    */
   messagesInit: boolean;
   /**
+   * Whether the message selection mode is enabled
+   */
+  isMessageSelectionMode: boolean;
+  /**
+   * Selected message IDs
+   */
+  messageSelectionIds: string[];
+  /**
    * Parsed messages for display (includes assistantGroup from conversation-flow)
    */
   messagesMap: Record<string, UIChatMessage[]>;
@@ -77,6 +85,8 @@ export const initialMessageState: ChatMessageState = {
   messageEditingIds: [],
   messageLoadingIds: [],
   messagesInit: false,
+  isMessageSelectionMode: false,
+  messageSelectionIds: [],
   messagesMap: {},
   supervisorDebounceTimers: {},
   supervisorDecisionAbortControllers: {},

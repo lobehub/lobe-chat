@@ -14,6 +14,11 @@ const n = setNamespace('m');
  */
 export interface MessageRuntimeStateAction {
   /**
+   * Clear message selection
+   */
+  clearMessageSelection: () => void;
+
+  /**
    * helper to toggle the loading state of the array,used by these three toggleXXXLoading
    */
   internal_toggleLoadingArrays: (
@@ -39,6 +44,14 @@ export interface MessageRuntimeStateAction {
    * Update active session type
    */
   internal_updateActiveSessionType: (sessionType?: 'agent' | 'group') => void;
+  /**
+   * Toggle message selection mode
+   */
+  toggleMessageSelectionMode: (enabled: boolean) => void;
+  /**
+   * Update message selection
+   */
+  updateMessageSelection: (id: string, selected: boolean) => void;
 }
 
 export const messageRuntimeState: StateCreator<
@@ -47,6 +60,14 @@ export const messageRuntimeState: StateCreator<
   [],
   MessageRuntimeStateAction
 > = (set, get) => ({
+  clearMessageSelection: () => {
+    set(
+      { isMessageSelectionMode: false, messageSelectionIds: [] },
+      false,
+      n('clearMessageSelection'),
+    );
+  },
+
   internal_toggleLoadingArrays: (key, loading, id, action) => {
     const abortControllerKey = `${key}AbortController`;
     if (loading) {
@@ -96,6 +117,7 @@ export const messageRuntimeState: StateCreator<
 
     // Before switching sessions, cancel all pending supervisor decisions
     get().internal_cancelAllSupervisorDecisions();
+    get().clearMessageSelection();
 
     set({ activeId }, false, n(`updateActiveId/${activeId}`));
   },
@@ -104,5 +126,19 @@ export const messageRuntimeState: StateCreator<
     if (get().activeSessionType === sessionType) return;
 
     set({ activeSessionType: sessionType }, false, n('updateActiveSessionType'));
+  },
+
+  toggleMessageSelectionMode: (enabled) => {
+    set({ isMessageSelectionMode: enabled }, false, n('toggleMessageSelectionMode'));
+  },
+
+  updateMessageSelection: (id, selected) => {
+    set(
+      {
+        messageSelectionIds: toggleBooleanList(get().messageSelectionIds, id, selected),
+      },
+      false,
+      n('updateMessageSelection'),
+    );
   },
 });

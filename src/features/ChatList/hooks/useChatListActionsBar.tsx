@@ -14,6 +14,7 @@ import {
   Share2,
   Split,
   Trash,
+  CheckSquare,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +40,7 @@ interface ChatListActionsBar {
   expand: ActionIconGroupItemType;
   export: ActionIconGroupItemType;
   regenerate: ActionIconGroupItemType;
+  select: ActionIconGroupItemType;
   share: ActionIconGroupItemType;
   translate: ActionIconGroupItemType;
   tts: ActionIconGroupItemType;
@@ -118,6 +120,11 @@ export const useChatListActionsBar = ({
         key: 'regenerate',
         label: t('regenerate'),
         spin: isRegenerating,
+      },
+      select: {
+        icon: CheckSquare,
+        key: 'select',
+        label: t('select', { ns: 'common' }),
       },
       share: {
         icon: Share2,
