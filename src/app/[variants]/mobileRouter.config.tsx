@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
 
@@ -8,6 +9,151 @@ import type { Locales } from '@/types/locale';
 
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
+
+/**
+ * Mobile Router Configuration - Pure CSR Mode
+ *
+ * IMPORTANT: This router runs ONLY in the browser (client-side).
+ *
+ * Key characteristics:
+ * - createBrowserRouter uses window.history API (client-only)
+ * - All loaders execute in the browser during navigation
+ * - No server-side rendering or hydration involved
+ * - Route data fetching happens on-demand during client navigation
+ *
+ * The entire router tree is wrapped with Next.js dynamic import (ssr: false),
+ * ensuring this code never executes on the server.
+ */
+
+// Chat components
+const MobileChatPage = dynamic(
+  () => import('./(main)/chat/index').then((m) => m.MobileChatPage),
+  { ssr: false },
+);
+const ChatSettings = dynamic(() => import('./(main)/chat/settings'), { ssr: false });
+const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Mobile'), { ssr: false });
+
+// Discover List components
+const MobileHomePage = dynamic(
+  () => import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
+  { ssr: false },
+);
+const MobileAssistantPage = dynamic(
+  () => import('./(main)/discover/(list)/assistant/index').then((m) => m.MobileAssistantPage),
+  { ssr: false },
+);
+const DiscoverAssistantLayout = dynamic(
+  () => import('./(main)/discover/(list)/assistant/_layout/Mobile'),
+  { ssr: false },
+);
+const DiscoverListMobileModelPage = dynamic(
+  () => import('./(main)/discover/(list)/model/index').then((m) => m.MobileModelPage),
+  { ssr: false },
+);
+const DiscoverModelLayout = dynamic(
+  () => import('./(main)/discover/(list)/model/_layout/Mobile'),
+  { ssr: false },
+);
+const DiscoverListMobileProviderPage = dynamic(
+  () => import('./(main)/discover/(list)/provider/index').then((m) => m.MobileProviderPage),
+  { ssr: false },
+);
+const DiscoverListMobileMcpPage = dynamic(
+  () => import('./(main)/discover/(list)/mcp/index').then((m) => m.MobileMcpPage),
+  { ssr: false },
+);
+const DiscoverMcpLayout = dynamic(
+  () => import('./(main)/discover/(list)/mcp/_layout/Mobile'),
+  { ssr: false },
+);
+const DiscoverListLayout = dynamic(
+  () => import('./(main)/discover/(list)/_layout/Mobile/index'),
+  { ssr: false },
+);
+
+// Discover Detail components
+const MobileDiscoverAssistantDetailPage = dynamic(
+  () =>
+    import('./(main)/discover/(detail)/assistant/index').then(
+      (m) => m.MobileDiscoverAssistantDetailPage,
+    ),
+  { ssr: false },
+);
+const DiscoverDetailMobileModelPage = dynamic(
+  () => import('./(main)/discover/(detail)/model/index').then((m) => m.MobileModelPage),
+  { ssr: false },
+);
+const DiscoverDetailMobileProviderPage = dynamic(
+  () => import('./(main)/discover/(detail)/provider/index').then((m) => m.MobileProviderPage),
+  { ssr: false },
+);
+const DiscoverDetailMobileMcpPage = dynamic(
+  () => import('./(main)/discover/(detail)/mcp/index').then((m) => m.MobileMcpPage),
+  { ssr: false },
+);
+const DiscoverDetailLayout = dynamic(
+  () => import('./(main)/discover/(detail)/_layout/Mobile/index'),
+  { ssr: false },
+);
+const DiscoverLayout = dynamic(
+  () => import('./(main)/discover/_layout/Mobile/index'),
+  { ssr: false },
+);
+
+// Knowledge components
+const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
+  ssr: false,
+});
+const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), {
+  ssr: false,
+});
+const KnowledgeBaseDetail = dynamic(
+  () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
+  { ssr: false },
+);
+const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Mobile'), {
+  ssr: false,
+});
+
+// Settings components
+const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Mobile'), { ssr: false });
+const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/MobileWrapper'), {
+  ssr: false,
+});
+
+// Image components
+const ImageComingSoon = dynamic(() => import('./(main)/image/ComingSoon'), { ssr: false });
+const ImageLayoutMobile = dynamic(() => import('./(main)/image/_layout/Mobile'), { ssr: false });
+
+// Labs components
+const LabsPage = dynamic(() => import('./(main)/labs'), { ssr: false });
+
+// Profile components
+const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)'), { ssr: false });
+const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), { ssr: false });
+const MobileProfileSecurityPage = dynamic(
+  () => import('./(main)/profile/security').then((m) => m.MobileProfileSecurityPage),
+  { ssr: false },
+);
+const MobileProfileStatsPage = dynamic(
+  () => import('./(main)/profile/stats').then((m) => m.MobileProfileStatsPage),
+  { ssr: false },
+);
+const ProfileLayoutMobile = dynamic(() => import('./(main)/profile/_layout/Mobile'), {
+  ssr: false,
+});
+
+// Me (mobile personal center) components
+const MeHomePage = dynamic(() => import('./(main)/(mobile)/me/(home)'), { ssr: false });
+const MeHomeLayout = dynamic(() => import('./(main)/(mobile)/me/(home)/layout'), { ssr: false });
+const MeProfilePage = dynamic(() => import('./(main)/(mobile)/me/profile'), { ssr: false });
+const MeProfileLayout = dynamic(() => import('./(main)/(mobile)/me/profile/layout'), {
+  ssr: false,
+});
+const MeSettingsPage = dynamic(() => import('./(main)/(mobile)/me/settings'), { ssr: false });
+const MeSettingsLayout = dynamic(() => import('./(main)/(mobile)/me/settings/layout'), {
+  ssr: false,
+});
 
 // Component to register navigate function in global store
 const NavigatorRegistrar = () => {
@@ -24,15 +170,13 @@ const NavigatorRegistrar = () => {
   return null;
 };
 
-// Root layout wrapper component - just registers navigator and renders outlet
-// Note: Mobile layout is provided by individual route components
+// Root layout wrapper component
 const RootLayout = (props: { locale: Locales }) => (
   <>
     <NavigatorRegistrar />
     <MobileMainLayout locale={props.locale} />
   </>
 );
-
 
 // Create mobile router configuration
 export const createMobileRouter = (locale: Locales) =>
@@ -43,24 +187,15 @@ export const createMobileRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <MobileChatPage />,
               index: true,
-              lazy: () =>
-                import('./(main)/chat/index').then((m) => ({
-                  Component: m.MobileChatPage,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/chat/settings').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <ChatSettings />,
               path: 'settings',
             },
           ],
-          lazy: () =>
-            import('./(main)/chat/_layout/Mobile').then((m) => ({
-              Component: m.default,
-            })),
+          element: <ChatLayout />,
           path: 'chat',
         },
 
@@ -71,116 +206,71 @@ export const createMobileRouter = (locale: Locales) =>
             {
               children: [
                 {
+                  element: <MobileHomePage />,
                   index: true,
-                  lazy: () =>
-                    import('./(main)/discover/(list)/(home)/index').then((m) => ({
-                      Component: m.MobileHomePage,
-                    })),
                 },
                 {
                   children: [
                     {
-                      lazy: () =>
-                        import('./(main)/discover/(list)/assistant/index').then((m) => ({
-                          Component: m.MobileAssistantPage,
-                        })),
+                      element: <MobileAssistantPage />,
                       path: 'assistant',
                     },
                   ],
-                  lazy: () =>
-                    import('./(main)/discover/(list)/assistant/_layout/Mobile').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <DiscoverAssistantLayout />,
                 },
                 {
                   children: [
                     {
-                      lazy: () =>
-                        import('./(main)/discover/(list)/model/index').then((m) => ({
-                          Component: m.MobileModelPage,
-                        })),
+                      element: <DiscoverListMobileModelPage />,
                       path: 'model',
                     },
                   ],
-                  lazy: () =>
-                    import('./(main)/discover/(list)/model/_layout/Mobile').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <DiscoverModelLayout />,
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(list)/provider/index').then((m) => ({
-                      Component: m.MobileProviderPage,
-                    })),
+                  element: <DiscoverListMobileProviderPage />,
                   path: 'provider',
                 },
                 {
                   children: [
                     {
-                      lazy: () =>
-                        import('./(main)/discover/(list)/mcp/index').then((m) => ({
-                          Component: m.MobileMcpPage,
-                        })),
+                      element: <DiscoverListMobileMcpPage />,
                       path: 'mcp',
                     },
                   ],
-                  lazy: () =>
-                    import('./(main)/discover/(list)/mcp/_layout/Mobile').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <DiscoverMcpLayout />,
                 },
               ],
-              lazy: () =>
-                import('./(main)/discover/(list)/_layout/Mobile/index').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <DiscoverListLayout />,
             },
             // Detail routes (with DetailLayout)
             {
               children: [
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/assistant/index').then((m) => ({
-                      Component: m.MobileDiscoverAssistantDetailPage,
-                    })),
+                  element: <MobileDiscoverAssistantDetailPage />,
                   loader: slugLoader,
                   path: 'assistant/:slug',
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/model/index').then((m) => ({
-                      Component: m.MobileModelPage,
-                    })),
+                  element: <DiscoverDetailMobileModelPage />,
                   loader: slugLoader,
                   path: 'model/:slug',
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/provider/index').then((m) => ({
-                      Component: m.MobileProviderPage,
-                    })),
+                  element: <DiscoverDetailMobileProviderPage />,
                   loader: slugLoader,
                   path: 'provider/:slug',
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/mcp/index').then((m) => ({
-                      Component: m.MobileMcpPage,
-                    })),
+                  element: <DiscoverDetailMobileMcpPage />,
                   loader: slugLoader,
                   path: 'mcp/:slug',
                 },
               ],
-              lazy: () =>
-                import('./(main)/discover/(detail)/_layout/Mobile/index').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <DiscoverDetailLayout />,
             },
           ],
-          lazy: () =>
-            import('./(main)/discover/_layout/Mobile/index').then((m) => ({
-              Component: m.default,
-            })),
+          element: <DiscoverLayout />,
           path: 'discover',
         },
 
@@ -188,32 +278,20 @@ export const createMobileRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <KnowledgeHome />,
               index: true,
-              lazy: () =>
-                import('./(main)/knowledge/routes/KnowledgeHome').then((m) => ({
-                  Component: m.default,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/knowledge/routes/KnowledgeBasesList').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <KnowledgeBasesList />,
               path: 'bases',
             },
             {
-              lazy: () =>
-                import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <KnowledgeBaseDetail />,
               loader: idLoader,
               path: 'bases/:id',
             },
           ],
-          lazy: () =>
-            import('./(main)/knowledge/_layout/Mobile').then((m) => ({
-              Component: m.default,
-            })),
+          element: <KnowledgeLayout />,
           path: 'knowledge',
         },
 
@@ -221,17 +299,11 @@ export const createMobileRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <SettingsLayout />,
               index: true,
-              lazy: () =>
-                import('./(main)/settings/_layout/Mobile').then((m) => ({
-                  Component: m.default,
-                })),
             },
           ],
-          lazy: () =>
-            import('./(main)/settings/_layout/MobileWrapper').then((m) => ({
-              Component: m.default,
-            })),
+          element: <SettingsLayoutWrapper />,
           path: 'settings',
         },
 
@@ -239,26 +311,17 @@ export const createMobileRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <ImageComingSoon />,
               index: true,
-              lazy: () =>
-                import('./(main)/image/ComingSoon').then((m) => ({
-                  Component: m.default,
-                })),
             },
           ],
-          lazy: () =>
-            import('./(main)/image/_layout/Mobile').then((m) => ({
-              Component: m.default,
-            })),
+          element: <ImageLayoutMobile />,
           path: 'image',
         },
 
         // Labs routes
         {
-          lazy: () =>
-            import('./(main)/labs').then((m) => ({
-              Component: m.default,
-            })),
+          element: <LabsPage />,
           path: 'labs',
         },
 
@@ -266,38 +329,23 @@ export const createMobileRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <ProfileHomePage />,
               index: true,
-              lazy: () =>
-                import('./(main)/profile/(home)').then((m) => ({
-                  Component: m.default,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/profile/apikey/index').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <ProfileApikeyPage />,
               path: 'apikey',
             },
             {
-              lazy: () =>
-                import('./(main)/profile/security').then((m) => ({
-                  Component: m.MobileProfileSecurityPage,
-                })),
+              element: <MobileProfileSecurityPage />,
               path: 'security',
             },
             {
-              lazy: () =>
-                import('./(main)/profile/stats').then((m) => ({
-                  Component: m.MobileProfileStatsPage,
-                })),
+              element: <MobileProfileStatsPage />,
               path: 'stats',
             },
           ],
-          lazy: () =>
-            import('./(main)/profile/_layout/Mobile').then((m) => ({
-              Component: m.default,
-            })),
+          element: <ProfileLayoutMobile />,
           path: 'profile',
         },
 
@@ -307,47 +355,29 @@ export const createMobileRouter = (locale: Locales) =>
             {
               children: [
                 {
+                  element: <MeHomePage />,
                   index: true,
-                  lazy: () =>
-                    import('./(main)/(mobile)/me/(home)').then((m) => ({
-                      Component: m.default,
-                    })),
                 },
               ],
-              lazy: () =>
-                import('./(main)/(mobile)/me/(home)/layout').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <MeHomeLayout />,
             },
             {
               children: [
                 {
-                  lazy: () =>
-                    import('./(main)/(mobile)/me/profile').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <MeProfilePage />,
                   path: 'profile',
                 },
               ],
-              lazy: () =>
-                import('./(main)/(mobile)/me/profile/layout').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <MeProfileLayout />,
             },
             {
               children: [
                 {
-                  lazy: () =>
-                    import('./(main)/(mobile)/me/settings').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <MeSettingsPage />,
                   path: 'settings',
                 },
               ],
-              lazy: () =>
-                import('./(main)/(mobile)/me/settings/layout').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <MeSettingsLayout />,
             },
           ],
           path: 'me',

@@ -1,39 +1,153 @@
 'use client';
 
-import { useEffect } from 'react';
-import { createBrowserRouter, redirect, useNavigate } from 'react-router-dom';
+import dynamic from 'next/dynamic';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 
-import { useGlobalStore } from '@/store/global';
 import type { Locales } from '@/types/locale';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
 import { idLoader, slugLoader } from './loaders/routeParams';
 
-// Component to register navigate function in global store
-const NavigatorRegistrar = () => {
-  const navigate = useNavigate();
+/**
+ * Desktop Router Configuration - Pure CSR Mode
+ *
+ * IMPORTANT: This router runs ONLY in the browser (client-side).
+ *
+ * Key characteristics:
+ * - createBrowserRouter uses window.history API (client-only)
+ * - All loaders execute in the browser during navigation
+ * - No server-side rendering or hydration involved
+ * - Route data fetching happens on-demand during client navigation
+ *
+ * The entire router tree is wrapped with Next.js dynamic import (ssr: false),
+ * ensuring this code never executes on the server.
+ */
 
-  useEffect(() => {
-    useGlobalStore.setState({ navigate });
+// Chat components
+const DesktopChatPage = dynamic(
+  () => import('./(main)/chat/index').then((m) => m.DesktopChatPage),
+  { ssr: false },
+);
+const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), { ssr: false });
 
-    return () => {
-      useGlobalStore.setState({ navigate: undefined });
-    };
-  }, [navigate]);
+// Discover List components
+const DesktopHomePage = dynamic(
+  () => import('./(main)/discover/(list)/(home)/index').then((m) => m.DesktopHomePage),
+  { ssr: false },
+);
+const DesktopAssistantPage = dynamic(
+  () => import('./(main)/discover/(list)/assistant/index').then((m) => m.DesktopAssistantPage),
+  { ssr: false },
+);
+const DiscoverAssistantLayout = dynamic(
+  () => import('./(main)/discover/(list)/assistant/_layout/Desktop'),
+  { ssr: false },
+);
+const DiscoverListMcpPage = dynamic(
+  () => import('./(main)/discover/(list)/mcp/index').then((m) => m.DesktopMcpPage),
+  { ssr: false },
+);
+const DiscoverMcpLayout = dynamic(
+  () => import('./(main)/discover/(list)/mcp/_layout/Desktop'),
+  { ssr: false },
+);
+const DiscoverListModelPage = dynamic(
+  () => import('./(main)/discover/(list)/model/index').then((m) => m.DesktopModelPage),
+  { ssr: false },
+);
+const DiscoverModelLayout = dynamic(
+  () => import('./(main)/discover/(list)/model/_layout/Desktop'),
+  { ssr: false },
+);
+const DiscoverListProviderPage = dynamic(
+  () => import('./(main)/discover/(list)/provider/index').then((m) => m.DesktopProviderPage),
+  { ssr: false },
+);
+const DiscoverListLayout = dynamic(
+  () => import('./(main)/discover/(list)/_layout/Desktop/index'),
+  { ssr: false },
+);
 
-  return null;
-};
+// Discover Detail components
+const DesktopDiscoverAssistantDetailPage = dynamic(
+  () =>
+    import('./(main)/discover/(detail)/assistant/index').then(
+      (m) => m.DesktopDiscoverAssistantDetailPage,
+    ),
+  { ssr: false },
+);
+const DiscoverDetailMcpPage = dynamic(
+  () => import('./(main)/discover/(detail)/mcp/index').then((m) => m.DesktopMcpPage),
+  { ssr: false },
+);
+const DiscoverDetailModelPage = dynamic(
+  () => import('./(main)/discover/(detail)/model/index').then((m) => m.DesktopModelPage),
+  { ssr: false },
+);
+const DiscoverDetailProviderPage = dynamic(
+  () => import('./(main)/discover/(detail)/provider/index').then((m) => m.DesktopProviderPage),
+  { ssr: false },
+);
+const DiscoverDetailLayout = dynamic(
+  () => import('./(main)/discover/(detail)/_layout/Desktop'),
+  { ssr: false },
+);
+const DiscoverLayout = dynamic(
+  () => import('./(main)/discover/_layout/Desktop/index'),
+  { ssr: false },
+);
 
-// Root layout wrapper component - just registers navigator and renders outlet
-// Note: Desktop layout is provided by individual route components
-const RootLayout = (props: { locale: Locales }) => {
-  return (
-    <>
-      <NavigatorRegistrar />
-      <DesktopMainLayout locale={props.locale} />
-    </>
-  );
-};
+// Knowledge components
+const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
+  ssr: false,
+});
+const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), {
+  ssr: false,
+});
+const KnowledgeBaseDetail = dynamic(
+  () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
+  { ssr: false },
+);
+const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Desktop'), {
+  ssr: false,
+});
+
+// Settings components
+const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Desktop'), { ssr: false });
+const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/DesktopWrapper'), {
+  ssr: false,
+});
+
+// Image components
+const ImagePage = dynamic(() => import('./(main)/image'), { ssr: false });
+const ImageLayoutWrapper = dynamic(() => import('./(main)/image/_layout/DesktopWrapper'), {
+  ssr: false,
+});
+
+// Labs components
+const LabsPage = dynamic(() => import('./(main)/labs'), { ssr: false });
+
+// Profile components
+const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)/desktop'), { ssr: false });
+const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), { ssr: false });
+const DesktopProfileSecurityPage = dynamic(
+  () => import('./(main)/profile/security/index').then((m) => m.DesktopProfileSecurityPage),
+  { ssr: false },
+);
+const DesktopProfileStatsPage = dynamic(
+  () => import('./(main)/profile/stats/index').then((m) => m.DesktopProfileStatsPage),
+  { ssr: false },
+);
+const DesktopProfileUsagePage = dynamic(
+  () => import('./(main)/profile/usage/index').then((m) => m.DesktopProfileUsagePage),
+  { ssr: false },
+);
+const ProfileLayoutWrapper = dynamic(() => import('./(main)/profile/_layout/DesktopWrapper'), {
+  ssr: false,
+});
+
+// Root layout wrapper component
+const RootLayout = (props: { locale: Locales }) => <DesktopMainLayout locale={props.locale} />;
 
 // Create desktop router configuration
 export const createDesktopRouter = (locale: Locales) =>
@@ -44,24 +158,15 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <DesktopChatPage />,
               index: true,
-              lazy: () =>
-                import('./(main)/chat/index').then((m) => ({
-                  Component: m.DesktopChatPage,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/chat/index').then((m) => ({
-                  Component: m.DesktopChatPage,
-                })),
+              element: <DesktopChatPage />,
               path: '*',
             },
           ],
-          lazy: () =>
-            import('./(main)/chat/_layout/Desktop').then((m) => ({
-              Component: m.default,
-            })),
+          element: <ChatLayout />,
           path: 'chat',
         },
 
@@ -74,117 +179,72 @@ export const createDesktopRouter = (locale: Locales) =>
                 {
                   children: [
                     {
+                      element: <DesktopAssistantPage />,
                       index: true,
-                      lazy: () =>
-                        import('./(main)/discover/(list)/assistant/index').then((m) => ({
-                          Component: m.DesktopAssistantPage,
-                        })),
                     },
                   ],
-                  lazy: () =>
-                    import('./(main)/discover/(list)/assistant/_layout/Desktop').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <DiscoverAssistantLayout />,
                   path: 'assistant',
                 },
                 {
                   children: [
                     {
+                      element: <DiscoverListModelPage />,
                       index: true,
-                      lazy: () =>
-                        import('./(main)/discover/(list)/model/index').then((m) => ({
-                          Component: m.DesktopModelPage,
-                        })),
                     },
                   ],
-                  lazy: () =>
-                    import('./(main)/discover/(list)/model/_layout/Desktop').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <DiscoverModelLayout />,
                   path: 'model',
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(list)/provider/index').then((m) => ({
-                      Component: m.DesktopProviderPage,
-                    })),
+                  element: <DiscoverListProviderPage />,
                   path: 'provider',
                 },
                 {
                   children: [
                     {
+                      element: <DiscoverListMcpPage />,
                       index: true,
-                      lazy: () =>
-                        import('./(main)/discover/(list)/mcp/index').then((m) => ({
-                          Component: m.DesktopMcpPage,
-                        })),
                     },
                   ],
-                  lazy: () =>
-                    import('./(main)/discover/(list)/mcp/_layout/Desktop').then((m) => ({
-                      Component: m.default,
-                    })),
+                  element: <DiscoverMcpLayout />,
                   path: 'mcp',
                 },
                 {
+                  element: <DesktopHomePage />,
                   index: true,
-                  lazy: () =>
-                    import('./(main)/discover/(list)/(home)/index').then((m) => ({
-                      Component: m.DesktopHomePage,
-                    })),
                 },
               ],
-              lazy: () =>
-                import('./(main)/discover/(list)/_layout/Desktop/index').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <DiscoverListLayout />,
             },
             // Detail routes (with DetailLayout)
             {
               children: [
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/assistant/index').then((m) => ({
-                      Component: m.DesktopDiscoverAssistantDetailPage,
-                    })),
+                  element: <DesktopDiscoverAssistantDetailPage />,
                   loader: slugLoader,
                   path: 'assistant/:slug',
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/model/index').then((m) => ({
-                      Component: m.DesktopModelPage,
-                    })),
+                  element: <DiscoverDetailModelPage />,
                   loader: slugLoader,
                   path: 'model/:slug',
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/provider/index').then((m) => ({
-                      Component: m.DesktopProviderPage,
-                    })),
+                  element: <DiscoverDetailProviderPage />,
                   loader: slugLoader,
                   path: 'provider/:slug',
                 },
                 {
-                  lazy: () =>
-                    import('./(main)/discover/(detail)/mcp/index').then((m) => ({
-                      Component: m.DesktopMcpPage,
-                    })),
+                  element: <DiscoverDetailMcpPage />,
                   loader: slugLoader,
                   path: 'mcp/:slug',
                 },
               ],
-              lazy: () =>
-                import('./(main)/discover/(detail)/_layout/Desktop').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <DiscoverDetailLayout />,
             },
           ],
-          lazy: () =>
-            import('./(main)/discover/_layout/Desktop/index').then((m) => ({
-              Component: m.default,
-            })),
+          element: <DiscoverLayout />,
           path: 'discover',
         },
 
@@ -192,40 +252,25 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <KnowledgeHome />,
               index: true,
-              lazy: () =>
-                import('./(main)/knowledge/routes/KnowledgeHome').then((m) => ({
-                  Component: m.default,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/knowledge/routes/KnowledgeBasesList').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <KnowledgeBasesList />,
               path: 'bases',
             },
             {
-              lazy: () =>
-                import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <KnowledgeBaseDetail />,
               loader: idLoader,
               path: 'bases/:id',
             },
             {
-              lazy: () =>
-                import('./(main)/knowledge/routes/KnowledgeBaseDetail').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <KnowledgeBaseDetail />,
               loader: idLoader,
               path: '*',
             },
           ],
-          lazy: () =>
-            import('./(main)/knowledge/_layout/Desktop').then((m) => ({
-              Component: m.default,
-            })),
+          element: <KnowledgeLayout />,
           path: 'knowledge',
         },
 
@@ -233,17 +278,11 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <SettingsLayout />,
               index: true,
-              lazy: () =>
-                import('./(main)/settings/_layout/Desktop').then((m) => ({
-                  Component: m.default,
-                })),
             },
           ],
-          lazy: () =>
-            import('./(main)/settings/_layout/DesktopWrapper').then((m) => ({
-              Component: m.default,
-            })),
+          element: <SettingsLayoutWrapper />,
           path: 'settings',
         },
 
@@ -251,26 +290,17 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <ImagePage />,
               index: true,
-              lazy: () =>
-                import('./(main)/image').then((m) => ({
-                  Component: m.default,
-                })),
             },
           ],
-          lazy: () =>
-            import('./(main)/image/_layout/DesktopWrapper').then((m) => ({
-              Component: m.default,
-            })),
+          element: <ImageLayoutWrapper />,
           path: 'image',
         },
 
         // Labs routes
         {
-          lazy: () =>
-            import('./(main)/labs').then((m) => ({
-              Component: m.default,
-            })),
+          element: <LabsPage />,
           path: 'labs',
         },
 
@@ -278,45 +308,27 @@ export const createDesktopRouter = (locale: Locales) =>
         {
           children: [
             {
+              element: <ProfileHomePage />,
               index: true,
-              lazy: () =>
-                import('./(main)/profile/(home)/desktop').then((m) => ({
-                  Component: m.default,
-                })),
             },
             {
-              lazy: () =>
-                import('./(main)/profile/apikey/index').then((m) => ({
-                  Component: m.default,
-                })),
+              element: <ProfileApikeyPage />,
               path: 'apikey',
             },
             {
-              lazy: () =>
-                import('./(main)/profile/security/index').then((m) => ({
-                  Component: m.DesktopProfileSecurityPage,
-                })),
+              element: <DesktopProfileSecurityPage />,
               path: 'security',
             },
             {
-              lazy: () =>
-                import('./(main)/profile/stats/index').then((m) => ({
-                  Component: m.DesktopProfileStatsPage,
-                })),
+              element: <DesktopProfileStatsPage />,
               path: 'stats',
             },
             {
-              lazy: () =>
-                import('./(main)/profile/usage/index').then((m) => ({
-                  Component: m.DesktopProfileUsagePage,
-                })),
+              element: <DesktopProfileUsagePage />,
               path: 'usage',
             },
           ],
-          lazy: () =>
-            import('./(main)/profile/_layout/DesktopWrapper').then((m) => ({
-              Component: m.default,
-            })),
+          element: <ProfileLayoutWrapper />,
           path: 'profile',
         },
 
