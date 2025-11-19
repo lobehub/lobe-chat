@@ -55,10 +55,9 @@ export const pluginPublicApi: StateCreator<
     const message = displayMessageSelectors.getDisplayMessageById(id)(get());
     if (!message || message.role !== 'tool' || !message.plugin) return;
 
-    const context = {
-      sessionId: message.sessionId,
-      topicId: message.topicId,
-    };
+    // Get operationId from messageOperationMap
+    const operationId = get().messageOperationMap[id];
+    const context = operationId ? { operationId } : undefined;
 
     // if there is error content, then clear the error
     if (!!message.pluginError) {

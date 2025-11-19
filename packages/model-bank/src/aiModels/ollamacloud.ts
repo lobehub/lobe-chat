@@ -5,12 +5,14 @@ const ollamaCloudModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
     },
-    contextWindowTokens: 200_000,
-    description: 'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
-    displayName: 'MiniMax M2',
+    contextWindowTokens: 1_048_576,
+    description:
+      'Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。',
+    displayName: 'Gemini 3 Pro Preview',
     enabled: true,
-    id: 'minimax-m2',
+    id: 'gemini-3-pro-preview',
     type: 'chat',
   },
   {
@@ -19,8 +21,7 @@ const ollamaCloudModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 200_000,
-    description:
-      'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
+    description: 'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
     displayName: 'MiniMax M2',
     enabled: true,
     id: 'minimax-m2',

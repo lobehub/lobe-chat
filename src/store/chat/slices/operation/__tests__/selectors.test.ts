@@ -16,12 +16,12 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
 
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
 
@@ -31,7 +31,9 @@ describe('Operation Selectors', () => {
         });
       });
 
-      const generateOps = operationSelectors.getOperationsByType('generateAI')(result.current);
+      const generateOps = operationSelectors.getOperationsByType('execAgentRuntime')(
+        result.current,
+      );
       const reasoningOps = operationSelectors.getOperationsByType('reasoning')(result.current);
 
       expect(generateOps).toHaveLength(2);
@@ -48,7 +50,7 @@ describe('Operation Selectors', () => {
         useChatStore.setState({ activeId: 'session1', activeTopicId: 'topic1' });
 
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
         });
 
@@ -59,7 +61,7 @@ describe('Operation Selectors', () => {
 
         // Operation in different context
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session2', topicId: 'topic2' },
         });
       });
@@ -82,7 +84,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         opId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         }).operationId;
       });
@@ -103,12 +105,14 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
       });
 
-      expect(operationSelectors.hasRunningOperationType('generateAI')(result.current)).toBe(true);
+      expect(operationSelectors.hasRunningOperationType('execAgentRuntime')(result.current)).toBe(
+        true,
+      );
       expect(operationSelectors.hasRunningOperationType('reasoning')(result.current)).toBe(false);
     });
   });
@@ -125,7 +129,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
         });
       });
@@ -146,7 +150,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
         });
       });
@@ -163,7 +167,7 @@ describe('Operation Selectors', () => {
         useChatStore.setState({ activeId: 'session1', activeTopicId: 'topic1' });
 
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1' },
           label: 'Generating response...',
         });
@@ -190,13 +194,129 @@ describe('Operation Selectors', () => {
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', messageId: 'msg1' },
         });
       });
 
       expect(operationSelectors.isMessageProcessing('msg1')(result.current)).toBe(true);
       expect(operationSelectors.isMessageProcessing('msg2')(result.current)).toBe(false);
+    });
+  });
+
+  describe('isMessageCreating', () => {
+    it('should return true for user message during sendMessage operation', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session1', messageId: 'user_msg_1' },
+        }).operationId;
+
+        // Associate message with operation
+        result.current.associateMessageWithOperation('user_msg_1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('user_msg_1')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('other_msg')(result.current)).toBe(false);
+    });
+
+    it('should return true for assistant message during createAssistantMessage operation', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'createAssistantMessage',
+          context: { sessionId: 'session1', messageId: 'assistant_msg_1' },
+        }).operationId;
+
+        // Associate message with operation
+        result.current.associateMessageWithOperation('assistant_msg_1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('assistant_msg_1')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('other_msg')(result.current)).toBe(false);
+    });
+
+    it('should return false when operation completes', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session1', messageId: 'msg1' },
+        }).operationId;
+
+        result.current.associateMessageWithOperation('msg1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('msg1')(result.current)).toBe(true);
+
+      act(() => {
+        result.current.completeOperation(opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('msg1')(result.current)).toBe(false);
+    });
+
+    it('should return false for other operation types', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+
+      act(() => {
+        // execAgentRuntime should not be considered as "creating"
+        opId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', messageId: 'msg1' },
+        }).operationId;
+
+        result.current.associateMessageWithOperation('msg1', opId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('msg1')(result.current)).toBe(false);
+    });
+
+    it('should only check sendMessage and createAssistantMessage operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let sendMsgOpId: string;
+      let createAssistantOpId: string;
+      let toolCallOpId: string;
+
+      act(() => {
+        // sendMessage - should be creating
+        sendMsgOpId = result.current.startOperation({
+          type: 'sendMessage',
+          context: { sessionId: 'session1', messageId: 'user_msg' },
+        }).operationId;
+        result.current.associateMessageWithOperation('user_msg', sendMsgOpId!);
+
+        // createAssistantMessage - should be creating
+        createAssistantOpId = result.current.startOperation({
+          type: 'createAssistantMessage',
+          context: { sessionId: 'session1', messageId: 'assistant_msg' },
+        }).operationId;
+        result.current.associateMessageWithOperation('assistant_msg', createAssistantOpId!);
+
+        // toolCalling - should NOT be creating
+        toolCallOpId = result.current.startOperation({
+          type: 'toolCalling',
+          context: { sessionId: 'session1', messageId: 'tool_msg' },
+        }).operationId;
+        result.current.associateMessageWithOperation('tool_msg', toolCallOpId!);
+      });
+
+      expect(operationSelectors.isMessageCreating('user_msg')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('assistant_msg')(result.current)).toBe(true);
+      expect(operationSelectors.isMessageCreating('tool_msg')(result.current)).toBe(false);
     });
   });
 
@@ -208,7 +328,7 @@ describe('Operation Selectors', () => {
 
       act(() => {
         opId = result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1', topicId: 'topic1', messageId: 'msg1' },
         }).operationId;
 
@@ -225,19 +345,19 @@ describe('Operation Selectors', () => {
   });
 
   describe('backward compatibility selectors', () => {
-    it('isAIGenerating should work', () => {
+    it('isAgentRuntimeRunning should work', () => {
       const { result } = renderHook(() => useChatStore());
 
-      expect(operationSelectors.isAIGenerating(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
 
       act(() => {
         result.current.startOperation({
-          type: 'generateAI',
+          type: 'execAgentRuntime',
           context: { sessionId: 'session1' },
         });
       });
 
-      expect(operationSelectors.isAIGenerating(result.current)).toBe(true);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
     });
 
     it('isSendingMessage should work', () => {
@@ -268,6 +388,126 @@ describe('Operation Selectors', () => {
       });
 
       expect(operationSelectors.isInRAGFlow(result.current)).toBe(true);
+    });
+
+    it('isMainWindowAgentRuntimeRunning should only detect main window operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+
+      // Start a main window operation (inThread: false)
+      let mainOpId: string;
+      act(() => {
+        mainOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+          metadata: { inThread: false },
+        }).operationId;
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete main window operation
+      act(() => {
+        result.current.completeOperation(mainOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
+    });
+
+    it('isMainWindowAgentRuntimeRunning should exclude thread operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      // Start a thread operation (inThread: true)
+      let threadOpId: string;
+      act(() => {
+        threadOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', threadId: 'thread1' },
+          metadata: { inThread: true },
+        }).operationId;
+      });
+
+      // Thread operation should not affect main window state
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      // But should be detected by general isAgentRuntimeRunning
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete thread operation
+      act(() => {
+        result.current.completeOperation(threadOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
+    });
+
+    it('isMainWindowAgentRuntimeRunning should distinguish between main and thread operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let mainOpId: string;
+      let threadOpId: string;
+
+      // Start both main window and thread operations
+      act(() => {
+        mainOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+          metadata: { inThread: false },
+        }).operationId;
+
+        threadOpId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1', threadId: 'thread1' },
+          metadata: { inThread: true },
+        }).operationId;
+      });
+
+      // Both selectors should detect their respective operations
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete main window operation, thread operation still running
+      act(() => {
+        result.current.completeOperation(mainOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Complete thread operation
+      act(() => {
+        result.current.completeOperation(threadOpId!);
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
+    });
+
+    it('isMainWindowAgentRuntimeRunning should exclude aborting operations', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      let opId: string;
+      act(() => {
+        opId = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { sessionId: 'session1' },
+          metadata: { inThread: false },
+        }).operationId;
+      });
+
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(true);
+
+      // Mark as aborting
+      act(() => {
+        result.current.updateOperationMetadata(opId!, { isAborting: true });
+      });
+
+      // Should exclude aborting operations
+      expect(operationSelectors.isMainWindowAgentRuntimeRunning(result.current)).toBe(false);
+      expect(operationSelectors.isAgentRuntimeRunning(result.current)).toBe(false);
     });
   });
 });

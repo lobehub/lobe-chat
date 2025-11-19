@@ -108,10 +108,13 @@ export interface ModelPerformance {
 export interface MessageMetadata extends ModelUsage, ModelPerformance {
   activeBranchIndex?: number;
   activeColumn?: boolean;
+  finishType?: string;
   /**
    * Message collapse state
    * true: collapsed, false/undefined: expanded
    */
   collapsed?: boolean;
   compare?: boolean;
+  usage?: ModelUsage;
+  performance?: ModelPerformance;
 }
