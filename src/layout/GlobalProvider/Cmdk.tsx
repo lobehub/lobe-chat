@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   ArrowUpDown,
   BookOpen,
+  Bot,
   Compass,
   CornerDownLeft,
   Github,
@@ -25,6 +26,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useHotkeyById } from '@/hooks/useHotkeys/useHotkeyById';
 import { useGlobalStore } from '@/store/global';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { useSessionStore } from '@/store/session';
 import { HotkeyEnum } from '@/types/hotkey';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -234,6 +237,8 @@ const Cmdk = memo(() => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
+  const createSession = useSessionStore((s) => s.createSession);
+  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const page = pages.at(-1);
 
@@ -328,6 +333,21 @@ const Cmdk = memo(() => {
 
             {!page && (
               <>
+                {showCreateSession && (
+                  <Command.Item
+                    onSelect={() => {
+                      createSession();
+                      setOpen(false);
+                    }}
+                    value="new-agent"
+                  >
+                    <Bot className={styles.icon} />
+                    <div className={styles.itemContent}>
+                      <div className={styles.itemLabel}>{t('cmdk.newAgent')}</div>
+                    </div>
+                  </Command.Item>
+                )}
+
                 {!pathname?.startsWith('/settings') && (
                   <Command.Item onSelect={() => handleNavigate('/settings')} value="settings">
                     <Settings className={styles.icon} />
