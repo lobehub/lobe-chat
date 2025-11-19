@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Interruptor de pensamiento profundo"
     },
+    "thinkingLevel": {
+      "title": "Nivel de pensamiento"
+    },
     "title": "Funcionalidad de extensión del modelo",
     "urlContext": {
       "desc": "Al activarlo, se analizarán automáticamente los enlaces web para obtener el contenido contextual real de la página",
@@ -396,6 +399,7 @@
       "rejectReasonPlaceholder": "Ingresar una razón ayudará al agente a comprender y mejorar futuras acciones",
       "rejectTitle": "Rechazar esta ejecución de herramienta",
       "rejectedWithReason": "Esta ejecución de herramienta fue rechazada: {{reason}}",
+      "toolAbort": "La llamada a la herramienta fue cancelada por el usuario",
       "toolRejected": "Esta ejecución de herramienta fue rechazada"
     }
   },

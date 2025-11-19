@@ -65,6 +65,9 @@
     "thinking": {
       "title": "深度思考開關"
     },
+    "thinkingLevel": {
+      "title": "思考層級"
+    },
     "title": "模型擴展功能",
     "urlContext": {
       "desc": "開啟後將自動解析網頁連結，以取得實際網頁上下文內容",
@@ -396,6 +399,7 @@
       "rejectReasonPlaceholder": "輸入拒絕原因將幫助 Agent 理解並優化後續行動",
       "rejectTitle": "拒絕本次工具調用",
       "rejectedWithReason": "本次工具調用被主動拒絕:{{reason}}",
+      "toolAbort": "本次工具呼叫已被使用者取消",
       "toolRejected": "本次工具調用被主動拒絕"
     }
   },

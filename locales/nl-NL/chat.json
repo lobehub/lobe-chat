@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Diepdenkschakelaar"
     },
+    "thinkingLevel": {
+      "title": "Denkniveau"
+    },
     "title": "Modeluitbreidingsfunctie",
     "urlContext": {
       "desc": "Na inschakeling worden webkoppelingen automatisch geanalyseerd om de daadwerkelijke inhoud van de webpagina te verkrijgen",
@@ -396,6 +399,7 @@
       "rejectReasonPlaceholder": "Het opgeven van een reden helpt de agent om toekomstige acties te verbeteren",
       "rejectTitle": "Huidige tooloproep weigeren",
       "rejectedWithReason": "Deze tooloproep is geweigerd met reden: {{reason}}",
+      "toolAbort": "Deze hulpmiddeloproep is door de gebruiker geannuleerd",
       "toolRejected": "Deze tooloproep is geweigerd"
     }
   },
