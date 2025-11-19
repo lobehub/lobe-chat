@@ -3,13 +3,13 @@ import { ReactNode, Suspense } from 'react';
 import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { appEnv } from '@/envs/app';
-import DevPanel from '@/features/DevPanel';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
 import { getAntdLocale } from '@/utils/locale';
 
 import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
+import HydrationDebugHelper from './HydrationDebugHelper';
 import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
@@ -63,7 +63,12 @@ const GlobalLayout = async ({
             <StoreInitialization />
             <Suspense>
               <ImportSettings />
-              {process.env.NODE_ENV === 'development' && <DevPanel />}
+              {process.env.NODE_ENV === 'development' && (
+                <>
+                  {/* <DevPanel /> */}
+                  <HydrationDebugHelper />
+                </>
+              )}
             </Suspense>
           </ServerConfigStoreProvider>
         </AppTheme>

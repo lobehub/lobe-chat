@@ -36,25 +36,7 @@ const RootLayout = (props: { locale: Locales }) => (
 
 // Hydration gate loader -always return true to bypass hydration gate
 const hydrationGateLoader: LoaderFunction = () => {
-  const { isAppHydrated } = useGlobalStore.getState();
-
-  // 如果状态已经就绪，直接放行
-  if (isAppHydrated) {
-    return null;
-  }
-
-  // 否则，返回一个 Promise，"暂停" 渲染
-  return new Promise((resolve) => {
-    console.log('[HydrationGate] Waiting for client state...');
-    // 订阅 useGlobalStore 的变化
-    const unsubscribe = useGlobalStore.subscribe((state) => {
-      if (state.isAppHydrated) {
-        console.log('[HydrationGate] Client state ready. Gate opened!');
-        unsubscribe(); // 清理订阅
-        resolve(null); // Promise 完成，门卫放行
-      }
-    });
-  });
+  return null;
 };
 
 // Create mobile router configuration
