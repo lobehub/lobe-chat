@@ -9,6 +9,7 @@ import type { Locales } from '@/types/locale';
 
 import DesktopMainLayout from './(main)/layouts/desktop';
 import { idLoader, slugLoader } from './loaders/routeParams';
+import Loading from '@/components/Loading/BrandTextLoading';
 
 /**
  * Desktop Router Configuration - Pure CSR Mode
@@ -25,52 +26,54 @@ import { idLoader, slugLoader } from './loaders/routeParams';
  * ensuring this code never executes on the server.
  */
 
-
-
+const DefalutDynamicConfig = {
+  loading: () => <Loading />,
+  ssr: false
+}
 
 // Chat components
 const DesktopChatPage = dynamic(
   () => import('./(main)/chat/index').then((m) => m.DesktopChatPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
-const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), { ssr: false });
+const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Desktop'), DefalutDynamicConfig);
 
 // Discover List components
 const DesktopHomePage = dynamic(
   () => import('./(main)/discover/(list)/(home)/index').then((m) => m.DesktopHomePage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DesktopAssistantPage = dynamic(
   () => import('./(main)/discover/(list)/assistant/index').then((m) => m.DesktopAssistantPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverAssistantLayout = dynamic(
   () => import('./(main)/discover/(list)/assistant/_layout/Desktop'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListMcpPage = dynamic(
   () => import('./(main)/discover/(list)/mcp/index').then((m) => m.DesktopMcpPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverMcpLayout = dynamic(
   () => import('./(main)/discover/(list)/mcp/_layout/Desktop'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListModelPage = dynamic(
   () => import('./(main)/discover/(list)/model/index').then((m) => m.DesktopModelPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverModelLayout = dynamic(
   () => import('./(main)/discover/(list)/model/_layout/Desktop'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListProviderPage = dynamic(
   () => import('./(main)/discover/(list)/provider/index').then((m) => m.DesktopProviderPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListLayout = dynamic(
   () => import('./(main)/discover/(list)/_layout/Desktop/index'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 
 // Discover Detail components
@@ -79,77 +82,65 @@ const DesktopDiscoverAssistantDetailPage = dynamic(
     import('./(main)/discover/(detail)/assistant/index').then(
       (m) => m.DesktopDiscoverAssistantDetailPage,
     ),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailMcpPage = dynamic(
   () => import('./(main)/discover/(detail)/mcp/index').then((m) => m.DesktopMcpPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailModelPage = dynamic(
   () => import('./(main)/discover/(detail)/model/index').then((m) => m.DesktopModelPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailProviderPage = dynamic(
   () => import('./(main)/discover/(detail)/provider/index').then((m) => m.DesktopProviderPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailLayout = dynamic(
   () => import('./(main)/discover/(detail)/_layout/Desktop'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverLayout = dynamic(
   () => import('./(main)/discover/_layout/Desktop/index'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 
 // Knowledge components
-const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
-  ssr: false,
-});
-const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), {
-  ssr: false,
-});
+const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), DefalutDynamicConfig);
+const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), DefalutDynamicConfig);
 const KnowledgeBaseDetail = dynamic(
   () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
-const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Desktop'), {
-  ssr: false,
-});
+const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Desktop'), DefalutDynamicConfig);
 
 // Settings components
-const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Desktop'), { ssr: false });
-const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/DesktopWrapper'), {
-  ssr: false,
-});
+const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Desktop'), DefalutDynamicConfig);
+const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/DesktopWrapper'), DefalutDynamicConfig);
 
 // Image components
-const ImagePage = dynamic(() => import('./(main)/image'), { ssr: false });
-const ImageLayoutWrapper = dynamic(() => import('./(main)/image/_layout/DesktopWrapper'), {
-  ssr: false,
-});
+const ImagePage = dynamic(() => import('./(main)/image'), DefalutDynamicConfig);
+const ImageLayoutWrapper = dynamic(() => import('./(main)/image/_layout/DesktopWrapper'), DefalutDynamicConfig);
 
 // Labs components
-const LabsPage = dynamic(() => import('./(main)/labs'), { ssr: false });
+const LabsPage = dynamic(() => import('./(main)/labs'), DefalutDynamicConfig);
 
 // Profile components
-const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)/desktop'), { ssr: false });
-const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), { ssr: false });
+const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)/desktop'), DefalutDynamicConfig);
+const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), DefalutDynamicConfig);
 const DesktopProfileSecurityPage = dynamic(
   () => import('./(main)/profile/security/index').then((m) => m.DesktopProfileSecurityPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DesktopProfileStatsPage = dynamic(
   () => import('./(main)/profile/stats/index').then((m) => m.DesktopProfileStatsPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DesktopProfileUsagePage = dynamic(
   () => import('./(main)/profile/usage/index').then((m) => m.DesktopProfileUsagePage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
-const ProfileLayoutWrapper = dynamic(() => import('./(main)/profile/_layout/DesktopWrapper'), {
-  ssr: false,
-});
+const ProfileLayoutWrapper = dynamic(() => import('./(main)/profile/_layout/DesktopWrapper'), DefalutDynamicConfig);
 
 // Component to register navigate function in global store
 const NavigatorRegistrar = () => {

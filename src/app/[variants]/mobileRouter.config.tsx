@@ -9,6 +9,7 @@ import type { Locales } from '@/types/locale';
 
 import { MobileMainLayout } from './(main)/layouts/mobile';
 import { idLoader, slugLoader } from './loaders/routeParams';
+import Loading from '@/components/Loading/BrandTextLoading';
 
 /**
  * Mobile Router Configuration - Pure CSR Mode
@@ -25,50 +26,55 @@ import { idLoader, slugLoader } from './loaders/routeParams';
  * ensuring this code never executes on the server.
  */
 
+const DefalutDynamicConfig = {
+  loading: () => <Loading />,
+  ssr: false
+}
+
 // Chat components
 const MobileChatPage = dynamic(
   () => import('./(main)/chat/index').then((m) => m.MobileChatPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
-const ChatSettings = dynamic(() => import('./(main)/chat/settings'), { ssr: false });
-const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Mobile'), { ssr: false });
+const ChatSettings = dynamic(() => import('./(main)/chat/settings'), DefalutDynamicConfig);
+const ChatLayout = dynamic(() => import('./(main)/chat/_layout/Mobile'), DefalutDynamicConfig);
 
 // Discover List components
 const MobileHomePage = dynamic(
   () => import('./(main)/discover/(list)/(home)/index').then((m) => m.MobileHomePage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const MobileAssistantPage = dynamic(
   () => import('./(main)/discover/(list)/assistant/index').then((m) => m.MobileAssistantPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverAssistantLayout = dynamic(
   () => import('./(main)/discover/(list)/assistant/_layout/Mobile'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListMobileModelPage = dynamic(
   () => import('./(main)/discover/(list)/model/index').then((m) => m.MobileModelPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverModelLayout = dynamic(
   () => import('./(main)/discover/(list)/model/_layout/Mobile'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListMobileProviderPage = dynamic(
   () => import('./(main)/discover/(list)/provider/index').then((m) => m.MobileProviderPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListMobileMcpPage = dynamic(
   () => import('./(main)/discover/(list)/mcp/index').then((m) => m.MobileMcpPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverMcpLayout = dynamic(
   () => import('./(main)/discover/(list)/mcp/_layout/Mobile'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverListLayout = dynamic(
   () => import('./(main)/discover/(list)/_layout/Mobile/index'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 
 // Discover Detail components
@@ -77,83 +83,69 @@ const MobileDiscoverAssistantDetailPage = dynamic(
     import('./(main)/discover/(detail)/assistant/index').then(
       (m) => m.MobileDiscoverAssistantDetailPage,
     ),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailMobileModelPage = dynamic(
   () => import('./(main)/discover/(detail)/model/index').then((m) => m.MobileModelPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailMobileProviderPage = dynamic(
   () => import('./(main)/discover/(detail)/provider/index').then((m) => m.MobileProviderPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailMobileMcpPage = dynamic(
   () => import('./(main)/discover/(detail)/mcp/index').then((m) => m.MobileMcpPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverDetailLayout = dynamic(
   () => import('./(main)/discover/(detail)/_layout/Mobile/index'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const DiscoverLayout = dynamic(
   () => import('./(main)/discover/_layout/Mobile/index'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 
 // Knowledge components
-const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), {
-  ssr: false,
-});
-const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), {
-  ssr: false,
-});
+const KnowledgeHome = dynamic(() => import('./(main)/knowledge/routes/KnowledgeHome'), DefalutDynamicConfig);
+const KnowledgeBasesList = dynamic(() => import('./(main)/knowledge/routes/KnowledgeBasesList'), DefalutDynamicConfig);
 const KnowledgeBaseDetail = dynamic(
   () => import('./(main)/knowledge/routes/KnowledgeBaseDetail'),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
-const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Mobile'), {
-  ssr: false,
-});
+const KnowledgeLayout = dynamic(() => import('./(main)/knowledge/_layout/Mobile'), DefalutDynamicConfig);
 
 // Settings components
-const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Mobile'), { ssr: false });
-const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/MobileWrapper'), {
-  ssr: false,
-});
+const SettingsLayout = dynamic(() => import('./(main)/settings/_layout/Mobile'), DefalutDynamicConfig);
+const SettingsLayoutWrapper = dynamic(() => import('./(main)/settings/_layout/MobileWrapper'), DefalutDynamicConfig);
 
 // Image components
-const ImageComingSoon = dynamic(() => import('./(main)/image/ComingSoon'), { ssr: false });
-const ImageLayoutMobile = dynamic(() => import('./(main)/image/_layout/Mobile'), { ssr: false });
+const ImageComingSoon = dynamic(() => import('./(main)/image/ComingSoon'), DefalutDynamicConfig);
+const ImageLayoutMobile = dynamic(() => import('./(main)/image/_layout/Mobile'), DefalutDynamicConfig);
 
 // Labs components
-const LabsPage = dynamic(() => import('./(main)/labs'), { ssr: false });
+const LabsPage = dynamic(() => import('./(main)/labs'), DefalutDynamicConfig);
 
 // Profile components
-const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)'), { ssr: false });
-const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), { ssr: false });
+const ProfileHomePage = dynamic(() => import('./(main)/profile/(home)'), DefalutDynamicConfig);
+const ProfileApikeyPage = dynamic(() => import('./(main)/profile/apikey/index'), DefalutDynamicConfig);
 const MobileProfileSecurityPage = dynamic(
   () => import('./(main)/profile/security').then((m) => m.MobileProfileSecurityPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
 const MobileProfileStatsPage = dynamic(
   () => import('./(main)/profile/stats').then((m) => m.MobileProfileStatsPage),
-  { ssr: false },
+  DefalutDynamicConfig,
 );
-const ProfileLayoutMobile = dynamic(() => import('./(main)/profile/_layout/Mobile'), {
-  ssr: false,
-});
+const ProfileLayoutMobile = dynamic(() => import('./(main)/profile/_layout/Mobile'), DefalutDynamicConfig);
 
 // Me (mobile personal center) components
-const MeHomePage = dynamic(() => import('./(main)/(mobile)/me/(home)'), { ssr: false });
-const MeHomeLayout = dynamic(() => import('./(main)/(mobile)/me/(home)/layout'), { ssr: false });
-const MeProfilePage = dynamic(() => import('./(main)/(mobile)/me/profile'), { ssr: false });
-const MeProfileLayout = dynamic(() => import('./(main)/(mobile)/me/profile/layout'), {
-  ssr: false,
-});
-const MeSettingsPage = dynamic(() => import('./(main)/(mobile)/me/settings'), { ssr: false });
-const MeSettingsLayout = dynamic(() => import('./(main)/(mobile)/me/settings/layout'), {
-  ssr: false,
-});
+const MeHomePage = dynamic(() => import('./(main)/(mobile)/me/(home)'), DefalutDynamicConfig);
+const MeHomeLayout = dynamic(() => import('./(main)/(mobile)/me/(home)/layout'), DefalutDynamicConfig);
+const MeProfilePage = dynamic(() => import('./(main)/(mobile)/me/profile'), DefalutDynamicConfig);
+const MeProfileLayout = dynamic(() => import('./(main)/(mobile)/me/profile/layout'), DefalutDynamicConfig);
+const MeSettingsPage = dynamic(() => import('./(main)/(mobile)/me/settings'), DefalutDynamicConfig);
+const MeSettingsLayout = dynamic(() => import('./(main)/(mobile)/me/settings/layout'), DefalutDynamicConfig);
 
 // Component to register navigate function in global store
 const NavigatorRegistrar = () => {
