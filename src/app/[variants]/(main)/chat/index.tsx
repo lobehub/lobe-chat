@@ -1,9 +1,8 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 
-// import { DesktopWorkspace, MobileWorkspace } from './components/WorkspaceLayout';
-import { MobileWorkspace } from './components/WorkspaceLayout';
+import { DesktopWorkspace, MobileWorkspace } from './components/WorkspaceLayout';
 import TelemetryNotification from './components/features/TelemetryNotification';
 import PageTitle from './features/PageTitle';
 
@@ -19,14 +18,22 @@ const MobileChatPage = memo(() => {
 
 const DesktopChatPage = memo(() => {
 
-  return <>test 123</>
-  // return (
-  //   <>
-  //     <PageTitle />
-  //     <DesktopWorkspace />
-  //     <TelemetryNotification mobile={false} />
-  //   </>
-  // );
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    console.log('DesktopChatPage');
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+
+  return (
+    <>
+      <PageTitle />
+      <DesktopWorkspace />
+      <TelemetryNotification mobile={false} />
+    </>
+  );
 });
 
 export { DesktopChatPage, MobileChatPage };
