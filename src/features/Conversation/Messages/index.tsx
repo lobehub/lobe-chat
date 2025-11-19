@@ -197,7 +197,7 @@ const Item = memo<ChatListItemProps>(
     ] = useChatStore((s) => [
       s.toggleMessageEditing,
       s.deleteMessage,
-      s.regenerateMessage,
+      s.regenerateUserMessage,
       s.regenerateAssistantMessage,
       s.translateMessage,
       s.ttsMessage,
