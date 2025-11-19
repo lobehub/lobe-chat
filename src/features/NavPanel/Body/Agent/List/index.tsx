@@ -3,6 +3,8 @@
 import React, { memo } from 'react';
 
 import { useFetchSessions } from '@/hooks/useFetchSessions';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -13,6 +15,7 @@ import SessionList from './List';
 import { useAgentList } from './useAgentList';
 
 const AgentList = memo(() => {
+  const expand = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const isInit = useSessionStore(sessionSelectors.isSessionListInit);
   const { customList, pinnedList, defaultList } = useAgentList();
   const { openRenameGroupModal, openConfigGroupModal } = useAgentModal();
@@ -25,17 +28,19 @@ const AgentList = memo(() => {
   const showCustom = customList && customList.length > 0;
   const showDefault = defaultList && defaultList.length > 0;
 
+  const hideGroup = !expand && showPinned;
+
   return (
     <>
       {showPinned && <SessionList dataSource={pinnedList} />}
-      {showCustom && (
+      {!hideGroup && showCustom && (
         <Group
           dataSource={customList}
           openConfigGroupModal={openConfigGroupModal}
           openRenameGroupModal={openRenameGroupModal}
         />
       )}
-      {showDefault && <SessionList dataSource={defaultList || []} />}
+      {!hideGroup && showDefault && <SessionList dataSource={defaultList || []} />}
     </>
   );
 });
