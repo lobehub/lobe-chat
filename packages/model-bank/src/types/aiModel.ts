@@ -423,6 +423,7 @@ export interface EnabledAiModel {
   id: string;
   parameters?: ModelParamsSchema;
   providerId: string;
+  releasedAt?: string;
   settings?: AiModelSettings;
   sort?: number;
   type: AiModelType;
