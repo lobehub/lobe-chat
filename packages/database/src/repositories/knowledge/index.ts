@@ -181,20 +181,20 @@ export class KnowledgeRepo {
     showFilesInKnowledgeBase,
     parentId,
   }: QueryFileListParams = {}): ReturnType<typeof sql> {
-    let whereConditions: any[] = [sql`${files.userId} = ${this.userId}`];
+    let whereConditions: any[] = [sql`f.user_id = ${this.userId}`];
 
     // Parent ID filter
     if (parentId !== undefined) {
       if (parentId === null) {
-        whereConditions.push(sql`${files.parentId} IS NULL`);
+        whereConditions.push(sql`f.parent_id IS NULL`);
       } else {
-        whereConditions.push(sql`${files.parentId} = ${parentId}`);
+        whereConditions.push(sql`f.parent_id = ${parentId}`);
       }
     }
 
     // Search filter
     if (q) {
-      whereConditions.push(sql`${files.name} ILIKE ${`%${q}%`}`);
+      whereConditions.push(sql`f.name ILIKE ${`%${q}%`}`);
     }
 
     // Category filter
@@ -202,12 +202,10 @@ export class KnowledgeRepo {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
       if (Array.isArray(fileTypePrefix)) {
         // For multiple file types (e.g., Documents includes 'application' and 'custom')
-        const orConditions = fileTypePrefix.map(
-          (prefix) => sql`${files.fileType} ILIKE ${`${prefix}%`}`,
-        );
+        const orConditions = fileTypePrefix.map((prefix) => sql`f.file_type ILIKE ${`${prefix}%`}`);
         whereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
       } else {
-        whereConditions.push(sql`${files.fileType} ILIKE ${`${fileTypePrefix}%`}`);
+        whereConditions.push(sql`f.file_type ILIKE ${`${fileTypePrefix}%`}`);
       }
     }
 
@@ -245,7 +243,7 @@ export class KnowledgeRepo {
 
       return sql`
         SELECT
-          f.id,
+          COALESCE(d.id, f.id) as id,
           f.name,
           f.file_type,
           f.size,
@@ -254,14 +252,16 @@ export class KnowledgeRepo {
           f.updated_at,
           f.chunk_task_id,
           f.embedding_task_id,
-          NULL as editor_data,
-          NULL as content,
-          NULL as metadata,
+          d.editor_data,
+          d.content,
+          COALESCE(d.metadata, f.metadata) as metadata,
           'file' as source_type
         FROM ${files} f
         INNER JOIN ${knowledgeBaseFiles} kbf
           ON f.id = kbf.file_id
           AND kbf.knowledge_base_id = ${knowledgeBaseId}
+        LEFT JOIN ${documents} d
+          ON f.id = d.file_id
         WHERE ${sql.join(kbWhereConditions, sql` AND `)}
       `;
     }
@@ -272,7 +272,7 @@ export class KnowledgeRepo {
         sql`
           NOT EXISTS (
                     SELECT 1 FROM ${knowledgeBaseFiles}
-                    WHERE ${knowledgeBaseFiles.fileId} = ${files.id}
+                    WHERE ${knowledgeBaseFiles.fileId} = f.id
                   )
         `,
       );
@@ -280,20 +280,22 @@ export class KnowledgeRepo {
 
     return sql`
       SELECT
-        id,
-        name,
-        file_type,
-        size,
-        url,
-        created_at,
-        updated_at,
-        chunk_task_id,
-        embedding_task_id,
-        NULL as editor_data,
-        NULL as content,
-        NULL as metadata,
+        COALESCE(d.id, f.id) as id,
+        f.name,
+        f.file_type,
+        f.size,
+        f.url,
+        f.created_at,
+        f.updated_at,
+        f.chunk_task_id,
+        f.embedding_task_id,
+        d.editor_data,
+        d.content,
+        COALESCE(d.metadata, f.metadata) as metadata,
         'file' as source_type
-      FROM ${files}
+      FROM ${files} f
+      LEFT JOIN ${documents} d
+        ON f.id = d.file_id
       WHERE ${sql.join(whereConditions, sql` AND `)}
     `;
   }
@@ -423,28 +425,26 @@ export class KnowledgeRepo {
         }
       }
 
+      // When in a knowledge base, documents are only accessible via their linked files
+      // Documents with fileId are already returned by the file query via their linked file records
+      // Standalone documents (without fileId) cannot be associated with a knowledge base,
+      // so we return an empty result set
       return sql`
         SELECT
-          d.id,
-          COALESCE(d.title, d.filename, 'Untitled') as name,
-          d.file_type,
-          d.total_char_count as size,
-          d.source as url,
-          d.created_at,
-          d.updated_at,
-          NULL as chunk_task_id,
-          NULL as embedding_task_id,
-          d.editor_data,
-          d.content,
-          d.metadata,
-          'document' as source_type
-        FROM ${documents} d
-        INNER JOIN ${files} f
-          ON d.file_id = f.id
-        INNER JOIN ${knowledgeBaseFiles} kbf
-          ON f.id = kbf.file_id
-          AND kbf.knowledge_base_id = ${knowledgeBaseId}
-        WHERE ${sql.join(kbWhereConditions, sql` AND `)}
+          NULL::varchar(30) as id,
+          NULL::text as name,
+          NULL::varchar(255) as file_type,
+          NULL::integer as size,
+          NULL::text as url,
+          NULL::timestamp with time zone as created_at,
+          NULL::timestamp with time zone as updated_at,
+          NULL::uuid as chunk_task_id,
+          NULL::uuid as embedding_task_id,
+          NULL::jsonb as editor_data,
+          NULL::text as content,
+          NULL::jsonb as metadata,
+          NULL::text as source_type
+        WHERE false
       `;
     }
 
