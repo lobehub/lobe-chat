@@ -42,7 +42,6 @@ const nextConfig: NextConfig = {
     // so we need to disable it
     // refs: https://github.com/lobehub/lobe-chat/pull/7430
     serverMinification: false,
-    turbopackFileSystemCacheForDev: true,
     webVitalsAttribution: ['CLS', 'LCP'],
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,

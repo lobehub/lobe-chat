@@ -289,7 +289,7 @@ export const streamingExecutor: StateCreator<
 
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
-      (toolCalls: any[]) => {
+      (toolCalls: MessageToolCall[]) => {
         internal_dispatchMessage(
           {
             id: messageId,
@@ -366,7 +366,6 @@ export const streamingExecutor: StateCreator<
           throttledUpdateToolCalls.flush();
           internal_toggleToolCallingStreaming(messageId, undefined);
 
-          tools = get().internal_transformToolCalls(parsedToolCalls);
           tool_calls = toolCalls;
 
           parsedToolCalls = parsedToolCalls.map((item) => ({
@@ -376,6 +375,9 @@ export const streamingExecutor: StateCreator<
               arguments: !!item.function.arguments ? item.function.arguments : '{}',
             },
           }));
+          console.log('parsedToolCalls:', parsedToolCalls);
+
+          tools = get().internal_transformToolCalls(parsedToolCalls);
 
           isFunctionCall = true;
         }
@@ -395,7 +397,7 @@ export const streamingExecutor: StateCreator<
           messageId,
           content,
           {
-            toolCalls: parsedToolCalls,
+            tools,
             reasoning: !!reasoning
               ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
               : undefined,

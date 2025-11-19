@@ -232,6 +232,50 @@ describe('google contextBuilders', () => {
       });
     });
 
+    it('should correctly convert function call message with thoughtSignature', async () => {
+      const message = {
+        role: 'assistant',
+        tool_calls: [
+          {
+            function: {
+              arguments: JSON.stringify({
+                language: ['JSON'],
+                path: 'package.json',
+                query: '"version":',
+                repo: 'lobehub/lobe-chat',
+              }),
+              name: 'grep____searchGitHub____mcp',
+            },
+            id: 'grep____searchGitHub____mcp_0_6RnOMTF0',
+            thoughtSignature:
+              'EsUHCsIHAdHtim9/MrjP+pnhM8DVkvulyfWQVf+isXQxEAbF32gbflE1hl6Te80qtp77Ywn8opB2uhQOIH/l6SStsj3+XRy1U1DTeKtqZxDBoLP2rNK6pi3/nk0ZOQIc8f6rxB70G/zOhk7d/1XQFqhmw5H+yDVRQjGD1cNPY5ctWGxQLAIk/HMWNovUJzz2c81jGWoXu7k2vtpuur2hcAL+J79BEVUTfvU3mSiXqJFTClmFPB6Fe79i0y3TwM2XdIBxzPgVgf8B+Pnv1S6YDxHNSm46jTlXKcSw30r3ixs5xEOzerbOUW5WG9BGukw/YQVvHiuoGLIALRa2Ig7dlOMH8+o+f0mKJtyYj8yF6wyBMol+G4mhSHvQSKJLj/Z5kFHvDZKeVUEOZed6vZivYLrVezjQPXgLHJMOmbp6QrZGxqW45QxDKY5X5F8giIOM8VgsUYhDQUBown+3vvwkIBA24icDsOwdhJ/roe9GabbGfxpkSzARIFh7rSI01cRKbh6cEaVFXf2WQftPeD7dBseQLiCdUYoy4ytECrjTpknrWnVUG6Ly4SKW6uN/IJXpm9JT9GgnGLIddFtEQzm9sIKWNpGEz6++lZpiCFS6LsYSnTP3vPj/7oSABRmwWywxA8EmLh+sv+jiK5aMjFi1sTuJ0Ujsvza3/SHZKewNi9WKQUDOa9Mqtjs2YGDnJxto4l5GMUzI5vhf6/+/A5eHALfVabaFP97v8FEPrXQU94dognwx4EnNqy/KWmGIlYZYqIfjaSAy7Z74viwl+oTtL9gyyBDc/FrQvXfyrYIq8N0pkLKAEh33fa/+YVocLL1LKI9rb2bg/RRr+Ee4NyIQKhIdEJaEh74d1COd/4r06J92ThkfVo5PEVTSsr8tBKiJ5wSmX9vyhbLWzxmXoq1xfGrs8kg7NMW53XEWGlQrIVOQmUtjjjBQKj6b4rBTAO6EKk63cGFbkSPohifiUBPHbxUUPy/hf0tQpeOo3jA01AuCFLOIZ5IYJ+Rm5+aZTU3Panv+Q7Yl1w5t5swhbNZfg7MlU/sxwLijLuWDDNfw+2Zw/aa3VDPgVw6Nv2vKkHi4tUU0XlgfiQgQYUMPxpGRV837uUxvZFNep2QUlAMog5h4sMYJWIAX1kK1pzsyR/KxuCn6nUq4ovWNBQHLC4aW2ZcGgW/6CbF81F1cewUz+vWNMMkJrL0d9celGEbFuY0Q709UipaDbCg49twlnLV9XUwqC5wYTFBiJbynBDqiZAvXn2YOxNIs8CCzuu2GSCQDo09ksJy5g/o=',
+            type: 'function',
+          },
+        ],
+      } as OpenAIChatMessage;
+
+      const converted = await buildGoogleMessage(message);
+
+      expect(converted).toEqual({
+        parts: [
+          {
+            functionCall: {
+              args: {
+                language: ['JSON'],
+                path: 'package.json',
+                query: '"version":',
+                repo: 'lobehub/lobe-chat',
+              },
+              name: 'grep____searchGitHub____mcp',
+            },
+            thoughtSignature:
+              'EsUHCsIHAdHtim9/MrjP+pnhM8DVkvulyfWQVf+isXQxEAbF32gbflE1hl6Te80qtp77Ywn8opB2uhQOIH/l6SStsj3+XRy1U1DTeKtqZxDBoLP2rNK6pi3/nk0ZOQIc8f6rxB70G/zOhk7d/1XQFqhmw5H+yDVRQjGD1cNPY5ctWGxQLAIk/HMWNovUJzz2c81jGWoXu7k2vtpuur2hcAL+J79BEVUTfvU3mSiXqJFTClmFPB6Fe79i0y3TwM2XdIBxzPgVgf8B+Pnv1S6YDxHNSm46jTlXKcSw30r3ixs5xEOzerbOUW5WG9BGukw/YQVvHiuoGLIALRa2Ig7dlOMH8+o+f0mKJtyYj8yF6wyBMol+G4mhSHvQSKJLj/Z5kFHvDZKeVUEOZed6vZivYLrVezjQPXgLHJMOmbp6QrZGxqW45QxDKY5X5F8giIOM8VgsUYhDQUBown+3vvwkIBA24icDsOwdhJ/roe9GabbGfxpkSzARIFh7rSI01cRKbh6cEaVFXf2WQftPeD7dBseQLiCdUYoy4ytECrjTpknrWnVUG6Ly4SKW6uN/IJXpm9JT9GgnGLIddFtEQzm9sIKWNpGEz6++lZpiCFS6LsYSnTP3vPj/7oSABRmwWywxA8EmLh+sv+jiK5aMjFi1sTuJ0Ujsvza3/SHZKewNi9WKQUDOa9Mqtjs2YGDnJxto4l5GMUzI5vhf6/+/A5eHALfVabaFP97v8FEPrXQU94dognwx4EnNqy/KWmGIlYZYqIfjaSAy7Z74viwl+oTtL9gyyBDc/FrQvXfyrYIq8N0pkLKAEh33fa/+YVocLL1LKI9rb2bg/RRr+Ee4NyIQKhIdEJaEh74d1COd/4r06J92ThkfVo5PEVTSsr8tBKiJ5wSmX9vyhbLWzxmXoq1xfGrs8kg7NMW53XEWGlQrIVOQmUtjjjBQKj6b4rBTAO6EKk63cGFbkSPohifiUBPHbxUUPy/hf0tQpeOo3jA01AuCFLOIZ5IYJ+Rm5+aZTU3Panv+Q7Yl1w5t5swhbNZfg7MlU/sxwLijLuWDDNfw+2Zw/aa3VDPgVw6Nv2vKkHi4tUU0XlgfiQgQYUMPxpGRV837uUxvZFNep2QUlAMog5h4sMYJWIAX1kK1pzsyR/KxuCn6nUq4ovWNBQHLC4aW2ZcGgW/6CbF81F1cewUz+vWNMMkJrL0d9celGEbFuY0Q709UipaDbCg49twlnLV9XUwqC5wYTFBiJbynBDqiZAvXn2YOxNIs8CCzuu2GSCQDo09ksJy5g/o=',
+          },
+        ],
+        role: 'model',
+      });
+    });
+
     it('should correctly handle empty content', async () => {
       const message: OpenAIChatMessage = {
         content: '' as any, // explicitly set as empty string
@@ -408,6 +452,74 @@ describe('google contextBuilders', () => {
       expect(contents).toEqual([
         { parts: [{ text: 'Hello' }], role: 'user' },
         { parts: [{ text: 'Hi' }], role: 'model' },
+      ]);
+    });
+
+    it('should correctly convert full conversation with thoughtSignature', async () => {
+      const messages: OpenAIChatMessage[] = [
+        { content: 'system prompt', role: 'system' },
+        { content: 'LobeChat 最新版本', role: 'user' },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments: JSON.stringify({
+                  language: ['JSON'],
+                  path: 'package.json',
+                  query: '"version":',
+                  repo: 'lobehub/lobe-chat',
+                }),
+                name: 'grep____searchGitHub____mcp',
+              },
+              id: 'grep____searchGitHub____mcp_0_6RnOMTF0',
+              thoughtSignature: 'test-signature',
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: '',
+          name: 'grep____searchGitHub____mcp',
+          role: 'tool',
+          tool_call_id: 'grep____searchGitHub____mcp_0_6RnOMTF0',
+        },
+      ];
+
+      const contents = await buildGoogleMessages(messages);
+
+      expect(contents).toEqual([
+        { parts: [{ text: 'system prompt' }], role: 'user' },
+        { parts: [{ text: 'LobeChat 最新版本' }], role: 'user' },
+        {
+          parts: [
+            {
+              functionCall: {
+                args: {
+                  language: ['JSON'],
+                  path: 'package.json',
+                  query: '"version":',
+                  repo: 'lobehub/lobe-chat',
+                },
+                name: 'grep____searchGitHub____mcp',
+              },
+              thoughtSignature: 'test-signature',
+            },
+          ],
+          role: 'model',
+        },
+        {
+          parts: [
+            {
+              functionResponse: {
+                name: 'grep____searchGitHub____mcp',
+                response: { result: '' },
+              },
+            },
+          ],
+          role: 'user',
+        },
       ]);
     });
   });

@@ -95,6 +95,7 @@ export const buildGoogleMessage = async (
           args: safeParseJSON(tool.function.arguments)!,
           name: tool.function.name,
         },
+        ...(tool.thoughtSignature && { thoughtSignature: tool.thoughtSignature }),
       })),
       role: 'model',
     };
