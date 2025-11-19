@@ -3,6 +3,7 @@
 import { useResponsive } from 'antd-style';
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Outlet } from 'react-router-dom';
 import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/features/Setting/Footer';
@@ -13,7 +14,7 @@ import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
-const Layout = memo<LayoutProps>(({ children, category }) => {
+const Layout = memo<Omit<LayoutProps, 'children'>>(({ category }) => {
   const ref = useRef<any>(null);
   const { md = true } = useResponsive();
   const { t } = useTranslation('auth');
@@ -41,7 +42,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
             paddingInline: 32,
           }}
         >
-          {children}
+          <Outlet />
         </SettingContainer>
       </Flexbox>
   );

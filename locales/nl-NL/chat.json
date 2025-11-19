@@ -17,6 +17,7 @@
   "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
   "chatList": {
+    "expandMessage": "Bericht uitvouwen",
     "longMessageDetail": "Bekijk details"
   },
   "clearCurrentMessages": "Huidige berichten wissen",
@@ -173,9 +174,11 @@
     "title": "Leden vermelden"
   },
   "messageAction": {
+    "collapse": "Bericht samenvouwen",
     "continueGeneration": "Doorgaan met genereren",
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
+    "expand": "Bericht uitvouwen",
     "regenerate": "Opnieuw genereren"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "Screenshot",
     "settings": "Exportinstellingen",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Breedtemodus",
+      "narrow": "Smalle schermmodus",
+      "wide": "Brede schermmodus"
+    },
     "withBackground": "Met achtergrondafbeelding",
     "withFooter": "Met voettekst",
     "withPluginInfo": "Met plug-in informatie",
@@ -383,6 +391,8 @@
         "manualDesc": "Handmatige goedkeuring vereist bij elke oproep"
       },
       "reject": "Weigeren",
+      "rejectAndContinue": "Weigeren en opnieuw proberen",
+      "rejectOnly": "Weigeren",
       "rejectReasonPlaceholder": "Het opgeven van een reden helpt de agent om toekomstige acties te verbeteren",
       "rejectTitle": "Huidige tooloproep weigeren",
       "rejectedWithReason": "Deze tooloproep is geweigerd met reden: {{reason}}",

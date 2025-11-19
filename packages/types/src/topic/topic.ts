@@ -1,6 +1,6 @@
-import { BaseDataModel } from '@/types/meta';
+import type { BaseDataModel } from '../meta';
 
-// 类型定义
+// Type definitions
 export type TimeGroupId =
   | 'today'
   | 'yesterday'

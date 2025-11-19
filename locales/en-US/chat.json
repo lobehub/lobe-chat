@@ -17,6 +17,7 @@
   "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
   "chatList": {
+    "expandMessage": "Expand Message",
     "longMessageDetail": "View Details"
   },
   "clearCurrentMessages": "Clear current session messages",
@@ -173,9 +174,11 @@
     "title": "Mention Members"
   },
   "messageAction": {
+    "collapse": "Collapse Message",
     "continueGeneration": "Continue Generating",
     "delAndRegenerate": "Delete and Regenerate",
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
+    "expand": "Expand Message",
     "regenerate": "Regenerate"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "Screenshot",
     "settings": "Export Settings",
     "text": "Text",
+    "widthMode": {
+      "label": "Width Mode",
+      "narrow": "Narrow",
+      "wide": "Wide"
+    },
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
@@ -383,6 +391,8 @@
         "manualDesc": "Manual approval required for each invocation"
       },
       "reject": "Reject",
+      "rejectAndContinue": "Reject and Retry",
+      "rejectOnly": "Reject",
       "rejectReasonPlaceholder": "Providing a reason will help the Agent understand and improve future actions",
       "rejectTitle": "Reject This Tool Invocation",
       "rejectedWithReason": "This tool invocation was actively rejected: {{reason}}",

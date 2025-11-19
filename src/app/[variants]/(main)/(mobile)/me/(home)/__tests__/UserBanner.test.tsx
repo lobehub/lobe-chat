@@ -6,10 +6,12 @@ import { useUserStore } from '@/store/user';
 import UserBanner from '../features/UserBanner';
 
 // Mock dependencies
-vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', () => ({
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to}>{children}</a>
+  ),
+  useNavigate: () => mockNavigate,
 }));
 
 vi.mock('@/features/User/UserInfo', () => ({
@@ -45,6 +47,7 @@ vi.mock('@/const/auth', () => ({
 
 afterEach(() => {
   enableAuth = true;
+  mockNavigate.mockReset();
 });
 
 describe('UserBanner', () => {

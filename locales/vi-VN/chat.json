@@ -17,6 +17,7 @@
   "availableAgents": "Trợ lý có sẵn",
   "backToBottom": "Quay về dưới cùng",
   "chatList": {
+    "expandMessage": "Mở rộng tin nhắn",
     "longMessageDetail": "Xem chi tiết"
   },
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
@@ -173,9 +174,11 @@
     "title": "Nhắc đến thành viên"
   },
   "messageAction": {
+    "collapse": "Thu gọn tin nhắn",
     "continueGeneration": "Tiếp tục tạo",
     "delAndRegenerate": "Xóa và tạo lại",
     "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
+    "expand": "Mở rộng tin nhắn",
     "regenerate": "Tạo lại"
   },
   "messages": {
@@ -327,6 +330,11 @@
     "screenshot": "Ảnh chụp màn hình",
     "settings": "Cài đặt xuất",
     "text": "Văn bản",
+    "widthMode": {
+      "label": "Chế độ chiều rộng",
+      "narrow": "Chế độ màn hình hẹp",
+      "wide": "Chế độ màn hình rộng"
+    },
     "withBackground": "Bao gồm hình nền",
     "withFooter": "Bao gồm chân trang",
     "withPluginInfo": "Bao gồm thông tin plugin",
@@ -383,6 +391,8 @@
         "manualDesc": "Mỗi lần gọi đều cần phê duyệt thủ công"
       },
       "reject": "Từ chối",
+      "rejectAndContinue": "Từ chối và thử lại",
+      "rejectOnly": "Từ chối",
       "rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
       "rejectTitle": "Từ chối lần gọi công cụ này",
       "rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",

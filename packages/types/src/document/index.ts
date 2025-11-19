@@ -11,6 +11,8 @@ export interface LobeDocument {
    */
   createdAt: Date;
 
+  editorData: Record<string, any> | null;
+
   /**
    * File type or extension
    */
@@ -52,6 +54,11 @@ export interface LobeDocument {
    * Full path of the original file
    */
   source: string;
+
+  /**
+   * Document source type
+   */
+  sourceType: DocumentSourceType;
 
   /**
    * Document title (if available)
@@ -161,7 +168,12 @@ export enum DocumentSourceType {
   API = 'api',
 
   /**
-   * Local or uploaded files
+   * Document created in editor
+   */
+  EDITOR = 'editor',
+
+  /**
+   * Local or uploaded file
    */
   FILE = 'file',
 

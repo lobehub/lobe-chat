@@ -1,4 +1,4 @@
-import { isDesktop, isServerMode } from '@lobechat/const';
+import { isDesktop } from '@lobechat/const';
 import { parseDataUri } from '@lobechat/model-runtime';
 import { uuid } from '@lobechat/utils';
 import dayjs from 'dayjs';
@@ -7,7 +7,6 @@ import { sha256 } from 'js-sha256';
 import { fileEnv } from '@/envs/file';
 import { lambdaClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
-import { clientS3Storage } from '@/services/file/ClientS3';
 import { FileMetadata, UploadBase64ToS3Result } from '@/types/files';
 import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
 
@@ -60,7 +59,7 @@ class UploadService {
    */
   uploadFileToS3 = async (
     file: File,
-    { onProgress, directory, skipCheckFileType, onNotSupported, pathname }: UploadFileToS3Options,
+    { onProgress, directory, pathname }: UploadFileToS3Options,
   ): Promise<{ data: FileMetadata; success: boolean }> => {
     const { getElectronStoreState } = await import('@/store/electron');
     const { electronSyncSelectors } = await import('@/store/electron/selectors');
@@ -75,27 +74,10 @@ class UploadService {
     }
 
     // Server-side upload logic
-    if (isServerMode) {
-      // if is server mode, upload to server s3,
 
-      const data = await this.uploadToServerS3(file, { directory, onProgress, pathname });
-      return { data, success: true };
-    }
+    // if is server mode, upload to server s3,
 
-    // upload to client s3
-    // Client-side upload logic
-    if (!skipCheckFileType && !file.type.startsWith('image') && !file.type.startsWith('video')) {
-      onNotSupported?.();
-      return { data: undefined as unknown as FileMetadata, success: false };
-    }
-
-    const fileArrayBuffer = await file.arrayBuffer();
-
-    // 1. check file hash
-    const hash = sha256(fileArrayBuffer);
-    // Upload to the indexeddb in the browser
-    const data = await this.uploadToClientS3(hash, file);
-
+    const data = await this.uploadToServerS3(file, { directory, onProgress, pathname });
     return { data, success: true };
   };
 
@@ -227,17 +209,6 @@ class UploadService {
     const { desktopFileAPI } = await import('@/services/electron/file');
     const { metadata } = await desktopFileAPI.uploadFile(file, hash, pathname);
     return metadata;
-  };
-
-  private uploadToClientS3 = async (hash: string, file: File): Promise<FileMetadata> => {
-    await clientS3Storage.putObject(hash, file);
-
-    return {
-      date: (Date.now() / 1000 / 60 / 60).toFixed(0),
-      dirname: '',
-      filename: file.name,
-      path: `client-s3://${hash}`,
-    };
   };
 
   /**

@@ -1,13 +1,23 @@
+import { ToolIntervention } from '@lobechat/types';
 import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Ban, Check, LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, X } from 'lucide-react';
-import { CSSProperties, memo, useState } from 'react';
+import {
+  Ban,
+  Check,
+  LayoutPanelTop,
+  LogsIcon,
+  LucideBug,
+  LucideBugOff,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
+import { useChatStore } from '@/store/chat';
 import { shinyTextStylish } from '@/styles/loading';
-import { ToolIntervention } from '@/types/message';
 
 import Debug from './Debug';
 import Settings from './Settings';
@@ -63,12 +73,12 @@ export const useStyles = createStyles(({ css, token, cx }) => ({
 interface InspectorProps {
   apiName: string;
   arguments?: string;
+  assistantMessageId: string;
   hidePluginUI?: boolean;
   id: string;
   identifier: string;
   index: number;
   intervention?: ToolIntervention;
-  messageId: string;
   result?: { content: string | null; error?: any; state?: any };
   setShowPluginRender: (show: boolean) => void;
   setShowRender: (show: boolean) => void;
@@ -81,13 +91,12 @@ interface InspectorProps {
 
 const Inspectors = memo<InspectorProps>(
   ({
-    messageId,
+    assistantMessageId,
     index,
     identifier,
     apiName,
     id,
     arguments: requestArgs,
-    showRender,
     result,
     setShowRender,
     showPluginRender,
@@ -99,6 +108,10 @@ const Inspectors = memo<InspectorProps>(
     const { styles, theme } = useStyles();
 
     const [showDebug, setShowDebug] = useState(false);
+    const [isPinned, setIsPinned] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const [deleteAssistantMessage] = useChatStore((s) => [s.deleteAssistantMessage]);
 
     const hasError = !!result?.error;
     const hasSuccessResult = !!result?.content && result.content !== LOADING_FLAT;
@@ -106,10 +119,18 @@ const Inspectors = memo<InspectorProps>(
     const hasResult = hasSuccessResult || hasError;
 
     const isPending = intervention?.status === 'pending';
-    const isReject = intervention?.status === 'rejected';
+    const isReject = intervention?.status === 'rejected' || intervention?.status === 'aborted';
     const isTitleLoading = !hasResult && !isPending;
 
-    const showCustomPluginRender = showRender && !isPending && !isReject;
+    // Compute actual render state based on pinned or hovered
+    const shouldShowRender = isPinned || isHovered;
+
+    // Sync with parent state
+    useEffect(() => {
+      setShowRender(shouldShowRender);
+    }, [shouldShowRender, setShowRender]);
+
+    const showCustomPluginRender = shouldShowRender && !isPending && !isReject;
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -119,7 +140,17 @@ const Inspectors = memo<InspectorProps>(
             gap={8}
             horizontal
             onClick={() => {
-              setShowRender(!showRender);
+              setIsPinned(!isPinned);
+            }}
+            onMouseEnter={() => {
+              if (!isPinned) {
+                setIsHovered(true);
+              }
+            }}
+            onMouseLeave={() => {
+              if (!isPinned) {
+                setIsHovered(false);
+              }
             }}
             paddingInline={4}
           >
@@ -128,7 +159,7 @@ const Inspectors = memo<InspectorProps>(
               identifier={identifier}
               index={index}
               isLoading={isTitleLoading}
-              messageId={messageId}
+              messageId={assistantMessageId}
               toolCallId={id}
             />
           </Flexbox>
@@ -152,6 +183,15 @@ const Inspectors = memo<InspectorProps>(
                 size={'small'}
                 title={t(showDebug ? 'debug.off' : 'debug.on')}
               />
+              <ActionIcon
+                icon={Trash2}
+                onClick={() => {
+                  deleteAssistantMessage(assistantMessageId);
+                }}
+                size={'small'}
+                title={t('inspector.delete')}
+              />
+
               <Settings id={identifier} />
             </Flexbox>
             {hasResult && (

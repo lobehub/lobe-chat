@@ -15,8 +15,22 @@ export default {
     prompt: '提示词',
   },
   localFiles: {
+    editFile: {
+      newString: '替换为',
+      oldString: '查找内容',
+      replaceAll: '替换全部匹配项',
+      replaceFirst: '仅替换第一个匹配项',
+    },
     file: '文件',
     folder: '文件夹',
+    moveFiles: {
+      itemsMoved: '已移动 {{count}} 个项目：',
+      itemsMoved_one: '已移动 {{count}} 个项目：',
+      itemsMoved_other: '已移动 {{count}} 个项目：',
+      itemsToMove: '{{count}} 个项目待移动：',
+      itemsToMove_one: '{{count}} 个项目待移动：',
+      itemsToMove_other: '{{count}} 个项目待移动：',
+    },
     open: '打开',
     openFile: '打开文件',
     openFolder: '打开文件夹',
@@ -27,6 +41,11 @@ export default {
     readFileError: '读取文件失败，请检查文件路径是否正确',
     readFiles: '读取文件',
     readFilesError: '读取文件失败，请检查文件路径是否正确',
+    writeFile: {
+      characters: '字符',
+      preview: '内容预览',
+      truncated: '已截断',
+    },
   },
   search: {
     createNewSearch: '创建新的搜索记录',

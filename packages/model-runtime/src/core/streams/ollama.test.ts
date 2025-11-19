@@ -235,6 +235,73 @@ describe('OllamaStream', () => {
       expect(onToolCall).toHaveBeenCalledTimes(1);
       expect(onCompletionMock).toHaveBeenCalledTimes(1);
     });
+
+    it('tools use with a done', async () => {
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1').mockReturnValueOnce('abcd1234');
+
+      const mockOllamaStream = new ReadableStream<ChatResponse>({
+        start(controller) {
+          controller.enqueue({
+            model: 'qwen2.5',
+            created_at: new Date('2024-12-01T03:34:55.166692Z'),
+            message: {
+              role: 'assistant',
+              content: '',
+              tool_calls: [
+                {
+                  function: {
+                    name: 'realtime-weather____fetchCurrentWeather',
+                    arguments: { city: '杭州' },
+                  },
+                },
+              ],
+            },
+            done_reason: 'stop',
+            done: true,
+            total_duration: 1122415333,
+            load_duration: 26178333,
+            prompt_eval_count: 221,
+            prompt_eval_duration: 507000000,
+            eval_count: 26,
+            eval_duration: 583000000,
+          } as unknown as ChatResponse);
+
+          controller.close();
+        },
+      });
+      const onStartMock = vi.fn();
+      const onTextMock = vi.fn();
+      const onToolCall = vi.fn();
+      const onCompletionMock = vi.fn();
+
+      const protocolStream = OllamaStream(mockOllamaStream, {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onCompletion: onCompletionMock,
+        onToolsCalling: onToolCall,
+      });
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: chat_1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0_abcd1234","index":0,"type":"function"}]\n`,
+        ].map((i) => `${i}\n`),
+      );
+
+      expect(onTextMock).toHaveBeenCalledTimes(0);
+      expect(onStartMock).toHaveBeenCalledTimes(1);
+      expect(onToolCall).toHaveBeenCalledTimes(1);
+      expect(onCompletionMock).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('should handle empty stream', async () => {

@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 là mô hình suy luận chú ý hỗn hợp quy mô lớn với trọng số mã nguồn mở, sở hữu 456 tỷ 600 triệu tham số, mỗi Token có thể kích hoạt khoảng 45,9 tỷ tham số. Mô hình hỗ trợ ngữ cảnh siêu dài lên đến 1 triệu Token một cách nguyên bản, và thông qua cơ chế chú ý chớp nhoáng, trong các tác vụ sinh 100.000 Token tiết kiệm 75% lượng phép tính dấu chấm động so với DeepSeek R1. Đồng thời, MiniMax-M1 áp dụng kiến trúc MoE (chuyên gia hỗn hợp), kết hợp thuật toán CISPO và thiết kế chú ý hỗn hợp trong huấn luyện tăng cường hiệu quả, đạt hiệu suất hàng đầu trong ngành khi suy luận đầu vào dài và các kịch bản kỹ thuật phần mềm thực tế."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 tái định nghĩa hiệu suất cho các tác nhân AI. Đây là một mô hình MoE nhỏ gọn, nhanh chóng và tiết kiệm chi phí, với tổng số 230 tỷ tham số và 10 tỷ tham số kích hoạt, được thiết kế để đạt hiệu năng hàng đầu trong các tác vụ mã hóa và tác nhân, đồng thời duy trì trí tuệ nhân tạo tổng quát mạnh mẽ. Chỉ với 10 tỷ tham số kích hoạt, MiniMax-M2 có thể mang lại hiệu suất tương đương với các mô hình quy mô lớn, khiến nó trở thành lựa chọn lý tưởng cho các ứng dụng hiệu suất cao."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Tổng tham số 1T, tham số kích hoạt 32B. Trong các mô hình không suy nghĩ, đạt trình độ hàng đầu về kiến thức tiên tiến, toán học và lập trình, đặc biệt phù hợp với các tác vụ đại lý chung. Được tối ưu kỹ lưỡng cho tác vụ đại lý, không chỉ trả lời câu hỏi mà còn có thể thực hiện hành động. Phù hợp nhất cho trò chuyện ứng biến, trải nghiệm đại lý chung, là mô hình phản xạ không cần suy nghĩ lâu."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 đã cải thiện đáng kể khả năng suy luận của mô hình ngay cả khi có rất ít dữ liệu gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời cuối."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B là biến thể chưng cất và hiệu quả hơn của mô hình Llama 70B. Nó duy trì hiệu suất mạnh mẽ trong các nhiệm vụ tạo văn bản, giảm chi phí tính toán để dễ dàng triển khai và nghiên cứu. Được Groq phục vụ bằng phần cứng đơn vị xử lý ngôn ngữ (LPU) tùy chỉnh để cung cấp suy luận nhanh và hiệu quả."
+    "description": "DeepSeek R1 Distill Llama 70B là một mô hình ngôn ngữ lớn dựa trên Llama3.3 70B, được tinh chỉnh bằng đầu ra từ DeepSeek R1, mang lại hiệu suất cạnh tranh tương đương với các mô hình tiên tiến quy mô lớn."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B là một mô hình ngôn ngữ lớn đã được tinh chế dựa trên Llama-3.1-8B-Instruct, được đào tạo bằng cách sử dụng đầu ra từ DeepSeek R1."
@@ -1853,6 +1856,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu sắc hơn và liên tục cung cấp các câu trả lời tốt hơn."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 — Mô hình hàng đầu được tối ưu hóa cho các tác vụ lập trình và agent, hỗ trợ cường độ suy luận có thể cấu hình và ngữ cảnh dài hơn."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: Biến thể GPT-5.1 dành cho ChatGPT, phù hợp với các tình huống trò chuyện."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: Phiên bản GPT-5.1 được tối ưu hóa cho các tác vụ lập trình mang tính agent, có thể sử dụng trong Responses API cho các quy trình làm việc mã hóa/đại lý phức tạp hơn."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: Biến thể Codex nhỏ gọn hơn và tiết kiệm chi phí hơn, được tối ưu hóa cho các tác vụ lập trình mang tính agent."
+  },
   "gpt-audio": {
     "description": "GPT Audio là mô hình trò chuyện chung hỗ trợ đầu vào và đầu ra âm thanh, có thể sử dụng âm thanh I/O trong API Chat Completions."
   },
@@ -2028,13 +2043,13 @@
     "description": "Dòng mô hình Imagen thế hệ thứ tư chuyển văn bản thành hình ảnh"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
+    "description": "Dòng mô hình tạo hình ảnh từ văn bản thế hệ thứ tư của Imagen"
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen thế hệ thứ 4, dòng mô hình chuyển văn bản sang hình ảnh — phiên bản Ultra"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
+    "description": "Phiên bản Ultra của dòng mô hình tạo hình ảnh từ văn bản thế hệ thứ tư của Imagen"
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small là lựa chọn lý tưởng cho các nhiệm vụ tạo mã, gỡ lỗi và tái cấu trúc với độ trễ tối thiểu."
@@ -2212,6 +2227,9 @@
   },
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct là mô hình hiệu quả với số lượng tham số nhỏ do Wuwen Xinqiong phát triển."
+  },
+  "meituan/longcat-flash-chat": {
+    "description": "Longcat Flash Chat là mô hình nền không tư duy do Meituan mã nguồn mở, được tối ưu hóa cho tương tác hội thoại và nhiệm vụ của tác nhân, nổi bật trong việc gọi công cụ và các tình huống tương tác nhiều vòng phức tạp."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Mô hình 70 tỷ tham số mạnh mẽ, xuất sắc trong lý luận, lập trình và các ứng dụng ngôn ngữ rộng lớn."
@@ -2443,6 +2461,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 là một mô hình ngôn ngữ lớn hiệu quả, được xây dựng dành riêng cho quy trình làm việc liên quan đến lập trình và tác vụ đại lý."
+  },
+  "minimax/minimax-m2": {
+    "description": "Được sinh ra để phục vụ mã hóa hiệu quả và quy trình làm việc của Agent."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 là một mô hình chuyên gia hỗn hợp (MoE) nhỏ gọn, nhanh chóng và tiết kiệm chi phí, với tổng số 230 tỷ tham số và 10 tỷ tham số kích hoạt, được thiết kế để đạt hiệu suất hàng đầu trong các tác vụ mã hóa và tác nhân, đồng thời duy trì trí tuệ nhân tạo tổng quát mạnh mẽ. Mô hình này thể hiện xuất sắc trong chỉnh sửa nhiều tệp, vòng lặp mã hóa-chạy-sửa lỗi, kiểm thử và sửa lỗi, cũng như các chuỗi công cụ liên kết dài phức tạp, là lựa chọn lý tưởng cho quy trình làm việc của nhà phát triển."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B là mô hình hàng đầu thế giới của Mistral về hiệu suất cạnh biên."
@@ -2774,6 +2798,54 @@
   "pro-deepseek-v3": {
     "description": "Mô hình chuyên dụng cho dịch vụ doanh nghiệp, hỗ trợ dịch vụ đồng thời."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, mô hình tiếng Trung với tham số lớn, phù hợp cho việc tạo nội dung chất lượng cao và các nhiệm vụ suy luận phức tạp."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, mô hình đa năng cỡ trung, cân bằng giữa chi phí và hiệu quả trong tạo văn bản và hỏi đáp."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, mô hình nhận diện ý định và điều phối tác tử, hỗ trợ ngữ cảnh dài."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, mô hình tác tử nhẹ, phù hợp cho hội thoại đa lượt chi phí thấp và điều phối nghiệp vụ."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, mô hình tác tử kiểm soát lưu lượng cao, thích hợp cho ứng dụng Agent quy mô lớn và đa nhiệm."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, mô hình tác tử hiệu suất cao cho hội thoại ngắn và phản hồi nhanh với khả năng xử lý đồng thời cao."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, mô hình kiểm duyệt và phát hiện nội dung đa phương tiện, hỗ trợ kiểm tra tuân thủ và nhận diện hình ảnh-văn bản."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, mô hình sáng tạo đa phương tiện, hỗ trợ hiểu và tạo nội dung kết hợp hình ảnh và văn bản."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, mô hình nhận diện đa phương tiện chuyên biệt cho ngữ cảnh tiếng Anh."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, mô hình tiếng Trung hiệu suất cao, phù hợp cho hỏi đáp phức tạp và suy luận quy mô lớn."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, mô hình đa phương tiện dựa trên Llama, hướng đến nhiệm vụ hiểu hình ảnh-văn bản tổng quát."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, mô hình OCR cho nhiều hình ảnh, hỗ trợ phát hiện và nhận diện văn bản từ nhiều ảnh."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, mô hình hỏi đáp đa phương tiện, hỗ trợ truy xuất và trả lời chính xác trong các ngữ cảnh hình ảnh-văn bản phức tạp."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, mô hình OCR cho một hình ảnh, hỗ trợ nhận diện ký tự với độ chính xác cao."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, mô hình ngôn ngữ thị giác với tham số lớn, phù hợp cho các tình huống hiểu hình ảnh-văn bản phức tạp."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, mô hình ngôn ngữ thị giác nhẹ, thích hợp cho hỏi đáp và phân tích hình ảnh-văn bản hàng ngày."
+  },
   "qvq-72b-preview": {
     "description": "Mô hình QVQ là mô hình nghiên cứu thử nghiệm do đội ngũ Qwen phát triển, tập trung vào việc nâng cao khả năng suy luận hình ảnh, đặc biệt trong lĩnh vực suy luận toán học."
   },
@@ -2924,7 +2996,9 @@
   "qwen2.5-72b-instruct": {
     "description": "Mô hình 72B quy mô mở nguồn của Qwen 2.5."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, mô hình chỉ dẫn mã nguồn mở trưởng thành, phù hợp cho hội thoại và tạo nội dung trong nhiều ngữ cảnh."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
   },
@@ -2955,11 +3029,15 @@
   "qwen2.5-omni-7b": {
     "description": "Mô hình Qwen-Omni hỗ trợ đầu vào từ nhiều loại dữ liệu khác nhau, bao gồm video, âm thanh, hình ảnh và văn bản, và xuất ra âm thanh và văn bản."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, mô hình đa phương tiện mã nguồn mở, thích hợp cho triển khai riêng tư và ứng dụng đa ngữ cảnh."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Nâng cao khả năng theo dõi lệnh, toán học, giải quyết vấn đề, mã hóa, nâng cao khả năng nhận diện mọi thứ, hỗ trợ định vị chính xác các yếu tố thị giác từ nhiều định dạng khác nhau, hỗ trợ hiểu và định vị thời gian sự kiện trong các tệp video dài (tối đa 10 phút), có khả năng hiểu thứ tự thời gian và tốc độ, hỗ trợ điều khiển Agent trên OS hoặc Mobile dựa trên khả năng phân tích và định vị, khả năng trích xuất thông tin quan trọng và xuất định dạng Json mạnh mẽ, phiên bản này là phiên bản 72B, phiên bản mạnh nhất trong dòng sản phẩm này."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, mô hình đa phương tiện nhẹ, cân bằng giữa chi phí triển khai và khả năng nhận diện."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL là phiên bản mới nhất của mô hình ngôn ngữ và hình ảnh trong gia đình mô hình Qwen."
   },
@@ -2984,22 +3062,48 @@
   "qwen3": {
     "description": "Qwen3 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, mô hình cấp nhập môn, phù hợp cho suy luận đơn giản và môi trường tài nguyên cực kỳ hạn chế."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, mô hình siêu nhẹ, dễ dàng triển khai tại biên và thiết bị đầu cuối."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, mô hình cỡ trung, phù hợp cho hỏi đáp đa ngôn ngữ và tạo văn bản."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, mô hình lớn đa năng, hướng đến nhiều nhiệm vụ phức tạp."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, mô hình chỉ dẫn hàng đầu đa năng, phù hợp cho nhiều nhiệm vụ tạo nội dung và suy luận."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, mô hình tư duy quy mô siêu lớn, thích hợp cho suy luận độ khó cao."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, mô hình đa năng cỡ trung-lớn, cân bằng giữa chi phí và hiệu quả."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, mô hình chỉ dẫn cỡ trung-lớn, phù hợp cho tạo nội dung chất lượng cao và hỏi đáp."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, mô hình tư duy cỡ trung-lớn, cân bằng giữa độ chính xác và chi phí."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, phù hợp cho các nhiệm vụ đa năng yêu cầu khả năng hiểu sâu hơn."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, phù hợp cho ứng dụng vừa và nhỏ và các tình huống suy luận cục bộ."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, mô hình nhẹ, triển khai linh hoạt, phù hợp cho các nghiệp vụ có tần suất cao."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã hóa Tongyi Qianwen. Mô hình qwen3-coder-30b-a3b-instruct mới nhất được phát triển dựa trên Qwen3, có khả năng hoạt động như một Tác nhân Lập trình mạnh mẽ, thành thạo trong việc gọi công cụ và tương tác môi trường, hỗ trợ lập trình tự động với năng lực mã hóa xuất sắc và khả năng tổng quát cao."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, mô hình mã hóa hàng đầu, hỗ trợ lập trình đa ngôn ngữ và hiểu mã phức tạp."
+  },
   "qwen3-coder-flash": {
     "description": "Mô hình mã nguồn của Thông Nghĩa Thiên Vấn. Bộ mô hình Qwen3-Coder mới nhất dựa trên Qwen3 là mô hình tạo mã, có khả năng Coding Agent mạnh mẽ, thành thạo gọi công cụ và tương tác môi trường, có thể tự lập trình, vừa xuất sắc về năng lực mã hóa vừa có khả năng tổng quát."
   },
@@ -3012,19 +3116,42 @@
   "qwen3-max": {
     "description": "Dòng mô hình Max của Tongyi Qianwen 3, so với dòng 2.5 có sự cải thiện lớn về khả năng chung, bao gồm hiểu văn bản song ngữ Trung-Anh, tuân thủ chỉ dẫn phức tạp, khả năng thực hiện các tác vụ mở chủ quan, đa ngôn ngữ và gọi công cụ; giảm thiểu ảo tưởng kiến thức của mô hình. Phiên bản qwen3-max mới nhất đã nâng cấp chuyên biệt về lập trình tác nhân và gọi công cụ so với phiên bản qwen3-max-preview. Mô hình chính thức phát hành đạt mức SOTA trong lĩnh vực, phù hợp với các nhu cầu tác nhân phức tạp hơn."
   },
+  "qwen3-max-preview": {
+    "description": "Mô hình mạnh nhất trong dòng Tongyi Qianwen, phù hợp với các tác vụ phức tạp và nhiều bước. Phiên bản xem trước đã hỗ trợ khả năng suy luận."
+  },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Mô hình mã nguồn mở thế hệ mới không có chế độ suy nghĩ dựa trên Qwen3, so với phiên bản trước (Thông Nghĩa Thiên Vấn 3-235B-A22B-Instruct-2507) có khả năng hiểu văn bản tiếng Trung tốt hơn, năng lực suy luận logic được cải thiện, và hiệu suất trong các nhiệm vụ tạo văn bản cũng tốt hơn."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, phiên bản mô hình tư duy hàng đầu cho các nhiệm vụ phức tạp."
+  },
   "qwen3-omni-flash": {
     "description": "Mô hình Qwen-Omni có thể tiếp nhận đầu vào kết hợp từ nhiều phương thức như văn bản, hình ảnh, âm thanh và video, và tạo phản hồi dưới dạng văn bản hoặc giọng nói. Mô hình cung cấp nhiều giọng nói nhân hóa, hỗ trợ đầu ra bằng nhiều ngôn ngữ và phương ngữ, phù hợp với các ứng dụng như sáng tác văn bản, nhận diện hình ảnh và trợ lý giọng nói."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, mô hình đa phương tiện hàng đầu, hướng đến các tình huống yêu cầu cao về hiểu và sáng tạo."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, phiên bản tư duy hàng đầu, dùng cho suy luận và lập kế hoạch đa phương tiện phức tạp."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, mô hình đa phương tiện lớn, cân bằng giữa độ chính xác và hiệu suất suy luận."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, phiên bản tư duy sâu cho các nhiệm vụ đa phương tiện phức tạp."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, mô hình chỉ dẫn đa phương tiện, phù hợp cho hỏi đáp và sáng tạo hình ảnh-văn bản chất lượng cao."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, phiên bản tư duy sâu đa phương tiện, tăng cường suy luận phức tạp và phân tích chuỗi dài."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, mô hình đa phương tiện nhẹ, phù hợp cho hỏi đáp thị giác hàng ngày và tích hợp ứng dụng."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, mô hình chuỗi tư duy đa phương tiện, thích hợp cho suy luận chi tiết về thông tin hình ảnh."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: phiên bản suy luận tốc độ cao và nhẹ, phù hợp với các tình huống yêu cầu độ trễ thấp hoặc xử lý số lượng lớn yêu cầu."
   },
@@ -3256,6 +3383,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do Microsoft AI cung cấp, đặc biệt xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Chúng tôi rất vui mừng ra mắt Grok 4 Fast, bước tiến mới nhất của chúng tôi trong các mô hình suy luận hiệu quả về chi phí."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Chúng tôi rất vui mừng giới thiệu grok-code-fast-1, một mô hình suy luận nhanh và tiết kiệm chi phí, nổi bật trong mã hóa cho tác nhân."
+  },
   "x1": {
     "description": "Mô hình Spark X1 sẽ được nâng cấp thêm, trên nền tảng dẫn đầu trong các nhiệm vụ toán học trong nước, đạt được hiệu quả trong các nhiệm vụ chung như suy luận, tạo văn bản, hiểu ngôn ngữ tương đương với OpenAI o1 và DeepSeek R1."
   },
@@ -3315,6 +3448,9 @@
   },
   "yi-vision-v2": {
     "description": "Mô hình nhiệm vụ thị giác phức tạp, cung cấp khả năng hiểu và phân tích hiệu suất cao dựa trên nhiều hình ảnh."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM-4.6, mô hình hàng đầu mới nhất của Zhipu AI, vượt trội hoàn toàn so với thế hệ trước về mã hóa nâng cao, xử lý văn bản dài, suy luận và năng lực tác nhân."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 là mô hình nền tảng dành cho ứng dụng tác nhân thông minh, sử dụng kiến trúc chuyên gia hỗn hợp (Mixture-of-Experts). Được tối ưu sâu trong các lĩnh vực gọi công cụ, duyệt web, kỹ thuật phần mềm và lập trình front-end, hỗ trợ tích hợp liền mạch vào các tác nhân mã như Claude Code, Roo Code. GLM-4.5 sử dụng chế độ suy luận hỗn hợp, thích ứng với nhiều kịch bản ứng dụng như suy luận phức tạp và sử dụng hàng ngày."

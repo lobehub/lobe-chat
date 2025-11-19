@@ -1,19 +1,15 @@
 import { chainLangDetect, chainTranslate } from '@lobechat/prompts';
 import { ChatTranslate, TraceNameMap, TracePayload } from '@lobechat/types';
-import { produce } from 'immer';
+import { merge } from '@lobechat/utils';
 import { StateCreator } from 'zustand/vanilla';
 
 import { supportLocales } from '@/locales/resources';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { merge } from '@/utils/merge';
-import { setNamespace } from '@/utils/storeDebug';
-
-const n = setNamespace('enhance');
 
 /**
  * chat translate
@@ -41,9 +37,9 @@ export const chatTranslate: StateCreator<
   }),
 
   translateMessage: async (id, targetLang) => {
-    const { internal_toggleChatLoading, updateMessageTranslate, internal_dispatchMessage } = get();
+    const { updateMessageTranslate, internal_dispatchMessage } = get();
 
-    const message = chatSelectors.getMessageById(id)(get());
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
     // Get current agent for translation
@@ -52,47 +48,64 @@ export const chatTranslate: StateCreator<
     // create translate extra
     await updateMessageTranslate(id, { content: '', from: '', to: targetLang });
 
-    internal_toggleChatLoading(true, id, n('translateMessage(start)', { id }));
-
-    let content = '';
-    let from = '';
-
-    // detect from language
-    chatService.fetchPresetTaskResult({
-      onFinish: async (data) => {
-        if (data && supportLocales.includes(data)) from = data;
-
-        await updateMessageTranslate(id, { content, from, to: targetLang });
-      },
-      params: merge(translationSetting, chainLangDetect(message.content)),
-      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.LanguageDetect }),
+    // Create translate operation
+    const { operationId } = get().startOperation({
+      context: { messageId: id, sessionId: message.sessionId, topicId: message.topicId },
+      label: 'Translating message',
+      type: 'translate',
     });
 
-    // translate to target language
-    await chatService.fetchPresetTaskResult({
-      onFinish: async (content) => {
-        await updateMessageTranslate(id, { content, from, to: targetLang });
-        internal_toggleChatLoading(false, id);
-      },
-      onMessageHandle: (chunk) => {
-        switch (chunk.type) {
-          case 'text': {
-            internal_dispatchMessage({
-              id,
-              key: 'translate',
-              type: 'updateMessageExtra',
-              value: produce({ content: '', from, to: targetLang }, (draft) => {
-                content += chunk.text;
-                draft.content += content;
-              }),
-            });
-            break;
+    // Associate message with operation
+    get().associateMessageWithOperation(id, operationId);
+
+    try {
+      let content = '';
+      let from = '';
+
+      // detect from language
+      chatService.fetchPresetTaskResult({
+        onFinish: async (data) => {
+          if (data && supportLocales.includes(data)) from = data;
+
+          await updateMessageTranslate(id, { content, from, to: targetLang });
+        },
+        params: merge(translationSetting, chainLangDetect(message.content)),
+        trace: get().getCurrentTracePayload({ traceName: TraceNameMap.LanguageDetect }),
+      });
+
+      // translate to target language
+      await chatService.fetchPresetTaskResult({
+        onFinish: async (translatedContent) => {
+          await updateMessageTranslate(id, { content: translatedContent, from, to: targetLang });
+          get().completeOperation(operationId);
+        },
+        onMessageHandle: (chunk) => {
+          switch (chunk.type) {
+            case 'text': {
+              content += chunk.text;
+              internal_dispatchMessage(
+                {
+                  id,
+                  key: 'translate',
+                  type: 'updateMessageExtra',
+                  value: { content, from, to: targetLang },
+                },
+                { operationId },
+              );
+              break;
+            }
           }
-        }
-      },
-      params: merge(translationSetting, chainTranslate(message.content, targetLang)),
-      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.Translator }),
-    });
+        },
+        params: merge(translationSetting, chainTranslate(message.content, targetLang)),
+        trace: get().getCurrentTracePayload({ traceName: TraceNameMap.Translator }),
+      });
+    } catch (error) {
+      get().failOperation(operationId, {
+        message: error instanceof Error ? error.message : String(error),
+        type: 'TranslateError',
+      });
+      throw error;
+    }
   },
 
   updateMessageTranslate: async (id, data) => {

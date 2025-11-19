@@ -9,7 +9,7 @@ import { SWRConfiguration } from 'swr';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
-import { messageStateSelectors } from '@/store/chat/selectors';
+import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
@@ -43,7 +43,7 @@ const BrowserSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
 
   const [loading, updateMessageInput] = useChatStore((s) => [
-    messageStateSelectors.isAIGenerating(s),
+    operationSelectors.isAgentRuntimeRunning(s),
     s.updateMessageInput,
   ]);
 

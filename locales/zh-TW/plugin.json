@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "查看參數列表",
+    "delete": "刪除工具調用",
+    "orphanedToolCall": "該工具調用訊息可能因異常原因成為孤立訊息，這可能會影響 Agent 的正常執行，請將其移除",
     "pluginRender": "查看插件介面"
   },
   "list": {
@@ -251,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "編輯檔案",
+      "getCommandOutput": "取得程式輸出",
+      "globLocalFiles": "匹配搜尋檔案",
+      "grepContent": "搜尋內容",
+      "killCommand": "終止程式執行",
       "listLocalFiles": "查看檔案列表",
       "moveLocalFiles": "移動檔案",
       "readLocalFile": "讀取檔案內容",

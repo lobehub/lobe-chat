@@ -25,7 +25,7 @@ const Category = memo(() => {
     qs.stringifyUrl(
       {
         query: { category: key === McpCategory.All ? null : key, q },
-        url: '/mcp',
+        url: '/discover/mcp',
       },
       { skipNull: true },
     );

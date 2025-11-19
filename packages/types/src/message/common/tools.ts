@@ -7,12 +7,12 @@ import { LobeToolRenderType } from '../../tool';
 // ToolIntervention must be defined first to avoid circular dependency
 export interface ToolIntervention {
   rejectedReason?: string;
-  status?: 'pending' | 'approved' | 'rejected' | 'none';
+  status?: 'pending' | 'approved' | 'rejected' | 'aborted' | 'none';
 }
 
 export const ToolInterventionSchema = z.object({
   rejectedReason: z.string().optional(),
-  status: z.enum(['pending', 'approved', 'rejected', 'none']).optional(),
+  status: z.enum(['pending', 'approved', 'rejected', 'aborted', 'none']).optional(),
 });
 
 export interface ChatPluginPayload {
@@ -112,7 +112,7 @@ export const ChatToolPayloadSchema = z.object({
 });
 
 /**
- * 聊天消息错误对象
+ * Chat message error object
  */
 export interface ChatMessagePluginError {
   body?: any;

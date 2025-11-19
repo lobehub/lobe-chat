@@ -52,8 +52,10 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
               }
 
               default: {
-                if (fetchErrorNotification)
+                console.error(err);
+                if (fetchErrorNotification && status) {
                   fetchErrorNotification.error({ errorMessage: err.message, status });
+                }
               }
             }
           }

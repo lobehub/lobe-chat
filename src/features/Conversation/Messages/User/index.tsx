@@ -60,13 +60,13 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
 
   const displayMode = useAgentStore(agentChatConfigSelectors.displayMode);
 
-  const [editing, generating, isInRAGFlow] = useChatStore((s) => [
+  const [editing, creating, isInRAGFlow] = useChatStore((s) => [
     messageStateSelectors.isMessageEditing(id)(s),
-    messageStateSelectors.isMessageGenerating(id)(s),
+    messageStateSelectors.isMessageCreating(id)(s), // User message only cares about creation (sendMessage)
     messageStateSelectors.isMessageInRAGFlow(id)(s),
   ]);
 
-  const loading = isInRAGFlow || generating;
+  const loading = isInRAGFlow || creating;
 
   // Get target name for DM indicator
   const userName = useUserStore(userProfileSelectors.nickName) || 'User';
