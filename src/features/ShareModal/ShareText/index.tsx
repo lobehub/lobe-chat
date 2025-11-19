@@ -1,3 +1,4 @@
+import { FORM_STYLE } from '@lobechat/const';
 import { exportFile } from '@lobechat/utils/client';
 import { Button, Form, type FormItemProps, copyToClipboard } from '@lobehub/ui';
 import { App, Switch } from 'antd';
@@ -7,12 +8,11 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { FORM_STYLE } from '@/const/layoutTokens';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors, topicSelectors } from '@/store/chat/selectors';
 
 import { useStyles } from '../style';
 import Preview from './Preview';
@@ -67,7 +67,7 @@ const ShareText = memo(() => {
   ];
 
   const [systemRole] = useAgentStore((s) => [agentSelectors.currentAgentSystemRole(s)]);
-  const messages = useChatStore(chatSelectors.activeBaseChats, isEqual);
+  const messages = useChatStore(displayMessageSelectors.activeDisplayMessages, isEqual);
   const topic = useChatStore(topicSelectors.currentActiveTopic, isEqual);
 
   const title = topic?.title || t('shareModal.exportTitle');
