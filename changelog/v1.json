@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Slove discover pagination router."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.85"
+  },
+  {
+    "children": {
       "improvements": ["Add Gemini 3.0 Pro Preview to Google Provider."]
     },
     "date": "2025-11-19",
