@@ -63,12 +63,7 @@ const GlobalLayout = async ({
             <StoreInitialization />
             <Suspense>
               <ImportSettings />
-              {process.env.NODE_ENV === 'development' && (
-                <>
-                  {/* <DevPanel /> */}
-                  <HydrationDebugHelper />
-                </>
-              )}
+              <HydrationDebugHelper />
             </Suspense>
           </ServerConfigStoreProvider>
         </AppTheme>
