@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fixed the hydrated false problem."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.91"
+  },
+  {
+    "children": {
       "improvements": ["Extract StatusIndicator component and improve tools display."]
     },
     "date": "2025-11-19",
