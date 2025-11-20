@@ -3,6 +3,7 @@ import type { ChatInputProps } from '@lobehub/editor/react';
 import type { MenuProps } from '@lobehub/ui/es/Menu';
 
 import { ActionKeys } from '@/features/ChatInput';
+import { UIChatMessage } from '@/types/message';
 
 export type SendButtonHandler = (params: {
   clearContent: () => void;
@@ -26,6 +27,10 @@ export const initialSendButtonState: SendButtonProps = {
 export interface PublicState {
   allowExpand?: boolean;
   expand?: boolean;
+  /**
+   * 用于自动感知上下文
+   */
+  getMessages?: () => UIChatMessage[];
   leftActions: ActionKeys[];
   mentionItems?: SlashOptions['items'];
   mobile?: boolean;
@@ -38,6 +43,9 @@ export interface PublicState {
 }
 
 export interface State extends PublicState {
+  autoCompleteRequestId: number;
+  // eslint-disable-next-line no-undef
+  autoCompleteTimerId?: NodeJS.Timeout;
   editor?: IEditor;
   isContentEmpty: boolean;
   markdownContent: string;
@@ -46,6 +54,7 @@ export interface State extends PublicState {
 
 export const initialState: State = {
   allowExpand: true,
+  autoCompleteRequestId: 0,
   expand: false,
   isContentEmpty: false,
   leftActions: [],

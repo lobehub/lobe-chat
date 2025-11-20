@@ -21,12 +21,14 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     onMarkdownContentChange,
     sendMenu,
     mentionItems,
+    getMessages,
   }) => {
     const storeApi = useStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
     const editor = useChatInputEditor();
 
     useStoreUpdater('mobile', mobile!);
+    useStoreUpdater('getMessages', getMessages!);
     useStoreUpdater('sendMenu', sendMenu!);
     useStoreUpdater('mentionItems', mentionItems);
     useStoreUpdater('leftActions', leftActions!);
