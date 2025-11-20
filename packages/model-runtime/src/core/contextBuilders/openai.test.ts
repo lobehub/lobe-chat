@@ -171,7 +171,7 @@ describe('convertOpenAIMessages', () => {
     expect((result[0] as any).reasoning).toBeUndefined();
   });
 
-  it('should filter out reasoning_content field from messages', async () => {
+  it('should preserve reasoning_content field from messages (for DeepSeek compatibility)', async () => {
     const messages = [
       {
         role: 'assistant',
@@ -184,14 +184,14 @@ describe('convertOpenAIMessages', () => {
     const result = await convertOpenAIMessages(messages);
 
     expect(result).toEqual([
-      { role: 'assistant', content: 'Hello' },
+      { role: 'assistant', content: 'Hello', reasoning_content: 'some reasoning content' },
       { role: 'user', content: 'Hi' },
     ]);
-    // Ensure reasoning_content field is removed
-    expect((result[0] as any).reasoning_content).toBeUndefined();
+    // Ensure reasoning_content field is preserved
+    expect((result[0] as any).reasoning_content).toBe('some reasoning content');
   });
 
-  it('should filter out both reasoning and reasoning_content fields from messages', async () => {
+  it('should filter out reasoning but preserve reasoning_content field', async () => {
     const messages = [
       {
         role: 'assistant',
@@ -203,10 +203,12 @@ describe('convertOpenAIMessages', () => {
 
     const result = await convertOpenAIMessages(messages);
 
-    expect(result).toEqual([{ role: 'assistant', content: 'Hello' }]);
-    // Ensure both fields are removed
+    expect(result).toEqual([
+      { role: 'assistant', content: 'Hello', reasoning_content: 'some reasoning content' },
+    ]);
+    // Ensure reasoning object is removed but reasoning_content is preserved
     expect((result[0] as any).reasoning).toBeUndefined();
-    expect((result[0] as any).reasoning_content).toBeUndefined();
+    expect((result[0] as any).reasoning_content).toBe('some reasoning content');
   });
 });
 

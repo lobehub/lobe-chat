@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import type { LobeAgentChatConfig, LobeAgentTTSConfig } from '@lobechat/types';
 import {
   boolean,
   index,
@@ -10,8 +11,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-
-import { LobeAgentChatConfig, LobeAgentTTSConfig } from '@/types/agent';
 
 import { idGenerator, randomSlug } from '../utils/idGenerator';
 import { timestamps } from './_helpers';

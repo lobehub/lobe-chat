@@ -1,6 +1,7 @@
 'use client';
 
 import { createStyles } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { memo, useEffect } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
@@ -32,15 +33,18 @@ const WideScreenContainer = memo<WideScreenContainerProps>(
     }, [wideScreen]);
 
     return (
-      <Flexbox
-        className={cx(styles.container, className)}
-        width={wideScreen ? '100%' : `min(${CONVERSATION_MIN_WIDTH}px, 100%)`}
-        {...rest}
-      >
-        {children}
+      <Flexbox width={'100%'}>
+        <Flexbox
+          className={cx(styles.container, className)}
+          width={wideScreen ? '100%' : `min(${CONVERSATION_MIN_WIDTH}px, 100%)`}
+          {...rest}
+        >
+          {children}
+        </Flexbox>
       </Flexbox>
     );
   },
+  isEqual,
 );
 
 export default WideScreenContainer;

@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 ist ein groß angelegtes hybrides Aufmerksamkeits-Inferenzmodell mit offenen Gewichten, das 456 Milliarden Parameter umfasst und etwa 45,9 Milliarden Parameter pro Token aktiviert. Das Modell unterstützt nativ einen ultralangen Kontext von 1 Million Tokens und spart durch den Blitz-Attention-Mechanismus bei Aufgaben mit 100.000 Tokens im Vergleich zu DeepSeek R1 75 % der Fließkommaoperationen ein. Gleichzeitig verwendet MiniMax-M1 eine MoE-Architektur (Mixture of Experts) und kombiniert den CISPO-Algorithmus mit einem hybriden Aufmerksamkeitsdesign für effizientes verstärkendes Lernen, was in der Langzeiteingabe-Inferenz und realen Software-Engineering-Szenarien branchenführende Leistung erzielt."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 definiert Effizienz für Agenten neu. Es handelt sich um ein kompaktes, schnelles und kosteneffizientes MoE-Modell mit insgesamt 230 Milliarden Parametern und 10 Milliarden aktiven Parametern. Es wurde für Spitzenleistungen bei Codierungs- und Agentenaufgaben entwickelt und bewahrt gleichzeitig eine starke allgemeine Intelligenz. Mit nur 10 Milliarden aktiven Parametern bietet MiniMax-M2 eine Leistung, die mit groß angelegten Modellen vergleichbar ist, und ist damit die ideale Wahl für Anwendungen mit hohen Effizienzanforderungen."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Mit insgesamt 1 Billion Parametern und 32 Milliarden aktivierten Parametern erreicht dieses nicht-denkende Modell Spitzenleistungen in den Bereichen aktuelles Wissen, Mathematik und Programmierung und ist besonders für allgemeine Agentenaufgaben optimiert. Es wurde speziell für Agentenaufgaben verfeinert, kann nicht nur Fragen beantworten, sondern auch Aktionen ausführen. Ideal für spontane, allgemeine Gespräche und Agentenerfahrungen, ist es ein reflexartiges Modell ohne lange Denkzeiten."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 verbessert die Modellschlussfolgerungsfähigkeit erheblich, selbst bei sehr begrenzten annotierten Daten. Vor der Ausgabe der endgültigen Antwort generiert das Modell eine Denkprozesskette, um die Genauigkeit der Antwort zu erhöhen."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B ist eine destillierte, effizientere Variante des 70B Llama Modells. Es behält starke Leistung bei Textgenerierungsaufgaben bei und reduziert den Rechenaufwand für einfachere Bereitstellung und Forschung. Betrieben von Groq mit deren maßgeschneiderter Language Processing Unit (LPU) Hardware für schnelle und effiziente Inferenz."
+    "description": "DeepSeek R1 Distill Llama 70B ist ein großes Sprachmodell auf Basis von Llama3.3 70B. Durch Feintuning mit den Ausgaben von DeepSeek R1 erreicht es eine konkurrenzfähige Leistung, die mit führenden Großmodellen vergleichbar ist."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B ist ein distilliertes großes Sprachmodell, das auf Llama-3.1-8B-Instruct basiert und durch Training mit den Ausgaben von DeepSeek R1 erstellt wurde."
@@ -1478,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash ist eine Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash Vorschau-Modell, unterstützt die Bildgenerierung"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash ist Googles kosteneffizientestes Modell und bietet umfassende Funktionen."
   },
@@ -1508,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview ist das kosteneffizienteste Modell von Google und bietet umfassende Funktionen."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview ist Googles kosteneffizientestes Modell mit umfassenden Funktionen."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Vorschauversion (25. September 2025) von Gemini 2.5 Flash"
   },
@@ -1525,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview ist Googles fortschrittlichstes Denkmodell, das komplexe Probleme in den Bereichen Code, Mathematik und MINT-Fächer lösen kann und große Datensätze, Codebasen und Dokumente mit langem Kontext analysiert."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro ist das intelligenteste Modell von Google mit modernster Schlussfolgerungsfähigkeit, multimodaler Verarbeitung sowie leistungsstarken Agenten- und Kontextkodierungsfunktionen."
   },
   "gemini-flash-latest": {
     "description": "Neueste Version von Gemini Flash"
@@ -1853,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 Pro nutzt mehr Rechenleistung für tiefgreifendere Überlegungen und liefert kontinuierlich bessere Antworten."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1 – Flaggschiffmodell, optimiert für Programmier- und Agentenaufgaben, unterstützt konfigurierbare Rechenintensität und längere Kontexte."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: Eine Variante von GPT-5.1 für ChatGPT, ideal für Konversationsszenarien."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: Eine für agentenbasierte Programmieraufgaben optimierte Version von GPT-5.1, geeignet für komplexe Code- und Agenten-Workflows über die Responses API."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: Eine kompaktere und kostengünstigere Codex-Variante, optimiert für agentenbasierte Programmieraufgaben."
+  },
   "gpt-audio": {
     "description": "GPT Audio ist ein universelles Chatmodell für Audioeingabe und -ausgabe, das Audio-I/O in der Chat Completions API unterstützt."
   },
@@ -2028,13 +2040,13 @@
     "description": "Imagen, Text-zu-Bild-Modellreihe der 4. Generation"
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Imagen 4. Generation Text-zu-Bild Modellserie"
+    "description": "Vierte Generation der Imagen-Modelle zur Text-zu-Bild-Generierung."
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen, Text-zu-Bild-Modell der 4. Generation (Ultra-Version)"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Imagen 4. Generation Text-zu-Bild Modellserie Ultra-Version"
+    "description": "Ultra-Version der vierten Generation der Imagen-Modelle zur Text-zu-Bild-Generierung."
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small ist ideal für Codegenerierung, Debugging und Refactoring-Aufgaben mit minimaler Latenz."
@@ -2212,6 +2224,9 @@
   },
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct ist ein effizientes Modell mit geringer Parameteranzahl, entwickelt von Wuwen Xinqiong."
+  },
+  "meituan/longcat-flash-chat": {
+    "description": "Ein von Meituan entwickeltes Open-Source-Basismodell, das speziell für dialogorientierte Interaktionen und agentenbasierte Aufgaben optimiert wurde und sich besonders bei Werkzeugaufrufen und komplexen mehrstufigen Dialogszenarien auszeichnet."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Ein leistungsstarkes Modell mit 70 Milliarden Parametern, das in den Bereichen Schlussfolgerungen, Programmierung und breiten Sprachanwendungen herausragt."
@@ -2443,6 +2458,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 ist ein leistungsstarkes, effizientes Sprachmodell, das speziell für Programmier- und Agenten-Workflows entwickelt wurde."
+  },
+  "minimax/minimax-m2": {
+    "description": "Speziell entwickelt für effizientes Codieren und Agenten-Workflows."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 ist ein kompaktes, schnelles und kosteneffizientes Mixture-of-Experts (MoE)-Modell mit 230 Milliarden Gesamtparametern und 10 Milliarden aktiven Parametern. Es wurde für höchste Leistung bei Codierungs- und Agentenaufgaben entwickelt und bietet gleichzeitig eine starke allgemeine Intelligenz. Das Modell überzeugt bei Aufgaben wie der Bearbeitung mehrerer Dateien, dem Code-Ausführen-Fehlerbeheben-Zyklus, Testverifikation und -korrektur sowie bei komplexen, lang verknüpften Toolchains – und ist damit die ideale Wahl für Entwickler-Workflows."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B ist das weltbeste Edge-Modell von Mistral."
@@ -2774,6 +2795,54 @@
   "pro-deepseek-v3": {
     "description": "Modell für exklusive Unternehmensdienste, inklusive paralleler Serviceunterstützung."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, ein großparametrisches chinesisches Modell, geeignet für hochwertige Inhaltserstellung und komplexe Schlussfolgerungsaufgaben."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, ein mittelgroßes Allzweckmodell, ideal für Textgenerierung und Frage-Antwort-Szenarien mit ausgewogenem Kosten-Nutzen-Verhältnis."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, ein Modell für Absichtserkennung und Agenten-Orchestrierung, unterstützt Szenarien mit langem Kontext."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, ein leichtgewichtiges Agentenmodell, geeignet für kostengünstige Mehrfachdialoge und Geschäftsprozesse."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, ein hochperformantes Agentenmodell mit hoher Durchsatzrate, ideal für groß angelegte, mehrfache Aufgabenanwendungen."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, ein hochgradig paralleles Agentenmodell für mittlere bis kurze Dialoge und schnelle Reaktionen."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, ein multimodales Modell zur Inhaltsprüfung und -erkennung, unterstützt Aufgaben zur Einhaltung von Bild-Text-Richtlinien."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, ein multimodales Kreativmodell, unterstützt integriertes Verständnis und Generierung von Bild und Text."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, ein multimodales Erkennungsmodell, spezialisiert auf englischsprachige Szenarien."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, ein leistungsstarkes chinesisches Allzweckmodell, geeignet für komplexe Frage-Antwort- und groß angelegte Schlussfolgerungsaufgaben."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, ein auf Llama basierendes multimodales Modell für allgemeines Bild-Text-Verständnis."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, ein OCR-Modell für mehrere Bilder, unterstützt Texterkennung und -extraktion aus mehreren Bildern."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, ein multimodales Frage-Antwort-Modell, ermöglicht präzise Suche und Beantwortung in komplexen Bild-Text-Szenarien."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, ein OCR-Modell für Einzelbilder, unterstützt hochpräzise Zeichenerkennung."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, ein großparametrisches visuell-sprachliches Modell, geeignet für komplexe Bild-Text-Verständnisaufgaben."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, ein leichtgewichtiges visuell-sprachliches Modell, ideal für alltägliche Bild-Text-Fragen und Analysen."
+  },
   "qvq-72b-preview": {
     "description": "Das QVQ-Modell ist ein experimentelles Forschungsmodell, das vom Qwen-Team entwickelt wurde und sich auf die Verbesserung der visuellen Schlussfolgerungsfähigkeiten konzentriert, insbesondere im Bereich der mathematischen Schlussfolgerungen."
   },
@@ -2924,7 +2993,9 @@
   "qwen2.5-72b-instruct": {
     "description": "Das 72B-Modell von Tongyi Qianwen 2.5 ist öffentlich zugänglich."
   },
-  "qwen2.5-7b-instruct": {},
+  "qwen2.5-7b-instruct": {
+    "description": "Qwen2.5 7B Instruct, ein ausgereiftes Open-Source-Instruktionsmodell, geeignet für Dialoge und Generierung in verschiedenen Szenarien."
+  },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Die Open-Source-Version des Qwen-Codemodells."
   },
@@ -2955,11 +3026,15 @@
   "qwen2.5-omni-7b": {
     "description": "Das Qwen-Omni-Modell der Serie unterstützt die Eingabe verschiedener Modalitäten, einschließlich Video, Audio, Bilder und Text, und gibt Audio und Text aus."
   },
-  "qwen2.5-vl-32b-instruct": {},
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Qwen2.5 VL 32B Instruct, ein multimodales Open-Source-Modell, ideal für private Bereitstellung und vielseitige Anwendungen."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Verbesserte Befolgung von Anweisungen, Mathematik, Problemlösung und Programmierung, gesteigerte Erkennungsfähigkeiten für alle Arten von visuellen Elementen, Unterstützung für die präzise Lokalisierung visueller Elemente in verschiedenen Formaten, Verständnis von langen Videodateien (maximal 10 Minuten) und sekundengenauer Ereigniszeitpunktlokalisierung, Fähigkeit zur zeitlichen Einordnung und Geschwindigkeitsverständnis, Unterstützung für die Steuerung von OS- oder Mobile-Agenten basierend auf Analyse- und Lokalisierungsfähigkeiten, starke Fähigkeit zur Extraktion von Schlüsselinformationen und JSON-Format-Ausgabe. Diese Version ist die leistungsstärkste Version der 72B-Serie."
   },
-  "qwen2.5-vl-7b-instruct": {},
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Qwen2.5 VL 7B Instruct, ein leichtgewichtiges multimodales Modell, das Kosten und Erkennungsleistung ausbalanciert."
+  },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL ist die neueste Version des visuellen Sprachmodells in der Qwen-Modellfamilie."
   },
@@ -2984,22 +3059,48 @@
   "qwen3": {
     "description": "Qwen3 ist das neue, großangelegte Sprachmodell von Alibaba, das mit hervorragender Leistung vielfältige Anwendungsbedürfnisse unterstützt."
   },
-  "qwen3-0.6b": {},
-  "qwen3-1.7b": {},
-  "qwen3-14b": {},
-  "qwen3-235b-a22b": {},
-  "qwen3-235b-a22b-instruct-2507": {},
-  "qwen3-235b-a22b-thinking-2507": {},
-  "qwen3-30b-a3b": {},
-  "qwen3-30b-a3b-instruct-2507": {},
-  "qwen3-30b-a3b-thinking-2507": {},
-  "qwen3-32b": {},
-  "qwen3-4b": {},
-  "qwen3-8b": {},
+  "qwen3-0.6b": {
+    "description": "Qwen3 0.6B, ein Einstiegsmodell, geeignet für einfache Schlussfolgerungen und stark ressourcenbeschränkte Umgebungen."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 1.7B, ein ultraleichtes Modell, ideal für Edge- und Endgerätebereitstellung."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 14B, ein mittelgroßes Modell, geeignet für mehrsprachige Frage-Antwort- und Textgenerierungsaufgaben."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 235B A22B, ein universelles Großmodell für eine Vielzahl komplexer Aufgaben."
+  },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 235B A22B Instruct 2507, ein universelles Flaggschiff-Instruktionsmodell, geeignet für vielfältige Generierungs- und Schlussfolgerungsaufgaben."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 235B A22B Thinking 2507, ein extrem großskaliges Denkmodell, ideal für hochkomplexe Schlussfolgerungen."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 30B A3B, ein mittelgroßes bis großes Allzweckmodell mit ausgewogenem Verhältnis zwischen Kosten und Leistung."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Qwen3 30B A3B Instruct 2507, ein mittelgroßes bis großes Instruktionsmodell, geeignet für hochwertige Generierung und Frage-Antwort-Aufgaben."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 30B A3B Thinking 2507, ein mittelgroßes bis großes Denkmodell mit ausgewogener Genauigkeit und Effizienz."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 32B, geeignet für allgemeine Aufgaben mit erhöhtem Verständnisbedarf."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 4B, ideal für mittelgroße bis kleine Anwendungen und lokale Inferenzszenarien."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 8B, ein leichtgewichtiges Modell mit flexibler Bereitstellung, geeignet für hochparallele Anwendungen."
+  },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Open-Source-Version des Qwen-Codegenerierungsmodells. Das neueste qwen3-coder-30b-a3b-instruct basiert auf Qwen3 und bietet leistungsstarke Coding-Agent-Fähigkeiten. Es ist spezialisiert auf Tool-Nutzung und Interaktion mit Umgebungen, ermöglicht autonomes Programmieren und kombiniert herausragende Programmierfähigkeiten mit allgemeinen Fähigkeiten."
   },
-  "qwen3-coder-480b-a35b-instruct": {},
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Qwen3 Coder 480B A35B Instruct, ein Flaggschiff-Code-Modell, unterstützt mehrsprachige Programmierung und komplexes Codeverständnis."
+  },
   "qwen3-coder-flash": {
     "description": "Tongyi Qianwen Code-Modell. Die neueste Qwen3-Coder Modellreihe basiert auf Qwen3 und ist ein Code-Generierungsmodell mit starker Coding-Agent-Fähigkeit, spezialisiert auf Werkzeugaufrufe und Umgebungsinteraktion, das selbstständiges Programmieren ermöglicht und neben hervorragenden Code-Fähigkeiten auch allgemeine Kompetenzen besitzt."
   },
@@ -3012,19 +3113,42 @@
   "qwen3-max": {
     "description": "Tongyi Qianwen 3 Max Modellserie, die im Vergleich zur 2.5 Serie eine deutliche Verbesserung der allgemeinen Fähigkeiten bietet, einschließlich verbesserter Textverständnisfähigkeiten in Chinesisch und Englisch, komplexer Befolgung von Anweisungen, subjektiver offener Aufgaben, Mehrsprachigkeit und Tool-Integration; das Modell zeigt weniger Wissenshalluzinationen. Die neueste qwen3-max Version wurde speziell im Bereich Agentenprogrammierung und Tool-Integration weiterentwickelt. Die offizielle Veröffentlichung erreicht SOTA-Niveau in Fachgebieten und ist für komplexere Agentenanforderungen optimiert."
   },
+  "qwen3-max-preview": {
+    "description": "Das leistungsstärkste Modell der Tongyi Qianwen-Serie, geeignet für komplexe, mehrstufige Aufgaben. Vorschauversion mit Denkfähigkeit."
+  },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Ein neues Open-Source-Modell der nächsten Generation im Nicht-Denk-Modus basierend auf Qwen3. Im Vergleich zur vorherigen Version (Tongyi Qianwen 3-235B-A22B-Instruct-2507) bietet es eine verbesserte chinesische Textverständnisfähigkeit, verstärkte logische Schlussfolgerungen und bessere Leistung bei textgenerierenden Aufgaben."
   },
-  "qwen3-next-80b-a3b-thinking": {},
+  "qwen3-next-80b-a3b-thinking": {
+    "description": "Qwen3 Next 80B A3B Thinking, eine Flaggschiff-Version für komplexe Schlussfolgerungsaufgaben."
+  },
   "qwen3-omni-flash": {
     "description": "Das Qwen-Omni-Modell kann kombinierte Eingaben aus Text, Bildern, Audio und Video verarbeiten und Antworten in Text- oder Sprachform generieren. Es bietet verschiedene menschenähnliche Sprachstile, unterstützt mehrsprachige und dialektale Sprachausgabe und eignet sich für Anwendungen wie Textgenerierung, visuelle Erkennung und Sprachassistenten."
   },
-  "qwen3-vl-235b-a22b-instruct": {},
-  "qwen3-vl-235b-a22b-thinking": {},
-  "qwen3-vl-30b-a3b-instruct": {},
-  "qwen3-vl-30b-a3b-thinking": {},
-  "qwen3-vl-8b-instruct": {},
-  "qwen3-vl-8b-thinking": {},
+  "qwen3-vl-235b-a22b-instruct": {
+    "description": "Qwen3 VL 235B A22B Instruct, ein Flaggschiff-Multimodalmodell für anspruchsvolle Verständnis- und Kreativaufgaben."
+  },
+  "qwen3-vl-235b-a22b-thinking": {
+    "description": "Qwen3 VL 235B A22B Thinking, die Denkversion des Flaggschiffs für komplexe multimodale Schlussfolgerungs- und Planungsaufgaben."
+  },
+  "qwen3-vl-30b-a3b-instruct": {
+    "description": "Qwen3 VL 30B A3B Instruct, ein großes multimodales Modell mit ausgewogener Genauigkeit und Schlussfolgerungsleistung."
+  },
+  "qwen3-vl-30b-a3b-thinking": {
+    "description": "Qwen3 VL 30B A3B Thinking, eine tiefgreifende Denkversion für komplexe multimodale Aufgaben."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, ein multimodales Instruktionsmodell, geeignet für hochwertige Bild-Text-Fragen und kreative Aufgaben."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, eine multimodale Denkversion mit Fokus auf komplexe Schlussfolgerungen und Langkettenanalysen."
+  },
+  "qwen3-vl-8b-instruct": {
+    "description": "Qwen3 VL 8B Instruct, ein leichtgewichtiges multimodales Modell, ideal für alltägliche visuelle Fragen und Anwendungsintegration."
+  },
+  "qwen3-vl-8b-thinking": {
+    "description": "Qwen3 VL 8B Thinking, ein multimodales Denkmodell, geeignet für detaillierte Schlussfolgerungen aus visuellen Informationen."
+  },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: eine leichtgewichtige, hochperformante Version für schnelle Inferenz, ideal für latenzkritische oder großvolumige Anfragen."
   },
@@ -3256,6 +3380,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 ist ein Sprachmodell von Microsoft AI, das in komplexen Dialogen, mehrsprachigen Anwendungen, Schlussfolgerungen und intelligenten Assistenten besonders gut abschneidet."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Wir freuen uns, Grok 4 Fast vorzustellen – unseren neuesten Fortschritt im Bereich kosteneffizienter Inferenzmodelle."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Wir freuen uns, grok-code-fast-1 zu präsentieren – ein schnelles und kosteneffizientes Inferenzmodell mit hervorragender Leistung im Bereich Agenten-Codierung."
+  },
   "x1": {
     "description": "Das Spark X1 Modell wird weiter verbessert und erreicht in allgemeinen Aufgaben wie Schlussfolgerungen, Textgenerierung und Sprachverständnis Ergebnisse, die mit OpenAI o1 und DeepSeek R1 vergleichbar sind, basierend auf der bereits führenden Leistung in mathematischen Aufgaben."
   },
@@ -3315,6 +3445,9 @@
   },
   "yi-vision-v2": {
     "description": "Ein Modell für komplexe visuelle Aufgaben, das leistungsstarke Verständnis- und Analysefähigkeiten auf der Grundlage mehrerer Bilder bietet."
+  },
+  "z-ai/glm-4.6": {
+    "description": "Das neueste Flaggschiffmodell von Zhipu, GLM-4.6, übertrifft seine Vorgänger deutlich in den Bereichen fortgeschrittenes Codieren, Verarbeitung langer Texte, logisches Schließen und agentenbasierte Fähigkeiten."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 ist ein speziell für Agentenanwendungen entwickeltes Basismodell mit Mixture-of-Experts-Architektur. Es ist tief optimiert für Werkzeugaufrufe, Web-Browsing, Softwareentwicklung und Frontend-Programmierung und unterstützt nahtlos die Integration in Code-Agenten wie Claude Code und Roo Code. GLM-4.5 verwendet einen hybriden Inferenzmodus und ist für komplexe Schlussfolgerungen sowie den Alltagsgebrauch geeignet."

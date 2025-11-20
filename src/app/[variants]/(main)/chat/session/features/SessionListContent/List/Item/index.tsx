@@ -7,7 +7,7 @@ import { DEFAULT_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { isDesktop } from '@/const/version';
 import { useChatStore } from '@/store/chat';
-import { messageStateSelectors } from '@/store/chat/selectors';
+import { operationSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
@@ -32,7 +32,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [
-    messageStateSelectors.isAIGenerating(s) && id === s.activeId,
+    operationSelectors.isAgentRuntimeRunning(s) && id === s.activeId,
   ]);
 
   const [pin, title, avatar, avatarBackground, updateAt, members, model, group, sessionType] =

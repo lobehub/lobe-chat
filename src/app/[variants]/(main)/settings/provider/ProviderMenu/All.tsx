@@ -1,9 +1,9 @@
 import { Icon } from '@lobehub/ui';
 import { WalletCards } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
+import { useSearchParams } from 'react-router-dom';
 
 import { useStyles } from './Item';
 
@@ -13,7 +13,7 @@ const All = memo((props: { onClick: (activeTab: string) => void }) => {
   const { onClick } = props;
   const { t } = useTranslation('modelProvider');
   const { styles, cx } = useStyles();
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const activeKey = searchParams.get('provider');
 
   return (

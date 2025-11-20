@@ -14,7 +14,12 @@ const loadingArr = Array.from({ length: 12 })
   .fill('-')
   .map((item, index) => `${index}x${item}`);
 
-const List = memo(() => {
+type ListProps = {
+  onProviderSelect: (provider: string) => void;
+};
+
+const List = memo((props: ListProps) => {
+  const { onProviderSelect } = props;
   const { t } = useTranslation('modelProvider');
   const enabledList = useAiInfraStore(aiProviderSelectors.enabledAiProviderList, isEqual);
   const disabledList = useAiInfraStore(aiProviderSelectors.disabledAiProviderList, isEqual);
@@ -30,7 +35,14 @@ const List = memo(() => {
         </Flexbox>
         <Grid gap={16} rows={3}>
           {loadingArr.map((item) => (
-            <Card enabled={false} id={item} key={item} loading source={'builtin'} />
+            <Card
+              enabled={false}
+              id={item}
+              key={item}
+              loading
+              onProviderSelect={onProviderSelect}
+              source={'builtin'}
+            />
           ))}
         </Grid>
       </Flexbox>
@@ -47,7 +59,7 @@ const List = memo(() => {
         </Flexbox>
         <Grid gap={16} rows={3}>
           {enabledList.map((item) => (
-            <Card {...item} key={item.id} />
+            <Card {...item} key={item.id} onProviderSelect={onProviderSelect} />
           ))}
         </Grid>
       </Flexbox>
@@ -60,7 +72,7 @@ const List = memo(() => {
         </Flexbox>
         <Grid gap={16} rows={3}>
           {disabledList.map((item) => (
-            <Card {...item} key={item.id} />
+            <Card {...item} key={item.id} onProviderSelect={onProviderSelect} />
           ))}
         </Grid>
       </Flexbox>

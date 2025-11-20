@@ -13,6 +13,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
+import { LobeDocumentPage } from '@/types/document';
 import { FileSource } from '@/types/files';
 
 import { idGenerator } from '../utils/idGenerator';
@@ -36,6 +37,77 @@ export const globalFiles = pgTable('global_files', {
 export type NewGlobalFile = typeof globalFiles.$inferInsert;
 export type GlobalFileItem = typeof globalFiles.$inferSelect;
 
+/**
+ * Documents table - Stores file content or web search results
+ */
+// @ts-ignore
+export const documents = pgTable(
+  'documents',
+  {
+    id: varchar('id', { length: 255 })
+      .$defaultFn(() => idGenerator('documents', 16))
+      .primaryKey(),
+
+    // Basic information
+    title: text('title'),
+    content: text('content'),
+
+    // Special type: custom/folder
+    fileType: varchar('file_type', { length: 255 }).notNull(),
+    filename: text('filename'),
+
+    // Statistics
+    totalCharCount: integer('total_char_count').notNull(),
+    totalLineCount: integer('total_line_count').notNull(),
+
+    // Metadata
+    metadata: jsonb('metadata').$type<Record<string, any>>(),
+
+    // Page/chunk data
+    pages: jsonb('pages').$type<LobeDocumentPage[]>(),
+
+    // Source type
+    sourceType: text('source_type', { enum: ['file', 'web', 'api'] }).notNull(),
+    source: text('source').notNull(), // File path or web URL
+
+    // Associated file (optional)
+    // Forward reference to files table defined below
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    // @ts-expect-error - files is defined later in this file, forward reference is valid at runtime
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    fileId: text('file_id').references(() => files.id, { onDelete: 'set null' }),
+
+    // Parent document (for folder hierarchy structure)
+    // @ts-ignore
+    parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
+      onDelete: 'set null',
+    }),
+
+    // User association
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    clientId: text('client_id'),
+
+    editorData: jsonb('editor_data').$type<Record<string, any>>(),
+
+    // Timestamps
+    ...timestamps,
+  },
+  (table) => [
+    index('documents_source_idx').on(table.source),
+    index('documents_file_type_idx').on(table.fileType),
+    index('documents_file_id_idx').on(table.fileId),
+    index('documents_parent_id_idx').on(table.parentId),
+    uniqueIndex('documents_client_id_user_id_unique').on(table.clientId, table.userId),
+  ],
+);
+
+export type NewDocument = typeof documents.$inferInsert;
+export type DocumentItem = typeof documents.$inferSelect;
+export const insertDocumentSchema = createInsertSchema(documents);
+
+// @ts-ignore
 export const files = pgTable(
   'files',
   {
@@ -61,6 +133,12 @@ export const files = pgTable(
     url: text('url').notNull(),
     source: text('source').$type<FileSource>(),
 
+    // Parent document (for folder hierarchy structure)
+    // @ts-ignore
+    parentId: varchar('parent_id', { length: 255 }).references(() => documents.id, {
+      onDelete: 'set null',
+    }),
+
     clientId: text('client_id'),
     metadata: jsonb('metadata'),
     chunkTaskId: uuid('chunk_task_id').references(() => asyncTasks.id, { onDelete: 'set null' }),
@@ -73,6 +151,7 @@ export const files = pgTable(
   (table) => {
     return {
       fileHashIdx: index('file_hash_idx').on(table.fileHash),
+      parentIdIdx: index('files_parent_id_idx').on(table.parentId),
       clientIdUnique: uniqueIndex('files_client_id_user_id_unique').on(
         table.clientId,
         table.userId,

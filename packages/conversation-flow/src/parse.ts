@@ -40,9 +40,53 @@ export function parse(messages: Message[], messageGroups?: MessageGroupMetadata[
   const flatList = transformer.flatten(messages);
 
   // Convert messageMap from Map to plain object for serialization
+  // Clean up metadata for assistant messages with tools
   const messageMapObj: Record<string, Message> = {};
+  const usagePerformanceFields = new Set([
+    'acceptedPredictionTokens',
+    'cost',
+    'duration',
+    'inputAudioTokens',
+    'inputCacheMissTokens',
+    'inputCachedTokens',
+    'inputCitationTokens',
+    'inputImageTokens',
+    'inputTextTokens',
+    'inputWriteCacheTokens',
+    'latency',
+    'outputAudioTokens',
+    'outputImageTokens',
+    'outputReasoningTokens',
+    'outputTextTokens',
+    'rejectedPredictionTokens',
+    'totalInputTokens',
+    'totalOutputTokens',
+    'totalTokens',
+    'tps',
+    'ttft',
+  ]);
+
   helperMaps.messageMap.forEach((message, id) => {
-    messageMapObj[id] = message;
+    // For assistant messages with tools, clean metadata to keep only usage/performance fields
+    if (
+      message.role === 'assistant' &&
+      message.tools &&
+      message.tools.length > 0 &&
+      message.metadata
+    ) {
+      const cleanedMetadata: Record<string, any> = {};
+      Object.entries(message.metadata).forEach(([key, value]) => {
+        if (usagePerformanceFields.has(key)) {
+          cleanedMetadata[key] = value;
+        }
+      });
+      messageMapObj[id] = {
+        ...message,
+        metadata: Object.keys(cleanedMetadata).length > 0 ? cleanedMetadata : undefined,
+      };
+    } else {
+      messageMapObj[id] = message;
+    }
   });
 
   return {

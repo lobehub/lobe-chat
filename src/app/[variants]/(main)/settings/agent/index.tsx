@@ -4,12 +4,12 @@ import { Tabs } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { useQueryState } from 'nuqs';
 import { memo } from 'react';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { AgentSettings } from '@/features/AgentSetting';
 import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
+import { parseAsString, useQueryState } from '@/hooks/useQueryParam';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
@@ -24,9 +24,7 @@ type AgentPageType = {
 const Page = memo((props: AgentPageType) => {
   const { mobile } = props;
   const cateItems = useCategory();
-  const [tab, setTab] = useQueryState('tab', {
-    defaultValue: ChatSettingsTabs.Prompt,
-  });
+  const [tab, setTab] = useQueryState('tab', parseAsString.withDefault(ChatSettingsTabs.Prompt));
   const config = useUserStore(settingsSelectors.defaultAgentConfig, isEqual);
   const meta = useUserStore(settingsSelectors.defaultAgentMeta, isEqual);
   const [updateAgent, isUserStateInit] = useUserStore((s) => [

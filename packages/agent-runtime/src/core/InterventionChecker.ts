@@ -2,14 +2,56 @@ import type {
   ArgumentMatcher,
   HumanInterventionPolicy,
   HumanInterventionRule,
+  SecurityBlacklistRule,
   ShouldInterveneParams,
 } from '@lobechat/types';
+
+import { DEFAULT_SECURITY_BLACKLIST } from './defaultSecurityBlacklist';
+
+/**
+ * Result of security blacklist check
+ */
+export interface SecurityCheckResult {
+  /**
+   * Whether the operation is blocked by security rules
+   */
+  blocked: boolean;
+
+  /**
+   * Reason for blocking (if blocked)
+   */
+  reason?: string;
+}
 
 /**
  * Intervention Checker
  * Determines whether a tool call requires human intervention
  */
 export class InterventionChecker {
+  /**
+   * Check if tool call is blocked by security blacklist
+   * This check runs BEFORE all other intervention checks
+   *
+   * @param securityBlacklist - Security blacklist rules
+   * @param toolArgs - Tool call arguments
+   * @returns Security check result
+   */
+  static checkSecurityBlacklist(
+    securityBlacklist: SecurityBlacklistRule[] = [],
+    toolArgs: Record<string, any> = {},
+  ): SecurityCheckResult {
+    for (const rule of securityBlacklist) {
+      if (this.matchesSecurityRule(rule, toolArgs)) {
+        return {
+          blocked: true,
+          reason: rule.description,
+        };
+      }
+    }
+
+    return { blocked: false };
+  }
+
   /**
    * Check if a tool call requires intervention
    *
@@ -18,6 +60,19 @@ export class InterventionChecker {
    */
   static shouldIntervene(params: ShouldInterveneParams): HumanInterventionPolicy {
     const { config, toolArgs = {} } = params;
+
+    // Use default blacklist if not provided
+    const securityBlacklist =
+      params.securityBlacklist !== undefined
+        ? params.securityBlacklist
+        : DEFAULT_SECURITY_BLACKLIST;
+
+    // CRITICAL: Check security blacklist first - this overrides ALL other settings
+    const securityCheck = this.checkSecurityBlacklist(securityBlacklist, toolArgs);
+    if (securityCheck.blocked) {
+      // Security blacklist always requires intervention, even in auto-run mode
+      return 'required';
+    }
 
     // No config means never intervene (auto-execute)
     if (!config) return 'never';
@@ -36,6 +91,36 @@ export class InterventionChecker {
 
     // No rule matched - default to require for safety
     return 'required';
+  }
+
+  /**
+   * Check if tool arguments match a security blacklist rule
+   *
+   * @param rule - Security rule to check
+   * @param toolArgs - Tool call arguments
+   * @returns true if matches (should be blocked)
+   */
+  private static matchesSecurityRule(
+    rule: SecurityBlacklistRule,
+    toolArgs: Record<string, any>,
+  ): boolean {
+    // Security rules must have match criteria
+    if (!rule.match) return false;
+
+    // All matchers must match (AND logic)
+    for (const [paramName, matcher] of Object.entries(rule.match)) {
+      const paramValue = toolArgs[paramName];
+
+      // Parameter not present in args - rule doesn't match
+      if (paramValue === undefined) return false;
+
+      // Check if value matches
+      if (!this.matchesArgument(matcher, paramValue)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**

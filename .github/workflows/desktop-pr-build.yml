@@ -1,7 +1,7 @@
 name: Desktop PR Build
 
 on:
-  pull_request_target:
+  pull_request:
     types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 
 # 确保同一 PR 同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
@@ -126,6 +126,7 @@ jobs:
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} nightly
 
       # macOS 构建处理
+      # 注意：fork 的 PR 无法访问 secrets，会构建未签名版本
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
         run: npm run desktop:build
@@ -136,7 +137,7 @@ jobs:
           DATABASE_URL: "postgresql://postgres@localhost:5432/postgres"
           # 默认添加一个加密 SECRET
           KEY_VAULTS_SECRET: "oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE="
-          # macOS 签名和公证配置
+          # macOS 签名和公证配置（fork 的 PR 访问不到 secrets，会跳过签名）
           CSC_LINK: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
           CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
@@ -148,7 +149,8 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
-      #  Windows 平台构建处理
+      # Windows 平台构建处理
+      # 注意：fork 的 PR 无法访问 secrets，会构建未签名版本
       - name: Build artifact on Windows
         if: runner.os == 'Windows'
         run: npm run desktop:build
@@ -275,6 +277,8 @@ jobs:
   publish-pr:
     needs: [merge-mac-files, version]
     name: Publish PR Build
+    # 只为非 fork 的 PR 发布（fork 的 PR 没有写权限）
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     # Grant write permissions for creating release and commenting on PR
     permissions:

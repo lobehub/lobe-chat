@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Zobacz listę argumentów",
+    "delete": "Usuń wywołanie narzędzia",
+    "orphanedToolCall": "To wywołanie narzędzia mogło zostać osierocone z powodu nieoczekiwanych okoliczności, co może zakłócić prawidłowe działanie Agenta. Proszę je usunąć.",
     "pluginRender": "Zobacz interfejs wtyczki"
   },
   "list": {
@@ -251,6 +253,11 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Edytuj plik",
+      "getCommandOutput": "Pobierz wynik polecenia",
+      "globLocalFiles": "Wyszukaj pasujące pliki",
+      "grepContent": "Przeszukaj zawartość",
+      "killCommand": "Zatrzymaj wykonywanie polecenia",
       "listLocalFiles": "Wyświetl listę plików",
       "moveLocalFiles": "Przenieś pliki",
       "readLocalFile": "Odczytaj zawartość pliku",

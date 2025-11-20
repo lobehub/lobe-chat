@@ -124,6 +124,10 @@ export interface ChatStreamPayload {
     type?: 'enabled' | 'disabled';
   };
   thinkingBudget?: number;
+  /**
+   * Thinking level for Gemini models (e.g., gemini-3.0-pro)
+   */
+  thinkingLevel?: 'low' | 'high';
   tool_choice?: string;
   tools?: ChatCompletionTool[];
   /**

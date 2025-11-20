@@ -1,21 +1,32 @@
 'use client';
 
-import { parseAsString, useQueryState } from 'nuqs';
-
 import { isCustomBranding } from '@/const/version';
 
 import DesktopLayout from '../_layout/Desktop';
 import MobileLayout from '../_layout/Mobile';
 import ProviderDetailPage from '../detail';
 import Footer from './Footer';
+import { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const Page = (props: { mobile?: boolean }) => {
-  const [Provider, setProvider] = useQueryState('provider', parseAsString.withDefault('all'));
+  const [SearchParams, setSearchParams] = useSearchParams();
+  const [provider, setProviderState] = useState(SearchParams.get('provider') || 'all');
+  const setProvider = (provider: string) => {
+    setSearchParams({ active: 'provider', provider });
+    setProviderState(provider);
+  };
+
   const { mobile } = props;
   const ProviderLayout = mobile ? MobileLayout : DesktopLayout;
+
+  const ProviderListPage = useMemo(() => {
+    return <ProviderDetailPage id={provider} onProviderSelect={setProvider} />;
+  }, [provider]);
+
   return (
     <ProviderLayout onProviderSelect={setProvider}>
-      <ProviderDetailPage id={Provider} />
+      {ProviderListPage}
       {!isCustomBranding && <Footer />}
     </ProviderLayout>
   );

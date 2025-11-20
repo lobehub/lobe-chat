@@ -1,13 +1,13 @@
+import {
+  type ClientDBLoadingProgress,
+  DatabaseLoadingState,
+  type MigrationSQL,
+  type MigrationTableItem,
+} from '@lobechat/types';
 import { sql } from 'drizzle-orm';
 import { PgliteDatabase, drizzle } from 'drizzle-orm/pglite';
 import { Md5 } from 'ts-md5';
 
-import {
-  ClientDBLoadingProgress,
-  DatabaseLoadingState,
-  MigrationSQL,
-  MigrationTableItem,
-} from '@/types/clientDB';
 import { sleep } from '@/utils/sleep';
 
 import migrations from '../core/migrations.json';

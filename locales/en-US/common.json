@@ -283,9 +283,11 @@
     "business": "Business Cooperation",
     "support": "Email Support"
   },
+  "new": "NEW",
   "oauth": "SSO Login",
   "officialSite": "Official Website",
   "ok": "OK",
+  "or": "or",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",

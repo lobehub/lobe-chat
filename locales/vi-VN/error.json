@@ -102,7 +102,7 @@
       "SPII": "Nội dung của bạn có thể chứa thông tin cá nhân nhạy cảm. Để bảo vệ quyền riêng tư, vui lòng loại bỏ các thông tin nhạy cảm liên quan rồi thử lại.",
       "default": "Nội dung bị chặn: {{blockReason}}。Vui lòng điều chỉnh yêu cầu rồi thử lại。"
     },
-    "InsufficientQuota": "Xin lỗi, hạn mức của khóa này đã đạt giới hạn, vui lòng kiểm tra số dư tài khoản của bạn hoặc tăng hạn mức khóa trước khi thử lại",
+    "InsufficientQuota": "Rất tiếc, hạn ngạch (quota) của khóa này đã đạt giới hạn. Vui lòng kiểm tra số dư tài khoản hoặc tăng hạn ngạch của khóa rồi thử lại.",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidClerkUser": "Xin lỗi, bạn chưa đăng nhập. Vui lòng đăng nhập hoặc đăng ký tài khoản trước khi tiếp tục.",
@@ -131,7 +131,7 @@
     "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
     "ProviderBizError": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "QuotaLimitReached": "Xin lỗi, lượng Token hiện tại hoặc số lần yêu cầu đã đạt đến giới hạn quota của khóa này, vui lòng tăng quota của khóa hoặc thử lại sau.",
+    "QuotaLimitReached": "Rất tiếc, số lượng Token sử dụng hoặc số lần yêu cầu hiện tại đã đạt giới hạn hạn ngạch (quota) của khóa này. Vui lòng tăng hạn ngạch của khóa hoặc thử lại sau.",
     "StreamChunkError": "Lỗi phân tích khối tin nhắn yêu cầu luồng, vui lòng kiểm tra xem API hiện tại có tuân thủ tiêu chuẩn hay không, hoặc liên hệ với nhà cung cấp API của bạn để được tư vấn.",
     "SubscriptionKeyMismatch": "Xin lỗi, do sự cố hệ thống tạm thời, lượng sử dụng đăng ký hiện tại đã không còn hiệu lực. Vui lòng nhấp vào nút bên dưới để khôi phục đăng ký hoặc gửi email cho chúng tôi để nhận hỗ trợ.",
     "SubscriptionPlanLimit": "Điểm đăng ký của bạn đã hết, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói cao hơn hoặc cấu hình API mô hình tùy chỉnh để tiếp tục sử dụng.",

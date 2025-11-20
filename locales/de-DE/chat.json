@@ -17,6 +17,7 @@
   "availableAgents": "Verfügbare Assistenten",
   "backToBottom": "Zurück zum Ende",
   "chatList": {
+    "expandMessage": "Nachricht anzeigen",
     "longMessageDetail": "Details anzeigen"
   },
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "Tiefdenk-Schalter"
+    },
+    "thinkingLevel": {
+      "title": "Denkebene"
     },
     "title": "Modell Erweiterungsfunktionen",
     "urlContext": {
@@ -173,9 +177,11 @@
     "title": "Mitglieder erwähnen"
   },
   "messageAction": {
+    "collapse": "Nachricht ausblenden",
     "continueGeneration": "Generierung fortsetzen",
     "delAndRegenerate": "Löschen und neu generieren",
     "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
+    "expand": "Nachricht anzeigen",
     "regenerate": "Neu generieren"
   },
   "messages": {
@@ -327,6 +333,11 @@
     "screenshot": "Screenshot",
     "settings": "Exporteinstellungen",
     "text": "Text",
+    "widthMode": {
+      "label": "Breitenmodus",
+      "narrow": "Schmalbildmodus",
+      "wide": "Breitbildmodus"
+    },
     "withBackground": "Mit Hintergrundbild",
     "withFooter": "Mit Fußzeile",
     "withPluginInfo": "Mit Plugin-Informationen",
@@ -383,9 +394,12 @@
         "manualDesc": "Jede Ausführung muss manuell genehmigt werden"
       },
       "reject": "Ablehnen",
+      "rejectAndContinue": "Ablehnen und erneut ausführen",
+      "rejectOnly": "Ablehnen",
       "rejectReasonPlaceholder": "Die Angabe eines Ablehnungsgrundes hilft dem Agenten, zukünftige Aktionen zu verbessern",
       "rejectTitle": "Tool-Ausführung ablehnen",
       "rejectedWithReason": "Die Tool-Ausführung wurde abgelehnt: {{reason}}",
+      "toolAbort": "Dieser Werkzeugaufruf wurde vom Benutzer abgebrochen",
       "toolRejected": "Die Tool-Ausführung wurde abgelehnt"
     }
   },

@@ -102,7 +102,7 @@
       "SPII": "Il tuo contenuto potrebbe contenere informazioni personali sensibili. Per proteggere la privacy, rimuovi tali informazioni e riprova.",
       "default": "Contenuto bloccato: {{blockReason}}. Modifica la richiesta e riprova."
     },
-    "InsufficientQuota": "Ci dispiace, la quota per questa chiave ha raggiunto il limite. Si prega di controllare il saldo dell'account o di aumentare la quota della chiave e riprovare.",
+    "InsufficientQuota": "Siamo spiacenti, la quota associata a questa chiave ha raggiunto il limite. Verifica che il saldo del tuo account sia sufficiente oppure aumenta la quota della chiave e riprova.",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
@@ -131,7 +131,7 @@
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
     "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
     "ProviderBizError": "Errore di business del fornitore {{provider}}. Si prega di controllare le informazioni seguenti o riprovare.",
-    "QuotaLimitReached": "Ci dispiace, l'uso attuale dei token o il numero di richieste ha raggiunto il limite di quota per questa chiave. Si prega di aumentare la quota di questa chiave o riprovare più tardi.",
+    "QuotaLimitReached": "Siamo spiacenti, l'utilizzo dei token o il numero di richieste ha raggiunto il limite della quota per questa chiave. Aumenta la quota della chiave o riprova più tardi.",
     "StreamChunkError": "Erro di analisi del blocco di messaggi della richiesta in streaming. Controlla se l'interfaccia API attuale è conforme agli standard o contatta il tuo fornitore di API per ulteriori informazioni.",
     "SubscriptionKeyMismatch": "Ci scusiamo, ma a causa di un'imprevista anomalia di sistema, l'attuale utilizzo dell'abbonamento è temporaneamente non valido. Si prega di fare clic sul pulsante qui sotto per ripristinare l'abbonamento o contattarci via email per ricevere supporto.",
     "SubscriptionPlanLimit": "I tuoi punti di abbonamento sono esauriti, non puoi utilizzare questa funzione. Ti preghiamo di passare a un piano superiore o di configurare un modello API personalizzato per continuare a utilizzare.",

@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
 import { useClientDataSWR } from '@/libs/swr';
-import { fileService , FileService } from '@/services/file';
+import { FileService, fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import {
   UploadFileListDispatch,
@@ -35,11 +35,11 @@ export interface FileManageAction {
   toggleEmbeddingIds: (ids: string[], loading?: boolean) => void;
   toggleParsingIds: (ids: string[], loading?: boolean) => void;
 
-  useFetchFileItem: (id?: string) => SWRResponse<FileListItem | undefined>;
-  useFetchFileManage: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
+  useFetchKnowledgeItem: (id?: string) => SWRResponse<FileListItem | undefined>;
+  useFetchKnowledgeItems: (params: QueryFileListParams) => SWRResponse<FileListItem[]>;
 }
 
-const FETCH_FILE_LIST_KEY = 'useFetchFileManage';
+const FETCH_ALL_KNOWLEDGE_KEY = 'useFetchKnowledgeItems';
 
 export const createFileManageSlice: StateCreator<
   FileStore,
@@ -171,7 +171,7 @@ export const createFileManageSlice: StateCreator<
     get().toggleParsingIds([id], false);
   },
   refreshFileList: async () => {
-    await mutate([FETCH_FILE_LIST_KEY, get().queryListParams]);
+    await mutate([FETCH_ALL_KNOWLEDGE_KEY, get().queryListParams]);
   },
   removeAllFiles: async () => {
     await fileService.removeAllFiles();
@@ -220,15 +220,15 @@ export const createFileManageSlice: StateCreator<
     });
   },
 
-  useFetchFileItem: (id) =>
-    useClientDataSWR<FileListItem | undefined>(!id ? null : ['useFetchFileItem', id], () =>
-      serverFileService.getFileItem(id!),
+  useFetchKnowledgeItem: (id) =>
+    useClientDataSWR<FileListItem | undefined>(!id ? null : ['useFetchKnowledgeItem', id], () =>
+      serverFileService.getKnowledgeItem(id!),
     ),
 
-  useFetchFileManage: (params) =>
+  useFetchKnowledgeItems: (params) =>
     useClientDataSWR<FileListItem[]>(
-      [FETCH_FILE_LIST_KEY, params],
-      () => serverFileService.getFiles(params),
+      [FETCH_ALL_KNOWLEDGE_KEY, params],
+      () => serverFileService.getKnowledgeItems(params),
       {
         onSuccess: (data) => {
           set({ fileList: data, queryListParams: params });
