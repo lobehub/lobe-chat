@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { ChatToolPayload, UserInterventionConfig } from '@lobechat/types';
+import { ChatToolPayload, SecurityBlacklistConfig, UserInterventionConfig } from '@lobechat/types';
 
 import type { Cost, CostLimit, Usage } from './usage';
 
@@ -23,6 +23,15 @@ export interface AgentState {
    * Controls how tools requiring approval are handled
    */
   userInterventionConfig?: UserInterventionConfig;
+
+  /**
+   * Security blacklist configuration
+   * These rules will ALWAYS block execution and require human intervention,
+   * regardless of user settings (even in auto-run mode).
+   * If not provided, DEFAULT_SECURITY_BLACKLIST will be used.
+   */
+  securityBlacklist?: SecurityBlacklistConfig;
+
   // --- Execution Tracking ---
   /**
    * Number of execution steps in this session.
