@@ -1,8 +1,7 @@
-import { toMarkdown } from 'mdast-util-to-markdown';
 import { Parent } from 'unist';
 import { expect } from 'vitest';
 
-import { treeNodeToString } from '@/features/ChatList/MarkdownElements/remarkPlugins/getNodeContent';
+import { treeNodeToString } from './getNodeContent';
 
 describe('treeNodeToString', () => {
   it('with latex', () => {
