@@ -22,7 +22,7 @@
     "ws": "^8.18.3"
   },
   "peerDependencies": {
-    "@electric-sql/pglite": "^0.2.17",
+    "@electric-sql/pglite": "^0.3.14",
     "dayjs": ">=1.11.19",
     "drizzle-orm": ">=0.44.7",
     "nanoid": ">=5.1.6",

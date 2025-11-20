@@ -137,7 +137,7 @@
     "@clerk/themes": "^2.4.36",
     "@codesandbox/sandpack-react": "^2.20.0",
     "@cyntler/react-doc-viewer": "^1.17.1",
-    "@electric-sql/pglite": "0.2.17",
+    "@electric-sql/pglite": "0.3.14",
     "@emotion/react": "^11.14.0",
     "@fal-ai/client": "^1.7.2",
     "@formkit/auto-animate": "^0.9.0",
