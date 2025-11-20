@@ -56,6 +56,7 @@ const modelsDisableInstuction = new Set([
   'google/gemini-2.5-flash-image-free',
   'google/gemini-2.5-flash-image',
   'google/gemini-3-pro-image-preview-free',
+  'google/gemini-3-pro-image-preview',
 ]);
 
 const PRO_THINKING_MIN = 128;
