@@ -38,6 +38,7 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   hide: css`
+    pointer-events: none;
     width: 0;
     opacity: 0;
   `,

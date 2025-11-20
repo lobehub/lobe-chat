@@ -13,6 +13,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 
 const useStyles = createStyles(({ css, token }) => ({
   base: css`
+    pointer-events: none;
     overflow: hidden;
     transition:
       width,

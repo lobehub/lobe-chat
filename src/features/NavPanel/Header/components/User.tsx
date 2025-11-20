@@ -25,6 +25,7 @@ const useStyles = createStyles(({ css, token }) => ({
       opacity 200ms ${token.motionEaseInOut};
   `,
   hide: css`
+    pointer-events: none;
     width: 0;
     opacity: 0;
   `,

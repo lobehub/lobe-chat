@@ -21,6 +21,7 @@ const useStyles = createStyles(({ css, token }) => ({
       margin-block-start 200ms ${token.motionEaseInOut};
   `,
   hide: css`
+    pointer-events: none;
     height: 0;
     margin-block-start: -12px;
     opacity: 0;
