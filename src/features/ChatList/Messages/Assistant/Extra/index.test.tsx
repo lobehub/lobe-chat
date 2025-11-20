@@ -9,13 +9,13 @@ import { AssistantMessageExtra } from './index';
 vi.mock('zustand/traditional');
 
 // Mock TTS and Translate components
-vi.mock('@/features/Conversation/components/Extras/TTS', () => ({
+vi.mock('@/features/ChatList/components/Extras/TTS', () => ({
   default: vi.fn(() => <div>TTS Component</div>),
 }));
-vi.mock('@/features/Conversation/components/Extras/Translate', () => ({
+vi.mock('@/features/ChatList/components/Extras/Translate', () => ({
   default: vi.fn(() => <div>Translate Component</div>),
 }));
-vi.mock('@/features/Conversation/components/Extras/Usage', () => ({
+vi.mock('@/features/ChatList/components/Extras/Usage', () => ({
   default: vi.fn(() => <div>Usage Component</div>),
 }));
 
