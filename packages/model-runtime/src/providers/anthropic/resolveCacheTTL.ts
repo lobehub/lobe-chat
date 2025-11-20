@@ -1,9 +1,10 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-import { DEFAULT_CACHE_TTL } from '.';
 import { ChatStreamPayload } from '../../types';
 
 type CacheTTL = Anthropic.Messages.CacheControlEphemeral['ttl'];
+
+const DEFAULT_CACHE_TTL = '5m' as const;
 
 /**
  * Resolves cache TTL from Anthropic payload or request settings.

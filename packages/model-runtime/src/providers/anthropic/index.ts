@@ -34,7 +34,6 @@ type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
-export const DEFAULT_CACHE_TTL = '5m' as const;
 
 interface AnthropicAIParams extends ClientOptions {
   id?: string;
