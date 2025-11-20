@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Provider settings button unable to redirect."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.94"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-11-20",
