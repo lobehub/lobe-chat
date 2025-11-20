@@ -256,6 +256,7 @@
     "pwa-install-handler": "^2.6.3",
     "query-string": "^9.3.1",
     "random-words": "^2.0.1",
+    "rc-util": "^5.44.4",
     "react": "19.2.0",
     "react-confetti": "^6.4.0",
     "react-diff-view": "^3.3.2",
