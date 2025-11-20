@@ -145,6 +145,118 @@ const zenmuxChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      'Grok 4 Fast 是 xAI 的高吞吐、低成本模型（支持 2M 上下文窗口），适合需要高并发与长上下文的使用场景。',
+    displayName: 'Grok 4.1 Fast',
+    id: 'x-ai/grok-4.1-fast',
+    maxOutput: 30_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      'Grok 4 Fast（Non-Reasoning）是 xAI 的高吞吐、低成本多模态模型（支持 2M 上下文窗口），面向对延迟和成本敏感但不需要启用模型内推理的场景。它与 Grok 4 Fast 的 reasoning 版本并列，可通过 API 的 reasoning enable 参数在需要时开启推理功能。Prompts 和 completions 可能会被 xAI 或 OpenRouter 用于改进未来模型。',
+    displayName: 'Grok 4.1 Fast (Non-Reasoning)',
+    id: 'x-ai/grok-4.1-fast-non-reasoning',
+    maxOutput: 30_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      'Grok 4 Fast 是 xAI 的高吞吐、低成本模型（支持 2M 上下文窗口），适合需要高并发与长上下文的使用场景。',
+    displayName: 'Grok 4 Fast',
+    id: 'x-ai/grok-4-fast',
+    maxOutput: 30_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_000_000,
+    description:
+      'Grok 4 Fast（Non-Reasoning）是 xAI 的高吞吐、低成本多模态模型（支持 2M 上下文窗口），面向对延迟和成本敏感但不需要启用模型内推理的场景。它与 Grok 4 Fast 的 reasoning 版本并列，可通过 API 的 reasoning enable 参数在需要时开启推理功能。Prompts 和 completions 可能会被 xAI 或 OpenRouter 用于改进未来模型。',
+    displayName: 'Grok 4 Fast (Non-Reasoning)',
+    id: 'x-ai/grok-4-fast-non-reasoning',
+    maxOutput: 30_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 256_000,
+    description: 'Grok 4 是 xAI 的旗舰推理模型，提供强大的推理与多模态能力。',
+    displayName: 'Grok 4',
+    id: 'x-ai/grok-4',
+    maxOutput: 256_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 256_000,
+    description: 'Grok Code Fast 1 是 xAI 的快速代码模型，输出具可读性与工程化适配。',
+    displayName: 'Grok Code Fast 1',
+    id: 'x-ai/grok-code-fast-1',
+    maxOutput: 10_000,
+    pricing: {
+      units: [
+        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
       vision: true,
     },
@@ -783,7 +895,10 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
     contextWindowTokens: 256_000,
     description: 'Qwen3-Coder 是 Qwen3 的代码生成器家族，擅长长文档内的代码理解与生成。',
     displayName: 'Qwen3-Coder',
@@ -818,76 +933,6 @@ const zenmuxChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 2_000_000,
-    description:
-      'Grok 4 Fast 是 xAI 的高吞吐、低成本模型（支持 2M 上下文窗口），适合需要高并发与长上下文的使用场景。',
-    displayName: 'Grok 4 Fast',
-    id: 'x-ai/grok-4-fast',
-    maxOutput: 30_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 2_000_000,
-    description:
-      'Grok 4 Fast（Non-Reasoning）是 xAI 的高吞吐、低成本多模态模型（支持 2M 上下文窗口），面向对延迟和成本敏感但不需要启用模型内推理的场景。它与 Grok 4 Fast 的 reasoning 版本并列，可通过 API 的 reasoning enable 参数在需要时开启推理功能。Prompts 和 completions 可能会被 xAI 或 OpenRouter 用于改进未来模型。',
-    displayName: 'Grok 4 Fast (Non-Reasoning)',
-    id: 'x-ai/grok-4-fast-non-reasoning',
-    maxOutput: 30_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 256_000,
-    description: 'Grok 4 是 xAI 的旗舰推理模型，提供强大的推理与多模态能力。',
-    displayName: 'Grok 4',
-    id: 'x-ai/grok-4',
-    maxOutput: 256_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 256_000,
-    description: 'Grok Code Fast 1 是 xAI 的快速代码模型，输出具可读性与工程化适配。',
-    displayName: 'Grok Code Fast 1',
-    id: 'x-ai/grok-code-fast-1',
-    maxOutput: 10_000,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0.2, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 1.5, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
     contextWindowTokens: 200_000,
     description: 'GLM 4.6 是 Z.AI 的旗舰模型，扩展了上下文长度和编码能力。',
     displayName: 'GLM 4.6',
@@ -902,7 +947,12 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, search: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
     contextWindowTokens: 200_000,
     description: 'Opus 4.1 是 Anthropic 的高端模型，优化于编程、复杂推理和持续任务。',
     displayName: 'Claude Opus 4.1',
@@ -921,7 +971,12 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, search: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
     contextWindowTokens: 200_000,
     description: 'Opus 4 是 Anthropic 的旗舰级模型，专为复杂任务和企业级应用设计。',
     displayName: 'Claude Opus 4',
@@ -940,7 +995,11 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'Gemini 2.5 Flash Image（Nano Banana）是 Google 的图像生成模型，同时支持多模态对话。',
@@ -958,7 +1017,11 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 32_768,
     description: 'Gemini 2.5 Flash Image 免费版，支持受限额度的多模态生成。',
     displayName: 'Gemini 2.5 Flash Image (Nano Banana) Free',
@@ -973,7 +1036,12 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, search: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
     contextWindowTokens: 200_000,
     description: 'Claude Sonnet 4.5 是 Anthropic 最新的混合推理模型，优化于复杂推理和编码。',
     displayName: 'Claude Sonnet 4.5',
@@ -1158,7 +1226,11 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, search: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
     contextWindowTokens: 128_000,
     description:
       'DeepSeek-V3.1 是 DeepSeek 的长上下文混合推理模型，支持思考/非思考混合模式与工具集成。',
@@ -1174,7 +1246,11 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 1_050_000,
     description: 'Gemini 2.0 Flash 是 Google 的高性能推理模型，适用于延展的多模态任务。',
     displayName: 'Gemini 2.0 Flash',
@@ -1189,7 +1265,11 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 1_050_000,
     description:
       'Gemini 2.0 Flash Lite 是 Gemini 家族的轻量版本，默认不启用思考以提升延迟与成本表现，但可通过参数开启。',
@@ -1205,7 +1285,11 @@ const zenmuxChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: { functionCall: true, reasoning: true, vision: true },
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 1_050_000,
     description:
       'Gemini 2.5 Flash Lite 是 Gemini 2.5 的轻量版本，优化了延迟与成本，适合高吞吐场景。',
