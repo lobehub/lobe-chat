@@ -23,7 +23,7 @@ const Layout = memo<LayoutProps>(() => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [activeTabState, setActiveTabState] = useMergedState({
-    active: searchParams.get('active') as SettingsTabs | SettingsTabs.Common,
+    active: searchParams.get('active') as SettingsTabs ? searchParams.get('active') as SettingsTabs : SettingsTabs.Common,
   }, {
     onChange: (obj: {
       active: SettingsTabs;
