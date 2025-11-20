@@ -77,6 +77,7 @@ export const ModelPerformanceSchema = z.object({
 
 export const MessageMetadataSchema = ModelUsageSchema.merge(ModelPerformanceSchema).extend({
   collapsed: z.boolean().optional(),
+  inspectExpanded: z.boolean().optional(),
 });
 
 export interface ModelUsage extends ModelTokensUsage {
@@ -108,10 +109,18 @@ export interface ModelPerformance {
 export interface MessageMetadata extends ModelUsage, ModelPerformance {
   activeBranchIndex?: number;
   activeColumn?: boolean;
+  finishType?: string;
   /**
    * Message collapse state
    * true: collapsed, false/undefined: expanded
    */
   collapsed?: boolean;
+  /**
+   * Tool inspect expanded state
+   * true: expanded, false/undefined: collapsed
+   */
+  inspectExpanded?: boolean;
   compare?: boolean;
+  usage?: ModelUsage;
+  performance?: ModelPerformance;
 }

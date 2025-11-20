@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Interrupteur de réflexion approfondie"
     },
+    "thinkingLevel": {
+      "title": "Niveau de réflexion"
+    },
     "title": "Fonctionnalités d'extension du modèle",
     "urlContext": {
       "desc": "Une fois activé, il analysera automatiquement les liens web pour obtenir le contenu contextuel réel de la page web",
@@ -330,6 +333,11 @@
     "screenshot": "Capture d'écran",
     "settings": "Paramètres d'exportation",
     "text": "Texte",
+    "widthMode": {
+      "label": "Mode de largeur",
+      "narrow": "Mode écran étroit",
+      "wide": "Mode écran large"
+    },
     "withBackground": "Avec image de fond",
     "withFooter": "Avec pied de page",
     "withPluginInfo": "Avec informations sur le plugin",
@@ -391,6 +399,7 @@
       "rejectReasonPlaceholder": "Saisir une raison de rejet aidera l'agent à comprendre et à améliorer ses actions futures",
       "rejectTitle": "Rejeter cet appel d'outil",
       "rejectedWithReason": "Cet appel d'outil a été rejeté volontairement : {{reason}}",
+      "toolAbort": "L'appel de l'outil a été annulé par l'utilisateur",
       "toolRejected": "Cet appel d'outil a été rejeté volontairement"
     }
   },

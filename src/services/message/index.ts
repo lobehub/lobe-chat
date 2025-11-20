@@ -77,12 +77,21 @@ export class MessageService {
     return lambdaClient.message.getHeatmaps.query();
   };
 
-  updateMessageError = async (id: string, value: ChatMessageError) => {
+  updateMessageError = async (
+    id: string,
+    value: ChatMessageError,
+    options?: { sessionId?: string | null; topicId?: string | null },
+  ) => {
     const error = value.type
       ? value
       : { body: value, message: value.message, type: 'ApplicationRuntimeError' };
 
-    return lambdaClient.message.update.mutate({ id, value: { error } });
+    return lambdaClient.message.update.mutate({
+      id,
+      sessionId: options?.sessionId,
+      topicId: options?.topicId,
+      value: { error },
+    });
   };
 
   updateMessagePluginArguments = async (id: string, value: string | Record<string, any>) => {

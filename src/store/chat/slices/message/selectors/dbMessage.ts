@@ -43,11 +43,18 @@ const activeDbMessages = (s: ChatStoreState): UIChatMessage[] => {
 // ============= DB Message Queries ========== //
 
 /**
- * Get raw message by ID from database
- * This searches in dbMessagesMap, which contains flat message structure
+ * Get raw message by ID from database (searches globally across all sessions/topics)
+ * This is essential for parallel topic agent runtime where background updates
+ * may occur after the user has switched to another chat.
  */
-const getDbMessageById = (id: string) => (s: ChatStoreState) =>
-  chatHelpers.getMessageById(activeDbMessages(s), id);
+const getDbMessageById = (id: string) => (s: ChatStoreState) => {
+  // Search across all messages in dbMessagesMap
+  for (const messages of Object.values(s.dbMessagesMap)) {
+    const message = chatHelpers.getMessageById(messages, id);
+    if (message) return message;
+  }
+  return undefined;
+};
 
 /**
  * Get raw message by tool_call_id from database

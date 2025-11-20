@@ -51,6 +51,8 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
 
       // it's compatible for DeepSeek
       if (msg.reasoning_content !== undefined) result.reasoning_content = msg.reasoning_content;
+      // MiniMax uses reasoning_details for historical thinking, so forward it unchanged
+      if (msg.reasoning_details !== undefined) result.reasoning_details = msg.reasoning_details;
 
       return result;
     }),

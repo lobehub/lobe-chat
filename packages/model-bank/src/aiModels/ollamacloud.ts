@@ -5,10 +5,23 @@ const ollamaCloudModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576,
+    description:
+      'Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。',
+    displayName: 'Gemini 3 Pro Preview',
+    enabled: true,
+    id: 'gemini-3-pro-preview',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 200_000,
-    description:
-      'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
+    description: 'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
     displayName: 'MiniMax M2',
     enabled: true,
     id: 'minimax-m2',
@@ -36,7 +49,6 @@ const ollamaCloudModels: AIChatModelCard[] = [
     description:
       'DeepSeek V3.1：下一代推理模型，提升了复杂推理与链路思考能力，适合需要深入分析的任务。',
     displayName: 'DeepSeek V3.1',
-    enabled: true,
     id: 'deepseek-v3.1:671b',
     type: 'chat',
   },
@@ -91,10 +103,20 @@ const ollamaCloudModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 262_144,
+    displayName: 'Qwen3 VL 235B Instruct',
+    id: 'qwen3-vl:235b-instruct',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 262_144,
     displayName: 'Qwen3 VL 235B',
     id: 'qwen3-vl:235b',
     type: 'chat',

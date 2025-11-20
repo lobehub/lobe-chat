@@ -206,6 +206,7 @@ export const LocalSystemManifest: BuiltinToolManifest = {
     {
       description:
         'Perform exact string replacements in files. Must read the file first before editing.',
+      humanIntervention: 'required',
       name: LocalSystemApiName.editLocalFile,
       parameters: {
         properties: {

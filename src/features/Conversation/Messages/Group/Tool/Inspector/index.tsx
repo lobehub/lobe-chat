@@ -1,26 +1,19 @@
 import { ToolIntervention } from '@lobechat/types';
-import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import {
-  Ban,
-  Check,
-  LayoutPanelTop,
-  LogsIcon,
-  LucideBug,
-  LucideBugOff,
-  Trash2,
-  X,
-} from 'lucide-react';
-import { CSSProperties, memo, useState } from 'react';
+import { LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, Trash2 } from 'lucide-react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
 import { useChatStore } from '@/store/chat';
+import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 
 import Debug from './Debug';
 import Settings from './Settings';
+import StatusIndicator from './StatusIndicator';
 import ToolTitle from './ToolTitle';
 
 export const useStyles = createStyles(({ css, token, cx }) => ({
@@ -86,6 +79,7 @@ interface InspectorProps {
   showPortal?: boolean;
   showRender: boolean;
   style?: CSSProperties;
+  toolMessageId?: string;
   type?: string;
 }
 
@@ -97,20 +91,24 @@ const Inspectors = memo<InspectorProps>(
     apiName,
     id,
     arguments: requestArgs,
-    showRender,
     result,
     setShowRender,
     showPluginRender,
     setShowPluginRender,
     type,
     intervention,
+    toolMessageId,
   }) => {
     const { t } = useTranslation('plugin');
-    const { styles, theme } = useStyles();
+    const { styles } = useStyles();
 
     const [showDebug, setShowDebug] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
-    const [deleteAssistantMessage] = useChatStore((s) => [s.deleteAssistantMessage]);
+    const [deleteAssistantMessage, toggleInspectExpanded] = useChatStore((s) => [
+      s.deleteAssistantMessage,
+      s.toggleInspectExpanded,
+    ]);
 
     const hasError = !!result?.error;
     const hasSuccessResult = !!result?.content && result.content !== LOADING_FLAT;
@@ -119,9 +117,25 @@ const Inspectors = memo<InspectorProps>(
 
     const isPending = intervention?.status === 'pending';
     const isReject = intervention?.status === 'rejected';
+    const isAbort = intervention?.status === 'aborted';
     const isTitleLoading = !hasResult && !isPending;
 
-    const showCustomPluginRender = showRender && !isPending && !isReject;
+    const isPersistentExpanded = useChatStore((s) => {
+      if (!toolMessageId) return undefined;
+
+      const message = dbMessageSelectors.getDbMessageById(toolMessageId)(s);
+      return message?.metadata?.inspectExpanded;
+    });
+
+    // Compute actual render state based on persistent expanded or hovered
+    const shouldShowRender = isPersistentExpanded || isHovered;
+
+    // Sync with parent state
+    useEffect(() => {
+      setShowRender(shouldShowRender);
+    }, [shouldShowRender, setShowRender]);
+
+    const showCustomPluginRender = shouldShowRender && !isPending && !isReject && !isAbort;
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -131,7 +145,17 @@ const Inspectors = memo<InspectorProps>(
             gap={8}
             horizontal
             onClick={() => {
-              setShowRender(!showRender);
+              if (toolMessageId) toggleInspectExpanded(toolMessageId);
+            }}
+            onMouseEnter={() => {
+              if (!isPersistentExpanded) {
+                setIsHovered(true);
+              }
+            }}
+            onMouseLeave={() => {
+              if (!isPersistentExpanded) {
+                setIsHovered(false);
+              }
             }}
             paddingInline={4}
           >
@@ -139,6 +163,7 @@ const Inspectors = memo<InspectorProps>(
               apiName={apiName}
               identifier={identifier}
               index={index}
+              isExpanded={isPersistentExpanded}
               isLoading={isTitleLoading}
               messageId={assistantMessageId}
               toolCallId={id}
@@ -175,19 +200,7 @@ const Inspectors = memo<InspectorProps>(
 
               <Settings id={identifier} />
             </Flexbox>
-            {hasResult && (
-              <Flexbox align={'center'} gap={4} horizontal style={{ fontSize: 12 }}>
-                {isReject ? (
-                  <Tooltip title={t('tool.intervention.toolRejected', { ns: 'chat' })}>
-                    <Icon color={theme.colorTextTertiary} icon={Ban} />
-                  </Tooltip>
-                ) : hasError ? (
-                  <Icon color={theme.colorError} icon={X} />
-                ) : (
-                  <Icon color={theme.colorSuccess} icon={Check} />
-                )}
-              </Flexbox>
-            )}
+            {hasResult && <StatusIndicator intervention={intervention} result={result} />}
           </Flexbox>
         </Flexbox>
         {showDebug && (

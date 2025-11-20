@@ -75,7 +75,6 @@ const StoreInitialization = memo(() => {
   const mobile = useIsMobile();
 
   useStoreUpdater('isMobile', mobile);
-  useStoreUpdater('router', router);
 
   return null;
 });

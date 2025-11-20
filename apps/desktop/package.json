@@ -52,6 +52,7 @@
     "@typescript/native-preview": "7.0.0-dev.20250711.1",
     "consola": "^3.4.2",
     "cookie": "^1.0.2",
+    "diff": "^8.0.2",
     "electron": "^38.7.0",
     "electron-builder": "^26.0.12",
     "electron-is": "^3.0.0",

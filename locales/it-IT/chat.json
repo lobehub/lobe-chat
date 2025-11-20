@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Interruttore di pensiero profondo"
     },
+    "thinkingLevel": {
+      "title": "Livello di pensiero"
+    },
     "title": "Funzionalità di estensione del modello",
     "urlContext": {
       "desc": "Se abilitato, analizzerà automaticamente i link delle pagine web per ottenere il contenuto contestuale reale della pagina",
@@ -330,6 +333,11 @@
     "screenshot": "Screenshot",
     "settings": "Impostazioni di esportazione",
     "text": "Testo",
+    "widthMode": {
+      "label": "Modalità larghezza",
+      "narrow": "Modalità schermo stretto",
+      "wide": "Modalità schermo ampio"
+    },
     "withBackground": "Con immagine di sfondo",
     "withFooter": "Con piè di pagina",
     "withPluginInfo": "Con informazioni sul plugin",
@@ -391,6 +399,7 @@
       "rejectReasonPlaceholder": "Inserire il motivo del rifiuto aiuterà l'agente a comprendere e ottimizzare le azioni future",
       "rejectTitle": "Rifiuta questa esecuzione dello strumento",
       "rejectedWithReason": "Questa esecuzione dello strumento è stata rifiutata: {{reason}}",
+      "toolAbort": "L'utilizzo dello strumento è stato annullato dall'utente",
       "toolRejected": "Questa esecuzione dello strumento è stata rifiutata"
     }
   },

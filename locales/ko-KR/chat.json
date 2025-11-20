@@ -65,6 +65,9 @@
     "thinking": {
       "title": "심층 사고 스위치"
     },
+    "thinkingLevel": {
+      "title": "사고 수준"
+    },
     "title": "모델 확장 기능",
     "urlContext": {
       "desc": "활성화하면 실제 웹페이지 컨텍스트 내용을 얻기 위해 웹 링크를 자동으로 분석합니다",
@@ -330,6 +333,11 @@
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
     "text": "텍스트",
+    "widthMode": {
+      "label": "너비 모드",
+      "narrow": "좁은 화면 모드",
+      "wide": "넓은 화면 모드"
+    },
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
@@ -391,6 +399,7 @@
       "rejectReasonPlaceholder": "거부 사유를 입력하면 에이전트가 이해하고 이후 행동을 최적화하는 데 도움이 됩니다",
       "rejectTitle": "이번 도구 호출 거부",
       "rejectedWithReason": "이번 도구 호출이 다음 사유로 거부됨: {{reason}}",
+      "toolAbort": "이번 도구 호출이 사용자에 의해 취소되었습니다",
       "toolRejected": "이번 도구 호출이 거부되었습니다"
     }
   },

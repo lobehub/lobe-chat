@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Derin Düşünme Anahtarı"
     },
+    "thinkingLevel": {
+      "title": "Düşünme Seviyesi"
+    },
     "title": "Model Genişletme Özellikleri",
     "urlContext": {
       "desc": "Etkinleştirildiğinde, gerçek web sayfası bağlam içeriğini almak için web bağlantıları otomatik olarak çözümlenir",
@@ -330,6 +333,11 @@
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
     "text": "Metin",
+    "widthMode": {
+      "label": "Genişlik Modu",
+      "narrow": "Dar Ekran Modu",
+      "wide": "Geniş Ekran Modu"
+    },
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",
@@ -391,6 +399,7 @@
       "rejectReasonPlaceholder": "Reddetme nedenini girmek, Agent'ın anlamasına ve sonraki eylemleri iyileştirmesine yardımcı olur",
       "rejectTitle": "Bu Araç Çağrısını Reddet",
       "rejectedWithReason": "Bu araç çağrısı şu nedenle reddedildi: {{reason}}",
+      "toolAbort": "Bu araç çağrısı kullanıcı tarafından iptal edildi",
       "toolRejected": "Bu araç çağrısı kullanıcı tarafından reddedildi"
     }
   },

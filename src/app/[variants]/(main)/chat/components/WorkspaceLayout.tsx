@@ -14,9 +14,6 @@ import ConversationArea from './ConversationArea';
 import PortalPanel from './PortalPanel';
 import TopicSidebar from './TopicSidebar';
 
-interface WorkspaceLayoutProps {
-  mobile?: boolean;
-}
 
 const DesktopWorkspace = memo(() => (
   <>
@@ -60,14 +57,4 @@ const MobileWorkspace = memo(() => (
 
 MobileWorkspace.displayName = 'MobileWorkspace';
 
-const WorkspaceLayout = memo<WorkspaceLayoutProps>(({ mobile }) => {
-  if (mobile) {
-    return <MobileWorkspace />;
-  }
-
-  return <DesktopWorkspace />;
-});
-
-WorkspaceLayout.displayName = 'WorkspaceLayout';
-
-export default WorkspaceLayout;
+export { DesktopWorkspace, MobileWorkspace };

@@ -5,13 +5,15 @@ import { ChatMessageState, initialMessageState } from './slices/message/initialS
 import { ChatTopicState, initialTopicState } from './slices/topic/initialState';
 import { ChatAIChatState, initialAiChatState } from './slices/aiChat/initialState';
 import { ChatThreadState, initialThreadState } from './slices/thread/initialState';
+import { ChatOperationState, initialOperationState } from './slices/operation/initialState';
 
 export type ChatStoreState = ChatTopicState &
   ChatMessageState &
   ChatAIChatState &
   ChatToolState &
   ChatThreadState &
-  ChatPortalState;
+  ChatPortalState &
+  ChatOperationState;
 
 export const initialState: ChatStoreState = {
   ...initialMessageState,
@@ -20,6 +22,7 @@ export const initialState: ChatStoreState = {
   ...initialToolState,
   ...initialThreadState,
   ...initialChatPortalState,
+  ...initialOperationState,
 
   // cloud
 };

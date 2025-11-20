@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 is a large-scale hybrid attention inference model with open-source weights, featuring 456 billion parameters, with approximately 45.9 billion parameters activated per token. The model natively supports ultra-long contexts of up to 1 million tokens and, through lightning attention mechanisms, reduces floating-point operations by 75% compared to DeepSeek R1 in tasks generating 100,000 tokens. Additionally, MiniMax-M1 employs a Mixture of Experts (MoE) architecture, combining the CISPO algorithm with an efficient reinforcement learning training design based on hybrid attention, achieving industry-leading performance in long-input inference and real-world software engineering scenarios."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 redefines efficiency for intelligent agents. It is a compact, fast, and cost-effective Mixture of Experts (MoE) model with 230 billion total parameters and 10 billion active parameters. Designed for top-tier performance in coding and agent tasks, it also maintains strong general intelligence. With only 10 billion active parameters, MiniMax-M2 delivers performance comparable to large-scale models, making it an ideal choice for high-efficiency applications."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "With a total of 1 trillion parameters and 32 billion activated parameters, this non-thinking model achieves top-tier performance in cutting-edge knowledge, mathematics, and coding, excelling in general agent tasks. It is carefully optimized for agent tasks, capable not only of answering questions but also taking actions. Ideal for improvisational, general chat, and agent experiences, it is a reflex-level model requiring no prolonged thinking."
   },
@@ -1155,7 +1158,7 @@
     "description": "DeepSeek-R1 greatly improves model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first generates a chain of thought to enhance answer accuracy."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B is a distilled, more efficient variant of the 70B Llama model. It maintains strong performance on text generation tasks while reducing computational overhead for easier deployment and research. Served by Groq using its custom Language Processing Unit (LPU) hardware for fast, efficient inference."
+    "description": "DeepSeek R1 Distill Llama 70B is a large language model based on Llama3.3 70B. Fine-tuned using outputs from DeepSeek R1, it achieves competitive performance on par with leading-edge large models."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B is a distilled large language model based on Llama-3.1-8B-Instruct, trained using outputs from DeepSeek R1."
@@ -1478,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is a variant of the model optimized for cost-effectiveness and low latency."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash preview model, supports image generation"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash is Google's most cost-effective model, offering comprehensive capabilities."
   },
@@ -1508,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is Google's most cost-effective model, offering a comprehensive set of features."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview is Google's most cost-effective model, offering comprehensive capabilities."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Preview release (September 25th, 2025) of Gemini 2.5 Flash"
   },
@@ -1525,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview is Google's most advanced cognitive model, capable of reasoning through complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long-context understanding."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro is Google's most advanced model, featuring state-of-the-art reasoning, multimodal understanding, and powerful agent capabilities with contextual awareness."
   },
   "gemini-flash-latest": {
     "description": "Latest release of Gemini Flash"
@@ -2225,6 +2225,9 @@
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct is a compact and efficient model developed by Wuwen Xinqiong."
   },
+  "meituan/longcat-flash-chat": {
+    "description": "An open-source foundational model from Meituan, optimized for conversational interactions and agent-based tasks. Excels in tool usage and complex multi-turn dialogue scenarios."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "A powerful 70-billion parameter model excelling in reasoning, coding, and broad language applications."
   },
@@ -2455,6 +2458,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 is a high-efficiency large language model built for coding and agent-based workflows."
+  },
+  "minimax/minimax-m2": {
+    "description": "Purpose-built for efficient coding and agent workflows."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 is a compact, fast, and cost-efficient Mixture of Experts (MoE) model with 230 billion total parameters and 10 billion active parameters. It is engineered for top performance in coding and agent tasks while maintaining robust general intelligence. Excelling in multi-file editing, code-run-debug loops, test validation and repair, and complex long-chain tool integrations, it is an ideal choice for developer workflows."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B is Mistral's top-tier edge model."
@@ -3371,6 +3380,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant applications."
   },
+  "x-ai/grok-4-fast": {
+    "description": "We’re excited to introduce Grok 4 Fast, our latest advancement in cost-effective reasoning models."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "We’re proud to launch grok-code-fast-1, a fast and cost-efficient reasoning model that excels in agent-based coding tasks."
+  },
   "x1": {
     "description": "The Spark X1 model will undergo further upgrades, achieving results in reasoning, text generation, and language understanding tasks that match OpenAI o1 and DeepSeek R1, building on its leading position in domestic mathematical tasks."
   },
@@ -3430,6 +3445,9 @@
   },
   "yi-vision-v2": {
     "description": "A complex visual task model that provides high-performance understanding and analysis capabilities based on multiple images."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM-4.6, the latest flagship model from Zhipu AI, delivers significant improvements over its predecessor in advanced coding, long-form text processing, reasoning, and agent capabilities."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 is a foundational model designed specifically for agent applications, using a Mixture-of-Experts (MoE) architecture. It is deeply optimized for tool invocation, web browsing, software engineering, and front-end programming, supporting seamless integration with code agents like Claude Code and Roo Code. GLM-4.5 employs a hybrid inference mode, adaptable to complex reasoning and everyday use scenarios."

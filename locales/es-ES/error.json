@@ -102,7 +102,7 @@
       "SPII": "Su contenido podría contener información personal sensible. Para proteger la privacidad, elimine la información sensible y vuelva a intentarlo.",
       "default": "Contenido bloqueado: {{blockReason}}. Ajuste su solicitud y vuelva a intentarlo."
     },
-    "InsufficientQuota": "Lo sentimos, la cuota de esta clave ha alcanzado su límite. Por favor, verifique si el saldo de su cuenta es suficiente o aumente la cuota de la clave y vuelva a intentarlo.",
+    "InsufficientQuota": "Lo sentimos, la cuota de esta clave ha alcanzado su límite. Por favor, verifica si el saldo de tu cuenta es suficiente o aumenta la cuota de la clave antes de intentarlo nuevamente.",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidClerkUser": "Lo siento mucho, actualmente no has iniciado sesión. Por favor, inicia sesión o regístrate antes de continuar.",
@@ -131,7 +131,7 @@
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
     "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
-    "QuotaLimitReached": "Lo sentimos, el uso actual de tokens o el número de solicitudes ha alcanzado el límite de cuota de esta clave. Por favor, aumenta la cuota de esta clave o intenta de nuevo más tarde.",
+    "QuotaLimitReached": "Lo sentimos, el uso de tokens o el número de solicitudes ha alcanzado el límite de cuota de esta clave. Por favor, aumenta la cuota de la clave o inténtalo más tarde.",
     "StreamChunkError": "Error de análisis del bloque de mensajes de la solicitud en streaming. Por favor, verifica si la API actual cumple con las normas estándar o contacta a tu proveedor de API para más información.",
     "SubscriptionKeyMismatch": "Lo sentimos, debido a un fallo ocasional del sistema, el uso de la suscripción actual ha dejado de ser válido temporalmente. Por favor, haga clic en el botón de abajo para restaurar la suscripción o contáctenos por correo electrónico para obtener soporte.",
     "SubscriptionPlanLimit": "Se han agotado sus puntos de suscripción, no puede utilizar esta función. Por favor, actualice a un plan superior o configure la API del modelo personalizado para continuar.",
