@@ -61,7 +61,6 @@ export class MessageModel {
       threadId,
     }: QueryMessageParams & { threadId?: string | null } = {},
     options: {
-      groupAssistantMessages?: boolean;
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
     } = {},
   ) => {
