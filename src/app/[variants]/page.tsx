@@ -12,6 +12,7 @@ export default async (props: DynamicLayoutProps) => {
   // Conditionally load and render based on device type
   // Using native dynamic import ensures complete code splitting
   // Mobile and Desktop bundles will be completely separate
+
   if (isMobile) {
     return <MobileRouter locale={locale} />;
   }

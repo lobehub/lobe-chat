@@ -65,6 +65,9 @@
     "thinking": {
       "title": "Deep Thinking Switch"
     },
+    "thinkingLevel": {
+      "title": "Level of Thinking"
+    },
     "title": "Model Extension Features",
     "urlContext": {
       "desc": "When enabled, web links will be automatically parsed to retrieve the actual webpage context content",
@@ -396,6 +399,7 @@
       "rejectReasonPlaceholder": "Providing a reason will help the Agent understand and improve future actions",
       "rejectTitle": "Reject This Tool Invocation",
       "rejectedWithReason": "This tool invocation was actively rejected: {{reason}}",
+      "toolAbort": "This tool invocation was canceled by the user",
       "toolRejected": "This tool invocation was actively rejected"
     }
   },

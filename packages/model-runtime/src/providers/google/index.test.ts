@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { GenerateContentResponse, Tool } from '@google/genai';
+import { GenerateContentResponse } from '@google/genai';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 

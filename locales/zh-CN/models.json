@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。"
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash 预览模型，支持图像生成"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 性价比最高的模型，提供全面的功能。"
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Preview release (Septempber 25th, 2025) of Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro 是 Google 最智能的模型，具有 SOTA 推理和多模式理解，以及强大的代理和氛围编码功能。"
   },
   "gemini-flash-latest": {
     "description": "Latest release of Gemini Flash"

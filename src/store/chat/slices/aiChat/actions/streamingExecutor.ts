@@ -76,7 +76,7 @@ export interface StreamingExecutorAction {
     tool_calls?: MessageToolCall[];
     content: string;
     traceId?: string;
-    finishType?: 'done' | 'error' | 'abort';
+    finishType?: string;
     usage?: ModelUsage;
   }>;
   /**
@@ -283,13 +283,13 @@ export const streamingExecutor: StateCreator<
     let thinkingStartAt: number;
     let duration: number | undefined;
     let reasoningOperationId: string | undefined;
-    let finishType: 'done' | 'error' | 'abort' | undefined;
+    let finishType: string | undefined;
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
     // Throttle tool_calls updates to prevent excessive re-renders (max once per 300ms)
     const throttledUpdateToolCalls = throttle(
-      (toolCalls: any[]) => {
+      (toolCalls: MessageToolCall[]) => {
         internal_dispatchMessage(
           {
             id: messageId,
@@ -366,7 +366,6 @@ export const streamingExecutor: StateCreator<
           throttledUpdateToolCalls.flush();
           internal_toggleToolCallingStreaming(messageId, undefined);
 
-          tools = get().internal_transformToolCalls(parsedToolCalls);
           tool_calls = toolCalls;
 
           parsedToolCalls = parsedToolCalls.map((item) => ({
@@ -376,6 +375,8 @@ export const streamingExecutor: StateCreator<
               arguments: !!item.function.arguments ? item.function.arguments : '{}',
             },
           }));
+
+          tools = get().internal_transformToolCalls(parsedToolCalls);
 
           isFunctionCall = true;
         }
@@ -395,7 +396,7 @@ export const streamingExecutor: StateCreator<
           messageId,
           content,
           {
-            toolCalls: parsedToolCalls,
+            tools,
             reasoning: !!reasoning
               ? { ...reasoning, duration: duration && !isNaN(duration) ? duration : undefined }
               : undefined,

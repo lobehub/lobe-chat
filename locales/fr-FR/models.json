@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Une variante du modèle Gemini 2.0 Flash, optimisée pour des objectifs tels que le rapport coût-efficacité et la faible latence."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Modèle de prévisualisation Gemini 2.0 Flash, prenant en charge la génération d'images"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Version de prévisualisation (25 septembre 2025) de Gemini 2.5 Flash"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview est le modèle de pensée le plus avancé de Google, capable de raisonner sur des problèmes complexes en code, mathématiques et domaines STEM, ainsi que d'analyser de grands ensembles de données, bibliothèques de code et documents avec un contexte étendu."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro est le modèle le plus intelligent de Google, doté d’un raisonnement de pointe, d’une compréhension multimodale, ainsi que de puissantes capacités d’agent et de codage d’ambiance."
   },
   "gemini-flash-latest": {
     "description": "Dernière version de Gemini Flash"

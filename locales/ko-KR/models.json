@@ -1481,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash 미리보기 모델로, 이미지 생성을 지원합니다."
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
   },
@@ -1511,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview는 Google의 가장 가성비 높은 모델로, 포괄적인 기능을 제공합니다."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview는 Google의 최고의 가성비 모델로, 포괄적인 기능을 제공합니다."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Gemini 2.5 Flash의 미리보기 버전 (2025년 9월 25일)"
   },
@@ -1528,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview는 구글의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용해 대규모 데이터셋, 코드베이스 및 문서를 분석합니다."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro는 Google의 가장 지능적인 모델로, 최첨단 추론 및 멀티모달 이해 능력과 강력한 에이전트 기능 및 분위기 인코딩 기능을 갖추고 있습니다."
   },
   "gemini-flash-latest": {
     "description": "Gemini Flash 최신 버전"

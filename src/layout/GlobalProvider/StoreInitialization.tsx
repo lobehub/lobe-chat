@@ -63,16 +63,7 @@ const StoreInitialization = memo(() => {
 
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {
-    onError: () => {
-      // 即使失败也要设置标志，避免应用卡住
-      useGlobalStore.setState({ isAppHydrated: true });
-      console.warn('[Hydration] Client state initialization failed.');
-    },
     onSuccess: (state) => {
-      // 设置水合完成标志
-      useGlobalStore.setState({ isAppHydrated: true });
-      console.log('[Hydration] Client state initialized successfully.');
-
       if (state.isOnboard === false) {
         router.push('/onboard');
       }

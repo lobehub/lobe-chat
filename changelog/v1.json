@@ -1,6 +1,48 @@
 [
   {
     "children": {
+      "fixes": ["Provider settings button unable to redirect."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.94"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.93"
+  },
+  {
+    "children": {
+      "improvements": ["Remove debug console logs and add loading state."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.92"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed the hydrated false problem."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.91"
+  },
+  {
+    "children": {
+      "improvements": ["Extract StatusIndicator component and improve tools display."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.90"
+  },
+  {
+    "children": {
+      "features": ["Support gemini 3.0 tools calling."]
+    },
+    "date": "2025-11-19",
+    "version": "2.0.0-next.89"
+  },
+  {
+    "children": {
       "improvements": ["Fully support Gemini 3.0 model."]
     },
     "date": "2025-11-19",
