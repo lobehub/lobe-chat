@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add Security Blacklist for agent runtime."]
+    },
+    "date": "2025-11-20",
+    "version": "2.0.0-next.95"
+  },
+  {
+    "children": {
       "fixes": ["Provider settings button unable to redirect."]
     },
     "date": "2025-11-20",
