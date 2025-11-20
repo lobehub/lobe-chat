@@ -7,6 +7,10 @@
     "desc": "Effacer les messages de la session actuelle et les fichiers téléchargés",
     "title": "Effacer les messages de la session"
   },
+  "commandPalette": {
+    "desc": "Ouvrez le panneau de commande global pour accéder rapidement aux fonctionnalités",
+    "title": "Panneau de commande"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Supprimer le dernier message et régénérer",
     "title": "Supprimer et régénérer"

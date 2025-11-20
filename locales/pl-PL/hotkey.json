@@ -7,6 +7,10 @@
     "desc": "Wyczyść wiadomości i przesłane pliki w bieżącej rozmowie",
     "title": "Wyczyść wiadomości rozmowy"
   },
+  "commandPalette": {
+    "desc": "Otwórz globalny panel poleceń, aby szybko uzyskać dostęp do funkcji",
+    "title": "Panel poleceń"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Usuń ostatnią wiadomość i wygeneruj ponownie",
     "title": "Usuń i wygeneruj ponownie"
