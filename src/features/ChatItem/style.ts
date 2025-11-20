@@ -86,6 +86,10 @@ export const useStyles = createStyles(
           padding-block: 24px 12px;
           padding-inline: 12px;
 
+          @supports (content-visibility: auto) {
+            contain-intrinsic-size: auto 100lvh;
+          }
+
           time {
             display: inline-block;
             white-space: nowrap;

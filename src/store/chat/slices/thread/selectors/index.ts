@@ -6,7 +6,7 @@ import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import type { ChatStoreState } from '@/store/chat';
 import { chatHelpers } from '@/store/chat/helpers';
 
-import { chatSelectors } from '../../message/selectors';
+import { displayMessageSelectors } from '../../message/selectors';
 import { genMessage } from './util';
 
 const currentTopicThreads = (s: ChatStoreState) => {
@@ -52,7 +52,7 @@ const getTheadParentMessages = (s: ChatStoreState, data: UIChatMessage[]) => {
  * 获取当前 thread 的父级消息
  */
 const portalDisplayParentMessages = (s: ChatStoreState): UIChatMessage[] => {
-  const data = chatSelectors.activeBaseChatsWithoutTool(s);
+  const data = displayMessageSelectors.activeDisplayMessages(s);
 
   return getTheadParentMessages(s, data);
 };
@@ -65,7 +65,7 @@ const portalDisplayChildChatsByThreadId =
   (id?: string) =>
   (s: ChatStoreState): UIChatMessage[] => {
     // skip tool message
-    const data = chatSelectors.activeBaseChatsWithoutTool(s);
+    const data = displayMessageSelectors.activeDisplayMessages(s);
 
     return data.filter((m) => !!id && m.threadId === id);
   };
@@ -74,7 +74,9 @@ const portalDisplayChats = (s: ChatStoreState) => {
   const parentMessages = portalDisplayParentMessages(s);
   const afterMessages = portalDisplayChildChatsByThreadId(s.portalThreadId)(s);
   // use for optimistic update
-  const draftMessage = chatSelectors.activeBaseChats(s).find((m) => m.threadId === THREAD_DRAFT_ID);
+  const draftMessage = displayMessageSelectors
+    .activeDisplayMessages(s)
+    .find((m) => m.threadId === THREAD_DRAFT_ID);
 
   return [...parentMessages, draftMessage, ...afterMessages].filter(Boolean) as UIChatMessage[];
 };
@@ -96,7 +98,7 @@ const portalDisplayChatIDs = (s: ChatStoreState): string[] =>
 // ========================================== //
 
 const portalAIParentMessages = (s: ChatStoreState): UIChatMessage[] => {
-  const data = chatSelectors.activeBaseChats(s);
+  const data = displayMessageSelectors.activeDisplayMessages(s);
 
   return getTheadParentMessages(s, data);
 };
@@ -105,7 +107,7 @@ const portalAIChildChatsByThreadId =
   (id?: string) =>
   (s: ChatStoreState): UIChatMessage[] => {
     // skip tool message
-    const data = chatSelectors.activeBaseChats(s);
+    const data = displayMessageSelectors.activeDisplayMessages(s);
 
     return data.filter((m) => !!id && m.threadId === id);
   };
@@ -162,8 +164,10 @@ const hasThreadBySourceMsgId = (id: string) => (s: ChatStoreState) => {
   return threads.some((t) => t.sourceMessageId === id);
 };
 
-const isThreadAIGenerating = (s: ChatStoreState) =>
-  s.chatLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));
+const isThreadAIGenerating = (s: ChatStoreState) => {
+  const { operationSelectors } = require('../../operation/selectors');
+  return operationSelectors.isAnyMessageLoading(portalDisplayChatIDs(s))(s);
+};
 
 const isInRAGFlow = (s: ChatStoreState) =>
   s.messageRAGLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));

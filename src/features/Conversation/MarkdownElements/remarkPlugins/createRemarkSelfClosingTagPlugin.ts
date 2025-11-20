@@ -25,7 +25,8 @@ export const createRemarkSelfClosingTagPlugin =
   (tagName: string): Plugin<[], any> =>
   () => {
     // Regex for the specific tag, ensure it matches the entire string for HTML check
-    const exactTagRegex = new RegExp(`^<${tagName}(\\s+[^>]*?)?\\s*\\/>$`);
+    // Allow trailing whitespace after /> to handle cases where markdown parsers include it
+    const exactTagRegex = new RegExp(`^<${tagName}(\\s+[^>]*?)?\\s*\\/>\\s*$`);
     // Regex for finding tags within text
     const textTagRegex = new RegExp(`<${tagName}(\\s+[^>]*?)?\\s*\\/>`, 'g');
 
@@ -127,6 +128,34 @@ export const createRemarkSelfClosingTagPlugin =
 
           parent.children.splice(index, 1, ...newChildren);
           return [SKIP, index + newChildren.length]; // Skip new nodes
+        }
+      });
+
+      // 3. Visit inlineCode nodes (backtick-wrapped tags like `<localFile ... />`)
+      // @ts-ignore
+      visit(tree, 'inlineCode', (node: any, index: number, parent) => {
+        log('>>> Visiting inlineCode node: "%s"', node.value);
+
+        if (!parent || typeof index !== 'number' || !node.value?.includes(`<${tagName}`)) {
+          return;
+        }
+
+        const match = node.value.match(exactTagRegex);
+        if (match) {
+          const [, attributesString] = match;
+          const properties = attributesString ? parseAttributes(attributesString.trim()) : {};
+
+          const newNode = {
+            data: {
+              hName: tagName,
+              hProperties: properties,
+            },
+            type: tagName,
+          };
+
+          log('Replacing inlineCode node at index %d with %s node: %o', index, tagName, newNode);
+          parent.children.splice(index, 1, newNode);
+          return [SKIP, index + 1];
         }
       });
     };

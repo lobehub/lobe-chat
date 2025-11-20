@@ -17,6 +17,7 @@
   "availableAgents": "Trợ lý có sẵn",
   "backToBottom": "Quay về dưới cùng",
   "chatList": {
+    "expandMessage": "Mở rộng tin nhắn",
     "longMessageDetail": "Xem chi tiết"
   },
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
@@ -63,6 +64,9 @@
     },
     "thinking": {
       "title": "Công tắc suy nghĩ sâu"
+    },
+    "thinkingLevel": {
+      "title": "Mức độ tư duy"
     },
     "title": "Chức năng mở rộng mô hình",
     "urlContext": {
@@ -173,8 +177,11 @@
     "title": "Nhắc đến thành viên"
   },
   "messageAction": {
+    "collapse": "Thu gọn tin nhắn",
+    "continueGeneration": "Tiếp tục tạo",
     "delAndRegenerate": "Xóa và tạo lại",
     "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
+    "expand": "Mở rộng tin nhắn",
     "regenerate": "Tạo lại"
   },
   "messages": {
@@ -239,6 +246,7 @@
   "noMatchingAgents": "Không tìm thấy thành viên phù hợp",
   "noMembersYet": "Nhóm này chưa có thành viên nào. Nhấp vào nút + để mời trợ lý.",
   "noSelectedAgents": "Chưa chọn thành viên nào",
+  "openInNewWindow": "Mở trong cửa sổ mới",
   "owner": "Chủ nhóm",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
@@ -325,6 +333,11 @@
     "screenshot": "Ảnh chụp màn hình",
     "settings": "Cài đặt xuất",
     "text": "Văn bản",
+    "widthMode": {
+      "label": "Chế độ chiều rộng",
+      "narrow": "Chế độ màn hình hẹp",
+      "wide": "Chế độ màn hình rộng"
+    },
     "withBackground": "Bao gồm hình nền",
     "withFooter": "Bao gồm chân trang",
     "withPluginInfo": "Bao gồm thông tin plugin",
@@ -366,6 +379,29 @@
     "overload": "Vượt quá giới hạn",
     "remained": "Còn lại",
     "used": "Đã sử dụng"
+  },
+  "tool": {
+    "intervention": {
+      "approve": "Phê duyệt",
+      "approveAndRemember": "Phê duyệt và ghi nhớ",
+      "approveOnce": "Chỉ phê duyệt lần này",
+      "mode": {
+        "allowList": "Danh sách cho phép",
+        "allowListDesc": "Chỉ tự động thực thi các công cụ đã được phê duyệt",
+        "autoRun": "Tự động phê duyệt",
+        "autoRunDesc": "Tự động phê duyệt tất cả các công cụ thực thi",
+        "manual": "Thủ công",
+        "manualDesc": "Mỗi lần gọi đều cần phê duyệt thủ công"
+      },
+      "reject": "Từ chối",
+      "rejectAndContinue": "Từ chối và thử lại",
+      "rejectOnly": "Từ chối",
+      "rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
+      "rejectTitle": "Từ chối lần gọi công cụ này",
+      "rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",
+      "toolAbort": "Lần gọi công cụ này đã bị người dùng hủy",
+      "toolRejected": "Lần gọi công cụ này đã bị từ chối"
+    }
   },
   "topic": {
     "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",

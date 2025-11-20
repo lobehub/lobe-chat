@@ -1,4 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { ChatToolPayload } from '@lobechat/types';
+
 import type { AgentState, ToolsCalling } from './state';
 
 export interface AgentEventInit {
@@ -33,7 +35,7 @@ export interface AgentEventToolResult {
 
 export interface AgentEventHumanApproveRequired {
   type: 'human_approve_required';
-  pendingToolsCalling: ToolsCalling[];
+  pendingToolsCalling: ChatToolPayload[];
   sessionId: string;
 }
 
@@ -59,6 +61,7 @@ export interface AgentEventHumanSelectRequired {
 export type FinishReason =
   | 'completed' // Normal completion
   | 'user_requested' // User requested to end
+  | 'user_aborted' // User abort
   | 'max_steps_exceeded' // Reached maximum steps limit
   | 'cost_limit_exceeded' // Reached cost limit
   | 'timeout' // Execution timeout

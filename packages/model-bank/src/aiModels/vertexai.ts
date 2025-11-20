@@ -135,6 +135,7 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-image-preview',
     maxOutput: 8192,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },
@@ -252,6 +253,7 @@ const vertexaiImageModels: AIImageModelCard[] = [
     releasedAt: '2025-08-26',
     parameters: nanoBananaParameters,
     pricing: {
+      approximatePricePerImage: 0.039,
       units: [
         { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'millionTokens' },
         { name: 'textOutput', rate: 2.5, strategy: 'fixed', unit: 'millionTokens' },

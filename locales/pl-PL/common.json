@@ -135,6 +135,7 @@
     }
   },
   "close": "Zamknij",
+  "confirm": "Potwierdź",
   "contact": "Skontaktuj się z nami",
   "copy": "Kopiuj",
   "copyFail": "Nie udało się skopiować",
@@ -282,9 +283,11 @@
     "business": "Współpraca biznesowa",
     "support": "Wsparcie mailowe"
   },
+  "new": "Nowy",
   "oauth": "Logowanie SSO",
   "officialSite": "Oficjalna strona internetowa",
   "ok": "OK",
+  "or": "lub",
   "password": "Hasło",
   "pin": "Przypnij",
   "pinOff": "Odepnij",

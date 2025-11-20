@@ -199,6 +199,12 @@
     "all": "الكل",
     "list": {
       "disabled": "غير مفعل",
+      "disabledActions": {
+        "sort": "طريقة الترتيب",
+        "sortAlphabetical": "ترتيب أبجديًا",
+        "sortAlphabeticalDesc": "ترتيب أبجدي عكسي",
+        "sortDefault": "الترتيب الافتراضي"
+      },
       "enabled": "مفعل"
     },
     "notFound": "لم يتم العثور على نتائج البحث",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "دليل التكوين",
       "responsesApi": {
-        "desc": "استخدام معيار طلبات الجيل الجديد من OpenAI، لفتح ميزات متقدمة مثل سلسلة التفكير",
+        "desc": "يعتمد تنسيق طلب الجيل الجديد من OpenAI، لتمكين ميزات متقدمة مثل سلسلة التفكير (مدعومة فقط من نماذج OpenAI)",
         "title": "استخدام معيار Responses API"
       },
       "waitingForMore": "المزيد من النماذج قيد <1>التخطيط للإدماج</1>، يرجى الانتظار"
@@ -391,7 +397,13 @@
       "addNew": "إضافة نموذج",
       "disabled": "غير مفعل",
       "disabledActions": {
-        "showMore": "عرض الكل"
+        "showMore": "عرض الكل",
+        "sort": "طريقة الترتيب",
+        "sortAlphabetical": "ترتيب أبجديًا",
+        "sortAlphabeticalDesc": "ترتيب أبجدي عكسي",
+        "sortDefault": "الترتيب الافتراضي",
+        "sortReleasedAt": "ترتيب حسب أقدم تاريخ إصدار",
+        "sortReleasedAtDesc": "ترتيب حسب أحدث تاريخ إصدار"
       },
       "empty": {
         "desc": "يرجى إنشاء نموذج مخصص أو سحب نموذج للبدء في الاستخدام",

@@ -7,17 +7,18 @@ import { ReactNode, memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Flexbox } from 'react-layout-kit';
 
 import {
-  removeVirtuosoVisibleItem,
-  upsertVirtuosoVisibleItem,
+  removeVirtuaVisibleItem,
+  upsertVirtuaVisibleItem,
 } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
-import { useChatStore } from '@/store/chat';
-import { chatSelectors, messageStateSelectors } from '@/store/chat/selectors';
+import { getChatStoreState, useChatStore } from '@/store/chat';
+import { displayMessageSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import History from '../components/History';
 import { InPortalThreadContext } from '../context/InPortalThreadContext';
 import AssistantMessage from './Assistant';
 import GroupMessage from './Group';
 import SupervisorMessage from './Supervisor';
+import ToolMessage from './Tool';
 import UserMessage from './User';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -41,6 +42,7 @@ export interface ChatListItemProps {
   id: string;
   inPortalThread?: boolean;
   index: number;
+  isLatestItem?: boolean;
 }
 
 const Item = memo<ChatListItemProps>(
@@ -52,13 +54,15 @@ const Item = memo<ChatListItemProps>(
     disableEditing,
     inPortalThread = false,
     index,
+    isLatestItem,
   }) => {
     const { styles, cx } = useStyles();
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
-
-    const [isMessageLoading] = useChatStore((s) => [messageStateSelectors.isMessageLoading(id)(s)]);
+    const [role, isMessageCreating] = useChatStore((s) => [
+      displayMessageSelectors.getDisplayMessageById(id)(s)?.role,
+      messageStateSelectors.isMessageCreating(id)(s),
+    ]);
 
     // ======================= Performance Optimization ======================= //
     // these useMemo/useCallback are all for the performance optimization
@@ -84,13 +88,13 @@ const Item = memo<ChatListItemProps>(
           if (entry.isIntersecting) {
             const { bottom, top } = entry.intersectionRect;
 
-            upsertVirtuosoVisibleItem(index, {
+            upsertVirtuaVisibleItem(index, {
               bottom,
               ratio: entry.intersectionRatio,
               top,
             });
           } else {
-            removeVirtuosoVisibleItem(index);
+            removeVirtuaVisibleItem(index);
           }
         });
       }, options);
@@ -99,11 +103,13 @@ const Item = memo<ChatListItemProps>(
 
       return () => {
         observer.disconnect();
-        removeVirtuosoVisibleItem(index);
+        removeVirtuaVisibleItem(index);
       };
     }, [index]);
 
     const onContextMenu = useCallback(async () => {
+      const item = displayMessageSelectors.getDisplayMessageById(id)(getChatStoreState());
+
       if (isDesktop && item) {
         const { electronSystemService } = await import('@/services/electron/system');
 
@@ -114,51 +120,55 @@ const Item = memo<ChatListItemProps>(
           role: item.role,
         });
       }
-    }, [id, item]);
+    }, [id]);
 
     const renderContent = useMemo(() => {
-      switch (item?.role) {
+      switch (role) {
         case 'user': {
-          return <UserMessage {...item} disableEditing={disableEditing} index={index} />;
+          return <UserMessage disableEditing={disableEditing} id={id} index={index} />;
         }
 
         case 'assistant': {
           return (
             <AssistantMessage
-              {...item}
               disableEditing={disableEditing}
+              id={id}
               index={index}
-              showTitle={item.groupId ? true : false}
+              isLatestItem={isLatestItem}
             />
           );
         }
 
-        case 'group': {
+        case 'assistantGroup': {
           return (
             <GroupMessage
-              {...item}
               disableEditing={disableEditing}
+              id={id}
               index={index}
-              showTitle={item.groupId ? true : false}
+              isLatestItem={isLatestItem}
             />
           );
+        }
+
+        case 'tool': {
+          return <ToolMessage id={id} index={index} />;
         }
 
         case 'supervisor': {
-          return <SupervisorMessage {...item} disableEditing={disableEditing} index={index} />;
+          return <SupervisorMessage disableEditing={disableEditing} id={id} index={index} />;
         }
       }
 
       return null;
-    }, [item]);
+    }, [role, disableEditing, id, index, isLatestItem]);
 
-    if (!item) return;
+    if (!role) return;
 
     return (
       <InPortalThreadContext.Provider value={inPortalThread}>
         {enableHistoryDivider && <History />}
         <Flexbox
-          className={cx(styles.message, className, isMessageLoading && styles.loading)}
+          className={cx(styles.message, className, isMessageCreating && styles.loading)}
           data-index={index}
           onContextMenu={onContextMenu}
           ref={containerRef}
@@ -169,6 +179,7 @@ const Item = memo<ChatListItemProps>(
       </InPortalThreadContext.Provider>
     );
   },
+  isEqual,
 );
 
 Item.displayName = 'ChatItem';

@@ -41,9 +41,29 @@
         "openingMessage": "Mensagem de Abertura",
         "openingQuestions": "Perguntas Iniciais",
         "title": "Configuração do Assistente"
+      },
+      "version": {
+        "empty": "Nenhuma versão histórica disponível",
+        "status": {
+          "archived": "Arquivado",
+          "deprecated": "Rejeitado",
+          "unpublished": "Em revisão"
+        },
+        "table": {
+          "isLatest": "Versão mais recente",
+          "isValidated": "Validado",
+          "publishAt": "Data de publicação",
+          "version": "Número da versão"
+        },
+        "title": "Histórico de versões"
       }
     },
     "list": "Lista de Assistentes",
+    "marketSource": {
+      "label": "Alternar fonte do mercado",
+      "legacy": "Mercado antigo",
+      "new": "Novo mercado"
+    },
     "more": "Mais",
     "plugins": "Integrar plugins",
     "recentSubmits": "Atualizações Recentes",
@@ -51,9 +71,34 @@
       "createdAt": "Publicado Recentemente",
       "identifier": "ID do Assistente",
       "knowledgeCount": "Quantidade de Bases de Conhecimento",
+      "myown": "Ver meus",
       "pluginCount": "Quantidade de Plugins",
       "title": "Nome do Assistente",
       "tokenUsage": "Uso de Tokens"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "O assistente foi removido oficialmente por questões de segurança/política",
+          "owner": "O proprietário do assistente o arquivou ou removeu voluntariamente"
+        },
+        "subtitle": "O assistente que você está tentando acessar foi arquivado pelos seguintes motivos possíveis:",
+        "title": "Assistente arquivado"
+      },
+      "backToMarket": "Voltar ao mercado de assistentes",
+      "deprecated": {
+        "reasons": {
+          "official": "O assistente foi removido oficialmente por questões de segurança/política",
+          "owner": "O proprietário do assistente o rejeitou ou removeu voluntariamente"
+        },
+        "subtitle": "O assistente que você está tentando acessar foi rejeitado pelos seguintes motivos possíveis:",
+        "title": "Assistente rejeitado"
+      },
+      "support": "Se tiver qualquer problema, copie o link e envie para <1>support@lobehub.com</1> para obter suporte.",
+      "unpublished": {
+        "subtitle": "O assistente que você está tentando acessar está passando por revisão de versão. Se tiver dúvidas, copie o link e envie para <1>support@lobehub.com</1> para obter suporte.",
+        "title": "Assistente em revisão"
+      }
     },
     "suggestions": "Sugestões Relacionadas",
     "systemRole": "Configuração do Assistente",

@@ -1,10 +1,16 @@
-import type {
+import { ChatToolPayload } from '@lobechat/types';
+import pMap from 'p-map';
+
+import {
   Agent,
   AgentEvent,
   AgentInstruction,
+  AgentInstructionCallTool,
+  AgentInstructionCallToolsBatch,
   AgentRuntimeContext,
   AgentState,
   Cost,
+  GeneralAgentCallToolsBatchResultPayload,
   InstructionExecutor,
   RuntimeConfig,
   ToolRegistry,
@@ -18,11 +24,16 @@ import type {
  */
 export class AgentRuntime {
   private executors: Record<AgentInstruction['type'], InstructionExecutor>;
+  private operationId?: string;
+  private getOperation?: RuntimeConfig['getOperation'];
 
   constructor(
     private agent: Agent,
     private config: RuntimeConfig = {},
   ) {
+    this.operationId = config.operationId;
+    this.getOperation = config.getOperation;
+
     // Build executors with priority: agent.executors > config.executors > built-in
     this.executors = {
       call_llm: this.createCallLLMExecutor(),
@@ -36,6 +47,28 @@ export class AgentRuntime {
       // Agent provided executors have highest priority
       ...(agent.executors as any),
     };
+  }
+
+  /**
+   * Get operation context (sessionId, topicId, etc.)
+   * Returns the business context captured by the operation
+   */
+  getContext() {
+    if (!this.operationId || !this.getOperation) {
+      return undefined;
+    }
+    return this.getOperation(this.operationId).context;
+  }
+
+  /**
+   * Get operation abort controller
+   * Returns the AbortController for cancellation
+   */
+  getAbortController(): AbortController | undefined {
+    if (!this.operationId || !this.getOperation) {
+      return undefined;
+    }
+    return this.getOperation(this.operationId).abortController;
   }
 
   /**
@@ -79,8 +112,21 @@ export class AgentRuntime {
 
       // Handle human approved tool calls
       if (runtimeContext.phase === 'human_approved_tool') {
-        const approvedPayload = runtimeContext.payload as { approvedToolCall: ToolsCalling };
-        rawInstructions = { payload: approvedPayload.approvedToolCall, type: 'call_tool' };
+        const approvedPayload = runtimeContext.payload as {
+          approvedToolCall: ChatToolPayload;
+          parentMessageId: string;
+          skipCreateToolMessage: boolean;
+        };
+        const toolCalling = approvedPayload.approvedToolCall;
+
+        rawInstructions = {
+          payload: {
+            parentMessageId: approvedPayload.parentMessageId,
+            skipCreateToolMessage: approvedPayload.skipCreateToolMessage,
+            toolCalling,
+          },
+          type: 'call_tool',
+        };
       } else {
         // Standard flow: Plan -> Execute
         rawInstructions = await this.agent.runner(runtimeContext, newState);
@@ -89,12 +135,37 @@ export class AgentRuntime {
       // Normalize to array
       const instructions = Array.isArray(rawInstructions) ? rawInstructions : [rawInstructions];
 
+      // Convert old format to new format
+      const normalizedInstructions = instructions.map((instruction) => {
+        if (
+          instruction.type === 'call_tools_batch' && // Check if payload is array of ToolsCalling (old format)
+          Array.isArray(instruction.payload)
+        ) {
+          const toolsCalling = instruction.payload.map((tc: ToolsCalling) => ({
+            apiName: tc.function.name,
+            arguments: tc.function.arguments,
+            id: tc.id,
+            identifier: tc.function.name,
+            type: 'default' as any,
+          }));
+
+          return {
+            payload: {
+              parentMessageId: '',
+              toolsCalling,
+            },
+            type: 'call_tools_batch',
+          };
+        }
+        return instruction;
+      });
+
       // Execute all instructions sequentially
       let currentState = newState;
       const allEvents: AgentEvent[] = [];
       let finalNextContext: AgentRuntimeContext | undefined = undefined;
 
-      for (const instruction of instructions) {
+      for (const instruction of normalizedInstructions) {
         let result;
 
         // Special handling for batch tool execution
@@ -147,9 +218,10 @@ export class AgentRuntime {
    */
   async approveToolCall(
     state: AgentState,
-    approvedToolCall: any,
+    approvedToolCall: ChatToolPayload,
   ): Promise<{ events: AgentEvent[]; newState: AgentState; nextContext?: AgentRuntimeContext }> {
     const context: AgentRuntimeContext = {
+      operationId: this.operationId,
       payload: { approvedToolCall },
       phase: 'human_approved_tool',
       session: this.createSessionContext(state),
@@ -245,10 +317,11 @@ export class AgentRuntime {
     }
 
     // Otherwise, just return the resumed state
+    const initialContext = this.createInitialContext(newState);
     return {
       events: [resumeEvent],
       newState,
-      nextContext: this.createInitialContext(newState),
+      nextContext: initialContext,
     };
   }
 
@@ -395,6 +468,7 @@ export class AgentRuntime {
 
         // Provide next context based on LLM result
         const nextContext: AgentRuntimeContext = {
+          operationId: this.operationId,
           payload: {
             hasToolCalls: toolCalls.length > 0,
             result: { content: assistantContent, tool_calls: toolCalls },
@@ -414,7 +488,7 @@ export class AgentRuntime {
   /** Create call_tool executor */
   private createCallToolExecutor(): InstructionExecutor {
     return async (instruction, state) => {
-      const { payload: toolCall } = instruction as Extract<AgentInstruction, { type: 'call_tool' }>;
+      const { payload } = instruction as AgentInstructionCallTool;
       const newState = structuredClone(state);
       const events: AgentEvent[] = [];
 
@@ -423,9 +497,10 @@ export class AgentRuntime {
 
       const tools = this.agent.tools || ({} as ToolRegistry);
 
+      const toolCall = payload.toolCalling;
       // Support both ToolsCalling (OpenAI format) and CallingToolPayload formats
-      const toolName = toolCall.apiName || toolCall.function?.name;
-      const toolArgs = toolCall.arguments || toolCall.function?.arguments;
+      const toolName = toolCall.apiName;
+      const toolArgs = toolCall.arguments;
       const toolId = toolCall.id;
 
       const handler = tools[toolName];
@@ -466,6 +541,7 @@ export class AgentRuntime {
 
       // Provide next context for tool result
       const nextContext: AgentRuntimeContext = {
+        operationId: this.operationId,
         payload: {
           result,
           toolCall,
@@ -498,7 +574,6 @@ export class AgentRuntime {
           sessionId: newState.sessionId,
           type: 'human_approve_required',
         },
-        { toolCalls: pendingToolsCalling, type: 'tool_pending' },
       ];
 
       return { events, newState };
@@ -586,27 +661,30 @@ export class AgentRuntime {
    * Execute multiple tool calls concurrently
    */
   private async executeToolsBatch(
-    instruction: { payload: any[]; type: 'call_tools_batch' },
+    instruction: AgentInstructionCallToolsBatch,
     baseState: AgentState,
   ): Promise<{
     events: AgentEvent[];
     newState: AgentState;
     nextContext?: AgentRuntimeContext;
   }> {
-    const { payload: toolsCalling } = instruction;
+    const { payload } = instruction;
 
     // Execute all tools concurrently based on the same state
-    const results = await Promise.all(
-      toolsCalling.map((toolCall) =>
-        this.executors.call_tool(
-          { payload: toolCall, type: 'call_tool' } as any,
-          structuredClone(baseState), // Each tool starts from the same base state
-        ),
+    const results = await pMap(instruction.payload.toolsCalling, (toolCalling: ChatToolPayload) =>
+      this.executors.call_tool(
+        {
+          payload: { parentMessageId: payload.parentMessageId, toolCalling },
+          type: 'call_tool',
+        } as AgentInstructionCallTool,
+        structuredClone(baseState), // Each tool starts from the same base state
       ),
     );
 
+    const lastParentMessageId = (results.at(-1)!.nextContext?.payload as any)
+      ?.parentMessageId as string;
     // Merge results
-    return this.mergeToolResults(results, baseState);
+    return this.mergeToolResults(results, baseState, lastParentMessageId);
   }
 
   /**
@@ -619,6 +697,7 @@ export class AgentRuntime {
       nextContext?: AgentRuntimeContext;
     }>,
     baseState: AgentState,
+    lastParentMessageId: string,
   ): {
     events: AgentEvent[];
     newState: AgentState;
@@ -678,10 +757,12 @@ export class AgentRuntime {
       events: allEvents,
       newState,
       nextContext: {
+        operationId: this.operationId,
         payload: {
+          parentMessageId: lastParentMessageId,
           toolCount: results.length,
           toolResults: results.map((r) => r.nextContext?.payload),
-        },
+        } as GeneralAgentCallToolsBatchResultPayload,
         phase: 'tools_batch_result',
         session: this.createSessionContext(newState),
       },
@@ -743,6 +824,7 @@ export class AgentRuntime {
           events: [warningEvent],
           newState,
           nextContext: {
+            operationId: this.operationId,
             payload: { error: warningEvent.error, isCostWarning: true },
             phase: 'error' as const,
             session: this.createSessionContext(newState),
@@ -772,6 +854,7 @@ export class AgentRuntime {
 
     if (lastMessage?.role === 'user') {
       return {
+        operationId: this.operationId,
         payload: {
           isFirstMessage: state.messages.length === 1,
           message: lastMessage,
@@ -782,6 +865,7 @@ export class AgentRuntime {
     }
 
     return {
+      operationId: this.operationId,
       payload: undefined,
       phase: 'init',
       session: this.createSessionContext(state),

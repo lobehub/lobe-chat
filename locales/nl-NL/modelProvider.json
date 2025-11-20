@@ -199,6 +199,12 @@
     "all": "Alles",
     "list": {
       "disabled": "Niet ingeschakeld",
+      "disabledActions": {
+        "sort": "Sorteervolgorde",
+        "sortAlphabetical": "Alfabetisch sorteren",
+        "sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
+        "sortDefault": "Standaard sortering"
+      },
       "enabled": "Ingeschakeld"
     },
     "notFound": "Geen zoekresultaten gevonden",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "Configuratiehandleiding",
       "responsesApi": {
-        "desc": "Gebruik de nieuwe generatie OpenAI-aanvraagformaatstandaard om geavanceerde functies zoals keten van gedachten te ontgrendelen",
+        "desc": "Maakt gebruik van het nieuwe generatie aanvraagformaat van OpenAI om geavanceerde functies zoals Chain of Thought te ontgrendelen (alleen ondersteund door OpenAI-modellen)",
         "title": "Gebruik Responses API-standaard"
       },
       "waitingForMore": "Meer modellen zijn in <1>planning voor integratie</1>, blijf op de hoogte"
@@ -391,7 +397,13 @@
       "addNew": "Model toevoegen",
       "disabled": "Niet ingeschakeld",
       "disabledActions": {
-        "showMore": "Toon alles"
+        "showMore": "Toon alles",
+        "sort": "Sorteervolgorde",
+        "sortAlphabetical": "Alfabetisch sorteren",
+        "sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
+        "sortDefault": "Standaard sortering",
+        "sortReleasedAt": "Sorteren op oudste publicatiedatum",
+        "sortReleasedAtDesc": "Sorteren op nieuwste publicatiedatum"
       },
       "empty": {
         "desc": "Maak een aangepast model of haal een model op om te beginnen met gebruiken.",

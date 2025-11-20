@@ -21,7 +21,6 @@ describe('createServerConfigStore', () => {
   it('should initialize store with default state', () => {
     const store = createServerConfigStore();
 
-    expect(store.getState().featureFlags).toHaveProperty('showLLM');
     expect(store.getState().featureFlags).toHaveProperty('enablePlugins');
     expect(store.getState()).toMatchObject({
       serverConfig: { telemetry: {}, aiProvider: {} },

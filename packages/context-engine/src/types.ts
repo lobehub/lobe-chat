@@ -1,7 +1,7 @@
 import { UIChatMessage } from '@lobechat/types';
 
 /**
- * 智能体状态 - 从原项目类型推断
+ * Agent state - inferred from original project types
  */
 export interface AgentState {
   [key: string]: any;
@@ -13,7 +13,7 @@ export interface AgentState {
 }
 
 /**
- * 聊天图像项
+ * Chat image item
  */
 export interface ChatImageItem {
   alt?: string;
@@ -22,7 +22,7 @@ export interface ChatImageItem {
 }
 
 /**
- * 消息工具调用
+ * Message tool call
  */
 export interface MessageToolCall {
   function: {
@@ -30,6 +30,7 @@ export interface MessageToolCall {
     name: string;
   };
   id: string;
+  thoughtSignature?: string;
   type: 'function';
 }
 export interface Message {
@@ -39,72 +40,72 @@ export interface Message {
 }
 
 /**
- * 管道上下文 - 在管道中流动的核心数据结构
+ * Pipeline context - core data structure flowing through the pipeline
  */
 export interface PipelineContext {
-  /** 中止原因 */
+  /** Abort reason */
   abortReason?: string;
 
-  /** 不可变的输入状态 */
+  /** Immutable input state */
   readonly initialState: AgentState;
 
-  /** 允许处理器提前终止管道 */
+  /** Allow processors to terminate pipeline early */
   isAborted: boolean;
 
-  /** 正在构建的可变消息列表 */
+  /** Mutable message list being built */
   messages: Message[];
-  /** 处理器间通信的元数据 */
+  /** Metadata for communication between processors */
   metadata: {
-    /** 其他自定义元数据 */
+    /** Other custom metadata */
     [key: string]: any;
-    /** 当前 token 估算值 */
+    /** Current token count estimate */
     currentTokenCount?: number;
-    /** 最大 token 限制 */
+    /** Maximum token limit */
     maxTokens?: number;
-    /** 模型标识 */
+    /** Model identifier */
     model?: string;
   };
 }
 
 /**
- * 上下文处理器接口 - 管道中处理站的标准化接口
+ * Context processor interface - standardized interface for processing stations in the pipeline
  */
 export interface ContextProcessor {
-  /** 处理器名称，用于调试和日志 */
+  /** Processor name, used for debugging and logging */
   name: string;
-  /** 核心处理方法 */
+  /** Core processing method */
   process: (context: PipelineContext) => Promise<PipelineContext>;
 }
 
 /**
- * 处理器配置选项
+ * Processor configuration options
  */
 export interface ProcessorOptions {
-  /** 是否启用调试模式 */
+  /** Whether to enable debug mode */
   debug?: boolean;
-  /** 自定义日志函数 */
+  /** Custom logging function */
   logger?: (message: string, level?: 'info' | 'warn' | 'error') => void;
 }
 
 /**
- * 管道执行结果
+ * Pipeline execution result
  */
 export interface PipelineResult {
-  /** 中止原因 */
+  /** Abort reason */
   abortReason?: string;
-  /** 是否被中止 */
+  /** Whether aborted */
   isAborted: boolean;
-  /** 最终处理的消息 */
+  /** Final processed messages */
   messages: any[];
-  /** 处理过程中的元数据 */
+  /** Metadata from processing */
   metadata: Record<string, any>;
-  /** 执行统计 */
+  /** Execution statistics */
   stats: {
-    /** 处理的处理器数量 */
+    /** Number of processors processed */
     processedCount: number;
-    /** 各处理器执行时间 */
+    /** Execution time for each processor */
     processorDurations: Record<string, number>;
-    /** 总处理时间 */
+    /** Total processing time */
     totalDuration: number;
   };
 }
@@ -126,14 +127,14 @@ export type ProcessorTypeLegacy =
   | 'processor';
 
 /**
- * Token 计数器接口
+ * Token counter interface
  */
 export interface TokenCounter {
   count: (messages: UIChatMessage[] | string) => Promise<number>;
 }
 
 /**
- * 文件上下文信息
+ * File context information
  */
 export interface FileContext {
   addUrl?: boolean;
@@ -142,7 +143,7 @@ export interface FileContext {
 }
 
 /**
- * RAG 检索块
+ * RAG retrieval chunk
  */
 export interface RetrievalChunk {
   content: string;
@@ -152,7 +153,7 @@ export interface RetrievalChunk {
 }
 
 /**
- * RAG 上下文
+ * RAG context
  */
 export interface RAGContext {
   chunks: RetrievalChunk[];
@@ -161,7 +162,7 @@ export interface RAGContext {
 }
 
 /**
- * 模型能力
+ * Model capabilities
  */
 export interface ModelCapabilities {
   supportsFunctionCall: boolean;
@@ -171,7 +172,7 @@ export interface ModelCapabilities {
 }
 
 /**
- * 处理器错误
+ * Processor error
  */
 export class ProcessorError extends Error {
   constructor(
@@ -185,7 +186,7 @@ export class ProcessorError extends Error {
 }
 
 /**
- * 管道错误
+ * Pipeline error
  */
 export class PipelineError extends Error {
   constructor(

@@ -1,4 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { ChatToolPayload, SecurityBlacklistConfig, UserInterventionConfig } from '@lobechat/types';
+
 import type { Cost, CostLimit, Usage } from './usage';
 
 /**
@@ -15,6 +17,21 @@ export interface AgentState {
   tools?: any[];
   systemRole?: string;
   toolManifestMap: Record<string, any>;
+
+  /**
+   * User's global intervention configuration
+   * Controls how tools requiring approval are handled
+   */
+  userInterventionConfig?: UserInterventionConfig;
+
+  /**
+   * Security blacklist configuration
+   * These rules will ALWAYS block execution and require human intervention,
+   * regardless of user settings (even in auto-run mode).
+   * If not provided, DEFAULT_SECURITY_BLACKLIST will be used.
+   */
+  securityBlacklist?: SecurityBlacklistConfig;
+
   // --- Execution Tracking ---
   /**
    * Number of execution steps in this session.
@@ -49,7 +66,7 @@ export interface AgentState {
    * When status is 'waiting_for_human', this stores pending requests
    * for human-in-the-loop operations.
    */
-  pendingToolsCalling?: ToolsCalling[];
+  pendingToolsCalling?: ChatToolPayload[];
   pendingHumanPrompt?: { metadata?: Record<string, unknown>; prompt: string };
   pendingHumanSelect?: {
     metadata?: Record<string, unknown>;

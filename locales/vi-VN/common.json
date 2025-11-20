@@ -135,6 +135,7 @@
     }
   },
   "close": "Đóng",
+  "confirm": "Xác nhận",
   "contact": "Liên hệ chúng tôi",
   "copy": "Sao chép",
   "copyFail": "Sao chép thất bại",
@@ -282,9 +283,11 @@
     "business": "Hợp tác kinh doanh",
     "support": "Hỗ trợ qua email"
   },
+  "new": "Mới",
   "oauth": "Đăng nhập SSO",
   "officialSite": "Trang web chính thức",
   "ok": "Đồng ý",
+  "or": "hoặc",
   "password": "Mật khẩu",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",

@@ -41,7 +41,7 @@ export class ToolCallProcessor extends BaseProcessor {
     let toolCallsConverted = 0;
     let toolMessagesConverted = 0;
 
-    // 处理每条消息的工具调用
+    // Process tool calls for each message
     for (let i = 0; i < clonedContext.messages.length; i++) {
       const message = clonedContext.messages[i];
 
@@ -52,7 +52,7 @@ export class ToolCallProcessor extends BaseProcessor {
           processedCount++;
           clonedContext.messages[i] = updatedMessage;
 
-          // 统计转换的工具调用和工具消息数量
+          // Count converted tool calls and tool messages
           if (message.role === 'assistant' && message.tools) {
             toolCallsConverted += message.tools.length;
           }
@@ -60,15 +60,15 @@ export class ToolCallProcessor extends BaseProcessor {
             toolMessagesConverted++;
           }
 
-          log(`处理消息 ${message.id}，角色: ${message.role}`);
+          log(`Processed message ${message.id}, role: ${message.role}`);
         }
       } catch (error) {
-        log.extend('error')(`处理消息 ${message.id} 工具调用时出错: ${error}`);
-        // 继续处理其他消息
+        log.extend('error')(`Error processing tool call in message ${message.id}: ${error}`);
+        // Continue processing other messages
       }
     }
 
-    // 更新元数据
+    // Update metadata
     clonedContext.metadata.toolCallProcessed = processedCount;
     clonedContext.metadata.toolCallsConverted = toolCallsConverted;
     clonedContext.metadata.toolMessagesConverted = toolMessagesConverted;
@@ -82,7 +82,7 @@ export class ToolCallProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理单条消息的工具调用
+   * Process tool calls for a single message
    */
   private async processMessage(message: any, supportTools: boolean): Promise<any> {
     switch (message.role) {
@@ -101,26 +101,26 @@ export class ToolCallProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理助手消息的工具调用
+   * Process tool calls in assistant message
    */
   private processAssistantMessage(message: any, supportTools: boolean): any {
-    // 检查是否有工具调用
+    // Check if there are tool calls
     const hasTools = message.tools && message.tools.length > 0;
     const hasEmptyToolCalls = message.tool_calls && message.tool_calls.length === 0;
 
     if (!supportTools || (!hasTools && hasEmptyToolCalls)) {
-      // 如果不支持工具或只有空的工具调用，返回普通消息（移除工具相关属性）
+      // If tools not supported or only has empty tool calls, return regular message (remove tool-related properties)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tools, tool_calls, ...messageWithoutTools } = message;
       return messageWithoutTools;
     }
 
     if (!hasTools) {
-      // 如果没有 tools 但有其他工具调用属性，只移除 tools
+      // If no tools but has other tool call properties, only remove tools
       return message;
     }
 
-    // 将 tools 转换为 tool_calls 格式
+    // Convert tools to tool_calls format
     const tool_calls = message.tools.map(
       (tool: any): MessageToolCall => ({
         function: {
@@ -130,6 +130,7 @@ export class ToolCallProcessor extends BaseProcessor {
             : `${tool.identifier}.${tool.apiName}`,
         },
         id: tool.id,
+        thoughtSignature: tool.thoughtSignature,
         type: 'function',
       }),
     );
@@ -138,11 +139,11 @@ export class ToolCallProcessor extends BaseProcessor {
   }
 
   /**
-   * 处理工具消息
+   * Process tool message
    */
   private processToolMessage(message: any, supportTools: boolean): any {
     if (!supportTools) {
-      // 如果不支持工具，将工具消息转换为用户消息
+      // If tools not supported, convert tool message to user message
       return {
         ...message,
         name: undefined,
@@ -152,7 +153,7 @@ export class ToolCallProcessor extends BaseProcessor {
       };
     }
 
-    // 生成工具名称
+    // Generate tool name
     const toolName = message.plugin
       ? this.config.genToolCallingName
         ? this.config.genToolCallingName(
@@ -166,19 +167,19 @@ export class ToolCallProcessor extends BaseProcessor {
     return {
       ...message,
       name: toolName,
-      // 保留 tool_call_id 用于关联
+      // Keep tool_call_id for association
     };
   }
 
   /**
-   * 验证工具调用格式
+   * Validate tool call format
    */
   private validateToolCall(tool: any): boolean {
     return !!(tool && tool.id && tool.identifier && tool.apiName && tool.arguments);
   }
 
   /**
-   * 验证工具消息格式
+   * Validate tool message format
    */
   private validateToolMessage(message: any): boolean {
     return !!(message && message.tool_call_id && message.content !== undefined);

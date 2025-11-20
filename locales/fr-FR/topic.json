@@ -6,6 +6,7 @@
     "confirmRemoveUnstarred": "Vous allez supprimer les sujets non favoris. Cette action est irréversible, veuillez agir avec prudence.",
     "duplicate": "Créer une copie",
     "export": "Exporter le sujet",
+    "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
     "removeAll": "Supprimer tous les sujets",
     "removeUnstarred": "Supprimer les sujets non favoris"
   },

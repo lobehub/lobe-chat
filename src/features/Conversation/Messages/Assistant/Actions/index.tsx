@@ -6,9 +6,9 @@ import { memo, use, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ShareMessageModal from '@/features/Conversation/components/ShareMessageModal';
-import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
+import { VirtuaContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/selectors';
+import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
@@ -23,9 +23,11 @@ interface AssistantActionsProps {
 }
 export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, index }) => {
   const { error, tools } = data;
-  const [isThreadMode, hasThread] = useChatStore((s) => [
+  const [isThreadMode, hasThread, isRegenerating, isCollapsed] = useChatStore((s) => [
     !!s.activeThreadId,
     threadSelectors.hasThreadBySourceMsgId(id)(s),
+    messageStateSelectors.isMessageRegenerating(id)(s),
+    messageStateSelectors.isMessageCollapsed(id)(s),
   ]);
   const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
   const [showShareModal, setShareModal] = useState(false);
@@ -42,7 +44,9 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     share,
     tts,
     translate,
-  } = useChatListActionsBar({ hasThread });
+    collapse,
+    expand,
+  } = useChatListActionsBar({ hasThread, isRegenerating });
 
   const hasTools = !!tools;
 
@@ -55,14 +59,14 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     return [edit, copy, inThread || isGroupSession ? null : branching].filter(
       Boolean,
     ) as ActionIconGroupItemType[];
-  }, [inThread, hasTools, isGroupSession]);
+  }, [inThread, hasTools, isGroupSession, delAndRegenerate, copy, edit, branching]);
 
   const { t } = useTranslation('common');
   const searchParams = useSearchParams();
   const topic = searchParams.get('topic');
   const [
     deleteMessage,
-    regenerateMessage,
+    regenerateAssistantMessage,
     translateMessage,
     ttsMessage,
     delAndRegenerateMessage,
@@ -71,9 +75,10 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     resendThreadMessage,
     delAndResendThreadMessage,
     toggleMessageEditing,
+    toggleMessageCollapsed,
   ] = useChatStore((s) => [
     s.deleteMessage,
-    s.regenerateMessage,
+    s.regenerateAssistantMessage,
     s.translateMessage,
     s.ttsMessage,
     s.delAndRegenerateMessage,
@@ -82,9 +87,10 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
+    s.toggleMessageCollapsed,
   ]);
   const { message } = App.useApp();
-  const virtuosoRef = use(VirtuosoContext);
+  const virtuaRef = use(VirtuaContext);
 
   const onActionClick = useCallback(
     async (action: ActionIconGroupEvent) => {
@@ -92,7 +98,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         case 'edit': {
           toggleMessageEditing(id, true);
 
-          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+          virtuaRef?.current?.scrollToIndex(index, { align: 'start' });
         }
       }
       if (!data) return;
@@ -120,7 +126,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
         case 'regenerate': {
           if (inPortalThread) {
             resendThreadMessage(id);
-          } else regenerateMessage(id);
+          } else regenerateAssistantMessage(id);
 
           // if this message is an error message, we need to delete it
           if (data.error) deleteMessage(id);
@@ -138,6 +144,12 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
 
         case 'tts': {
           ttsMessage(id);
+          break;
+        }
+
+        case 'collapse':
+        case 'expand': {
+          toggleMessageCollapsed(id);
           break;
         }
 
@@ -165,6 +177,8 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 
+  const collapseAction = isCollapsed ? expand : collapse;
+
   return (
     <>
       <ActionIconGroup
@@ -173,6 +187,7 @@ export const AssistantActionsBar = memo<AssistantActionsProps>(({ id, data, inde
           items: [
             edit,
             copy,
+            collapseAction,
             divider,
             tts,
             translate,

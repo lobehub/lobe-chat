@@ -2,23 +2,23 @@ import type { ContextProcessor, PipelineContext, ProcessorOptions } from '../typ
 import { ProcessorError } from '../types';
 
 /**
- * 基础处理器抽象类
- * 提供通用的处理器功能和错误处理
+ * Base processor abstract class
+ * Provides common processor functionality and error handling
  */
 export abstract class BaseProcessor implements ContextProcessor {
   abstract readonly name: string;
 
-  // 为了兼容现有子类构造函数签名，保留参数但不做任何处理
+  // Keep parameters for compatibility with existing subclass constructor signatures, but do no processing
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_options: ProcessorOptions = {}) {}
 
   /**
-   * 核心处理方法 - 子类需要实现
+   * Core processing method - subclasses need to implement
    */
   protected abstract doProcess(context: PipelineContext): Promise<PipelineContext>;
 
   /**
-   * 公共处理入口，包含错误处理和日志
+   * Public processing entry point, includes error handling and logging
    */
   async process(context: PipelineContext): Promise<PipelineContext> {
     try {
@@ -29,32 +29,32 @@ export abstract class BaseProcessor implements ContextProcessor {
     } catch (error) {
       throw new ProcessorError(
         this.name,
-        `处理失败: ${error}`,
+        `Processing failed: ${error}`,
         error instanceof Error ? error : new Error(String(error)),
       );
     }
   }
 
   /**
-   * 验证输入上下文
+   * Validate input context
    */
   protected validateInput(context: PipelineContext): void {
     if (!context || !Array.isArray(context.messages)) {
-      throw new Error('无效的上下文');
+      throw new Error('Invalid context');
     }
   }
 
   /**
-   * 验证输出上下文
+   * Validate output context
    */
   protected validateOutput(context: PipelineContext): void {
     if (!context || !Array.isArray(context.messages)) {
-      throw new Error('无效的输出上下文');
+      throw new Error('Invalid output context');
     }
   }
 
   /**
-   * 安全地克隆上下文
+   * Safely clone context
    */
   protected cloneContext(context: PipelineContext): PipelineContext {
     return {
@@ -65,7 +65,7 @@ export abstract class BaseProcessor implements ContextProcessor {
   }
 
   /**
-   * 中止管道处理
+   * Abort pipeline processing
    */
   protected abort(context: PipelineContext, reason: string): PipelineContext {
     return {
@@ -76,7 +76,7 @@ export abstract class BaseProcessor implements ContextProcessor {
   }
 
   /**
-   * 检查消息是否为空
+   * Check if message is empty
    */
   protected isEmptyMessage(message: string | undefined | null): boolean {
     return !message || message.trim().length === 0;

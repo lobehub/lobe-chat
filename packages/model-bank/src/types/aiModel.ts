@@ -185,6 +185,10 @@ export interface LookupPricingUnit extends PricingUnitBase {
 export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit;
 
 export interface Pricing {
+  /**
+   * Fallback approximate per-image price (USD) when detailed pricing table is unavailable
+   */
+  approximatePricePerImage?: number;
   currency?: ModelPriceCurrency;
   units: PricingUnit[];
 }
@@ -234,9 +238,11 @@ export type ExtendParamsType =
   | 'disableContextCaching'
   | 'reasoningEffort'
   | 'gpt5ReasoningEffort'
+  | 'gpt5_1ReasoningEffort'
   | 'textVerbosity'
   | 'thinking'
   | 'thinkingBudget'
+  | 'thinkingLevel'
   | 'urlContext';
 
 export interface AiModelSettings {
@@ -390,13 +396,22 @@ export const ToggleAiModelEnableSchema = z.object({
 
 export type ToggleAiModelEnableParams = z.infer<typeof ToggleAiModelEnableSchema>;
 
-//
-
 export interface AiModelForSelect {
   abilities: ModelAbilities;
+  /**
+   * Approximate per-image price (USD), used when exact calculation is not possible
+   */
+  approximatePricePerImage?: number;
   contextWindowTokens?: number;
+  description?: string;
   displayName?: string;
   id: string;
+  parameters?: ModelParamsSchema;
+  /**
+   * Exact per-image price (USD) calculated from pricing units
+   */
+  pricePerImage?: number;
+  pricing?: Pricing;
 }
 
 export interface EnabledAiModel {
@@ -408,6 +423,7 @@ export interface EnabledAiModel {
   id: string;
   parameters?: ModelParamsSchema;
   providerId: string;
+  releasedAt?: string;
   settings?: AiModelSettings;
   sort?: number;
   type: AiModelType;

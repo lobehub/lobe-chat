@@ -30,6 +30,7 @@ export interface CommonAction {
     isLogin: boolean | undefined,
     serverConfig: GlobalServerConfig,
     options?: {
+      onError?: (error: any) => void;
       onSuccess: (data: UserInitializationState) => void;
     },
   ) => SWRResponse;
@@ -75,6 +76,9 @@ export const createCommonSlice: StateCreator<
       !!isLogin ? GET_USER_STATE_KEY : null,
       () => userService.getUserState(),
       {
+        onError: (error) => {
+          options?.onError?.(error);
+        },
         onSuccess: (data) => {
           options?.onSuccess?.(data);
 

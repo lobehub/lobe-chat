@@ -7,13 +7,13 @@ import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { DiscoverTab } from '@/types/discover';
 
 import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
 import { useNav } from '../../../features/useNav';
 import SortButton from '../../features/SortButton';
+import MarketSourceSwitch from '../../assistant/features/MarketSourceSwitch';
 import { useScroll } from './useScroll';
 
 export const useStyles = createStyles(({ cx, stylish, css, token }) => ({
@@ -75,7 +75,7 @@ const Nav = memo(() => {
             compact
             items={items as any}
             onChange={(key) => {
-              const path = key === DiscoverTab.Home ? '/' : `/${key}`;
+              const path = key === DiscoverTab.Home ? '/discover' : `/discover/${key}`;
               const search = q ? `?q=${encodeURIComponent(q)}` : '';
               navigate(path + search, { replace: true });
               const scrollableElement = document?.querySelector(`#${SCROLL_PARENT_ID}`);
@@ -88,7 +88,8 @@ const Nav = memo(() => {
           />
         </Flexbox>
         {!isHome && (
-          <Flexbox align={'center'} gap={4} horizontal>
+          <Flexbox align={'center'} gap={8} horizontal>
+            {activeKey === DiscoverTab.Assistants && <MarketSourceSwitch />}
             <SortButton />
           </Flexbox>
         )}
@@ -97,4 +98,4 @@ const Nav = memo(() => {
   );
 });
 
-export default withSuspense(Nav);
+export default Nav;

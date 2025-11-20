@@ -41,9 +41,29 @@
         "openingMessage": "Opening Message",
         "openingQuestions": "Opening Questions",
         "title": "Assistant Settings"
+      },
+      "version": {
+        "empty": "No historical versions yet",
+        "status": {
+          "archived": "Archived",
+          "deprecated": "Deprecated",
+          "unpublished": "Under Review"
+        },
+        "table": {
+          "isLatest": "Latest Version",
+          "isValidated": "Validated",
+          "publishAt": "Published Date",
+          "version": "Version"
+        },
+        "title": "Version History"
       }
     },
     "list": "Assistant List",
+    "marketSource": {
+      "label": "Market Source",
+      "legacy": "Legacy",
+      "new": "New"
+    },
     "more": "More",
     "plugins": "Integrated Plugins",
     "recentSubmits": "Recent Updates",
@@ -51,9 +71,34 @@
       "createdAt": "Recently Published",
       "identifier": "Assistant ID",
       "knowledgeCount": "Number of Knowledge Bases",
+      "myown": "View My Assistants",
       "pluginCount": "Number of Plugins",
       "title": "Assistant Name",
       "tokenUsage": "Token Usage"
+    },
+    "status": {
+      "archived": {
+        "reasons": {
+          "official": "The assistant was removed by the platform due to security, political, or other concerns.",
+          "owner": "The assistant was voluntarily removed or archived by its developer."
+        },
+        "subtitle": "The assistant you're trying to access has been archived for one of the following reasons:",
+        "title": "Assistant Archived"
+      },
+      "backToMarket": "Back to Assistant Marketplace",
+      "deprecated": {
+        "reasons": {
+          "official": "The assistant was removed by the platform due to security, political, or other concerns.",
+          "owner": "The assistant was voluntarily removed or rejected by its developer."
+        },
+        "subtitle": "The assistant you're trying to access has been rejected for one of the following reasons:",
+        "title": "Assistant Rejected"
+      },
+      "support": "If you have any questions, please copy the link and contact us at <1>support@lobehub.com</1>.",
+      "unpublished": {
+        "subtitle": "The assistant you're trying to access is currently under review. If you have any questions, please copy the link and contact us at <1>support@lobehub.com</1>.",
+        "title": "Assistant Under Review"
+      }
     },
     "suggestions": "Related Recommendations",
     "systemRole": "Assistant Settings",

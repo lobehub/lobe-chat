@@ -18,32 +18,41 @@ export const useStyles = createStyles(({ css, token }) => ({
     text-overflow: ellipsis;
   `,
 
+  expand: css`
+    color: ${token.colorText};
+  `,
   shinyText: shinyTextStylish(token),
 }));
 
 interface BuiltinPluginTitleProps {
   apiName: string;
-  hasResult?: boolean;
   icon?: ReactNode;
   identifier: string;
   index: number;
+  isExpanded?: boolean;
+  isLoading?: boolean;
   messageId: string;
   title: string;
   toolCallId: string;
 }
 
-const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(({ apiName, title, hasResult }) => {
-  const { styles } = useStyles();
+const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(
+  ({ apiName, title, isLoading, isExpanded }) => {
+    const { styles, cx } = useStyles();
 
-  const isLoading = !hasResult;
-
-  return (
-    <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
-      <div>{title}</div>
-      <Icon icon={ChevronRight} />
-      <span className={styles.apiName}>{apiName}</span>
-    </Flexbox>
-  );
-});
+    return (
+      <Flexbox
+        align={'center'}
+        className={cx(isLoading && styles.shinyText, isExpanded && styles.expand)}
+        gap={4}
+        horizontal
+      >
+        <div>{title}</div>
+        <Icon icon={ChevronRight} />
+        <span className={styles.apiName}>{apiName}</span>
+      </Flexbox>
+    );
+  },
+);
 
 export default BuiltinPluginTitle;

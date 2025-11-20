@@ -199,6 +199,12 @@
     "all": "全部",
     "list": {
       "disabled": "未启用",
+      "disabledActions": {
+        "sort": "排序方式",
+        "sortAlphabetical": "按字母排序",
+        "sortAlphabeticalDesc": "按字母倒序排序",
+        "sortDefault": "默认排序"
+      },
       "enabled": "已启用"
     },
     "notFound": "未找到搜索结果",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "配置教程",
       "responsesApi": {
-        "desc": "采用 OpenAI 新一代请求格式规范，解锁思维链等进阶特性",
+        "desc": "采用 OpenAI 新一代请求格式规范，解锁思维链等进阶特性 (仅 OpenAI 模型支持)",
         "title": "使用 Responses API 规范"
       },
       "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
@@ -391,7 +397,13 @@
       "addNew": "添加模型",
       "disabled": "未启用",
       "disabledActions": {
-        "showMore": "显示全部"
+        "showMore": "显示全部",
+        "sort": "排序方式",
+        "sortAlphabetical": "按字母排序",
+        "sortAlphabeticalDesc": "按字母倒序排序",
+        "sortDefault": "默认排序",
+        "sortReleasedAt": "按最早发布时间排序",
+        "sortReleasedAtDesc": "按最新发布时间排序"
       },
       "empty": {
         "desc": "请创建自定义模型或拉取模型后开始使用吧",

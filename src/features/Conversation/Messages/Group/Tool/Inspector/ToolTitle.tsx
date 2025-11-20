@@ -26,24 +26,26 @@ export const useStyles = createStyles(({ css, token }) => ({
     text-overflow: ellipsis;
   `,
 
+  expand: css`
+    color: ${token.colorText};
+  `,
   shinyText: shinyTextStylish(token),
 }));
 
 interface ToolTitleProps {
   apiName: string;
-  hasResult?: boolean;
   identifier: string;
   index: number;
+  isExpanded?: boolean;
+  isLoading?: boolean;
   messageId: string;
   toolCallId: string;
 }
 
 const ToolTitle = memo<ToolTitleProps>(
-  ({ identifier, apiName, hasResult, index, toolCallId, messageId }) => {
+  ({ identifier, apiName, isLoading, index, toolCallId, messageId, isExpanded }) => {
     const { t } = useTranslation('plugin');
-    const { styles } = useStyles();
-
-    const isLoading = !hasResult;
+    const { styles, cx } = useStyles();
 
     const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
@@ -69,9 +71,10 @@ const ToolTitle = memo<ToolTitleProps>(
       return (
         <BuiltinPluginTitle
           {...builtinPluginTitle}
-          hasResult={hasResult}
           identifier={identifier}
           index={index}
+          isExpanded={isExpanded}
+          isLoading={isLoading}
           messageId={messageId}
           toolCallId={toolCallId}
         />
@@ -81,7 +84,12 @@ const ToolTitle = memo<ToolTitleProps>(
     const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
     return (
-      <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={6} horizontal>
+      <Flexbox
+        align={'center'}
+        className={cx(isLoading && styles.shinyText, isExpanded && styles.expand)}
+        gap={6}
+        horizontal
+      >
         <div>{pluginTitle}</div> <Icon icon={ChevronRight} />
         <span className={styles.apiName}>{apiName}</span>
       </Flexbox>

@@ -1,11 +1,11 @@
 import { PGlite } from '@electric-sql/pglite';
 import { vector } from '@electric-sql/pglite/vector';
+import type { MigrationTableItem } from '@lobechat/types';
 import { drizzle as pgliteDrizzle } from 'drizzle-orm/pglite';
 import fs from 'node:fs';
 import { Md5 } from 'ts-md5';
 
 import { electronIpcClient } from '@/server/modules/ElectronIPCClient';
-import { MigrationTableItem } from '@/types/clientDB';
 
 import { DrizzleMigrationModel } from '../models/drizzleMigration';
 import * as schema from '../schemas';

@@ -13,17 +13,6 @@ export const getMessageById = (
   const directMatch = messages.find((m) => m.id === id);
   if (directMatch) return directMatch;
 
-  // If not found, search in group message children (blocks)
-  for (const message of messages) {
-    if (message.role === 'group' && message.children) {
-      const blockMatch = message.children.find((block) => block.id === id);
-      if (blockMatch) {
-        // Return the block with parentId set to group message ID
-        return { ...blockMatch, parentId: message.id } as UIChatMessage;
-      }
-    }
-  }
-
   return undefined;
 };
 

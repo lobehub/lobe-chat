@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import type { LobeAgentChatConfig, LobeAgentTTSConfig } from '@lobechat/types';
 import {
   boolean,
   index,
@@ -10,8 +11,6 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-
-import { LobeAgentChatConfig, LobeAgentTTSConfig } from '@/types/agent';
 
 import { idGenerator, randomSlug } from '../utils/idGenerator';
 import { timestamps } from './_helpers';
@@ -37,6 +36,7 @@ export const agents = pgTable(
     tags: jsonb('tags').$type<string[]>().default([]),
     avatar: text('avatar'),
     backgroundColor: text('background_color'),
+    marketIdentifier: text('market_identifier'),
 
     plugins: jsonb('plugins').$type<string[]>().default([]),
 

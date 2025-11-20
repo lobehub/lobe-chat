@@ -18,7 +18,7 @@ const OAuthForm = memo<{ id: string }>(({ id }) => {
   const user = useUserStore(userProfileSelectors.userProfile);
   const isOAuthLoggedIn = useUserStore(authSelectors.isLoginWithAuth);
 
-  const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.delAndRegenerateMessage, s.deleteMessage]);
 
   const { message, modal } = App.useApp();
 

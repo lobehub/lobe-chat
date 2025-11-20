@@ -30,7 +30,7 @@ const CustomRender = memo<CustomRenderProps>(
     // Determine if plugin UI should be shown based on plugin type
     useEffect(() => {
       if (!plugin?.type) return;
-      setShowPluginRender(!['default', 'mcp'].includes(plugin.type));
+      setShowPluginRender(plugin.type !== 'default');
     }, [plugin?.type, setShowPluginRender]);
 
     // Parse and display result content

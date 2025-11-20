@@ -25,12 +25,26 @@ export class FileModel {
     this.db = db;
   }
 
+  /**
+   * Get file by ID without userId filter (public access)
+   * Use this for scenarios like file proxy where file should be accessible by ID alone
+   *
+   * @param db - Database instance
+   * @param id - File ID
+   * @returns File record or undefined
+   */
+  static async getFileById(db: LobeChatDatabase, id: string): Promise<FileItem | undefined> {
+    return db.query.files.findFirst({
+      where: eq(files.id, id),
+    });
+  }
+
   create = async (
-    params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string },
+    params: Omit<NewFile, 'id' | 'userId'> & { id?: string; knowledgeBaseId?: string },
     insertToGlobalFiles?: boolean,
     trx?: Transaction,
-  ) => {
-    const executeInTransaction = async (tx: Transaction) => {
+  ): Promise<{ id: string }> => {
+    const executeInTransaction = async (tx: Transaction): Promise<FileItem> => {
       if (insertToGlobalFiles) {
         await tx.insert(globalFiles).values({
           creator: this.userId,
@@ -42,12 +56,12 @@ export class FileModel {
         });
       }
 
-      const result = await tx
+      const result = (await tx
         .insert(files)
         .values({ ...params, userId: this.userId })
-        .returning();
+        .returning()) as FileItem[];
 
-      const item = result[0];
+      const item = result[0]!;
 
       if (params.knowledgeBaseId) {
         await tx.insert(knowledgeBaseFiles).values({
@@ -87,7 +101,7 @@ export class FileModel {
 
   delete = async (id: string, removeGlobalFile: boolean = true, trx?: Transaction) => {
     const executeInTransaction = async (tx: Transaction) => {
-      // pglite 环境下不能再 transaction 中使用非事务操作，会阻塞住
+      // In pglite environment, non-transactional operations cannot be used within a transaction as it will block
       const file = await this.findById(id, tx);
       if (!file) return;
 
@@ -137,26 +151,26 @@ export class FileModel {
     if (ids.length === 0) return [];
 
     return await this.db.transaction(async (trx) => {
-      // 1. 先获取文件列表，以便返回删除的文件
+      // 1. First get the file list to return the deleted files
       const fileList = await trx.query.files.findMany({
         where: and(inArray(files.id, ids), eq(files.userId, this.userId)),
       });
 
       if (fileList.length === 0) return [];
 
-      // 提取需要检查的文件哈希值
+      // Extract file hashes that need to be checked
       const hashList = fileList.map((file) => file.fileHash!).filter(Boolean);
 
-      // 2. 删除相关的 chunks
+      // 2. Delete related chunks
       await this.deleteFileChunks(trx as any, ids);
 
-      // 3. 删除文件记录
+      // 3. Delete file records
       await trx.delete(files).where(and(inArray(files.id, ids), eq(files.userId, this.userId)));
 
-      // 如果不需要删除全局文件，直接返回
+      // If global files don't need to be deleted, return directly
       if (!removeGlobalFile || hashList.length === 0) return fileList;
 
-      // 4. 找出不再被引用的哈希值
+      // 4. Find hashes that are no longer referenced
       const remainingFiles = await trx
         .select({
           fileHash: files.fileHash,
@@ -164,18 +178,18 @@ export class FileModel {
         .from(files)
         .where(inArray(files.fileHash, hashList));
 
-      // 将仍在使用的哈希值放入Set中，便于快速查找
+      // Put still-in-use hashes into a Set for quick lookup
       const usedHashes = new Set(remainingFiles.map((file) => file.fileHash));
 
-      // 找出需要删除的哈希值(不再被任何文件使用的)
+      // Find hashes to delete (those no longer used by any file)
       const hashesToDelete = hashList.filter((hash) => !usedHashes.has(hash));
 
       if (hashesToDelete.length === 0) return fileList;
 
-      // 5. 删除不再被引用的全局文件
+      // 5. Delete global files that are no longer referenced
       await trx.delete(globalFiles).where(inArray(globalFiles.hashId, hashesToDelete));
 
-      // 返回删除的文件列表
+      // Return the list of deleted files
       return fileList;
     });
   };
@@ -192,17 +206,25 @@ export class FileModel {
     knowledgeBaseId,
     showFilesInKnowledgeBase,
   }: QueryFileListParams = {}) => {
-    // 1. query where
+    // 1. Build where clause
     let whereClause = and(
       q ? ilike(files.name, `%${q}%`) : undefined,
       eq(files.userId, this.userId),
     );
-    if (category && category !== FilesTabs.All) {
+    if (category && category !== FilesTabs.All && category !== FilesTabs.Home) {
       const fileTypePrefix = this.getFileTypePrefix(category as FilesTabs);
-      whereClause = and(whereClause, ilike(files.fileType, `${fileTypePrefix}%`));
+      if (Array.isArray(fileTypePrefix)) {
+        // For multiple file types (e.g., Documents includes 'application' and 'custom')
+        whereClause = and(
+          whereClause,
+          or(...fileTypePrefix.map((prefix) => ilike(files.fileType, `${prefix}%`))),
+        );
+      } else {
+        whereClause = and(whereClause, ilike(files.fileType, `${fileTypePrefix}%`));
+      }
     }
 
-    // 2. order part
+    // 2. Build order clause
 
     let orderByClause = desc(files.createdAt);
     // create a map for sortable fields
@@ -219,7 +241,7 @@ export class FileModel {
       orderByClause = sortFunction(sortableFields[sorter as SortableField]);
     }
 
-    // 3. build query
+    // 3. Build base query
     let query = this.db
       .select({
         chunkTaskId: files.chunkTaskId,
@@ -234,7 +256,7 @@ export class FileModel {
       })
       .from(files);
 
-    // 4. add knowledge base query
+    // 4. Add knowledge base query if needed
     if (knowledgeBaseId) {
       // if knowledgeBaseId is provided, it means we are querying files in a knowledge-base
 
@@ -247,7 +269,7 @@ export class FileModel {
         ),
       );
     }
-    // 5.if we don't show files in knowledge base, we need exclude files in knowledge base
+    // 5. If we don't show files in knowledge base, exclude them
     else if (!showFilesInKnowledgeBase) {
       whereClause = and(
         whereClause,
@@ -257,7 +279,7 @@ export class FileModel {
       );
     }
 
-    // or we are just filter in the global files
+    // Otherwise, we are just filtering in the global files
     return query.where(whereClause).orderBy(orderByClause);
   };
 
@@ -294,19 +316,22 @@ export class FileModel {
   /**
    * get the corresponding file type prefix according to FilesTabs
    */
-  private getFileTypePrefix = (category: FilesTabs): string => {
+  private getFileTypePrefix = (category: FilesTabs): string | string[] => {
     switch (category) {
       case FilesTabs.Audios: {
         return 'audio';
       }
       case FilesTabs.Documents: {
-        return 'application';
+        return ['application', 'custom'];
       }
       case FilesTabs.Images: {
         return 'image';
       }
       case FilesTabs.Videos: {
         return 'video';
+      }
+      case FilesTabs.Websites: {
+        return 'text/html';
       }
       default: {
         return '';
@@ -322,11 +347,11 @@ export class FileModel {
       ),
     });
 
-  // 抽象出通用的删除 chunks 方法
+  // Abstract common method for deleting chunks
   private deleteFileChunks = async (trx: PgTransaction<any>, fileIds: string[]) => {
     if (fileIds.length === 0) return;
 
-    // 获取要删除的文件相关的所有 chunk IDs（移除知识库保护逻辑）
+    // Get all chunk IDs related to the files to be deleted (knowledge base protection logic removed)
     const relatedChunks = await trx
       .select({ chunkId: fileChunks.chunkId })
       .from(fileChunks)
@@ -336,15 +361,15 @@ export class FileModel {
 
     if (chunkIds.length === 0) return;
 
-    // 批量处理配置
+    // Batch processing configuration
     const BATCH_SIZE = 1000;
     const MAX_CONCURRENT_BATCHES = 3;
 
-    // 分批并行处理
+    // Process in batches concurrently
     for (let i = 0; i < chunkIds.length; i += BATCH_SIZE * MAX_CONCURRENT_BATCHES) {
       const batchPromises = [];
 
-      // 创建多个并行批次
+      // Create multiple parallel batches
       for (let j = 0; j < MAX_CONCURRENT_BATCHES; j++) {
         const startIdx = i + j * BATCH_SIZE;
         if (startIdx >= chunkIds.length) break;
@@ -352,29 +377,29 @@ export class FileModel {
         const batchChunkIds = chunkIds.slice(startIdx, startIdx + BATCH_SIZE);
         if (batchChunkIds.length === 0) continue;
 
-        // 按正确的删除顺序处理每个批次，失败不阻止流程
+        // Process each batch in the correct deletion order, failures do not block the flow
         const batchPromise = (async () => {
-          // 1. 删除 embeddings (最顶层，有外键依赖)
+          // 1. Delete embeddings (top-level, has foreign key dependencies)
           try {
             await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
           } catch (e) {
-            // 静默处理，不阻止删除流程
+            // Silent handling, does not block deletion process
             console.warn('Failed to delete embeddings:', e);
           }
 
-          // 2. 删除 documentChunks 关联 (如果存在)
+          // 2. Delete documentChunks association (if exists)
           try {
             await trx.delete(documentChunks).where(inArray(documentChunks.chunkId, batchChunkIds));
           } catch (e) {
-            // 静默处理，不阻止删除流程
+            // Silent handling, does not block deletion process
             console.warn('Failed to delete documentChunks:', e);
           }
 
-          // 3. 删除 chunks (核心数据)
+          // 3. Delete chunks (core data)
           try {
             await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
           } catch (e) {
-            // 静默处理，不阻止删除流程
+            // Silent handling, does not block deletion process
             console.warn('Failed to delete chunks:', e);
           }
         })();
@@ -382,15 +407,15 @@ export class FileModel {
         batchPromises.push(batchPromise);
       }
 
-      // 等待当前批次的所有任务完成
+      // Wait for all tasks in the current batch to complete
       await Promise.all(batchPromises);
     }
 
-    // 4. 最后删除 fileChunks 关联表记录
+    // 4. Finally delete fileChunks association table records
     try {
       await trx.delete(fileChunks).where(inArray(fileChunks.fileId, fileIds));
     } catch (e) {
-      // 静默处理，不阻止删除流程
+      // Silent handling, does not block deletion process
       console.warn('Failed to delete fileChunks:', e);
     }
 

@@ -236,6 +236,8 @@
   },
   "inspector": {
     "args": "Voir la liste des paramètres",
+    "delete": "Supprimer l'appel d'outil",
+    "orphanedToolCall": "Cet appel d'outil est peut-être devenu orphelin en raison d'une erreur, ce qui pourrait perturber le bon fonctionnement de l'agent. Veuillez le supprimer.",
     "pluginRender": "Voir l'interface du plugin"
   },
   "list": {
@@ -251,14 +253,20 @@
   },
   "localSystem": {
     "apiName": {
+      "editLocalFile": "Modifier le fichier",
+      "getCommandOutput": "Obtenir la sortie du code",
+      "globLocalFiles": "Rechercher des fichiers correspondants",
+      "grepContent": "Rechercher dans le contenu",
+      "killCommand": "Arrêter l'exécution du code",
       "listLocalFiles": "Voir la liste des fichiers",
       "moveLocalFiles": "Déplacer les fichiers",
       "readLocalFile": "Lire le contenu du fichier",
       "renameLocalFile": "Renommer",
+      "runCommand": "Exécuter le code",
       "searchLocalFiles": "Rechercher des fichiers",
       "writeLocalFile": "Écrire dans un fichier"
     },
-    "title": "Fichiers locaux"
+    "title": "Système local"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Vérification de l'environnement d'installation...",

@@ -6,6 +6,7 @@ table agents {
   tags jsonb [default: `[]`]
   avatar text
   background_color text
+  market_identifier text
   plugins jsonb [default: `[]`]
   client_id text
   user_id text [not null]
@@ -169,20 +170,8 @@ table chat_groups_agents {
   }
 }
 
-table document_chunks {
-  document_id varchar(30) [not null]
-  chunk_id uuid [not null]
-  page_index integer
-  user_id text [not null]
-  created_at "timestamp with time zone" [not null, default: `now()`]
-
-  indexes {
-    (document_id, chunk_id) [pk]
-  }
-}
-
 table documents {
-  id varchar(30) [pk, not null]
+  id varchar(255) [pk, not null]
   title text
   content text
   file_type varchar(255) [not null]
@@ -194,6 +183,7 @@ table documents {
   source_type text [not null]
   source text [not null]
   file_id text
+  parent_id varchar(255)
   user_id text [not null]
   client_id text
   editor_data jsonb
@@ -205,6 +195,7 @@ table documents {
     source [name: 'documents_source_idx']
     file_type [name: 'documents_file_type_idx']
     file_id [name: 'documents_file_id_idx']
+    parent_id [name: 'documents_parent_id_idx']
     (client_id, user_id) [name: 'documents_client_id_user_id_unique', unique]
   }
 }
@@ -218,6 +209,7 @@ table files {
   size integer [not null]
   url text [not null]
   source text
+  parent_id varchar(255)
   client_id text
   metadata jsonb
   chunk_task_id uuid
@@ -228,6 +220,7 @@ table files {
 
   indexes {
     file_hash [name: 'file_hash_idx']
+    parent_id [name: 'files_parent_id_idx']
     (client_id, user_id) [name: 'files_client_id_user_id_unique', unique]
   }
 }
@@ -345,6 +338,7 @@ table message_plugins {
   id text [pk, not null]
   tool_call_id text
   type text [default: 'default']
+  intervention jsonb
   api_name text
   arguments text
   identifier text
@@ -655,6 +649,18 @@ table chunks {
   indexes {
     (client_id, user_id) [name: 'chunks_client_id_user_id_unique', unique]
     user_id [name: 'chunks_user_id_idx']
+  }
+}
+
+table document_chunks {
+  document_id varchar(30) [not null]
+  chunk_id uuid [not null]
+  page_index integer
+  user_id text [not null]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (document_id, chunk_id) [pk]
   }
 }
 

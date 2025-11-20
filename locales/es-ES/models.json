@@ -236,6 +236,9 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 es un modelo de inferencia de atención mixta a gran escala con pesos de código abierto, que cuenta con 456 mil millones de parámetros, activando aproximadamente 45.9 mil millones de parámetros por token. El modelo soporta de forma nativa contextos ultra largos de hasta 1 millón de tokens y, gracias a su mecanismo de atención relámpago, reduce en un 75 % las operaciones de punto flotante en tareas de generación de 100 mil tokens en comparación con DeepSeek R1. Además, MiniMax-M1 utiliza una arquitectura MoE (Mezcla de Expertos), combinando el algoritmo CISPO y un diseño de atención mixta para un entrenamiento eficiente mediante aprendizaje reforzado, logrando un rendimiento líder en la industria en inferencia con entradas largas y escenarios reales de ingeniería de software."
   },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 redefine la eficiencia para los agentes inteligentes. Es un modelo MoE compacto, rápido y rentable, con un total de 230 mil millones de parámetros y 10 mil millones de parámetros activos. Está diseñado para ofrecer un rendimiento de primer nivel en tareas de codificación y agentes, manteniendo al mismo tiempo una inteligencia general sólida. Con solo 10 mil millones de parámetros activos, MiniMax-M2 ofrece un rendimiento comparable al de modelos a gran escala, lo que lo convierte en una opción ideal para aplicaciones de alta eficiencia."
+  },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Con un total de 1 billón de parámetros y 32 mil millones de parámetros activados, este modelo no reflexivo alcanza niveles de vanguardia en conocimiento avanzado, matemáticas y codificación, destacando en tareas generales de agentes. Optimizado para tareas de agentes, no solo responde preguntas sino que también puede actuar. Ideal para conversaciones improvisadas, chat general y experiencias de agentes, es un modelo de nivel reflexivo que no requiere largos tiempos de pensamiento."
   },
@@ -1049,6 +1052,9 @@
   "deepseek-r1-0528": {
     "description": "Modelo completo de 685 mil millones de parámetros, lanzado el 28 de mayo de 2025. DeepSeek-R1 utiliza técnicas de aprendizaje reforzado a gran escala en la fase de postentrenamiento, mejorando significativamente la capacidad de razonamiento del modelo con muy pocos datos etiquetados. Presenta alto rendimiento y gran capacidad en tareas de matemáticas, código y razonamiento en lenguaje natural."
   },
+  "deepseek-r1-250528": {
+    "description": "DeepSeek R1 250528, versión completa del modelo de inferencia DeepSeek-R1, ideal para tareas complejas de matemáticas y lógica."
+  },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B versión rápida, que soporta búsqueda en línea en tiempo real, ofreciendo una velocidad de respuesta más rápida mientras mantiene el rendimiento del modelo."
   },
@@ -1059,31 +1065,34 @@
     "description": "deepseek-r1-distill-llama es un modelo basado en Llama destilado a partir de DeepSeek-R1."
   },
   "deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek R1, el modelo más grande e inteligente del conjunto DeepSeek, ha sido destilado en la arquitectura Llama 70B. Basado en pruebas de referencia y evaluaciones humanas, este modelo es más inteligente que el Llama 70B original, destacándose especialmente en tareas que requieren precisión matemática y factual."
+    "description": "DeepSeek R1 Distill Llama 70B, modelo destilado que combina la capacidad de inferencia R1 con el ecosistema Llama."
   },
   "deepseek-r1-distill-llama-8b": {
-    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+    "description": "DeepSeek-R1-Distill-Llama-8B es un modelo de lenguaje grande destilado basado en Llama-3.1-8B, utilizando las salidas de DeepSeek R1."
+  },
+  "deepseek-r1-distill-qianfan-70b": {
+    "description": "DeepSeek R1 Distill Qianfan 70B, modelo destilado R1 basado en Qianfan-70B, con excelente relación calidad-precio."
+  },
+  "deepseek-r1-distill-qianfan-8b": {
+    "description": "DeepSeek R1 Distill Qianfan 8B, modelo destilado R1 basado en Qianfan-8B, ideal para aplicaciones medianas y pequeñas."
   },
   "deepseek-r1-distill-qianfan-llama-70b": {
-    "description": "Lanzado por primera vez el 14 de febrero de 2025, destilado por el equipo de desarrollo del modelo Qianfan a partir del modelo base Llama3_70B (Construido con Meta Llama), con datos de destilación que también incluyen el corpus de Qianfan."
-  },
-  "deepseek-r1-distill-qianfan-llama-8b": {
-    "description": "Lanzado por primera vez el 14 de febrero de 2025, destilado por el equipo de desarrollo del modelo Qianfan a partir del modelo base Llama3_8B (Construido con Meta Llama), con datos de destilación que también incluyen el corpus de Qianfan."
+    "description": "DeepSeek R1 Distill Qianfan Llama 70B, modelo destilado R1 basado en Llama-70B."
   },
   "deepseek-r1-distill-qwen": {
     "description": "deepseek-r1-distill-qwen es un modelo basado en Qwen destilado a partir de DeepSeek-R1."
   },
   "deepseek-r1-distill-qwen-1.5b": {
-    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+    "description": "DeepSeek R1 Distill Qwen 1.5B, modelo R1 ultraligero, adecuado para entornos con recursos extremadamente limitados."
   },
   "deepseek-r1-distill-qwen-14b": {
-    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+    "description": "DeepSeek R1 Distill Qwen 14B, modelo R1 de tamaño medio, ideal para despliegue en múltiples escenarios."
   },
   "deepseek-r1-distill-qwen-32b": {
-    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+    "description": "DeepSeek R1 Distill Qwen 32B, modelo destilado R1 basado en Qwen-32B, equilibrando rendimiento y coste."
   },
   "deepseek-r1-distill-qwen-7b": {
-    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+    "description": "DeepSeek R1 Distill Qwen 7B, modelo R1 ligero, adecuado para entornos perimetrales y empresariales privados."
   },
   "deepseek-r1-fast-online": {
     "description": "DeepSeek R1 versión rápida completa, que soporta búsqueda en línea en tiempo real, combinando la potente capacidad de 671B de parámetros con una velocidad de respuesta más rápida."
@@ -1112,11 +1121,23 @@
   "deepseek-v3.1-terminus": {
     "description": "DeepSeek-V3.1-Terminus es una versión optimizada del modelo de lenguaje a gran escala lanzado por DeepSeek, especialmente diseñado para dispositivos terminales."
   },
+  "deepseek-v3.1-think-250821": {
+    "description": "DeepSeek V3.1 Think 250821, modelo de pensamiento profundo correspondiente a la versión Terminus, ideal para escenarios de inferencia de alto rendimiento."
+  },
   "deepseek-v3.1:671b": {
     "description": "DeepSeek V3.1: modelo de inferencia de próxima generación que mejora las capacidades de razonamiento complejo y pensamiento en cadena, ideal para tareas que requieren análisis profundo."
   },
   "deepseek-v3.2-exp": {
     "description": "deepseek-v3.2-exp introduce el mecanismo de atención dispersa, con el objetivo de mejorar la eficiencia en el entrenamiento y la inferencia al procesar textos largos, con un precio inferior al de deepseek-v3.1."
+  },
+  "deepseek-v3.2-think": {
+    "description": "DeepSeek V3.2 Think, versión completa del modelo de pensamiento profundo, con capacidades mejoradas de razonamiento de cadenas largas."
+  },
+  "deepseek-vl2": {
+    "description": "DeepSeek VL2, modelo multimodal que admite comprensión de imágenes y texto, así como preguntas visuales de alta precisión."
+  },
+  "deepseek-vl2-small": {
+    "description": "DeepSeek VL2 Small, versión multimodal ligera, adecuada para entornos con recursos limitados y escenarios de alta concurrencia."
   },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 es un modelo experto de mezcla de 685B parámetros, la última iteración de la serie de modelos de chat insignia del equipo de DeepSeek.\n\nHereda el modelo [DeepSeek V3](/deepseek/deepseek-chat-v3) y se desempeña excepcionalmente en diversas tareas."
@@ -1137,7 +1158,7 @@
     "description": "DeepSeek-R1 mejora enormemente la capacidad de razonamiento del modelo con muy pocos datos etiquetados. Antes de generar la respuesta final, el modelo produce una cadena de pensamiento para aumentar la precisión de la respuesta."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B es una variante destilada y más eficiente del modelo Llama de 70B. Mantiene un rendimiento sólido en tareas de generación de texto, reduciendo el costo computacional para facilitar su despliegue e investigación. Operado por Groq con su hardware personalizado de unidad de procesamiento de lenguaje (LPU) para ofrecer inferencia rápida y eficiente."
+    "description": "DeepSeek R1 Distill Llama 70B es un modelo de lenguaje de gran escala basado en Llama3.3 70B. Este modelo ha sido ajustado finamente utilizando las salidas de DeepSeek R1, logrando un rendimiento competitivo comparable al de los modelos más avanzados del mercado."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B es un modelo de lenguaje grande destilado basado en Llama-3.1-8B-Instruct, entrenado utilizando la salida de DeepSeek R1."
@@ -1253,83 +1274,89 @@
   "emohaa": {
     "description": "Emohaa es un modelo psicológico con capacidades de consulta profesional, ayudando a los usuarios a comprender problemas emocionales."
   },
-  "ernie-3.5-128k": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, cubre una vasta cantidad de corpus en chino e inglés, con potentes capacidades generales que satisfacen la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas."
-  },
-  "ernie-3.5-8k": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, cubre una vasta cantidad de corpus en chino e inglés, con potentes capacidades generales que satisfacen la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas."
-  },
-  "ernie-3.5-8k-preview": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, cubre una vasta cantidad de corpus en chino e inglés, con potentes capacidades generales que satisfacen la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas."
-  },
-  "ernie-4.0-8k-latest": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, de ultra gran escala, ha logrado una actualización completa de capacidades en comparación con ERNIE 3.5, siendo ampliamente aplicable en escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas."
-  },
-  "ernie-4.0-8k-preview": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, de ultra gran escala, ha logrado una actualización completa de capacidades en comparación con ERNIE 3.5, siendo ampliamente aplicable en escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas."
-  },
-  "ernie-4.0-turbo-128k": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, de ultra gran escala, muestra un rendimiento excepcional en general, siendo ampliamente aplicable en escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas. En comparación con ERNIE 4.0, presenta un rendimiento superior."
-  },
-  "ernie-4.0-turbo-8k-latest": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, de ultra gran escala, muestra un rendimiento excepcional en general, siendo ampliamente aplicable en escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas. En comparación con ERNIE 4.0, presenta un rendimiento superior."
-  },
-  "ernie-4.0-turbo-8k-preview": {
-    "description": "El modelo de lenguaje grande de bandera de Baidu, desarrollado internamente, de ultra gran escala, muestra un rendimiento excepcional en general, siendo ampliamente aplicable en escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información de preguntas y respuestas. En comparación con ERNIE 4.0, presenta un rendimiento superior."
+  "ernie-4.5-0.3b": {
+    "description": "ERNIE 4.5 0.3B, modelo ligero de código abierto, ideal para despliegues locales y personalizados."
   },
   "ernie-4.5-21b-a3b": {
-    "description": "ERNIE 4.5 21B A3B es un modelo de expertos mixto desarrollado por Wenxin de Baidu, con potentes capacidades de razonamiento y soporte multilingüe."
+    "description": "ERNIE 4.5 21B A3B, modelo de gran tamaño de código abierto, con mejor rendimiento en tareas de comprensión y generación."
   },
   "ernie-4.5-300b-a47b": {
     "description": "ERNIE 4.5 300B A47B es un modelo de expertos mixto a gran escala desarrollado por Wenxin de Baidu, con capacidades de razonamiento excepcionales."
   },
   "ernie-4.5-8k-preview": {
-    "description": "El modelo grande Wenxin 4.5 es un nuevo modelo base multimodal nativo desarrollado por Baidu, que logra una optimización colaborativa a través de modelado conjunto de múltiples modalidades, con excelentes capacidades de comprensión multimodal; presenta una capacidad lingüística más avanzada, con mejoras en comprensión, generación, lógica y memoria, así como una notable reducción de alucinaciones y mejoras en razonamiento lógico y capacidades de codificación."
+    "description": "ERNIE 4.5 8K Preview, modelo de vista previa con contexto de 8K, diseñado para probar y experimentar las capacidades de ERNIE 4.5."
   },
   "ernie-4.5-turbo-128k": {
-    "description": "ERNIE 4.5 Turbo presenta mejoras significativas en la eliminación de ilusiones, razonamiento lógico y capacidades de codificación. En comparación con ERNIE 4.5, es más rápido y más económico. Las capacidades del modelo se han mejorado de manera integral, satisfaciendo mejor el procesamiento de diálogos de larga historia y tareas de comprensión de documentos extensos."
+    "description": "ERNIE 4.5 Turbo 128K, modelo general de alto rendimiento, compatible con búsqueda mejorada y uso de herramientas, ideal para preguntas y respuestas, código, agentes inteligentes y más."
+  },
+  "ernie-4.5-turbo-128k-preview": {
+    "description": "ERNIE 4.5 Turbo 128K Preview, versión de vista previa con capacidades equivalentes a la versión oficial, ideal para pruebas y ajustes."
   },
   "ernie-4.5-turbo-32k": {
-    "description": "ERNIE 4.5 Turbo también ha mejorado significativamente en la eliminación de ilusiones, razonamiento lógico y capacidades de codificación. En comparación con ERNIE 4.5, es más rápido y más económico. Las capacidades en creación de texto y preguntas y respuestas han mejorado notablemente. La longitud de salida y la latencia de oraciones completas han aumentado en comparación con ERNIE 4.5."
+    "description": "ERNIE 4.5 Turbo 32K, versión de contexto medio-largo, adecuada para preguntas y respuestas, recuperación de bases de conocimiento y diálogos multivuelta."
+  },
+  "ernie-4.5-turbo-latest": {
+    "description": "ERNIE 4.5 Turbo Última versión, optimizada en rendimiento general, ideal como modelo principal en entornos de producción."
+  },
+  "ernie-4.5-turbo-vl": {
+    "description": "ERNIE 4.5 Turbo VL, modelo multimodal maduro, ideal para tareas de comprensión e identificación de imágenes y texto en producción."
   },
   "ernie-4.5-turbo-vl-32k": {
-    "description": "Nueva versión del modelo de gran escala de ERNIE, con mejoras significativas en comprensión de imágenes, creación, traducción y codificación, que ahora soporta una longitud de contexto de 32K, con una latencia de primer token notablemente reducida."
+    "description": "ERNIE 4.5 Turbo VL 32K, versión multimodal de texto largo, adecuada para comprensión conjunta de documentos extensos e imágenes."
+  },
+  "ernie-4.5-turbo-vl-32k-preview": {
+    "description": "ERNIE 4.5 Turbo VL 32K Preview, versión de vista previa multimodal 32K, útil para evaluar capacidades visuales de contexto largo."
+  },
+  "ernie-4.5-turbo-vl-latest": {
+    "description": "ERNIE 4.5 Turbo VL Última versión, versión más reciente multimodal, con mejor rendimiento en comprensión e inferencia de imágenes y texto."
+  },
+  "ernie-4.5-turbo-vl-preview": {
+    "description": "ERNIE 4.5 Turbo VL Preview, modelo multimodal de vista previa, compatible con comprensión y generación de imágenes y texto, ideal para preguntas visuales y experiencias de comprensión de contenido."
+  },
+  "ernie-4.5-vl-28b-a3b": {
+    "description": "ERNIE 4.5 VL 28B A3B, modelo multimodal de código abierto, compatible con tareas de comprensión e inferencia de imágenes y texto."
+  },
+  "ernie-5.0-thinking-preview": {
+    "description": "ERNIE 5.0 Thinking Preview, modelo insignia nativo totalmente multimodal, compatible con modelado unificado de texto, imagen, audio y video, con capacidades integrales mejoradas, ideal para preguntas complejas, creación y agentes inteligentes."
   },
   "ernie-char-8k": {
-    "description": "Modelo de lenguaje grande de escenario vertical desarrollado internamente por Baidu, adecuado para aplicaciones como NPC de juegos, diálogos de servicio al cliente y juegos de rol de diálogos, con un estilo de personaje más distintivo y consistente, y una mayor capacidad de seguimiento de instrucciones y rendimiento de inferencia."
+    "description": "ERNIE Character 8K, modelo de diálogo con personalidad, ideal para construcción de personajes IP y conversaciones de acompañamiento a largo plazo."
   },
   "ernie-char-fiction-8k": {
-    "description": "Modelo de lenguaje grande de escenario vertical desarrollado internamente por Baidu, adecuado para aplicaciones como NPC de juegos, diálogos de servicio al cliente y juegos de rol de diálogos, con un estilo de personaje más distintivo y consistente, y una mayor capacidad de seguimiento de instrucciones y rendimiento de inferencia."
+    "description": "ERNIE Character Fiction 8K, modelo de personalidad orientado a la creación de novelas y tramas, ideal para generación de historias largas."
+  },
+  "ernie-char-fiction-8k-preview": {
+    "description": "ERNIE Character Fiction 8K Preview, versión de vista previa del modelo de creación de personajes y tramas, para pruebas y experiencia funcional."
   },
   "ernie-irag-edit": {
-    "description": "El modelo de edición de imágenes ERNIE iRAG desarrollado por Baidu soporta operaciones como borrar objetos, repintar objetos y generar variaciones basadas en imágenes."
+    "description": "ERNIE iRAG Edit, modelo de edición de imágenes que admite borrado, repintado y generación de variantes."
   },
   "ernie-lite-8k": {
-    "description": "ERNIE Lite es un modelo de lenguaje grande ligero desarrollado internamente por Baidu, que combina un excelente rendimiento del modelo con una buena capacidad de inferencia, adecuado para su uso en tarjetas de aceleración de IA de bajo consumo."
+    "description": "ERNIE Lite 8K, modelo general ligero, ideal para preguntas y respuestas diarias y generación de contenido con sensibilidad al coste."
   },
   "ernie-lite-pro-128k": {
-    "description": "Modelo de lenguaje grande ligero desarrollado internamente por Baidu, que combina un excelente rendimiento del modelo con una buena capacidad de inferencia, con un rendimiento superior al de ERNIE Lite, adecuado para su uso en tarjetas de aceleración de IA de bajo consumo."
+    "description": "ERNIE Lite Pro 128K, modelo ligero de alto rendimiento, ideal para escenarios sensibles a la latencia y al coste."
   },
   "ernie-novel-8k": {
-    "description": "Modelo de lenguaje grande general desarrollado internamente por Baidu, con ventajas notables en la capacidad de continuar novelas, también aplicable en escenarios de cortometrajes y películas."
+    "description": "ERNIE Novel 8K, modelo para creación de novelas largas y tramas IP, experto en narrativas multirrol y multilínea."
   },
   "ernie-speed-128k": {
-    "description": "El modelo de lenguaje grande de alto rendimiento desarrollado internamente por Baidu, lanzado en 2024, tiene capacidades generales excepcionales, adecuado como modelo base para ajustes finos, manejando mejor problemas específicos de escenarios, y con un excelente rendimiento de inferencia."
+    "description": "ERNIE Speed 128K, modelo grande sin coste de entrada/salida, ideal para comprensión de textos largos y pruebas a gran escala."
+  },
+  "ernie-speed-8k": {
+    "description": "ERNIE Speed 8K, modelo gratuito y rápido, ideal para conversaciones diarias y tareas ligeras de texto."
   },
   "ernie-speed-pro-128k": {
-    "description": "El modelo de lenguaje grande de alto rendimiento desarrollado internamente por Baidu, lanzado en 2024, tiene capacidades generales excepcionales, con un rendimiento superior al de ERNIE Speed, adecuado como modelo base para ajustes finos, manejando mejor problemas específicos de escenarios, y con un excelente rendimiento de inferencia."
+    "description": "ERNIE Speed Pro 128K, modelo de alta concurrencia y excelente relación calidad-precio, ideal para servicios en línea a gran escala y aplicaciones empresariales."
   },
   "ernie-tiny-8k": {
-    "description": "ERNIE Tiny es un modelo de lenguaje grande de alto rendimiento desarrollado internamente por Baidu, con los costos de implementación y ajuste más bajos entre los modelos de la serie Wenxin."
-  },
-  "ernie-x1-32k": {
-    "description": "Posee una comprensión, planificación, reflexión y capacidad de evolución más fuertes. Como un modelo de pensamiento profundo más completo, ERNIE-X1 combina precisión, creatividad y elocuencia, destacándose especialmente en preguntas y respuestas en chino, creación literaria, redacción de documentos, diálogos cotidianos, razonamiento lógico, cálculos complejos y llamadas a herramientas."
-  },
-  "ernie-x1-32k-preview": {
-    "description": "El modelo grande Wenxin X1 posee una mayor capacidad de comprensión, planificación, reflexión y evolución. Como un modelo de pensamiento profundo más completo, Wenxin X1 combina precisión, creatividad y elocuencia, destacándose especialmente en preguntas y respuestas de conocimiento en chino, creación literaria, redacción de documentos, diálogos cotidianos, razonamiento lógico, cálculos complejos y llamadas a herramientas."
+    "description": "ERNIE Tiny 8K, modelo ultraligero, ideal para preguntas simples, clasificación y escenarios de inferencia de bajo coste."
   },
   "ernie-x1-turbo-32k": {
-    "description": "Mejora en comparación con ERNIE-X1-32K, con mejores resultados y rendimiento."
+    "description": "ERNIE X1 Turbo 32K, modelo de pensamiento rápido con contexto largo de 32K, ideal para razonamiento complejo y diálogos multivuelta."
+  },
+  "ernie-x1.1-preview": {
+    "description": "ERNIE X1.1 Preview, versión de vista previa del modelo de pensamiento ERNIE X1.1, ideal para validación y pruebas de capacidades."
   },
   "fal-ai/bytedance/seedream/v4": {
     "description": "El modelo de generación de imágenes Seedream 4.0, desarrollado por el equipo Seed de ByteDance, soporta entrada de texto e imagen, ofreciendo una experiencia de generación de imágenes altamente controlable y de alta calidad. Genera imágenes basadas en indicaciones de texto."
@@ -1389,7 +1416,7 @@
     "description": "FLUX.1 [schnell], como el modelo de pocos pasos más avanzado de código abierto actualmente, supera no solo a competidores similares sino también a potentes modelos no refinados como Midjourney v6.0 y DALL·E 3 (HD). Este modelo ha sido ajustado específicamente para conservar toda la diversidad de salida de la etapa de preentrenamiento. En comparación con los modelos más avanzados del mercado, FLUX.1 [schnell] mejora significativamente la calidad visual, el cumplimiento de instrucciones, la variación de tamaño/proporción, el manejo de fuentes y la diversidad de salida, ofreciendo a los usuarios una experiencia de generación de imágenes creativas más rica y variada."
   },
   "flux.1-schnell": {
-    "description": "Transformador de flujo rectificado con 12 mil millones de parámetros, capaz de generar imágenes basadas en descripciones textuales."
+    "description": "FLUX.1-schnell, modelo de generación de imágenes de alto rendimiento, ideal para crear rápidamente imágenes de múltiples estilos."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajuste) ofrece un rendimiento estable y ajustable, siendo una opción ideal para soluciones de tareas complejas."
@@ -1454,9 +1481,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Variante del modelo Gemini 2.0 Flash, optimizada para objetivos como la rentabilidad y la baja latencia."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Modelo de vista previa Gemini 2.0 Flash, que admite la generación de imágenes"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash es el modelo de mejor relación calidad-precio de Google, que ofrece funcionalidades completas."
   },
@@ -1484,9 +1508,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview es el modelo más rentable de Google, que ofrece una funcionalidad completa."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview es el modelo de mejor relación calidad-precio de Google, que ofrece funcionalidades completas."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Versión preliminar (25 de septiembre de 2025) de Gemini 2.5 Flash"
   },
@@ -1501,6 +1522,9 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y áreas STEM, así como analizar grandes conjuntos de datos, bases de código y documentos utilizando contextos extensos."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro es el modelo más inteligente de Google, con razonamiento de última generación, comprensión multimodal y potentes capacidades de agente y codificación contextual."
   },
   "gemini-flash-latest": {
     "description": "Última versión de Gemini Flash"
@@ -1537,6 +1561,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520 es la última versión del modelo, diseñada para tareas altamente complejas y diversas, con un rendimiento excepcional."
+  },
+  "glm-4-32b-0414": {
+    "description": "GLM-4 32B 0414, versión del modelo general de la serie GLM, compatible con generación y comprensión de texto multitarea."
   },
   "glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat ofrece un alto rendimiento en semántica, matemáticas, razonamiento, programación y conocimiento. También admite navegación web, ejecución de código, uso de herramientas personalizadas e inferencia de textos largos. Compatible con 26 idiomas, incluidos japonés, coreano y alemán."
@@ -1826,6 +1853,18 @@
   "gpt-5-pro": {
     "description": "GPT-5 pro utiliza más capacidad de cómputo para pensar de forma más profunda y ofrecer respuestas de mayor calidad de manera constante."
   },
+  "gpt-5.1": {
+    "description": "GPT-5.1: modelo insignia optimizado para tareas de codificación y agentes, con soporte para intensidad de razonamiento configurable y contextos más largos."
+  },
+  "gpt-5.1-chat-latest": {
+    "description": "GPT-5.1 Chat: variante de GPT-5.1 para ChatGPT, ideal para escenarios conversacionales."
+  },
+  "gpt-5.1-codex": {
+    "description": "GPT-5.1 Codex: versión de GPT-5.1 optimizada para tareas de codificación agentica, disponible en la API de Respuestas para flujos de trabajo de código/agente más complejos."
+  },
+  "gpt-5.1-codex-mini": {
+    "description": "GPT-5.1 Codex mini: variante de Codex más compacta y económica, optimizada para tareas de codificación agentica."
+  },
   "gpt-audio": {
     "description": "GPT Audio es un modelo de chat general para entrada y salida de audio, compatible con el uso de audio I/O en la API de Chat Completions."
   },
@@ -2001,13 +2040,13 @@
     "description": "Serie Imagen de cuarta generación para generar imágenes a partir de texto."
   },
   "imagen-4.0-generate-preview-06-06": {
-    "description": "Serie de modelos de texto a imagen de cuarta generación de Imagen"
+    "description": "Serie de modelos de generación de imágenes de texto a imagen de cuarta generación de Imagen."
   },
   "imagen-4.0-ultra-generate-001": {
     "description": "Imagen, serie de modelos de texto a imagen de cuarta generación, versión Ultra"
   },
   "imagen-4.0-ultra-generate-preview-06-06": {
-    "description": "Serie de modelos de texto a imagen de cuarta generación de Imagen, versión Ultra"
+    "description": "Versión Ultra de la serie de modelos de generación de imágenes de texto a imagen de cuarta generación de Imagen."
   },
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small es la opción ideal para tareas de generación, depuración y refactorización de código, con latencia mínima."
@@ -2036,14 +2075,26 @@
   "internlm3-latest": {
     "description": "Nuestra última serie de modelos, con un rendimiento de inferencia excepcional, lidera el mercado de modelos de código abierto de tamaño similar. Apunta por defecto a nuestra serie de modelos InternLM3 más reciente."
   },
+  "internvl2.5-38b-mpo": {
+    "description": "InternVL2.5 38B MPO, modelo multimodal preentrenado, compatible con tareas complejas de inferencia de imágenes y texto."
+  },
   "internvl2.5-latest": {
     "description": "La versión InternVL2.5 que seguimos manteniendo, que ofrece un rendimiento excelente y estable. Por defecto, apunta a nuestra serie de modelos InternVL2.5 más reciente, actualmente apuntando a internvl2.5-78b."
+  },
+  "internvl3-14b": {
+    "description": "InternVL3 14B, modelo multimodal de tamaño medio, equilibrando rendimiento y coste."
+  },
+  "internvl3-1b": {
+    "description": "InternVL3 1B, modelo multimodal ligero, ideal para despliegue en entornos con recursos limitados."
+  },
+  "internvl3-38b": {
+    "description": "InternVL3 38B, modelo multimodal de código abierto a gran escala, ideal para tareas de comprensión de imágenes y texto de alta precisión."
   },
   "internvl3-latest": {
     "description": "Nuestro modelo multimodal más reciente, que posee una mayor capacidad de comprensión de texto e imagen, así como una comprensión de imágenes a largo plazo, con un rendimiento comparable a los mejores modelos cerrados. Por defecto, apunta a nuestra serie de modelos InternVL más reciente, actualmente apuntando a internvl3-78b."
   },
   "irag-1.0": {
-    "description": "iRAG (image based RAG) desarrollado por Baidu es una tecnología de generación de imágenes mejorada con recuperación, que combina los recursos de miles de millones de imágenes de búsqueda de Baidu con potentes capacidades de modelos base para generar imágenes ultra realistas. Su efecto supera ampliamente los sistemas nativos de generación de imágenes, eliminando el aspecto artificial de la IA y con costos muy bajos. iRAG se caracteriza por no generar alucinaciones, ultra realismo y resultados inmediatos."
+    "description": "ERNIE iRAG, modelo de generación mejorada por recuperación de imágenes, compatible con búsqueda por imagen, recuperación de imágenes y texto, y generación de contenido."
   },
   "jamba-large": {
     "description": "Nuestro modelo más potente y avanzado, diseñado para manejar tareas complejas a nivel empresarial, con un rendimiento excepcional."
@@ -2064,7 +2115,7 @@
     "description": "El modelo kimi-k2-0905-preview tiene una longitud de contexto de 256k, con una mayor capacidad de codificación agentiva, una estética y funcionalidad mejoradas en el código frontend, y una mejor comprensión del contexto."
   },
   "kimi-k2-instruct": {
-    "description": "Kimi K2 Instruct es un modelo de lenguaje a gran escala desarrollado por Moonshot AI, con capacidad para manejar contextos extremadamente largos."
+    "description": "Kimi K2 Instruct, modelo de inferencia oficial de Kimi, compatible con contexto largo, código, preguntas y respuestas, entre otros escenarios."
   },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 es un modelo base con arquitectura MoE que ofrece potentes capacidades para código y agentes, con 1T parámetros totales y 32B parámetros activados. En las pruebas de referencia en categorías principales como razonamiento de conocimiento general, programación, matemáticas y agentes, el rendimiento del modelo K2 supera al de otros modelos de código abierto más extendidos."
@@ -2173,6 +2224,9 @@
   },
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct es un modelo eficiente de bajo número de parámetros desarrollado por Wuwen Xinqiong."
+  },
+  "meituan/longcat-flash-chat": {
+    "description": "Modelo base no reflexivo de código abierto de Meituan, optimizado para interacciones conversacionales y tareas de agentes inteligentes, con un rendimiento destacado en llamadas a herramientas y escenarios complejos de múltiples turnos."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Un poderoso modelo de 70 mil millones de parámetros que sobresale en razonamiento, codificación y amplias aplicaciones de lenguaje."
@@ -2404,6 +2458,12 @@
   },
   "minimax-m2": {
     "description": "MiniMax M2 es un modelo de lenguaje grande y eficiente, diseñado para flujos de trabajo de codificación y agentes."
+  },
+  "minimax/minimax-m2": {
+    "description": "Diseñado para una codificación eficiente y flujos de trabajo de agentes."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 es un modelo de expertos mixtos (MoE) compacto, rápido y rentable, con un total de 230 mil millones de parámetros y 10 mil millones de parámetros activos. Está diseñado para ofrecer un rendimiento de primer nivel en tareas de codificación y agentes, manteniendo una inteligencia general robusta. El modelo destaca en edición de múltiples archivos, ciclos cerrados de codificación-ejecución-corrección, verificación y corrección de pruebas, así como en complejas cadenas de herramientas de enlaces largos, lo que lo convierte en una opción ideal para los flujos de trabajo de los desarrolladores."
   },
   "ministral-3b-latest": {
     "description": "Ministral 3B es el modelo de borde de primer nivel mundial de Mistral."
@@ -2735,6 +2795,54 @@
   "pro-deepseek-v3": {
     "description": "Modelo exclusivo para servicios empresariales, incluye servicio concurrente."
   },
+  "qianfan-70b": {
+    "description": "Qianfan 70B, un modelo chino de gran tamaño, ideal para la generación de contenido de alta calidad y tareas de razonamiento complejo."
+  },
+  "qianfan-8b": {
+    "description": "Qianfan 8B, un modelo general de tamaño medio, adecuado para generación de texto y preguntas y respuestas con equilibrio entre coste y rendimiento."
+  },
+  "qianfan-agent-intent-32k": {
+    "description": "Qianfan Agent Intent 32K, modelo orientado al reconocimiento de intenciones y orquestación de agentes, compatible con contextos largos."
+  },
+  "qianfan-agent-lite-8k": {
+    "description": "Qianfan Agent Lite 8K, modelo ligero de agente, ideal para diálogos multivuelta de bajo coste y orquestación empresarial."
+  },
+  "qianfan-agent-speed-32k": {
+    "description": "Qianfan Agent Speed 32K, modelo de agente de alto rendimiento, adecuado para aplicaciones de agentes a gran escala y multitarea."
+  },
+  "qianfan-agent-speed-8k": {
+    "description": "Qianfan Agent Speed 8K, modelo de agente de alta concurrencia, diseñado para diálogos cortos y respuestas rápidas."
+  },
+  "qianfan-check-vl": {
+    "description": "Qianfan Check VL, modelo de revisión y detección de contenido multimodal, compatible con tareas de cumplimiento e identificación de imágenes y texto."
+  },
+  "qianfan-composition": {
+    "description": "Qianfan Composition, modelo de creación multimodal, compatible con comprensión y generación combinada de texto e imagen."
+  },
+  "qianfan-engcard-vl": {
+    "description": "Qianfan EngCard VL, modelo de reconocimiento multimodal enfocado en escenarios en inglés."
+  },
+  "qianfan-lightning-128b-a19b": {
+    "description": "Qianfan Lightning 128B A19B, modelo general de alto rendimiento en chino, ideal para preguntas complejas y tareas de razonamiento a gran escala."
+  },
+  "qianfan-llama-vl-8b": {
+    "description": "Qianfan Llama VL 8B, modelo multimodal basado en Llama, orientado a tareas generales de comprensión de texto e imagen."
+  },
+  "qianfan-multipicocr": {
+    "description": "Qianfan MultiPicOCR, modelo OCR para múltiples imágenes, compatible con detección y reconocimiento de texto en varias imágenes."
+  },
+  "qianfan-qi-vl": {
+    "description": "Qianfan QI VL, modelo de preguntas y respuestas multimodal, diseñado para recuperación precisa y respuestas en escenarios complejos de texto e imagen."
+  },
+  "qianfan-singlepicocr": {
+    "description": "Qianfan SinglePicOCR, modelo OCR para una sola imagen, compatible con reconocimiento de caracteres de alta precisión."
+  },
+  "qianfan-vl-70b": {
+    "description": "Qianfan VL 70B, modelo de lenguaje visual de gran tamaño, ideal para escenarios complejos de comprensión de texto e imagen."
+  },
+  "qianfan-vl-8b": {
+    "description": "Qianfan VL 8B, modelo de lenguaje visual ligero, adecuado para preguntas y respuestas cotidianas sobre imágenes y análisis."
+  },
   "qvq-72b-preview": {
     "description": "El modelo QVQ es un modelo de investigación experimental desarrollado por el equipo de Qwen, enfocado en mejorar la capacidad de razonamiento visual, especialmente en el ámbito del razonamiento matemático."
   },
@@ -2886,7 +2994,7 @@
     "description": "El modelo de 72B de Tongyi Qwen 2.5, de código abierto."
   },
   "qwen2.5-7b-instruct": {
-    "description": "El modelo de 7B de Tongyi Qwen 2.5, de código abierto."
+    "description": "Qwen2.5 7B Instruct, modelo de instrucciones de código abierto maduro, adecuado para diálogos y generación en múltiples escenarios."
   },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "La versión de código abierto del modelo Qwen para codificación."
@@ -2919,13 +3027,13 @@
     "description": "La serie de modelos Qwen-Omni admite la entrada de datos de múltiples modalidades, incluyendo video, audio, imágenes y texto, y produce audio y texto como salida."
   },
   "qwen2.5-vl-32b-instruct": {
-    "description": "La serie de modelos Qwen2.5-VL ha mejorado el nivel de inteligencia, utilidad y aplicabilidad del modelo, optimizando su rendimiento en escenarios como conversaciones naturales, creación de contenido, servicios de conocimiento especializado y desarrollo de código. La versión 32B utiliza técnicas de aprendizaje por refuerzo para optimizar el modelo, ofreciendo en comparación con otros modelos de la serie Qwen2.5 VL, un estilo de salida más acorde con las preferencias humanas, capacidad de razonamiento para problemas matemáticos complejos, así como comprensión y razonamiento detallado de imágenes."
+    "description": "Qwen2.5 VL 32B Instruct, modelo multimodal de código abierto, ideal para despliegue privado y aplicaciones en diversos escenarios."
   },
   "qwen2.5-vl-72b-instruct": {
     "description": "Mejora general en seguimiento de instrucciones, matemáticas, resolución de problemas y código, con capacidades de reconocimiento de objetos mejoradas, soporta formatos diversos para localizar elementos visuales con precisión, y puede entender archivos de video largos (hasta 10 minutos) y localizar eventos en segundos, comprendiendo la secuencia y velocidad del tiempo, soportando el control de agentes en OS o móviles, con fuerte capacidad de extracción de información clave y salida en formato Json. Esta versión es la de 72B, la más potente de la serie."
   },
   "qwen2.5-vl-7b-instruct": {
-    "description": "Mejora general en seguimiento de instrucciones, matemáticas, resolución de problemas y código, con capacidades de reconocimiento de objetos mejoradas, soporta formatos diversos para localizar elementos visuales con precisión, y puede entender archivos de video largos (hasta 10 minutos) y localizar eventos en segundos, comprendiendo la secuencia y velocidad del tiempo, soportando el control de agentes en OS o móviles, con fuerte capacidad de extracción de información clave y salida en formato Json. Esta versión es la de 72B, la más potente de la serie."
+    "description": "Qwen2.5 VL 7B Instruct, modelo multimodal ligero, que equilibra coste de implementación y capacidad de reconocimiento."
   },
   "qwen2.5-vl-instruct": {
     "description": "Qwen2.5-VL es la última versión del modelo de lenguaje visual de la familia de modelos Qwen."
@@ -2952,46 +3060,46 @@
     "description": "Qwen3 es la nueva generación de modelo de lenguaje a gran escala de Alibaba, que ofrece un rendimiento excepcional para satisfacer diversas necesidades de aplicación."
   },
   "qwen3-0.6b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 0.6B, modelo de nivel inicial, adecuado para razonamiento simple y entornos con recursos extremadamente limitados."
   },
   "qwen3-1.7b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 1.7B, modelo ultraligero, fácil de implementar en dispositivos periféricos y terminales."
   },
   "qwen3-14b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 14B, modelo de tamaño medio, ideal para generación de texto y preguntas multilingües."
   },
   "qwen3-235b-a22b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 235B A22B, modelo general de gran tamaño, orientado a tareas complejas diversas."
   },
   "qwen3-235b-a22b-instruct-2507": {
-    "description": "Modelo de código abierto basado en Qwen3 en modo no reflexivo, con mejoras leves en capacidad creativa subjetiva y seguridad del modelo respecto a la versión anterior (Tongyi Qianwen 3-235B-A22B)."
+    "description": "Qwen3 235B A22B Instruct 2507, modelo insignia de instrucciones, ideal para generación y razonamiento en múltiples tareas."
   },
   "qwen3-235b-a22b-thinking-2507": {
-    "description": "Modelo de código abierto basado en Qwen3 en modo reflexivo, con mejoras significativas en capacidad lógica, general, enriquecimiento de conocimiento y creatividad respecto a la versión anterior (Tongyi Qianwen 3-235B-A22B), adecuado para escenarios de razonamiento complejo y avanzado."
+    "description": "Qwen3 235B A22B Thinking 2507, modelo de pensamiento a gran escala, diseñado para razonamiento de alta dificultad."
   },
   "qwen3-30b-a3b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 30B A3B, modelo general de tamaño medio a grande, equilibrado entre coste y rendimiento."
   },
   "qwen3-30b-a3b-instruct-2507": {
-    "description": "En comparación con la versión anterior (Qwen3-30B-A3B), se ha mejorado considerablemente la capacidad general en chino, inglés y otros idiomas. Se ha optimizado especialmente para tareas subjetivas y abiertas, alineándose mucho mejor con las preferencias del usuario y proporcionando respuestas más útiles."
+    "description": "Qwen3 30B A3B Instruct 2507, modelo de instrucciones de tamaño medio a grande, ideal para generación y preguntas de alta calidad."
   },
   "qwen3-30b-a3b-thinking-2507": {
-    "description": "Basado en el modelo de código abierto en modo reflexivo de Qwen3, esta versión mejora significativamente la capacidad lógica, la capacidad general, el conocimiento y la creatividad en comparación con la versión anterior (Tongyi Qianwen 3-30B-A3B). Es adecuado para escenarios complejos que requieren un razonamiento avanzado."
+    "description": "Qwen3 30B A3B Thinking 2507, modelo de pensamiento de tamaño medio a grande, que equilibra precisión y coste."
   },
   "qwen3-32b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 32B, adecuado para tareas generales que requieren mayor capacidad de comprensión."
   },
   "qwen3-4b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 4B, ideal para aplicaciones pequeñas y medianas y escenarios de inferencia local."
   },
   "qwen3-8b": {
-    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+    "description": "Qwen3 8B, modelo ligero, implementación flexible, adecuado para servicios de alta concurrencia."
   },
   "qwen3-coder-30b-a3b-instruct": {
     "description": "Versión de código abierto del modelo de codificación Tongyi Qianwen. El nuevo qwen3-coder-30b-a3b-instruct, basado en Qwen3, es un modelo de generación de código con potentes capacidades como Agente de Programación, especializado en llamadas a herramientas e interacción con entornos, capaz de programar de forma autónoma con habilidades de codificación sobresalientes y capacidades generales."
   },
   "qwen3-coder-480b-a35b-instruct": {
-    "description": "Versión de código abierto del modelo de código Tongyi Qianwen. El más reciente qwen3-coder-480b-a35b-instruct está basado en Qwen3, con fuertes capacidades de agente de codificación, experto en llamadas a herramientas e interacción con entornos, capaz de programación autónoma y con habilidades sobresalientes de código y capacidades generales."
+    "description": "Qwen3 Coder 480B A35B Instruct, modelo insignia para programación, compatible con múltiples lenguajes y comprensión de código complejo."
   },
   "qwen3-coder-flash": {
     "description": "Modelo de código Tongyi Qianwen. La última serie de modelos Qwen3-Coder está basada en Qwen3 para generación de código, con una potente capacidad de agente de codificación, experta en llamadas a herramientas e interacción con el entorno, capaz de programación autónoma, combinando una excelente habilidad en código con capacidades generales."
@@ -3005,32 +3113,41 @@
   "qwen3-max": {
     "description": "La serie Max de Tongyi Qianwen 3 representa una mejora significativa en la capacidad general respecto a la serie 2.5, con habilidades mejoradas en comprensión de texto en chino e inglés, seguimiento de instrucciones complejas, tareas abiertas subjetivas, multilingüismo y llamadas a herramientas; además, reduce las alucinaciones de conocimiento del modelo. La última versión qwen3-max ha sido especialmente mejorada en programación de agentes y llamadas a herramientas respecto a la versión previa qwen3-max-preview. El modelo oficial lanzado alcanza un nivel SOTA en su campo, adaptándose a demandas más complejas de agentes."
   },
+  "qwen3-max-preview": {
+    "description": "El modelo más avanzado de la serie Tongyi Qianwen, ideal para tareas complejas y de múltiples pasos. La versión preliminar ya admite razonamiento."
+  },
   "qwen3-next-80b-a3b-instruct": {
     "description": "Modelo de código abierto de nueva generación basado en Qwen3 en modo no reflexivo, que ofrece una mejor comprensión del texto en chino, mayor capacidad de razonamiento lógico y un mejor desempeño en tareas de generación de texto en comparación con la versión anterior (Tongyi Qianwen 3-235B-A22B-Instruct-2507)."
   },
   "qwen3-next-80b-a3b-thinking": {
-    "description": "Modelo de código abierto de nueva generación basado en Qwen3 en modo reflexivo, que mejora la capacidad de seguir instrucciones y ofrece respuestas más concisas en comparación con la versión anterior (Tongyi Qianwen 3-235B-A22B-Thinking-2507)."
+    "description": "Qwen3 Next 80B A3B Thinking, versión insignia de razonamiento orientada a tareas complejas."
   },
   "qwen3-omni-flash": {
     "description": "El modelo Qwen-Omni puede recibir entradas combinadas de texto, imágenes, audio y video, y generar respuestas en forma de texto o voz. Ofrece múltiples voces humanizadas, admite salida de voz en varios idiomas y dialectos, y puede aplicarse en escenarios como creación de texto, reconocimiento visual y asistentes de voz."
   },
   "qwen3-vl-235b-a22b-instruct": {
-    "description": "Qwen3 VL 235B A22B en modo sin razonamiento (Instruct), adecuado para escenarios de instrucciones sin razonamiento, manteniendo una potente capacidad de comprensión visual."
+    "description": "Qwen3 VL 235B A22B Instruct, modelo multimodal insignia, orientado a escenarios exigentes de comprensión y creación."
   },
   "qwen3-vl-235b-a22b-thinking": {
-    "description": "Qwen3 VL 235B A22B en modo de razonamiento (versión de código abierto), diseñado para escenarios complejos que requieren razonamiento avanzado y comprensión de videos largos, ofreciendo capacidades de razonamiento visual + textual de primer nivel."
+    "description": "Qwen3 VL 235B A22B Thinking, versión de pensamiento insignia, diseñada para tareas complejas de razonamiento y planificación multimodal."
   },
   "qwen3-vl-30b-a3b-instruct": {
-    "description": "Qwen3 VL 30B en modo sin razonamiento (Instruct), orientado a escenarios comunes de seguimiento de instrucciones, manteniendo una alta capacidad de comprensión y generación multimodal."
+    "description": "Qwen3 VL 30B A3B Instruct, modelo multimodal de gran tamaño, que equilibra precisión y rendimiento de razonamiento."
   },
   "qwen3-vl-30b-a3b-thinking": {
-    "description": "Qwen-VL (versión de código abierto) ofrece capacidades de comprensión visual y generación de texto, compatible con interacción de agentes, codificación visual, percepción espacial, comprensión de videos largos y pensamiento profundo, con un sólido reconocimiento de texto y soporte multilingüe en escenarios complejos."
+    "description": "Qwen3 VL 30B A3B Thinking, versión de pensamiento para tareas multimodales complejas."
+  },
+  "qwen3-vl-32b-instruct": {
+    "description": "Qwen3 VL 32B Instruct, modelo multimodal ajustado por instrucciones, ideal para preguntas y creación de alta calidad con texto e imagen."
+  },
+  "qwen3-vl-32b-thinking": {
+    "description": "Qwen3 VL 32B Thinking, versión de pensamiento multimodal, reforzada para razonamiento complejo y análisis de cadenas largas."
   },
   "qwen3-vl-8b-instruct": {
-    "description": "Qwen3 VL 8B en modo sin razonamiento (Instruct), adecuado para tareas comunes de generación y reconocimiento multimodal."
+    "description": "Qwen3 VL 8B Instruct, modelo multimodal ligero, adecuado para preguntas visuales cotidianas e integración en aplicaciones."
   },
   "qwen3-vl-8b-thinking": {
-    "description": "Qwen3 VL 8B en modo de razonamiento, orientado a escenarios ligeros de razonamiento e interacción multimodal, manteniendo la capacidad de comprensión de contextos largos."
+    "description": "Qwen3 VL 8B Thinking, modelo de cadena de pensamiento multimodal, ideal para razonamiento detallado sobre información visual."
   },
   "qwen3-vl-flash": {
     "description": "Qwen3 VL Flash: versión ligera de inferencia rápida, ideal para escenarios sensibles a la latencia o con solicitudes en gran volumen."
@@ -3263,6 +3380,12 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 es un modelo de lenguaje proporcionado por Microsoft AI, que destaca en diálogos complejos, multilingües, razonamiento y asistentes inteligentes."
   },
+  "x-ai/grok-4-fast": {
+    "description": "Nos complace presentar Grok 4 Fast, nuestro último avance en modelos de inferencia rentables."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Nos complace lanzar grok-code-fast-1, un modelo de inferencia rápido y rentable con un rendimiento sobresaliente en codificación para agentes."
+  },
   "x1": {
     "description": "El modelo Spark X1 se actualizará aún más, logrando resultados en tareas generales como razonamiento, generación de texto y comprensión del lenguaje que se comparan con OpenAI o1 y DeepSeek R1, además de liderar en tareas matemáticas en el país."
   },
@@ -3322,6 +3445,9 @@
   },
   "yi-vision-v2": {
     "description": "Modelo para tareas visuales complejas, que ofrece capacidades de comprensión y análisis de alto rendimiento basadas en múltiples imágenes."
+  },
+  "z-ai/glm-4.6": {
+    "description": "El nuevo modelo insignia de Zhipu, GLM-4.6, supera ampliamente a su predecesor en codificación avanzada, procesamiento de textos largos, razonamiento y capacidades de agentes inteligentes."
   },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 es un modelo base diseñado para aplicaciones de agentes inteligentes, utilizando arquitectura Mixture-of-Experts (MoE). Está profundamente optimizado para llamadas a herramientas, navegación web, ingeniería de software y programación frontend, soportando integración fluida con agentes de código como Claude Code y Roo Code. GLM-4.5 emplea un modo de inferencia híbrido que se adapta a escenarios de razonamiento complejo y uso cotidiano."

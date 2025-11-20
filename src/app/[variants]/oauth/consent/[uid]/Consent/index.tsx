@@ -42,11 +42,9 @@ const useStyles = createStyles(({ css, token }) => ({
     background-color: transparent;
   `,
   card: css`
-    width: 100%;
     max-width: 500px;
     border-color: ${token.colorBorderSecondary};
     border-radius: 12px;
-
     background-color: ${token.colorBgContainer};
   `,
   connector: css`

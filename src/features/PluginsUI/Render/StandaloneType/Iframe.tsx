@@ -3,7 +3,7 @@ import { Skeleton } from 'antd';
 import { memo, useRef, useState } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { dbMessageSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
@@ -28,7 +28,7 @@ import {
 // just to simplify code a little, don't use this pattern everywhere
 const getSettings = (identifier: string) =>
   pluginSelectors.getPluginSettingsById(identifier)(useToolStore.getState());
-const getMessage = (id: string) => chatSelectors.getMessageById(id)(useChatStore.getState());
+const getMessage = (id: string) => dbMessageSelectors.getDbMessageById(id)(useChatStore.getState());
 
 interface IFrameRenderProps {
   height?: number;
@@ -61,7 +61,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     const iframeWin = iframeRef.current?.contentWindow;
 
     if (iframeWin) {
-      const message = chatSelectors.getMessageById(id)(useChatStore.getState());
+      const message = dbMessageSelectors.getDbMessageById(id)(useChatStore.getState());
       if (!message) return;
       const props = { content: '' };
 
@@ -94,9 +94,9 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
   });
 
   // when plugin update state, we should update it to the message pluginState key
-  const updatePluginState = useChatStore((s) => s.updatePluginState);
+  const optimisticUpdatePluginState = useChatStore((s) => s.optimisticUpdatePluginState);
   useOnPluginStateUpdate((key, value) => {
-    updatePluginState(id, { [key]: value });
+    optimisticUpdatePluginState(id, { [key]: value });
   });
 
   // when plugin wants to get plugin settings, send it to plugin

@@ -18,7 +18,7 @@ enum FilePreviewTab {
 const FilePreview = () => {
   const previewFileId = useChatStore(chatPortalSelectors.previewFileId);
   const chunkText = useChatStore(chatPortalSelectors.chunkText);
-  const useFetchFileItem = useFileStore((s) => s.useFetchFileItem);
+  const useFetchFileItem = useFileStore((s) => s.useFetchKnowledgeItem);
   const { t } = useTranslation('portal');
 
   const [tab, setTab] = useState<FilePreviewTab>(FilePreviewTab.File);

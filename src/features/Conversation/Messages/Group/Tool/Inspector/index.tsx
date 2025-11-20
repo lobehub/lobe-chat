@@ -1,15 +1,19 @@
+import { ToolIntervention } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Check, LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, X } from 'lucide-react';
-import { CSSProperties, memo, useState } from 'react';
+import { LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, Trash2 } from 'lucide-react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
+import { useChatStore } from '@/store/chat';
+import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 
 import Debug from './Debug';
 import Settings from './Settings';
+import StatusIndicator from './StatusIndicator';
 import ToolTitle from './ToolTitle';
 
 export const useStyles = createStyles(({ css, token, cx }) => ({
@@ -62,11 +66,12 @@ export const useStyles = createStyles(({ css, token, cx }) => ({
 interface InspectorProps {
   apiName: string;
   arguments?: string;
+  assistantMessageId: string;
   hidePluginUI?: boolean;
   id: string;
   identifier: string;
   index: number;
-  messageId: string;
+  intervention?: ToolIntervention;
   result?: { content: string | null; error?: any; state?: any };
   setShowPluginRender: (show: boolean) => void;
   setShowRender: (show: boolean) => void;
@@ -74,35 +79,63 @@ interface InspectorProps {
   showPortal?: boolean;
   showRender: boolean;
   style?: CSSProperties;
+  toolMessageId?: string;
   type?: string;
 }
 
 const Inspectors = memo<InspectorProps>(
   ({
-    messageId,
+    assistantMessageId,
     index,
     identifier,
     apiName,
     id,
     arguments: requestArgs,
-    showRender,
     result,
     setShowRender,
     showPluginRender,
     setShowPluginRender,
-    hidePluginUI = false,
     type,
+    intervention,
+    toolMessageId,
   }) => {
     const { t } = useTranslation('plugin');
-    const { styles, theme } = useStyles();
+    const { styles } = useStyles();
 
     const [showDebug, setShowDebug] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const [deleteAssistantMessage, toggleInspectExpanded] = useChatStore((s) => [
+      s.deleteAssistantMessage,
+      s.toggleInspectExpanded,
+    ]);
 
     const hasError = !!result?.error;
     const hasSuccessResult = !!result?.content && result.content !== LOADING_FLAT;
 
     const hasResult = hasSuccessResult || hasError;
 
+    const isPending = intervention?.status === 'pending';
+    const isReject = intervention?.status === 'rejected';
+    const isAbort = intervention?.status === 'aborted';
+    const isTitleLoading = !hasResult && !isPending;
+
+    const isPersistentExpanded = useChatStore((s) => {
+      if (!toolMessageId) return undefined;
+
+      const message = dbMessageSelectors.getDbMessageById(toolMessageId)(s);
+      return message?.metadata?.inspectExpanded;
+    });
+
+    // Compute actual render state based on persistent expanded or hovered
+    const shouldShowRender = isPersistentExpanded || isHovered;
+
+    // Sync with parent state
+    useEffect(() => {
+      setShowRender(shouldShowRender);
+    }, [shouldShowRender, setShowRender]);
+
+    const showCustomPluginRender = shouldShowRender && !isPending && !isReject && !isAbort;
     return (
       <Flexbox className={styles.container} gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -112,22 +145,33 @@ const Inspectors = memo<InspectorProps>(
             gap={8}
             horizontal
             onClick={() => {
-              setShowRender(!showRender);
+              if (toolMessageId) toggleInspectExpanded(toolMessageId);
+            }}
+            onMouseEnter={() => {
+              if (!isPersistentExpanded) {
+                setIsHovered(true);
+              }
+            }}
+            onMouseLeave={() => {
+              if (!isPersistentExpanded) {
+                setIsHovered(false);
+              }
             }}
             paddingInline={4}
           >
             <ToolTitle
               apiName={apiName}
-              hasResult={hasResult}
               identifier={identifier}
               index={index}
-              messageId={messageId}
+              isExpanded={isPersistentExpanded}
+              isLoading={isTitleLoading}
+              messageId={assistantMessageId}
               toolCallId={id}
             />
           </Flexbox>
           <Flexbox align={'center'} gap={8} horizontal>
             <Flexbox className={styles.actions} horizontal>
-              {showRender && !hidePluginUI && (
+              {showCustomPluginRender && (
                 <ActionIcon
                   icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                   onClick={() => {
@@ -145,17 +189,18 @@ const Inspectors = memo<InspectorProps>(
                 size={'small'}
                 title={t(showDebug ? 'debug.off' : 'debug.on')}
               />
+              <ActionIcon
+                icon={Trash2}
+                onClick={() => {
+                  deleteAssistantMessage(assistantMessageId);
+                }}
+                size={'small'}
+                title={t('inspector.delete')}
+              />
+
               <Settings id={identifier} />
             </Flexbox>
-            {hasResult && (
-              <Flexbox align={'center'} gap={4} horizontal style={{ fontSize: 12 }}>
-                {hasError ? (
-                  <X color={theme.colorError} size={14} />
-                ) : (
-                  <Check color={theme.colorSuccess} size={14} />
-                )}
-              </Flexbox>
-            )}
+            {hasResult && <StatusIndicator intervention={intervention} result={result} />}
           </Flexbox>
         </Flexbox>
         {showDebug && (

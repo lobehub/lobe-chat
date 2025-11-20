@@ -201,4 +201,77 @@ describe('createRemarkSelfClosingTagPlugin', () => {
     const tree = processMarkdown(markdown, tagName);
     expect(tree).toMatchSnapshot();
   });
+
+  it('should handle multiple tags in unordered list with directories and files', () => {
+    const markdown = [
+      '我已查看了你桌面上 test 文件夹的目录，里面包含以下项目：',
+      '',
+      '- <localFile name=".config" path="/Users/user/Desktop/test/.config" isDirectory />    ', // 注意：行尾有 4 个空格
+      '- <localFile name=".venv" path="/Users/user/Desktop/test/.venv" isDirectory />',
+    ].join('\n');
+    const tree = processMarkdown(markdown, tagName);
+
+    // Should have 2 children: a paragraph and a list
+    expect(tree.children).toHaveLength(2);
+
+    // First child should be the introductory paragraph
+    expect(tree.children[0].type).toBe('paragraph');
+
+    // Second child should be the unordered list
+    const listNode = tree.children[1];
+    expect(listNode.type).toBe('list');
+    expect(listNode.ordered).toBe(false);
+
+    // The list should have 2 items
+    expect(listNode.children).toHaveLength(2);
+
+    // Verify first item (.config directory) - this one has trailing spaces after />
+    // When a tag is standalone in a list item, remark doesn't wrap it in a paragraph
+    const firstItem = listNode.children[0];
+    expect(firstItem.type).toBe('listItem');
+    const firstTag = firstItem.children[0];
+    expect(firstTag.type).toBe(tagName);
+    expect(firstTag.data?.hProperties).toEqual({
+      name: '.config',
+      path: '/Users/user/Desktop/test/.config',
+      isDirectory: true,
+    });
+
+    // Verify second item (.venv directory)
+    const secondItem = listNode.children[1];
+    const secondTag = secondItem.children[0];
+    expect(secondTag.type).toBe(tagName);
+    expect(secondTag.data?.hProperties).toEqual({
+      name: '.venv',
+      path: '/Users/user/Desktop/test/.venv',
+      isDirectory: true,
+    });
+
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('should handle tags wrapped in backticks (code)', () => {
+    const markdown = `Use this file: \`<${tagName} name="config.json" path="/app/config.json" />\` in your code.`;
+    const tree = processMarkdown(markdown, tagName);
+
+    expect(tree.children).toHaveLength(1);
+    expect(tree.children[0].type).toBe('paragraph');
+
+    const paragraphChildren = tree.children[0].children;
+    expect(paragraphChildren).toHaveLength(3);
+
+    expect(paragraphChildren[0].type).toBe('text');
+    expect(paragraphChildren[0].value).toBe('Use this file: ');
+
+    // The tag should be parsed even inside backticks
+    const tagNode = paragraphChildren[1];
+    expect(tagNode.type).toBe(tagName);
+    expect(tagNode.data?.hProperties).toEqual({
+      name: 'config.json',
+      path: '/app/config.json',
+    });
+
+    expect(paragraphChildren[2].type).toBe('text');
+    expect(paragraphChildren[2].value).toBe(' in your code.');
+  });
 });

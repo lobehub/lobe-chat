@@ -135,6 +135,7 @@
     }
   },
   "close": "Sluiten",
+  "confirm": "Bevestigen",
   "contact": "Contacteer ons",
   "copy": "Kopiëren",
   "copyFail": "Kopiëren mislukt",
@@ -282,9 +283,11 @@
     "business": "Zakelijke samenwerking",
     "support": "E-mailondersteuning"
   },
+  "new": "Nieuw",
   "oauth": "SSO inloggen",
   "officialSite": "Officiële website",
   "ok": "Oké",
+  "or": "of",
   "password": "Wachtwoord",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",

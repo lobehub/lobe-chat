@@ -1,16 +1,16 @@
 'use client';
 
-import { ReactNode, forwardRef, memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
-import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import isEqual from 'fast-deep-equal';
+import { ReactNode, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { VList, VListHandle } from 'virtua';
 
 import WideScreenContainer from '@/features/Conversation/components/WideScreenContainer';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { displayMessageSelectors } from '@/store/chat/selectors';
 
 import AutoScroll from '../AutoScroll';
 import SkeletonList from '../SkeletonList';
-import { VirtuosoContext, resetVirtuosoVisibleItems, setVirtuosoGlobalRef } from './VirtuosoContext';
+import { VirtuaContext, resetVirtuaVisibleItems, setVirtuaGlobalRef } from './VirtuosoContext';
 
 interface VirtualizedListProps {
   dataSource: string[];
@@ -18,83 +18,124 @@ interface VirtualizedListProps {
   mobile?: boolean;
 }
 
-const List = forwardRef(({ ...props }, ref) => {
-  return (
-    <Flexbox>
-      <WideScreenContainer id={'chatlist-list'} ref={ref} {...props} />
-    </Flexbox>
-  );
-});
-
 const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemContent }) => {
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const virtuaRef = useRef<VListHandle>(null);
   const prevDataLengthRef = useRef(dataSource.length);
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
+  // eslint-disable-next-line no-undef
+  const scrollEndTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [id, isFirstLoading, isCurrentChatLoaded] = useChatStore((s) => [
-    chatSelectors.currentChatKey(s),
-    chatSelectors.currentChatLoadingState(s),
-    chatSelectors.isCurrentChatLoaded(s),
+  const [isFirstLoading, isCurrentChatLoaded] = useChatStore((s) => [
+    displayMessageSelectors.currentChatLoadingState(s),
+    displayMessageSelectors.isCurrentDisplayChatLoaded(s),
   ]);
 
-  const getFollowOutput = useCallback(() => {
-    const newFollowOutput = dataSource.length > prevDataLengthRef.current ? 'auto' : false;
+  const atBottomThreshold = 200 * (mobile ? 2 : 1);
+
+  // Check if at bottom based on scroll position
+  const checkAtBottom = useCallback(() => {
+    const ref = virtuaRef.current;
+    if (!ref) return false;
+
+    const scrollOffset = ref.scrollOffset;
+    const scrollSize = ref.scrollSize;
+    const viewportSize = ref.viewportSize;
+
+    return scrollSize - scrollOffset - viewportSize <= atBottomThreshold;
+  }, [atBottomThreshold]);
+
+  // Handle scroll events
+  const handleScroll = useCallback(() => {
+    setIsScrolling(true);
+
+    // Check if at bottom
+    const isAtBottom = checkAtBottom();
+    setAtBottom(isAtBottom);
+
+    // Clear existing timer
+    if (scrollEndTimerRef.current) {
+      clearTimeout(scrollEndTimerRef.current);
+    }
+
+    // Set new timer for scroll end
+    scrollEndTimerRef.current = setTimeout(() => {
+      setIsScrolling(false);
+    }, 150);
+  }, [checkAtBottom]);
+
+  const handleScrollEnd = useCallback(() => {
+    setIsScrolling(false);
+  }, []);
+
+  // Auto scroll to bottom when new messages arrive
+  useEffect(() => {
+    const shouldScroll = dataSource.length > prevDataLengthRef.current;
     prevDataLengthRef.current = dataSource.length;
-    return newFollowOutput;
+
+    if (shouldScroll && virtuaRef.current) {
+      virtuaRef.current.scrollToIndex(dataSource.length - 2, { align: 'start', smooth: true });
+    }
   }, [dataSource.length]);
 
   const scrollToBottom = useCallback(
     (behavior: 'auto' | 'smooth' = 'smooth') => {
       if (atBottom) return;
-      if (!virtuosoRef.current) return;
-      virtuosoRef.current.scrollToIndex({ align: 'end', behavior, index: 'LAST' });
+      if (!virtuaRef.current) return;
+      virtuaRef.current.scrollToIndex(dataSource.length - 1, {
+        align: 'end',
+        smooth: behavior === 'smooth',
+      });
     },
-    [atBottom],
+    [atBottom, dataSource.length],
   );
 
   useEffect(() => {
-    scrollToBottom();
-  }, [id]);
-
-  useEffect(() => {
-    setVirtuosoGlobalRef(virtuosoRef);
+    setVirtuaGlobalRef(virtuaRef);
 
     return () => {
-      setVirtuosoGlobalRef(null);
+      setVirtuaGlobalRef(null);
     };
-  }, [virtuosoRef]);
+  }, [virtuaRef]);
 
   useEffect(() => {
     return () => {
-      resetVirtuosoVisibleItems();
+      resetVirtuaVisibleItems();
+      if (scrollEndTimerRef.current) {
+        clearTimeout(scrollEndTimerRef.current);
+      }
     };
   }, []);
 
-  // overscan should be 3 times the height of the window
-  const overscan = typeof window !== 'undefined' ? window.innerHeight * 3 : 0;
+  // Scroll to bottom on initial render
+  useEffect(() => {
+    if (virtuaRef.current && dataSource.length > 0) {
+      virtuaRef.current.scrollToIndex(dataSource.length - 1, { align: 'end' });
+    }
+  }, [isCurrentChatLoaded]);
 
   // first time loading or not loaded
   if (isFirstLoading || !isCurrentChatLoaded) return <SkeletonList mobile={mobile} />;
 
   return (
-    <VirtuosoContext value={virtuosoRef}>
-      <Virtuoso
-        atBottomStateChange={setAtBottom}
-        atBottomThreshold={50 * (mobile ? 2 : 1)}
-        components={{
-          List,
-        }}
-
-        computeItemKey={(_, item) => item}
+    <VirtuaContext value={virtuaRef}>
+      <VList
+        // bufferSize should be 2 times the height of the window
+        bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
         data={dataSource}
-        followOutput={getFollowOutput}
-        increaseViewportBy={overscan}
-        initialTopMostItemIndex={dataSource?.length - 1}
-        isScrolling={setIsScrolling}
-        itemContent={itemContent}
-        ref={virtuosoRef}
-      />
+        onScroll={handleScroll}
+        onScrollEnd={handleScrollEnd}
+        ref={virtuaRef}
+        reverse
+        style={{ height: '100%' }}
+      >
+        {(data, index) => (
+          <WideScreenContainer key={data} style={{ position: 'relative' }}>
+            {itemContent(index, data, { virtuaRef })}
+          </WideScreenContainer>
+        )}
+      </VList>
+
       <WideScreenContainer
         onChange={() => {
           if (!atBottom) return;
@@ -108,21 +149,24 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
           atBottom={atBottom}
           isScrolling={isScrolling}
           onScrollToBottom={(type) => {
+            const virtua = virtuaRef.current;
+            if (!virtua) return;
+
             switch (type) {
               case 'auto': {
-                scrollToBottom();
+                virtua.scrollToIndex(dataSource.length - 1, { align: 'end' });
                 break;
               }
               case 'click': {
-                scrollToBottom('smooth');
+                virtua.scrollToIndex(dataSource.length - 1, { align: 'end', smooth: true });
                 break;
               }
             }
           }}
         />
       </WideScreenContainer>
-    </VirtuosoContext>
+    </VirtuaContext>
   );
-});
+}, isEqual);
 
 export default VirtualizedList;

@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { GroundingSearch, ModelReasoning } from '@lobechat/types';
+import { GroundingSearch, ModelReasoning, ToolIntervention } from '@lobechat/types';
 import {
   boolean,
   index,
@@ -11,7 +11,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '../utils/idGenerator';
 import { timestamps, varchar255 } from './_helpers';
@@ -36,25 +36,25 @@ export const messageGroups = pgTable(
       .$defaultFn(() => idGenerator('messageGroups'))
       .notNull(),
 
-    // 关联关系 - 只需要 topic 层级
+    // Association - only needs topic level
     topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
 
-    // 支持嵌套结构
+    // Support nested structure
     // @ts-ignore
     parentGroupId: varchar255('parent_group_id').references(() => messageGroups.id, {
       onDelete: 'cascade',
     }),
 
-    // 关联的用户消息
+    // Associated user message
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     parentMessageId: text('parent_message_id').references(() => messages.id, {
       onDelete: 'cascade',
     }),
 
-    // 元数据
+    // Metadata
     title: varchar255('title'),
     description: text('description'),
 
@@ -146,10 +146,10 @@ export const messagePlugins = pgTable(
       .primaryKey(),
 
     toolCallId: text('tool_call_id'),
-    type: text('type', {
-      enum: ['default', 'markdown', 'standalone', 'builtin'],
-    }).default('default'),
+    type: text('type').default('default'),
 
+    // Human intervention fields
+    intervention: jsonb('intervention').$type<ToolIntervention>(),
     apiName: text('api_name'),
     arguments: text('arguments'),
     identifier: text('identifier'),
@@ -167,9 +167,6 @@ export const messagePlugins = pgTable(
     ),
   }),
 );
-
-export type MessagePluginItem = typeof messagePlugins.$inferSelect;
-export const updateMessagePluginSchema = createSelectSchema(messagePlugins);
 
 export const messageTTS = pgTable(
   'message_tts',

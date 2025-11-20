@@ -1,3 +1,9 @@
+import {
+  FetchSSEOptions,
+  fetchSSE,
+  getMessageError,
+  standardizeAnimationStyle,
+} from '@lobechat/fetch-sse';
 import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap, UIChatMessage } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
@@ -25,12 +31,6 @@ import {
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
-import {
-  FetchSSEOptions,
-  fetchSSE,
-  getMessageError,
-  standardizeAnimationStyle,
-} from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth } from '../_auth';
@@ -174,6 +174,13 @@ class ChatService {
         extendParams.reasoning_effort = chatConfig.gpt5ReasoningEffort;
       }
 
+      if (
+        modelExtendParams!.includes('gpt5_1ReasoningEffort') &&
+        chatConfig.gpt5_1ReasoningEffort
+      ) {
+        extendParams.reasoning_effort = chatConfig.gpt5_1ReasoningEffort;
+      }
+
       if (modelExtendParams!.includes('textVerbosity') && chatConfig.textVerbosity) {
         extendParams.verbosity = chatConfig.textVerbosity;
       }
@@ -187,6 +194,10 @@ class ChatService {
         chatConfig.thinkingBudget !== undefined
       ) {
         extendParams.thinkingBudget = chatConfig.thinkingBudget;
+      }
+
+      if (modelExtendParams!.includes('thinkingLevel') && chatConfig.thinkingLevel) {
+        extendParams.thinkingLevel = chatConfig.thinkingLevel;
       }
 
       if (modelExtendParams!.includes('urlContext') && chatConfig.urlContext) {

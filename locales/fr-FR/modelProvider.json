@@ -199,6 +199,12 @@
     "all": "Tout",
     "list": {
       "disabled": "Non activé",
+      "disabledActions": {
+        "sort": "Méthode de tri",
+        "sortAlphabetical": "Trier par ordre alphabétique",
+        "sortAlphabeticalDesc": "Trier par ordre alphabétique décroissant",
+        "sortDefault": "Tri par défaut"
+      },
       "enabled": "Activé"
     },
     "notFound": "Aucun résultat trouvé",
@@ -289,7 +295,7 @@
       },
       "helpDoc": "Guide de configuration",
       "responsesApi": {
-        "desc": "Utilise la nouvelle norme de format de requête d'OpenAI, débloquant des fonctionnalités avancées telles que les chaînes de pensée",
+        "desc": "Adopte le nouveau format de requête de dernière génération d'OpenAI, permettant de débloquer des fonctionnalités avancées telles que la chaîne de pensée (pris en charge uniquement par les modèles OpenAI)",
         "title": "Utiliser la norme Responses API"
       },
       "waitingForMore": "D'autres modèles sont en <1>planification d'intégration</1>, restez à l'écoute"
@@ -391,7 +397,13 @@
       "addNew": "Ajouter un modèle",
       "disabled": "Non activé",
       "disabledActions": {
-        "showMore": "Afficher tout"
+        "showMore": "Afficher tout",
+        "sort": "Méthode de tri",
+        "sortAlphabetical": "Trier par ordre alphabétique",
+        "sortAlphabeticalDesc": "Trier par ordre alphabétique décroissant",
+        "sortDefault": "Tri par défaut",
+        "sortReleasedAt": "Trier par date de sortie la plus ancienne",
+        "sortReleasedAtDesc": "Trier par date de sortie la plus récente"
       },
       "empty": {
         "desc": "Veuillez créer un modèle personnalisé ou importer un modèle pour commencer à l'utiliser.",

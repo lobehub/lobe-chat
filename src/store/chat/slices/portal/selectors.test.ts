@@ -10,7 +10,7 @@ describe('chatDockSelectors', () => {
     const state = {
       showPortal: false,
       portalToolMessage: undefined,
-      messagesMap: {},
+      dbMessagesMap: {},
       activeId: 'test-id',
       activeTopicId: undefined,
       ...overrides,
@@ -109,7 +109,7 @@ describe('chatDockSelectors', () => {
     it('should return message content when message exists', () => {
       const messageContent = 'Test message content';
       const state = createState({
-        messagesMap: {
+        dbMessagesMap: {
           'test-id_null': [
             {
               id: 'test-id',
@@ -150,7 +150,7 @@ describe('chatDockSelectors', () => {
     it('should extract content from artifact tag', () => {
       const artifactContent = 'Test artifact content';
       const state = createState({
-        messagesMap: {
+        dbMessagesMap: {
           'test-id_null': [
             {
               id: 'test-id',
@@ -178,7 +178,7 @@ describe('chatDockSelectors', () => {
 </body>
 </html>`;
       const state = createState({
-        messagesMap: {
+        dbMessagesMap: {
           'test-id_null': [
             {
               id: 'test-id',
@@ -203,7 +203,7 @@ ${htmlContent}
   describe('isArtifactTagClosed', () => {
     it('should return false for unclosed artifact tag', () => {
       const state = createState({
-        messagesMap: {
+        dbMessagesMap: {
           'test-id_null': [
             {
               id: 'test-id',
@@ -222,7 +222,7 @@ ${htmlContent}
 
     it('should return true for closed artifact tag', () => {
       const state = createState({
-        messagesMap: {
+        dbMessagesMap: {
           'test-id_null': [
             {
               id: 'test-id',
@@ -241,7 +241,7 @@ ${htmlContent}
 
     it('should return false when no artifact tag exists', () => {
       const state = createState({
-        messagesMap: {
+        dbMessagesMap: {
           'test-id_null': [
             {
               id: 'test-id',
