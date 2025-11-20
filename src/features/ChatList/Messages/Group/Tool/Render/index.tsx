@@ -3,8 +3,7 @@ import { ChatToolResult, ToolIntervention } from '@lobechat/types';
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import AbortResponse from '@/features/ChatList/Messages/Group/Tool/Render/AbortResponse';
-
+import AbortResponse from './AbortResponse';
 import CustomRender from './CustomRender';
 import ErrorResponse from './ErrorResponse';
 import Intervention from './Intervention';

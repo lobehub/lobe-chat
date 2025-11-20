@@ -5,13 +5,13 @@ import { useSearchParams } from 'next/navigation';
 import { memo, use, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ShareMessageModal from '@/features/ChatList/components/ShareMessageModal';
-import { VirtuaContext } from '@/features/ChatList/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors, threadSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
+import ShareMessageModal from '../../../components/ShareMessageModal';
+import { VirtuaContext } from '../../../components/VirtualizedList/VirtuosoContext';
 import { InPortalThreadContext } from '../../../context/InPortalThreadContext';
 import { useChatListActionsBar } from '../../../hooks/useChatListActionsBar';
 import { ErrorActionsBar } from './Error';

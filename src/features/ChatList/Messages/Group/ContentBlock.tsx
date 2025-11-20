@@ -4,13 +4,13 @@ import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
-import { markdownElements } from '@/features/ChatList/MarkdownElements';
-import Reasoning from '@/features/ChatList/Messages/Assistant/Reasoning';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
+import { markdownElements } from '../../MarkdownElements';
+import Reasoning from '../Assistant/Reasoning';
 import ImageFileListViewer from '../User/ImageFileListViewer';
 import ErrorContent from './Error';
 import MessageContent from './MessageContent';

@@ -1,14 +1,15 @@
+import { LOADING_FLAT } from '@lobechat/const';
 import { ModelPerformance, ModelUsage } from '@lobechat/types';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { LOADING_FLAT } from '@/const/message';
-import ExtraContainer from '@/features/ChatList/components/Extras/ExtraContainer';
-import TTS from '@/features/ChatList/components/Extras/TTS';
-import Translate from '@/features/ChatList/components/Extras/Translate';
-import Usage from '@/features/ChatList/components/Extras/Usage';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors } from '@/store/chat/selectors';
+
+import ExtraContainer from '../../../components/Extras/ExtraContainer';
+import TTS from '../../../components/Extras/TTS';
+import Translate from '../../../components/Extras/Translate';
+import Usage from '../../../components/Extras/Usage';
 
 interface AssistantMessageExtraProps {
   content: string;

@@ -5,10 +5,10 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGroupMessage } from '@/features/ChatList/Messages/Group/GroupContext';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 
+import { useGroupMessage } from '../../../GroupContext';
 import { ApprovalMode } from './index';
 
 interface ApprovalActionsProps {

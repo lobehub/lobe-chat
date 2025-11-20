@@ -4,10 +4,10 @@ import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { CollapsedMessage } from '@/features/ChatList/Messages/Group/CollapsedMessage';
 import { useChatStore } from '@/store/chat';
 import { messageStateSelectors } from '@/store/chat/slices/message/selectors';
 
+import { CollapsedMessage } from './CollapsedMessage';
 import { GroupMessageContext } from './GroupContext';
 import GroupItem from './GroupItem';
 

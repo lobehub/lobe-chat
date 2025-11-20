@@ -5,8 +5,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import ErrorMessageExtra, { useErrorContent } from '@/features/ChatList/Error';
 import { useChatStore } from '@/store/chat';
+
+import ErrorMessageExtra, { useErrorContent } from '../../../Error';
 
 export interface ErrorContentProps {
   error?: ChatMessageError;

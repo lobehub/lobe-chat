@@ -3,12 +3,12 @@ import { UIChatMessage } from '@lobechat/types';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { CollapsedMessage } from '@/features/ChatList/Messages/Assistant/CollapsedMessage';
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors, messageStateSelectors } from '@/store/chat/selectors';
 
 import { DefaultMessage } from '../Default';
 import ImageFileListViewer from '../User/ImageFileListViewer';
+import { CollapsedMessage } from './CollapsedMessage';
 import FileChunks from './FileChunks';
 import IntentUnderstanding from './IntentUnderstanding';
 import Reasoning from './Reasoning';
